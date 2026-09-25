@@ -5,7 +5,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.407";
+  const BUILD="40.6.408";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
@@ -79,26 +79,114 @@
   let tradusAutoPromise=null;
   const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
+  // 40.6.408 — diagnostic only: decompose scheduler queue, Resource Timing,
+  // script evaluation/load-event tail and Long Tasks without changing residency order.
+  const LOAD_DIAGNOSTICS=new Map();
+  const LONG_TASKS=[];
+  const LONG_TASK_SUPPORTED=typeof PerformanceObserver!=="undefined"
+    && Array.isArray(PerformanceObserver.supportedEntryTypes)
+    && PerformanceObserver.supportedEntryTypes.includes("longtask");
+  try{performance.setResourceTimingBufferSize?.(1000);}catch(_){}
+  let longTaskObserver=null;
+  if(LONG_TASK_SUPPORTED){
+    try{
+      longTaskObserver=new PerformanceObserver(list=>{
+        for(const entry of list.getEntries()){
+          LONG_TASKS.push({startTime:Number(entry.startTime||0),duration:Number(entry.duration||0),name:String(entry.name||"longtask")});
+          if(LONG_TASKS.length>400)LONG_TASKS.splice(0,LONG_TASKS.length-400);
+        }
+      });
+      longTaskObserver.observe({type:"longtask",buffered:true});
+    }catch(_){}
+  }
+  const roundMs=value=>Number.isFinite(Number(value))?Number(Number(value).toFixed(3)):null;
+  const absoluteSrc=src=>{try{return new URL(String(src||""),document.baseURI).href;}catch(_){return String(src||"");}};
+  function resourceTimingFor(src,startMs,endMs){
+    try{
+      const absolute=absoluteSrc(src);
+      const entries=performance.getEntriesByType("resource")
+        .filter(entry=>entry?.initiatorType==="script" && String(entry.name||"")===absolute)
+        .filter(entry=>Number(entry.startTime)<=Number(endMs)+5)
+        .sort((a,b)=>Number(b.startTime)-Number(a.startTime));
+      const entry=entries.find(row=>Number(row.responseEnd)>=Number(startMs)-5)||entries[0]||null;
+      if(!entry)return null;
+      const requestStart=Number(entry.requestStart||entry.fetchStart||entry.startTime);
+      const responseEnd=Number(entry.responseEnd||0);
+      const transferSize=Number(entry.transferSize||0);
+      const encodedBodySize=Number(entry.encodedBodySize||0);
+      const decodedBodySize=Number(entry.decodedBodySize||0);
+      let cacheHint="UNKNOWN";
+      if(transferSize>0)cacheHint="NETWORK_OR_REVALIDATED";
+      else if(encodedBodySize>0||decodedBodySize>0)cacheHint="CACHE_OR_LOCAL";
+      return {
+        resource_start_ms:roundMs(Number(entry.startTime||0)),
+        request_start_ms:roundMs(requestStart),
+        response_end_ms:roundMs(responseEnd),
+        resource_fetch_ms:responseEnd>0&&requestStart>=0?roundMs(Math.max(0,responseEnd-requestStart)):null,
+        transfer_size:Number.isFinite(transferSize)?transferSize:null,
+        encoded_body_size:Number.isFinite(encodedBodySize)?encodedBodySize:null,
+        decoded_body_size:Number.isFinite(decodedBodySize)?decodedBodySize:null,
+        protocol:String(entry.nextHopProtocol||"—"),
+        cache_hint:cacheHint
+      };
+    }catch(_){return null;}
+  }
+  function longTaskOverlap(startMs,endMs){
+    if(!LONG_TASK_SUPPORTED)return {supported:false,count:0,total_ms:null,max_ms:null};
+    let count=0,total=0,max=0;
+    for(const row of LONG_TASKS){
+      const start=Math.max(Number(startMs),Number(row.startTime));
+      const end=Math.min(Number(endMs),Number(row.startTime)+Number(row.duration));
+      const overlap=end-start;
+      if(overlap>0){count+=1;total+=overlap;max=Math.max(max,overlap);}
+    }
+    return {supported:true,count,total_ms:roundMs(total),max_ms:roundMs(max)};
+  }
+  function recordLoadDiagnostic(src,startMs,endMs,mode,ok){
+    const resource=resourceTimingFor(src,startMs,endMs);
+    const responseEnd=Number(resource?.response_end_ms);
+    const evalTail=Number.isFinite(responseEnd)&&responseEnd>0?Math.max(0,Number(endMs)-responseEnd):null;
+    const row={
+      src:String(src||""),
+      absolute_src:absoluteSrc(src),
+      mode:String(mode||"dynamic"),
+      ok:ok!==false,
+      load_start_ms:roundMs(startMs),
+      load_end_ms:roundMs(endMs),
+      load_event_ms:roundMs(Math.max(0,Number(endMs)-Number(startMs))),
+      eval_load_event_ms:roundMs(evalTail),
+      ...(resource||{resource_fetch_ms:null,transfer_size:null,encoded_body_size:null,decoded_body_size:null,protocol:"—",cache_hint:"NO_RESOURCE_ENTRY"})
+    };
+    LOAD_DIAGNOSTICS.set(String(src||""),row);
+    return row;
+  }
+  const latestLoadDiagnostic=src=>LOAD_DIAGNOSTICS.get(String(src||""))||null;
+
   // 40.6.400 — cooperative bounded residency; operator input never gates progress.
   const yieldMain=(timeout=220)=>new Promise(resolve=>{
     if(typeof requestIdleCallback==="function")requestIdleCallback(()=>requestAnimationFrame(()=>resolve()),{timeout});
     else setTimeout(()=>requestAnimationFrame(()=>resolve()),Math.min(timeout,120));
   });
-  const loadOne=src=>new Promise(resolve=>{
+  const loadOne=(src,diagnosticStart=performance.now())=>new Promise(resolve=>{
     const existing=[...document.scripts].find(s=>s.dataset.postBootSrc===src);
+    const finish=(ok,mode,node)=>{
+      const ended=performance.now();
+      try{recordLoadDiagnostic(src,diagnosticStart,ended,mode,ok);}catch(_){}
+      resolve(ok);
+    };
     if(existing){
-      if(existing.dataset.loaded==="1"){resolve(true);return;}
-      if(existing.dataset.loaded==="0"){resolve(false);return;}
-      existing.addEventListener("load",()=>resolve(true),{once:true});
-      existing.addEventListener("error",()=>resolve(false),{once:true});
+      if(existing.dataset.loaded==="1"){finish(true,"existing-loaded",existing);return;}
+      if(existing.dataset.loaded==="0"){finish(false,"existing-failed",existing);return;}
+      existing.addEventListener("load",()=>finish(true,"existing-pending",existing),{once:true});
+      existing.addEventListener("error",()=>finish(false,"existing-pending",existing),{once:true});
       return;
     }
     const script=document.createElement("script");
     script.src=src;
     script.async=false;
     script.dataset.postBootSrc=src;
-    script.addEventListener("load",()=>{script.dataset.loaded="1";resolve(true);},{once:true});
-    script.addEventListener("error",()=>{script.dataset.loaded="0";resolve(false);},{once:true});
+    script.addEventListener("load",()=>{script.dataset.loaded="1";finish(true,"dynamic",script);},{once:true});
+    script.addEventListener("error",()=>{script.dataset.loaded="0";finish(false,"dynamic",script);},{once:true});
     document.body.appendChild(script);
   });
 
@@ -269,13 +357,20 @@
         const src=STRATEGY_CORE_MODULES[index];
         const cycleStart=performance.now();
         try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module-cycle-start",{group:"strategy",src,index:index+1,total:STRATEGY_CORE_MODULES.length,reason});}catch(_){}
-        await yieldMain(160); await sleep(18);
+        const yieldStart=performance.now();
+        await yieldMain(160);
+        const yieldEnd=performance.now();
+        const sleepStart=performance.now();
+        await sleep(18);
+        const sleepEnd=performance.now();
         const loadStart=performance.now();
         try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module-load-start",{group:"strategy",src,index:index+1,total:STRATEGY_CORE_MODULES.length,reason});}catch(_){}
-        const ok=await loadOne(src);
+        const ok=await loadOne(src,loadStart);
         const loadEnd=performance.now();
         if(ok)state.strategyCoreLoaded+=1; else failed.push(src);
-        try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module-load-end",{group:"strategy",src,index:index+1,total:STRATEGY_CORE_MODULES.length,ok,loaded:state.strategyCoreLoaded,reason,load_ms:Number((loadEnd-loadStart).toFixed(3)),cycle_ms:Number((loadEnd-cycleStart).toFixed(3))});}catch(_){}
+        const diag=latestLoadDiagnostic(src)||{};
+        const long=longTaskOverlap(cycleStart,loadEnd);
+        try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module-load-end",{group:"strategy",src,index:index+1,total:STRATEGY_CORE_MODULES.length,ok,loaded:state.strategyCoreLoaded,reason,load_ms:roundMs(loadEnd-loadStart),cycle_ms:roundMs(loadEnd-cycleStart),queue_wait_ms:roundMs(loadStart-cycleStart),yield_wait_ms:roundMs(yieldEnd-yieldStart),sleep_wait_ms:roundMs(sleepEnd-sleepStart),resource_fetch_ms:diag.resource_fetch_ms??null,eval_load_event_ms:diag.eval_load_event_ms??null,transfer_size:diag.transfer_size??null,encoded_body_size:diag.encoded_body_size??null,decoded_body_size:diag.decoded_body_size??null,protocol:diag.protocol||"—",cache_hint:diag.cache_hint||"UNKNOWN",load_mode:diag.mode||"unknown",long_task_supported:long.supported,long_task_count:long.count,long_task_ms:long.total_ms,long_task_max_ms:long.max_ms});}catch(_){}
         try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module",{src,ok,loaded:state.strategyCoreLoaded,reason,index:index+1,total:STRATEGY_CORE_MODULES.length});}catch(_){}
       }
       state.strategyCoreFailed=failed; state.strategyCoreReady=failed.length===0;
@@ -292,13 +387,20 @@
       const src=list[index];
       const cycleStart=performance.now();
       try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module-cycle-start",{group,src,index:index+1,total:list.length});}catch(_){}
-      await sleep(pauseMs); await yieldMain(idleTimeout);
+      const sleepStart=performance.now();
+      await sleep(pauseMs);
+      const sleepEnd=performance.now();
+      const yieldStart=performance.now();
+      await yieldMain(idleTimeout);
+      const yieldEnd=performance.now();
       const loadStart=performance.now();
       try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module-load-start",{group,src,index:index+1,total:list.length});}catch(_){}
-      const ok=await loadOne(src);
+      const ok=await loadOne(src,loadStart);
       const loadEnd=performance.now();
       state.loaded+=ok?1:0; if(!ok)state.failed.push(src);
-      try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module-load-end",{group,src,index:index+1,total:list.length,ok,loaded:state.loaded,load_ms:Number((loadEnd-loadStart).toFixed(3)),cycle_ms:Number((loadEnd-cycleStart).toFixed(3))});}catch(_){}
+      const diag=latestLoadDiagnostic(src)||{};
+      const long=longTaskOverlap(cycleStart,loadEnd);
+      try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module-load-end",{group,src,index:index+1,total:list.length,ok,loaded:state.loaded,load_ms:roundMs(loadEnd-loadStart),cycle_ms:roundMs(loadEnd-cycleStart),queue_wait_ms:roundMs(loadStart-cycleStart),yield_wait_ms:roundMs(yieldEnd-yieldStart),sleep_wait_ms:roundMs(sleepEnd-sleepStart),resource_fetch_ms:diag.resource_fetch_ms??null,eval_load_event_ms:diag.eval_load_event_ms??null,transfer_size:diag.transfer_size??null,encoded_body_size:diag.encoded_body_size??null,decoded_body_size:diag.decoded_body_size??null,protocol:diag.protocol||"—",cache_hint:diag.cache_hint||"UNKNOWN",load_mode:diag.mode||"unknown",long_task_supported:long.supported,long_task_count:long.count,long_task_ms:long.total_ms,long_task_max_ms:long.max_ms});}catch(_){}
       try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module",{group,src,ok,loaded:state.loaded,index:index+1,total:list.length});}catch(_){}
     }
   }
@@ -343,11 +445,12 @@
   globalThis.AgentCryptoPostBootRuntime=Object.freeze({
     build:BUILD,
     start,
-    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),strategy_core_started:state.strategyCoreStarted,strategy_core_ready:state.strategyCoreReady,strategy_core_loaded:state.strategyCoreLoaded,strategy_core_total:STRATEGY_CORE_MODULES.length,strategy_core_failed:Object.freeze(state.strategyCoreFailed.slice()),strategy_diagnostic_total:STRATEGY_DIAGNOSTIC_MODULES.length,strategy_auto_started:state.strategyAutoStarted,strategy_auto_reason:state.strategyAutoReason,tradus_auto_started:state.tradusAutoStarted,tradus_auto_ready:state.tradusAutoReady,tradus_auto_failed:Object.freeze(state.tradusAutoFailed.slice()),tradus_auto_modules:TRADUS_AUTO_MODULES.length,memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"AUTO_HEADLESS_EVENT_DRIVEN_406405",operator_quiet_ms:0,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice())}),
+    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),strategy_core_started:state.strategyCoreStarted,strategy_core_ready:state.strategyCoreReady,strategy_core_loaded:state.strategyCoreLoaded,strategy_core_total:STRATEGY_CORE_MODULES.length,strategy_core_failed:Object.freeze(state.strategyCoreFailed.slice()),strategy_diagnostic_total:STRATEGY_DIAGNOSTIC_MODULES.length,strategy_auto_started:state.strategyAutoStarted,strategy_auto_reason:state.strategyAutoReason,tradus_auto_started:state.tradusAutoStarted,tradus_auto_ready:state.tradusAutoReady,tradus_auto_failed:Object.freeze(state.tradusAutoFailed.slice()),tradus_auto_modules:TRADUS_AUTO_MODULES.length,memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"AUTO_HEADLESS_EVENT_DRIVEN_406405",operator_quiet_ms:0,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice()),pipeline_diagnostic:"RESIDENCY_PIPELINE_406408",resource_timing:true,long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length}),
     loadMarketsNow:loadMarketModulesNow,
     loadStrategyCoreNow,
     ensureTradusAutoResidency:ensureTradusAutoResidency405,
     autoStartStrategy:autoStartStrategy405,
+    diagnostics:()=>Object.freeze({build:BUILD,schema:"agent_crypto_residency_pipeline_diagnostic_v1",long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length,long_tasks:Object.freeze(LONG_TASKS.map(row=>Object.freeze({...row}))),loads:Object.freeze([...LOAD_DIAGNOSTICS.values()].map(row=>Object.freeze({...row}))),scheduler_unchanged:true,module_order_unchanged:true}),
     marketDemandModules:MARKET_DEMAND_MODULES.slice(),
     market_lazy_cycle_guard:true,
     same_application:true,
