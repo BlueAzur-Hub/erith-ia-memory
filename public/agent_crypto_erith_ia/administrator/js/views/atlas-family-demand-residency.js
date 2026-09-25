@@ -10,9 +10,9 @@
 (()=>{
   "use strict";
   const __PROBE_406411_SRC="atlas-family-demand-residency.js";
-  const __PROBE_406411_ON=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"")==="40.6.411";
+  const __PROBE_406411_BUILD=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");\n  const __PROBE_406411_ON=["40.6.411","40.6.412"].includes(__PROBE_406411_BUILD);
   const __PROBE_406411_T0=__PROBE_406411_ON?performance.now():0;
-  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-enter",{src:__PROBE_406411_SRC,build:"40.6.411"});}catch(_){}}
+  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-enter",{src:__PROBE_406411_SRC,build:__PROBE_406411_BUILD});}catch(_){}}
 
   const BUILD="40.4.139";
   const BOOT_FIX="40.6.72";
@@ -105,5 +105,5 @@
     else if(document.readyState!=="complete")window.addEventListener("load",installAtlasFamilyResidency406071R1,{once:true});
   }
 
-  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-exit",{src:__PROBE_406411_SRC,build:"40.6.411",eval_ms:Number((performance.now()-__PROBE_406411_T0).toFixed(3))});}catch(_){}}
+  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-exit",{src:__PROBE_406411_SRC,build:__PROBE_406411_BUILD,eval_ms:Number((performance.now()-__PROBE_406411_T0).toFixed(3))});}catch(_){}}
 })();
