@@ -1,3 +1,5 @@
+/* 40.6.413 · diagnostic-only eval boundary */
+(()=>{try{const b=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");if(b==="40.6.413")globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-enter",{src:"admin-theme-glass.js",build:"40.6.413"});}catch(_){}})();
 /* Agent-Crypto 40.4.300 — Glass theme switch. Presentation only. */
 (() => {
   "use strict";
@@ -53,3 +55,5 @@
     });
   } catch (_) {}
 })();
+/* 40.6.413 · diagnostic-only eval boundary */
+(()=>{try{const b=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");if(b==="40.6.413")globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-exit",{src:"admin-theme-glass.js",build:"40.6.413"});}catch(_){}})();
