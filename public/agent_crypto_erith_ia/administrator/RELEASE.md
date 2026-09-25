@@ -1,21 +1,33 @@
-# Agent-Crypto — Cold Boot Contention Recovery
+# Agent-Crypto — Readiness Trace Diagnostic
 
-Build **40.6.402** · parent **40.6.401** · Market Core **38.15.11**.
+Build **40.6.403** · parent **40.6.402** · Market Core **38.15.11**.
 
-Preuve 40.6.401 :
-- PRE-AETHER et script Aether : ~0 s mesuré ;
-- Auto Reader start : owner 18/20, ~166 ms sync ;
-- GitHub Memory initial state : ~33 095 ms async settle ;
-- Strategy A, Aether, Market, Oracle et Math fonctionnels au terrain.
+But unique : identifier le propriétaire des grands délais de readiness qui subsistent après la récupération Cold Boot 40.6.402.
 
-Changement borné 40.6.402 :
-- Auto Reader runtime déplacé immédiatement après son render : **7/19** ;
-- auto-load GitHub Shared Memory retiré du Cold Boot ;
-- bouton manuel GitHub Memory conservé ;
-- instrumentation 40.6.401 conservée intégralement.
+40.6.402 a déjà prouvé :
+- Auto Reader remonté à l'owner 7/19 et observé à ~2,57 s sur le terrain ;
+- GitHub Shared Memory retiré du Cold Boot automatique, chemin manuel conservé ;
+- PRE-AETHER et évaluation du script Aether quasi instantanés ;
+- Strategy A / Paper runtime toujours actifs.
 
-Inchangés : Strategy A métier/seuils, Market Core 38.15.11, Math, Aether, Oracle, Lecture Technique, REDIVIDER, Storage schemas.
+40.6.403 ne change **aucune condition de readiness** et ne réordonne aucun moteur.
 
-Aucun nouveau timer, observer, owner réseau, ordre réel ou wallet.
+Instrumentation ajoutée :
+- module js/readiness-trace.js sans timer, observer, réseau ni stockage ;
+- trace des événements Consultation / Aether / Strategy Core / Postboot / CURRENT / System Hydrated / présentation / Evidence ;
+- vérité détaillée des signaux Consultation First et liste des signaux manquants ;
+- TOP MARK GAPS : dix plus grands intervalles >= 250 ms entre marqueurs Boot Probe.
 
-Terrain Firefox : **PENDING**. Régression = rollback **40.6.401**.
+Protections inchangées :
+- Market Core 38.15.11 ;
+- Strategy A métier / seuils / Cost Gate ;
+- Math Core ;
+- Aether métier ;
+- Oracle ;
+- Lecture Technique ;
+- REDIVIDER ;
+- Storage schemas ;
+- ordre Cold Boot 40.6.402 ;
+- GitHub Memory demand-only manuel.
+
+Terrain Firefox : **PENDING**.
