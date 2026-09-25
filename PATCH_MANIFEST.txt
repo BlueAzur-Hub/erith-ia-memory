@@ -1,0 +1,28 @@
+AGENT-CRYPTO 40.6.413 PATCH ONLY
+
+Release commit: 98064f280fe7b11289d0abdf547fc793ca689b82
+Base runtime: 40.6.412
+Market Core: 38.15.11
+
+This archive intentionally contains ONLY files changed by 40.6.413.
+It is NOT a full copy of the public repository.
+
+Files:
+- public/agent_crypto_erith_ia/administrator/index.html
+- public/agent_crypto_erith_ia/administrator/build.json
+- public/agent_crypto_erith_ia/administrator/RELEASE.md
+- public/agent_crypto_erith_ia/administrator/HANDOFF.md
+- public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js
+- public/agent_crypto_erith_ia/administrator/js/boot-surgical-probe-406413.js
+- public/agent_crypto_erith_ia/administrator/js/views/analysis-aux-demand-loader.js
+- public/agent_crypto_erith_ia/administrator/js/market-reading-depth.js
+- public/agent_crypto_erith_ia/administrator/js/layout-repair.js
+- public/agent_crypto_erith_ia/administrator/js/admin-theme-glass.js
+- public/agent_crypto_erith_ia/administrator/js/market-stack.js
+
+Mission: SECONDARY POSTBOOT SPLIT PROBE
+Targets: analysis-aux-demand-loader.js, market-reading-depth.js, layout-repair.js, admin-theme-glass.js, market-stack.js
+Measure: responseEnd -> eval-enter -> eval-exit -> load-event
+
+Rollback reference: 40.6.407
+No Market Core / Strategy business / Aether business / Oracle / Math / Technical Reading changes.
