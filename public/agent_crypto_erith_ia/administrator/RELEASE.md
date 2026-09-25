@@ -1,66 +1,56 @@
-# Agent-Crypto — Secondary Postboot Split Probe
+# Agent-Crypto — Decision Board Continuity Recovery
 
-Build **40.6.413** · parent **40.6.412** · rollback sain **40.6.407** · Market Core **38.15.11**.
+Build **40.6.414** · parent **40.6.413** · rollback sain **40.6.407** · Market Core **38.15.11**.
 
-## Preuve 40.6.412
+## Diagnostic terrain 40.6.413
 
-La correction Decision Board a fonctionné :
-- 2 rendus réels ;
-- 25 différés ;
-- 9 dédupliqués ;
-- 0 erreur.
+Le split secondaire a innocenté les cinq suspects :
+- `analysis-aux-demand-loader.js` ≈555 ms total ;
+- `market-reading-depth.js` ≈277 ms ;
+- `layout-repair.js` ≈155 ms ;
+- `admin-theme-glass.js` ≈480 ms ;
+- `market-stack.js` ≈273 ms.
 
-Le faux coût Strategy est également résolu : `strategy-a-canonical-spec.js` est revenu à ≈145 ms total.
+Ils n'expliquent donc pas les freezes multi-secondes.
 
-Le postboot reste cependant long, avec cinq suspects principaux :
-- `analysis-aux-demand-loader.js` ≈17,4 s ;
-- `market-reading-depth.js` ≈8,6 s ;
-- `layout-repair.js` ≈5,1 s ;
-- `admin-theme-glass.js` ≈4,9 s ;
-- `market-stack.js` ≈4,6 s.
+En revanche, le code a révélé une régression certaine : le coalescing Decision Board introduit en 40.6.412 était protégé par une condition **exactement égale à 40.6.412**. Dès 40.6.413, il se désactivait et retombait sur le rendu lourd historique.
 
-## Changement unique 40.6.413
+Le rapport 40.6.413 le confirme : plusieurs `renderDecisionBoard()` d'environ 1,2–1,3 s chacun pendant le boot, alors que le snapshot du gate restait à zéro.
 
-**Diagnostic seulement.**
+## Correction unique 40.6.414
 
-Chaque suspect reçoit deux marqueurs sans modifier sa logique :
-- `probe-script-eval-enter` ;
-- `probe-script-eval-exit`.
+Le gate Decision Board 40.6.412 devient **continu sur tous les builds 40.6.x >= 412**.
 
-Le rapport calcule ensuite :
+Aucune logique Atlas/CURRENT n'est modifiée.
 
-`responseEnd → eval-enter → eval-exit → load-event`
-
-Les cinq URLs postboot reçoivent uniquement un token de cache `40.6.413-probe` afin d'éviter une copie CDN antérieure pendant le test.
+Le comportement Atlas observé n'est pas une preuve d'un double démarrage du même CURRENT : le dump montre un CURRENT restauré puis, plus tard, un **NOUVEAU CURRENT FERMÉ** sur un snapshot canonique ultérieur. Le mécanisme N+1 est donc conservé.
 
 ## Invariants
 
-- Decision Board coalescing 40.6.412 conservé ;
 - Market Core 38.15.11 inchangé ;
 - Strategy métier inchangée ;
 - Aether métier inchangé ;
+- Atlas CURRENT métier inchangé ;
 - Oracle / Math / Lecture Technique inchangés ;
-- aucun nouveau fetch métier ;
+- aucun nouveau fetch ;
 - aucun stockage ajouté ;
 - aucun timer récurrent ;
-- aucun MutationObserver ;
 - aucun ordre réel.
 
 ## Test Firefox
 
 1. Ctrl+F5.
-2. Vérifier **Build 40.6.413 · Administrator**.
-3. Utiliser souris / scroll normalement.
-4. Ne pas ouvrir Evidence pendant le premier boot.
-5. Attendre **Runtimes secondaires prêts**.
-6. Rapport de démarrage → **Actualiser** → **Copier**.
-7. Envoyer le rapport complet, surtout :
-   - `SECONDARY SCRIPT RESPONSE / EVAL / LOAD SPLIT · 40.6.413`;
-   - `POSTBOOT MODULE COST TRACE`;
-   - `RESIDENCY PIPELINE DIAGNOSTIC`;
-   - `READINESS EVENT TRACE`;
-   - `TOP MARK GAPS`.
+2. Vérifier **Build 40.6.414 · Administrator**.
+3. Utiliser l'interface normalement.
+4. Attendre Consultation / Strategy / Postboot.
+5. Rapport de démarrage → Actualiser → Copier.
+6. Vérifier le bloc `DECISION BOARD CONTINUITY · 40.6.414` :
+   - `active YES` ;
+   - `deferred` augmente pendant le boot ;
+   - un flush utile après ouverture du gate ;
+   - `errors 0`.
 
 ## Stop
 
-**Aucune chirurgie secondaire avant cette preuve.**
+Si les gels cycliques disparaissent ou diminuent fortement, le propriétaire principal était bien la régression de continuité du gate.
+Si les gels persistent, la prochaine analyse doit viser uniquement les propriétaires Atlas/CURRENT actifs pendant le cycle, pas les cinq secondaires désormais innocentés.
