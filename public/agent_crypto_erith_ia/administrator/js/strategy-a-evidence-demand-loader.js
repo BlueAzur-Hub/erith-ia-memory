@@ -1,4 +1,4 @@
-/* Agent-Crypto Administrator — 40.6.400 EXPLICIT STRATEGY EVIDENCE DEMAND
+/* Agent-Crypto Administrator — 40.6.405 EXPLICIT STRATEGY DIAGNOSTIC / EVIDENCE DEMAND
    Canonical Strategy A evidence stays immediately available on explicit operator demand.
    Evidence never loads in background. It loads only from an explicit Evidence surface or explicit API/hash demand.
    A failed/missing module keeps the loader PARTIAL and remains retryable.
@@ -7,9 +7,11 @@
   "use strict";
   if (globalThis.AgentCryptoCanonicalEvidenceWiring?.owner === "strategy-a-evidence-demand-loader.js") return;
 
-  const BUILD = "40.6.400";
-  const SOURCE = "40.6.400-explicit-evidence-demand";
+  const BUILD = "40.6.405";
+  const SOURCE = "40.6.405-explicit-diagnostic-evidence-demand";
   const MODULES = Object.freeze([
+    "./js/strategy-a-replay.js",
+    "./js/strategy-a-replay-acceptance.js?v=40.6.405",
     "./js/strategy-a-evidence-lifecycle-truth.js",
     "./js/strategy-a-foundation-applicability-truth.js",
     "./js/strategy-a-foundation-delegated-certification-406221.js",
@@ -61,6 +63,8 @@
   ]);
 
   const READY_CHECKS = Object.freeze({
+    "./js/strategy-a-replay.js": () => !!globalThis.AgentCryptoStrategyAReplay,
+    "./js/strategy-a-replay-acceptance.js?v=40.6.405": () => !!globalThis.AgentCryptoStrategyAReplayAcceptance,
     "./js/strategy-a-evidence-lifecycle-truth.js": () => !!globalThis.AgentCryptoEvidenceLifecycleTruth,
     "./js/strategy-a-foundation-applicability-truth.js": () => globalThis.AgentCryptoStrategyASafetyCertification?.foundation_applicability_truth_406191 === true,
     "./js/strategy-a-foundation-delegated-certification-406221.js": () => !!globalThis.AgentCryptoStrategyAFoundationDelegatedCertification,
