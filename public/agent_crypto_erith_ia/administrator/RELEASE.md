@@ -1,35 +1,52 @@
-# Agent-Crypto — Strategy status relocation
+# Agent-Crypto — Residency Pipeline Diagnostic
 
-Build **40.6.407** · parent **40.6.406** · Market Core **38.15.11**.
+Build **40.6.408** · parent / rollback **40.6.407** · Market Core **38.15.11**.
 
-## Correction unique
+## Nature
 
-Le badge **STRATEGY A · AUTO A ACTIF** ajouté en 40.6.406 dans le bandeau supérieur Administrator est **retiré du menu**.
+Version **diagnostique uniquement**.
 
-Le même état de lecture seule est désormais affiché **uniquement dans la section Simulation**, juste sous son en-tête.
-
-## Invariants
-
-Inchangés :
-- Auto A / autostart Strategy ;
-- Strategy A métier et seuils ;
-- Cost Gate / Risk Governor / Paper ;
-- découplage Simulation / Evidence 40.6.406 ;
-- résumé léger G1 → G9 ;
-- Evidence complet sur demande explicite ;
-- Market Core **38.15.11** ;
-- Math, Aether, Oracle, Lecture Technique, REDIVIDER, Storage.
+Aucun changement :
+- ordre des modules ;
+- valeurs de pause / yield du scheduler ;
+- Strategy A métier, seuils, Cost Gate, Risk Governor, Paper ;
+- Auto A / autostart ;
+- découplage Simulation / Evidence ;
+- résumé léger des 9 Gates ;
+- Market Core, Math, Aether, Oracle, Lecture Technique, REDIVIDER, Storage.
 
 Aucun ordre réel.
+
+## Sonde
+
+`post-boot-runtime-loader.js` mesure maintenant pour chaque module Strategy Core et Postboot :
+
+- `queue_wait_ms` : cycle-start → load-start ;
+- `yield_wait_ms` : durée réelle du `yieldMain()` ;
+- `sleep_wait_ms` : durée réelle de la pause demandée ;
+- `resource_fetch_ms` : Resource Timing requestStart/fetchStart → responseEnd ;
+- `eval_load_event_ms` : responseEnd → événement load du script ;
+- transfer/encoded/decoded size ;
+- nextHopProtocol ;
+- cache hint ;
+- chevauchement Long Task si l'API navigateur est disponible.
+
+Le Rapport de démarrage ajoute :
+
+**RESIDENCY PIPELINE DIAGNOSTIC · 40.6.408**
 
 ## Test Firefox
 
 1. Ctrl+F5.
-2. Vérifier **Build 40.6.407 · Administrator**.
-3. Vérifier que le header ne contient plus **STRATEGY A · AUTO A ACTIF** et retrouve sa géométrie normale.
-4. Ouvrir **Simulation**.
-5. Vérifier que le statut Strategy est présent dans Simulation uniquement.
-6. Vérifier que Strategy démarre toujours automatiquement.
-7. Vérifier que l'ouverture de Simulation ne déclenche toujours pas Evidence 28/28.
+2. Vérifier **Build 40.6.408 · Administrator**.
+3. Ne pas ouvrir Simulation, Evidence ou GitHub Memory pendant le premier boot.
+4. Utiliser normalement souris / scroll / cockpit.
+5. Laisser le cockpit se stabiliser.
+6. Ouvrir **Rapport de démarrage → Actualiser → Copier**.
+7. Envoyer :
+   - RESIDENCY PIPELINE DIAGNOSTIC ;
+   - POSTBOOT MODULE COST TRACE ;
+   - TOP MARK GAPS ;
+   - READINESS EVENT TRACE.
 
-Terrain : **PENDING**.
+**STOP : ne corriger aucun owner avant lecture de cette preuve.**
