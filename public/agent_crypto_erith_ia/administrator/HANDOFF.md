@@ -1,36 +1,40 @@
 # Agent-Crypto — Handoff
 
-Build **40.6.411** · parent **40.6.410** · rollback **40.6.407**.
+Build **40.6.412** · parent **40.6.411** · rollback **40.6.407**.
 
 ## Mission
 
-Identifier le propriétaire réel des lenteurs encore visibles sans refaire l'architecture.
+Retirer la tempête `renderDecisionBoard()` du chemin critique sans toucher à la logique métier.
 
 ## Vérité acquise
 
-40.6.410 conserve le cockpit avant Strategy.
-Le prochain P0 est le chemin :
+40.6.411 a prouvé :
 
-`Livecheck → Market → CURRENT → Graph → Consultation/Aether`.
+- Strategy Canonical Spec est un faux coupable : l'attente est avant son eval ;
+- le thread principal reste congestionné ;
+- Decision Board possède plusieurs rendus synchrones réels de ~1,2–1,4 s.
 
-Les anciennes valeurs `eval/event` ne prouvent pas qu'un petit script exécute réellement pendant 5–19 secondes.
+## 40.6.412
 
-## Sonde 40.6.411
+- rendu Decision Board passif différé jusqu'à Strategy Core ready ;
+- postboot-ready = fallback ;
+- état identique = rendu passif dédupliqué ;
+- refresh humain = force immédiate ;
+- sonde complète conservée.
 
-Le Rapport de démarrage expose maintenant :
+## À vérifier
 
-- chronométrage des fonctions critiques ;
-- séparation `responseEnd / eval-enter / eval-exit / load-event` ;
-- dérive réelle du timer postboot de 1500 ms ;
-- ressources externes précoces ;
-- Residency Pipeline et Top Mark Gaps conservés.
+Comparer 40.6.411 → 40.6.412 :
 
-## Discipline
+- Livecheck ;
+- Marché ;
+- CURRENT ;
+- Graphique / Consultation / Aether ;
+- Strategy Core ;
+- drift du timer Postboot ;
+- nombre et coût des rendus Decision Board ;
+- attente `responseEnd → eval-enter` du Strategy spec.
 
-- aucune correction métier dans cette build ;
-- pas de suppression de module ;
-- pas de refonte Strategy/Aether ;
-- pas de modification Market Core ;
-- attendre une session Firefox 40.6.411 avant de choisir le propriétaire suivant.
+Si le trou Livecheck → Marché reste dominant après cette correction, le prochain audit vise uniquement ce chemin.
 
-**STOP après collecte du rapport.**
+**Aucune 40.6.413 avant lecture du rapport Firefox 40.6.412.**
