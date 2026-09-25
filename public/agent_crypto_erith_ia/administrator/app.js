@@ -56437,6 +56437,12 @@ atlasColdBootDefer("cold read", () => renderColdRead(false));
 
 atlasColdBootDefer("auto reader render", renderAutoReader);
 
+/* 40.6.402 — Cold Boot contention recovery.
+   Auto Reader runtime starts immediately after its presentation shell.
+   GitHub Shared Memory no longer auto-fetches during Cold Boot; its existing
+   manual btnLoadGithubMemory owner remains the explicit demand path. */
+atlasColdBootDefer("auto reader start", startAutoReader);
+
 atlasColdBootDefer("shared memory render", renderSharedMemory);
 
 atlasColdBootDefer("memory truth render", renderMemoryTruth);
@@ -56446,8 +56452,6 @@ atlasColdBootDefer("memory coverage render", atlasRenderMemoryCoverage);
 atlasColdBootDefer("Memory Intelligence 32.0", atlasMemoryIntelligenceInit);
 
 atlasColdBootDefer("Multi-Collector & Operator Console 33.0", atlasMultiCollectorOperatorInit);
-
-atlasColdBootDefer("github memory initial state", () => loadGithubSharedMemory(false, "auto"));
 
 atlasColdBootDefer("beginner summary", renderBeginnerSummary);
 
@@ -56469,7 +56473,6 @@ window.addEventListener("pageshow", event => {
 
 atlasColdBootDefer("analyst panel", renderAnalystPanel);
 
-atlasColdBootDefer("auto reader start", startAutoReader);
 atlasColdBootDefer("questionnaire hydrate", loadQuestionnaire);
 atlasColdBootDefer("Math Core first render", renderAtlasMathCore);
 atlasColdBootStart();
