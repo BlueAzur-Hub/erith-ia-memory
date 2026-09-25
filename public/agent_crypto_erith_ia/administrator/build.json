@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.406",
+  "build": "40.6.407",
   "engine": "38.15.11",
-  "release": "RECOVERY · SIMULATION / EVIDENCE DECOUPLING",
+  "release": "PRESENTATION · STRATEGY STATUS MOVED INTO SIMULATION",
   "published": true,
-  "status": "published_pending_firefox_simulation_evidence_decoupling_406",
-  "parent_build": "40.6.405",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.406",
-  "administrator_build": "40.6.406",
-  "build_label": "Build 40.6.406 · Administrator",
+  "status": "published_pending_firefox_header_geometry_407",
+  "parent_build": "40.6.406",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.407",
+  "administrator_build": "40.6.407",
+  "build_label": "Build 40.6.407 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox desktop: Ctrl+F5 -> Build 40.6.406. Vérifier le badge Strategy A hors Simulation. Ouvrir Simulation: aucun chargement Evidence ne doit partir; Evidence wiring doit rester 0/28 ou à son état préalable. Vérifier le résumé léger G1→G9. Cliquer ensuite explicitement « OUVRIR LES PREUVES »: le loader 28/28 doit partir uniquement à ce moment.",
+  "terrain_pending": "Firefox desktop: Ctrl+F5. Vérifier que le header ne contient plus STRATEGY A · AUTO A ACTIF et retrouve sa géométrie antérieure. Ouvrir Simulation: le statut Strategy doit apparaître uniquement dans cette section. Vérifier que Auto A reste automatique et que le découplage Evidence 40.6.406 reste inchangé.",
   "terrain_proof": null,
-  "release_notes": "40.6.406 decouples Simulation presentation from the full Strategy Evidence demand. Ordinary clicks inside Strategy/Evidence surfaces no longer trigger the 28-module loader. A lightweight 9-Gate summary reads the already-resident Safety Certification matrix, while a single explicit « OUVRIR LES PREUVES » control retains full Evidence access. An always-visible header pill exposes Strategy A headless AUTO A / WAIT / STOP state. Market Core 38.15.11, Strategy thresholds, Cost Gate, Risk Governor, Paper business logic, Math, Aether, Oracle, Lecture Technique, REDIVIDER and storage schemas remain unchanged.",
+  "release_notes": "40.6.407 removes the rejected Strategy A status pill from the top Administrator header and relocates the same read-only state into the Simulation section. No Strategy business logic, autostart, Evidence routing, Market Core, Math, Aether, Oracle, Lecture Technique, REDIVIDER or storage behavior is changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -4580,5 +4580,33 @@
       "explicit UI control",
       "explicit API call"
     ]
+  },
+  "strategy_status_relocation_406407": {
+    "parent": "40.6.406",
+    "scope": "PRESENTATION_ONLY",
+    "rejected_header_badge": "strategyAAutoHeadlessStatus406406",
+    "header_badge_removed": true,
+    "header_status_stack_modified_at_runtime": false,
+    "new_owner": "js/strategy-a-simulation-evidence-decoupling-406407.js",
+    "target_section": "#simulation",
+    "placement": "after .section-head inside Simulation",
+    "state_source": "AgentCryptoStrategyAAutoStart.snapshot",
+    "states": [
+      "AUTO A ACTIF",
+      "WAIT",
+      "STOP",
+      "ATTENTE"
+    ],
+    "auto_start_changed": false,
+    "strategy_business_logic_changed": false,
+    "evidence_routing_changed": false,
+    "market_core_modified": false,
+    "math_modified": false,
+    "aether_modified": false,
+    "oracle_modified": false,
+    "lecture_technique_modified": false,
+    "redivider_modified": false,
+    "storage_modified": false,
+    "real_order": false
   }
 }
