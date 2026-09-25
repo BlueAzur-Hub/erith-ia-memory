@@ -1,4 +1,4 @@
-/* Agent-Crypto Administrator — 40.6.405 EXPLICIT STRATEGY DIAGNOSTIC / EVIDENCE DEMAND
+/* Agent-Crypto Administrator — 40.6.406 EXPLICIT STRATEGY DIAGNOSTIC / EVIDENCE DEMAND
    Canonical Strategy A evidence stays immediately available on explicit operator demand.
    Evidence never loads in background. It loads only from an explicit Evidence surface or explicit API/hash demand.
    A failed/missing module keeps the loader PARTIAL and remains retryable.
@@ -7,8 +7,8 @@
   "use strict";
   if (globalThis.AgentCryptoCanonicalEvidenceWiring?.owner === "strategy-a-evidence-demand-loader.js") return;
 
-  const BUILD = "40.6.405";
-  const SOURCE = "40.6.405-explicit-diagnostic-evidence-demand";
+  const BUILD = "40.6.406";
+  const SOURCE = "40.6.406-explicit-diagnostic-evidence-demand";
   const MODULES = Object.freeze([
     "./js/strategy-a-replay.js",
     "./js/strategy-a-replay-acceptance.js?v=40.6.405",
@@ -256,10 +256,15 @@
     try { return await loading; } finally { loading=null; }
   }
   function evidenceIntent(target) {
-    if (!(target instanceof Element)) return false;
-    return !!target.closest('#strategyADossier,#strategyAEvidenceGateAudit,#strategyADurableEvidence,#strategyAPaperV2ProofBridge,[data-strategy-evidence-demand="true"],a[href*="strategyADossier"],a[href*="strategy-evidence"]');
+    if (!(target instanceof Element)) return null;
+    return target.closest('[data-strategy-evidence-demand="true"]');
   }
-  document.addEventListener("click",event=>{if(evidenceIntent(event.target))void load("operator-evidence-demand");},true);
+  document.addEventListener("click",event=>{
+    const trigger=evidenceIntent(event.target);
+    if(!trigger)return;
+    const reason=String(trigger.getAttribute("data-strategy-evidence-reason")||"operator-explicit-evidence-demand");
+    void load(reason);
+  },true);
   const evidenceHash=String(location.hash||"").toLowerCase();
   if(evidenceHash.includes("strategyadossier")||evidenceHash.includes("strategy-evidence"))void load("evidence-hash-demand");
 
@@ -282,7 +287,7 @@
         failed:Object.freeze(Array.from(failures.keys())),
         states:Object.freeze(Object.fromEntries(states)),
         direct_parser_injection:false,idle_paced:true,recurring_timer:false,observer:false,
-        business_network_request:false,background_after_postboot:false,explicit_demand_only:true,real_order:false,paper_only:true,
+        business_network_request:false,background_after_postboot:false,explicit_demand_only:true,ordinary_surface_click_demand:false,explicit_control_selector:'[data-strategy-evidence-demand="true"]',real_order:false,paper_only:true,
         g3:"PENDING",g9:"LOCKED"
       });
     }
