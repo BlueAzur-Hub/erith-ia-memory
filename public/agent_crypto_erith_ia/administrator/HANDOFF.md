@@ -1,28 +1,36 @@
 # Agent-Crypto — Handoff
 
-Build **40.6.410** · parent **40.6.409** · rollback **40.6.407**.
+Build **40.6.411** · parent **40.6.410** · rollback **40.6.407**.
 
-## Politique
+## Mission
 
-**Cockpit d'abord, Strategy automatique ensuite.**
+Identifier le propriétaire réel des lenteurs encore visibles sans refaire l'architecture.
 
-Le boot-priority Strategy au `DOMContentLoaded` est retiré.
-Strategy démarre via le signal Aether existant, sans clic opérateur.
+## Vérité acquise
 
-## Entre modules Strategy
+40.6.410 conserve le cockpit avant Strategy.
+Le prochain P0 est le chemin :
 
-- MessageChannel task boundary ;
-- zéro sleep artificiel ;
-- zéro requestIdleCallback ;
-- ordre et chargement séquentiel inchangés.
+`Livecheck → Market → CURRENT → Graph → Consultation/Aether`.
 
-## Vérification
+Les anciennes valeurs `eval/event` ne prouvent pas qu'un petit script exécute réellement pendant 5–19 secondes.
 
-Comparer :
-- Aether ready ;
-- Consultation ready ;
-- Strategy Core ready ;
-- queue/yield/sleep Strategy ;
-- eval/load-event restant.
+## Sonde 40.6.411
 
-**STOP : aucune 40.6.411 avant lecture du rapport.**
+Le Rapport de démarrage expose maintenant :
+
+- chronométrage des fonctions critiques ;
+- séparation `responseEnd / eval-enter / eval-exit / load-event` ;
+- dérive réelle du timer postboot de 1500 ms ;
+- ressources externes précoces ;
+- Residency Pipeline et Top Mark Gaps conservés.
+
+## Discipline
+
+- aucune correction métier dans cette build ;
+- pas de suppression de module ;
+- pas de refonte Strategy/Aether ;
+- pas de modification Market Core ;
+- attendre une session Firefox 40.6.411 avant de choisir le propriétaire suivant.
+
+**STOP après collecte du rapport.**
