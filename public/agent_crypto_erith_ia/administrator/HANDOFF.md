@@ -1,21 +1,24 @@
 # Agent-Crypto — Handoff
 
-Build **40.6.402** · rollback **40.6.401** · Market Core **38.15.11**.
+Build **40.6.403** · rollback **40.6.402** · Market Core **38.15.11**.
 
-Objectif : vérifier que la contention Cold Boot baisse sans perdre de fonction.
+Objectif : tracer la chaîne readiness sans modifier son comportement.
 
 Test Firefox :
-1. Ctrl+F5 et vérifier **Build 40.6.402**.
-2. Utiliser immédiatement souris / scroll / panneaux.
-3. Vérifier que **Auto Reader** devient actif plus tôt.
-4. Vérifier Marché, Graphique, Oracle, Aether et Strategy A.
-5. Ne pas ouvrir GitHub Memory au début : il ne doit plus se charger automatiquement.
-6. Ensuite ouvrir GitHub Memory et utiliser son bouton manuel : la fonction doit rester disponible.
-7. Ouvrir **Rapport de démarrage** → **Actualiser** → **Copier**.
+1. **Ctrl+F5** et vérifier **Build 40.6.403**.
+2. Utiliser l'interface normalement pendant le démarrage ; ne pas rester immobile.
+3. Attendre la stabilisation raisonnable du cockpit.
+4. Ouvrir **Rapport de démarrage** → **Actualiser** → **Copier**.
+5. Fournir le rapport complet.
 
-Attendu :
-- owner GitHub Memory absent de la liste Cold Boot ;
-- Auto Reader start vers **7/19** ;
-- instrumentation SYNC / SETTLE toujours présente ;
-- Strategy Evidence reste explicit-demand-only ;
-- aucune régression Market Core / Strategy / Math / Aether / LT / REDIVIDER.
+Le rapport doit maintenant contenir :
+- **Consultation signals** ;
+- **Consultation missing** ;
+- **Consultation checks** ;
+- **READINESS EVENT TRACE** ;
+- **TOP MARK GAPS · >= 250 ms** ;
+- les mesures Cold Boot .401/.402 déjà conservées.
+
+Critère : déterminer quel événement ou quelle condition retarde Marché / Graphique / Consultation / Aether runtime / Postboot.
+
+Aucune correction fonctionnelle n'est incluse dans 40.6.403.
