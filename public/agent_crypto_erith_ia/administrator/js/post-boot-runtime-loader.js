@@ -5,7 +5,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.409";
+  const BUILD="40.6.410";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
@@ -78,6 +78,19 @@
   let strategyCorePromise=null;
   let tradusAutoPromise=null;
   const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  const yieldTask=()=>new Promise(resolve=>{
+    if(typeof MessageChannel!=="function"){
+      setTimeout(resolve,0);
+      return;
+    }
+    const channel=new MessageChannel();
+    const finish=()=>{
+      try{channel.port1.onmessage=null;channel.port1.close();channel.port2.close();}catch(_){}
+      resolve();
+    };
+    channel.port1.onmessage=finish;
+    channel.port2.postMessage(0);
+  });
 
   // 40.6.408 — diagnostic only: decompose scheduler queue, Resource Timing,
   // script evaluation/load-event tail and Long Tasks without changing residency order.
@@ -357,13 +370,14 @@
         const src=STRATEGY_CORE_MODULES[index];
         const cycleStart=performance.now();
         try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module-cycle-start",{group:"strategy",src,index:index+1,total:STRATEGY_CORE_MODULES.length,reason});}catch(_){}
-        // 40.6.409 — Strategy Core priority lane.
-        // Diagnostic 40.6.408 proved the cooperative waits were inflating
-        // 18 ms / 160 ms scheduling points into multi-second starvation.
-        // Preserve the same module order and sequential loadOne() contract,
-        // but do not yield/sleep between the eight Strategy Core modules.
+        // 40.6.410 — Aether-first Strategy scheduler.
+        // Strategy Core no longer races the cockpit at DOMContentLoaded.
+        // After Aether/Consultation readiness, keep the same sequential module
+        // order and allow one zero-delay MessageChannel task boundary between
+        // modules. No requestIdleCallback and no artificial sleep are used.
         const yieldStart=performance.now();
-        const yieldEnd=yieldStart;
+        if(index>0)await yieldTask();
+        const yieldEnd=performance.now();
         const sleepStart=yieldEnd;
         const sleepEnd=sleepStart;
         const loadStart=performance.now();
@@ -441,19 +455,19 @@
     window.addEventListener("agent-crypto:aether-failed",onAetherFailed,{once:true,passive:true});
   }
 
-  const bootStrategyCore=()=>{void loadStrategyCoreNow("boot-priority");};
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bootStrategyCore,{once:true,passive:true});
-  else queueMicrotask(bootStrategyCore);
+  // 40.6.410 — Strategy Core is automatic but Aether-first.
+  // The existing Aether-ready schedule calls start(), which then joins
+  // loadStrategyCoreNow("postboot-join"). No DOMContentLoaded Strategy race.
 
   globalThis.AgentCryptoPostBootRuntime=Object.freeze({
     build:BUILD,
     start,
-    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),strategy_core_started:state.strategyCoreStarted,strategy_core_ready:state.strategyCoreReady,strategy_core_loaded:state.strategyCoreLoaded,strategy_core_total:STRATEGY_CORE_MODULES.length,strategy_core_failed:Object.freeze(state.strategyCoreFailed.slice()),strategy_diagnostic_total:STRATEGY_DIAGNOSTIC_MODULES.length,strategy_auto_started:state.strategyAutoStarted,strategy_auto_reason:state.strategyAutoReason,tradus_auto_started:state.tradusAutoStarted,tradus_auto_ready:state.tradusAutoReady,tradus_auto_failed:Object.freeze(state.tradusAutoFailed.slice()),tradus_auto_modules:TRADUS_AUTO_MODULES.length,memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"AUTO_HEADLESS_EVENT_DRIVEN_406405",operator_quiet_ms:0,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice()),pipeline_diagnostic:"RESIDENCY_PIPELINE_406409",strategy_core_priority_scheduler:true,strategy_core_waits_removed:true,resource_timing:true,long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length}),
+    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),strategy_core_started:state.strategyCoreStarted,strategy_core_ready:state.strategyCoreReady,strategy_core_loaded:state.strategyCoreLoaded,strategy_core_total:STRATEGY_CORE_MODULES.length,strategy_core_failed:Object.freeze(state.strategyCoreFailed.slice()),strategy_diagnostic_total:STRATEGY_DIAGNOSTIC_MODULES.length,strategy_auto_started:state.strategyAutoStarted,strategy_auto_reason:state.strategyAutoReason,tradus_auto_started:state.tradusAutoStarted,tradus_auto_ready:state.tradusAutoReady,tradus_auto_failed:Object.freeze(state.tradusAutoFailed.slice()),tradus_auto_modules:TRADUS_AUTO_MODULES.length,memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"AUTO_HEADLESS_EVENT_DRIVEN_406405",operator_quiet_ms:0,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice()),pipeline_diagnostic:"RESIDENCY_PIPELINE_406410",strategy_core_priority_scheduler:false,strategy_core_aether_first:true,strategy_core_task_yield:"MESSAGE_CHANNEL",strategy_core_waits_removed:true,resource_timing:true,long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length}),
     loadMarketsNow:loadMarketModulesNow,
     loadStrategyCoreNow,
     ensureTradusAutoResidency:ensureTradusAutoResidency405,
     autoStartStrategy:autoStartStrategy405,
-    diagnostics:()=>Object.freeze({build:BUILD,schema:"agent_crypto_residency_pipeline_diagnostic_v1",long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length,long_tasks:Object.freeze(LONG_TASKS.map(row=>Object.freeze({...row}))),loads:Object.freeze([...LOAD_DIAGNOSTICS.values()].map(row=>Object.freeze({...row}))),scheduler_unchanged:false,module_order_unchanged:true,strategy_core_waits_removed:true}),
+    diagnostics:()=>Object.freeze({build:BUILD,schema:"agent_crypto_residency_pipeline_diagnostic_v1",long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length,long_tasks:Object.freeze(LONG_TASKS.map(row=>Object.freeze({...row}))),loads:Object.freeze([...LOAD_DIAGNOSTICS.values()].map(row=>Object.freeze({...row}))),scheduler_unchanged:false,module_order_unchanged:true,strategy_core_waits_removed:true,strategy_core_aether_first:true,strategy_core_task_yield:"MESSAGE_CHANNEL"}),
     marketDemandModules:MARKET_DEMAND_MODULES.slice(),
     market_lazy_cycle_guard:true,
     same_application:true,
