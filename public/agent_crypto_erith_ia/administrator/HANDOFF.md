@@ -1,24 +1,28 @@
 # Agent-Crypto — Handoff
 
-Build **40.6.409** · parent **40.6.408** · rollback **40.6.407**.
+Build **40.6.410** · parent **40.6.409** · rollback **40.6.407**.
 
-## Une seule variable
+## Politique
 
-Suppression de `yieldMain(160)` + `sleep(18)` **uniquement entre les 8 modules Strategy Core**.
+**Cockpit d'abord, Strategy automatique ensuite.**
 
-## Invariants
+Le boot-priority Strategy au `DOMContentLoaded` est retiré.
+Strategy démarre via le signal Aether existant, sans clic opérateur.
 
-- ordre des modules inchangé ;
-- chargement séquentiel inchangé ;
-- Strategy métier inchangée ;
-- Auto A inchangé ;
-- Evidence inchangé ;
-- Secondary / TRADUS / Market Demand inchangés ;
-- Market Core 38.15.11 inchangé ;
-- sonde 40.6.408 conservée.
+## Entre modules Strategy
 
-## PASS attendu
+- MessageChannel task boundary ;
+- zéro sleep artificiel ;
+- zéro requestIdleCallback ;
+- ordre et chargement séquentiel inchangés.
 
-`queue/yield/sleep` Strategy proches de zéro et `Strategy Core ready` plus tôt, sans régression fonctionnelle.
+## Vérification
 
-**Aucune 40.6.410 avant analyse terrain 40.6.409.**
+Comparer :
+- Aether ready ;
+- Consultation ready ;
+- Strategy Core ready ;
+- queue/yield/sleep Strategy ;
+- eval/load-event restant.
+
+**STOP : aucune 40.6.411 avant lecture du rapport.**
