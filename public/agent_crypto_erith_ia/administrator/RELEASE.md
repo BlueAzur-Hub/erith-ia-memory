@@ -31,7 +31,7 @@ Le loader 28 modules ne part désormais que depuis un contrôle explicitement ma
 
 `data-strategy-evidence-demand="true"`
 
-ou depuis les chemins API/hash explicitement prévus.
+ou depuis un appel API explicitement demandé. La navigation par simple hash ne charge plus Evidence.
 
 ### 2. Résumé léger des 9 Gates
 
