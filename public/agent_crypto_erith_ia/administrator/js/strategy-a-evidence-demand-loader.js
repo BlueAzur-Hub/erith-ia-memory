@@ -1,6 +1,6 @@
 /* Agent-Crypto Administrator — 40.6.406 EXPLICIT STRATEGY DIAGNOSTIC / EVIDENCE DEMAND
    Canonical Strategy A evidence stays immediately available on explicit operator demand.
-   Evidence never loads in background. It loads only from an explicit Evidence surface or explicit API/hash demand.
+   Evidence never loads in background. It loads only from the explicit operator control or explicit API demand.
    A failed/missing module keeps the loader PARTIAL and remains retryable.
    No recurring timer, observer, business network request or order path. */
 (() => {
@@ -265,9 +265,6 @@
     const reason=String(trigger.getAttribute("data-strategy-evidence-reason")||"operator-explicit-evidence-demand");
     void load(reason);
   },true);
-  const evidenceHash=String(location.hash||"").toLowerCase();
-  if(evidenceHash.includes("strategyadossier")||evidenceHash.includes("strategy-evidence"))void load("evidence-hash-demand");
-
   globalThis.AgentCryptoCanonicalEvidenceWiring=Object.freeze({
     build:BUILD,
     owner:"strategy-a-evidence-demand-loader.js",
@@ -287,7 +284,7 @@
         failed:Object.freeze(Array.from(failures.keys())),
         states:Object.freeze(Object.fromEntries(states)),
         direct_parser_injection:false,idle_paced:true,recurring_timer:false,observer:false,
-        business_network_request:false,background_after_postboot:false,explicit_demand_only:true,ordinary_surface_click_demand:false,explicit_control_selector:'[data-strategy-evidence-demand="true"]',real_order:false,paper_only:true,
+        business_network_request:false,background_after_postboot:false,explicit_demand_only:true,ordinary_surface_click_demand:false,hash_demand:false,explicit_control_selector:'[data-strategy-evidence-demand="true"]',real_order:false,paper_only:true,
         g3:"PENDING",g9:"LOCKED"
       });
     }
