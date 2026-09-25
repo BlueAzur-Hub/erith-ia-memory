@@ -1,19 +1,40 @@
 # Agent-Crypto — Handoff
 
-Build **40.6.407** · rollback **40.6.406** · Market Core **38.15.11**.
+Build **40.6.408** · rollback **40.6.407** · Market Core **38.15.11**.
 
-## Contrat
+## Objet
 
-**Aucun statut Strategy dans le menu supérieur.**
+Mesurer pourquoi certains modules passent des dizaines de secondes entre
+`cycle-start` et `load-end`, sans modifier leur comportement.
 
-Le statut Auto A est visible seulement dans **Simulation**.
+## Diagnostic attendu
+
+Pour chaque module Strategy/Postboot :
+
+- queue wait ;
+- yield wait ;
+- sleep wait ;
+- Resource Timing ;
+- évaluation / load-event tail ;
+- cache / transfer / protocole ;
+- Long Task overlap si supporté par Firefox.
+
+## Protections
+
+- `.407` reste le checkpoint sain ;
+- Auto A inchangé ;
+- Simulation/Evidence inchangés ;
+- aucune modification métier ;
+- aucun réordonnancement ;
+- aucun preload ;
+- aucun timer récurrent ;
+- PerformanceObserver uniquement pour `longtask` si supporté ;
+- aucun réseau métier ou stockage ajouté.
 
 ## Test
 
-- Header : aucun badge Strategy.
-- Simulation : statut Strategy présent.
-- Auto A : toujours automatique.
-- Evidence : toujours explicit-only.
-- 9 Gates : résumé léger conservé.
+Ctrl+F5 → attendre stabilisation → Rapport de démarrage → Actualiser → Copier.
 
-Au moindre changement métier : rollback **40.6.406**.
+Ne pas ouvrir les preuves complètes avant la première copie du rapport.
+
+**Aucune 40.6.409 avant analyse du rapport 40.6.408.**
