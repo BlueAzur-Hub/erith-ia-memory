@@ -4559,7 +4559,7 @@
     ],
     "evidence_modules_removed": false,
     "evidence_api_removed": false,
-    "evidence_hash_demand_preserved": true,
+    "evidence_hash_demand_preserved": false,
     "new_recurring_timer": false,
     "new_observer": false,
     "new_storage_owner": false,
@@ -4575,6 +4575,10 @@
     "lecture_technique_modified": false,
     "redivider_modified": false,
     "paper_only": true,
-    "real_order": false
+    "real_order": false,
+    "full_evidence_entrypoints": [
+      "explicit UI control",
+      "explicit API call"
+    ]
   }
 }
