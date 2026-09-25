@@ -5,27 +5,31 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.404";
+  const BUILD="40.6.405";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
-    "./js/strategy-a-replay.js",
     "./js/strategy-a-canonical-spec.js",
-    "./js/strategy-a-replay-acceptance.js?v=40.6.273",
-    "./js/strategy-a-paper-lifecycle.js",
+    "./js/strategy-a-paper-lifecycle.js?v=40.6.405",
     "./js/strategy-a-auto-lifecycle-bridge.js",
-    "./js/strategy-a-after-cost-metrics.js",
+    "./js/strategy-a-after-cost-metrics.js?v=40.6.405",
     "./js/strategy-a-durable-evidence-store.js",
     "./js/strategy-a-safety-certification.js",
     "./js/strategy-a-evidence-dossier.js",
     "./js/strategy-a-paper-after-cost-acceptance.js"
   ]);
+  const STRATEGY_DIAGNOSTIC_MODULES=Object.freeze([
+    "./js/strategy-a-replay.js",
+    "./js/strategy-a-replay-acceptance.js?v=40.6.405"
+  ]);
+  const TRADUS_AUTO_MODULES=Object.freeze([
+    "./js/tradus-shadow-ledger.js?v=40.6.405",
+    "./js/tradus-paper-shadow.js?v=40.6.405",
+    "./js/tradus-paper-observability.js?v=40.6.405",
+    "./js/tradus-data-ui-decoupling.js?v=40.6.405"
+  ]);
   const SECONDARY_MODULES=Object.freeze([
     "./js/tradus-shadow-adapter.js",
-    "./js/tradus-shadow-ledger.js",
-    "./js/tradus-paper-shadow.js",
-    "./js/tradus-paper-observability.js",
-    "./js/tradus-data-ui-decoupling.js",
     "./js/atlas-heartbeat-rearm.js",
     "./js/markets-domain-contract.js",
     "./js/views/system-demand-residency.js",
@@ -69,9 +73,10 @@
     "./js/market-reading-depth.js"
   ]);
 
-  const state={started:false,done:false,reason:"",loaded:0,failed:[],strategyCoreStarted:false,strategyCoreReady:false,strategyCoreLoaded:0,strategyCoreFailed:[],marketDemandStarted:false,marketDemandReady:false,marketDemandReason:"",marketDemandFailed:[]};
+  const state={started:false,done:false,reason:"",loaded:0,failed:[],strategyCoreStarted:false,strategyCoreReady:false,strategyCoreLoaded:0,strategyCoreFailed:[],marketDemandStarted:false,marketDemandReady:false,marketDemandReason:"",marketDemandFailed:[],tradusAutoStarted:false,tradusAutoReady:false,tradusAutoFailed:[],strategyAutoStarted:false,strategyAutoReason:""};
   let marketDemandPromise=null;
   let strategyCorePromise=null;
+  let tradusAutoPromise=null;
   const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
   // 40.6.400 — cooperative bounded residency; operator input never gates progress.
@@ -96,6 +101,109 @@
     script.addEventListener("error",()=>{script.dataset.loaded="0";resolve(false);},{once:true});
     document.body.appendChild(script);
   });
+
+  function strategyManualStopActive405(){
+    try{return sessionStorage.getItem("agent_crypto_strategy_a_auto_manual_stop_v1")==="1";}catch(_){return false;}
+  }
+  function strategyPresentationOpen405(){
+    const simulation=document.getElementById("simulation");
+    return !(simulation instanceof HTMLDetailsElement)||simulation.open===true;
+  }
+  function installStrategyHeadlessPresentationGate405(){
+    const current=globalThis.renderStrategySandboxExtensions;
+    if(typeof current!=="function"||current.__agentCryptoHeadlessGate405===true)return;
+    const wrapped=function(...args){
+      if(!strategyPresentationOpen405())return false;
+      return current.apply(this,args);
+    };
+    Object.defineProperty(wrapped,"__agentCryptoHeadlessGate405",{value:true});
+    Object.defineProperty(wrapped,"__agentCryptoOriginal405",{value:current});
+    globalThis.renderStrategySandboxExtensions=wrapped;
+  }
+  function syncStrategyPresentation405(){
+    try{globalThis.AgentCryptoStrategyAPaperLifecycle?.render?.();}catch(_){}
+    try{globalThis.AgentCryptoStrategyAAfterCostMetrics?.render?.();}catch(_){}
+    try{globalThis.AgentCryptoStrategyASafetyCertification?.render?.();}catch(_){}
+    try{globalThis.AgentCryptoStrategyAEvidenceDossier?.render?.();}catch(_){}
+    try{globalThis.AgentCryptoStrategyAPaperAfterCostAcceptance?.render?.();}catch(_){}
+    try{globalThis.renderStrategySandboxExtensions?.();}catch(_){}
+    try{
+      const panel=document.getElementById("strategyAAutoPaperRunner");
+      const label=[...(panel?.querySelectorAll?.("span")||[])].find(node=>/DEFAULT OFF|AUTO START/i.test(String(node.textContent||"")));
+      if(label)label.textContent="SESSION-LOCAL · 5 MIN · AUTO START";
+    }catch(_){}
+  }
+  function ensureStrategyWorkspace405(){
+    try{
+      const active=String(globalThis.strategyALocalContext?.()?.active_workspace||"");
+      if(active==="strategy_a")return true;
+      if(typeof globalThis.switchPaperWorkspace!=="function")return false;
+      globalThis.switchPaperWorkspace("strategy_a",{render:false});
+      return String(globalThis.strategyALocalContext?.()?.active_workspace||"")==="strategy_a";
+    }catch(_){return false;}
+  }
+  function autoStartStrategy405(reason="strategy-core-ready"){
+    state.strategyAutoReason=String(reason||"strategy-core-ready");
+    installStrategyHeadlessPresentationGate405();
+    if(strategyManualStopActive405()){
+      try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-auto-autostart-skipped",{reason:"manual-stop",source:state.strategyAutoReason});}catch(_){}
+      return false;
+    }
+    const before=globalThis.strategyAAutoSnapshot?.();
+    if(before?.enabled===true){state.strategyAutoStarted=true;return true;}
+    if(!ensureStrategyWorkspace405()){
+      try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-auto-autostart-failed",{reason:"workspace-unavailable",source:state.strategyAutoReason});}catch(_){}
+      return false;
+    }
+    let result=null;
+    try{result=globalThis.strategyAAutoStart?.()||null;}catch(error){
+      try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-auto-autostart-failed",{reason:String(error?.message||error),source:state.strategyAutoReason});}catch(_){}
+      return false;
+    }
+    state.strategyAutoStarted=result?.enabled===true;
+    try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-auto-autostart",{ok:state.strategyAutoStarted,phase:String(result?.phase||"—"),reason:state.strategyAutoReason});}catch(_){}
+    return state.strategyAutoStarted;
+  }
+  async function ensureTradusAutoResidency405(detail,reason="first-tradus-event"){
+    if(state.tradusAutoReady){
+      try{globalThis.AgentCryptoTradusShadowLedger?.capture?.(detail,"406405-event");}catch(_){}
+      try{globalThis.AgentCryptoTradusPaperShadow?.process_observation?.(detail,"406405-event");}catch(_){}
+      try{globalThis.AgentCryptoTradusPaperObservability?.publish?.(detail,"406405-event");}catch(_){}
+      try{globalThis.AgentCryptoTradusDataUiDecoupling?.publish_truth?.("406405-event");}catch(_){}
+      return true;
+    }
+    if(tradusAutoPromise)return tradusAutoPromise;
+    state.tradusAutoStarted=true;
+    tradusAutoPromise=(async()=>{
+      const failed=[];
+      for(let index=0;index<TRADUS_AUTO_MODULES.length;index++){
+        const src=TRADUS_AUTO_MODULES[index];
+        await yieldMain(160); await sleep(18);
+        const ok=await loadOne(src);
+        if(!ok)failed.push(src);
+        try{globalThis.AgentCryptoBootProbe?.mark?.("tradus-auto-module",{src,index:index+1,total:TRADUS_AUTO_MODULES.length,ok,reason});}catch(_){}
+        if(!ok)break;
+      }
+      state.tradusAutoFailed=failed;
+      state.tradusAutoReady=failed.length===0;
+      if(state.tradusAutoReady){
+        try{globalThis.AgentCryptoTradusShadowLedger?.capture?.(detail,"406405-first-event");}catch(_){}
+        try{globalThis.AgentCryptoTradusPaperShadow?.process_observation?.(detail,"406405-first-event");}catch(_){}
+        try{globalThis.AgentCryptoTradusPaperObservability?.publish?.(detail,"406405-first-event");}catch(_){}
+        try{globalThis.AgentCryptoTradusDataUiDecoupling?.publish_truth?.("406405-first-event");}catch(_){}
+      }
+      try{window.dispatchEvent(new CustomEvent("agent-crypto:tradus-auto-residency-ready",{detail:{build:BUILD,ok:state.tradusAutoReady,failed:failed.slice(),reason}}));}catch(_){}
+      return state.tradusAutoReady;
+    })();
+    return tradusAutoPromise;
+  }
+  document.addEventListener("agentcrypto:tradus-shadow-observation",event=>{
+    void ensureTradusAutoResidency405(event?.detail||null,"first-tradus-event");
+  },{passive:true});
+  document.addEventListener("toggle",event=>{
+    const target=event.target;
+    if(target?.id==="simulation"&&target.open===true)queueMicrotask(syncStrategyPresentation405);
+  },true);
 
   async function loadMarketModulesNow(reason="operator-market-click"){
     if(globalThis.ErithDomainSkeletonMirror){
@@ -173,6 +281,7 @@
       state.strategyCoreFailed=failed; state.strategyCoreReady=failed.length===0;
       try{globalThis.AgentCryptoBootProbe?.markOnce?.("strategy-core-ready",{loaded:state.strategyCoreLoaded,failed:failed.length,reason});}catch(_){}
       try{window.dispatchEvent(new CustomEvent("agent-crypto:strategy-core-ready",{detail:{build:BUILD,ok:state.strategyCoreReady,failed:failed.slice()}}));}catch(_){}
+      if(state.strategyCoreReady)queueMicrotask(()=>autoStartStrategy405("strategy-core-ready"));
       return state.strategyCoreReady;
     })();
     return strategyCorePromise;
@@ -234,9 +343,11 @@
   globalThis.AgentCryptoPostBootRuntime=Object.freeze({
     build:BUILD,
     start,
-    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),strategy_core_started:state.strategyCoreStarted,strategy_core_ready:state.strategyCoreReady,strategy_core_loaded:state.strategyCoreLoaded,strategy_core_total:STRATEGY_CORE_MODULES.length,strategy_core_failed:Object.freeze(state.strategyCoreFailed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"COOPERATIVE_BOUNDED_NO_OPERATOR_QUIET_406400",operator_quiet_ms:0,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice())}),
+    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),strategy_core_started:state.strategyCoreStarted,strategy_core_ready:state.strategyCoreReady,strategy_core_loaded:state.strategyCoreLoaded,strategy_core_total:STRATEGY_CORE_MODULES.length,strategy_core_failed:Object.freeze(state.strategyCoreFailed.slice()),strategy_diagnostic_total:STRATEGY_DIAGNOSTIC_MODULES.length,strategy_auto_started:state.strategyAutoStarted,strategy_auto_reason:state.strategyAutoReason,tradus_auto_started:state.tradusAutoStarted,tradus_auto_ready:state.tradusAutoReady,tradus_auto_failed:Object.freeze(state.tradusAutoFailed.slice()),tradus_auto_modules:TRADUS_AUTO_MODULES.length,memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"AUTO_HEADLESS_EVENT_DRIVEN_406405",operator_quiet_ms:0,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice())}),
     loadMarketsNow:loadMarketModulesNow,
     loadStrategyCoreNow,
+    ensureTradusAutoResidency:ensureTradusAutoResidency405,
+    autoStartStrategy:autoStartStrategy405,
     marketDemandModules:MARKET_DEMAND_MODULES.slice(),
     market_lazy_cycle_guard:true,
     same_application:true,
