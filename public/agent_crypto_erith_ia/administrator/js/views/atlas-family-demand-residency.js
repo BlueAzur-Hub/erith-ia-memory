@@ -10,7 +10,8 @@
 (()=>{
   "use strict";
   const __PROBE_406411_SRC="atlas-family-demand-residency.js";
-  const __PROBE_406411_BUILD=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");\n  const __PROBE_406411_ON=["40.6.411","40.6.412"].includes(__PROBE_406411_BUILD);
+  const __PROBE_406411_BUILD=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");
+  const __PROBE_406411_ON=["40.6.411","40.6.412"].includes(__PROBE_406411_BUILD);
   const __PROBE_406411_T0=__PROBE_406411_ON?performance.now():0;
   if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-enter",{src:__PROBE_406411_SRC,build:__PROBE_406411_BUILD});}catch(_){}}
 
