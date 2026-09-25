@@ -5,7 +5,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.410";
+  const BUILD="40.6.411";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
@@ -445,7 +445,15 @@
     try{return globalThis.AgentCryptoConsultationFirst406286?.snapshot?.()?.aether_state==="ready";}
     catch(_){return false;}
   }
-  function scheduleAfterAether(reason){setTimeout(()=>{if(!state.started)void start(reason);},1500);}
+  function scheduleAfterAether(reason){
+    const delayMs=1500,scheduledAt=performance.now(),expectedAt=scheduledAt+delayMs;
+    try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-schedule-406411",{reason:String(reason||""),delay_ms:delayMs,scheduled_at_ms:Number(scheduledAt.toFixed(3)),expected_at_ms:Number(expectedAt.toFixed(3))});}catch(_){}
+    setTimeout(()=>{
+      const firedAt=performance.now(),drift=Math.max(0,firedAt-expectedAt);
+      try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-schedule-fired-406411",{reason:String(reason||""),delay_ms:delayMs,fired_at_ms:Number(firedAt.toFixed(3)),drift_ms:Number(drift.toFixed(3)),already_started:state.started===true});}catch(_){}
+      if(!state.started)void start(reason);
+    },delayMs);
+  }
   function onAetherReady(){window.removeEventListener("agent-crypto:aether-ready",onAetherReady);scheduleAfterAether("aether-ready+1500ms");}
   function onAetherFailed(){setTimeout(()=>{if(!state.started)void start("aether-failed-fallback+5000ms");},5000);}
 
@@ -462,12 +470,12 @@
   globalThis.AgentCryptoPostBootRuntime=Object.freeze({
     build:BUILD,
     start,
-    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),strategy_core_started:state.strategyCoreStarted,strategy_core_ready:state.strategyCoreReady,strategy_core_loaded:state.strategyCoreLoaded,strategy_core_total:STRATEGY_CORE_MODULES.length,strategy_core_failed:Object.freeze(state.strategyCoreFailed.slice()),strategy_diagnostic_total:STRATEGY_DIAGNOSTIC_MODULES.length,strategy_auto_started:state.strategyAutoStarted,strategy_auto_reason:state.strategyAutoReason,tradus_auto_started:state.tradusAutoStarted,tradus_auto_ready:state.tradusAutoReady,tradus_auto_failed:Object.freeze(state.tradusAutoFailed.slice()),tradus_auto_modules:TRADUS_AUTO_MODULES.length,memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"AUTO_HEADLESS_EVENT_DRIVEN_406405",operator_quiet_ms:0,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice()),pipeline_diagnostic:"RESIDENCY_PIPELINE_406410",strategy_core_priority_scheduler:false,strategy_core_aether_first:true,strategy_core_task_yield:"MESSAGE_CHANNEL",strategy_core_waits_removed:true,resource_timing:true,long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length}),
+    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),strategy_core_started:state.strategyCoreStarted,strategy_core_ready:state.strategyCoreReady,strategy_core_loaded:state.strategyCoreLoaded,strategy_core_total:STRATEGY_CORE_MODULES.length,strategy_core_failed:Object.freeze(state.strategyCoreFailed.slice()),strategy_diagnostic_total:STRATEGY_DIAGNOSTIC_MODULES.length,strategy_auto_started:state.strategyAutoStarted,strategy_auto_reason:state.strategyAutoReason,tradus_auto_started:state.tradusAutoStarted,tradus_auto_ready:state.tradusAutoReady,tradus_auto_failed:Object.freeze(state.tradusAutoFailed.slice()),tradus_auto_modules:TRADUS_AUTO_MODULES.length,memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"AUTO_HEADLESS_EVENT_DRIVEN_406405",operator_quiet_ms:0,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice()),pipeline_diagnostic:"RESIDENCY_PIPELINE_406411",strategy_core_priority_scheduler:false,strategy_core_aether_first:true,strategy_core_task_yield:"MESSAGE_CHANNEL",strategy_core_waits_removed:true,resource_timing:true,long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length}),
     loadMarketsNow:loadMarketModulesNow,
     loadStrategyCoreNow,
     ensureTradusAutoResidency:ensureTradusAutoResidency405,
     autoStartStrategy:autoStartStrategy405,
-    diagnostics:()=>Object.freeze({build:BUILD,schema:"agent_crypto_residency_pipeline_diagnostic_v1",long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length,long_tasks:Object.freeze(LONG_TASKS.map(row=>Object.freeze({...row}))),loads:Object.freeze([...LOAD_DIAGNOSTICS.values()].map(row=>Object.freeze({...row}))),scheduler_unchanged:false,module_order_unchanged:true,strategy_core_waits_removed:true,strategy_core_aether_first:true,strategy_core_task_yield:"MESSAGE_CHANNEL"}),
+    diagnostics:()=>Object.freeze({build:BUILD,schema:"agent_crypto_residency_pipeline_diagnostic_v1",long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length,long_tasks:Object.freeze(LONG_TASKS.map(row=>Object.freeze({...row}))),loads:Object.freeze([...LOAD_DIAGNOSTICS.values()].map(row=>Object.freeze({...row}))),scheduler_unchanged:false,module_order_unchanged:true,strategy_core_waits_removed:true,strategy_core_aether_first:true,strategy_core_task_yield:"MESSAGE_CHANNEL",surgical_probe_406411:true}),
     marketDemandModules:MARKET_DEMAND_MODULES.slice(),
     market_lazy_cycle_guard:true,
     same_application:true,
