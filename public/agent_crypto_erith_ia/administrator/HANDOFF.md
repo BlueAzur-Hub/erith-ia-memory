@@ -1,19 +1,21 @@
 # Agent-Crypto — Handoff
 
-Build **40.6.401** · rollback **40.6.400** · Market Core **38.15.11**.
+Build **40.6.402** · rollback **40.6.401** · Market Core **38.15.11**.
 
-Objectif unique : obtenir une preuve propriétaire par propriétaire avant toute chirurgie Cold Boot / PRE-AETHER.
+Objectif : vérifier que la contention Cold Boot baisse sans perdre de fonction.
 
 Test Firefox :
-1. Ctrl+F5 et vérifier **Build 40.6.401**.
-2. Utiliser normalement souris / scroll / panneaux ; ne pas rester immobile.
-3. Après stabilisation, ouvrir **Rapport de démarrage** → **Actualiser** → **Copier**.
-4. Fournir le rapport complet.
+1. Ctrl+F5 et vérifier **Build 40.6.402**.
+2. Utiliser immédiatement souris / scroll / panneaux.
+3. Vérifier que **Auto Reader** devient actif plus tôt.
+4. Vérifier Marché, Graphique, Oracle, Aether et Strategy A.
+5. Ne pas ouvrir GitHub Memory au début : il ne doit plus se charger automatiquement.
+6. Ensuite ouvrir GitHub Memory et utiliser son bouton manuel : la fonction doit rester disponible.
+7. Ouvrir **Rapport de démarrage** → **Actualiser** → **Copier**.
 
-Le rapport doit maintenant contenir :
-- **COLD BOOT OWNERS · SYNC / SETTLE** ;
-- **PARSER / AETHER CHECKPOINTS** ;
-- Consultation First ;
-- Evidence wiring / reason.
-
-Strategy A, Market Core, Math, Aether métier, Oracle, Lecture Technique, REDIVIDER et Storage restent inchangés.
+Attendu :
+- owner GitHub Memory absent de la liste Cold Boot ;
+- Auto Reader start vers **7/19** ;
+- instrumentation SYNC / SETTLE toujours présente ;
+- Strategy Evidence reste explicit-demand-only ;
+- aucune régression Market Core / Strategy / Math / Aether / LT / REDIVIDER.
