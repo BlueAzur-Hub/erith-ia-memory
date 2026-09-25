@@ -1,52 +1,41 @@
-# Agent-Crypto — Residency Pipeline Diagnostic
+# Agent-Crypto — Strategy Core Priority Scheduler Recovery
 
-Build **40.6.408** · parent / rollback **40.6.407** · Market Core **38.15.11**.
+Build **40.6.409** · parent **40.6.408** · rollback sain **40.6.407** · Market Core **38.15.11**.
 
-## Nature
+## Correction unique
 
-Version **diagnostique uniquement**.
+40.6.408 a prouvé que `yieldMain(160)` + `sleep(18)` entre les modules Strategy Core pouvaient dériver jusqu'à plusieurs dizaines de secondes.
 
-Aucun changement :
-- ordre des modules ;
-- valeurs de pause / yield du scheduler ;
-- Strategy A métier, seuils, Cost Gate, Risk Governor, Paper ;
-- Auto A / autostart ;
-- découplage Simulation / Evidence ;
-- résumé léger des 9 Gates ;
-- Market Core, Math, Aether, Oracle, Lecture Technique, REDIVIDER, Storage.
+40.6.409 retire uniquement ces deux attentes dans la boucle des **8 modules Strategy Core**.
 
-Aucun ordre réel.
+Conservés :
+- même ordre des 8 modules ;
+- même `loadOne()` séquentiel ;
+- mêmes modules ;
+- mêmes règles Strategy / Auto A ;
+- même découplage Simulation / Evidence ;
+- même Market Core 38.15.11 ;
+- même sonde Residency Pipeline de 40.6.408.
 
-## Sonde
+Les schedulers Secondary, TRADUS et Market Demand ne sont pas modifiés.
 
-`post-boot-runtime-loader.js` mesure maintenant pour chaque module Strategy Core et Postboot :
+## Preuve attendue
 
-- `queue_wait_ms` : cycle-start → load-start ;
-- `yield_wait_ms` : durée réelle du `yieldMain()` ;
-- `sleep_wait_ms` : durée réelle de la pause demandée ;
-- `resource_fetch_ms` : Resource Timing requestStart/fetchStart → responseEnd ;
-- `eval_load_event_ms` : responseEnd → événement load du script ;
-- transfer/encoded/decoded size ;
-- nextHopProtocol ;
-- cache hint ;
-- chevauchement Long Task si l'API navigateur est disponible.
+Dans `RESIDENCY PIPELINE DIAGNOSTIC` :
+- `queue_wait_ms` Strategy doit devenir quasi nul ;
+- `yield_wait_ms` Strategy = 0 ;
+- `sleep_wait_ms` Strategy = 0 ;
+- `Strategy Core ready` doit fortement avancer si le diagnostic 40.6.408 était correct.
 
-Le Rapport de démarrage ajoute :
-
-**RESIDENCY PIPELINE DIAGNOSTIC · 40.6.408**
+Les éventuels coûts `eval/load_event_ms` restants seront traités séparément seulement s'ils persistent.
 
 ## Test Firefox
 
 1. Ctrl+F5.
-2. Vérifier **Build 40.6.408 · Administrator**.
-3. Ne pas ouvrir Simulation, Evidence ou GitHub Memory pendant le premier boot.
-4. Utiliser normalement souris / scroll / cockpit.
-5. Laisser le cockpit se stabiliser.
-6. Ouvrir **Rapport de démarrage → Actualiser → Copier**.
-7. Envoyer :
-   - RESIDENCY PIPELINE DIAGNOSTIC ;
-   - POSTBOOT MODULE COST TRACE ;
-   - TOP MARK GAPS ;
-   - READINESS EVENT TRACE.
+2. Vérifier **Build 40.6.409 · Administrator**.
+3. Ne pas ouvrir Evidence au premier boot.
+4. Attendre la stabilisation.
+5. Rapport de démarrage → Actualiser → Copier.
+6. Envoyer `READINESS EVENT TRACE`, `POSTBOOT MODULE COST TRACE`, `RESIDENCY PIPELINE DIAGNOSTIC`, `TOP MARK GAPS`.
 
-**STOP : ne corriger aucun owner avant lecture de cette preuve.**
+**STOP : aucune autre optimisation avant cette preuve.**

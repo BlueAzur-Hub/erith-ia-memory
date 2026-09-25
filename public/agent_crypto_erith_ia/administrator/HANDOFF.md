@@ -1,40 +1,24 @@
 # Agent-Crypto — Handoff
 
-Build **40.6.408** · rollback **40.6.407** · Market Core **38.15.11**.
+Build **40.6.409** · parent **40.6.408** · rollback **40.6.407**.
 
-## Objet
+## Une seule variable
 
-Mesurer pourquoi certains modules passent des dizaines de secondes entre
-`cycle-start` et `load-end`, sans modifier leur comportement.
+Suppression de `yieldMain(160)` + `sleep(18)` **uniquement entre les 8 modules Strategy Core**.
 
-## Diagnostic attendu
+## Invariants
 
-Pour chaque module Strategy/Postboot :
-
-- queue wait ;
-- yield wait ;
-- sleep wait ;
-- Resource Timing ;
-- évaluation / load-event tail ;
-- cache / transfer / protocole ;
-- Long Task overlap si supporté par Firefox.
-
-## Protections
-
-- `.407` reste le checkpoint sain ;
+- ordre des modules inchangé ;
+- chargement séquentiel inchangé ;
+- Strategy métier inchangée ;
 - Auto A inchangé ;
-- Simulation/Evidence inchangés ;
-- aucune modification métier ;
-- aucun réordonnancement ;
-- aucun preload ;
-- aucun timer récurrent ;
-- PerformanceObserver uniquement pour `longtask` si supporté ;
-- aucun réseau métier ou stockage ajouté.
+- Evidence inchangé ;
+- Secondary / TRADUS / Market Demand inchangés ;
+- Market Core 38.15.11 inchangé ;
+- sonde 40.6.408 conservée.
 
-## Test
+## PASS attendu
 
-Ctrl+F5 → attendre stabilisation → Rapport de démarrage → Actualiser → Copier.
+`queue/yield/sleep` Strategy proches de zéro et `Strategy Core ready` plus tôt, sans régression fonctionnelle.
 
-Ne pas ouvrir les preuves complètes avant la première copie du rapport.
-
-**Aucune 40.6.409 avant analyse du rapport 40.6.408.**
+**Aucune 40.6.410 avant analyse terrain 40.6.409.**
