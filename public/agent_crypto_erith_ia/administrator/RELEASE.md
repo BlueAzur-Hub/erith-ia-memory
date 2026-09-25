@@ -1,20 +1,21 @@
-# Agent-Crypto — Cold Boot Ownership Diagnostic
+# Agent-Crypto — Cold Boot Contention Recovery
 
-Build **40.6.401** · parent **40.6.400** · Market Core **38.15.11**.
+Build **40.6.402** · parent **40.6.401** · Market Core **38.15.11**.
 
-But : mesurer avant de réordonner.
+Preuve 40.6.401 :
+- PRE-AETHER et script Aether : ~0 s mesuré ;
+- Auto Reader start : owner 18/20, ~166 ms sync ;
+- GitHub Memory initial state : ~33 095 ms async settle ;
+- Strategy A, Aether, Market, Oracle et Math fonctionnels au terrain.
 
-Cette build ne modifie aucun seuil, aucune décision Strategy A, aucun scheduler métier, Aether, Math, Oracle, Lecture Technique, REDIVIDER ou Storage.
+Changement borné 40.6.402 :
+- Auto Reader runtime déplacé immédiatement après son render : **7/19** ;
+- auto-load GitHub Shared Memory retiré du Cold Boot ;
+- bouton manuel GitHub Memory conservé ;
+- instrumentation 40.6.401 conservée intégralement.
 
-Instrumentation ajoutée :
-- durée **synchrone** de chacun des 20 owners Cold Boot ;
-- durée de **settle async** quand l'owner retourne une Promise ;
-- marqueurs PRE-AETHER début/fin ;
-- marqueurs début/fin d'évaluation du script Aether ;
-- marqueurs fin du stack direct, DOMContentLoaded et window load ;
-- snapshot Consultation First ;
-- mode / reason_last de Strategy Evidence dans le rapport.
+Inchangés : Strategy A métier/seuils, Market Core 38.15.11, Math, Aether, Oracle, Lecture Technique, REDIVIDER, Storage schemas.
 
-Aucun nouvel observer, aucun timer récurrent, aucun réseau métier, aucun ordre.
+Aucun nouveau timer, observer, owner réseau, ordre réel ou wallet.
 
-Terrain Firefox : **PENDING**. Ouvrir « Rapport de démarrage », Actualiser, puis Copier après stabilisation en utilisant l'interface normalement.
+Terrain Firefox : **PENDING**. Régression = rollback **40.6.401**.
