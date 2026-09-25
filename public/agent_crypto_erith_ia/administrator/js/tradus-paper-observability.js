@@ -240,7 +240,6 @@
   }
 
   function publish(row = null, source = "event") {
-    if (!mounted) mount();
     const snapshot = buildSnapshot(row, source);
     if (!snapshot) return null;
     lastSnapshot = snapshot;
@@ -295,11 +294,8 @@
   });
   globalThis.AgentCryptoTradusPaperObservability = api;
 
+  // 40.6.405 — observabilité automatique sans construction de panneau.
   if (typeof document !== "undefined") {
     document.addEventListener(SOURCE_EVENT, event => queueMicrotask(() => publish(event?.detail, "tradus_event")));
-    const boot = () => { if (mount()) publish(null, "mount"); };
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, {once:true}); else boot();
-    window.addEventListener("pageshow", () => { if (mount()) publish(null, "pageshow"); });
-    document.addEventListener("click", () => { if (!mounted && mount()) publish(null, "late_mount"); }, {capture:true});
   }
 })();

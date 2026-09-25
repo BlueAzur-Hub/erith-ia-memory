@@ -1,21 +1,26 @@
 # Agent-Crypto — Handoff
 
-Build **40.6.404** · rollback **40.6.403** · Market Core **38.15.11**.
+Build **40.6.405** · rollback **40.6.404** · Market Core **38.15.11**.
 
-Objectif : nommer les modules responsables des longs blocages postboot sans modifier leur comportement.
+Test principal : vérifier l'automatisation sans toucher à Simulation.
 
-Test Firefox :
-1. Ctrl+F5 et vérifier **Build 40.6.404**.
-2. Utiliser l'interface normalement pendant le démarrage.
-3. Ne pas ouvrir GitHub Memory ni Strategy Evidence au premier passage.
-4. Après stabilisation : **Rapport de démarrage → Actualiser → Copier**.
-5. Fournir le rapport complet.
+1. Ctrl+F5 et vérifier **Build 40.6.405**.
+2. **Ne pas ouvrir Simulation** pendant le démarrage.
+3. Utiliser normalement le cockpit.
+4. Vérifier ensuite que Strategy A est déjà **AUTO A ACTIF** / en attente marché ou Cost Gate, sans clic DÉMARRER.
+5. Vérifier que le workspace Strategy A est actif automatiquement.
+6. Ouvrir Simulation seulement après cette vérification : les panneaux doivent alors apparaître sans démarrer le moteur.
+7. Rapport de démarrage → Actualiser → Copier.
 
-Sections prioritaires :
-- **POSTBOOT MODULE COST TRACE** ;
-- **TOP MARK GAPS · >= 250 ms** ;
-- **READINESS EVENT TRACE**.
+À comparer avec 40.6.404 :
+- Strategy Core total et temps d'arrivée ;
+- Auto A autostart marker ;
+- POSTBOOT MODULE COST TRACE ;
+- absence des gros coûts Replay au boot ;
+- absence des gros coûts TRADUS avant premier événement ;
+- Postboot runtime ready ;
+- réactivité Firefox.
 
-Critère : isoler les 1 à 3 fichiers dont cycle_ms/load_ms expliquent les freezes de plusieurs secondes.
+STOP opérateur : s'il a été utilisé explicitement dans la session, l'autostart le respecte.
 
-Aucune correction fonctionnelle n'est incluse dans 40.6.404.
+Aucun ordre réel.
