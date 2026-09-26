@@ -37,6 +37,7 @@ MAX_PER_SOURCE = 50
 # Additive contract only: Aether Watch / Window Manager / presentation are untouched.
 EVENT_CORE_BUILD = "40.6.418"
 EVENT_CORE_SCHEMA = "atlas_news_event_core_v1"
+TAXONOMY_BUILD = "40.6.421"
 EVENT_CLUSTER_WINDOW_HOURS = 48
 EVENT_CLUSTER_ENTITY_WINDOW_HOURS = 48
 
@@ -515,12 +516,82 @@ def detect_sectors(text: str, matched: list[str]) -> list[str]:
     return sectors[:8]
 
 
-def detect_event(text: str) -> tuple[str, str, int, str]:
+GENERIC_RECAP_HEADLINE_RE = re.compile(
+    r"\b(what happened in crypto today|what happened today in crypto|crypto today|today in crypto|daily crypto recap|crypto daily recap)\b",
+    re.I,
+)
+ETF_HEADLINE_RE = re.compile(r"\betfs?\b", re.I)
+ETF_FLOW_HEADLINE_RE = re.compile(
+    r"\b(flow|flows|inflow|inflows|outflow|outflows|redemption|redemptions|streak|flux|entree|entrees|sortie|sorties|"
+    r"turns? (?:positive|green)|turned (?:positive|green)|adds?|added|takes? in|took in|draws?|drew|"
+    r"erases?|erased)\b",
+    re.I,
+)
+ONCHAIN_MOVEMENT_HEADLINE_RE = re.compile(
+    r"\b(bitcoin|btc|ethereum|ether|eth|wallet|wallets|address|addresses|on[- ]?chain)\b"
+    r".*\b(moved|moves|movement|transfer|transfers|transferred|sending|sent|shifted|shifts|deposit|deposits|"
+    r"deposited|withdraw|withdraws|withdrew|withdrawn|transfert|transferts|deplace|deplaces|deplacee|deplacees)\b",
+    re.I,
+)
+REGULATION_HEADLINE_RE = re.compile(
+    r"\b(regulation|regulatory|regulator|sec|cftc|mica|lawsuit|court|enforcement|clarity act|genius act|"
+    r"market structure bill|digital asset market structure|sanction|justice)\b",
+    re.I,
+)
+
+
+def detect_event_text(text: str) -> tuple[str, str, int, str]:
     padded = f" {semantic_text(text)} "
     for event_id, label, base_score, phrases, direction in EVENT_RULES:
         if any(f" {normalize_text(phrase)} " in padded for phrase in phrases):
             return event_id, label, base_score, direction
     return "general", "Information de marché à qualifier", 46, "orientation indéterminée"
+
+
+def detect_event(headline: str, summary: str = "") -> tuple[str, str, int, str]:
+    """Classify the story owner before incidental context.
+
+    40.6.421 Taxonomy Truth:
+    - headline semantics own the event type;
+    - a generic daily recap cannot become Regulation/Justice from one body mention;
+    - explicit ETF flow language beats incidental regulatory context;
+    - plain on-chain transfers are not Justice by default;
+    - body text is only a fallback when the headline has no event owner.
+    """
+    headline_text = semantic_text(headline)
+    if GENERIC_RECAP_HEADLINE_RE.search(headline_text):
+        return "general", "Information de marché à qualifier", 46, "orientation indéterminée"
+    if ETF_HEADLINE_RE.search(headline_text) and ETF_FLOW_HEADLINE_RE.search(headline_text):
+        return "etf_flow", "ETF / flux institutionnels", 78, "flux de demande/offre à qualifier ; causalité non présumée"
+    if ONCHAIN_MOVEMENT_HEADLINE_RE.search(headline_text) and not REGULATION_HEADLINE_RE.search(headline_text):
+        return "onchain_movement", "Mouvement on-chain / transferts", 64, "flux on-chain à qualifier ; causalité non présumée"
+
+    headline_event = detect_event_text(headline_text)
+    if headline_event[0] != "general":
+        return headline_event
+    return detect_event_text(summary)
+
+
+def taxonomy_topics(matched: list[str], event_id: str, headline: str) -> list[str]:
+    topics = list(dict.fromkeys(str(value) for value in matched))
+    headline_text = semantic_text(headline)
+    if event_id in {"general", "onchain_movement", "etf_flow"} and not REGULATION_HEADLINE_RE.search(headline_text):
+        topics = [value for value in topics if value not in {"regulation", "regulation_market"}]
+    if event_id == "etf_flow":
+        for value in ("money_flow", "institutional"):
+            if value not in topics:
+                topics.append(value)
+    return topics
+
+
+def taxonomy_driver_domains(combined: str, matched: list[str], event_id: str, headline: str) -> list[str]:
+    domains = driver_domains_for_text(combined, matched)
+    headline_text = semantic_text(headline)
+    if event_id in {"general", "onchain_movement", "etf_flow"} and not REGULATION_HEADLINE_RE.search(headline_text):
+        domains = [value for value in domains if value != "regulation"]
+    if event_id == "etf_flow" and "institutional_flows" not in domains:
+        domains.append("institutional_flows")
+    return list(dict.fromkeys(domains))
 
 
 def freshness(published_at: str) -> dict[str, Any]:
@@ -671,8 +742,11 @@ def analyze_item(item: dict[str, Any]) -> dict[str, Any] | None:
     if score < threshold:
         return None
 
-    combined = f"{item.get('headline', '')} {item.get('summary', '')}"
-    event_id, event_label, event_base, direction = detect_event(combined)
+    headline = str(item.get("headline", "") or "")
+    summary_text = str(item.get("summary", "") or "")
+    combined = f"{headline} {summary_text}"
+    event_id, event_label, event_base, direction = detect_event(headline, summary_text)
+    matched = taxonomy_topics(matched, event_id, headline)
     assets = detect_assets(combined)
     sectors = detect_sectors(combined, matched)
     fresh = freshness(item.get("published_at", ""))
@@ -707,7 +781,7 @@ def analyze_item(item: dict[str, Any]) -> dict[str, Any] | None:
     source_host = urllib.parse.urlsplit(item.get("url", "")).netloc.replace("www.", "") or urllib.parse.urlsplit(next((s.url for s in SOURCES if s.id == item.get("source_id")), "")).netloc
     published = parse_date(item.get("published_at", ""))
     now_iso = utc_now().isoformat()
-    driver_domains = driver_domains_for_text(combined, matched)
+    driver_domains = taxonomy_driver_domains(combined, matched, event_id, headline)
 
     source_tier, source_tier_label = event_core_source_tier(item)
 
@@ -730,6 +804,7 @@ def analyze_item(item: dict[str, Any]) -> dict[str, Any] | None:
         "driver_domains": driver_domains, "driver_coverage_build": BUILD, "causal_claim": False,
         "observation_only": True,
         "event_core_build": EVENT_CORE_BUILD, "event_core_schema": EVENT_CORE_SCHEMA,
+        "taxonomy_build": TAXONOMY_BUILD,
         "canonical_topic": event_label, "article_ids": [f"feed_{fingerprint}"], "article_count": 1,
         "cluster_reason": "single_article",
         "source_tier": source_tier, "source_tier_label": source_tier_label,
@@ -798,6 +873,7 @@ def merge_event(base: dict[str, Any], other: dict[str, Any], cluster_reason: str
     merged["confirmations"] = max(int(base.get("confirmations", 1)), int(other.get("confirmations", 1)), len(names))
     merged["event_core_build"] = EVENT_CORE_BUILD
     merged["event_core_schema"] = EVENT_CORE_SCHEMA
+    merged["taxonomy_build"] = TAXONOMY_BUILD
     merged["cluster_reason"] = cluster_reason
     merged["last_seen_at"] = max(str(base.get("last_seen_at", "")), str(other.get("last_seen_at", "")))
     merged["evidence"] = dict(base.get("evidence") or {})
@@ -847,15 +923,18 @@ def refresh_previous_asset_derivation(event_value: Any) -> dict[str, Any]:
     story text remain untouched; only deterministic derived fields are refreshed.
     """
     event = dict(event_value) if isinstance(event_value, dict) else {}
-    combined = f"{event.get('headline', '')} {event.get('body', '')}"
+    headline = str(event.get("headline", "") or "")
+    body = str(event.get("body", "") or "")
+    combined = f"{headline} {body}"
     source_group = str(event.get("source_group") or "unknown")
     score, matched = relevance({
-        "headline": event.get("headline", ""),
-        "summary": event.get("body", ""),
+        "headline": headline,
+        "summary": body,
         "source_group": source_group,
     })
     threshold = 5 if source_group in ("world", "finance") else 4
-    event_id, event_label, event_base, direction = detect_event(combined)
+    event_id, event_label, event_base, direction = detect_event(headline, body)
+    matched = taxonomy_topics(matched, event_id, headline)
     assets = detect_assets(combined)
     sectors = detect_sectors(combined, matched)
     impact_score = event_base + min(12, max(0, score - threshold) * 2)
@@ -873,10 +952,11 @@ def refresh_previous_asset_derivation(event_value: Any) -> dict[str, Any]:
     event["sectors"] = sectors
     event["relevance_score"] = score
     event["matched_topics"] = matched
-    event["driver_domains"] = driver_domains_for_text(combined, matched)
+    event["driver_domains"] = taxonomy_driver_domains(combined, matched, event_id, headline)
     event["driver_coverage_build"] = BUILD
     event["impact"] = {"score": impact_score, "level": impact_level(impact_score)}
     event["semantic_refresh_build"] = EVENT_CORE_BUILD
+    event["taxonomy_build"] = TAXONOMY_BUILD
 
     article_ids = list(event.get("article_ids") or event.get("merged_event_ids") or [event.get("id")])
     event["article_ids"] = [value for value in dict.fromkeys(article_ids) if value]
@@ -1174,7 +1254,39 @@ def self_test() -> int:
     assert reg is not None and reg["event_type"] == "market_structure_regulation"
     assert "regulation" in reg["driver_domains"]
 
-    summary = build_summary([treasury, etf, reg], [{"status": "ok"}])
+    taxonomy_etf = analyze_item({
+        "source_group": "crypto", "source_trust": 60,
+        "headline": "Bitcoin ETFs Notch Seven-Day Winning Streak as 2026 Flows Turn Green",
+        "summary": "Bitcoin ETFs drew nearly $3 billion while post-Clarity Act losses were erased.",
+        "published_at": utc_now().isoformat(), "source_name": "Taxonomy Fixture", "source_id": "taxonomy_etf",
+        "url": "https://example.com/taxonomy-etf",
+    })
+    assert taxonomy_etf is not None and taxonomy_etf["event_type"] == "etf_flow"
+    assert "institutional_flows" in taxonomy_etf["driver_domains"]
+    assert "regulation" not in taxonomy_etf["driver_domains"]
+    assert taxonomy_etf["taxonomy_build"] == TAXONOMY_BUILD
+
+    taxonomy_recap = analyze_item({
+        "source_group": "crypto", "source_trust": 54,
+        "headline": "Here’s what happened in crypto today",
+        "summary": "Daily trends impacting Bitcoin, blockchain, DeFi, Web3 and crypto regulation.",
+        "published_at": utc_now().isoformat(), "source_name": "Taxonomy Fixture", "source_id": "taxonomy_recap",
+        "url": "https://example.com/taxonomy-recap",
+    })
+    assert taxonomy_recap is not None and taxonomy_recap["event_type"] == "general"
+    assert "regulation" not in taxonomy_recap["driver_domains"]
+
+    taxonomy_onchain = analyze_item({
+        "source_group": "crypto", "source_trust": 60,
+        "headline": "$161 Million in Decade-Old Bitcoin Has Moved in Just Two Weeks",
+        "summary": "Four ancient wallets moved 1,971 BTC; one carried an old lawsuit tag.",
+        "published_at": utc_now().isoformat(), "source_name": "Taxonomy Fixture", "source_id": "taxonomy_onchain",
+        "url": "https://example.com/taxonomy-onchain",
+    })
+    assert taxonomy_onchain is not None and taxonomy_onchain["event_type"] == "onchain_movement"
+    assert "regulation" not in taxonomy_onchain["driver_domains"]
+
+    summary = build_summary([treasury, etf, reg, taxonomy_etf, taxonomy_recap, taxonomy_onchain], [{"status": "ok"}])
     assert summary["driver_coverage"]["macro_liquidity"]["events_72h"] >= 1
     assert summary["driver_coverage"]["institutional_flows"]["events_72h"] >= 1
     assert summary["driver_coverage"]["regulation"]["events_72h"] >= 1
@@ -1184,7 +1296,8 @@ def self_test() -> int:
     assert VERSION == "V1.1-alpha.26.47.5"
     assert EVENT_CORE_BUILD == "40.6.418"
     assert EVENT_CORE_SCHEMA == "atlas_news_event_core_v1"
-    print("Atlas News Sentinel canonical 40.3.89 self-test: OK")
+    assert TAXONOMY_BUILD == "40.6.421"
+    print("Atlas News Sentinel canonical 40.3.89 + Taxonomy Truth 40.6.421 self-test: OK")
     return 0
 
 

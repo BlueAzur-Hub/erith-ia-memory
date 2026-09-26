@@ -84,6 +84,23 @@ jobs:
           print(f"NEWS EVENT CORE 40.6.418 PASS · events={len(events)} · articles={core.get('articles')} · clustered={core.get('clustered_articles')} · bitget_clusters={len(bitget_security)}")
           PY
 
+      - name: Validate Taxonomy Truth 40.6.421
+        run: |
+          python - <<'PY'
+          import json, re
+          from pathlib import Path
+          data=json.loads(Path("public/agent_crypto_erith_ia/data/news/latest.json").read_text(encoding="utf-8"))
+          events=[e for e in data.get("events",[]) if isinstance(e,dict)]
+          missing=[e.get("event_id") for e in events if e.get("taxonomy_build")!="40.6.421"]
+          recap=[e.get("event_id") for e in events if "what happened in crypto today" in str(e.get("headline") or "").lower() and e.get("event_type")!="general"]
+          onchain=[e.get("event_id") for e in events if re.search(r"decade-old bitcoin.*moved",str(e.get("headline") or ""),re.I) and e.get("event_type")!="onchain_movement"]
+          etf=[e.get("event_id") for e in events if re.search(r"etfs?.*(flows?|streak)",str(e.get("headline") or ""),re.I) and e.get("event_type")!="etf_flow"]
+          false_reg=[e.get("event_id") for e in events if e.get("event_type") in {"general","onchain_movement","etf_flow"} and "regulation" in (e.get("driver_domains") or []) and not re.search(r"\b(regulation|regulatory|sec|cftc|mica|lawsuit|court|enforcement|clarity act|genius act)\b",str(e.get("headline") or ""),re.I)]
+          if missing or recap or onchain or etf or false_reg:
+              raise SystemExit(f"Taxonomy Truth failed: missing={missing[:5]} recap={recap[:5]} onchain={onchain[:5]} etf={etf[:5]} false_reg={false_reg[:5]}")
+          print(f"NEWS TAXONOMY TRUTH 40.6.421 PASS · events={len(events)}")
+          PY
+
       - name: Build native-French operator display contract
         id: native_news_fr
         run: python public/agent_crypto_erith_ia/tools/atlas_news_native_fr_404291.py --require-native-fr
