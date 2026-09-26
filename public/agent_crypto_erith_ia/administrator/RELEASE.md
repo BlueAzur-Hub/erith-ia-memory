@@ -1,72 +1,40 @@
-# Agent-Crypto — Aether True Late Load
+# Agent-Crypto — Aether External Wake Decoupling
 
-Build **40.6.416** · parent **40.6.415** · rollback **40.6.415** · Market Core **38.15.11**.
+Build **40.6.415** · parent **40.6.414** · rollback **40.6.414** · Market Core **38.15.11**.
 
-## Intention unique
+## Parent 40.6.414 — preuve Firefox
 
-Corriger uniquement l'ordre de chargement Aether.
+La 40.6.414 est retenue comme checkpoint fonctionnel : Decision Board active YES, rendered 4, deferred 25, deduped 20, forced 1, errors 0 ; Strategy READY ; Postboot READY.
+Performance parent : Consultation 61,63 s · Strategy Core 66,38 s · Postboot runtime 109,72 s · system-hydrated 193–199 s · POSTBOOT TIMER drift 30 256 ms.
 
-Le Fil Crypto demandait la priorité suivante :
+## Intention unique 40.6.415
 
-1. prix / Livecheck ;
-2. Market ;
-3. Graphique ;
-4. Math Core ;
-5. seulement ensuite Aether.
+Empêcher l'ancien propriétaire `index.html#atlasDebtSettlementRuntime` de réveiller Aether pendant la fenêtre critique de boot.
 
-La 40.6.415 gardait encore `aether.js` dans le stack parser direct puis tentait de contrôler ses réveils. La 40.6.416 retire cette résidence précoce.
+Correction :
+- réveil externe au DOMContentLoaded bloqué pendant le boot ;
+- pulse Astro/Celestial conservé ; son appel Aether est autorisé seulement après `postboot-runtime-ready` ;
+- retour de visibilité : refresh forcé conservé seulement après Postboot ;
+- aucun nouveau timer, observer, fetch owner ou stockage ;
+- rapport : `AETHER EXTERNAL WAKE · 40.6.415` avec compteurs skipped/allowed.
 
-## Correction
+## Protections
 
-- suppression du `<script src="./js/aether.js">` parser-résident ;
-- `consultation-first-406286.js` devient le propriétaire automatique unique du chargement `aether.js` ;
-- chargement automatique après `consultation-ready` ;
-- fallback borné existant conservé ;
-- hover/focus ne peuvent plus charger Aether prématurément ;
-- clic explicite opérateur conservé ;
-- les marques `aether-script-before` / `aether-script-after` sont désormais émises au vrai moment du chargement dynamique ;
-- le gate `POSTBOOT_READY_ONLY` introduit en 40.6.415 est retiré : il n'a plus de raison d'exister si Aether n'est plus chargé trop tôt ;
-- Celestial / visibilité réutilisent simplement Aether s'il existe déjà ; avant son chargement, leurs appels sont des no-op.
+Market Core 38.15.11, Decision Board .414, Aether métier/géométrie, Chronos/Astro/Celestial, Atlas/CURRENT/N+1, Strategy A/Paper/Gates, Oracle, Math, Lecture Technique, Storage, Shared Memory, Window Manager/F11 : inchangés.
 
-## Ce qui ne change pas
+## Validation statique
 
-- contenu du Fil Aether ;
-- News Sentinel ;
-- traduction FR/EN ;
-- ranking / sélection des News ;
-- Aether métier ;
-- Market Core 38.15.11 ;
-- Graphique ;
-- Math Core ;
-- Atlas / CURRENT ;
-- Oracle ;
-- Strategy A / Paper / Gates ;
-- Lecture Technique ;
-- Storage / Shared Memory ;
-- aucun ordre réel.
-
-## Preuve statique
-
-- `index.html` ne contient plus aucun chargement direct de `./js/aether.js` ;
-- `consultation-first-406286.js` : syntaxe PASS ;
-- `atlasDebtSettlementRuntime` : syntaxe PASS ;
-- aucun nouveau timer récurrent ;
-- aucun nouvel observer ;
-- aucun nouveau fetch owner ;
-- aucun nouveau fichier `index-40.6.416.html` n'est créé.
+- atlasDebtSettlementRuntime : syntaxe PASS ;
+- rapport de démarrage inline : syntaxe PASS ;
+- setInterval / MutationObserver / fetch() dans le propriétaire : topologie inchangée ;
+- identité Administrator : 40.6.415 ;
+- snapshot immutable : index-40.6.415.html.
 
 ## Test Firefox
 
-Ctrl+F5 → confirmer **Build 40.6.416** → laisser le démarrage travailler → Rapport → Actualiser → Copier.
-
-Le résultat attendu est simple :
-
-- Market / Graphique / Market Snapshot / Math Core avant Aether ;
-- `Aether script start` et `Aether script end` postérieurs à `Consultation prête` ;
-- plus de chargement Aether à ~0,6 s ;
-- plus de `aether-ready · reason=already-loaded` avant Consultation ;
-- VEILLE apparaît seulement après le chargement tardif Aether.
+Ctrl+F5 → confirmer Build 40.6.415 → laisser booter → Rapport → Actualiser → Copier.
+Vérifier Decision Board .414 toujours active/errors 0, section AETHER EXTERNAL WAKE présente, skipped >= 1 avant Postboot, allowed seulement après Postboot, puis comparer les temps et surtout la dérive POSTBOOT TIMER au parent 30 256 ms.
 
 ## Stop point
 
-Ne pas modifier encore le contenu News / français / rotation. D'abord valider l'ordre de chargement.
+Ne pas ouvrir .416 avant lecture du terrain .415.
