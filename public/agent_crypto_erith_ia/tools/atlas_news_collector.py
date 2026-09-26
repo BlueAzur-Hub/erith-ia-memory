@@ -38,7 +38,7 @@ MAX_PER_SOURCE = 50
 EVENT_CORE_BUILD = "40.6.417"
 EVENT_CORE_SCHEMA = "atlas_news_event_core_v1"
 EVENT_CLUSTER_WINDOW_HOURS = 48
-EVENT_CLUSTER_ENTITY_WINDOW_HOURS = 36
+EVENT_CLUSTER_ENTITY_WINDOW_HOURS = 48
 
 USER_AGENT = (
     "ERITHIA-NewsSentinel/1.0 "
@@ -751,15 +751,49 @@ def deduplicate(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def refresh_previous_asset_derivation(event_value: Any) -> dict[str, Any]:
-    """Recompute derived tags and normalize Event Core fields before archive carry-forward."""
+    """Recompute current semantic derivations before archive carry-forward.
+
+    40.6.417 FINALIZE: an old archive row must not keep a stale event_type/impact/
+    sector forever after the classifier is corrected. Source evidence and immutable
+    story text remain untouched; only deterministic derived fields are refreshed.
+    """
     event = dict(event_value) if isinstance(event_value, dict) else {}
-    event["assets"] = detect_assets(f"{event.get('headline', '')} {event.get('body', '')}")
+    combined = f"{event.get('headline', '')} {event.get('body', '')}"
+    source_group = str(event.get("source_group") or "unknown")
+    score, matched = relevance({
+        "headline": event.get("headline", ""),
+        "summary": event.get("body", ""),
+        "source_group": source_group,
+    })
+    threshold = 5 if source_group in ("world", "finance") else 4
+    event_id, event_label, event_base, direction = detect_event(combined)
+    assets = detect_assets(combined)
+    sectors = detect_sectors(combined, matched)
+    impact_score = event_base + min(12, max(0, score - threshold) * 2)
+    if assets:
+        impact_score += min(5, len(assets))
+    if "geopolitics" in matched and "macro" in matched:
+        impact_score += 6
+    impact_score = max(0, min(100, impact_score))
+
+    event["event_type"] = event_id
+    event["event_label"] = event_label
+    event["canonical_topic"] = event_label
+    event["direction"] = direction
+    event["assets"] = assets
+    event["sectors"] = sectors
+    event["relevance_score"] = score
+    event["matched_topics"] = matched
+    event["driver_domains"] = driver_domains_for_text(combined, matched)
+    event["driver_coverage_build"] = BUILD
+    event["impact"] = {"score": impact_score, "level": impact_level(impact_score)}
+    event["semantic_refresh_build"] = EVENT_CORE_BUILD
+
     article_ids = list(event.get("article_ids") or event.get("merged_event_ids") or [event.get("id")])
     event["article_ids"] = [value for value in dict.fromkeys(article_ids) if value]
     event["article_count"] = len(event["article_ids"])
     event["event_core_build"] = EVENT_CORE_BUILD
     event["event_core_schema"] = EVENT_CORE_SCHEMA
-    event.setdefault("canonical_topic", event.get("event_label") or event.get("event_type") or "Information de marché")
     event.setdefault("cluster_reason", "archive_carry_forward")
     return event
 
@@ -929,6 +963,21 @@ def self_test() -> int:
     }
     hack_vc_event = analyze_item(hack_vc)
     assert hack_vc_event is None or hack_vc_event["event_type"] != "security"
+    stale_hack_vc = {
+        "id": "stale-hack-vc",
+        "headline": hack_vc["headline"],
+        "body": hack_vc["summary"],
+        "source_group": "crypto",
+        "event_type": "security",
+        "event_label": "Hack / exploit / sécurité",
+        "impact": {"score": 99, "level": "Critique"},
+        "sectors": ["Cybersécurité"],
+        "assets": ["SOL"],
+    }
+    refreshed_hack_vc = refresh_previous_asset_derivation(stale_hack_vc)
+    assert refreshed_hack_vc["event_type"] != "security"
+    assert "Cybersécurité" not in refreshed_hack_vc["sectors"]
+    assert int(refreshed_hack_vc["impact"]["score"]) < 85
 
     # 40.6.417 — differently worded Bitget breach stories become one real event.
     bitget_a = {
