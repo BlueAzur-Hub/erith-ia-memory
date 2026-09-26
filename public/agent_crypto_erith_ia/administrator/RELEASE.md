@@ -1,67 +1,60 @@
-# Agent-Crypto — Aether News-Set Exposure Gate
+# Agent-Crypto — News Flow Direction Truth + Role Quality Evidence
 
-Build **40.6.419** · parent **40.6.418** · rollback **40.6.418** (Aether ribbon gate only) · Market Core **38.15.11**.
+Build **40.6.420** · parent **40.6.419** · Market Core **38.15.11**.
 
-## Objet
+## Terrain acquis avant cette version
 
-Corriger la causalité de démarrage du fil Aether, sans nouveau placeholder.
+**40.6.419 AETHER NEWS-SET EXPOSURE GATE = PASS Firefox.**
 
-Le défaut observé en 40.6.418 est précis :
+Le système principal charge d'abord. News Sentinel termine son cycle. Le fil Aether apparaît ensuite déjà alimenté. Cette mécanique est **gelée** et n'est pas modifiée par 40.6.420.
 
-`market ready → aetherCorePaint() → system/network → News`
+## Audit News Sentinel — P0 prouvé
 
-Aether devenait donc visible avant que News Sentinel ait fini son cycle initial. Les messages `EN ATTENTE`, `NON DISPONIBLE` ou `News Sentinel non chargée` ne corrigeaient pas le défaut : ils ne faisaient que rendre visible l'absence de données.
+Le snapshot terrain 40.6.419 montrait deux défauts de vérité opérateur :
 
-## Contrat 40.6.419
+1. une storyline ETF positive / inflows pouvait être accompagnée de **ETF / FLUX SORTANTS · OFFRE / VENTE** ;
+2. **SOLIDITÉ DE LA LECTURE DU RÔLE** affichait un total (ex. 78/100) alors que ses composantes visibles restaient à `—`.
 
-Nouvel ordre :
+### Cause 1 — direction de flux
 
-`menu normal → marché/système → News Sentinel → lot News opérateur prêt → exposition Aether`
+`newsMarketDemandContext()` mettait l'événement sélectionné et tous les événements de contexte dans le même panier, puis `newsMarketBestRawRole()` prenait le meilleur score de preuve.
 
-Règles :
-- le code Aether reste résident tôt pour ses API et le Window Manager ;
-- le **ruban opérateur Aether reste invisible** pendant `idle/loading` ;
-- le menu natif `Relancer / Rafraîchir / Décision / Sources / Chronos` reste visible pendant cette attente ;
-- le déclencheur n'est **pas une News unique** : il faut un lot opérateur pluriel, minimum **2 événements qualifiés** ;
-- quand le lot est prêt, Aether apparaît déjà rempli et démarre sa cadence existante ;
-- une archive précédente/cachée peut être utilisée si le cycle est terminé et que le lot qualifié existe ;
-- aucun nouveau texte d'attente n'est présenté dans le ruban opérateur.
+Donc un article de contexte `outflow` mieux scoré pouvait renverser une storyline sélectionnée `inflow`.
 
-## Chirurgie
+### Cause 2 — composantes de solidité invisibles
 
-### `administrator/js/aether.js`
-- `aetherMarkMarketReady()` ne peint plus Aether ;
-- News reste réveillée par son propriétaire existant ;
-- ajout d'un gate `aetherNewsSetReadiness()` / `aetherExposeWhenNewsSetReady()` ;
-- `renderAether()`, `renderAetherVeille()` et `aetherCorePaint()` refusent le rendu opérateur avant exposition ;
-- le premier rendu survient après règlement du cycle News et constitution d'un lot pluriel.
+Le renderer écrivait dans des IDs hérités `*_40237` alors que le HTML canonique expose `newsMarketRoleQuality_<composante>`.
 
-### `administrator/admin-ribbons.css`
-- avant `data-aether-news-set-ready="1"` : menu natif forcé visible, ruban Aether forcé invisible ;
-- après le signal : le gate disparaît et **la cadence Aether historique démarre depuis sa première frame** ;
-- aucune géométrie, couleur, durée ou animation post-ready n'est modifiée.
+Le score était calculé, mais sa preuve visuelle n'était pas raccordée.
 
-## Protections
+## Correction 40.6.420
 
-Inchangés :
-- Market Core **38.15.11** ;
-- Watch / Window Manager / géométrie / F11 ;
-- News collector / Event Core / relevance gate 40.6.418 ;
-- Oracle / Lecture Technique / REDIVIDER / Storage ;
-- Strategy A métier / thresholds / Cost Gate ;
-- PAPER only · G3 PENDING · G9 LOCKED ;
-- aucun ordre réel.
+### Flux
+- un flux explicite dans **l'événement sélectionné** a priorité ;
+- les événements liés ne servent qu'en fallback/contexte ;
+- si le contexte contient réellement des flux entrants **et** sortants, aucun gagnant arbitraire n'est choisi :
+  **ETF / FLUX MIXTES · INDÉTERMINÉ** ;
+- le score de preuve ne peut plus, à lui seul, inverser le sens d'un flux.
 
-Aucun nouveau timer, MutationObserver, stockage ou requête métier.
+### Solidité de lecture
+Les sept composantes canoniques sont de nouveau écrites : Preuve source, Sources distinctes, Timestamp, Actif, Mécanisme, Timeline, Marché.
 
-## Preuve Firefox attendue
+## Non modifié
+Collector News Sentinel / Event Core / relevance gate ; Aether 40.6.419 ; Watch / Window Manager / F11 ; Market Core 38.15.11 ; Oracle / LT / Atlas CURRENT ; Strategy / TRADUS / Storage. Aucun nouveau fetch, timer, observer ou stockage. PAPER only · G3 PENDING · G9 LOCKED.
 
-1. Ctrl+F5 → **Build 40.6.419**.
-2. Observer le header pendant le boot : **menu normal uniquement**, aucun fil Aether vide.
-3. Laisser News Sentinel finir son cycle.
-4. À la disponibilité du lot qualifié, Aether doit apparaître **déjà rempli de News**.
-5. Vérifier ensuite la séquence du fil (plusieurs News) et les contrôles Window Manager/F11.
+## Terrain Firefox attendu
+1. Ctrl+F5 → **Build 40.6.420**.
+2. Confirmer que le boot Aether reste celui validé en 40.6.419.
+3. Ouvrir News Sentinel / NEWS→MARCHÉ.
+4. Une storyline ETF positive ne doit plus être inversée en `FLUX SORTANTS` par un contexte opposé.
+5. Si les deux sens sont réellement présents : `FLUX MIXTES · INDÉTERMINÉ`.
+6. **SOLIDITÉ DE LA LECTURE DU RÔLE** doit montrer ses composantes et leurs détails.
+
+## Roadmap
+- **40.6.421 — Taxonomy Truth**
+- **40.6.422 — Storyline Clustering / Diversity**
+- **40.6.423 — Criticality vs Operator Relevance**
+- **40.6.424 — Langue / présentation**, seulement après la sémantique.
 
 ## Stop
-
-Si Aether apparaît avant le lot News, **40.6.419 = FAIL**. Ne pas remplacer le défaut par un autre message d'attente.
+Ne pas retoucher le chargement Aether. Une intention : vérité directionnelle + preuve visible.

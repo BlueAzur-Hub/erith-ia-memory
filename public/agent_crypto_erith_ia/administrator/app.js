@@ -23532,16 +23532,72 @@ function newsMarketInitialCatalyst(selected, contextEvents) {
   return newsMarketBestRawRole(eligible,[NEWS_MARKET_CAUSAL_ROLE_RULES.catalyst_positive,NEWS_MARKET_CAUSAL_ROLE_RULES.catalyst_negative]);
 }
 
-function newsMarketDemandContext(selected, contextEvents) {
-  return newsMarketBestRawRole(
-    [selected,...(contextEvents||[])].filter(Boolean),
-    [
-      NEWS_MARKET_MONEY_FLOW_RULES.flow_up,
-      NEWS_MARKET_MONEY_FLOW_RULES.flow_down,
-      NEWS_MARKET_CAUSAL_ROLE_RULES.flow_up,
-      NEWS_MARKET_CAUSAL_ROLE_RULES.flow_down
-    ]
+function newsMarketFlowRules406420(){
+  return [
+    NEWS_MARKET_MONEY_FLOW_RULES.flow_up,
+    NEWS_MARKET_MONEY_FLOW_RULES.flow_down,
+    NEWS_MARKET_CAUSAL_ROLE_RULES.flow_up,
+    NEWS_MARKET_CAUSAL_ROLE_RULES.flow_down
+  ];
+}
+function newsMarketFlowPolarity406420(role){
+  const id=String(role?.id||"").toLowerCase();
+  const direction=String(role?.direction||"").toUpperCase();
+  if(id.includes("inflow")||direction.includes("DEMANDE"))return 1;
+  if(id.includes("outflow")||direction.includes("OFFRE")||direction.includes("VENTE"))return -1;
+  return 0;
+}
+function newsMarketFlowCandidates406420(events){
+  const candidates=[];
+  for(const event of events||[]) for(const rule of newsMarketFlowRules406420()){
+    const match=newsMarketRawRoleMatch(event,rule);
+    if(match)candidates.push({match,event,polarity:newsMarketFlowPolarity406420(match)});
+  }
+  candidates.sort((a,b)=>
+    Number(b?.match?.evidence?.score??-1)-Number(a?.match?.evidence?.score??-1)
+    ||Number(b?.match?.source_count||1)-Number(a?.match?.source_count||1)
+    ||Date.parse(b?.match?.event_time||0)-Date.parse(a?.match?.event_time||0)
   );
+  return candidates;
+}
+function newsMarketFlowSummary406420(events,scope){
+  const candidates=newsMarketFlowCandidates406420(events);
+  const up=candidates.filter(row=>row.polarity===1);
+  const down=candidates.filter(row=>row.polarity===-1);
+  if(up.length&&down.length){
+    const a=up[0].match,b=down[0].match;
+    const scoreA=Number(a?.evidence?.score),scoreB=Number(b?.evidence?.score);
+    const score=Number.isFinite(scoreA)&&Number.isFinite(scoreB)?Math.min(scoreA,scoreB):Number.isFinite(scoreA)?scoreA:Number.isFinite(scoreB)?scoreB:null;
+    const names=new Set([a?.source_name,b?.source_name].map(v=>String(v||"").trim()).filter(Boolean));
+    const times=[Date.parse(a?.event_time||0),Date.parse(b?.event_time||0)].filter(Number.isFinite);
+    return {
+      id:"mixed-institutional-flows-406420",
+      label:"ETF / FLUX MIXTES",
+      direction:"INDÉTERMINÉ",
+      event_id:null,
+      headline:"Contexte de flux contradictoire",
+      headline_original:null,
+      source_name:"Contexte multi-événements",
+      source_count:Math.max(2,names.size),
+      event_time:times.length?new Date(Math.max(...times)).toISOString():null,
+      evidence:{score,level:"CONTRADICTOIRE"},
+      causal_claim:false,
+      context_scope:scope,
+      context_conflict:true,
+      positive_role:a,
+      negative_role:b
+    };
+  }
+  const best=(up[0]||down[0])?.match||null;
+  return best?{...best,context_scope:scope,context_conflict:false}:null;
+}
+function newsMarketDemandContext(selected, contextEvents) {
+  // 40.6.420 — selected-event truth has priority. Context may enrich only when
+  // the selected event has no explicit flow. Opposite context directions become
+  // MIXED instead of an arbitrary winner chosen solely by evidence score.
+  const direct=newsMarketFlowSummary406420(selected?[selected]:[],"selected-event");
+  if(direct)return direct;
+  return newsMarketFlowSummary406420((contextEvents||[]).filter(Boolean),"related-events");
 }
 
 const NEWS_MARKET_SUPPORTING_AMPLIFIER_RULE = Object.freeze({
@@ -23613,7 +23669,7 @@ function newsMarketOperatorIntelligence(current=null, context={}) {
   const leverageTruth=adjustedBase.amplifier?(Number(adjustedBase.amplifier?.evidence?.score||0)>=65?"QUALIFIÉ":"PARTIEL"):(driverTruth.leverage?.status||"NON QUALIFIÉ");
   const macroTruth=driverTruth.macro_liquidity?.status||"NON QUALIFIÉ";
   const causalChain={macro_liquidity:macroTruth,institutional_flows:flowTruth,technical_trigger:technicalTruth,leverage_amplifier:leverageTruth,market_reaction:marketTruth40372,causal_claim:false};
-  const role=catalyst?"CATALYSEUR POSSIBLE":flow?`FLUX ${flow.direction}`:technical?"DÉCLENCHEUR TECHNIQUE":adjustedBase.amplifier?`AMPLIFICATEUR ${adjustedBase.amplifier.direction}`:"RÔLE NON QUALIFIÉ";
+  const role=catalyst?"CATALYSEUR POSSIBLE":flow?(flow.context_conflict?"FLUX MIXTES":`FLUX ${flow.direction}`):technical?"DÉCLENCHEUR TECHNIQUE":adjustedBase.amplifier?`AMPLIFICATEUR ${adjustedBase.amplifier.direction}`:"RÔLE NON QUALIFIÉ";
   return {
     schema:"atlas.news_to_market.operator_intelligence.v1",build:"40.2.35",status:"observed",event:mechanismEvent,lead_event:selected,
     event_role_pairing_build:"40.3.64",causal_role_truth_build:"40.3.72",base:adjustedBase,facts,mechanism,initial_catalyst:catalyst,technical_trigger:technical,flow,driver_truth_40_3_72:driverTruth,causal_chain_40_3_72:causalChain,supporting_amplifiers:supporting,market_confirmation:confirmation,
@@ -23713,7 +23769,7 @@ globalThis.AtlasNewsMarketReactionTimeline=Object.freeze({compute:newsMarketReac
 /* 40.2.37 — ROLE EVIDENCE QUALITY · quality of the reading, never causal probability. */
 function newsMarketUniqueRoleSources(narrative){const set=new Set();for(const r of narrative?.supporting_amplifiers||[]){const s=String(r?.source_name||"").trim().toLowerCase();if(s)set.add(s);}if(!set.size&&narrative?.event?.source_name)set.add(String(narrative.event.source_name).toLowerCase());return set.size;}
 function newsMarketRoleQuality(event=null,narrative=null){const n=narrative||newsMarketOperatorIntelligence(event);if(n?.status!=="observed")return {schema:"atlas.news_market.role_quality.v1",build:"40.2.37",status:"no-event",causal_probability:null};const e=n.base?.amplifier?.evidence||newsMarketEvidence(n.event);const sourceEvidence=Math.max(0,Math.min(30,(Number(e?.score)||0)*.30));const independentSources=newsMarketUniqueRoleSources(n);const confirmations=Math.min(15,(Math.min(independentSources,3)/3)*15);const timestamp=newsMarketEventTime(n.event)?10:0;const asset=(n.event?.assets||[]).length?10:0;const mechanism=n.base?.amplifier||n.flow||n.technical_trigger?15:0;const timeline=typeof newsMarketReactionTimeline==="function"?newsMarketReactionTimeline(n.event,n):null;const timelinePoints=timeline?.status==="ready"?(timeline.points||[]).filter(p=>Number.isFinite(p?.price)).length:0;const timelineScore=timelinePoints>=4?10:timelinePoints>=2?5:0;const market=n.market_confirmation?.count>=5?10:n.market_confirmation?.count?5:0;const total=Math.round((sourceEvidence+confirmations+timestamp+asset+mechanism+timelineScore+market)*10)/10;const label=total>=85?"FORTE":total>=65?"ÉLEVÉE":total>=45?"MOYENNE":"FAIBLE";return {schema:"atlas.news_market.role_quality.v1",build:"40.2.37",status:"ready",score:total,label,components:{source_evidence:{points:sourceEvidence,max:30,detail:`preuve source ${e?.score??"—"}/100`},independent_sources:{points:confirmations,max:15,detail:`${independentSources} source${independentSources>1?"s":""} distincte${independentSources>1?"s":""} détectée${independentSources>1?"s":""}`},timestamp:{points:timestamp,max:10,detail:timestamp?"timestamp exploitable":"timestamp absent"},asset:{points:asset,max:10,detail:asset?"actif explicite":"actif absent"},mechanism:{points:mechanism,max:15,detail:mechanism?n.mechanism?.title||"mécanisme explicite":"mécanisme non qualifié"},timeline:{points:timelineScore,max:10,detail:`${timelinePoints}/5 points temporels disponibles`},market:{points:market,max:10,detail:n.market_confirmation?.breadth||"marché indisponible"}},causal_probability:null,causal_probability_calculated:false,causal_claim:false};}
-function renderNewsMarketRoleQuality(event=null,narrative=null){const root=document.getElementById("newsMarketRoleQuality");if(!root)return null;const q=newsMarketRoleQuality(event,narrative);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(q.status!=="ready"){set("newsMarketRoleQualityScore","INFORMATION INSUFFISANTE");set("newsMarketRoleQualityNote","Aucun score causal n’est calculé.");root.dataset.state="missing";return q;}set("newsMarketRoleQualityScore",`${q.label} · ${q.score.toFixed(1)}/100`);set("newsMarketRoleQualityNote","Solidité de la lecture du rôle · ce score n’est PAS une probabilité de causalité.");for(const [key,row] of Object.entries(q.components)){set(`newsMarketRoleQuality_${key}_40237`,`${row.points.toFixed(1)}/${row.max}`);set(`newsMarketRoleQuality_${key}_note_40237`,row.detail);}set("newsMarketCausalProbability","NON CALCULÉE");root.dataset.state="ready";root.dataset.quality=q.label.toLowerCase();return q;}
+function renderNewsMarketRoleQuality(event=null,narrative=null){const root=document.getElementById("newsMarketRoleQuality");if(!root)return null;const q=newsMarketRoleQuality(event,narrative);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(q.status!=="ready"){set("newsMarketRoleQualityScore","INFORMATION INSUFFISANTE");set("newsMarketRoleQualityNote","Aucun score causal n’est calculé.");root.dataset.state="missing";return q;}set("newsMarketRoleQualityScore",`${q.label} · ${q.score.toFixed(1)}/100`);set("newsMarketRoleQualityNote","Solidité de la lecture du rôle · ce score n’est PAS une probabilité de causalité.");for(const [key,row] of Object.entries(q.components)){const value=`${row.points.toFixed(1)}/${row.max}`;set(`newsMarketRoleQuality_${key}`,value);set(`newsMarketRoleQuality_${key}_note`,row.detail);set(`newsMarketRoleQuality_${key}_40237`,value);set(`newsMarketRoleQuality_${key}_note_40237`,row.detail);}set("newsMarketCausalProbability","NON CALCULÉE");root.dataset.state="ready";root.dataset.quality=q.label.toLowerCase();return q;}
 globalThis.AtlasNewsMarketRoleQuality=Object.freeze({compute:newsMarketRoleQuality,render:renderNewsMarketRoleQuality,causal_probability_calculated:false,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
 
 
@@ -23723,6 +23779,22 @@ function newsMarketText(id){return String(document.getElementById(id)?.textConte
 function newsMarketCrossLayer(event=null,context={}){const n=context?.narrative||newsMarketOperatorIntelligence(event);if(n?.status!=="observed")return {schema:"atlas.news_market.cross_layer.v1",build:"40.2.38",status:"no-event",causal_claim:false};const timeline=typeof newsMarketReactionTimeline==="function"?newsMarketReactionTimeline(n.event,n):null;const quality=typeof newsMarketRoleQuality==="function"?newsMarketRoleQuality(n.event,n):null;const model=context?.model||null;const oracleBias=String(model?.bias||newsMarketText("atlasOracleHeroBias")||"INDISPONIBLE").toUpperCase();const oracleBull=Number.isFinite(Number(model?.bullStrength))?`Force hausse ${model.bullStrength}/100`:newsMarketText("atlasOracleBull")||"Oracle indisponible";const oracleRegime=newsMarketText("atlasOracleRegimeStatus")||"Régime indisponible";const atlasLine=Number.isFinite(Number(model?.directionScore))?`Momentum ${model?.atlas||""} · direction ${model.directionScore>=0?"+":""}${model.directionScore}/100`:newsMarketText("atlasOracleAtlas")||"Atlas indisponible";const newsDir=String(n.mechanism?.direction||"").toUpperCase();const marketPositive=Number(n.market_confirmation?.positive||0)>Number(n.market_confirmation?.negative||0);const newsBull=newsDir.includes("HAUSS");const newsBear=newsDir.includes("BAISS");const oracleBullish=oracleBias.includes("HAUSS");const oracleBearish=oracleBias.includes("BAISS");const atlasBullish=/momentum positif|direction \+/i.test(atlasLine);const atlasBearish=/momentum négatif|direction -/i.test(atlasLine);let convergence="COUVERTURE PARTIELLE";if(newsBull&&marketPositive&&oracleBullish&&atlasBullish)convergence="CONVERGENCE DESCRIPTIVE HAUSSIÈRE";else if(newsBear&&!marketPositive&&oracleBearish&&atlasBearish)convergence="CONVERGENCE DESCRIPTIVE BAISSIÈRE";else if((newsBull&&oracleBearish)||(newsBear&&oracleBullish))convergence="LECTURE MIXTE / CONTRADICTOIRE";else if(newsBull||newsBear)convergence="CONVERGENCE PARTIELLE";return {schema:"atlas.news_market.cross_layer.v1",build:"40.2.38",status:"ready",layers:{news:`${n.mechanism?.title||"Rôle non qualifié"} · ${n.mechanism?.direction||"indéterminé"}`,reaction:timeline?.status==="ready"?`${timeline.alignment} · ${timeline.alignment_basis||"fenêtre"} ${newsMarketFmtTimelinePct(timeline.alignment_delta_pct)}`:"Timeline indisponible",market:`${n.market_confirmation?.breadth||"Top 5 indisponible"} · ${n.market_confirmation?.focus||"actif indisponible"}`,oracle:`${oracleBias} · ${oracleRegime} · ${oracleBull}`,atlas:atlasLine},quality:quality?.status==="ready"?`${quality.label} · ${quality.score.toFixed(1)}/100`:"non qualifiée",convergence,conclusion:`${convergence} · ${n.market_confirmation?.breadth||"Top 5"} · ${timeline?.status==="ready"?timeline.alignment:"timeline —"}`,causal_claim:false};}
 function renderNewsMarketCrossLayer(event=null,context={}){const root=document.getElementById("newsMarketCrossLayer");if(!root)return null;const x=newsMarketCrossLayer(event,context);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(x.status!=="ready"){set("newsMarketCrossLayerVerdict","INFORMATION INSUFFISANTE");root.dataset.state="missing";return x;}for(const key of ["news","reaction","market","oracle","atlas"])set(`newsMarketCrossLayer_${key}_40238`,x.layers[key]);set("newsMarketCrossLayerQuality",x.quality);set("newsMarketCrossLayerVerdict",x.convergence);set("newsMarketCrossLayerNote",x.conclusion);set("decisionNewsExplanation",`${x.convergence} · ${x.layers.market}`);root.dataset.state="ready";root.dataset.convergence=x.convergence.toLowerCase();return x;}
 globalThis.AtlasNewsMarketCrossLayer=Object.freeze({compute:newsMarketCrossLayer,render:renderNewsMarketCrossLayer,independent_layers:true,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
+
+globalThis.AgentCryptoNewsSemanticTruth406420=Object.freeze({
+  build:"40.6.420",
+  scope:"News Sentinel / News→Market P0 semantic truth",
+  selected_event_flow_precedence:true,
+  opposite_context_flows_become_mixed:true,
+  arbitrary_evidence_winner_across_flow_polarities:false,
+  role_quality_canonical_component_ids:true,
+  collector_modified:false,
+  aether_modified:false,
+  new_fetch:false,
+  new_timer:false,
+  new_observer:false,
+  new_storage_owner:false,
+  automatic_order:false
+});
 
 
 

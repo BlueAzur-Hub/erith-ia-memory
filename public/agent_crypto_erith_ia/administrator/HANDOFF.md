@@ -1,38 +1,29 @@
 # Agent-Crypto — Handoff Seven
 
-Build **40.6.419** · parent **40.6.418** · Market Core **38.15.11**.
+Build **40.6.420** · parent **40.6.419** · Market Core **38.15.11**.
 
-## Pourquoi cette version
+## Clôture du fil courant
 
-40.6.418 a correctement livré le relevance gate News mais a raté le contrat de démarrage Aether : le ruban devenait visible avant les News et montrait des placeholders.
+**40.6.419 = PASS Firefox sur l'ordre de démarrage Aether.**
+Séquence acquise : `système → News Sentinel → lot News → Aether visible`. Cette mécanique est gelée.
 
-40.6.419 ne cherche plus à améliorer l'état vide. **Elle supprime son exposition.**
-
-## Invariant opérateur
-
-Avant la fin du cycle initial News :
-- menu normal visible ;
-- Aether techniquement résident mais visuellement absent ;
-- aucun `EN ATTENTE`, `NON DISPONIBLE` ou `News Sentinel non chargée` dans le ruban.
-
-Après News :
-- lot qualifié pluriel requis (>=2 événements) ;
-- Aether apparaît déjà rempli ;
-- cadence historique conservée.
+## 40.6.420
+- P0 direction de flux : l'événement sélectionné ne peut plus être renversé par un contexte opposé simplement parce que celui-ci a un meilleur score de preuve.
+- Contexte contradictoire : inflows + outflows => **FLUX MIXTES · INDÉTERMINÉ**.
+- P0 auditabilité : les composantes de **SOLIDITÉ DE LA LECTURE DU RÔLE** sont reconnectées aux IDs canoniques.
 
 ## Owners modifiés
-
-- `administrator/js/aether.js` — causalité / gate d'exposition.
-- `administrator/admin-ribbons.css` — garde de visibilité avant News-set-ready.
-- identité de build/release + snapshot.
+- `administrator/app.js`
+- identité build / release / snapshot
+- handoff / prompt de reprise
 
 ## Owners protégés
+Aether 40.6.419, News collector/Event Core, Market Core, Window Manager, F11, Oracle, LT, Strategy, Storage.
 
-News collector et Event Core 40.6.418, Market Core 38.15.11, Window Manager, Watch, géométrie/F11, Oracle, LT, Strategy, Storage.
+## Prochain ordre
+1. **40.6.421 Taxonomy Truth** — recap générique, on-chain movement, régulation/sécurité/macro.
+2. **40.6.422 Storyline Clustering / Diversity** — fusion des variantes ETF avant priorité.
+3. **40.6.423 Criticality vs Operator Relevance** — audit de la saturation 91–100.
+4. **40.6.424 Language/operator polish** si nécessaire.
 
-## Terrain
-
-Firefox uniquement :
-`Ctrl+F5 → menu normal reste stable → News finit → Aether apparaît déjà rempli`.
-
-Pas de nouvelle version cosmétique si ce contrat échoue.
+Terrain .420 : **PENDING Firefox**.
