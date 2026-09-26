@@ -1112,7 +1112,7 @@ def self_test() -> int:
     fbi_security = {
         "source_group": "world", "source_trust": 74,
         "headline": "Inside the FBI hack: Agents fearful and angry after 'dangerous' data breach",
-        "summary": "Federal agents discuss an internal data breach with no crypto or market mechanism.",
+        "summary": "Federal agents discuss an internal data breach unrelated to financial markets.",
         "published_at": utc_now().isoformat(), "source_name": "BBC World", "source_id": "bbc_world",
         "url": "https://example.com/fbi-breach",
     }
