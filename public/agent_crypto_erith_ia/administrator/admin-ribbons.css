@@ -1759,3 +1759,34 @@
   #atlasAetherStatusPanel .aether42-core section{display:block!important}
   #atlasAetherStatusPanel .aether42-card>footer{display:block!important}
 }
+
+/* ============================================================================
+   40.6.419 — AETHER NEWS-SET EXPOSURE GATE
+   Before News Sentinel has produced a settled plural operator set, the native
+   command/status lane remains the only visible lane. Aether stays technically
+   resident for APIs/Window Manager, but its ribbon cadence does not start.
+   Removing this gate after data readiness starts the existing 270 s cadence
+   from its first frame. Geometry, colors and post-ready cadence are unchanged.
+   ============================================================================ */
+body:not([data-aether-news-set-ready="1"]) #livecheck.command-bar>#btnLivecheck,
+body:not([data-aether-news-set-ready="1"]) #livecheck.command-bar>#btnRefresh,
+body:not([data-aether-news-set-ready="1"]) #livecheck.command-bar>#decisionCard,
+body:not([data-aether-news-set-ready="1"]) #livecheck.command-bar>#sourceActiveCard,
+body:not([data-aether-news-set-ready="1"]) #livecheck.command-bar>#sourceTimeCard{
+  animation:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+body:not([data-aether-news-set-ready="1"]) #atlasAetherRibbon{
+  animation:none!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+body:not([data-aether-news-set-ready="1"]) #atlasAetherRibbon *,
+body:not([data-aether-news-set-ready="1"]) #atlasAetherVeille,
+body:not([data-aether-news-set-ready="1"]) #atlasAetherSystem{
+  animation:none!important;
+  animation-play-state:paused!important;
+}
+

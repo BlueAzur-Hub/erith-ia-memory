@@ -1,39 +1,38 @@
 # Agent-Crypto — Handoff Seven
 
-Build **40.6.418** · parent **40.6.417** · rollback **40.6.417** · Market Core **38.15.11**.
+Build **40.6.419** · parent **40.6.418** · Market Core **38.15.11**.
 
-## État transmis
+## Pourquoi cette version
 
-40.6.417 a prouvé :
-- Aether Watch : PASS ;
-- menu / Window Manager : PASS ;
-- Event Core : actif ;
-- diversité News : amélioration réelle ;
-- défaut restant : shell précoce mais contenu tardif ;
-- défaut News : pertinence opérateur trop permissive sur certains articles génériques.
+40.6.418 a correctement livré le relevance gate News mais a raté le contrat de démarrage Aether : le ruban devenait visible avant les News et montrait des placeholders.
 
-40.6.418 traite **uniquement** ces deux points.
+40.6.419 ne cherche plus à améliorer l'état vide. **Elle supprime son exposition.**
 
-## Propriétaires modifiés
+## Invariant opérateur
 
-- `administrator/js/aether.js` : readiness de présentation + consommation du gate producteur.
-- `tools/atlas_news_collector.py` : market relevance gate + tri opérateur.
-- workflow News : validation du contrat 40.6.418.
-- identité release / build / entry.
+Avant la fin du cycle initial News :
+- menu normal visible ;
+- Aether techniquement résident mais visuellement absent ;
+- aucun `EN ATTENTE`, `NON DISPONIBLE` ou `News Sentinel non chargée` dans le ruban.
 
-## Protections absolues
+Après News :
+- lot qualifié pluriel requis (>=2 événements) ;
+- Aether apparaît déjà rempli ;
+- cadence historique conservée.
 
-Ne pas reconstruire Aether. Ne pas toucher sans preuve à :
-Market Core 38.15.11, Window Manager, géométrie/F11, Oracle, Lecture Technique, REDIVIDER, Storage, Strategy A métier.
+## Owners modifiés
 
-## Test suivant
+- `administrator/js/aether.js` — causalité / gate d'exposition.
+- `administrator/admin-ribbons.css` — garde de visibilité avant News-set-ready.
+- identité de build/release + snapshot.
 
-Firefox Ctrl+F5. Vérifier :
-- shell Aether immédiatement informatif ;
-- transition progressive vers vraies données ;
-- contrôles Window Manager/F11 intacts ;
-- FBI breach et avis administratif Fed non prioritaires opérateur ;
-- incidents crypto réels toujours présents ;
-- aucune perte de diversité / clustering.
+## Owners protégés
 
-Après cette preuve : décider séparément du chantier performance Strategy/Postboot. Ne pas le mélanger à 40.6.418.
+News collector et Event Core 40.6.418, Market Core 38.15.11, Window Manager, Watch, géométrie/F11, Oracle, LT, Strategy, Storage.
+
+## Terrain
+
+Firefox uniquement :
+`Ctrl+F5 → menu normal reste stable → News finit → Aether apparaît déjà rempli`.
+
+Pas de nouvelle version cosmétique si ce contrat échoue.

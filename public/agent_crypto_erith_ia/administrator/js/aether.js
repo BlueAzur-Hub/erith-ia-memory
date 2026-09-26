@@ -14,6 +14,8 @@
   const AETHER_MARQUEE_MIN_OVERFLOW_PX=48;
   const AETHER_MARQUEE_DELAY_S=0.55;
   const aetherVeilleState={index:0,kind:"alert",fingerprint:"",viewportWidth:0,last:null,storyEvent:null,storyContext:null,feedWasVisible:false};
+  const AETHER_NEWS_SET_MIN_EVENTS=2;
+  const aetherExposureState={newsSetReady:false,exposed:false,exposedAt:0,reason:"boot",status:"idle",events:0};
   // 40.6.386 — entity truth guard. LINK is an ambiguous English word/company token.
   // Trust it as the Chainlink asset only when the canonical story contains an explicit Chainlink anchor.
   // This prevents regulatory stories such as "OTC Link LLC" from entering Aether as false LINK crypto alerts.
@@ -299,6 +301,47 @@ function aetherNewsCanonicalEvent(event){
     const label=operatorStats.priority24>0?`${operatorStats.priority24} PRIORITAIRE${operatorStats.priority24>1?"S":""} 24H`:"VEILLE QUALIFIÉE";
     return{label,text:decision||"Surveillance",tone:globalTone,events:ranked,stats:operatorStats,archiveStats:stats,status,decision};
   }
+  function aetherNewsSetReadiness(){
+    let status="idle",startupSucceeded=false;
+    try{
+      if(typeof newsFeedState!=="undefined"){
+        status=String(newsFeedState?.status||"idle").trim().toLowerCase();
+        startupSucceeded=newsFeedState?.startupSucceeded===true;
+      }
+    }catch(_){}
+    const settled=status!=="idle"&&status!=="loading"&&status!=="unavailable";
+    let ranked=[];
+    if(settled){try{ranked=aetherVeilleEvents();}catch(_){ranked=[];}}
+    const ready=settled&&ranked.length>=AETHER_NEWS_SET_MIN_EVENTS;
+    return Object.freeze({ready,status,startupSucceeded,events:ranked.length,min_events:AETHER_NEWS_SET_MIN_EVENTS});
+  }
+  function aetherExposeWhenNewsSetReady(reason="news-set-ready"){
+    const readiness=aetherNewsSetReadiness();
+    aetherExposureState.status=readiness.status;
+    aetherExposureState.events=readiness.events;
+    aetherExposureState.newsSetReady=readiness.ready;
+    aetherExposureState.reason=reason;
+    if(!readiness.ready)return false;
+    if(!aetherExposureState.exposed){
+      aetherExposureState.exposed=true;
+      aetherExposureState.exposedAt=Date.now();
+      const body=document.body;
+      const root=document.documentElement;
+      if(body)body.dataset.aetherNewsSetReady="1";
+      if(root)root.dataset.aetherNewsSetReady="1";
+      const ribbon=document.getElementById("atlasAetherRibbon");
+      if(ribbon){ribbon.dataset.aetherNewsSetReady="1";ribbon.setAttribute("aria-hidden","false");}
+      aetherVeilleState.index=0;
+      aetherVeilleState.kind="alert";
+      aetherVeilleState.storyEvent=null;
+      aetherVeilleState.storyContext=null;
+      aetherVeilleState.feedWasVisible=false;
+      aetherVeilleState.fingerprint="";
+    }
+    aetherCorePaint();
+    return true;
+  }
+
   function aetherNewsMarketContext(currentEvent=null){
     try{
       const owner=globalThis.AtlasNewsToMarketOperatorIntelligence;
@@ -448,6 +491,7 @@ function aetherNewsCanonicalEvent(event){
     });
   }
   function renderAetherVeille(){
+    if(!aetherExposureState.exposed)return null;
     const host=document.getElementById("atlasAetherVeille"),meta=document.getElementById("atlasAetherVeilleMeta"),viewport=document.getElementById("atlasAetherVeilleViewport");
     if(!host||!meta||!viewport)return null;
     const current=aetherVeilleCurrent(),copy=host.querySelector("[data-aether-veille-copy]"),brand=host.querySelector(".atlas-aether-veille-brand"),marquee=host.querySelector(".atlas-aether-veille-marquee");
@@ -618,16 +662,20 @@ function aetherNewsCanonicalEvent(event){
         && status==="ok";
       const canonicalDisplayReady=events.length>0
         && events.every(aetherNewsContractReady);
-      if(status==="loading"||aetherNewsWake.attempted||typeof loadNewsLiveFeed!=="function")return Promise.resolve(false);
-      // 40.4.112: cached events are a continuity fallback, never proof that the current archive was fetched.
-      // Wake the existing News owner once on page start, even when a previous localStorage cache populated the ribbon.
-      if(runtimeFresh&&canonicalDisplayReady)return Promise.resolve(false);
+      if(aetherNewsWake.attempted||typeof loadNewsLiveFeed!=="function")return Promise.resolve(false);
+      // 40.6.419 — cached/previous News may be used, but Aether is exposed only after a settled plural operator set exists.
+      // If News is already fully ready, consume it without forcing another collection.
+      if(runtimeFresh&&canonicalDisplayReady){
+        try{aetherExposeWhenNewsSetReady("news-already-ready");}catch(_){}
+        return Promise.resolve(true);
+      }
+      if(status==="loading")return Promise.resolve(false);
       aetherNewsWake.attempted=true;
       aetherNewsWake.inflight=Promise.resolve(loadNewsLiveFeed({force:true,automatic:false}))
         .catch(()=>false)
         .finally(()=>{
           aetherNewsWake.inflight=null;
-          try{aetherVeilleState.fingerprint="";renderAether();renderAetherVeille();}catch(_){}
+          try{aetherVeilleState.fingerprint="";aetherExposeWhenNewsSetReady("news-owner-settled");}catch(_){}
         });
       return aetherNewsWake.inflight;
     }catch(_){return Promise.resolve(false);}
@@ -1412,6 +1460,7 @@ function aetherNewsMarketSemantic(){
     }
   }
   function renderAether(){
+    if(!aetherExposureState.exposed)return null;
     const s=aetherSnapshot();
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
     // 40.4.130 — restore the healthy semantic INFO contract. No global INFO marquee.
@@ -1514,15 +1563,21 @@ function aetherNewsMarketSemantic(){
     return window.requestAnimationFrame(()=>window.requestAnimationFrame(()=>callback()));
   }
   function aetherCorePaint(){
+    if(!aetherExposureState.exposed)return false;
     aetherLazyState.corePainted=true;
     renderAether();
     renderAetherSystem();
     renderAetherVeille();
+    return true;
   }
   function aetherScheduleNews(){
     if(aetherLazyState.newsScheduled)return;
     aetherLazyState.newsScheduled=true;
-    aetherIdle(()=>{void aetherWakeNewsSentinel();});
+    aetherIdle(()=>{
+      Promise.resolve(aetherWakeNewsSentinel()).finally(()=>{
+        try{aetherExposeWhenNewsSetReady("news-schedule-settled");}catch(_){}
+      });
+    });
   }
   function aetherScheduleNetwork({force=false}={}){
     if(aetherLazyState.networkScheduled||document.hidden)return;
@@ -1535,7 +1590,8 @@ function aetherNewsMarketSemantic(){
   function aetherMarkMarketReady(reason="market"){
     aetherLazyState.marketReady=true;
     aetherLazyState.reason=reason;
-    aetherCorePaint();
+    // 40.6.419 — invert the old causality: do not paint Aether here.
+    // Primary UI stays native while system/network work runs; News settles first, then exposes Aether.
     aetherScheduleNetwork({force:false});
   }
   function aetherBindOracleCompletion(){
@@ -1571,10 +1627,11 @@ function aetherNewsMarketSemantic(){
 
 
   function refreshAether({force=false}={}){
-    // Explicit/manual refresh keeps the historical public API contract; automatic boot does not call it.
-    aetherCorePaint();
-    void aetherWakeNewsSentinel();
-    return aetherSystemRefresh({force});
+    // 40.6.419 — manual refresh respects the same exposure contract as automatic boot.
+    const news=Promise.resolve(aetherWakeNewsSentinel()).finally(()=>{
+      try{aetherExposeWhenNewsSetReady("manual-refresh-news-settled");}catch(_){}
+    });
+    return Promise.allSettled([aetherSystemRefresh({force}),news]);
   }
 
   function bindAether(){
@@ -1602,7 +1659,7 @@ function aetherNewsMarketSemantic(){
       quickPanel.addEventListener("click",openDetail);
       quickPanel.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openDetail();}});
     }
-    window.addEventListener("erith:operator-priority-release",()=>{renderAether();renderAetherSystem();renderAetherVeille();},{passive:true});
+    window.addEventListener("erith:operator-priority-release",()=>{if(aetherExposureState.exposed){renderAether();renderAetherSystem();renderAetherVeille();}},{passive:true});
     const feed=document.getElementById("atlasAetherVeille");
     if(feed&&feed.dataset.aetherNewsNavBound!=="1"){
       feed.dataset.aetherNewsNavBound="1";
@@ -1812,10 +1869,15 @@ function aetherNewsMarketSemantic(){
     aether_attention_workbench_readability_lock:true,
     aether_attention_workbench_storage:false,
     aether_attention_workbench_global_window_manager:false,
-    aether_attention_boot_order:"market_graph -> aether_core -> system_weather -> news_history_on_demand",
+    aether_attention_boot_order:"market_graph -> system_weather -> news_set_ready -> aether_operator_exposure",
     aether_attention_boot_eager_refresh:false,
-    aether_attention_progressive_readiness:true,
-    aether_attention_progressive_readiness_build:"40.6.418",
+    aether_attention_news_set_exposure_gate:true,
+    aether_attention_news_set_exposure_gate_build:"40.6.419",
+    aether_attention_news_set_min_events:AETHER_NEWS_SET_MIN_EVENTS,
+    aether_attention_news_set_ready:()=>aetherNewsSetReadiness(),
+    aether_attention_operator_exposed:()=>aetherExposureState.exposed,
+    aether_attention_progressive_readiness:false,
+    aether_attention_progressive_readiness_build:"40.6.418_SUPERSEDED",
     aether_attention_progressive_readiness_network:false,
     aether_attention_progressive_readiness_timer:false,
     aether_attention_progressive_readiness_observer:false,
