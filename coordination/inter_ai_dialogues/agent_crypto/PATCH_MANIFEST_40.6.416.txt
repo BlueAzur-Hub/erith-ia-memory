@@ -1,0 +1,49 @@
+AGENT-CRYPTO PATCH MANIFEST
+===========================
+Build: 40.6.416
+Release: AETHER TRUE LATE LOAD
+Parent: 40.6.415
+Rollback: 40.6.415
+Market Core: 38.15.11
+
+INTENTION
+---------
+Fix loading order only: Market / Graph / Math before Aether. Do not redesign News content yet.
+
+FUNCTIONAL FILES
+----------------
+public/agent_crypto_erith_ia/administrator/index.html
+public/agent_crypto_erith_ia/administrator/js/consultation-first-406286.js
+public/agent_crypto_erith_ia/administrator/build.json
+public/agent_crypto_erith_ia/administrator/RELEASE.md
+
+STATIC PROOF
+------------
+Direct parser load of ./js/aether.js: 0
+consultation-first syntax: PASS
+atlasDebtSettlementRuntime syntax: PASS
+Old 40.6.415 POSTBOOT_READY_ONLY wake gate: retired
+Hover wake: false
+Focus wake: false
+Explicit operator click: preserved
+New index-40.6.416.html snapshot: NONE
+
+EXPECTED ORDER
+--------------
+Livecheck / Market / Graph / Market Snapshot / Math Core
+-> consultation-ready
+-> dynamic aether.js load
+-> Aether ready / VEILLE
+
+OUT OF SCOPE
+------------
+News selection, French/English policy, News ranking, Aether content, Strategy, Market Core, Atlas, Oracle, Math formulas.
+
+TERRAIN
+-------
+PENDING Firefox.
+Expected: Aether script start/end after Consultation ready; no Aether parser start around page entry.
+
+ZIP
+---
+AGENT_CRYPTO_AETHER_TRUE_LATE_LOAD_40.6.416.zip
