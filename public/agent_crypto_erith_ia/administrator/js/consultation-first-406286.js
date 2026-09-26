@@ -1,14 +1,14 @@
-/* Agent-Crypto Administrator — 40.6.286 AETHER FEED DATA-GATED ACTIVATION
-   Probe-only correction on top of Consultation First.
-   Graph and Market Flow readiness are now causally gated by the canonical market-ready mark,
-   so their timestamps cannot be emitted from placeholder/static DOM before market data exists.
-   Aether scheduling and all business logic remain unchanged. */
+/* Agent-Crypto Administrator — 40.6.416 AETHER TRUE LATE LOAD
+   Loading-order correction on top of Consultation First.
+   Aether is no longer expected to be parser-resident. The owner loads it only after the
+   primary consultation signals are ready, or after the bounded fallback. Explicit operator
+   click remains allowed; hover/focus no longer wake Aether early. Business logic is unchanged. */
 (()=>{
   "use strict";
   if(globalThis.AgentCryptoConsultationFirst406286)return;
 
-  const BUILD="40.6.286";
-  const AETHER_SRC="./js/aether.js?v=40.6.286";
+  const BUILD="40.6.416";
+  const AETHER_SRC="./js/aether.js?v=40.6.416";
   const MAX_CHECKS=120;
   const CHECK_MS=500;
   const state={checks:0,consultationReady:false,consultationReason:"",aetherState:"pending",aetherReason:"",signals:{}};
@@ -90,18 +90,23 @@
     const promise=new Promise(resolve=>{
       script.addEventListener("load",()=>{
         state.aetherState="ready";
+        try{globalThis.AgentCryptoBootProbe?.markOnce?.("aether-script-after",{build:BUILD,reason:state.aetherReason,aether_global:!!globalThis.AgentCryptoAether});}catch(_){}
         try{globalThis.AgentCryptoBootProbe?.markOnce?.("aether-ready",{build:BUILD,reason:state.aetherReason});}catch(_){}
         try{window.dispatchEvent(new CustomEvent("agent-crypto:aether-ready",{detail:{build:BUILD,reason:state.aetherReason}}));}catch(_){}
         resolve(true);
       },{once:true});
       script.addEventListener("error",()=>{
         state.aetherState="failed";
+        try{globalThis.AgentCryptoBootProbe?.markOnce?.("aether-script-after",{build:BUILD,reason:"load-error",aether_global:false});}catch(_){}
         try{window.dispatchEvent(new CustomEvent("agent-crypto:aether-failed",{detail:{build:BUILD,reason:state.aetherReason}}));}catch(_){}
         resolve(false);
       },{once:true});
     });
     script.__agentCryptoAetherPromise=promise;
-    if(!existing)document.body.appendChild(script);
+    if(!existing){
+      try{globalThis.AgentCryptoBootProbe?.markOnce?.("aether-script-before",{build:BUILD,reason:state.aetherReason,ready_state:document.readyState});}catch(_){}
+      document.body.appendChild(script);
+    }
     return promise;
   }
 
@@ -122,14 +127,6 @@
   }
 
   function bindExplicitDemand(){
-    document.addEventListener("pointerover",event=>{
-      const target=event.target instanceof Element?event.target.closest("#atlasAetherStatusToggle"):null;
-      if(target&&state.aetherState==="pending")void loadAether("operator-pointerover");
-    },{passive:true,capture:true});
-    document.addEventListener("focusin",event=>{
-      const target=event.target instanceof Element?event.target.closest("#atlasAetherStatusToggle"):null;
-      if(target&&state.aetherState==="pending")void loadAether("operator-focus");
-    },true);
     document.addEventListener("click",event=>{
       const target=event.target instanceof Element?event.target.closest("#atlasAetherStatusToggle"):null;
       if(!target||aetherAlreadyLoaded())return;
@@ -146,6 +143,6 @@
     build:BUILD,loadAether,
     snapshot:()=>Object.freeze({build:BUILD,consultation_ready:state.consultationReady,consultation_reason:state.consultationReason,signals:Object.freeze({...state.signals}),aether_state:state.aetherState,aether_reason:state.aetherReason,checks:state.checks,max_checks:MAX_CHECKS,check_ms:CHECK_MS}),
     order:Object.freeze(["shell-menu-chronos","market-graph-technical-top5-flow-snapshot-math","aether","postboot","strategy-evidence"]),
-    aether_parser_blocking:false,explicit_aether_demand:true,recurring_timer:false,bounded_probe_timer:true,observer:false,business_logic_changed:false,market_core_changed:false,book_lite:false,probe_causal_market_gate:Object.freeze(["graph-ready","market-flow-ready"])
+    aether_parser_blocking:false,aether_direct_parser_load:false,aether_load_owner:"consultation-first",aether_load_after_consultation:true,explicit_aether_demand:"click-only",hover_wake:false,focus_wake:false,recurring_timer:false,bounded_probe_timer:true,observer:false,business_logic_changed:false,market_core_changed:false,book_lite:false,probe_causal_market_gate:Object.freeze(["graph-ready","market-flow-ready"])
   });
 })();
