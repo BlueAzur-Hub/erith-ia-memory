@@ -1,24 +1,24 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.421",
+  "build": "40.6.422",
   "engine": "38.15.11",
-  "release": "NEWS TAXONOMY TRUTH",
+  "release": "AETHER 12/12 BATCH TRUTH",
   "published": true,
-  "status": "published_pending_firefox_421",
-  "parent_build": "40.6.420",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.421",
-  "administrator_build": "40.6.421",
-  "build_label": "Build 40.6.421 · Administrator",
+  "status": "published_pending_firefox_422",
+  "parent_build": "40.6.421",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.422",
+  "administrator_build": "40.6.422",
+  "build_label": "Build 40.6.422 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
-  "aether_modified": false,
+  "aether_modified": true,
   "atlas_current_modified": false,
   "oracle_modified": false,
   "lecture_technique_modified": false,
   "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": false,
+  "administrator_presentation_modified": true,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 puis confirmer Build 40.6.421. Vérifier que le boot Aether 40.6.419 reste PASS/frozen et que les garanties 40.6.420 restent intactes. Dans News Sentinel: (1) Winning Streak / Flows Turn Green => ETF / flux institutionnels; (2) Here’s what happened in crypto today => Information de marché à qualifier; (3) Decade-Old Bitcoin Has Moved => Mouvement on-chain / transferts.",
+  "terrain_pending": "Firefox: Ctrl+F5 puis confirmer Build 40.6.422. Laisser VEILLE dérouler visiblement 1/12 → 12/12, puis vérifier SYSTEM puis retour du menu sans bande noire. Pendant un lot, quitter l’onglet puis revenir: la cadence doit reprendre au même point sans sauter des News. Attendu diagnostic: 12 affichées, 12 uniques, 0 doublon, batch complete=true.",
   "terrain_proof": null,
-  "release_notes": "40.6.421 is a bounded News Sentinel taxonomy-truth repair. Event ownership is headline-first; explicit ETF-flow headlines outrank incidental regulatory context; generic daily recaps no longer inherit Regulation/Justice from body mentions; plain on-chain transfers receive a neutral on-chain movement taxonomy instead of Justice. Archive carry-forward is deterministically refreshed. Aether, Market Core, Oracle, LT, Atlas CURRENT, Strategy, Storage and the 40.6.420 flow/Role Quality repairs are unchanged.",
+  "release_notes": "40.6.422 repairs the Aether VEILLE reader itself. One VEILLE window now owns one frozen 12-story identity batch; rank/archive refreshes cannot change story N under the cursor. The entire command-bar cadence pauses while the document is hidden, so background-tab time cannot consume CSS phases while JS drops News pulses. Batch diagnostics expose displayed/unique/duplicates/completion. No new timer, observer, fetch owner, storage owner or trading path. News taxonomy 40.6.421, Market Core, Oracle, LT, Atlas CURRENT, Strategy and Storage remain unchanged.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5006,9 +5006,9 @@
     "terrain_observation": "Selected positive ETF story rendered FLUX MIXTES / INDÉTERMINÉ rather than false FLUX SORTANTS; all seven Role Quality components displayed values; consultation readiness reported READY and Aether ready."
   },
   "next_news_roadmap": {
-    "40.6.422": "storyline clustering/diversity — consolidate repeated ETF narratives before operator priority",
-    "40.6.423": "criticality vs operator relevance calibration — reduce 91–100 saturation without weakening source evidence",
-    "40.6.424": "language/operator-lane polish only if still needed after semantic terrain"
+    "40.6.423": "storyline clustering/diversity — consolidate repeated narratives before operator priority",
+    "40.6.424": "criticality vs operator relevance calibration",
+    "40.6.425": "language/operator-lane polish only after Aether and semantic terrain are stable"
   },
   "news_taxonomy_truth_406421": {
     "repair_in": "40.6.421",
@@ -5043,6 +5043,43 @@
     "new_fetch_owner": false,
     "new_timer": false,
     "new_observer": false,
+    "real_order": false,
+    "paper_only": true,
+    "terrain_required": true
+  },
+  "aether_batch_truth_406422": {
+    "repair_in": "40.6.422",
+    "audit_scope": "Aether VEILLE 12/12 runtime reader",
+    "owners": [
+      "public/agent_crypto_erith_ia/administrator/js/aether.js",
+      "public/agent_crypto_erith_ia/administrator/admin-ribbons.css"
+    ],
+    "terrain_symptom": "3–4 News repeated, then blank command-bar interval before native menu returns",
+    "evidence": "News Sentinel had 115 unique events while Aether contract claimed 12; current selection can produce 12 distinct events",
+    "root_causes": [
+      "document.hidden pulses were discarded while CSS 270 s cadence could continue",
+      "aetherVeilleEvents() was recalculated on every advance, so cursor index targeted a moving ranked list",
+      "validation asserted constants/timing but not 12 distinct story identities actually displayed before SYSTEM"
+    ],
+    "repairs": [
+      "freeze one 12-story identity batch for each VEILLE window",
+      "advance within frozen batch without wrap",
+      "pause complete command-bar CSS cadence while document is hidden",
+      "resume from exact phase when visible",
+      "publish batch diagnostics: expected/total/displayed/unique/duplicates/complete",
+      "flag batch violation if a full 12-story window exits before completion"
+    ],
+    "expected_batch_size": 12,
+    "no_new_timer": true,
+    "no_new_observer": true,
+    "fetch_owner_count_changed": false,
+    "storage_owner_changed": false,
+    "news_collector_changed": false,
+    "taxonomy_changed": false,
+    "market_core_modified": false,
+    "oracle_modified": false,
+    "atlas_current_modified": false,
+    "strategy_modified": false,
     "real_order": false,
     "paper_only": true,
     "terrain_required": true

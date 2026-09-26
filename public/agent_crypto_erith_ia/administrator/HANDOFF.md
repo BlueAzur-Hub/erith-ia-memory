@@ -1,33 +1,36 @@
 # Agent-Crypto — Handoff Seven
 
-Build **40.6.421** · parent **40.6.420** · Market Core **38.15.11**.
+Build **40.6.422 — AETHER 12/12 BATCH TRUTH**  
+Parent **40.6.421** · Market Core **38.15.11**.
 
-## Checkpoints gelés
-- **40.6.419 Aether boot = PASS Firefox**
-- **40.6.420 News Flow Direction + Role Quality = PASS Firefox**
-- PAPER only · G3 PENDING · G9 LOCKED
+## P0 courant
+Aether affichait 3–4 News, pouvait répéter les mêmes histoires, puis laisser une bande vide avant le retour du menu.
 
-## 40.6.421 — Taxonomy Truth
-Owner principal : `public/agent_crypto_erith_ia/tools/atlas_news_collector.py`
+## Cause isolée
+1. le CSS possédait la cadence 270 s ;
+2. JS possédait l'avance News ;
+3. `document.hidden` faisait jeter des pulses JS ;
+4. `aetherVeilleEvents()` était recalculé à chaque avance : l'index pointait une liste mouvante.
 
-Correction :
-- headline-first ;
-- ETF flow explicite > contexte réglementaire secondaire ;
-- recap générique ≠ Régulation / justice ;
-- mouvement on-chain ≠ Justice par défaut ;
-- carry-forward archive recalculé ;
-- fixtures + workflow guard.
+## 40.6.422
+- lot 12 identités figé par fenêtre VEILLE ;
+- pas de wrap dans le lot ;
+- cadence entière pause quand l'onglet est caché ;
+- reprise au même point ;
+- diagnostics batch + violation flag.
 
-Cas terrain :
-- Winning Streak / Flows Turn Green → **ETF / flux institutionnels**
-- Here’s what happened in crypto today → **Information de marché à qualifier**
-- Decade-Old Bitcoin Has Moved → **Mouvement on-chain / transferts**
+Owners :
+- `administrator/js/aether.js`
+- `administrator/admin-ribbons.css`
 
-## Zones protégées
-Aether, Market Core 38.15.11, Oracle, LT, Atlas CURRENT, Window Manager/F11, Strategy/TRADUS, Storage, Web Classique.
+## Protégé
+News collector / Taxonomy 40.6.421 · Market Core 38.15.11 · Oracle · LT · Atlas CURRENT · Strategy/TRADUS · Storage.
+
+## Test
+Firefox :
+**1/12 → … → 12/12 → SYSTEM → menu**, sans blackout.
+Tester aussi un aller-retour vers un autre onglet pendant VEILLE.
 
 ## Suite
-Si .421 PASS Firefox :
-1. **40.6.422 — Storyline Clustering / Diversity**
-2. **40.6.423 — Criticality vs Operator Relevance**
-3. **40.6.424 — langue / présentation** si nécessaire.
+Si PASS :
+**40.6.423 Storyline Clustering / Diversity**.

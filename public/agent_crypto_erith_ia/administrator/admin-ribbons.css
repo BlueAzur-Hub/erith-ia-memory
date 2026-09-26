@@ -1790,3 +1790,11 @@ body:not([data-aether-news-set-ready="1"]) #atlasAetherSystem{
   animation-play-state:paused!important;
 }
 
+/* 40.6.422 — AETHER 12/12 BATCH TRUTH.
+   Firefox hidden/background tabs pause the entire command-bar cadence as one clock.
+   VEILLE, SYSTEM, native menu and per-message marquee resume from the exact same phase. */
+html[data-aether-cadence-paused="1"] body #livecheck.command-bar > *,
+html[data-aether-cadence-paused="1"] body #atlasAetherRibbon *{
+  animation-play-state:paused!important;
+}
+

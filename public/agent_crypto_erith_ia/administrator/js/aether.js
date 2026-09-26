@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.5.13
-  Revision: 40.5.1 Aether News content truth corrective lock. The ribbon shows the actual event content; metadata never replaces the news itself.
+  Build: 40.6.422
+  Revision: 40.6.422 Aether 12/12 Batch Truth. VEILLE freezes one 12-story batch per window and pauses the whole cadence while the document is hidden.
 */
 (() => {
   "use strict";
@@ -13,7 +13,11 @@
   const AETHER_MARQUEE_SPEED_PX_S=72;
   const AETHER_MARQUEE_MIN_OVERFLOW_PX=48;
   const AETHER_MARQUEE_DELAY_S=0.55;
-  const aetherVeilleState={index:0,kind:"alert",fingerprint:"",viewportWidth:0,last:null,storyEvent:null,storyContext:null,feedWasVisible:false};
+  const aetherVeilleState={
+    index:0,kind:"alert",fingerprint:"",viewportWidth:0,last:null,storyEvent:null,storyContext:null,feedWasVisible:false,
+    batch:[],batchKeys:[],batchId:0,batchStartedAt:0,batchCompleted:false,batchDisplayedKeys:[],batchReason:"boot",
+    cadencePaused:false,visibilityPauses:0,lastVisibilityReason:"boot"
+  };
   const AETHER_NEWS_SET_MIN_EVENTS=2;
   const aetherExposureState={newsSetReady:false,exposed:false,exposedAt:0,reason:"boot",status:"idle",events:0};
   // 40.6.386 — entity truth guard. LINK is an ambiguous English word/company token.
@@ -261,6 +265,95 @@ function aetherNewsCanonicalEvent(event){
     for(const row of pool){if(chosen.length>=AETHER_VEILLE_TOP)break;take(row);}
     return chosen.slice(0,AETHER_VEILLE_TOP).map(row=>row.event);
   }
+
+  /* 40.6.422 — AETHER 12/12 BATCH TRUTH
+     The live archive may refresh and re-rank at any time, but one VEILLE window owns one immutable
+     list of story identities. A moving rank can no longer turn cursor N into another story. */
+  function aetherVeilleEventKey(event,index=0){
+    const canonical=aetherNewsCanonicalEvent(event)||event||{};
+    const raw=canonical?.event_id||canonical?.id||canonical?.fingerprint||canonical?.source_url||canonical?.url
+      ||canonical?.display_headline||canonical?.headline_original||canonical?.headline||`row-${index}`;
+    return String(raw||`row-${index}`).replace(/\s+/g," ").trim().toLowerCase();
+  }
+  function aetherVeilleBatchPublish(){
+    const total=aetherVeilleState.batch.length;
+    const displayed=aetherVeilleState.batchDisplayedKeys.length;
+    const unique=new Set(aetherVeilleState.batchDisplayedKeys).size;
+    const duplicates=Math.max(0,displayed-unique);
+    const complete=total>0&&unique>=total&&aetherVeilleState.index===total-1;
+    aetherVeilleState.batchCompleted=complete;
+    const host=document.getElementById("atlasAetherVeille");
+    const root=document.documentElement;
+    const values={
+      aetherBatchId:String(aetherVeilleState.batchId),
+      aetherBatchIndex:String(total?Math.min(total,aetherVeilleState.index+1):0),
+      aetherBatchTotal:String(total),
+      aetherBatchDisplayed:String(displayed),
+      aetherBatchUnique:String(unique),
+      aetherBatchDuplicates:String(duplicates),
+      aetherBatchComplete:complete?"1":"0"
+    };
+    if(host)for(const [key,value] of Object.entries(values))host.dataset[key]=value;
+    if(root){
+      root.dataset.aetherVeilleBatch=`${unique}/${total}`;
+      root.dataset.aetherVeilleBatchComplete=complete?"1":"0";
+      root.dataset.aetherVeilleBatchDuplicates=String(duplicates);
+    }
+    return Object.freeze({id:aetherVeilleState.batchId,total,displayed,unique,duplicates,complete,index:aetherVeilleState.index,reason:aetherVeilleState.batchReason});
+  }
+  function aetherVeilleBatchRecord(index=aetherVeilleState.index){
+    const key=aetherVeilleState.batchKeys[index]||"";
+    if(key&&!aetherVeilleState.batchDisplayedKeys.includes(key))aetherVeilleState.batchDisplayedKeys.push(key);
+    return aetherVeilleBatchPublish();
+  }
+  function aetherVeilleBatchStart(reason="batch-start"){
+    const events=aetherVeilleEvents().slice(0,AETHER_VEILLE_TOP);
+    aetherVeilleState.batch=events;
+    aetherVeilleState.batchKeys=events.map((event,index)=>aetherVeilleEventKey(event,index));
+    aetherVeilleState.batchId+=1;
+    aetherVeilleState.batchStartedAt=Date.now();
+    aetherVeilleState.batchCompleted=false;
+    aetherVeilleState.batchDisplayedKeys=[];
+    aetherVeilleState.batchReason=reason;
+    aetherVeilleState.index=0;
+    aetherVeilleState.kind="alert";
+    aetherVeilleState.storyEvent=null;
+    aetherVeilleState.storyContext=null;
+    aetherVeilleState.fingerprint="";
+    if(events.length)aetherVeilleBatchRecord(0);else aetherVeilleBatchPublish();
+    return events;
+  }
+  function aetherVeilleBatchEvents(){
+    return aetherVeilleState.batch.length?aetherVeilleState.batch:aetherVeilleBatchStart("lazy-batch");
+  }
+  function aetherVeilleBatchSnapshot(){
+    const published=aetherVeilleBatchPublish();
+    return Object.freeze({
+      ...published,
+      expected:AETHER_VEILLE_TOP,
+      keys:Object.freeze([...aetherVeilleState.batchKeys]),
+      displayed_keys:Object.freeze([...aetherVeilleState.batchDisplayedKeys]),
+      started_at:aetherVeilleState.batchStartedAt||0,
+      cadence_paused:aetherVeilleState.cadencePaused,
+      visibility_pauses:aetherVeilleState.visibilityPauses,
+      visibility_reason:aetherVeilleState.lastVisibilityReason
+    });
+  }
+  function aetherCadenceVisibilitySync(reason="visibilitychange"){
+    const paused=document.hidden===true;
+    const root=document.documentElement;
+    aetherVeilleState.cadencePaused=paused;
+    aetherVeilleState.lastVisibilityReason=reason;
+    if(paused)aetherVeilleState.visibilityPauses+=1;
+    if(root){
+      root.dataset.aetherCadencePaused=paused?"1":"0";
+      root.dataset.aetherCadenceVisibility=paused?"hidden":"visible";
+    }
+    const ribbon=document.getElementById("atlasAetherRibbon");
+    if(ribbon)ribbon.dataset.aetherCadencePaused=paused?"1":"0";
+    return paused;
+  }
+
   function aetherVeilleScope(event){
     const assets=aetherVeilleTrustedAssets(event).map(v=>String(v||"").trim()).filter(Boolean);
     if(assets.length)return assets.slice(0,3).join("/");
@@ -337,6 +430,7 @@ function aetherNewsCanonicalEvent(event){
       aetherVeilleState.storyContext=null;
       aetherVeilleState.feedWasVisible=false;
       aetherVeilleState.fingerprint="";
+      aetherVeilleBatchStart("news-set-exposed");
     }
     aetherCorePaint();
     return true;
@@ -431,7 +525,7 @@ function aetherNewsCanonicalEvent(event){
   }
 
   function aetherVeilleCurrent(){
-    const snapshot=aetherVeilleStatus(),events=snapshot.events||[];
+    const snapshot=aetherVeilleStatus(),events=aetherVeilleBatchEvents();
     if(!events.length)return{...snapshot,kind:"alert",brand:"♥ VEILLE",index:0,total:0,event:null,meta:snapshot.label,detail:snapshot.text};
     aetherVeilleState.index=((aetherVeilleState.index%events.length)+events.length)%events.length;
     if(aetherVeilleState.kind==="context"){
@@ -522,18 +616,19 @@ function aetherNewsCanonicalEvent(event){
     return current;
   }
   function aetherVeilleAdvance(){
-    const ranked=aetherVeilleEvents();
+    const ranked=aetherVeilleBatchEvents();
     if(!ranked.length){
       aetherVeilleState.index=0;aetherVeilleState.kind="alert";aetherVeilleState.storyEvent=null;aetherVeilleState.storyContext=null;aetherVeilleState.fingerprint="";
+      aetherVeilleBatchPublish();
       return renderAetherVeille();
     }
-    // 40.4.126+ / 40.4.130 — scarce FEED time belongs to News stories only.
-    // 40.4.129 continuity is preserved: the cursor is not reset when a FEED window closes.
-    aetherVeilleState.index=(aetherVeilleState.index+1)%ranked.length;
+    // 40.6.422 — advance inside the frozen batch only. Never wrap inside one VEILLE window.
+    if(aetherVeilleState.index<ranked.length-1)aetherVeilleState.index+=1;
     aetherVeilleState.kind="alert";
     aetherVeilleState.storyEvent=null;
     aetherVeilleState.storyContext=null;
     aetherVeilleState.fingerprint="";
+    aetherVeilleBatchRecord(aetherVeilleState.index);
     return renderAetherVeille();
   }
   function aetherCompact(value, max=88){
@@ -1691,13 +1786,19 @@ function aetherNewsMarketSemantic(){
     if(feed&&feed.dataset.aetherFeedPulseBound!=="1"){
       feed.dataset.aetherFeedPulseBound="1";
       feed.addEventListener("animationiteration",event=>{
-        if(event.target!==feed||event.animationName!=="atlasAetherFeedPulse40112"||document.hidden)return;
+        if(event.target!==feed||event.animationName!=="atlasAetherFeedPulse40112")return;
+        // 40.6.422 — visibility pauses the CSS cadence itself. A hidden-tab pulse must never be
+        // discarded while the 270 s phase clock keeps moving.
+        if(document.hidden){aetherCadenceVisibilitySync("pulse-hidden");return;}
         const style=getComputedStyle(feed);
         const visible=style.visibility==="visible"&&Number.parseFloat(style.opacity||"0")>.5;
         if(visible){
-          // 40.4.131 — first visible pulse arms the batch; story 1 keeps its full reading slot.
+          // First visible pulse owns story 1. A completed previous window receives a fresh frozen batch.
           if(!aetherVeilleState.feedWasVisible){
             aetherVeilleState.feedWasVisible=true;
+            if(aetherVeilleState.batchCompleted||!aetherVeilleState.batch.length)aetherVeilleBatchStart("veille-window");
+            else aetherVeilleBatchRecord(aetherVeilleState.index);
+            renderAetherVeille();
             return;
           }
           aetherVeilleAdvance();
@@ -1707,9 +1808,18 @@ function aetherNewsMarketSemantic(){
           aetherVeilleState.storyEvent=null;
           aetherVeilleState.storyContext=null;
           aetherVeilleState.fingerprint="";
+          const truth=aetherVeilleBatchPublish();
+          const root=document.documentElement;
+          if(root)root.dataset.aetherVeilleBatchViolation=truth.total>=AETHER_VEILLE_TOP&&!truth.complete?"1":"0";
           renderAetherVeille();
         }
       },{passive:true});
+    }
+    if(document.documentElement.dataset.aetherCadenceVisibilityBound!=="1"){
+      document.documentElement.dataset.aetherCadenceVisibilityBound="1";
+      document.addEventListener("visibilitychange",()=>aetherCadenceVisibilitySync("visibilitychange"),{passive:true});
+      window.addEventListener("pageshow",()=>aetherCadenceVisibilitySync("pageshow"),{passive:true});
+      aetherCadenceVisibilitySync("bind");
     }
     aetherBindMarketCompletion();
     aetherBindOracleCompletion();
@@ -1730,9 +1840,14 @@ function aetherNewsMarketSemantic(){
       weather:aetherSystemState.weather,
       system_at:aetherSystemState.systemAt,
       weather_at:aetherSystemState.weatherAt,
-      veille:aetherVeilleState.last||aetherVeilleCurrent()
+      veille:aetherVeilleState.last||aetherVeilleCurrent(),
+      veille_batch:aetherVeilleBatchSnapshot()
     }),
     single_lane:true,
+    veille_batch_truth_build:"40.6.422",
+    veille_batch_size:AETHER_VEILLE_TOP,
+    veille_batch_snapshot:aetherVeilleBatchSnapshot,
+    cadence_visibility_pause:true,
     presentation_owner:"admin-ribbons.css",
     new_recurring_timer:false,
     bridge_telemetry_owner:false,

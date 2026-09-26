@@ -1,0 +1,85 @@
+name: Agent-Crypto Package 40.6.422
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406422.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate Aether 12/12 Batch Truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/js/aether.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          js=Path("public/agent_crypto_erith_ia/administrator/js/aether.js").read_text(encoding="utf-8")
+          css=Path("public/agent_crypto_erith_ia/administrator/admin-ribbons.css").read_text(encoding="utf-8")
+          index=Path("public/agent_crypto_erith_ia/administrator/index.html").read_text(encoding="utf-8")
+          build=json.loads(Path("public/agent_crypto_erith_ia/administrator/build.json").read_text(encoding="utf-8"))
+          checks={
+              "build": build.get("build")=="40.6.422",
+              "release": build.get("release")=="AETHER 12/12 BATCH TRUTH",
+              "aether_modified": build.get("aether_modified") is True,
+              "market_core_protected": build.get("market_core_modified") is False,
+              "top12": 'const AETHER_VEILLE_TOP=12;' in js,
+              "frozen_batch": 'aetherVeilleBatchStart("veille-window")' in js,
+              "batch_diag": 'veille_batch:aetherVeilleBatchSnapshot()' in js,
+              "hidden_pause": 'aetherCadenceVisibilitySync("visibilitychange")' in js,
+              "css_pause": 'data-aether-cadence-paused="1"' in css,
+              "no_new_interval": "setInterval(" not in js,
+              "no_observer": "MutationObserver" not in js,
+              "index": "Build 40.6.422" in index,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"Aether 40.6.422 validation failed: {bad}")
+          print("AETHER 12/12 BATCH TRUTH 40.6.422 STATIC PASS")
+          PY
+
+      - name: Build clean ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_AETHER_12_12_BATCH_TRUTH_40.6.422.zip"
+          rm -f "$ZIP"
+          rm -rf /tmp/agent-crypto-406422
+          mkdir -p /tmp/agent-crypto-406422/administrator/js /tmp/agent-crypto-406422/coordination
+          cp public/agent_crypto_erith_ia/administrator/index.html /tmp/agent-crypto-406422/administrator/
+          cp public/agent_crypto_erith_ia/administrator/index-40.6.422.html /tmp/agent-crypto-406422/administrator/
+          cp public/agent_crypto_erith_ia/administrator/build.json /tmp/agent-crypto-406422/administrator/
+          cp public/agent_crypto_erith_ia/administrator/RELEASE.md /tmp/agent-crypto-406422/administrator/
+          cp public/agent_crypto_erith_ia/administrator/HANDOFF.md /tmp/agent-crypto-406422/administrator/
+          cp public/agent_crypto_erith_ia/administrator/admin-ribbons.css /tmp/agent-crypto-406422/administrator/
+          cp public/agent_crypto_erith_ia/administrator/js/aether.js /tmp/agent-crypto-406422/administrator/js/
+          cp coordination/inter_ai_dialogues/agent_crypto/HANDOFF_40.6.422_AETHER_12_12_BATCH_TRUTH.md /tmp/agent-crypto-406422/coordination/
+          cp coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_SEVEN_AGENT_CRYPTO_40.6.422.md /tmp/agent-crypto-406422/coordination/
+          cp coordination/inter_ai_dialogues/agent_crypto/PACKAGE_MANIFEST_40.6.422.txt /tmp/agent-crypto-406422/PATCH_MANIFEST.txt
+          (cd /tmp/agent-crypto-406422 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          unzip -l "$ZIP"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_AETHER_12_12_BATCH_TRUTH_40.6.422.zip"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ZIP"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add clean Agent-Crypto 40.6.422 ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
