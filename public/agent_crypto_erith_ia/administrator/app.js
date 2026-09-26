@@ -58516,7 +58516,8 @@ renderDecisionBoard = function renderDecisionBoard35() {
    - one pending render is flushed after Strategy Core readiness;
    - postboot-ready is a bounded fallback if Strategy readiness fails;
    - after the gate opens, identical-state passive renders are deduplicated;
-   - 40.6.414: the gate remains active on later 40.6.x builds instead of self-disabling outside 40.6.412;\n   - explicit operator refresh always bypasses the gate;
+   - 40.6.414: the gate follows a stable feature-owner contract, independent of the displayed build number;
+   - explicit operator refresh always bypasses the gate;
    - no market/Strategy/Aether business rule, timer cadence, storage schema,
      network owner or order path is changed.
    ============================================================ */
@@ -58533,6 +58534,8 @@ const atlasDecisionBoardGate406412 = {
   lastReason:"",
   lastDurationMs:0,
   strategyReady:false,
+  strategyFailed:false,
+  strategyFailureReason:"",
   postbootReady:false
 };
 
@@ -58542,6 +58545,17 @@ function atlasDecisionBoardSignature406412() {
   try { currentFingerprint=String(atlasCurrentStateRead?.()?.fingerprint || ""); } catch (_) {}
   try { packageFingerprint=String(atlasSharedSynthesisState?.package?.fingerprint || ""); } catch (_) {}
   const lock=state?.sourceLock || {};
+  const sourceHealth=(Array.isArray(state?.sourceStatus) ? state.sourceStatus : [])
+    .map(item=>[
+      String(item?.key || item?.name || item?.source || item?.id || ""),
+      String(item?.status || item?.state || "UNKNOWN")
+    ].join(":"))
+    .sort()
+    .join(",");
+  const expectedRaw=state?.sourceStatusExpectedTotal;
+  const sourceExpected=(expectedRaw==null || expectedRaw==="")
+    ? 0
+    : (Number.isFinite(Number(expectedRaw)) ? Number(expectedRaw) : 0);
   return [
     state?.liveOk===true ? "1" : "0",
     String(state?.timestamp || ""),
@@ -58550,23 +58564,34 @@ function atlasDecisionBoardSignature406412() {
     lock?.valid===true ? "1" : "0",
     String(Array.isArray(state?.coins) ? state.coins.length : 0),
     String(state?.selectedCoinId || ""),
+    String(sourceExpected),
+    sourceHealth,
     String(memoryRevision),
     currentFingerprint,
     packageFingerprint
   ].join("|");
 }
 
-function atlasDecisionBoardCoalescingActiveBuild406414(value = "") {
-  const match=String(value||"").match(/^40\.6\.(\d+)$/);
-  return !!match && Number(match[1]) >= 412;
+/* 40.6.414: feature-owner contract. If this owner is resident, coalescing is enabled.
+   It must not self-disable because the commercial build number changes. */
+function atlasDecisionBoardCoalescingActiveBuild406414() {
+  return true;
 }
 
 function atlasDecisionBoardGateOpen406412() {
   if (atlasDecisionBoardGate406412.strategyReady || atlasDecisionBoardGate406412.postbootReady) return true;
   try {
     const snap=globalThis.AgentCryptoPostBootRuntime?.snapshot?.();
+    const failed=Array.isArray(snap?.strategy_core_failed) ? snap.strategy_core_failed : [];
+    if (failed.length) {
+      atlasDecisionBoardGate406412.strategyReady=false;
+      atlasDecisionBoardGate406412.strategyFailed=true;
+      atlasDecisionBoardGate406412.strategyFailureReason="strategy-core-failed:"+failed.length;
+    }
     if (snap?.strategy_core_ready===true) {
       atlasDecisionBoardGate406412.strategyReady=true;
+      atlasDecisionBoardGate406412.strategyFailed=false;
+      atlasDecisionBoardGate406412.strategyFailureReason="";
       return true;
     }
     if (snap?.done===true) {
@@ -58651,8 +58676,23 @@ renderDecisionBoard = function renderDecisionBoard406412(options = {}) {
   }
 };
 
-window.addEventListener("agent-crypto:strategy-core-ready",()=>{
+window.addEventListener("agent-crypto:strategy-core-ready",(event)=>{
+  if (event?.detail?.ok===false) {
+    const failed=Array.isArray(event?.detail?.failed) ? event.detail.failed : [];
+    atlasDecisionBoardGate406412.strategyReady=false;
+    atlasDecisionBoardGate406412.strategyFailed=true;
+    atlasDecisionBoardGate406412.strategyFailureReason=failed.length
+      ? "strategy-core-failed:"+failed.length
+      : "strategy-core-failed";
+    atlasDecisionBoardProbeOnce406412("decision-board-strategy-failed-406414",{
+      reason:atlasDecisionBoardGate406412.strategyFailureReason,
+      failed:failed.length
+    });
+    return;
+  }
   atlasDecisionBoardGate406412.strategyReady=true;
+  atlasDecisionBoardGate406412.strategyFailed=false;
+  atlasDecisionBoardGate406412.strategyFailureReason="";
   atlasDecisionBoardProbeOnce406412("decision-board-gate-open-406412",{reason:"strategy-core-ready"});
   atlasDecisionBoardFlush406412("strategy-core-ready-flush");
 },{passive:true});
@@ -58676,8 +58716,11 @@ globalThis.AgentCryptoDecisionBoardGate406412=Object.freeze({
     last_reason:atlasDecisionBoardGate406412.lastReason,
     last_duration_ms:atlasDecisionBoardGate406412.lastDurationMs,
     strategy_ready:atlasDecisionBoardGate406412.strategyReady,
+    strategy_failed:atlasDecisionBoardGate406412.strategyFailed,
+    strategy_failure_reason:atlasDecisionBoardGate406412.strategyFailureReason,
     postboot_ready:atlasDecisionBoardGate406412.postbootReady,
-    active_build:atlasDecisionBoardCoalescingActiveBuild406414(String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||globalThis.AGENT_CRYPTO_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"")),
+    active_build:atlasDecisionBoardCoalescingActiveBuild406414(),
+    activation_contract:"decision-board-owner-present",
     continuity_fix:"40.6.414",
     last_signature:atlasDecisionBoardGate406412.lastSignature
   }),
