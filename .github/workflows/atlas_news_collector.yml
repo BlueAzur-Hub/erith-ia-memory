@@ -12,6 +12,12 @@ on:
       - "public/agent_crypto_erith_ia/tools/atlas_news_collector.py"
       - "public/agent_crypto_erith_ia/tools/atlas_news_collector_fr_404291.py"
       - "public/agent_crypto_erith_ia/tools/atlas_news_native_fr_404291.py"
+  pull_request:
+    paths:
+      - ".github/workflows/atlas_news_collector.yml"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_collector.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_collector_fr_404291.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_native_fr_404291.py"
   schedule:
     - cron: "17 * * * *"
 
@@ -44,6 +50,24 @@ jobs:
       - name: Collect immutable source evidence · French discovery first
         id: collect_news
         run: python public/agent_crypto_erith_ia/tools/atlas_news_collector_fr_404291.py
+
+      - name: Validate News Event Core 40.6.417 contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/data/news/latest.json")
+          data=json.loads(p.read_text(encoding="utf-8"))
+          core=data.get("event_core") if isinstance(data.get("event_core"),dict) else {}
+          events=[e for e in data.get("events",[]) if isinstance(e,dict)]
+          if core.get("build")!="40.6.417": raise SystemExit(f"Event Core build mismatch: {core}")
+          if core.get("schema")!="atlas_news_event_core_v1": raise SystemExit(f"Event Core schema mismatch: {core}")
+          missing=[e.get("event_id") for e in events if e.get("event_core_build")!="40.6.417" or not isinstance(e.get("article_ids"),list) or int(e.get("article_count") or 0)<1]
+          false_hack_vc=[e.get("event_id") for e in events if "hack vc" in str(e.get("headline") or "").lower() and e.get("event_type")=="security"]
+          if missing or false_hack_vc:
+              raise SystemExit(f"Event Core validation failed: missing={missing[:5]} false_hack_vc={false_hack_vc[:5]}")
+          print(f"NEWS EVENT CORE 40.6.417 PASS · events={len(events)} · articles={core.get('articles')} · clustered={core.get('clustered_articles')}")
+          PY
 
       - name: Build native-French operator display contract
         id: native_news_fr
@@ -106,6 +130,7 @@ jobs:
           PY
 
       - name: Commit News Sentinel archive
+        if: github.event_name != 'pull_request'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

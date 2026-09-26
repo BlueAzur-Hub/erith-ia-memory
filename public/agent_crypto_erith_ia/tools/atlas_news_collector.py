@@ -33,6 +33,13 @@ MAX_EVENTS = 120
 MAX_AGE_DAYS = 7
 MAX_PER_SOURCE = 50
 
+# 40.6.417 — Aether/News Event Core foundation.
+# Additive contract only: Aether Watch / Window Manager / presentation are untouched.
+EVENT_CORE_BUILD = "40.6.417"
+EVENT_CORE_SCHEMA = "atlas_news_event_core_v1"
+EVENT_CLUSTER_WINDOW_HOURS = 48
+EVENT_CLUSTER_ENTITY_WINDOW_HOURS = 36
+
 USER_AGENT = (
     "ERITHIA-NewsSentinel/1.0 "
     "(+https://github.com/BlueAzur-Hub/erith-ia-memory)"
@@ -112,6 +119,48 @@ SOURCE_GROUP_LABELS = {
     "crypto": "Média crypto spécialisé",
 }
 
+SOURCE_TIER_LABELS = {
+    1: "Source primaire / réglementaire",
+    2: "Données marché / positionnement",
+    3: "Presse financière / mondiale",
+    4: "Média crypto spécialisé",
+    5: "Agrégateur / découverte",
+}
+
+EVENT_CLUSTER_GENERIC_TOKENS = {
+    "bitcoin", "btc", "ethereum", "eth", "crypto", "cryptocurrency", "blockchain",
+    "market", "markets", "price", "prices", "token", "tokens", "coin", "coins",
+    "exchange", "wallet", "wallets", "fund", "funds", "million", "billion",
+    "hack", "hacked", "hacking", "exploit", "exploited", "breach", "security",
+    "attack", "attacks", "drained", "stolen", "assets", "ceo",
+    "north", "south", "korea", "iran", "israel", "china", "russia", "ukraine",
+    "sec", "cftc", "fed", "ecb", "regulation", "regulatory", "institutional",
+    "news", "report", "reports", "says", "said", "live", "update", "updates",
+}
+
+
+def event_core_source_tier(item: dict[str, Any]) -> tuple[int, str]:
+    source_id = str(item.get("source_id") or "")
+    group = str(item.get("source_group") or "")
+    if source_id.startswith("google_news_"):
+        tier = 5
+    elif group == "primary":
+        tier = 1
+    elif group in ("finance", "world"):
+        tier = 3
+    elif group == "crypto":
+        tier = 4
+    else:
+        tier = 5
+    return tier, SOURCE_TIER_LABELS[tier]
+
+
+def semantic_text(value: Any) -> str:
+    """Normalize text while protecting known ambiguous entity names from keyword collisions."""
+    text = normalize_text(str(value or ""))
+    # Hack VC is a venture-capital brand, not evidence of a cyber hack.
+    return re.sub(r"\bhack\s+vc\b", "hackvc", text)
+
 MONEY_FLOW_KEYWORDS = (
     "net inflow", "net inflows", "inflow", "inflows", "outflow", "outflows",
     "redemption", "redemptions", "subscriptions", "fund flows", "etf flows",
@@ -177,7 +226,7 @@ KEYWORD_GROUPS: tuple[tuple[str, int, tuple[str, ...]], ...] = (
     (
         "security", 6,
         (
-            "hack", "exploit", "breach", "cyberattack", "ransomware", "stolen funds",
+            "hack", "hacked", "hacking", "exploit", "breach", "security breach", "cyberattack", "ransomware", "stolen funds",
             "drained", "vulnerability", "outage", "withdrawals suspended", "bankruptcy",
             "insolvency", "liquidation", "piratage", "faille", "fonds voles", "retraits suspendus",
             "faillite", "insolvabilite",
@@ -204,7 +253,7 @@ EVENT_RULES: tuple[tuple[str, str, int, tuple[str, ...], str], ...] = (
     ("etf_flow", "ETF / flux institutionnels", 78, MONEY_FLOW_KEYWORDS, "flux de demande/offre à qualifier ; causalité non présumée"),
     ("treasury_liquidity", "Trésor US / liquidité obligataire", 77, TREASURY_LIQUIDITY_KEYWORDS, "contexte de liquidité macro à qualifier ; causalité non présumée"),
     ("market_structure_regulation", "Réglementation / structure de marché", 75, REGULATION_MARKET_KEYWORDS, "prime de risque réglementaire à qualifier ; causalité non présumée"),
-    ("security", "Hack / exploit / sécurité", 86, ("hack", "exploit", "breach", "cyberattack", "ransomware", "stolen", "drained", "piratage", "faille"), "pression négative potentielle"),
+    ("security", "Hack / exploit / sécurité", 86, ("hack", "hacked", "hacking", "exploit", "breach", "security breach", "cyberattack", "ransomware", "stolen", "drained", "piratage", "faille"), "pression négative potentielle"),
     ("bankruptcy", "Faillite / liquidité / retraits", 88, ("bankruptcy", "insolvency", "withdrawals suspended", "liquidation", "faillite", "insolvabilite", "retraits suspendus"), "pression négative potentielle"),
     ("regulation", "Régulation / justice", 78, ("regulation", "regulatory", "sec", "cftc", "mica", "lawsuit", "enforcement", "reglementation", "sanction", "justice"), "orientation mixte selon la décision"),
     ("etf", "ETF / institutionnels", 76, ("etf", "blackrock", "fidelity", "institutional", "asset manager", "institutionnel"), "catalyseur potentiel, sens à confirmer"),
@@ -427,7 +476,7 @@ def contains_phrase(text: str, phrase: str) -> bool:
 
 
 def relevance(item: dict[str, Any]) -> tuple[int, list[str]]:
-    text = normalize_text(f"{item.get('headline', '')} {item.get('summary', '')}")
+    text = semantic_text(f"{item.get('headline', '')} {item.get('summary', '')}")
     score = 0
     matched: list[str] = []
     for label, weight, phrases in KEYWORD_GROUPS:
@@ -448,7 +497,7 @@ def detect_assets(text: str) -> list[str]:
 
 
 def detect_sectors(text: str, matched: list[str]) -> list[str]:
-    value = normalize_text(text)
+    value = semantic_text(text)
     mapping = (
         ("DeFi", ("defi", "dex", "lending", "bridge")),
         ("Stablecoins", ("stablecoin", "usdt", "usdc", "depeg")),
@@ -457,7 +506,7 @@ def detect_sectors(text: str, matched: list[str]) -> list[str]:
         ("IA", ("artificial intelligence", "intelligence artificielle", "ai", "gpu", "compute")),
         ("RWA", ("real world asset", "rwa", "tokenization", "tokenisation")),
         ("Marché global", ("fed", "ecb", "central bank", "inflation", "interest rate", "tariff", "sanctions", "war", "oil")),
-        ("Cybersécurité", ("hack", "exploit", "cyberattack", "ransomware", "breach")),
+        ("Cybersécurité", ("hack", "hacked", "hacking", "exploit", "cyberattack", "ransomware", "breach", "security breach")),
     )
     padded = f" {value} "
     sectors = [label for label, phrases in mapping if any(f" {normalize_text(p)} " in padded for p in phrases)]
@@ -467,7 +516,7 @@ def detect_sectors(text: str, matched: list[str]) -> list[str]:
 
 
 def detect_event(text: str) -> tuple[str, str, int, str]:
-    padded = f" {normalize_text(text)} "
+    padded = f" {semantic_text(text)} "
     for event_id, label, base_score, phrases, direction in EVENT_RULES:
         if any(f" {normalize_text(phrase)} " in padded for phrase in phrases):
             return event_id, label, base_score, direction
@@ -563,6 +612,16 @@ def analyze_item(item: dict[str, Any]) -> dict[str, Any] | None:
     now_iso = utc_now().isoformat()
     driver_domains = driver_domains_for_text(combined, matched)
 
+    source_tier, source_tier_label = event_core_source_tier(item)
+    operator_relevance_score = int(round(
+        impact_score * 0.45
+        + evidence_score * 0.25
+        + min(20, score * 2)
+        + (5 if any(topic in matched for topic in ("macro", "geopolitics", "energy", "institutional", "money_flow", "treasury_liquidity")) else 0)
+        + (4 if source_tier == 1 else 0)
+    ))
+    operator_relevance_score = max(0, min(100, operator_relevance_score))
+
     return {
         "id": f"feed_{fingerprint}", "event_id": f"feed_{fingerprint}", "fingerprint": fingerprint,
         "version": VERSION, "origin": "github_news_collector", "headline": clean_text(item.get("headline", ""), 260),
@@ -581,6 +640,12 @@ def analyze_item(item: dict[str, Any]) -> dict[str, Any] | None:
         "decision": decision, "confirmations": 1, "relevance_score": score, "matched_topics": matched,
         "driver_domains": driver_domains, "driver_coverage_build": BUILD, "causal_claim": False,
         "observation_only": True,
+        "event_core_build": EVENT_CORE_BUILD, "event_core_schema": EVENT_CORE_SCHEMA,
+        "canonical_topic": event_label, "article_ids": [f"feed_{fingerprint}"], "article_count": 1,
+        "cluster_reason": "single_article",
+        "source_tier": source_tier, "source_tier_label": source_tier_label,
+        "operator_relevance": {"score": operator_relevance_score, "status": "derived_not_trade_signal"},
+        "market_reaction": {"score": None, "status": "not_measured", "causal_claim": False},
     }
 
 
@@ -592,14 +657,59 @@ def jaccard(a: set[str], b: set[str]) -> float:
     return 0.0 if not a or not b else len(a & b) / len(a | b)
 
 
-def merge_event(base: dict[str, Any], other: dict[str, Any]) -> dict[str, Any]:
+def event_anchor_tokens(event: dict[str, Any]) -> set[str]:
+    assets = {str(value).lower() for value in (event.get("assets") or [])}
+    return {
+        token for token in title_tokens(str(event.get("headline") or ""))
+        if token not in EVENT_CLUSTER_GENERIC_TOKENS and token.lower() not in assets
+    }
+
+
+def event_cluster_match(event: dict[str, Any], existing: dict[str, Any]) -> tuple[bool, str]:
+    event_time = parse_date(event.get("event_time", ""))
+    existing_time = parse_date(existing.get("event_time", ""))
+    delta_hours = abs((event_time - existing_time).total_seconds()) / 3600
+    if delta_hours > EVENT_CLUSTER_WINDOW_HOURS:
+        return False, "outside_window"
+
+    same_url = bool(event.get("source_url") and event.get("source_url") == existing.get("source_url"))
+    if same_url:
+        return True, "same_url"
+
+    if event.get("event_type") != existing.get("event_type"):
+        return False, "different_type"
+
+    tokens = title_tokens(event.get("headline", ""))
+    existing_tokens = title_tokens(existing.get("headline", ""))
+    similarity = jaccard(tokens, existing_tokens)
+    if similarity >= 0.46:
+        return True, "headline_similarity"
+
+    if event.get("event_type") in {"security", "bankruptcy"} and delta_hours <= EVENT_CLUSTER_ENTITY_WINDOW_HOURS:
+        shared = event_anchor_tokens(event) & event_anchor_tokens(existing)
+        if shared and similarity >= 0.04:
+            return True, "incident_entity_anchor"
+
+    return False, "no_match"
+
+
+def merge_event(base: dict[str, Any], other: dict[str, Any], cluster_reason: str = "merged") -> dict[str, Any]:
     merged = dict(base)
     names = list(dict.fromkeys([*(base.get("source_names") or [base.get("source_name")]), *(other.get("source_names") or [other.get("source_name")])]))
     urls = [url for url in dict.fromkeys([*(base.get("source_urls") or [base.get("source_url")]), *(other.get("source_urls") or [other.get("source_url")])]) if url]
     merged["source_names"] = names
     merged["source_urls"] = urls
     merged["source_count"] = len(names)
+    base_articles = list(base.get("article_ids") or base.get("merged_event_ids") or [base.get("id")])
+    other_articles = list(other.get("article_ids") or other.get("merged_event_ids") or [other.get("id")])
+    article_ids = [value for value in dict.fromkeys([*base_articles, *other_articles]) if value]
+    merged["article_ids"] = article_ids
+    merged["merged_event_ids"] = article_ids
+    merged["article_count"] = len(article_ids)
     merged["confirmations"] = max(int(base.get("confirmations", 1)), int(other.get("confirmations", 1)), len(names))
+    merged["event_core_build"] = EVENT_CORE_BUILD
+    merged["event_core_schema"] = EVENT_CORE_SCHEMA
+    merged["cluster_reason"] = cluster_reason
     merged["last_seen_at"] = max(str(base.get("last_seen_at", "")), str(other.get("last_seen_at", "")))
     merged["evidence"] = dict(base.get("evidence") or {})
     merged["evidence"]["score"] = min(100, max(int(base.get("evidence", {}).get("score", 0)), int(other.get("evidence", {}).get("score", 0))) + min(12, (len(names) - 1) * 5))
@@ -618,29 +728,39 @@ def merge_event(base: dict[str, Any], other: dict[str, Any]) -> dict[str, Any]:
 def deduplicate(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     clusters: list[dict[str, Any]] = []
     for event in sorted(events, key=lambda item: item.get("event_time", ""), reverse=True):
-        event_time = parse_date(event.get("event_time", ""))
-        event_tokens = title_tokens(event.get("headline", ""))
         matched_index = None
+        matched_reason = "single_article"
         for index, existing in enumerate(clusters):
-            existing_time = parse_date(existing.get("event_time", ""))
-            if abs((event_time - existing_time).total_seconds()) > 48 * 3600:
-                continue
-            same_url = bool(event.get("source_url") and event.get("source_url") == existing.get("source_url"))
-            same_type = event.get("event_type") == existing.get("event_type")
-            if same_url or (same_type and jaccard(event_tokens, title_tokens(existing.get("headline", ""))) >= 0.46):
+            matched, reason = event_cluster_match(event, existing)
+            if matched:
                 matched_index = index
+                matched_reason = reason
                 break
         if matched_index is None:
-            clusters.append(event)
+            row = dict(event)
+            article_ids = list(row.get("article_ids") or row.get("merged_event_ids") or [row.get("id")])
+            row["article_ids"] = [value for value in dict.fromkeys(article_ids) if value]
+            row["article_count"] = len(row["article_ids"])
+            row["event_core_build"] = EVENT_CORE_BUILD
+            row["event_core_schema"] = EVENT_CORE_SCHEMA
+            row["cluster_reason"] = row.get("cluster_reason") or "single_article"
+            clusters.append(row)
         else:
-            clusters[matched_index] = merge_event(clusters[matched_index], event)
+            clusters[matched_index] = merge_event(clusters[matched_index], event, matched_reason)
     return clusters
 
 
 def refresh_previous_asset_derivation(event_value: Any) -> dict[str, Any]:
-    """Recompute derived asset tags from immutable story text before archive carry-forward."""
+    """Recompute derived tags and normalize Event Core fields before archive carry-forward."""
     event = dict(event_value) if isinstance(event_value, dict) else {}
     event["assets"] = detect_assets(f"{event.get('headline', '')} {event.get('body', '')}")
+    article_ids = list(event.get("article_ids") or event.get("merged_event_ids") or [event.get("id")])
+    event["article_ids"] = [value for value in dict.fromkeys(article_ids) if value]
+    event["article_count"] = len(event["article_ids"])
+    event["event_core_build"] = EVENT_CORE_BUILD
+    event["event_core_schema"] = EVENT_CORE_SCHEMA
+    event.setdefault("canonical_topic", event.get("event_label") or event.get("event_type") or "Information de marché")
+    event.setdefault("cluster_reason", "archive_carry_forward")
     return event
 
 
@@ -688,6 +808,7 @@ def build_summary(events: list[dict[str, Any]], source_status: list[dict[str, An
                 if name:
                     distinct_sources[domain].add(str(name))
 
+    article_count = sum(max(1, int(event.get("article_count", 1))) for event in events)
     return {
         "events_24h": len(last24), "critical_24h": len(critical), "strong_24h": len(strong),
         "sources_ok": len(ok_sources), "sources_total": len(source_status), "sources_failed": len(failed_sources),
@@ -695,6 +816,14 @@ def build_summary(events: list[dict[str, Any]], source_status: list[dict[str, An
         "decision": "Surveillance renforcée" if critical or strong else "Surveillance normale",
         "driver_coverage": {domain: {"events_72h": count, "distinct_sources": len(distinct_sources[domain])} for domain, count in coverage.items()},
         "driver_coverage_build": BUILD, "causal_claim": False,
+        "event_core": {
+            "build": EVENT_CORE_BUILD,
+            "schema": EVENT_CORE_SCHEMA,
+            "unique_events": len(events),
+            "articles": article_count,
+            "clustered_articles": max(0, article_count - len(events)),
+            "contract": "one real event = one operator story; articles = confirmations",
+        },
     }
 
 
@@ -735,6 +864,7 @@ def collect() -> int:
         "collector_build": BUILD, "sources_configured": len(SOURCES), "causal_claim": False,
         "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
         "summary": summary, "source_status": statuses, "events": events,
+        "event_core": summary.get("event_core", {}),
     }
     (ROOT / "latest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     status_payload = {
@@ -744,6 +874,7 @@ def collect() -> int:
         "sources_failed": summary["sources_failed"], "sources_configured": len(SOURCES),
         "collector_build": BUILD, "driver_coverage_build": BUILD,
         "driver_coverage": summary["driver_coverage"], "causal_claim": False,
+        "event_core": summary.get("event_core", {}),
         "message": payload["message"],
     }
     (ROOT / "status.json").write_text(json.dumps(status_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -787,6 +918,48 @@ def self_test() -> int:
     assert merged[0]["source_count"] == 2
     assert merged[0]["confirmations"] >= 2
     assert merged[0]["causal_claim"] is False
+
+    # 40.6.417 — Hack VC is a venture-capital brand, not cyber evidence.
+    hack_vc = {
+        "source_group": "crypto", "source_trust": 60,
+        "headline": "Former Hack VC partner death ruled a suicide",
+        "summary": "Venture capital industry report with no cyber incident.",
+        "published_at": utc_now().isoformat(), "source_name": "Test Crypto", "source_id": "test_crypto",
+        "url": "https://example.com/hack-vc",
+    }
+    hack_vc_event = analyze_item(hack_vc)
+    assert hack_vc_event is None or hack_vc_event["event_type"] != "security"
+
+    # 40.6.417 — differently worded Bitget breach stories become one real event.
+    bitget_a = {
+        "source_group": "crypto", "source_trust": 66,
+        "headline": "Bitget hacked as $350 million vanishes from exchange wallets",
+        "summary": "Security incident under investigation.",
+        "published_at": utc_now().isoformat(), "source_name": "Source A", "source_id": "coindesk",
+        "url": "https://example.com/bitget-a",
+    }
+    bitget_b = {
+        "source_group": "crypto", "source_trust": 60,
+        "headline": "Bitget CEO says $352 million hack used spoofed transfers",
+        "summary": "The exchange is investigating the same breach.",
+        "published_at": utc_now().isoformat(), "source_name": "Source B", "source_id": "decrypt",
+        "url": "https://example.com/bitget-b",
+    }
+    bitget_event_a = analyze_item(bitget_a)
+    bitget_event_b = analyze_item(bitget_b)
+    assert bitget_event_a is not None and bitget_event_b is not None
+    bitget_match, bitget_reason = event_cluster_match(bitget_event_a, bitget_event_b)
+    assert bitget_match, (
+        bitget_event_a.get("event_type"), bitget_event_b.get("event_type"),
+        sorted(event_anchor_tokens(bitget_event_a)), sorted(event_anchor_tokens(bitget_event_b)),
+        jaccard(title_tokens(bitget_event_a.get("headline", "")), title_tokens(bitget_event_b.get("headline", ""))),
+    )
+    clustered = deduplicate([bitget_event_a, bitget_event_b])
+    assert len(clustered) == 1
+    assert clustered[0]["article_count"] == 2
+    assert clustered[0]["source_count"] == 2
+    assert clustered[0]["event_core_build"] == EVENT_CORE_BUILD
+    assert clustered[0]["cluster_reason"] == "incident_entity_anchor"
 
     irrelevant = {
         "source_group": "world", "source_trust": 70,
@@ -837,6 +1010,8 @@ def self_test() -> int:
     assert len(SOURCES) == 15
     assert BUILD == "40.3.89"
     assert VERSION == "V1.1-alpha.26.47.5"
+    assert EVENT_CORE_BUILD == "40.6.417"
+    assert EVENT_CORE_SCHEMA == "atlas_news_event_core_v1"
     print("Atlas News Sentinel canonical 40.3.89 self-test: OK")
     return 0
 
