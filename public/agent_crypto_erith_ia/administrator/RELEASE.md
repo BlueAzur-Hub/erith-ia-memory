@@ -84,3 +84,8 @@ Le workflow News Sentinel vérifie après collecte :
 Si Aether Watch ou son menu régresse : rollback immédiat 40.6.415.
 
 Si le Watch reste intact mais Event Core ne regroupe pas correctement les événements : corriger uniquement le producteur News, sans toucher au Watch.
+
+## Archive semantic refresh
+
+The collector now recomputes deterministic derived semantics when carrying the previous archive forward. A stale historical classification (for example `Hack VC` previously stored as security/critical) cannot survive merely because it already existed in `latest.json`. Immutable source text and evidence provenance remain untouched.
+
