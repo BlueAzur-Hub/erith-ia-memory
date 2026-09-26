@@ -1,91 +1,69 @@
-# Agent-Crypto — Aether Contract Freeze + News Event Core Foundation
+# Agent-Crypto — Aether Progressive Readiness + News Relevance Gate
 
-Build **40.6.417** · parent **40.6.415** · rollback **40.6.415** · Market Core **38.15.11**.
+Build **40.6.418** · parent **40.6.417** · rollback **40.6.417** · Market Core **38.15.11**.
 
 ## But
 
-Commencer la refonte News Sentinel / Aether VEILLE **sans toucher à Aether Attention Watch**.
+Corriger les deux défauts terrain restants de 40.6.417 sans reconstruire l'architecture :
 
-40.6.415 reste le checkpoint Firefox validé pour le Watch, son menu natif, le Window Manager et le cockpit.
+1. le Watch existe tôt mais montre des cartes vides avant l'arrivée des couches ;
+2. News Sentinel confond encore parfois **qualité de source** et **pertinence marché**.
 
-## Aether Watch — GEL ABSOLU
+## Aether · hydratation progressive
 
-Cette build ne modifie pas :
-- `js/aether.js` ;
-- `#atlasAetherStatusPanel` ;
-- le Window Manager `aether-watch` ;
-- déplacer / réduire / détacher-raccrocher / agrandir / masquer ;
-- géométrie, placement gauche, F11, restauration ;
-- rendu du Watch.
+Le propriétaire reste `administrator/js/aether.js`.
 
-Le défaut 40.6.416 n'est pas réintroduit.
+La fenêtre, le Window Manager, la géométrie, F11, déplacer/réduire/détacher/agrandir/masquer ne changent pas.
 
-## News Event Core 40.6.417
+Au lieu de `—` silencieux, le shell affiche immédiatement des états explicites :
+- `SHELL READY` ;
+- Marché / News / Atlas / Oracle : `EN ATTENTE` ;
+- hydratation progressive ;
+- puis le rendu canonique existant remplace ces placeholders dès que les vraies données sont disponibles.
 
-Le producteur canonique `tools/atlas_news_collector.py` reçoit un contrat additif :
+Aucun fetch, timer, observer ou stockage n'est ajouté par cette readiness.
 
-**un événement réel = une histoire opérateur ; plusieurs articles = confirmations.**
+## News · relevance gate
 
-Champs additifs :
-- `event_core_build` / `event_core_schema` ;
-- `canonical_topic` ;
-- `article_ids` / `article_count` ;
-- `cluster_reason` ;
-- `source_tier` / `source_tier_label` ;
-- `operator_relevance` ;
-- `market_reaction` explicitement `not_measured` tant qu'aucune réaction n'est calculée.
+Le producteur canonique reste `tools/atlas_news_collector.py`.
 
-## Déduplication
+40.6.418 sépare désormais :
+- **preuve / qualité de source** ;
+- **impact potentiel** ;
+- **pertinence opérateur pour le marché**.
 
-Les règles historiques restent disponibles : URL identique et similarité de titre.
+Un article peut rester dans l'archive tout en étant marqué `archive_context_only`.
 
-Une fondation supplémentaire est ajoutée pour les incidents `security` / `bankruptcy` : dans une fenêtre bornée, des titres différents partageant une même entité significative peuvent être regroupés. Cela vise notamment les multiples articles décrivant le même incident Bitget.
+Régressions verrouillées :
+- hack FBI sans ancrage crypto/marché → non prioritaire opérateur ;
+- avis administratif Fed / Peoples Bancorp sans mécanisme macro → non prioritaire opérateur ;
+- incidents crypto réels (Bitget, bridge exploit, wallets, etc.) restent éligibles ;
+- regroupement Event Core 40.6.417 conservé.
 
-Le cluster conserve les articles et les sources ; il ne les efface pas.
+Le tri privilégie d'abord les événements éligibles au lane opérateur. Les compteurs critique/fort du résumé utilisent cette même population éligible.
 
-## Faux positif Hack VC
+## Protections
 
-`Hack VC` est désormais protégé comme nom d'entité de venture capital. Le mot `Hack` dans cette expression ne suffit plus à classer l'article comme cyberattaque.
+Inchangés :
+- Market Core **38.15.11** ;
+- Window Manager `aether-watch` ;
+- géométrie et F11 ;
+- Oracle / Lecture Technique / REDIVIDER / Storage ;
+- Strategy A métier / thresholds / Cost Gate ;
+- PAPER only, G3 PENDING, G9 LOCKED ;
+- aucun ordre réel.
 
-## Scores séparés
+## Preuve terrain attendue
 
-`operator_relevance` est ajouté comme dimension descriptive distincte. Les scores `evidence`, `impact`, `market_reaction` et pertinence opérateur ne sont pas fusionnés en une causalité.
-
-Le tri de production existant n'est **pas encore remplacé** dans cette foundation build.
-
-## Français / sources
-
-Cette build ne modifie ni :
-- Google News FR ;
-- le contrat français natif 40.4.291 ;
-- la politique `[EN]` de fallback ;
-- les sources configurées.
-
-Ces sujets restent pour la phase suivante après validation de l'Event Core.
-
-## CI
-
-Le workflow News Sentinel vérifie après collecte :
-- schema `atlas_news_event_core_v1` ;
-- build Event Core `40.6.417` ;
-- présence des identifiants/articles ;
-- absence du faux classement `Hack VC` → `security`.
-
-## Test Firefox
-
-1. Ctrl+F5 et confirmer **Build 40.6.417**.
-2. Ouvrir Aether Attention Watch.
-3. Vérifier les cinq contrôles Window Manager.
-4. Vérifier Market Core 38.15.11, Binance, Graphique, Math, Atlas, Oracle, Strategy.
-5. Après le prochain refresh News Sentinel, vérifier la réduction des doublons d'un même incident.
+1. Ctrl+F5 → **Build 40.6.418**.
+2. Ouvrir Aether tôt : aucune grille muette ; états `EN ATTENTE` visibles immédiatement.
+3. Laisser le runtime converger : Binance 5/5, News, Atlas CURRENT, Oracle.
+4. Vérifier tous les contrôles Window Manager et F11.
+5. Ouvrir News Sentinel : les événements génériques sans ancrage marché ne doivent plus dominer la priorité.
+6. Copier le Rapport de démarrage seulement pour comparer les temps ; il n'est plus nécessaire de reprover 40.6.417.
 
 ## Stop point
 
-Si Aether Watch ou son menu régresse : rollback immédiat 40.6.415.
+Si le Watch régresse en géométrie/Window Manager : rollback 40.6.417.
 
-Si le Watch reste intact mais Event Core ne regroupe pas correctement les événements : corriger uniquement le producteur News, sans toucher au Watch.
-
-## Archive semantic refresh
-
-The collector now recomputes deterministic derived semantics when carrying the previous archive forward. A stale historical classification (for example `Hack VC` previously stored as security/critical) cannot survive merely because it already existed in `latest.json`. Immutable source text and evidence provenance remain untouched.
-
+Si le relevance gate dégrade un événement crypto réellement pertinent : corriger uniquement le producteur News / gate ; ne pas toucher au Watch.

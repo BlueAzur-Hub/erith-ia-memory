@@ -25,6 +25,9 @@
   }
   function aetherVeilleOperatorEligible(event){
   const canonical=aetherNewsCanonicalEvent(event)||event||{};
+  // 40.6.418 — producer relevance gate is authoritative when present.
+  // The historical local guard remains as a backward-compatible second line of defense.
+  if(canonical?.operator_relevance?.eligible===false)return false;
   const assets=aetherVeilleTrustedAssets(canonical);
   const domains=(Array.isArray(canonical?.driver_domains)?canonical.driver_domains:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
   const topics=(Array.isArray(canonical?.matched_topics)?canonical.matched_topics:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
@@ -1115,9 +1118,66 @@ function aetherNewsMarketSemantic(){
     const detail=document.createElement('span');detail.textContent=aetherTimelineClip(entry.preview||entry.detail,88);detail.title=entry.detail||'';
     row.append(time,type,detail);return row;
   }
+  function aetherComponentReadinessPaint(panel){
+    const stage=panel?.querySelector('[data-aether-component-stage-406046]');if(!stage)return;
+    if(stage.dataset.aetherReadiness406418==='hydrated')return;
+    stage.dataset.aetherReadiness406418='waiting';
+    aetherSet(stage,'status_system','SHELL READY','neutral');
+    aetherSet(stage,'status_modules','HYDRATATION PROGRESSIVE','neutral');
+    aetherSet(stage,'attention_level','EN ATTENTE','neutral');
+    aetherSet(stage,'attention_why','Hydratation progressive des couches');
+    aetherSet(stage,'attention_watch','Marché · News · Atlas · Oracle');
+    aetherSet(stage,'system_status','EN ATTENTE','neutral');
+    aetherSet(stage,'system_cpu','N/D','muted');
+    aetherSet(stage,'system_ram','N/D','muted');
+    aetherSet(stage,'system_gpu','N/D','muted');
+    aetherSet(stage,'sources_status','EN ATTENTE','neutral');
+    aetherSet(stage,'sources_binance','EN ATTENTE');
+    aetherSet(stage,'sources_book','EN ATTENTE');
+    aetherSet(stage,'sources_news','EN ATTENTE');
+    aetherSet(stage,'sources_atlas','EN ATTENTE');
+    aetherSet(stage,'atlas_status','EN ATTENTE','neutral');
+    aetherSet(stage,'atlas_signal','CURRENT en attente');
+    aetherSet(stage,'atlas_score','—');
+    aetherSet(stage,'atlas_reports','0/4');
+    aetherSet(stage,'atlas_resident','EN ATTENTE');
+    aetherSet(stage,'oracle_status','EN ATTENTE','neutral');
+    aetherSet(stage,'oracle_asset','—');
+    aetherSet(stage,'oracle_scenario','EN ATTENTE');
+    aetherSet(stage,'oracle_regime','—');
+    aetherSet(stage,'oracle_confidence','—');
+    aetherSet(stage,'market_status','EN ATTENTE','neutral');
+    aetherSet(stage,'market_up','—');
+    aetherSet(stage,'market_down','—');
+    aetherSet(stage,'market_flat','—');
+    ['BTC','ETH','BNB','XRP','SOL'].forEach((symbol,i)=>{aetherSet(stage,`market_coin_${i}_symbol`,symbol);aetherSet(stage,`market_coin_${i}_change`,'—');});
+    aetherSet(stage,'convergence_ratio','0/4');
+    aetherSet(stage,'convergence_pct','0% couv.','neutral');
+    aetherSet(stage,'convergence_dominant','EN ATTENTE');
+    aetherSet(stage,'convergence_confirm_label','hydratation');
+    aetherSet(stage,'convergence_confirm','couches en attente');
+    aetherSet(stage,'divergence_status','EN ATTENTE','neutral');
+    aetherSet(stage,'divergence_detail','Couches en cours de disponibilité');
+    aetherSet(stage,'divergence_oppose','—');
+    aetherSet(stage,'weather_status','EN ATTENTE','neutral');
+    aetherSet(stage,'weather_today','—');
+    aetherSet(stage,'weather_rain','—');
+    aetherSet(stage,'weather_gust','—');
+    aetherSet(stage,'weather_detail','Source météo différée');
+    aetherCardTone(stage,'system','neutral');
+    aetherCardTone(stage,'sources','neutral');
+    aetherCardTone(stage,'atlas','neutral');
+    aetherCardTone(stage,'oracle','neutral');
+    aetherCardTone(stage,'market','neutral');
+    aetherCardTone(stage,'convergence','neutral');
+    aetherCardTone(stage,'divergence','neutral');
+    aetherCardTone(stage,'weather','neutral');
+    aetherCardTone(stage,'core','neutral');
+  }
   function aetherComponentPaint(panel,snapshot=aetherSnapshot(),watch=aetherOperatorWatch()){
     const stage=panel?.querySelector('[data-aether-component-stage-406046]');if(!stage)return;
     const vm=aetherComponentViewModel(snapshot,watch);
+    stage.dataset.aetherReadiness406418='hydrated';
     const now=new Date();
     const dateText=new Intl.DateTimeFormat('fr-FR',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).format(now);
     const timeText=new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
@@ -1291,6 +1351,7 @@ function aetherNewsMarketSemantic(){
       <nav class="aether46-actions" aria-label="Lectures Aether"><button type="button" data-aether46-open="history">Historique</button><button type="button" data-aether46-open="details">Détails</button></nav>`;
 
     panel.appendChild(stage);
+    aetherComponentReadinessPaint(panel);
     stage.querySelector('[data-aether46-open="history"]')?.addEventListener('click',()=>void aetherWorkbenchOpen('history',panel));
     stage.querySelector('[data-aether46-open="details"]')?.addEventListener('click',()=>void aetherWorkbenchOpen('details',panel));
     const events=stage.querySelector('[data-aether-card-406046="events"]');
@@ -1753,6 +1814,11 @@ function aetherNewsMarketSemantic(){
     aether_attention_workbench_global_window_manager:false,
     aether_attention_boot_order:"market_graph -> aether_core -> system_weather -> news_history_on_demand",
     aether_attention_boot_eager_refresh:false,
+    aether_attention_progressive_readiness:true,
+    aether_attention_progressive_readiness_build:"40.6.418",
+    aether_attention_progressive_readiness_network:false,
+    aether_attention_progressive_readiness_timer:false,
+    aether_attention_progressive_readiness_observer:false,
     aether_attention_history_dom_lazy:true,
     aether_attention_details_dom_lazy:true,
     aether_attention_new_recurring_timer:false,

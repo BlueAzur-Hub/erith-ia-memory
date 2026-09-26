@@ -35,7 +35,7 @@ MAX_PER_SOURCE = 50
 
 # 40.6.417 — Aether/News Event Core foundation.
 # Additive contract only: Aether Watch / Window Manager / presentation are untouched.
-EVENT_CORE_BUILD = "40.6.417"
+EVENT_CORE_BUILD = "40.6.418"
 EVENT_CORE_SCHEMA = "atlas_news_event_core_v1"
 EVENT_CLUSTER_WINDOW_HOURS = 48
 EVENT_CLUSTER_ENTITY_WINDOW_HOURS = 48
@@ -566,6 +566,103 @@ def driver_domains_for_text(text: str, matched_topics: list[str] | tuple[str, ..
     return domains
 
 
+
+OPERATOR_MARKET_MECHANISM_RE = re.compile(
+    r"\b(interest rates?|rate cuts?|rate hikes?|inflation|cpi|pce|jobs report|unemployment|gdp|recession|"
+    r"treasury yields?|bond yields?|liquidity|buybacks?|quantitative easing|quantitative tightening|\bqe\b|\bqt\b|"
+    r"oil|brent|opec|tariffs?|sanctions|ceasefire|fund flows?|inflows?|outflows?|redemptions?)\b",
+    re.I,
+)
+OPERATOR_CRYPTO_MARKET_RE = re.compile(
+    r"\b(bitcoin|btc|ethereum|ether|eth|solana|sol|xrp|bnb|crypto(?:currency)?|blockchain|defi|stablecoins?|"
+    r"web3|wallets?|tokens?|altcoins?|memecoins?|on[- ]?chain|staking|mining|perpetuals?|bridge|layerzero|dao)\b",
+    re.I,
+)
+OPERATOR_ADMINISTRATIVE_PRIMARY_RE = re.compile(
+    r"\b(approval of application|approves? application|application by|appoints?|appointment|personnel|"
+    r"termination of enforcement action|technical amendment|meeting notice)\b",
+    re.I,
+)
+
+def operator_market_relevance(
+    combined: str,
+    event_id: str,
+    assets: list[str],
+    matched: list[str],
+    driver_domains: list[str],
+    source_group: str,
+) -> dict[str, Any]:
+    text = semantic_text(combined)
+    topics = {str(value) for value in matched}
+    domains = {str(value) for value in driver_domains}
+    reasons: list[str] = []
+    score = 0
+    asset_anchor = bool(assets)
+    crypto_anchor = asset_anchor or "crypto" in topics or bool(OPERATOR_CRYPTO_MARKET_RE.search(text))
+    if asset_anchor:
+        score += 45
+        reasons.append("asset_anchor")
+    elif crypto_anchor:
+        score += 35
+        reasons.append("crypto_market_anchor")
+    strong_domains = domains & {"macro_liquidity", "institutional_flows", "regulation", "leverage"}
+    if strong_domains:
+        score += 25
+        reasons.append("driver_domain:" + ",".join(sorted(strong_domains)))
+    direct_topics = topics & {"money_flow", "treasury_liquidity", "regulation_market"}
+    if direct_topics:
+        score += 25
+        reasons.append("market_topic:" + ",".join(sorted(direct_topics)))
+    mechanism_anchor = bool(OPERATOR_MARKET_MECHANISM_RE.search(text))
+    if mechanism_anchor:
+        score += 20
+        reasons.append("market_mechanism")
+    if event_id == "security" and not crypto_anchor:
+        score = min(score, 20)
+        reasons.append("generic_security_without_market_anchor")
+    if event_id == "macro" and not (mechanism_anchor or crypto_anchor or "treasury_liquidity" in topics):
+        score = min(score, 20)
+        reasons.append("institution_name_without_macro_mechanism")
+    if event_id == "regulation" and not (crypto_anchor or "regulation_market" in topics):
+        score = min(score, 25)
+        reasons.append("generic_regulation_without_crypto_anchor")
+    if source_group == "primary" and OPERATOR_ADMINISTRATIVE_PRIMARY_RE.search(text) and not crypto_anchor:
+        score = min(score, 15)
+        reasons.append("administrative_primary_notice")
+    score = max(0, min(100, score))
+    return {"eligible": score >= 35, "market_anchor_score": score, "reasons": list(dict.fromkeys(reasons))}
+
+def apply_operator_relevance(event: dict[str, Any]) -> dict[str, Any]:
+    combined = f"{event.get('headline', '')} {event.get('body', '')}"
+    gate = operator_market_relevance(
+        combined,
+        str(event.get("event_type") or "general"),
+        list(event.get("assets") or []),
+        list(event.get("matched_topics") or []),
+        list(event.get("driver_domains") or []),
+        str(event.get("source_group") or "unknown"),
+    )
+    impact_score = int((event.get("impact") or {}).get("score") or 0)
+    evidence_score = int((event.get("evidence") or {}).get("score") or 0)
+    raw_relevance = int(event.get("relevance_score") or 0)
+    score = int(round(gate["market_anchor_score"] * 0.55 + impact_score * 0.25 + evidence_score * 0.10 + min(10, raw_relevance)))
+    if not gate["eligible"]:
+        score = min(score, 44)
+        event["decision"] = {
+            "action": "Archive contextuelle",
+            "checks": "Source conservée ; priorité opérateur refusée sans ancrage marché suffisant.",
+            "tone": "neutral",
+        }
+    event["operator_relevance"] = {
+        "score": max(0, min(100, score)),
+        "status": "eligible" if gate["eligible"] else "archive_context_only",
+        "eligible": bool(gate["eligible"]),
+        "market_anchor_score": int(gate["market_anchor_score"]),
+        "reasons": gate["reasons"],
+    }
+    return event
+
+
 def analyze_item(item: dict[str, Any]) -> dict[str, Any] | None:
     score, matched = relevance(item)
     threshold = 5 if item.get("source_group") in ("world", "finance") else 4
@@ -613,16 +710,8 @@ def analyze_item(item: dict[str, Any]) -> dict[str, Any] | None:
     driver_domains = driver_domains_for_text(combined, matched)
 
     source_tier, source_tier_label = event_core_source_tier(item)
-    operator_relevance_score = int(round(
-        impact_score * 0.45
-        + evidence_score * 0.25
-        + min(20, score * 2)
-        + (5 if any(topic in matched for topic in ("macro", "geopolitics", "energy", "institutional", "money_flow", "treasury_liquidity")) else 0)
-        + (4 if source_tier == 1 else 0)
-    ))
-    operator_relevance_score = max(0, min(100, operator_relevance_score))
 
-    return {
+    row = {
         "id": f"feed_{fingerprint}", "event_id": f"feed_{fingerprint}", "fingerprint": fingerprint,
         "version": VERSION, "origin": "github_news_collector", "headline": clean_text(item.get("headline", ""), 260),
         "body": clean_text(item.get("summary", ""), 1000), "source_name": item.get("source_name", "Source"),
@@ -644,9 +733,9 @@ def analyze_item(item: dict[str, Any]) -> dict[str, Any] | None:
         "canonical_topic": event_label, "article_ids": [f"feed_{fingerprint}"], "article_count": 1,
         "cluster_reason": "single_article",
         "source_tier": source_tier, "source_tier_label": source_tier_label,
-        "operator_relevance": {"score": operator_relevance_score, "status": "derived_not_trade_signal"},
         "market_reaction": {"score": None, "status": "not_measured", "causal_claim": False},
     }
+    return apply_operator_relevance(row)
 
 
 def title_tokens(title: str) -> set[str]:
@@ -722,7 +811,7 @@ def merge_event(base: dict[str, Any], other: dict[str, Any], cluster_reason: str
     merged["causal_claim"] = False
     if len(names) >= 2 and int(merged["evidence"]["score"]) >= 65 and int(merged.get("impact", {}).get("score", 0)) >= 68:
         merged["decision"] = {"action": "Surveillance renforcée", "checks": f"{len(names)} sources concordantes. Vérifier la source primaire et la réaction du marché.", "tone": "warn"}
-    return merged
+    return apply_operator_relevance(merged)
 
 
 def deduplicate(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -795,7 +884,7 @@ def refresh_previous_asset_derivation(event_value: Any) -> dict[str, Any]:
     event["event_core_build"] = EVENT_CORE_BUILD
     event["event_core_schema"] = EVENT_CORE_SCHEMA
     event.setdefault("cluster_reason", "archive_carry_forward")
-    return event
+    return apply_operator_relevance(event)
 
 
 def load_previous() -> list[dict[str, Any]]:
@@ -811,10 +900,13 @@ def load_previous() -> list[dict[str, Any]]:
         return []
 
 
-def event_sort_key(event: dict[str, Any]) -> tuple[int, int, float]:
+def event_sort_key(event: dict[str, Any]) -> tuple[int, int, int, float]:
+    operator = event.get("operator_relevance") if isinstance(event.get("operator_relevance"), dict) else {}
+    eligible = 1 if operator.get("eligible") is not False else 0
     return (
+        eligible,
+        int(operator.get("score") or 0),
         int(event.get("impact", {}).get("score", 0)),
-        int(event.get("evidence", {}).get("score", 0)),
         parse_date(event.get("event_time", "")).timestamp(),
     )
 
@@ -822,11 +914,15 @@ def event_sort_key(event: dict[str, Any]) -> tuple[int, int, float]:
 def build_summary(events: list[dict[str, Any]], source_status: list[dict[str, Any]]) -> dict[str, Any]:
     now = utc_now()
     last24 = [event for event in events if (now - parse_date(event.get("event_time", ""))) <= timedelta(hours=24)]
-    critical = [event for event in last24 if int(event.get("impact", {}).get("score", 0)) >= 85]
-    strong = [event for event in last24 if 68 <= int(event.get("impact", {}).get("score", 0)) < 85]
+    operator_last24 = [
+        event for event in last24
+        if not isinstance(event.get("operator_relevance"), dict) or event["operator_relevance"].get("eligible") is not False
+    ]
+    critical = [event for event in operator_last24 if int(event.get("impact", {}).get("score", 0)) >= 85]
+    strong = [event for event in operator_last24 if 68 <= int(event.get("impact", {}).get("score", 0)) < 85]
     ok_sources = [source for source in source_status if source.get("status") in ("ok", "empty")]
     failed_sources = [source for source in source_status if source.get("status") == "error"]
-    lead = max(last24 or events, key=event_sort_key, default=None)
+    lead = max(operator_last24 or last24 or events, key=event_sort_key, default=None)
 
     cutoff = now - timedelta(hours=72)
     recent = [event for event in events if parse_date(event.get("event_time", "")) >= cutoff]
@@ -844,7 +940,9 @@ def build_summary(events: list[dict[str, Any]], source_status: list[dict[str, An
 
     article_count = sum(max(1, int(event.get("article_count", 1))) for event in events)
     return {
-        "events_24h": len(last24), "critical_24h": len(critical), "strong_24h": len(strong),
+        "events_24h": len(last24), "operator_eligible_24h": len(operator_last24),
+        "context_only_24h": max(0, len(last24) - len(operator_last24)),
+        "critical_24h": len(critical), "strong_24h": len(strong),
         "sources_ok": len(ok_sources), "sources_total": len(source_status), "sources_failed": len(failed_sources),
         "lead_event_id": lead.get("id") if lead else None,
         "decision": "Surveillance renforcée" if critical or strong else "Surveillance normale",
@@ -1009,6 +1107,31 @@ def self_test() -> int:
     assert clustered[0]["source_count"] == 2
     assert clustered[0]["event_core_build"] == EVENT_CORE_BUILD
     assert clustered[0]["cluster_reason"] == "incident_entity_anchor"
+    assert clustered[0]["operator_relevance"]["eligible"] is True
+
+    fbi_security = {
+        "source_group": "world", "source_trust": 74,
+        "headline": "Inside the FBI hack: Agents fearful and angry after 'dangerous' data breach",
+        "summary": "Federal agents discuss an internal data breach with no crypto or market mechanism.",
+        "published_at": utc_now().isoformat(), "source_name": "BBC World", "source_id": "bbc_world",
+        "url": "https://example.com/fbi-breach",
+    }
+    fbi_event = analyze_item(fbi_security)
+    assert fbi_event is not None
+    assert fbi_event["operator_relevance"]["eligible"] is False
+    assert int(fbi_event["operator_relevance"]["score"]) <= 44
+
+    fed_admin = {
+        "source_group": "primary", "source_trust": 92,
+        "headline": "Federal Reserve Board announces approval of application by Peoples Bancorp Inc.",
+        "summary": "Administrative approval notice.",
+        "published_at": utc_now().isoformat(), "source_name": "Federal Reserve", "source_id": "fed",
+        "url": "https://example.com/fed-admin",
+    }
+    fed_admin_event = analyze_item(fed_admin)
+    assert fed_admin_event is not None
+    assert fed_admin_event["operator_relevance"]["eligible"] is False
+    assert int(fed_admin_event["operator_relevance"]["score"]) <= 44
 
     irrelevant = {
         "source_group": "world", "source_trust": 70,
@@ -1059,7 +1182,7 @@ def self_test() -> int:
     assert len(SOURCES) == 15
     assert BUILD == "40.3.89"
     assert VERSION == "V1.1-alpha.26.47.5"
-    assert EVENT_CORE_BUILD == "40.6.417"
+    assert EVENT_CORE_BUILD == "40.6.418"
     assert EVENT_CORE_SCHEMA == "atlas_news_event_core_v1"
     print("Atlas News Sentinel canonical 40.3.89 self-test: OK")
     return 0
