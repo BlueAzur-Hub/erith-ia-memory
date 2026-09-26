@@ -1,60 +1,64 @@
-# Agent-Crypto — News Flow Direction Truth + Role Quality Evidence
+# Agent-Crypto — News Taxonomy Truth
 
-Build **40.6.420** · parent **40.6.419** · Market Core **38.15.11**.
+Build **40.6.421** · parent **40.6.420** · Market Core **38.15.11**.
 
-## Terrain acquis avant cette version
+## Terrain acquis
 
-**40.6.419 AETHER NEWS-SET EXPOSURE GATE = PASS Firefox.**
+**40.6.420 = PASS Firefox.**
 
-Le système principal charge d'abord. News Sentinel termine son cycle. Le fil Aether apparaît ensuite déjà alimenté. Cette mécanique est **gelée** et n'est pas modifiée par 40.6.420.
+Le terrain fourni confirme :
+- Build 40.6.420 chargé ;
+- Aether / consultation READY ;
+- événement ETF positif : **FLUX MIXTES · INDÉTERMINÉ**, aucun faux FLUX SORTANTS ;
+- les sept composantes de **SOLIDITÉ DE LA LECTURE DU RÔLE** sont visibles et chiffrées.
 
-## Audit News Sentinel — P0 prouvé
+Les contrats 40.6.419 Aether boot et 40.6.420 News Flow / Role Quality sont gelés.
 
-Le snapshot terrain 40.6.419 montrait deux défauts de vérité opérateur :
+## Audit Taxonomy Truth
 
-1. une storyline ETF positive / inflows pouvait être accompagnée de **ETF / FLUX SORTANTS · OFFRE / VENTE** ;
-2. **SOLIDITÉ DE LA LECTURE DU RÔLE** affichait un total (ex. 78/100) alors que ses composantes visibles restaient à `—`.
+Trois erreurs de taxonomie réelles existaient dans le corpus courant :
 
-### Cause 1 — direction de flux
+1. **Bitcoin ETFs Notch Seven-Day Winning Streak as 2026 Flows Turn Green**
+   - ancien : `Réglementation / structure de marché`
+   - nouveau : **ETF / flux institutionnels**
+   - cause : le résumé mentionnait le Clarity Act.
 
-`newsMarketDemandContext()` mettait l'événement sélectionné et tous les événements de contexte dans le même panier, puis `newsMarketBestRawRole()` prenait le meilleur score de preuve.
+2. **Here’s what happened in crypto today**
+   - ancien : `Régulation / justice`
+   - nouveau : **Information de marché à qualifier**
+   - cause : un recap générique héritait du mot « regulation » présent dans son résumé.
 
-Donc un article de contexte `outflow` mieux scoré pouvait renverser une storyline sélectionnée `inflow`.
+3. **$161 Million in Decade-Old Bitcoin Has Moved in Just Two Weeks**
+   - ancien : `Régulation / justice`
+   - nouveau : **Mouvement on-chain / transferts**
+   - cause : le résumé contenait une mention incidente de « lawsuit tags ».
 
-### Cause 2 — composantes de solidité invisibles
+## Correction 40.6.421
 
-Le renderer écrivait dans des IDs hérités `*_40237` alors que le HTML canonique expose `newsMarketRoleQuality_<composante>`.
-
-Le score était calculé, mais sa preuve visuelle n'était pas raccordée.
-
-## Correction 40.6.420
-
-### Flux
-- un flux explicite dans **l'événement sélectionné** a priorité ;
-- les événements liés ne servent qu'en fallback/contexte ;
-- si le contexte contient réellement des flux entrants **et** sortants, aucun gagnant arbitraire n'est choisi :
-  **ETF / FLUX MIXTES · INDÉTERMINÉ** ;
-- le score de preuve ne peut plus, à lui seul, inverser le sens d'un flux.
-
-### Solidité de lecture
-Les sept composantes canoniques sont de nouveau écrites : Preuve source, Sources distinctes, Timestamp, Actif, Mécanisme, Timeline, Marché.
+- le titre possède la taxonomie principale ;
+- ETF + sémantique de flux dans le titre => `etf_flow` ;
+- recap quotidien générique => `general` ;
+- mouvement wallet/on-chain sans rôle réglementaire du titre => `onchain_movement` ;
+- les topics/domaines Régulation hérités du corps sont retirés lorsque le titre ne porte pas ce rôle ;
+- le carry-forward de l'archive recalcule ces dérivations ;
+- fixtures réelles dans le self-test ;
+- workflow News valide `taxonomy_build = 40.6.421`.
 
 ## Non modifié
-Collector News Sentinel / Event Core / relevance gate ; Aether 40.6.419 ; Watch / Window Manager / F11 ; Market Core 38.15.11 ; Oracle / LT / Atlas CURRENT ; Strategy / TRADUS / Storage. Aucun nouveau fetch, timer, observer ou stockage. PAPER only · G3 PENDING · G9 LOCKED.
+
+Aether 40.6.419 · Flow/Role Quality 40.6.420 · Event Core schema/build 40.6.418 · Market Core 38.15.11 · Window Manager/F11 · Oracle · Lecture Technique · Atlas CURRENT · Strategy/TRADUS · Storage.
+
+Aucun nouvel ordre, timer, observer, stockage ou propriétaire réseau.
 
 ## Terrain Firefox attendu
-1. Ctrl+F5 → **Build 40.6.420**.
-2. Confirmer que le boot Aether reste celui validé en 40.6.419.
-3. Ouvrir News Sentinel / NEWS→MARCHÉ.
-4. Une storyline ETF positive ne doit plus être inversée en `FLUX SORTANTS` par un contexte opposé.
-5. Si les deux sens sont réellement présents : `FLUX MIXTES · INDÉTERMINÉ`.
-6. **SOLIDITÉ DE LA LECTURE DU RÔLE** doit montrer ses composantes et leurs détails.
+
+1. Ctrl+F5 → **Build 40.6.421**.
+2. Aether conserve le boot validé 40.6.419.
+3. Les garanties 40.6.420 restent intactes.
+4. Vérifier les trois cas de taxonomie ci-dessus.
+5. Aucun ne doit retomber arbitrairement dans Régulation / justice.
 
 ## Roadmap
-- **40.6.421 — Taxonomy Truth**
 - **40.6.422 — Storyline Clustering / Diversity**
 - **40.6.423 — Criticality vs Operator Relevance**
-- **40.6.424 — Langue / présentation**, seulement après la sémantique.
-
-## Stop
-Ne pas retoucher le chargement Aether. Une intention : vérité directionnelle + preuve visible.
+- **40.6.424 — Language / operator polish**, après la sémantique.

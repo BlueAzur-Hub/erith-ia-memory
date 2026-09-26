@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.420",
+  "build": "40.6.421",
   "engine": "38.15.11",
-  "release": "NEWS FLOW DIRECTION TRUTH + ROLE QUALITY EVIDENCE",
+  "release": "NEWS TAXONOMY TRUTH",
   "published": true,
-  "status": "published_pending_firefox_420",
-  "parent_build": "40.6.419",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.420",
-  "administrator_build": "40.6.420",
-  "build_label": "Build 40.6.420 · Administrator",
+  "status": "published_pending_firefox_421",
+  "parent_build": "40.6.420",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.421",
+  "administrator_build": "40.6.421",
+  "build_label": "Build 40.6.421 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -18,7 +18,7 @@
   "lecture_technique_modified": false,
   "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": true,
+  "administrator_presentation_modified": false,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 puis confirmer Build 40.6.420. Vérifier que le boot Aether 40.6.419 reste PASS/frozen. Dans News Sentinel, un événement ETF/inflows ne doit plus être renversé en FLUX SORTANTS par un contexte opposé mieux scoré ; si les événements liés contiennent réellement les deux sens, afficher ETF / FLUX MIXTES · INDÉTERMINÉ. Vérifier aussi que les 7 composantes de SOLIDITÉ DE LA LECTURE DU RÔLE affichent leurs points/détails au lieu de —.",
+  "terrain_pending": "Firefox: Ctrl+F5 puis confirmer Build 40.6.421. Vérifier que le boot Aether 40.6.419 reste PASS/frozen et que les garanties 40.6.420 restent intactes. Dans News Sentinel: (1) Winning Streak / Flows Turn Green => ETF / flux institutionnels; (2) Here’s what happened in crypto today => Information de marché à qualifier; (3) Decade-Old Bitcoin Has Moved => Mouvement on-chain / transferts.",
   "terrain_proof": null,
-  "release_notes": "40.6.420 is a bounded News Sentinel semantic-truth repair after the 40.6.419 Aether boot fix. Selected-event flow now has precedence; opposite context flows become MIXED/INDETERMINATE instead of an arbitrary highest-evidence direction. Role Quality component DOM bindings are repaired so the displayed score is auditable. Collector, Aether gate, Market Core, Watch, F11, Oracle, LT and Strategy are unchanged.",
+  "release_notes": "40.6.421 is a bounded News Sentinel taxonomy-truth repair. Event ownership is headline-first; explicit ETF-flow headlines outrank incidental regulatory context; generic daily recaps no longer inherit Regulation/Justice from body mentions; plain on-chain transfers receive a neutral on-chain movement taxonomy instead of Justice. Archive carry-forward is deterministically refreshed. Aether, Market Core, Oracle, LT, Atlas CURRENT, Strategy, Storage and the 40.6.420 flow/Role Quality repairs are unchanged.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5001,12 +5001,50 @@
     "paper_only": true,
     "g3": "PENDING",
     "g9": "LOCKED",
-    "terrain_required": true
+    "terrain_required": false,
+    "terrain_proof": "PASS_FIREFOX_406420",
+    "terrain_observation": "Selected positive ETF story rendered FLUX MIXTES / INDÉTERMINÉ rather than false FLUX SORTANTS; all seven Role Quality components displayed values; consultation readiness reported READY and Aether ready."
   },
   "next_news_roadmap": {
-    "40.6.421": "taxonomy truth audit — recap/regulation, on-chain movement/justice, security/macro classification fixtures",
     "40.6.422": "storyline clustering/diversity — consolidate repeated ETF narratives before operator priority",
     "40.6.423": "criticality vs operator relevance calibration — reduce 91–100 saturation without weakening source evidence",
     "40.6.424": "language/operator-lane polish only if still needed after semantic terrain"
+  },
+  "news_taxonomy_truth_406421": {
+    "repair_in": "40.6.421",
+    "owners": [
+      "public/agent_crypto_erith_ia/tools/atlas_news_collector.py",
+      ".github/workflows/atlas_news_collector.yml"
+    ],
+    "audit_scope": "News Sentinel taxonomy truth",
+    "root_cause": "detect_event classified headline + summary as one first-match bag, allowing incidental body mentions to hijack the event owner",
+    "repairs": [
+      "headline-first event ownership",
+      "explicit ETF flow headline precedence over incidental regulation context",
+      "generic daily recap guard => general",
+      "plain on-chain transfer guard => onchain_movement",
+      "taxonomy topic + driver-domain decontamination",
+      "archive carry-forward deterministic taxonomy refresh",
+      "collector self-tests + workflow archive validation"
+    ],
+    "known_fixtures": [
+      "Winning Streak / Flows Turn Green => etf_flow",
+      "Here’s what happened in crypto today => general",
+      "Decade-Old Bitcoin Has Moved => onchain_movement"
+    ],
+    "event_core_schema_changed": false,
+    "event_core_build_preserved": "40.6.418",
+    "aether_modified": false,
+    "market_core_modified": false,
+    "oracle_modified": false,
+    "lecture_technique_modified": false,
+    "strategy_modified": false,
+    "storage_modified": false,
+    "new_fetch_owner": false,
+    "new_timer": false,
+    "new_observer": false,
+    "real_order": false,
+    "paper_only": true,
+    "terrain_required": true
   }
 }
