@@ -4,7 +4,7 @@
   "use strict";
   if(globalThis.AgentCryptoBootContinuityProbe406414)return;
   const BUILD="40.6.414";
-  const fmt=v=>Number.isFinite(Number(v))?Number(v).toFixed(0)+" ms":"—";
+  const fmt=v=>(v==null||v==="")?"non mesuré":(Number.isFinite(Number(v))?Number(v).toFixed(0)+" ms":"non mesuré");
   function snapshot(){
     try{return globalThis.AgentCryptoDecisionBoardGate406412?.snapshot?.()||null;}catch(_){return null;}
   }
@@ -13,7 +13,8 @@
     const lines=["DECISION BOARD CONTINUITY · 40.6.414"];
     if(!s){lines.push("gate API · unavailable");return lines;}
     lines.push("active "+(s.active_build?"YES":"NO")+" · rendered "+Number(s.rendered||0)+" · deferred "+Number(s.deferred||0)+" · deduped "+Number(s.deduped||0)+" · forced "+Number(s.forced||0)+" · errors "+Number(s.errors||0));
-    lines.push("strategy "+(s.strategy_ready?"READY":"WAIT")+" · postboot "+(s.postboot_ready?"READY":"WAIT")+" · pending "+(s.pending?"YES":"NO")+" · last "+fmt(s.last_duration_ms)+" · reason "+String(s.last_reason||"—"));
+    const strategyState=s.strategy_failed?"FAILED":(s.strategy_ready?"READY":"WAIT");
+    lines.push("strategy "+strategyState+" · postboot "+(s.postboot_ready?"READY":"WAIT")+" · pending "+(s.pending?"YES":"NO")+" · last "+fmt(s.last_duration_ms)+" · reason "+String(s.strategy_failure_reason||s.last_reason||"—"));
     lines.push("continuity fix "+String(s.continuity_fix||"—")+" · presentation-only");
     return lines;
   }
@@ -31,6 +32,5 @@
     recurring_timer:false
   });
   globalThis.AgentCryptoBootContinuityProbe406414=api;
-  globalThis.AgentCryptoBootSurgicalProbe406411=api;
   try{globalThis.AgentCryptoBootProbe?.mark?.("decision-board-continuity-probe-ready",{build:BUILD});}catch(_){}
 })();
