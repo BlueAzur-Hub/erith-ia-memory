@@ -475,7 +475,7 @@
     loadStrategyCoreNow,
     ensureTradusAutoResidency:ensureTradusAutoResidency405,
     autoStartStrategy:autoStartStrategy405,
-    diagnostics:()=>Object.freeze({build:BUILD,schema:"agent_crypto_residency_pipeline_diagnostic_v1",long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length,long_tasks:Object.freeze(LONG_TASKS.map(row=>Object.freeze({...row}))),loads:Object.freeze([...LOAD_DIAGNOSTICS.values()].map(row=>Object.freeze({...row}))),scheduler_unchanged:false,module_order_unchanged:true,strategy_core_waits_removed:true,strategy_core_aether_first:true,strategy_core_task_yield:"MESSAGE_CHANNEL",surgical_probe_406411:true,secondary_split_probe_406413:true,decision_board_continuity_fix_406414:true,decision_board_continuity_fix_406414:true}),
+    diagnostics:()=>Object.freeze({build:BUILD,schema:"agent_crypto_residency_pipeline_diagnostic_v1",long_task_supported:LONG_TASK_SUPPORTED,long_task_count:LONG_TASKS.length,long_tasks:Object.freeze(LONG_TASKS.map(row=>Object.freeze({...row}))),loads:Object.freeze([...LOAD_DIAGNOSTICS.values()].map(row=>Object.freeze({...row}))),scheduler_unchanged:false,module_order_unchanged:true,strategy_core_waits_removed:true,strategy_core_aether_first:true,strategy_core_task_yield:"MESSAGE_CHANNEL",surgical_probe_406411:true,secondary_split_probe_406413:true,decision_board_continuity_fix_406414:true}),
     marketDemandModules:MARKET_DEMAND_MODULES.slice(),
     market_lazy_cycle_guard:true,
     same_application:true,
