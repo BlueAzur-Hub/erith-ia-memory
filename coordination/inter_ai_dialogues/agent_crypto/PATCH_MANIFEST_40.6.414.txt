@@ -1,0 +1,26 @@
+AGENT-CRYPTO 40.6.414 — PATCH MANIFEST
+Parent: 40.6.413
+Rollback: 40.6.407
+Market Core: 38.15.11
+Scope: Decision Board continuity + diagnostic truth + release coherence
+
+RUNTIME FILES
+public/agent_crypto_erith_ia/administrator/app.js
+public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js
+public/agent_crypto_erith_ia/administrator/js/boot-surgical-probe-406413.js
+public/agent_crypto_erith_ia/administrator/js/decision-board-continuity-probe-406414.js
+public/agent_crypto_erith_ia/administrator/index.html
+public/agent_crypto_erith_ia/administrator/build.json
+public/agent_crypto_erith_ia/administrator/RELEASE.md
+public/agent_crypto_erith_ia/administrator/index-40.6.414.html
+
+HANDOFF
+coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_SEVEN_AGENT_CRYPTO_40.6.414.md
+
+OUT OF SCOPE / UNCHANGED
+Market Core 38.15.11; Atlas/CURRENT business logic; Strategy A business logic; Aether business logic; Oracle; Math; Technical Reading; Storage business logic; Window Manager; real orders.
+
+VALIDATION
+Static branch checks: required before merge.
+GitHub Pages: required after merge.
+Firefox operator: PENDING until Christophe tests.
