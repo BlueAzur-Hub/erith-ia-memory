@@ -6,21 +6,30 @@ Parent: 40.6.415
 Rollback: 40.6.415
 Market Core: 38.15.11
 
-PROTECTED / UNCHANGED
----------------------
+PUBLISHED COMMITS
+-----------------
+PR #32 merge: 68f600ef930f8e77534894713358352a8d3d2c9c
+PR #33 finalize merge: ee8f5398c4044ef6e48ffac776bba5e231c01430
+News archive refresh: da01d885c501c57ee5927c5cd118521012eb225a
+
+PROTECTED / BYTE-IDENTICAL TO 40.6.415
+------------------------------------
 js/aether.js
-Aether Attention Watch shell / geometry / F11
-Administrator Window Manager aether-watch
+  SHA: e8a3e52c82943c08324b61d2f3a7b9bfe490b04f
+Administrator Window Manager
+  SHA: c1da17f67984512efa17f2a88a41e03af59822f4
+Aether Attention Watch shell / geometry / F11 / native menu
 Market Core 38.15.11
 Graphique / Math Core / Atlas CURRENT / Oracle / Lecture Technique
 Decision Board / Strategy / Paper / Gates / Storage / Shared Memory
-Google News FR routing and native-French contract 40.4.291
+Google News FR routing and native-French display contract 40.4.291
 
 FUNCTIONAL CHANGES
 ------------------
 public/agent_crypto_erith_ia/tools/atlas_news_collector.py
 .github/workflows/atlas_news_collector.yml
-public/agent_crypto_erith_ia/administrator/index.html (version identity/cache tokens only)
+public/agent_crypto_erith_ia/administrator/index.html
+  version identity/cache tokens only
 public/agent_crypto_erith_ia/administrator/build.json
 public/agent_crypto_erith_ia/administrator/RELEASE.md
 
@@ -31,22 +40,41 @@ Producer build: 40.6.417
 Contract: one real event = one operator story; articles = confirmations.
 Same URL clustering: retained.
 Headline similarity threshold: retained at 0.46.
-Incident entity anchor clustering: added for security/bankruptcy inside 36 h.
+Incident entity-anchor clustering: security/bankruptcy, bounded 48 h.
+Archive semantic refresh: enabled for deterministic derived fields.
 Article/source confirmations preserved.
-Hack VC ambiguous-entity guard added.
+Hack VC ambiguous-entity guard: event type, sector and stale critical impact corrected.
 Source tier added.
 Operator relevance added as a separate descriptive dimension.
 Market reaction remains not_measured; causal_claim=false.
-Production sort policy unchanged.
+Production sort policy unchanged in this foundation build.
+
+PRODUCTION ARCHIVE PROOF
+------------------------
+Event Core: 120 unique events from 140 article records.
+Clustered articles: 20.
+Bitget incident: 1 security event · 11 article confirmations · 3 distinct sources.
+Hack VC stale false-positive: absent from security/critical lane after semantic refresh.
+Native French contract: 40.4.291 unchanged.
+Current native-French events: 13 / 120.
+Current English archive fallback: 107 / 120.
+Machine translation: false.
 
 CI
 --
-News workflow validates Event Core schema/build/article fields and rejects Hack VC→security false positives after collection.
+Version Truth: PASS.
+Version Delivery: PASS.
+News Sentinel canonical collector self-test: PASS.
+French-first router self-test: PASS.
+Native-French contract self-test: PASS.
+News Event Core validation: PASS.
+Administrator News/Aether consumer contract: PASS.
 
 TERRAIN
 -------
-PENDING Firefox + News Sentinel refresh.
-Stop immediately if Aether Watch/menu/Window Manager differs from 40.6.415.
+Firefox 40.6.417: PENDING operator.
+Mandatory first check: Aether Attention Watch + native Window Manager controls remain identical to 40.6.415.
+Then verify Market / Graph / Math / Atlas / Oracle / Strategy and News Sentinel/Event Core.
 
 ZIP DELIVERY NAME
 -----------------
