@@ -92,17 +92,18 @@
       diag=(globalThis.AgentCryptoPostBootRuntime?.diagnostics?.()?.loads||[])
         .find(r=>short(r.src)===src)||null;
     }catch(_){}
-    const responseEnd=Number(diag?.response_end_ms);
-    const loadEnd=Number(diag?.load_end_ms);
-    const enterAt=Number(enter?.t_ms),exitAt=Number(exit?.t_ms);
-    const delta=(a,b)=>Number.isFinite(a)&&Number.isFinite(b)?Math.max(0,b-a):null;
+    const finiteOrNull=value=>(value==null||value==="")?null:(Number.isFinite(Number(value))?Number(value):null);
+    const responseEnd=finiteOrNull(diag?.response_end_ms);
+    const loadEnd=finiteOrNull(diag?.load_end_ms);
+    const enterAt=finiteOrNull(enter?.t_ms),exitAt=finiteOrNull(exit?.t_ms);
+    const delta=(a,b)=>a!=null&&b!=null?Math.max(0,b-a):null;
     return {
       src,
       response_to_enter_ms:delta(responseEnd,enterAt),
       eval_ms:delta(enterAt,exitAt),
       exit_to_load_ms:delta(exitAt,loadEnd),
-      resource_fetch_ms:Number.isFinite(Number(diag?.resource_fetch_ms))?Number(diag.resource_fetch_ms):null,
-      total_load_ms:Number.isFinite(Number(diag?.load_event_ms))?Number(diag.load_event_ms):null
+      resource_fetch_ms:finiteOrNull(diag?.resource_fetch_ms),
+      total_load_ms:finiteOrNull(diag?.load_event_ms)
     };
   }
 
@@ -117,7 +118,7 @@
     return out.sort((a,b)=>b.duration_ms-a.duration_ms);
   }
 
-  const fmt=v=>Number.isFinite(Number(v))?Number(v).toFixed(0)+" ms":"—";
+  const fmt=v=>(v==null||v==="")?"non mesuré":(Number.isFinite(Number(v))?Number(v).toFixed(0)+" ms":"non mesuré");
   function humanLines(){
     const lines=["SURGICAL BOOT PROBE · 40.6.413"];
     lines.push("Wrappers installés        "+installed.length+"/20 · diagnostic seulement");
@@ -139,7 +140,7 @@
       const s=scriptSplit(src);
       lines.push(src+" · resource "+fmt(s.resource_fetch_ms)+" · response→eval "+fmt(s.response_to_enter_ms)+" · eval "+fmt(s.eval_ms)+" · eval→load "+fmt(s.exit_to_load_ms)+" · total "+fmt(s.total_load_ms));
     });
-    const postMarks=(globalThis.AgentCryptoBootProbe?.snapshot?.()?.marks||[]).filter(r=>r.name==="postboot-schedule-406411"||r.name==="postboot-schedule-fired-406411");
+    const postMarks=(globalThis.AgentCryptoBootProbe?.snapshot?.()?.marks||[]).filter(r=>r.name==="postboot-schedule-406412"||r.name==="postboot-schedule-fired-406412");
     if(postMarks.length){
       lines.push("POSTBOOT TIMER");
       postMarks.slice(-4).forEach(r=>lines.push(r.name+" · t="+fmt(r.t_ms)+" · reason="+String(r.detail?.reason||"—")+" · drift="+fmt(r.detail?.drift_ms)));
