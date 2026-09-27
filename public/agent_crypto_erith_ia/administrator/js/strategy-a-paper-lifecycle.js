@@ -533,7 +533,7 @@
       #strategyAPaperLifecycle .spl-title{font-size:9px;font-weight:950;letter-spacing:.09em;text-transform:uppercase;color:#ffe3a3}
       #strategyAPaperLifecycle .spl-sub{margin-top:3px;font-size:8px;line-height:1.35;color:#a99b7c}
       #strategyAPaperLifecycle .spl-actions{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}
-      #strategyAPaperLifecycle .spl-actions button{font-size:8px!important;min-height:28px!important}
+      #strategyAPaperLifecycle .spl-actions button{font-size:13px!important;min-height:38px!important}
       #strategyAPaperLifecycle .spl-state{padding:8px;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:rgba(0,0,0,.15);font-size:9px;color:#f5eee0}
       #strategyAPaperLifecycle .spl-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:7px}
       #strategyAPaperLifecycle .spl-kpi{padding:6px 7px;border:1px solid rgba(255,255,255,.06);border-radius:7px;background:rgba(255,255,255,.018)}

@@ -486,7 +486,7 @@
       #${PANEL_ID} .k span{display:block;font-size:7px;color:#789b91;text-transform:uppercase}
       #${PANEL_ID} .k b{display:block;margin-top:2px;font-size:8px;color:#effffb;overflow-wrap:anywhere}
       #${PANEL_ID} .n{margin-top:6px;font-size:8px;color:#88a9a0;line-height:1.35}
-      #${PANEL_ID} button{font-size:8px!important;min-height:26px!important}
+      #${PANEL_ID} button{font-size:13px!important;min-height:38px!important}
     `;
     document.head.appendChild(s);
   }

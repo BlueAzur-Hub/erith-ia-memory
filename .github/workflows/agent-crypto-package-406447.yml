@@ -1,0 +1,100 @@
+name: Agent-Crypto Package 40.6.447 Strategy Human Readability
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406447.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate 40.6.447 readability
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-execution-cost-truth.js"
+          node --check "$ROOT/js/strategy-a-paper-lifecycle.js"
+          node --check "$ROOT/js/strategy-a-replay.js"
+          node --check "$ROOT/js/strategy-a-g3-prospective-t0-capture.js"
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          css=(root/"strategy-human-readability.css").read_text(encoding="utf-8")
+          idx=(root/"index.html").read_text(encoding="utf-8")
+          b=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          sizes=[float(x) for x in re.findall(r'font-size:\s*([0-9.]+)px',css)]
+          checks={
+            "build":b.get("build")=="40.6.447",
+            "market_core":b.get("market_core")=="38.15.11",
+            "css_link":'strategy-human-readability.css?v=40.6.447' in idx,
+            "min_font":bool(sizes) and min(sizes)>=12.5,
+            "no_new_priority":"!important" not in css,
+            "human_gate_grid":'grid-template-columns:repeat(3,minmax(0,1fr))' in css,
+            "gate_wrap":'white-space:normal' in css,
+          }
+          files={
+            "execution":(root/"js/strategy-a-execution-cost-truth.js").read_text(encoding="utf-8"),
+            "lifecycle":(root/"js/strategy-a-paper-lifecycle.js").read_text(encoding="utf-8"),
+            "replay":(root/"js/strategy-a-replay.js").read_text(encoding="utf-8"),
+            "g3":(root/"js/strategy-a-g3-prospective-t0-capture.js").read_text(encoding="utf-8"),
+          }
+          checks.update({
+            "execution_button":"font-size:13px!important" in files["execution"] and "min-height:40px!important" in files["execution"],
+            "lifecycle_button":"font-size:13px!important;min-height:38px!important" in files["lifecycle"],
+            "replay_button":"font-size:13px!important;min-height:38px!important" in files["replay"],
+            "g3_button":"font-size:13px!important;min-height:38px!important" in files["g3"],
+            "loader_446_owner":'details[data-collapse-key="simulation"]' in (root/"js/strategy-a-audit-demand-loader.js").read_text(encoding="utf-8"),
+          })
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"40.6.447 readability validation failed: {bad}")
+          print("40.6.447 STRATEGY HUMAN READABILITY STATIC PASS")
+          PY
+
+      - name: Build bounded ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_STRATEGY_HUMAN_READABILITY_40.6.447.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406447
+          mkdir -p /tmp/agent-crypto-406447/administrator/js
+          cp "$ROOT/index.html" /tmp/agent-crypto-406447/administrator/
+          cp "$ROOT/index-40.6.447.html" /tmp/agent-crypto-406447/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406447/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406447/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406447/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.447.txt" /tmp/agent-crypto-406447/administrator/
+          cp "$ROOT/strategy-human-readability.css" /tmp/agent-crypto-406447/administrator/
+          cp "$ROOT/js/strategy-a-execution-cost-truth.js" /tmp/agent-crypto-406447/administrator/js/
+          cp "$ROOT/js/strategy-a-paper-lifecycle.js" /tmp/agent-crypto-406447/administrator/js/
+          cp "$ROOT/js/strategy-a-replay.js" /tmp/agent-crypto-406447/administrator/js/
+          cp "$ROOT/js/strategy-a-g3-prospective-t0-capture.js" /tmp/agent-crypto-406447/administrator/js/
+          (cd /tmp/agent-crypto-406447 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_STRATEGY_HUMAN_READABILITY_40.6.447.zip" "$ROOT/AGENT_CRYPTO_STRATEGY_HUMAN_READABILITY_40.6.447.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.447 Strategy readability ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

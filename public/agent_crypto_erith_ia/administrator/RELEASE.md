@@ -1,33 +1,33 @@
-# Agent-Crypto 40.6.446 — STRATEGY A DEMAND LOADER OWNER FIX
+# Agent-Crypto 40.6.447 — STRATEGY HUMAN READABILITY
 
-## Objectif unique
-Réparer le déclenchement on-demand des audits Strategy A / Execution Cost dans Simulation.
+## Pourquoi cette version existe
+La dette n'est pas nouvelle : le Fil Crypto avait déjà fixé une règle simple — à 100 % dans Firefox, chaque phrase doit être lisible sans zoom. Strategy a pourtant réaccumulé des libellés à 7–10 px et des grilles trop compactes.
 
-## Cause prouvée
-Le DOM canonique est :
-```html
-<details data-collapse-key="simulation">
-  ...
-  <section id="simulation">...</section>
-</details>
-```
+## Correction
+- couche canonique `strategy-human-readability.css`, nom stable et non versionné ;
+- texte courant : 13 px ;
+- libellés techniques : 12,5 px minimum ;
+- valeurs : 14 px ;
+- titres : 16 à 18 px ;
+- boutons : 13 px, hauteur minimale 38 px ;
+- résumé 9 Gates : 3 colonnes au lieu de 9 sur grand écran, texte autorisé à revenir à la ligne ;
+- Cost-Wait : 3 colonnes ;
+- Oracle/Cost : 2 colonnes ;
+- grilles After-Cost / Evidence / Replay / Paper V2 / TRADUS décompressées ;
+- aucune information supprimée ou cachée.
 
-Le loader 40.6.443 testait l'événement `toggle` et la propriété `.open` sur `#simulation`, qui est une `<section>`, pas le `<details>` ouvrable.
+Quatre propriétaires qui forçaient encore des boutons microscopiques avec des déclarations prioritaires sont corrigés à la source :
+- `strategy-a-execution-cost-truth.js`
+- `strategy-a-paper-lifecycle.js`
+- `strategy-a-replay.js`
+- `strategy-a-g3-prospective-t0-capture.js`
 
-## Correction 40.6.446
-Le propriétaire d'ouverture devient exclusivement :
-```
-details[data-collapse-key="simulation"]
-```
+## Tests avant commit
+- CSS : aucune taille de texte définie sous 12,5 px ;
+- CSS : aucune nouvelle déclaration prioritaire ;
+- cascade locale : la couche canonique gagne contre les anciens styles 7–10 px même lorsqu'ils sont injectés après elle ;
+- rendu représentatif local : PASS ;
+- aucun changement de seuil, calcul, stockage, réseau, timer ou ordre d'exécution.
 
-Deux chemins testés localement avant commit :
-- Simulation fermée puis ouverte : PASS, 3/3 modules chargés dans l'ordre.
-- Simulation déjà ouverte au chargement du loader : PASS, 3/3 modules chargés dans l'ordre.
-
-Ordre attendu :
-1. COST-WAIT OUTCOME AUDIT
-2. ORACLE / COST CALIBRATION TRUTH
-3. EXECUTION COST TRUTH
-
-## Protégé
-Backend/API 40.6.441 · cadrage Graphique 40.6.442 · Oracle metrics 40.6.445 · Strategy A métier / seuils · Market Core 38.15.11 · Aether · stockage · timers / observers.
+## Gel
+40.6.441 Backend · 40.6.442 Graphique · 40.6.445 Oracle metrics · 40.6.446 loader Strategy · Market Core 38.15.11.

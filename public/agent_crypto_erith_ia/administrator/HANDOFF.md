@@ -1,17 +1,22 @@
-# HANDOFF — Agent-Crypto 40.6.446
+# HANDOFF — Agent-Crypto 40.6.447
 
-Objectif unique : vérifier le remontage on-demand des trois panneaux Strategy A réparés.
+Objectif unique : lisibilité humaine de Strategy.
 
-## Test Firefox unique
-1. Vérifier **Build 40.6.446**.
-2. Ouvrir **Simulation**.
-3. Ne rien chercher ailleurs dans la page.
-4. Dans Simulation, vérifier la présence de :
-   - **STRATEGY A · COST-WAIT OUTCOME AUDIT**
-   - **STRATEGY A · ORACLE / COST CALIBRATION TRUTH**
-   - **STRATEGY A · EXECUTION COST TRUTH**
-5. Le troisième panneau doit proposer **MESURER KRAKEN + OKX**.
+## Test Firefox
+À 100 % de zoom :
+1. vérifier **Build 40.6.447** ;
+2. ouvrir **Simulation** ;
+3. lire Strategy normalement, sans zoom ni recherche ;
+4. contrôler visuellement :
+   - statut Strategy / résumé 9 Gates ;
+   - Cost-Wait Outcome Audit ;
+   - Oracle / Cost Calibration Truth ;
+   - Execution Cost Truth ;
+   - panneaux Paper / Replay / Evidence déjà présents ;
+   - TRADUS si présent.
 
-Si un titre manque : copier-coller de la page ou capture, puis arrêt. Aucun autre test manuel demandé.
+Critère PASS : le texte normal est lisible, les libellés ne sont plus microscopiques, les grilles ne forment plus des paquets illisibles et les boutons sont lisibles/cliquables.
 
-Checkpoints gelés : Backend .441 · Graphique .442 · Oracle metrics .445 · Market Core 38.15.11.
+Critère FAIL : un bloc Strategy reste en micro-texte ou une interaction .446 régresse.
+
+Aucun test de trading réel. Aucun seuil à modifier.
