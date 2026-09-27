@@ -1,0 +1,105 @@
+name: Agent-Crypto Package 40.6.439 Progressive Recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406439.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate progressive recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+          node --check "$ROOT/js/strategy-a-cost-wait-outcome-audit.js"
+          node --check "$ROOT/js/strategy-a-oracle-cost-calibration-audit.js"
+          python - <<'PY'
+          import json, hashlib
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          build=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          index=(root/"index.html").read_text(encoding="utf-8")
+          post=(root/"js/post-boot-runtime-loader.js").read_text(encoding="utf-8")
+          cost=(root/"js/strategy-a-cost-wait-outcome-audit.js").read_text(encoding="utf-8")
+          oracle=(root/"js/strategy-a-oracle-cost-calibration-audit.js").read_text(encoding="utf-8")
+          demand=(root/"js/strategy-a-audit-demand-loader.js").read_text(encoding="utf-8")
+          def gitsha(p):
+              data=p.read_bytes()
+              return hashlib.sha1(("blob "+str(len(data))+"\0").encode()+data).hexdigest()
+          checks={
+            "build": build.get("build")=="40.6.439",
+            "parent": build.get("parent_build")=="40.6.438",
+            "market_core": build.get("market_core")=="38.15.11" and build.get("market_core_modified") is False,
+            "style_protected": gitsha(root/"style.css")=="0e4ae4526d043073ada940a2426811e725dcfb7b",
+            "app_protected": gitsha(root/"app.js")=="0988c742c62997b022d75a511561302b170d7972",
+            "postboot_protected": gitsha(root/"js/post-boot-runtime-loader.js")=="5a778bc78df95c81d8e71576b49347bf933c656a",
+            "source_loader_protected": gitsha(root/"js/views/private-source-demand-loader.js")=="7060c5bf1b5f6cc88af1e8132f62878d7c486462",
+            "demand_tag": "strategy-a-audit-demand-loader.js?v=40.6.439" in index,
+            "cost_not_postboot": "strategy-a-cost-wait-outcome-audit.js" not in post,
+            "oracle_not_postboot": "strategy-a-oracle-cost-calibration-audit.js" not in post,
+            "execution_not_postboot": "strategy-a-execution-cost-truth.js" not in post,
+            "execution_not_demand": "strategy-a-execution-cost-truth.js" not in demand,
+            "cost_repeat_export": 'addEventListener("click",()=>exportJson(s));' in cost,
+            "oracle_repeat_export": 'addEventListener("click",()=>exportJson(data));' in oracle,
+            "cost_gated": "if(!presentationOpen())return last;" in cost,
+            "oracle_gated": "if(!presentationOpen())return last;" in oracle,
+            "cache_style": "./style.css?v=40.6.439" in index,
+            "cache_app": "./app.js?v=40.6.439" in index,
+            "cache_postboot": "./js/post-boot-runtime-loader.js?v=40.6.439" in index,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"40.6.439 validation failed: {bad}")
+          print("40.6.439 PROGRESSIVE RECOVERY STATIC PASS")
+          PY
+
+      - name: Build ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_PROGRESSIVE_RECOVERY_40.6.439.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406439
+          mkdir -p /tmp/agent-crypto-406439/administrator/js/views
+          cp "$ROOT/index.html" /tmp/agent-crypto-406439/administrator/
+          cp "$ROOT/index-40.6.439.html" /tmp/agent-crypto-406439/administrator/
+          cp "$ROOT/style.css" /tmp/agent-crypto-406439/administrator/
+          cp "$ROOT/app.js" /tmp/agent-crypto-406439/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406439/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406439/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406439/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.439.txt" /tmp/agent-crypto-406439/administrator/
+          cp "$ROOT/js/post-boot-runtime-loader.js" /tmp/agent-crypto-406439/administrator/js/
+          cp "$ROOT/js/views/private-source-demand-loader.js" /tmp/agent-crypto-406439/administrator/js/views/
+          cp "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/agent-crypto-406439/administrator/js/
+          cp "$ROOT/js/strategy-a-cost-wait-outcome-audit.js" /tmp/agent-crypto-406439/administrator/js/
+          cp "$ROOT/js/strategy-a-oracle-cost-calibration-audit.js" /tmp/agent-crypto-406439/administrator/js/
+          (cd /tmp/agent-crypto-406439 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_PROGRESSIVE_RECOVERY_40.6.439.zip" "$ROOT/AGENT_CRYPTO_PROGRESSIVE_RECOVERY_40.6.439.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.439 progressive recovery ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
