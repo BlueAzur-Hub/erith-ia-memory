@@ -1,0 +1,88 @@
+name: Agent-Crypto Package 40.6.427
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406427.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate native CSS-only geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          css=(root/"style.css").read_text(encoding="utf-8")
+          index=(root/"index.html").read_text(encoding="utf-8")
+          build=json.loads((root/"build.json").read_text(encoding="utf-8"))
+
+          checks={
+              "build": build.get("build")=="40.6.427",
+              "parent": build.get("parent_build")=="40.6.425",
+              "market_core": build.get("market_core")=="38.15.11" and build.get("market_core_modified") is False,
+              "aether_unchanged": build.get("aether_modified") is False,
+              "presentation_only": build.get("administrator_presentation_modified") is True,
+              "style_cache": "./style.css?v=40.6.427" in index,
+              "old_geometry_removed": "clamp(507px, calc(59vh + 42px), 647px)" not in css,
+              "new_geometry_present": "clamp(540px, calc(64vh + 42px), 760px)" in css,
+              "no_dynamic_owner": "native_cockpit_css_geometry_406427" in build,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad:
+              raise SystemExit(f"40.6.427 validation failed: {bad}")
+          print("40.6.427 NATIVE CSS GEOMETRY STATIC PASS")
+          PY
+
+          if git diff --name-only 2bcd0459ba7570b81fec194244d1cc5be9a9f426..HEAD -- 'public/agent_crypto_erith_ia/administrator/js/**' | grep -q .; then
+            echo "JavaScript changed relative to accepted 40.6.425 — refusing package"
+            git diff --name-only 2bcd0459ba7570b81fec194244d1cc5be9a9f426..HEAD -- 'public/agent_crypto_erith_ia/administrator/js/**'
+            exit 1
+          fi
+
+      - name: Build ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_NATIVE_COCKPIT_CSS_GEOMETRY_40.6.427.zip"
+          rm -f "$ZIP"
+          rm -rf /tmp/agent-crypto-406427
+          mkdir -p /tmp/agent-crypto-406427/administrator /tmp/agent-crypto-406427/coordination
+
+          cp public/agent_crypto_erith_ia/administrator/index.html /tmp/agent-crypto-406427/administrator/
+          cp public/agent_crypto_erith_ia/administrator/index-40.6.427.html /tmp/agent-crypto-406427/administrator/
+          cp public/agent_crypto_erith_ia/administrator/style.css /tmp/agent-crypto-406427/administrator/
+          cp public/agent_crypto_erith_ia/administrator/build.json /tmp/agent-crypto-406427/administrator/
+          cp public/agent_crypto_erith_ia/administrator/RELEASE.md /tmp/agent-crypto-406427/administrator/
+          cp public/agent_crypto_erith_ia/administrator/HANDOFF.md /tmp/agent-crypto-406427/administrator/
+          cp coordination/inter_ai_dialogues/agent_crypto/PACKAGE_MANIFEST_40.6.427.txt /tmp/agent-crypto-406427/coordination/
+
+          (cd /tmp/agent-crypto-406427 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+
+      - name: Commit ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_NATIVE_COCKPIT_CSS_GEOMETRY_40.6.427.zip"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ZIP"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.427 ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
