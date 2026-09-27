@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.430",
+  "build": "40.6.431",
   "engine": "38.15.11",
-  "release": "STRATEGY A COST-WAIT AUDIT CANONICAL NAME",
+  "release": "STRATEGY A ORACLE COST CALIBRATION TRUTH",
   "published": true,
-  "status": "published_pending_firefox_430",
-  "parent_build": "40.6.429",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.430",
-  "administrator_build": "40.6.430",
-  "build_label": "Build 40.6.430 · Administrator",
+  "status": "published_pending_firefox_431",
+  "parent_build": "40.6.430",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.431",
+  "administrator_build": "40.6.431",
+  "build_label": "Build 40.6.431 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 puis vérifier Build 40.6.430. Ouvrir Simulation / Strategy A. Le panneau COST-WAIT OUTCOME AUDIT doit fonctionner depuis le fichier canonique js/strategy-a-cost-wait-outcome-audit.js. Vérifier AgentCryptoStrategyACostWaitOutcomeAudit406429.self_test().pass === true. Aucun changement de seuil ou de comportement Auto A.",
+  "terrain_pending": "Firefox: Ctrl+F5 puis vérifier Build 40.6.431. Ouvrir Simulation / Strategy A. Vérifier le panneau STRATEGY A · ORACLE / COST CALIBRATION TRUTH · 40.6.431 sous le Cost-Wait Audit. Self-test attendu: AgentCryptoStrategyAOracleCostCalibrationAudit.self_test().pass === true.",
   "terrain_proof": null,
-  "release_notes": "40.6.430 corrige uniquement la dette de nomenclature introduite en 40.6.429 : le module actif devient js/strategy-a-cost-wait-outcome-audit.js, l'ancien fichier suffixé -406429 est retiré, et les query strings ?v=40.6.429 introduites par .429 sur style.css, app.js et post-boot-runtime-loader.js sont supprimées. La logique de l'audit Cost-Wait, les seuils Strategy A, Oracle, Risk, Paper, Market Core 38.15.11, Aether et le CSS cockpit restent inchangés.",
+  "release_notes": "40.6.431 ajoute un audit passif de vérité de calibration Strategy A : le coût 0,60 % est exposé comme modèle Simulation / fallback pédagogique non vérifié comme coût réel de plateforme, et expected_move_pct est explicitement identifié comme alias de l'enveloppe Oracle bullAmplitude, non comme rendement attendu calibré. Le module recroise ces vérités avec le Cost-Wait Outcome Audit existant. Aucun seuil, calcul Oracle, décision Strategy A, Risk, Paper, Market Core 38.15.11, Aether ou CSS cockpit n'est modifié.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5307,5 +5307,51 @@
     "cockpit_css_changed": false,
     "real_order": false,
     "firefox_validation_required": true
+  },
+  "strategy_a_oracle_cost_calibration_truth_406431": {
+    "enabled": true,
+    "module": "js/strategy-a-oracle-cost-calibration-audit.js",
+    "load_owner": "js/post-boot-runtime-loader.js SECONDARY_MODULES",
+    "parent": "40.6.430",
+    "mode": "READ_ONLY_SEMANTIC_AND_CALIBRATION_AUDIT",
+    "cost_model_truth": {
+      "aggregate_current_pct": 0.6,
+      "components_pct": {
+        "buy_fee": 0.25,
+        "entry_impact": 0.05,
+        "sell_fee": 0.25,
+        "exit_impact": 0.05
+      },
+      "source": "Simulation fields or pedagogical fallback",
+      "real_platform_fee_verified": false,
+      "real_spread_verified": false,
+      "real_slippage_verified": false
+    },
+    "oracle_truth": {
+      "source": "atlasOracleBuildModel(BTC).bullAmplitude",
+      "strategy_alias": "expected_move_pct",
+      "semantic": "UPSIDE_ENVELOPE_AMPLITUDE",
+      "trained_probability": false,
+      "calibrated_expected_return": false,
+      "horizon_amplitude_scales": {
+        "1m": 0.085,
+        "5m": 0.18,
+        "15m": 0.32
+      }
+    },
+    "decision": "DO_NOT_CHANGE_THRESHOLDS_FROM_AUDIT_ALONE",
+    "thresholds_changed": false,
+    "oracle_math_changed": false,
+    "strategy_decision_changed": false,
+    "risk_changed": false,
+    "paper_changed": false,
+    "market_core_modified": false,
+    "new_fetch": false,
+    "recurring_timer": false,
+    "mutation_observer": false,
+    "storage_write": false,
+    "real_order": false,
+    "firefox_validation_required": true,
+    "terrain_status": "PENDING_FIREFOX_406431"
   }
 }

@@ -1,55 +1,91 @@
-# Agent-Crypto — 40.6.430 · STRATEGY A COST-WAIT AUDIT CANONICAL NAME
+# Agent-Crypto — 40.6.431 · STRATEGY A ORACLE COST CALIBRATION TRUTH
 
-Parent : **40.6.429**.  
+Parent : **40.6.430**.  
 Market Core : **38.15.11**.
 
 ## Objet unique
 
-Corriger la dette de nomenclature introduite par 40.6.429, sans toucher à la logique Strategy A.
+Transformer l'audit Strategy A du fil courant en **vérité de calibration visible**, sans modifier le moteur.
 
-Le propriétaire fonctionnel actif devient :
+Nouveau propriétaire canonique :
 
-`js/strategy-a-cost-wait-outcome-audit.js`
+`js/strategy-a-oracle-cost-calibration-audit.js`
 
-L'ancien fichier versionné est retiré :
+Nom stable et fonctionnel : aucun numéro de build dans le nom du fichier.
 
-`js/strategy-a-cost-wait-outcome-audit-406429.js`
+## Vérité de coût retrouvée
 
-Règle appliquée : **Git porte les versions ; les noms de fichiers portent les responsabilités.**
+Le seuil Strategy A est calculé par :
 
-## Nettoyage borné
+- frais achat : **0,25 %** ;
+- impact entrée : **0,05 %** ;
+- frais vente : **0,25 %** ;
+- impact sortie : **0,05 %** ;
+- coût aller-retour modélisé : **0,60 %** ;
+- marge de sécurité : **0,20 %** ;
+- seuil requis : **max(0,80 %, coût + marge)** = **0,80 %** avec le modèle courant.
 
-Les query strings `?v=40.6.429` introduites par la livraison .429 sont retirées de :
+Point critique : ces valeurs viennent des **champs Simulation ou du fallback pédagogique**. Le code du projet dit lui-même que les frais réels de plateforme, le spread réel et le slippage réel ne sont pas vérifiés ici.
 
-- `style.css`
-- `app.js`
-- `js/post-boot-runtime-loader.js`
-- le module Cost-Wait renommé
+## Vérité Oracle retrouvée
 
-Ctrl+F5 reste le geste opérateur de rafraîchissement.
+Strategy A lit :
+
+`atlasOracleBuildModel(BTC).bullAmplitude`
+
+puis expose cette valeur sous le nom :
+
+`expected_move_pct`
+
+Mais `bullAmplitude` est une **enveloppe déterministe de scénario**, calculée depuis l'enveloppe de risque, l'échelle d'horizon, la force directionnelle et le short tilt. Ce n'est ni une probabilité entraînée, ni un rendement attendu calibré.
+
+Échelles d'amplitude Oracle :
+
+- 1 min : 0,085 ;
+- 5 min : 0,180 ;
+- 15 min : 0,320.
+
+## Lecture avec l'audit .430
+
+Le nouveau panneau recroise automatiquement ces deux vérités avec le Cost-Wait Outcome Audit :
+
+- coût modélisé courant ;
+- seuil courant ;
+- enveloppe Oracle médiane observée ;
+- MFE médiane observée ;
+- couverture T+60 ;
+- écart MFE − enveloppe.
+
+## Décision de chantier
+
+**Ne pas modifier le seuil 0,80 % dans cette version.**
+
+Avant toute calibration métier :
+
+1. distinguer coûts d'exécution réellement vérifiés et modèle pédagogique ;
+2. calibrer `bullAmplitude` contre la MFE réelle ;
+3. seulement ensuite tester un nouveau Cost Gate en Paper.
 
 ## Protections
 
-- logique Cost-Wait .429 inchangée ;
-- Cost Gate 0,80 % inchangé ;
-- coût 0,60 % inchangé ;
-- Direction / Confiance inchangées ;
-- Oracle / Risk Governor / Paper inchangés ;
+- aucun seuil changé ;
+- aucune formule Oracle changée ;
+- aucune décision Strategy A changée ;
+- Risk Governor inchangé ;
+- Paper inchangé ;
 - Market Core 38.15.11 inchangé ;
 - Aether inchangé ;
-- CSS cockpit fonctionnel inchangé ;
-- aucun nouveau fetch / WebSocket / timer / observer / stockage ;
+- CSS cockpit inchangé ;
+- aucun nouveau fetch / WebSocket / timer récurrent / observer / stockage ;
 - aucun ordre réel.
-
-Les identifiants internes historiques `406429` ne sont pas renommés dans cette chirurgie, conformément au précédent `operator-dashboard.js` : le changement porte sur le **nom canonique du fichier actif**, pas sur une migration transversale.
 
 ## Test Firefox
 
 1. Ctrl+F5.
-2. Vérifier **Build 40.6.430**.
+2. Vérifier **Build 40.6.431**.
 3. Ouvrir Simulation / Strategy A.
-4. Vérifier le panneau **STRATEGY A · COST-WAIT OUTCOME AUDIT · 40.6.430**.
-5. Console : `AgentCryptoStrategyACostWaitOutcomeAudit406429.self_test().pass === true`.
-6. Vérifier qu'aucune requête n'est faite vers `strategy-a-cost-wait-outcome-audit-406429.js`.
+4. Vérifier le panneau **STRATEGY A · ORACLE / COST CALIBRATION TRUTH · 40.6.431** sous le Cost-Wait Audit.
+5. Console : `AgentCryptoStrategyAOracleCostCalibrationAudit.self_test().pass === true`.
+6. Vérifier que Strategy A conserve exactement ses seuils et son comportement.
 
 Terrain : **PENDING FIREFOX**.

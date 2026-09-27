@@ -1,21 +1,57 @@
-# Handoff — 40.6.430
+# Handoff Seven — 40.6.431 · Strategy A Oracle / Cost Calibration Truth
 
-Parent fonctionnel : **40.6.429**.
+## État de clôture
 
-Objet unique : réparer la nomenclature du nouveau module Cost-Wait sans modifier son métier.
+Build courant : **40.6.431**.  
+Market Core : **38.15.11**.  
+Parent : **40.6.430**.
 
-## Canonique
+CSS cockpit .428/.430 : protégé.  
+Aether / News : protégé.  
+Strategy A : **aucune règle métier modifiée**.
 
-`js/strategy-a-cost-wait-outcome-audit.js`
+## Ce qui a été découvert
 
-## Retiré
+Strategy A ne produit toujours pas de vrai Paper autonome démontré. Le goulot dominant est le Cost Gate.
 
-`js/strategy-a-cost-wait-outcome-audit-406429.js`
+Le coût courant **0,60 %** n'est pas une mesure vérifiée des coûts réels d'une plateforme. Il provient des champs Simulation / fallback pédagogique :
 
-Le loader secondaire référence uniquement le nom canonique, sans `?v=`.
+- 0,25 % achat ;
+- 0,05 % impact entrée ;
+- 0,25 % vente ;
+- 0,05 % impact sortie.
 
-La dette `?v=40.6.429` introduite par .429 sur `style.css`, `app.js` et `post-boot-runtime-loader.js` est également retirée. Les query strings historiques extérieures à cette livraison ne sont pas traitées ici.
+Le seuil courant reste **0,80 % = max(0,80 %, 0,60 % + 0,20 %)**.
 
-Aucun seuil, Oracle, Risk, Paper, Market Core 38.15.11, Aether ou CSS cockpit n'est modifié.
+La valeur appelée `expected_move_pct` par Strategy A est en réalité `atlasOracleBuildModel(BTC).bullAmplitude`, c'est-à-dire une enveloppe de scénario déterministe, pas un rendement attendu calibré.
 
-Test : Ctrl+F5 → Build 40.6.430 → Simulation / Strategy A → panneau Cost-Wait → self-test PASS.
+## Version 40.6.431
+
+Ajoute seulement :
+
+`js/strategy-a-oracle-cost-calibration-audit.js`
+
+Le panneau croise :
+
+- coût modélisé ;
+- seuil ;
+- enveloppe Oracle médiane ;
+- MFE médiane observée ;
+- couverture T+60 ;
+- écart MFE − enveloppe.
+
+Aucun fetch, timer récurrent, observer, stockage ou ordre.
+
+## Prochain D
+
+1. Firefox Ctrl+F5 et valider le panneau .431.
+2. Exporter le Cost-Wait Audit et, si utile, l'Oracle / Cost Calibration Truth.
+3. Ne pas baisser arbitrairement 0,80 %.
+4. Prochaine étude : **coût réel vérifiable vs modèle pédagogique**, puis **calibration bullAmplitude ↔ MFE**.
+5. Ne toucher aux seuils que sur preuve Paper mesurable.
+
+## Règle de reprise
+
+Une intention → un propriétaire → une modification → une preuve → STOP.
+
+Git porte les versions ; les noms de fichiers portent les responsabilités.
