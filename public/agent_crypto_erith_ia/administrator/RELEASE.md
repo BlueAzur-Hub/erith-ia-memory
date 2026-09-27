@@ -1,19 +1,25 @@
-# Agent-Crypto 40.6.442 — CHART FRAME 40.6.428 EXACT CSS RESTORE
+# Agent-Crypto 40.6.443 — STRATEGY A EXECUTION COST TRUTH ON-DEMAND RESTORE
 
 ## Objectif unique
-Restaurer le cadrage Graphique validé en 40.6.428, perdu lors de la récupération 40.6.438.
+Reprendre le chantier interrompu : restaurer Execution Cost Truth dans Simulation, à la demande uniquement.
 
-## Restauration exacte
-Dans le bloc canonique `.chart-shell` existant :
+## Comportement
+Simulation ouverte →
+Cost-Wait →
+Oracle / Cost Calibration →
+Execution Cost Truth.
 
-```css
-height: clamp(525px, calc(61.5vh + 42px), 720px) !important;
-min-height: 525px !important;
-max-height: 720px !important;
-```
+Execution Cost Truth n'est pas ajouté au post-boot standard.
 
-Source : 40.6.428 · commit `46d273d05d36b654a76697be7564160e2faa73c5`.
+## Fiabilisation du même propriétaire
+- null / chaîne vide ne deviennent plus 0 ;
+- bid > ask est refusé pour Kraken et OKX ;
+- demande Source Truth bornée à 7 s si le propriétaire Backend n'est pas encore disponible ;
+- bouton MESURER revient à l'état normal après la mesure ;
+- EXPORTER est répétable ;
+- self-test ne se condamne plus lui-même avec une valeur false attendue.
 
 ## Protégé
-Backend/API 40.6.441 reste validé et gelé.
-Aucun code Backend, Source Truth, post-boot, app.js, Aether, Market Core, Oracle, Risk, Paper, Strategy ou Execution Cost Truth n'est modifié.
+Backend/API 40.6.441 : gelé.
+Cadrage Graphique 40.6.442 : gelé.
+Aucun changement Market Core, Aether, Oracle math, Risk, Paper ou seuil Strategy.

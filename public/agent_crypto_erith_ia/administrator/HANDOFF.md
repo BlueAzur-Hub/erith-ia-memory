@@ -1,14 +1,17 @@
-# HANDOFF — Agent-Crypto 40.6.442
+# HANDOFF — Agent-Crypto 40.6.443
 
-40.6.441 : Backend/API PASS terrain, gelé.
+40.6.441 Backend/API = PASS terrain / gelé.
+40.6.442 cadrage Graphique = PASS terrain / gelé.
 
-40.6.442 : restauration CSS uniquement.
+40.6.443 reprend uniquement Execution Cost Truth.
 
-## Test unique
-1. Vérifier Build 40.6.442.
-2. Regarder le Graphique en fenêtre normale.
-3. Passer en F11.
-4. Vérifier que le cadrage retrouve le comportement validé 40.6.428.
+## Test
+1. Vérifier Build 40.6.443.
+2. Ouvrir Simulation.
+3. Vérifier l'ordre : Cost-Wait → Oracle/Cost → Execution Cost Truth.
+4. Cliquer MESURER KRAKEN + OKX.
+5. Vérifier que le bouton redevient MESURER après la fin.
+6. Vérifier Kraken chiffré et OKX via Source Truth CEX / Backend local.
+7. Tester EXPORTER deux fois.
 
-Ne pas retester Backend/API sauf si une régression visible apparaît.
-Un FAIL CSS = STOP. Aucun autre chantier mélangé.
+Un FAIL = STOP.

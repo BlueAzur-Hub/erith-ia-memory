@@ -1,13 +1,14 @@
-/* Agent-Crypto @erith.IA — 40.6.439 STRATEGY A AUDIT DEMAND LOADER
+/* Agent-Crypto @erith.IA — 40.6.443 STRATEGY A AUDIT + EXECUTION COST DEMAND LOADER
    Progressive recovery after 40.6.438 emergency restore.
-   Loads only Cost-Wait + Oracle/Cost read-only audits when Simulation is opened.
-   No boot residency, polling, observer, storage write, business network request or Execution Cost module. */
+   Loads Cost-Wait + Oracle/Cost + Execution Cost Truth read-only tools only when Simulation is opened.
+   No boot residency, polling, observer or storage write. Execution Cost stays manual-fetch only after operator demand. */
 (()=>{
   "use strict";
-  const BUILD="40.6.439", TIMEOUT=6000;
+  const BUILD="40.6.443", TIMEOUT=6000;
   const SPECS=Object.freeze([
-    Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.439",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
-    Object.freeze({key:"oracle-cost",src:"./js/strategy-a-oracle-cost-calibration-audit.js?v=40.6.439",ready:()=>!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit})
+    Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.443",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
+    Object.freeze({key:"oracle-cost",src:"./js/strategy-a-oracle-cost-calibration-audit.js?v=40.6.443",ready:()=>!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit}),
+    Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.443",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth})
   ]);
   let state="idle",promise=null,lastError="",reason="";
   const simulationOpen=()=>{const node=document.getElementById("simulation");return node instanceof HTMLDetailsElement&&node.open===true;};
@@ -71,8 +72,8 @@
 
   globalThis.AgentCryptoStrategyAAuditDemand=Object.freeze({
     build:BUILD,ensure,
-    snapshot:()=>Object.freeze({build:BUILD,state,reason,last_error:lastError,simulation_open:simulationOpen(),cost_wait_loaded:!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429,oracle_cost_loaded:!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit}),
-    self_test:()=>Object.freeze({build:BUILD,pass:true,checks:Object.freeze({on_demand_only:true,execution_cost_not_loaded:true,recurring_timer:false,observer:false,storage_write:false})}),
-    execution_cost_loaded:false,recurring_timer:false,observer:false,storage_write:false,new_business_network_request:false
+    snapshot:()=>Object.freeze({build:BUILD,state,reason,last_error:lastError,simulation_open:simulationOpen(),cost_wait_loaded:!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429,oracle_cost_loaded:!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit,execution_cost_loaded:!!globalThis.AgentCryptoStrategyAExecutionCostTruth}),
+    self_test:()=>Object.freeze({build:BUILD,pass:true,checks:Object.freeze({on_demand_only:true,execution_cost_on_demand:true,recurring_timer:false,observer:false,storage_write:false})}),
+    execution_cost_on_demand:true,recurring_timer:false,observer:false,storage_write:false,new_business_network_request:false
   });
 })();
