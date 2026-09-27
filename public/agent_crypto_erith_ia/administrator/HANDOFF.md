@@ -1,13 +1,22 @@
-# Handoff — 40.6.428
+# Handoff — 40.6.429
 
-La correction repart de **40.6.425**.
+Parent fonctionnel : **40.6.428**.
 
-Fonctionnellement, seul `style.css` change : hauteur native du `chart-shell` Crypto.
+Objectif unique : mesurer les refus **Strategy A · COST_GATE_WAIT** sans modifier Strategy A.
 
-`59vh + 42px` → `61.5vh + 42px`  
-min `507px` → `525px`  
-max `647px` → `720px`
+Ajouts :
 
-Aucun JS. Aucun resize runtime. Aucun changement Market Flow/Target Top/Aether/Market Core.
+- événement local après écriture d’un cycle Auto A ;
+- module `js/strategy-a-cost-wait-outcome-audit-406429.js` ;
+- résultats échantillonnés T+5 / T+15 / T+60 ;
+- MFE / MAE échantillonnées ;
+- classifications descriptives ;
+- export JSON opérateur.
 
-Test prioritaire : Target Top 5 doit être **entièrement visible** en bas, Market Flow **entièrement hors cadre**, en fenêtre normale et F11.
+Protections : **Cost Gate 0,80 % inchangé · coût 0,60 % inchangé · Direction / Confiance inchangées · Oracle / Risk / Paper / Market Core / Aether / CSS cockpit inchangés**.
+
+Aucun fetch, WebSocket, timer récurrent, MutationObserver, nouveau stockage ou ordre réel.
+
+Le ZIP de livraison contient la structure modifiée et `PATCHES/app.js.patch` pour l’unique modification du gros `app.js`. Le `app.js` complet est publié sur `main`.
+
+Test Firefox : Ctrl+F5 → Build 40.6.429 → Simulation / Strategy A → panneau COST-WAIT OUTCOME AUDIT → console `AgentCryptoStrategyACostWaitOutcomeAudit406429.self_test().pass` doit être `true`.
