@@ -161,7 +161,7 @@
     }
 
     if (ROOT.getAttribute(ACTIVE_ATTR) === "1") deactivate(`navigation:${target || "other"}`);
-  });
+  }, true);
 
   window.addEventListener("resize", () => scheduleResizeFit("viewport-resize"), { passive: true });
 
