@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.431",
+  "build": "40.6.432",
   "engine": "38.15.11",
-  "release": "STRATEGY A ORACLE COST CALIBRATION TRUTH",
+  "release": "STRATEGY A EXECUTION COST TRUTH",
   "published": true,
-  "status": "published_pending_firefox_431",
-  "parent_build": "40.6.430",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.431",
-  "administrator_build": "40.6.431",
-  "build_label": "Build 40.6.431 · Administrator",
+  "status": "published_pending_firefox_432",
+  "parent_build": "40.6.431",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.432",
+  "administrator_build": "40.6.432",
+  "build_label": "Build 40.6.432 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -25,14 +25,14 @@
   "new_recurring_timer": false,
   "new_observer": false,
   "new_storage_owner": false,
-  "new_business_network_request": false,
+  "new_business_network_request": true,
   "static_asset_module_load": false,
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 puis vérifier Build 40.6.431. Ouvrir Simulation / Strategy A. Vérifier le panneau STRATEGY A · ORACLE / COST CALIBRATION TRUTH · 40.6.431 sous le Cost-Wait Audit. Self-test attendu: AgentCryptoStrategyAOracleCostCalibrationAudit.self_test().pass === true.",
+  "terrain_pending": "Firefox : Ctrl+F5 puis vérifier Build 40.6.432. Ouvrir Simulation / Strategy A. Dans STRATEGY A · EXECUTION COST TRUTH · 40.6.432, cliquer MESURER KRAKEN + OKX. Vérifier que chaque plateforme affiche soit sa mesure BTC/EUR, soit une erreur explicite. Exporter ensuite le JSON. Aucun ordre réel et aucun seuil Strategy A modifié.",
   "terrain_proof": null,
-  "release_notes": "40.6.431 ajoute un audit passif de vérité de calibration Strategy A : le coût 0,60 % est exposé comme modèle Simulation / fallback pédagogique non vérifié comme coût réel de plateforme, et expected_move_pct est explicitement identifié comme alias de l'enveloppe Oracle bullAmplitude, non comme rendement attendu calibré. Le module recroise ces vérités avec le Cost-Wait Outcome Audit existant. Aucun seuil, calcul Oracle, décision Strategy A, Risk, Paper, Market Core 38.15.11, Aether ou CSS cockpit n'est modifié.",
+  "release_notes": "40.6.432 ajoute un banc de mesure manuel et en lecture seule des coûts d'exécution BTC/EUR sur Kraken Pro et OKX Europe : frais maker/taker de référence sourcés, spread public, profondeur proche du prix, glissement simulé pour 10/25/50/100 EUR et estimation Market→Market. Deux requêtes publiques sont lancées uniquement au clic opérateur ; aucun WebSocket, timer récurrent, stockage, clé API, wallet, ordre réel, changement de seuil, Oracle, Risk, Paper, Market Core, Aether ou CSS cockpit.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5353,5 +5353,78 @@
     "real_order": false,
     "firefox_validation_required": true,
     "terrain_status": "PENDING_FIREFOX_406431"
+  },
+  "strategy_a_execution_cost_truth_406432": {
+    "enabled": true,
+    "module": "js/strategy-a-execution-cost-truth.js",
+    "load_owner": "js/post-boot-runtime-loader.js SECONDARY_MODULES",
+    "parent": "40.6.431",
+    "mode": "MANUAL_PUBLIC_ORDER_BOOK_MEASUREMENT",
+    "pair": "BTC/EUR",
+    "venues": [
+      "Kraken Pro",
+      "OKX Europe"
+    ],
+    "fee_reference": {
+      "kraken": {
+        "maker_pct": 0.4,
+        "taker_pct": 0.8,
+        "source": "https://www.kraken.com/fr/features/fee-schedule",
+        "account_specific": true,
+        "checked_on": "2026-09-27"
+      },
+      "okx_europe_spot_only_regular": {
+        "maker_pct": 0.1,
+        "taker_pct": 0.2,
+        "effective_from": "2026-09-25",
+        "source": "https://www.okx.com/fr-fr/help/important-notice-upcoming-spot-fee-adjustment-eea",
+        "account_specific": true,
+        "checked_on": "2026-09-27"
+      }
+    },
+    "public_order_book_endpoints": {
+      "kraken": "https://api.kraken.com/0/public/Depth?pair=XBTEUR&count=100",
+      "okx_europe": "https://eea.okx.com/api/v5/market/books?instId=BTC-EUR&sz=100"
+    },
+    "sizes_eur": [
+      10,
+      25,
+      50,
+      100
+    ],
+    "depth_bps": [
+      5,
+      10,
+      25
+    ],
+    "measures": [
+      "best_bid_ask",
+      "spread",
+      "nearby_depth",
+      "simulated_slippage",
+      "fee_aware_market_roundtrip",
+      "post_only_fee_floors"
+    ],
+    "manual_public_fetch_only": true,
+    "automatic_network_request": false,
+    "new_business_network_request": true,
+    "new_websocket": false,
+    "recurring_timer": false,
+    "mutation_observer": false,
+    "storage_write": false,
+    "api_key": false,
+    "wallet": false,
+    "real_order": false,
+    "automatic_platform_choice": false,
+    "thresholds_changed": false,
+    "oracle_math_changed": false,
+    "strategy_decision_changed": false,
+    "risk_changed": false,
+    "paper_changed": false,
+    "market_core_modified": false,
+    "aether_modified": false,
+    "cockpit_css_changed": false,
+    "firefox_validation_required": true,
+    "terrain_status": "PENDING_FIREFOX_406432"
   }
 }

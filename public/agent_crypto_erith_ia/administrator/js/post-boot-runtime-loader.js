@@ -31,6 +31,7 @@
   const SECONDARY_MODULES=Object.freeze([
     "./js/strategy-a-cost-wait-outcome-audit.js",
     "./js/strategy-a-oracle-cost-calibration-audit.js",
+    "./js/strategy-a-execution-cost-truth.js",
     "./js/tradus-shadow-adapter.js",
     "./js/atlas-heartbeat-rearm.js",
     "./js/markets-domain-contract.js",

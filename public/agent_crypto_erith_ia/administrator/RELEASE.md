@@ -1,91 +1,75 @@
-# Agent-Crypto — 40.6.431 · STRATEGY A ORACLE COST CALIBRATION TRUTH
+# Agent-Crypto — 40.6.432 · STRATEGY A EXECUTION COST TRUTH
 
-Parent : **40.6.430**.  
+Parent : **40.6.431**.  
 Market Core : **38.15.11**.
 
 ## Objet unique
 
-Transformer l'audit Strategy A du fil courant en **vérité de calibration visible**, sans modifier le moteur.
+Mesurer, sans ordre réel, les conditions d'exécution BTC/EUR sur **Kraken Pro** et **OKX Europe** afin de remplacer progressivement le coût pédagogique 0,60 % par une vérité économique vérifiable.
 
 Nouveau propriétaire canonique :
 
-`js/strategy-a-oracle-cost-calibration-audit.js`
+js/strategy-a-execution-cost-truth.js
 
-Nom stable et fonctionnel : aucun numéro de build dans le nom du fichier.
+## Ce que mesure le panneau
 
-## Vérité de coût retrouvée
+Au clic sur **MESURER KRAKEN + OKX** :
 
-Le seuil Strategy A est calculé par :
+- frais Maker / Taker de référence, sourcés et datés ;
+- meilleur prix acheteur / vendeur ;
+- spread réel du carnet public ;
+- profondeur proche du prix à ±5, ±10 et ±25 points de base ;
+- glissement simulé pour 10 €, 25 €, 50 € et 100 € ;
+- coût estimé Market → Market, carnet + frais Taker de référence ;
+- planchers de frais Post-only → Post-only et Post-only → Market.
 
-- frais achat : **0,25 %** ;
-- impact entrée : **0,05 %** ;
-- frais vente : **0,25 %** ;
-- impact sortie : **0,05 %** ;
-- coût aller-retour modélisé : **0,60 %** ;
-- marge de sécurité : **0,20 %** ;
-- seuil requis : **max(0,80 %, coût + marge)** = **0,80 %** avec le modèle courant.
+## Références de frais
 
-Point critique : ces valeurs viennent des **champs Simulation ou du fallback pédagogique**. Le code du projet dit lui-même que les frais réels de plateforme, le spread réel et le slippage réel ne sont pas vérifiés ici.
+**Kraken Pro — niveau Spot 1 de référence :** Maker 0,40 %, Taker 0,80 %.  
+Source : https://www.kraken.com/fr/features/fee-schedule
 
-## Vérité Oracle retrouvée
+**OKX Europe — compte EEE Spot-only Regular, effet 25/09/2026 :** Maker 0,10 %, Taker 0,20 %.  
+Source : https://www.okx.com/fr-fr/help/important-notice-upcoming-spot-fee-adjustment-eea
 
-Strategy A lit :
+Ces taux sont des références : le taux réellement appliqué dépend du compte, du volume, des actifs et du type de compte.
 
-`atlasOracleBuildModel(BTC).bullAmplitude`
+## Réseau
 
-puis expose cette valeur sous le nom :
+La version n'ajoute **aucun flux permanent**.
 
-`expected_move_pct`
+Le clic opérateur lance uniquement deux lectures publiques de carnet :
 
-Mais `bullAmplitude` est une **enveloppe déterministe de scénario**, calculée depuis l'enveloppe de risque, l'échelle d'horizon, la force directionnelle et le short tilt. Ce n'est ni une probabilité entraînée, ni un rendement attendu calibré.
+- Kraken : BTC/EUR Depth ;
+- OKX Europe : BTC-EUR Market Books.
 
-Échelles d'amplitude Oracle :
-
-- 1 min : 0,085 ;
-- 5 min : 0,180 ;
-- 15 min : 0,320.
-
-## Lecture avec l'audit .430
-
-Le nouveau panneau recroise automatiquement ces deux vérités avec le Cost-Wait Outcome Audit :
-
-- coût modélisé courant ;
-- seuil courant ;
-- enveloppe Oracle médiane observée ;
-- MFE médiane observée ;
-- couverture T+60 ;
-- écart MFE − enveloppe.
-
-## Décision de chantier
-
-**Ne pas modifier le seuil 0,80 % dans cette version.**
-
-Avant toute calibration métier :
-
-1. distinguer coûts d'exécution réellement vérifiés et modèle pédagogique ;
-2. calibrer `bullAmplitude` contre la MFE réelle ;
-3. seulement ensuite tester un nouveau Cost Gate en Paper.
+Aucun compte, aucune clé API, aucun wallet et aucun ordre ne sont utilisés.
 
 ## Protections
 
-- aucun seuil changé ;
-- aucune formule Oracle changée ;
-- aucune décision Strategy A changée ;
+- Cost Gate 0,80 % inchangé ;
+- coût pédagogique 0,60 % inchangé dans le moteur existant ;
+- Oracle et bullAmplitude inchangés ;
 - Risk Governor inchangé ;
 - Paper inchangé ;
 - Market Core 38.15.11 inchangé ;
 - Aether inchangé ;
 - CSS cockpit inchangé ;
-- aucun nouveau fetch / WebSocket / timer récurrent / observer / stockage ;
+- aucun WebSocket ;
+- aucun timer récurrent ;
+- aucun stockage ;
+- aucun choix automatique Kraken / OKX ;
 - aucun ordre réel.
 
-## Test Firefox
+## Test terrain
 
 1. Ctrl+F5.
-2. Vérifier **Build 40.6.431**.
-3. Ouvrir Simulation / Strategy A.
-4. Vérifier le panneau **STRATEGY A · ORACLE / COST CALIBRATION TRUTH · 40.6.431** sous le Cost-Wait Audit.
-5. Console : `AgentCryptoStrategyAOracleCostCalibrationAudit.self_test().pass === true`.
-6. Vérifier que Strategy A conserve exactement ses seuils et son comportement.
+2. Vérifier **Build 40.6.432**.
+3. Ouvrir **Simulation / Strategy A**.
+4. Repérer **STRATEGY A · EXECUTION COST TRUTH · 40.6.432** sous le panneau violet de calibration.
+5. Cliquer **MESURER KRAKEN + OKX**.
+6. Les deux cartes doivent afficher des chiffres, ou une erreur explicite si une plateforme bloque la requête.
+7. Cliquer **EXPORTER** et transmettre le JSON.
+
+Aucune console n'est nécessaire pour ce test.
 
 Terrain : **PENDING FIREFOX**.

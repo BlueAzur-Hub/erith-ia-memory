@@ -1,57 +1,54 @@
-# Handoff Seven — 40.6.431 · Strategy A Oracle / Cost Calibration Truth
+# Handoff Seven — 40.6.432 · Strategy A Execution Cost Truth
 
-## État de clôture
+## État courant
 
-Build courant : **40.6.431**.  
-Market Core : **38.15.11**.  
-Parent : **40.6.430**.
+Build : **40.6.432**.  
+Parent : **40.6.431**.  
+Market Core : **38.15.11**.
 
-CSS cockpit .428/.430 : protégé.  
-Aether / News : protégé.  
-Strategy A : **aucune règle métier modifiée**.
+Aether, CSS cockpit, Oracle métier, Risk, Paper et Market Core restent protégés.
 
-## Ce qui a été découvert
+## Pourquoi cette version existe
 
-Strategy A ne produit toujours pas de vrai Paper autonome démontré. Le goulot dominant est le Cost Gate.
+40.6.431 a démontré que le coût 0,60 % est un modèle pédagogique et non une preuve des coûts réels de plateforme.
 
-Le coût courant **0,60 %** n'est pas une mesure vérifiée des coûts réels d'une plateforme. Il provient des champs Simulation / fallback pédagogique :
+40.6.432 mesure donc séparément, sur BTC/EUR :
 
-- 0,25 % achat ;
-- 0,05 % impact entrée ;
-- 0,25 % vente ;
-- 0,05 % impact sortie.
+- Kraken Pro ;
+- OKX Europe ;
+- frais Maker / Taker de référence ;
+- spread ;
+- profondeur du carnet ;
+- glissement simulé 10 / 25 / 50 / 100 € ;
+- coût Market → Market ;
+- planchers Post-only.
 
-Le seuil courant reste **0,80 % = max(0,80 %, 0,60 % + 0,20 %)**.
+## Geste opérateur
 
-La valeur appelée `expected_move_pct` par Strategy A est en réalité `atlasOracleBuildModel(BTC).bullAmplitude`, c'est-à-dire une enveloppe de scénario déterministe, pas un rendement attendu calibré.
+Firefox → Ctrl+F5 → Simulation / Strategy A → panneau **EXECUTION COST TRUTH** → **MESURER KRAKEN + OKX** → **EXPORTER**.
 
-## Version 40.6.431
+Christophe n'a rien à chercher dans la console.
 
-Ajoute seulement :
+## Lecture attendue
 
-`js/strategy-a-oracle-cost-calibration-audit.js`
+Cette version ne doit pas dire quelle plateforme choisir. Elle fournit les mesures nécessaires pour comparer.
 
-Le panneau croise :
+Si les deux plateformes répondent :
+- comparer le coût total des micro-opérations ;
+- conserver séparément frais, spread, profondeur et glissement ;
+- ne pas confondre tarif de référence et tarif réellement appliqué au compte.
 
-- coût modélisé ;
-- seuil ;
-- enveloppe Oracle médiane ;
-- MFE médiane observée ;
-- couverture T+60 ;
-- écart MFE − enveloppe.
-
-Aucun fetch, timer récurrent, observer, stockage ou ordre.
+Si une plateforme échoue :
+- conserver la mesure de l'autre ;
+- afficher l'erreur ;
+- réparer uniquement le propriétaire réseau concerné.
 
 ## Prochain D
 
-1. Firefox Ctrl+F5 et valider le panneau .431.
-2. Exporter le Cost-Wait Audit et, si utile, l'Oracle / Cost Calibration Truth.
-3. Ne pas baisser arbitrairement 0,80 %.
-4. Prochaine étude : **coût réel vérifiable vs modèle pédagogique**, puis **calibration bullAmplitude ↔ MFE**.
-5. Ne toucher aux seuils que sur preuve Paper mesurable.
+1. valider le terrain .432 ;
+2. analyser l'export réel Kraken + OKX ;
+3. décider si davantage d'échantillons sont nécessaires ;
+4. calibrer bullAmplitude ↔ MFE avec les observations disponibles ;
+5. seulement ensuite tester en Paper un Cost Gate fondé sur un coût d'exécution vérifié.
 
-## Règle de reprise
-
-Une intention → un propriétaire → une modification → une preuve → STOP.
-
-Git porte les versions ; les noms de fichiers portent les responsabilités.
+Règle : **une intention → un propriétaire → une modification → une preuve → STOP**.
