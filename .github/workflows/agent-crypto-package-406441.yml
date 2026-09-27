@@ -1,0 +1,83 @@
+name: Agent-Crypto Package 40.6.441 Backend Restore
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406441.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate exact Backend restore
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/views/private-backend-sources.js"
+          node --check "$ROOT/js/views/private-source-demand-loader.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          idx=(root/"index.html").read_text(encoding="utf-8")
+          b=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          direct='./js/views/private-backend-sources.js?v=40.6.441'
+          post='./js/post-boot-runtime-loader.js?v=40.6.441'
+          checks={
+            "build":b.get("build")=="40.6.441",
+            "direct_backend_owner":direct in idx,
+            "backend_before_postboot":idx.index(direct)<idx.index(post),
+            "backend_owner_unchanged":"40.4.62" in (root/"js/views/private-backend-sources.js").read_text(encoding="utf-8"),
+            "source_loader_still_present":"private-source-demand-loader.js?v=40.6.440" in (root/"js/post-boot-runtime-loader.js").read_text(encoding="utf-8"),
+            "no_execution_cost_residency":"strategy-a-execution-cost-truth.js" not in (root/"js/post-boot-runtime-loader.js").read_text(encoding="utf-8"),
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"40.6.441 validation failed: {bad}")
+          print("40.6.441 BACKEND VALIDATED BEHAVIOR RESTORE STATIC PASS")
+          PY
+
+      - name: Build bounded ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_BACKEND_VALIDATED_BEHAVIOR_RESTORE_40.6.441.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406441
+          mkdir -p /tmp/agent-crypto-406441/administrator/js/views /tmp/agent-crypto-406441/administrator/js
+          cp "$ROOT/index.html" /tmp/agent-crypto-406441/administrator/
+          cp "$ROOT/index-40.6.441.html" /tmp/agent-crypto-406441/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406441/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406441/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406441/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.441.txt" /tmp/agent-crypto-406441/administrator/
+          cp "$ROOT/js/views/private-backend-sources.js" /tmp/agent-crypto-406441/administrator/js/views/
+          cp "$ROOT/js/views/private-source-demand-loader.js" /tmp/agent-crypto-406441/administrator/js/views/
+          cp "$ROOT/js/post-boot-runtime-loader.js" /tmp/agent-crypto-406441/administrator/js/
+          (cd /tmp/agent-crypto-406441 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_BACKEND_VALIDATED_BEHAVIOR_RESTORE_40.6.441.zip" "$ROOT/AGENT_CRYPTO_BACKEND_VALIDATED_BEHAVIOR_RESTORE_40.6.441.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.441 Backend restore ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

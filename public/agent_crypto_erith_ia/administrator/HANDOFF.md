@@ -1,15 +1,12 @@
-# HANDOFF — Agent-Crypto 40.6.440
+# HANDOFF — Agent-Crypto 40.6.441
 
-40.6.439 = FAIL terrain Backend/API.
+40.6.441 restaure uniquement la priorité du Backend/API.
 
-40.6.440 ne corrige que le propriétaire de demande Source Truth et son cache-buster de livraison.
+## Test terrain unique
+1. Vérifier Build 40.6.441.
+2. Dès que la page est utilisable, ouvrir Backend/API.
+3. À l'hydratation du panneau, SOURCE TRUTH CEX doit apparaître sans attendre le post-boot secondaire.
+4. Vérifier ensuite que Kraken / Coinbase / OKX peuvent converger vers leur état normal.
 
-## Test terrain
-1. Vérifier Build 40.6.440.
-2. Ouvrir Backend/API immédiatement après chargement.
-3. Source Truth CEX doit apparaître dans le même panneau.
-4. Recharger une fois puis attendre la fin du chargement avant d’ouvrir Backend/API : même résultat.
-5. Vérifier CEX READY et les lignes Binance/Kraken/Coinbase/OKX.
-6. Ne pas tester Execution Cost Truth.
-
-Un FAIL = arrêt. Aucun autre chantier avant PASS Backend/API.
+Si le panneau Source Truth n'apparaît pas immédiatement après hydratation : FAIL et STOP.
+Aucun autre chantier n'est à tester dans cette version.
