@@ -16102,14 +16102,17 @@ html[data-atlas-mode="essential"] .atlas-chart-context {
   white-space: nowrap !important;
 }
 
-/* Grow the frame, then reserve the new lower band.
-   The plot keeps its previous usable height. */
+/* Native cockpit geometry.
+   The graph and Technical Reading are taller from first paint.
+   Browser viewport units handle normal window and F11 natively;
+   no runtime resize owner is involved. Target Top 5 remains after
+   this block and Market Flow remains untouched below it. */
 #analyste.champagne-clean-lens .chart-shell,
 #analyste.champagne-clean-lens.detail-collapsed .chart-shell,
 #analyste.champagne-clean-lens:not(.detail-collapsed) .chart-shell {
-  height: clamp(507px, calc(59vh + 42px), 647px) !important;
-  min-height: 507px !important;
-  max-height: 647px !important;
+  height: clamp(540px, calc(64vh + 42px), 760px) !important;
+  min-height: 540px !important;
+  max-height: 760px !important;
 }
 
 #analyste.champagne-clean-lens #mainChart,
