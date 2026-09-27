@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.6.424
-  Revision: 40.6.424 Aether Single Phase Owner. One JavaScript state machine owns INFO → 12 News → SYSTEM; the native menu is manual-only after Aether exposure, eliminating multi-clock blank seams.
+  Build: 40.6.425
+  Revision: 40.6.425 Aether Single Phase Owner. One JavaScript state machine owns INFO → 12 News → SYSTEM; the native menu is manual-only after Aether exposure, eliminating multi-clock blank seams.
 */
 (() => {
   "use strict";
@@ -386,9 +386,10 @@ function aetherNewsCanonicalEvent(event){
       visibility_reason:aetherVeilleState.lastVisibilityReason
     });
   }
-  /* 40.6.424 — AETHER SINGLE PHASE OWNER
-     One state machine owns the visible lane. CSS no longer owns time.
-     Only one pending timeout exists; hidden/manual pauses preserve the remaining duration. */
+  /* 40.6.425 — AETHER MENU ESCAPE / CONTINUITY RECOVERY
+     One state machine still owns the visible lane and its single pending deadline.
+     Hidden tabs preserve remaining duration. Manual ♥ VEILLE now only shows the native menu:
+     it does not pause or destroy the canonical deadline, so Aether resumes automatically. */
   function aetherPhaseBar(){return document.getElementById("livecheck");}
   function aetherPhasePaused(){return aetherPhaseState.hiddenPaused||aetherPhaseState.manualPaused;}
   function aetherPhaseClearTimer(){
@@ -403,12 +404,16 @@ function aetherNewsCanonicalEvent(event){
     aetherPhaseState.transitions+=1;
     if(bar){
       bar.dataset.aetherPhase=phase;
-      bar.dataset.aetherPhaseOwner="40.6.424";
+      bar.dataset.aetherPhaseOwner="40.6.425";
       bar.dataset.aetherPhaseReason=reason;
+      if(phase!=="native"){
+        delete bar.dataset.aetherMenuEscape;
+        delete bar.dataset.aetherManualNative;
+      }
     }
     if(root){
       root.dataset.aetherPhase=phase;
-      root.dataset.aetherPhaseOwner="40.6.424";
+      root.dataset.aetherPhaseOwner="40.6.425";
     }
     const ribbon=document.getElementById("atlasAetherRibbon");
     if(ribbon)ribbon.setAttribute("aria-hidden",phase==="native"?"true":"false");
@@ -454,7 +459,10 @@ function aetherNewsCanonicalEvent(event){
     if(reason==="manual")aetherPhaseState.manualPaused=false;
     else aetherPhaseState.hiddenPaused=false;
     if(aetherPhasePaused())return false;
-    if(aetherPhaseState.nextAction&&aetherPhaseState.remaining>0)return aetherPhaseSchedule(aetherPhaseState.remaining,aetherPhaseState.nextAction);
+    if(aetherPhaseState.nextAction){
+      if(aetherPhaseState.remaining>0)return aetherPhaseSchedule(aetherPhaseState.remaining,aetherPhaseState.nextAction);
+      return aetherPhaseDispatch(aetherPhaseState.nextAction);
+    }
     return true;
   }
   function aetherPhaseEnterInfo(reason="cycle"){
@@ -505,21 +513,29 @@ function aetherNewsCanonicalEvent(event){
   }
   function aetherPhaseHoldNative(reason="operator"){
     if(!aetherExposureState.exposed)return false;
-    if(!aetherPhaseState.manualPaused){
-      aetherPhaseState.suspendedPhase=aetherPhaseState.phase==="native"?"info":aetherPhaseState.phase;
-      aetherPhasePause("manual");
-    }
+    const current=aetherPhaseState.phase;
+    if(current!=="native")aetherPhaseState.suspendedPhase=current;
     const bar=aetherPhaseBar();
-    if(bar)bar.dataset.aetherManualNative="1";
     aetherPhaseApply("native",reason);
+    if(bar){
+      bar.dataset.aetherMenuEscape="1";
+      delete bar.dataset.aetherManualNative;
+    }
     return true;
   }
   function aetherPhaseResumeAutomatic(reason="operator"){
     const bar=aetherPhaseBar();
-    if(bar)delete bar.dataset.aetherManualNative;
+    if(!bar||bar.dataset.aetherMenuEscape!=="1")return false;
+    delete bar.dataset.aetherMenuEscape;
+    delete bar.dataset.aetherManualNative;
     const restore=aetherPhaseState.suspendedPhase||"info";
     aetherPhaseApply(restore,reason);
-    return aetherPhaseResume("manual");
+    if(aetherPhaseState.timer)return true;
+    if(aetherPhaseState.nextAction){
+      if(aetherPhaseState.remaining>0)return aetherPhaseSchedule(aetherPhaseState.remaining,aetherPhaseState.nextAction);
+      return aetherPhaseDispatch(aetherPhaseState.nextAction);
+    }
+    return true;
   }
   function aetherCadenceVisibilitySync(reason="visibilitychange"){
     const hidden=document.hidden===true,root=document.documentElement;
@@ -539,11 +555,13 @@ function aetherNewsCanonicalEvent(event){
   }
   function aetherPhaseSnapshot(){
     return Object.freeze({
-      owner_build:"40.6.424",phase:aetherPhaseState.phase,suspended_phase:aetherPhaseState.suspendedPhase,
+      owner_build:"40.6.425",phase:aetherPhaseState.phase,suspended_phase:aetherPhaseState.suspendedPhase,
       started:aetherPhaseState.started,hidden_paused:aetherPhaseState.hiddenPaused,manual_paused:aetherPhaseState.manualPaused,
       remaining_ms:Math.max(0,Math.round(aetherPhaseState.remaining||0)),next_action:aetherPhaseState.nextAction,
+      timer_pending:aetherPhaseState.timer!==0,generation:aetherPhaseState.generation,
+      menu_escape:aetherPhaseBar()?.dataset?.aetherMenuEscape==="1",
       transitions:aetherPhaseState.transitions,last_reason:aetherPhaseState.lastReason,last_transition_at:aetherPhaseState.lastTransitionAt,
-      automatic_native_menu:false
+      automatic_native_menu:false,manual_native_menu_pauses_cadence:false,manual_native_menu_auto_return:true
     });
   }
 
@@ -1977,7 +1995,7 @@ function aetherNewsMarketSemantic(){
       feed.addEventListener("click",openNews);
       feed.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openNews();}});
     }
-    // 40.6.424 — CSS animationiteration is retired as a phase owner.
+    // 40.6.425 — CSS animationiteration is retired as a phase owner.
     // Operator bridge requests enter the same canonical state machine.
     if(document.documentElement.dataset.aetherSinglePhaseBridgeBound!=="1"){
       document.documentElement.dataset.aetherSinglePhaseBridgeBound="1";
@@ -1998,7 +2016,7 @@ function aetherNewsMarketSemantic(){
   }
 
   const api=Object.freeze({
-    build:"40.6.424",
+    build:"40.6.425",
     backend:AETHER_SYSTEM_BACKEND,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -2014,11 +2032,12 @@ function aetherNewsMarketSemantic(){
       phase:aetherPhaseSnapshot()
     }),
     single_lane:true,
-    phase_owner_build:"40.6.424",
+    phase_owner_build:"40.6.425",
     phase_snapshot:aetherPhaseSnapshot,
+    phase_menu_escape:aetherPhaseHoldNative,
     phase_hold_native:aetherPhaseHoldNative,
     phase_resume_automatic:aetherPhaseResumeAutomatic,
-    veille_batch_truth_build:"40.6.424",
+    veille_batch_truth_build:"40.6.425",
     veille_batch_size:AETHER_VEILLE_TOP,
     veille_batch_snapshot:aetherVeilleBatchSnapshot,
     phase_visibility_truth:true,
