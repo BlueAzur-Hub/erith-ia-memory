@@ -1,26 +1,26 @@
-# Agent-Crypto — 40.6.436 · STRATEGY A EXECUTION COST OWNER RECOVERY
+# Agent-Crypto — 40.6.437 · BACKEND SOURCE TRUTH RESIDENCY RECOVERY
 
-Parent : 40.6.435.
+Parent : 40.6.436.
 Market Core : 38.15.11.
 
-## Échec terrain .435
-- Execution Cost Truth visible.
-- Source Truth CEX séparé : CEX READY, OKX 5/5.
-- clic Mesurer : Kraken indisponible, diagnostic `fetchJson is not defined` ; OKX indisponible dans le même panneau.
-- audit du module publié : appels `fetchJson()` présents mais helper absent.
+## Terrain
+Backend / API peut être ouvert et hydraté avant l'arrivée du loader secondaire Source Truth.
+Dans ce cas l'utilisateur ne voit que l'architecture statique (« Architecture future ») alors que le Backend local V1.4.2 et Source Truth CEX existent toujours.
 
-## Correction .436
-1. restaure un helper `fetchJson()` borné pour le carnet public Kraken ;
-2. OKX réutilise `ErithPrivateBackendSources.refresh()` et donc le propriétaire Source Truth CEX déjà prouvé ;
-3. supprime la chaîne de fallback de montage ;
-4. emplacement unique : directement après `strategyAOracleCostCalibrationAudit` ;
-5. ajoute un self-test interne pour empêcher la régression du helper.
+## Cause
+`private-source-demand-loader.js` ne rejouait pas la demande si Backend était déjà ouvert au moment où le loader arrivait.
+Les événements click / toggle / erith:system-hydrated avaient alors déjà été consommés.
 
-## Inchangé
-Strategy A métier, Cost Gate, Oracle, Risk, Paper, Market Core 38.15.11, Aether et CSS cockpit.
+## Correction
+- si Backend/API est déjà ouvert à l'arrivée du loader : `ensure("backend-already-open")` immédiatement ;
+- Execution Cost Truth demande `ErithPrivateSourceDemand.ensure("execution-cost-truth")` si Source Truth CEX n'est pas encore chargé ;
+- le helper fetchJson restauré en .436 reste présent ;
+- le panneau Execution Cost Truth reste sous Oracle / Cost Calibration Truth.
 
-## Test Firefox
-Ctrl+F5 > Build 40.6.436 > Simulation / Strategy A.
-Execution Cost Truth doit être directement sous Oracle / Cost Calibration Truth.
-Cliquer MESURER KRAKEN + OKX.
-Attendu : Kraken chiffré ; OKX `SOURCE TRUTH CEX · BACKEND LOCAL 8790` avec bid/ask/spread.
+## Non modifié
+Private Backend V1.4.2, logique CEX, Strategy A métier, Cost Gate, Oracle, Risk, Paper, Market Core 38.15.11, Aether, CSS cockpit.
+
+## Test
+Ctrl+F5 > Build 40.6.437 > Backend / API.
+Attendu : Architecture statique + Source Truth CEX dans le même Backend / API, sans devoir refermer/réouvrir au bon moment.
+Puis Simulation / Strategy A > Execution Cost Truth > MESURER KRAKEN + OKX.

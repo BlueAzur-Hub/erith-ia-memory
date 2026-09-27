@@ -1,10 +1,10 @@
-/* Agent-Crypto @erith.IA — 40.6.436 STRATEGY A EXECUTION COST TRUTH
+/* Agent-Crypto @erith.IA — 40.6.437 STRATEGY A EXECUTION COST TRUTH
    Manual BTC/EUR execution-cost measurement for Kraken + OKX Europe.
-   40.6.436: restore the missing fetch helper, reuse ErithPrivateBackendSources for OKX, and lock the panel to one canonical anchor.
+   40.6.437: recover Source Truth demand if the Backend owner has not loaded yet, while preserving the .436 fetch-helper repair and canonical panel anchor.
    No direct browser OKX internet access, order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
 (() => {
   "use strict";
-  const BUILD="40.6.436", ROOT="strategyAExecutionCostTruth";
+  const BUILD="40.6.437", ROOT="strategyAExecutionCostTruth";
   const SIZES=Object.freeze([10,25,50,100]), DEPTH_BPS=Object.freeze([5,10,25]), TIMEOUT=9000, BACKEND_TIMEOUT=18000;
   const VENUES=Object.freeze({
     kraken:Object.freeze({
@@ -87,8 +87,15 @@
     };
   }
   async function fetchOkxBackendQuote(venue){
-    const owner=globalThis.ErithPrivateBackendSources;
-    if(!owner||typeof owner.refresh!=="function")throw new Error("Source Truth CEX non chargée");
+    let owner=globalThis.ErithPrivateBackendSources;
+    if(!owner||typeof owner.refresh!=="function"){
+      const demand=globalThis.ErithPrivateSourceDemand;
+      if(demand&&typeof demand.ensure==="function"){
+        await demand.ensure("execution-cost-truth");
+        owner=globalThis.ErithPrivateBackendSources;
+      }
+    }
+    if(!owner||typeof owner.refresh!=="function")throw new Error("Source Truth CEX non chargée après demande");
     const started=performance.now();
     const payload=await owner.refresh();
     if(!payload)throw new Error("Backend local : Source Truth CEX n’a renvoyé aucune donnée");
@@ -191,7 +198,7 @@
     if(!last)return false;
     try{
       const b=new Blob([JSON.stringify(last,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_436.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
+      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_437.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
   function style(){
@@ -243,7 +250,7 @@
     const checks=Object.freeze({
       fetch_helper_defined:typeof fetchJson==="function",
       canonical_anchor_only:true,
-      okx_owner_route:true,
+      okx_owner_route:typeof globalThis.ErithPrivateSourceDemand?.ensure==="function"||typeof globalThis.ErithPrivateBackendSources?.refresh==="function",
       direct_okx_browser_internet:false,
       no_real_order:true
     });

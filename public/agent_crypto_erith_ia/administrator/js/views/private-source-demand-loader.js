@@ -14,6 +14,7 @@
    40.6.242 hardening: removes eager source-reader boot and settles loader ready state only
    after Source Truth -> DEX freshness -> downstream source readers are ordered.
    Source Truth stays in its canonical Backend / API host.
+   40.6.437 replays demand when Backend/API is already open before this secondary loader arrives.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, loader storage write, wallet or trading endpoint is introduced. */
 (()=>{
@@ -206,6 +207,9 @@
   const backend=document.querySelector('details[data-collapse-key="backend"]');
   backend?.addEventListener("toggle",()=>{if(backend.open)void ensure("backend-open");});
   window.addEventListener("erith:system-hydrated",event=>{if(String(event?.detail?.key||"")==="backend"&&document.querySelector('details[data-collapse-key="backend"]')?.open)void ensure("backend-hydrated");},{passive:true});
+  // 40.6.437 — if Backend/API was already opened before this secondary loader arrived,
+  // the original click/toggle/hydration events are already gone. Recover immediately.
+  if(backend?.open)void ensure("backend-already-open");
 
   const hash=String(location.hash||"");
   if(["#sources","#backend","#privateBackendV1","#privateSourceIntelligence"].includes(hash))void ensure("direct-hash");
