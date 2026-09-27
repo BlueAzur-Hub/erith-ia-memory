@@ -1,22 +1,21 @@
-# Handoff — 40.6.429
+# Handoff — 40.6.430
 
-Parent fonctionnel : **40.6.428**.
+Parent fonctionnel : **40.6.429**.
 
-Objectif unique : mesurer les refus **Strategy A · COST_GATE_WAIT** sans modifier Strategy A.
+Objet unique : réparer la nomenclature du nouveau module Cost-Wait sans modifier son métier.
 
-Ajouts :
+## Canonique
 
-- événement local après écriture d’un cycle Auto A ;
-- module `js/strategy-a-cost-wait-outcome-audit-406429.js` ;
-- résultats échantillonnés T+5 / T+15 / T+60 ;
-- MFE / MAE échantillonnées ;
-- classifications descriptives ;
-- export JSON opérateur.
+`js/strategy-a-cost-wait-outcome-audit.js`
 
-Protections : **Cost Gate 0,80 % inchangé · coût 0,60 % inchangé · Direction / Confiance inchangées · Oracle / Risk / Paper / Market Core / Aether / CSS cockpit inchangés**.
+## Retiré
 
-Aucun fetch, WebSocket, timer récurrent, MutationObserver, nouveau stockage ou ordre réel.
+`js/strategy-a-cost-wait-outcome-audit-406429.js`
 
-Le ZIP de livraison contient la structure modifiée et `PATCHES/app.js.patch` pour l’unique modification du gros `app.js`. Le `app.js` complet est publié sur `main`.
+Le loader secondaire référence uniquement le nom canonique, sans `?v=`.
 
-Test Firefox : Ctrl+F5 → Build 40.6.429 → Simulation / Strategy A → panneau COST-WAIT OUTCOME AUDIT → console `AgentCryptoStrategyACostWaitOutcomeAudit406429.self_test().pass` doit être `true`.
+La dette `?v=40.6.429` introduite par .429 sur `style.css`, `app.js` et `post-boot-runtime-loader.js` est également retirée. Les query strings historiques extérieures à cette livraison ne sont pas traitées ici.
+
+Aucun seuil, Oracle, Risk, Paper, Market Core 38.15.11, Aether ou CSS cockpit n'est modifié.
+
+Test : Ctrl+F5 → Build 40.6.430 → Simulation / Strategy A → panneau Cost-Wait → self-test PASS.

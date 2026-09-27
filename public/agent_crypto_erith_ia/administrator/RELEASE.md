@@ -1,101 +1,55 @@
-# Agent-Crypto — 40.6.429 · STRATEGY A COST-WAIT OUTCOME AUDIT
+# Agent-Crypto — 40.6.430 · STRATEGY A COST-WAIT AUDIT CANONICAL NAME
 
-Parent : **40.6.428**.  
-Market Core : **38.15.11**.  
-CSS cockpit 40.6.428 : **inchangé / protégé**.  
-Aether .425 : **inchangé / protégé**.
+Parent : **40.6.429**.  
+Market Core : **38.15.11**.
 
-## Destination
+## Objet unique
 
-Mesurer au lieu de modifier.
+Corriger la dette de nomenclature introduite par 40.6.429, sans toucher à la logique Strategy A.
 
-40.6.429 ajoute un audit passif des cycles **Strategy A · COST_GATE_WAIT** pour répondre à une question précise :
+Le propriétaire fonctionnel actif devient :
 
-> les refus du Cost Gate protègent-ils réellement Strategy A, ou le seuil bloque-t-il aussi des mouvements qui dépassent ensuite les coûts / le seuil existant ?
+`js/strategy-a-cost-wait-outcome-audit.js`
 
-## Instrumentation
-
-Une seule instrumentation dans le ledger Auto A :
-
-- après l'écriture réelle d'un cycle, émission locale de `agent-crypto:strategy-a-experiment-cycle` ;
-- aucune modification de la décision du cycle ;
-- aucun changement de cadence Auto A.
-
-Nouveau module :
+L'ancien fichier versionné est retiré :
 
 `js/strategy-a-cost-wait-outcome-audit-406429.js`
 
-Il lit uniquement les lignes existantes du **Strategy A Experiment Ledger / Durable Evidence**.
+Règle appliquée : **Git porte les versions ; les noms de fichiers portent les responsabilités.**
 
-Pour chaque vrai `COST_GATE_WAIT`, il cherche les prix des cycles Auto A suivants :
+## Nettoyage borné
 
-- T+5 min ;
-- T+15 min ;
-- T+60 min.
+Les query strings `?v=40.6.429` introduites par la livraison .429 sont retirées de :
 
-Tolérance de raccord temporel : **±2,5 min**.
+- `style.css`
+- `app.js`
+- `js/post-boot-runtime-loader.js`
+- le module Cost-Wait renommé
 
-Il calcule aussi sur la fenêtre T0 → T+60 :
+Ctrl+F5 reste le geste opérateur de rafraîchissement.
 
-- MFE observée, échantillonnée aux cycles Auto A ;
-- MAE observée ;
-- pic net théorique après le coût déjà porté par le cycle ;
-- écart MFE − expected_move.
+## Protections
 
-## Classification descriptive
-
-- `REFUS_PROTECTEUR_OBSERVE` : le pic observé reste sous les coûts modélisés ;
-- `COUVRE_COUTS_SANS_MARGE` : le pic couvre les coûts mais pas le seuil complet ;
-- `SEUIL_DEPASSE_APRES_REFUS` : le pic observé dépasse le seuil Strategy A existant ;
-- `INCONNU` : T+60 ou échantillonnage insuffisant.
-
-Ces classes ne sont **pas** des P/L exécutés et ne constituent aucune preuve de rentabilité.
-
-## Interdits respectés
-
-- aucun seuil Strategy A modifié ;
+- logique Cost-Wait .429 inchangée ;
 - Cost Gate 0,80 % inchangé ;
-- modèle de coût 0,60 % inchangé ;
+- coût 0,60 % inchangé ;
 - Direction / Confiance inchangées ;
-- Oracle inchangé ;
-- Risk Governor inchangé ;
-- Paper inchangé ;
+- Oracle / Risk Governor / Paper inchangés ;
 - Market Core 38.15.11 inchangé ;
 - Aether inchangé ;
-- CSS cockpit inchangé ;
-- aucun fetch ;
-- aucun WebSocket ;
-- aucun timer récurrent ;
-- aucun MutationObserver ;
-- aucun nouveau stockage ;
+- CSS cockpit fonctionnel inchangé ;
+- aucun nouveau fetch / WebSocket / timer / observer / stockage ;
 - aucun ordre réel.
 
-## Charge runtime
-
-Le module est ajouté aux runtimes secondaires, pas au Strategy Core critique.
-
-Il se recalcule sur :
-
-- le nouvel événement de cycle Auto A ;
-- Durable Evidence ready ;
-- ouverture de Simulation ;
-- pageshow.
-
-Il n'écoute pas le flux marché chaud.
-
-## Test local
-
-Self-test JavaScript : **PASS 5/5**.
+Les identifiants internes historiques `406429` ne sont pas renommés dans cette chirurgie, conformément au précédent `operator-dashboard.js` : le changement porte sur le **nom canonique du fichier actif**, pas sur une migration transversale.
 
 ## Test Firefox
 
 1. Ctrl+F5.
-2. Vérifier **Build 40.6.429**.
-3. Ouvrir **Simulation / Strategy A**.
-4. Vérifier la présence du panneau **STRATEGY A · COST-WAIT OUTCOME AUDIT · 40.6.429**.
-5. Dans la console, vérifier :
-   `AgentCryptoStrategyACostWaitOutcomeAudit406429.self_test().pass === true`
-6. Laisser Auto A actif ; les T+60 ne doivent se résoudre qu'après des cycles futurs réels.
-7. Exporter l'audit après accumulation pour analyser la calibration.
+2. Vérifier **Build 40.6.430**.
+3. Ouvrir Simulation / Strategy A.
+4. Vérifier le panneau **STRATEGY A · COST-WAIT OUTCOME AUDIT · 40.6.430**.
+5. Console : `AgentCryptoStrategyACostWaitOutcomeAudit406429.self_test().pass === true`.
+6. Vérifier qu'aucune requête n'est faite vers `strategy-a-cost-wait-outcome-audit-406429.js`.
 
-Aucune modification de seuil ne doit être faite à partir d'un échantillon incomplet.
+Terrain : **PENDING FIREFOX**.

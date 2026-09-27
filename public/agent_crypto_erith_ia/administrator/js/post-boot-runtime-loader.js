@@ -29,7 +29,7 @@
     "./js/tradus-data-ui-decoupling.js?v=40.6.405"
   ]);
   const SECONDARY_MODULES=Object.freeze([
-    "./js/strategy-a-cost-wait-outcome-audit-406429.js?v=40.6.429",
+    "./js/strategy-a-cost-wait-outcome-audit.js",
     "./js/tradus-shadow-adapter.js",
     "./js/atlas-heartbeat-rearm.js",
     "./js/markets-domain-contract.js",

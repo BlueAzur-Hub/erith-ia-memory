@@ -1,9 +1,9 @@
-/* Agent-Crypto @erith.IA — 40.6.429 STRATEGY A COST-WAIT OUTCOME AUDIT
+/* Agent-Crypto @erith.IA — 40.6.430 STRATEGY A COST-WAIT OUTCOME AUDIT
    Read-only. Existing Auto A cycle rows only. No threshold, Oracle, Risk, Paper,
    Market Core, network, polling timer, MutationObserver or storage change. */
 (() => {
   "use strict";
-  const BUILD="40.6.429", ROOT="strategyACostWaitOutcomeAudit406429";
+  const BUILD="40.6.430", ROOT="strategyACostWaitOutcomeAudit406429";
   const EVENT="agent-crypto:strategy-a-experiment-cycle", H=[5,15,60];
   const TOL=150000, MIN60=6;
   let last=null, queued=false, reason="boot";
@@ -102,7 +102,7 @@
     document.head.appendChild(s);
   }
   function exportJson(data){
-    try{const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="STRATEGY_A_COST_WAIT_OUTCOME_AUDIT_40_6_429.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;}catch(_){return false;}
+    try{const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="STRATEGY_A_COST_WAIT_OUTCOME_AUDIT_40_6_430.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;}catch(_){return false;}
   }
   function render(){
     if(typeof document==="undefined")return snapshot();

@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.429",
+  "build": "40.6.430",
   "engine": "38.15.11",
-  "release": "STRATEGY A COST-WAIT OUTCOME AUDIT",
+  "release": "STRATEGY A COST-WAIT AUDIT CANONICAL NAME",
   "published": true,
-  "status": "published_pending_firefox_429",
-  "parent_build": "40.6.428",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.429",
-  "administrator_build": "40.6.429",
-  "build_label": "Build 40.6.429 · Administrator",
+  "status": "published_pending_firefox_430",
+  "parent_build": "40.6.429",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.430",
+  "administrator_build": "40.6.430",
+  "build_label": "Build 40.6.430 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 puis vérifier Build 40.6.429. Ouvrir Simulation / Strategy A. Le panneau COST-WAIT OUTCOME AUDIT doit apparaître sans modifier Auto A. Vérifier AgentCryptoStrategyACostWaitOutcomeAudit406429.self_test().pass === true, puis laisser Auto A produire des cycles. Les T+60 doivent se résoudre uniquement quand des cycles futurs réels existent.",
+  "terrain_pending": "Firefox: Ctrl+F5 puis vérifier Build 40.6.430. Ouvrir Simulation / Strategy A. Le panneau COST-WAIT OUTCOME AUDIT doit fonctionner depuis le fichier canonique js/strategy-a-cost-wait-outcome-audit.js. Vérifier AgentCryptoStrategyACostWaitOutcomeAudit406429.self_test().pass === true. Aucun changement de seuil ou de comportement Auto A.",
   "terrain_proof": null,
-  "release_notes": "40.6.429 hérite de 40.6.428 et ajoute uniquement une instrumentation rétrospective Strategy A. Chaque cycle Auto A publié émet un événement local borné après écriture du ledger. Un module postboot en lecture seule recroise les COST_GATE_WAIT avec les prix des cycles Auto A futurs à T+5/T+15/T+60, calcule MFE/MAE échantillonnés et compare le pic observé aux coûts/seuils existants. Aucun seuil, Oracle, Risk, Paper, Market Core, Aether ou CSS cockpit n'est modifié. Aucun fetch, WebSocket, timer récurrent, MutationObserver ou nouveau stockage.",
+  "release_notes": "40.6.430 corrige uniquement la dette de nomenclature introduite en 40.6.429 : le module actif devient js/strategy-a-cost-wait-outcome-audit.js, l'ancien fichier suffixé -406429 est retiré, et les query strings ?v=40.6.429 introduites par .429 sur style.css, app.js et post-boot-runtime-loader.js sont supprimées. La logique de l'audit Cost-Wait, les seuils Strategy A, Oracle, Risk, Paper, Market Core 38.15.11, Aether et le CSS cockpit restent inchangés.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5236,7 +5236,7 @@
     "parent": "40.6.428",
     "event": "agent-crypto:strategy-a-experiment-cycle",
     "event_owner": "app.js Strategy A Experiment Ledger append",
-    "module": "js/strategy-a-cost-wait-outcome-audit-406429.js",
+    "module": "js/strategy-a-cost-wait-outcome-audit.js",
     "load_owner": "js/post-boot-runtime-loader.js SECONDARY_MODULES",
     "data_source": "Strategy A Experiment Ledger / Durable Evidence cycle prices",
     "horizons_min": [
@@ -5280,6 +5280,32 @@
     "real_order": false,
     "paper_only": true,
     "local_self_test": "PASS_5_5",
-    "terrain_status": "PENDING_FIREFOX"
+    "terrain_status": "PENDING_FIREFOX_406430",
+    "active_filename_versioned": false
+  },
+  "canonical_module_name_cleanup_406430": {
+    "enabled": true,
+    "scope": "STRATEGY_A_COST_WAIT_AUDIT_FILENAME_AND_429_QUERY_DEBT_ONLY",
+    "parent": "40.6.429",
+    "canonical_module": "js/strategy-a-cost-wait-outcome-audit.js",
+    "removed_module": "js/strategy-a-cost-wait-outcome-audit-406429.js",
+    "module_logic_changed": false,
+    "internal_legacy_identifiers_changed": false,
+    "removed_429_query_strings": [
+      "style.css?v=40.6.429",
+      "app.js?v=40.6.429",
+      "post-boot-runtime-loader.js?v=40.6.429",
+      "strategy-a-cost-wait-outcome-audit-406429.js?v=40.6.429"
+    ],
+    "naming_rule": "Git carries versions; functional filenames carry responsibilities",
+    "market_core_modified": false,
+    "strategy_thresholds_changed": false,
+    "oracle_changed": false,
+    "risk_governor_changed": false,
+    "paper_changed": false,
+    "aether_changed": false,
+    "cockpit_css_changed": false,
+    "real_order": false,
+    "firefox_validation_required": true
   }
 }
