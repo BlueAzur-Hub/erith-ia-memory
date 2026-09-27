@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.6.422
-  Revision: 40.6.422 Aether 12/12 Batch Truth. VEILLE freezes one 12-story batch per window and pauses the whole cadence while the document is hidden.
+  Build: 40.6.423
+  Revision: 40.6.423 Aether Phase / Visibility Truth. Native menu + Aether share one effective pause contract, phase handoffs overlap, and 12/12 proof distinguishes rendered, visible and reading-complete stories.
 */
 (() => {
   "use strict";
@@ -15,7 +15,8 @@
   const AETHER_MARQUEE_DELAY_S=0.55;
   const aetherVeilleState={
     index:0,kind:"alert",fingerprint:"",viewportWidth:0,last:null,storyEvent:null,storyContext:null,feedWasVisible:false,
-    batch:[],batchKeys:[],batchId:0,batchStartedAt:0,batchCompleted:false,batchDisplayedKeys:[],batchReason:"boot",
+    batch:[],batchKeys:[],batchId:0,batchStartedAt:0,batchCompleted:false,batchReason:"boot",
+    batchRenderLog:[],batchVisibleLog:[],batchReadCompleteLog:[],
     cadencePaused:false,visibilityPauses:0,lastVisibilityReason:"boot"
   };
   const AETHER_NEWS_SET_MIN_EVENTS=2;
@@ -277,10 +278,17 @@ function aetherNewsCanonicalEvent(event){
   }
   function aetherVeilleBatchPublish(){
     const total=aetherVeilleState.batch.length;
-    const displayed=aetherVeilleState.batchDisplayedKeys.length;
-    const unique=new Set(aetherVeilleState.batchDisplayedKeys).size;
-    const duplicates=Math.max(0,displayed-unique);
-    const complete=total>0&&unique>=total&&aetherVeilleState.index===total-1;
+    const rendered=aetherVeilleState.batchRenderLog.length;
+    const renderedUnique=new Set(aetherVeilleState.batchRenderLog).size;
+    const visible=aetherVeilleState.batchVisibleLog.length;
+    const visibleUnique=new Set(aetherVeilleState.batchVisibleLog).size;
+    const readingComplete=aetherVeilleState.batchReadCompleteLog.length;
+    const readingCompleteSet=new Set(aetherVeilleState.batchReadCompleteLog);
+    const readingCompleteUnique=readingCompleteSet.size;
+    // 40.6.423 — duplicates are measured from actual visible slot starts.
+    // They are never removed before counting.
+    const duplicates=Math.max(0,visible-visibleUnique);
+    const complete=total>0&&aetherVeilleState.batchKeys.every(key=>key&&readingCompleteSet.has(key));
     aetherVeilleState.batchCompleted=complete;
     const host=document.getElementById("atlasAetherVeille");
     const root=document.documentElement;
@@ -288,23 +296,51 @@ function aetherNewsCanonicalEvent(event){
       aetherBatchId:String(aetherVeilleState.batchId),
       aetherBatchIndex:String(total?Math.min(total,aetherVeilleState.index+1):0),
       aetherBatchTotal:String(total),
-      aetherBatchDisplayed:String(displayed),
-      aetherBatchUnique:String(unique),
+      aetherBatchRendered:String(rendered),
+      aetherBatchRenderedUnique:String(renderedUnique),
+      aetherBatchVisible:String(visible),
+      aetherBatchVisibleUnique:String(visibleUnique),
+      aetherBatchReadComplete:String(readingComplete),
+      aetherBatchReadCompleteUnique:String(readingCompleteUnique),
+      // compatibility names now map to visible truth, not selection truth.
+      aetherBatchDisplayed:String(visible),
+      aetherBatchUnique:String(visibleUnique),
       aetherBatchDuplicates:String(duplicates),
       aetherBatchComplete:complete?"1":"0"
     };
     if(host)for(const [key,value] of Object.entries(values))host.dataset[key]=value;
     if(root){
-      root.dataset.aetherVeilleBatch=`${unique}/${total}`;
+      root.dataset.aetherVeilleBatch=`${readingCompleteUnique}/${total}`;
       root.dataset.aetherVeilleBatchComplete=complete?"1":"0";
       root.dataset.aetherVeilleBatchDuplicates=String(duplicates);
+      root.dataset.aetherVeilleRendered=String(renderedUnique);
+      root.dataset.aetherVeilleVisible=String(visibleUnique);
+      root.dataset.aetherVeilleReadComplete=String(readingCompleteUnique);
     }
-    return Object.freeze({id:aetherVeilleState.batchId,total,displayed,unique,duplicates,complete,index:aetherVeilleState.index,reason:aetherVeilleState.batchReason});
+    return Object.freeze({
+      id:aetherVeilleState.batchId,total,rendered,rendered_unique:renderedUnique,
+      visible,visible_unique:visibleUnique,reading_complete:readingComplete,
+      reading_complete_unique:readingCompleteUnique,displayed:visible,unique:visibleUnique,
+      duplicates,complete,index:aetherVeilleState.index,reason:aetherVeilleState.batchReason
+    });
   }
-  function aetherVeilleBatchRecord(index=aetherVeilleState.index){
+  function aetherVeilleBatchLog(kind,index=aetherVeilleState.index){
     const key=aetherVeilleState.batchKeys[index]||"";
-    if(key&&!aetherVeilleState.batchDisplayedKeys.includes(key))aetherVeilleState.batchDisplayedKeys.push(key);
+    if(!key)return aetherVeilleBatchPublish();
+    if(kind==="rendered")aetherVeilleState.batchRenderLog.push(key);
+    else if(kind==="visible")aetherVeilleState.batchVisibleLog.push(key);
+    else if(kind==="reading-complete")aetherVeilleState.batchReadCompleteLog.push(key);
     return aetherVeilleBatchPublish();
+  }
+  function aetherVeilleBatchRenderRecord(current){
+    if(!current||current.kind!=="alert"||!current.event)return aetherVeilleBatchPublish();
+    return aetherVeilleBatchLog("rendered",Number.isFinite(Number(current.index))?Number(current.index):aetherVeilleState.index);
+  }
+  function aetherVeilleBatchVisibleRecord(index=aetherVeilleState.index){
+    return aetherVeilleBatchLog("visible",index);
+  }
+  function aetherVeilleBatchReadCompleteRecord(index=aetherVeilleState.index){
+    return aetherVeilleBatchLog("reading-complete",index);
   }
   function aetherVeilleBatchStart(reason="batch-start"){
     const events=aetherVeilleEvents().slice(0,AETHER_VEILLE_TOP);
@@ -313,14 +349,16 @@ function aetherNewsCanonicalEvent(event){
     aetherVeilleState.batchId+=1;
     aetherVeilleState.batchStartedAt=Date.now();
     aetherVeilleState.batchCompleted=false;
-    aetherVeilleState.batchDisplayedKeys=[];
+    aetherVeilleState.batchRenderLog=[];
+    aetherVeilleState.batchVisibleLog=[];
+    aetherVeilleState.batchReadCompleteLog=[];
     aetherVeilleState.batchReason=reason;
     aetherVeilleState.index=0;
     aetherVeilleState.kind="alert";
     aetherVeilleState.storyEvent=null;
     aetherVeilleState.storyContext=null;
     aetherVeilleState.fingerprint="";
-    if(events.length)aetherVeilleBatchRecord(0);else aetherVeilleBatchPublish();
+    aetherVeilleBatchPublish();
     return events;
   }
   function aetherVeilleBatchEvents(){
@@ -332,7 +370,9 @@ function aetherNewsCanonicalEvent(event){
       ...published,
       expected:AETHER_VEILLE_TOP,
       keys:Object.freeze([...aetherVeilleState.batchKeys]),
-      displayed_keys:Object.freeze([...aetherVeilleState.batchDisplayedKeys]),
+      rendered_keys:Object.freeze([...aetherVeilleState.batchRenderLog]),
+      visible_keys:Object.freeze([...aetherVeilleState.batchVisibleLog]),
+      reading_complete_keys:Object.freeze([...aetherVeilleState.batchReadCompleteLog]),
       started_at:aetherVeilleState.batchStartedAt||0,
       cadence_paused:aetherVeilleState.cadencePaused,
       visibility_pauses:aetherVeilleState.visibilityPauses,
@@ -610,6 +650,8 @@ function aetherNewsCanonicalEvent(event){
       if(copy&&copy.textContent!==current.detail)copy.textContent=current.detail;
       if(copy)copy.title=current.detail;
       aetherVeilleState.fingerprint=fingerprint;
+      // Rendered means the story content was actually committed to the VEILLE DOM.
+      aetherVeilleBatchRenderRecord(current);
     }
     aetherVeilleMarqueeSync(host,viewport,marquee,copy,fingerprint,fingerprintChanged);
     aetherVeilleState.last=current;
@@ -622,13 +664,12 @@ function aetherNewsCanonicalEvent(event){
       aetherVeilleBatchPublish();
       return renderAetherVeille();
     }
-    // 40.6.422 — advance inside the frozen batch only. Never wrap inside one VEILLE window.
+    // 40.6.423 — advance inside the frozen batch only. Never wrap inside one VEILLE window.
     if(aetherVeilleState.index<ranked.length-1)aetherVeilleState.index+=1;
     aetherVeilleState.kind="alert";
     aetherVeilleState.storyEvent=null;
     aetherVeilleState.storyContext=null;
     aetherVeilleState.fingerprint="";
-    aetherVeilleBatchRecord(aetherVeilleState.index);
     return renderAetherVeille();
   }
   function aetherCompact(value, max=88){
@@ -1793,15 +1834,25 @@ function aetherNewsMarketSemantic(){
         const style=getComputedStyle(feed);
         const visible=style.visibility==="visible"&&Number.parseFloat(style.opacity||"0")>.5;
         if(visible){
-          // First visible pulse owns story 1. A completed previous window receives a fresh frozen batch.
+          // 40.6.423 — a pulse boundary means the PREVIOUS visible slot received its full 18 s.
+          // Story 1 is recorded visible at the first VEILLE pulse; each later pulse completes one
+          // reading slot before advancing to the next frozen identity.
           if(!aetherVeilleState.feedWasVisible){
             aetherVeilleState.feedWasVisible=true;
             if(aetherVeilleState.batchCompleted||!aetherVeilleState.batch.length)aetherVeilleBatchStart("veille-window");
-            else aetherVeilleBatchRecord(aetherVeilleState.index);
-            renderAetherVeille();
+            const current=renderAetherVeille();
+            if(current?.kind==="alert")aetherVeilleBatchVisibleRecord(aetherVeilleState.index);
             return;
           }
-          aetherVeilleAdvance();
+          aetherVeilleBatchReadCompleteRecord(aetherVeilleState.index);
+          const ranked=aetherVeilleBatchEvents();
+          if(aetherVeilleState.index<ranked.length-1){
+            const next=aetherVeilleAdvance();
+            if(next?.kind==="alert")aetherVeilleBatchVisibleRecord(aetherVeilleState.index);
+          }else{
+            // Last story stays rendered through the end of its completed slot.
+            aetherVeilleBatchPublish();
+          }
         }else if(aetherVeilleState.feedWasVisible){
           aetherVeilleState.feedWasVisible=false;
           aetherVeilleState.kind="alert";
@@ -1829,7 +1880,7 @@ function aetherNewsMarketSemantic(){
   }
 
   const api=Object.freeze({
-    build:"40.4.139",
+    build:"40.6.423",
     backend:AETHER_SYSTEM_BACKEND,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -1844,9 +1895,11 @@ function aetherNewsMarketSemantic(){
       veille_batch:aetherVeilleBatchSnapshot()
     }),
     single_lane:true,
-    veille_batch_truth_build:"40.6.422",
+    veille_batch_truth_build:"40.6.423",
     veille_batch_size:AETHER_VEILLE_TOP,
     veille_batch_snapshot:aetherVeilleBatchSnapshot,
+    phase_visibility_truth:true,
+    reading_completion_truth:true,
     cadence_visibility_pause:true,
     presentation_owner:"admin-ribbons.css",
     new_recurring_timer:false,

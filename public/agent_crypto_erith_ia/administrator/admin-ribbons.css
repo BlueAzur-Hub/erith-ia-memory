@@ -220,27 +220,31 @@
    ============================================================================ */
 #livecheck.command-bar{position:relative!important}
 
+/* 40.6.423 — PHASE / VISIBILITY TRUTH.
+   Handoffs overlap by ~0.40–0.75 s so there is always a visible owner.
+   Native status is also armed under Aether just before the 270 s wrap. */
 @keyframes atlasStatusNativePhase{
-  0%,11.110%{opacity:1;visibility:visible}
-  11.111%,100%{opacity:0;visibility:hidden}
+  0%,11.180%{opacity:1;visibility:visible}
+  11.181%,99.919%{opacity:0;visibility:hidden}
+  99.920%,100%{opacity:1;visibility:visible}
 }
 @keyframes atlasAetherBandPhase{
-  0%,11.110%{opacity:0;visibility:hidden}
-  11.111%,100%{opacity:1;visibility:visible}
+  0%,11.029%{opacity:0;visibility:hidden}
+  11.030%,100%{opacity:1;visibility:visible}
 }
 @keyframes atlasAetherInfoPhase{
-  0%,11.110%{opacity:0;visibility:hidden}
-  11.111%,16.666%{opacity:1;visibility:visible}
-  16.667%,100%{opacity:0;visibility:hidden}
+  0%,11.029%{opacity:0;visibility:hidden}
+  11.030%,16.750%{opacity:1;visibility:visible}
+  16.751%,100%{opacity:0;visibility:hidden}
 }
 @keyframes atlasAetherVeillePhase{
-  0%,16.666%{opacity:0;visibility:hidden}
-  16.667%,96.666%{opacity:1;visibility:visible}
-  96.667%,100%{opacity:0;visibility:hidden}
+  0%,16.549%{opacity:0;visibility:hidden}
+  16.550%,96.820%{opacity:1;visibility:visible}
+  96.821%,100%{opacity:0;visibility:hidden}
 }
 @keyframes atlasAetherSystemPhase{
-  0%,96.666%{opacity:0;visibility:hidden}
-  96.667%,100%{opacity:1;visibility:visible}
+  0%,96.549%{opacity:0;visibility:hidden}
+  96.550%,100%{opacity:1;visibility:visible}
 }
 @keyframes atlasAetherFeedPulse40112{
   0%{--aether-feed-pulse-40112:0}
@@ -1793,7 +1797,16 @@ body:not([data-aether-news-set-ready="1"]) #atlasAetherSystem{
 /* 40.6.422 — AETHER 12/12 BATCH TRUTH.
    Firefox hidden/background tabs pause the entire command-bar cadence as one clock.
    VEILLE, SYSTEM, native menu and per-message marquee resume from the exact same phase. */
-html[data-aether-cadence-paused="1"] body #livecheck.command-bar > *,
+/* Specificity matters: legacy native rules use #livecheck + child IDs + !important.
+   :is(#id,...) gives this pause contract equal ID specificity plus the root state attribute. */
+html[data-aether-cadence-paused="1"] body #livecheck.command-bar > :is(
+  #btnLivecheck,
+  #btnRefresh,
+  #decisionCard,
+  #sourceActiveCard,
+  #sourceTimeCard,
+  #atlasAetherRibbon
+),
 html[data-aether-cadence-paused="1"] body #atlasAetherRibbon *{
   animation-play-state:paused!important;
 }

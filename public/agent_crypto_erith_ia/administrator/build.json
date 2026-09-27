@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.422",
+  "build": "40.6.423",
   "engine": "38.15.11",
-  "release": "AETHER 12/12 BATCH TRUTH",
+  "release": "AETHER PHASE / VISIBILITY TRUTH",
   "published": true,
-  "status": "published_pending_firefox_422",
-  "parent_build": "40.6.421",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.422",
-  "administrator_build": "40.6.422",
-  "build_label": "Build 40.6.422 · Administrator",
+  "status": "published_pending_firefox_423",
+  "parent_build": "40.6.422",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.423",
+  "administrator_build": "40.6.423",
+  "build_label": "Build 40.6.423 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 puis confirmer Build 40.6.422. Laisser VEILLE dérouler visiblement 1/12 → 12/12, puis vérifier SYSTEM puis retour du menu sans bande noire. Pendant un lot, quitter l’onglet puis revenir: la cadence doit reprendre au même point sans sauter des News. Attendu diagnostic: 12 affichées, 12 uniques, 0 doublon, batch complete=true.",
+  "terrain_pending": "Firefox: Ctrl+F5 puis confirmer Build 40.6.423. Observer une boucle complète: VEILLE 1/12 → 12/12, dernière News lisible jusqu’au pulse de fin, chevauchement SYSTEM, puis menu/date/heure sans ligne vierge. Tester un changement d’onglet vers 4/12 puis retour: même point repris. Diagnostic attendu: rendered/visible/reading_complete distincts, 12 reading-complete uniques, duplicates mesurés sans pré-déduplication, complete=true seulement après le 12e créneau.",
   "terrain_proof": null,
-  "release_notes": "40.6.422 repairs the Aether VEILLE reader itself. One VEILLE window now owns one frozen 12-story identity batch; rank/archive refreshes cannot change story N under the cursor. The entire command-bar cadence pauses while the document is hidden, so background-tab time cannot consume CSS phases while JS drops News pulses. Batch diagnostics expose displayed/unique/duplicates/completion. No new timer, observer, fetch owner, storage owner or trading path. News taxonomy 40.6.421, Market Core, Oracle, LT, Atlas CURRENT, Strategy and Storage remain unchanged.",
+  "release_notes": "40.6.423 finishes the Aether reader truth pass. It fixes the hidden-tab pause specificity so native menu and Aether animations pause together, adds overlapping phase handoffs to remove the empty command-bar seam around INFO/VEILLE/SYSTEM/MENU, and replaces optimistic batch counters with separate rendered, visible and reading-complete logs. Duplicates are measured from real visible slot starts and completion is granted only after every frozen story identity has completed a visible reading slot. No new timer, observer, fetch owner, storage owner or trading path.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5006,9 +5006,9 @@
     "terrain_observation": "Selected positive ETF story rendered FLUX MIXTES / INDÉTERMINÉ rather than false FLUX SORTANTS; all seven Role Quality components displayed values; consultation readiness reported READY and Aether ready."
   },
   "next_news_roadmap": {
-    "40.6.423": "storyline clustering/diversity — consolidate repeated narratives before operator priority",
-    "40.6.424": "criticality vs operator relevance calibration",
-    "40.6.425": "language/operator-lane polish only after Aether and semantic terrain are stable"
+    "40.6.424": "storyline clustering/diversity — consolidate repeated narratives before operator priority",
+    "40.6.425": "criticality vs operator relevance calibration",
+    "40.6.426": "language/operator-lane polish only after Aether and semantic terrain are stable"
   },
   "news_taxonomy_truth_406421": {
     "repair_in": "40.6.421",
@@ -5083,5 +5083,49 @@
     "real_order": false,
     "paper_only": true,
     "terrain_required": true
-  }
+  },
+  "aether_phase_visibility_truth_406423": {
+    "repair_in": "40.6.423",
+    "parent": "40.6.422",
+    "owners": [
+      "public/agent_crypto_erith_ia/administrator/js/aether.js",
+      "public/agent_crypto_erith_ia/administrator/admin-ribbons.css"
+    ],
+    "terrain_evidence": [
+      "40.6.422 materially increased News diversity beyond the historical 3–4 loop",
+      "operator captured an empty command-bar frame between Aether SYSTEM and native menu/date-time return",
+      "Astra audit reproduced native-menu animation continuing while Aether pause state was active"
+    ],
+    "root_causes": [
+      "pause selector had lower specificity than legacy #livecheck + child-id !important animation rules",
+      "phase boundaries touched but had no overlap, allowing a visible-owner seam when clocks diverged by a frame",
+      "40.6.422 counters recorded selection/progression before proving actual visibility or full reading slot",
+      "duplicate log pre-deduplicated keys, making duplicate count structurally optimistic"
+    ],
+    "repairs": [
+      "high-specificity pause selector explicitly targets native command-bar IDs and Aether ribbon",
+      "native/Aether, INFO/VEILLE, VEILLE/SYSTEM and SYSTEM/menu wrap handoffs overlap",
+      "separate rendered, visible and reading-complete logs",
+      "duplicates counted from raw visible slot log",
+      "batch complete requires every frozen story key in reading-complete log",
+      "last story remains rendered through the pulse that completes its reading slot"
+    ],
+    "expected_batch_size": 12,
+    "no_new_timer": true,
+    "no_new_observer": true,
+    "fetch_owner_count_changed": false,
+    "storage_owner_changed": false,
+    "news_collector_changed": false,
+    "taxonomy_changed": false,
+    "market_core_modified": false,
+    "oracle_modified": false,
+    "atlas_current_modified": false,
+    "strategy_modified": false,
+    "real_order": false,
+    "paper_only": true,
+    "terrain_required": true
+  },
+  "known_open_issues": [
+    "40.6.420 mixed-flow source-count truth: two detected flow directions can still overstate independent-source count; tracked separately, not modified in 40.6.423."
+  ]
 }
