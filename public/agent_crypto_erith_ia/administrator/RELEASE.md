@@ -1,90 +1,27 @@
-# Agent-Crypto — 40.6.434 · STRATEGY A OKX ONE-SHOT RECOVERY + READABILITY
+# Agent-Crypto — 40.6.435 · STRATEGY A OKX BACKEND ROUTE TRUTH
 
-Parent : **40.6.433**.  
-Market Core : **38.15.11**.
+Parent : 40.6.434.
+Market Core : 38.15.11.
 
-## Preuve terrain parent
+## Terrain parent
+40.6.434 : Kraken PASS ; OKX direct navigateur FAIL par timeout WebSocket EEA puis timeout REST public.
+Le même dump prouve Source Truth CEX CEX READY, OKX 5/5 et 4/4 sources via le Private Backend local.
 
-40.6.433 est **PASS pour le montage** :
-- panneau Execution Cost Truth visible dans Firefox ;
-- Kraken BTC/EUR mesuré ;
-- spread, profondeur et glissement Kraken calculés ;
-- OKX : **NetworkError** sur le REST EEA direct ;
-- Firefox a également affiché un avertissement de ralentissement global de la page.
+## Correction unique
+Execution Cost Truth ne contacte plus OKX directement sur Internet.
+Il réutilise http://127.0.0.1:8790/quotes?assets=BTC, Private Backend V1.4.2.
+Bid/ask OKX servent au meilleur achat, meilleure vente et spread top-of-book.
 
-Le défaut ouvert est donc OKX, pas le montage.
-
-## Correction 40.6.434
-
-Propriétaire unique :
-
-`js/strategy-a-execution-cost-truth.js`
-
-### OKX
-
-La mesure reste **strictement manuelle**, au clic sur `MESURER KRAKEN + OKX`.
-
-Ordre de transport :
-
-1. **OKX Europe WebSocket public EEA**  
-   `wss://wseea.okx.com:8443/ws/v5/public`  
-   canal `books` · instrument `BTC-EUR`.
-
-   Le WebSocket est **one-shot** :
-   - ouvert uniquement au clic opérateur ;
-   - premier snapshot carnet lu ;
-   - fermeture immédiate ;
-   - aucun abonnement permanent.
-
-2. Si le WebSocket EEA échoue : **REST public OKX**  
-   `https://www.okx.com/api/v5/market/books?instId=BTC-EUR&sz=100`.
-
-Le `NetworkError` brut n'est plus la lecture principale : en cas d'échec total, l'interface affiche un état court et place les détails dans **Diagnostic technique** replié.
-
-### Lisibilité
-
-Le panneau Execution Cost Truth seul reçoit :
-- titre et sous-titre plus grands ;
-- labels et valeurs plus grands ;
-- tableau 10/25/50/100 € plus lisible ;
-- boutons plus lisibles ;
-- source de transport visible ;
-- passage en une colonne lorsque l'espace horizontal devient insuffisant.
-
-Aucun CSS global du cockpit n'est modifié.
+## Vérité conservée
+Backend V1.4.2 ne prouve pas encore un carnet multi-niveaux dans son contrat public actuel.
+Donc profondeur ±5/±25 bp = NON EXPOSÉE et glissement 10/25/50/100 EUR = N/D.
+Aucune valeur n'est inventée.
 
 ## Protections
+Aucun accès Internet OKX direct depuis Firefox. Aucun WebSocket ajouté. Aucun timer, stockage, clé API, wallet ou ordre réel.
+Cost Gate, Oracle, Risk, Paper, Market Core 38.15.11, Aether et cockpit inchangés.
 
-Inchangés :
-- calcul spread ;
-- calcul profondeur ;
-- calcul slippage ;
-- frais Kraken / OKX de référence ;
-- Cost Gate 0,80 % ;
-- coût pédagogique historique 0,60 % ;
-- Oracle / bullAmplitude ;
-- Risk ;
-- Paper ;
-- Market Core 38.15.11 ;
-- Aether ;
-- CSS cockpit global ;
-- aucune clé API ;
-- aucun wallet ;
-- aucun ordre réel.
-
-Aucun timer récurrent. Aucun WebSocket permanent. Aucun stockage ajouté.
-
-## Test Firefox
-
-1. Ctrl+F5.
-2. Vérifier **Build 40.6.434**.
-3. Ouvrir **Simulation / Strategy A**.
-4. Descendre au panneau **STRATEGY A · EXECUTION COST TRUTH · 40.6.434**.
-5. Cliquer **MESURER KRAKEN + OKX**.
-6. Attendre les deux cartes.
-7. Vérifier qu'OKX affiche soit **WS EEA · ONE-SHOT**, soit **REST PUBLIC · FALLBACK**.
-8. Cliquer **EXPORTER** et transmettre le JSON.
-
-Si OKX échoue encore : capture/dump uniquement. **Aucune console.**
-
-Terrain : **PENDING FIREFOX**.
+## Test
+Ctrl+F5 > Build 40.6.435 > Simulation / Strategy A > Execution Cost Truth > MESURER KRAKEN + OKX.
+OKX attendu : Source BACKEND LOCAL 8790 · OKX PUBLIC avec bid/ask + spread.
+Puis EXPORTER le JSON.

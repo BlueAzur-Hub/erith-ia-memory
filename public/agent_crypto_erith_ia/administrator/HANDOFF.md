@@ -1,45 +1,14 @@
-# Handoff Seven — 40.6.434 · OKX One-Shot Recovery + Readability
+# Handoff Seven — 40.6.435 · OKX Backend Route Truth
 
-## État courant
+Build 40.6.435. Parent 40.6.434. Market Core 38.15.11.
 
-Build : **40.6.434**.  
-Parent : **40.6.433**.  
-Market Core : **38.15.11**.
+Terrain .434 : montage PASS, lisibilité PASS, Kraken PASS, OKX direct navigateur FAIL par deux timeouts.
+Le dump courant prouve séparément Source Truth CEX : OKX 5/5 via le backend local 127.0.0.1:8790.
 
-## Terrain .433
+.435 utilise donc le propriétaire existant /quotes?assets=BTC pour OKX.
+Mesuré : bid, ask, spread.
+Non revendiqué : profondeur multi-niveaux et slippage 10/25/50/100 EUR.
 
-- montage Execution Cost Truth : **PASS** ;
-- Kraken BTC/EUR : **PASS** ;
-- OKX REST EEA direct : **FAIL · NetworkError** ;
-- panneau : trop petit à lire confortablement ;
-- ralentissement Firefox global observé, chantier séparé.
+Geste opérateur : Ctrl+F5 > 40.6.435 > Simulation / Strategy A > Execution Cost Truth > MESURER KRAKEN + OKX > EXPORTER.
 
-## .434
-
-Une seule fonction produit est corrigée : **mesurer OKX sans dépendre du REST EEA qui a échoué dans Firefox**.
-
-Le module tente :
-1. WebSocket public EEA `books / BTC-EUR` en **one-shot** ;
-2. REST public OKX en fallback.
-
-Le WebSocket n'existe que pendant le clic de mesure et se ferme au premier snapshot.
-
-Le même panneau reçoit une augmentation de typographie locale. Aucun style global n'est rouvert.
-
-## Geste opérateur
-
-Ctrl+F5 → vérifier **40.6.434** → Simulation / Strategy A → Execution Cost Truth → **MESURER KRAKEN + OKX**.
-
-Attendu :
-- carte Kraken chiffrée ;
-- carte OKX chiffrée ;
-- transport OKX affiché ;
-- export `STRATEGY_A_EXECUTION_COST_TRUTH_40_6_434.json`.
-
-Si échec : capture/dump, pas de recherche, pas de console.
-
-## Protections
-
-Strategy A métier, seuils, Oracle, Risk, Paper, Market Core, Aether et CSS cockpit sont gelés.
-
-Règle : **une intention → un propriétaire → une modification → une preuve → STOP**.
+Si .435 PASS, extension Backend V1.4.3 orderbook read-only à traiter séparément pour profondeur + slippage réels.
