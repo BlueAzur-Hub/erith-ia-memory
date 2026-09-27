@@ -1,0 +1,98 @@
+name: Agent-Crypto Package 40.6.426
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406426.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate 40.6.426 cockpit geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/js/livecheck-cockpit-406426.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          js=(root/"js/livecheck-cockpit-406426.js").read_text(encoding="utf-8")
+          css=(root/"admin-livecheck-cockpit-406426.css").read_text(encoding="utf-8")
+          index=(root/"index.html").read_text(encoding="utf-8")
+          build=json.loads((root/"build.json").read_text(encoding="utf-8"))
+
+          checks={
+              "build": build.get("build")=="40.6.426",
+              "parent": build.get("parent_build")=="40.6.425",
+              "market_core": build.get("market_core")=="38.15.11" and build.get("market_core_modified") is False,
+              "aether_unchanged": build.get("aether_modified") is False,
+              "presentation_only": build.get("administrator_presentation_modified") is True,
+              "css_loaded": "admin-livecheck-cockpit-406426.css?v=40.6.426" in index,
+              "js_loaded": "livecheck-cockpit-406426.js?v=40.6.426" in index,
+              "livecheck_anchor": 'byId("livecheck")' in js,
+              "target_top_terminal": '#market-workspace > .top5-ribbon' in js,
+              "market_zone_owner": "#market-zone.atlas-market-zone" in css,
+              "market_flow_css_untouched": ".market-flow-ribbon" not in css and "#marketFlow" not in css,
+              "market_flow_js_untouched": "market-flow-ribbon" not in js and "tickerTrack" not in js and "marketFlow" not in js,
+              "no_interval": "setInterval(" not in js,
+              "no_timeout": "setTimeout(" not in js,
+              "no_observer": "MutationObserver" not in js,
+              "no_storage": all(x not in js for x in ("localStorage","sessionStorage","indexedDB")),
+              "no_fetch": "fetch(" not in js,
+              "resize_raf": 'window.addEventListener("resize"' in js and "requestAnimationFrame" in js,
+              "no_dom_move": all(x not in js for x in ("appendChild(","insertBefore(",".append(",".prepend(","replaceChildren(")),
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad:
+              raise SystemExit(f"40.6.426 validation failed: {bad}")
+          print("40.6.426 LIVECHECK COCKPIT / F11 VIEWPORT FIT STATIC PASS")
+          PY
+
+      - name: Build clean ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_LIVECHECK_COCKPIT_VIEWPORT_FIT_40.6.426.zip"
+          rm -f "$ZIP"
+          rm -rf /tmp/agent-crypto-406426
+          mkdir -p /tmp/agent-crypto-406426/administrator/js /tmp/agent-crypto-406426/coordination
+
+          cp public/agent_crypto_erith_ia/administrator/index.html /tmp/agent-crypto-406426/administrator/
+          cp public/agent_crypto_erith_ia/administrator/index-40.6.426.html /tmp/agent-crypto-406426/administrator/
+          cp public/agent_crypto_erith_ia/administrator/build.json /tmp/agent-crypto-406426/administrator/
+          cp public/agent_crypto_erith_ia/administrator/RELEASE.md /tmp/agent-crypto-406426/administrator/
+          cp public/agent_crypto_erith_ia/administrator/HANDOFF.md /tmp/agent-crypto-406426/administrator/
+          cp public/agent_crypto_erith_ia/administrator/admin-livecheck-cockpit-406426.css /tmp/agent-crypto-406426/administrator/
+          cp public/agent_crypto_erith_ia/administrator/js/livecheck-cockpit-406426.js /tmp/agent-crypto-406426/administrator/js/
+          cp coordination/inter_ai_dialogues/agent_crypto/HANDOFF_40.6.426_LIVECHECK_COCKPIT_VIEWPORT_FIT.md /tmp/agent-crypto-406426/coordination/
+          cp coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_SEVEN_AGENT_CRYPTO_40.6.426.md /tmp/agent-crypto-406426/coordination/
+          cp coordination/inter_ai_dialogues/agent_crypto/PACKAGE_MANIFEST_40.6.426.txt /tmp/agent-crypto-406426/PATCH_MANIFEST.txt
+
+          (cd /tmp/agent-crypto-406426 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          unzip -l "$ZIP"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_LIVECHECK_COCKPIT_VIEWPORT_FIT_40.6.426.zip"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ZIP"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add clean Agent-Crypto 40.6.426 ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
