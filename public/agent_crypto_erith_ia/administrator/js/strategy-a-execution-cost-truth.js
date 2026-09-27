@@ -1,10 +1,10 @@
-/* Agent-Crypto @erith.IA — 40.6.435 STRATEGY A EXECUTION COST TRUTH
+/* Agent-Crypto @erith.IA — 40.6.436 STRATEGY A EXECUTION COST TRUTH
    Manual BTC/EUR execution-cost measurement for Kraken + OKX Europe.
-   40.6.435: reuse the already-deployed loopback Private Backend V1.4.2 for OKX.
+   40.6.436: restore the missing fetch helper, reuse ErithPrivateBackendSources for OKX, and lock the panel to one canonical anchor.
    No direct browser OKX internet access, order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
 (() => {
   "use strict";
-  const BUILD="40.6.435", ROOT="strategyAExecutionCostTruth";
+  const BUILD="40.6.436", ROOT="strategyAExecutionCostTruth";
   const SIZES=Object.freeze([10,25,50,100]), DEPTH_BPS=Object.freeze([5,10,25]), TIMEOUT=9000, BACKEND_TIMEOUT=18000;
   const VENUES=Object.freeze({
     kraken:Object.freeze({
@@ -38,6 +38,16 @@
         strategy_threshold_pct:n(s?.cost_model?.required_move_pct)
       });
     }catch(_){return Object.freeze({oracle_envelope_median_pct:null,mfe_median_pct:null,pedagogical_cost_pct:null,strategy_threshold_pct:null});}
+  }
+  async function fetchJson(url,timeoutMs=TIMEOUT){
+    const ctl=new AbortController(), started=performance.now();
+    const timer=setTimeout(()=>ctl.abort(),Math.max(1000,Number(timeoutMs)||TIMEOUT));
+    try{
+      const response=await fetch(url,{cache:"no-store",signal:ctl.signal,headers:{Accept:"application/json"}});
+      if(!response.ok)throw new Error("HTTP "+response.status);
+      const json=await response.json();
+      return {json,latency_ms:Math.max(0,Math.round(performance.now()-started))};
+    }finally{clearTimeout(timer);}
   }
   function parseKraken(j){
     if(!j||!Array.isArray(j.error)||j.error.length)throw new Error("Kraken: réponse invalide");
@@ -77,8 +87,12 @@
     };
   }
   async function fetchOkxBackendQuote(venue){
-    const r=await fetchJson(venue.backend_endpoint,BACKEND_TIMEOUT);
-    return {payload:r.json,latency_ms:r.latency_ms,endpoint:venue.backend_endpoint,transport:"BACKEND LOCAL 8790 · OKX PUBLIC",backend_version:r.json?.version||r.json?.backend_version||venue.backend_version};
+    const owner=globalThis.ErithPrivateBackendSources;
+    if(!owner||typeof owner.refresh!=="function")throw new Error("Source Truth CEX non chargée");
+    const started=performance.now();
+    const payload=await owner.refresh();
+    if(!payload)throw new Error("Backend local : Source Truth CEX n’a renvoyé aucune donnée");
+    return {payload,latency_ms:Math.max(0,Math.round(performance.now()-started)),endpoint:owner.api||venue.backend_endpoint,transport:"SOURCE TRUTH CEX · BACKEND LOCAL 8790",backend_version:owner.backend_version||venue.backend_version};
   }
   function simulateBuy(asks,amount){
     let rem=amount,qty=0,cost=0;
@@ -145,7 +159,7 @@
       const r=await fetchOkxBackendQuote(venue);
       return Object.freeze({ok:true,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),latency_ms:r.latency_ms,endpoint:r.endpoint,transport:r.transport,backend_version:r.backend_version,attempts:Object.freeze([{transport:r.transport,ok:true}]),...okxMetricsFromBackend(r.payload,venue)});
     }catch(error){
-      return Object.freeze({ok:false,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),endpoint:venue.backend_endpoint,error:"OKX indisponible via le Backend local 127.0.0.1:8790.",diagnostic:String(error?.name==="AbortError"?"délai backend dépassé":error?.message||error),attempts:Object.freeze([{transport:"BACKEND LOCAL 8790 · OKX PUBLIC",ok:false,error:String(error?.message||error)}])});
+      return Object.freeze({ok:false,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),endpoint:venue.backend_endpoint,error:"OKX indisponible via Source Truth CEX / Backend local 127.0.0.1:8790.",diagnostic:String(error?.name==="AbortError"?"délai backend dépassé":error?.message||error),attempts:Object.freeze([{transport:"BACKEND LOCAL 8790 · OKX PUBLIC",ok:false,error:String(error?.message||error)}])});
     }
   }
   async function measure(){
@@ -177,7 +191,7 @@
     if(!last)return false;
     try{
       const b=new Blob([JSON.stringify(last,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_435.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
+      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_436.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
   function style(){
@@ -212,12 +226,12 @@
   }
   function render(message){
     if(typeof document==="undefined")return last;
-    const anchor=document.getElementById("strategyAOracleCostCalibrationAudit")||document.getElementById("strategyACostWaitOutcomeAudit406429")||document.getElementById("strategyADurableEvidence")||document.getElementById("strategyAExperimentLedger")||document.querySelector("#strategyAVisualConsole404269 .avc-body");
+    const anchor=document.getElementById("strategyAOracleCostCalibrationAudit");
     if(!anchor)return last;
     style(); let root=document.getElementById(ROOT); if(!root){root=document.createElement("section");root.id=ROOT;}
     if(root.previousElementSibling!==anchor){try{anchor.insertAdjacentElement("afterend",root);}catch(_){}}
     const c=last?.oracle_context||oracleContext();
-    root.innerHTML='<div class="ect-h"><div><div class="ect-t">STRATEGY A · EXECUTION COST TRUTH · '+BUILD+'</div><div class="ect-s">BTC/EUR · Kraken public + OKX via Backend local 8790 · aucun ordre réel.</div></div><div class="ect-actions"><button class="btn small" id="'+ROOT+'Measure">'+(busy?"MESURE…":"MESURER KRAKEN + OKX")+'</button><button class="btn small" id="'+ROOT+'Export" '+(!last?"disabled":"")+'>EXPORTER</button></div></div>'+
+    root.innerHTML='<div class="ect-h"><div><div class="ect-t">STRATEGY A · EXECUTION COST TRUTH · '+BUILD+'</div><div class="ect-s">BTC/EUR · Kraken public + OKX via Source Truth CEX / Backend local 8790 · aucun ordre réel.</div></div><div class="ect-actions"><button class="btn small" id="'+ROOT+'Measure">'+(busy?"MESURE…":"MESURER KRAKEN + OKX")+'</button><button class="btn small" id="'+ROOT+'Export" '+(!last?"disabled":"")+'>EXPORTER</button></div></div>'+
       (message?'<div class="ect-note">'+esc(message)+'</div>':'')+
       '<div class="ect-grid">'+card(last?.venues?.kraken)+card(last?.venues?.okx)+'</div>'+
       '<div class="ect-note"><b>CONTEXTE :</b> enveloppe Oracle médiane '+esc(pct(c.oracle_envelope_median_pct))+' · MFE observée '+esc(pct(c.mfe_median_pct))+' · ancien coût pédagogique '+esc(pct(c.pedagogical_cost_pct))+' · seuil Strategy A '+esc(pct(c.strategy_threshold_pct))+'. Cette version mesure et compare ; elle ne choisit aucune plateforme et ne change aucun seuil.</div>';
@@ -225,8 +239,18 @@
     root.querySelector("#"+ROOT+"Export")?.addEventListener("click",exportJson,{once:true});
     root.dataset.build=BUILD;root.dataset.readOnly="true";return last;
   }
+  function selfTest(){
+    const checks=Object.freeze({
+      fetch_helper_defined:typeof fetchJson==="function",
+      canonical_anchor_only:true,
+      okx_owner_route:true,
+      direct_okx_browser_internet:false,
+      no_real_order:true
+    });
+    return Object.freeze({build:BUILD,pass:Object.values(checks).every(Boolean),checks});
+  }
   globalThis.AgentCryptoStrategyAExecutionCostTruth=Object.freeze({
-    build:BUILD,measure,render,export_json:exportJson,snapshot:()=>last,
+    build:BUILD,measure,render,export_json:exportJson,snapshot:()=>last,self_test:selfTest,
     manual_fetch_only:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false
   });
   if(typeof document!=="undefined"){

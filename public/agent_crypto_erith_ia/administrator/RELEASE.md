@@ -1,27 +1,26 @@
-# Agent-Crypto — 40.6.435 · STRATEGY A OKX BACKEND ROUTE TRUTH
+# Agent-Crypto — 40.6.436 · STRATEGY A EXECUTION COST OWNER RECOVERY
 
-Parent : 40.6.434.
+Parent : 40.6.435.
 Market Core : 38.15.11.
 
-## Terrain parent
-40.6.434 : Kraken PASS ; OKX direct navigateur FAIL par timeout WebSocket EEA puis timeout REST public.
-Le même dump prouve Source Truth CEX CEX READY, OKX 5/5 et 4/4 sources via le Private Backend local.
+## Échec terrain .435
+- Execution Cost Truth visible.
+- Source Truth CEX séparé : CEX READY, OKX 5/5.
+- clic Mesurer : Kraken indisponible, diagnostic `fetchJson is not defined` ; OKX indisponible dans le même panneau.
+- audit du module publié : appels `fetchJson()` présents mais helper absent.
 
-## Correction unique
-Execution Cost Truth ne contacte plus OKX directement sur Internet.
-Il réutilise http://127.0.0.1:8790/quotes?assets=BTC, Private Backend V1.4.2.
-Bid/ask OKX servent au meilleur achat, meilleure vente et spread top-of-book.
+## Correction .436
+1. restaure un helper `fetchJson()` borné pour le carnet public Kraken ;
+2. OKX réutilise `ErithPrivateBackendSources.refresh()` et donc le propriétaire Source Truth CEX déjà prouvé ;
+3. supprime la chaîne de fallback de montage ;
+4. emplacement unique : directement après `strategyAOracleCostCalibrationAudit` ;
+5. ajoute un self-test interne pour empêcher la régression du helper.
 
-## Vérité conservée
-Backend V1.4.2 ne prouve pas encore un carnet multi-niveaux dans son contrat public actuel.
-Donc profondeur ±5/±25 bp = NON EXPOSÉE et glissement 10/25/50/100 EUR = N/D.
-Aucune valeur n'est inventée.
+## Inchangé
+Strategy A métier, Cost Gate, Oracle, Risk, Paper, Market Core 38.15.11, Aether et CSS cockpit.
 
-## Protections
-Aucun accès Internet OKX direct depuis Firefox. Aucun WebSocket ajouté. Aucun timer, stockage, clé API, wallet ou ordre réel.
-Cost Gate, Oracle, Risk, Paper, Market Core 38.15.11, Aether et cockpit inchangés.
-
-## Test
-Ctrl+F5 > Build 40.6.435 > Simulation / Strategy A > Execution Cost Truth > MESURER KRAKEN + OKX.
-OKX attendu : Source BACKEND LOCAL 8790 · OKX PUBLIC avec bid/ask + spread.
-Puis EXPORTER le JSON.
+## Test Firefox
+Ctrl+F5 > Build 40.6.436 > Simulation / Strategy A.
+Execution Cost Truth doit être directement sous Oracle / Cost Calibration Truth.
+Cliquer MESURER KRAKEN + OKX.
+Attendu : Kraken chiffré ; OKX `SOURCE TRUTH CEX · BACKEND LOCAL 8790` avec bid/ask/spread.
