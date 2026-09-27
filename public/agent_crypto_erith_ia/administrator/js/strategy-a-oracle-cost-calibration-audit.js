@@ -1,11 +1,12 @@
-/* Agent-Crypto @erith.IA — 40.6.431 STRATEGY A ORACLE / COST CALIBRATION TRUTH
+/* Agent-Crypto @erith.IA — 40.6.439 STRATEGY A ORACLE / COST CALIBRATION TRUTH · PROGRESSIVE RECOVERY
    Read-only semantic and calibration audit.
    No threshold, Oracle math, Strategy A decision, Risk, Paper, Market Core, network,
    recurring timer, observer or storage mutation. */
 (() => {
   "use strict";
-  const BUILD="40.6.431";
+  const BUILD="40.6.439";
   const ROOT="strategyAOracleCostCalibrationAudit";
+  const presentationOpen=()=>{const node=document.getElementById("simulation");return !(node instanceof HTMLDetailsElement)||node.open===true;};
   const EVENT="agent-crypto:strategy-a-experiment-cycle";
   let last=null,queued=false,reason="boot";
   const num=v=>v===null||v===undefined||v===""||typeof v==="boolean"?null:(Number.isFinite(Number(v))?Number(v):null);
@@ -89,11 +90,12 @@
   }
 
   function exportJson(data){
-    try{const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="STRATEGY_A_ORACLE_COST_CALIBRATION_TRUTH_40_6_431.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;}catch(_){return false;}
+    try{const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="STRATEGY_A_ORACLE_COST_CALIBRATION_TRUTH_40_6_439.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;}catch(_){return false;}
   }
 
   function render(){
     if(typeof document==="undefined")return snapshot();
+    if(!presentationOpen())return last;
     const data=snapshot();
     const anchor=document.getElementById("strategyACostWaitOutcomeAudit406429")||document.getElementById("strategyADurableEvidence")||document.getElementById("strategyAExperimentLedger");
     if(!anchor)return data;
@@ -104,7 +106,7 @@
     root.innerHTML='<div class="occ-h"><div><div class="occ-t">STRATEGY A · ORACLE / COST CALIBRATION TRUTH · '+BUILD+'</div><div class="occ-s">Audit sémantique en lecture seule · aucun seuil ni moteur modifié.</div></div><button type="button" class="btn small" id="'+ROOT+'Export">EXPORTER</button></div>'+
       '<div class="occ-g"><div class="occ-k"><span>Coût modélisé</span><b>'+esc(pct(c.aggregate_modelled_cost_pct))+'</b></div><div class="occ-k"><span>Seuil actuel</span><b>'+esc(pct(c.required_move_pct))+'</b></div><div class="occ-k"><span>Enveloppe Oracle médiane</span><b>'+esc(pct(x.oracle_envelope_median_pct))+'</b></div><div class="occ-k"><span>MFE médiane observée</span><b>'+esc(pct(x.mfe_median_pct))+'</b></div></div>'+
       '<div class="occ-note"><span class="occ-warn">COÛT :</span> '+esc(pct(c.aggregate_modelled_cost_pct))+' = achat '+esc(pct(c.buy_fee_pct))+' + impact entrée '+esc(pct(c.entry_impact_pct))+' + vente '+esc(pct(c.sell_fee_pct))+' + impact sortie '+esc(pct(c.exit_impact_pct))+'. Ces valeurs viennent des champs Simulation / fallback pédagogique ; frais réels de plateforme, spread réel et slippage réel non vérifiés.<br><span class="occ-warn">ORACLE :</span> Strategy A appelle <b>expected_move_pct</b> la valeur <b>bullAmplitude</b>. C\'est une enveloppe déterministe de scénario, pas une probabilité entraînée ni un rendement attendu calibré.<br><span class="occ-warn">OBSERVÉ :</span> couverture T+60 '+esc(Number.isFinite(x.coverage_pct)?x.coverage_pct.toFixed(1)+" %":"—")+' · MFE − enveloppe médiane '+esc(pct(x.mfe_minus_oracle_envelope_median_pct))+'.<br><b>Conclusion :</b> ne pas recalibrer le seuil à partir de cette seule mesure ; séparer d\'abord coût d\'exécution vérifié et modèle pédagogique, puis calibrer bullAmplitude contre la MFE réelle.</div>';
-    root.querySelector("#"+ROOT+"Export")?.addEventListener("click",()=>exportJson(data),{once:true});
+    root.querySelector("#"+ROOT+"Export")?.addEventListener("click",()=>exportJson(data));
     root.dataset.auditBuild=BUILD;root.dataset.readOnly="true";return data;
   }
 
@@ -130,6 +132,7 @@
   if(typeof document!=="undefined"){
     document.addEventListener(EVENT,()=>schedule(EVENT),{passive:true});
     document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",()=>schedule("durable-evidence-ready"),{passive:true});
+    document.addEventListener("toggle",e=>{if(e?.target?.id==="simulation"&&e.target.open===true)schedule("simulation-open");},true);
     window.addEventListener("pageshow",()=>schedule("pageshow"),{passive:true});
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>schedule("dom-ready"),{once:true});else schedule("script-load");
   }
