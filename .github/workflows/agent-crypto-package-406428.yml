@@ -1,0 +1,79 @@
+name: Agent-Crypto Package 40.6.428
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406428.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate native CSS-only correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          css=(root/"style.css").read_text(encoding="utf-8")
+          index=(root/"index.html").read_text(encoding="utf-8")
+          build=json.loads((root/"build.json").read_text(encoding="utf-8"))
+
+          checks={
+            "build": build.get("build")=="40.6.428",
+            "parent": build.get("parent_build")=="40.6.425",
+            "market_core": build.get("market_core")=="38.15.11" and build.get("market_core_modified") is False,
+            "aether": build.get("aether_modified") is False,
+            "native_rule": "height: clamp(525px, calc(61.5vh + 42px), 720px) !important;" in css,
+            "native_min": "min-height: 525px !important;" in css,
+            "native_max": "max-height: 720px !important;" in css,
+            "style_cache": "./style.css?v=40.6.428" in index,
+            "no_426_runtime": "livecheck-cockpit-406426.js" not in index,
+            "no_426_css": "admin-livecheck-cockpit-406426.css" not in index,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad:
+            raise SystemExit(f"40.6.428 static validation failed: {bad}")
+          print("40.6.428 NATIVE CSS FIT STATIC PASS")
+          PY
+
+      - name: Build clean ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_NATIVE_CSS_COCKPIT_FIT_40.6.428.zip"
+          rm -f "$ZIP"
+          rm -rf /tmp/agent-crypto-406428
+          mkdir -p /tmp/agent-crypto-406428/administrator
+          cp public/agent_crypto_erith_ia/administrator/index.html /tmp/agent-crypto-406428/administrator/
+          cp public/agent_crypto_erith_ia/administrator/index-40.6.428.html /tmp/agent-crypto-406428/administrator/
+          cp public/agent_crypto_erith_ia/administrator/style.css /tmp/agent-crypto-406428/administrator/
+          cp public/agent_crypto_erith_ia/administrator/build.json /tmp/agent-crypto-406428/administrator/
+          cp public/agent_crypto_erith_ia/administrator/RELEASE.md /tmp/agent-crypto-406428/administrator/
+          cp public/agent_crypto_erith_ia/administrator/HANDOFF.md /tmp/agent-crypto-406428/administrator/
+          (cd /tmp/agent-crypto-406428 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_NATIVE_CSS_COCKPIT_FIT_40.6.428.zip"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ZIP"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.428 ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
