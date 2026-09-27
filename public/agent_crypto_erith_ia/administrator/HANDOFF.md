@@ -1,25 +1,13 @@
-# Agent-Crypto — Handoff Seven
+# Handoff — 40.6.428
 
-Build **40.6.425 — AETHER MENU ESCAPE / CONTINUITY RECOVERY**  
-Parent **40.6.424** · Market Core **38.15.11**.
+La correction repart de **40.6.425**.
 
-## Vérité terrain
-40.6.424 a corrigé la ligne vide et la boucle INFO → NEWS → SYSTEM → INFO.
-Le défaut restant est `♥ VEILLE`, câblé comme pause manuelle persistante.
+Fonctionnellement, seul `style.css` change : hauteur native du `chart-shell` Crypto.
 
-## 40.6.425
-- `♥ VEILLE` = retour temporaire au menu, pas pause ;
-- timeout canonique conservé ;
-- reprise automatique à la prochaine échéance ;
-- garde-fou `remaining<=0 → nextAction` ;
-- `Aether · ATTENTION` peut reprendre immédiatement ;
-- aucun nouveau timer/observer/fetch/storage/trading owner.
+`59vh + 42px` → `61.5vh + 42px`  
+min `507px` → `525px`  
+max `647px` → `720px`
 
-## Test
-Firefox : **NEWS → ♥ VEILLE → MENU → attendre → reprise automatique**.
+Aucun JS. Aucun resize runtime. Aucun changement Market Flow/Target Top/Aether/Market Core.
 
-## Protégé
-Market Core 38.15.11 · News producer · Oracle · Math · LT · Atlas CURRENT · Strategy/TRADUS · Storage.
-
-## Suite
-Si PASS : **40.6.426 Storyline Clustering / Diversity**.
+Test prioritaire : Target Top 5 doit être **entièrement visible** en bas, Market Flow **entièrement hors cadre**, en fenêtre normale et F11.
