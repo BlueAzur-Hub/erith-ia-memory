@@ -1,12 +1,16 @@
-# HANDOFF — Agent-Crypto 40.6.438 RESTORE
+# HANDOFF — Agent-Crypto 40.6.439
 
-40.6.437 est rejetée terrain : interface déclarée morte par l'opérateur.
+Base : 40.6.438 restaurée et vivante.
 
-40.6.438 restaure le runtime actif depuis 40.6.425 par commit en avant, sans rembobiner les données ni l'historique Git.
+Cette étape récupère uniquement les deux audits Strategy A read-only .430/.431, avec chargement à la demande.
 
-Règle de reprise :
-1. Firefox tranche.
-2. Si l'interface 40.6.438 est complète et réactive : geler la restauration.
-3. Ne réintroduire aucun module 40.6.429–40.6.437 avant PASS.
-4. Après PASS seulement, reprendre les dettes Execution Cost Truth une par une.
-5. VALIDÉ = IMMUTABLE.
+## Test terrain
+1. Vérifier Build 40.6.439.
+2. Confirmer que le cockpit reste aussi réactif que 40.6.438.
+3. Ouvrir Simulation.
+4. Attendre Cost-Wait Outcome Audit + Oracle / Cost Calibration Truth.
+5. Tester Exporter deux fois sur chaque panneau.
+6. Fermer Simulation et vérifier la réactivité.
+7. Ne pas tester Execution Cost Truth : il n’est volontairement pas résident.
+
+Un seul FAIL = arrêt. Aucun .440 avant preuve terrain.
