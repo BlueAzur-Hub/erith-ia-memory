@@ -1,14 +1,13 @@
-# HANDOFF — Agent-Crypto 40.6.444
+# HANDOFF — Agent-Crypto 40.6.445
 
-Objectif unique : corriger le bloc Oracle COHÉRENCE / VOLATILITÉ / PANIER 24 H.
+Dernière correction de ce fil.
 
-## Test terrain
-1. Vérifier Build 40.6.444.
-2. Ouvrir Graphique / Oracle comme sur la capture.
-3. Sous ORACLE BAISSE :
-   - COHÉRENCE doit être seule sur la première ligne ;
-   - VOLATILITÉ et PANIER 24 H côte à côte dessous ;
-   - aucune valeur écrasée ;
-   - aucune scrollbar.
+## Test terrain unique
+Vérifier dans Lecture Oracle que les trois blocs sont visibles ensemble sur une seule ligne :
+COHÉRENCE | VOLATILITÉ | PANIER 24 H
 
+Aucun scroll.
+Aucun bloc caché.
 Aucun autre test demandé.
+
+Après ce test, clôture du fil.

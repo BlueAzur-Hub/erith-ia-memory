@@ -1,27 +1,21 @@
-# Agent-Crypto 40.6.444 — ORACLE METRICS READABILITY RESTORE
+# Agent-Crypto 40.6.445 — ORACLE METRICS FINAL FIT
 
 ## Objectif unique
-Exécuter la correction visuelle déjà promise dans le Fil après 40.6.435.
+Corriger la régression visuelle introduite par 40.6.444.
 
-## Résultat attendu
-```
-COHÉRENCE
-100/100
+Les trois métriques Oracle doivent rester visibles simultanément :
+- COHÉRENCE
+- VOLATILITÉ
+- PANIER 24 H
 
-VOLATILITÉ        PANIER 24 H
-0.06 %            +0.91 %
-```
+## Correction
+Une seule ligne, trois colonnes égales.
+Pas de scroll.
+Pas de donnée masquée.
+Pas de texte réduit.
+Pas de changement de calcul Oracle.
 
-Aucune scrollbar. Aucun texte réduit pour faire tenir les valeurs.
-
-## Changement
-Dans la présentation Oracle existante :
-- grille des métriques : 2 colonnes ;
-- première métrique (COHÉRENCE) : largeur complète.
-
-## Protégé
-- math Oracle et données Oracle inchangés ;
-- Backend/API 40.6.441 inchangé ;
-- cadrage Graphique 40.6.442 inchangé ;
-- Execution Cost 40.6.443 inchangé ;
-- style.css, app.js, post-boot, Aether, Market Core inchangés.
+## Gel
+Backend/API 40.6.441 reste gelé.
+Cadrage Graphique 40.6.442 reste gelé.
+Strategy / Execution Cost 40.6.443 reste gelé.
