@@ -1,28 +1,25 @@
-# Agent-Crypto 40.6.439 — PROGRESSIVE RECOVERY · STRATEGY AUDITS ON DEMAND
+# Agent-Crypto 40.6.440 — BACKEND/API DETERMINISTIC RESIDENCY RECOVERY
 
-## Base protégée
-40.6.438 reste la base vivante restaurée depuis 40.6.425.
+## Cause terrain
+40.6.439 est rejetée : Backend/API pouvait être ouvert avant l’arrivée de son loader, ce qui perdait le signal de demande et laissait uniquement le bloc statique.
 
-Les blobs suivants restent strictement inchangés :
+## Correction bornée
+- replay immédiat si Backend/API est déjà ouvert ;
+- suppression d’un script Source Truth échoué/périmé avant nouvelle tentative ;
+- retry réel ;
+- timeout de chargement Source Truth : 7 s ;
+- montage explicite de private-backend-sources.js après chargement ;
+- attente downstream bornée à 4,5 s ;
+- cache-buster 40.6.440 sur l’entrée private-source-demand-loader dans le post-boot.
+
+## Non touché
+- private-backend-sources.js
 - style.css
 - app.js
-- js/post-boot-runtime-loader.js
-- js/views/private-source-demand-loader.js
+- Aether
+- Market Core 38.15.11
+- Oracle / Risk / Paper
+- Strategy business logic
+- Execution Cost Truth
 
-## Réintroduction bornée
-Deux modules seulement :
-- Strategy A Cost-Wait Outcome Audit
-- Strategy A Oracle / Cost Calibration Truth
-
-Ils ne sont plus résidents au boot. Le loader `strategy-a-audit-demand-loader.js` les charge uniquement à l’ouverture de Simulation.
-
-## Durcissement inclus
-- chargement retentable après échec ;
-- attente bornée à 6 s par module ;
-- Exporter répétable ;
-- aucun recalcul/rendu d’audit quand Simulation est fermée ;
-- Execution Cost Truth reste hors résidence.
-
-## Interdits respectés
-Aucun changement CSS/Aether/Market Core/Oracle math/Risk/Paper/Strategy business logic.
-Aucun ordre réel. Aucun timer récurrent. Aucun observer. Aucun stockage nouveau.
+Les audits Strategy A de 40.6.439 restent chargés uniquement à la demande.

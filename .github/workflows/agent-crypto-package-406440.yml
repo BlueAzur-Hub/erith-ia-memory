@@ -1,0 +1,89 @@
+name: Agent-Crypto Package 40.6.440 Backend Recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406440.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate Backend recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/views/private-source-demand-loader.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          b=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          idx=(root/"index.html").read_text(encoding="utf-8")
+          loader=(root/"js/views/private-source-demand-loader.js").read_text(encoding="utf-8")
+          post=(root/"js/post-boot-runtime-loader.js").read_text(encoding="utf-8")
+          checks={
+            "build":b.get("build")=="40.6.440",
+            "parent":b.get("parent_build")=="40.6.439",
+            "replay":'ensure("backend-already-open")' in loader,
+            "retry_cleanup":"discardSourceScript" in loader,
+            "timeout":"source-load-timeout" in loader and "SOURCE_LOAD_TIMEOUT_MS=7000" in loader,
+            "mount":"owner.mount()" in loader,
+            "post_cache":"private-source-demand-loader.js?v=40.6.440" in post,
+            "execution_not_postboot":"strategy-a-execution-cost-truth.js" not in post,
+            "index_identity":"Build 40.6.440 · Administrator" in idx,
+            "style_cache":"./style.css?v=40.6.440" in idx,
+            "app_cache":"./app.js?v=40.6.440" in idx,
+            "post_cache_entry":"./js/post-boot-runtime-loader.js?v=40.6.440" in idx,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"40.6.440 validation failed: {bad}")
+          print("40.6.440 BACKEND RECOVERY STATIC PASS")
+          PY
+
+      - name: Build ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_BACKEND_RESIDENCY_RECOVERY_40.6.440.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406440
+          mkdir -p /tmp/agent-crypto-406440/administrator/js/views
+          cp "$ROOT/index.html" /tmp/agent-crypto-406440/administrator/
+          cp "$ROOT/index-40.6.440.html" /tmp/agent-crypto-406440/administrator/
+          cp "$ROOT/style.css" /tmp/agent-crypto-406440/administrator/
+          cp "$ROOT/app.js" /tmp/agent-crypto-406440/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406440/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406440/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406440/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.440.txt" /tmp/agent-crypto-406440/administrator/
+          cp "$ROOT/js/post-boot-runtime-loader.js" /tmp/agent-crypto-406440/administrator/js/
+          cp "$ROOT/js/views/private-source-demand-loader.js" /tmp/agent-crypto-406440/administrator/js/views/
+          (cd /tmp/agent-crypto-406440 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_BACKEND_RESIDENCY_RECOVERY_40.6.440.zip" "$ROOT/AGENT_CRYPTO_BACKEND_RESIDENCY_RECOVERY_40.6.440.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.440 Backend recovery ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

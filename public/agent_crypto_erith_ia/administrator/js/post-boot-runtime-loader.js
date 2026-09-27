@@ -34,7 +34,7 @@
     "./js/markets-domain-contract.js",
     "./js/views/system-demand-residency.js",
     "./js/views/secondary-domain-demand-residency.js",
-    "./js/views/private-source-demand-loader.js",
+    "./js/views/private-source-demand-loader.js?v=40.6.440",
     "./js/views/atlas-family-demand-residency.js",
     "./js/views/analysis-aux-demand-loader.js?v=40.6.413-probe",
     "./js/layout-repair.js?v=40.6.413-probe",

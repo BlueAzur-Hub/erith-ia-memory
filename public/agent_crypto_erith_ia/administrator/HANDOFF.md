@@ -1,16 +1,15 @@
-# HANDOFF — Agent-Crypto 40.6.439
+# HANDOFF — Agent-Crypto 40.6.440
 
-Base : 40.6.438 restaurée et vivante.
+40.6.439 = FAIL terrain Backend/API.
 
-Cette étape récupère uniquement les deux audits Strategy A read-only .430/.431, avec chargement à la demande.
+40.6.440 ne corrige que le propriétaire de demande Source Truth et son cache-buster de livraison.
 
 ## Test terrain
-1. Vérifier Build 40.6.439.
-2. Confirmer que le cockpit reste aussi réactif que 40.6.438.
-3. Ouvrir Simulation.
-4. Attendre Cost-Wait Outcome Audit + Oracle / Cost Calibration Truth.
-5. Tester Exporter deux fois sur chaque panneau.
-6. Fermer Simulation et vérifier la réactivité.
-7. Ne pas tester Execution Cost Truth : il n’est volontairement pas résident.
+1. Vérifier Build 40.6.440.
+2. Ouvrir Backend/API immédiatement après chargement.
+3. Source Truth CEX doit apparaître dans le même panneau.
+4. Recharger une fois puis attendre la fin du chargement avant d’ouvrir Backend/API : même résultat.
+5. Vérifier CEX READY et les lignes Binance/Kraken/Coinbase/OKX.
+6. Ne pas tester Execution Cost Truth.
 
-Un seul FAIL = arrêt. Aucun .440 avant preuve terrain.
+Un FAIL = arrêt. Aucun autre chantier avant PASS Backend/API.
