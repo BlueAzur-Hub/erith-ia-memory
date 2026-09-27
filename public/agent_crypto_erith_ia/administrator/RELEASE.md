@@ -1,26 +1,36 @@
-# Agent-Crypto — Aether Menu Escape / Continuity Recovery
+# Agent-Crypto — 40.6.428 · NATIVE CSS COCKPIT FIT CORRECTION
 
-Build **40.6.425** · parent **40.6.424** · Market Core **38.15.11**.
+Source fonctionnelle : **40.6.425**.  
+Tentatives rejetées non héritées : **40.6.426**, **40.6.427**.  
+Market Core : **38.15.11**.
 
-## Terrain 40.6.424
-La boucle INFO → NEWS → SYSTEM → INFO et la disparition de la ligne vide sont bonnes.
-Le défaut restant est le contrat manuel de `♥ VEILLE` : .424 le traite comme un HOLD persistant qui peut tuer la cadence jusqu'à reprise explicite ou reload.
+## Correction
 
-## Correction 40.6.425
-- `♥ VEILLE` affiche immédiatement le menu natif.
-- Aucun `manualPaused=true`.
-- Le timeout canonique n'est pas détruit.
-- Aucun second timer n'est créé.
-- À la prochaine échéance canonique, Aether reprend automatiquement.
-- Si `remaining <= 0`, `nextAction` est exécuté immédiatement.
-- `Aether · ATTENTION` reste une reprise immédiate optionnelle.
+Une seule correction fonctionnelle dans `style.css` :
 
-## Protections
-Market Core 38.15.11 · News collector · Oracle · Math · Lecture Technique · Atlas CURRENT · Strategy/TRADUS · Storage · Window Manager : inchangés.
+`#analyste ... .chart-shell`
 
-## Terrain Firefox attendu
-**NEWS → ♥ VEILLE → MENU → attendre sans cliquer → reprise automatique Aether.**
-Répéter depuis INFO et SYSTEM. Aucun Ctrl+F5 ne doit être nécessaire pour réveiller le fil.
+- avant : `clamp(507px, calc(59vh + 42px), 647px)`
+- après : `clamp(525px, calc(61.5vh + 42px), 720px)`
 
-## Suite
-Après PASS : **40.6.426 — Storyline Clustering / Diversity**.
+Le but est de donner au bloc **Graphique + Lecture technique** une taille native plus grande dès le chargement, tout en laissant **Target Top 5 entièrement visible** au bas du viewport et **Market Flow intact sous le fold**.
+
+## Interdits respectés
+
+- aucun JavaScript ajouté ou modifié ;
+- aucune fonction de redimensionnement ;
+- aucun listener resize/F11 ;
+- aucun requestAnimationFrame ;
+- aucun déplacement DOM ;
+- aucun changement Target Top 5 ;
+- aucun changement Market Flow ;
+- aucun changement Window Manager ;
+- Aether .425 inchangé ;
+- Market Core 38.15.11 inchangé.
+
+## Test Firefox
+
+Ctrl+F5 → Build 40.6.428 → Livecheck pour positionner la vue seulement.
+
+Attendu normal et F11 :
+Menu/Aether → Graphique + Lecture technique → Target Top 5 entier → Market Flow hors cadre.
