@@ -1,29 +1,28 @@
-# Agent-Crypto 40.6.438 — EMERGENCY RESTORE · 40.6.425 RUNTIME RECOVERY
+# Agent-Crypto 40.6.439 — PROGRESSIVE RECOVERY · STRATEGY AUDITS ON DEMAND
 
-## Statut
-Restauration d'urgence après rejet terrain de 40.6.437.
+## Base protégée
+40.6.438 reste la base vivante restaurée depuis 40.6.425.
 
-## Source restaurée
-- Checkpoint runtime : 40.6.425 — AETHER MENU ESCAPE / CONTINUITY RECOVERY
-- Commit source : 2bcd0459ba7570b81fec194244d1cc5be9a9f426
-- Méthode : commit en avant sur main, sans réécriture d'historique.
+Les blobs suivants restent strictement inchangés :
+- style.css
+- app.js
+- js/post-boot-runtime-loader.js
+- js/views/private-source-demand-loader.js
 
-## Runtime restauré
-- administrator/style.css
-- administrator/app.js
-- administrator/js/post-boot-runtime-loader.js
-- administrator/js/views/private-source-demand-loader.js
-- administrator/index.html reconstruit depuis 40.6.425 avec identité 40.6.438 et cache-busters 40.6.438.
+## Réintroduction bornée
+Deux modules seulement :
+- Strategy A Cost-Wait Outcome Audit
+- Strategy A Oracle / Cost Calibration Truth
 
-## Non touché
-- données marché/news et collecteurs
-- book_mirror.json
-- Market Core 38.15.11
-- Aether
-- Oracle / Risk / Paper
-- web/ Classic
+Ils ne sont plus résidents au boot. Le loader `strategy-a-audit-demand-loader.js` les charge uniquement à l’ouverture de Simulation.
 
-Les modules Strategy ajoutés entre 40.6.429 et 40.6.437 restent dans Git mais ne sont plus chargés par le post-boot restauré.
+## Durcissement inclus
+- chargement retentable après échec ;
+- attente bornée à 6 s par module ;
+- Exporter répétable ;
+- aucun recalcul/rendu d’audit quand Simulation est fermée ;
+- Execution Cost Truth reste hors résidence.
 
-## Gate terrain
-Attendre Build 40.6.438, puis un seul Ctrl+F5. Première preuve : interface Administrator complète et réactive. Aucun autre chantier avant PASS.
+## Interdits respectés
+Aucun changement CSS/Aether/Market Core/Oracle math/Risk/Paper/Strategy business logic.
+Aucun ordre réel. Aucun timer récurrent. Aucun observer. Aucun stockage nouveau.
