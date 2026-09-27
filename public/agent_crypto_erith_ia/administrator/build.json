@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.443",
+  "build": "40.6.444",
   "engine": "38.15.11",
-  "release": "STRATEGY A EXECUTION COST TRUTH ON-DEMAND RESTORE",
+  "release": "ORACLE METRICS READABILITY RESTORE",
   "published": true,
-  "status": "published_pending_firefox_443",
-  "parent_build": "40.6.442",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.443",
-  "administrator_build": "40.6.443",
-  "build_label": "Build 40.6.443 · Administrator",
+  "status": "published_pending_firefox_444",
+  "parent_build": "40.6.443",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.444",
+  "administrator_build": "40.6.444",
+  "build_label": "Build 40.6.444 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -16,7 +16,7 @@
   "atlas_current_modified": false,
   "oracle_modified": false,
   "lecture_technique_modified": false,
-  "strategy_a_modified": true,
+  "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
   "administrator_presentation_modified": true,
   "aerith10_presentation_modified": false,
@@ -26,13 +26,13 @@
   "new_observer": false,
   "new_storage_owner": false,
   "new_business_network_request": false,
-  "static_asset_module_load": true,
+  "static_asset_module_load": false,
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox : ouvrir Simulation. Cost-Wait puis Oracle/Cost puis Execution Cost Truth doivent apparaître à la demande. Execution Cost Truth doit rester à l’ancre canonique sous Oracle/Cost. Cliquer MESURER KRAKEN + OKX : bouton doit revenir à son état normal après mesure. EXPORTER doit fonctionner plusieurs fois. Backend 40.6.441 et cadrage 40.6.442 restent gelés.",
+  "terrain_pending": "Firefox : vérifier uniquement le bloc Oracle sous ORACLE BAISSE. COHÉRENCE doit occuper toute la première ligne ; VOLATILITÉ et PANIER 24 H doivent être lisibles côte à côte sur la seconde ligne, sans scroll ni texte écrasé.",
   "terrain_proof": null,
-  "release_notes": "40.6.443 restaure Execution Cost Truth uniquement à l’ouverture de Simulation via le demand-loader existant. Le module reste absent du post-boot standard. Fiabilisation bornée du même propriétaire : null/chaîne vide ne deviennent plus 0, carnet croisé refusé, demande Backend bornée à 7 s, bouton de mesure rétabli après finally, export répétable, self-test cohérent. Aucun seuil Strategy, math Oracle, Risk, Paper, Market Core, Aether, Backend ou CSS n’est modifié.",
+  "release_notes": "40.6.444 exécute la correction visuelle promise après 40.6.435 : le bloc COHÉRENCE / VOLATILITÉ / PANIER 24 H passe en grille 2 colonnes avec COHÉRENCE sur toute la première ligne. Aucun calcul Oracle, aucune donnée, aucun Backend, aucun CSS global, aucun Market Core, Aether, Strategy ou Execution Cost n’est modifié.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5372,5 +5372,33 @@
     "storage_write_added": false,
     "real_order": false,
     "terrain_status": "PENDING_FIREFOX_406443"
+  },
+  "oracle_metrics_readability_restore_406444": {
+    "enabled": true,
+    "source_incident": "40.6.435 visual debt",
+    "source_thread_line": "COHERENCE full row, VOLATILITE + PANIER 24H second row",
+    "objective": "READABLE_WITHOUT_SCROLL_OR_TEXT_COMPRESSION",
+    "owner": "index.html inline Oracle presentation CSS",
+    "rows": [
+      [
+        "COHERENCE"
+      ],
+      [
+        "VOLATILITE",
+        "PANIER_24H"
+      ]
+    ],
+    "oracle_math_changed": false,
+    "oracle_data_changed": false,
+    "backend_406441_frozen": true,
+    "chart_406442_frozen": true,
+    "execution_cost_406443_untouched": true,
+    "style_css_modified": false,
+    "app_js_modified": false,
+    "backend_modified": false,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "storage_write_added": false,
+    "terrain_status": "PENDING_FIREFOX_406444"
   }
 }

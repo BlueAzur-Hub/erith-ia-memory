@@ -1,17 +1,14 @@
-# HANDOFF — Agent-Crypto 40.6.443
+# HANDOFF — Agent-Crypto 40.6.444
 
-40.6.441 Backend/API = PASS terrain / gelé.
-40.6.442 cadrage Graphique = PASS terrain / gelé.
+Objectif unique : corriger le bloc Oracle COHÉRENCE / VOLATILITÉ / PANIER 24 H.
 
-40.6.443 reprend uniquement Execution Cost Truth.
+## Test terrain
+1. Vérifier Build 40.6.444.
+2. Ouvrir Graphique / Oracle comme sur la capture.
+3. Sous ORACLE BAISSE :
+   - COHÉRENCE doit être seule sur la première ligne ;
+   - VOLATILITÉ et PANIER 24 H côte à côte dessous ;
+   - aucune valeur écrasée ;
+   - aucune scrollbar.
 
-## Test
-1. Vérifier Build 40.6.443.
-2. Ouvrir Simulation.
-3. Vérifier l'ordre : Cost-Wait → Oracle/Cost → Execution Cost Truth.
-4. Cliquer MESURER KRAKEN + OKX.
-5. Vérifier que le bouton redevient MESURER après la fin.
-6. Vérifier Kraken chiffré et OKX via Source Truth CEX / Backend local.
-7. Tester EXPORTER deux fois.
-
-Un FAIL = STOP.
+Aucun autre test demandé.

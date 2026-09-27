@@ -1,25 +1,27 @@
-# Agent-Crypto 40.6.443 — STRATEGY A EXECUTION COST TRUTH ON-DEMAND RESTORE
+# Agent-Crypto 40.6.444 — ORACLE METRICS READABILITY RESTORE
 
 ## Objectif unique
-Reprendre le chantier interrompu : restaurer Execution Cost Truth dans Simulation, à la demande uniquement.
+Exécuter la correction visuelle déjà promise dans le Fil après 40.6.435.
 
-## Comportement
-Simulation ouverte →
-Cost-Wait →
-Oracle / Cost Calibration →
-Execution Cost Truth.
+## Résultat attendu
+```
+COHÉRENCE
+100/100
 
-Execution Cost Truth n'est pas ajouté au post-boot standard.
+VOLATILITÉ        PANIER 24 H
+0.06 %            +0.91 %
+```
 
-## Fiabilisation du même propriétaire
-- null / chaîne vide ne deviennent plus 0 ;
-- bid > ask est refusé pour Kraken et OKX ;
-- demande Source Truth bornée à 7 s si le propriétaire Backend n'est pas encore disponible ;
-- bouton MESURER revient à l'état normal après la mesure ;
-- EXPORTER est répétable ;
-- self-test ne se condamne plus lui-même avec une valeur false attendue.
+Aucune scrollbar. Aucun texte réduit pour faire tenir les valeurs.
+
+## Changement
+Dans la présentation Oracle existante :
+- grille des métriques : 2 colonnes ;
+- première métrique (COHÉRENCE) : largeur complète.
 
 ## Protégé
-Backend/API 40.6.441 : gelé.
-Cadrage Graphique 40.6.442 : gelé.
-Aucun changement Market Core, Aether, Oracle math, Risk, Paper ou seuil Strategy.
+- math Oracle et données Oracle inchangés ;
+- Backend/API 40.6.441 inchangé ;
+- cadrage Graphique 40.6.442 inchangé ;
+- Execution Cost 40.6.443 inchangé ;
+- style.css, app.js, post-boot, Aether, Market Core inchangés.
