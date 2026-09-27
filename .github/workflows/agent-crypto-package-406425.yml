@@ -1,0 +1,81 @@
+name: Agent-Crypto Package 40.6.425
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406425.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate 40.6.425
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/js/aether.js
+          node --check public/agent_crypto_erith_ia/administrator/js/aether-operator-bridge.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          js=Path("public/agent_crypto_erith_ia/administrator/js/aether.js").read_text(encoding="utf-8")
+          bridge=Path("public/agent_crypto_erith_ia/administrator/js/aether-operator-bridge.js").read_text(encoding="utf-8")
+          index=Path("public/agent_crypto_erith_ia/administrator/index.html").read_text(encoding="utf-8")
+          build=json.loads(Path("public/agent_crypto_erith_ia/administrator/build.json").read_text(encoding="utf-8"))
+          checks={
+              "build": build.get("build")=="40.6.425",
+              "market_core": build.get("market_core")=="38.15.11" and build.get("market_core_modified") is False,
+              "menu_escape_api": "phase_menu_escape:aetherPhaseHoldNative" in js,
+              "no_manual_pause_in_hold": 'aetherPhasePause("manual")' not in js[js.find("function aetherPhaseHoldNative"):js.find("function aetherPhaseResumeAutomatic")],
+              "deadline_recovery": "return aetherPhaseDispatch(aetherPhaseState.nextAction);" in js,
+              "bridge_auto_return": "veille_escape_auto_return:true" in bridge,
+              "bridge_not_persistent": "veille_escape_persistent_until_resume_or_reload:false" in bridge,
+              "index": "Build 40.6.425" in index,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"40.6.425 validation failed: {bad}")
+          print("40.6.425 STATIC PASS")
+          PY
+
+      - name: Build clean ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_AETHER_MENU_ESCAPE_CONTINUITY_RECOVERY_40.6.425.zip"
+          rm -f "$ZIP"
+          rm -rf /tmp/agent-crypto-406425
+          mkdir -p /tmp/agent-crypto-406425/administrator/js /tmp/agent-crypto-406425/coordination
+          cp public/agent_crypto_erith_ia/administrator/index.html /tmp/agent-crypto-406425/administrator/
+          cp public/agent_crypto_erith_ia/administrator/index-40.6.425.html /tmp/agent-crypto-406425/administrator/
+          cp public/agent_crypto_erith_ia/administrator/build.json /tmp/agent-crypto-406425/administrator/
+          cp public/agent_crypto_erith_ia/administrator/RELEASE.md /tmp/agent-crypto-406425/administrator/
+          cp public/agent_crypto_erith_ia/administrator/HANDOFF.md /tmp/agent-crypto-406425/administrator/
+          cp public/agent_crypto_erith_ia/administrator/js/aether.js /tmp/agent-crypto-406425/administrator/js/
+          cp public/agent_crypto_erith_ia/administrator/js/aether-operator-bridge.js /tmp/agent-crypto-406425/administrator/js/
+          cp coordination/inter_ai_dialogues/agent_crypto/HANDOFF_40.6.425_AETHER_MENU_ESCAPE_CONTINUITY_RECOVERY.md /tmp/agent-crypto-406425/coordination/
+          cp coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_SEVEN_AGENT_CRYPTO_40.6.425.md /tmp/agent-crypto-406425/coordination/
+          cp coordination/inter_ai_dialogues/agent_crypto/PACKAGE_MANIFEST_40.6.425.txt /tmp/agent-crypto-406425/PATCH_MANIFEST.txt
+          (cd /tmp/agent-crypto-406425 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_AETHER_MENU_ESCAPE_CONTINUITY_RECOVERY_40.6.425.zip"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ZIP"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add clean Agent-Crypto 40.6.425 ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
