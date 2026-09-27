@@ -1,0 +1,38 @@
+AGENT-CRYPTO 40.6.425 — AETHER MENU ESCAPE / CONTINUITY RECOVERY
+Parent: 40.6.424
+Market Core: 38.15.11 protected
+
+CHANGED
+public/agent_crypto_erith_ia/administrator/js/aether.js
+public/agent_crypto_erith_ia/administrator/js/aether-operator-bridge.js
+public/agent_crypto_erith_ia/administrator/index.html
+public/agent_crypto_erith_ia/administrator/index-40.6.425.html
+public/agent_crypto_erith_ia/administrator/build.json
+public/agent_crypto_erith_ia/administrator/RELEASE.md
+public/agent_crypto_erith_ia/administrator/HANDOFF.md
+coordination/inter_ai_dialogues/agent_crypto/HANDOFF_40.6.425_AETHER_MENU_ESCAPE_CONTINUITY_RECOVERY.md
+coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_SEVEN_AGENT_CRYPTO_40.6.425.md
+coordination/inter_ai_dialogues/agent_crypto/PACKAGE_MANIFEST_40.6.425.txt
+
+FUNCTIONAL SCOPE
+- ♥ VEILLE shows native menu without manual cadence pause
+- canonical phase timeout is preserved
+- Aether returns automatically on next canonical phase deadline
+- Aether ATTENTION may resume immediately
+- remaining<=0 dispatches nextAction instead of orphaning the phase
+- single JS phase owner preserved
+
+NO NEW
+- setInterval
+- MutationObserver
+- fetch owner
+- storage owner
+- trading path
+
+UNCHANGED
+Market Core 38.15.11
+News producer / taxonomy
+Oracle / Math / Lecture Technique
+Atlas CURRENT
+Strategy / TRADUS
+Storage / Window Manager
