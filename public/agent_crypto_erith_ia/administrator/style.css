@@ -16102,15 +16102,14 @@ html[data-atlas-mode="essential"] .atlas-chart-context {
   white-space: nowrap !important;
 }
 
-/* 40.6.428 — native cockpit geometry correction.
-   CSS only: the central graph/detail block is larger at first paint.
-   Normal window and F11 are handled natively by vh. No runtime resize owner. */
+/* Grow the frame, then reserve the new lower band.
+   The plot keeps its previous usable height. */
 #analyste.champagne-clean-lens .chart-shell,
 #analyste.champagne-clean-lens.detail-collapsed .chart-shell,
 #analyste.champagne-clean-lens:not(.detail-collapsed) .chart-shell {
-  height: clamp(525px, calc(61.5vh + 42px), 720px) !important;
-  min-height: 525px !important;
-  max-height: 720px !important;
+  height: clamp(507px, calc(59vh + 42px), 647px) !important;
+  min-height: 507px !important;
+  max-height: 647px !important;
 }
 
 #analyste.champagne-clean-lens #mainChart,

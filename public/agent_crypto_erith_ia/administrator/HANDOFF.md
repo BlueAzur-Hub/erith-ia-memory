@@ -1,8 +1,12 @@
-# Handoff Seven — 40.6.437 · Backend Source Truth Residency Recovery
+# HANDOFF — Agent-Crypto 40.6.438 RESTORE
 
-Le Backend n'a pas été supprimé du dépôt : V1.4.2 et private-backend-sources.js sont intacts.
-Le défaut terrain est une course de lazy loading : Backend/API peut être déjà ouvert avant l'arrivée de private-source-demand-loader.js, qui ne rejouait pas la demande.
+40.6.437 est rejetée terrain : interface déclarée morte par l'opérateur.
 
-.437 rejoue la demande quand Backend est déjà ouvert et permet à Execution Cost Truth de demander le propriétaire Source Truth lui-même.
+40.6.438 restaure le runtime actif depuis 40.6.425 par commit en avant, sans rembobiner les données ni l'historique Git.
 
-Test opérateur : Ctrl+F5 > 40.6.437 > Backend/API. Source Truth CEX doit apparaître sous l'architecture statique. Ensuite Execution Cost Truth > MESURER KRAKEN + OKX.
+Règle de reprise :
+1. Firefox tranche.
+2. Si l'interface 40.6.438 est complète et réactive : geler la restauration.
+3. Ne réintroduire aucun module 40.6.429–40.6.437 avant PASS.
+4. Après PASS seulement, reprendre les dettes Execution Cost Truth une par une.
+5. VALIDÉ = IMMUTABLE.

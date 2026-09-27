@@ -1,26 +1,29 @@
-# Agent-Crypto — 40.6.437 · BACKEND SOURCE TRUTH RESIDENCY RECOVERY
+# Agent-Crypto 40.6.438 — EMERGENCY RESTORE · 40.6.425 RUNTIME RECOVERY
 
-Parent : 40.6.436.
-Market Core : 38.15.11.
+## Statut
+Restauration d'urgence après rejet terrain de 40.6.437.
 
-## Terrain
-Backend / API peut être ouvert et hydraté avant l'arrivée du loader secondaire Source Truth.
-Dans ce cas l'utilisateur ne voit que l'architecture statique (« Architecture future ») alors que le Backend local V1.4.2 et Source Truth CEX existent toujours.
+## Source restaurée
+- Checkpoint runtime : 40.6.425 — AETHER MENU ESCAPE / CONTINUITY RECOVERY
+- Commit source : 2bcd0459ba7570b81fec194244d1cc5be9a9f426
+- Méthode : commit en avant sur main, sans réécriture d'historique.
 
-## Cause
-`private-source-demand-loader.js` ne rejouait pas la demande si Backend était déjà ouvert au moment où le loader arrivait.
-Les événements click / toggle / erith:system-hydrated avaient alors déjà été consommés.
+## Runtime restauré
+- administrator/style.css
+- administrator/app.js
+- administrator/js/post-boot-runtime-loader.js
+- administrator/js/views/private-source-demand-loader.js
+- administrator/index.html reconstruit depuis 40.6.425 avec identité 40.6.438 et cache-busters 40.6.438.
 
-## Correction
-- si Backend/API est déjà ouvert à l'arrivée du loader : `ensure("backend-already-open")` immédiatement ;
-- Execution Cost Truth demande `ErithPrivateSourceDemand.ensure("execution-cost-truth")` si Source Truth CEX n'est pas encore chargé ;
-- le helper fetchJson restauré en .436 reste présent ;
-- le panneau Execution Cost Truth reste sous Oracle / Cost Calibration Truth.
+## Non touché
+- données marché/news et collecteurs
+- book_mirror.json
+- Market Core 38.15.11
+- Aether
+- Oracle / Risk / Paper
+- web/ Classic
 
-## Non modifié
-Private Backend V1.4.2, logique CEX, Strategy A métier, Cost Gate, Oracle, Risk, Paper, Market Core 38.15.11, Aether, CSS cockpit.
+Les modules Strategy ajoutés entre 40.6.429 et 40.6.437 restent dans Git mais ne sont plus chargés par le post-boot restauré.
 
-## Test
-Ctrl+F5 > Build 40.6.437 > Backend / API.
-Attendu : Architecture statique + Source Truth CEX dans le même Backend / API, sans devoir refermer/réouvrir au bon moment.
-Puis Simulation / Strategy A > Execution Cost Truth > MESURER KRAKEN + OKX.
+## Gate terrain
+Attendre Build 40.6.438, puis un seul Ctrl+F5. Première preuve : interface Administrator complète et réactive. Aucun autre chantier avant PASS.

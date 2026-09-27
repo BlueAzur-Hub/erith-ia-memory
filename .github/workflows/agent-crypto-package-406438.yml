@@ -1,0 +1,90 @@
+name: Agent-Crypto Package 40.6.438 Restore
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406438.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate restore checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, hashlib
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          build=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          index=(root/"index.html").read_text(encoding="utf-8")
+          post=(root/"js/post-boot-runtime-loader.js").read_text(encoding="utf-8")
+          source=(root/"js/views/private-source-demand-loader.js").read_text(encoding="utf-8")
+          def sha(p): return hashlib.sha1(("blob "+str(p.stat().st_size)+"\0").encode()+p.read_bytes()).hexdigest()
+          checks={
+            "build": build.get("build")=="40.6.438",
+            "source_checkpoint": build.get("emergency_restore_406438",{}).get("source_build")=="40.6.425",
+            "market_core": build.get("market_core")=="38.15.11" and build.get("market_core_modified") is False,
+            "index_identity": "Build 40.6.438 · Administrator" in index,
+            "cache_style": "./style.css?v=40.6.438" in index,
+            "cache_app": "./app.js?v=40.6.438" in index,
+            "cache_postboot": "./js/post-boot-runtime-loader.js?v=40.6.438" in index,
+            "no_cost_wait_resident": "strategy-a-cost-wait-outcome-audit.js" not in post,
+            "no_oracle_cost_resident": "strategy-a-oracle-cost-calibration-audit.js" not in post,
+            "no_execution_cost_resident": "strategy-a-execution-cost-truth.js" not in post,
+            "no_437_backend_replay": 'ensure("backend-already-open")' not in source,
+            "style_blob_425": sha(root/"style.css")=="0e4ae4526d043073ada940a2426811e725dcfb7b",
+            "app_blob_425": sha(root/"app.js")=="0988c742c62997b022d75a511561302b170d7972",
+            "postboot_blob_425": sha(root/"js/post-boot-runtime-loader.js")=="5a778bc78df95c81d8e71576b49347bf933c656a",
+            "source_loader_blob_425": sha(root/"js/views/private-source-demand-loader.js")=="7060c5bf1b5f6cc88af1e8132f62878d7c486462",
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"40.6.438 restore validation failed: {bad}")
+          print("40.6.438 RESTORE STATIC PASS")
+          PY
+
+      - name: Build restore ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_EMERGENCY_RESTORE_40.6.438.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406438
+          mkdir -p /tmp/agent-crypto-406438/administrator/js/views
+          cp "$ROOT/index.html" /tmp/agent-crypto-406438/administrator/
+          cp "$ROOT/index-40.6.438.html" /tmp/agent-crypto-406438/administrator/
+          cp "$ROOT/style.css" /tmp/agent-crypto-406438/administrator/
+          cp "$ROOT/app.js" /tmp/agent-crypto-406438/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406438/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406438/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406438/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.438.txt" /tmp/agent-crypto-406438/administrator/
+          cp "$ROOT/js/post-boot-runtime-loader.js" /tmp/agent-crypto-406438/administrator/js/
+          cp "$ROOT/js/views/private-source-demand-loader.js" /tmp/agent-crypto-406438/administrator/js/views/
+          (cd /tmp/agent-crypto-406438 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_EMERGENCY_RESTORE_40.6.438.zip" "$ROOT/AGENT_CRYPTO_EMERGENCY_RESTORE_40.6.438.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.438 restore ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

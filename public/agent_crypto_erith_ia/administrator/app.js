@@ -36442,7 +36442,7 @@ function strategyAExperimentRecord(trigger="timer"){
     metrics:metrics?{sample_size:Number(metrics.sample_size||0),status:String(metrics.status||""),wins:Number(metrics.wins||0),losses:Number(metrics.losses||0),cumulative_net_pnl_eur:Number(metrics.cumulative_net_pnl_eur||0),expectancy_eur:Number(metrics.expectancy_eur||0),total_fees_eur:Number(metrics.total_fees_eur||0),estimated_total_impact_eur:Number(metrics.estimated_total_impact_eur||0),max_drawdown_eur:Number(metrics.max_drawdown_eur||0)}:null,
     safety:{paper_only:true,real_orders:false,kraken_network:false,wallet:false,credentials:false,withdrawals:false,market_core_changed:false,oracle_engine_changed:false,risk_policy_changed:false,cost_threshold_changed:false}
   };
-  STRATEGY_A_EXPERIMENT_LEDGER_404289.push(row);strategyAExperimentPersist();try{document.dispatchEvent(new CustomEvent("agent-crypto:strategy-a-experiment-cycle",{detail:strategyAExperimentClone(row)}));}catch(_){}return strategyAExperimentClone(row);
+  STRATEGY_A_EXPERIMENT_LEDGER_404289.push(row);strategyAExperimentPersist();return strategyAExperimentClone(row);
 }
 function strategyAExperimentSummary(){
   const rows=STRATEGY_A_EXPERIMENT_LEDGER_404289,latest=rows.at(-1)||null;
