@@ -1,12 +1,14 @@
-# HANDOFF — Agent-Crypto 40.6.441
+# HANDOFF — Agent-Crypto 40.6.442
 
-40.6.441 restaure uniquement la priorité du Backend/API.
+40.6.441 : Backend/API PASS terrain, gelé.
 
-## Test terrain unique
-1. Vérifier Build 40.6.441.
-2. Dès que la page est utilisable, ouvrir Backend/API.
-3. À l'hydratation du panneau, SOURCE TRUTH CEX doit apparaître sans attendre le post-boot secondaire.
-4. Vérifier ensuite que Kraken / Coinbase / OKX peuvent converger vers leur état normal.
+40.6.442 : restauration CSS uniquement.
 
-Si le panneau Source Truth n'apparaît pas immédiatement après hydratation : FAIL et STOP.
-Aucun autre chantier n'est à tester dans cette version.
+## Test unique
+1. Vérifier Build 40.6.442.
+2. Regarder le Graphique en fenêtre normale.
+3. Passer en F11.
+4. Vérifier que le cadrage retrouve le comportement validé 40.6.428.
+
+Ne pas retester Backend/API sauf si une régression visible apparaît.
+Un FAIL CSS = STOP. Aucun autre chantier mélangé.

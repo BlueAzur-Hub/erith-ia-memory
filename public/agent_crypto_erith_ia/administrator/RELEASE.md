@@ -1,25 +1,19 @@
-# Agent-Crypto 40.6.441 — BACKEND/API VALIDATED BEHAVIOR RESTORE
+# Agent-Crypto 40.6.442 — CHART FRAME 40.6.428 EXACT CSS RESTORE
 
 ## Objectif unique
-Restaurer le comportement validé : ouvrir Backend/API ne doit plus attendre l'arrivée tardive du post-boot secondaire pour obtenir Source Truth.
+Restaurer le cadrage Graphique validé en 40.6.428, perdu lors de la récupération 40.6.438.
 
-## Changement
-Le propriétaire canonique existant :
-`js/views/private-backend-sources.js`
-est chargé directement depuis `index.html`, juste avant `post-boot-runtime-loader.js`.
+## Restauration exacte
+Dans le bloc canonique `.chart-shell` existant :
 
-Il est donc déjà résident quand l'opérateur ouvre Backend/API. Son mécanisme existant `erith:system-hydrated` reste responsable du montage dans le corps Backend hydraté.
+```css
+height: clamp(525px, calc(61.5vh + 42px), 720px) !important;
+min-height: 525px !important;
+max-height: 720px !important;
+```
 
-## Inchangé
-- private-backend-sources.js : byte-identique
-- private-source-demand-loader.js : byte-identique
-- post-boot-runtime-loader.js : byte-identique
-- style.css : byte-identique
-- app.js : byte-identique
-- Aether
-- Market Core 38.15.11
-- Oracle / Risk / Paper
-- Strategy métier
-- Execution Cost Truth
+Source : 40.6.428 · commit `46d273d05d36b654a76697be7564160e2faa73c5`.
 
-Aucun rollback global.
+## Protégé
+Backend/API 40.6.441 reste validé et gelé.
+Aucun code Backend, Source Truth, post-boot, app.js, Aether, Market Core, Oracle, Risk, Paper, Strategy ou Execution Cost Truth n'est modifié.
