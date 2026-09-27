@@ -1,68 +1,158 @@
 /* Agent-Crypto @erith.IA — Operator bridge
-   Build 40.6.425 · MENU ESCAPE / CONTINUITY RECOVERY.
-   ♥ VEILLE requests the native menu without pausing or destroying the canonical Aether deadline.
-   Aether resumes automatically on the next canonical phase transition; Aether ATTENTION may resume the
-   suspended visual phase immediately. This bridge owns no timer, visibility style, layout restart or storage. */
+   Build 40.6.2 · COLD BOOT WARM START + VEILLE NATIVE HOLD.
+   Reuses the existing Livecheck button exactly once on an empty cold boot.
+   VEILLE can escape to the native operator row and stays there until Aether is reopened or the page reloads.
+   No recurring timer, observer, fetch owner, storage write, trading state or market algorithm is added. */
 (() => {
   "use strict";
-  const BUILD = "40.6.425";
+
+  const BUILD = "40.6.2";
+  const HOLD_KEY = "aetherManualNative406002";
   const BOOT_KEY = "aetherColdBoot";
-  function text406425(id){return String(document.getElementById(id)?.textContent||"").replace(/\s+/g," ").trim();}
-  function phaseApi(){return globalThis.ErithAether||globalThis.AgentCryptoAether||null;}
-  function menuEscape406425(reason="operator-bridge"){
-    const bar=document.getElementById("livecheck");if(!bar)return false;
-    const api=phaseApi();let accepted=false;
-    try{
-      if(typeof api?.phase_menu_escape==="function")accepted=api.phase_menu_escape(reason)===true;
-      else if(typeof api?.phase_hold_native==="function")accepted=api.phase_hold_native(reason)===true;
-      else{window.dispatchEvent(new CustomEvent("erith:aether-native-hold",{detail:{reason}}));accepted=true;}
-    }catch(_){try{window.dispatchEvent(new CustomEvent("erith:aether-native-hold",{detail:{reason}}));accepted=true;}catch(__){accepted=false;}}
-    return accepted&&bar.dataset.aetherPhase==="native";
+  const NATIVE_IDS = ["btnLivecheck", "btnRefresh", "decisionCard", "sourceActiveCard", "sourceTimeCard"];
+  const AETHER_IDS = ["atlasAetherRibbon", "atlasAetherVeille", "atlasAetherSystem"];
+
+  function text406002(id) {
+    return String(document.getElementById(id)?.textContent || "").replace(/\s+/g, " ").trim();
   }
-  function resumeNow406425(reason="operator-bridge"){
-    const bar=document.getElementById("livecheck");if(!bar||bar.dataset.aetherMenuEscape!=="1")return false;
-    const api=phaseApi();let resumed=false;
-    try{
-      if(typeof api?.phase_resume_automatic==="function")resumed=api.phase_resume_automatic(reason)===true;
-      else{window.dispatchEvent(new CustomEvent("erith:aether-native-resume",{detail:{reason}}));resumed=true;}
-    }catch(_){try{window.dispatchEvent(new CustomEvent("erith:aether-native-resume",{detail:{reason}}));resumed=true;}catch(__){resumed=false;}}
-    return resumed;
+
+  function nativeNodes() {
+    return NATIVE_IDS.map(id => document.getElementById(id)).filter(Boolean);
   }
-  function bindVeilleEscape(){
-    const feed=document.getElementById("atlasAetherVeille"),brand=feed?.querySelector(".atlas-aether-veille-brand");
-    if(!feed||!brand||brand.dataset.aetherNativeBound==="1")return false;
-    brand.dataset.aetherNativeBound="1";brand.setAttribute("role","button");brand.setAttribute("tabindex","0");
-    brand.setAttribute("aria-label","Revenir au menu normal");brand.setAttribute("title","Revenir au menu normal");
-    brand.style.setProperty("pointer-events","auto","important");brand.style.cursor="pointer";
-    const escape=event=>{event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();menuEscape406425("veille-brand");};
-    brand.addEventListener("click",escape,true);
-    brand.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" ")escape(event);},true);
-    const toggle=document.getElementById("atlasAetherStatusToggle");
-    if(toggle&&toggle.dataset.aetherResumeBound!=="1"){
-      toggle.dataset.aetherResumeBound="1";
-      toggle.addEventListener("click",()=>{resumeNow406425("aether-toggle");},true);
+
+  function aetherNodes() {
+    return AETHER_IDS.map(id => document.getElementById(id)).filter(Boolean);
+  }
+
+  function setImportant(node, name, value) {
+    if (node) node.style.setProperty(name, value, "important");
+  }
+
+  function clearManualVisibility(node) {
+    if (!node) return;
+    for (const name of ["animation", "opacity", "visibility", "pointer-events"]) node.style.removeProperty(name);
+  }
+
+  function holdNative406002() {
+    const bar = document.getElementById("livecheck");
+    if (!bar) return false;
+
+    for (const node of nativeNodes()) {
+      setImportant(node, "animation", "none");
+      setImportant(node, "opacity", "1");
+      setImportant(node, "visibility", "visible");
+      setImportant(node, "pointer-events", "auto");
+    }
+    for (const node of aetherNodes()) {
+      setImportant(node, "animation", "none");
+      setImportant(node, "opacity", "0");
+      setImportant(node, "visibility", "hidden");
+      setImportant(node, "pointer-events", "none");
+    }
+
+    bar.dataset[HOLD_KEY] = "native";
+    return true;
+  }
+
+  function releaseNative406002() {
+    const bar = document.getElementById("livecheck");
+    if (!bar) return false;
+    for (const node of [...nativeNodes(), ...aetherNodes()]) clearManualVisibility(node);
+    delete bar.dataset[HOLD_KEY];
+    // Restoring the CSS animation property restarts the existing canonical phase owner.
+    void bar.offsetWidth;
+    return true;
+  }
+
+  function bindVeilleEscape() {
+    const feed = document.getElementById("atlasAetherVeille");
+    const brand = feed?.querySelector(".atlas-aether-veille-brand");
+    if (!feed || !brand || brand.dataset.aetherNativeBound === "1") return false;
+
+    brand.dataset.aetherNativeBound = "1";
+    brand.setAttribute("role", "button");
+    brand.setAttribute("tabindex", "0");
+    brand.setAttribute("aria-label", "Revenir au menu normal");
+    brand.setAttribute("title", "Revenir au menu normal");
+    setImportant(brand, "pointer-events", "auto");
+    brand.style.cursor = "pointer";
+
+    const escape = event => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      holdNative406002();
+    };
+
+    brand.addEventListener("click", escape, true);
+    brand.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") escape(event);
+    }, true);
+
+    const aetherToggle = document.getElementById("atlasAetherStatusToggle");
+    if (aetherToggle && aetherToggle.dataset.aetherResumeBound !== "1") {
+      aetherToggle.dataset.aetherResumeBound = "1";
+      aetherToggle.addEventListener("click", () => {
+        if (document.getElementById("livecheck")?.dataset?.[HOLD_KEY] === "native") releaseNative406002();
+      }, true);
     }
     return true;
   }
-  function isColdBootEmpty(){
-    const live=text406425("liveStatus"),decision=text406425("tableDecision"),source=text406425("sourceName");
-    const chart=text406425("chartStatus")||text406425("analysisSummary");
-    const explicitEmpty=/livecheck requis/i.test(live)||/refus[eé] avant livecheck/i.test(decision)||/aucune source consult[eé]e/i.test(source);
-    const alreadyWarm=/livecheck ok|binance|coingecko|kraken|websocket|5\/5/i.test(`${live} ${decision} ${source} ${chart}`)&&!/aucune source consult[eé]e/i.test(source);
-    return explicitEmpty&&!alreadyWarm;
+
+  function isColdBootEmpty() {
+    const live = text406002("liveStatus");
+    const decision = text406002("tableDecision");
+    const source = text406002("sourceName");
+    const chart = text406002("chartStatus") || text406002("analysisSummary");
+
+    const explicitEmpty = /livecheck requis/i.test(live)
+      || /refus[eé] avant livecheck/i.test(decision)
+      || /aucune source consult[eé]e/i.test(source);
+
+    const alreadyWarm = /livecheck ok|binance|coingecko|kraken|websocket|5\/5/i.test(`${live} ${decision} ${source} ${chart}`)
+      && !/aucune source consult[eé]e/i.test(source);
+
+    return explicitEmpty && !alreadyWarm;
   }
-  function warmColdBootOnce406425(){
-    const bar=document.getElementById("livecheck"),button=document.getElementById("btnLivecheck");
-    if(!bar||!button||document.hidden||bar.dataset[BOOT_KEY]==="attempted"||!isColdBootEmpty())return false;
-    bar.dataset[BOOT_KEY]="attempted";button.dataset.aetherColdBoot="1";button.click();return true;
+
+  function warmColdBootOnce406002() {
+    const bar = document.getElementById("livecheck");
+    const button = document.getElementById("btnLivecheck");
+    if (!bar || !button || document.hidden) return false;
+    if (bar.dataset[BOOT_KEY] === "attempted") return false;
+    if (!isColdBootEmpty()) return false;
+
+    // One attempt only. The canonical button remains the sole business/network owner.
+    bar.dataset[BOOT_KEY] = "attempted";
+    button.dataset.aetherColdBoot = "1";
+    button.click();
+    return true;
   }
-  function bind406425(){bindVeilleEscape();requestAnimationFrame(()=>requestAnimationFrame(()=>warmColdBootOnce406425()));return true;}
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind406425,{once:true});else bind406425();
-  globalThis.ErithAetherOperatorBridge=Object.freeze({
-    build:BUILD,menuEscape:menuEscape406425,holdNative:menuEscape406425,releaseNative:resumeNow406425,
-    warmColdBootOnce:warmColdBootOnce406425,canonical_phase_owner:"aether.js 40.6.425",
-    direct_visibility_write:false,forced_animation_restart:false,cold_boot_attempts_max:1,
-    veille_escape_persistent_until_resume_or_reload:false,veille_escape_auto_return:true,manual_cadence_pause:false,
-    recurring_timer:false,observer:false,fetch_owner:false,storage_write:false,trading_state_write:false,market_algorithm_changed:false
+
+  function bind406002() {
+    bindVeilleEscape();
+    // DOMContentLoaded fires only after the existing synchronous scripts have executed.
+    // Two paint turns let their canonical listeners settle without adding a timer/retry loop.
+    requestAnimationFrame(() => requestAnimationFrame(() => warmColdBootOnce406002()));
+    return true;
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind406002, { once: true });
+  else bind406002();
+
+  globalThis.ErithAetherOperatorBridge = Object.freeze({
+    build: BUILD,
+    holdNative: holdNative406002,
+    releaseNative: releaseNative406002,
+    warmColdBootOnce: warmColdBootOnce406002,
+    canonical_livecheck_owner_reused: true,
+    cold_boot_attempts_max: 1,
+    veille_escape_persistent_until_resume_or_reload: true,
+    recurring_timer: false,
+    observer: false,
+    fetch_owner: false,
+    storage_write: false,
+    trading_state_write: false,
+    market_algorithm_changed: false
   });
 })();

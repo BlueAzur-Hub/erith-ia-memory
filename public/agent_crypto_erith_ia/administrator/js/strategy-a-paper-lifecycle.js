@@ -633,13 +633,9 @@
   });
 
   globalThis.AgentCryptoStrategyAPaperLifecycle = api;
-  // 40.6.405 — métier résident, présentation différée.
-  // Le lifecycle reste disponible immédiatement pour Auto A ; son panneau ne se construit
-  // que lorsque la surface Simulation est explicitement ouverte.
+  // Compatibility owner: downstream .292/.293/.294 modules already address the .291 symbol.
   if (typeof document !== "undefined") {
-    document.addEventListener("toggle", event => {
-      const target = event.target;
-      if (target?.id === "simulation" && target.open === true) queueMicrotask(() => render());
-    }, true);
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => render(), { once: true });
+    else render();
   }
 })();

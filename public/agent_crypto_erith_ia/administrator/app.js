@@ -18193,13 +18193,6 @@ function atlasRestoreRememberedMarket(reason = "réseau temporairement indisponi
     atlasAnalysisLiveReady() ? "ok" : "warn"
   );
 
-  // 40.6.395 — the remembered snapshot is canonical again: immediately
-  // resynchronize the existing Math score owner instead of leaving the
-  // provisional boot state visible until a later full render / reload.
-  const restoredCoin = getSelectedCoin() || state.coins[0] || null;
-  renderScore(restoredCoin);
-  if (typeof atlasV2SyncMathRail === "function") atlasV2SyncMathRail();
-
   return true;
 }
 
@@ -20726,11 +20719,6 @@ function atlasMarketFrameContextForMath() {
 }
 
 function atlasMathScoreBand(score) {
-  // 40.6.395 — boot truth: an absent score is pending, never a numeric zero.
-  if (score === null || score === undefined || score === "") {
-    return { id: "neutral", color: "#8EA4BA", label: "En attente" };
-  }
-
   const value = Number(score);
 
   if (!Number.isFinite(value)) {
@@ -23532,72 +23520,16 @@ function newsMarketInitialCatalyst(selected, contextEvents) {
   return newsMarketBestRawRole(eligible,[NEWS_MARKET_CAUSAL_ROLE_RULES.catalyst_positive,NEWS_MARKET_CAUSAL_ROLE_RULES.catalyst_negative]);
 }
 
-function newsMarketFlowRules406420(){
-  return [
-    NEWS_MARKET_MONEY_FLOW_RULES.flow_up,
-    NEWS_MARKET_MONEY_FLOW_RULES.flow_down,
-    NEWS_MARKET_CAUSAL_ROLE_RULES.flow_up,
-    NEWS_MARKET_CAUSAL_ROLE_RULES.flow_down
-  ];
-}
-function newsMarketFlowPolarity406420(role){
-  const id=String(role?.id||"").toLowerCase();
-  const direction=String(role?.direction||"").toUpperCase();
-  if(id.includes("inflow")||direction.includes("DEMANDE"))return 1;
-  if(id.includes("outflow")||direction.includes("OFFRE")||direction.includes("VENTE"))return -1;
-  return 0;
-}
-function newsMarketFlowCandidates406420(events){
-  const candidates=[];
-  for(const event of events||[]) for(const rule of newsMarketFlowRules406420()){
-    const match=newsMarketRawRoleMatch(event,rule);
-    if(match)candidates.push({match,event,polarity:newsMarketFlowPolarity406420(match)});
-  }
-  candidates.sort((a,b)=>
-    Number(b?.match?.evidence?.score??-1)-Number(a?.match?.evidence?.score??-1)
-    ||Number(b?.match?.source_count||1)-Number(a?.match?.source_count||1)
-    ||Date.parse(b?.match?.event_time||0)-Date.parse(a?.match?.event_time||0)
-  );
-  return candidates;
-}
-function newsMarketFlowSummary406420(events,scope){
-  const candidates=newsMarketFlowCandidates406420(events);
-  const up=candidates.filter(row=>row.polarity===1);
-  const down=candidates.filter(row=>row.polarity===-1);
-  if(up.length&&down.length){
-    const a=up[0].match,b=down[0].match;
-    const scoreA=Number(a?.evidence?.score),scoreB=Number(b?.evidence?.score);
-    const score=Number.isFinite(scoreA)&&Number.isFinite(scoreB)?Math.min(scoreA,scoreB):Number.isFinite(scoreA)?scoreA:Number.isFinite(scoreB)?scoreB:null;
-    const names=new Set([a?.source_name,b?.source_name].map(v=>String(v||"").trim()).filter(Boolean));
-    const times=[Date.parse(a?.event_time||0),Date.parse(b?.event_time||0)].filter(Number.isFinite);
-    return {
-      id:"mixed-institutional-flows-406420",
-      label:"ETF / FLUX MIXTES",
-      direction:"INDÉTERMINÉ",
-      event_id:null,
-      headline:"Contexte de flux contradictoire",
-      headline_original:null,
-      source_name:"Contexte multi-événements",
-      source_count:Math.max(2,names.size),
-      event_time:times.length?new Date(Math.max(...times)).toISOString():null,
-      evidence:{score,level:"CONTRADICTOIRE"},
-      causal_claim:false,
-      context_scope:scope,
-      context_conflict:true,
-      positive_role:a,
-      negative_role:b
-    };
-  }
-  const best=(up[0]||down[0])?.match||null;
-  return best?{...best,context_scope:scope,context_conflict:false}:null;
-}
 function newsMarketDemandContext(selected, contextEvents) {
-  // 40.6.420 — selected-event truth has priority. Context may enrich only when
-  // the selected event has no explicit flow. Opposite context directions become
-  // MIXED instead of an arbitrary winner chosen solely by evidence score.
-  const direct=newsMarketFlowSummary406420(selected?[selected]:[],"selected-event");
-  if(direct)return direct;
-  return newsMarketFlowSummary406420((contextEvents||[]).filter(Boolean),"related-events");
+  return newsMarketBestRawRole(
+    [selected,...(contextEvents||[])].filter(Boolean),
+    [
+      NEWS_MARKET_MONEY_FLOW_RULES.flow_up,
+      NEWS_MARKET_MONEY_FLOW_RULES.flow_down,
+      NEWS_MARKET_CAUSAL_ROLE_RULES.flow_up,
+      NEWS_MARKET_CAUSAL_ROLE_RULES.flow_down
+    ]
+  );
 }
 
 const NEWS_MARKET_SUPPORTING_AMPLIFIER_RULE = Object.freeze({
@@ -23669,7 +23601,7 @@ function newsMarketOperatorIntelligence(current=null, context={}) {
   const leverageTruth=adjustedBase.amplifier?(Number(adjustedBase.amplifier?.evidence?.score||0)>=65?"QUALIFIÉ":"PARTIEL"):(driverTruth.leverage?.status||"NON QUALIFIÉ");
   const macroTruth=driverTruth.macro_liquidity?.status||"NON QUALIFIÉ";
   const causalChain={macro_liquidity:macroTruth,institutional_flows:flowTruth,technical_trigger:technicalTruth,leverage_amplifier:leverageTruth,market_reaction:marketTruth40372,causal_claim:false};
-  const role=catalyst?"CATALYSEUR POSSIBLE":flow?(flow.context_conflict?"FLUX MIXTES":`FLUX ${flow.direction}`):technical?"DÉCLENCHEUR TECHNIQUE":adjustedBase.amplifier?`AMPLIFICATEUR ${adjustedBase.amplifier.direction}`:"RÔLE NON QUALIFIÉ";
+  const role=catalyst?"CATALYSEUR POSSIBLE":flow?`FLUX ${flow.direction}`:technical?"DÉCLENCHEUR TECHNIQUE":adjustedBase.amplifier?`AMPLIFICATEUR ${adjustedBase.amplifier.direction}`:"RÔLE NON QUALIFIÉ";
   return {
     schema:"atlas.news_to_market.operator_intelligence.v1",build:"40.2.35",status:"observed",event:mechanismEvent,lead_event:selected,
     event_role_pairing_build:"40.3.64",causal_role_truth_build:"40.3.72",base:adjustedBase,facts,mechanism,initial_catalyst:catalyst,technical_trigger:technical,flow,driver_truth_40_3_72:driverTruth,causal_chain_40_3_72:causalChain,supporting_amplifiers:supporting,market_confirmation:confirmation,
@@ -23769,7 +23701,7 @@ globalThis.AtlasNewsMarketReactionTimeline=Object.freeze({compute:newsMarketReac
 /* 40.2.37 — ROLE EVIDENCE QUALITY · quality of the reading, never causal probability. */
 function newsMarketUniqueRoleSources(narrative){const set=new Set();for(const r of narrative?.supporting_amplifiers||[]){const s=String(r?.source_name||"").trim().toLowerCase();if(s)set.add(s);}if(!set.size&&narrative?.event?.source_name)set.add(String(narrative.event.source_name).toLowerCase());return set.size;}
 function newsMarketRoleQuality(event=null,narrative=null){const n=narrative||newsMarketOperatorIntelligence(event);if(n?.status!=="observed")return {schema:"atlas.news_market.role_quality.v1",build:"40.2.37",status:"no-event",causal_probability:null};const e=n.base?.amplifier?.evidence||newsMarketEvidence(n.event);const sourceEvidence=Math.max(0,Math.min(30,(Number(e?.score)||0)*.30));const independentSources=newsMarketUniqueRoleSources(n);const confirmations=Math.min(15,(Math.min(independentSources,3)/3)*15);const timestamp=newsMarketEventTime(n.event)?10:0;const asset=(n.event?.assets||[]).length?10:0;const mechanism=n.base?.amplifier||n.flow||n.technical_trigger?15:0;const timeline=typeof newsMarketReactionTimeline==="function"?newsMarketReactionTimeline(n.event,n):null;const timelinePoints=timeline?.status==="ready"?(timeline.points||[]).filter(p=>Number.isFinite(p?.price)).length:0;const timelineScore=timelinePoints>=4?10:timelinePoints>=2?5:0;const market=n.market_confirmation?.count>=5?10:n.market_confirmation?.count?5:0;const total=Math.round((sourceEvidence+confirmations+timestamp+asset+mechanism+timelineScore+market)*10)/10;const label=total>=85?"FORTE":total>=65?"ÉLEVÉE":total>=45?"MOYENNE":"FAIBLE";return {schema:"atlas.news_market.role_quality.v1",build:"40.2.37",status:"ready",score:total,label,components:{source_evidence:{points:sourceEvidence,max:30,detail:`preuve source ${e?.score??"—"}/100`},independent_sources:{points:confirmations,max:15,detail:`${independentSources} source${independentSources>1?"s":""} distincte${independentSources>1?"s":""} détectée${independentSources>1?"s":""}`},timestamp:{points:timestamp,max:10,detail:timestamp?"timestamp exploitable":"timestamp absent"},asset:{points:asset,max:10,detail:asset?"actif explicite":"actif absent"},mechanism:{points:mechanism,max:15,detail:mechanism?n.mechanism?.title||"mécanisme explicite":"mécanisme non qualifié"},timeline:{points:timelineScore,max:10,detail:`${timelinePoints}/5 points temporels disponibles`},market:{points:market,max:10,detail:n.market_confirmation?.breadth||"marché indisponible"}},causal_probability:null,causal_probability_calculated:false,causal_claim:false};}
-function renderNewsMarketRoleQuality(event=null,narrative=null){const root=document.getElementById("newsMarketRoleQuality");if(!root)return null;const q=newsMarketRoleQuality(event,narrative);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(q.status!=="ready"){set("newsMarketRoleQualityScore","INFORMATION INSUFFISANTE");set("newsMarketRoleQualityNote","Aucun score causal n’est calculé.");root.dataset.state="missing";return q;}set("newsMarketRoleQualityScore",`${q.label} · ${q.score.toFixed(1)}/100`);set("newsMarketRoleQualityNote","Solidité de la lecture du rôle · ce score n’est PAS une probabilité de causalité.");for(const [key,row] of Object.entries(q.components)){const value=`${row.points.toFixed(1)}/${row.max}`;set(`newsMarketRoleQuality_${key}`,value);set(`newsMarketRoleQuality_${key}_note`,row.detail);set(`newsMarketRoleQuality_${key}_40237`,value);set(`newsMarketRoleQuality_${key}_note_40237`,row.detail);}set("newsMarketCausalProbability","NON CALCULÉE");root.dataset.state="ready";root.dataset.quality=q.label.toLowerCase();return q;}
+function renderNewsMarketRoleQuality(event=null,narrative=null){const root=document.getElementById("newsMarketRoleQuality");if(!root)return null;const q=newsMarketRoleQuality(event,narrative);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(q.status!=="ready"){set("newsMarketRoleQualityScore","INFORMATION INSUFFISANTE");set("newsMarketRoleQualityNote","Aucun score causal n’est calculé.");root.dataset.state="missing";return q;}set("newsMarketRoleQualityScore",`${q.label} · ${q.score.toFixed(1)}/100`);set("newsMarketRoleQualityNote","Solidité de la lecture du rôle · ce score n’est PAS une probabilité de causalité.");for(const [key,row] of Object.entries(q.components)){set(`newsMarketRoleQuality_${key}_40237`,`${row.points.toFixed(1)}/${row.max}`);set(`newsMarketRoleQuality_${key}_note_40237`,row.detail);}set("newsMarketCausalProbability","NON CALCULÉE");root.dataset.state="ready";root.dataset.quality=q.label.toLowerCase();return q;}
 globalThis.AtlasNewsMarketRoleQuality=Object.freeze({compute:newsMarketRoleQuality,render:renderNewsMarketRoleQuality,causal_probability_calculated:false,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
 
 
@@ -23779,22 +23711,6 @@ function newsMarketText(id){return String(document.getElementById(id)?.textConte
 function newsMarketCrossLayer(event=null,context={}){const n=context?.narrative||newsMarketOperatorIntelligence(event);if(n?.status!=="observed")return {schema:"atlas.news_market.cross_layer.v1",build:"40.2.38",status:"no-event",causal_claim:false};const timeline=typeof newsMarketReactionTimeline==="function"?newsMarketReactionTimeline(n.event,n):null;const quality=typeof newsMarketRoleQuality==="function"?newsMarketRoleQuality(n.event,n):null;const model=context?.model||null;const oracleBias=String(model?.bias||newsMarketText("atlasOracleHeroBias")||"INDISPONIBLE").toUpperCase();const oracleBull=Number.isFinite(Number(model?.bullStrength))?`Force hausse ${model.bullStrength}/100`:newsMarketText("atlasOracleBull")||"Oracle indisponible";const oracleRegime=newsMarketText("atlasOracleRegimeStatus")||"Régime indisponible";const atlasLine=Number.isFinite(Number(model?.directionScore))?`Momentum ${model?.atlas||""} · direction ${model.directionScore>=0?"+":""}${model.directionScore}/100`:newsMarketText("atlasOracleAtlas")||"Atlas indisponible";const newsDir=String(n.mechanism?.direction||"").toUpperCase();const marketPositive=Number(n.market_confirmation?.positive||0)>Number(n.market_confirmation?.negative||0);const newsBull=newsDir.includes("HAUSS");const newsBear=newsDir.includes("BAISS");const oracleBullish=oracleBias.includes("HAUSS");const oracleBearish=oracleBias.includes("BAISS");const atlasBullish=/momentum positif|direction \+/i.test(atlasLine);const atlasBearish=/momentum négatif|direction -/i.test(atlasLine);let convergence="COUVERTURE PARTIELLE";if(newsBull&&marketPositive&&oracleBullish&&atlasBullish)convergence="CONVERGENCE DESCRIPTIVE HAUSSIÈRE";else if(newsBear&&!marketPositive&&oracleBearish&&atlasBearish)convergence="CONVERGENCE DESCRIPTIVE BAISSIÈRE";else if((newsBull&&oracleBearish)||(newsBear&&oracleBullish))convergence="LECTURE MIXTE / CONTRADICTOIRE";else if(newsBull||newsBear)convergence="CONVERGENCE PARTIELLE";return {schema:"atlas.news_market.cross_layer.v1",build:"40.2.38",status:"ready",layers:{news:`${n.mechanism?.title||"Rôle non qualifié"} · ${n.mechanism?.direction||"indéterminé"}`,reaction:timeline?.status==="ready"?`${timeline.alignment} · ${timeline.alignment_basis||"fenêtre"} ${newsMarketFmtTimelinePct(timeline.alignment_delta_pct)}`:"Timeline indisponible",market:`${n.market_confirmation?.breadth||"Top 5 indisponible"} · ${n.market_confirmation?.focus||"actif indisponible"}`,oracle:`${oracleBias} · ${oracleRegime} · ${oracleBull}`,atlas:atlasLine},quality:quality?.status==="ready"?`${quality.label} · ${quality.score.toFixed(1)}/100`:"non qualifiée",convergence,conclusion:`${convergence} · ${n.market_confirmation?.breadth||"Top 5"} · ${timeline?.status==="ready"?timeline.alignment:"timeline —"}`,causal_claim:false};}
 function renderNewsMarketCrossLayer(event=null,context={}){const root=document.getElementById("newsMarketCrossLayer");if(!root)return null;const x=newsMarketCrossLayer(event,context);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(x.status!=="ready"){set("newsMarketCrossLayerVerdict","INFORMATION INSUFFISANTE");root.dataset.state="missing";return x;}for(const key of ["news","reaction","market","oracle","atlas"])set(`newsMarketCrossLayer_${key}_40238`,x.layers[key]);set("newsMarketCrossLayerQuality",x.quality);set("newsMarketCrossLayerVerdict",x.convergence);set("newsMarketCrossLayerNote",x.conclusion);set("decisionNewsExplanation",`${x.convergence} · ${x.layers.market}`);root.dataset.state="ready";root.dataset.convergence=x.convergence.toLowerCase();return x;}
 globalThis.AtlasNewsMarketCrossLayer=Object.freeze({compute:newsMarketCrossLayer,render:renderNewsMarketCrossLayer,independent_layers:true,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
-
-globalThis.AgentCryptoNewsSemanticTruth406420=Object.freeze({
-  build:"40.6.420",
-  scope:"News Sentinel / News→Market P0 semantic truth",
-  selected_event_flow_precedence:true,
-  opposite_context_flows_become_mixed:true,
-  arbitrary_evidence_winner_across_flow_polarities:false,
-  role_quality_canonical_component_ids:true,
-  collector_modified:false,
-  aether_modified:false,
-  new_fetch:false,
-  new_timer:false,
-  new_observer:false,
-  new_storage_owner:false,
-  automatic_order:false
-});
 
 
 
@@ -56317,8 +56233,7 @@ const atlasColdBootState = {
   running: false,
   executed: 0,
   lastLabel: "",
-  lastError: "",
-  ownerTimings: []
+  lastError: ""
 };
 
 function atlasColdBootDefer(label, fn) {
@@ -56334,92 +56249,25 @@ function atlasColdBootNext() {
   const task = atlasColdBootState.queue.shift();
   if (!task) {
     atlasColdBootState.running = false;
-    atlasBootProbeMark406275("coldboot-queue-drained", {
-      executed: atlasColdBootState.executed,
-      owners: atlasColdBootState.ownerTimings.length
-    });
     return;
   }
 
   atlasColdBootState.lastLabel = task.label;
-  const ownerStartedAt = performance.now();
-  const timing = {
-    label: task.label,
-    start_ms: Number(ownerStartedAt.toFixed(3)),
-    sync_ms: null,
-    async: false,
-    settled_ms: null,
-    status: "running"
-  };
-  atlasColdBootState.ownerTimings.push(timing);
-
   try {
     atlasBootProbeMark406275(`coldboot-owner:${task.label}`, {
       queue_remaining: atlasColdBootState.queue.length,
       executed_before: atlasColdBootState.executed
     });
-    atlasBootProbeMark406275(`coldboot-owner-start:${task.label}`, {
-      queue_remaining: atlasColdBootState.queue.length,
-      executed_before: atlasColdBootState.executed
-    }, false);
-
     const result = atlasSafeBoot(task.label, task.fn);
-    const syncMs = Math.max(0, performance.now() - ownerStartedAt);
-    timing.sync_ms = Number(syncMs.toFixed(3));
-    timing.async = !!(result && typeof result.then === "function");
-    timing.status = timing.async ? "pending" : "settled";
-    if (!timing.async) timing.settled_ms = timing.sync_ms;
-
-    atlasBootProbeMark406275(`coldboot-owner-sync-end:${task.label}`, {
-      sync_ms: timing.sync_ms,
-      async: timing.async
-    }, false);
-
-    if (timing.async) {
-      Promise.resolve(result).then(
-        () => {
-          const settleMs = Math.max(0, performance.now() - ownerStartedAt);
-          timing.settled_ms = Number(settleMs.toFixed(3));
-          timing.status = "fulfilled";
-          atlasBootProbeMark406275(`coldboot-owner-settled:${task.label}`, {
-            settle_ms: timing.settled_ms,
-            status: timing.status
-          }, false);
-        },
-        error => {
-          const settleMs = Math.max(0, performance.now() - ownerStartedAt);
-          timing.settled_ms = Number(settleMs.toFixed(3));
-          timing.status = "rejected";
-          atlasBootProbeMark406275(`coldboot-owner-settled:${task.label}`, {
-            settle_ms: timing.settled_ms,
-            status: timing.status,
-            error: String(error?.message || error || "")
-          }, false);
-        }
-      );
+    if (result && typeof result.catch === "function") {
       result.catch(error => {
         atlasColdBootState.lastError = String(error?.message || error || "");
         console.warn(`40.3.98 deferred boot ${task.label}:`, error);
       });
-    } else {
-      atlasBootProbeMark406275(`coldboot-owner-settled:${task.label}`, {
-        settle_ms: timing.settled_ms,
-        status: timing.status
-      }, false);
     }
-
     atlasColdBootState.executed += 1;
   } catch (error) {
-    const settleMs = Math.max(0, performance.now() - ownerStartedAt);
-    timing.sync_ms = timing.sync_ms ?? Number(settleMs.toFixed(3));
-    timing.settled_ms = Number(settleMs.toFixed(3));
-    timing.status = "threw";
     atlasColdBootState.lastError = String(error?.message || error || "");
-    atlasBootProbeMark406275(`coldboot-owner-settled:${task.label}`, {
-      settle_ms: timing.settled_ms,
-      status: timing.status,
-      error: atlasColdBootState.lastError
-    }, false);
   }
 
   requestAnimationFrame(atlasColdBootNext);
@@ -56443,12 +56291,8 @@ globalThis.AtlasColdBoot = Object.freeze({
     running: atlasColdBootState.running,
     executed: atlasColdBootState.executed,
     last_label: atlasColdBootState.lastLabel,
-    last_error: atlasColdBootState.lastError,
-    owner_timings: atlasColdBootState.ownerTimings.map(row => ({ ...row }))
+    last_error: atlasColdBootState.lastError
   }),
-  instrumentation_build: "40.6.401",
-  owner_timing_mode: "SYNC_PLUS_ASYNC_SETTLE",
-  scheduling_behavior_changed: false,
   first_paint_frames_reserved: 2,
   owners_started_per_frame: 1,
   recurring_timer: false,
@@ -56509,12 +56353,6 @@ atlasColdBootDefer("cold read", () => renderColdRead(false));
 
 atlasColdBootDefer("auto reader render", renderAutoReader);
 
-/* 40.6.402 — Cold Boot contention recovery.
-   Auto Reader runtime starts immediately after its presentation shell.
-   GitHub Shared Memory no longer auto-fetches during Cold Boot; its existing
-   manual btnLoadGithubMemory owner remains the explicit demand path. */
-atlasColdBootDefer("auto reader start", startAutoReader);
-
 atlasColdBootDefer("shared memory render", renderSharedMemory);
 
 atlasColdBootDefer("memory truth render", renderMemoryTruth);
@@ -56524,6 +56362,8 @@ atlasColdBootDefer("memory coverage render", atlasRenderMemoryCoverage);
 atlasColdBootDefer("Memory Intelligence 32.0", atlasMemoryIntelligenceInit);
 
 atlasColdBootDefer("Multi-Collector & Operator Console 33.0", atlasMultiCollectorOperatorInit);
+
+atlasColdBootDefer("github memory initial state", () => loadGithubSharedMemory(false, "auto"));
 
 atlasColdBootDefer("beginner summary", renderBeginnerSummary);
 
@@ -56545,6 +56385,7 @@ window.addEventListener("pageshow", event => {
 
 atlasColdBootDefer("analyst panel", renderAnalystPanel);
 
+atlasColdBootDefer("auto reader start", startAutoReader);
 atlasColdBootDefer("questionnaire hydrate", loadQuestionnaire);
 atlasColdBootDefer("Math Core first render", renderAtlasMathCore);
 atlasColdBootStart();
@@ -57247,7 +57088,7 @@ setTimeout(() => {
   const refresh = document.getElementById("btnDecisionBoardRefresh");
   if (refresh && refresh.dataset.atlasV2Bound !== "1") {
     refresh.dataset.atlasV2Bound = "1";
-    refresh.addEventListener("click", () => renderDecisionBoard({force:true,reason:"manual-refresh"}));
+    refresh.addEventListener("click", () => renderDecisionBoard());
   }
   const exportButton = document.getElementById("btnDecisionBoardExport");
   if (exportButton && exportButton.dataset.atlasV2Bound !== "1") {
@@ -58574,237 +58415,6 @@ renderDecisionBoard = function renderDecisionBoard35() {
   try { atlasMemoryLedgerRender35(); } catch (_) {}
   return result;
 };
-
-/* ============================================================
-   40.6.412 + 40.6.414 — DECISION BOARD BOOT COALESCING / CONTINUITY FIX
-
-   renderDecisionBoard() is presentation-only but expensive because it traverses
-   market + memory state and rebuilds large DOM fragments. During 40.6.411 the
-   surgical probe observed repeated ~1.2–1.4 s synchronous calls on the boot
-   critical path.
-
-   Contract:
-   - before Strategy Core is ready, passive Decision Board renders are deferred;
-   - one pending render is flushed after Strategy Core readiness;
-   - postboot-ready is a bounded fallback if Strategy readiness fails;
-   - after the gate opens, identical-state passive renders are deduplicated;
-   - 40.6.414: the gate follows a stable feature-owner contract, independent of the displayed build number;
-   - explicit operator refresh always bypasses the gate;
-   - no market/Strategy/Aether business rule, timer cadence, storage schema,
-     network owner or order path is changed.
-   ============================================================ */
-const atlasDecisionBoardRender406412Base = renderDecisionBoard;
-const atlasDecisionBoardGate406412 = {
-  pending:false,
-  flushScheduled:false,
-  rendered:0,
-  deferred:0,
-  deduped:0,
-  forced:0,
-  errors:0,
-  lastSignature:"",
-  lastReason:"",
-  lastDurationMs:0,
-  strategyReady:false,
-  strategyFailed:false,
-  strategyFailureReason:"",
-  postbootReady:false
-};
-
-function atlasDecisionBoardSignature406412() {
-  let memoryRevision=0,currentFingerprint="",packageFingerprint="";
-  try { memoryRevision=Number(atlasAutoMemoryCache?.revision || 0); } catch (_) {}
-  try { currentFingerprint=String(atlasCurrentStateRead?.()?.fingerprint || ""); } catch (_) {}
-  try { packageFingerprint=String(atlasSharedSynthesisState?.package?.fingerprint || ""); } catch (_) {}
-  const lock=state?.sourceLock || {};
-  const sourceHealth=(Array.isArray(state?.sourceStatus) ? state.sourceStatus : [])
-    .map(item=>[
-      String(item?.key || item?.name || item?.source || item?.id || ""),
-      String(item?.status || item?.state || "UNKNOWN")
-    ].join(":"))
-    .sort()
-    .join(",");
-  const expectedRaw=state?.sourceStatusExpectedTotal;
-  const sourceExpected=(expectedRaw==null || expectedRaw==="")
-    ? 0
-    : (Number.isFinite(Number(expectedRaw)) ? Number(expectedRaw) : 0);
-  return [
-    state?.liveOk===true ? "1" : "0",
-    String(state?.timestamp || ""),
-    String(lock?.snapshotId || ""),
-    String(lock?.mode || ""),
-    lock?.valid===true ? "1" : "0",
-    String(Array.isArray(state?.coins) ? state.coins.length : 0),
-    String(state?.selectedCoinId || ""),
-    String(sourceExpected),
-    sourceHealth,
-    String(memoryRevision),
-    currentFingerprint,
-    packageFingerprint
-  ].join("|");
-}
-
-/* 40.6.414: feature-owner contract. If this owner is resident, coalescing is enabled.
-   It must not self-disable because the commercial build number changes. */
-function atlasDecisionBoardCoalescingActiveBuild406414() {
-  return true;
-}
-
-function atlasDecisionBoardGateOpen406412() {
-  if (atlasDecisionBoardGate406412.strategyReady || atlasDecisionBoardGate406412.postbootReady) return true;
-  try {
-    const snap=globalThis.AgentCryptoPostBootRuntime?.snapshot?.();
-    const failed=Array.isArray(snap?.strategy_core_failed) ? snap.strategy_core_failed : [];
-    if (failed.length) {
-      atlasDecisionBoardGate406412.strategyReady=false;
-      atlasDecisionBoardGate406412.strategyFailed=true;
-      atlasDecisionBoardGate406412.strategyFailureReason="strategy-core-failed:"+failed.length;
-    }
-    if (snap?.strategy_core_ready===true) {
-      atlasDecisionBoardGate406412.strategyReady=true;
-      atlasDecisionBoardGate406412.strategyFailed=false;
-      atlasDecisionBoardGate406412.strategyFailureReason="";
-      return true;
-    }
-    if (snap?.done===true) {
-      atlasDecisionBoardGate406412.postbootReady=true;
-      return true;
-    }
-  } catch (_) {}
-  return false;
-}
-
-function atlasDecisionBoardProbe406412(name,detail={}) {
-  try { globalThis.AgentCryptoBootProbe?.mark?.(name,{build:"40.6.412",...detail}); } catch (_) {}
-}
-
-function atlasDecisionBoardProbeOnce406412(name,detail={}) {
-  try { globalThis.AgentCryptoBootProbe?.markOnce?.(name,{build:"40.6.412",...detail}); } catch (_) {}
-}
-
-function atlasDecisionBoardFlush406412(reason) {
-  if (!atlasDecisionBoardGate406412.pending || atlasDecisionBoardGate406412.flushScheduled) return false;
-  atlasDecisionBoardGate406412.flushScheduled=true;
-  const run=()=>{
-    atlasDecisionBoardGate406412.flushScheduled=false;
-    if (!atlasDecisionBoardGate406412.pending) return;
-    try { renderDecisionBoard({force:true,reason:String(reason||"gate-flush")}); }
-    catch (error) { console.warn("40.6.412 Decision Board flush", error); }
-  };
-  if (typeof requestAnimationFrame==="function") requestAnimationFrame(()=>requestAnimationFrame(run));
-  else setTimeout(run,0);
-  return true;
-}
-
-renderDecisionBoard = function renderDecisionBoard406412(options = {}) {
-  const activeBuild=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||globalThis.AGENT_CRYPTO_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");
-  if (!atlasDecisionBoardCoalescingActiveBuild406414(activeBuild)) return atlasDecisionBoardRender406412Base();
-  const opts=options===true ? {force:true,reason:"legacy-force"} : (options && typeof options==="object" ? options : {});
-  const force=opts.force===true;
-  const reason=String(opts.reason || (force ? "explicit-force" : "passive"));
-  const signature=atlasDecisionBoardSignature406412();
-
-  if (!force && !atlasDecisionBoardGateOpen406412()) {
-    atlasDecisionBoardGate406412.pending=true;
-    atlasDecisionBoardGate406412.deferred+=1;
-    atlasDecisionBoardGate406412.lastReason=reason;
-    atlasDecisionBoardProbeOnce406412("decision-board-deferred-406412",{reason});
-    return false;
-  }
-
-  if (!force && signature && signature===atlasDecisionBoardGate406412.lastSignature) {
-    atlasDecisionBoardGate406412.deduped+=1;
-    atlasDecisionBoardGate406412.lastReason=reason;
-    atlasDecisionBoardProbeOnce406412("decision-board-deduped-406412",{reason});
-    return false;
-  }
-
-  if (force) atlasDecisionBoardGate406412.forced+=1;
-  const started=performance.now();
-  let succeeded=false;
-  try {
-    const result=atlasDecisionBoardRender406412Base();
-    succeeded=true;
-    return result;
-  } finally {
-    const duration=Math.max(0,performance.now()-started);
-    atlasDecisionBoardGate406412.lastDurationMs=Number(duration.toFixed(3));
-    atlasDecisionBoardGate406412.lastReason=reason;
-    if (succeeded) {
-      atlasDecisionBoardGate406412.rendered+=1;
-      atlasDecisionBoardGate406412.pending=false;
-      atlasDecisionBoardGate406412.lastSignature=signature;
-      atlasDecisionBoardProbe406412("decision-board-rendered-406412",{
-        reason,
-        force,
-        duration_ms:atlasDecisionBoardGate406412.lastDurationMs,
-        rendered:atlasDecisionBoardGate406412.rendered,
-        deferred:atlasDecisionBoardGate406412.deferred,
-        deduped:atlasDecisionBoardGate406412.deduped
-      });
-    } else {
-      atlasDecisionBoardGate406412.errors+=1;
-    }
-  }
-};
-
-window.addEventListener("agent-crypto:strategy-core-ready",(event)=>{
-  if (event?.detail?.ok===false) {
-    const failed=Array.isArray(event?.detail?.failed) ? event.detail.failed : [];
-    atlasDecisionBoardGate406412.strategyReady=false;
-    atlasDecisionBoardGate406412.strategyFailed=true;
-    atlasDecisionBoardGate406412.strategyFailureReason=failed.length
-      ? "strategy-core-failed:"+failed.length
-      : "strategy-core-failed";
-    atlasDecisionBoardProbeOnce406412("decision-board-strategy-failed-406414",{
-      reason:atlasDecisionBoardGate406412.strategyFailureReason,
-      failed:failed.length
-    });
-    return;
-  }
-  atlasDecisionBoardGate406412.strategyReady=true;
-  atlasDecisionBoardGate406412.strategyFailed=false;
-  atlasDecisionBoardGate406412.strategyFailureReason="";
-  atlasDecisionBoardProbeOnce406412("decision-board-gate-open-406412",{reason:"strategy-core-ready"});
-  atlasDecisionBoardFlush406412("strategy-core-ready-flush");
-},{passive:true});
-
-window.addEventListener("agent-crypto:postboot-runtime-ready",()=>{
-  atlasDecisionBoardGate406412.postbootReady=true;
-  atlasDecisionBoardProbeOnce406412("decision-board-gate-open-fallback-406412",{reason:"postboot-runtime-ready"});
-  atlasDecisionBoardFlush406412("postboot-runtime-ready-flush");
-},{passive:true});
-
-globalThis.AgentCryptoDecisionBoardGate406412=Object.freeze({
-  build:"40.6.412",
-  snapshot:()=>Object.freeze({
-    pending:atlasDecisionBoardGate406412.pending,
-    flush_scheduled:atlasDecisionBoardGate406412.flushScheduled,
-    rendered:atlasDecisionBoardGate406412.rendered,
-    deferred:atlasDecisionBoardGate406412.deferred,
-    deduped:atlasDecisionBoardGate406412.deduped,
-    forced:atlasDecisionBoardGate406412.forced,
-    errors:atlasDecisionBoardGate406412.errors,
-    last_reason:atlasDecisionBoardGate406412.lastReason,
-    last_duration_ms:atlasDecisionBoardGate406412.lastDurationMs,
-    strategy_ready:atlasDecisionBoardGate406412.strategyReady,
-    strategy_failed:atlasDecisionBoardGate406412.strategyFailed,
-    strategy_failure_reason:atlasDecisionBoardGate406412.strategyFailureReason,
-    postboot_ready:atlasDecisionBoardGate406412.postbootReady,
-    active_build:atlasDecisionBoardCoalescingActiveBuild406414(),
-    activation_contract:"decision-board-owner-present",
-    continuity_fix:"40.6.414",
-    last_signature:atlasDecisionBoardGate406412.lastSignature
-  }),
-  manual:()=>renderDecisionBoard({force:true,reason:"api-manual"}),
-  business_logic_changed:false,
-  market_core_changed:false,
-  strategy_changed:false,
-  aether_changed:false,
-  recurring_timer:false,
-  storage_write:false,
-  network:false
-});
 
 function atlasAutonomousOperatorTick35(reason = "watchdog") {
   try {
