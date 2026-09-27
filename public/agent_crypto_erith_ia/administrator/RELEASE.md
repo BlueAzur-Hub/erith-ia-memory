@@ -1,75 +1,69 @@
-# Agent-Crypto — 40.6.432 · STRATEGY A EXECUTION COST TRUTH
+# Agent-Crypto — 40.6.433 · STRATEGY A EXECUTION COST TRUTH MOUNT REPAIR
 
-Parent : **40.6.431**.  
+Parent : **40.6.432**.  
 Market Core : **38.15.11**.
 
 ## Objet unique
 
-Mesurer, sans ordre réel, les conditions d'exécution BTC/EUR sur **Kraken Pro** et **OKX Europe** afin de remplacer progressivement le coût pédagogique 0,60 % par une vérité économique vérifiable.
+Réparer le **montage visible** de `STRATEGY A · EXECUTION COST TRUTH`.
 
-Nouveau propriétaire canonique :
+Le dump terrain 40.6.432 a prouvé :
+- Build 40.6.432 chargé ;
+- Cost-Wait .430 visible ;
+- Oracle / Cost Calibration .431 visible ;
+- **Execution Cost Truth .432 absent du DOM rendu**.
 
-js/strategy-a-execution-cost-truth.js
+La mesure Kraken / OKX n'était donc pas testable par l'opérateur.
 
-## Ce que mesure le panneau
+## Correction
 
-Au clic sur **MESURER KRAKEN + OKX** :
+Le propriétaire reste :
 
-- frais Maker / Taker de référence, sourcés et datés ;
-- meilleur prix acheteur / vendeur ;
-- spread réel du carnet public ;
-- profondeur proche du prix à ±5, ±10 et ±25 points de base ;
-- glissement simulé pour 10 €, 25 €, 50 € et 100 € ;
-- coût estimé Market → Market, carnet + frais Taker de référence ;
-- planchers de frais Post-only → Post-only et Post-only → Market.
+`js/strategy-a-execution-cost-truth.js`
 
-## Références de frais
+Le panneau ne dépend plus uniquement des panneaux lazy .430/.431. Il peut maintenant s'ancrer sur, par ordre de préférence :
 
-**Kraken Pro — niveau Spot 1 de référence :** Maker 0,40 %, Taker 0,80 %.  
-Source : https://www.kraken.com/fr/features/fee-schedule
+1. Oracle / Cost Calibration .431 ;
+2. Cost-Wait .430 ;
+3. Durable Evidence ;
+4. Experiment Ledger ;
+5. le corps stable de la console Strategy A.
 
-**OKX Europe — compte EEE Spot-only Regular, effet 25/09/2026 :** Maker 0,10 %, Taker 0,20 %.  
-Source : https://www.okx.com/fr-fr/help/important-notice-upcoming-spot-fee-adjustment-eea
+Le montage est relancé de façon événementielle quand :
+- la page est prête ;
+- Durable Evidence devient disponible ;
+- un cycle Strategy A arrive ;
+- **Simulation est ouverte** ;
+- le post-boot est terminé ;
+- Firefox restaure la page.
 
-Ces taux sont des références : le taux réellement appliqué dépend du compte, du volume, des actifs et du type de compte.
+Aucun timer récurrent et aucun MutationObserver ne sont ajoutés.
 
-## Réseau
+## Ce qui ne change pas
 
-La version n'ajoute **aucun flux permanent**.
-
-Le clic opérateur lance uniquement deux lectures publiques de carnet :
-
-- Kraken : BTC/EUR Depth ;
-- OKX Europe : BTC-EUR Market Books.
-
-Aucun compte, aucune clé API, aucun wallet et aucun ordre ne sont utilisés.
-
-## Protections
-
-- Cost Gate 0,80 % inchangé ;
-- coût pédagogique 0,60 % inchangé dans le moteur existant ;
-- Oracle et bullAmplitude inchangés ;
-- Risk Governor inchangé ;
-- Paper inchangé ;
-- Market Core 38.15.11 inchangé ;
-- Aether inchangé ;
-- CSS cockpit inchangé ;
-- aucun WebSocket ;
-- aucun timer récurrent ;
-- aucun stockage ;
-- aucun choix automatique Kraken / OKX ;
+- endpoints Kraken / OKX : inchangés ;
+- profils de frais : inchangés ;
+- spread / profondeur / glissement : mêmes calculs ;
+- Cost Gate : inchangé ;
+- Oracle / bullAmplitude : inchangé ;
+- Risk : inchangé ;
+- Paper : inchangé ;
+- Market Core 38.15.11 : inchangé ;
+- Aether : inchangé ;
+- CSS cockpit : inchangé ;
+- aucun wallet ;
+- aucune clé API ;
 - aucun ordre réel.
 
-## Test terrain
+## Test Firefox
 
 1. Ctrl+F5.
-2. Vérifier **Build 40.6.432**.
+2. Vérifier **Build 40.6.433**.
 3. Ouvrir **Simulation / Strategy A**.
-4. Repérer **STRATEGY A · EXECUTION COST TRUTH · 40.6.432** sous le panneau violet de calibration.
+4. Le panneau **STRATEGY A · EXECUTION COST TRUTH · 40.6.433** doit être visible.
 5. Cliquer **MESURER KRAKEN + OKX**.
-6. Les deux cartes doivent afficher des chiffres, ou une erreur explicite si une plateforme bloque la requête.
-7. Cliquer **EXPORTER** et transmettre le JSON.
+6. Envoyer la capture et, si disponible, l'export JSON.
 
-Aucune console n'est nécessaire pour ce test.
+**Pas de recherche dans la page. Pas de console.**
 
 Terrain : **PENDING FIREFOX**.

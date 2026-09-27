@@ -1,10 +1,10 @@
-/* Agent-Crypto @erith.IA — 40.6.432 STRATEGY A EXECUTION COST TRUTH
+/* Agent-Crypto @erith.IA — 40.6.433 STRATEGY A EXECUTION COST TRUTH
    Manual public order-book measurement for BTC/EUR on Kraken + OKX Europe.
    Measures spread, nearby depth, simulated slippage and fee-aware round-trip cost.
    No order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
 (() => {
   "use strict";
-  const BUILD="40.6.432", ROOT="strategyAExecutionCostTruth";
+  const BUILD="40.6.433", ROOT="strategyAExecutionCostTruth";
   const SIZES=Object.freeze([10,25,50,100]), DEPTH_BPS=Object.freeze([5,10,25]), TIMEOUT=9000;
   const VENUES=Object.freeze({
     kraken:Object.freeze({
@@ -165,9 +165,10 @@
   }
   function render(message){
     if(typeof document==="undefined")return last;
-    const anchor=document.getElementById("strategyAOracleCostCalibrationAudit")||document.getElementById("strategyACostWaitOutcomeAudit406429");
+    const anchor=document.getElementById("strategyAOracleCostCalibrationAudit")||document.getElementById("strategyACostWaitOutcomeAudit406429")||document.getElementById("strategyADurableEvidence")||document.getElementById("strategyAExperimentLedger")||document.querySelector("#strategyAVisualConsole404269 .avc-body");
     if(!anchor)return last;
-    style(); let root=document.getElementById(ROOT); if(!root){root=document.createElement("section");root.id=ROOT;anchor.insertAdjacentElement("afterend",root);}
+    style(); let root=document.getElementById(ROOT); if(!root){root=document.createElement("section");root.id=ROOT;}
+    if(root.previousElementSibling!==anchor){try{anchor.insertAdjacentElement("afterend",root);}catch(_){}}
     const c=last?.oracle_context||oracleContext();
     root.innerHTML='<div class="ect-h"><div><div class="ect-t">STRATEGY A · EXECUTION COST TRUTH · '+BUILD+'</div><div class="ect-s">Mesure manuelle BTC/EUR · Kraken + OKX Europe · aucun ordre réel.</div></div><div class="ect-actions"><button class="btn small" id="'+ROOT+'Measure">'+(busy?"MESURE…":"MESURER KRAKEN + OKX")+'</button><button class="btn small" id="'+ROOT+'Export" '+(!last?"disabled":"")+'>EXPORTER</button></div></div>'+
       (message?'<div class="ect-note">'+esc(message)+'</div>':'')+
@@ -182,8 +183,19 @@
     manual_fetch_only:true,new_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false
   });
   if(typeof document!=="undefined"){
+    let mountQueued=false;
     const boot=()=>{try{render();}catch(_){}};
-    if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else queueMicrotask(boot);
-    document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",boot,{passive:true});
+    const scheduleMount=()=>{
+      if(mountQueued)return;
+      mountQueued=true;
+      const run=()=>{mountQueued=false;boot();};
+      try{queueMicrotask(run);}catch(_){Promise.resolve().then(run);}
+    };
+    if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",scheduleMount,{once:true});else scheduleMount();
+    document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",scheduleMount,{passive:true});
+    document.addEventListener("agent-crypto:strategy-a-experiment-cycle",scheduleMount,{passive:true});
+    document.addEventListener("toggle",event=>{if(event?.target?.id==="simulation"&&event.target.open===true)scheduleMount();},true);
+    window.addEventListener("agent-crypto:postboot-runtime-ready",scheduleMount,{passive:true});
+    window.addEventListener("pageshow",scheduleMount,{passive:true});
   }
 })();
