@@ -1,33 +1,20 @@
-# Agent-Crypto 40.6.447 — STRATEGY HUMAN READABILITY
+# Agent-Crypto 40.6.448 — HTML DOCUMENT STRUCTURE RECOVERY
 
-## Pourquoi cette version existe
-La dette n'est pas nouvelle : le Fil Crypto avait déjà fixé une règle simple — à 100 % dans Firefox, chaque phrase doit être lisible sans zoom. Strategy a pourtant réaccumulé des libellés à 7–10 px et des grilles trop compactes.
+## Problème corrigé
+Deux insertions HTML .446/.447 contenaient trois séquences littérales antislash+n au lieu de retours à la ligne. Deux apparaissaient avant le header ; le parseur fermait prématurément HEAD.
 
-## Correction
-- couche canonique `strategy-human-readability.css`, nom stable et non versionné ;
-- texte courant : 13 px ;
-- libellés techniques : 12,5 px minimum ;
-- valeurs : 14 px ;
-- titres : 16 à 18 px ;
-- boutons : 13 px, hauteur minimale 38 px ;
-- résumé 9 Gates : 3 colonnes au lieu de 9 sur grand écran, texte autorisé à revenir à la ligne ;
-- Cost-Wait : 3 colonnes ;
-- Oracle/Cost : 2 colonnes ;
-- grilles After-Cost / Evidence / Replay / Paper V2 / TRADUS décompressées ;
-- aucune information supprimée ou cachée.
+## Correction bornée
+- Remplacement des trois séquences uniquement dans les deux insertions de balisage identifiées.
+- Restauration du HEAD et suppression des nœuds texte parasites.
+- Identité de document, manifeste et aria-label cohérents en 40.6.448.
+- Entrée canonique index.html et copie de livraison index-40.6.448.html identiques.
+- Aucun changement de fichier CSS ou JavaScript externe ; URLs et ordre des ressources inchangés.
+- Backend .441, cadrage .442, métriques Oracle .445, loader .446 et lisibilité .447 conservés.
 
-Quatre propriétaires qui forçaient encore des boutons microscopiques avec des déclarations prioritaires sont corrigés à la source :
-- `strategy-a-execution-cost-truth.js`
-- `strategy-a-paper-lifecycle.js`
-- `strategy-a-replay.js`
-- `strategy-a-g3-prospective-t0-capture.js`
+## Preuves
+HTML_STRUCTURE_TEST_40.6.448.json : Firefox isolé, DOM du document complet et rendu sans scripts métier/réseau, à 1920×920, 1920×1080 et 1280×720. Aucun texte parasite ; feuille de lisibilité dans HEAD. 655 IDs, 44 scripts externes, 32 liens et 58 styles inline préservés. Syntaxe de 19 scripts inline vérifiée. Garde canonique Version Truth : PASS.
 
-## Tests avant commit
-- CSS : aucune taille de texte définie sous 12,5 px ;
-- CSS : aucune nouvelle déclaration prioritaire ;
-- cascade locale : la couche canonique gagne contre les anciens styles 7–10 px même lorsqu'ils sont injectés après elle ;
-- rendu représentatif local : PASS ;
-- aucun changement de seuil, calcul, stockage, réseau, timer ou ordre d'exécution.
+Ces contrôles ne constituent pas une validation du runtime local de Christophe. La typographie fine Strategy et les autres dettes de l’audit .447 restent distinctes.
 
-## Gel
-40.6.441 Backend · 40.6.442 Graphique · 40.6.445 Oracle metrics · 40.6.446 loader Strategy · Market Core 38.15.11.
+## Protection
+Market Core 38.15.11, Web Classic, Aether, Oracle, Atlas CURRENT, Lecture Technique, Strategy, Risk, Paper, Window Manager, données et stockage inchangés.

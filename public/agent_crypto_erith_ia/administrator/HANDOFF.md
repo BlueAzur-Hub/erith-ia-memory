@@ -1,22 +1,13 @@
-# HANDOFF — Agent-Crypto 40.6.447
+# HANDOFF — Agent-Crypto 40.6.448
 
-Objectif unique : lisibilité humaine de Strategy.
+Parent : 40.6.447. Objet : supprimer les antislash+n parasites et restaurer la structure HTML.
 
-## Test Firefox
-À 100 % de zoom :
-1. vérifier **Build 40.6.447** ;
-2. ouvrir **Simulation** ;
-3. lire Strategy normalement, sans zoom ni recherche ;
-4. contrôler visuellement :
-   - statut Strategy / résumé 9 Gates ;
-   - Cost-Wait Outcome Audit ;
-   - Oracle / Cost Calibration Truth ;
-   - Execution Cost Truth ;
-   - panneaux Paper / Replay / Evidence déjà présents ;
-   - TRADUS si présent.
+## Contrôle opérateur
+Recharger l’entrée canonique Administrator. Vérifier Build 40.6.448, absence des caractères parasites avant le header, puis cadrage normal et F11. Conserver les validations .441/.442/.445/.446.
+La structure du document a été testée dans Firefox isolé. Ne pas annoncer PASS opérateur avant le retour de Christophe.
 
-Critère PASS : le texte normal est lisible, les libellés ne sont plus microscopiques, les grilles ne forment plus des paquets illisibles et les boutons sont lisibles/cliquables.
+## Limites
+Cette version ne modifie aucun CSS ni moteur. Elle ne prétend pas solder les micro-tailles Strategy, la fraîcheur des quotes ou les chemins d’erreur du loader décrits dans l’audit Astra .447. Aucun rollback global.
 
-Critère FAIL : un bloc Strategy reste en micro-texte ou une interaction .446 régresse.
-
-Aucun test de trading réel. Aucun seuil à modifier.
+## Livraison
+ZIP différentiel avec arborescence administrator/, manifeste et rapport de contrôle. Le SHA-256 est dans le fichier .zip.sha256 associé. Le commit est l’autorité de publication ; contrôler les workflows Version Truth, Delivery et GitHub Pages.
