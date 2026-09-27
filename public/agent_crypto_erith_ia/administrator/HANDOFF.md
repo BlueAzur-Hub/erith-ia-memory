@@ -1,25 +1,12 @@
-# Agent-Crypto — Handoff Seven
+# HANDOFF — 40.6.427 · NATIVE COCKPIT CSS GEOMETRY
 
-Build **40.6.425 — AETHER MENU ESCAPE / CONTINUITY RECOVERY**  
-Parent **40.6.424** · Market Core **38.15.11**.
+La 40.6.426 est rejetée et non héritée.
 
-## Vérité terrain
-40.6.424 a corrigé la ligne vide et la boucle INFO → NEWS → SYSTEM → INFO.
-Le défaut restant est `♥ VEILLE`, câblé comme pause manuelle persistante.
+40.6.427 repart de **40.6.425** et modifie uniquement la géométrie CSS native du `chart-shell`.
 
-## 40.6.425
-- `♥ VEILLE` = retour temporaire au menu, pas pause ;
-- timeout canonique conservé ;
-- reprise automatique à la prochaine échéance ;
-- garde-fou `remaining<=0 → nextAction` ;
-- `Aether · ATTENTION` peut reprendre immédiatement ;
-- aucun nouveau timer/observer/fetch/storage/trading owner.
+`507 / 59vh+42 / 647` → `540 / 64vh+42 / 760`.
 
-## Test
-Firefox : **NEWS → ♥ VEILLE → MENU → attendre → reprise automatique**.
+Aucun JavaScript n'est ajouté ou modifié. Livecheck reste le mécanisme existant de positionnement. F11 repose uniquement sur les unités CSS `vh` du navigateur.
 
-## Protégé
-Market Core 38.15.11 · News producer · Oracle · Math · LT · Atlas CURRENT · Strategy/TRADUS · Storage.
-
-## Suite
-Si PASS : **40.6.426 Storyline Clustering / Diversity**.
+Contrat terrain :
+**Menu/Aether → Graphique + Lecture technique → Target Top 5**, avec **Market Flow intact hors cadre juste dessous**.
