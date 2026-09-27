@@ -1,26 +1,43 @@
-# Agent-Crypto — Aether Menu Escape / Continuity Recovery
+# Agent-Crypto — 40.6.427 · Native Cockpit CSS Geometry
 
-Build **40.6.425** · parent **40.6.424** · Market Core **38.15.11**.
+Parent accepté : **40.6.425**  
+Build rejeté non repris : **40.6.426**  
+Market Core : **38.15.11**
 
-## Terrain 40.6.424
-La boucle INFO → NEWS → SYSTEM → INFO et la disparition de la ligne vide sont bonnes.
-Le défaut restant est le contrat manuel de `♥ VEILLE` : .424 le traite comme un HOLD persistant qui peut tuer la cadence jusqu'à reprise explicite ou reload.
+## Correction demandée
 
-## Correction 40.6.425
-- `♥ VEILLE` affiche immédiatement le menu natif.
-- Aucun `manualPaused=true`.
-- Le timeout canonique n'est pas détruit.
-- Aucun second timer n'est créé.
-- À la prochaine échéance canonique, Aether reprend automatiquement.
-- Si `remaining <= 0`, `nextAction` est exécuté immédiatement.
-- `Aether · ATTENTION` reste une reprise immédiate optionnelle.
+Correction **uniquement CSS native** de la géométrie du bloc central.
 
-## Protections
-Market Core 38.15.11 · News collector · Oracle · Math · Lecture Technique · Atlas CURRENT · Strategy/TRADUS · Storage · Window Manager : inchangés.
+Règle canonique modifiée dans `style.css` :
 
-## Terrain Firefox attendu
-**NEWS → ♥ VEILLE → MENU → attendre sans cliquer → reprise automatique Aether.**
-Répéter depuis INFO et SYSTEM. Aucun Ctrl+F5 ne doit être nécessaire pour réveiller le fil.
+- avant : `clamp(507px, calc(59vh + 42px), 647px)`
+- après : `clamp(540px, calc(64vh + 42px), 760px)`
 
-## Suite
-Après PASS : **40.6.426 — Storyline Clustering / Diversity**.
+Effet attendu :
+- Livecheck conserve uniquement son rôle existant de positionnement/navigation ;
+- Graphique + Lecture technique sont plus hauts dès le rendu ;
+- Target Top 5 reste la dernière bande visible ;
+- Market Flow reste intact juste dessous, hors cadre ;
+- F11 agrandit naturellement via `vh`, sans aucun code runtime.
+
+## Interdits respectés
+
+- aucun JS ajouté ;
+- aucun JS modifié ;
+- aucun listener resize/F11 ;
+- aucun requestAnimationFrame ;
+- aucun timer ;
+- aucun observer ;
+- aucun déplacement DOM ;
+- aucun masquage Market Flow ;
+- aucun changement Target Top 5 ;
+- aucun changement Window Manager / Aether / Oracle / Math / Strategy / Storage / Market Core.
+
+## Test terrain
+
+1. Ctrl+F5 et vérifier **Build 40.6.427**.
+2. Cliquer Livecheck pour positionner la vue.
+3. Vérifier : Menu/Aether haut → Graphique + Lecture technique centre → Target Top 5 bas.
+4. Market Flow doit être sous le bord inférieur.
+5. F11 : même composition, agrandie nativement.
+6. Sortie F11 : retour natif sans script.
