@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.423",
+  "build": "40.6.424",
   "engine": "38.15.11",
-  "release": "AETHER PHASE / VISIBILITY TRUTH",
+  "release": "AETHER SINGLE PHASE OWNER",
   "published": true,
-  "status": "published_pending_firefox_423",
-  "parent_build": "40.6.422",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.423",
-  "administrator_build": "40.6.423",
-  "build_label": "Build 40.6.423 · Administrator",
+  "status": "published_pending_firefox_424",
+  "parent_build": "40.6.423",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.424",
+  "administrator_build": "40.6.424",
+  "build_label": "Build 40.6.424 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -22,7 +22,7 @@
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
-  "new_recurring_timer": false,
+  "new_recurring_timer": true,
   "new_observer": false,
   "new_storage_owner": false,
   "new_business_network_request": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 puis confirmer Build 40.6.423. Observer une boucle complète: VEILLE 1/12 → 12/12, dernière News lisible jusqu’au pulse de fin, chevauchement SYSTEM, puis menu/date/heure sans ligne vierge. Tester un changement d’onglet vers 4/12 puis retour: même point repris. Diagnostic attendu: rendered/visible/reading_complete distincts, 12 reading-complete uniques, duplicates mesurés sans pré-déduplication, complete=true seulement après le 12e créneau.",
+  "terrain_pending": "Firefox: Ctrl+F5 puis confirmer Build 40.6.424. Après News readiness, vérifier INFO 15 s → 12 News de 18 s → SYSTEM 9 s → INFO, sans passage automatique par le menu natif et sans ligne vide. Changer d’onglet vers 4/12 puis revenir: même News / même temps restant. Tester clic ♥ VEILLE: menu natif manuel, puis clic Aether ATTENTION: reprise exacte du flux.",
   "terrain_proof": null,
-  "release_notes": "40.6.423 finishes the Aether reader truth pass. It fixes the hidden-tab pause specificity so native menu and Aether animations pause together, adds overlapping phase handoffs to remove the empty command-bar seam around INFO/VEILLE/SYSTEM/MENU, and replaces optimistic batch counters with separate rendered, visible and reading-complete logs. Duplicates are measured from real visible slot starts and completion is granted only after every frozen story identity has completed a visible reading slot. No new timer, observer, fetch owner, storage owner or trading path.",
+  "release_notes": "40.6.424 replaces the five-clock Aether ribbon cadence with one JavaScript phase owner. CSS no longer owns phase time; it only renders the atomic #livecheck[data-aether-phase] state. Automatic native-menu time is removed from the loop: after News readiness the cycle is INFO 15 s → 12 News × 18 s → SYSTEM 9 s → INFO. The native menu remains available manually through the existing VEILLE escape, now delegated to the same phase owner without inline visibility writes or animation restarts. One self-rescheduling timeout is intentionally added as the sole phase deadline owner; no interval, observer, fetch owner, storage owner or trading path is added.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5006,9 +5006,9 @@
     "terrain_observation": "Selected positive ETF story rendered FLUX MIXTES / INDÉTERMINÉ rather than false FLUX SORTANTS; all seven Role Quality components displayed values; consultation readiness reported READY and Aether ready."
   },
   "next_news_roadmap": {
-    "40.6.424": "storyline clustering/diversity — consolidate repeated narratives before operator priority",
-    "40.6.425": "criticality vs operator relevance calibration",
-    "40.6.426": "language/operator-lane polish only after Aether and semantic terrain are stable"
+    "40.6.425": "storyline clustering/diversity — consolidate repeated narratives before operator priority",
+    "40.6.426": "criticality vs operator relevance calibration",
+    "40.6.427": "language/operator-lane polish after Aether single-owner terrain is stable"
   },
   "news_taxonomy_truth_406421": {
     "repair_in": "40.6.421",
@@ -5127,5 +5127,59 @@
   },
   "known_open_issues": [
     "40.6.420 mixed-flow source-count truth: two detected flow directions can still overstate independent-source count; tracked separately, not modified in 40.6.423."
-  ]
+  ],
+  "aether_single_phase_owner_406424": {
+    "repair_in": "40.6.424",
+    "parent": "40.6.423",
+    "owners": [
+      "public/agent_crypto_erith_ia/administrator/js/aether.js",
+      "public/agent_crypto_erith_ia/administrator/admin-ribbons.css",
+      "public/agent_crypto_erith_ia/administrator/js/aether-operator-bridge.js"
+    ],
+    "terrain_evidence": [
+      "40.6.423 shows multiple distinct News but still exposes a physically empty command-bar row between Aether phases",
+      "a second empty row is observed before the automatic native menu returns and interrupts the information flow",
+      "code audit confirms independent CSS clocks for native menu, Aether band, INFO, VEILLE, SYSTEM and an 18 s feed pulse",
+      "legacy aether-operator-bridge.js still had direct inline visibility writes and a forced layout restart capable of resetting CSS phase clocks"
+    ],
+    "root_causes": [
+      "multiple independent CSS animation clocks owned one visual lane",
+      "the command-bar container kept physical height even when all phase children were invisible",
+      "the automatic 30 s native-menu phase intentionally interrupted the information stream",
+      "legacy operator bridge could restart CSS animations outside the canonical cadence"
+    ],
+    "repairs": [
+      "one JavaScript state machine owns INFO, VEILLE slots and SYSTEM",
+      "CSS phase keyframes are retired; CSS reacts only to one data-aether-phase state",
+      "automatic native-menu phase removed after Aether exposure",
+      "native menu remains manual-only and pauses/resumes the exact phase deadline",
+      "News exposure requires 12 qualified operator events before automatic Aether starts",
+      "hidden tabs pause the single deadline and preserve remaining time",
+      "legacy operator bridge delegates hold/resume and no longer writes phase visibility or forces layout"
+    ],
+    "automatic_cycle": {
+      "info_seconds": 15,
+      "news_count": 12,
+      "news_slot_seconds": 18,
+      "system_seconds": 9,
+      "native_menu_seconds": 0,
+      "total_seconds": 240
+    },
+    "phase_scheduler": "single self-rescheduling setTimeout",
+    "pending_phase_timeouts_max": 1,
+    "new_recurring_timer": true,
+    "new_interval": false,
+    "new_observer": false,
+    "fetch_owner_count_changed": false,
+    "storage_owner_changed": false,
+    "news_collector_changed": false,
+    "taxonomy_changed": false,
+    "market_core_modified": false,
+    "oracle_modified": false,
+    "atlas_current_modified": false,
+    "strategy_modified": false,
+    "real_order": false,
+    "paper_only": true,
+    "terrain_required": true
+  }
 }

@@ -1,0 +1,90 @@
+name: Agent-Crypto Package 40.6.424
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406424.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate Aether single phase owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/js/aether.js
+          node --check public/agent_crypto_erith_ia/administrator/js/aether-operator-bridge.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          js=Path("public/agent_crypto_erith_ia/administrator/js/aether.js").read_text(encoding="utf-8")
+          bridge=Path("public/agent_crypto_erith_ia/administrator/js/aether-operator-bridge.js").read_text(encoding="utf-8")
+          css=Path("public/agent_crypto_erith_ia/administrator/admin-ribbons.css").read_text(encoding="utf-8")
+          index=Path("public/agent_crypto_erith_ia/administrator/index.html").read_text(encoding="utf-8")
+          build=json.loads(Path("public/agent_crypto_erith_ia/administrator/build.json").read_text(encoding="utf-8"))
+          checks={
+              "build": build.get("build")=="40.6.424",
+              "release": build.get("release")=="AETHER SINGLE PHASE OWNER",
+              "market_core_protected": build.get("market_core_modified") is False,
+              "min12": "const AETHER_NEWS_SET_MIN_EVENTS=12;" in js,
+              "single_owner": "function aetherPhaseEnterVeille" in js and "aetherPhaseState.timer=window.setTimeout" in js,
+              "no_animationiteration_listener": 'addEventListener("animationiteration"' not in js,
+              "no_phase_css_keyframes": all(k not in css for k in ["@keyframes atlasStatusNativePhase","@keyframes atlasAetherVeillePhase","@keyframes atlasAetherSystemPhase"]),
+              "css_data_phase": all(k in css for k in ['data-aether-phase="native"','data-aether-phase="veille"','data-aether-phase="system"']),
+              "manual_menu_only": "automatic_native_menu:false" in js,
+              "bridge_delegates": "phase_hold_native" in bridge and "phase_resume_automatic" in bridge,
+              "bridge_no_restart": "offsetWidth" not in bridge,
+              "no_interval": "setInterval(" not in js,
+              "no_observer": "MutationObserver" not in js,
+              "index": "Build 40.6.424" in index and "aether-operator-bridge.js?v=40.6.424" in index,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"Aether 40.6.424 validation failed: {bad}")
+          print("AETHER SINGLE PHASE OWNER 40.6.424 STATIC PASS")
+          PY
+
+      - name: Build clean ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_AETHER_SINGLE_PHASE_OWNER_40.6.424.zip"
+          rm -f "$ZIP"
+          rm -rf /tmp/agent-crypto-406424
+          mkdir -p /tmp/agent-crypto-406424/administrator/js /tmp/agent-crypto-406424/coordination
+          cp public/agent_crypto_erith_ia/administrator/index.html /tmp/agent-crypto-406424/administrator/
+          cp public/agent_crypto_erith_ia/administrator/index-40.6.424.html /tmp/agent-crypto-406424/administrator/
+          cp public/agent_crypto_erith_ia/administrator/build.json /tmp/agent-crypto-406424/administrator/
+          cp public/agent_crypto_erith_ia/administrator/RELEASE.md /tmp/agent-crypto-406424/administrator/
+          cp public/agent_crypto_erith_ia/administrator/HANDOFF.md /tmp/agent-crypto-406424/administrator/
+          cp public/agent_crypto_erith_ia/administrator/admin-ribbons.css /tmp/agent-crypto-406424/administrator/
+          cp public/agent_crypto_erith_ia/administrator/js/aether.js /tmp/agent-crypto-406424/administrator/js/
+          cp public/agent_crypto_erith_ia/administrator/js/aether-operator-bridge.js /tmp/agent-crypto-406424/administrator/js/
+          cp coordination/inter_ai_dialogues/agent_crypto/HANDOFF_40.6.424_AETHER_SINGLE_PHASE_OWNER.md /tmp/agent-crypto-406424/coordination/
+          cp coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_SEVEN_AGENT_CRYPTO_40.6.424.md /tmp/agent-crypto-406424/coordination/
+          cp coordination/inter_ai_dialogues/agent_crypto/PACKAGE_MANIFEST_40.6.424.txt /tmp/agent-crypto-406424/PATCH_MANIFEST.txt
+          (cd /tmp/agent-crypto-406424 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          unzip -l "$ZIP"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_AETHER_SINGLE_PHASE_OWNER_40.6.424.zip"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ZIP"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add clean Agent-Crypto 40.6.424 ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

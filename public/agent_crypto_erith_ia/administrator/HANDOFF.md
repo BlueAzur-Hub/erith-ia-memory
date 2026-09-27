@@ -1,37 +1,34 @@
 # Agent-Crypto — Handoff Seven
 
-Build **40.6.423 — AETHER PHASE / VISIBILITY TRUTH**  
-Parent **40.6.422** · Market Core **38.15.11**.
+Build **40.6.424 — AETHER SINGLE PHASE OWNER**  
+Parent **40.6.423** · Market Core **38.15.11**.
 
 ## Preuve terrain
-40.6.422 améliore nettement la diversité News, mais une ligne command-bar vide a été capturée entre Aether SYSTÈME et le retour menu/date-heure.
+40.6.423 : plusieurs News distinctes, mais ligne vide encore visible entre les phases et avant le retour menu.
 
-## Audit Astra + Seven
-- pause native/Aether non réellement commune à cause de la spécificité CSS ;
-- frontières de phases sans chevauchement ;
-- compteurs .422 trop optimistes.
+## Root cause
+Le bandeau avait encore plusieurs horloges CSS indépendantes + un ancien operator bridge capable de redémarrer les animations.
 
-## 40.6.423
-Owners :
-- `administrator/js/aether.js`
-- `administrator/admin-ribbons.css`
+## 40.6.424
+- phase time owner unique : `aether.js` ;
+- CSS phase keyframes retirées ;
+- cycle automatique : INFO 15 s → 12×18 s News → SYSTEM 9 s → INFO ;
+- **plus de menu natif automatique** ;
+- menu natif manuel seulement ;
+- pause onglet + pause menu conservent le temps restant ;
+- bridge .424 ne touche plus directement animation/opacité/visibilité et ne force plus de layout restart ;
+- exposition Aether exige 12 News qualifiées.
 
-Réparations :
-- pause CSS avec IDs explicites ;
-- overlap menu/Aether + INFO/VEILLE + VEILLE/SYSTEM + wrap SYSTEM/menu ;
-- logs séparés rendered / visible / reading-complete ;
-- doublons mesurés sur les passages visibles bruts ;
-- complete seulement après 12 créneaux réellement terminés.
+## Nouveau timer
+Un seul `setTimeout` auto-réarmé est introduit comme propriétaire de phase. Maximum : 1 pending. Aucun interval/observer/fetch/storage/order ajouté.
 
-## Test Firefox
-**1/12 → … → 12/12 → SYSTEM → menu/date-heure**, sans ligne vide.
-Faire un aller-retour vers un autre onglet vers 4/12.
+## Test
+Firefox : **INFO → 1/12 → … → 12/12 → SYSTEM → INFO**, zéro ligne vide.
+Changer d'onglet vers 4/12.
+Tester menu manuel via ♥ VEILLE puis reprise via Aether ATTENTION.
 
 ## Protégé
-Market Core 38.15.11 · News collector/Taxonomy .421 · Oracle · LT · Atlas CURRENT · Strategy/TRADUS · Storage.
-
-## Ticket séparé
-Le source-count des flux mixtes .420 reste à corriger séparément.
+Market Core · News collector/Taxonomy · Oracle · LT · Atlas CURRENT · Strategy/TRADUS · Storage.
 
 ## Suite
-Si PASS : **40.6.424 Storyline Clustering / Diversity**.
+Si PASS : **40.6.425 Storyline Clustering / Diversity**.
