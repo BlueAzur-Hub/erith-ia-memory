@@ -1,9 +1,10 @@
-/* Agent-Crypto @erith.IA — 40.6.430 STRATEGY A COST-WAIT OUTCOME AUDIT
+/* Agent-Crypto @erith.IA — 40.6.439 STRATEGY A COST-WAIT OUTCOME AUDIT · PROGRESSIVE RECOVERY
    Read-only. Existing Auto A cycle rows only. No threshold, Oracle, Risk, Paper,
    Market Core, network, polling timer, MutationObserver or storage change. */
 (() => {
   "use strict";
-  const BUILD="40.6.430", ROOT="strategyACostWaitOutcomeAudit406429";
+  const BUILD="40.6.439", ROOT="strategyACostWaitOutcomeAudit406429";
+  const presentationOpen=()=>{const node=document.getElementById("simulation");return !(node instanceof HTMLDetailsElement)||node.open===true;};
   const EVENT="agent-crypto:strategy-a-experiment-cycle", H=[5,15,60];
   const TOL=150000, MIN60=6;
   let last=null, queued=false, reason="boot";
@@ -102,10 +103,11 @@
     document.head.appendChild(s);
   }
   function exportJson(data){
-    try{const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="STRATEGY_A_COST_WAIT_OUTCOME_AUDIT_40_6_430.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;}catch(_){return false;}
+    try{const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="STRATEGY_A_COST_WAIT_OUTCOME_AUDIT_40_6_439.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;}catch(_){return false;}
   }
   function render(){
     if(typeof document==="undefined")return snapshot();
+    if(!presentationOpen())return last;
     const s=snapshot(),a=document.getElementById("strategyADurableEvidence")||document.getElementById("strategyAExperimentLedger")||document.querySelector("#strategyAVisualConsole .avc-body");
     if(!a)return s;style();let root=document.getElementById(ROOT);if(!root){root=document.createElement("section");root.id=ROOT;}
     if(root.previousElementSibling!==a){try{a.insertAdjacentElement("afterend",root);}catch(_){}}
@@ -113,7 +115,7 @@
     root.innerHTML='<div class="cwo-h"><div><div class="cwo-t">STRATEGY A · COST-WAIT OUTCOME AUDIT · '+BUILD+'</div><div class="cwo-s">Lecture seule · vrais cycles Auto A · T+5/T+15/T+60 échantillonnés par les cycles suivants · aucun seuil modifié.</div></div><button type="button" class="btn small" id="'+ROOT+'Export">EXPORTER</button></div>'+
       '<div class="cwo-g"><div class="cwo-k"><span>Cost Wait</span><b>'+c.total_cost_wait+'</b></div><div class="cwo-k"><span>T+60 résolus</span><b>'+c.resolved_t60+'</b></div><div class="cwo-k"><span>Refus protecteurs</span><b>'+c.protective+'</b></div><div class="cwo-k"><span>Couvre coûts</span><b>'+c.covers_costs_without_margin+'</b></div><div class="cwo-k"><span>Seuil dépassé après refus</span><b>'+c.threshold_exceeded_after_refusal+'</b></div><div class="cwo-k"><span>Inconnus</span><b>'+c.unknown+'</b></div></div>'+
       '<div class="cwo-stat">MFE médiane : <b>'+esc(pct(st.mfe_median_pct))+'</b> · P75 : <b>'+esc(pct(st.mfe_p75_pct))+'</b> · P90 : <b>'+esc(pct(st.mfe_p90_pct))+'</b> · expected_move médian : <b>'+esc(pct(st.expected_move_median_pct))+'</b> · MFE − expected médian : <b>'+esc(pct(st.sampled_mfe_minus_expected_median_pct))+'</b>.<br>Pic favorable observé sur les cycles Auto A, pas un P/L exécuté. Données manquantes = INCONNU.</div>';
-    root.querySelector("#"+ROOT+"Export")?.addEventListener("click",()=>exportJson(s),{once:true});root.dataset.auditBuild=BUILD;root.dataset.readOnly="true";return s;
+    root.querySelector("#"+ROOT+"Export")?.addEventListener("click",()=>exportJson(s));root.dataset.auditBuild=BUILD;root.dataset.readOnly="true";return s;
   }
   function schedule(r="event"){reason=String(r||"event");if(queued)return;queued=true;const run=()=>{queued=false;try{render();}catch(_){}};try{queueMicrotask(run);}catch(_){setTimeout(run,0);}}
   function selfTest(){
