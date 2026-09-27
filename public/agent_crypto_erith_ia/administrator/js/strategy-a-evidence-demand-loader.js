@@ -1,16 +1,17 @@
-/* Agent-Crypto Administrator — 40.6.284 BOOK CONSULTATION FIRST / G3 REFUSAL TRUTH
+/* Agent-Crypto Administrator — 40.6.407 EXPLICIT STRATEGY DIAGNOSTIC / EVIDENCE DEMAND
    Canonical Strategy A evidence stays immediately available on explicit operator demand.
-   Automatic background residency now waits for post-boot completion, so Strategy evidence
-   never competes with Menu/Chronos/Graph/Technical/Top5/Flow/Market/Math or Aether startup.
+   Evidence never loads in background. It loads only from the explicit operator control or explicit API demand.
    A failed/missing module keeps the loader PARTIAL and remains retryable.
    No recurring timer, observer, business network request or order path. */
 (() => {
   "use strict";
   if (globalThis.AgentCryptoCanonicalEvidenceWiring?.owner === "strategy-a-evidence-demand-loader.js") return;
 
-  const BUILD = "40.6.284";
-  const SOURCE = "40.6.284-postboot-idle";
+  const BUILD = "40.6.407";
+  const SOURCE = "40.6.407-explicit-diagnostic-evidence-demand";
   const MODULES = Object.freeze([
+    "./js/strategy-a-replay.js",
+    "./js/strategy-a-replay-acceptance.js?v=40.6.405",
     "./js/strategy-a-evidence-lifecycle-truth.js",
     "./js/strategy-a-foundation-applicability-truth.js",
     "./js/strategy-a-foundation-delegated-certification-406221.js",
@@ -62,6 +63,8 @@
   ]);
 
   const READY_CHECKS = Object.freeze({
+    "./js/strategy-a-replay.js": () => !!globalThis.AgentCryptoStrategyAReplay,
+    "./js/strategy-a-replay-acceptance.js?v=40.6.405": () => !!globalThis.AgentCryptoStrategyAReplayAcceptance,
     "./js/strategy-a-evidence-lifecycle-truth.js": () => !!globalThis.AgentCryptoEvidenceLifecycleTruth,
     "./js/strategy-a-foundation-applicability-truth.js": () => globalThis.AgentCryptoStrategyASafetyCertification?.foundation_applicability_truth_406191 === true,
     "./js/strategy-a-foundation-delegated-certification-406221.js": () => !!globalThis.AgentCryptoStrategyAFoundationDelegatedCertification,
@@ -120,7 +123,7 @@
     failures.set(src, String(error?.message || error || "MODULE_NOT_READY"));
     states.set(src, "failed");
   }
-  function yieldBrowser(timeout=4000) {
+  function yieldBrowser(timeout=220) {
     return new Promise(resolve => {
       if (typeof requestIdleCallback === "function") requestIdleCallback(() => resolve(), {timeout});
       else setTimeout(resolve, 48);
@@ -252,34 +255,20 @@
 
     try { return await loading; } finally { loading=null; }
   }
-  function strategyIntent(target) {
-    if (!(target instanceof Element)) return false;
-    if (target.closest('[id^="strategyA"],[id*="StrategyA"],[data-collapse-key*="strategy"],[data-collapse-key*="Strategy"]')) return true;
-    const anchor=target.closest('a[href*="strategyA"],a[href*="StrategyA"]');
-    return !!anchor;
+  function evidenceIntent(target) {
+    if (!(target instanceof Element)) return null;
+    return target.closest('[data-strategy-evidence-demand="true"]');
   }
-  let backgroundScheduled=false;
-  function requestBackground(reason="idle-after-postboot") {
-    if(backgroundScheduled)return;
-    backgroundScheduled=true;
-    const run=()=>{void load(reason);};
-    if (typeof requestIdleCallback === "function") requestIdleCallback(run,{timeout:30000});
-    else setTimeout(run,2500);
-  }
-  function postBootDone(){
-    try{return globalThis.AgentCryptoPostBootRuntime?.snapshot?.()?.done===true;}
-    catch(_){return false;}
-  }
-
-  document.addEventListener("click",event=>{if(strategyIntent(event.target))void load("operator-strategy-demand");},true);
-  if (String(location.hash||"").toLowerCase().includes("strategya")) void load("strategy-hash-demand");
-  if(postBootDone())requestBackground("idle-after-postboot-already");
-  else window.addEventListener("agent-crypto:postboot-runtime-ready",()=>requestBackground("idle-after-postboot"),{once:true,passive:true});
-
+  document.addEventListener("click",event=>{
+    const trigger=evidenceIntent(event.target);
+    if(!trigger)return;
+    const reason=String(trigger.getAttribute("data-strategy-evidence-reason")||"operator-explicit-evidence-demand");
+    void load(reason);
+  },true);
   globalThis.AgentCryptoCanonicalEvidenceWiring=Object.freeze({
     build:BUILD,
     owner:"strategy-a-evidence-demand-loader.js",
-    mode:"DEMAND_OR_POSTBOOT_IDLE_RETRYABLE",
+    mode:"EXPLICIT_EVIDENCE_DEMAND_ONLY",
     modules:MODULES,
     presentation_modules:PRESENTATION,
     panels:PANEL_IDS,
@@ -289,13 +278,13 @@
     snapshot:()=>{
       reconcileState();
       return Object.freeze({
-        build:BUILD,owner:"strategy-a-evidence-demand-loader.js",mode:"DEMAND_OR_POSTBOOT_IDLE_RETRYABLE",
+        build:BUILD,owner:"strategy-a-evidence-demand-loader.js",mode:"EXPLICIT_EVIDENCE_DEMAND_ONLY",
         loaded:loaded.size,total:ALL.length,complete,reason_last:reasonLast,
         missing:Object.freeze(ALL.filter(src=>!moduleReady(src))),
         failed:Object.freeze(Array.from(failures.keys())),
         states:Object.freeze(Object.fromEntries(states)),
         direct_parser_injection:false,idle_paced:true,recurring_timer:false,observer:false,
-        business_network_request:false,background_after_postboot:true,real_order:false,paper_only:true,
+        business_network_request:false,background_after_postboot:false,explicit_demand_only:true,ordinary_surface_click_demand:false,hash_demand:false,explicit_control_selector:'[data-strategy-evidence-demand="true"]',real_order:false,paper_only:true,
         g3:"PENDING",g9:"LOCKED"
       });
     }

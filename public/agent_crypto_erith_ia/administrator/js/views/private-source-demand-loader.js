@@ -14,10 +14,18 @@
    40.6.242 hardening: removes eager source-reader boot and settles loader ready state only
    after Source Truth -> DEX freshness -> downstream source readers are ordered.
    Source Truth stays in its canonical Backend / API host.
+   40.6.440 restores deterministic Backend/API demand: replay when Backend is already open,
+   bounded source-owner loading, and real retry after a failed/stale script node.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, loader storage write, wallet or trading endpoint is introduced. */
 (()=>{
   "use strict";
+  const __PROBE_406411_SRC="private-source-demand-loader.js";
+  const __PROBE_406411_BUILD=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");
+  const __PROBE_406411_ON=["40.6.411","40.6.412"].includes(__PROBE_406411_BUILD);
+  const __PROBE_406411_T0=__PROBE_406411_ON?performance.now():0;
+  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-enter",{src:__PROBE_406411_SRC,build:__PROBE_406411_BUILD});}catch(_){}}
+
   const INSTANCE_KEY="__ERITH_PRIVATE_SOURCE_DEMAND_STABLE_BOUND__";
   if(globalThis[INSTANCE_KEY])return;
   globalThis[INSTANCE_KEY]=true;
@@ -26,7 +34,8 @@
   const BUILD=String(globalThis.ErithVersionTruth?.build||pathBuild()||metaBuild()||"runtime").trim();
   const runtimeBuild=()=>String(globalThis.ErithVersionTruth?.build||pathBuild()||new URLSearchParams(location.search||"").get("ac-build")||metaBuild()||BUILD||"runtime").trim();
   const SRC=`./js/views/private-backend-sources.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
-  let state="idle",promise=null,reason="",loadedAt=0,lastError="";
+  const SOURCE_LOAD_TIMEOUT_MS=7000, DOWNSTREAM_TIMEOUT_MS=4500;
+  let state="idle",promise=null,reason="",loadedAt=0,lastError="",attempts=0;
 
   const parts=value=>String(value||"").split(".").map(x=>Number.parseInt(x,10)||0);
   const atLeast=target=>{const A=parts(runtimeBuild()),B=parts(target),n=Math.max(A.length,B.length);for(let i=0;i<n;i+=1){const d=(A[i]||0)-(B[i]||0);if(d)return d>0;}return true;};
@@ -163,26 +172,82 @@
     ensureStrategyTradusOutcomeMemory();
   }
 
+  const sourceScript=()=>document.querySelector('script[data-private-source-demand-stable="true"],script[data-private-source-demand="true"]');
+  const discardSourceScript=node=>{if(!node)return;try{node.dataset.loaded="0";node.remove();}catch(_){}};
+  const downstreamBounded=async()=>{
+    let timer=0;
+    try{
+      const timeout=new Promise(resolve=>{timer=setTimeout(()=>resolve("timeout"),DOWNSTREAM_TIMEOUT_MS);});
+      const result=await Promise.race([Promise.resolve(afterSourceOwners()).then(()=>"ready").catch(()=>"error"),timeout]);
+      return result;
+    }finally{if(timer)clearTimeout(timer);}
+  };
+  const sourceOwnerReady=async(node,why)=>{
+    if(node)node.dataset.loaded="1";
+    const owner=globalThis.ErithPrivateBackendSources;
+    if(!owner||typeof owner.mount!=="function"){
+      state="error";lastError="source-owner-missing-after-load";
+      discardSourceScript(node);
+      return false;
+    }
+    try{owner.mount();}catch(_){}
+    const downstream=await downstreamBounded();
+    settleReady();
+    if(downstream!=="ready")lastError="downstream-"+downstream;
+    try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:runtimeBuild(),reason:String(why||reason),downstream}}));}catch(_){}
+    return true;
+  };
+
   function ensure(why="operator"){
     reason=String(why||"operator");
-    if(state==="ready"||globalThis.ErithPrivateBackendSources||globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_40459__){return Promise.resolve(afterSourceOwners()).then(()=>{settleReady();return true;});}
+    if(globalThis.ErithPrivateBackendSources){
+      try{globalThis.ErithPrivateBackendSources.mount?.();}catch(_){}
+      return sourceOwnerReady(sourceScript(),reason);
+    }
     if(promise)return promise;
-    state="loading";
+
+    let existing=sourceScript();
+    if(existing && (
+      state==="error" ||
+      existing.dataset.loaded==="0" ||
+      existing.dataset.loaded==="false" ||
+      existing.dataset.loaded==="true"
+    )){
+      discardSourceScript(existing);
+      existing=null;
+    }
+
+    state="loading";lastError="";attempts+=1;
     promise=new Promise(resolve=>{
-      const existing=document.querySelector('script[data-private-source-demand-stable="true"],script[data-private-source-demand="true"]');
-      if(existing){
-        if(globalThis.ErithPrivateBackendSources||existing.dataset.loaded==="true"){void (async()=>{await afterSourceOwners();resolve(settleReady());})();return;}
-        existing.addEventListener("load",async()=>{existing.dataset.loaded="true";await afterSourceOwners();resolve(settleReady());},{once:true});
-        existing.addEventListener("error",()=>{state="error";lastError="load-error";resolve(false);},{once:true});
+      let node=existing,settled=false,timer=0;
+      const finish=async(ok,code)=>{
+        if(settled)return;
+        settled=true;
+        if(timer)clearTimeout(timer);
+        if(!ok){
+          state="error";lastError=String(code||"source-load-failed");
+          discardSourceScript(node);
+          resolve(false);
+          return;
+        }
+        resolve(await sourceOwnerReady(node,reason));
+      };
+      timer=setTimeout(()=>void finish(false,"source-load-timeout"),SOURCE_LOAD_TIMEOUT_MS);
+
+      if(node){
+        node.addEventListener("load",()=>void finish(true,"existing-load"),{once:true});
+        node.addEventListener("error",()=>void finish(false,"existing-load-error"),{once:true});
         return;
       }
-      const script=document.createElement("script");
-      script.src=SRC;
-      script.async=true;
-      script.dataset.privateSourceDemandStable="true";
-      script.addEventListener("load",async()=>{script.dataset.loaded="true";await afterSourceOwners();settleReady();try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:runtimeBuild(),reason}}));}catch(_){}resolve(true);},{once:true});
-      script.addEventListener("error",()=>{state="error";lastError="script-load-error";resolve(false);},{once:true});
-      document.head.appendChild(script);
+
+      node=document.createElement("script");
+      node.src=SRC;
+      node.async=true;
+      node.dataset.privateSourceDemandStable="true";
+      node.dataset.loaded="pending";
+      node.addEventListener("load",()=>void finish(true,"script-load"),{once:true});
+      node.addEventListener("error",()=>void finish(false,"script-load-error"),{once:true});
+      document.head.appendChild(node);
     }).finally(()=>{promise=null;});
     return promise;
   }
@@ -200,6 +265,9 @@
   const backend=document.querySelector('details[data-collapse-key="backend"]');
   backend?.addEventListener("toggle",()=>{if(backend.open)void ensure("backend-open");});
   window.addEventListener("erith:system-hydrated",event=>{if(String(event?.detail?.key||"")==="backend"&&document.querySelector('details[data-collapse-key="backend"]')?.open)void ensure("backend-hydrated");},{passive:true});
+  // 40.6.440 — replay demand if the Backend was opened before this loader arrived.
+  if(backend?.open)queueMicrotask(()=>void ensure("backend-already-open"));
+  window.addEventListener("pageshow",()=>{const node=document.querySelector('details[data-collapse-key="backend"]');if(node?.open&&!globalThis.ErithPrivateBackendSources)void ensure("backend-pageshow-recovery");},{passive:true});
 
   const hash=String(location.hash||"");
   if(["#sources","#backend","#privateBackendV1","#privateSourceIntelligence"].includes(hash))void ensure("direct-hash");
@@ -226,7 +294,7 @@
     ensureAtlasDecisionContext,
     ensureStrategyTradusComparative,
     ensureStrategyTradusOutcomeMemory,
-    snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,parser_boot_loaded:false,source:SRC,source_truth_host:"backend",active_build:runtimeBuild()}),
+    snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,attempts,source_load_timeout_ms:SOURCE_LOAD_TIMEOUT_MS,downstream_timeout_ms:DOWNSTREAM_TIMEOUT_MS,parser_boot_loaded:false,source:SRC,source_truth_host:"backend",active_build:runtimeBuild()}),
     stable_owner:true,
     source_truth_backend_placement_restored:true,
     sources_reparenting:false,
@@ -248,4 +316,6 @@
   });
   globalThis.ErithPrivateSourceDemand=API;
   globalThis.ErithPrivateSourceDemand40486=API;
+
+  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-exit",{src:__PROBE_406411_SRC,build:__PROBE_406411_BUILD,eval_ms:Number((performance.now()-__PROBE_406411_T0).toFixed(3))});}catch(_){}}
 })();

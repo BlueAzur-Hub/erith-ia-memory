@@ -1,3 +1,5 @@
+/* 40.6.413 · diagnostic-only eval boundary */
+(()=>{try{const b=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");if(b==="40.6.413")globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-enter",{src:"analysis-aux-demand-loader.js",build:"40.6.413"});}catch(_){}})();
 /* Agent-Crypto @erith.IA — 40.4.87
    READ-ONLY AUXILIARY READER TRUE-DEMAND LOADER / PHASE-2 SEAL
    Retrospective Validation and Memory Health are unchanged read-only owners.
@@ -68,3 +70,5 @@
     new_storage_owner:false
   });
 })();
+/* 40.6.413 · diagnostic-only eval boundary */
+(()=>{try{const b=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");if(b==="40.6.413")globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-exit",{src:"analysis-aux-demand-loader.js",build:"40.6.413"});}catch(_){}})();

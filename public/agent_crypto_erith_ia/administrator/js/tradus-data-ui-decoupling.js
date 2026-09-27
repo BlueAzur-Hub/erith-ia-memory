@@ -110,9 +110,6 @@
       try { snapshot = obs.read(); } catch (_) {}
     }
 
-    // Visual panel mounting is best-effort and deliberately secondary.
-    try { obs?.mount?.(); } catch (_) {}
-
     const state = classify(snapshot);
     lastActivation = Object.freeze({
       at:new Date().toISOString(), source, state,
@@ -127,12 +124,12 @@
   }
 
   function afterExplicitOpen() {
-    // Existing 40.6.69 R1 uses two requestAnimationFrame hops for its explicit
-    // Workbench/Aether bind. One extra one-shot frame lets semantic fallback paint
-    // after the canonical bridge without any recurring timer or observer.
+    // 40.6.405 — le panneau devient présent uniquement sur ouverture explicite,
+    // tandis que la vérité TRADUS continue d’être calculée headless.
     requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(() => {
       const obs = observability();
       let snapshot = null;
+      try { obs?.mount?.(); } catch (_) {}
       try { snapshot = obs?.read?.() || null; } catch (_) {}
       applySemanticState(snapshot);
     })));
@@ -205,10 +202,7 @@
       afterExplicitOpen();
     }, { capture:true });
 
-    const boot = () => publishTruth("boot");
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once:true });
-    else boot();
+    // 40.6.405 — aucun bootstrap UI : le premier événement TRADUS est le propriétaire d’activation.
 
-    window.addEventListener("pageshow", () => publishTruth("pageshow"));
   }
 })();

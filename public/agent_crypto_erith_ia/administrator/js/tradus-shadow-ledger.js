@@ -200,19 +200,14 @@
 
   function onObservation(event) {
     capture(event?.detail,"tradus_event");
-    if(!mounted)mount();
   }
 
-  const api=Object.freeze({build:BUILD,event:EVENT_NAME,max_rows:MAX_ROWS,capture,read:()=>clone(rows),summary,export_ledger:exportLedger,mount,storage:()=>storageMode,paper_only:true,shadow_only:true,real_orders:false,recurring_timer:false,network_owner:false});
+  const api=Object.freeze({build:BUILD,event:EVENT_NAME,max_rows:MAX_ROWS,capture,read:()=>clone(rows),summary,export_ledger:exportLedger,mount,storage:()=>storageMode,paper_only:true,shadow_only:true,real_orders:false,recurring_timer:false,network_owner:false,headless_auto:true,presentation_auto_mount:false});
   globalThis.AgentCryptoTradusShadowLedger=api;
   load();
 
+  // 40.6.405 — headless automatique : le ledger écoute les observations sans monter son panneau.
   if(typeof document!=="undefined"){
     document.addEventListener(EVENT_NAME,onObservation);
-    const boot=()=>{mount();};
-    if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true}); else boot();
-    window.addEventListener("load",boot,{once:true});
-    window.addEventListener("pageshow",boot);
-    document.addEventListener("click",()=>{if(!mounted)mount();},{capture:true});
   }
 })();

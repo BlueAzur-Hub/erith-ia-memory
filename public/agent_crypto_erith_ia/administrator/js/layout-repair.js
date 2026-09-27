@@ -1,3 +1,5 @@
+/* 40.6.413 · diagnostic-only eval boundary */
+(()=>{try{const b=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");if(b==="40.6.413")globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-enter",{src:"layout-repair.js",build:"40.6.413"});}catch(_){}})();
 (() => {
   "use strict";
 
@@ -630,3 +632,5 @@
   queueMicrotask(() => { try { install(); } catch (_) {} });
   window.addEventListener("load", () => { try { install(); } catch (_) {} }, { once: true });
 })();
+/* 40.6.413 · diagnostic-only eval boundary */
+(()=>{try{const b=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");if(b==="40.6.413")globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-exit",{src:"layout-repair.js",build:"40.6.413"});}catch(_){}})();
