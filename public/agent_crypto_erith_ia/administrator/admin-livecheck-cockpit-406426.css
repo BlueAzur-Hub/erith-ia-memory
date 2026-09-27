@@ -1,0 +1,74 @@
+/* Agent-Crypto @erith.IA — 40.6.426
+   LIVECHECK COCKPIT / F11 VIEWPORT FIT
+   Geometry only. The operator contract is:
+   Livecheck at the top, Graph + Technical Reading in the middle,
+   Target Top 5 as the final visible strip, Market Flow naturally below the fold.
+   Market Flow itself is not hidden, moved, resized or modified. */
+
+@media (min-width: 1101px) {
+  html[data-atlas-livecheck-cockpit="1"]:not([data-atlas-market-domain="metals"])
+  body.atlas-administrator-mirror
+  #market-zone.atlas-market-zone {
+    box-sizing: border-box !important;
+    height: var(--atlas-livecheck-cockpit-market-height) !important;
+    min-height: var(--atlas-livecheck-cockpit-market-height) !important;
+    max-height: var(--atlas-livecheck-cockpit-market-height) !important;
+    overflow: hidden !important;
+  }
+
+  html[data-atlas-livecheck-cockpit="1"]:not([data-atlas-market-domain="metals"])
+  body.atlas-administrator-mirror
+  #market-zone.atlas-market-zone
+  > #analyste.champagne-clean-lens,
+  html[data-atlas-livecheck-cockpit="1"]:not([data-atlas-market-domain="metals"])
+  body.atlas-administrator-mirror
+  #market-zone.atlas-market-zone
+  > #analyste.champagne-clean-lens.detail-collapsed,
+  html[data-atlas-livecheck-cockpit="1"]:not([data-atlas-market-domain="metals"])
+  body.atlas-administrator-mirror
+  #market-zone.atlas-market-zone
+  > #analyste.champagne-clean-lens:not(.detail-collapsed) {
+    box-sizing: border-box !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: hidden !important;
+  }
+
+  html[data-atlas-livecheck-cockpit="1"]:not([data-atlas-market-domain="metals"])
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens
+  > .chart-panel {
+    box-sizing: border-box !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  html[data-atlas-livecheck-cockpit="1"]:not([data-atlas-market-domain="metals"])
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens
+  .chart-shell,
+  html[data-atlas-livecheck-cockpit="1"]:not([data-atlas-market-domain="metals"])
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens.detail-collapsed
+  .chart-shell,
+  html[data-atlas-livecheck-cockpit="1"]:not([data-atlas-market-domain="metals"])
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens:not(.detail-collapsed)
+  .chart-shell {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    align-self: stretch !important;
+  }
+
+  html[data-atlas-livecheck-cockpit="1"]:not([data-atlas-market-domain="metals"])
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens:not(.detail-collapsed)
+  .clean-lens-detail-panel {
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+  }
+}
