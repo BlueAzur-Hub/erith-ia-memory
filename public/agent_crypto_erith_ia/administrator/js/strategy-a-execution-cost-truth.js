@@ -1,11 +1,11 @@
-/* Agent-Crypto @erith.IA — 40.6.433 STRATEGY A EXECUTION COST TRUTH
+/* Agent-Crypto @erith.IA — 40.6.434 STRATEGY A EXECUTION COST TRUTH
    Manual public order-book measurement for BTC/EUR on Kraken + OKX Europe.
-   Measures spread, nearby depth, simulated slippage and fee-aware round-trip cost.
+   40.6.434: OKX EEA one-shot WebSocket recovery + public REST fallback + readable panel.
    No order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
 (() => {
   "use strict";
-  const BUILD="40.6.433", ROOT="strategyAExecutionCostTruth";
-  const SIZES=Object.freeze([10,25,50,100]), DEPTH_BPS=Object.freeze([5,10,25]), TIMEOUT=9000;
+  const BUILD="40.6.434", ROOT="strategyAExecutionCostTruth";
+  const SIZES=Object.freeze([10,25,50,100]), DEPTH_BPS=Object.freeze([5,10,25]), TIMEOUT=9000, OKX_WS_TIMEOUT=8000;
   const VENUES=Object.freeze({
     kraken:Object.freeze({
       id:"kraken",name:"Kraken Pro",pair:"BTC/EUR",maker:0.40,taker:0.80,
@@ -17,7 +17,8 @@
       id:"okx",name:"OKX Europe",pair:"BTC/EUR",maker:0.10,taker:0.20,
       fee_note:"EEE Spot-only Regular · effet 25/09/2026 · le taux réel dépend du compte",
       fee_source:"https://www.okx.com/fr-fr/help/important-notice-upcoming-spot-fee-adjustment-eea",
-      endpoint:"https://eea.okx.com/api/v5/market/books?instId=BTC-EUR&sz=100"
+      ws_endpoint:"wss://wseea.okx.com:8443/ws/v5/public",
+      rest_endpoint:"https://www.okx.com/api/v5/market/books?instId=BTC-EUR&sz=100"
     })
   });
   let last=null,busy=false;
@@ -56,6 +57,39 @@
       if(!res.ok)throw new Error("HTTP "+res.status);
       return {json:await res.json(),latency_ms:Math.round(performance.now()-started)};
     }finally{clearTimeout(t);}
+  }
+  function okxBookFromData(data){
+    if(!data)throw new Error("OKX: carnet BTC/EUR absent");
+    return {bids:(data.bids||[]).map(r=>[n(r[0]),n(r[1])]).filter(r=>r[0]>0&&r[1]>0),asks:(data.asks||[]).map(r=>[n(r[0]),n(r[1])]).filter(r=>r[0]>0&&r[1]>0)};
+  }
+  function fetchOkxWsBook(venue){
+    return new Promise((resolve,reject)=>{
+      const started=performance.now();let settled=false,ws=null;
+      const finish=(error,result)=>{
+        if(settled)return;settled=true;clearTimeout(timer);
+        try{if(ws&&ws.readyState<=1)ws.close(1000,"one-shot complete");}catch(_){}
+        if(error)reject(error);else resolve(result);
+      };
+      const timer=setTimeout(()=>finish(new Error("WebSocket EEA : délai dépassé")),OKX_WS_TIMEOUT);
+      try{ws=new WebSocket(venue.ws_endpoint);}catch(error){finish(error);return;}
+      ws.addEventListener("open",()=>{
+        try{ws.send(JSON.stringify({id:"ect434",op:"subscribe",args:[{channel:"books",instId:"BTC-EUR"}]}));}
+        catch(error){finish(error);}
+      },{once:true});
+      ws.addEventListener("message",event=>{
+        let payload=null;try{payload=JSON.parse(String(event.data||""));}catch(_){return;}
+        if(payload?.event==="error"){finish(new Error("WebSocket EEA : "+String(payload?.msg||payload?.code||"erreur")));return;}
+        if(payload?.arg?.channel!=="books"||payload?.arg?.instId!=="BTC-EUR"||!Array.isArray(payload?.data)||!payload.data[0])return;
+        try{finish(null,{book:okxBookFromData(payload.data[0]),latency_ms:Math.round(performance.now()-started),endpoint:venue.ws_endpoint,transport:"WS EEA · ONE-SHOT"});}
+        catch(error){finish(error);}
+      });
+      ws.addEventListener("error",()=>finish(new Error("WebSocket EEA : connexion impossible")),{once:true});
+      ws.addEventListener("close",event=>{if(!settled&&event.code!==1000)finish(new Error("WebSocket EEA : fermeture "+event.code));},{once:true});
+    });
+  }
+  async function fetchOkxPublicRestBook(venue){
+    const r=await fetchJson(venue.rest_endpoint);
+    return {book:parseOkx(r.json),latency_ms:r.latency_ms,endpoint:venue.rest_endpoint,transport:"REST PUBLIC · FALLBACK"};
   }
   function simulateBuy(asks,amount){
     let rem=amount,qty=0,cost=0;
@@ -107,20 +141,36 @@
       post_only_fill_guaranteed:false
     };
   }
-  async function one(venue){
+  async function oneKraken(venue){
     const started=new Date().toISOString();
     try{
-      const r=await fetchJson(venue.endpoint), book=venue.id==="kraken"?parseKraken(r.json):parseOkx(r.json);
-      return Object.freeze({ok:true,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),latency_ms:r.latency_ms,endpoint:venue.endpoint,...metrics(book,venue)});
+      const r=await fetchJson(venue.endpoint),book=parseKraken(r.json);
+      return Object.freeze({ok:true,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),latency_ms:r.latency_ms,endpoint:venue.endpoint,transport:"REST PUBLIC",attempts:Object.freeze([{transport:"REST PUBLIC",ok:true}]),...metrics(book,venue)});
     }catch(e){
-      return Object.freeze({ok:false,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),endpoint:venue.endpoint,error:String(e?.name==="AbortError"?"délai dépassé":e?.message||e)});
+      return Object.freeze({ok:false,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),endpoint:venue.endpoint,error:"Kraken indisponible.",diagnostic:String(e?.name==="AbortError"?"délai dépassé":e?.message||e),attempts:Object.freeze([{transport:"REST PUBLIC",ok:false,error:String(e?.message||e)}])});
+    }
+  }
+  async function oneOkx(venue){
+    const started=new Date().toISOString(),attempts=[];
+    try{
+      const r=await fetchOkxWsBook(venue);attempts.push({transport:r.transport,ok:true});
+      return Object.freeze({ok:true,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),latency_ms:r.latency_ms,endpoint:r.endpoint,transport:r.transport,attempts:Object.freeze(attempts.slice()),...metrics(r.book,venue)});
+    }catch(error){
+      attempts.push({transport:"WS EEA · ONE-SHOT",ok:false,error:String(error?.message||error)});
+    }
+    try{
+      const r=await fetchOkxPublicRestBook(venue);attempts.push({transport:r.transport,ok:true});
+      return Object.freeze({ok:true,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),latency_ms:r.latency_ms,endpoint:r.endpoint,transport:r.transport,attempts:Object.freeze(attempts.slice()),...metrics(r.book,venue)});
+    }catch(error){
+      attempts.push({transport:"REST PUBLIC · FALLBACK",ok:false,error:String(error?.name==="AbortError"?"délai dépassé":error?.message||error)});
+      return Object.freeze({ok:false,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),endpoint:venue.ws_endpoint,error:"OKX indisponible après WebSocket EEA one-shot et REST public.",diagnostic:attempts.map(x=>x.transport+" : "+(x.ok?"OK":x.error)).join(" · "),attempts:Object.freeze(attempts.slice())});
     }
   }
   async function measure(){
     if(busy)return last;
     busy=true; render("Mesure en cours…");
     try{
-      const [kraken,okx]=await Promise.all([one(VENUES.kraken),one(VENUES.okx)]);
+      const [kraken,okx]=await Promise.all([oneKraken(VENUES.kraken),oneOkx(VENUES.okx)]);
       const okCount=[kraken,okx].filter(x=>x.ok).length;
       last=Object.freeze({
         schema:"agent_crypto_strategy_a_execution_cost_truth_v1",build:BUILD,generated_at:new Date().toISOString(),
@@ -133,7 +183,7 @@
           market_roundtrip_cost_is_orderbook_simulation_plus_reference_taker_fees:true,
           post_only_cost_is_fee_floor_only_and_fill_not_guaranteed:true
         }),
-        protections:Object.freeze({manual_fetch_only:true,new_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false})
+        protections:Object.freeze({manual_fetch_only:true,operator_triggered_one_shot_websocket:true,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false})
       });
       render(); return last;
     }finally{busy=false;}
@@ -142,20 +192,23 @@
     if(!last)return false;
     try{
       const b=new Blob([JSON.stringify(last,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_432.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
+      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_434.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
   function style(){
     if(document.getElementById(ROOT+"Style"))return;
     const s=document.createElement("style");s.id=ROOT+"Style";
-    s.textContent="#"+ROOT+"{margin-top:9px;padding:10px;border:1px solid rgba(65,224,193,.28);border-radius:10px;background:rgba(5,29,31,.25)}#"+ROOT+" .ect-h{display:flex;justify-content:space-between;gap:9px;align-items:flex-start;flex-wrap:wrap}#"+ROOT+" .ect-t{font-size:9px;font-weight:950;letter-spacing:.08em;color:#82f5de}#"+ROOT+" .ect-s{font-size:8px;color:#87aaa7;margin-top:3px}#"+ROOT+" .ect-actions{display:flex;gap:6px}#"+ROOT+" .ect-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px}#"+ROOT+" .ect-card{padding:8px;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:rgba(0,0,0,.13)}#"+ROOT+" .ect-card h4{margin:0 0 6px;font-size:10px;color:#e8ffff}#"+ROOT+" .ect-k{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}#"+ROOT+" .ect-k div{padding:5px;border-radius:6px;background:rgba(255,255,255,.025)}#"+ROOT+" .ect-k span{display:block;font-size:7px;color:#789491}#"+ROOT+" .ect-k b{font-size:9px;color:#effffd}#"+ROOT+" table{width:100%;border-collapse:collapse;margin-top:6px;font-size:8px}#"+ROOT+" th,#"+ROOT+" td{padding:4px;border-bottom:1px solid rgba(255,255,255,.05);text-align:right}#"+ROOT+" th:first-child,#"+ROOT+" td:first-child{text-align:left}#"+ROOT+" .ect-note{margin-top:7px;font-size:8px;line-height:1.45;color:#9db7b5}#"+ROOT+" .bad{color:#ff9f9f}.good{color:#8ff0c1}@media(max-width:950px){#"+ROOT+" .ect-grid{grid-template-columns:1fr}}";
+    s.textContent="#"+ROOT+"{margin-top:10px;padding:13px;border:1px solid rgba(65,224,193,.34);border-radius:10px;background:rgba(5,29,31,.25)}#"+ROOT+" .ect-h{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}#"+ROOT+" .ect-t{font-size:12px;font-weight:950;letter-spacing:.065em;color:#82f5de;line-height:1.35}#"+ROOT+" .ect-s{font-size:10.5px;color:#9bb9b6;margin-top:4px;line-height:1.4}#"+ROOT+" .ect-actions{display:flex;gap:8px}#"+ROOT+" .ect-actions button{min-height:36px!important;font-size:11px!important;padding:8px 12px!important}#"+ROOT+" .ect-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}#"+ROOT+" .ect-card{padding:11px;border:1px solid rgba(255,255,255,.09);border-radius:8px;background:rgba(0,0,0,.13);min-width:0}#"+ROOT+" .ect-card h4{margin:0 0 8px;font-size:13px;line-height:1.35;color:#e8ffff}#"+ROOT+" .ect-k{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}#"+ROOT+" .ect-k div{padding:7px;border-radius:6px;background:rgba(255,255,255,.03);min-width:0}#"+ROOT+" .ect-k span{display:block;font-size:9.5px;line-height:1.3;color:#8ea9a6}#"+ROOT+" .ect-k b{display:block;margin-top:2px;font-size:11.5px;line-height:1.3;color:#effffd;overflow-wrap:anywhere}#"+ROOT+" table{width:100%;border-collapse:collapse;margin-top:8px;font-size:10.5px;line-height:1.35}#"+ROOT+" th,#"+ROOT+" td{padding:6px 5px;border-bottom:1px solid rgba(255,255,255,.06);text-align:right}#"+ROOT+" th:first-child,#"+ROOT+" td:first-child{text-align:left}#"+ROOT+" .ect-note{margin-top:8px;font-size:10.5px;line-height:1.5;color:#a9c1bf}#"+ROOT+" .ect-transport{margin:0 0 8px;font-size:9.5px;line-height:1.35;color:#82bcb2}#"+ROOT+" details.ect-diagnostic{margin-top:8px;font-size:9.5px;color:#879d9b}#"+ROOT+" details.ect-diagnostic summary{cursor:pointer;color:#a3b9b6}#"+ROOT+" .bad{color:#ffaaa2}.good{color:#8ff0c1}@media(max-width:1100px){#"+ROOT+" .ect-grid{grid-template-columns:1fr}#"+ROOT+" .ect-k{grid-template-columns:repeat(2,minmax(0,1fr))}}";
     document.head.appendChild(s);
   }
   function card(v){
     if(!v)return '<div class="ect-card"><h4>—</h4><div class="ect-note">Non mesuré.</div></div>';
-    if(!v.ok)return '<div class="ect-card"><h4>'+esc(v.venue)+'</h4><div class="ect-note bad">Mesure impossible : '+esc(v.error)+'</div></div>';
+    if(!v.ok){
+      const diagnostic=v.diagnostic?'<details class="ect-diagnostic"><summary>Diagnostic technique</summary><div>'+esc(v.diagnostic)+'</div></details>':'';
+      return '<div class="ect-card"><h4>'+esc(v.venue)+'</h4><div class="ect-note bad">'+esc(v.error||"Mesure indisponible.")+'</div>'+diagnostic+'</div>';
+    }
     const d=v.depth_eur||{}, rows=(v.simulations||[]).map(x=>'<tr><td>'+esc(x.amount_eur)+' €</td><td>'+esc(pct(x.buy_slippage_pct))+'</td><td>'+esc(pct(x.sell_slippage_pct))+'</td><td>'+esc(pct(x.market_market_estimated_cost_pct))+'</td></tr>').join("");
-    return '<div class="ect-card"><h4>'+esc(v.venue)+' · '+esc(v.pair)+'</h4><div class="ect-k">'+
+    return '<div class="ect-card"><h4>'+esc(v.venue)+' · '+esc(v.pair)+'</h4><div class="ect-transport">Carnet : '+esc(v.transport||"source publique")+' · '+esc(v.latency_ms)+' ms</div><div class="ect-k">'+
       '<div><span>Maker réf.</span><b>'+esc(pct(v.fee_reference.maker_pct))+'</b></div><div><span>Taker réf.</span><b>'+esc(pct(v.fee_reference.taker_pct))+'</b></div>'+
       '<div><span>Spread</span><b>'+esc(bp(v.spread_bp))+'</b></div><div><span>Latence</span><b>'+esc(v.latency_ms)+' ms</b></div>'+
       '<div><span>Meilleur achat</span><b>'+esc(eur(v.best_ask))+'</b></div><div><span>Meilleure vente</span><b>'+esc(eur(v.best_bid))+'</b></div>'+
@@ -180,7 +233,7 @@
   }
   globalThis.AgentCryptoStrategyAExecutionCostTruth=Object.freeze({
     build:BUILD,measure,render,export_json:exportJson,snapshot:()=>last,
-    manual_fetch_only:true,new_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false
+    manual_fetch_only:true,operator_triggered_one_shot_websocket:true,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false
   });
   if(typeof document!=="undefined"){
     let mountQueued=false;

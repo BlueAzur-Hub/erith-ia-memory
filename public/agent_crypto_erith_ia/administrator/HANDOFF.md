@@ -1,38 +1,45 @@
-# Handoff Seven — 40.6.433 · Execution Cost Truth Mount Repair
+# Handoff Seven — 40.6.434 · OKX One-Shot Recovery + Readability
 
 ## État courant
 
-Build : **40.6.433**.  
-Parent : **40.6.432**.  
+Build : **40.6.434**.  
+Parent : **40.6.433**.  
 Market Core : **38.15.11**.
 
-## Preuve de la panne .432
+## Terrain .433
 
-Le dump terrain fourni par Christophe montrait .432 chargé, puis les panneaux .430 et .431 présents, mais aucun panneau **EXECUTION COST TRUTH**.
+- montage Execution Cost Truth : **PASS** ;
+- Kraken BTC/EUR : **PASS** ;
+- OKX REST EEA direct : **FAIL · NetworkError** ;
+- panneau : trop petit à lire confortablement ;
+- ralentissement Firefox global observé, chantier séparé.
 
-Diagnostic : **propriétaire chargé, surface non montée**.
+## .434
 
-## Réparation .433
+Une seule fonction produit est corrigée : **mesurer OKX sans dépendre du REST EEA qui a échoué dans Firefox**.
 
-Une seule responsabilité : rendre le panneau visible lorsque Strategy A devient réellement disponible.
+Le module tente :
+1. WebSocket public EEA `books / BTC-EUR` en **one-shot** ;
+2. REST public OKX en fallback.
 
-Le module utilise désormais des ancres de repli Strategy A et remonte sur l'ouverture de Simulation et les événements Strategy A existants.
+Le WebSocket n'existe que pendant le clic de mesure et se ferme au premier snapshot.
 
-Aucune logique de mesure Kraken / OKX n'est changée.
+Le même panneau reçoit une augmentation de typographie locale. Aucun style global n'est rouvert.
 
 ## Geste opérateur
 
-**Ctrl+F5 → vérifier 40.6.433 → ouvrir Strategy A.**
+Ctrl+F5 → vérifier **40.6.434** → Simulation / Strategy A → Execution Cost Truth → **MESURER KRAKEN + OKX**.
 
-Le panneau doit être visible sans chercher dans toute la page.
+Attendu :
+- carte Kraken chiffrée ;
+- carte OKX chiffrée ;
+- transport OKX affiché ;
+- export `STRATEGY_A_EXECUTION_COST_TRUTH_40_6_434.json`.
 
-Ensuite seulement :
-**MESURER KRAKEN + OKX → EXPORTER**.
-
-Si le panneau est absent, envoyer simplement le dump/capture : ne rien chercher.
+Si échec : capture/dump, pas de recherche, pas de console.
 
 ## Protections
 
-Market Core, Aether, CSS cockpit, Oracle, Risk, Paper, seuils et frais de référence sont gelés.
+Strategy A métier, seuils, Oracle, Risk, Paper, Market Core, Aether et CSS cockpit sont gelés.
 
 Règle : **une intention → un propriétaire → une modification → une preuve → STOP**.
