@@ -1,21 +1,33 @@
-# Agent-Crypto 40.6.445 — ORACLE METRICS FINAL FIT
+# Agent-Crypto 40.6.446 — STRATEGY A DEMAND LOADER OWNER FIX
 
 ## Objectif unique
-Corriger la régression visuelle introduite par 40.6.444.
+Réparer le déclenchement on-demand des audits Strategy A / Execution Cost dans Simulation.
 
-Les trois métriques Oracle doivent rester visibles simultanément :
-- COHÉRENCE
-- VOLATILITÉ
-- PANIER 24 H
+## Cause prouvée
+Le DOM canonique est :
+```html
+<details data-collapse-key="simulation">
+  ...
+  <section id="simulation">...</section>
+</details>
+```
 
-## Correction
-Une seule ligne, trois colonnes égales.
-Pas de scroll.
-Pas de donnée masquée.
-Pas de texte réduit.
-Pas de changement de calcul Oracle.
+Le loader 40.6.443 testait l'événement `toggle` et la propriété `.open` sur `#simulation`, qui est une `<section>`, pas le `<details>` ouvrable.
 
-## Gel
-Backend/API 40.6.441 reste gelé.
-Cadrage Graphique 40.6.442 reste gelé.
-Strategy / Execution Cost 40.6.443 reste gelé.
+## Correction 40.6.446
+Le propriétaire d'ouverture devient exclusivement :
+```
+details[data-collapse-key="simulation"]
+```
+
+Deux chemins testés localement avant commit :
+- Simulation fermée puis ouverte : PASS, 3/3 modules chargés dans l'ordre.
+- Simulation déjà ouverte au chargement du loader : PASS, 3/3 modules chargés dans l'ordre.
+
+Ordre attendu :
+1. COST-WAIT OUTCOME AUDIT
+2. ORACLE / COST CALIBRATION TRUTH
+3. EXECUTION COST TRUTH
+
+## Protégé
+Backend/API 40.6.441 · cadrage Graphique 40.6.442 · Oracle metrics 40.6.445 · Strategy A métier / seuils · Market Core 38.15.11 · Aether · stockage · timers / observers.

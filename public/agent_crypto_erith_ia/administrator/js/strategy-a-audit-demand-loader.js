@@ -1,17 +1,20 @@
-/* Agent-Crypto @erith.IA — 40.6.443 STRATEGY A AUDIT + EXECUTION COST DEMAND LOADER
-   Progressive recovery after 40.6.438 emergency restore.
+/* Agent-Crypto @erith.IA — 40.6.446 STRATEGY A AUDIT + EXECUTION COST DEMAND LOADER OWNER FIX
+   Minimal owner repair after 40.6.443: the opening owner is the canonical outer
+   details[data-collapse-key="simulation"], not the inner #simulation section.
    Loads Cost-Wait + Oracle/Cost + Execution Cost Truth read-only tools only when Simulation is opened.
    No boot residency, polling, observer or storage write. Execution Cost stays manual-fetch only after operator demand. */
 (()=>{
   "use strict";
-  const BUILD="40.6.443", TIMEOUT=6000;
+  const BUILD="40.6.446", TIMEOUT=6000;
+  const SIMULATION_OWNER_SELECTOR='details[data-collapse-key="simulation"]';
   const SPECS=Object.freeze([
-    Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.443",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
-    Object.freeze({key:"oracle-cost",src:"./js/strategy-a-oracle-cost-calibration-audit.js?v=40.6.443",ready:()=>!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit}),
-    Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.443",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth})
+    Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
+    Object.freeze({key:"oracle-cost",src:"./js/strategy-a-oracle-cost-calibration-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit}),
+    Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth})
   ]);
   let state="idle",promise=null,lastError="",reason="";
-  const simulationOpen=()=>{const node=document.getElementById("simulation");return node instanceof HTMLDetailsElement&&node.open===true;};
+  const simulationOwner=()=>document.querySelector(SIMULATION_OWNER_SELECTOR);
+  const simulationOpen=()=>{const node=simulationOwner();return node instanceof HTMLDetailsElement&&node.open===true;};
 
   function existing(key){return document.querySelector('script[data-strategy-a-audit-demand="'+key+'"]');}
   function load(spec){
@@ -56,8 +59,8 @@
         if(!ok){state="error";lastError="load-failed:"+spec.key;return false;}
       }
       state="ready";
-      try{globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429?.refresh?.("406439-demand-ready");}catch(_){}
-      try{globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit?.refresh?.("406439-demand-ready");}catch(_){}
+      try{globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429?.refresh?.("406446-demand-ready");}catch(_){}
+      try{globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit?.refresh?.("406446-demand-ready");}catch(_){}
       try{window.dispatchEvent(new CustomEvent("agent-crypto:strategy-a-audits-ready",{detail:{build:BUILD,reason}}));}catch(_){}
       return true;
     })().finally(()=>{promise=null;});
@@ -65,15 +68,29 @@
   }
 
   document.addEventListener("toggle",event=>{
-    if(event?.target?.id==="simulation"&&event.target.open===true)void ensure("simulation-open");
+    const target=event?.target;
+    if(target instanceof HTMLDetailsElement&&target.matches(SIMULATION_OWNER_SELECTOR)&&target.open===true)void ensure("simulation-open");
   },true);
-  const simulation=document.getElementById("simulation");
+  const simulation=simulationOwner();
   if(simulation?.open)queueMicrotask(()=>void ensure("simulation-already-open"));
 
   globalThis.AgentCryptoStrategyAAuditDemand=Object.freeze({
     build:BUILD,ensure,
     snapshot:()=>Object.freeze({build:BUILD,state,reason,last_error:lastError,simulation_open:simulationOpen(),cost_wait_loaded:!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429,oracle_cost_loaded:!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit,execution_cost_loaded:!!globalThis.AgentCryptoStrategyAExecutionCostTruth}),
-    self_test:()=>Object.freeze({build:BUILD,pass:true,checks:Object.freeze({on_demand_only:true,execution_cost_on_demand:true,recurring_timer:false,observer:false,storage_write:false})}),
+    self_test:()=>{
+      const owner=simulationOwner();
+      const checks=Object.freeze({
+        on_demand_only:true,
+        simulation_owner_is_details:owner instanceof HTMLDetailsElement,
+        simulation_owner_selector:!!owner?.matches?.(SIMULATION_OWNER_SELECTOR),
+        inner_simulation_section_is_not_owner:document.getElementById("simulation")!==owner,
+        execution_cost_on_demand:true,
+        recurring_timer:false,
+        observer:false,
+        storage_write:false
+      });
+      return Object.freeze({build:BUILD,pass:Object.values(checks).every(Boolean),checks});
+    },
     execution_cost_on_demand:true,recurring_timer:false,observer:false,storage_write:false,new_business_network_request:false
   });
 })();
