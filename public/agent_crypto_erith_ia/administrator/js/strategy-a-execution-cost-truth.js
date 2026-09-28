@@ -1,11 +1,15 @@
-/* Agent-Crypto @erith.IA — 40.6.443 STRATEGY A EXECUTION COST TRUTH
+/* Agent-Crypto @erith.IA — 40.6.450 STRATEGY A EXECUTION COST SOURCE TRUTH FRESHNESS
    Manual BTC/EUR execution-cost measurement for Kraken + OKX Europe.
-   40.6.443: restore the tool on Simulation demand, harden numeric/null handling, reject crossed bid/ask, bound Backend demand, keep the canonical anchor, and restore repeatable export/UI state.
+   40.6.443 restored the tool and hardened null/crossed-book handling.
+   40.6.450 fails closed on stale/unknown/future OKX quote time, proves BTC/EUR identity before generic aliases,
+   separates quote/receive/calculate times, rejects booleans/blank numeric inputs, and keeps Kraken usable when OKX is invalid.
+   Source Truth fallback freshness is the existing private-backend cache contract: 15 s.
    No direct browser OKX internet access, order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
 (() => {
   "use strict";
-  const BUILD="40.6.443", ROOT="strategyAExecutionCostTruth";
+  const BUILD="40.6.450", ROOT="strategyAExecutionCostTruth";
   const SIZES=Object.freeze([10,25,50,100]), DEPTH_BPS=Object.freeze([5,10,25]), TIMEOUT=9000, BACKEND_TIMEOUT=18000;
+  const SOURCE_TRUTH_CACHE_TTL_SECONDS=15, SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS=30;
   const VENUES=Object.freeze({
     kraken:Object.freeze({
       id:"kraken",name:"Kraken Pro",pair:"BTC/EUR",maker:0.40,taker:0.80,
@@ -22,7 +26,12 @@
     })
   });
   let last=null,busy=false;
-  const n=v=>{if(v===null||v===undefined||v==="")return null;const x=Number(v);return Number.isFinite(x)?x:null;};
+  const n=v=>{
+    if(v===null||v===undefined||typeof v==="boolean")return null;
+    if(typeof v==="string"&&!v.trim())return null;
+    if(typeof v!=="number"&&typeof v!=="string")return null;
+    const x=Number(v);return Number.isFinite(x)?x:null;
+  };
   const esc=v=>String(v??"—").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const pct=v=>Number.isFinite(v)?(v>=0?"+":"")+v.toFixed(4)+" %":"—";
   const eur=v=>Number.isFinite(v)?v.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})+" €":"—";
@@ -59,20 +68,91 @@
     for(const value of values){const v=n(value);if(v!==null&&v>0)return v;}
     return null;
   };
-  function okxQuoteFromBackend(payload){
+  const toMs=value=>{
+    if(value===null||value===undefined||typeof value==="boolean")return null;
+    if(typeof value==="string"&&!value.trim())return null;
+    const numeric=Number(value);
+    if(Number.isFinite(numeric))return numeric>1e12?numeric:numeric>1e9?numeric*1000:null;
+    const parsed=Date.parse(String(value));return Number.isFinite(parsed)?parsed:null;
+  };
+  const measurementError=(code,message,details={})=>{const error=new Error(message);error.code=code;error.details=details;return error;};
+  const normalizedPair=value=>String(value??"").toUpperCase().replace(/^XBT/,"BTC").replace(/[^A-Z0-9]/g,"");
+  const ageText=seconds=>{
+    if(!Number.isFinite(seconds))return "—";
+    if(seconds<60)return Math.round(seconds)+" s";
+    if(seconds<3600)return (seconds/60).toFixed(seconds<600?1:0)+" min";
+    return (seconds/3600).toFixed(1)+" h";
+  };
+  function freshnessLimit(payload){
+    const candidates=[
+      ["payload.freshness.cex_max_age_seconds",payload?.freshness?.cex_max_age_seconds],
+      ["payload.cex_max_age_seconds",payload?.cex_max_age_seconds],
+      ["payload.freshness_max_age_seconds",payload?.freshness_max_age_seconds],
+      ["payload.cache_ttl_seconds",payload?.cache_ttl_seconds]
+    ];
+    for(const [source,value] of candidates){const x=n(value);if(x!==null&&x>0)return {seconds:x,source};}
+    return {seconds:SOURCE_TRUTH_CACHE_TTL_SECONDS,source:"architecture/private-backend-sources.json#cache.ttl_seconds"};
+  }
+  function quoteTimestamp(quote){
+    const candidates=[
+      ["quote.observed_at_utc",quote?.observed_at_utc],
+      ["quote.observed_at",quote?.observed_at],
+      ["quote.quote_timestamp",quote?.quote_timestamp],
+      ["quote.timestamp",quote?.timestamp],
+      ["quote.updated_at",quote?.updated_at],
+      ["quote.raw.ts",quote?.raw?.ts]
+    ];
+    for(const [path,value] of candidates){
+      if(value===null||value===undefined||(typeof value==="string"&&!value.trim()))continue;
+      return {path,value,ms:toMs(value)};
+    }
+    return {path:null,value:null,ms:null};
+  }
+  function quoteFreshness(quote,payload,nowMs=Date.now()){
+    const limit=freshnessLimit(payload),stamp=quoteTimestamp(quote);
+    if(!stamp.path)return Object.freeze({state:"UNKNOWN",reason:"MISSING_TIMESTAMP",age_seconds:null,max_age_seconds:limit.seconds,policy_source:limit.source,observed_at_utc:null,timestamp_path:null});
+    if(stamp.ms===null)return Object.freeze({state:"UNKNOWN",reason:"INVALID_TIMESTAMP",age_seconds:null,max_age_seconds:limit.seconds,policy_source:limit.source,observed_at_utc:String(stamp.value),timestamp_path:stamp.path});
+    const rawAge=(nowMs-stamp.ms)/1000;
+    if(rawAge < -SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS)return Object.freeze({state:"UNKNOWN",reason:"FUTURE_TIMESTAMP",age_seconds:null,max_age_seconds:limit.seconds,policy_source:limit.source,observed_at_utc:new Date(stamp.ms).toISOString(),timestamp_path:stamp.path});
+    const age=Math.max(0,rawAge),stale=age>limit.seconds;
+    return Object.freeze({state:stale?"STALE":"FRESH",reason:stale?"STALE":"FRESH",age_seconds:age,max_age_seconds:limit.seconds,policy_source:limit.source,observed_at_utc:new Date(stamp.ms).toISOString(),timestamp_path:stamp.path});
+  }
+  function quoteIdentity(row,quote){
+    if(String(row?.asset||"").toUpperCase()!=="BTC")throw measurementError("INVALID_ASSET","Backend local : actif OKX inattendu");
+    const pairCandidates=[quote?.pair,quote?.instrument_id,quote?.instId,quote?.raw?.instId,quote?.symbol];
+    let explicitPair=null;
+    for(const value of pairCandidates){
+      const raw=String(value??"").trim();
+      if(!raw)continue;
+      const normalized=normalizedPair(raw);
+      if(raw.includes("/")||raw.includes("-")||raw.includes("_")||normalized.includes("EUR")){explicitPair=normalized;break;}
+    }
+    if(explicitPair&&explicitPair!=="BTCEUR")throw measurementError("INVALID_PAIR","Backend local : paire OKX différente de BTC/EUR",{pair:explicitPair});
+    const currencyCandidates=[quote?.quote_currency,quote?.quote_ccy,quote?.currency,quote?.raw?.quoteCcy,row?.quote_currency,row?.currency];
+    let explicitCurrency=null;
+    for(const value of currencyCandidates){const raw=String(value??"").trim().toUpperCase();if(raw){explicitCurrency=raw;break;}}
+    if(explicitCurrency&&explicitCurrency!=="EUR")throw measurementError("INVALID_CURRENCY","Backend local : devise OKX différente de EUR",{currency:explicitCurrency});
+    const eurSpecific=firstPositive(quote?.bid_eur,quote?.bid_price_eur)!==null&&firstPositive(quote?.ask_eur,quote?.ask_price_eur)!==null;
+    const genericAliasAllowed=eurSpecific||explicitPair==="BTCEUR"||explicitCurrency==="EUR"||firstPositive(quote?.price_eur)!==null;
+    return Object.freeze({explicit_pair:explicitPair,explicit_currency:explicitCurrency,eur_specific_book:eurSpecific,generic_alias_allowed:genericAliasAllowed});
+  }
+  function okxQuoteFromBackend(payload,nowMs=Date.now()){
     const rows=Array.isArray(payload?.assets)?payload.assets:[];
     const row=rows.find(item=>String(item?.asset||"").toUpperCase()==="BTC");
     const quotes=Array.isArray(row?.quotes)?row.quotes:[];
     const quote=quotes.find(item=>String(item?.provider||"").toLowerCase()==="okx"&&String(item?.status||"").toLowerCase()==="ok");
-    if(!quote)throw new Error("Backend local : quote OKX BTC/EUR absente");
-    const bestBid=firstPositive(quote.bid_eur,quote.bid_price_eur,quote.bid,quote.bidPx,quote?.raw?.bidPx);
-    const bestAsk=firstPositive(quote.ask_eur,quote.ask_price_eur,quote.ask,quote.askPx,quote?.raw?.askPx);
-    if(!(bestBid>0&&bestAsk>0))throw new Error("Backend local : bid/ask OKX non exposés");
-    if(bestBid>bestAsk)throw new Error("Backend local : bid/ask OKX croisés");
-    return {quote,bestBid,bestAsk};
+    if(!quote)throw measurementError("MISSING_QUOTE","Backend local : quote OKX BTC/EUR absente");
+    const identity=quoteIdentity(row,quote);
+    const bestBid=firstPositive(quote.bid_eur,quote.bid_price_eur,identity.generic_alias_allowed?quote.bid:null,identity.generic_alias_allowed?quote.bidPx:null,identity.generic_alias_allowed?quote?.raw?.bidPx:null);
+    const bestAsk=firstPositive(quote.ask_eur,quote.ask_price_eur,identity.generic_alias_allowed?quote.ask:null,identity.generic_alias_allowed?quote.askPx:null,identity.generic_alias_allowed?quote?.raw?.askPx:null);
+    if(!(bestBid>0&&bestAsk>0))throw measurementError("MISSING_BOOK","Backend local : bid/ask OKX BTC/EUR non exposés ou devise non prouvée",{identity});
+    if(bestBid>bestAsk)throw measurementError("CROSSED_BOOK","Backend local : bid/ask OKX croisés",{bestBid,bestAsk});
+    const freshness=quoteFreshness(quote,payload,nowMs);
+    if(freshness.state!=="FRESH")throw measurementError(freshness.state,"Backend local : fraîcheur OKX "+freshness.state,{freshness});
+    return {quote,bestBid,bestAsk,identity,freshness};
   }
-  function okxMetricsFromBackend(payload,venue){
-    const parsed=okxQuoteFromBackend(payload),bestBid=parsed.bestBid,bestAsk=parsed.bestAsk;
+  function okxMetricsFromBackend(payload,venue,nowMs=Date.now()){
+    const parsed=okxQuoteFromBackend(payload,nowMs),bestBid=parsed.bestBid,bestAsk=parsed.bestAsk;
     const mid=(bestBid+bestAsk)/2,spreadPct=(bestAsk-bestBid)/mid*100,spreadBp=spreadPct*100;
     const topOfBookCrossPct=(1-(bestBid/bestAsk))*100;
     const feeSpreadReferencePct=topOfBookCrossPct+2*venue.taker;
@@ -80,7 +160,16 @@
     return {
       pair:venue.pair,best_bid:bestBid,best_ask:bestAsk,mid,spread_pct:spreadPct,spread_bp:spreadBp,
       depth_available:false,depth_eur:null,simulations,fee_plus_spread_snapshot_pct:feeSpreadReferencePct,
-      observed_at_utc:parsed.quote?.observed_at_utc||payload?.observed_at_utc||null,
+      observed_at_utc:parsed.freshness.observed_at_utc,
+      quote_observed_at_utc:parsed.freshness.observed_at_utc,
+      quote_age_seconds:parsed.freshness.age_seconds,
+      freshness_state:parsed.freshness.state,
+      freshness_reason:parsed.freshness.reason,
+      freshness_max_age_seconds:parsed.freshness.max_age_seconds,
+      freshness_policy_source:parsed.freshness.policy_source,
+      quote_timestamp_path:parsed.freshness.timestamp_path,
+      backend_payload_observed_at_utc:payload?.observed_at_utc||null,
+      quote_identity:parsed.identity,
       backend_quote_fields:Object.freeze({price_eur:n(parsed.quote?.price_eur),bid_eur:bestBid,ask_eur:bestAsk}),
       fee_reference:{maker_pct:venue.maker,taker_pct:venue.taker,note:venue.fee_note,source:venue.fee_source},
       post_only_post_only_fee_floor_pct:2*venue.maker,post_only_market_fee_floor_pct:venue.maker+venue.taker,post_only_fill_guaranteed:false,
@@ -162,30 +251,50 @@
   async function oneKraken(venue){
     const started=new Date().toISOString();
     try{
-      const r=await fetchJson(venue.endpoint),book=parseKraken(r.json);
-      return Object.freeze({ok:true,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),latency_ms:r.latency_ms,endpoint:venue.endpoint,transport:"REST PUBLIC",attempts:Object.freeze([{transport:"REST PUBLIC",ok:true}]),...metrics(book,venue)});
+      const r=await fetchJson(venue.endpoint),received=new Date().toISOString(),book=parseKraken(r.json);
+      return Object.freeze({ok:true,venue:venue.name,started_at:started,received_at_utc:received,measured_at:new Date().toISOString(),latency_ms:r.latency_ms,endpoint:venue.endpoint,transport:"REST PUBLIC",freshness_state:"DIRECT_REQUEST",quote_observed_at_utc:null,quote_age_seconds:null,attempts:Object.freeze([{transport:"REST PUBLIC",ok:true}]),...metrics(book,venue)});
     }catch(e){
-      return Object.freeze({ok:false,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),endpoint:venue.endpoint,error:"Kraken indisponible.",diagnostic:String(e?.name==="AbortError"?"délai dépassé":e?.message||e),attempts:Object.freeze([{transport:"REST PUBLIC",ok:false,error:String(e?.message||e)}])});
+      return Object.freeze({ok:false,venue:venue.name,started_at:started,received_at_utc:null,measured_at:new Date().toISOString(),endpoint:venue.endpoint,error:"Kraken indisponible.",diagnostic:String(e?.name==="AbortError"?"délai dépassé":e?.message||e),attempts:Object.freeze([{transport:"REST PUBLIC",ok:false,error:String(e?.message||e)}])});
     }
   }
   async function oneOkx(venue){
     const started=new Date().toISOString();
+    let receivedAt=null;
     try{
       const r=await fetchOkxBackendQuote(venue);
-      return Object.freeze({ok:true,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),latency_ms:r.latency_ms,endpoint:r.endpoint,transport:r.transport,backend_version:r.backend_version,attempts:Object.freeze([{transport:r.transport,ok:true}]),...okxMetricsFromBackend(r.payload,venue)});
+      receivedAt=new Date().toISOString();
+      const metrics=okxMetricsFromBackend(r.payload,venue,Date.parse(receivedAt));
+      return Object.freeze({ok:true,venue:venue.name,started_at:started,received_at_utc:receivedAt,measured_at:new Date().toISOString(),latency_ms:r.latency_ms,endpoint:r.endpoint,transport:r.transport,backend_version:r.backend_version,attempts:Object.freeze([{transport:r.transport,ok:true}]),...metrics});
     }catch(error){
-      return Object.freeze({ok:false,venue:venue.name,started_at:started,measured_at:new Date().toISOString(),endpoint:venue.backend_endpoint,error:"OKX indisponible via Source Truth CEX / Backend local 127.0.0.1:8790.",diagnostic:String(error?.name==="AbortError"?"délai backend dépassé":error?.message||error),attempts:Object.freeze([{transport:"BACKEND LOCAL 8790 · OKX PUBLIC",ok:false,error:String(error?.message||error)}])});
+      const freshness=error?.details?.freshness||null;
+      const state=freshness?.state||(/^(INVALID_|MISSING_|CROSSED_)/.test(String(error?.code||""))?"INVALID":"ERROR");
+      const label=state==="STALE"?"OKX : cotation périmée (STALE).":state==="UNKNOWN"?"OKX : fraîcheur de cotation inconnue (UNKNOWN).":state==="INVALID"?"OKX : cotation BTC/EUR invalide.":"OKX indisponible via Source Truth CEX / Backend local 127.0.0.1:8790.";
+      return Object.freeze({
+        ok:false,venue:venue.name,started_at:started,received_at_utc:receivedAt,measured_at:new Date().toISOString(),endpoint:venue.backend_endpoint,
+        data_state:state,freshness_state:freshness?.state||null,freshness_reason:freshness?.reason||null,
+        quote_observed_at_utc:freshness?.observed_at_utc||null,quote_age_seconds:freshness?.age_seconds??null,
+        freshness_max_age_seconds:freshness?.max_age_seconds??SOURCE_TRUTH_CACHE_TTL_SECONDS,
+        freshness_policy_source:freshness?.policy_source||"architecture/private-backend-sources.json#cache.ttl_seconds",
+        error:label,diagnostic:String(error?.name==="AbortError"?"délai backend dépassé":error?.message||error),
+        error_code:String(error?.code||"ERROR"),
+        attempts:Object.freeze([{transport:"BACKEND LOCAL 8790 · OKX PUBLIC",ok:false,error:String(error?.message||error)}])
+      });
     }
+  }
+  function measurementStatus(kraken,okx){
+    const okCount=[kraken,okx].filter(x=>x?.ok===true).length;
+    if(okCount===2)return okx?.depth_available===false?"MEASURED_BOTH_OKX_TOP_OF_BOOK_ONLY":"MEASURED_BOTH";
+    return okCount===1?"PARTIAL":"FAILED";
   }
   async function measure(){
     if(busy)return last;
     busy=true; render("Mesure en cours…");
     try{
       const [kraken,okx]=await Promise.all([oneKraken(VENUES.kraken),oneOkx(VENUES.okx)]);
-      const okCount=[kraken,okx].filter(x=>x.ok).length;
+      const status=measurementStatus(kraken,okx);
       last=Object.freeze({
         schema:"agent_crypto_strategy_a_execution_cost_truth_v1",build:BUILD,generated_at:new Date().toISOString(),
-        status:okCount===2?(okx.depth_available===false?"MEASURED_BOTH_OKX_TOP_OF_BOOK_ONLY":"MEASURED_BOTH"):okCount===1?"PARTIAL":"FAILED",
+        status,
         pair:"BTC/EUR",sizes_eur:SIZES.slice(),depth_bps:DEPTH_BPS.slice(),
         oracle_context:oracleContext(),venues:Object.freeze({kraken,okx}),
         assumptions:Object.freeze({
@@ -195,6 +304,9 @@
           okx_top_of_book_from_existing_backend:true,
           okx_fee_plus_spread_snapshot_is_not_slippage_proof:true,
           okx_depth_and_slippage_remain_unknown_until_backend_exposes_orderbook:true,
+          okx_stale_or_unknown_quote_is_not_measurement:true,
+          source_truth_fallback_freshness_seconds:SOURCE_TRUTH_CACHE_TTL_SECONDS,
+          quote_time_receive_time_calculation_time_separated:true,
           post_only_cost_is_fee_floor_only_and_fill_not_guaranteed:true
         }),
         protections:Object.freeze({manual_fetch_only:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false})
@@ -206,7 +318,7 @@
     if(!last)return false;
     try{
       const b=new Blob([JSON.stringify(last,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_443.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
+      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_450.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
   function style(){
@@ -219,7 +331,8 @@
     if(!v)return '<div class="ect-card"><h4>—</h4><div class="ect-note">Non mesuré.</div></div>';
     if(!v.ok){
       const diagnostic=v.diagnostic?'<details class="ect-diagnostic"><summary>Diagnostic technique</summary><div>'+esc(v.diagnostic)+'</div></details>':'';
-      return '<div class="ect-card"><h4>'+esc(v.venue)+'</h4><div class="ect-note bad">'+esc(v.error||"Mesure indisponible.")+'</div>'+diagnostic+'</div>';
+      const freshness=v.freshness_state?'<div class="ect-note bad"><b>Fraîcheur :</b> '+esc(v.freshness_state)+(v.freshness_reason?' · '+esc(v.freshness_reason):'')+(Number.isFinite(v.quote_age_seconds)?' · âge '+esc(ageText(v.quote_age_seconds)):'')+(Number.isFinite(v.freshness_max_age_seconds)?' · limite '+esc(ageText(v.freshness_max_age_seconds)):'')+(v.quote_observed_at_utc?' · quote '+esc(v.quote_observed_at_utc):'')+'</div>':'';
+      return '<div class="ect-card"><h4>'+esc(v.venue)+'</h4><div class="ect-note bad">'+esc(v.error||"Mesure indisponible.")+'</div>'+freshness+diagnostic+'</div>';
     }
     const d=v.depth_eur||{};
     const rows=(v.simulations||[]).map(x=>v.depth_available===false
@@ -231,7 +344,8 @@
     const scope=v.depth_available===false
       ? '<div class="ect-note"><b>OKX via Backend local :</b> bid/ask réels et spread mesurés. Le Backend V1.4.2 ne fournit pas encore le carnet multi-niveaux : profondeur et glissement 10/25/50/100 € restent <b>INCONNUS</b>, sans valeur inventée. Référence frais Taker + spread au snapshot : '+esc(pct(v.fee_plus_spread_snapshot_pct))+' avant slippage.</div>'
       : '';
-    return '<div class="ect-card"><h4>'+esc(v.venue)+' · '+esc(v.pair)+'</h4><div class="ect-transport">Source : '+esc(v.transport||"source publique")+' · '+esc(v.latency_ms)+' ms</div><div class="ect-k">'+
+    const freshness=v.freshness_state?'<div class="ect-transport"><b>Fraîcheur :</b> '+esc(v.freshness_state)+(Number.isFinite(v.quote_age_seconds)?' · âge '+esc(ageText(v.quote_age_seconds)):'')+(Number.isFinite(v.freshness_max_age_seconds)?' · limite '+esc(ageText(v.freshness_max_age_seconds)):'')+(v.quote_observed_at_utc?' · quote '+esc(v.quote_observed_at_utc):'')+'</div>':'';
+    return '<div class="ect-card"><h4>'+esc(v.venue)+' · '+esc(v.pair)+'</h4><div class="ect-transport">Source : '+esc(v.transport||"source publique")+' · latence requête '+esc(v.latency_ms)+' ms</div>'+freshness+'<div class="ect-k">'+
       '<div><span>Maker réf.</span><b>'+esc(pct(v.fee_reference.maker_pct))+'</b></div><div><span>Taker réf.</span><b>'+esc(pct(v.fee_reference.taker_pct))+'</b></div>'+
       '<div><span>Spread</span><b>'+esc(bp(v.spread_bp))+'</b></div><div><span>Latence</span><b>'+esc(v.latency_ms)+' ms</b></div>'+
       '<div><span>Meilleur achat</span><b>'+esc(eur(v.best_ask))+'</b></div><div><span>Meilleure vente</span><b>'+esc(eur(v.best_bid))+'</b></div>'+
@@ -255,22 +369,44 @@
     root.dataset.build=BUILD;root.dataset.readOnly="true";return last;
   }
   function selfTest(){
+    const now=Date.parse("2026-09-28T19:00:00Z");
+    const payload=quote=>({assets:[{asset:"BTC",quotes:[quote]}]});
+    const base={provider:"okx",status:"ok",observed_at_utc:"2026-09-28T18:59:55Z",bid_eur:"99990",ask_eur:"100010",price_eur:"100000"};
+    const rejects=(quote,code,reason=null)=>{
+      try{okxQuoteFromBackend(payload(quote),now);return false;}
+      catch(error){return error?.code===code&&(reason===null||error?.details?.freshness?.reason===reason);}
+    };
+    let fresh=false;
+    try{
+      const parsed=okxQuoteFromBackend(payload(base),now);
+      fresh=parsed.freshness.state==="FRESH"&&Math.round(parsed.freshness.age_seconds)===5;
+    }catch(_){}
     const checks=Object.freeze({
       fetch_helper_defined:typeof fetchJson==="function",
       canonical_anchor_only:true,
-      okx_owner_route:typeof globalThis.ErithPrivateSourceDemand?.ensure==="function"||typeof globalThis.ErithPrivateBackendSources?.refresh==="function",
+      okx_owner_route_contract:typeof fetchOkxBackendQuote==="function",
       direct_okx_browser_internet_blocked:true,
-      null_is_not_zero:n(null)===null&&n("")===null,
-      crossed_quote_guard:true,
+      null_blank_boolean_not_zero:n(null)===null&&n("")===null&&n("   ")===null&&n(false)===null&&n({})===null,
+      numeric_epoch_string_supported:toMs(String(now))===now,
+      fresh_quote_accepted:fresh,
+      stale_quote_rejected:rejects({...base,observed_at_utc:"2020-01-01T00:00:00Z"},"STALE","STALE"),
+      missing_timestamp_unknown:rejects({...base,observed_at_utc:undefined},"UNKNOWN","MISSING_TIMESTAMP"),
+      future_timestamp_unknown:rejects({...base,observed_at_utc:"2026-09-28T19:02:00Z"},"UNKNOWN","FUTURE_TIMESTAMP"),
+      crossed_quote_rejected:rejects({...base,bid_eur:"101000",ask_eur:"100000"},"CROSSED_BOOK"),
+      wrong_currency_rejected:rejects({provider:"okx",status:"ok",observed_at_utc:"2026-09-28T18:59:55Z",pair:"BTC-USDT",bid:"99990",ask:"100010"},"INVALID_PAIR"),
+      existing_source_truth_cache_contract:freshnessLimit({}).seconds===15,
+      stale_okx_preserves_kraken_partial:measurementStatus({ok:true},{ok:false,freshness_state:"STALE"})==="PARTIAL",
       backend_demand_bounded:true,
       repeatable_export:true,
       no_real_order:true
     });
-    return Object.freeze({build:BUILD,pass:Object.values(checks).every(Boolean),checks});
+    const runtime=Object.freeze({okx_owner_available:typeof globalThis.ErithPrivateSourceDemand?.ensure==="function"||typeof globalThis.ErithPrivateBackendSources?.refresh==="function"});
+    return Object.freeze({build:BUILD,pass:Object.values(checks).every(Boolean),checks,runtime});
   }
   globalThis.AgentCryptoStrategyAExecutionCostTruth=Object.freeze({
     build:BUILD,measure,render,export_json:exportJson,snapshot:()=>last,self_test:selfTest,
-    manual_fetch_only:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false
+    manual_fetch_only:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false,
+    freshness_fallback_seconds:SOURCE_TRUTH_CACHE_TTL_SECONDS,future_tolerance_seconds:SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS,stale_or_unknown_quote_usable:false
   });
   if(typeof document!=="undefined"){
     let mountQueued=false;

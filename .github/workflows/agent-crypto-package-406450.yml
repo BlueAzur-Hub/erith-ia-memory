@@ -1,0 +1,112 @@
+name: Agent-Crypto Package 40.6.450 Execution Cost Freshness
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406450.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.450
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-execution-cost-truth.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+
+          node <<'NODE'
+          const fs=require("fs");
+          const src=fs.readFileSync("public/agent_crypto_erith_ia/administrator/js/strategy-a-execution-cost-truth.js","utf8");
+          Function(src)();
+          const api=globalThis.AgentCryptoStrategyAExecutionCostTruth;
+          const result=api?.self_test?.();
+          if(!result?.pass) throw new Error("Execution Cost self_test failed: "+JSON.stringify(result));
+          const required=[
+            "fresh_quote_accepted","stale_quote_rejected","missing_timestamp_unknown","future_timestamp_unknown",
+            "crossed_quote_rejected","wrong_currency_rejected","null_blank_boolean_not_zero",
+            "numeric_epoch_string_supported","stale_okx_preserves_kraken_partial","existing_source_truth_cache_contract"
+          ];
+          for(const key of required) if(result.checks?.[key]!==true) throw new Error("Missing PASS: "+key);
+          console.log("40.6.450 EXECUTION COST SELF TEST PASS");
+          NODE
+
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          idx=(root/"index.html").read_text(encoding="utf-8")
+          loader=(root/"js/strategy-a-audit-demand-loader.js").read_text(encoding="utf-8")
+          b=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          arch=json.loads((root/"architecture/private-backend-sources.json").read_text(encoding="utf-8"))
+          receipt=json.loads((root/"EXECUTION_COST_FRESHNESS_TEST_40.6.450.json").read_text(encoding="utf-8"))
+          checks={
+            "build":b.get("build")=="40.6.450",
+            "market_core":b.get("market_core")=="38.15.11",
+            "source_truth_cache_contract":arch.get("cache",{}).get("ttl_seconds")==15,
+            "loader_behavior_build":'const BUILD="40.6.446"' in loader,
+            "loader_execution_asset":'strategy-a-execution-cost-truth.js?v=40.6.450' in loader,
+            "index_loader_cache_token":'strategy-a-audit-demand-loader.js?v=40.6.450' in idx,
+            "readability_449_preserved":'strategy-human-readability.css?v=40.6.449' in idx,
+            "readability_in_head":idx.find("strategy-human-readability.css") < idx.find("</head>"),
+            "no_markup_literal_newline":re.search(r'>\\n\s*<',idx) is None,
+            "receipt":receipt.get("pass") is True,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"40.6.450 validation failed: {bad}")
+          print("40.6.450 STATIC CONTRACT PASS")
+          PY
+
+          BAD="$(git diff --name-only HEAD^ HEAD -- "$ROOT/js" | grep -Ev '(^|/)(strategy-a-execution-cost-truth|strategy-a-audit-demand-loader)\.js$' || true)"
+          if [ -n "$BAD" ]; then
+            echo "Unexpected runtime JS change:" >&2
+            echo "$BAD" >&2
+            exit 1
+          fi
+
+      - name: Build bounded ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_EXECUTION_COST_FRESHNESS_40.6.450.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406450
+          mkdir -p /tmp/agent-crypto-406450/administrator/js /tmp/agent-crypto-406450/administrator/architecture
+          cp "$ROOT/index.html" /tmp/agent-crypto-406450/administrator/
+          cp "$ROOT/index-40.6.450.html" /tmp/agent-crypto-406450/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406450/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406450/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406450/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.450.txt" /tmp/agent-crypto-406450/administrator/
+          cp "$ROOT/EXECUTION_COST_FRESHNESS_TEST_40.6.450.json" /tmp/agent-crypto-406450/administrator/
+          cp "$ROOT/js/strategy-a-execution-cost-truth.js" /tmp/agent-crypto-406450/administrator/js/
+          cp "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/agent-crypto-406450/administrator/js/
+          cp "$ROOT/architecture/private-backend-sources.json" /tmp/agent-crypto-406450/administrator/architecture/
+          (cd /tmp/agent-crypto-406450 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_EXECUTION_COST_FRESHNESS_40.6.450.zip" "$ROOT/AGENT_CRYPTO_EXECUTION_COST_FRESHNESS_40.6.450.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.450 Execution Cost freshness ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

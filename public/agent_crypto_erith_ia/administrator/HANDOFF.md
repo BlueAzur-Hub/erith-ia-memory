@@ -1,17 +1,19 @@
-# HANDOFF — Agent-Crypto 40.6.449
+# HANDOFF — Agent-Crypto 40.6.450
 
-Objet unique : vérifier la lisibilité réelle de Strategy après injection tardive des modules.
+## Test Firefox unique
+1. Vérifier **Build 40.6.450**.
+2. Ouvrir **Simulation**.
+3. Dans **EXECUTION COST TRUTH**, cliquer **MESURER KRAKEN + OKX**.
+4. Sur la carte OKX, vérifier une ligne distincte de la latence :
+   - `Fraîcheur : FRESH`
+   - âge de quote
+   - limite de fraîcheur
+   - heure de quote.
+5. Kraken doit continuer à afficher sa mesure normalement.
 
-## Test Firefox opérateur
-À 100 % de zoom :
-1. vérifier **Build 40.6.449** ;
-2. ouvrir **Simulation** ;
-3. lire normalement, sans zoom ;
-4. contrôler en priorité Paper Lifecycle et G3 Prospective ;
-5. vérifier ensuite After-Cost, Durable Evidence et les audits Cost-Wait / Oracle-Cost / Execution Cost ;
-6. refaire un contrôle F11.
+Aucun besoin de fabriquer une quote périmée dans la session réelle : les cas STALE/UNKNOWN/futur/croisé/mauvaise devise sont couverts par le self-test isolé.
 
-PASS : aucun de ces panneaux ne retombe en micro-texte après chargement tardif.
-FAIL : un libellé ou une valeur redevient visiblement microscopique. Dans ce cas capture/dump, sans chercher manuellement dans le code.
+## À ne pas confondre
+La prochaine dette reste le loader Strategy : reprise après script chargé sans API + self_test trompeur. Ce n'est pas traité dans .450.
 
-La .449 ne traite volontairement ni la fraîcheur des quotes Execution Cost ni les chemins d'erreur/self-test du loader ; ces chantiers restent séparés.
+Checkpoints protégés : .441 · .442 · .445 · .446 · .448 · .449 · Market Core 38.15.11 · Aether.

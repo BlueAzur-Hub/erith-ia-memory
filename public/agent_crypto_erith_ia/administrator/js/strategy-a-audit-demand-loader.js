@@ -2,7 +2,7 @@
    Minimal owner repair after 40.6.443: the opening owner is the canonical outer
    details[data-collapse-key="simulation"], not the inner #simulation section.
    Loads Cost-Wait + Oracle/Cost + Execution Cost Truth read-only tools only when Simulation is opened.
-   No boot residency, polling, observer or storage write. Execution Cost stays manual-fetch only after operator demand. */
+   No boot residency, polling, observer or storage write. Execution Cost stays manual-fetch only after operator demand.\n   40.6.450 only refreshes the Execution Cost asset token; loader behavior remains 40.6.446. */
 (()=>{
   "use strict";
   const BUILD="40.6.446", TIMEOUT=6000;
@@ -10,7 +10,7 @@
   const SPECS=Object.freeze([
     Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
     Object.freeze({key:"oracle-cost",src:"./js/strategy-a-oracle-cost-calibration-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit}),
-    Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth})
+    Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.450",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth})
   ]);
   let state="idle",promise=null,lastError="",reason="";
   const simulationOwner=()=>document.querySelector(SIMULATION_OWNER_SELECTOR);
