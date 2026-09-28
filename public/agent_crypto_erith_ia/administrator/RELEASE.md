@@ -1,44 +1,27 @@
-# Agent-Crypto 40.6.453 — AETHER SOURCE READINESS TRUTH
+# Agent-Crypto 40.6.454 — STRATEGY EXPERIMENT CYCLE EVENT WIRING
 
 ## Objet unique
-Empêcher Aether d'afficher **TOUTES LES SOURCES PRÊTES** lorsque la couche Source Truth / Source Intelligence n'est pas réellement prête et fraîche.
+Raccorder l'événement `agent-crypto:strategy-a-experiment-cycle` au vrai propriétaire des cycles Auto A / Experiment Ledger.
 
 ## Cause prouvée
-Dans 40.6.452, `aetherSourcesModel()` décidait `PRÊTES` uniquement avec :
-- Binance complet ;
-- Book prêt ;
-- Atlas Data disponible ;
-- News disponibles.
+Les trois modules d'audit écoutaient déjà cet événement :
+- `strategy-a-cost-wait-outcome-audit.js` ;
+- `strategy-a-oracle-cost-calibration-audit.js` ;
+- `strategy-a-execution-cost-truth.js`.
 
-Il ne lisait ni `ErithPrivateBackendSources.sourceIntelligence()`, ni le `freshness_gate` CEX. Le terrain a donc pu montrer simultanément Source Intelligence PARTIELLE / CEX périmé et Aether **TOUTES LES SOURCES PRÊTES**.
+Le vrai cycle était bien produit par `strategyAAutoCycle()` puis enregistré par `strategyAExperimentRecord()`, mais aucun producteur courant n'émettait l'événement après l'enregistrement du cycle.
 
 ## Correction
-Propriétaire unique : `js/aether.js`.
+Propriétaire unique modifié : `app.js`.
 
-Le statut Aether `PRÊTES` exige maintenant :
-1. Binance complet ;
-2. Book prêt ;
-3. Atlas prêt ;
-4. News prêtes ;
-5. Source Intelligence `state === "ready"` ;
-6. `freshness_gate.ready === true` ;
-7. CEX comparable complet.
+Après ajout du vrai cycle au ledger et tentative de persistance existante, `strategyAExperimentRecord()` émet exactement une fois `agent-crypto:strategy-a-experiment-cycle`.
 
-API absente, intelligence absente, état partiel/stale ou fraîcheur non prête => **SOURCES PARTIELLES**.
+Le détail expose seulement : `cycle_id`, `cycle_number`, `captured_at`, `trigger`, `phase`, `persisted`, `build`.
 
-Aether se repeint sur les événements existants :
-- `erith:source-intelligence` ;
-- `erith:source-intelligence-auto` ;
-- `erith:private-source-runtime-loaded`.
+La panne éventuelle de localStorage n'empêche pas la notification d'un cycle déjà présent dans le ledger runtime ; le champ `persisted` indique la réussite de la persistance existante.
 
-## Test
-Le workflow 40.6.453 exécute :
-- `node --check js/aether.js` ;
-- un harness du helper pur de readiness ;
-- les cas API absente, intelligence absente, PARTIAL, freshness false, CEX incomplet et READY complet ;
-- contrôle statique du câblage Aether et de la préservation du loader Strategy 40.6.452.
+## Invariants
+Aucun nouveau timer, observer, fetch, WebSocket, stockage, ordre, seuil Strategy, Cost Gate, Oracle, Risk, Paper, Backend, Aether ou Market Core 38.15.11.
 
-## Protégé
-Backend .441 · Graphique .442 · Oracle .445 · HTML .448 · lisibilité .449 · fraîcheur Execution Cost .450 · tableaux .451 · loader Strategy .452 · Market Core 38.15.11.
-
-Aucun seuil Strategy/Oracle, aucun calcul d'exécution, aucun Backend, aucun Market Core, aucun nouveau timer/observer/storage/network métier.
+## Checkpoint parent
+40.6.453 est désormais PASS terrain.

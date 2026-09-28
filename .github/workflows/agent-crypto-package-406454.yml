@@ -1,0 +1,126 @@
+name: Agent-Crypto Package 40.6.454 Strategy Experiment Cycle Event
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406454-strategy-experiment-cycle-event
+    paths:
+      - '.github/workflows/agent-crypto-package-406454.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.454
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/app.js"
+
+          node <<'NODE'
+          const fs=require('fs');
+          const src=fs.readFileSync('public/agent_crypto_erith_ia/administrator/app.js','utf8');
+          const start=src.indexOf('const STRATEGY_A_EXPERIMENT_CYCLE_EVENT_406454=');
+          const end=src.indexOf('function strategyAExperimentRecord(trigger="timer"){');
+          if(start<0||end<=start)throw new Error('40.6.454 helper boundaries missing');
+          const helper=src.slice(start,end);
+          let seen=[];
+          globalThis.CustomEvent=class CustomEvent{constructor(type,opts){this.type=type;this.detail=opts?.detail;}};
+          globalThis.document={dispatchEvent(ev){seen.push(ev);return true;}};
+          Function(helper+'\nglobalThis.__dispatch406454=strategyAExperimentCycleDispatch406454;')();
+          const row={cycle_id:'A-CYCLE-00123-TEST',cycle_number:123,captured_at:'2026-09-28T22:00:00.000Z',trigger:'timer',phase:'COST_GATE_WAIT'};
+          const ok=globalThis.__dispatch406454(row,true);
+          if(ok!==true)throw new Error('helper did not dispatch');
+          if(seen.length!==1)throw new Error('expected one event, got '+seen.length);
+          if(seen[0].type!=='agent-crypto:strategy-a-experiment-cycle')throw new Error('wrong event '+seen[0].type);
+          if(seen[0].detail?.cycle_id!==row.cycle_id||seen[0].detail?.cycle_number!==123)throw new Error('cycle identity detail mismatch');
+          if(seen[0].detail?.trigger!=='timer'||seen[0].detail?.phase!=='COST_GATE_WAIT'||seen[0].detail?.persisted!==true)throw new Error('event detail mismatch');
+          delete globalThis.document;
+          if(globalThis.__dispatch406454(row,false)!==false)throw new Error('no-document path must fail closed');
+          const dispatchCalls=(src.match(/  strategyAExperimentCycleDispatch406454\(row,persisted\);/g)||[]).length;
+          if(dispatchCalls!==1)throw new Error('expected one record dispatch call, got '+dispatchCalls);
+          const finallyCalls=(src.match(/try\{strategyAExperimentRecord\(trigger\);\}catch\(_\)\{\}/g)||[]).length;
+          if(finallyCalls!==1)throw new Error('expected one Auto A finally record call, got '+finallyCalls);
+          console.log('40.6.454 EVENT HARNESS PASS');
+          NODE
+
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          idx=(root/'index.html').read_text(encoding='utf-8')
+          app=(root/'app.js').read_text(encoding='utf-8')
+          b=json.loads((root/'build.json').read_text(encoding='utf-8'))
+          receipt=json.loads((root/'STRATEGY_EXPERIMENT_CYCLE_EVENT_TEST_40.6.454.json').read_text(encoding='utf-8'))
+          listeners={
+            'cost':(root/'js/strategy-a-cost-wait-outcome-audit.js').read_text(encoding='utf-8'),
+            'oracle':(root/'js/strategy-a-oracle-cost-calibration-audit.js').read_text(encoding='utf-8'),
+            'execution':(root/'js/strategy-a-execution-cost-truth.js').read_text(encoding='utf-8'),
+          }
+          checks={
+            'build':b.get('build')=='40.6.454',
+            'market_core':b.get('market_core')=='38.15.11',
+            'release':b.get('release')=='STRATEGY EXPERIMENT CYCLE EVENT WIRING',
+            'entry_build':'Build 40.6.454 · Administrator' in idx,
+            'app_cache_bust':'./app.js?v=40.6.454' in idx,
+            'loader_452_preserved':'strategy-a-audit-demand-loader.js?v=40.6.452' in idx,
+            'helper':'strategyAExperimentCycleDispatch406454' in app,
+            'receipt':receipt.get('pass') is True,
+            'cost_listener':'agent-crypto:strategy-a-experiment-cycle' in listeners['cost'],
+            'oracle_listener':'agent-crypto:strategy-a-experiment-cycle' in listeners['oracle'],
+            'execution_listener':'agent-crypto:strategy-a-experiment-cycle' in listeners['execution'],
+            'no_markup_literal_newline':re.search(r'>\\n\s*<',idx) is None,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f'40.6.454 validation failed: {bad}')
+          print('40.6.454 STATIC CONTRACT PASS')
+          PY
+
+      - name: Build bounded ZIP
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_STRATEGY_EXPERIMENT_CYCLE_EVENT_40.6.454.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406454
+          mkdir -p /tmp/agent-crypto-406454/administrator/js
+          cp "$ROOT/index.html" /tmp/agent-crypto-406454/administrator/
+          cp "$ROOT/index-40.6.454.html" /tmp/agent-crypto-406454/administrator/
+          cp "$ROOT/app.js" /tmp/agent-crypto-406454/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406454/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406454/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406454/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.454.txt" /tmp/agent-crypto-406454/administrator/
+          cp "$ROOT/STRATEGY_EXPERIMENT_CYCLE_EVENT_TEST_40.6.454.json" /tmp/agent-crypto-406454/administrator/
+          cp "$ROOT/js/strategy-a-cost-wait-outcome-audit.js" /tmp/agent-crypto-406454/administrator/js/
+          cp "$ROOT/js/strategy-a-oracle-cost-calibration-audit.js" /tmp/agent-crypto-406454/administrator/js/
+          cp "$ROOT/js/strategy-a-execution-cost-truth.js" /tmp/agent-crypto-406454/administrator/js/
+          (cd /tmp/agent-crypto-406454 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_STRATEGY_EXPERIMENT_CYCLE_EVENT_40.6.454.zip" "$ROOT/AGENT_CRYPTO_STRATEGY_EXPERIMENT_CYCLE_EVENT_40.6.454.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.454 Strategy cycle event ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

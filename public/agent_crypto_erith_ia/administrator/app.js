@@ -36416,6 +36416,27 @@ function strategyAExperimentPersist(){
   STRATEGY_A_EXPERIMENT_LEDGER_404289=STRATEGY_A_EXPERIMENT_LEDGER_404289.slice(-STRATEGY_A_EXPERIMENT_LEDGER_MAX);
   try{localStorage.setItem(STRATEGY_A_EXPERIMENT_LEDGER_KEY,JSON.stringify(STRATEGY_A_EXPERIMENT_LEDGER_404289));return true;}catch(_){return false;}
 }
+/* 40.6.454 — STRATEGY A EXPERIMENT CYCLE EVENT WIRING
+   Presentation/audit notification only. A REAL Auto A cycle is already recorded
+   in the existing Experiment Ledger before this event is emitted. No gate,
+   threshold, timer, network request, execution path or storage owner is added. */
+const STRATEGY_A_EXPERIMENT_CYCLE_EVENT_406454="agent-crypto:strategy-a-experiment-cycle";
+function strategyAExperimentCycleDispatch406454(row,persisted){
+  if(!row||typeof document==="undefined"||typeof CustomEvent!=="function")return false;
+  try{
+    const detail=Object.freeze({
+      cycle_id:String(row?.cycle_id||""),
+      cycle_number:Number(row?.cycle_number||0),
+      captured_at:String(row?.captured_at||""),
+      trigger:String(row?.trigger||""),
+      phase:String(row?.phase||""),
+      persisted:persisted===true,
+      build:"40.6.454"
+    });
+    document.dispatchEvent(new CustomEvent(STRATEGY_A_EXPERIMENT_CYCLE_EVENT_406454,{detail}));
+    return true;
+  }catch(_){return false;}
+}
 function strategyAExperimentRecord(trigger="timer"){
   const s=STRATEGY_A_AUTO_STATE;
   const p=typeof STRATEGY_A_LAST_PROPOSAL!=="undefined"?STRATEGY_A_LAST_PROPOSAL:null;
@@ -36442,7 +36463,11 @@ function strategyAExperimentRecord(trigger="timer"){
     metrics:metrics?{sample_size:Number(metrics.sample_size||0),status:String(metrics.status||""),wins:Number(metrics.wins||0),losses:Number(metrics.losses||0),cumulative_net_pnl_eur:Number(metrics.cumulative_net_pnl_eur||0),expectancy_eur:Number(metrics.expectancy_eur||0),total_fees_eur:Number(metrics.total_fees_eur||0),estimated_total_impact_eur:Number(metrics.estimated_total_impact_eur||0),max_drawdown_eur:Number(metrics.max_drawdown_eur||0)}:null,
     safety:{paper_only:true,real_orders:false,kraken_network:false,wallet:false,credentials:false,withdrawals:false,market_core_changed:false,oracle_engine_changed:false,risk_policy_changed:false,cost_threshold_changed:false}
   };
-  STRATEGY_A_EXPERIMENT_LEDGER_404289.push(row);strategyAExperimentPersist();return strategyAExperimentClone(row);
+  STRATEGY_A_EXPERIMENT_LEDGER_404289.push(row);
+  const persisted=strategyAExperimentPersist();
+  const cloned=strategyAExperimentClone(row);
+  strategyAExperimentCycleDispatch406454(row,persisted);
+  return cloned;
 }
 function strategyAExperimentSummary(){
   const rows=STRATEGY_A_EXPERIMENT_LEDGER_404289,latest=rows.at(-1)||null;
