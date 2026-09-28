@@ -1,19 +1,13 @@
-# HANDOFF — Agent-Crypto 40.6.450
+# HANDOFF — Agent-Crypto 40.6.451
 
-## Test Firefox unique
-1. Vérifier **Build 40.6.450**.
-2. Ouvrir **Simulation**.
-3. Dans **EXECUTION COST TRUTH**, cliquer **MESURER KRAKEN + OKX**.
-4. Sur la carte OKX, vérifier une ligne distincte de la latence :
-   - `Fraîcheur : FRESH`
-   - âge de quote
-   - limite de fraîcheur
-   - heure de quote.
-5. Kraken doit continuer à afficher sa mesure normalement.
+## Test Firefox
+1. Vérifier **Build 40.6.451**.
+2. Ouvrir Simulation → Execution Cost Truth.
+3. Vérifier les deux tableaux Kraken / OKX.
+4. Les en-têtes doivent rester dans chaque carte : aucun texte Kraken ne doit traverser dans OKX et inversement.
+5. Aucun scroll horizontal ne doit être nécessaire.
+6. La ligne OKX `Fraîcheur : FRESH · âge … · limite … · quote …` de .450 doit rester inchangée.
 
-Aucun besoin de fabriquer une quote périmée dans la session réelle : les cas STALE/UNKNOWN/futur/croisé/mauvaise devise sont couverts par le self-test isolé.
+PASS : séparation centrale propre et valeurs toujours lisibles.
 
-## À ne pas confondre
-La prochaine dette reste le loader Strategy : reprise après script chargé sans API + self_test trompeur. Ce n'est pas traité dans .450.
-
-Checkpoints protégés : .441 · .442 · .445 · .446 · .448 · .449 · Market Core 38.15.11 · Aether.
+La prochaine dette fonctionnelle reste le loader Strategy (reprise après script chargé sans API + self_test), volontairement hors .451.

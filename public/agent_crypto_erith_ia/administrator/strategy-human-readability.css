@@ -142,6 +142,36 @@ body #simulation #strategyAExecutionCostTruth table {font-size:13px;line-height:
 body #simulation #strategyAExecutionCostTruth th,
 body #simulation #strategyAExecutionCostTruth td {padding:8px 7px}
 
+/* 40.6.451 — Execution Cost table containment.
+   The global Administrator table contract still carries min-width:790px.
+   Inside the two half-width Execution Cost cards that minimum made each table
+   physically wider than its card, so Kraken's last header crossed into OKX.
+   This local presentation owner keeps both tables inside their cards. */
+body #simulation #strategyAExecutionCostTruth .ect-card {
+  overflow:hidden;
+}
+body #simulation #strategyAExecutionCostTruth table {
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  table-layout:fixed;
+}
+body #simulation #strategyAExecutionCostTruth th,
+body #simulation #strategyAExecutionCostTruth td {
+  min-width:0;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+body #simulation #strategyAExecutionCostTruth th:nth-child(1),
+body #simulation #strategyAExecutionCostTruth td:nth-child(1) {width:18%}
+body #simulation #strategyAExecutionCostTruth th:nth-child(2),
+body #simulation #strategyAExecutionCostTruth td:nth-child(2),
+body #simulation #strategyAExecutionCostTruth th:nth-child(3),
+body #simulation #strategyAExecutionCostTruth td:nth-child(3) {width:24%}
+body #simulation #strategyAExecutionCostTruth th:nth-child(4),
+body #simulation #strategyAExecutionCostTruth td:nth-child(4) {width:34%}
+
 /* Decompress the densest technical grids without hiding any evidence. */
 body #simulation #strategyAAfterCost .sam-grid,
 body #simulation #strategyADurableEvidence .de-grid,

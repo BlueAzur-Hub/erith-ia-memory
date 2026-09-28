@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.450",
+  "build": "40.6.451",
   "engine": "38.15.11",
-  "release": "EXECUTION COST SOURCE TRUTH FRESHNESS",
+  "release": "EXECUTION COST TABLE LAYOUT FIX",
   "published": true,
-  "status": "published_pending_firefox_450",
-  "parent_build": "40.6.449",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.450",
-  "administrator_build": "40.6.450",
-  "build_label": "Build 40.6.450 · Administrator",
+  "status": "published_pending_firefox_451",
+  "parent_build": "40.6.450",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.451",
+  "administrator_build": "40.6.451",
+  "build_label": "Build 40.6.451 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -16,7 +16,7 @@
   "atlas_current_modified": false,
   "oracle_modified": false,
   "lecture_technique_modified": false,
-  "strategy_a_modified": true,
+  "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
   "administrator_presentation_modified": true,
   "aerith10_presentation_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox : ouvrir Simulation puis MESURER KRAKEN + OKX. OKX doit afficher FRESH avec âge, limite et heure de quote distincts de la latence de requête. Une quote STALE/UNKNOWN est non exploitable et laisse Kraken en PARTIAL. Aucun test de quote périmée à fabriquer côté opérateur.",
+  "terrain_pending": "Firefox : ouvrir Simulation puis Execution Cost Truth. Les deux tableaux Kraken / OKX doivent rester strictement dans leur carte, sans chevauchement central des en-têtes ni scroll horizontal. Fraîcheur .450 doit rester visible et inchangée.",
   "terrain_proof": null,
-  "release_notes": "40.6.450 ferme la dette de fraîcheur Execution Cost : la quote OKX doit prouver son horodatage et respecter le contrat Source Truth existant (cache backend 15 s, avec seuil dynamique si le payload en expose un). Timestamp absent/invalide/futur → UNKNOWN ; trop ancien → STALE ; ces états ne sont plus des mesures exploitables. La paire/devise BTC/EUR est vérifiée avant les alias bid/ask génériques ; booléens et chaînes blanches sont rejetés comme numériques. Kraken reste exploitable si OKX échoue. Aucun seuil Strategy, calcul Oracle, Backend, Market Core, Aether, stockage, timer ou ordre réel n'est modifié.",
+  "release_notes": "40.6.451 corrige uniquement le débordement visuel des tableaux Execution Cost. Cause prouvée : le contrat global table{min-width:790px} dépassait la largeur réelle de chaque demi-carte Kraken/OKX. La feuille canonique Strategy neutralise ce minimum localement, impose table-layout:fixed, autorise le retour à la ligne et fixe des proportions de colonnes 18/24/24/34. Aucun JS, calcul, fraîcheur, Backend, loader, seuil Strategy, Oracle, Market Core ou Aether n'est modifié.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5614,6 +5614,50 @@
     "new_observer": false,
     "storage_write": false,
     "real_order": false,
-    "firefox_status": "PENDING_OPERATOR_450"
+    "firefox_status": "PASS_OPERATOR_450",
+    "firefox_proof_note": "28/09/2026 : capture + dump opérateur. OKX FRESH, âge 7 s, limite 15 s, quote 2026-09-28T19:59:25Z ; latence requête 8071 ms distincte. Kraken DIRECT_REQUEST 1486 ms."
+  },
+  "execution_cost_table_layout_406451": {
+    "enabled": true,
+    "parent": "40.6.450",
+    "owner": "strategy-human-readability.css",
+    "root_cause": "GLOBAL_TABLE_MIN_WIDTH_790_PX_OVERFLOWED_EACH_HALF_WIDTH_EXECUTION_COST_CARD",
+    "global_contract_preserved": true,
+    "execution_cost_override": {
+      "min_width_px": 0,
+      "max_width_percent": 100,
+      "table_layout": "fixed",
+      "column_widths_percent": [
+        18,
+        24,
+        24,
+        34
+      ],
+      "white_space": "normal",
+      "overflow_wrap": "anywhere"
+    },
+    "local_chromium_test": {
+      "viewport_px": [
+        1644,
+        920
+      ],
+      "representative_card_width_px": 745,
+      "baseline_table_width_px": 790,
+      "baseline_overflow_px": 68,
+      "fixed_table_width_px": 721,
+      "fixed_overflow_px": 0,
+      "pass": true
+    },
+    "javascript_modified": false,
+    "execution_cost_math_changed": false,
+    "freshness_406450_changed": false,
+    "strategy_thresholds_changed": false,
+    "strategy_business_logic_changed": false,
+    "backend_modified": false,
+    "loader_modified": false,
+    "oracle_math_changed": false,
+    "market_core_modified": false,
+    "aether_modified": false,
+    "firefox_status": "PENDING_OPERATOR_VISUAL_451"
   }
 }
