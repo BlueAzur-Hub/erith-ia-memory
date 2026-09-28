@@ -32,7 +32,7 @@
   "terrain_verified": false,
   "terrain_pending": "Firefox : Ctrl+F5 puis vérifier Build 40.6.455. Ouvrir uniquement Section 04 · Expérimentation & système → Simulation. Dans STRATEGY A · EXECUTION COST TRUTH · 40.6.455, ne cliquer sur aucun bouton : Kraken + OKX doivent se mesurer automatiquement. Puis laisser Auto A produire un vrai cycle : la mesure doit se relancer automatiquement une fois après le cycle, sans double mesure. Les blocs Cost-Wait et Oracle/Cost doivent rester présents. Rien d'autre à ouvrir pour ce test.",
   "terrain_proof": null,
-  "release_notes": "40.6.455 automatise Execution Cost sans timer ni polling. Le module mesure Kraken + OKX une fois lorsqu'il est réellement monté dans Simulation, puis relance une mesure après chaque événement réel agent-crypto:strategy-a-experiment-cycle fourni par 40.6.454. Une mesure déjà en cours est dédupliquée ; au plus une reprise est mise en attente si un cycle arrive pendant la mesure. Le bouton devient un rafraîchissement manuel de secours. Aucun seuil, Oracle, Risk, Paper, Backend, Aether, Market Core ou ordre réel n'est modifié.",
+  "release_notes": "40.6.455 automatise Execution Cost sans timer ni polling. Le module mesure Kraken + OKX une fois lorsqu'il est réellement monté dans Simulation, puis relance une mesure après chaque événement réel agent-crypto:strategy-a-experiment-cycle fourni par 40.6.454. Une mesure déjà en cours est dédupliquée ; au plus une reprise est mise en attente si un cycle arrive pendant la mesure. Le bouton devient un rafraîchissement manuel de secours. Aucun seuil, Oracle, Risk, Paper, Backend, Aether, Market Core ou ordre réel n'est modifié. Delivery hardening: the canonical Strategy audit loader is cache-busted with delivery token 40.6.455 while its behavior contract remains 40.6.452; its execution-cost child URL now requests ?v=40.6.455 so Firefox cannot retain the 40.6.450 module behind the new global build.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5826,6 +5826,12 @@
     "market_core_modified": false,
     "real_order": false,
     "paper_only": true,
-    "firefox_status": "PENDING_OPERATOR_455"
+    "firefox_status": "PENDING_OPERATOR_455",
+    "loader_logic_build": "40.6.452",
+    "loader_delivery_token": "40.6.455",
+    "execution_cost_delivery_token": "40.6.455",
+    "cache_bust_verified": true,
+    "loader_behavior_changed": false,
+    "loader_delivery_modified": true
   }
 }

@@ -9,8 +9,11 @@ Supprimer le clic obligatoire sur **MESURER KRAKEN + OKX** sans ajouter de timer
 - si une mesure est déjà en cours : pas de deuxième mesure concurrente ; au plus une reprise après le cycle est conservée ;
 - le bouton reste présent comme **RAFRAÎCHIR KRAKEN + OKX** de secours, mais il n'est plus requis.
 
-## Propriétaire unique
+## Propriétaire fonctionnel
 `js/strategy-a-execution-cost-truth.js` → build interne 40.6.455.
+
+## Livraison cache
+Le comportement du loader Strategy reste **40.6.452**, mais son token de livraison passe à **40.6.455** afin de demander explicitement `strategy-a-execution-cost-truth.js?v=40.6.455`. Aucun changement de logique du loader.
 
 ## Réseau
 Cette automatisation déclenche les mêmes lectures déjà utilisées par le bouton :

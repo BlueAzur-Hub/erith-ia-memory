@@ -7,7 +7,7 @@
 2. Vérifier en haut : **Build 40.6.455 · Administrator**.
 3. Ouvrir uniquement **Section 04 · Expérimentation & système**.
 4. Ouvrir uniquement **Simulation**.
-5. Descendre jusqu'au bloc **STRATEGY A · EXECUTION COST TRUTH · 40.6.455**.
+5. Descendre jusqu'au bloc **STRATEGY A · EXECUTION COST TRUTH · 40.6.455**. Si ce titre reste en 40.6.450 après Ctrl+F5, arrêter le test et signaler un problème de cache/livraison.
 6. **Ne cliquer sur aucun bouton.**
 7. Attendre la fin de la mesure automatique : les cartes Kraken + OKX doivent remplacer `Non mesuré` par leurs valeurs ou par un diagnostic réel si une source est indisponible.
 8. Vérifier que le bouton affiche désormais **RAFRAÎCHIR KRAKEN + OKX** : c'est seulement un secours manuel.
