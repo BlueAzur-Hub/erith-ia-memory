@@ -1,26 +1,32 @@
-# Agent-Crypto 40.6.455 — EXECUTION COST AUTO MEASURE
+# Agent-Crypto 40.6.456 — PRIVATE SOURCE LOADER READY FAIL-CLOSED
 
 ## Objet unique
-Supprimer le clic obligatoire sur **MESURER KRAKEN + OKX** sans ajouter de timer ou de polling.
+Corriger le contrat interne `ready` du loader Source Truth sans modifier Source Truth lui-même.
 
-## Comportement
-- au premier montage réel de `STRATEGY A · EXECUTION COST TRUTH` dans Simulation : mesure automatique Kraken + OKX ;
-- après chaque vrai `agent-crypto:strategy-a-experiment-cycle` émis par 40.6.454 : nouvelle mesure automatique ;
-- si une mesure est déjà en cours : pas de deuxième mesure concurrente ; au plus une reprise après le cycle est conservée ;
-- le bouton reste présent comme **RAFRAÎCHIR KRAKEN + OKX** de secours, mais il n'est plus requis.
+## Cause prouvée
+Depuis 40.6.440, `sourceOwnerReady()` appelait `settleReady()` avant de vérifier le résultat de `downstreamBounded()`. Un timeout ou une erreur downstream pouvait donc produire simultanément :
+- `state = ready` ;
+- `ensure() = true` ;
+- événement `erith:private-source-runtime-loaded` ;
+- et `last_error = downstream-timeout/error`.
 
-## Propriétaire fonctionnel
-`js/strategy-a-execution-cost-truth.js` → build interne 40.6.455.
+Le marqueur DOM `dataset.loaded=true` du DEX freshness guard pouvait aussi être accepté comme prêt même si `AgentCryptoDexFreshnessGuard.active !== true`.
 
-## Livraison cache
-Le comportement du loader Strategy reste **40.6.452**, mais son token de livraison passe à **40.6.455** afin de demander explicitement `strategy-a-execution-cost-truth.js?v=40.6.455`. Aucun changement de logique du loader.
+## Correction
+`READY` exige maintenant les quatre conditions :
+1. propriétaire Source Truth présent et montable ;
+2. `mount()` sans erreur ;
+3. `AgentCryptoDexFreshnessGuard.active === true` ;
+4. downstream borné = `ready`.
 
-## Réseau
-Cette automatisation déclenche les mêmes lectures déjà utilisées par le bouton :
-- Kraken REST public ;
-- OKX uniquement via Source Truth CEX / backend local 8790.
+Sinon : `state=error`, `ensure()=false`, `last_error` explicite et **aucun événement runtime-ready**.
 
-Elle n'ajoute aucun WebSocket, aucun timer récurrent, aucun polling, aucune clé, aucun wallet et aucun ordre réel.
+Une demande explicite ultérieure retente le downstream en réutilisant le Source Truth déjà chargé.
+
+## Observabilité
+`snapshot()` expose maintenant `runtime_ready`, `source_owner_ready`, `freshness_guard_ready`, `downstream_state`. Un `self_test()` pur vérifie le contrat fail-closed.
 
 ## Protégé
-Market Core 38.15.11 · Backend .441 · Graphique .442 · Oracle .445 · structure .448 · lisibilité .449 · freshness Execution Cost .450 · layout .451 · Strategy loader .452 · Aether readiness .453 · cycle event .454.
+Market Core 38.15.11 · Backend Source Truth métier · Aether .453 · cycle event .454 · Execution Cost auto .455 · Strategy / Oracle / Risk / Paper.
+
+Aucun nouveau timer, observer, storage owner, endpoint métier ou ordre réel.

@@ -1,0 +1,123 @@
+name: Agent-Crypto Package 40.6.456 Private Source Ready Fail Closed
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406456-private-source-ready-fail-closed
+    paths:
+      - '.github/workflows/agent-crypto-package-406456.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.456
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/views/private-source-demand-loader.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+
+          node <<'NODE'
+          const fs=require('fs');
+          const src=fs.readFileSync('public/agent_crypto_erith_ia/administrator/js/views/private-source-demand-loader.js','utf8');
+          const A='/* 40.6.456 READY CONTRACT PURE START */';
+          const B='/* 40.6.456 READY CONTRACT PURE END */';
+          const a=src.indexOf(A),b=src.indexOf(B);
+          if(a<0||b<a)throw new Error('pure ready helper markers missing');
+          const code=src.slice(a,b+B.length);
+          Function(code+'\nglobalThis.__outcome406456=sourceRuntimeOutcome406456;')();
+          const fn=globalThis.__outcome406456;
+          const cases=[
+            ['owner-missing',false,true,'ready',false,'source-owner-not-ready'],
+            ['freshness-false',true,false,'ready',false,'freshness-guard-not-ready'],
+            ['timeout',true,true,'timeout',false,'downstream-timeout'],
+            ['error',true,true,'error',false,'downstream-error'],
+            ['ready',true,true,'ready',true,''],
+          ];
+          for(const [name,o,f,d,ready,error] of cases){const got=fn(o,f,d);if(got.ready!==ready||got.error!==error)throw new Error(name+' '+JSON.stringify(got));}
+          const oldPattern='settleReady();\n    if(downstream!=="ready")';
+          if(src.includes(oldPattern))throw new Error('old fail-open settle pattern remains');
+          const failure=src.indexOf('if(!outcome.ready){');
+          const settle=src.indexOf('settleReady();',failure);
+          const dispatch=src.indexOf('erith:private-source-runtime-loaded',failure);
+          if(!(failure>=0&&settle>failure&&dispatch>settle))throw new Error('ready ordering contract invalid');
+          if(!src.includes('globalThis.AgentCryptoDexFreshnessGuard?.active===true'))throw new Error('freshness active contract missing');
+          console.log('40.6.456 READY CONTRACT HARNESS PASS');
+          NODE
+
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          idx=(root/'index.html').read_text(encoding='utf-8')
+          loader=(root/'js/views/private-source-demand-loader.js').read_text(encoding='utf-8')
+          post=(root/'js/post-boot-runtime-loader.js').read_text(encoding='utf-8')
+          b=json.loads((root/'build.json').read_text(encoding='utf-8'))
+          receipt=json.loads((root/'PRIVATE_SOURCE_READY_FAIL_CLOSED_TEST_40.6.456.json').read_text(encoding='utf-8'))
+          checks={
+            'build':b.get('build')=='40.6.456',
+            'release':b.get('release')=='PRIVATE SOURCE LOADER READY FAIL-CLOSED',
+            'market_core':b.get('market_core')=='38.15.11',
+            'entry_build':'Build 40.6.456 · Administrator' in idx,
+            'postboot_delivery':'post-boot-runtime-loader.js?v=40.6.456' in idx,
+            'private_source_delivery':'private-source-demand-loader.js?v=40.6.456' in post,
+            'postboot_logic':'const BUILD="40.6.414"' in post,
+            'snapshot_fields':all(x in loader for x in ['runtime_ready','source_owner_ready','freshness_guard_ready','downstream_state']),
+            'self_test':'self_test:()=>{' in loader,
+            'receipt':receipt.get('pass') is True,
+            'exec_cost_455':'strategy-a-audit-demand-loader.js?v=40.6.455' in idx,
+            'app_454':'app.js?v=40.6.454' in idx,
+            'no_markup_literal_newline':re.search(r'>\\n\s*<',idx) is None,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f'40.6.456 validation failed: {bad}')
+          print('40.6.456 STATIC CONTRACT PASS')
+          PY
+
+      - name: Build bounded ZIP
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_PRIVATE_SOURCE_READY_FAIL_CLOSED_40.6.456.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406456
+          mkdir -p /tmp/agent-crypto-406456/administrator/js/views /tmp/agent-crypto-406456/administrator/js
+          cp "$ROOT/index.html" /tmp/agent-crypto-406456/administrator/
+          cp "$ROOT/index-40.6.456.html" /tmp/agent-crypto-406456/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406456/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406456/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406456/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.456.txt" /tmp/agent-crypto-406456/administrator/
+          cp "$ROOT/PRIVATE_SOURCE_READY_FAIL_CLOSED_TEST_40.6.456.json" /tmp/agent-crypto-406456/administrator/
+          cp "$ROOT/js/views/private-source-demand-loader.js" /tmp/agent-crypto-406456/administrator/js/views/
+          cp "$ROOT/js/post-boot-runtime-loader.js" /tmp/agent-crypto-406456/administrator/js/
+          (cd /tmp/agent-crypto-406456 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_PRIVATE_SOURCE_READY_FAIL_CLOSED_40.6.456.zip" "$ROOT/AGENT_CRYPTO_PRIVATE_SOURCE_READY_FAIL_CLOSED_40.6.456.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.456 Source ready fail-closed ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

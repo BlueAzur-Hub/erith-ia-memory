@@ -16,6 +16,8 @@
    Source Truth stays in its canonical Backend / API host.
    40.6.440 restores deterministic Backend/API demand: replay when Backend is already open,
    bounded source-owner loading, and real retry after a failed/stale script node.
+   40.6.456 makes runtime READY fail-closed: Source owner + freshness guard + bounded downstream ordering
+   must all succeed before state=ready and before erith:private-source-runtime-loaded is emitted.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, loader storage write, wallet or trading endpoint is introduced. */
 (()=>{
@@ -36,6 +38,7 @@
   const SRC=`./js/views/private-backend-sources.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
   const SOURCE_LOAD_TIMEOUT_MS=7000, DOWNSTREAM_TIMEOUT_MS=4500;
   let state="idle",promise=null,reason="",loadedAt=0,lastError="",attempts=0;
+  let sourceOwnerReadyState=false,freshnessGuardReady=false,downstreamState="idle";
 
   const parts=value=>String(value||"").split(".").map(x=>Number.parseInt(x,10)||0);
   const atLeast=target=>{const A=parts(runtimeBuild()),B=parts(target),n=Math.max(A.length,B.length);for(let i=0;i<n;i+=1){const d=(A[i]||0)-(B[i]||0);if(d)return d>0;}return true;};
@@ -67,24 +70,41 @@
   function ensureDexFreshnessGuard(){
     if(!atLeast("40.6.111"))return Promise.resolve(false);
     if(globalThis.AgentCryptoDexFreshnessGuard?.active===true)return Promise.resolve(true);
-    const existing=document.querySelector('script[data-dex-freshness-guard-canonical="true"]');
+    let existing=document.querySelector('script[data-dex-freshness-guard-canonical="true"]');
     if(existing){
-      if(globalThis.AgentCryptoDexFreshnessGuard?.active===true||existing.dataset.loaded==="true")return Promise.resolve(true);
-      return new Promise(resolve=>{
-        existing.addEventListener("load",()=>{existing.dataset.loaded="true";resolve(globalThis.AgentCryptoDexFreshnessGuard?.active===true);},{once:true});
-        existing.addEventListener("error",()=>resolve(false),{once:true});
-      });
+      if(globalThis.AgentCryptoDexFreshnessGuard?.active===true)return Promise.resolve(true);
+      if(existing.dataset.loaded==="true"||existing.dataset.loaded==="false"){
+        try{existing.remove();}catch(_){}
+        existing=null;
+      }else{
+        return new Promise(resolve=>{
+          existing.addEventListener("load",()=>{
+            existing.dataset.loaded="true";
+            resolve(globalThis.AgentCryptoDexFreshnessGuard?.active===true);
+          },{once:true});
+          existing.addEventListener("error",()=>{
+            existing.dataset.loaded="false";
+            try{existing.remove();}catch(_){}
+            resolve(false);
+          },{once:true});
+        });
+      }
     }
     return new Promise(resolve=>{
       const script=document.createElement("script");
       script.src=`./js/dex-freshness-guard.js?v=administrator-build-${encodeURIComponent(runtimeBuild())}`;
       script.async=false;
       script.dataset.dexFreshnessGuardCanonical="true";
+      script.dataset.loaded="pending";
       script.addEventListener("load",()=>{
         script.dataset.loaded="true";
         resolve(globalThis.AgentCryptoDexFreshnessGuard?.active===true);
       },{once:true});
-      script.addEventListener("error",()=>resolve(false),{once:true});
+      script.addEventListener("error",()=>{
+        script.dataset.loaded="false";
+        try{script.remove();}catch(_){}
+        resolve(false);
+      },{once:true});
       document.head.appendChild(script);
     });
   }
@@ -159,42 +179,67 @@
     return true;
   }
 
-  function settleReady(){state="ready";loadedAt=Date.now();lastError="";return true;}
+  function settleReady(){state="ready";loadedAt=Date.now();lastError="";downstreamState="ready";return true;}
+
+  /* 40.6.456 READY CONTRACT PURE START */
+  function sourceRuntimeOutcome406456(ownerReady,freshnessReady,downstream){
+    const ds=String(downstream||"unknown");
+    if(ownerReady!==true)return Object.freeze({ready:false,error:"source-owner-not-ready"});
+    if(freshnessReady!==true)return Object.freeze({ready:false,error:"freshness-guard-not-ready"});
+    if(ds!=="ready")return Object.freeze({ready:false,error:"downstream-"+ds});
+    return Object.freeze({ready:true,error:""});
+  }
+  /* 40.6.456 READY CONTRACT PURE END */
 
   async function afterSourceOwners(){
-    // 40.6.241: DEX freshness must bind to the Source Truth API before the
-    // source-runtime-ready event lets downstream diagnostics/readers consume it.
-    await ensureDexFreshnessGuard();
+    // 40.6.456: freshness readiness is a hard prerequisite for the runtime-ready event.
+    const freshness=await ensureDexFreshnessGuard();
+    freshnessGuardReady=freshness===true&&globalThis.AgentCryptoDexFreshnessGuard?.active===true;
+    if(!freshnessGuardReady)return false;
     ensureDexDiagnostics();
     ensureCexDivergenceGuard();
     ensureAtlasDecisionContext();
     ensureStrategyTradusComparative();
     ensureStrategyTradusOutcomeMemory();
+    return true;
   }
 
   const sourceScript=()=>document.querySelector('script[data-private-source-demand-stable="true"],script[data-private-source-demand="true"]');
   const discardSourceScript=node=>{if(!node)return;try{node.dataset.loaded="0";node.remove();}catch(_){}};
   const downstreamBounded=async()=>{
     let timer=0;
+    downstreamState="loading";
     try{
       const timeout=new Promise(resolve=>{timer=setTimeout(()=>resolve("timeout"),DOWNSTREAM_TIMEOUT_MS);});
-      const result=await Promise.race([Promise.resolve(afterSourceOwners()).then(()=>"ready").catch(()=>"error"),timeout]);
-      return result;
+      const result=await Promise.race([
+        Promise.resolve(afterSourceOwners()).then(ok=>ok===true?"ready":"freshness-not-ready").catch(()=>"error"),
+        timeout
+      ]);
+      downstreamState=String(result||"error");
+      return downstreamState;
     }finally{if(timer)clearTimeout(timer);}
   };
   const sourceOwnerReady=async(node,why)=>{
     if(node)node.dataset.loaded="1";
     const owner=globalThis.ErithPrivateBackendSources;
-    if(!owner||typeof owner.mount!=="function"){
-      state="error";lastError="source-owner-missing-after-load";
+    sourceOwnerReadyState=!!owner&&typeof owner.mount==="function";
+    if(!sourceOwnerReadyState){
+      state="error";loadedAt=0;lastError="source-owner-missing-after-load";freshnessGuardReady=false;downstreamState="not-started";
       discardSourceScript(node);
       return false;
     }
-    try{owner.mount();}catch(_){}
+    try{owner.mount();}catch(_){
+      state="error";loadedAt=0;lastError="source-owner-mount-error";sourceOwnerReadyState=false;freshnessGuardReady=false;downstreamState="not-started";
+      return false;
+    }
     const downstream=await downstreamBounded();
+    const outcome=sourceRuntimeOutcome406456(sourceOwnerReadyState,freshnessGuardReady,downstream);
+    if(!outcome.ready){
+      state="error";loadedAt=0;lastError=outcome.error;
+      return false;
+    }
     settleReady();
-    if(downstream!=="ready")lastError="downstream-"+downstream;
-    try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:runtimeBuild(),reason:String(why||reason),downstream}}));}catch(_){}
+    try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:runtimeBuild(),reason:String(why||reason),downstream,source_owner_ready:true,freshness_guard_ready:true}}));}catch(_){}
     return true;
   };
 
@@ -217,7 +262,7 @@
       existing=null;
     }
 
-    state="loading";lastError="";attempts+=1;
+    state="loading";loadedAt=0;lastError="";sourceOwnerReadyState=false;freshnessGuardReady=false;downstreamState="loading";attempts+=1;
     promise=new Promise(resolve=>{
       let node=existing,settled=false,timer=0;
       const finish=async(ok,code)=>{
@@ -294,7 +339,17 @@
     ensureAtlasDecisionContext,
     ensureStrategyTradusComparative,
     ensureStrategyTradusOutcomeMemory,
-    snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,attempts,source_load_timeout_ms:SOURCE_LOAD_TIMEOUT_MS,downstream_timeout_ms:DOWNSTREAM_TIMEOUT_MS,parser_boot_loaded:false,source:SRC,source_truth_host:"backend",active_build:runtimeBuild()}),
+    snapshot:()=>Object.freeze({state,runtime_ready:state==="ready",reason,loaded_at:loadedAt,last_error:lastError,attempts,source_owner_ready:sourceOwnerReadyState,freshness_guard_ready:freshnessGuardReady,downstream_state:downstreamState,source_load_timeout_ms:SOURCE_LOAD_TIMEOUT_MS,downstream_timeout_ms:DOWNSTREAM_TIMEOUT_MS,parser_boot_loaded:false,source:SRC,source_truth_host:"backend",active_build:runtimeBuild()}),
+    self_test:()=>{
+      const cases=[
+        sourceRuntimeOutcome406456(false,true,"ready").ready===false,
+        sourceRuntimeOutcome406456(true,false,"ready").ready===false,
+        sourceRuntimeOutcome406456(true,true,"timeout").ready===false,
+        sourceRuntimeOutcome406456(true,true,"error").ready===false,
+        sourceRuntimeOutcome406456(true,true,"ready").ready===true
+      ];
+      return Object.freeze({pass:cases.every(Boolean),total:cases.length,passed:cases.filter(Boolean).length,cases:Object.freeze(cases)});
+    },
     stable_owner:true,
     source_truth_backend_placement_restored:true,
     sources_reparenting:false,
