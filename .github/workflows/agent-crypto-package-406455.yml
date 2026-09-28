@@ -59,7 +59,7 @@ jobs:
             'entry_build':'Build 40.6.455 · Administrator' in idx,
             'parent_app_454':'./app.js?v=40.6.454' in idx,
             'loader_452':'strategy-a-audit-demand-loader.js?v=40.6.452' in idx,
-            'module_build':'STRATEGY A · EXECUTION COST TRUTH · '+ '40.6.455' in js,
+            'module_build':'const BUILD="40.6.455"' in js and 'STRATEGY A · EXECUTION COST TRUTH · ' in js,
             'receipt':receipt.get('pass') is True,
             'no_literal_markup_newline':re.search(r'>\\n\s*<',idx) is None,
           }
