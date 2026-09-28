@@ -1,0 +1,33 @@
+AGENT-CRYPTO EXECUTION COST AUTO MEASURE — 40.6.455
+===================================================
+
+OWNER
+-----
+js/strategy-a-execution-cost-truth.js
+
+AUTO TRIGGERS
+-------------
+1. first real module mount in Simulation
+2. agent-crypto:strategy-a-experiment-cycle
+
+DEDUPLICATION
+-------------
+busy measurement -> no concurrent request
+experiment during busy -> at most one pending replay
+
+MANUAL FALLBACK
+---------------
+RAFRAÎCHIR KRAKEN + OKX remains available but is not required
+
+NO
+--
+no recurring timer
+no polling
+no observer
+no WebSocket
+no storage owner
+no API key
+no wallet
+no real order
+no Strategy threshold change
+no Oracle/Risk/Paper/Backend/Aether/Market Core change

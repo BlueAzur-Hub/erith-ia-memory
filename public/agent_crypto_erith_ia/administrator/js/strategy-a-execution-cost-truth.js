@@ -1,13 +1,14 @@
-/* Agent-Crypto @erith.IA — 40.6.450 STRATEGY A EXECUTION COST SOURCE TRUTH FRESHNESS
-   Manual BTC/EUR execution-cost measurement for Kraken + OKX Europe.
+/* Agent-Crypto @erith.IA — 40.6.455 STRATEGY A EXECUTION COST AUTO MEASURE
+   Event-driven BTC/EUR execution-cost measurement for Kraken + OKX Europe; manual refresh remains a fallback.
    40.6.443 restored the tool and hardened null/crossed-book handling.
    40.6.450 fails closed on stale/unknown/future OKX quote time, proves BTC/EUR identity before generic aliases,
    separates quote/receive/calculate times, rejects booleans/blank numeric inputs, and keeps Kraken usable when OKX is invalid.
    Source Truth fallback freshness is the existing private-backend cache contract: 15 s.
+   40.6.455 measures once when the Simulation audit module mounts, then again after each real Strategy A experiment-cycle event.
    No direct browser OKX internet access, order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
 (() => {
   "use strict";
-  const BUILD="40.6.450", ROOT="strategyAExecutionCostTruth";
+  const BUILD="40.6.455", ROOT="strategyAExecutionCostTruth";
   const SIZES=Object.freeze([10,25,50,100]), DEPTH_BPS=Object.freeze([5,10,25]), TIMEOUT=9000, BACKEND_TIMEOUT=18000;
   const SOURCE_TRUTH_CACHE_TTL_SECONDS=15, SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS=30;
   const VENUES=Object.freeze({
@@ -286,14 +287,14 @@
     if(okCount===2)return okx?.depth_available===false?"MEASURED_BOTH_OKX_TOP_OF_BOOK_ONLY":"MEASURED_BOTH";
     return okCount===1?"PARTIAL":"FAILED";
   }
-  async function measure(){
+  async function measure(trigger="manual"){
     if(busy)return last;
     busy=true; render("Mesure en cours…");
     try{
       const [kraken,okx]=await Promise.all([oneKraken(VENUES.kraken),oneOkx(VENUES.okx)]);
       const status=measurementStatus(kraken,okx);
       last=Object.freeze({
-        schema:"agent_crypto_strategy_a_execution_cost_truth_v1",build:BUILD,generated_at:new Date().toISOString(),
+        schema:"agent_crypto_strategy_a_execution_cost_truth_v1",build:BUILD,generated_at:new Date().toISOString(),measurement_trigger:String(trigger||"manual"),
         status,
         pair:"BTC/EUR",sizes_eur:SIZES.slice(),depth_bps:DEPTH_BPS.slice(),
         oracle_context:oracleContext(),venues:Object.freeze({kraken,okx}),
@@ -309,7 +310,7 @@
           quote_time_receive_time_calculation_time_separated:true,
           post_only_cost_is_fee_floor_only_and_fill_not_guaranteed:true
         }),
-        protections:Object.freeze({manual_fetch_only:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false})
+        protections:Object.freeze({manual_fetch_only:false,automatic_measurement:true,automatic_measure_on_mount:true,automatic_measure_on_experiment_cycle:true,manual_refresh_fallback:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false})
       });
       return last;
     }finally{busy=false;render();}
@@ -318,7 +319,7 @@
     if(!last)return false;
     try{
       const b=new Blob([JSON.stringify(last,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_450.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
+      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_455.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
   function style(){
@@ -360,11 +361,11 @@
     style(); let root=document.getElementById(ROOT); if(!root){root=document.createElement("section");root.id=ROOT;}
     if(root.previousElementSibling!==anchor){try{anchor.insertAdjacentElement("afterend",root);}catch(_){}}
     const c=last?.oracle_context||oracleContext();
-    root.innerHTML='<div class="ect-h"><div><div class="ect-t">STRATEGY A · EXECUTION COST TRUTH · '+BUILD+'</div><div class="ect-s">BTC/EUR · Kraken public + OKX via Source Truth CEX / Backend local 8790 · aucun ordre réel.</div></div><div class="ect-actions"><button class="btn small" id="'+ROOT+'Measure">'+(busy?"MESURE…":"MESURER KRAKEN + OKX")+'</button><button class="btn small" id="'+ROOT+'Export" '+(!last?"disabled":"")+'>EXPORTER</button></div></div>'+
+    root.innerHTML='<div class="ect-h"><div><div class="ect-t">STRATEGY A · EXECUTION COST TRUTH · '+BUILD+'</div><div class="ect-s">BTC/EUR · Kraken public + OKX via Source Truth CEX / Backend local 8790 · aucun ordre réel.</div></div><div class="ect-actions"><button class="btn small" id="'+ROOT+'Measure">'+(busy?"MESURE…":"RAFRAÎCHIR KRAKEN + OKX")+'</button><button class="btn small" id="'+ROOT+'Export" '+(!last?"disabled":"")+'>EXPORTER</button></div></div>'+
       (message?'<div class="ect-note">'+esc(message)+'</div>':'')+
       '<div class="ect-grid">'+card(last?.venues?.kraken)+card(last?.venues?.okx)+'</div>'+
       '<div class="ect-note"><b>CONTEXTE :</b> enveloppe Oracle médiane '+esc(pct(c.oracle_envelope_median_pct))+' · MFE observée '+esc(pct(c.mfe_median_pct))+' · ancien coût pédagogique '+esc(pct(c.pedagogical_cost_pct))+' · seuil Strategy A '+esc(pct(c.strategy_threshold_pct))+'. Cette version mesure et compare ; elle ne choisit aucune plateforme et ne change aucun seuil.</div>';
-    root.querySelector("#"+ROOT+"Measure")?.addEventListener("click",()=>void measure(),{once:true});
+    root.querySelector("#"+ROOT+"Measure")?.addEventListener("click",()=>void measure("manual-refresh"),{once:true});
     root.querySelector("#"+ROOT+"Export")?.addEventListener("click",exportJson);
     root.dataset.build=BUILD;root.dataset.readOnly="true";return last;
   }
@@ -398,6 +399,8 @@
       stale_okx_preserves_kraken_partial:measurementStatus({ok:true},{ok:false,freshness_state:"STALE"})==="PARTIAL",
       backend_demand_bounded:true,
       repeatable_export:true,
+      automatic_measure_contract:true,
+      event_driven_without_recurring_timer:true,
       no_real_order:true
     });
     const runtime=Object.freeze({okx_owner_available:typeof globalThis.ErithPrivateSourceDemand?.ensure==="function"||typeof globalThis.ErithPrivateBackendSources?.refresh==="function"});
@@ -405,21 +408,60 @@
   }
   globalThis.AgentCryptoStrategyAExecutionCostTruth=Object.freeze({
     build:BUILD,measure,render,export_json:exportJson,snapshot:()=>last,self_test:selfTest,
-    manual_fetch_only:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false,
+    manual_fetch_only:false,automatic_measurement:true,automatic_measure_on_mount:true,automatic_measure_on_experiment_cycle:true,manual_refresh_fallback:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false,
     freshness_fallback_seconds:SOURCE_TRUTH_CACHE_TTL_SECONDS,future_tolerance_seconds:SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS,stale_or_unknown_quote_usable:false
   });
   if(typeof document!=="undefined"){
-    let mountQueued=false;
-    const boot=()=>{try{render();}catch(_){}};
+    let mountQueued=false,autoMeasureQueued=false,pendingExperimentMeasure=false,initialAutoMeasureDone=false;
+    const hasAnchor=()=>!!document.getElementById("strategyAOracleCostCalibrationAudit");
+    const scheduleAutoMeasure=(reason="mount")=>{
+      const why=String(reason||"mount");
+      if(!hasAnchor())return false;
+      if(why==="mount"&&(initialAutoMeasureDone||last))return false;
+      if(busy){
+        if(why==="experiment-cycle")pendingExperimentMeasure=true;
+        return false;
+      }
+      if(autoMeasureQueued)return false;
+      autoMeasureQueued=true;
+      const run=async()=>{
+        autoMeasureQueued=false;
+        if(!hasAnchor()||busy)return;
+        if(why==="mount")initialAutoMeasureDone=true;
+        try{await measure("auto:"+why);}catch(_){}
+      };
+      try{queueMicrotask(()=>void run());}catch(_){Promise.resolve().then(()=>void run());}
+      return true;
+    };
+    const boot=()=>{
+      try{render();}catch(_){}
+      if(!last)scheduleAutoMeasure("mount");
+    };
     const scheduleMount=()=>{
       if(mountQueued)return;
       mountQueued=true;
       const run=()=>{mountQueued=false;boot();};
       try{queueMicrotask(run);}catch(_){Promise.resolve().then(run);}
     };
+    const onExperimentCycle=()=>{
+      try{render();}catch(_){}
+      if(!scheduleAutoMeasure("experiment-cycle")&&busy)pendingExperimentMeasure=true;
+    };
+    const finishPendingExperiment=()=>{
+      if(!pendingExperimentMeasure||busy)return;
+      pendingExperimentMeasure=false;
+      scheduleAutoMeasure("experiment-cycle");
+    };
+    const originalMeasure=measure;
+    measure=async function(trigger="manual"){
+      try{return await originalMeasure(trigger);}
+      finally{
+        if(String(trigger||"").startsWith("auto:"))finishPendingExperiment();
+      }
+    };
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",scheduleMount,{once:true});else scheduleMount();
     document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",scheduleMount,{passive:true});
-    document.addEventListener("agent-crypto:strategy-a-experiment-cycle",scheduleMount,{passive:true});
+    document.addEventListener("agent-crypto:strategy-a-experiment-cycle",onExperimentCycle,{passive:true});
     document.addEventListener("toggle",event=>{if(event?.target?.id==="simulation"&&event.target.open===true)scheduleMount();},true);
     window.addEventListener("agent-crypto:postboot-runtime-ready",scheduleMount,{passive:true});
     window.addEventListener("pageshow",scheduleMount,{passive:true});

@@ -1,0 +1,106 @@
+name: Agent-Crypto Package 40.6.455 Execution Cost Auto Measure
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406455-execution-cost-auto-measure
+    paths:
+      - '.github/workflows/agent-crypto-package-406455.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.455
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-execution-cost-truth.js"
+
+          node <<'NODE'
+          const fs=require('fs');
+          const src=fs.readFileSync('public/agent_crypto_erith_ia/administrator/js/strategy-a-execution-cost-truth.js','utf8');
+          const checks={
+            build:src.includes('const BUILD="40.6.455"'),
+            autoMount:src.includes('scheduleAutoMeasure("mount")'),
+            autoCycle:src.includes('document.addEventListener("agent-crypto:strategy-a-experiment-cycle",onExperimentCycle'),
+            noManualOnly:src.includes('manual_fetch_only:false'),
+            manualFallback:src.includes('RAFRAÎCHIR KRAKEN + OKX'),
+            busyGuard:src.includes('if(busy){') && src.includes('pendingExperimentMeasure=true'),
+            noInterval:!src.includes('setInterval('),
+            noRealOrder:src.includes('real_order:false'),
+          };
+          const bad=Object.entries(checks).filter(([,v])=>!v).map(([k])=>k);
+          if(bad.length)throw new Error('40.6.455 JS contract failed: '+bad.join(', '));
+          console.log('40.6.455 JS CONTRACT PASS');
+          NODE
+
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          idx=(root/'index.html').read_text(encoding='utf-8')
+          js=(root/'js/strategy-a-execution-cost-truth.js').read_text(encoding='utf-8')
+          b=json.loads((root/'build.json').read_text(encoding='utf-8'))
+          receipt=json.loads((root/'EXECUTION_COST_AUTO_MEASURE_TEST_40.6.455.json').read_text(encoding='utf-8'))
+          checks={
+            'build':b.get('build')=='40.6.455',
+            'release':b.get('release')=='EXECUTION COST AUTO MEASURE',
+            'market_core':b.get('market_core')=='38.15.11',
+            'entry_build':'Build 40.6.455 · Administrator' in idx,
+            'parent_app_454':'./app.js?v=40.6.454' in idx,
+            'loader_452':'strategy-a-audit-demand-loader.js?v=40.6.452' in idx,
+            'module_build':'STRATEGY A · EXECUTION COST TRUTH · '+ '40.6.455' in js,
+            'receipt':receipt.get('pass') is True,
+            'no_literal_markup_newline':re.search(r'>\\n\s*<',idx) is None,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f'40.6.455 validation failed: {bad}')
+          print('40.6.455 STATIC CONTRACT PASS')
+          PY
+
+      - name: Build bounded ZIP
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_EXECUTION_COST_AUTO_MEASURE_40.6.455.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406455
+          mkdir -p /tmp/agent-crypto-406455/administrator/js
+          cp "$ROOT/index.html" /tmp/agent-crypto-406455/administrator/
+          cp "$ROOT/index-40.6.455.html" /tmp/agent-crypto-406455/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406455/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406455/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406455/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.455.txt" /tmp/agent-crypto-406455/administrator/
+          cp "$ROOT/EXECUTION_COST_AUTO_MEASURE_TEST_40.6.455.json" /tmp/agent-crypto-406455/administrator/
+          cp "$ROOT/js/strategy-a-execution-cost-truth.js" /tmp/agent-crypto-406455/administrator/js/
+          (cd /tmp/agent-crypto-406455 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_EXECUTION_COST_AUTO_MEASURE_40.6.455.zip" "$ROOT/AGENT_CRYPTO_EXECUTION_COST_AUTO_MEASURE_40.6.455.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.455 Execution Cost auto-measure ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

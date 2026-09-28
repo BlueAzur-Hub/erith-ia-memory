@@ -1,27 +1,23 @@
-# Agent-Crypto 40.6.454 — STRATEGY EXPERIMENT CYCLE EVENT WIRING
+# Agent-Crypto 40.6.455 — EXECUTION COST AUTO MEASURE
 
 ## Objet unique
-Raccorder l'événement `agent-crypto:strategy-a-experiment-cycle` au vrai propriétaire des cycles Auto A / Experiment Ledger.
+Supprimer le clic obligatoire sur **MESURER KRAKEN + OKX** sans ajouter de timer ou de polling.
 
-## Cause prouvée
-Les trois modules d'audit écoutaient déjà cet événement :
-- `strategy-a-cost-wait-outcome-audit.js` ;
-- `strategy-a-oracle-cost-calibration-audit.js` ;
-- `strategy-a-execution-cost-truth.js`.
+## Comportement
+- au premier montage réel de `STRATEGY A · EXECUTION COST TRUTH` dans Simulation : mesure automatique Kraken + OKX ;
+- après chaque vrai `agent-crypto:strategy-a-experiment-cycle` émis par 40.6.454 : nouvelle mesure automatique ;
+- si une mesure est déjà en cours : pas de deuxième mesure concurrente ; au plus une reprise après le cycle est conservée ;
+- le bouton reste présent comme **RAFRAÎCHIR KRAKEN + OKX** de secours, mais il n'est plus requis.
 
-Le vrai cycle était bien produit par `strategyAAutoCycle()` puis enregistré par `strategyAExperimentRecord()`, mais aucun producteur courant n'émettait l'événement après l'enregistrement du cycle.
+## Propriétaire unique
+`js/strategy-a-execution-cost-truth.js` → build interne 40.6.455.
 
-## Correction
-Propriétaire unique modifié : `app.js`.
+## Réseau
+Cette automatisation déclenche les mêmes lectures déjà utilisées par le bouton :
+- Kraken REST public ;
+- OKX uniquement via Source Truth CEX / backend local 8790.
 
-Après ajout du vrai cycle au ledger et tentative de persistance existante, `strategyAExperimentRecord()` émet exactement une fois `agent-crypto:strategy-a-experiment-cycle`.
+Elle n'ajoute aucun WebSocket, aucun timer récurrent, aucun polling, aucune clé, aucun wallet et aucun ordre réel.
 
-Le détail expose seulement : `cycle_id`, `cycle_number`, `captured_at`, `trigger`, `phase`, `persisted`, `build`.
-
-La panne éventuelle de localStorage n'empêche pas la notification d'un cycle déjà présent dans le ledger runtime ; le champ `persisted` indique la réussite de la persistance existante.
-
-## Invariants
-Aucun nouveau timer, observer, fetch, WebSocket, stockage, ordre, seuil Strategy, Cost Gate, Oracle, Risk, Paper, Backend, Aether ou Market Core 38.15.11.
-
-## Checkpoint parent
-40.6.453 est désormais PASS terrain.
+## Protégé
+Market Core 38.15.11 · Backend .441 · Graphique .442 · Oracle .445 · structure .448 · lisibilité .449 · freshness Execution Cost .450 · layout .451 · Strategy loader .452 · Aether readiness .453 · cycle event .454.

@@ -1,21 +1,17 @@
-# HANDOFF — Agent-Crypto 40.6.454
+# HANDOFF — Agent-Crypto 40.6.455
 
 ## Test Firefox exact
 **Ne pas déplier toute la page.**
 
-1. Ctrl+F5.
-2. Vérifier en haut : **Build 40.6.454 · Administrator**.
+1. Faire `Ctrl+F5`.
+2. Vérifier en haut : **Build 40.6.455 · Administrator**.
 3. Ouvrir uniquement **Section 04 · Expérimentation & système**.
-4. Dans Section 04, ouvrir uniquement **Simulation**.
-5. Repérer **AUTO PAPER RUNNER V1 · STRATÉGIE A** et **STRATEGY A · EXPERIMENT LEDGER**.
-6. Noter le nombre `cycles` / `Cycles tracés`.
-7. Si Auto A est déjà actif, attendre son prochain cycle prévu. S'il est OFF, ne pas l'activer uniquement pour le test sans décision opérateur.
-8. Après un vrai nouveau cycle : le nombre doit avancer d'une unité, sans double-cycle.
-9. Dans la même sous-section Simulation, vérifier seulement la présence de :
-   - STRATEGY A · COST-WAIT OUTCOME AUDIT ;
-   - STRATEGY A · ORACLE / COST CALIBRATION TRUTH ;
-   - STRATEGY A · EXECUTION COST TRUTH.
+4. Ouvrir uniquement **Simulation**.
+5. Descendre jusqu'au bloc **STRATEGY A · EXECUTION COST TRUTH · 40.6.455**.
+6. **Ne cliquer sur aucun bouton.**
+7. Attendre la fin de la mesure automatique : les cartes Kraken + OKX doivent remplacer `Non mesuré` par leurs valeurs ou par un diagnostic réel si une source est indisponible.
+8. Vérifier que le bouton affiche désormais **RAFRAÎCHIR KRAKEN + OKX** : c'est seulement un secours manuel.
+9. Si Auto A est actif, noter l'heure / les valeurs Execution Cost puis attendre le prochain vrai cycle Auto A. Après ce cycle, Execution Cost doit repasser brièvement en mesure puis se mettre à jour automatiquement une seule fois.
+10. Vérifier dans la même sous-section que **COST-WAIT OUTCOME AUDIT** et **ORACLE / COST CALIBRATION TRUTH** sont toujours présents.
 
-**Rien d'autre à ouvrir pour .454.**
-
-Si Auto A reste OFF, la non-régression visuelle suffit côté terrain ; le dispatch est couvert par le harness automatisé jusqu'au prochain vrai cycle.
+**Rien d'autre à ouvrir pour le test .455.**
