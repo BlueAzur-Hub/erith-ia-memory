@@ -1,0 +1,114 @@
+name: Agent-Crypto Package 40.6.453 Aether Source Readiness Truth
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406453-aether-source-readiness-truth
+    paths:
+      - '.github/workflows/agent-crypto-package-406453.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.453
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/aether.js"
+
+          node <<'NODE'
+          const fs=require("fs");
+          const src=fs.readFileSync("public/agent_crypto_erith_ia/administrator/js/aether.js","utf8");
+          const START="/* 40.6.453 SOURCE READINESS PURE START */";
+          const END="/* 40.6.453 SOURCE READINESS PURE END */";
+          const a=src.indexOf(START), b=src.indexOf(END);
+          if(a<0||b<a)throw new Error("readiness helper markers missing");
+          const code=src.slice(a,b+END.length);
+          Function(code+"\nglobalThis.__readiness406453=aetherSourceTruthReadiness;")();
+          const fn=globalThis.__readiness406453;
+          const run=(api)=>{globalThis.ErithPrivateBackendSources=api;return fn();};
+          const cases=[
+            ["api-missing",undefined,false],
+            ["intel-missing",{sourceIntelligence(){return null}},false],
+            ["partial",{sourceIntelligence(){return {state:"partial",freshness_gate:{ready:true},cex:{comparable_assets:5,total_assets:5}}}},false],
+            ["freshness-false",{sourceIntelligence(){return {state:"ready",freshness_gate:{ready:false},cex:{comparable_assets:5,total_assets:5}}}},false],
+            ["cex-incomplete",{sourceIntelligence(){return {state:"ready",freshness_gate:{ready:true},cex:{comparable_assets:4,total_assets:5}}}},false],
+            ["ready",{sourceIntelligence(){return {state:"ready",freshness_gate:{ready:true},cex:{comparable_assets:5,total_assets:5}}}},true],
+          ];
+          for(const [name,api,expected] of cases){const got=run(api);if(got.ready!==expected)throw new Error(name+" expected "+expected+" got "+JSON.stringify(got));}
+          if(!src.includes("const sourceReady=binanceComplete&&bookReady&&atlasReady&&newsReady&&sourceTruth.ready;"))throw new Error("Aether aggregate contract missing source truth");
+          for(const event of ["erith:source-intelligence","erith:source-intelligence-auto","erith:private-source-runtime-loaded"]){if(!src.includes(event))throw new Error("event binding missing "+event);}
+          console.log("40.6.453 AETHER SOURCE READINESS HARNESS PASS");
+          NODE
+
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          idx=(root/"index.html").read_text(encoding="utf-8")
+          aether=(root/"js/aether.js").read_text(encoding="utf-8")
+          b=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          receipt=json.loads((root/"AETHER_SOURCE_READINESS_TRUTH_TEST_40.6.453.json").read_text(encoding="utf-8"))
+          checks={
+            "build":b.get("build")=="40.6.453",
+            "market_core":b.get("market_core")=="38.15.11",
+            "aether_modified":b.get("aether_modified") is True,
+            "strategy_business_logic":b.get("strategy_a_business_logic_modified") is False,
+            "release":b.get("release")=="AETHER SOURCE READINESS TRUTH",
+            "entry_build":"Build 40.6.453 · Administrator" in idx,
+            "strategy_loader_452_preserved":'strategy-a-audit-demand-loader.js?v=40.6.452' in idx,
+            "helper":"aetherSourceTruthReadiness" in aether,
+            "receipt":receipt.get("pass") is True,
+            "no_markup_literal_newline":re.search(r'>\\n\s*<',idx) is None,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"40.6.453 validation failed: {bad}")
+          print("40.6.453 STATIC CONTRACT PASS")
+          PY
+
+      - name: Build bounded ZIP
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_AETHER_SOURCE_READINESS_TRUTH_40.6.453.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406453
+          mkdir -p /tmp/agent-crypto-406453/administrator/js
+          cp "$ROOT/index.html" /tmp/agent-crypto-406453/administrator/
+          cp "$ROOT/index-40.6.453.html" /tmp/agent-crypto-406453/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406453/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406453/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406453/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.453.txt" /tmp/agent-crypto-406453/administrator/
+          cp "$ROOT/AETHER_SOURCE_READINESS_TRUTH_TEST_40.6.453.json" /tmp/agent-crypto-406453/administrator/
+          cp "$ROOT/js/aether.js" /tmp/agent-crypto-406453/administrator/js/
+          (cd /tmp/agent-crypto-406453 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_AETHER_SOURCE_READINESS_TRUTH_40.6.453.zip" "$ROOT/AGENT_CRYPTO_AETHER_SOURCE_READINESS_TRUTH_40.6.453.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.453 Aether source readiness ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

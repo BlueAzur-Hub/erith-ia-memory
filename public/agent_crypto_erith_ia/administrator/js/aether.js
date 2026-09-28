@@ -1383,6 +1383,26 @@ function aetherNewsMarketSemantic(){
     else if(gpu===null){status='PARTIEL';tone='neutral';}
     return {cpu,cpuTemp,gpu,gpuTemp,ram,status,tone};
   }
+  /* 40.6.453 SOURCE READINESS PURE START */
+  function aetherSourceTruthReadiness(){
+    const api=globalThis.ErithPrivateBackendSources;
+    if(!api||typeof api.sourceIntelligence!=="function"){
+      return Object.freeze({known:false,ready:false,state:"missing",freshness_ready:false,cex_ready:false,cex_comparable:null,cex_total:null});
+    }
+    let intel=null;
+    try{intel=api.sourceIntelligence?.()||null;}catch(_){}
+    if(!intel||typeof intel!=="object"){
+      return Object.freeze({known:false,ready:false,state:"unknown",freshness_ready:false,cex_ready:false,cex_comparable:null,cex_total:null});
+    }
+    const state=String(intel?.state||"unknown").trim().toLowerCase();
+    const gate=intel?.freshness_gate||null;
+    const freshnessReady=gate?.ready===true;
+    const comparable=Number(intel?.cex?.comparable_assets),total=Number(intel?.cex?.total_assets);
+    const cexReady=Number.isFinite(comparable)&&Number.isFinite(total)&&total>0&&comparable===total;
+    const ready=state==="ready"&&freshnessReady&&cexReady;
+    return Object.freeze({known:true,ready,state,freshness_ready:freshnessReady,cex_ready:cexReady,cex_comparable:Number.isFinite(comparable)?comparable:null,cex_total:Number.isFinite(total)?total:null});
+  }
+  /* 40.6.453 SOURCE READINESS PURE END */
   function aetherSourcesModel(snapshot){
     let newsCount=0,newsLabel='VEILLE',newsStatus='idle';
     try{const ns=aetherVeilleStatus();newsCount=Array.isArray(ns?.events)?ns.events.length:0;newsLabel=newsCount?'ACTIVES':String(ns?.label||'VEILLE').toUpperCase();newsStatus=String(ns?.status||'idle').toLowerCase();}catch(_){}
@@ -1394,8 +1414,9 @@ function aetherNewsMarketSemantic(){
     const atlasData=String(snapshot?.currentStatus||'').toUpperCase()==='CURRENT'?'CURRENT':snapshot?.reports?'DISPONIBLE':'VEILLE';
     const atlasReady=atlasData==='CURRENT'||atlasData==='DISPONIBLE';
     const newsReady=newsCount>0&&newsStatus!=='error';
-    const sourceReady=binanceComplete&&bookReady&&atlasReady&&newsReady;
-    return {ratio,book,news:newsCount?`${newsCount} QUALIFIÉ${newsCount>1?'S':''}`:newsLabel,atlasData,status:sourceReady?'PRÊTES':'PARTIELLES',tone:sourceReady?'good':'warn',checks:{binanceComplete,bookReady,atlasReady,newsReady}};
+    const sourceTruth=aetherSourceTruthReadiness();
+    const sourceReady=binanceComplete&&bookReady&&atlasReady&&newsReady&&sourceTruth.ready;
+    return {ratio,book,news:newsCount?`${newsCount} QUALIFIÉ${newsCount>1?'S':''}`:newsLabel,atlasData,status:sourceReady?'PRÊTES':'PARTIELLES',tone:sourceReady?'good':'warn',checks:{binanceComplete,bookReady,atlasReady,newsReady,sourceTruthKnown:sourceTruth.known,sourceTruthReady:sourceTruth.ready,sourceTruthState:sourceTruth.state,sourceTruthFreshnessReady:sourceTruth.freshness_ready,sourceTruthCexReady:sourceTruth.cex_ready}};
   }
   function aetherAtlasModel(snapshot){
     const raw=String(snapshot?.atlas||'').trim();
@@ -2007,6 +2028,14 @@ function aetherNewsMarketSemantic(){
       document.addEventListener("visibilitychange",()=>aetherCadenceVisibilitySync("visibilitychange"),{passive:true});
       window.addEventListener("pageshow",()=>aetherCadenceVisibilitySync("pageshow"),{passive:true});
       aetherCadenceVisibilitySync("bind");
+    }
+    // 40.6.453 — Source readiness truth is event-driven: Aether repaints when Source Intelligence settles.
+    if(document.documentElement.dataset.aetherSourceTruth406453Bound!=="1"){
+      document.documentElement.dataset.aetherSourceTruth406453Bound="1";
+      const refreshSourceTruth406453=()=>{if(aetherExposureState.exposed)queueMicrotask(()=>{try{renderAether();}catch(_){}});};
+      document.addEventListener("erith:source-intelligence",refreshSourceTruth406453,{passive:true});
+      document.addEventListener("erith:source-intelligence-auto",refreshSourceTruth406453,{passive:true});
+      window.addEventListener("erith:private-source-runtime-loaded",refreshSourceTruth406453,{passive:true});
     }
     aetherBindMarketCompletion();
     aetherBindOracleCompletion();

@@ -1,38 +1,44 @@
-# Agent-Crypto 40.6.452 — STRATEGY DEMAND LOADER RETRY + SELF TEST
+# Agent-Crypto 40.6.453 — AETHER SOURCE READINESS TRUTH
 
-## Objet
-Fermer les deux défauts loader confirmés par l'audit Astra, sans toucher au métier Strategy.
+## Objet unique
+Empêcher Aether d'afficher **TOUTES LES SOURCES PRÊTES** lorsque la couche Source Truth / Source Intelligence n'est pas réellement prête et fraîche.
 
-## Défaut 1 — script chargé sans API
-Avant .452, un événement `load` pouvait poser `dataset.loaded=1` même si le script n'avait pas créé son API attendue. La tentative suivante retrouvait ce nœud `loaded=1`, retournait encore `false` et ne recréait jamais le script.
+## Cause prouvée
+Dans 40.6.452, `aetherSourcesModel()` décidait `PRÊTES` uniquement avec :
+- Binance complet ;
+- Book prêt ;
+- Atlas Data disponible ;
+- News disponibles.
 
-### Correction
-- succès transport ≠ succès module ;
-- succès seulement si `load` **et** API attendue présente ;
-- si API absente : nœud marqué failed puis retiré ;
-- si un ancien nœud `loaded=1` existe sans API : il est considéré stale, retiré et recréé dans la demande explicite courante ;
-- aucun retry automatique : la reprise vient uniquement d'un nouvel `ensure()` / nouvel événement opérateur.
+Il ne lisait ni `ErithPrivateBackendSources.sourceIntelligence()`, ni le `freshness_gate` CEX. Le terrain a donc pu montrer simultanément Source Intelligence PARTIELLE / CEX périmé et Aether **TOUTES LES SOURCES PRÊTES**.
 
-## Défaut 2 — self_test trompeur
-Les anciennes clés `recurring_timer:false`, `observer:false`, `storage_write:false` étaient passées dans `every(Boolean)`. Le test ne pouvait donc jamais être vrai.
+## Correction
+Propriétaire unique : `js/aether.js`.
 
-### Correction
-Assertions positives :
-- `no_recurring_timer:true`
-- `no_observer:true`
-- `no_storage_write:true`
-- `no_automatic_retry_loop:true`
+Le statut Aether `PRÊTES` exige maintenant :
+1. Binance complet ;
+2. Book prêt ;
+3. Atlas prêt ;
+4. News prêtes ;
+5. Source Intelligence `state === "ready"` ;
+6. `freshness_gate.ready === true` ;
+7. CEX comparable complet.
 
-Les métadonnées réelles restent séparément à `false`.
+API absente, intelligence absente, état partiel/stale ou fraîcheur non prête => **SOURCES PARTIELLES**.
 
-## Test avant commit
-Harness Node isolé avec faux DOM :
-1. load transport sans API → FAIL CLOSED + script retiré ;
-2. deuxième demande explicite → 3/3 APIs chargées ;
-3. nœud historique `loaded=1` sans API → retiré + remplacé ;
-4. `self_test().pass === true`.
+Aether se repeint sur les événements existants :
+- `erith:source-intelligence` ;
+- `erith:source-intelligence-auto` ;
+- `erith:private-source-runtime-loaded`.
 
-Receipt : `STRATEGY_AUDIT_LOADER_RETRY_TEST_40.6.452.json`.
+## Test
+Le workflow 40.6.453 exécute :
+- `node --check js/aether.js` ;
+- un harness du helper pur de readiness ;
+- les cas API absente, intelligence absente, PARTIAL, freshness false, CEX incomplet et READY complet ;
+- contrôle statique du câblage Aether et de la préservation du loader Strategy 40.6.452.
 
 ## Protégé
-.441 Backend · .442 Graphique · .445 Oracle · .448 HTML · .449 lisibilité · .450 fraîcheur · .451 tableaux · Market Core 38.15.11 · Aether.
+Backend .441 · Graphique .442 · Oracle .445 · HTML .448 · lisibilité .449 · fraîcheur Execution Cost .450 · tableaux .451 · loader Strategy .452 · Market Core 38.15.11.
+
+Aucun seuil Strategy/Oracle, aucun calcul d'exécution, aucun Backend, aucun Market Core, aucun nouveau timer/observer/storage/network métier.
