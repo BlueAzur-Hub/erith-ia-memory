@@ -1,0 +1,89 @@
+name: Agent-Crypto Package 40.6.449 Strategy Readability Cascade
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406449.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.449
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          css=(root/"strategy-human-readability.css").read_text(encoding="utf-8")
+          idx=(root/"index.html").read_text(encoding="utf-8")
+          b=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          receipt=json.loads((root/"READABILITY_COMPUTED_TEST_40.6.449.json").read_text(encoding="utf-8"))
+          css_no_comments=re.sub(r'/\\*[\\s\\S]*?\\*/','',css)
+          checks={
+            "build":b.get("build")=="40.6.449",
+            "market_core":b.get("market_core")=="38.15.11",
+            "css_cache_token":'strategy-human-readability.css?v=40.6.449' in idx,
+            "css_in_head":idx.find("strategy-human-readability.css") < idx.find("</head>"),
+            "no_markup_literal_newline":re.search(r'>\\\\n\\s*<',idx) is None,
+            "specificity_anchor":'body section#simulation[id] [id^="strategyA"][id] :where' in css,
+            "paper_label":'#strategyAPaperLifecycle .spl-kpi span' in css,
+            "g3_label":'#strategyAG3ProspectiveT0Capture .k span' in css,
+            "no_priority_override":"!important" not in css_no_comments,
+            "computed_receipt":receipt.get("pass") is True,
+            "html_448_preserved":b.get("strategy_human_readability_cascade_406449",{}).get("html_structure_406448_preserved") is True,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"40.6.449 validation failed: {bad}")
+          print("40.6.449 STRATEGY READABILITY CASCADE STATIC PASS")
+          PY
+          if git diff --name-only HEAD^ HEAD | grep -E '^public/agent_crypto_erith_ia/administrator/js/.*\.js$'; then
+            echo "Unexpected Strategy/runtime JS change in presentation-only release" >&2
+            exit 1
+          fi
+
+      - name: Build bounded ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_STRATEGY_READABILITY_CASCADE_40.6.449.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406449
+          mkdir -p /tmp/agent-crypto-406449/administrator
+          cp "$ROOT/index.html" /tmp/agent-crypto-406449/administrator/
+          cp "$ROOT/index-40.6.449.html" /tmp/agent-crypto-406449/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406449/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406449/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406449/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.449.txt" /tmp/agent-crypto-406449/administrator/
+          cp "$ROOT/READABILITY_COMPUTED_TEST_40.6.449.json" /tmp/agent-crypto-406449/administrator/
+          cp "$ROOT/strategy-human-readability.css" /tmp/agent-crypto-406449/administrator/
+          (cd /tmp/agent-crypto-406449 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_STRATEGY_READABILITY_CASCADE_40.6.449.zip" "$ROOT/AGENT_CRYPTO_STRATEGY_READABILITY_CASCADE_40.6.449.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.449 Strategy readability ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -11,29 +11,29 @@ body #simulation [id^="tradus"] {
   font-size:14px;
   line-height:1.5;
 }
-body #simulation [id^="strategyA"] :where(div,section,article,p,span,small,em,li,label,summary,td,th),
-body #simulation [id^="strategyTradus"] :where(div,section,article,p,span,small,em,li,label,summary,td,th),
-body #simulation [id^="tradus"] :where(div,section,article,p,span,small,em,li,label,summary,td,th) {
+body section#simulation[id] [id^="strategyA"][id] :where(div,section,article,p,span,small,em,li,label,summary,td,th),
+body section#simulation[id] [id^="strategyTradus"][id] :where(div,section,article,p,span,small,em,li,label,summary,td,th),
+body section#simulation[id] [id^="tradus"][id] :where(div,section,article,p,span,small,em,li,label,summary,td,th) {
   font-size:13px;
   line-height:1.5;
 }
-body #simulation [id^="strategyA"] :where(b,strong),
-body #simulation [id^="strategyTradus"] :where(b,strong),
-body #simulation [id^="tradus"] :where(b,strong) {
+body section#simulation[id] [id^="strategyA"][id] :where(b,strong),
+body section#simulation[id] [id^="strategyTradus"][id] :where(b,strong),
+body section#simulation[id] [id^="tradus"][id] :where(b,strong) {
   font-size:14px;
   line-height:1.4;
 }
-body #simulation [id^="strategyA"] :where(button,.btn),
-body #simulation [id^="strategyTradus"] :where(button,.btn),
-body #simulation [id^="tradus"] :where(button,.btn) {
+body section#simulation[id] [id^="strategyA"][id] :where(button,.btn),
+body section#simulation[id] [id^="strategyTradus"][id] :where(button,.btn),
+body section#simulation[id] [id^="tradus"][id] :where(button,.btn) {
   min-height:38px;
   padding:8px 12px;
   font-size:13px;
   line-height:1.2;
 }
-body #simulation [id^="strategyA"] :where(h2,h3,h4),
-body #simulation [id^="strategyTradus"] :where(h2,h3,h4),
-body #simulation [id^="tradus"] :where(h2,h3,h4),
+body section#simulation[id] [id^="strategyA"][id] :where(h2,h3,h4),
+body section#simulation[id] [id^="strategyTradus"][id] :where(h2,h3,h4),
+body section#simulation[id] [id^="tradus"][id] :where(h2,h3,h4),
 body #simulation [id^="strategyA"] [class$="-title"],
 body #simulation [id^="strategyTradus"] [class$="-title"],
 body #simulation [id^="tradus"] [class$="-title"] {
@@ -46,6 +46,32 @@ body #simulation [id^="tradus"] [class$="-kicker"] {
   font-size:13px;
   line-height:1.35;
   letter-spacing:.07em;
+}
+
+/* 40.6.449 — late-injection readability shields for the two regressions
+   reproduced by the Astra audit. The canonical sheet remains the only owner;
+   no priority override and no module/business rewrite. */
+body #simulation #strategyAPaperLifecycle .spl-title,
+body #simulation #strategyAG3ProspectiveT0Capture .t {
+  font-size:16px;
+  line-height:1.35;
+}
+body #simulation #strategyAPaperLifecycle .spl-sub,
+body #simulation #strategyAPaperLifecycle .spl-state,
+body #simulation #strategyAPaperLifecycle .spl-safety,
+body #simulation #strategyAG3ProspectiveT0Capture .n {
+  font-size:13px;
+  line-height:1.5;
+}
+body #simulation #strategyAPaperLifecycle .spl-kpi span,
+body #simulation #strategyAG3ProspectiveT0Capture .k span {
+  font-size:13px;
+  line-height:1.4;
+}
+body #simulation #strategyAPaperLifecycle .spl-kpi b,
+body #simulation #strategyAG3ProspectiveT0Capture .k b {
+  font-size:14px;
+  line-height:1.4;
 }
 
 /* Strategy state + 9-gate summary: readable first, technical density second. */

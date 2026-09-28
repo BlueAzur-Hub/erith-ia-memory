@@ -1,13 +1,17 @@
-# HANDOFF — Agent-Crypto 40.6.448
+# HANDOFF — Agent-Crypto 40.6.449
 
-Parent : 40.6.447. Objet : supprimer les antislash+n parasites et restaurer la structure HTML.
+Objet unique : vérifier la lisibilité réelle de Strategy après injection tardive des modules.
 
-## Contrôle opérateur
-Recharger l’entrée canonique Administrator. Vérifier Build 40.6.448, absence des caractères parasites avant le header, puis cadrage normal et F11. Conserver les validations .441/.442/.445/.446.
-La structure du document a été testée dans Firefox isolé. Ne pas annoncer PASS opérateur avant le retour de Christophe.
+## Test Firefox opérateur
+À 100 % de zoom :
+1. vérifier **Build 40.6.449** ;
+2. ouvrir **Simulation** ;
+3. lire normalement, sans zoom ;
+4. contrôler en priorité Paper Lifecycle et G3 Prospective ;
+5. vérifier ensuite After-Cost, Durable Evidence et les audits Cost-Wait / Oracle-Cost / Execution Cost ;
+6. refaire un contrôle F11.
 
-## Limites
-Cette version ne modifie aucun CSS ni moteur. Elle ne prétend pas solder les micro-tailles Strategy, la fraîcheur des quotes ou les chemins d’erreur du loader décrits dans l’audit Astra .447. Aucun rollback global.
+PASS : aucun de ces panneaux ne retombe en micro-texte après chargement tardif.
+FAIL : un libellé ou une valeur redevient visiblement microscopique. Dans ce cas capture/dump, sans chercher manuellement dans le code.
 
-## Livraison
-ZIP différentiel avec arborescence administrator/, manifeste et rapport de contrôle. Le SHA-256 est dans le fichier .zip.sha256 associé. Le commit est l’autorité de publication ; contrôler les workflows Version Truth, Delivery et GitHub Pages.
+La .449 ne traite volontairement ni la fraîcheur des quotes Execution Cost ni les chemins d'erreur/self-test du loader ; ces chantiers restent séparés.
