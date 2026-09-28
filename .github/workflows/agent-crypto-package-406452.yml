@@ -1,0 +1,115 @@
+name: Agent-Crypto Package 40.6.452 Strategy Loader Retry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406452.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.452
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+
+          node <<'NODE'
+          const fs=require("fs");
+          const src=fs.readFileSync("public/agent_crypto_erith_ia/administrator/js/strategy-a-audit-demand-loader.js","utf8");
+          class E{constructor(){this.l={}} addEventListener(t,f,o={}){(this.l[t]??=[]).push({f,once:!!o.once})} dispatch(t){for(const r of [...(this.l[t]||[])]){r.f({target:this});if(r.once)this.l[t]=this.l[t].filter(x=>x!==r)}}}
+          class H extends E{constructor(){super();this.open=false} matches(s){return s==='details[data-collapse-key="simulation"]'}}
+          class S extends E{constructor(){super();this.dataset={};this.removed=false} remove(){this.removed=true;document.scripts=document.scripts.filter(x=>x!==this)}}
+          const owner=new H(),inner={id:"simulation"}; globalThis.HTMLDetailsElement=H; globalThis.CustomEvent=class{};
+          globalThis.window={dispatchEvent(){}};
+          const names={"cost-wait":"AgentCryptoStrategyACostWaitOutcomeAudit406429","oracle-cost":"AgentCryptoStrategyAOracleCostCalibrationAudit","execution-cost":"AgentCryptoStrategyAExecutionCostTruth"};
+          let mode="success",appended=[];
+          globalThis.document={scripts:[],body:{appendChild(n){document.scripts.push(n);setImmediate(()=>{const k=n.dataset.strategyAAuditDemand;appended.push(k);if(mode==="missing"&&k==="cost-wait"&&appended.filter(x=>x==="cost-wait").length===1){n.dispatch("load");return}globalThis[names[k]]={refresh(){}};n.dispatch("load")})}},createElement(){return new S()},querySelector(sel){if(sel==='details[data-collapse-key="simulation"]')return owner;const m=sel.match(/^script\[data-strategy-a-audit-demand="([^"]+)"\]$/);return m?document.scripts.find(x=>x.dataset.strategyAAuditDemand===m[1])||null:null},getElementById(id){return id==="simulation"?inner:null},addEventListener(){}};
+          Function(src)();
+          const api=globalThis.AgentCryptoStrategyAAuditDemand;
+          if(api.build!=="40.6.452"||api.self_test().pass!==true)throw new Error("self_test failed");
+          (async()=>{
+            owner.open=true;mode="missing";appended=[];
+            if(await api.ensure("workflow-missing-api")!==false)throw new Error("missing API must fail");
+            if(document.scripts.some(x=>x.dataset.strategyAAuditDemand==="cost-wait"))throw new Error("failed node retained");
+            mode="success";
+            if(await api.ensure("workflow-manual-retry")!==true)throw new Error("manual retry failed");
+            for(const n of Object.values(names))if(!globalThis[n])throw new Error("API missing "+n);
+            delete globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429;
+            for(const n of [...document.scripts])if(n.dataset.strategyAAuditDemand==="cost-wait")n.remove();
+            const stale=new S();stale.dataset.strategyAAuditDemand="cost-wait";stale.dataset.loaded="1";document.scripts.push(stale);
+            if(await api.ensure("workflow-stale-node")!==true||!stale.removed)throw new Error("stale loaded node recovery failed");
+            console.log("40.6.452 STRATEGY LOADER RETRY HARNESS PASS");
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          idx=(root/"index.html").read_text(encoding="utf-8")
+          loader=(root/"js/strategy-a-audit-demand-loader.js").read_text(encoding="utf-8")
+          b=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          receipt=json.loads((root/"STRATEGY_AUDIT_LOADER_RETRY_TEST_40.6.452.json").read_text(encoding="utf-8"))
+          checks={
+            "build":b.get("build")=="40.6.452",
+            "market_core":b.get("market_core")=="38.15.11",
+            "loader_build":'const BUILD="40.6.452"' in loader,
+            "loader_entry":'strategy-a-audit-demand-loader.js?v=40.6.452' in idx,
+            "positive_self_test":'no_recurring_timer:true' in loader and 'no_observer:true' in loader and 'no_storage_write:true' in loader,
+            "stale_retry":'staleLoadedNode' in loader and 'removeNode(node)' in loader,
+            "api_required":'transportReady' in loader,
+            "no_auto_loop":'no_automatic_retry_loop:true' in loader,
+            "receipt":receipt.get("pass") is True,
+            "readability_451_preserved":'strategy-human-readability.css?v=40.6.451' in idx,
+            "no_markup_literal_newline":re.search(r'>\\n\s*<',idx) is None,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f"40.6.452 validation failed: {bad}")
+          print("40.6.452 STATIC CONTRACT PASS")
+          PY
+
+      - name: Build bounded ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_STRATEGY_LOADER_RETRY_40.6.452.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406452
+          mkdir -p /tmp/agent-crypto-406452/administrator/js
+          cp "$ROOT/index.html" /tmp/agent-crypto-406452/administrator/
+          cp "$ROOT/index-40.6.452.html" /tmp/agent-crypto-406452/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406452/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406452/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406452/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.452.txt" /tmp/agent-crypto-406452/administrator/
+          cp "$ROOT/STRATEGY_AUDIT_LOADER_RETRY_TEST_40.6.452.json" /tmp/agent-crypto-406452/administrator/
+          cp "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/agent-crypto-406452/administrator/js/
+          (cd /tmp/agent-crypto-406452 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_STRATEGY_LOADER_RETRY_40.6.452.zip" "$ROOT/AGENT_CRYPTO_STRATEGY_LOADER_RETRY_40.6.452.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.452 Strategy loader retry ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

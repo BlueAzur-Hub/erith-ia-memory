@@ -1,34 +1,38 @@
-# Agent-Crypto 40.6.451 — EXECUTION COST TABLE LAYOUT FIX
+# Agent-Crypto 40.6.452 — STRATEGY DEMAND LOADER RETRY + SELF TEST
 
-## Objet unique
-Corriger le chevauchement central des en-têtes de tableaux Kraken / OKX observé après la validation terrain 40.6.450.
+## Objet
+Fermer les deux défauts loader confirmés par l'audit Astra, sans toucher au métier Strategy.
 
-## Cause prouvée
-Le CSS global Administrator impose encore :
-```css
-table { min-width: 790px; }
-```
-Chaque carte Execution Cost n'offre qu'environ 745 px dans la géométrie opérateur montrée. Le tableau dépasse donc physiquement sa carte et son dernier en-tête traverse la séparation centrale.
+## Défaut 1 — script chargé sans API
+Avant .452, un événement `load` pouvait poser `dataset.loaded=1` même si le script n'avait pas créé son API attendue. La tentative suivante retrouvait ce nœud `loaded=1`, retournait encore `false` et ne recréait jamais le script.
 
-## Correction
-Dans le propriétaire de présentation Strategy existant `strategy-human-readability.css` uniquement :
-- `min-width:0` local sur le tableau Execution Cost ;
-- `max-width:100%` ;
-- `table-layout:fixed` ;
-- retour à la ligne autorisé dans TH/TD ;
-- colonnes 18 / 24 / 24 / 34 % ;
-- carte en containment visuel.
+### Correction
+- succès transport ≠ succès module ;
+- succès seulement si `load` **et** API attendue présente ;
+- si API absente : nœud marqué failed puis retiré ;
+- si un ancien nœud `loaded=1` existe sans API : il est considéré stale, retiré et recréé dans la demande explicite courante ;
+- aucun retry automatique : la reprise vient uniquement d'un nouvel `ensure()` / nouvel événement opérateur.
 
-Le contrat global des autres tableaux reste intact.
+## Défaut 2 — self_test trompeur
+Les anciennes clés `recurring_timer:false`, `observer:false`, `storage_write:false` étaient passées dans `every(Boolean)`. Le test ne pouvait donc jamais être vrai.
+
+### Correction
+Assertions positives :
+- `no_recurring_timer:true`
+- `no_observer:true`
+- `no_storage_write:true`
+- `no_automatic_retry_loop:true`
+
+Les métadonnées réelles restent séparément à `false`.
 
 ## Test avant commit
-Chromium headless à viewport 1644×920 sur DOM représentatif :
-- baseline : carte 745 px, tableau 790 px, débordement **68 px** ;
-- candidat : tableau 721 px, débordement **0 px**.
+Harness Node isolé avec faux DOM :
+1. load transport sans API → FAIL CLOSED + script retiré ;
+2. deuxième demande explicite → 3/3 APIs chargées ;
+3. nœud historique `loaded=1` sans API → retiré + remplacé ;
+4. `self_test().pass === true`.
 
-Receipt : `EXECUTION_COST_TABLE_LAYOUT_TEST_40.6.451.json`.
+Receipt : `STRATEGY_AUDIT_LOADER_RETRY_TEST_40.6.452.json`.
 
 ## Protégé
-40.6.450 freshness PASS terrain · 40.6.449 lisibilité · 40.6.448 HTML · 40.6.446 loader · Backend .441 · Graphique .442 · Oracle .445 · Market Core 38.15.11 · Aether.
-
-Aucun JS modifié.
+.441 Backend · .442 Graphique · .445 Oracle · .448 HTML · .449 lisibilité · .450 fraîcheur · .451 tableaux · Market Core 38.15.11 · Aether.

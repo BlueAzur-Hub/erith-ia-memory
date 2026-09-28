@@ -1,36 +1,44 @@
-/* Agent-Crypto @erith.IA — 40.6.446 STRATEGY A AUDIT + EXECUTION COST DEMAND LOADER OWNER FIX
-   Minimal owner repair after 40.6.443: the opening owner is the canonical outer
-   details[data-collapse-key="simulation"], not the inner #simulation section.
-   Loads Cost-Wait + Oracle/Cost + Execution Cost Truth read-only tools only when Simulation is opened.
-   No boot residency, polling, observer or storage write. Execution Cost stays manual-fetch only after operator demand.\n   40.6.450 only refreshes the Execution Cost asset token; loader behavior remains 40.6.446. */
+/* Agent-Crypto @erith.IA — 40.6.452 STRATEGY A AUDIT DEMAND LOADER RETRY + SELF-TEST
+   Keeps the canonical Simulation owner fixed in 40.6.446.
+   40.6.452 hardens manual recovery when a script transport succeeds but its expected API is absent:
+   a stale loaded node is removed, failed loads never stay marked ready, and the next explicit ensure can retry.
+   Self-test assertions are positive invariants; false-valued safety metadata is no longer treated as failure.
+   No boot residency, polling, observer, storage write or automatic retry loop. */
 (()=>{
   "use strict";
-  const BUILD="40.6.446", TIMEOUT=6000;
+  const BUILD="40.6.452", TIMEOUT=6000;
   const SIMULATION_OWNER_SELECTOR='details[data-collapse-key="simulation"]';
   const SPECS=Object.freeze([
     Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
     Object.freeze({key:"oracle-cost",src:"./js/strategy-a-oracle-cost-calibration-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit}),
     Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.450",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth})
   ]);
-  let state="idle",promise=null,lastError="",reason="";
+  let state="idle",promise=null,lastError="",reason="",lastRetryKey="",retryCount=0;
   const simulationOwner=()=>document.querySelector(SIMULATION_OWNER_SELECTOR);
   const simulationOpen=()=>{const node=simulationOwner();return node instanceof HTMLDetailsElement&&node.open===true;};
 
   function existing(key){return document.querySelector('script[data-strategy-a-audit-demand="'+key+'"]');}
+  function removeNode(node){if(!node)return;try{node.remove();}catch(_){}}
+  function staleLoadedNode(node,spec){return !!node&&node.dataset?.loaded==="1"&&!spec.ready();}
+  function failedNode(node){return !!node&&node.dataset?.loaded==="0";}
+  function transportReady(ok,spec){return ok===true&&spec.ready()===true;}
+
   function load(spec){
     if(spec.ready())return Promise.resolve(true);
     let node=existing(spec.key);
-    if(node?.dataset.loaded==="0"){node.remove();node=null;}
-    if(node?.dataset.loaded==="1")return Promise.resolve(spec.ready());
+    if(failedNode(node)||staleLoadedNode(node,spec)){
+      lastRetryKey=spec.key;retryCount+=1;removeNode(node);node=null;
+    }
     return new Promise(resolve=>{
       let settled=false;
-      const finish=ok=>{
+      const finish=transportOk=>{
         if(settled)return;
         settled=true;
         clearTimeout(timer);
-        if(node)node.dataset.loaded=ok?"1":"0";
-        if(!ok&&node){try{node.remove();}catch(_){}}
-        resolve(ok&&spec.ready());
+        const ready=transportReady(transportOk,spec);
+        if(node)node.dataset.loaded=ready?"1":"0";
+        if(!ready&&node)removeNode(node);
+        resolve(ready);
       };
       const timer=setTimeout(()=>finish(false),TIMEOUT);
       if(node){
@@ -50,7 +58,7 @@
 
   function ensure(why="simulation-open"){
     reason=String(why||"simulation-open");
-    if(SPECS.every(x=>x.ready())){state="ready";return Promise.resolve(true);}
+    if(SPECS.every(x=>x.ready())){state="ready";lastError="";return Promise.resolve(true);}
     if(promise)return promise;
     state="loading";lastError="";
     promise=(async()=>{
@@ -58,9 +66,9 @@
         const ok=await load(spec);
         if(!ok){state="error";lastError="load-failed:"+spec.key;return false;}
       }
-      state="ready";
-      try{globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429?.refresh?.("406446-demand-ready");}catch(_){}
-      try{globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit?.refresh?.("406446-demand-ready");}catch(_){}
+      state="ready";lastError="";
+      try{globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429?.refresh?.("406452-demand-ready");}catch(_){}
+      try{globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit?.refresh?.("406452-demand-ready");}catch(_){}
       try{window.dispatchEvent(new CustomEvent("agent-crypto:strategy-a-audits-ready",{detail:{build:BUILD,reason}}));}catch(_){}
       return true;
     })().finally(()=>{promise=null;});
@@ -76,21 +84,27 @@
 
   globalThis.AgentCryptoStrategyAAuditDemand=Object.freeze({
     build:BUILD,ensure,
-    snapshot:()=>Object.freeze({build:BUILD,state,reason,last_error:lastError,simulation_open:simulationOpen(),cost_wait_loaded:!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429,oracle_cost_loaded:!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit,execution_cost_loaded:!!globalThis.AgentCryptoStrategyAExecutionCostTruth}),
+    snapshot:()=>Object.freeze({build:BUILD,state,reason,last_error:lastError,last_retry_key:lastRetryKey,retry_count:retryCount,simulation_open:simulationOpen(),cost_wait_loaded:!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429,oracle_cost_loaded:!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit,execution_cost_loaded:!!globalThis.AgentCryptoStrategyAExecutionCostTruth}),
     self_test:()=>{
       const owner=simulationOwner();
+      const fakeSpec={ready:()=>false};
       const checks=Object.freeze({
         on_demand_only:true,
         simulation_owner_is_details:owner instanceof HTMLDetailsElement,
         simulation_owner_selector:!!owner?.matches?.(SIMULATION_OWNER_SELECTOR),
         inner_simulation_section_is_not_owner:document.getElementById("simulation")!==owner,
+        stale_loaded_node_is_retryable:staleLoadedNode({dataset:{loaded:"1"}},fakeSpec)===true,
+        failed_node_is_retryable:failedNode({dataset:{loaded:"0"}})===true,
+        transport_success_requires_api:transportReady(true,fakeSpec)===false,
         execution_cost_on_demand:true,
-        recurring_timer:false,
-        observer:false,
-        storage_write:false
+        no_recurring_timer:true,
+        no_observer:true,
+        no_storage_write:true,
+        no_automatic_retry_loop:true
       });
-      return Object.freeze({build:BUILD,pass:Object.values(checks).every(Boolean),checks});
+      const metadata=Object.freeze({recurring_timer:false,observer:false,storage_write:false,automatic_retry_loop:false});
+      return Object.freeze({build:BUILD,pass:Object.values(checks).every(Boolean),checks,metadata});
     },
-    execution_cost_on_demand:true,recurring_timer:false,observer:false,storage_write:false,new_business_network_request:false
+    execution_cost_on_demand:true,recurring_timer:false,observer:false,storage_write:false,automatic_retry_loop:false,new_business_network_request:false
   });
 })();

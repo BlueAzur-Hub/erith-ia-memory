@@ -1,13 +1,14 @@
-# HANDOFF — Agent-Crypto 40.6.451
+# HANDOFF — Agent-Crypto 40.6.452
 
-## Test Firefox
-1. Vérifier **Build 40.6.451**.
-2. Ouvrir Simulation → Execution Cost Truth.
-3. Vérifier les deux tableaux Kraken / OKX.
-4. Les en-têtes doivent rester dans chaque carte : aucun texte Kraken ne doit traverser dans OKX et inversement.
-5. Aucun scroll horizontal ne doit être nécessaire.
-6. La ligne OKX `Fraîcheur : FRESH · âge … · limite … · quote …` de .450 doit rester inchangée.
+## Test Firefox minimal
+1. Vérifier **Build 40.6.452**.
+2. Ouvrir **Simulation**.
+3. Vérifier que Cost-Wait, Oracle/Cost et Execution Cost montent toujours.
+4. Facultatif dans la console :
+   `AgentCryptoStrategyAAuditDemand.self_test()`
+   doit renvoyer `pass: true`.
 
-PASS : séparation centrale propre et valeurs toujours lisibles.
+Ne pas provoquer volontairement une panne de script sur la session opérateur : le cas script chargé sans API est couvert par le harness local et par le workflow.
 
-La prochaine dette fonctionnelle reste le loader Strategy (reprise après script chargé sans API + self_test), volontairement hors .451.
+## Hors périmètre
+Aucun changement de seuil Strategy, calcul, quote freshness, tableau, Backend, Oracle, Market Core ou Aether.

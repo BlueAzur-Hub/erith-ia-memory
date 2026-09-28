@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.451",
+  "build": "40.6.452",
   "engine": "38.15.11",
-  "release": "EXECUTION COST TABLE LAYOUT FIX",
+  "release": "STRATEGY DEMAND LOADER RETRY + SELF TEST",
   "published": true,
-  "status": "published_pending_firefox_451",
-  "parent_build": "40.6.450",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.451",
-  "administrator_build": "40.6.451",
-  "build_label": "Build 40.6.451 · Administrator",
+  "status": "published_pending_firefox_452",
+  "parent_build": "40.6.451",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.452",
+  "administrator_build": "40.6.452",
+  "build_label": "Build 40.6.452 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -16,9 +16,9 @@
   "atlas_current_modified": false,
   "oracle_modified": false,
   "lecture_technique_modified": false,
-  "strategy_a_modified": false,
+  "strategy_a_modified": true,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": true,
+  "administrator_presentation_modified": false,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox : ouvrir Simulation puis Execution Cost Truth. Les deux tableaux Kraken / OKX doivent rester strictement dans leur carte, sans chevauchement central des en-têtes ni scroll horizontal. Fraîcheur .450 doit rester visible et inchangée.",
+  "terrain_pending": "Firefox : ouvrir Simulation. Les trois audits doivent monter comme en .446. Test de diagnostic optionnel : AgentCryptoStrategyAAuditDemand.self_test().pass doit être true. La reprise après script chargé sans API est couverte localement ; aucun sabotage terrain n'est demandé.",
   "terrain_proof": null,
-  "release_notes": "40.6.451 corrige uniquement le débordement visuel des tableaux Execution Cost. Cause prouvée : le contrat global table{min-width:790px} dépassait la largeur réelle de chaque demi-carte Kraken/OKX. La feuille canonique Strategy neutralise ce minimum localement, impose table-layout:fixed, autorise le retour à la ligne et fixe des proportions de colonnes 18/24/24/34. Aucun JS, calcul, fraîcheur, Backend, loader, seuil Strategy, Oracle, Market Core ou Aether n'est modifié.",
+  "release_notes": "40.6.452 durcit uniquement le loader on-demand Strategy. Un script marqué chargé sans API attendue n'est plus considéré prêt : le nœud stale/failed est retiré et la prochaine demande explicite peut recréer le script. Un load event n'est succès que si l'API existe réellement. Aucun retry automatique, polling, observer ou storage. Le self_test utilise désormais des assertions positives (no_recurring_timer/no_observer/no_storage_write) et sépare les métadonnées false de sécurité du verdict.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5658,6 +5658,52 @@
     "oracle_math_changed": false,
     "market_core_modified": false,
     "aether_modified": false,
-    "firefox_status": "PENDING_OPERATOR_VISUAL_451"
+    "firefox_status": "PASS_OPERATOR_VISUAL_451",
+    "firefox_proof_note": "28/09/2026 : capture opérateur en Build 40.6.451. Kraken et OKX strictement contenus dans leurs cartes, aucun chevauchement central, aucun scroll horizontal requis ; fraîcheur .450 intacte."
+  },
+  "strategy_a_audit_demand_loader_406452": {
+    "enabled": true,
+    "parent": "40.6.451",
+    "owner": "js/strategy-a-audit-demand-loader.js",
+    "canonical_owner_selector": "details[data-collapse-key=\"simulation\"]",
+    "root_causes": [
+      "SCRIPT_TRANSPORT_LOAD_COULD_BE_MARKED_LOADED_WITHOUT_EXPECTED_API",
+      "LOADED_1_WITH_MISSING_API_WAS_NOT_RECREATED_ON_NEXT_ENSURE",
+      "SELF_TEST_TREATED_FALSE_SAFETY_METADATA_AS_FAILED_ASSERTIONS"
+    ],
+    "fixes": {
+      "transport_success_requires_expected_api": true,
+      "failed_script_removed": true,
+      "stale_loaded_without_api_removed": true,
+      "next_explicit_ensure_recreates_script": true,
+      "automatic_retry_loop": false,
+      "self_test_positive_invariants": true,
+      "safety_metadata_separated": true,
+      "retry_diagnostics_in_snapshot": true
+    },
+    "local_harness": {
+      "node_syntax": "PASS",
+      "first_transport_load_without_api": "PASS_FAILS_CLOSED_AND_REMOVES_NODE",
+      "second_explicit_ensure": "PASS_RELOADS_ALL_3_APIS",
+      "stale_loaded_1_without_api": "PASS_REMOVED_AND_REPLACED",
+      "self_test": "PASS"
+    },
+    "preserved": {
+      "cost_wait_asset": "40.6.446",
+      "oracle_cost_asset": "40.6.446",
+      "execution_cost_asset": "40.6.450",
+      "execution_cost_freshness_406450": true,
+      "table_layout_406451": true,
+      "no_recurring_timer": true,
+      "no_observer": true,
+      "no_storage_write": true,
+      "no_automatic_retry_loop": true,
+      "no_new_business_network_request": true,
+      "strategy_thresholds_changed": false,
+      "strategy_business_logic_changed": false,
+      "market_core_modified": false,
+      "aether_modified": false
+    },
+    "firefox_status": "PENDING_OPERATOR_452"
   }
 }
