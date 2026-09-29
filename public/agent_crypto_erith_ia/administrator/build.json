@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.464",
+  "build": "40.6.465",
   "engine": "38.15.11",
-  "release": "STRATEGY A EXECUTION COST EVIDENCE CAPTURE DELIVERY RECOVERY",
+  "release": "STRATEGY A EXECUTION COST EVIDENCE CAPTURE RENDER RECOVERY",
   "published": true,
-  "status": "published_pending_firefox_464",
-  "parent_build": "40.6.463",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.464",
-  "administrator_build": "40.6.464",
-  "build_label": "Build 40.6.464 · Administrator",
+  "status": "published_pending_firefox_465",
+  "parent_build": "40.6.464",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.465",
+  "administrator_build": "40.6.465",
+  "build_label": "Build 40.6.465 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 → Build 40.6.464 → Section 04 → Simulation → rechercher EXECUTION COST EVIDENCE CAPTURE. Attendu sans PAPER actif: ARMED, suivis 0, entrées 0, sorties 0, entrée+sortie 0, After-cost injection OFF.",
+  "terrain_pending": "Firefox: Ctrl+F5 → Build 40.6.465 → Section 04 → Simulation → rechercher EXECUTION COST EVIDENCE CAPTURE. Attendu sans PAPER actif: ARMED, suivis 0, entrées 0, sorties 0, entrée+sortie 0, After-cost injection OFF.",
   "terrain_proof": null,
-  "release_notes": "40.6.464 corrige l'absence terrain du panneau .463: strategy-core-ready était émis sur window mais écouté sur document; le premier rendu pouvait aussi précéder l'ancre. .464 écoute window, accepte les ancres .460/.461/.462 et ajoute Audit Demand comme fallback de livraison/rendu. Aucune logique de coût/trading modifiée.",
+  "release_notes": "40.6.465 corrige la seconde cause de non-montage observée en .464: ensureStyle()/render() utilisaient ROOT alors qu'aucune constante ROOT n'était déclarée dans strategy-a-execution-cost-evidence-capture.js. .465 déclare ROOT, rebuste les deux chemins de livraison du module et ajoute un harness CI qui exécute réellement le chemin de montage DOM jusqu'à la création du panneau. Aucune logique de coût/trading modifiée.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -6164,6 +6164,32 @@
     "thresholds_changed": false,
     "market_core_modified": false,
     "real_order": false,
-    "firefox_status": "PENDING_OPERATOR_464"
+    "firefox_status": "FAIL_OPERATOR_464_PANEL_ABSENT",
+    "firefox_proof_note": "29/09/2026 : Build 40.6.464 visible dans Firefox, diagnostics .460/.461/.462 visibles, mais recherche EXECUTION COST EVIDENCE CAPTURE = expression non trouvée. Inspection main : ensureStyle() référençait ROOT sans déclaration dans le module Capture."
+  },
+  "strategy_a_execution_cost_evidence_capture_render_recovery_406465": {
+    "enabled": true,
+    "parent": "40.6.464",
+    "owner": "js/strategy-a-execution-cost-evidence-capture.js",
+    "delivery_parents": [
+      "js/post-boot-runtime-loader.js",
+      "js/strategy-a-audit-demand-loader.js"
+    ],
+    "root_cause": "UNDECLARED_ROOT_IDENTIFIER_ABORTED_ENSURESTYLE_BEFORE_PANEL_CREATION",
+    "fix": "const ROOT=\"strategyAExecutionCostEvidenceCapture\"",
+    "render_path_ci_harness": true,
+    "render_path_ci_expected_panel_id": "strategyAExecutionCostEvidenceCapture",
+    "static_syntax_check": true,
+    "delivery_tokens_465": true,
+    "capture_semantics_changed": false,
+    "historical_backfill": false,
+    "after_cost_injection": false,
+    "db_schema_changed": false,
+    "thresholds_changed": false,
+    "market_core_modified": false,
+    "source_truth_modified": false,
+    "aether_modified": false,
+    "real_order": false,
+    "firefox_status": "PENDING_OPERATOR_465"
   }
 }

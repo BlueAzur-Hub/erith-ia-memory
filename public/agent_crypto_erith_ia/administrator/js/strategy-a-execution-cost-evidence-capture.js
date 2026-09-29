@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.464 STRATEGY A EXECUTION COST EVIDENCE CAPTURE DELIVERY RECOVERY
+/* Agent-Crypto @erith.IA — 40.6.465 STRATEGY A EXECUTION COST EVIDENCE CAPTURE DELIVERY RECOVERY
    Future-PAPER evidence capture only.
    Wraps the existing Auto Lifecycle bridge before autostart, measures Kraken BTC/EUR
    on PAPER open and PAPER close through the existing Execution Cost Truth owner,
@@ -7,7 +7,8 @@
    no gate promotion, no threshold change and no real order. */
 (()=>{
   "use strict";
-  const BUILD="40.6.464";
+  const BUILD="40.6.465";
+  const ROOT="strategyAExecutionCostEvidenceCapture";
   const VENUE_KEY="kraken";
   const RECORDS=new Map();
   let installed=false,lastError=null;

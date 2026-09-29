@@ -1,0 +1,54 @@
+name: Agent-Crypto Package 40.6.465 Capture Render Recovery
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/agent-crypto-package-406465.yml']
+permissions: {contents: write}
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 2}
+      - name: Validate syntax and delivery
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-execution-cost-evidence-capture.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'const ROOT="strategyAExecutionCostEvidenceCapture";' "$ROOT/js/strategy-a-execution-cost-evidence-capture.js"
+          grep -F 'window.addEventListener("agent-crypto:strategy-core-ready"' "$ROOT/js/strategy-a-execution-cost-evidence-capture.js"
+          grep -F 'strategy-a-execution-cost-evidence-capture.js?v=40.6.465' "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'strategy-a-execution-cost-evidence-capture.js?v=40.6.465' "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'Build 40.6.465 · Administrator' "$ROOT/index.html"
+      - name: Exercise Capture render mount path
+        run: |
+          node <<'NODE'
+          const fs=require("fs"),vm=require("vm");
+          const path="public/agent_crypto_erith_ia/administrator/js/strategy-a-execution-cost-evidence-capture.js";
+          const code=fs.readFileSync(path,"utf8"),nodes=new Map();
+          const anchor={insertAdjacentElement(position,node){if(position!=="afterend")throw new Error("bad position");nodes.set(node.id,node);}};
+          const head={appendChild(node){if(node.id)nodes.set(node.id,node);}};
+          global.document={readyState:"complete",head,getElementById(id){if(id==="strategyAAfterCostCompletenessTruth")return anchor;return nodes.get(id)||null;},createElement(tag){return {tagName:String(tag).toUpperCase(),id:"",textContent:"",innerHTML:"",dataset:{},addEventListener(){},remove(){},setAttribute(){}};},addEventListener(){},dispatchEvent(){}};
+          global.window={addEventListener(){}};
+          global.CustomEvent=function(){};
+          global.AgentCryptoStrategyAAutoLifecycleBridge={on_open(){return {ok:false};},on_close(){return {ok:false};},read(){return [];},summary(){return {};}};
+          global.AgentCryptoStrategyAExecutionCostTruth={measure:async()=>null};
+          vm.runInThisContext(code,{filename:path});
+          queueMicrotask(()=>{const panel=document.getElementById("strategyAExecutionCostEvidenceCapture"),style=document.getElementById("strategyAExecutionCostEvidenceCaptureStyle");if(!panel)throw new Error("Capture panel did not mount");if(!style)throw new Error("Capture style did not mount");if(!String(panel.innerHTML).includes("EXECUTION COST EVIDENCE CAPTURE"))throw new Error("title missing");if(!String(panel.innerHTML).includes("ARMED"))throw new Error("ARMED missing");console.log("PASS: Capture render mount path");});
+          NODE
+      - name: Package
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"; ZIP="$ROOT/AGENT_CRYPTO_CAPTURE_RENDER_RECOVERY_40.6.465.zip"
+          rm -f "$ZIP" "$ZIP.sha256"; rm -rf /tmp/ac465; mkdir -p /tmp/ac465/administrator/js
+          cp "$ROOT/index.html" "$ROOT/index-40.6.465.html" "$ROOT/build.json" "$ROOT/RELEASE.md" "$ROOT/HANDOFF.md" "$ROOT/HANDOFF_FINAL_40.6.465.md" "$ROOT/CAPTURE_RENDER_RECOVERY_TEST_40.6.465.json" /tmp/ac465/administrator/
+          cp "$ROOT/js/strategy-a-execution-cost-evidence-capture.js" "$ROOT/js/post-boot-runtime-loader.js" "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/ac465/administrator/js/
+          (cd /tmp/ac465 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"; sha256sum "$ZIP" > "$ZIP.sha256"
+      - name: Commit package
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_CAPTURE_RENDER_RECOVERY_40.6.465.zip" "$ROOT/AGENT_CRYPTO_CAPTURE_RENDER_RECOVERY_40.6.465.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.465 Capture Render Recovery ZIP"
+          git pull --rebase origin main; git push origin HEAD:main
