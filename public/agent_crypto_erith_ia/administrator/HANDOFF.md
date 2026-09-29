@@ -1,10 +1,15 @@
-# HANDOFF — Agent-Crypto 40.6.458
+# HANDOFF — Agent-Crypto 40.6.459
 
 ## Test Firefox minimal
 1. Ctrl+F5.
-2. Vérifier **Build 40.6.458 · Administrator**.
+2. Vérifier **Build 40.6.459 · Administrator**.
 3. **Section 04 · Expérimentation & système → Simulation**.
-4. Descendre à **STRATEGY A · EXECUTION COST TRUTH · 40.6.458**.
-5. Vérifier que le panneau est présent et que **RAFRAÎCHIR KRAKEN + OKX** termine une mesure nominale.
+4. Descendre à **STRATEGY A · EXECUTION COST TRUTH · 40.6.459**.
+5. **Ne cliquer sur rien.**
+6. Vérifier seulement que la mesure automatique nominale reste exploitable :
+   - carte **OKX Europe · BTC/EUR** présente ;
+   - fraîcheur **FRESH** si le backend courant fournit une quote fraîche ;
+   - prix/spread présents ;
+   - pas de **INVALID_PAIR** ni **MISSING_BOOK** sur le terrain nominal.
 
-Ne pas essayer de provoquer le chevauchement Auto A pendant la mesure : ce cas est couvert par harness.
+La fixture BTCUSDT contradictoire est couverte par le harness, pas à reproduire dans Firefox.

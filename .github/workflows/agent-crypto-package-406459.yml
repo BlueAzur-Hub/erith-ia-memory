@@ -1,0 +1,95 @@
+name: Agent-Crypto Package 40.6.459 Execution Cost Currency Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406459.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.459
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-execution-cost-truth.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+
+          node <<'NODE'
+          const fs=require('fs');
+          const s=fs.readFileSync('public/agent_crypto_erith_ia/administrator/js/strategy-a-execution-cost-truth.js','utf8');
+          Function(s)();
+          const t=globalThis.AgentCryptoStrategyAExecutionCostTruth.self_test();
+          if(!t.pass) throw new Error(JSON.stringify(t));
+          if(!t.checks.compact_usdt_with_price_eur_rejected) throw new Error('BTCUSDT fixture accepted');
+          if(!t.checks.compact_symbol_usdt_rejected) throw new Error('BTCUSDT symbol fixture accepted');
+          if(!t.checks.price_eur_alone_does_not_prove_generic_book) throw new Error('price_eur still proves generic book');
+          console.log('40.6.459 CURRENCY PROOF HARNESS PASS');
+          NODE
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path('public/agent_crypto_erith_ia/administrator')
+          idx=(r/'index.html').read_text(encoding='utf-8')
+          audit=(r/'js/strategy-a-audit-demand-loader.js').read_text(encoding='utf-8')
+          b=json.loads((r/'build.json').read_text(encoding='utf-8'))
+          receipt=json.loads((r/'EXECUTION_COST_CURRENCY_PROOF_TEST_40.6.459.json').read_text(encoding='utf-8'))
+          checks={
+            'build':b.get('build')=='40.6.459',
+            'release':b.get('release')=='EXECUTION COST CURRENCY PROOF HARDENING',
+            'market_core':b.get('market_core')=='38.15.11',
+            'entry':'Build 40.6.459 · Administrator' in idx,
+            'audit_delivery':'strategy-a-audit-demand-loader.js?v=40.6.459' in idx,
+            'cost_delivery':'strategy-a-execution-cost-truth.js?v=40.6.459' in audit,
+            'source_loader_457_preserved':'post-boot-runtime-loader.js?v=40.6.457' in idx,
+            'receipt':receipt.get('pass') is True,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit('40.6.459 failed: '+str(bad))
+          print('40.6.459 STATIC PASS')
+          PY
+
+      - name: Package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_EXECUTION_COST_CURRENCY_PROOF_40.6.459.zip"
+          rm -f "$ZIP" "$ZIP.sha256"
+          rm -rf /tmp/ac459
+          mkdir -p /tmp/ac459/administrator/js
+          cp "$ROOT/index.html" /tmp/ac459/administrator/
+          cp "$ROOT/index-40.6.459.html" /tmp/ac459/administrator/
+          cp "$ROOT/build.json" /tmp/ac459/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/ac459/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/ac459/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.459.txt" /tmp/ac459/administrator/
+          cp "$ROOT/EXECUTION_COST_CURRENCY_PROOF_TEST_40.6.459.json" /tmp/ac459/administrator/
+          cp "$ROOT/js/strategy-a-execution-cost-truth.js" /tmp/ac459/administrator/js/
+          cp "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/ac459/administrator/js/
+          (cd /tmp/ac459 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_EXECUTION_COST_CURRENCY_PROOF_40.6.459.zip" "$ROOT/AGENT_CRYPTO_EXECUTION_COST_CURRENCY_PROOF_40.6.459.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.459 Currency Proof ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -7,10 +7,12 @@
    40.6.455 measures once when the Simulation audit module mounts, then again after each real Strategy A experiment-cycle event.
    40.6.458 resumes one pending experiment-cycle from the common exit of every in-flight measurement,
    including a manual "RAFRAÎCHIR KRAKEN + OKX" measurement; pending cycles coalesce to one boolean.
+   40.6.459 hardens BTC/EUR identity proof: compact pair identities such as BTCUSDT are explicit contradictions,
+   and price_eur alone never authorizes generic bid/ask aliases as an EUR order book.
    No direct browser OKX internet access, order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
 (() => {
   "use strict";
-  const BUILD="40.6.458", ROOT="strategyAExecutionCostTruth";
+  const BUILD="40.6.459", ROOT="strategyAExecutionCostTruth";
   const SIZES=Object.freeze([10,25,50,100]), DEPTH_BPS=Object.freeze([5,10,25]), TIMEOUT=9000, BACKEND_TIMEOUT=18000;
   const SOURCE_TRUTH_CACHE_TTL_SECONDS=15, SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS=30;
   const VENUES=Object.freeze({
@@ -128,7 +130,7 @@
       const raw=String(value??"").trim();
       if(!raw)continue;
       const normalized=normalizedPair(raw);
-      if(raw.includes("/")||raw.includes("-")||raw.includes("_")||normalized.includes("EUR")){explicitPair=normalized;break;}
+      if(normalized&&normalized!=="BTC"){explicitPair=normalized;break;}
     }
     if(explicitPair&&explicitPair!=="BTCEUR")throw measurementError("INVALID_PAIR","Backend local : paire OKX différente de BTC/EUR",{pair:explicitPair});
     const currencyCandidates=[quote?.quote_currency,quote?.quote_ccy,quote?.currency,quote?.raw?.quoteCcy,row?.quote_currency,row?.currency];
@@ -136,7 +138,7 @@
     for(const value of currencyCandidates){const raw=String(value??"").trim().toUpperCase();if(raw){explicitCurrency=raw;break;}}
     if(explicitCurrency&&explicitCurrency!=="EUR")throw measurementError("INVALID_CURRENCY","Backend local : devise OKX différente de EUR",{currency:explicitCurrency});
     const eurSpecific=firstPositive(quote?.bid_eur,quote?.bid_price_eur)!==null&&firstPositive(quote?.ask_eur,quote?.ask_price_eur)!==null;
-    const genericAliasAllowed=eurSpecific||explicitPair==="BTCEUR"||explicitCurrency==="EUR"||firstPositive(quote?.price_eur)!==null;
+    const genericAliasAllowed=eurSpecific||explicitPair==="BTCEUR"||explicitCurrency==="EUR";
     return Object.freeze({explicit_pair:explicitPair,explicit_currency:explicitCurrency,eur_specific_book:eurSpecific,generic_alias_allowed:genericAliasAllowed});
   }
   function okxQuoteFromBackend(payload,nowMs=Date.now()){
@@ -321,7 +323,7 @@
     if(!last)return false;
     try{
       const b=new Blob([JSON.stringify(last,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_458.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
+      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_459.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
   function style(){
@@ -400,6 +402,9 @@
       future_timestamp_unknown:rejects({...base,observed_at_utc:"2026-09-28T19:02:00Z"},"UNKNOWN","FUTURE_TIMESTAMP"),
       crossed_quote_rejected:rejects({...base,bid_eur:"101000",ask_eur:"100000"},"CROSSED_BOOK"),
       wrong_currency_rejected:rejects({provider:"okx",status:"ok",observed_at_utc:"2026-09-28T18:59:55Z",pair:"BTC-USDT",bid:"99990",ask:"100010"},"INVALID_PAIR"),
+      compact_usdt_with_price_eur_rejected:rejects({provider:"okx",status:"ok",observed_at_utc:"2026-09-28T18:59:55Z",pair:"BTCUSDT",price_eur:"100000",bid:"99990",ask:"100010"},"INVALID_PAIR"),
+      compact_symbol_usdt_rejected:rejects({provider:"okx",status:"ok",observed_at_utc:"2026-09-28T18:59:55Z",symbol:"BTCUSDT",price_eur:"100000",bid:"99990",ask:"100010"},"INVALID_PAIR"),
+      price_eur_alone_does_not_prove_generic_book:rejects({provider:"okx",status:"ok",observed_at_utc:"2026-09-28T18:59:55Z",price_eur:"100000",bid:"99990",ask:"100010"},"MISSING_BOOK"),
       existing_source_truth_cache_contract:freshnessLimit({}).seconds===15,
       stale_okx_preserves_kraken_partial:measurementStatus({ok:true},{ok:false,freshness_state:"STALE"})==="PARTIAL",
       backend_demand_bounded:true,
