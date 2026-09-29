@@ -1,0 +1,101 @@
+name: Agent-Crypto Package 40.6.463 Execution Cost Evidence Capture
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406463.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.463
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-execution-cost-evidence-capture.js"
+          node --check "$ROOT/js/strategy-a-durable-evidence-store.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+
+          node <<'NODE'
+          const fs=require('fs');
+          const s=fs.readFileSync('public/agent_crypto_erith_ia/administrator/js/strategy-a-execution-cost-evidence-capture.js','utf8');
+          Function(s)();
+          const t=globalThis.AgentCryptoStrategyAExecutionCostEvidenceCapture.self_test();
+          if(!t.pass) throw new Error(JSON.stringify(t));
+          const api=globalThis.AgentCryptoStrategyAExecutionCostEvidenceCapture;
+          if(api.after_cost_injection!==false||api.historical_backfill!==false) throw new Error('40.6.463 must remain capture-only');
+          console.log('40.6.463 CAPTURE HARNESS PASS');
+          NODE
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path('public/agent_crypto_erith_ia/administrator')
+          idx=(r/'index.html').read_text(encoding='utf-8')
+          post=(r/'js/post-boot-runtime-loader.js').read_text(encoding='utf-8')
+          durable=(r/'js/strategy-a-durable-evidence-store.js').read_text(encoding='utf-8')
+          b=json.loads((r/'build.json').read_text(encoding='utf-8'))
+          receipt=json.loads((r/'EXECUTION_COST_EVIDENCE_CAPTURE_TEST_40.6.463.json').read_text(encoding='utf-8'))
+          checks={
+            'build':b.get('build')=='40.6.463',
+            'release':b.get('release')=='STRATEGY A EXECUTION COST EVIDENCE CAPTURE',
+            'market_core':b.get('market_core')=='38.15.11',
+            'entry':'Build 40.6.463 · Administrator' in idx,
+            'postboot_delivery':'post-boot-runtime-loader.js?v=40.6.463' in idx,
+            'audit_462_preserved':'strategy-a-audit-demand-loader.js?v=40.6.462' in idx,
+            'execution_cost_core':'strategy-a-execution-cost-truth.js?v=40.6.459' in post,
+            'capture_core':'strategy-a-execution-cost-evidence-capture.js?v=40.6.463' in post,
+            'durable_463':'const BUILD="40.6.463"' in durable,
+            'evidence_fingerprint':'execution_cost_evidence' in durable and 'opened_capture' in durable and 'closed_capture' in durable,
+            'receipt':receipt.get('pass') is True,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit('40.6.463 failed: '+str(bad))
+          print('40.6.463 STATIC PASS')
+          PY
+
+      - name: Package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_STRATEGY_A_EXECUTION_COST_EVIDENCE_CAPTURE_40.6.463.zip"
+          rm -f "$ZIP" "$ZIP.sha256"
+          rm -rf /tmp/ac463
+          mkdir -p /tmp/ac463/administrator/js
+          cp "$ROOT/index.html" /tmp/ac463/administrator/
+          cp "$ROOT/index-40.6.463.html" /tmp/ac463/administrator/
+          cp "$ROOT/build.json" /tmp/ac463/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/ac463/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/ac463/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.463.txt" /tmp/ac463/administrator/
+          cp "$ROOT/EXECUTION_COST_EVIDENCE_CAPTURE_TEST_40.6.463.json" /tmp/ac463/administrator/
+          cp "$ROOT/js/strategy-a-execution-cost-evidence-capture.js" /tmp/ac463/administrator/js/
+          cp "$ROOT/js/strategy-a-durable-evidence-store.js" /tmp/ac463/administrator/js/
+          cp "$ROOT/js/post-boot-runtime-loader.js" /tmp/ac463/administrator/js/
+          cp "$ROOT/js/strategy-a-execution-cost-truth.js" /tmp/ac463/administrator/js/
+          (cd /tmp/ac463 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_STRATEGY_A_EXECUTION_COST_EVIDENCE_CAPTURE_40.6.463.zip" "$ROOT/AGENT_CRYPTO_STRATEGY_A_EXECUTION_COST_EVIDENCE_CAPTURE_40.6.463.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.463 Execution Cost Evidence ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -1,5 +1,7 @@
 /* Agent-Crypto @erith.IA — Strategy A Durable Evidence Continuity
-   Build 40.6.272 recovery of the 40.6.268 capability.
+   Build 40.6.463 extends the recovered 40.6.272 / 40.6.268 capability.
+   PAPER state fingerprint now includes execution-cost evidence capture revision/state,
+   so an asynchronous open/close evidence update is durably persisted without changing the DB schema.
    Same IndexedDB schema as 40.6.268, but bounded:
    - no market-series listener
    - no recurring timer
@@ -12,7 +14,7 @@
 (() => {
   "use strict";
 
-  const BUILD="40.6.272";
+  const BUILD="40.6.463";
   const DB_NAME="agent_crypto_strategy_a_durable_evidence_v1";
   const DB_VERSION=1;
   const STORE_CYCLES="cycles";
@@ -170,7 +172,9 @@
   }
 
   function paperFingerprint(row){
-    return [row?.status,row?.phase,row?.state,row?.closed_at,row?.filled_at,row?.quantity_btc,row?.fill_price_eur,row?.reconciliation_id]
+    const evidence=row?.execution_cost_evidence||null;
+    return [row?.status,row?.phase,row?.state,row?.closed_at,row?.filled_at,row?.quantity_btc,row?.fill_price_eur,row?.reconciliation_id,
+      evidence?.build,evidence?.revision,evidence?.state,evidence?.opened_capture?.state,evidence?.opened_capture?.captured_at,evidence?.closed_capture?.state,evidence?.closed_capture?.captured_at]
       .map(v=>String(v??"")).join("|");
   }
 

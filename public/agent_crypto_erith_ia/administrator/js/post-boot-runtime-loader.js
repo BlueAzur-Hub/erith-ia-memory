@@ -1,11 +1,15 @@
-/* Agent-Crypto Administrator — 40.6.289 STORAGE PRIMARY TRUTH RESIDENCY
+/* Agent-Crypto Administrator — 40.6.463 FUTURE PAPER EXECUTION COST EVIDENCE CAPTURE
+   Extends the existing Aether-first Strategy Core residency with the existing Execution Cost Truth owner
+   plus a bounded PAPER open/close capture facade. Same application; no new recurring timer or DB schema.
+   Historical after-cost rows are not modified.
+   Previous residency lineage: 40.6.289 / 40.6.414.
    Same application, staged residency.
    Heavy secondary runtimes wait until the consultation surface and Aether are resident.
    This prevents background Strategy/Tradus/Admin work from competing with Book consultation.
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.414";
+  const BUILD="40.6.463";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
@@ -13,7 +17,9 @@
     "./js/strategy-a-paper-lifecycle.js?v=40.6.405",
     "./js/strategy-a-auto-lifecycle-bridge.js",
     "./js/strategy-a-after-cost-metrics.js?v=40.6.405",
-    "./js/strategy-a-durable-evidence-store.js",
+    "./js/strategy-a-durable-evidence-store.js?v=40.6.463",
+    "./js/strategy-a-execution-cost-truth.js?v=40.6.459",
+    "./js/strategy-a-execution-cost-evidence-capture.js?v=40.6.463",
     "./js/strategy-a-safety-certification.js",
     "./js/strategy-a-evidence-dossier.js",
     "./js/strategy-a-paper-after-cost-acceptance.js"

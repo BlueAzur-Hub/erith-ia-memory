@@ -1,22 +1,18 @@
-# HANDOFF — Agent-Crypto 40.6.462
+# HANDOFF — Agent-Crypto 40.6.463
 
 ## Test Firefox minimal
 1. Ctrl+F5.
-2. Vérifier **Build 40.6.462 · Administrator**.
+2. Vérifier **Build 40.6.463 · Administrator**.
 3. **Section 04 · Expérimentation & système → Simulation**.
-4. Descendre sous **STRATEGY A · EVIDENCE IDENTITY CROSSWALK**.
-5. Repérer **STRATEGY A · AFTER-COST COMPLETENESS TRUTH · 40.6.462**.
-6. **Ne cliquer sur rien.**
-7. Relever :
-   - Liens uniques analysés ;
-   - COMPLETE + VERIFIED ;
-   - Frais manquants ;
-   - Impact manquant ;
-   - Spread manquant ;
-   - Slippage manquant ;
-   - Mismatch comptable ;
-   - Faits de base incomplets ;
-   - PAPER orphelins conservés ;
-   - les 4 lignes de diagnostic.
+4. Sous **STRATEGY A · DURABLE EVIDENCE**, repérer **STRATEGY A · EXECUTION COST EVIDENCE CAPTURE · 40.6.463**.
+5. **Ne déclencher aucun PAPER artificiellement.**
 
-Cette version ne complète aucun coût. Elle dit seulement ce qui manque réellement.
+Sans PAPER ouvert, le terrain attendu est :
+- État : **ARMED**
+- PAPER suivis : **0**
+- Entrées capturées : **0**
+- Sorties capturées : **0**
+- Entrée + sortie : **0**
+- After-cost injection : **OFF**
+
+La preuve fonctionnelle open/close sera produite naturellement au prochain PAPER réel du moteur de simulation. Aucun trade ne doit être forcé pour tester cette version.
