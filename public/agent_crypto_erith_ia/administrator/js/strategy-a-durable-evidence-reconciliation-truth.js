@@ -163,7 +163,7 @@
       visible_after:[{execution_id:"E1"}],
       durable_after:[
         {payload:{reconciliation_id:"R1",execution_id:"E1",cost_completeness:"PARTIAL_MODEL",accounting_identity_status:"INDETERMINATE_COSTS",accounting_identity_ok:null}},
-        {payload:{execution_id:"E2",cost_completeness:"COMPLETE",accounting_identity_status:"VERIFIED",accounting_identity_ok:true}}
+        {payload:{reconciliation_id:"R2",execution_id:"E2",cost_completeness:"COMPLETE",accounting_identity_status:"VERIFIED",accounting_identity_ok:true}}
       ],
       durable_paper:[
         {payload:{execution_id:"R1",status:"CLOSED_SYNCED"}},
