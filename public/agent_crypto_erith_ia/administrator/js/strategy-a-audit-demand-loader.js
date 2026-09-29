@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.467 STRATEGY A AUDIT DEMAND LOADER + REAL VENUE COST SHADOW
+/* Agent-Crypto @erith.IA — 40.6.468 STRATEGY A AUDIT DEMAND LOADER + EVIDENCE RECONCILIATION GAP TRUTH
    Keeps the canonical Simulation owner fixed in 40.6.446.
    40.6.452 hardens manual recovery when a script transport succeeds but its expected API is absent:
    a stale loaded node is removed, failed loads never stay marked ready, and the next explicit ensure can retry.
@@ -9,14 +9,14 @@
    No boot residency, polling, observer, storage write or automatic retry loop. */
 (()=>{
   "use strict";
-  const BUILD="40.6.467", TIMEOUT=6000;
+  const BUILD="40.6.468", TIMEOUT=6000;
   const SIMULATION_OWNER_SELECTOR='details[data-collapse-key="simulation"]';
   const SPECS=Object.freeze([
     Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
     Object.freeze({key:"oracle-cost",src:"./js/strategy-a-oracle-cost-calibration-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit}),
     Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.467",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth}),
     Object.freeze({key:"real-venue-cost-shadow",src:"./js/strategy-a-real-venue-cost-shadow-truth.js?v=40.6.467",ready:()=>!!globalThis.AgentCryptoStrategyARealVenueCostShadowTruth}),
-    Object.freeze({key:"durable-reconciliation",src:"./js/strategy-a-durable-evidence-reconciliation-truth.js?v=40.6.467",ready:()=>!!globalThis.AgentCryptoStrategyADurableEvidenceReconciliation}),
+    Object.freeze({key:"durable-reconciliation",src:"./js/strategy-a-durable-evidence-reconciliation-truth.js?v=40.6.468",ready:()=>!!globalThis.AgentCryptoStrategyADurableEvidenceReconciliation}),
     Object.freeze({key:"identity-crosswalk",src:"./js/strategy-a-evidence-identity-crosswalk-truth.js?v=40.6.467",ready:()=>!!globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk}),
     Object.freeze({key:"after-cost-completeness",src:"./js/strategy-a-after-cost-completeness-truth.js?v=40.6.467",ready:()=>!!globalThis.AgentCryptoStrategyAAfterCostCompletenessTruth}),
     Object.freeze({key:"execution-cost-evidence-capture",src:"./js/strategy-a-execution-cost-evidence-capture.js?v=40.6.465",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostEvidenceCapture})

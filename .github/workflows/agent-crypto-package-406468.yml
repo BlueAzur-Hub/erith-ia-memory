@@ -1,0 +1,49 @@
+name: Agent-Crypto Package 40.6.468 Evidence Reconciliation Runtime Gap Truth
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/agent-crypto-package-406468.yml']
+permissions: {contents: write}
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 2}
+      - name: Validate syntax and delivery
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-durable-evidence-reconciliation-truth.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'const FIELDS=Object.freeze(["execution_id","reconciliation_id","trade_id","identity"])' "$ROOT/js/strategy-a-durable-evidence-reconciliation-truth.js"
+          grep -F 'historical_open' "$ROOT/js/strategy-a-durable-evidence-reconciliation-truth.js"
+          grep -F 'strategy-a-durable-evidence-reconciliation-truth.js?v=40.6.468' "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'Build 40.6.468 · Administrator' "$ROOT/index.html"
+      - name: Exercise reconciliation and gap self-test
+        run: |
+          node <<'NODE'
+          const fs=require("fs"),vm=require("vm");
+          const p="public/agent_crypto_erith_ia/administrator/js/strategy-a-durable-evidence-reconciliation-truth.js";
+          vm.runInThisContext(fs.readFileSync(p,"utf8"),{filename:p});
+          const t=global.AgentCryptoStrategyADurableEvidenceReconciliation.self_test();
+          if(!t.pass)throw new Error(JSON.stringify(t));
+          if(!t.checks.multi_id_restores_links)throw new Error("Multi-ID truth failed");
+          if(!t.checks.historical_gap_distinguished)throw new Error("Historical gap truth failed");
+          console.log("PASS reconciliation + runtime gap truth");
+          NODE
+      - name: Package
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"; ZIP="$ROOT/AGENT_CRYPTO_EVIDENCE_RECONCILIATION_RUNTIME_GAP_TRUTH_40.6.468.zip"
+          rm -f "$ZIP" "$ZIP.sha256"; rm -rf /tmp/ac468; mkdir -p /tmp/ac468/administrator/js
+          cp "$ROOT/index.html" "$ROOT/index-40.6.468.html" "$ROOT/build.json" "$ROOT/RELEASE.md" "$ROOT/HANDOFF.md" "$ROOT/HANDOFF_FINAL_40.6.468.md" "$ROOT/EVIDENCE_RECONCILIATION_RUNTIME_GAP_TRUTH_TEST_40.6.468.json" /tmp/ac468/administrator/
+          cp "$ROOT/js/strategy-a-durable-evidence-reconciliation-truth.js" "$ROOT/js/strategy-a-audit-demand-loader.js" "$ROOT/js/post-boot-runtime-loader.js" /tmp/ac468/administrator/js/
+          (cd /tmp/ac468 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"; sha256sum "$ZIP" > "$ZIP.sha256"
+      - name: Commit package
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_EVIDENCE_RECONCILIATION_RUNTIME_GAP_TRUTH_40.6.468.zip" "$ROOT/AGENT_CRYPTO_EVIDENCE_RECONCILIATION_RUNTIME_GAP_TRUTH_40.6.468.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.468 Evidence Reconciliation Runtime Gap Truth ZIP"
+          git pull --rebase origin main; git push origin HEAD:main
