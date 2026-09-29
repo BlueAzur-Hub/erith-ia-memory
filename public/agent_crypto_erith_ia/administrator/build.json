@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.459",
+  "build": "40.6.460",
   "engine": "38.15.11",
-  "release": "EXECUTION COST CURRENCY PROOF HARDENING",
+  "release": "STRATEGY A DURABLE EVIDENCE RECONCILIATION TRUTH",
   "published": true,
-  "status": "published_pending_firefox_459",
-  "parent_build": "40.6.458",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.459",
-  "administrator_build": "40.6.459",
-  "build_label": "Build 40.6.459 · Administrator",
+  "status": "published_pending_firefox_460",
+  "parent_build": "40.6.459",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.460",
+  "administrator_build": "40.6.460",
+  "build_label": "Build 40.6.460 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -16,7 +16,7 @@
   "atlas_current_modified": false,
   "oracle_modified": false,
   "lecture_technique_modified": false,
-  "strategy_a_modified": true,
+  "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
   "administrator_presentation_modified": false,
   "aerith10_presentation_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox : Ctrl+F5 → Build 40.6.459 → Section 04 · Expérimentation & système → Simulation → STRATEGY A · EXECUTION COST TRUTH · 40.6.459. Ne cliquer sur rien. Vérifier seulement que la mesure automatique nominale reste disponible et que la carte OKX BTC/EUR affiche FRESH avec prix/spread, sans INVALID_PAIR ni MISSING_BOOK.",
+  "terrain_pending": "Firefox : Ctrl+F5 → Build 40.6.460 → Section 04 · Expérimentation & système → Simulation. Descendre sous STRATEGY A · DURABLE EVIDENCE jusqu'à STRATEGY A · DURABLE EVIDENCE RECONCILIATION · 40.6.460. Ne cliquer sur rien. Relever Ledger visible/durable, After-cost visible/durable, After-cost↔PAPER liés, orphelins et gaps runtime.",
   "terrain_proof": null,
-  "release_notes": "40.6.459 ferme la dette Astra de preuve de devise Execution Cost. Les identités compactes de paire comme BTCUSDT sont désormais reconnues comme identité explicite et rejetées pour un contrat BTC/EUR. price_eur seul ne prouve plus que des bid/ask génériques sont libellés en EUR ; les alias génériques exigent désormais bid/ask EUR spécifiques, une paire BTCEUR explicite ou une devise EUR explicite. Aucun changement de frais, calculs de coût, Strategy, Oracle, Source Truth, Aether, Market Core, timer, observer, stockage ou ordre réel.",
+  "release_notes": "40.6.460 ajoute une vérité passive de réconciliation Strategy A entre le ledger visible, Durable Evidence IndexedDB, after-cost, états PAPER et gaps runtime. Elle ne certifie aucun gate et ne modifie aucun seuil. Elle expose recouvrement des IDs, after-cost COMPLETE+VERIFIED, after-cost/PAPER liés, orphelins et gaps ouverts/fermés. Aucun réseau, aucune écriture storage, aucun timer/observer, aucun ordre réel.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5929,7 +5929,7 @@
     "firefox_status": "PASS_OPERATOR_457",
     "firefox_proof_note": "29/09/2026 : Build 40.6.457 visible ; Source Truth CEX = CEX READY, Binance 5/5, Kraken 5/5, Coinbase 4/5, OKX 5/5, 4/4 sources ; Source Intelligence V1.3 chargé avec CEX 5/5 frais."
   },
-  "execution_cost_control_modified": true,
+  "execution_cost_control_modified": false,
   "execution_cost_pending_cycle_resume_406458": {
     "enabled": true,
     "parent": "40.6.457",
@@ -5978,6 +5978,48 @@
     "new_observer": false,
     "storage_write": false,
     "real_order": false,
-    "firefox_status": "PENDING_OPERATOR_459"
+    "firefox_status": "PASS_OPERATOR_459",
+    "firefox_proof_note": "29/09/2026 : Build 40.6.459 visible ; OKX Europe BTC/EUR nominal via Source Truth CEX / Backend local 8790 ; FRESH âge 2 s, spread 1.82 bp, prix achat/vente présents ; aucun INVALID_PAIR ni MISSING_BOOK visible. PASS terrain nominal."
+  },
+  "strategy_a_durable_evidence_reconciliation_406460": {
+    "enabled": true,
+    "parent": "40.6.459",
+    "owner": "js/strategy-a-durable-evidence-reconciliation-truth.js",
+    "delivery_parent": "js/strategy-a-audit-demand-loader.js",
+    "mode": "READ_ONLY_RECONCILIATION",
+    "sources": [
+      "AgentCryptoStrategyAExperimentLedger",
+      "AgentCryptoStrategyADurableEvidence",
+      "AgentCryptoStrategyAAfterCostMetrics"
+    ],
+    "reconciles": [
+      "visible_vs_durable_cycles",
+      "visible_vs_durable_after_cost",
+      "durable_after_cost_vs_durable_paper",
+      "runtime_gaps"
+    ],
+    "reports": [
+      "unique_ids",
+      "missing_ids",
+      "duplicates",
+      "shared_ids",
+      "orphan_after_cost",
+      "orphan_paper",
+      "complete_verified_after_cost",
+      "open_closed_runtime_gaps"
+    ],
+    "certifies_g1": false,
+    "certifies_g8": false,
+    "promotes_gate": false,
+    "thresholds_changed": false,
+    "market_core_modified": false,
+    "source_truth_modified": false,
+    "aether_modified": false,
+    "network": false,
+    "storage_write": false,
+    "new_timer": false,
+    "new_observer": false,
+    "real_order": false,
+    "firefox_status": "PENDING_OPERATOR_460"
   }
 }

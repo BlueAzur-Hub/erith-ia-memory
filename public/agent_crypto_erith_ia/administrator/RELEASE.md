@@ -1,20 +1,27 @@
-# Agent-Crypto 40.6.459 — EXECUTION COST CURRENCY PROOF HARDENING
+# Agent-Crypto 40.6.460 — STRATEGY A DURABLE EVIDENCE RECONCILIATION TRUTH
 
 ## Objet unique
-Fermer la dette Astra où une fixture `BTCUSDT + price_eur + bid/ask génériques` pouvait être acceptée comme carnet BTC/EUR.
+Réconcilier sans mutation les preuves Strategy A déjà visibles :
+- Experiment Ledger visible ;
+- Durable Evidence IndexedDB ;
+- after-cost ;
+- états PAPER ;
+- gaps runtime.
 
-## Cause
-Deux permissivités se combinaient :
-- une identité compacte `BTCUSDT` pouvait ne pas être retenue comme paire explicite ;
-- `price_eur` suffisait à autoriser ensuite des `bid/ask` génériques, alors qu'un prix converti en EUR ne prouve pas la devise du carnet.
+## Pourquoi
+Le terrain .459 montre un ledger courant avec 97 cycles / 0 Paper, tandis que Durable Evidence expose 583 cycles, 4 after-cost, 9 états PAPER et 516 gaps runtime. Cette version ne choisit pas une vérité arbitrairement : elle mesure les recouvrements et les orphelins par identifiants.
 
-## Correction
-- toute identité de paire compacte non réduite à l'actif seul `BTC` est traitée comme paire explicite ;
-- toute paire explicite autre que `BTCEUR` est rejetée ;
-- `price_eur` n'autorise plus les alias génériques de carnet ;
-- les bid/ask génériques ne sont utilisables que si la devise EUR est prouvée par le carnet EUR spécifique, une paire BTCEUR explicite ou une devise EUR explicite.
+## Affichage
+Nouveau bloc sous Durable Evidence :
+- Ledger visible / durable ;
+- cycles IDs communs ;
+- after-cost visible / durable ;
+- after-cost COMPLETE + VERIFIED ;
+- after-cost ↔ PAPER liés ;
+- after-cost orphelins ;
+- PAPER orphelins ;
+- gaps runtime total / ouverts.
 
-## Protégé
-Market Core 38.15.11 · frais · calculs de coût · Strategy · Oracle · Source Truth · Aether · Paper.
-
-Aucun timer, observer, stockage, owner réseau ou ordre réel ajouté.
+## Garde-fous
+Diagnostic uniquement. Aucun PASS G1/G8, aucune certification, aucun seuil Strategy A, aucun trade forcé, aucune écriture IndexedDB, aucun réseau, aucun ordre réel.
+Market Core 38.15.11 intact.
