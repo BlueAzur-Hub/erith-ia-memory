@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.473 STRATEGY A AUDIT DEMAND LOADER + OKX T60 TRAJECTORY + UNKNOWN TRUTH
+/* Agent-Crypto @erith.IA — 40.6.474 STRATEGY A AUDIT DEMAND LOADER + PROSPECTIVE OUTCOME + OKX COST EVIDENCE
    Keeps the canonical Simulation owner fixed in 40.6.446.
    40.6.452 hardens manual recovery when a script transport succeeds but its expected API is absent:
    a stale loaded node is removed, failed loads never stay marked ready, and the next explicit ensure can retry.
@@ -9,7 +9,7 @@
    No boot residency, polling, observer, storage write or automatic retry loop. */
 (()=>{
   "use strict";
-  const BUILD="40.6.473", TIMEOUT=6000;
+  const BUILD="40.6.474", TIMEOUT=6000;
   const SIMULATION_OWNER_SELECTOR='details[data-collapse-key="simulation"]';
   const SPECS=Object.freeze([
     Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
@@ -83,6 +83,7 @@
       try{globalThis.AgentCryptoStrategyARealVenueCostShadowTruth?.refresh?.("406466-demand-ready");}catch(_){}
       try{globalThis.AgentCryptoStrategyAOkxPotentialOutcomeAudit?.refresh?.("406471-demand-ready");}catch(_){}
       try{globalThis.AgentCryptoStrategyAOkxOutcomeCoverageTruth?.refresh?.("406472-demand-ready");}catch(_){}
+      try{globalThis.AgentCryptoStrategyAProspectiveOutcomeEvidenceCapture?.render?.();}catch(_){}
       try{globalThis.AgentCryptoStrategyADurableEvidenceReconciliation?.render?.();}catch(_){}
       try{globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk?.render?.();}catch(_){}
       try{globalThis.AgentCryptoStrategyAAfterCostCompletenessTruth?.render?.();}catch(_){}
@@ -103,7 +104,7 @@
 
   globalThis.AgentCryptoStrategyAAuditDemand=Object.freeze({
     build:BUILD,ensure,
-    snapshot:()=>Object.freeze({build:BUILD,state,reason,last_error:lastError,last_retry_key:lastRetryKey,retry_count:retryCount,simulation_open:simulationOpen(),cost_wait_loaded:!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429,oracle_cost_loaded:!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit,execution_cost_loaded:!!globalThis.AgentCryptoStrategyAExecutionCostTruth,real_venue_cost_shadow_loaded:!!globalThis.AgentCryptoStrategyARealVenueCostShadowTruth,okx_potential_outcome_loaded:!!globalThis.AgentCryptoStrategyAOkxPotentialOutcomeAudit,okx_outcome_coverage_loaded:!!globalThis.AgentCryptoStrategyAOkxOutcomeCoverageTruth,okx_t60_trajectory_loaded:!!globalThis.AgentCryptoStrategyAOkxT60TrajectoryUnknownTruth,durable_reconciliation_loaded:!!globalThis.AgentCryptoStrategyADurableEvidenceReconciliation,identity_crosswalk_loaded:!!globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk,after_cost_completeness_loaded:!!globalThis.AgentCryptoStrategyAAfterCostCompletenessTruth,execution_cost_evidence_capture_loaded:!!globalThis.AgentCryptoStrategyAExecutionCostEvidenceCapture}),
+    snapshot:()=>Object.freeze({build:BUILD,state,reason,last_error:lastError,last_retry_key:lastRetryKey,retry_count:retryCount,simulation_open:simulationOpen(),cost_wait_loaded:!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429,oracle_cost_loaded:!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit,execution_cost_loaded:!!globalThis.AgentCryptoStrategyAExecutionCostTruth,real_venue_cost_shadow_loaded:!!globalThis.AgentCryptoStrategyARealVenueCostShadowTruth,okx_potential_outcome_loaded:!!globalThis.AgentCryptoStrategyAOkxPotentialOutcomeAudit,okx_outcome_coverage_loaded:!!globalThis.AgentCryptoStrategyAOkxOutcomeCoverageTruth,okx_t60_trajectory_loaded:!!globalThis.AgentCryptoStrategyAOkxT60TrajectoryUnknownTruth,durable_reconciliation_loaded:!!globalThis.AgentCryptoStrategyADurableEvidenceReconciliation,identity_crosswalk_loaded:!!globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk,after_cost_completeness_loaded:!!globalThis.AgentCryptoStrategyAAfterCostCompletenessTruth,execution_cost_evidence_capture_loaded:!!globalThis.AgentCryptoStrategyAExecutionCostEvidenceCapture,prospective_outcome_evidence_loaded:!!globalThis.AgentCryptoStrategyAProspectiveOutcomeEvidenceCapture}),
     self_test:()=>{
       const owner=simulationOwner();
       const fakeSpec={ready:()=>false};
