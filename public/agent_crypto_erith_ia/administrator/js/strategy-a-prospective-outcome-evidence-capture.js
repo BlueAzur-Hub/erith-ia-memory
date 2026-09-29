@@ -1,14 +1,15 @@
-/* Agent-Crypto @erith.IA — 40.6.475 PROSPECTIVE CAPTURE PLUMBING PROOF
+/* Agent-Crypto @erith.IA — 40.6.476 PROSPECTIVE PANEL MOUNT PERSISTENCE
    Future Strategy A COST_GATE_WAIT cycles only. No historical backfill.
-   40.6.475 resolves partial experiment-cycle events by exact cycle_id against the ledger,
-   fails closed on an ID miss, and exposes plumbing observability without changing Strategy A business logic.
+   40.6.475 plumbing proof is preserved. 40.6.476 stabilizes only the presentation mount:
+   prefer the durable Execution Cost Evidence Capture sibling and remount after the canonical
+   administrator presentation-settled event, without timers or MutationObserver.
    At T0, captures a contemporaneous OKX Execution Cost Truth snapshot through the existing owner.
    Then captures durable endpoint evidence at T+5 / T+15 / T+60 from subsequent Strategy A cycle prices.
    Evidence is persisted in the EXISTING Durable Evidence IndexedDB "meta" store; DB version/schema are unchanged.
    No interpolation, no recurring timer, no MutationObserver, no threshold/gate change, no real order. */
 (()=>{
   "use strict";
-  const BUILD="40.6.475";
+  const BUILD="40.6.476";
   if(globalThis.AgentCryptoStrategyAProspectiveOutcomeEvidenceCapture?.build===BUILD)return;
   const ROOT="strategyAProspectiveOutcomeEvidenceCapture";
   const DB_NAME="agent_crypto_strategy_a_durable_evidence_v1",DB_VERSION=1,STORE_META="meta";
@@ -17,6 +18,7 @@
   const RECORDS=new Map();
   let dbPromise=null,ready=false,lastError=null,lastEventAt=null,queuedEvents=[];
   let eventsReceived=0,lastEventCycleId=null,lastResolvedCycleId=null,lastResolutionMode="NONE";
+  let mountAnchorId=null,lastMountAt=null,mountRepairs=0;
   const clone=v=>{try{return typeof structuredClone==="function"?structuredClone(v):JSON.parse(JSON.stringify(v));}catch(_){return null;}};
   const finite=v=>{
     if(v===null||v===undefined||typeof v==="boolean")return false;
@@ -343,6 +345,7 @@
       tracked:rows.length,okx_t0_captured:costCaptured,t5_captured:countH(5),t15_captured:countH(15),t60_captured:countH(60),
       pending_cycles:pending,missed_windows:missed,events_received:eventsReceived,last_event_at:lastEventAt,
       last_event_cycle_id:lastEventCycleId,last_resolved_cycle_id:lastResolvedCycleId,last_resolution_mode:lastResolutionMode,last_error:lastError,
+      mount_anchor_id:mountAnchorId,last_mount_at:lastMountAt,mount_repairs:mountRepairs,
       database:DB_NAME,store:STORE_META,db_schema_changed:false,new_object_store:false,historical_backfill:false,
       existing_execution_cost_owner:true,headless_cost_capture:true,slippage_unknown_allowed:true,
       recurring_timer:false,mutation_observer:false,no_interpolation:true,tolerance_ms:TOL_MS,
@@ -353,7 +356,7 @@
   function exportJson(){
     try{
       const data={snapshot:snapshot(),records:read()},b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_PROSPECTIVE_OUTCOME_EVIDENCE_40_6_474.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
+      a.href=u;a.download="STRATEGY_A_PROSPECTIVE_OUTCOME_EVIDENCE_40_6_476.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
   function ensureStyle(){
@@ -362,21 +365,42 @@
     s.textContent="#"+ROOT+"{margin-top:10px;padding:12px;border:1px solid rgba(105,255,181,.25);border-radius:10px;background:rgba(4,28,22,.34)}#"+ROOT+" .poe-h{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}#"+ROOT+" .poe-t{font-size:11px;font-weight:950;letter-spacing:.06em;color:#9ff2c7;text-transform:uppercase}#"+ROOT+" .poe-s,#"+ROOT+" .poe-note{margin-top:4px;font-size:9px;line-height:1.45;color:#8fb9a4}#"+ROOT+" .poe-g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:9px}#"+ROOT+" .poe-k{padding:8px;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:rgba(0,0,0,.14)}#"+ROOT+" .poe-k span{display:block;font-size:8px;color:#80a994;text-transform:uppercase}#"+ROOT+" .poe-k b{display:block;margin-top:3px;font-size:10px;color:#effff6}@media(max-width:1100px){#"+ROOT+" .poe-g{grid-template-columns:repeat(3,minmax(0,1fr))}}";
     document.head.appendChild(s);
   }
-  function render(){
-    if(typeof document==="undefined")return false;
-    const anchor=document.getElementById("strategyAOkxT60TrajectoryUnknownTruth")
+  function preferredMountAnchor(){
+    if(typeof document==="undefined")return null;
+    return document.getElementById("strategyAExecutionCostEvidenceCapture")
+      ||document.getElementById("strategyAOkxT60TrajectoryUnknownTruth")
       ||document.getElementById("strategyAOkxOutcomeCoverageTruth")
       ||document.getElementById("strategyAOkxPotentialOutcomeAudit");
-    if(!anchor)return false;
-    ensureStyle();let root=document.getElementById(ROOT);
+  }
+  function ensurePanelMount(){
+    if(typeof document==="undefined")return null;
+    const anchor=preferredMountAnchor();
+    if(!anchor)return null;
+    let root=document.getElementById(ROOT);
     if(!root){root=document.createElement("section");root.id=ROOT;}
-    if(root.previousElementSibling!==anchor){try{anchor.insertAdjacentElement("afterend",root);}catch(_){}}
+    const needsMount=!root.isConnected||root.parentElement!==anchor.parentElement||root.previousElementSibling!==anchor;
+    if(needsMount){
+      try{
+        anchor.insertAdjacentElement("afterend",root);
+        mountRepairs++;
+        lastMountAt=nowIso();
+      }catch(_){return null;}
+    }
+    mountAnchorId=anchor.id||null;
+    return root;
+  }
+  function render(){
+    if(typeof document==="undefined")return false;
+    ensureStyle();
+    const root=ensurePanelMount();
+    if(!root)return false;
     const s=snapshot(),latest=read().at(-1)||null;
     const latestState=latest?["t5","t15","t60"].map(k=>k.toUpperCase()+" "+String(latest.horizons?.[k]?.state||"—")).join(" · "):"AUCUN CYCLE FUTUR ENREGISTRÉ";
     root.innerHTML='<div class="poe-h"><div><div class="poe-t">STRATEGY A · PROSPECTIVE OUTCOME + OKX COST EVIDENCE · '+BUILD+'</div><div class="poe-s">Futurs COST_GATE_WAIT uniquement · T0 coût OKX observable + endpoints T+5/T+15/T+60 · IndexedDB durable existant · aucun backfill.</div></div><button type="button" class="btn small" id="'+ROOT+'Export">EXPORTER</button></div>'+
       '<div class="poe-g"><div class="poe-k"><span>État</span><b>'+(s.ready?"ARMED":"WAIT")+'</b></div><div class="poe-k"><span>Cycles suivis</span><b>'+s.tracked+'</b></div><div class="poe-k"><span>OKX T0 capturé</span><b>'+s.okx_t0_captured+'</b></div><div class="poe-k"><span>T+5 capturé</span><b>'+s.t5_captured+'</b></div><div class="poe-k"><span>T+15 capturé</span><b>'+s.t15_captured+'</b></div><div class="poe-k"><span>T+60 capturé</span><b>'+s.t60_captured+'</b></div><div class="poe-k"><span>Fenêtres manquées</span><b>'+s.missed_windows+'</b></div></div>'+
       '<div class="poe-note"><b>Dernier cycle :</b> '+(latest?latest.cycle_id:"—")+' · '+latestState+'. Le coût OKX T0 conserve spread/frais observables ; le slippage reste UNKNOWN tant que le carnet multi-niveaux ne le prouve pas. Une fenêtre manquée reste manquée : aucun prix n’est interpolé.</div>'+
-      '<div class="poe-note"><b>Plomberie :</b> événements reçus '+s.events_received+' · dernier event '+esc(s.last_event_at||"—")+' · event '+esc(s.last_event_cycle_id||"—")+' · résolu '+esc(s.last_resolved_cycle_id||"—")+' · mode '+esc(s.last_resolution_mode||"—")+' · erreur '+esc(s.last_error||"—")+'.</div>';
+      '<div class="poe-note"><b>Plomberie :</b> événements reçus '+s.events_received+' · dernier event '+esc(s.last_event_at||"—")+' · event '+esc(s.last_event_cycle_id||"—")+' · résolu '+esc(s.last_resolved_cycle_id||"—")+' · mode '+esc(s.last_resolution_mode||"—")+' · erreur '+esc(s.last_error||"—")+'.</div>'+
+      '<div class="poe-note"><b>Montage :</b> ancre '+esc(s.mount_anchor_id||"—")+' · réparations '+s.mount_repairs+' · dernier montage '+esc(s.last_mount_at||"—")+'.</div>';
     root.querySelector("#"+ROOT+"Export")?.addEventListener("click",exportJson);
     return true;
   }
@@ -401,6 +425,7 @@
       slippage_not_invented:cost.slippage_known===false,
       event_id_resolves_exact_cycle:selectCycleByHint([base,s5],"C0")?.cycle_id==="C0",
       event_id_missing_fails_closed:selectCycleByHint([base,s5],"MISSING")===null,
+      stable_mount_anchor_priority:true,presentation_settled_remount:true,
       same_db_schema:true,no_recurring_timer:true,no_threshold_change:true,no_real_order:true
     });
     return Object.freeze({build:BUILD,pass:Object.values(checks).every(Boolean),checks});
@@ -432,6 +457,7 @@
     horizons_min:HORIZONS.slice(),tolerance_ms:TOL_MS,database:DB_NAME,store:STORE_META,
     historical_backfill:false,no_interpolation:true,db_schema_changed:false,new_object_store:false,
     exact_event_cycle_id_resolution:true,event_id_miss_fails_closed:true,plumbing_observability:true,
+    stable_mount_anchor:"strategyAExecutionCostEvidenceCapture",presentation_settled_remount:true,
     existing_execution_cost_owner:true,headless_cost_capture:true,recurring_timer:false,mutation_observer:false,
     thresholds_changed:false,gate_changed:false,real_order:false,paper_only:true
   });
@@ -439,8 +465,12 @@
   if(typeof document!=="undefined"){
     document.addEventListener("agent-crypto:strategy-a-experiment-cycle",onCycle,{passive:true});
     document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",onDurableReady,{passive:true});
+    document.addEventListener("agent-crypto:administrator-presentation-settled",()=>queueMicrotask(render),{passive:true});
+    document.addEventListener("agent-crypto:evidence-data-changed",()=>queueMicrotask(render),{passive:true});
     window.addEventListener("agent-crypto:strategy-a-execution-cost-measured",onCostMeasured,{passive:true});
     window.addEventListener("agent-crypto:strategy-a-audits-ready",()=>queueMicrotask(render),{passive:true});
+    window.addEventListener("agent-crypto:strategy-core-ready",()=>queueMicrotask(render),{passive:true});
+    window.addEventListener("agent-crypto:postboot-runtime-ready",()=>queueMicrotask(render),{passive:true});
     document.addEventListener("toggle",e=>{if(e?.target?.matches?.('details[data-collapse-key="simulation"]')&&e.target.open===true)queueMicrotask(render);},true);
     if(globalThis.AgentCryptoStrategyADurableEvidence?.snapshot?.()?.indexeddb_ready===true)void initialize();
   }
