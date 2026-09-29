@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.455 STRATEGY A EXECUTION COST AUTO MEASURE
+/* Agent-Crypto @erith.IA — 40.6.469 EXECUTION COST PUBLIC API COMPLETION
    Event-driven BTC/EUR execution-cost measurement for Kraken + OKX Europe; manual refresh remains a fallback.
    40.6.443 restored the tool and hardened null/crossed-book handling.
    40.6.450 fails closed on stale/unknown/future OKX quote time, proves BTC/EUR identity before generic aliases,
@@ -9,10 +9,12 @@
    including a manual "RAFRAÎCHIR KRAKEN + OKX" measurement; pending cycles coalesce to one boolean.
    40.6.459 hardens BTC/EUR identity proof: compact pair identities such as BTCUSDT are explicit contradictions,
    and price_eur alone never authorizes generic bid/ask aliases as an EUR order book.
-   40.6.466 adds one passive custom event after a completed measurement so the read-only venue-cost shadow can recompute without polling.\n   No direct browser OKX internet access, order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
+   40.6.466 adds one passive custom event after a completed measurement so the read-only venue-cost shadow can recompute without polling.
+   40.6.469 keeps one measure function for public, button and auto callers; its common finally resumes pending cycles.
+   No direct browser OKX internet access, order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
 (() => {
   "use strict";
-  const BUILD="40.6.459", ROOT="strategyAExecutionCostTruth";
+  const BUILD="40.6.469", ROOT="strategyAExecutionCostTruth";
   const SIZES=Object.freeze([10,25,50,100]), DEPTH_BPS=Object.freeze([5,10,25]), TIMEOUT=9000, BACKEND_TIMEOUT=18000;
   const SOURCE_TRUTH_CACHE_TTL_SECONDS=15, SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS=30;
   const VENUES=Object.freeze({
@@ -31,6 +33,8 @@
     })
   });
   let last=null,busy=false;
+  // One completion path for the public API, the manual button and auto cycles.
+  let resumePendingExperiment=()=>false;
   const n=v=>{
     if(v===null||v===undefined||typeof v==="boolean")return null;
     if(typeof v==="string"&&!v.trim())return null;
@@ -318,13 +322,16 @@
       });
       try{globalThis.window?.dispatchEvent?.(new CustomEvent("agent-crypto:strategy-a-execution-cost-measured",{detail:{build:BUILD,status}}));}catch(_){}
       return last;
-    }finally{busy=false;render();}
+    }finally{
+      busy=false;
+      try{render();}finally{resumePendingExperiment();}
+    }
   }
   function exportJson(){
     if(!last)return false;
     try{
       const b=new Blob([JSON.stringify(last,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_459.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
+      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_469.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
   function style(){
@@ -467,13 +474,7 @@
       pendingExperimentMeasure=false;
       return scheduleAutoMeasure("experiment-cycle");
     };
-    const originalMeasure=measure;
-    measure=async function(trigger="manual"){
-      try{return await originalMeasure(trigger);}
-      finally{
-        finishPendingExperiment();
-      }
-    };
+    resumePendingExperiment=finishPendingExperiment;
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",scheduleMount,{once:true});else scheduleMount();
     document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",scheduleMount,{passive:true});
     document.addEventListener("agent-crypto:strategy-a-experiment-cycle",onExperimentCycle,{passive:true});

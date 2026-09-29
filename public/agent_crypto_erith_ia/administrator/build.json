@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.468",
+  "build": "40.6.469",
   "engine": "38.15.11",
-  "release": "STRATEGY A EVIDENCE RECONCILIATION + RUNTIME GAP TRUTH",
+  "release": "EXECUTION COST CAPTURE IDEMPOTENCE + PUBLIC API COMPLETION",
   "published": true,
-  "status": "published_pending_firefox_468",
-  "parent_build": "40.6.467",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.468",
-  "administrator_build": "40.6.468",
-  "build_label": "Build 40.6.468 · Administrator",
+  "status": "published_pending_operator_firefox_469",
+  "parent_build": "40.6.468",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.469",
+  "administrator_build": "40.6.469",
+  "build_label": "Build 40.6.469 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 → Build 40.6.468 → Section 04 → Simulation. Vérifier Reconciliation + Runtime Gap Truth : 4 liens Multi-ID, 0 after-cost vraiment orphelin, 5 PAPER vraiment orphelins; gaps total conservés mais actifs de cette page séparés des historiques ouverts.",
+  "terrain_pending": "Firefox opérateur : vérifier Build 40.6.469, panneau Capture unique et ARMED après chargement. Ne forcer aucun PAPER. Les tests de doublons et de reprise API sont exécutés automatiquement en Firefox isolé avec données synthétiques.",
   "terrain_proof": null,
-  "release_notes": "40.6.468 corrige la vérité de Reconciliation sans modifier les données: le résumé after-cost ↔ PAPER utilise les quatre champs Multi-ID (execution_id, reconciliation_id, trade_id, identity) comme le Crosswalk, et les gaps ouverts d'anciennes sessions ne sont plus confondus avec les gaps actifs de la page courante. Aucun gap n'est supprimé, aucune preuve n'est fusionnée ou réécrite.",
+  "release_notes": "40.6.469 préserve la première tentative de capture par execution_id/phase, ignore une ouverture PAPER signalée duplicate, et remet la reprise du cycle en attente dans le finally commun de la mesure publique/manuelle/automatique. Aucun coût historique inventé, seuil ou gate modifié, aucun ordre réel.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -6270,5 +6270,24 @@
     "market_core_modified": false,
     "real_order": false,
     "firefox_status": "PENDING_OPERATOR_468"
+  },
+  "execution_cost_capture_integrity_406469": {
+    "owners": [
+      "js/strategy-a-execution-cost-evidence-capture.js",
+      "js/strategy-a-execution-cost-truth.js"
+    ],
+    "first_attempt_per_execution_phase_preserved": true,
+    "duplicate_open_not_recaptured": true,
+    "failed_attempt_not_backfilled_with_later_quote": true,
+    "public_manual_auto_common_completion": true,
+    "pending_cycles_coalesced": true,
+    "after_cost_injection": false,
+    "historical_backfill": false,
+    "isolated_firefox_regression_suite": ".github/scripts/agent_crypto_execution_evidence_test.cjs",
+    "operator_firefox_verified": false,
+    "off_size_simulations_remain_unknown": true,
+    "new_timer": false,
+    "new_storage": false,
+    "new_network_owner": false
   }
 }

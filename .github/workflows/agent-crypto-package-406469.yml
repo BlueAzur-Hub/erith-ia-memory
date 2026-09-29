@@ -1,0 +1,57 @@
+name: Agent-Crypto 40.6.469 Capture Integrity Validation and Package
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/agent-crypto-package-406469.yml']
+permissions:
+  contents: read
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax and canonical version contract
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/strategy-a-execution-cost-truth.js
+          node --check public/agent_crypto_erith_ia/administrator/js/strategy-a-execution-cost-evidence-capture.js
+          node --check public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js
+          node --check public/agent_crypto_erith_ia/administrator/js/strategy-a-audit-demand-loader.js
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Install isolated Firefox test runtime
+        run: |
+          npm install --prefix "$RUNNER_TEMP/ac469" --no-package-lock --ignore-scripts playwright@1.62.1
+          "$RUNNER_TEMP/ac469/node_modules/.bin/playwright" install --with-deps firefox
+      - name: Exercise public completion and capture idempotence in Firefox
+        run: |
+          AGENT_CRYPTO_PLAYWRIGHT_MODULE="$RUNNER_TEMP/ac469/node_modules/playwright" node .github/scripts/agent_crypto_execution_evidence_test.cjs > "$RUNNER_TEMP/capture-integrity-firefox.json"
+          cat "$RUNNER_TEMP/capture-integrity-firefox.json"
+      - name: Reproduce and verify exact delivery archive
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile,hashlib,io,json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          names=['index.html','index-40.6.469.html','build.json','RELEASE.md','HANDOFF.md','HANDOFF_FINAL_40.6.469.md','CAPTURE_INTEGRITY_TEST_40.6.469.json','js/post-boot-runtime-loader.js','js/strategy-a-audit-demand-loader.js','js/strategy-a-execution-cost-truth.js','js/strategy-a-execution-cost-evidence-capture.js']
+          buf=io.BytesIO()
+          with zipfile.ZipFile(buf,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for name in names:
+              info=zipfile.ZipInfo('administrator/'+name,date_time=(2026,9,29,14,40,0));info.compress_type=zipfile.ZIP_DEFLATED;info.external_attr=0o100644<<16
+              z.writestr(info,(root/name).read_bytes())
+          archive=root/'AGENT_CRYPTO_CAPTURE_INTEGRITY_40.6.469.zip'
+          assert buf.getvalue()==archive.read_bytes(), 'Archive differs from checked-out sources'
+          expected=archive.with_suffix('.zip.sha256').read_text().split()[0]
+          assert hashlib.sha256(buf.getvalue()).hexdigest()==expected, 'Checksum mismatch'
+          assert zipfile.ZipFile(archive).testzip() is None
+          assert json.loads((root/'build.json').read_text())['engine']=='38.15.11'
+          print('PASS: 11 files, source identity and SHA-256',expected)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_40.6.469_CAPTURE_INTEGRITY
+          path: |
+            public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_CAPTURE_INTEGRITY_40.6.469.zip
+            public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_CAPTURE_INTEGRITY_40.6.469.zip.sha256
+            ${{ runner.temp }}/capture-integrity-firefox.json

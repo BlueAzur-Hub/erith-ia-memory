@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.465 STRATEGY A EXECUTION COST EVIDENCE CAPTURE DELIVERY RECOVERY
+/* Agent-Crypto @erith.IA — 40.6.469 EXECUTION COST EVIDENCE CAPTURE IDEMPOTENCE
    Future-PAPER evidence capture only.
    Wraps the existing Auto Lifecycle bridge before autostart, measures Kraken BTC/EUR
    on PAPER open and PAPER close through the existing Execution Cost Truth owner,
@@ -7,7 +7,7 @@
    no gate promotion, no threshold change and no real order. */
 (()=>{
   "use strict";
-  const BUILD="40.6.465";
+  const BUILD="40.6.469";
   const ROOT="strategyAExecutionCostEvidenceCapture";
   const VENUE_KEY="kraken";
   const RECORDS=new Map();
@@ -113,6 +113,12 @@
     if(!row)return {ok:false,reason:"EXECUTION_ID_MISSING"};
     const field=phase==="close"?"closed_capture":"opened_capture";
     const requestField=phase==="close"?"close_requested_at":"open_requested_at";
+    // A repeated notification is not a new execution. Preserve the first attempt,
+    // including PENDING or failure, rather than backfilling it with a later quote.
+    if(row[field])return {
+      ok:["BOOK_SIMULATION_CAPTURED","TOP_OF_BOOK_CAPTURED"].includes(row[field].state),
+      duplicate:true,reason:"CAPTURE_ALREADY_REQUESTED",evidence:clone(row[field])
+    };
     row[requestField]=nowIso();
     row[field]={state:"PENDING",phase,requested_at:row[requestField],authoritative_after_cost_input:false};
     row.state=phase==="close"?"CLOSE_CAPTURE_PENDING":"OPEN_CAPTURE_PENDING";
@@ -163,7 +169,7 @@
       ...base,
       on_open:args=>{
         const result=base.on_open(args);
-        if(result?.ok===true){
+        if(result?.ok===true&&result.duplicate!==true){
           const executionId=text(result.execution_id||args?.fill?.execution_id);
           const notional=positive(result?.state?.asset_notional_eur??result?.state?.paper_authorized_notional_eur??args?.fill?.authorized_notional_eur);
           if(executionId)void capturePhase(executionId,"open",notional);
