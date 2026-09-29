@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.456",
+  "build": "40.6.457",
   "engine": "38.15.11",
-  "release": "PRIVATE SOURCE LOADER READY FAIL-CLOSED",
+  "release": "PRIVATE SOURCE MOUNT CONTRACT HARDENING",
   "published": true,
-  "status": "published_pending_firefox_456",
-  "parent_build": "40.6.455",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.456",
-  "administrator_build": "40.6.456",
-  "build_label": "Build 40.6.456 · Administrator",
+  "status": "published_pending_firefox_457",
+  "parent_build": "40.6.456",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.457",
+  "administrator_build": "40.6.457",
+  "build_label": "Build 40.6.457 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox : Ctrl+F5 puis vérifier Build 40.6.456. Ouvrir uniquement Section 04 · Expérimentation & système → Backend / API. Dans SOURCE TRUTH CEX · READ ONLY, vérifier CEX READY et les quatre sources CEX. Puis dans la même sous-section, descendre à SOURCE INTELLIGENCE V1.3 et vérifier que CEX reste frais/mesuré ; son état global peut rester PARTIEL à cause du DEX. Aucun autre panneau à ouvrir pour ce test.",
+  "terrain_pending": "Firefox : Ctrl+F5 puis vérifier Build 40.6.457. Ouvrir uniquement Section 04 · Expérimentation & système → Backend / API. Dans SOURCE TRUTH CEX · READ ONLY, vérifier CEX READY et les quatre sources CEX ; puis descendre à SOURCE INTELLIGENCE V1.3 et vérifier que CEX reste frais/mesuré. Ne provoquer aucune panne : le chemin mount()=false est couvert par harness.",
   "terrain_proof": null,
-  "release_notes": "40.6.456 rend le contrat READY du private-source demand loader strictement fail-closed. Le loader n'annonce READY et n'émet erith:private-source-runtime-loaded que si le propriétaire Source Truth existe et se monte, si AgentCryptoDexFreshnessGuard.active===true, et si l'ordonnancement downstream bounded se termine en ready. Timeout, erreur ou freshness guard non prêt => state=error, last_error explicite, return false, aucun événement READY. Une demande explicite ultérieure retente le downstream sans détruire le Source Truth déjà chargé. Snapshot enrichi avec runtime_ready, source_owner_ready, freshness_guard_ready et downstream_state.",
+  "release_notes": "40.6.457 durcit le contrat de montage du propriétaire Source Truth. Le loader distingue maintenant API propriétaire disponible, panneau effectivement monté et runtime réellement prêt. owner.mount() doit retourner explicitement true ; false ou exception => state=error, ensure()=false, aucun downstream, aucun événement erith:private-source-runtime-loaded. Le double appel mount() du chemin propriétaire déjà chargé est supprimé : une demande = une tentative de montage. Aucun changement Source Truth métier, Strategy, Oracle, Aether, Execution Cost, Market Core, timer, observer, storage owner ou ordre réel.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -5883,6 +5883,49 @@
     "storage_write": false,
     "new_network_owner": false,
     "real_order": false,
-    "firefox_status": "PENDING_OPERATOR_456"
+    "firefox_status": "PASS_OPERATOR_456",
+    "firefox_proof_note": "29/09/2026 : Build 40.6.456 visible ; Source Truth CEX nominal et interface opérateur fonctionnelle. Notion clôture .456 = PASS terrain nominal."
+  },
+  "private_source_mount_contract_406457": {
+    "enabled": true,
+    "parent": "40.6.456",
+    "owner": "js/views/private-source-demand-loader.js",
+    "delivery_parent": "js/post-boot-runtime-loader.js",
+    "root_cause": "SOURCE_OWNER_MOUNT_FALSE_WAS_IGNORED_AND_OWNER_COULD_BE_MOUNTED_TWICE_PER_DEMAND",
+    "ready_requires": [
+      "source_owner_api_available",
+      "source_owner_mount_returns_true",
+      "dex_freshness_guard_active_true",
+      "bounded_downstream_state_ready"
+    ],
+    "failure_states": [
+      "source-owner-missing-after-load",
+      "source-owner-mount-false",
+      "source-owner-mount-error",
+      "freshness-guard-not-ready",
+      "downstream-timeout",
+      "downstream-error"
+    ],
+    "duplicate_pre_mount_removed": true,
+    "mount_calls_per_demand_max": 1,
+    "snapshot_fields_added": [
+      "source_owner_api_ready",
+      "source_owner_mounted"
+    ],
+    "ready_event": "erith:private-source-runtime-loaded",
+    "ready_event_emitted_only_on_success": true,
+    "ensure_returns_false_on_mount_false": true,
+    "source_truth_owner_modified": false,
+    "strategy_modified": false,
+    "oracle_modified": false,
+    "aether_modified": false,
+    "execution_cost_modified": false,
+    "market_core_modified": false,
+    "new_timer": false,
+    "new_observer": false,
+    "storage_write": false,
+    "new_network_owner": false,
+    "real_order": false,
+    "firefox_status": "PENDING_OPERATOR_457"
   }
 }

@@ -18,6 +18,8 @@
    bounded source-owner loading, and real retry after a failed/stale script node.
    40.6.456 makes runtime READY fail-closed: Source owner + freshness guard + bounded downstream ordering
    must all succeed before state=ready and before erith:private-source-runtime-loaded is emitted.
+   40.6.457 hardens Source owner readiness: mount() must explicitly return true, mount-false is fail-closed,
+   and the duplicate pre-mount call is removed so one demand performs one owner mount attempt.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, loader storage write, wallet or trading endpoint is introduced. */
 (()=>{
@@ -38,7 +40,7 @@
   const SRC=`./js/views/private-backend-sources.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
   const SOURCE_LOAD_TIMEOUT_MS=7000, DOWNSTREAM_TIMEOUT_MS=4500;
   let state="idle",promise=null,reason="",loadedAt=0,lastError="",attempts=0;
-  let sourceOwnerReadyState=false,freshnessGuardReady=false,downstreamState="idle";
+  let sourceOwnerApiReadyState=false,sourceOwnerMountedState=false,sourceOwnerReadyState=false,freshnessGuardReady=false,downstreamState="idle";
 
   const parts=value=>String(value||"").split(".").map(x=>Number.parseInt(x,10)||0);
   const atLeast=target=>{const A=parts(runtimeBuild()),B=parts(target),n=Math.max(A.length,B.length);for(let i=0;i<n;i+=1){const d=(A[i]||0)-(B[i]||0);if(d)return d>0;}return true;};
@@ -191,6 +193,15 @@
   }
   /* 40.6.456 READY CONTRACT PURE END */
 
+  /* 40.6.457 SOURCE OWNER MOUNT CONTRACT PURE START */
+  function sourceOwnerMountOutcome406457(apiReady,mountResult,mountErrored){
+    if(apiReady!==true)return Object.freeze({ready:false,error:"source-owner-missing-after-load"});
+    if(mountErrored===true)return Object.freeze({ready:false,error:"source-owner-mount-error"});
+    if(mountResult!==true)return Object.freeze({ready:false,error:"source-owner-mount-false"});
+    return Object.freeze({ready:true,error:""});
+  }
+  /* 40.6.457 SOURCE OWNER MOUNT CONTRACT PURE END */
+
   async function afterSourceOwners(){
     // 40.6.456: freshness readiness is a hard prerequisite for the runtime-ready event.
     const freshness=await ensureDexFreshnessGuard();
@@ -222,14 +233,21 @@
   const sourceOwnerReady=async(node,why)=>{
     if(node)node.dataset.loaded="1";
     const owner=globalThis.ErithPrivateBackendSources;
-    sourceOwnerReadyState=!!owner&&typeof owner.mount==="function";
-    if(!sourceOwnerReadyState){
+    sourceOwnerApiReadyState=!!owner&&typeof owner.mount==="function";
+    sourceOwnerMountedState=false;
+    sourceOwnerReadyState=false;
+    if(!sourceOwnerApiReadyState){
       state="error";loadedAt=0;lastError="source-owner-missing-after-load";freshnessGuardReady=false;downstreamState="not-started";
       discardSourceScript(node);
       return false;
     }
-    try{owner.mount();}catch(_){
-      state="error";loadedAt=0;lastError="source-owner-mount-error";sourceOwnerReadyState=false;freshnessGuardReady=false;downstreamState="not-started";
+    let mountResult=false,mountErrored=false;
+    try{mountResult=owner.mount();}catch(_){mountErrored=true;}
+    const mountOutcome=sourceOwnerMountOutcome406457(sourceOwnerApiReadyState,mountResult,mountErrored);
+    sourceOwnerMountedState=mountOutcome.ready===true;
+    sourceOwnerReadyState=sourceOwnerApiReadyState&&sourceOwnerMountedState;
+    if(!sourceOwnerReadyState){
+      state="error";loadedAt=0;lastError=mountOutcome.error;freshnessGuardReady=false;downstreamState="not-started";
       return false;
     }
     const downstream=await downstreamBounded();
@@ -246,7 +264,6 @@
   function ensure(why="operator"){
     reason=String(why||"operator");
     if(globalThis.ErithPrivateBackendSources){
-      try{globalThis.ErithPrivateBackendSources.mount?.();}catch(_){}
       return sourceOwnerReady(sourceScript(),reason);
     }
     if(promise)return promise;
@@ -262,7 +279,7 @@
       existing=null;
     }
 
-    state="loading";loadedAt=0;lastError="";sourceOwnerReadyState=false;freshnessGuardReady=false;downstreamState="loading";attempts+=1;
+    state="loading";loadedAt=0;lastError="";sourceOwnerApiReadyState=false;sourceOwnerMountedState=false;sourceOwnerReadyState=false;freshnessGuardReady=false;downstreamState="loading";attempts+=1;
     promise=new Promise(resolve=>{
       let node=existing,settled=false,timer=0;
       const finish=async(ok,code)=>{
@@ -339,14 +356,18 @@
     ensureAtlasDecisionContext,
     ensureStrategyTradusComparative,
     ensureStrategyTradusOutcomeMemory,
-    snapshot:()=>Object.freeze({state,runtime_ready:state==="ready",reason,loaded_at:loadedAt,last_error:lastError,attempts,source_owner_ready:sourceOwnerReadyState,freshness_guard_ready:freshnessGuardReady,downstream_state:downstreamState,source_load_timeout_ms:SOURCE_LOAD_TIMEOUT_MS,downstream_timeout_ms:DOWNSTREAM_TIMEOUT_MS,parser_boot_loaded:false,source:SRC,source_truth_host:"backend",active_build:runtimeBuild()}),
+    snapshot:()=>Object.freeze({state,runtime_ready:state==="ready",reason,loaded_at:loadedAt,last_error:lastError,attempts,source_owner_api_ready:sourceOwnerApiReadyState,source_owner_mounted:sourceOwnerMountedState,source_owner_ready:sourceOwnerReadyState,freshness_guard_ready:freshnessGuardReady,downstream_state:downstreamState,source_load_timeout_ms:SOURCE_LOAD_TIMEOUT_MS,downstream_timeout_ms:DOWNSTREAM_TIMEOUT_MS,parser_boot_loaded:false,source:SRC,source_truth_host:"backend",active_build:runtimeBuild()}),
     self_test:()=>{
       const cases=[
         sourceRuntimeOutcome406456(false,true,"ready").ready===false,
         sourceRuntimeOutcome406456(true,false,"ready").ready===false,
         sourceRuntimeOutcome406456(true,true,"timeout").ready===false,
         sourceRuntimeOutcome406456(true,true,"error").ready===false,
-        sourceRuntimeOutcome406456(true,true,"ready").ready===true
+        sourceRuntimeOutcome406456(true,true,"ready").ready===true,
+        sourceOwnerMountOutcome406457(false,true,false).ready===false,
+        sourceOwnerMountOutcome406457(true,false,false).ready===false,
+        sourceOwnerMountOutcome406457(true,true,true).ready===false,
+        sourceOwnerMountOutcome406457(true,true,false).ready===true
       ];
       return Object.freeze({pass:cases.every(Boolean),total:cases.length,passed:cases.filter(Boolean).length,cases:Object.freeze(cases)});
     },
@@ -363,6 +384,7 @@
     atlas_decision_context:atLeast("40.6.114"),
     strategy_tradus_comparative_intelligence:atLeast("40.6.115"),
     strategy_tradus_outcome_memory:atLeast("40.6.117"),
+    source_owner_mount_contract_hardened:atLeast("40.6.457"),
     operator_cockpit:false,
     new_timer:false,
     new_observer:false,

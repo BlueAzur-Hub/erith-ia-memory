@@ -1,0 +1,118 @@
+name: Agent-Crypto Package 40.6.457 Private Source Mount Contract
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406457-private-source-mount-contract
+    paths:
+      - '.github/workflows/agent-crypto-package-406457.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.457
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/views/private-source-demand-loader.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+
+          node <<'NODE'
+          const fs=require('fs');
+          const src=fs.readFileSync('public/agent_crypto_erith_ia/administrator/js/views/private-source-demand-loader.js','utf8');
+          const A='/* 40.6.457 SOURCE OWNER MOUNT CONTRACT PURE START */';
+          const B='/* 40.6.457 SOURCE OWNER MOUNT CONTRACT PURE END */';
+          const a=src.indexOf(A),b=src.indexOf(B);
+          if(a<0||b<a)throw new Error('pure mount helper markers missing');
+          Function(src.slice(a,b+B.length)+'\nglobalThis.__mountOutcome406457=sourceOwnerMountOutcome406457;')();
+          const fn=globalThis.__mountOutcome406457;
+          const cases=[
+            ['api-missing',false,true,false,false,'source-owner-missing-after-load'],
+            ['mount-false',true,false,false,false,'source-owner-mount-false'],
+            ['mount-throws',true,true,true,false,'source-owner-mount-error'],
+            ['mount-true',true,true,false,true,''],
+          ];
+          for(const [name,api,mr,me,ready,error] of cases){const got=fn(api,mr,me);if(got.ready!==ready||got.error!==error)throw new Error(name+' '+JSON.stringify(got));}
+          if(src.includes('globalThis.ErithPrivateBackendSources.mount?.()'))throw new Error('duplicate pre-mount remains');
+          if((src.match(/owner\.mount\(\)/g)||[]).length!==1)throw new Error('owner.mount call count must be exactly one');
+          if(!src.includes('lastError=mountOutcome.error'))throw new Error('mount result is not wired to runtime error');
+          if(!src.includes('source_owner_api_ready:sourceOwnerApiReadyState'))throw new Error('source_owner_api_ready missing');
+          if(!src.includes('source_owner_mounted:sourceOwnerMountedState'))throw new Error('source_owner_mounted missing');
+          console.log('40.6.457 MOUNT CONTRACT HARNESS PASS');
+          NODE
+
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          idx=(root/'index.html').read_text(encoding='utf-8')
+          loader=(root/'js/views/private-source-demand-loader.js').read_text(encoding='utf-8')
+          post=(root/'js/post-boot-runtime-loader.js').read_text(encoding='utf-8')
+          b=json.loads((root/'build.json').read_text(encoding='utf-8'))
+          receipt=json.loads((root/'PRIVATE_SOURCE_MOUNT_CONTRACT_TEST_40.6.457.json').read_text(encoding='utf-8'))
+          checks={
+            'build':b.get('build')=='40.6.457',
+            'release':b.get('release')=='PRIVATE SOURCE MOUNT CONTRACT HARDENING',
+            'market_core':b.get('market_core')=='38.15.11',
+            'entry_build':'Build 40.6.457 · Administrator' in idx,
+            'postboot_delivery':'post-boot-runtime-loader.js?v=40.6.457' in idx,
+            'private_source_delivery':'private-source-demand-loader.js?v=40.6.457' in post,
+            'mount_api_snapshot':'source_owner_api_ready' in loader,
+            'mount_result_snapshot':'source_owner_mounted' in loader,
+            'receipt':receipt.get('pass') is True,
+            'exec_cost_455':'strategy-a-audit-demand-loader.js?v=40.6.455' in idx,
+            'app_454':'app.js?v=40.6.454' in idx,
+            'no_markup_literal_newline':re.search(r'>\\n\s*<',idx) is None,
+          }
+          bad=[k for k,v in checks.items() if not v]
+          if bad: raise SystemExit(f'40.6.457 validation failed: {bad}')
+          print('40.6.457 STATIC CONTRACT PASS')
+          PY
+
+      - name: Build bounded ZIP
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_PRIVATE_SOURCE_MOUNT_CONTRACT_40.6.457.zip"
+          SHA="$ZIP.sha256"
+          rm -f "$ZIP" "$SHA"
+          rm -rf /tmp/agent-crypto-406457
+          mkdir -p /tmp/agent-crypto-406457/administrator/js/views /tmp/agent-crypto-406457/administrator/js
+          cp "$ROOT/index.html" /tmp/agent-crypto-406457/administrator/
+          cp "$ROOT/index-40.6.457.html" /tmp/agent-crypto-406457/administrator/
+          cp "$ROOT/build.json" /tmp/agent-crypto-406457/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/agent-crypto-406457/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/agent-crypto-406457/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.457.txt" /tmp/agent-crypto-406457/administrator/
+          cp "$ROOT/PRIVATE_SOURCE_MOUNT_CONTRACT_TEST_40.6.457.json" /tmp/agent-crypto-406457/administrator/
+          cp "$ROOT/js/views/private-source-demand-loader.js" /tmp/agent-crypto-406457/administrator/js/views/
+          cp "$ROOT/js/post-boot-runtime-loader.js" /tmp/agent-crypto-406457/administrator/js/
+          (cd /tmp/agent-crypto-406457 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$SHA"
+
+      - name: Commit package
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_PRIVATE_SOURCE_MOUNT_CONTRACT_40.6.457.zip" "$ROOT/AGENT_CRYPTO_PRIVATE_SOURCE_MOUNT_CONTRACT_40.6.457.zip.sha256"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore(package): add Agent-Crypto 40.6.457 Source mount contract ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
