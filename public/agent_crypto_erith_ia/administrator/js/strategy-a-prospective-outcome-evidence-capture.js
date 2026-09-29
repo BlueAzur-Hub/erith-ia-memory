@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.476 PROSPECTIVE PANEL MOUNT PERSISTENCE
+/* Agent-Crypto @erith.IA — 40.6.478 PROSPECTIVE TERMINAL RECORD WRITE GUARD
    Future Strategy A COST_GATE_WAIT cycles only. No historical backfill.
    40.6.475 plumbing proof is preserved. 40.6.476 stabilizes only the presentation mount:
    prefer the durable Execution Cost Evidence Capture sibling and remount after the canonical
@@ -9,7 +9,7 @@
    No interpolation, no recurring timer, no MutationObserver, no threshold/gate change, no real order. */
 (()=>{
   "use strict";
-  const BUILD="40.6.476";
+  const BUILD="40.6.478";
   if(globalThis.AgentCryptoStrategyAProspectiveOutcomeEvidenceCapture?.build===BUILD)return;
   const ROOT="strategyAProspectiveOutcomeEvidenceCapture";
   const DB_NAME="agent_crypto_strategy_a_durable_evidence_v1",DB_VERSION=1,STORE_META="meta";
@@ -34,6 +34,7 @@
   const nowIso=()=>new Date().toISOString();
   const horizonKey=min=>"t"+min;
   const terminal=s=>["CAPTURED","MISSED_WINDOW"].includes(String(s||""));
+  const recordTerminal=record=>HORIZONS.every(min=>terminal(record?.horizons?.[horizonKey(min)]?.state));
   const validPhase=row=>upper(row?.phase)==="COST_GATE_WAIT"||text(row?.first_blocker).toLowerCase()==="cost";
   const cycleId=row=>text(row?.cycle_id||row?.decision_id||row?.proposal_id||row?.id);
   const rowTime=row=>time(row?.captured_at||row?.at||row?.timestamp);
@@ -208,6 +209,7 @@
   }
   function applySample(record,sample){
     if(!record||!sample||sample.symbol!==record.symbol||sample.at<=time(record.t0_at))return false;
+    if(recordTerminal(record))return false;
     let changed=addObservation(record,sample);
     for(const min of HORIZONS){
       const key=horizonKey(min),h=record.horizons[key];
@@ -356,7 +358,7 @@
   function exportJson(){
     try{
       const data={snapshot:snapshot(),records:read()},b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_PROSPECTIVE_OUTCOME_EVIDENCE_40_6_476.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
+      a.href=u;a.download="STRATEGY_A_PROSPECTIVE_OUTCOME_EVIDENCE_40_6_478.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
   function ensureStyle(){
@@ -420,6 +422,8 @@
       t5_captured:rec.horizons.t5.state==="CAPTURED"&&rec.horizons.t5.endpoint.gap_sec===30,
       t15_missed_without_interpolation:rec.horizons.t15.state==="MISSED_WINDOW",
       t60_captured:rec.horizons.t60.state==="CAPTURED",
+      terminal_record_detected:recordTerminal(rec)===true,
+      terminal_record_is_immutable:applySample(rec,Object.freeze({cycle_id:"C4",at:t0+70*60000,at_iso:new Date(t0+70*60000).toISOString(),price_eur:101,symbol:"BTC"}))===false&&rec.observations.every(r=>r.cycle_id!=="C4"),
       okx_top_of_book_captured:cost.state==="TOP_OF_BOOK_CAPTURED"&&cost.fee_plus_spread_snapshot_pct===.5,
       shadow_floor_context_only:Math.abs(cost.shadow_floor_plus_margin_pct-.7)<1e-9,
       slippage_not_invented:cost.slippage_known===false,
@@ -458,6 +462,7 @@
     historical_backfill:false,no_interpolation:true,db_schema_changed:false,new_object_store:false,
     exact_event_cycle_id_resolution:true,event_id_miss_fails_closed:true,plumbing_observability:true,
     stable_mount_anchor:"strategyAExecutionCostEvidenceCapture",presentation_settled_remount:true,
+    terminal_record_write_guard:true,terminal_states:Object.freeze(["CAPTURED","MISSED_WINDOW"]),
     existing_execution_cost_owner:true,headless_cost_capture:true,recurring_timer:false,mutation_observer:false,
     thresholds_changed:false,gate_changed:false,real_order:false,paper_only:true
   });

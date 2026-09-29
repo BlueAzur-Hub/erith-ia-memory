@@ -1,0 +1,62 @@
+name: Agent-Crypto Package 40.6.478
+
+on:
+  push:
+    branches: [main, agent-crypto-406478-prospective-terminal-write-guard]
+    paths:
+      - '.github/workflows/agent-crypto-package-406478.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Validate
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'const BUILD="40.6.478"' "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          grep -F 'if(recordTerminal(record))return false;' "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          grep -F 'terminal_record_write_guard:true' "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          node -e 'const fs=require("fs"),vm=require("vm");vm.runInThisContext(fs.readFileSync(process.argv[1],"utf8"));const t=globalThis.AgentCryptoStrategyAProspectiveOutcomeEvidenceCapture.self_test();if(!t.pass||!t.checks.terminal_record_is_immutable)process.exit(1);' "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Mark receipt
+        if: github.ref == 'refs/heads/main'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/administrator/PROSPECTIVE_TERMINAL_WRITE_GUARD_TEST_40.6.478.json")
+          d=json.loads(p.read_text())
+          d["pass_pending_workflow"]=False
+          d["pass"]=True
+          d["cases"]={k:"PASS" for k in d["cases"]}
+          p.write_text(json.dumps(d,indent=2)+"\n")
+          PY
+      - name: Package
+        if: github.ref == 'refs/heads/main'
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_PROSPECTIVE_TERMINAL_WRITE_GUARD_40.6.478.zip"
+          rm -rf /tmp/ac478 "$ZIP" "$ZIP.sha256"
+          mkdir -p /tmp/ac478/administrator/js
+          cp "$ROOT/index.html" "$ROOT/index-40.6.478.html" "$ROOT/build.json" "$ROOT/RELEASE.md" "$ROOT/HANDOFF.md" "$ROOT/HANDOFF_FINAL_40.6.478.md" "$ROOT/PATCH_MANIFEST_40.6.478.txt" "$ROOT/PROSPECTIVE_TERMINAL_WRITE_GUARD_TEST_40.6.478.json" /tmp/ac478/administrator/
+          cp "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js" "$ROOT/js/post-boot-runtime-loader.js" "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/ac478/administrator/js/
+          (cd /tmp/ac478 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          sha256sum "$ZIP" > "$ZIP.sha256"
+      - name: Commit package
+        if: github.ref == 'refs/heads/main'
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/PROSPECTIVE_TERMINAL_WRITE_GUARD_TEST_40.6.478.json" "$ROOT/AGENT_CRYPTO_PROSPECTIVE_TERMINAL_WRITE_GUARD_40.6.478.zip" "$ROOT/AGENT_CRYPTO_PROSPECTIVE_TERMINAL_WRITE_GUARD_40.6.478.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.478 terminal guard ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
