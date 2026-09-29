@@ -14,7 +14,8 @@
   const SPECS=Object.freeze([
     Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
     Object.freeze({key:"oracle-cost",src:"./js/strategy-a-oracle-cost-calibration-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit}),
-    Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.466",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth}),\n    Object.freeze({key:"real-venue-cost-shadow",src:"./js/strategy-a-real-venue-cost-shadow-truth.js?v=40.6.466",ready:()=>!!globalThis.AgentCryptoStrategyARealVenueCostShadowTruth}),
+    Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.466",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth}),
+    Object.freeze({key:"real-venue-cost-shadow",src:"./js/strategy-a-real-venue-cost-shadow-truth.js?v=40.6.466",ready:()=>!!globalThis.AgentCryptoStrategyARealVenueCostShadowTruth}),
     Object.freeze({key:"durable-reconciliation",src:"./js/strategy-a-durable-evidence-reconciliation-truth.js?v=40.6.460",ready:()=>!!globalThis.AgentCryptoStrategyADurableEvidenceReconciliation}),
     Object.freeze({key:"identity-crosswalk",src:"./js/strategy-a-evidence-identity-crosswalk-truth.js?v=40.6.461",ready:()=>!!globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk}),
     Object.freeze({key:"after-cost-completeness",src:"./js/strategy-a-after-cost-completeness-truth.js?v=40.6.462",ready:()=>!!globalThis.AgentCryptoStrategyAAfterCostCompletenessTruth}),
@@ -75,7 +76,8 @@
       }
       state="ready";lastError="";
       try{globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429?.refresh?.("406452-demand-ready");}catch(_){}
-      try{globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit?.refresh?.("406460-demand-ready");}catch(_){}\n      try{globalThis.AgentCryptoStrategyARealVenueCostShadowTruth?.refresh?.("406466-demand-ready");}catch(_){}
+      try{globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit?.refresh?.("406460-demand-ready");}catch(_){}
+      try{globalThis.AgentCryptoStrategyARealVenueCostShadowTruth?.refresh?.("406466-demand-ready");}catch(_){}
       try{globalThis.AgentCryptoStrategyADurableEvidenceReconciliation?.render?.();}catch(_){}
       try{globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk?.render?.();}catch(_){}
       try{globalThis.AgentCryptoStrategyAAfterCostCompletenessTruth?.render?.();}catch(_){}
