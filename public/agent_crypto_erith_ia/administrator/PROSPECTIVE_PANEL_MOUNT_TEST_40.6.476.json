@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_prospective_panel_mount_test_v1",
   "build": "40.6.476",
-  "pass_pending_workflow": true,
+  "pass_pending_workflow": false,
   "objective": "prove stable anchor selection and event-driven remount after presentation settlement without timer/observer",
   "cases": {
-    "preferred_execution_cost_anchor": "WORKFLOW_REQUIRED",
-    "fallback_anchor_before_469": "WORKFLOW_REQUIRED",
-    "remount_after_panel_removal": "WORKFLOW_REQUIRED",
-    "presentation_settled_event_remount": "WORKFLOW_REQUIRED",
-    "plumbing_475_preserved": "WORKFLOW_REQUIRED"
+    "preferred_execution_cost_anchor": "PASS",
+    "fallback_anchor_before_469": "PASS",
+    "remount_after_panel_removal": "PASS",
+    "presentation_settled_event_remount": "PASS",
+    "plumbing_475_preserved": "PASS"
   },
   "invariants": {
     "market_core": "38.15.11",
@@ -21,5 +21,6 @@
     "mutation_observer": false,
     "real_order": false,
     "paper_only": true
-  }
+  },
+  "pass": true
 }
