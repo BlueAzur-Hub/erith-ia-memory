@@ -1,0 +1,53 @@
+name: Agent-Crypto Package 40.6.470 OKX Potential Outcome Audit
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/agent-crypto-package-406470.yml']
+permissions: {contents: write}
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 2}
+      - name: Validate syntax and delivery
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-okx-potential-outcome-audit.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'okx_required_floor_before_slippage_pct:0.6109' "$ROOT/js/strategy-a-okx-potential-outcome-audit.js"
+          grep -F 'cost_wait_population:144' "$ROOT/js/strategy-a-okx-potential-outcome-audit.js"
+          grep -F 'expected_potential_count:16' "$ROOT/js/strategy-a-okx-potential-outcome-audit.js"
+          grep -F 'strategy-a-okx-potential-outcome-audit.js?v=40.6.470' "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'Build 40.6.470 · Administrator' "$ROOT/index.html"
+      - name: Exercise frozen baseline and MFE self-test
+        run: |
+          node <<'NODE'
+          const fs=require("fs"),vm=require("vm");
+          const p="public/agent_crypto_erith_ia/administrator/js/strategy-a-okx-potential-outcome-audit.js";
+          vm.runInThisContext(fs.readFileSync(p,"utf8"),{filename:p});
+          const t=global.AgentCryptoStrategyAOkxPotentialOutcomeAudit.self_test();
+          if(!t.pass)throw new Error(JSON.stringify(t));
+          if(global.AgentCryptoStrategyAOkxPotentialOutcomeAudit.thresholds_changed!==false)throw new Error("threshold invariant");
+          if(global.AgentCryptoStrategyAOkxPotentialOutcomeAudit.gate_changed!==false)throw new Error("gate invariant");
+          if(global.AgentCryptoStrategyAOkxPotentialOutcomeAudit.real_order!==false)throw new Error("order invariant");
+          console.log("PASS frozen OKX baseline + horizon MFE");
+          NODE
+      - name: Version truth guard
+        run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Package
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"; ZIP="$ROOT/AGENT_CRYPTO_OKX_POTENTIAL_OUTCOME_AUDIT_40.6.470.zip"
+          rm -f "$ZIP" "$ZIP.sha256"; rm -rf /tmp/ac470; mkdir -p /tmp/ac470/administrator/js
+          cp "$ROOT/index.html" "$ROOT/index-40.6.470.html" "$ROOT/build.json" "$ROOT/RELEASE.md" "$ROOT/HANDOFF.md" "$ROOT/HANDOFF_FINAL_40.6.470.md" "$ROOT/OKX_POTENTIAL_OUTCOME_AUDIT_TEST_40.6.470.json" /tmp/ac470/administrator/
+          cp "$ROOT/js/strategy-a-okx-potential-outcome-audit.js" "$ROOT/js/strategy-a-audit-demand-loader.js" "$ROOT/js/post-boot-runtime-loader.js" /tmp/ac470/administrator/js/
+          (cd /tmp/ac470 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"; sha256sum "$ZIP" > "$ZIP.sha256"
+      - name: Commit package
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_OKX_POTENTIAL_OUTCOME_AUDIT_40.6.470.zip" "$ROOT/AGENT_CRYPTO_OKX_POTENTIAL_OUTCOME_AUDIT_40.6.470.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.470 OKX Potential Outcome Audit ZIP"
+          git pull --rebase origin main; git push origin HEAD:main
