@@ -1,23 +1,24 @@
-# Agent-Crypto 40.6.466 — STRATEGY A REAL VENUE COST SHADOW TRUTH
+# Agent-Crypto 40.6.467 — SHADOW CANONICAL TICKET + DURABLE READINESS TRUTH
 
-Objectif unique : arrêter l'attente passive et répondre à une question mesurable sans modifier Strategy A :
+Deux anomalies d'affichage de 40.6.466 sont corrigées, sans modifier Strategy A.
 
-**Avec le snapshot courant des coûts Kraken / OKX, combien des cycles COST_GATE_WAIT déjà collectés auraient franchi un gate dérivé du coût réel observable + marge canonique ?**
+## 1. Ticket canonique
 
-## Ce que fait 40.6.466
+Le panneau Real Venue Cost Shadow Truth pouvait afficher `— €` quand l'Audit Demand montait avant la résidence de `AgentCryptoStrategyACanonicalSpec`.
 
-- relit les cas historiques de `STRATEGY A · COST-WAIT OUTCOME AUDIT`;
-- ne réécrit aucun cycle;
-- relit le snapshot courant de `EXECUTION COST TRUTH`;
-- utilise la marge de sécurité canonique Strategy A;
-- calcule un shadow Kraken pour 10 / 25 / 50 / 100 € à partir du carnet mesuré et des frais de référence;
-- met en évidence le ticket canonique 50 €;
-- calcule pour OKX un **plancher observable** frais taker aller-retour + spread + marge;
-- marque OKX **POTENTIAL / INDETERMINATE**, jamais PASS, tant que profondeur multi-niveaux et slippage restent inconnus;
-- conserve le gate legacy 0,80 % intact.
+40.6.467 garde l'autorité du spec canonique et utilise **50 €** comme fallback explicite de pré-résidence, valeur déjà définie dans `strategy-a-canonical-spec.js > profile.ticket_eur`.
 
-## Limite essentielle
+## 2. Durable Evidence
 
-Le snapshot de coût courant appliqué aux cycles historiques est un **contrefactuel**, pas une preuve de coût historique et pas une preuve de rentabilité.
+En .466, Reconciliation/Crosswalk/Completeness pouvaient rendre des zéros alors que l'IndexedDB Durable Evidence n'était pas encore hydratée.
 
-Aucune plateforme n'est choisie automatiquement. Aucun ordre réel. Aucun seuil, Oracle, Risk Governor, Paper ou Market Core 38.15.11 modifié.
+40.6.467 distingue désormais :
+- **DURABLE_LOADING** : API absente ou store pas encore ready → valeurs durables affichées `…`, aucune conclusion d'absence;
+- état réel après `ready=true` : comptes durables, liens et complétude calculés normalement.
+
+Les surfaces se rafraîchissent sur :
+- `agent-crypto:strategy-a-durable-evidence-ready`;
+- `agent-crypto:strategy-core-ready`;
+- `agent-crypto:postboot-runtime-ready`.
+
+Aucune écriture IndexedDB ajoutée, aucun backfill, aucun seuil, aucun ordre réel, Market Core 38.15.11 intact.

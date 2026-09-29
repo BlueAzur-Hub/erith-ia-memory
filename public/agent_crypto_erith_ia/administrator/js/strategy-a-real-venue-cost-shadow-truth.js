@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.466 STRATEGY A REAL VENUE COST SHADOW TRUTH
+/* Agent-Crypto @erith.IA — 40.6.467 STRATEGY A REAL VENUE COST SHADOW TRUTH
    Read-only counterfactual audit. Replays historical COST_GATE_WAIT cycle expected_move values
    against the current measured execution-cost snapshot without changing Strategy A, Risk, Paper,
    Oracle, Market Core, storage or thresholds. Kraken can produce a complete market->market shadow
@@ -6,7 +6,7 @@
    multi-level depth/slippage is exposed; OKX can therefore be POTENTIAL, never certified PASS. */
 (() => {
   "use strict";
-  const BUILD="40.6.466", ROOT="strategyARealVenueCostShadowTruth";
+  const BUILD="40.6.467", ROOT="strategyARealVenueCostShadowTruth", CANONICAL_TICKET_EUR=50;
   let last=null,queued=false,reason="boot";
   const num=v=>v===null||v===undefined||v===""||typeof v==="boolean"?null:(Number.isFinite(Number(v))?Number(v):null);
   const pct=v=>Number.isFinite(v)?(v>=0?"+":"")+Number(v).toFixed(4)+" %":"—";
@@ -58,7 +58,8 @@
   function snapshot(){
     const {audit,execution,calibration,spec}=inputs(),cycles=cyclesFromAudit(audit);
     const margin=num(calibration?.cost_model?.safety_margin_pct)??num(spec?.policy?.cost_safety_margin_pct);
-    const ticket=num(spec?.profile?.ticket_eur);
+    const ticket=num(spec?.profile?.ticket_eur)??CANONICAL_TICKET_EUR;
+    const ticketSource=num(spec?.profile?.ticket_eur)!==null?"CANONICAL_SPEC_RUNTIME":"CANONICAL_SPEC_FALLBACK_50";
     const kraken=execution?.venues?.kraken||null,okx=execution?.venues?.okx||null;
     const krakenRows=[];
     for(const sim of Array.isArray(kraken?.simulations)?kraken.simulations:[]){
@@ -82,7 +83,7 @@
       status:flags.some(x=>/NOT_READY|UNKNOWN|UNAVAILABLE/.test(x))?"REVIEW_REQUIRED":"SHADOW_READY",
       flags:Object.freeze(flags),
       population:Object.freeze({cost_wait_cycles:cycles.length,expected_move_comparable:comparable,source_build:audit?.build||null,source_sampling:audit?.outcome_sampling||null}),
-      canonical_profile:Object.freeze({ticket_eur:ticket,safety_margin_pct:margin,legacy_gate_policy_pct:num(spec?.policy?.cost_required_move_pct)}),
+      canonical_profile:Object.freeze({ticket_eur:ticket,ticket_source:ticketSource,safety_margin_pct:margin,legacy_gate_policy_pct:num(spec?.policy?.cost_required_move_pct)}),
       legacy:legacySummary(cycles),
       execution_snapshot:Object.freeze({build:execution?.build||null,generated_at:execution?.generated_at||null,status:execution?.status||null,pair:execution?.pair||"BTC/EUR"}),
       kraken:Object.freeze({available:kraken?.ok===true,venue:kraken?.venue||"Kraken Pro",measurement_scope:kraken?.measurement_scope||"ORDERBOOK_SIMULATION",rows:Object.freeze(krakenRows),canonical_ticket_row:ticketRow}),
@@ -129,7 +130,8 @@
   function selfTest(){
     const cycles=[.30,.45,.55,.90].map((x,i)=>({cycle_id:"T"+i,expected_move_pct:x,legacy_required_move_pct:.80}));
     const legacy=legacySummary(cycles),kr=compareComplete(cycles,.30,.20),ok=compareLowerBound(cycles,.20,.20);
-    const checks=Object.freeze({legacy:legacy.pass===1&&legacy.wait===3,kraken:kr.shadow_pass===2&&kr.shadow_wait===2&&Math.abs(kr.shadow_required_move_pct-.50)<1e-9,okx:ok.potential_pass_before_slippage===3&&ok.definite_wait_before_slippage===1&&ok.certified_pass===0,okx_unknown_slippage:ok.slippage_status==="UNKNOWN",read_only:true});
+    const fallbackTicket=(num(null)??CANONICAL_TICKET_EUR)===50;
+    const checks=Object.freeze({legacy:legacy.pass===1&&legacy.wait===3,kraken:kr.shadow_pass===2&&kr.shadow_wait===2&&Math.abs(kr.shadow_required_move_pct-.50)<1e-9,okx:ok.potential_pass_before_slippage===3&&ok.definite_wait_before_slippage===1&&ok.certified_pass===0,okx_unknown_slippage:ok.slippage_status==="UNKNOWN",canonical_ticket_fallback:fallbackTicket,read_only:true});
     return Object.freeze({build:BUILD,pass:Object.values(checks).every(Boolean),checks});
   }
   globalThis.AgentCryptoStrategyARealVenueCostShadowTruth=Object.freeze({build:BUILD,snapshot:()=>last||snapshot(),refresh:r=>{reason=String(r||"api");return render();},export_json:()=>exportJson(last||snapshot()),self_test:selfTest,thresholds_changed:false,strategy_decision_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,storage_write:false,new_fetch:false,new_websocket:false,recurring_timer:false,mutation_observer:false,real_order:false,paper_only:true,automatic_platform_choice:false});

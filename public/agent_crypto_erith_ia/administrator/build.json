@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.466",
+  "build": "40.6.467",
   "engine": "38.15.11",
-  "release": "STRATEGY A REAL VENUE COST SHADOW TRUTH",
+  "release": "STRATEGY A SHADOW CANONICAL TICKET + DURABLE READINESS TRUTH",
   "published": true,
-  "status": "published_pending_firefox_466",
-  "parent_build": "40.6.465",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.466",
-  "administrator_build": "40.6.466",
-  "build_label": "Build 40.6.466 · Administrator",
+  "status": "published_pending_firefox_467",
+  "parent_build": "40.6.466",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.467",
+  "administrator_build": "40.6.467",
+  "build_label": "Build 40.6.467 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 → Build 40.6.466 → Section 04 → Simulation → vérifier REAL VENUE COST SHADOW TRUTH après EXECUTION COST TRUTH. Attendu: lecture historique COST WAIT, Kraken shadow par ticket, OKX POTENTIEL avant slippage, aucun seuil Strategy A modifié.",
+  "terrain_pending": "Firefox: Ctrl+F5 → Build 40.6.467 → Section 04 → Simulation. Vérifier ticket canonique 50 € dans Real Venue Cost Shadow Truth et absence de faux zéros pendant l'hydratation Durable Evidence: affichage … / DURABLE_LOADING jusqu'à ready, puis restauration des comptes réels.",
   "terrain_proof": null,
-  "release_notes": "40.6.466 ajoute un audit contrefactuel read-only qui applique le snapshot courant de coûts Kraken/OKX aux expected_move historiques des cycles COST_GATE_WAIT. Kraken peut produire un shadow complet pour 10/25/50/100 € ; OKX reste un plancher frais+spread avant slippage et ne peut jamais être certifié PASS tant que le backend n'expose pas la profondeur multi-niveaux. Strategy A, ses seuils, Risk, Paper, Oracle et Market Core restent inchangés.",
+  "release_notes": "40.6.467 corrige deux vérités de présentation observées en .466 sans toucher au métier: (1) le ticket canonique Shadow utilise 50 € comme fallback explicite issu du Strategy A canonical spec lorsque l'API spec n'est pas encore résidente; (2) Reconciliation/Crosswalk/Completeness n'affichent plus de faux zéros ni NO_DURABLE_EVIDENCE tant que Durable Evidence IndexedDB n'est pas ready. Ils affichent DURABLE_LOADING puis se rafraîchissent sur durable-evidence-ready / strategy-core-ready / postboot-runtime-ready.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -6219,5 +6219,27 @@
     "observer": false,
     "real_order": false,
     "firefox_status": "PENDING_OPERATOR_466"
+  },
+  "strategy_a_shadow_canonical_ticket_durable_readiness_truth_406467": {
+    "enabled": true,
+    "parent": "40.6.466",
+    "canonical_ticket_eur": 50,
+    "canonical_ticket_source": "strategy-a-canonical-spec.js profile.ticket_eur; fallback used only before spec API residency",
+    "durable_loading_truth": true,
+    "transient_zero_suppressed": true,
+    "refresh_events": [
+      "agent-crypto:strategy-a-durable-evidence-ready",
+      "agent-crypto:strategy-core-ready",
+      "agent-crypto:postboot-runtime-ready"
+    ],
+    "thresholds_changed": false,
+    "strategy_decision_changed": false,
+    "oracle_math_changed": false,
+    "risk_changed": false,
+    "paper_changed": false,
+    "market_core_modified": false,
+    "storage_write": false,
+    "real_order": false,
+    "firefox_status": "PENDING_OPERATOR_467"
   }
 }

@@ -1,10 +1,10 @@
-/* Agent-Crypto @erith.IA — 40.6.461 STRATEGY A EVIDENCE IDENTITY CROSSWALK TRUTH
+/* Agent-Crypto @erith.IA — 40.6.467 STRATEGY A EVIDENCE IDENTITY CROSSWALK TRUTH
    Read-only identity crosswalk between Durable Evidence after-cost and PAPER states.
    Compares every available execution_id / reconciliation_id / trade_id / identity value.
    No merge, no mutation, no certification, no network, no storage write, no real order. */
 (()=>{
   "use strict";
-  const BUILD="40.6.461";
+  const BUILD="40.6.467";
   const ROOT="strategyAEvidenceIdentityCrosswalk";
   const STYLE=ROOT+"Style";
   const clone=v=>{try{return JSON.parse(JSON.stringify(v));}catch(_){return null;}};
@@ -112,11 +112,15 @@
       real_orders:false
     });
   }
+  function durableReady(){
+    try{return globalThis.AgentCryptoStrategyADurableEvidence?.snapshot?.()?.ready===true;}catch(_){return false;}
+  }
   function snapshot(){
     const durable=globalThis.AgentCryptoStrategyADurableEvidence;
     const after=safe(durable?.read_after_cost,[]);
     const paper=safe(durable?.read_paper_states,[]);
-    return summarizeRows(after,paper);
+    const s=summarizeRows(after,paper);
+    return durableReady()?s:Object.freeze({...s,state:"DURABLE_LOADING",durable_ready:false});
   }
   function selfTest(){
     const after=[
@@ -164,19 +168,19 @@
     if(!anchor)return false;
     let root=document.getElementById(ROOT);
     if(!root){root=document.createElement("section");root.id=ROOT;anchor.insertAdjacentElement("afterend",root);}
-    const s=snapshot(),m=s.match_classes;
+    const s=snapshot(),m=s.match_classes,ready=s.state!=="DURABLE_LOADING",show=v=>ready?String(v):"…";
     root.innerHTML=`<div class="xw-head"><div><div class="xw-title">STRATEGY A · EVIDENCE IDENTITY CROSSWALK · ${BUILD}</div><div class="xw-sub">Tous les IDs disponibles sont comparés avant de déclarer une preuve orpheline. Aucune fusion automatique.</div></div><button class="btn small" id="${ROOT}Export" type="button">EXPORTER</button></div>
       <div class="xw-grid">
-        <div class="xw-k"><span>After-cost / PAPER</span><b>${s.after_cost_rows} / ${s.paper_rows}</b></div>
-        <div class="xw-k"><span>Liens candidats</span><b>${s.candidate_links}</b></div>
-        <div class="xw-k"><span>Liens 1↔1 uniques</span><b>${s.unique_one_to_one_links}</b></div>
-        <div class="xw-k"><span>Liens ambigus</span><b>${s.ambiguous_candidate_links}</b></div>
-        <div class="xw-k"><span>Execution exact</span><b>${m.EXACT_EXECUTION_MATCH}</b></div>
-        <div class="xw-k"><span>Reconciliation exact</span><b>${m.RECONCILIATION_MATCH}</b></div>
-        <div class="xw-k"><span>Trade exact</span><b>${m.TRADE_MATCH}</b></div>
-        <div class="xw-k"><span>Cross-field / Multi-ID</span><b>${m.CROSS_FIELD_MATCH} / ${m.MULTI_ID_MATCH}</b></div>
-        <div class="xw-k"><span>After-cost vraiment orphelins</span><b>${s.truly_orphan_after_cost}</b></div>
-        <div class="xw-k"><span>PAPER vraiment orphelins</span><b>${s.truly_orphan_paper}</b></div>
+        <div class="xw-k"><span>After-cost / PAPER</span><b>${ready?(s.after_cost_rows+" / "+s.paper_rows):"… / …"}</b></div>
+        <div class="xw-k"><span>Liens candidats</span><b>${show(s.candidate_links)}</b></div>
+        <div class="xw-k"><span>Liens 1↔1 uniques</span><b>${show(s.unique_one_to_one_links)}</b></div>
+        <div class="xw-k"><span>Liens ambigus</span><b>${show(s.ambiguous_candidate_links)}</b></div>
+        <div class="xw-k"><span>Execution exact</span><b>${show(m.EXACT_EXECUTION_MATCH)}</b></div>
+        <div class="xw-k"><span>Reconciliation exact</span><b>${show(m.RECONCILIATION_MATCH)}</b></div>
+        <div class="xw-k"><span>Trade exact</span><b>${show(m.TRADE_MATCH)}</b></div>
+        <div class="xw-k"><span>Cross-field / Multi-ID</span><b>${ready?(m.CROSS_FIELD_MATCH+" / "+m.MULTI_ID_MATCH):"… / …"}</b></div>
+        <div class="xw-k"><span>After-cost vraiment orphelins</span><b>${show(s.truly_orphan_after_cost)}</b></div>
+        <div class="xw-k"><span>PAPER vraiment orphelins</span><b>${show(s.truly_orphan_paper)}</b></div>
       </div>
       <div class="xw-state"><b>État : ${s.state}</b> · candidat ≠ preuve fusionnée. Un lien ambigu reste REVIEW REQUIRED. Aucun enregistrement local n'est modifié.</div>
       <div class="xw-foot">Champs comparés : execution_id · reconciliation_id · trade_id · identity. Aucun seuil modifié · aucune certification · aucune écriture IndexedDB · PAPER ONLY.</div>`;
@@ -193,7 +197,9 @@
   if(typeof document!=="undefined"){
     const attempt=()=>{try{return render();}catch(_){return false;}};
     document.addEventListener("agent-crypto:strategy-a-audits-ready",attempt,{once:true});
-    document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",attempt,{once:true});
+    document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",attempt,{passive:true});
+    window.addEventListener("agent-crypto:strategy-core-ready",()=>queueMicrotask(attempt),{passive:true});
+    window.addEventListener("agent-crypto:postboot-runtime-ready",()=>queueMicrotask(attempt),{passive:true});
     document.addEventListener("agent-crypto:evidence-data-changed",()=>queueMicrotask(attempt),{passive:true});
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",attempt,{once:true});else queueMicrotask(attempt);
   }

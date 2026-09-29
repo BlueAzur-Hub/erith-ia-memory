@@ -1,10 +1,10 @@
-/* Agent-Crypto @erith.IA — 40.6.462 STRATEGY A AFTER-COST COMPLETENESS TRUTH
+/* Agent-Crypto @erith.IA — 40.6.467 STRATEGY A AFTER-COST COMPLETENESS TRUTH
    Read-only diagnosis of the uniquely linked after-cost ↔ PAPER evidence established by 40.6.461.
    Reveals exactly which cost components or accounting checks block COMPLETE + VERIFIED.
    No mutation, no certification, no network, no storage write, no real order. */
 (()=>{
   "use strict";
-  const BUILD="40.6.462";
+  const BUILD="40.6.467";
   const ROOT="strategyAAfterCostCompletenessTruth";
   const STYLE=ROOT+"Style";
   const clone=v=>{try{return JSON.parse(JSON.stringify(v));}catch(_){return null;}};
@@ -121,12 +121,16 @@
     });
   }
 
+  function durableReady(){
+    try{return globalThis.AgentCryptoStrategyADurableEvidence?.snapshot?.()?.ready===true;}catch(_){return false;}
+  }
   function snapshot(){
     const durable=globalThis.AgentCryptoStrategyADurableEvidence;
     const crosswalk=globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk;
     const after=safe(durable?.read_after_cost,[]);
     const paper=safe(durable?.read_paper_states,[]);
-    return summarize(after,paper,crosswalk);
+    const s=summarize(after,paper,crosswalk);
+    return durableReady()?s:Object.freeze({...s,state:"DURABLE_LOADING",durable_ready:false});
   }
 
   function selfTest(){
@@ -189,25 +193,25 @@
     if(!anchor)return false;
     let root=document.getElementById(ROOT);
     if(!root){root=document.createElement("section");root.id=ROOT;anchor.insertAdjacentElement("afterend",root);}
-    const s=snapshot();
-    const rows=s.linked_rows.map((x,i)=>{
+    const s=snapshot(),ready=s.state!=="DURABLE_LOADING",show=v=>ready?String(v):"…";
+    const rows=ready?s.linked_rows.map((x,i)=>{
       const a=x.analysis;
       const miss=[...a.blockers,...a.base_fact_blockers];
       return `<div class="ac-row"><div><b>Lien ${i+1}</b> · ${x.classification}</div><div>${a.cost_completeness}</div><div>${a.accounting_identity_status}</div><div>${miss.length?miss.join(" · "):"aucun blocage détecté"}</div></div>`;
-    }).join("");
+    }).join(""):"";
     root.innerHTML=`<div class="ac-head"><div><div class="ac-title">STRATEGY A · AFTER-COST COMPLETENESS TRUTH · ${BUILD}</div><div class="ac-sub">Analyse uniquement les liens 1↔1 uniques établis par le Crosswalk. Montre pourquoi COMPLETE + VERIFIED n'est pas atteint.</div></div><button class="btn small" id="${ROOT}Export" type="button">EXPORTER</button></div>
       <div class="ac-grid">
-        <div class="ac-k"><span>Liens uniques analysés</span><b>${s.unique_linked_rows}</b></div>
-        <div class="ac-k"><span>COMPLETE + VERIFIED</span><b>${s.complete_verified}/${s.unique_linked_rows}</b></div>
-        <div class="ac-k"><span>Frais manquants</span><b>${s.missing_fees_rows}</b></div>
-        <div class="ac-k"><span>Impact manquant</span><b>${s.missing_impact_rows}</b></div>
-        <div class="ac-k"><span>Spread manquant</span><b>${s.missing_spread_rows}</b></div>
-        <div class="ac-k"><span>Slippage manquant</span><b>${s.missing_slippage_rows}</b></div>
-        <div class="ac-k"><span>Mismatch comptable</span><b>${s.accounting_mismatch}</b></div>
-        <div class="ac-k"><span>Faits de base incomplets</span><b>${s.base_facts_incomplete}</b></div>
-        <div class="ac-k"><span>PAPER orphelins conservés</span><b>${s.true_orphan_paper}</b></div>
+        <div class="ac-k"><span>Liens uniques analysés</span><b>${show(s.unique_linked_rows)}</b></div>
+        <div class="ac-k"><span>COMPLETE + VERIFIED</span><b>${ready?(s.complete_verified+"/"+s.unique_linked_rows):"…"}</b></div>
+        <div class="ac-k"><span>Frais manquants</span><b>${show(s.missing_fees_rows)}</b></div>
+        <div class="ac-k"><span>Impact manquant</span><b>${show(s.missing_impact_rows)}</b></div>
+        <div class="ac-k"><span>Spread manquant</span><b>${show(s.missing_spread_rows)}</b></div>
+        <div class="ac-k"><span>Slippage manquant</span><b>${show(s.missing_slippage_rows)}</b></div>
+        <div class="ac-k"><span>Mismatch comptable</span><b>${show(s.accounting_mismatch)}</b></div>
+        <div class="ac-k"><span>Faits de base incomplets</span><b>${show(s.base_facts_incomplete)}</b></div>
+        <div class="ac-k"><span>PAPER orphelins conservés</span><b>${show(s.true_orphan_paper)}</b></div>
       </div>
-      <div class="ac-list">${rows||'<div class="ac-row"><div>Aucun lien unique à analyser</div></div>'}</div>
+      <div class="ac-list">${ready?(rows||'<div class="ac-row"><div>Aucun lien unique à analyser</div></div>'):'<div class="ac-row"><div>Preuve durable en cours de chargement…</div></div>'}</div>
       <div class="ac-state"><b>État : ${s.state}</b> · cette vue ne complète aucun coût et ne certifie aucun gate. UNKNOWN reste UNKNOWN.</div>
       <div class="ac-foot">Composants vérifiés : fees_eur · impact_eur · spread_eur · slippage_eur + faits de base et identité comptable. Aucun enregistrement n'est modifié.</div>`;
     root.querySelector("#"+ROOT+"Export")?.addEventListener("click",exportJson,{once:true});
@@ -224,7 +228,9 @@
   if(typeof document!=="undefined"){
     const attempt=()=>{try{return render();}catch(_){return false;}};
     document.addEventListener("agent-crypto:strategy-a-audits-ready",attempt,{once:true});
-    document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",attempt,{once:true});
+    document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",attempt,{passive:true});
+    window.addEventListener("agent-crypto:strategy-core-ready",()=>queueMicrotask(attempt),{passive:true});
+    window.addEventListener("agent-crypto:postboot-runtime-ready",()=>queueMicrotask(attempt),{passive:true});
     document.addEventListener("agent-crypto:evidence-data-changed",()=>queueMicrotask(attempt),{passive:true});
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",attempt,{once:true});else queueMicrotask(attempt);
   }

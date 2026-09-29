@@ -1,0 +1,52 @@
+name: Agent-Crypto Package 40.6.467 Shadow Ticket Durable Readiness Truth
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/agent-crypto-package-406467.yml']
+permissions: {contents: write}
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 2}
+      - name: Validate syntax and delivery
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-real-venue-cost-shadow-truth.js"
+          node --check "$ROOT/js/strategy-a-durable-evidence-reconciliation-truth.js"
+          node --check "$ROOT/js/strategy-a-evidence-identity-crosswalk-truth.js"
+          node --check "$ROOT/js/strategy-a-after-cost-completeness-truth.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'CANONICAL_TICKET_EUR=50' "$ROOT/js/strategy-a-real-venue-cost-shadow-truth.js"
+          grep -F 'DURABLE_LOADING' "$ROOT/js/strategy-a-durable-evidence-reconciliation-truth.js"
+          grep -F 'DURABLE_LOADING' "$ROOT/js/strategy-a-evidence-identity-crosswalk-truth.js"
+          grep -F 'DURABLE_LOADING' "$ROOT/js/strategy-a-after-cost-completeness-truth.js"
+          grep -F 'strategy-a-durable-evidence-reconciliation-truth.js?v=40.6.467' "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'Build 40.6.467 · Administrator' "$ROOT/index.html"
+      - name: Exercise shadow self-test
+        run: |
+          node <<'NODE'
+          const fs=require("fs"),vm=require("vm");
+          const p="public/agent_crypto_erith_ia/administrator/js/strategy-a-real-venue-cost-shadow-truth.js";
+          vm.runInThisContext(fs.readFileSync(p,"utf8"),{filename:p});
+          const t=global.AgentCryptoStrategyARealVenueCostShadowTruth.self_test();
+          if(!t.pass)throw new Error(JSON.stringify(t));
+          if(t.checks.canonical_ticket_fallback!==true)throw new Error("canonical ticket fallback failed");
+          console.log("PASS shadow ticket fallback");
+          NODE
+      - name: Package
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"; ZIP="$ROOT/AGENT_CRYPTO_SHADOW_TICKET_DURABLE_READINESS_TRUTH_40.6.467.zip"
+          rm -f "$ZIP" "$ZIP.sha256"; rm -rf /tmp/ac467; mkdir -p /tmp/ac467/administrator/js
+          cp "$ROOT/index.html" "$ROOT/index-40.6.467.html" "$ROOT/build.json" "$ROOT/RELEASE.md" "$ROOT/HANDOFF.md" "$ROOT/HANDOFF_FINAL_40.6.467.md" "$ROOT/SHADOW_TICKET_DURABLE_READINESS_TEST_40.6.467.json" /tmp/ac467/administrator/
+          cp "$ROOT/js/strategy-a-real-venue-cost-shadow-truth.js" "$ROOT/js/strategy-a-durable-evidence-reconciliation-truth.js" "$ROOT/js/strategy-a-evidence-identity-crosswalk-truth.js" "$ROOT/js/strategy-a-after-cost-completeness-truth.js" "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/ac467/administrator/js/
+          (cd /tmp/ac467 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"; sha256sum "$ZIP" > "$ZIP.sha256"
+      - name: Commit package
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_SHADOW_TICKET_DURABLE_READINESS_TRUTH_40.6.467.zip" "$ROOT/AGENT_CRYPTO_SHADOW_TICKET_DURABLE_READINESS_TRUTH_40.6.467.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.467 Shadow Ticket Durable Readiness ZIP"
+          git pull --rebase origin main; git push origin HEAD:main

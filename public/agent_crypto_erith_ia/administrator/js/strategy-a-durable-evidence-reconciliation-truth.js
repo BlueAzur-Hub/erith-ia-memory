@@ -1,10 +1,10 @@
-/* Agent-Crypto @erith.IA — 40.6.460 STRATEGY A DURABLE EVIDENCE RECONCILIATION TRUTH
+/* Agent-Crypto @erith.IA — 40.6.467 STRATEGY A DURABLE EVIDENCE RECONCILIATION TRUTH
    Read-only reconciliation between visible Experiment Ledger, Durable Evidence IndexedDB facade,
    After-cost evidence, PAPER states and runtime gaps.
    Diagnostic only: no gate promotion, no threshold change, no storage write, no network, no real order. */
 (()=>{
   "use strict";
-  const BUILD="40.6.460";
+  const BUILD="40.6.467";
   const ROOT="strategyADurableEvidenceReconciliation";
   const STYLE=ROOT+"Style";
   const clone=v=>{try{return JSON.parse(JSON.stringify(v));}catch(_){return null;}};
@@ -86,6 +86,17 @@
       diagnostic_only:true,certifies_g1:false,certifies_g8:false,promotes_gate:false,paper_only:true,real_orders:false
     });
   }
+  function durableReadiness(){
+    const durable=globalThis.AgentCryptoStrategyADurableEvidence;
+    let snap=null;
+    try{snap=durable?.snapshot?.()||null;}catch(_){}
+    return Object.freeze({
+      api_present:!!durable,
+      ready:snap?.ready===true,
+      indexeddb_ready:snap?.indexeddb_ready===true,
+      last_error:snap?.last_error||null
+    });
+  }
   function snapshot(){
     const durable=globalThis.AgentCryptoStrategyADurableEvidence;
     const ledger=globalThis.AgentCryptoStrategyAExperimentLedger;
@@ -96,7 +107,9 @@
     const durableAfter=safe(durable?.read_after_cost,[]);
     const durablePaper=safe(durable?.read_paper_states,[]);
     const gaps=safe(durable?.read_runtime_gaps,[]);
-    return reconcile({visible_cycles:visibleCycles,durable_cycles:durableCycles,visible_after:visibleAfter,durable_after:durableAfter,durable_paper:durablePaper,runtime_gaps:gaps});
+    const s=reconcile({visible_cycles:visibleCycles,durable_cycles:durableCycles,visible_after:visibleAfter,durable_after:durableAfter,durable_paper:durablePaper,runtime_gaps:gaps});
+    const readiness=durableReadiness();
+    return Object.freeze({...s,durable_readiness:readiness,state:readiness.ready?s.state:"DURABLE_LOADING"});
   }
   function selfTest(){
     const s=reconcile({
@@ -142,17 +155,17 @@
     if(!anchor)return false;
     let root=document.getElementById(ROOT);
     if(!root){root=document.createElement("section");root.id=ROOT;anchor.insertAdjacentElement("afterend",root);}
-    const s=snapshot(),g=s.runtime_gaps;
+    const s=snapshot(),g=s.runtime_gaps,ready=s.durable_readiness?.ready===true,show=v=>ready?String(v):"…";
     root.innerHTML=`<div class="der-head"><div><div class="der-title">STRATEGY A · DURABLE EVIDENCE RECONCILIATION · ${BUILD}</div><div class="der-sub">Ledger visible ↔ preuve durable ↔ after-cost ↔ états PAPER ↔ gaps runtime. Diagnostic passif uniquement.</div></div><button class="btn small" id="${ROOT}Export" type="button">EXPORTER</button></div>
       <div class="der-grid">
-        <div class="der-k"><span>Ledger visible / durable</span><b>${s.visible_ledger.rows} / ${s.durable_cycles.rows}</b></div>
-        <div class="der-k"><span>Cycles IDs communs</span><b>${s.cycle_reconciliation.shared}</b></div>
-        <div class="der-k"><span>After-cost visible / durable</span><b>${s.visible_after_cost.rows} / ${s.durable_after_cost.rows}</b></div>
-        <div class="der-k"><span>After-cost COMPLETE+VERIFIED</span><b>${s.durable_after_cost.complete_verified}/${s.durable_after_cost.rows}</b></div>
-        <div class="der-k"><span>After-cost ↔ PAPER liés</span><b>${s.after_to_paper.shared}</b></div>
-        <div class="der-k"><span>After-cost orphelins</span><b>${s.after_to_paper.left_only}</b></div>
-        <div class="der-k"><span>PAPER orphelins</span><b>${s.after_to_paper.right_only}</b></div>
-        <div class="der-k"><span>Gaps runtime</span><b>${g.total} · ouverts ${g.open}</b></div>
+        <div class="der-k"><span>Ledger visible / durable</span><b>${s.visible_ledger.rows} / ${show(s.durable_cycles.rows)}</b></div>
+        <div class="der-k"><span>Cycles IDs communs</span><b>${show(s.cycle_reconciliation.shared)}</b></div>
+        <div class="der-k"><span>After-cost visible / durable</span><b>${s.visible_after_cost.rows} / ${show(s.durable_after_cost.rows)}</b></div>
+        <div class="der-k"><span>After-cost COMPLETE+VERIFIED</span><b>${ready?(s.durable_after_cost.complete_verified+"/"+s.durable_after_cost.rows):"…"}</b></div>
+        <div class="der-k"><span>After-cost ↔ PAPER liés</span><b>${show(s.after_to_paper.shared)}</b></div>
+        <div class="der-k"><span>After-cost orphelins</span><b>${show(s.after_to_paper.left_only)}</b></div>
+        <div class="der-k"><span>PAPER orphelins</span><b>${show(s.after_to_paper.right_only)}</b></div>
+        <div class="der-k"><span>Gaps runtime</span><b>${ready?(g.total+" · ouverts "+g.open):"…"}</b></div>
       </div>
       <div class="der-warn"><b>État : ${s.state}</b> · cette vue ne certifie ni G1 ni G8. Elle révèle seulement quelles preuves se recouvrent, lesquelles sont orphelines et combien de gaps runtime restent à expliquer.</div>
       <div class="der-foot">Aucun seuil modifié · aucun trade forcé · aucune écriture IndexedDB · aucun réseau · PAPER ONLY.</div>`;
@@ -169,7 +182,9 @@
   if(typeof document!=="undefined"){
     const attempt=()=>{try{return render();}catch(_){return false;}};
     document.addEventListener("agent-crypto:strategy-a-audits-ready",attempt,{once:true});
-    document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",attempt,{once:true});
+    document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",attempt,{passive:true});
+    window.addEventListener("agent-crypto:strategy-core-ready",()=>queueMicrotask(attempt),{passive:true});
+    window.addEventListener("agent-crypto:postboot-runtime-ready",()=>queueMicrotask(attempt),{passive:true});
     document.addEventListener("agent-crypto:evidence-data-changed",()=>queueMicrotask(attempt),{passive:true});
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",attempt,{once:true});else queueMicrotask(attempt);
   }
