@@ -24,7 +24,8 @@ jobs:
           grep -F 'TOL_MS=150000' "$ROOT/js/strategy-a-okx-outcome-coverage-truth.js"
           grep -F 'PARTIAL_NO_CROSS' "$ROOT/js/strategy-a-okx-outcome-coverage-truth.js"
           grep -F 'DURABLE_EVIDENCE_ONLY' "$ROOT/js/strategy-a-okx-potential-outcome-audit.js"
-          grep -F 'strategy-a-okx-potential-outcome-audit.js?v=40.6.472' "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'strategy-a-okx-potential-outcome-audit.js?v=40.6.471' "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'strategy-a-okx-outcome-coverage-truth.js?v=40.6.472' "$ROOT/js/strategy-a-audit-demand-loader.js"
           grep -F 'Build 40.6.472 · Administrator' "$ROOT/index.html"
       - name: Exercise durable baseline recovery self-test
         run: |
