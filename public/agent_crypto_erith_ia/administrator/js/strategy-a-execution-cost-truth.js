@@ -9,7 +9,7 @@
    including a manual "RAFRAÎCHIR KRAKEN + OKX" measurement; pending cycles coalesce to one boolean.
    40.6.459 hardens BTC/EUR identity proof: compact pair identities such as BTCUSDT are explicit contradictions,
    and price_eur alone never authorizes generic bid/ask aliases as an EUR order book.
-   No direct browser OKX internet access, order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
+   40.6.466 adds one passive custom event after a completed measurement so the read-only venue-cost shadow can recompute without polling.\n   No direct browser OKX internet access, order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
 (() => {
   "use strict";
   const BUILD="40.6.459", ROOT="strategyAExecutionCostTruth";
@@ -316,6 +316,7 @@
         }),
         protections:Object.freeze({manual_fetch_only:false,automatic_measurement:true,automatic_measure_on_mount:true,automatic_measure_on_experiment_cycle:true,manual_refresh_fallback:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false})
       });
+      try{globalThis.window?.dispatchEvent?.(new CustomEvent("agent-crypto:strategy-a-execution-cost-measured",{detail:{build:BUILD,status}}));}catch(_){}
       return last;
     }finally{busy=false;render();}
   }

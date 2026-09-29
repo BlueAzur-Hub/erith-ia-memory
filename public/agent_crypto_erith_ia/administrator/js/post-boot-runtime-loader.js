@@ -1,4 +1,4 @@
-/* Agent-Crypto Administrator — 40.6.465 EXECUTION COST EVIDENCE CAPTURE DELIVERY RECOVERY
+/* Agent-Crypto Administrator — 40.6.466 REAL VENUE COST SHADOW TRUTH
    Extends the existing Aether-first Strategy Core residency with the existing Execution Cost Truth owner
    plus a bounded PAPER open/close capture facade. Same application; no new recurring timer or DB schema.
    Historical after-cost rows are not modified.
@@ -9,7 +9,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.465";
+  const BUILD="40.6.466";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
@@ -18,7 +18,7 @@
     "./js/strategy-a-auto-lifecycle-bridge.js",
     "./js/strategy-a-after-cost-metrics.js?v=40.6.405",
     "./js/strategy-a-durable-evidence-store.js?v=40.6.463",
-    "./js/strategy-a-execution-cost-truth.js?v=40.6.459",
+    "./js/strategy-a-execution-cost-truth.js?v=40.6.466",
     "./js/strategy-a-execution-cost-evidence-capture.js?v=40.6.465",
     "./js/strategy-a-safety-certification.js",
     "./js/strategy-a-evidence-dossier.js",

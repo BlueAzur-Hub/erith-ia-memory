@@ -1,19 +1,23 @@
-# Agent-Crypto 40.6.465 — EXECUTION COST EVIDENCE CAPTURE RENDER RECOVERY
+# Agent-Crypto 40.6.466 — STRATEGY A REAL VENUE COST SHADOW TRUTH
 
-40.6.464 reste FAIL terrain : Build 40.6.464 était visible, les diagnostics .460/.461/.462 étaient présents, mais le panneau EXECUTION COST EVIDENCE CAPTURE restait absent.
+Objectif unique : arrêter l'attente passive et répondre à une question mesurable sans modifier Strategy A :
 
-Cause exacte supplémentaire trouvée sur main :
-`strategy-a-execution-cost-evidence-capture.js` appelle `ensureStyle()`, qui utilisait `ROOT+"Style"` alors qu'aucune constante `ROOT` n'était déclarée dans ce module. L'exception était avalée par les try/catch de rendez-vous de rendu, ce qui rendait l'échec silencieux.
+**Avec le snapshot courant des coûts Kraken / OKX, combien des cycles COST_GATE_WAIT déjà collectés auraient franchi un gate dérivé du coût réel observable + marge canonique ?**
 
-Correction 40.6.465 :
-- déclaration `const ROOT="strategyAExecutionCostEvidenceCapture";`;
-- cache-bust 40.6.465 sur les deux chemins de livraison Capture;
-- BUILD 40.6.465 dans les loaders concernés;
-- harness CI DOM qui exécute réellement le chemin `render() → ensureStyle() → création du panneau`;
-- aucune modification des calculs, seuils, données, schéma IndexedDB ou ordres.
+## Ce que fait 40.6.466
 
-Invariants : aucun backfill historique; after-cost injection OFF; PAPER ONLY; Market Core 38.15.11 intact; aucun ordre réel.
+- relit les cas historiques de `STRATEGY A · COST-WAIT OUTCOME AUDIT`;
+- ne réécrit aucun cycle;
+- relit le snapshot courant de `EXECUTION COST TRUTH`;
+- utilise la marge de sécurité canonique Strategy A;
+- calcule un shadow Kraken pour 10 / 25 / 50 / 100 € à partir du carnet mesuré et des frais de référence;
+- met en évidence le ticket canonique 50 €;
+- calcule pour OKX un **plancher observable** frais taker aller-retour + spread + marge;
+- marque OKX **POTENTIAL / INDETERMINATE**, jamais PASS, tant que profondeur multi-niveaux et slippage restent inconnus;
+- conserve le gate legacy 0,80 % intact.
 
-Test terrain unique :
-Ctrl+F5 → Build 40.6.465 → Section 04 → Simulation → rechercher EXECUTION COST EVIDENCE CAPTURE.
-Attendu sans PAPER actif : ARMED · PAPER suivis 0 · Entrées 0 · Sorties 0 · Entrée+sortie 0 · After-cost injection OFF.
+## Limite essentielle
+
+Le snapshot de coût courant appliqué aux cycles historiques est un **contrefactuel**, pas une preuve de coût historique et pas une preuve de rentabilité.
+
+Aucune plateforme n'est choisie automatiquement. Aucun ordre réel. Aucun seuil, Oracle, Risk Governor, Paper ou Market Core 38.15.11 modifié.
