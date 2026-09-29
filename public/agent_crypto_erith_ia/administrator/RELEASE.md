@@ -1,49 +1,37 @@
-# Agent-Crypto 40.6.474 — PROSPECTIVE OUTCOME + OKX COST EVIDENCE
+# Agent-Crypto 40.6.475 — PROSPECTIVE CAPTURE PLUMBING PROOF
 
 ## Point de départ
 
-40.6.471–.473 ont terminé le diagnostic historique :
-- baseline durable .467 : 144/144 COST WAIT et 16/16 OKX POTENTIAL;
-- un seul franchissement T+60 observé;
-- ce franchissement est un point unique à +0,691 %, à 22,2 min, soit environ +0,080 % au-dessus du plancher 0,6109 % avant slippage;
-- 8 inconnus T+60 : 4 PARTIAL_NO_CROSS et 4 TARGET_GAP_NO_SAMPLE.
+40.6.474 est visible et **ARMED**, mais aucun nouveau COST_GATE_WAIT n'a été produit pendant la fenêtre de test terrain. Le compteur historique `Cost waits` est resté à 65 alors qu'Auto A continuait à produire des cycles.
 
-L'historique ne doit plus être complété par interpolation.
+Le but de .475 n'est donc pas de changer Strategy A : il est de prouver et rendre observable la plomberie de capture sans attendre le marché.
 
-## 40.6.474
+## Correction bornée
 
-La stratégie construit désormais une preuve prospective pour les **nouveaux COST_GATE_WAIT uniquement**.
+Propriétaire unique :
+`js/strategy-a-prospective-outcome-evidence-capture.js`
 
-À T0 :
-- cycle_id, heure, prix BTC/EUR, expected_move, required_move;
-- mesure OKX via l'owner existant `AgentCryptoStrategyAExecutionCostTruth`;
-- bid/ask, spread, frais de référence et fee+spread observables;
-- slippage laissé UNKNOWN s'il n'est pas prouvé;
-- contexte analytique frais+spread+0,2 % enregistré sans modifier le gate.
+L'événement `agent-crypto:strategy-a-experiment-cycle` de .454 est volontairement partiel. Il contient l'identité du cycle mais pas `market.price_eur`.
 
-Aux cycles suivants :
-- endpoint T+5;
-- endpoint T+15;
-- endpoint T+60;
-- gap exact à la cible;
-- move endpoint;
-- MFE / MAE et nombre d'échantillons jusqu'à l'endpoint.
+40.6.475 :
+1. lit le `cycle_id` de l'événement ;
+2. résout **ce cycle exact** dans l'Experiment Ledger ;
+3. n'utilise plus silencieusement le dernier cycle si l'ID demandé manque ;
+4. échoue alors en `EVENT_CYCLE_NOT_FOUND_IN_LEDGER:<id>` ;
+5. expose la plomberie dans le panneau : événements reçus, dernier event, cycle résolu, mode de résolution et dernière erreur.
 
-Tolérance : ±150 s, inchangée.
-Si la fenêtre est manquée : **MISSED_WINDOW**. Aucun prix inventé.
+## Harness isolé
 
-## Durabilité
+Le workflow .475 simule :
+- un événement partiel visant un COST_GATE_WAIT plus ancien alors qu'un cycle plus récent existe déjà ;
+- la résolution exacte `LEDGER_BY_ID` ;
+- l'écriture dans le store `meta` de l'IndexedDB durable existant ;
+- une mesure OKX T0 factice via l'owner Execution Cost Truth ;
+- un échantillon T+5 ;
+- un ID absent qui doit échouer fermé sans prendre le dernier cycle.
 
-Écriture dans le store `meta` de l'IndexedDB Durable Evidence existant :
-`agent_crypto_strategy_a_durable_evidence_v1`
+## Invariants
 
-- DB_VERSION reste 1;
-- aucun object store ajouté;
-- aucun backfill;
-- maximum mémoire opérationnelle 256 cycles.
+Aucun changement de seuil, Cost Gate, Oracle, Risk, PAPER, cadence Auto A, Market Core 38.15.11, schéma IndexedDB ou ordre réel.
 
-## Effets
-
-La nouvelle capture appelle l'owner Execution Cost Truth déjà existant sur chaque nouveau COST_GATE_WAIT, y compris en mode headless. Cela peut déclencher les requêtes Kraken/OKX déjà définies par cet owner. Aucun nouveau protocole réseau n'est implémenté.
-
-Aucun changement de Cost Gate, Oracle, Risk, Paper, Market Core 38.15.11 ou autorisation d'ordre réel.
+Le préfixe durable `prospective_outcome_474:` est conservé afin de ne pas abandonner d'éventuelles preuves .474 déjà écrites.
