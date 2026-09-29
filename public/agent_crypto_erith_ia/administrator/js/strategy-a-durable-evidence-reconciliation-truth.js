@@ -166,7 +166,7 @@
         {payload:{reconciliation_id:"R2",execution_id:"E2",cost_completeness:"COMPLETE",accounting_identity_status:"VERIFIED",accounting_identity_ok:true}}
       ],
       durable_paper:[
-        {payload:{execution_id:"R1",status:"CLOSED_SYNCED"}},
+        {payload:{execution_id:"E1",status:"CLOSED_SYNCED"}},
         {payload:{trade_id:"E2",status:"CLOSED_SYNCED"}},
         {payload:{execution_id:"P9",status:"OPEN_SYNCED"}}
       ],
