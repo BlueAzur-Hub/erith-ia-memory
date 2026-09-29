@@ -1,27 +1,30 @@
-# Agent-Crypto 40.6.460 — STRATEGY A DURABLE EVIDENCE RECONCILIATION TRUTH
+# Agent-Crypto 40.6.461 — STRATEGY A EVIDENCE IDENTITY CROSSWALK TRUTH
 
 ## Objet unique
-Réconcilier sans mutation les preuves Strategy A déjà visibles :
-- Experiment Ledger visible ;
-- Durable Evidence IndexedDB ;
-- after-cost ;
-- états PAPER ;
-- gaps runtime.
+Vérifier si les 4 after-cost et les 9 états PAPER de Durable Evidence sont réellement orphelins avant toute correction de données.
 
-## Pourquoi
-Le terrain .459 montre un ledger courant avec 97 cycles / 0 Paper, tandis que Durable Evidence expose 583 cycles, 4 after-cost, 9 états PAPER et 516 gaps runtime. Cette version ne choisit pas une vérité arbitrairement : elle mesure les recouvrements et les orphelins par identifiants.
+## Cause du faux négatif possible
+Le stockage durable choisit historiquement des identifiants primaires différents :
+- after-cost : reconciliation_id → execution_id → trade_id → identity ;
+- PAPER : execution_id → trade_id → reconciliation_id.
 
-## Affichage
-Nouveau bloc sous Durable Evidence :
-- Ledger visible / durable ;
-- cycles IDs communs ;
-- after-cost visible / durable ;
-- after-cost COMPLETE + VERIFIED ;
-- after-cost ↔ PAPER liés ;
-- after-cost orphelins ;
-- PAPER orphelins ;
-- gaps runtime total / ouverts.
+Une même opération peut donc contenir les deux identifiants mais apparaître orpheline si on compare seulement l'ID primaire choisi.
+
+## Correction diagnostique
+Le nouveau crosswalk compare tous les champs disponibles de chaque ligne :
+- execution_id
+- reconciliation_id
+- trade_id
+- identity
+
+Il classe les candidats :
+- EXACT_EXECUTION_MATCH
+- RECONCILIATION_MATCH
+- TRADE_MATCH
+- CROSS_FIELD_MATCH
+- MULTI_ID_MATCH
+
+Il distingue aussi liens 1↔1 uniques, candidats ambigus et vrais orphelins.
 
 ## Garde-fous
-Diagnostic uniquement. Aucun PASS G1/G8, aucune certification, aucun seuil Strategy A, aucun trade forcé, aucune écriture IndexedDB, aucun réseau, aucun ordre réel.
-Market Core 38.15.11 intact.
+Aucune fusion automatique. Aucune écriture IndexedDB. Aucun gate certifié. Aucun seuil, réseau ou ordre réel. Market Core 38.15.11 intact.
