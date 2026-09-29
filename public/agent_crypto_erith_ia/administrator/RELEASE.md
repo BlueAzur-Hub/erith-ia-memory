@@ -1,37 +1,29 @@
-# Agent-Crypto 40.6.475 — PROSPECTIVE CAPTURE PLUMBING PROOF
+# Agent-Crypto 40.6.476 — PROSPECTIVE PANEL MOUNT PERSISTENCE
 
-## Point de départ
+## Terrain parent
 
-40.6.474 est visible et **ARMED**, mais aucun nouveau COST_GATE_WAIT n'a été produit pendant la fenêtre de test terrain. Le compteur historique `Cost waits` est resté à 65 alors qu'Auto A continuait à produire des cycles.
+40.6.475 a validé la plomberie Firefox :
+- panneau ARMED ;
+- événements reçus 1 ;
+- event = résolu = `A-CYCLE-00001-ebfa9b7e` ;
+- mode `LEDGER_BY_ID` ;
+- erreur `—`.
 
-Le but de .475 n'est donc pas de changer Strategy A : il est de prouver et rendre observable la plomberie de capture sans attendre le marché.
+Quelques minutes plus tard le panneau .475 avait disparu, alors que `EXECUTION COST EVIDENCE CAPTURE · 40.6.469` restait visible.
 
 ## Correction bornée
 
-Propriétaire unique :
-`js/strategy-a-prospective-outcome-evidence-capture.js`
+Aucun changement de capture, ledger, IndexedDB, OKX, Cost Gate ou Strategy A métier.
 
-L'événement `agent-crypto:strategy-a-experiment-cycle` de .454 est volontairement partiel. Il contient l'identité du cycle mais pas `market.price_eur`.
+Le panneau prospectif :
+1. préfère désormais l'ancre stable `strategyAExecutionCostEvidenceCapture` ;
+2. garde les ancres .473/.472/.471 en fallback de démarrage ;
+3. se remonte après le propriétaire canonique `agent-crypto:administrator-presentation-settled` ;
+4. se remonte également sur les événements bornés déjà existants : evidence-data-changed, audits-ready, strategy-core-ready, postboot-runtime-ready et cycle Auto A ;
+5. n'ajoute aucun timer récurrent et aucun MutationObserver.
 
-40.6.475 :
-1. lit le `cycle_id` de l'événement ;
-2. résout **ce cycle exact** dans l'Experiment Ledger ;
-3. n'utilise plus silencieusement le dernier cycle si l'ID demandé manque ;
-4. échoue alors en `EVENT_CYCLE_NOT_FOUND_IN_LEDGER:<id>` ;
-5. expose la plomberie dans le panneau : événements reçus, dernier event, cycle résolu, mode de résolution et dernière erreur.
+## Vérité
 
-## Harness isolé
+40.6.475 = **PLUMBING PASS / MOUNT PERSISTENCE FAIL**.
 
-Le workflow .475 simule :
-- un événement partiel visant un COST_GATE_WAIT plus ancien alors qu'un cycle plus récent existe déjà ;
-- la résolution exacte `LEDGER_BY_ID` ;
-- l'écriture dans le store `meta` de l'IndexedDB durable existant ;
-- une mesure OKX T0 factice via l'owner Execution Cost Truth ;
-- un échantillon T+5 ;
-- un ID absent qui doit échouer fermé sans prendre le dernier cycle.
-
-## Invariants
-
-Aucun changement de seuil, Cost Gate, Oracle, Risk, PAPER, cadence Auto A, Market Core 38.15.11, schéma IndexedDB ou ordre réel.
-
-Le préfixe durable `prospective_outcome_474:` est conservé afin de ne pas abandonner d'éventuelles preuves .474 déjà écrites.
+40.6.476 traite uniquement **MOUNT PERSISTENCE** et conserve la plomberie .475.
