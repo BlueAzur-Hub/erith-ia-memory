@@ -1,27 +1,28 @@
-# HANDOFF — Agent-Crypto 40.6.477
+# HANDOFF — Agent-Crypto 40.6.478
 
 ## Objet unique
 
-Réparer le chargement initial de l'image **Lecture Technique** sans toucher au reste du runtime.
+Rendre un dossier prospectif terminé réellement immuable.
 
-## Firefox opérateur
+## Règle
 
-1. Ctrl+F5.
-2. Vérifier **Build 40.6.477 · Administrator**.
-3. Test A — Lecture Technique ouverte au démarrage : l'image doit apparaître sans clic AUTO/RND.
-4. Test B — replier Lecture Technique, démarrer avec cache froid, puis ouvrir : l'image doit charger à l'ouverture.
-5. Test C — ouvrir pendant la lecture asynchrone du cache : une seule reprise est autorisée et l'image doit apparaître.
-6. Vérifier AUTO puis RND.
-7. Si une image privée est utilisée, vérifier qu'elle reste prioritaire et fonctionnelle.
-8. Observer séparément la stabilité Firefox / Transformer Book : cette version ne prétend pas corriger le plantage global.
+Un dossier est terminal lorsque ses trois horizons T+5, T+15 et T+60 sont chacun dans un état terminal : `CAPTURED` ou `MISSED_WINDOW`.
 
-## Invariants
+À partir de là, tout cycle futur doit être ignoré pour ce dossier : aucune observation ajoutée, aucun `updated_at` modifié, aucune écriture IndexedDB.
 
-- réseau différé tant que le panneau reste replié ;
-- aucun préchargement de la bibliothèque complète ;
-- aucun nouveau timer ;
-- aucun nouvel observer ;
-- Strategy A inchangée ;
-- Aether / Redivider inchangés ;
-- Market Core **38.15.11** intact ;
-- aucun ordre réel.
+## Validation
+
+Le harness doit vérifier :
+1. dossier terminal détecté ;
+2. deux cycles tardifs successifs → zéro écriture ;
+3. observations et `updated_at` inchangés ;
+4. dossier non terminal → capture encore fonctionnelle ;
+5. échantillon trop tardif → `MISSED_WINDOW` encore fonctionnel.
+
+## Terrain
+
+La preuve naturelle complète dépend toujours de l'existence future d'un vrai dossier `COST_GATE_WAIT`. Il n'est pas nécessaire de forcer quoi que ce soit.
+
+Lecture Technique conserve le correctif 40.6.477.
+
+Market Core 38.15.11 intact. Aucun ordre réel.
