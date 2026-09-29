@@ -1,0 +1,83 @@
+name: Agent-Crypto Package 40.6.458 Execution Cost Pending Cycle Resume
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-package-406458.yml'
+permissions:
+  contents: write
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-execution-cost-truth.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+          node <<'NODE'
+          const fs=require('fs');
+          const s=fs.readFileSync('public/agent_crypto_erith_ia/administrator/js/strategy-a-execution-cost-truth.js','utf8');
+          if(!s.includes('const BUILD="40.6.458"')) throw new Error('wrong build');
+          if(s.includes('startsWith("auto:")')) throw new Error('auto-only gate remains');
+          if((s.match(/finishPendingExperiment\(\);/g)||[]).length!==1) throw new Error('common exit resume missing');
+          const a=s.indexOf('  function pendingResumeDecision406458');
+          const b=s.indexOf('  function selfTest(){',a);
+          Function(s.slice(a,b)+'\nglobalThis.__p=pendingResumeDecision406458;')();
+          if(globalThis.__p(true,false)!==true) throw new Error('manual-exit resume failed');
+          if(globalThis.__p(true,true)!==false) throw new Error('busy wait failed');
+          if(globalThis.__p(false,false)!==false) throw new Error('noop failed');
+          console.log('40.6.458 HARNESS PASS');
+          NODE
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path('public/agent_crypto_erith_ia/administrator')
+          idx=(r/'index.html').read_text(encoding='utf-8')
+          audit=(r/'js/strategy-a-audit-demand-loader.js').read_text(encoding='utf-8')
+          b=json.loads((r/'build.json').read_text(encoding='utf-8'))
+          assert b['build']=='40.6.458'
+          assert b['market_core']=='38.15.11'
+          assert 'Build 40.6.458 · Administrator' in idx
+          assert 'strategy-a-audit-demand-loader.js?v=40.6.458' in idx
+          assert 'strategy-a-execution-cost-truth.js?v=40.6.458' in audit
+          assert 'post-boot-runtime-loader.js?v=40.6.457' in idx
+          print('40.6.458 STATIC PASS')
+          PY
+      - name: Package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_EXECUTION_COST_PENDING_CYCLE_RESUME_40.6.458.zip"
+          rm -f "$ZIP" "$ZIP.sha256"
+          rm -rf /tmp/ac458
+          mkdir -p /tmp/ac458/administrator/js
+          cp "$ROOT/index.html" /tmp/ac458/administrator/
+          cp "$ROOT/index-40.6.458.html" /tmp/ac458/administrator/
+          cp "$ROOT/build.json" /tmp/ac458/administrator/
+          cp "$ROOT/RELEASE.md" /tmp/ac458/administrator/
+          cp "$ROOT/HANDOFF.md" /tmp/ac458/administrator/
+          cp "$ROOT/PATCH_MANIFEST_40.6.458.txt" /tmp/ac458/administrator/
+          cp "$ROOT/EXECUTION_COST_PENDING_CYCLE_TEST_40.6.458.json" /tmp/ac458/administrator/
+          cp "$ROOT/js/strategy-a-execution-cost-truth.js" /tmp/ac458/administrator/js/
+          cp "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/ac458/administrator/js/
+          (cd /tmp/ac458 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+      - name: Commit package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_EXECUTION_COST_PENDING_CYCLE_RESUME_40.6.458.zip" "$ROOT/AGENT_CRYPTO_EXECUTION_COST_PENDING_CYCLE_RESUME_40.6.458.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.458 Execution Cost ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -11,7 +11,7 @@
   const SPECS=Object.freeze([
     Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
     Object.freeze({key:"oracle-cost",src:"./js/strategy-a-oracle-cost-calibration-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit}),
-    Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.455",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth})
+    Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.458",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth})
   ]);
   let state="idle",promise=null,lastError="",reason="",lastRetryKey="",retryCount=0;
   const simulationOwner=()=>document.querySelector(SIMULATION_OWNER_SELECTOR);

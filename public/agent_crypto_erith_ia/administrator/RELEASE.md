@@ -1,37 +1,20 @@
-# Agent-Crypto 40.6.457 — PRIVATE SOURCE MOUNT CONTRACT HARDENING
+# Agent-Crypto 40.6.458 — EXECUTION COST PENDING CYCLE RESUME
 
 ## Objet unique
-Fermer le cas résiduel où le loader pouvait continuer après un `mount() === false`, et supprimer le double appel de montage du propriétaire Source Truth déjà chargé.
+Fermer la dette Astra où un événement Strategy A `experiment-cycle` reçu pendant un rafraîchissement manuel Kraken + OKX pouvait rester en attente après la fin de cette mesure.
 
-## Cause prouvée
-Dans `js/views/private-source-demand-loader.js`, le contrat 40.6.456 vérifiait seulement la présence de l'API `mount`, puis appelait `owner.mount()` sans exploiter son booléen. Le propriétaire canonique `private-backend-sources.js` renvoie pourtant explicitement `false` si son host Backend n'est pas montable.
-
-Le chemin `ensure()` appelait aussi `mount()` une première fois avant `sourceOwnerReady()`, qui le rappelait immédiatement.
+## Cause
+`pendingExperimentMeasure` était posé pendant `busy=true`, mais la sortie commune n'appelait `finishPendingExperiment()` que pour un trigger `auto:`.
 
 ## Correction
-READY exige maintenant :
-1. API propriétaire disponible ;
-2. `mount() === true` ;
-3. Freshness Guard actif ;
-4. downstream borné = `ready`.
+La sortie de toute mesure appelle maintenant `finishPendingExperiment()`.
 
-`mount() === false` ou exception :
-- `state=error` ;
-- `ensure()=false` ;
-- aucun downstream ;
-- aucun événement `erith:private-source-runtime-loaded`.
-
-Le double pre-mount est supprimé : une demande effectue une seule tentative de montage du propriétaire.
-
-## Observabilité
-`snapshot()` distingue désormais :
-- `source_owner_api_ready` ;
-- `source_owner_mounted` ;
-- `source_owner_ready` ;
-- `freshness_guard_ready` ;
-- `downstream_state`.
+Contrat :
+- une seule mesure simultanée ;
+- au maximum une reprise en attente ;
+- une reprise est consommée une seule fois après la fin de la mesure courante.
 
 ## Protégé
-Market Core 38.15.11 · Source Truth métier · Strategy · Oracle · Aether · Execution Cost · Risk · Paper.
+Market Core 38.15.11 · seuils Strategy A · Oracle · Source Truth · Aether · frais · calculs Execution Cost · Paper.
 
-Aucun nouveau timer, observer, storage owner, endpoint métier ou ordre réel.
+Aucun nouveau timer, observer, stockage, owner réseau ou ordre réel.

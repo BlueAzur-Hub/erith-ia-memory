@@ -5,10 +5,12 @@
    separates quote/receive/calculate times, rejects booleans/blank numeric inputs, and keeps Kraken usable when OKX is invalid.
    Source Truth fallback freshness is the existing private-backend cache contract: 15 s.
    40.6.455 measures once when the Simulation audit module mounts, then again after each real Strategy A experiment-cycle event.
+   40.6.458 resumes one pending experiment-cycle from the common exit of every in-flight measurement,
+   including a manual "RAFRAÎCHIR KRAKEN + OKX" measurement; pending cycles coalesce to one boolean.
    No direct browser OKX internet access, order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
 (() => {
   "use strict";
-  const BUILD="40.6.455", ROOT="strategyAExecutionCostTruth";
+  const BUILD="40.6.458", ROOT="strategyAExecutionCostTruth";
   const SIZES=Object.freeze([10,25,50,100]), DEPTH_BPS=Object.freeze([5,10,25]), TIMEOUT=9000, BACKEND_TIMEOUT=18000;
   const SOURCE_TRUTH_CACHE_TTL_SECONDS=15, SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS=30;
   const VENUES=Object.freeze({
@@ -319,7 +321,7 @@
     if(!last)return false;
     try{
       const b=new Blob([JSON.stringify(last,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_455.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
+      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_458.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
   function style(){
@@ -369,6 +371,9 @@
     root.querySelector("#"+ROOT+"Export")?.addEventListener("click",exportJson);
     root.dataset.build=BUILD;root.dataset.readOnly="true";return last;
   }
+  function pendingResumeDecision406458(pending,inFlight){
+    return pending===true&&inFlight!==true;
+  }
   function selfTest(){
     const now=Date.parse("2026-09-28T19:00:00Z");
     const payload=quote=>({assets:[{asset:"BTC",quotes:[quote]}]});
@@ -400,6 +405,10 @@
       backend_demand_bounded:true,
       repeatable_export:true,
       automatic_measure_contract:true,
+      pending_resume_contract_406458:
+        pendingResumeDecision406458(true,false)===true&&
+        pendingResumeDecision406458(true,true)===false&&
+        pendingResumeDecision406458(false,false)===false,
       event_driven_without_recurring_timer:true,
       no_real_order:true
     });
@@ -408,7 +417,7 @@
   }
   globalThis.AgentCryptoStrategyAExecutionCostTruth=Object.freeze({
     build:BUILD,measure,render,export_json:exportJson,snapshot:()=>last,self_test:selfTest,
-    manual_fetch_only:false,automatic_measurement:true,automatic_measure_on_mount:true,automatic_measure_on_experiment_cycle:true,manual_refresh_fallback:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false,
+    manual_fetch_only:false,automatic_measurement:true,automatic_measure_on_mount:true,automatic_measure_on_experiment_cycle:true,manual_refresh_fallback:true,pending_experiment_resume_from_any_measure_exit:true,pending_experiment_coalesced_to_one:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false,
     freshness_fallback_seconds:SOURCE_TRUTH_CACHE_TTL_SECONDS,future_tolerance_seconds:SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS,stale_or_unknown_quote_usable:false
   });
   if(typeof document!=="undefined"){
@@ -448,15 +457,15 @@
       if(!scheduleAutoMeasure("experiment-cycle")&&busy)pendingExperimentMeasure=true;
     };
     const finishPendingExperiment=()=>{
-      if(!pendingExperimentMeasure||busy)return;
+      if(!pendingResumeDecision406458(pendingExperimentMeasure,busy))return false;
       pendingExperimentMeasure=false;
-      scheduleAutoMeasure("experiment-cycle");
+      return scheduleAutoMeasure("experiment-cycle");
     };
     const originalMeasure=measure;
     measure=async function(trigger="manual"){
       try{return await originalMeasure(trigger);}
       finally{
-        if(String(trigger||"").startsWith("auto:"))finishPendingExperiment();
+        finishPendingExperiment();
       }
     };
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",scheduleMount,{once:true});else scheduleMount();
