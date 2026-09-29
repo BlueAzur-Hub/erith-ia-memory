@@ -34,46 +34,62 @@ jobs:
           set -euo pipefail
           ROOT="public/agent_crypto_erith_ia/administrator"
           grep -F 'Build 40.6.477 · Administrator' "$ROOT/index.html"
-          grep -F 'const BUILD="40.6.477", BASE="./assets/visual/technical-reading/"' "$ROOT/index.html"
-          grep -F 'const BUILD="40.6.477", BASE="./assets/visual/technical-reading/"' "$ROOT/runtime-shell.html"
-          grep -F 'return ok===true;' "$ROOT/index.html"
-          grep -F 'open_during_cache_read_retry_once:true' "$ROOT/index.html"
+          for FILE in "$ROOT/index.html" "$ROOT/runtime-shell.html"; do
+            grep -F 'const BUILD="40.6.477", BASE="./assets/visual/technical-reading/"' "$FILE"
+            grep -F 'const ok=await swapUrl(wanted,theme,{initial,source:"asset",allowNetwork});' "$FILE"
+            grep -F 'imageReady=ok===true;' "$FILE"
+            grep -F 'if(ok!==true&&collapsedAtStart&&!detailCollapsed40307())' "$FILE"
+            grep -F 'open_during_cache_read_retry_once:true' "$FILE"
+          done
           node --check "$ROOT/js/post-boot-runtime-loader.js"
           node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
           python .github/scripts/agent_crypto_version_truth_guard_compat.py
 
-      - name: Verify Technical controller parity
+      - name: Verify bounded recovery logic in both entries
         shell: bash
         run: |
           python - <<'PY'
-          import re, hashlib
+          import re
           from pathlib import Path
           root=Path("public/agent_crypto_erith_ia/administrator")
           rx=re.compile(r'<script id="atlasTechnicalStaticThemeController">\s*(.*?)\s*</script>',re.S)
-          blocks=[]
+          required=(
+              'const BUILD="40.6.477"',
+              'const ok=await swapUrl(wanted,theme,{initial,source:"asset",allowNetwork});',
+              'return ok===true;',
+              'imageReady=ok===true;',
+              'if(ok!==true&&collapsedAtStart&&!detailCollapsed40307())',
+              'ok=await apply(true,{allowNetwork:true});',
+              'collapsed_boot_defers_network_on_cache_miss:true',
+              'open_during_cache_read_retry_once:true',
+          )
           for name in ("index.html","runtime-shell.html"):
               text=(root/name).read_text(encoding="utf-8")
               m=rx.search(text)
               if not m:
                   raise SystemExit(f"controller missing in {name}")
-              blocks.append(m.group(1).strip())
-          if blocks[0] != blocks[1]:
-              raise SystemExit("Technical controller drift between index.html and runtime-shell.html")
-          print("controller_sha256", hashlib.sha256(blocks[0].encode()).hexdigest())
+              block=m.group(1)
+              missing=[x for x in required if x not in block]
+              if missing:
+                  raise SystemExit(f"{name} missing recovery markers: {missing}")
+              print(name, "recovery_logic=PASS")
           PY
 
-      - name: Exercise actual Lecture Technique controller
+      - name: Exercise actual Lecture Technique controller in both entries
         shell: bash
         run: |
           node <<'NODE'
           const fs=require("fs"),vm=require("vm");
-          const html=fs.readFileSync("public/agent_crypto_erith_ia/administrator/index.html","utf8");
-          const m=html.match(/<script id="atlasTechnicalStaticThemeController">\s*([\s\S]*?)\s*<\/script>/);
-          if(!m) throw new Error("technical controller missing");
-          const source=m[1];
+          const ROOT="public/agent_crypto_erith_ia/administrator";
+          function extract(file){
+            const html=fs.readFileSync(ROOT+"/"+file,"utf8");
+            const m=html.match(/<script id="atlasTechnicalStaticThemeController">\s*([\s\S]*?)\s*<\/script>/);
+            if(!m)throw new Error("technical controller missing in "+file);
+            return m[1];
+          }
 
           class ClassList{
-            constructor(owner){this.owner=owner;this.s=new Set();}
+            constructor(){this.s=new Set();}
             add(...v){v.forEach(x=>this.s.add(x));}
             remove(...v){v.forEach(x=>this.s.delete(x));}
             contains(v){return this.s.has(v);}
@@ -82,7 +98,7 @@ jobs:
             toString(){return [...this.s].join(" ");}
           }
           class El{
-            constructor(tag="div",id=""){this.tagName=String(tag).toUpperCase();this.id=id;this.dataset={};this.attributes=new Map();this.children=[];this.parentElement=null;this.style={setProperty:(k,v)=>{this.style[k]=v;}};this.classList=new ClassList(this);this._innerHTML="";this.loading="";this.decoding="";}
+            constructor(tag="div",id=""){this.tagName=String(tag).toUpperCase();this.id=id;this.dataset={};this.attributes=new Map();this.children=[];this.parentElement=null;this.style={setProperty:(k,v)=>{this.style[k]=v;}};this.classList=new ClassList();this._innerHTML="";this.loading="";this.decoding="";}
             set className(v){this.classList.setFromString(v);} get className(){return this.classList.toString();}
             set innerHTML(v){this._innerHTML=String(v);} get innerHTML(){return this._innerHTML;}
             appendChild(n){if(n.parentElement)n.remove();this.children.push(n);n.parentElement=this;return n;}
@@ -97,25 +113,24 @@ jobs:
             querySelectorAll(sel){return findAll(this,sel);}
           }
           function matches(el,sel){
-            if(sel.startsWith("#")) return el.id===sel.slice(1);
-            if(sel.startsWith(".")) return sel.slice(1).split(".").every(c=>el.classList.contains(c));
-            if(sel==="[data-tech-static-mode]") return Object.prototype.hasOwnProperty.call(el.dataset,"techStaticMode");
-            if(sel==="[data-tech-random]") return Object.prototype.hasOwnProperty.call(el.dataset,"techRandom");
+            if(sel.startsWith("#"))return el.id===sel.slice(1);
+            if(sel.startsWith("."))return sel.slice(1).split(".").every(c=>el.classList.contains(c));
+            if(sel==="[data-tech-static-mode]")return Object.prototype.hasOwnProperty.call(el.dataset,"techStaticMode");
+            if(sel==="[data-tech-random]")return Object.prototype.hasOwnProperty.call(el.dataset,"techRandom");
             return false;
           }
           function find(root,sel){for(const c of root.children){if(matches(c,sel))return c;const x=find(c,sel);if(x)return x;}return null;}
           function findAll(root,sel,out=[]){for(const c of root.children){if(matches(c,sel))out.push(c);findAll(c,sel,out);}return out;}
           const flush=async(n=80)=>{for(let i=0;i<n;i++)await Promise.resolve();};
 
-          function makeEnv({collapsed=false,delayedCache=false,privateImage=false}={}){
+          function makeEnv(source,{collapsed=false,delayedCache=false,privateImage=false}={}){
             const observers=[];
             const body=new El("body","body"),head=new El("head","head");
             const panel=new El("section","detailPanel"),deck=new El("section","analyste"),host=new El("div");
             host.className="detail-project-visual";
             panel.appendChild(host);deck.appendChild(panel);body.appendChild(deck);
             if(collapsed)deck.classList.add("detail-collapsed");
-            let resolveCache;
-            let cacheResolveCalls=0,networkRequests=0;
+            let resolveCache,cacheResolveCalls=0,networkRequests=0;
             const delayed=new Promise(r=>{resolveCache=r;});
             const privateBlob=privateImage?new Blob(["private"]):null;
             const document={
@@ -150,7 +165,7 @@ jobs:
             env.window=env;env.globalThis=env;
             const ctx=vm.createContext(env);
             return {
-              ctx,deck,panel,host,observers,
+              ctx,deck,host,observers,
               run(){vm.runInContext(source,ctx,{filename:"atlasTechnicalStaticThemeController"});},
               open(){deck.classList.remove("detail-collapsed");for(const o of observers)o.cb([],o);},
               trigger(){for(const o of observers)o.cb([],o);},
@@ -160,40 +175,42 @@ jobs:
             };
           }
 
-          (async()=>{
-            // A: open boot
+          async function exercise(label,source){
             {
-              const e=makeEnv({collapsed:false});e.run();await flush();
-              if(!e.portrait()?.getAttribute("src"))throw new Error("open boot image absent");
-              if(e.stats().networkRequests!==1)throw new Error("open boot network count");
+              const e=makeEnv(source,{collapsed:false});e.run();await flush();
+              if(!e.portrait()?.getAttribute("src"))throw new Error(label+": open boot image absent");
+              if(e.stats().networkRequests!==1)throw new Error(label+": open boot network count");
             }
-            // B: collapsed cold cache stays deferred, false READY is not latched, then opening recovers.
             {
-              const e=makeEnv({collapsed:true});e.run();await flush();
-              if(e.portrait()?.getAttribute("src"))throw new Error("collapsed cold boot should stay blank");
-              if(e.stats().networkRequests!==0)throw new Error("collapsed cold boot used network");
+              const e=makeEnv(source,{collapsed:true});e.run();await flush();
+              if(e.portrait()?.getAttribute("src"))throw new Error(label+": collapsed cold boot should stay blank");
+              if(e.stats().networkRequests!==0)throw new Error(label+": collapsed cold boot used network");
               const before=e.stats().cacheResolveCalls;
               e.trigger();await flush();
-              if(!(e.stats().cacheResolveCalls>before))throw new Error("failed initial swap was falsely latched ready");
+              if(!(e.stats().cacheResolveCalls>before))throw new Error(label+": failed initial swap was falsely latched ready");
               e.open();await flush();
-              if(!e.portrait()?.getAttribute("src"))throw new Error("collapsed then open did not recover");
-              if(e.stats().networkRequests!==1)throw new Error("collapsed then open recovery network count");
+              if(!e.portrait()?.getAttribute("src"))throw new Error(label+": collapsed then open did not recover");
+              if(e.stats().networkRequests!==1)throw new Error(label+": collapsed then open recovery network count");
             }
-            // C: open while the first cache read is still pending -> exactly one network recovery.
             {
-              const e=makeEnv({collapsed:true,delayedCache:true});e.run();await flush(10);
+              const e=makeEnv(source,{collapsed:true,delayedCache:true});e.run();await flush(10);
               e.open();await flush(10);
               e.resolveCache(null);await flush(120);
-              if(!e.portrait()?.getAttribute("src"))throw new Error("open during cache read did not recover");
-              if(e.stats().networkRequests!==1)throw new Error("open-during-cache retry was not one-shot");
+              if(!e.portrait()?.getAttribute("src"))throw new Error(label+": open during cache read did not recover");
+              if(e.stats().networkRequests!==1)throw new Error(label+": open-during-cache retry was not one-shot");
             }
-            // D: private image remains authoritative.
             {
-              const e=makeEnv({collapsed:false,privateImage:true});e.run();await flush();
+              const e=makeEnv(source,{collapsed:false,privateImage:true});e.run();await flush();
               const src=e.portrait()?.getAttribute("src")||"";
-              if(!src.startsWith("blob:private-technical"))throw new Error("private image not preserved");
-              if(e.stats().networkRequests!==0)throw new Error("private image unexpectedly used network");
+              if(!src.startsWith("blob:private-technical"))throw new Error(label+": private image not preserved");
+              if(e.stats().networkRequests!==0)throw new Error(label+": private image unexpectedly used network");
             }
+            console.log(label,"PASS");
+          }
+
+          (async()=>{
+            await exercise("index.html",extract("index.html"));
+            await exercise("runtime-shell.html",extract("runtime-shell.html"));
             console.log("40.6.477 LECTURE TECHNIQUE HARNESS PASS");
           })().catch(err=>{console.error(err);process.exit(1);});
           NODE
