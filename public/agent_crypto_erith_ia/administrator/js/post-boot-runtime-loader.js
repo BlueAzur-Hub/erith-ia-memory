@@ -1,4 +1,4 @@
-/* Agent-Crypto Administrator — 40.6.475 PROSPECTIVE OUTCOME + OKX COST EVIDENCE
+/* Agent-Crypto Administrator — 40.6.476 PROSPECTIVE OUTCOME + OKX COST EVIDENCE
    Extends the existing Aether-first Strategy Core residency with the existing Execution Cost Truth owner
    plus a bounded PAPER open/close capture facade. Same application; no new recurring timer or DB schema.
    Historical after-cost rows are not modified.
@@ -9,7 +9,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.475";
+  const BUILD="40.6.476";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
@@ -20,7 +20,7 @@
     "./js/strategy-a-durable-evidence-store.js?v=40.6.463",
     "./js/strategy-a-execution-cost-truth.js?v=40.6.469",
     "./js/strategy-a-execution-cost-evidence-capture.js?v=40.6.469",
-    "./js/strategy-a-prospective-outcome-evidence-capture.js?v=40.6.475",
+    "./js/strategy-a-prospective-outcome-evidence-capture.js?v=40.6.476",
     "./js/strategy-a-safety-certification.js",
     "./js/strategy-a-evidence-dossier.js",
     "./js/strategy-a-paper-after-cost-acceptance.js"
