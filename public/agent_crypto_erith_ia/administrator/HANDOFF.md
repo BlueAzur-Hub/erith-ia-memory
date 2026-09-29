@@ -1,23 +1,27 @@
-# HANDOFF — Agent-Crypto 40.6.476
+# HANDOFF — Agent-Crypto 40.6.477
 
 ## Objet unique
 
-Empêcher la disparition du panneau PROSPECTIVE après les rerenders de présentation, sans modifier sa plomberie métier.
+Réparer le chargement initial de l'image **Lecture Technique** sans toucher au reste du runtime.
 
-## Firefox
+## Firefox opérateur
 
 1. Ctrl+F5.
-2. Vérifier **Build 40.6.476 · Administrator**.
-3. Section 04 → Simulation.
-4. Vérifier **STRATEGY A · PROSPECTIVE OUTCOME + OKX COST EVIDENCE · 40.6.476**.
-5. Le panneau doit apparaître juste après **EXECUTION COST EVIDENCE CAPTURE · 40.6.469**.
-6. Ligne **Montage** : ancre attendue `strategyAExecutionCostEvidenceCapture`.
-7. Laisser passer au moins un cycle Auto A et une actualisation de présentation.
-8. Le panneau doit rester présent ; s'il a été retiré par un rerender, `réparations` doit augmenter et le panneau doit revenir automatiquement.
+2. Vérifier **Build 40.6.477 · Administrator**.
+3. Test A — Lecture Technique ouverte au démarrage : l'image doit apparaître sans clic AUTO/RND.
+4. Test B — replier Lecture Technique, démarrer avec cache froid, puis ouvrir : l'image doit charger à l'ouverture.
+5. Test C — ouvrir pendant la lecture asynchrone du cache : une seule reprise est autorisée et l'image doit apparaître.
+6. Vérifier AUTO puis RND.
+7. Si une image privée est utilisée, vérifier qu'elle reste prioritaire et fonctionnelle.
+8. Observer séparément la stabilité Firefox / Transformer Book : cette version ne prétend pas corriger le plantage global.
 
-La plomberie .475 reste attendue :
-- event = résolu ;
-- mode `LEDGER_BY_ID` ;
-- erreur `—`.
+## Invariants
 
-Aucun COST_GATE_WAIT n'est requis pour tester le montage.
+- réseau différé tant que le panneau reste replié ;
+- aucun préchargement de la bibliothèque complète ;
+- aucun nouveau timer ;
+- aucun nouvel observer ;
+- Strategy A inchangée ;
+- Aether / Redivider inchangés ;
+- Market Core **38.15.11** intact ;
+- aucun ordre réel.

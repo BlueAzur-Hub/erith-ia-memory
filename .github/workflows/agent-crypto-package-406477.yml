@@ -1,0 +1,260 @@
+name: Agent-Crypto Package 40.6.477 Lecture Technique Initial Image Recovery
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406477-technical-image-initial-recovery
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/runtime-shell.html'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/administrator/RELEASE.md'
+      - 'public/agent_crypto_erith_ia/administrator/HANDOFF.md'
+      - 'public/agent_crypto_erith_ia/administrator/HANDOFF_FINAL_40.6.477.md'
+      - 'public/agent_crypto_erith_ia/administrator/LECTURE_TECHNIQUE_INITIAL_IMAGE_TEST_40.6.477.json'
+      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/strategy-a-audit-demand-loader.js'
+      - '.github/workflows/agent-crypto-package-406477.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate release truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          grep -F 'Build 40.6.477 · Administrator' "$ROOT/index.html"
+          for FILE in "$ROOT/index.html" "$ROOT/runtime-shell.html"; do
+            grep -F 'const BUILD="40.6.477", BASE="./assets/visual/technical-reading/"' "$FILE"
+            grep -F 'const ok=await swapUrl(wanted,theme,{initial,source:"asset",allowNetwork});' "$FILE"
+            grep -F 'imageReady=ok===true;' "$FILE"
+            grep -F 'if(ok!==true&&collapsedAtStart&&!detailCollapsed40307())' "$FILE"
+            grep -F 'open_during_cache_read_retry_once:true' "$FILE"
+          done
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Verify bounded recovery logic in both entries
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          rx=re.compile(r'<script id="atlasTechnicalStaticThemeController">\s*(.*?)\s*</script>',re.S)
+          required=(
+              'const BUILD="40.6.477"',
+              'const ok=await swapUrl(wanted,theme,{initial,source:"asset",allowNetwork});',
+              'return ok===true;',
+              'imageReady=ok===true;',
+              'if(ok!==true&&collapsedAtStart&&!detailCollapsed40307())',
+              'ok=await apply(true,{allowNetwork:true});',
+              'collapsed_boot_defers_network_on_cache_miss:true',
+              'open_during_cache_read_retry_once:true',
+          )
+          for name in ("index.html","runtime-shell.html"):
+              text=(root/name).read_text(encoding="utf-8")
+              m=rx.search(text)
+              if not m:
+                  raise SystemExit(f"controller missing in {name}")
+              block=m.group(1)
+              missing=[x for x in required if x not in block]
+              if missing:
+                  raise SystemExit(f"{name} missing recovery markers: {missing}")
+              print(name, "recovery_logic=PASS")
+          PY
+
+      - name: Exercise actual Lecture Technique controller in both entries
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs=require("fs"),vm=require("vm");
+          const ROOT="public/agent_crypto_erith_ia/administrator";
+          function extract(file){
+            const html=fs.readFileSync(ROOT+"/"+file,"utf8");
+            const m=html.match(/<script id="atlasTechnicalStaticThemeController">\s*([\s\S]*?)\s*<\/script>/);
+            if(!m)throw new Error("technical controller missing in "+file);
+            return m[1];
+          }
+
+          class ClassList{
+            constructor(){this.s=new Set();}
+            add(...v){v.forEach(x=>this.s.add(x));}
+            remove(...v){v.forEach(x=>this.s.delete(x));}
+            contains(v){return this.s.has(v);}
+            toggle(v,on){if(on===undefined){if(this.s.has(v)){this.s.delete(v);return false;}this.s.add(v);return true;}if(on)this.s.add(v);else this.s.delete(v);return !!on;}
+            setFromString(v){this.s=new Set(String(v||"").split(/\s+/).filter(Boolean));}
+            toString(){return [...this.s].join(" ");}
+          }
+          class El{
+            constructor(tag="div",id=""){this.tagName=String(tag).toUpperCase();this.id=id;this.dataset={};this.attributes=new Map();this.children=[];this.parentElement=null;this.style={setProperty:(k,v)=>{this.style[k]=v;}};this.classList=new ClassList();this._innerHTML="";this.loading="";this.decoding="";}
+            set className(v){this.classList.setFromString(v);} get className(){return this.classList.toString();}
+            set innerHTML(v){this._innerHTML=String(v);} get innerHTML(){return this._innerHTML;}
+            appendChild(n){if(n.parentElement)n.remove();this.children.push(n);n.parentElement=this;return n;}
+            prepend(n){if(n.parentElement)n.remove();this.children.unshift(n);n.parentElement=this;return n;}
+            before(n){if(!this.parentElement)return;if(n.parentElement)n.remove();const a=this.parentElement.children,i=a.indexOf(this);a.splice(Math.max(0,i),0,n);n.parentElement=this.parentElement;}
+            remove(){if(!this.parentElement)return;const a=this.parentElement.children,i=a.indexOf(this);if(i>=0)a.splice(i,1);this.parentElement=null;}
+            setAttribute(k,v){this.attributes.set(k,String(v));if(k==="src")this.src=String(v);}
+            getAttribute(k){return this.attributes.has(k)?this.attributes.get(k):null;}
+            removeAttribute(k){this.attributes.delete(k);}
+            addEventListener(){}
+            querySelector(sel){return find(this,sel);}
+            querySelectorAll(sel){return findAll(this,sel);}
+          }
+          function matches(el,sel){
+            if(sel.startsWith("#"))return el.id===sel.slice(1);
+            if(sel.startsWith("."))return sel.slice(1).split(".").every(c=>el.classList.contains(c));
+            if(sel==="[data-tech-static-mode]")return Object.prototype.hasOwnProperty.call(el.dataset,"techStaticMode");
+            if(sel==="[data-tech-random]")return Object.prototype.hasOwnProperty.call(el.dataset,"techRandom");
+            return false;
+          }
+          function find(root,sel){for(const c of root.children){if(matches(c,sel))return c;const x=find(c,sel);if(x)return x;}return null;}
+          function findAll(root,sel,out=[]){for(const c of root.children){if(matches(c,sel))out.push(c);findAll(c,sel,out);}return out;}
+          const flush=async(n=80)=>{for(let i=0;i<n;i++)await Promise.resolve();};
+
+          function makeEnv(source,{collapsed=false,delayedCache=false,privateImage=false}={}){
+            const observers=[];
+            const body=new El("body","body"),head=new El("head","head");
+            const panel=new El("section","detailPanel"),deck=new El("section","analyste"),host=new El("div");
+            host.className="detail-project-visual";
+            panel.appendChild(host);deck.appendChild(panel);body.appendChild(deck);
+            if(collapsed)deck.classList.add("detail-collapsed");
+            let resolveCache,cacheResolveCalls=0,networkRequests=0;
+            const delayed=new Promise(r=>{resolveCache=r;});
+            const privateBlob=privateImage?new Blob(["private"]):null;
+            const document={
+              readyState:"complete",body,head,hidden:false,
+              getElementById(id){return [head,body].map(x=>x.id===id?x:find(x,"#"+id)).find(Boolean)||null;},
+              createElement(tag){return new El(tag);},
+              addEventListener(){}
+            };
+            class MO{constructor(cb){this.cb=cb;observers.push(this);}observe(){}disconnect(){}}
+            class Img{constructor(){this.decoding="";this.onload=null;this.onerror=null;this._src="";}set src(v){this._src=v;queueMicrotask(()=>this.onload?.());}get src(){return this._src;}decode(){return Promise.resolve();}}
+            const env={
+              console,document,localStorage:{getItem(){return null;},setItem(){},removeItem(){}},
+              MutationObserver:MO,Image:Img,Blob,
+              URL:{createObjectURL(){return "blob:private-technical";},revokeObjectURL(){}},
+              crypto:globalThis.crypto,
+              setTimeout(){return 1;},clearTimeout(){},queueMicrotask,
+              AgentCryptoVisualCache:{
+                async resolve(logical,{allowNetwork}={}){
+                  cacheResolveCalls++;
+                  if(!allowNetwork)return null;
+                  networkRequests++;
+                  return {url:"resolved:"+logical,source:"network",cached:false};
+                }
+              },
+              AgentCryptoPrivateVisuals:{
+                getTechnical(){if(privateBlob)return Promise.resolve({blob:privateBlob,framing:{x:50,y:12}});return delayedCache?delayed:Promise.resolve(null);},
+                clearTechnical(){return Promise.resolve(true);}
+              },
+              addEventListener(){},
+              dispatchEvent(){return true;}
+            };
+            env.window=env;env.globalThis=env;
+            const ctx=vm.createContext(env);
+            return {
+              ctx,deck,host,observers,
+              run(){vm.runInContext(source,ctx,{filename:"atlasTechnicalStaticThemeController"});},
+              open(){deck.classList.remove("detail-collapsed");for(const o of observers)o.cb([],o);},
+              trigger(){for(const o of observers)o.cb([],o);},
+              resolveCache(v=null){resolveCache?.(v);},
+              portrait(){return host.querySelector(".admin-tech-portrait-r3");},
+              stats(){return {cacheResolveCalls,networkRequests};}
+            };
+          }
+
+          async function exercise(label,source){
+            {
+              const e=makeEnv(source,{collapsed:false});e.run();await flush();
+              if(!e.portrait()?.getAttribute("src"))throw new Error(label+": open boot image absent");
+              if(e.stats().networkRequests!==1)throw new Error(label+": open boot network count");
+            }
+            {
+              const e=makeEnv(source,{collapsed:true});e.run();await flush();
+              if(e.portrait()?.getAttribute("src"))throw new Error(label+": collapsed cold boot should stay blank");
+              if(e.stats().networkRequests!==0)throw new Error(label+": collapsed cold boot used network");
+              const before=e.stats().cacheResolveCalls;
+              e.trigger();await flush();
+              if(!(e.stats().cacheResolveCalls>before))throw new Error(label+": failed initial swap was falsely latched ready");
+              e.open();await flush();
+              if(!e.portrait()?.getAttribute("src"))throw new Error(label+": collapsed then open did not recover");
+              if(e.stats().networkRequests!==1)throw new Error(label+": collapsed then open recovery network count");
+            }
+            {
+              const e=makeEnv(source,{collapsed:true,delayedCache:true});e.run();await flush(10);
+              e.open();await flush(10);
+              e.resolveCache(null);await flush(120);
+              if(!e.portrait()?.getAttribute("src"))throw new Error(label+": open during cache read did not recover");
+              if(e.stats().networkRequests!==1)throw new Error(label+": open-during-cache retry was not one-shot");
+            }
+            {
+              const e=makeEnv(source,{collapsed:false,privateImage:true});e.run();await flush();
+              const src=e.portrait()?.getAttribute("src")||"";
+              if(!src.startsWith("blob:private-technical"))throw new Error(label+": private image not preserved");
+              if(e.stats().networkRequests!==0)throw new Error(label+": private image unexpectedly used network");
+            }
+            console.log(label,"PASS");
+          }
+
+          (async()=>{
+            await exercise("index.html",extract("index.html"));
+            await exercise("runtime-shell.html",extract("runtime-shell.html"));
+            console.log("40.6.477 LECTURE TECHNIQUE HARNESS PASS");
+          })().catch(err=>{console.error(err);process.exit(1);});
+          NODE
+
+      - name: Mark receipt PASS
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/administrator/LECTURE_TECHNIQUE_INITIAL_IMAGE_TEST_40.6.477.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          d["pass_pending_workflow"]=False
+          d["pass"]=True
+          d["cases"]={k:"PASS" for k in d["cases"]}
+          p.write_text(json.dumps(d,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          PY
+
+      - name: Build bounded ZIP
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_LECTURE_TECHNIQUE_INITIAL_IMAGE_RECOVERY_40.6.477.zip"
+          rm -f "$ZIP" "$ZIP.sha256"
+          rm -rf /tmp/ac477
+          mkdir -p /tmp/ac477/administrator/js
+          cp "$ROOT/index.html" "$ROOT/index-40.6.477.html" "$ROOT/runtime-shell.html" "$ROOT/build.json" "$ROOT/RELEASE.md" "$ROOT/HANDOFF.md" "$ROOT/HANDOFF_FINAL_40.6.477.md" "$ROOT/PATCH_MANIFEST_40.6.477.txt" "$ROOT/LECTURE_TECHNIQUE_INITIAL_IMAGE_TEST_40.6.477.json" /tmp/ac477/administrator/
+          cp "$ROOT/js/post-boot-runtime-loader.js" "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/ac477/administrator/js/
+          (cd /tmp/ac477 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+
+      - name: Commit receipt and package
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/LECTURE_TECHNIQUE_INITIAL_IMAGE_TEST_40.6.477.json" "$ROOT/AGENT_CRYPTO_LECTURE_TECHNIQUE_INITIAL_IMAGE_RECOVERY_40.6.477.zip" "$ROOT/AGENT_CRYPTO_LECTURE_TECHNIQUE_INITIAL_IMAGE_RECOVERY_40.6.477.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.477 Lecture Technique ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
