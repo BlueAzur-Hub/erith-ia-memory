@@ -1,0 +1,35 @@
+name: Agent-Crypto Package 40.6.464 Capture Delivery Recovery
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/agent-crypto-package-406464.yml']
+permissions: {contents: write}
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 2}
+      - name: Validate
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-execution-cost-evidence-capture.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'window.addEventListener("agent-crypto:strategy-core-ready"' "$ROOT/js/strategy-a-execution-cost-evidence-capture.js"
+          grep -F 'strategy-a-execution-cost-evidence-capture.js?v=40.6.464' "$ROOT/js/strategy-a-audit-demand-loader.js"
+      - name: Package
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"; ZIP="$ROOT/AGENT_CRYPTO_CAPTURE_DELIVERY_RECOVERY_40.6.464.zip"
+          rm -f "$ZIP" "$ZIP.sha256"; rm -rf /tmp/ac464; mkdir -p /tmp/ac464/administrator/js
+          cp "$ROOT/index.html" "$ROOT/index-40.6.464.html" "$ROOT/build.json" "$ROOT/RELEASE.md" "$ROOT/HANDOFF.md" "$ROOT/HANDOFF_FINAL_40.6.464.md" "$ROOT/CAPTURE_DELIVERY_RECOVERY_TEST_40.6.464.json" /tmp/ac464/administrator/
+          cp "$ROOT/js/strategy-a-execution-cost-evidence-capture.js" "$ROOT/js/post-boot-runtime-loader.js" "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/ac464/administrator/js/
+          (cd /tmp/ac464 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"; sha256sum "$ZIP" > "$ZIP.sha256"
+      - name: Commit package
+        run: |
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_CAPTURE_DELIVERY_RECOVERY_40.6.464.zip" "$ROOT/AGENT_CRYPTO_CAPTURE_DELIVERY_RECOVERY_40.6.464.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.464 Delivery Recovery ZIP"
+          git pull --rebase origin main; git push origin HEAD:main

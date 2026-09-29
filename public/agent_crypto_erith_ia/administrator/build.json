@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.463",
+  "build": "40.6.464",
   "engine": "38.15.11",
-  "release": "STRATEGY A EXECUTION COST EVIDENCE CAPTURE",
+  "release": "STRATEGY A EXECUTION COST EVIDENCE CAPTURE DELIVERY RECOVERY",
   "published": true,
-  "status": "published_pending_firefox_463",
-  "parent_build": "40.6.462",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.463",
-  "administrator_build": "40.6.463",
-  "build_label": "Build 40.6.463 · Administrator",
+  "status": "published_pending_firefox_464",
+  "parent_build": "40.6.463",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.464",
+  "administrator_build": "40.6.464",
+  "build_label": "Build 40.6.464 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox : Ctrl+F5 → Build 40.6.463 → Section 04 · Expérimentation & système → Simulation. Sous STRATEGY A · DURABLE EVIDENCE, repérer STRATEGY A · EXECUTION COST EVIDENCE CAPTURE · 40.6.463. Sans PAPER ouvert, vérifier État ARMED, PAPER suivis 0, Entrées 0, Sorties 0, Entrée+sortie 0, After-cost injection OFF.",
+  "terrain_pending": "Firefox: Ctrl+F5 → Build 40.6.464 → Section 04 → Simulation → rechercher EXECUTION COST EVIDENCE CAPTURE. Attendu sans PAPER actif: ARMED, suivis 0, entrées 0, sorties 0, entrée+sortie 0, After-cost injection OFF.",
   "terrain_proof": null,
-  "release_notes": "40.6.463 arme la capture de preuve de coûts d'exécution pour les FUTURS PAPER sans modifier les 4 archives historiques. Le Strategy Core charge l'owner Execution Cost Truth 40.6.459 sans mesure réseau au boot ; le nouveau capture owner enveloppe Auto Lifecycle avant autostart et déclenche une mesure Kraken BTC/EUR bornée à l'ouverture puis à la fermeture d'un PAPER. Les snapshots bruts (spread, top-of-book et simulation exacte 10/25/50/100 € si disponible) sont projetés dans les PAPER states existants puis persistés par Durable Evidence. Aucune injection after-cost dans .463 : l'intégration comptable attend une preuve sémantique séparée afin d'éviter un mismatch artificiel.",
+  "release_notes": "40.6.464 corrige l'absence terrain du panneau .463: strategy-core-ready était émis sur window mais écouté sur document; le premier rendu pouvait aussi précéder l'ancre. .464 écoute window, accepte les ancres .460/.461/.462 et ajoute Audit Demand comme fallback de livraison/rendu. Aucune logique de coût/trading modifiée.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -6147,6 +6147,23 @@
     "source_truth_modified": false,
     "aether_modified": false,
     "real_order": false,
-    "firefox_status": "PENDING_OPERATOR_463"
+    "firefox_status": "FAIL_OPERATOR_463_PANEL_ABSENT",
+    "firefox_proof_note": "Build 40.6.463 + Durable Evidence 40.6.463 visibles; recherche Firefox EXECUTION COST EVIDENCE CAPTURE = expression non trouvée."
+  },
+  "strategy_a_execution_cost_evidence_capture_delivery_recovery_406464": {
+    "enabled": true,
+    "parent": "40.6.463",
+    "root_cause": "RENDER_RENDEZVOUS_TARGET_MISMATCH_AND_EARLY_ANCHOR_RACE",
+    "fixed_listener_target": "window",
+    "audit_demand_fallback_delivery": true,
+    "broadened_render_anchor": true,
+    "capture_semantics_changed": false,
+    "historical_backfill": false,
+    "after_cost_injection": false,
+    "db_schema_changed": false,
+    "thresholds_changed": false,
+    "market_core_modified": false,
+    "real_order": false,
+    "firefox_status": "PENDING_OPERATOR_464"
   }
 }

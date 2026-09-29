@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.463 STRATEGY A EXECUTION COST EVIDENCE CAPTURE
+/* Agent-Crypto @erith.IA — 40.6.464 STRATEGY A EXECUTION COST EVIDENCE CAPTURE DELIVERY RECOVERY
    Future-PAPER evidence capture only.
    Wraps the existing Auto Lifecycle bridge before autostart, measures Kraken BTC/EUR
    on PAPER open and PAPER close through the existing Execution Cost Truth owner,
@@ -7,7 +7,7 @@
    no gate promotion, no threshold change and no real order. */
 (()=>{
   "use strict";
-  const BUILD="40.6.463";
+  const BUILD="40.6.464";
   const VENUE_KEY="kraken";
   const RECORDS=new Map();
   let installed=false,lastError=null;
@@ -247,7 +247,11 @@
   function render(){
     if(typeof document==="undefined")return false;
     ensureStyle();
-    const anchor=document.getElementById("strategyADurableEvidence")||document.getElementById("strategyAAfterCost");
+    const anchor=document.getElementById("strategyAAfterCostCompletenessTruth")
+      ||document.getElementById("strategyAEvidenceIdentityCrosswalk")
+      ||document.getElementById("strategyADurableEvidenceReconciliation")
+      ||document.getElementById("strategyADurableEvidence")
+      ||document.getElementById("strategyAAfterCost");
     if(!anchor)return false;
     let panel=document.getElementById("strategyAExecutionCostEvidenceCapture");
     if(!panel){panel=document.createElement("section");panel.id="strategyAExecutionCostEvidenceCapture";anchor.insertAdjacentElement("afterend",panel);}
@@ -270,7 +274,8 @@
   installBridgeFacade();
   if(typeof document!=="undefined"){
     const attempt=()=>{try{installBridgeFacade();render();}catch(_){return false;}return true;};
-    document.addEventListener("agent-crypto:strategy-core-ready",attempt,{once:true});
+    window.addEventListener("agent-crypto:strategy-core-ready",attempt,{once:true,passive:true});
+    window.addEventListener("agent-crypto:strategy-a-audits-ready",attempt,{passive:true});
     document.addEventListener("agent-crypto:strategy-a-durable-evidence-ready",attempt,{passive:true});
     document.addEventListener("toggle",event=>{if(event?.target?.id==="simulation"&&event.target.open===true)queueMicrotask(attempt);},true);
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",attempt,{once:true});else queueMicrotask(attempt);
