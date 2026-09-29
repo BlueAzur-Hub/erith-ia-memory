@@ -1,29 +1,28 @@
-# Agent-Crypto 40.6.476 — PROSPECTIVE PANEL MOUNT PERSISTENCE
+# Agent-Crypto 40.6.477 — LECTURE TECHNIQUE INITIAL IMAGE RECOVERY
 
-## Terrain parent
+## Défaut démontré
 
-40.6.475 a validé la plomberie Firefox :
-- panneau ARMED ;
-- événements reçus 1 ;
-- event = résolu = `A-CYCLE-00001-ebfa9b7e` ;
-- mode `LEDGER_BY_ID` ;
-- erreur `—`.
+Sur démarrage replié avec cache visuel froid, Lecture Technique pouvait rester sans image après ouverture.
 
-Quelques minutes plus tard le panneau .475 avait disparu, alors que `EXECUTION COST EVIDENCE CAPTURE · 40.6.469` restait visible.
+Cause bornée au contrôleur `atlasTechnicalStaticThemeController` :
+- `swapUrl()` pouvait retourner `false` ;
+- `apply()` ignorait ce résultat et retournait toujours `true` ;
+- `ensureInitialImage()` posait alors `imageReady=true` ;
+- l'ouverture ultérieure pouvait ne plus relancer le chargement.
 
-## Correction bornée
+Cas associé : si le panneau s'ouvrait pendant la lecture asynchrone du cache, l'observer rejoignait la Promise déjà démarrée en état replié et aucune seconde tentative n'était garantie.
 
-Aucun changement de capture, ledger, IndexedDB, OKX, Cost Gate ou Strategy A métier.
+## Correction
 
-Le panneau prospectif :
-1. préfère désormais l'ancre stable `strategyAExecutionCostEvidenceCapture` ;
-2. garde les ancres .473/.472/.471 en fallback de démarrage ;
-3. se remonte après le propriétaire canonique `agent-crypto:administrator-presentation-settled` ;
-4. se remonte également sur les événements bornés déjà existants : evidence-data-changed, audits-ready, strategy-core-ready, postboot-runtime-ready et cycle Auto A ;
-5. n'ajoute aucun timer récurrent et aucun MutationObserver.
+40.6.477 :
+1. propage le vrai résultat de `swapUrl()` depuis `apply()` ;
+2. ne marque l'image prête que sur succès réel ;
+3. si le chargement a commencé replié, a échoué, puis que le panneau s'est ouvert pendant l'attente, effectue une seule reprise avec réseau autorisé ;
+4. conserve le réseau différé tant que Lecture Technique reste repliée ;
+5. préserve cache chaud, image privée, AUTO, RND et absence de préchargement complet.
 
-## Vérité
+## Hors périmètre
 
-40.6.475 = **PLUMBING PASS / MOUNT PERSISTENCE FAIL**.
+Aucun changement Strategy A, Aether, Redivider, Market Core 38.15.11, schéma IndexedDB ou ordre réel.
 
-40.6.476 traite uniquement **MOUNT PERSISTENCE** et conserve la plomberie .475.
+Le plantage Firefox/Transformer Book observé reste un chantier séparé : aucune causalité n'est affirmée par cette correction.
