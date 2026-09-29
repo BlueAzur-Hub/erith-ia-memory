@@ -1,0 +1,189 @@
+name: Agent-Crypto Package 40.6.476 Prospective Panel Mount Persistence
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406476-prospective-panel-mount-persistence
+    paths:
+      - '.github/workflows/agent-crypto-package-406476.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate syntax and version truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'const BUILD="40.6.476"' "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          grep -F 'stable_mount_anchor:"strategyAExecutionCostEvidenceCapture"' "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          grep -F 'agent-crypto:administrator-presentation-settled' "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          grep -F 'strategy-a-prospective-outcome-evidence-capture.js?v=40.6.476' "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'Build 40.6.476 · Administrator' "$ROOT/index.html"
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Exercise isolated mount persistence harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require("fs"),vm=require("vm");
+          const p="public/agent_crypto_erith_ia/administrator/js/strategy-a-prospective-outcome-evidence-capture.js";
+
+          class Bus {
+            constructor(){this.listeners=new Map();}
+            addEventListener(type,fn){const a=this.listeners.get(type)||[];a.push(fn);this.listeners.set(type,a);}
+            dispatchEvent(ev){for(const fn of this.listeners.get(ev.type)||[])fn(ev);return true;}
+          }
+          class El {
+            constructor(tag,id=null){this.tagName=String(tag||"div").toUpperCase();this.id=id||"";this.parentElement=null;this.children=[];this.innerHTML="";this.dataset={};}
+            get isConnected(){return !!this.parentElement||this===document.head||this===document.body;}
+            get previousElementSibling(){
+              if(!this.parentElement)return null;
+              const a=this.parentElement.children,i=a.indexOf(this);return i>0?a[i-1]:null;
+            }
+            insertAdjacentElement(pos,node){
+              if(pos!=="afterend"||!this.parentElement)throw new Error("bad insert");
+              if(node.parentElement){const old=node.parentElement.children;const oi=old.indexOf(node);if(oi>=0)old.splice(oi,1);}
+              const a=this.parentElement.children,i=a.indexOf(this);a.splice(i+1,0,node);node.parentElement=this.parentElement;return node;
+            }
+            appendChild(node){
+              if(node.parentElement){const old=node.parentElement.children;const oi=old.indexOf(node);if(oi>=0)old.splice(oi,1);}
+              this.children.push(node);node.parentElement=this;return node;
+            }
+            remove(){
+              if(!this.parentElement)return;
+              const a=this.parentElement.children,i=a.indexOf(this);if(i>=0)a.splice(i,1);this.parentElement=null;
+            }
+            querySelector(){return {addEventListener(){}};}
+            addEventListener(){}
+          }
+
+          const docBus=new Bus();
+          global.CustomEvent=class CustomEvent{constructor(type,opts={}){this.type=type;this.detail=opts.detail;}};
+          global.document=Object.assign(docBus,{
+            head:new El("head"),
+            body:new El("body"),
+            readyState:"complete",
+            createElement(tag){return new El(tag);},
+            getElementById(id){
+              const scan=node=>{if(node.id===id)return node;for(const c of node.children||[]){const x=scan(c);if(x)return x;}return null;};
+              return scan(this.head)||scan(this.body);
+            }
+          });
+          document.head.parentElement=new El("html");
+          document.body.parentElement=document.head.parentElement;
+          document.head.parentElement.children=[document.head,document.body];
+          global.window=new Bus();
+
+          const simulationHost=new El("div","simulationHost");document.body.appendChild(simulationHost);
+          const t60=new El("section","strategyAOkxT60TrajectoryUnknownTruth");simulationHost.appendChild(t60);
+
+          const meta=new Map();
+          const later=fn=>Promise.resolve().then(fn);
+          const db={
+            objectStoreNames:{contains:n=>n==="meta"},
+            transaction(name,mode){
+              if(name!=="meta")throw new Error("unexpected store");
+              const tx={};
+              const store={
+                getAll(){const req={};later(()=>{req.result=[...meta.values()];req.onsuccess?.();});return req;},
+                put(entry){later(()=>{meta.set(entry.id,entry);tx.oncomplete?.();});},
+                delete(id){later(()=>{meta.delete(id);tx.oncomplete?.();});}
+              };
+              tx.objectStore=()=>store;return tx;
+            },
+            close(){}
+          };
+          global.indexedDB={open(){const req={};later(()=>{req.result=db;req.onsuccess?.();});return req;}};
+          global.AgentCryptoStrategyAExperimentLedger={read:()=>[]};
+
+          vm.runInThisContext(fs.readFileSync(p,"utf8"),{filename:p});
+          const api=global.AgentCryptoStrategyAProspectiveOutcomeEvidenceCapture;
+          if(!api)throw new Error("owner absent");
+          if(!api.self_test().pass)throw new Error("self test failed");
+          const flush=async(n=100)=>{for(let i=0;i<n;i++)await Promise.resolve();};
+
+          (async()=>{
+            if(!(await api.initialize()))throw new Error("initialize failed");
+            let panel=document.getElementById("strategyAProspectiveOutcomeEvidenceCapture");
+            if(!panel||panel.previousElementSibling!==t60)throw new Error("fallback mount failed");
+
+            const ece=new El("section","strategyAExecutionCostEvidenceCapture");
+            t60.insertAdjacentElement("afterend",ece);
+            document.dispatchEvent(new CustomEvent("agent-crypto:administrator-presentation-settled",{detail:{reason:"harness-stable-anchor-arrived"}}));
+            await flush();
+            panel=document.getElementById("strategyAProspectiveOutcomeEvidenceCapture");
+            if(!panel||panel.previousElementSibling!==ece)throw new Error("did not rehome to stable .469 anchor");
+            let snap=api.snapshot();
+            if(snap.mount_anchor_id!=="strategyAExecutionCostEvidenceCapture")throw new Error("wrong mount anchor "+JSON.stringify(snap));
+            const repairsBefore=snap.mount_repairs;
+
+            panel.remove();
+            if(document.getElementById("strategyAProspectiveOutcomeEvidenceCapture"))throw new Error("panel removal simulation failed");
+            document.dispatchEvent(new CustomEvent("agent-crypto:administrator-presentation-settled",{detail:{reason:"harness-panel-removed"}}));
+            await flush();
+            panel=document.getElementById("strategyAProspectiveOutcomeEvidenceCapture");
+            snap=api.snapshot();
+            if(!panel||panel.previousElementSibling!==ece)throw new Error("panel did not remount after settlement");
+            if(!(snap.mount_repairs>repairsBefore))throw new Error("mount repair counter did not advance");
+            if(api.recurring_timer!==false||api.mutation_observer!==false)throw new Error("forbidden polling/observer");
+            console.log("40.6.476 MOUNT HARNESS PASS",JSON.stringify(snap));
+          })().catch(err=>{console.error(err);process.exit(1);});
+          NODE
+
+      - name: Mark test receipt PASS
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/administrator/PROSPECTIVE_PANEL_MOUNT_TEST_40.6.476.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          d["pass_pending_workflow"]=False
+          d["pass"]=True
+          d["cases"]={k:"PASS" for k in d["cases"]}
+          p.write_text(json.dumps(d,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          PY
+
+      - name: Build bounded ZIP
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_PROSPECTIVE_PANEL_MOUNT_PERSISTENCE_40.6.476.zip"
+          rm -f "$ZIP" "$ZIP.sha256"
+          rm -rf /tmp/ac476
+          mkdir -p /tmp/ac476/administrator/js
+          cp "$ROOT/index.html" "$ROOT/index-40.6.476.html" "$ROOT/build.json" "$ROOT/RELEASE.md" "$ROOT/HANDOFF.md" "$ROOT/HANDOFF_FINAL_40.6.476.md" "$ROOT/PATCH_MANIFEST_40.6.476.txt" "$ROOT/PROSPECTIVE_PANEL_MOUNT_TEST_40.6.476.json" /tmp/ac476/administrator/
+          cp "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js" "$ROOT/js/strategy-a-execution-cost-truth.js" "$ROOT/js/strategy-a-durable-evidence-store.js" "$ROOT/js/strategy-a-execution-cost-evidence-capture.js" "$ROOT/js/post-boot-runtime-loader.js" "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/ac476/administrator/js/
+          (cd /tmp/ac476 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+
+      - name: Commit receipt and package
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/PROSPECTIVE_PANEL_MOUNT_TEST_40.6.476.json" "$ROOT/AGENT_CRYPTO_PROSPECTIVE_PANEL_MOUNT_PERSISTENCE_40.6.476.zip" "$ROOT/AGENT_CRYPTO_PROSPECTIVE_PANEL_MOUNT_PERSISTENCE_40.6.476.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.476 mount persistence ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
