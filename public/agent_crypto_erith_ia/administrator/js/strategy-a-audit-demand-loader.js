@@ -1,21 +1,23 @@
-/* Agent-Crypto @erith.IA — 40.6.461 STRATEGY A AUDIT DEMAND LOADER + EVIDENCE IDENTITY CROSSWALK
+/* Agent-Crypto @erith.IA — 40.6.462 STRATEGY A AUDIT DEMAND LOADER + AFTER-COST COMPLETENESS TRUTH
    Keeps the canonical Simulation owner fixed in 40.6.446.
    40.6.452 hardens manual recovery when a script transport succeeds but its expected API is absent:
    a stale loaded node is removed, failed loads never stay marked ready, and the next explicit ensure can retry.
    Self-test assertions are positive invariants; false-valued safety metadata is no longer treated as failure.
    40.6.460 adds one read-only reconciliation surface for visible/durable Strategy A evidence.
    40.6.461 adds a read-only all-ID crosswalk before any evidence is called truly orphaned.
+   40.6.462 adds a read-only completeness diagnosis for uniquely linked after-cost ↔ PAPER rows.
    No boot residency, polling, observer, storage write or automatic retry loop. */
 (()=>{
   "use strict";
-  const BUILD="40.6.461", TIMEOUT=6000;
+  const BUILD="40.6.462", TIMEOUT=6000;
   const SIMULATION_OWNER_SELECTOR='details[data-collapse-key="simulation"]';
   const SPECS=Object.freeze([
     Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
     Object.freeze({key:"oracle-cost",src:"./js/strategy-a-oracle-cost-calibration-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit}),
     Object.freeze({key:"execution-cost",src:"./js/strategy-a-execution-cost-truth.js?v=40.6.459",ready:()=>!!globalThis.AgentCryptoStrategyAExecutionCostTruth}),
     Object.freeze({key:"durable-reconciliation",src:"./js/strategy-a-durable-evidence-reconciliation-truth.js?v=40.6.460",ready:()=>!!globalThis.AgentCryptoStrategyADurableEvidenceReconciliation}),
-    Object.freeze({key:"identity-crosswalk",src:"./js/strategy-a-evidence-identity-crosswalk-truth.js?v=40.6.461",ready:()=>!!globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk})
+    Object.freeze({key:"identity-crosswalk",src:"./js/strategy-a-evidence-identity-crosswalk-truth.js?v=40.6.461",ready:()=>!!globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk}),
+    Object.freeze({key:"after-cost-completeness",src:"./js/strategy-a-after-cost-completeness-truth.js?v=40.6.462",ready:()=>!!globalThis.AgentCryptoStrategyAAfterCostCompletenessTruth})
   ]);
   let state="idle",promise=null,lastError="",reason="",lastRetryKey="",retryCount=0;
   const simulationOwner=()=>document.querySelector(SIMULATION_OWNER_SELECTOR);
@@ -75,6 +77,7 @@
       try{globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit?.refresh?.("406460-demand-ready");}catch(_){}
       try{globalThis.AgentCryptoStrategyADurableEvidenceReconciliation?.render?.();}catch(_){}
       try{globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk?.render?.();}catch(_){}
+      try{globalThis.AgentCryptoStrategyAAfterCostCompletenessTruth?.render?.();}catch(_){}
       try{window.dispatchEvent(new CustomEvent("agent-crypto:strategy-a-audits-ready",{detail:{build:BUILD,reason}}));}catch(_){}
       return true;
     })().finally(()=>{promise=null;});
@@ -90,7 +93,7 @@
 
   globalThis.AgentCryptoStrategyAAuditDemand=Object.freeze({
     build:BUILD,ensure,
-    snapshot:()=>Object.freeze({build:BUILD,state,reason,last_error:lastError,last_retry_key:lastRetryKey,retry_count:retryCount,simulation_open:simulationOpen(),cost_wait_loaded:!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429,oracle_cost_loaded:!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit,execution_cost_loaded:!!globalThis.AgentCryptoStrategyAExecutionCostTruth,durable_reconciliation_loaded:!!globalThis.AgentCryptoStrategyADurableEvidenceReconciliation,identity_crosswalk_loaded:!!globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk}),
+    snapshot:()=>Object.freeze({build:BUILD,state,reason,last_error:lastError,last_retry_key:lastRetryKey,retry_count:retryCount,simulation_open:simulationOpen(),cost_wait_loaded:!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429,oracle_cost_loaded:!!globalThis.AgentCryptoStrategyAOracleCostCalibrationAudit,execution_cost_loaded:!!globalThis.AgentCryptoStrategyAExecutionCostTruth,durable_reconciliation_loaded:!!globalThis.AgentCryptoStrategyADurableEvidenceReconciliation,identity_crosswalk_loaded:!!globalThis.AgentCryptoStrategyAEvidenceIdentityCrosswalk,after_cost_completeness_loaded:!!globalThis.AgentCryptoStrategyAAfterCostCompletenessTruth}),
     self_test:()=>{
       const owner=simulationOwner();
       const fakeSpec={ready:()=>false};
@@ -105,6 +108,7 @@
         execution_cost_on_demand:true,
         durable_reconciliation_on_demand:true,
         identity_crosswalk_on_demand:true,
+        after_cost_completeness_on_demand:true,
         no_recurring_timer:true,
         no_observer:true,
         no_storage_write:true,
@@ -113,6 +117,6 @@
       const metadata=Object.freeze({recurring_timer:false,observer:false,storage_write:false,automatic_retry_loop:false});
       return Object.freeze({build:BUILD,pass:Object.values(checks).every(Boolean),checks,metadata});
     },
-    execution_cost_on_demand:true,durable_reconciliation_on_demand:true,identity_crosswalk_on_demand:true,recurring_timer:false,observer:false,storage_write:false,automatic_retry_loop:false,new_business_network_request:false
+    execution_cost_on_demand:true,durable_reconciliation_on_demand:true,identity_crosswalk_on_demand:true,after_cost_completeness_on_demand:true,recurring_timer:false,observer:false,storage_write:false,automatic_retry_loop:false,new_business_network_request:false
   });
 })();
