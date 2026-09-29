@@ -1,0 +1,216 @@
+name: Agent-Crypto Package 40.6.475 Prospective Capture Plumbing Proof
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406475-prospective-capture-plumbing-proof
+    paths:
+      - '.github/workflows/agent-crypto-package-406475.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate syntax and version truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'const BUILD="40.6.475"' "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          grep -F 'exact_event_cycle_id_resolution:true' "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          grep -F 'event_id_miss_fails_closed:true' "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js"
+          grep -F 'strategy-a-prospective-outcome-evidence-capture.js?v=40.6.475' "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'Build 40.6.475 · Administrator' "$ROOT/index.html"
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Exercise isolated plumbing harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require("fs"),vm=require("vm");
+          const p="public/agent_crypto_erith_ia/administrator/js/strategy-a-prospective-outcome-evidence-capture.js";
+
+          class Bus {
+            constructor(){this.listeners=new Map();}
+            addEventListener(type,fn){const a=this.listeners.get(type)||[];a.push(fn);this.listeners.set(type,a);}
+            removeEventListener(type,fn){const a=this.listeners.get(type)||[];this.listeners.set(type,a.filter(x=>x!==fn));}
+            dispatchEvent(ev){for(const fn of this.listeners.get(ev.type)||[])fn(ev);return true;}
+          }
+          global.CustomEvent=class CustomEvent{constructor(type,opts={}){this.type=type;this.detail=opts.detail;}};
+          global.document=new Bus();
+          document.getElementById=()=>null;
+          global.window=new Bus();
+
+          const meta=new Map();
+          const db={
+            objectStoreNames:{contains:name=>name==="meta"},
+            transaction(name,mode){
+              if(name!=="meta")throw new Error("unexpected store "+name);
+              const tx={};
+              const store={
+                getAll(){
+                  const req={};
+                  setImmediate(()=>{req.result=[...meta.values()];req.onsuccess?.();});
+                  return req;
+                },
+                put(entry){
+                  setImmediate(()=>{meta.set(entry.id,structuredClone(entry));tx.oncomplete?.();});
+                },
+                delete(id){
+                  setImmediate(()=>{meta.delete(id);tx.oncomplete?.();});
+                }
+              };
+              tx.objectStore=()=>store;
+              return tx;
+            },
+            close(){}
+          };
+          global.indexedDB={
+            open(){
+              const req={};
+              setImmediate(()=>{req.result=db;req.onsuccess?.();});
+              return req;
+            }
+          };
+
+          const t0=Date.parse("2026-09-29T20:00:00Z");
+          const target={
+            cycle_id:"A-CYCLE-HARNESS-TARGET",cycle_number:200,captured_at:new Date(t0).toISOString(),
+            trigger:"timer",phase:"COST_GATE_WAIT",first_blocker:"cost",
+            market:{symbol:"BTC",price_eur:100},
+            cost:{expected_move_pct:.62,required_move_pct:.81,total_cost_pct:.61}
+          };
+          const newer={
+            cycle_id:"A-CYCLE-HARNESS-NEWER",cycle_number:201,captured_at:new Date(t0+60000).toISOString(),
+            trigger:"timer",phase:"NO_TRADE",first_blocker:"direction",
+            market:{symbol:"BTC",price_eur:100.1},
+            cost:{expected_move_pct:.10,required_move_pct:.81,total_cost_pct:.61}
+          };
+          const t5={
+            cycle_id:"A-CYCLE-HARNESS-T5",cycle_number:202,captured_at:new Date(t0+5*60000).toISOString(),
+            trigger:"timer",phase:"NO_TRADE",first_blocker:"direction",
+            market:{symbol:"BTC",price_eur:100.3},
+            cost:{expected_move_pct:.10,required_move_pct:.81,total_cost_pct:.61}
+          };
+          const ledger=[target,newer];
+          global.AgentCryptoStrategyAExperimentLedger={read:()=>ledger.slice()};
+          global.AgentCryptoStrategyAExecutionCostTruth={
+            async measure(trigger){
+              return {
+                generated_at:new Date().toISOString(),
+                measurement_trigger:trigger,
+                venues:{okx:{
+                  ok:true,venue:"OKX Europe",pair:"BTC/EUR",transport:"HARNESS",
+                  measured_at:new Date().toISOString(),quote_observed_at_utc:new Date().toISOString(),
+                  quote_age_seconds:0,freshness_state:"FRESH",
+                  best_bid:99.95,best_ask:100.05,mid:100,spread_pct:.1,spread_bp:10,
+                  fee_plus_spread_snapshot_pct:.5,depth_available:false,
+                  fee_reference:{maker_pct:.1,taker_pct:.2},simulations:[]
+                }}
+              };
+            },
+            snapshot(){return null;}
+          };
+
+          vm.runInThisContext(fs.readFileSync(p,"utf8"),{filename:p});
+          const api=global.AgentCryptoStrategyAProspectiveOutcomeEvidenceCapture;
+          if(!api)throw new Error("prospective owner absent");
+          const base=api.self_test();
+          if(!base.pass)throw new Error("self_test failed "+JSON.stringify(base));
+
+          const wait=ms=>new Promise(r=>setTimeout(r,ms));
+          (async()=>{
+            if(!(await api.initialize()))throw new Error("initialize failed "+JSON.stringify(api.snapshot()));
+
+            // Partial .454 event: no market.price_eur in detail. A newer ledger row already exists.
+            document.dispatchEvent(new CustomEvent("agent-crypto:strategy-a-experiment-cycle",{detail:{
+              cycle_id:target.cycle_id,cycle_number:target.cycle_number,captured_at:target.captured_at,
+              trigger:"timer",phase:"COST_GATE_WAIT",persisted:true,build:"40.6.454"
+            }}));
+            await wait(80);
+            let s=api.snapshot();
+            if(s.tracked!==1)throw new Error("target was not tracked "+JSON.stringify(s));
+            if(s.last_event_cycle_id!==target.cycle_id||s.last_resolved_cycle_id!==target.cycle_id)throw new Error("exact ID resolution failed "+JSON.stringify(s));
+            if(s.last_resolution_mode!=="LEDGER_BY_ID")throw new Error("wrong resolution mode "+JSON.stringify(s));
+            if(s.okx_t0_captured!==1)throw new Error("OKX T0 not captured "+JSON.stringify(s));
+            if(![...meta.keys()].some(k=>k==="prospective_outcome_474:"+target.cycle_id))throw new Error("durable meta write missing");
+
+            ledger.push(t5);
+            document.dispatchEvent(new CustomEvent("agent-crypto:strategy-a-experiment-cycle",{detail:{
+              cycle_id:t5.cycle_id,cycle_number:t5.cycle_number,captured_at:t5.captured_at,
+              trigger:"timer",phase:"NO_TRADE",persisted:true,build:"40.6.454"
+            }}));
+            await wait(80);
+            s=api.snapshot();
+            if(s.t5_captured!==1)throw new Error("T+5 not captured "+JSON.stringify(s));
+            if(s.events_received!==2)throw new Error("event count mismatch "+JSON.stringify(s));
+
+            document.dispatchEvent(new CustomEvent("agent-crypto:strategy-a-experiment-cycle",{detail:{
+              cycle_id:"A-CYCLE-HARNESS-MISSING",cycle_number:203,captured_at:new Date(t0+10*60000).toISOString(),
+              trigger:"timer",phase:"NO_TRADE",persisted:true,build:"40.6.454"
+            }}));
+            await wait(50);
+            s=api.snapshot();
+            if(s.last_resolution_mode!=="LEDGER_ID_MISS")throw new Error("missing ID did not fail closed "+JSON.stringify(s));
+            if(!String(s.last_error||"").startsWith("EVENT_CYCLE_NOT_FOUND_IN_LEDGER:"))throw new Error("missing ID error absent "+JSON.stringify(s));
+            if(s.tracked!==1)throw new Error("missing ID contaminated tracked set "+JSON.stringify(s));
+
+            console.log("40.6.475 PLUMBING HARNESS PASS",JSON.stringify(s));
+          })().catch(err=>{console.error(err);process.exit(1);});
+          NODE
+
+      - name: Mark test receipt PASS
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/administrator/PROSPECTIVE_CAPTURE_PLUMBING_TEST_40.6.475.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          d["pass_pending_workflow"]=False
+          d["pass"]=True
+          d["cases"]={k:"PASS" for k in d["cases"]}
+          p.write_text(json.dumps(d,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          PY
+
+      - name: Build bounded ZIP
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_PROSPECTIVE_CAPTURE_PLUMBING_PROOF_40.6.475.zip"
+          rm -f "$ZIP" "$ZIP.sha256"
+          rm -rf /tmp/ac475
+          mkdir -p /tmp/ac475/administrator/js
+          cp "$ROOT/index.html" "$ROOT/index-40.6.475.html" "$ROOT/build.json" "$ROOT/RELEASE.md" "$ROOT/HANDOFF.md" "$ROOT/HANDOFF_FINAL_40.6.475.md" "$ROOT/PATCH_MANIFEST_40.6.475.txt" "$ROOT/PROSPECTIVE_CAPTURE_PLUMBING_TEST_40.6.475.json" /tmp/ac475/administrator/
+          cp "$ROOT/js/strategy-a-prospective-outcome-evidence-capture.js" "$ROOT/js/strategy-a-execution-cost-truth.js" "$ROOT/js/strategy-a-durable-evidence-store.js" "$ROOT/js/post-boot-runtime-loader.js" "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/ac475/administrator/js/
+          (cd /tmp/ac475 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+
+      - name: Commit receipt and package
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/PROSPECTIVE_CAPTURE_PLUMBING_TEST_40.6.475.json" "$ROOT/AGENT_CRYPTO_PROSPECTIVE_CAPTURE_PLUMBING_PROOF_40.6.475.zip" "$ROOT/AGENT_CRYPTO_PROSPECTIVE_CAPTURE_PLUMBING_PROOF_40.6.475.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.475 plumbing proof ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main

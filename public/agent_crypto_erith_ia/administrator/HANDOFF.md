@@ -1,53 +1,33 @@
-# HANDOFF FINAL — 40.6.474
+# HANDOFF — Agent-Crypto 40.6.475
 
-## Terrain parent .473
+## Objet unique
 
-PASS : TRAJECTORY_TRUTH_READY.
+Prouver le raccordement réel de la capture prospective sans attendre un nouveau COST_GATE_WAIT de marché.
 
-Cycle franchissant :
-- A-CYCLE-00001-d562dc57;
-- premier passage / dernier passage / pic : 22,2 min;
-- pic +0,691 %;
-- marge vs plancher +0,080 %;
-- 1 échantillon >= plancher;
-- span observé 0,0 min.
+## Firefox minimal
 
-Inconnus T+60 :
-- PARTIAL_NO_CROSS : 4;
-- ARCHIVE_END_NO_SAMPLE : 0;
-- TARGET_GAP_NO_SAMPLE : 4.
+1. Ctrl+F5.
+2. Vérifier **Build 40.6.475 · Administrator**.
+3. Ouvrir **Section 04 → Simulation**.
+4. Repérer **STRATEGY A · PROSPECTIVE OUTCOME + OKX COST EVIDENCE · 40.6.475**.
+5. Vérifier **État = ARMED**.
+6. Regarder la nouvelle ligne **Plomberie**.
+7. Attendre seulement le prochain cycle Auto A normal, même s'il finit NO_TRADE.
 
-## 40.6.474
+Attendu après ce cycle :
+- `événements reçus` augmente ;
+- `dernier event` n'est plus — ;
+- `event` contient le cycle Auto A reçu ;
+- `résolu` correspond au même cycle ;
+- `mode = LEDGER_BY_ID` ;
+- `erreur = —`.
 
-On arrête de chercher à compléter l'historique ancien.
-On fabrique une meilleure preuve future.
+Ce test ne dépend plus d'un COST_GATE_WAIT.
 
-Nouveau owner résident :
-`AgentCryptoStrategyAProspectiveOutcomeEvidenceCapture`
+## Ensuite
 
-Pour chaque nouveau COST_GATE_WAIT :
-1. persiste T0;
-2. demande un snapshot Execution Cost Truth et conserve la preuve OKX observable;
-3. sur les cycles suivants, capture T+5 / T+15 / T+60 à ±150 s;
-4. persiste endpoint, gap, MFE, MAE;
-5. si la fenêtre est ratée, écrit MISSED_WINDOW sans interpolation.
+Si un futur COST_GATE_WAIT réel arrive, `Cycles suivis` doit augmenter et le coût OKX T0 doit être demandé. T+5/T+15/T+60 restent prospectifs et sans interpolation.
 
-Stockage : IndexedDB Durable Evidence existant, store meta, aucun nouveau schéma.
+## Protections
 
-## Test Firefox
-
-Ctrl+F5 → Build 40.6.474 → Section 04 → Simulation.
-
-Panneau attendu :
-**STRATEGY A · PROSPECTIVE OUTCOME + OKX COST EVIDENCE · 40.6.474**
-
-État initial : **ARMED**.
-
-Puis laisser Auto A tourner normalement, sans forcer de PAPER.
-Au prochain COST_GATE_WAIT :
-- Cycles suivis doit augmenter;
-- OKX T0 capturé doit augmenter si la mesure est disponible;
-- T+5, T+15 et T+60 doivent se remplir au fil des cycles;
-- une absence réelle devient MISSED_WINDOW, jamais une valeur inventée.
-
-Aucun changement de gate. Aucun ordre réel.
+Market Core 38.15.11 intact. Aucun seuil, gate, Oracle, Risk ou PAPER modifié. Aucun backfill. Aucun ordre réel.

@@ -1,12 +1,14 @@
-/* Agent-Crypto @erith.IA — 40.6.474 PROSPECTIVE OUTCOME + OKX COST EVIDENCE CAPTURE
+/* Agent-Crypto @erith.IA — 40.6.475 PROSPECTIVE CAPTURE PLUMBING PROOF
    Future Strategy A COST_GATE_WAIT cycles only. No historical backfill.
+   40.6.475 resolves partial experiment-cycle events by exact cycle_id against the ledger,
+   fails closed on an ID miss, and exposes plumbing observability without changing Strategy A business logic.
    At T0, captures a contemporaneous OKX Execution Cost Truth snapshot through the existing owner.
    Then captures durable endpoint evidence at T+5 / T+15 / T+60 from subsequent Strategy A cycle prices.
    Evidence is persisted in the EXISTING Durable Evidence IndexedDB "meta" store; DB version/schema are unchanged.
    No interpolation, no recurring timer, no MutationObserver, no threshold/gate change, no real order. */
 (()=>{
   "use strict";
-  const BUILD="40.6.474";
+  const BUILD="40.6.475";
   if(globalThis.AgentCryptoStrategyAProspectiveOutcomeEvidenceCapture?.build===BUILD)return;
   const ROOT="strategyAProspectiveOutcomeEvidenceCapture";
   const DB_NAME="agent_crypto_strategy_a_durable_evidence_v1",DB_VERSION=1,STORE_META="meta";
@@ -14,6 +16,7 @@
   const HORIZONS=Object.freeze([5,15,60]),TOL_MS=150000,MAX_ROWS=256,SHADOW_MARGIN_PCT=0.2;
   const RECORDS=new Map();
   let dbPromise=null,ready=false,lastError=null,lastEventAt=null,queuedEvents=[];
+  let eventsReceived=0,lastEventCycleId=null,lastResolvedCycleId=null,lastResolutionMode="NONE";
   const clone=v=>{try{return typeof structuredClone==="function"?structuredClone(v):JSON.parse(JSON.stringify(v));}catch(_){return null;}};
   const finite=v=>{
     if(v===null||v===undefined||typeof v==="boolean")return false;
@@ -22,6 +25,7 @@
   };
   const num=v=>finite(v)?Number(v):null;
   const text=v=>String(v??"").trim();
+  const esc=v=>String(v??"—").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const upper=v=>text(v).toUpperCase();
   const time=v=>{const n=typeof v==="number"?v:Date.parse(text(v));return Number.isFinite(n)?n:null;};
   const iso=v=>{const n=time(v);return n===null?null:new Date(n).toISOString();};
@@ -53,10 +57,35 @@
     }
     return (Array.isArray(rows)?rows:[]).map(normalizeCycle).filter(Boolean).sort((a,b)=>a.at-b.at);
   }
+  const eventCycleId=detail=>{
+    const raw=detail?.cycle??detail?.row??detail?.payload??detail;
+    return cycleId(unwrap(raw)||raw);
+  };
+  function selectCycleByHint(rows,hintId){
+    const list=Array.isArray(rows)?rows:[];
+    if(hintId){
+      for(let i=list.length-1;i>=0;i--)if(list[i]?.cycle_id===hintId)return list[i];
+      return null;
+    }
+    return list.at(-1)||null;
+  }
   function latestCycle(eventDetail=null){
     const candidates=[eventDetail?.cycle,eventDetail?.row,eventDetail?.payload,eventDetail].map(normalizeCycle).filter(Boolean);
-    if(candidates.length)return candidates.sort((a,b)=>a.at-b.at).at(-1);
-    return sourceRows().at(-1)||null;
+    if(candidates.length){
+      const sample=candidates.sort((a,b)=>a.at-b.at).at(-1);
+      lastResolutionMode="EVENT_PAYLOAD";lastResolvedCycleId=sample.cycle_id;
+      return sample;
+    }
+    const rows=sourceRows(),hint=eventCycleId(eventDetail);
+    const sample=selectCycleByHint(rows,hint);
+    if(sample){
+      lastResolutionMode=hint?"LEDGER_BY_ID":"LEDGER_LATEST";
+      lastResolvedCycleId=sample.cycle_id;
+      return sample;
+    }
+    lastResolutionMode=hint?"LEDGER_ID_MISS":"LEDGER_EMPTY";
+    lastResolvedCycleId=null;
+    return null;
   }
 
   function openDb(){
@@ -283,13 +312,19 @@
       const row=newRecord(sample);RECORDS.set(sample.cycle_id,row);await persist(row);await prune();registered=true;
       void captureCost(row);
     }
-    lastEventAt=nowIso();render();
+    render();
     return {registered,advanced};
   }
   async function processEvent(detail){
     if(!ready){queuedEvents.push(detail);return {queued:true};}
     const sample=latestCycle(detail);
-    if(!sample){lastError="LATEST_CYCLE_UNAVAILABLE";render();return {ok:false,reason:lastError};}
+    if(!sample){
+      const hint=eventCycleId(detail);
+      lastError=hint?"EVENT_CYCLE_NOT_FOUND_IN_LEDGER:"+hint:"LATEST_CYCLE_UNAVAILABLE";
+      render();
+      return {ok:false,reason:lastError};
+    }
+    if(lastError==="LATEST_CYCLE_UNAVAILABLE"||String(lastError||"").startsWith("EVENT_CYCLE_NOT_FOUND_IN_LEDGER:"))lastError=null;
     return registerAndAdvance(sample);
   }
   async function drainQueued(){
@@ -306,7 +341,8 @@
     return Object.freeze({
       schema:"agent_crypto_strategy_a_prospective_outcome_evidence_capture_status_v1",build:BUILD,ready,
       tracked:rows.length,okx_t0_captured:costCaptured,t5_captured:countH(5),t15_captured:countH(15),t60_captured:countH(60),
-      pending_cycles:pending,missed_windows:missed,last_event_at:lastEventAt,last_error:lastError,
+      pending_cycles:pending,missed_windows:missed,events_received:eventsReceived,last_event_at:lastEventAt,
+      last_event_cycle_id:lastEventCycleId,last_resolved_cycle_id:lastResolvedCycleId,last_resolution_mode:lastResolutionMode,last_error:lastError,
       database:DB_NAME,store:STORE_META,db_schema_changed:false,new_object_store:false,historical_backfill:false,
       existing_execution_cost_owner:true,headless_cost_capture:true,slippage_unknown_allowed:true,
       recurring_timer:false,mutation_observer:false,no_interpolation:true,tolerance_ms:TOL_MS,
@@ -339,7 +375,8 @@
     const latestState=latest?["t5","t15","t60"].map(k=>k.toUpperCase()+" "+String(latest.horizons?.[k]?.state||"—")).join(" · "):"AUCUN CYCLE FUTUR ENREGISTRÉ";
     root.innerHTML='<div class="poe-h"><div><div class="poe-t">STRATEGY A · PROSPECTIVE OUTCOME + OKX COST EVIDENCE · '+BUILD+'</div><div class="poe-s">Futurs COST_GATE_WAIT uniquement · T0 coût OKX observable + endpoints T+5/T+15/T+60 · IndexedDB durable existant · aucun backfill.</div></div><button type="button" class="btn small" id="'+ROOT+'Export">EXPORTER</button></div>'+
       '<div class="poe-g"><div class="poe-k"><span>État</span><b>'+(s.ready?"ARMED":"WAIT")+'</b></div><div class="poe-k"><span>Cycles suivis</span><b>'+s.tracked+'</b></div><div class="poe-k"><span>OKX T0 capturé</span><b>'+s.okx_t0_captured+'</b></div><div class="poe-k"><span>T+5 capturé</span><b>'+s.t5_captured+'</b></div><div class="poe-k"><span>T+15 capturé</span><b>'+s.t15_captured+'</b></div><div class="poe-k"><span>T+60 capturé</span><b>'+s.t60_captured+'</b></div><div class="poe-k"><span>Fenêtres manquées</span><b>'+s.missed_windows+'</b></div></div>'+
-      '<div class="poe-note"><b>Dernier cycle :</b> '+(latest?latest.cycle_id:"—")+' · '+latestState+'. Le coût OKX T0 conserve spread/frais observables ; le slippage reste UNKNOWN tant que le carnet multi-niveaux ne le prouve pas. Une fenêtre manquée reste manquée : aucun prix n’est interpolé.</div>';
+      '<div class="poe-note"><b>Dernier cycle :</b> '+(latest?latest.cycle_id:"—")+' · '+latestState+'. Le coût OKX T0 conserve spread/frais observables ; le slippage reste UNKNOWN tant que le carnet multi-niveaux ne le prouve pas. Une fenêtre manquée reste manquée : aucun prix n’est interpolé.</div>'+
+      '<div class="poe-note"><b>Plomberie :</b> événements reçus '+s.events_received+' · dernier event '+esc(s.last_event_at||"—")+' · event '+esc(s.last_event_cycle_id||"—")+' · résolu '+esc(s.last_resolved_cycle_id||"—")+' · mode '+esc(s.last_resolution_mode||"—")+' · erreur '+esc(s.last_error||"—")+'.</div>';
     root.querySelector("#"+ROOT+"Export")?.addEventListener("click",exportJson);
     return true;
   }
@@ -362,6 +399,8 @@
       okx_top_of_book_captured:cost.state==="TOP_OF_BOOK_CAPTURED"&&cost.fee_plus_spread_snapshot_pct===.5,
       shadow_floor_context_only:Math.abs(cost.shadow_floor_plus_margin_pct-.7)<1e-9,
       slippage_not_invented:cost.slippage_known===false,
+      event_id_resolves_exact_cycle:selectCycleByHint([base,s5],"C0")?.cycle_id==="C0",
+      event_id_missing_fails_closed:selectCycleByHint([base,s5],"MISSING")===null,
       same_db_schema:true,no_recurring_timer:true,no_threshold_change:true,no_real_order:true
     });
     return Object.freeze({build:BUILD,pass:Object.values(checks).every(Boolean),checks});
@@ -378,7 +417,13 @@
     }
   }
   function onDurableReady(){void initialize();}
-  function onCycle(event){void processEvent(event?.detail||null);}
+  function onCycle(event){
+    const detail=event?.detail||null;
+    eventsReceived++;
+    lastEventAt=nowIso();
+    lastEventCycleId=eventCycleId(detail)||null;
+    void processEvent(detail);
+  }
   function onCostMeasured(){try{void applyCostSnapshotToPending(globalThis.AgentCryptoStrategyAExecutionCostTruth?.snapshot?.());}catch(_){}}
 
   globalThis.AgentCryptoStrategyAProspectiveOutcomeEvidenceCapture=Object.freeze({
@@ -386,6 +431,7 @@
     initialize,process_cycle:detail=>processEvent(detail),apply_cost_snapshot:snapshot=>applyCostSnapshotToPending(snapshot),
     horizons_min:HORIZONS.slice(),tolerance_ms:TOL_MS,database:DB_NAME,store:STORE_META,
     historical_backfill:false,no_interpolation:true,db_schema_changed:false,new_object_store:false,
+    exact_event_cycle_id_resolution:true,event_id_miss_fails_closed:true,plumbing_observability:true,
     existing_execution_cost_owner:true,headless_cost_capture:true,recurring_timer:false,mutation_observer:false,
     thresholds_changed:false,gate_changed:false,real_order:false,paper_only:true
   });
