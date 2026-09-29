@@ -1,28 +1,28 @@
-# Agent-Crypto 40.6.477 — LECTURE TECHNIQUE INITIAL IMAGE RECOVERY
+# Agent-Crypto 40.6.478 — PROSPECTIVE TERMINAL RECORD WRITE GUARD
 
 ## Défaut démontré
 
-Sur démarrage replié avec cache visuel froid, Lecture Technique pouvait rester sans image après ouverture.
+Dans le collecteur prospectif .476/.477, chaque nouveau cycle parcourait tous les dossiers et appelait `applySample()`.
 
-Cause bornée au contrôleur `atlasTechnicalStaticThemeController` :
-- `swapUrl()` pouvait retourner `false` ;
-- `apply()` ignorait ce résultat et retournait toujours `true` ;
-- `ensureInitialImage()` posait alors `imageReady=true` ;
-- l'ouverture ultérieure pouvait ne plus relancer le chargement.
+Même lorsqu'un dossier avait déjà T+5, T+15 et T+60 tous terminaux, `addObservation()` s'exécutait avant la vérification des horizons. Un cycle tardif pouvait donc signaler un changement puis déclencher une écriture IndexedDB sans nouvelle preuve utile.
 
-Cas associé : si le panneau s'ouvrait pendant la lecture asynchrone du cache, l'observer rejoignait la Promise déjà démarrée en état replié et aucune seconde tentative n'était garantie.
+## Correction bornée
 
-## Correction
+40.6.478 ajoute une seule règle :
 
-40.6.477 :
-1. propage le vrai résultat de `swapUrl()` depuis `apply()` ;
-2. ne marque l'image prête que sur succès réel ;
-3. si le chargement a commencé replié, a échoué, puis que le panneau s'est ouvert pendant l'attente, effectue une seule reprise avec réseau autorisé ;
-4. conserve le réseau différé tant que Lecture Technique reste repliée ;
-5. préserve cache chaud, image privée, AUTO, RND et absence de préchargement complet.
+> si T+5, T+15 et T+60 sont tous `CAPTURED` ou `MISSED_WINDOW`, le dossier est terminal et `applySample()` retourne immédiatement `false`.
 
-## Hors périmètre
+Conséquences :
+- aucune observation post-terminale ;
+- aucune réécriture IndexedDB post-terminale ;
+- `updated_at` du dossier terminé ne bouge plus ;
+- les dossiers encore PENDING continuent de progresser normalement ;
+- les fenêtres tardives restent `MISSED_WINDOW`.
 
-Aucun changement Strategy A, Aether, Redivider, Market Core 38.15.11, schéma IndexedDB ou ordre réel.
+## Invariants
 
-Le plantage Firefox/Transformer Book observé reste un chantier séparé : aucune causalité n'est affirmée par cette correction.
+Aucun changement des horizons 5/15/60 min, tolérance, Cost Gate, seuils, décision Strategy A, capture OKX T0, Oracle, Risk, PAPER, schéma IndexedDB ou Market Core 38.15.11.
+
+Lecture Technique .477 est héritée sans modification.
+
+Aucun ordre réel.
