@@ -1,0 +1,60 @@
+name: Agent-Crypto 40.6.489 Validate and Publish ZIP
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/agent-crypto-package-406489.yml'
+      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-hot-window-sizing-406489.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/RELEASE.md'
+      - 'public/agent_crypto_erith_ia/administrator/HANDOFF.md'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/oracle-evidence-hot-window-sizing-406489.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'const BUILD = "40.6.489"' "$ROOT/js/oracle-evidence-hot-window-sizing-406489.js"
+          grep -F 'db.transaction(api.store,"readonly")' "$ROOT/js/oracle-evidence-hot-window-sizing-406489.js"
+          grep -F 'oracle-evidence-hot-window-sizing-406489.js?v=40.6.489' "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'Build 40.6.489 · Administrator' "$ROOT/index.html"
+          grep -F '"build": "40.6.489"' "$ROOT/build.json"
+          grep -F '"mode": "READ_ONLY_MEASUREMENT_ONLY"' "$ROOT/build.json"
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Build ZIP
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_HOT_WINDOW_SIZING_40.6.489.zip"
+          rm -f "$ZIP" "$ZIP.sha256"
+          zip -9 "$ZIP" "$ROOT/index.html" "$ROOT/build.json" "$ROOT/js/post-boot-runtime-loader.js" "$ROOT/js/oracle-evidence-hot-window-sizing-406489.js" "$ROOT/RELEASE.md" "$ROOT/HANDOFF.md" "$ROOT/HANDOFF_FINAL_40.6.489.md" "$ROOT/ORACLE_EVIDENCE_HOT_WINDOW_SIZING_40.6.489.md"
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+
+      - name: Publish ZIP
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_HOT_WINDOW_SIZING_40.6.489.zip" "$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_HOT_WINDOW_SIZING_40.6.489.zip.sha256"
+          git commit -m "chore(package): publish Agent-Crypto 40.6.489 sizing ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
