@@ -1,21 +1,7 @@
 name: Agent-Crypto Package 40.6.477 Lecture Technique Initial Image Recovery
 
 on:
-  push:
-    branches:
-      - main
-      - agent-crypto-406477-technical-image-initial-recovery
-    paths:
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/runtime-shell.html'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/RELEASE.md'
-      - 'public/agent_crypto_erith_ia/administrator/HANDOFF.md'
-      - 'public/agent_crypto_erith_ia/administrator/HANDOFF_FINAL_40.6.477.md'
-      - 'public/agent_crypto_erith_ia/administrator/LECTURE_TECHNIQUE_INITIAL_IMAGE_TEST_40.6.477.json'
-      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/strategy-a-audit-demand-loader.js'
-      - '.github/workflows/agent-crypto-package-406477.yml'
+  workflow_dispatch:
 
 permissions:
   contents: write
