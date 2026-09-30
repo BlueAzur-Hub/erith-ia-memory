@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.485 ORACLE EVIDENCE EXISTING BRIDGE INTEGRATION
+/* Agent-Crypto @erith.IA — 40.6.487 ORACLE EVIDENCE EXISTING BRIDGE INTEGRATION
    Supersedes the uninstalled 40.6.483 standalone 8791 transport.
    Reuses the proven 40.6.482 chunk foundation and the established authenticated
    Atlas-10 Crypto Bridge on 127.0.0.1:8787.
@@ -265,11 +265,11 @@
     if(!cold&&!root) return false;
     const panel=document.createElement("section");
     panel.id="oracleEvidenceExistingBridge406484";
-    panel.setAttribute("aria-label","Oracle Evidence via Bridge existant 8787 · 40.6.485");
+    panel.setAttribute("aria-label","Oracle Evidence via Bridge existant 8787 · 40.6.487");
     panel.style.cssText="margin:8px 0 12px;padding:10px 12px;border:1px solid rgba(103,255,190,.24);border-radius:10px;background:rgba(6,24,25,.72);display:grid;gap:8px";
     panel.innerHTML=
       '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">'+
-        '<div><strong style="color:#8fffd0">MÉMOIRE FROIDE · BRIDGE EXISTANT 8787 · 40.6.485</strong><br>'+
+        '<div><strong style="color:#8fffd0">MÉMOIRE FROIDE · BRIDGE EXISTANT 8787 · 40.6.487</strong><br>'+
         '<small>Atlas-10 Bridge V1.9.13 · session Administrator · GitHub froid · zéro purge locale</small></div>'+
         '<span id="oracleBridge484State" style="font-weight:800">IDLE</span>'+
       '</div>'+
@@ -308,7 +308,7 @@
         ? ("Erreur · "+snap.error)
         : snap.ingest
           ? (String(snap.ingest.row_count)+" Evidence · SHA-256 "+snap.ingest.sha256.slice(0,16)+"… · local "+String(snap.ingest.local_before)+" → "+String(snap.ingest.local_after)+" · aucune purge")
-          : "40.6.485 attend Bridge V1.9.13 : timeout GitHub durci + relecture large-file via Git Blob. Aucune Evidence locale ne peut être supprimée.";
+          : "40.6.487 attend Bridge V1.9.13 : timeout GitHub durci + relecture large-file via Git Blob. Aucune Evidence locale ne peut être supprimée.";
     }
   }
 
