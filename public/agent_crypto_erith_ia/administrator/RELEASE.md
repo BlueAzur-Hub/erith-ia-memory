@@ -1,51 +1,74 @@
-# Agent-Crypto 40.6.483 — ORACLE EVIDENCE SAFE BRIDGE INGEST + COLD VERIFY
+# Agent-Crypto 40.6.484 — ORACLE EVIDENCE EXISTING BRIDGE INTEGRATION
 
-## Parent
+## Why 40.6.484
 
-40.6.482 — ORACLE EVIDENCE TIERED STORAGE FOUNDATION.
+40.6.482 proved the HOT/COLD chunk foundation in Firefox.
 
-The 40.6.482 browser/IndexedDB foundation is preserved as the chunk-preparation owner.
+40.6.483 created a standalone 8791 transport candidate, but the operator had not installed it. Re-reading the actual local architecture showed that Agent-Crypto already has an authenticated Atlas-10 Crypto Bridge on 8787 and a separate read-only Private Backend on 8790.
+
+40.6.484 therefore corrects the architecture **before operator deployment**.
+
+## Runtime truth
+
+- Administrator: 40.6.484
+- Market Core: 38.15.11
+- Control Center: 2.3.2R16
+- Atlas-10 Crypto Bridge: V1.9.12 · 127.0.0.1:8787
+- Private Backend: V1.4.2 · 127.0.0.1:8790 · unchanged/read-only
+- Seven Vault: 127.0.0.1:8780 · independent/outside scope
 
 ## Added
 
-- `js/oracle-evidence-safe-bridge-ingest.js`
-- `tools/oracle_evidence_cold_bridge.py`
-- operator-triggered loopback Bridge at `127.0.0.1:8791`
-- GitHub cold ingest with atomic chunk + pending-manifest commit
-- independent GitHub readback before VERIFIED
-- SHA-256 / row_count / JSONL / manifest-commit verification
-- browser button to test Bridge, send the next 500 Evidence, and verify published cold data
+Browser owner:
+`js/oracle-evidence-existing-bridge-integration.js`
+
+Bridge capabilities:
+- `oracle_evidence.read`
+- `oracle_evidence.publish`
+
+Bridge routes:
+- `GET /oracle-evidence/status`
+- `POST /oracle-evidence/ingest`
+
+## Removed from active runtime
+
+- standalone browser owner `js/oracle-evidence-safe-bridge-ingest.js`
+- standalone local service `tools/oracle_evidence_cold_bridge.py`
+- active port 8791 requirement
+
+Historical 40.6.483 package artifacts remain historical evidence; they are not loaded by 40.6.484.
 
 ## Preserved
 
+- 40.6.482 Oracle Evidence chunk-preparation foundation
+- 40.6.481 cursor recovery
 - Market Core 38.15.11
-- Strategy A business logic
-- Solo Progression 1 000 EUR profile
+- Strategy A business logic / Solo Progression 1 000 EUR
 - Oracle Math
+- Atlas CURRENT
 - Aether
 - Lecture Technique
 - Web Classique
-- Atlas CURRENT
 - IndexedDB schema
-- 40.6.481 cursor recovery
-- 40.6.482 HOT/COLD foundation
+- local Evidence rows
+- Private Backend V1.4.2
 
 ## Safety
 
-No GitHub token in browser.
-No automatic upload.
-No local Evidence delete.
-No retention reduction.
-No real order.
+- no GitHub token in browser;
+- no automatic upload;
+- owner-only Bridge capability;
+- no generic GitHub-write capability;
+- no local Evidence delete;
+- no retention reduction;
+- no real order.
 
-## Terrain
+## Operator terrain
 
-40.6.482 is frozen PASS after a real 500-Evidence bundle test.
-
-40.6.483 requires operator terrain:
-1. start the local Bridge;
-2. click **Tester Bridge**;
-3. click **Envoyer 500 au Bridge**;
-4. require `VERIFIED`;
-5. after Pages propagation, click **Vérifier dernier chunk publié**;
-6. confirm the local Evidence count did not decrease.
+1. replace/start Control Center R16 / Bridge V1.9.12;
+2. open Administrator 40.6.484 and authenticate normally;
+3. Oracle → Evidence & validation;
+4. **Tester Bridge 8787** → require READY V1.9.12 + GitHub local PRÊT;
+5. **Envoyer 500 Evidence** → require VERIFIED;
+6. after GitHub Pages propagation, **Vérifier dernier chunk publié** → require PASS;
+7. local Evidence count must remain unchanged or higher.
