@@ -1,26 +1,40 @@
-# HANDOFF — Agent-Crypto 40.6.481
+# HANDOFF — Agent-Crypto 40.6.482
 
-## Checkpoint
+## Current checkpoint
+40.6.481 is terrain PASS and frozen as the Oracle Evidence read-recovery checkpoint.
 
-40.6.480 reste le correctif d'accès CoinGecko. 40.6.481 est séparée et ne touche qu'au transport de lecture Oracle Evidence.
+40.6.482 adds only the cold-storage foundation.
 
-## Vérification opérateur
+## Operator terrain
+Open Oracle → Evidence & validation.
 
-Ctrl+F5 → **Build 40.6.481 · Administrator**.
+A card must appear:
+`MÉMOIRE FROIDE · GITHUB · 40.6.482`
 
-Ouvrir Oracle → **Evidence & validation**.
+Initial expected truth:
+- Local = current Oracle Evidence count;
+- Archived = 0;
+- Chunks = 0;
+- Transport = PENDING_SAFE_BRIDGE;
+- local retention = forbidden.
 
-Attendu :
-1. aucune erreur `serialized value is too large`;
-2. Explorer reconstruit ;
-3. Oracle Lab / Integrity ne retombent plus sur des zéros de fallback liés à l'échec de lecture ;
-4. compteur Evidence non réinitialisé ;
-5. aucune suppression de données.
+Press:
+1. **Lire manifest GitHub**
+2. **Préparer 500 Evidence**
+3. **Télécharger le lot**
 
-## Protection
+Expected:
+- one bounded bundle is created;
+- SHA-256 visible;
+- local Evidence count does not decrease.
 
-Market Core 38.15.11 intact. Strategy A, profil Solo Progression 1 000 €, gates, Risk, PAPER, Atlas CURRENT et Oracle Math intacts.
+## Stop rule
+Do NOT implement browser GitHub credentials.
+Do NOT purge IndexedDB.
+Do NOT lower the 50 000 retention cap as a workaround.
 
-## Suite
+## Next sister task
+40.6.483 = safe local Bridge ingest:
+transport bundle → validate → GitHub JSONL → manifest update → readback → SHA/count/parse proof.
 
-Une fois .481 terrain PASS : préparer séparément le stockage tiered navigateur chaud + GitHub froid. Ne pas purger IndexedDB avant preuve d'archivage vérifiée.
+Only a later build may introduce local retention after verified cold copies exist.
