@@ -1,0 +1,116 @@
+name: Agent-Crypto Package 40.6.480 Public Crypto Collector Access Recovery
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406480-public-crypto-access-recovery
+    paths:
+      - '.github/workflows/agent-crypto-package-406480.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate Python and auth isolation
+        run: |
+          set -euo pipefail
+          python -m py_compile             public/agent_crypto_erith_ia/tools/collect_public_crypto.py             public/agent_crypto_erith_ia/tools/collect_public_crypto_rank_complete.py             .github/scripts/agent_crypto_public_crypto_demo_auth_test_406480.py
+          python .github/scripts/agent_crypto_public_crypto_demo_auth_test_406480.py
+
+      - name: Validate release truth
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          COLLECTOR="public/agent_crypto_erith_ia/tools/collect_public_crypto.py"
+          ADAPTER="public/agent_crypto_erith_ia/tools/collect_public_crypto_rank_complete.py"
+          PROD=".github/workflows/atlas-public-crypto-market.yml"
+
+          grep -F 'COINGECKO_DEMO_API_KEY:' "$PROD"
+          grep -F 'secrets.COINGECKO_DEMO_API_KEY' "$PROD"
+          grep -F 'x-cg-demo-api-key' "$COLLECTOR"
+          grep -F '"api_key_required": True' "$COLLECTOR"
+          grep -F '"api_key_present_in_public_files": False' "$COLLECTOR"
+          grep -F '"api_key_value_logged": False' "$COLLECTOR"
+          grep -F 'headers=base.coingecko_demo_headers()' "$ADAPTER"
+
+          grep -F 'Build 40.6.480 · Administrator' "$ROOT/index.html"
+          grep -F 'const BUILD="40.6.480";' "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'strategy-a-input-freshness-truth.js?v=40.6.479' "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'const BUILD="40.6.480", TIMEOUT=6000;' "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F '"build": "40.6.480"' "$ROOT/build.json"
+          grep -F '"transport": "x-cg-demo-api-key header"' "$ROOT/build.json"
+          grep -F '"extended_251_1000_modified": false' "$ROOT/build.json"
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Validate build contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          d=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          assert d["build"]=="40.6.480"
+          assert d["market_core"]=="38.15.11"
+          assert d["strategy_a_modified"] is False
+          assert d["strategy_a_business_logic_modified"] is False
+          assert d["atlas_current_modified"] is False
+          assert d["real_order"] is False
+          r=d["public_crypto_collector_access_recovery_406480"]
+          assert r["scope"]=="CANONICAL_TOP250_ACCESS_ONLY"
+          assert r["secret_public"] is False
+          assert r["secret_logged"] is False
+          assert r["ecb_secret_exposure"] is False
+          assert r["canonical_latest_preserved_on_failure"] is True
+          print("40.6.480 BUILD CONTRACT PASS")
+          PY
+
+      - name: Mark receipt PASS
+        if: github.ref == 'refs/heads/main'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/administrator/PUBLIC_CRYPTO_COLLECTOR_ACCESS_TEST_40.6.480.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          d["pass_pending_workflow"]=False
+          d["pass"]=True
+          d["live_provider_recovery_proven"]=False
+          d["cases"]={k:"PASS" for k in d["cases"]}
+          d["cases"]["live_provider_recovery"]="PENDING_VALID_SECRET"
+          p.write_text(json.dumps(d,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          PY
+
+      - name: Package
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_PUBLIC_CRYPTO_COLLECTOR_ACCESS_RECOVERY_40.6.480.zip"
+          rm -rf /tmp/ac480 "$ZIP" "$ZIP.sha256"
+          mkdir -p /tmp/ac480
+
+          cp --parents             .github/workflows/atlas-public-crypto-market.yml             .github/workflows/agent-crypto-package-406480.yml             .github/scripts/agent_crypto_public_crypto_demo_auth_test_406480.py             public/agent_crypto_erith_ia/tools/collect_public_crypto.py             public/agent_crypto_erith_ia/tools/collect_public_crypto_rank_complete.py             "$ROOT/index.html"             "$ROOT/index-40.6.480.html"             "$ROOT/build.json"             "$ROOT/RELEASE.md"             "$ROOT/HANDOFF.md"             "$ROOT/HANDOFF_FINAL_40.6.480.md"             "$ROOT/PUBLIC_CRYPTO_COLLECTOR_ACCESS_RECOVERY_40.6.480.md"             "$ROOT/PUBLIC_CRYPTO_COLLECTOR_ACCESS_TEST_40.6.480.json"             "$ROOT/PATCH_MANIFEST_40.6.480.txt"             "$ROOT/js/post-boot-runtime-loader.js"             "$ROOT/js/strategy-a-audit-demand-loader.js"             /tmp/ac480/
+
+          (cd /tmp/ac480 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+
+      - name: Commit package
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add             "$ROOT/PUBLIC_CRYPTO_COLLECTOR_ACCESS_TEST_40.6.480.json"             "$ROOT/AGENT_CRYPTO_PUBLIC_CRYPTO_COLLECTOR_ACCESS_RECOVERY_40.6.480.zip"             "$ROOT/AGENT_CRYPTO_PUBLIC_CRYPTO_COLLECTOR_ACCESS_RECOVERY_40.6.480.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.480 collector recovery ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
