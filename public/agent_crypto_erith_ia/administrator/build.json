@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.488",
+  "build": "40.6.489",
   "engine": "38.15.11",
-  "release": "PUBLIC CRYPTO COLLECTOR RESTORE",
+  "release": "ORACLE EVIDENCE HOT WINDOW SIZING PROBE",
   "published": true,
-  "status": "published_pending_restore_terrain",
-  "parent_build": "40.6.487",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.488",
-  "administrator_build": "40.6.488",
-  "build_label": "Build 40.6.488 · Administrator",
+  "status": "published_pending_firefox_sizing_measurement_489",
+  "parent_build": "40.6.488",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.489",
+  "administrator_build": "40.6.489",
+  "build_label": "Build 40.6.489 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,7 +30,7 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Validate restored canonical public Crypto collector.",
+  "terrain_pending": "Firefox: lire la mesure automatique Oracle Evidence avant toute décision de HOT WINDOW.",
   "terrain_proof": null,
   "release_notes": "40.6.488 restores the canonical public Crypto collector owner from the last validated pre-regression checkpoint. Protected subsystems remain unchanged.",
   "strategy_facade_406323": {
@@ -6984,5 +6984,20 @@
     "market_core_modified": false,
     "real_order": false,
     "firefox_status": "PENDING_OPERATOR_487"
+  },
+  "oracle_evidence_hot_window_sizing_406489": {
+    "enabled": true,
+    "module": "js/oracle-evidence-hot-window-sizing-406489.js",
+    "mode": "READ_ONLY_MEASUREMENT_ONLY",
+    "automatic_measure_once": true,
+    "sample_target": 1000,
+    "hot_scenarios": [
+      10000,
+      5000,
+      2500
+    ],
+    "indexeddb_transaction_mode": "readonly",
+    "local_modification": false,
+    "retention_activated": false
   }
 }
