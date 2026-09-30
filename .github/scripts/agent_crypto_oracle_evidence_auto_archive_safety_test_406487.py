@@ -62,7 +62,7 @@ need(x["sequential_only"] is True and x["parallel_uploads"] is False,"build sequ
 need(x["wait_for_verified_before_next"] is True,"build verified gate")
 need(x["local_retention_allowed"] is False and x["local_delete_api_exposed"] is False,"retention locked")
 
-for old in ("406481","406482","406483","406484","406485","406486"):
+for old in ("406477","406481","406482","406483","406484","406485","406486"):
     p=Path(f".github/workflows/agent-crypto-package-{old}.yml")
     t=p.read_text(encoding="utf-8")
     need("workflow_dispatch:" in t,f"historical {old} manual only")
