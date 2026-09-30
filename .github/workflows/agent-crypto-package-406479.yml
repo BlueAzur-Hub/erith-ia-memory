@@ -1,0 +1,96 @@
+name: Agent-Crypto Package 40.6.479 Strategy Input Freshness Truth
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406479-strategy-input-freshness-truth
+    paths:
+      - '.github/workflows/agent-crypto-package-406479.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate release truth
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-input-freshness-truth.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          node --check "$ROOT/js/strategy-a-audit-demand-loader.js"
+          grep -F 'const BUILD="40.6.479"' "$ROOT/js/strategy-a-input-freshness-truth.js"
+          grep -F 'DIRECT_DECISION_INPUT' "$ROOT/js/strategy-a-input-freshness-truth.js"
+          grep -F 'CONTEXT_VISIBLE_NOT_PROVEN_DIRECT' "$ROOT/js/strategy-a-input-freshness-truth.js"
+          grep -F 'EVIDENCE_SHADOW_NOT_GATE' "$ROOT/js/strategy-a-input-freshness-truth.js"
+          grep -F 'strategy-a-input-freshness-truth.js?v=40.6.479' "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'Build 40.6.479 · Administrator' "$ROOT/index.html"
+          grep -F '"t60_captured": 1' "$ROOT/TERRAIN_PROOF_40.6.478_PROSPECTIVE_CHAIN.json"
+          grep -F 'HTTP 403 CoinGecko' "$ROOT/ATLAS_CANONICAL_UPSTREAM_DIAGNOSIS_40.6.479.md"
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Self-test read-only freshness owner
+        run: |
+          node <<'NODE'
+          const fs=require("fs"),vm=require("vm");
+          const p="public/agent_crypto_erith_ia/administrator/js/strategy-a-input-freshness-truth.js";
+          const ctx={console,globalThis:null};ctx.globalThis=ctx;
+          vm.createContext(ctx);
+          vm.runInContext(fs.readFileSync(p,"utf8"),ctx,{filename:p});
+          const api=ctx.AgentCryptoStrategyAInputFreshnessTruth;
+          if(!api)throw new Error("freshness owner missing");
+          const t=api.self_test();
+          if(!t.pass)throw new Error("self test failed "+JSON.stringify(t));
+          for(const k of ["read_only","fetch","storage_write","recurring_timer","mutation_observer","real_order"]){
+            if(k==="read_only"){if(api[k]!==true)throw new Error(k);}
+            else if(api[k]!==false)throw new Error(k);
+          }
+          console.log("40.6.479 INPUT FRESHNESS SELFTEST PASS",JSON.stringify(t));
+          NODE
+
+      - name: Mark receipt PASS
+        if: github.ref == 'refs/heads/main'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/administrator/STRATEGY_INPUT_FRESHNESS_TEST_40.6.479.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          d["pass_pending_workflow"]=False
+          d["pass"]=True
+          d["cases"]={k:"PASS" for k in d["cases"]}
+          p.write_text(json.dumps(d,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          PY
+
+      - name: Package
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_STRATEGY_INPUT_FRESHNESS_TRUTH_40.6.479.zip"
+          rm -rf /tmp/ac479 "$ZIP" "$ZIP.sha256"
+          mkdir -p /tmp/ac479/administrator/js
+          cp "$ROOT/index.html" "$ROOT/index-40.6.479.html" "$ROOT/build.json" "$ROOT/RELEASE.md" "$ROOT/HANDOFF.md" "$ROOT/HANDOFF_FINAL_40.6.479.md" "$ROOT/PATCH_MANIFEST_40.6.479.txt" "$ROOT/TERRAIN_PROOF_40.6.478_PROSPECTIVE_CHAIN.json" "$ROOT/ATLAS_CANONICAL_UPSTREAM_DIAGNOSIS_40.6.479.md" "$ROOT/STRATEGY_INPUT_FRESHNESS_TEST_40.6.479.json" /tmp/ac479/administrator/
+          cp "$ROOT/js/strategy-a-input-freshness-truth.js" "$ROOT/js/post-boot-runtime-loader.js" "$ROOT/js/strategy-a-audit-demand-loader.js" /tmp/ac479/administrator/js/
+          (cd /tmp/ac479 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+
+      - name: Commit package
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOT/STRATEGY_INPUT_FRESHNESS_TEST_40.6.479.json" "$ROOT/AGENT_CRYPTO_STRATEGY_INPUT_FRESHNESS_TRUTH_40.6.479.zip" "$ROOT/AGENT_CRYPTO_STRATEGY_INPUT_FRESHNESS_TRUTH_40.6.479.zip.sha256"
+          git commit -m "chore(package): add Agent-Crypto 40.6.479 freshness truth ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
