@@ -11,8 +11,6 @@ TOOLS = ROOT / "public" / "agent_crypto_erith_ia" / "tools"
 sys.path.insert(0, str(TOOLS))
 
 import collect_public_crypto as base  # noqa: E402
-import collect_public_crypto_rank_complete as rank  # noqa: E402
-
 
 class FakeResponse:
     status_code = 200
@@ -62,6 +60,8 @@ def main() -> int:
         require(isinstance(rows, list) and len(rows) == 1, "canonical fetch returns list")
         require(len(fake.calls) == 1, "canonical fetch exactly one request in harness")
         require(fake.calls[0][1].get("headers") == {"x-cg-demo-api-key": test_secret}, "canonical CoinGecko request authenticated")
+
+        import collect_public_crypto_rank_complete as rank  # noqa: E402
 
         rank.ORIGINAL_FETCH = lambda _session, _timeout: [
             {"id": "bitcoin", "market_cap_rank": 1, "current_price": 1.0}
