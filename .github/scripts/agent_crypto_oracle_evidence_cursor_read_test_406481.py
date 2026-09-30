@@ -27,7 +27,7 @@ need('cursor_reads_406481' in s and 'cursor_rows_406481' in s,"cursor telemetry"
 need('async function atlasOracleEvidencePut(row)' in s,"put owner preserved")
 need('async function atlasOracleEvidenceDelete(ids)' in s,"delete owner preserved")
 need('async function atlasOracleEvidenceColdSummary()' in s,"cold summary preserved")
-need('const ATLAS_ORACLE_EVIDENCE_MAX_ROWS = 50000' in s,"retention cap unchanged")
+need(re.search(r'const\\s+ATLAS_ORACLE_EVIDENCE_MAX_ROWS\\s*=\\s*50_?000\\s*;',s) is not None,"retention cap unchanged")
 
 cursor=re.search(r'async function atlasOracleEvidenceReadAllByCursor406481\(\)\{(.*?)\n\}',s,re.S)
 need(cursor is not None,"cursor body extractable")
