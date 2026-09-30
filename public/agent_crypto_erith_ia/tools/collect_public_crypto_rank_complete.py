@@ -43,11 +43,7 @@ def fetch_coingecko_rank_complete(session, timeout: float) -> list[dict[str, Any
         return rows
 
     fallback_url = base.COINGECKO_URL.replace("&page=1", "&page=2")
-    response = session.get(
-        fallback_url,
-        timeout=timeout,
-        headers=base.coingecko_demo_headers(),
-    )
+    response = session.get(fallback_url, timeout=timeout)
     if response.status_code == 429:
         raise RuntimeError("CoinGecko HTTP 429 (quota temporaire · fallback page 2)")
     response.raise_for_status()

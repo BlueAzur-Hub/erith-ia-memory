@@ -1,51 +1,27 @@
-# HANDOFF — Agent-Crypto 40.6.487
+# HANDOFF — Agent-Crypto 40.6.488
 
-## Proven checkpoint before automation
+## Décision
 
-40.6.485 terrain PASS:
-- Bridge V1.9.13 READY;
-- GitHub local PRÊT;
-- first real 500-row chunk VERIFIED;
-- public readback PASS;
-- archived_rows = 500;
-- chunks = 1;
-- local Evidence count did not decrease.
+40.6.488 est une restauration stricte du producteur Crypto canonique Top-250.
 
-## 40.6.487 objective
+Le code source restauré provient de 40.6.479 / commit `aa120142b856596739e0fc6abd5b418fe58f379a`.
 
-Archive the remaining backlog without requiring ~70 manual clicks and without weakening proof semantics.
+## Propriétaires restaurés
 
-## Mandatory gates
+- `.github/workflows/atlas-public-crypto-market.yml`
+- `public/agent_crypto_erith_ia/tools/collect_public_crypto.py`
+- `public/agent_crypto_erith_ia/tools/collect_public_crypto_rank_complete.py`
 
-- Bridge version = V1.9.13.
-- Bridge Oracle Evidence `enabled=true`.
-- GitHub local credential ready.
-- one archive owner at a time.
-- one chunk in flight.
-- VERIFIED before next chunk.
-- fixed target per pass.
-- exact public receipt proof.
-- zero local delete.
+## Héritage protégé
 
-## Operator terrain
+Le reste de l'Administrator reste celui de 40.6.487. Les modules runtime 40.6.487 sont hérités sans modification fonctionnelle.
 
-1. Bridge V1.9.13 running.
-2. Open Build 40.6.487.
-3. Oracle → Evidence & validation.
-4. Confirm the manual 500 button is disabled by the AUTO owner.
-5. Click **Archiver automatiquement** once.
-6. Observe at least two consecutive chunks reach VERIFIED without another click.
-7. Click **Pause après ce chunk** and require AUTO_PAUSED after a VERIFIED boundary.
-8. Click **Reprendre** and require continuation after the same watermark.
-9. Optional: **Arrêter après ce chunk**, then Start again and prove resume from Bridge VERIFIED watermark.
-10. Confirm local Evidence count never decreases.
+## Validation
 
-After queue completion and Pages propagation:
-- click **Vérifier fin publiée** once;
-- require `FINAL_PUBLIC_EXACT_VERIFY_PASS`.
+Après publication :
+1. attendre le workflow `Atlas Public Crypto Market`;
+2. vérifier le statut du collecteur canonique ;
+3. vérifier qu'un snapshot plus récent est publié ;
+4. seulement ensuite considérer Atlas CURRENT de nouveau alimenté.
 
-## Important
-
-Do not start retention/HOT-window deletion work in this build.
-
-Cold durability and archive automation remain separate from local retention.
+Ne pas ouvrir un nouveau chantier Strategy / Atlas tant que cette preuve n'est pas connue.

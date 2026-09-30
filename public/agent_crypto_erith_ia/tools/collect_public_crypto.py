@@ -6,8 +6,7 @@ Build 28.2.75 architecture:
 - CoinGecko USD monetary values are converted to EUR with the public ECB rate.
 - The original USD values are preserved next to the EUR values.
 - The last valid public snapshot is never overwritten by a failed collection.
-- CoinGecko Demo authentication comes only from the GitHub Actions secret environment.
-- No API key value is written to public JSON, logs, wallet, orders, Bridge, or Crypto files outside data/crypto.
+- No API key, wallet, order, Bridge write, or Crypto file outside data/crypto is used.
 """
 from __future__ import annotations
 
@@ -46,17 +45,6 @@ USER_AGENT = (
     "Chrome/126 Safari/537.36 Agent-Crypto-ERITH-IA-Public-Crypto/28.2.75"
 )
 FX_MAX_AGE_DAYS = 10
-COINGECKO_DEMO_API_KEY_ENV = "COINGECKO_DEMO_API_KEY"
-
-
-def coingecko_demo_headers() -> dict[str, str]:
-    """Return the CoinGecko Demo auth header without persisting or logging the key."""
-    api_key = str(os.environ.get(COINGECKO_DEMO_API_KEY_ENV) or "").strip()
-    if not api_key:
-        raise RuntimeError(
-            "CoinGecko Demo API key missing: GitHub Actions secret COINGECKO_DEMO_API_KEY is required"
-        )
-    return {"x-cg-demo-api-key": api_key}
 
 
 def utc_now() -> datetime:
@@ -139,7 +127,7 @@ def build_session() -> requests.Session:
 
 
 def fetch_coingecko(session: requests.Session, timeout: float) -> list[dict[str, Any]]:
-    response = session.get(COINGECKO_URL, timeout=timeout, headers=coingecko_demo_headers())
+    response = session.get(COINGECKO_URL, timeout=timeout)
     if response.status_code == 429:
         raise RuntimeError("CoinGecko HTTP 429 (quota temporaire)")
     response.raise_for_status()
@@ -391,11 +379,8 @@ def build_status(*, status: str, started_at: str, latest: dict[str, Any] | None,
             "recovery_watchdog": "17 et 47 min · stale >=20 min · aucun collecteur actif",
         },
         "security": {
-            "api_key_required": True,
-            "api_key_source": "GitHub Actions secret COINGECKO_DEMO_API_KEY",
-            "api_key_transport": "x-cg-demo-api-key header",
+            "api_key_required": False,
             "api_key_present_in_public_files": False,
-            "api_key_value_logged": False,
             "browser_direct_market_fetch_required": False,
             "github_write_scope": "public/agent_crypto_erith_ia/data/crypto only",
             "exchange_order_allowed": False,
