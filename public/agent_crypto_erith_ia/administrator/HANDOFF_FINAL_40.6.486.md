@@ -35,7 +35,7 @@ automatic sequential backlog archive.
 
 ## Workflow cleanup
 
-Historical package workflows .482-.485 are manual-only, preventing runtime archive commits from generating irrelevant historical release failures.
+Historical package workflows .481-.485 are manual-only, preventing runtime archive commits from generating irrelevant historical release failures.
 
 ## Terrain proof required
 
