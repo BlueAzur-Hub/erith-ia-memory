@@ -43,6 +43,8 @@ jobs:
         run: python -m pip install --disable-pip-version-check requests==2.32.5
 
       - name: Collect rank-complete CoinGecko USD and convert with ECB EUR rate
+        env:
+          COINGECKO_DEMO_API_KEY: ${{ secrets.COINGECKO_DEMO_API_KEY }}
         run: >-
           python public/agent_crypto_erith_ia/tools/collect_public_crypto_rank_complete.py
           --root public/agent_crypto_erith_ia
@@ -70,8 +72,14 @@ jobs:
           if status.get("status") not in {"ready", "degraded", "unavailable"}:
               raise SystemExit("unsupported crypto collector status")
           security = status.get("security") or {}
-          if security.get("api_key_required") is not False:
-              raise SystemExit("no-key contract missing")
+          if security.get("api_key_required") is not True:
+              raise SystemExit("CoinGecko Demo auth contract missing")
+          if security.get("api_key_present_in_public_files") is not False:
+              raise SystemExit("public API key exposure lock missing")
+          if security.get("api_key_value_logged") is not False:
+              raise SystemExit("API key logging lock missing")
+          if security.get("api_key_transport") != "x-cg-demo-api-key header":
+              raise SystemExit("CoinGecko Demo header transport contract missing")
           if security.get("browser_direct_market_fetch_required") is not False:
               raise SystemExit("browser independence contract missing")
           if security.get("exchange_order_allowed") is not False:
@@ -166,9 +174,10 @@ jobs:
           print(f"- Rank 250 represented: **{250 in ranks}**")
           print(f"- Canonical snapshot: **{latest.get('snapshot_id', '—')}**")
           print(f"- Schedule: **11 and 41 Europe/Paris each hour**")
-          print(f"- Market source: **CoinGecko USD**")
+          print(f"- Market source: **CoinGecko USD · Demo-authenticated GitHub Actions**")
           print(f"- Conversion: **ECB USD/EUR · {latest.get('fx', {}).get('source_date', '—')}**")
           print(f"- Role: **broad market snapshot/cache — never execution quote**")
+          print(f"- CoinGecko auth transport: **GitHub Actions secret → x-cg-demo-api-key header**")
           print(f"- Browser direct CoinGecko market request required: **No**")
           if status.get("last_error"):
               print(f"- Collector warning: `{status['last_error'][:1000]}`")

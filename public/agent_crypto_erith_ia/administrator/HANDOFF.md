@@ -1,31 +1,31 @@
-# HANDOFF — Agent-Crypto 40.6.479
+# HANDOFF — Agent-Crypto 40.6.480
 
-## Objet
+## État
 
-Sécuriser la preuve acquise et rendre visible la fraîcheur réelle des entrées Strategy A avant toute correction supplémentaire.
+40.6.479 reste le checkpoint Strategy A / Input Freshness.
+
+40.6.480 ne change pas le métier Strategy. Elle répare uniquement l'accès du collecteur canonique Top-250 à CoinGecko.
+
+## Vérification GitHub Actions
+
+1. Le repository doit posséder un secret Actions nommé `COINGECKO_DEMO_API_KEY`.
+2. Le workflow `Atlas Public Crypto Market` doit s'exécuter.
+3. Attendre un `status.json` avec `status = ready`.
+4. Vérifier que `latest.json.generated_at` est plus récent que le snapshot du 29/09 05:38:03Z.
+5. Vérifier que `preserved_last_valid = false` sur le run réussi.
+
+Si le secret manque ou est invalide :
+- ne pas inventer de prix ;
+- ne pas forcer Atlas ;
+- conserver le dernier snapshot valide ;
+- garder le diagnostic DEGRADED.
 
 ## Firefox
 
-1. Ctrl+F5.
-2. Vérifier **Build 40.6.479 · Administrator**.
-3. Section 04 → Simulation.
-4. Trouver **STRATEGY A · INPUT FRESHNESS TRUTH · 40.6.479**.
-5. Vérifier que le dernier cycle Strategy est visible avec son heure.
-6. Vérifier la séparation :
-   - BTC prix + 24 h : DIRECT_DECISION_INPUT ;
-   - Oracle / direction : DIRECT_DECISION_INPUT ;
-   - Cost Gate modèle : DIRECT_DECISION_INPUT ;
-   - Atlas CURRENT : CONTEXT_VISIBLE_NOT_PROVEN_DIRECT ;
-   - Kraken + OKX mesuré : EVIDENCE_SHADOW_NOT_GATE ;
-   - News : CONTEXT_ONLY.
-7. Un Atlas CURRENT ancien doit être affiché STALE sans arrêter ni modifier Strategy.
+Après publication : Ctrl+F5 → **Build 40.6.480 · Administrator**.
 
-## Atlas
-
-Ne pas forcer un nouveau CURRENT sur le même snapshot.
-
-Le diagnostic upstream actuel est : CoinGecko HTTP 403, dernier snapshot canonique valide conservé.
+Le panneau `STRATEGY A · INPUT FRESHNESS TRUTH` reste celui de 40.6.479 et doit simplement refléter la nouvelle fraîcheur quand le snapshot canonique recommence à avancer.
 
 ## Protection
 
-Lecture Technique .477 et garde terminale .478 sont héritées. Market Core 38.15.11 intact. Aucun ordre réel.
+Market Core **38.15.11** intact. Strategy A business logic intacte. Aucun ordre réel.

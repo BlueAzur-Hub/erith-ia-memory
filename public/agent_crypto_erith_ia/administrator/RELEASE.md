@@ -1,40 +1,34 @@
-# Agent-Crypto 40.6.479 — STRATEGY A INPUT FRESHNESS TRUTH + ATLAS UPSTREAM DIAGNOSIS
+# Agent-Crypto 40.6.480 — PUBLIC CRYPTO COLLECTOR ACCESS RECOVERY
 
-## Checkpoint sécurisé
+## Objet unique
 
-40.6.478 est gelée comme checkpoint fonctionnel :
-- 1 dossier prospectif réel ;
-- OKX T0 capturé ;
-- T+5, T+15 et T+60 CAPTURED ;
-- 0 fenêtre manquée ;
-- cycle `A-CYCLE-00029-405f73c5`.
+Réparer l'accès du producteur public Crypto canonique Top-250 à CoinGecko, sans modifier Strategy A ni le moteur Atlas CURRENT.
 
-La garde d'immuabilité post-terminale reste prouvée par harness. Le terrain n'a pas encore observé directement les écritures IndexedDB post-clôture.
+## Cause confirmée en 40.6.479
 
-## 40.6.479
+- `data/crypto/latest.json` reste sur le dernier snapshot valide ;
+- le collecteur continue de se réveiller ;
+- CoinGecko répond HTTP 403 ;
+- `status.json` passe DEGRADED et protège le dernier valide.
 
-Ajoute un panneau read-only **STRATEGY A · INPUT FRESHNESS TRUTH**.
+Le problème démontré est donc l'accès upstream du collecteur, pas un gel du moteur Atlas.
 
-Il sépare :
-- les champs réellement capturés dans le cycle Strategy ;
-- le contexte Atlas CURRENT visible ;
-- la mesure Execution Cost de preuve ;
-- le contexte News.
+## Correction 40.6.480
 
-Pour chaque entrée : rôle, valeur, horodatage disponible, âge, fraîcheur et limite de preuve.
+- le workflow canonique lit `secrets.COINGECKO_DEMO_API_KEY` ;
+- le collecteur transmet la clé uniquement via l'en-tête `x-cg-demo-api-key` aux requêtes CoinGecko ;
+- la clé n'est jamais placée dans les en-têtes globaux de la session `requests` ;
+- la requête BCE USD/EUR ne reçoit donc jamais la clé CoinGecko ;
+- le fallback de pagination Top-250 utilise la même authentification ;
+- secret absent/invalide → fail-closed, `status=degraded`, dernier `latest.json` valide conservé ;
+- aucune valeur de clé n'est publiée dans les JSON.
 
-UNKNOWN reste UNKNOWN : si un upstream n'expose pas son propre timestamp dans la ligne de cycle, 40.6.479 ne l'invente pas.
+## Preuve
 
-## Diagnostic Atlas
+Harness sans réseau : `.github/scripts/agent_crypto_public_crypto_demo_auth_test_406480.py`.
 
-Le producteur public Crypto canonique est DEGRADED :
-- latest valide : 2026-09-29T05:38:03.339Z ;
-- dernier essai observé : 2026-09-29T23:46:38Z ;
-- erreur : HTTP 403 CoinGecko ;
-- dernier snapshot valide préservé.
-
-Le collecteur Top-50 indépendant est également en HTTP 403. La stagnation du CURRENT Atlas est donc expliquée par l'upstream CoinGecko, pas par un scheduler Atlas arrêté.
+La preuve provider réelle reste PENDING jusqu'à l'exécution GitHub Actions avec un secret Demo valide et la publication d'un nouveau snapshot `ready`.
 
 ## Invariants
 
-Aucun seuil, gate, calcul Oracle, décision Strategy, modèle de coûts, Market Core, wallet ou ordre réel modifié.
+Strategy A, seuils/gates, Oracle, Cost Gate, Aether, Lecture Technique, Atlas CURRENT engine, Market Core **38.15.11**, wallet et ordres réels : inchangés.

@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.479 STRATEGY A AUDIT DEMAND LOADER + PROSPECTIVE OUTCOME + OKX COST EVIDENCE
+/* Agent-Crypto @erith.IA — 40.6.480 STRATEGY A AUDIT DEMAND LOADER + PROSPECTIVE OUTCOME + OKX COST EVIDENCE
    Keeps the canonical Simulation owner fixed in 40.6.446.
    40.6.452 hardens manual recovery when a script transport succeeds but its expected API is absent:
    a stale loaded node is removed, failed loads never stay marked ready, and the next explicit ensure can retry.
@@ -9,7 +9,7 @@
    No boot residency, polling, observer, storage write or automatic retry loop. */
 (()=>{
   "use strict";
-  const BUILD="40.6.479", TIMEOUT=6000;
+  const BUILD="40.6.480", TIMEOUT=6000;
   const SIMULATION_OWNER_SELECTOR='details[data-collapse-key="simulation"]';
   const SPECS=Object.freeze([
     Object.freeze({key:"cost-wait",src:"./js/strategy-a-cost-wait-outcome-audit.js?v=40.6.446",ready:()=>!!globalThis.AgentCryptoStrategyACostWaitOutcomeAudit406429}),
