@@ -1,0 +1,87 @@
+name: Agent-Crypto 40.6.485 Validate Package and Publish ZIP
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406485-oracle-evidence-github-transport-resilience
+    paths:
+      - '.github/workflows/agent-crypto-package-406485.yml'
+      - '.github/scripts/agent_crypto_oracle_evidence_github_resilience_test_406485.py'
+      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-existing-bridge-integration.js'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
+      - 'public/agent_crypto_erith_ia/data/oracle_evidence/manifest.json'
+      - 'coordination/inter_ai_dialogues/agent_crypto/BRIDGE_R17_V1_9_13_GITHUB_TRANSPORT_RESILIENCE_LOCK_40.6.485.md'
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-package-406485.yml'
+      - '.github/scripts/agent_crypto_oracle_evidence_github_resilience_test_406485.py'
+      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-existing-bridge-integration.js'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
+      - 'public/agent_crypto_erith_ia/data/oracle_evidence/manifest.json'
+      - 'coordination/inter_ai_dialogues/agent_crypto/BRIDGE_R17_V1_9_13_GITHUB_TRANSPORT_RESILIENCE_LOCK_40.6.485.md'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.485 GitHub transport resilience
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia"
+          node --check "$ROOT/administrator/js/oracle-evidence-existing-bridge-integration.js"
+          python .github/scripts/agent_crypto_oracle_evidence_github_resilience_test_406485.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+          grep -F 'Build 40.6.485 · Administrator' "$ROOT/administrator/index.html"
+          grep -F '"build": "40.6.485"' "$ROOT/administrator/build.json"
+          grep -F 'oracle-evidence-existing-bridge-integration.js?v=40.6.485' "$ROOT/administrator/js/post-boot-runtime-loader.js"
+
+      - name: Mark test receipt PASS
+        if: github.ref == 'refs/heads/main'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/administrator/ORACLE_EVIDENCE_GITHUB_RESILIENCE_TEST_40.6.485.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          d["pass_pending_workflow"]=False
+          d["pass"]=True
+          d["cases"]={k:"PASS" for k in d["cases"]}
+          p.write_text(json.dumps(d,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          PY
+
+      - name: Build ZIP
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_GITHUB_TRANSPORT_RESILIENCE_40.6.485.zip"
+          rm -rf /tmp/ac485 "$ZIP" "$ZIP.sha256"
+          mkdir -p /tmp/ac485
+          cp --parents             .github/workflows/agent-crypto-package-406485.yml             .github/scripts/agent_crypto_oracle_evidence_github_resilience_test_406485.py             coordination/inter_ai_dialogues/agent_crypto/BRIDGE_R17_V1_9_13_GITHUB_TRANSPORT_RESILIENCE_LOCK_40.6.485.md             public/agent_crypto_erith_ia/data/oracle_evidence/manifest.json             "$ROOT/js/oracle-evidence-tiered-storage-foundation.js"             "$ROOT/js/oracle-evidence-existing-bridge-integration.js"             "$ROOT/js/post-boot-runtime-loader.js"             "$ROOT/js/strategy-a-audit-demand-loader.js"             "$ROOT/index.html"             "$ROOT/index-40.6.485.html"             "$ROOT/build.json"             "$ROOT/RELEASE.md"             "$ROOT/HANDOFF.md"             "$ROOT/HANDOFF_FINAL_40.6.485.md"             "$ROOT/ORACLE_EVIDENCE_GITHUB_TRANSPORT_RESILIENCE_40.6.485.md"             "$ROOT/ORACLE_EVIDENCE_GITHUB_RESILIENCE_TEST_40.6.485.json"             "$ROOT/PATCH_MANIFEST_40.6.485.txt"             /tmp/ac485/
+          (cd /tmp/ac485 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+
+      - name: Commit published ZIP
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add             "$ROOT/ORACLE_EVIDENCE_GITHUB_RESILIENCE_TEST_40.6.485.json"             "$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_GITHUB_TRANSPORT_RESILIENCE_40.6.485.zip"             "$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_GITHUB_TRANSPORT_RESILIENCE_40.6.485.zip.sha256"
+          git commit -m "chore(package): publish Agent-Crypto 40.6.485 GitHub resilience ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
