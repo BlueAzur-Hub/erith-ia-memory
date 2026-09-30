@@ -1,25 +1,7 @@
 name: Agent-Crypto 40.6.482 Validate Package and Publish ZIP
 
 on:
-  push:
-    branches:
-      - main
-      - agent-crypto-406482-oracle-evidence-tiered-storage-foundation
-    paths:
-      - '.github/workflows/agent-crypto-package-406482.yml'
-      - '.github/scripts/agent_crypto_oracle_evidence_tiered_storage_test_406482.py'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-tiered-storage-foundation.js'
-      - 'public/agent_crypto_erith_ia/data/oracle_evidence/**'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-  pull_request:
-    paths:
-      - '.github/workflows/agent-crypto-package-406482.yml'
-      - '.github/scripts/agent_crypto_oracle_evidence_tiered_storage_test_406482.py'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-tiered-storage-foundation.js'
-      - 'public/agent_crypto_erith_ia/data/oracle_evidence/**'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
+  workflow_dispatch:
 
 permissions:
   contents: write

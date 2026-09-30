@@ -1,19 +1,7 @@
 name: Agent-Crypto 40.6.481 Validate and Package
 
 on:
-  push:
-    branches:
-      - main
-      - agent-crypto-406481-oracle-evidence-cursor-read-recovery
-    paths:
-      - '.github/workflows/agent-crypto-package-406481.yml'
-  pull_request:
-    paths:
-      - 'public/agent_crypto_erith_ia/administrator/app.js'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - '.github/scripts/agent_crypto_oracle_evidence_cursor_read_test_406481.py'
-      - '.github/workflows/agent-crypto-package-406481.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read

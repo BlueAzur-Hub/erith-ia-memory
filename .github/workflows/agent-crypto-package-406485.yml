@@ -1,29 +1,7 @@
 name: Agent-Crypto 40.6.485 Validate Package and Publish ZIP
 
 on:
-  push:
-    branches:
-      - main
-      - agent-crypto-406485-oracle-evidence-github-transport-resilience
-    paths:
-      - '.github/workflows/agent-crypto-package-406485.yml'
-      - '.github/scripts/agent_crypto_oracle_evidence_github_resilience_test_406485.py'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-existing-bridge-integration.js'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
-      - 'public/agent_crypto_erith_ia/data/oracle_evidence/manifest.json'
-      - 'coordination/inter_ai_dialogues/agent_crypto/BRIDGE_R17_V1_9_13_GITHUB_TRANSPORT_RESILIENCE_LOCK_40.6.485.md'
-  pull_request:
-    paths:
-      - '.github/workflows/agent-crypto-package-406485.yml'
-      - '.github/scripts/agent_crypto_oracle_evidence_github_resilience_test_406485.py'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-existing-bridge-integration.js'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
-      - 'public/agent_crypto_erith_ia/data/oracle_evidence/manifest.json'
-      - 'coordination/inter_ai_dialogues/agent_crypto/BRIDGE_R17_V1_9_13_GITHUB_TRANSPORT_RESILIENCE_LOCK_40.6.485.md'
+  workflow_dispatch:
 
 permissions:
   contents: write
