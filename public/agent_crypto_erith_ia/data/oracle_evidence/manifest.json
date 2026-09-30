@@ -1,6 +1,6 @@
 {
   "schema": "agent_crypto_oracle_evidence_cold_archive_manifest_v1",
-  "build": "40.6.483",
+  "build": "40.6.484",
   "storage_tier": "GITHUB_COLD",
   "source": {
     "database": "agent_crypto_oracle_evidence_v1",
@@ -14,12 +14,16 @@
   "github_token_in_browser": false,
   "browser_github_write": false,
   "transport": {
-    "status": "SAFE_BRIDGE_AVAILABLE",
-    "owner": "public/agent_crypto_erith_ia/tools/oracle_evidence_cold_bridge.py",
-    "endpoint": "http://127.0.0.1:8791/api/oracle-evidence/cold-ingest",
+    "status": "EXISTING_BRIDGE_8787_REQUIRED",
+    "owner": "Atlas-10 Crypto Bridge V1.9.12",
+    "endpoint": "http://127.0.0.1:8787/oracle-evidence/ingest",
+    "status_endpoint": "http://127.0.0.1:8787/oracle-evidence/status",
+    "authentication": "EXISTING_ADMINISTRATOR_BRIDGE_SESSION",
+    "capability": "oracle_evidence.publish",
     "loopback_only": true,
     "operator_triggered": true,
-    "automatic_upload": false
+    "automatic_upload": false,
+    "standalone_8791_superseded": true
   },
   "verification": {
     "required": [
@@ -32,5 +36,5 @@
     "verified_chunks": 0
   },
   "created_at": "2026-09-30T02:20:00Z",
-  "updated_at": "2026-09-30T03:36:00Z"
+  "updated_at": "2026-09-30T04:50:00Z"
 }
