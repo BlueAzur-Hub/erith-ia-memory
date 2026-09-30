@@ -1,27 +1,7 @@
 name: Agent-Crypto 40.6.483 Validate Package and Publish ZIP
 
 on:
-  push:
-    branches:
-      - main
-      - agent-crypto-406483-oracle-evidence-safe-bridge-ingest-cold-verify
-    paths:
-      - '.github/workflows/agent-crypto-package-406483.yml'
-      - '.github/scripts/agent_crypto_oracle_evidence_safe_bridge_test_406483.py'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-safe-bridge-ingest.js'
-      - 'public/agent_crypto_erith_ia/tools/oracle_evidence_cold_bridge.py'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
-  pull_request:
-    paths:
-      - '.github/workflows/agent-crypto-package-406483.yml'
-      - '.github/scripts/agent_crypto_oracle_evidence_safe_bridge_test_406483.py'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-safe-bridge-ingest.js'
-      - 'public/agent_crypto_erith_ia/tools/oracle_evidence_cold_bridge.py'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
+  workflow_dispatch:
 
 permissions:
   contents: write
