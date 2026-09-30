@@ -60,7 +60,7 @@ need(x["resume_source"]=="BRIDGE_VERIFIED_WATERMARK","resume source")
 need(x["local_retention_allowed"] is False and x["local_delete_api_exposed"] is False,"retention locked")
 need(x["browser_github_write"] is False and x["github_token_in_browser"] is False,"browser GitHub lock")
 
-for old in ("406482","406483","406484","406485"):
+for old in ("406481","406482","406483","406484","406485"):
     p=Path(f".github/workflows/agent-crypto-package-{old}.yml")
     t=p.read_text(encoding="utf-8")
     need("workflow_dispatch:" in t, f"historical {old} manual only")
