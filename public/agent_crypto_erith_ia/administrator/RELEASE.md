@@ -1,39 +1,25 @@
-# Agent-Crypto 40.6.488 — PUBLIC CRYPTO COLLECTOR PRE-480 RESTORE
+# Agent-Crypto 40.6.489 — ORACLE EVIDENCE HOT WINDOW SIZING PROBE
 
-## Objet unique
+## Objet
+Mesurer automatiquement le poids réel des Oracle Evidence encore portées par Firefox avant de choisir une HOT WINDOW.
 
-Restaurer le producteur public Crypto canonique Top-250 à son dernier état validé avant la régression 40.6.480.
+## Mesures
+- count IndexedDB exact ;
+- échantillon systématique borné à 1 000 lignes ;
+- taille JSON réelle avec TextEncoder ;
+- moyenne, médiane, P95, minimum et maximum ;
+- estimation du payload local total ;
+- navigator.storage.estimate() pour l'origin ;
+- couverture du manifest froid GitHub ;
+- scénarios HOT 10 000 / 5 000 / 2 500 comme estimations uniquement.
 
-## Source de restauration
+## Sécurité
+READ ONLY. Aucune modification locale. Aucune rétention activée. Aucun changement de schéma.
 
-- Build source : **40.6.479**
-- Commit source : `aa120142b856596739e0fc6abd5b418fe58f379a`
-- Trois propriétaires restaurés exactement :
-  - `.github/workflows/atlas-public-crypto-market.yml`
-  - `public/agent_crypto_erith_ia/tools/collect_public_crypto.py`
-  - `public/agent_crypto_erith_ia/tools/collect_public_crypto_rank_complete.py`
+## Terrain
+Après Ctrl+F5 :
+Oracle → Evidence & validation → ORACLE EVIDENCE · HOT WINDOW SIZING · 40.6.489.
 
-## Méthode
+La mesure part automatiquement une fois. Le bouton « Mesurer — aucune suppression » permet uniquement de refaire la mesure.
 
-Aucune réinvention. Aucun changement de fournisseur. Aucun changement Strategy A ou Atlas CURRENT.
-
-La restauration remet les trois propriétaires au contenu exact du checkpoint 40.6.479.
-
-## Protections
-
-- Market Core 38.15.11 inchangé
-- Strategy A inchangée
-- Atlas CURRENT engine inchangé
-- Oracle / Math inchangés
-- Aether / Redivider inchangés
-- Lecture Technique inchangée
-- Bridge R17 / V1.9.13 inchangé
-- Oracle Evidence 40.6.487 inchangé
-- Web Classique inchangée
-- aucun ordre réel
-
-## Preuve attendue
-
-Après merge sur main, le workflow `Atlas Public Crypto Market` doit produire un nouveau snapshot utilisable.
-
-Si le provider refuse encore l'appel, le dernier snapshot valide reste conservé et l'incident est traité comme une preuve provider distincte de la restauration.
+La décision de HOT WINDOW reste interdite tant que les chiffres terrain ne sont pas lus.
