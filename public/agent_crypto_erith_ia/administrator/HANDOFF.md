@@ -1,43 +1,52 @@
-# HANDOFF — Agent-Crypto 40.6.485
+# HANDOFF — Agent-Crypto 40.6.486
 
-## Checkpoint
+## Canonical checkpoint entering this build
 
-40.6.485 — ORACLE EVIDENCE GITHUB TRANSPORT RESILIENCE.
-
-## Reproduced terrain before repair
-
-R16 / V1.9.12:
-- Bridge READY;
+40.6.485 terrain PASS:
+- Bridge V1.9.13 READY;
 - GitHub local READY;
-- two ingest attempts;
-- same failure: write operation timed out;
-- archived_rows remained 0;
-- chunks remained empty;
-- local Evidence remained intact.
+- one real 500-Evidence chunk VERIFIED;
+- archived_rows = 500;
+- chunks = 1;
+- public readback = PUBLISHED_VERIFY_PASS;
+- local Evidence count did not decrease.
 
-## Repair owner
+## 40.6.486 mission
 
-Bridge R17 / V1.9.13:
-- 180 s large-write timeout;
-- one bounded retry;
-- 120 s cold readback;
-- >1 MiB readback through Git Blob;
-- explicit timeout/network diagnostics.
+Remove the need for roughly 70 operator clicks.
 
-Administrator 40.6.485:
-- requires Bridge V1.9.13;
-- allows 300 s for ingest response.
+## Queue model
 
-## Next terrain sequence
+At queue start:
+1. fetch Bridge status and authoritative VERIFIED watermark;
+2. count local Evidence;
+3. snapshot the latest local row as a fixed target;
+4. estimate current backlog = local rows - already archived rows.
 
-R17 running
-→ Administrator authenticated
-→ Tester Bridge 8787
-→ READY V1.9.13
-→ Envoyer 500 Evidence
-→ require BRIDGE_8787_INGEST_VERIFIED
-→ verify published chunk after Pages propagation
-→ require PUBLISHED_VERIFY_PASS
-→ local Evidence count must not decrease.
+Loop:
+1. read next 500 rows after current watermark, never beyond startup target;
+2. build proven 40.6.482 bundle schema;
+3. POST to Bridge 8787;
+4. require VERIFIED;
+5. advance watermark from the verified bundle;
+6. repeat.
 
-No HOT-window/retention work until real cold chunks are VERIFIED.
+## Important live-system rule
+
+Rows produced after the startup target are not chased during the current pass. They remain local and are archived by a later pass.
+
+## Pause / Stop semantics
+
+Pause and Stop are **after current chunk** only.
+
+No request is force-aborted while Bridge may be committing to GitHub.
+
+## Resume
+
+A fresh Start always resumes from the Bridge/GitHub VERIFIED watermark, not from browser memory.
+
+## No-retention lock
+
+40.6.486 still performs no local deletion.
+
+Retention/HOT-window work remains a later project after multiple cold chunks are proven durable.
