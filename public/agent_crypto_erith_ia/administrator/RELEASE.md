@@ -54,7 +54,7 @@ If the page is reloaded or the queue is stopped, the next start asks Bridge 8787
 
 ## Historical workflow hygiene
 
-40.6.482 / .483 / .484 / .485 package workflows are now manual-only archives. They no longer relaunch and fail on every later Agent-Crypto build or Oracle Evidence runtime commit.
+40.6.481 / .482 / .483 / .484 / .485 package workflows are now manual-only archives. They no longer relaunch and fail on every later Agent-Crypto build or Oracle Evidence runtime commit.
 
 ## Terrain
 
