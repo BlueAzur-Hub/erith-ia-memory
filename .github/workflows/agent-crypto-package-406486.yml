@@ -8,7 +8,7 @@ on:
     paths:
       - '.github/workflows/agent-crypto-package-406486.yml'
       - '.github/scripts/agent_crypto_oracle_evidence_auto_archive_test_406486.py'
-      - '.github/workflows/agent-crypto-package-406482.yml'
+      - '.github/workflows/agent-crypto-package-406481.yml'\n      - '.github/workflows/agent-crypto-package-406482.yml'
       - '.github/workflows/agent-crypto-package-406483.yml'
       - '.github/workflows/agent-crypto-package-406484.yml'
       - '.github/workflows/agent-crypto-package-406485.yml'
@@ -114,7 +114,7 @@ jobs:
           cp --parents \
             .github/workflows/agent-crypto-package-406486.yml \
             .github/scripts/agent_crypto_oracle_evidence_auto_archive_test_406486.py \
-            .github/workflows/agent-crypto-package-406482.yml \
+            .github/workflows/agent-crypto-package-406481.yml \\\n            .github/workflows/agent-crypto-package-406482.yml \
             .github/workflows/agent-crypto-package-406483.yml \
             .github/workflows/agent-crypto-package-406484.yml \
             .github/workflows/agent-crypto-package-406485.yml \
