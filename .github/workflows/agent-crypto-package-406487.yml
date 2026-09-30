@@ -8,6 +8,12 @@ on:
     paths:
       - '.github/workflows/agent-crypto-package-406487.yml'
       - '.github/scripts/agent_crypto_oracle_evidence_auto_archive_safety_test_406487.py'
+      - '.github/workflows/agent-crypto-package-406477.yml'
+      - '.github/workflows/agent-crypto-package-406481.yml'
+      - '.github/workflows/agent-crypto-package-406482.yml'
+      - '.github/workflows/agent-crypto-package-406483.yml'
+      - '.github/workflows/agent-crypto-package-406484.yml'
+      - '.github/workflows/agent-crypto-package-406485.yml'
       - '.github/workflows/agent-crypto-package-406486.yml'
       - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-existing-bridge-integration.js'
       - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-auto-archive-safety-gates.js'
@@ -24,6 +30,12 @@ on:
     paths:
       - '.github/workflows/agent-crypto-package-406487.yml'
       - '.github/scripts/agent_crypto_oracle_evidence_auto_archive_safety_test_406487.py'
+      - '.github/workflows/agent-crypto-package-406477.yml'
+      - '.github/workflows/agent-crypto-package-406481.yml'
+      - '.github/workflows/agent-crypto-package-406482.yml'
+      - '.github/workflows/agent-crypto-package-406483.yml'
+      - '.github/workflows/agent-crypto-package-406484.yml'
+      - '.github/workflows/agent-crypto-package-406485.yml'
       - '.github/workflows/agent-crypto-package-406486.yml'
       - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-existing-bridge-integration.js'
       - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-auto-archive-safety-gates.js'
@@ -111,6 +123,12 @@ jobs:
           cp --parents \
             .github/workflows/agent-crypto-package-406487.yml \
             .github/scripts/agent_crypto_oracle_evidence_auto_archive_safety_test_406487.py \
+            .github/workflows/agent-crypto-package-406477.yml \
+            .github/workflows/agent-crypto-package-406481.yml \
+            .github/workflows/agent-crypto-package-406482.yml \
+            .github/workflows/agent-crypto-package-406483.yml \
+            .github/workflows/agent-crypto-package-406484.yml \
+            .github/workflows/agent-crypto-package-406485.yml \
             .github/workflows/agent-crypto-package-406486.yml \
             "$ROOT/js/oracle-evidence-tiered-storage-foundation.js" \
             "$ROOT/js/oracle-evidence-existing-bridge-integration.js" \
