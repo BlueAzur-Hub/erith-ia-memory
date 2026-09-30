@@ -1,52 +1,51 @@
-# HANDOFF — Agent-Crypto 40.6.486
+# HANDOFF — Agent-Crypto 40.6.487
 
-## Canonical checkpoint entering this build
+## Proven checkpoint before automation
 
 40.6.485 terrain PASS:
 - Bridge V1.9.13 READY;
-- GitHub local READY;
-- one real 500-Evidence chunk VERIFIED;
+- GitHub local PRÊT;
+- first real 500-row chunk VERIFIED;
+- public readback PASS;
 - archived_rows = 500;
 - chunks = 1;
-- public readback = PUBLISHED_VERIFY_PASS;
 - local Evidence count did not decrease.
 
-## 40.6.486 mission
+## 40.6.487 objective
 
-Remove the need for roughly 70 operator clicks.
+Archive the remaining backlog without requiring ~70 manual clicks and without weakening proof semantics.
 
-## Queue model
+## Mandatory gates
 
-At queue start:
-1. fetch Bridge status and authoritative VERIFIED watermark;
-2. count local Evidence;
-3. snapshot the latest local row as a fixed target;
-4. estimate current backlog = local rows - already archived rows.
+- Bridge version = V1.9.13.
+- Bridge Oracle Evidence `enabled=true`.
+- GitHub local credential ready.
+- one archive owner at a time.
+- one chunk in flight.
+- VERIFIED before next chunk.
+- fixed target per pass.
+- exact public receipt proof.
+- zero local delete.
 
-Loop:
-1. read next 500 rows after current watermark, never beyond startup target;
-2. build proven 40.6.482 bundle schema;
-3. POST to Bridge 8787;
-4. require VERIFIED;
-5. advance watermark from the verified bundle;
-6. repeat.
+## Operator terrain
 
-## Important live-system rule
+1. Bridge V1.9.13 running.
+2. Open Build 40.6.487.
+3. Oracle → Evidence & validation.
+4. Confirm the manual 500 button is disabled by the AUTO owner.
+5. Click **Archiver automatiquement** once.
+6. Observe at least two consecutive chunks reach VERIFIED without another click.
+7. Click **Pause après ce chunk** and require AUTO_PAUSED after a VERIFIED boundary.
+8. Click **Reprendre** and require continuation after the same watermark.
+9. Optional: **Arrêter après ce chunk**, then Start again and prove resume from Bridge VERIFIED watermark.
+10. Confirm local Evidence count never decreases.
 
-Rows produced after the startup target are not chased during the current pass. They remain local and are archived by a later pass.
+After queue completion and Pages propagation:
+- click **Vérifier fin publiée** once;
+- require `FINAL_PUBLIC_EXACT_VERIFY_PASS`.
 
-## Pause / Stop semantics
+## Important
 
-Pause and Stop are **after current chunk** only.
+Do not start retention/HOT-window deletion work in this build.
 
-No request is force-aborted while Bridge may be committing to GitHub.
-
-## Resume
-
-A fresh Start always resumes from the Bridge/GitHub VERIFIED watermark, not from browser memory.
-
-## No-retention lock
-
-40.6.486 still performs no local deletion.
-
-Retention/HOT-window work remains a later project after multiple cold chunks are proven durable.
+Cold durability and archive automation remain separate from local retention.

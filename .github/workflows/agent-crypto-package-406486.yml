@@ -1,47 +1,7 @@
 name: Agent-Crypto 40.6.486 Validate Package and Publish ZIP
 
 on:
-  push:
-    branches:
-      - main
-      - agent-crypto-406486-oracle-evidence-automatic-sequential-cold-archive
-    paths:
-      - '.github/workflows/agent-crypto-package-406486.yml'
-      - '.github/scripts/agent_crypto_oracle_evidence_auto_archive_test_406486.py'
-      - '.github/workflows/agent-crypto-package-406481.yml'
-      - '.github/workflows/agent-crypto-package-406482.yml'
-      - '.github/workflows/agent-crypto-package-406483.yml'
-      - '.github/workflows/agent-crypto-package-406484.yml'
-      - '.github/workflows/agent-crypto-package-406485.yml'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-auto-archive-queue.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/js/strategy-a-audit-demand-loader.js'
-      - 'public/agent_crypto_erith_ia/administrator/RELEASE.md'
-      - 'public/agent_crypto_erith_ia/administrator/HANDOFF.md'
-      - 'public/agent_crypto_erith_ia/administrator/HANDOFF_FINAL_40.6.486.md'
-      - 'public/agent_crypto_erith_ia/administrator/ORACLE_EVIDENCE_AUTOMATIC_SEQUENTIAL_COLD_ARCHIVE_40.6.486.md'
-      - 'public/agent_crypto_erith_ia/administrator/PATCH_MANIFEST_40.6.486.txt'
-  pull_request:
-    paths:
-      - '.github/workflows/agent-crypto-package-406486.yml'
-      - '.github/scripts/agent_crypto_oracle_evidence_auto_archive_test_406486.py'
-      - '.github/workflows/agent-crypto-package-406481.yml'
-      - '.github/workflows/agent-crypto-package-406482.yml'
-      - '.github/workflows/agent-crypto-package-406483.yml'
-      - '.github/workflows/agent-crypto-package-406484.yml'
-      - '.github/workflows/agent-crypto-package-406485.yml'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-auto-archive-queue.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/js/strategy-a-audit-demand-loader.js'
-      - 'public/agent_crypto_erith_ia/administrator/RELEASE.md'
-      - 'public/agent_crypto_erith_ia/administrator/HANDOFF.md'
-      - 'public/agent_crypto_erith_ia/administrator/HANDOFF_FINAL_40.6.486.md'
-      - 'public/agent_crypto_erith_ia/administrator/ORACLE_EVIDENCE_AUTOMATIC_SEQUENTIAL_COLD_ARCHIVE_40.6.486.md'
-      - 'public/agent_crypto_erith_ia/administrator/PATCH_MANIFEST_40.6.486.txt'
+  workflow_dispatch:
 
 permissions:
   contents: write
