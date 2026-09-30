@@ -1,0 +1,191 @@
+name: Stage Agent-Crypto 40.6.489 Hot Window Sizing
+
+on:
+  push:
+    branches:
+      - agent-crypto-406489-oracle-evidence-hot-window-sizing
+    paths:
+      - '.github/workflows/agent-crypto-stage-406489.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent-crypto-406489-oracle-evidence-hot-window-sizing
+          fetch-depth: 2
+
+      - name: Validate JavaScript and wiring
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/oracle-evidence-hot-window-sizing-406489.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'const BUILD = "40.6.489"' "$ROOT/js/oracle-evidence-hot-window-sizing-406489.js"
+          grep -F 'db.transaction(api.store,"readonly")' "$ROOT/js/oracle-evidence-hot-window-sizing-406489.js"
+          grep -F 'oracle-evidence-hot-window-sizing-406489.js?v=40.6.489' "$ROOT/js/post-boot-runtime-loader.js"
+          grep -F 'Build 40.6.489 · Administrator' "$ROOT/index.html"
+
+      - name: Stamp build truth and documentation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, shutil
+
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          build_path=root/"build.json"
+          d=json.loads(build_path.read_text(encoding="utf-8"))
+          if d.get("build")!="40.6.488":
+              raise SystemExit(f"unexpected parent build: {d.get('build')}")
+          d.update({
+              "build":"40.6.489",
+              "release":"ORACLE EVIDENCE HOT WINDOW SIZING PROBE",
+              "status":"published_pending_firefox_sizing_measurement_489",
+              "parent_build":"40.6.488",
+              "asset_token":"market-core-v2.0-alpha-build-40.6.489",
+              "administrator_build":"40.6.489",
+              "build_label":"Build 40.6.489 · Administrator",
+              "terrain_verified":False,
+              "terrain_pending":"Firefox: lire la mesure automatique Oracle Evidence avant toute décision de HOT WINDOW.",
+              "terrain_proof":None,
+              "release_notes":"40.6.489 ajoute une sonde READ ONLY de dimensionnement Oracle Evidence : échantillon borné, tailles JSON, storage estimate et couverture du manifest froid. Aucune rétention n'est activée.",
+              "oracle_modified":False,
+              "storage_schema_changed":False,
+              "retention_changed":False,
+              "new_recurring_timer":False,
+              "new_observer":False,
+              "new_business_network_request":False,
+              "real_order":False
+          })
+          d["oracle_evidence_hot_window_sizing_406489"]={
+              "enabled":True,
+              "module":"js/oracle-evidence-hot-window-sizing-406489.js",
+              "mode":"READ_ONLY_MEASUREMENT_ONLY",
+              "automatic_measure_once":True,
+              "sample_target":1000,
+              "sampling":"SYSTEMATIC_BOUNDED_CURSOR",
+              "size_metric":"TextEncoder(JSON.stringify(record)).byteLength",
+              "hot_scenarios":[10000,5000,2500],
+              "scenarios_are_estimates_only":True,
+              "process_ram_truth":"NOT_EXPOSED_BY_FIREFOX_PAGE_WHEN_UNAVAILABLE",
+              "indexeddb_transaction_mode":"readonly",
+              "local_modification":False,
+              "retention_activated":False,
+              "storage_schema_changed":False,
+              "oracle_math_changed":False,
+              "strategy_a_changed":False,
+              "market_core_changed":False,
+              "atlas_current_changed":False,
+              "evidence_archive_406487_changed":False,
+              "real_order":False
+          }
+          build_path.write_text(json.dumps(d,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+
+          shutil.copyfile(root/"index.html",root/"index-40.6.489.html")
+
+          release="""# Agent-Crypto 40.6.489 — ORACLE EVIDENCE HOT WINDOW SIZING PROBE
+
+## Objet
+Mesurer automatiquement le poids réel des Oracle Evidence encore portées par Firefox avant de choisir une HOT WINDOW.
+
+## Mesures
+- count IndexedDB exact ;
+- échantillon systématique borné à 1 000 lignes ;
+- taille JSON par TextEncoder ;
+- moyenne, médiane, P95, min, max ;
+- estimation du payload total ;
+- navigator.storage.estimate() ;
+- couverture du manifest froid GitHub ;
+- scénarios HOT 10 000 / 5 000 / 2 500 comme estimations uniquement.
+
+## Sécurité
+READ ONLY. Aucune modification locale. Aucune rétention activée. Aucun changement de schéma.
+
+## Terrain
+Ctrl+F5 → Oracle → Evidence & validation → ORACLE EVIDENCE · HOT WINDOW SIZING · 40.6.489.
+La mesure part automatiquement une fois. Le bouton permet uniquement de refaire la mesure.
+"""
+          (root/"RELEASE.md").write_text(release,encoding="utf-8")
+          (root/"HANDOFF.md").write_text(release+"\nLa prochaine version ne doit choisir une HOT WINDOW qu'après lecture des mesures Firefox.\n",encoding="utf-8")
+          (root/"HANDOFF_FINAL_40.6.489.md").write_text(release,encoding="utf-8")
+          (root/"ORACLE_EVIDENCE_HOT_WINDOW_SIZING_40.6.489.md").write_text(release,encoding="utf-8")
+
+          receipt={
+              "schema":"agent_crypto_oracle_hot_window_sizing_test_v1",
+              "build":"40.6.489",
+              "static_status":"PASS",
+              "terrain_status":"PENDING_FIREFOX_MEASUREMENT",
+              "sample_target":1000,
+              "indexeddb_mode":"readonly",
+              "automatic_measure_once":True,
+              "local_modification":False,
+              "retention_activated":False
+          }
+          (root/"ORACLE_EVIDENCE_HOT_WINDOW_SIZING_TEST_40.6.489.json").write_text(
+              json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+
+          manifest="""AGENT-CRYPTO 40.6.489 — ORACLE EVIDENCE HOT WINDOW SIZING PROBE
+
+ADDED
+js/oracle-evidence-hot-window-sizing-406489.js
+index-40.6.489.html
+HANDOFF_FINAL_40.6.489.md
+ORACLE_EVIDENCE_HOT_WINDOW_SIZING_40.6.489.md
+ORACLE_EVIDENCE_HOT_WINDOW_SIZING_TEST_40.6.489.json
+
+MODIFIED
+index.html
+build.json
+js/post-boot-runtime-loader.js
+RELEASE.md
+HANDOFF.md
+
+CONTRACT
+READ ONLY
+sample target 1000
+HOT scenarios 10000 / 5000 / 2500
+no retention activated
+storage schema unchanged
+Market Core 38.15.11 protected
+Strategy A protected
+Atlas CURRENT protected
+Oracle Math protected
+"""
+          (root/"PATCH_MANIFEST_40.6.489.txt").write_text(manifest,encoding="utf-8")
+          PY
+
+      - name: Validate build truth
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+          grep -F '"build": "40.6.489"' "$ROOT/build.json"
+          grep -F '"retention_changed": false' "$ROOT/build.json"
+          grep -F '"storage_schema_changed": false' "$ROOT/build.json"
+          grep -F '"mode": "READ_ONLY_MEASUREMENT_ONLY"' "$ROOT/build.json"
+
+      - name: Build and verify ZIP
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_HOT_WINDOW_SIZING_40.6.489.zip"
+          rm -rf /tmp/ac489 "$ZIP" "$ZIP.sha256"
+          mkdir -p /tmp/ac489
+          cp --parents             "$ROOT/index.html"             "$ROOT/index-40.6.489.html"             "$ROOT/build.json"             "$ROOT/js/post-boot-runtime-loader.js"             "$ROOT/js/oracle-evidence-hot-window-sizing-406489.js"             "$ROOT/RELEASE.md"             "$ROOT/HANDOFF.md"             "$ROOT/HANDOFF_FINAL_40.6.489.md"             "$ROOT/ORACLE_EVIDENCE_HOT_WINDOW_SIZING_40.6.489.md"             "$ROOT/ORACLE_EVIDENCE_HOT_WINDOW_SIZING_TEST_40.6.489.json"             "$ROOT/PATCH_MANIFEST_40.6.489.txt"             /tmp/ac489/
+          (cd /tmp/ac489 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+
+      - name: Commit staged 40.6.489
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          git commit -m "chore(package): stage Agent-Crypto 40.6.489 sizing probe"
+          git pull --rebase origin agent-crypto-406489-oracle-evidence-hot-window-sizing
+          git push origin HEAD:agent-crypto-406489-oracle-evidence-hot-window-sizing
