@@ -6,7 +6,7 @@
     "database": "agent_crypto_oracle_evidence_v1",
     "store": "observations"
   },
-  "archived_rows": 16000,
+  "archived_rows": 16500,
   "chunks": [
     {
       "schema": "agent_crypto_oracle_evidence_cold_chunk_v1",
@@ -1019,22 +1019,22 @@
       },
       "local_rows_deleted": false,
       "local_retention_allowed": false,
-      "status": "WRITTEN_PENDING_VERIFY",
+      "status": "VERIFIED",
       "written_at": "2026-09-30T16:23:08.859714+00:00",
-      "verified_at": null,
-      "write_commit": null,
+      "verified_at": "2026-09-30T16:24:02.847528+00:00",
+      "write_commit": "2a4463b1be08be564ff69623ae6fadf550086881",
       "verification": {
-        "read_back": false,
-        "sha256": false,
-        "row_count": false,
-        "json_parse": false,
-        "manifest_commit": false
+        "read_back": true,
+        "sha256": true,
+        "row_count": true,
+        "json_parse": true,
+        "manifest_commit": true
       }
     }
   ],
   "watermark": {
-    "t0": 1788950051528,
-    "id": "1788950051528-bitcoin-5m-continuation"
+    "t0": 1788980372693,
+    "id": "1788980372693-bitcoin-5m-continuation"
   },
   "local_retention_allowed": false,
   "local_delete_requires_verified_cold_copy": true,
@@ -1055,8 +1055,8 @@
       "json_parse",
       "manifest_commit"
     ],
-    "verified_chunks": 32,
-    "last_verified_at": "2026-09-30T16:22:55.078649+00:00"
+    "verified_chunks": 33,
+    "last_verified_at": "2026-09-30T16:24:02.847528+00:00"
   },
   "created_at": "2026-09-30T02:20:00Z",
   "updated_at": "2026-09-30T05:58:00Z"
