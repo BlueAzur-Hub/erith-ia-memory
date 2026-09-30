@@ -1,20 +1,20 @@
 {
   "schema": "agent_crypto_oracle_evidence_safe_bridge_test_v1",
   "build": "40.6.483",
-  "pass_pending_workflow": true,
+  "pass_pending_workflow": false,
   "cases": {
-    "bundle_schema_validation": "PENDING",
-    "sha256_rejection_on_tamper": "PENDING",
-    "path_traversal_rejected": "PENDING",
-    "pending_manifest_atomic_contract": "PENDING",
-    "readback_verified_manifest_contract": "PENDING",
-    "loopback_only_bridge": "PENDING",
-    "github_token_browser_absent": "PENDING",
-    "operator_triggered_only": "PENDING",
-    "local_retention_locked": "PENDING",
-    "oracle_482_foundation_preserved": "PENDING",
-    "strategy_a_unchanged": "PENDING",
-    "market_core_381511_unchanged": "PENDING"
+    "bundle_schema_validation": "PASS",
+    "sha256_rejection_on_tamper": "PASS",
+    "path_traversal_rejected": "PASS",
+    "pending_manifest_atomic_contract": "PASS",
+    "readback_verified_manifest_contract": "PASS",
+    "loopback_only_bridge": "PASS",
+    "github_token_browser_absent": "PASS",
+    "operator_triggered_only": "PASS",
+    "local_retention_locked": "PASS",
+    "oracle_482_foundation_preserved": "PASS",
+    "strategy_a_unchanged": "PASS",
+    "market_core_381511_unchanged": "PASS"
   },
-  "pass": false
+  "pass": true
 }
