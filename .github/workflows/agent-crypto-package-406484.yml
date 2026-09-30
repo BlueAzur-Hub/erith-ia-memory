@@ -1,31 +1,7 @@
 name: Agent-Crypto 40.6.484 Validate Package and Publish ZIP
 
 on:
-  push:
-    branches:
-      - main
-      - agent-crypto-406484-oracle-evidence-existing-bridge-integration
-    paths:
-      - '.github/workflows/agent-crypto-package-406484.yml'
-      - '.github/scripts/agent_crypto_oracle_evidence_existing_bridge_test_406484.py'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-existing-bridge-integration.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-tiered-storage-foundation.js'
-      - 'public/agent_crypto_erith_ia/data/oracle_evidence/**'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
-      - 'coordination/inter_ai_dialogues/agent_crypto/BRIDGE_R16_V1_9_12_ORACLE_EVIDENCE_SOURCE_LOCK_40.6.484.md'
-  pull_request:
-    paths:
-      - '.github/workflows/agent-crypto-package-406484.yml'
-      - '.github/scripts/agent_crypto_oracle_evidence_existing_bridge_test_406484.py'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-existing-bridge-integration.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-tiered-storage-foundation.js'
-      - 'public/agent_crypto_erith_ia/data/oracle_evidence/**'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
-      - 'coordination/inter_ai_dialogues/agent_crypto/BRIDGE_R16_V1_9_12_ORACLE_EVIDENCE_SOURCE_LOCK_40.6.484.md'
+  workflow_dispatch:
 
 permissions:
   contents: write
