@@ -1,6 +1,6 @@
 {
   "schema": "agent_crypto_oracle_evidence_cold_archive_manifest_v1",
-  "build": "40.6.484",
+  "build": "40.6.485",
   "storage_tier": "GITHUB_COLD",
   "source": {
     "database": "agent_crypto_oracle_evidence_v1",
@@ -14,8 +14,8 @@
   "github_token_in_browser": false,
   "browser_github_write": false,
   "transport": {
-    "status": "EXISTING_BRIDGE_8787_REQUIRED",
-    "owner": "Atlas-10 Crypto Bridge V1.9.12",
+    "status": "EXISTING_BRIDGE_8787_GITHUB_RESILIENCE_REQUIRED",
+    "owner": "Atlas-10 Crypto Bridge V1.9.13",
     "endpoint": "http://127.0.0.1:8787/oracle-evidence/ingest",
     "status_endpoint": "http://127.0.0.1:8787/oracle-evidence/status",
     "authentication": "EXISTING_ADMINISTRATOR_BRIDGE_SESSION",
@@ -23,7 +23,11 @@
     "loopback_only": true,
     "operator_triggered": true,
     "automatic_upload": false,
-    "standalone_8791_superseded": true
+    "standalone_8791_superseded": true,
+    "github_large_write_timeout_seconds": 180,
+    "github_readback_timeout_seconds": 120,
+    "github_timeout_retries": 1,
+    "large_file_readback": "contents-object-metadata -> git-blob"
   },
   "verification": {
     "required": [
@@ -36,5 +40,5 @@
     "verified_chunks": 0
   },
   "created_at": "2026-09-30T02:20:00Z",
-  "updated_at": "2026-09-30T04:50:00Z"
+  "updated_at": "2026-09-30T05:58:00Z"
 }
