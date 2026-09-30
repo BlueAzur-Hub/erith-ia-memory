@@ -1030,6 +1030,37 @@
         "json_parse": true,
         "manifest_commit": true
       }
+    },
+    {
+      "schema": "agent_crypto_oracle_evidence_cold_chunk_v1",
+      "build": "40.6.482",
+      "payload_format": "jsonl",
+      "relative_path": "2026/09/09/evidence-1788980433739-1789010657842-500.jsonl",
+      "row_count": 500,
+      "first_t0": 1788980433739,
+      "last_t0": 1789010657842,
+      "first_id": "1788980433739-bitcoin-5m-continuation",
+      "last_id": "1789010657842-bitcoin-5m-continuation",
+      "sha256": "350a1faabd707d3d616867e5a48827b0873a21a9fba9fef0aca955442aa41781",
+      "source_database": "agent_crypto_oracle_evidence_v1",
+      "source_store": "observations",
+      "watermark_after": {
+        "t0": 1789010657842,
+        "id": "1789010657842-bitcoin-5m-continuation"
+      },
+      "local_rows_deleted": false,
+      "local_retention_allowed": false,
+      "status": "WRITTEN_PENDING_VERIFY",
+      "written_at": "2026-09-30T16:24:09.448417+00:00",
+      "verified_at": null,
+      "write_commit": null,
+      "verification": {
+        "read_back": false,
+        "sha256": false,
+        "row_count": false,
+        "json_parse": false,
+        "manifest_commit": false
+      }
     }
   ],
   "watermark": {
