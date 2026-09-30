@@ -1,50 +1,63 @@
-# HANDOFF — Agent-Crypto 40.6.483
+# HANDOFF — Agent-Crypto 40.6.484
 
 ## Canonical checkpoint
 
-**40.6.483 — ORACLE EVIDENCE SAFE BRIDGE INGEST + COLD VERIFY**
+**40.6.484 — ORACLE EVIDENCE EXISTING BRIDGE INTEGRATION**
 
-Parent: 40.6.482.
+40.6.483 is superseded before operator installation.
 
-## Proven before this build
+## Proven foundation
 
-40.6.481 Firefox PASS:
-- cursor reader restored full Evidence access;
-- no `serialized value is too large`.
+40.6.481:
+- Firefox cursor recovery PASS.
 
-40.6.482 Firefox PASS:
-- real 500-Evidence transport bundle produced;
+40.6.482:
+- real 500-row bundle PASS;
 - SHA-256 `0492dd842d38040854d445d40f51e2030d43d474d6e934d65b8d3aed6871a66f`;
 - 500 JSONL rows valid;
-- local Evidence count did not decrease;
-- no local purge.
+- local count not decreased;
+- zero local purge.
 
-## 40.6.483 mission
+## Local architecture
 
-Add a trusted local write owner without moving GitHub credentials into the public browser.
+- Seven Vault 8780: independent.
+- Atlas-10 Bridge 8787: trusted authenticated owner.
+- Private Backend 8790: read-only market-source backend.
+- no 8791 process.
 
-Browser -> loopback Bridge -> GitHub cold storage.
+## 40.6.484 owner map
 
-## Required invariant
+Preparation:
+`administrator/js/oracle-evidence-tiered-storage-foundation.js` (40.6.482 preserved)
 
-40.6.483 still NEVER deletes local Evidence.
+Browser transport:
+`administrator/js/oracle-evidence-existing-bridge-integration.js`
 
-## Operator test
+Trusted writer:
+Atlas-10 Crypto Bridge V1.9.12 / 127.0.0.1:8787
 
-1. Start `tools/oracle_evidence_cold_bridge.py serve`.
-2. Oracle -> Evidence & validation.
-3. In **BRIDGE SÛR · GITHUB COLD VERIFY · 40.6.483**, click **Tester Bridge**.
-4. Require Bridge READY and GitHub auth PRÊTE.
-5. Click **Envoyer 500 au Bridge**.
-6. Require `BRIDGE_INGEST_VERIFIED`.
-7. Record write commit + verify commit.
-8. After GitHub Pages propagation, click **Vérifier dernier chunk publié**.
-9. Require `PUBLISHED_VERIFY_PASS`.
-10. Confirm local Evidence count has not decreased.
+Cold truth:
+`data/oracle_evidence/manifest.json`
 
-## Next scope only after multiple VERIFIED chunks
+## Invariant
 
-40.6.484 — VERIFIED LOCAL RETENTION / HOT WINDOW.
+40.6.484 NEVER deletes local Evidence.
 
-Do not invent the HOT window size.
-Measure average Evidence storage cost and Firefox memory first.
+## Terrain sequence
+
+R16 Bridge running
+→ Administrator authenticated
+→ Tester Bridge 8787
+→ READY V1.9.12 / GitHub PRÊT
+→ Envoyer 500 Evidence
+→ Bridge validates and writes PENDING
+→ exact GitHub readback
+→ VERIFIED manifest commit
+→ local count checked
+→ published verifier after Pages propagation.
+
+## Future
+
+Do not start local retention merely because one chunk passes.
+
+Require multiple VERIFIED chunks first, then measure actual Firefox Evidence size / RAM / IndexedDB pressure before defining a HOT window.
