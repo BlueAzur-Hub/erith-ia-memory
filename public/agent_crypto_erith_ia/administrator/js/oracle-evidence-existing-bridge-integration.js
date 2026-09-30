@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.484 ORACLE EVIDENCE EXISTING BRIDGE INTEGRATION
+/* Agent-Crypto @erith.IA — 40.6.485 ORACLE EVIDENCE EXISTING BRIDGE INTEGRATION
    Supersedes the uninstalled 40.6.483 standalone 8791 transport.
    Reuses the proven 40.6.482 chunk foundation and the established authenticated
    Atlas-10 Crypto Bridge on 127.0.0.1:8787.
@@ -6,12 +6,13 @@
 (()=>{
   "use strict";
 
-  const BUILD="40.6.484";
+  const BUILD="40.6.485";
   const BRIDGE_BASE="http://127.0.0.1:8787";
   const STATUS_PATH="/oracle-evidence/status";
   const INGEST_PATH="/oracle-evidence/ingest";
   const BRIDGE_TOKEN_KEY="agent_crypto_bridge_auth_40375_token";
   const CHUNK_ROWS=500;
+  const INGEST_TIMEOUT_MS=300000;
 
   const state={
     mounted:false,
@@ -104,7 +105,7 @@
         chunks:Number(payload?.chunks||0),
         verified_chunks:Number(payload?.verified_chunks||0)
       });
-      if(state.bridge.version!=="1.9.12") throw new Error("Bridge V1.9.12 requis");
+      if(state.bridge.version!=="1.9.13") throw new Error("Bridge V1.9.13 requis");
       if(!state.bridge.credential_ready) throw new Error("Credential GitHub local absent dans le Bridge");
       setState("BRIDGE_8787_READY");
       return state.bridge;
@@ -125,7 +126,7 @@
       const bundle=await base.prepare_next_chunk({limit:CHUNK_ROWS});
       if(!bundle?.chunk||!bundle?.jsonl) throw new Error("Aucun lot Oracle Evidence à ingérer");
       setState("BRIDGE_8787_INGESTING");
-      const result=await bridgeJson(INGEST_PATH,{method:"POST",body:bundle,timeout_ms:120000});
+      const result=await bridgeJson(INGEST_PATH,{method:"POST",body:bundle,timeout_ms:INGEST_TIMEOUT_MS});
       if(String(result?.status||"").toUpperCase()!=="VERIFIED") throw new Error("Le Bridge n'a pas retourné VERIFIED");
       if(String(result.relative_path||"")!==String(bundle.chunk.relative_path||"")) throw new Error("Chemin froid divergent");
       if(String(result.sha256||"")!==String(bundle.chunk.sha256||"")) throw new Error("SHA-256 froid divergent");
@@ -187,7 +188,8 @@
       build:BUILD,
       transport:"EXISTING_ATLAS10_BRIDGE_8787",
       bridge_base:BRIDGE_BASE,
-      bridge_version_required:"1.9.12",
+      bridge_version_required:"1.9.13",
+      ingest_timeout_ms:INGEST_TIMEOUT_MS,
       backend_8790_modified:false,
       standalone_8791_superseded:true,
       action:state.action,
@@ -218,12 +220,12 @@
     if(!cold&&!root) return false;
     const panel=document.createElement("section");
     panel.id="oracleEvidenceExistingBridge406484";
-    panel.setAttribute("aria-label","Oracle Evidence via Bridge existant 8787 · 40.6.484");
+    panel.setAttribute("aria-label","Oracle Evidence via Bridge existant 8787 · 40.6.485");
     panel.style.cssText="margin:8px 0 12px;padding:10px 12px;border:1px solid rgba(103,255,190,.24);border-radius:10px;background:rgba(6,24,25,.72);display:grid;gap:8px";
     panel.innerHTML=
       '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">'+
-        '<div><strong style="color:#8fffd0">MÉMOIRE FROIDE · BRIDGE EXISTANT 8787 · 40.6.484</strong><br>'+
-        '<small>Atlas-10 Bridge V1.9.12 · session Administrator · GitHub froid · zéro purge locale</small></div>'+
+        '<div><strong style="color:#8fffd0">MÉMOIRE FROIDE · BRIDGE EXISTANT 8787 · 40.6.485</strong><br>'+
+        '<small>Atlas-10 Bridge V1.9.13 · session Administrator · GitHub froid · zéro purge locale</small></div>'+
         '<span id="oracleBridge484State" style="font-weight:800">IDLE</span>'+
       '</div>'+
       '<div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12px">'+
@@ -237,7 +239,7 @@
         '<button type="button" id="btnOracleBridge484Ingest">Envoyer 500 Evidence</button>'+
         '<button type="button" id="btnOracleBridge484Verify">Vérifier dernier chunk publié</button>'+
       '</div>'+
-      '<small id="oracleBridge484Note">40.6.483 / port 8791 est supersédé. Le token GitHub reste dans le Bridge 8787. Aucune Evidence locale ne peut être supprimée par 40.6.484.</small>';
+      '<small id="oracleBridge484Note">40.6.485 attend Bridge V1.9.13 : timeout GitHub durci + relecture large-file via Git Blob. Aucune Evidence locale ne peut être supprimée.</small>';
     if(cold?.parentNode) cold.parentNode.insertBefore(panel,cold.nextSibling); else root.prepend(panel);
     document.getElementById("btnOracleBridge484Health")?.addEventListener("click",()=>void testBridge().catch(()=>{}));
     document.getElementById("btnOracleBridge484Ingest")?.addEventListener("click",()=>void ingestNext500().catch(()=>{}));
@@ -261,7 +263,7 @@
         ? ("Erreur · "+snap.error)
         : snap.ingest
           ? (String(snap.ingest.row_count)+" Evidence · SHA-256 "+snap.ingest.sha256.slice(0,16)+"… · local "+String(snap.ingest.local_before)+" → "+String(snap.ingest.local_after)+" · aucune purge")
-          : "40.6.483 / port 8791 est supersédé. Le token GitHub reste dans le Bridge 8787. Aucune Evidence locale ne peut être supprimée par 40.6.484.";
+          : "40.6.485 attend Bridge V1.9.13 : timeout GitHub durci + relecture large-file via Git Blob. Aucune Evidence locale ne peut être supprimée.";
     }
   }
 
