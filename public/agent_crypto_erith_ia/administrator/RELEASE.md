@@ -1,28 +1,40 @@
-# Agent-Crypto 40.6.478 — PROSPECTIVE TERMINAL RECORD WRITE GUARD
+# Agent-Crypto 40.6.479 — STRATEGY A INPUT FRESHNESS TRUTH + ATLAS UPSTREAM DIAGNOSIS
 
-## Défaut démontré
+## Checkpoint sécurisé
 
-Dans le collecteur prospectif .476/.477, chaque nouveau cycle parcourait tous les dossiers et appelait `applySample()`.
+40.6.478 est gelée comme checkpoint fonctionnel :
+- 1 dossier prospectif réel ;
+- OKX T0 capturé ;
+- T+5, T+15 et T+60 CAPTURED ;
+- 0 fenêtre manquée ;
+- cycle `A-CYCLE-00029-405f73c5`.
 
-Même lorsqu'un dossier avait déjà T+5, T+15 et T+60 tous terminaux, `addObservation()` s'exécutait avant la vérification des horizons. Un cycle tardif pouvait donc signaler un changement puis déclencher une écriture IndexedDB sans nouvelle preuve utile.
+La garde d'immuabilité post-terminale reste prouvée par harness. Le terrain n'a pas encore observé directement les écritures IndexedDB post-clôture.
 
-## Correction bornée
+## 40.6.479
 
-40.6.478 ajoute une seule règle :
+Ajoute un panneau read-only **STRATEGY A · INPUT FRESHNESS TRUTH**.
 
-> si T+5, T+15 et T+60 sont tous `CAPTURED` ou `MISSED_WINDOW`, le dossier est terminal et `applySample()` retourne immédiatement `false`.
+Il sépare :
+- les champs réellement capturés dans le cycle Strategy ;
+- le contexte Atlas CURRENT visible ;
+- la mesure Execution Cost de preuve ;
+- le contexte News.
 
-Conséquences :
-- aucune observation post-terminale ;
-- aucune réécriture IndexedDB post-terminale ;
-- `updated_at` du dossier terminé ne bouge plus ;
-- les dossiers encore PENDING continuent de progresser normalement ;
-- les fenêtres tardives restent `MISSED_WINDOW`.
+Pour chaque entrée : rôle, valeur, horodatage disponible, âge, fraîcheur et limite de preuve.
+
+UNKNOWN reste UNKNOWN : si un upstream n'expose pas son propre timestamp dans la ligne de cycle, 40.6.479 ne l'invente pas.
+
+## Diagnostic Atlas
+
+Le producteur public Crypto canonique est DEGRADED :
+- latest valide : 2026-09-29T05:38:03.339Z ;
+- dernier essai observé : 2026-09-29T23:46:38Z ;
+- erreur : HTTP 403 CoinGecko ;
+- dernier snapshot valide préservé.
+
+Le collecteur Top-50 indépendant est également en HTTP 403. La stagnation du CURRENT Atlas est donc expliquée par l'upstream CoinGecko, pas par un scheduler Atlas arrêté.
 
 ## Invariants
 
-Aucun changement des horizons 5/15/60 min, tolérance, Cost Gate, seuils, décision Strategy A, capture OKX T0, Oracle, Risk, PAPER, schéma IndexedDB ou Market Core 38.15.11.
-
-Lecture Technique .477 est héritée sans modification.
-
-Aucun ordre réel.
+Aucun seuil, gate, calcul Oracle, décision Strategy, modèle de coûts, Market Core, wallet ou ordre réel modifié.
