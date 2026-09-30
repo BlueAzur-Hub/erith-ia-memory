@@ -7,27 +7,50 @@
     "store": "observations"
   },
   "archived_rows": 0,
-  "chunks": [],
+  "chunks": [
+    {
+      "schema": "agent_crypto_oracle_evidence_cold_chunk_v1",
+      "build": "40.6.482",
+      "payload_format": "jsonl",
+      "relative_path": "2026/08/19/evidence-1787176716790-1787258285968-500.jsonl",
+      "row_count": 500,
+      "first_t0": 1787176716790,
+      "last_t0": 1787258285968,
+      "first_id": "1787176716790-bitcoin-5m-continuation",
+      "last_id": "1787258285968-bitcoin-15m-continuation",
+      "sha256": "0492dd842d38040854d445d40f51e2030d43d474d6e934d65b8d3aed6871a66f",
+      "source_database": "agent_crypto_oracle_evidence_v1",
+      "source_store": "observations",
+      "watermark_after": {
+        "t0": 1787258285968,
+        "id": "1787258285968-bitcoin-15m-continuation"
+      },
+      "local_rows_deleted": false,
+      "local_retention_allowed": false,
+      "status": "WRITTEN_PENDING_VERIFY",
+      "written_at": "2026-09-30T14:36:48.367619+00:00",
+      "verified_at": null,
+      "write_commit": null,
+      "verification": {
+        "read_back": false,
+        "sha256": false,
+        "row_count": false,
+        "json_parse": false,
+        "manifest_commit": false
+      }
+    }
+  ],
   "watermark": null,
   "local_retention_allowed": false,
   "local_delete_requires_verified_cold_copy": true,
   "github_token_in_browser": false,
   "browser_github_write": false,
   "transport": {
-    "status": "EXISTING_BRIDGE_8787_GITHUB_RESILIENCE_REQUIRED",
+    "status": "EXISTING_BRIDGE_8787",
     "owner": "Atlas-10 Crypto Bridge V1.9.13",
     "endpoint": "http://127.0.0.1:8787/oracle-evidence/ingest",
-    "status_endpoint": "http://127.0.0.1:8787/oracle-evidence/status",
-    "authentication": "EXISTING_ADMINISTRATOR_BRIDGE_SESSION",
-    "capability": "oracle_evidence.publish",
-    "loopback_only": true,
     "operator_triggered": true,
-    "automatic_upload": false,
-    "standalone_8791_superseded": true,
-    "github_large_write_timeout_seconds": 180,
-    "github_readback_timeout_seconds": 120,
-    "github_timeout_retries": 1,
-    "large_file_readback": "contents-object-metadata -> git-blob"
+    "automatic_upload": false
   },
   "verification": {
     "required": [
