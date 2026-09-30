@@ -1,0 +1,124 @@
+name: Agent-Crypto 40.6.484 Validate Package and Publish ZIP
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406484-oracle-evidence-existing-bridge-integration
+    paths:
+      - '.github/workflows/agent-crypto-package-406484.yml'
+      - '.github/scripts/agent_crypto_oracle_evidence_existing_bridge_test_406484.py'
+      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-existing-bridge-integration.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-tiered-storage-foundation.js'
+      - 'public/agent_crypto_erith_ia/data/oracle_evidence/**'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
+      - 'coordination/inter_ai_dialogues/agent_crypto/BRIDGE_R16_V1_9_12_ORACLE_EVIDENCE_SOURCE_LOCK_40.6.484.md'
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-package-406484.yml'
+      - '.github/scripts/agent_crypto_oracle_evidence_existing_bridge_test_406484.py'
+      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-existing-bridge-integration.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-tiered-storage-foundation.js'
+      - 'public/agent_crypto_erith_ia/data/oracle_evidence/**'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
+      - 'coordination/inter_ai_dialogues/agent_crypto/BRIDGE_R16_V1_9_12_ORACLE_EVIDENCE_SOURCE_LOCK_40.6.484.md'
+
+permissions:
+  contents: write
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Validate 40.6.484 existing Bridge integration
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia"
+          node --check "$ROOT/administrator/js/oracle-evidence-existing-bridge-integration.js"
+          node --check "$ROOT/administrator/js/oracle-evidence-tiered-storage-foundation.js"
+          python .github/scripts/agent_crypto_oracle_evidence_existing_bridge_test_406484.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+          grep -F 'Build 40.6.484 · Administrator' "$ROOT/administrator/index.html"
+          grep -F '"build": "40.6.484"' "$ROOT/administrator/build.json"
+          grep -F 'oracle-evidence-existing-bridge-integration.js?v=40.6.484' "$ROOT/administrator/js/post-boot-runtime-loader.js"
+          ! grep -R -F '127.0.0.1:8791' "$ROOT/administrator/js/oracle-evidence-existing-bridge-integration.js" "$ROOT/data/oracle_evidence/manifest.json"
+
+      - name: Validate safety contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia")
+          d=json.loads((root/"administrator/build.json").read_text(encoding="utf-8"))
+          m=json.loads((root/"data/oracle_evidence/manifest.json").read_text(encoding="utf-8"))
+          assert d["build"]=="40.6.484"
+          assert d["market_core"]=="38.15.11"
+          assert d["strategy_a_modified"] is False
+          assert d["strategy_a_business_logic_modified"] is False
+          assert d["oracle_math_changed"] is False
+          assert d["storage_schema_changed"] is False
+          assert d["retention_changed"] is False
+          assert d["real_order"] is False
+          x=d["oracle_evidence_existing_bridge_integration_406484"]
+          assert x["bridge_url"]=="http://127.0.0.1:8787"
+          assert x["backend_modified"] is False
+          assert x["browser_github_write"] is False
+          assert x["github_token_in_browser"] is False
+          assert x["automatic_upload"] is False
+          assert x["local_retention_allowed"] is False
+          assert x["local_delete_api_exposed"] is False
+          assert x["standalone_8791_superseded"] is True
+          assert m["local_retention_allowed"] is False
+          assert m["github_token_in_browser"] is False
+          assert m["browser_github_write"] is False
+          assert m["transport"]["endpoint"].startswith("http://127.0.0.1:8787/")
+          assert m["transport"]["automatic_upload"] is False
+          print("40.6.484 SAFETY CONTRACT PASS")
+          PY
+
+      - name: Mark test receipt PASS
+        if: github.ref == 'refs/heads/main'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/administrator/ORACLE_EVIDENCE_EXISTING_BRIDGE_TEST_40.6.484.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          d["pass_pending_workflow"]=False
+          d["pass"]=True
+          d["cases"]={k:"PASS" for k in d["cases"]}
+          p.write_text(json.dumps(d,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          PY
+
+      - name: Build ZIP
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_EXISTING_BRIDGE_INTEGRATION_40.6.484.zip"
+          rm -rf /tmp/ac484 "$ZIP" "$ZIP.sha256"
+          mkdir -p /tmp/ac484
+          cp --parents             .github/workflows/agent-crypto-package-406484.yml             .github/scripts/agent_crypto_oracle_evidence_existing_bridge_test_406484.py             coordination/inter_ai_dialogues/agent_crypto/BRIDGE_R16_V1_9_12_ORACLE_EVIDENCE_SOURCE_LOCK_40.6.484.md             public/agent_crypto_erith_ia/data/oracle_evidence/manifest.json             public/agent_crypto_erith_ia/data/oracle_evidence/README.md             "$ROOT/js/oracle-evidence-tiered-storage-foundation.js"             "$ROOT/js/oracle-evidence-existing-bridge-integration.js"             "$ROOT/js/post-boot-runtime-loader.js"             "$ROOT/js/strategy-a-audit-demand-loader.js"             "$ROOT/index.html"             "$ROOT/index-40.6.484.html"             "$ROOT/build.json"             "$ROOT/RELEASE.md"             "$ROOT/HANDOFF.md"             "$ROOT/HANDOFF_FINAL_40.6.484.md"             "$ROOT/ORACLE_EVIDENCE_EXISTING_BRIDGE_INTEGRATION_40.6.484.md"             "$ROOT/ORACLE_EVIDENCE_EXISTING_BRIDGE_TEST_40.6.484.json"             "$ROOT/PATCH_MANIFEST_40.6.484.txt"             /tmp/ac484/
+          (cd /tmp/ac484 && zip -9 -r "$GITHUB_WORKSPACE/$ZIP" .)
+          unzip -t "$ZIP"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+
+      - name: Commit published ZIP
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add             "$ROOT/ORACLE_EVIDENCE_EXISTING_BRIDGE_TEST_40.6.484.json"             "$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_EXISTING_BRIDGE_INTEGRATION_40.6.484.zip"             "$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_EXISTING_BRIDGE_INTEGRATION_40.6.484.zip.sha256"
+          git commit -m "chore(package): publish Agent-Crypto 40.6.484 existing Bridge ZIP"
+          git pull --rebase origin main
+          git push origin HEAD:main
