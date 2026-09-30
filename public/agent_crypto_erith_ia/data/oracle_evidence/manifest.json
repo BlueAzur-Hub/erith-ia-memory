@@ -1,0 +1,31 @@
+{
+  "schema": "agent_crypto_oracle_evidence_cold_archive_manifest_v1",
+  "build": "40.6.482",
+  "storage_tier": "GITHUB_COLD",
+  "source": {
+    "database": "agent_crypto_oracle_evidence_v1",
+    "store": "observations"
+  },
+  "archived_rows": 0,
+  "chunks": [],
+  "watermark": null,
+  "local_retention_allowed": false,
+  "local_delete_requires_verified_cold_copy": true,
+  "github_token_in_browser": false,
+  "browser_github_write": false,
+  "transport": {
+    "status": "PENDING_SAFE_BRIDGE",
+    "owner": null,
+    "automatic_upload": false
+  },
+  "verification": {
+    "required": [
+      "sha256",
+      "row_count",
+      "json_parse",
+      "manifest_commit"
+    ],
+    "verified_chunks": 0
+  },
+  "created_at": "2026-09-30T02:20:00Z"
+}

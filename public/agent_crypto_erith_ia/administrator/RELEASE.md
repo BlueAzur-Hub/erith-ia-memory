@@ -1,39 +1,49 @@
-# Agent-Crypto 40.6.481 — ORACLE EVIDENCE CURSOR READ RECOVERY
+# Agent-Crypto 40.6.482 — ORACLE EVIDENCE TIERED STORAGE FOUNDATION
 
-## Objet unique
+## Parent terrain
+40.6.481 Firefox PASS:
+- Evidence & validation recovered;
+- 35 607 / 35 607 rows displayed;
+- 5 732 resolved;
+- 29 875 pending;
+- no `serialized value is too large`.
 
-Réparer la lecture du store Oracle Evidence devenu trop volumineux pour un `IndexedDB.getAll()` monolithique dans Firefox.
+## Goal
+Introduce the safe foundation for:
+- **HOT** browser memory = existing Oracle Evidence IndexedDB;
+- **COLD** durable memory = GitHub `public/agent_crypto_erith_ia/data/oracle_evidence`;
+- **CONTROL** = Notion;
+- **TRANSPORT** = future authenticated local Bridge/backend.
 
-## Cause
+## Runtime
+New module:
+`js/oracle-evidence-tiered-storage-foundation.js`
 
-Le propriétaire commun `atlasOracleEvidenceAll()` matérialisait le store entier via `getAll()`. Avec plus de 35 000 Evidence, Firefox peut refuser le payload structuré global (`serialized value is too large`).
+Operator-triggered capabilities:
+- load GitHub cold manifest;
+- count local Evidence;
+- prepare next bounded local chunk using IndexedDB `t0` cursor;
+- 500 rows default, 1000 hard max;
+- serialize JSONL;
+- SHA-256;
+- row count + first/last T0 + first/last ID + watermark;
+- download one transport bundle;
+- verify a published cold chunk by SHA/count/JSON parse.
 
-## Correction
+## Absolute safety locks
+- no local Evidence deletion;
+- no retention reduction;
+- no IndexedDB schema change;
+- no GitHub token in browser;
+- no browser-to-GitHub write;
+- no automatic upload;
+- no timer;
+- no observer;
+- no Oracle Math/model change;
+- no Strategy A/profile change;
+- no Market Core 38.15.11 change;
+- no real order.
 
-- lecture complète par `openCursor()`, une observation à la fois ;
-- API `atlasOracleEvidenceAll()` conservée pour ses consommateurs ;
-- warm mirror existant conservé ;
-- `put/delete` existants inchangés ;
-- pruning : `count()` avant toute lecture complète ; sous 50 000 lignes, aucune matérialisation n'est déclenchée pour le pruning ;
-- aucune suppression, migration ou réécriture historique ajoutée ;
-- télémétrie de lecture cursor exposée.
-
-## Invariants
-
-Aucune modification de :
-- schéma IndexedDB ;
-- rétention 50 000 ;
-- Oracle Math / modèles ;
-- Strategy A / profil Crypto ;
-- Atlas CURRENT ;
-- Market Core 38.15.11 ;
-- ordres réels.
-
-## Terrain attendu
-
-Firefox → Oracle → Evidence & validation :
-- plus de `serialized value is too large` ;
-- Explorer/Lab/Integrity capables de reconstruire leurs vues ;
-- compteur Evidence conservé et continuant à progresser.
-
-La mémoire chaude complète reste volontairement conservée en 40.6.481. Le stockage froid GitHub est un chantier séparé.
+## Next
+40.6.483 should implement the trusted Bridge/backend ingest + cold readback verification.
+It must still leave browser Evidence untouched.
