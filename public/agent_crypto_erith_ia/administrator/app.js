@@ -8061,7 +8061,14 @@ const atlasOracleEvidenceReadCache = {
   outcome_summary_valid_403108:false,
   outcome_runs_403108:0,
   outcome_rows_scanned_403108:0,
-  outcome_idle_refreshes_skipped_403108:0
+  outcome_idle_refreshes_skipped_403108:0,
+
+  // 40.6.481 Firefox-safe full Evidence reader telemetry.
+  cursor_reads_406481:0,
+  cursor_rows_406481:0,
+  cursor_last_ms_406481:0,
+  cursor_last_error_406481:null,
+  getall_used_406481:false
 };
 
 
@@ -8237,6 +8244,48 @@ function atlasOracleEvidenceInvalidateReadCache(){
   c.outcome_summary_valid_403108=false;
 }
 
+/* 40.6.481 — ORACLE EVIDENCE CURSOR READ RECOVERY
+   Firefox can reject one very large IndexedDB getAll() structured-clone payload.
+   Read the same canonical store one record at a time with openCursor(), then feed
+   the existing warm mirror unchanged. No row deletion, schema migration, model
+   change, timer, observer or network request is introduced here. */
+async function atlasOracleEvidenceReadAllByCursor406481(){
+  const c=atlasOracleEvidenceReadCache;
+  const started=atlasRuntimeNow();
+  const db=await atlasOracleEvidenceOpen();
+  return new Promise((resolve,reject)=>{
+    const rows=[];
+    const tx=db.transaction(ATLAS_ORACLE_EVIDENCE_STORE,"readonly");
+    const store=tx.objectStore(ATLAS_ORACLE_EVIDENCE_STORE);
+    const request=store.openCursor();
+    let settled=false;
+    const fail=error=>{
+      if(settled)return;
+      settled=true;
+      c.cursor_last_ms_406481=Math.max(0,atlasRuntimeNow()-started);
+      c.cursor_last_error_406481=String(error?.message||error||"Lecture cursor Oracle Evidence refusée");
+      reject(error instanceof Error?error:new Error(c.cursor_last_error_406481));
+    };
+    request.onsuccess=()=>{
+      const cursor=request.result;
+      if(cursor){
+        rows.push(cursor.value);
+        cursor.continue();
+        return;
+      }
+      if(settled)return;
+      settled=true;
+      c.cursor_reads_406481+=1;
+      c.cursor_rows_406481=rows.length;
+      c.cursor_last_ms_406481=Math.max(0,atlasRuntimeNow()-started);
+      c.cursor_last_error_406481=null;
+      resolve(rows);
+    };
+    request.onerror=()=>fail(request.error||new Error("Lecture cursor Oracle Evidence refusée"));
+    tx.onabort=()=>fail(tx.error||new Error("Lecture cursor Oracle Evidence annulée"));
+  });
+}
+
 async function atlasOracleEvidenceAll(options = null) {
   const runtimeStarted = atlasRuntimeNow();
   const c = atlasOracleEvidenceReadCache;
@@ -8256,15 +8305,7 @@ async function atlasOracleEvidenceAll(options = null) {
   const generation = c.generation;
   const scanStarted = atlasRuntimeNow();
   let readPromise = null;
-  readPromise = (async () => {
-    const db = await atlasOracleEvidenceOpen();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(ATLAS_ORACLE_EVIDENCE_STORE, "readonly");
-      const request = tx.objectStore(ATLAS_ORACLE_EVIDENCE_STORE).getAll();
-      request.onsuccess = () => resolve(Array.isArray(request.result) ? request.result : []);
-      request.onerror = () => reject(request.error || new Error("Lecture Oracle Evidence refusée"));
-    });
-  })().then(rows => {
+  readPromise = atlasOracleEvidenceReadAllByCursor406481().then(rows => {
     if (generation === c.generation) atlasOracleEvidenceCacheSetRows(rows);
     return rows;
   }).finally(() => {
@@ -8297,6 +8338,33 @@ try{
 }catch(_){}
 
 try{
+  globalThis.AtlasOracleEvidenceCursorReadRecovery406481=Object.freeze({
+    build:"40.6.481",
+    owner:"administrator/app.js",
+    storage:"IndexedDB",
+    read_strategy:"openCursor one record at a time",
+    getall_for_full_evidence:false,
+    warm_mirror_preserved:true,
+    evidence_rows_deleted:false,
+    schema_changed:false,
+    retention_changed:false,
+    oracle_math_changed:false,
+    strategy_a_changed:false,
+    market_core_changed:false,
+    recurring_timer:false,
+    observer:false,
+    network_added:false,
+    state:()=>({
+      cursor_reads:atlasOracleEvidenceReadCache.cursor_reads_406481||0,
+      cursor_rows:atlasOracleEvidenceReadCache.cursor_rows_406481||0,
+      cursor_last_ms:atlasOracleEvidenceReadCache.cursor_last_ms_406481||0,
+      cursor_last_error:atlasOracleEvidenceReadCache.cursor_last_error_406481||null,
+      getall_used:atlasOracleEvidenceReadCache.getall_used_406481===true
+    })
+  });
+}catch(_){}
+
+try{
   globalThis.AtlasOracleEvidenceWarmMirror=Object.freeze({
     build:"40.3.101",
     cache_window_ms:ATLAS_ORACLE_EVIDENCE_READ_CACHE_MS,
@@ -8317,6 +8385,11 @@ try{
       outcome_pending:atlasOracleEvidenceReadCache.outcome_pending_403108||0,
       outcome_rows_scanned:atlasOracleEvidenceReadCache.outcome_rows_scanned_403108||0,
       outcome_idle_refreshes_skipped:atlasOracleEvidenceReadCache.outcome_idle_refreshes_skipped_403108||0,
+      cursor_reads_406481:atlasOracleEvidenceReadCache.cursor_reads_406481||0,
+      cursor_rows_406481:atlasOracleEvidenceReadCache.cursor_rows_406481||0,
+      cursor_last_ms_406481:atlasOracleEvidenceReadCache.cursor_last_ms_406481||0,
+      cursor_last_error_406481:atlasOracleEvidenceReadCache.cursor_last_error_406481||null,
+      getall_used_406481:atlasOracleEvidenceReadCache.getall_used_406481===true,
       in_flight:Boolean(atlasOracleEvidenceReadCache.in_flight)
     }),
     fresh_read_supported:true,
@@ -8508,7 +8581,9 @@ function atlasOracleEvidenceBuildObservation({ model, coin, candidateModels, vie
 }
 
 async function atlasOracleEvidencePruneIfNeeded() {
-  const rows = await atlasOracleEvidenceAll();
+  const summary=await atlasOracleEvidenceColdSummary();
+  if (summary.count <= ATLAS_ORACLE_EVIDENCE_MAX_ROWS) return 0;
+  const rows = await atlasOracleEvidenceAll({fresh:true});
   if (rows.length <= ATLAS_ORACLE_EVIDENCE_MAX_ROWS) return 0;
   const ordered = rows.slice().sort((a,b)=>Number(a?.t0||0)-Number(b?.t0||0));
   return atlasOracleEvidenceDelete(ordered.slice(0, ordered.length-ATLAS_ORACLE_EVIDENCE_MAX_ROWS).map(row=>row.id));

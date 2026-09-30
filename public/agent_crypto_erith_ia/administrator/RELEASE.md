@@ -1,34 +1,39 @@
-# Agent-Crypto 40.6.480 — PUBLIC CRYPTO COLLECTOR ACCESS RECOVERY
+# Agent-Crypto 40.6.481 — ORACLE EVIDENCE CURSOR READ RECOVERY
 
 ## Objet unique
 
-Réparer l'accès du producteur public Crypto canonique Top-250 à CoinGecko, sans modifier Strategy A ni le moteur Atlas CURRENT.
+Réparer la lecture du store Oracle Evidence devenu trop volumineux pour un `IndexedDB.getAll()` monolithique dans Firefox.
 
-## Cause confirmée en 40.6.479
+## Cause
 
-- `data/crypto/latest.json` reste sur le dernier snapshot valide ;
-- le collecteur continue de se réveiller ;
-- CoinGecko répond HTTP 403 ;
-- `status.json` passe DEGRADED et protège le dernier valide.
+Le propriétaire commun `atlasOracleEvidenceAll()` matérialisait le store entier via `getAll()`. Avec plus de 35 000 Evidence, Firefox peut refuser le payload structuré global (`serialized value is too large`).
 
-Le problème démontré est donc l'accès upstream du collecteur, pas un gel du moteur Atlas.
+## Correction
 
-## Correction 40.6.480
-
-- le workflow canonique lit `secrets.COINGECKO_DEMO_API_KEY` ;
-- le collecteur transmet la clé uniquement via l'en-tête `x-cg-demo-api-key` aux requêtes CoinGecko ;
-- la clé n'est jamais placée dans les en-têtes globaux de la session `requests` ;
-- la requête BCE USD/EUR ne reçoit donc jamais la clé CoinGecko ;
-- le fallback de pagination Top-250 utilise la même authentification ;
-- secret absent/invalide → fail-closed, `status=degraded`, dernier `latest.json` valide conservé ;
-- aucune valeur de clé n'est publiée dans les JSON.
-
-## Preuve
-
-Harness sans réseau : `.github/scripts/agent_crypto_public_crypto_demo_auth_test_406480.py`.
-
-La preuve provider réelle reste PENDING jusqu'à l'exécution GitHub Actions avec un secret Demo valide et la publication d'un nouveau snapshot `ready`.
+- lecture complète par `openCursor()`, une observation à la fois ;
+- API `atlasOracleEvidenceAll()` conservée pour ses consommateurs ;
+- warm mirror existant conservé ;
+- `put/delete` existants inchangés ;
+- pruning : `count()` avant toute lecture complète ; sous 50 000 lignes, aucune matérialisation n'est déclenchée pour le pruning ;
+- aucune suppression, migration ou réécriture historique ajoutée ;
+- télémétrie de lecture cursor exposée.
 
 ## Invariants
 
-Strategy A, seuils/gates, Oracle, Cost Gate, Aether, Lecture Technique, Atlas CURRENT engine, Market Core **38.15.11**, wallet et ordres réels : inchangés.
+Aucune modification de :
+- schéma IndexedDB ;
+- rétention 50 000 ;
+- Oracle Math / modèles ;
+- Strategy A / profil Crypto ;
+- Atlas CURRENT ;
+- Market Core 38.15.11 ;
+- ordres réels.
+
+## Terrain attendu
+
+Firefox → Oracle → Evidence & validation :
+- plus de `serialized value is too large` ;
+- Explorer/Lab/Integrity capables de reconstruire leurs vues ;
+- compteur Evidence conservé et continuant à progresser.
+
+La mémoire chaude complète reste volontairement conservée en 40.6.481. Le stockage froid GitHub est un chantier séparé.

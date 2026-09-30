@@ -1,0 +1,72 @@
+name: Agent-Crypto 40.6.481 Validate and Package
+
+on:
+  push:
+    branches:
+      - main
+      - agent-crypto-406481-oracle-evidence-cursor-read-recovery
+    paths:
+      - '.github/workflows/agent-crypto-package-406481.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/app.js'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - '.github/scripts/agent_crypto_oracle_evidence_cursor_read_test_406481.py'
+      - '.github/workflows/agent-crypto-package-406481.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate 40.6.481
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          python .github/scripts/agent_crypto_oracle_evidence_cursor_read_test_406481.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+          grep -F 'Build 40.6.481 · Administrator' public/agent_crypto_erith_ia/administrator/index.html
+          grep -F '"build": "40.6.481"' public/agent_crypto_erith_ia/administrator/build.json
+
+      - name: Validate build invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("public/agent_crypto_erith_ia/administrator/build.json").read_text(encoding="utf-8"))
+          assert d["build"]=="40.6.481"
+          assert d["market_core"]=="38.15.11"
+          assert d["strategy_a_modified"] is False
+          assert d["strategy_a_business_logic_modified"] is False
+          assert d["oracle_math_changed"] is False
+          assert d["storage_schema_changed"] is False
+          assert d["retention_changed"] is False
+          assert d["real_order"] is False
+          r=d["oracle_evidence_cursor_read_recovery_406481"]
+          assert r["evidence_rows_deleted"] is False
+          assert r["retention_cap_rows"]==50000
+          print("40.6.481 BUILD CONTRACT PASS")
+          PY
+
+      - name: Build ZIP
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          mkdir -p package
+          cp --parents             .github/workflows/agent-crypto-package-406481.yml             .github/scripts/agent_crypto_oracle_evidence_cursor_read_test_406481.py             "$ROOT/app.js"             "$ROOT/index.html"             "$ROOT/index-40.6.481.html"             "$ROOT/build.json"             "$ROOT/RELEASE.md"             "$ROOT/HANDOFF.md"             "$ROOT/HANDOFF_FINAL_40.6.481.md"             "$ROOT/ORACLE_EVIDENCE_CURSOR_READ_RECOVERY_40.6.481.md"             "$ROOT/ORACLE_EVIDENCE_CURSOR_READ_TEST_40.6.481.json"             "$ROOT/PATCH_MANIFEST_40.6.481.txt"             "$ROOT/js/post-boot-runtime-loader.js"             "$ROOT/js/strategy-a-audit-demand-loader.js"             package/
+          (cd package && zip -9 -r ../AGENT_CRYPTO_ORACLE_EVIDENCE_CURSOR_READ_RECOVERY_40.6.481.zip .)
+          sha256sum AGENT_CRYPTO_ORACLE_EVIDENCE_CURSOR_READ_RECOVERY_40.6.481.zip > AGENT_CRYPTO_ORACLE_EVIDENCE_CURSOR_READ_RECOVERY_40.6.481.zip.sha256
+          unzip -t AGENT_CRYPTO_ORACLE_EVIDENCE_CURSOR_READ_RECOVERY_40.6.481.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ORACLE_EVIDENCE_CURSOR_READ_RECOVERY_40.6.481
+          path: |
+            AGENT_CRYPTO_ORACLE_EVIDENCE_CURSOR_READ_RECOVERY_40.6.481.zip
+            AGENT_CRYPTO_ORACLE_EVIDENCE_CURSOR_READ_RECOVERY_40.6.481.zip.sha256
+          if-no-files-found: error
