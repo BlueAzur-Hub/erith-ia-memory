@@ -1,40 +1,50 @@
-# HANDOFF — Agent-Crypto 40.6.482
+# HANDOFF — Agent-Crypto 40.6.483
 
-## Current checkpoint
-40.6.481 is terrain PASS and frozen as the Oracle Evidence read-recovery checkpoint.
+## Canonical checkpoint
 
-40.6.482 adds only the cold-storage foundation.
+**40.6.483 — ORACLE EVIDENCE SAFE BRIDGE INGEST + COLD VERIFY**
 
-## Operator terrain
-Open Oracle → Evidence & validation.
+Parent: 40.6.482.
 
-A card must appear:
-`MÉMOIRE FROIDE · GITHUB · 40.6.482`
+## Proven before this build
 
-Initial expected truth:
-- Local = current Oracle Evidence count;
-- Archived = 0;
-- Chunks = 0;
-- Transport = PENDING_SAFE_BRIDGE;
-- local retention = forbidden.
+40.6.481 Firefox PASS:
+- cursor reader restored full Evidence access;
+- no `serialized value is too large`.
 
-Press:
-1. **Lire manifest GitHub**
-2. **Préparer 500 Evidence**
-3. **Télécharger le lot**
+40.6.482 Firefox PASS:
+- real 500-Evidence transport bundle produced;
+- SHA-256 `0492dd842d38040854d445d40f51e2030d43d474d6e934d65b8d3aed6871a66f`;
+- 500 JSONL rows valid;
+- local Evidence count did not decrease;
+- no local purge.
 
-Expected:
-- one bounded bundle is created;
-- SHA-256 visible;
-- local Evidence count does not decrease.
+## 40.6.483 mission
 
-## Stop rule
-Do NOT implement browser GitHub credentials.
-Do NOT purge IndexedDB.
-Do NOT lower the 50 000 retention cap as a workaround.
+Add a trusted local write owner without moving GitHub credentials into the public browser.
 
-## Next sister task
-40.6.483 = safe local Bridge ingest:
-transport bundle → validate → GitHub JSONL → manifest update → readback → SHA/count/parse proof.
+Browser -> loopback Bridge -> GitHub cold storage.
 
-Only a later build may introduce local retention after verified cold copies exist.
+## Required invariant
+
+40.6.483 still NEVER deletes local Evidence.
+
+## Operator test
+
+1. Start `tools/oracle_evidence_cold_bridge.py serve`.
+2. Oracle -> Evidence & validation.
+3. In **BRIDGE SÛR · GITHUB COLD VERIFY · 40.6.483**, click **Tester Bridge**.
+4. Require Bridge READY and GitHub auth PRÊTE.
+5. Click **Envoyer 500 au Bridge**.
+6. Require `BRIDGE_INGEST_VERIFIED`.
+7. Record write commit + verify commit.
+8. After GitHub Pages propagation, click **Vérifier dernier chunk publié**.
+9. Require `PUBLISHED_VERIFY_PASS`.
+10. Confirm local Evidence count has not decreased.
+
+## Next scope only after multiple VERIFIED chunks
+
+40.6.484 — VERIFIED LOCAL RETENTION / HOT WINDOW.
+
+Do not invent the HOT window size.
+Measure average Evidence storage cost and Firefox memory first.
