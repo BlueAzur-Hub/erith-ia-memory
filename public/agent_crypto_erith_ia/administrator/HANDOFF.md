@@ -1,28 +1,31 @@
-# HANDOFF — Agent-Crypto 40.6.478
+# HANDOFF — Agent-Crypto 40.6.479
 
-## Objet unique
+## Objet
 
-Rendre un dossier prospectif terminé réellement immuable.
+Sécuriser la preuve acquise et rendre visible la fraîcheur réelle des entrées Strategy A avant toute correction supplémentaire.
 
-## Règle
+## Firefox
 
-Un dossier est terminal lorsque ses trois horizons T+5, T+15 et T+60 sont chacun dans un état terminal : `CAPTURED` ou `MISSED_WINDOW`.
+1. Ctrl+F5.
+2. Vérifier **Build 40.6.479 · Administrator**.
+3. Section 04 → Simulation.
+4. Trouver **STRATEGY A · INPUT FRESHNESS TRUTH · 40.6.479**.
+5. Vérifier que le dernier cycle Strategy est visible avec son heure.
+6. Vérifier la séparation :
+   - BTC prix + 24 h : DIRECT_DECISION_INPUT ;
+   - Oracle / direction : DIRECT_DECISION_INPUT ;
+   - Cost Gate modèle : DIRECT_DECISION_INPUT ;
+   - Atlas CURRENT : CONTEXT_VISIBLE_NOT_PROVEN_DIRECT ;
+   - Kraken + OKX mesuré : EVIDENCE_SHADOW_NOT_GATE ;
+   - News : CONTEXT_ONLY.
+7. Un Atlas CURRENT ancien doit être affiché STALE sans arrêter ni modifier Strategy.
 
-À partir de là, tout cycle futur doit être ignoré pour ce dossier : aucune observation ajoutée, aucun `updated_at` modifié, aucune écriture IndexedDB.
+## Atlas
 
-## Validation
+Ne pas forcer un nouveau CURRENT sur le même snapshot.
 
-Le harness doit vérifier :
-1. dossier terminal détecté ;
-2. deux cycles tardifs successifs → zéro écriture ;
-3. observations et `updated_at` inchangés ;
-4. dossier non terminal → capture encore fonctionnelle ;
-5. échantillon trop tardif → `MISSED_WINDOW` encore fonctionnel.
+Le diagnostic upstream actuel est : CoinGecko HTTP 403, dernier snapshot canonique valide conservé.
 
-## Terrain
+## Protection
 
-La preuve naturelle complète dépend toujours de l'existence future d'un vrai dossier `COST_GATE_WAIT`. Il n'est pas nécessaire de forcer quoi que ce soit.
-
-Lecture Technique conserve le correctif 40.6.477.
-
-Market Core 38.15.11 intact. Aucun ordre réel.
+Lecture Technique .477 et garde terminale .478 sont héritées. Market Core 38.15.11 intact. Aucun ordre réel.
