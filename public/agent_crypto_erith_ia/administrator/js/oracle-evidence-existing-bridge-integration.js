@@ -6,13 +6,33 @@
 (()=>{
   "use strict";
 
-  const BUILD="40.6.485";
+  const BUILD="40.6.487";
   const BRIDGE_BASE="http://127.0.0.1:8787";
   const STATUS_PATH="/oracle-evidence/status";
   const INGEST_PATH="/oracle-evidence/ingest";
   const BRIDGE_TOKEN_KEY="agent_crypto_bridge_auth_40375_token";
   const CHUNK_ROWS=500;
   const INGEST_TIMEOUT_MS=300000;
+  const ARCHIVE_LOCK_KEY="__ATLAS_ORACLE_EVIDENCE_ARCHIVE_LOCK__";
+
+  function archiveLockOwner(){
+    const lock=globalThis[ARCHIVE_LOCK_KEY];
+    return lock&&typeof lock==="object"?String(lock.owner||""):"";
+  }
+
+  function acquireArchiveLock(owner){
+    const current=archiveLockOwner();
+    if(current&&current!==owner) throw new Error("Archivage Oracle Evidence déjà actif · "+current);
+    globalThis[ARCHIVE_LOCK_KEY]=Object.freeze({owner:String(owner),since:Date.now()});
+  }
+
+  function releaseArchiveLock(owner){
+    const current=archiveLockOwner();
+    if(current===owner){
+      try{delete globalThis[ARCHIVE_LOCK_KEY];}
+      catch(_){globalThis[ARCHIVE_LOCK_KEY]=null;}
+    }
+  }
 
   const state={
     mounted:false,
@@ -106,6 +126,7 @@
         verified_chunks:Number(payload?.verified_chunks||0)
       });
       if(state.bridge.version!=="1.9.13") throw new Error("Bridge V1.9.13 requis");
+      if(!state.bridge.ready) throw new Error("Bridge Oracle Evidence désactivé · enabled=false");
       if(!state.bridge.credential_ready) throw new Error("Credential GitHub local absent dans le Bridge");
       setState("BRIDGE_8787_READY");
       return state.bridge;
@@ -117,12 +138,18 @@
   }
 
   async function ingestNext500(){
+    const owner="manual-40.6.487";
+    acquireArchiveLock(owner);
     const base=foundation();
     setState("PREPARE_500");
     try{
       const before=await base.count_local_rows();
-      const bridge=state.bridge?.ready?state.bridge:await testBridge();
+      const bridge=await testBridge();
+      if(!bridge?.ready) throw new Error("Bridge Oracle Evidence désactivé");
       if(!bridge?.credential_ready) throw new Error("Credential GitHub local absent dans le Bridge");
+      if(Number(bridge.archived_rows||0)>0){
+        throw new Error("Archivage manuel 500 désactivé après bootstrap · utilise Archivage froid automatique");
+      }
       const bundle=await base.prepare_next_chunk({limit:CHUNK_ROWS});
       if(!bundle?.chunk||!bundle?.jsonl) throw new Error("Aucun lot Oracle Evidence à ingérer");
       setState("BRIDGE_8787_INGESTING");
@@ -150,6 +177,8 @@
     }catch(error){
       setState(error?.code==="BRIDGE_AUTH_REQUIRED"?"AUTH_BRIDGE_REQUISE":"BRIDGE_8787_INGEST_ERROR",error);
       throw error;
+    }finally{
+      releaseArchiveLock(owner);
     }
   }
 
@@ -159,22 +188,38 @@
     return rows.length?rows[rows.length-1]:null;
   }
 
+  function exactExpectedReceipt(){
+    if(state.ingest?.relative_path) return state.ingest;
+    try{
+      const queue=globalThis.AtlasOracleEvidenceAutoArchive406487?.state?.();
+      if(queue?.last_verified?.relative_path) return queue.last_verified;
+    }catch(_){}
+    return null;
+  }
+
   async function verifyPublishedLatest(){
     const base=foundation();
     setState("PUBLISHED_VERIFY_LOADING");
     try{
+      const expected=exactExpectedReceipt();
+      if(!expected) throw new Error("Aucun reçu exact à vérifier dans cette session");
       const manifest=await base.load_manifest();
-      const entry=verifiedEntry(manifest);
-      if(!entry) throw new Error("Aucun chunk VERIFIED publié dans le manifest");
-      const proof=await base.verify_cold_chunk(entry.relative_path,{sha256:entry.sha256,row_count:entry.row_count});
-      if(proof?.verified!==true) throw new Error("Vérification publiée échouée");
+      const chunks=Array.isArray(manifest?.chunks)?manifest.chunks:[];
+      const entry=chunks.find(x=>String(x?.relative_path||"")===String(expected.relative_path||""));
+      if(!entry) throw new Error("Le chunk exact n'est pas encore publié dans le manifest public");
+      if(String(entry.status||"").toUpperCase()!=="VERIFIED") throw new Error("Le chunk exact publié n'est pas VERIFIED");
+      if(String(entry.sha256||"")!==String(expected.sha256||"")) throw new Error("SHA-256 du reçu exact divergent");
+      if(Number(entry.row_count)!==Number(expected.row_count)) throw new Error("row_count du reçu exact divergent");
+      const proof=await base.verify_cold_chunk(entry.relative_path,{sha256:expected.sha256,row_count:expected.row_count});
+      if(proof?.verified!==true) throw new Error("Vérification publique du reçu exact échouée");
       state.published=Object.freeze({
         verified:true,
+        exact_receipt:true,
         relative_path:String(entry.relative_path||""),
         sha256:String(proof.sha256||""),
         row_count:Number(proof.row_count||0)
       });
-      setState("PUBLISHED_VERIFY_PASS");
+      setState("PUBLISHED_EXACT_VERIFY_PASS");
       return state.published;
     }catch(error){
       state.published=null;
@@ -239,7 +284,7 @@
         '<button type="button" id="btnOracleBridge484Ingest">Envoyer 500 Evidence</button>'+
         '<button type="button" id="btnOracleBridge484Verify">Vérifier dernier chunk publié</button>'+
       '</div>'+
-      '<small id="oracleBridge484Note">40.6.485 attend Bridge V1.9.13 : timeout GitHub durci + relecture large-file via Git Blob. Aucune Evidence locale ne peut être supprimée.</small>';
+      '<small id="oracleBridge484Note">40.6.487 : archivage manuel de masse désactivé ; file automatique + reçu public exact. Aucune Evidence locale ne peut être supprimée.</small>';
     if(cold?.parentNode) cold.parentNode.insertBefore(panel,cold.nextSibling); else root.prepend(panel);
     document.getElementById("btnOracleBridge484Health")?.addEventListener("click",()=>void testBridge().catch(()=>{}));
     document.getElementById("btnOracleBridge484Ingest")?.addEventListener("click",()=>void ingestNext500().catch(()=>{}));
