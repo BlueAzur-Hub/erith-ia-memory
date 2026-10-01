@@ -1,0 +1,56 @@
+name: Agent-Crypto 40.6.491 Validate Package
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/scripts/agent_crypto_oracle_evidence_atomicity_guard_406491.py'
+      - '.github/workflows/agent-crypto-package-406491.yml'
+      - 'public/agent_crypto_erith_ia/administrator/**40.6.491*'
+  push:
+    branches: [main]
+    paths:
+      - '.github/scripts/agent_crypto_oracle_evidence_atomicity_guard_406491.py'
+      - '.github/workflows/agent-crypto-package-406491.yml'
+      - 'public/agent_crypto_erith_ia/administrator/**40.6.491*'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Validate syntax and atomicity contracts
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/oracle-evidence-retention-atomicity-406491.js"
+          node --check "$ROOT/js/oracle-evidence-auto-archive-safety-gates.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          python .github/scripts/agent_crypto_oracle_evidence_atomicity_guard_406491.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Verify protected cold archive is not patched
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git diff --exit-code origin/main...HEAD -- public/agent_crypto_erith_ia/data/oracle_evidence
+      - name: Verify committed delivery ZIP
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_RETENTION_ATOMICITY_40.6.491.zip"
+          test -f "$ZIP" && test -f "$ZIP.sha256"
+          sha256sum --check "$ZIP.sha256"
+          unzip -t "$ZIP"
+          unzip -l "$ZIP" | grep -F 'oracle-evidence-retention-atomicity-406491.js'
+          unzip -l "$ZIP" | grep -F 'oracle-evidence-auto-archive-safety-gates.js'
+          unzip -l "$ZIP" | grep -F 'PATCH_MANIFEST_40.6.491.txt'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent-crypto-40.6.491-retention-atomicity
+          path: |
+            public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_ORACLE_EVIDENCE_RETENTION_ATOMICITY_40.6.491.zip
+            public/agent_crypto_erith_ia/administrator/AGENT_CRYPTO_ORACLE_EVIDENCE_RETENTION_ATOMICITY_40.6.491.zip.sha256
+          if-no-files-found: error

@@ -9,7 +9,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.490";
+  const BUILD="40.6.491";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
@@ -49,9 +49,9 @@
     "./js/views/peripheral-diagnostics-loader.js",
     "./js/oracle-evidence-tiered-storage-foundation.js?v=40.6.482",
     "./js/oracle-evidence-existing-bridge-integration.js?v=40.6.487",
-    "./js/oracle-evidence-auto-archive-safety-gates.js?v=40.6.487",
+    "./js/oracle-evidence-auto-archive-safety-gates.js?v=40.6.491",
     "./js/oracle-evidence-hot-window-sizing-406489.js?v=40.6.489",
-    "./js/oracle-evidence-verified-hot-window-retention-406490.js?v=40.6.490",
+    "./js/oracle-evidence-retention-atomicity-406491.js?v=40.6.491",
     "./js/market-stack.js?v=40.6.413-probe",
     "./js/parallel-markets.js",
     "./js/admin-theme-glass.js?v=40.6.413-probe",
