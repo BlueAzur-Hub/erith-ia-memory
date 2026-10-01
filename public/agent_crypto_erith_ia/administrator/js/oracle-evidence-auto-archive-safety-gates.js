@@ -1,18 +1,18 @@
-/* Agent-Crypto @erith.IA — 40.6.487 ORACLE EVIDENCE AUTO ARCHIVE SAFETY GATES
+/* Agent-Crypto @erith.IA — 40.6.491 ORACLE EVIDENCE AUTO ARCHIVE SINGLE-FLIGHT + WATERMARK PROGRESS
    Automatic sequential cold archive with exact-receipt proof.
    Fixed target at start. One chunk in flight. VERIFIED before next.
    Pause/Stop only after current chunk. No local deletion. */
 (()=>{
   "use strict";
 
-  const BUILD="40.6.487";
+  const BUILD="40.6.491";
   const SOURCE_BUILD="40.6.482";
   const BRIDGE_BASE="http://127.0.0.1:8787";
   const STATUS_PATH="/oracle-evidence/status";
   const INGEST_PATH="/oracle-evidence/ingest";
   const BRIDGE_TOKEN_KEY="agent_crypto_bridge_auth_40375_token";
   const ARCHIVE_LOCK_KEY="__ATLAS_ORACLE_EVIDENCE_ARCHIVE_LOCK__";
-  const AUTO_LOCK_OWNER="auto-40.6.487";
+  const AUTO_LOCK_OWNER="auto-40.6.491";
   const CHUNK_ROWS=500;
   const MAX_ROWS=1000;
   const REQUEST_TIMEOUT_MS=300000;
@@ -22,6 +22,7 @@
     action:"IDLE",
     error:null,
     running:false,
+    starting:false,
     paused:false,
     pause_requested:false,
     stop_requested:false,
@@ -194,6 +195,33 @@
     }finally{try{db.close();}catch(_){}}
   }
 
+  async function countRowsAfter(watermark,target){
+    const api=evidenceApi();
+    const db=await openDb();
+    const start=mark(watermark),end=mark(target);
+    try{
+      return await new Promise((resolve,reject)=>{
+        let count=0;
+        const tx=db.transaction(api.store,"readonly");
+        let index;
+        try{index=tx.objectStore(api.store).index("t0");}
+        catch(error){reject(error);return;}
+        const range=start?IDBKeyRange.lowerBound(start.t0):null;
+        const req=index.openCursor(range,"next");
+        req.onsuccess=()=>{
+          const cursor=req.result;
+          if(!cursor){resolve(count);return;}
+          const current={t0:Number(cursor.key),id:String(cursor.primaryKey||"")};
+          if(end&&compareMark(current,end)>0){resolve(count);return;}
+          if(!start||compareMark(current,start)>0) count+=1;
+          cursor.continue();
+        };
+        req.onerror=()=>reject(req.error||new Error("Count watermark Oracle Evidence refusé"));
+        tx.onabort=()=>reject(tx.error||new Error("Count watermark Oracle Evidence annulé"));
+      });
+    }finally{try{db.close();}catch(_){}}
+  }
+
   async function readRowsAfter(watermark,target,limit=CHUNK_ROWS){
     const bounded=Math.max(1,Math.min(MAX_ROWS,Number(limit)||CHUNK_ROWS));
     const api=evidenceApi();
@@ -315,22 +343,23 @@
   }
 
   async function start(){
-    if(state.running) return snapshot();
-    acquireArchiveLock();
+    if(state.running||state.starting||state.paused) return snapshot();
+    state.starting=true;
     resetRun();
     setAction("AUTO_INITIALISING");
     try{
+      acquireArchiveLock();
       const status=await bridgeStatus();
       const local=await countLocalRows();
       const target=await latestLocalMark();
       const remoteWatermark=mark(status.watermark);
       state.starting_local_rows=local;
       state.starting_archived_rows=Number(status.archived_rows||0);
-      state.pending_at_start=Math.max(0,local-state.starting_archived_rows);
       state.watermark=remoteWatermark;
       state.target_watermark=target;
+      state.pending_at_start=await countRowsAfter(remoteWatermark,target);
       state.started_at=new Date().toISOString();
-      if(!target||compareMark(target,remoteWatermark)<=0){
+      if(!target||compareMark(target,remoteWatermark)<=0||state.pending_at_start===0){
         state.running=false;
         state.finished_at=new Date().toISOString();
         releaseArchiveLock();
@@ -346,6 +375,9 @@
       releaseArchiveLock();
       setAction(error?.code==="BRIDGE_AUTH_REQUIRED"?"AUTH_BRIDGE_REQUISE":"AUTO_ERROR",error);
       throw error;
+    }finally{
+      state.starting=false;
+      render();
     }
   }
 
@@ -510,6 +542,7 @@
       bridge_base:BRIDGE_BASE,
       chunk_rows:CHUNK_ROWS,
       running:state.running,
+      starting:state.starting,
       paused:state.paused,
       pause_requested:state.pause_requested,
       stop_requested:state.stop_requested,
@@ -530,6 +563,8 @@
       finished_at:state.finished_at,
       progress:progress(),
       fixed_target_at_start:true,
+      progress_count_mode:"ROWS_AFTER_VERIFIED_WATERMARK_TO_FIXED_TARGET",
+      single_flight_start:true,
       sequential_only:true,
       parallel_uploads:false,
       wait_for_verified_before_next:true,
@@ -559,11 +594,11 @@
 
     const panel=document.createElement("section");
     panel.id="oracleEvidenceAutoArchive406487";
-    panel.setAttribute("aria-label","Archivage froid automatique Oracle Evidence 40.6.487");
+    panel.setAttribute("aria-label","Archivage froid automatique Oracle Evidence 40.6.491");
     panel.style.cssText="margin:8px 0 12px;padding:10px 12px;border:1px solid rgba(255,216,102,.28);border-radius:10px;background:rgba(28,22,5,.68);display:grid;gap:8px";
     panel.innerHTML=
       '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">'+
-        '<div><strong style="color:#ffe28f">ARCHIVAGE FROID AUTOMATIQUE · 40.6.487</strong><br>'+
+        '<div><strong style="color:#ffe28f">ARCHIVAGE FROID AUTOMATIQUE · 40.6.491</strong><br>'+
         '<small>500/chunk · séquentiel · VERIFIED avant suivant · cible figée · zéro purge</small></div>'+
         '<span id="oracleAuto487State" style="font-weight:800">IDLE</span>'+
       '</div>'+
@@ -598,7 +633,7 @@
     if(manual){
       manual.disabled=true;
       manual.textContent="Manuel désactivé · utilise AUTO";
-      manual.title="40.6.487 verrouille l'archivage de masse sur la file séquentielle";
+      manual.title="40.6.491 verrouille l'archivage de masse sur la file séquentielle";
     }
 
     state.mounted=true;
@@ -624,7 +659,7 @@
     const resumeBtn=document.getElementById("btnOracleAuto487Resume");
     const stopBtn=document.getElementById("btnOracleAuto487Stop");
     const verifyBtn=document.getElementById("btnOracleAuto487Verify");
-    if(startBtn) startBtn.disabled=snap.running||snap.paused;
+    if(startBtn) startBtn.disabled=snap.starting||snap.running||snap.paused;
     if(pauseBtn) pauseBtn.disabled=!snap.running||snap.pause_requested||snap.stop_requested;
     if(resumeBtn) resumeBtn.disabled=!snap.paused;
     if(stopBtn) stopBtn.disabled=!snap.running&&!snap.paused;
@@ -650,9 +685,9 @@
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",mount,{once:true}); else mount();
   window.addEventListener("agent-crypto:postboot-runtime-ready",mount,{once:true});
 
-  globalThis.AtlasOracleEvidenceAutoArchive406487=Object.freeze({
+  const autoArchiveApi406491=Object.freeze({
     build:BUILD,
-    role:"AUTOMATIC_SEQUENTIAL_COLD_ARCHIVE_SAFETY_GATES",
+    role:"AUTOMATIC_SEQUENTIAL_COLD_ARCHIVE_SINGLE_FLIGHT",
     start,
     pause,
     resume,
@@ -663,6 +698,8 @@
     chunk_rows:CHUNK_ROWS,
     bridge_enabled_required:true,
     fixed_target_at_start:true,
+    progress_count_mode:"ROWS_AFTER_VERIFIED_WATERMARK_TO_FIXED_TARGET",
+    single_flight_start:true,
     sequential_only:true,
     parallel_uploads:false,
     wait_for_verified_before_next:true,
@@ -675,4 +712,6 @@
     automatic_delete:false,
     real_order:false
   });
+  globalThis.AtlasOracleEvidenceAutoArchive406487=autoArchiveApi406491;
+  globalThis.AtlasOracleEvidenceAutoArchive406491=autoArchiveApi406491;
 })();

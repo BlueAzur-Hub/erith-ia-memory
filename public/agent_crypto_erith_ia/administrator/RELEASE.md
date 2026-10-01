@@ -1,3 +1,23 @@
+# Agent-Crypto 40.6.491 — Oracle Evidence Retention Atomicity + AUTO Single-Flight
+
+Published target: Administrator 40.6.491 · Market Core 38.15.11 protected.
+
+## Scope
+- Closes the 40.6.490 retention TOCTOU window: the final exact-value comparison and exact-key deletion now occur in one IndexedDB `readwrite` transaction.
+- The public cold chunk is authenticated before the transaction; inside the transaction every current local row is compared exactly with the authenticated public row before any delete is queued.
+- No cryptographic digest is awaited inside the deletion transaction.
+- AUTO archive startup is single-flight before the first asynchronous boundary.
+- AUTO progress is counted from the Bridge VERIFIED watermark to the fixed local target instead of `local_rows - archived_rows`.
+- Historical 40.6.489 and 40.6.490 package workflows are manual-only so later builds cannot produce false version-red runs.
+
+## Protected
+Market Core 38.15.11, Strategy A business logic, Oracle Math, Aether, Lecture Technique, Web Classique and the cold Oracle Evidence archive are unchanged. No real order, wallet access, new storage schema or automatic deletion.
+
+## Verification state
+Static/syntax/package validation is provided by the 40.6.491 workflow. Firefox terrain remains required before the new retention path is declared terrain-verified.
+
+---
+
 # Agent-Crypto 40.6.490 — ORACLE EVIDENCE VERIFIED HOT WINDOW RETENTION
 
 ## Objet
