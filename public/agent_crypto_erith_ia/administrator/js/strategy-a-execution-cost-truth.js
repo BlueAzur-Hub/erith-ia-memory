@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.469 EXECUTION COST PUBLIC API COMPLETION
+/* Agent-Crypto @erith.IA — 40.6.492 OKX ORDERBOOK DEPTH TRUTH
    Event-driven BTC/EUR execution-cost measurement for Kraken + OKX Europe; manual refresh remains a fallback.
    40.6.443 restored the tool and hardened null/crossed-book handling.
    40.6.450 fails closed on stale/unknown/future OKX quote time, proves BTC/EUR identity before generic aliases,
@@ -11,10 +11,12 @@
    and price_eur alone never authorizes generic bid/ask aliases as an EUR order book.
    40.6.466 adds one passive custom event after a completed measurement so the read-only venue-cost shadow can recompute without polling.
    40.6.469 keeps one measure function for public, button and auto callers; its common finally resumes pending cycles.
+   40.6.492 reads OKX multi-level BTC/EUR depth only through Backend 8790 V1.4.3 and derives bounded depth/slippage evidence.
+   If the book is absent/stale/invalid, the previous top-of-book evidence stays available and depth/slippage remain UNKNOWN.
    No direct browser OKX internet access, order, wallet, key, storage, recurring timer, observer, Strategy threshold or Oracle change. */
 (() => {
   "use strict";
-  const BUILD="40.6.469", ROOT="strategyAExecutionCostTruth";
+  const BUILD="40.6.492", ROOT="strategyAExecutionCostTruth";
   const SIZES=Object.freeze([10,25,50,100]), DEPTH_BPS=Object.freeze([5,10,25]), TIMEOUT=9000, BACKEND_TIMEOUT=18000;
   const SOURCE_TRUTH_CACHE_TTL_SECONDS=15, SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS=30;
   const VENUES=Object.freeze({
@@ -29,7 +31,8 @@
       fee_note:"EEE Spot-only Regular · effet 25/09/2026 · le taux réel dépend du compte",
       fee_source:"https://www.okx.com/fr-fr/help/important-notice-upcoming-spot-fee-adjustment-eea",
       backend_endpoint:"http://127.0.0.1:8790/quotes?assets=BTC",
-      backend_version:"1.4.2"
+      orderbook_endpoint:"http://127.0.0.1:8790/orderbook?asset=BTC&depth=100",
+      backend_version:"1.4.3"
     })
   });
   let last=null,busy=false;
@@ -185,6 +188,35 @@
       measurement_scope:"TOP_OF_BOOK_FROM_PRIVATE_BACKEND",slippage_claim:false,nearby_depth_claim:false
     };
   }
+  function okxOrderbookFromBackend(payload,nowMs=Date.now()){
+    if(!payload||payload.read_only!==true)throw measurementError("INVALID_ORDERBOOK","Backend local : contrat orderbook read-only absent");
+    if(String(payload.provider||"").toLowerCase()!=="okx")throw measurementError("INVALID_ORDERBOOK","Backend local : provider orderbook différent de OKX");
+    if(String(payload.asset||"").toUpperCase()!=="BTC")throw measurementError("INVALID_ORDERBOOK","Backend local : actif orderbook différent de BTC");
+    if(normalizedPair(payload.pair)!=="BTCEUR")throw measurementError("INVALID_ORDERBOOK","Backend local : paire orderbook différente de BTC/EUR",{pair:payload.pair});
+    if(String(payload.status||"").toLowerCase()!=="ok")throw measurementError("ORDERBOOK_UNAVAILABLE","Backend local : carnet OKX indisponible",{status:payload.status,error:payload.error});
+    const stampMs=toMs(payload.observed_at_utc);
+    if(stampMs===null)throw measurementError("UNKNOWN","Backend local : timestamp carnet OKX absent ou invalide");
+    const rawAge=(nowMs-stampMs)/1000;
+    if(rawAge < -SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS)throw measurementError("UNKNOWN","Backend local : timestamp carnet OKX dans le futur");
+    const age=Math.max(0,rawAge);
+    if(age>SOURCE_TRUTH_CACHE_TTL_SECONDS)throw measurementError("STALE","Backend local : carnet OKX périmé",{age_seconds:age,max_age_seconds:SOURCE_TRUTH_CACHE_TTL_SECONDS});
+    const normalizeRows=rows=>(Array.isArray(rows)?rows:[]).map(row=>[n(row?.[0]),n(row?.[1])]).filter(row=>row[0]>0&&row[1]>0);
+    const bids=normalizeRows(payload.bids).sort((a,b)=>b[0]-a[0]);
+    const asks=normalizeRows(payload.asks).sort((a,b)=>a[0]-b[0]);
+    if(!bids.length||!asks.length)throw measurementError("MISSING_ORDERBOOK","Backend local : niveaux bid/ask OKX absents");
+    if(bids[0][0]>asks[0][0])throw measurementError("CROSSED_BOOK","Backend local : carnet OKX croisé",{bestBid:bids[0][0],bestAsk:asks[0][0]});
+    return Object.freeze({
+      book:Object.freeze({bids:Object.freeze(bids),asks:Object.freeze(asks)}),
+      freshness:Object.freeze({state:"FRESH",age_seconds:age,max_age_seconds:SOURCE_TRUTH_CACHE_TTL_SECONDS,observed_at_utc:new Date(stampMs).toISOString()}),
+      requested_depth:n(payload.requested_depth),
+      levels:payload.levels||null
+    });
+  }
+  async function fetchOkxBackendBook(venue){
+    const endpoint=venue.orderbook_endpoint;
+    const r=await fetchJson(endpoint,BACKEND_TIMEOUT);
+    return {payload:r.json,latency_ms:r.latency_ms,endpoint,transport:"BACKEND LOCAL 8790 · OKX PUBLIC ORDERBOOK",backend_version:String(r.json?.backend_version||venue.backend_version)};
+  }
   async function fetchOkxBackendQuote(venue){
     let owner=globalThis.ErithPrivateBackendSources;
     if(!owner||typeof owner.refresh!=="function"){
@@ -270,10 +302,53 @@
     const started=new Date().toISOString();
     let receivedAt=null;
     try{
-      const r=await fetchOkxBackendQuote(venue);
+      const quoteRead=await fetchOkxBackendQuote(venue);
       receivedAt=new Date().toISOString();
-      const metrics=okxMetricsFromBackend(r.payload,venue,Date.parse(receivedAt));
-      return Object.freeze({ok:true,venue:venue.name,started_at:started,received_at_utc:receivedAt,measured_at:new Date().toISOString(),latency_ms:r.latency_ms,endpoint:r.endpoint,transport:r.transport,backend_version:r.backend_version,attempts:Object.freeze([{transport:r.transport,ok:true}]),...metrics});
+      const top=okxMetricsFromBackend(quoteRead.payload,venue,Date.parse(receivedAt));
+      try{
+        const bookRead=await fetchOkxBackendBook(venue);
+        const bookReceivedAt=new Date().toISOString();
+        const parsedBook=okxOrderbookFromBackend(bookRead.payload,Date.parse(bookReceivedAt));
+        const full=metrics(parsedBook.book,venue);
+        return Object.freeze({
+          ok:true,venue:venue.name,started_at:started,received_at_utc:bookReceivedAt,measured_at:new Date().toISOString(),
+          latency_ms:bookRead.latency_ms,quote_latency_ms:quoteRead.latency_ms,orderbook_latency_ms:bookRead.latency_ms,
+          endpoint:bookRead.endpoint,quote_endpoint:quoteRead.endpoint,transport:"SOURCE TRUTH CEX + BACKEND LOCAL 8790 ORDERBOOK",
+          backend_version:bookRead.backend_version,attempts:Object.freeze([
+            {transport:quoteRead.transport,ok:true},
+            {transport:bookRead.transport,ok:true}
+          ]),
+          ...full,
+          depth_available:true,
+          measurement_scope:"MULTI_LEVEL_ORDERBOOK_FROM_PRIVATE_BACKEND",
+          slippage_claim:true,nearby_depth_claim:true,
+          observed_at_utc:parsedBook.freshness.observed_at_utc,
+          quote_observed_at_utc:top.quote_observed_at_utc,
+          quote_age_seconds:top.quote_age_seconds,
+          orderbook_observed_at_utc:parsedBook.freshness.observed_at_utc,
+          orderbook_age_seconds:parsedBook.freshness.age_seconds,
+          freshness_state:"FRESH",
+          freshness_reason:"QUOTE_AND_ORDERBOOK_FRESH",
+          freshness_max_age_seconds:SOURCE_TRUTH_CACHE_TTL_SECONDS,
+          quote_identity:top.quote_identity,
+          backend_quote_fields:top.backend_quote_fields,
+          orderbook_requested_depth:parsedBook.requested_depth,
+          orderbook_levels:parsedBook.levels,
+          fee_plus_spread_snapshot_pct:top.fee_plus_spread_snapshot_pct
+        });
+      }catch(bookError){
+        return Object.freeze({
+          ok:true,venue:venue.name,started_at:started,received_at_utc:receivedAt,measured_at:new Date().toISOString(),
+          latency_ms:quoteRead.latency_ms,endpoint:quoteRead.endpoint,transport:quoteRead.transport,backend_version:quoteRead.backend_version,
+          attempts:Object.freeze([{transport:quoteRead.transport,ok:true},{transport:"BACKEND LOCAL 8790 · OKX PUBLIC ORDERBOOK",ok:false,error:String(bookError?.message||bookError)}]),
+          ...top,
+          depth_available:false,
+          orderbook_error:String(bookError?.message||bookError),
+          orderbook_error_code:String(bookError?.code||"ORDERBOOK_UNAVAILABLE"),
+          measurement_scope:"TOP_OF_BOOK_FALLBACK_ORDERBOOK_UNAVAILABLE",
+          slippage_claim:false,nearby_depth_claim:false
+        });
+      }
     }catch(error){
       const freshness=error?.details?.freshness||null;
       const state=freshness?.state||(/^(INVALID_|MISSING_|CROSSED_)/.test(String(error?.code||""))?"INVALID":"ERROR");
@@ -311,8 +386,10 @@
           account_specific_fee_may_differ:true,
           market_roundtrip_cost_is_orderbook_simulation_plus_reference_taker_fees_for_kraken:true,
           okx_top_of_book_from_existing_backend:true,
+          okx_multi_level_orderbook_from_backend_143:true,
           okx_fee_plus_spread_snapshot_is_not_slippage_proof:true,
-          okx_depth_and_slippage_remain_unknown_until_backend_exposes_orderbook:true,
+          okx_orderbook_depth_drives_slippage_when_available:true,
+          okx_depth_and_slippage_fail_closed_when_orderbook_unavailable:true,
           okx_stale_or_unknown_quote_is_not_measurement:true,
           source_truth_fallback_freshness_seconds:SOURCE_TRUTH_CACHE_TTL_SECONDS,
           quote_time_receive_time_calculation_time_separated:true,
@@ -331,7 +408,7 @@
     if(!last)return false;
     try{
       const b=new Blob([JSON.stringify(last,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_469.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
+      a.href=u;a.download="STRATEGY_A_EXECUTION_COST_TRUTH_40_6_492.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
   function style(){
@@ -355,8 +432,10 @@
     const depth5=v.depth_available===false?"NON EXPOSÉE":eur((d["5"]?.ask_eur||0)+(d["5"]?.bid_eur||0));
     const depth25=v.depth_available===false?"NON EXPOSÉE":eur((d["25"]?.ask_eur||0)+(d["25"]?.bid_eur||0));
     const scope=v.depth_available===false
-      ? '<div class="ect-note"><b>OKX via Backend local :</b> bid/ask réels et spread mesurés. Le Backend V1.4.2 ne fournit pas encore le carnet multi-niveaux : profondeur et glissement 10/25/50/100 € restent <b>INCONNUS</b>, sans valeur inventée. Référence frais Taker + spread au snapshot : '+esc(pct(v.fee_plus_spread_snapshot_pct))+' avant slippage.</div>'
-      : '';
+      ? '<div class="ect-note"><b>OKX via Backend local :</b> bid/ask réels et spread mesurés. Le carnet multi-niveaux V1.4.3 est indisponible pour cette mesure : profondeur et glissement 10/25/50/100 € restent <b>INCONNUS</b>, sans valeur inventée. Référence frais Taker + spread au snapshot : '+esc(pct(v.fee_plus_spread_snapshot_pct))+' avant slippage.</div>'
+      : (String(v.venue||"").includes("OKX")
+        ? '<div class="ect-note good"><b>OKX ORDERBOOK :</b> carnet multi-niveaux public via Backend local V1.4.3 · profondeur et slippage calculés depuis les niveaux réellement reçus · aucune exécution.</div>'
+        : '');
     const freshness=v.freshness_state?'<div class="ect-transport"><b>Fraîcheur :</b> '+esc(v.freshness_state)+(Number.isFinite(v.quote_age_seconds)?' · âge '+esc(ageText(v.quote_age_seconds)):'')+(Number.isFinite(v.freshness_max_age_seconds)?' · limite '+esc(ageText(v.freshness_max_age_seconds)):'')+(v.quote_observed_at_utc?' · quote '+esc(v.quote_observed_at_utc):'')+'</div>':'';
     return '<div class="ect-card"><h4>'+esc(v.venue)+' · '+esc(v.pair)+'</h4><div class="ect-transport">Source : '+esc(v.transport||"source publique")+' · latence requête '+esc(v.latency_ms)+' ms</div>'+freshness+'<div class="ect-k">'+
       '<div><span>Maker réf.</span><b>'+esc(pct(v.fee_reference.maker_pct))+'</b></div><div><span>Taker réf.</span><b>'+esc(pct(v.fee_reference.taker_pct))+'</b></div>'+
@@ -388,6 +467,7 @@
     const now=Date.parse("2026-09-28T19:00:00Z");
     const payload=quote=>({assets:[{asset:"BTC",quotes:[quote]}]});
     const base={provider:"okx",status:"ok",observed_at_utc:"2026-09-28T18:59:55Z",bid_eur:"99990",ask_eur:"100010",price_eur:"100000"};
+    const bookFixture={read_only:true,backend_version:"1.4.3",provider:"okx",asset:"BTC",pair:"BTC-EUR",status:"ok",observed_at_utc:"2026-09-28T18:59:55Z",requested_depth:100,levels:{bids:2,asks:2},bids:[[99990,0.5],[99980,1]],asks:[[100010,0.5],[100020,1]]};
     const rejects=(quote,code,reason=null)=>{
       try{okxQuoteFromBackend(payload(quote),now);return false;}
       catch(error){return error?.code===code&&(reason===null||error?.details?.freshness?.reason===reason);}
@@ -397,6 +477,8 @@
       const parsed=okxQuoteFromBackend(payload(base),now);
       fresh=parsed.freshness.state==="FRESH"&&Math.round(parsed.freshness.age_seconds)===5;
     }catch(_){}
+    const parsedOrderbook=okxOrderbookFromBackend(bookFixture,now);
+    const orderbookMetrics=metrics(parsedOrderbook.book,VENUES.okx);
     const checks=Object.freeze({
       fetch_helper_defined:typeof fetchJson==="function",
       canonical_anchor_only:true,
@@ -414,6 +496,8 @@
       compact_symbol_usdt_rejected:rejects({provider:"okx",status:"ok",observed_at_utc:"2026-09-28T18:59:55Z",symbol:"BTCUSDT",price_eur:"100000",bid:"99990",ask:"100010"},"INVALID_PAIR"),
       price_eur_alone_does_not_prove_generic_book:rejects({provider:"okx",status:"ok",observed_at_utc:"2026-09-28T18:59:55Z",price_eur:"100000",bid:"99990",ask:"100010"},"MISSING_BOOK"),
       existing_source_truth_cache_contract:freshnessLimit({}).seconds===15,
+      okx_orderbook_read_only_contract:parsedOrderbook.freshness.state==="FRESH"&&parsedOrderbook.book.bids.length===2&&parsedOrderbook.book.asks.length===2,
+      okx_orderbook_depth_and_slippage_computable:Number.isFinite(orderbookMetrics.depth_eur?.["5"]?.ask_eur)&&orderbookMetrics.simulations.every(x=>Number.isFinite(x.market_market_estimated_cost_pct)),
       stale_okx_preserves_kraken_partial:measurementStatus({ok:true},{ok:false,freshness_state:"STALE"})==="PARTIAL",
       backend_demand_bounded:true,
       repeatable_export:true,
@@ -430,7 +514,7 @@
   }
   globalThis.AgentCryptoStrategyAExecutionCostTruth=Object.freeze({
     build:BUILD,measure,render,export_json:exportJson,snapshot:()=>last,self_test:selfTest,
-    manual_fetch_only:false,automatic_measurement:true,automatic_measure_on_mount:true,automatic_measure_on_experiment_cycle:true,manual_refresh_fallback:true,pending_experiment_resume_from_any_measure_exit:true,pending_experiment_coalesced_to_one:true,okx_loopback_backend_only:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false,
+    manual_fetch_only:false,automatic_measurement:true,automatic_measure_on_mount:true,automatic_measure_on_experiment_cycle:true,manual_refresh_fallback:true,pending_experiment_resume_from_any_measure_exit:true,pending_experiment_coalesced_to_one:true,okx_loopback_backend_only:true,okx_orderbook_backend_required_for_depth:true,direct_okx_browser_internet:false,new_websocket:false,persistent_websocket:false,recurring_timer:false,storage_write:false,api_key:false,wallet:false,real_order:false,thresholds_changed:false,oracle_math_changed:false,risk_changed:false,paper_changed:false,market_core_changed:false,automatic_platform_choice:false,
     freshness_fallback_seconds:SOURCE_TRUTH_CACHE_TTL_SECONDS,future_tolerance_seconds:SOURCE_TRUTH_FUTURE_TOLERANCE_SECONDS,stale_or_unknown_quote_usable:false
   });
   if(typeof document!=="undefined"){

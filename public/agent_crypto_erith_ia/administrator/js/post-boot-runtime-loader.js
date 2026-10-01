@@ -9,7 +9,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.491";
+  const BUILD="40.6.492";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
@@ -18,7 +18,7 @@
     "./js/strategy-a-auto-lifecycle-bridge.js",
     "./js/strategy-a-after-cost-metrics.js?v=40.6.405",
     "./js/strategy-a-durable-evidence-store.js?v=40.6.463",
-    "./js/strategy-a-execution-cost-truth.js?v=40.6.469",
+    "./js/strategy-a-execution-cost-truth.js?v=40.6.492",
     "./js/strategy-a-execution-cost-evidence-capture.js?v=40.6.469",
     "./js/strategy-a-prospective-outcome-evidence-capture.js?v=40.6.478",
     "./js/strategy-a-input-freshness-truth.js?v=40.6.479",
