@@ -1,0 +1,56 @@
+name: Agent-Crypto 40.6.495 Validate Package
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Scope 40.6.495 validator
+        run: |
+          set -euo pipefail
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json", encoding="utf-8"))["build"])')"
+          if [ "$CURRENT" != "40.6.495" ]; then
+            echo "AGENT_CRYPTO_SKIP_406495=true" >> "$GITHUB_ENV"
+            echo "Historical 40.6.495 validator skipped for build $CURRENT"
+          fi
+      - name: Validate syntax and OKX shadow evidence contracts
+        if: env.AGENT_CRYPTO_SKIP_406495 != 'true'
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-okx-micro-execution-shadow-truth.js"
+          node --check "$ROOT/js/post-boot-runtime-loader.js"
+          node -e "require('./$ROOT/js/strategy-a-okx-micro-execution-shadow-truth.js'); const s=global.AgentCryptoOkxMicroExecutionShadowTruth.self_test(); console.log(JSON.stringify(s)); if(!s.pass) process.exit(1)"
+          python .github/scripts/agent_crypto_okx_shadow_evidence_guard_406495.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Verify protected cold archive is not patched
+        if: github.event_name == 'pull_request' && env.AGENT_CRYPTO_SKIP_406495 != 'true'
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git diff --exit-code origin/main...HEAD -- public/agent_crypto_erith_ia/data/oracle_evidence
+      - name: Build delivery ZIP with tree preserved
+        if: env.AGENT_CRYPTO_SKIP_406495 != 'true'
+        run: |
+          set -euo pipefail
+          ZIP="AGENT_CRYPTO_OKX_SHADOW_EVIDENCE_TRUTH_40.6.495.zip"
+          zip -r "$ZIP"             public/agent_crypto_erith_ia/administrator/index-40.6.495.html             public/agent_crypto_erith_ia/administrator/build.json             public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js             public/agent_crypto_erith_ia/administrator/js/strategy-a-okx-micro-execution-shadow-truth.js             public/agent_crypto_erith_ia/administrator/OKX_SHADOW_EVIDENCE_TRUTH_40.6.495.md             public/agent_crypto_erith_ia/administrator/HANDOFF_FINAL_40.6.495.md             public/agent_crypto_erith_ia/administrator/PATCH_MANIFEST_40.6.495.txt             .github/scripts/agent_crypto_okx_shadow_evidence_guard_406495.py             .github/workflows/agent-crypto-package-406495.yml
+          sha256sum "$ZIP" > "$ZIP.sha256"
+          unzip -t "$ZIP"
+          unzip -l "$ZIP" | grep 'public/agent_crypto_erith_ia/administrator/js/strategy-a-okx-micro-execution-shadow-truth.js'
+      - uses: actions/upload-artifact@v4
+        if: env.AGENT_CRYPTO_SKIP_406495 != 'true'
+        with:
+          name: agent-crypto-40.6.495-okx-shadow-evidence-truth
+          path: |
+            AGENT_CRYPTO_OKX_SHADOW_EVIDENCE_TRUTH_40.6.495.zip
+            AGENT_CRYPTO_OKX_SHADOW_EVIDENCE_TRUTH_40.6.495.zip.sha256
+          if-no-files-found: error
