@@ -1,17 +1,7 @@
-name: Agent-Crypto 40.6.489 Validate and Publish ZIP
+name: Agent-Crypto 40.6.489 Historical Package
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/agent-crypto-package-406489.yml'
-      - 'public/agent_crypto_erith_ia/administrator/js/oracle-evidence-hot-window-sizing-406489.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js'
-      - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/RELEASE.md'
-      - 'public/agent_crypto_erith_ia/administrator/HANDOFF.md'
+  workflow_dispatch:
 
 permissions:
   contents: write

@@ -1,3 +1,24 @@
+# HANDOFF — Agent-Crypto 40.6.491
+
+Checkpoint: Administrator 40.6.491 · ORACLE EVIDENCE RETENTION ATOMICITY + AUTO SINGLE-FLIGHT.
+
+## Why
+40.6.490 could prove a local chunk, close that read transaction, and only afterwards open a separate write transaction to delete the same IDs. An Oracle update between those two transactions could therefore make the proof stale while the canary still returned PASS.
+
+## Correction
+1. Public cold JSONL is fetched and SHA/boundaries are verified.
+2. Local SHA is still checked as a preflight.
+3. Final comparison is repeated by exact canonical row value inside the same IndexedDB `readwrite` transaction that owns the deletes.
+4. A mismatched or missing row aborts the transaction before commit.
+5. HOT 10 000 is checked from the count obtained inside that same transaction.
+6. AUTO `start()` sets `starting=true` before its first await; duplicate starts do not launch a second loop.
+7. AUTO progress counts only rows strictly after the VERIFIED remote watermark and up to the fixed target.
+
+## Terrain still required
+Firefox Ctrl+F5 → 40.6.491 → Oracle/Evidence. Validate preview, one ≤500 canary, then AUTO single-click behavior/progression. Do not continue mass retention if any mismatch appears.
+
+---
+
 # HANDOFF — Agent-Crypto 40.6.490
 
 ## État livré
