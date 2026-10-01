@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.494",
+  "build": "40.6.495",
   "engine": "38.15.11",
-  "release": "STRATEGY LEDGER LIVE MERGE TRUTH",
+  "release": "OKX SHADOW EVIDENCE TRUTH",
   "published": true,
-  "status": "published_static_verified_494_terrain_pending",
-  "parent_build": "40.6.493",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.494",
-  "administrator_build": "40.6.494",
-  "build_label": "Build 40.6.494 · Administrator",
+  "status": "published_static_verified_495_terrain_pending",
+  "parent_build": "40.6.494",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.495",
+  "administrator_build": "40.6.495",
+  "build_label": "Build 40.6.495 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox : ouvrir Section 04 > Simulation et laisser Auto A produire un nouveau cycle. Vérifier que le dernier cycle Experiment Ledger = PROSPECTIVE .478 event = .478 résolu = INPUT FRESHNESS .479 latest cycle, sans LEDGER_ID_MISS ni faux DIRECT_INPUT_STALE. 40.6.492/493, Market Core 38.15.11, Oracle, Cost Gate, Risk et PAPER restent inchangés.",
-  "terrain_proof": "PENDING_40.6.494",
-  "release_notes": "40.6.494 repairs only the Strategy A Experiment Ledger read facade inherited from 40.6.206. The merged read now combines the historical/durable generic view, prospective evidence, and the exact live Experiment Ledger by cycle_id, with exact live fields authoritative and newest live cycles preserved inside the bounded 240-row facade. This removes the stale-reader condition that produced LEDGER_ID_MISS in 40.6.478 and false DIRECT_INPUT_STALE in 40.6.479 while Auto A itself continued normally. No Strategy thresholds, Cost Gate, Oracle math, Risk, PAPER execution, OKX/Kraken measurement, Backend, Bridge, Market Core, real order, wallet, key, timer, observer, or storage schema is changed.",
+  "terrain_pending": "Firefox : ouvrir Section 04 > Simulation, vérifier STRATEGY A · OKX SHADOW EVIDENCE TRUTH · 40.6.495. Sur un cycle Auto A normal : cycle lié visible, Oracle historique séparé de l'expected move du cycle, FULL/PARTIAL explicite, âge de source visible, coûts numériques présents. Laisser vieillir au-delà de 120 s ou observer un nouveau cycle pour vérifier STALE_HISTORY. 40.6.492, Cost Gate, Oracle, Risk, PAPER, Backend/Bridge et Market Core 38.15.11 restent inchangés.",
+  "terrain_proof": "PENDING_40.6.495",
+  "release_notes": "40.6.495 keeps 40.6.494 as the validated Strategy Ledger plumbing baseline and hardens only the passive OKX shadow laboratory. It separates the historical Oracle median from the linked Strategy cycle expected_move_pct, links Auto-A measurements to the latest cycle_id when applicable, distinguishes FULL_ORDERBOOK_FRESH / PARTIAL_TOP_OF_BOOK_FRESH / STALE_HISTORY / SOURCE_UNAVAILABLE, ages current evidence, and retains numeric cost + required-with-margin values inside the bounded 24-observation session history. 4/4 Post-only is explicitly described as four ticket sizes against a fee floor, not four executable opportunities. No Strategy threshold, Cost Gate, Oracle math, Risk, PAPER execution, 40.6.492 measurement logic, Backend, Bridge, Market Core, order, wallet, key, persistent storage schema, recurring timer or MutationObserver is changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -7164,5 +7164,56 @@
       "real_order": false
     },
     "terrain": "PENDING_FIREFOX_NEXT_AUTO_A_CYCLE"
+  },
+  "parent_terrain_406494": {
+    "status": "PASS_FIREFOX_USER_EVIDENCE",
+    "evidence": "40.6.478 event cycle_id == resolved cycle_id == 40.6.479 latest cycle; mode LEDGER_BY_ID; error none; 40.6.479 OBSERVED_OK/FRESH",
+    "user_export_time": "2026-10-01T21:53:36Z"
+  },
+  "okx_shadow_evidence_truth_406495": {
+    "scope": "strategy_a_okx_shadow_evidence_lab_only",
+    "owner": "js/strategy-a-okx-micro-execution-shadow-truth.js",
+    "source_owner": "js/strategy-a-execution-cost-truth.js",
+    "source_owner_modified": false,
+    "historical_oracle_median_preserved": true,
+    "linked_cycle_context_added": true,
+    "linked_cycle_key": "cycle_id",
+    "active_comparator_policy": "AUTO_EXPERIMENT_CYCLE_EXPECTED_MOVE_ELSE_HISTORICAL_ORACLE_MEDIAN",
+    "source_quality_states": [
+      "FULL_ORDERBOOK_FRESH",
+      "PARTIAL_TOP_OF_BOOK_FRESH",
+      "STALE_HISTORY",
+      "SOURCE_UNAVAILABLE"
+    ],
+    "current_view_max_age_seconds": 120,
+    "session_history_max_observations": 24,
+    "numeric_history_fields": [
+      "cost_pct",
+      "required_with_margin_pct",
+      "state",
+      "evidence",
+      "fill"
+    ],
+    "source_timestamp_preserved": true,
+    "linked_cycle_id_preserved": true,
+    "post_only_four_of_four_semantics": "FOUR_TICKET_SIZES_VS_FEE_FLOOR_NOT_FOUR_EXECUTABLE_OPPORTUNITIES",
+    "packaging_tree_preserved": true,
+    "ci_historical_self_skip": true,
+    "protected": {
+      "market_core": "38.15.11",
+      "execution_cost_truth": "40.6.492",
+      "strategy_thresholds_changed": false,
+      "cost_gate_changed": false,
+      "oracle_math_changed": false,
+      "risk_policy_changed": false,
+      "paper_execution_changed": false,
+      "backend_modified": false,
+      "bridge_modified": false,
+      "new_recurring_timer": false,
+      "mutation_observer": false,
+      "storage_schema_changed": false,
+      "real_order": false
+    },
+    "terrain": "PENDING_FIREFOX"
   }
 }
