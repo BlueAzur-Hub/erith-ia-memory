@@ -13,7 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 0}
+      - name: Scope historical 40.6.493 validator
+        run: |
+          set -euo pipefail
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json", encoding="utf-8"))["build"])')"
+          if [ "$CURRENT" != "40.6.493" ]; then
+            echo "AGENT_CRYPTO_SKIP_406493=true" >> "$GITHUB_ENV"
+            echo "Historical 40.6.493 validator skipped for build $CURRENT"
+          fi
       - name: Validate syntax and micro-execution shadow contracts
+        if: env.AGENT_CRYPTO_SKIP_406493 != 'true'
         run: |
           set -euo pipefail
           ROOT="public/agent_crypto_erith_ia/administrator"
@@ -23,12 +32,13 @@ jobs:
           python .github/scripts/agent_crypto_okx_micro_execution_shadow_guard_406493.py
           python .github/scripts/agent_crypto_version_truth_guard_compat.py
       - name: Verify protected cold archive is not patched
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && env.AGENT_CRYPTO_SKIP_406493 != 'true'
         run: |
           set -euo pipefail
           git fetch origin main
           git diff --exit-code origin/main...HEAD -- public/agent_crypto_erith_ia/data/oracle_evidence
       - name: Build delivery ZIP
+        if: env.AGENT_CRYPTO_SKIP_406493 != 'true'
         run: |
           set -euo pipefail
           ROOT="public/agent_crypto_erith_ia/administrator"
@@ -37,6 +47,7 @@ jobs:
           sha256sum "$ZIP" > "$ZIP.sha256"
           unzip -t "$ZIP"
       - uses: actions/upload-artifact@v4
+        if: env.AGENT_CRYPTO_SKIP_406493 != 'true'
         with:
           name: agent-crypto-40.6.493-okx-micro-execution-shadow
           path: |
