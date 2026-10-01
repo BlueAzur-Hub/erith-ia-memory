@@ -28,7 +28,7 @@ need("crypto.subtle" not in atomic and "sha256Hex(" not in atomic,"digest inside
 need("single_readwrite_transaction: true" in ret and "atomic_exact_value_match: true" in ret,"atomic receipt")
 need(".clear(" not in ret and "indexedDB.deleteDatabase" not in ret,"global delete api")
 need('const BUILD="40.6.491";' in auto,"auto build")
-need("starting:false" in auto and "if(state.running||state.starting) return snapshot();" in auto,"single flight")
+need("starting:false" in auto and "if(state.running||state.starting||state.paused) return snapshot();" in auto,"single flight")
 need("state.pending_at_start=await countRowsAfter(remoteWatermark,target);" in auto,"watermark count")
 need('progress_count_mode:"ROWS_AFTER_VERIFIED_WATERMARK_TO_FIXED_TARGET"' in auto,"progress contract")
 need('const BUILD="40.6.491";' in loader,"loader build")

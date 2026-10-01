@@ -343,7 +343,7 @@
   }
 
   async function start(){
-    if(state.running||state.starting) return snapshot();
+    if(state.running||state.starting||state.paused) return snapshot();
     state.starting=true;
     resetRun();
     setAction("AUTO_INITIALISING");

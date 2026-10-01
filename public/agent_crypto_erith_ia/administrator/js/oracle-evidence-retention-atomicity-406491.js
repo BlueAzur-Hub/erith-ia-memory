@@ -264,7 +264,7 @@
     });
   }
 
-  async function readLocalProof(chunk) {async function readLocalProof(chunk) {
+  async function readLocalProof(chunk) {
     const rows = await readLocalChunkRows(chunk);
     assertRowsMatchChunk(rows, chunk, "Chunk local");
     const sha256 = await sha256Hex(canonicalJsonl(rows));
@@ -382,7 +382,7 @@
     }
   }
 
-  async function assertIdsAbsent(ids) {async function assertIdsAbsent(ids) {
+  async function assertIdsAbsent(ids) {
     const api = evidenceApi();
     const exactIds = Array.isArray(ids) ? ids.map(String) : [];
     const db = await openExistingEvidenceDb();
@@ -509,7 +509,6 @@
     const proof = await verifyChunkBeforeDelete(candidate);
     const atomic = await deleteExactChunkTransaction(proof.chunk, proof.cold.rows);
 
-    await assertIdsAbsent(proof.cold.rows.map(row => String(row.id)));
     const remaining = await countLocalRows();
     assert(remaining >= HOT_MIN_ROWS, "Invariant HOT 10 000 violé après transaction");
     assert(remaining >= atomic.rows_remaining, "Compteur local final inférieur au résultat atomique");
@@ -531,12 +530,12 @@
       last_id: String(proof.chunk.last_id),
       rows_before: atomic.rows_before,
       rows_remaining: remaining,
-      deleted_ids_absent: true,
+      atomic_delete_committed: true,
       completed_at: new Date().toISOString()
     });
   }
 
-  function operatorConfirm(message) {function operatorConfirm(message) {
+  function operatorConfirm(message) {
     if (typeof globalThis.confirm !== "function") throw new Error("Confirmation opérateur indisponible");
     return globalThis.confirm(message) === true;
   }
