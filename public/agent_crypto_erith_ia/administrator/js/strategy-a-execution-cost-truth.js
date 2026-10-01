@@ -365,7 +365,7 @@
       });
     }
   }
-  function measurementStatus(kraken,okx){  function measurementStatus(kraken,okx){
+  function measurementStatus(kraken,okx){
     const okCount=[kraken,okx].filter(x=>x?.ok===true).length;
     if(okCount===2)return okx?.depth_available===false?"MEASURED_BOTH_OKX_TOP_OF_BOOK_ONLY":"MEASURED_BOTH";
     return okCount===1?"PARTIAL":"FAILED";
