@@ -42,7 +42,7 @@ jobs:
           ROOT="public/agent_crypto_erith_ia/administrator"
           ZIP="$ROOT/AGENT_CRYPTO_ORACLE_EVIDENCE_RETENTION_ATOMICITY_40.6.491.zip"
           test -f "$ZIP" && test -f "$ZIP.sha256"
-          sha256sum --check "$ZIP.sha256"
+          (cd "$ROOT" && sha256sum --check "AGENT_CRYPTO_ORACLE_EVIDENCE_RETENTION_ATOMICITY_40.6.491.zip.sha256")
           unzip -t "$ZIP"
           unzip -l "$ZIP" | grep -F 'oracle-evidence-retention-atomicity-406491.js'
           unzip -l "$ZIP" | grep -F 'oracle-evidence-auto-archive-safety-gates.js'
