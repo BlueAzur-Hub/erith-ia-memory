@@ -1,4 +1,4 @@
-/* Agent-Crypto Administrator — 40.6.407 EXPLICIT STRATEGY DIAGNOSTIC / EVIDENCE DEMAND
+/* Agent-Crypto Administrator — 40.6.494 EXPLICIT STRATEGY DIAGNOSTIC / EVIDENCE DEMAND
    Canonical Strategy A evidence stays immediately available on explicit operator demand.
    Evidence never loads in background. It loads only from the explicit operator control or explicit API demand.
    A failed/missing module keeps the loader PARTIAL and remains retryable.
@@ -7,8 +7,8 @@
   "use strict";
   if (globalThis.AgentCryptoCanonicalEvidenceWiring?.owner === "strategy-a-evidence-demand-loader.js") return;
 
-  const BUILD = "40.6.407";
-  const SOURCE = "40.6.407-explicit-diagnostic-evidence-demand";
+  const BUILD = "40.6.494";
+  const SOURCE = "40.6.494-explicit-diagnostic-evidence-demand";
   const MODULES = Object.freeze([
     "./js/strategy-a-replay.js",
     "./js/strategy-a-replay-acceptance.js?v=40.6.405",
@@ -41,6 +41,7 @@
   const PRESENTATION = Object.freeze(["./js/administrator-operator-focus-406216.js"]);
   const ALL = Object.freeze([...MODULES, ...PRESENTATION]);
   const CACHE_IDENTITY = Object.freeze({
+    "./js/strategy-a-g3-prospective-t0-capture.js": "40.6.494",
     "./js/strategy-a-g3-structured-data-truth.js": "40.6.279",
     "./js/strategy-a-g3-cascade-checkpoint.js": "40.6.279",
     "./js/strategy-a-g3-strict-decision-time-truth-406226.js": "40.6.279",

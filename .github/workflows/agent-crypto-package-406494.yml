@@ -1,0 +1,52 @@
+name: Agent-Crypto 40.6.494 Validate Package
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Validate syntax and ledger live merge contracts
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/js/strategy-a-g3-prospective-t0-capture.js"
+          node --check "$ROOT/js/strategy-a-evidence-demand-loader.js"
+          node -e "require('./$ROOT/js/strategy-a-g3-prospective-t0-capture.js'); const s=global.AgentCryptoStrategyAG3ProspectiveT0Capture.self_test(); console.log(JSON.stringify(s)); if(!s.pass) process.exit(1)"
+          python .github/scripts/agent_crypto_strategy_ledger_live_merge_guard_406494.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Verify protected cold archive is not patched
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git diff --exit-code origin/main...HEAD -- public/agent_crypto_erith_ia/data/oracle_evidence
+      - name: Build delivery ZIP
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          ZIP="AGENT_CRYPTO_STRATEGY_LEDGER_LIVE_MERGE_TRUTH_40.6.494.zip"
+          zip -j "$ZIP" \
+            "$ROOT/index-40.6.494.html" \
+            "$ROOT/build.json" \
+            "$ROOT/js/strategy-a-g3-prospective-t0-capture.js" \
+            "$ROOT/js/strategy-a-evidence-demand-loader.js" \
+            "$ROOT/STRATEGY_LEDGER_LIVE_MERGE_TRUTH_40.6.494.md" \
+            "$ROOT/HANDOFF_FINAL_40.6.494.md" \
+            "$ROOT/PATCH_MANIFEST_40.6.494.txt"
+          sha256sum "$ZIP" > "$ZIP.sha256"
+          unzip -t "$ZIP"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent-crypto-40.6.494-strategy-ledger-live-merge-truth
+          path: |
+            AGENT_CRYPTO_STRATEGY_LEDGER_LIVE_MERGE_TRUTH_40.6.494.zip
+            AGENT_CRYPTO_STRATEGY_LEDGER_LIVE_MERGE_TRUTH_40.6.494.zip.sha256
+          if-no-files-found: error

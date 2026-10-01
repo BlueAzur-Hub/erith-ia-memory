@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.206 G3 PROSPECTIVE T0 STABLE HOST BINDING
+/* Agent-Crypto @erith.IA — 40.6.494 G3 PROSPECTIVE T0 + LIVE LEDGER MERGE TRUTH
    Operator-triggered, PAPER-only capture of one NEW Strategy A decision cycle.
    Existing historical ledger rows are never backfilled. The legacy producer remains
    authoritative; this module adds a bounded prospective evidence overlay and exposes
@@ -8,7 +8,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.206";
+  const BUILD = "40.6.494";
   const OWNER = "strategy-a-g3-prospective-t0-capture";
   const STORAGE_KEY = "agent_crypto_erith_ia_strategy_a_g3_prospective_t0_40_6_205";
   const MAX_ROWS = 64;
@@ -77,17 +77,59 @@
     return [];
   }
 
+  function ledgerRowTime(row) {
+    return parseTime(row?.captured_at ?? row?.decision_at ?? row?.decided_at ?? row?.available_at ?? row?.at ?? row?.timestamp);
+  }
+
+  function mergeLedgerViews(genericRows = [], exactRows = [], prospectiveRows = []) {
+    const byId = new Map();
+    const anonymous = [];
+    const absorb = (rows, mode) => {
+      for (const row of Array.isArray(rows) ? rows : []) {
+        if (!plain(row)) continue;
+        const id = cycleId(row);
+        if (!id) {
+          anonymous.push(row);
+          continue;
+        }
+        const previous = byId.get(id);
+        if (mode === "exact" && plain(previous)) {
+          // Live exact facts are authoritative for overlapping fields while
+          // prospective-only evidence fields remain available on the facade.
+          byId.set(id, { ...previous, ...row });
+        } else {
+          byId.set(id, row);
+        }
+      }
+    };
+
+    // Historical/durable generic view first, then prospective evidence overlay,
+    // then the exact live owner last. The live owner must never be hidden by an
+    // older facade snapshot for a cycle_id that Auto A has just emitted.
+    absorb(genericRows, "generic");
+    absorb(prospectiveRows, "prospective");
+    absorb(exactRows, "exact");
+
+    const merged = anonymous.concat([...byId.values()]);
+    merged.sort((a, b) => {
+      const ta = ledgerRowTime(a), tb = ledgerRowTime(b);
+      if (ta === null && tb === null) return 0;
+      if (ta === null) return -1;
+      if (tb === null) return 1;
+      return ta - tb;
+    });
+    return merged.slice(-240);
+  }
+
   function mergedRead() {
-    const base = ORIGINAL_GENERIC_LEDGER || EXACT_LEGACY_LEDGER || null;
-    const legacy = readLegacy(base);
-    const prospective = PROSPECTIVE.filter(plain);
-    const prospectiveIds = new Set(prospective.map(cycleId).filter(Boolean));
-    return legacy.filter(row => !prospectiveIds.has(cycleId(row))).concat(prospective).slice(-240);
+    const generic = ORIGINAL_GENERIC_LEDGER ? readLegacy(ORIGINAL_GENERIC_LEDGER) : [];
+    const exact = EXACT_LEGACY_LEDGER ? readLegacy(EXACT_LEGACY_LEDGER) : [];
+    return mergeLedgerViews(generic, exact, PROSPECTIVE.filter(plain));
   }
 
   function installLedgerFacade() {
     if (facadeInstalled) return true;
-    const base = ORIGINAL_GENERIC_LEDGER || EXACT_LEGACY_LEDGER || null;
+    const base = sourceLedger();
     if (!base) return false;
 
     const wrapper = Object.freeze({
@@ -98,8 +140,11 @@
       summary: () => ({
         build: BUILD,
         source_rows: readLegacy(base).length,
+        generic_rows: ORIGINAL_GENERIC_LEDGER ? readLegacy(ORIGINAL_GENERIC_LEDGER).length : 0,
+        exact_live_rows: EXACT_LEGACY_LEDGER ? readLegacy(EXACT_LEGACY_LEDGER).length : 0,
         prospective_rows: PROSPECTIVE.length,
         merged_rows: mergedRead().length,
+        exact_live_priority: true,
         paper_only: true,
         g3: "PENDING",
         g9: "LOCKED"
@@ -572,6 +617,39 @@
     const complete = normalizeProspective(source, market, { spec_build: "40.6.56", legacy_owner: "TEST" });
     const noTime = normalizeProspective(source, { ...market, market_at: null, proven_source_time: false }, { spec_build: "40.6.56", legacy_owner: "TEST" });
     const badPrice = normalizeProspective(source, { ...market, price_eur: 65001 }, { spec_build: "40.6.56", legacy_owner: "TEST" });
+    const genericRows = Array.from({length: 241}, (_, i) => ({
+      cycle_id: "OLD-" + String(i).padStart(3, "0"),
+      captured_at: new Date(base - (241 - i) * 60000).toISOString(),
+      phase: "NO_TRADE",
+      marker: "GENERIC"
+    })).concat([{
+      cycle_id: "A-CYCLE-LIVE",
+      captured_at: new Date(base + 1000).toISOString(),
+      phase: "NO_TRADE",
+      marker: "STALE_GENERIC",
+      prospective_t0_complete: true
+    }]);
+    const prospectiveRows = [{
+      cycle_id: "A-CYCLE-LIVE",
+      decision_at: new Date(base + 1000).toISOString(),
+      prospective_t0_complete: true,
+      prospective_marker: "KEPT"
+    }];
+    const exactRows = [{
+      cycle_id: "A-CYCLE-LIVE",
+      captured_at: new Date(base + 2000).toISOString(),
+      phase: "COST_GATE_WAIT",
+      marker: "EXACT_LIVE"
+    }, {
+      cycle_id: "A-CYCLE-NEWEST",
+      captured_at: new Date(base + 3000).toISOString(),
+      phase: "NO_TRADE",
+      marker: "EXACT_NEWEST"
+    }];
+    const merged = mergeLedgerViews(genericRows, exactRows, prospectiveRows);
+    const mergedLive = merged.find(row => cycleId(row) === "A-CYCLE-LIVE");
+    const mergedNewest = merged.at(-1);
+
     const pass =
       complete.prospective_t0_complete === true &&
       complete.decision === "NO_TRADE" &&
@@ -583,7 +661,11 @@
       badPrice.prospective_t0_complete === false &&
       badPrice.blockers.includes("market_at_proven") &&
       complete.current_runtime_backfill === false &&
-      complete.future_outcomes_used_as_t0_input === false;
+      complete.future_outcomes_used_as_t0_input === false &&
+      merged.length === 240 &&
+      mergedLive?.marker === "EXACT_LIVE" &&
+      mergedLive?.prospective_marker === "KEPT" &&
+      mergedNewest?.cycle_id === "A-CYCLE-NEWEST";
     return {
       schema: "agent_crypto_strategy_a_g3_prospective_t0_capture_self_test_v1",
       build: BUILD,
@@ -596,7 +678,11 @@
         missing_market_time_fails_closed: noTime.prospective_t0_complete === false,
         price_mismatch_fails_closed: badPrice.prospective_t0_complete === false,
         no_historical_backfill: complete.current_runtime_backfill === false,
-        no_future_outcomes: complete.future_outcomes_used_as_t0_input === false
+        no_future_outcomes: complete.future_outcomes_used_as_t0_input === false,
+        merged_view_remains_bounded_240: merged.length === 240,
+        exact_live_overrides_stale_generic: mergedLive?.marker === "EXACT_LIVE",
+        prospective_fields_survive_live_merge: mergedLive?.prospective_marker === "KEPT",
+        newest_exact_cycle_is_visible: mergedNewest?.cycle_id === "A-CYCLE-NEWEST"
       }
     };
   }
@@ -621,6 +707,8 @@
     current_runtime_backfill: false,
     current_oracle_applied_to_past: false,
     future_outcomes_used_as_t0_input: false,
+    live_ledger_merge_truth: true,
+    exact_live_priority: true,
     recurring_timer: false,
     observer: false,
     fetch_added: false,
