@@ -6,7 +6,7 @@
    Read-only. No private API, no order, no wallet, no Strategy/Market Core mutation. */
 (()=>{
   "use strict";
-  const BUILD="40.6.505";
+  const BUILD="40.6.506";
   const ROOT="atlasOkxMicrostructure";
   const BACKEND="http://127.0.0.1:8790";
   const LIVE_MS=2000;
@@ -118,7 +118,6 @@
       .find(x=>/Afficher/i.test(x.textContent||""))||document.querySelector("#analyste .chart-v2-control-deck");
     const panel=document.getElementById("detailPanel");
     if(!group||!panel)return false;
-    panel.style.position="relative";
 
     let btn=document.getElementById(ROOT+"Toggle");
     if(!btn){
@@ -156,7 +155,8 @@
         </div>
         <div class="oms-kpis" data-oms-kpis></div>
         <div class="oms-body" data-oms-body></div>`;
-      panel.appendChild(root);
+      document.body.appendChild(root);
+      root.dataset.portalOwner="depth-40.6.506";
       root.querySelector("[data-oms-detach]").addEventListener("click",event=>{event.stopPropagation();setDetached(!state.detached);});
       root.querySelector("[data-oms-refresh]").addEventListener("click",event=>{event.stopPropagation();void refresh();});
       root.querySelector("[data-oms-close]").addEventListener("click",event=>{event.stopPropagation();setOpen(false);});
@@ -165,6 +165,8 @@
         root.querySelectorAll("[data-oms-tab]").forEach(b=>b.classList.toggle("is-active",b===button));
         render();
       }));
+      root.addEventListener("pointerdown",event=>event.stopPropagation());
+      root.addEventListener("click",event=>event.stopPropagation());
       const head=root.querySelector(".oms-head");
       head.addEventListener("pointerdown",onDragStart);
       head.addEventListener("pointermove",onDragMove);
@@ -182,11 +184,34 @@
     const r=root.getBoundingClientRect();
     state.floatX=r.left;state.floatY=r.top;state.floatW=r.width;state.floatH=r.height;
   }
+  function dockRect(){
+    const panel=document.getElementById("detailPanel");
+    const r=panel?.getBoundingClientRect?.();
+    if(!r||r.width<10||r.height<10)return null;
+    return {x:r.left,y:r.top,width:r.width,height:r.height};
+  }
+  function applyDockRect(){
+    const root=document.getElementById(ROOT);
+    if(!root||state.detached)return false;
+    const r=dockRect();
+    if(!r)return false;
+    root.classList.remove("is-detached","is-dragging");
+    Object.assign(root.style,{
+      position:"fixed",
+      left:Math.round(r.x)+"px",
+      top:Math.round(r.y)+"px",
+      width:Math.round(r.width)+"px",
+      height:Math.round(r.height)+"px",
+      right:"auto",
+      bottom:"auto"
+    });
+    return true;
+  }
   function applyPlacement(){
     const root=document.getElementById(ROOT),panel=document.getElementById("detailPanel");
     if(!root||!panel)return;
+    if(root.parentElement!==document.body)document.body.appendChild(root);
     if(state.detached){
-      if(root.parentElement!==document.body)document.body.appendChild(root);
       root.classList.add("is-detached");
       panel.classList.remove("atlas-depth-active");
       if(!Number.isFinite(state.floatX)||!Number.isFinite(state.floatY)){
@@ -202,23 +227,29 @@
       state.floatW=w;state.floatH=h;
       state.floatX=clamp(state.floatX??8,8,Math.max(8,window.innerWidth-w-8));
       state.floatY=clamp(state.floatY??8,8,Math.max(8,window.innerHeight-h-8));
-      Object.assign(root.style,{left:state.floatX+"px",top:state.floatY+"px",width:w+"px",height:h+"px",right:"auto",bottom:"auto"});
+      Object.assign(root.style,{position:"fixed",left:state.floatX+"px",top:state.floatY+"px",width:w+"px",height:h+"px",right:"auto",bottom:"auto"});
     }else{
-      if(root.parentElement!==panel)panel.appendChild(root);
       root.classList.remove("is-detached","is-dragging");
-      root.removeAttribute("style");
       panel.classList.toggle("atlas-depth-active",state.open);
+      applyDockRect();
     }
   }
   function setDetached(value){
     const next=!!value;
     if(next===state.detached)return state.detached;
-    if(!next)rememberFloatRect();
+    const root=document.getElementById(ROOT);
+    if(next&&root){
+      const r=root.getBoundingClientRect();
+      state.floatX=r.left;state.floatY=r.top;state.floatW=r.width;state.floatH=r.height;
+    }else if(!next){
+      rememberFloatRect();
+    }
     state.detached=next;
     applyPlacement();sync();
     return state.detached;
   }
   function onDragStart(event){
+    event.stopPropagation();
     if(!state.detached||event.button!==0||event.target.closest("button"))return;
     const root=document.getElementById(ROOT);
     if(!root)return;
@@ -229,6 +260,7 @@
     event.preventDefault();
   }
   function onDragMove(event){
+    event.stopPropagation();
     if(!state.detached||!state.dragging)return;
     const root=document.getElementById(ROOT);
     if(!root)return;
@@ -240,6 +272,7 @@
     event.preventDefault();
   }
   function onDragEnd(event){
+    event.stopPropagation();
     if(!state.dragging)return;
     state.dragging=false;
     document.getElementById(ROOT)?.classList.remove("is-dragging");
@@ -439,6 +472,8 @@
     return Object.freeze({build:BUILD,pass,checks:{
       lecture_technique_overlay:true,
       docked_glass_surface:true,
+      independent_body_portal:true,
+      graph_parent_never_moved:true,
       detachable_floating_surface:true,
       detach_restores_lecture_technique:true,
       draggable_when_detached:true,
@@ -464,6 +499,8 @@
     lecture_technique_overlay:true,
     semi_transparent:true,
     detachable:true,
+    independent_body_portal:true,
+    graph_parent_never_moved:true,
     draggable_when_detached:true,
     docked_to_lecture_technique:true,
     detach_restores_lecture_technique:true,
@@ -480,7 +517,8 @@
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
     window.addEventListener("pageshow",boot,{passive:true});
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")clearLive();else if(state.open)scheduleLive();},{passive:true});
-    window.addEventListener("resize",()=>{if(state.detached){rememberFloatRect();applyPlacement();}},{passive:true});
+    window.addEventListener("resize",()=>{if(state.detached){rememberFloatRect();applyPlacement();}else applyDockRect();},{passive:true});
+    window.addEventListener("scroll",()=>{if(state.open&&!state.detached)applyDockRect();},{passive:true,capture:true});
     window.addEventListener("agent-crypto:quote-architecture-changed",()=>{state.capturedAt=null;state.bids=[];state.asks=[];if(state.open)void refresh();},{passive:true});
   }
 })();
