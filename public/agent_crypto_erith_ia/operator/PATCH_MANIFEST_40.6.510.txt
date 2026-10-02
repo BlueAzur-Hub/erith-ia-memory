@@ -1,0 +1,35 @@
+AGENT-CRYPTO OPERATOR PATCH MANIFEST — 40.6.510
+Release: OPERATOR SHARED RUNTIME 509
+Administrator source: 40.6.509
+Market Core: 38.15.11 UNCHANGED
+
+MODIFIED
+M public/agent_crypto_erith_ia/operator/index.html
+M public/agent_crypto_erith_ia/operator/build.json
+M public/agent_crypto_erith_ia/operator/README.md
+M .github/workflows/agent-crypto-package-406509.yml
+
+ADDED
+A public/agent_crypto_erith_ia/operator/index-40.6.510.html
+A public/agent_crypto_erith_ia/operator/OPERATOR_SHARED_RUNTIME_40.6.510.md
+A public/agent_crypto_erith_ia/operator/PATCH_MANIFEST_40.6.510.txt
+A .github/scripts/agent_crypto_operator_guard_406510.py
+A .github/workflows/agent-crypto-operator-406510.yml
+
+ARCHITECTURE
+Operator -> Administrator 40.6.509 shared runtime
+view=intermediate -> operator role
+one Market Core / no second engine
+
+INHERITED
+Graphique / Ligne / Bougies / multi-actifs / Lecture Technique / Math Core read-only / OKX Book & Profondeur read-only
+
+NO BUSINESS CHANGE
+Strategy / Cost Gate / Oracle / Aether / Backend / Bridge unchanged.
+No wallet. No private key. No real order.
+
+DELIVERY
+Full runtime ZIP contains both public/agent_crypto_erith_ia/operator and public/agent_crypto_erith_ia/administrator.
+
+NEXT
+Firefox terrain proof, then freeze Operator 40.6.510 before any .511 enrichment.
