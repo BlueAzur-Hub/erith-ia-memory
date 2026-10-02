@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.495 OKX SHADOW EVIDENCE TRUTH
+/* Agent-Crypto @erith.IA — 40.6.496 OKX DEMO FILL + HORIZON EVIDENCE TRUTH
    Passive evidence laboratory layered after 40.6.492 Execution Cost Truth.
    Distinguishes historical Oracle reference from the linked Strategy cycle, ages current evidence,
    preserves numeric session observations, and makes FULL/PARTIAL OKX coverage explicit.
@@ -6,11 +6,26 @@
    No fetch, WebSocket, key, wallet, order, storage write, recurring timer, MutationObserver or historical backfill. */
 (()=>{
   "use strict";
-  const BUILD="40.6.495";
+  const BUILD="40.6.496";
   const ROOT="strategyAOkxMicroExecutionShadowTruth";
   const SIZES=Object.freeze([10,25,50,100]);
   const MAX_SESSION_OBSERVATIONS=24;
   const CURRENT_VIEW_MAX_AGE_SECONDS=120;
+  const DEMO_V5=Object.freeze({
+    source_report:"post_only_fill_horizon_lab_v5_FINAL_20261002_084547.json",
+    source_sha256:"930bb9d35cfdbcd3c2a0632063918e8c7a8b2afb424da8d99aa4bf7ae1b4425b",
+    mode:"OKX_DEMO",instrument:"BTC-EUR",ticket_eur:10,attempts:10,full_fills:4,partial_fills:0,no_fill:6,
+    fill_rate_pct:40.0,first_fill_median_s:20.0,observed_entry_fee_pct:0.1,maker_maker_fee_proxy_pct:0.2,
+    horizons:Object.freeze({
+      5:Object.freeze({observations:4,median_bid_move_pct:0.14471091461074842,median_after_mm_fee_proxy_pct:-0.05528908538925158,covers_count:1,covers_rate_pct:25.0}),
+      15:Object.freeze({observations:4,median_bid_move_pct:0.135735502276726,median_after_mm_fee_proxy_pct:-0.064264497723274,covers_count:0,covers_rate_pct:0.0}),
+      30:Object.freeze({observations:4,median_bid_move_pct:0.08432971556435374,median_after_mm_fee_proxy_pct:-0.11567028443564627,covers_count:0,covers_rate_pct:0.0}),
+      60:Object.freeze({observations:4,median_bid_move_pct:-0.4500473426133213,median_after_mm_fee_proxy_pct:-0.6500473426133213,covers_count:0,covers_rate_pct:0.0}),
+      120:Object.freeze({observations:4,median_bid_move_pct:-0.6458978080861073,median_after_mm_fee_proxy_pct:-0.8458978080861074,covers_count:0,covers_rate_pct:0.0})
+    }),
+    entry_leg_demo_proven:true,round_trip_fill_proven:false,live_fill_proven:false,exit_post_only_fill_proven:false,
+    longer_horizon_validated:false,sample_small:true,strategy_a_v1_status:"FAIL_BENCHMARK_FROZEN",strategy_a2_started:false
+  });
   let last=null,lastCapturedKey=null,expiryTimer=null;
   const observations=[];
 
@@ -119,6 +134,7 @@
         mfe_median_pct:n(c?.mfe_median_pct)
       }),
       rows,
+      demo_v5:DEMO_V5,
       summary:Object.freeze({
         market_market_potential:count("market_market","POTENTIAL"),
         market_market_wait:count("market_market","WAIT"),
@@ -131,10 +147,16 @@
         potential_is_not_pass:true,
         four_of_four_means_four_ticket_sizes_not_four_executable_opportunities:true,
         post_only_is_fee_floor_only:true,
-        post_only_fill_not_proven:true,
-        queue_position_unknown:true,
-        partial_fill_unknown:true,
-        adverse_selection_unknown:true,
+        post_only_entry_demo_proven:true,
+        post_only_demo_ticket_eur:DEMO_V5.ticket_eur,
+        post_only_demo_fill_rate_pct:DEMO_V5.fill_rate_pct,
+        post_only_demo_first_fill_median_s:DEMO_V5.first_fill_median_s,
+        post_only_round_trip_fill_not_proven:true,
+        live_fill_not_proven:true,
+        exit_post_only_fill_not_proven:true,
+        queue_position_live_unknown:true,
+        longer_horizon_validated:false,
+        strategy_a_v1_status:DEMO_V5.strategy_a_v1_status,
         historical_oracle_median_is_not_cycle_proof:true,
         current_strategy_gate_unchanged:true
       }),
@@ -189,7 +211,7 @@
     return lab;
   }
 
-  const statusText=s=>s==="POTENTIAL_MEASURED"?"POTENTIEL · MESURÉ":s==="POTENTIAL_FILL_UNKNOWN"?"POTENTIEL · FILL INCONNU":s==="WAIT"?"WAIT":"UNKNOWN";
+  const statusText=s=>s==="POTENTIAL_MEASURED"?"POTENTIEL · MESURÉ":s==="POTENTIAL_FILL_UNKNOWN"?"POTENTIEL · ROUND-TRIP INCONNU":s==="WAIT"?"WAIT":"UNKNOWN";
   const statusClass=s=>String(s).startsWith("POTENTIAL")?"good":s==="WAIT"?"wait":"unknown";
   function cell(mode){
     if(!mode)return '<span class="unknown">UNKNOWN</span>';
@@ -206,10 +228,19 @@
     return c.code;
   }
   function qualityNote(c){
-    if(c?.code==="FULL_ORDERBOOK_FRESH")return '<b>Couverture FULL :</b> frais + spread + carnet multi-niveaux disponibles pour Market→Market. Les chemins Post-only restent des planchers de frais, sans preuve de fill.';
+    if(c?.code==="FULL_ORDERBOOK_FRESH")return '<b>Couverture FULL :</b> frais + spread + carnet multi-niveaux disponibles pour Market→Market. Les chemins Post-only restent des planchers de coût ; la preuve Demo d’entrée est affichée séparément et ne prouve ni la sortie ni le live.';
     if(c?.code==="PARTIAL_TOP_OF_BOOK_FRESH")return '<b>Lecture PARTIELLE :</b> frais / top-of-book disponibles, carnet multi-niveaux indisponible. Profondeur et slippage Market→Market restent UNKNOWN.';
     if(c?.code==="STALE_HISTORY")return '<b>Lecture HISTORIQUE :</b> la mesure est conservée mais elle n’est plus fraîche pour une lecture actuelle. Ne pas la traiter comme un état live.';
     return '<b>Source indisponible ou incomplète :</b> UNKNOWN reste UNKNOWN.';
+  }
+
+  function demoEvidenceHtml(){
+    const h=DEMO_V5.horizons;
+    const one=k=>'<b>+'+k+' min</b> '+esc(pct(h[k].median_bid_move_pct))+' · après proxy 0,20 % '+esc(pct(h[k].median_after_mm_fee_proxy_pct))+' · couverture '+esc(h[k].covers_count)+'/'+esc(h[k].observations);
+    return '<div class="omes-quality"><b>OKX DEMO V5 · ENTRÉE POST-ONLY · 10 €</b><br>'+
+      esc(DEMO_V5.full_fills)+'/'+esc(DEMO_V5.attempts)+' fills complets · '+esc(DEMO_V5.fill_rate_pct.toFixed(1))+' % · médiane premier fill '+esc(DEMO_V5.first_fill_median_s)+' s · fee entrée observé '+esc(DEMO_V5.observed_entry_fee_pct.toFixed(4))+' %.<br>'+
+      one(5)+' · '+one(15)+' · '+one(30)+' · '+one(60)+' · '+one(120)+'.<br>'+
+      '<b>Conclusion V5 :</b> allongement d’horizon NON VALIDÉ sur cet échantillon. Entrée Demo mesurée ; sortie Post-only, round-trip et fill live non prouvés. Strategy A V1 reste FAIL benchmark figé.</div>';
   }
 
   function style(){
@@ -237,13 +268,14 @@
     if(root.previousElementSibling!==anchor){try{anchor.insertAdjacentElement("afterend",root);}catch(_){}}
     const c=lab.context||{},s=lab.summary||{},rows=Array.isArray(lab.rows)?lab.rows:[],coverage=lab.coverage||{};
     const cycleLabel=lab.linked_cycle_id||"NON LIÉ (référence historique)";
-    root.innerHTML='<div class="omes-h"><div><div class="omes-t">STRATEGY A · OKX SHADOW EVIDENCE TRUTH · '+BUILD+'</div><div class="omes-s">Laboratoire passif · preuve par cycle lorsque la mesure vient d’Auto A · EVIDENCE_SHADOW_NOT_GATE.</div></div><div class="omes-actions"><button class="btn small" id="'+ROOT+'Export" '+(!last?"disabled":"")+'>EXPORTER LAB</button></div></div>'+
+    root.innerHTML='<div class="omes-h"><div><div class="omes-t">STRATEGY A · OKX DEMO FILL + HORIZON EVIDENCE TRUTH · '+BUILD+'</div><div class="omes-s">Laboratoire passif · preuve cycle + exécution Demo bornée · EVIDENCE_SHADOW_NOT_GATE.</div></div><div class="omes-actions"><button class="btn small" id="'+ROOT+'Export" '+(!last?"disabled":"")+'>EXPORTER LAB</button></div></div>'+
       '<div class="omes-k"><div><span>Oracle historique médiane</span><b>'+esc(pct(c.oracle_envelope_median_pct))+'</b></div><div><span>Expected move cycle lié</span><b>'+esc(pct(c.linked_cycle_expected_move_pct))+'</b></div><div><span>Comparateur actif</span><b>'+esc(pct(c.active_comparator_pct))+' · '+esc(c.active_comparator_source||"—")+'</b></div><div><span>Cycle lié</span><b>'+esc(cycleLabel)+'</b></div></div>'+
       '<div class="omes-k"><div><span>Marge dérivée</span><b>'+esc(pct(c.current_safety_margin_pct))+'</b></div><div><span>Cost Gate existant</span><b>'+esc(pct(c.strategy_threshold_pct))+' · INCHANGÉ</b></div><div><span>Observations session</span><b>'+esc(observations.length)+' / '+MAX_SESSION_OBSERVATIONS+'</b></div><div><span>Source actuelle</span><b>'+esc(coverageText(coverage))+' · âge '+esc(ageText(coverage.age_seconds))+'</b></div></div>'+
       '<div class="omes-k"><div><span>Market→Market potentiels</span><b>'+esc(s.market_market_potential??0)+' / 4</b></div><div><span>Post-only→Market potentiels</span><b>'+esc(s.post_only_market_potential??0)+' / 4</b></div><div><span>Post-only→Post-only potentiels</span><b>'+esc(s.post_only_post_only_potential??0)+' / 4</b></div><div><span>Qualité preuve</span><b>'+esc(coverage.code||"UNKNOWN")+'</b></div></div>'+
       '<div class="omes-quality">'+qualityNote(coverage)+'</div>'+
+      demoEvidenceHtml()+
       '<div class="omes-table-wrap"><table><thead><tr><th>Ticket</th><th>Market→Market</th><th>Post-only→Market</th><th>Post-only→Post-only</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><b>'+esc(r.amount_eur)+' €</b></td><td>'+cell(r.market_market)+'</td><td>'+cell(r.post_only_market)+'</td><td>'+cell(r.post_only_post_only)+'</td></tr>').join("")+'</tbody></table></div>'+
-      '<div class="omes-lock"><b>POTENTIEL ≠ PASS.</b> Un affichage 4/4 signifie seulement que quatre montants sont comparés à un plancher de frais. Ce ne sont pas quatre opportunités exécutables. Post-only : fill, position dans la file, partial fill et adverse selection restent INCONNUS. Aucun seuil Strategy A n’est modifié.</div>'+
+      '<div class="omes-lock"><b>POTENTIEL ≠ PASS.</b> Le V5 prouve seulement l’entrée Post-only Demo à 10 € : 4/10 fills complets, médiane 20 s. Les quatre tickets du tableau restent des comparaisons de coût ; 25/50/100 € n’ont pas de preuve de fill V5. Sortie, round-trip, file live et fill live restent non prouvés. Strategy A V1 reste FAIL benchmark figé et aucun seuil n’est modifié.</div>'+
       '<div class="omes-note">SESSION ONLY · historique numérique borné à 24 observations · aucune écriture IndexedDB/localStorage · aucune API privée · aucun ordre · aucune clé · aucun wallet.</div>';
     root.querySelector("#"+ROOT+"Export")?.addEventListener("click",exportJson);
     root.dataset.build=BUILD;root.dataset.readOnly="true";root.dataset.evidence="shadow-not-gate";root.dataset.coverage=coverage.code||"unknown";
@@ -256,7 +288,7 @@
     try{
       const payload={...last,session_observations:observations.slice(),exported_at:new Date().toISOString()};
       const b=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");
-      a.href=u;a.download="STRATEGY_A_OKX_SHADOW_EVIDENCE_TRUTH_40_6_495.json";
+      a.href=u;a.download="STRATEGY_A_OKX_DEMO_FILL_HORIZON_EVIDENCE_TRUTH_40_6_496.json";
       document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);return true;
     }catch(_){return false;}
   }
@@ -285,13 +317,17 @@
       no_storage:lab.protections.storage_write===false,
       no_network:lab.protections.network_fetch===false,
       no_order:lab.protections.real_order===false,
-      gate_unchanged:lab.protections.cost_gate_changed===false
+      gate_unchanged:lab.protections.cost_gate_changed===false,
+      demo_v5_attached:lab.demo_v5===DEMO_V5,
+      demo_entry_fill_truth:DEMO_V5.attempts===10&&DEMO_V5.full_fills===4&&DEMO_V5.fill_rate_pct===40,
+      horizon_truth:DEMO_V5.horizons[5].covers_count===1&&DEMO_V5.horizons[15].covers_count===0&&DEMO_V5.horizons[120].median_bid_move_pct<0,
+      v1_frozen:DEMO_V5.strategy_a_v1_status==="FAIL_BENCHMARK_FROZEN"&&DEMO_V5.strategy_a2_started===false
     });
     return Object.freeze({build:BUILD,pass:Object.values(checks).every(Boolean),checks});
   }
 
   globalThis.AgentCryptoOkxMicroExecutionShadowTruth=Object.freeze({
-    build:BUILD,render,evaluate,snapshot:()=>last,session_observations:()=>observations.slice(),export_json:exportJson,self_test:selfTest,
+    build:BUILD,render,evaluate,snapshot:()=>last,session_observations:()=>observations.slice(),export_json:exportJson,self_test:selfTest,demo_v5:DEMO_V5,
     evidence_shadow_not_gate:true,network_fetch:false,websocket:false,storage_write:false,recurring_timer:false,mutation_observer:false,
     freshness_expiry_timeout:true,api_key:false,wallet:false,real_order:false,thresholds_changed:false,cost_gate_changed:false,
     risk_governor_changed:false,oracle_math_changed:false,market_core_changed:false,automatic_platform_choice:false

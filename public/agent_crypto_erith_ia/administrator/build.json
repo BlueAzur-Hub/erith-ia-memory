@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.495",
+  "build": "40.6.496",
   "engine": "38.15.11",
-  "release": "OKX SHADOW EVIDENCE TRUTH",
+  "release": "OKX DEMO FILL + HORIZON EVIDENCE TRUTH",
   "published": true,
-  "status": "published_static_verified_495_terrain_pending",
-  "parent_build": "40.6.494",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.495",
-  "administrator_build": "40.6.495",
-  "build_label": "Build 40.6.495 · Administrator",
+  "status": "published_static_verified_496_terrain_pending",
+  "parent_build": "40.6.495",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.496",
+  "administrator_build": "40.6.496",
+  "build_label": "Build 40.6.496 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox : ouvrir Section 04 > Simulation, vérifier STRATEGY A · OKX SHADOW EVIDENCE TRUTH · 40.6.495. Sur un cycle Auto A normal : cycle lié visible, Oracle historique séparé de l'expected move du cycle, FULL/PARTIAL explicite, âge de source visible, coûts numériques présents. Laisser vieillir au-delà de 120 s ou observer un nouveau cycle pour vérifier STALE_HISTORY. 40.6.492, Cost Gate, Oracle, Risk, PAPER, Backend/Bridge et Market Core 38.15.11 restent inchangés.",
-  "terrain_proof": "PENDING_40.6.495",
-  "release_notes": "40.6.495 keeps 40.6.494 as the validated Strategy Ledger plumbing baseline and hardens only the passive OKX shadow laboratory. It separates the historical Oracle median from the linked Strategy cycle expected_move_pct, links Auto-A measurements to the latest cycle_id when applicable, distinguishes FULL_ORDERBOOK_FRESH / PARTIAL_TOP_OF_BOOK_FRESH / STALE_HISTORY / SOURCE_UNAVAILABLE, ages current evidence, and retains numeric cost + required-with-margin values inside the bounded 24-observation session history. 4/4 Post-only is explicitly described as four ticket sizes against a fee floor, not four executable opportunities. No Strategy threshold, Cost Gate, Oracle math, Risk, PAPER execution, 40.6.492 measurement logic, Backend, Bridge, Market Core, order, wallet, key, persistent storage schema, recurring timer or MutationObserver is changed.",
+  "terrain_pending": "Firefox : ouvrir Section 04 > Simulation, vérifier STRATEGY A · OKX DEMO FILL + HORIZON EVIDENCE TRUTH · 40.6.496. Confirmer la carte V5 : 4/10 full fills, 40 %, médiane 20 s, fee entrée 0,10 %, horizons 5/15/30/60/120 min et conclusion HORIZON NON VALIDÉ. Vérifier que 25/50/100 € restent non mesurés pour le fill, que Strategy A V1 reste FAIL benchmark figé, et que 40.6.492, Cost Gate, Oracle, Risk, PAPER, Backend/Bridge et Market Core 38.15.11 sont inchangés.",
+  "terrain_proof": "PENDING_40.6.496",
+  "release_notes": "40.6.496 integrates the bounded OKX Demo V5 entry-fill and post-fill horizon evidence into the passive Strategy A laboratory without changing Strategy business logic or gates. V5 measured 10 BTC/EUR Demo post-only entries at best bid: 4 full fills, 0 partial, 6 no-fill, 40% fill rate, 20 s median first-fill checkpoint, and 0.10% observed entry fee. Four filled entries were observed at +5/+15/+30/+60/+120 min; median bid moves were +0.1447%, +0.1357%, +0.0843%, -0.4500%, -0.6459%, and the 0.20% maker/maker fee proxy was covered by 1/4 only at +5 min and 0/4 thereafter. Longer horizon is therefore not validated by this small Demo sample. Entry Demo evidence does not prove exit fill, round-trip fill, queue position live, or live fill. Strategy A V1 remains FAIL_BENCHMARK_FROZEN; Strategy A2 is not started. No threshold, Cost Gate, Oracle math, Risk, PAPER execution, 40.6.492 measurement logic, Backend, Bridge, Market Core, wallet, key, live order or persistent storage schema is changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -7215,5 +7215,83 @@
       "real_order": false
     },
     "terrain": "PENDING_FIREFOX"
+  },
+  "okx_demo_fill_horizon_evidence_406496": {
+    "source_report": "post_only_fill_horizon_lab_v5_FINAL_20261002_084547.json",
+    "source_sha256": "930bb9d35cfdbcd3c2a0632063918e8c7a8b2afb424da8d99aa4bf7ae1b4425b",
+    "mode": "OKX_DEMO",
+    "instrument": "BTC-EUR",
+    "ticket_eur": 10,
+    "attempts": 10,
+    "filled": 4,
+    "partial": 0,
+    "no_fill": 6,
+    "fill_rate_pct": 40,
+    "first_fill_median_s": 20,
+    "observed_entry_fee_pct": 0.1,
+    "maker_maker_fee_proxy_pct": 0.2,
+    "horizons": {
+      "5m": {
+        "observations": 4,
+        "median_bid_move_pct": 0.14471091461074842,
+        "median_after_mm_fee_proxy_pct": -0.05528908538925158,
+        "covers_count": 1,
+        "covers_rate_pct": 25
+      },
+      "15m": {
+        "observations": 4,
+        "median_bid_move_pct": 0.135735502276726,
+        "median_after_mm_fee_proxy_pct": -0.064264497723274,
+        "covers_count": 0,
+        "covers_rate_pct": 0
+      },
+      "30m": {
+        "observations": 4,
+        "median_bid_move_pct": 0.08432971556435374,
+        "median_after_mm_fee_proxy_pct": -0.11567028443564627,
+        "covers_count": 0,
+        "covers_rate_pct": 0
+      },
+      "60m": {
+        "observations": 4,
+        "median_bid_move_pct": -0.4500473426133213,
+        "median_after_mm_fee_proxy_pct": -0.6500473426133213,
+        "covers_count": 0,
+        "covers_rate_pct": 0
+      },
+      "120m": {
+        "observations": 4,
+        "median_bid_move_pct": -0.6458978080861073,
+        "median_after_mm_fee_proxy_pct": -0.8458978080861074,
+        "covers_count": 0,
+        "covers_rate_pct": 0
+      }
+    },
+    "conclusion": "LONGER_HORIZON_NOT_VALIDATED_IN_V5_SAMPLE",
+    "strategy_a_v1_status": "FAIL_BENCHMARK_FROZEN",
+    "strategy_a2_started": false,
+    "entry_leg_demo_proven": true,
+    "exit_post_only_fill_proven": false,
+    "round_trip_fill_proven": false,
+    "live_fill_proven": false,
+    "queue_position_live_proven": false,
+    "sample_small": true,
+    "protected": {
+      "strategy_thresholds_changed": false,
+      "cost_gate_changed": false,
+      "oracle_math_changed": false,
+      "risk_policy_changed": false,
+      "paper_execution_changed": false,
+      "execution_cost_truth_406492_changed": false,
+      "backend_modified": false,
+      "bridge_modified": false,
+      "market_core_modified": false,
+      "new_recurring_timer": false,
+      "mutation_observer": false,
+      "storage_schema_changed": false,
+      "real_order": false,
+      "wallet": false,
+      "api_key": false
+    }
   }
 }
