@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.496",
+  "build": "40.6.497",
   "engine": "38.15.11",
-  "release": "OKX DEMO FILL + HORIZON EVIDENCE TRUTH",
+  "release": "QUOTE CURRENCY ARCHITECTURE",
   "published": true,
-  "status": "published_static_verified_496_terrain_pending",
-  "parent_build": "40.6.495",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.496",
-  "administrator_build": "40.6.496",
-  "build_label": "Build 40.6.496 · Administrator",
+  "status": "published_static_verified_497_terrain_pending",
+  "parent_build": "40.6.496",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.497",
+  "administrator_build": "40.6.497",
+  "build_label": "Build 40.6.497 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox : ouvrir Section 04 > Simulation, vérifier STRATEGY A · OKX DEMO FILL + HORIZON EVIDENCE TRUTH · 40.6.496. Confirmer la carte V5 : 4/10 full fills, 40 %, médiane 20 s, fee entrée 0,10 %, horizons 5/15/30/60/120 min et conclusion HORIZON NON VALIDÉ. Vérifier que 25/50/100 € restent non mesurés pour le fill, que Strategy A V1 reste FAIL benchmark figé, et que 40.6.492, Cost Gate, Oracle, Risk, PAPER, Backend/Bridge et Market Core 38.15.11 sont inchangés.",
-  "terrain_proof": "PENDING_40.6.496",
-  "release_notes": "40.6.496 integrates the bounded OKX Demo V5 entry-fill and post-fill horizon evidence into the passive Strategy A laboratory without changing Strategy business logic or gates. V5 measured 10 BTC/EUR Demo post-only entries at best bid: 4 full fills, 0 partial, 6 no-fill, 40% fill rate, 20 s median first-fill checkpoint, and 0.10% observed entry fee. Four filled entries were observed at +5/+15/+30/+60/+120 min; median bid moves were +0.1447%, +0.1357%, +0.0843%, -0.4500%, -0.6459%, and the 0.20% maker/maker fee proxy was covered by 1/4 only at +5 min and 0/4 thereafter. Longer horizon is therefore not validated by this small Demo sample. Entry Demo evidence does not prove exit fill, round-trip fill, queue position live, or live fill. Strategy A V1 remains FAIL_BENCHMARK_FROZEN; Strategy A2 is not started. No threshold, Cost Gate, Oracle math, Risk, PAPER execution, 40.6.492 measurement logic, Backend, Bridge, Market Core, wallet, key, live order or persistent storage schema is changed.",
+  "terrain_pending": "Firefox : Ctrl+F5, Graphique Crypto. Vérifier le sélecteur AFFICHAGE EUR/USD. Cliquer USD : le libellé DISPLAY passe USD mais EXEC reste BTC-EUR et SETTLE EUR. Revenir EUR. Vérifier Prix/Base100, Top5, Lecture Technique, Market Core 38.15.11 et Strategy A inchangés.",
+  "terrain_proof": "PENDING_40.6.497",
+  "release_notes": "40.6.497 introduces a display/execution/settlement separation contract. EUR/USD is display-only; changing display currency cannot mutate executionInstrument or settlementAsset. Default remains EUR / BTC-EUR / EUR. No graph algorithm, Market Core, Strategy A, Oracle, Math, Risk, PAPER, Bridge, Backend, storage schema, recurring timer, MutationObserver, wallet or real order is changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -7293,5 +7293,31 @@
       "wallet": false,
       "api_key": false
     }
+  },
+  "quote_currency_architecture_406497": {
+    "enabled": true,
+    "owner": "js/quote-currency-architecture-406497.js",
+    "display_currency_values": [
+      "EUR",
+      "USD"
+    ],
+    "default_display_currency": "EUR",
+    "execution_instrument": "BTC-EUR",
+    "settlement_asset": "EUR",
+    "display_changes_execution_instrument": false,
+    "display_changes_settlement_asset": false,
+    "storage_write": false,
+    "new_recurring_timer": false,
+    "mutation_observer": false,
+    "market_core_modified": false,
+    "strategy_a_changed": false,
+    "oracle_changed": false,
+    "math_core_changed": false,
+    "bridge_modified": false,
+    "backend_modified": false,
+    "private_api": false,
+    "real_order": false,
+    "wallet": false,
+    "terrain": "PENDING_FIREFOX"
   }
 }

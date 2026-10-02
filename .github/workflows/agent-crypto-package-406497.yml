@@ -1,0 +1,21 @@
+name: Agent-Crypto 40.6.497 Validate Package
+on:
+  push: {branches: [main]}
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scope
+        run: |
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json"))["build"])')"
+          if [ "$CURRENT" != "40.6.497" ]; then echo "SKIP=true" >> "$GITHUB_ENV"; fi
+      - name: Validate
+        if: env.SKIP != 'true'
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js
+          node -e "require('./public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js'); const r=global.AgentCryptoQuoteCurrencyArchitecture.self_test(); console.log(r); if(!r.pass) process.exit(1)"
+          python .github/scripts/agent_crypto_quote_currency_guard_406497.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
