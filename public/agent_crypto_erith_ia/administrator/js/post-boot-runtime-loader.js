@@ -1,4 +1,4 @@
-/* Agent-Crypto Administrator — 40.6.504 OKX MICROSTRUCTURE
+/* Agent-Crypto Administrator — 40.6.505 OKX MICROSTRUCTURE
    Extends the existing Aether-first Strategy Core residency with the existing Execution Cost Truth owner
    plus a bounded PAPER open/close capture facade. Same application; no new recurring timer or DB schema.
    Historical after-cost rows are not modified.
@@ -9,7 +9,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.504";
+  const BUILD="40.6.505";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
@@ -19,7 +19,7 @@
     "./js/strategy-a-after-cost-metrics.js?v=40.6.405",
     "./js/strategy-a-durable-evidence-store.js?v=40.6.463",
     "./js/strategy-a-execution-cost-truth.js?v=40.6.492",
-    "./js/strategy-a-okx-micro-execution-shadow-truth.js?v=40.6.504",
+    "./js/strategy-a-okx-micro-execution-shadow-truth.js?v=40.6.505",
     "./js/strategy-a-execution-cost-evidence-capture.js?v=40.6.469",
     "./js/strategy-a-prospective-outcome-evidence-capture.js?v=40.6.478",
     "./js/strategy-a-input-freshness-truth.js?v=40.6.479",
