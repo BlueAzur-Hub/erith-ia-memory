@@ -6,16 +6,17 @@
    Read-only. No private API, no order, no wallet, no Strategy/Market Core mutation. */
 (()=>{
   "use strict";
-  const BUILD="40.6.506";
+  const BUILD="40.6.507";
   const ROOT="atlasOkxMicrostructure";
   const BACKEND="http://127.0.0.1:8790";
   const LIVE_MS=2000;
   const state={
     open:false,loading:false,asset:"BTC",pair:"BTC/EUR",capturedAt:null,
     bids:[],asks:[],tab:"book",error:null,backendVersion:null,lastLatencyMs:null,
-    detached:false,floatX:null,floatY:null,floatW:null,floatH:null,dragging:false,dragDx:0,dragDy:0
+    detached:false,floatX:null,floatY:null,floatW:null,floatH:null,dragging:false,dragDx:0,dragDy:0,minimized:false,maximized:false,restoreDetached:false,maxRestore:null
   };
   let liveTimer=0;
+  let dockSyncTimer=0;
   const n=v=>{const x=Number(v);return Number.isFinite(x)?x:null;};
   const fmt=(v,d=2)=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:d}):"—";
   const eur=v=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:0})+" €":"—";
@@ -63,13 +64,15 @@
 #${ROOT} .oms-head{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:12px 11px 9px;border-bottom:1px solid rgba(255,255,255,.075);user-select:none}
 #${ROOT}.is-detached .oms-head{cursor:grab}
 #${ROOT}.is-detached.is-dragging .oms-head{cursor:grabbing}
+#${ROOT}.is-minimized{height:48px!important;min-height:48px!important;resize:none!important;overflow:hidden!important}
+#${ROOT}.is-minimized .oms-tabs,#${ROOT}.is-minimized .oms-kpis,#${ROOT}.is-minimized .oms-body{display:none!important}
+#${ROOT}.is-maximized{z-index:2147481800!important;resize:none!important}
 #${ROOT} .oms-title{display:grid;gap:3px;min-width:0}
 #${ROOT} .oms-title b{font:950 15px/1.08 system-ui,sans-serif;color:#a8f7f5;letter-spacing:.045em}
 #${ROOT} .oms-title small{font:850 10.5px/1.3 ui-monospace,monospace;color:#9db5bf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #${ROOT} .oms-actions{display:flex;align-items:center;gap:5px}
 #${ROOT} button{min-height:30px;padding:6px 9px;border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(255,255,255,.055);color:#e2f0f4;font:900 10px/1 system-ui,sans-serif;cursor:pointer}
 #${ROOT} button.is-active{background:rgba(81,224,229,.18);border-color:rgba(81,224,229,.55);color:#a6f8f7}
-#${ROOT} [data-oms-detach]{border-color:rgba(255,215,130,.25);color:#ffe0a0}
 #${ROOT} .oms-live{display:inline-flex;align-items:center;gap:5px;font:900 10px/1 ui-monospace,monospace;color:#84e6c9}
 #${ROOT} .oms-live::before{content:"";width:7px;height:7px;border-radius:50%;background:#67e0bb;box-shadow:0 0 10px rgba(103,224,187,.8)}
 #${ROOT} .oms-tabs{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
@@ -135,6 +138,7 @@
     if(!root){
       root=document.createElement("section");
       root.id=ROOT;
+      root.classList.add("admin-native-control-host","admin-native-tone-cyan");
       root.setAttribute("aria-label","OKX Orderbook Depth live read-only");
       root.innerHTML=`
         <div class="oms-head">
@@ -144,9 +148,13 @@
           </div>
           <div class="oms-actions">
             <span class="oms-live">LIVE 2 s</span>
-            <button type="button" data-oms-detach title="Décrocher / replacer">Décrocher ↗</button>
-            <button type="button" data-oms-refresh title="Rafraîchir">↻</button>
-            <button type="button" data-oms-close title="Fermer">×</button>
+          </div>
+          <div class="admin-native-controls admin-native-controls-native" role="group" aria-label="Commandes fenêtre Administrator · Profondeur">
+            <button type="button" class="admin-native-control admin-native-move" data-oms-move title="Détacher et déplacer Profondeur" aria-label="Détacher et déplacer Profondeur">⠿</button>
+            <button type="button" class="admin-native-control admin-native-minimize" data-oms-minimize title="Réduire Profondeur" aria-label="Réduire Profondeur">—</button>
+            <button type="button" class="admin-native-control admin-native-float" data-oms-detach title="Détacher Profondeur" aria-label="Détacher Profondeur">□</button>
+            <button type="button" class="admin-native-control admin-native-maximize" data-oms-maximize title="Agrandir Profondeur" aria-label="Agrandir Profondeur">⤢</button>
+            <button type="button" class="admin-native-control admin-native-hide" data-oms-close title="Masquer Profondeur" aria-label="Masquer Profondeur">×</button>
           </div>
         </div>
         <div class="oms-tabs">
@@ -157,9 +165,10 @@
         <div class="oms-body" data-oms-body></div>`;
       document.body.appendChild(root);
       root.dataset.portalOwner="depth-40.6.506";
-      root.querySelector("[data-oms-detach]").addEventListener("click",event=>{event.stopPropagation();setDetached(!state.detached);});
-      root.querySelector("[data-oms-refresh]").addEventListener("click",event=>{event.stopPropagation();void refresh();});
-      root.querySelector("[data-oms-close]").addEventListener("click",event=>{event.stopPropagation();setOpen(false);});
+      root.querySelector("[data-oms-detach]").addEventListener("click",event=>{event.preventDefault();event.stopPropagation();setDetached(!state.detached);});
+      root.querySelector("[data-oms-minimize]").addEventListener("click",event=>{event.preventDefault();event.stopPropagation();setMinimized(!state.minimized);});
+      root.querySelector("[data-oms-maximize]").addEventListener("click",event=>{event.preventDefault();event.stopPropagation();setMaximized(!state.maximized);});
+      root.querySelector("[data-oms-close]").addEventListener("click",event=>{event.preventDefault();event.stopPropagation();setOpen(false);});
       root.querySelectorAll("[data-oms-tab]").forEach(button=>button.addEventListener("click",()=>{
         state.tab=button.dataset.omsTab||"book";
         root.querySelectorAll("[data-oms-tab]").forEach(b=>b.classList.toggle("is-active",b===button));
@@ -167,17 +176,26 @@
       }));
       root.addEventListener("pointerdown",event=>event.stopPropagation());
       root.addEventListener("click",event=>event.stopPropagation());
-      const head=root.querySelector(".oms-head");
-      head.addEventListener("pointerdown",onDragStart);
-      head.addEventListener("pointermove",onDragMove);
-      head.addEventListener("pointerup",onDragEnd);
-      head.addEventListener("pointercancel",onDragEnd);
+      const move=root.querySelector("[data-oms-move]");
+      move.addEventListener("pointerdown",onMoveHandleStart);
+      move.addEventListener("pointermove",onDragMove);
+      move.addEventListener("pointerup",onDragEnd);
+      move.addEventListener("pointercancel",onDragEnd);
     }
     sync();
     return true;
   }
 
   function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+  function stopDockSync(){
+    if(dockSyncTimer){clearInterval(dockSyncTimer);dockSyncTimer=0;}
+  }
+  function startDockSync(){
+    stopDockSync();
+    if(!state.open||state.detached||state.maximized)return;
+    applyDockRect();
+    dockSyncTimer=setInterval(()=>{if(state.open&&!state.detached&&!state.maximized)applyDockRect();else stopDockSync();},180);
+  }
   function rememberFloatRect(){
     const root=document.getElementById(ROOT);
     if(!root||!state.detached)return;
@@ -201,7 +219,7 @@
       left:Math.round(r.x)+"px",
       top:Math.round(r.y)+"px",
       width:Math.round(r.width)+"px",
-      height:Math.round(r.height)+"px",
+      height:(state.minimized?48:Math.round(r.height))+"px",
       right:"auto",
       bottom:"auto"
     });
@@ -211,7 +229,17 @@
     const root=document.getElementById(ROOT),panel=document.getElementById("detailPanel");
     if(!root||!panel)return;
     if(root.parentElement!==document.body)document.body.appendChild(root);
+    root.classList.toggle("is-minimized",state.minimized);
+    root.classList.toggle("is-maximized",state.maximized);
+    if(state.maximized){
+      stopDockSync();
+      panel.classList.remove("atlas-depth-active");
+      root.classList.add("is-detached");
+      Object.assign(root.style,{position:"fixed",left:"12px",top:"12px",width:"calc(100vw - 24px)",height:"calc(100vh - 24px)",right:"auto",bottom:"auto"});
+      return;
+    }
     if(state.detached){
+      stopDockSync();
       root.classList.add("is-detached");
       panel.classList.remove("atlas-depth-active");
       if(!Number.isFinite(state.floatX)||!Number.isFinite(state.floatY)){
@@ -230,8 +258,9 @@
       Object.assign(root.style,{position:"fixed",left:state.floatX+"px",top:state.floatY+"px",width:w+"px",height:h+"px",right:"auto",bottom:"auto"});
     }else{
       root.classList.remove("is-detached","is-dragging");
-      panel.classList.toggle("atlas-depth-active",state.open);
+      panel.classList.toggle("atlas-depth-active",state.open&&!state.minimized);
       applyDockRect();
+      startDockSync();
     }
   }
   function setDetached(value){
@@ -248,11 +277,43 @@
     applyPlacement();sync();
     return state.detached;
   }
-  function onDragStart(event){
-    event.stopPropagation();
-    if(!state.detached||event.button!==0||event.target.closest("button"))return;
+  function setMinimized(value){
+    state.minimized=!!value;
+    if(state.minimized&&state.maximized)state.maximized=false;
+    applyPlacement();sync();
+    return state.minimized;
+  }
+  function setMaximized(value){
+    const next=!!value;
     const root=document.getElementById(ROOT);
-    if(!root)return;
+    if(next===state.maximized)return state.maximized;
+    if(next){
+      if(root){
+        const r=root.getBoundingClientRect();
+        state.maxRestore={x:r.left,y:r.top,width:r.width,height:r.height};
+      }
+      state.restoreDetached=state.detached;
+      state.maximized=true;
+      state.minimized=false;
+      state.detached=true;
+    }else{
+      state.maximized=false;
+      state.detached=state.restoreDetached===true;
+      if(state.detached&&state.maxRestore){
+        state.floatX=state.maxRestore.x;state.floatY=state.maxRestore.y;
+        state.floatW=state.maxRestore.width;state.floatH=state.maxRestore.height;
+      }
+    }
+    applyPlacement();sync();
+    return state.maximized;
+  }
+  function onMoveHandleStart(event){
+    event.stopPropagation();
+    if(event.button!==0)return;
+    const root=document.getElementById(ROOT);
+    if(!root||state.maximized)return;
+    if(state.minimized)setMinimized(false);
+    if(!state.detached)setDetached(true);
     const r=root.getBoundingClientRect();
     state.dragging=true;state.dragDx=event.clientX-r.left;state.dragDy=event.clientY-r.top;
     root.classList.add("is-dragging");
@@ -295,9 +356,30 @@
     const root=document.getElementById(ROOT);
     root?.classList.toggle("is-open",state.open);
     const panel=document.getElementById("detailPanel");
-    panel?.classList.toggle("atlas-depth-active",state.open&&!state.detached);
+    panel?.classList.toggle("atlas-depth-active",state.open&&!state.detached&&!state.minimized&&!state.maximized);
     const detach=root?.querySelector("[data-oms-detach]");
-    if(detach)detach.textContent=state.detached?"Replacer ▣":"Décrocher ↗";
+    if(detach){
+      detach.textContent=state.detached?"▣":"□";
+      detach.title=state.detached?"Raccrocher Profondeur":"Détacher Profondeur";
+      detach.setAttribute("aria-label",detach.title);
+    }
+    const minimize=root?.querySelector("[data-oms-minimize]");
+    if(minimize){
+      minimize.textContent=state.minimized?"+":"—";
+      minimize.title=state.minimized?"Restaurer Profondeur":"Réduire Profondeur";
+      minimize.setAttribute("aria-label",minimize.title);
+    }
+    const maximize=root?.querySelector("[data-oms-maximize]");
+    if(maximize){
+      maximize.textContent=state.maximized?"↙":"⤢";
+      maximize.title=state.maximized?"Restaurer la taille de Profondeur":"Agrandir Profondeur";
+      maximize.setAttribute("aria-label",maximize.title);
+    }
+    const move=root?.querySelector("[data-oms-move]");
+    if(move){
+      move.title=state.detached?"Déplacer Profondeur":"Détacher et déplacer Profondeur";
+      move.setAttribute("aria-label",move.title);
+    }
     const b=document.getElementById(ROOT+"Toggle");
     if(b){
       b.classList.toggle("is-active",state.open);
@@ -307,7 +389,7 @@
   function setOpen(value){
     state.open=!!value;
     mount();applyPlacement();sync();
-    if(!state.open){clearLive();document.getElementById("detailPanel")?.classList.remove("atlas-depth-active");return false;}
+    if(!state.open){clearLive();stopDockSync();document.getElementById("detailPanel")?.classList.remove("atlas-depth-active");return false;}
     const asset=selectedAsset();
     if(state.asset!==asset||!state.capturedAt)void refresh();
     else scheduleLive();
@@ -474,7 +556,11 @@
       docked_glass_surface:true,
       independent_body_portal:true,
       graph_parent_never_moved:true,
+      native_window_control_strip:true,
+      exact_lecture_technique_dock_sync:true,
       detachable_floating_surface:true,
+      minimizable:true,
+      maximizable:true,
       detach_restores_lecture_technique:true,
       draggable_when_detached:true,
       readable_font_floor:true,
@@ -490,7 +576,7 @@
   }
 
   globalThis.AgentCryptoOkxMicrostructure=Object.freeze({
-    build:BUILD,mount,setOpen,setDetached,refresh,
+    build:BUILD,mount,setOpen,setDetached,setMinimized,setMaximized,refresh,
     snapshot:()=>Object.freeze({...state,bids:state.bids.slice(),asks:state.asks.slice()}),
     self_test:selfTest,
     read_only:true,
@@ -501,6 +587,10 @@
     detachable:true,
     independent_body_portal:true,
     graph_parent_never_moved:true,
+    native_window_control_strip:true,
+    exact_lecture_technique_dock_sync:true,
+    minimizable:true,
+    maximizable:true,
     draggable_when_detached:true,
     docked_to_lecture_technique:true,
     detach_restores_lecture_technique:true,
@@ -517,7 +607,7 @@
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
     window.addEventListener("pageshow",boot,{passive:true});
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")clearLive();else if(state.open)scheduleLive();},{passive:true});
-    window.addEventListener("resize",()=>{if(state.detached){rememberFloatRect();applyPlacement();}else applyDockRect();},{passive:true});
+    window.addEventListener("resize",()=>{if(state.maximized)applyPlacement();else if(state.detached){rememberFloatRect();applyPlacement();}else applyDockRect();},{passive:true});
     window.addEventListener("scroll",()=>{if(state.open&&!state.detached)applyDockRect();},{passive:true,capture:true});
     window.addEventListener("agent-crypto:quote-architecture-changed",()=>{state.capturedAt=null;state.bids=[];state.asks=[];if(state.open)void refresh();},{passive:true});
   }
