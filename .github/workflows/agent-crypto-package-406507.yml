@@ -1,0 +1,26 @@
+name: Agent-Crypto 40.6.507 Validate Package
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scope
+        run: |
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json"))["build"])')"
+          if [ "$CURRENT" != "40.6.507" ]; then echo "SKIP=true" >> "$GITHUB_ENV"; fi
+      - name: Validate Native Depth Window Chrome
+        if: env.SKIP != 'true'
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+          python .github/scripts/agent_crypto_okx_depth_native_chrome_guard_406507.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
