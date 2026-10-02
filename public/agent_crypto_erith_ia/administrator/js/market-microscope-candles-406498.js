@@ -7,7 +7,8 @@
   const ROOT="atlasMarketMicroscope";
   const REST="https://eea.okx.com";
   const BARS=Object.freeze({"1m":"1m","5m":"5m","15m":"15m","1h":"1H","4h":"4H","1j":"1D"});
-  const state={mode:"native",bar:"15m",instrument:"BTC-EUR",rows:[],loading:false,error:null,lastLoadedAt:null,source:"OKX public candles"};\n  const view={start:0,count:120,dragging:false,dragX:0,dragStart:0};
+  const state={mode:"native",bar:"15m",instrument:"BTC-EUR",rows:[],loading:false,error:null,lastLoadedAt:null,source:"OKX public candles"};
+  const view={start:0,count:120,dragging:false,dragX:0,dragStart:0};
   let requestToken=0;
   const num=v=>{const x=Number(v);return Number.isFinite(x)?x:null;};
   const fmt=(v,d=2)=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:d}):"—";
