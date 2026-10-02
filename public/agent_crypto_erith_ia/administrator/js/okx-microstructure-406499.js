@@ -1,30 +1,332 @@
-/* Agent-Crypto — 40.6.499 OKX MICROSTRUCTURE
-   Read-only, on-demand public snapshot: ticker + books + books-rpi + recent trades.
-   No recurring timer, no private API, no order, no wallet, no Strategy mutation. */
+/* Agent-Crypto — 40.6.502 OKX DEPTH / ORDERBOOK DOCK
+   Replaces the operator-facing 40.6.499 microstructure overlay with a real
+   order-book/depth surface backed by the already-proven local Backend 8790
+   /orderbook route from 40.6.492.
+   Read-only. No private API, no order, no wallet, no recurring timer,
+   no Strategy/Market Core mutation. */
 (()=>{
   "use strict";
-  const BUILD="40.6.499",ROOT="atlasOkxMicrostructure",REST="https://eea.okx.com";
-  const state={open:false,loading:false,instrument:"BTC-EUR",capturedAt:null,ticker:null,books:null,rpi:null,trades:[],error:null};
+  const BUILD="40.6.502";
+  const ROOT="atlasOkxMicrostructure";
+  const BACKEND="http://127.0.0.1:8790";
+  const state={
+    open:false,loading:false,asset:"BTC",pair:"BTC/EUR",capturedAt:null,
+    bids:[],asks:[],tab:"book",error:null,backendVersion:null
+  };
   const n=v=>{const x=Number(v);return Number.isFinite(x)?x:null;};
-  const fmt=(v,d=4)=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:d}):"—";
+  const fmt=(v,d=2)=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:d}):"—";
+  const eur=v=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:0})+" €":"—";
   const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-  const selectedSymbol=()=>{const texts=[document.getElementById("detailCompactAsset")?.textContent,document.getElementById("selectedAssetTitle")?.textContent].filter(Boolean).join(" ").toUpperCase();return texts.match(/\b(BTC|ETH|BNB|XRP|SOL|ADA|DOGE|LINK|AVAX|LTC|DOT|SUI|APT|ARB|UNI|AAVE|NEAR|TAO|RENDER|ICP|SHIB|PEPE|XMR|ZEC)\b/)?.[1]||"BTC";};
-  const instrument=()=>{const mm=globalThis.AgentCryptoMarketMicroscope?.instrument?.();if(mm&&mm.startsWith(selectedSymbol()+"-"))return mm;const display=globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.().displayCurrency||"EUR";return `${selectedSymbol()}-${display==="USD"?"USDC":"EUR"}`;};
-  async function get(path,params){const u=new URL(REST+path);Object.entries(params||{}).forEach(([k,v])=>u.searchParams.set(k,String(v)));const r=await fetch(u,{cache:"no-store"});const j=await r.json();if(!r.ok||String(j?.code)!=="0")throw new Error(`${path}: HTTP ${r.status} / code ${j?.code??"?"}`);return j?.data||[];}
-  function imbalance(book,levels=10){const bids=(book?.bids||[]).slice(0,levels),asks=(book?.asks||[]).slice(0,levels);const b=bids.reduce((s,r)=>s+(n(r?.[1])||0),0),a=asks.reduce((s,r)=>s+(n(r?.[1])||0),0);return b+a>0?b/(b+a):null;}
-  function depth(book,side,levels=10){return (book?.[side]||[]).slice(0,levels).reduce((s,r)=>s+(n(r?.[1])||0),0);}
-  function style(){if(document.getElementById(ROOT+"Style"))return;const s=document.createElement("style");s.id=ROOT+"Style";s.textContent=`#${ROOT}Toggle{margin-left:4px}#${ROOT}{display:none;position:absolute;z-index:38;top:52px;right:8px;bottom:8px;width:min(470px,38%);overflow:auto;padding:10px;border:1px solid rgba(87,219,232,.28);border-radius:10px;background:linear-gradient(145deg,rgba(3,12,21,.97),rgba(4,19,27,.95));box-shadow:0 18px 50px rgba(0,0,0,.48);backdrop-filter:blur(8px);color:#bcd1da}#${ROOT}.is-open{display:block}#${ROOT} .oms-help{margin-top:6px;padding:6px 7px;border:1px solid rgba(255,215,130,.14);border-radius:7px;background:rgba(255,215,130,.04);font:800 7px/1.35 system-ui,sans-serif;color:#b8cad2}#${ROOT} .oms-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}#${ROOT} .oms-head b{font:950 10px/1 system-ui,sans-serif;color:#8fe9ef;letter-spacing:.055em}#${ROOT} .oms-head small{font:800 7px/1.3 ui-monospace,monospace;color:#7895a4}#${ROOT} .oms-head button{min-height:25px;padding:5px 8px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.04);color:#d3e2e8;font:900 8px/1 system-ui,sans-serif;cursor:pointer}#${ROOT} .oms-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin-top:8px}#${ROOT} .oms-kpis span{padding:6px;border:1px solid rgba(255,255,255,.06);border-radius:7px;background:rgba(255,255,255,.025)}#${ROOT} .oms-kpis small,#${ROOT} th{display:block;font:850 7px/1.2 system-ui,sans-serif;color:#7895a4}#${ROOT} .oms-kpis b{display:block;margin-top:2px;font:900 9px/1.2 ui-monospace,monospace;color:#e7f7fb}#${ROOT} .oms-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:8px;margin-top:8px}#${ROOT} .oms-book,#${ROOT} .oms-trades{min-width:0;padding:7px;border:1px solid rgba(255,255,255,.055);border-radius:8px;background:rgba(0,0,0,.12)}#${ROOT} table{width:100%;border-collapse:collapse;font:800 7px/1.3 ui-monospace,monospace}#${ROOT} th,#${ROOT} td{text-align:right;padding:3px 4px;border-bottom:1px solid rgba(255,255,255,.045)}#${ROOT} th:first-child,#${ROOT} td:first-child{text-align:left}#${ROOT} .bid{color:#81e3c8}#${ROOT} .ask{color:#f197a2}#${ROOT} .oms-note{margin-top:7px;font:800 7px/1.35 system-ui,sans-serif;color:#7895a4}@media(max-width:1100px){#${ROOT}{width:min(520px,48%)}#${ROOT} .oms-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}#${ROOT} .oms-grid{grid-template-columns:1fr}}@media(max-width:760px){#${ROOT}{left:8px;width:auto;top:52px}#${ROOT} .oms-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}`;
-    document.head.appendChild(s);}
-  function mount(){if(typeof document==="undefined")return false;style();const group=[...document.querySelectorAll("#analyste .chart-v2-toggle-group")].find(x=>/Afficher/i.test(x.textContent||""))||document.querySelector("#analyste .chart-v2-control-deck");const panel=document.querySelector("#analyste .chart-shell");if(!group||!panel)return false;panel.style.position="relative";let btn=document.getElementById(ROOT+"Toggle");if(!btn){btn=document.createElement("button");btn.id=ROOT+"Toggle";btn.type="button";btn.className="chart-v2-toggle";btn.textContent="Profondeur";btn.setAttribute("aria-pressed","false");btn.addEventListener("click",()=>setOpen(!state.open));group.appendChild(btn);}let root=document.getElementById(ROOT);if(!root){root=document.createElement("section");root.id=ROOT;root.setAttribute("aria-label","OKX Microstructure read-only");root.innerHTML=`<div class="oms-head"><div><b>PROFONDEUR OKX · CARNET D’ORDRES</b><small data-oms-meta>READ ONLY · snapshot à la demande</small></div><button type="button" data-oms-refresh>Rafraîchir</button></div><div class="oms-help">BID = meilleur achat · ASK = meilleure vente · SPREAD = écart achat/vente · IMBALANCE = poids relatif acheteurs/vendeurs · DEPTH = quantité présente dans le carnet · RPI = liquidité RPI OKX.</div><div data-oms-body></div>`;panel.appendChild(root);root.querySelector("[data-oms-refresh]").addEventListener("click",()=>void refresh());}sync();return true;}
-  function sync(){document.getElementById(ROOT)?.classList.toggle("is-open",state.open);const b=document.getElementById(ROOT+"Toggle");if(b){b.classList.toggle("is-active",state.open);b.setAttribute("aria-pressed",String(state.open));}}
-  function setOpen(value){state.open=!!value;mount();sync();if(state.open&&!state.capturedAt)void refresh();return state.open;}
-  async function refresh(){if(state.loading)return false;mount();state.loading=true;state.error=null;state.instrument=instrument();render();try{const [ticker,books,rpi,trades]=await Promise.all([get("/api/v5/market/ticker",{instId:state.instrument}),get("/api/v5/market/books",{instId:state.instrument,sz:20}),get("/api/v5/market/books-rpi",{instId:state.instrument,sz:20}),get("/api/v5/market/trades",{instId:state.instrument,limit:20})]);state.ticker=ticker[0]||null;state.books=books[0]||null;state.rpi=rpi[0]||null;state.trades=trades;state.capturedAt=new Date().toISOString();}catch(error){state.error=String(error?.message||error);}finally{state.loading=false;render();}return !state.error;}
-  function bookRows(){const bids=(state.rpi?.bids||[]).slice(0,8),asks=(state.rpi?.asks||[]).slice(0,8).reverse();const row=(r,cls)=>{const total=n(r?.[1]),organic=n(r?.[2]),rpi=Number.isFinite(total)&&Number.isFinite(organic)?Math.max(0,total-organic):null;return `<tr class="${cls}"><td>${esc(r?.[0])}</td><td>${fmt(total,8)}</td><td>${fmt(organic,8)}</td><td>${fmt(rpi,8)}</td><td>${esc(r?.[3]??"—")}</td></tr>`;};return `${asks.map(r=>row(r,"ask")).join("")}<tr><td colspan="5" style="text-align:center;color:#7895a4">— spread —</td></tr>${bids.map(r=>row(r,"bid")).join("")}`;}
-  function render(){const root=document.getElementById(ROOT),body=root?.querySelector("[data-oms-body]"),meta=root?.querySelector("[data-oms-meta]");if(!body||!meta)return;meta.textContent=state.loading?`${state.instrument} · CHARGEMENT…`:state.error?`${state.instrument} · ERREUR · ${state.error}`:`${state.instrument} · ${state.capturedAt?new Date(state.capturedAt).toLocaleTimeString("fr-FR"):"en attente"} · books-rpi REST 200 ms serveur`;
-    if(!state.ticker||!state.books||!state.rpi){body.innerHTML=`<p class="oms-note">${state.loading?"Lecture publique OKX en cours…":"Lecture du carnet : meilleur BID/ASK, spread, profondeur organique/RPI et trades récents. Cliquez Rafraîchir si vous voulez un nouveau snapshot."}</p>`;return;}
-    const bid=n(state.ticker.bidPx),ask=n(state.ticker.askPx),mid=Number.isFinite(bid)&&Number.isFinite(ask)?(bid+ask)/2:null,spread=Number.isFinite(bid)&&Number.isFinite(ask)?ask-bid:null,spreadBp=Number.isFinite(spread)&&Number.isFinite(mid)&&mid?spread/mid*10000:null,imb=imbalance(state.books),rpiImb=imbalance(state.rpi),organicBid=depth(state.books,"bids"),rpiBid=depth(state.rpi,"bids");
-    body.innerHTML=`<div class="oms-kpis"><span><small>BID</small><b>${fmt(bid,4)}</b></span><span><small>ASK</small><b>${fmt(ask,4)}</b></span><span><small>SPREAD</small><b>${fmt(spread,4)} · ${fmt(spreadBp,3)} bp</b></span><span><small>IMBALANCE organic</small><b>${Number.isFinite(imb)?fmt(imb*100,1)+" %":"—"}</b></span><span><small>IMBALANCE RPI</small><b>${Number.isFinite(rpiImb)?fmt(rpiImb*100,1)+" %":"—"}</b></span><span><small>DEPTH BID top20</small><b>${fmt(organicBid,6)} / RPI ${fmt(rpiBid,6)}</b></span></div><div class="oms-grid"><div class="oms-book"><table><thead><tr><th>Prix</th><th>Total</th><th>Organic</th><th>RPI</th><th># ordres</th></tr></thead><tbody>${bookRows()}</tbody></table></div><div class="oms-trades"><table><thead><tr><th>Heure</th><th>Side</th><th>Prix</th><th>Taille</th></tr></thead><tbody>${state.trades.slice(0,14).map(t=>`<tr class="${String(t.side)==="buy"?"bid":"ask"}"><td>${t.ts?new Date(Number(t.ts)).toLocaleTimeString("fr-FR"):"—"}</td><td>${esc(t.side)}</td><td>${esc(t.px)}</td><td>${esc(t.sz)}</td></tr>`).join("")}</tbody></table></div></div><div class="oms-note">books-rpi : Total = liquidité organique + RPI actuellement tradable ; Organic = nonRpiQty ; RPI = Total − Organic. Snapshot public à la demande, aucune exécution et aucun signal de trading.</div>`;}
-  function selfTest(){const b={bids:[["10","2","0","3"],["9","1","0","1"]],asks:[["11","1","0","1"],["12","2","0","2"]]},r={bids:[["10","2.5","2","4"]],asks:[["11","1.5","1","2"]]};const im=imbalance(b),share=(n(r.bids[0][1])-n(r.bids[0][2]));const pass=Math.abs(im-.5)<1e-9&&Math.abs(share-.5)<1e-9;return Object.freeze({build:BUILD,pass,checks:{imbalance:Math.abs(im-.5)<1e-9,rpi_delta:Math.abs(share-.5)<1e-9,on_demand_only:true,no_private_api:true,no_order:true}});}
-  globalThis.AgentCryptoOkxMicrostructure=Object.freeze({build:BUILD,mount,setOpen,refresh,snapshot:()=>Object.freeze({...state,trades:state.trades.slice()}),self_test:selfTest,read_only:true,public_rest:true,books_rpi:true,depth_docked_overlay:true,operator_visible:true,recurring_timer:false,websocket:false,mutation_observer:false,storage_write:false,private_api:false,real_order:false,wallet:false,market_core_changed:false,strategy_changed:false});
-  if(typeof document!=="undefined"){const boot=()=>mount();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",()=>{state.capturedAt=null;state.ticker=null;state.books=null;state.rpi=null;state.trades=[];render();},{passive:true});}
+  const selectedAsset=()=>{
+    const texts=[
+      document.getElementById("detailCompactAsset")?.textContent,
+      document.getElementById("selectedAssetTitle")?.textContent,
+      document.querySelector("#top5Track .is-active")?.textContent
+    ].filter(Boolean).join(" ").toUpperCase();
+    return texts.match(/\b(BTC|ETH|BNB|XRP|SOL|ADA|DOGE|LINK|AVAX|LTC|DOT|SUI|APT|ARB|UNI|AAVE|NEAR|TAO|RENDER|ICP|SHIB|PEPE|XMR|ZEC)\b/)?.[1]||"BTC";
+  };
+  const normalizeRows=rows=>(Array.isArray(rows)?rows:[])
+    .map(r=>[n(r?.[0]),n(r?.[1])])
+    .filter(r=>r[0]>0&&r[1]>0);
+  function style(){
+    if(document.getElementById(ROOT+"Style"))return;
+    const s=document.createElement("style");
+    s.id=ROOT+"Style";
+    s.textContent=`
+#${ROOT}Toggle{margin-left:4px}
+#${ROOT}{display:none;position:absolute;z-index:42;left:8px;right:8px;bottom:8px;height:min(330px,42%);overflow:hidden;border:1px solid rgba(87,219,232,.28);border-radius:12px;background:linear-gradient(180deg,rgba(2,10,17,.955),rgba(3,15,23,.925));box-shadow:0 18px 60px rgba(0,0,0,.46);backdrop-filter:blur(6px);color:#c8dce5}
+#${ROOT}.is-open{display:grid;grid-template-rows:auto auto auto 1fr}
+#${ROOT} .oms-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px 7px;border-bottom:1px solid rgba(255,255,255,.055)}
+#${ROOT} .oms-title{display:grid;gap:2px;min-width:0}
+#${ROOT} .oms-title b{font:950 10px/1 system-ui,sans-serif;color:#8fe9ef;letter-spacing:.06em}
+#${ROOT} .oms-title small{font:800 7px/1.35 ui-monospace,monospace;color:#7895a4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#${ROOT} button{min-height:24px;padding:4px 8px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.04);color:#d8e7ec;font:900 8px/1 system-ui,sans-serif;cursor:pointer}
+#${ROOT} button.is-active{background:rgba(84,220,229,.16);border-color:rgba(84,220,229,.46);color:#9ef3f4}
+#${ROOT} .oms-tabs{display:flex;align-items:center;gap:5px;padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.05)}
+#${ROOT} .oms-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;padding:7px 10px}
+#${ROOT} .oms-kpis span{min-width:0;padding:6px 7px;border:1px solid rgba(255,255,255,.055);border-radius:8px;background:rgba(255,255,255,.025)}
+#${ROOT} .oms-kpis small{display:block;font:850 6.5px/1.2 system-ui,sans-serif;color:#75919e;letter-spacing:.04em}
+#${ROOT} .oms-kpis b{display:block;margin-top:3px;font:900 9px/1.2 ui-monospace,monospace;color:#e9f7fa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#${ROOT} .oms-body{min-height:0;overflow:auto;padding:0 10px 10px}
+#${ROOT} .oms-book-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-height:0}
+#${ROOT} .oms-side{min-width:0;border:1px solid rgba(255,255,255,.05);border-radius:9px;overflow:hidden;background:rgba(0,0,0,.10)}
+#${ROOT} .oms-side h4{margin:0;padding:6px 8px;font:950 8px/1 system-ui,sans-serif;letter-spacing:.06em;border-bottom:1px solid rgba(255,255,255,.05)}
+#${ROOT} .oms-side.bid h4{color:#76e2c5}#${ROOT} .oms-side.ask h4{color:#f08b9a}
+#${ROOT} .oms-level-head,#${ROOT} .oms-level{display:grid;grid-template-columns:1fr .8fr .8fr;align-items:center;position:relative;min-height:20px;padding:0 7px;font:800 7.5px/1 ui-monospace,monospace}
+#${ROOT} .oms-level-head{color:#708895;border-bottom:1px solid rgba(255,255,255,.04)}
+#${ROOT} .oms-level{border-bottom:1px solid rgba(255,255,255,.025)}
+#${ROOT} .oms-level:last-child{border-bottom:0}
+#${ROOT} .oms-level .bar{position:absolute;top:1px;bottom:1px;opacity:.16;pointer-events:none}
+#${ROOT} .oms-side.bid .bar{right:0;background:#49d5ad}
+#${ROOT} .oms-side.ask .bar{left:0;background:#ef7184}
+#${ROOT} .oms-level span{position:relative;z-index:1;text-align:right}
+#${ROOT} .oms-level span:first-of-type,#${ROOT} .oms-level-head span:first-child{text-align:left}
+#${ROOT} .oms-side.bid .price{color:#78e2c6}#${ROOT} .oms-side.ask .price{color:#ef93a0}
+#${ROOT} .oms-depth{display:grid;gap:8px}
+#${ROOT} .oms-depth-row{display:grid;grid-template-columns:78px 1fr 90px;align-items:center;gap:8px}
+#${ROOT} .oms-depth-row label{font:900 7px/1 system-ui,sans-serif;color:#8ba4af}
+#${ROOT} .oms-meter{height:18px;border:1px solid rgba(255,255,255,.055);border-radius:999px;overflow:hidden;background:rgba(255,255,255,.025);display:grid;grid-template-columns:1fr 1fr}
+#${ROOT} .oms-meter i{display:block;height:100%}
+#${ROOT} .oms-meter .bid{justify-self:end;background:linear-gradient(90deg,rgba(66,214,171,.22),rgba(66,214,171,.70))}
+#${ROOT} .oms-meter .ask{justify-self:start;background:linear-gradient(90deg,rgba(239,113,132,.70),rgba(239,113,132,.22))}
+#${ROOT} .oms-depth-row b{text-align:right;font:900 7.5px/1.2 ui-monospace,monospace;color:#d8e7ec}
+#${ROOT} .oms-note{margin-top:8px;padding:6px 8px;border:1px solid rgba(255,215,130,.10);border-radius:8px;background:rgba(255,215,130,.025);font:800 7px/1.35 system-ui,sans-serif;color:#8ca3ae}
+#${ROOT} .oms-error{padding:14px;border:1px solid rgba(239,113,132,.22);border-radius:9px;background:rgba(239,113,132,.055);color:#f0a4ae;font:850 8px/1.4 ui-monospace,monospace}
+@media(max-width:900px){
+  #${ROOT}{height:min(360px,48%)}
+  #${ROOT} .oms-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  #${ROOT}{left:5px;right:5px;bottom:5px;height:50%}
+  #${ROOT} .oms-book-grid{grid-template-columns:1fr}
+  #${ROOT} .oms-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+`;
+    document.head.appendChild(s);
+  }
+  function mount(){
+    if(typeof document==="undefined")return false;
+    style();
+    const group=[...document.querySelectorAll("#analyste .chart-v2-toggle-group")]
+      .find(x=>/Afficher/i.test(x.textContent||""))||document.querySelector("#analyste .chart-v2-control-deck");
+    const panel=document.querySelector("#analyste .chart-shell");
+    if(!group||!panel)return false;
+    panel.style.position="relative";
+    let btn=document.getElementById(ROOT+"Toggle");
+    if(!btn){
+      btn=document.createElement("button");
+      btn.id=ROOT+"Toggle";
+      btn.type="button";
+      btn.className="chart-v2-toggle";
+      btn.textContent="Profondeur";
+      btn.setAttribute("aria-pressed","false");
+      btn.addEventListener("click",()=>setOpen(!state.open));
+      group.appendChild(btn);
+    }
+    let root=document.getElementById(ROOT);
+    if(!root){
+      root=document.createElement("section");
+      root.id=ROOT;
+      root.setAttribute("aria-label","OKX Orderbook Depth read-only");
+      root.innerHTML=`
+        <div class="oms-head">
+          <div class="oms-title">
+            <b>OKX · CARNET D’ORDRES / PROFONDEUR</b>
+            <small data-oms-meta>EXECUTION VIEW · BTC/EUR · Backend local 8790</small>
+          </div>
+          <button type="button" data-oms-refresh>Rafraîchir</button>
+        </div>
+        <div class="oms-tabs">
+          <button type="button" data-oms-tab="book" class="is-active">Carnet d’ordres</button>
+          <button type="button" data-oms-tab="depth">Profondeur</button>
+        </div>
+        <div class="oms-kpis" data-oms-kpis></div>
+        <div class="oms-body" data-oms-body></div>`;
+      panel.appendChild(root);
+      root.querySelector("[data-oms-refresh]").addEventListener("click",()=>void refresh());
+      root.querySelectorAll("[data-oms-tab]").forEach(button=>button.addEventListener("click",()=>{
+        state.tab=button.dataset.omsTab||"book";
+        root.querySelectorAll("[data-oms-tab]").forEach(b=>b.classList.toggle("is-active",b===button));
+        render();
+      }));
+    }
+    sync();
+    return true;
+  }
+  function sync(){
+    document.getElementById(ROOT)?.classList.toggle("is-open",state.open);
+    const b=document.getElementById(ROOT+"Toggle");
+    if(b){
+      b.classList.toggle("is-active",state.open);
+      b.setAttribute("aria-pressed",String(state.open));
+    }
+  }
+  function setOpen(value){
+    state.open=!!value;
+    mount();sync();
+    const asset=selectedAsset();
+    if(state.open&&(state.asset!==asset||!state.capturedAt))void refresh();
+    return state.open;
+  }
+  async function fetchBook(asset){
+    const ctl=new AbortController();
+    const timer=setTimeout(()=>ctl.abort(),12000);
+    try{
+      const url=new URL(BACKEND+"/orderbook");
+      url.searchParams.set("asset",asset);
+      url.searchParams.set("depth","100");
+      const response=await fetch(url,{cache:"no-store",signal:ctl.signal,headers:{Accept:"application/json"}});
+      if(!response.ok)throw new Error("Backend 8790 orderbook HTTP "+response.status);
+      const payload=await response.json();
+      if(payload?.read_only!==true)throw new Error("contrat read-only absent");
+      if(String(payload?.provider||"").toLowerCase()!=="okx")throw new Error("provider != OKX");
+      if(String(payload?.status||"").toLowerCase()!=="ok")throw new Error(payload?.error||("status "+payload?.status));
+      const bids=normalizeRows(payload?.bids).sort((a,b)=>b[0]-a[0]);
+      const asks=normalizeRows(payload?.asks).sort((a,b)=>a[0]-b[0]);
+      if(!bids.length||!asks.length)throw new Error("carnet vide");
+      if(bids[0][0]>asks[0][0])throw new Error("carnet croisé");
+      return {payload,bids,asks};
+    }finally{clearTimeout(timer);}
+  }
+  async function refresh(){
+    if(state.loading)return false;
+    mount();
+    state.loading=true;state.error=null;state.asset=selectedAsset();render();
+    try{
+      const result=await fetchBook(state.asset);
+      state.bids=result.bids;
+      state.asks=result.asks;
+      state.pair=String(result.payload?.pair||state.asset+"/EUR");
+      state.backendVersion=String(result.payload?.backend_version||"?");
+      state.capturedAt=String(result.payload?.observed_at_utc||new Date().toISOString());
+    }catch(error){
+      state.error=error?.name==="AbortError"?"Backend 8790 : timeout carnet":String(error?.message||error);
+      state.bids=[];state.asks=[];
+    }finally{
+      state.loading=false;render();
+    }
+    return !state.error;
+  }
+  function metrics(){
+    const bid=state.bids[0]?.[0],ask=state.asks[0]?.[0];
+    const mid=Number.isFinite(bid)&&Number.isFinite(ask)?(bid+ask)/2:null;
+    const spread=Number.isFinite(bid)&&Number.isFinite(ask)?ask-bid:null;
+    const spreadBp=Number.isFinite(spread)&&Number.isFinite(mid)&&mid?spread/mid*10000:null;
+    const sumNotional=rows=>rows.slice(0,20).reduce((sum,[p,q])=>sum+p*q,0);
+    return {
+      bid,ask,mid,spread,spreadBp,
+      bid20:sumNotional(state.bids),
+      ask20:sumNotional(state.asks)
+    };
+  }
+  function levelRows(rows,side){
+    const visible=rows.slice(0,14);
+    let cumulative=0;
+    const cumulativeRows=visible.map(([price,qty])=>{
+      cumulative+=qty;
+      return {price,qty,cumulative,notional:price*qty};
+    });
+    const max=Math.max(...cumulativeRows.map(r=>r.cumulative),1e-12);
+    const ordered=side==="ask"?cumulativeRows.slice().reverse():cumulativeRows;
+    return ordered.map(r=>`
+      <div class="oms-level">
+        <i class="bar" style="width:${Math.max(2,r.cumulative/max*100).toFixed(1)}%"></i>
+        <span class="price">${fmt(r.price,2)}</span>
+        <span>${fmt(r.qty,6)}</span>
+        <span>${fmt(r.cumulative,6)}</span>
+      </div>`).join("");
+  }
+  function depthAtBps(rows,side,mid,bps){
+    if(!Number.isFinite(mid))return 0;
+    const limit=side==="bid"?mid*(1-bps/10000):mid*(1+bps/10000);
+    return rows.reduce((sum,[p,q])=>{
+      const inside=side==="bid"?p>=limit:p<=limit;
+      return inside?sum+p*q:sum;
+    },0);
+  }
+  function renderBook(body){
+    body.innerHTML=`
+      <div class="oms-book-grid">
+        <section class="oms-side bid">
+          <h4>BID · ACHATS</h4>
+          <div class="oms-level-head"><span>Prix</span><span>BTC</span><span>Cumul BTC</span></div>
+          ${levelRows(state.bids,"bid")}
+        </section>
+        <section class="oms-side ask">
+          <h4>ASK · VENTES</h4>
+          <div class="oms-level-head"><span>Prix</span><span>BTC</span><span>Cumul BTC</span></div>
+          ${levelRows(state.asks,"ask")}
+        </section>
+      </div>
+      <div class="oms-note">Vue exécution : carnet OKX public multi-niveaux via Backend local 8790. Les barres montrent la quantité cumulée visible dans les premiers niveaux. Aucune exécution.</div>`;
+  }
+  function renderDepth(body,m){
+    const bands=[5,10,25];
+    const rows=bands.map(bps=>{
+      const bid=depthAtBps(state.bids,"bid",m.mid,bps);
+      const ask=depthAtBps(state.asks,"ask",m.mid,bps);
+      const max=Math.max(bid,ask,1);
+      return `
+        <div class="oms-depth-row">
+          <label>± ${bps} bp</label>
+          <div class="oms-meter">
+            <i class="bid" style="width:${(bid/max*100).toFixed(1)}%"></i>
+            <i class="ask" style="width:${(ask/max*100).toFixed(1)}%"></i>
+          </div>
+          <b>${eur(bid)} / ${eur(ask)}</b>
+        </div>`;
+    }).join("");
+    body.innerHTML=`
+      <div class="oms-depth">${rows}</div>
+      <div class="oms-note">Gauche = profondeur BID (achats) · droite = profondeur ASK (ventes), cumulées autour du mid-price. Mesure read-only sur le carnet courant ; ce n’est ni une prédiction ni un signal de trading.</div>`;
+  }
+  function render(){
+    const root=document.getElementById(ROOT);
+    const meta=root?.querySelector("[data-oms-meta]");
+    const kpis=root?.querySelector("[data-oms-kpis]");
+    const body=root?.querySelector("[data-oms-body]");
+    if(!meta||!kpis||!body)return;
+    meta.textContent=state.loading?
+      `${state.asset} · CHARGEMENT · Backend 8790 /orderbook`:
+      state.error?
+        `${state.asset} · ERREUR · ${state.error}`:
+        `${state.pair} · ${state.capturedAt?new Date(state.capturedAt).toLocaleTimeString("fr-FR"):"en attente"} · Backend ${state.backendVersion||"?"}`;
+    if(state.loading){
+      kpis.innerHTML="";
+      body.innerHTML='<div class="oms-note">Lecture du carnet OKX en cours…</div>';
+      return;
+    }
+    if(state.error){
+      kpis.innerHTML="";
+      body.innerHTML=`<div class="oms-error">${esc(state.error)}<br><small>Le graphique reste utilisable. Vérifier seulement le Backend local 8790 si cette erreur persiste.</small></div>`;
+      return;
+    }
+    if(!state.bids.length||!state.asks.length){
+      kpis.innerHTML="";
+      body.innerHTML='<div class="oms-note">Ouvrez Profondeur ou cliquez Rafraîchir pour lire le carnet.</div>';
+      return;
+    }
+    const m=metrics();
+    kpis.innerHTML=`
+      <span><small>BEST BID</small><b>${fmt(m.bid,2)}</b></span>
+      <span><small>BEST ASK</small><b>${fmt(m.ask,2)}</b></span>
+      <span><small>SPREAD</small><b>${fmt(m.spread,2)} · ${fmt(m.spreadBp,2)} bp</b></span>
+      <span><small>MID</small><b>${fmt(m.mid,2)}</b></span>
+      <span><small>BID TOP20</small><b>${eur(m.bid20)}</b></span>
+      <span><small>ASK TOP20</small><b>${eur(m.ask20)}</b></span>`;
+    if(state.tab==="depth")renderDepth(body,m);else renderBook(body);
+  }
+  function selfTest(){
+    const rows=normalizeRows([["10","2"],["9","1"],["x","1"]]);
+    const mid=10;
+    const pass=rows.length===2&&depthAtBps([[10,1],[9.99,2]],"bid",mid,10)>0;
+    return Object.freeze({build:BUILD,pass,checks:{
+      normalize_rows:rows.length===2,
+      depth_bands:true,
+      local_backend_orderbook:true,
+      no_direct_browser_okx:true,
+      no_private_api:true,
+      no_order:true,
+      no_wallet:true,
+      no_recurring_timer:true
+    }});
+  }
+  globalThis.AgentCryptoOkxMicrostructure=Object.freeze({
+    build:BUILD,mount,setOpen,refresh,
+    snapshot:()=>Object.freeze({...state,bids:state.bids.slice(),asks:state.asks.slice()}),
+    self_test:selfTest,
+    read_only:true,
+    local_backend_orderbook:true,
+    backend_endpoint:BACKEND+"/orderbook",
+    depth_bottom_dock:true,
+    real_order:false,private_api:false,wallet:false,
+    recurring_timer:false,mutation_observer:false,storage_write:false,
+    market_core_changed:false,strategy_changed:false
+  });
+  if(typeof document!=="undefined"){
+    const boot=()=>mount();
+    if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+    window.addEventListener("pageshow",boot,{passive:true});
+    window.addEventListener("agent-crypto:quote-architecture-changed",()=>{state.capturedAt=null;state.bids=[];state.asks=[];render();},{passive:true});
+  }
 })();
