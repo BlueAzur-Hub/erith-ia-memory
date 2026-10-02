@@ -3,6 +3,7 @@ name: Agent-Crypto 40.6.501 Validate Package
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
