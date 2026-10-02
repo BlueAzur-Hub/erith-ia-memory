@@ -25,3 +25,26 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
           python .github/scripts/agent_crypto_admin_meta_truth_guard_406509.py
           python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Build Administrator 40.6.509 ZIP
+        if: env.SKIP != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          out=Path("dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.509.zip")
+          out.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for p in sorted(root.rglob("*")):
+                  if p.is_file():
+                      z.write(p,Path("administrator")/p.relative_to(root))
+          print(out, out.stat().st_size)
+          PY
+      - name: Upload Administrator 40.6.509 ZIP
+        if: env.SKIP != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.509
+          path: dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.509.zip
+          if-no-files-found: error
+          retention-days: 90
