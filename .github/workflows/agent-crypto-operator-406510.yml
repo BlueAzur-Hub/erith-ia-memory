@@ -1,0 +1,57 @@
+name: Agent-Crypto Operator 40.6.510 Validate Package
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/operator/**'
+      - '.github/scripts/agent_crypto_operator_guard_406510.py'
+      - '.github/workflows/agent-crypto-operator-406510.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/operator/**'
+      - '.github/scripts/agent_crypto_operator_guard_406510.py'
+      - '.github/workflows/agent-crypto-operator-406510.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scope
+        run: |
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/operator/build.json"))["build"])')"
+          if [ "$CURRENT" != "40.6.510" ]; then echo "SKIP=true" >> "$GITHUB_ENV"; fi
+      - name: Validate Operator 40.6.510 shared runtime
+        if: env.SKIP != 'true'
+        run: |
+          python .github/scripts/agent_crypto_operator_guard_406510.py
+      - name: Build Operator 40.6.510 full runtime ZIP
+        if: env.SKIP != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          base=Path("public/agent_crypto_erith_ia")
+          out=Path("dist/AGENT_CRYPTO_OPERATOR_40.6.510_FULL.zip")
+          out.parent.mkdir(parents=True,exist_ok=True)
+          roots=[base/"operator",base/"administrator"]
+          with zipfile.ZipFile(out,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for root in roots:
+                  for p in sorted(root.rglob("*")):
+                      if p.is_file():
+                          z.write(p,Path("public/agent_crypto_erith_ia")/p.relative_to(base))
+          print(out, out.stat().st_size)
+          PY
+      - name: Upload Operator 40.6.510 full runtime ZIP
+        if: env.SKIP != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_OPERATOR_40.6.510_FULL
+          path: dist/AGENT_CRYPTO_OPERATOR_40.6.510_FULL.zip
+          if-no-files-found: error
+          retention-days: 90

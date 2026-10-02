@@ -3,7 +3,15 @@ name: Agent-Crypto 40.6.509 Validate Package
 on:
   push:
     branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_admin_meta_truth_guard_406509.py'
+      - '.github/workflows/agent-crypto-package-406509.yml'
   pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_admin_meta_truth_guard_406509.py'
+      - '.github/workflows/agent-crypto-package-406509.yml'
   workflow_dispatch:
 
 permissions:
