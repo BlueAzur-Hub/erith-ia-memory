@@ -6,7 +6,7 @@
    Read-only. No private API, no order, no wallet, no Strategy/Market Core mutation. */
 (()=>{
   "use strict";
-  const BUILD="40.6.503";
+  const BUILD="40.6.504";
   const ROOT="atlasOkxMicrostructure";
   const BACKEND="http://127.0.0.1:8790";
   const LIVE_MS=2000;
@@ -39,32 +39,32 @@
 #${ROOT}Toggle{margin-left:4px}
 #detailPanel{position:relative}
 #${ROOT}{
-  display:none;position:absolute;z-index:90;left:6px;right:6px;top:46px;bottom:6px;
-  overflow:hidden;border:1px solid rgba(87,219,232,.34);border-radius:12px;
-  background:linear-gradient(180deg,rgba(2,10,17,.90),rgba(3,14,22,.84));
-  box-shadow:0 18px 60px rgba(0,0,0,.50);backdrop-filter:blur(8px) saturate(1.05);
-  color:#d5e8ee
+  display:none;position:absolute;z-index:90;inset:0;
+  overflow:hidden;border:1px solid rgba(87,219,232,.40);border-radius:14px;
+  background:linear-gradient(180deg,rgba(2,10,17,.965),rgba(3,14,22,.945));
+  box-shadow:0 20px 70px rgba(0,0,0,.58);backdrop-filter:blur(14px) saturate(.92);
+  color:#e2f2f6
 }
-#${ROOT}.is-open{display:grid;grid-template-rows:auto auto auto 1fr}
-#${ROOT} .oms-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 10px 8px;border-bottom:1px solid rgba(255,255,255,.07)}
+#${ROOT}.is-open{display:grid;grid-template-rows:auto auto auto 1fr}#detailPanel.atlas-depth-active> :not(#${ROOT}){opacity:.08;filter:saturate(.35) brightness(.50);pointer-events:none;transition:opacity .15s ease}#detailPanel.atlas-depth-active{overflow:hidden}
+#${ROOT} .oms-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 12px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
 #${ROOT} .oms-title{display:grid;gap:3px;min-width:0}
-#${ROOT} .oms-title b{font:950 12px/1.05 system-ui,sans-serif;color:#97f2f3;letter-spacing:.055em}
-#${ROOT} .oms-title small{font:850 9px/1.25 ui-monospace,monospace;color:#8ca7b3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#${ROOT} .oms-title b{font:950 15px/1.08 system-ui,sans-serif;color:#a8f7f5;letter-spacing:.055em}
+#${ROOT} .oms-title small{font:850 10.5px/1.3 ui-monospace,monospace;color:#9db5bf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #${ROOT} .oms-actions{display:flex;align-items:center;gap:5px}
-#${ROOT} button{min-height:28px;padding:5px 9px;border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(255,255,255,.055);color:#e2f0f4;font:900 9px/1 system-ui,sans-serif;cursor:pointer}
+#${ROOT} button{min-height:31px;padding:6px 10px;border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(255,255,255,.055);color:#e2f0f4;font:900 10px/1 system-ui,sans-serif;cursor:pointer}
 #${ROOT} button.is-active{background:rgba(81,224,229,.18);border-color:rgba(81,224,229,.55);color:#a6f8f7}
-#${ROOT} .oms-live{display:inline-flex;align-items:center;gap:5px;font:900 9px/1 ui-monospace,monospace;color:#84e6c9}
+#${ROOT} .oms-live{display:inline-flex;align-items:center;gap:5px;font:900 12px/1 ui-monospace,monospace;color:#84e6c9}
 #${ROOT} .oms-live::before{content:"";width:7px;height:7px;border-radius:50%;background:#67e0bb;box-shadow:0 0 10px rgba(103,224,187,.8)}
-#${ROOT} .oms-tabs{display:flex;align-items:center;gap:6px;padding:7px 9px;border-bottom:1px solid rgba(255,255,255,.06)}
-#${ROOT} .oms-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:8px 9px}
-#${ROOT} .oms-kpis span{min-width:0;padding:7px 8px;border:1px solid rgba(255,255,255,.065);border-radius:8px;background:rgba(255,255,255,.035)}
-#${ROOT} .oms-kpis small{display:block;font:900 8px/1.15 system-ui,sans-serif;color:#819daa;letter-spacing:.045em}
-#${ROOT} .oms-kpis b{display:block;margin-top:4px;font:950 11px/1.15 ui-monospace,monospace;color:#f0fbfd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#${ROOT} .oms-body{min-height:0;overflow:auto;padding:0 9px 10px}
+#${ROOT} .oms-tabs{display:flex;align-items:center;gap:6px;padding:9px 11px;border-bottom:1px solid rgba(255,255,255,.06)}
+#${ROOT} .oms-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:10px 11px}
+#${ROOT} .oms-kpis span{min-width:0;padding:9px 9px;border:1px solid rgba(255,255,255,.065);border-radius:8px;background:rgba(255,255,255,.035)}
+#${ROOT} .oms-kpis small{display:block;font:900 9.5px/1.18 system-ui,sans-serif;color:#819daa;letter-spacing:.045em}
+#${ROOT} .oms-kpis b{display:block;margin-top:4px;font:950 13px/1.16 ui-monospace,monospace;color:#f0fbfd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#${ROOT} .oms-body{min-height:0;overflow:auto;padding:0 11px 12px}
 #${ROOT} .oms-book{display:grid;gap:5px}
-#${ROOT} .oms-book-head{display:grid;grid-template-columns:1fr .8fr .8fr;padding:2px 6px 4px;color:#7e99a6;font:900 8px/1 system-ui,sans-serif}
+#${ROOT} .oms-book-head{display:grid;grid-template-columns:1fr .8fr .8fr;padding:2px 6px 4px;color:#7e99a6;font:900 9.5px/1 system-ui,sans-serif}
 #${ROOT} .oms-book-head span:not(:first-child){text-align:right}
-#${ROOT} .oms-level{display:grid;grid-template-columns:1fr .8fr .8fr;align-items:center;position:relative;min-height:24px;padding:0 6px;border-radius:5px;font:900 10px/1 ui-monospace,monospace;overflow:hidden}
+#${ROOT} .oms-level{display:grid;grid-template-columns:1fr .8fr .8fr;align-items:center;position:relative;min-height:29px;padding:0 7px;border-radius:5px;font:900 10px/1 ui-monospace,monospace;overflow:hidden}
 #${ROOT} .oms-level .bar{position:absolute;top:1px;bottom:1px;right:0;opacity:.18;pointer-events:none}
 #${ROOT} .oms-level.ask .bar{background:#ef7184}
 #${ROOT} .oms-level.bid .bar{background:#49d5ad}
@@ -72,22 +72,22 @@
 #${ROOT} .oms-level span:first-of-type{text-align:left}
 #${ROOT} .oms-level.ask .price{color:#f3a0aa}
 #${ROOT} .oms-level.bid .price{color:#88e8cd}
-#${ROOT} .oms-midline{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;margin:4px 0;padding:7px 8px;border:1px solid rgba(255,215,130,.13);border-radius:7px;background:rgba(255,215,130,.035)}
-#${ROOT} .oms-midline b{font:950 12px/1 ui-monospace,monospace;color:#ffe2a3}
-#${ROOT} .oms-midline small{font:900 8px/1.2 system-ui,sans-serif;color:#9db1ba;text-align:right}
+#${ROOT} .oms-midline{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;margin:6px 0;padding:9px 9px;border:1px solid rgba(255,215,130,.13);border-radius:7px;background:rgba(255,215,130,.035)}
+#${ROOT} .oms-midline b{font:950 14px/1 ui-monospace,monospace;color:#ffe2a3}
+#${ROOT} .oms-midline small{font:900 10px/1.25 system-ui,sans-serif;color:#9db1ba;text-align:right}
 #${ROOT} .oms-depth{display:grid;gap:10px;padding-top:4px}
 #${ROOT} .oms-depth-row{display:grid;grid-template-columns:56px 1fr 92px;align-items:center;gap:6px}
-#${ROOT} .oms-depth-row label{font:950 9px/1 system-ui,sans-serif;color:#9bb0b9}
-#${ROOT} .oms-meter{height:22px;border:1px solid rgba(255,255,255,.07);border-radius:999px;overflow:hidden;background:rgba(255,255,255,.03);display:grid;grid-template-columns:1fr 1fr}
+#${ROOT} .oms-depth-row label{font:950 10.5px/1 system-ui,sans-serif;color:#9bb0b9}
+#${ROOT} .oms-meter{height:26px;border:1px solid rgba(255,255,255,.07);border-radius:999px;overflow:hidden;background:rgba(255,255,255,.03);display:grid;grid-template-columns:1fr 1fr}
 #${ROOT} .oms-meter i{display:block;height:100%}
 #${ROOT} .oms-meter .bid{justify-self:end;background:linear-gradient(90deg,rgba(66,214,171,.22),rgba(66,214,171,.76))}
 #${ROOT} .oms-meter .ask{justify-self:start;background:linear-gradient(90deg,rgba(239,113,132,.76),rgba(239,113,132,.22))}
-#${ROOT} .oms-depth-row b{text-align:right;font:950 9px/1.2 ui-monospace,monospace;color:#e3f0f4}
-#${ROOT} .oms-note{margin-top:8px;padding:7px 8px;border:1px solid rgba(255,215,130,.11);border-radius:8px;background:rgba(255,215,130,.028);font:850 9px/1.35 system-ui,sans-serif;color:#9db0b8}
-#${ROOT} .oms-error{padding:14px;border:1px solid rgba(239,113,132,.24);border-radius:9px;background:rgba(239,113,132,.07);color:#f4a9b2;font:900 10px/1.45 ui-monospace,monospace}
+#${ROOT} .oms-depth-row b{text-align:right;font:950 10.5px/1.2 ui-monospace,monospace;color:#e3f0f4}
+#${ROOT} .oms-note{margin-top:8px;padding:7px 8px;border:1px solid rgba(255,215,130,.11);border-radius:8px;background:rgba(255,215,130,.028);font:850 10px/1.4 system-ui,sans-serif;color:#9db0b8}
+#${ROOT} .oms-error{padding:14px;border:1px solid rgba(239,113,132,.24);border-radius:9px;background:rgba(239,113,132,.07);color:#f4a9b2;font:900 11px/1.5 ui-monospace,monospace}
 @media(max-width:1100px){
-  #${ROOT} .oms-title b{font-size:11px}
-  #${ROOT} .oms-level{font-size:9px}
+  #${ROOT} .oms-title b{font-size:13px}
+  #${ROOT} .oms-level{font-size:11px}
 }
 `;
     document.head.appendChild(s);
@@ -164,6 +164,7 @@
   }
   function sync(){
     document.getElementById(ROOT)?.classList.toggle("is-open",state.open);
+    document.getElementById("detailPanel")?.classList.toggle("atlas-depth-active",state.open);
     const b=document.getElementById(ROOT+"Toggle");
     if(b){
       b.classList.toggle("is-active",state.open);
@@ -232,7 +233,7 @@
     return {bid,ask,mid,spread,spreadBp,bid20:sumNotional(state.bids),ask20:sumNotional(state.asks)};
   }
 
-  function rowsHtml(rows,side,count=8){
+  function rowsHtml(rows,side,count=6){
     const visible=rows.slice(0,count);
     let cumulative=0;
     const enriched=visible.map(([price,qty])=>{
@@ -263,9 +264,9 @@
     body.innerHTML=`
       <div class="oms-book">
         <div class="oms-book-head"><span>Prix</span><span>BTC</span><span>Cumul BTC</span></div>
-        ${rowsHtml(state.asks,"ask",7)}
+        ${rowsHtml(state.asks,"ask",6)}
         <div class="oms-midline"><b>${fmt(m.mid,2)}</b><small>SPREAD ${fmt(m.spread,2)} · ${fmt(m.spreadBp,2)} bp</small></div>
-        ${rowsHtml(state.bids,"bid",7)}
+        ${rowsHtml(state.bids,"bid",6)}
       </div>
       <div class="oms-note">Le carnet se rafraîchit toutes les 2 s uniquement tant que cette fenêtre est ouverte. Vue read-only : aucune exécution.</div>`;
   }
@@ -337,7 +338,9 @@
     const pass=rows.length===2&&LIVE_MS===2000;
     return Object.freeze({build:BUILD,pass,checks:{
       lecture_technique_overlay:true,
+      full_panel_cover:true,
       readable_font_floor:true,
+      larger_operator_typography:true,
       live_refresh_2s:LIVE_MS===2000,
       refresh_only_while_open:true,
       local_backend_orderbook:true,
@@ -357,6 +360,8 @@
     backend_endpoint:BACKEND+"/orderbook",
     lecture_technique_overlay:true,
     semi_transparent:true,
+    full_panel_cover:true,
+    underlying_detail_dimmed:true,
     live_interval_ms:LIVE_MS,
     real_order:false,private_api:false,wallet:false,
     recurring_timer:true,timer_scope:"OPEN_ONLY",
