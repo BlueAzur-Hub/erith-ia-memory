@@ -1,0 +1,75 @@
+name: Agent-Crypto 40.6.516 Validate Rollback
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_rollback_safe_guard_406516.py'
+      - '.github/workflows/agent-crypto-package-406516.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_rollback_safe_guard_406516.py'
+      - '.github/workflows/agent-crypto-package-406516.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scope
+        run: |
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json"))["build"])')"
+          if [ "$CURRENT" != "40.6.516" ]; then echo "SKIP=true" >> "$GITHUB_ENV"; fi
+      - name: Validate rollback contracts
+        if: env.SKIP != 'true'
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js
+          node --check public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js
+          node - <<'NODE'
+          require("./public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js");
+          const q=globalThis.AgentCryptoQuoteCurrencyArchitecture?.self_test?.();
+          console.log(JSON.stringify(q,null,2));
+          if(!q?.pass) process.exit(1);
+          const snap=globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.();
+          if(snap?.displayCurrency!=="EUR"||snap?.executionInstrument!=="BTC-EUR"||snap?.settlementAsset!=="EUR") process.exit(1);
+          NODE
+          python .github/scripts/agent_crypto_rollback_safe_guard_406516.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Build PATCH ONLY ZIP
+        if: env.SKIP != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          files=[
+            "public/agent_crypto_erith_ia/administrator/index.html",
+            "public/agent_crypto_erith_ia/administrator/index-40.6.516.html",
+            "public/agent_crypto_erith_ia/administrator/build.json",
+            "public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js",
+            "public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js",
+            "public/agent_crypto_erith_ia/administrator/views/atlas.html",
+            "public/agent_crypto_erith_ia/administrator/ROLLBACK_SAFE_CHECKPOINT_40.6.516.md",
+            "public/agent_crypto_erith_ia/administrator/PATCH_MANIFEST_40.6.516.txt",
+            "public/agent_crypto_erith_ia/administrator/SEVEN_HANDOFF_40.6.516.md",
+            ".github/scripts/agent_crypto_rollback_safe_guard_406516.py",
+            ".github/workflows/agent-crypto-package-406516.yml",
+          ]
+          out=Path("dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.516_ROLLBACK_SAFE_513_RUNTIME_PATCH.zip")
+          out.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for raw in files:
+              p=Path(raw)
+              if not p.is_file(): raise SystemExit("missing patch file: "+raw)
+              z.write(p,p)
+          print(out,out.stat().st_size)
+          PY
+      - name: Upload rollback PATCH ONLY
+        if: env.SKIP != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.516_ROLLBACK_SAFE_513_RUNTIME_PATCH
+          path: dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.516_ROLLBACK_SAFE_513_RUNTIME_PATCH.zip
+          if-no-files-found: error
+          retention-days: 90
