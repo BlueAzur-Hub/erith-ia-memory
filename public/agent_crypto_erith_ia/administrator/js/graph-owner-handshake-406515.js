@@ -7,6 +7,7 @@
   const BUILD="40.6.515";
   const OWNER_NAMES=Object.freeze([
     "atlasRenderChartResult",
+    "atlasChartV2RedrawFromBroker",
     "renderComparisonAnalystPanel",
     "atlasScannerRun",
     "atlasExternalChartRender"
