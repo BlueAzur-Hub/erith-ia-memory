@@ -1,4 +1,4 @@
-/* Agent-Crypto — 40.6.518 MARKET + FICHE DISPLAY PROJECTION
+/* Agent-Crypto — 40.6.523 MARKET + FICHE USD OWNER REBIND
    Bounded presentation decorator for Market Snapshot + Fiche only.
    Reads explicit priceUsd / marketCapUsd / volume24hUsd already present in Market data.
    No EUR→USD conversion. No Market Core mutation. No broker mutation.
@@ -7,7 +7,7 @@
 (()=>{
   "use strict";
 
-  const BUILD="40.6.518";
+  const BUILD="40.6.523";
   const WRAPPED=Symbol.for("agentCrypto.marketFicheDisplay406518");
   const originals=Object.create(null);
   const runtime={
@@ -115,6 +115,14 @@
     return raw||"source explicite";
   }
 
+  function usdSourceLabel(coin){
+    const explicit=String(coin?.usdSource||coin?.priceUsdSource||"").trim();
+    if(explicit)return explicit;
+    if(coin?.usdUpdatedAt)return "CoinGecko";
+    if(/usd/i.test(String(coin?.sourceMode||"")))return sourceLabel(coin);
+    return "CoinGecko";
+  }
+
   function ageLabel(timestamp){
     const ms=Date.parse(String(timestamp||""));
     if(!Number.isFinite(ms))return "heure source —";
@@ -126,34 +134,119 @@
   }
 
   function usdTimestamp(coin){
-    return coin?.spotUpdatedAt||coin?.lastUpdated||coin?.timestamp||coin?.snapshotGeneratedAt||null;
+    return coin?.usdUpdatedAt||coin?.snapshotGeneratedAt||coin?.lastUpdated||coin?.timestamp||coin?.spotUpdatedAt||null;
   }
 
   function setPriceBox(box,coin){
     if(!box)return false;
     const projection=projectCoin(coin,"USD");
+    const hasPrice=projection?.price!==null&&projection?.price!==undefined;
     const primary=box.querySelector("b,strong");
     const small=box.querySelector("small");
-    if(primary)primary.textContent=projection?.price!==null?formatMoney(projection.price,"USD"):"—";
+    if(primary)primary.textContent=hasPrice?formatMoney(projection.price,"USD"):"—";
 
-    const truth=`USD · ${sourceLabel(coin)}`;
-    const freshness=projection?.price!==null?ageLabel(usdTimestamp(coin)):"aucune estimation";
+    const truth=`USD · ${usdSourceLabel(coin)}`;
+    const freshness=hasPrice?ageLabel(usdTimestamp(coin)):"aucune estimation";
 
     if(small){
       const span=small.querySelector("span");
       const em=small.querySelector("em");
       if(span||em){
-        if(span)span.textContent=projection?.price!==null?truth:"USD indisponible";
+        if(span)span.textContent=hasPrice?truth:"USD indisponible";
         if(em)em.textContent=freshness;
       }else{
-        small.textContent=projection?.price!==null?`${truth} · ${freshness}`:"USD indisponible · aucune estimation";
+        small.textContent=hasPrice?`${truth} · ${freshness}`:"USD indisponible · aucune estimation";
       }
     }
     box.dataset.displayCurrency="USD";
-    box.title=projection?.price!==null
-      ?`Prix USD explicite · ${sourceLabel(coin)} · ${freshness}`
+    box.title=hasPrice
+      ?`Prix USD explicite · ${usdSourceLabel(coin)} · ${freshness}`
       :"Prix USD indisponible · aucune conversion EUR→USD";
-    return projection?.price!==null;
+    return hasPrice;
+  }
+
+  function helpMetric(root,matcher){
+    if(!root?.querySelectorAll)return null;
+    return [...root.querySelectorAll(".atlas-help-market-grid > span")].find(node=>{
+      const label=String(node.querySelector?.("small")?.textContent||"").trim();
+      return matcher(label);
+    })||null;
+  }
+
+  function setHelpMetric(metric,label,value){
+    if(!metric)return false;
+    const small=metric.querySelector("small");
+    const strong=metric.querySelector("strong");
+    if(small)small.textContent=label;
+    if(strong)strong.textContent=value;
+    return Boolean(strong);
+  }
+
+  function openHelpSurface(coinId=""){
+    if(typeof document==="undefined")return null;
+    const id=String(coinId||"").trim();
+    const candidates=[
+      document.getElementById("atlasMarketCardDockHost"),
+      document.getElementById("atlasHelpLayer")
+    ].filter(Boolean);
+    return candidates.find(surface=>{
+      const visible=surface.hidden!==true&&surface.getAttribute("aria-hidden")!=="true";
+      const same=!id||String(surface.dataset?.marketHelpCoinId||"")===id;
+      return visible&&same;
+    })||null;
+  }
+
+  function applyMarketHelpSurface(root,coin,currency=displayCurrency()){
+    if(!root||!coin)return false;
+    const selected=String(currency).toUpperCase()==="USD"?"USD":"EUR";
+    const first=helpMetric(root,label=>label==="Prix direct EUR"||label==="Prix affichage USD");
+    const second=helpMetric(root,label=>label==="Prix USD marché");
+    const cap=helpMetric(root,label=>label==="Capitalisation");
+    const volume=helpMetric(root,label=>label==="Volume 24 h");
+    const projection=projectCoin(coin,selected);
+    const usd=projectCoin(coin,"USD");
+
+    if(selected==="USD"){
+      setHelpMetric(first,"Prix affichage USD",projection?.price!==null&&projection?.price!==undefined?formatMoney(projection.price,"USD"):"—");
+      setHelpMetric(second,"Prix USD marché",usd?.price!==null&&usd?.price!==undefined?formatMoney(usd.price,"USD"):"—");
+      setHelpMetric(cap,"Capitalisation",projection?.marketCap!==null&&projection?.marketCap!==undefined?formatCompactMoney(projection.marketCap,"USD",{marketCap:true}):"—");
+      setHelpMetric(volume,"Volume 24 h",projection?.volume24h!==null&&projection?.volume24h!==undefined?formatCompactMoney(projection.volume24h,"USD"):"—");
+      const observed=root.querySelector?.('[data-help-live="observed-source"]');
+      if(observed)observed.textContent=`Prix USD · ${usdSourceLabel(coin)} · ${ageLabel(usdTimestamp(coin))} · variation 24 h inchangée`;
+      root.dataset&&(root.dataset.displayCurrency="USD");
+      return true;
+    }
+
+    const eur=projectCoin(coin,"EUR");
+    if(first?.querySelector?.("small"))first.querySelector("small").textContent="Prix direct EUR";
+    setHelpMetric(cap,"Capitalisation",eur?.marketCap!==null&&eur?.marketCap!==undefined?formatCompactMoney(eur.marketCap,"EUR",{marketCap:true}):"—");
+    setHelpMetric(volume,"Volume 24 h",eur?.volume24h!==null&&eur?.volume24h!==undefined?formatCompactMoney(eur.volume24h,"EUR"):"—");
+    root.dataset&&(root.dataset.displayCurrency="EUR");
+    return true;
+  }
+
+  function projectHelpDefinitionResult(result,row){
+    if(displayCurrency()!=="USD"||!result||typeof result.html!=="string"||typeof document==="undefined")return result;
+    const id=String(result.marketCoinId||marketRowId(row)||"").trim();
+    const coin=coinForId(id);
+    if(!coin)return result;
+    const template=document.createElement("template");
+    template.innerHTML=result.html;
+    applyMarketHelpSurface(template.content,coin,"USD");
+    return {...result,html:template.innerHTML};
+  }
+
+  function applyOpenMarketHelp(coin=null,{refreshNative=false}={}){
+    if(typeof document==="undefined")return false;
+    const surface=openHelpSurface(coin?.id||"");
+    if(!surface)return false;
+    const id=String(coin?.id||surface.dataset?.marketHelpCoinId||"").trim();
+    const resolved=coin||coinForId(id);
+    if(!resolved)return false;
+    if(refreshNative&&typeof originals.atlasPatchOpenMarketHelp==="function"){
+      try{originals.atlasPatchOpenMarketHelp(resolved);}catch(_){}
+    }
+    return applyMarketHelpSurface(surface,resolved,displayCurrency());
   }
 
   function marketRowId(row){
@@ -313,7 +406,8 @@
     const coin=selectedCoin();
     const a=applyCompactFiche(coin);
     const b=applyGridFiche(coin);
-    runtime.ficheProjected=Boolean(a||b);
+    const c=applyOpenMarketHelp(coin,{refreshNative:displayCurrency()!=="USD"});
+    runtime.ficheProjected=Boolean(a||b||c);
     runtime.lastReason=reason;
     return runtime.ficheProjected;
   }
@@ -327,6 +421,25 @@
       const result=original.apply(this,args);
       try{after(...args);}catch(_){}
       return result;
+    };
+    Object.defineProperty(wrapped,WRAPPED,{value:true});
+    try{Object.defineProperty(wrapped,"name",{value:original.name,configurable:true});}catch(_){}
+    globalThis[name]=wrapped;
+    runtime.wrapped.push(name);
+    return true;
+  }
+
+  function wrapResult(name,transform){
+    const original=globalThis[name];
+    if(typeof original!=="function")return false;
+    if(original[WRAPPED])return true;
+    originals[name]=original;
+    const wrapped=function(...args){
+      const result=original.apply(this,args);
+      try{
+        const transformed=transform(result,...args);
+        return transformed===undefined?result:transformed;
+      }catch(_){return result;}
     };
     Object.defineProperty(wrapped,WRAPPED,{value:true});
     try{Object.defineProperty(wrapped,"name",{value:original.name,configurable:true});}catch(_){}
@@ -354,6 +467,7 @@
       restoreMarketEur();
       applyCompactFiche(selectedCoin());
       restoreGridUsdBaseline();
+      applyOpenMarketHelp(null,{refreshNative:true});
     }
     return snapshot();
   }
@@ -380,8 +494,13 @@
     wrap("atlasPatchMarketRowSnapshot",(row,coin)=>applyMarketRow(row,coin));
     wrap("atlasPatchMarketTableSnapshot",()=>applyMarket("atlasPatchMarketTableSnapshot"));
     wrap("atlasPatchSpotDom",()=>applyMarket("atlasPatchSpotDom"));
+    wrap("atlasPatchCurrentQuoteBox",(box,coin)=>{
+      if(displayCurrency()==="USD"&&box?.closest?.("#marketRows"))setPriceBox(box,coin);
+    });
     wrap("atlasRenderCompactDetailSummary",coin=>applyCompactFiche(coin));
     wrap("atlasRenderAssetDetail",coin=>applyGridFiche(coin));
+    wrapResult("atlasMarketHelpDefinition",(result,row)=>projectHelpDefinitionResult(result,row));
+    wrap("atlasPatchOpenMarketHelp",coin=>applyOpenMarketHelp(coin));
 
     if(typeof window!=="undefined"&&!runtime.eventBound){
       window.addEventListener("agent-crypto:quote-architecture-changed",event=>{
@@ -417,7 +536,7 @@
       &&missing?.price===null
       &&missing?.marketCap===null
       &&missing?.volume24h===null
-      &&displayCurrency()==="EUR"
+      &&["EUR","USD"].includes(displayCurrency())
     );
     return Object.freeze({
       build:BUILD,
@@ -427,7 +546,9 @@
         explicit_usd_market_cap_only:usd?.marketCap===1122.5,
         explicit_usd_volume_only:usd?.volume24h===28.0625,
         no_eur_to_usd_fallback:missing?.price===null&&missing?.marketCap===null&&missing?.volume24h===null,
-        default_display_remains_eur:displayCurrency()==="EUR",
+        display_currency_supported:["EUR","USD"].includes(displayCurrency()),
+        late_market_price_rebind:true,
+        market_help_fiche_projection:true,
         market_only:true,
         fiche_only:true,
         graph_changed:false,
@@ -457,6 +578,8 @@
     market_only:true,
     fiche_only:true,
     display_projection_only:true,
+    late_market_price_rebind:true,
+    market_help_fiche_projection:true,
     eur_to_usd_conversion:false,
     broker_changed:false,
     graph_changed:false,
