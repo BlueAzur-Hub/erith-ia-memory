@@ -1,15 +1,16 @@
-/* Agent-Crypto — 40.6.512 DEPTH TRUE DOCK · BODY ONLY WHEN DETACHED
-   Correction after Firefox terrain proof of 40.6.511:
-   - docked Depth is a real child overlay of #detailPanel (Lecture Technique zone);
-   - it therefore scrolls/disappears naturally with that zone instead of remaining fixed in the viewport;
-   - document.body is used only for detached/maximized Depth;
-   - native controls remain independent: move, minimize, redock, maximize, hide;
-   - no dock-follow timer and no scroll-follow geometry loop;
+/* Agent-Crypto — 40.6.513 DEPTH BODY DOCUMENT DOCK · RESTORE + CORRECT
+   Restore of the independent 40.6.511 body-portal architecture after the 40.6.512 child-dock regression.
+   Correct dock model:
+   - Depth always remains technically independent under document.body;
+   - docked placement uses DOCUMENT coordinates (absolute), not VIEWPORT coordinates (fixed);
+   - it therefore scrolls naturally with Lecture Technique without any JS follow loop;
+   - opening/redocking measures Lecture Technique once;
+   - detached/maximized mode remains fixed and independent with native menu;
    - 40.6.510 orderbook context/freshness truth is preserved.
    Read-only. No private API, no order, no wallet, no Strategy/Market Core mutation. */
 (()=>{
   "use strict";
-  const BUILD="40.6.512";
+  const BUILD="40.6.513";
   const ROOT="atlasOkxMicrostructure";
   const BACKEND="http://127.0.0.1:8790";
   const LIVE_MS=2000;
@@ -193,7 +194,7 @@
         <div class="oms-kpis" data-oms-kpis></div>
         <div class="oms-body" data-oms-body></div>`;
       document.body.appendChild(root);
-      root.dataset.portalOwner="depth-40.6.512";
+      root.dataset.portalOwner="depth-40.6.513";
       root.querySelector("[data-oms-detach]").addEventListener("click",event=>{event.preventDefault();event.stopPropagation();setDetached(!state.detached);});
       root.querySelector("[data-oms-minimize]").addEventListener("click",event=>{event.preventDefault();event.stopPropagation();setMinimized(!state.minimized);});
       root.querySelector("[data-oms-maximize]").addEventListener("click",event=>{event.preventDefault();event.stopPropagation();setMaximized(!state.maximized);});
@@ -222,43 +223,54 @@
     const r=root.getBoundingClientRect();
     state.floatX=r.left;state.floatY=r.top;state.floatW=r.width;state.floatH=r.height;
   }
-  function dockIntoLectureTechnique(){
-    const root=document.getElementById(ROOT),panel=document.getElementById("detailPanel");
-    if(!root||!panel||state.detached||state.maximized)return false;
-    if(root.parentElement!==panel)panel.appendChild(root);
+  function dockRect(){
+    const panel=document.getElementById("detailPanel");
+    const r=panel?.getBoundingClientRect?.();
+    if(!r||r.width<10||r.height<10)return null;
+    const scrollX=window.scrollX||document.documentElement.scrollLeft||0;
+    const scrollY=window.scrollY||document.documentElement.scrollTop||0;
+    return {
+      x:r.left+scrollX,
+      y:r.top+scrollY,
+      width:r.width,
+      height:r.height,
+      viewportX:r.left,
+      viewportY:r.top
+    };
+  }
+  function snapToLectureTechnique(){
+    const root=document.getElementById(ROOT);
+    if(!root||state.detached||state.maximized)return false;
+    const r=dockRect();
+    if(!r)return false;
+    if(root.parentElement!==document.body)document.body.appendChild(root);
     root.classList.remove("is-detached","is-dragging");
     Object.assign(root.style,{
       position:"absolute",
-      left:"0",
-      top:"0",
-      right:"0",
-      bottom:state.minimized?"auto":"0",
-      width:"auto",
-      height:state.minimized?"48px":"auto"
+      left:Math.round(r.x)+"px",
+      top:Math.round(r.y)+"px",
+      width:Math.round(r.width)+"px",
+      height:(state.minimized?48:Math.round(r.height))+"px",
+      right:"auto",
+      bottom:"auto"
     });
-    panel.classList.toggle("atlas-depth-active",state.open&&!state.minimized);
     return true;
   }
   function applyPlacement(){
     const root=document.getElementById(ROOT),panel=document.getElementById("detailPanel");
     if(!root||!panel)return;
+    if(root.parentElement!==document.body)document.body.appendChild(root);
     root.classList.toggle("is-minimized",state.minimized);
     root.classList.toggle("is-maximized",state.maximized);
-
     if(state.maximized){
-      if(root.parentElement!==document.body)document.body.appendChild(root);
+      
       panel.classList.remove("atlas-depth-active");
       root.classList.add("is-detached");
-      Object.assign(root.style,{
-        position:"fixed",left:"12px",top:"12px",
-        width:"calc(100vw - 24px)",height:"calc(100vh - 24px)",
-        right:"auto",bottom:"auto"
-      });
+      Object.assign(root.style,{position:"fixed",left:"12px",top:"12px",width:"calc(100vw - 24px)",height:"calc(100vh - 24px)",right:"auto",bottom:"auto"});
       return;
     }
-
     if(state.detached){
-      if(root.parentElement!==document.body)document.body.appendChild(root);
+      
       root.classList.add("is-detached");
       panel.classList.remove("atlas-depth-active");
       if(!Number.isFinite(state.floatX)||!Number.isFinite(state.floatY)){
@@ -274,14 +286,12 @@
       state.floatW=w;state.floatH=h;
       state.floatX=clamp(state.floatX??8,8,Math.max(8,window.innerWidth-w-8));
       state.floatY=clamp(state.floatY??8,8,Math.max(8,window.innerHeight-h-8));
-      Object.assign(root.style,{
-        position:"fixed",left:state.floatX+"px",top:state.floatY+"px",
-        width:w+"px",height:h+"px",right:"auto",bottom:"auto"
-      });
-      return;
+      Object.assign(root.style,{position:"fixed",left:state.floatX+"px",top:state.floatY+"px",width:w+"px",height:h+"px",right:"auto",bottom:"auto"});
+    }else{
+      root.classList.remove("is-detached","is-dragging");
+      panel.classList.toggle("atlas-depth-active",state.open&&!state.minimized);
+      snapToLectureTechnique();
     }
-
-    dockIntoLectureTechnique();
   }
   function setDetached(value){
     const next=!!value;
@@ -652,14 +662,15 @@
     return Object.freeze({build:BUILD,pass,checks:{
       lecture_technique_overlay:true,
       docked_glass_surface:true,
-      body_portal_only_when_detached:true,
+      independent_body_portal:true,
       graph_parent_never_moved:true,
-      docked_parent_is_detail_panel:true,
-      detached_parent_is_document_body:true,
       native_window_control_strip:true,
-      true_lecture_technique_child_dock:true,
+      body_portal_docked_and_detached:true,
+      document_coordinate_dock:true,
+      one_shot_lecture_technique_snap:true,
       no_dock_follow_loop:true,
       no_scroll_follow:true,
+      scroll_moves_naturally_with_document:true,
       detachable_floating_surface:true,
       minimizable:true,
       maximizable:true,
@@ -697,18 +708,19 @@
     lecture_technique_overlay:true,
     semi_transparent:true,
     detachable:true,
-    body_portal_only_when_detached:true,
+    independent_body_portal:true,
     graph_parent_never_moved:true,
-    docked_parent_is_detail_panel:true,
-    detached_parent_is_document_body:true,
     native_window_control_strip:true,
-    true_lecture_technique_child_dock:true,
+    body_portal_docked_and_detached:true,
+    document_coordinate_dock:true,
+    one_shot_lecture_technique_snap:true,
     no_dock_follow_loop:true,
     no_scroll_follow:true,
+    scroll_moves_naturally_with_document:true,
     minimizable:true,
     maximizable:true,
     draggable_when_detached:true,
-    docked_inside_lecture_technique:true,
+    docked_to_lecture_technique:true,
     detach_restores_lecture_technique:true,
     underlying_detail_visible:true,
     live_interval_ms:LIVE_MS,
@@ -723,7 +735,7 @@
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
     window.addEventListener("pageshow",boot,{passive:true});
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")clearLive();else if(state.open)scheduleLive();},{passive:true});
-    window.addEventListener("resize",()=>{if(state.maximized)applyPlacement();else if(state.detached){rememberFloatRect();applyPlacement();}},{passive:true});
+    window.addEventListener("resize",()=>{if(state.maximized)applyPlacement();else if(state.detached){rememberFloatRect();applyPlacement();}else if(state.open)snapToLectureTechnique();},{passive:true});
     window.addEventListener("agent-crypto:quote-architecture-changed",()=>{
       const next=selectedAsset();
       state.requestedAsset=next;

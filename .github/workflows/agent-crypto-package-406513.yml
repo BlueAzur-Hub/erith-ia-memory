@@ -1,0 +1,64 @@
+name: Agent-Crypto 40.6.513 Validate Package
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_depth_body_document_dock_guard_406513.py'
+      - '.github/workflows/agent-crypto-package-406513.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_depth_body_document_dock_guard_406513.py'
+      - '.github/workflows/agent-crypto-package-406513.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scope
+        run: |
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json"))["build"])')"
+          if [ "$CURRENT" != "40.6.513" ]; then echo "SKIP=true" >> "$GITHUB_ENV"; fi
+      - name: Validate 40.6.513 code and contract
+        if: env.SKIP != 'true'
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+          node --check public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js
+          node - <<'NODE'
+          require("./public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js");
+          const result=globalThis.AgentCryptoOkxMicrostructure?.self_test?.();
+          console.log(JSON.stringify(result,null,2));
+          if(!result?.pass) process.exit(1);
+          NODE
+          python .github/scripts/agent_crypto_depth_body_document_dock_guard_406513.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Build Administrator 40.6.513 ZIP
+        if: env.SKIP != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          out=Path("dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.513_DEPTH_BODY_DOCUMENT_DOCK.zip")
+          out.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for p in sorted(root.rglob("*")):
+                  if p.is_file():
+                      z.write(p,Path("administrator")/p.relative_to(root))
+          print(out, out.stat().st_size)
+          PY
+      - name: Upload Administrator 40.6.513 ZIP
+        if: env.SKIP != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.513_DEPTH_BODY_DOCUMENT_DOCK
+          path: dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.513_DEPTH_BODY_DOCUMENT_DOCK.zip
+          if-no-files-found: error
+          retention-days: 90
