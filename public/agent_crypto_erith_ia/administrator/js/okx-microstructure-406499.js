@@ -1,15 +1,15 @@
-/* Agent-Crypto — 40.6.510 OKX ORDERBOOK CONTEXT + FRESHNESS TRUTH
-   Bounded repair after independent audit:
-   - validate requested asset / returned pair / EUR quote before commit;
-   - require a valid, recent source timestamp;
-   - keep source time distinct from receive time;
-   - never relabel old levels as a newly requested asset;
-   - expose FRESH / STALE / OFFLINE / UNKNOWN instead of unconditional LIVE.
-   Presentation geometry from 40.6.507 is preserved.
+/* Agent-Crypto — 40.6.511 DEPTH STATIC OVERLAY · NO FOLLOW LOOP
+   Bounded presentation repair after Firefox terrain feedback:
+   - Depth remains an independent document.body portal;
+   - opening/redocking snaps once over Lecture Technique;
+   - no 180 ms dock-follow timer;
+   - no scroll-follow handler;
+   - detached Depth remains fully independent with its native menu;
+   - 40.6.510 orderbook context/freshness truth is preserved.
    Read-only. No private API, no order, no wallet, no Strategy/Market Core mutation. */
 (()=>{
   "use strict";
-  const BUILD="40.6.510";
+  const BUILD="40.6.511";
   const ROOT="atlasOkxMicrostructure";
   const BACKEND="http://127.0.0.1:8790";
   const LIVE_MS=2000;
@@ -22,7 +22,6 @@
     detached:false,floatX:null,floatY:null,floatW:null,floatH:null,dragging:false,dragDx:0,dragDy:0,minimized:false,maximized:false,restoreDetached:false,maxRestore:null
   };
   let liveTimer=0;
-  let dockSyncTimer=0;
   const n=v=>{const x=Number(v);return Number.isFinite(x)?x:null;};
   const fmt=(v,d=2)=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:d}):"—";
   const eur=v=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:0})+" €":"—";
@@ -217,15 +216,6 @@
   }
 
   function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
-  function stopDockSync(){
-    if(dockSyncTimer){clearInterval(dockSyncTimer);dockSyncTimer=0;}
-  }
-  function startDockSync(){
-    stopDockSync();
-    if(!state.open||state.detached||state.maximized)return;
-    applyDockRect();
-    dockSyncTimer=setInterval(()=>{if(state.open&&!state.detached&&!state.maximized)applyDockRect();else stopDockSync();},180);
-  }
   function rememberFloatRect(){
     const root=document.getElementById(ROOT);
     if(!root||!state.detached)return;
@@ -238,7 +228,7 @@
     if(!r||r.width<10||r.height<10)return null;
     return {x:r.left,y:r.top,width:r.width,height:r.height};
   }
-  function applyDockRect(){
+  function snapToLectureTechnique(){
     const root=document.getElementById(ROOT);
     if(!root||state.detached)return false;
     const r=dockRect();
@@ -262,14 +252,14 @@
     root.classList.toggle("is-minimized",state.minimized);
     root.classList.toggle("is-maximized",state.maximized);
     if(state.maximized){
-      stopDockSync();
+      
       panel.classList.remove("atlas-depth-active");
       root.classList.add("is-detached");
       Object.assign(root.style,{position:"fixed",left:"12px",top:"12px",width:"calc(100vw - 24px)",height:"calc(100vh - 24px)",right:"auto",bottom:"auto"});
       return;
     }
     if(state.detached){
-      stopDockSync();
+      
       root.classList.add("is-detached");
       panel.classList.remove("atlas-depth-active");
       if(!Number.isFinite(state.floatX)||!Number.isFinite(state.floatY)){
@@ -289,8 +279,7 @@
     }else{
       root.classList.remove("is-detached","is-dragging");
       panel.classList.toggle("atlas-depth-active",state.open&&!state.minimized);
-      applyDockRect();
-      startDockSync();
+      snapToLectureTechnique();
     }
   }
   function setDetached(value){
@@ -419,7 +408,7 @@
   function setOpen(value){
     state.open=!!value;
     mount();applyPlacement();sync();
-    if(!state.open){clearLive();stopDockSync();document.getElementById("detailPanel")?.classList.remove("atlas-depth-active");return false;}
+    if(!state.open){clearLive();document.getElementById("detailPanel")?.classList.remove("atlas-depth-active");return false;}
     const asset=selectedAsset();
     if(state.asset!==asset||!state.capturedAt)void refresh();
     else scheduleLive();
@@ -665,7 +654,9 @@
       independent_body_portal:true,
       graph_parent_never_moved:true,
       native_window_control_strip:true,
-      exact_lecture_technique_dock_sync:true,
+      one_shot_lecture_technique_snap:true,
+      no_dock_follow_loop:true,
+      no_scroll_follow:true,
       detachable_floating_surface:true,
       minimizable:true,
       maximizable:true,
@@ -706,7 +697,9 @@
     independent_body_portal:true,
     graph_parent_never_moved:true,
     native_window_control_strip:true,
-    exact_lecture_technique_dock_sync:true,
+    one_shot_lecture_technique_snap:true,
+    no_dock_follow_loop:true,
+    no_scroll_follow:true,
     minimizable:true,
     maximizable:true,
     draggable_when_detached:true,
@@ -725,8 +718,7 @@
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
     window.addEventListener("pageshow",boot,{passive:true});
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")clearLive();else if(state.open)scheduleLive();},{passive:true});
-    window.addEventListener("resize",()=>{if(state.maximized)applyPlacement();else if(state.detached){rememberFloatRect();applyPlacement();}else applyDockRect();},{passive:true});
-    window.addEventListener("scroll",()=>{if(state.open&&!state.detached)applyDockRect();},{passive:true,capture:true});
+    window.addEventListener("resize",()=>{if(state.maximized)applyPlacement();else if(state.detached){rememberFloatRect();applyPlacement();}},{passive:true});
     window.addEventListener("agent-crypto:quote-architecture-changed",()=>{
       const next=selectedAsset();
       state.requestedAsset=next;
