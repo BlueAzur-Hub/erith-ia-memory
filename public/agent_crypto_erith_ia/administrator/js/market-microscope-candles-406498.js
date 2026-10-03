@@ -1,9 +1,9 @@
-/* Agent-Crypto — 40.6.498 MARKET MICROSCOPE · CANDLES CORE
+/* Agent-Crypto — 40.6.514 MARKET MICROSCOPE · CANDLES · USD/USDC + CT
    Additive read-only OKX public chart surface. Native Prix/Base100 stays untouched.
    Fetch occurs only on explicit Bougies / interval / refresh action. No recurring timer. */
 (()=>{
   "use strict";
-  const BUILD="40.6.498";
+  const BUILD="40.6.514";
   const ROOT="atlasMarketMicroscope";
   const REST="https://eea.okx.com";
   const BARS=Object.freeze({"1m":"1m","5m":"5m","15m":"15m","1h":"1H","4h":"4H","1j":"1D"});
@@ -13,11 +13,13 @@
   const num=v=>{const x=Number(v);return Number.isFinite(x)?x:null;};
   const fmt=(v,d=2)=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:d}):"—";
   const selectedSymbol=()=>{
+    const external=globalThis.AgentCryptoNewListing?.selectedSymbol?.();
+    if(external)return String(external).toUpperCase();
     const texts=[document.getElementById("detailCompactAsset")?.textContent,document.getElementById("selectedAssetTitle")?.textContent,document.querySelector("#top5Track .is-active")?.textContent].filter(Boolean).join(" ").toUpperCase();
-    const m=texts.match(/\b(BTC|ETH|BNB|XRP|SOL|ADA|DOGE|LINK|AVAX|LTC|DOT|SUI|APT|ARB|UNI|AAVE|NEAR|TAO|RENDER|ICP|SHIB|PEPE|XMR|ZEC)\b/);
+    const m=texts.match(/\b(BTC|ETH|BNB|XRP|SOL|CT|ADA|DOGE|LINK|AVAX|LTC|DOT|SUI|APT|ARB|UNI|AAVE|NEAR|TAO|RENDER|ICP|SHIB|PEPE|XMR|ZEC)\b/);
     return m?.[1]||"BTC";
   };
-  const displayCurrency=()=>globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.().displayCurrency||"EUR";
+  const displayCurrency=()=>globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.().displayCurrency||"USD";
   const desiredInstrument=()=>`${selectedSymbol()}-${displayCurrency()==="USD"?"USDC":"EUR"}`;
   function parseRows(data){
     return (Array.isArray(data)?data:[]).map(r=>({t:num(r?.[0]),o:num(r?.[1]),h:num(r?.[2]),l:num(r?.[3]),c:num(r?.[4]),v:num(r?.[5]),confirm:String(r?.[8]??"")})).filter(r=>[r.t,r.o,r.h,r.l,r.c].every(Number.isFinite)).sort((a,b)=>a.t-b.t);
@@ -128,6 +130,6 @@
     tip.style.display="block";tip.style.left=Math.min(g.w-250,Math.max(8,px+14))+"px";tip.style.top="54px";
   }
   function selfTest(){const sample=parseRows([["3","3","4","2","3.5","30","0","0","1"],["1","1","2","0.5","1.5","10","0","0","1"],["2","1.5","3","1","2.5","20","0","0","1"]]);const ma=movingAverage(sample,2);const pass=sample.length===3&&sample[0].t===1&&ma[0]===null&&Math.abs(ma[1]-2)<1e-9;return Object.freeze({build:BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,native_default:state.mode==="native",wheel_zoom:true,drag_pan:true,fullspace_padding:true,no_recurring_timer:true,no_order:true}});}
-  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice()}),instrument:()=>state.instrument,resetView,viewport:()=>Object.freeze({...view}),self_test:selfTest,read_only:true,network:"OKX_PUBLIC_ON_DEMAND",recurring_timer:false,mutation_observer:false,storage_write:false,real_order:false,market_core_changed:false,strategy_changed:false});
+  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice()}),instrument:()=>state.instrument,resetView,viewport:()=>Object.freeze({...view}),self_test:selfTest,read_only:true,usd_default:true,ct_usdc_supported:true,network:"OKX_PUBLIC_ON_DEMAND",recurring_timer:false,mutation_observer:false,storage_write:false,real_order:false,market_core_changed:false,strategy_changed:false});
   if(typeof document!=="undefined"){const boot=()=>mount();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",()=>{if(state.mode==="candles")draw();},{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(state.mode==="candles")void load();},{passive:true});}
 })();

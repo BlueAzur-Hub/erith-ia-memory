@@ -1,0 +1,74 @@
+name: Agent-Crypto 40.6.514 USD Default CT Patch
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.514.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/views/atlas.html"
+      - "public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js"
+      - "public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js"
+      - "public/agent_crypto_erith_ia/administrator/js/usd-default-surface-router-406514.js"
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js"
+      - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
+      - "public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport-406500.js"
+      - ".github/scripts/agent_crypto_usd_default_ct_guard_406514.py"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/**"
+      - ".github/scripts/agent_crypto_usd_default_ct_guard_406514.py"
+
+permissions:
+  contents: read
+
+jobs:
+  guard-and-patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python guard
+        run: python .github/scripts/agent_crypto_usd_default_ct_guard_406514.py
+
+      - name: JavaScript syntax
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js
+          node --check public/agent_crypto_erith_ia/administrator/js/usd-default-surface-router-406514.js
+          node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport-406500.js
+          node --check public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js
+
+      - name: Build truth JSON
+        run: python -m json.tool public/agent_crypto_erith_ia/administrator/build.json >/dev/null
+
+      - name: Create PATCH-ONLY package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="AGENT_CRYPTO_ADMINISTRATOR_40.6.514_PATCH_ONLY"
+          mkdir -p "$ROOT/public/agent_crypto_erith_ia/administrator/js"                    "$ROOT/public/agent_crypto_erith_ia/administrator/views"                    "$ROOT/.github/scripts"
+          cp public/agent_crypto_erith_ia/administrator/index.html "$ROOT/public/agent_crypto_erith_ia/administrator/"
+          cp public/agent_crypto_erith_ia/administrator/index-40.6.514.html "$ROOT/public/agent_crypto_erith_ia/administrator/"
+          cp public/agent_crypto_erith_ia/administrator/build.json "$ROOT/public/agent_crypto_erith_ia/administrator/"
+          cp public/agent_crypto_erith_ia/administrator/PATCH_MANIFEST_40.6.514.txt "$ROOT/public/agent_crypto_erith_ia/administrator/"
+          cp public/agent_crypto_erith_ia/administrator/USD_DEFAULT_CT_NEW_LISTING_40.6.514.md "$ROOT/public/agent_crypto_erith_ia/administrator/"
+          cp public/agent_crypto_erith_ia/administrator/SEVEN_HANDOFF_40.6.514.md "$ROOT/public/agent_crypto_erith_ia/administrator/"
+          cp public/agent_crypto_erith_ia/administrator/views/atlas.html "$ROOT/public/agent_crypto_erith_ia/administrator/views/"
+          for f in             post-boot-runtime-loader.js             quote-currency-architecture-406497.js             usd-default-surface-router-406514.js             market-microscope-candles-406498.js             okx-microstructure-406499.js             okx-local-backend-transport-406500.js
+          do
+            cp "public/agent_crypto_erith_ia/administrator/js/$f" "$ROOT/public/agent_crypto_erith_ia/administrator/js/"
+          done
+          cp .github/scripts/agent_crypto_usd_default_ct_guard_406514.py "$ROOT/.github/scripts/"
+          zip -9 -r AGENT_CRYPTO_ADMINISTRATOR_40.6.514_PATCH_ONLY.zip "$ROOT"
+          du -h AGENT_CRYPTO_ADMINISTRATOR_40.6.514_PATCH_ONLY.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.514_PATCH_ONLY
+          path: AGENT_CRYPTO_ADMINISTRATOR_40.6.514_PATCH_ONLY.zip
+          if-no-files-found: error
+          retention-days: 14

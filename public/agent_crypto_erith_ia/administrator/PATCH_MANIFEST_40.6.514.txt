@@ -1,0 +1,75 @@
+AGENT-CRYPTO PATCH MANIFEST — 40.6.514
+Release: USD DEFAULT · OKX MULTI-QUOTE · CT NEW LISTING
+Parent: 40.6.513 — TERRAIN PASS
+Market Core: 38.15.11 UNCHANGED
+
+MISSION
+- USD becomes the default DISPLAY currency.
+- EUR remains selectable.
+- DISPLAY currency never silently mutates executionInstrument or settlementAsset.
+- Direct USD values only; no EUR value is relabeled as USD.
+- OKX native USD-side market truth is represented as USDC when the API instrument is *-USDC.
+- Concrete (CT) is exposed as a new-listing lane without inventing a canonical market rank.
+
+MODIFIED
+public/agent_crypto_erith_ia/administrator/index.html
+public/agent_crypto_erith_ia/administrator/build.json
+public/agent_crypto_erith_ia/administrator/views/atlas.html
+public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js
+public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js
+public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js
+public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport-406500.js
+
+ADDED
+public/agent_crypto_erith_ia/administrator/index-40.6.514.html
+public/agent_crypto_erith_ia/administrator/js/usd-default-surface-router-406514.js
+public/agent_crypto_erith_ia/administrator/USD_DEFAULT_CT_NEW_LISTING_40.6.514.md
+public/agent_crypto_erith_ia/administrator/SEVEN_HANDOFF_40.6.514.md
+.github/scripts/agent_crypto_usd_default_ct_guard_406514.py
+.github/workflows/agent-crypto-406514-usd-default-ct.yml
+
+USD SURFACES
+- Target Top 5 / live ribbon
+- Market + Market Flow
+- Fiche / Lecture Technique presentation
+- historical Graph price view / axis / tooltip / currency-scoped cache
+- Oracle visible price presentation
+- Market Microscope
+- OKX Depth / order book
+
+OKX
+DISPLAY USD -> native orderbook/candles instrument BASE-USDC
+DISPLAY EUR -> native orderbook/candles instrument BASE-EUR
+USDC is labeled USDC, never fiat USD.
+AbortSignal is preserved through the local transport.
+
+CT
+Asset: Concrete
+Symbol: CT
+New-listing lane: Nouveaux · CT
+Exact search: CT / CONCRETE
+Native local public route: CT-USDC
+Canonical Top 250/1000 mutation: NO
+Oracle candidate injection: NO
+Synthetic market rank: NO
+
+CSS
+Lecture Technique: tabular numbers + secondary text contrast only.
+Depth: sticky book header + tabular numbers + stale/offline dimming only.
+40.6.513 body/document dock geometry is preserved.
+
+PROTECTED
+Market Core 38.15.11
+Strategy / Cost Gate business logic
+Aether
+Web Classique
+Backend 1.4.4 contract
+Bridge 1.9.13 contract
+40.6.513 Depth dock geometry
+No private API / wallet / real order.
+
+PACKAGE
+PATCH ONLY.
+The workflow deliberately packages only the changed/added files.
+No Administrator assets directory and no historical media bundle are included.
