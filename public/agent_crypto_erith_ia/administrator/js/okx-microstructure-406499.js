@@ -573,7 +573,7 @@
   function renderBook(body,m){
     body.innerHTML=`
       <div class="oms-book">
-        <div class="oms-book-head"><span>Prix</span><span>BTC</span><span>Cumul BTC</span></div>
+        <div class="oms-book-head"><span>Prix</span><span>${esc(state.loadedAsset||state.requestedAsset||state.asset)}</span><span>Cumul ${esc(state.loadedAsset||state.requestedAsset||state.asset)}</span></div>
         ${rowsHtml(state.asks,"ask",6)}
         <div class="oms-midline"><b>${fmt(m.mid,2)}</b><small>SPREAD ${fmt(m.spread,2)} · ${fmt(m.spreadBp,2)} bp</small></div>
         ${rowsHtml(state.bids,"bid",6)}
@@ -605,15 +605,20 @@
   function render(){
     const root=document.getElementById(ROOT);
     const meta=root?.querySelector("[data-oms-meta]");
+    const live=root?.querySelector("[data-oms-live]");
     const kpis=root?.querySelector("[data-oms-kpis]");
     const body=root?.querySelector("[data-oms-body]");
     if(!meta||!kpis||!body)return;
 
+    const freshness=state.loading?"UNKNOWN":String(state.freshness||"UNKNOWN");
+    if(live){live.dataset.state=freshness;live.textContent=freshness;}
+    const sourceTime=state.sourceObservedAt?new Date(state.sourceObservedAt).toLocaleTimeString("fr-FR"):"source inconnue";
+    const receivedTime=state.receivedAt?new Date(state.receivedAt).toLocaleTimeString("fr-FR"):null;
     meta.textContent=state.loading?
-      `${state.asset} · actualisation…`:
+      \`\${state.requestedAsset}/EUR · actualisation…\`:
       state.error?
-        `${state.asset} · ERREUR · ${state.error}`:
-        `${state.pair} · ${state.capturedAt?new Date(state.capturedAt).toLocaleTimeString("fr-FR"):"en attente"} · ${state.lastLatencyMs??"—"} ms`;
+        \`\${state.loadedAsset===state.requestedAsset&&state.bids.length?state.pair:state.requestedAsset+"/EUR"} · \${freshness} · \${state.error}\`:
+        \`\${state.pair} · source \${sourceTime}\${receivedTime?" · reçu "+receivedTime:""} · âge \${Number.isFinite(state.sourceAgeMs)?Math.round(state.sourceAgeMs/1000)+" s":"—"} · \${state.lastLatencyMs??"—"} ms\`;
 
     if(state.loading&&!state.bids.length){
       kpis.innerHTML="";
@@ -622,7 +627,7 @@
     }
     if(state.error&&!state.bids.length){
       kpis.innerHTML="";
-      body.innerHTML=`<div class="oms-error">${esc(state.error)}<br><small>Le graphique reste utilisable. Vérifier le Backend local 8790 si l’erreur persiste.</small></div>`;
+      body.innerHTML=\`<div class="oms-error">\${esc(state.error)}<br><small>Le graphique reste utilisable. Vérifier le Backend local 8790 si l’erreur persiste.</small></div>\`;
       return;
     }
     if(!state.bids.length||!state.asks.length){
@@ -632,20 +637,28 @@
     }
 
     const m=metrics();
-    kpis.innerHTML=`
-      <span><small>BEST BID</small><b>${fmt(m.bid,2)}</b></span>
-      <span><small>BEST ASK</small><b>${fmt(m.ask,2)}</b></span>
-      <span><small>SPREAD</small><b>${fmt(m.spread,2)} · ${fmt(m.spreadBp,2)} bp</b></span>
-      <span><small>MID</small><b>${fmt(m.mid,2)}</b></span>
-      <span><small>BID TOP20</small><b>${eur(m.bid20)}</b></span>
-      <span><small>ASK TOP20</small><b>${eur(m.ask20)}</b></span>`;
+    kpis.innerHTML=\`
+      <span><small>BEST BID</small><b>\${fmt(m.bid,2)}</b></span>
+      <span><small>BEST ASK</small><b>\${fmt(m.ask,2)}</b></span>
+      <span><small>SPREAD</small><b>\${fmt(m.spread,2)} · \${fmt(m.spreadBp,2)} bp</b></span>
+      <span><small>MID</small><b>\${fmt(m.mid,2)}</b></span>
+      <span><small>BID TOP20</small><b>\${eur(m.bid20)}</b></span>
+      <span><small>ASK TOP20</small><b>\${eur(m.ask20)}</b></span>\`;
 
     if(state.tab==="depth")renderDepth(body,m);else renderBook(body,m);
   }
 
   function selfTest(){
     const rows=normalizeRows([["10","2"],["9","1"],["x","1"]]);
-    const pass=rows.length===2&&LIVE_MS===2000;
+    const now=Date.parse("2026-10-03T12:00:00Z");
+    const fresh={read_only:true,provider:"okx",status:"ok",asset:"ETH",pair:"ETH-EUR",observed_at_utc:"2026-10-03T11:59:58Z",bids:[[2000,2]],asks:[[2001,3]]};
+    let freshPass=false,staleRejected=false,wrongPairRejected=false,missingTimeRejected=false,wrongQuoteRejected=false;
+    try{freshPass=validateBookPayload(fresh,"ETH",now).pair==="ETH/EUR";}catch(_){}
+    try{validateBookPayload({...fresh,observed_at_utc:"2020-01-01T00:00:00Z"},"ETH",now);}catch(error){staleRejected=error?.code==="STALE_BOOK";}
+    try{validateBookPayload({...fresh,asset:"BTC",pair:"BTC-EUR"},"ETH",now);}catch(error){wrongPairRejected=error?.code==="ASSET_MISMATCH"||error?.code==="PAIR_MISMATCH";}
+    try{validateBookPayload({...fresh,observed_at_utc:""},"ETH",now);}catch(error){missingTimeRejected=error?.code==="SOURCE_TIME_INVALID";}
+    try{validateBookPayload({...fresh,pair:"ETH-USDC"},"ETH",now);}catch(error){wrongQuoteRejected=error?.code==="QUOTE_MISMATCH";}
+    const pass=rows.length===2&&LIVE_MS===2000&&freshPass&&staleRejected&&wrongPairRejected&&missingTimeRejected&&wrongQuoteRejected;
     return Object.freeze({build:BUILD,pass,checks:{
       lecture_technique_overlay:true,
       docked_glass_surface:true,
@@ -663,6 +676,15 @@
       live_refresh_2s:LIVE_MS===2000,
       refresh_only_while_open:true,
       local_backend_orderbook:true,
+      source_freshness_required:true,
+      source_timestamp_not_fabricated:true,
+      requested_asset_must_match_payload:true,
+      eur_quote_required:true,
+      dynamic_asset_units:true,
+      stale_payload_rejected:staleRejected,
+      wrong_pair_rejected:wrongPairRejected,
+      missing_source_time_rejected:missingTimeRejected,
+      wrong_quote_rejected:wrongQuoteRejected,
       no_direct_browser_okx:true,
       no_private_api:true,
       no_order:true,
@@ -674,6 +696,7 @@
     build:BUILD,mount,setOpen,setDetached,setMinimized,setMaximized,refresh,
     snapshot:()=>Object.freeze({...state,bids:state.bids.slice(),asks:state.asks.slice()}),
     self_test:selfTest,
+    validation_contract:Object.freeze({fresh_max_age_ms:FRESH_MAX_AGE_MS,future_tolerance_ms:FUTURE_TOLERANCE_MS,quote:"EUR"}),
     read_only:true,
     local_backend_orderbook:true,
     backend_endpoint:BACKEND+"/orderbook",
@@ -704,6 +727,12 @@
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")clearLive();else if(state.open)scheduleLive();},{passive:true});
     window.addEventListener("resize",()=>{if(state.maximized)applyPlacement();else if(state.detached){rememberFloatRect();applyPlacement();}else applyDockRect();},{passive:true});
     window.addEventListener("scroll",()=>{if(state.open&&!state.detached)applyDockRect();},{passive:true,capture:true});
-    window.addEventListener("agent-crypto:quote-architecture-changed",()=>{state.capturedAt=null;state.bids=[];state.asks=[];if(state.open)void refresh();},{passive:true});
+    window.addEventListener("agent-crypto:quote-architecture-changed",()=>{
+      const next=selectedAsset();
+      state.requestedAsset=next;
+      if(state.loadedAsset!==next)clearBookForAsset(next);
+      try{state.activeController?.abort();}catch(_){}
+      if(state.open)void refresh({asset:next});
+    },{passive:true});
   }
 })();
