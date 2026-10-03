@@ -1,0 +1,83 @@
+name: Agent-Crypto 40.6.515 Validate Patch
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_graph_owner_handshake_guard_406515.py'
+      - '.github/workflows/agent-crypto-package-406515.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_graph_owner_handshake_guard_406515.py'
+      - '.github/workflows/agent-crypto-package-406515.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scope
+        run: |
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json"))["build"])')"
+          if [ "$CURRENT" != "40.6.515" ]; then echo "SKIP=true" >> "$GITHUB_ENV"; fi
+      - name: Validate 40.6.515 contracts
+        if: env.SKIP != 'true'
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/global-quote-router-406514.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-owner-handshake-406515.js
+          node --check public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js
+          node - <<'NODE'
+          require("./public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js");
+          const q=globalThis.AgentCryptoQuoteCurrencyArchitecture?.self_test?.();
+          console.log("quote",JSON.stringify(q,null,2));
+          if(!q?.pass) process.exit(1);
+          require("./public/agent_crypto_erith_ia/administrator/js/global-quote-router-406514.js");
+          const r=globalThis.AgentCryptoGlobalQuoteRouter?.self_test?.();
+          console.log("router",JSON.stringify(r,null,2));
+          if(!r?.pass) process.exit(1);
+          require("./public/agent_crypto_erith_ia/administrator/js/graph-owner-handshake-406515.js");
+          const h=globalThis.AgentCryptoGraphOwnerHandshake?.self_test?.();
+          console.log("handshake",JSON.stringify(h,null,2));
+          if(!h?.pass) process.exit(1);
+          NODE
+          python .github/scripts/agent_crypto_graph_owner_handshake_guard_406515.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Build PATCH ONLY ZIP
+        if: env.SKIP != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          files=[
+            "public/agent_crypto_erith_ia/administrator/index.html",
+            "public/agent_crypto_erith_ia/administrator/index-40.6.515.html",
+            "public/agent_crypto_erith_ia/administrator/build.json",
+            "public/agent_crypto_erith_ia/administrator/js/global-quote-router-406514.js",
+            "public/agent_crypto_erith_ia/administrator/js/graph-owner-handshake-406515.js",
+            "public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js",
+            "public/agent_crypto_erith_ia/administrator/views/atlas.html",
+            "public/agent_crypto_erith_ia/administrator/GRAPH_OWNER_HANDSHAKE_40.6.515.md",
+            "public/agent_crypto_erith_ia/administrator/PATCH_MANIFEST_40.6.515.txt",
+            "public/agent_crypto_erith_ia/administrator/SEVEN_HANDOFF_40.6.515.md",
+            ".github/scripts/agent_crypto_graph_owner_handshake_guard_406515.py",
+            ".github/workflows/agent-crypto-package-406515.yml",
+          ]
+          out=Path("dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.515_GRAPH_OWNER_HANDSHAKE_PATCH.zip")
+          out.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for raw in files:
+              p=Path(raw)
+              if not p.is_file(): raise SystemExit("missing patch file: "+raw)
+              z.write(p,p)
+          print(out,out.stat().st_size)
+          PY
+      - name: Upload 40.6.515 PATCH ONLY
+        if: env.SKIP != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.515_GRAPH_OWNER_HANDSHAKE_PATCH
+          path: dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.515_GRAPH_OWNER_HANDSHAKE_PATCH.zip
+          if-no-files-found: error
+          retention-days: 90
