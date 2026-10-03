@@ -96,8 +96,15 @@
 #${ROOT} .oms-actions{display:flex;align-items:center;gap:5px}
 #${ROOT} button{min-height:30px;padding:6px 9px;border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(255,255,255,.055);color:#e2f0f4;font:900 10px/1 system-ui,sans-serif;cursor:pointer}
 #${ROOT} button.is-active{background:rgba(81,224,229,.18);border-color:rgba(81,224,229,.55);color:#a6f8f7}
-#${ROOT} .oms-live{display:inline-flex;align-items:center;gap:5px;font:900 10px/1 ui-monospace,monospace;color:#84e6c9}
-#${ROOT} .oms-live::before{content:"";width:7px;height:7px;border-radius:50%;background:#67e0bb;box-shadow:0 0 10px rgba(103,224,187,.8)}
+#${ROOT} .oms-live{display:inline-flex;align-items:center;gap:5px;font:900 10px/1 ui-monospace,monospace;color:#a9b9c0}
+#${ROOT} .oms-live::before{content:"";width:7px;height:7px;border-radius:50%;background:#8fa0a8;box-shadow:0 0 8px rgba(143,160,168,.55)}
+#${ROOT} .oms-live[data-state="FRESH"]{color:#84e6c9}
+#${ROOT} .oms-live[data-state="FRESH"]::before{background:#67e0bb;box-shadow:0 0 10px rgba(103,224,187,.8)}
+#${ROOT} .oms-live[data-state="STALE"]{color:#ffd27f}
+#${ROOT} .oms-live[data-state="STALE"]::before{background:#e9b45a;box-shadow:0 0 10px rgba(233,180,90,.65)}
+#${ROOT} .oms-live[data-state="OFFLINE"]{color:#f2a0aa}
+#${ROOT} .oms-live[data-state="OFFLINE"]::before{background:#ef7184;box-shadow:0 0 10px rgba(239,113,132,.65)}
+#${ROOT} .oms-live[data-state="UNKNOWN"]{color:#a9b9c0}
 #${ROOT} .oms-tabs{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
 #${ROOT} .oms-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:9px 10px}
 #${ROOT} .oms-kpis span{min-width:0;padding:8px 9px;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:rgba(1,9,15,.50)}
@@ -170,7 +177,7 @@
             <small data-oms-meta>Backend local 8790 · lecture seule</small>
           </div>
           <div class="oms-actions">
-            <span class="oms-live">LIVE 2 s</span>
+            <span class="oms-live" data-oms-live data-state="UNKNOWN">UNKNOWN</span>
           </div>
           <div class="admin-native-controls admin-native-controls-native" role="group" aria-label="Commandes fenêtre Administrator · Profondeur">
             <button type="button" class="admin-native-control admin-native-move" data-oms-move title="Détacher et déplacer Profondeur" aria-label="Détacher et déplacer Profondeur">⠿</button>
