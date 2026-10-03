@@ -1,0 +1,81 @@
+name: Agent-Crypto 40.6.521 Validate Depth Multi-Quote
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_depth_multi_quote_guard_406521.py'
+      - '.github/workflows/agent-crypto-package-406521.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_depth_multi_quote_guard_406521.py'
+      - '.github/workflows/agent-crypto-package-406521.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scope
+        run: |
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json"))["build"])')"
+          if [ "$CURRENT" != "40.6.521" ]; then echo "SKIP=true" >> "$GITHUB_ENV"; fi
+      - name: Validate Depth Multi-Quote
+        if: env.SKIP != 'true'
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport-406500.js
+          node --check public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js
+          node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js');
+          require('./public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js');
+          const q=globalThis.AgentCryptoQuoteCurrencyArchitecture?.self_test?.();
+          const d=globalThis.AgentCryptoOkxMicrostructure?.self_test?.();
+          console.log(JSON.stringify({quote:q,depth:d},null,2));
+          if(!q?.pass||!d?.pass) process.exit(1);
+          if(d?.checks?.stablecoin_never_relabelled_usd!==true) process.exit(1);
+          NODE
+          python .github/scripts/agent_crypto_depth_multi_quote_guard_406521.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Build PATCH ONLY ZIP
+        if: env.SKIP != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          files=[
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/index-40.6.521.html',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js',
+            'public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport-406500.js',
+            'public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js',
+            'public/agent_crypto_erith_ia/administrator/js/currency-domain-v2-406517.js',
+            'public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js',
+            'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js',
+            'public/agent_crypto_erith_ia/administrator/views/atlas.html',
+            'public/agent_crypto_erith_ia/administrator/DEPTH_MULTI_QUOTE_40.6.521.md',
+            'public/agent_crypto_erith_ia/administrator/PATCH_MANIFEST_40.6.521.txt',
+            'public/agent_crypto_erith_ia/administrator/SEVEN_HANDOFF_40.6.521.md',
+            '.github/scripts/agent_crypto_depth_multi_quote_guard_406521.py',
+            '.github/workflows/agent-crypto-package-406521.yml',
+          ]
+          out=Path('dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.521_DEPTH_MULTI_QUOTE_PATCH.zip')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for raw in files:
+              p=Path(raw)
+              if not p.is_file(): raise SystemExit('missing patch file: '+raw)
+              z.write(p,p)
+          print(out,out.stat().st_size)
+          PY
+      - name: Upload Depth Multi-Quote PATCH ONLY
+        if: env.SKIP != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.521_DEPTH_MULTI_QUOTE_PATCH
+          path: dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.521_DEPTH_MULTI_QUOTE_PATCH.zip
+          if-no-files-found: error
+          retention-days: 90
