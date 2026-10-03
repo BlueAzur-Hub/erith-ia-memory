@@ -222,7 +222,7 @@
     return Object.freeze({build:BUILD,pass,checks:{eur_to_usd_math:Math.abs(number-112.25)<1e-9,object_series_scaling:Math.abs(object.y-11.225)<1e-9,array_series_scaling:Math.abs(array[1]-11.225)<1e-9,no_timer:true,no_observer:true,no_storage_write:true,no_order:true}});
   }
   globalThis.AgentCryptoGlobalQuoteRouter=Object.freeze({
-    build:BUILD,loadTruth,apply,snapshot,self_test,
+    build:BUILD,loadTruth,apply,snapshot,self_test:selfTest,
     source_truth:"CoinGecko USD + ECB FX public archive",
     historical_method:"canonical EUR runtime series × published ECB USD/EUR",
     display_only:true,execution_mutation:false,settlement_mutation:false,market_core_changed:false,strategy_changed:false,oracle_changed:false,depth_changed:false,
