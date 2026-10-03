@@ -1,11 +1,11 @@
-/* Agent-Crypto — 40.6.497 QUOTE CURRENCY ARCHITECTURE
+/* Agent-Crypto — 40.6.514 QUOTE CURRENCY ARCHITECTURE · USD DEFAULT
    Presentation / routing contract only. Display currency never mutates execution instrument.
    No recurring timer, MutationObserver, storage write, order, wallet or Strategy gate change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.497";
+  const BUILD="40.6.514";
   const ROOT_ID="atlasQuoteCurrencyArchitecture";
-  const state={displayCurrency:"EUR",executionInstrument:"BTC-EUR",settlementAsset:"EUR"};
+  const state={displayCurrency:"USD",executionInstrument:"BTC-EUR",settlementAsset:"EUR"};
   const validDisplay=new Set(["EUR","USD"]);
   const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
   const snapshot=()=>Object.freeze({...state,build:BUILD,separation_locked:true});
@@ -48,12 +48,14 @@
   }
   function selfTest(){
     const before={...state};
-    setDisplayCurrency("USD",{reason:"self-test"});
-    const separated=state.displayCurrency==="USD"&&state.executionInstrument===before.executionInstrument&&state.settlementAsset===before.settlementAsset;
+    const target=before.displayCurrency==="USD"?"EUR":"USD";
+    setDisplayCurrency(target,{reason:"self-test"});
+    const separated=state.displayCurrency===target&&state.executionInstrument===before.executionInstrument&&state.settlementAsset===before.settlementAsset;
     Object.assign(state,before);render();
-    return Object.freeze({build:BUILD,pass:separated,checks:{display_changes_without_execution_mutation:separated,default_execution_is_btc_eur:before.executionInstrument==="BTC-EUR",no_persistent_storage:true,no_order:true}});
+    const pass=separated&&before.displayCurrency==="USD";
+    return Object.freeze({build:BUILD,pass,checks:{usd_default:before.displayCurrency==="USD",display_changes_without_execution_mutation:separated,default_execution_is_btc_eur:before.executionInstrument==="BTC-EUR",no_persistent_storage:true,no_order:true}});
   }
-  globalThis.AgentCryptoQuoteCurrencyArchitecture=Object.freeze({build:BUILD,snapshot,render,setDisplayCurrency,setExecutionInstrument,setSettlementAsset,self_test:selfTest,display_only:true,execution_mutation_from_display:false,storage_write:false,recurring_timer:false,mutation_observer:false,real_order:false,wallet:false,market_core_changed:false,strategy_changed:false});
+  globalThis.AgentCryptoQuoteCurrencyArchitecture=Object.freeze({build:BUILD,snapshot,render,setDisplayCurrency,setExecutionInstrument,setSettlementAsset,self_test:selfTest,default_display:"USD",display_only:true,execution_mutation_from_display:false,storage_write:false,recurring_timer:false,mutation_observer:false,real_order:false,wallet:false,market_core_changed:false,strategy_changed:false});
   if(typeof document!=="undefined"){
     const mount=()=>{try{render();}catch(_){}};
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
