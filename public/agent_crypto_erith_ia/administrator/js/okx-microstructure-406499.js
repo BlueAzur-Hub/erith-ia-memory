@@ -1,18 +1,24 @@
-/* Agent-Crypto — 40.6.503 OKX DEPTH · LECTURE TECHNIQUE LIVE OVERLAY
-   Terrain-driven presentation repair.
-   The Depth / Orderbook surface now lives on top of the Lecture Technique panel
-   instead of consuming chart space. It uses the proven local Backend 8790
-   /orderbook route and refreshes only while open, every 2 seconds.
+/* Agent-Crypto — 40.6.510 OKX ORDERBOOK CONTEXT + FRESHNESS TRUTH
+   Bounded repair after independent audit:
+   - validate requested asset / returned pair / EUR quote before commit;
+   - require a valid, recent source timestamp;
+   - keep source time distinct from receive time;
+   - never relabel old levels as a newly requested asset;
+   - expose FRESH / STALE / OFFLINE / UNKNOWN instead of unconditional LIVE.
+   Presentation geometry from 40.6.507 is preserved.
    Read-only. No private API, no order, no wallet, no Strategy/Market Core mutation. */
 (()=>{
   "use strict";
-  const BUILD="40.6.507";
+  const BUILD="40.6.510";
   const ROOT="atlasOkxMicrostructure";
   const BACKEND="http://127.0.0.1:8790";
   const LIVE_MS=2000;
+  const FRESH_MAX_AGE_MS=15000;
+  const FUTURE_TOLERANCE_MS=5000;
   const state={
-    open:false,loading:false,asset:"BTC",pair:"BTC/EUR",capturedAt:null,
-    bids:[],asks:[],tab:"book",error:null,backendVersion:null,lastLatencyMs:null,
+    open:false,loading:false,asset:"BTC",requestedAsset:"BTC",loadedAsset:null,loadingAsset:null,pendingAsset:null,
+    pair:"BTC/EUR",quote:"EUR",capturedAt:null,sourceObservedAt:null,receivedAt:null,sourceAgeMs:null,freshness:"UNKNOWN",
+    bids:[],asks:[],tab:"book",error:null,backendVersion:null,lastLatencyMs:null,activeController:null,requestSeq:0,
     detached:false,floatX:null,floatY:null,floatW:null,floatH:null,dragging:false,dragDx:0,dragDy:0,minimized:false,maximized:false,restoreDetached:false,maxRestore:null
   };
   let liveTimer=0;
@@ -21,6 +27,23 @@
   const fmt=(v,d=2)=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:d}):"—";
   const eur=v=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:0})+" €":"—";
   const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+  const bookError=(code,message)=>{const error=new Error(message);error.code=code;return error;};
+  const parsePair=value=>{
+    const match=String(value||"").trim().toUpperCase().replace(/_/g,"-").match(/^([A-Z0-9]+)[\/-]([A-Z0-9]+)$/);
+    return match?{base:match[1],quote:match[2],display:\`\${match[1]}/\${match[2]}\`}:null;
+  };
+  const parseSourceTime=value=>{
+    const raw=String(value||"").trim();
+    if(!raw)return null;
+    const ms=Date.parse(raw);
+    return Number.isFinite(ms)?ms:null;
+  };
+  function classifyError(error){
+    if(error?.code==="STALE_BOOK")return "STALE";
+    if(error?.name==="AbortError")return "OFFLINE";
+    if(error?.code==="PAIR_MISMATCH"||error?.code==="ASSET_MISMATCH"||error?.code==="QUOTE_MISMATCH"||error?.code==="SOURCE_TIME_INVALID"||error?.code==="SOURCE_TIME_FUTURE")return "UNKNOWN";
+    return "OFFLINE";
+  }
   const selectedAsset=()=>{
     const texts=[
       document.getElementById("detailCompactAsset")?.textContent,
