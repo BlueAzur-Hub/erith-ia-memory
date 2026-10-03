@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.513",
+  "build": "40.6.514",
   "engine": "38.15.11",
-  "release": "DEPTH BODY DOCUMENT DOCK · RESTORE + CORRECT",
+  "release": "USD DEFAULT · OKX MULTI-QUOTE · CT NEW LISTING",
   "published": true,
-  "status": "published_pending_firefox_406513",
-  "parent_build": "40.6.512",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.513",
-  "administrator_build": "40.6.513",
-  "build_label": "Build 40.6.513 · Administrator",
+  "status": "published_pending_firefox_406514",
+  "parent_build": "40.6.513",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.514",
+  "administrator_build": "40.6.514",
+  "build_label": "Build 40.6.514 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox Ryzen : Ctrl+F5 → confirmer Build 40.6.513. Ouvrir Profondeur : elle doit couvrir exactement Lecture Technique, rester techniquement indépendante sous document.body, puis quitter naturellement l’écran avec la page au scroll sans aucun suivi JS. Naviguer vers les sections Administrator : elle ne doit pas rester collée au viewport. ⠿ doit détacher/déplacer Profondeur seule ; □ doit la réaligner une fois sur Lecture Technique ; — / ⤢ / × conservés. Revalider FRESH/STALE et colonnes dynamiques.",
-  "terrain_proof": "PENDING_40.6.513_FIREFOX",
-  "release_notes": "40.6.513 restores the independent document.body portal architecture from 40.6.511 after the 40.6.512 child-dock regression, then corrects the actual placement mistake: docked Depth now uses absolute DOCUMENT coordinates (target viewport rect + page scroll offsets) instead of fixed VIEWPORT coordinates. It remains visually aligned over Lecture Technique but scrolls away naturally with the document without a timer or scroll-follow handler. document.body ownership remains technical truth in both docked and detached modes; detached/maximized modes stay fixed. Native Administrator controls and 40.6.510 OKX context/freshness truth are preserved. Market Core 38.15.11, Strategy, Cost Gate, Oracle, Aether, Lecture Technique logic, Backend 1.4.4 and Bridge 1.9.13 remain unchanged.",
+  "terrain_pending": "Firefox Ryzen : Ctrl+F5 → confirmer Build 40.6.514. Vérifier USD actif au démarrage ; Top 5, Market, Market Flow, Fiche, Lecture Technique et Oracle en USD direct ; Graphique solo USD avec cache séparé ; Profondeur BTC/USDC sous USD puis BTC/EUR sous EUR ; bascules rapides EUR↔USD sans réponse dépassée ; recherche CT ou bouton Nouveaux · CT → Concrete CT/USDC ; Bougies/Profondeur CT-USDC ; revalider le dock Profondeur 40.6.513 sans régression.",
+  "terrain_proof": "PENDING_40.6.514_FIREFOX",
+  "release_notes": "40.6.514 extends the already terrain-validated 40.6.513 Depth dock without changing its geometry. USD becomes the default display currency while EUR remains switchable. A new surface router propagates direct USD values across Market, Market Flow, Fiche/Lecture Technique, the historical chart and Oracle presentation. The historical chart uses currency-scoped cache keys and direct CoinGecko USD series instead of relabelling EUR. OKX Microscope and Depth use native USDC instruments when DISPLAY USD is active and native EUR instruments under DISPLAY EUR; USDC is never mislabeled as fiat USD. The local OKX transport now preserves AbortSignal. Concrete (CT) is added as an explicit new-listing lane using CT-USDC public OKX data, isolated from canonical Top 250/1000 ranking and Oracle candidates. Market Core 38.15.11, Strategy/Cost Gate, Aether, Web Classique, Backend 1.4.4 and Bridge 1.9.13 contracts remain protected.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -7301,7 +7301,7 @@
       "EUR",
       "USD"
     ],
-    "default_display_currency": "EUR",
+    "default_display_currency": "USD",
     "execution_instrument": "BTC-EUR",
     "settlement_asset": "EUR",
     "display_changes_execution_instrument": false,
@@ -7318,7 +7318,9 @@
     "private_api": false,
     "real_order": false,
     "wallet": false,
-    "terrain": "PENDING_FIREFOX"
+    "terrain": "PENDING_FIREFOX_406514",
+    "runtime_build": "40.6.514",
+    "eur_switch_preserved": true
   },
   "market_microscope_candles_406498": {
     "enabled": true,
@@ -7362,7 +7364,11 @@
     "private_api": false,
     "real_order": false,
     "wallet": false,
-    "terrain": "PENDING_FIREFOX"
+    "terrain": "PENDING_FIREFOX_406514",
+    "runtime_build": "40.6.514",
+    "usd_primary": true,
+    "eur_switch_preserved": true,
+    "ct_usdc_supported": true
   },
   "okx_microstructure_406499": {
     "enabled": true,
@@ -7404,7 +7410,17 @@
     "math_core_changed": false,
     "bridge_modified": false,
     "backend_modified": false,
-    "terrain": "PENDING_FIREFOX"
+    "terrain": "PENDING_FIREFOX_406514",
+    "runtime_build": "40.6.514",
+    "native_quotes": [
+      "EUR",
+      "USDC"
+    ],
+    "display_usd_native_quote": "USDC",
+    "display_eur_native_quote": "EUR",
+    "ct_usdc_supported": true,
+    "abort_signal": true,
+    "depth_406513_geometry_preserved": true
   },
   "bridge_modified": false,
   "okx_local_backend_transport_406500": {
@@ -7438,7 +7454,10 @@
     "market_core_modified": false,
     "native_price_base100_modified": false,
     "requires_local_r19_for_terrain": true,
-    "terrain": "PENDING_FIREFOX_RYZEN"
+    "terrain": "PENDING_FIREFOX_406514",
+    "runtime_build": "40.6.514",
+    "abort_signal_preserved": true,
+    "ct_usdc_supported": true
   },
   "market_microscope_ux_406501": {
     "enabled": true,
@@ -8195,5 +8214,75 @@
     "new_observer": false,
     "storage_write": false,
     "next_stage": "THREAD_CLOSE_AFTER_40.6.513_TERRAIN_PROOF"
+  },
+  "previous_build_406513_terrain": {
+    "administrator_loaded": true,
+    "screenshot_build_badge_pass": true,
+    "depth_docked_pass": true,
+    "depth_detached_pass": true,
+    "native_window_behavior_pass": true,
+    "graph_parent_never_moved": true,
+    "lecture_technique_preserved": true,
+    "status": "PASS_OPERATOR_2026-10-03",
+    "superseded_as_active_build_by": "40.6.514"
+  },
+  "usd_default_surface_router_406514": {
+    "enabled": true,
+    "owner": "js/usd-default-surface-router-406514.js",
+    "parent": "40.6.513",
+    "default_display_currency": "USD",
+    "alternate_display_currency": "EUR",
+    "direct_usd_only": true,
+    "eur_to_usd_relabel": false,
+    "direct_usd_market_source": "CoinGecko Top 250 USD",
+    "direct_usd_chart_source": "CoinGecko market_chart USD",
+    "chart_cache_currency_scoped": true,
+    "surfaces": [
+      "Target Top 5",
+      "Market",
+      "Market Flow",
+      "Fiche",
+      "Lecture Technique",
+      "Graphique",
+      "Oracle presentation"
+    ],
+    "oracle_business_logic_changed": false,
+    "strategy_business_logic_changed": false,
+    "market_core_modified": false,
+    "css_geometry_changed": false,
+    "lecture_technique_css_scope": "typography/secondary contrast only",
+    "depth_css_scope": "sticky header/tabular numbers/stale-offline dimming only",
+    "ct_new_listing": {
+      "asset": "Concrete",
+      "symbol": "CT",
+      "native_pair": "CT-USDC",
+      "source": "OKX public market",
+      "market_menu": "Nouveaux · CT",
+      "exact_search": [
+        "CT",
+        "CONCRETE"
+      ],
+      "injected_into_top250": false,
+      "injected_into_top1000": false,
+      "injected_into_oracle": false,
+      "rank_claim": false
+    },
+    "real_order": false,
+    "private_api": false,
+    "wallet": false,
+    "new_recurring_timer": false,
+    "mutation_observer": false,
+    "terrain": "PENDING_FIREFOX_406514"
+  },
+  "okx_abort_signal_406514": {
+    "enabled": true,
+    "owner": "js/okx-local-backend-transport-406500.js",
+    "preserves_input_signal": true,
+    "routed_get_only": true,
+    "allowlisted_only": true,
+    "stale_response_guard": "request sequence + asset/quote context",
+    "market_core_modified": false,
+    "strategy_changed": false,
+    "real_order": false
   }
 }
