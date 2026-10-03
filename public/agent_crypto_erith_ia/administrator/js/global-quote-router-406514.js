@@ -1,12 +1,12 @@
-/* Agent-Crypto — 40.6.514 GLOBAL QUOTE ROUTER · USD FOUNDATION
+/* Agent-Crypto — 40.6.515 GRAPH OWNER HANDSHAKE · USD COMMIT AFTER RENDER
    Display-only USD foundation for Graphique/Fiche.
    Source truth: existing same-origin public CoinGecko USD snapshot + ECB FX metadata.
    No recurring timer, MutationObserver, storage write, wallet, private API or real order. */
 (()=>{
   "use strict";
-  const BUILD="40.6.514";
+  const BUILD="40.6.515";
   const SNAPSHOT_RELATIVE="../data/crypto/latest.json";
-  const state={truth:null,fx:null,status:"BOOT",lastError:null,lastAppliedAt:null,lastReason:"boot",loadPromise:null,controller:null,chartBackup:null,domBackup:new Map()};
+  const state={truth:null,fx:null,status:"BOOT",lastError:null,lastAppliedAt:null,lastReason:"boot",loadPromise:null,controller:null,chartBackup:null,domBackup:new Map(),ownerEpoch:0,ownerPendingReason:null};
   const finite=v=>Number.isFinite(Number(v))?Number(v):null;
   const displayCurrency=()=>String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.().displayCurrency||"USD").toUpperCase();
   const fxFactor=()=>finite(state.fx?.usdPerEur);
@@ -192,8 +192,36 @@
     return snapshot();
   }
   function base100Active(){return document?.querySelector?.('[data-chart-view="base100"]')?.classList?.contains("is-active")===true;}
+  function prepareOwnerRender(reason="graph-owner"){
+    if(displayCurrency()!=="USD")return 0;
+    const epoch=++state.ownerEpoch;
+    state.ownerPendingReason=String(reason||"graph-owner");
+    restoreChart();
+    restoreDom();
+    state.status="OWNER_RENDERING";
+    state.lastReason=`owner-prepare:${state.ownerPendingReason}`;
+    return epoch;
+  }
+  function settleOwnerRender(reason="graph-owner",epoch=state.ownerEpoch){
+    if(displayCurrency()!=="USD")return Promise.resolve(snapshot());
+    const expected=Number(epoch||state.ownerEpoch);
+    const ownerReason=String(reason||state.ownerPendingReason||"graph-owner");
+    const run=()=>{
+      if(expected!==state.ownerEpoch)return snapshot();
+      state.ownerPendingReason=null;
+      return apply(`owner-settled:${ownerReason}`);
+    };
+    if(typeof requestAnimationFrame==="function"){
+      return new Promise(resolve=>requestAnimationFrame(()=>Promise.resolve(run()).then(resolve)));
+    }
+    return Promise.resolve().then(run);
+  }
   function scheduleOwnerReapply(reason){
     if(displayCurrency()!=="USD")return;
+    if(globalThis.AgentCryptoGraphOwnerHandshake?.installed===true){
+      prepareOwnerRender(`control:${reason}`);
+      return;
+    }
     restoreChart();restoreDom();
     const run=()=>void apply(reason);
     if(typeof requestAnimationFrame==="function")requestAnimationFrame(()=>requestAnimationFrame(run));else Promise.resolve().then(run);
@@ -211,6 +239,7 @@
   function snapshot(){return Object.freeze({
     build:BUILD,display_currency:displayCurrency(),status:state.status,
     fx:state.fx?{...state.fx}:null,last_error:state.lastError,last_applied_at:state.lastAppliedAt,last_reason:state.lastReason,
+    owner_epoch:state.ownerEpoch,owner_pending_reason:state.ownerPendingReason,owner_handshake:globalThis.AgentCryptoGraphOwnerHandshake?.snapshot?.()||null,
     display_only:true,execution_mutation:false,settlement_mutation:false,market_core_changed:false,strategy_changed:false,oracle_changed:false,depth_changed:false,
     new_recurring_timer:false,mutation_observer:false,storage_write:false,real_order:false,wallet:false
   });}
@@ -222,7 +251,7 @@
     return Object.freeze({build:BUILD,pass,checks:{eur_to_usd_math:Math.abs(number-112.25)<1e-9,object_series_scaling:Math.abs(object.y-11.225)<1e-9,array_series_scaling:Math.abs(array[1]-11.225)<1e-9,no_timer:true,no_observer:true,no_storage_write:true,no_order:true}});
   }
   globalThis.AgentCryptoGlobalQuoteRouter=Object.freeze({
-    build:BUILD,loadTruth,apply,snapshot,self_test:selfTest,
+    build:BUILD,loadTruth,apply,prepareOwnerRender,settleOwnerRender,snapshot,self_test:selfTest,
     source_truth:"CoinGecko USD + ECB FX public archive",
     historical_method:"canonical EUR runtime series × published ECB USD/EUR",
     display_only:true,execution_mutation:false,settlement_mutation:false,market_core_changed:false,strategy_changed:false,oracle_changed:false,depth_changed:false,
