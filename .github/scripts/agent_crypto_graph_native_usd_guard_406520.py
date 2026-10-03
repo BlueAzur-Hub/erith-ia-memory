@@ -34,6 +34,9 @@ need("single:${x[0]}:${p}:USD" in module,"USD context isolation missing")
 need("browser_eur_to_usd_conversion:false" in module,"no-conversion contract")
 need("stablecoins_relabelled_as_usd:false" in module,"stablecoin truth")
 need("agent-crypto:quote-architecture-changed" in module,"currency event missing")
+need("atlasChartOverlaySolo" in module and "PRIX USD" in module,"solo overlay USD missing")
+need("atlasChartOverlayComparison" in module and "volume24hUsd" in module,"comparison/volume USD missing")
+need("PRIX SNAPSHOT COINGECKO" in module,"tooltip USD source label missing")
 
 def blob(path):
     return subprocess.check_output(["git","hash-object",str(path)],text=True).strip()
