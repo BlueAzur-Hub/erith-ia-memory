@@ -1,4 +1,4 @@
-/* Agent-Crypto Administrator — 40.6.517 CURRENCY DOMAIN V2 · ADDITIVE CONTRACT ONLY
+/* Agent-Crypto Administrator — 40.6.518 MARKET + FICHE USD PROJECTION
    Extends the existing Aether-first Strategy Core residency with the existing Execution Cost Truth owner
    plus a bounded PAPER open/close capture facade. Same application; no new recurring timer or DB schema.
    Historical after-cost rows are not modified.
@@ -9,7 +9,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.517";
+  const BUILD="40.6.518";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
