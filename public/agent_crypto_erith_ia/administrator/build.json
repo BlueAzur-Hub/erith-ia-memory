@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.522",
+  "build": "40.6.523",
   "engine": "38.15.11",
-  "release": "USD DEFAULT DISPLAY · OWNER CHAIN COMPLETE",
+  "release": "MARKET + FICHE USD OWNER REBIND",
   "published": true,
-  "status": "published_pending_firefox_406522",
-  "parent_build": "40.6.521",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.522",
-  "administrator_build": "40.6.522",
-  "build_label": "Build 40.6.522 · Administrator",
+  "status": "published_pending_firefox_406523",
+  "parent_build": "40.6.522",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.523",
+  "administrator_build": "40.6.523",
+  "build_label": "Build 40.6.523 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox Ryzen : Ctrl+F5 → confirmer Build 40.6.522. Au démarrage DISPLAY doit être USD. Graphique, Market/Fiche, Oracle/Aether/Lecture, Bougies et Profondeur doivent suivre leurs propriétaires USD/USDC/USDT respectifs. Cliquer EUR doit revenir proprement à EUR sans changer EXEC BTC-EUR ni SETTLE EUR.",
-  "terrain_proof": "PENDING_40.6.522_FIREFOX_GLOBAL_USD_DEFAULT",
-  "release_notes": "40.6.522 completes the requested presentation destination by making USD the one-shot Administrator boot default after all currency-aware owners are loaded. It does not convert values, mutate execution or settlement, persist a preference, add a timer/observer/network owner, or change business logic. EUR remains operator-selectable. Existing owner truth remains: Graphique native USD source, Market/Fiche explicit USD, Oracle/Aether USD presentation, Bougies native USDC under USD display, and Profondeur native USDC with USDT fallback.",
+  "terrain_pending": "Firefox Ryzen : Ctrl+F5 → confirmer Build 40.6.523. DISPLAY doit démarrer USD. Dans Market, BTC/ETH/BNB/XRP et autres lignes enrichies doivent afficher leur prix USD explicite, sans retour EUR après refresh spot. FICHE CRYPTO · MARKET SNAPSHOT doit afficher Prix affichage USD + Prix USD marché + Capitalisation/Volume USD. Graphique, Oracle/Aether, Bougies BTC-USDC, Profondeur BTC/USDC ou USDT, EXEC BTC-EUR et SETTLE EUR restent inchangés. Cliquer EUR doit restaurer proprement les valeurs EUR.",
+  "terrain_proof": "PENDING_40.6.523_FIREFOX_MARKET_FICHE_USD_REBIND",
+  "release_notes": "40.6.523 repairs the remaining Firefox USD presentation leak proven in 40.6.522. Root cause 1: the native late spot writer atlasPatchCurrentQuoteBox rewrote Market row prices back to EUR after the 40.6.518 projection. Root cause 2: the visible FICHE CRYPTO · MARKET SNAPSHOT is produced by atlasMarketHelpDefinition / atlasPatchOpenMarketHelp and was not part of the previous detail-grid projection. The existing Market/Fiche owner now rebinds only those two presentation paths to explicit priceUsd / marketCapUsd / volume24hUsd fields. No EUR→USD conversion, no app.js edit, no Market Core, Strategy, Graph, Oracle/Aether, Candles, Depth, Backend or Bridge change.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -8342,8 +8342,12 @@
     "real_order": false,
     "wallet": false,
     "self_test": "AgentCryptoMarketFicheDisplay406518.self_test()",
-    "terrain": "PENDING_FIREFOX",
-    "next_stage": "ORACLE_AETHER_PRESENTATION_AFTER_40.6.518_FIREFOX_PASS"
+    "terrain": "PENDING_FIREFOX_406523",
+    "next_stage": "ORACLE_AETHER_PRESENTATION_AFTER_40.6.518_FIREFOX_PASS",
+    "repair_in": "40.6.523",
+    "current_owner_build": "40.6.523",
+    "late_spot_writer_rebound": true,
+    "market_help_definition_projection": true
   },
   "oracle_aether_display_406519": {
     "enabled": true,
@@ -8508,7 +8512,53 @@
     "real_order": false,
     "wallet": false,
     "self_test": "AgentCryptoUsdDefault406522.self_test()",
-    "terrain": "PENDING_FIREFOX",
-    "destination_status": "USD_PRESENTATION_CHAIN_COMPLETE_PENDING_TERRAIN"
+    "terrain": "PARTIAL_FIREFOX_406522_MARKET_FICHE_EUR_LEAK",
+    "destination_status": "PARTIAL_PASS_SUPERSEDED_BY_40.6.523_MARKET_FICHE_REBIND"
+  },
+  "market_fiche_usd_owner_rebind_406523": {
+    "enabled": true,
+    "parent": "40.6.522",
+    "owner": "js/market-fiche-display-406518.js",
+    "scope": "MARKET_FICHE_PRESENTATION_ONLY",
+    "firefox_evidence_406522": [
+      "DISPLAY USD active while Market BTC/ETH/BNB/XRP prices remained EUR",
+      "Market capitalization and volume were already USD, proving partial 40.6.518 projection",
+      "FICHE CRYPTO · MARKET SNAPSHOT retained Prix direct EUR, EUR capitalization and EUR volume"
+    ],
+    "root_causes": [
+      "late native spot writer atlasPatchCurrentQuoteBox overwrote Market price cells after USD projection",
+      "visible market help fiche is atlasMarketHelpDefinition/atlasPatchOpenMarketHelp, not the previously projected detail grid"
+    ],
+    "repair": [
+      "rebind Market price box after atlasPatchCurrentQuoteBox only inside #marketRows",
+      "project atlasMarketHelpDefinition result to USD before fiche insertion",
+      "reproject atlasPatchOpenMarketHelp after native live refresh",
+      "restore EUR presentation on operator EUR switch"
+    ],
+    "usd_fields": [
+      "priceUsd",
+      "marketCapUsd",
+      "volume24hUsd"
+    ],
+    "usd_price_source_prefers": "usdUpdatedAt / explicit USD provenance",
+    "browser_eur_to_usd_conversion": false,
+    "missing_usd_policy": "UNAVAILABLE_NO_ESTIMATION",
+    "app_js_changed": false,
+    "graph_changed": false,
+    "oracle_aether_changed": false,
+    "candles_changed": false,
+    "depth_changed": false,
+    "market_core_modified": false,
+    "strategy_changed": false,
+    "backend_changed": false,
+    "bridge_changed": false,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "storage_owner_added": false,
+    "network_owner_added": false,
+    "real_order": false,
+    "wallet": false,
+    "self_test": "AgentCryptoMarketFicheDisplay406518.self_test()",
+    "terrain": "PENDING_FIREFOX"
   }
 }
