@@ -218,10 +218,7 @@
   }
   function scheduleOwnerReapply(reason){
     if(displayCurrency()!=="USD")return;
-    if(globalThis.AgentCryptoGraphOwnerHandshake?.installed===true){
-      prepareOwnerRender(`control:${reason}`);
-      return;
-    }
+    if(globalThis.AgentCryptoGraphOwnerHandshake?.installed===true)return;
     restoreChart();restoreDom();
     const run=()=>void apply(reason);
     if(typeof requestAnimationFrame==="function")requestAnimationFrame(()=>requestAnimationFrame(run));else Promise.resolve().then(run);
