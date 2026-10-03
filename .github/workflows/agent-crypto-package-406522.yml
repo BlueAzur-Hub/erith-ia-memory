@@ -1,0 +1,86 @@
+name: Agent-Crypto 40.6.522 Validate USD Default
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_usd_default_guard_406522.py'
+      - '.github/workflows/agent-crypto-package-406522.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_usd_default_guard_406522.py'
+      - '.github/workflows/agent-crypto-package-406522.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scope
+        run: |
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json"))["build"])')"
+          if [ "$CURRENT" != "40.6.522" ]; then echo "SKIP=true" >> "$GITHUB_ENV"; fi
+      - name: Validate USD Default
+        if: env.SKIP != 'true'
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/display-default-usd-406522.js
+          node --check public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js
+          node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js');
+          require('./public/agent_crypto_erith_ia/administrator/js/display-default-usd-406522.js');
+          const before=globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.();
+          const test=globalThis.AgentCryptoUsdDefault406522?.self_test?.();
+          const after=globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.();
+          console.log(JSON.stringify({before,test,after},null,2));
+          if(!test?.pass) process.exit(1);
+          if(after?.displayCurrency!==before?.displayCurrency) process.exit(1);
+          if(after?.executionInstrument!==before?.executionInstrument||after?.settlementAsset!==before?.settlementAsset) process.exit(1);
+          NODE
+          python .github/scripts/agent_crypto_usd_default_guard_406522.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Build PATCH ONLY ZIP
+        if: env.SKIP != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          files=[
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/index-40.6.522.html',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/js/display-default-usd-406522.js',
+            'public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js',
+            'public/agent_crypto_erith_ia/administrator/js/currency-domain-v2-406517.js',
+            'public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js',
+            'public/agent_crypto_erith_ia/administrator/js/market-fiche-display-406518.js',
+            'public/agent_crypto_erith_ia/administrator/js/oracle-aether-display-406519.js',
+            'public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js',
+            'public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js',
+            'public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport-406500.js',
+            'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js',
+            'public/agent_crypto_erith_ia/administrator/views/atlas.html',
+            'public/agent_crypto_erith_ia/administrator/USD_DEFAULT_DISPLAY_40.6.522.md',
+            'public/agent_crypto_erith_ia/administrator/PATCH_MANIFEST_40.6.522.txt',
+            'public/agent_crypto_erith_ia/administrator/SEVEN_HANDOFF_40.6.522.md',
+            '.github/scripts/agent_crypto_usd_default_guard_406522.py',
+            '.github/workflows/agent-crypto-package-406522.yml',
+          ]
+          out=Path('dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.522_USD_DEFAULT_PATCH.zip')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for raw in files:
+              p=Path(raw)
+              if not p.is_file(): raise SystemExit('missing patch file: '+raw)
+              z.write(p,p)
+          print(out,out.stat().st_size)
+          PY
+      - name: Upload USD Default PATCH ONLY
+        if: env.SKIP != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.522_USD_DEFAULT_PATCH
+          path: dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.522_USD_DEFAULT_PATCH.zip
+          if-no-files-found: error
+          retention-days: 90
