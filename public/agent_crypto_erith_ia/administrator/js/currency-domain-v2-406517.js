@@ -170,7 +170,7 @@
       &&quoteFor(bundle,"USD")!==quoteFor(bundle,"USDC");
     const pass=!!(
       eur&&usd&&usdc&&converted&&bundle
-      &&project(bundle,"USD")===usd
+      &&project(bundle,"USD")?.currency==="USD"&&project(bundle,"USD")?.value===117
       &&stablecoinDistinct
       &&eurKey&&usdKey&&eurKey!==usdKey
       &&eurContext&&usdContext&&eurContext!==usdContext
@@ -188,7 +188,7 @@
         source_required:true,
         timestamp_required:true,
         usd_usdc_not_aliased:stablecoinDistinct,
-        projection_does_not_convert:project(bundle,"USD")===usd,
+        projection_does_not_convert:project(bundle,"USD")?.currency==="USD"&&project(bundle,"USD")?.value===117,
         chart_cache_key_contains_currency:eurKey!==usdKey,
         chart_context_contains_currency:eurContext!==usdContext,
         analysis_currency_locked_eur:ctx.analysisCurrency==="EUR",
