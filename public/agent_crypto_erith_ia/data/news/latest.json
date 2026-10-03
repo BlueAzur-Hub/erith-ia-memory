@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-10-03T02:04:38.319546+00:00",
+  "generated_at": "2026-10-03T08:14:46.415819+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,11 +11,11 @@
   "causal_claim": false,
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 30,
-    "operator_eligible_24h": 30,
+    "events_24h": 28,
+    "operator_eligible_24h": 28,
     "context_only_24h": 0,
-    "critical_24h": 12,
-    "strong_24h": 7,
+    "critical_24h": 11,
+    "strong_24h": 6,
     "sources_ok": 15,
     "sources_total": 15,
     "sources_failed": 0,
@@ -27,11 +27,11 @@
         "distinct_sources": 4
       },
       "institutional_flows": {
-        "events_72h": 9,
+        "events_72h": 8,
         "distinct_sources": 4
       },
       "regulation": {
-        "events_72h": 13,
+        "events_72h": 12,
         "distinct_sources": 4
       },
       "leverage": {
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 50,
       "qualified_count": 7,
-      "latency_ms": 102,
+      "latency_ms": 438,
       "error": null
     },
     {
@@ -68,9 +68,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 37,
+      "fetched_count": 38,
       "qualified_count": 2,
-      "latency_ms": 121,
+      "latency_ms": 362,
       "error": null
     },
     {
@@ -81,7 +81,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 86,
+      "latency_ms": 133,
       "error": null
     },
     {
@@ -92,7 +92,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 339,
+      "latency_ms": 337,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 23,
-      "latency_ms": 265,
+      "latency_ms": 385,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 27,
-      "latency_ms": 249,
+      "latency_ms": 224,
       "error": null
     },
     {
@@ -123,9 +123,9 @@
       "group": "crypto",
       "url": "https://decrypt.co/feed",
       "status": "ok",
-      "fetched_count": 39,
-      "qualified_count": 31,
-      "latency_ms": 205,
+      "fetched_count": 50,
+      "qualified_count": 41,
+      "latency_ms": 141,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 6,
-      "latency_ms": 972,
+      "latency_ms": 2509,
       "error": null
     },
     {
@@ -147,7 +147,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 17,
-      "latency_ms": 216,
+      "latency_ms": 149,
       "error": null
     },
     {
@@ -157,8 +157,8 @@
       "url": "https://www.france24.com/fr/rss",
       "status": "ok",
       "fetched_count": 24,
-      "qualified_count": 2,
-      "latency_ms": 345,
+      "qualified_count": 1,
+      "latency_ms": 162,
       "error": null
     },
     {
@@ -169,7 +169,7 @@
       "status": "ok",
       "fetched_count": 1,
       "qualified_count": 1,
-      "latency_ms": 265,
+      "latency_ms": 237,
       "error": null
     },
     {
@@ -180,7 +180,7 @@
       "status": "ok",
       "fetched_count": 9,
       "qualified_count": 9,
-      "latency_ms": 326,
+      "latency_ms": 295,
       "error": null
     },
     {
@@ -191,7 +191,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 264,
+      "latency_ms": 279,
       "error": null
     },
     {
@@ -202,7 +202,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 148,
+      "latency_ms": 121,
       "error": null
     },
     {
@@ -213,7 +213,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 8264,
+      "latency_ms": 10234,
       "error": null
     }
   ],
@@ -377,11 +377,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-01T09:59:30+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.887978+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.887978+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.010737+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.010737+00:00",
       "freshness": {
         "iso": "2026-10-01T09:59:30+00:00",
-        "hours": 40.08,
+        "hours": 46.25,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -645,11 +645,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-10-02T11:22:40+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.858284+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.858284+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.983997+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.983997+00:00",
       "freshness": {
         "iso": "2026-10-02T11:22:40+00:00",
-        "hours": 14.7,
+        "hours": 20.87,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -779,11 +779,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-10-02T08:11:54+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.868805+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.868805+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.993323+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.993323+00:00",
       "freshness": {
         "iso": "2026-10-02T08:11:54+00:00",
-        "hours": 17.88,
+        "hours": 24.04,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -914,11 +914,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-10-01T17:11:44+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.642685+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.642685+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.748377+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.748377+00:00",
       "freshness": {
         "iso": "2026-10-01T17:11:44+00:00",
-        "hours": 32.88,
+        "hours": 39.05,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1050,11 +1050,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-10-01T11:59:17+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.877867+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.877867+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.001534+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.001534+00:00",
       "freshness": {
         "iso": "2026-10-01T11:59:17+00:00",
-        "hours": 38.09,
+        "hours": 44.26,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1185,12 +1185,12 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-10-01T04:15:20+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.894962+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.894962+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.017106+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.017106+00:00",
       "freshness": {
         "iso": "2026-10-01T04:15:20+00:00",
-        "hours": 45.82,
-        "label": "Récente · moins de 48 h",
+        "hours": 51.99,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -1318,11 +1318,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-30T15:50:25+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.690064+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.690064+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.768121+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.768121+00:00",
       "freshness": {
         "iso": "2026-09-30T15:50:25+00:00",
-        "hours": 58.23,
+        "hours": 64.4,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1850,11 +1850,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-02T08:20:08+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.753427+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.753427+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.828125+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.828125+00:00",
       "freshness": {
         "iso": "2026-10-02T08:20:08+00:00",
-        "hours": 17.74,
+        "hours": 23.91,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2118,12 +2118,12 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-10-02T15:27:31+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.722368+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.722368+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.816505+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.816505+00:00",
       "freshness": {
         "iso": "2026-10-02T15:27:31+00:00",
-        "hours": 10.62,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 16.78,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -2522,11 +2522,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-30T06:31:00+00:00",
-      "first_seen_at": "2026-10-03T02:04:30.061405+00:00",
-      "last_seen_at": "2026-10-03T02:04:30.061405+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.264164+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.264164+00:00",
       "freshness": {
         "iso": "2026-09-30T06:31:00+00:00",
-        "hours": 67.56,
+        "hours": 73.73,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2653,11 +2653,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-01T09:59:30+00:00",
-      "first_seen_at": "2026-10-03T02:04:30.062968+00:00",
-      "last_seen_at": "2026-10-03T02:04:30.062968+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.265024+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.265024+00:00",
       "freshness": {
         "iso": "2026-10-01T09:59:30+00:00",
-        "hours": 40.08,
+        "hours": 46.25,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2785,12 +2785,12 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-01T08:05:03+00:00",
-      "first_seen_at": "2026-10-03T02:04:30.070651+00:00",
-      "last_seen_at": "2026-10-03T02:04:30.070651+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.269209+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.269209+00:00",
       "freshness": {
         "iso": "2026-10-01T08:05:03+00:00",
-        "hours": 41.99,
-        "label": "Récente · moins de 48 h",
+        "hours": 48.16,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -2915,11 +2915,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-30T18:05:50+00:00",
-      "first_seen_at": "2026-10-03T02:04:30.072282+00:00",
-      "last_seen_at": "2026-10-03T02:04:30.072282+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.270098+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.270098+00:00",
       "freshness": {
         "iso": "2026-09-30T18:05:50+00:00",
-        "hours": 55.98,
+        "hours": 62.15,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3047,11 +3047,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-30T16:24:33+00:00",
-      "first_seen_at": "2026-10-03T02:04:30.069201+00:00",
-      "last_seen_at": "2026-10-03T02:04:30.069201+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.268401+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.268401+00:00",
       "freshness": {
         "iso": "2026-09-30T16:24:33+00:00",
-        "hours": 57.67,
+        "hours": 63.83,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3177,11 +3177,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-27T09:39:00+00:00",
-      "first_seen_at": "2026-10-03T02:04:30.073757+00:00",
-      "last_seen_at": "2026-10-03T02:04:30.073757+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.270877+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.270877+00:00",
       "freshness": {
         "iso": "2026-09-27T09:39:00+00:00",
-        "hours": 136.43,
+        "hours": 142.59,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3443,11 +3443,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-01T10:38:04+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.886626+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.886626+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.009408+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.009408+00:00",
       "freshness": {
         "iso": "2026-10-01T10:38:04+00:00",
-        "hours": 39.44,
+        "hours": 45.61,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3577,11 +3577,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-30T17:27:43+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.682262+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.682262+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.764476+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.764476+00:00",
       "freshness": {
         "iso": "2026-09-30T17:27:43+00:00",
-        "hours": 56.61,
+        "hours": 62.78,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3711,11 +3711,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-02T12:58:25+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.619300+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.619300+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.734348+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.734348+00:00",
       "freshness": {
         "iso": "2026-10-02T12:58:25+00:00",
-        "hours": 13.1,
+        "hours": 19.27,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4106,11 +4106,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-10-01T15:00:00+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.873966+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.873966+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.998009+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.998009+00:00",
       "freshness": {
         "iso": "2026-10-01T15:00:00+00:00",
-        "hours": 35.07,
+        "hours": 41.24,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4235,11 +4235,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-30T20:31:04+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.671688+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.671688+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.761330+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.761330+00:00",
       "freshness": {
         "iso": "2026-09-30T20:31:04+00:00",
-        "hours": 53.56,
+        "hours": 59.73,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4366,11 +4366,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-29T10:16:48+00:00",
-      "first_seen_at": "2026-10-03T02:04:30.030806+00:00",
-      "last_seen_at": "2026-10-03T02:04:30.030806+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.259973+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.259973+00:00",
       "freshness": {
         "iso": "2026-09-29T10:16:48+00:00",
-        "hours": 87.8,
+        "hours": 93.96,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4627,11 +4627,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-02T12:25:56+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.731364+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.731364+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.820645+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.820645+00:00",
       "freshness": {
         "iso": "2026-10-02T12:25:56+00:00",
-        "hours": 13.64,
+        "hours": 19.81,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5154,11 +5154,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-02T09:37:06+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.748607+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.748607+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.825791+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.825791+00:00",
       "freshness": {
         "iso": "2026-10-02T09:37:06+00:00",
-        "hours": 16.46,
+        "hours": 22.62,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5414,11 +5414,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-01T21:31:03+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.626897+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.626897+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.739578+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.739578+00:00",
       "freshness": {
         "iso": "2026-10-01T21:31:03+00:00",
-        "hours": 28.56,
+        "hours": 34.73,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5543,11 +5543,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-01T16:16:07+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.788548+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.788548+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.846589+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.846589+00:00",
       "freshness": {
         "iso": "2026-10-01T16:16:07+00:00",
-        "hours": 33.81,
+        "hours": 39.97,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5673,11 +5673,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-01T15:03:35+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.790474+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.790474+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.847714+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.847714+00:00",
       "freshness": {
         "iso": "2026-10-01T15:03:35+00:00",
-        "hours": 35.02,
+        "hours": 41.18,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5803,11 +5803,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-30T18:30:01+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.792631+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.792631+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.848884+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.848884+00:00",
       "freshness": {
         "iso": "2026-09-30T18:30:01+00:00",
-        "hours": 55.57,
+        "hours": 61.74,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5933,11 +5933,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-30T16:42:15+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.794643+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.794643+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.850009+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.850009+00:00",
       "freshness": {
         "iso": "2026-09-30T16:42:15+00:00",
-        "hours": 57.37,
+        "hours": 63.54,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6063,11 +6063,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-30T15:45:00+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.796522+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.796522+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.851091+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.851091+00:00",
       "freshness": {
         "iso": "2026-09-30T15:45:00+00:00",
-        "hours": 58.32,
+        "hours": 64.49,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6193,11 +6193,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-29T13:55:53+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.799773+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.799773+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.852219+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.852219+00:00",
       "freshness": {
         "iso": "2026-09-29T13:55:53+00:00",
-        "hours": 84.14,
+        "hours": 90.31,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6323,11 +6323,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-28T17:46:30+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.801645+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.801645+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.853262+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.853262+00:00",
       "freshness": {
         "iso": "2026-09-28T17:46:30+00:00",
-        "hours": 104.3,
+        "hours": 110.47,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6586,12 +6586,12 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-02T14:12:48+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.725138+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.725138+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.818257+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.818257+00:00",
       "freshness": {
         "iso": "2026-10-02T14:12:48+00:00",
-        "hours": 11.86,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 18.03,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -6846,12 +6846,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-02T17:12:48+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.849788+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.849788+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.979117+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.979117+00:00",
       "freshness": {
         "iso": "2026-10-02T17:12:48+00:00",
-        "hours": 8.86,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 15.03,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -6978,11 +6978,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-01T20:46:03+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.629129+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.629129+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.740656+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.740656+00:00",
       "freshness": {
         "iso": "2026-10-01T20:46:03+00:00",
-        "hours": 29.31,
+        "hours": 35.48,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7106,11 +7106,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-01T20:20:04+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.870531+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.870531+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.994956+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.994956+00:00",
       "freshness": {
         "iso": "2026-10-01T20:20:04+00:00",
-        "hours": 29.74,
+        "hours": 35.91,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7490,11 +7490,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-02T01:07:08+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.772919+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.772919+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.838077+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.838077+00:00",
       "freshness": {
         "iso": "2026-10-02T01:07:08+00:00",
-        "hours": 24.96,
+        "hours": 31.12,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7978,135 +7978,6 @@
       "semantic_refresh_build": "40.6.418"
     },
     {
-      "id": "feed_a72d85f1132c09a1",
-      "event_id": "feed_a72d85f1132c09a1",
-      "fingerprint": "a72d85f1132c09a1",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "CFTC sues Cash FX, alleges $950M crypto-linked forex scheme",
-      "body": "The CFTC claimed that Cash FX engaged in minimal forex trading and misappropriated most of the participant funds.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/cftc-sues-cash-fx-alleges-950m-crypto-linked-forex-scheme",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/cftc-sues-cash-fx-alleges-950m-crypto-linked-forex-scheme"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-26T06:59:29+00:00",
-      "first_seen_at": "2026-09-27T22:17:36.165842+00:00",
-      "last_seen_at": "2026-09-27T22:17:36.165842+00:00",
-      "freshness": {
-        "iso": "2026-09-26T06:59:29+00:00",
-        "hours": 39.3,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "regulation"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "Régulation / justice",
-      "article_ids": [
-        "feed_a72d85f1132c09a1"
-      ],
-      "article_count": 1,
-      "cluster_reason": "same_url",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 71,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 60,
-        "reasons": [
-          "crypto_market_anchor",
-          "driver_domain:regulation"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "merged_event_ids": [
-        "feed_a72d85f1132c09a1"
-      ],
-      "headline_original": "CFTC sues Cash FX, alleges $950M crypto-linked forex scheme",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] CFTC sues Cash FX, alleges $950M crypto-linked forex scheme",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "semantic_refresh_build": "40.6.418"
-    },
-    {
       "id": "feed_d9ac5e5a6ecbe816",
       "event_id": "feed_d9ac5e5a6ecbe816",
       "fingerprint": "d9ac5e5a6ecbe816",
@@ -8130,12 +8001,12 @@
       "event_type": "onchain_movement",
       "event_label": "Mouvement on-chain / transferts",
       "event_time": "2026-10-02T16:45:52+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.616830+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.616830+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.732961+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.732961+00:00",
       "freshness": {
         "iso": "2026-10-02T16:45:52+00:00",
-        "hours": 9.31,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 15.48,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -8420,11 +8291,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-02T11:28:41+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.623059+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.623059+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.736544+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.736544+00:00",
       "freshness": {
         "iso": "2026-10-02T11:28:41+00:00",
-        "hours": 14.6,
+        "hours": 20.77,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8550,11 +8421,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-02T12:31:53+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.855165+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.855165+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.982235+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.982235+00:00",
       "freshness": {
         "iso": "2026-10-02T12:31:53+00:00",
-        "hours": 13.54,
+        "hours": 19.71,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8680,11 +8551,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-02T10:54:33+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.739377+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.739377+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.822724+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.822724+00:00",
       "freshness": {
         "iso": "2026-10-02T10:54:33+00:00",
-        "hours": 15.17,
+        "hours": 21.33,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8811,11 +8682,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-01T21:07:45+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.777704+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.777704+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.840820+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.840820+00:00",
       "freshness": {
         "iso": "2026-10-01T21:07:45+00:00",
-        "hours": 28.95,
+        "hours": 35.11,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8940,11 +8811,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-01T18:46:03+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.637445+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.637445+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.745763+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.745763+00:00",
       "freshness": {
         "iso": "2026-10-01T18:46:03+00:00",
-        "hours": 31.31,
+        "hours": 37.48,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9198,12 +9069,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-02T19:46:03+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.609225+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.609225+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.728287+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.728287+00:00",
       "freshness": {
         "iso": "2026-10-02T19:46:03+00:00",
-        "hours": 6.31,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.48,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -9329,11 +9200,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-10-02T09:30:49+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.750556+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.750556+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.826809+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.826809+00:00",
       "freshness": {
         "iso": "2026-10-02T09:30:49+00:00",
-        "hours": 16.56,
+        "hours": 22.73,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9584,12 +9455,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-02T18:41:17+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.711792+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.711792+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.811880+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.811880+00:00",
       "freshness": {
         "iso": "2026-10-02T18:41:17+00:00",
-        "hours": 7.39,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.56,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -9713,11 +9584,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-01T16:16:32+00:00",
-      "first_seen_at": "2026-10-03T02:04:30.067700+00:00",
-      "last_seen_at": "2026-10-03T02:04:30.067700+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.267621+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.267621+00:00",
       "freshness": {
         "iso": "2026-10-01T16:16:32+00:00",
-        "hours": 33.8,
+        "hours": 39.97,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9838,11 +9709,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-26T18:24:00+00:00",
-      "first_seen_at": "2026-10-03T02:04:30.075554+00:00",
-      "last_seen_at": "2026-10-03T02:04:30.075554+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.271841+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.271841+00:00",
       "freshness": {
         "iso": "2026-09-26T18:24:00+00:00",
-        "hours": 151.68,
+        "hours": 157.84,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -10217,11 +10088,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-02T13:00:00+00:00",
-      "first_seen_at": "2026-10-03T02:04:30.576151+00:00",
-      "last_seen_at": "2026-10-03T02:04:30.576151+00:00",
+      "first_seen_at": "2026-10-03T08:14:38.318084+00:00",
+      "last_seen_at": "2026-10-03T08:14:38.318084+00:00",
       "freshness": {
         "iso": "2026-10-02T13:00:00+00:00",
-        "hours": 13.08,
+        "hours": 19.24,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10346,11 +10217,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-10-02T09:12:54+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.624792+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.624792+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.737535+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.737535+00:00",
       "freshness": {
         "iso": "2026-10-02T09:12:54+00:00",
-        "hours": 16.86,
+        "hours": 23.03,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10473,12 +10344,12 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-02T15:32:53+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.720599+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.720599+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.815513+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.815513+00:00",
       "freshness": {
         "iso": "2026-10-02T15:32:53+00:00",
-        "hours": 10.53,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 16.7,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -10600,11 +10471,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-01T16:16:03+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.649412+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.649412+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.750657+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.750657+00:00",
       "freshness": {
         "iso": "2026-10-01T16:16:03+00:00",
-        "hours": 33.81,
+        "hours": 39.98,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10725,11 +10596,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-01T08:56:02+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.664296+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.664296+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.757509+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.757509+00:00",
       "freshness": {
         "iso": "2026-10-01T08:56:02+00:00",
-        "hours": 41.14,
+        "hours": 47.31,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11112,12 +10983,12 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-02T17:30:40+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.615430+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.615430+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.732038+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.732038+00:00",
       "freshness": {
         "iso": "2026-10-02T17:30:40+00:00",
-        "hours": 8.56,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.73,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -11495,12 +11366,12 @@
       "event_type": "network",
       "event_label": "Upgrade / mainnet / réseau",
       "event_time": "2026-10-02T17:47:06+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.612994+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.612994+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.730476+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.730476+00:00",
       "freshness": {
         "iso": "2026-10-02T17:47:06+00:00",
-        "hours": 8.29,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.46,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -11624,11 +11495,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-02T20:40:47+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.706898+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.706898+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.810272+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.810272+00:00",
       "freshness": {
         "iso": "2026-10-02T20:40:47+00:00",
-        "hours": 5.4,
+        "hours": 11.56,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -11749,11 +11620,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-01T18:45:09+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.782299+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.782299+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.843094+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.843094+00:00",
       "freshness": {
         "iso": "2026-10-01T18:45:09+00:00",
-        "hours": 31.32,
+        "hours": 37.49,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11876,11 +11747,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-01T18:01:49+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.784113+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.784113+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.844325+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.844325+00:00",
       "freshness": {
         "iso": "2026-10-01T18:01:49+00:00",
-        "hours": 32.04,
+        "hours": 38.21,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12100,7 +11971,8 @@
       "headline_fr_quality_status": "archive_only",
       "headline_fr_quality_reasons": [
         "source_not_native_french"
-      ]
+      ],
+      "semantic_refresh_build": "40.6.418"
     },
     {
       "id": "feed_3f97c7e891fb506d",
@@ -12377,11 +12249,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-01T18:45:29+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.872419+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.872419+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.996575+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.996575+00:00",
       "freshness": {
         "iso": "2026-10-01T18:45:29+00:00",
-        "hours": 31.32,
+        "hours": 37.49,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12504,12 +12376,12 @@
       "event_type": "network",
       "event_label": "Upgrade / mainnet / réseau",
       "event_time": "2026-10-02T18:24:05+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.716872+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.716872+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.813411+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.813411+00:00",
       "freshness": {
         "iso": "2026-10-02T18:24:05+00:00",
-        "hours": 7.67,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.84,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -12633,11 +12505,11 @@
       "event_type": "network",
       "event_label": "Upgrade / mainnet / réseau",
       "event_time": "2026-10-02T03:34:25+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.768369+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.768369+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.835611+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.835611+00:00",
       "freshness": {
         "iso": "2026-10-02T03:34:25+00:00",
-        "hours": 22.5,
+        "hours": 28.67,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12889,11 +12761,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-01T23:17:47+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.774875+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.774875+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.839217+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.839217+00:00",
       "freshness": {
         "iso": "2026-10-01T23:17:47+00:00",
-        "hours": 26.78,
+        "hours": 32.95,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -13119,264 +12991,6 @@
       "semantic_refresh_build": "40.6.418"
     },
     {
-      "id": "feed_169ccb9bfb851b38",
-      "event_id": "feed_169ccb9bfb851b38",
-      "fingerprint": "169ccb9bfb851b38",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Solana’s 150-millisecond settlement upgrade reaches second public test network",
-      "body": "Alpenglow is running on both public test networks, giving application teams a place to check their software before the live blockchain switches.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/tech/2026/09/26/solana-s-150-millisecond-settlement-upgrade-reaches-second-public-test-network",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/tech/2026/09/26/solana-s-150-millisecond-settlement-upgrade-reaches-second-public-test-network"
-      ],
-      "declared_status": "reported",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-09-26T05:00:00+00:00",
-      "first_seen_at": "2026-09-27T22:17:36.215413+00:00",
-      "last_seen_at": "2026-09-27T22:17:36.215413+00:00",
-      "freshness": {
-        "iso": "2026-09-26T05:00:00+00:00",
-        "hours": 41.29,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 59,
-        "level": "Modéré"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [
-        "SOL"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 11,
-      "matched_topics": [
-        "crypto",
-        "market_structure"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "Information de marché à qualifier",
-      "article_ids": [
-        "feed_169ccb9bfb851b38"
-      ],
-      "article_count": 1,
-      "cluster_reason": "same_url",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 56,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 45,
-        "reasons": [
-          "asset_anchor"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "merged_event_ids": [
-        "feed_169ccb9bfb851b38"
-      ],
-      "headline_original": "Solana’s 150-millisecond settlement upgrade reaches second public test network",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Solana’s 150-millisecond settlement upgrade reaches second public test network",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "semantic_refresh_build": "40.6.418"
-    },
-    {
-      "id": "feed_319d54965601c4a6",
-      "event_id": "feed_319d54965601c4a6",
-      "fingerprint": "319d54965601c4a6",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "XRP Ledger’s Batch upgrade slips to Oct. 9 after validator support resets",
-      "body": "The feature would let users bundle up to eight transactions, including asset-and-payment transfers, but a brief drop below the network’s 80% support threshold restarted its two-week activation clock.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/tech/2026/09/26/xrp-ledger-s-batch-upgrade-slips-to-oct-9-after-validator-support-resets",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/tech/2026/09/26/xrp-ledger-s-batch-upgrade-slips-to-oct-9-after-validator-support-resets"
-      ],
-      "declared_status": "reported",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-09-26T04:30:00+00:00",
-      "first_seen_at": "2026-09-27T22:17:36.217945+00:00",
-      "last_seen_at": "2026-09-27T22:17:36.217945+00:00",
-      "freshness": {
-        "iso": "2026-09-26T04:30:00+00:00",
-        "hours": 41.79,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 59,
-        "level": "Modéré"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [
-        "XRP"
-      ],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 11,
-      "matched_topics": [
-        "crypto",
-        "market_structure"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "Information de marché à qualifier",
-      "article_ids": [
-        "feed_319d54965601c4a6"
-      ],
-      "article_count": 1,
-      "cluster_reason": "same_url",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 56,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 45,
-        "reasons": [
-          "asset_anchor"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "merged_event_ids": [
-        "feed_319d54965601c4a6"
-      ],
-      "headline_original": "XRP Ledger’s Batch upgrade slips to Oct. 9 after validator support resets",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] XRP Ledger’s Batch upgrade slips to Oct. 9 after validator support resets",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "semantic_refresh_build": "40.6.418"
-    },
-    {
       "id": "feed_719d54f7c8af2bfb",
       "event_id": "feed_719d54f7c8af2bfb",
       "fingerprint": "719d54f7c8af2bfb",
@@ -13400,11 +13014,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-02T20:46:58+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.703180+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.703180+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.809183+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.809183+00:00",
       "freshness": {
         "iso": "2026-10-02T20:46:58+00:00",
-        "hours": 5.29,
+        "hours": 11.46,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -13788,11 +13402,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-02T20:16:04+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.606852+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.606852+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.727161+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.727161+00:00",
       "freshness": {
         "iso": "2026-10-02T20:16:04+00:00",
-        "hours": 5.81,
+        "hours": 11.98,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -13919,11 +13533,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-02T10:31:16+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.860956+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.860956+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.986433+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.986433+00:00",
       "freshness": {
         "iso": "2026-10-02T10:31:16+00:00",
-        "hours": 15.55,
+        "hours": 21.72,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -14049,11 +13663,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-02T08:28:19+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.866545+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.866545+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.991254+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.991254+00:00",
       "freshness": {
         "iso": "2026-10-02T08:28:19+00:00",
-        "hours": 17.6,
+        "hours": 23.77,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -14179,11 +13793,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-01T12:23:15+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.658155+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.658155+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.755457+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.755457+00:00",
       "freshness": {
         "iso": "2026-10-01T12:23:15+00:00",
-        "hours": 37.69,
+        "hours": 43.86,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -14562,12 +14176,12 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-02T17:15:35+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.847946+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.847946+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.976791+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.976791+00:00",
       "freshness": {
         "iso": "2026-10-02T17:15:35+00:00",
-        "hours": 8.82,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.98,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -14691,11 +14305,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-02T09:14:21+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.863830+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.863830+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.988748+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.988748+00:00",
       "freshness": {
         "iso": "2026-10-02T09:14:21+00:00",
-        "hours": 16.84,
+        "hours": 23.0,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -14819,11 +14433,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-01T11:30:38+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.883241+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.883241+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.006429+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.006429+00:00",
       "freshness": {
         "iso": "2026-10-01T11:30:38+00:00",
-        "hours": 38.56,
+        "hours": 44.73,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -14947,12 +14561,12 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-01T07:06:30+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.890597+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.890597+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.013108+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.013108+00:00",
       "freshness": {
         "iso": "2026-10-01T07:06:30+00:00",
-        "hours": 42.97,
-        "label": "Récente · moins de 48 h",
+        "hours": 49.14,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -15075,12 +14689,12 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-01T04:58:52+00:00",
-      "first_seen_at": "2026-10-03T02:04:29.893400+00:00",
-      "last_seen_at": "2026-10-03T02:04:29.893400+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.015687+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.015687+00:00",
       "freshness": {
         "iso": "2026-10-01T04:58:52+00:00",
-        "hours": 45.09,
-        "label": "Récente · moins de 48 h",
+        "hours": 51.26,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -15806,6 +15420,381 @@
         "source_not_native_french"
       ],
       "semantic_refresh_build": "40.6.418"
+    },
+    {
+      "id": "feed_e01da4d8b16e3028",
+      "event_id": "feed_e01da4d8b16e3028",
+      "fingerprint": "e01da4d8b16e3028",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Introducing The Information Exchange on Solana, Powered by Decrypt and MYR",
+      "body": "Decrypt is the destination, Myriad is the infrastructure and MYR is the token for a connected media ecosystem.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/379655/introducing-the-information-exchange-powered-by-decrypt-and-myr",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/379655/introducing-the-information-exchange-powered-by-decrypt-and-myr"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-09-30T16:36:10+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.766097+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.766097+00:00",
+      "freshness": {
+        "iso": "2026-09-30T16:36:10+00:00",
+        "hours": 63.64,
+        "label": "Cette semaine",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 55,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [
+        "SOL"
+      ],
+      "sectors": [
+        "Exchanges",
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "Information de marché à qualifier",
+      "article_ids": [
+        "feed_e01da4d8b16e3028"
+      ],
+      "article_count": 1,
+      "cluster_reason": "single_article",
+      "source_tier": 4,
+      "source_tier_label": "Média crypto spécialisé",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 52,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 45,
+        "reasons": [
+          "asset_anchor"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Introducing The Information Exchange on Solana, Powered by Decrypt and MYR",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Introducing The Information Exchange on Solana, Powered by Decrypt and MYR",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_30b18db35522123b",
+      "event_id": "feed_30b18db35522123b",
+      "fingerprint": "30b18db35522123b",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Ex-NCA Officer Must Repay $2.4M for Bitcoin He Stole When It Was Worth $77K",
+      "body": "Paul Chowles took 50 BTC from a Silk Road 2.0 seizure in 2017. Prosecutors have now valued the theft at more than 30 times that.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/379702/ex-nca-officer-must-repay-2-4m-for-bitcoin-he-stole-when-it-was-worth-77k",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/379702/ex-nca-officer-must-repay-2-4m-for-bitcoin-he-stole-when-it-was-worth-77k"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-09-30T15:17:45+00:00",
+      "first_seen_at": "2026-10-03T08:14:35.769587+00:00",
+      "last_seen_at": "2026-10-03T08:14:35.769587+00:00",
+      "freshness": {
+        "iso": "2026-09-30T15:17:45+00:00",
+        "hours": 64.95,
+        "label": "Cette semaine",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 55,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "Information de marché à qualifier",
+      "article_ids": [
+        "feed_30b18db35522123b"
+      ],
+      "article_count": 1,
+      "cluster_reason": "single_article",
+      "source_tier": 4,
+      "source_tier_label": "Média crypto spécialisé",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 52,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 45,
+        "reasons": [
+          "asset_anchor"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Ex-NCA Officer Must Repay $2.4M for Bitcoin He Stole When It Was Worth $77K",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Ex-NCA Officer Must Repay $2.4M for Bitcoin He Stole When It Was Worth $77K",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_03bef0002c1b5d5b",
+      "event_id": "feed_03bef0002c1b5d5b",
+      "fingerprint": "03bef0002c1b5d5b",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Crypto thieves attack man in home and threaten to kill pregnant wife's baby in 'horrific' robbery",
+      "body": "The man was beaten with hammers until he transferred hundreds of thousands of pounds of cryptocurrency.",
+      "source_name": "BBC Business",
+      "source_url": "https://www.bbc.co.uk/news/articles/c6eq84eygz0qo?at_medium=RSS&at_campaign=rss",
+      "source_host": "bbc.co.uk",
+      "source_group": "finance",
+      "source_class": "Presse économique reconnue",
+      "source_count": 1,
+      "source_names": [
+        "BBC Business"
+      ],
+      "source_urls": [
+        "https://www.bbc.co.uk/news/articles/c6eq84eygz0qo?at_medium=RSS&at_campaign=rss"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-10-01T23:45:06+00:00",
+      "first_seen_at": "2026-10-03T08:14:36.037242+00:00",
+      "last_seen_at": "2026-10-03T08:14:36.037242+00:00",
+      "freshness": {
+        "iso": "2026-10-01T23:45:06+00:00",
+        "hours": 32.49,
+        "label": "Récente · moins de 48 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 76,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 56,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 16,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 10,
+      "matched_topics": [
+        "crypto",
+        "geopolitics"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "Information de marché à qualifier",
+      "article_ids": [
+        "feed_03bef0002c1b5d5b"
+      ],
+      "article_count": 1,
+      "cluster_reason": "single_article",
+      "source_tier": 3,
+      "source_tier_label": "Presse financière / mondiale",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 51,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 35,
+        "reasons": [
+          "crypto_market_anchor"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Crypto thieves attack man in home and threaten to kill pregnant wife's baby in 'horrific' robbery",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Crypto thieves attack man in home and threaten to kill pregnant wife's baby in 'horrific' robbery",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
     }
   ],
   "event_core": {
