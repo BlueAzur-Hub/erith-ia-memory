@@ -847,17 +847,33 @@ function aetherNewsCanonicalEvent(event){
     const text=String(value||"").replace(/\s+/g," ").trim();
     return text.length>max?`${text.slice(0,Math.max(8,max-1)).trimEnd()}…`:text;
   }
+  function aetherDisplayCurrency(){
+    try{return String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"EUR").toUpperCase()==="USD"?"USD":"EUR";}
+    catch(_){return"EUR";}
+  }
+  function aetherDisplayPrice(coin){
+    const currency=aetherDisplayCurrency();
+    const raw=currency==="USD"?coin?.priceUsd:(coin?.priceEur??coin?.price);
+    const value=aetherSystemNumber(raw);
+    return{currency,value:value!==null&&value>0?value:null};
+  }
+  function aetherFormatDisplayPrice(value,currency,maximumFractionDigits=2){
+    const n=aetherSystemNumber(value);
+    if(n===null||n<=0)return"—";
+    return new Intl.NumberFormat("fr-FR",{style:"currency",currency,maximumFractionDigits}).format(n);
+  }
+
   function aetherMarketBrief(){
     try{
       const coins=(typeof state!=="undefined"&&Array.isArray(state?.coins))?state.coins:[];
       const top5=new Set(["BTC","ETH","BNB","XRP","SOL"]);
       const rows=coins.filter(row=>top5.has(String(row?.symbol||"").toUpperCase()));
       const btc=rows.find(row=>String(row?.symbol||"").toUpperCase()==="BTC")||coins.find(row=>row?.id==="bitcoin");
-      const price=aetherSystemNumber(btc?.price),change=aetherSystemNumber(btc?.change24h);
+      const display=aetherDisplayPrice(btc),price=display.value,change=aetherSystemNumber(btc?.change24h);
       const leader=rows.filter(row=>aetherSystemNumber(row?.change24h)!==null).sort((x,y)=>Number(y.change24h)-Number(x.change24h))[0]||null;
       const parts=[];
       if(price!==null&&price>0){
-        parts.push(`BTC ${new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:0}).format(price)}`);
+        parts.push(`BTC ${aetherFormatDisplayPrice(price,display.currency,0)}`);
         if(change!==null)parts.push(`${change>=0?"+":""}${change.toFixed(2)} %`);
       }
       const leaderChange=aetherSystemNumber(leader?.change24h);
@@ -1825,11 +1841,11 @@ function aetherNewsMarketSemantic(){
   function aetherBtc(){
     try{
       const coin=(typeof state!=="undefined"&&Array.isArray(state?.coins))?state.coins.find(row=>String(row?.symbol||"").toUpperCase()==="BTC"||row?.id==="bitcoin"):null;
-      const price=aetherSystemNumber(coin?.price),change=aetherSystemNumber(coin?.change24h);
-      if(price===null||price<=0)return{value:"—",tone:"flat",title:"BTC live indisponible"};
-      const priceText=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:price>=1000?0:2}).format(price);
+      const display=aetherDisplayPrice(coin),price=display.value,change=aetherSystemNumber(coin?.change24h);
+      if(price===null||price<=0)return{value:"—",tone:"flat",title:`BTC ${display.currency} indisponible · aucune estimation`};
+      const priceText=aetherFormatDisplayPrice(price,display.currency,price>=1000?0:2);
       const changeText=change===null?"":` · ${change>=0?"+":""}${change.toFixed(2)} %`;
-      return{value:`${priceText}${changeText}`,tone:change>0?"positive":change<0?"negative":"flat",title:"Bitcoin · prix live Agent-Crypto"};
+      return{value:`${priceText}${changeText}`,tone:change>0?"positive":change<0?"negative":"flat",title:`Bitcoin · prix ${display.currency} explicite · Agent-Crypto`};
     }catch(_){return{value:"—",tone:"flat",title:"BTC live indisponible"};}
   }
   function renderAetherSystem(){
@@ -2238,6 +2254,9 @@ function aetherNewsMarketSemantic(){
     news_translation_canonical_original_untouched:true,
     news_translation_canonical_original_preserved:true
   });
+  window.addEventListener("agent-crypto:quote-architecture-changed",()=>{
+    try{renderAetherSystem();renderAether();}catch(_){}
+  },{passive:true});
   globalThis.AgentCryptoAether=api;
   /* Compatibility read-only alias for diagnostics that knew the R6/R7 object. */
   globalThis.AgentCryptoAetherSystem=api;
