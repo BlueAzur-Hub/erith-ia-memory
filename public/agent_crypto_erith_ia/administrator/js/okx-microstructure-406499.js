@@ -30,7 +30,7 @@
   const bookError=(code,message)=>{const error=new Error(message);error.code=code;return error;};
   const parsePair=value=>{
     const match=String(value||"").trim().toUpperCase().replace(/_/g,"-").match(/^([A-Z0-9]+)[\/-]([A-Z0-9]+)$/);
-    return match?{base:match[1],quote:match[2],display:\`\${match[1]}/\${match[2]}\`}:null;
+    return match?{base:match[1],quote:match[2],display:`${match[1]}/${match[2]}`}:null;
   };
   const parseSourceTime=value=>{
     const raw=String(value||"").trim();
@@ -433,16 +433,16 @@
     if(String(payload?.provider||"").toLowerCase()!=="okx")throw bookError("CONTRACT_INVALID","provider != OKX");
     if(String(payload?.status||"").toLowerCase()!=="ok")throw bookError("BACKEND_STATUS",payload?.error||("status "+payload?.status));
     const payloadAsset=String(payload?.asset||"").trim().toUpperCase();
-    if(payloadAsset!==asset)throw bookError("ASSET_MISMATCH",\`actif reçu \${payloadAsset||"?"} != demandé \${asset}\`);
+    if(payloadAsset!==asset)throw bookError("ASSET_MISMATCH",`actif reçu ${payloadAsset||"?"} != demandé ${asset}`);
     const pair=parsePair(payload?.pair);
     if(!pair)throw bookError("PAIR_MISMATCH","paire source absente ou invalide");
-    if(pair.base!==asset)throw bookError("PAIR_MISMATCH",\`paire reçue \${pair.display} != actif demandé \${asset}\`);
-    if(pair.quote!=="EUR")throw bookError("QUOTE_MISMATCH",\`devise reçue \${pair.quote} != EUR\`);
+    if(pair.base!==asset)throw bookError("PAIR_MISMATCH",`paire reçue ${pair.display} != actif demandé ${asset}`);
+    if(pair.quote!=="EUR")throw bookError("QUOTE_MISMATCH",`devise reçue ${pair.quote} != EUR`);
     const observedMs=parseSourceTime(payload?.observed_at_utc);
     if(observedMs===null)throw bookError("SOURCE_TIME_INVALID","timestamp source absent ou invalide");
     const ageMs=nowMs-observedMs;
     if(ageMs < -FUTURE_TOLERANCE_MS)throw bookError("SOURCE_TIME_FUTURE","timestamp source dans le futur");
-    if(ageMs > FRESH_MAX_AGE_MS)throw bookError("STALE_BOOK",\`carnet périmé (\${Math.round(ageMs/1000)} s)\`);
+    if(ageMs > FRESH_MAX_AGE_MS)throw bookError("STALE_BOOK",`carnet périmé (${Math.round(ageMs/1000)} s)`);
     const bids=normalizeRows(payload?.bids).sort((a,b)=>b[0]-a[0]);
     const asks=normalizeRows(payload?.asks).sort((a,b)=>a[0]-b[0]);
     if(!bids.length||!asks.length)throw bookError("BOOK_EMPTY","carnet vide");
@@ -458,7 +458,7 @@
   function clearBookForAsset(asset){
     const next=String(asset||"BTC").trim().toUpperCase()||"BTC";
     state.asset=next;state.requestedAsset=next;state.loadedAsset=null;
-    state.pair=\`\${next}/EUR\`;state.quote="EUR";
+    state.pair=`${next}/EUR`;state.quote="EUR";
     state.bids=[];state.asks=[];state.capturedAt=null;state.sourceObservedAt=null;state.receivedAt=null;state.sourceAgeMs=null;
     state.backendVersion=null;state.lastLatencyMs=null;state.freshness="UNKNOWN";
   }
@@ -615,10 +615,10 @@
     const sourceTime=state.sourceObservedAt?new Date(state.sourceObservedAt).toLocaleTimeString("fr-FR"):"source inconnue";
     const receivedTime=state.receivedAt?new Date(state.receivedAt).toLocaleTimeString("fr-FR"):null;
     meta.textContent=state.loading?
-      \`\${state.requestedAsset}/EUR · actualisation…\`:
+      `${state.requestedAsset}/EUR · actualisation…`:
       state.error?
-        \`\${state.loadedAsset===state.requestedAsset&&state.bids.length?state.pair:state.requestedAsset+"/EUR"} · \${freshness} · \${state.error}\`:
-        \`\${state.pair} · source \${sourceTime}\${receivedTime?" · reçu "+receivedTime:""} · âge \${Number.isFinite(state.sourceAgeMs)?Math.round(state.sourceAgeMs/1000)+" s":"—"} · \${state.lastLatencyMs??"—"} ms\`;
+        `${state.loadedAsset===state.requestedAsset&&state.bids.length?state.pair:state.requestedAsset+"/EUR"} · ${freshness} · ${state.error}`:
+        `${state.pair} · source ${sourceTime}${receivedTime?" · reçu "+receivedTime:""} · âge ${Number.isFinite(state.sourceAgeMs)?Math.round(state.sourceAgeMs/1000)+" s":"—"} · ${state.lastLatencyMs??"—"} ms`;
 
     if(state.loading&&!state.bids.length){
       kpis.innerHTML="";
@@ -627,7 +627,7 @@
     }
     if(state.error&&!state.bids.length){
       kpis.innerHTML="";
-      body.innerHTML=\`<div class="oms-error">\${esc(state.error)}<br><small>Le graphique reste utilisable. Vérifier le Backend local 8790 si l’erreur persiste.</small></div>\`;
+      body.innerHTML=`<div class="oms-error">${esc(state.error)}<br><small>Le graphique reste utilisable. Vérifier le Backend local 8790 si l’erreur persiste.</small></div>`;
       return;
     }
     if(!state.bids.length||!state.asks.length){
@@ -637,13 +637,13 @@
     }
 
     const m=metrics();
-    kpis.innerHTML=\`
-      <span><small>BEST BID</small><b>\${fmt(m.bid,2)}</b></span>
-      <span><small>BEST ASK</small><b>\${fmt(m.ask,2)}</b></span>
-      <span><small>SPREAD</small><b>\${fmt(m.spread,2)} · \${fmt(m.spreadBp,2)} bp</b></span>
-      <span><small>MID</small><b>\${fmt(m.mid,2)}</b></span>
-      <span><small>BID TOP20</small><b>\${eur(m.bid20)}</b></span>
-      <span><small>ASK TOP20</small><b>\${eur(m.ask20)}</b></span>\`;
+    kpis.innerHTML=`
+      <span><small>BEST BID</small><b>${fmt(m.bid,2)}</b></span>
+      <span><small>BEST ASK</small><b>${fmt(m.ask,2)}</b></span>
+      <span><small>SPREAD</small><b>${fmt(m.spread,2)} · ${fmt(m.spreadBp,2)} bp</b></span>
+      <span><small>MID</small><b>${fmt(m.mid,2)}</b></span>
+      <span><small>BID TOP20</small><b>${eur(m.bid20)}</b></span>
+      <span><small>ASK TOP20</small><b>${eur(m.ask20)}</b></span>`;
 
     if(state.tab==="depth")renderDepth(body,m);else renderBook(body,m);
   }
