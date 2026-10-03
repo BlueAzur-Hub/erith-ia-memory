@@ -426,47 +426,112 @@
     return true;
   }
 
-  async function fetchBook(asset){
-    const ctl=new AbortController();
-    const timer=setTimeout(()=>ctl.abort(),12000);
+  function validateBookPayload(payload,requestedAsset,nowMs=Date.now()){
+    const asset=String(requestedAsset||"").trim().toUpperCase();
+    if(!asset)throw bookError("ASSET_MISMATCH","actif demandé absent");
+    if(payload?.read_only!==true)throw bookError("CONTRACT_INVALID","contrat read-only absent");
+    if(String(payload?.provider||"").toLowerCase()!=="okx")throw bookError("CONTRACT_INVALID","provider != OKX");
+    if(String(payload?.status||"").toLowerCase()!=="ok")throw bookError("BACKEND_STATUS",payload?.error||("status "+payload?.status));
+    const payloadAsset=String(payload?.asset||"").trim().toUpperCase();
+    if(payloadAsset!==asset)throw bookError("ASSET_MISMATCH",\`actif reçu \${payloadAsset||"?"} != demandé \${asset}\`);
+    const pair=parsePair(payload?.pair);
+    if(!pair)throw bookError("PAIR_MISMATCH","paire source absente ou invalide");
+    if(pair.base!==asset)throw bookError("PAIR_MISMATCH",\`paire reçue \${pair.display} != actif demandé \${asset}\`);
+    if(pair.quote!=="EUR")throw bookError("QUOTE_MISMATCH",\`devise reçue \${pair.quote} != EUR\`);
+    const observedMs=parseSourceTime(payload?.observed_at_utc);
+    if(observedMs===null)throw bookError("SOURCE_TIME_INVALID","timestamp source absent ou invalide");
+    const ageMs=nowMs-observedMs;
+    if(ageMs < -FUTURE_TOLERANCE_MS)throw bookError("SOURCE_TIME_FUTURE","timestamp source dans le futur");
+    if(ageMs > FRESH_MAX_AGE_MS)throw bookError("STALE_BOOK",\`carnet périmé (\${Math.round(ageMs/1000)} s)\`);
+    const bids=normalizeRows(payload?.bids).sort((a,b)=>b[0]-a[0]);
+    const asks=normalizeRows(payload?.asks).sort((a,b)=>a[0]-b[0]);
+    if(!bids.length||!asks.length)throw bookError("BOOK_EMPTY","carnet vide");
+    if(bids[0][0]>asks[0][0])throw bookError("BOOK_CROSSED","carnet croisé");
+    return {
+      payload,bids,asks,asset,pair:pair.display,quote:pair.quote,
+      sourceObservedAt:new Date(observedMs).toISOString(),
+      receivedAt:new Date(nowMs).toISOString(),
+      ageMs:Math.max(0,ageMs)
+    };
+  }
+
+  function clearBookForAsset(asset){
+    const next=String(asset||"BTC").trim().toUpperCase()||"BTC";
+    state.asset=next;state.requestedAsset=next;state.loadedAsset=null;
+    state.pair=\`\${next}/EUR\`;state.quote="EUR";
+    state.bids=[];state.asks=[];state.capturedAt=null;state.sourceObservedAt=null;state.receivedAt=null;state.sourceAgeMs=null;
+    state.backendVersion=null;state.lastLatencyMs=null;state.freshness="UNKNOWN";
+  }
+
+  async function fetchBook(asset,controller=new AbortController()){
+    const timer=setTimeout(()=>controller.abort(),12000);
     const started=performance.now();
     try{
       const url=new URL(BACKEND+"/orderbook");
       url.searchParams.set("asset",asset);
       url.searchParams.set("depth","100");
-      const response=await fetch(url,{cache:"no-store",signal:ctl.signal,headers:{Accept:"application/json"}});
-      if(!response.ok)throw new Error("Backend 8790 orderbook HTTP "+response.status);
+      const response=await fetch(url,{cache:"no-store",signal:controller.signal,headers:{Accept:"application/json"}});
+      if(!response.ok)throw bookError("BACKEND_HTTP","Backend 8790 orderbook HTTP "+response.status);
       const payload=await response.json();
-      if(payload?.read_only!==true)throw new Error("contrat read-only absent");
-      if(String(payload?.provider||"").toLowerCase()!=="okx")throw new Error("provider != OKX");
-      if(String(payload?.status||"").toLowerCase()!=="ok")throw new Error(payload?.error||("status "+payload?.status));
-      const bids=normalizeRows(payload?.bids).sort((a,b)=>b[0]-a[0]);
-      const asks=normalizeRows(payload?.asks).sort((a,b)=>a[0]-b[0]);
-      if(!bids.length||!asks.length)throw new Error("carnet vide");
-      if(bids[0][0]>asks[0][0])throw new Error("carnet croisé");
-      return {payload,bids,asks,latencyMs:Math.max(0,Math.round(performance.now()-started))};
+      const validated=validateBookPayload(payload,asset,Date.now());
+      return {...validated,latencyMs:Math.max(0,Math.round(performance.now()-started))};
     }finally{clearTimeout(timer);}
   }
 
   async function refresh(options={}){
-    if(state.loading)return false;
     mount();
-    state.loading=true;state.error=null;state.asset=selectedAsset();
-    if(!options.automatic)render();
-    try{
-      const result=await fetchBook(state.asset);
-      state.bids=result.bids;
-      state.asks=result.asks;
-      state.pair=String(result.payload?.pair||state.asset+"/EUR");
-      state.backendVersion=String(result.payload?.backend_version||"?");
-      state.capturedAt=String(result.payload?.observed_at_utc||new Date().toISOString());
-      state.lastLatencyMs=result.latencyMs;
-    }catch(error){
-      state.error=error?.name==="AbortError"?"Backend 8790 : timeout carnet":String(error?.message||error);
-    }finally{
-      state.loading=false;render();scheduleLive();
+    const requested=String(options.asset||selectedAsset()||"BTC").trim().toUpperCase();
+    state.asset=requested;state.requestedAsset=requested;
+
+    if(state.loading){
+      if(requested!==state.loadingAsset){
+        state.pendingAsset=requested;
+        if(state.loadedAsset!==requested)clearBookForAsset(requested);
+        try{state.activeController?.abort();}catch(_){}
+        render();
+      }
+      return false;
     }
-    return !state.error;
+
+    const requestAsset=requested;
+    if(state.loadedAsset!==requestAsset)clearBookForAsset(requestAsset);
+    const seq=++state.requestSeq;
+    const controller=new AbortController();
+    state.activeController=controller;state.loadingAsset=requestAsset;state.pendingAsset=null;
+    state.loading=true;state.error=null;state.freshness="UNKNOWN";
+    if(!options.automatic)render();
+
+    let ok=false;
+    try{
+      const result=await fetchBook(requestAsset,controller);
+      if(seq!==state.requestSeq||state.requestedAsset!==requestAsset){
+        throw bookError("SUPERSEDED_REQUEST","réponse carnet dépassée par une nouvelle sélection");
+      }
+      state.bids=result.bids;state.asks=result.asks;
+      state.loadedAsset=result.asset;state.asset=result.asset;state.pair=result.pair;state.quote=result.quote;
+      state.backendVersion=String(result.payload?.backend_version||"?");
+      state.capturedAt=result.sourceObservedAt;state.sourceObservedAt=result.sourceObservedAt;state.receivedAt=result.receivedAt;state.sourceAgeMs=result.ageMs;
+      state.lastLatencyMs=result.latencyMs;state.freshness="FRESH";state.error=null;ok=true;
+    }catch(error){
+      const superseded=error?.code==="SUPERSEDED_REQUEST"||(error?.name==="AbortError"&&state.pendingAsset&&state.pendingAsset!==requestAsset);
+      if(!superseded){
+        const freshState=classifyError(error);
+        const message=error?.name==="AbortError"?"Backend 8790 : timeout / annulation carnet":String(error?.message||error);
+        if(state.loadedAsset!==requestAsset)clearBookForAsset(requestAsset);
+        state.freshness=freshState;state.error=message;
+      }
+    }finally{
+      state.loading=false;state.loadingAsset=null;state.activeController=null;
+      const pending=state.pendingAsset;
+      state.pendingAsset=null;
+      render();
+      if(pending&&state.open){
+        queueMicrotask(()=>void refresh({automatic:true,asset:pending}));
+      }else{
+        scheduleLive();
+      }
+    }
+    return ok;
   }
 
   function metrics(){
