@@ -28,6 +28,7 @@ need("Build 40.6.515 · Administrator" in index and "Build 40.6.515 · Administr
 need('administrator-release" content="GRAPH OWNER HANDSHAKE · USD COMMIT AFTER RENDER"' in index,"release meta")
 need('global-quote-router-406514.js?v=40.6.515' in index,"router delivery")
 need('graph-owner-handshake-406515.js?v=40.6.515' in index,"handshake delivery")
+need('post-boot-runtime-loader.js?v=40.6.515' in index,"post-boot cache token")
 need(index.index("global-quote-router-406514.js?v=40.6.515") < index.index("graph-owner-handshake-406515.js?v=40.6.515"),"router before handshake")
 need('id="atlasStableStackInterface">Build 40.6.515<' in atlas,"atlas interface")
 need('const BUILD="40.6.515"' in loader,"loader build")
