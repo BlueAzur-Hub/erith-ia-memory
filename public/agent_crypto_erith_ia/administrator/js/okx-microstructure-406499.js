@@ -574,7 +574,7 @@
       const superseded=error?.code==="SUPERSEDED_REQUEST"||(error?.name==="AbortError"&&state.pendingAsset&&state.pendingAsset!==requestAsset);
       if(!superseded){
         const freshState=classifyError(error);
-        const message=error?.name==="AbortError"?"Backend 8790 : timeout / annulation carnet":String(error?.message||error);
+        const ext=externalContext();const message=error?.name==="AbortError"?(ext.active?`${ext.providerLabel||ext.provider} : timeout / annulation carnet`:"Backend 8790 : timeout / annulation carnet"):String(error?.message||error);
         if(state.loadedAsset!==requestAsset||state.loadedQuote!==requestQuote)clearBookForAsset(requestAsset,requestQuote);
         state.freshness=freshState;state.error=message;
       }
