@@ -1,4 +1,4 @@
-/* Agent-Crypto — 40.6.523 MARKET + FICHE USD OWNER REBIND
+/* Agent-Crypto — 40.6.525 FICHE USD DE-DUP + EUR SYMMETRY
    Bounded presentation decorator for Market Snapshot + Fiche only.
    Reads explicit priceUsd / marketCapUsd / volume24hUsd already present in Market data.
    No EUR→USD conversion. No Market Core mutation. No broker mutation.
@@ -7,7 +7,7 @@
 (()=>{
   "use strict";
 
-  const BUILD="40.6.523";
+  const BUILD="40.6.525";
   const WRAPPED=Symbol.for("agentCrypto.marketFicheDisplay406518");
   const originals=Object.create(null);
   const runtime={
@@ -200,15 +200,22 @@
     if(!root||!coin)return false;
     const selected=String(currency).toUpperCase()==="USD"?"USD":"EUR";
     const first=helpMetric(root,label=>label==="Prix direct EUR"||label==="Prix affichage USD");
-    const second=helpMetric(root,label=>label==="Prix USD marché");
+    const second=helpMetric(root,label=>label==="Prix USD marché"||label==="Source USD");
     const cap=helpMetric(root,label=>label==="Capitalisation");
     const volume=helpMetric(root,label=>label==="Volume 24 h");
     const projection=projectCoin(coin,selected);
     const usd=projectCoin(coin,"USD");
 
     if(selected==="USD"){
-      setHelpMetric(first,"Prix affichage USD",projection?.price!==null&&projection?.price!==undefined?formatMoney(projection.price,"USD"):"—");
-      setHelpMetric(second,"Prix USD marché",usd?.price!==null&&usd?.price!==undefined?formatMoney(usd.price,"USD"):"—");
+      const usdPrice=usd?.price!==null&&usd?.price!==undefined?formatMoney(usd.price,"USD"):"—";
+      setHelpMetric(first,"Prix affichage USD",usdPrice);
+      setHelpMetric(
+        second,
+        "Source USD",
+        usd?.price!==null&&usd?.price!==undefined
+          ?`${usdSourceLabel(coin)} · ${ageLabel(usdTimestamp(coin))}`
+          :"Indisponible · aucune estimation"
+      );
       setHelpMetric(cap,"Capitalisation",projection?.marketCap!==null&&projection?.marketCap!==undefined?formatCompactMoney(projection.marketCap,"USD",{marketCap:true}):"—");
       setHelpMetric(volume,"Volume 24 h",projection?.volume24h!==null&&projection?.volume24h!==undefined?formatCompactMoney(projection.volume24h,"USD"):"—");
       const observed=root.querySelector?.('[data-help-live="observed-source"]');
@@ -218,7 +225,8 @@
     }
 
     const eur=projectCoin(coin,"EUR");
-    if(first?.querySelector?.("small"))first.querySelector("small").textContent="Prix direct EUR";
+    setHelpMetric(first,"Prix direct EUR",eur?.price!==null&&eur?.price!==undefined?formatMoney(eur.price,"EUR"):"—");
+    setHelpMetric(second,"Prix USD marché",usd?.price!==null&&usd?.price!==undefined?formatMoney(usd.price,"USD"):"—");
     setHelpMetric(cap,"Capitalisation",eur?.marketCap!==null&&eur?.marketCap!==undefined?formatCompactMoney(eur.marketCap,"EUR",{marketCap:true}):"—");
     setHelpMetric(volume,"Volume 24 h",eur?.volume24h!==null&&eur?.volume24h!==undefined?formatCompactMoney(eur.volume24h,"EUR"):"—");
     root.dataset&&(root.dataset.displayCurrency="EUR");
@@ -549,6 +557,8 @@
         display_currency_supported:["EUR","USD"].includes(displayCurrency()),
         late_market_price_rebind:true,
         market_help_fiche_projection:true,
+        fiche_usd_second_metric_is_source:true,
+        fiche_eur_restore_symmetric:true,
         market_only:true,
         fiche_only:true,
         graph_changed:false,
@@ -580,6 +590,8 @@
     display_projection_only:true,
     late_market_price_rebind:true,
     market_help_fiche_projection:true,
+    fiche_usd_second_metric_is_source:true,
+    fiche_eur_restore_symmetric:true,
     eur_to_usd_conversion:false,
     broker_changed:false,
     graph_changed:false,
