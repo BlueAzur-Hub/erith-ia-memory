@@ -5048,6 +5048,14 @@ function atlasRenderEmptyGraphSelection() {
   if (state.chartEngineV2?.controller) {
     try { state.chartEngineV2.controller.abort(); } catch {}
   }
+  // 40.6.536 — explicit empty selection is a terminal idle state, never a
+  // cancelled request that still looks "loading" to the next Reset/Solo action.
+  if (state.chartEngineV2) {
+    state.chartEngineV2.controller = null;
+    state.chartEngineV2.loading = false;
+    state.chartEngineV2.activeRequestKey = null;
+    state.chartEngineV2.retryKey = null;
+  }
   state.chartRenderToken += 1;
   state.comparisonRenderToken += 1;
   atlasDestroyRealChart();
@@ -12729,6 +12737,14 @@ function atlasPrepareChartSelection(coin, period = 1, options = {}) {
   if (state.chartEngineV2?.controller) {
     try { state.chartEngineV2.controller.abort(); } catch {}
   }
+  // 40.6.536 — every new canonical selection starts from an idle native request owner.
+  // Clear/abort may have stopped the previous fetch while leaving its loading key behind.
+  if (state.chartEngineV2) {
+    state.chartEngineV2.controller = null;
+    state.chartEngineV2.loading = false;
+    state.chartEngineV2.activeRequestKey = null;
+    state.chartEngineV2.retryKey = null;
+  }
   const normalizedPeriod = Number(period || 1);
   state.selectedCoinId = coin.id;
   state.chartPeriodDays = normalizedPeriod;
@@ -15155,14 +15171,28 @@ function atlasScannerDecorateEntry(tx, coin, result, source) {
 }
 
 function atlasScannerRowsWindowCount(rows, start, end) {
-  let count = 0;
-  for (const row of rows) {
-    const timestamp = Number(row?.t);
-    if (timestamp < start) continue;
-    if (timestamp > end) break;
-    count += 1;
-  }
-  return count;
+  // 40.6.536 — exact same inclusive window count, but O(log n) instead of
+  // rescanning every historical row for every candidate combination.
+  if (!Array.isArray(rows) || !rows.length) return 0;
+  const lowerBound = target => {
+    let lo = 0, hi = rows.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (Number(rows[mid]?.t) < target) lo = mid + 1;
+      else hi = mid;
+    }
+    return lo;
+  };
+  const upperBound = target => {
+    let lo = 0, hi = rows.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (Number(rows[mid]?.t) <= target) lo = mid + 1;
+      else hi = mid;
+    }
+    return lo;
+  };
+  return Math.max(0, upperBound(end) - lowerBound(start));
 }
 
 function atlasScannerSubsetIsCompatible(prepared, period) {
@@ -15530,6 +15560,11 @@ function atlasScannerStoredHistory(coin, period) {
   return candidates[0] || null;
 }
 
+async function atlasScannerYieldToUi(tx) {
+  await new Promise(resolve => setTimeout(resolve, 0));
+  return atlasScannerCurrent(tx);
+}
+
 async function atlasScannerRun(tx) {
   const accepted = [];
   const rejected = [];
@@ -15547,6 +15582,9 @@ async function atlasScannerRun(tx) {
     );
     atlasScannerSetTransactionFlag(true);
     atlasScannerProgress(tx);
+    atlasRenderComparisonControls();
+    // Let Firefox paint the busy state before cache compatibility work begins.
+    if (!(await atlasScannerYieldToUi(tx))) return false;
 
     /*
       Phase 1 : tous les caches sont examinés avant la première requête réseau.
@@ -15573,6 +15611,9 @@ async function atlasScannerRun(tx) {
           tx.candidateIds
         ).length;
         atlasScannerProgress(tx, coin.symbol);
+        // Cache-heavy scans used to monopolize the browser event loop. Yield
+        // periodically without changing candidate order or compatibility truth.
+        if (tx.cacheChecked % 3 === 0 && !(await atlasScannerYieldToUi(tx))) return false;
 
         if (tx.validCount >= ATLAS_SCANNER_TARGET) {
           const cachedFinal = atlasScannerAligned(
@@ -15702,6 +15743,18 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     if (!ATLAS_SCANNER_PRESETS.has(preset)) {
       return atlasScannerVisibleFailure(preset, `${label} refusé · preset inconnu`);
     }
+    const requestedPeriod = Number(options.period || state.chartPeriodDays || 1);
+    const activeTx = atlasScannerTransaction;
+    if (
+      activeTx
+      && !activeTx.cancelled
+      && activeTx.preset === preset
+      && Number(activeTx.period) === requestedPeriod
+    ) {
+      atlasScannerSetUiState(preset, "running", `${label} · calcul déjà en cours · clic répété ignoré`);
+      atlasRenderComparisonControls();
+      return true;
+    }
     if (!state.liveOk) {
       return atlasScannerVisibleFailure(preset, `${label} refusé · Livecheck requis`);
     }
@@ -15711,9 +15764,12 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
 
     atlasScannerCancel("nouvelle demande", { keepUi: true });
     atlasScannerInvalidateChartWork(`start:${preset}`);
+    if (globalThis.__atlasExternalChartContext?.active === true) {
+      atlasExternalChartClear(`scanner:${preset}`);
+    }
     const displayedSnapshot = atlasScannerStateSnapshot();
 
-    const period = Number(options.period || state.chartPeriodDays || 1);
+    const period = requestedPeriod;
     const pool = atlasScannerPool(preset, period);
 
     if (pool.length < ATLAS_SCANNER_TARGET) {
@@ -15769,6 +15825,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       `${label} · ${atlasMarketFrameShortId(marketFrame)} · classement ${marketBasisLabel} · démarrage`
     );
     atlasScannerProgress(tx);
+    atlasRenderComparisonControls();
 
     void atlasScannerRun(tx).catch(error => {
       if (error?.name === "AbortError") return;
