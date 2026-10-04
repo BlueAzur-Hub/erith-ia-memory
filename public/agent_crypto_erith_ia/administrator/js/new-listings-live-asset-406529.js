@@ -292,8 +292,17 @@
     renderDiscovery();return true;
   }
 
+  function nativeCategoryOwnsUx(){
+    try{return globalThis.AgentCryptoNewListingsNativeCategory406531?.native_only===true;}catch(_){return false;}
+  }
+
   function renderActiveRibbon(){
     if(typeof document==="undefined")return;
+    if(nativeCategoryOwnsUx()){
+      const existing=document.getElementById(ACTIVE_ID);
+      if(existing){existing.hidden=true;existing.replaceChildren();}
+      return;
+    }
     ensureStyle();
     const host=document.querySelector("#analyste .chart-v2-control-deck")||document.querySelector("#analyste .chart-v2-toolbar-reading");
     if(!host)return;
@@ -308,10 +317,12 @@
   function bind(){
     ensureStyle();
     const radarButton=document.getElementById("atlasNewListingsButton406528");
-    if(radarButton&&radarButton.dataset.live529!=="1"){
+    if(radarButton&&radarButton.dataset.live529!=="1"&&!nativeCategoryOwnsUx()){
       radarButton.dataset.live529="1";
       radarButton.addEventListener("click",()=>{ensureRadarPanel();});
     }
+    const legacy=document.getElementById(DISCOVERY_ID);
+    if(nativeCategoryOwnsUx()&&legacy)legacy.hidden=true;
     renderActiveRibbon();
   }
 
