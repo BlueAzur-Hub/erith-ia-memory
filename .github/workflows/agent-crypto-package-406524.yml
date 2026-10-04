@@ -1,0 +1,84 @@
+name: Agent-Crypto 40.6.524 Validate Target Flow USD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_target_flow_usd_guard_406524.py'
+      - '.github/workflows/agent-crypto-package-406524.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - '.github/scripts/agent_crypto_target_flow_usd_guard_406524.py'
+      - '.github/workflows/agent-crypto-package-406524.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scope
+        run: |
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json"))["build"])')"
+          if [ "$CURRENT" != "40.6.524" ]; then echo "SKIP=true" >> "$GITHUB_ENV"; fi
+
+      - name: Validate Target Top + Market Flow USD
+        if: env.SKIP != 'true'
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/target-flow-display-406524.js
+          node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/target-flow-display-406524.js');
+          const t=globalThis.AgentCryptoTargetFlowDisplay406524?.self_test?.();
+          console.log(JSON.stringify(t,null,2));
+          if(!t?.pass) process.exit(1);
+          if(t?.checks?.explicit_usd_price_only!==true) process.exit(1);
+          if(t?.checks?.no_eur_to_usd_fallback!==true) process.exit(1);
+          if(t?.checks?.late_top5_spot_rebind!==true) process.exit(1);
+          NODE
+          python .github/scripts/agent_crypto_target_flow_usd_guard_406524.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Build PATCH ONLY ZIP
+        if: env.SKIP != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          files=[
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/index-40.6.524.html',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/js/target-flow-display-406524.js',
+            'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js',
+            'public/agent_crypto_erith_ia/administrator/views/atlas.html',
+            'public/agent_crypto_erith_ia/administrator/TARGET_FLOW_USD_DISPLAY_40.6.524.md',
+            'public/agent_crypto_erith_ia/administrator/PATCH_MANIFEST_40.6.524.txt',
+            'public/agent_crypto_erith_ia/administrator/SEVEN_HANDOFF_40.6.524.md',
+            '.github/scripts/agent_crypto_target_flow_usd_guard_406524.py',
+            '.github/workflows/agent-crypto-package-406524.yml',
+          ]
+          out=Path('dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.524_TARGET_FLOW_USD_PATCH.zip')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for raw in files:
+              p=Path(raw)
+              if not p.is_file():
+                raise SystemExit('missing patch file: '+raw)
+              z.write(p,p)
+          print(out,out.stat().st_size)
+          PY
+
+      - name: Upload Target Flow USD PATCH ONLY
+        if: env.SKIP != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.524_TARGET_FLOW_USD_PATCH
+          path: dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.524_TARGET_FLOW_USD_PATCH.zip
+          if-no-files-found: error
+          retention-days: 90
