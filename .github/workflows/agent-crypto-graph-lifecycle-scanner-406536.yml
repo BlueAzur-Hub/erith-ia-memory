@@ -58,7 +58,7 @@ jobs:
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as z:
               for p in files:z.write(p,p)
           with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
-              fh.write(f"zip={out.as_posix()}\\n")
+              print(f"zip={out.as_posix()}", file=fh)
           print(out, out.stat().st_size, "files", len(files))
           PY
 
