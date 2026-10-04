@@ -35,7 +35,7 @@ const results=[];
    if(symbol==='CT')reply('/ticker?',{code:'0',data:[{last:'2',ts:String(Date.now())}]});
    else reply('/tickers?',{code:'00000',data:[{lastPrice:'3',price24hPcnt:'0.01',ts:String(Date.now())}]});
   },symbol);}
-  async function candles(part='candles',price=2){await page.evaluate(({part,price})=>reply(part,{code:part.includes('v3')?'00000':'0',data:[[Date.now()-600000,price,price,price,price,5],[Date.now()-300000,price+1,price+1,price+1,price+1,6]]}),{part,price});}
+  async function candles(part='candles',price=2){await page.evaluate(({part,price})=>{const url=pending.find(x=>x.url.includes(part))?.url||'';reply(part,{code:url.includes('v3')?'00000':'0',data:[[Date.now()-600000,price,price,price,price,5],[Date.now()-300000,price+1,price+1,price+1,price+1,6]]})},{part,price});}
   // A canonical click during ticker loading must invalidate the pending intent.
   for(const id of ['btnChartTop5','btnChartReset','btnChartClear']){
    await setup();await page.evaluate(()=>{globalThis.task=AgentCryptoNewListingsNativeCategory.select(ct)});

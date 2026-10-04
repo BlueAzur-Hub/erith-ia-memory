@@ -52,7 +52,9 @@ jobs:
       - name: Verify repaired lifecycle in Firefox
         env:
           PLAYWRIGHT_MODULE: '${{ github.workspace }}/.test-runtime/node_modules/playwright'
-        run: node .github/scripts/agent_crypto_new_listings_lifecycle_test.cjs | tee firefox-lifecycle.json
+        run: |
+          set -euo pipefail
+          node .github/scripts/agent_crypto_new_listings_lifecycle_test.cjs | tee firefox-lifecycle.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
