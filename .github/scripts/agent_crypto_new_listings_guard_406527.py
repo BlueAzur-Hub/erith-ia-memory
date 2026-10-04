@@ -7,9 +7,10 @@ def need(v,m):
 build=json.loads((ADMIN/'build.json').read_text(encoding='utf-8')); index=(ADMIN/'index.html').read_text(encoding='utf-8'); js=(ADMIN/'js/new-listings.js').read_text(encoding='utf-8')
 need(build.get('build')=='40.6.527','build'); need(build.get('market_core')=='38.15.11' and build.get('market_core_modified') is False,'market core')
 need('new-listings.js?v=40.6.527' in index,'module not loaded')
-for token in ['MEXC","pair":"CT/USDC','OKX Europe","pair":"CT/USD','OKX Europe","pair":"CT/EUR','OKX","pair":"CT/USDT']:
-    need(token in js,'missing pair truth '+token)
-need('OKX","pair":"CT/USDC' not in js,'fake OKX CT/USDC')
+need('exchange:"MEXC"' in js and 'pair:"CT/USDC"' in js,'missing MEXC CT/USDC')
+need('exchange:"OKX Europe"' in js and 'pair:"CT/USD"' in js and 'pair:"CT/EUR"' in js,'missing OKX Europe CT/USD or CT/EUR')
+need('exchange:"OKX"' in js and 'pair:"CT/USDT"' in js,'missing OKX CT/USDT')
+need('exchange:"OKX",pair:"CT/USDC"' not in js and 'exchange:"OKX Europe",pair:"CT/USDC"' not in js,'fake OKX CT/USDC')
 need('state_coins_injection:false' in js and 'price_fabrication:false' in js,'truth guard')
 def blob(p): return subprocess.check_output(['git','hash-object',str(p)],text=True).strip()
 need(blob(ADMIN/'app.js')=='3507514b8a90366a7ca1b5d86e5cf3f700be31ab','app changed')
