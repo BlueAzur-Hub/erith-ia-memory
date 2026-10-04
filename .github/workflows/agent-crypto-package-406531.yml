@@ -1,0 +1,78 @@
+name: Agent-Crypto 40.6.531 Validate New Listings Native Category
+on:
+  push:
+    branches: [main]
+    paths: ['public/agent_crypto_erith_ia/administrator/**','.github/scripts/agent_crypto_new_listings_native_category_guard_406531.py','.github/workflows/agent-crypto-package-406531.yml']
+  pull_request:
+    paths: ['public/agent_crypto_erith_ia/administrator/**','.github/scripts/agent_crypto_new_listings_native_category_guard_406531.py','.github/workflows/agent-crypto-package-406531.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scope
+        run: |
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json"))["build"])')"
+          if [ "$CURRENT" != "40.6.531" ]; then echo "SKIP=true" >> "$GITHUB_ENV"; fi
+      - name: Validate
+        if: env.SKIP != 'true'
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category-406531.js
+          node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+          node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js');
+          require('./public/agent_crypto_erith_ia/administrator/js/new-listings-native-category-406531.js');
+          require('./public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js');
+          require('./public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js');
+          const live=globalThis.AgentCryptoNewListingLiveAsset?.self_test?.();
+          const native=globalThis.AgentCryptoNewListingsNativeCategory406531?.self_test?.();
+          const candles=globalThis.AgentCryptoMarketMicroscope?.self_test?.();
+          const depth=globalThis.AgentCryptoOkxMicrostructure?.self_test?.();
+          console.log(JSON.stringify({live,native,candles,depth},null,2));
+          if(!live?.pass || !native?.pass || !candles?.pass || !depth?.pass) process.exit(1);
+          if(!native?.checks?.category_not_ct_only || !native?.checks?.second_listing_supported) process.exit(1);
+          if(!native?.checks?.legacy_new_ribbon_hidden || !native?.checks?.return_market_button_removed) process.exit(1);
+          NODE
+          python .github/scripts/agent_crypto_new_listings_native_category_guard_406531.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Package
+        if: env.SKIP != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          files=[
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/index-40.6.531.html',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/js/new-listings.js',
+            'public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js',
+            'public/agent_crypto_erith_ia/administrator/js/new-listings-native-category-406531.js',
+            'public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js',
+            'public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js',
+            'public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport.js',
+            'public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js',
+            'public/agent_crypto_erith_ia/administrator/views/atlas.html',
+            'public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_NATIVE_CATEGORY_40.6.531.md',
+            'public/agent_crypto_erith_ia/administrator/PATCH_MANIFEST_40.6.531.txt',
+            'public/agent_crypto_erith_ia/administrator/SEVEN_HANDOFF_40.6.531.md',
+            '.github/scripts/agent_crypto_new_listings_native_category_guard_406531.py',
+            '.github/workflows/agent-crypto-package-406531.yml'
+          ]
+          out=Path('dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.531_NEW_LISTINGS_NATIVE_CATEGORY_PATCH.zip')
+          out.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for raw in files:
+              z.write(Path(raw),Path(raw))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: env.SKIP != 'true'
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.531_NEW_LISTINGS_NATIVE_CATEGORY_PATCH
+          path: dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.531_NEW_LISTINGS_NATIVE_CATEGORY_PATCH.zip
+          if-no-files-found: error
+          retention-days: 90
