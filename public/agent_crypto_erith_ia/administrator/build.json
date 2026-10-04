@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.523",
+  "build": "40.6.524",
   "engine": "38.15.11",
-  "release": "MARKET + FICHE USD OWNER REBIND",
+  "release": "TARGET TOP + MARKET FLOW USD DISPLAY",
   "published": true,
-  "status": "published_pending_firefox_406523",
-  "parent_build": "40.6.522",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.523",
-  "administrator_build": "40.6.523",
-  "build_label": "Build 40.6.523 · Administrator",
+  "status": "published_pending_firefox_406524",
+  "parent_build": "40.6.523",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.524",
+  "administrator_build": "40.6.524",
+  "build_label": "Build 40.6.524 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox Ryzen : Ctrl+F5 → confirmer Build 40.6.523. DISPLAY doit démarrer USD. Dans Market, BTC/ETH/BNB/XRP et autres lignes enrichies doivent afficher leur prix USD explicite, sans retour EUR après refresh spot. FICHE CRYPTO · MARKET SNAPSHOT doit afficher Prix affichage USD + Prix USD marché + Capitalisation/Volume USD. Graphique, Oracle/Aether, Bougies BTC-USDC, Profondeur BTC/USDC ou USDT, EXEC BTC-EUR et SETTLE EUR restent inchangés. Cliquer EUR doit restaurer proprement les valeurs EUR.",
-  "terrain_proof": "PENDING_40.6.523_FIREFOX_MARKET_FICHE_USD_REBIND",
-  "release_notes": "40.6.523 repairs the remaining Firefox USD presentation leak proven in 40.6.522. Root cause 1: the native late spot writer atlasPatchCurrentQuoteBox rewrote Market row prices back to EUR after the 40.6.518 projection. Root cause 2: the visible FICHE CRYPTO · MARKET SNAPSHOT is produced by atlasMarketHelpDefinition / atlasPatchOpenMarketHelp and was not part of the previous detail-grid projection. The existing Market/Fiche owner now rebinds only those two presentation paths to explicit priceUsd / marketCapUsd / volume24hUsd fields. No EUR→USD conversion, no app.js edit, no Market Core, Strategy, Graph, Oracle/Aether, Candles, Depth, Backend or Bridge change.",
+  "terrain_pending": "Firefox Ryzen : Ctrl+F5 → confirmer Build 40.6.524. DISPLAY démarre USD. Target Top 5 doit afficher ses prix en USD explicite et ne plus revenir en EUR lors du spot refresh. Market Flow doit afficher ses 24 cartes en USD explicite. Fiche/Market .523, Graphique, Oracle/Aether, Bougies BTC-USDC, Profondeur BTC/USDC ou USDT, EXEC BTC-EUR et SETTLE EUR restent inchangés. Cliquer EUR doit restaurer Target Top + Market Flow en EUR.",
+  "terrain_proof": "PENDING_40.6.524_FIREFOX_TARGET_FLOW_USD",
+  "release_notes": "40.6.524 repairs the two remaining ribbon presentation owners proven by Firefox/code audit after 40.6.523. Target Top 5 was still rendered through atlasCurrentQuotePriceText(quote), whose canonical quote remains EUR, and its live spot patch atlasPatchTickerSpot rewrote EUR again after refresh. Market Flow explicitly read coin.priceEur/coin.price and formatted with atlasFormatEUR. A dedicated presentation-only owner now projects both ribbons from explicit coin.priceUsd under DISPLAY USD, rebinds Target Top after the late spot writer, restores EUR on operator switch, and performs no EUR→USD conversion. app.js, Market Core 38.15.11, Market/Fiche .523, Graph, Oracle/Aether, Candles, Depth, Strategy, Backend and Bridge remain unchanged.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -8559,6 +8559,51 @@
     "real_order": false,
     "wallet": false,
     "self_test": "AgentCryptoMarketFicheDisplay406518.self_test()",
+    "terrain": "PENDING_FIREFOX"
+  },
+  "target_flow_display_406524": {
+    "enabled": true,
+    "parent": "40.6.523",
+    "owner": "js/target-flow-display-406524.js",
+    "owners": [
+      "Target Top 5 presentation",
+      "Market Flow presentation"
+    ],
+    "scope": "DISPLAY_PROJECTION_ONLY",
+    "firefox_evidence": [
+      "Target Top 5 BTC visibly remained EUR while DISPLAY USD was active"
+    ],
+    "code_audit": {
+      "target_top_renderer": "atlasRenderTopFiveRibbon -> atlasCurrentQuotePriceText(quote) (canonical EUR)",
+      "target_top_late_writer": "atlasPatchTickerSpot -> atlasCurrentQuotePriceText(quote) (canonical EUR)",
+      "market_flow_renderer": "atlasRenderMarketFlowRibbon -> coin.priceEur/coin.price + atlasFormatEUR"
+    },
+    "repair": [
+      "Target Top reads explicit coin.priceUsd under DISPLAY USD",
+      "Target Top reprojects after atlasPatchTickerSpot",
+      "Market Flow reads explicit coin.priceUsd under DISPLAY USD",
+      "EUR switch restores native EUR renderers"
+    ],
+    "usd_field": "priceUsd",
+    "browser_eur_to_usd_conversion": false,
+    "missing_usd_policy": "UNAVAILABLE_NO_ESTIMATION",
+    "app_js_changed": false,
+    "market_fiche_changed": false,
+    "graph_changed": false,
+    "oracle_aether_changed": false,
+    "candles_changed": false,
+    "depth_changed": false,
+    "market_core_modified": false,
+    "strategy_changed": false,
+    "backend_changed": false,
+    "bridge_changed": false,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "storage_owner_added": false,
+    "network_owner_added": false,
+    "real_order": false,
+    "wallet": false,
+    "self_test": "AgentCryptoTargetFlowDisplay406524.self_test()",
     "terrain": "PENDING_FIREFOX"
   }
 }
