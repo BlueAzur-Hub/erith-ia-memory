@@ -22,10 +22,10 @@ for token in required:
 
 # Clear and fresh canonical selection both own the same idle reset fields.
 for name in ("atlasPrepareChartSelection","atlasRenderEmptyGraphSelection"):
-    m=re.search(rf"function {name}\\([^)]*\\) \\{{(?P<body>.*?)\\n\\}}",src,re.S)
-    if not m:
+    start=src.find(f"function {name}")
+    if start < 0:
         raise SystemExit(f"FAIL function missing: {name}")
-    body=m.group("body")
+    body=src[start:start+2600]
     for token in ("controller = null","loading = false","activeRequestKey = null","retryKey = null"):
         if token not in body:
             raise SystemExit(f"FAIL {name} missing {token}")
