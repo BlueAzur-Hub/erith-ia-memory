@@ -6,6 +6,7 @@ ROOT=Path(__file__).resolve().parents[2]
 ADMIN=ROOT/"public/agent_crypto_erith_ia/administrator"
 INDEX=(ADMIN/"index.html").read_text(encoding="utf-8")
 OWNER=(ADMIN/"js/new-listings-native-category.js").read_text(encoding="utf-8")
+APP=(ADMIN/"app.js").read_text(encoding="utf-8")
 BUILD=json.loads((ADMIN/"build.json").read_text(encoding="utf-8"))
 
 errors=[]
@@ -23,6 +24,20 @@ need(re.search(r'AgentCryptoNewListingsNativeCategory\d+', OWNER) is None,
 need("const state={" in OWNER, "canonical state object missing")
 need("globalThis.AgentCryptoNewListingsNativeCategory=" in OWNER,
      "canonical public API missing")
+need("__atlasExternalChartContext" not in OWNER,
+     "New Listings owner reaches into private graph context")
+need("atlasExternalChartDraw" not in OWNER,
+     "New Listings owner calls private graph draw function")
+need("AtlasExternalChart?.present" in OWNER,
+     "New Listings owner does not use the public graph owner API")
+need("function atlasExternalChartPresent" in APP,
+     "app.js public external-series presenter missing")
+need("present:atlasExternalChartPresent" in APP,
+     "AtlasExternalChart public presenter not exported")
+need("if (atlasExternalChartActive())" in APP and "atlasChartOverlayExternal" in APP,
+     "external chart overlay ownership missing")
+need("newListingOpen406" not in OWNER and "newListingSources406" not in OWNER,
+     "versioned dataset accessor survived stable-owner migration")
 
 # Exit contract: external listing context must yield to existing native controls.
 for selector in (
@@ -37,7 +52,8 @@ m=re.search(r'function bindCanonicalExit\(\)\{(?P<body>.*?)\n  \}', OWNER, re.S)
 need(m is not None, "bindCanonicalExit missing")
 if m:
     body=m.group("body")
-    need("deactivate();" in body, "canonical exit does not deactivate external context")
+    need("deactivate({clearChart:false});" in body,
+         "canonical exit must release listing state without clearing canvas before native handler")
     need("stopImmediatePropagation" not in body, "canonical exit blocks native handler")
     need("preventDefault" not in body, "canonical exit prevents native handler")
 
