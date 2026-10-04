@@ -1,0 +1,90 @@
+name: Agent-Crypto New Listings Package
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js"
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js"
+      - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - ".github/scripts/agent_crypto_new_listings_guard.py"
+      - ".github/workflows/agent-crypto-new-listings-package.yml"
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - ".github/scripts/agent_crypto_new_listings_guard.py"
+      - ".github/workflows/agent-crypto-new-listings-package.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate canonical owner
+        run: |
+          python .github/scripts/agent_crypto_new_listings_guard.py
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js
+          node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+
+      - name: Build compact patch ZIP
+        id: patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, zipfile, os
+
+          admin=Path("public/agent_crypto_erith_ia/administrator")
+          build=json.loads((admin/"build.json").read_text(encoding="utf-8"))["build"]
+          files=[
+            admin/"index.html",
+            admin/f"index-{build}.html",
+            admin/"build.json",
+            admin/"js/new-listings.js",
+            admin/"js/new-listings-live-asset-406529.js",
+            admin/"js/new-listings-native-category.js",
+            admin/"js/market-microscope-candles-406498.js",
+            admin/"js/okx-microstructure-406499.js",
+            admin/"js/okx-local-backend-transport.js",
+            admin/"js/post-boot-runtime-loader.js",
+            admin/"views/atlas.html",
+            admin/f"NEW_LISTINGS_CANONICAL_OWNER_{build}.md",
+            admin/f"PATCH_MANIFEST_{build}.txt",
+            admin/f"SEVEN_HANDOFF_{build}.md",
+            Path(".github/scripts/agent_crypto_new_listings_guard.py"),
+            Path(".github/workflows/agent-crypto-new-listings-guard.yml"),
+            Path(".github/workflows/agent-crypto-new-listings-package.yml"),
+          ]
+          missing=[str(p) for p in files if not p.exists()]
+          if missing:
+            raise SystemExit("Missing package files: "+", ".join(missing))
+          out=Path("dist")/f"AGENT_CRYPTO_ADMINISTRATOR_{build}_NEW_LISTINGS_CANONICAL_PATCH.zip"
+          out.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for p in files:
+              z.write(p,p)
+          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
+            fh.write(f"build={build}\n")
+            fh.write(f"zip={out.as_posix()}\n")
+            fh.write(f"artifact=AGENT_CRYPTO_ADMINISTRATOR_{build}_NEW_LISTINGS_CANONICAL_PATCH\n")
+          print(out, out.stat().st_size)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.patch.outputs.artifact }}
+          path: ${{ steps.patch.outputs.zip }}
+          if-no-files-found: error
+          retention-days: 90
