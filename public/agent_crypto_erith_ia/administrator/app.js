@@ -56442,6 +56442,13 @@ document.querySelectorAll(".period-btn[data-period]").forEach(btn => {
 });
 
 els.btnChartSolo?.addEventListener("click", () => {
+  // 40.6.535 — Solo is an explicit Market-surface intent.
+  // A memorized V7 Oracle/Top 5 surface must not cover the requested BTC Solo chart.
+  // Preserve the Oracle sub-profile itself; only leave the Oracle surface until the
+  // operator explicitly opens Oracle again.
+  state.chartViewV2.oracle = false;
+  atlasGraphContextV7SetSurface("market", "handler-solo-explicit-market");
+  atlasChartV2SyncControls();
   atlasResetComparison(getSelectedCoin() || state.coins?.[0] || null);
   atlasGraphContextV7CommitMarket("handler-solo");
 });
