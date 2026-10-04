@@ -119,6 +119,7 @@
     u.searchParams.set("ids","tether,usd-coin");
     u.searchParams.set("vs_currencies","usd,eur");
     const j=await json(u,{timeoutMs:12000,signal});
+    if(signal?.aborted)return state.quoteRates;
     const rates=new Map();
     const usdt=j?.tether||{},usdc=j?.["usd-coin"]||{};
     if(positive(usdt.usd))rates.set("USDT:USD",Number(usdt.usd));

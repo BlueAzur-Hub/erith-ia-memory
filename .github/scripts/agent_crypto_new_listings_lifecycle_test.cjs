@@ -54,7 +54,7 @@ const results=[];
   await setup();await page.evaluate(()=>{globalThis.first=AgentCryptoNewListingsNativeCategory.select(ct);globalThis.second=AgentCryptoNewListingsNativeCategory.select(mha)});
   await ticker('MHA');await page.waitForFunction(()=>pending.some(x=>x.url.includes('v3/market/candles')));await candles('v3/market/candles',3);assert.equal(await page.evaluate(()=>second),true);
   await ticker('CT');assert.equal(await page.evaluate(()=>first),false);
-  assert.equal(await page.evaluate(()=>AgentCryptoNewListingLiveAsset.snapshot().base),'MHA');assert.equal(await page.evaluate(()=>mode),'MHA');assert.equal(await page.locator('#atlasNewListingActive529').count(),0);assert.equal(await page.locator('#detailCompactAsset').textContent(),'MHA');results.push('late CT cannot overwrite newer MHA graph/Fiche/depth context');
+  assert.equal(await page.evaluate(()=>AgentCryptoNewListingLiveAsset.snapshot().base),'MHA');assert.equal(await page.evaluate(()=>mode),'MHA');assert.equal(await page.locator('#atlasNewListingActive529').isVisible(),false);assert.equal(await page.locator('#detailCompactAsset').textContent(),'MHA');results.push('late CT cannot overwrite newer MHA graph/Fiche/depth context');
   // Native period intent also owns its response order.
   await page.locator('[data-period="7"]').click();await page.locator('[data-period="30"]').click();
   await candles('interval=1H',30);await page.waitForFunction(()=>paints.at(-1)?.days===30);await candles('interval=15m',7);
