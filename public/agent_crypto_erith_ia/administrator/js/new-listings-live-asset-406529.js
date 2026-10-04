@@ -89,7 +89,7 @@
       const row=Array.isArray(j?.data)?j.data[0]:null;
       const px=n(row?.last),ts=n(row?.ts);
       if(String(j?.code)!=="0"||!(px>0)||!(ts>0))throw new Error(`OKX ${ctx.providerSymbol} indisponible`);
-      return frozen({provider:"okx",lastPrice:px,timestamp:new Date(ts).toISOString(),change24h:null});
+      return frozen({provider:"okx",lastPrice:px,timestamp:new Date(ts).toISOString(),change24h:null,quoteCurrency:ctx.quote});
     }
     const u=new URL(BITGET+"/api/v3/market/tickers");
     u.searchParams.set("category","SPOT");u.searchParams.set("symbol",ctx.providerSymbol);
@@ -97,14 +97,14 @@
     const row=Array.isArray(j?.data)?j.data[0]:null;
     const px=n(row?.lastPrice),ts=n(row?.ts),chg=n(row?.price24hPcnt);
     if(String(j?.code)!=="00000"||!(px>0)||!(ts>0))throw new Error(`Bitget ${ctx.providerSymbol} indisponible`);
-    return frozen({provider:"bitget",lastPrice:px,timestamp:new Date(ts).toISOString(),change24h:Number.isFinite(chg)?chg*100:null});
+    return frozen({provider:"bitget",lastPrice:px,timestamp:new Date(ts).toISOString(),change24h:Number.isFinite(chg)?chg*100:null,quoteCurrency:ctx.quote});
   }
 
-  async function load(input={}){
+  async function load(input={},options={}){
     const ctx=normalizeContext(input);
     if(!ctx)throw new Error("Contexte New Listing invalide");
-    const quote=await probeContext(ctx);
-    state.active=frozen({...ctx,quote});
+    const marketTicker=await probeContext(ctx);
+    state.active=frozen({...ctx,marketTicker,nativeMarket:options?.nativeMarket===true});
     state.lastError=null;
     renderActiveRibbon();
     emit("operator-load");
