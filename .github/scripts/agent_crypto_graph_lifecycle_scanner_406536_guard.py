@@ -14,7 +14,7 @@ required=[
   "exact same inclusive window count, but O(log n)",
   "async function atlasScannerYieldToUi",
   "calcul déjà en cours · clic répété ignoré",
-  'atlasExternalChartClear(\`scanner:\${preset}\`)',
+  'atlasExternalChartClear(`scanner:${preset}`)',
 ]
 for token in required:
     if token not in src:
