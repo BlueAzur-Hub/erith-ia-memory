@@ -40,13 +40,13 @@ need(blob(ADMIN/'js/okx-local-backend-transport.js')=='fa4660cdf1f8176c9e4c40cd0
 need(blob(ADMIN/'js/graph-native-usd-406520.js')=='23db576e3a9035c6df92f0bfafeb830f1e7d9ffa','native USD graph owner changed')
 need(blob(ADMIN/'js/new-listings-live-asset-406529.js')=='de2e3c52fb644b1892a4e2c8383c21bdf67fdb2c','live module blob mismatch')
 need(blob(ADMIN/'js/market-microscope-candles-406498.js')=='d5882d987da56204b2d8c2857dd8e33ea68c7457','candles blob mismatch')
-need(blob(ADMIN/'js/okx-microstructure-406499.js')=='91fd38becd255096c36897570e06ec13254c3288','depth blob mismatch')
+need(blob(ADMIN/'js/okx-microstructure-406499.js')=='aaa9f60b994f12e2f80a0d05f8b247422c2e7e8f','depth blob mismatch')
 
 print(json.dumps({
   'ok':True,
   'build':'40.6.529',
   'live_blob':'de2e3c52fb644b1892a4e2c8383c21bdf67fdb2c',
   'candles_blob':'d5882d987da56204b2d8c2857dd8e33ea68c7457',
-  'depth_blob':'91fd38becd255096c36897570e06ec13254c3288',
+  'depth_blob':'aaa9f60b994f12e2f80a0d05f8b247422c2e7e8f',
   'terrain':'PENDING_FIREFOX'
 }))
