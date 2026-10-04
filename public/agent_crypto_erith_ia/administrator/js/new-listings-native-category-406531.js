@@ -380,12 +380,14 @@
 
   function lineRate(spec,currency){
     const c=upper(currency);
-    return quoteRate(spec.quote,c)||1;
+    if(upper(spec.quote)===c)return 1;
+    return quoteRate(spec.quote,c);
   }
 
   function resultFromCandles(spec,coin,pack,days){
     const currency=displayCurrency();
     const rate=lineRate(spec,currency);
+    if(!(positive(rate)))throw new Error(`Référence ${spec.quote}/${currency} indisponible · conversion refusée`);
     const rows=(pack?.rows||[]).filter(r=>positive(r?.c)&&finite(r?.t)!==null);
     const series=rows.map(r=>[Number(r.t),Number(r.c)*rate]);
     const volumeSeries=rows.map(r=>[Number(r.t),Math.max(0,Number(r.v)||0)]);
@@ -492,6 +494,9 @@
     if(!spec)return false;
     state531.lastError=null;
     try{
+      if(upper(spec.quote)!==displayCurrency()&&!quoteRate(spec.quote,displayCurrency())){
+        await fetchQuoteRates();
+      }
       const loaded=await globalThis.AgentCryptoNewListingLiveAsset?.load?.({
         provider:spec.provider,name:spec.name,id:spec.id,base:spec.base,quote:spec.quote,
         providerSymbol:spec.providerSymbol,listedAt:spec.listedAt
