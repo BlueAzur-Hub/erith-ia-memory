@@ -52,10 +52,9 @@ jobs:
           admin=Path("public/agent_crypto_erith_ia/administrator")
           build=json.loads((admin/"build.json").read_text(encoding="utf-8"))["build"]
           lifecycle_note=admin/f"NEW_LISTINGS_LIFECYCLE_{build}.md"
+          canonical_note=admin/f"NEW_LISTINGS_CANONICAL_OWNER_{build}.md"
           if lifecycle_note.exists():
-            # 40.6.534+ lifecycle repairs: ship only the files required by the
-            # published runtime change and its reproducible proof. Do not pull
-            # unchanged app/graph/depth owners into the operator patch.
+            # Lifecycle release: package only its runtime/proof payload.
             files=[
               admin/"index.html",
               admin/f"index-{build}.html",
@@ -67,7 +66,7 @@ jobs:
               Path(".github/workflows/agent-crypto-new-listings-lifecycle.yml"),
             ]
             package_kind="NEW_LISTINGS_LIFECYCLE_PATCH"
-          else:
+          elif canonical_note.exists():
             # Historical canonical-owner packages retain their original contract.
             files=[
               admin/"index.html",
@@ -90,6 +89,13 @@ jobs:
               Path(".github/workflows/agent-crypto-new-listings-package.yml"),
             ]
             package_kind="NEW_LISTINGS_CANONICAL_PATCH"
+          else:
+            # This workflow is path-triggered by shared Administrator files too.
+            # A non-New-Listings build must not fail by inventing release notes.
+            with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
+              fh.write("packaged=false\n")
+            print(f"SKIP: {build} is not a New Listings release")
+            raise SystemExit(0)
           missing=[str(p) for p in files if not p.exists()]
           if missing:
             raise SystemExit("Missing package files: "+", ".join(missing))
@@ -102,10 +108,12 @@ jobs:
             fh.write(f"build={build}\n")
             fh.write(f"zip={out.as_posix()}\n")
             fh.write(f"artifact=AGENT_CRYPTO_ADMINISTRATOR_{build}_{package_kind}\n")
+            fh.write("packaged=true\n")
           print(out, out.stat().st_size, "files", len(files))
           PY
 
       - uses: actions/upload-artifact@v4
+        if: steps.patch.outputs.packaged == 'true'
         with:
           name: ${{ steps.patch.outputs.artifact }}
           path: ${{ steps.patch.outputs.zip }}
