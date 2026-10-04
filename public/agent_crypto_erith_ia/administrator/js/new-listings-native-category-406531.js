@@ -150,7 +150,15 @@
   function quoteRate(quote,currency){
     const q=upper(quote),c=upper(currency);
     if(q===c)return 1;
-    return positive(state531.quoteRates.get(`${q}:${c}`));
+    const cached=positive(state531.quoteRates.get(`${q}:${c}`));
+    if(cached)return cached;
+    const id=q==="USDT"?"tether":q==="USDC"?"usd-coin":null;
+    if(!id)return null;
+    try{
+      const coin=globalThis.AtlasMarketUniverse1000?.find?.(id)||null;
+      const value=c==="USD"?positive(coin?.priceUsd):c==="EUR"?positive(coin?.priceEur??coin?.price):null;
+      return value||null;
+    }catch(_){return null;}
   }
 
   function coinFromSpec(spec){
