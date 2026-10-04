@@ -9,7 +9,7 @@
 (()=>{
   "use strict";
 
-  const MODULE_VERSION="40.6.533";
+  const MODULE_VERSION="40.6.534";
   const BUTTON_ID="atlasNewListingsButton406528";
   const LEGACY_RADAR_ID="atlasNewListingsRadar406528";
   const LEGACY_LIVE_ID="atlasNewListingsLive529";
@@ -43,6 +43,9 @@
     discovered:[],
     specs:[],
     selected:null,
+    requestRevision:0,
+    requestController:null,
+    pending:null,
     coinCache:new Map(),
     quoteRates:new Map(),
     tickerMap:new Map(),
@@ -54,7 +57,7 @@
     mounted:false
   };
 
-  const finite=v=>{const n=Number(v);return Number.isFinite(n)?n:null;};
+  const finite=v=>{if(v===null||v===undefined||String(v).trim()==="")return null;const n=Number(v);return Number.isFinite(n)?n:null;};
   const positive=v=>{const n=finite(v);return n!==null&&n>0?n:null;};
   const upper=v=>String(v??"").trim().toUpperCase();
   const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -111,11 +114,12 @@
     return state.tickerMap;
   }
 
-  async function fetchQuoteRates(){
+  async function fetchQuoteRates({signal=null}={}){
     const u=new URL("https://api.coingecko.com/api/v3/simple/price");
     u.searchParams.set("ids","tether,usd-coin");
     u.searchParams.set("vs_currencies","usd,eur");
-    const j=await json(u,{timeoutMs:12000});
+    const j=await json(u,{timeoutMs:12000,signal});
+    if(signal?.aborted)return state.quoteRates;
     const rates=new Map();
     const usdt=j?.tether||{},usdc=j?.["usd-coin"]||{};
     if(positive(usdt.usd))rates.set("USDT:USD",Number(usdt.usd));
@@ -468,17 +472,38 @@
     const why=document.getElementById("assetDetailWhy");if(why)why.innerHTML=`<strong>Lecture :</strong> ${esc(spec.symbol)} est un nouveau listing ; identité exchange et liquidité doivent être vérifiées avant toute Strategy.`;
   }
 
-  async function renderLine(spec,days=1){
-    if(!spec)return false;
+  function beginRequest(spec){
+    try{state.requestController?.abort();}catch(_){}
+    const request={revision:++state.requestRevision,controller:new AbortController(),spec};
+    state.requestController=request.controller;
+    state.pending=spec;
+    return request;
+  }
+
+  function isCurrent(request){
+    return request.revision===state.requestRevision&&!request.controller.signal.aborted;
+  }
+
+  function finishRequest(request){
+    if(request.revision!==state.requestRevision)return;
+    state.requestController=null;
+    state.pending=null;
+  }
+
+  async function renderLine(spec,days=1,request){
+    if(!spec||!isCurrent(request))return false;
     const ext=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
     if(!ext?.active||String(ext.id)!==String(spec.id)){
       await globalThis.AgentCryptoNewListingLiveAsset?.load?.({
         provider:spec.provider,name:spec.name,id:spec.id,base:spec.base,quote:spec.quote,
         providerSymbol:spec.providerSymbol,listedAt:spec.listedAt
-      },{nativeMarket:true});
+      },{nativeMarket:true,signal:request.controller.signal});
+      if(!isCurrent(request))return false;
     }
     const cfg=periodConfig(days);
-    const pack=await globalThis.AgentCryptoNewListingLiveAsset?.fetchCandles?.({bar:cfg.bar,limit:cfg.limit});
+    const pack=await globalThis.AgentCryptoNewListingLiveAsset?.fetchCandles?.({bar:cfg.bar,limit:cfg.limit,signal:request.controller.signal});
+    if(!isCurrent(request))return false;
+    if(pack?.provider!==spec.provider||pack?.instrument!==`${spec.base}-${spec.quote}`)throw new Error("Réponse graphique hors contexte · affichage refusé");
     if(!pack?.rows?.length)throw new Error(`Bougies ${spec.pair} indisponibles`);
     if(!spec.ticker){
       const live=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()?.marketTicker;
@@ -505,15 +530,18 @@
 
   async function select(spec){
     if(!spec)return false;
+    const request=beginRequest(spec);
     state.lastError=null;
     try{
       if(upper(spec.quote)!==displayCurrency()&&!quoteRate(spec.quote,displayCurrency())){
-        await fetchQuoteRates();
+        await fetchQuoteRates({signal:request.controller.signal});
+        if(!isCurrent(request))return false;
       }
       const loaded=await globalThis.AgentCryptoNewListingLiveAsset?.load?.({
         provider:spec.provider,name:spec.name,id:spec.id,base:spec.base,quote:spec.quote,
         providerSymbol:spec.providerSymbol,listedAt:spec.listedAt
-      },{nativeMarket:true});
+      },{nativeMarket:true,signal:request.controller.signal});
+      if(!isCurrent(request)||!loaded)return false;
       if(loaded?.marketTicker){
         spec.ticker={
           ...(spec.ticker||{}),
@@ -525,20 +553,25 @@
       const coin=coinFromSpec(spec);if(coin)state.coinCache.set(spec.id,coin);
       state.selected=spec;patchUniverseResolver();renderCategory();
       globalThis.AgentCryptoMarketMicroscope?.setMode?.("native");
-      await renderLine(spec,1);
+      if(!await renderLine(spec,1,request)||!isCurrent(request))return false;
       try{globalThis.AgentCryptoMarketFicheDisplay406518?.apply?.("new-listing-category-select");}catch(_){}
       hideLegacyUx();
       document.getElementById("analyste")?.scrollIntoView({behavior:"smooth",block:"start"});
       return true;
     }catch(error){
+      if(!isCurrent(request))return false;
       state.lastError=String(error?.message||error);
       const note=document.getElementById(NOTE_ID);if(note)note.textContent=`Nouveau listing ${spec.symbol} · ${state.lastError}`;
       return false;
-    }
+    }finally{finishRequest(request);}
   }
 
   function deactivate({clearChart=true}={}){
-    const hadSelection=Boolean(state.selected);
+    const hadSelection=Boolean(state.selected||state.pending);
+    ++state.requestRevision;
+    try{state.requestController?.abort();}catch(_){}
+    state.requestController=null;
+    state.pending=null;
     state.selected=null;
     state.lastResult=null;
     try{globalThis.AgentCryptoNewListingLiveAsset?.deactivate?.();}catch(_){}
@@ -580,7 +613,7 @@
     button.addEventListener("click",event=>{
       event.preventDefault();event.stopImmediatePropagation();
       const next=!state.enabled;
-      if(!next&&state.selected)deactivate();
+      if(!next&&(state.selected||state.pending))deactivate();
       state.enabled=next;
       button.classList.toggle("active",state.enabled);button.classList.toggle("is-active",state.enabled);
       button.setAttribute("aria-pressed",state.enabled?"true":"false");
@@ -598,12 +631,12 @@
     document.addEventListener("click",event=>{
       const button=event.target?.closest?.(".filter-btn[data-filter]");
       if(!button||button.id===BUTTON_ID)return;
-      if(state.enabled||state.selected){
+      if(state.enabled||state.selected||state.pending){
         state.enabled=false;
         const category=document.getElementById(BUTTON_ID);
         category?.classList.remove("active","is-active");
         category?.setAttribute("aria-pressed","false");
-        if(state.selected)deactivate();
+        if(state.selected||state.pending)deactivate();
       }
     },true);
   }
@@ -627,10 +660,12 @@
       event.preventDefault();event.stopImmediatePropagation();
       const days=Number(button.dataset.period)||1;
       globalThis.atlasChartSetPeriodButtons?.(days,true);
-      void renderLine(state.selected,days).catch(error=>{
+      const request=beginRequest(state.selected);
+      void renderLine(state.selected,days,request).catch(error=>{
+        if(!isCurrent(request))return;
         state.lastError=String(error?.message||error);
         globalThis.atlasChartSetPeriodButtons?.(days,false);
-      });
+      }).finally(()=>finishRequest(request));
     },true);
   }
 
@@ -639,7 +674,9 @@
       if(!state.selected)return;
       const control=event.target?.closest?.("[data-chart-view],[data-chart-scale],[data-chart-display]");
       if(!control)return;
+      const revision=state.requestRevision;
       setTimeout(()=>{
+        if(!state.selected||revision!==state.requestRevision)return;
         const coin=state.coinCache.get(state.selected.id);
         if(state.lastResult&&coin)patchNativeFiche(state.selected,coin,state.lastResult);
         hideLegacyUx();
@@ -649,7 +686,7 @@
 
   function bindCanonicalExit(){
     document.addEventListener("click",event=>{
-      if(!state.selected)return;
+      if(!state.selected&&!state.pending)return;
       if(event.target?.closest?.(`tr[${ROOT_ATTR}]`))return;
       const canonical=event.target?.closest?.(CANONICAL_EXIT_SELECTOR);
       if(!canonical)return;
@@ -669,6 +706,7 @@
     return Object.freeze({
       build:MODULE_VERSION,enabled:state.enabled,discovered:state.specs.length,
       selectedId:state.selected?.id||null,selectedSymbol:state.selected?.symbol||null,
+      pendingId:state.pending?.id||null,
       lastDiscoveryAt:state.lastDiscoveryAt,lastError:state.lastError,
       duplicateGraph:false,duplicateFiche:false,duplicateDepth:false,
       legacyRibbonVisible:false,returnMarketButton:false

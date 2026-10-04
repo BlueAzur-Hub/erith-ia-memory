@@ -1,0 +1,65 @@
+name: Agent-Crypto New Listings Lifecycle
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js'
+      - '.github/scripts/agent_crypto_new_listings_lifecycle_test.cjs'
+      - '.github/workflows/agent-crypto-new-listings-lifecycle.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js'
+      - '.github/scripts/agent_crypto_new_listings_lifecycle_test.cjs'
+      - '.github/workflows/agent-crypto-new-listings-lifecycle.yml'
+permissions:
+  contents: read
+jobs:
+  firefox-lifecycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated test browser
+        run: |
+          npm install --prefix .test-runtime --no-audit --no-fund playwright@1.62.1
+          .test-runtime/node_modules/.bin/playwright install --with-deps firefox
+      - name: Syntax and version truth
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Prove regression on 40.6.533
+        env:
+          PLAYWRIGHT_MODULE: '${{ github.workspace }}/.test-runtime/node_modules/playwright'
+        run: |
+          git fetch --depth=1 origin 0697ac561a9a6ee390c279395d52dec1afa9d5d0
+          BASEDIR="$RUNNER_TEMP/listings-533"
+          mkdir -p "$BASEDIR/public/agent_crypto_erith_ia/administrator/js"
+          for FILE in new-listings-native-category.js new-listings-live-asset-406529.js; do
+            git show "0697ac561a9a6ee390c279395d52dec1afa9d5d0:public/agent_crypto_erith_ia/administrator/js/$FILE" > "$BASEDIR/public/agent_crypto_erith_ia/administrator/js/$FILE"
+          done
+          if REPO_ROOT="$BASEDIR" node .github/scripts/agent_crypto_new_listings_lifecycle_test.cjs > baseline.log 2>&1; then
+            cat baseline.log
+            echo 'Expected 40.6.533 to reproduce the regression'; exit 1
+          fi
+          cat baseline.log
+          grep -F 'obsolete CT ticker restored live context' baseline.log
+      - name: Verify repaired lifecycle in Firefox
+        env:
+          PLAYWRIGHT_MODULE: '${{ github.workspace }}/.test-runtime/node_modules/playwright'
+        run: |
+          set -euo pipefail
+          node .github/scripts/agent_crypto_new_listings_lifecycle_test.cjs | tee firefox-lifecycle.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: new-listings-lifecycle-proof
+          path: |
+            baseline.log
+            firefox-lifecycle.json
+          if-no-files-found: warn

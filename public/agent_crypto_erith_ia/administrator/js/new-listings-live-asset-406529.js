@@ -8,15 +8,15 @@
 (()=>{
   "use strict";
 
-  const BUILD="40.6.529";
+  const BUILD="40.6.534";
   const BITGET="https://api.bitget.com";
   const OKX="https://www.okx.com";
   const EVENT="agent-crypto:external-asset-changed";
   const DISCOVERY_ID="atlasNewListingsLive529";
   const ACTIVE_ID="atlasNewListingActive529";
-  const state={active:null,discovered:[],discovering:false,lastDiscoveryAt:null,lastError:null};
+  const state={loadRevision:0,loadController:null,active:null,discovered:[],discovering:false,lastDiscoveryAt:null,lastError:null};
 
-  const n=v=>{const x=Number(v);return Number.isFinite(x)?x:null;};
+  const n=v=>{if(v===null||v===undefined||String(v).trim()==="")return null;const x=Number(v);return Number.isFinite(x)?x:null;};
   const upper=v=>String(v??"").trim().toUpperCase();
   const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const isoMs=v=>{const x=Number(v);return Number.isFinite(x)&&x>0?new Date(x).toISOString():null;};
@@ -103,7 +103,26 @@
   async function load(input={},options={}){
     const ctx=normalizeContext(input);
     if(!ctx)throw new Error("Contexte New Listing invalide");
-    const marketTicker=await probeContext(ctx);
+    // Only the latest operator intent may publish an exchange context.
+    const revision=++state.loadRevision;
+    try{state.loadController?.abort();}catch(_){}
+    const controller=new AbortController();
+    state.loadController=controller;
+    const forward=()=>controller.abort();
+    const signal=options.signal;
+    if(signal?.aborted)forward();
+    else signal?.addEventListener("abort",forward,{once:true});
+    let marketTicker;
+    try{
+      marketTicker=await probeContext(ctx,{signal:controller.signal});
+      if(controller.signal.aborted||revision!==state.loadRevision)return null;
+    }catch(error){
+      if(controller.signal.aborted||revision!==state.loadRevision)return null;
+      throw error;
+    }finally{
+      signal?.removeEventListener("abort",forward);
+      if(revision===state.loadRevision)state.loadController=null;
+    }
     state.active=frozen({...ctx,marketTicker,nativeMarket:options?.nativeMarket===true});
     state.lastError=null;
     renderActiveRibbon();
@@ -118,6 +137,9 @@
   }
 
   function deactivate(){
+    ++state.loadRevision;
+    try{state.loadController?.abort();}catch(_){}
+    state.loadController=null;
     const previous=state.active;
     state.active=null;state.lastError=null;
     renderActiveRibbon();
@@ -293,7 +315,7 @@
   }
 
   function nativeCategoryOwnsUx(){
-    try{return globalThis.AgentCryptoNewListingsNativeCategory406531?.native_only===true;}catch(_){return false;}
+    try{return globalThis.AgentCryptoNewListingsNativeCategory?.native_only===true;}catch(_){return false;}
   }
 
   function renderActiveRibbon(){
