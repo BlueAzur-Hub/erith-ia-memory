@@ -51,30 +51,49 @@ jobs:
 
           admin=Path("public/agent_crypto_erith_ia/administrator")
           build=json.loads((admin/"build.json").read_text(encoding="utf-8"))["build"]
-          files=[
-            admin/"index.html",
-            admin/"app.js",
-            admin/f"index-{build}.html",
-            admin/"build.json",
-            admin/"js/new-listings.js",
-            admin/"js/new-listings-live-asset-406529.js",
-            admin/"js/new-listings-native-category.js",
-            admin/"js/market-microscope-candles-406498.js",
-            admin/"js/okx-microstructure-406499.js",
-            admin/"js/okx-local-backend-transport.js",
-            admin/"js/post-boot-runtime-loader.js",
-            admin/"views/atlas.html",
-            admin/f"NEW_LISTINGS_CANONICAL_OWNER_{build}.md",
-            admin/f"PATCH_MANIFEST_{build}.txt",
-            admin/f"SEVEN_HANDOFF_{build}.md",
-            Path(".github/scripts/agent_crypto_new_listings_guard.py"),
-            Path(".github/workflows/agent-crypto-new-listings-guard.yml"),
-            Path(".github/workflows/agent-crypto-new-listings-package.yml"),
-          ]
+          lifecycle_note=admin/f"NEW_LISTINGS_LIFECYCLE_{build}.md"
+          if lifecycle_note.exists():
+            # 40.6.534+ lifecycle repairs: ship only the files required by the
+            # published runtime change and its reproducible proof. Do not pull
+            # unchanged app/graph/depth owners into the operator patch.
+            files=[
+              admin/"index.html",
+              admin/f"index-{build}.html",
+              admin/"build.json",
+              admin/"js/new-listings-live-asset-406529.js",
+              admin/"js/new-listings-native-category.js",
+              lifecycle_note,
+              Path(".github/scripts/agent_crypto_new_listings_lifecycle_test.cjs"),
+              Path(".github/workflows/agent-crypto-new-listings-lifecycle.yml"),
+            ]
+            package_kind="NEW_LISTINGS_LIFECYCLE_PATCH"
+          else:
+            # Historical canonical-owner packages retain their original contract.
+            files=[
+              admin/"index.html",
+              admin/"app.js",
+              admin/f"index-{build}.html",
+              admin/"build.json",
+              admin/"js/new-listings.js",
+              admin/"js/new-listings-live-asset-406529.js",
+              admin/"js/new-listings-native-category.js",
+              admin/"js/market-microscope-candles-406498.js",
+              admin/"js/okx-microstructure-406499.js",
+              admin/"js/okx-local-backend-transport.js",
+              admin/"js/post-boot-runtime-loader.js",
+              admin/"views/atlas.html",
+              admin/f"NEW_LISTINGS_CANONICAL_OWNER_{build}.md",
+              admin/f"PATCH_MANIFEST_{build}.txt",
+              admin/f"SEVEN_HANDOFF_{build}.md",
+              Path(".github/scripts/agent_crypto_new_listings_guard.py"),
+              Path(".github/workflows/agent-crypto-new-listings-guard.yml"),
+              Path(".github/workflows/agent-crypto-new-listings-package.yml"),
+            ]
+            package_kind="NEW_LISTINGS_CANONICAL_PATCH"
           missing=[str(p) for p in files if not p.exists()]
           if missing:
             raise SystemExit("Missing package files: "+", ".join(missing))
-          out=Path("dist")/f"AGENT_CRYPTO_ADMINISTRATOR_{build}_NEW_LISTINGS_CANONICAL_PATCH.zip"
+          out=Path("dist")/f"AGENT_CRYPTO_ADMINISTRATOR_{build}_{package_kind}.zip"
           out.parent.mkdir(parents=True,exist_ok=True)
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as z:
             for p in files:
@@ -82,8 +101,8 @@ jobs:
           with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
             fh.write(f"build={build}\n")
             fh.write(f"zip={out.as_posix()}\n")
-            fh.write(f"artifact=AGENT_CRYPTO_ADMINISTRATOR_{build}_NEW_LISTINGS_CANONICAL_PATCH\n")
-          print(out, out.stat().st_size)
+            fh.write(f"artifact=AGENT_CRYPTO_ADMINISTRATOR_{build}_{package_kind}\n")
+          print(out, out.stat().st_size, "files", len(files))
           PY
 
       - uses: actions/upload-artifact@v4
