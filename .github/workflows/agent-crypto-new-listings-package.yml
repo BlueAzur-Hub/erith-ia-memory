@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js"
@@ -14,6 +15,7 @@ on:
       - ".github/workflows/agent-crypto-new-listings-package.yml"
   pull_request:
     paths:
+      - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
@@ -33,6 +35,7 @@ jobs:
       - name: Validate canonical owner
         run: |
           python .github/scripts/agent_crypto_new_listings_guard.py
+          node --check public/agent_crypto_erith_ia/administrator/app.js
           node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
           node --check public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js
           node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js
@@ -50,6 +53,7 @@ jobs:
           build=json.loads((admin/"build.json").read_text(encoding="utf-8"))["build"]
           files=[
             admin/"index.html",
+            admin/"app.js",
             admin/f"index-{build}.html",
             admin/"build.json",
             admin/"js/new-listings.js",

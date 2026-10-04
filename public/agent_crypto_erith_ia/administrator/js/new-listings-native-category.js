@@ -9,7 +9,7 @@
 (()=>{
   "use strict";
 
-  const MODULE_VERSION="40.6.532";
+  const MODULE_VERSION="40.6.533";
   const BUTTON_ID="atlasNewListingsButton406528";
   const LEGACY_RADAR_ID="atlasNewListingsRadar406528";
   const LEGACY_LIVE_ID="atlasNewListingsLive529";
@@ -48,6 +48,7 @@
     tickerMap:new Map(),
     lastDiscoveryAt:null,
     lastError:null,
+    lastResult:null,
     originalRenderMarketTable:null,
     renderWrapped:false,
     mounted:false
@@ -418,7 +419,7 @@
       coin,series,volumeSeries,
       source:`${spec.providerLabel} ${spec.pair} candles${rate!==1?` · ${spec.quote}/${currency} CoinGecko`:""}`,
       sourceFamily:spec.provider,
-      sourceMode:"new-listing-exchange-native-406531",
+      sourceMode:"new-listing-exchange-native",
       provider:spec.provider,
       currency,quoteCurrency:currency,
       periodDays:Number(days||1),
@@ -487,19 +488,14 @@
     if(!coin)throw new Error("Fiche New Listing indisponible");
     state.coinCache.set(spec.id,coin);patchUniverseResolver();
     const result=resultFromCandles(spec,coin,pack,days);
-    const ctx=globalThis.__atlasExternalChartContext;
-    if(!ctx)throw new Error("Contexte Graphique externe absent");
-    try{ctx.controller?.abort?.();}catch(_){}
-    ctx.controller=null;ctx.active=true;ctx.coin={...coin,externalChart403113:true};ctx.period=Number(days||1);
-    ctx.result=result;ctx.resultPeriod=Number(days||1);ctx.loading=false;ctx.error="";ctx.token=Number(ctx.token||0)+1;
-    ctx.openedAt=ctx.openedAt||Date.now();ctx.view403114=ctx.view403114||"price";ctx.scale403114=ctx.scale403114||"linear";
-    ctx.volume403114=ctx.volume403114!==false;ctx.legend403114=ctx.legend403114===true;ctx.analysis403114=ctx.analysis403114!==false;
-    ctx.lastPresentationKey403114="";
-    document.documentElement.dataset.atlasExternalChart="on";document.body.dataset.atlasExternalChart="on";
-    globalThis.atlasChartSetPeriodButtons?.(Number(days||1),false);
-    if(typeof globalThis.atlasExternalChartDraw==="function")globalThis.atlasExternalChartDraw(coin,Number(days||1),result);
-    else if(typeof globalThis.drawLineChart==="function")globalThis.drawLineChart(document.getElementById("mainChart"),result.series,`${coin.symbol} ${Number(days||1)===1?"24h":days+"j"}`,result,`new-listing:${coin.id}:${days}`);
-    else throw new Error("Propriétaire Graphique principal indisponible");
+    const presented=globalThis.AtlasExternalChart?.present?.(
+      coin,
+      Number(days||1),
+      result,
+      {source:"new-listing-native-category"}
+    );
+    if(!presented)throw new Error("API publique Graphique externe indisponible");
+    state.lastResult=result;
     patchNativeFiche(spec,coin,result);
     const caption=document.getElementById("chartCaption");
     if(caption){const t=caption.querySelector(".chart-caption-text");if(t)t.textContent=`${spec.symbol} · Nouveau listing · ${spec.providerLabel} ${spec.pair} · données réelles · ${result.series.length} points`;}
@@ -544,6 +540,7 @@
   function deactivate({clearChart=true}={}){
     const hadSelection=Boolean(state.selected);
     state.selected=null;
+    state.lastResult=null;
     try{globalThis.AgentCryptoNewListingLiveAsset?.deactivate?.();}catch(_){}
     if(clearChart){
       try{globalThis.AtlasExternalChart?.clear?.("new-listing-native-exit");}catch(_){}
@@ -563,12 +560,12 @@
     body.dataset.newListingsNativeCategory="1";
     body.addEventListener("click",event=>{
       const sources=event.target?.closest?.("[data-new-listing-sources]");
-      if(sources){event.preventDefault();event.stopPropagation();sourceInfo(resolveSpec(sources.dataset.newListingSources406531));return;}
+      if(sources){event.preventDefault();event.stopPropagation();sourceInfo(resolveSpec(sources.dataset.newListingSources));return;}
       const button=event.target?.closest?.("[data-new-listing-open]");
       const row=event.target?.closest?.(`tr[${ROOT_ATTR}]`);
       if(!button&&!row)return;
       event.preventDefault();event.stopPropagation();
-      void select(resolveSpec(button?.dataset?.newListingOpen406531||row?.getAttribute(ROOT_ATTR)));
+      void select(resolveSpec(button?.dataset?.newListingOpen||row?.getAttribute(ROOT_ATTR)));
     });
     body.addEventListener("keydown",event=>{
       const row=event.target?.closest?.(`tr[${ROOT_ATTR}]`);
@@ -643,9 +640,8 @@
       const control=event.target?.closest?.("[data-chart-view],[data-chart-scale],[data-chart-display]");
       if(!control)return;
       setTimeout(()=>{
-        const ctx=globalThis.__atlasExternalChartContext;
         const coin=state.coinCache.get(state.selected.id);
-        if(ctx?.result&&coin)patchNativeFiche(state.selected,coin,ctx.result);
+        if(state.lastResult&&coin)patchNativeFiche(state.selected,coin,state.lastResult);
         hideLegacyUx();
       },0);
     });
@@ -657,7 +653,7 @@
       if(event.target?.closest?.(`tr[${ROOT_ATTR}]`))return;
       const canonical=event.target?.closest?.(CANONICAL_EXIT_SELECTOR);
       if(!canonical)return;
-      deactivate();
+      deactivate({clearChart:false});
     },true);
   }
 
@@ -690,6 +686,8 @@
       native_market_category:true,
       native_fiche_surface_reused:true,
       native_main_line_graph_reused:true,
+      graph_owner_public_api:typeof globalThis.AtlasExternalChart?.present==="function",
+      private_graph_context_write:false,
       native_candles_owner_reused:true,
       native_depth_owner_reused:true,
       legacy_radar_hidden:true,

@@ -13443,7 +13443,10 @@ function atlasChartOverlaySet(titleHtml, seriesHtml, summaryHtml, truthLabel = "
   overlay.dataset.layout = layout;
   const chartShell = overlay.closest(".chart-shell");
   if (chartShell) chartShell.dataset.analysisLayout = layout;
-  overlay.hidden = state.chartViewV2.analysis === false;
+  const analysisEnabled = atlasExternalChartActive()
+    ? atlasExternalPresentation().analysis !== false
+    : state.chartViewV2.analysis !== false;
+  overlay.hidden = !analysisEnabled;
   overlay.setAttribute("aria-hidden", overlay.hidden ? "true" : "false");
 }
 
@@ -13807,7 +13810,81 @@ function atlasChartOverlaySolo(chart, period, options = {}) {
   );
 }
 
+function atlasChartOverlayExternal() {
+  const ctx = atlasExternalChartContext;
+  if (!ctx?.active || !ctx.coin?.id) return false;
+
+  const coin = ctx.coin;
+  const result = ctx.result || null;
+  const metrics = result?.integrity?.metrics || {};
+  const period = Number(ctx.period || result?.periodDays || 1);
+  const periodLabel = atlasChartPeriodLabel(period);
+  const currencyRaw = String(result?.quoteCurrency || result?.currency || "EUR").toUpperCase();
+  const currency = currencyRaw === "USD" ? "USD" : "EUR";
+  const scaleLabel = atlasExternalPresentation().scale === "logarithmic" ? "LOG" : "NORMALE";
+  const symbol = String(coin.symbol || coin.name || "ACTIF").toUpperCase();
+  const name = String(coin.name || symbol);
+
+  if (!result?.series?.length) {
+    atlasChartOverlaySet(
+      atlasChartOverlayTitleHtml(
+        `${symbol} · ${name} · ${periodLabel}`,
+        `PRIX ${currency} · ${scaleLabel}`,
+        "EXTERNE · CHARGEMENT"
+      ),
+      '<span class="atlas-hud-detail">Série externe réelle en cours de chargement</span>',
+      '<span class="atlas-hud-detail">Le contexte canonique Market reste isolé.</span>',
+      "attente",
+      "solo"
+    );
+    return true;
+  }
+
+  const first = Number(metrics.firstPrice);
+  const last = Number(metrics.lastPrice);
+  const min = Number(metrics.minPrice);
+  const max = Number(metrics.maxPrice);
+  const change = Number(metrics.changePct);
+  const points = Number(metrics.pointCount || result.series.length || 0);
+  const lastTimestamp = Number(metrics.lastTimestamp || 0);
+  const amplitude = Number.isFinite(min) && min > 0 && Number.isFinite(max)
+    ? (max - min) / min * 100
+    : null;
+  const formatPrice = value => atlasFormatCurrency(value, currency);
+
+  const seriesParts = [];
+  if (Number.isFinite(last)) seriesParts.push(formatPrice(last));
+  if (Number.isFinite(change)) seriesParts.push(fmtPct(change));
+  if (Number.isFinite(min)) seriesParts.push(`bas ${formatPrice(min)}`);
+  if (Number.isFinite(max)) seriesParts.push(`haut ${formatPrice(max)}`);
+  if (Number.isFinite(amplitude)) seriesParts.push(`amplitude ${amplitude.toFixed(2)} %`);
+
+  const summaryParts = [];
+  if (Number.isFinite(first)) summaryParts.push(`départ ${formatPrice(first)}`);
+  if (Number.isFinite(last)) summaryParts.push(`dernière ${formatPrice(last)}`);
+  if (points) summaryParts.push(`${points} points`);
+  if (lastTimestamp > 0) summaryParts.push(`série ${atlasExactTimestampLabel(lastTimestamp)}`);
+  summaryParts.push(String(result.source || "source externe réelle"));
+
+  const color = atlasChartOverlayCoinColor(coin, 0);
+  atlasChartOverlaySet(
+    atlasChartOverlayTitleHtml(
+      `${symbol} · ${name} · ${periodLabel}`,
+      `PRIX ${currency} · ${scaleLabel}`,
+      "EXTERNE"
+    ),
+    `<span class="atlas-hud-coin" style="--coin-color:${escapeHtml(color)}"><b>${escapeHtml(symbol)}</b><em>${escapeHtml(seriesParts.join(" · ") || "Mesures externes non disponibles")}</em></span>`,
+    `<span class="atlas-hud-detail">${escapeHtml(summaryParts.join(" · "))}</span>`,
+    "direct",
+    "solo"
+  );
+  return true;
+}
+
 function atlasChartOverlayUpdate() {
+  if (atlasExternalChartActive()) {
+    return atlasChartOverlayExternal();
+  }
   const chart = state.dataBroker?.chart;
   const requestedPeriod = Number(state.chartPeriodDays || 1);
   const chartReady = !!chart
@@ -17428,6 +17505,63 @@ function atlasExternalChartDraw(coin,period,result){
   return safeResult;
 }
 
+function atlasExternalChartPresent(coin, period = 1, result = null, options = {}) {
+  if (!atlasMarketHelpIsExternal(coin) || !coin?.id) return false;
+  if (!Array.isArray(result?.series) || result.series.length < 2) return false;
+
+  const normalized = [1,7,30,60,90,365,36500].includes(Number(period))
+    ? Number(period)
+    : 1;
+  const ctx = atlasExternalChartContext;
+  const sameCoin = ctx.active === true && ctx.coin?.id === coin.id;
+
+  try { ctx.controller?.abort?.(); } catch {}
+  ctx.controller = null;
+
+  if (state.chartEngineV2?.controller) {
+    try { state.chartEngineV2.controller.abort(); } catch {}
+  }
+  state.chartRenderToken += 1;
+  if (state.chartEngineV2) {
+    state.chartEngineV2.activeRequestKey = "";
+    state.chartEngineV2.loading = false;
+  }
+
+  ctx.active = true;
+  ctx.coin = { ...coin, externalChart403113: true };
+  ctx.period = normalized;
+  ctx.result = {
+    ...result,
+    coin: { ...coin, externalChart403113: true },
+    periodDays: normalized,
+    externalChart403113: true,
+    externalMarket: true
+  };
+  ctx.resultPeriod = normalized;
+  ctx.loading = false;
+  ctx.error = "";
+  ctx.token += 1;
+  ctx.openedAt = sameCoin && ctx.openedAt ? ctx.openedAt : Date.now();
+
+  if (!sameCoin || options.resetPresentation === true) {
+    ctx.view403114 = "price";
+    ctx.scale403114 = "linear";
+    ctx.volume403114 = true;
+    ctx.legend403114 = false;
+    ctx.analysis403114 = true;
+  }
+  ctx.lastPresentationKey403114 = "";
+
+  document.documentElement.dataset.atlasExternalChart = "on";
+  document.body.dataset.atlasExternalChart = "on";
+
+  atlasChartV2SyncControls();
+  atlasChartSetPeriodButtons(normalized, false);
+  atlasExternalChartDraw(ctx.coin, normalized, ctx.result);
+  atlasChartOverlayUpdate();
+  return true;
+}
+
 async function atlasExternalChartRender(period=atlasExternalChartPeriod(),options={}){
   const ctx=atlasExternalChartContext;
   const coin=ctx.coin;
@@ -17620,6 +17754,7 @@ globalThis.AtlasExternalChart=Object.freeze({
   build:"40.3.113",
   open:atlasExternalChartOpen,
   render:atlasExternalChartRender,
+  present:atlasExternalChartPresent,
   clear:atlasExternalChartClear,
   state:()=>({
     active:atlasExternalChartContext.active,
