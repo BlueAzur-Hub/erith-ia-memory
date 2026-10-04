@@ -44,3 +44,7 @@ Unchanged:
 6. New Listing → Hausses 5 → canonical Scanner owns the graph with no external context rebound.
 
 Terrain remains pending Christophe/Firefox.
+
+## Delivery proof
+
+Compact ZIP packaging is part of the 40.6.536 CI contract. The artifact-output path was corrected after the first successful runtime guard so the generated 1.10 MB patch can be attached without changing runtime code.
