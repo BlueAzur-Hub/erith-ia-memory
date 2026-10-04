@@ -1,0 +1,49 @@
+name: Agent-Crypto 40.6.526 Validate OKX Transport
+on:
+  push:
+    branches: [main]
+    paths: ['public/agent_crypto_erith_ia/administrator/**','.github/scripts/agent_crypto_okx_transport_guard_406526.py','.github/workflows/agent-crypto-package-406526.yml']
+  pull_request:
+    paths: ['public/agent_crypto_erith_ia/administrator/**','.github/scripts/agent_crypto_okx_transport_guard_406526.py','.github/workflows/agent-crypto-package-406526.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scope
+        run: |
+          CURRENT="$(python -c 'import json; print(json.load(open("public/agent_crypto_erith_ia/administrator/build.json"))["build"])')"
+          if [ "$CURRENT" != "40.6.526" ]; then echo "SKIP=true" >> "$GITHUB_ENV"; fi
+      - name: Validate
+        if: env.SKIP != 'true'
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport.js
+          node - <<'NODE'
+          globalThis.fetch=async()=>({ok:true});
+          require('./public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport.js');
+          const t=globalThis.AgentCryptoOkxLocalTransport?.self_test?.();
+          console.log(JSON.stringify(t,null,2));
+          if(!t?.pass || !t?.checks?.abort_signal_preserved) process.exit(1);
+          NODE
+          python .github/scripts/agent_crypto_okx_transport_guard_406526.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Package
+        if: env.SKIP != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          files=['public/agent_crypto_erith_ia/administrator/index.html','public/agent_crypto_erith_ia/administrator/index-40.6.526.html','public/agent_crypto_erith_ia/administrator/build.json','public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport.js','public/agent_crypto_erith_ia/administrator/js/post-boot-runtime-loader.js','public/agent_crypto_erith_ia/administrator/views/atlas.html','public/agent_crypto_erith_ia/administrator/OKX_TRANSPORT_ABORT_SIGNAL_40.6.526.md','public/agent_crypto_erith_ia/administrator/PATCH_MANIFEST_40.6.526.txt','public/agent_crypto_erith_ia/administrator/SEVEN_HANDOFF_40.6.526.md','.github/scripts/agent_crypto_okx_transport_guard_406526.py','.github/workflows/agent-crypto-package-406526.yml']
+          out=Path('dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.526_OKX_TRANSPORT_PATCH.zip'); out.parent.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for raw in files: z.write(Path(raw),Path(raw))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: env.SKIP != 'true'
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.526_OKX_TRANSPORT_PATCH
+          path: dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.526_OKX_TRANSPORT_PATCH.zip
+          if-no-files-found: error
+          retention-days: 90

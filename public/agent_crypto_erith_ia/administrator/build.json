@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.525",
+  "build": "40.6.526",
   "engine": "38.15.11",
-  "release": "FICHE USD DE-DUP + EUR SYMMETRY",
+  "release": "OKX TRANSPORT ABORT SIGNAL + CANONICAL OWNER NAME",
   "published": true,
-  "status": "published_pending_firefox_406525",
-  "parent_build": "40.6.524",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.525",
-  "administrator_build": "40.6.525",
-  "build_label": "Build 40.6.525 · Administrator",
+  "status": "published_pending_firefox_406526",
+  "parent_build": "40.6.525",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.526",
+  "administrator_build": "40.6.526",
+  "build_label": "Build 40.6.526 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -18,7 +18,7 @@
   "lecture_technique_modified": false,
   "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": true,
+  "administrator_presentation_modified": false,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox Ryzen : Ctrl+F5 → confirmer Build 40.6.525. En USD, FICHE CRYPTO doit afficher une seule valeur de prix USD ; la seconde case devient Source USD + fraîcheur. En EUR, la Fiche doit restaurer Prix direct EUR + Prix USD marché, avec Capitalisation/Volume EUR. Profondeur reste inchangée : le stale EUR observé à 16 s s'est auto-résorbé et le verrou 15 s est conservé.",
-  "terrain_proof": "PENDING_40.6.525_FIREFOX_FICHE_SYMMETRY",
-  "release_notes": "40.6.525 fixes the remaining FICHE CRYPTO presentation asymmetry observed after 40.6.524. Under DISPLAY USD, the same explicit priceUsd had been shown twice as 'Prix affichage USD' and 'Prix USD marché'. The second metric now reports USD source + freshness instead of duplicating the price. Under DISPLAY EUR, the card restores a deterministic native pair: Prix direct EUR + Prix USD marché, with EUR market cap and volume. No Depth change: the transient BTC/EUR STALE 16 s state self-recovered, and the 15 s freshness safety gate remains unchanged.",
+  "terrain_pending": "Firefox : Ctrl+F5 → confirmer Build 40.6.526. Bougies et Profondeur doivent rester identiques. Changer rapidement actif/vue pendant une requête ne doit plus laisser une requête OKX reroutée survivre à son AbortSignal. Aucun changement de prix, paire, Backend 1.4.4 ou Bridge 1.9.13.",
+  "terrain_proof": "PENDING_40.6.526_FIREFOX_OKX_ABORT_SIGNAL",
+  "release_notes": "40.6.526 is a bounded transport robustness release. The local OKX browser transport previously rebuilt routed fetch() calls to 127.0.0.1:8790 without forwarding AbortSignal. The canonical owner now preserves init.signal / Request.signal while still forwarding only allowlisted public-market GETs. The loaded file is renamed to js/okx-local-backend-transport.js; the historical 406500 file remains in the repository but is no longer loaded.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -7438,7 +7438,10 @@
     "market_core_modified": false,
     "native_price_base100_modified": false,
     "requires_local_r19_for_terrain": true,
-    "terrain": "PENDING_FIREFOX_RYZEN"
+    "terrain": "PENDING_FIREFOX_RYZEN",
+    "superseded_by": "40.6.526",
+    "historical_owner": "js/okx-local-backend-transport-406500.js",
+    "loaded": false
   },
   "market_microscope_ux_406501": {
     "enabled": true,
@@ -8642,6 +8645,39 @@
     "real_order": false,
     "wallet": false,
     "self_test": "AgentCryptoMarketFicheDisplay406518.self_test()",
+    "terrain": "PENDING_FIREFOX"
+  },
+  "okx_local_backend_transport_406526": {
+    "enabled": true,
+    "parent": "40.6.525",
+    "owner": "js/okx-local-backend-transport.js",
+    "backend": "http://127.0.0.1:8790/okx-public",
+    "backend_version": "1.4.4",
+    "bridge_version": "1.9.13",
+    "scope": "PUBLIC_OKX_GET_TRANSPORT_ONLY",
+    "fix": "FORWARD_ABORT_SIGNAL",
+    "request_signal_sources": [
+      "init.signal",
+      "Request.signal"
+    ],
+    "canonical_filename": true,
+    "historical_file_retained": true,
+    "allowed_endpoints": [
+      "candles",
+      "ticker",
+      "books",
+      "books-rpi",
+      "trades"
+    ],
+    "read_only": true,
+    "private_api": false,
+    "orders": false,
+    "wallet": false,
+    "market_core_modified": false,
+    "depth_changed": false,
+    "candles_changed": false,
+    "strategy_changed": false,
+    "self_test": "AgentCryptoOkxLocalTransport.self_test()",
     "terrain": "PENDING_FIREFOX"
   }
 }
