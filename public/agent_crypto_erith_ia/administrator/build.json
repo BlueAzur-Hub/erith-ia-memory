@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.526",
+  "build": "40.6.527",
   "engine": "38.15.11",
-  "release": "OKX TRANSPORT ABORT SIGNAL + CANONICAL OWNER NAME",
+  "release": "NEW LISTINGS NAVIGATOR · CONCRETE CT",
   "published": true,
-  "status": "published_pending_firefox_406526",
-  "parent_build": "40.6.525",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.526",
-  "administrator_build": "40.6.526",
-  "build_label": "Build 40.6.526 · Administrator",
+  "status": "published_pending_firefox_406527",
+  "parent_build": "40.6.526",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.527",
+  "administrator_build": "40.6.527",
+  "build_label": "Build 40.6.527 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -18,7 +18,7 @@
   "lecture_technique_modified": false,
   "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": false,
+  "administrator_presentation_modified": true,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox : Ctrl+F5 → confirmer Build 40.6.526. Bougies et Profondeur doivent rester identiques. Changer rapidement actif/vue pendant une requête ne doit plus laisser une requête OKX reroutée survivre à son AbortSignal. Aucun changement de prix, paire, Backend 1.4.4 ou Bridge 1.9.13.",
-  "terrain_proof": "PENDING_40.6.526_FIREFOX_OKX_ABORT_SIGNAL",
-  "release_notes": "40.6.526 is a bounded transport robustness release. The local OKX browser transport previously rebuilt routed fetch() calls to 127.0.0.1:8790 without forwarding AbortSignal. The canonical owner now preserves init.signal / Request.signal while still forwarding only allowlisted public-market GETs. The loaded file is renamed to js/okx-local-backend-transport.js; the historical 406500 file remains in the repository but is no longer loaded.",
+  "terrain_pending": "Firefox : Ctrl+F5 → confirmer Build 40.6.527. Dans Market, le bouton 'Nouveaux listings · CT' doit ouvrir la carte Concrete. Vérifier les vérités de paires CT/USD, CT/EUR, CT/USDT OKX et CT/USDC + CT/USDT MEXC. Le bouton Rechercher CT dans Market doit tenter l'univers 1000 sans y injecter artificiellement CT. Aucun prix ne doit être inventé si CoinGecko concrete n'est pas chargé.",
+  "terrain_proof": "PENDING_40.6.527_FIREFOX_CT_NAVIGATOR",
+  "release_notes": "40.6.527 adds a read-only New Listings navigator for Concrete (CT). It does not alter Core 250/Extended 1000 ranking or state.coins. Pair truth is recorded from official listing announcements: OKX Europe CT/USD and CT/EUR, OKX CT/USDT, MEXC CT/USDC and CT/USDT. The panel displays a live price only if CoinGecko id concrete is already present in the canonical loaded Market universe; otherwise it explicitly says price not loaded.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -8678,6 +8678,51 @@
     "candles_changed": false,
     "strategy_changed": false,
     "self_test": "AgentCryptoOkxLocalTransport.self_test()",
+    "terrain": "PENDING_FIREFOX"
+  },
+  "new_listings_navigator_406527": {
+    "enabled": true,
+    "parent": "40.6.526",
+    "owner": "js/new-listings.js",
+    "asset": {
+      "id": "concrete",
+      "symbol": "CT",
+      "name": "Concrete",
+      "listed_at": "2026-09-30"
+    },
+    "verified_pairs": [
+      {
+        "exchange": "OKX Europe",
+        "pair": "CT/USD"
+      },
+      {
+        "exchange": "OKX Europe",
+        "pair": "CT/EUR"
+      },
+      {
+        "exchange": "OKX",
+        "pair": "CT/USDT"
+      },
+      {
+        "exchange": "MEXC",
+        "pair": "CT/USDC"
+      },
+      {
+        "exchange": "MEXC",
+        "pair": "CT/USDT"
+      }
+    ],
+    "false_pair_prohibited": "OKX CT/USDC",
+    "market_core_modified": false,
+    "state_coins_injection": false,
+    "ranking_mutation": false,
+    "price_fabrication": false,
+    "network_request": false,
+    "backend_changed": false,
+    "bridge_changed": false,
+    "orders": false,
+    "wallet": false,
+    "self_test": "AgentCryptoNewListings.self_test()",
     "terrain": "PENDING_FIREFOX"
   }
 }
