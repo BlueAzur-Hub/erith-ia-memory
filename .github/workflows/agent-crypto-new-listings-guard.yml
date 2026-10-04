@@ -1,0 +1,30 @@
+name: Agent-Crypto New Listings Canonical Guard
+
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - ".github/scripts/agent_crypto_new_listings_guard.py"
+      - ".github/workflows/agent-crypto-new-listings-guard.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - ".github/scripts/agent_crypto_new_listings_guard.py"
+      - ".github/workflows/agent-crypto-new-listings-guard.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify stable runtime owner and native exit contract
+        run: python .github/scripts/agent_crypto_new_listings_guard.py
