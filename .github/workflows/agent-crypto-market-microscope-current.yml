@@ -7,7 +7,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
-      - "public/agent_crypto_erith_ia/administrator/MARKET_MICROSCOPE_CANONICAL_RUNTIME_40.6.563.md"
+      - "public/agent_crypto_erith_ia/administrator/MARKET_MICROSCOPE_*.md"
       - ".github/scripts/agent_crypto_market_microscope_guard.py"
       - ".github/workflows/agent-crypto-market-microscope-current.yml"
   pull_request:
@@ -15,6 +15,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/MARKET_MICROSCOPE_*.md"
       - ".github/scripts/agent_crypto_market_microscope_guard.py"
       - ".github/workflows/agent-crypto-market-microscope-current.yml"
   workflow_dispatch:
@@ -66,14 +67,16 @@ jobs:
           from pathlib import Path
           import hashlib, json, zipfile
           root=Path("public/agent_crypto_erith_ia/administrator")
-          build=json.loads((root/"build.json").read_text(encoding="utf-8"))["build"]
+          manifest=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          build=manifest["build"]
+          release_note=root/manifest["release_notes"]
           out=Path(f"AGENT_CRYPTO_ADMINISTRATOR_{build}_MICROSCOPE_PATCH.zip")
           files=[
             root/"index.html",
             root/f"index-{build}.html",
             root/"build.json",
             root/"js/market-microscope-candles.js",
-            root/"MARKET_MICROSCOPE_CANONICAL_RUNTIME_40.6.563.md",
+            release_note,
           ]
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
             for p in files:

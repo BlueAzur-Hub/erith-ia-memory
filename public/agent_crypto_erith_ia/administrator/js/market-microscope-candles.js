@@ -1,4 +1,4 @@
-/* Agent-Crypto — 40.6.563 MARKET MICROSCOPE · CANONICAL RUNTIME + INDICATOR STATE
+/* Agent-Crypto — 40.6.564 MARKET MICROSCOPE · LOCAL TRANSPORT TRUTH + CANDLE VALIDATION
    Historical lineage: core 40.6.498 · New Listings reuse 40.6.529.
    40.6.529 additive extension: New Listing external context can reuse this exact chart shell
    for Ligne + Bougies without mutating Market Core/state.coins.
@@ -6,7 +6,7 @@
    Fetch occurs only on explicit Bougies / interval / refresh / external-asset load. No recurring timer. */
 (()=>{
   "use strict";
-  const BUILD="40.6.563";
+  const BUILD="40.6.564";
   const HISTORICAL_CORE_BUILD="40.6.498";
   const EXTENSION_BUILD="40.6.529";
   const ROOT="atlasMarketMicroscope";
@@ -39,12 +39,27 @@
     try{globalThis.sessionStorage?.setItem(INDICATOR_STORAGE_KEY,payload);persisted=true;}catch(_){}
     return persisted;
   }
-  const state={mode:"native",bar:"15m",requestedBar:"15m",loadedBar:null,instrument:"BTC-EUR",requestedInstrument:"BTC-EUR",loadedInstrument:null,rows:[],loading:false,error:null,lastLoadedAt:null,source:"OKX public candles",indicators:readIndicatorState(),lastLevels:null};
+  const state={mode:"native",bar:"15m",requestedBar:"15m",loadedBar:null,instrument:"BTC-EUR",requestedInstrument:"BTC-EUR",loadedInstrument:null,rows:[],loading:false,error:null,errorCode:null,lastLoadedAt:null,source:"OKX public candles",indicators:readIndicatorState(),lastLevels:null};
   const view={start:0,count:72,dragging:false,dragX:0,dragStart:0};
   let requestToken=0,activeController=null;
   const REQUEST_TIMEOUT_MS=12000;
-  const num=v=>{const x=Number(v);return Number.isFinite(x)?x:null;};
+  const num=v=>{
+    if(v===null||v===undefined||typeof v==="boolean")return null;
+    if(typeof v==="string"&&!v.trim())return null;
+    const x=Number(v);return Number.isFinite(x)?x:null;
+  };
   const fmt=(v,d=2)=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:d}):"—";
+  const codedError=(code,message)=>{const error=new Error(message);error.code=code;return error;};
+  function backendLabel(backend){
+    try{const u=new URL(String(backend||""));return `LOCAL BACKEND ${u.hostname}${u.port?":"+u.port:""}`;}catch(_){return "LOCAL BACKEND NON CONFIRMÉ";}
+  }
+  function transportTruth(){
+    const owner=globalThis.AgentCryptoOkxLocalTransport;
+    const backend=String(owner?.backend||"").trim();
+    return Object.freeze({confirmed:!!backend,backend:backend||null,label:backend?backendLabel(backend):"TRANSPORT LOCAL NON CONFIRMÉ",owner:owner?.canonical_filename||null});
+  }
+  const timeoutError=(inst,bar)=>codedError("OKX_LOCAL_TIMEOUT",`${transportTruth().label} · délai ${REQUEST_TIMEOUT_MS/1000} s dépassé · ${inst} · ${bar}`);
+  const canFallbackToUsdc=error=>String(error?.code||"")==="OKX_CANDLES_UNAVAILABLE";
   const externalContext=()=>{try{return globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()||{active:false};}catch(_){return {active:false};}};
   const selectedSymbol=()=>{
     const ext=externalContext();if(ext.active&&ext.base)return String(ext.base).toUpperCase();
@@ -60,8 +75,19 @@
   const activeBar=()=>state.loadedBar||state.bar;
   const activeInstrument=()=>state.loadedInstrument||state.instrument;
   const requestKey=(instrument=state.requestedInstrument,bar=state.requestedBar)=>`${String(instrument||"").toUpperCase()}|${String(bar||"")}`;
+  function normalizeCandle(record){
+    const t=num(record?.t),o=num(record?.o),h=num(record?.h),l=num(record?.l),c=num(record?.c),v=num(record?.v);
+    if(![t,o,h,l,c].every(Number.isFinite)||t<=0)return null;
+    if(h<Math.max(o,c,l)||l>Math.min(o,c,h))return null;
+    if(v!==null&&v<0)return null;
+    return {t,o,h,l,c,v,confirm:String(record?.confirm??"")};
+  }
   function parseRows(data){
-    return (Array.isArray(data)?data:[]).map(r=>({t:num(r?.[0]),o:num(r?.[1]),h:num(r?.[2]),l:num(r?.[3]),c:num(r?.[4]),v:num(r?.[5]),confirm:String(r?.[8]??"")})).filter(r=>[r.t,r.o,r.h,r.l,r.c].every(Number.isFinite)).sort((a,b)=>a.t-b.t);
+    return (Array.isArray(data)?data:[]).map(r=>normalizeCandle({t:r?.[0],o:r?.[1],h:r?.[2],l:r?.[3],c:r?.[4],v:r?.[5],confirm:r?.[8]})).filter(Boolean).sort((a,b)=>a.t-b.t);
+  }
+  function requireUsableRows(rows,inst){
+    if(!Array.isArray(rows)||!rows.length)throw codedError("OKX_CANDLES_INVALID",`Candles ${inst}: aucune bougie exploitable`);
+    return rows;
   }
   function movingAverage(rows,n){return rows.map((r,i)=>{if(i+1<n)return null;let s=0;for(let k=i-n+1;k<=i;k++)s+=rows[k].c;return s/n;});}
   function exponentialAverage(rows,n){
@@ -394,13 +420,21 @@
     if(ext.active){
       const pack=await globalThis.AgentCryptoNewListingLiveAsset?.fetchCandles?.({bar,limit:300,signal});
       if(!pack?.rows?.length)throw new Error(`Candles externes ${inst} indisponibles`);
-      const rows=pack.rows.map(r=>({t:num(r.t),o:num(r.o),h:num(r.h),l:num(r.l),c:num(r.c),v:num(r.v),confirm:""})).filter(r=>[r.t,r.o,r.h,r.l,r.c].every(Number.isFinite)).sort((a,b)=>a.t-b.t);
-      return {rows,source:`${pack.providerLabel||ext.providerLabel||ext.provider} public candles`};
+      const rows=requireUsableRows(pack.rows.map(r=>normalizeCandle({t:r?.t,o:r?.o,h:r?.h,l:r?.l,c:r?.c,v:r?.v,confirm:""})).filter(Boolean).sort((a,b)=>a.t-b.t),inst);
+      return {rows,source:`${pack.providerLabel||ext.providerLabel||ext.provider} public candles`,transport:"EXTERNAL_PROVIDER"};
     }
+    const transport=transportTruth();
+    if(!transport.confirmed)throw codedError("OKX_LOCAL_TRANSPORT_MISSING","Transport OKX local non chargé · Backend 8790 requis");
     const url=`${REST}/api/v5/market/candles?instId=${encodeURIComponent(inst)}&bar=${encodeURIComponent(BARS[bar]||BARS["15m"])}&limit=300`;
-    const r=await fetch(url,{cache:"no-store",signal});const j=await r.json();
-    if(!r.ok||String(j?.code)!=="0"||!Array.isArray(j?.data)||!j.data.length)throw new Error(`Candles ${inst}: HTTP ${r.status} / code ${j?.code??"?"}`);
-    return {rows:parseRows(j.data),source:"OKX public candles"};
+    let r;
+    try{r=await fetch(url,{cache:"no-store",signal});}
+    catch(error){if(signal?.aborted)throw error;throw codedError("OKX_LOCAL_UNAVAILABLE",`${transport.label} indisponible · ${inst} · ${bar}`);}
+    let j;
+    try{j=await r.json();}catch(_){throw codedError("OKX_RESPONSE_INVALID",`Réponse OKX illisible · ${transport.label} · ${inst}`);}
+    if(!r.ok)throw codedError("OKX_HTTP",`Candles ${inst}: HTTP ${r.status} · ${transport.label}`);
+    if(String(j?.code)!=="0"||!Array.isArray(j?.data)||!j.data.length)throw codedError("OKX_CANDLES_UNAVAILABLE",`Candles ${inst}: code ${j?.code??"?"} · aucune série OKX disponible`);
+    const rows=requireUsableRows(parseRows(j.data),inst);
+    return {rows,source:"OKX public candles",transport:transport.label};
   }
   async function load(options={}){
     mount();
@@ -410,8 +444,9 @@
     const token=++requestToken;
     try{activeController?.abort();}catch(_){}
     const controller=new AbortController();activeController=controller;
-    const timeout=setTimeout(()=>{if(token===requestToken)controller.abort();},REQUEST_TIMEOUT_MS);
-    state.loading=true;state.error=null;
+    let timedOut=false;
+    const timeout=setTimeout(()=>{if(token===requestToken){timedOut=true;controller.abort();}},REQUEST_TIMEOUT_MS);
+    state.loading=true;state.error=null;state.errorCode=null;
     const root=document.getElementById(ROOT),ext=externalContext();
     renderState();
     if(root)root.querySelector("[data-amm-state]").textContent=`CHARGEMENT · ${primary} · ${requestedBar} · ${ext.active?(ext.providerLabel||ext.provider):"OKX"} public`;
@@ -420,19 +455,30 @@
       try{
         const pack=await fetchInstrument(primary,{bar:requestedBar,signal:controller.signal});rows=pack.rows;source=pack.source;
       }catch(error){
-        if(controller.signal.aborted||token!==requestToken)return false;
-        if(!ext.active&&displayCurrency()==="EUR"){
+        if(token!==requestToken)return false;
+        if(controller.signal.aborted){
+          if(timedOut)throw timeoutError(primary,requestedBar);
+          return false;
+        }
+        if(!ext.active&&displayCurrency()==="EUR"&&canFallbackToUsdc(error)){
           const fallback=`${selectedSymbol()}-USDC`;
           const pack=await fetchInstrument(fallback,{bar:requestedBar,signal:controller.signal});
           rows=pack.rows;source=pack.source;inst=fallback;warning=`${primary} indisponible · fallback ${fallback} non converti en EUR`;
         }else throw error;
       }
-      if(controller.signal.aborted||token!==requestToken)return false;
-      state.instrument=inst;state.loadedInstrument=inst;state.loadedBar=requestedBar;state.source=source||"OKX public candles";state.rows=rows;state.error=warning;state.lastLoadedAt=new Date().toISOString();
+      if(token!==requestToken)return false;
+      if(controller.signal.aborted){
+        if(timedOut)throw timeoutError(primary,requestedBar);
+        return false;
+      }
+      state.instrument=inst;state.loadedInstrument=inst;state.loadedBar=requestedBar;state.source=source||"OKX public candles";state.rows=requireUsableRows(rows,inst);state.error=warning;state.errorCode=warning?"OKX_FALLBACK_USDC":null;state.lastLoadedAt=new Date().toISOString();
       resetView(false);renderState();draw();return true;
     }catch(error){
-      if(controller.signal.aborted||token!==requestToken)return false;
-      state.error=String(error?.message||error);renderState();return false;
+      if(token!==requestToken)return false;
+      if(controller.signal.aborted&&!timedOut)return false;
+      const finalError=timedOut?timeoutError(primary,requestedBar):error;
+      state.errorCode=String(finalError?.code||"OKX_CANDLES_LOAD_FAILED");
+      state.error=String(finalError?.message||finalError);renderState();return false;
     }finally{
       clearTimeout(timeout);
       if(token===requestToken){
@@ -442,7 +488,7 @@
       }
     }
   }
-  function renderState(){const root=document.getElementById(ROOT);if(!root)return;const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=ext.active?(state.mode==="candles"?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const indicators=[state.indicators.ma?"MA5/10/20":null,state.indicators.ema?"EMA5/10/20":null,state.indicators.sr?"S/R pivots":null,state.indicators.supertrend?"Supertrend 10×3":null,state.indicators.boll?"Bollinger 20×2":null,state.indicators.sar?"SAR 0.02/0.20":null,state.indicators.vwap?"VWAP fenêtre":null,state.indicators.vp?"Volume Profile approx":null].filter(Boolean).join(" + ")||"indicateurs masqués";const shownInstrument=activeInstrument(),shownBar=activeBar();if(meta)meta.textContent=`${shownInstrument} · ${shownBar} · ${state.rows.length} points · O/H/L/C + Volume · ${indicators}`;const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"OKX public candles").replace(/ public candles$/i,"");st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · dernière série affichée ${shownInstrument} · ${shownBar}`:state.error?`ATTENTION · ${state.error}`:`${provider} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;}}
+  function renderState(){const root=document.getElementById(ROOT);if(!root)return;const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=ext.active?(state.mode==="candles"?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const indicators=[state.indicators.ma?"MA5/10/20":null,state.indicators.ema?"EMA5/10/20":null,state.indicators.sr?"S/R pivots":null,state.indicators.supertrend?"Supertrend 10×3":null,state.indicators.boll?"Bollinger 20×2":null,state.indicators.sar?"SAR 0.02/0.20":null,state.indicators.vwap?"VWAP fenêtre":null,state.indicators.vp?"Volume Profile approx":null].filter(Boolean).join(" + ")||"indicateurs masqués";const shownInstrument=activeInstrument(),shownBar=activeBar();if(meta)meta.textContent=`${shownInstrument} · ${shownBar} · ${state.rows.length} points · O/H/L/C + Volume · ${indicators}`;const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"OKX public candles").replace(/ public candles$/i,""),transport=ext.active?"EXTERNAL PROVIDER":transportTruth().label;st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · ${transport} · dernière série affichée ${shownInstrument} · ${shownBar}`:state.error?`ATTENTION · ${state.error} · dernière série valide conservée ${shownInstrument} · ${shownBar}`:`${provider} · ${transport} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;}}
   function visibleRows(){
     if(!state.rows.length)return [];
     const count=Math.max(20,Math.min(view.count||72,state.rows.length));
@@ -682,11 +728,16 @@
     const vpReferenceOk=vpReference.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX"&&vpReference.bins.length===24&&vpReference.pocIndex===23&&near(vpReference.maxVolume,11);
     const maEmaFullHistory=near(ma20[20],111.5)&&near(ma20[29],120.5)&&near(ema20[20],111.5)&&near(ema20[29],120.5);
     const requestIdentityOk=requestKey("ETH-USDC","1h")==="ETH-USDC|1h";
+    const nullOhlcRejected=parseRows([["1",null,"2","0.5","1.5","10","0","0","1"]]).length===0;
+    const incoherentOhlcRejected=parseRows([["1","1","1.2","0.5","1.5","10","0","0","1"]]).length===0;
+    let emptySeriesRejected=false;try{requireUsableRows([],"TEST");}catch(error){emptySeriesRejected=error?.code==="OKX_CANDLES_INVALID";}
+    const timeoutTruth=timeoutError("BTC-USDC","15m").code==="OKX_LOCAL_TIMEOUT";
+    const transportLabelTruth=backendLabel("http://127.0.0.1:8790/okx-public")==="LOCAL BACKEND 127.0.0.1:8790";
     const indicatorFixture={ma:false,ema:true,sr:false,supertrend:true,boll:true,sar:true,vwap:true,vp:true};
     const indicatorRoundTrip=JSON.stringify(normalizeIndicatorState(JSON.parse(JSON.stringify(indicatorFixture))))===JSON.stringify(indicatorFixture);
-    const pass=sample.length===5&&sample[0].t===1&&ma[0]===null&&Math.abs(ma[1]-2)<1e-9&&ema.some(Number.isFinite)&&Math.abs(delta-10)<1e-9&&barDurationMs("15m")===900000&&sr.method==="PIVOTS_VISIBLES_W2"&&maEmaFullHistory&&stReference&&bollReference&&sarReference&&vwapReferenceOk&&vpReferenceOk&&requestIdentityOk&&indicatorRoundTrip;
-    return Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),ma_ema_full_history_projection:maEmaFullHistory,candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",support_resistance_last_levels_clear_when_disabled:true,support_resistance_distance_signature:true,support_resistance_historical_reference_label:true,supertrend_method:st.method==="SUPERTREND_ATR_WILDER",supertrend_reference_10x3:stReference,supertrend_default_off:INDICATOR_DEFAULTS.supertrend===false,bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:INDICATOR_DEFAULTS.ma===true,ema_opt_in:INDICATOR_DEFAULTS.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,technical_sr_native_window:true,technical_sr_collapsible:true,technical_sr_compact_summary:true,technical_sr_price_priority:true,technical_sr_price_visibility:true,technical_sr_context_separate:true,technical_sr_no_confidence_label:true,supertrend_opt_in:true,supertrend_period_10_multiplier_3:true,bollinger_method:boll.method==="BOLLINGER_SMA_STDDEV",bollinger_reference_20x2:bollReference,bollinger_default_off:INDICATOR_DEFAULTS.boll===false,bollinger_opt_in:true,bollinger_period_20_multiplier_2:true,sar_method:sar.method==="PARABOLIC_SAR_CLASSIC",sar_reference_002_020:sarReference,sar_default_off:INDICATOR_DEFAULTS.sar===false,sar_opt_in:true,sar_step_002_max_020:true,vwap_method:vwapReference.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME",vwap_reference_window:vwapReferenceOk,vwap_label_window:true,vwap_default_off:INDICATOR_DEFAULTS.vwap===false,vwap_opt_in:true,volume_profile_method:vpReference.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX",volume_profile_reference_24_bins:vpReferenceOk,volume_profile_default_off:INDICATOR_DEFAULTS.vp===false,volume_profile_opt_in:true,volume_profile_bins_24:true,request_identity_key:requestIdentityOk,canonical_market_selection_owner:typeof globalThis.getSelectedCoin==="function"||typeof document==="undefined",latest_request_wins:true,abort_previous_request:true,request_timeout_ms:REQUEST_TIMEOUT_MS,loaded_context_separate_from_requested_context:true,indicator_state_summary_refresh:true,indicator_state_roundtrip:indicatorRoundTrip,indicator_state_storage_key:INDICATOR_STORAGE_KEY==="agentCrypto.marketMicroscope.indicators.v1",default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
+    const pass=sample.length===5&&sample[0].t===1&&ma[0]===null&&Math.abs(ma[1]-2)<1e-9&&ema.some(Number.isFinite)&&Math.abs(delta-10)<1e-9&&barDurationMs("15m")===900000&&sr.method==="PIVOTS_VISIBLES_W2"&&maEmaFullHistory&&stReference&&bollReference&&sarReference&&vwapReferenceOk&&vpReferenceOk&&requestIdentityOk&&nullOhlcRejected&&incoherentOhlcRejected&&emptySeriesRejected&&timeoutTruth&&transportLabelTruth&&indicatorRoundTrip;
+    return Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),ma_ema_full_history_projection:maEmaFullHistory,candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",support_resistance_last_levels_clear_when_disabled:true,support_resistance_distance_signature:true,support_resistance_historical_reference_label:true,supertrend_method:st.method==="SUPERTREND_ATR_WILDER",supertrend_reference_10x3:stReference,supertrend_default_off:INDICATOR_DEFAULTS.supertrend===false,bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:INDICATOR_DEFAULTS.ma===true,ema_opt_in:INDICATOR_DEFAULTS.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,technical_sr_native_window:true,technical_sr_collapsible:true,technical_sr_compact_summary:true,technical_sr_price_priority:true,technical_sr_price_visibility:true,technical_sr_context_separate:true,technical_sr_no_confidence_label:true,supertrend_opt_in:true,supertrend_period_10_multiplier_3:true,bollinger_method:boll.method==="BOLLINGER_SMA_STDDEV",bollinger_reference_20x2:bollReference,bollinger_default_off:INDICATOR_DEFAULTS.boll===false,bollinger_opt_in:true,bollinger_period_20_multiplier_2:true,sar_method:sar.method==="PARABOLIC_SAR_CLASSIC",sar_reference_002_020:sarReference,sar_default_off:INDICATOR_DEFAULTS.sar===false,sar_opt_in:true,sar_step_002_max_020:true,vwap_method:vwapReference.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME",vwap_reference_window:vwapReferenceOk,vwap_label_window:true,vwap_default_off:INDICATOR_DEFAULTS.vwap===false,vwap_opt_in:true,volume_profile_method:vpReference.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX",volume_profile_reference_24_bins:vpReferenceOk,volume_profile_default_off:INDICATOR_DEFAULTS.vp===false,volume_profile_opt_in:true,volume_profile_bins_24:true,request_identity_key:requestIdentityOk,strict_null_ohlc_rejected:nullOhlcRejected,strict_incoherent_ohlc_rejected:incoherentOhlcRejected,empty_parsed_series_rejected:emptySeriesRejected,timeout_has_explicit_error:timeoutTruth,local_transport_truth_label:transportLabelTruth,canonical_market_selection_owner:typeof globalThis.getSelectedCoin==="function"||typeof document==="undefined",latest_request_wins:true,abort_previous_request:true,request_timeout_ms:REQUEST_TIMEOUT_MS,loaded_context_separate_from_requested_context:true,indicator_state_summary_refresh:true,indicator_state_roundtrip:indicatorRoundTrip,indicator_state_storage_key:INDICATOR_STORAGE_KEY==="agentCrypto.marketMicroscope.indicators.v1",default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
   }
-  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active,lastLevels:state.lastLevels,request_key:requestKey()}),instrument:()=>activeInstrument(),technicalLevels:()=>state.lastLevels,indicatorState:()=>Object.freeze({...state.indicators}),resetView,viewport:()=>Object.freeze({...view}),installCanonicalSelectionHook,self_test:selfTest,read_only:true,network:"OKX_PUBLIC_ON_DEMAND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,latest_request_wins:true,request_timeout_ms:REQUEST_TIMEOUT_MS,indicator_state_persistence:true,indicator_storage_key:INDICATOR_STORAGE_KEY,recurring_timer:false,mutation_observer:false,storage_write:true,storage_scope:"INDICATOR_STATE_ONLY",real_order:false,market_core_changed:false,strategy_changed:false});
+  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active,lastLevels:state.lastLevels,request_key:requestKey()}),instrument:()=>activeInstrument(),technicalLevels:()=>state.lastLevels,indicatorState:()=>Object.freeze({...state.indicators}),resetView,viewport:()=>Object.freeze({...view}),installCanonicalSelectionHook,self_test:selfTest,read_only:true,network:"OKX_PUBLIC_VIA_LOCAL_BACKEND_ON_DEMAND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,latest_request_wins:true,request_timeout_ms:REQUEST_TIMEOUT_MS,indicator_state_persistence:true,indicator_storage_key:INDICATOR_STORAGE_KEY,recurring_timer:false,mutation_observer:false,storage_write:true,storage_scope:"INDICATOR_STATE_ONLY",real_order:false,market_core_changed:false,strategy_changed:false});
   if(typeof document!=="undefined"){const boot=()=>{mount();installCanonicalSelectionHook();};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",()=>{if(state.mode==="candles")draw();},{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(state.mode==="candles"&&!externalContext().active)void load({bar:state.bar,reason:"quote-architecture"});},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{requestToken+=1;try{activeController?.abort();}catch(_){}activeController=null;state.loading=false;mount();state.rows=[];state.error=null;state.lastLoadedAt=null;state.lastLevels=null;state.loadedBar=null;state.loadedInstrument=null;state.mode="native";renderTechnicalLevels(null);syncControls();},{passive:true});}
 })();
