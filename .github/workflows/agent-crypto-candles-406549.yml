@@ -1,0 +1,73 @@
+name: Agent-Crypto 40.6.549 Candles Human Readability
+
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.549.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/CANDLES_HUMAN_READABILITY_40.6.549.md"
+      - ".github/scripts/agent_crypto_candles_guard_406549.py"
+      - ".github/workflows/agent-crypto-candles-406549.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.549.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/CANDLES_HUMAN_READABILITY_40.6.549.md"
+      - ".github/scripts/agent_crypto_candles_guard_406549.py"
+      - ".github/workflows/agent-crypto-candles-406549.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: JavaScript syntax
+        run: node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js
+      - name: Module self-test
+        run: |
+          node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js');
+          const r=global.AgentCryptoMarketMicroscope.self_test();
+          console.log(JSON.stringify(r,null,2));
+          if(!r.pass) process.exit(1);
+          NODE
+      - name: Scope guard
+        run: python .github/scripts/agent_crypto_candles_guard_406549.py
+      - name: Version truth
+        run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Package compact patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, zipfile
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          out=Path("AGENT_CRYPTO_ADMINISTRATOR_40.6.549_CANDLES_HUMAN_READABILITY_PATCH.zip")
+          files=[
+            root/"index.html",
+            root/"index-40.6.549.html",
+            root/"build.json",
+            root/"js/market-microscope-candles-406498.js",
+            root/"CANDLES_HUMAN_READABILITY_40.6.549.md",
+          ]
+          with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
+            for p in files:
+              z.write(p,p.as_posix())
+          h=hashlib.sha256(out.read_bytes()).hexdigest()
+          Path("CANDLES_40.6.549_SHA256.txt").write_text(f"{h}  {out.name}\n",encoding="utf-8")
+          print(out, out.stat().st_size, h)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.549_CANDLES_HUMAN_READABILITY_PATCH
+          path: |
+            AGENT_CRYPTO_ADMINISTRATOR_40.6.549_CANDLES_HUMAN_READABILITY_PATCH.zip
+            CANDLES_40.6.549_SHA256.txt
