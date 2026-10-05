@@ -1,4 +1,4 @@
-/* Agent-Crypto — 40.6.551 MARKET MICROSCOPE · SUPPORT / RÉSISTANCE
+/* Agent-Crypto — 40.6.552 MARKET MICROSCOPE · TECHNICAL S/R GLASS COLLAPSIBLE
    Historical core owner: 40.6.498 · New Listings reuse: 40.6.529.
    40.6.529 additive extension: New Listing external context can reuse this exact chart shell
    for Ligne + Bougies without mutating Market Core/state.coins.
@@ -6,7 +6,7 @@
    Fetch occurs only on explicit Bougies / interval / refresh / external-asset load. No recurring timer. */
 (()=>{
   "use strict";
-  const BUILD="40.6.551";
+  const BUILD="40.6.552";
   const CORE_BUILD="40.6.498";
   const EXTENSION_BUILD="40.6.529";
   const ROOT="atlasMarketMicroscope";
@@ -134,13 +134,14 @@
   function technicalLevelsMarkup(levels){
     const unit=priceUnit(),s=levels?.support,r=levels?.resistance;
     const card=(label,level,cls)=>`<span class="${cls}"><small>${label}</small><strong>${level?fmtPrice(level.price)+" "+unit:"Aucun niveau"}</strong><em>${level?`${level.touches} touche${level.touches>1?"s":""} · ${level.confidence} · écart ${levelDistance(level)}`:"fenêtre insuffisante"}</em></span>`;
-    return `<div class="amm-tech-levels-head"><b>REPÈRES SUPPORT / RÉSISTANCE</b><small>${state.instrument} · ${state.bar} · pivots visibles · lecture seule</small></div><div class="amm-tech-levels-grid">${card("SUPPORT",s,"is-support")}${card("RÉSISTANCE",r,"is-resistance")}</div><p>Repères heuristiques locaux sur la fenêtre Bougies visible. Ils décrivent des zones observées, pas une certitude de marché ni un ordre.</p>`;
+    const compact=`S ${s?fmtPrice(s.price):"—"} · R ${r?fmtPrice(r.price):"—"} · ${s&&r&&s.confidence===r.confidence?s.confidence:"repères locaux"}`;
+    return `<summary class="amm-tech-levels-summary"><span><b>REPÈRES SUPPORT / RÉSISTANCE</b><small>${state.instrument} · ${state.bar} · pivots visibles</small></span><em>${compact}</em><i aria-hidden="true">▾</i></summary><div class="amm-tech-levels-body"><div class="amm-tech-levels-grid">${card("SUPPORT",s,"is-support")}${card("RÉSISTANCE",r,"is-resistance")}</div><p>Repères heuristiques locaux sur la fenêtre Bougies visible. Ils décrivent des zones observées, pas une certitude de marché ni un ordre.</p></div>`;
   }
   function ensureTechnicalLevelsHost(){
     if(typeof document==="undefined")return null;
     const body=document.getElementById("detailPanelBody"),anchor=document.getElementById("detailCompactStrip");if(!body||!anchor)return null;
     let host=document.getElementById("atlasCandlesTechnicalLevels406551");
-    if(!host){host=document.createElement("section");host.id="atlasCandlesTechnicalLevels406551";host.className="amm-tech-levels";host.hidden=true;anchor.insertAdjacentElement("afterend",host);}
+    if(!host){host=document.createElement("details");host.id="atlasCandlesTechnicalLevels406551";host.className="amm-tech-levels";host.hidden=true;host.open=true;anchor.insertAdjacentElement("afterend",host);}
     return host;
   }
   function renderTechnicalLevels(levels){
@@ -172,21 +173,29 @@
     if(document.getElementById(ROOT+"Style"))return;
     const s=document.createElement("style");s.id=ROOT+"Style";
     s.textContent=`#${ROOT}Controls{display:flex;align-items:center;gap:4px;margin-left:5px;padding-left:7px;border-left:1px solid rgba(255,211,122,.16)}#${ROOT}Controls small{font:900 7px/1 system-ui,sans-serif;letter-spacing:.12em;color:#8da2ad}#${ROOT}Controls button,#${ROOT} .amm-bar button,#${ROOT} .amm-refresh{min-height:25px;padding:5px 8px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.04);color:#c6d8df;font:900 9px/1 system-ui,sans-serif;cursor:pointer}#${ROOT}Controls button.is-active,#${ROOT} .amm-bar button.is-active{color:#07141a;background:#ffd782;border-color:#fff0bc}#${ROOT}{position:absolute;inset:0;z-index:20;display:none;background:linear-gradient(180deg,rgba(2,9,16,.992),rgba(3,15,23,.992));border:1px solid rgba(255,215,130,.12);border-radius:9px;overflow:hidden;box-sizing:border-box}#${ROOT}.is-open{display:block}#${ROOT} .amm-head{position:absolute;z-index:5;left:10px;right:10px;top:7px;display:flex;gap:10px;align-items:center;justify-content:space-between;pointer-events:auto}#${ROOT} .amm-title{display:grid;gap:3px;min-width:220px}#${ROOT} .amm-title b{font:950 11px/1 system-ui,sans-serif;color:#fff0cc;letter-spacing:.045em}#${ROOT} .amm-title small{font:850 8px/1.25 ui-monospace,monospace;color:#91aab5}#${ROOT} .amm-bar{display:flex;gap:4px;align-items:center;flex-wrap:wrap}#${ROOT} canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}#${ROOT} .amm-tip{position:absolute;z-index:4;display:block;left:12px;right:12px;top:39px;min-width:0;padding:8px 10px;border:1px solid rgba(113,220,236,.24);border-radius:9px;background:rgba(3,13,22,.92);box-shadow:0 8px 24px rgba(0,0,0,.26);color:#dceff5;pointer-events:none}#${ROOT} .amm-inspector-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}#${ROOT} .amm-inspector-head b{font:950 9px/1 system-ui,sans-serif;letter-spacing:.08em;color:#fff0bc}#${ROOT} .amm-inspector-head span{font:850 9px/1.2 system-ui,sans-serif;color:#9bb4bf}#${ROOT} .amm-inspector-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}#${ROOT} .amm-inspector-grid span{display:grid;gap:3px;min-width:0;padding:5px 7px;border:1px solid rgba(255,255,255,.075);border-radius:7px;background:rgba(255,255,255,.026)}#${ROOT} .amm-inspector-grid small{font:900 8px/1 system-ui,sans-serif;letter-spacing:.05em;color:#819ba7}#${ROOT} .amm-inspector-grid strong{font:950 11px/1.15 ui-monospace,monospace;color:#edfaff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#${ROOT} .amm-inspector-grid strong.is-up{color:#73e3c7}#${ROOT} .amm-inspector-grid strong.is-down{color:#ff91a0}#${ROOT} .amm-inspector-grid strong.is-flat{color:#d8e7ec}#${ROOT} .amm-state{position:absolute;z-index:4;left:12px;bottom:8px;font:850 9px/1.3 ui-monospace,monospace;color:#9ab1bb;background:rgba(2,10,17,.82);padding:5px 8px;border:1px solid rgba(255,255,255,.055);border-radius:7px;pointer-events:none}#${ROOT} .amm-tools{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}#${ROOT} .amm-indicators{display:flex;align-items:center;gap:4px;padding-right:6px;border-right:1px solid rgba(255,255,255,.08)}#${ROOT} .amm-indicators small{font:900 8px/1 system-ui,sans-serif;letter-spacing:.08em;color:#8aa2ad}#${ROOT} .amm-indicators button{min-height:25px;padding:5px 8px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.04);color:#c6d8df;font:900 9px/1 system-ui,sans-serif;cursor:pointer}#${ROOT} .amm-indicators button.is-active{color:#07141a;background:#8fefff;border-color:#c8f7ff}#${ROOT} .amm-series-legend{position:absolute;z-index:4;left:14px;right:14px;top:112px;min-height:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#9fb4bd;pointer-events:none}#${ROOT} .amm-series-legend[hidden]{display:none}#${ROOT} .amm-series-legend span{display:inline-flex;align-items:center;gap:5px;font:900 9px/1 ui-monospace,monospace;white-space:nowrap}#${ROOT} .amm-series-legend i{width:14px;height:3px;border-radius:999px;display:inline-block;box-shadow:0 0 5px currentColor}
-#detailPanel .amm-tech-levels{margin:7px 0;padding:7px;border:1px solid rgba(119,225,236,.16);border-radius:10px;background:linear-gradient(180deg,rgba(5,17,26,.72),rgba(4,12,20,.58));box-shadow:inset 0 0 18px rgba(64,187,206,.035)}
+#detailPanel .amm-tech-levels{margin:7px 0;border:1px solid rgba(119,225,236,.15);border-radius:10px;background:linear-gradient(180deg,rgba(5,17,26,.38),rgba(4,12,20,.26));box-shadow:inset 0 0 18px rgba(64,187,206,.025);backdrop-filter:blur(2px);overflow:hidden}
 #detailPanel .amm-tech-levels[hidden]{display:none}
-#detailPanel .amm-tech-levels-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
-#detailPanel .amm-tech-levels-head b{font:950 9px/1 system-ui,sans-serif;letter-spacing:.07em;color:#dffaff}
-#detailPanel .amm-tech-levels-head small{font:800 8px/1.2 ui-monospace,monospace;color:#819aa6}
+#detailPanel .amm-tech-levels-summary{list-style:none;display:grid;grid-template-columns:minmax(0,1fr) auto 14px;align-items:center;gap:7px;padding:7px 8px;cursor:pointer;background:rgba(8,24,34,.20);user-select:none}
+#detailPanel .amm-tech-levels-summary::-webkit-details-marker{display:none}
+#detailPanel .amm-tech-levels-summary>span{display:grid;gap:2px;min-width:0}
+#detailPanel .amm-tech-levels-summary b{font:950 9px/1 system-ui,sans-serif;letter-spacing:.07em;color:#dffaff}
+#detailPanel .amm-tech-levels-summary small{font:800 8px/1.2 ui-monospace,monospace;color:#86a0ab}
+#detailPanel .amm-tech-levels-summary>em{font:900 8px/1.2 ui-monospace,monospace;font-style:normal;color:#b7ccd4;white-space:nowrap}
+#detailPanel .amm-tech-levels-summary>i{font:900 11px/1 system-ui,sans-serif;font-style:normal;color:#8fdce7;transition:transform .16s ease}
+#detailPanel .amm-tech-levels[open]>.amm-tech-levels-summary>i{transform:rotate(180deg)}
+#detailPanel .amm-tech-levels-body{padding:0 7px 7px}
 #detailPanel .amm-tech-levels-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-#detailPanel .amm-tech-levels-grid>span{display:grid;gap:3px;padding:7px;border:1px solid rgba(255,255,255,.075);border-radius:8px;background:rgba(255,255,255,.025)}
+#detailPanel .amm-tech-levels-grid>span{display:grid;gap:3px;padding:7px;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:rgba(4,18,27,.30);backdrop-filter:blur(1.5px)}
 #detailPanel .amm-tech-levels-grid small{font:900 8px/1 system-ui,sans-serif;letter-spacing:.06em;color:#8ba5b0}
 #detailPanel .amm-tech-levels-grid strong{font:950 12px/1.1 ui-monospace,monospace;color:#eefaff}
 #detailPanel .amm-tech-levels-grid em{font:800 8px/1.25 system-ui,sans-serif;font-style:normal;color:#91a8b2}
-#detailPanel .amm-tech-levels-grid .is-support{border-color:rgba(103,226,195,.18)}
+#detailPanel .amm-tech-levels-grid .is-support{border-color:rgba(103,226,195,.17);background:linear-gradient(180deg,rgba(14,62,54,.22),rgba(4,18,27,.26))}
 #detailPanel .amm-tech-levels-grid .is-support strong{color:#78e1c4}
-#detailPanel .amm-tech-levels-grid .is-resistance{border-color:rgba(255,164,139,.18)}
+#detailPanel .amm-tech-levels-grid .is-resistance{border-color:rgba(255,164,139,.17);background:linear-gradient(180deg,rgba(75,36,30,.22),rgba(4,18,27,.26))}
 #detailPanel .amm-tech-levels-grid .is-resistance strong{color:#ffac92}
-#detailPanel .amm-tech-levels p{margin:6px 1px 0;font:750 8px/1.35 system-ui,sans-serif;color:#708a96}
+#detailPanel .amm-tech-levels p{margin:6px 1px 0;font:750 8px/1.35 system-ui,sans-serif;color:#78929d}
+#detailPanel .amm-tech-levels:not([open]){background:rgba(4,15,23,.24)}
+#detailPanel .amm-tech-levels:not([open])>.amm-tech-levels-summary{background:rgba(8,24,34,.18)}
 @media(max-width:760px){#${ROOT} .amm-head{align-items:flex-start;flex-direction:column}#${ROOT} .amm-title{min-width:0}#${ROOT} .amm-tools{width:100%;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}#${ROOT} .amm-indicators,#${ROOT} .amm-bar{flex:0 0 auto}#${ROOT} .amm-tip{top:75px;padding:7px}#${ROOT} .amm-inspector-head{align-items:flex-start;flex-direction:column;gap:3px}#${ROOT} .amm-inspector-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}#${ROOT} .amm-inspector-grid strong{font-size:10px}#${ROOT} .amm-series-legend{top:198px;gap:8px}#${ROOT} .amm-state{font-size:8px;max-width:calc(100% - 24px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}`;
     document.head.appendChild(s);
   }
@@ -365,7 +374,7 @@
     const sample=parseRows([["3","3","4","2","3.5","30","0","0","1"],["1","1","2","0.5","1.5","10","0","0","1"],["2","1.5","3","1","2.5","20","0","0","1"],["4","3.5","5","3","4","40","0","0","1"],["5","4","6","3.5","5","50","0","0","1"]]);
     const ma=movingAverage(sample,2),ema=exponentialAverage(sample,3),delta=candleChangePct({o:100,c:110}),sr=supportResistance(sample);
     const pass=sample.length===5&&sample[0].t===1&&ma[0]===null&&Math.abs(ma[1]-2)<1e-9&&ema.some(Number.isFinite)&&Math.abs(delta-10)<1e-9&&barDurationMs("15m")===900000&&sr.method==="PIVOTS_VISIBLES_W2";
-    return Object.freeze({build:BUILD,core_build:CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:state.indicators.ma===true,ema_opt_in:state.indicators.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
+    return Object.freeze({build:BUILD,core_build:CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:state.indicators.ma===true,ema_opt_in:state.indicators.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,technical_sr_glass:true,technical_sr_collapsible:true,technical_sr_compact_summary:true,default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
   }
   globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active,lastLevels:state.lastLevels}),instrument:()=>state.instrument,technicalLevels:()=>state.lastLevels,resetView,viewport:()=>Object.freeze({...view}),self_test:selfTest,read_only:true,network:"OKX_PUBLIC_ON_DEMAND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,recurring_timer:false,mutation_observer:false,storage_write:false,real_order:false,market_core_changed:false,strategy_changed:false});
   if(typeof document!=="undefined"){const boot=()=>mount();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",()=>{if(state.mode==="candles")draw();},{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(state.mode==="candles"&&!externalContext().active)void load();},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{mount();state.rows=[];state.error=null;state.lastLoadedAt=null;state.lastLevels=null;state.mode="native";renderTechnicalLevels(null);syncControls();},{passive:true});}
