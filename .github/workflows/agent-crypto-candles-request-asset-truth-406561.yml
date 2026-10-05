@@ -1,0 +1,87 @@
+name: Agent-Crypto 40.6.561 Candles Request Asset Truth
+
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.561.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/CANDLES_REQUEST_ASSET_TRUTH_40.6.561.md"
+      - ".github/scripts/agent_crypto_candles_request_asset_truth_guard_406561.py"
+      - ".github/workflows/agent-crypto-candles-request-asset-truth-406561.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.561.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/CANDLES_REQUEST_ASSET_TRUTH_40.6.561.md"
+      - ".github/scripts/agent_crypto_candles_request_asset_truth_guard_406561.py"
+      - ".github/workflows/agent-crypto-candles-request-asset-truth-406561.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: JavaScript syntax
+        run: node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js
+
+      - name: Module self-test
+        run: |
+          node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js');
+          const r=global.AgentCryptoMarketMicroscope.self_test();
+          console.log(JSON.stringify(r,null,2));
+          const c=r.checks||{};
+          if(
+            !r.pass ||
+            !c.request_identity_key ||
+            !c.latest_request_wins ||
+            !c.abort_previous_request ||
+            c.request_timeout_ms!==12000 ||
+            !c.loaded_context_separate_from_requested_context
+          ) process.exit(1);
+          NODE
+
+      - name: Request asset truth guard
+        run: python .github/scripts/agent_crypto_candles_request_asset_truth_guard_406561.py
+
+      - name: Version truth
+        run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Package compact patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, zipfile
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          out=Path("AGENT_CRYPTO_ADMINISTRATOR_40.6.561_REQUEST_ASSET_TRUTH_PATCH.zip")
+          files=[
+            root/"index.html",
+            root/"index-40.6.561.html",
+            root/"build.json",
+            root/"js/market-microscope-candles-406498.js",
+            root/"CANDLES_REQUEST_ASSET_TRUTH_40.6.561.md",
+          ]
+          with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
+            for p in files:
+              z.write(p,p.as_posix())
+          h=hashlib.sha256(out.read_bytes()).hexdigest()
+          Path("REQUEST_ASSET_TRUTH_40.6.561_SHA256.txt").write_text(f"{h}  {out.name}\n",encoding="utf-8")
+          print(out, out.stat().st_size, h)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.561_REQUEST_ASSET_TRUTH_PATCH
+          path: |
+            AGENT_CRYPTO_ADMINISTRATOR_40.6.561_REQUEST_ASSET_TRUTH_PATCH.zip
+            REQUEST_ASSET_TRUTH_40.6.561_SHA256.txt

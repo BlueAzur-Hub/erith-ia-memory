@@ -1,4 +1,4 @@
-/* Agent-Crypto — 40.6.560 MARKET MICROSCOPE · VOLUME PROFILE APPROX OPT-IN
+/* Agent-Crypto — 40.6.561 MARKET MICROSCOPE · REQUEST + ASSET TRUTH LOCK
    Historical core owner: 40.6.498 · New Listings reuse: 40.6.529.
    40.6.529 additive extension: New Listing external context can reuse this exact chart shell
    for Ligne + Bougies without mutating Market Core/state.coins.
@@ -6,26 +6,33 @@
    Fetch occurs only on explicit Bougies / interval / refresh / external-asset load. No recurring timer. */
 (()=>{
   "use strict";
-  const BUILD="40.6.560";
+  const BUILD="40.6.561";
   const CORE_BUILD="40.6.498";
   const EXTENSION_BUILD="40.6.529";
   const ROOT="atlasMarketMicroscope";
   const REST="https://eea.okx.com";
   const BARS=Object.freeze({"1m":"1m","5m":"5m","15m":"15m","1h":"1H","4h":"4H","1j":"1D"});
-  const state={mode:"native",bar:"15m",instrument:"BTC-EUR",rows:[],loading:false,error:null,lastLoadedAt:null,source:"OKX public candles",indicators:{ma:true,ema:false,sr:true,supertrend:false,boll:false,sar:false,vwap:false,vp:false},lastLevels:null};
+  const state={mode:"native",bar:"15m",requestedBar:"15m",loadedBar:null,instrument:"BTC-EUR",requestedInstrument:"BTC-EUR",loadedInstrument:null,rows:[],loading:false,error:null,lastLoadedAt:null,source:"OKX public candles",indicators:{ma:true,ema:false,sr:true,supertrend:false,boll:false,sar:false,vwap:false,vp:false},lastLevels:null};
   const view={start:0,count:72,dragging:false,dragX:0,dragStart:0};
-  let requestToken=0;
+  let requestToken=0,activeController=null;
+  const REQUEST_TIMEOUT_MS=12000;
   const num=v=>{const x=Number(v);return Number.isFinite(x)?x:null;};
   const fmt=(v,d=2)=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:d}):"—";
   const externalContext=()=>{try{return globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()||{active:false};}catch(_){return {active:false};}};
   const selectedSymbol=()=>{
     const ext=externalContext();if(ext.active&&ext.base)return String(ext.base).toUpperCase();
-    const texts=[document.getElementById("detailCompactAsset")?.textContent,document.getElementById("selectedAssetTitle")?.textContent,document.querySelector("#top5Track .is-active")?.textContent].filter(Boolean).join(" ").toUpperCase();
-    const m=texts.match(/\b(BTC|ETH|BNB|XRP|SOL|ADA|DOGE|LINK|AVAX|LTC|DOT|SUI|APT|ARB|UNI|AAVE|NEAR|TAO|RENDER|ICP|SHIB|PEPE|XMR|ZEC)\b/);
-    return m?.[1]||"BTC";
+    try{
+      const coin=typeof globalThis.getSelectedCoin==="function"?globalThis.getSelectedCoin():null;
+      const symbol=String(coin?.symbol||"").trim().toUpperCase();
+      if(/^[A-Z0-9]{2,16}$/.test(symbol))return symbol;
+    }catch(_){}
+    return "BTC";
   };
   const displayCurrency=()=>globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.().displayCurrency||"EUR";
   const desiredInstrument=()=>{const ext=externalContext();return ext.active&&ext.instrument?ext.instrument:`${selectedSymbol()}-${displayCurrency()==="USD"?"USDC":"EUR"}`;};
+  const activeBar=()=>state.loadedBar||state.bar;
+  const activeInstrument=()=>state.loadedInstrument||state.instrument;
+  const requestKey=(instrument=state.requestedInstrument,bar=state.requestedBar)=>`${String(instrument||"").toUpperCase()}|${String(bar||"")}`;
   function parseRows(data){
     return (Array.isArray(data)?data:[]).map(r=>({t:num(r?.[0]),o:num(r?.[1]),h:num(r?.[2]),l:num(r?.[3]),c:num(r?.[4]),v:num(r?.[5]),confirm:String(r?.[8]??"")})).filter(r=>[r.t,r.o,r.h,r.l,r.c].every(Number.isFinite)).sort((a,b)=>a.t-b.t);
   }
@@ -165,7 +172,7 @@
     return clusters.map(c=>({price:c.price,touches:c.points.length,lastIndex:c.lastIndex,confidence:c.points.length>=3?"fort":c.points.length>=2?"confirmé":"indicatif"}));
   }
   function supportResistance(rows){
-    if(!Array.isArray(rows)||rows.length<7)return {support:null,resistance:null,current:null,tolerance:null,method:"PIVOTS_VISIBLES_W2",bar:state.bar,instrument:state.instrument};
+    if(!Array.isArray(rows)||rows.length<7)return {support:null,resistance:null,current:null,tolerance:null,method:"PIVOTS_VISIBLES_W2",bar:activeBar(),instrument:activeInstrument()};
     const current=Number(rows[rows.length-1]?.c);
     const low=Math.min(...rows.map(r=>r.l)),high=Math.max(...rows.map(r=>r.h)),range=Math.max(1e-12,high-low);
     const tolerance=Math.max(range*.02,Math.abs(current||0)*.00045);
@@ -189,9 +196,9 @@
     if(!support&&Number.isFinite(low)&&low<current)support={price:low,touches:1,lastIndex:rows.findIndex(r=>r.l===low),confidence:"indicatif",fallback:true};
     if(!resistance&&Number.isFinite(high)&&high>current)resistance={price:high,touches:1,lastIndex:rows.findIndex(r=>r.h===high),confidence:"indicatif",fallback:true};
     const enrich=(level,kind)=>level?Object.freeze({...level,kind,distancePct:current?((level.price-current)/current)*100:null}):null;
-    return Object.freeze({support:enrich(support,"support"),resistance:enrich(resistance,"resistance"),current,tolerance,method:"PIVOTS_VISIBLES_W2",bar:state.bar,instrument:state.instrument,window:rows.length});
+    return Object.freeze({support:enrich(support,"support"),resistance:enrich(resistance,"resistance"),current,tolerance,method:"PIVOTS_VISIBLES_W2",bar:activeBar(),instrument:activeInstrument(),window:rows.length});
   }
-  function barDurationMs(bar=state.bar){
+  function barDurationMs(bar=activeBar()){
     return ({"1m":60000,"5m":300000,"15m":900000,"1h":3600000,"4h":14400000,"1j":86400000})[bar]||900000;
   }
   function candleChangePct(row){
@@ -214,10 +221,10 @@
     return {status:age<=limit?"FRESH":"STALE",ageMs:age,label:ageLabel(age)};
   }
   function priceUnit(){
-    const quote=String(state.instrument||"").split("-").pop()?.toUpperCase();
+    const quote=String(activeInstrument()||"").split("-").pop()?.toUpperCase();
     return quote||displayCurrency();
   }
-  function volumeUnit(){return String(state.instrument||selectedSymbol()).split("-")[0]?.toUpperCase()||selectedSymbol();}
+  function volumeUnit(){return String(activeInstrument()||selectedSymbol()).split("-")[0]?.toUpperCase()||selectedSymbol();}
   function priceDigits(v){
     const a=Math.abs(Number(v));
     if(!Number.isFinite(a))return 2;
@@ -294,7 +301,7 @@
     const change=candleChangePct(row),changeText=Number.isFinite(change)?`${change>=0?"+":""}${change.toFixed(2)} %`:"—";
     const cls=Number.isFinite(change)?(change>0?"is-up":change<0?"is-down":"is-flat"):"is-flat";
     const unit=priceUnit(),volUnit=volumeUnit();
-    return `<div class="amm-inspector-head"><b>BOUGIE SÉLECTIONNÉE</b><span>${candleTimeLabel(row.t)} · ${state.instrument} · ${state.bar}</span></div><div class="amm-inspector-grid"><span><small>OUVERTURE</small><strong>${fmtPrice(row.o)} ${unit}</strong></span><span><small>PLUS HAUT</small><strong>${fmtPrice(row.h)} ${unit}</strong></span><span><small>PLUS BAS</small><strong>${fmtPrice(row.l)} ${unit}</strong></span><span><small>CLÔTURE</small><strong>${fmtPrice(row.c)} ${unit}</strong></span><span><small>VARIATION</small><strong class="${cls}">${changeText}</strong></span><span><small>VOLUME</small><strong>${fmt(row.v,4)} ${volUnit}</strong></span></div>`;
+    return `<div class="amm-inspector-head"><b>BOUGIE SÉLECTIONNÉE</b><span>${candleTimeLabel(row.t)} · ${activeInstrument()} · ${activeBar()}</span></div><div class="amm-inspector-grid"><span><small>OUVERTURE</small><strong>${fmtPrice(row.o)} ${unit}</strong></span><span><small>PLUS HAUT</small><strong>${fmtPrice(row.h)} ${unit}</strong></span><span><small>PLUS BAS</small><strong>${fmtPrice(row.l)} ${unit}</strong></span><span><small>CLÔTURE</small><strong>${fmtPrice(row.c)} ${unit}</strong></span><span><small>VARIATION</small><strong class="${cls}">${changeText}</strong></span><span><small>VOLUME</small><strong>${fmt(row.v,4)} ${volUnit}</strong></span></div>`;
   }
   function style(){
     if(document.getElementById(ROOT+"Style"))return;
@@ -321,7 +328,7 @@
   function mount(){
     if(typeof document==="undefined")return false;style();const sh=shell(),host=controlsHost();if(!sh||!host)return false;sh.style.position="relative";
     let c=document.getElementById(ROOT+"Controls");if(!c){c=document.createElement("span");c.id=ROOT+"Controls";c.innerHTML=`<small>MICROSCOPE</small><button type="button" data-amm-mode="native" class="is-active">Ligne</button><button type="button" data-amm-mode="candles">Bougies</button>`;host.appendChild(c);c.querySelectorAll("[data-amm-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.ammMode)));}
-    let root=document.getElementById(ROOT);if(!root){root=document.createElement("section");root.id=ROOT;root.setAttribute("aria-label","Market Microscope Bougies OKX");root.innerHTML=`<div class="amm-head"><div class="amm-title"><b>MARKET MICROSCOPE · BOUGIES</b><small data-amm-meta>En attente</small></div><div class="amm-tools"><div class="amm-indicators"><small>INDICATEURS</small><button type="button" data-amm-indicator="ma" class="is-active">MA</button><button type="button" data-amm-indicator="ema">EMA</button><button type="button" data-amm-indicator="sr" class="is-active">S/R</button><button type="button" data-amm-indicator="supertrend">SUPER</button><button type="button" data-amm-indicator="boll">BOLL</button><button type="button" data-amm-indicator="sar">SAR</button><button type="button" data-amm-indicator="vwap">VWAP</button><button type="button" data-amm-indicator="vp">VP</button></div><div class="amm-bar">${Object.keys(BARS).map(k=>`<button type="button" data-amm-bar="${k}" class="${k===state.bar?"is-active":""}">${k}</button>`).join("")}<button type="button" class="amm-refresh" data-amm-reset title="Réinitialiser zoom">⟲</button><button type="button" class="amm-refresh" data-amm-refresh>↻</button></div></div></div><canvas data-amm-canvas></canvas><div class="amm-tip" data-amm-tip aria-live="polite">${inspectorMarkup(null)}</div><div class="amm-series-legend" data-amm-series-legend></div><div class="amm-state" data-amm-state>READ ONLY · OKX public</div>`;sh.appendChild(root);root.querySelectorAll("[data-amm-bar]").forEach(b=>b.addEventListener("click",()=>{state.bar=b.dataset.ammBar;root.querySelectorAll("[data-amm-bar]").forEach(x=>x.classList.toggle("is-active",x===b));if(state.mode==="candles")void load();}));root.querySelectorAll("[data-amm-indicator]").forEach(b=>b.addEventListener("click",()=>{const key=b.dataset.ammIndicator;if(!["ma","ema","sr","supertrend","boll","sar","vwap","vp"].includes(key))return;state.indicators[key]=!state.indicators[key];root.querySelectorAll("[data-amm-indicator]").forEach(x=>x.classList.toggle("is-active",!!state.indicators[x.dataset.ammIndicator]));renderSeriesLegend();if(key==="sr"&&!state.indicators.sr)renderTechnicalLevels(null);draw();}));root.querySelector("[data-amm-reset]").addEventListener("click",()=>resetView());root.querySelector("[data-amm-refresh]").addEventListener("click",()=>void load());const canvas=root.querySelector("canvas");canvas.addEventListener("wheel",onWheel,{passive:false});canvas.addEventListener("pointerdown",onPointerDown);canvas.addEventListener("pointermove",onPointer,{passive:false});canvas.addEventListener("pointerup",onPointerUp);canvas.addEventListener("pointercancel",onPointerUp);canvas.addEventListener("dblclick",()=>resetView());canvas.addEventListener("pointerleave",()=>{if(!view.dragging)draw();},{passive:true});}
+    let root=document.getElementById(ROOT);if(!root){root=document.createElement("section");root.id=ROOT;root.setAttribute("aria-label","Market Microscope Bougies OKX");root.innerHTML=`<div class="amm-head"><div class="amm-title"><b>MARKET MICROSCOPE · BOUGIES</b><small data-amm-meta>En attente</small></div><div class="amm-tools"><div class="amm-indicators"><small>INDICATEURS</small><button type="button" data-amm-indicator="ma" class="is-active">MA</button><button type="button" data-amm-indicator="ema">EMA</button><button type="button" data-amm-indicator="sr" class="is-active">S/R</button><button type="button" data-amm-indicator="supertrend">SUPER</button><button type="button" data-amm-indicator="boll">BOLL</button><button type="button" data-amm-indicator="sar">SAR</button><button type="button" data-amm-indicator="vwap">VWAP</button><button type="button" data-amm-indicator="vp">VP</button></div><div class="amm-bar">${Object.keys(BARS).map(k=>`<button type="button" data-amm-bar="${k}" class="${k===state.bar?"is-active":""}">${k}</button>`).join("")}<button type="button" class="amm-refresh" data-amm-reset title="Réinitialiser zoom">⟲</button><button type="button" class="amm-refresh" data-amm-refresh>↻</button></div></div></div><canvas data-amm-canvas></canvas><div class="amm-tip" data-amm-tip aria-live="polite">${inspectorMarkup(null)}</div><div class="amm-series-legend" data-amm-series-legend></div><div class="amm-state" data-amm-state>READ ONLY · OKX public</div>`;sh.appendChild(root);root.querySelectorAll("[data-amm-bar]").forEach(b=>b.addEventListener("click",()=>{state.bar=b.dataset.ammBar;state.requestedBar=state.bar;root.querySelectorAll("[data-amm-bar]").forEach(x=>x.classList.toggle("is-active",x===b));if(state.mode==="candles")void load({bar:state.bar,reason:"operator-bar"});}));root.querySelectorAll("[data-amm-indicator]").forEach(b=>b.addEventListener("click",()=>{const key=b.dataset.ammIndicator;if(!["ma","ema","sr","supertrend","boll","sar","vwap","vp"].includes(key))return;state.indicators[key]=!state.indicators[key];root.querySelectorAll("[data-amm-indicator]").forEach(x=>x.classList.toggle("is-active",!!state.indicators[x.dataset.ammIndicator]));renderSeriesLegend();if(key==="sr"&&!state.indicators.sr)renderTechnicalLevels(null);renderState();draw();}));root.querySelector("[data-amm-reset]").addEventListener("click",()=>resetView());root.querySelector("[data-amm-refresh]").addEventListener("click",()=>void load());const canvas=root.querySelector("canvas");canvas.addEventListener("wheel",onWheel,{passive:false});canvas.addEventListener("pointerdown",onPointerDown);canvas.addEventListener("pointermove",onPointer,{passive:false});canvas.addEventListener("pointerup",onPointerUp);canvas.addEventListener("pointercancel",onPointerUp);canvas.addEventListener("dblclick",()=>resetView());canvas.addEventListener("pointerleave",()=>{if(!view.dragging)draw();},{passive:true});}
     syncControls();return true;
   }
   function renderSeriesLegend(){
@@ -339,29 +346,60 @@
   }
   function syncControls(){document.querySelectorAll(`#${ROOT}Controls [data-amm-mode]`).forEach(b=>b.classList.toggle("is-active",b.dataset.ammMode===state.mode));document.querySelectorAll(`#${ROOT} [data-amm-indicator]`).forEach(b=>b.classList.toggle("is-active",!!state.indicators[b.dataset.ammIndicator]));document.getElementById(ROOT)?.classList.toggle("is-open",state.mode==="candles");renderSeriesLegend();}
   function setMode(mode){state.mode=mode==="candles"?"candles":"native";mount();syncControls();if(state.mode==="candles")void load();else renderTechnicalLevels(null);return state.mode;}
-  async function fetchInstrument(inst){
+  async function fetchInstrument(inst,{bar=state.requestedBar||state.bar,signal=null}={}){
     const ext=externalContext();
     if(ext.active){
-      const pack=await globalThis.AgentCryptoNewListingLiveAsset?.fetchCandles?.({bar:state.bar,limit:300});
+      const pack=await globalThis.AgentCryptoNewListingLiveAsset?.fetchCandles?.({bar,limit:300,signal});
       if(!pack?.rows?.length)throw new Error(`Candles externes ${inst} indisponibles`);
-      state.source=`${pack.providerLabel||ext.providerLabel||ext.provider} public candles`;
-      return pack.rows.map(r=>({t:num(r.t),o:num(r.o),h:num(r.h),l:num(r.l),c:num(r.c),v:num(r.v),confirm:""})).filter(r=>[r.t,r.o,r.h,r.l,r.c].every(Number.isFinite)).sort((a,b)=>a.t-b.t);
+      const rows=pack.rows.map(r=>({t:num(r.t),o:num(r.o),h:num(r.h),l:num(r.l),c:num(r.c),v:num(r.v),confirm:""})).filter(r=>[r.t,r.o,r.h,r.l,r.c].every(Number.isFinite)).sort((a,b)=>a.t-b.t);
+      return {rows,source:`${pack.providerLabel||ext.providerLabel||ext.provider} public candles`};
     }
-    state.source="OKX public candles";
-    const url=`${REST}/api/v5/market/candles?instId=${encodeURIComponent(inst)}&bar=${encodeURIComponent(BARS[state.bar])}&limit=300`;const r=await fetch(url,{cache:"no-store"});const j=await r.json();if(!r.ok||String(j?.code)!=="0"||!Array.isArray(j?.data)||!j.data.length)throw new Error(`Candles ${inst}: HTTP ${r.status} / code ${j?.code??"?"}`);return parseRows(j.data);
+    const url=`${REST}/api/v5/market/candles?instId=${encodeURIComponent(inst)}&bar=${encodeURIComponent(BARS[bar]||BARS["15m"])}&limit=300`;
+    const r=await fetch(url,{cache:"no-store",signal});const j=await r.json();
+    if(!r.ok||String(j?.code)!=="0"||!Array.isArray(j?.data)||!j.data.length)throw new Error(`Candles ${inst}: HTTP ${r.status} / code ${j?.code??"?"}`);
+    return {rows:parseRows(j.data),source:"OKX public candles"};
   }
-  async function load(){
-    if(state.loading)return false;mount();const token=++requestToken;state.loading=true;state.error=null;const root=document.getElementById(ROOT),ext=externalContext();if(root)root.querySelector("[data-amm-state]").textContent=ext.active?`CHARGEMENT · ${ext.providerLabel||ext.provider} public`:"CHARGEMENT · OKX public";
-    const primary=desiredInstrument();let inst=primary,rows=null;
-    try{rows=await fetchInstrument(primary);}catch(error){
-      if(!ext.active&&displayCurrency()==="EUR"){
-        const fallback=`${selectedSymbol()}-USDC`;
-        try{rows=await fetchInstrument(fallback);inst=fallback;state.error=`${primary} indisponible · fallback ${fallback} non converti en EUR`;}catch(_){state.loading=false;state.error=String(error?.message||error);renderState();return false;}
-      }else{state.loading=false;state.error=String(error?.message||error);renderState();return false;}
+  async function load(options={}){
+    mount();
+    const requestedBar=BARS[options.bar]?options.bar:state.bar;
+    state.bar=requestedBar;state.requestedBar=requestedBar;
+    const primary=desiredInstrument();state.requestedInstrument=primary;
+    const token=++requestToken;
+    try{activeController?.abort();}catch(_){}
+    const controller=new AbortController();activeController=controller;
+    const timeout=setTimeout(()=>{if(token===requestToken)controller.abort();},REQUEST_TIMEOUT_MS);
+    state.loading=true;state.error=null;
+    const root=document.getElementById(ROOT),ext=externalContext();
+    renderState();
+    if(root)root.querySelector("[data-amm-state]").textContent=`CHARGEMENT · ${primary} · ${requestedBar} · ${ext.active?(ext.providerLabel||ext.provider):"OKX"} public`;
+    let inst=primary,rows=null,source=null,warning=null;
+    try{
+      try{
+        const pack=await fetchInstrument(primary,{bar:requestedBar,signal:controller.signal});rows=pack.rows;source=pack.source;
+      }catch(error){
+        if(controller.signal.aborted||token!==requestToken)return false;
+        if(!ext.active&&displayCurrency()==="EUR"){
+          const fallback=`${selectedSymbol()}-USDC`;
+          const pack=await fetchInstrument(fallback,{bar:requestedBar,signal:controller.signal});
+          rows=pack.rows;source=pack.source;inst=fallback;warning=`${primary} indisponible · fallback ${fallback} non converti en EUR`;
+        }else throw error;
+      }
+      if(controller.signal.aborted||token!==requestToken)return false;
+      state.instrument=inst;state.loadedInstrument=inst;state.loadedBar=requestedBar;state.source=source||"OKX public candles";state.rows=rows;state.error=warning;state.lastLoadedAt=new Date().toISOString();
+      resetView(false);renderState();draw();return true;
+    }catch(error){
+      if(controller.signal.aborted||token!==requestToken)return false;
+      state.error=String(error?.message||error);renderState();return false;
+    }finally{
+      clearTimeout(timeout);
+      if(token===requestToken){
+        state.loading=false;
+        if(activeController===controller)activeController=null;
+        renderState();
+      }
     }
-    if(token!==requestToken)return false;state.instrument=inst;state.rows=rows;state.loading=false;state.lastLoadedAt=new Date().toISOString();resetView(false);renderState();draw();return true;
   }
-  function renderState(){const root=document.getElementById(ROOT);if(!root)return;const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=ext.active?(state.mode==="candles"?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const indicators=[state.indicators.ma?"MA5/10/20":null,state.indicators.ema?"EMA5/10/20":null,state.indicators.sr?"S/R pivots":null,state.indicators.supertrend?"Supertrend 10×3":null,state.indicators.boll?"Bollinger 20×2":null,state.indicators.sar?"SAR 0.02/0.20":null,state.indicators.vwap?"VWAP":null,state.indicators.vp?"Volume Profile approx":null].filter(Boolean).join(" + ")||"indicateurs masqués";if(meta)meta.textContent=`${state.instrument} · ${state.bar} · ${state.rows.length} points · O/H/L/C + Volume · ${indicators}`;const freshness=marketFreshness();if(st){st.dataset.freshness=freshness.status;const provider=String(state.source||"OKX public candles").replace(/ public candles$/i,"");st.textContent=state.error?`ATTENTION · ${state.error}`:`${provider} · ${freshness.status} · bougie ${state.bar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;}}
+  function renderState(){const root=document.getElementById(ROOT);if(!root)return;const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=ext.active?(state.mode==="candles"?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const indicators=[state.indicators.ma?"MA5/10/20":null,state.indicators.ema?"EMA5/10/20":null,state.indicators.sr?"S/R pivots":null,state.indicators.supertrend?"Supertrend 10×3":null,state.indicators.boll?"Bollinger 20×2":null,state.indicators.sar?"SAR 0.02/0.20":null,state.indicators.vwap?"VWAP":null,state.indicators.vp?"Volume Profile approx":null].filter(Boolean).join(" + ")||"indicateurs masqués";const shownInstrument=activeInstrument(),shownBar=activeBar();if(meta)meta.textContent=`${shownInstrument} · ${shownBar} · ${state.rows.length} points · O/H/L/C + Volume · ${indicators}`;const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"OKX public candles").replace(/ public candles$/i,"");st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · dernière série affichée ${shownInstrument} · ${shownBar}`:state.error?`ATTENTION · ${state.error}`:`${provider} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;}}
   function visibleRows(){
     if(!state.rows.length)return [];
     const count=Math.max(20,Math.min(view.count||72,state.rows.length));
@@ -561,6 +599,24 @@
     const r=g.rows[i],tip=document.querySelector(`#${ROOT} [data-amm-tip]`);if(!tip)return;
     tip.innerHTML=inspectorMarkup(r);
   }
+  function installCanonicalSelectionHook(){
+    const names=["atlasSelectMarketCoin","atlasSetComparisonIds"];
+    let installed=false;
+    names.forEach(name=>{
+      const current=globalThis[name];
+      if(typeof current!=="function")return;
+      if(current.__agentCryptoMicroscope561===true){installed=true;return;}
+      const wrapped=function(...args){
+        const result=current.apply(this,args);
+        queueMicrotask(()=>{try{if(state.mode==="candles"&&!externalContext().active)void load({bar:state.bar,reason:`canonical:${name}`});}catch(_){}});
+        return result;
+      };
+      Object.defineProperty(wrapped,"__agentCryptoMicroscope561",{value:true});
+      Object.defineProperty(wrapped,"__agentCryptoMicroscope561Original",{value:current});
+      try{globalThis[name]=wrapped;if(globalThis[name]===wrapped)installed=true;}catch(_){}
+    });
+    return installed;
+  }
   function selfTest(){
     const sample=parseRows([["3","3","4","2","3.5","30","0","0","1"],["1","1","2","0.5","1.5","10","0","0","1"],["2","1.5","3","1","2.5","20","0","0","1"],["4","3.5","5","3","4","40","0","0","1"],["5","4","6","3.5","5","50","0","0","1"]]);
     const trendSample=Array.from({length:24},(_,i)=>{const base=100+i*.7+Math.sin(i/2)*2;return {t:i+1,o:base-.4,h:base+1.2,l:base-1.1,c:base+.35,v:10+i};});
@@ -570,9 +626,10 @@
     const sarOk=sar.method==="PARABOLIC_SAR_CLASSIC"&&sar.values.some(Number.isFinite)&&sar.directions.some(v=>v===1||v===-1);
     const vwapOk=vw.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME"&&vw.values.some(Number.isFinite);
     const vpOk=vp.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX"&&vp.bins.length===12&&Number.isInteger(vp.pocIndex)&&vp.maxVolume>0;
-    const pass=sample.length===5&&sample[0].t===1&&ma[0]===null&&Math.abs(ma[1]-2)<1e-9&&ema.some(Number.isFinite)&&Math.abs(delta-10)<1e-9&&barDurationMs("15m")===900000&&sr.method==="PIVOTS_VISIBLES_W2"&&stOk&&bollOk&&sarOk&&vwapOk&&vpOk;
-    return Object.freeze({build:BUILD,core_build:CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",supertrend_method:st.method==="SUPERTREND_ATR_WILDER",supertrend_values:st.values.some(Number.isFinite),supertrend_direction:st.directions.some(v=>v===1||v===-1),supertrend_default_off:state.indicators.supertrend===false,bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:state.indicators.ma===true,ema_opt_in:state.indicators.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,technical_sr_native_window:true,technical_sr_collapsible:true,technical_sr_compact_summary:true,technical_sr_price_priority:true,technical_sr_price_visibility:true,technical_sr_context_separate:true,technical_sr_no_confidence_label:true,supertrend_opt_in:true,supertrend_period_10_multiplier_3:true,bollinger_method:boll.method==="BOLLINGER_SMA_STDDEV",bollinger_values:bollOk,bollinger_default_off:state.indicators.boll===false,bollinger_opt_in:true,bollinger_period_20_multiplier_2:true,sar_method:sar.method==="PARABOLIC_SAR_CLASSIC",sar_values:sarOk,sar_default_off:state.indicators.sar===false,sar_opt_in:true,sar_step_002_max_020:true,vwap_method:vw.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME",vwap_values:vwapOk,vwap_default_off:state.indicators.vwap===false,vwap_opt_in:true,volume_profile_method:vp.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX",volume_profile_values:vpOk,volume_profile_default_off:state.indicators.vp===false,volume_profile_opt_in:true,volume_profile_bins_24:true,default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
+    const requestIdentityOk=requestKey("ETH-USDC","1h")==="ETH-USDC|1h";
+    const pass=sample.length===5&&sample[0].t===1&&ma[0]===null&&Math.abs(ma[1]-2)<1e-9&&ema.some(Number.isFinite)&&Math.abs(delta-10)<1e-9&&barDurationMs("15m")===900000&&sr.method==="PIVOTS_VISIBLES_W2"&&stOk&&bollOk&&sarOk&&vwapOk&&vpOk&&requestIdentityOk;
+    return Object.freeze({build:BUILD,core_build:CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",supertrend_method:st.method==="SUPERTREND_ATR_WILDER",supertrend_values:st.values.some(Number.isFinite),supertrend_direction:st.directions.some(v=>v===1||v===-1),supertrend_default_off:state.indicators.supertrend===false,bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:state.indicators.ma===true,ema_opt_in:state.indicators.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,technical_sr_native_window:true,technical_sr_collapsible:true,technical_sr_compact_summary:true,technical_sr_price_priority:true,technical_sr_price_visibility:true,technical_sr_context_separate:true,technical_sr_no_confidence_label:true,supertrend_opt_in:true,supertrend_period_10_multiplier_3:true,bollinger_method:boll.method==="BOLLINGER_SMA_STDDEV",bollinger_values:bollOk,bollinger_default_off:state.indicators.boll===false,bollinger_opt_in:true,bollinger_period_20_multiplier_2:true,sar_method:sar.method==="PARABOLIC_SAR_CLASSIC",sar_values:sarOk,sar_default_off:state.indicators.sar===false,sar_opt_in:true,sar_step_002_max_020:true,vwap_method:vw.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME",vwap_values:vwapOk,vwap_default_off:state.indicators.vwap===false,vwap_opt_in:true,volume_profile_method:vp.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX",volume_profile_values:vpOk,volume_profile_default_off:state.indicators.vp===false,volume_profile_opt_in:true,volume_profile_bins_24:true,request_identity_key:requestIdentityOk,canonical_market_selection_owner:typeof globalThis.getSelectedCoin==="function"||typeof document==="undefined",latest_request_wins:true,abort_previous_request:true,request_timeout_ms:REQUEST_TIMEOUT_MS,loaded_context_separate_from_requested_context:true,default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
   }
-  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active,lastLevels:state.lastLevels}),instrument:()=>state.instrument,technicalLevels:()=>state.lastLevels,resetView,viewport:()=>Object.freeze({...view}),self_test:selfTest,read_only:true,network:"OKX_PUBLIC_ON_DEMAND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,recurring_timer:false,mutation_observer:false,storage_write:false,real_order:false,market_core_changed:false,strategy_changed:false});
-  if(typeof document!=="undefined"){const boot=()=>mount();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",()=>{if(state.mode==="candles")draw();},{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(state.mode==="candles"&&!externalContext().active)void load();},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{mount();state.rows=[];state.error=null;state.lastLoadedAt=null;state.lastLevels=null;state.mode="native";renderTechnicalLevels(null);syncControls();},{passive:true});}
+  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active,lastLevels:state.lastLevels,request_key:requestKey()}),instrument:()=>activeInstrument(),technicalLevels:()=>state.lastLevels,resetView,viewport:()=>Object.freeze({...view}),installCanonicalSelectionHook,self_test:selfTest,read_only:true,network:"OKX_PUBLIC_ON_DEMAND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,latest_request_wins:true,request_timeout_ms:REQUEST_TIMEOUT_MS,recurring_timer:false,mutation_observer:false,storage_write:false,real_order:false,market_core_changed:false,strategy_changed:false});
+  if(typeof document!=="undefined"){const boot=()=>{mount();installCanonicalSelectionHook();};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",()=>{if(state.mode==="candles")draw();},{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(state.mode==="candles"&&!externalContext().active)void load({bar:state.bar,reason:"quote-architecture"});},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{requestToken+=1;try{activeController?.abort();}catch(_){}activeController=null;state.loading=false;mount();state.rows=[];state.error=null;state.lastLoadedAt=null;state.lastLevels=null;state.loadedBar=null;state.loadedInstrument=null;state.mode="native";renderTechnicalLevels(null);syncControls();},{passive:true});}
 })();
