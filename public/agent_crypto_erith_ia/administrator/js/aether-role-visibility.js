@@ -89,107 +89,23 @@
   });
 })();
 
-/* 40.6.543 R6 — ACTIVE MARKET FICHE PORTAL · DOCK AWARE */
-(() => {
-  "use strict";
-
-  const BUILD = "40.6.543 R6";
-  const LAYER_ID = "atlasHelpLayer";
-  const DOCK_HOST_ID = "atlasMarketCardDockHost";
-  const WORKSPACE_GRID_ID = "marketWorkspaceGrid";
-  const MODE_SELECTOR = "[data-market-card-mode]";
-  const MAX_Z = "2147483647";
-  const EVENT_TYPES = ["pointerover", "focusin", "click", "keydown"];
-
-  function activeFiche() {
-    const layer = document.getElementById(LAYER_ID);
-    if (!(layer instanceof HTMLElement)) return null;
-    if (layer.hidden || layer.getAttribute("aria-hidden") === "true") return null;
-    if (!layer.dataset.marketHelpCoinId) return null;
-    return layer;
-  }
-
-  function dockedFiche(layer = activeFiche()) {
-    if (!(layer instanceof HTMLElement)) return false;
-    const dockHost = document.getElementById(DOCK_HOST_ID);
-    const grid = document.getElementById(WORKSPACE_GRID_ID);
-    return Boolean(
-      (dockHost && (layer.parentElement === dockHost || dockHost.contains(layer)))
-      || grid?.classList?.contains("market-card-dock-active")
-    );
-  }
-
-  function releaseDockForeground(layer, reason = "dock") {
-    if (!(layer instanceof HTMLElement)) return false;
-    layer.style.removeProperty("z-index");
-    layer.dataset.marketFicheForeground406073R5 = reason;
-    document.documentElement.dataset.marketFicheForeground406073R5 = "dock";
-    return true;
-  }
-
-  function promote(reason = "operator-market-fiche") {
-    const layer = activeFiche();
-    if (!layer || !document.body) return false;
-
-    if (dockedFiche(layer)) {
-      return releaseDockForeground(layer, `dock-aware:${reason}`);
-    }
-
-    layer.style.setProperty("z-index", MAX_Z, "important");
-    if (layer.parentElement !== document.body || layer !== document.body.lastElementChild) {
-      document.body.append(layer);
-    }
-
-    layer.dataset.marketFicheForeground406073R5 = reason;
-    document.documentElement.dataset.marketFicheForeground406073R5 = "1";
-    return true;
-  }
-
-  function schedulePromote(event) {
-    const modeButton = event?.target?.closest?.(MODE_SELECTOR);
-    if (modeButton) {
-      const mode = String(modeButton.dataset?.marketCardMode || "").toLowerCase();
-      queueMicrotask(() => {
-        const layer = activeFiche();
-        if (!layer) return;
-        if (mode === "dock" || dockedFiche(layer)) {
-          releaseDockForeground(layer, "mode:dock");
-          return;
-        }
-        if (mode === "floating") promote("mode:floating");
-      });
-      return;
-    }
-    queueMicrotask(() => promote(event?.type || "interaction"));
-  }
-
-  EVENT_TYPES.forEach(type => document.addEventListener(type, schedulePromote, { passive: true }));
-  queueMicrotask(() => promote("install"));
-
-  globalThis.ErithMarketFicheForeground406073R5 = Object.freeze({
-    build: BUILD,
-    layer_id: LAYER_ID,
-    dock_host_id: DOCK_HOST_ID,
-    workspace_grid_id: WORKSPACE_GRID_ID,
-    mode_selector: MODE_SELECTOR,
-    z_index: Number(MAX_Z),
-    strategy: "floating-body-tail-portal-with-native-dock-respect",
-    events: Object.freeze([...EVENT_TYPES]),
-    dock_aware: true,
-    mode_click_non_destructive: true,
-    aether_geometry_changed: false,
-    aether_visibility_changed: false,
-    window_manager_changed: false,
-    market_core_changed: false,
-    clone_added: false,
-    new_timer: false,
-    new_observer: false,
-    new_storage_owner: false,
-    new_network_owner: false,
-    promote,
-    docked_fiche: dockedFiche
-  });
-})();
+/* 40.6.545 — NATIVE MARKET FICHE OWNERSHIP RESTORE
+   Restoration means: do not add a second owner around the canonical
+   Flottante / Latérale implementation. The native app.js 28.3.46-28.3.48
+   contract and the 40.1.2 CSS restoration own the behavior.
+   The later 40.6.73 R5 / 40.6.543 R6 body-tail portal is retired. */
+globalThis.ErithMarketFicheForeground406073R5 = Object.freeze({
+  build: "40.6.545",
+  retired: true,
+  strategy: "native-app-js-only",
+  native_owner: "app.js",
+  native_mode_key: "agent_crypto_erith_ia_market_card_mode_v1",
+  floating_mode: true,
+  lateral_mode: true,
+  body_tail_portal: false,
+  extra_document_event_listeners: false,
+  market_core_changed: false
+});
 
 /* ==========================================================================
    BUILD 40.6.83 — AETHER V2 CANONICAL INTEGRATION
