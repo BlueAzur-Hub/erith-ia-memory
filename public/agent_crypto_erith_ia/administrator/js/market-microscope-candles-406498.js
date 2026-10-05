@@ -1,4 +1,4 @@
-/* Agent-Crypto — 40.6.561 MARKET MICROSCOPE · REQUEST + ASSET TRUTH LOCK
+/* Agent-Crypto — 40.6.562 MARKET MICROSCOPE · INDICATOR TRUTH LOCK
    Historical core owner: 40.6.498 · New Listings reuse: 40.6.529.
    40.6.529 additive extension: New Listing external context can reuse this exact chart shell
    for Ligne + Bougies without mutating Market Core/state.coins.
@@ -6,7 +6,7 @@
    Fetch occurs only on explicit Bougies / interval / refresh / external-asset load. No recurring timer. */
 (()=>{
   "use strict";
-  const BUILD="40.6.561";
+  const BUILD="40.6.562";
   const CORE_BUILD="40.6.498";
   const EXTENSION_BUILD="40.6.529";
   const ROOT="atlasMarketMicroscope";
@@ -242,14 +242,19 @@
     const v=Math.abs(level.distancePct);
     return `${v.toFixed(v<1?2:1)} %`;
   }
+  function levelsReferenceIsLatest(levels){
+    const windowSize=Math.max(0,Number(levels?.window)||0);
+    return !!windowSize&&view.start+windowSize>=state.rows.length;
+  }
   function technicalLevelsMarkup(levels){
     const unit=priceUnit(),s=levels?.support,r=levels?.resistance;
-    const summary=`${state.instrument} · ${state.bar} · S ${s?fmtPrice(s.price):"—"} · R ${r?fmtPrice(r.price):"—"}`;
+    const summary=`${levels?.instrument||activeInstrument()} · ${levels?.bar||activeBar()} · S ${s?fmtPrice(s.price):"—"} · R ${r?fmtPrice(r.price):"—"}`;
+    const referenceLabel=levelsReferenceIsLatest(levels)?"dernière clôture":"clôture visible";
     const card=(label,level,cls)=>`<div class="${cls}"><b>${label}</b><span class="amm-tech-price">${level?`<strong>${fmtPrice(level.price)}</strong><small>${unit}</small>`:"Aucun niveau"}</span></div>`;
     const contextLine=(label,level,kind)=>{
       if(!level)return `<span><b>${label}</b><small>niveau indisponible sur cette fenêtre</small></span>`;
       const tested=`${kind==="support"?"Testé":"Testée"} ${level.touches} fois`;
-      return `<span><b>${label}</b><small>${tested} · prix actuel à ${levelDistance(level)} du niveau</small></span>`;
+      return `<span><b>${label}</b><small>${tested} · ${referenceLabel} à ${levelDistance(level)} du niveau</small></span>`;
     };
     return `<summary><span><b>Repères Support / Résistance</b><small>${summary}</small></span><em data-window-state>Ouvrir</em></summary><div class="atlas-detail-subwindow-body"><div class="detail-grid clean-lens-detail-grid amm-tech-native-grid">${card("Support",s,"is-support")}${card("Résistance",r,"is-resistance")}</div><div class="why-box clean-lens-why-box amm-tech-context"><b>Contexte des niveaux</b>${contextLine("Support",s,"support")}${contextLine("Résistance",r,"resistance")}</div></div>`;
   }
@@ -279,9 +284,20 @@
   }
   function renderTechnicalLevels(levels){
     const host=ensureTechnicalLevelsHost();
-    if(!host)return;
-    if(!levels||state.mode!=="candles"||!state.indicators.sr){host.hidden=true;host.removeAttribute("data-signature");return;}
-    const sig=[levels.instrument,levels.bar,levels.window,levels.support?.price,levels.support?.touches,levels.resistance?.price,levels.resistance?.touches].join("|");
+    if(!host){if(!levels||state.mode!=="candles"||!state.indicators.sr)state.lastLevels=null;return;}
+    if(!levels||state.mode!=="candles"||!state.indicators.sr){
+      host.hidden=true;
+      host.removeAttribute("data-signature");
+      host.removeAttribute("data-event-signature");
+      state.lastLevels=null;
+      return;
+    }
+    const sig=[
+      levels.instrument,levels.bar,levels.window,levels.current,
+      levels.support?.price,levels.support?.touches,levels.support?.distancePct,
+      levels.resistance?.price,levels.resistance?.touches,levels.resistance?.distancePct,
+      levelsReferenceIsLatest(levels)?"latest":"historical"
+    ].join("|");
     const wasOpen=host.open;
     if(host.dataset.signature!==sig){host.innerHTML=technicalLevelsMarkup(levels);host.dataset.signature=sig;host.open=wasOpen;syncTechnicalLevelsWindow(host);}
     host.hidden=false;syncTechnicalLevelsWindow(host);
@@ -339,7 +355,7 @@
     if(state.indicators.supertrend)items.push(["SUPER ↑","#72e3c8"],["SUPER ↓","#ff8999"]);
     if(state.indicators.boll)items.push(["BOLL +","#8fdcff"],["BOLL 20","#b8c7d4"],["BOLL −","#8fdcff"]);
     if(state.indicators.sar)items.push(["SAR","#f5d07a"]);
-    if(state.indicators.vwap)items.push(["VWAP","#f0c36d"]);
+    if(state.indicators.vwap)items.push(["VWAP fenêtre","#f0c36d"]);
     if(state.indicators.vp)items.push(["VP approx","#74bce2"],["POC","#ffd782"]);
     host.innerHTML=items.map(([label,color])=>`<span><i style="background:${color};color:${color}"></i>${label}</span>`).join("");
     host.hidden=!items.length;
@@ -399,7 +415,7 @@
       }
     }
   }
-  function renderState(){const root=document.getElementById(ROOT);if(!root)return;const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=ext.active?(state.mode==="candles"?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const indicators=[state.indicators.ma?"MA5/10/20":null,state.indicators.ema?"EMA5/10/20":null,state.indicators.sr?"S/R pivots":null,state.indicators.supertrend?"Supertrend 10×3":null,state.indicators.boll?"Bollinger 20×2":null,state.indicators.sar?"SAR 0.02/0.20":null,state.indicators.vwap?"VWAP":null,state.indicators.vp?"Volume Profile approx":null].filter(Boolean).join(" + ")||"indicateurs masqués";const shownInstrument=activeInstrument(),shownBar=activeBar();if(meta)meta.textContent=`${shownInstrument} · ${shownBar} · ${state.rows.length} points · O/H/L/C + Volume · ${indicators}`;const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"OKX public candles").replace(/ public candles$/i,"");st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · dernière série affichée ${shownInstrument} · ${shownBar}`:state.error?`ATTENTION · ${state.error}`:`${provider} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;}}
+  function renderState(){const root=document.getElementById(ROOT);if(!root)return;const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=ext.active?(state.mode==="candles"?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const indicators=[state.indicators.ma?"MA5/10/20":null,state.indicators.ema?"EMA5/10/20":null,state.indicators.sr?"S/R pivots":null,state.indicators.supertrend?"Supertrend 10×3":null,state.indicators.boll?"Bollinger 20×2":null,state.indicators.sar?"SAR 0.02/0.20":null,state.indicators.vwap?"VWAP fenêtre":null,state.indicators.vp?"Volume Profile approx":null].filter(Boolean).join(" + ")||"indicateurs masqués";const shownInstrument=activeInstrument(),shownBar=activeBar();if(meta)meta.textContent=`${shownInstrument} · ${shownBar} · ${state.rows.length} points · O/H/L/C + Volume · ${indicators}`;const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"OKX public candles").replace(/ public candles$/i,"");st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · dernière série affichée ${shownInstrument} · ${shownBar}`:state.error?`ATTENTION · ${state.error}`:`${provider} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;}}
   function visibleRows(){
     if(!state.rows.length)return [];
     const count=Math.max(20,Math.min(view.count||72,state.rows.length));
@@ -504,10 +520,16 @@
       ctx.beginPath();let started=false;values.forEach((v,i)=>{if(!Number.isFinite(v))return;const xx=x(i),yy=y(v);if(!started){ctx.moveTo(xx,yy);started=true;}else ctx.lineTo(xx,yy);});ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();
     };
     if(state.indicators.ma){
-      [[5,"#ffd782"],[10,"#73d8ff"],[20,"#c99af4"]].forEach(([n,color])=>drawIndicator(movingAverage(rows,n),color,1.2));
+      [[5,"#ffd782"],[10,"#73d8ff"],[20,"#c99af4"]].forEach(([n,color])=>{
+        const values=movingAverage(state.rows,n).slice(view.start,view.start+rows.length);
+        drawIndicator(values,color,1.2);
+      });
     }
     if(state.indicators.ema){
-      [[5,"#ff9f5a"],[10,"#ff6fae"],[20,"#5ee7e7"]].forEach(([n,color])=>drawIndicator(exponentialAverage(rows,n),color,1.05));
+      [[5,"#ff9f5a"],[10,"#ff6fae"],[20,"#5ee7e7"]].forEach(([n,color])=>{
+        const values=exponentialAverage(state.rows,n).slice(view.start,view.start+rows.length);
+        drawIndicator(values,color,1.05);
+      });
     }
     if(state.indicators.supertrend&&superValues.length){
       let previous=null;
@@ -605,30 +627,37 @@
     names.forEach(name=>{
       const current=globalThis[name];
       if(typeof current!=="function")return;
-      if(current.__agentCryptoMicroscope561===true){installed=true;return;}
+      if(current.__agentCryptoMicroscope561===true||current.__agentCryptoMicroscope562===true){installed=true;return;}
       const wrapped=function(...args){
         const result=current.apply(this,args);
         queueMicrotask(()=>{try{if(state.mode==="candles"&&!externalContext().active)void load({bar:state.bar,reason:`canonical:${name}`});}catch(_){}});
         return result;
       };
       Object.defineProperty(wrapped,"__agentCryptoMicroscope561",{value:true});
+      Object.defineProperty(wrapped,"__agentCryptoMicroscope562",{value:true});
       Object.defineProperty(wrapped,"__agentCryptoMicroscope561Original",{value:current});
       try{globalThis[name]=wrapped;if(globalThis[name]===wrapped)installed=true;}catch(_){}
     });
     return installed;
   }
   function selfTest(){
+    const near=(a,b,t=1e-9)=>Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(a-b)<=t;
     const sample=parseRows([["3","3","4","2","3.5","30","0","0","1"],["1","1","2","0.5","1.5","10","0","0","1"],["2","1.5","3","1","2.5","20","0","0","1"],["4","3.5","5","3","4","40","0","0","1"],["5","4","6","3.5","5","50","0","0","1"]]);
-    const trendSample=Array.from({length:24},(_,i)=>{const base=100+i*.7+Math.sin(i/2)*2;return {t:i+1,o:base-.4,h:base+1.2,l:base-1.1,c:base+.35,v:10+i};});
-    const ma=movingAverage(sample,2),ema=exponentialAverage(sample,3),delta=candleChangePct({o:100,c:110}),sr=supportResistance(sample),st=supertrend(trendSample,3,2),boll=bollinger(trendSample,5,2),sar=parabolicSar(trendSample,.02,.2),vw=vwap(trendSample),vp=volumeProfile(trendSample,12);
-    const stOk=st.method==="SUPERTREND_ATR_WILDER"&&st.values.some(Number.isFinite)&&st.directions.some(v=>v===1||v===-1);
-    const bollOk=boll.method==="BOLLINGER_SMA_STDDEV"&&boll.mid.some(Number.isFinite)&&boll.upper.some(Number.isFinite)&&boll.lower.some(Number.isFinite);
-    const sarOk=sar.method==="PARABOLIC_SAR_CLASSIC"&&sar.values.some(Number.isFinite)&&sar.directions.some(v=>v===1||v===-1);
-    const vwapOk=vw.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME"&&vw.values.some(Number.isFinite);
-    const vpOk=vp.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX"&&vp.bins.length===12&&Number.isInteger(vp.pocIndex)&&vp.maxVolume>0;
+    const referenceRows=Array.from({length:30},(_,i)=>({t:i+1,o:100+i,h:102+i,l:99+i,c:101+i,v:10+i}));
+    const ma=movingAverage(sample,2),ema=exponentialAverage(sample,3),delta=candleChangePct({o:100,c:110}),sr=supportResistance(sample);
+    const ma20=movingAverage(referenceRows,20),ema20=exponentialAverage(referenceRows,20);
+    const st=supertrend(referenceRows,10,3),boll=bollinger(referenceRows,20,2),sar=parabolicSar(referenceRows,.02,.2);
+    const vwapReference=vwap([{h:12,l:8,c:10,v:2},{h:15,l:9,c:12,v:3},{h:18,l:12,c:15,v:5}]);
+    const vpReference=volumeProfile([{h:3,l:0,c:0,v:2},{h:9,l:6,c:9,v:5},{h:15,l:12,c:15,v:7},{h:24,l:21,c:24,v:11}],24);
+    const stReference=st.method==="SUPERTREND_ATR_WILDER"&&st.period===10&&st.multiplier===3&&near(st.atr[29],3)&&near(st.values[29],120.5)&&st.directions[29]===1;
+    const bollReference=boll.method==="BOLLINGER_SMA_STDDEV"&&boll.period===20&&boll.multiplier===2&&near(boll.mid[19],110.5)&&near(boll.upper[19],122.03256259467079,1e-10)&&near(boll.lower[19],98.9674374053292,1e-10);
+    const sarReference=sar.method==="PARABOLIC_SAR_CLASSIC"&&near(sar.values[29],125.97295766380162,1e-10)&&sar.directions[29]===1;
+    const vwapReferenceOk=vwapReference.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME"&&near(vwapReference.values[0],10)&&near(vwapReference.values[1],11.2)&&near(vwapReference.values[2],13.1);
+    const vpReferenceOk=vpReference.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX"&&vpReference.bins.length===24&&vpReference.pocIndex===23&&near(vpReference.maxVolume,11);
+    const maEmaFullHistory=near(ma20[20],111.5)&&near(ma20[29],120.5)&&near(ema20[20],111.5)&&near(ema20[29],120.5);
     const requestIdentityOk=requestKey("ETH-USDC","1h")==="ETH-USDC|1h";
-    const pass=sample.length===5&&sample[0].t===1&&ma[0]===null&&Math.abs(ma[1]-2)<1e-9&&ema.some(Number.isFinite)&&Math.abs(delta-10)<1e-9&&barDurationMs("15m")===900000&&sr.method==="PIVOTS_VISIBLES_W2"&&stOk&&bollOk&&sarOk&&vwapOk&&vpOk&&requestIdentityOk;
-    return Object.freeze({build:BUILD,core_build:CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",supertrend_method:st.method==="SUPERTREND_ATR_WILDER",supertrend_values:st.values.some(Number.isFinite),supertrend_direction:st.directions.some(v=>v===1||v===-1),supertrend_default_off:state.indicators.supertrend===false,bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:state.indicators.ma===true,ema_opt_in:state.indicators.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,technical_sr_native_window:true,technical_sr_collapsible:true,technical_sr_compact_summary:true,technical_sr_price_priority:true,technical_sr_price_visibility:true,technical_sr_context_separate:true,technical_sr_no_confidence_label:true,supertrend_opt_in:true,supertrend_period_10_multiplier_3:true,bollinger_method:boll.method==="BOLLINGER_SMA_STDDEV",bollinger_values:bollOk,bollinger_default_off:state.indicators.boll===false,bollinger_opt_in:true,bollinger_period_20_multiplier_2:true,sar_method:sar.method==="PARABOLIC_SAR_CLASSIC",sar_values:sarOk,sar_default_off:state.indicators.sar===false,sar_opt_in:true,sar_step_002_max_020:true,vwap_method:vw.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME",vwap_values:vwapOk,vwap_default_off:state.indicators.vwap===false,vwap_opt_in:true,volume_profile_method:vp.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX",volume_profile_values:vpOk,volume_profile_default_off:state.indicators.vp===false,volume_profile_opt_in:true,volume_profile_bins_24:true,request_identity_key:requestIdentityOk,canonical_market_selection_owner:typeof globalThis.getSelectedCoin==="function"||typeof document==="undefined",latest_request_wins:true,abort_previous_request:true,request_timeout_ms:REQUEST_TIMEOUT_MS,loaded_context_separate_from_requested_context:true,default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
+    const pass=sample.length===5&&sample[0].t===1&&ma[0]===null&&Math.abs(ma[1]-2)<1e-9&&ema.some(Number.isFinite)&&Math.abs(delta-10)<1e-9&&barDurationMs("15m")===900000&&sr.method==="PIVOTS_VISIBLES_W2"&&maEmaFullHistory&&stReference&&bollReference&&sarReference&&vwapReferenceOk&&vpReferenceOk&&requestIdentityOk;
+    return Object.freeze({build:BUILD,core_build:CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),ma_ema_full_history_projection:maEmaFullHistory,candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",support_resistance_last_levels_clear_when_disabled:true,support_resistance_distance_signature:true,support_resistance_historical_reference_label:true,supertrend_method:st.method==="SUPERTREND_ATR_WILDER",supertrend_reference_10x3:stReference,supertrend_default_off:state.indicators.supertrend===false,bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:state.indicators.ma===true,ema_opt_in:state.indicators.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,technical_sr_native_window:true,technical_sr_collapsible:true,technical_sr_compact_summary:true,technical_sr_price_priority:true,technical_sr_price_visibility:true,technical_sr_context_separate:true,technical_sr_no_confidence_label:true,supertrend_opt_in:true,supertrend_period_10_multiplier_3:true,bollinger_method:boll.method==="BOLLINGER_SMA_STDDEV",bollinger_reference_20x2:bollReference,bollinger_default_off:state.indicators.boll===false,bollinger_opt_in:true,bollinger_period_20_multiplier_2:true,sar_method:sar.method==="PARABOLIC_SAR_CLASSIC",sar_reference_002_020:sarReference,sar_default_off:state.indicators.sar===false,sar_opt_in:true,sar_step_002_max_020:true,vwap_method:vwapReference.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME",vwap_reference_window:vwapReferenceOk,vwap_label_window:true,vwap_default_off:state.indicators.vwap===false,vwap_opt_in:true,volume_profile_method:vpReference.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX",volume_profile_reference_24_bins:vpReferenceOk,volume_profile_default_off:state.indicators.vp===false,volume_profile_opt_in:true,volume_profile_bins_24:true,request_identity_key:requestIdentityOk,canonical_market_selection_owner:typeof globalThis.getSelectedCoin==="function"||typeof document==="undefined",latest_request_wins:true,abort_previous_request:true,request_timeout_ms:REQUEST_TIMEOUT_MS,loaded_context_separate_from_requested_context:true,indicator_state_summary_refresh:true,default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
   }
   globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active,lastLevels:state.lastLevels,request_key:requestKey()}),instrument:()=>activeInstrument(),technicalLevels:()=>state.lastLevels,resetView,viewport:()=>Object.freeze({...view}),installCanonicalSelectionHook,self_test:selfTest,read_only:true,network:"OKX_PUBLIC_ON_DEMAND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,latest_request_wins:true,request_timeout_ms:REQUEST_TIMEOUT_MS,recurring_timer:false,mutation_observer:false,storage_write:false,real_order:false,market_core_changed:false,strategy_changed:false});
   if(typeof document!=="undefined"){const boot=()=>{mount();installCanonicalSelectionHook();};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",()=>{if(state.mode==="candles")draw();},{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(state.mode==="candles"&&!externalContext().active)void load({bar:state.bar,reason:"quote-architecture"});},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{requestToken+=1;try{activeController?.abort();}catch(_){}activeController=null;state.loading=false;mount();state.rows=[];state.error=null;state.lastLoadedAt=null;state.lastLevels=null;state.loadedBar=null;state.loadedInstrument=null;state.mode="native";renderTechnicalLevels(null);syncControls();},{passive:true});}
