@@ -1,4 +1,4 @@
-name: Agent-Crypto 40.6.539 New Listings Identity Logos
+name: Agent-Crypto 40.6.540 New Listings Safe Radar
 
 on:
   push:
@@ -6,20 +6,20 @@ on:
     paths:
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
-      - "public/agent_crypto_erith_ia/administrator/index-40.6.539.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.540.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
-      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_IDENTITY_LOGOS_40.6.539.md"
-      - ".github/scripts/agent_crypto_new_listings_identity_406539_guard.py"
-      - ".github/workflows/agent-crypto-new-listings-identity-406539.yml"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_SAFE_RADAR_40.6.540.md"
+      - ".github/scripts/agent_crypto_new_listings_safe_radar_406540_guard.py"
+      - ".github/workflows/agent-crypto-new-listings-safe-radar-406540.yml"
   pull_request:
     paths:
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
-      - "public/agent_crypto_erith_ia/administrator/index-40.6.539.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.540.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
-      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_IDENTITY_LOGOS_40.6.539.md"
-      - ".github/scripts/agent_crypto_new_listings_identity_406539_guard.py"
-      - ".github/workflows/agent-crypto-new-listings-identity-406539.yml"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_SAFE_RADAR_40.6.540.md"
+      - ".github/scripts/agent_crypto_new_listings_safe_radar_406540_guard.py"
+      - ".github/workflows/agent-crypto-new-listings-safe-radar-406540.yml"
 
 permissions:
   contents: read
@@ -30,9 +30,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify bounded identity enrichment
+      - name: Verify safe radar
         run: |
-          python .github/scripts/agent_crypto_new_listings_identity_406539_guard.py
+          python .github/scripts/agent_crypto_new_listings_safe_radar_406540_guard.py
           node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
           python .github/scripts/agent_crypto_version_truth_guard_compat.py
 
@@ -45,13 +45,13 @@ jobs:
           files=[
             Path("public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"),
             Path("public/agent_crypto_erith_ia/administrator/index.html"),
-            Path("public/agent_crypto_erith_ia/administrator/index-40.6.539.html"),
+            Path("public/agent_crypto_erith_ia/administrator/index-40.6.540.html"),
             Path("public/agent_crypto_erith_ia/administrator/build.json"),
-            Path("public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_IDENTITY_LOGOS_40.6.539.md"),
-            Path(".github/scripts/agent_crypto_new_listings_identity_406539_guard.py"),
-            Path(".github/workflows/agent-crypto-new-listings-identity-406539.yml"),
+            Path("public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_SAFE_RADAR_40.6.540.md"),
+            Path(".github/scripts/agent_crypto_new_listings_safe_radar_406540_guard.py"),
+            Path(".github/workflows/agent-crypto-new-listings-safe-radar-406540.yml"),
           ]
-          out=Path("dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.539_NEW_LISTINGS_IDENTITY_LOGOS_PATCH.zip")
+          out=Path("dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.540_NEW_LISTINGS_SAFE_RADAR_PATCH.zip")
           out.parent.mkdir(parents=True,exist_ok=True)
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as z:
               for p in files:
@@ -64,6 +64,6 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.539_NEW_LISTINGS_IDENTITY_LOGOS_PATCH
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.540_NEW_LISTINGS_SAFE_RADAR_PATCH
           path: ${{ steps.patch.outputs.zip }}
           retention-days: 90

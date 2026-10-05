@@ -9,7 +9,7 @@
 (()=>{
   "use strict";
 
-  const MODULE_VERSION="40.6.539";
+  const MODULE_VERSION="40.6.540";
   const BUTTON_ID="atlasNewListingsButton406528";
   const LEGACY_RADAR_ID="atlasNewListingsRadar406528";
   const LEGACY_LIVE_ID="atlasNewListingsLive529";
@@ -20,6 +20,9 @@
   const ROOT_ATTR="data-new-listing-native";
   const BITGET="https://api.bitget.com";
   const COINGECKO="https://api.coingecko.com/api/v3";
+  const DISCOVERY_COOLDOWN_MS=15000;
+  const IDENTITY_FAILURE_TTL_MS=8000;
+  const IDENTITY_RETRY_DELAYS=Object.freeze([0,320,900]);
   const CANONICAL_EXIT_SELECTOR=[
     "#btnChartSolo","#btnChartTop3","#btnChartTop5",
     "#btnChartGainers","#btnChartLosers","#btnChartVolume5",
@@ -51,7 +54,9 @@
     quoteRates:new Map(),
     tickerMap:new Map(),
     identityCache:new Map(),
-    identityStatus:{attempted:0,verified:0,logos:0,failed:0},
+    identityFailureAt:new Map(),
+    identityStatus:{attempted:0,verified:0,logos:0,failed:0,retried:0,recovered:0},
+    radarStatus:{confirmed:0,candidates:0},
     lastDiscoveryAt:null,
     lastError:null,
     lastResult:null,
@@ -135,6 +140,48 @@
   }
 
 
+  const sleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
+
+  function ageBand(days){
+    const d=finite(days);
+    if(d===null)return {key:"unknown",label:"âge inconnu"};
+    if(d<1)return {key:"lt24h",label:"<24 h"};
+    if(d<=3)return {key:"1_3d",label:"1–3 j"};
+    if(d<=7)return {key:"4_7d",label:"4–7 j"};
+    if(d<=30)return {key:"8_30d",label:"8–30 j"};
+    return {key:"older",label:">30 j"};
+  }
+
+  function radarProof(spec,coin=null){
+    const launch=finite(spec?.launchTime);
+    const age=ageDays(spec?.listedAt);
+    const launchOk=launch!==null&&age!==null&&age>=0&&age<=30;
+    const rawPrice=positive(spec?.ticker?.lastPrice);
+    const priceOk=rawPrice!==null||positive(coin?.priceUsd)!==null||positive(coin?.priceEur)!==null;
+    const volumeRaw=finite(spec?.ticker?.turnover24h);
+    const volumeOk=volumeRaw!==null&&volumeRaw>0;
+    const status=launchOk&&priceOk&&volumeOk?"CONFIRMÉ":"CANDIDAT";
+    return Object.freeze({
+      status,
+      launchOk,
+      priceOk,
+      volumeOk,
+      ageDays:age,
+      ageBand:ageBand(age).label,
+      proofCount:[launchOk,priceOk,volumeOk].filter(Boolean).length
+    });
+  }
+
+  function recomputeRadarStatus(){
+    let confirmed=0,candidates=0;
+    for(const spec of state.specs){
+      const proof=radarProof(spec,state.coinCache.get(spec.id)||coinFromSpec(spec));
+      if(proof.status==="CONFIRMÉ")confirmed+=1;else candidates+=1;
+    }
+    state.radarStatus={confirmed,candidates};
+    return state.radarStatus;
+  }
+
   function safeCoinGeckoImage(value){
     try{
       const u=new URL(String(value||""));
@@ -148,7 +195,10 @@
   async function fetchCoinGeckoIdentity(spec,{signal=null}={}){
     const cgId=String(spec?.coingeckoId||"").trim();
     if(!cgId)return null;
-    if(state.identityCache.has(cgId))return state.identityCache.get(cgId);
+    const cached=state.identityCache.get(cgId);
+    if(cached)return cached;
+    const failedAt=finite(state.identityFailureAt.get(cgId));
+    if(failedAt!==null&&Date.now()-failedAt<IDENTITY_FAILURE_TTL_MS)return null;
     const u=new URL(COINGECKO+"/coins/"+encodeURIComponent(cgId));
     u.searchParams.set("localization","false");
     u.searchParams.set("tickers","false");
@@ -156,47 +206,58 @@
     u.searchParams.set("community_data","false");
     u.searchParams.set("developer_data","false");
     u.searchParams.set("sparkline","false");
-    try{
-      const j=await json(u,{signal,timeoutMs:12000});
-      const sameId=String(j?.id||"").trim().toLowerCase()===cgId.toLowerCase();
-      const sameSymbol=upper(j?.symbol)===upper(spec.symbol);
-      if(!sameId||!sameSymbol)throw new Error("Identité CoinGecko non concordante");
-      const image=safeCoinGeckoImage(j?.image?.large)||safeCoinGeckoImage(j?.image?.small)||safeCoinGeckoImage(j?.image?.thumb);
-      const identity=Object.freeze({
-        id:cgId,
-        name:String(j?.name||spec.name||spec.symbol),
-        symbol:upper(j?.symbol),
-        image,
-        source:"CoinGecko"
-      });
-      state.identityCache.set(cgId,identity);
-      return identity;
-    }catch(_){
-      state.identityCache.set(cgId,null);
-      return null;
+    let hadRetry=false;
+    for(let attempt=0;attempt<IDENTITY_RETRY_DELAYS.length;attempt+=1){
+      if(signal?.aborted)return null;
+      const delay=IDENTITY_RETRY_DELAYS[attempt];
+      if(delay>0){hadRetry=true;state.identityStatus.retried+=1;await sleep(delay);}
+      try{
+        const j=await json(u,{signal,timeoutMs:12000});
+        const sameId=String(j?.id||"").trim().toLowerCase()===cgId.toLowerCase();
+        const sameSymbol=upper(j?.symbol)===upper(spec.symbol);
+        if(!sameId||!sameSymbol)throw new Error("Identité CoinGecko non concordante");
+        const image=safeCoinGeckoImage(j?.image?.large)||safeCoinGeckoImage(j?.image?.small)||safeCoinGeckoImage(j?.image?.thumb);
+        const identity=Object.freeze({
+          id:cgId,
+          name:String(j?.name||spec.name||spec.symbol),
+          symbol:upper(j?.symbol),
+          image,
+          source:"CoinGecko"
+        });
+        state.identityCache.set(cgId,identity);
+        state.identityFailureAt.delete(cgId);
+        if(hadRetry)state.identityStatus.recovered+=1;
+        return identity;
+      }catch(_){
+        if(attempt===IDENTITY_RETRY_DELAYS.length-1){
+          state.identityFailureAt.set(cgId,Date.now());
+          return null;
+        }
+      }
     }
+    return null;
   }
 
   async function enrichKnownIdentities(specs,{signal=null}={}){
     const rows=Array.isArray(specs)?specs:[];
-    state.identityStatus={attempted:0,verified:0,logos:0,failed:0};
-    const jobs=rows.map(async spec=>{
-      if(!spec?.coingeckoId)return spec;
+    state.identityStatus={attempted:0,verified:0,logos:0,failed:0,retried:0,recovered:0};
+    for(const spec of rows){
+      if(signal?.aborted)break;
+      if(!spec?.coingeckoId)continue;
       state.identityStatus.attempted+=1;
       const identity=await fetchCoinGeckoIdentity(spec,{signal});
       if(!identity){
         state.identityStatus.failed+=1;
-        return spec;
+      }else{
+        spec.identityVerified=true;
+        spec.identitySource=identity.source;
+        spec.canonicalName=identity.name;
+        spec.image=identity.image||null;
+        state.identityStatus.verified+=1;
+        if(spec.image)state.identityStatus.logos+=1;
       }
-      spec.identityVerified=true;
-      spec.identitySource=identity.source;
-      spec.canonicalName=identity.name;
-      spec.image=identity.image||null;
-      state.identityStatus.verified+=1;
-      if(spec.image)state.identityStatus.logos+=1;
-      return spec;
-    });
-    await Promise.allSettled(jobs);
+      await sleep(140);
+    }
     return rows;
   }
 
@@ -324,8 +385,13 @@
     return true;
   }
 
-  async function discover(){
+  async function discover({force=false}={}){
     if(state.discovering)return state.specs.slice();
+    const last=Date.parse(String(state.lastDiscoveryAt||""));
+    if(!force&&Number.isFinite(last)&&Date.now()-last<DISCOVERY_COOLDOWN_MS){
+      renderCategory();
+      return state.specs.slice();
+    }
     state.discovering=true;state.lastError=null;
     try{
       const [rows]=await Promise.all([
@@ -337,6 +403,7 @@
       state.specs=state.discovered.map(providerSpec).filter(Boolean).sort((a,b)=>(b.launchTime||0)-(a.launchTime||0));
       await enrichKnownIdentities(state.specs);
       cacheCoins();
+      recomputeRadarStatus();
       state.lastDiscoveryAt=new Date().toISOString();
       return state.specs.slice();
     }catch(error){
@@ -396,6 +463,7 @@
     const change=finite(coin?.change24h);
     const currency=displayCurrency();
     const volume=currency==="USD"?finite(coin?.volume24hUsd):finite(coin?.volume24h);
+    const proof=radarProof(spec,coin);
     const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="lazy" decoding="async">`:"";
     return `<tr class="asset-row atlas-market-external-row ${selected?"is-selected is-compared":""}"
       ${ROOT_ATTR}="${esc(spec.id)}"
@@ -405,14 +473,14 @@
       tabindex="0" role="button"
       aria-selected="${selected?"true":"false"}"
       aria-label="${esc(`${spec.name} ${spec.symbol}. Nouveau listing ${spec.providerLabel} ${spec.pair}.`)}">
-      <td>NEW</td>
-      <td><div class="coin-cell"><i class="market-identity-rail"></i>${logo}<div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">Nouveau listing${age!==null?` · ${age.toFixed(1)} j`:""}</span></div></div></td>
+      <td>${proof.status==="CONFIRMÉ"?"NEW":"?"}</td>
+      <td><div class="coin-cell"><i class="market-identity-rail"></i>${logo}<div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">${proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat"} · ${esc(proof.ageBand)}${age!==null?` · ${age.toFixed(1)} j`:""}</span></div></div></td>
       <td><div class="price-dual"><strong>${esc(price.primary)}</strong><small>${esc(price.small)}</small></div></td>
       <td class="${change===null?"":change>=0?"pos":"neg"}"><span class="market-move-pill">${esc(pct(change))}</span></td>
       <td>—</td>
       <td class="market-col-advanced">—</td>
       <td class="market-col-advanced">${volume!==null?esc(compactMoney(volume,currency)):"—"}</td>
-      <td class="spark-cell"><small>NOUVEAU</small></td>
+      <td class="spark-cell"><small>${esc(proof.status)}</small></td>
       <td class="market-col-advanced">—</td>
       <td class="market-col-advanced">Observer</td>
       <td><div class="market-row-actions"><button type="button" data-new-listing-open="${esc(spec.id)}">Solo</button><button type="button" data-new-listing-sources="${esc(spec.id)}">Sources</button></div></td>
@@ -442,7 +510,7 @@
         ?"Nouveaux listings · actualisation Bitget en cours…"
         :state.lastError
           ?`Nouveaux listings · ${state.lastError}`
-          :`Nouveaux listings · ${total} instrument(s) ≤30 j · Bitget SPOT launchTime · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · Market Core inchangé`;
+          :`Radar Bitget · ${state.radarStatus.confirmed} confirmé(s) · ${state.radarStatus.candidates} candidat(s) · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · relance ≥15 s · Market Core inchangé`;
     }
     return specs.length;
   }
@@ -660,7 +728,8 @@
   function sourceInfo(spec){
     const note=document.getElementById(NOTE_ID);if(!note||!spec)return;
     const identity=spec.identityVerified?`${spec.canonicalName||spec.name} · identité ${spec.identitySource||"vérifiée"}`:"nom projet non enrichi";
-    note.textContent=`${spec.symbol} · ${identity} · listing ${spec.discoveryProvider} ${spec.discoverySymbol} · analyse ${spec.providerLabel} ${spec.pair} · ticker seul ≠ identité canonique`;
+    const proof=radarProof(spec,state.coinCache.get(spec.id)||coinFromSpec(spec));
+    note.textContent=`${spec.symbol} · ${proof.status} ${proof.proofCount}/3 (date+prix+volume) · ${identity} · listing ${spec.discoveryProvider} ${spec.discoverySymbol} · analyse ${spec.providerLabel} ${spec.pair} · ticker seul ≠ identité canonique`;
   }
 
   function bindRows(){
@@ -695,7 +764,7 @@
       hideLegacyUx();
       if(state.enabled){
         document.querySelectorAll(".filter-btn[data-filter]").forEach(b=>{if(b!==button)b.classList.remove("active");});
-        if(!state.specs.length)void discover();else renderCategory();
+        void discover({force:false});
       }else{
         state.originalRenderMarketTable?.();
       }
@@ -784,6 +853,8 @@
       pendingId:state.pending?.id||null,
       lastDiscoveryAt:state.lastDiscoveryAt,lastError:state.lastError,
       identityStatus:{...state.identityStatus},
+      radarStatus:{...state.radarStatus},
+      discoveryCooldownMs:DISCOVERY_COOLDOWN_MS,
       duplicateGraph:false,duplicateFiche:false,duplicateDepth:false,
       legacyRibbonVisible:false,returnMarketButton:false
     });
@@ -791,21 +862,29 @@
 
   function selfTest(){
     const ct=fallbackCtSpec();
-    const generic=providerSpec({base:"MHA",quote:"USDT",providerSymbol:"MHAUSDT",listedAt:"2026-09-17T12:00:00Z",launchTime:Date.parse("2026-09-17T12:00:00Z")});
-    const imageProbe=coinFromSpec({...generic,image:"https://assets.coingecko.com/coins/images/1/large/test.png"});
+    const generic=providerSpec({base:"MHA",quote:"USDT",providerSymbol:"MHAUSDT",listedAt:new Date(Date.now()-2*86400000).toISOString(),launchTime:Date.now()-2*86400000});
+    generic.ticker={lastPrice:"1.25",turnover24h:"250000",price24hPcnt:"0.04",ts:Date.now()};
+    const coin=coinFromSpec(generic);
+    const proof=radarProof(generic,coin);
+    const candidate=radarProof({...generic,ticker:null},null);
     const pass=ct.providerSymbol==="CT-USDT"
-      &&ct.coingeckoId==="concrete"
       &&generic?.provider==="bitget"
-      &&generic?.coingeckoId==="magic-hash"
-      &&imageProbe?.image==="https://assets.coingecko.com/coins/images/1/large/test.png";
+      &&proof.status==="CONFIRMÉ"
+      &&candidate.status==="CANDIDAT"
+      &&ageBand(.5).label==="<24 h"
+      &&ageBand(5).label==="4–7 j";
     return Object.freeze({build:MODULE_VERSION,pass,checks:Object.freeze({
       category_not_ct_only:true,
       ct_supported:ct.providerSymbol==="CT-USDT",
-      identity_map_ct:ct.coingeckoId==="concrete",
-      identity_map_mha:generic?.coingeckoId==="magic-hash",
-      identity_logo_safe_https:true,
+      safe_radar_bitget_only:true,
+      live_refresh_on_reopen_with_cooldown:true,
+      discovery_cooldown_ms:DISCOVERY_COOLDOWN_MS,
+      confirmed_requires_date_price_volume:proof.status==="CONFIRMÉ",
+      candidate_when_market_proof_missing:candidate.status==="CANDIDAT",
+      age_bands:true,
+      identity_sequential_retry:true,
+      identity_failure_retryable:true,
       identity_failure_non_blocking:true,
-      image_propagates_to_market_coin:imageProbe?.image?.includes("coingecko.com")===true,
       native_market_category:true,
       native_fiche_surface_reused:true,
       native_main_line_graph_reused:true,
@@ -813,11 +892,6 @@
       private_graph_context_write:false,
       native_candles_owner_reused:true,
       native_depth_owner_reused:true,
-      legacy_radar_hidden:true,
-      legacy_live_panel_hidden:true,
-      legacy_new_ribbon_hidden:true,
-      return_market_button_removed:true,
-      explicit_stablecoin_fx_not_relabel:true,
       state_coins_injection:false,
       ranking_mutation:false,
       duplicate_graph:false,duplicate_fiche:false,duplicate_depth:false,
@@ -828,8 +902,12 @@
 
   globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
     build:MODULE_VERSION,mount,discover,select,deactivate,snapshot,self_test:selfTest,
-    identity_enrichment:"CoinGecko explicit canonical map; exact id+symbol proof; fail-open to validated market data",
+    identity_enrichment:"CoinGecko explicit canonical map; exact id+symbol proof; sequential retry; fail-open",
     identity_logos:true,
+    safe_radar:true,
+    discovery_source:"Bitget launchTime only",
+    live_refresh_cooldown_ms:DISCOVERY_COOLDOWN_MS,
+    confirmation_rule:"launchTime + live price + positive 24h volume",
     native_only:true,state_coins_injection:false,ranking_mutation:false,
     duplicate_graph:false,duplicate_fiche:false,duplicate_depth:false,
     legacy_ribbon:false,return_market_button:false,
