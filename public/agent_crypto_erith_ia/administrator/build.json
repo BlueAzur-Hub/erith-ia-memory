@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.542",
+  "build": "40.6.543",
   "engine": "38.15.11",
-  "release": "NEW LISTINGS · GITHUB IDENTITY MEMORY",
+  "release": "NEW LISTINGS · VALID LOGOS + FICHE DOCK STABILITY",
   "published": true,
-  "status": "published_pending_firefox_406542",
-  "parent_build": "40.6.541",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.542",
-  "administrator_build": "40.6.542",
-  "build_label": "Build 40.6.542 · Administrator",
+  "status": "published_pending_firefox_406543",
+  "parent_build": "40.6.542",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.543",
+  "administrator_build": "40.6.543",
+  "build_label": "Build 40.6.543 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,7 +30,7 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 -> Nouveaux listings. Target: 5 confirmed / identities 5/5 / logos 5 / GitHub 5/5 / no CoinGecko identity fallback. Verify prices/24h/volume unchanged, Fiche logo, CT -> Graphique -> Réinit -> BTC.",
+  "terrain_pending": "Firefox: Ctrl+F5 -> Nouveaux listings. Target: 5 confirmed / identities 5/5 / logos 5 with PONS and CNPY visibly rendered from GitHub registry. Then open Fiche Crypto and switch Flottante -> Latérale -> Flottante; the clicked control must remain reachable and Latérale must stay docked without body re-portal. Verify CT -> Graphique -> Réinit -> BTC.",
   "terrain_proof": "PENDING_40.6.536_OPERATOR_FIREFOX",
   "release_notes": "40.6.536 rend atomique le cycle Clear/Reset du propriétaire graphique natif, remplace le comptage de fenêtre Scanner linéaire par une recherche binaire exacte, cède périodiquement le thread UI pendant les caches, ignore un clic répété sur le même Scanner déjà actif et libère le contexte graphique externe avant un preset Scanner. Rendus Hausses/Baisses/Volumes, Market Core 38.15.11, Oracle métier, Profondeur, Bougies, Lecture Technique, Strategy A, Aether et Web Classique inchangés.",
   "strategy_facade_406323": {
@@ -9253,6 +9253,56 @@
     "market_core_modified": false,
     "state_coins_injection": false,
     "ranking_mutation": false,
+    "duplicate_graph": false,
+    "duplicate_fiche": false,
+    "duplicate_depth": false,
+    "storage_write": false,
+    "private_api": false,
+    "orders": false,
+    "wallet": false,
+    "terrain": "PENDING_FIREFOX"
+  },
+  "new_listings_identity_fiche_stability_406543": {
+    "enabled": true,
+    "parent": "40.6.542",
+    "owners": [
+      "data/new-listings-identities.json",
+      "js/new-listings-native-category.js",
+      "js/aether-role-visibility.js"
+    ],
+    "destination": "VALID_EMBEDDED_LOGOS_AND_NATIVE_FICHE_DOCK_STABILITY",
+    "logo_fix": {
+      "registry_version": "40.6.543",
+      "png_crc_validation": true,
+      "repaired": [
+        "MHA",
+        "PONS",
+        "CNPY"
+      ],
+      "preserved": [
+        "CT",
+        "MCAT"
+      ],
+      "expected_visual": [
+        "CT",
+        "MHA",
+        "MCAT",
+        "PONS",
+        "CNPY"
+      ]
+    },
+    "fiche_fix": {
+      "historical_portal": "ErithMarketFicheForeground406073R5",
+      "defect": "global body-tail portal reparented active fiche after Latérale mode click",
+      "repair": "dock-aware portal respects #atlasMarketCardDockHost and market-card-dock-active; mode clicks are non-destructive",
+      "floating_preserved": true,
+      "lateral_preserved": true
+    },
+    "discovery_changed": false,
+    "live_market_changed": false,
+    "price_pipeline_changed": false,
+    "graph_owner_changed": false,
+    "market_core_modified": false,
     "duplicate_graph": false,
     "duplicate_fiche": false,
     "duplicate_depth": false,
