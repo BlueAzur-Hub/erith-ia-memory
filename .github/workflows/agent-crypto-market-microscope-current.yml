@@ -1,0 +1,91 @@
+name: Agent-Crypto Market Microscope Current
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/MARKET_MICROSCOPE_CANONICAL_RUNTIME_40.6.563.md"
+      - ".github/scripts/agent_crypto_market_microscope_guard.py"
+      - ".github/workflows/agent-crypto-market-microscope-current.yml"
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - ".github/scripts/agent_crypto_market_microscope_guard.py"
+      - ".github/workflows/agent-crypto-market-microscope-current.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: JavaScript syntax
+        run: node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
+
+      - name: Deterministic Microscope self-test
+        run: |
+          node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js');
+          const r=global.AgentCryptoMarketMicroscope.self_test();
+          console.log(JSON.stringify(r,null,2));
+          const c=r.checks||{};
+          if(
+            !r.pass ||
+            !c.ma_ema_full_history_projection ||
+            !c.supertrend_reference_10x3 ||
+            !c.bollinger_reference_20x2 ||
+            !c.sar_reference_002_020 ||
+            !c.vwap_reference_window ||
+            !c.volume_profile_reference_24_bins ||
+            !c.support_resistance_last_levels_clear_when_disabled ||
+            !c.support_resistance_distance_signature ||
+            !c.support_resistance_historical_reference_label ||
+            !c.indicator_state_roundtrip ||
+            !c.indicator_state_storage_key
+          ) process.exit(1);
+          NODE
+
+      - name: Canonical runtime guard
+        run: python .github/scripts/agent_crypto_market_microscope_guard.py
+
+      - name: Version truth
+        run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Package compact current patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, zipfile
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          build=json.loads((root/"build.json").read_text(encoding="utf-8"))["build"]
+          out=Path(f"AGENT_CRYPTO_ADMINISTRATOR_{build}_MICROSCOPE_PATCH.zip")
+          files=[
+            root/"index.html",
+            root/f"index-{build}.html",
+            root/"build.json",
+            root/"js/market-microscope-candles.js",
+            root/"MARKET_MICROSCOPE_CANONICAL_RUNTIME_40.6.563.md",
+          ]
+          with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
+            for p in files:
+              z.write(p,p.as_posix())
+          h=hashlib.sha256(out.read_bytes()).hexdigest()
+          Path("MICROSCOPE_PATCH_SHA256.txt").write_text(f"{h}  {out.name}\n",encoding="utf-8")
+          print(out, out.stat().st_size, h)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_CURRENT_MICROSCOPE_PATCH
+          path: |
+            AGENT_CRYPTO_ADMINISTRATOR_*_MICROSCOPE_PATCH.zip
+            MICROSCOPE_PATCH_SHA256.txt
