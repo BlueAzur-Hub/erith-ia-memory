@@ -9,7 +9,7 @@
 (()=>{
   "use strict";
 
-  const MODULE_VERSION="40.6.540";
+  const MODULE_VERSION="40.6.541";
   const BUTTON_ID="atlasNewListingsButton406528";
   const LEGACY_RADAR_ID="atlasNewListingsRadar406528";
   const LEGACY_LIVE_ID="atlasNewListingsLive529";
@@ -22,7 +22,8 @@
   const COINGECKO="https://api.coingecko.com/api/v3";
   const DISCOVERY_COOLDOWN_MS=15000;
   const IDENTITY_FAILURE_TTL_MS=8000;
-  const IDENTITY_RETRY_DELAYS=Object.freeze([0,320,900]);
+  const IDENTITY_FALLBACK_START_DELAY_MS=1200;
+  const IDENTITY_FALLBACK_RETRY_DELAYS=Object.freeze([0,900,2200]);
   const CANONICAL_EXIT_SELECTOR=[
     "#btnChartSolo","#btnChartTop3","#btnChartTop5",
     "#btnChartGainers","#btnChartLosers","#btnChartVolume5",
@@ -55,7 +56,7 @@
     tickerMap:new Map(),
     identityCache:new Map(),
     identityFailureAt:new Map(),
-    identityStatus:{attempted:0,verified:0,logos:0,failed:0,retried:0,recovered:0},
+    identityStatus:{attempted:0,verified:0,logos:0,failed:0,batchRequests:0,batchFailures:0,fallbackRequests:0,rateLimited:0,mismatched:0,missing:0,recovered:0,lastFailure:null},
     radarStatus:{confirmed:0,candidates:0},
     lastDiscoveryAt:null,
     lastError:null,
@@ -106,7 +107,11 @@
     }
     try{
       const r=await fetch(url,{cache:"no-store",signal:controller.signal,headers:{Accept:"application/json"}});
-      if(!r.ok)throw new Error(`HTTP ${r.status}`);
+      if(!r.ok){
+        const error=new Error(`HTTP ${r.status}`);
+        error.status=r.status;
+        throw error;
+      }
       return await r.json();
     }finally{
       clearTimeout(timer);
@@ -192,7 +197,92 @@
     }catch(_){return null;}
   }
 
-  async function fetchCoinGeckoIdentity(spec,{signal=null}={}){
+  function identityFailureKind(error){
+    const status=Number(error?.status);
+    if(status===429)return "HTTP 429";
+    if(Number.isFinite(status)&&status>=400)return `HTTP ${status}`;
+    if(error?.code==="IDENTITY_MISMATCH")return "identité non concordante";
+    if(error?.name==="AbortError")return "timeout/abort";
+    return "réseau";
+  }
+
+  function recordIdentityDiagnostic(error,{batch=false}={}){
+    const kind=identityFailureKind(error);
+    state.identityStatus.lastFailure=kind;
+    if(kind==="HTTP 429")state.identityStatus.rateLimited+=1;
+    if(batch)state.identityStatus.batchFailures+=1;
+    return kind;
+  }
+
+  function identityFromPayload(spec,payload,source){
+    const cgId=String(spec?.coingeckoId||"").trim();
+    const sameId=String(payload?.id||"").trim().toLowerCase()===cgId.toLowerCase();
+    const sameSymbol=upper(payload?.symbol)===upper(spec?.symbol);
+    if(!sameId||!sameSymbol){
+      const error=new Error("Identité CoinGecko non concordante");
+      error.code="IDENTITY_MISMATCH";
+      throw error;
+    }
+    const image=safeCoinGeckoImage(typeof payload?.image==="string"?payload.image:null)
+      ||safeCoinGeckoImage(payload?.image?.large)
+      ||safeCoinGeckoImage(payload?.image?.small)
+      ||safeCoinGeckoImage(payload?.image?.thumb);
+    return Object.freeze({
+      id:cgId,
+      name:String(payload?.name||spec.name||spec.symbol),
+      symbol:upper(payload?.symbol),
+      image,
+      source
+    });
+  }
+
+  function cacheIdentity(identity){
+    if(!identity?.id)return null;
+    state.identityCache.set(identity.id,identity);
+    state.identityFailureAt.delete(identity.id);
+    return identity;
+  }
+
+  async function fetchCoinGeckoIdentitiesBatch(specs,{signal=null}={}){
+    const rows=(Array.isArray(specs)?specs:[]).filter(spec=>spec?.coingeckoId&&!state.identityCache.has(String(spec.coingeckoId)));
+    if(!rows.length)return true;
+    const ids=[...new Set(rows.map(spec=>String(spec.coingeckoId).trim()).filter(Boolean))];
+    if(!ids.length)return true;
+    const u=new URL(COINGECKO+"/coins/markets");
+    u.searchParams.set("vs_currency","usd");
+    u.searchParams.set("ids",ids.join(","));
+    u.searchParams.set("order","market_cap_desc");
+    u.searchParams.set("per_page",String(Math.min(250,ids.length)));
+    u.searchParams.set("page","1");
+    u.searchParams.set("sparkline","false");
+    state.identityStatus.batchRequests+=1;
+    try{
+      const payload=await json(u,{signal,timeoutMs:12000});
+      if(!Array.isArray(payload))throw new Error("Réponse CoinGecko batch invalide");
+      const byId=new Map(payload.map(row=>[String(row?.id||"").trim().toLowerCase(),row]).filter(([id])=>id));
+      for(const spec of rows){
+        if(signal?.aborted)break;
+        const cgId=String(spec.coingeckoId).trim();
+        const row=byId.get(cgId.toLowerCase());
+        if(!row){
+          state.identityStatus.missing+=1;
+          continue;
+        }
+        try{
+          cacheIdentity(identityFromPayload(spec,row,"CoinGecko /coins/markets"));
+        }catch(error){
+          state.identityStatus.mismatched+=1;
+          recordIdentityDiagnostic(error);
+        }
+      }
+      return true;
+    }catch(error){
+      recordIdentityDiagnostic(error,{batch:true});
+      return false;
+    }
+  }
+
+  async function fetchCoinGeckoIdentityFallback(spec,{signal=null}={}){
     const cgId=String(spec?.coingeckoId||"").trim();
     if(!cgId)return null;
     const cached=state.identityCache.get(cgId);
@@ -206,59 +296,61 @@
     u.searchParams.set("community_data","false");
     u.searchParams.set("developer_data","false");
     u.searchParams.set("sparkline","false");
-    let hadRetry=false;
-    for(let attempt=0;attempt<IDENTITY_RETRY_DELAYS.length;attempt+=1){
+    let lastError=null;
+    for(let attempt=0;attempt<IDENTITY_FALLBACK_RETRY_DELAYS.length;attempt+=1){
       if(signal?.aborted)return null;
-      const delay=IDENTITY_RETRY_DELAYS[attempt];
-      if(delay>0){hadRetry=true;state.identityStatus.retried+=1;await sleep(delay);}
+      const delay=IDENTITY_FALLBACK_RETRY_DELAYS[attempt];
+      if(delay>0)await sleep(delay);
       try{
-        const j=await json(u,{signal,timeoutMs:12000});
-        const sameId=String(j?.id||"").trim().toLowerCase()===cgId.toLowerCase();
-        const sameSymbol=upper(j?.symbol)===upper(spec.symbol);
-        if(!sameId||!sameSymbol)throw new Error("Identité CoinGecko non concordante");
-        const image=safeCoinGeckoImage(j?.image?.large)||safeCoinGeckoImage(j?.image?.small)||safeCoinGeckoImage(j?.image?.thumb);
-        const identity=Object.freeze({
-          id:cgId,
-          name:String(j?.name||spec.name||spec.symbol),
-          symbol:upper(j?.symbol),
-          image,
-          source:"CoinGecko"
-        });
-        state.identityCache.set(cgId,identity);
-        state.identityFailureAt.delete(cgId);
-        if(hadRetry)state.identityStatus.recovered+=1;
+        state.identityStatus.fallbackRequests+=1;
+        const payload=await json(u,{signal,timeoutMs:12000});
+        const identity=cacheIdentity(identityFromPayload(spec,payload,"CoinGecko fallback"));
+        state.identityStatus.recovered+=1;
         return identity;
-      }catch(_){
-        if(attempt===IDENTITY_RETRY_DELAYS.length-1){
-          state.identityFailureAt.set(cgId,Date.now());
-          return null;
-        }
+      }catch(error){
+        lastError=error;
+        if(error?.code==="IDENTITY_MISMATCH")break;
       }
     }
+    state.identityFailureAt.set(cgId,Date.now());
+    recordIdentityDiagnostic(lastError||new Error("Identité CoinGecko indisponible"));
     return null;
   }
 
   async function enrichKnownIdentities(specs,{signal=null}={}){
     const rows=Array.isArray(specs)?specs:[];
-    state.identityStatus={attempted:0,verified:0,logos:0,failed:0,retried:0,recovered:0};
-    for(const spec of rows){
+    const targets=rows.filter(spec=>spec?.coingeckoId);
+    state.identityStatus={attempted:targets.length,verified:0,logos:0,failed:0,batchRequests:0,batchFailures:0,fallbackRequests:0,rateLimited:0,mismatched:0,missing:0,recovered:0,lastFailure:null};
+    await fetchCoinGeckoIdentitiesBatch(targets,{signal});
+    let unresolved=targets.filter(spec=>!state.identityCache.has(String(spec.coingeckoId)));
+    if(unresolved.length&&!signal?.aborted)await sleep(IDENTITY_FALLBACK_START_DELAY_MS);
+    for(const spec of unresolved){
       if(signal?.aborted)break;
-      if(!spec?.coingeckoId)continue;
-      state.identityStatus.attempted+=1;
-      const identity=await fetchCoinGeckoIdentity(spec,{signal});
+      await fetchCoinGeckoIdentityFallback(spec,{signal});
+    }
+    for(const spec of targets){
+      const identity=state.identityCache.get(String(spec.coingeckoId))||null;
       if(!identity){
         state.identityStatus.failed+=1;
-      }else{
-        spec.identityVerified=true;
-        spec.identitySource=identity.source;
-        spec.canonicalName=identity.name;
-        spec.image=identity.image||null;
-        state.identityStatus.verified+=1;
-        if(spec.image)state.identityStatus.logos+=1;
+        continue;
       }
-      await sleep(140);
+      spec.identityVerified=true;
+      spec.identitySource=identity.source;
+      spec.canonicalName=identity.name;
+      spec.image=identity.image||null;
+      state.identityStatus.verified+=1;
+      if(spec.image)state.identityStatus.logos+=1;
     }
     return rows;
+  }
+
+  function identityDiagnosticsLabel(){
+    const s=state.identityStatus;
+    const parts=[`batch ${s.batchRequests}`];
+    if(s.fallbackRequests)parts.push(`fallback ${s.fallbackRequests}`);
+    if(s.rateLimited)parts.push(`429 ${s.rateLimited}`);
+    if(s.failed)parts.push(`échec ${s.failed}${s.lastFailure?` (${s.lastFailure})`:""}`);
+    return parts.join(" · ");
   }
 
   function providerSpec(row){
@@ -510,7 +602,7 @@
         ?"Nouveaux listings · actualisation Bitget en cours…"
         :state.lastError
           ?`Nouveaux listings · ${state.lastError}`
-          :`Radar Bitget · ${state.radarStatus.confirmed} confirmé(s) · ${state.radarStatus.candidates} candidat(s) · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · relance ≥15 s · Market Core inchangé`;
+          :`Radar Bitget · ${state.radarStatus.confirmed} confirmé(s) · ${state.radarStatus.candidates} candidat(s) · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · ${identityDiagnosticsLabel()} · relance ≥15 s · Market Core inchangé`;
     }
     return specs.length;
   }
@@ -882,7 +974,9 @@
       confirmed_requires_date_price_volume:proof.status==="CONFIRMÉ",
       candidate_when_market_proof_missing:candidate.status==="CANDIDAT",
       age_bands:true,
-      identity_sequential_retry:true,
+      identity_batch_markets:true,
+      identity_individual_fallback:true,
+      identity_exact_id_symbol:true,
       identity_failure_retryable:true,
       identity_failure_non_blocking:true,
       native_market_category:true,
@@ -902,7 +996,7 @@
 
   globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
     build:MODULE_VERSION,mount,discover,select,deactivate,snapshot,self_test:selfTest,
-    identity_enrichment:"CoinGecko explicit canonical map; exact id+symbol proof; sequential retry; fail-open",
+    identity_enrichment:"CoinGecko /coins/markets batch; exact id+symbol proof; delayed individual fallback; fail-open",
     identity_logos:true,
     safe_radar:true,
     discovery_source:"Bitget launchTime only",
