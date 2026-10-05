@@ -18,6 +18,8 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/FICHE_CRYPTO_LATERALE_POINTER_RESTORE_40.6.547.md"
+      - "public/agent_crypto_erith_ia/administrator/style.css"
       - ".github/scripts/agent_crypto_new_listings_guard.py"
       - ".github/workflows/agent-crypto-new-listings-package.yml"
   pull_request:
@@ -33,6 +35,8 @@ on:
       - ".github/scripts/agent_crypto_new_listings_github_identity_memory_406542_guard.py"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/FICHE_CRYPTO_LATERALE_POINTER_RESTORE_40.6.547.md"
+      - "public/agent_crypto_erith_ia/administrator/style.css"
       - ".github/scripts/agent_crypto_new_listings_guard.py"
       - ".github/workflows/agent-crypto-new-listings-package.yml"
   workflow_dispatch:
@@ -66,6 +70,7 @@ jobs:
           admin=Path("public/agent_crypto_erith_ia/administrator")
           build=json.loads((admin/"build.json").read_text(encoding="utf-8"))["build"]
           lifecycle_note=admin/f"NEW_LISTINGS_LIFECYCLE_{build}.md"
+          fiche_pointer_restore_note=admin/f"FICHE_CRYPTO_LATERALE_POINTER_RESTORE_{build}.md"
           logo_cache_truth_note=admin/f"NEW_LISTINGS_LOGO_CACHE_TRUTH_{build}.md"
           fiche_restore_note=admin/f"NEW_FICHE_NATIVE_LATERAL_RESTORE_{build}.md"
           real_logo_note=admin/f"NEW_LISTINGS_REAL_LOGO_ASSETS_{build}.md"
@@ -73,7 +78,16 @@ jobs:
           github_identity_note=admin/f"NEW_LISTINGS_GITHUB_IDENTITY_MEMORY_{build}.md"
           batched_identity_note=admin/f"NEW_LISTINGS_BATCHED_IDENTITY_{build}.md"
           canonical_note=admin/f"NEW_LISTINGS_CANONICAL_OWNER_{build}.md"
-          if logo_cache_truth_note.exists():
+          if fiche_pointer_restore_note.exists():
+            files=[
+              admin/"index.html",
+              admin/f"index-{build}.html",
+              admin/"build.json",
+              admin/"style.css",
+              fiche_pointer_restore_note,
+            ]
+            package_kind="FICHE_LATERAL_POINTER_RESTORE_PATCH"
+          elif logo_cache_truth_note.exists():
             files=[
               admin/"index.html",
               admin/f"index-{build}.html",
