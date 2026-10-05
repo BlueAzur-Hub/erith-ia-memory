@@ -1,0 +1,61 @@
+name: Agent-Crypto 40.6.561 Trading Desk Foundation
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/trading-desk.html"
+      - "public/agent_crypto_erith_ia/administrator/trading-desk.css"
+      - "public/agent_crypto_erith_ia/administrator/js/trading-desk-foundation-406561.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.561.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/TRADING_DESK_FOUNDATION_40.6.561.md"
+      - ".github/scripts/agent_crypto_trading_desk_guard_406561.py"
+      - ".github/workflows/agent-crypto-trading-desk-406561.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/trading-desk.html"
+      - "public/agent_crypto_erith_ia/administrator/trading-desk.css"
+      - "public/agent_crypto_erith_ia/administrator/js/trading-desk-foundation-406561.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.561.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/TRADING_DESK_FOUNDATION_40.6.561.md"
+      - ".github/scripts/agent_crypto_trading_desk_guard_406561.py"
+      - ".github/workflows/agent-crypto-trading-desk-406561.yml"
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node --check public/agent_crypto_erith_ia/administrator/js/trading-desk-foundation-406561.js
+      - run: |
+          node - <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const code=fs.readFileSync('public/agent_crypto_erith_ia/administrator/js/trading-desk-foundation-406561.js','utf8');
+          const noop=()=>{};const el=()=>({addEventListener:noop,classList:{toggle:noop},setAttribute:noop,textContent:"",dataset:{}});
+          const sandbox={globalThis:{},document:{readyState:"loading",addEventListener:noop,querySelectorAll:()=>[],querySelector:()=>null,getElementById:()=>null,documentElement:{dataset:{}}}};
+          sandbox.globalThis=sandbox;vm.runInNewContext(code,sandbox);
+          const r=sandbox.AgentCryptoTradingDeskFoundation.self_test();console.log(JSON.stringify(r,null,2));if(!r.pass||!r.checks.read_only||!r.checks.no_order)process.exit(1);
+          NODE
+      - run: python .github/scripts/agent_crypto_trading_desk_guard_406561.py
+      - run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Package compact patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          r=Path("public/agent_crypto_erith_ia/administrator");o=Path("AGENT_CRYPTO_ADMINISTRATOR_40.6.561_TRADING_DESK_FOUNDATION_PATCH.zip")
+          fs=[r/"index.html",r/"index-40.6.561.html",r/"build.json",r/"trading-desk.html",r/"trading-desk.css",r/"js/trading-desk-foundation-406561.js",r/"TRADING_DESK_FOUNDATION_40.6.561.md"]
+          with zipfile.ZipFile(o,"w",zipfile.ZIP_DEFLATED) as z:
+            for p in fs:z.write(p,p.as_posix())
+          h=hashlib.sha256(o.read_bytes()).hexdigest();Path("TRADING_DESK_40.6.561_SHA256.txt").write_text(f"{h}  {o.name}\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.561_TRADING_DESK_FOUNDATION_PATCH
+          path: |
+            AGENT_CRYPTO_ADMINISTRATOR_40.6.561_TRADING_DESK_FOUNDATION_PATCH.zip
+            TRADING_DESK_40.6.561_SHA256.txt
