@@ -1,4 +1,4 @@
-/* Agent-Crypto — 40.6.550 MARKET MICROSCOPE · CANDLES READABILITY POLISH
+/* Agent-Crypto — 40.6.551 MARKET MICROSCOPE · SUPPORT / RÉSISTANCE
    Historical core owner: 40.6.498 · New Listings reuse: 40.6.529.
    40.6.529 additive extension: New Listing external context can reuse this exact chart shell
    for Ligne + Bougies without mutating Market Core/state.coins.
@@ -6,13 +6,13 @@
    Fetch occurs only on explicit Bougies / interval / refresh / external-asset load. No recurring timer. */
 (()=>{
   "use strict";
-  const BUILD="40.6.550";
+  const BUILD="40.6.551";
   const CORE_BUILD="40.6.498";
   const EXTENSION_BUILD="40.6.529";
   const ROOT="atlasMarketMicroscope";
   const REST="https://eea.okx.com";
   const BARS=Object.freeze({"1m":"1m","5m":"5m","15m":"15m","1h":"1H","4h":"4H","1j":"1D"});
-  const state={mode:"native",bar:"15m",instrument:"BTC-EUR",rows:[],loading:false,error:null,lastLoadedAt:null,source:"OKX public candles",indicators:{ma:true,ema:false}};
+  const state={mode:"native",bar:"15m",instrument:"BTC-EUR",rows:[],loading:false,error:null,lastLoadedAt:null,source:"OKX public candles",indicators:{ma:true,ema:false,sr:true},lastLevels:null};
   const view={start:0,count:72,dragging:false,dragX:0,dragStart:0};
   let requestToken=0;
   const num=v=>{const x=Number(v);return Number.isFinite(x)?x:null;};
@@ -46,6 +46,46 @@
       ema=close*alpha+ema*(1-alpha);
       return ema;
     });
+  }
+  function clusterPivots(points,tolerance){
+    const sorted=(Array.isArray(points)?points:[]).filter(p=>Number.isFinite(p?.price)).slice().sort((a,b)=>a.price-b.price);
+    const clusters=[];
+    sorted.forEach(point=>{
+      const last=clusters[clusters.length-1];
+      if(last&&Math.abs(point.price-last.price)<=tolerance){
+        last.points.push(point);
+        last.price=last.points.reduce((sum,p)=>sum+p.price,0)/last.points.length;
+        last.lastIndex=Math.max(last.lastIndex,point.index);
+      }else clusters.push({price:point.price,points:[point],lastIndex:point.index});
+    });
+    return clusters.map(c=>({price:c.price,touches:c.points.length,lastIndex:c.lastIndex,confidence:c.points.length>=3?"fort":c.points.length>=2?"confirmé":"indicatif"}));
+  }
+  function supportResistance(rows){
+    if(!Array.isArray(rows)||rows.length<7)return {support:null,resistance:null,current:null,tolerance:null,method:"PIVOTS_VISIBLES_W2",bar:state.bar,instrument:state.instrument};
+    const current=Number(rows[rows.length-1]?.c);
+    const low=Math.min(...rows.map(r=>r.l)),high=Math.max(...rows.map(r=>r.h)),range=Math.max(1e-12,high-low);
+    const tolerance=Math.max(range*.02,Math.abs(current||0)*.00045);
+    const lows=[],highs=[];
+    for(let i=2;i<rows.length-2;i++){
+      const r=rows[i];
+      if(r.l<=rows[i-1].l&&r.l<=rows[i-2].l&&r.l<=rows[i+1].l&&r.l<=rows[i+2].l)lows.push({price:r.l,index:i});
+      if(r.h>=rows[i-1].h&&r.h>=rows[i-2].h&&r.h>=rows[i+1].h&&r.h>=rows[i+2].h)highs.push({price:r.h,index:i});
+    }
+    const lowClusters=clusterPivots(lows,tolerance),highClusters=clusterPivots(highs,tolerance);
+    const choose=(clusters,kind)=>{
+      const side=clusters.filter(c=>kind==="support"?c.price<current:c.price>current);
+      side.sort((a,b)=>{
+        const da=Math.abs(a.price-current),db=Math.abs(b.price-current);
+        if(a.touches!==b.touches&&Math.abs(da-db)<tolerance*2)return b.touches-a.touches;
+        return da-db;
+      });
+      return side[0]||null;
+    };
+    let support=choose(lowClusters,"support"),resistance=choose(highClusters,"resistance");
+    if(!support&&Number.isFinite(low)&&low<current)support={price:low,touches:1,lastIndex:rows.findIndex(r=>r.l===low),confidence:"indicatif",fallback:true};
+    if(!resistance&&Number.isFinite(high)&&high>current)resistance={price:high,touches:1,lastIndex:rows.findIndex(r=>r.h===high),confidence:"indicatif",fallback:true};
+    const enrich=(level,kind)=>level?Object.freeze({...level,kind,distancePct:current?((level.price-current)/current)*100:null}):null;
+    return Object.freeze({support:enrich(support,"support"),resistance:enrich(resistance,"resistance"),current,tolerance,method:"PIVOTS_VISIBLES_W2",bar:state.bar,instrument:state.instrument,window:rows.length});
   }
   function barDurationMs(bar=state.bar){
     return ({"1m":60000,"5m":300000,"15m":900000,"1h":3600000,"4h":14400000,"1j":86400000})[bar]||900000;
@@ -86,6 +126,36 @@
   function fmtPrice(v){
     return Number.isFinite(Number(v))?Number(v).toLocaleString("fr-FR",{maximumFractionDigits:priceDigits(v)}):"—";
   }
+  function levelDistance(level){
+    if(!level||!Number.isFinite(level.distancePct))return "—";
+    const v=Math.abs(level.distancePct);
+    return `${v.toFixed(v<1?2:1)} %`;
+  }
+  function technicalLevelsMarkup(levels){
+    const unit=priceUnit(),s=levels?.support,r=levels?.resistance;
+    const card=(label,level,cls)=>`<span class="${cls}"><small>${label}</small><strong>${level?fmtPrice(level.price)+" "+unit:"Aucun niveau"}</strong><em>${level?`${level.touches} touche${level.touches>1?"s":""} · ${level.confidence} · écart ${levelDistance(level)}`:"fenêtre insuffisante"}</em></span>`;
+    return `<div class="amm-tech-levels-head"><b>REPÈRES SUPPORT / RÉSISTANCE</b><small>${state.instrument} · ${state.bar} · pivots visibles · lecture seule</small></div><div class="amm-tech-levels-grid">${card("SUPPORT",s,"is-support")}${card("RÉSISTANCE",r,"is-resistance")}</div><p>Repères heuristiques locaux sur la fenêtre Bougies visible. Ils décrivent des zones observées, pas une certitude de marché ni un ordre.</p>`;
+  }
+  function ensureTechnicalLevelsHost(){
+    if(typeof document==="undefined")return null;
+    const body=document.getElementById("detailPanelBody"),anchor=document.getElementById("detailCompactStrip");if(!body||!anchor)return null;
+    let host=document.getElementById("atlasCandlesTechnicalLevels406551");
+    if(!host){host=document.createElement("section");host.id="atlasCandlesTechnicalLevels406551";host.className="amm-tech-levels";host.hidden=true;anchor.insertAdjacentElement("afterend",host);}
+    return host;
+  }
+  function renderTechnicalLevels(levels){
+    const host=ensureTechnicalLevelsHost();
+    if(!host)return;
+    if(!levels||state.mode!=="candles"||!state.indicators.sr){host.hidden=true;host.removeAttribute("data-signature");return;}
+    const sig=[levels.instrument,levels.bar,levels.window,levels.support?.price,levels.support?.touches,levels.resistance?.price,levels.resistance?.touches].join("|");
+    if(host.dataset.signature!==sig){host.innerHTML=technicalLevelsMarkup(levels);host.dataset.signature=sig;}
+    host.hidden=false;
+    state.lastLevels=levels;
+    if(globalThis.CustomEvent&&host.dataset.eventSignature!==sig){
+      host.dataset.eventSignature=sig;
+      try{window.dispatchEvent(new CustomEvent("agent-crypto:candles-technical-levels",{detail:levels}));}catch(_){}
+    }
+  }
   function candleTimeLabel(ts){
     const d=new Date(ts);
     if(!Number.isFinite(d.getTime()))return "Date inconnue";
@@ -101,7 +171,23 @@
   function style(){
     if(document.getElementById(ROOT+"Style"))return;
     const s=document.createElement("style");s.id=ROOT+"Style";
-    s.textContent=`#${ROOT}Controls{display:flex;align-items:center;gap:4px;margin-left:5px;padding-left:7px;border-left:1px solid rgba(255,211,122,.16)}#${ROOT}Controls small{font:900 7px/1 system-ui,sans-serif;letter-spacing:.12em;color:#8da2ad}#${ROOT}Controls button,#${ROOT} .amm-bar button,#${ROOT} .amm-refresh{min-height:25px;padding:5px 8px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.04);color:#c6d8df;font:900 9px/1 system-ui,sans-serif;cursor:pointer}#${ROOT}Controls button.is-active,#${ROOT} .amm-bar button.is-active{color:#07141a;background:#ffd782;border-color:#fff0bc}#${ROOT}{position:absolute;inset:0;z-index:20;display:none;background:linear-gradient(180deg,rgba(2,9,16,.992),rgba(3,15,23,.992));border:1px solid rgba(255,215,130,.12);border-radius:9px;overflow:hidden;box-sizing:border-box}#${ROOT}.is-open{display:block}#${ROOT} .amm-head{position:absolute;z-index:5;left:10px;right:10px;top:7px;display:flex;gap:10px;align-items:center;justify-content:space-between;pointer-events:auto}#${ROOT} .amm-title{display:grid;gap:3px;min-width:220px}#${ROOT} .amm-title b{font:950 11px/1 system-ui,sans-serif;color:#fff0cc;letter-spacing:.045em}#${ROOT} .amm-title small{font:850 8px/1.25 ui-monospace,monospace;color:#91aab5}#${ROOT} .amm-bar{display:flex;gap:4px;align-items:center;flex-wrap:wrap}#${ROOT} canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}#${ROOT} .amm-tip{position:absolute;z-index:4;display:block;left:12px;right:12px;top:39px;min-width:0;padding:8px 10px;border:1px solid rgba(113,220,236,.24);border-radius:9px;background:rgba(3,13,22,.92);box-shadow:0 8px 24px rgba(0,0,0,.26);color:#dceff5;pointer-events:none}#${ROOT} .amm-inspector-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}#${ROOT} .amm-inspector-head b{font:950 9px/1 system-ui,sans-serif;letter-spacing:.08em;color:#fff0bc}#${ROOT} .amm-inspector-head span{font:850 9px/1.2 system-ui,sans-serif;color:#9bb4bf}#${ROOT} .amm-inspector-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}#${ROOT} .amm-inspector-grid span{display:grid;gap:3px;min-width:0;padding:5px 7px;border:1px solid rgba(255,255,255,.075);border-radius:7px;background:rgba(255,255,255,.026)}#${ROOT} .amm-inspector-grid small{font:900 8px/1 system-ui,sans-serif;letter-spacing:.05em;color:#819ba7}#${ROOT} .amm-inspector-grid strong{font:950 11px/1.15 ui-monospace,monospace;color:#edfaff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#${ROOT} .amm-inspector-grid strong.is-up{color:#73e3c7}#${ROOT} .amm-inspector-grid strong.is-down{color:#ff91a0}#${ROOT} .amm-inspector-grid strong.is-flat{color:#d8e7ec}#${ROOT} .amm-state{position:absolute;z-index:4;left:12px;bottom:8px;font:850 9px/1.3 ui-monospace,monospace;color:#9ab1bb;background:rgba(2,10,17,.82);padding:5px 8px;border:1px solid rgba(255,255,255,.055);border-radius:7px;pointer-events:none}#${ROOT} .amm-tools{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}#${ROOT} .amm-indicators{display:flex;align-items:center;gap:4px;padding-right:6px;border-right:1px solid rgba(255,255,255,.08)}#${ROOT} .amm-indicators small{font:900 8px/1 system-ui,sans-serif;letter-spacing:.08em;color:#8aa2ad}#${ROOT} .amm-indicators button{min-height:25px;padding:5px 8px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.04);color:#c6d8df;font:900 9px/1 system-ui,sans-serif;cursor:pointer}#${ROOT} .amm-indicators button.is-active{color:#07141a;background:#8fefff;border-color:#c8f7ff}#${ROOT} .amm-series-legend{position:absolute;z-index:4;left:14px;right:14px;top:112px;min-height:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#9fb4bd;pointer-events:none}#${ROOT} .amm-series-legend[hidden]{display:none}#${ROOT} .amm-series-legend span{display:inline-flex;align-items:center;gap:5px;font:900 9px/1 ui-monospace,monospace;white-space:nowrap}#${ROOT} .amm-series-legend i{width:14px;height:3px;border-radius:999px;display:inline-block;box-shadow:0 0 5px currentColor}@media(max-width:760px){#${ROOT} .amm-head{align-items:flex-start;flex-direction:column}#${ROOT} .amm-title{min-width:0}#${ROOT} .amm-tools{width:100%;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}#${ROOT} .amm-indicators,#${ROOT} .amm-bar{flex:0 0 auto}#${ROOT} .amm-tip{top:75px;padding:7px}#${ROOT} .amm-inspector-head{align-items:flex-start;flex-direction:column;gap:3px}#${ROOT} .amm-inspector-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}#${ROOT} .amm-inspector-grid strong{font-size:10px}#${ROOT} .amm-series-legend{top:198px;gap:8px}#${ROOT} .amm-state{font-size:8px;max-width:calc(100% - 24px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}`;
+    s.textContent=`#${ROOT}Controls{display:flex;align-items:center;gap:4px;margin-left:5px;padding-left:7px;border-left:1px solid rgba(255,211,122,.16)}#${ROOT}Controls small{font:900 7px/1 system-ui,sans-serif;letter-spacing:.12em;color:#8da2ad}#${ROOT}Controls button,#${ROOT} .amm-bar button,#${ROOT} .amm-refresh{min-height:25px;padding:5px 8px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.04);color:#c6d8df;font:900 9px/1 system-ui,sans-serif;cursor:pointer}#${ROOT}Controls button.is-active,#${ROOT} .amm-bar button.is-active{color:#07141a;background:#ffd782;border-color:#fff0bc}#${ROOT}{position:absolute;inset:0;z-index:20;display:none;background:linear-gradient(180deg,rgba(2,9,16,.992),rgba(3,15,23,.992));border:1px solid rgba(255,215,130,.12);border-radius:9px;overflow:hidden;box-sizing:border-box}#${ROOT}.is-open{display:block}#${ROOT} .amm-head{position:absolute;z-index:5;left:10px;right:10px;top:7px;display:flex;gap:10px;align-items:center;justify-content:space-between;pointer-events:auto}#${ROOT} .amm-title{display:grid;gap:3px;min-width:220px}#${ROOT} .amm-title b{font:950 11px/1 system-ui,sans-serif;color:#fff0cc;letter-spacing:.045em}#${ROOT} .amm-title small{font:850 8px/1.25 ui-monospace,monospace;color:#91aab5}#${ROOT} .amm-bar{display:flex;gap:4px;align-items:center;flex-wrap:wrap}#${ROOT} canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}#${ROOT} .amm-tip{position:absolute;z-index:4;display:block;left:12px;right:12px;top:39px;min-width:0;padding:8px 10px;border:1px solid rgba(113,220,236,.24);border-radius:9px;background:rgba(3,13,22,.92);box-shadow:0 8px 24px rgba(0,0,0,.26);color:#dceff5;pointer-events:none}#${ROOT} .amm-inspector-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}#${ROOT} .amm-inspector-head b{font:950 9px/1 system-ui,sans-serif;letter-spacing:.08em;color:#fff0bc}#${ROOT} .amm-inspector-head span{font:850 9px/1.2 system-ui,sans-serif;color:#9bb4bf}#${ROOT} .amm-inspector-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}#${ROOT} .amm-inspector-grid span{display:grid;gap:3px;min-width:0;padding:5px 7px;border:1px solid rgba(255,255,255,.075);border-radius:7px;background:rgba(255,255,255,.026)}#${ROOT} .amm-inspector-grid small{font:900 8px/1 system-ui,sans-serif;letter-spacing:.05em;color:#819ba7}#${ROOT} .amm-inspector-grid strong{font:950 11px/1.15 ui-monospace,monospace;color:#edfaff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#${ROOT} .amm-inspector-grid strong.is-up{color:#73e3c7}#${ROOT} .amm-inspector-grid strong.is-down{color:#ff91a0}#${ROOT} .amm-inspector-grid strong.is-flat{color:#d8e7ec}#${ROOT} .amm-state{position:absolute;z-index:4;left:12px;bottom:8px;font:850 9px/1.3 ui-monospace,monospace;color:#9ab1bb;background:rgba(2,10,17,.82);padding:5px 8px;border:1px solid rgba(255,255,255,.055);border-radius:7px;pointer-events:none}#${ROOT} .amm-tools{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}#${ROOT} .amm-indicators{display:flex;align-items:center;gap:4px;padding-right:6px;border-right:1px solid rgba(255,255,255,.08)}#${ROOT} .amm-indicators small{font:900 8px/1 system-ui,sans-serif;letter-spacing:.08em;color:#8aa2ad}#${ROOT} .amm-indicators button{min-height:25px;padding:5px 8px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.04);color:#c6d8df;font:900 9px/1 system-ui,sans-serif;cursor:pointer}#${ROOT} .amm-indicators button.is-active{color:#07141a;background:#8fefff;border-color:#c8f7ff}#${ROOT} .amm-series-legend{position:absolute;z-index:4;left:14px;right:14px;top:112px;min-height:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#9fb4bd;pointer-events:none}#${ROOT} .amm-series-legend[hidden]{display:none}#${ROOT} .amm-series-legend span{display:inline-flex;align-items:center;gap:5px;font:900 9px/1 ui-monospace,monospace;white-space:nowrap}#${ROOT} .amm-series-legend i{width:14px;height:3px;border-radius:999px;display:inline-block;box-shadow:0 0 5px currentColor}
+#detailPanel .amm-tech-levels{margin:7px 0;padding:7px;border:1px solid rgba(119,225,236,.16);border-radius:10px;background:linear-gradient(180deg,rgba(5,17,26,.72),rgba(4,12,20,.58));box-shadow:inset 0 0 18px rgba(64,187,206,.035)}
+#detailPanel .amm-tech-levels[hidden]{display:none}
+#detailPanel .amm-tech-levels-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
+#detailPanel .amm-tech-levels-head b{font:950 9px/1 system-ui,sans-serif;letter-spacing:.07em;color:#dffaff}
+#detailPanel .amm-tech-levels-head small{font:800 8px/1.2 ui-monospace,monospace;color:#819aa6}
+#detailPanel .amm-tech-levels-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#detailPanel .amm-tech-levels-grid>span{display:grid;gap:3px;padding:7px;border:1px solid rgba(255,255,255,.075);border-radius:8px;background:rgba(255,255,255,.025)}
+#detailPanel .amm-tech-levels-grid small{font:900 8px/1 system-ui,sans-serif;letter-spacing:.06em;color:#8ba5b0}
+#detailPanel .amm-tech-levels-grid strong{font:950 12px/1.1 ui-monospace,monospace;color:#eefaff}
+#detailPanel .amm-tech-levels-grid em{font:800 8px/1.25 system-ui,sans-serif;font-style:normal;color:#91a8b2}
+#detailPanel .amm-tech-levels-grid .is-support{border-color:rgba(103,226,195,.18)}
+#detailPanel .amm-tech-levels-grid .is-support strong{color:#78e1c4}
+#detailPanel .amm-tech-levels-grid .is-resistance{border-color:rgba(255,164,139,.18)}
+#detailPanel .amm-tech-levels-grid .is-resistance strong{color:#ffac92}
+#detailPanel .amm-tech-levels p{margin:6px 1px 0;font:750 8px/1.35 system-ui,sans-serif;color:#708a96}
+@media(max-width:760px){#${ROOT} .amm-head{align-items:flex-start;flex-direction:column}#${ROOT} .amm-title{min-width:0}#${ROOT} .amm-tools{width:100%;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}#${ROOT} .amm-indicators,#${ROOT} .amm-bar{flex:0 0 auto}#${ROOT} .amm-tip{top:75px;padding:7px}#${ROOT} .amm-inspector-head{align-items:flex-start;flex-direction:column;gap:3px}#${ROOT} .amm-inspector-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}#${ROOT} .amm-inspector-grid strong{font-size:10px}#${ROOT} .amm-series-legend{top:198px;gap:8px}#${ROOT} .amm-state{font-size:8px;max-width:calc(100% - 24px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}`;
     document.head.appendChild(s);
   }
   function shell(){return document.querySelector("#analyste .chart-shell");}
@@ -109,7 +195,7 @@
   function mount(){
     if(typeof document==="undefined")return false;style();const sh=shell(),host=controlsHost();if(!sh||!host)return false;sh.style.position="relative";
     let c=document.getElementById(ROOT+"Controls");if(!c){c=document.createElement("span");c.id=ROOT+"Controls";c.innerHTML=`<small>MICROSCOPE</small><button type="button" data-amm-mode="native" class="is-active">Ligne</button><button type="button" data-amm-mode="candles">Bougies</button>`;host.appendChild(c);c.querySelectorAll("[data-amm-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.ammMode)));}
-    let root=document.getElementById(ROOT);if(!root){root=document.createElement("section");root.id=ROOT;root.setAttribute("aria-label","Market Microscope Bougies OKX");root.innerHTML=`<div class="amm-head"><div class="amm-title"><b>MARKET MICROSCOPE · BOUGIES</b><small data-amm-meta>En attente</small></div><div class="amm-tools"><div class="amm-indicators"><small>INDICATEURS</small><button type="button" data-amm-indicator="ma" class="is-active">MA</button><button type="button" data-amm-indicator="ema">EMA</button></div><div class="amm-bar">${Object.keys(BARS).map(k=>`<button type="button" data-amm-bar="${k}" class="${k===state.bar?"is-active":""}">${k}</button>`).join("")}<button type="button" class="amm-refresh" data-amm-reset title="Réinitialiser zoom">⟲</button><button type="button" class="amm-refresh" data-amm-refresh>↻</button></div></div></div><canvas data-amm-canvas></canvas><div class="amm-tip" data-amm-tip aria-live="polite">${inspectorMarkup(null)}</div><div class="amm-series-legend" data-amm-series-legend></div><div class="amm-state" data-amm-state>READ ONLY · OKX public</div>`;sh.appendChild(root);root.querySelectorAll("[data-amm-bar]").forEach(b=>b.addEventListener("click",()=>{state.bar=b.dataset.ammBar;root.querySelectorAll("[data-amm-bar]").forEach(x=>x.classList.toggle("is-active",x===b));if(state.mode==="candles")void load();}));root.querySelectorAll("[data-amm-indicator]").forEach(b=>b.addEventListener("click",()=>{const key=b.dataset.ammIndicator;if(!["ma","ema"].includes(key))return;state.indicators[key]=!state.indicators[key];root.querySelectorAll("[data-amm-indicator]").forEach(x=>x.classList.toggle("is-active",!!state.indicators[x.dataset.ammIndicator]));renderSeriesLegend();draw();}));root.querySelector("[data-amm-reset]").addEventListener("click",()=>resetView());root.querySelector("[data-amm-refresh]").addEventListener("click",()=>void load());const canvas=root.querySelector("canvas");canvas.addEventListener("wheel",onWheel,{passive:false});canvas.addEventListener("pointerdown",onPointerDown);canvas.addEventListener("pointermove",onPointer,{passive:false});canvas.addEventListener("pointerup",onPointerUp);canvas.addEventListener("pointercancel",onPointerUp);canvas.addEventListener("dblclick",()=>resetView());canvas.addEventListener("pointerleave",()=>{if(!view.dragging)draw();},{passive:true});}
+    let root=document.getElementById(ROOT);if(!root){root=document.createElement("section");root.id=ROOT;root.setAttribute("aria-label","Market Microscope Bougies OKX");root.innerHTML=`<div class="amm-head"><div class="amm-title"><b>MARKET MICROSCOPE · BOUGIES</b><small data-amm-meta>En attente</small></div><div class="amm-tools"><div class="amm-indicators"><small>INDICATEURS</small><button type="button" data-amm-indicator="ma" class="is-active">MA</button><button type="button" data-amm-indicator="ema">EMA</button><button type="button" data-amm-indicator="sr" class="is-active">S/R</button></div><div class="amm-bar">${Object.keys(BARS).map(k=>`<button type="button" data-amm-bar="${k}" class="${k===state.bar?"is-active":""}">${k}</button>`).join("")}<button type="button" class="amm-refresh" data-amm-reset title="Réinitialiser zoom">⟲</button><button type="button" class="amm-refresh" data-amm-refresh>↻</button></div></div></div><canvas data-amm-canvas></canvas><div class="amm-tip" data-amm-tip aria-live="polite">${inspectorMarkup(null)}</div><div class="amm-series-legend" data-amm-series-legend></div><div class="amm-state" data-amm-state>READ ONLY · OKX public</div>`;sh.appendChild(root);root.querySelectorAll("[data-amm-bar]").forEach(b=>b.addEventListener("click",()=>{state.bar=b.dataset.ammBar;root.querySelectorAll("[data-amm-bar]").forEach(x=>x.classList.toggle("is-active",x===b));if(state.mode==="candles")void load();}));root.querySelectorAll("[data-amm-indicator]").forEach(b=>b.addEventListener("click",()=>{const key=b.dataset.ammIndicator;if(!["ma","ema","sr"].includes(key))return;state.indicators[key]=!state.indicators[key];root.querySelectorAll("[data-amm-indicator]").forEach(x=>x.classList.toggle("is-active",!!state.indicators[x.dataset.ammIndicator]));renderSeriesLegend();if(key==="sr"&&!state.indicators.sr)renderTechnicalLevels(null);draw();}));root.querySelector("[data-amm-reset]").addEventListener("click",()=>resetView());root.querySelector("[data-amm-refresh]").addEventListener("click",()=>void load());const canvas=root.querySelector("canvas");canvas.addEventListener("wheel",onWheel,{passive:false});canvas.addEventListener("pointerdown",onPointerDown);canvas.addEventListener("pointermove",onPointer,{passive:false});canvas.addEventListener("pointerup",onPointerUp);canvas.addEventListener("pointercancel",onPointerUp);canvas.addEventListener("dblclick",()=>resetView());canvas.addEventListener("pointerleave",()=>{if(!view.dragging)draw();},{passive:true});}
     syncControls();return true;
   }
   function renderSeriesLegend(){
@@ -121,7 +207,7 @@
     host.hidden=!items.length;
   }
   function syncControls(){document.querySelectorAll(`#${ROOT}Controls [data-amm-mode]`).forEach(b=>b.classList.toggle("is-active",b.dataset.ammMode===state.mode));document.querySelectorAll(`#${ROOT} [data-amm-indicator]`).forEach(b=>b.classList.toggle("is-active",!!state.indicators[b.dataset.ammIndicator]));document.getElementById(ROOT)?.classList.toggle("is-open",state.mode==="candles");renderSeriesLegend();}
-  function setMode(mode){state.mode=mode==="candles"?"candles":"native";mount();syncControls();if(state.mode==="candles")void load();return state.mode;}
+  function setMode(mode){state.mode=mode==="candles"?"candles":"native";mount();syncControls();if(state.mode==="candles")void load();else renderTechnicalLevels(null);return state.mode;}
   async function fetchInstrument(inst){
     const ext=externalContext();
     if(ext.active){
@@ -144,7 +230,7 @@
     }
     if(token!==requestToken)return false;state.instrument=inst;state.rows=rows;state.loading=false;state.lastLoadedAt=new Date().toISOString();resetView(false);renderState();draw();return true;
   }
-  function renderState(){const root=document.getElementById(ROOT);if(!root)return;const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=ext.active?(state.mode==="candles"?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const indicators=[state.indicators.ma?"MA5/10/20":null,state.indicators.ema?"EMA5/10/20":null].filter(Boolean).join(" + ")||"indicateurs masqués";if(meta)meta.textContent=`${state.instrument} · ${state.bar} · ${state.rows.length} points · O/H/L/C + Volume · ${indicators}`;const freshness=marketFreshness();if(st){st.dataset.freshness=freshness.status;const provider=String(state.source||"OKX public candles").replace(/ public candles$/i,"");st.textContent=state.error?`ATTENTION · ${state.error}`:`${provider} · ${freshness.status} · bougie ${state.bar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;}}
+  function renderState(){const root=document.getElementById(ROOT);if(!root)return;const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=ext.active?(state.mode==="candles"?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const indicators=[state.indicators.ma?"MA5/10/20":null,state.indicators.ema?"EMA5/10/20":null,state.indicators.sr?"S/R pivots":null].filter(Boolean).join(" + ")||"indicateurs masqués";if(meta)meta.textContent=`${state.instrument} · ${state.bar} · ${state.rows.length} points · O/H/L/C + Volume · ${indicators}`;const freshness=marketFreshness();if(st){st.dataset.freshness=freshness.status;const provider=String(state.source||"OKX public candles").replace(/ public candles$/i,"");st.textContent=state.error?`ATTENTION · ${state.error}`:`${provider} · ${freshness.status} · bougie ${state.bar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;}}
   function visibleRows(){
     if(!state.rows.length)return [];
     const count=Math.max(20,Math.min(view.count||72,state.rows.length));
@@ -221,6 +307,21 @@
       [[5,"#ff9f5a"],[10,"#ff6fae"],[20,"#5ee7e7"]].forEach(([n,color])=>drawIndicator(exponentialAverage(rows,n),color,1.05));
     }
 
+    const levels=state.indicators.sr?supportResistance(rows):null;
+    if(levels){
+      const drawLevel=(level,kind)=>{
+        if(!level||!Number.isFinite(level.price)||level.price<low||level.price>high)return;
+        const yy=y(level.price),label=`${kind==="support"?"S":"R"}  ${fmtPrice(level.price)} · ${level.touches}×`;
+        ctx.save();ctx.setLineDash([7,5]);ctx.lineWidth=1.15;ctx.strokeStyle=kind==="support"?"rgba(103,226,195,.58)":"rgba(255,164,139,.58)";
+        ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r,yy);ctx.stroke();ctx.setLineDash([]);
+        ctx.font="900 10px ui-monospace,monospace";const tw=ctx.measureText(label).width+12,tx=w-pad.r-tw-5,ty=Math.max(pad.t+3,Math.min(priceBottom-19,yy-9));
+        ctx.fillStyle="rgba(3,13,21,.90)";ctx.fillRect(tx,ty,tw,18);ctx.strokeStyle=kind==="support"?"rgba(103,226,195,.38)":"rgba(255,164,139,.38)";ctx.strokeRect(tx,ty,tw,18);
+        ctx.fillStyle=kind==="support"?"#78e1c4":"#ffac92";ctx.textAlign="left";ctx.fillText(label,tx+6,ty+12);ctx.restore();
+      };
+      drawLevel(levels.support,"support");drawLevel(levels.resistance,"resistance");
+      renderTechnicalLevels(levels);
+    }else renderTechnicalLevels(null);
+
     ctx.font="12px ui-monospace,monospace";ctx.textAlign="left";
     for(let k=0;k<5;k++){const value=high-(range*k/4),yy=pad.t+k*plotH/4;ctx.fillStyle="#7f98a5";ctx.fillText(fmtPrice(value),w-pad.r+7,yy+3);}
     const ticks=[0,Math.floor((rows.length-1)/2),rows.length-1];ctx.textAlign="center";ctx.fillStyle="#6f8793";
@@ -262,10 +363,10 @@
   }
   function selfTest(){
     const sample=parseRows([["3","3","4","2","3.5","30","0","0","1"],["1","1","2","0.5","1.5","10","0","0","1"],["2","1.5","3","1","2.5","20","0","0","1"],["4","3.5","5","3","4","40","0","0","1"],["5","4","6","3.5","5","50","0","0","1"]]);
-    const ma=movingAverage(sample,2),ema=exponentialAverage(sample,3),delta=candleChangePct({o:100,c:110});
-    const pass=sample.length===5&&sample[0].t===1&&ma[0]===null&&Math.abs(ma[1]-2)<1e-9&&ema.some(Number.isFinite)&&Math.abs(delta-10)<1e-9&&barDurationMs("15m")===900000;
-    return Object.freeze({build:BUILD,core_build:CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),candle_change_pct:Math.abs(delta-10)<1e-9,bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:state.indicators.ma===true,ema_opt_in:state.indicators.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
+    const ma=movingAverage(sample,2),ema=exponentialAverage(sample,3),delta=candleChangePct({o:100,c:110}),sr=supportResistance(sample);
+    const pass=sample.length===5&&sample[0].t===1&&ma[0]===null&&Math.abs(ma[1]-2)<1e-9&&ema.some(Number.isFinite)&&Math.abs(delta-10)<1e-9&&barDurationMs("15m")===900000&&sr.method==="PIVOTS_VISIBLES_W2";
+    return Object.freeze({build:BUILD,core_build:CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:state.indicators.ma===true,ema_opt_in:state.indicators.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
   }
-  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active}),instrument:()=>state.instrument,resetView,viewport:()=>Object.freeze({...view}),self_test:selfTest,read_only:true,network:"OKX_PUBLIC_ON_DEMAND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,recurring_timer:false,mutation_observer:false,storage_write:false,real_order:false,market_core_changed:false,strategy_changed:false});
-  if(typeof document!=="undefined"){const boot=()=>mount();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",()=>{if(state.mode==="candles")draw();},{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(state.mode==="candles"&&!externalContext().active)void load();},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{mount();state.rows=[];state.error=null;state.lastLoadedAt=null;state.mode="native";syncControls();},{passive:true});}
+  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active,lastLevels:state.lastLevels}),instrument:()=>state.instrument,technicalLevels:()=>state.lastLevels,resetView,viewport:()=>Object.freeze({...view}),self_test:selfTest,read_only:true,network:"OKX_PUBLIC_ON_DEMAND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,recurring_timer:false,mutation_observer:false,storage_write:false,real_order:false,market_core_changed:false,strategy_changed:false});
+  if(typeof document!=="undefined"){const boot=()=>mount();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",()=>{if(state.mode==="candles")draw();},{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(state.mode==="candles"&&!externalContext().active)void load();},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{mount();state.rows=[];state.error=null;state.lastLoadedAt=null;state.lastLevels=null;state.mode="native";renderTechnicalLevels(null);syncControls();},{passive:true});}
 })();
