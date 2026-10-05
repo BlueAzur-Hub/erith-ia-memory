@@ -1,7 +1,7 @@
 /* Agent-Crypto — NEW LISTINGS · NATIVE MARKET CATEGORY — stable canonical owner
    Product destination:
    - "Nouveaux listings" is one native Market category, not a CT-only button and not a second workspace.
-   - Recent SPOT instruments discovered from Bitget are rendered in the existing Market table.
+   - Recent SPOT instruments discovered live from Bitget and OKX are rendered in the existing Market table.
    - Selection reuses the existing Fiche surface, main Graphique Ligne, Bougies owner and Profondeur owner.
    - Provider/pair plumbing stays internal; no NEW ribbon and no Retour Market button.
    - Selecting a normal Market asset clears the external listing context automatically.
@@ -9,7 +9,7 @@
 (()=>{
   "use strict";
 
-  const MODULE_VERSION="40.6.534";
+  const MODULE_VERSION="40.6.537";
   const BUTTON_ID="atlasNewListingsButton406528";
   const LEGACY_RADAR_ID="atlasNewListingsRadar406528";
   const LEGACY_LIVE_ID="atlasNewListingsLive529";
@@ -19,6 +19,7 @@
   const NOTE_ID="tableNote";
   const ROOT_ATTR="data-new-listing-native";
   const BITGET="https://api.bitget.com";
+  const OKX="https://www.okx.com";
   const CANONICAL_EXIT_SELECTOR=[
     "#btnChartSolo","#btnChartTop3","#btnChartTop5",
     "#btnChartGainers","#btnChartLosers","#btnChartVolume5",
@@ -49,6 +50,7 @@
     coinCache:new Map(),
     quoteRates:new Map(),
     tickerMap:new Map(),
+    sourceStatus:{bitget:{ok:false,count:0,error:null},okx:{ok:false,count:0,error:null}},
     lastDiscoveryAt:null,
     lastError:null,
     lastResult:null,
@@ -63,6 +65,8 @@
   const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const pct=v=>{const n=finite(v);return n===null?"—":`${n>=0?"+":""}${n.toFixed(2)} %`;};
   const ageDays=iso=>{const t=Date.parse(String(iso||""));return Number.isFinite(t)?Math.max(0,(Date.now()-t)/86400000):null;};
+  const ageBand=days=>{const d=finite(days);if(d===null)return {key:"unknown",label:"âge inconnu"};if(d<1)return {key:"lt24h",label:"<24 h"};if(d<=3)return {key:"1_3d",label:"1–3 j"};if(d<=7)return {key:"4_7d",label:"4–7 j"};if(d<=30)return {key:"8_30d",label:"8–30 j"};return {key:"older",label:">30 j"};};
+  const quoteRank=q=>({USDT:0,USDC:1,USD:2,EUR:3}[upper(q)]??9);
 
   function displayCurrency(){
     try{return String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"USD").toUpperCase()==="EUR"?"EUR":"USD";}
@@ -114,6 +118,27 @@
     return state.tickerMap;
   }
 
+  async function fetchOkxRecent({days=30,signal=null}={}){
+    const u=new URL(OKX+"/api/v5/public/instruments");u.searchParams.set("instType","SPOT");
+    const j=await json(u,{timeoutMs:15000,signal});
+    if(String(j?.code)!=="0"||!Array.isArray(j?.data))throw new Error(j?.msg||"OKX instruments indisponibles");
+    const horizon=Math.max(1,Math.min(30,Number(days)||30))*86400000,now=Date.now(),cutoff=now-horizon;
+    const candidates=[];
+    for(const row of j.data){
+      const launchTime=finite(row?.listTime),instId=upper(row?.instId);
+      if(!(launchTime>0)||launchTime<cutoff||launchTime>now+86400000||upper(row?.state)!=="LIVE"||!instId)continue;
+      const parts=instId.split("-"),base=upper(row?.baseCcy||parts[0]),quote=upper(row?.quoteCcy||parts[1]);
+      if(!base||!quote||parts.length<2)continue;
+      candidates.push({base,quote,providerSymbol:instId,listedAt:new Date(launchTime).toISOString(),launchTime,provider:"okx",providerLabel:"OKX",discoveryProvider:"OKX",discoverySymbol:instId});
+    }
+    const preferred=new Map();
+    for(const row of candidates){
+      const prev=preferred.get(row.base);
+      if(!prev||quoteRank(row.quote)<quoteRank(prev.quote)||(quoteRank(row.quote)===quoteRank(prev.quote)&&row.launchTime>prev.launchTime))preferred.set(row.base,row);
+    }
+    return [...preferred.values()].sort((a,b)=>b.launchTime-a.launchTime);
+  }
+
   async function fetchQuoteRates({signal=null}={}){
     const u=new URL("https://api.coingecko.com/api/v3/simple/price");
     u.searchParams.set("ids","tether,usd-coin");
@@ -136,12 +161,13 @@
     if(!base||!quote||!providerSymbol)return null;
     const friendly=FRIENDLY[base]||null;
     const isCt=base==="CT";
-    const provider=isCt?"okx":"bitget";
+    const sourceProvider=String(row?.provider||row?.discoveryProvider||"bitget").trim().toLowerCase();
+    const provider=isCt?"okx":sourceProvider==="okx"?"okx":"bitget";
     const symbol=isCt?"CT-USDT":providerSymbol;
     const pair=isCt?"CT/USDT":`${base}/${quote}`;
     const quoteFinal=isCt?"USDT":quote;
-    const ticker=state.tickerMap.get(providerSymbol)||null;
-    const id=friendly?.canonicalId||`new-listing:bitget:${providerSymbol.toLowerCase()}`;
+    const ticker=provider==="bitget"?state.tickerMap.get(providerSymbol)||null:null;
+    const id=friendly?.canonicalId||`new-listing:${provider}:${providerSymbol.toLowerCase()}`;
     return {
       id,
       name:friendly?.name||base,
@@ -151,14 +177,25 @@
       quote:quoteFinal,
       pair,
       provider,
-      providerLabel:isCt?"OKX":"Bitget",
+      providerLabel:isCt?"OKX":provider==="okx"?"OKX":"Bitget",
       providerSymbol:symbol,
-      discoveryProvider:"Bitget",
+      discoveryProvider:String(row?.discoveryProvider||row?.providerLabel||(provider==="okx"?"OKX":"Bitget")),
       discoverySymbol:providerSymbol,
       listedAt:row?.listedAt||null,
       launchTime:Number(row?.launchTime||Date.parse(row?.listedAt||""))||null,
       ticker
     };
+  }
+
+  function dedupeProviderPairs(specs){
+    const preferred=new Map();
+    for(const spec of specs){
+      if(!spec)continue;
+      const key=`${spec.provider}:${spec.base}`;
+      const prev=preferred.get(key);
+      if(!prev||quoteRank(spec.quote)<quoteRank(prev.quote)||(quoteRank(spec.quote)===quoteRank(prev.quote)&&(spec.launchTime||0)>(prev.launchTime||0)))preferred.set(key,spec);
+    }
+    return [...preferred.values()];
   }
 
   function quoteRate(quote,currency){
@@ -255,15 +292,25 @@
     if(state.discovering)return state.specs.slice();
     state.discovering=true;state.lastError=null;
     try{
-      const [rows]=await Promise.all([
+      const settled=await Promise.allSettled([
         globalThis.AgentCryptoNewListingLiveAsset?.discoverBitget?.({days:30})||[],
         fetchTickers(),
-        fetchQuoteRates().catch(()=>new Map())
+        fetchQuoteRates().catch(()=>new Map()),
+        fetchOkxRecent({days:30})
       ]);
-      state.discovered=Array.isArray(rows)?rows.slice():[];
-      state.specs=state.discovered.map(providerSpec).filter(Boolean).sort((a,b)=>(b.launchTime||0)-(a.launchTime||0));
+      const bitgetRows=settled[0].status==="fulfilled"&&Array.isArray(settled[0].value)?settled[0].value:[];
+      const okxRows=settled[3].status==="fulfilled"&&Array.isArray(settled[3].value)?settled[3].value:[];
+      state.sourceStatus={
+        bitget:{ok:settled[0].status==="fulfilled",count:bitgetRows.length,error:settled[0].status==="rejected"?String(settled[0].reason?.message||settled[0].reason):settled[1].status==="rejected"?String(settled[1].reason?.message||settled[1].reason):null},
+        okx:{ok:settled[3].status==="fulfilled",count:okxRows.length,error:settled[3].status==="rejected"?String(settled[3].reason?.message||settled[3].reason):null}
+      };
+      state.discovered=[...bitgetRows,...okxRows];
+      state.specs=dedupeProviderPairs(state.discovered.map(providerSpec).filter(Boolean)).sort((a,b)=>(b.launchTime||0)-(a.launchTime||0));
       cacheCoins();
       state.lastDiscoveryAt=new Date().toISOString();
+      if(!state.specs.length&&!state.sourceStatus.bitget.ok&&!state.sourceStatus.okx.ok){
+        state.lastError=`Bitget: ${state.sourceStatus.bitget.error||"indisponible"} · OKX: ${state.sourceStatus.okx.error||"indisponible"}`;
+      }
       return state.specs.slice();
     }catch(error){
       state.lastError=String(error?.message||error);
@@ -331,7 +378,7 @@
       aria-selected="${selected?"true":"false"}"
       aria-label="${esc(`${spec.name} ${spec.symbol}. Nouveau listing ${spec.providerLabel} ${spec.pair}.`)}">
       <td>NEW</td>
-      <td><div class="coin-cell"><i class="market-identity-rail"></i><div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">Nouveau listing${age!==null?` · ${age.toFixed(1)} j`:""}</span></div></div></td>
+      <td><div class="coin-cell"><i class="market-identity-rail"></i><div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">Nouveau · ${ageBand(age).label}${age!==null?` · ${age.toFixed(1)} j`:""}</span></div></div></td>
       <td><div class="price-dual"><strong>${esc(price.primary)}</strong><small>${esc(price.small)}</small></div></td>
       <td class="${change===null?"":change>=0?"pos":"neg"}"><span class="market-move-pill">${esc(pct(change))}</span></td>
       <td>—</td>
@@ -362,12 +409,13 @@
 
     const note=document.getElementById(NOTE_ID);
     if(note&&state.enabled){
-      const total=state.specs.length;
+      const total=state.specs.length,b=state.sourceStatus.bitget||{},o=state.sourceStatus.okx||{};
+      const sources=`Bitget ${b.ok?b.count:"indisponible"} · OKX ${o.ok?o.count:"indisponible"}`;
       note.textContent=state.discovering
-        ?"Nouveaux listings · actualisation Bitget en cours…"
-        :state.lastError
-          ?`Nouveaux listings · ${state.lastError}`
-          :`Nouveaux listings · ${total} instrument(s) ≤30 j · source Bitget SPOT launchTime · Market Core inchangé`;
+        ?"Nouveaux listings · recherche live Bitget + OKX en cours…"
+        :state.lastError&&total===0
+          ?`Nouveaux listings indisponibles · ${state.lastError}`
+          :`Nouveaux listings · ${total} actif(s) ≤30 j · ${sources} · recherche live à chaque ouverture · Market Core inchangé`;
     }
     return specs.length;
   }
@@ -620,7 +668,7 @@
       hideLegacyUx();
       if(state.enabled){
         document.querySelectorAll(".filter-btn[data-filter]").forEach(b=>{if(b!==button)b.classList.remove("active");});
-        if(!state.specs.length)void discover();else renderCategory();
+        void discover();
       }else{
         state.originalRenderMarketTable?.();
       }
@@ -708,6 +756,8 @@
       selectedId:state.selected?.id||null,selectedSymbol:state.selected?.symbol||null,
       pendingId:state.pending?.id||null,
       lastDiscoveryAt:state.lastDiscoveryAt,lastError:state.lastError,
+      sourceStatus:{bitget:{...state.sourceStatus.bitget},okx:{...state.sourceStatus.okx}},
+      discoverySources:["Bitget","OKX"],
       duplicateGraph:false,duplicateFiche:false,duplicateDepth:false,
       legacyRibbonVisible:false,returnMarketButton:false
     });
@@ -715,12 +765,20 @@
 
   function selfTest(){
     const ct=fallbackCtSpec();
-    const generic=providerSpec({base:"MHA",quote:"USDT",providerSymbol:"MHAUSDT",listedAt:"2026-09-17T12:00:00Z",launchTime:Date.parse("2026-09-17T12:00:00Z")});
-    const pass=ct.providerSymbol==="CT-USDT"&&generic?.provider==="bitget"&&generic?.providerSymbol==="MHAUSDT";
+    const generic=providerSpec({base:"MHA",quote:"USDT",providerSymbol:"MHAUSDT",listedAt:"2026-09-17T12:00:00Z",launchTime:Date.parse("2026-09-17T12:00:00Z"),provider:"bitget",discoveryProvider:"Bitget"});
+    const okx=providerSpec({base:"TEST",quote:"USDT",providerSymbol:"TEST-USDT",listedAt:"2026-10-04T12:00:00Z",launchTime:Date.parse("2026-10-04T12:00:00Z"),provider:"okx",discoveryProvider:"OKX"});
+    const bands=[ageBand(.5).key,ageBand(2).key,ageBand(5).key,ageBand(12).key].join(",");
+    const pass=ct.providerSymbol==="CT-USDT"&&generic?.provider==="bitget"&&generic?.providerSymbol==="MHAUSDT"&&okx?.provider==="okx"&&okx?.providerSymbol==="TEST-USDT"&&bands==="lt24h,1_3d,4_7d,8_30d";
     return Object.freeze({build:MODULE_VERSION,pass,checks:Object.freeze({
       category_not_ct_only:true,
       ct_supported:ct.providerSymbol==="CT-USDT",
       second_listing_supported:generic?.providerSymbol==="MHAUSDT",
+      okx_recent_listing_supported:okx?.provider==="okx",
+      bitget_listing_time_discovery:true,
+      okx_listing_time_discovery:true,
+      live_refresh_on_each_activation:true,
+      age_bands:bands,
+      cross_exchange_unknown_identity_kept_separate:true,
       native_market_category:true,
       native_fiche_surface_reused:true,
       native_main_line_graph_reused:true,
@@ -743,6 +801,7 @@
 
   globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
     build:MODULE_VERSION,mount,discover,select,deactivate,snapshot,self_test:selfTest,
+    discovery_sources:Object.freeze(["Bitget","OKX"]),live_refresh:true,age_bands:Object.freeze(["<24 h","1–3 j","4–7 j","8–30 j"]),
     native_only:true,state_coins_injection:false,ranking_mutation:false,
     duplicate_graph:false,duplicate_fiche:false,duplicate_depth:false,
     legacy_ribbon:false,return_market_button:false,
