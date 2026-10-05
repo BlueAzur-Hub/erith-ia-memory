@@ -52,8 +52,21 @@ jobs:
           admin=Path("public/agent_crypto_erith_ia/administrator")
           build=json.loads((admin/"build.json").read_text(encoding="utf-8"))["build"]
           lifecycle_note=admin/f"NEW_LISTINGS_LIFECYCLE_{build}.md"
+          batched_identity_note=admin/f"NEW_LISTINGS_BATCHED_IDENTITY_{build}.md"
           canonical_note=admin/f"NEW_LISTINGS_CANONICAL_OWNER_{build}.md"
-          if lifecycle_note.exists():
+          if batched_identity_note.exists():
+            # 40.6.541 identity release: compact runtime + proof payload only.
+            files=[
+              admin/"index.html",
+              admin/f"index-{build}.html",
+              admin/"build.json",
+              admin/"js/new-listings-native-category.js",
+              batched_identity_note,
+              Path(".github/scripts/agent_crypto_new_listings_batched_identity_406541_guard.py"),
+              Path(".github/workflows/agent-crypto-new-listings-batched-identity-406541.yml"),
+            ]
+            package_kind="NEW_LISTINGS_BATCHED_IDENTITY_PATCH"
+          elif lifecycle_note.exists():
             # Lifecycle release: package only its runtime/proof payload.
             files=[
               admin/"index.html",
