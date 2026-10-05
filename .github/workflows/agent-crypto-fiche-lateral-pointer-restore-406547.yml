@@ -1,0 +1,36 @@
+name: Agent-Crypto 40.6.547 Fiche Lateral Pointer Restore
+
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/style.css"
+      - "public/agent_crypto_erith_ia/administrator/help-layer.css"
+      - "public/agent_crypto_erith_ia/administrator/app.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/FICHE_CRYPTO_LATERALE_POINTER_RESTORE_40.6.547.md"
+      - ".github/scripts/agent_crypto_fiche_lateral_pointer_restore_406547_guard.py"
+      - ".github/workflows/agent-crypto-fiche-lateral-pointer-restore-406547.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/style.css"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/FICHE_CRYPTO_LATERALE_POINTER_RESTORE_40.6.547.md"
+      - ".github/scripts/agent_crypto_fiche_lateral_pointer_restore_406547_guard.py"
+      - ".github/workflows/agent-crypto-fiche-lateral-pointer-restore-406547.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify restored native Fiche pointer path
+        run: python .github/scripts/agent_crypto_fiche_lateral_pointer_restore_406547_guard.py
+      - name: JavaScript syntax
+        run: node --check public/agent_crypto_erith_ia/administrator/app.js
