@@ -1,3 +1,5 @@
+> **REJECTED FIREFOX 2026-10-05** — false OKX "new" classifications (BTC/ETH/USDC), missing ticker/price path, CT regression. Superseded by rollback **40.6.538**.
+
 # Agent-Crypto 40.6.537 — NEW LISTINGS · LIVE DISCOVERY V2
 
 Parent: **40.6.536**  

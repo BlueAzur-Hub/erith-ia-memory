@@ -1,4 +1,4 @@
-name: Agent-Crypto 40.6.537 New Listings Discovery V2
+name: Agent-Crypto 40.6.538 New Listings Rollback
 
 on:
   push:
@@ -6,20 +6,20 @@ on:
     paths:
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
-      - "public/agent_crypto_erith_ia/administrator/index-40.6.537.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.538.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
-      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_DISCOVERY_V2_40.6.537.md"
-      - ".github/scripts/agent_crypto_new_listings_discovery_406537_guard.py"
-      - ".github/workflows/agent-crypto-new-listings-discovery-406537.yml"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_DISCOVERY_V2_ROLLBACK_40.6.538.md"
+      - ".github/scripts/agent_crypto_new_listings_rollback_406538_guard.py"
+      - ".github/workflows/agent-crypto-new-listings-rollback-406538.yml"
   pull_request:
     paths:
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
-      - "public/agent_crypto_erith_ia/administrator/index-40.6.537.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.538.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
-      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_DISCOVERY_V2_40.6.537.md"
-      - ".github/scripts/agent_crypto_new_listings_discovery_406537_guard.py"
-      - ".github/workflows/agent-crypto-new-listings-discovery-406537.yml"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_DISCOVERY_V2_ROLLBACK_40.6.538.md"
+      - ".github/scripts/agent_crypto_new_listings_rollback_406538_guard.py"
+      - ".github/workflows/agent-crypto-new-listings-rollback-406538.yml"
 
 permissions:
   contents: read
@@ -30,13 +30,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify live discovery V2
+      - name: Verify exact rollback
         run: |
-          python .github/scripts/agent_crypto_new_listings_discovery_406537_guard.py
+          python .github/scripts/agent_crypto_new_listings_rollback_406538_guard.py
           node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
           python .github/scripts/agent_crypto_version_truth_guard_compat.py
 
-      - name: Build compact patch ZIP
+      - name: Build compact rollback ZIP
         id: patch
         run: |
           python - <<'PY'
@@ -45,18 +45,18 @@ jobs:
           files=[
             Path("public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"),
             Path("public/agent_crypto_erith_ia/administrator/index.html"),
-            Path("public/agent_crypto_erith_ia/administrator/index-40.6.537.html"),
+            Path("public/agent_crypto_erith_ia/administrator/index-40.6.538.html"),
             Path("public/agent_crypto_erith_ia/administrator/build.json"),
-            Path("public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_DISCOVERY_V2_40.6.537.md"),
-            Path(".github/scripts/agent_crypto_new_listings_discovery_406537_guard.py"),
-            Path(".github/workflows/agent-crypto-new-listings-discovery-406537.yml"),
+            Path("public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_DISCOVERY_V2_ROLLBACK_40.6.538.md"),
+            Path(".github/scripts/agent_crypto_new_listings_rollback_406538_guard.py"),
+            Path(".github/workflows/agent-crypto-new-listings-rollback-406538.yml"),
           ]
-          missing=[str(p) for p in files if not p.exists()]
-          if missing: raise SystemExit("Missing patch files: "+", ".join(missing))
-          out=Path("dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.537_NEW_LISTINGS_DISCOVERY_V2_PATCH.zip")
+          out=Path("dist/AGENT_CRYPTO_ADMINISTRATOR_40.6.538_NEW_LISTINGS_ROLLBACK_PATCH.zip")
           out.parent.mkdir(parents=True,exist_ok=True)
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as z:
-              for p in files:z.write(p,p)
+              for p in files:
+                  if not p.exists(): raise SystemExit(f"Missing patch file: {p}")
+                  z.write(p,p)
           with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
               print(f"zip={out.as_posix()}",file=fh)
           print(out,out.stat().st_size,"files",len(files))
@@ -64,6 +64,6 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.537_NEW_LISTINGS_DISCOVERY_V2_PATCH
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.538_NEW_LISTINGS_ROLLBACK_PATCH
           path: ${{ steps.patch.outputs.zip }}
           retention-days: 90
