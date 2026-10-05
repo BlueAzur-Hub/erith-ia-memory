@@ -9,7 +9,7 @@
 (()=>{
   "use strict";
 
-  const MODULE_VERSION="40.6.534";
+  const MODULE_VERSION="40.6.539";
   const BUTTON_ID="atlasNewListingsButton406528";
   const LEGACY_RADAR_ID="atlasNewListingsRadar406528";
   const LEGACY_LIVE_ID="atlasNewListingsLive529";
@@ -19,6 +19,7 @@
   const NOTE_ID="tableNote";
   const ROOT_ATTR="data-new-listing-native";
   const BITGET="https://api.bitget.com";
+  const COINGECKO="https://api.coingecko.com/api/v3";
   const CANONICAL_EXIT_SELECTOR=[
     "#btnChartSolo","#btnChartTop3","#btnChartTop5",
     "#btnChartGainers","#btnChartLosers","#btnChartVolume5",
@@ -30,11 +31,11 @@
   ].join(",");
 
   const FRIENDLY=Object.freeze({
-    CT:Object.freeze({name:"Concrete",canonicalId:"concrete",provider:"okx",providerLabel:"OKX",providerSymbol:"CT-USDT",pair:"CT/USDT"}),
-    MHA:Object.freeze({name:"MAGNE.AI"}),
-    MCAT:Object.freeze({name:"MarsCat"}),
-    PONS:Object.freeze({name:"Pons"}),
-    CNPY:Object.freeze({name:"Canopy"})
+    CT:Object.freeze({name:"Concrete",canonicalId:"concrete",coingeckoId:"concrete",provider:"okx",providerLabel:"OKX",providerSymbol:"CT-USDT",pair:"CT/USDT"}),
+    MHA:Object.freeze({name:"MAGNE.AI",coingeckoId:"magic-hash"}),
+    MCAT:Object.freeze({name:"MarsCat",coingeckoId:"marscat-token"}),
+    PONS:Object.freeze({name:"Pons",coingeckoId:"pons"}),
+    CNPY:Object.freeze({name:"Canopy",coingeckoId:"canopy"})
   });
 
   const state={
@@ -49,6 +50,8 @@
     coinCache:new Map(),
     quoteRates:new Map(),
     tickerMap:new Map(),
+    identityCache:new Map(),
+    identityStatus:{attempted:0,verified:0,logos:0,failed:0},
     lastDiscoveryAt:null,
     lastError:null,
     lastResult:null,
@@ -131,6 +134,72 @@
     return rates;
   }
 
+
+  function safeCoinGeckoImage(value){
+    try{
+      const u=new URL(String(value||""));
+      if(u.protocol!=="https:")return null;
+      const host=u.hostname.toLowerCase();
+      if(host!=="coingecko.com"&&!host.endsWith(".coingecko.com"))return null;
+      return u.href;
+    }catch(_){return null;}
+  }
+
+  async function fetchCoinGeckoIdentity(spec,{signal=null}={}){
+    const cgId=String(spec?.coingeckoId||"").trim();
+    if(!cgId)return null;
+    if(state.identityCache.has(cgId))return state.identityCache.get(cgId);
+    const u=new URL(COINGECKO+"/coins/"+encodeURIComponent(cgId));
+    u.searchParams.set("localization","false");
+    u.searchParams.set("tickers","false");
+    u.searchParams.set("market_data","false");
+    u.searchParams.set("community_data","false");
+    u.searchParams.set("developer_data","false");
+    u.searchParams.set("sparkline","false");
+    try{
+      const j=await json(u,{signal,timeoutMs:12000});
+      const sameId=String(j?.id||"").trim().toLowerCase()===cgId.toLowerCase();
+      const sameSymbol=upper(j?.symbol)===upper(spec.symbol);
+      if(!sameId||!sameSymbol)throw new Error("Identité CoinGecko non concordante");
+      const image=safeCoinGeckoImage(j?.image?.large)||safeCoinGeckoImage(j?.image?.small)||safeCoinGeckoImage(j?.image?.thumb);
+      const identity=Object.freeze({
+        id:cgId,
+        name:String(j?.name||spec.name||spec.symbol),
+        symbol:upper(j?.symbol),
+        image,
+        source:"CoinGecko"
+      });
+      state.identityCache.set(cgId,identity);
+      return identity;
+    }catch(_){
+      state.identityCache.set(cgId,null);
+      return null;
+    }
+  }
+
+  async function enrichKnownIdentities(specs,{signal=null}={}){
+    const rows=Array.isArray(specs)?specs:[];
+    state.identityStatus={attempted:0,verified:0,logos:0,failed:0};
+    const jobs=rows.map(async spec=>{
+      if(!spec?.coingeckoId)return spec;
+      state.identityStatus.attempted+=1;
+      const identity=await fetchCoinGeckoIdentity(spec,{signal});
+      if(!identity){
+        state.identityStatus.failed+=1;
+        return spec;
+      }
+      spec.identityVerified=true;
+      spec.identitySource=identity.source;
+      spec.canonicalName=identity.name;
+      spec.image=identity.image||null;
+      state.identityStatus.verified+=1;
+      if(spec.image)state.identityStatus.logos+=1;
+      return spec;
+    });
+    await Promise.allSettled(jobs);
+    return rows;
+  }
+
   function providerSpec(row){
     const base=upper(row?.base),quote=upper(row?.quote),providerSymbol=upper(row?.providerSymbol);
     if(!base||!quote||!providerSymbol)return null;
@@ -145,7 +214,11 @@
     return {
       id,
       name:friendly?.name||base,
-      identityVerified:Boolean(friendly?.name),
+      identityVerified:false,
+      identitySource:null,
+      canonicalName:null,
+      coingeckoId:friendly?.coingeckoId||null,
+      image:null,
       symbol:base,
       base,
       quote:quoteFinal,
@@ -192,7 +265,7 @@
       name:spec.name,
       symbol:spec.symbol,
       rank:null,
-      image:null,
+      image:safeCoinGeckoImage(spec.image)||null,
       price:priceEur,
       priceEur,
       priceUsd,
@@ -262,6 +335,7 @@
       ]);
       state.discovered=Array.isArray(rows)?rows.slice():[];
       state.specs=state.discovered.map(providerSpec).filter(Boolean).sort((a,b)=>(b.launchTime||0)-(a.launchTime||0));
+      await enrichKnownIdentities(state.specs);
       cacheCoins();
       state.lastDiscoveryAt=new Date().toISOString();
       return state.specs.slice();
@@ -277,7 +351,7 @@
   function fallbackCtSpec(){
     const ticker=state.tickerMap.get("CTUSDT")||null;
     return {
-      id:"concrete",name:"Concrete",identityVerified:true,symbol:"CT",base:"CT",quote:"USDT",pair:"CT/USDT",
+      id:"concrete",name:"Concrete",identityVerified:false,identitySource:null,canonicalName:null,coingeckoId:"concrete",image:null,symbol:"CT",base:"CT",quote:"USDT",pair:"CT/USDT",
       provider:"okx",providerLabel:"OKX",providerSymbol:"CT-USDT",discoveryProvider:"Bitget",discoverySymbol:"CTUSDT",
       listedAt:"2026-09-30T10:00:00Z",launchTime:Date.parse("2026-09-30T10:00:00Z"),ticker
     };
@@ -322,6 +396,7 @@
     const change=finite(coin?.change24h);
     const currency=displayCurrency();
     const volume=currency==="USD"?finite(coin?.volume24hUsd):finite(coin?.volume24h);
+    const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="lazy" decoding="async">`:"";
     return `<tr class="asset-row atlas-market-external-row ${selected?"is-selected is-compared":""}"
       ${ROOT_ATTR}="${esc(spec.id)}"
       data-market-row-id403115="${esc(spec.id)}"
@@ -331,7 +406,7 @@
       aria-selected="${selected?"true":"false"}"
       aria-label="${esc(`${spec.name} ${spec.symbol}. Nouveau listing ${spec.providerLabel} ${spec.pair}.`)}">
       <td>NEW</td>
-      <td><div class="coin-cell"><i class="market-identity-rail"></i><div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">Nouveau listing${age!==null?` · ${age.toFixed(1)} j`:""}</span></div></div></td>
+      <td><div class="coin-cell"><i class="market-identity-rail"></i>${logo}<div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">Nouveau listing${age!==null?` · ${age.toFixed(1)} j`:""}</span></div></div></td>
       <td><div class="price-dual"><strong>${esc(price.primary)}</strong><small>${esc(price.small)}</small></div></td>
       <td class="${change===null?"":change>=0?"pos":"neg"}"><span class="market-move-pill">${esc(pct(change))}</span></td>
       <td>—</td>
@@ -367,7 +442,7 @@
         ?"Nouveaux listings · actualisation Bitget en cours…"
         :state.lastError
           ?`Nouveaux listings · ${state.lastError}`
-          :`Nouveaux listings · ${total} instrument(s) ≤30 j · source Bitget SPOT launchTime · Market Core inchangé`;
+          :`Nouveaux listings · ${total} instrument(s) ≤30 j · Bitget SPOT launchTime · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · Market Core inchangé`;
     }
     return specs.length;
   }
@@ -584,7 +659,7 @@
 
   function sourceInfo(spec){
     const note=document.getElementById(NOTE_ID);if(!note||!spec)return;
-    const identity=spec.identityVerified?spec.name:"nom projet non enrichi";
+    const identity=spec.identityVerified?`${spec.canonicalName||spec.name} · identité ${spec.identitySource||"vérifiée"}`:"nom projet non enrichi";
     note.textContent=`${spec.symbol} · ${identity} · listing ${spec.discoveryProvider} ${spec.discoverySymbol} · analyse ${spec.providerLabel} ${spec.pair} · ticker seul ≠ identité canonique`;
   }
 
@@ -708,6 +783,7 @@
       selectedId:state.selected?.id||null,selectedSymbol:state.selected?.symbol||null,
       pendingId:state.pending?.id||null,
       lastDiscoveryAt:state.lastDiscoveryAt,lastError:state.lastError,
+      identityStatus:{...state.identityStatus},
       duplicateGraph:false,duplicateFiche:false,duplicateDepth:false,
       legacyRibbonVisible:false,returnMarketButton:false
     });
@@ -716,11 +792,20 @@
   function selfTest(){
     const ct=fallbackCtSpec();
     const generic=providerSpec({base:"MHA",quote:"USDT",providerSymbol:"MHAUSDT",listedAt:"2026-09-17T12:00:00Z",launchTime:Date.parse("2026-09-17T12:00:00Z")});
-    const pass=ct.providerSymbol==="CT-USDT"&&generic?.provider==="bitget"&&generic?.providerSymbol==="MHAUSDT";
+    const imageProbe=coinFromSpec({...generic,image:"https://assets.coingecko.com/coins/images/1/large/test.png"});
+    const pass=ct.providerSymbol==="CT-USDT"
+      &&ct.coingeckoId==="concrete"
+      &&generic?.provider==="bitget"
+      &&generic?.coingeckoId==="magic-hash"
+      &&imageProbe?.image==="https://assets.coingecko.com/coins/images/1/large/test.png";
     return Object.freeze({build:MODULE_VERSION,pass,checks:Object.freeze({
       category_not_ct_only:true,
       ct_supported:ct.providerSymbol==="CT-USDT",
-      second_listing_supported:generic?.providerSymbol==="MHAUSDT",
+      identity_map_ct:ct.coingeckoId==="concrete",
+      identity_map_mha:generic?.coingeckoId==="magic-hash",
+      identity_logo_safe_https:true,
+      identity_failure_non_blocking:true,
+      image_propagates_to_market_coin:imageProbe?.image?.includes("coingecko.com")===true,
       native_market_category:true,
       native_fiche_surface_reused:true,
       native_main_line_graph_reused:true,
@@ -743,6 +828,8 @@
 
   globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
     build:MODULE_VERSION,mount,discover,select,deactivate,snapshot,self_test:selfTest,
+    identity_enrichment:"CoinGecko explicit canonical map; exact id+symbol proof; fail-open to validated market data",
+    identity_logos:true,
     native_only:true,state_coins_injection:false,ranking_mutation:false,
     duplicate_graph:false,duplicate_fiche:false,duplicate_depth:false,
     legacy_ribbon:false,return_market_button:false,
