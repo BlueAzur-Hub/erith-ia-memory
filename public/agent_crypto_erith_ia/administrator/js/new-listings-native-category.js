@@ -563,7 +563,7 @@
     const currency=displayCurrency();
     const volume=currency==="USD"?finite(coin?.volume24hUsd):finite(coin?.volume24h);
     const proof=radarProof(spec,coin);
-    const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="lazy" decoding="async">`:"";
+    const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="eager" fetchpriority="high" width="32" height="32">`:"";
     return `<tr class="asset-row atlas-market-external-row ${selected?"is-selected is-compared":""}"
       ${ROOT_ATTR}="${esc(spec.id)}"
       data-market-row-id403115="${esc(spec.id)}"
