@@ -1,0 +1,68 @@
+name: Agent-Crypto 40.6.543 Identity + Fiche Stability
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json"
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/js/aether-role-visibility.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.543.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_IDENTITY_FICHE_STABILITY_40.6.543.md"
+      - ".github/scripts/agent_crypto_new_listings_identity_fiche_stability_406543_guard.py"
+      - ".github/scripts/agent_crypto_fiche_dock_stability_406543_test.cjs"
+      - ".github/workflows/agent-crypto-new-listings-identity-fiche-stability-406543.yml"
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json"
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/js/aether-role-visibility.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.543.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_IDENTITY_FICHE_STABILITY_40.6.543.md"
+      - ".github/scripts/agent_crypto_new_listings_identity_fiche_stability_406543_guard.py"
+      - ".github/scripts/agent_crypto_fiche_dock_stability_406543_test.cjs"
+      - ".github/workflows/agent-crypto-new-listings-identity-fiche-stability-406543.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Static integrity guard
+        run: |
+          python .github/scripts/agent_crypto_new_listings_identity_fiche_stability_406543_guard.py
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
+          node --check public/agent_crypto_erith_ia/administrator/js/aether-role-visibility.js
+          python .github/scripts/agent_crypto_new_listings_guard.py
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Install isolated Firefox
+        run: |
+          npm install --prefix .test-runtime --no-audit --no-fund playwright@1.62.1
+          .test-runtime/node_modules/.bin/playwright install --with-deps firefox
+
+      - name: Verify Fiche dock mode in Firefox
+        env:
+          PLAYWRIGHT_MODULE: "${{ github.workspace }}/.test-runtime/node_modules/playwright"
+        run: |
+          node .github/scripts/agent_crypto_fiche_dock_stability_406543_test.cjs | tee fiche-dock-firefox.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent-crypto-40.6.543-identity-fiche-proof
+          path: fiche-dock-firefox.json
+          if-no-files-found: warn
