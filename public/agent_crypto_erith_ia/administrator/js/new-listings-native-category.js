@@ -321,7 +321,7 @@
     }
   }
 
-  function fallbackCtSpec(){function fallbackCtSpec(){
+  function fallbackCtSpec(){
     const ticker=state.tickerMap.get("CTUSDT")||null;
     return {
       id:"concrete",name:"Concrete",identityVerified:true,symbol:"CT",base:"CT",quote:"USDT",pair:"CT/USDT",
@@ -799,7 +799,7 @@
     })});
   }
 
-  globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
+  globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
     build:MODULE_VERSION,mount,discover,select,deactivate,snapshot,self_test:selfTest,
     discovery_sources:Object.freeze(["Bitget","OKX"]),live_refresh:true,age_bands:Object.freeze(["<24 h","1–3 j","4–7 j","8–30 j"]),
     native_only:true,state_coins_injection:false,ranking_mutation:false,
