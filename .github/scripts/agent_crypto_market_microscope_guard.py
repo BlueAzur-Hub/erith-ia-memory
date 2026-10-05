@@ -12,13 +12,15 @@ def need(ok, msg):
     if not ok:
         raise SystemExit("MARKET_MICROSCOPE_GUARD_FAIL: " + msg)
 
-need(BUILD.get("build") == "40.6.563", "current build")
-need(BUILD.get("parent_build") == "40.6.562", "parent build")
+CURRENT = str(BUILD.get("build") or "").strip()
+PARENT = str(BUILD.get("parent_build") or "").strip()
+need(bool(CURRENT), "current build")
+need(bool(PARENT), "parent build")
 need(BUILD.get("market_core") == "38.15.11", "Market Core")
-need("market-microscope-candles.js?v=40.6.563" in INDEX, "canonical runtime cache token")
+need(f"market-microscope-candles.js?v={CURRENT}" in INDEX, "canonical runtime cache token")
 need("market-microscope-candles-406498.js" not in INDEX, "legacy runtime referenced by current index")
 need(not (ROOT / "js/market-microscope-candles-406498.js").exists(), "legacy runtime file still active")
-need('const BUILD="40.6.563"' in JS, "module build")
+need(f'const BUILD="{CURRENT}"' in JS, "module build")
 need('const HISTORICAL_CORE_BUILD="40.6.498"' in JS, "historical lineage metadata")
 need('const INDICATOR_STORAGE_KEY="agentCrypto.marketMicroscope.indicators.v1"' in JS, "stable indicator state owner")
 need("indicators:readIndicatorState()" in JS, "indicator state restore")
@@ -34,20 +36,37 @@ need('method:"PIVOTS_VISIBLES_W2"' in JS, "S/R method")
 need("latest_request_wins:true" in JS, "latest request wins")
 need("request_timeout_ms:REQUEST_TIMEOUT_MS" in JS, "request timeout")
 need("indicator_state_roundtrip:indicatorRoundTrip" in JS, "indicator roundtrip self-test")
+need("strict_null_ohlc_rejected:nullOhlcRejected" in JS, "null OHLC validation")
+need("strict_incoherent_ohlc_rejected:incoherentOhlcRejected" in JS, "OHLC coherence validation")
+need("empty_parsed_series_rejected:emptySeriesRejected" in JS, "empty parsed series validation")
+need("timeout_has_explicit_error:timeoutTruth" in JS, "timeout truth self-test")
+need("OKX_LOCAL_TIMEOUT" in JS, "explicit local timeout error")
+need("OKX_LOCAL_UNAVAILABLE" in JS, "explicit local backend unavailable error")
+need("canFallbackToUsdc(error)" in JS, "bounded EUR to USDC fallback")
+need('network:"OKX_PUBLIC_VIA_LOCAL_BACKEND_ON_DEMAND_OR_NEW_LISTING_PROVIDER"' in JS, "network truth")
 need('storage_scope:"INDICATOR_STATE_ONLY"' in JS, "bounded storage scope")
 need("real_order:false" in JS, "no real orders")
 need("recurring_timer:false" in JS, "no recurring timer")
 
 scope = BUILD.get("market_microscope_runtime") or {}
 need(scope.get("owner") == "js/market-microscope-candles.js", "manifest canonical owner")
+need(scope.get("transport_owner") == "js/okx-local-backend-transport.js", "manifest transport owner")
+need(scope.get("transport_runtime") == "LOCAL_BACKEND_127.0.0.1_8790", "manifest local backend truth")
+need(scope.get("direct_browser_okx_fetch") is False, "direct browser OKX disabled")
+need(scope.get("timeout_silent_fixed") is True, "timeout repair manifest")
+need(scope.get("strict_ohlc_validation") is True, "strict OHLC manifest")
+need(scope.get("empty_parsed_series_rejected") is True, "empty series manifest")
+need(scope.get("eur_fallback_on_transport_failure") is False, "transport failure fallback guard")
 need(scope.get("formulas_changed") is False, "formulas unchanged")
 need(scope.get("market_core_modified") is False, "Market Core unchanged")
 need(scope.get("no_storage_deletion") is True, "storage non-destructive")
 
 print(json.dumps({
     "ok": True,
-    "build": BUILD.get("build"),
+    "build": CURRENT,
+    "parent": PARENT,
     "runtime": "js/market-microscope-candles.js",
+    "transport": scope.get("transport_runtime"),
     "indicator_state_owner": scope.get("indicator_state_owner"),
     "market_core": BUILD.get("market_core"),
     "terrain": "PENDING_FIREFOX"
