@@ -9,7 +9,7 @@
 (()=>{
   "use strict";
 
-  const MODULE_VERSION="40.6.543";
+  const MODULE_VERSION="40.6.544";
   const BUTTON_ID="atlasNewListingsButton406528";
   const LEGACY_RADAR_ID="atlasNewListingsRadar406528";
   const LEGACY_LIVE_ID="atlasNewListingsLive529";
@@ -189,13 +189,16 @@
 
   function safeIdentityImage(value){
     const raw=String(value||"").trim();
-    if(/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(raw))return raw;
+    if(!raw)return null;
     try{
-      const u=new URL(raw);
+      const u=new URL(raw,document.baseURI);
       if(u.protocol!=="https:")return null;
+      const sameOrigin=u.origin===location.origin;
+      const localLogo=sameOrigin&&/\/administrator\/assets\/crypto\/new-listings\/[a-z0-9._-]+\.png$/i.test(u.pathname);
+      if(localLogo)return u.href;
       const host=u.hostname.toLowerCase();
-      if(host!=="coingecko.com"&&!host.endsWith(".coingecko.com"))return null;
-      return u.href;
+      if(host==="coingecko.com"||host.endsWith(".coingecko.com"))return u.href;
+      return null;
     }catch(_){return null;}
   }
 
@@ -980,7 +983,7 @@
       candidate_when_market_proof_missing:candidate.status==="CANDIDAT",
       age_bands:true,
       identity_github_registry_primary:true,
-      identity_embedded_logos:true,
+      identity_binary_logo_assets:true,
       identity_remote_batch_emergency_only:true,
       identity_exact_id_symbol:true,
       identity_retry_storm_removed:true,
@@ -1002,7 +1005,7 @@
 
   globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
     build:MODULE_VERSION,mount,discover,select,deactivate,snapshot,self_test:selfTest,
-    identity_enrichment:"GitHub static identity memory first; CoinGecko batch only for unresolved known ids; exact id+symbol proof; fail-open",
+    identity_enrichment:"GitHub static identity memory first with real PNG assets; CoinGecko batch only for unresolved known ids; exact id+symbol proof; fail-open",
     identity_logos:true,
     safe_radar:true,
     discovery_source:"Bitget launchTime only",
