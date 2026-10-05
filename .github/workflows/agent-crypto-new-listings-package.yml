@@ -66,12 +66,25 @@ jobs:
           admin=Path("public/agent_crypto_erith_ia/administrator")
           build=json.loads((admin/"build.json").read_text(encoding="utf-8"))["build"]
           lifecycle_note=admin/f"NEW_LISTINGS_LIFECYCLE_{build}.md"
+          fiche_restore_note=admin/f"NEW_FICHE_NATIVE_LATERAL_RESTORE_{build}.md"
           real_logo_note=admin/f"NEW_LISTINGS_REAL_LOGO_ASSETS_{build}.md"
           identity_fiche_note=admin/f"NEW_LISTINGS_IDENTITY_FICHE_STABILITY_{build}.md"
           github_identity_note=admin/f"NEW_LISTINGS_GITHUB_IDENTITY_MEMORY_{build}.md"
           batched_identity_note=admin/f"NEW_LISTINGS_BATCHED_IDENTITY_{build}.md"
           canonical_note=admin/f"NEW_LISTINGS_CANONICAL_OWNER_{build}.md"
-          if real_logo_note.exists():
+          if fiche_restore_note.exists():
+            files=[
+              admin/"index.html",
+              admin/f"index-{build}.html",
+              admin/"build.json",
+              admin/"js/aether-role-visibility.js",
+              fiche_restore_note,
+              Path(".github/scripts/agent_crypto_fiche_native_lateral_restore_406545_guard.py"),
+              Path(".github/scripts/agent_crypto_fiche_native_lateral_restore_406545_test.cjs"),
+              Path(".github/workflows/agent-crypto-fiche-native-lateral-restore-406545.yml"),
+            ]
+            package_kind="FICHE_NATIVE_LATERAL_RESTORE_PATCH"
+          elif real_logo_note.exists():
             files=[
               admin/"index.html",
               admin/f"index-{build}.html",

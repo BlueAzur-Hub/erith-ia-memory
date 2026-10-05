@@ -1,0 +1,46 @@
+name: Agent-Crypto 40.6.545 Restore Native Fiche Lateral
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/aether-role-visibility.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.545.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/NEW_FICHE_NATIVE_LATERAL_RESTORE_40.6.545.md"
+      - ".github/scripts/agent_crypto_fiche_native_lateral_restore_406545_guard.py"
+      - ".github/scripts/agent_crypto_fiche_native_lateral_restore_406545_test.cjs"
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/aether-role-visibility.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.545.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/NEW_FICHE_NATIVE_LATERAL_RESTORE_40.6.545.md"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Static restoration guard
+        run: |
+          python .github/scripts/agent_crypto_fiche_native_lateral_restore_406545_guard.py
+          node --check public/agent_crypto_erith_ia/administrator/js/aether-role-visibility.js
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Install Firefox
+        run: |
+          npm install --prefix .test-runtime --no-audit --no-fund playwright@1.62.1
+          .test-runtime/node_modules/.bin/playwright install --with-deps firefox
+      - name: Verify restored lateral geometry in Firefox
+        env:
+          PLAYWRIGHT_MODULE: "${{ github.workspace }}/.test-runtime/node_modules/playwright"
+        run: node .github/scripts/agent_crypto_fiche_native_lateral_restore_406545_test.cjs
