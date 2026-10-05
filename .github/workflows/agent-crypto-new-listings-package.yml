@@ -6,6 +6,9 @@ on:
     paths:
       - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_GITHUB_IDENTITY_MEMORY_40.6.542.md"
+      - ".github/scripts/agent_crypto_new_listings_github_identity_memory_406542_guard.py"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
@@ -17,6 +20,9 @@ on:
     paths:
       - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_GITHUB_IDENTITY_MEMORY_40.6.542.md"
+      - ".github/scripts/agent_crypto_new_listings_github_identity_memory_406542_guard.py"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
       - ".github/scripts/agent_crypto_new_listings_guard.py"
@@ -52,9 +58,23 @@ jobs:
           admin=Path("public/agent_crypto_erith_ia/administrator")
           build=json.loads((admin/"build.json").read_text(encoding="utf-8"))["build"]
           lifecycle_note=admin/f"NEW_LISTINGS_LIFECYCLE_{build}.md"
+          github_identity_note=admin/f"NEW_LISTINGS_GITHUB_IDENTITY_MEMORY_{build}.md"
           batched_identity_note=admin/f"NEW_LISTINGS_BATCHED_IDENTITY_{build}.md"
           canonical_note=admin/f"NEW_LISTINGS_CANONICAL_OWNER_{build}.md"
-          if batched_identity_note.exists():
+          if github_identity_note.exists():
+            # 40.6.542 GitHub identity memory: runtime + registry + proof payload only.
+            files=[
+              admin/"index.html",
+              admin/f"index-{build}.html",
+              admin/"build.json",
+              admin/"js/new-listings-native-category.js",
+              admin/"data/new-listings-identities.json",
+              github_identity_note,
+              Path(".github/scripts/agent_crypto_new_listings_github_identity_memory_406542_guard.py"),
+              Path(".github/workflows/agent-crypto-new-listings-github-identity-memory-406542.yml"),
+            ]
+            package_kind="NEW_LISTINGS_GITHUB_IDENTITY_MEMORY_PATCH"
+          elif batched_identity_note.exists():
             # 40.6.541 identity release: compact runtime + proof payload only.
             files=[
               admin/"index.html",
