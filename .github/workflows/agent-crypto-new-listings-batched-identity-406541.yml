@@ -1,0 +1,34 @@
+name: Agent-Crypto 40.6.541 New Listings Batched Identity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.541.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_BATCHED_IDENTITY_40.6.541.md"
+      - ".github/scripts/agent_crypto_new_listings_batched_identity_406541_guard.py"
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.541.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_BATCHED_IDENTITY_40.6.541.md"
+      - ".github/scripts/agent_crypto_new_listings_batched_identity_406541_guard.py"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify 40.6.541 batched identity
+        run: |
+          python .github/scripts/agent_crypto_new_listings_batched_identity_406541_guard.py
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
