@@ -6241,7 +6241,7 @@ main .decision-board{
 /* Crypto Card is the intentional interactive use of the shared help layer.
    Generic help stays non-interactive; the market card restores pointer input
    only while a real market coin is bound to the layer. */
-.atlas-help-layer[data-market-help-coin-id]:not([hidden]) {
+#atlasHelpLayer.atlas-help-layer[data-market-help-coin-id]:not([hidden]) {
   pointer-events: auto;
 }
 .atlas-help-kicker {
