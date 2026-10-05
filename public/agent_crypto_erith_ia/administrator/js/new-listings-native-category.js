@@ -9,7 +9,7 @@
 (()=>{
   "use strict";
 
-  const MODULE_VERSION="40.6.541";
+  const MODULE_VERSION="40.6.542";
   const BUTTON_ID="atlasNewListingsButton406528";
   const LEGACY_RADAR_ID="atlasNewListingsRadar406528";
   const LEGACY_LIVE_ID="atlasNewListingsLive529";
@@ -21,9 +21,8 @@
   const BITGET="https://api.bitget.com";
   const COINGECKO="https://api.coingecko.com/api/v3";
   const DISCOVERY_COOLDOWN_MS=15000;
-  const IDENTITY_FAILURE_TTL_MS=8000;
-  const IDENTITY_FALLBACK_START_DELAY_MS=1200;
-  const IDENTITY_FALLBACK_RETRY_DELAYS=Object.freeze([0,900,2200]);
+  const IDENTITY_REGISTRY_URL="./data/new-listings-identities.json";
+  const IDENTITY_REMOTE_BATCH_TIMEOUT_MS=12000;
   const CANONICAL_EXIT_SELECTOR=[
     "#btnChartSolo","#btnChartTop3","#btnChartTop5",
     "#btnChartGainers","#btnChartLosers","#btnChartVolume5",
@@ -55,8 +54,9 @@
     quoteRates:new Map(),
     tickerMap:new Map(),
     identityCache:new Map(),
-    identityFailureAt:new Map(),
-    identityStatus:{attempted:0,verified:0,logos:0,failed:0,batchRequests:0,batchFailures:0,fallbackRequests:0,rateLimited:0,mismatched:0,missing:0,recovered:0,lastFailure:null},
+    identityRegistry:new Map(),
+    registryStatus:{loaded:false,entries:0,applied:0,logos:0,error:null,source:"GitHub"},
+    identityStatus:{attempted:0,verified:0,logos:0,failed:0,githubHits:0,batchRequests:0,batchFailures:0,rateLimited:0,mismatched:0,missing:0,lastFailure:null},
     radarStatus:{confirmed:0,candidates:0},
     lastDiscoveryAt:null,
     lastError:null,
@@ -187,9 +187,11 @@
     return state.radarStatus;
   }
 
-  function safeCoinGeckoImage(value){
+  function safeIdentityImage(value){
+    const raw=String(value||"").trim();
+    if(/^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(raw))return raw;
     try{
-      const u=new URL(String(value||""));
+      const u=new URL(raw);
       if(u.protocol!=="https:")return null;
       const host=u.hostname.toLowerCase();
       if(host!=="coingecko.com"&&!host.endsWith(".coingecko.com"))return null;
@@ -216,20 +218,20 @@
 
   function identityFromPayload(spec,payload,source){
     const cgId=String(spec?.coingeckoId||"").trim();
-    const sameId=String(payload?.id||"").trim().toLowerCase()===cgId.toLowerCase();
+    const sameId=String(payload?.id||payload?.coingeckoId||"").trim().toLowerCase()===cgId.toLowerCase();
     const sameSymbol=upper(payload?.symbol)===upper(spec?.symbol);
     if(!sameId||!sameSymbol){
-      const error=new Error("Identité CoinGecko non concordante");
+      const error=new Error("Identité non concordante");
       error.code="IDENTITY_MISMATCH";
       throw error;
     }
-    const image=safeCoinGeckoImage(typeof payload?.image==="string"?payload.image:null)
-      ||safeCoinGeckoImage(payload?.image?.large)
-      ||safeCoinGeckoImage(payload?.image?.small)
-      ||safeCoinGeckoImage(payload?.image?.thumb);
+    const image=safeIdentityImage(typeof payload?.image==="string"?payload.image:null)
+      ||safeIdentityImage(payload?.image?.large)
+      ||safeIdentityImage(payload?.image?.small)
+      ||safeIdentityImage(payload?.image?.thumb);
     return Object.freeze({
       id:cgId,
-      name:String(payload?.name||spec.name||spec.symbol),
+      name:String(payload?.canonicalName||payload?.name||payload?.displayName||spec.name||spec.symbol),
       symbol:upper(payload?.symbol),
       image,
       source
@@ -239,8 +241,57 @@
   function cacheIdentity(identity){
     if(!identity?.id)return null;
     state.identityCache.set(identity.id,identity);
-    state.identityFailureAt.delete(identity.id);
     return identity;
+  }
+
+  async function loadIdentityRegistry(){
+    if(state.registryStatus.loaded)return state.identityRegistry;
+    try{
+      const r=await fetch(IDENTITY_REGISTRY_URL,{cache:"force-cache",headers:{Accept:"application/json"}});
+      if(!r.ok)throw new Error(`HTTP ${r.status}`);
+      const payload=await r.json();
+      if(payload?.schema!=="agent_crypto_new_listings_identity_registry_v1"||!payload?.identities||typeof payload.identities!=="object"){
+        throw new Error("registre identité GitHub invalide");
+      }
+      const registry=new Map();
+      for(const [id,row] of Object.entries(payload.identities)){
+        const key=String(id||"").trim();
+        if(!key||row?.verified!==true)continue;
+        const normalized={...row,coingeckoId:String(row?.coingeckoId||key)};
+        registry.set(key,normalized);
+      }
+      state.identityRegistry=registry;
+      state.registryStatus={loaded:true,entries:registry.size,applied:0,logos:0,error:null,source:"GitHub"};
+      return registry;
+    }catch(error){
+      state.identityRegistry=new Map();
+      state.registryStatus={loaded:true,entries:0,applied:0,logos:0,error:String(error?.message||error),source:"GitHub"};
+      return state.identityRegistry;
+    }
+  }
+
+  function applyRegistryIdentities(specs){
+    let applied=0,logos=0;
+    for(const spec of Array.isArray(specs)?specs:[]){
+      const cgId=String(spec?.coingeckoId||"").trim();
+      if(!cgId)continue;
+      const row=state.identityRegistry.get(cgId);
+      if(!row)continue;
+      try{
+        const identity=cacheIdentity(identityFromPayload(spec,row,"GitHub identity memory"));
+        spec.identityVerified=true;
+        spec.identitySource=identity.source;
+        spec.canonicalName=identity.name;
+        spec.image=identity.image||null;
+        applied+=1;
+        if(identity.image)logos+=1;
+      }catch(error){
+        state.identityStatus.mismatched+=1;
+        recordIdentityDiagnostic(error);
+      }
+    }
+    state.registryStatus={...state.registryStatus,applied,logos};
+    return applied;
   }
 
   async function fetchCoinGeckoIdentitiesBatch(specs,{signal=null}={}){
@@ -257,23 +308,16 @@
     u.searchParams.set("sparkline","false");
     state.identityStatus.batchRequests+=1;
     try{
-      const payload=await json(u,{signal,timeoutMs:12000});
+      const payload=await json(u,{signal,timeoutMs:IDENTITY_REMOTE_BATCH_TIMEOUT_MS});
       if(!Array.isArray(payload))throw new Error("Réponse CoinGecko batch invalide");
       const byId=new Map(payload.map(row=>[String(row?.id||"").trim().toLowerCase(),row]).filter(([id])=>id));
       for(const spec of rows){
         if(signal?.aborted)break;
         const cgId=String(spec.coingeckoId).trim();
         const row=byId.get(cgId.toLowerCase());
-        if(!row){
-          state.identityStatus.missing+=1;
-          continue;
-        }
-        try{
-          cacheIdentity(identityFromPayload(spec,row,"CoinGecko /coins/markets"));
-        }catch(error){
-          state.identityStatus.mismatched+=1;
-          recordIdentityDiagnostic(error);
-        }
+        if(!row){state.identityStatus.missing+=1;continue;}
+        try{cacheIdentity(identityFromPayload(spec,row,"CoinGecko emergency batch"));}
+        catch(error){state.identityStatus.mismatched+=1;recordIdentityDiagnostic(error);}
       }
       return true;
     }catch(error){
@@ -282,58 +326,17 @@
     }
   }
 
-  async function fetchCoinGeckoIdentityFallback(spec,{signal=null}={}){
-    const cgId=String(spec?.coingeckoId||"").trim();
-    if(!cgId)return null;
-    const cached=state.identityCache.get(cgId);
-    if(cached)return cached;
-    const failedAt=finite(state.identityFailureAt.get(cgId));
-    if(failedAt!==null&&Date.now()-failedAt<IDENTITY_FAILURE_TTL_MS)return null;
-    const u=new URL(COINGECKO+"/coins/"+encodeURIComponent(cgId));
-    u.searchParams.set("localization","false");
-    u.searchParams.set("tickers","false");
-    u.searchParams.set("market_data","false");
-    u.searchParams.set("community_data","false");
-    u.searchParams.set("developer_data","false");
-    u.searchParams.set("sparkline","false");
-    let lastError=null;
-    for(let attempt=0;attempt<IDENTITY_FALLBACK_RETRY_DELAYS.length;attempt+=1){
-      if(signal?.aborted)return null;
-      const delay=IDENTITY_FALLBACK_RETRY_DELAYS[attempt];
-      if(delay>0)await sleep(delay);
-      try{
-        state.identityStatus.fallbackRequests+=1;
-        const payload=await json(u,{signal,timeoutMs:12000});
-        const identity=cacheIdentity(identityFromPayload(spec,payload,"CoinGecko fallback"));
-        state.identityStatus.recovered+=1;
-        return identity;
-      }catch(error){
-        lastError=error;
-        if(error?.code==="IDENTITY_MISMATCH")break;
-      }
-    }
-    state.identityFailureAt.set(cgId,Date.now());
-    recordIdentityDiagnostic(lastError||new Error("Identité CoinGecko indisponible"));
-    return null;
-  }
-
   async function enrichKnownIdentities(specs,{signal=null}={}){
     const rows=Array.isArray(specs)?specs:[];
     const targets=rows.filter(spec=>spec?.coingeckoId);
-    state.identityStatus={attempted:targets.length,verified:0,logos:0,failed:0,batchRequests:0,batchFailures:0,fallbackRequests:0,rateLimited:0,mismatched:0,missing:0,recovered:0,lastFailure:null};
-    await fetchCoinGeckoIdentitiesBatch(targets,{signal});
-    let unresolved=targets.filter(spec=>!state.identityCache.has(String(spec.coingeckoId)));
-    if(unresolved.length&&!signal?.aborted)await sleep(IDENTITY_FALLBACK_START_DELAY_MS);
-    for(const spec of unresolved){
-      if(signal?.aborted)break;
-      await fetchCoinGeckoIdentityFallback(spec,{signal});
-    }
+    state.identityStatus={attempted:targets.length,verified:0,logos:0,failed:0,githubHits:0,batchRequests:0,batchFailures:0,rateLimited:0,mismatched:0,missing:0,lastFailure:null};
+    await loadIdentityRegistry();
+    state.identityStatus.githubHits=applyRegistryIdentities(targets);
+    const unresolved=targets.filter(spec=>!state.identityCache.has(String(spec.coingeckoId)));
+    if(unresolved.length&&!signal?.aborted)await fetchCoinGeckoIdentitiesBatch(unresolved,{signal});
     for(const spec of targets){
       const identity=state.identityCache.get(String(spec.coingeckoId))||null;
-      if(!identity){
-        state.identityStatus.failed+=1;
-        continue;
-      }
+      if(!identity){state.identityStatus.failed+=1;continue;}
       spec.identityVerified=true;
       spec.identitySource=identity.source;
       spec.canonicalName=identity.name;
@@ -345,9 +348,10 @@
   }
 
   function identityDiagnosticsLabel(){
-    const s=state.identityStatus;
-    const parts=[`batch ${s.batchRequests}`];
-    if(s.fallbackRequests)parts.push(`fallback ${s.fallbackRequests}`);
+    const s=state.identityStatus,r=state.registryStatus;
+    const parts=[`GitHub ${s.githubHits}/${s.attempted}`];
+    if(r.error)parts.push("registre indisponible");
+    if(s.batchRequests)parts.push(`CoinGecko secours ${s.batchRequests}`);
     if(s.rateLimited)parts.push(`429 ${s.rateLimited}`);
     if(s.failed)parts.push(`échec ${s.failed}${s.lastFailure?` (${s.lastFailure})`:""}`);
     return parts.join(" · ");
@@ -418,7 +422,7 @@
       name:spec.name,
       symbol:spec.symbol,
       rank:null,
-      image:safeCoinGeckoImage(spec.image)||null,
+      image:safeIdentityImage(spec.image)||null,
       price:priceEur,
       priceEur,
       priceUsd,
@@ -974,10 +978,11 @@
       confirmed_requires_date_price_volume:proof.status==="CONFIRMÉ",
       candidate_when_market_proof_missing:candidate.status==="CANDIDAT",
       age_bands:true,
-      identity_batch_markets:true,
-      identity_individual_fallback:true,
+      identity_github_registry_primary:true,
+      identity_embedded_logos:true,
+      identity_remote_batch_emergency_only:true,
       identity_exact_id_symbol:true,
-      identity_failure_retryable:true,
+      identity_retry_storm_removed:true,
       identity_failure_non_blocking:true,
       native_market_category:true,
       native_fiche_surface_reused:true,
@@ -996,7 +1001,7 @@
 
   globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
     build:MODULE_VERSION,mount,discover,select,deactivate,snapshot,self_test:selfTest,
-    identity_enrichment:"CoinGecko /coins/markets batch; exact id+symbol proof; delayed individual fallback; fail-open",
+    identity_enrichment:"GitHub static identity memory first; CoinGecko batch only for unresolved known ids; exact id+symbol proof; fail-open",
     identity_logos:true,
     safe_radar:true,
     discovery_source:"Bitget launchTime only",
