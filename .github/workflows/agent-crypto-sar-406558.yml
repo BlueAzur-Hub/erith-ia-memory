@@ -1,0 +1,54 @@
+name: Agent-Crypto 40.6.558 Candles SAR
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.558.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/CANDLES_SAR_40.6.558.md"
+      - ".github/scripts/agent_crypto_sar_guard_406558.py"
+      - ".github/workflows/agent-crypto-sar-406558.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.558.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/CANDLES_SAR_40.6.558.md"
+      - ".github/scripts/agent_crypto_sar_guard_406558.py"
+      - ".github/workflows/agent-crypto-sar-406558.yml"
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  validate-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js
+      - run: |
+          node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/market-microscope-candles-406498.js');
+          const r=global.AgentCryptoMarketMicroscope.self_test();console.log(JSON.stringify(r,null,2));
+          if(!r.pass||!r.checks.sar_method||!r.checks.sar_values||!r.checks.sar_default_off)process.exit(1);
+          NODE
+      - run: python .github/scripts/agent_crypto_sar_guard_406558.py
+      - run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Package compact patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          r=Path("public/agent_crypto_erith_ia/administrator");o=Path("AGENT_CRYPTO_ADMINISTRATOR_40.6.558_SAR_PATCH.zip")
+          fs=[r/"index.html",r/"index-40.6.558.html",r/"build.json",r/"js/market-microscope-candles-406498.js",r/"CANDLES_SAR_40.6.558.md"]
+          with zipfile.ZipFile(o,"w",zipfile.ZIP_DEFLATED) as z:
+            for p in fs:z.write(p,p.as_posix())
+          h=hashlib.sha256(o.read_bytes()).hexdigest();Path("SAR_40.6.558_SHA256.txt").write_text(f"{h}  {o.name}\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.558_SAR_PATCH
+          path: |
+            AGENT_CRYPTO_ADMINISTRATOR_40.6.558_SAR_PATCH.zip
+            SAR_40.6.558_SHA256.txt
