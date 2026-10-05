@@ -7,6 +7,10 @@ on:
       - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json"
+      - "public/agent_crypto_erith_ia/administrator/js/aether-role-visibility.js"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_IDENTITY_FICHE_STABILITY_40.6.543.md"
+      - ".github/scripts/agent_crypto_new_listings_identity_fiche_stability_406543_guard.py"
+      - ".github/scripts/agent_crypto_fiche_dock_stability_406543_test.cjs"
       - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_GITHUB_IDENTITY_MEMORY_40.6.542.md"
       - ".github/scripts/agent_crypto_new_listings_github_identity_memory_406542_guard.py"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js"
@@ -21,6 +25,10 @@ on:
       - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json"
+      - "public/agent_crypto_erith_ia/administrator/js/aether-role-visibility.js"
+      - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_IDENTITY_FICHE_STABILITY_40.6.543.md"
+      - ".github/scripts/agent_crypto_new_listings_identity_fiche_stability_406543_guard.py"
+      - ".github/scripts/agent_crypto_fiche_dock_stability_406543_test.cjs"
       - "public/agent_crypto_erith_ia/administrator/NEW_LISTINGS_GITHUB_IDENTITY_MEMORY_40.6.542.md"
       - ".github/scripts/agent_crypto_new_listings_github_identity_memory_406542_guard.py"
       - "public/agent_crypto_erith_ia/administrator/index.html"
@@ -58,10 +66,26 @@ jobs:
           admin=Path("public/agent_crypto_erith_ia/administrator")
           build=json.loads((admin/"build.json").read_text(encoding="utf-8"))["build"]
           lifecycle_note=admin/f"NEW_LISTINGS_LIFECYCLE_{build}.md"
+          identity_fiche_note=admin/f"NEW_LISTINGS_IDENTITY_FICHE_STABILITY_{build}.md"
           github_identity_note=admin/f"NEW_LISTINGS_GITHUB_IDENTITY_MEMORY_{build}.md"
           batched_identity_note=admin/f"NEW_LISTINGS_BATCHED_IDENTITY_{build}.md"
           canonical_note=admin/f"NEW_LISTINGS_CANONICAL_OWNER_{build}.md"
-          if github_identity_note.exists():
+          if identity_fiche_note.exists():
+            # 40.6.543: valid GitHub logo payloads + native Fiche dock stability.
+            files=[
+              admin/"index.html",
+              admin/f"index-{build}.html",
+              admin/"build.json",
+              admin/"js/new-listings-native-category.js",
+              admin/"js/aether-role-visibility.js",
+              admin/"data/new-listings-identities.json",
+              identity_fiche_note,
+              Path(".github/scripts/agent_crypto_new_listings_identity_fiche_stability_406543_guard.py"),
+              Path(".github/scripts/agent_crypto_fiche_dock_stability_406543_test.cjs"),
+              Path(".github/workflows/agent-crypto-new-listings-identity-fiche-stability-406543.yml"),
+            ]
+            package_kind="NEW_LISTINGS_IDENTITY_FICHE_STABILITY_PATCH"
+          elif github_identity_note.exists():
             # 40.6.542 GitHub identity memory: runtime + registry + proof payload only.
             files=[
               admin/"index.html",
