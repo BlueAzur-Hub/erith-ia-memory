@@ -9,7 +9,7 @@
 (()=>{
   "use strict";
 
-  const MODULE_VERSION="40.6.544";
+  const MODULE_VERSION="40.6.546";
   const BUTTON_ID="atlasNewListingsButton406528";
   const LEGACY_RADAR_ID="atlasNewListingsRadar406528";
   const LEGACY_LIVE_ID="atlasNewListingsLive529";
@@ -21,7 +21,7 @@
   const BITGET="https://api.bitget.com";
   const COINGECKO="https://api.coingecko.com/api/v3";
   const DISCOVERY_COOLDOWN_MS=15000;
-  const IDENTITY_REGISTRY_URL="./data/new-listings-identities.json";
+  const IDENTITY_REGISTRY_URL="./data/new-listings-identities.json?v=40.6.546";
   const IDENTITY_REMOTE_BATCH_TIMEOUT_MS=12000;
   const CANONICAL_EXIT_SELECTOR=[
     "#btnChartSolo","#btnChartTop3","#btnChartTop5",
@@ -250,7 +250,7 @@
   async function loadIdentityRegistry(){
     if(state.registryStatus.loaded)return state.identityRegistry;
     try{
-      const r=await fetch(IDENTITY_REGISTRY_URL,{cache:"force-cache",headers:{Accept:"application/json"}});
+      const r=await fetch(IDENTITY_REGISTRY_URL,{cache:"no-store",headers:{Accept:"application/json"}});
       if(!r.ok)throw new Error(`HTTP ${r.status}`);
       const payload=await r.json();
       if(payload?.schema!=="agent_crypto_new_listings_identity_registry_v1"||!payload?.identities||typeof payload.identities!=="object"){
