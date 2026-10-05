@@ -66,13 +66,29 @@ jobs:
           admin=Path("public/agent_crypto_erith_ia/administrator")
           build=json.loads((admin/"build.json").read_text(encoding="utf-8"))["build"]
           lifecycle_note=admin/f"NEW_LISTINGS_LIFECYCLE_{build}.md"
+          logo_cache_truth_note=admin/f"NEW_LISTINGS_LOGO_CACHE_TRUTH_{build}.md"
           fiche_restore_note=admin/f"NEW_FICHE_NATIVE_LATERAL_RESTORE_{build}.md"
           real_logo_note=admin/f"NEW_LISTINGS_REAL_LOGO_ASSETS_{build}.md"
           identity_fiche_note=admin/f"NEW_LISTINGS_IDENTITY_FICHE_STABILITY_{build}.md"
           github_identity_note=admin/f"NEW_LISTINGS_GITHUB_IDENTITY_MEMORY_{build}.md"
           batched_identity_note=admin/f"NEW_LISTINGS_BATCHED_IDENTITY_{build}.md"
           canonical_note=admin/f"NEW_LISTINGS_CANONICAL_OWNER_{build}.md"
-          if fiche_restore_note.exists():
+          if logo_cache_truth_note.exists():
+            files=[
+              admin/"index.html",
+              admin/f"index-{build}.html",
+              admin/"build.json",
+              admin/"js/new-listings-native-category.js",
+              admin/"data/new-listings-identities.json",
+              admin/"assets/crypto/new-listings/concrete.png",
+              admin/"assets/crypto/new-listings/magic-hash.png",
+              admin/"assets/crypto/new-listings/marscat-token.png",
+              admin/"assets/crypto/new-listings/pons.png",
+              admin/"assets/crypto/new-listings/canopy.png",
+              logo_cache_truth_note,
+            ]
+            package_kind="NEW_LISTINGS_LOGO_CACHE_TRUTH_PATCH"
+          elif fiche_restore_note.exists():
             files=[
               admin/"index.html",
               admin/f"index-{build}.html",
