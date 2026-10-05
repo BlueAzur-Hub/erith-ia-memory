@@ -949,6 +949,7 @@
       pendingId:state.pending?.id||null,
       lastDiscoveryAt:state.lastDiscoveryAt,lastError:state.lastError,
       identityStatus:{...state.identityStatus},
+      registryStatus:{...state.registryStatus},
       radarStatus:{...state.radarStatus},
       discoveryCooldownMs:DISCOVERY_COOLDOWN_MS,
       duplicateGraph:false,duplicateFiche:false,duplicateDepth:false,
