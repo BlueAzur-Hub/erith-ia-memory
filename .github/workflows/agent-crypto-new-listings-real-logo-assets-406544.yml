@@ -1,0 +1,48 @@
+name: Agent-Crypto 40.6.544 Real Crypto Logo Assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/assets/crypto/new-listings/**"
+      - "public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json"
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.544.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - ".github/scripts/agent_crypto_new_listings_real_logo_assets_406544_guard.py"
+      - ".github/scripts/agent_crypto_real_logo_assets_406544_test.cjs"
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/assets/crypto/new-listings/**"
+      - "public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json"
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/index-40.6.544.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Static logo guard
+        run: |
+          python .github/scripts/agent_crypto_new_listings_real_logo_assets_406544_guard.py
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
+          python .github/scripts/agent_crypto_version_truth_guard_compat.py
+      - name: Install Firefox
+        run: |
+          npm install --prefix .test-runtime --no-audit --no-fund playwright@1.62.1
+          .test-runtime/node_modules/.bin/playwright install --with-deps firefox
+      - name: Decode all five PNG assets in Firefox
+        env:
+          PLAYWRIGHT_MODULE: "${{ github.workspace }}/.test-runtime/node_modules/playwright"
+        run: node .github/scripts/agent_crypto_real_logo_assets_406544_test.cjs
