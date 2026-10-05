@@ -66,11 +66,30 @@ jobs:
           admin=Path("public/agent_crypto_erith_ia/administrator")
           build=json.loads((admin/"build.json").read_text(encoding="utf-8"))["build"]
           lifecycle_note=admin/f"NEW_LISTINGS_LIFECYCLE_{build}.md"
+          real_logo_note=admin/f"NEW_LISTINGS_REAL_LOGO_ASSETS_{build}.md"
           identity_fiche_note=admin/f"NEW_LISTINGS_IDENTITY_FICHE_STABILITY_{build}.md"
           github_identity_note=admin/f"NEW_LISTINGS_GITHUB_IDENTITY_MEMORY_{build}.md"
           batched_identity_note=admin/f"NEW_LISTINGS_BATCHED_IDENTITY_{build}.md"
           canonical_note=admin/f"NEW_LISTINGS_CANONICAL_OWNER_{build}.md"
-          if identity_fiche_note.exists():
+          if real_logo_note.exists():
+            files=[
+              admin/"index.html",
+              admin/f"index-{build}.html",
+              admin/"build.json",
+              admin/"js/new-listings-native-category.js",
+              admin/"data/new-listings-identities.json",
+              admin/"assets/crypto/new-listings/concrete.png",
+              admin/"assets/crypto/new-listings/magic-hash.png",
+              admin/"assets/crypto/new-listings/marscat-token.png",
+              admin/"assets/crypto/new-listings/pons.png",
+              admin/"assets/crypto/new-listings/canopy.png",
+              real_logo_note,
+              Path(".github/scripts/agent_crypto_new_listings_real_logo_assets_406544_guard.py"),
+              Path(".github/scripts/agent_crypto_real_logo_assets_406544_test.cjs"),
+              Path(".github/workflows/agent-crypto-new-listings-real-logo-assets-406544.yml"),
+            ]
+            package_kind="NEW_LISTINGS_REAL_LOGO_ASSETS_PATCH"
+          elif identity_fiche_note.exists():
             # 40.6.543: valid GitHub logo payloads + native Fiche dock stability.
             files=[
               admin/"index.html",
