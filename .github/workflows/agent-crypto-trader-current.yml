@@ -10,6 +10,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
+      - "public/agent_crypto_erith_ia/administrator/js/aether.js"
       - ".github/workflows/agent-crypto-trader-current.yml"
   push:
     branches: [main]
@@ -21,6 +22,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
+      - "public/agent_crypto_erith_ia/administrator/js/aether.js"
       - ".github/workflows/agent-crypto-trader-current.yml"
 
 permissions:
@@ -41,6 +43,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
           node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
           node --check public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js
+          node --check public/agent_crypto_erith_ia/administrator/js/aether.js
 
       - name: Trader single-runtime contract
         run: |
@@ -56,6 +59,7 @@ jobs:
           admin=(root/"administrator"/"index.html").read_text(encoding="utf-8")
           admin_build=json.loads((root/"administrator"/"build.json").read_text(encoding="utf-8"))
           cockpit=(root/"administrator"/"js"/"trader-cockpit-fit.js").read_text(encoding="utf-8")
+          aether=(root/"administrator"/"js"/"aether.js").read_text(encoding="utf-8")
           current=str(build.get("build","")).strip()
 
           forbidden=[
@@ -82,10 +86,15 @@ jobs:
             "no_duplicate_chart": "duplicated_chart_owner:false" in mirror,
             "no_duplicate_market": "duplicated_market_owner:false" in mirror,
             "read_only": build["execution"]=="disabled" and build["real_orders"] is False,
-            "native_trader_badge": 'id="traderSurfaceBadge"' in admin and '>TRADER</span>' in admin,
+            "native_trader_badge": 'id="traderSurfaceBadge">TRADER · '+current+'</span>' in admin,
             "native_admin_arrow": 'id="traderSurfaceAdminLink"' in admin and '>↗</a>' in admin,
             "native_header_first_paint": 'id="agentCryptoTraderFirstPaint"' in admin,
-            "no_late_header_injection": "traderRuntimeBadge" not in mirror and "traderRuntimeAdminLink" not in mirror,
+            "no_late_header_injection": "traderRuntimeBadge" not in mirror and "traderRuntimeAdminLink" not in mirror and "traderBadge.textContent" not in mirror,
+            "native_status_lane_present": all(token in admin for token in ['id="livecheck"', 'id="btnLivecheck"', 'id="btnRefresh"', 'id="decisionCard"', 'id="sourceActiveCard"', 'id="sourceTimeCard"']),
+            "native_status_lane_not_first_paint_hidden": 'html[data-agent-crypto-surface="trader"] #livecheck{display:none!important}' not in admin,
+            "mirror_preserves_native_status_lane": ':not(#accueil):not(#livecheck):not(#market-zone)' in mirror,
+            "aether_trader_ribbon_disabled": 'const AETHER_RIBBON_ENABLED=AETHER_SURFACE!=="trader"' in aether,
+            "aether_trader_native_phase": 'aetherPhaseApply("native","trader-ribbon-disabled")' in aether,
             "stable_cockpit_owner_loaded": 'js/trader-cockpit-fit.js' in admin,
             "target_top_native_dom": 'id="targetTop5Cycle"' in admin and 'id="top5Track"' in admin,
             "cockpit_no_market_flow_owner": "marketFlowCycle" not in cockpit and "tickerTrack" not in cockpit,
@@ -121,11 +130,12 @@ jobs:
           import json, zipfile
           root=Path("public/agent_crypto_erith_ia")
           build=json.loads((root/"trader"/"build.json").read_text(encoding="utf-8"))["build"]
-          out=Path(f"AGENT_CRYPTO_TRADER_{build}_NATIVE_TARGET_TOP_FIT.zip")
+          out=Path(f"AGENT_CRYPTO_TRADER_{build}_NATIVE_STATUS_LANE.zip")
           files=[
             root/"administrator"/"index.html",
             root/"administrator"/"build.json",
             root/"administrator"/"js"/"trader-cockpit-fit.js",
+            root/"administrator"/"js"/"aether.js",
             root/"trader"/"trading-desk.html",
             root/"trader"/"trader-runtime-mirror.js",
             root/"trader"/"build.json",
@@ -138,5 +148,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: AGENT_CRYPTO_TRADER_40.6.610_NATIVE_TARGET_TOP_FIT
-          path: AGENT_CRYPTO_TRADER_40.6.610_NATIVE_TARGET_TOP_FIT.zip
+          name: AGENT_CRYPTO_TRADER_40.6.611_NATIVE_STATUS_LANE
+          path: AGENT_CRYPTO_TRADER_40.6.611_NATIVE_STATUS_LANE.zip

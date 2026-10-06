@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const BUILD="40.6.610";
+const BUILD="40.6.611";
 const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
@@ -18,7 +18,7 @@ function mount(){
     const style=doc.createElement("style");
     style.id="agentCryptoTraderRuntimeMirrorStyle";
     style.textContent=[
-      "body.atlas-trader-runtime-mirror main.shell > :not(#accueil):not(#market-zone){display:none!important}",
+      "body.atlas-trader-runtime-mirror main.shell > :not(#accueil):not(#livecheck):not(#market-zone){display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-view-switcher{display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-advanced{display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential [data-atlas-essential-target]:not([data-atlas-essential-target='market-workspace']):not([data-atlas-essential-target='analyste']){display:none!important}",
@@ -39,9 +39,7 @@ function mount(){
     if(right)right.textContent="· Trader";
   }
 
-  const traderBadge=doc.getElementById("traderSurfaceBadge");
   const adminLink=doc.getElementById("traderSurfaceAdminLink");
-  if(traderBadge)traderBadge.textContent="TRADER";
   if(adminLink){
     adminLink.href="../administrator/index.html";
     adminLink.target="_top";

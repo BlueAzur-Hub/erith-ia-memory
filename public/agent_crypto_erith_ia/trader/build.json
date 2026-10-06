@@ -1,12 +1,12 @@
 {
-  "build": "40.6.610",
+  "build": "40.6.611",
   "surface": "trader",
-  "release": "TRADER · NATIVE TARGET TOP FIT",
-  "parent_trader_build": "40.6.609",
-  "administrator_base": "40.6.610",
+  "release": "TRADER · NATIVE STATUS LANE + VISIBLE BUILD",
+  "parent_trader_build": "40.6.610",
+  "administrator_base": "40.6.611",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406610_pending_firefox_terrain",
+  "status": "published_406611_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -25,7 +25,8 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Trader header: TRADER + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Trader header: TRADER · 40.6.611 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Native status lane: Relancer + Rafraîchir + Décision + Sources + Chronos",
       "Marché",
       "Graphique",
       "Lecture Technique",
@@ -120,9 +121,9 @@
     "pr": "repository_history_authority",
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
-    "zip": "workflow artifact: AGENT_CRYPTO_TRADER_40.6.610_NATIVE_TARGET_TOP_FIT",
-    "javascript_syntax": "CI_REQUIRED",
-    "workflow_artifact": "AGENT_CRYPTO_TRADER_40.6.610_NATIVE_TARGET_TOP_FIT"
+    "zip": "workflow artifact: AGENT_CRYPTO_TRADER_40.6.611_NATIVE_STATUS_LANE",
+    "workflow_artifact": "AGENT_CRYPTO_TRADER_40.6.611_NATIVE_STATUS_LANE",
+    "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -130,15 +131,16 @@
     "no_aether_thread": true,
     "administrator_business_logic_modified": false,
     "administrator_presentation_modified": true,
+    "aether_phase_contract_modified": true,
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.610.",
-    "Confirm the 40.6.609 header remains unchanged and stable.",
-    "Confirm Graphique + Lecture Technique fit the middle of the viewport and Target Top 5 is fully visible as the final strip.",
-    "Confirm Market Flow remains immediately below Target Top 5 and appears only after scrolling.",
-    "Confirm F11 expands Graphique + Lecture Technique while Target Top 5 remains the final visible strip.",
-    "Confirm Target Top 5 cycle and coin comparison clicks remain native and functional."
+    "Firefox Ctrl+F5 on Trader 40.6.611.",
+    "Confirm the header shows TRADER · 40.6.611, live Binance, theme Metal/Glass and one Administrator arrow.",
+    "Confirm the native status lane is visible immediately: Relancer, Rafraîchir, Décision, Sources and Chronos.",
+    "Click through Graphique modes including Ligne/Bougies/Profondeur and wait several minutes: the status lane must never become empty.",
+    "Confirm Aether ribbon never replaces the native status lane on Trader.",
+    "Confirm Target Top 5 / Market Flow geometry from 40.6.610 is unchanged."
   ],
   "restore_406607": {
     "source_build": "40.6.601",
@@ -233,6 +235,31 @@
     "market_core_modified": false,
     "graph_business_logic_modified": false,
     "lecture_technique_modified": false,
+    "real_order": false
+  },
+  "native_status_lane_406611": {
+    "enabled": true,
+    "owner": "Administrator native #livecheck.command-bar + aether.js native phase",
+    "source_first_visible": true,
+    "runtime_mirror_preserves_livecheck": true,
+    "native_controls_persist": true,
+    "aether_ribbon_enabled": false,
+    "aether_phase": "native",
+    "news_ready_may_hide_controls": false,
+    "empty_lane_regression_fixed": true,
+    "visible_build_in_existing_trader_badge": true,
+    "new_badge_added": false,
+    "duplicated_menu": false,
+    "dom_move": false,
+    "observer": false,
+    "new_timer": false,
+    "new_storage": false,
+    "new_network": false,
+    "market_core_modified": false,
+    "graph_business_logic_modified": false,
+    "lecture_technique_modified": false,
+    "target_top_modified": false,
+    "market_flow_modified": false,
     "real_order": false
   }
 }
