@@ -1,12 +1,12 @@
 {
-  "build": "40.6.608",
+  "build": "40.6.609",
   "surface": "trader",
-  "release": "TRADER · NATIVE SURFACE FIRST PAINT",
-  "parent_trader_build": "40.6.607",
-  "administrator_base": "40.6.608",
+  "release": "TRADER · NATIVE MINIMAL HEADER",
+  "parent_trader_build": "40.6.608",
+  "administrator_base": "40.6.609",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406608_pending_firefox_terrain",
+  "status": "published_406609_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -25,7 +25,7 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Administrator header truth",
+      "Trader header: TRADER + Prix live Binance + theme Metal/Glass + Administrator arrow",
       "Marché",
       "Graphique",
       "Lecture Technique",
@@ -115,25 +115,26 @@
     "PAIR/data truth in Administrator"
   ],
   "delivery": {
-    "pr": "PENDING",
-    "merge_commit": "PENDING",
-    "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.608_NATIVE_SURFACE_FIRST_PAINT.zip",
-    "javascript_syntax": "PENDING"
+    "pr": "repository_history_authority",
+    "merge_commit": "repository_history_authority",
+    "github_pages": "repository_actions_authority",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.609_NATIVE_MINIMAL_HEADER.zip",
+    "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
     "no_real_order": true,
     "no_new_exchange_key": true,
     "no_aether_thread": true,
-    "administrator_runtime_modified": false,
+    "administrator_business_logic_modified": false,
+    "administrator_presentation_modified": true,
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.608.",
-    "Confirm there is no full Administrator menu flash before the Trader surface appears.",
-    "Confirm no third livecheck/status row appears in Trader.",
-    "Confirm the Aether ribbon/thread never starts in Trader.",
-    "Confirm Marché + Graphique and the 40.6.601 runtime behavior remain stable."
+    "Firefox Ctrl+F5 on Trader 40.6.609.",
+    "Confirm first paint already contains only TRADER, Prix live Binance, theme Metal/Glass and one Administrator arrow in the status header.",
+    "Confirm no Build/Administrator version pill or ENGINE pill appears in Trader, even briefly.",
+    "Confirm no duplicate menu, no Aether ribbon/thread and no Aether geometry movement.",
+    "Confirm Marché + Graphique + Lecture Technique keep the shared Administrator runtime behavior."
   ],
   "restore_406607": {
     "source_build": "40.6.601",
@@ -180,6 +181,31 @@
     "math_core_modified": false,
     "candles_modified": false,
     "depth_modified": false,
+    "real_order": false
+  },
+  "native_header_406609": {
+    "enabled": true,
+    "owner": "administrator/index.html#agentCryptoTraderFirstPaint + static status-stack markup",
+    "source_first": true,
+    "before_first_paint": true,
+    "visible": [
+      "TRADER",
+      "Prix live Binance",
+      "theme Metal/Glass",
+      "Administrator arrow"
+    ],
+    "hidden_in_trader": [
+      "Build/Administrator version pill",
+      "ENGINE badge",
+      "decorative sigil"
+    ],
+    "mirror_header_injection": false,
+    "administrator_default_header_unchanged": true,
+    "market_core_modified": false,
+    "business_logic_modified": false,
+    "aether_modified": false,
+    "graph_modified": false,
+    "lecture_technique_modified": false,
     "real_order": false
   }
 }
