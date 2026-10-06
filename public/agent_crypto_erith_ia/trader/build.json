@@ -1,12 +1,12 @@
 {
-  "build": "40.6.596",
+  "build": "40.6.597",
   "surface": "trader",
-  "release": "TRADER · NATIVE SOURCE DOCK",
-  "parent_trader_build": "40.6.595",
+  "release": "TRADER · PAIR CENTRAL TRUTH + DEBUG SWEEP",
+  "parent_trader_build": "40.6.596",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": false,
-  "status": "branch_ready_for_pr_406596",
+  "status": "branch_ready_for_pr_406597",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -141,6 +141,37 @@
       ],
       "external_new_listing_policy": "limited until a canonical CoinGecko id exists",
       "single_owner": true
+    },
+    "pair_central_truth": {
+      "owner": "trader/pair-central-truth.js",
+      "principle": "Market selection is the one canonical PAIR truth for Trader.",
+      "outputs": [
+        "coin id",
+        "symbol",
+        "quote",
+        "pair",
+        "display currency",
+        "external flag",
+        "revision"
+      ],
+      "consumers_audited": [
+        "Market",
+        "Ligne",
+        "Bougies",
+        "Profondeur",
+        "Lecture Technique",
+        "Math Core",
+        "Source Dock"
+      ],
+      "visible_status_chip": true,
+      "mismatch_diagnostic": true,
+      "auto_order": false
+    },
+    "debug_sweep": {
+      "stale_market_fiche_fix": "floating fiche now closes immediately when a new central asset is selected",
+      "market_dom_ownership_fix": "Market no longer writes Lecture Technique DOM directly",
+      "cross_surface_status": "PAIR pill shows SYNC / SYNCING / MISMATCH from owner snapshots",
+      "protected_owners_changed": false
     }
   },
   "technical_reading": {
@@ -202,10 +233,10 @@
     "pr": null,
     "merge_commit": null,
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.596_NATIVE_SOURCE_DOCK.zip",
-    "zip_bytes": 76002,
-    "javascript_syntax": "PASS",
-    "package_commit": "7ce4265522569e0277243144ce30a99ee0d5073a"
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.597_PAIR_CENTRAL_TRUTH_DEBUG.zip",
+    "zip_bytes": null,
+    "javascript_syntax": "PENDING",
+    "package_commit": null
   },
   "stop_gate": {
     "no_real_order": true,
@@ -215,9 +246,10 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox: open Lecture Technique > Source Dock on BTC.",
-    "Verify Site officiel opens bitcoin.org (or current CoinGecko declared homepage), plus Explorer / Whitepaper / Code source / Community when declared.",
-    "Verify Actualiser reloads metadata and the status reports direct/cache; News Sentinel must stay grey/inactive.",
-    "Switch BTC -> ETH -> another asset and confirm portal URLs follow the selected asset."
+    "Firefox: select BTC, ETH, SOL and at least one non-pillar asset from Market.",
+    "PAIR pill must follow the selection and settle to SYNC, never MISMATCH.",
+    "Verify Ligne/Bougies, Profondeur, Lecture Technique, Math Core and Source Dock all display the same asset.",
+    "Verify a floating Market fiche disappears immediately after selecting another asset.",
+    "Report any MISMATCH state with the visible selected asset; 40.6.597 is a debug checkpoint before OKX account read-only."
   ]
 }
