@@ -1,4 +1,4 @@
-# ERITH.IA Trading Desk — 40.6.575
+# ERITH.IA Trading Desk — 40.6.576
 
 Version suivante de la fondation Trader, destinée à vérifier visuellement que l'agencement canonique a été compris.
 
@@ -37,7 +37,7 @@ Cette version reste une **coquille de disposition** :
 Les blocs métier seront remontés depuis leurs propriétaires existants uniquement après validation opérateur de cette géométrie.
 
 
-## Intégration 40.6.575 — première vraie brique
+## Intégration 40.6.576 — première vraie brique
 
 Une seule responsabilité : **monter le propriétaire Bougies déjà existant dans la surface Trader**.
 
@@ -55,7 +55,7 @@ Le module Administrator reste propriétaire du rendu, des indicateurs, des inter
 Market, Profondeur, Lecture Technique et Math Core restent des emplacements non montés dans cette version.
 
 
-## Intégration 40.6.575 — Profondeur réelle
+## Intégration 40.6.576 — Profondeur réelle
 
 Une seule responsabilité supplémentaire : **monter le propriétaire Profondeur / Carnet existant**.
 
@@ -74,3 +74,17 @@ Le module conserve son comportement validé :
 Dans Trader, `#detailPanel` reste le panneau Lecture Technique sous-jacent. Profondeur se superpose dessus comme dans Administrator ; fermer Profondeur révèle Lecture Technique.
 
 Market, Lecture Technique métier et Math Core restent encore non montés.
+
+
+## Correction 40.6.576 — Réduire doit réduire pour de vrai
+
+Retour terrain sur 40.6.575 : la commande « Réduire » de Profondeur fonctionnait techniquement,
+mais ne libérait aucune largeur pour le Graphique. Le rail droit restait plein et révélait seulement
+le placeholder Lecture Technique : résultat fonctionnel mais visuellement brouillon.
+
+40.6.576 corrige uniquement ce comportement de shell :
+- réduire ou fermer Profondeur => rail droit compact de 42 px ;
+- le Graphique récupère immédiatement l'espace libéré ;
+- une languette verticale « DÉTAIL » restaure Profondeur ;
+- aucun moteur Profondeur/Bougies n'est modifié ;
+- Lecture Technique métier reste non montée.
