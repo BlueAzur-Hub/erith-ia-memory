@@ -5,7 +5,7 @@
      Même bibliothèque, mêmes périodes, même stockage privé local.
      Adaptation unique : chemins assets depuis /trader/. */
 
-  const BUILD = "40.6.580";
+  const BUILD = "40.6.586";
   const BASE = "../administrator/assets/visual/technical-reading/";
   const DEFAULT_IMAGE = "../administrator/assets/visual/admin-technical-reading-default.png";
   const DB_NAME = "agent_crypto_private_visuals";
@@ -287,6 +287,9 @@
   function ensureToolbar() {
     const p = panel(), h = host();
     if (!p || !h) return null;
+    p.classList.add("atlas-tech-static-cycle","atlas-tech-letterbox-fill-40230","atlas-tech-frame-lock-40259","atlas-classic-web-tech-40261");
+    h.setAttribute("aria-label","Cliquer pour choisir une image privée locale pour Lecture technique");
+    h.setAttribute("title","Cliquer pour choisir une image privée locale");
     let bar = p.querySelector(".atlas-tech-static-toolbar");
     if (!bar) {
       bar = document.createElement("div");
@@ -314,6 +317,14 @@
         syncButtons();
         schedule();
       });
+    }
+
+    let tint = h.querySelector(".atlas-tech-static-tint");
+    if (!tint) {
+      tint = document.createElement("span");
+      tint.className = "atlas-tech-static-tint";
+      tint.setAttribute("aria-hidden","true");
+      h.appendChild(tint);
     }
 
     if (h.dataset.traderPrivatePickerBound !== "1") {
