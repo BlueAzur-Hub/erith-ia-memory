@@ -69,16 +69,19 @@ jobs:
           root=Path("public/agent_crypto_erith_ia/administrator")
           manifest=json.loads((root/"build.json").read_text(encoding="utf-8"))
           build=manifest["build"]
-          release_note=root/manifest["release_notes"]
+          release_note_name=str(manifest.get("release_notes") or "").strip()
           out=Path(f"AGENT_CRYPTO_ADMINISTRATOR_{build}_MICROSCOPE_PATCH.zip")
           files=[
             root/"index.html",
-            root/f"index-{build}.html",
             root/"build.json",
             root/"app.js",
             root/"js/market-microscope-candles.js",
-            release_note,
           ]
+          optional=[
+            root/f"index-{build}.html",
+            root/release_note_name if release_note_name else None,
+          ]
+          files.extend(p for p in optional if p is not None and p.exists())
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
             for p in files:
               z.write(p,p.as_posix())
