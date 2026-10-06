@@ -38,26 +38,39 @@ h2{font-size:15px;margin-bottom:0}
 .trader-menu{margin-top:12px;padding:10px 12px;border-radius:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .menu-pair{display:flex;align-items:center;gap:9px;border:1px solid rgba(95,231,242,.35);background:rgba(95,231,242,.06);color:var(--text);border-radius:10px;padding:8px 11px}
 .menu-pair span{font-size:9px;color:var(--muted);letter-spacing:.12em}.menu-pair strong{font-size:12px;color:var(--cyan)}
-.trader-grid{margin-top:12px;display:grid;grid-template-columns:minmax(250px,.95fr) minmax(460px,1.6fr) minmax(300px,1fr);grid-template-areas:
-  "market graph right"
-  "market math actions";
-  gap:12px;align-items:stretch}
+
+/* 40.6.572 layout repair:
+   preserve the visual order already established in Administrator:
+   top = Graphique + Profondeur/Lecture Technique
+   below = Market + Math Core/actions. */
+.trader-grid{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(0,1.15fr) minmax(320px,.72fr);
+  grid-template-areas:
+    "graph graph right"
+    "market market bottom";
+  gap:12px;
+  align-items:start
+}
 .surface{border-radius:var(--radius);min-width:0;overflow:hidden}
-.market-surface{grid-area:market;min-height:620px}
-.graph-surface{grid-area:graph;min-height:410px}
-.right-stack{grid-area:right;display:grid;gap:12px;grid-template-rows:minmax(230px,1fr) minmax(230px,1fr)}
-.math-surface{grid-area:math;min-height:190px}
-.action-surface{grid-area:actions;min-height:190px}
+.graph-surface{grid-area:graph;min-height:520px}
+.right-stack{grid-area:right;display:grid;gap:12px;grid-template-rows:minmax(245px,1fr) minmax(245px,1fr)}
+.market-surface{grid-area:market;min-height:520px}
+.bottom-right-stack{grid-area:bottom;display:grid;gap:12px;align-content:start}
+.math-surface{min-height:260px}
+.action-surface{min-height:190px}
 .surface-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.018)}
 .surface-head span{font-size:10px;color:var(--muted);white-space:nowrap}
 .surface-placeholder{margin:14px;padding:16px;border:1px dashed rgba(117,210,229,.23);border-radius:12px;background:rgba(0,0,0,.12);min-height:160px}
 .surface-placeholder strong{font-size:12px;letter-spacing:.06em}
-.graph-placeholder{min-height:315px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+.graph-placeholder{min-height:425px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
   background:
     linear-gradient(rgba(95,231,242,.035) 1px,transparent 1px),
     linear-gradient(90deg,rgba(95,231,242,.035) 1px,transparent 1px);
   background-size:36px 36px}
-.compact{min-height:140px}
+.market-placeholder{min-height:420px}
+.compact{min-height:160px}
 .math-action-row{display:flex;align-items:center;gap:16px;padding:18px}
 .score-orb,.round-action{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-strong);background:rgba(95,231,242,.05);color:var(--cyan);font-weight:700}
 .math-action-row p{margin:6px 0 0}
@@ -70,10 +83,12 @@ h2{font-size:15px;margin-bottom:0}
 .action-note{margin:0 18px 18px}
 .trader-footer{margin-top:12px;padding:10px 13px;border-radius:12px;display:flex;gap:14px;justify-content:space-between;flex-wrap:wrap;color:var(--muted);font-size:10px}
 @media(max-width:1180px){
-  .trader-grid{grid-template-columns:minmax(240px,.8fr) minmax(420px,1.4fr);grid-template-areas:
-    "market graph"
-    "market right"
-    "math actions"}
+  .trader-grid{
+    grid-template-columns:minmax(0,1.55fr) minmax(300px,.85fr);
+    grid-template-areas:
+      "graph right"
+      "market bottom"
+  }
 }
 @media(max-width:760px){
   body{padding:10px}
@@ -81,13 +96,14 @@ h2{font-size:15px;margin-bottom:0}
   .topbar-actions{justify-content:flex-start}
   .trader-menu{position:sticky;top:8px;z-index:20}
   .trader-grid{display:flex;flex-direction:column}
-  .graph-surface{order:1}
+  .graph-surface{order:1;min-height:350px}
   .right-stack{order:2;display:flex;flex-direction:column}
   .depth-surface{order:1}
   .technical-surface{order:2}
-  .math-surface{order:3}
-  .action-surface{order:4}
-  .market-surface{order:5;min-height:320px}
-  .graph-surface{min-height:350px}
+  .bottom-right-stack{order:3;display:flex;flex-direction:column}
+  .math-surface{order:1}
+  .action-surface{order:2}
+  .market-surface{order:4;min-height:320px}
   .graph-placeholder{min-height:255px}
+  .market-placeholder{min-height:220px}
 }
