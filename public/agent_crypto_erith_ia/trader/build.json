@@ -5,8 +5,8 @@
   "parent_trader_build": "40.6.587",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "published": false,
-  "status": "branch_ready_for_pr_406588",
+  "published": true,
+  "status": "published_pending_terrain_406588",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -76,10 +76,10 @@
     "Math Core"
   ],
   "delivery": {
-    "pr": "PENDING",
-    "merge_commit": "PENDING",
-    "github_pages": "PENDING",
-    "zip": "PENDING"
+    "pr": 153,
+    "merge_commit": "7d6afedd2303a5dc6f244a5ff2761eea282f1f91",
+    "github_pages": "RUN 37460915497 · IN PROGRESS",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.588_MARKET_FIDELITY.zip"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -89,8 +89,10 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox proof: Nouveaux listings visible and functional in Trader Market",
-    "select one recent listing and verify Fiche/Graph/Depth reuse",
+    "Firefox proof: Nouveaux listings visible next to Spéculatifs",
+    "open Nouveaux listings and verify several recent instruments in the existing Market table",
+    "hover one listing: native floating Fiche must follow",
+    "select one listing: existing Graph/Bougies and Depth must reuse external context",
     "then bounded pass for BUY / SELL / REDIVIDER"
   ]
 }

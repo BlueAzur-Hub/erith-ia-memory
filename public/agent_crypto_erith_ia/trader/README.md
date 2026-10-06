@@ -20,3 +20,10 @@ Market Core 38.15.11 inchangé. Pas de second Graphique, pas de seconde Fiche, p
 Firefox : **PENDING CHRISTOPHE**.
 
 Après validation : passage séparé sur **BUY / SELL / REDIVIDER**.
+
+## Livraison 40.6.588
+- PR #153 fusionnée.
+- Merge commit : `7d6afedd2303a5dc6f244a5ff2761eea282f1f91`.
+- GitHub Pages : run `37460915497`.
+- ZIP : `downloads/AGENT_CRYPTO_TRADER_40.6.588_MARKET_FIDELITY.zip`.
+- Terrain Firefox : **PENDING CHRISTOPHE**.
