@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD="40.6.590";
+  const BUILD="40.6.596";
   const $=id=>document.getElementById(id);
   const finite=v=>{if(v===null||v===undefined||v==="")return null;const n=Number(v);return Number.isFinite(n)?n:null;};
   const currency=()=>String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"USD").toUpperCase()==="EUR"?"EUR":"USD";
@@ -41,13 +41,11 @@
     }
   }
   function renderSource(c,s){
+    const owner=globalThis.AgentCryptoTraderSourceDock;
+    if(owner?.select){owner.select(c);return;}
     set("sourceDockAsset",String(c?.name||c?.symbol||"—")+" · "+String(c?.symbol||"").toUpperCase());
-    set("sourceDockCompactState",s?.truth==="cache"?"Cache":"Actif");
-    set("sourceDockStatus","Synchronisé · "+(s?.period_label||"historique en attente"));
-    set("sourceDockOrigin",sourceLabel(c));
-    set("sourceDockUpdated",ageLabel(c));
-    const first=document.querySelector("#sourceDockPortals .source-portal");
-    if(first){first.classList.remove("is-disabled");first.textContent="CoinGecko";}
+    set("sourceDockCompactState","En attente");
+    set("sourceDockStatus","Source Dock natif en attente");
   }
   function renderBroker(c,s){
     set("brokerMarket","Market public");
