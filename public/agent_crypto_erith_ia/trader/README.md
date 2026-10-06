@@ -1,4 +1,4 @@
-# ERITH.IA Trading Desk — 40.6.574
+# ERITH.IA Trading Desk — 40.6.575
 
 Version suivante de la fondation Trader, destinée à vérifier visuellement que l'agencement canonique a été compris.
 
@@ -37,7 +37,7 @@ Cette version reste une **coquille de disposition** :
 Les blocs métier seront remontés depuis leurs propriétaires existants uniquement après validation opérateur de cette géométrie.
 
 
-## Intégration 40.6.574 — première vraie brique
+## Intégration 40.6.575 — première vraie brique
 
 Une seule responsabilité : **monter le propriétaire Bougies déjà existant dans la surface Trader**.
 
@@ -53,3 +53,24 @@ Le Trader fournit uniquement les points DOM attendus par le propriétaire exista
 Le module Administrator reste propriétaire du rendu, des indicateurs, des intervalles, du zoom/pan, des requêtes OKX publiques via Backend local et de la persistance de ses préférences.
 
 Market, Profondeur, Lecture Technique et Math Core restent des emplacements non montés dans cette version.
+
+
+## Intégration 40.6.575 — Profondeur réelle
+
+Une seule responsabilité supplémentaire : **monter le propriétaire Profondeur / Carnet existant**.
+
+Chargé directement depuis Administrator :
+- `js/okx-microstructure-406499.js`
+
+Le module conserve son comportement validé :
+- body portal indépendant ;
+- lecture seule ;
+- Backend local 8790 ;
+- USD => préférence USDC puis USDT ;
+- rafraîchissement toutes les 2 s uniquement lorsque la fenêtre est ouverte ;
+- commandes natives réduire / détacher / agrandir / masquer ;
+- aucun ordre, aucune API privée, aucun wallet.
+
+Dans Trader, `#detailPanel` reste le panneau Lecture Technique sous-jacent. Profondeur se superpose dessus comme dans Administrator ; fermer Profondeur révèle Lecture Technique.
+
+Market, Lecture Technique métier et Math Core restent encore non montés.
