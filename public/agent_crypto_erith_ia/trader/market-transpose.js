@@ -61,7 +61,7 @@
     return true;
   }
   function rowMarkup(c){
-    const selected=c.id===state.selectedId,ch24=finite(c.change24h),ch7=finite(c.change7d);
+    const selected=!state.externalCoin&&c.id===state.selectedId,ch24=finite(c.change24h),ch7=finite(c.change7d);
     const tone=v=>Number.isFinite(v)?(v>0?"pos":v<0?"neg":"flat"):"";
     return '<tr data-market-id="'+esc(c.id)+'" data-market-help-id="'+esc(c.id)+'" class="'+(selected?"is-selected":"")+'">'+
       '<td><b>'+esc(c.rank??"—")+'</b></td>'+
