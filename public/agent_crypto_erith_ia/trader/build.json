@@ -1,24 +1,26 @@
 {
-  "build": "40.6.580",
+  "build": "40.6.581",
   "surface": "trader",
-  "release": "TRADER · FINAL FIDELITY CASCADE",
-  "parent_trader_build": "40.6.579",
+  "release": "TRADER · INTERFACE FIDELITY SYNC",
+  "parent_trader_build": "40.6.580",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "published": true,
-  "status": "published_pending_terrain_406580",
+  "published": false,
+  "status": "branch_ready_for_pr_406581",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
-    "menu": "minimal top menu + central PAIR + Graphique/Lecture/Market/Math navigation",
+    "menu": "Administrator visual grammar transposed; limited to Marché/Graphique/Lecture/Profondeur/Math + PAIR/SPOT/PERP/READ ONLY",
     "primary": "Administrator #analyste / champagne-clean-lens transposed",
     "chart": "existing market-microscope-candles owner",
     "technical_reading": "single real portrait layer inside #detailPanel + complete S/R owner window",
     "depth": "existing okx-microstructure owner docked on #detailPanel",
     "market": "native Market Snapshot below Graph",
-    "math": "native Math Core V3 beside Market"
+    "math": "native Math Core V3 beside Market",
+    "chart_toolbar": "Administrator Graph toolbar grammar restored around existing Candles owner; Fiche/Legend/Analysis/Depth/Currency controls",
+    "market_fiche": "native-style floating/lateral Market Snapshot fiche restored from selected Trader market coin"
   },
   "technical_reading": {
     "single_portrait_owner": true,
@@ -60,16 +62,22 @@
     "Market Core 38.15.11",
     "Candles owner",
     "Depth owner",
+    "Technical Reading 40.6.580",
+    "Math Core transpose 40.6.580",
     "EUR/USD architecture"
   ],
   "stop_gate": {
-    "javascript_syntax": "PASS_LOCAL_PARSE_BEFORE_COMMIT",
+    "javascript_syntax": "PENDING_PR_CI",
     "no_real_order": true,
     "no_new_exchange_key": true,
+    "no_aether_thread": true,
+    "administrator_owners_changed": false,
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox terrain proof 40.6.580",
+    "PR + Version Truth / Delivery checks",
+    "GitHub Pages deployment",
+    "Firefox terrain proof 40.6.581",
     "freeze Trader skeleton if PASS",
     "future OKX private READ ONLY only after explicit continuation"
   ]
