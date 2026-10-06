@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD="40.6.589";
+  const BUILD="40.6.597";
   const MODE_KEY="agent_crypto_erith_ia_market_card_mode_v1";
   const MIN_MARKET_WIDTH=980;
   const PANEL_MIN_WIDTH=320;
@@ -171,7 +171,7 @@
     });
     document.addEventListener("keydown",e=>{if(e.key==="Escape"&&effectiveMode()!=="dock")hide(true);});
     $("traderFicheToggle")?.addEventListener("click",()=>setEnabled(!enabled));
-    window.addEventListener("agent-crypto:trader-selection-changed",()=>{if(effectiveMode()==="dock"){const row=document.querySelector("#marketRows tr.is-selected[data-market-help-id]");if(row)show(row);}},{passive:true});
+    window.addEventListener("agent-crypto:trader-selection-changed",()=>{if(effectiveMode()==="dock"){const row=document.querySelector("#marketRows tr.is-selected[data-market-help-id]");if(row)show(row);}else{hide(true);}},{passive:true});
     window.addEventListener("resize",()=>{if(effectiveMode()!=="dock")hide(true);else if(activeTarget)show(activeTarget);},{passive:true});
     setEnabled(true);
   }
