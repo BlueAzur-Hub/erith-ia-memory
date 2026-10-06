@@ -1,7 +1,7 @@
 # ERITH.IA Trading Desk — 40.6.582
 
 ## Statut
-Menu-only fidelity pass. **Aucune reconstruction du menu Trader.**
+Publié sur `main` via **PR #147**. Menu-only fidelity pass. **Aucune reconstruction du menu Trader.**
 
 ## Contrat 40.6.582
 Le haut du Trader transpose directement le menu Administrator :
@@ -19,4 +19,6 @@ Lecture Technique, Profondeur, Market Snapshot, Fiche Market, Math Core, Bougies
 Administrator 40.6.571 · Market Core 38.15.11 · READ ONLY · aucun ordre réel.
 
 ## Terrain
+Merge commit : `3504c079861d150403fc797307d10468f160db61`.
+
 Firefox : **PENDING CHRISTOPHE**.
