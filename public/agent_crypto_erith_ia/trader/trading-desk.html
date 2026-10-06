@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <meta name="agent-crypto-surface" content="trader" />
-  <meta name="agent-crypto-build" content="40.6.586" />
+  <meta name="agent-crypto-build" content="40.6.587" />
   <meta name="agent-crypto-administrator-base" content="40.6.571" />
-  <title>ERITH.IA · Trading Desk — 40.6.586</title>
+  <title>ERITH.IA · Trading Desk — 40.6.587</title>
 
   <!-- Architecture visuelle existante Administrator : réutilisée, pas réinventée. -->
   <link rel="stylesheet" href="../administrator/style.css?v=40.6.571" />
@@ -15,9 +15,10 @@
   <link rel="stylesheet" href="../administrator/admin-visual-assets.css?v=40.6.400" />
   <link rel="stylesheet" href="../administrator/admin-technical-reading-classic-opacity.css?v=40.6.571" />
   <link rel="stylesheet" href="../administrator/market-reading-depth.css?v=40.6.571" />
-  <link rel="stylesheet" href="./trading-desk.css?v=40.6.586" />
-  <link rel="stylesheet" href="./trader-fidelity.css?v=40.6.586" />
-  <link rel="stylesheet" href="./technical-reading-native.css?v=40.6.586" />
+  <link rel="stylesheet" href="../administrator/help-layer.css?v=40.6.547" />
+  <link rel="stylesheet" href="./trading-desk.css?v=40.6.587" />
+  <link rel="stylesheet" href="./trader-fidelity.css?v=40.6.587" />
+  <link rel="stylesheet" href="./technical-reading-native.css?v=40.6.587" />
 </head>
 <body class="atlas-administrator-mirror">
   <header class="hero glass" id="accueil">
@@ -40,7 +41,7 @@
         </div>
       </div>
       <div class="status-stack" aria-label="Statuts">
-        <span class="pill ok atlas-version-control"><span>Build 40.6.586 · Trader</span></span>
+        <span class="pill ok atlas-version-control"><span>Build 40.6.587 · Trader</span></span>
         <span class="pill admin-engine-badge">ENGINE · Market Core 38.15.11</span>
         <span class="pill ok">READ ONLY</span>
         <span class="sigil">⌁</span>
@@ -70,7 +71,7 @@
 
   <main class="trader-main">
     <!--
-      40.6.586 : transposition du couple natif Administrator
+      40.6.587 : transposition du couple natif Administrator
       Graphique + Lecture Technique + rail natif.
       Profondeur conserve son owner existant et se docke sur #detailPanel.
     -->
@@ -240,36 +241,7 @@
           </tr></thead><tbody id="marketRows"><tr><td colspan="9" class="empty">Chargement du snapshot public…</td></tr></tbody></table>
         </div>
         <p class="table-note" id="tableNote">Même archive publique CoinGecko/BCE que l’Administrator · aucune cotation inventée.</p>
-        <aside class="trader-market-fiche" id="traderMarketFiche" data-mode="float" aria-label="Fiche Crypto Market Snapshot">
-          <div class="trader-market-fiche-head">
-            <p class="eyebrow">FICHE CRYPTO · MARKET SNAPSHOT</p>
-            <div class="trader-market-fiche-mode" role="group" aria-label="Position de la Fiche Crypto">
-              <button type="button" class="is-active" data-trader-fiche-mode="float">Flottante</button>
-              <button type="button" data-trader-fiche-mode="side">Latérale</button>
-            </div>
-          </div>
-          <div class="trader-market-fiche-identity">
-            <img id="traderFicheImage" alt="" />
-            <div><h3><span id="traderFicheName">Bitcoin</span><small id="traderFicheSymbol">BTC</small></h3><p id="traderFicheRank">Rang 1 · Repère marché</p></div>
-          </div>
-          <div class="trader-market-fiche-grid">
-            <div><span>Prix affichage</span><b id="traderFichePrice">—</b></div>
-            <div><span>Source USD</span><b id="traderFicheSource">—</b></div>
-            <div><span>24 h direct</span><b id="traderFiche24">—</b></div>
-            <div><span>7 j marché</span><b id="traderFiche7">—</b></div>
-            <div><span>30 j marché</span><b id="traderFiche30">—</b></div>
-            <div><span>Vol./cap.</span><b id="traderFicheRatio">—</b></div>
-            <div><span>Capitalisation</span><b id="traderFicheCap">—</b></div>
-            <div><span>Volume 24 h</span><b id="traderFicheVolume">—</b></div>
-            <div><span>Score Atlas</span><b id="traderFicheScore">—</b></div>
-            <div><span>Décision</span><b id="traderFicheDecision">Observer / comparer</b></div>
-          </div>
-          <div class="trader-market-fiche-proof">
-            <span><b>Cotation et 24 h observés</b> · <span id="traderFicheObserved">—</span></span>
-            <span><b>Référence marché 24 h</b> · <span id="traderFicheReference">—</span></span>
-          </div>
-          <div class="trader-market-fiche-foot">Sélectionné 1/1 · clique la ligne ou appuie sur Entrée pour actualiser la fiche.</div>
-        </aside>
+
       </article>
       <aside class="panel glass score-panel atlas-math-dock" id="math" data-math-dock="side" data-analysis-owner="math-mesures-integrite">
         <div class="atlas-math-dock-head">
@@ -326,6 +298,9 @@
     </section>
   </main>
 
+  <aside class="atlas-help-layer" id="atlasHelpLayer" role="dialog" aria-hidden="true" hidden></aside>
+  <div class="atlas-visually-hidden" id="atlasHelpLive" aria-live="polite"></div>
+
   <div class="trader-orbs-left" aria-label="Commandes Trader futures">
     <button type="button" class="trade-orb buy" disabled><b>BUY</b><span>Achat</span></button>
     <button type="button" class="trade-orb sell" disabled><b>SELL</b><span>Vente</span></button>
@@ -338,19 +313,20 @@
   </div>
 
   <footer class="trader-footer">
-    <span>Trader 40.6.586 · INTERFACE FIDELITY SYNC · PENDING OPÉRATEUR</span>
+    <span>Trader 40.6.587 · INTERFACE FIDELITY SYNC · PENDING OPÉRATEUR</span>
     <span>Administrator 40.6.571 · Market Core 38.15.11</span>
     <span id="viewportProfile">viewport</span>
   </footer>
 
   <script src="../administrator/js/quote-currency-architecture-406497.js" defer></script>
   <script src="../administrator/js/okx-local-backend-transport.js" defer></script>
-  <script src="./technical-reading-transpose.js?v=40.6.586" defer></script>
-  <script src="./market-transpose.js?v=40.6.586" defer></script>
-  <script src="./math-core-transpose.js?v=40.6.586" defer></script>
+  <script src="./technical-reading-transpose.js?v=40.6.587" defer></script>
+  <script src="./market-transpose.js?v=40.6.587" defer></script>
+  <script src="./market-fiche-native.js?v=40.6.587" defer></script>
+  <script src="./math-core-transpose.js?v=40.6.587" defer></script>
   <script src="../administrator/js/market-microscope-candles.js" defer></script>
   <script src="../administrator/js/okx-microstructure-406499.js" defer></script>
-  <script src="./trading-desk.js?v=40.6.586" defer></script>
-  <script src="./trader-fidelity.js?v=40.6.586" defer></script>
+  <script src="./trading-desk.js?v=40.6.587" defer></script>
+  <script src="./trader-fidelity.js?v=40.6.587" defer></script>
 </body>
 </html>
