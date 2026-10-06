@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.607",
+  "build": "40.6.608",
   "engine": "38.15.11",
-  "release": "TRADER · RESTORE 40.6.601 BASELINE",
+  "release": "TRADER · NATIVE SURFACE FIRST PAINT",
   "published": true,
-  "status": "published_terrain_pending_406607",
-  "parent_build": "40.6.606",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.607",
-  "administrator_build": "40.6.607",
-  "build_label": "Build 40.6.607 · Administrator",
+  "status": "published_terrain_pending_406608",
+  "parent_build": "40.6.607",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.608",
+  "administrator_build": "40.6.608",
+  "build_label": "Build 40.6.608 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,7 +31,7 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_406607_RESTORE_601_BASELINE",
+  "terrain_proof": "PENDING_FIREFOX_406608_NATIVE_TRADER_FIRST_PAINT",
   "release_notes": "WORKSPACE_MEMORY_CURRENCY_LABEL_SYNC_40.6.571.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
@@ -10261,6 +10261,18 @@
     "target_top_modified": false,
     "market_flow_modified": false,
     "aether_business_logic_modified": false,
+    "real_order": false
+  },
+  "trader_native_surface_406608": {
+    "enabled": true,
+    "query_contract": "surface=trader",
+    "first_paint_surface_preseed": true,
+    "aether_ribbon_disabled_only_for_trader": true,
+    "aether_panel_code_preserved": true,
+    "administrator_surface_default_unchanged": true,
+    "market_core_modified": false,
+    "oracle_modified": false,
+    "math_core_modified": false,
     "real_order": false
   }
 }
