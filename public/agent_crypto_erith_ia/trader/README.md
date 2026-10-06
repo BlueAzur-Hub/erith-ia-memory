@@ -1,58 +1,38 @@
-# ERITH.IA Trading Desk — 40.6.589
+# ERITH.IA Trading Desk — 40.6.590
 
 ## Objet
-Ajouter **le Graphique Crypto Ligne** à la surface Trader, sous le propriétaire Bougies déjà validé.
+**Interface Fidelity II** : arrêter d'ajouter des propriétaires Trader parallèles et rapprocher encore le poste Trader de l'Administrator 40.6.571 validé.
 
-## Principe
-Aucun second cockpit : le sélecteur natif **MICROSCOPE · Ligne / Bougies** reste l’unique changement de surface.
+## Cette version
+- conserve le Graphique Ligne 40.6.589 et les vrais propriétaires Bougies / Profondeur / devise ;
+- restaure un **vrai bouton Volume** pour le Graphique Ligne : il masque/affiche réellement les volumes ;
+- remplace le petit résumé Trader par la hiérarchie d'analyse de l'Interface :
+  - actif + nom + période + devise ;
+  - vérité de source ;
+  - prix / variation / bas / haut / amplitude ;
+  - départ / dernière / nombre de points / date de série / source ;
+- ajoute un **propriétaire de contexte unique** pour Lecture Technique :
+  - actif sélectionné ;
+  - Prix EUR/USD ;
+  - variation 24 h marché ;
+  - Fiche active ;
+  - Source Dock ;
+  - état marché / spot / historique ;
+  - réseau, cache, latence ;
+  - intégrité graphique ;
+- corrige le bug où la carte **24 h** affichait la granularité Bougies (ex. `5m`) au lieu de la variation 24 h ;
+- laisse les Support / Résistance au propriétaire Bougies existant.
 
-- **Ligne** → graphique historique style Administrator dans la même `.chart-shell`.
-- **Bougies** → propriétaire `market-microscope-candles.js` existant, inchangé.
-- La sélection Market reste la source d’identité de l’actif.
-- La sélection Nouveaux listings reste compatible.
+## Protégé
+- Administrator 40.6.571 ;
+- Market Core 38.15.11 ;
+- propriétaires Bougies / Profondeur / Quote Currency ;
+- New Listings ;
+- Math Core ;
+- aucune exécution réelle.
 
-## Données
-### Crypto canonique
-Historique public CoinGecko `market_chart` dans la devise d’affichage active.
-
-### Nouveaux listings
-Réutilisation de `AgentCryptoNewListingLiveAsset.fetchCandles()` :
-- 24h → 5m ;
-- 7j → 1h ;
-- 30j → 4h ;
-- périodes longues → 1j selon couverture réellement disponible.
-
-Aucune série synthétique.
-
-## Interface transposée
-Périodes :
-**24h · 7j · 30j · 60j · 90j · 1a · Max ?**
-
-La surface conserve :
-- légende ;
-- analyse historique ;
-- axes temporels/prix ;
-- tooltip au survol ;
-- volume historique discret ;
-- source et nombre de points.
-
-## Protections
-- Market Core 38.15.11 inchangé.
-- Bougies inchangées.
-- Profondeur inchangée.
-- Fiche Crypto inchangée.
-- Lecture Technique inchangée.
-- READ ONLY ; aucun ordre réel.
+## Direction suivante
+40.6.591 servira de test visuel **Interface miroir / exclusions grisées** : conserver la géométrie de l'Interface et rendre visibles mais inactifs les modules exclus du Trader, afin de comparer cette approche avec la suppression pure.
 
 ## Terrain
-Firefox : **PENDING CHRISTOPHE**.
-
-Test demandé : BTC → Ligne, CT → Ligne, puis aller-retour Ligne / Bougies.
-
-## Livraison 40.6.589
-- PR #154 fusionnée.
-- Merge commit : `b20ec32838ba6199825e8e5025bf55d3f22d5f63`.
-- GitHub Pages : **SUCCESS** · latest deployment.
-- ZIP : `downloads/AGENT_CRYPTO_TRADER_40.6.589_NATIVE_LINE_GRAPH.zip` · 149 049 octets.
-- Syntaxe JS Trader : **PASS**.
-- Terrain Firefox : **PENDING CHRISTOPHE**.
+Firefox opérateur : **PENDING CHRISTOPHE**.
