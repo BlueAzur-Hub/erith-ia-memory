@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD="40.6.584";
+  const BUILD="40.6.585";
   const $=id=>document.getElementById(id);
   const finite=value=>{
     if(value===null||value===undefined||value==="")return null;
@@ -133,7 +133,7 @@
     syncCurrencyButtons();
   }
   function bindGraphControls(){
-    const legend=$("traderLegendToggle"),analysis=$("traderAnalysisToggle"),depth=$("traderDepthToggle");
+    const legend=$("traderLegendToggle"),analysis=$("traderAnalysisToggle");
     legend?.addEventListener("click",()=>{
       const root=$("atlasMarketMicroscope");if(!root)return;
       const hidden=root.classList.toggle("trader-hide-legend");
@@ -144,14 +144,9 @@
       const hidden=root.classList.toggle("trader-hide-analysis");
       analysis.classList.toggle("is-active",!hidden);analysis.setAttribute("aria-pressed",String(!hidden));
     });
-    depth?.addEventListener("click",()=>{
-      try{globalThis.AgentCryptoOkxMicrostructure?.setOpen?.(true);}catch(_){}
-      depth.classList.add("is-active");
-      $("detailPanel")?.scrollIntoView?.({behavior:"smooth",block:"nearest"});
-    });
   }
   function start(){
-    bindHeaderNavigation();bindCurrency();bindGraphControls();bindFiche();bindMarketKeyboard();
+    bindHeaderNavigation();bindGraphControls();bindFiche();bindMarketKeyboard();
     syncMarketRows();setFicheOpen(true);
     document.documentElement.dataset.traderFidelity=BUILD;
   }
