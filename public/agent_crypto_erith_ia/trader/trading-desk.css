@@ -194,3 +194,32 @@ button,a{font:inherit}
   .trade-orb{width:64px;height:64px}
   .trade-orb.kill{width:70px;height:70px}
 }
+
+/* 40.6.578 — Market natif transposé depuis Administrator. */
+.trader-market-workspace{margin-top:10px!important}
+.trader-market-workspace #marketSnapshotPanel{min-width:0}
+.trader-market-workspace #marketRows tr[data-market-id]{cursor:pointer}
+.trader-market-workspace #marketRows tr[data-market-id].is-selected{
+  outline:1px solid rgba(255,214,122,.72);outline-offset:-1px;
+  background:linear-gradient(90deg,rgba(255,214,122,.11),rgba(98,236,255,.035))
+}
+.trader-market-identity{display:flex;align-items:center;gap:9px;min-width:0}
+.trader-market-identity img{width:24px;height:24px;border-radius:50%;object-fit:cover;flex:0 0 auto}
+.trader-market-identity span{display:grid;gap:2px;min-width:0}
+.trader-market-identity b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trader-market-identity small{color:rgba(188,211,222,.72)}
+.trader-market-select{
+  min-height:28px;padding:5px 9px;border:1px solid rgba(98,236,255,.24);
+  border-radius:999px;background:rgba(98,236,255,.045);color:#c9f7fb;
+  font-size:9px;font-weight:900;cursor:pointer
+}
+.trader-market-select.is-active{border-color:rgba(255,214,122,.52);color:#ffe7aa;background:rgba(255,214,122,.08)}
+.trader-market-workspace[data-market-columns="essential"] .market-col-advanced{display:none!important}
+.trader-market-source{color:rgba(164,193,205,.66);font-size:8px;display:block;margin-top:2px}
+.trader-math-placeholder{min-height:300px}
+@media(max-width:900px){
+  .trader-market-workspace{display:flex!important;flex-direction:column}
+  .trader-market-workspace #marketSnapshotPanel{order:1}
+  .trader-market-workspace #math{order:2;width:100%}
+  .trader-market-workspace .table-wrap{overflow-x:auto}
+}
