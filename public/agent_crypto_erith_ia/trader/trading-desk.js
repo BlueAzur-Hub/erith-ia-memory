@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.6.581";
+  const BUILD = "40.6.582";
   const ADMIN_BASE = "40.6.571";
   const DETAIL_KEY = "agent_crypto_erith_ia_clean_lens_detail_collapsed_v2";
   const profileNode = document.getElementById("viewportProfile");
