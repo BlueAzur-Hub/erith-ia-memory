@@ -1,12 +1,12 @@
 {
-  "build": "40.6.595",
+  "build": "40.6.596",
   "surface": "trader",
-  "release": "TRADER · INTERFACE FILTERED LAYOUT",
-  "parent_trader_build": "40.6.594",
+  "release": "TRADER · NATIVE SOURCE DOCK",
+  "parent_trader_build": "40.6.595",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": false,
-  "status": "branch_ready_for_pr_406595",
+  "status": "branch_ready_for_pr_406596",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -15,7 +15,7 @@
     "menu": "Administrator menu geometry mirrored in Trader. Marché and Graphique active; excluded modules visible but disabled.",
     "primary": "Administrator #analyste / champagne-clean-lens transposed",
     "chart": "Administrator-style Crypto Ligne surface retained; its analysis overlay now follows the Administrator information hierarchy (asset/name/period/currency/source truth/price/change/low/high/amplitude/departure/last/points). Real Volume toggle restored for the Ligne owner.",
-    "technical_reading": "Administrator native #detailPanel DOM retained and now synchronized from one Trader context owner: selected asset, display currency, price, 24h market variation, active line history, Source Dock, data-state, diagnostics and integrity. Candles S/R stays owned by the existing Candles owner.",
+    "technical_reading": "Administrator native #detailPanel DOM retained. Trader now has a dedicated Source Dock owner transposed from Administrator: selected asset, direct CoinGecko metadata, official website, explorer, whitepaper, source repository, community, targeted news, cache/retry/refresh. News Sentinel remains visible but disabled because it is outside Trader.",
     "depth": "existing okx-microstructure owner docked on #detailPanel",
     "market": "Administrator Market Snapshot transposed + native Nouveaux listings category restored in the existing Trader table.",
     "math": "native Math Core V3 beside Market",
@@ -117,6 +117,30 @@
       "dormant_pointer_events": false,
       "dormant_fetches": false,
       "administrator_base": "40.6.571"
+    },
+    "source_dock": {
+      "owner": "trader/source-dock-native.js",
+      "administrator_reference": "Administrator app.js Source Dock / Market Portals",
+      "active_portals": [
+        "CoinGecko",
+        "Site officiel",
+        "Explorateur",
+        "Whitepaper",
+        "Code source",
+        "Communauté",
+        "Actualités"
+      ],
+      "dormant_portal": "News Sentinel",
+      "cache_ttl_hours": 6,
+      "stale_max_days": 7,
+      "refresh_button": true,
+      "retry_steps_seconds": [
+        60,
+        300,
+        900
+      ],
+      "external_new_listing_policy": "limited until a canonical CoinGecko id exists",
+      "single_owner": true
     }
   },
   "technical_reading": {
@@ -178,10 +202,10 @@
     "pr": null,
     "merge_commit": null,
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.595_INTERFACE_FILTERED_LAYOUT.zip",
-    "zip_bytes": 90931,
-    "javascript_syntax": "PASS",
-    "package_commit": "df7127ae367fd625a49d9147bb032a9e5db7172c"
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.596_NATIVE_SOURCE_DOCK.zip",
+    "zip_bytes": null,
+    "javascript_syntax": "PENDING",
+    "package_commit": null
   },
   "stop_gate": {
     "no_real_order": true,
@@ -191,8 +215,9 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox: compare Trader 40.6.595 with Administrator 40.6.571 side by side.",
-    "Validate that active Trader surfaces dominate while excluded Interface areas remain recognizable but visually dormant.",
-    "If accepted, freeze visual architecture before Trader Workflow / BUY SELL REDIVIDER."
+    "Firefox: open Lecture Technique > Source Dock on BTC.",
+    "Verify Site officiel opens bitcoin.org (or current CoinGecko declared homepage), plus Explorer / Whitepaper / Code source / Community when declared.",
+    "Verify Actualiser reloads metadata and the status reports direct/cache; News Sentinel must stay grey/inactive.",
+    "Switch BTC -> ETH -> another asset and confirm portal URLs follow the selected asset."
   ]
 }
