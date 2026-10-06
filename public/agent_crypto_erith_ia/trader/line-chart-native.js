@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD="40.6.594";
+  const BUILD="40.6.595";
   const PERIODS=Object.freeze([1,7,30,60,90,365,36500]);
   const LABELS=Object.freeze({1:"24h",7:"7j",30:"30j",60:"60j",90:"90j",365:"1a",36500:"Max"});
   const state={period:1,token:0,controller:null,rows:[],volumes:[],source:"",currency:"USD",coin:null,error:null,loading:false,volume:true,legend:true,analysis:true,lastLoadedAt:null,external:false,truth:"direct",hoverIndex:-1};
