@@ -1,7 +1,8 @@
 (() => {
   "use strict";
-  const BUILD = "40.6.576";
+  const BUILD = "40.6.577";
   const ADMIN_BASE = "40.6.571";
+  const DETAIL_KEY = "agent_crypto_erith_ia_clean_lens_detail_collapsed_v2";
   const profileNode = document.getElementById("viewportProfile");
 
   function viewportProfile() {
@@ -18,50 +19,75 @@
     if (profileNode) profileNode.textContent = "viewport · " + profile;
   }
 
-  function togglePanel(button) {
-    const id = button.dataset.collapseTarget;
-    const panel = id ? document.getElementById(id) : null;
-    if (!panel) return;
-    const collapsed = panel.dataset.collapsed === "true";
-    const next = !collapsed;
-    panel.dataset.collapsed = String(next);
-    button.setAttribute("aria-expanded", String(!next));
-    button.textContent = next ? "Afficher" : "Réduire";
+  function scheduleGraphLayout() {
+    requestAnimationFrame(() => {
+      try { globalThis.AgentCryptoMarketMicroscope?.mount?.(); } catch (_) {}
+      try { window.dispatchEvent(new Event("resize")); } catch (_) {}
+    });
   }
 
-  document.addEventListener("click", event => {
-    const button = event.target instanceof Element ? event.target.closest("[data-collapse-target]") : null;
-    if (button) togglePanel(button);
-  });
+  /* Transposition directe du comportement Clean Lens Administrator. */
+  function setDetailCollapsed(collapsed, persist = true) {
+    const deck = document.getElementById("analyste");
+    const panel = document.getElementById("detailPanel");
+    const toggle = document.getElementById("detailPanelToggle");
+    const stateLabel = document.getElementById("detailPanelToggleState");
+    const rail = document.getElementById("detailPanelRail");
+    const railArrow = document.querySelector("#detailPanelRail b");
+    if (!deck || !panel) return false;
 
-  globalThis.AgentCryptoTraderFoundation = Object.freeze({
-    build: BUILD,
-    administratorBase: ADMIN_BASE,
-    surface: "trader",
-    execution: "disabled",
-    phase: "depth-owner-plus-rail-collapse",
-    duplicatedBusinessLogic: false,
-    mountedOwners: Object.freeze({ candles: true, market: false, depth: true, technicalReading: false, mathCore: false }),
-    shellBehaviors: Object.freeze({ supportRailCollapsesOnDepthMinimize: true, graphReclaimsWidth: true }),
-    omittedSections: Object.freeze(["Aether","Atlas","Oracle","Veille","Sources","Decision Board","Other Administrator sections"]),
-    canonicalOwners: Object.freeze({
-      market: "../administrator/app.js#marketSnapshotPanel",
-      candles: "../administrator/js/market-microscope-candles.js",
-      depth: "../administrator/js/okx-microstructure-406499.js",
-      technicalReading: "../administrator/app.js#detailPanel",
-      mathCore: "../administrator/app.js#math",
-      quoteCurrency: "../administrator/js/quote-currency-architecture-406497.js"
-    }),
-    snapshot() {
-      return {
-        build: BUILD,
-        administrator_base: ADMIN_BASE,
-        viewport: viewportProfile(),
-        execution: "disabled",
-        duplicated_business_logic: false
-      };
+    const value = !!collapsed;
+    deck.classList.toggle("detail-collapsed", value);
+    toggle?.setAttribute("aria-expanded", String(!value));
+    rail?.setAttribute("aria-expanded", String(!value));
+    panel.setAttribute("aria-hidden", String(value));
+    panel.inert = value;
+    panel.hidden = value;
+
+    if (stateLabel) stateLabel.textContent = value ? "Afficher ▼" : "Réduire ▲";
+    if (railArrow) railArrow.textContent = value ? "▼" : "▲";
+
+    if (persist) {
+      try { localStorage.setItem(DETAIL_KEY, value ? "1" : "0"); } catch (_) {}
     }
-  });
+    scheduleGraphLayout();
+    return true;
+  }
+
+  function toggleDetail(forceOpen = null) {
+    const deck = document.getElementById("analyste");
+    if (!deck) return;
+    const collapsed = deck.classList.contains("detail-collapsed");
+    const next = forceOpen === true ? false : forceOpen === false ? true : !collapsed;
+    setDetailCollapsed(next, true);
+  }
+
+  function initNativeDetailPanel() {
+    const deck = document.getElementById("analyste");
+    const toggle = document.getElementById("detailPanelToggle");
+    const rail = document.getElementById("detailPanelRail");
+    if (!deck || !toggle || !rail) return false;
+
+    let collapsed = false;
+    try {
+      const stored = localStorage.getItem(DETAIL_KEY);
+      collapsed = stored === "1";
+    } catch (_) {}
+    setDetailCollapsed(collapsed, false);
+
+    const bind = node => {
+      if (!node || node.dataset.traderNativeDetailBound === "1") return;
+      node.dataset.traderNativeDetailBound = "1";
+      node.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleDetail();
+      });
+    };
+    bind(toggle);
+    bind(rail);
+    return true;
+  }
 
   function mountExistingCandlesOwner() {
     const quote = globalThis.AgentCryptoQuoteCurrencyArchitecture;
@@ -89,51 +115,67 @@
     return mounted;
   }
 
-  function depthSnapshot() {
-    try { return globalThis.AgentCryptoOkxMicrostructure?.snapshot?.() || null; } catch (_) { return null; }
-  }
-
-  function syncSupportRail() {
-    const snap = depthSnapshot();
-    const compact = !!snap && (snap.minimized === true || snap.open === false);
-    document.body.dataset.traderRailCompact = compact ? "true" : "false";
-    return compact;
-  }
-
-  function restoreSupportRail() {
-    document.body.dataset.traderRailCompact = "false";
-    const depth = globalThis.AgentCryptoOkxMicrostructure;
-    try { depth?.setMinimized?.(false); } catch (_) {}
-    try { depth?.setOpen?.(true); } catch (_) {}
-    requestAnimationFrame(syncSupportRail);
-  }
-
-  document.getElementById("traderDetailRailToggle")?.addEventListener("click", restoreSupportRail);
-
-  document.addEventListener("click", event => {
-    const target = event.target instanceof Element ? event.target : null;
-    if (!target) return;
-    if (target.closest("#atlasOkxMicrostructure [data-oms-minimize], #atlasOkxMicrostructure [data-oms-close]")) {
-      requestAnimationFrame(() => requestAnimationFrame(syncSupportRail));
+  function syncTechnicalSummary(levels) {
+    if (!levels) return;
+    const asset = document.getElementById("detailCompactAsset");
+    const price = document.getElementById("detailCompactPrice");
+    const period = document.getElementById("detailCompactChange");
+    if (asset) asset.textContent = String(levels.instrument || "BTC-USDC").replace("-", " / ");
+    if (price && Number.isFinite(Number(levels.current))) {
+      price.textContent = Number(levels.current).toLocaleString("fr-FR", { maximumFractionDigits: 2 });
     }
-  }, true);
+    if (period) period.textContent = String(levels.bar || "5m");
+  }
 
-  const bootOwners = () => {
+  window.addEventListener("agent-crypto:candles-technical-levels", event => {
+    syncTechnicalSummary(event.detail);
+  }, { passive: true });
+
+  globalThis.AgentCryptoTraderFoundation = Object.freeze({
+    build: BUILD,
+    administratorBase: ADMIN_BASE,
+    surface: "trader",
+    execution: "disabled",
+    phase: "native-primary-transpose",
+    duplicatedBusinessLogic: false,
+    mountedOwners: Object.freeze({
+      candles: true,
+      depth: true,
+      technicalReadingArchitecture: true,
+      technicalReadingSRBridge: true,
+      market: false,
+      mathCore: false
+    }),
+    omittedSections: Object.freeze([
+      "Aether","Atlas","Oracle","Veille","Sources","Decision Board","Other Administrator sections"
+    ]),
+    snapshot() {
+      return {
+        build: BUILD,
+        administrator_base: ADMIN_BASE,
+        viewport: viewportProfile(),
+        detail_collapsed: document.getElementById("analyste")?.classList.contains("detail-collapsed") === true,
+        execution: "disabled"
+      };
+    }
+  });
+
+  const boot = () => {
     syncViewport();
+    initNativeDetailPanel();
     mountExistingCandlesOwner();
     mountExistingDepthOwner();
-    requestAnimationFrame(syncSupportRail);
   };
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bootOwners, { once: true });
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
   } else {
-    bootOwners();
+    boot();
   }
+
   window.addEventListener("pageshow", () => {
     mountExistingCandlesOwner();
     mountExistingDepthOwner();
-    requestAnimationFrame(syncSupportRail);
   }, { passive: true });
   window.addEventListener("resize", syncViewport, { passive: true });
 })();

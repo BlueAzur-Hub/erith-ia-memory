@@ -1,8 +1,8 @@
 {
-  "build": "40.6.576",
+  "build": "40.6.577",
   "surface": "trader",
-  "release": "TRADER · SUPPORT RAIL COLLAPSE / GRAPH RECLAIM",
-  "parent_trader_build": "40.6.575",
+  "release": "TRADER · NATIVE PRIMARY TRANSPOSE",
+  "parent_trader_build": "40.6.576",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": true,
@@ -11,71 +11,46 @@
   "operator_validation": "PENDING",
   "execution": "disabled",
   "real_orders": false,
-  "business_logic_duplicated": false,
-  "layout_truth": {
-    "menu": "minimal",
-    "aether_feed": false,
-    "atlas_section": false,
-    "oracle_section": false,
-    "other_administrator_sections": false,
-    "primary_focus": "Graphique Bougies · OWNER MOUNTED",
-    "right_support_panels": [
-      "Profondeur owner mounted",
-      "Reduce/close collapses support rail to narrow DETAIL tab",
-      "Graphique reclaims freed width",
-      "Lecture Technique underlying placeholder remains unmounted"
+  "architecture": {
+    "primary": "Administrator #analyste / champagne-clean-lens transposed",
+    "chart": "existing market-microscope-candles owner",
+    "detail_panel": "native #detailPanel + #detailPanelToggle + #detailPanelRail",
+    "depth": "existing okx-microstructure owner docked on #detailPanel",
+    "custom_42px_rail_removed": true,
+    "custom_depth_minimize_interception_removed": true
+  },
+  "technical_reading": {
+    "support_resistance": "existing candles technical_reading_bridge",
+    "time_modes": [
+      "AUTO",
+      "AUBE",
+      "JOUR",
+      "SOIR",
+      "NUIT",
+      "LUNE"
     ],
-    "trader_controls": "round floating controls using Math Core / Redivider visual language",
-    "below_primary": [
-      "Market",
-      "Math Core at right"
-    ]
-  },
-  "canonical_contract": {
-    "single_responsive_page": true,
-    "entry": "trading-desk.html",
-    "pair_is_central_truth": true,
-    "no_new_ui_architecture": true,
-    "reuse_existing_owners": true
-  },
-  "owners_to_reuse": {
-    "market": "../administrator/app.js#marketSnapshotPanel",
-    "candles": "../administrator/js/market-microscope-candles.js",
-    "depth": "../administrator/js/okx-microstructure-406499.js",
-    "technical_reading": "../administrator/app.js#detailPanel",
-    "math_core": "../administrator/app.js#math",
-    "quote_currency": "../administrator/js/quote-currency-architecture-406497.js"
+    "auto_schedule": {
+      "dawn": "05:30-09:00",
+      "day": "09:00-17:30",
+      "dusk": "17:30-21:30",
+      "night": "21:30-00:30",
+      "lunar": "00:30-05:30"
+    },
+    "random_library_count": 21,
+    "local_private_image": true,
+    "private_indexeddb": "agent_crypto_private_visuals",
+    "private_slot": "technical-reading"
   },
   "protected": [
     "Administrator 40.6.571",
     "Market Core 38.15.11",
-    "Profondeur dock/detach contract",
-    "EUR/USD architecture",
-    "Lecture Technique",
-    "Market Microscope candles"
+    "Candles owner",
+    "Depth owner",
+    "EUR/USD architecture"
   ],
-  "mounted_owners": {
-    "candles": true,
-    "market": false,
-    "depth": true,
-    "technical_reading": false,
-    "math_core": false
-  },
-  "integration_truth": {
-    "quote_currency_owner_loaded": "../administrator/js/quote-currency-architecture-406497.js",
-    "okx_transport_owner_loaded": "../administrator/js/okx-local-backend-transport.js",
-    "candles_owner_loaded": "../administrator/js/market-microscope-candles.js",
-    "candles_business_logic_copied": false,
-    "initial_pair": "BTC-USDC",
-    "initial_display_currency": "USD",
-    "real_order": false,
-    "depth_owner_loaded": "../administrator/js/okx-microstructure-406499.js",
-    "depth_business_logic_copied": false,
-    "depth_default_open": true,
-    "depth_live_refresh": "2s while open only",
-    "depth_quote": "USDC when display currency is USD",
-    "depth_reduce_reclaims_graph_width": true,
-    "support_rail_compact_width_px": 42,
-    "detail_restore_control": "vertical DÉTAIL tab"
-  }
+  "next": [
+    "terrain proof primary trio",
+    "transpose Market",
+    "transpose Math Core"
+  ]
 }
