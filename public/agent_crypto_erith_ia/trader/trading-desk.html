@@ -5,10 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <meta name="agent-crypto-surface" content="trader" />
-  <meta name="agent-crypto-build" content="40.6.576" />
+  <meta name="agent-crypto-build" content="40.6.577" />
   <meta name="agent-crypto-administrator-base" content="40.6.571" />
-  <title>ERITH.IA · Trading Desk — 40.6.576</title>
-  <link rel="stylesheet" href="./trading-desk.css?v=40.6.576" />
+  <title>ERITH.IA · Trading Desk — 40.6.577</title>
+
+  <!-- Architecture visuelle existante Administrator : réutilisée, pas réinventée. -->
+  <link rel="stylesheet" href="../administrator/style.css?v=40.6.571" />
+  <link rel="stylesheet" href="../administrator/admin-windows.css?v=40.6.571" />
+  <link rel="stylesheet" href="../administrator/admin-visual-assets.css?v=40.6.400" />
+  <link rel="stylesheet" href="../administrator/admin-technical-reading-classic-opacity.css?v=40.6.571" />
+  <link rel="stylesheet" href="../administrator/market-reading-depth.css?v=40.6.571" />
+  <link rel="stylesheet" href="./trading-desk.css?v=40.6.577" />
 </head>
 <body>
   <header class="trader-menu" aria-label="Menu Trader minimal">
@@ -31,60 +38,78 @@
     </div>
   </header>
 
-  <main>
-    <section class="trader-primary" aria-label="Zone principale de surveillance">
-      <section class="surface graph-surface" data-owner="administrator:market-microscope-candles.js">
-        <header class="surface-head">
-          <div>
-            <p class="eyebrow">SURFACE PRINCIPALE</p>
-            <h1>Graphique · Bougies</h1>
-          </div>
-          <span class="owner-state">owner existant · MONTÉ</span>
-        </header>
-
-        <div id="analyste" class="trader-analyste" aria-label="Graphique Trader">
-          <div class="chart-v2-control-deck trader-chart-controls" aria-label="Contrôles du Graphique"></div>
-          <div class="chart-shell trader-chart-shell" aria-label="Market Microscope Bougies"></div>
-        </div>
-      </section>
-
-      <aside class="analysis-rail" aria-label="Profondeur et Lecture Technique">
-        <button id="traderDetailRailToggle" class="detail-rail-toggle" type="button" aria-label="Restaurer les détails de marché" title="Restaurer Profondeur / Lecture Technique">DÉTAIL</button>
-        <section class="surface technical-surface" id="detailPanel" data-owner="administrator:detailPanel">
-          <header class="surface-head compact-head">
-            <div>
-              <p class="eyebrow">OUTIL D'APPUI · SOUS-JACENT</p>
-              <h2>Lecture Technique</h2>
+  <main class="trader-main">
+    <!--
+      40.6.577 : transposition du couple natif Administrator
+      Graphique + Lecture Technique + rail natif.
+      Profondeur conserve son owner existant et se docke sur #detailPanel.
+    -->
+    <section class="atlas-market-zone trader-native-zone" id="market-zone" aria-label="Zone Trader principale">
+      <section class="analyst-deck champagne-clean-lens" id="analyste">
+        <article class="panel glass chart-panel trader-chart-panel">
+          <div class="section-head compact trader-chart-head">
+            <div class="chart-v2-title-block">
+              <span class="eyebrow">SURFACE PRINCIPALE</span>
+              <h2>Graphique · Bougies</h2>
             </div>
-            <span class="owner-state">owner à monter</span>
-          </header>
-          <div class="surface-placeholder technical-placeholder">
-            <strong>LECTURE TECHNIQUE</strong>
-            <p>Le propriétaire Profondeur existant se superpose ici exactement comme dans Administrator. Fermer Profondeur révèle cette zone.</p>
+            <div class="chart-v2-control-deck trader-chart-controls" aria-label="Contrôles du Graphique"></div>
           </div>
-        </section>
-      </aside>
+          <div class="chart-shell trader-chart-shell" aria-label="Market Microscope Bougies"></div>
+        </article>
+
+        <article class="panel glass detail-panel clean-lens-detail-panel" id="detailPanel">
+          <button class="section-head compact detail-panel-toggle" id="detailPanelToggle" type="button"
+                  data-clean-lens-action="toggle" aria-expanded="true" aria-controls="detailPanelBody"
+                  aria-label="Réduire ou afficher le détail actif">
+            <span class="detail-panel-toggle-title">
+              <span class="eyebrow">DÉTAIL ACTIF</span>
+              <strong>Lecture technique</strong>
+            </span>
+            <span class="detail-panel-toggle-state" id="detailPanelToggleState">Réduire ▲</span>
+          </button>
+
+          <div class="detail-project-visual" aria-hidden="false">
+            <span>Agent-Crypto · Aerith</span>
+          </div>
+
+          <div class="detail-panel-body" id="detailPanelBody">
+            <div class="detail-compact-strip" id="detailCompactStrip" aria-label="Résumé compact de l’actif">
+              <span data-detail-semantic="identity"><small>Actif</small><b id="detailCompactAsset">BTC / USDC</b></span>
+              <span data-detail-semantic="price"><small>Prix USD</small><b id="detailCompactPrice">—</b></span>
+              <span data-detail-semantic="decision"><small>Lecture</small><b id="detailCompactDecision">S/R</b></span>
+              <span data-detail-semantic="change"><small>Période</small><b id="detailCompactChange">5m</b></span>
+            </div>
+            <!-- Le owner Bougies insère ici sa vraie fenêtre Support / Résistance. -->
+          </div>
+        </article>
+
+        <button class="detail-panel-rail" id="detailPanelRail" type="button"
+                data-clean-lens-action="toggle" aria-expanded="true"
+                aria-label="Afficher ou masquer le détail actif">
+          <span>DÉTAIL ACTIF <b aria-hidden="true">▲</b></span>
+        </button>
+      </section>
     </section>
 
     <section class="secondary-grid" aria-label="Market et Math Core">
       <section class="surface market-surface" data-owner="administrator:marketSnapshotPanel">
         <header class="surface-head">
           <div>
-            <p class="eyebrow">EN DESSOUS · OWNER EXISTANT</p>
+            <p class="eyebrow">ÉTAPE SUIVANTE · OWNER EXISTANT</p>
             <h2>Market</h2>
           </div>
-          <span class="owner-state">à monter</span>
+          <span class="owner-state">à transposer</span>
         </header>
         <div class="surface-placeholder market-placeholder">
           <strong>MARKET SNAPSHOT</strong>
-          <p>Le Market reste sous la zone Graphique / Profondeur / Lecture Technique, comme dans l'interface connue.</p>
+          <p>Prochaine transposition après validation du trio Graphique / Lecture Technique / Profondeur.</p>
         </div>
       </section>
 
       <aside class="surface math-surface" data-owner="administrator:math">
         <header class="surface-head">
           <div>
-            <p class="eyebrow">EN DESSOUS · OWNER EXISTANT</p>
+            <p class="eyebrow">ÉTAPE SUIVANTE · OWNER EXISTANT</p>
             <h2>Math Core</h2>
           </div>
           <span class="owner-state">à droite du Market</span>
@@ -93,7 +118,7 @@
           <div class="score-orb">—</div>
           <div>
             <strong>ATLAS MATH CORE</strong>
-            <p>Score et mesures existants. Aucun achat automatique.</p>
+            <p>Le vrai bloc sera transposé après validation du haut de page.</p>
           </div>
         </div>
       </aside>
@@ -101,12 +126,8 @@
   </main>
 
   <div class="trader-orbs-left" aria-label="Commandes Trader futures">
-    <button type="button" class="trade-orb buy" disabled>
-      <b>BUY</b><span>Achat</span>
-    </button>
-    <button type="button" class="trade-orb sell" disabled>
-      <b>SELL</b><span>Vente</span>
-    </button>
+    <button type="button" class="trade-orb buy" disabled><b>BUY</b><span>Achat</span></button>
+    <button type="button" class="trade-orb sell" disabled><b>SELL</b><span>Vente</span></button>
   </div>
 
   <div class="trader-orbs-right">
@@ -116,15 +137,16 @@
   </div>
 
   <footer class="trader-footer">
-    <span>Trader 40.6.576 · PENDING OPÉRATEUR</span>
+    <span>Trader 40.6.577 · NATIVE PRIMARY TRANSPOSE · PENDING OPÉRATEUR</span>
     <span>Administrator 40.6.571 · Market Core 38.15.11</span>
     <span id="viewportProfile">viewport</span>
   </footer>
 
   <script src="../administrator/js/quote-currency-architecture-406497.js" defer></script>
   <script src="../administrator/js/okx-local-backend-transport.js" defer></script>
+  <script src="./technical-reading-transpose.js?v=40.6.577" defer></script>
   <script src="../administrator/js/market-microscope-candles.js" defer></script>
   <script src="../administrator/js/okx-microstructure-406499.js" defer></script>
-  <script src="./trading-desk.js?v=40.6.576" defer></script>
+  <script src="./trading-desk.js?v=40.6.577" defer></script>
 </body>
 </html>
