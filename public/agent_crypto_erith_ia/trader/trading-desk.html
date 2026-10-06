@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <meta name="agent-crypto-surface" content="trader" />
-  <meta name="agent-crypto-build" content="40.6.594" />
+  <meta name="agent-crypto-build" content="40.6.595" />
   <meta name="agent-crypto-administrator-base" content="40.6.571" />
-  <title>ERITH.IA · Trading Desk — 40.6.594</title>
+  <title>ERITH.IA · Trading Desk — 40.6.595</title>
 
   <!-- Architecture visuelle existante Administrator : réutilisée, pas réinventée. -->
   <link rel="stylesheet" href="../administrator/style.css?v=40.6.571" />
@@ -16,12 +16,12 @@
   <link rel="stylesheet" href="../administrator/admin-technical-reading-classic-opacity.css?v=40.6.571" />
   <link rel="stylesheet" href="../administrator/market-reading-depth.css?v=40.6.571" />
   <link rel="stylesheet" href="../administrator/help-layer.css?v=40.6.547" />
-  <link rel="stylesheet" href="./trading-desk.css?v=40.6.594" />
-  <link rel="stylesheet" href="./trader-fidelity.css?v=40.6.594" />
-  <link rel="stylesheet" href="./technical-reading-native.css?v=40.6.594" />
-  <link rel="stylesheet" href="./line-chart-native.css?v=40.6.594" />
+  <link rel="stylesheet" href="./trading-desk.css?v=40.6.595" />
+  <link rel="stylesheet" href="./trader-fidelity.css?v=40.6.595" />
+  <link rel="stylesheet" href="./technical-reading-native.css?v=40.6.595" />
+  <link rel="stylesheet" href="./line-chart-native.css?v=40.6.595" />
 </head>
-<body class="atlas-administrator-mirror trader-interface-ghost-mode">
+<body class="atlas-administrator-mirror trader-interface-ghost-mode trader-interface-filtered-layout">
   <header class="hero glass" id="accueil">
     <div class="hero-top">
       <div class="title-block">
@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="status-stack" aria-label="Statuts">
-        <span class="pill ok atlas-version-control"><span>Build 40.6.594 · Trader</span></span>
+        <span class="pill ok atlas-version-control"><span>Build 40.6.595 · Trader</span></span>
         <span class="pill admin-engine-badge">ENGINE · Market Core 38.15.11</span>
         <span class="pill ok">READ ONLY</span>
         <span class="sigil">⌁</span>
@@ -81,7 +81,7 @@
 
   <main class="trader-main">
     <!--
-      40.6.594 : transposition du couple natif Administrator
+      40.6.595 : transposition du couple natif Administrator
       Graphique + Lecture Technique + rail natif.
       Profondeur conserve son owner existant et se docke sur #detailPanel.
     -->
@@ -234,6 +234,21 @@
       </section>
     </section>
 
+    <section class="trader-filtered-memory-band trader-filtered-memory-band-top" aria-hidden="true">
+      <article class="trader-filtered-slot is-wide" data-origin="oracle">
+        <small>ORACLE</small><b>Scénarios · consultation</b><span>mémoire de l’Interface · hors mission Trader</span>
+      </article>
+      <article class="trader-filtered-slot" data-origin="atlas">
+        <small>ATLAS</small><b>Analyse élargie</b><span>désactivé</span>
+      </article>
+      <article class="trader-filtered-slot" data-origin="decision">
+        <small>DÉCISION</small><b>Espace décisionnel</b><span>désactivé</span>
+      </article>
+      <article class="trader-filtered-slot" data-origin="analysis">
+        <small>ANALYSE</small><b>Lecture globale</b><span>désactivé</span>
+      </article>
+    </section>
+
     <div class="math-top-dock" id="mathTopDock" hidden></div>
     <section class="layout-two market-workspace-grid trader-market-workspace" id="marketWorkspaceGrid" aria-label="Market et Math Core">
       <article class="panel glass wide market-snapshot-panel" id="marketSnapshotPanel">
@@ -334,27 +349,38 @@
       </aside>
     </section>
 
-    <section class="trader-ghost-workspace" id="traderGhostWorkspace" aria-hidden="true">
-      <div class="trader-ghost-heading">
+    <section class="trader-filtered-memory-stack" id="traderFilteredMemory" aria-hidden="true">
+      <div class="trader-filtered-memory-head">
         <div>
-          <p class="eyebrow">INTERFACE AGENT-CRYPTO · MÉMOIRE DORMANTE</p>
-          <h2>Architecture conservée · fonctions hors mission Trader</h2>
+          <p class="eyebrow">INTERFACE AGENT-CRYPTO · ARCHITECTURE FILTRÉE</p>
+          <h2>Fonctions conservées comme empreinte visuelle · moteurs absents</h2>
         </div>
-        <span>aucun moteur chargé</span>
+        <span>TRADER = SOUS-ENSEMBLE ACTIF</span>
       </div>
-      <div class="trader-ghost-grid">
-        <article class="trader-ghost-panel trader-ghost-wide"><small>ORACLE</small><b>Scénarios & consultation</b><span>hors Trader</span></article>
-        <article class="trader-ghost-panel"><small>ATLAS</small><b>Analyse élargie</b><span>hors Trader</span></article>
-        <article class="trader-ghost-panel"><small>SOURCES</small><b>Recherche documentaire</b><span>hors Trader</span></article>
-        <article class="trader-ghost-panel"><small>DÉCISION</small><b>Espace décisionnel</b><span>hors Trader</span></article>
-        <article class="trader-ghost-panel"><small>ANALYSE</small><b>Lecture globale</b><span>hors Trader</span></article>
-        <article class="trader-ghost-panel"><small>SYSTÈME</small><b>Administration système</b><span>hors Trader</span></article>
-        <article class="trader-ghost-panel"><small>PROJETS</small><b>Workspace projets</b><span>hors Trader</span></article>
-        <article class="trader-ghost-panel trader-ghost-wide"><small>AETHER</small><b>Veille & présence</b><span>hors Trader</span></article>
+
+      <div class="trader-filtered-row trader-filtered-row-analysis">
+        <article class="trader-filtered-slot is-wide"><small>MULTI HORIZON</small><b>Lecture temporelle étendue</b><span>hors Trader</span></article>
+        <article class="trader-filtered-slot"><small>NEWS SENTINEL</small><b>Flux macro / contexte</b><span>hors Trader</span></article>
+        <article class="trader-filtered-slot"><small>LECTURE FROIDE</small><b>Relecture différée</b><span>hors Trader</span></article>
       </div>
-      <div class="trader-ghost-legend">
-        <span><i class="ghost-swatch active"></i> actif dans Trader</span>
-        <span><i class="ghost-swatch dormant"></i> présent comme mémoire visuelle uniquement</span>
+
+      <div class="trader-filtered-row trader-filtered-row-risk">
+        <article class="trader-filtered-slot"><small>WATCHLIST</small><b>Surveillance générale</b><span>hors Trader</span></article>
+        <article class="trader-filtered-slot"><small>RISQUES</small><b>Cadre transversal</b><span>hors Trader</span></article>
+        <article class="trader-filtered-slot"><small>IMPACT</small><b>Contexte élargi</b><span>hors Trader</span></article>
+        <article class="trader-filtered-slot"><small>NO FOMO</small><b>Garde-fou éditorial</b><span>hors Trader</span></article>
+      </div>
+
+      <div class="trader-filtered-row trader-filtered-row-system">
+        <article class="trader-filtered-slot"><small>SOURCES</small><b>Diagnostic général</b><span>hors Trader</span></article>
+        <article class="trader-filtered-slot"><small>SYSTÈME</small><b>Administration système</b><span>hors Trader</span></article>
+        <article class="trader-filtered-slot"><small>PROJETS</small><b>Workspace projets</b><span>hors Trader</span></article>
+        <article class="trader-filtered-slot"><small>AETHER</small><b>Veille & présence</b><span>hors Trader</span></article>
+      </div>
+
+      <div class="trader-filtered-legend">
+        <span><i class="ghost-swatch active"></i> surface Trader active</span>
+        <span><i class="ghost-swatch dormant"></i> mémoire visuelle seulement</span>
         <span><i class="ghost-swatch stop"></i> sécurité / interruption</span>
       </div>
     </section>
@@ -375,24 +401,24 @@
   </div>
 
   <footer class="trader-footer">
-    <span>Trader 40.6.594 · INTERFACE FIDELITY SYNC · PENDING OPÉRATEUR</span>
+    <span>Trader 40.6.595 · INTERFACE FIDELITY SYNC · PENDING OPÉRATEUR</span>
     <span>Administrator 40.6.571 · Market Core 38.15.11</span>
     <span id="viewportProfile">viewport</span>
   </footer>
 
   <script src="../administrator/js/quote-currency-architecture-406497.js" defer></script>
   <script src="../administrator/js/okx-local-backend-transport.js" defer></script>
-  <script src="./technical-reading-transpose.js?v=40.6.594" defer></script>
+  <script src="./technical-reading-transpose.js?v=40.6.595" defer></script>
   <script src="../administrator/js/new-listings-live-asset-406529.js" defer></script>
-  <script src="./market-transpose.js?v=40.6.594" defer></script>
-  <script src="./new-listings-transpose.js?v=40.6.594" defer></script>
-  <script src="./line-chart-native.js?v=40.6.594" defer></script>
-  <script src="./technical-reading-data-sync.js?v=40.6.594" defer></script>
-  <script src="./market-fiche-native.js?v=40.6.594" defer></script>
-  <script src="./math-core-transpose.js?v=40.6.594" defer></script>
+  <script src="./market-transpose.js?v=40.6.595" defer></script>
+  <script src="./new-listings-transpose.js?v=40.6.595" defer></script>
+  <script src="./line-chart-native.js?v=40.6.595" defer></script>
+  <script src="./technical-reading-data-sync.js?v=40.6.595" defer></script>
+  <script src="./market-fiche-native.js?v=40.6.595" defer></script>
+  <script src="./math-core-transpose.js?v=40.6.595" defer></script>
   <script src="../administrator/js/market-microscope-candles.js" defer></script>
   <script src="../administrator/js/okx-microstructure-406499.js" defer></script>
-  <script src="./trading-desk.js?v=40.6.594" defer></script>
-  <script src="./trader-fidelity.js?v=40.6.594" defer></script>
+  <script src="./trading-desk.js?v=40.6.595" defer></script>
+  <script src="./trader-fidelity.js?v=40.6.595" defer></script>
 </body>
 </html>

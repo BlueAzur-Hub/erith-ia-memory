@@ -1,25 +1,27 @@
-# ERITH.IA Trading Desk — 40.6.594
+# ERITH.IA Trading Desk — 40.6.595
 
 ## Objet
-Restaurer la **sémantique historique réelle** du survol Graphique Ligne, pas seulement son habillage.
+Faire du Trader une **lecture filtrée de l'Interface Administrator**, et non une application reconstruite à côté.
 
-## Parité Administrator
-Sur le Graphique Ligne :
-- le point historique survolé est maintenant marqué directement sur la courbe ;
-- le tableau porte le titre `PRIX HISTORIQUE · VARIATION <période>` ;
-- le prix affiché est celui du **point historique sous le pointeur** ;
-- la variation affichée reprend la logique Administrator : variation normalisée depuis le début de la période sélectionnée ;
-- le `change24h` courant du Market n'est plus injecté dans un point historique ;
-- l'horodatage texte ajouté par le Trader a été retiré du tableau pour revenir au contrat visuel de l'Interface.
+## Actif
+Marché, Graphique Ligne, Bougies, Profondeur, Lecture Technique, EUR/USD, Fiche, Math Core, Nouveaux listings.
 
-## Hérité de 40.6.593
-- DOM / classes natives `atlas-chart-tooltip` ;
-- identité actif ;
-- pont de couleur ;
-- styles Administrator 40.6.571.
+## Mémoire grisée
+Les zones exclues gardent une empreinte visuelle à leur place logique :
+- sous le couple Graphique / Lecture Technique : Oracle, Atlas, Décision, Analyse ;
+- après Market / Math Core, dans l'ordre de l'Interface : Multi Horizon, News Sentinel, Lecture froide, Watchlist, Risques, Impact, No FOMO, Sources, Système, Projets, Aether.
 
-## Inchangé
-Interface Ghost Skeleton, Lecture Technique, Market, Bougies, Profondeur, Math Core, READ ONLY et absence d'exécution réelle.
+## Règle technique
+Ces surfaces grisées sont du **HTML/CSS uniquement** :
+- aucun owner métier ;
+- aucun listener ;
+- aucun fetch ;
+- aucun état restauré ;
+- `pointer-events:none`.
+
+## Protégé
+40.6.594 : Graphique Ligne, prix historiques, point de survol, variation par période, EUR/USD.
+Administrator 40.6.571 et Market Core 38.15.11 restent inchangés.
 
 ## Terrain
 Firefox opérateur : **PENDING CHRISTOPHE**.
