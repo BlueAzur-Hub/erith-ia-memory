@@ -1,18 +1,18 @@
 {
-  "build": "40.6.591",
+  "build": "40.6.592",
   "surface": "trader",
-  "release": "TRADER · INTERFACE MIRROR / GREY EXCLUSIONS",
-  "parent_trader_build": "40.6.590",
+  "release": "TRADER · INTERFACE GHOST SKELETON",
+  "parent_trader_build": "40.6.591",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": false,
-  "status": "branch_ready_for_pr_406591",
+  "status": "branch_ready_for_pr_406592",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
-    "menu": "Administrator menu geometry mirrored in Trader. Marché and Graphique remain active; excluded Administrator modules stay visible as disabled grey controls instead of disappearing.",
+    "menu": "Administrator menu geometry mirrored in Trader. Marché and Graphique active; excluded modules visible but disabled.",
     "primary": "Administrator #analyste / champagne-clean-lens transposed",
     "chart": "Administrator-style Crypto Ligne surface retained; its analysis overlay now follows the Administrator information hierarchy (asset/name/period/currency/source truth/price/change/low/high/amplitude/departure/last/points). Real Volume toggle restored for the Ligne owner.",
     "technical_reading": "Administrator native #detailPanel DOM retained and now synchronized from one Trader context owner: selected asset, display currency, price, 24h market variation, active line history, Source Dock, data-state, diagnostics and integrity. Candles S/R stays owned by the existing Candles owner.",
@@ -42,6 +42,33 @@
         "Aether · ATTENTION"
       ],
       "logic_added": false
+    },
+    "interface_ghost_skeleton": {
+      "principle": "Active Trader surfaces are extracted from the Administrator visual language; excluded Administrator areas remain as grey visual memory only.",
+      "active_surfaces": [
+        "Marché",
+        "Graphique Ligne",
+        "Bougies",
+        "Profondeur",
+        "Lecture Technique",
+        "Fiche",
+        "Math Core",
+        "Nouveaux listings",
+        "EUR/USD"
+      ],
+      "dormant_visual_only": [
+        "Oracle",
+        "Atlas",
+        "Sources",
+        "Décision",
+        "Analyse",
+        "Système",
+        "Projets",
+        "Aether"
+      ],
+      "owners_loaded_for_dormant": false,
+      "dormant_pointer_events": false,
+      "dormant_network_requests": false
     }
   },
   "technical_reading": {
@@ -103,10 +130,10 @@
     "pr": null,
     "merge_commit": null,
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.591_INTERFACE_MIRROR_GREY.zip",
-    "zip_bytes": 46604,
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.592_INTERFACE_GHOST_SKELETON.zip",
+    "zip_bytes": 61548,
     "javascript_syntax": "PASS",
-    "package_commit": "390d5665e2b4933fa632f31301106040b9953cb5"
+    "package_commit": "4eba1816a0dc4496f39ded9afab97601d5941314"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -116,8 +143,8 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox: compare header geometry directly with Administrator 40.6.571.",
-    "Decide whether grey-exclusion mirror is clearer than removed-module Trader header.",
-    "If accepted, apply the same mirror-first principle to remaining Trader surfaces before BUY / SELL / REDIVIDER."
+    "Firefox: validate the dormant grey body skeleton as visual memory of Administrator.",
+    "Check that active Graph/Technical Reading/Market/Math retain full contrast.",
+    "If accepted, freeze the Trader visual architecture before any BUY / SELL / REDIVIDER execution work."
   ]
 }

@@ -1,26 +1,44 @@
-# ERITH.IA Trading Desk — 40.6.591
+# ERITH.IA Trading Desk — 40.6.592
 
 ## Objet
-Tester concrètement l'idée **« repartir de l'Interface puis griser ce qui est exclu »** sans reconstruire le Trader ni réintroduire les propriétaires métier Administrator.
+Faire du Trader une **projection filtrée de l'Interface Administrator**, pas une deuxième application.
 
-## Ce qui change
-Le menu supérieur reprend la géométrie et les repères visuels de l'Administrator :
-- **Marché** et **Graphique** restent actifs ;
-- Livecheck, Atlas, Oracle, Sources, Décision, Analyse, Système, Projets, Vue Normal, Command Center et Aether restent visibles mais **gris / désactivés** ;
-- aucun de ces boutons gris ne charge de module, ne lance d'appel, ne restaure de contexte ni n'ajoute de logique.
+## Principe
+- les surfaces utiles au Trader restent réelles, actives et à plein contraste ;
+- les fonctions exclues conservent une **mémoire visuelle grise** ;
+- cette mémoire est uniquement du HTML/CSS de présentation : aucun propriétaire métier, aucun listener, aucun fetch, aucun état restauré.
 
-## Ce qui reste 40.6.590
-- Graphique Ligne et tableau d'analyse Interface Fidelity II ;
-- Bougies / Profondeur / devise natifs ;
-- Lecture Technique synchronisée sur l'actif unique ;
-- Market + Nouveaux listings ;
-- Fiche native ;
+## Actif dans Trader
+- Marché / Market Snapshot ;
+- Graphique Ligne ;
+- Bougies ;
+- Profondeur ;
+- Lecture Technique ;
+- EUR / USD ;
+- Fiche ;
 - Math Core ;
-- READ ONLY / aucune exécution réelle.
+- Nouveaux listings.
 
-## But terrain
-Comparer visuellement deux philosophies :
-1. retirer les modules inutiles ;
-2. conserver l'Interface comme squelette et **griser les modules exclus**.
+## Mémoire dormante
+Le corps de page ajoute une silhouette grise pour :
+- Oracle ;
+- Atlas ;
+- Sources ;
+- Décision ;
+- Analyse ;
+- Système ;
+- Projets ;
+- Aether.
 
-Firefox opérateur tranche.
+Ces panneaux sont `aria-hidden`, `pointer-events:none` et ne chargent aucun script.
+
+## Grammaire
+- couleur / cyan / champagne : actif Trader ;
+- gris : existe dans Agent-Crypto mais hors mission Trader ;
+- rouge : sécurité / interruption.
+
+## Protégé
+Administrator 40.6.571, Market Core 38.15.11, propriétaires Bougies / Profondeur / Quote Currency / New Listings / Math Core.
+
+## Terrain
+Firefox opérateur : **PENDING CHRISTOPHE**.
