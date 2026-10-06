@@ -1,12 +1,12 @@
 {
-  "build": "40.6.594",
+  "build": "40.6.595",
   "surface": "trader",
-  "release": "TRADER · HISTORICAL HOVER PARITY",
-  "parent_trader_build": "40.6.593",
+  "release": "TRADER · INTERFACE FILTERED LAYOUT",
+  "parent_trader_build": "40.6.594",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": false,
-  "status": "branch_ready_for_pr_406594",
+  "status": "branch_ready_for_pr_406595",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -80,6 +80,43 @@
       "marker_radius_px": 6.4,
       "current_market_change_removed_from_historical_tooltip": true,
       "timestamp_removed_from_tooltip_row": true
+    },
+    "interface_filtered_layout": {
+      "principle": "Trader is an active subset of Administrator. Useful owners stay active; excluded areas keep their spatial memory as grey, inert presentation-only slots.",
+      "active_surfaces": [
+        "Marché",
+        "Graphique Ligne",
+        "Bougies",
+        "Profondeur",
+        "Lecture Technique",
+        "EUR/USD",
+        "Fiche",
+        "Math Core",
+        "Nouveaux listings"
+      ],
+      "dormant_top_band": [
+        "Oracle",
+        "Atlas",
+        "Décision",
+        "Analyse"
+      ],
+      "dormant_lower_sequence": [
+        "Multi Horizon",
+        "News Sentinel",
+        "Lecture froide",
+        "Watchlist",
+        "Risques",
+        "Impact",
+        "No FOMO",
+        "Sources",
+        "Système",
+        "Projets",
+        "Aether"
+      ],
+      "dormant_logic_loaded": false,
+      "dormant_pointer_events": false,
+      "dormant_fetches": false,
+      "administrator_base": "40.6.571"
     }
   },
   "technical_reading": {
@@ -141,10 +178,10 @@
     "pr": null,
     "merge_commit": null,
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.594_HISTORICAL_HOVER_PARITY.zip",
-    "zip_bytes": 77279,
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.595_INTERFACE_FILTERED_LAYOUT.zip",
+    "zip_bytes": null,
     "javascript_syntax": "PASS",
-    "package_commit": "6a4923bd1eda0f27d378259529856c00387d4356"
+    "package_commit": null
   },
   "stop_gate": {
     "no_real_order": true,
@@ -154,9 +191,8 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox: move the pointer into the middle of the 24h curve, not only over the endpoint.",
-    "Confirm the orange historical point is visibly marked on the curve.",
-    "Confirm tooltip title is PRIX HISTORIQUE · VARIATION 24h and price changes point by point.",
-    "Compare the percentage with Administrator: variation since the beginning of the selected period."
+    "Firefox: compare Trader 40.6.595 with Administrator 40.6.571 side by side.",
+    "Validate that active Trader surfaces dominate while excluded Interface areas remain recognizable but visually dormant.",
+    "If accepted, freeze visual architecture before Trader Workflow / BUY SELL REDIVIDER."
   ]
 }
