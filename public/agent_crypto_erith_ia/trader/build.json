@@ -5,8 +5,8 @@
   "parent_trader_build": "40.6.599",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "published": false,
-  "status": "pr_165_ci_passed_ready_to_merge",
+  "published": true,
+  "status": "published_406600_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -256,11 +256,11 @@
   ],
   "delivery": {
     "pr": 165,
-    "merge_commit": null,
-    "github_pages": "PENDING_MERGE",
+    "merge_commit": "5ec3e8767c6f38de27f387fa5f663bcc61ee17cd",
+    "github_pages": "SUCCESS · run 37507054554",
     "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.600_CANONICAL_CHART_OWNER.zip",
     "zip_bytes": 86855,
-    "javascript_syntax": "PASS · Agent-Crypto Trader Current",
+    "javascript_syntax": "PASS · Agent-Crypto Trader Current · PR + main",
     "package_commit": "fafe160b496ea79f24c16c25da84711d2ae9a22c"
   },
   "stop_gate": {
