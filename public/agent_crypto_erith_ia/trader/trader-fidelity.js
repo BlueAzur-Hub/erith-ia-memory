@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD="40.6.581";
+  const BUILD="40.6.582";
   const $=id=>document.getElementById(id);
   const finite=value=>{
     if(value===null||value===undefined||value==="")return null;
@@ -106,6 +106,9 @@
     });
   }
   function bindHeaderNavigation(){
+    $("traderAdminReturn")?.addEventListener("click",()=>{
+      location.href="../administrator/index.html?view=advanced";
+    });
     document.querySelectorAll("[data-trader-target]").forEach(button=>button.addEventListener("click",()=>{
       const id=button.dataset.traderTarget;
       document.querySelectorAll("[data-trader-target]").forEach(x=>x.classList.toggle("is-active",x===button));

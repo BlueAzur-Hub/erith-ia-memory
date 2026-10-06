@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <meta name="agent-crypto-surface" content="trader" />
-  <meta name="agent-crypto-build" content="40.6.581" />
+  <meta name="agent-crypto-build" content="40.6.582" />
   <meta name="agent-crypto-administrator-base" content="40.6.571" />
-  <title>ERITH.IA · Trading Desk — 40.6.581</title>
+  <title>ERITH.IA · Trading Desk — 40.6.582</title>
 
   <!-- Architecture visuelle existante Administrator : réutilisée, pas réinventée. -->
   <link rel="stylesheet" href="../administrator/style.css?v=40.6.571" />
@@ -15,39 +15,53 @@
   <link rel="stylesheet" href="../administrator/admin-visual-assets.css?v=40.6.400" />
   <link rel="stylesheet" href="../administrator/admin-technical-reading-classic-opacity.css?v=40.6.571" />
   <link rel="stylesheet" href="../administrator/market-reading-depth.css?v=40.6.571" />
-  <link rel="stylesheet" href="./trading-desk.css?v=40.6.581" />
-  <link rel="stylesheet" href="./trader-fidelity.css?v=40.6.581" />
+  <link rel="stylesheet" href="./trading-desk.css?v=40.6.582" />
+  <link rel="stylesheet" href="./trader-fidelity.css?v=40.6.582" />
 </head>
 <body>
-  <header class="trader-menu trader-interface-header glass" aria-label="Menu Trader">
-    <div class="trader-interface-top">
-      <div class="title-block trader-title-block">
-        <p class="eyebrow">ERITH.IA · TRADING DESK</p>
-        <div class="brand-account-row trader-brand-account-row">
-          <h1 class="brandline trader-brandline"><span>Agent-Crypto</span> <strong>· Trader</strong></h1>
-          <div class="trader-context-switcher" aria-label="Contexte de trading">
-            <button type="button" class="pair-chip" aria-disabled="true">
-              <span>PAIR</span><b>BTC / USDC</b>
+  <header class="hero glass" id="accueil">
+    <div class="hero-top">
+      <div class="title-block">
+        <p class="eyebrow">ERITH.IA · MARKETS OBSERVATORY</p>
+        <div class="brand-account-row">
+          <h1 class="brandline"><span>Agent-Crypto</span> <strong>@erith.IA</strong></h1>
+          <div class="atlas-view-switcher" role="group" aria-label="Retour à l’interface Agent-Crypto">
+            <button class="atlas-view-button atlas-view-button-admin" id="traderAdminReturn"
+                    type="button" aria-pressed="false"
+                    aria-label="Retourner à l’administration Agent-Crypto">
+              <svg class="atlas-view-button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"></path>
+                <path d="M9.5 12.2 11.2 14l3.7-4"></path>
+              </svg>
+              <span>Administration</span>
             </button>
-            <span class="mode-chip">SPOT</span>
-            <span class="mode-chip muted">PERP séparé</span>
           </div>
         </div>
       </div>
-      <div class="status-stack trader-status-stack" aria-label="Statuts Trader">
-        <span class="status-chip trader-build-chip">Trader 40.6.581</span>
-        <span class="status-chip">READ ONLY</span>
-        <a class="admin-link" href="../administrator/index.html?view=advanced">Administrator</a>
+      <div class="status-stack" aria-label="Statuts">
+        <span class="pill ok atlas-version-control"><span>Build 40.6.582 · Trader</span></span>
+        <span class="pill admin-engine-badge">ENGINE · Market Core 38.15.11</span>
+        <span class="pill ok">READ ONLY</span>
+        <span class="sigil">⌁</span>
       </div>
     </div>
-    <section class="atlas-v2-interface-bar trader-interface-bar" aria-label="Navigation Trader">
-      <nav class="nav atlas-v2-nav trader-v2-nav">
-        <div class="atlas-v2-nav-group atlas-v2-nav-essential atlas-quick-dock trader-quick-dock">
-          <button type="button" class="atlas-quick-link" data-trader-target="marketSnapshotPanel"><span class="atlas-quick-icon" aria-hidden="true">▦</span><span>Marché</span></button>
-          <button type="button" class="atlas-quick-link is-active" data-trader-target="market-zone"><span class="atlas-quick-icon" aria-hidden="true">⌇</span><span>Graphique</span></button>
-          <button type="button" class="atlas-quick-link" data-trader-target="detailPanel"><span class="atlas-quick-icon" aria-hidden="true">◇</span><span>Lecture</span></button>
-          <button type="button" class="atlas-quick-link" data-trader-target="depth"><span class="atlas-quick-icon" aria-hidden="true">≋</span><span>Profondeur</span></button>
-          <button type="button" class="atlas-quick-link" data-trader-target="math"><span class="atlas-quick-icon" aria-hidden="true">⊕</span><span>Math Core</span></button>
+
+    <section class="atlas-v2-interface-bar" aria-label="Raccourcis Agent-Crypto Trader">
+      <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques">
+        <div class="atlas-v2-nav-group atlas-v2-nav-essential atlas-quick-dock"
+             aria-label="Raccourcis essentiels">
+          <button type="button" class="atlas-quick-link"
+                  data-trader-target="marketWorkspaceGrid"
+                  aria-controls="marketWorkspaceGrid">
+            <span class="atlas-quick-icon" aria-hidden="true">▦</span>
+            <span>Marché</span>
+          </button>
+          <button type="button" class="atlas-quick-link is-active"
+                  data-trader-target="market-zone"
+                  aria-controls="market-zone">
+            <span class="atlas-quick-icon" aria-hidden="true">⌇</span>
+            <span>Graphique</span>
+          </button>
         </div>
       </nav>
     </section>
@@ -55,7 +69,7 @@
 
   <main class="trader-main">
     <!--
-      40.6.581 : transposition du couple natif Administrator
+      40.6.582 : transposition du couple natif Administrator
       Graphique + Lecture Technique + rail natif.
       Profondeur conserve son owner existant et se docke sur #detailPanel.
     -->
@@ -265,19 +279,19 @@
   </div>
 
   <footer class="trader-footer">
-    <span>Trader 40.6.581 · INTERFACE FIDELITY SYNC · PENDING OPÉRATEUR</span>
+    <span>Trader 40.6.582 · INTERFACE FIDELITY SYNC · PENDING OPÉRATEUR</span>
     <span>Administrator 40.6.571 · Market Core 38.15.11</span>
     <span id="viewportProfile">viewport</span>
   </footer>
 
   <script src="../administrator/js/quote-currency-architecture-406497.js" defer></script>
   <script src="../administrator/js/okx-local-backend-transport.js" defer></script>
-  <script src="./technical-reading-transpose.js?v=40.6.581" defer></script>
-  <script src="./market-transpose.js?v=40.6.581" defer></script>
-  <script src="./math-core-transpose.js?v=40.6.581" defer></script>
+  <script src="./technical-reading-transpose.js?v=40.6.582" defer></script>
+  <script src="./market-transpose.js?v=40.6.582" defer></script>
+  <script src="./math-core-transpose.js?v=40.6.582" defer></script>
   <script src="../administrator/js/market-microscope-candles.js" defer></script>
   <script src="../administrator/js/okx-microstructure-406499.js" defer></script>
-  <script src="./trading-desk.js?v=40.6.581" defer></script>
-  <script src="./trader-fidelity.js?v=40.6.581" defer></script>
+  <script src="./trading-desk.js?v=40.6.582" defer></script>
+  <script src="./trader-fidelity.js?v=40.6.582" defer></script>
 </body>
 </html>
