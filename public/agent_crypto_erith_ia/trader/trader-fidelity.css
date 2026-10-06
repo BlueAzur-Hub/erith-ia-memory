@@ -122,54 +122,7 @@
 #atlasMarketMicroscope.trader-hide-legend .amm-series-legend{display:none!important}
 #atlasMarketMicroscope.trader-hide-analysis .amm-tip{display:none!important}
 
-/* Native Market fiche restored in Trader. */
-#marketSnapshotPanel{position:relative}
-.trader-market-fiche{
-  --fiche-accent:#ffd782;
-  position:absolute;
-  z-index:2350;
-  top:74px;
-  left:58%;
-  width:min(455px,calc(100% - 28px));
-  transform:translateX(-50%);
-  border:1px solid rgba(83,229,241,.55);
-  border-radius:14px;
-  padding:12px;
-  background:linear-gradient(180deg,rgba(4,24,34,.985),rgba(3,18,27,.985));
-  box-shadow:0 22px 55px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.035);
-}
-.trader-market-fiche[hidden]{display:none!important}
-.trader-market-fiche[data-mode="side"]{left:auto;right:12px;transform:none}
-.trader-market-fiche-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.trader-market-fiche-head .eyebrow{margin:0;color:#ffd782;font-size:9px;letter-spacing:.13em;font-weight:950}
-.trader-market-fiche-mode{display:flex;gap:4px}
-.trader-market-fiche-mode button{
-  min-height:25px;padding:4px 7px;border:1px solid rgba(255,255,255,.16);border-radius:6px;
-  background:rgba(255,255,255,.035);color:#bacbd3;font-size:9px;font-weight:850;cursor:pointer
-}
-.trader-market-fiche-mode button.is-active{border-color:#ffe2a1;color:#fff5d8;background:rgba(255,215,130,.12)}
-.trader-market-fiche-identity{display:flex;align-items:center;gap:10px;padding:9px 0 10px;border-bottom:1px solid rgba(255,255,255,.10)}
-.trader-market-fiche-identity img{width:46px;height:46px;border-radius:50%;object-fit:cover;background:#0b1c26}
-.trader-market-fiche-identity h3{margin:0;font-size:17px;color:#fff3cf}
-.trader-market-fiche-identity h3 small{margin-left:5px;font-size:11px;color:#6be6f0}
-.trader-market-fiche-identity p{margin:3px 0 0;color:#8fa7b2;font-size:9px}
-.trader-market-fiche-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:9px}
-.trader-market-fiche-grid>div{
-  display:grid;gap:3px;min-width:0;padding:8px 9px;border:1px solid rgba(255,255,255,.09);
-  border-radius:8px;background:rgba(255,255,255,.025)
-}
-.trader-market-fiche-grid span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#7fa4b2;font-weight:900}
-.trader-market-fiche-grid b{font-size:12px;color:#eefaff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.trader-market-fiche-grid b.pos{color:#64efa0}.trader-market-fiche-grid b.neg{color:#ff6f89}
-.trader-market-fiche-proof{
-  margin-top:9px;padding:7px 9px;border:1px solid rgba(255,215,130,.12);border-radius:8px;
-  background:rgba(255,215,130,.035);display:grid;gap:4px;font-size:8px;color:#a7bbc3
-}
-.trader-market-fiche-proof b{color:#ffe7aa}
-.trader-market-fiche-foot{
-  margin-top:9px;padding:7px 9px;border:1px solid rgba(98,236,255,.15);border-radius:8px;
-  color:#ffe7aa;font-size:9px;font-weight:850;background:rgba(98,236,255,.035)
-}
+/* Fiche Crypto uses the native Administrator help-layer/dock CSS. */
 
 @media(max-width:1180px){
   .trader-interface-top{grid-template-columns:1fr}
@@ -182,5 +135,4 @@
   .trader-context-switcher{width:100%}
   .trader-chart-fidelity-head{flex-direction:column!important}
   .trader-graph-toolbar,.trader-chart-controls{width:100%!important;justify-content:flex-start!important}
-  .trader-market-fiche{position:fixed;left:8px;right:8px;top:82px;width:auto;max-height:calc(100vh - 100px);overflow:auto;transform:none}
 }
