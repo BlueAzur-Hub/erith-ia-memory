@@ -31,9 +31,9 @@
   const ADMIN_PRIMARY_STORE="payloads";
   const PERIOD_MIN_POINTS=Object.freeze({1:20,7:40,30:100,60:120,90:180,365:180,36500:180});
   const bankContextKey=(coin,currency=displayCurrency())=>String(coin?.id||"").toLowerCase()+":"+String(currency||"").toUpperCase();
-  const adminCacheKey=(coin,period,currency=displayCurrency())=>String(currency||"").toUpperCase()==="USD"
-    ?String(coin?.id||"").toLowerCase()+":USD:coingecko:"+Number(period||1)
-    :String(coin?.id||"").toLowerCase()+":"+Number(period||1)+":coingecko";
+  const adminCacheKey=(coin,period,currency=displayCurrency(),family="coingecko")=>String(currency||"").toUpperCase()==="USD"
+    ?String(coin?.id||"").toLowerCase()+":USD:"+String(family||"coingecko").toLowerCase()+":"+Number(period||1)
+    :String(coin?.id||"").toLowerCase()+":"+Number(period||1)+":"+String(family||"coingecko").toLowerCase();
 
   function parseStore(raw){
     try{const parsed=typeof raw==="string"?JSON.parse(raw):raw;return parsed&&typeof parsed==="object"?parsed:{};}catch(_){return{};}
@@ -122,9 +122,14 @@
     const key=bankContextKey(coin,currency);
     if(!force&&state.historyBank&&state.historyBankKey===key)return state.historyBank;
     const payload=await readInterfacePrimaryStore(),records=new Map();
+    const families=String(currency||"").toUpperCase()==="USD"?["coingecko","binance"]:["binance","coingecko"];
     for(const period of PERIODS){
-      const raw=payload.store[adminCacheKey(coin,period,currency)];
-      const record=normalizeInterfaceRecord(raw,coin,period,currency);
+      let record=null;
+      for(const family of families){
+        const raw=payload.store[adminCacheKey(coin,period,currency,family)];
+        record=normalizeInterfaceRecord(raw,coin,period,currency);
+        if(record)break;
+      }
       if(record)records.set(period,record);
     }
     state.historyBank={coinId:String(coin.id),currency:String(currency).toUpperCase(),records};
