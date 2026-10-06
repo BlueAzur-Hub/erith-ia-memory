@@ -20,7 +20,8 @@ Aucun ordre réel. Aucune clé privée. Aucun thread Aether.
 - PR : **#146**
 - Merge commit : `380d1b0104099041795930829d012dff318551b2`
 - Syntaxe `trader-fidelity.js` : **PASS Node --check**
-- GitHub Pages : à vérifier après le merge
+- GitHub Pages : **SUCCESS** · run `37448207439`
+- ZIP complet Trader : `downloads/AGENT_CRYPTO_TRADER_40.6.581_INTERFACE_FIDELITY_FULL.zip` · 96 556 octets
 - Terrain Firefox : **PENDING CHRISTOPHE**
 
 Après PASS terrain : geler le squelette Trader avant toute phase OKX privé READ ONLY.
