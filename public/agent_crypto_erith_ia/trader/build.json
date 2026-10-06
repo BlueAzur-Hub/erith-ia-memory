@@ -1,12 +1,12 @@
 {
-  "build": "40.6.584",
+  "build": "40.6.585",
   "surface": "trader",
-  "release": "TRADER · RESTORE TRADING DESK IDENTITY",
-  "parent_trader_build": "40.6.583",
+  "release": "TRADER · NATIVE GRAPH CONTROL OWNERS",
+  "parent_trader_build": "40.6.584",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": false,
-  "status": "branch_ready_for_pr_406584",
+  "status": "branch_ready_for_pr_406585",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -19,7 +19,7 @@
     "depth": "existing okx-microstructure owner docked on #detailPanel",
     "market": "native Market Snapshot below Graph",
     "math": "native Math Core V3 beside Market",
-    "chart_toolbar": "Administrator Graph toolbar grammar retained; Administrator-only MARCHÉ · CRYPTO domain selector removed from Trader; existing Candles owner and controls unchanged.",
+    "chart_toolbar": "Trader custom Volume, Profondeur and duplicate AFFICHAGE controls removed. Native OKX Depth owner injects one Profondeur; quote-currency owner injects one AFFICHAGE EUR/USD; Candles owner injects MICROSCOPE Ligne/Bougies. Trader retains only existing Legend/Analysis/Fiche bridges.",
     "market_fiche": "floating/lateral Market Snapshot fiche bound to selected Trader market coin"
   },
   "technical_reading": {
@@ -84,7 +84,7 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox terrain proof of Trader title/header identity",
-    "then separate 40.6.585 Graph toolbar cleanup"
+    "Firefox verify one Profondeur and one AFFICHAGE group",
+    "then 40.6.586 restore native Technical Reading DOM/geometry"
   ]
 }
