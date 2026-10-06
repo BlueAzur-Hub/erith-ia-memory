@@ -32,6 +32,7 @@ function ensureNavigation(doc){
   if(oracle){oracle.dataset.traderNav="oracle";oracle.classList.add("trader-runtime-nav-link");}
   if(sources){
     sources.dataset.traderNav="sources";
+    sources.dataset.atlasEssentialTarget="source-dock";
     sources.classList.add("trader-runtime-nav-link");
     sources.setAttribute("aria-controls","source-dock");
     sources.setAttribute("aria-label","Ouvrir les Sources du Trader dans la Lecture technique");
@@ -43,7 +44,10 @@ function ensureNavigation(doc){
   let decision=doc.querySelector('[data-trader-nav="decision"]');
   if(!decision){
     decision=doc.querySelector('#atlasAdminCenterDrawer a[href="#decision-board"]');
-    if(decision)decision.dataset.traderNav="decision";
+    if(decision){
+      decision.dataset.traderNav="decision";
+      decision.classList.add("trader-runtime-nav-link");
+    }
   }
 
   const aether=doc.getElementById("atlasAetherStatusToggle");
@@ -62,10 +66,13 @@ function ensureNavigation(doc){
   return true;
 }
 
+function isElement(node){return !!node&&node.nodeType===1;}
+function isDetails(node){return isElement(node)&&String(node.tagName||"").toUpperCase()==="DETAILS";}
+
 function clearFocusedRoute(doc){
   doc.body.classList.remove("trader-route-decision");
   doc.querySelectorAll("[data-trader-route-open-before]").forEach(node=>{
-    if(node instanceof HTMLDetailsElement)node.open=node.dataset.traderRouteOpenBefore==="1";
+    if(isDetails(node))node.open=node.dataset.traderRouteOpenBefore==="1";
     delete node.dataset.traderRouteOpenBefore;
   });
   doc.querySelectorAll("[data-trader-route-path],[data-trader-route-surface]").forEach(node=>{
@@ -77,10 +84,10 @@ function clearFocusedRoute(doc){
 function focusExistingSurface(doc,targetId){
   clearFocusedRoute(doc);
   const target=doc.getElementById(targetId);
-  if(!(target instanceof HTMLElement))return false;
+  if(!(isElement(target)))return false;
 
   const route="decision";
-  if(target instanceof HTMLDetailsElement){
+  if(isDetails(target)){
     target.dataset.traderRouteOpenBefore=target.open?"1":"0";
     target.open=true;
   }
@@ -89,7 +96,7 @@ function focusExistingSurface(doc,targetId){
   let node=target.parentElement;
   while(node&&node!==doc.body&&!node.matches("main.shell")){
     node.dataset.traderRoutePath=route;
-    if(node instanceof HTMLDetailsElement){
+    if(isDetails(node)){
       node.dataset.traderRouteOpenBefore=node.open?"1":"0";
       node.open=true;
     }
@@ -105,15 +112,15 @@ function openTraderSources(doc){
   clearFocusedRoute(doc);
   const deck=doc.getElementById("analyste");
   const toggle=doc.getElementById("detailPanelToggle");
-  if(deck?.classList.contains("detail-collapsed")&&toggle instanceof HTMLElement){
+  if(deck?.classList.contains("detail-collapsed")&&isElement(toggle)){
     try{toggle.click();}catch(_){}
   }
   const sourceDock=doc.getElementById("source-dock");
   const sourceState=doc.getElementById("detailSourcesWindow");
-  if(sourceDock instanceof HTMLDetailsElement)sourceDock.open=true;
-  if(sourceState instanceof HTMLDetailsElement)sourceState.open=true;
+  if(isDetails(sourceDock))sourceDock.open=true;
+  if(isDetails(sourceState))sourceState.open=true;
   const target=sourceDock||sourceState||doc.getElementById("detailPanel");
-  if(target instanceof HTMLElement){
+  if(isElement(target)){
     try{target.scrollIntoView({block:"center",behavior:"smooth"});}catch(_){try{target.scrollIntoView();}catch(__){}}
     return true;
   }
@@ -122,7 +129,7 @@ function openTraderSources(doc){
 
 function alignAetherBelowGraphToolbar(win,doc){
   const panel=doc.getElementById("atlasAetherStatusPanel");
-  if(!(panel instanceof HTMLElement)||panel.dataset.aetherOperatorOpen!=="1")return false;
+  if(!(isElement(panel))||panel.dataset.aetherOperatorOpen!=="1")return false;
   const toolbar=doc.querySelector("#analyste .chart-v2-toolbar");
   const accueil=doc.getElementById("accueil");
   const anchorRect=(toolbar||accueil)?.getBoundingClientRect?.();
@@ -256,7 +263,7 @@ function mount(){
     const style=doc.createElement("style");
     style.id="agentCryptoTraderRuntimeMirrorStyle";
     style.textContent=[
-      "body.atlas-trader-runtime-mirror main.shell > :not(#accueil):not(#market-zone){display:none!important}",
+      "body.atlas-trader-runtime-mirror main.shell > :not(#accueil):not(#market-zone):not([data-trader-route-path='decision']){display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-view-switcher{display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-advanced{display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential [data-atlas-essential-target='livecheck']{display:none!important}",
