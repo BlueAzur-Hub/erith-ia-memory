@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.6.573";
+  const BUILD = "40.6.574";
   const ADMIN_BASE = "40.6.571";
   const profileNode = document.getElementById("viewportProfile");
 
@@ -39,8 +39,9 @@
     administratorBase: ADMIN_BASE,
     surface: "trader",
     execution: "disabled",
-    phase: "light-shell",
+    phase: "candles-owner-mounted",
     duplicatedBusinessLogic: false,
+    mountedOwners: Object.freeze({ candles: true, market: false, depth: false, technicalReading: false, mathCore: false }),
     omittedSections: Object.freeze(["Aether","Atlas","Oracle","Veille","Sources","Decision Board","Other Administrator sections"]),
     canonicalOwners: Object.freeze({
       market: "../administrator/app.js#marketSnapshotPanel",
@@ -61,6 +62,30 @@
     }
   });
 
-  syncViewport();
+  function mountExistingCandlesOwner() {
+    const quote = globalThis.AgentCryptoQuoteCurrencyArchitecture;
+    const candles = globalThis.AgentCryptoMarketMicroscope;
+    try { quote?.setDisplayCurrency?.("USD", { reason: "trader-default-usd" }); } catch (_) {}
+    const mounted = !!candles?.mount?.();
+    if (mounted) {
+      try { candles.setMode?.("candles"); } catch (_) {}
+      document.documentElement.dataset.traderCandlesOwner = "mounted";
+    } else {
+      document.documentElement.dataset.traderCandlesOwner = "missing";
+    }
+    return mounted;
+  }
+
+  const bootOwners = () => {
+    syncViewport();
+    mountExistingCandlesOwner();
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootOwners, { once: true });
+  } else {
+    bootOwners();
+  }
+  window.addEventListener("pageshow", mountExistingCandlesOwner, { passive: true });
   window.addEventListener("resize", syncViewport, { passive: true });
 })();
