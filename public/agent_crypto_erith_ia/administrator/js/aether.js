@@ -2021,6 +2021,10 @@ function aetherNewsMarketSemantic(){
       });
     }
     if(!AETHER_RIBBON_ENABLED){
+      // Trader keeps the native status lane permanently. The Aether ribbon is
+      // resident but disabled on this surface, so its phase must never hide
+      // Relancer / Rafraîchir / Décision / Sources / Chronos.
+      aetherPhaseApply("native","trader-ribbon-disabled");
       const ribbon=document.getElementById("atlasAetherRibbon");
       if(ribbon){
         ribbon.dataset.aetherRuntime="disabled";
