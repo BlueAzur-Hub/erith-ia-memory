@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.611",
+  "build": "40.6.612",
   "engine": "38.15.11",
-  "release": "TRADER · NATIVE STATUS LANE + VISIBLE BUILD",
+  "release": "TRADER · RESTORE FULLSCREEN CASCADE",
   "published": true,
-  "status": "published_terrain_pending_406611",
-  "parent_build": "40.6.610",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.611",
-  "administrator_build": "40.6.611",
-  "build_label": "Build 40.6.611 · Administrator",
+  "status": "published_terrain_pending_406612",
+  "parent_build": "40.6.611",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.612",
+  "administrator_build": "40.6.612",
+  "build_label": "Build 40.6.612 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,7 +31,7 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_406611_TRADER_NATIVE_STATUS_LANE",
+  "terrain_proof": "PENDING_FIREFOX_406612_FULLSCREEN_RESTORE",
   "release_notes": "WORKSPACE_MEMORY_CURRENCY_LABEL_SYNC_40.6.571.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
@@ -10360,5 +10360,28 @@
     "real_order": false,
     "automatic_order": false,
     "terrain": "PENDING_FIREFOX"
+  },
+  "trader_fullscreen_restore_406612": {
+    "enabled": true,
+    "parent": "40.6.611",
+    "scope": "TRADER_PRESENTATION_RESTORE_ONLY",
+    "restores": "pre-40.6.610 fullscreen/F11 geometry",
+    "removes_target_top_viewport_fit": true,
+    "trader_cockpit_fit_runtime_loaded": false,
+    "native_status_lane_preserved": true,
+    "visible_build_preserved": true,
+    "aether_trader_native_phase_preserved": true,
+    "target_top_business_logic_modified": false,
+    "market_flow_modified": false,
+    "market_core_modified": false,
+    "graph_business_logic_modified": false,
+    "lecture_technique_modified": false,
+    "real_order": false,
+    "automatic_order": false,
+    "cumulative": [
+      "40.6.609 minimal header",
+      "40.6.611 native status lane + visible build",
+      "40.6.612 fullscreen restore"
+    ]
   }
 }
