@@ -1,12 +1,12 @@
 {
-  "build": "40.6.599",
+  "build": "40.6.600",
   "surface": "trader",
-  "release": "TRADER · INTERFACE HISTORY BANK · FINAL HANDOFF",
-  "parent_trader_build": "40.6.598",
+  "release": "TRADER · CANONICAL CHART OWNER EXTRACTION",
+  "parent_trader_build": "40.6.599",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": false,
-  "status": "branch_ready_for_pr_406599",
+  "status": "branch_ready_for_pr_406600",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -21,7 +21,7 @@
     "math": "native Math Core V3 beside Market",
     "chart_toolbar": "Native Depth, Quote Currency and Microscope owners remain unique. Trader restores a real Volume toggle for its real Ligne volume bars; Legend/Analysis/Fiche remain functional bridges.",
     "market_fiche": "Administrator native Fiche contract restored in Trader: help-layer floating surface + real lateral dock host, persisted floating/dock mode, sticky/internal-scroll geometry from shared Administrator CSS. Legacy pinned trader-market-fiche owner retired.",
-    "line_chart": "Canonical crypto Ligne no longer treats a period click as a network action. It reads the existing Administrator historical cache/database first and renders the requested window from that historical mass.",
+    "line_chart": "Trader Ligne presentation adapter delegates historical data ownership to the extracted Administrator chart-history owner. Exact period cache, coverage validation, source family, freshness, direct refresh and canonical storage are no longer reimplemented in Trader.",
     "technical_context_owner": "trader/technical-reading-data-sync.js · one selected asset shared with Market/Ligne/Bougies/Depth.",
     "interface_mirror": {
       "active_modules": [
@@ -174,35 +174,29 @@
       "protected_owners_changed": false
     },
     "line_chart_resilience": {
-      "superseded_by": "40.6.599 Interface History Bank",
-      "old_problem": "40.6.598 still modeled 24h/7j/30j/... as independent Trader fetch/cache contexts and could expose NetworkError while a real series remained visible.",
-      "old_trader_cache_key": "agent_crypto_erith_ia_trader_line_cache_v1",
-      "old_cache_write_used_by_406599": false,
-      "automatic_cleanup_of_old_key": false
+      "supersedes": "40.6.599 Interface History Bank",
+      "rejected_terrain": "40.6.599 could present ~24h under Max and refuse missing exact periods because Trader interpreted raw storage without the Administrator integrity contract.",
+      "fix": "Remove Trader History Bank / covering-period slicing. Use exact canonical period ownership and Administrator coverage rules.",
+      "trader_cache_added": false
     },
-    "interface_history_bank": {
-      "decision": "D LOCK — reuse the existing Interface history store; do not recreate a Trader period-fetch engine.",
-      "primary_database": "IndexedDB agent_crypto_storage_relief_40278 / payloads",
-      "primary_payload_key": "agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50",
-      "local_fallback": "same Administrator cache key in localStorage only if PRIMARY is unavailable",
-      "families": {
-        "EUR": [
-          "binance",
-          "coingecko"
-        ],
-        "USD": [
-          "coingecko",
-          "binance"
-        ]
-      },
-      "period_navigation": "database-only",
-      "network_on_period_change": false,
-      "exact_period_first": true,
-      "covering_period_slice_fallback": true,
-      "trader_period_cache_added": false,
-      "primary_database_write": false,
-      "direct_network_policy": "bootstrap only when current asset/currency has no usable Interface history; never caused by a period button",
-      "raw_network_error_on_period_change": false
+    "canonical_chart_owner": {
+      "owner": "administrator/js/chart-history-owner.js",
+      "filename_version_suffix": false,
+      "source_lineage": [
+        "Administrator app.js chart owner",
+        "graph-native-usd owner"
+      ],
+      "trader_role": "presentation adapter only",
+      "exact_period_only": true,
+      "covering_period_alias": false,
+      "integrity_rules": "same minimum points / minimum coverage / freshness contract as Administrator",
+      "storage": "agent_crypto_storage_relief_40278 / payloads / agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50",
+      "EUR": "Administrator source preference: Binance for supported canonical assets, CoinGecko otherwise",
+      "USD": "CoinGecko native USD, isolated USD cache key",
+      "period_click": "exact canonical cache first; direct owner refresh only when exact cache is absent or stale",
+      "max_truth": "24h/7d/etc can never be relabeled Max",
+      "administrator_runtime_imported": false,
+      "real_order": false
     }
   },
   "technical_reading": {
@@ -264,22 +258,23 @@
     "pr": null,
     "merge_commit": null,
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.599_INTERFACE_HISTORY_BANK_FINAL_HANDOFF.zip",
-    "zip_bytes": 81872,
-    "javascript_syntax": "PASS",
-    "package_commit": "f086b7b51e52e81d11a1a59e1f5bad7912c13664"
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.600_CANONICAL_CHART_OWNER.zip",
+    "zip_bytes": null,
+    "javascript_syntax": "PENDING",
+    "package_commit": null
   },
   "stop_gate": {
     "no_real_order": true,
     "no_new_exchange_key": true,
     "no_aether_thread": true,
-    "administrator_owners_changed": false,
+    "administrator_runtime_changed": false,
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Final terrain check: BTC Ligne → 24h / 7j / 30j / 60j / 90j / 1a without a NetworkError overlay.",
-    "On periods present in Interface storage, the truth banner must read HISTORIQUE INTERFACE · BASE LOCALE.",
-    "EUR then USD: period navigation must remain database-only and separated by currency.",
-    "If this passes, close the thread on 40.6.599; no further feature work in this handoff."
+    "Firefox: BTC Ligne USD → 24h / 7j / 30j / 60j / 90j / 1a / Max.",
+    "Each active period must match the actual first/last timestamps and Administrator coverage rules.",
+    "A missing/stale exact period may refresh through the canonical source owner; it must never reuse a shorter series under a longer label.",
+    "Repeat EUR → USD and BTC → ETH → SOL; PAIR must remain SYNC.",
+    "Bougies / Profondeur / Lecture Technique / Source Dock / Math Core must remain unchanged."
   ]
 }
