@@ -48,3 +48,11 @@ La surface conserve :
 Firefox : **PENDING CHRISTOPHE**.
 
 Test demandé : BTC → Ligne, CT → Ligne, puis aller-retour Ligne / Bougies.
+
+## Livraison 40.6.589
+- PR #154 fusionnée.
+- Merge commit : `b20ec32838ba6199825e8e5025bf55d3f22d5f63`.
+- Build GitHub Pages : SUCCESS · run `37464985249`.
+- ZIP : `downloads/AGENT_CRYPTO_TRADER_40.6.589_NATIVE_LINE_GRAPH.zip` · 149 049 octets.
+- Syntaxe JS Trader : **PASS**.
+- Terrain Firefox : **PENDING CHRISTOPHE**.

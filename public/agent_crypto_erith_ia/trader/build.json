@@ -5,8 +5,8 @@
   "parent_trader_build": "40.6.588",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "published": false,
-  "status": "branch_ready_for_pr_406589",
+  "published": true,
+  "status": "published_pending_terrain_406589",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -79,10 +79,12 @@
     "New Listings live asset owner"
   ],
   "delivery": {
-    "pr": "PENDING",
-    "merge_commit": "PENDING",
-    "github_pages": "PENDING",
-    "zip": "PENDING"
+    "pr": 154,
+    "merge_commit": "b20ec32838ba6199825e8e5025bf55d3f22d5f63",
+    "github_pages": "CODE BUILD SUCCESS · run 37464985249",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.589_NATIVE_LINE_GRAPH.zip",
+    "zip_bytes": 149049,
+    "javascript_syntax": "PASS"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -92,10 +94,10 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox test Ligne on BTC and one normal crypto",
-    "Firefox test Ligne on Concrete CT after Nouveaux listings selection",
-    "switch Ligne ↔ Bougies without losing selected asset",
-    "verify 24h / 7j period changes on Ligne",
-    "then bounded BUY / SELL / REDIVIDER pass"
+    "Firefox: BTC → Ligne must render historical curve",
+    "Firefox: Concrete CT → Ligne must render provider series",
+    "switch Ligne ↔ Bougies and keep same asset",
+    "test 24h and 7j on Ligne",
+    "then BUY / SELL / REDIVIDER"
   ]
 }
