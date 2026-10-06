@@ -1,203 +1,65 @@
 {
-  "build": "40.6.600",
+  "build": "40.6.601",
   "surface": "trader",
-  "release": "TRADER · CANONICAL CHART OWNER EXTRACTION",
-  "parent_trader_build": "40.6.599",
+  "release": "TRADER · INTERFACE RUNTIME MIRROR",
+  "parent_trader_build": "40.6.600",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "published": true,
-  "status": "published_406600_pending_firefox_terrain",
+  "published": false,
+  "status": "branch_ready_for_pr_406601",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
-    "menu": "Administrator menu geometry mirrored in Trader. Marché and Graphique active; excluded modules visible but disabled.",
-    "primary": "Administrator #analyste / champagne-clean-lens transposed",
-    "chart": "Administrator-style Crypto Ligne surface retained; its analysis overlay now follows the Administrator information hierarchy (asset/name/period/currency/source truth/price/change/low/high/amplitude/departure/last/points). Real Volume toggle restored for the Ligne owner.",
-    "technical_reading": "Administrator native #detailPanel DOM retained. Trader now has a dedicated Source Dock owner transposed from Administrator: selected asset, direct CoinGecko metadata, official website, explorer, whitepaper, source repository, community, targeted news, cache/retry/refresh. News Sentinel remains visible but disabled because it is outside Trader.",
-    "depth": "existing okx-microstructure owner docked on #detailPanel",
-    "market": "Administrator Market Snapshot transposed + native Nouveaux listings category restored in the existing Trader table.",
-    "math": "native Math Core V3 beside Market",
-    "chart_toolbar": "Native Depth, Quote Currency and Microscope owners remain unique. Trader restores a real Volume toggle for its real Ligne volume bars; Legend/Analysis/Fiche remain functional bridges.",
-    "market_fiche": "Administrator native Fiche contract restored in Trader: help-layer floating surface + real lateral dock host, persisted floating/dock mode, sticky/internal-scroll geometry from shared Administrator CSS. Legacy pinned trader-market-fiche owner retired.",
-    "line_chart": "Trader Ligne presentation adapter delegates historical data ownership to the extracted Administrator chart-history owner. Exact period cache, coverage validation, source family, freshness, direct refresh and canonical storage are no longer reimplemented in Trader.",
-    "technical_context_owner": "trader/technical-reading-data-sync.js · one selected asset shared with Market/Ligne/Bougies/Depth.",
-    "interface_mirror": {
-      "active_modules": [
-        "Marché",
-        "Graphique"
-      ],
-      "grey_disabled_modules": [
-        "Livecheck",
-        "Atlas",
-        "Oracle",
-        "Sources",
-        "Décision",
-        "Analyse",
-        "Système",
-        "Projets",
-        "Vue Normal",
-        "Command Center",
-        "Aether · ATTENTION"
-      ],
-      "logic_added": false
-    },
-    "interface_ghost_skeleton": {
-      "principle": "Active Trader surfaces are extracted from the Administrator visual language; excluded Administrator areas remain as grey visual memory only.",
-      "active_surfaces": [
-        "Marché",
-        "Graphique Ligne",
-        "Bougies",
-        "Profondeur",
-        "Lecture Technique",
-        "Fiche",
-        "Math Core",
-        "Nouveaux listings",
-        "EUR/USD"
-      ],
-      "dormant_visual_only": [
-        "Oracle",
-        "Atlas",
-        "Sources",
-        "Décision",
-        "Analyse",
-        "Système",
-        "Projets",
-        "Aether"
-      ],
-      "owners_loaded_for_dormant": false,
-      "dormant_pointer_events": false,
-      "dormant_network_requests": false
-    },
-    "chart_tooltip": {
-      "source_contract": "Administrator historical tooltip semantics",
-      "dom_id": "atlasChartTooltip",
-      "title": "PRIX HISTORIQUE · VARIATION <période>",
-      "historical_price_from_hovered_point": true,
-      "variation_rule": "normalized from the first point of the selected period, matching Administrator baseValue semantics",
-      "visible_hover_marker": true,
-      "marker_radius_px": 6.4,
-      "current_market_change_removed_from_historical_tooltip": true,
-      "timestamp_removed_from_tooltip_row": true
-    },
-    "interface_filtered_layout": {
-      "principle": "Trader is an active subset of Administrator. Useful owners stay active; excluded areas keep their spatial memory as grey, inert presentation-only slots.",
-      "active_surfaces": [
-        "Marché",
-        "Graphique Ligne",
-        "Bougies",
-        "Profondeur",
-        "Lecture Technique",
-        "EUR/USD",
-        "Fiche",
-        "Math Core",
-        "Nouveaux listings"
-      ],
-      "dormant_top_band": [
-        "Oracle",
-        "Atlas",
-        "Décision",
-        "Analyse"
-      ],
-      "dormant_lower_sequence": [
-        "Multi Horizon",
-        "News Sentinel",
-        "Lecture froide",
-        "Watchlist",
-        "Risques",
-        "Impact",
-        "No FOMO",
-        "Sources",
-        "Système",
-        "Projets",
-        "Aether"
-      ],
-      "dormant_logic_loaded": false,
-      "dormant_pointer_events": false,
-      "dormant_fetches": false,
-      "administrator_base": "40.6.571"
-    },
-    "source_dock": {
-      "owner": "trader/source-dock-native.js",
-      "administrator_reference": "Administrator app.js Source Dock / Market Portals",
-      "active_portals": [
-        "CoinGecko",
-        "Site officiel",
-        "Explorateur",
-        "Whitepaper",
-        "Code source",
-        "Communauté",
-        "Actualités"
-      ],
-      "dormant_portal": "News Sentinel",
-      "cache_ttl_hours": 6,
-      "stale_max_days": 7,
-      "refresh_button": true,
-      "retry_steps_seconds": [
-        60,
-        300,
-        900
-      ],
-      "external_new_listing_policy": "limited until a canonical CoinGecko id exists",
-      "single_owner": true
-    },
-    "pair_central_truth": {
-      "owner": "trader/pair-central-truth.js",
-      "principle": "Market selection is the one canonical PAIR truth for Trader.",
-      "outputs": [
-        "coin id",
-        "symbol",
-        "quote",
-        "pair",
-        "display currency",
-        "external flag",
-        "revision"
-      ],
-      "consumers_audited": [
-        "Market",
-        "Ligne",
-        "Bougies",
-        "Profondeur",
-        "Lecture Technique",
-        "Math Core",
-        "Source Dock"
-      ],
-      "visible_status_chip": true,
-      "mismatch_diagnostic": true,
-      "auto_order": false
-    },
-    "debug_sweep": {
-      "stale_market_fiche_fix": "floating fiche now closes immediately when a new central asset is selected",
-      "market_dom_ownership_fix": "Market no longer writes Lecture Technique DOM directly",
-      "cross_surface_status": "PAIR pill shows SYNC / SYNCING / MISMATCH from owner snapshots",
-      "protected_owners_changed": false
-    },
-    "line_chart_resilience": {
-      "supersedes": "40.6.599 Interface History Bank",
-      "rejected_terrain": "40.6.599 could present ~24h under Max and refuse missing exact periods because Trader interpreted raw storage without the Administrator integrity contract.",
-      "fix": "Remove Trader History Bank / covering-period slicing. Use exact canonical period ownership and Administrator coverage rules.",
-      "trader_cache_added": false
-    },
-    "canonical_chart_owner": {
-      "owner": "administrator/js/chart-history-owner.js",
-      "filename_version_suffix": false,
-      "source_lineage": [
-        "Administrator app.js chart owner",
-        "graph-native-usd owner"
-      ],
-      "trader_role": "presentation adapter only",
-      "exact_period_only": true,
-      "covering_period_alias": false,
-      "integrity_rules": "same minimum points / minimum coverage / freshness contract as Administrator",
-      "storage": "agent_crypto_storage_relief_40278 / payloads / agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50",
-      "EUR": "Administrator source preference: Binance for supported canonical assets, CoinGecko otherwise",
-      "USD": "CoinGecko native USD, isolated USD cache key",
-      "period_click": "exact canonical cache first; direct owner refresh only when exact cache is absent or stale",
-      "max_truth": "24h/7d/etc can never be relabeled Max",
-      "administrator_runtime_imported": false,
-      "real_order": false
-    }
+    "decision": "Trader is no longer a parallel application. It mounts the exact Administrator page/runtime and filters presentation only.",
+    "runtime": "administrator/index.html inside same-origin Trader frame",
+    "core_owner": "administrator/app.js 40.6.571 remains the live owner of Graphique, Market, Lecture Technique and Math Core",
+    "additive_owners": [
+      "administrator/js/graph-native-usd-406520.js",
+      "administrator/js/market-microscope-candles.js",
+      "administrator/js/okx-microstructure-406499.js",
+      "administrator/js/quote-currency-architecture-406497.js",
+      "administrator/js/new-listings-live-asset-406529.js"
+    ],
+    "trader_adapter": "trader/trader-runtime-mirror.js",
+    "trader_adapter_role": "presentation filter only",
+    "visible_runtime_surfaces": [
+      "Administrator header truth",
+      "Marché",
+      "Graphique",
+      "Lecture Technique",
+      "Market workspace",
+      "Math Core",
+      "Bougies",
+      "Profondeur",
+      "EUR/USD"
+    ],
+    "hidden_presentation_only": [
+      "Atlas",
+      "Oracle standalone",
+      "News",
+      "Decision",
+      "System",
+      "Projects",
+      "Audience",
+      "Sources standalone"
+    ],
+    "duplicated_chart_owner": false,
+    "duplicated_market_owner": false,
+    "duplicated_math_owner": false,
+    "duplicated_detail_owner": false,
+    "duplicated_depth_owner": false,
+    "duplicated_candles_owner": false,
+    "custom_trader_history_engine_loaded": false,
+    "custom_trader_market_engine_loaded": false,
+    "custom_trader_math_engine_loaded": false,
+    "legacy_trader_files": "remain in repository for history but are not loaded by trading-desk.html",
+    "storage": "exact same origin/localStorage/IndexedDB as Administrator because the live runtime is Administrator itself",
+    "network": "exact same network behavior and error handling as Administrator runtime",
+    "bridge": "exact same Bridge/OKX owners as Administrator runtime",
+    "read_only": true,
+    "real_orders": false
   },
   "technical_reading": {
     "single_portrait_owner": true,
@@ -241,40 +103,38 @@
     "new_prediction_model": false
   },
   "protected": [
-    "Administrator 40.6.571",
+    "Administrator 40.6.571 runtime",
     "Market Core 38.15.11",
-    "Candles owner",
-    "Depth owner",
-    "Technical Reading 40.6.580",
-    "Math Core transpose 40.6.580",
-    "EUR/USD architecture",
-    "Technical Reading",
+    "Administrator Graphique owner",
+    "Graph Native USD owner",
+    "Market Microscope Bougies owner",
+    "OKX Profondeur owner",
+    "Lecture Technique",
     "Market Snapshot",
     "Math Core",
-    "Market Microscope Bougies owner",
-    "New Listings live asset owner"
+    "PAIR/data truth in Administrator"
   ],
   "delivery": {
-    "pr": 165,
-    "merge_commit": "5ec3e8767c6f38de27f387fa5f663bcc61ee17cd",
-    "github_pages": "SUCCESS · run 37507054554",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.600_CANONICAL_CHART_OWNER.zip",
-    "zip_bytes": 86855,
-    "javascript_syntax": "PASS · Agent-Crypto Trader Current · PR + main",
-    "package_commit": "fafe160b496ea79f24c16c25da84711d2ae9a22c"
+    "pr": null,
+    "merge_commit": null,
+    "github_pages": "PENDING",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.601_INTERFACE_RUNTIME_MIRROR.zip",
+    "zip_bytes": null,
+    "javascript_syntax": "PENDING",
+    "package_commit": null
   },
   "stop_gate": {
     "no_real_order": true,
     "no_new_exchange_key": true,
     "no_aether_thread": true,
-    "administrator_runtime_changed": false,
+    "administrator_runtime_modified": false,
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox: BTC Ligne USD → 24h / 7j / 30j / 60j / 90j / 1a / Max.",
-    "Each active period must match the actual first/last timestamps and Administrator coverage rules.",
-    "A missing/stale exact period may refresh through the canonical source owner; it must never reuse a shorter series under a longer label.",
-    "Repeat EUR → USD and BTC → ETH → SOL; PAIR must remain SYNC.",
-    "Bougies / Profondeur / Lecture Technique / Source Dock / Math Core must remain unchanged."
+    "Firefox Ctrl+F5 on Trader 40.6.601.",
+    "Confirm Trader visibly shows the filtered Administrator runtime, not the former custom Trader shell.",
+    "BTC/USD Graphique: 24h → 7j → 30j → 60j → 90j → 1a → Max; behavior must match Administrator exactly because it is the same runtime.",
+    "Check Bougies, Profondeur, Lecture Technique, Market and Math Core; they must also behave exactly like Administrator.",
+    "If a defect remains, reproduce the same action in Administrator. If both fail, owner is Administrator. If only Trader fails, owner is trader-runtime-mirror presentation filter."
   ]
 }
