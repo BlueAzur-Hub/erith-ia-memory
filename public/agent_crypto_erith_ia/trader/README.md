@@ -1,27 +1,27 @@
-# ERITH.IA Trading Desk — 40.6.580
+# ERITH.IA Trading Desk — 40.6.581
 
 ## Statut
-Dernière cascade de fidélité du squelette Trader. Même application Agent-Crypto, page `trading-desk.html`, exécution réelle désactivée.
+Interface fidelity pass du Trader. Même application Agent-Crypto, même page `trading-desk.html`, toujours READ ONLY.
 
-## Agencement canonique
-- Menu minimal en haut : identité, PAIR, SPOT / PERP séparé, navigation Graphique / Lecture / Market / Math Core, retour Administrator.
-- Zone principale : Graphique / Bougies dominant ; Lecture Technique et Profondeur conservent les owners Administrator.
-- En dessous : Market Snapshot large + Math Core V3 à droite.
-- BUY / SELL / STOP restent désactivés.
-
-## Lecture Technique
-Un seul portrait Aerith dans `#detailPanel` ; les pseudo-backgrounds concurrents du shell Trader sont neutralisés et le cadrage est recentré.
-AUTO / AUBE / JOUR / SOIR / NUIT / LUNE, RND 21 images, image privée IndexedDB et Support / Résistance existant sont conservés. La fenêtre S/R s'ouvre au premier chargement puis reste repliable.
-
-## Market
-Même archive publique Agent-Crypto `latest.json` / `extended.json`. Recherche, filtres, 50/100/250/500/1000, Essentiel/Complet, tris, sélection et Solo conservés. Les valeurs absentes restent absentes : `null` n'est plus transformé en zéro.
-
-## Math Core V3
-Palette canonique : rouge <25 ; orange 25–54 ; turquoise/bleu 55–74 ; vert >=75 ; gris uniquement quand réellement en attente.
-Mesures factuelles : série, pas médian, complétude, volatilité fenêtre, drawdown, VaR historique 95 %. Aucun modèle prédictif ajouté.
+## Ce que 40.6.581 corrige
+- **Menu haut** : reprend la grammaire visuelle Administrator mais reste limité au Trader. Aucun fil Aether, Atlas, Oracle, Veille, Sources, Decision Board ou Command Center.
+- **Navigation** : Marché · Graphique · Lecture · Profondeur · Math Core, avec PAIR / SPOT / PERP / READ ONLY / retour Administrator.
+- **Graphique** : remet le cockpit visuel autour du propriétaire Bougies existant : Marché Crypto, Afficher (Volume / Légende / Analyse / Fiche / Profondeur), Affichage EUR/USD ; le propriétaire Bougies conserve et injecte ses contrôles MICROSCOPE Ligne/Bougies et ses indicateurs/intervalles.
+- **Fiche Market** : restitution d’une vraie Fiche Crypto flottante/latérale liée à l’actif sélectionné dans Market, avec prix, source, 24 h, 7 j, 30 j si disponible, vol/cap, capitalisation, volume 24 h, score Math/Atlas disponible et décision de consultation.
+- **Market et Math Core** : structures 40.6.580 conservées ; palette Math rouge/orange/turquoise/vert inchangée.
+- **Lecture Technique / Profondeur** : propriétaires existants conservés ; aucun changement métier.
 
 ## Protections
-Administrator 40.6.571 et Market Core 38.15.11 inchangés. Owners Bougies/Profondeur conservés. Aucune clé OKX privée côté client. Aucun ordre réel.
+- Administrator **40.6.571** inchangé.
+- Market Core **38.15.11** inchangé.
+- Candles owner inchangé.
+- Depth owner inchangé.
+- Lecture Technique 40.6.580 inchangée.
+- Math Core transpose 40.6.580 inchangé.
+- Architecture EUR/USD inchangée.
+- Aucun ordre réel, aucune clé privée, aucun thread Aether.
 
 ## Stop Gate
-Syntaxe JavaScript vérifiée avant publication. Terrain Firefox 40.6.580 : **PENDING CHRISTOPHE**. Après PASS terrain, geler le squelette Trader avant le chantier OKX privé READ ONLY.
+Validation statique via PR/CI avant merge. Terrain Firefox 40.6.581 : **PENDING CHRISTOPHE**.
+
+Après PASS terrain : geler le squelette Trader avant toute phase OKX privé READ ONLY.
