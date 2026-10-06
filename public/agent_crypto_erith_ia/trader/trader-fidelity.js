@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD="40.6.586";
+  const BUILD="40.6.587";
   const $=id=>document.getElementById(id);
   const finite=value=>{
     if(value===null||value===undefined||value==="")return null;
@@ -146,7 +146,7 @@
     });
   }
   function start(){
-    bindHeaderNavigation();bindGraphControls();bindFiche();bindMarketKeyboard();
+    bindHeaderNavigation();bindGraphControls();bindMarketKeyboard();
     syncMarketRows();setFicheOpen(true);
     document.documentElement.dataset.traderFidelity=BUILD;
   }
