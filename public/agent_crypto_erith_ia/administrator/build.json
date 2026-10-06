@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.606",
+  "build": "40.6.607",
   "engine": "38.15.11",
-  "release": "TRADER · SOURCES STABILITY + EMPTY RIBBON REMOVAL",
+  "release": "TRADER · RESTORE 40.6.601 BASELINE",
   "published": true,
-  "status": "published_terrain_pending_406606",
-  "parent_build": "40.6.605",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.606",
-  "administrator_build": "40.6.606",
-  "build_label": "Build 40.6.606 · Administrator",
+  "status": "published_terrain_pending_406607",
+  "parent_build": "40.6.606",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.607",
+  "administrator_build": "40.6.607",
+  "build_label": "Build 40.6.607 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,7 +31,7 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_406606_TRADER_SOURCES_STABILITY",
+  "terrain_proof": "PENDING_FIREFOX_406607_RESTORE_601_BASELINE",
   "release_notes": "WORKSPACE_MEMORY_CURRENCY_LABEL_SYNC_40.6.571.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
@@ -10247,6 +10247,20 @@
     "math_core_modified": false,
     "target_top_modified": false,
     "market_flow_modified": false,
+    "real_order": false
+  },
+  "trader_restore_406607": {
+    "enabled": true,
+    "source_build": "40.6.601",
+    "source_commit": "4c65790e6c68ae7b631e78657bab4e36e69e5ba7",
+    "owner": "trader/trader-runtime-mirror.js",
+    "administrator_runtime_owner_preserved": true,
+    "market_core_modified": false,
+    "oracle_modified": false,
+    "math_core_modified": false,
+    "target_top_modified": false,
+    "market_flow_modified": false,
+    "aether_business_logic_modified": false,
     "real_order": false
   }
 }
