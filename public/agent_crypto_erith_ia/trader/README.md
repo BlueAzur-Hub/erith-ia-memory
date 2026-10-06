@@ -1,73 +1,67 @@
-# ERITH.IA Trading Desk — 40.6.599
+# ERITH.IA Trading Desk — 40.6.600
 
-## FINAL HANDOFF · D LOCK
+## CANONICAL CHART OWNER EXTRACTION
 
-La correction finale remet le Graphique Ligne dans la destination demandée :
+40.6.599 est rejetée terrain.
 
-**Le Trader ne possède plus un moteur de chargement par période.  
-Il lit la masse historique déjà détenue par l'Interface et restitue la fenêtre choisie.**
+La cause n'était pas un simple cache manquant : depuis 40.6.589, le Trader possédait son propre moteur Ligne (fetch, périodes, cache, validation et rendu). 40.6.599 lisait le stockage brut de l'Interface mais ne réutilisait pas son contrat d'intégrité ; une série d'environ 24 h pouvait donc être affichée sous le bouton Max.
 
-## Source historique réutilisée
+## Correction
 
-Le Trader lit en priorité le cache historique canonique de l'Administrator :
+Le propriétaire historique est maintenant extrait dans :
 
-- IndexedDB PRIMARY : `agent_crypto_storage_relief_40278`
-- store : `payloads`
-- payload : `agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50`
+`administrator/js/chart-history-owner.js`
 
-Si IndexedDB PRIMARY n'est pas disponible, il peut lire la copie locale du **même cache Interface**.
+Le nom du fichier ne contient aucun numéro de build.
 
-Il ne crée plus de cache historique Trader par période.
+Il reprend la lignée du Graphique Administrator :
 
-## Clic 24h / 7j / 30j / 60j / 90j / 1a / Max
+- périodes : 24h / 7j / 30j / 60j / 90j / 1a / Max ;
+- cache exact par actif + devise + période + famille de source ;
+- mêmes seuils minimum de points et de couverture ;
+- validation chronologique et fraîcheur ;
+- même stockage canonique : `agent_crypto_storage_relief_40278 / payloads` ;
+- clé historique : `agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50` ;
+- EUR : Binance sur les actifs canoniques supportés, CoinGecko sinon ;
+- USD : CoinGecko USD natif et cache USD isolé.
 
-Un clic de période :
+`trader/line-chart-native.js` ne possède plus de History Bank ni de fallback « période couvrante ». Il reste l'adaptateur visuel du Trader : canvas, tooltip, Volume et pont New Listings.
 
-1. ne lance **aucune requête réseau** ;
-2. cherche d'abord la période exacte déjà détenue par l'Interface ;
-3. sinon, cherche la plus petite série Interface couvrant la période et en extrait la fenêtre utile ;
-4. restitue cette série dans le graphique.
+## Règle de période
 
-Donc le bouton de période est un **sélecteur de lecture de la base historique**, pas un déclencheur réseau.
+Une période exacte valide existe : elle est affichée immédiatement.
 
-## Réseau
+Elle est absente ou périmée : le propriétaire canonique peut l'actualiser auprès de sa source, puis la stocke dans le cache partagé.
 
-Une requête directe CoinGecko n'est tolérée qu'au **bootstrap** d'un actif/devise si aucune série Interface exploitable n'existe pour le contexte courant.
-
-Elle n'est jamais déclenchée par un bouton de période.
-
-## EUR / USD
-
-- EUR : priorité aux familles Interface Binance puis CoinGecko.
-- USD : priorité CoinGecko puis Binance.
-- Les deux contextes restent séparés.
-
-## 40.6.598
-
-La logique de cache propre Trader introduite en 40.6.598 est **abandonnée** dans 40.6.599.
-La clé précédente n'est plus écrite. Aucun nettoyage automatique n'est effectué.
+Une série plus courte ne peut jamais être renommée 7j, 30j ou Max.
 
 ## Protégé
 
-- Administrator 40.6.571
-- Market Core 38.15.11
-- PAIR centrale 40.6.597
-- Source Dock 40.6.596
-- Interface filtrée 40.6.595
-- tooltip / prix historiques 40.6.594
-- Bougies / Profondeur / Lecture Technique / Math Core
-- READ ONLY · aucun ordre réel
+- Administrator 40.6.571 : runtime non importé et non modifié ;
+- Market Core 38.15.11 ;
+- PAIR Central Truth ;
+- Bougies ;
+- Profondeur ;
+- Lecture Technique ;
+- Source Dock ;
+- Fiche ;
+- Math Core ;
+- EUR / USD ;
+- READ ONLY · aucun ordre réel.
 
-## Test de clôture
+## Test Firefox
 
-BTC → Ligne → 24h → 7j → 30j → 60j → 90j → 1a.
+BTC / USD / Ligne :
 
-Attendu :
-- pas de `NetworkError` au changement de période ;
-- source visible : **HISTORIQUE INTERFACE · BASE LOCALE** lorsqu'une série existe dans la base ;
-- les valeurs et le tooltip changent avec la période ;
-- aucun appel réseau provoqué par le bouton de période.
+24h → 7j → 30j → 60j → 90j → 1a → Max.
 
-Puis EUR → USD et même test.
+À vérifier pour chaque période :
 
-Cette version est la **version de clôture du fil**.
+- bouton actif = période réellement couverte ;
+- dates début/fin cohérentes ;
+- aucune série 24 h affichée sous Max ;
+- PAIR reste SYNC ;
+- un cache exact est utilisé lorsqu'il existe ;
+- une actualisation réseau n'a lieu que si le propriétaire canonique en a besoin.
+
+Puis EUR → USD, et BTC → ETH → SOL.
