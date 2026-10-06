@@ -47701,7 +47701,14 @@ function atlasWorkspaceRenderStrip(options = {}) {
 
   const comparison = atlasComparisonActive();
   const period = atlasChartPeriodLabel(Number(state.chartPeriodDays || 1));
-  const view = comparison || state.chartViewV2.view === "base100" ? "Base 100" : "Prix EUR";
+  const workspaceDisplayCurrency = (() => {
+    try {
+      return String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "USD" ? "USD" : "EUR";
+    } catch {
+      return "EUR";
+    }
+  })();
+  const view = comparison || state.chartViewV2.view === "base100" ? "Base 100" : `Prix ${workspaceDisplayCurrency}`;
   const scale = comparison || state.chartViewV2.view === "base100"
     ? "Normale"
     : state.chartViewV2.scale === "logarithmic"
@@ -57036,6 +57043,10 @@ window.addEventListener("atlas:admin-graph", () => {
 window.addEventListener("atlas:v2mode", () => {
   atlasWorkspaceRenderStrip();
   atlasWorkspaceScheduleSave(180);
+});
+
+window.addEventListener("agent-crypto:quote-architecture-changed", () => {
+  atlasWorkspaceRenderStrip();
 });
 
 window.addEventListener("atlas:admin-center", () => {
