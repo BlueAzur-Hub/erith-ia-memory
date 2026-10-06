@@ -1,12 +1,12 @@
 {
-  "build": "40.6.597",
+  "build": "40.6.598",
   "surface": "trader",
-  "release": "TRADER · PAIR CENTRAL TRUTH + DEBUG SWEEP",
-  "parent_trader_build": "40.6.596",
+  "release": "TRADER · LINE RESILIENT CACHE / NETWORK ERROR REPAIR",
+  "parent_trader_build": "40.6.597",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": false,
-  "status": "branch_ready_for_pr_406597",
+  "status": "branch_ready_for_pr_406598",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -172,6 +172,21 @@
       "market_dom_ownership_fix": "Market no longer writes Lecture Technique DOM directly",
       "cross_surface_status": "PAIR pill shows SYNC / SYNCING / MISMATCH from owner snapshots",
       "protected_owners_changed": false
+    },
+    "line_chart_resilience": {
+      "symptom": "Graphique visible mais overlay 'NetworkError when attempting to fetch resource' après une actualisation CoinGecko intermittente.",
+      "root_cause": "Trader Ligne n'avait pas la résilience historique de l'Administrator : fallback Microscope limité à 24h et aucun cache exact pour 7j/30j/60j/90j/1a/Max.",
+      "administrator_reference": "fetchChartSeries / atlasStoreChartResult / atlasGetStoredChartResult",
+      "fixes": [
+        "cache exact Trader par coin/devise/période",
+        "lecture optionnelle du cache historique Administrator existant sur la même origine",
+        "conservation de la dernière série réelle si une actualisation du même contexte échoue",
+        "NetworkError n'est affichée comme indisponibilité que si aucune série exacte réelle n'est disponible"
+      ],
+      "trader_cache_limit": 14,
+      "exact_context_required": true,
+      "stale_cross_period_reuse": false,
+      "stale_cross_asset_reuse": false
     }
   },
   "technical_reading": {
@@ -233,10 +248,10 @@
     "pr": null,
     "merge_commit": null,
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.597_PAIR_CENTRAL_TRUTH_DEBUG.zip",
-    "zip_bytes": 94115,
-    "javascript_syntax": "PASS",
-    "package_commit": "92f2c5f33fd38ff7896ed8d8a4dfc40dfbf018bf"
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.598_LINE_RESILIENT_CACHE.zip",
+    "zip_bytes": null,
+    "javascript_syntax": "PENDING",
+    "package_commit": null
   },
   "stop_gate": {
     "no_real_order": true,
@@ -246,10 +261,9 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox: select BTC, ETH, SOL and at least one non-pillar asset from Market.",
-    "PAIR pill must follow the selection and settle to SYNC, never MISMATCH.",
-    "Verify Ligne/Bougies, Profondeur, Lecture Technique, Math Core and Source Dock all display the same asset.",
-    "Verify a floating Market fiche disappears immediately after selecting another asset.",
-    "Report any MISMATCH state with the visible selected asset; 40.6.597 is a debug checkpoint before OKX account read-only."
+    "Firefox: BTC Ligne, tester 24h / 7j / 30j / 60j / 90j / 1a.",
+    "Si CoinGecko direct échoue après une série réussie, aucune bannière indisponible ne doit recouvrir le graphique ; la vérité doit passer en CACHE / REPLI.",
+    "Changer EUR / USD puis revenir sur une période déjà chargée : le cache doit rester strictement séparé par devise.",
+    "Puis reprendre le sweep PAIR centrale BTC → ETH → SOL → autre actif."
   ]
 }
