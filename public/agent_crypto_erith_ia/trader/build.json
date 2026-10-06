@@ -1,12 +1,12 @@
 {
-  "build": "40.6.592",
+  "build": "40.6.593",
   "surface": "trader",
-  "release": "TRADER · INTERFACE GHOST SKELETON",
-  "parent_trader_build": "40.6.591",
+  "release": "TRADER · NATIVE CHART SNAPSHOT TABLE",
+  "parent_trader_build": "40.6.592",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": false,
-  "status": "branch_ready_for_pr_406592",
+  "status": "branch_ready_for_pr_406593",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -69,6 +69,27 @@
       "owners_loaded_for_dormant": false,
       "dormant_pointer_events": false,
       "dormant_network_requests": false
+    },
+    "chart_tooltip": {
+      "source_contract": "Administrator atlas-chart-tooltip",
+      "dom_id": "atlasChartTooltip",
+      "classes": [
+        "atlas-chart-tooltip",
+        "atlas-chart-tooltip-date",
+        "atlas-chart-tooltip-row",
+        "atlas-chart-tooltip-identity",
+        "atlas-chart-tooltip-color-bridge",
+        "atlas-chart-tooltip-values",
+        "atlas-chart-tooltip-change"
+      ],
+      "title": "PRIX SNAPSHOT COINGECKO · VARIATION 24h",
+      "data": [
+        "selected asset",
+        "hovered historical price",
+        "timestamp",
+        "24h market variation"
+      ],
+      "duplicate_custom_trader_tooltip_removed": true
     }
   },
   "technical_reading": {
@@ -130,10 +151,10 @@
     "pr": null,
     "merge_commit": null,
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.592_INTERFACE_GHOST_SKELETON.zip",
-    "zip_bytes": 61548,
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.593_NATIVE_CHART_SNAPSHOT_TABLE.zip",
+    "zip_bytes": 72498,
     "javascript_syntax": "PASS",
-    "package_commit": "4eba1816a0dc4496f39ded9afab97601d5941314"
+    "package_commit": "2c67e4e7bdf963c847a9b4303ccd72e71b6fe8ba"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -143,8 +164,8 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox: validate the dormant grey body skeleton as visual memory of Administrator.",
-    "Check that active Graph/Technical Reading/Market/Math retain full contrast.",
-    "If accepted, freeze the Trader visual architecture before any BUY / SELL / REDIVIDER execution work."
+    "Firefox: hover Graphique Ligne and compare the snapshot table directly with Administrator 40.6.571.",
+    "Verify BTC identity / color bridge / hovered price / timestamp / 24h change.",
+    "Then freeze this chart-table contract if terrain matches."
   ]
 }

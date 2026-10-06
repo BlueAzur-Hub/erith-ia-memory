@@ -1,44 +1,28 @@
-# ERITH.IA Trading Desk — 40.6.592
+# ERITH.IA Trading Desk — 40.6.593
 
 ## Objet
-Faire du Trader une **projection filtrée de l'Interface Administrator**, pas une deuxième application.
+Remplacer le petit tooltip propre au Trader par le **tableau natif du Graphique Administrator**.
 
-## Principe
-- les surfaces utiles au Trader restent réelles, actives et à plein contraste ;
-- les fonctions exclues conservent une **mémoire visuelle grise** ;
-- cette mémoire est uniquement du HTML/CSS de présentation : aucun propriétaire métier, aucun listener, aucun fetch, aucun état restauré.
+## Contrat repris
+Le Graphique Ligne utilise maintenant le contrat visuel `atlas-chart-tooltip` déjà présent dans l'Interface :
+- titre `PRIX SNAPSHOT COINGECKO · VARIATION 24h` ;
+- identité actif ;
+- pont de couleur ;
+- prix du point historique survolé ;
+- date / heure du point ;
+- variation marché 24 h ;
+- mêmes classes CSS héritées d'Administrator 40.6.571.
 
-## Actif dans Trader
-- Marché / Market Snapshot ;
-- Graphique Ligne ;
-- Bougies ;
-- Profondeur ;
+Le petit `trader-line-tooltip` est supprimé.
+
+## Inchangé
+- Interface Ghost Skeleton 40.6.592 ;
 - Lecture Technique ;
-- EUR / USD ;
-- Fiche ;
+- Market / Nouveaux listings ;
+- Bougies / Profondeur ;
 - Math Core ;
-- Nouveaux listings.
-
-## Mémoire dormante
-Le corps de page ajoute une silhouette grise pour :
-- Oracle ;
-- Atlas ;
-- Sources ;
-- Décision ;
-- Analyse ;
-- Système ;
-- Projets ;
-- Aether.
-
-Ces panneaux sont `aria-hidden`, `pointer-events:none` et ne chargent aucun script.
-
-## Grammaire
-- couleur / cyan / champagne : actif Trader ;
-- gris : existe dans Agent-Crypto mais hors mission Trader ;
-- rouge : sécurité / interruption.
-
-## Protégé
-Administrator 40.6.571, Market Core 38.15.11, propriétaires Bougies / Profondeur / Quote Currency / New Listings / Math Core.
+- READ ONLY ;
+- aucune exécution réelle.
 
 ## Terrain
 Firefox opérateur : **PENDING CHRISTOPHE**.
