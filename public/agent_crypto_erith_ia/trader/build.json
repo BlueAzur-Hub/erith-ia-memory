@@ -1,25 +1,31 @@
 {
   "build": "40.6.572",
   "surface": "trader",
-  "release": "TRADER · CANONICAL FOUNDATION",
+  "release": "TRADER · CANONICAL FOUNDATION · LAYOUT REPAIR",
   "parent_administrator": "40.6.571",
   "market_core": "38.15.11",
-  "status": "foundation",
+  "status": "foundation_unvalidated_layout_repaired",
   "execution": "disabled",
   "real_orders": false,
   "business_logic_duplicated": false,
+  "terrain_verified": false,
+  "operator_validation": "PENDING",
+  "layout_truth": {
+    "source": "Fil Interface Crypto + Administrator existing arrangement",
+    "desktop_top": [
+      "Graphique Bougies",
+      "Profondeur above Lecture Technique"
+    ],
+    "desktop_below": [
+      "Market",
+      "Math Core / actions"
+    ],
+    "preserve_existing_interface_order": true
+  },
   "canonical_contract": {
     "single_responsive_page": true,
     "entry": "trading-desk.html",
     "pair_is_central_truth": true,
-    "desktop": [
-      "Market",
-      "Graphique Bougies",
-      "Profondeur above Lecture Technique",
-      "Math Core",
-      "Achat/Vente",
-      "REDIVIDER Kill Switch"
-    ],
     "mobile": [
       "PAIR",
       "Graphique",
