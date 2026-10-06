@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const BUILD="40.6.604";
+const BUILD="40.6.605";
 const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
@@ -27,10 +27,16 @@ function ensureNavigation(doc){
   const oracle=nav.querySelector('[data-atlas-essential-target="oracle-analysis-suite"]');
   const sources=nav.querySelector('[data-atlas-essential-target="sources"]');
 
-  if(market)market.dataset.traderNav="market";
-  if(graph)graph.dataset.traderNav="graph";
-  if(oracle)oracle.dataset.traderNav="oracle";
-  if(sources)sources.dataset.traderNav="sources";
+  if(market){market.dataset.traderNav="market";market.classList.add("trader-runtime-nav-link");}
+  if(graph){graph.dataset.traderNav="graph";graph.classList.add("trader-runtime-nav-link");}
+  if(oracle){oracle.dataset.traderNav="oracle";oracle.classList.add("trader-runtime-nav-link");}
+  if(sources){
+    sources.dataset.traderNav="sources";
+    sources.dataset.atlasEssentialTarget="source-dock";
+    sources.classList.add("trader-runtime-nav-link");
+    sources.setAttribute("aria-controls","source-dock");
+    sources.setAttribute("aria-label","Ouvrir les Sources du Trader dans la Lecture technique");
+  }
 
   const target=traderAnchor(doc,"target-top","Target Top","◎","#targetTop5Cycle");
   const flow=traderAnchor(doc,"market-flow","Market Flow","≈","#marketFlowCycle");
@@ -38,7 +44,10 @@ function ensureNavigation(doc){
   let decision=doc.querySelector('[data-trader-nav="decision"]');
   if(!decision){
     decision=doc.querySelector('#atlasAdminCenterDrawer a[href="#decision-board"]');
-    if(decision)decision.dataset.traderNav="decision";
+    if(decision){
+      decision.dataset.traderNav="decision";
+      decision.classList.add("trader-runtime-nav-link");
+    }
   }
 
   const aether=doc.getElementById("atlasAetherStatusToggle");
@@ -54,6 +63,144 @@ function ensureNavigation(doc){
     if(node)nav.appendChild(node);
   }
   nav.dataset.traderNavigation=BUILD;
+  return true;
+}
+
+function isElement(node){return !!node&&node.nodeType===1;}
+function isDetails(node){return isElement(node)&&String(node.tagName||"").toUpperCase()==="DETAILS";}
+
+function clearFocusedRoute(doc){
+  doc.body.classList.remove("trader-route-decision");
+  doc.querySelectorAll("[data-trader-route-open-before]").forEach(node=>{
+    if(isDetails(node))node.open=node.dataset.traderRouteOpenBefore==="1";
+    delete node.dataset.traderRouteOpenBefore;
+  });
+  doc.querySelectorAll("[data-trader-route-path],[data-trader-route-surface]").forEach(node=>{
+    delete node.dataset.traderRoutePath;
+    delete node.dataset.traderRouteSurface;
+  });
+}
+
+function focusExistingSurface(doc,targetId){
+  clearFocusedRoute(doc);
+  const target=doc.getElementById(targetId);
+  if(!(isElement(target)))return false;
+
+  const route="decision";
+  if(isDetails(target)){
+    target.dataset.traderRouteOpenBefore=target.open?"1":"0";
+    target.open=true;
+  }
+  target.dataset.traderRouteSurface=route;
+
+  let node=target.parentElement;
+  while(node&&node!==doc.body&&!node.matches("main.shell")){
+    node.dataset.traderRoutePath=route;
+    if(isDetails(node)){
+      node.dataset.traderRouteOpenBefore=node.open?"1":"0";
+      node.open=true;
+    }
+    node=node.parentElement;
+  }
+
+  doc.body.classList.add("trader-route-decision");
+  try{target.scrollIntoView({block:"start",behavior:"smooth"});}catch(_){try{target.scrollIntoView();}catch(__){}}
+  return true;
+}
+
+function openTraderSources(doc){
+  clearFocusedRoute(doc);
+  const deck=doc.getElementById("analyste");
+  const toggle=doc.getElementById("detailPanelToggle");
+  if(deck?.classList.contains("detail-collapsed")&&isElement(toggle)){
+    try{toggle.click();}catch(_){}
+  }
+  const sourceDock=doc.getElementById("source-dock");
+  const sourceState=doc.getElementById("detailSourcesWindow");
+  if(isDetails(sourceDock))sourceDock.open=true;
+  if(isDetails(sourceState))sourceState.open=true;
+  const target=sourceDock||sourceState||doc.getElementById("detailPanel");
+  if(isElement(target)){
+    try{target.scrollIntoView({block:"center",behavior:"smooth"});}catch(_){try{target.scrollIntoView();}catch(__){}}
+    return true;
+  }
+  return false;
+}
+
+function alignAetherBelowGraphToolbar(win,doc){
+  const panel=doc.getElementById("atlasAetherStatusPanel");
+  if(!(isElement(panel))||panel.dataset.aetherOperatorOpen!=="1")return false;
+  const toolbar=doc.querySelector("#analyste .chart-v2-toolbar");
+  const accueil=doc.getElementById("accueil");
+  const anchorRect=(toolbar||accueil)?.getBoundingClientRect?.();
+  const current=panel.getBoundingClientRect?.();
+  const vw=Math.max(doc.documentElement.clientWidth,win.innerWidth||0);
+  const vh=Math.max(doc.documentElement.clientHeight,win.innerHeight||0);
+  if(!current||vw<1||vh<1)return false;
+
+  const top=Math.max(12,Math.ceil((anchorRect?.bottom||0)+10));
+  const available=Math.max(280,vh-top-12);
+  const targetHeight=Math.min(current.height||available,available);
+  const targetWidth=Math.min(current.width||targetHeight*16/9,Math.max(420,vw-24),targetHeight*16/9);
+  const targetLeft=Math.max(12,Math.min(current.left||12,vw-targetWidth-12));
+
+  panel.style.setProperty("left",Math.round(targetLeft)+"px","important");
+  panel.style.setProperty("right","auto","important");
+  panel.style.setProperty("top",Math.round(top)+"px","important");
+  panel.style.setProperty("bottom","auto","important");
+  panel.style.setProperty("width",Math.round(targetWidth)+"px","important");
+  panel.style.setProperty("height",Math.round(targetHeight)+"px","important");
+  panel.dataset.traderAetherBelowToolbar=BUILD;
+  return true;
+}
+
+function emitRouteAudit(win,doc,route,before=contextSnapshot(win,doc)){
+  try{
+    win.requestAnimationFrame(()=>win.requestAnimationFrame(()=>{
+      const after=contextSnapshot(win,doc);
+      const stable=contextStable(before,after);
+      doc.documentElement.dataset.traderRouteFidelity=stable?"stable":"context-changed";
+      try{
+        win.dispatchEvent(new CustomEvent("agent-crypto:trader-route-check",{detail:{
+          build:BUILD,route,before,after,stable,mutated:false
+        }}));
+      }catch(_){}
+    }));
+  }catch(_){}
+}
+
+function bindFunctionalRoutes(win,doc){
+  const nav=doc.querySelector("#accueil .atlas-v2-nav-essential");
+  if(!nav||nav.dataset.traderFunctionalRoutes==="1")return false;
+  nav.dataset.traderFunctionalRoutes="1";
+  nav.addEventListener("click",event=>{
+    const item=event.target?.closest?.("[data-trader-nav]");
+    if(!item||!nav.contains(item))return;
+    const route=String(item.dataset.traderNav||"");
+    const before=contextSnapshot(win,doc);
+
+    if(route==="sources"){
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      openTraderSources(doc);
+      emitRouteAudit(win,doc,route,before);
+      return;
+    }
+    if(route==="decision"){
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      focusExistingSurface(doc,"atlasDecisionBoardDetails");
+      emitRouteAudit(win,doc,route,before);
+      return;
+    }
+
+    if(route!=="decision")clearFocusedRoute(doc);
+    if(route==="aether"){
+      try{
+        win.requestAnimationFrame(()=>win.requestAnimationFrame(()=>alignAetherBelowGraphToolbar(win,doc)));
+      }catch(_){}
+    }
+  },true);
   return true;
 }
 
@@ -95,20 +242,10 @@ function bindNavigationFidelity(win,doc){
     const item=event.target?.closest?.("[data-trader-nav]");
     if(!item||!nav.contains(item))return;
     const route=String(item.dataset.traderNav||"");
+    if(route==="sources"||route==="decision")return;
     const before=contextSnapshot(win,doc);
     doc.documentElement.dataset.traderRouteLast=route;
-    try{
-      win.requestAnimationFrame(()=>win.requestAnimationFrame(()=>{
-        const after=contextSnapshot(win,doc);
-        const stable=contextStable(before,after);
-        doc.documentElement.dataset.traderRouteFidelity=stable?"stable":"context-changed";
-        try{
-          win.dispatchEvent(new CustomEvent("agent-crypto:trader-route-check",{detail:{
-            build:BUILD,route,before,after,stable,mutated:false
-          }}));
-        }catch(_){}
-      }));
-    }catch(_){}
+    emitRouteAudit(win,doc,route,before);
   },{passive:true});
   return true;
 }
@@ -126,7 +263,7 @@ function mount(){
     const style=doc.createElement("style");
     style.id="agentCryptoTraderRuntimeMirrorStyle";
     style.textContent=[
-      "body.atlas-trader-runtime-mirror main.shell > :not(#accueil):not(#market-zone){display:none!important}",
+      "body.atlas-trader-runtime-mirror main.shell > :not(#accueil):not(#market-zone):not([data-trader-route-path='decision']){display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-view-switcher{display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-advanced{display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential [data-atlas-essential-target='livecheck']{display:none!important}",
@@ -134,7 +271,12 @@ function mount(){
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential .trader-runtime-nav-link{display:inline-flex!important;align-items:center!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential .trader-runtime-aether-link{display:inline-flex!important;align-items:center!important}",
+      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential [data-trader-nav='oracle']{display:inline-flex!important;align-items:center!important}",
       "body.atlas-trader-runtime-mirror #atlasAetherRibbon{display:none!important}",
+      "body.atlas-trader-runtime-mirror.trader-route-decision main.shell > :not(#accueil):not([data-trader-route-path='decision']){display:none!important}",
+      "body.atlas-trader-runtime-mirror.trader-route-decision [data-trader-route-path='decision']{display:block!important}",
+      "body.atlas-trader-runtime-mirror.trader-route-decision [data-trader-route-path='decision'] > :not([data-trader-route-path='decision']):not([data-trader-route-surface='decision']){display:none!important}",
+      "body.atlas-trader-runtime-mirror.trader-route-decision [data-trader-route-surface='decision']{display:block!important}",
       "body.atlas-trader-runtime-mirror #atlasMarketDomainSwitch{pointer-events:none!important;cursor:default!important}",
       "body.atlas-trader-runtime-mirror #market-zone{margin-top:12px}",
       "body.atlas-trader-runtime-mirror .shell{padding-bottom:28px}",
@@ -183,6 +325,7 @@ function mount(){
   }
 
   ensureNavigation(doc);
+  bindFunctionalRoutes(win,doc);
   bindNavigationFidelity(win,doc);
   doc.documentElement.dataset.traderRouteFidelity="ready";
 
@@ -205,7 +348,7 @@ function mount(){
   }catch(_){}
 
   if(status){
-    status.textContent="Interface Administrator montée · routage Trader fidèle";
+    status.textContent="Interface Administrator montée · navigation Trader réparée";
     status.dataset.state="ready";
   }
   frame.dataset.ready="true";
@@ -229,6 +372,10 @@ globalThis.AgentCryptoTraderRuntimeMirror=Object.freeze({
   context_snapshot:()=>{try{const win=frame.contentWindow,doc=frame.contentDocument||win?.document;return win&&doc?contextSnapshot(win,doc):null;}catch(_){return null;}},
   navigation_audit:()=>{try{const doc=frame.contentDocument||frame.contentWindow?.document;return doc?navigationAudit(doc):null;}catch(_){return null;}},
   route_fidelity_read_only:true,
+  sources_route_owner:"existing Source Dock + Sources status window",
+  decision_route_owner:"existing atlasDecisionBoardDetails",
+  oracle_nav_restored:true,
+  aether_toolbar_clearance:true,
   duplicated_market_owner:false,
   duplicated_chart_owner:false,
   duplicated_math_owner:false,

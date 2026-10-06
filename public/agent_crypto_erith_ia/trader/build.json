@@ -1,12 +1,12 @@
 {
-  "build": "40.6.604",
+  "build": "40.6.605",
   "surface": "trader",
-  "release": "TRADER · ROUTING FIDELITY CHECKPOINT",
-  "parent_trader_build": "40.6.603",
-  "administrator_base": "40.6.604",
+  "release": "TRADER · NAVIGATION REPAIR",
+  "parent_trader_build": "40.6.604",
+  "administrator_base": "40.6.605",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406604_pending_firefox_terrain",
+  "status": "published_406605_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -14,7 +14,7 @@
   "architecture": {
     "decision": "Trader is no longer a parallel application. It mounts the exact Administrator page/runtime and filters presentation only.",
     "runtime": "administrator/index.html inside same-origin Trader frame",
-    "core_owner": "administrator runtime 40.6.602 remains the live owner of Graphique, Market, Lecture Technique and Math Core",
+    "core_owner": "current shared Administrator runtime remains the live owner of Graphique, Market, Lecture Technique and Math Core",
     "additive_owners": [
       "administrator/js/graph-native-usd-406520.js",
       "administrator/js/market-microscope-candles.js",
@@ -107,7 +107,7 @@
     "new_prediction_model": false
   },
   "protected": [
-    "Administrator 40.6.571 runtime",
+    "Administrator shared runtime",
     "Market Core 38.15.11",
     "Administrator Graphique owner",
     "Graph Native USD owner",
@@ -125,7 +125,7 @@
     "pr": "PENDING",
     "merge_commit": "PENDING",
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.604_ROUTING_FIDELITY_CHECKPOINT.zip",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.605_NAVIGATION_REPAIR.zip",
     "javascript_syntax": "PENDING"
   },
   "stop_gate": {
@@ -136,10 +136,12 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.604.",
-    "Validate Marché -> Graphique -> Target Top -> Market Flow -> Oracle -> Sources -> Décision -> Aether -> Graphique.",
-    "Confirm selected asset, USD display, candle instrument/bar and graph period stay coherent.",
-    "If terrain passes, freeze 40.6.604 as the protected Trader base before the next feature family."
+    "Firefox Ctrl+F5 on Trader 40.6.605.",
+    "Verify Oracle is visible in the top Trader menu.",
+    "Verify Sources opens the existing Source Dock / data state inside Lecture Technique.",
+    "Verify Décision exposes the existing Decision Board without the full Atlas UI.",
+    "Verify Aether opens below the Graphique toolbar and no longer hides its menu.",
+    "Recheck Marché, Graphique, Target Top, Market Flow and return path."
   ],
   "navigation_406602": {
     "enabled": true,
@@ -208,6 +210,31 @@
     "lecture_technique_modified": false,
     "depth_modified": false,
     "candles_modified": false,
+    "real_order": false
+  },
+  "navigation_repair_406605": {
+    "enabled": true,
+    "scope": "TRADER_ROUTING_PRESENTATION_ONLY",
+    "sources_owner": "existing #source-dock + #detailSourcesWindow",
+    "sources_recreated": false,
+    "sources_opens_native_detail": true,
+    "decision_owner": "existing #atlasDecisionBoardDetails",
+    "decision_recreated": false,
+    "decision_focus_method": "temporary ancestor focus path; original DOM remains owner",
+    "oracle_top_nav_restored": true,
+    "oracle_business_logic_modified": false,
+    "aether_owner_preserved": true,
+    "aether_open_geometry": "Trader-only fit below existing #analyste .chart-v2-toolbar",
+    "aether_storage_write": false,
+    "target_top_owner_preserved": true,
+    "market_flow_owner_preserved": true,
+    "graph_toolbar_preserved": true,
+    "market_core_modified": false,
+    "math_core_modified": false,
+    "candles_modified": false,
+    "depth_modified": false,
+    "recurring_timer": false,
+    "mutation_observer": false,
     "real_order": false
   }
 }
