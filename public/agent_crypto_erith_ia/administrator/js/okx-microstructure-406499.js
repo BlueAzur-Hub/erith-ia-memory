@@ -1,4 +1,5 @@
-/* Agent-Crypto — 40.6.521 DEPTH MULTI-QUOTE · DISPLAY-AWARE SOURCE TRUTH
+/* Agent-Crypto — 40.6.570 DEPTH MULTI-QUOTE · RENDER REPAIR
+   Base contract: 40.6.521 DISPLAY-AWARE SOURCE TRUTH.
    40.6.529 additive extension: New Listing external context may provide the same validated
    order-book contract through OKX public or Bitget public. Market default remains unchanged.
    Restore of the independent 40.6.511 body-portal architecture after the 40.6.512 child-dock regression.
@@ -12,7 +13,7 @@
    Read-only. No private API, no order, no wallet, no Strategy/Market Core mutation. */
 (()=>{
   "use strict";
-  const BUILD="40.6.521";
+  const BUILD="40.6.570";
   const EXTENSION_BUILD="40.6.529";
   const ROOT="atlasOkxMicrostructure";
   const BACKEND="http://127.0.0.1:8790";
@@ -653,7 +654,7 @@
             <i class="bid" style="width:${(bid/max*100).toFixed(1)}%"></i>
             <i class="ask" style="width:${(ask/max*100).toFixed(1)}%"></i>
           </div>
-          <b>${eur(bid)} / ${eur(ask)}</b>
+          <b>${quoteAmount(bid)} / ${quoteAmount(ask)}</b>
         </div>`;
     }).join("");
     body.innerHTML=`
