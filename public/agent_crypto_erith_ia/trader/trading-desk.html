@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <meta name="agent-crypto-surface" content="trader" />
-  <meta name="agent-crypto-build" content="40.6.573" />
+  <meta name="agent-crypto-build" content="40.6.574" />
   <meta name="agent-crypto-administrator-base" content="40.6.571" />
-  <title>ERITH.IA · Trading Desk — 40.6.573</title>
-  <link rel="stylesheet" href="./trading-desk.css?v=40.6.573" />
+  <title>ERITH.IA · Trading Desk — 40.6.574</title>
+  <link rel="stylesheet" href="./trading-desk.css?v=40.6.574" />
 </head>
 <body>
   <header class="trader-menu" aria-label="Menu Trader minimal">
@@ -39,12 +39,12 @@
             <p class="eyebrow">SURFACE PRINCIPALE</p>
             <h1>Graphique · Bougies</h1>
           </div>
-          <span class="owner-state">owner existant · à monter</span>
+          <span class="owner-state">owner existant · MONTÉ</span>
         </header>
 
-        <div class="surface-placeholder graph-placeholder">
-          <strong>MARKET MICROSCOPE · BOUGIES</strong>
-          <p>La zone prioritaire pour Yohan et Christophe. Le moteur existant sera remonté ici sans duplication.</p>
+        <div id="analyste" class="trader-analyste" aria-label="Graphique Trader">
+          <div class="chart-v2-control-deck trader-chart-controls" aria-label="Contrôles du Graphique"></div>
+          <div class="chart-shell trader-chart-shell" aria-label="Market Microscope Bougies"></div>
         </div>
       </section>
 
@@ -133,11 +133,14 @@
   </div>
 
   <footer class="trader-footer">
-    <span>Trader 40.6.573 · PENDING OPÉRATEUR</span>
+    <span>Trader 40.6.574 · PENDING OPÉRATEUR</span>
     <span>Administrator 40.6.571 · Market Core 38.15.11</span>
     <span id="viewportProfile">viewport</span>
   </footer>
 
-  <script src="./trading-desk.js?v=40.6.573" defer></script>
+  <script src="../administrator/js/quote-currency-architecture-406497.js" defer></script>
+  <script src="../administrator/js/okx-local-backend-transport.js" defer></script>
+  <script src="../administrator/js/market-microscope-candles.js" defer></script>
+  <script src="./trading-desk.js?v=40.6.574" defer></script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 {
-  "build": "40.6.573",
+  "build": "40.6.574",
   "surface": "trader",
-  "release": "TRADER · LIGHT SHELL · FAMILIAR INTERFACE",
-  "parent_trader_build": "40.6.572",
+  "release": "TRADER · MOUNT EXISTING CANDLES OWNER",
+  "parent_trader_build": "40.6.573",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": true,
@@ -18,7 +18,7 @@
     "atlas_section": false,
     "oracle_section": false,
     "other_administrator_sections": false,
-    "primary_focus": "Graphique Bougies",
+    "primary_focus": "Graphique Bougies · OWNER MOUNTED",
     "right_support_panels": [
       "Profondeur collapsible",
       "Lecture Technique collapsible"
@@ -51,5 +51,21 @@
     "EUR/USD architecture",
     "Lecture Technique",
     "Market Microscope candles"
-  ]
+  ],
+  "mounted_owners": {
+    "candles": true,
+    "market": false,
+    "depth": false,
+    "technical_reading": false,
+    "math_core": false
+  },
+  "integration_truth": {
+    "quote_currency_owner_loaded": "../administrator/js/quote-currency-architecture-406497.js",
+    "okx_transport_owner_loaded": "../administrator/js/okx-local-backend-transport.js",
+    "candles_owner_loaded": "../administrator/js/market-microscope-candles.js",
+    "candles_business_logic_copied": false,
+    "initial_pair": "BTC-USDC",
+    "initial_display_currency": "USD",
+    "real_order": false
+  }
 }

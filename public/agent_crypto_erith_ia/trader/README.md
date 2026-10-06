@@ -1,4 +1,4 @@
-# ERITH.IA Trading Desk — 40.6.573
+# ERITH.IA Trading Desk — 40.6.574
 
 Version suivante de la fondation Trader, destinée à vérifier visuellement que l'agencement canonique a été compris.
 
@@ -35,3 +35,21 @@ Cette version reste une **coquille de disposition** :
 - Market Core 38.15.11 intact.
 
 Les blocs métier seront remontés depuis leurs propriétaires existants uniquement après validation opérateur de cette géométrie.
+
+
+## Intégration 40.6.574 — première vraie brique
+
+Une seule responsabilité : **monter le propriétaire Bougies déjà existant dans la surface Trader**.
+
+Chargés directement depuis Administrator :
+- `js/quote-currency-architecture-406497.js`
+- `js/okx-local-backend-transport.js`
+- `js/market-microscope-candles.js`
+
+Le Trader fournit uniquement les points DOM attendus par le propriétaire existant :
+- `#analyste .chart-v2-control-deck`
+- `#analyste .chart-shell`
+
+Le module Administrator reste propriétaire du rendu, des indicateurs, des intervalles, du zoom/pan, des requêtes OKX publiques via Backend local et de la persistance de ses préférences.
+
+Market, Profondeur, Lecture Technique et Math Core restent des emplacements non montés dans cette version.
