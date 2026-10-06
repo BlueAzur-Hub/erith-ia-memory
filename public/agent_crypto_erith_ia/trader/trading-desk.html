@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <meta name="agent-crypto-surface" content="trader" />
-  <meta name="agent-crypto-build" content="40.6.578" />
+  <meta name="agent-crypto-build" content="40.6.579" />
   <meta name="agent-crypto-administrator-base" content="40.6.571" />
-  <title>ERITH.IA · Trading Desk — 40.6.578</title>
+  <title>ERITH.IA · Trading Desk — 40.6.579</title>
 
   <!-- Architecture visuelle existante Administrator : réutilisée, pas réinventée. -->
   <link rel="stylesheet" href="../administrator/style.css?v=40.6.571" />
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../administrator/admin-visual-assets.css?v=40.6.400" />
   <link rel="stylesheet" href="../administrator/admin-technical-reading-classic-opacity.css?v=40.6.571" />
   <link rel="stylesheet" href="../administrator/market-reading-depth.css?v=40.6.571" />
-  <link rel="stylesheet" href="./trading-desk.css?v=40.6.578" />
+  <link rel="stylesheet" href="./trading-desk.css?v=40.6.579" />
 </head>
 <body>
   <header class="trader-menu" aria-label="Menu Trader minimal">
@@ -40,7 +40,7 @@
 
   <main class="trader-main">
     <!--
-      40.6.578 : transposition du couple natif Administrator
+      40.6.579 : transposition du couple natif Administrator
       Graphique + Lecture Technique + rail natif.
       Profondeur conserve son owner existant et se docke sur #detailPanel.
     -->
@@ -135,12 +135,57 @@
         </div>
         <p class="table-note" id="tableNote">Même archive publique CoinGecko/BCE que l’Administrator · aucune cotation inventée.</p>
       </article>
-      <aside class="panel glass score-panel atlas-math-dock trader-math-placeholder" id="math" data-math-dock="side">
-        <div class="atlas-math-dock-head"><div>
-          <p class="eyebrow">ÉTAPE CASCADE SUIVANTE</p><h2>Math Core</h2>
-          <p class="atlas-math-context-line">Le bloc natif arrive dans 40.6.579.</p>
-        </div></div>
-        <div class="score-ring" style="--score:0"><span>—</span><small>À transposer</small></div>
+      <aside class="panel glass score-panel atlas-math-dock" id="math" data-math-dock="side" data-analysis-owner="math-mesures-integrite">
+        <div class="atlas-math-dock-head">
+          <div>
+            <p class="eyebrow">ATLAS MATH CORE V3</p>
+            <h2>Risque historique et qualité de série</h2>
+            <p class="atlas-math-context-line" id="atlasMathContextLine">Contexte Market : en attente</p>
+          </div>
+          <div class="atlas-math-dock-actions" role="group" aria-label="Position Atlas Math Core">
+            <button type="button" data-math-position="top" aria-label="Déployer Atlas Math Core au-dessus du Market Snapshot">Dessus</button>
+            <button type="button" data-math-position="side" class="is-active" aria-label="Afficher Atlas Math Core à droite du Market Snapshot">Latéral</button>
+            <button type="button" data-math-position="rail" aria-label="Réduire Atlas Math Core en rail">Réduire</button>
+          </div>
+        </div>
+        <button class="atlas-math-rail-trigger" id="atlasMathRailTrigger" type="button" data-math-position="side" aria-label="Déployer Atlas Math Core">
+          <span class="atlas-math-rail-content"><b class="atlas-math-rail-medallion" id="atlasMathRailScore">—</b></span>
+        </button>
+        <div class="score-ring" id="scoreRing" style="--score:0">
+          <span id="scoreValue">—</span><small id="scoreLabel">En attente</small>
+        </div>
+        <p class="muted-line">Math Core · volatilité, drawdown, VaR, complétude et qualité de série.</p>
+        <div class="atlas-human-verdict" id="atlasHumanVerdict">
+          <b>Lecture factuelle :</b> en attente du Market et des Bougies.<br>
+          <b>Mesures :</b> calculées uniquement sur la série réelle fournie par le propriétaire Bougies.
+        </div>
+        <div class="atlas-summary-grid" id="atlasSummaryGrid">
+          <div><span>Série réelle</span><b>En attente</b></div>
+          <div><span>Volatilité fenêtre</span><b>En attente</b></div>
+          <div><span>Drawdown maximal</span><b>En attente</b></div>
+          <div><span>VaR 95 % / pas</span><b>En attente</b></div>
+        </div>
+        <details class="atlas-tech-details">
+          <summary aria-label="Ouvrir ou réduire les mesures historiques, la méthode et les limites"><span>Mesures historiques, méthode et qualité de série</span></summary>
+          <section class="atlas-score-components">
+            <h3>Composantes de l’indice</h3>
+            <div class="breakdown" id="scoreBreakdown">
+              <div><span>Information</span><b>—</b></div><div><span>Marché</span><b>—</b></div>
+              <div><span>Liquidité</span><b>—</b></div><div><span>Momentum</span><b>—</b></div><div><span>Pénalité</span><b>—</b></div>
+            </div>
+          </section>
+          <div class="atlas-math-core" id="atlasMathCorePanel">
+            <div class="atlas-math-card"><span>Actif</span><b>—</b><small>Market requis</small></div>
+            <div class="atlas-math-card"><span>Couverture des données</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Variation 24 h</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Variation 7 j</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Ratio volume / capitalisation</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Granularité</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Amplitude observée</span><b>—</b><small>En attente</small></div>
+            <div class="atlas-math-card"><span>Risque global</span><b>Non évalué</b><small>Données partielles</small></div>
+          </div>
+        </details>
+        <div class="atlas-verdict" id="atlasMathVerdict"><b>Mode observation</b> · aucune exécution réelle</div>
       </aside>
     </section>
   </main>
@@ -157,17 +202,18 @@
   </div>
 
   <footer class="trader-footer">
-    <span>Trader 40.6.578 · NATIVE PRIMARY TRANSPOSE · PENDING OPÉRATEUR</span>
+    <span>Trader 40.6.579 · NATIVE PRIMARY TRANSPOSE · PENDING OPÉRATEUR</span>
     <span>Administrator 40.6.571 · Market Core 38.15.11</span>
     <span id="viewportProfile">viewport</span>
   </footer>
 
   <script src="../administrator/js/quote-currency-architecture-406497.js" defer></script>
   <script src="../administrator/js/okx-local-backend-transport.js" defer></script>
-  <script src="./technical-reading-transpose.js?v=40.6.578" defer></script>
-  <script src="./market-transpose.js?v=40.6.578" defer></script>
+  <script src="./technical-reading-transpose.js?v=40.6.579" defer></script>
+  <script src="./market-transpose.js?v=40.6.579" defer></script>
+  <script src="./math-core-transpose.js?v=40.6.579" defer></script>
   <script src="../administrator/js/market-microscope-candles.js" defer></script>
   <script src="../administrator/js/okx-microstructure-406499.js" defer></script>
-  <script src="./trading-desk.js?v=40.6.578" defer></script>
+  <script src="./trading-desk.js?v=40.6.579" defer></script>
 </body>
 </html>
