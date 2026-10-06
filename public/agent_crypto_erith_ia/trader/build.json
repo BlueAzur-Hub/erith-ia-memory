@@ -1,12 +1,12 @@
 {
-  "build": "40.6.611",
+  "build": "40.6.612",
   "surface": "trader",
-  "release": "TRADER · NATIVE STATUS LANE + VISIBLE BUILD",
-  "parent_trader_build": "40.6.610",
-  "administrator_base": "40.6.611",
+  "release": "TRADER · RESTORE FULLSCREEN CASCADE",
+  "parent_trader_build": "40.6.611",
+  "administrator_base": "40.6.612",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406611_pending_firefox_terrain",
+  "status": "published_406612_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -25,13 +25,11 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Trader header: TRADER · 40.6.611 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Trader header: TRADER · 40.6.612 + Prix live Binance + theme Metal/Glass + Administrator arrow",
       "Native status lane: Relancer + Rafraîchir + Décision + Sources + Chronos",
-      "Marché",
-      "Graphique",
-      "Lecture Technique",
-      "Target Top 5",
-      "Market Flow below fold",
+      "Graphique + Lecture Technique: native fullscreen/F11 geometry restored",
+      "Target Top 5 below Graphique in normal document flow",
+      "Market Flow below Target Top",
       "Market workspace",
       "Math Core",
       "Bougies",
@@ -121,8 +119,8 @@
     "pr": "repository_history_authority",
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
-    "zip": "workflow artifact: AGENT_CRYPTO_TRADER_40.6.611_NATIVE_STATUS_LANE",
-    "workflow_artifact": "AGENT_CRYPTO_TRADER_40.6.611_NATIVE_STATUS_LANE",
+    "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.612.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -131,16 +129,13 @@
     "no_aether_thread": true,
     "administrator_business_logic_modified": false,
     "administrator_presentation_modified": true,
-    "aether_phase_contract_modified": true,
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.611.",
-    "Confirm the header shows TRADER · 40.6.611, live Binance, theme Metal/Glass and one Administrator arrow.",
-    "Confirm the native status lane is visible immediately: Relancer, Rafraîchir, Décision, Sources and Chronos.",
-    "Click through Graphique modes including Ligne/Bougies/Profondeur and wait several minutes: the status lane must never become empty.",
-    "Confirm Aether ribbon never replaces the native status lane on Trader.",
-    "Confirm Target Top 5 / Market Flow geometry from 40.6.610 is unchanged."
+    "Firefox Ctrl+F5 on Trader 40.6.612.",
+    "Confirm F11 restores the long-standing full-screen Graphique + Lecture Technique behavior.",
+    "Confirm TRADER · 40.6.612 and native status lane remain stable after repeated clicks.",
+    "Confirm Target Top and Market Flow remain below in normal scroll flow; no viewport compression."
   ],
   "restore_406607": {
     "source_build": "40.6.601",
@@ -260,6 +255,21 @@
     "lecture_technique_modified": false,
     "target_top_modified": false,
     "market_flow_modified": false,
+    "real_order": false
+  },
+  "fullscreen_restore_406612": {
+    "enabled": true,
+    "removed_owner": "administrator/js/trader-cockpit-fit.js runtime load",
+    "removed_css_variable": "--trader-target-top-analyst-height",
+    "restored_native_geometry": true,
+    "f11_contract": "full-screen behavior inherited from canonical Administrator/CSS",
+    "livecheck_preserved": true,
+    "aether_native_lane_preserved": true,
+    "target_top_moved": false,
+    "market_flow_moved": false,
+    "market_core_modified": false,
+    "graph_business_logic_modified": false,
+    "lecture_technique_modified": false,
     "real_order": false
   }
 }
