@@ -101,7 +101,7 @@
   }
   function syncPeriods(){
     const ext=externalContext();
-    const age=Number(ext?.ageDays??ext?.coin?.providerContext?.ageDays||0);
+    const age=Number((ext?.ageDays ?? ext?.coin?.providerContext?.ageDays) || 0);
     document.querySelectorAll("[data-trader-line-period]").forEach(btn=>{
       const p=Number(btn.dataset.traderLinePeriod||1);
       let disabled=false;
