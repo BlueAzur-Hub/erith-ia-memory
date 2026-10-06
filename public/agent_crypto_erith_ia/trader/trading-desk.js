@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.6.574";
+  const BUILD = "40.6.575";
   const ADMIN_BASE = "40.6.571";
   const profileNode = document.getElementById("viewportProfile");
 
@@ -39,9 +39,9 @@
     administratorBase: ADMIN_BASE,
     surface: "trader",
     execution: "disabled",
-    phase: "candles-owner-mounted",
+    phase: "candles-plus-depth-owner-mounted",
     duplicatedBusinessLogic: false,
-    mountedOwners: Object.freeze({ candles: true, market: false, depth: false, technicalReading: false, mathCore: false }),
+    mountedOwners: Object.freeze({ candles: true, market: false, depth: true, technicalReading: false, mathCore: false }),
     omittedSections: Object.freeze(["Aether","Atlas","Oracle","Veille","Sources","Decision Board","Other Administrator sections"]),
     canonicalOwners: Object.freeze({
       market: "../administrator/app.js#marketSnapshotPanel",
@@ -76,9 +76,22 @@
     return mounted;
   }
 
+  function mountExistingDepthOwner() {
+    const depth = globalThis.AgentCryptoOkxMicrostructure;
+    const mounted = !!depth?.mount?.();
+    if (mounted) {
+      try { depth.setOpen?.(true); } catch (_) {}
+      document.documentElement.dataset.traderDepthOwner = "mounted";
+    } else {
+      document.documentElement.dataset.traderDepthOwner = "missing";
+    }
+    return mounted;
+  }
+
   const bootOwners = () => {
     syncViewport();
     mountExistingCandlesOwner();
+    mountExistingDepthOwner();
   };
 
   if (document.readyState === "loading") {
@@ -86,6 +99,9 @@
   } else {
     bootOwners();
   }
-  window.addEventListener("pageshow", mountExistingCandlesOwner, { passive: true });
+  window.addEventListener("pageshow", () => {
+    mountExistingCandlesOwner();
+    mountExistingDepthOwner();
+  }, { passive: true });
   window.addEventListener("resize", syncViewport, { passive: true });
 })();

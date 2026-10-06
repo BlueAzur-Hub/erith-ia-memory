@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <meta name="agent-crypto-surface" content="trader" />
-  <meta name="agent-crypto-build" content="40.6.574" />
+  <meta name="agent-crypto-build" content="40.6.575" />
   <meta name="agent-crypto-administrator-base" content="40.6.571" />
-  <title>ERITH.IA · Trading Desk — 40.6.574</title>
-  <link rel="stylesheet" href="./trading-desk.css?v=40.6.574" />
+  <title>ERITH.IA · Trading Desk — 40.6.575</title>
+  <link rel="stylesheet" href="./trading-desk.css?v=40.6.575" />
 </head>
 <body>
   <header class="trader-menu" aria-label="Menu Trader minimal">
@@ -49,35 +49,17 @@
       </section>
 
       <aside class="analysis-rail" aria-label="Profondeur et Lecture Technique">
-        <section class="surface collapsible-panel" id="depthPanel" data-owner="administrator:okx-microstructure-406499.js" data-collapsed="false">
+        <section class="surface technical-surface" id="detailPanel" data-owner="administrator:detailPanel">
           <header class="surface-head compact-head">
             <div>
-              <p class="eyebrow">OUTIL D'APPUI</p>
-              <h2>Profondeur</h2>
-            </div>
-            <button class="collapse-toggle" type="button" data-collapse-target="depthPanel" aria-expanded="true">Réduire</button>
-          </header>
-          <div class="collapsible-body">
-            <div class="surface-placeholder compact-placeholder">
-              <strong>CARNET / PROFONDEUR</strong>
-              <p>Réutilise le propriétaire existant ; panneau repliable pour préserver la priorité du graphique.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="surface collapsible-panel" id="technicalPanel" data-owner="administrator:detailPanel" data-collapsed="false">
-          <header class="surface-head compact-head">
-            <div>
-              <p class="eyebrow">OUTIL D'APPUI</p>
+              <p class="eyebrow">OUTIL D'APPUI · SOUS-JACENT</p>
               <h2>Lecture Technique</h2>
             </div>
-            <button class="collapse-toggle" type="button" data-collapse-target="technicalPanel" aria-expanded="true">Réduire</button>
+            <span class="owner-state">owner à monter</span>
           </header>
-          <div class="collapsible-body">
-            <div class="surface-placeholder compact-placeholder">
-              <strong>LECTURE TECHNIQUE</strong>
-              <p>Support, résistance et prix restent issus des propriétaires existants ; panneau repliable.</p>
-            </div>
+          <div class="surface-placeholder technical-placeholder">
+            <strong>LECTURE TECHNIQUE</strong>
+            <p>Le propriétaire Profondeur existant se superpose ici exactement comme dans Administrator. Fermer Profondeur révèle cette zone.</p>
           </div>
         </section>
       </aside>
@@ -133,7 +115,7 @@
   </div>
 
   <footer class="trader-footer">
-    <span>Trader 40.6.574 · PENDING OPÉRATEUR</span>
+    <span>Trader 40.6.575 · PENDING OPÉRATEUR</span>
     <span>Administrator 40.6.571 · Market Core 38.15.11</span>
     <span id="viewportProfile">viewport</span>
   </footer>
@@ -141,6 +123,7 @@
   <script src="../administrator/js/quote-currency-architecture-406497.js" defer></script>
   <script src="../administrator/js/okx-local-backend-transport.js" defer></script>
   <script src="../administrator/js/market-microscope-candles.js" defer></script>
-  <script src="./trading-desk.js?v=40.6.574" defer></script>
+  <script src="../administrator/js/okx-microstructure-406499.js" defer></script>
+  <script src="./trading-desk.js?v=40.6.575" defer></script>
 </body>
 </html>
