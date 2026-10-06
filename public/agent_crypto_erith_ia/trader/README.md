@@ -1,90 +1,43 @@
-# ERITH.IA Trading Desk — 40.6.576
+# ERITH.IA Trading Desk — 40.6.577
 
-Version suivante de la fondation Trader, destinée à vérifier visuellement que l'agencement canonique a été compris.
+## Intention
 
-## Intention unique
+Transposer le haut de l'Administrator au lieu de réinventer sa géométrie.
 
-**Retrouver l'interface Agent-Crypto connue, mais allégée pour le trading. Ne pas refaire la roue.**
+### Trio prioritaire
 
-### En haut
+- **Graphique / Bougies** : owner existant `market-microscope-candles.js`.
+- **Lecture Technique** : structure native `#detailPanel`, `#detailPanelToggle`, `#detailPanelBody`, `#detailPanelRail`.
+- **Profondeur** : owner existant `okx-microstructure-406499.js`, docké sur le vrai `#detailPanel`.
 
-- menu minimal ;
-- aucun fil Aether ;
-- aucune section Atlas ;
-- aucun Oracle ;
-- aucune Veille / Sources / Decision Board / autre section Administrator ;
-- Graphique / Bougies = surface principale ;
-- Profondeur à droite, repliable ;
-- Lecture Technique à droite, repliable ;
-- boutons Trader ronds, dans le langage visuel des boutons Math Core / Redivider actuels ;
-- REDIVIDER reste le Kill Switch.
+La correction 40.6.576 qui fabriquait un rail Trader de 42 px est retirée. Le Trader reprend la mécanique Clean Lens de l'Interface.
 
-### En dessous
+## Options Lecture Technique transposées
 
-- Market large ;
-- Math Core à droite du Market.
+Même logique que dans Administrator :
+- AUTO ;
+- AUBE ;
+- JOUR ;
+- SOIR ;
+- NUIT ;
+- LUNE ;
+- RND sur 21 images ;
+- image privée choisie localement par clic sur le portrait ;
+- stockage IndexedDB `agent_crypto_private_visuals` / slot `technical-reading`.
 
-## Sécurité et réutilisation
+Plages AUTO :
+- Aube 05:30–09:00
+- Jour 09:00–17:30
+- Soir 17:30–21:30
+- Nuit 21:30–00:30
+- Lunaire 00:30–05:30
 
-Cette version reste une **coquille de disposition** :
-- aucun moteur métier n'est recopié ;
+Le bridge Support/Résistance reste celui du owner Bougies ; aucune nouvelle formule S/R n'est créée.
+
+## Sécurité
+
 - aucun ordre réel ;
-- aucune clé OKX ;
-- BUY / SELL / STOP désactivés ;
-- Administrator 40.6.571 intact ;
-- Market Core 38.15.11 intact.
-
-Les blocs métier seront remontés depuis leurs propriétaires existants uniquement après validation opérateur de cette géométrie.
-
-
-## Intégration 40.6.576 — première vraie brique
-
-Une seule responsabilité : **monter le propriétaire Bougies déjà existant dans la surface Trader**.
-
-Chargés directement depuis Administrator :
-- `js/quote-currency-architecture-406497.js`
-- `js/okx-local-backend-transport.js`
-- `js/market-microscope-candles.js`
-
-Le Trader fournit uniquement les points DOM attendus par le propriétaire existant :
-- `#analyste .chart-v2-control-deck`
-- `#analyste .chart-shell`
-
-Le module Administrator reste propriétaire du rendu, des indicateurs, des intervalles, du zoom/pan, des requêtes OKX publiques via Backend local et de la persistance de ses préférences.
-
-Market, Profondeur, Lecture Technique et Math Core restent des emplacements non montés dans cette version.
-
-
-## Intégration 40.6.576 — Profondeur réelle
-
-Une seule responsabilité supplémentaire : **monter le propriétaire Profondeur / Carnet existant**.
-
-Chargé directement depuis Administrator :
-- `js/okx-microstructure-406499.js`
-
-Le module conserve son comportement validé :
-- body portal indépendant ;
-- lecture seule ;
-- Backend local 8790 ;
-- USD => préférence USDC puis USDT ;
-- rafraîchissement toutes les 2 s uniquement lorsque la fenêtre est ouverte ;
-- commandes natives réduire / détacher / agrandir / masquer ;
-- aucun ordre, aucune API privée, aucun wallet.
-
-Dans Trader, `#detailPanel` reste le panneau Lecture Technique sous-jacent. Profondeur se superpose dessus comme dans Administrator ; fermer Profondeur révèle Lecture Technique.
-
-Market, Lecture Technique métier et Math Core restent encore non montés.
-
-
-## Correction 40.6.576 — Réduire doit réduire pour de vrai
-
-Retour terrain sur 40.6.575 : la commande « Réduire » de Profondeur fonctionnait techniquement,
-mais ne libérait aucune largeur pour le Graphique. Le rail droit restait plein et révélait seulement
-le placeholder Lecture Technique : résultat fonctionnel mais visuellement brouillon.
-
-40.6.576 corrige uniquement ce comportement de shell :
-- réduire ou fermer Profondeur => rail droit compact de 42 px ;
-- le Graphique récupère immédiatement l'espace libéré ;
-- une languette verticale « DÉTAIL » restaure Profondeur ;
-- aucun moteur Profondeur/Bougies n'est modifié ;
-- Lecture Technique métier reste non montée.
+- BUY / SELL / STOP toujours désactivés ;
+- Administrator 40.6.571 inchangé ;
+- Market Core 38.15.11 inchangé ;
+- Market + Math Core restent la prochaine transposition après validation terrain du haut.
