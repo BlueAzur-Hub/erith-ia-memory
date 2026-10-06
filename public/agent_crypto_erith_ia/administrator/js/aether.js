@@ -7,6 +7,12 @@
 */
 (() => {
   "use strict";
+  const AETHER_SURFACE=String(document.documentElement.dataset.agentCryptoSurface||"administrator");
+  const AETHER_RIBBON_ENABLED=AETHER_SURFACE!=="trader";
+  if(!AETHER_RIBBON_ENABLED){
+    document.documentElement.dataset.aetherRibbonLoaded="0";
+    document.documentElement.dataset.aetherRibbonPolicy="disabled";
+  }
   function aetherText(id,fallback="—"){const n=document.getElementById(id);const v=String(n?.textContent||"").replace(/\s+/g," ").trim();return v||fallback;}
   function aetherCurrent(){try{return typeof atlasCurrentStateRead==="function"?(atlasCurrentStateRead()||null):null;}catch(_){return null;}}
   const AETHER_VEILLE_TOP=12;
@@ -398,6 +404,17 @@ function aetherNewsCanonicalEvent(event){
   }
   function aetherPhaseApply(phase,reason="phase"){
     const bar=aetherPhaseBar(),root=document.documentElement;
+    if(!AETHER_RIBBON_ENABLED){
+      if(bar){
+        bar.dataset.aetherPhase="native";
+        bar.dataset.aetherPhaseOwner="trader-disabled";
+        bar.dataset.aetherPhaseReason="trader-ribbon-disabled";
+      }
+      if(root)root.dataset.aetherPhase="native";
+      const ribbon=document.getElementById("atlasAetherRibbon");
+      if(ribbon)ribbon.setAttribute("aria-hidden","true");
+      return "native";
+    }
     aetherPhaseState.phase=phase;
     aetherPhaseState.lastReason=reason;
     aetherPhaseState.lastTransitionAt=Date.now();
@@ -430,6 +447,7 @@ function aetherNewsCanonicalEvent(event){
     return false;
   }
   function aetherPhaseSchedule(ms,action){
+    if(!AETHER_RIBBON_ENABLED)return false;
     aetherPhaseClearTimer();
     aetherPhaseState.remaining=Math.max(0,Number(ms)||0);
     aetherPhaseState.nextAction=String(action||"");
@@ -504,6 +522,7 @@ function aetherNewsCanonicalEvent(event){
     return true;
   }
   function aetherPhaseStart(reason="start"){
+    if(!AETHER_RIBBON_ENABLED)return false;
     if(!aetherExposureState.exposed)return false;
     if(aetherPhaseState.started)return true;
     aetherPhaseState.started=true;
@@ -634,7 +653,8 @@ function aetherNewsCanonicalEvent(event){
       if(body)body.dataset.aetherNewsSetReady="1";
       if(root)root.dataset.aetherNewsSetReady="1";
       const ribbon=document.getElementById("atlasAetherRibbon");
-      if(ribbon){ribbon.dataset.aetherNewsSetReady="1";ribbon.setAttribute("aria-hidden","false");}
+      if(ribbon&&AETHER_RIBBON_ENABLED){ribbon.dataset.aetherNewsSetReady="1";ribbon.setAttribute("aria-hidden","false");}
+      else if(ribbon)ribbon.setAttribute("aria-hidden","true");
       aetherVeilleState.index=0;
       aetherVeilleState.kind="alert";
       aetherVeilleState.storyEvent=null;
@@ -1809,13 +1829,15 @@ function aetherNewsMarketSemantic(){
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
     // 40.4.130 — restore the healthy semantic INFO contract. No global INFO marquee.
     // Long News text belongs only to the dedicated VEILLE phase.
-    put("atlasAetherRibbonMarket","");
-    put("atlasAetherRibbonAtlas",`Atlas · ${s.atlas}`);
-    put("atlasAetherRibbonOracle",`Oracle · ${s.oracle}`);
-    put("atlasAetherRibbonSources",`Sources · ${s.sources}`);
-    put("atlasAetherRibbonBook",`Book · ${s.book}`);
-    renderAetherVeille();
-    let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel",`Aether · ${stateLabel}`);
+    if(AETHER_RIBBON_ENABLED){
+      put("atlasAetherRibbonMarket","");
+      put("atlasAetherRibbonAtlas",`Atlas · ${s.atlas}`);
+      put("atlasAetherRibbonOracle",`Oracle · ${s.oracle}`);
+      put("atlasAetherRibbonSources",`Sources · ${s.sources}`);
+      put("atlasAetherRibbonBook",`Book · ${s.book}`);
+      renderAetherVeille();
+      let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel",`Aether · ${stateLabel}`);
+    }
     const watch406027=aetherOperatorWatch();aetherTimelineCapture(watch406027);const panel=document.getElementById("atlasAetherStatusPanel");if(panel&&panel.dataset.aetherOperatorOpen==="1"&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row="${k}"]`);if(n)n.textContent=v;};const watch406026=aetherOperatorWatch();row("level",watch406026.level);row("convergence",watch406026.convergence);row("divergence",watch406026.divergence);row("watch",watch406026.watch);row("note",watch406026.note);aetherTimelineRender(panel,{includeFull:panel.dataset.aetherFocus==="history"});row("market",aetherMarketBreadth());row("atlas_auto",aetherAtlasAuto());row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("system",aetherSystemBrief());row("weather",aetherWeatherFirstGlance());row("weather_risk",aetherWeatherRisk());if(panel.dataset.aetherFocus==="details")aetherDetailsRender(panel);aetherComponentPaint(panel,s,watch406026);}
   }
 
@@ -1910,8 +1932,10 @@ function aetherNewsMarketSemantic(){
     if(!aetherExposureState.exposed)return false;
     aetherLazyState.corePainted=true;
     renderAether();
-    renderAetherSystem();
-    renderAetherVeille();
+    if(AETHER_RIBBON_ENABLED){
+      renderAetherSystem();
+      renderAetherVeille();
+    }
     return true;
   }
   function aetherScheduleNews(){
@@ -1988,8 +2012,22 @@ function aetherNewsMarketSemantic(){
         let nativeHidden=false;
         try{nativeHidden=Boolean(panel&&(panel.hidden||getComputedStyle(panel).display==='none'||panel.getClientRects().length===0));}catch(_){}
         const shouldOpen=!panel||panel.dataset?.aetherOperatorOpen!=="1"||nativeHidden;
+        if(!AETHER_RIBBON_ENABLED&&shouldOpen&&!aetherExposureState.exposed){
+          aetherExposureState.exposed=true;
+          aetherExposureState.exposedAt=Date.now();
+          aetherExposureState.reason="trader-operator-open";
+        }
         aetherPanelSet(shouldOpen);
       });
+    }
+    if(!AETHER_RIBBON_ENABLED){
+      const ribbon=document.getElementById("atlasAetherRibbon");
+      if(ribbon){
+        ribbon.dataset.aetherRuntime="disabled";
+        ribbon.setAttribute("aria-hidden","true");
+      }
+      document.documentElement.dataset.aetherRibbonLoaded="0";
+      return;
     }
     const quickPanel=document.getElementById("atlasAetherSystem");
     if(quickPanel&&quickPanel.dataset.aetherDetailBound!=="1"){
@@ -2076,7 +2114,9 @@ function aetherNewsMarketSemantic(){
       veille_batch:aetherVeilleBatchSnapshot(),
       phase:aetherPhaseSnapshot()
     }),
-    single_lane:true,
+    single_lane:AETHER_RIBBON_ENABLED,
+    ribbon_enabled:AETHER_RIBBON_ENABLED,
+    surface:AETHER_SURFACE,
     phase_owner_build:"40.6.425",
     phase_snapshot:aetherPhaseSnapshot,
     phase_menu_escape:aetherPhaseHoldNative,
