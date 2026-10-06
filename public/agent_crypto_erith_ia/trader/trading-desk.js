@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.6.575";
+  const BUILD = "40.6.576";
   const ADMIN_BASE = "40.6.571";
   const profileNode = document.getElementById("viewportProfile");
 
@@ -39,9 +39,10 @@
     administratorBase: ADMIN_BASE,
     surface: "trader",
     execution: "disabled",
-    phase: "candles-plus-depth-owner-mounted",
+    phase: "depth-owner-plus-rail-collapse",
     duplicatedBusinessLogic: false,
     mountedOwners: Object.freeze({ candles: true, market: false, depth: true, technicalReading: false, mathCore: false }),
+    shellBehaviors: Object.freeze({ supportRailCollapsesOnDepthMinimize: true, graphReclaimsWidth: true }),
     omittedSections: Object.freeze(["Aether","Atlas","Oracle","Veille","Sources","Decision Board","Other Administrator sections"]),
     canonicalOwners: Object.freeze({
       market: "../administrator/app.js#marketSnapshotPanel",
@@ -88,10 +89,40 @@
     return mounted;
   }
 
+  function depthSnapshot() {
+    try { return globalThis.AgentCryptoOkxMicrostructure?.snapshot?.() || null; } catch (_) { return null; }
+  }
+
+  function syncSupportRail() {
+    const snap = depthSnapshot();
+    const compact = !!snap && (snap.minimized === true || snap.open === false);
+    document.body.dataset.traderRailCompact = compact ? "true" : "false";
+    return compact;
+  }
+
+  function restoreSupportRail() {
+    document.body.dataset.traderRailCompact = "false";
+    const depth = globalThis.AgentCryptoOkxMicrostructure;
+    try { depth?.setMinimized?.(false); } catch (_) {}
+    try { depth?.setOpen?.(true); } catch (_) {}
+    requestAnimationFrame(syncSupportRail);
+  }
+
+  document.getElementById("traderDetailRailToggle")?.addEventListener("click", restoreSupportRail);
+
+  document.addEventListener("click", event => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (!target) return;
+    if (target.closest("#atlasOkxMicrostructure [data-oms-minimize], #atlasOkxMicrostructure [data-oms-close]")) {
+      requestAnimationFrame(() => requestAnimationFrame(syncSupportRail));
+    }
+  }, true);
+
   const bootOwners = () => {
     syncViewport();
     mountExistingCandlesOwner();
     mountExistingDepthOwner();
+    requestAnimationFrame(syncSupportRail);
   };
 
   if (document.readyState === "loading") {
@@ -102,6 +133,7 @@
   window.addEventListener("pageshow", () => {
     mountExistingCandlesOwner();
     mountExistingDepthOwner();
+    requestAnimationFrame(syncSupportRail);
   }, { passive: true });
   window.addEventListener("resize", syncViewport, { passive: true });
 })();
