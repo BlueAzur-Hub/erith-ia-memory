@@ -1,12 +1,12 @@
 {
-  "build": "40.6.609",
+  "build": "40.6.610",
   "surface": "trader",
-  "release": "TRADER · NATIVE MINIMAL HEADER",
-  "parent_trader_build": "40.6.608",
-  "administrator_base": "40.6.609",
+  "release": "TRADER · NATIVE TARGET TOP FIT",
+  "parent_trader_build": "40.6.609",
+  "administrator_base": "40.6.610",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406609_pending_firefox_terrain",
+  "status": "published_406610_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -29,6 +29,8 @@
       "Marché",
       "Graphique",
       "Lecture Technique",
+      "Target Top 5",
+      "Market Flow below fold",
       "Market workspace",
       "Math Core",
       "Bougies",
@@ -118,8 +120,9 @@
     "pr": "repository_history_authority",
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.609_NATIVE_MINIMAL_HEADER.zip",
-    "javascript_syntax": "CI_REQUIRED"
+    "zip": "workflow artifact: AGENT_CRYPTO_TRADER_40.6.610_NATIVE_TARGET_TOP_FIT",
+    "javascript_syntax": "CI_REQUIRED",
+    "workflow_artifact": "AGENT_CRYPTO_TRADER_40.6.610_NATIVE_TARGET_TOP_FIT"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -130,11 +133,12 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.609.",
-    "Confirm first paint already contains only TRADER, Prix live Binance, theme Metal/Glass and one Administrator arrow in the status header.",
-    "Confirm no Build/Administrator version pill or ENGINE pill appears in Trader, even briefly.",
-    "Confirm no duplicate menu, no Aether ribbon/thread and no Aether geometry movement.",
-    "Confirm Marché + Graphique + Lecture Technique keep the shared Administrator runtime behavior."
+    "Firefox Ctrl+F5 on Trader 40.6.610.",
+    "Confirm the 40.6.609 header remains unchanged and stable.",
+    "Confirm Graphique + Lecture Technique fit the middle of the viewport and Target Top 5 is fully visible as the final strip.",
+    "Confirm Market Flow remains immediately below Target Top 5 and appears only after scrolling.",
+    "Confirm F11 expands Graphique + Lecture Technique while Target Top 5 remains the final visible strip.",
+    "Confirm Target Top 5 cycle and coin comparison clicks remain native and functional."
   ],
   "restore_406607": {
     "source_build": "40.6.601",
@@ -205,6 +209,29 @@
     "business_logic_modified": false,
     "aether_modified": false,
     "graph_modified": false,
+    "lecture_technique_modified": false,
+    "real_order": false
+  },
+  "native_target_top_fit": {
+    "enabled": true,
+    "owner": "administrator/js/trader-cockpit-fit.js",
+    "stable_filename": true,
+    "source_first_css": "administrator/index.html#agentCryptoTraderFirstPaint",
+    "automatic_on_trader_surface": true,
+    "target_top_dom_owner": "administrator/index.html#market-workspace > .top5-ribbon",
+    "target_top_business_owner": "administrator/app.js + target-flow-display-406524.js",
+    "target_top_moved": false,
+    "target_top_duplicated": false,
+    "market_flow_hidden": false,
+    "market_flow_moved": false,
+    "market_flow_modified": false,
+    "dom_move": false,
+    "timer": false,
+    "observer": false,
+    "storage": false,
+    "network": false,
+    "market_core_modified": false,
+    "graph_business_logic_modified": false,
     "lecture_technique_modified": false,
     "real_order": false
   }
