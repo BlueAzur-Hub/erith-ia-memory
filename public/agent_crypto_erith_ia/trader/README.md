@@ -1,27 +1,40 @@
-# ERITH.IA Trading Desk — 40.6.595
+# ERITH.IA Trading Desk — 40.6.596
 
 ## Objet
-Faire du Trader une **lecture filtrée de l'Interface Administrator**, et non une application reconstruite à côté.
+Finir la transposition fonctionnelle de **Lecture Technique / SOURCE DOCK**.
 
-## Actif
-Marché, Graphique Ligne, Bougies, Profondeur, Lecture Technique, EUR/USD, Fiche, Math Core, Nouveaux listings.
+La structure HTML était déjà celle de l'Administrator, mais le Trader n'activait réellement que l'étiquette CoinGecko. Cette version transpose le propriétaire métier Source Dock sans importer `administrator/app.js`.
 
-## Mémoire grisée
-Les zones exclues gardent une empreinte visuelle à leur place logique :
-- sous le couple Graphique / Lecture Technique : Oracle, Atlas, Décision, Analyse ;
-- après Market / Math Core, dans l'ordre de l'Interface : Multi Horizon, News Sentinel, Lecture froide, Watchlist, Risques, Impact, No FOMO, Sources, Système, Projets, Aether.
+## Portails actifs
+Pour un actif CoinGecko canonique :
+- CoinGecko ;
+- **Site officiel** ;
+- Explorateur blockchain ;
+- Whitepaper ;
+- Code source ;
+- Communauté ;
+- Actualités ciblées.
 
-## Règle technique
-Ces surfaces grisées sont du **HTML/CSS uniquement** :
-- aucun owner métier ;
-- aucun listener ;
-- aucun fetch ;
-- aucun état restauré ;
-- `pointer-events:none`.
+Les métadonnées sont lues depuis `/api/v3/coins/{id}`, comme dans l'Administrator.
+
+## Propriétaire
+`trader/source-dock-native.js`
+
+Il possède :
+- validation des URL http/https ;
+- dédoublonnage ;
+- cache navigateur 6 h ;
+- conservation stale maximale 7 jours ;
+- bouton **Actualiser** ;
+- retry 1 min / 5 min / 15 min ;
+- état Direct / Cache / limité ;
+- synchronisation sur l'actif sélectionné.
+
+## News Sentinel
+Visible dans le Source Dock mais **grisé / hors Trader**. Son moteur n'est pas chargé.
 
 ## Protégé
-40.6.594 : Graphique Ligne, prix historiques, point de survol, variation par période, EUR/USD.
-Administrator 40.6.571 et Market Core 38.15.11 restent inchangés.
+40.6.595 Interface Filtered Layout et 40.6.594 Graphique Ligne historique + EUR/USD restent inchangés.
 
 ## Terrain
 Firefox opérateur : **PENDING CHRISTOPHE**.
