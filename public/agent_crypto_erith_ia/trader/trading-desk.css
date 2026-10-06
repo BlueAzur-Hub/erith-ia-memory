@@ -207,7 +207,7 @@ h2{font-size:15px;margin-bottom:0}
 }
 
 
-/* 40.6.575 — montage direct du propriétaire Bougies existant.
+/* 40.6.576 — montage direct du propriétaire Bougies existant.
    Aucun moteur Graphique recopié dans /trader/. */
 .trader-analyste{padding:10px 12px 12px}
 .trader-chart-controls{
@@ -264,7 +264,7 @@ h2{font-size:15px;margin-bottom:0}
 }
 
 
-/* 40.6.575 — Profondeur owner existant.
+/* 40.6.576 — Profondeur owner existant.
    Le module validé garde son modèle body-portal et se cale sur #detailPanel,
    comme dans Administrator. Lecture Technique reste le panneau sous-jacent. */
 .analysis-rail{display:block}
@@ -281,4 +281,72 @@ h2{font-size:15px;margin-bottom:0}
 @media(max-width:820px){
   #detailPanel{min-height:430px;height:430px}
   .technical-placeholder{min-height:335px}
+}
+
+
+/* 40.6.576 — rail support compact.
+   Correction terrain : Réduire doit réellement libérer l'espace du Graphique.
+   Le rail devient une languette étroite, comme le comportement familier de l'Administrator. */
+.trader-primary{
+  transition:grid-template-columns .18s ease;
+}
+.analysis-rail{
+  position:relative;
+  min-width:0;
+}
+.detail-rail-toggle{
+  display:none;
+  width:100%;
+  min-height:640px;
+  border:1px solid rgba(115,213,232,.28);
+  border-radius:12px;
+  background:linear-gradient(180deg,rgba(8,25,34,.96),rgba(5,16,24,.96));
+  color:#70dce8;
+  font:900 9px/1 system-ui,sans-serif;
+  letter-spacing:.16em;
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+  cursor:pointer;
+}
+body[data-trader-rail-compact="true"] .trader-primary{
+  grid-template-columns:minmax(0,1fr) 42px;
+}
+body[data-trader-rail-compact="true"] #detailPanel{
+  display:none;
+}
+body[data-trader-rail-compact="true"] .detail-rail-toggle{
+  display:grid;
+  place-items:center;
+}
+body[data-trader-rail-compact="true"] #atlasOkxMicrostructure.is-minimized{
+  display:none!important;
+}
+body[data-trader-rail-compact="true"] .graph-surface{
+  min-width:0;
+}
+#detailPanel{
+  border-color:rgba(115,213,232,.20);
+}
+#detailPanel .technical-placeholder{
+  border-style:solid;
+  border-color:rgba(115,213,232,.10);
+  background:
+    linear-gradient(180deg,rgba(7,24,33,.42),rgba(5,17,25,.26));
+}
+#detailPanel .technical-placeholder p{
+  max-width:28ch;
+}
+@media(max-width:820px){
+  body[data-trader-rail-compact="true"] .trader-primary{
+    display:flex;
+    flex-direction:column;
+  }
+  body[data-trader-rail-compact="true"] .analysis-rail{
+    order:2;
+  }
+  .detail-rail-toggle{
+    min-height:44px;
+    writing-mode:horizontal-tb;
+    transform:none;
+  }
 }
