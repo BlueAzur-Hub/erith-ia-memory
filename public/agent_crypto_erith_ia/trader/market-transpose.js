@@ -1,6 +1,6 @@
 (function marketTranspose(){
   "use strict";
-  const BUILD="40.6.580",LATEST="../data/crypto/latest.json",EXTENDED="../data/crypto/extended.json";
+  const BUILD="40.6.587",LATEST="../data/crypto/latest.json",EXTENDED="../data/crypto/extended.json";
   const state={coins:[],extended:[],selectedId:"bitcoin",filter:"all",limit:50,columns:"essential",sort:"rank-asc",query:"",loaded:false,extendedLoaded:false};
   const stable=new Set(["USDT","USDC","DAI","FDUSD","USDE","USDS","PYUSD","TUSD","EURC"]);
   const $=id=>document.getElementById(id);
@@ -51,7 +51,7 @@
   function rowMarkup(c){
     const selected=c.id===state.selectedId,ch24=finite(c.change24h),ch7=finite(c.change7d);
     const tone=v=>Number.isFinite(v)?(v>0?"pos":v<0?"neg":"flat"):"";
-    return '<tr data-market-id="'+esc(c.id)+'" class="'+(selected?"is-selected":"")+'">'+
+    return '<tr data-market-id="'+esc(c.id)+'" data-market-help-id="'+esc(c.id)+'" class="'+(selected?"is-selected":"")+'">'+
       '<td><b>'+esc(c.rank??"—")+'</b></td>'+
       '<td><span class="trader-market-identity">'+(c.image?'<img src="'+esc(c.image)+'" alt="" loading="lazy">':"")+'<span><b>'+esc(c.name||c.symbol)+'</b><small>'+esc(String(c.symbol||"").toUpperCase())+'</small></span></span></td>'+
       '<td><b>'+esc(money(priceOf(c)))+'</b><small class="trader-market-source">CoinGecko public</small></td>'+
