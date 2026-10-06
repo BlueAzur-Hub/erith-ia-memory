@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD="40.6.587";
+  const BUILD="40.6.588";
   const MODE_KEY="agent_crypto_erith_ia_market_card_mode_v1";
   const MIN_MARKET_WIDTH=980;
   const PANEL_MIN_WIDTH=320;
@@ -26,7 +26,7 @@
     if(selected?.id===id)return selected;
     // Market-transpose only exposes the selected object publicly; select-on-click remains canonical.
     // For hover of another row use its visible facts from DOM, never fabricate hidden values.
-    const row=document.querySelector('#marketRows tr[data-market-id="'+CSS.escape(String(id||""))+'"]');
+    const row=document.querySelector('#marketRows tr[data-market-help-id="'+CSS.escape(String(id||""))+'"]');
     if(!row)return null;
     const cells=row.children;
     const identity=row.querySelector(".trader-market-identity");
