@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+"""Stable guard for the current Agent-Crypto Carnet / Profondeur owner."""
+
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+ADMIN = Path("public/agent_crypto_erith_ia/administrator")
+DEPTH = ADMIN / "js/okx-microstructure-406499.js"
+INDEX = ADMIN / "index.html"
+BUILD = ADMIN / "build.json"
+
+
+def fail(message: str) -> None:
+    raise SystemExit("DEPTH_CURRENT_FAIL: " + message)
+
+
+def need(value: bool, message: str) -> None:
+    if not value:
+        fail(message)
+
+
+manifest = json.loads(BUILD.read_text(encoding="utf-8"))
+depth = DEPTH.read_text(encoding="utf-8")
+index = INDEX.read_text(encoding="utf-8")
+current = str(manifest.get("build") or "").strip()
+
+need(bool(re.fullmatch(r"\d+\.\d+\.\d+", current)), "invalid current build")
+need(manifest.get("market_core") == "38.15.11", "Market Core drift")
+need(f"okx-microstructure-406499.js?v={current}" in index, "current depth cache token")
+need('const BUILD="40.6.570"' in depth, "40.6.570 repaired depth owner not loaded")
+need("const quoteAmount=" in depth, "quoteAmount helper missing")
+need(re.search(r"\beur\s*\(", depth) is None, "legacy eur() call resurrected")
+need("function renderDepth(body,m)" in depth, "renderDepth missing")
+need("${quoteAmount(bid)} / ${quoteAmount(ask)}" in depth, "depth bands do not use quoteAmount")
+need("const bands=[5,10,25]" in depth, "depth bands changed")
+need('state.tab==="depth"' in depth, "depth tab routing missing")
+need("document.body.appendChild(root)" in depth, "independent body portal missing")
+
+scope = manifest.get("okx_depth_multi_quote_render_repair_406570") or {}
+need(scope.get("enabled") is True, "40.6.570 repair manifest missing")
+need(scope.get("scope") == "DEPTH_TAB_RENDER_ONLY", "repair scope drift")
+need(scope.get("dock_406513_modified") is False, "40.6.513 dock contract modified")
+need(scope.get("bridge_modified") is False, "Bridge modified")
+need(scope.get("backend_modified") is False, "Backend modified")
+need(scope.get("private_api") is False, "private API introduced")
+need(scope.get("real_order") is False, "real order introduced")
+need(scope.get("wallet") is False, "wallet introduced")
+
+print(json.dumps({
+    "ok": True,
+    "current_build": current,
+    "depth_owner_build": "40.6.570",
+    "market_core": manifest.get("market_core"),
+    "legacy_eur_calls": 0,
+    "depth_bands_bp": [5, 10, 25],
+    "terrain": scope.get("terrain"),
+}, ensure_ascii=False, sort_keys=True))
