@@ -1,0 +1,39 @@
+name: Agent-Crypto Depth Current
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/administrator/DEPTH_MULTI_QUOTE_RENDER_REPAIR_*.md'
+      - '.github/scripts/agent_crypto_depth_current_guard.py'
+      - '.github/workflows/agent-crypto-depth-current.yml'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/administrator/DEPTH_MULTI_QUOTE_RENDER_REPAIR_*.md'
+      - '.github/scripts/agent_crypto_depth_current_guard.py'
+      - '.github/workflows/agent-crypto-depth-current.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  depth-current:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Depth JavaScript syntax
+        run: node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+
+      - name: Stable Depth current guard
+        run: python .github/scripts/agent_crypto_depth_current_guard.py
+
+      - name: Version truth
+        run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
