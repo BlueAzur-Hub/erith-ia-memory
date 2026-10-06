@@ -311,3 +311,164 @@
   .trader-ghost-grid{grid-template-columns:1fr}
   .trader-ghost-panel.trader-ghost-wide{grid-column:auto}
 }
+
+
+/* 40.6.595 — Interface Filtered Layout
+   Preserve the Administrator spatial memory while keeping excluded owners absent. */
+.trader-interface-filtered-layout .trader-filtered-memory-band,
+.trader-interface-filtered-layout .trader-filtered-memory-stack{
+  pointer-events:none;
+  user-select:none;
+  filter:grayscale(.88) saturate(.34);
+}
+.trader-filtered-memory-band{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:8px;
+  margin:8px 16px 10px;
+  padding:8px;
+  border:1px solid rgba(142,156,165,.10);
+  border-radius:14px;
+  background:
+    linear-gradient(180deg,rgba(91,102,110,.055),rgba(24,31,37,.08)),
+    rgba(5,11,16,.34);
+  opacity:.48;
+}
+.trader-filtered-slot{
+  min-width:0;
+  min-height:48px;
+  padding:9px 10px;
+  border:1px solid rgba(145,157,166,.10);
+  border-radius:10px;
+  background:
+    linear-gradient(180deg,rgba(108,118,125,.055),rgba(47,55,61,.06)),
+    rgba(8,14,19,.42);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.014);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:2px;
+}
+.trader-filtered-slot small{
+  color:#64727b;
+  font:950 7px/1 system-ui,sans-serif;
+  letter-spacing:.15em;
+}
+.trader-filtered-slot b{
+  overflow:hidden;
+  color:#89969e;
+  font:850 10px/1.18 system-ui,sans-serif;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.trader-filtered-slot span{
+  overflow:hidden;
+  color:#5f6c74;
+  font:750 8px/1.2 system-ui,sans-serif;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.trader-filtered-memory-stack{
+  margin:10px 16px 112px;
+  padding:10px;
+  border:1px solid rgba(137,153,163,.10);
+  border-radius:17px;
+  background:
+    linear-gradient(180deg,rgba(77,87,94,.055),rgba(23,29,34,.09)),
+    rgba(5,11,16,.37);
+  opacity:.50;
+}
+.trader-filtered-memory-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:16px;
+  padding:2px 3px 8px;
+  border-bottom:1px solid rgba(145,157,166,.08);
+}
+.trader-filtered-memory-head .eyebrow{
+  margin:0 0 3px;
+  color:#6e7b83!important;
+}
+.trader-filtered-memory-head h2{
+  margin:0;
+  color:#8a969d;
+  font-size:12px;
+  line-height:1.2;
+  font-weight:850;
+}
+.trader-filtered-memory-head>span{
+  padding:4px 7px;
+  border:1px solid rgba(145,157,166,.10);
+  border-radius:999px;
+  color:#65727a;
+  font:900 7px/1 system-ui,sans-serif;
+  letter-spacing:.10em;
+  white-space:nowrap;
+}
+.trader-filtered-row{
+  display:grid;
+  gap:7px;
+  margin-top:7px;
+}
+.trader-filtered-row-analysis{
+  grid-template-columns:2fr 1fr 1fr;
+}
+.trader-filtered-row-risk,
+.trader-filtered-row-system{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+.trader-filtered-memory-stack .trader-filtered-slot{
+  min-height:42px;
+  padding:8px 9px;
+}
+.trader-filtered-legend{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-top:8px;
+  padding:8px 3px 0;
+  border-top:1px solid rgba(145,157,166,.07);
+  color:#69767e;
+  font:800 8px/1.2 system-ui,sans-serif;
+}
+.trader-filtered-legend span{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+}
+
+/* Active owners remain visually dominant; dormant architecture should read as background. */
+.trader-interface-filtered-layout #market-zone,
+.trader-interface-filtered-layout #marketWorkspaceGrid{
+  position:relative;
+  z-index:3;
+  filter:none!important;
+  opacity:1!important;
+}
+.trader-interface-filtered-layout .trader-filtered-memory-band,
+.trader-interface-filtered-layout .trader-filtered-memory-stack{
+  position:relative;
+  z-index:1;
+}
+.trader-interface-filtered-layout .trader-interface-mirror .trader-excluded-module{
+  opacity:.25!important;
+}
+@media(max-width:1180px){
+  .trader-filtered-memory-band{grid-template-columns:2fr 1fr 1fr}
+  .trader-filtered-memory-band .trader-filtered-slot:last-child{display:none}
+}
+@media(max-width:900px){
+  .trader-filtered-memory-band,
+  .trader-filtered-row-analysis,
+  .trader-filtered-row-risk,
+  .trader-filtered-row-system{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .trader-filtered-memory-head{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:620px){
+  .trader-filtered-memory-band,
+  .trader-filtered-row-analysis,
+  .trader-filtered-row-risk,
+  .trader-filtered-row-system{grid-template-columns:1fr}
+}
