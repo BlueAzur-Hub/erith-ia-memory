@@ -1,12 +1,12 @@
 {
-  "build": "40.6.589",
+  "build": "40.6.590",
   "surface": "trader",
-  "release": "TRADER · NATIVE CRYPTO LINE GRAPH",
-  "parent_trader_build": "40.6.588",
+  "release": "TRADER · INTERFACE FIDELITY II",
+  "parent_trader_build": "40.6.589",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "published": true,
-  "status": "published_pending_terrain_406589",
+  "published": false,
+  "status": "branch_ready_for_pr_406590",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -14,14 +14,15 @@
   "architecture": {
     "menu": "Native Administrator visual shell retained; Trader semantic identity restored exactly: ERITH.IA · TRADING DESK / Agent-Crypto · Trader. Existing Marché/Graphique navigation preserved.",
     "primary": "Administrator #analyste / champagne-clean-lens transposed",
-    "chart": "Administrator-style Crypto Ligne surface added beneath the existing Market Microscope Bougies overlay. Existing Ligne/Bougies owner remains the mode switch; Bougies owner unchanged.",
-    "technical_reading": "Administrator native #detailPanel DOM restored: compact strip, Fiche active, Source Dock, Sources/data, Network/cache/latency, Integrity. Native Administrator mirror classes and static-theme classes restored. Trader-specific Technical Reading geometry owner removed.",
+    "chart": "Administrator-style Crypto Ligne surface retained; its analysis overlay now follows the Administrator information hierarchy (asset/name/period/currency/source truth/price/change/low/high/amplitude/departure/last/points). Real Volume toggle restored for the Ligne owner.",
+    "technical_reading": "Administrator native #detailPanel DOM retained and now synchronized from one Trader context owner: selected asset, display currency, price, 24h market variation, active line history, Source Dock, data-state, diagnostics and integrity. Candles S/R stays owned by the existing Candles owner.",
     "depth": "existing okx-microstructure owner docked on #detailPanel",
     "market": "Administrator Market Snapshot transposed + native Nouveaux listings category restored in the existing Trader table.",
     "math": "native Math Core V3 beside Market",
-    "chart_toolbar": "Trader custom Volume, Profondeur and duplicate AFFICHAGE controls removed. Native OKX Depth owner injects one Profondeur; quote-currency owner injects one AFFICHAGE EUR/USD; Candles owner injects MICROSCOPE Ligne/Bougies. Trader retains only existing Legend/Analysis/Fiche bridges.",
+    "chart_toolbar": "Native Depth, Quote Currency and Microscope owners remain unique. Trader restores a real Volume toggle for its real Ligne volume bars; Legend/Analysis/Fiche remain functional bridges.",
     "market_fiche": "Administrator native Fiche contract restored in Trader: help-layer floating surface + real lateral dock host, persisted floating/dock mode, sticky/internal-scroll geometry from shared Administrator CSS. Legacy pinned trader-market-fiche owner retired.",
-    "line_chart": "Canonical crypto: CoinGecko market_chart direct in selected display currency. New Listings: existing AgentCryptoNewListingLiveAsset.fetchCandles provider context. Period row transposed: 24h, 7j, 30j, 60j, 90j, 1a, Max."
+    "line_chart": "Canonical crypto: CoinGecko market_chart direct in selected display currency. New Listings: existing AgentCryptoNewListingLiveAsset.fetchCandles provider context. Period row transposed: 24h, 7j, 30j, 60j, 90j, 1a, Max.",
+    "technical_context_owner": "trader/technical-reading-data-sync.js · one selected asset shared with Market/Ligne/Bougies/Depth."
   },
   "technical_reading": {
     "single_portrait_owner": true,
@@ -79,13 +80,13 @@
     "New Listings live asset owner"
   ],
   "delivery": {
-    "pr": 154,
-    "merge_commit": "b20ec32838ba6199825e8e5025bf55d3f22d5f63",
-    "github_pages": "SUCCESS · latest deployment",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.589_NATIVE_LINE_GRAPH.zip",
-    "zip_bytes": 149049,
-    "javascript_syntax": "PASS",
-    "package_commit": "c0e25d2c17b978290568cd5e62a63c9e53627a20"
+    "pr": null,
+    "merge_commit": null,
+    "github_pages": "PENDING",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.590_INTERFACE_FIDELITY_II.zip",
+    "zip_bytes": null,
+    "javascript_syntax": "PENDING",
+    "package_commit": null
   },
   "stop_gate": {
     "no_real_order": true,
@@ -95,10 +96,9 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox: BTC → Ligne must render historical curve",
-    "Firefox: Concrete CT → Ligne must render provider series",
-    "switch Ligne ↔ Bougies and keep same asset",
-    "test 24h and 7j on Ligne",
-    "then BUY / SELL / REDIVIDER"
+    "Firefox: verify BTC selected in Ligne also populates Lecture Technique (Actif/Prix/24h/Fiche/Source Dock).",
+    "Switch Ligne ↔ Bougies ↔ Profondeur and verify one shared active asset.",
+    "Compare the Trader analysis overlay with Administrator.",
+    "Then test 40.6.591 Interface mirror / grey exclusions before BUY / SELL / REDIVIDER."
   ]
 }
