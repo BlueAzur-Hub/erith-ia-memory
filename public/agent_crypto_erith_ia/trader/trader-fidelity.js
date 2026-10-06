@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD="40.6.583";
+  const BUILD="40.6.584";
   const $=id=>document.getElementById(id);
   const finite=value=>{
     if(value===null||value===undefined||value==="")return null;
