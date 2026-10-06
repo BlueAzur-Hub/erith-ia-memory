@@ -168,3 +168,146 @@
 .trader-interface-mirror .atlas-quick-link:not(.trader-excluded-module){
   opacity:1!important;
 }
+
+
+/* 40.6.592 — Interface Ghost Skeleton
+   Visual memory only: no owner, no event, no data request. */
+.trader-interface-ghost-mode .trader-main{
+  position:relative;
+}
+.trader-interface-ghost-mode .trader-native-zone,
+.trader-interface-ghost-mode .trader-market-workspace{
+  position:relative;
+  z-index:2;
+}
+.trader-ghost-workspace{
+  position:relative;
+  z-index:1;
+  margin:14px 16px 112px;
+  padding:14px;
+  border:1px solid rgba(137,155,166,.14);
+  border-radius:18px;
+  background:
+    linear-gradient(180deg,rgba(86,96,104,.095),rgba(31,38,44,.14)),
+    rgba(8,14,19,.54);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.02);
+  color:#7b8a94;
+  filter:grayscale(.82) saturate(.42);
+  opacity:.72;
+  pointer-events:none;
+  user-select:none;
+}
+.trader-ghost-heading{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  padding:4px 4px 12px;
+  border-bottom:1px solid rgba(151,166,176,.10);
+}
+.trader-ghost-heading .eyebrow{
+  margin:0 0 4px;
+  color:#7f8d96!important;
+}
+.trader-ghost-heading h2{
+  margin:0;
+  font-size:15px;
+  line-height:1.2;
+  color:#9aa6ad;
+  font-weight:800;
+}
+.trader-ghost-heading>span{
+  flex:0 0 auto;
+  padding:5px 9px;
+  border:1px solid rgba(148,160,169,.12);
+  border-radius:999px;
+  background:rgba(107,118,126,.06);
+  color:#78858e;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.trader-ghost-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  padding-top:10px;
+}
+.trader-ghost-panel{
+  min-height:72px;
+  padding:11px 12px;
+  border:1px solid rgba(145,157,166,.10);
+  border-radius:12px;
+  background:
+    linear-gradient(180deg,rgba(115,125,132,.055),rgba(52,61,67,.075)),
+    rgba(10,16,21,.44);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.015);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:3px;
+}
+.trader-ghost-panel.trader-ghost-wide{
+  grid-column:span 2;
+}
+.trader-ghost-panel small{
+  font-size:8px;
+  font-weight:950;
+  letter-spacing:.14em;
+  color:#697780;
+}
+.trader-ghost-panel b{
+  font-size:11px;
+  line-height:1.2;
+  color:#87949c;
+}
+.trader-ghost-panel span{
+  font-size:9px;
+  color:#606d75;
+}
+.trader-ghost-legend{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-top:10px;
+  padding:9px 4px 1px;
+  border-top:1px solid rgba(151,166,176,.08);
+  font-size:9px;
+  font-weight:800;
+  color:#74818a;
+}
+.trader-ghost-legend span{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.ghost-swatch{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.16);
+  background:#68747c;
+}
+.ghost-swatch.active{background:#5edce8;box-shadow:0 0 9px rgba(94,220,232,.28)}
+.ghost-swatch.dormant{background:#667078}
+.ghost-swatch.stop{background:#b35b64;box-shadow:0 0 8px rgba(179,91,100,.18)}
+
+/* Active Trader surfaces stay at full contrast over the dormant shell. */
+.trader-interface-ghost-mode #market-zone,
+.trader-interface-ghost-mode #marketWorkspaceGrid{
+  filter:none;
+  opacity:1;
+}
+.trader-interface-ghost-mode .trader-interface-mirror .trader-excluded-module{
+  opacity:.30!important;
+}
+@media(max-width:1100px){
+  .trader-ghost-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:680px){
+  .trader-ghost-heading{align-items:flex-start;flex-direction:column}
+  .trader-ghost-grid{grid-template-columns:1fr}
+  .trader-ghost-panel.trader-ghost-wide{grid-column:auto}
+}
