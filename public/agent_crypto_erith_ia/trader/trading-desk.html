@@ -33,17 +33,6 @@
   </nav>
 
   <main class="trader-grid" aria-label="Fondation canonique Trading Desk">
-    <section class="surface market-surface" data-owner="administrator:marketSnapshotPanel">
-      <header class="surface-head">
-        <div><p class="eyebrow">OWNER EXISTANT</p><h2>Market</h2></div>
-        <span>à monter</span>
-      </header>
-      <div class="surface-placeholder">
-        <strong>MARKET SNAPSHOT</strong>
-        <p>Réutiliser le propriétaire Market existant. Pas de copie de logique, pas de second univers de prix.</p>
-      </div>
-    </section>
-
     <section class="surface graph-surface" data-owner="administrator:market-microscope-candles.js">
       <header class="surface-head">
         <div><p class="eyebrow">OWNER EXISTANT</p><h2>Graphique · Bougies</h2></div>
@@ -55,7 +44,7 @@
       </div>
     </section>
 
-    <aside class="right-stack">
+    <aside class="right-stack" aria-label="Lecture de marché latérale">
       <section class="surface depth-surface" data-owner="administrator:okx-microstructure-406499.js">
         <header class="surface-head">
           <div><p class="eyebrow">OWNER EXISTANT</p><h2>Profondeur</h2></div>
@@ -79,32 +68,45 @@
       </section>
     </aside>
 
-    <section class="surface math-surface" data-owner="administrator:math">
+    <section class="surface market-surface" data-owner="administrator:marketSnapshotPanel">
       <header class="surface-head">
-        <div><p class="eyebrow">OWNER EXISTANT</p><h2>Math Core</h2></div>
-        <span>à monter</span>
+        <div><p class="eyebrow">OWNER EXISTANT</p><h2>Market</h2></div>
+        <span>en dessous du Graphique</span>
       </header>
-      <div class="math-action-row">
-        <div class="score-orb" aria-label="Score Math Core non monté">—</div>
-        <div>
-          <strong>ATLAS MATH CORE</strong>
-          <p>Le score ouvrira le futur ticket Achat. Aucun achat automatique.</p>
-        </div>
+      <div class="surface-placeholder market-placeholder">
+        <strong>MARKET SNAPSHOT</strong>
+        <p>Réutiliser le propriétaire Market existant. Pas de copie de logique, pas de second univers de prix.</p>
       </div>
     </section>
 
-    <section class="surface action-surface" aria-label="Actions de trading futures">
-      <header class="surface-head">
-        <div><p class="eyebrow">FUTUR · DÉSACTIVÉ</p><h2>Achat / Vente</h2></div>
-        <span>simulation plus tard</span>
-      </header>
-      <div class="action-row">
-        <button type="button" class="round-action buy" disabled>BUY</button>
-        <button type="button" class="round-action sell" disabled>SELL</button>
-        <button type="button" class="round-action kill" disabled>STOP</button>
-      </div>
-      <p class="action-note">BUY/SELL réels interdits à cette étape. REDIVIDER reste le Kill Switch supérieur.</p>
-    </section>
+    <aside class="bottom-right-stack" aria-label="Math Core et actions">
+      <section class="surface math-surface" data-owner="administrator:math">
+        <header class="surface-head">
+          <div><p class="eyebrow">OWNER EXISTANT</p><h2>Math Core</h2></div>
+          <span>à droite du Market</span>
+        </header>
+        <div class="math-action-row">
+          <div class="score-orb" aria-label="Score Math Core non monté">—</div>
+          <div>
+            <strong>ATLAS MATH CORE</strong>
+            <p>Le score ouvrira le futur ticket Achat. Aucun achat automatique.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="surface action-surface" aria-label="Actions de trading futures">
+        <header class="surface-head">
+          <div><p class="eyebrow">FUTUR · DÉSACTIVÉ</p><h2>Achat / Vente</h2></div>
+          <span>simulation plus tard</span>
+        </header>
+        <div class="action-row">
+          <button type="button" class="round-action buy" disabled>BUY</button>
+          <button type="button" class="round-action sell" disabled>SELL</button>
+          <button type="button" class="round-action kill" disabled>STOP</button>
+        </div>
+        <p class="action-note">BUY/SELL réels interdits à cette étape. REDIVIDER reste le Kill Switch supérieur.</p>
+      </section>
+    </aside>
   </main>
 
   <footer class="trader-footer">
