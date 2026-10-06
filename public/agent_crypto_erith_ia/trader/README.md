@@ -1,4 +1,4 @@
-# ERITH.IA Trading Desk — 40.6.577
+# ERITH.IA Trading Desk — 40.6.578
 
 ## Intention
 
@@ -41,3 +41,11 @@ Le bridge Support/Résistance reste celui du owner Bougies ; aucune nouvelle for
 - Administrator 40.6.571 inchangé ;
 - Market Core 38.15.11 inchangé ;
 - Market + Math Core restent la prochaine transposition après validation terrain du haut.
+
+## 40.6.578 — Market natif transposé
+
+Le placeholder Market est remplacé par la structure Administrator : Market Snapshot, recherche, filtres, vues 50/100/250/500/1000, colonnes Essentiel/Complet et tris.
+
+Données : mêmes archives publiques que l'Administrator, `../data/crypto/latest.json` et `extended.json` à la demande.
+
+La sélection Market devient le premier owner de la PAIR Trader et resynchronise Graphique/Bougies + Profondeur via leurs owners existants. Aucune requête CoinGecko directe navigateur n'est ajoutée.
