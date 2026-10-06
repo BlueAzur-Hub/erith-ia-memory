@@ -1,35 +1,22 @@
-# ERITH.IA Trading Desk — 40.6.587
+# ERITH.IA Trading Desk — 40.6.588
 
 ## Objet
-Restaurer la **Fiche Crypto native** au lieu de la carte Trader figée.
+Rendre le **Market Trader fidèle au Market Administrator** en restaurant la catégorie native **Nouveaux listings**.
 
-## Contrat restauré
-Lignée Administrator :
-- 28.3.46 — Flottante / Latérale ;
-- 28.3.47 — disponibilité latérale adaptative ;
-- 28.3.48 — persistance + sticky + scroll interne ;
-- 40.1.2 — géométrie CSS du dock ;
-- 40.6.547 — interaction pointeur restaurée.
+## Transposition
+- bouton **Nouveaux listings** ajouté à la même barre de filtres Market ;
+- propriétaire public existant réutilisé : `administrator/js/new-listings-live-asset-406529.js` ;
+- découverte Bitget SPOT ≤ 30 jours ;
+- identités/logos GitHub existants réutilisés via `administrator/data/new-listings-identities.json` ;
+- résultats injectés dans **le tableau Market existant**, sans second Market ;
+- aucune injection dans le Market Core / ranking ;
+- sélection d’un nouveau listing réutilise le Graphique/Bougies et Profondeur existants via le contexte externe public ;
+- Fiche Crypto 40.6.587 continue d’utiliser sa surface Flottante / Latérale native.
 
-## Correction
-- suppression de `#traderMarketFiche` et de son CSS propriétaire ;
-- utilisation de `#atlasHelpLayer` pour la fiche flottante ;
-- utilisation de `#atlasMarketCardDockHost` pour la fiche latérale ;
-- mode Flottante / Latérale mémorisé via la clé historique ;
-- la fiche flottante suit la ligne Market survolée/focalisée au lieu d'être clouée au tableau ;
-- `Escape` masque la fiche flottante ;
-- le bouton Fiche active/désactive ce propriétaire natif ;
-- les lignes Market exposent `data-market-help-id`.
+## Protections
+Market Core 38.15.11 inchangé. Pas de second Graphique, pas de seconde Fiche, pas de seconde Profondeur. READ ONLY, aucun ordre réel.
 
-## Inchangé
-Market Core 38.15.11, Bougies, Profondeur, Lecture Technique 40.6.586, Math Core, READ ONLY.
-
+## Terrain
 Firefox : **PENDING CHRISTOPHE**.
 
-## Livraison cumulative 40.6.585 → 40.6.587
-- PR #150 : propriétaires natifs des contrôles Graphique.
-- PR #151 : Lecture Technique Administrator transposée.
-- PR #152 : Fiche Crypto native Flottante / Latérale.
-- GitHub Pages : SUCCESS · run `37455649835`.
-- ZIP : `downloads/AGENT_CRYPTO_TRADER_40.6.587_NATIVE_RESTORE.zip`.
-- Terrain Firefox : **PENDING CHRISTOPHE**.
+Après validation : passage séparé sur **BUY / SELL / REDIVIDER**.

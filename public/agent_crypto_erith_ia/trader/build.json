@@ -1,12 +1,12 @@
 {
-  "build": "40.6.587",
+  "build": "40.6.588",
   "surface": "trader",
-  "release": "TRADER · NATIVE FICHE CRYPTO FLOATING/LATERAL",
-  "parent_trader_build": "40.6.586",
+  "release": "TRADER · NATIVE NEW LISTINGS MARKET FIDELITY",
+  "parent_trader_build": "40.6.587",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "published": true,
-  "status": "published_pending_terrain_406587",
+  "published": false,
+  "status": "branch_ready_for_pr_406588",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -17,7 +17,7 @@
     "chart": "existing market-microscope-candles owner",
     "technical_reading": "Administrator native #detailPanel DOM restored: compact strip, Fiche active, Source Dock, Sources/data, Network/cache/latency, Integrity. Native Administrator mirror classes and static-theme classes restored. Trader-specific Technical Reading geometry owner removed.",
     "depth": "existing okx-microstructure owner docked on #detailPanel",
-    "market": "native Market Snapshot below Graph",
+    "market": "Administrator Market Snapshot transposed + native Nouveaux listings category restored in the existing Trader table.",
     "math": "native Math Core V3 beside Market",
     "chart_toolbar": "Trader custom Volume, Profondeur and duplicate AFFICHAGE controls removed. Native OKX Depth owner injects one Profondeur; quote-currency owner injects one AFFICHAGE EUR/USD; Candles owner injects MICROSCOPE Ligne/Bougies. Trader retains only existing Legend/Analysis/Fiche bridges.",
     "market_fiche": "Administrator native Fiche contract restored in Trader: help-layer floating surface + real lateral dock host, persisted floating/dock mode, sticky/internal-scroll geometry from shared Administrator CSS. Legacy pinned trader-market-fiche owner retired."
@@ -44,7 +44,12 @@
     "default_limit": 50,
     "extended_to_1000": true,
     "browser_direct_coingecko": false,
-    "fiche_restored": true
+    "fiche_restored": true,
+    "new_listings": true,
+    "new_listings_owner": "administrator/js/new-listings-live-asset-406529.js + trader/new-listings-transpose.js",
+    "new_listings_horizon_days": 30,
+    "new_listings_state_coins_injection": false,
+    "new_listings_ranking_mutation": false
   },
   "math_core": {
     "score_palette": {
@@ -71,16 +76,10 @@
     "Math Core"
   ],
   "delivery": {
-    "prs": [
-      150,
-      151,
-      152
-    ],
-    "graph_controls_merge": "e040b33419076bfacac1bdf79f9e1bfa67979c10",
-    "technical_reading_merge": "c238bd2a6e8861b6f11fce7c45e7c9c296f40343",
-    "fiche_native_merge": "886f3c468a31c041e455a0e4edd860fbc3306700",
-    "github_pages": "SUCCESS · run 37455649835",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.587_NATIVE_RESTORE.zip"
+    "pr": "PENDING",
+    "merge_commit": "PENDING",
+    "github_pages": "PENDING",
+    "zip": "PENDING"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -90,10 +89,8 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox proof of 40.6.587 cumulative cascade",
-    "verify Graph toolbar has one Profondeur and one AFFICHAGE group",
-    "verify Technical Reading matches Administrator geometry/content",
-    "verify Fiche floating follows hover/focus and Latérale docks when width permits",
-    "then STOP or next bounded terrain correction"
+    "Firefox proof: Nouveaux listings visible and functional in Trader Market",
+    "select one recent listing and verify Fiche/Graph/Depth reuse",
+    "then bounded pass for BUY / SELL / REDIVIDER"
   ]
 }

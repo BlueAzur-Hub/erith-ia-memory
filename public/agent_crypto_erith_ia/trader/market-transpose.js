@@ -1,13 +1,13 @@
 (function marketTranspose(){
   "use strict";
-  const BUILD="40.6.587",LATEST="../data/crypto/latest.json",EXTENDED="../data/crypto/extended.json";
-  const state={coins:[],extended:[],selectedId:"bitcoin",filter:"all",limit:50,columns:"essential",sort:"rank-asc",query:"",loaded:false,extendedLoaded:false};
+  const BUILD="40.6.588",LATEST="../data/crypto/latest.json",EXTENDED="../data/crypto/extended.json";
+  const state={coins:[],extended:[],selectedId:"bitcoin",externalCoin:null,filter:"all",limit:50,columns:"essential",sort:"rank-asc",query:"",loaded:false,extendedLoaded:false};
   const stable=new Set(["USDT","USDC","DAI","FDUSD","USDE","USDS","PYUSD","TUSD","EURC"]);
   const $=id=>document.getElementById(id);
   const finite=v=>{if(v===null||v===undefined||v==="")return null;const n=Number(v);return Number.isFinite(n)?n:null;};
   const displayCurrency=()=>String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"USD").toUpperCase()==="EUR"?"EUR":"USD";
   const allCoins=()=>state.coins.concat(state.extended).sort((a,b)=>Number(a.rank||99999)-Number(b.rank||99999));
-  const selectedCoin=()=>allCoins().find(c=>c.id===state.selectedId)||state.coins[0]||null;
+  const selectedCoin=()=>state.externalCoin||allCoins().find(c=>c.id===state.selectedId)||state.coins[0]||null;
   const priceOf=c=>finite(displayCurrency()==="USD"?c?.priceUsd:(c?.priceEur??c?.price));
   const capOf=c=>finite(displayCurrency()==="USD"?c?.marketCapUsd:c?.marketCap);
   const volOf=c=>finite(displayCurrency()==="USD"?c?.volume24hUsd:c?.volume24h);
@@ -35,21 +35,33 @@
     const j=await r.json();state.extended=Array.isArray(j?.coins)?j.coins:[];state.extendedLoaded=true;
   }
   function syncPair(coin){
-    if(!coin)return;const quote=displayCurrency()==="USD"?"USDC":"EUR",symbol=String(coin.symbol||"BTC").toUpperCase();
+    if(!coin)return;const quote=String(coin?.rawQuoteCurrency||coin?.quote||coin?.providerContext?.quote||(displayCurrency()==="USD"?"USDC":"EUR")).toUpperCase(),symbol=String(coin.symbol||"BTC").toUpperCase();
     const p=document.querySelector(".pair-chip b");if(p)p.textContent=symbol+" / "+quote;
     const asset=$("detailCompactAsset");if(asset)asset.textContent=symbol+" / "+quote;
     const title=$("selectedAssetTitle");if(title)title.textContent=(coin.name||symbol)+" — "+symbol;
   }
   async function selectCoin(id,reason="market"){
     const coin=allCoins().find(c=>c.id===id)||state.coins[0];if(!coin)return false;
+    state.externalCoin=null;
+    try{globalThis.AgentCryptoNewListingLiveAsset?.deactivate?.();}catch(_){}
     state.selectedId=coin.id;syncPair(coin);render();
     const candles=globalThis.AgentCryptoMarketMicroscope;
     try{await candles?.load?.({bar:candles?.snapshot?.()?.bar||"5m",reason:"trader:"+reason});}catch(_){}
     try{await globalThis.AgentCryptoOkxMicrostructure?.refresh?.({asset:String(coin.symbol||"BTC").toUpperCase(),quote:displayCurrency()==="USD"?"USDC":"EUR"});}catch(_){}
     window.dispatchEvent(new CustomEvent("agent-crypto:trader-selection-changed",{detail:{coin:Object.freeze({...coin}),source:reason}}));return true;
   }
+  async function selectExternal(coin,reason="new-listing"){
+    if(!coin||!coin.id)return false;
+    state.externalCoin=Object.freeze({...coin});
+    syncPair(state.externalCoin);
+    const candles=globalThis.AgentCryptoMarketMicroscope;
+    try{await candles?.load?.({bar:candles?.snapshot?.()?.bar||"5m",reason:"trader:"+reason});}catch(_){}
+    try{await globalThis.AgentCryptoOkxMicrostructure?.refresh?.({asset:String(coin.symbol||"").toUpperCase(),quote:String(coin?.rawQuoteCurrency||coin?.quote||coin?.providerContext?.quote||"USDT").toUpperCase()});}catch(_){}
+    window.dispatchEvent(new CustomEvent("agent-crypto:trader-selection-changed",{detail:{coin:state.externalCoin,source:reason,external:true}}));
+    return true;
+  }
   function rowMarkup(c){
-    const selected=c.id===state.selectedId,ch24=finite(c.change24h),ch7=finite(c.change7d);
+    const selected=!state.externalCoin&&c.id===state.selectedId,ch24=finite(c.change24h),ch7=finite(c.change7d);
     const tone=v=>Number.isFinite(v)?(v>0?"pos":v<0?"neg":"flat"):"";
     return '<tr data-market-id="'+esc(c.id)+'" data-market-help-id="'+esc(c.id)+'" class="'+(selected?"is-selected":"")+'">'+
       '<td><b>'+esc(c.rank??"—")+'</b></td>'+
@@ -87,7 +99,7 @@
     }catch(error){const body=$("marketRows");if(body)body.innerHTML='<tr><td colspan="9" class="empty">Market indisponible · '+esc(error?.message||error)+'</td></tr>';document.documentElement.dataset.traderMarket="error";}
   }
   globalThis.getSelectedCoin=()=>selectedCoin();
-  globalThis.AgentCryptoTraderMarket=Object.freeze({build:BUILD,start,select:selectCoin,selected:selectedCoin,snapshot:()=>Object.freeze({build:BUILD,loaded:state.loaded,assets:allCoins().length,selected_id:state.selectedId,limit:state.limit,filter:state.filter,columns:state.columns,sort:state.sort}),source:"PUBLIC_GITHUB_COINGECKO_ECB",browser_direct_coingecko:false,real_order:false});
+  globalThis.AgentCryptoTraderMarket=Object.freeze({build:BUILD,start,select:selectCoin,selectExternal,selected:selectedCoin,snapshot:()=>Object.freeze({build:BUILD,loaded:state.loaded,assets:allCoins().length,selected_id:state.externalCoin?.id||state.selectedId,external_selected:!!state.externalCoin,limit:state.limit,filter:state.filter,columns:state.columns,sort:state.sort}),source:"PUBLIC_GITHUB_COINGECKO_ECB",browser_direct_coingecko:false,real_order:false});
   window.addEventListener("agent-crypto:quote-architecture-changed",()=>{syncPair(selectedCoin());render();},{passive:true});
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>void start(),{once:true});else void start();
 })();
