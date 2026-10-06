@@ -4,13 +4,21 @@ on:
   pull_request:
     paths:
       - "public/agent_crypto_erith_ia/trader/**"
-      - "public/agent_crypto_erith_ia/administrator/js/chart-history-owner.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/app.js"
+      - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
+      - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - ".github/workflows/agent-crypto-trader-current.yml"
   push:
     branches: [main]
     paths:
       - "public/agent_crypto_erith_ia/trader/**"
-      - "public/agent_crypto_erith_ia/administrator/js/chart-history-owner.js"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/app.js"
+      - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
+      - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
+      - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - ".github/workflows/agent-crypto-trader-current.yml"
 
 permissions:
@@ -26,53 +34,60 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node --check public/agent_crypto_erith_ia/administrator/js/chart-history-owner.js
-          for file in public/agent_crypto_erith_ia/trader/*.js; do
-            node --check "$file"
-          done
+          node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
+          node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
 
-      - name: Canonical history owner contract
-        run: |
-          node <<'NODE'
-          require('./public/agent_crypto_erith_ia/administrator/js/chart-history-owner.js');
-          const owner=global.AgentCryptoChartHistoryOwner;
-          const coin={id:'bitcoin',symbol:'BTC'};
-          const now=Date.now();
-          const series=(hours,points)=>Array.from({length:points},(_,i)=>[
-            now-hours*3600000+(hours*3600000*i/(points-1)),
-            85000+i
-          ]);
-          const checks={
-            usd_key:owner.storageKey(coin,7,'USD')==='bitcoin:USD:coingecko:7',
-            eur_key:owner.storageKey(coin,7,'EUR')==='bitcoin:7:binance',
-            usd_family:owner.preferredFamily(coin,'USD')==='coingecko',
-            eur_family:owner.preferredFamily(coin,'EUR')==='binance',
-            max_rejects_24h:owner.validate(coin,36500,series(23,288)).ok===false,
-            seven_day_coverage:owner.validate(coin,7,series(140,50)).ok===true,
-            exact_period_only:owner.exact_period_only===true,
-            no_covering_alias:owner.covering_period_alias===false,
-            no_order:owner.real_order===false
-          };
-          console.log(checks);
-          if(Object.values(checks).some(value=>!value))process.exit(1);
-          NODE
-
-      - name: Trader build contract
+      - name: Trader single-runtime contract
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          root=Path("public/agent_crypto_erith_ia/trader")
-          build=json.loads((root/"build.json").read_text(encoding="utf-8"))
-          html=(root/"trading-desk.html").read_text(encoding="utf-8")
-          line=(root/"line-chart-native.js").read_text(encoding="utf-8")
-          assert build["build"] in html
-          assert "chart-history-owner.js" in html
-          assert "AgentCryptoChartHistoryOwner" in line
-          assert "loadInterfaceBank" not in line
-          assert "bestBankResult" not in line
-          assert "covering_period_alias:false" in line
-          assert build["execution"]=="disabled"
-          assert build["real_orders"] is False
-          print({"build":build["build"],"owner":"chart-history-owner.js","status":"PASS"})
+
+          root=Path("public/agent_crypto_erith_ia")
+          trader=root/"trader"
+          html=(trader/"trading-desk.html").read_text(encoding="utf-8")
+          mirror=(trader/"trader-runtime-mirror.js").read_text(encoding="utf-8")
+          build=json.loads((trader/"build.json").read_text(encoding="utf-8"))
+          admin=(root/"administrator"/"index.html").read_text(encoding="utf-8")
+
+          forbidden=[
+            "line-chart-native.js",
+            "market-transpose.js",
+            "math-core-transpose.js",
+            "technical-reading-transpose.js",
+            "source-dock-native.js",
+            "market-fiche-native.js",
+            "pair-central-truth.js",
+          ]
+          checks={
+            "build": build["build"]=="40.6.601",
+            "administrator_frame": 'src="../administrator/index.html"' in html,
+            "mirror_loaded": 'src="./trader-runtime-mirror.js"' in html,
+            "legacy_runtime_not_loaded": all(name not in html for name in forbidden),
+            "market_zone_filter": "#market-zone" in mirror,
+            "presentation_only": "filtered_presentation_only:true" in mirror,
+            "no_duplicate_chart": "duplicated_chart_owner:false" in mirror,
+            "no_duplicate_market": "duplicated_market_owner:false" in mirror,
+            "read_only": build["execution"]=="disabled" and build["real_orders"] is False,
+            "admin_graph_present": 'id="analyste"' in admin and 'id="mainChart"' in admin,
+            "admin_market_present": 'id="market-workspace"' in admin,
+            "admin_math_present": 'id="math"' in admin,
+            "admin_detail_present": 'id="detailPanel"' in admin,
+          }
+          print(json.dumps(checks,indent=2,ensure_ascii=False))
+          if not all(checks.values()):
+              raise SystemExit("Trader single-runtime contract failed")
+          PY
+
+      - name: No parallel Trader owners in entrypoint
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html=Path("public/agent_crypto_erith_ia/trader/trading-desk.html").read_text(encoding="utf-8")
+          scripts=[line.strip() for line in html.splitlines() if "<script" in line]
+          print("\n".join(scripts))
+          assert len(scripts)==1, scripts
+          assert "trader-runtime-mirror.js" in scripts[0]
           PY

@@ -1,67 +1,66 @@
-# ERITH.IA Trading Desk — 40.6.600
+# ERITH.IA Trading Desk — 40.6.601
 
-## CANONICAL CHART OWNER EXTRACTION
+## INTERFACE RUNTIME MIRROR
 
-40.6.599 est rejetée terrain.
+40.6.600 est rejetée comme architecture finale.
 
-La cause n'était pas un simple cache manquant : depuis 40.6.589, le Trader possédait son propre moteur Ligne (fetch, périodes, cache, validation et rendu). 40.6.599 lisait le stockage brut de l'Interface mais ne réutilisait pas son contrat d'intégrité ; une série d'environ 24 h pouvait donc être affichée sous le bouton Max.
+Le diagnostic complet montre que le Graphique de l'Interface n'est pas un simple lecteur de cache exportable : il appartient au runtime vivant `administrator/app.js`, avec son état, ses périodes, sa validation, son rendu Chart.js, ses refreshs et ses propriétaires additionnels.
 
-## Correction
+Depuis 40.6.589, le Trader reconstruisait progressivement ses propres propriétaires. Cette branche est arrêtée.
 
-Le propriétaire historique est maintenant extrait dans :
+## Décision 40.6.601
 
-`administrator/js/chart-history-owner.js`
+Le Trader monte directement :
 
-Le nom du fichier ne contient aucun numéro de build.
+`../administrator/index.html`
 
-Il reprend la lignée du Graphique Administrator :
+dans une frame same-origin, puis `trader-runtime-mirror.js` applique uniquement un filtre de présentation.
 
-- périodes : 24h / 7j / 30j / 60j / 90j / 1a / Max ;
-- cache exact par actif + devise + période + famille de source ;
-- mêmes seuils minimum de points et de couverture ;
-- validation chronologique et fraîcheur ;
-- même stockage canonique : `agent_crypto_storage_relief_40278 / payloads` ;
-- clé historique : `agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50` ;
-- EUR : Binance sur les actifs canoniques supportés, CoinGecko sinon ;
-- USD : CoinGecko USD natif et cache USD isolé.
+Le Trader utilise donc réellement :
 
-`trader/line-chart-native.js` ne possède plus de History Bank ni de fallback « période couvrante ». Il reste l'adaptateur visuel du Trader : canvas, tooltip, Volume et pont New Listings.
+- le même `administrator/app.js` ;
+- le même Graphique ;
+- le même Market ;
+- la même Lecture Technique ;
+- le même Math Core ;
+- les mêmes Bougies ;
+- la même Profondeur ;
+- la même architecture EUR/USD ;
+- les mêmes caches localStorage / IndexedDB ;
+- le même Bridge / transport OKX ;
+- les mêmes règles réseau et Data Truth.
 
-## Règle de période
+Aucune copie du moteur Graphique, Market, Math ou Detail n'est chargée par `trading-desk.html`.
 
-Une période exacte valide existe : elle est affichée immédiatement.
+## Présentation Trader
 
-Elle est absente ou périmée : le propriétaire canonique peut l'actualiser auprès de sa source, puis la stocke dans le cache partagé.
+Le runtime reste Administrator, mais la page Trader masque seulement les grandes familles hors mission. Sont conservés :
 
-Une série plus courte ne peut jamais être renommée 7j, 30j ou Max.
-
-## Protégé
-
-- Administrator 40.6.571 : runtime non importé et non modifié ;
-- Market Core 38.15.11 ;
-- PAIR Central Truth ;
+- header de vérité ;
+- Marché ;
+- Graphique ;
+- Lecture Technique ;
+- Market ;
+- Math Core ;
 - Bougies ;
 - Profondeur ;
-- Lecture Technique ;
-- Source Dock ;
-- Fiche ;
-- Math Core ;
-- EUR / USD ;
-- READ ONLY · aucun ordre réel.
+- EUR/USD.
 
-## Test Firefox
+Le filtrage ne modifie aucun owner métier Administrator.
 
-BTC / USD / Ligne :
+## Fichiers Trader historiques
 
-24h → 7j → 30j → 60j → 90j → 1a → Max.
+Les anciens fichiers tels que `line-chart-native.js`, `market-transpose.js`, `math-core-transpose.js`, etc. restent dans le dépôt pour l'historique Git, mais **ne sont plus chargés par la page Trader**.
 
-À vérifier pour chaque période :
+## Diagnostic futur
 
-- bouton actif = période réellement couverte ;
-- dates début/fin cohérentes ;
-- aucune série 24 h affichée sous Max ;
-- PAIR reste SYNC ;
-- un cache exact est utilisé lorsqu'il existe ;
-- une actualisation réseau n'a lieu que si le propriétaire canonique en a besoin.
+Si un défaut apparaît :
 
-Puis EUR → USD, et BTC → ETH → SOL.
+1. reproduire la même action dans Administrator ;
+2. si Administrator et Trader échouent pareil : bug owner Administrator ;
+3. si Administrator fonctionne et Trader échoue : bug du filtre `trader-runtime-mirror.js` ;
+4. ne jamais recréer un owner Trader parallèle.
+
+## Sécurité
+
+READ ONLY. Aucun ordre réel. Aucune clé privée. Aucun nouveau transport.
