@@ -1,45 +1,59 @@
 {
-  "build": "40.6.579",
+  "build": "40.6.580",
   "surface": "trader",
-  "release": "TRADER · NATIVE MATH CORE TRANSPOSE",
-  "parent_trader_build": "40.6.578",
+  "release": "TRADER · FINAL FIDELITY CASCADE",
+  "parent_trader_build": "40.6.579",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_pending_terrain",
+  "status": "published_pending_terrain_406580",
   "terrain_verified": false,
-  "operator_validation": "PENDING",
+  "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
+    "menu": "minimal top menu + central PAIR + Graphique/Lecture/Market/Math navigation",
     "primary": "Administrator #analyste / champagne-clean-lens transposed",
     "chart": "existing market-microscope-candles owner",
-    "detail_panel": "native #detailPanel + #detailPanelToggle + #detailPanelRail",
+    "technical_reading": "single real portrait layer inside #detailPanel + complete S/R owner window",
     "depth": "existing okx-microstructure owner docked on #detailPanel",
-    "custom_42px_rail_removed": true,
-    "custom_depth_minimize_interception_removed": true
+    "market": "native Market Snapshot below Graph",
+    "math": "native Math Core V3 beside Market"
   },
   "technical_reading": {
-    "support_resistance": "existing candles technical_reading_bridge",
+    "single_portrait_owner": true,
+    "duplicate_panel_pseudo_background_removed": true,
     "time_modes": [
       "AUTO",
       "AUBE",
       "JOUR",
       "SOIR",
       "NUIT",
-      "LUNE"
+      "LUNE",
+      "RND"
     ],
-    "auto_schedule": {
-      "dawn": "05:30-09:00",
-      "day": "09:00-17:30",
-      "dusk": "17:30-21:30",
-      "night": "21:30-00:30",
-      "lunar": "00:30-05:30"
-    },
-    "random_library_count": 21,
     "local_private_image": true,
-    "private_indexeddb": "agent_crypto_private_visuals",
-    "private_slot": "technical-reading"
+    "initial_support_resistance_open": true,
+    "framing": "face-priority final crop"
+  },
+  "market": {
+    "source": "../data/crypto/latest.json + extended.json on demand",
+    "null_numeric_truth": true,
+    "default_limit": 50,
+    "extended_to_1000": true,
+    "browser_direct_coingecko": false
+  },
+  "math_core": {
+    "score_palette": {
+      "red": "<25 #FF5C78",
+      "orange": "25–54 #FF9F1C",
+      "turquoise": "55–74 #42E8E0",
+      "green": ">=75 #64EFA0",
+      "neutral": "pending only #8EA4BA"
+    },
+    "history_source": "AgentCryptoMarketMicroscope.snapshot().rows",
+    "null_numeric_truth": true,
+    "new_prediction_model": false
   },
   "protected": [
     "Administrator 40.6.571",
@@ -48,44 +62,15 @@
     "Depth owner",
     "EUR/USD architecture"
   ],
-  "next": [
-    "terrain proof full Trader skeleton",
-    "visual fidelity pass only if terrain requires"
-  ],
-  "market": {
-    "architecture": "native #marketWorkspaceGrid + #marketSnapshotPanel",
-    "source": "../data/crypto/latest.json + extended.json on demand",
-    "source_owner": "same GitHub Actions CoinGecko USD + BCE EUR archive as Administrator",
-    "default_limit": 50,
-    "extended_to_1000": true,
-    "search": true,
-    "filters": true,
-    "sort": true,
-    "essential_complete_columns": true,
-    "central_selection": true,
-    "graph_selection_bridge": true,
-    "depth_selection_bridge": true,
-    "browser_direct_coingecko": false
+  "stop_gate": {
+    "javascript_syntax": "PASS_LOCAL_PARSE_BEFORE_COMMIT",
+    "no_real_order": true,
+    "no_new_exchange_key": true,
+    "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
-  "math_core": {
-    "architecture": "native #math + #mathTopDock + Administrator dock controls",
-    "score_formula": "transposed from Administrator scoreCoin",
-    "history_source": "AgentCryptoMarketMicroscope.snapshot().rows",
-    "measures": [
-      "real series points",
-      "median step",
-      "completeness",
-      "window volatility",
-      "max drawdown",
-      "historical VaR 95% per step"
-    ],
-    "positions": [
-      "top",
-      "side",
-      "rail"
-    ],
-    "storage_key": "agent_crypto_erith_ia_v2_math_dock",
-    "new_prediction_model": false,
-    "real_order": false
-  }
+  "next": [
+    "Firefox terrain proof 40.6.580",
+    "freeze Trader skeleton if PASS",
+    "future OKX private READ ONLY only after explicit continuation"
+  ]
 }

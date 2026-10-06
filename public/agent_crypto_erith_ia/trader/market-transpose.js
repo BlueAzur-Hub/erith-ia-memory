@@ -1,15 +1,16 @@
 (function marketTranspose(){
   "use strict";
-  const BUILD="40.6.579",LATEST="../data/crypto/latest.json",EXTENDED="../data/crypto/extended.json";
+  const BUILD="40.6.580",LATEST="../data/crypto/latest.json",EXTENDED="../data/crypto/extended.json";
   const state={coins:[],extended:[],selectedId:"bitcoin",filter:"all",limit:50,columns:"essential",sort:"rank-asc",query:"",loaded:false,extendedLoaded:false};
   const stable=new Set(["USDT","USDC","DAI","FDUSD","USDE","USDS","PYUSD","TUSD","EURC"]);
   const $=id=>document.getElementById(id);
+  const finite=v=>{if(v===null||v===undefined||v==="")return null;const n=Number(v);return Number.isFinite(n)?n:null;};
   const displayCurrency=()=>String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"USD").toUpperCase()==="EUR"?"EUR":"USD";
   const allCoins=()=>state.coins.concat(state.extended).sort((a,b)=>Number(a.rank||99999)-Number(b.rank||99999));
   const selectedCoin=()=>allCoins().find(c=>c.id===state.selectedId)||state.coins[0]||null;
-  const priceOf=c=>displayCurrency()==="USD"?Number(c?.priceUsd):Number(c?.priceEur??c?.price);
-  const capOf=c=>displayCurrency()==="USD"?Number(c?.marketCapUsd):Number(c?.marketCap);
-  const volOf=c=>displayCurrency()==="USD"?Number(c?.volume24hUsd):Number(c?.volume24h);
+  const priceOf=c=>finite(displayCurrency()==="USD"?c?.priceUsd:(c?.priceEur??c?.price));
+  const capOf=c=>finite(displayCurrency()==="USD"?c?.marketCapUsd:c?.marketCap);
+  const volOf=c=>finite(displayCurrency()==="USD"?c?.volume24hUsd:c?.volume24h);
   const money=v=>Number.isFinite(Number(v))?new Intl.NumberFormat("fr-FR",{style:"currency",currency:displayCurrency(),maximumFractionDigits:Math.abs(Number(v))<1?6:2}).format(Number(v)):"—";
   const compact=v=>Number.isFinite(Number(v))?new Intl.NumberFormat("fr-FR",{style:"currency",currency:displayCurrency(),notation:"compact",maximumFractionDigits:2}).format(Number(v)):"—";
   const pct=v=>Number.isFinite(Number(v))?(Number(v)>=0?"+":"")+Number(v).toFixed(2)+" %":"—";
@@ -22,8 +23,8 @@
     const sorters={
       "rank-asc":(a,b)=>Number(a.rank||99999)-Number(b.rank||99999),
       "volume-desc":(a,b)=>(volOf(b)||-Infinity)-(volOf(a)||-Infinity),
-      "change24-desc":(a,b)=>(Number(b.change24h)||-Infinity)-(Number(a.change24h)||-Infinity),
-      "change24-asc":(a,b)=>(Number(a.change24h)||Infinity)-(Number(b.change24h)||Infinity),
+      "change24-desc":(a,b)=>(finite(b.change24h)??-Infinity)-(finite(a.change24h)??-Infinity),
+      "change24-asc":(a,b)=>(finite(a.change24h)??Infinity)-(finite(b.change24h)??Infinity),
       "ratio-desc":(a,b)=>(ratio(b)||-Infinity)-(ratio(a)||-Infinity)
     };
     rows.sort(sorters[state.sort]||sorters["rank-asc"]);return rows.slice(0,state.limit);
@@ -48,7 +49,7 @@
     window.dispatchEvent(new CustomEvent("agent-crypto:trader-selection-changed",{detail:{coin:Object.freeze({...coin}),source:reason}}));return true;
   }
   function rowMarkup(c){
-    const selected=c.id===state.selectedId,ch24=Number(c.change24h),ch7=Number(c.change7d);
+    const selected=c.id===state.selectedId,ch24=finite(c.change24h),ch7=finite(c.change7d);
     const tone=v=>Number.isFinite(v)?(v>0?"pos":v<0?"neg":"flat"):"";
     return '<tr data-market-id="'+esc(c.id)+'" class="'+(selected?"is-selected":"")+'">'+
       '<td><b>'+esc(c.rank??"—")+'</b></td>'+

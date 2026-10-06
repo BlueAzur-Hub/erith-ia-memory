@@ -32,8 +32,11 @@ button,a{font:inherit}
 .brand{display:flex;flex-direction:column;min-width:210px}
 .brand-kicker{font-size:9px;letter-spacing:.16em;color:var(--trader-cyan)}
 .brand strong{font-size:16px;margin-top:2px}
-.pair-bar,.menu-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.pair-bar{flex:1}
+.pair-bar,.menu-actions,.trader-menu-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pair-bar{flex:1 1 auto}
+.trader-menu-nav{gap:5px;flex:0 1 auto}
+.trader-menu-nav a{min-height:30px;padding:7px 9px;border:1px solid rgba(98,229,239,.18);border-radius:9px;background:rgba(98,229,239,.035);color:#cceff4;text-decoration:none;font-size:9px;font-weight:800}
+.trader-menu-nav a:hover,.trader-menu-nav a:focus-visible{border-color:rgba(98,229,239,.48);background:rgba(98,229,239,.09);outline:none}
 .menu-actions{justify-content:flex-end}
 .pair-chip,.mode-chip,.status-chip,.admin-link{
   border:1px solid var(--trader-line);
@@ -88,72 +91,66 @@ button,a{font:inherit}
   overflow:hidden!important;
 }
 
-/* Lecture Technique : on conserve les classes natives, seulement un minimum de hauteur Trader. */
-#detailPanel{
-  min-height:640px;
-  overflow:hidden;
+/* 40.6.580 — Lecture Technique finale : un seul portrait, contenu par son owner. */
+#detailPanel.trader-tech-final{
+  min-height:640px;overflow:hidden;isolation:isolate!important;
+  background:rgba(2,8,16,.12)!important;border-color:rgba(98,236,255,.24)!important;
 }
-#detailPanel .detail-panel-body{
-  min-height:0;
+#detailPanel.trader-tech-final::before,#detailPanel.trader-tech-final::after{
+  content:none!important;display:none!important;background:none!important;background-image:none!important;
 }
-#detailPanel .detail-project-visual{
-  cursor:pointer;
+#detailPanel.trader-tech-final .detail-project-visual.admin-tech-r3{
+  position:static!important;display:block!important;width:100%!important;height:150px!important;
+  min-height:150px!important;max-height:150px!important;flex:0 0 150px!important;margin:0 0 6px!important;
+  padding:0!important;overflow:visible!important;border:0!important;background:transparent!important;
+  box-shadow:none!important;cursor:pointer!important;z-index:0!important;
 }
-
-/* Le vrai rail Administrator doit être l'unique rail de détail. */
-#detailPanelRail{
-  min-height:640px;
+#detailPanel.trader-tech-final .detail-project-visual.admin-tech-r3>.admin-tech-portrait-r3{
+  position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+  min-width:100%!important;min-height:100%!important;max-width:none!important;max-height:none!important;
+  margin:0!important;padding:0!important;object-fit:cover!important;
+  object-position:var(--admin-tech-x,50%) var(--admin-tech-y,42%)!important;
+  opacity:1!important;filter:none!important;transform:none!important;z-index:0!important;
+  pointer-events:none!important;user-select:none!important;
 }
-
-/* Profondeur body-portal : aucune géométrie parallèle dans Trader. */
+#detailPanel.trader-tech-final>.detail-panel-toggle,
+#detailPanel.trader-tech-final>.atlas-tech-static-toolbar,
+#detailPanel.trader-tech-final>.detail-panel-body{position:relative!important;z-index:3!important}
+#detailPanel.trader-tech-final>.detail-panel-toggle{
+  background:rgba(2,8,17,.68)!important;border-color:rgba(98,236,255,.20)!important;backdrop-filter:none!important;
+}
+#detailPanel.trader-tech-final>.atlas-tech-static-toolbar{
+  display:flex!important;flex-wrap:wrap!important;gap:3px!important;padding:5px 7px!important;
+  background:rgba(2,8,17,.58)!important;border-bottom:1px solid rgba(255,216,135,.14)!important;
+}
+#detailPanel.trader-tech-final>.atlas-tech-static-toolbar button{
+  min-height:24px!important;padding:4px 6px!important;border-radius:7px!important;background:rgba(3,12,22,.68)!important;
+}
+#detailPanel.trader-tech-final>.atlas-tech-static-toolbar button.is-active{
+  color:#07141a!important;background:#8fefff!important;border-color:#c8f7ff!important;
+}
+#detailPanel.trader-tech-final>.detail-panel-body{
+  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;gap:5px!important;
+  min-height:0!important;padding:0 7px 8px!important;overflow-y:auto!important;overflow-x:hidden!important;background:transparent!important;
+}
+#detailPanel.trader-tech-final .detail-compact-strip{
+  position:relative!important;z-index:4!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;
+}
+#detailPanel.trader-tech-final .detail-compact-strip>span,
+#detailPanel.trader-tech-final #atlasCandlesTechnicalLevels>summary,
+#detailPanel.trader-tech-final #atlasCandlesTechnicalLevels .detail-grid>div,
+#detailPanel.trader-tech-final #atlasCandlesTechnicalLevels .why-box{
+  background:rgba(2,9,18,.68)!important;border-color:rgba(98,236,255,.18)!important;box-shadow:none!important;backdrop-filter:none!important;
+}
+#detailPanel.trader-tech-final #atlasCandlesTechnicalLevels{width:100%!important;flex:0 0 auto!important;background:rgba(3,11,22,.28)!important}
+#detailPanel.trader-tech-final #atlasCandlesTechnicalLevels[open]>.atlas-detail-subwindow-body{background:rgba(2,8,17,.24)!important}
+#detailPanel.trader-tech-final .detail-project-visual.admin-tech-r3>span{
+  position:absolute!important;left:10px!important;top:166px!important;bottom:auto!important;z-index:4!important;
+  max-width:calc(100% - 20px)!important;background:rgba(2,8,17,.55)!important;
+}
+#detailPanel.trader-tech-final :is(h2,h3,h4,b,strong,span,small,p,button,summary,em){text-shadow:0 1px 2px rgba(0,0,0,.94)!important}
+#detailPanelRail{min-height:640px}
 #atlasOkxMicrostructure{z-index:2400}
-
-/* Bas de page provisoire : Market + Math seront transposés ensuite. */
-.surface,.trader-footer{
-  border:1px solid var(--trader-line);
-  background:linear-gradient(180deg,var(--trader-panel),rgba(6,18,27,.92));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 14px 38px rgba(0,0,0,.16);
-}
-.surface{border-radius:13px;min-width:0;overflow:hidden}
-.surface-head{
-  min-height:58px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:10px 13px;
-  border-bottom:1px solid var(--trader-line);
-}
-.surface-head h2{margin:0;font-size:15px}
-.surface-head .eyebrow{margin:0 0 4px;font-size:8px;letter-spacing:.16em;color:var(--trader-cyan)}
-.owner-state{font-size:9px;color:var(--trader-muted)}
-.secondary-grid{
-  margin-top:10px;
-  display:grid;
-  grid-template-columns:minmax(0,3fr) minmax(300px,.92fr);
-  gap:10px;
-  align-items:start;
-}
-.market-surface{min-height:360px}
-.math-surface{min-height:300px}
-.surface-placeholder{
-  margin:12px;
-  min-height:265px;
-  padding:18px;
-  border:1px dashed rgba(115,213,232,.24);
-  border-radius:11px;
-  background:rgba(0,0,0,.10);
-}
-.surface-placeholder strong{font-size:12px}
-.surface-placeholder p,.math-preview p{font-size:11px;line-height:1.45;color:var(--trader-muted);margin:7px 0 0}
-.math-preview{display:flex;align-items:center;gap:16px;padding:20px 16px}
-.score-orb{
-  width:82px;height:82px;border-radius:50%;
-  display:grid;place-items:center;
-  border:1px solid rgba(255,212,124,.42);
-  box-shadow:inset 0 0 0 8px rgba(255,212,124,.04);
-  color:var(--trader-amber);font-size:25px;font-weight:800;
-}
 
 /* Commandes Trader futures : inchangées et toujours désactivées. */
 .trader-orbs-left,.trader-orbs-right{
@@ -178,7 +175,9 @@ button,a{font:inherit}
 .trade-orb.kill{width:88px;height:88px;border-color:rgba(255,86,86,.50);color:#ff9a96}
 
 .trader-footer{
-  margin-top:10px;min-height:36px;border-radius:10px;padding:8px 12px;
+  margin-top:10px;min-height:36px;border:1px solid var(--trader-line);border-radius:10px;padding:8px 12px;
+  background:linear-gradient(180deg,var(--trader-panel),rgba(6,18,27,.92));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 14px 38px rgba(0,0,0,.16);
   display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
   color:var(--trader-muted);font-size:9px;
 }
@@ -201,8 +200,12 @@ button,a{font:inherit}
 .trader-market-workspace #marketRows tr[data-market-id]{cursor:pointer}
 .trader-market-workspace #marketRows tr[data-market-id].is-selected{
   outline:1px solid rgba(255,214,122,.72);outline-offset:-1px;
-  background:linear-gradient(90deg,rgba(255,214,122,.11),rgba(98,236,255,.035))
+  background:linear-gradient(90deg,rgba(255,159,28,.10),rgba(66,232,224,.035))
 }
+.trader-market-workspace #marketRows tr[data-market-id]:hover{background:rgba(66,232,224,.035)}
+.trader-market-workspace #marketRows .pos{color:#64efa0!important;font-weight:850}
+.trader-market-workspace #marketRows .neg{color:#ff5c78!important;font-weight:850}
+.trader-market-workspace #marketRows .flat{color:#42e8e0!important}
 .trader-market-identity{display:flex;align-items:center;gap:9px;min-width:0}
 .trader-market-identity img{width:24px;height:24px;border-radius:50%;object-fit:cover;flex:0 0 auto}
 .trader-market-identity span{display:grid;gap:2px;min-width:0}
@@ -237,3 +240,17 @@ button,a{font:inherit}
 .trader-market-workspace #math[data-math-dock="rail"] .atlas-math-rail-trigger{display:grid!important}
 #mathTopDock:not([hidden]){margin:10px 0}
 #mathTopDock #math{width:100%}
+
+/* 40.6.580 — Math Core canonical score palette. */
+.trader-market-workspace #math{min-width:0;background:linear-gradient(180deg,rgba(5,17,29,.96),rgba(4,13,24,.94))!important;border-color:color-mix(in srgb,var(--math-score-color,#42E8E0) 28%,rgba(255,255,255,.11))!important}
+.trader-market-workspace #math[data-math-score-band="red"]{--math-score-color:#FF5C78}
+.trader-market-workspace #math[data-math-score-band="orange"]{--math-score-color:#FF9F1C}
+.trader-market-workspace #math[data-math-score-band="turquoise"]{--math-score-color:#42E8E0}
+.trader-market-workspace #math[data-math-score-band="green"]{--math-score-color:#64EFA0}
+.trader-market-workspace #math .atlas-human-verdict,
+.trader-market-workspace #math .atlas-summary-grid>div,
+.trader-market-workspace #math .atlas-tech-details,
+.trader-market-workspace #math .atlas-verdict{background:rgba(3,12,23,.72)!important;border-color:color-mix(in srgb,var(--math-score-color,#42E8E0) 24%,rgba(255,255,255,.08))!important}
+.trader-market-workspace #math .atlas-summary-grid>div b,
+.trader-market-workspace #math #atlasMathVerdict b{color:var(--math-score-color,#42E8E0)!important}
+@media(max-width:1120px){.trader-menu-nav{order:3;flex-basis:100%;justify-content:flex-start}}

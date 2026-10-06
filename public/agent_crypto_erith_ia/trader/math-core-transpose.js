@@ -1,10 +1,10 @@
 (function mathCoreTranspose(){
   "use strict";
-  const BUILD="40.6.579";
+  const BUILD="40.6.580";
   const KEY="agent_crypto_erith_ia_v2_math_dock";
   const $=id=>document.getElementById(id);
   const clamp=(a,b,v)=>Math.max(a,Math.min(b,v));
-  const finite=v=>Number.isFinite(Number(v))?Number(v):null;
+  const finite=v=>{if(v===null||v===undefined||v==="")return null;const n=Number(v);return Number.isFinite(n)?n:null;};
   const selected=()=>globalThis.AgentCryptoTraderMarket?.selected?.()||globalThis.getSelectedCoin?.()||null;
   const rows=()=>globalThis.AgentCryptoMarketMicroscope?.snapshot?.()?.rows||[];
   function scoreCoin(c){
@@ -26,6 +26,15 @@
     let label=score<=40?"Données fragiles":score<=55?"Lecture prudente":score<=65?"Mouvement modéré":score<=75?"Mouvement marqué":"Volatilité élevée";
     label+=" · public";
     return{score,label,parts,penalty};
+  }
+  function scoreBand(score){
+    if(score===null||score===undefined||score==="")return{id:"neutral",color:"#8EA4BA",label:"En attente"};
+    const value=Number(score);
+    if(!Number.isFinite(value))return{id:"neutral",color:"#8EA4BA",label:"Analyse suspendue"};
+    if(value<25)return{id:"red",color:"#FF5C78",label:"Données insuffisantes"};
+    if(value<55)return{id:"orange",color:"#FF9F1C",label:"Lecture prudente"};
+    if(value<75)return{id:"turquoise",color:"#42E8E0",label:"Lecture structurée"};
+    return{id:"green",color:"#64EFA0",label:"Lecture étayée"};
   }
   function median(values){
     const a=values.map(Number).filter(Number.isFinite).sort((x,y)=>x-y);if(!a.length)return null;
@@ -64,12 +73,13 @@
   const pct=(v,d=2)=>v===null||!Number.isFinite(Number(v))?"Indisponible":Number(v).toFixed(d)+" %";
   const stepLabel=ms=>!Number.isFinite(Number(ms))?"inconnu":ms<3600000?Math.round(ms/60000)+" min":Number(ms/3600000).toFixed(1)+" h";
   function render(){
-    const c=selected(),s=scoreCoin(c),m=metrics(),symbol=String(c?.symbol||"—").toUpperCase();
-    const ring=$("scoreRing"),value=$("scoreValue"),label=$("scoreLabel");
-    if(ring)ring.style.setProperty("--score",String(s.score??0));
-    if(value)value.textContent=s.score??"—";
-    if(label)label.textContent=s.label;
-    const rail=$("atlasMathRailScore");if(rail)rail.textContent=s.score??"—";
+    const c=selected(),s=scoreCoin(c),m=metrics(),symbol=String(c?.symbol||"—").toUpperCase(),band=scoreBand(s.score);
+    const shell=$("math"),ring=$("scoreRing"),value=$("scoreValue"),label=$("scoreLabel");
+    if(shell){shell.style.setProperty("--math-score-color",band.color);shell.dataset.mathScoreBand=band.id;}
+    if(ring){ring.style.setProperty("--score",String(s.score??0));ring.style.setProperty("--math-score-color",band.color);}
+    if(value){value.textContent=s.score??"—";value.style.setProperty("--math-score-color",band.color);}
+    if(label){label.textContent=band.label+(s.score===null?"":" · public");label.style.setProperty("--math-score-color",band.color);}
+    const rail=$("atlasMathRailScore");if(rail){rail.textContent=s.score??"—";rail.style.color=band.color;}
     const context=$("atlasMathContextLine");
     if(context)context.textContent=c?symbol+" · "+(c.name||symbol)+" · CoinGecko public · Bougies "+stepLabel(m.step)+" · "+m.points+" pts":"Contexte Market : en attente";
     const verdict=$("atlasHumanVerdict");
@@ -130,6 +140,6 @@
     bind();let pos="side";try{pos=localStorage.getItem(KEY)||"side";}catch(_){}
     setPosition(pos,false);render();
   }
-  globalThis.AgentCryptoTraderMathCore=Object.freeze({build:BUILD,start,render,score:()=>scoreCoin(selected()),metrics,setPosition,snapshot:()=>Object.freeze({build:BUILD,selected:selected()?.id||null,score:scoreCoin(selected()).score,metrics:metrics(),dock:$("math")?.dataset?.mathDock||"side"}),formula_owner:"ADMINISTRATOR_SCORECOIN_TRANSPOSE",history_owner:"AGENT_CRYPTO_MARKET_MICROSCOPE_ROWS",prediction:false,real_order:false});
+  globalThis.AgentCryptoTraderMathCore=Object.freeze({build:BUILD,start,render,score:()=>scoreCoin(selected()),scoreBand,metrics,setPosition,snapshot:()=>Object.freeze({build:BUILD,selected:selected()?.id||null,score:scoreCoin(selected()).score,band:scoreBand(scoreCoin(selected()).score).id,metrics:metrics(),dock:$("math")?.dataset?.mathDock||"side"}),formula_owner:"ADMINISTRATOR_SCORECOIN_TRANSPOSE",score_palette_owner:"ADMINISTRATOR_ATLAS_MATH_SCORE_BAND",history_owner:"AGENT_CRYPTO_MARKET_MICROSCOPE_ROWS",prediction:false,real_order:false});
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();

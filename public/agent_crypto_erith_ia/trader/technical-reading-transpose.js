@@ -1,11 +1,11 @@
 (() => {
   "use strict";
 
-  /* 40.6.577 — transposition fidèle des options Lecture Technique Administrator.
+  /* 40.6.580 — transposition fidèle des options Lecture Technique Administrator.
      Même bibliothèque, mêmes périodes, même stockage privé local.
      Adaptation unique : chemins assets depuis /trader/. */
 
-  const BUILD = "40.6.577";
+  const BUILD = "40.6.580";
   const BASE = "../administrator/assets/visual/technical-reading/";
   const DEFAULT_IMAGE = "../administrator/assets/visual/admin-technical-reading-default.png";
   const DB_NAME = "agent_crypto_private_visuals";
@@ -46,7 +46,7 @@
   ].map(Object.freeze));
 
   const FRAMING = Object.freeze({
-    dawn:{x:55,y:30}, day:{x:55,y:28}, dusk:{x:52,y:30}, night:{x:50,y:34}, lunar:{x:50,y:22}
+    dawn:{x:52,y:40}, day:{x:52,y:42}, dusk:{x:52,y:42}, night:{x:50,y:42}, lunar:{x:50,y:38}
   });
 
   let mode = "auto";
@@ -94,7 +94,7 @@
           blob: file,
           mime: file.type,
           name: file.name,
-          framing:{x:50,y:12},
+          framing:{x:50,y:35},
           updated_at:new Date().toISOString()
         });
       });
@@ -176,7 +176,7 @@
     const bar = panel()?.querySelector(".atlas-tech-static-toolbar");
     if (!bar) return;
     bar.dataset.techStatus = label;
-    bar.title = "Lecture technique · " + label;
+    bar.setAttribute("aria-label", "Lecture technique · " + label);
   }
 
   function revokeObjectUrl() {
@@ -201,7 +201,7 @@
     revokeObjectUrl();
     objectUrl = URL.createObjectURL(record.blob);
     img.src = objectUrl;
-    setFraming(record.framing || {x:50,y:12});
+    setFraming(record.framing || {x:50,y:35});
     privateOverride = true;
     panel().dataset.techPrivate = "1";
     status("Image privée locale");
@@ -277,7 +277,7 @@
       input.value = "";
       if (!file || !String(file.type || "").startsWith("image/")) return;
       const ok = await writePrivate(file).catch(() => false);
-      if (ok) applyPrivate({blob:file,framing:{x:50,y:12}});
+      if (ok) applyPrivate({blob:file,framing:{x:50,y:35}});
       syncButtons();
       schedule();
     });
@@ -299,7 +299,7 @@
         '<button type="button" data-tech-static-mode="dusk">SOIR</button>'+
         '<button type="button" data-tech-static-mode="night">NUIT</button>'+
         '<button type="button" data-tech-static-mode="lunar">LUNE</button>'+
-        '<button type="button" data-tech-random="1" title="Image aléatoire">RND</button>';
+        '<button type="button" data-tech-random="1" aria-label="Image aléatoire">RND</button>';
       h.before(bar);
       bar.addEventListener("click", async event => {
         const rnd = event.target.closest("[data-tech-random]");

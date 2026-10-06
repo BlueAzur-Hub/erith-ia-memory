@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <meta name="agent-crypto-surface" content="trader" />
-  <meta name="agent-crypto-build" content="40.6.579" />
+  <meta name="agent-crypto-build" content="40.6.580" />
   <meta name="agent-crypto-administrator-base" content="40.6.571" />
-  <title>ERITH.IA · Trading Desk — 40.6.579</title>
+  <title>ERITH.IA · Trading Desk — 40.6.580</title>
 
   <!-- Architecture visuelle existante Administrator : réutilisée, pas réinventée. -->
   <link rel="stylesheet" href="../administrator/style.css?v=40.6.571" />
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../administrator/admin-visual-assets.css?v=40.6.400" />
   <link rel="stylesheet" href="../administrator/admin-technical-reading-classic-opacity.css?v=40.6.571" />
   <link rel="stylesheet" href="../administrator/market-reading-depth.css?v=40.6.571" />
-  <link rel="stylesheet" href="./trading-desk.css?v=40.6.579" />
+  <link rel="stylesheet" href="./trading-desk.css?v=40.6.580" />
 </head>
 <body>
   <header class="trader-menu" aria-label="Menu Trader minimal">
@@ -32,6 +32,13 @@
       <span class="mode-chip muted">PERP séparé</span>
     </div>
 
+    <nav class="trader-menu-nav" aria-label="Navigation Trader">
+      <a href="#market-zone">Graphique</a>
+      <a href="#detailPanel">Lecture</a>
+      <a href="#marketSnapshotPanel">Market</a>
+      <a href="#math">Math Core</a>
+    </nav>
+
     <div class="menu-actions">
       <span class="status-chip">READ ONLY</span>
       <a class="admin-link" href="../administrator/index.html?view=advanced">Administrator</a>
@@ -40,7 +47,7 @@
 
   <main class="trader-main">
     <!--
-      40.6.579 : transposition du couple natif Administrator
+      40.6.580 : transposition du couple natif Administrator
       Graphique + Lecture Technique + rail natif.
       Profondeur conserve son owner existant et se docke sur #detailPanel.
     -->
@@ -57,7 +64,7 @@
           <div class="chart-shell trader-chart-shell" aria-label="Market Microscope Bougies"></div>
         </article>
 
-        <article class="panel glass detail-panel clean-lens-detail-panel" id="detailPanel">
+        <article class="panel glass detail-panel clean-lens-detail-panel trader-tech-final" id="detailPanel">
           <button class="section-head compact detail-panel-toggle" id="detailPanelToggle" type="button"
                   data-clean-lens-action="toggle" aria-expanded="true" aria-controls="detailPanelBody"
                   aria-label="Réduire ou afficher le détail actif">
@@ -202,18 +209,18 @@
   </div>
 
   <footer class="trader-footer">
-    <span>Trader 40.6.579 · NATIVE PRIMARY TRANSPOSE · PENDING OPÉRATEUR</span>
+    <span>Trader 40.6.580 · NATIVE PRIMARY TRANSPOSE · PENDING OPÉRATEUR</span>
     <span>Administrator 40.6.571 · Market Core 38.15.11</span>
     <span id="viewportProfile">viewport</span>
   </footer>
 
   <script src="../administrator/js/quote-currency-architecture-406497.js" defer></script>
   <script src="../administrator/js/okx-local-backend-transport.js" defer></script>
-  <script src="./technical-reading-transpose.js?v=40.6.579" defer></script>
-  <script src="./market-transpose.js?v=40.6.579" defer></script>
-  <script src="./math-core-transpose.js?v=40.6.579" defer></script>
+  <script src="./technical-reading-transpose.js?v=40.6.580" defer></script>
+  <script src="./market-transpose.js?v=40.6.580" defer></script>
+  <script src="./math-core-transpose.js?v=40.6.580" defer></script>
   <script src="../administrator/js/market-microscope-candles.js" defer></script>
   <script src="../administrator/js/okx-microstructure-406499.js" defer></script>
-  <script src="./trading-desk.js?v=40.6.579" defer></script>
+  <script src="./trading-desk.js?v=40.6.580" defer></script>
 </body>
 </html>

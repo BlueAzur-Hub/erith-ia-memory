@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.6.579";
+  const BUILD = "40.6.580";
   const ADMIN_BASE = "40.6.571";
   const DETAIL_KEY = "agent_crypto_erith_ia_clean_lens_detail_collapsed_v2";
   const profileNode = document.getElementById("viewportProfile");
@@ -119,16 +119,23 @@
     if (!levels) return;
     const asset = document.getElementById("detailCompactAsset");
     const price = document.getElementById("detailCompactPrice");
+    const priceLabel = price?.closest("span")?.querySelector("small");
     const period = document.getElementById("detailCompactChange");
+    const currency = String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "USD").toUpperCase() === "EUR" ? "EUR" : "USD";
     if (asset) asset.textContent = String(levels.instrument || "BTC-USDC").replace("-", " / ");
-    if (price && Number.isFinite(Number(levels.current))) {
-      price.textContent = Number(levels.current).toLocaleString("fr-FR", { maximumFractionDigits: 2 });
-    }
+    if (priceLabel) priceLabel.textContent = "Prix " + currency;
+    if (price && Number.isFinite(Number(levels.current))) price.textContent = Number(levels.current).toLocaleString("fr-FR", { maximumFractionDigits: 2 });
     if (period) period.textContent = String(levels.bar || "5m");
+    const host = document.getElementById("atlasCandlesTechnicalLevels");
+    if (host && !host.hidden && host.dataset.traderInitialOpen !== "1") {
+      host.dataset.traderInitialOpen = "1";
+      host.open = true;
+    }
   }
-
-  window.addEventListener("agent-crypto:candles-technical-levels", event => {
-    syncTechnicalSummary(event.detail);
+  window.addEventListener("agent-crypto:candles-technical-levels", event => syncTechnicalSummary(event.detail), { passive: true });
+  window.addEventListener("agent-crypto:quote-architecture-changed", () => {
+    const levels = globalThis.AgentCryptoMarketMicroscope?.technicalLevels?.();
+    if (levels) syncTechnicalSummary(levels);
   }, { passive: true });
 
   globalThis.AgentCryptoTraderFoundation = Object.freeze({
@@ -163,6 +170,7 @@
   const boot = () => {
     syncViewport();
     initNativeDetailPanel();
+    document.getElementById("detailPanel")?.classList.add("trader-tech-final");
     mountExistingCandlesOwner();
     mountExistingDepthOwner();
   };
