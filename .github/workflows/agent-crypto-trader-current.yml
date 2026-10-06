@@ -51,6 +51,8 @@ jobs:
           mirror=(trader/"trader-runtime-mirror.js").read_text(encoding="utf-8")
           build=json.loads((trader/"build.json").read_text(encoding="utf-8"))
           admin=(root/"administrator"/"index.html").read_text(encoding="utf-8")
+          admin_build=json.loads((root/"administrator"/"build.json").read_text(encoding="utf-8"))
+          current=str(build.get("build","")).strip()
 
           forbidden=[
             "line-chart-native.js",
@@ -62,7 +64,11 @@ jobs:
             "pair-central-truth.js",
           ]
           checks={
-            "build": build["build"]=="40.6.601",
+            "build_format": bool(current) and current.count(".")==2 and all(part.isdigit() for part in current.split(".")),
+            "entry_build_matches": current in html,
+            "mirror_build_matches": f'const BUILD="{current}"' in mirror,
+            "administrator_build_matches": str(admin_build.get("build","")).strip()==current,
+            "administrator_index_matches": current in admin,
             "administrator_frame": 'src="../administrator/index.html"' in html,
             "mirror_loaded": 'src="./trader-runtime-mirror.js"' in html,
             "legacy_runtime_not_loaded": all(name not in html for name in forbidden),
