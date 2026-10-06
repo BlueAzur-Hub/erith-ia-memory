@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD="40.6.590";
+  const BUILD="40.6.593";
   const PERIODS=Object.freeze([1,7,30,60,90,365,36500]);
   const LABELS=Object.freeze({1:"24h",7:"7j",30:"30j",60:"60j",90:"90j",365:"1a",36500:"Max"});
   const state={period:1,token:0,controller:null,rows:[],volumes:[],source:"",currency:"USD",coin:null,error:null,loading:false,volume:true,legend:true,analysis:true,lastLoadedAt:null,external:false,truth:"direct"};
@@ -199,14 +199,28 @@
   }
   function showTooltip(event){
     if(!lineMode())return;
-    const row=nearestAt(event.clientX),tip=$("traderLineTooltip"),canvas=$("traderMainChart");if(!row||!tip||!canvas)return;
-    const rect=canvas.getBoundingClientRect(),date=new Date(row[0]);
-    tip.innerHTML="<b>"+escapeHtml(formatPrice(row[1]))+"</b><small>"+escapeHtml(date.toLocaleString("fr-FR"))+"</small>";
-    tip.hidden=false;tip.setAttribute("aria-hidden","false");
-    const left=Math.max(8,Math.min(rect.width-210,event.clientX-rect.left+14)),top=Math.max(90,Math.min(rect.height-70,event.clientY-rect.top+14));
+    const row=nearestAt(event.clientX),tip=$("atlasChartTooltip"),canvas=$("traderMainChart"),coin=state.coin||selectedCoin();
+    if(!row||!tip||!canvas||!coin)return;
+    const rect=canvas.getBoundingClientRect(),date=new Date(row[0]),color=colorFor(coin);
+    const symbol=String(coin.symbol||"ACTIF").toUpperCase(),name=String(coin.name||symbol);
+    const ch=Number(coin.change24h),hasChange=Number.isFinite(ch),changeText=hasChange?((ch>0?"+":"")+ch.toFixed(2)+" %"):"—";
+    const changeClass=!hasChange?"is-missing":ch>0?"is-positive":ch<0?"is-negative":"is-neutral";
+    const image=coin.image?'<img src="'+escapeHtml(coin.image)+'" alt="" loading="lazy">':'<span class="atlas-chart-tooltip-fallback">'+escapeHtml(symbol.slice(0,3))+'</span>';
+    const title=(state.external?"PRIX EXCHANGE":"PRIX SNAPSHOT COINGECKO")+" · VARIATION 24h";
+    tip.innerHTML=
+      '<div class="atlas-chart-tooltip-date">'+escapeHtml(title)+'</div>'+
+      '<div class="atlas-chart-tooltip-row" style="--atlas-series-color:'+escapeHtml(color)+';--atlas-series-gradient:linear-gradient(90deg,'+escapeHtml(color)+','+escapeHtml(color)+')">'+
+        '<div class="atlas-chart-tooltip-identity">'+image+'<span><b>'+escapeHtml(symbol)+'</b><small>'+escapeHtml(name)+'</small></span></div>'+
+        '<span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span>'+
+        '<div class="atlas-chart-tooltip-values"><strong>'+escapeHtml(formatPrice(row[1]))+'</strong><small>'+escapeHtml(date.toLocaleString("fr-FR"))+'</small><span class="atlas-chart-tooltip-change '+changeClass+'">'+escapeHtml(changeText)+'</span></div>'+
+      '</div>';
+    tip.hidden=false;tip.setAttribute("aria-hidden","false");tip.dataset.displayCurrency=state.currency;
+    const width=Math.min(344,Math.max(250,rect.width-20));
+    const left=Math.max(8,Math.min(rect.width-width-8,event.clientX-rect.left+18));
+    const top=Math.max(110,Math.min(rect.height-118,event.clientY-rect.top+18));
     tip.style.left=left+"px";tip.style.top=top+"px";
   }
-  function hideTooltip(){const tip=$("traderLineTooltip");if(tip){tip.hidden=true;tip.setAttribute("aria-hidden","true");}}
+  function hideTooltip(){const tip=$("atlasChartTooltip");if(tip){tip.hidden=true;tip.setAttribute("aria-hidden","true");}}
   async function load(reason="operator"){
     if(!lineMode()&&reason!=="selection")return false;
     const coin=selectedCoin();if(!coin)return false;
