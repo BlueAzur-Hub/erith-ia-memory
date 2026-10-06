@@ -1,27 +1,22 @@
-# ERITH.IA Trading Desk — 40.6.581
+# ERITH.IA Trading Desk — 40.6.582
 
 ## Statut
-Publié sur `main` via **PR #146**. Interface fidelity pass du Trader ; même application Agent-Crypto, même page `trading-desk.html`, toujours READ ONLY.
+Menu-only fidelity pass. **Aucune reconstruction du menu Trader.**
 
-## Ce que 40.6.581 corrige
-- **Menu haut** : reprend la grammaire visuelle Administrator mais reste limité au Trader. Aucun fil Aether, Atlas, Oracle, Veille, Sources, Decision Board ou Command Center.
-- **Navigation** : Marché · Graphique · Lecture · Profondeur · Math Core, avec PAIR / SPOT / PERP / READ ONLY / retour Administrator.
-- **Graphique** : remet le cockpit visuel autour du propriétaire Bougies existant : Marché Crypto, Afficher (Volume / Légende / Analyse / Fiche / Profondeur), Affichage EUR/USD ; le propriétaire Bougies conserve et injecte ses contrôles MICROSCOPE Ligne/Bougies et ses indicateurs/intervalles.
-- **Fiche Market** : restitution d’une Fiche Crypto flottante/latérale liée à l’actif sélectionné dans Market, avec prix, source, 24 h, 7 j, 30 j si disponible, vol/cap, capitalisation, volume 24 h, score Math disponible et décision de consultation.
-- **Market et Math Core** : structures 40.6.580 conservées ; palette Math rouge/orange/turquoise/vert inchangée.
-- **Lecture Technique / Profondeur** : propriétaires existants conservés ; aucun changement métier.
+## Contrat 40.6.582
+Le haut du Trader transpose directement le menu Administrator :
+- mêmes classes natives `hero`, `hero-top`, `brand-account-row`, `brandline`, `status-stack`, `atlas-v2-interface-bar`, `atlas-v2-nav`, `atlas-quick-dock`, `atlas-quick-link`;
+- même marque `ERITH.IA · MARKETS OBSERVATORY / Agent-Crypto @erith.IA`;
+- bouton **Administration** utilisant le composant natif `atlas-view-button-admin`;
+- barre essentielle limitée aux entrées existantes utiles au Trader : **Marché** et **Graphique**;
+- aucun bouton Trader inventé dans le menu : pas de Lecture, Profondeur ou Math Core ajoutés au header;
+- aucun Aether, Atlas, Oracle, Sources, Decision, Analyse, Système, Projets ou Command Center.
 
-## Protections
-Administrator **40.6.571**, Market Core **38.15.11**, Candles, Profondeur, Lecture Technique, Math Core et architecture EUR/USD restent inchangés.
+## Hors chantier
+Lecture Technique, Profondeur, Market Snapshot, Fiche Market, Math Core, Bougies et moteurs de données ne sont pas modifiés par ce passage.
 
-Aucun ordre réel. Aucune clé privée. Aucun thread Aether.
+## Références protégées
+Administrator 40.6.571 · Market Core 38.15.11 · READ ONLY · aucun ordre réel.
 
-## Livraison
-- PR : **#146**
-- Merge commit : `380d1b0104099041795930829d012dff318551b2`
-- Syntaxe `trader-fidelity.js` : **PASS Node --check**
-- GitHub Pages : **SUCCESS** · run `37448207439`
-- ZIP complet Trader : `downloads/AGENT_CRYPTO_TRADER_40.6.581_INTERFACE_FIDELITY_FULL.zip` · 96 556 octets
-- Terrain Firefox : **PENDING CHRISTOPHE**
-
-Après PASS terrain : geler le squelette Trader avant toute phase OKX privé READ ONLY.
+## Terrain
+Firefox : **PENDING CHRISTOPHE**.
