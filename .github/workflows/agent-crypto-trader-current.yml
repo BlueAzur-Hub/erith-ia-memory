@@ -9,6 +9,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
+      - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
       - ".github/workflows/agent-crypto-trader-current.yml"
   push:
     branches: [main]
@@ -19,6 +20,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
+      - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
       - ".github/workflows/agent-crypto-trader-current.yml"
 
 permissions:
@@ -38,6 +40,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
           node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node --check public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js
 
       - name: Trader single-runtime contract
         run: |
@@ -52,6 +55,7 @@ jobs:
           build=json.loads((trader/"build.json").read_text(encoding="utf-8"))
           admin=(root/"administrator"/"index.html").read_text(encoding="utf-8")
           admin_build=json.loads((root/"administrator"/"build.json").read_text(encoding="utf-8"))
+          cockpit=(root/"administrator"/"js"/"trader-cockpit-fit.js").read_text(encoding="utf-8")
           current=str(build.get("build","")).strip()
 
           forbidden=[
@@ -82,6 +86,11 @@ jobs:
             "native_admin_arrow": 'id="traderSurfaceAdminLink"' in admin and '>↗</a>' in admin,
             "native_header_first_paint": 'id="agentCryptoTraderFirstPaint"' in admin,
             "no_late_header_injection": "traderRuntimeBadge" not in mirror and "traderRuntimeAdminLink" not in mirror,
+            "stable_cockpit_owner_loaded": 'js/trader-cockpit-fit.js' in admin,
+            "target_top_native_dom": 'id="targetTop5Cycle"' in admin and 'id="top5Track"' in admin,
+            "cockpit_no_market_flow_owner": "marketFlowCycle" not in cockpit and "tickerTrack" not in cockpit,
+            "cockpit_no_dom_move": all(token not in cockpit for token in ["appendChild(", "insertBefore(", "prepend(", "append("]),
+            "cockpit_no_timer_observer_storage_network": all(token not in cockpit for token in ["setInterval(", "setTimeout(", "MutationObserver", "localStorage", "sessionStorage", "fetch("]),
             "admin_graph_present": 'id="analyste"' in admin and 'id="mainChart"' in admin,
             "admin_market_present": 'id="market-workspace"' in admin,
             "admin_math_present": 'id="math"' in admin,
