@@ -1,4 +1,4 @@
-/* Agent-Crypto — 40.6.569 MARKET MICROSCOPE · CHECKPOINT CLEANUP
+/* Agent-Crypto — 40.6.570 MARKET MICROSCOPE · CHECKPOINT INHERITED · NO LOGIC CHANGE
    Historical lineage: core 40.6.498 · New Listings reuse 40.6.529.
    40.6.529 additive extension: New Listing external context can reuse this exact chart shell
    for Ligne + Bougies without mutating Market Core/state.coins.
@@ -6,7 +6,7 @@
    Fetch occurs only on explicit Bougies / interval / refresh / external-asset load. No recurring timer. */
 (()=>{
   "use strict";
-  const BUILD="40.6.569";
+  const BUILD="40.6.570";
   const HISTORICAL_CORE_BUILD="40.6.498";
   const EXTENSION_BUILD="40.6.529";
   const ROOT="atlasMarketMicroscope";
