@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const BUILD="40.6.605";
+const BUILD="40.6.606";
 const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
@@ -32,7 +32,7 @@ function ensureNavigation(doc){
   if(oracle){oracle.dataset.traderNav="oracle";oracle.classList.add("trader-runtime-nav-link");}
   if(sources){
     sources.dataset.traderNav="sources";
-    sources.dataset.atlasEssentialTarget="source-dock";
+    sources.removeAttribute("data-atlas-essential-target");
     sources.classList.add("trader-runtime-nav-link");
     sources.setAttribute("aria-controls","source-dock");
     sources.setAttribute("aria-label","Ouvrir les Sources du Trader dans la Lecture technique");
@@ -116,10 +116,8 @@ function openTraderSources(doc){
     try{toggle.click();}catch(_){}
   }
   const sourceDock=doc.getElementById("source-dock");
-  const sourceState=doc.getElementById("detailSourcesWindow");
   if(isDetails(sourceDock))sourceDock.open=true;
-  if(isDetails(sourceState))sourceState.open=true;
-  const target=sourceDock||sourceState||doc.getElementById("detailPanel");
+  const target=sourceDock||doc.getElementById("detailPanel");
   if(isElement(target)){
     try{target.scrollIntoView({block:"center",behavior:"smooth"});}catch(_){try{target.scrollIntoView();}catch(__){}}
     return true;
@@ -273,6 +271,7 @@ function mount(){
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential .trader-runtime-aether-link{display:inline-flex!important;align-items:center!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential [data-trader-nav='oracle']{display:inline-flex!important;align-items:center!important}",
       "body.atlas-trader-runtime-mirror #atlasAetherRibbon{display:none!important}",
+      "body.atlas-trader-runtime-mirror #livecheck{display:none!important;min-height:0!important;height:0!important;margin:0!important;padding:0!important;border:0!important;overflow:hidden!important}",
       "body.atlas-trader-runtime-mirror.trader-route-decision main.shell > :not(#accueil):not([data-trader-route-path='decision']){display:none!important}",
       "body.atlas-trader-runtime-mirror.trader-route-decision [data-trader-route-path='decision']{display:block!important}",
       "body.atlas-trader-runtime-mirror.trader-route-decision [data-trader-route-path='decision'] > :not([data-trader-route-path='decision']):not([data-trader-route-surface='decision']){display:none!important}",
@@ -348,7 +347,7 @@ function mount(){
   }catch(_){}
 
   if(status){
-    status.textContent="Interface Administrator montée · navigation Trader réparée";
+    status.textContent="Interface Administrator montée · Sources stables · ruban vide supprimé";
     status.dataset.state="ready";
   }
   frame.dataset.ready="true";
@@ -372,7 +371,7 @@ globalThis.AgentCryptoTraderRuntimeMirror=Object.freeze({
   context_snapshot:()=>{try{const win=frame.contentWindow,doc=frame.contentDocument||win?.document;return win&&doc?contextSnapshot(win,doc):null;}catch(_){return null;}},
   navigation_audit:()=>{try{const doc=frame.contentDocument||frame.contentWindow?.document;return doc?navigationAudit(doc):null;}catch(_){return null;}},
   route_fidelity_read_only:true,
-  sources_route_owner:"existing Source Dock + Sources status window",
+  sources_route_owner:"existing Source Dock",
   decision_route_owner:"existing atlasDecisionBoardDetails",
   oracle_nav_restored:true,
   aether_toolbar_clearance:true,

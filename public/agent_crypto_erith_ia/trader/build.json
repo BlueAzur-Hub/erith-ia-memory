@@ -1,12 +1,12 @@
 {
-  "build": "40.6.605",
+  "build": "40.6.606",
   "surface": "trader",
-  "release": "TRADER · NAVIGATION REPAIR",
-  "parent_trader_build": "40.6.604",
-  "administrator_base": "40.6.605",
+  "release": "TRADER · SOURCES STABILITY + EMPTY RIBBON REMOVAL",
+  "parent_trader_build": "40.6.605",
+  "administrator_base": "40.6.606",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406605_pending_firefox_terrain",
+  "status": "published_406606_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -125,7 +125,7 @@
     "pr": "PENDING",
     "merge_commit": "PENDING",
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.605_NAVIGATION_REPAIR.zip",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.606_SOURCES_STABLE.zip",
     "javascript_syntax": "PENDING"
   },
   "stop_gate": {
@@ -136,12 +136,10 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.605.",
-    "Verify Oracle is visible in the top Trader menu.",
-    "Verify Sources opens the existing Source Dock / data state inside Lecture Technique.",
-    "Verify Décision exposes the existing Decision Board without the full Atlas UI.",
-    "Verify Aether opens below the Graphique toolbar and no longer hides its menu.",
-    "Recheck Marché, Graphique, Target Top, Market Flow and return path."
+    "Firefox Ctrl+F5 on Trader 40.6.606.",
+    "Click Sources once: Source Dock must stay open until the operator closes it or changes route.",
+    "Verify the empty line under the Trader navigation is gone.",
+    "Recheck Oracle, Decision, Aether, Target Top and Market Flow."
   ],
   "navigation_406602": {
     "enabled": true,
@@ -236,5 +234,30 @@
     "recurring_timer": false,
     "mutation_observer": false,
     "real_order": false
+  },
+  "sources_stability_406606": {
+    "enabled": true,
+    "scope": "TRADER_PRESENTATION_ONLY",
+    "source_button_native_route_attribute_removed": true,
+    "source_owner": "existing #source-dock",
+    "source_owner_recreated": false,
+    "source_open_count_per_click": 1,
+    "detail_sources_window_auto_open": false,
+    "accordion_conflict_removed": true,
+    "detail_panel_existing_toggle_reused": true,
+    "market_core_modified": false,
+    "source_data_modified": false,
+    "network_owner_modified": false,
+    "recurring_timer": false,
+    "mutation_observer": false
+  },
+  "empty_ribbon_removal_406606": {
+    "enabled": true,
+    "trader_only": true,
+    "hidden_container": "#livecheck",
+    "reason": "Aether ribbon was hidden in 40.6.603 but its empty command-bar shell remained",
+    "aether_module_modified": false,
+    "aether_panel_modified": false,
+    "administrator_livecheck_modified": false
   }
 }
