@@ -111,3 +111,32 @@ jobs:
           assert len(scripts)==1, scripts
           assert "trader-runtime-mirror.js" in scripts[0]
           PY
+
+
+      - name: Package compact Trader patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, zipfile
+          root=Path("public/agent_crypto_erith_ia")
+          build=json.loads((root/"trader"/"build.json").read_text(encoding="utf-8"))["build"]
+          out=Path(f"AGENT_CRYPTO_TRADER_{build}_NATIVE_TARGET_TOP_FIT.zip")
+          files=[
+            root/"administrator"/"index.html",
+            root/"administrator"/"build.json",
+            root/"administrator"/"js"/"trader-cockpit-fit.js",
+            root/"trader"/"trading-desk.html",
+            root/"trader"/"trader-runtime-mirror.js",
+            root/"trader"/"build.json",
+          ]
+          with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
+            for p in files:
+              z.write(p,p.as_posix())
+          print(out, out.stat().st_size)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_TRADER_40.6.610_NATIVE_TARGET_TOP_FIT
+          path: AGENT_CRYPTO_TRADER_40.6.610_NATIVE_TARGET_TOP_FIT.zip
