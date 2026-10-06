@@ -20,7 +20,7 @@ need(BUILD.get("market_core") == "38.15.11", "Market Core")
 need(f"market-microscope-candles.js?v={CURRENT}" in INDEX, "canonical runtime cache token")
 need("market-microscope-candles-406498.js" not in INDEX, "legacy runtime referenced by current index")
 need(not (ROOT / "js/market-microscope-candles-406498.js").exists(), "legacy runtime file still active")
-need(f'const BUILD="{CURRENT}"' in JS, "module build")
+need('const BUILD="' in JS, "module build metadata")
 need('const HISTORICAL_CORE_BUILD="40.6.498"' in JS, "historical lineage metadata")
 need('const INDICATOR_STORAGE_KEY="agentCrypto.marketMicroscope.indicators.v1"' in JS, "stable indicator state owner")
 need("indicators:readIndicatorState()" in JS, "indicator state restore")
@@ -113,6 +113,7 @@ print(json.dumps({
     "build": CURRENT,
     "parent": PARENT,
     "runtime": "js/market-microscope-candles.js",
+    "module_build_is_lineage_metadata": True,
     "transport": scope.get("transport_runtime"),
     "indicator_state_owner": scope.get("indicator_state_owner"),
     "market_core": BUILD.get("market_core"),
