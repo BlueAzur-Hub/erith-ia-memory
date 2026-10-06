@@ -1,0 +1,78 @@
+name: Agent-Crypto Trader Current
+
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/trader/**"
+      - "public/agent_crypto_erith_ia/administrator/js/chart-history-owner.js"
+      - ".github/workflows/agent-crypto-trader-current.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/trader/**"
+      - "public/agent_crypto_erith_ia/administrator/js/chart-history-owner.js"
+      - ".github/workflows/agent-crypto-trader-current.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-trader:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/js/chart-history-owner.js
+          for file in public/agent_crypto_erith_ia/trader/*.js; do
+            node --check "$file"
+          done
+
+      - name: Canonical history owner contract
+        run: |
+          node <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/chart-history-owner.js');
+          const owner=global.AgentCryptoChartHistoryOwner;
+          const coin={id:'bitcoin',symbol:'BTC'};
+          const now=Date.now();
+          const series=(hours,points)=>Array.from({length:points},(_,i)=>[
+            now-hours*3600000+(hours*3600000*i/(points-1)),
+            85000+i
+          ]);
+          const checks={
+            usd_key:owner.storageKey(coin,7,'USD')==='bitcoin:USD:coingecko:7',
+            eur_key:owner.storageKey(coin,7,'EUR')==='bitcoin:7:binance',
+            usd_family:owner.preferredFamily(coin,'USD')==='coingecko',
+            eur_family:owner.preferredFamily(coin,'EUR')==='binance',
+            max_rejects_24h:owner.validate(coin,36500,series(23,288)).ok===false,
+            seven_day_coverage:owner.validate(coin,7,series(140,50)).ok===true,
+            exact_period_only:owner.exact_period_only===true,
+            no_covering_alias:owner.covering_period_alias===false,
+            no_order:owner.real_order===false
+          };
+          console.log(checks);
+          if(Object.values(checks).some(value=>!value))process.exit(1);
+          NODE
+
+      - name: Trader build contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/trader")
+          build=json.loads((root/"build.json").read_text(encoding="utf-8"))
+          html=(root/"trading-desk.html").read_text(encoding="utf-8")
+          line=(root/"line-chart-native.js").read_text(encoding="utf-8")
+          assert build["build"] in html
+          assert "chart-history-owner.js" in html
+          assert "AgentCryptoChartHistoryOwner" in line
+          assert "loadInterfaceBank" not in line
+          assert "bestBankResult" not in line
+          assert "covering_period_alias:false" in line
+          assert build["execution"]=="disabled"
+          assert build["real_orders"] is False
+          print({"build":build["build"],"owner":"chart-history-owner.js","status":"PASS"})
+          PY
