@@ -1,12 +1,12 @@
 {
-  "build": "40.6.607",
+  "build": "40.6.608",
   "surface": "trader",
-  "release": "TRADER · RESTORE 40.6.601 BASELINE",
-  "parent_trader_build": "40.6.606",
-  "administrator_base": "40.6.607",
+  "release": "TRADER · NATIVE SURFACE FIRST PAINT",
+  "parent_trader_build": "40.6.607",
+  "administrator_base": "40.6.608",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406607_pending_firefox_terrain",
+  "status": "published_406608_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -118,7 +118,7 @@
     "pr": "PENDING",
     "merge_commit": "PENDING",
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.607_RESTORE_40.6.601_BASELINE.zip",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.608_NATIVE_SURFACE_FIRST_PAINT.zip",
     "javascript_syntax": "PENDING"
   },
   "stop_gate": {
@@ -129,12 +129,11 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.607.",
-    "Confirm the Trader is visually back to the 40.6.601 baseline.",
-    "Confirm only Marché and Graphique remain in the top Trader navigation.",
-    "Confirm Aether Watch no longer jumps/repositions on open.",
-    "Confirm Graphique internal toolbar remains intact.",
-    "Do not reintroduce extended Trader navigation before terrain validation."
+    "Firefox Ctrl+F5 on Trader 40.6.608.",
+    "Confirm there is no full Administrator menu flash before the Trader surface appears.",
+    "Confirm no third livecheck/status row appears in Trader.",
+    "Confirm the Aether ribbon/thread never starts in Trader.",
+    "Confirm Marché + Graphique and the 40.6.601 runtime behavior remain stable."
   ],
   "restore_406607": {
     "source_build": "40.6.601",
@@ -161,6 +160,26 @@
     "target_top_modified": false,
     "market_flow_modified": false,
     "aether_business_logic_modified": false,
+    "real_order": false
+  },
+  "native_surface_406608": {
+    "enabled": true,
+    "iframe_url": "../administrator/index.html?surface=trader",
+    "surface_declared_before_first_paint": true,
+    "post_load_navigation_amputation_required": false,
+    "first_paint_matches_601_filtered_surface": true,
+    "livecheck_status_row_loaded_in_trader": false,
+    "aether_ribbon_runtime_loaded_in_trader": false,
+    "aether_ribbon_phase_timer_started_in_trader": false,
+    "aether_auto_news_wake_for_ribbon": false,
+    "aether_auto_system_wake_for_ribbon": false,
+    "aether_panel_code_preserved": true,
+    "administrator_behavior_changed": false,
+    "market_core_modified": false,
+    "oracle_modified": false,
+    "math_core_modified": false,
+    "candles_modified": false,
+    "depth_modified": false,
     "real_order": false
   }
 }
