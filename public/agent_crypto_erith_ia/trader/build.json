@@ -1,12 +1,12 @@
 {
-  "build": "40.6.603",
+  "build": "40.6.604",
   "surface": "trader",
-  "release": "TRADER · AETHER ON DEMAND",
-  "parent_trader_build": "40.6.602",
-  "administrator_base": "40.6.603",
+  "release": "TRADER · ROUTING FIDELITY CHECKPOINT",
+  "parent_trader_build": "40.6.603",
+  "administrator_base": "40.6.604",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406603_pending_firefox_terrain",
+  "status": "published_406604_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -116,13 +116,16 @@
     "Lecture Technique",
     "Market Snapshot",
     "Math Core",
-    "PAIR/data truth in Administrator"
+    "PAIR/data truth in Administrator",
+    "Target Top existing owner",
+    "Market Flow existing owner",
+    "Trader 40.6.601 single-runtime architecture"
   ],
   "delivery": {
     "pr": "PENDING",
     "merge_commit": "PENDING",
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.603_AETHER_ON_DEMAND.zip",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.604_ROUTING_FIDELITY_CHECKPOINT.zip",
     "javascript_syntax": "PENDING"
   },
   "stop_gate": {
@@ -133,8 +136,10 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Continue cumulatively to 40.6.604 routing fidelity checkpoint.",
-    "Then Firefox terrain validation with Christophe."
+    "Firefox Ctrl+F5 on Trader 40.6.604.",
+    "Validate Marché -> Graphique -> Target Top -> Market Flow -> Oracle -> Sources -> Décision -> Aether -> Graphique.",
+    "Confirm selected asset, USD display, candle instrument/bar and graph period stay coherent.",
+    "If terrain passes, freeze 40.6.604 as the protected Trader base before the next feature family."
   ],
   "navigation_406602": {
     "enabled": true,
@@ -168,5 +173,41 @@
     "no_new_timer": true,
     "no_new_observer": true,
     "no_business_logic_change": true
+  },
+  "routing_fidelity_406604": {
+    "enabled": true,
+    "routes": [
+      "Marché",
+      "Graphique",
+      "Target Top",
+      "Market Flow",
+      "Oracle",
+      "Sources",
+      "Décision",
+      "Aether"
+    ],
+    "existing_controls_only": true,
+    "context_fields": [
+      "asset",
+      "display_currency",
+      "candle_instrument",
+      "candle_bar",
+      "graph_period"
+    ],
+    "route_check": "double requestAnimationFrame after navigation",
+    "context_mutation_on_mismatch": false,
+    "diagnostic_event": "agent-crypto:trader-route-check",
+    "storage_write": false,
+    "recurring_timer": false,
+    "mutation_observer": false,
+    "target_top_owner_preserved": true,
+    "market_flow_owner_preserved": true,
+    "oracle_owner_preserved": true,
+    "market_core_modified": false,
+    "math_core_modified": false,
+    "lecture_technique_modified": false,
+    "depth_modified": false,
+    "candles_modified": false,
+    "real_order": false
   }
 }
