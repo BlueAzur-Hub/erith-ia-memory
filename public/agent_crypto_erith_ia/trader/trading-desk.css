@@ -1,352 +1,196 @@
 :root{
   color-scheme:dark;
-  --bg:#061018;
-  --panel:rgba(10,25,35,.90);
-  --line:rgba(115,213,232,.23);
-  --line-strong:rgba(115,213,232,.42);
-  --text:#edf9fc;
-  --muted:#91aab5;
-  --cyan:#62e5ef;
-  --green:#70f0c6;
-  --red:#ff7e79;
-  --amber:#ffd47c;
-  --radius:13px;
+  --trader-bg:#061018;
+  --trader-panel:rgba(10,25,35,.92);
+  --trader-line:rgba(115,213,232,.23);
+  --trader-text:#edf9fc;
+  --trader-muted:#91aab5;
+  --trader-cyan:#62e5ef;
+  --trader-green:#70f0c6;
+  --trader-red:#ff7e79;
+  --trader-amber:#ffd47c;
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#07131b,#061018);color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif}
-body{padding:12px 14px 92px}
+html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#07131b,#061018);color:var(--trader-text)}
+body{padding:12px 14px 92px;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif}
 button,a{font:inherit}
-h1,h2,p{margin-top:0}
 
-.trader-menu,.surface,.trader-footer{
-  border:1px solid var(--line);
-  background:linear-gradient(180deg,var(--panel),rgba(6,18,27,.92));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 14px 38px rgba(0,0,0,.16)
-}
-
-/* Menu volontairement minimal : pas d'Aether, Atlas, Oracle, Veille ou autres sections. */
+/* Menu Trader volontairement minimal : aucun fil Aether / Atlas / Oracle / Veille. */
 .trader-menu{
   min-height:58px;
   display:flex;
   align-items:center;
   gap:18px;
   padding:9px 12px;
+  border:1px solid var(--trader-line);
   border-radius:12px;
+  background:linear-gradient(180deg,var(--trader-panel),rgba(6,18,27,.94));
   position:sticky;
   top:8px;
-  z-index:30
+  z-index:3000;
 }
 .brand{display:flex;flex-direction:column;min-width:210px}
-.brand-kicker{font-size:9px;letter-spacing:.16em;color:var(--cyan)}
+.brand-kicker{font-size:9px;letter-spacing:.16em;color:var(--trader-cyan)}
 .brand strong{font-size:16px;margin-top:2px}
 .pair-bar,.menu-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .pair-bar{flex:1}
 .menu-actions{justify-content:flex-end}
 .pair-chip,.mode-chip,.status-chip,.admin-link{
-  border:1px solid var(--line);
+  border:1px solid var(--trader-line);
   border-radius:999px;
   min-height:34px;
   padding:7px 11px;
   background:rgba(255,255,255,.025);
-  color:var(--text);
+  color:var(--trader-text);
   text-decoration:none;
-  font-size:10px
+  font-size:10px;
 }
 .pair-chip{display:flex;gap:8px;align-items:center;border-color:rgba(98,229,239,.38)}
-.pair-chip span{color:var(--muted);font-size:8px;letter-spacing:.11em}
-.pair-chip b{color:var(--cyan);font-size:12px}
-.mode-chip.muted{color:var(--muted)}
-.status-chip{color:var(--green);border-color:rgba(112,240,198,.30)}
+.pair-chip span{color:var(--trader-muted);font-size:8px;letter-spacing:.11em}
+.pair-chip b{color:var(--trader-cyan);font-size:12px}
+.mode-chip.muted{color:var(--trader-muted)}
+.status-chip{color:var(--trader-green);border-color:rgba(112,240,198,.30)}
 
-.trader-primary{
-  margin-top:10px;
-  display:grid;
-  grid-template-columns:minmax(0,2.55fr) minmax(310px,.72fr);
-  gap:10px;
-  align-items:stretch
+.trader-main{margin-top:10px}
+
+/*
+  Le haut de page n'a plus de grille Trader parallèle.
+  #analyste / .champagne-clean-lens / #detailPanel / #detailPanelRail
+  reprennent directement l'architecture Administrator et ses styles.
+*/
+.trader-native-zone{margin:0;padding:0}
+#analyste.champagne-clean-lens{
+  margin:0!important;
+  width:100%;
 }
-.surface{border-radius:var(--radius);min-width:0;overflow:hidden}
-.graph-surface{min-height:640px}
-.analysis-rail{display:grid;grid-template-rows:auto auto;gap:10px;align-content:start}
-.collapsible-panel{min-height:0}
-.collapsible-panel[data-collapsed="true"] .collapsible-body{display:none}
-.collapsible-panel[data-collapsed="true"]{min-height:0}
+.trader-chart-panel{min-width:0}
+.trader-chart-head{
+  min-height:52px!important;
+  align-items:center!important;
+  gap:10px!important;
+}
+.trader-chart-head .chart-v2-title-block{
+  min-width:170px;
+}
+.trader-chart-head h2{margin:1px 0 0;font-size:15px}
+.trader-chart-controls{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:4px;
+  flex:1 1 auto;
+  min-width:0;
+}
+.trader-chart-shell{
+  position:relative!important;
+  min-height:550px!important;
+  height:550px!important;
+  overflow:hidden!important;
+}
 
+/* Lecture Technique : on conserve les classes natives, seulement un minimum de hauteur Trader. */
+#detailPanel{
+  min-height:640px;
+  overflow:hidden;
+}
+#detailPanel .detail-panel-body{
+  min-height:0;
+}
+#detailPanel .detail-project-visual{
+  cursor:pointer;
+}
+
+/* Le vrai rail Administrator doit être l'unique rail de détail. */
+#detailPanelRail{
+  min-height:640px;
+}
+
+/* Profondeur body-portal : aucune géométrie parallèle dans Trader. */
+#atlasOkxMicrostructure{z-index:2400}
+
+/* Bas de page provisoire : Market + Math seront transposés ensuite. */
+.surface,.trader-footer{
+  border:1px solid var(--trader-line);
+  background:linear-gradient(180deg,var(--trader-panel),rgba(6,18,27,.92));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 14px 38px rgba(0,0,0,.16);
+}
+.surface{border-radius:13px;min-width:0;overflow:hidden}
 .surface-head{
-  min-height:62px;
+  min-height:58px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:12px;
-  padding:11px 13px;
-  border-bottom:1px solid var(--line);
-  background:rgba(255,255,255,.017)
+  padding:10px 13px;
+  border-bottom:1px solid var(--trader-line);
 }
-.compact-head{min-height:56px}
-.eyebrow{margin:0 0 4px;font-size:8px;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase}
-h1{font-size:17px;margin-bottom:0}
-h2{font-size:15px;margin-bottom:0}
-.owner-state{font-size:9px;color:var(--muted);white-space:nowrap}
-.collapse-toggle{
-  border:1px solid var(--line);
-  border-radius:999px;
-  background:rgba(255,255,255,.025);
-  color:var(--text);
-  min-height:30px;
-  padding:5px 9px;
-  cursor:pointer;
-  font-size:9px
-}
-.collapse-toggle:hover{border-color:var(--line-strong)}
-
-.surface-placeholder{
-  margin:12px;
-  border:1px dashed rgba(115,213,232,.24);
-  border-radius:11px;
-  background:rgba(0,0,0,.10)
-}
-.graph-placeholder{
-  min-height:550px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:24px;
-  background:
-    linear-gradient(rgba(98,229,239,.035) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(98,229,239,.035) 1px,transparent 1px);
-  background-size:38px 38px
-}
-.compact-placeholder{min-height:218px;padding:16px}
-.market-placeholder{min-height:410px;padding:18px}
-.surface-placeholder strong{font-size:12px;letter-spacing:.05em}
-.surface-placeholder p,.math-preview p{font-size:11px;line-height:1.45;color:var(--muted);margin:7px 0 0}
-
+.surface-head h2{margin:0;font-size:15px}
+.surface-head .eyebrow{margin:0 0 4px;font-size:8px;letter-spacing:.16em;color:var(--trader-cyan)}
+.owner-state{font-size:9px;color:var(--trader-muted)}
 .secondary-grid{
   margin-top:10px;
   display:grid;
   grid-template-columns:minmax(0,3fr) minmax(300px,.92fr);
   gap:10px;
-  align-items:start
+  align-items:start;
 }
-.market-surface{min-height:500px}
-.math-surface{min-height:340px}
+.market-surface{min-height:360px}
+.math-surface{min-height:300px}
+.surface-placeholder{
+  margin:12px;
+  min-height:265px;
+  padding:18px;
+  border:1px dashed rgba(115,213,232,.24);
+  border-radius:11px;
+  background:rgba(0,0,0,.10);
+}
+.surface-placeholder strong{font-size:12px}
+.surface-placeholder p,.math-preview p{font-size:11px;line-height:1.45;color:var(--trader-muted);margin:7px 0 0}
 .math-preview{display:flex;align-items:center;gap:16px;padding:20px 16px}
 .score-orb{
-  flex:0 0 auto;
   width:82px;height:82px;border-radius:50%;
   display:grid;place-items:center;
   border:1px solid rgba(255,212,124,.42);
   box-shadow:inset 0 0 0 8px rgba(255,212,124,.04);
-  color:var(--amber);font-size:25px;font-weight:800
+  color:var(--trader-amber);font-size:25px;font-weight:800;
 }
 
-/* Boutons Trader : orbes flottantes, même langage que Math Core / Redivider actuel.
-   Ils sont volontairement désactivés dans cette version de structure. */
+/* Commandes Trader futures : inchangées et toujours désactivées. */
 .trader-orbs-left,.trader-orbs-right{
-  position:fixed;
-  bottom:15px;
-  z-index:50;
-  display:flex;
-  align-items:flex-end;
-  gap:10px;
-  pointer-events:none
+  position:fixed;bottom:15px;z-index:2600;
+  display:flex;align-items:flex-end;gap:10px;pointer-events:none;
 }
 .trader-orbs-left{left:14px}
 .trader-orbs-right{right:14px}
 .trade-orb{
   width:78px;height:78px;border-radius:50%;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  border:2px solid var(--line-strong);
+  border:2px solid rgba(115,213,232,.42);
   background:rgba(6,17,25,.94);
   box-shadow:0 10px 32px rgba(0,0,0,.38),inset 0 0 0 6px rgba(255,255,255,.018);
-  color:var(--text);
-  pointer-events:auto
+  color:var(--trader-text);pointer-events:auto;
 }
 .trade-orb b{font-size:16px;line-height:1}
 .trade-orb span{font-size:8px;margin-top:5px;text-transform:uppercase;letter-spacing:.08em}
 .trade-orb:disabled{opacity:.84;cursor:not-allowed}
-.trade-orb.buy{border-color:rgba(112,240,198,.48);color:var(--green)}
-.trade-orb.sell{border-color:rgba(255,126,121,.48);color:var(--red)}
+.trade-orb.buy{border-color:rgba(112,240,198,.48);color:var(--trader-green)}
+.trade-orb.sell{border-color:rgba(255,126,121,.48);color:var(--trader-red)}
 .trade-orb.kill{width:88px;height:88px;border-color:rgba(255,86,86,.50);color:#ff9a96}
 
 .trader-footer{
-  margin-top:10px;
-  min-height:36px;
-  border-radius:10px;
-  padding:8px 12px;
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  flex-wrap:wrap;
-  color:var(--muted);
-  font-size:9px
+  margin-top:10px;min-height:36px;border-radius:10px;padding:8px 12px;
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  color:var(--trader-muted);font-size:9px;
 }
 
-@media(max-width:1180px){
-  .trader-primary{grid-template-columns:minmax(0,1.8fr) minmax(285px,.75fr)}
-  .secondary-grid{grid-template-columns:minmax(0,2fr) minmax(285px,.8fr)}
-}
-@media(max-width:820px){
+@media(max-width:900px){
   body{padding:8px 8px 88px}
   .trader-menu{position:static;align-items:flex-start;flex-wrap:wrap}
   .brand{min-width:100%;flex-basis:100%}
   .menu-actions{margin-left:auto}
-  .trader-primary,.secondary-grid{display:flex;flex-direction:column}
-  .graph-surface{order:1;min-height:420px}
-  .analysis-rail{order:2;display:flex;flex-direction:column}
-  .graph-placeholder{min-height:335px}
-  .compact-placeholder{min-height:150px}
-  .secondary-grid .market-surface{order:2;min-height:320px}
-  .secondary-grid .math-surface{order:1;min-height:250px}
-  .market-placeholder{min-height:230px}
+  .secondary-grid{display:flex;flex-direction:column}
+  .trader-chart-shell{min-height:390px!important;height:390px!important}
+  #detailPanel,#detailPanelRail{min-height:430px}
   .trade-orb{width:64px;height:64px}
   .trade-orb.kill{width:70px;height:70px}
-  .trade-orb b{font-size:13px}
-}
-
-
-/* 40.6.576 — montage direct du propriétaire Bougies existant.
-   Aucun moteur Graphique recopié dans /trader/. */
-.trader-analyste{padding:10px 12px 12px}
-.trader-chart-controls{
-  min-height:34px;
-  display:flex;
-  align-items:center;
-  gap:7px;
-  flex-wrap:wrap;
-  margin-bottom:8px;
-  padding:5px 7px;
-  border:1px solid rgba(115,213,232,.16);
-  border-radius:9px;
-  background:rgba(255,255,255,.018)
-}
-.trader-chart-shell{
-  position:relative;
-  min-height:550px;
-  height:550px;
-  border:1px solid rgba(115,213,232,.15);
-  border-radius:10px;
-  overflow:hidden;
-  background:rgba(0,0,0,.10)
-}
-#analyste #atlasMarketMicroscopeControls{
-  display:flex;
-  align-items:center;
-  gap:4px;
-  flex-wrap:wrap
-}
-#analyste #atlasMarketMicroscopeControls>small{
-  font:900 8px/1 system-ui,sans-serif;
-  letter-spacing:.08em;
-  color:#8aa2ad
-}
-#analyste #atlasMarketMicroscopeControls button{
-  min-height:25px;
-  padding:5px 8px;
-  border:1px solid rgba(255,255,255,.13);
-  border-radius:999px;
-  background:rgba(255,255,255,.04);
-  color:#c6d8df;
-  font:900 9px/1 system-ui,sans-serif;
-  cursor:pointer
-}
-#analyste #atlasMarketMicroscopeControls button.is-active{
-  color:#07141a;
-  background:#8fefff;
-  border-color:#c8f7ff
-}
-@media(max-width:820px){
-  .trader-analyste{padding:8px}
-  .trader-chart-shell{min-height:390px;height:390px}
-  .trader-chart-controls{overflow-x:auto;flex-wrap:nowrap}
-}
-
-
-/* 40.6.576 — Profondeur owner existant.
-   Le module validé garde son modèle body-portal et se cale sur #detailPanel,
-   comme dans Administrator. Lecture Technique reste le panneau sous-jacent. */
-.analysis-rail{display:block}
-#detailPanel{
-  position:relative;
-  min-height:640px;
-  height:640px;
-  overflow:hidden
-}
-.technical-placeholder{
-  min-height:545px;
-  padding:18px
-}
-@media(max-width:820px){
-  #detailPanel{min-height:430px;height:430px}
-  .technical-placeholder{min-height:335px}
-}
-
-
-/* 40.6.576 — rail support compact.
-   Correction terrain : Réduire doit réellement libérer l'espace du Graphique.
-   Le rail devient une languette étroite, comme le comportement familier de l'Administrator. */
-.trader-primary{
-  transition:grid-template-columns .18s ease;
-}
-.analysis-rail{
-  position:relative;
-  min-width:0;
-}
-.detail-rail-toggle{
-  display:none;
-  width:100%;
-  min-height:640px;
-  border:1px solid rgba(115,213,232,.28);
-  border-radius:12px;
-  background:linear-gradient(180deg,rgba(8,25,34,.96),rgba(5,16,24,.96));
-  color:#70dce8;
-  font:900 9px/1 system-ui,sans-serif;
-  letter-spacing:.16em;
-  writing-mode:vertical-rl;
-  transform:rotate(180deg);
-  cursor:pointer;
-}
-body[data-trader-rail-compact="true"] .trader-primary{
-  grid-template-columns:minmax(0,1fr) 42px;
-}
-body[data-trader-rail-compact="true"] #detailPanel{
-  display:none;
-}
-body[data-trader-rail-compact="true"] .detail-rail-toggle{
-  display:grid;
-  place-items:center;
-}
-body[data-trader-rail-compact="true"] #atlasOkxMicrostructure.is-minimized{
-  display:none!important;
-}
-body[data-trader-rail-compact="true"] .graph-surface{
-  min-width:0;
-}
-#detailPanel{
-  border-color:rgba(115,213,232,.20);
-}
-#detailPanel .technical-placeholder{
-  border-style:solid;
-  border-color:rgba(115,213,232,.10);
-  background:
-    linear-gradient(180deg,rgba(7,24,33,.42),rgba(5,17,25,.26));
-}
-#detailPanel .technical-placeholder p{
-  max-width:28ch;
-}
-@media(max-width:820px){
-  body[data-trader-rail-compact="true"] .trader-primary{
-    display:flex;
-    flex-direction:column;
-  }
-  body[data-trader-rail-compact="true"] .analysis-rail{
-    order:2;
-  }
-  .detail-rail-toggle{
-    min-height:44px;
-    writing-mode:horizontal-tb;
-    transform:none;
-  }
 }
