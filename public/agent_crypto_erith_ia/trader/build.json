@@ -1,12 +1,12 @@
 {
-  "build": "40.6.593",
+  "build": "40.6.594",
   "surface": "trader",
-  "release": "TRADER · NATIVE CHART SNAPSHOT TABLE",
-  "parent_trader_build": "40.6.592",
+  "release": "TRADER · HISTORICAL HOVER PARITY",
+  "parent_trader_build": "40.6.593",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": false,
-  "status": "branch_ready_for_pr_406593",
+  "status": "branch_ready_for_pr_406594",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -71,25 +71,15 @@
       "dormant_network_requests": false
     },
     "chart_tooltip": {
-      "source_contract": "Administrator atlas-chart-tooltip",
+      "source_contract": "Administrator historical tooltip semantics",
       "dom_id": "atlasChartTooltip",
-      "classes": [
-        "atlas-chart-tooltip",
-        "atlas-chart-tooltip-date",
-        "atlas-chart-tooltip-row",
-        "atlas-chart-tooltip-identity",
-        "atlas-chart-tooltip-color-bridge",
-        "atlas-chart-tooltip-values",
-        "atlas-chart-tooltip-change"
-      ],
-      "title": "PRIX SNAPSHOT COINGECKO · VARIATION 24h",
-      "data": [
-        "selected asset",
-        "hovered historical price",
-        "timestamp",
-        "24h market variation"
-      ],
-      "duplicate_custom_trader_tooltip_removed": true
+      "title": "PRIX HISTORIQUE · VARIATION <période>",
+      "historical_price_from_hovered_point": true,
+      "variation_rule": "normalized from the first point of the selected period, matching Administrator baseValue semantics",
+      "visible_hover_marker": true,
+      "marker_radius_px": 6.4,
+      "current_market_change_removed_from_historical_tooltip": true,
+      "timestamp_removed_from_tooltip_row": true
     }
   },
   "technical_reading": {
@@ -151,10 +141,10 @@
     "pr": null,
     "merge_commit": null,
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.593_NATIVE_CHART_SNAPSHOT_TABLE.zip",
-    "zip_bytes": 72498,
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.594_HISTORICAL_HOVER_PARITY.zip",
+    "zip_bytes": null,
     "javascript_syntax": "PASS",
-    "package_commit": "2c67e4e7bdf963c847a9b4303ccd72e71b6fe8ba"
+    "package_commit": null
   },
   "stop_gate": {
     "no_real_order": true,
@@ -164,8 +154,9 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox: hover Graphique Ligne and compare the snapshot table directly with Administrator 40.6.571.",
-    "Verify BTC identity / color bridge / hovered price / timestamp / 24h change.",
-    "Then freeze this chart-table contract if terrain matches."
+    "Firefox: move the pointer into the middle of the 24h curve, not only over the endpoint.",
+    "Confirm the orange historical point is visibly marked on the curve.",
+    "Confirm tooltip title is PRIX HISTORIQUE · VARIATION 24h and price changes point by point.",
+    "Compare the percentage with Administrator: variation since the beginning of the selected period."
   ]
 }
