@@ -1,8 +1,8 @@
 {
-  "build": "40.6.575",
+  "build": "40.6.576",
   "surface": "trader",
-  "release": "TRADER · MOUNT EXISTING DEPTH OWNER",
-  "parent_trader_build": "40.6.574",
+  "release": "TRADER · SUPPORT RAIL COLLAPSE / GRAPH RECLAIM",
+  "parent_trader_build": "40.6.575",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": true,
@@ -20,8 +20,10 @@
     "other_administrator_sections": false,
     "primary_focus": "Graphique Bougies · OWNER MOUNTED",
     "right_support_panels": [
-      "Profondeur owner mounted over Lecture Technique host",
-      "Lecture Technique underlying placeholder"
+      "Profondeur owner mounted",
+      "Reduce/close collapses support rail to narrow DETAIL tab",
+      "Graphique reclaims freed width",
+      "Lecture Technique underlying placeholder remains unmounted"
     ],
     "trader_controls": "round floating controls using Math Core / Redivider visual language",
     "below_primary": [
@@ -71,6 +73,9 @@
     "depth_business_logic_copied": false,
     "depth_default_open": true,
     "depth_live_refresh": "2s while open only",
-    "depth_quote": "USDC when display currency is USD"
+    "depth_quote": "USDC when display currency is USD",
+    "depth_reduce_reclaims_graph_width": true,
+    "support_rail_compact_width_px": 42,
+    "detail_restore_control": "vertical DÉTAIL tab"
   }
 }
