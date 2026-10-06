@@ -1,9 +1,9 @@
 (() => {
   "use strict";
-  const BUILD="40.6.598";
+  const BUILD="40.6.599";
   const PERIODS=Object.freeze([1,7,30,60,90,365,36500]);
   const LABELS=Object.freeze({1:"24h",7:"7j",30:"30j",60:"60j",90:"90j",365:"1a",36500:"Max"});
-  const state={period:1,token:0,controller:null,rows:[],volumes:[],source:"",currency:"USD",coin:null,error:null,loading:false,volume:true,legend:true,analysis:true,lastLoadedAt:null,external:false,truth:"direct",hoverIndex:-1,loadedContextKey:"",refreshWarning:null};
+  const state={period:1,token:0,controller:null,rows:[],volumes:[],source:"",currency:"USD",coin:null,error:null,loading:false,volume:true,legend:true,analysis:true,lastLoadedAt:null,external:false,truth:"direct",hoverIndex:-1,loadedContextKey:"",refreshWarning:null,historyBank:null,historyBankKey:"",historyBankSource:"",historyBankLoadedAt:null,historyBankPeriods:[]};
   const $=id=>document.getElementById(id);
   const finite=v=>{if(v===null||v===undefined||v==="")return null;const n=Number(v);return Number.isFinite(n)?n:null;};
   const displayCurrency=()=>String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"USD").toUpperCase()==="EUR"?"EUR":"USD";
@@ -26,47 +26,117 @@
   };
   const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-  const TRADER_LINE_CACHE_KEY="agent_crypto_erith_ia_trader_line_cache_v1";
   const ADMIN_LINE_CACHE_KEY="agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50";
-  const CACHE_LIMIT=14;
-  const CACHE_MAX_AGE_MS=Object.freeze({
-    1:7*24*60*60*1000,7:14*24*60*60*1000,30:60*24*60*60*1000,
-    60:120*24*60*60*1000,90:180*24*60*60*1000,365:540*24*60*60*1000,36500:900*24*60*60*1000
-  });
-  const cacheContextKey=(coin,period,currency=displayCurrency())=>String(coin?.id||"").toLowerCase()+":"+String(currency||"").toUpperCase()+":"+Number(period||1);
+  const ADMIN_PRIMARY_DB="agent_crypto_storage_relief_40278";
+  const ADMIN_PRIMARY_STORE="payloads";
+  const PERIOD_MIN_POINTS=Object.freeze({1:20,7:40,30:100,60:120,90:180,365:180,36500:180});
+  const bankContextKey=(coin,currency=displayCurrency())=>String(coin?.id||"").toLowerCase()+":"+String(currency||"").toUpperCase();
   const adminCacheKey=(coin,period,currency=displayCurrency())=>String(currency||"").toUpperCase()==="USD"
     ?String(coin?.id||"").toLowerCase()+":USD:coingecko:"+Number(period||1)
     :String(coin?.id||"").toLowerCase()+":"+Number(period||1)+":coingecko";
-  function readJsonStore(key){
-    try{const parsed=JSON.parse(localStorage.getItem(key)||"{}");return parsed&&typeof parsed==="object"?parsed:{};}catch(_){return{};}
+
+  function parseStore(raw){
+    try{const parsed=typeof raw==="string"?JSON.parse(raw):raw;return parsed&&typeof parsed==="object"?parsed:{};}catch(_){return{};}
   }
-  function writeTraderCache(store){
-    try{localStorage.setItem(TRADER_LINE_CACHE_KEY,JSON.stringify(store&&typeof store==="object"?store:{}));return true;}catch(_){return false;}
+
+  async function readInterfacePrimaryStore(){
+    try{
+      if(globalThis.indexedDB){
+        if(typeof indexedDB.databases==="function"){
+          const dbs=await indexedDB.databases();
+          if(!Array.isArray(dbs)||!dbs.some(row=>row?.name===ADMIN_PRIMARY_DB))throw new Error("PRIMARY_ABSENT");
+        }
+        const row=await new Promise((resolve,reject)=>{
+          const req=indexedDB.open(ADMIN_PRIMARY_DB);
+          req.onerror=()=>reject(req.error||new Error("Interface IndexedDB indisponible"));
+          req.onsuccess=()=>{
+            const db=req.result;
+            if(!db.objectStoreNames.contains(ADMIN_PRIMARY_STORE)){db.close();resolve(null);return;}
+            const tx=db.transaction(ADMIN_PRIMARY_STORE,"readonly");
+            const get=tx.objectStore(ADMIN_PRIMARY_STORE).get(ADMIN_LINE_CACHE_KEY);
+            get.onsuccess=()=>{const value=get.result||null;db.close();resolve(value);};
+            get.onerror=()=>{const error=get.error||new Error("Lecture cache Interface refusée");db.close();reject(error);};
+          };
+          req.onupgradeneeded=()=>{try{req.transaction.abort();}catch(_){}reject(new Error("PRIMARY_ABSENT"));};
+        });
+        const primary=parseStore(row?.payload||null);
+        if(Object.keys(primary).length)return{store:primary,source:"IndexedDB PRIMARY Interface"};
+      }
+    }catch(_){}
+    try{
+      const local=parseStore(localStorage.getItem(ADMIN_LINE_CACHE_KEY));
+      if(Object.keys(local).length)return{store:local,source:"Interface local fallback"};
+    }catch(_){}
+    return{store:{},source:"Interface cache absent"};
   }
-  function cacheMaxAge(period){return CACHE_MAX_AGE_MS[Number(period||1)]||CACHE_MAX_AGE_MS[1];}
-  function normalizeCachedResult(raw,coin,period,currency,label){
+
+  function normalizeInterfaceRecord(raw,coin,period,currency){
     if(!raw||typeof raw!=="object")return null;
-    const savedAt=Number(raw.savedAt||raw.createdAt||Date.parse(raw.generatedAt||raw.fetchedAt||0));
-    if(Number.isFinite(savedAt)&&savedAt>0&&Date.now()-savedAt>cacheMaxAge(period))return null;
-    const rows=normalizeSeries(raw.rows||raw.series),volumes=normalizeVolumes(raw.volumes||raw.volumeSeries);
+    const rows=normalizeSeries(raw.series||raw.rows),volumes=normalizeVolumes(raw.volumeSeries||raw.volumes);
     if(rows.length<2)return null;
-    return{rows,volumes,source:label,currency:String(raw.currency||raw.quoteCurrency||currency||displayCurrency()).toUpperCase(),external:false,truth:"cache",savedAt:Number.isFinite(savedAt)&&savedAt>0?savedAt:null};
+    const recordCurrency=String(raw.currency||raw.quoteCurrency||currency||displayCurrency()).toUpperCase();
+    if(recordCurrency!==String(currency||displayCurrency()).toUpperCase())return null;
+    return{
+      rows,volumes,
+      source:String(raw.source||"Historique Interface"),
+      currency:recordCurrency,
+      external:false,
+      truth:"database",
+      savedAt:Number(raw.savedAt||raw.createdAt||Date.parse(raw.generatedAt||0))||null,
+      period:Number(period||1)
+    };
   }
-  function storeCachedResult(coin,period,result){
-    if(!coin?.id||result?.external||!Array.isArray(result?.rows)||result.rows.length<2)return false;
-    const key=cacheContextKey(coin,period,result.currency||displayCurrency()),store=readJsonStore(TRADER_LINE_CACHE_KEY),savedAt=Date.now();
-    store[key]={coinId:coin.id,period:Number(period||1),currency:String(result.currency||displayCurrency()).toUpperCase(),rows:result.rows,volumes:result.volumes||[],source:result.source||"CoinGecko market_chart · direct",savedAt};
-    const keys=Object.keys(store).sort((a,b)=>Number(store[b]?.savedAt||0)-Number(store[a]?.savedAt||0));
-    for(const stale of keys.slice(CACHE_LIMIT))delete store[stale];
-    return writeTraderCache(store);
+
+  function sliceCoveringRecord(record,period){
+    if(!record?.rows?.length||Number(period)===36500)return record||null;
+    const lastTs=Number(record.rows.at(-1)?.[0]);if(!Number.isFinite(lastTs))return null;
+    const cutoff=lastTs-Number(period)*86400000;
+    const rows=record.rows.filter(row=>Number(row?.[0])>=cutoff);
+    const volumes=(record.volumes||[]).filter(row=>Number(row?.[0])>=cutoff);
+    const min=PERIOD_MIN_POINTS[Number(period)]||2;
+    if(rows.length<min)return null;
+    return{...record,rows,volumes,period:Number(period),source:String(record.source||"Historique Interface")+" · fenêtre "+periodLabel(period)};
   }
-  function exactCachedResult(coin,period,currency=displayCurrency()){
+
+  function bestBankResult(bank,period){
+    if(!bank?.records)return null;
+    const p=Number(period||1);
+    const exact=bank.records.get(p);
+    if(exact)return{...exact,source:String(exact.source||"Historique Interface")+" · DB"};
+    if(p===36500){
+      const candidates=[...bank.records.entries()].sort((a,b)=>b[0]-a[0]);
+      return candidates.length?{...candidates[0][1],source:String(candidates[0][1].source||"Historique Interface")+" · DB"}:null;
+    }
+    const candidates=[...bank.records.entries()]
+      .filter(([days])=>Number(days)>p)
+      .sort((a,b)=>Number(a[0])-Number(b[0]));
+    for(const [,record] of candidates){
+      const sliced=sliceCoveringRecord(record,p);
+      if(sliced)return sliced;
+    }
+    return null;
+  }
+
+  async function loadInterfaceBank(coin,currency=displayCurrency(),force=false){
     if(!coin?.id)return null;
-    const own=readJsonStore(TRADER_LINE_CACHE_KEY)[cacheContextKey(coin,period,currency)];
-    const ownResult=normalizeCachedResult(own,coin,period,currency,"Cache navigateur Trader · série CoinGecko");
-    if(ownResult)return ownResult;
-    const admin=readJsonStore(ADMIN_LINE_CACHE_KEY)[adminCacheKey(coin,period,currency)];
-    return normalizeCachedResult(admin,coin,period,currency,"Cache navigateur Interface · série CoinGecko");
+    const key=bankContextKey(coin,currency);
+    if(!force&&state.historyBank&&state.historyBankKey===key)return state.historyBank;
+    const payload=await readInterfacePrimaryStore(),records=new Map();
+    for(const period of PERIODS){
+      const raw=payload.store[adminCacheKey(coin,period,currency)];
+      const record=normalizeInterfaceRecord(raw,coin,period,currency);
+      if(record)records.set(period,record);
+    }
+    state.historyBank={coinId:String(coin.id),currency:String(currency).toUpperCase(),records};
+    state.historyBankKey=key;
+    state.historyBankSource=payload.source;
+    state.historyBankLoadedAt=new Date().toISOString();
+    state.historyBankPeriods=[...records.keys()].sort((a,b)=>a-b);
+    return state.historyBank;
+  }
+
+  function clearInterfaceBank(){
+    state.historyBank=null;state.historyBankKey="";state.historyBankSource="";state.historyBankLoadedAt=null;state.historyBankPeriods=[];
   }
 
 
@@ -177,9 +247,10 @@
     if(title)title.textContent=symbol+" · "+name+" · "+periodLabel(state.period)+" · PRIX "+state.currency+" · NORMALE";
     if(series){
       series.className="atlas-hud-truth";
-      series.textContent=(state.external?"HISTORIQUE EXCHANGE":"HISTORIQUE COINGECKO")+" · "+(state.truth==="cache"?"CACHE / REPLI":"DIRECT");
+      const truthLabel=state.external?"HISTORIQUE EXCHANGE":state.truth==="database"?"HISTORIQUE INTERFACE · BASE LOCALE":state.truth==="direct-bootstrap"?"HISTORIQUE COINGECKO · BOOTSTRAP":"HISTORIQUE COINGECKO · "+(state.truth==="cache"?"CACHE / REPLI":"DIRECT");
+      series.textContent=truthLabel;
     }
-    if(overlay)overlay.dataset.truth=state.truth==="cache"?"cache":"direct";
+    if(overlay)overlay.dataset.truth=state.truth==="cache"||state.truth==="database"?"cache":"direct";
     if(summary){
       const amp=a.amplitude===null?"—":a.amplitude.toFixed(2)+" %";
       const stamp=state.rows.length?new Date(state.rows.at(-1)[0]).toLocaleString("fr-FR"):"—";
@@ -286,31 +357,71 @@
     if(tip){tip.hidden=true;tip.setAttribute("aria-hidden","true");}
     if(state.hoverIndex!==-1){state.hoverIndex=-1;draw();}
   }
+  function applyResult(coin,result,contextKey,warning=null){
+    state.hoverIndex=-1;
+    state.rows=result.rows;state.volumes=result.volumes||[];state.source=result.source;
+    state.currency=result.currency;state.external=!!result.external;state.truth=result.truth||"database";
+    state.loadedContextKey=contextKey;state.refreshWarning=warning;state.lastLoadedAt=new Date().toISOString();
+    state.loading=false;state.error=null;setLoading("");syncText();draw();dispatchLoaded();return true;
+  }
+
   async function load(reason="operator"){
     if(!lineMode()&&reason!=="selection")return false;
     const coin=selectedCoin();if(!coin)return false;
     state.token+=1;const token=state.token;
     try{state.controller?.abort?.();}catch(_){}
-    const controller=new AbortController();state.controller=controller;state.coin=coin;state.loading=true;state.error=null;syncPeriods();setLoading("Chargement de la série historique réelle…");
+    const controller=new AbortController();state.controller=controller;state.coin=coin;state.loading=true;state.error=null;syncPeriods();
+    const ctx=externalContext();
+
+    if(ctx){
+      setLoading("Chargement historique exchange…");
+      try{
+        const result=await fetchExternal(ctx,state.period,controller.signal);
+        if(token!==state.token)return false;
+        return applyResult(coin,result,"external:"+String(ctx.pair||coin.id)+":"+state.period);
+      }catch(error){
+        if(error?.name==="AbortError"||token!==state.token)return false;
+        const fallback=fallbackMicroscope(coin,state.period);
+        if(fallback)return applyResult(coin,fallback,"external:"+String(ctx.pair||coin.id)+":"+state.period,String(error?.message||error));
+        state.loading=false;state.error=String(error?.message||error);setLoading("Graphique Ligne indisponible · "+state.error);draw();return false;
+      }
+    }
+
+    const currency=displayCurrency(),requestedKey=bankContextKey(coin,currency)+":"+Number(state.period||1);
+    setLoading("Lecture de l’historique Interface…");
     try{
-      const ctx=externalContext();
-      let result=ctx?await fetchExternal(ctx,state.period,controller.signal):await fetchCanonical(coin,state.period,controller.signal);
+      const bank=await loadInterfaceBank(coin,currency,reason==="selection"||reason==="currency");
       if(token!==state.token)return false;
-      const loadedKey=cacheContextKey(coin,state.period,result.currency||displayCurrency());state.hoverIndex=-1;state.rows=result.rows;state.volumes=result.volumes;state.source=result.source;state.currency=result.currency;state.external=result.external;state.truth=result.truth||"direct";state.loadedContextKey=loadedKey;state.refreshWarning=null;state.lastLoadedAt=new Date().toISOString();state.loading=false;state.error=null;if(!result.external)storeCachedResult(coin,state.period,result);setLoading("");syncText();draw();dispatchLoaded();return true;
+      const stored=bestBankResult(bank,state.period);
+      if(stored){
+        return applyResult(coin,{...stored,currency,truth:"database",external:false},
+          requestedKey,
+          state.historyBankSource+" · "+state.historyBankPeriods.map(periodLabel).join(" / "));
+      }
+
+      // D LOCK 40.6.599:
+      // a period click NEVER opens a network request. It only reads the
+      // historical mass already owned by the Interface database.
+      if(reason==="period"){
+        state.loading=false;state.error=null;state.refreshWarning="Période absente de la base historique Interface · aucune requête réseau lancée";
+        setLoading("");syncText();draw();dispatchLoaded();return false;
+      }
+
+      // Bootstrap only: if the Interface database has no usable row for the
+      // current asset/currency, one direct request may seed the visible period.
+      // Period navigation remains database-only afterwards.
+      const direct=await fetchCanonical(coin,state.period,controller.signal);
+      if(token!==state.token)return false;
+      return applyResult(coin,{...direct,truth:"direct-bootstrap"},requestedKey,
+        "Bootstrap direct : base Interface sans série exploitable pour ce contexte");
     }catch(error){
-      if(error?.name==="AbortError")return false;
-      if(token!==state.token)return false;
-      const ctx=externalContext(),currency=ctx?String(ctx.quote||"USDT").toUpperCase():displayCurrency(),requestedKey=cacheContextKey(coin,state.period,currency);
-      const cached=!ctx?exactCachedResult(coin,state.period,currency):null;
-      if(cached){
-        state.hoverIndex=-1;state.rows=cached.rows;state.volumes=cached.volumes;state.source=cached.source;state.currency=cached.currency;state.external=false;state.truth="cache";state.loadedContextKey=requestedKey;state.refreshWarning="Actualisation directe indisponible · "+String(error?.message||error);state.lastLoadedAt=new Date().toISOString();state.loading=false;state.error=null;setLoading("");syncText();draw();dispatchLoaded();return true;
-      }
-      if(state.loadedContextKey===requestedKey&&state.rows.length>=2){
-        state.truth="cache";state.source="Dernière série réelle conservée · actualisation réseau indisponible";state.refreshWarning=String(error?.message||error);state.loading=false;state.error=null;setLoading("");syncText();draw();dispatchLoaded();return true;
-      }
+      if(error?.name==="AbortError"||token!==state.token)return false;
+      const bank=state.historyBankKey===bankContextKey(coin,currency)?state.historyBank:null;
+      const stored=bestBankResult(bank,state.period);
+      if(stored)return applyResult(coin,{...stored,currency,truth:"database",external:false},requestedKey,String(error?.message||error));
       const fallback=fallbackMicroscope(coin,state.period);
-      if(fallback){state.hoverIndex=-1;state.rows=fallback.rows;state.volumes=fallback.volumes;state.source=fallback.source;state.currency=fallback.currency;state.external=fallback.external;state.truth=fallback.truth||"cache";state.loadedContextKey=requestedKey;state.refreshWarning=String(error?.message||error);state.lastLoadedAt=new Date().toISOString();state.loading=false;state.error=null;setLoading("");syncText();draw();dispatchLoaded();return true;}
-      state.loading=false;state.error=String(error?.message||error);state.refreshWarning=null;setLoading("Graphique Ligne indisponible · "+state.error);syncText();draw();return false;
+      if(fallback)return applyResult(coin,fallback,requestedKey,String(error?.message||error));
+      state.loading=false;state.error=String(error?.message||error);state.refreshWarning=null;setLoading("Graphique Ligne indisponible · "+state.error);draw();return false;
     }
   }
   function setPeriod(period){
@@ -319,7 +430,7 @@
   }
   function snapshotState(){
     const a=analysisText(),coin=state.coin||selectedCoin()||null;
-    return Object.freeze({build:BUILD,period:state.period,period_label:periodLabel(state.period),points:state.rows.length,source:state.source,currency:state.currency,external:state.external,truth:state.truth,volume:state.volume,loading:state.loading,error:state.error,refresh_warning:state.refreshWarning,loaded_context_key:state.loadedContextKey,last_loaded_at:state.lastLoadedAt,coin_id:coin?.id||null,symbol:coin?.symbol||null,name:coin?.name||null,first:a.first,last:a.last,min:a.min,max:a.max,change:a.change,amplitude:a.amplitude});
+    return Object.freeze({build:BUILD,period:state.period,period_label:periodLabel(state.period),points:state.rows.length,source:state.source,currency:state.currency,external:state.external,truth:state.truth,volume:state.volume,loading:state.loading,error:state.error,refresh_warning:state.refreshWarning,loaded_context_key:state.loadedContextKey,last_loaded_at:state.lastLoadedAt,history_bank_source:state.historyBankSource,history_bank_periods:[...state.historyBankPeriods],history_bank_loaded_at:state.historyBankLoadedAt,network_on_period_change:false,coin_id:coin?.id||null,symbol:coin?.symbol||null,name:coin?.name||null,first:a.first,last:a.last,min:a.min,max:a.max,change:a.change,amplitude:a.amplitude});
   }
   function dispatchLoaded(){try{window.dispatchEvent(new CustomEvent("agent-crypto:trader-line-loaded",{detail:snapshotState()}));}catch(_){}}
   function bind(){
@@ -340,15 +451,15 @@
     $("traderAnalysisToggle")?.addEventListener("click",()=>{state.analysis=!state.analysis;updatePresentation();});
     $("traderMainChart")?.addEventListener("pointermove",showTooltip,{passive:true});
     $("traderMainChart")?.addEventListener("pointerleave",hideTooltip,{passive:true});
-    window.addEventListener("agent-crypto:trader-selection-changed",()=>{state.period=1;syncPeriods();if(lineMode())void load("selection");},{passive:true});
+    window.addEventListener("agent-crypto:trader-selection-changed",()=>{clearInterfaceBank();state.period=1;syncPeriods();if(lineMode())void load("selection");},{passive:true});
     window.addEventListener("agent-crypto:external-asset-changed",()=>{state.period=1;syncPeriods();if(lineMode())void load("external");},{passive:true});
-    window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(lineMode()&&!externalContext())void load("currency");},{passive:true});
+    window.addEventListener("agent-crypto:quote-architecture-changed",()=>{clearInterfaceBank();if(lineMode()&&!externalContext())void load("currency");},{passive:true});
     let frame=0;window.addEventListener("resize",()=>{if(frame)cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{frame=0;draw();});},{passive:true});
     setTimeout(()=>{syncPeriods();if(lineMode())void load("boot");},0);
   }
   globalThis.AgentCryptoTraderLineChart=Object.freeze({
     build:BUILD,load,setPeriod,snapshot:snapshotState,
-    native_interface_transpose:true,real_order:false,market_core_changed:false,recurring_timer:false
+    native_interface_transpose:true,interface_history_bank:true,indexeddb_primary_read:true,network_on_period_change:false,trader_period_cache_added:false,real_order:false,market_core_changed:false,recurring_timer:false
   });
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind,{once:true});else bind();
 })();
