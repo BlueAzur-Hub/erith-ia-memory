@@ -136,3 +136,35 @@
   .trader-chart-fidelity-head{flex-direction:column!important}
   .trader-graph-toolbar,.trader-chart-controls{width:100%!important;justify-content:flex-start!important}
 }
+
+
+/* 40.6.591 — Interface mirror experiment.
+   Keep Administrator geometry visible; excluded modules are present but inert. */
+.trader-interface-mirror{
+  display:flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  flex-wrap:wrap!important;
+}
+.trader-interface-mirror .trader-excluded-module,
+.trader-interface-mirror .trader-excluded-module:disabled{
+  opacity:.42!important;
+  filter:grayscale(.82) saturate(.42)!important;
+  color:#71818b!important;
+  border-color:rgba(139,158,170,.13)!important;
+  background:linear-gradient(180deg,rgba(26,33,39,.48),rgba(11,18,23,.50))!important;
+  box-shadow:none!important;
+  cursor:not-allowed!important;
+  pointer-events:auto!important;
+}
+.trader-interface-mirror .trader-excluded-module .atlas-quick-icon{
+  color:#687983!important;
+  text-shadow:none!important;
+}
+.trader-interface-mirror .trader-excluded-attention{
+  color:#8b7182!important;
+  border-color:rgba(181,112,157,.13)!important;
+}
+.trader-interface-mirror .atlas-quick-link:not(.trader-excluded-module){
+  opacity:1!important;
+}

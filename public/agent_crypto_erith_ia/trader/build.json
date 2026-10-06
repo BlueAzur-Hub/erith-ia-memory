@@ -1,18 +1,18 @@
 {
-  "build": "40.6.590",
+  "build": "40.6.591",
   "surface": "trader",
-  "release": "TRADER · INTERFACE FIDELITY II",
-  "parent_trader_build": "40.6.589",
+  "release": "TRADER · INTERFACE MIRROR / GREY EXCLUSIONS",
+  "parent_trader_build": "40.6.590",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": false,
-  "status": "branch_ready_for_pr_406590",
+  "status": "branch_ready_for_pr_406591",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
-    "menu": "Native Administrator visual shell retained; Trader semantic identity restored exactly: ERITH.IA · TRADING DESK / Agent-Crypto · Trader. Existing Marché/Graphique navigation preserved.",
+    "menu": "Administrator menu geometry mirrored in Trader. Marché and Graphique remain active; excluded Administrator modules stay visible as disabled grey controls instead of disappearing.",
     "primary": "Administrator #analyste / champagne-clean-lens transposed",
     "chart": "Administrator-style Crypto Ligne surface retained; its analysis overlay now follows the Administrator information hierarchy (asset/name/period/currency/source truth/price/change/low/high/amplitude/departure/last/points). Real Volume toggle restored for the Ligne owner.",
     "technical_reading": "Administrator native #detailPanel DOM retained and now synchronized from one Trader context owner: selected asset, display currency, price, 24h market variation, active line history, Source Dock, data-state, diagnostics and integrity. Candles S/R stays owned by the existing Candles owner.",
@@ -22,7 +22,27 @@
     "chart_toolbar": "Native Depth, Quote Currency and Microscope owners remain unique. Trader restores a real Volume toggle for its real Ligne volume bars; Legend/Analysis/Fiche remain functional bridges.",
     "market_fiche": "Administrator native Fiche contract restored in Trader: help-layer floating surface + real lateral dock host, persisted floating/dock mode, sticky/internal-scroll geometry from shared Administrator CSS. Legacy pinned trader-market-fiche owner retired.",
     "line_chart": "Canonical crypto: CoinGecko market_chart direct in selected display currency. New Listings: existing AgentCryptoNewListingLiveAsset.fetchCandles provider context. Period row transposed: 24h, 7j, 30j, 60j, 90j, 1a, Max.",
-    "technical_context_owner": "trader/technical-reading-data-sync.js · one selected asset shared with Market/Ligne/Bougies/Depth."
+    "technical_context_owner": "trader/technical-reading-data-sync.js · one selected asset shared with Market/Ligne/Bougies/Depth.",
+    "interface_mirror": {
+      "active_modules": [
+        "Marché",
+        "Graphique"
+      ],
+      "grey_disabled_modules": [
+        "Livecheck",
+        "Atlas",
+        "Oracle",
+        "Sources",
+        "Décision",
+        "Analyse",
+        "Système",
+        "Projets",
+        "Vue Normal",
+        "Command Center",
+        "Aether · ATTENTION"
+      ],
+      "logic_added": false
+    }
   },
   "technical_reading": {
     "single_portrait_owner": true,
@@ -83,10 +103,10 @@
     "pr": null,
     "merge_commit": null,
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.590_INTERFACE_FIDELITY_II.zip",
-    "zip_bytes": 64467,
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.591_INTERFACE_MIRROR_GREY.zip",
+    "zip_bytes": 46604,
     "javascript_syntax": "PASS",
-    "package_commit": "e843b464a511ac1ff02ea3f6fe5899f487d74d9b"
+    "package_commit": "390d5665e2b4933fa632f31301106040b9953cb5"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -96,9 +116,8 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox: verify BTC selected in Ligne also populates Lecture Technique (Actif/Prix/24h/Fiche/Source Dock).",
-    "Switch Ligne ↔ Bougies ↔ Profondeur and verify one shared active asset.",
-    "Compare the Trader analysis overlay with Administrator.",
-    "Then test 40.6.591 Interface mirror / grey exclusions before BUY / SELL / REDIVIDER."
+    "Firefox: compare header geometry directly with Administrator 40.6.571.",
+    "Decide whether grey-exclusion mirror is clearer than removed-module Trader header.",
+    "If accepted, apply the same mirror-first principle to remaining Trader surfaces before BUY / SELL / REDIVIDER."
   ]
 }

@@ -1,38 +1,26 @@
-# ERITH.IA Trading Desk — 40.6.590
+# ERITH.IA Trading Desk — 40.6.591
 
 ## Objet
-**Interface Fidelity II** : arrêter d'ajouter des propriétaires Trader parallèles et rapprocher encore le poste Trader de l'Administrator 40.6.571 validé.
+Tester concrètement l'idée **« repartir de l'Interface puis griser ce qui est exclu »** sans reconstruire le Trader ni réintroduire les propriétaires métier Administrator.
 
-## Cette version
-- conserve le Graphique Ligne 40.6.589 et les vrais propriétaires Bougies / Profondeur / devise ;
-- restaure un **vrai bouton Volume** pour le Graphique Ligne : il masque/affiche réellement les volumes ;
-- remplace le petit résumé Trader par la hiérarchie d'analyse de l'Interface :
-  - actif + nom + période + devise ;
-  - vérité de source ;
-  - prix / variation / bas / haut / amplitude ;
-  - départ / dernière / nombre de points / date de série / source ;
-- ajoute un **propriétaire de contexte unique** pour Lecture Technique :
-  - actif sélectionné ;
-  - Prix EUR/USD ;
-  - variation 24 h marché ;
-  - Fiche active ;
-  - Source Dock ;
-  - état marché / spot / historique ;
-  - réseau, cache, latence ;
-  - intégrité graphique ;
-- corrige le bug où la carte **24 h** affichait la granularité Bougies (ex. `5m`) au lieu de la variation 24 h ;
-- laisse les Support / Résistance au propriétaire Bougies existant.
+## Ce qui change
+Le menu supérieur reprend la géométrie et les repères visuels de l'Administrator :
+- **Marché** et **Graphique** restent actifs ;
+- Livecheck, Atlas, Oracle, Sources, Décision, Analyse, Système, Projets, Vue Normal, Command Center et Aether restent visibles mais **gris / désactivés** ;
+- aucun de ces boutons gris ne charge de module, ne lance d'appel, ne restaure de contexte ni n'ajoute de logique.
 
-## Protégé
-- Administrator 40.6.571 ;
-- Market Core 38.15.11 ;
-- propriétaires Bougies / Profondeur / Quote Currency ;
-- New Listings ;
+## Ce qui reste 40.6.590
+- Graphique Ligne et tableau d'analyse Interface Fidelity II ;
+- Bougies / Profondeur / devise natifs ;
+- Lecture Technique synchronisée sur l'actif unique ;
+- Market + Nouveaux listings ;
+- Fiche native ;
 - Math Core ;
-- aucune exécution réelle.
+- READ ONLY / aucune exécution réelle.
 
-## Direction suivante
-40.6.591 servira de test visuel **Interface miroir / exclusions grisées** : conserver la géométrie de l'Interface et rendre visibles mais inactifs les modules exclus du Trader, afin de comparer cette approche avec la suppression pure.
+## But terrain
+Comparer visuellement deux philosophies :
+1. retirer les modules inutiles ;
+2. conserver l'Interface comme squelette et **griser les modules exclus**.
 
-## Terrain
-Firefox opérateur : **PENDING CHRISTOPHE**.
+Firefox opérateur tranche.
