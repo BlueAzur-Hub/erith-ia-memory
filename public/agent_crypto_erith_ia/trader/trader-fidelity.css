@@ -1,0 +1,186 @@
+/* Agent-Crypto Trader — interface fidelity layer
+   Stable filename by design: no build number in the file name.
+   Purpose: transpose the validated Administrator visual grammar without importing Aether/Atlas/Oracle/Veille. */
+
+.trader-menu.trader-interface-header{
+  display:block!important;
+  min-height:0!important;
+  padding:0!important;
+  overflow:hidden;
+  background:linear-gradient(180deg,rgba(7,20,30,.98),rgba(4,14,23,.97))!important;
+  border:1px solid rgba(104,205,229,.25)!important;
+  border-radius:13px!important;
+}
+.trader-interface-top{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:16px;
+  min-height:70px;
+  padding:9px 12px;
+}
+.trader-title-block{min-width:0}
+.trader-title-block .eyebrow{margin:0 0 3px;color:#9bdde8;letter-spacing:.12em;font-size:9px;font-weight:900}
+.trader-brand-account-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.trader-brandline{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:28px;line-height:1;color:#fff1ca}
+.trader-brandline strong{font-weight:700;color:#edfaff}
+.trader-context-switcher{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.trader-status-stack{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.trader-status-stack .status-chip,.trader-status-stack .admin-link{min-height:32px;padding:7px 11px}
+.trader-build-chip{border-color:rgba(109,240,196,.28)!important;color:#aef8dc!important}
+.trader-interface-bar{
+  padding:7px 9px;
+  border-top:1px solid rgba(104,205,229,.17);
+  background:rgba(2,11,18,.44);
+}
+.trader-v2-nav{display:flex!important;align-items:center!important;min-height:38px!important}
+.trader-quick-dock{display:flex!important;align-items:center!important;gap:7px!important;flex-wrap:wrap!important}
+.trader-quick-dock .atlas-quick-link{
+  min-height:32px!important;
+  padding:7px 12px!important;
+  border:1px solid rgba(98,229,239,.20)!important;
+  border-radius:9px!important;
+  background:linear-gradient(180deg,rgba(13,34,45,.82),rgba(6,20,29,.82))!important;
+  color:#dff8fb!important;
+  font-size:10px!important;
+  font-weight:850!important;
+  cursor:pointer;
+}
+.trader-quick-dock .atlas-quick-link:hover,.trader-quick-dock .atlas-quick-link:focus-visible,
+.trader-quick-dock .atlas-quick-link.is-active{
+  border-color:rgba(98,229,239,.58)!important;
+  background:linear-gradient(180deg,rgba(32,73,88,.86),rgba(12,40,53,.86))!important;
+  outline:none!important;
+}
+.trader-quick-dock .atlas-quick-icon{font-size:12px;color:#75e9f1}
+
+/* Graph toolbar: same visual grammar as Administrator; business owners remain unchanged. */
+.trader-chart-fidelity-head{
+  align-items:flex-start!important;
+  padding:8px 10px 7px!important;
+  min-height:60px!important;
+}
+.trader-market-domain-title{display:flex!important;align-items:center!important;min-width:138px!important}
+.trader-domain-static{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  min-height:34px!important;
+  padding:7px 12px!important;
+  border:1px solid rgba(100,227,239,.34)!important;
+  border-radius:999px!important;
+  background:rgba(24,73,87,.34)!important;
+  color:#caeff5!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  letter-spacing:.04em!important;
+}
+.trader-domain-static b{color:#66edf4!important}
+.trader-graph-toolbar{display:flex!important;flex:1 1 auto!important;min-width:0!important;justify-content:flex-end!important}
+.trader-graph-toolbar .chart-v2-toolbar-reading{display:flex!important;align-items:center!important;justify-content:flex-end!important;width:100%!important}
+.trader-chart-controls{
+  display:flex!important;
+  flex:1 1 auto!important;
+  min-width:0!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:6px!important;
+  flex-wrap:wrap!important;
+}
+.trader-chart-controls .chart-v2-toggle-group{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:4px!important;
+  padding-left:7px!important;
+  border-left:1px solid rgba(255,211,122,.14)!important;
+}
+.trader-chart-controls .chart-v2-toggle-group>span{
+  font:900 7px/1 system-ui,sans-serif!important;
+  letter-spacing:.11em!important;
+  color:#8da2ad!important;
+  text-transform:uppercase!important;
+}
+.trader-chart-controls .chart-v2-toggle{
+  min-height:25px!important;
+  padding:5px 8px!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  border-radius:7px!important;
+  background:rgba(255,255,255,.04)!important;
+  color:#c6d8df!important;
+  font:900 9px/1 system-ui,sans-serif!important;
+  cursor:pointer!important;
+}
+.trader-chart-controls .chart-v2-toggle.is-active{
+  color:#07141a!important;
+  background:#8fefff!important;
+  border-color:#c8f7ff!important;
+}
+.trader-chart-controls .chart-v2-toggle[data-trader-depth-toggle].is-active{
+  background:#ffd782!important;border-color:#fff0bc!important;color:#07141a!important;
+}
+.trader-chart-controls #atlasMarketMicroscopeControls{margin-left:0!important}
+#atlasMarketMicroscope.trader-hide-legend .amm-series-legend{display:none!important}
+#atlasMarketMicroscope.trader-hide-analysis .amm-tip{display:none!important}
+
+/* Native Market fiche restored in Trader. */
+#marketSnapshotPanel{position:relative}
+.trader-market-fiche{
+  --fiche-accent:#ffd782;
+  position:absolute;
+  z-index:2350;
+  top:74px;
+  left:58%;
+  width:min(455px,calc(100% - 28px));
+  transform:translateX(-50%);
+  border:1px solid rgba(83,229,241,.55);
+  border-radius:14px;
+  padding:12px;
+  background:linear-gradient(180deg,rgba(4,24,34,.985),rgba(3,18,27,.985));
+  box-shadow:0 22px 55px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.trader-market-fiche[hidden]{display:none!important}
+.trader-market-fiche[data-mode="side"]{left:auto;right:12px;transform:none}
+.trader-market-fiche-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.trader-market-fiche-head .eyebrow{margin:0;color:#ffd782;font-size:9px;letter-spacing:.13em;font-weight:950}
+.trader-market-fiche-mode{display:flex;gap:4px}
+.trader-market-fiche-mode button{
+  min-height:25px;padding:4px 7px;border:1px solid rgba(255,255,255,.16);border-radius:6px;
+  background:rgba(255,255,255,.035);color:#bacbd3;font-size:9px;font-weight:850;cursor:pointer
+}
+.trader-market-fiche-mode button.is-active{border-color:#ffe2a1;color:#fff5d8;background:rgba(255,215,130,.12)}
+.trader-market-fiche-identity{display:flex;align-items:center;gap:10px;padding:9px 0 10px;border-bottom:1px solid rgba(255,255,255,.10)}
+.trader-market-fiche-identity img{width:46px;height:46px;border-radius:50%;object-fit:cover;background:#0b1c26}
+.trader-market-fiche-identity h3{margin:0;font-size:17px;color:#fff3cf}
+.trader-market-fiche-identity h3 small{margin-left:5px;font-size:11px;color:#6be6f0}
+.trader-market-fiche-identity p{margin:3px 0 0;color:#8fa7b2;font-size:9px}
+.trader-market-fiche-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:9px}
+.trader-market-fiche-grid>div{
+  display:grid;gap:3px;min-width:0;padding:8px 9px;border:1px solid rgba(255,255,255,.09);
+  border-radius:8px;background:rgba(255,255,255,.025)
+}
+.trader-market-fiche-grid span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#7fa4b2;font-weight:900}
+.trader-market-fiche-grid b{font-size:12px;color:#eefaff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trader-market-fiche-grid b.pos{color:#64efa0}.trader-market-fiche-grid b.neg{color:#ff6f89}
+.trader-market-fiche-proof{
+  margin-top:9px;padding:7px 9px;border:1px solid rgba(255,215,130,.12);border-radius:8px;
+  background:rgba(255,215,130,.035);display:grid;gap:4px;font-size:8px;color:#a7bbc3
+}
+.trader-market-fiche-proof b{color:#ffe7aa}
+.trader-market-fiche-foot{
+  margin-top:9px;padding:7px 9px;border:1px solid rgba(98,236,255,.15);border-radius:8px;
+  color:#ffe7aa;font-size:9px;font-weight:850;background:rgba(98,236,255,.035)
+}
+
+@media(max-width:1180px){
+  .trader-interface-top{grid-template-columns:1fr}
+  .trader-status-stack{justify-content:flex-start}
+  .trader-brandline{font-size:24px}
+}
+@media(max-width:900px){
+  .trader-menu.trader-interface-header{position:static!important}
+  .trader-brand-account-row{align-items:flex-start}
+  .trader-context-switcher{width:100%}
+  .trader-chart-fidelity-head{flex-direction:column!important}
+  .trader-graph-toolbar,.trader-chart-controls{width:100%!important;justify-content:flex-start!important}
+  .trader-market-fiche{position:fixed;left:8px;right:8px;top:82px;width:auto;max-height:calc(100vh - 100px);overflow:auto;transform:none}
+}
