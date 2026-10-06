@@ -84,6 +84,7 @@ need(scope.get("eur_fallback_on_transport_failure") is False, "transport failure
 need(scope.get("stable_control_rows") is True, "manifest stable control rows")
 need(scope.get("responsive_single_line_toolbar") is True, "manifest responsive single-line toolbar")
 need(scope.get("interval_label_removed") is True, "manifest interval label removed")
+need("interval_label" not in scope, "stale INTERVALLE manifest field removed")
 need(scope.get("toolbar_single_line_preferred") is True, "manifest desktop single-line preference")
 need(scope.get("narrow_wrap_two_rows") is True, "manifest narrow two-row fallback")
 need(scope.get("control_row_wrapping") is True, "manifest responsive control wrapping")
@@ -115,5 +116,5 @@ print(json.dumps({
     "transport": scope.get("transport_runtime"),
     "indicator_state_owner": scope.get("indicator_state_owner"),
     "market_core": BUILD.get("market_core"),
-    "terrain": "PENDING_FIREFOX"
+    "terrain": BUILD.get("terrain_proof")
 }))
