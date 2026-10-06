@@ -1,6 +1,6 @@
 (function marketTranspose(){
   "use strict";
-  const BUILD="40.6.588",LATEST="../data/crypto/latest.json",EXTENDED="../data/crypto/extended.json";
+  const BUILD="40.6.589",LATEST="../data/crypto/latest.json",EXTENDED="../data/crypto/extended.json";
   const state={coins:[],extended:[],selectedId:"bitcoin",externalCoin:null,filter:"all",limit:50,columns:"essential",sort:"rank-asc",query:"",loaded:false,extendedLoaded:false};
   const stable=new Set(["USDT","USDC","DAI","FDUSD","USDE","USDS","PYUSD","TUSD","EURC"]);
   const $=id=>document.getElementById(id);

@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD="40.6.588";
+  const BUILD="40.6.589";
   const MODE_KEY="agent_crypto_erith_ia_market_card_mode_v1";
   const MIN_MARKET_WIDTH=980;
   const PANEL_MIN_WIDTH=320;

@@ -1,0 +1,244 @@
+(() => {
+  "use strict";
+  const BUILD="40.6.589";
+  const PERIODS=Object.freeze([1,7,30,60,90,365,36500]);
+  const LABELS=Object.freeze({1:"24h",7:"7j",30:"30j",60:"60j",90:"90j",365:"1a",36500:"Max"});
+  const state={period:1,token:0,controller:null,rows:[],volumes:[],source:"",currency:"USD",coin:null,error:null,loading:false,legend:true,analysis:true,lastLoadedAt:null,external:false};
+  const $=id=>document.getElementById(id);
+  const finite=v=>{if(v===null||v===undefined||v==="")return null;const n=Number(v);return Number.isFinite(n)?n:null;};
+  const displayCurrency=()=>String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"USD").toUpperCase()==="EUR"?"EUR":"USD";
+  const selectedCoin=()=>globalThis.AgentCryptoTraderMarket?.selected?.()||globalThis.getSelectedCoin?.()||null;
+  const lineMode=()=>{
+    const native=document.querySelector("#atlasMarketMicroscopeControls [data-amm-mode='native']");
+    return native ? native.classList.contains("is-active") : !document.getElementById("atlasMarketMicroscope")?.classList.contains("is-open");
+  };
+  const periodLabel=p=>LABELS[Number(p)]||String(p)+"j";
+  const currencyFormatter=(currency,value)=>{
+    const n=finite(value);if(n===null)return"—";
+    const digits=Math.abs(n)>=1000?2:Math.abs(n)>=1?4:Math.abs(n)>=.01?6:8;
+    try{return new Intl.NumberFormat("fr-FR",{style:"currency",currency,maximumFractionDigits:digits}).format(n);}
+    catch(_){return n.toLocaleString("fr-FR",{maximumFractionDigits:digits})+" "+currency;}
+  };
+  const quoteFormatter=(quote,value)=>{
+    const n=finite(value);if(n===null)return"—";
+    const digits=Math.abs(n)>=1000?2:Math.abs(n)>=1?5:Math.abs(n)>=.01?7:9;
+    return n.toLocaleString("fr-FR",{maximumFractionDigits:digits})+" "+quote;
+  };
+  const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+  function externalContext(){
+    const snap=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
+    const coin=selectedCoin();
+    const active=!!snap?.active && !!coin?.externalNewListing;
+    return active?{...snap,coin}:null;
+  }
+  function colorFor(coin){
+    const symbol=String(coin?.symbol||"").toUpperCase();
+    const map={BTC:"#F7931A",ETH:"#8193b5",USDT:"#26a17b",USDC:"#2775ca",BNB:"#F3BA2F",XRP:"#f2f4f7",SOL:"#6ee7c7",CT:"#ffd782"};
+    return map[symbol]||"#62ecff";
+  }
+  function normalizeSeries(raw){
+    const map=new Map();
+    (Array.isArray(raw)?raw:[]).forEach(point=>{
+      const t=finite(point?.[0]??point?.t),v=finite(point?.[1]??point?.price??point?.c);
+      if(t!==null&&t>0&&v!==null&&v>0)map.set(t,v);
+    });
+    return [...map.entries()].sort((a,b)=>a[0]-b[0]);
+  }
+  function normalizeVolumes(raw){
+    const map=new Map();
+    (Array.isArray(raw)?raw:[]).forEach(point=>{
+      const t=finite(point?.[0]??point?.t),v=finite(point?.[1]??point?.volume??point?.v);
+      if(t!==null&&t>0&&v!==null&&v>=0)map.set(t,v);
+    });
+    return [...map.entries()].sort((a,b)=>a[0]-b[0]);
+  }
+  function externalPlan(period,ageDays){
+    const p=Number(period||1),age=Math.max(0,Number(ageDays||0));
+    if(p<=1)return{bar:"5m",limit:300,coverage:"≈24 h"};
+    if(p<=7)return{bar:"1h",limit:Math.min(300,Math.max(48,Math.ceil(Math.min(age||7,7)*24))),coverage:"≤7 j"};
+    if(p<=30)return{bar:"4h",limit:Math.min(300,Math.max(42,Math.ceil(Math.min(age||30,30)*6))),coverage:"≤30 j"};
+    if(p<=90)return{bar:"1j",limit:Math.min(300,Math.max(30,Math.ceil(Math.min(age||p,p)))),coverage:"quotidien"};
+    return{bar:"1j",limit:Math.min(300,Math.max(30,Math.ceil(Math.min(age||300,p===36500?300:p)))),coverage:"quotidien"};
+  }
+  async function fetchCanonical(coin,period,signal){
+    if(!coin?.id)throw new Error("Actif sans identifiant historique");
+    const currency=displayCurrency(),days=Number(period)===36500?"max":String(Number(period)||1);
+    const url=new URL("https://api.coingecko.com/api/v3/coins/"+encodeURIComponent(coin.id)+"/market_chart");
+    url.searchParams.set("vs_currency",currency.toLowerCase());
+    url.searchParams.set("days",days);
+    url.searchParams.set("precision","full");
+    const response=await fetch(url,{cache:"no-store",signal,headers:{Accept:"application/json"}});
+    if(!response.ok)throw new Error("CoinGecko historique · HTTP "+response.status);
+    const payload=await response.json();
+    const rows=normalizeSeries(payload?.prices),volumes=normalizeVolumes(payload?.total_volumes);
+    if(rows.length<2)throw new Error("Série CoinGecko vide");
+    return{rows,volumes,source:"CoinGecko market_chart · direct",currency,external:false};
+  }
+  async function fetchExternal(ctx,period,signal){
+    const plan=externalPlan(period,ctx?.ageDays??ctx?.coin?.providerContext?.ageDays);
+    const pack=await globalThis.AgentCryptoNewListingLiveAsset?.fetchCandles?.({bar:plan.bar,limit:plan.limit,signal});
+    const rows=normalizeSeries((pack?.rows||[]).map(r=>[r.t,r.c]));
+    const volumes=normalizeVolumes((pack?.rows||[]).map(r=>[r.t,r.v]));
+    if(rows.length<2)throw new Error("Série externe vide");
+    return{rows,volumes,source:(pack?.providerLabel||ctx?.providerLabel||ctx?.provider||"Exchange")+" "+(pack?.pair||ctx?.pair||"")+" · "+plan.bar,currency:String(pack?.quote||ctx?.quote||"USDT").toUpperCase(),external:true,plan};
+  }
+  function fallbackMicroscope(coin,period){
+    if(Number(period)!==1)return null;
+    const snap=globalThis.AgentCryptoMarketMicroscope?.snapshot?.();
+    if(!Array.isArray(snap?.rows)||snap.rows.length<2)return null;
+    const ctx=externalContext();
+    if(!!snap.external!==!!ctx)return null;
+    const rows=normalizeSeries(snap.rows.map(r=>[r.t,r.c])),volumes=normalizeVolumes(snap.rows.map(r=>[r.t,r.v]));
+    if(rows.length<2)return null;
+    return{rows,volumes,source:String(snap.source||"Market Microscope OHLCV")+" · repli",currency:ctx?String(ctx.quote||"USDT").toUpperCase():displayCurrency(),external:!!ctx};
+  }
+  function setLoading(label){
+    const root=$("traderNativeLineChart");if(!root)return;
+    root.classList.toggle("is-loading",state.loading);
+    root.classList.toggle("is-error",!!state.error);
+    root.dataset.stateLabel=label||"";
+  }
+  function syncPeriods(){
+    const ext=externalContext();
+    const age=Number((ext?.ageDays ?? ext?.coin?.providerContext?.ageDays) || 0);
+    document.querySelectorAll("[data-trader-line-period]").forEach(btn=>{
+      const p=Number(btn.dataset.traderLinePeriod||1);
+      let disabled=false;
+      if(ext&&age>0&&p!==36500)disabled=p>Math.max(7,age*1.2);
+      btn.disabled=disabled;
+      btn.classList.toggle("active",p===state.period);
+      btn.classList.toggle("is-active",p===state.period);
+      btn.setAttribute("aria-pressed",p===state.period?"true":"false");
+    });
+    const truth=$("traderLinePeriodTruth");
+    if(truth)truth.textContent=ext?(age>0?Math.min(age,state.period===36500?age:state.period).toFixed(age<10?1:0)+" j dispo":periodLabel(state.period)):periodLabel(state.period);
+  }
+  function updatePresentation(){
+    const legend=$("traderLineLegend"),overlay=$("traderLineInsightOverlay");
+    if(legend)legend.hidden=!state.legend;
+    if(overlay){overlay.hidden=!state.analysis;overlay.setAttribute("aria-hidden",state.analysis?"false":"true");}
+  }
+  function analysisText(){
+    const rows=state.rows;if(rows.length<2)return{change:null,min:null,max:null};
+    const first=rows[0][1],last=rows.at(-1)[1],values=rows.map(x=>x[1]);
+    return{change:first>0?(last/first-1)*100:null,min:Math.min(...values),max:Math.max(...values)};
+  }
+  function syncText(){
+    const coin=state.coin||selectedCoin()||{},symbol=String(coin.symbol||"ACTIF").toUpperCase(),a=analysisText(),color=colorFor(coin);
+    const legend=$("traderLineLegend");
+    if(legend)legend.innerHTML='<i style="color:'+escapeHtml(color)+'"></i><b>'+escapeHtml(symbol)+'</b><span>'+escapeHtml(state.source||"Historique réel")+'</span>';
+    const title=$("traderLineInsightTitle"),series=$("traderLineInsightSeries"),summary=$("traderLineInsightSummary");
+    if(title)title.textContent=(state.external?"NEW LISTING":"GRAPHIQUE")+" · PRIX / HISTORIQUE";
+    if(series)series.textContent=symbol+" · "+periodLabel(state.period)+" · "+state.rows.length+" points · "+state.currency;
+    if(summary)summary.textContent=a.change===null?"Variation indisponible":"Variation "+(a.change>=0?"+":"")+a.change.toFixed(2)+" % · bas "+formatPrice(a.min)+" · haut "+formatPrice(a.max);
+    const caption=$("traderLineCaption");
+    if(caption)caption.textContent=symbol+" · "+periodLabel(state.period)+" · "+state.source+" · "+state.rows.length+" points · "+(state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—")+" · lecture seule";
+    updatePresentation();
+  }
+  function formatPrice(value){
+    return state.external?quoteFormatter(state.currency,value):currencyFormatter(state.currency,value);
+  }
+  function timeLabel(ts){
+    const d=new Date(Number(ts));
+    if(state.period<=1)return d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+    if(state.period<=7)return d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("fr-FR",{hour:"2-digit"});
+    if(state.period<=90)return d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit"});
+    return d.toLocaleDateString("fr-FR",{month:"short",year:"2-digit"});
+  }
+  function canvasGeometry(){
+    const canvas=$("traderMainChart"),root=$("traderNativeLineChart");if(!canvas||!root)return null;
+    const rect=root.getBoundingClientRect(),dpr=window.devicePixelRatio||1,w=Math.max(600,Math.round(rect.width||980)),h=Math.max(340,Math.round(rect.height||480));
+    const pw=Math.round(w*dpr),ph=Math.round(h*dpr);
+    if(canvas.width!==pw||canvas.height!==ph){canvas.width=pw;canvas.height=ph;canvas.style.width=w+"px";canvas.style.height=h+"px";}
+    const ctx=canvas.getContext("2d");ctx.setTransform(dpr,0,0,dpr,0,0);return{canvas,ctx,w,h};
+  }
+  function draw(){
+    const g=canvasGeometry();if(!g)return;
+    const {ctx,w,h}=g;ctx.clearRect(0,0,w,h);
+    const rows=state.rows;if(rows.length<2)return;
+    const pad={l:38,r:94,t:82,b:46},plotW=w-pad.l-pad.r,plotH=h-pad.t-pad.b;
+    const times=rows.map(r=>r[0]),prices=rows.map(r=>r[1]),minP=Math.min(...prices),maxP=Math.max(...prices),span=Math.max(maxP-minP,Math.abs(maxP)*.002,1e-9);
+    const lo=minP-span*.08,hi=maxP+span*.08,t0=times[0],t1=times.at(-1),x=t=>pad.l+(t-t0)/(t1-t0||1)*plotW,y=v=>pad.t+(hi-v)/(hi-lo||1)*plotH;
+    ctx.save();
+    ctx.strokeStyle="rgba(176,236,255,.075)";ctx.lineWidth=1;
+    for(let i=0;i<6;i++){const yy=pad.t+i*plotH/5;ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r,yy);ctx.stroke();}
+    for(let i=0;i<7;i++){const xx=pad.l+i*plotW/6;ctx.beginPath();ctx.moveTo(xx,pad.t);ctx.lineTo(xx,h-pad.b);ctx.stroke();}
+    const vols=state.volumes,maxV=Math.max(...vols.map(v=>v[1]),1),vmap=new Map(vols);
+    rows.forEach(([t],i)=>{const v=vmap.get(t);if(!(v>=0))return;const xx=x(t),vh=(v/maxV)*Math.min(88,plotH*.18);ctx.fillStyle="rgba(98,236,255,.11)";ctx.fillRect(xx-1.5,h-pad.b-vh,3,vh);});
+    const color=colorFor(state.coin),grad=ctx.createLinearGradient(0,pad.t,0,h-pad.b);grad.addColorStop(0,"rgba(91,123,145,.16)");grad.addColorStop(1,"rgba(52,75,92,.01)");
+    ctx.beginPath();rows.forEach(([t,p],i)=>{const xx=x(t),yy=y(p);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);});ctx.lineTo(x(t1),h-pad.b);ctx.lineTo(x(t0),h-pad.b);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+    ctx.beginPath();rows.forEach(([t,p],i)=>{const xx=x(t),yy=y(p);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);});ctx.strokeStyle=color;ctx.lineWidth=2.4;ctx.stroke();
+    const last=rows.at(-1);ctx.beginPath();ctx.arc(x(last[0]),y(last[1]),4.2,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+    ctx.font="750 11px system-ui,sans-serif";ctx.fillStyle="rgba(224,244,252,.76)";ctx.textAlign="left";ctx.textBaseline="middle";
+    for(let i=0;i<6;i++){const v=hi-(hi-lo)*i/5,yy=pad.t+i*plotH/5;ctx.fillText(formatPrice(v),w-pad.r+8,yy);}
+    ctx.textAlign="center";ctx.textBaseline="top";
+    for(let i=0;i<6;i++){const t=t0+(t1-t0)*i/5,xx=x(t);ctx.fillText(timeLabel(t),xx,h-pad.b+10);}
+    ctx.restore();
+    g.canvas.__traderLineGeom={pad,plotW,plotH,t0,t1,lo,hi,x,y,w,h};
+  }
+  function nearestAt(clientX){
+    const canvas=$("traderMainChart"),geom=canvas?.__traderLineGeom;if(!canvas||!geom||!state.rows.length)return null;
+    const rect=canvas.getBoundingClientRect(),px=clientX-rect.left,t=geom.t0+((px-geom.pad.l)/geom.plotW)*(geom.t1-geom.t0);
+    let best=null,delta=Infinity;
+    for(const row of state.rows){const d=Math.abs(row[0]-t);if(d<delta){delta=d;best=row;}}
+    return best;
+  }
+  function showTooltip(event){
+    if(!lineMode())return;
+    const row=nearestAt(event.clientX),tip=$("traderLineTooltip"),canvas=$("traderMainChart");if(!row||!tip||!canvas)return;
+    const rect=canvas.getBoundingClientRect(),date=new Date(row[0]);
+    tip.innerHTML="<b>"+escapeHtml(formatPrice(row[1]))+"</b><small>"+escapeHtml(date.toLocaleString("fr-FR"))+"</small>";
+    tip.hidden=false;tip.setAttribute("aria-hidden","false");
+    const left=Math.max(8,Math.min(rect.width-210,event.clientX-rect.left+14)),top=Math.max(90,Math.min(rect.height-70,event.clientY-rect.top+14));
+    tip.style.left=left+"px";tip.style.top=top+"px";
+  }
+  function hideTooltip(){const tip=$("traderLineTooltip");if(tip){tip.hidden=true;tip.setAttribute("aria-hidden","true");}}
+  async function load(reason="operator"){
+    if(!lineMode()&&reason!=="selection")return false;
+    const coin=selectedCoin();if(!coin)return false;
+    state.token+=1;const token=state.token;
+    try{state.controller?.abort?.();}catch(_){}
+    const controller=new AbortController();state.controller=controller;state.coin=coin;state.loading=true;state.error=null;syncPeriods();setLoading("Chargement de la série historique réelle…");
+    try{
+      const ctx=externalContext();
+      let result=ctx?await fetchExternal(ctx,state.period,controller.signal):await fetchCanonical(coin,state.period,controller.signal);
+      if(token!==state.token)return false;
+      state.rows=result.rows;state.volumes=result.volumes;state.source=result.source;state.currency=result.currency;state.external=result.external;state.lastLoadedAt=new Date().toISOString();state.loading=false;state.error=null;setLoading("");syncText();draw();return true;
+    }catch(error){
+      if(error?.name==="AbortError")return false;
+      if(token!==state.token)return false;
+      const fallback=fallbackMicroscope(coin,state.period);
+      if(fallback){state.rows=fallback.rows;state.volumes=fallback.volumes;state.source=fallback.source;state.currency=fallback.currency;state.external=fallback.external;state.lastLoadedAt=new Date().toISOString();state.loading=false;state.error=null;setLoading("");syncText();draw();return true;}
+      state.loading=false;state.error=String(error?.message||error);setLoading("Graphique Ligne indisponible · "+state.error);syncText();draw();return false;
+    }
+  }
+  function setPeriod(period){
+    const p=Number(period);if(!PERIODS.includes(p))return;
+    state.period=p;syncPeriods();if(lineMode())void load("period");
+  }
+  function bind(){
+    syncPeriods();updatePresentation();
+    document.addEventListener("click",event=>{
+      const period=event.target.closest?.("[data-trader-line-period]");
+      if(period&&!period.disabled){event.preventDefault();setPeriod(Number(period.dataset.traderLinePeriod));return;}
+      const mode=event.target.closest?.("#atlasMarketMicroscopeControls [data-amm-mode]");
+      if(mode?.dataset.ammMode==="native"){queueMicrotask(()=>void load("line-mode"));}
+      if(mode?.dataset.ammMode==="candles"){hideTooltip();}
+    });
+    $("traderLegendToggle")?.addEventListener("click",()=>{state.legend=!state.legend;updatePresentation();});
+    $("traderAnalysisToggle")?.addEventListener("click",()=>{state.analysis=!state.analysis;updatePresentation();});
+    $("traderMainChart")?.addEventListener("pointermove",showTooltip,{passive:true});
+    $("traderMainChart")?.addEventListener("pointerleave",hideTooltip,{passive:true});
+    window.addEventListener("agent-crypto:trader-selection-changed",()=>{state.period=1;syncPeriods();if(lineMode())void load("selection");},{passive:true});
+    window.addEventListener("agent-crypto:external-asset-changed",()=>{state.period=1;syncPeriods();if(lineMode())void load("external");},{passive:true});
+    window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(lineMode()&&!externalContext())void load("currency");},{passive:true});
+    let frame=0;window.addEventListener("resize",()=>{if(frame)cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{frame=0;draw();});},{passive:true});
+    setTimeout(()=>{syncPeriods();if(lineMode())void load("boot");},0);
+  }
+  globalThis.AgentCryptoTraderLineChart=Object.freeze({
+    build:BUILD,load,setPeriod,snapshot:()=>Object.freeze({build:BUILD,period:state.period,points:state.rows.length,source:state.source,currency:state.currency,external:state.external,loading:state.loading,error:state.error,last_loaded_at:state.lastLoadedAt}),
+    native_interface_transpose:true,real_order:false,market_core_changed:false,recurring_timer:false
+  });
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind,{once:true});else bind();
+})();

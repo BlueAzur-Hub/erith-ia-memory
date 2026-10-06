@@ -1,29 +1,50 @@
-# ERITH.IA Trading Desk — 40.6.588
+# ERITH.IA Trading Desk — 40.6.589
 
 ## Objet
-Rendre le **Market Trader fidèle au Market Administrator** en restaurant la catégorie native **Nouveaux listings**.
+Ajouter **le Graphique Crypto Ligne** à la surface Trader, sous le propriétaire Bougies déjà validé.
 
-## Transposition
-- bouton **Nouveaux listings** ajouté à la même barre de filtres Market ;
-- propriétaire public existant réutilisé : `administrator/js/new-listings-live-asset-406529.js` ;
-- découverte Bitget SPOT ≤ 30 jours ;
-- identités/logos GitHub existants réutilisés via `administrator/data/new-listings-identities.json` ;
-- résultats injectés dans **le tableau Market existant**, sans second Market ;
-- aucune injection dans le Market Core / ranking ;
-- sélection d’un nouveau listing réutilise le Graphique/Bougies et Profondeur existants via le contexte externe public ;
-- Fiche Crypto 40.6.587 continue d’utiliser sa surface Flottante / Latérale native.
+## Principe
+Aucun second cockpit : le sélecteur natif **MICROSCOPE · Ligne / Bougies** reste l’unique changement de surface.
+
+- **Ligne** → graphique historique style Administrator dans la même `.chart-shell`.
+- **Bougies** → propriétaire `market-microscope-candles.js` existant, inchangé.
+- La sélection Market reste la source d’identité de l’actif.
+- La sélection Nouveaux listings reste compatible.
+
+## Données
+### Crypto canonique
+Historique public CoinGecko `market_chart` dans la devise d’affichage active.
+
+### Nouveaux listings
+Réutilisation de `AgentCryptoNewListingLiveAsset.fetchCandles()` :
+- 24h → 5m ;
+- 7j → 1h ;
+- 30j → 4h ;
+- périodes longues → 1j selon couverture réellement disponible.
+
+Aucune série synthétique.
+
+## Interface transposée
+Périodes :
+**24h · 7j · 30j · 60j · 90j · 1a · Max ?**
+
+La surface conserve :
+- légende ;
+- analyse historique ;
+- axes temporels/prix ;
+- tooltip au survol ;
+- volume historique discret ;
+- source et nombre de points.
 
 ## Protections
-Market Core 38.15.11 inchangé. Pas de second Graphique, pas de seconde Fiche, pas de seconde Profondeur. READ ONLY, aucun ordre réel.
+- Market Core 38.15.11 inchangé.
+- Bougies inchangées.
+- Profondeur inchangée.
+- Fiche Crypto inchangée.
+- Lecture Technique inchangée.
+- READ ONLY ; aucun ordre réel.
 
 ## Terrain
 Firefox : **PENDING CHRISTOPHE**.
 
-Après validation : passage séparé sur **BUY / SELL / REDIVIDER**.
-
-## Livraison 40.6.588
-- PR #153 fusionnée.
-- Merge commit : `7d6afedd2303a5dc6f244a5ff2761eea282f1f91`.
-- GitHub Pages : run `37460915497`.
-- ZIP : `downloads/AGENT_CRYPTO_TRADER_40.6.588_MARKET_FIDELITY.zip`.
-- Terrain Firefox : **PENDING CHRISTOPHE**.
+Test demandé : BTC → Ligne, CT → Ligne, puis aller-retour Ligne / Bougies.

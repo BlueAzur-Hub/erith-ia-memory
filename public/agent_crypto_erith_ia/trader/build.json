@@ -1,12 +1,12 @@
 {
-  "build": "40.6.588",
+  "build": "40.6.589",
   "surface": "trader",
-  "release": "TRADER · NATIVE NEW LISTINGS MARKET FIDELITY",
-  "parent_trader_build": "40.6.587",
+  "release": "TRADER · NATIVE CRYPTO LINE GRAPH",
+  "parent_trader_build": "40.6.588",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "published": true,
-  "status": "published_pending_terrain_406588",
+  "published": false,
+  "status": "branch_ready_for_pr_406589",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -14,13 +14,14 @@
   "architecture": {
     "menu": "Native Administrator visual shell retained; Trader semantic identity restored exactly: ERITH.IA · TRADING DESK / Agent-Crypto · Trader. Existing Marché/Graphique navigation preserved.",
     "primary": "Administrator #analyste / champagne-clean-lens transposed",
-    "chart": "existing market-microscope-candles owner",
+    "chart": "Administrator-style Crypto Ligne surface added beneath the existing Market Microscope Bougies overlay. Existing Ligne/Bougies owner remains the mode switch; Bougies owner unchanged.",
     "technical_reading": "Administrator native #detailPanel DOM restored: compact strip, Fiche active, Source Dock, Sources/data, Network/cache/latency, Integrity. Native Administrator mirror classes and static-theme classes restored. Trader-specific Technical Reading geometry owner removed.",
     "depth": "existing okx-microstructure owner docked on #detailPanel",
     "market": "Administrator Market Snapshot transposed + native Nouveaux listings category restored in the existing Trader table.",
     "math": "native Math Core V3 beside Market",
     "chart_toolbar": "Trader custom Volume, Profondeur and duplicate AFFICHAGE controls removed. Native OKX Depth owner injects one Profondeur; quote-currency owner injects one AFFICHAGE EUR/USD; Candles owner injects MICROSCOPE Ligne/Bougies. Trader retains only existing Legend/Analysis/Fiche bridges.",
-    "market_fiche": "Administrator native Fiche contract restored in Trader: help-layer floating surface + real lateral dock host, persisted floating/dock mode, sticky/internal-scroll geometry from shared Administrator CSS. Legacy pinned trader-market-fiche owner retired."
+    "market_fiche": "Administrator native Fiche contract restored in Trader: help-layer floating surface + real lateral dock host, persisted floating/dock mode, sticky/internal-scroll geometry from shared Administrator CSS. Legacy pinned trader-market-fiche owner retired.",
+    "line_chart": "Canonical crypto: CoinGecko market_chart direct in selected display currency. New Listings: existing AgentCryptoNewListingLiveAsset.fetchCandles provider context. Period row transposed: 24h, 7j, 30j, 60j, 90j, 1a, Max."
   },
   "technical_reading": {
     "single_portrait_owner": true,
@@ -73,13 +74,15 @@
     "EUR/USD architecture",
     "Technical Reading",
     "Market Snapshot",
-    "Math Core"
+    "Math Core",
+    "Market Microscope Bougies owner",
+    "New Listings live asset owner"
   ],
   "delivery": {
-    "pr": 153,
-    "merge_commit": "7d6afedd2303a5dc6f244a5ff2761eea282f1f91",
-    "github_pages": "RUN 37460915497 · IN PROGRESS",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.588_MARKET_FIDELITY.zip"
+    "pr": "PENDING",
+    "merge_commit": "PENDING",
+    "github_pages": "PENDING",
+    "zip": "PENDING"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -89,10 +92,10 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox proof: Nouveaux listings visible next to Spéculatifs",
-    "open Nouveaux listings and verify several recent instruments in the existing Market table",
-    "hover one listing: native floating Fiche must follow",
-    "select one listing: existing Graph/Bougies and Depth must reuse external context",
-    "then bounded pass for BUY / SELL / REDIVIDER"
+    "Firefox test Ligne on BTC and one normal crypto",
+    "Firefox test Ligne on Concrete CT after Nouveaux listings selection",
+    "switch Ligne ↔ Bougies without losing selected asset",
+    "verify 24h / 7j period changes on Ligne",
+    "then bounded BUY / SELL / REDIVIDER pass"
   ]
 }
