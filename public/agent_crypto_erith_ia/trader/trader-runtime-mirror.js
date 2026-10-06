@@ -1,9 +1,61 @@
 (()=>{
 "use strict";
-const BUILD="40.6.601";
+const BUILD="40.6.602";
 const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
+
+const NAV_ORDER=["market","graph","target-top","market-flow","oracle","sources","decision","aether"];
+
+function traderAnchor(doc,key,label,icon,href){
+  let node=doc.querySelector('[data-trader-nav="'+key+'"]');
+  if(node)return node;
+  node=doc.createElement("a");
+  node.className="atlas-quick-link trader-runtime-nav-link";
+  node.href=href;
+  node.dataset.traderNav=key;
+  node.innerHTML='<span class="atlas-quick-icon" aria-hidden="true">'+icon+'</span><span>'+label+'</span>';
+  return node;
+}
+
+function ensureNavigation(doc){
+  const nav=doc.querySelector("#accueil .atlas-v2-nav-essential");
+  if(!nav)return false;
+
+  const market=nav.querySelector('[data-atlas-essential-target="market-workspace"]');
+  const graph=nav.querySelector('[data-atlas-essential-target="analyste"]');
+  const oracle=nav.querySelector('[data-atlas-essential-target="oracle-analysis-suite"]');
+  const sources=nav.querySelector('[data-atlas-essential-target="sources"]');
+
+  if(market)market.dataset.traderNav="market";
+  if(graph)graph.dataset.traderNav="graph";
+  if(oracle)oracle.dataset.traderNav="oracle";
+  if(sources)sources.dataset.traderNav="sources";
+
+  const target=traderAnchor(doc,"target-top","Target Top","◎","#targetTop5Cycle");
+  const flow=traderAnchor(doc,"market-flow","Market Flow","≈","#marketFlowCycle");
+
+  let decision=doc.querySelector('[data-trader-nav="decision"]');
+  if(!decision){
+    decision=doc.querySelector('#atlasAdminCenterDrawer a[href="#decision-board"]');
+    if(decision)decision.dataset.traderNav="decision";
+  }
+
+  const aether=doc.getElementById("atlasAetherStatusToggle");
+  if(aether){
+    aether.dataset.traderNav="aether";
+    aether.classList.add("atlas-quick-link","trader-runtime-aether-link");
+    aether.setAttribute("title","Ouvrir la synthèse Aether");
+  }
+
+  const nodes={market,graph,"target-top":target,"market-flow":flow,oracle,sources,decision,aether};
+  for(const key of NAV_ORDER){
+    const node=nodes[key];
+    if(node)nav.appendChild(node);
+  }
+  nav.dataset.traderNavigation=BUILD;
+  return true;
+}
 
 function mount(){
   let win,doc;
@@ -21,7 +73,11 @@ function mount(){
       "body.atlas-trader-runtime-mirror main.shell > :not(#accueil):not(#market-zone){display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-view-switcher{display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-advanced{display:none!important}",
-      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential [data-atlas-essential-target]:not([data-atlas-essential-target='market-workspace']):not([data-atlas-essential-target='analyste']){display:none!important}",
+      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential [data-atlas-essential-target='livecheck']{display:none!important}",
+      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential [data-atlas-essential-target='atlas-local-ai-collapse']{display:none!important}",
+      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important}",
+      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential .trader-runtime-nav-link{display:inline-flex!important;align-items:center!important}",
+      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential .trader-runtime-aether-link{display:inline-flex!important;align-items:center!important}",
       "body.atlas-trader-runtime-mirror #atlasMarketDomainSwitch{pointer-events:none!important;cursor:default!important}",
       "body.atlas-trader-runtime-mirror #market-zone{margin-top:12px}",
       "body.atlas-trader-runtime-mirror .shell{padding-bottom:28px}",
@@ -40,6 +96,13 @@ function mount(){
     if(left)left.textContent="Agent-Crypto";
     if(right)right.textContent="· Trader";
   }
+
+  const versionText=doc.getElementById("atlasVersionTruthText");
+  const versionControl=doc.getElementById("atlasVersionTruthControl");
+  const releaseBadge=doc.getElementById("atlasV2ReleaseBadge");
+  if(versionText)versionText.textContent="Build "+BUILD+" · Administrator";
+  if(versionControl)versionControl.setAttribute("aria-label","Version Agent-Crypto chargée : Build "+BUILD+", mode Administrator");
+  if(releaseBadge)releaseBadge.textContent="Agent-Crypto @erith.IA · Build "+BUILD+" · Administrator";
 
   const statusStack=hero?.querySelector(".status-stack");
   if(statusStack&&!doc.getElementById("traderRuntimeBadge")){
@@ -62,6 +125,8 @@ function mount(){
     statusStack.insertBefore(link,sigil||null);
   }
 
+  ensureNavigation(doc);
+
   const marketSwitch=doc.getElementById("atlasMarketDomainSwitch");
   if(marketSwitch){
     marketSwitch.setAttribute("aria-label","Marché Crypto · runtime Interface partagé");
@@ -75,12 +140,13 @@ function mount(){
       build:BUILD,
       administrator_runtime:true,
       filtered_presentation_only:true,
+      navigation:NAV_ORDER.slice(),
       real_orders:false
     }}));
   }catch(_){}
 
   if(status){
-    status.textContent="Interface Administrator montée · filtrage Trader actif";
+    status.textContent="Interface Administrator montée · menu Trader actif";
     status.dataset.state="ready";
   }
   frame.dataset.ready="true";
@@ -100,6 +166,7 @@ globalThis.AgentCryptoTraderRuntimeMirror=Object.freeze({
   frame:()=>frame,
   administrator_runtime:true,
   filtered_presentation_only:true,
+  navigation:Object.freeze(NAV_ORDER.slice()),
   duplicated_market_owner:false,
   duplicated_chart_owner:false,
   duplicated_math_owner:false,
