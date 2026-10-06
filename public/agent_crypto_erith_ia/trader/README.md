@@ -25,3 +25,11 @@ Lignée Administrator :
 Market Core 38.15.11, Bougies, Profondeur, Lecture Technique 40.6.586, Math Core, READ ONLY.
 
 Firefox : **PENDING CHRISTOPHE**.
+
+## Livraison cumulative 40.6.585 → 40.6.587
+- PR #150 : propriétaires natifs des contrôles Graphique.
+- PR #151 : Lecture Technique Administrator transposée.
+- PR #152 : Fiche Crypto native Flottante / Latérale.
+- GitHub Pages : SUCCESS · run `37455649835`.
+- ZIP : `downloads/AGENT_CRYPTO_TRADER_40.6.587_NATIVE_RESTORE.zip`.
+- Terrain Firefox : **PENDING CHRISTOPHE**.

@@ -5,8 +5,8 @@
   "parent_trader_build": "40.6.586",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "published": false,
-  "status": "branch_ready_for_pr_406587",
+  "published": true,
+  "status": "published_pending_terrain_406587",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -71,10 +71,16 @@
     "Math Core"
   ],
   "delivery": {
-    "pr": "PENDING",
-    "merge_commit": "PENDING",
-    "github_pages": "PENDING",
-    "zip": "PENDING"
+    "prs": [
+      150,
+      151,
+      152
+    ],
+    "graph_controls_merge": "e040b33419076bfacac1bdf79f9e1bfa67979c10",
+    "technical_reading_merge": "c238bd2a6e8861b6f11fce7c45e7c9c296f40343",
+    "fiche_native_merge": "886f3c468a31c041e455a0e4edd860fbc3306700",
+    "github_pages": "SUCCESS · run 37455649835",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.587_NATIVE_RESTORE.zip"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -84,7 +90,10 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox proof: Fiche follows hover/focus in Flottante, Latérale docks when width permits, Escape hides floating",
-    "verify Market menu framing separately if still needed"
+    "Firefox proof of 40.6.587 cumulative cascade",
+    "verify Graph toolbar has one Profondeur and one AFFICHAGE group",
+    "verify Technical Reading matches Administrator geometry/content",
+    "verify Fiche floating follows hover/focus and Latérale docks when width permits",
+    "then STOP or next bounded terrain correction"
   ]
 }
