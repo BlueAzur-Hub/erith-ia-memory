@@ -195,7 +195,7 @@ button,a{font:inherit}
   .trade-orb.kill{width:70px;height:70px}
 }
 
-/* 40.6.578 — Market natif transposé depuis Administrator. */
+/* 40.6.579 — Market natif transposé depuis Administrator. */
 .trader-market-workspace{margin-top:10px!important}
 .trader-market-workspace #marketSnapshotPanel{min-width:0}
 .trader-market-workspace #marketRows tr[data-market-id]{cursor:pointer}
@@ -216,10 +216,24 @@ button,a{font:inherit}
 .trader-market-select.is-active{border-color:rgba(255,214,122,.52);color:#ffe7aa;background:rgba(255,214,122,.08)}
 .trader-market-workspace[data-market-columns="essential"] .market-col-advanced{display:none!important}
 .trader-market-source{color:rgba(164,193,205,.66);font-size:8px;display:block;margin-top:2px}
-.trader-math-placeholder{min-height:300px}
+
 @media(max-width:900px){
   .trader-market-workspace{display:flex!important;flex-direction:column}
   .trader-market-workspace #marketSnapshotPanel{order:1}
   .trader-market-workspace #math{order:2;width:100%}
   .trader-market-workspace .table-wrap{overflow-x:auto}
 }
+
+/* 40.6.579 — Math Core V3 : structure native Administrator, calculs transposés. */
+.trader-market-workspace #math{min-width:0}
+.trader-market-workspace #math.is-rail{min-height:320px}
+.trader-market-workspace #math[data-math-dock="rail"] .atlas-math-dock-head,
+.trader-market-workspace #math[data-math-dock="rail"] > .score-ring,
+.trader-market-workspace #math[data-math-dock="rail"] > .muted-line,
+.trader-market-workspace #math[data-math-dock="rail"] > .atlas-human-verdict,
+.trader-market-workspace #math[data-math-dock="rail"] > .atlas-summary-grid,
+.trader-market-workspace #math[data-math-dock="rail"] > .atlas-tech-details,
+.trader-market-workspace #math[data-math-dock="rail"] > .atlas-verdict{display:none!important}
+.trader-market-workspace #math[data-math-dock="rail"] .atlas-math-rail-trigger{display:grid!important}
+#mathTopDock:not([hidden]){margin:10px 0}
+#mathTopDock #math{width:100%}
