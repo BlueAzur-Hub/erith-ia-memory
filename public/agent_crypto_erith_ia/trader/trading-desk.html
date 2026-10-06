@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <meta name="agent-crypto-surface" content="trader" />
-  <meta name="agent-crypto-build" content="40.6.591" />
+  <meta name="agent-crypto-build" content="40.6.592" />
   <meta name="agent-crypto-administrator-base" content="40.6.571" />
-  <title>ERITH.IA · Trading Desk — 40.6.591</title>
+  <title>ERITH.IA · Trading Desk — 40.6.592</title>
 
   <!-- Architecture visuelle existante Administrator : réutilisée, pas réinventée. -->
   <link rel="stylesheet" href="../administrator/style.css?v=40.6.571" />
@@ -16,12 +16,12 @@
   <link rel="stylesheet" href="../administrator/admin-technical-reading-classic-opacity.css?v=40.6.571" />
   <link rel="stylesheet" href="../administrator/market-reading-depth.css?v=40.6.571" />
   <link rel="stylesheet" href="../administrator/help-layer.css?v=40.6.547" />
-  <link rel="stylesheet" href="./trading-desk.css?v=40.6.591" />
-  <link rel="stylesheet" href="./trader-fidelity.css?v=40.6.591" />
-  <link rel="stylesheet" href="./technical-reading-native.css?v=40.6.591" />
-  <link rel="stylesheet" href="./line-chart-native.css?v=40.6.591" />
+  <link rel="stylesheet" href="./trading-desk.css?v=40.6.592" />
+  <link rel="stylesheet" href="./trader-fidelity.css?v=40.6.592" />
+  <link rel="stylesheet" href="./technical-reading-native.css?v=40.6.592" />
+  <link rel="stylesheet" href="./line-chart-native.css?v=40.6.592" />
 </head>
-<body class="atlas-administrator-mirror">
+<body class="atlas-administrator-mirror trader-interface-ghost-mode">
   <header class="hero glass" id="accueil">
     <div class="hero-top">
       <div class="title-block">
@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="status-stack" aria-label="Statuts">
-        <span class="pill ok atlas-version-control"><span>Build 40.6.591 · Trader</span></span>
+        <span class="pill ok atlas-version-control"><span>Build 40.6.592 · Trader</span></span>
         <span class="pill admin-engine-badge">ENGINE · Market Core 38.15.11</span>
         <span class="pill ok">READ ONLY</span>
         <span class="sigil">⌁</span>
@@ -81,7 +81,7 @@
 
   <main class="trader-main">
     <!--
-      40.6.591 : transposition du couple natif Administrator
+      40.6.592 : transposition du couple natif Administrator
       Graphique + Lecture Technique + rail natif.
       Profondeur conserve son owner existant et se docke sur #detailPanel.
     -->
@@ -333,6 +333,31 @@
         <div class="atlas-verdict" id="atlasMathVerdict"><b>Mode observation</b> · aucune exécution réelle</div>
       </aside>
     </section>
+
+    <section class="trader-ghost-workspace" id="traderGhostWorkspace" aria-hidden="true">
+      <div class="trader-ghost-heading">
+        <div>
+          <p class="eyebrow">INTERFACE AGENT-CRYPTO · MÉMOIRE DORMANTE</p>
+          <h2>Architecture conservée · fonctions hors mission Trader</h2>
+        </div>
+        <span>aucun moteur chargé</span>
+      </div>
+      <div class="trader-ghost-grid">
+        <article class="trader-ghost-panel trader-ghost-wide"><small>ORACLE</small><b>Scénarios & consultation</b><span>hors Trader</span></article>
+        <article class="trader-ghost-panel"><small>ATLAS</small><b>Analyse élargie</b><span>hors Trader</span></article>
+        <article class="trader-ghost-panel"><small>SOURCES</small><b>Recherche documentaire</b><span>hors Trader</span></article>
+        <article class="trader-ghost-panel"><small>DÉCISION</small><b>Espace décisionnel</b><span>hors Trader</span></article>
+        <article class="trader-ghost-panel"><small>ANALYSE</small><b>Lecture globale</b><span>hors Trader</span></article>
+        <article class="trader-ghost-panel"><small>SYSTÈME</small><b>Administration système</b><span>hors Trader</span></article>
+        <article class="trader-ghost-panel"><small>PROJETS</small><b>Workspace projets</b><span>hors Trader</span></article>
+        <article class="trader-ghost-panel trader-ghost-wide"><small>AETHER</small><b>Veille & présence</b><span>hors Trader</span></article>
+      </div>
+      <div class="trader-ghost-legend">
+        <span><i class="ghost-swatch active"></i> actif dans Trader</span>
+        <span><i class="ghost-swatch dormant"></i> présent comme mémoire visuelle uniquement</span>
+        <span><i class="ghost-swatch stop"></i> sécurité / interruption</span>
+      </div>
+    </section>
   </main>
 
   <aside class="atlas-help-layer" id="atlasHelpLayer" role="dialog" aria-hidden="true" hidden></aside>
@@ -350,24 +375,24 @@
   </div>
 
   <footer class="trader-footer">
-    <span>Trader 40.6.591 · INTERFACE FIDELITY SYNC · PENDING OPÉRATEUR</span>
+    <span>Trader 40.6.592 · INTERFACE FIDELITY SYNC · PENDING OPÉRATEUR</span>
     <span>Administrator 40.6.571 · Market Core 38.15.11</span>
     <span id="viewportProfile">viewport</span>
   </footer>
 
   <script src="../administrator/js/quote-currency-architecture-406497.js" defer></script>
   <script src="../administrator/js/okx-local-backend-transport.js" defer></script>
-  <script src="./technical-reading-transpose.js?v=40.6.591" defer></script>
+  <script src="./technical-reading-transpose.js?v=40.6.592" defer></script>
   <script src="../administrator/js/new-listings-live-asset-406529.js" defer></script>
-  <script src="./market-transpose.js?v=40.6.591" defer></script>
-  <script src="./new-listings-transpose.js?v=40.6.591" defer></script>
-  <script src="./line-chart-native.js?v=40.6.591" defer></script>
-  <script src="./technical-reading-data-sync.js?v=40.6.591" defer></script>
-  <script src="./market-fiche-native.js?v=40.6.591" defer></script>
-  <script src="./math-core-transpose.js?v=40.6.591" defer></script>
+  <script src="./market-transpose.js?v=40.6.592" defer></script>
+  <script src="./new-listings-transpose.js?v=40.6.592" defer></script>
+  <script src="./line-chart-native.js?v=40.6.592" defer></script>
+  <script src="./technical-reading-data-sync.js?v=40.6.592" defer></script>
+  <script src="./market-fiche-native.js?v=40.6.592" defer></script>
+  <script src="./math-core-transpose.js?v=40.6.592" defer></script>
   <script src="../administrator/js/market-microscope-candles.js" defer></script>
   <script src="../administrator/js/okx-microstructure-406499.js" defer></script>
-  <script src="./trading-desk.js?v=40.6.591" defer></script>
-  <script src="./trader-fidelity.js?v=40.6.591" defer></script>
+  <script src="./trading-desk.js?v=40.6.592" defer></script>
+  <script src="./trader-fidelity.js?v=40.6.592" defer></script>
 </body>
 </html>
