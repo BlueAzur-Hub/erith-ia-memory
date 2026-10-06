@@ -1,9 +1,9 @@
 (() => {
   "use strict";
-  const BUILD="40.6.593";
+  const BUILD="40.6.594";
   const PERIODS=Object.freeze([1,7,30,60,90,365,36500]);
   const LABELS=Object.freeze({1:"24h",7:"7j",30:"30j",60:"60j",90:"90j",365:"1a",36500:"Max"});
-  const state={period:1,token:0,controller:null,rows:[],volumes:[],source:"",currency:"USD",coin:null,error:null,loading:false,volume:true,legend:true,analysis:true,lastLoadedAt:null,external:false,truth:"direct"};
+  const state={period:1,token:0,controller:null,rows:[],volumes:[],source:"",currency:"USD",coin:null,error:null,loading:false,volume:true,legend:true,analysis:true,lastLoadedAt:null,external:false,truth:"direct",hoverIndex:-1};
   const $=id=>document.getElementById(id);
   const finite=v=>{if(v===null||v===undefined||v==="")return null;const n=Number(v);return Number.isFinite(n)?n:null;};
   const displayCurrency=()=>String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"USD").toUpperCase()==="EUR"?"EUR":"USD";
@@ -183,6 +183,12 @@
     ctx.beginPath();rows.forEach(([t,p],i)=>{const xx=x(t),yy=y(p);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);});ctx.lineTo(x(t1),h-pad.b);ctx.lineTo(x(t0),h-pad.b);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
     ctx.beginPath();rows.forEach(([t,p],i)=>{const xx=x(t),yy=y(p);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);});ctx.strokeStyle=color;ctx.lineWidth=2.4;ctx.stroke();
     const last=rows.at(-1);ctx.beginPath();ctx.arc(x(last[0]),y(last[1]),4.2,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+    if(Number.isInteger(state.hoverIndex)&&state.hoverIndex>=0&&state.hoverIndex<rows.length){
+      const hovered=rows[state.hoverIndex],hx=x(hovered[0]),hy=y(hovered[1]);
+      ctx.beginPath();ctx.arc(hx,hy,6.4,0,Math.PI*2);ctx.fillStyle="rgba(3,10,20,.90)";ctx.fill();
+      ctx.lineWidth=2;ctx.strokeStyle=color;ctx.stroke();
+      ctx.beginPath();ctx.arc(hx,hy,2.1,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+    }
     ctx.font="750 11px system-ui,sans-serif";ctx.fillStyle="rgba(224,244,252,.76)";ctx.textAlign="left";ctx.textBaseline="middle";
     for(let i=0;i<6;i++){const v=hi-(hi-lo)*i/5,yy=pad.t+i*plotH/5;ctx.fillText(formatPrice(v),w-pad.r+8,yy);}
     ctx.textAlign="center";ctx.textBaseline="top";
@@ -193,34 +199,49 @@
   function nearestAt(clientX){
     const canvas=$("traderMainChart"),geom=canvas?.__traderLineGeom;if(!canvas||!geom||!state.rows.length)return null;
     const rect=canvas.getBoundingClientRect(),px=clientX-rect.left,t=geom.t0+((px-geom.pad.l)/geom.plotW)*(geom.t1-geom.t0);
-    let best=null,delta=Infinity;
-    for(const row of state.rows){const d=Math.abs(row[0]-t);if(d<delta){delta=d;best=row;}}
-    return best;
+    let index=-1,delta=Infinity;
+    for(let i=0;i<state.rows.length;i+=1){const d=Math.abs(state.rows[i][0]-t);if(d<delta){delta=d;index=i;}}
+    return index>=0?{row:state.rows[index],index}:null;
+  }
+  function historicalChangeAt(index){
+    const first=Number(state.rows?.[0]?.[1]),price=Number(state.rows?.[index]?.[1]);
+    if(!(first>0)||!(price>0))return null;
+    const change=(price/first-1)*100;
+    return Math.abs(change)<0.005?0:change;
   }
   function showTooltip(event){
     if(!lineMode())return;
-    const row=nearestAt(event.clientX),tip=$("atlasChartTooltip"),canvas=$("traderMainChart"),coin=state.coin||selectedCoin();
-    if(!row||!tip||!canvas||!coin)return;
-    const rect=canvas.getBoundingClientRect(),date=new Date(row[0]),color=colorFor(coin);
+    const hit=nearestAt(event.clientX),tip=$("atlasChartTooltip"),canvas=$("traderMainChart"),coin=state.coin||selectedCoin();
+    if(!hit||!tip||!canvas||!coin)return;
+    const {row,index}=hit,rect=canvas.getBoundingClientRect(),color=colorFor(coin);
+    if(state.hoverIndex!==index){state.hoverIndex=index;draw();}
     const symbol=String(coin.symbol||"ACTIF").toUpperCase(),name=String(coin.name||symbol);
-    const ch=Number(coin.change24h),hasChange=Number.isFinite(ch),changeText=hasChange?((ch>0?"+":"")+ch.toFixed(2)+" %"):"—";
+    const ch=historicalChangeAt(index),hasChange=Number.isFinite(ch),changeText=hasChange?((ch>0?"+":"")+ch.toFixed(2)+" %"):"—";
     const changeClass=!hasChange?"is-missing":ch>0?"is-positive":ch<0?"is-negative":"is-neutral";
+    const arrow=!hasChange?"":ch>0?"▲ ":ch<0?"▼ ":"• ";
     const image=coin.image?'<img src="'+escapeHtml(coin.image)+'" alt="" loading="lazy">':'<span class="atlas-chart-tooltip-fallback">'+escapeHtml(symbol.slice(0,3))+'</span>';
-    const title=(state.external?"PRIX EXCHANGE":"PRIX SNAPSHOT COINGECKO")+" · VARIATION 24h";
+    const title="PRIX HISTORIQUE · VARIATION "+periodLabel(state.period);
     tip.innerHTML=
       '<div class="atlas-chart-tooltip-date">'+escapeHtml(title)+'</div>'+
       '<div class="atlas-chart-tooltip-row" style="--atlas-series-color:'+escapeHtml(color)+';--atlas-series-gradient:linear-gradient(90deg,'+escapeHtml(color)+','+escapeHtml(color)+')">'+
         '<div class="atlas-chart-tooltip-identity">'+image+'<span><b>'+escapeHtml(symbol)+'</b><small>'+escapeHtml(name)+'</small></span></div>'+
         '<span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span>'+
-        '<div class="atlas-chart-tooltip-values"><strong>'+escapeHtml(formatPrice(row[1]))+'</strong><small>'+escapeHtml(date.toLocaleString("fr-FR"))+'</small><span class="atlas-chart-tooltip-change '+changeClass+'">'+escapeHtml(changeText)+'</span></div>'+
+        '<div class="atlas-chart-tooltip-values"><strong>'+escapeHtml(formatPrice(row[1]))+'</strong><span class="atlas-chart-tooltip-change '+changeClass+'" title="Variation depuis le début de la période">'+escapeHtml(arrow+changeText)+'</span></div>'+
       '</div>';
     tip.hidden=false;tip.setAttribute("aria-hidden","false");tip.dataset.displayCurrency=state.currency;
     const width=Math.min(344,Math.max(250,rect.width-20));
-    const left=Math.max(8,Math.min(rect.width-width-8,event.clientX-rect.left+18));
-    const top=Math.max(110,Math.min(rect.height-118,event.clientY-rect.top+18));
-    tip.style.left=left+"px";tip.style.top=top+"px";
+    const geom=canvas.__traderLineGeom,anchorX=geom?.x?geom.x(row[0]):event.clientX-rect.left,anchorY=geom?.y?geom.y(row[1]):event.clientY-rect.top;
+    const roomRight=rect.width-anchorX-18,roomLeft=anchorX-18;
+    let left=roomRight>=width||roomRight>=roomLeft?anchorX+18:anchorX-width-18;
+    left=Math.max(8,Math.min(rect.width-width-8,left));
+    const top=Math.max(8,Math.min(rect.height-118,anchorY-58));
+    tip.style.left=Math.round(left)+"px";tip.style.top=Math.round(top)+"px";
   }
-  function hideTooltip(){const tip=$("atlasChartTooltip");if(tip){tip.hidden=true;tip.setAttribute("aria-hidden","true");}}
+  function hideTooltip(){
+    const tip=$("atlasChartTooltip");
+    if(tip){tip.hidden=true;tip.setAttribute("aria-hidden","true");}
+    if(state.hoverIndex!==-1){state.hoverIndex=-1;draw();}
+  }
   async function load(reason="operator"){
     if(!lineMode()&&reason!=="selection")return false;
     const coin=selectedCoin();if(!coin)return false;
@@ -231,12 +252,12 @@
       const ctx=externalContext();
       let result=ctx?await fetchExternal(ctx,state.period,controller.signal):await fetchCanonical(coin,state.period,controller.signal);
       if(token!==state.token)return false;
-      state.rows=result.rows;state.volumes=result.volumes;state.source=result.source;state.currency=result.currency;state.external=result.external;state.truth=result.truth||"direct";state.lastLoadedAt=new Date().toISOString();state.loading=false;state.error=null;setLoading("");syncText();draw();dispatchLoaded();return true;
+      state.hoverIndex=-1;state.rows=result.rows;state.volumes=result.volumes;state.source=result.source;state.currency=result.currency;state.external=result.external;state.truth=result.truth||"direct";state.lastLoadedAt=new Date().toISOString();state.loading=false;state.error=null;setLoading("");syncText();draw();dispatchLoaded();return true;
     }catch(error){
       if(error?.name==="AbortError")return false;
       if(token!==state.token)return false;
       const fallback=fallbackMicroscope(coin,state.period);
-      if(fallback){state.rows=fallback.rows;state.volumes=fallback.volumes;state.source=fallback.source;state.currency=fallback.currency;state.external=fallback.external;state.truth=fallback.truth||"cache";state.lastLoadedAt=new Date().toISOString();state.loading=false;state.error=null;setLoading("");syncText();draw();dispatchLoaded();return true;}
+      if(fallback){state.hoverIndex=-1;state.rows=fallback.rows;state.volumes=fallback.volumes;state.source=fallback.source;state.currency=fallback.currency;state.external=fallback.external;state.truth=fallback.truth||"cache";state.lastLoadedAt=new Date().toISOString();state.loading=false;state.error=null;setLoading("");syncText();draw();dispatchLoaded();return true;}
       state.loading=false;state.error=String(error?.message||error);setLoading("Graphique Ligne indisponible · "+state.error);syncText();draw();return false;
     }
   }
