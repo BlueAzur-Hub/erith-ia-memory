@@ -1,8 +1,8 @@
 {
-  "build": "40.6.577",
+  "build": "40.6.578",
   "surface": "trader",
-  "release": "TRADER · NATIVE PRIMARY TRANSPOSE",
-  "parent_trader_build": "40.6.576",
+  "release": "TRADER · NATIVE MARKET TRANSPOSE",
+  "parent_trader_build": "40.6.577",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": true,
@@ -49,8 +49,22 @@
     "EUR/USD architecture"
   ],
   "next": [
-    "terrain proof primary trio",
-    "transpose Market",
-    "transpose Math Core"
-  ]
+    "transpose Math Core",
+    "terrain proof full skeleton"
+  ],
+  "market": {
+    "architecture": "native #marketWorkspaceGrid + #marketSnapshotPanel",
+    "source": "../data/crypto/latest.json + extended.json on demand",
+    "source_owner": "same GitHub Actions CoinGecko USD + BCE EUR archive as Administrator",
+    "default_limit": 50,
+    "extended_to_1000": true,
+    "search": true,
+    "filters": true,
+    "sort": true,
+    "essential_complete_columns": true,
+    "central_selection": true,
+    "graph_selection_bridge": true,
+    "depth_selection_bridge": true,
+    "browser_direct_coingecko": false
+  }
 }
