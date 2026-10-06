@@ -1,8 +1,8 @@
 {
-  "build": "40.6.578",
+  "build": "40.6.579",
   "surface": "trader",
-  "release": "TRADER · NATIVE MARKET TRANSPOSE",
-  "parent_trader_build": "40.6.577",
+  "release": "TRADER · NATIVE MATH CORE TRANSPOSE",
+  "parent_trader_build": "40.6.578",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
   "published": true,
@@ -49,8 +49,8 @@
     "EUR/USD architecture"
   ],
   "next": [
-    "transpose Math Core",
-    "terrain proof full skeleton"
+    "terrain proof full Trader skeleton",
+    "visual fidelity pass only if terrain requires"
   ],
   "market": {
     "architecture": "native #marketWorkspaceGrid + #marketSnapshotPanel",
@@ -66,5 +66,26 @@
     "graph_selection_bridge": true,
     "depth_selection_bridge": true,
     "browser_direct_coingecko": false
+  },
+  "math_core": {
+    "architecture": "native #math + #mathTopDock + Administrator dock controls",
+    "score_formula": "transposed from Administrator scoreCoin",
+    "history_source": "AgentCryptoMarketMicroscope.snapshot().rows",
+    "measures": [
+      "real series points",
+      "median step",
+      "completeness",
+      "window volatility",
+      "max drawdown",
+      "historical VaR 95% per step"
+    ],
+    "positions": [
+      "top",
+      "side",
+      "rail"
+    ],
+    "storage_key": "agent_crypto_erith_ia_v2_math_dock",
+    "new_prediction_model": false,
+    "real_order": false
   }
 }
