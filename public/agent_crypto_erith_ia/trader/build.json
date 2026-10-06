@@ -5,8 +5,8 @@
   "parent_trader_build": "40.6.580",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "published": false,
-  "status": "branch_ready_for_pr_406581",
+  "published": true,
+  "status": "published_pending_terrain_406581",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -20,7 +20,7 @@
     "market": "native Market Snapshot below Graph",
     "math": "native Math Core V3 beside Market",
     "chart_toolbar": "Administrator Graph toolbar grammar restored around existing Candles owner; Fiche/Legend/Analysis/Depth/Currency controls",
-    "market_fiche": "native-style floating/lateral Market Snapshot fiche restored from selected Trader market coin"
+    "market_fiche": "floating/lateral Market Snapshot fiche bound to selected Trader market coin"
   },
   "technical_reading": {
     "single_portrait_owner": true,
@@ -43,7 +43,8 @@
     "null_numeric_truth": true,
     "default_limit": 50,
     "extended_to_1000": true,
-    "browser_direct_coingecko": false
+    "browser_direct_coingecko": false,
+    "fiche_restored": true
   },
   "math_core": {
     "score_palette": {
@@ -66,8 +67,14 @@
     "Math Core transpose 40.6.580",
     "EUR/USD architecture"
   ],
+  "delivery": {
+    "pr": 146,
+    "merge_commit": "380d1b0104099041795930829d012dff318551b2",
+    "javascript_syntax": "PASS_NODE_CHECK_TRADER_FIDELITY_JS",
+    "github_pages": "PENDING",
+    "zip": "PENDING"
+  },
   "stop_gate": {
-    "javascript_syntax": "PENDING_PR_CI",
     "no_real_order": true,
     "no_new_exchange_key": true,
     "no_aether_thread": true,
@@ -75,7 +82,6 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "PR + Version Truth / Delivery checks",
     "GitHub Pages deployment",
     "Firefox terrain proof 40.6.581",
     "freeze Trader skeleton if PASS",
