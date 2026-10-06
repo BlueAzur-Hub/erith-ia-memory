@@ -1,12 +1,12 @@
 {
-  "build": "40.6.601",
+  "build": "40.6.602",
   "surface": "trader",
-  "release": "TRADER · INTERFACE RUNTIME MIRROR",
-  "parent_trader_build": "40.6.600",
-  "administrator_base": "40.6.571",
+  "release": "TRADER · NAVIGATION + BUILD TRUTH",
+  "parent_trader_build": "40.6.601",
+  "administrator_base": "40.6.602",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406601_pending_firefox_terrain",
+  "status": "published_406602_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -14,7 +14,7 @@
   "architecture": {
     "decision": "Trader is no longer a parallel application. It mounts the exact Administrator page/runtime and filters presentation only.",
     "runtime": "administrator/index.html inside same-origin Trader frame",
-    "core_owner": "administrator/app.js 40.6.571 remains the live owner of Graphique, Market, Lecture Technique and Math Core",
+    "core_owner": "administrator runtime 40.6.602 remains the live owner of Graphique, Market, Lecture Technique and Math Core",
     "additive_owners": [
       "administrator/js/graph-native-usd-406520.js",
       "administrator/js/market-microscope-candles.js",
@@ -28,6 +28,12 @@
       "Administrator header truth",
       "Marché",
       "Graphique",
+      "Target Top",
+      "Market Flow",
+      "Oracle",
+      "Sources",
+      "Décision",
+      "Aether",
       "Lecture Technique",
       "Market workspace",
       "Math Core",
@@ -36,14 +42,12 @@
       "EUR/USD"
     ],
     "hidden_presentation_only": [
-      "Atlas",
-      "Oracle standalone",
-      "News",
-      "Decision",
-      "System",
-      "Projects",
-      "Audience",
-      "Sources standalone"
+      "Atlas UI",
+      "Analyse générale",
+      "Système",
+      "Projets",
+      "Vue",
+      "Command Center"
     ],
     "duplicated_chart_owner": false,
     "duplicated_market_owner": false,
@@ -115,13 +119,11 @@
     "PAIR/data truth in Administrator"
   ],
   "delivery": {
-    "pr": 166,
-    "merge_commit": "d672455e194219e2b5d3088f65b904cb76899db2",
-    "github_pages": "SUCCESS · run 37511676865",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.601_INTERFACE_RUNTIME_MIRROR.zip",
-    "zip_bytes": 18096,
-    "javascript_syntax": "PASS · Agent-Crypto Trader Current · PR + main",
-    "package_commit": "0b888a6c850f8c92197476987df8ad57147f66be"
+    "pr": "PENDING",
+    "merge_commit": "PENDING",
+    "github_pages": "PENDING",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.602_NAVIGATION_BUILD_TRUTH.zip",
+    "javascript_syntax": "PENDING"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -131,10 +133,26 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.601.",
-    "Confirm Trader visibly shows the filtered Administrator runtime, not the former custom Trader shell.",
-    "BTC/USD Graphique: 24h → 7j → 30j → 60j → 90j → 1a → Max; behavior must match Administrator exactly because it is the same runtime.",
-    "Check Bougies, Profondeur, Lecture Technique, Market and Math Core; they must also behave exactly like Administrator.",
-    "If a defect remains, reproduce the same action in Administrator. If both fail, owner is Administrator. If only Trader fails, owner is trader-runtime-mirror presentation filter."
-  ]
+    "Continue cumulatively to 40.6.603 Aether On Demand.",
+    "Then 40.6.604 routing fidelity checkpoint before Firefox terrain validation."
+  ],
+  "navigation_406602": {
+    "enabled": true,
+    "order": [
+      "Marché",
+      "Graphique",
+      "Target Top",
+      "Market Flow",
+      "Oracle",
+      "Sources",
+      "Décision",
+      "Aether"
+    ],
+    "existing_runtime_reused": true,
+    "new_business_logic": false,
+    "target_top_owner_preserved": true,
+    "market_flow_owner_preserved": true,
+    "atlas_ui_hidden": true,
+    "strategy_ui_not_added": true
+  }
 }
