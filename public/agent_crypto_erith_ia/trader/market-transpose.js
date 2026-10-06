@@ -35,10 +35,12 @@
     const j=await r.json();state.extended=Array.isArray(j?.coins)?j.coins:[];state.extendedLoaded=true;
   }
   function syncPair(coin){
-    if(!coin)return;const quote=String(coin?.rawQuoteCurrency||coin?.quote||coin?.providerContext?.quote||(displayCurrency()==="USD"?"USDC":"EUR")).toUpperCase(),symbol=String(coin.symbol||"BTC").toUpperCase();
-    const p=document.querySelector(".pair-chip b");if(p)p.textContent=symbol+" / "+quote;
-    const asset=$("detailCompactAsset");if(asset)asset.textContent=symbol+" / "+quote;
-    const title=$("selectedAssetTitle");if(title)title.textContent=(coin.name||symbol)+" — "+symbol;
+    if(!coin)return;
+    const quote=String(coin?.rawQuoteCurrency||coin?.quote||coin?.providerContext?.quote||(displayCurrency()==="USD"?"USDC":"EUR")).toUpperCase();
+    const symbol=String(coin.symbol||"BTC").toUpperCase();
+    document.documentElement.dataset.traderSelectedPair=symbol+"/"+quote;
+    // 40.6.597: Market owns selection only. Lecture Technique and the PAIR status pill
+    // are rendered by their dedicated owners; no cross-surface DOM write here.
   }
   async function selectCoin(id,reason="market"){
     const coin=allCoins().find(c=>c.id===id)||state.coins[0];if(!coin)return false;
