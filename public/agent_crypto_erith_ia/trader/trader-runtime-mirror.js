@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const BUILD="40.6.602";
+const BUILD="40.6.603";
 const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
@@ -78,6 +78,7 @@ function mount(){
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential .trader-runtime-nav-link{display:inline-flex!important;align-items:center!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential .trader-runtime-aether-link{display:inline-flex!important;align-items:center!important}",
+      "body.atlas-trader-runtime-mirror #atlasAetherRibbon{display:none!important}",
       "body.atlas-trader-runtime-mirror #atlasMarketDomainSwitch{pointer-events:none!important;cursor:default!important}",
       "body.atlas-trader-runtime-mirror #market-zone{margin-top:12px}",
       "body.atlas-trader-runtime-mirror .shell{padding-bottom:28px}",

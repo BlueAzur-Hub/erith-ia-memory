@@ -1,12 +1,12 @@
 {
-  "build": "40.6.602",
+  "build": "40.6.603",
   "surface": "trader",
-  "release": "TRADER · NAVIGATION + BUILD TRUTH",
-  "parent_trader_build": "40.6.601",
-  "administrator_base": "40.6.602",
+  "release": "TRADER · AETHER ON DEMAND",
+  "parent_trader_build": "40.6.602",
+  "administrator_base": "40.6.603",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406602_pending_firefox_terrain",
+  "status": "published_406603_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -122,7 +122,7 @@
     "pr": "PENDING",
     "merge_commit": "PENDING",
     "github_pages": "PENDING",
-    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.602_NAVIGATION_BUILD_TRUTH.zip",
+    "zip": "public/agent_crypto_erith_ia/trader/downloads/AGENT_CRYPTO_TRADER_40.6.603_AETHER_ON_DEMAND.zip",
     "javascript_syntax": "PENDING"
   },
   "stop_gate": {
@@ -133,8 +133,8 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Continue cumulatively to 40.6.603 Aether On Demand.",
-    "Then 40.6.604 routing fidelity checkpoint before Firefox terrain validation."
+    "Continue cumulatively to 40.6.604 routing fidelity checkpoint.",
+    "Then Firefox terrain validation with Christophe."
   ],
   "navigation_406602": {
     "enabled": true,
@@ -154,5 +154,19 @@
     "market_flow_owner_preserved": true,
     "atlas_ui_hidden": true,
     "strategy_ui_not_added": true
+  },
+  "aether_on_demand_406603": {
+    "enabled": true,
+    "trader_only": true,
+    "aether_module_preserved": true,
+    "aether_status_toggle_preserved": true,
+    "aether_panel_preserved": true,
+    "permanent_ribbon_hidden": true,
+    "administrator_aether_unchanged": true,
+    "atlas_data_context_unchanged": true,
+    "oracle_context_unchanged": true,
+    "no_new_timer": true,
+    "no_new_observer": true,
+    "no_business_logic_change": true
   }
 }
