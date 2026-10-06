@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD="40.6.588";
+  const BUILD="40.6.589";
   const BUTTON_ID="atlasNewListingsButton406528";
   const ROOT_ATTR="data-new-listing-id";
   const BITGET="https://api.bitget.com";
