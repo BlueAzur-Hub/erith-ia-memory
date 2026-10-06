@@ -5,8 +5,8 @@
   "parent_trader_build": "40.6.581",
   "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "published": false,
-  "status": "branch_ready_for_pr_406582",
+  "published": true,
+  "status": "published_pending_terrain_406582",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -71,11 +71,10 @@
     "Math Core"
   ],
   "delivery": {
-    "pr": "PENDING",
-    "merge_commit": "PENDING",
-    "javascript_syntax": "PENDING_PR_CI",
-    "github_pages": "PENDING",
-    "zip": "PENDING"
+    "pr": 147,
+    "merge_commit": "3504c079861d150403fc797307d10468f160db61",
+    "github_pages": "PENDING_FINAL_TRUTH_COMMIT",
+    "zip": "NOT_REQUESTED_THIS_PASS"
   },
   "stop_gate": {
     "no_real_order": true,
