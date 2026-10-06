@@ -5,116 +5,139 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <meta name="agent-crypto-surface" content="trader" />
-  <meta name="agent-crypto-build" content="40.6.572" />
-  <meta name="agent-crypto-parent-administrator" content="40.6.571" />
-  <title>ERITH.IA · Trading Desk — 40.6.572</title>
-  <link rel="stylesheet" href="./trading-desk.css?v=40.6.572" />
+  <meta name="agent-crypto-build" content="40.6.573" />
+  <meta name="agent-crypto-administrator-base" content="40.6.571" />
+  <title>ERITH.IA · Trading Desk — 40.6.573</title>
+  <link rel="stylesheet" href="./trading-desk.css?v=40.6.573" />
 </head>
 <body>
-  <header class="trader-topbar">
-    <div>
-      <p class="kicker">ERITH.IA · TRADING DESK</p>
-      <h1>Agent-Crypto · Trader</h1>
-      <p class="subline">Fondation 40.6.572 · même application · aucun moteur métier dupliqué</p>
+  <header class="trader-menu" aria-label="Menu Trader minimal">
+    <div class="brand">
+      <span class="brand-kicker">ERITH.IA · TRADING DESK</span>
+      <strong>Agent-Crypto · Trader</strong>
     </div>
-    <div class="topbar-actions">
-      <span class="status status-safe">READ ONLY · FOUNDATION</span>
-      <a class="button-link" href="../administrator/index.html?view=advanced">Administrator</a>
+
+    <div class="pair-bar">
+      <button type="button" class="pair-chip" aria-disabled="true">
+        <span>PAIR</span><b>BTC / USDC</b>
+      </button>
+      <span class="mode-chip">SPOT</span>
+      <span class="mode-chip muted">PERP séparé</span>
+    </div>
+
+    <div class="menu-actions">
+      <span class="status-chip">READ ONLY</span>
+      <a class="admin-link" href="../administrator/index.html?view=advanced">Administrator</a>
     </div>
   </header>
 
-  <nav class="trader-menu" aria-label="Menu Trader">
-    <button type="button" class="menu-pair" aria-disabled="true" title="La PAIR centrale sera branchée sur le propriétaire Market existant lors de l’étape suivante.">
-      <span>PAIR</span><strong>BTC / USDC</strong>
-    </button>
-    <span class="menu-note">PAIR centrale = vérité commune du Trading Desk</span>
-    <span class="menu-note">Spot / Perp séparés</span>
-    <span class="menu-note">Aucun ordre réel</span>
-  </nav>
-
-  <main class="trader-grid" aria-label="Fondation canonique Trading Desk">
-    <section class="surface graph-surface" data-owner="administrator:market-microscope-candles.js">
-      <header class="surface-head">
-        <div><p class="eyebrow">OWNER EXISTANT</p><h2>Graphique · Bougies</h2></div>
-        <span>à monter</span>
-      </header>
-      <div class="surface-placeholder graph-placeholder">
-        <strong>MARKET MICROSCOPE · BOUGIES</strong>
-        <p>Réutiliser le moteur Bougies déjà validé : indicateurs, intervalles, OKX public via Backend local.</p>
-      </div>
-    </section>
-
-    <aside class="right-stack" aria-label="Lecture de marché latérale">
-      <section class="surface depth-surface" data-owner="administrator:okx-microstructure-406499.js">
+  <main>
+    <section class="trader-primary" aria-label="Zone principale de surveillance">
+      <section class="surface graph-surface" data-owner="administrator:market-microscope-candles.js">
         <header class="surface-head">
-          <div><p class="eyebrow">OWNER EXISTANT</p><h2>Profondeur</h2></div>
-          <span>au-dessus de LT</span>
+          <div>
+            <p class="eyebrow">SURFACE PRINCIPALE</p>
+            <h1>Graphique · Bougies</h1>
+          </div>
+          <span class="owner-state">owner existant · à monter</span>
         </header>
-        <div class="surface-placeholder compact">
-          <strong>CARNET / PROFONDEUR</strong>
-          <p>Dock, détachement et déplacement restent ceux déjà validés.</p>
+
+        <div class="surface-placeholder graph-placeholder">
+          <strong>MARKET MICROSCOPE · BOUGIES</strong>
+          <p>La zone prioritaire pour Yohan et Christophe. Le moteur existant sera remonté ici sans duplication.</p>
         </div>
       </section>
 
-      <section class="surface technical-surface" data-owner="administrator:detailPanel">
-        <header class="surface-head">
-          <div><p class="eyebrow">OWNER EXISTANT</p><h2>Lecture Technique</h2></div>
-          <span>à monter</span>
-        </header>
-        <div class="surface-placeholder compact">
-          <strong>LECTURE TECHNIQUE</strong>
-          <p>Support / résistance et prix restent issus des propriétaires existants.</p>
-        </div>
-      </section>
-    </aside>
+      <aside class="analysis-rail" aria-label="Profondeur et Lecture Technique">
+        <section class="surface collapsible-panel" id="depthPanel" data-owner="administrator:okx-microstructure-406499.js" data-collapsed="false">
+          <header class="surface-head compact-head">
+            <div>
+              <p class="eyebrow">OUTIL D'APPUI</p>
+              <h2>Profondeur</h2>
+            </div>
+            <button class="collapse-toggle" type="button" data-collapse-target="depthPanel" aria-expanded="true">Réduire</button>
+          </header>
+          <div class="collapsible-body">
+            <div class="surface-placeholder compact-placeholder">
+              <strong>CARNET / PROFONDEUR</strong>
+              <p>Réutilise le propriétaire existant ; panneau repliable pour préserver la priorité du graphique.</p>
+            </div>
+          </div>
+        </section>
 
-    <section class="surface market-surface" data-owner="administrator:marketSnapshotPanel">
-      <header class="surface-head">
-        <div><p class="eyebrow">OWNER EXISTANT</p><h2>Market</h2></div>
-        <span>en dessous du Graphique</span>
-      </header>
-      <div class="surface-placeholder market-placeholder">
-        <strong>MARKET SNAPSHOT</strong>
-        <p>Réutiliser le propriétaire Market existant. Pas de copie de logique, pas de second univers de prix.</p>
-      </div>
+        <section class="surface collapsible-panel" id="technicalPanel" data-owner="administrator:detailPanel" data-collapsed="false">
+          <header class="surface-head compact-head">
+            <div>
+              <p class="eyebrow">OUTIL D'APPUI</p>
+              <h2>Lecture Technique</h2>
+            </div>
+            <button class="collapse-toggle" type="button" data-collapse-target="technicalPanel" aria-expanded="true">Réduire</button>
+          </header>
+          <div class="collapsible-body">
+            <div class="surface-placeholder compact-placeholder">
+              <strong>LECTURE TECHNIQUE</strong>
+              <p>Support, résistance et prix restent issus des propriétaires existants ; panneau repliable.</p>
+            </div>
+          </div>
+        </section>
+      </aside>
     </section>
 
-    <aside class="bottom-right-stack" aria-label="Math Core et actions">
-      <section class="surface math-surface" data-owner="administrator:math">
+    <section class="secondary-grid" aria-label="Market et Math Core">
+      <section class="surface market-surface" data-owner="administrator:marketSnapshotPanel">
         <header class="surface-head">
-          <div><p class="eyebrow">OWNER EXISTANT</p><h2>Math Core</h2></div>
-          <span>à droite du Market</span>
+          <div>
+            <p class="eyebrow">EN DESSOUS · OWNER EXISTANT</p>
+            <h2>Market</h2>
+          </div>
+          <span class="owner-state">à monter</span>
         </header>
-        <div class="math-action-row">
-          <div class="score-orb" aria-label="Score Math Core non monté">—</div>
+        <div class="surface-placeholder market-placeholder">
+          <strong>MARKET SNAPSHOT</strong>
+          <p>Le Market reste sous la zone Graphique / Profondeur / Lecture Technique, comme dans l'interface connue.</p>
+        </div>
+      </section>
+
+      <aside class="surface math-surface" data-owner="administrator:math">
+        <header class="surface-head">
+          <div>
+            <p class="eyebrow">EN DESSOUS · OWNER EXISTANT</p>
+            <h2>Math Core</h2>
+          </div>
+          <span class="owner-state">à droite du Market</span>
+        </header>
+        <div class="math-preview">
+          <div class="score-orb">—</div>
           <div>
             <strong>ATLAS MATH CORE</strong>
-            <p>Le score ouvrira le futur ticket Achat. Aucun achat automatique.</p>
+            <p>Score et mesures existants. Aucun achat automatique.</p>
           </div>
         </div>
-      </section>
-
-      <section class="surface action-surface" aria-label="Actions de trading futures">
-        <header class="surface-head">
-          <div><p class="eyebrow">FUTUR · DÉSACTIVÉ</p><h2>Achat / Vente</h2></div>
-          <span>simulation plus tard</span>
-        </header>
-        <div class="action-row">
-          <button type="button" class="round-action buy" disabled>BUY</button>
-          <button type="button" class="round-action sell" disabled>SELL</button>
-          <button type="button" class="round-action kill" disabled>STOP</button>
-        </div>
-        <p class="action-note">BUY/SELL réels interdits à cette étape. REDIVIDER reste le Kill Switch supérieur.</p>
-      </section>
-    </aside>
+      </aside>
+    </section>
   </main>
 
+  <div class="trader-orbs-left" aria-label="Commandes Trader futures">
+    <button type="button" class="trade-orb buy" disabled>
+      <b>BUY</b><span>Achat</span>
+    </button>
+    <button type="button" class="trade-orb sell" disabled>
+      <b>SELL</b><span>Vente</span>
+    </button>
+  </div>
+
+  <div class="trader-orbs-right">
+    <button type="button" class="trade-orb kill" disabled title="REDIVIDER reste le Kill Switch">
+      <b>STOP</b><span>Redivider</span>
+    </button>
+  </div>
+
   <footer class="trader-footer">
-    <span>Trader 40.6.572</span>
-    <span>Base Administrator 40.6.571 · Market Core 38.15.11</span>
+    <span>Trader 40.6.573 · PENDING OPÉRATEUR</span>
+    <span>Administrator 40.6.571 · Market Core 38.15.11</span>
     <span id="viewportProfile">viewport</span>
   </footer>
 
-  <script src="./trading-desk.js?v=40.6.572" defer></script>
+  <script src="./trading-desk.js?v=40.6.573" defer></script>
 </body>
 </html>

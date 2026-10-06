@@ -1,109 +1,207 @@
 :root{
   color-scheme:dark;
   --bg:#061018;
-  --panel:rgba(11,27,38,.88);
-  --panel-2:rgba(14,34,47,.72);
-  --line:rgba(117,210,229,.22);
-  --line-strong:rgba(117,210,229,.42);
-  --text:#e8f6fb;
-  --muted:#8fa9b5;
-  --cyan:#5fe7f2;
-  --green:#6ef3c5;
-  --red:#ff7d78;
-  --amber:#ffd980;
-  --radius:14px;
+  --panel:rgba(10,25,35,.90);
+  --line:rgba(115,213,232,.23);
+  --line-strong:rgba(115,213,232,.42);
+  --text:#edf9fc;
+  --muted:#91aab5;
+  --cyan:#62e5ef;
+  --green:#70f0c6;
+  --red:#ff7e79;
+  --amber:#ffd47c;
+  --radius:13px;
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:
-  radial-gradient(circle at 12% -10%,rgba(58,169,190,.12),transparent 32rem),
-  linear-gradient(180deg,#07131c 0%,#061018 100%);
-  color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif}
-body{padding:18px}
+html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#07131b,#061018);color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif}
+body{padding:12px 14px 92px}
 button,a{font:inherit}
-.trader-topbar,.trader-menu,.surface,.trader-footer{
-  border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),rgba(6,20,29,.90));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 18px 50px rgba(0,0,0,.18)
-}
-.trader-topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 18px;border-radius:var(--radius)}
-.kicker,.eyebrow{margin:0 0 5px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan)}
 h1,h2,p{margin-top:0}
-h1{font-size:21px;margin-bottom:5px}
-h2{font-size:15px;margin-bottom:0}
-.subline,.menu-note,.surface-placeholder p,.math-action-row p,.action-note{color:var(--muted);font-size:12px;line-height:1.45}
-.topbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.status,.button-link{border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-size:11px;letter-spacing:.04em}
-.status-safe{color:var(--green);border-color:rgba(110,243,197,.30)}
-.button-link{color:var(--text);text-decoration:none;background:rgba(255,255,255,.035)}
-.button-link:hover{border-color:var(--line-strong)}
-.trader-menu{margin-top:12px;padding:10px 12px;border-radius:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.menu-pair{display:flex;align-items:center;gap:9px;border:1px solid rgba(95,231,242,.35);background:rgba(95,231,242,.06);color:var(--text);border-radius:10px;padding:8px 11px}
-.menu-pair span{font-size:9px;color:var(--muted);letter-spacing:.12em}.menu-pair strong{font-size:12px;color:var(--cyan)}
 
-/* 40.6.572 layout repair:
-   preserve the visual order already established in Administrator:
-   top = Graphique + Profondeur/Lecture Technique
-   below = Market + Math Core/actions. */
-.trader-grid{
-  margin-top:12px;
+.trader-menu,.surface,.trader-footer{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,var(--panel),rgba(6,18,27,.92));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 14px 38px rgba(0,0,0,.16)
+}
+
+/* Menu volontairement minimal : pas d'Aether, Atlas, Oracle, Veille ou autres sections. */
+.trader-menu{
+  min-height:58px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:9px 12px;
+  border-radius:12px;
+  position:sticky;
+  top:8px;
+  z-index:30
+}
+.brand{display:flex;flex-direction:column;min-width:210px}
+.brand-kicker{font-size:9px;letter-spacing:.16em;color:var(--cyan)}
+.brand strong{font-size:16px;margin-top:2px}
+.pair-bar,.menu-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pair-bar{flex:1}
+.menu-actions{justify-content:flex-end}
+.pair-chip,.mode-chip,.status-chip,.admin-link{
+  border:1px solid var(--line);
+  border-radius:999px;
+  min-height:34px;
+  padding:7px 11px;
+  background:rgba(255,255,255,.025);
+  color:var(--text);
+  text-decoration:none;
+  font-size:10px
+}
+.pair-chip{display:flex;gap:8px;align-items:center;border-color:rgba(98,229,239,.38)}
+.pair-chip span{color:var(--muted);font-size:8px;letter-spacing:.11em}
+.pair-chip b{color:var(--cyan);font-size:12px}
+.mode-chip.muted{color:var(--muted)}
+.status-chip{color:var(--green);border-color:rgba(112,240,198,.30)}
+
+.trader-primary{
+  margin-top:10px;
   display:grid;
-  grid-template-columns:minmax(0,1.15fr) minmax(0,1.15fr) minmax(320px,.72fr);
-  grid-template-areas:
-    "graph graph right"
-    "market market bottom";
-  gap:12px;
-  align-items:start
+  grid-template-columns:minmax(0,2.55fr) minmax(310px,.72fr);
+  gap:10px;
+  align-items:stretch
 }
 .surface{border-radius:var(--radius);min-width:0;overflow:hidden}
-.graph-surface{grid-area:graph;min-height:520px}
-.right-stack{grid-area:right;display:grid;gap:12px;grid-template-rows:minmax(245px,1fr) minmax(245px,1fr)}
-.market-surface{grid-area:market;min-height:520px}
-.bottom-right-stack{grid-area:bottom;display:grid;gap:12px;align-content:start}
-.math-surface{min-height:260px}
-.action-surface{min-height:190px}
-.surface-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.018)}
-.surface-head span{font-size:10px;color:var(--muted);white-space:nowrap}
-.surface-placeholder{margin:14px;padding:16px;border:1px dashed rgba(117,210,229,.23);border-radius:12px;background:rgba(0,0,0,.12);min-height:160px}
-.surface-placeholder strong{font-size:12px;letter-spacing:.06em}
-.graph-placeholder{min-height:425px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
-  background:
-    linear-gradient(rgba(95,231,242,.035) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(95,231,242,.035) 1px,transparent 1px);
-  background-size:36px 36px}
-.market-placeholder{min-height:420px}
-.compact{min-height:160px}
-.math-action-row{display:flex;align-items:center;gap:16px;padding:18px}
-.score-orb,.round-action{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-strong);background:rgba(95,231,242,.05);color:var(--cyan);font-weight:700}
-.math-action-row p{margin:6px 0 0}
-.action-row{display:flex;gap:12px;align-items:center;padding:18px 18px 10px}
-.round-action{appearance:none}
-.round-action:disabled{opacity:.58;cursor:not-allowed}
-.round-action.buy{border-color:rgba(110,243,197,.36);color:var(--green)}
-.round-action.sell{border-color:rgba(255,125,120,.38);color:var(--red)}
-.round-action.kill{border-color:rgba(255,217,128,.35);color:var(--amber)}
-.action-note{margin:0 18px 18px}
-.trader-footer{margin-top:12px;padding:10px 13px;border-radius:12px;display:flex;gap:14px;justify-content:space-between;flex-wrap:wrap;color:var(--muted);font-size:10px}
-@media(max-width:1180px){
-  .trader-grid{
-    grid-template-columns:minmax(0,1.55fr) minmax(300px,.85fr);
-    grid-template-areas:
-      "graph right"
-      "market bottom"
-  }
+.graph-surface{min-height:640px}
+.analysis-rail{display:grid;grid-template-rows:auto auto;gap:10px;align-content:start}
+.collapsible-panel{min-height:0}
+.collapsible-panel[data-collapsed="true"] .collapsible-body{display:none}
+.collapsible-panel[data-collapsed="true"]{min-height:0}
+
+.surface-head{
+  min-height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:11px 13px;
+  border-bottom:1px solid var(--line);
+  background:rgba(255,255,255,.017)
 }
-@media(max-width:760px){
-  body{padding:10px}
-  .trader-topbar{align-items:flex-start;flex-direction:column}
-  .topbar-actions{justify-content:flex-start}
-  .trader-menu{position:sticky;top:8px;z-index:20}
-  .trader-grid{display:flex;flex-direction:column}
-  .graph-surface{order:1;min-height:350px}
-  .right-stack{order:2;display:flex;flex-direction:column}
-  .depth-surface{order:1}
-  .technical-surface{order:2}
-  .bottom-right-stack{order:3;display:flex;flex-direction:column}
-  .math-surface{order:1}
-  .action-surface{order:2}
-  .market-surface{order:4;min-height:320px}
-  .graph-placeholder{min-height:255px}
-  .market-placeholder{min-height:220px}
+.compact-head{min-height:56px}
+.eyebrow{margin:0 0 4px;font-size:8px;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase}
+h1{font-size:17px;margin-bottom:0}
+h2{font-size:15px;margin-bottom:0}
+.owner-state{font-size:9px;color:var(--muted);white-space:nowrap}
+.collapse-toggle{
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,255,255,.025);
+  color:var(--text);
+  min-height:30px;
+  padding:5px 9px;
+  cursor:pointer;
+  font-size:9px
+}
+.collapse-toggle:hover{border-color:var(--line-strong)}
+
+.surface-placeholder{
+  margin:12px;
+  border:1px dashed rgba(115,213,232,.24);
+  border-radius:11px;
+  background:rgba(0,0,0,.10)
+}
+.graph-placeholder{
+  min-height:550px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:24px;
+  background:
+    linear-gradient(rgba(98,229,239,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(98,229,239,.035) 1px,transparent 1px);
+  background-size:38px 38px
+}
+.compact-placeholder{min-height:218px;padding:16px}
+.market-placeholder{min-height:410px;padding:18px}
+.surface-placeholder strong{font-size:12px;letter-spacing:.05em}
+.surface-placeholder p,.math-preview p{font-size:11px;line-height:1.45;color:var(--muted);margin:7px 0 0}
+
+.secondary-grid{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:minmax(0,3fr) minmax(300px,.92fr);
+  gap:10px;
+  align-items:start
+}
+.market-surface{min-height:500px}
+.math-surface{min-height:340px}
+.math-preview{display:flex;align-items:center;gap:16px;padding:20px 16px}
+.score-orb{
+  flex:0 0 auto;
+  width:82px;height:82px;border-radius:50%;
+  display:grid;place-items:center;
+  border:1px solid rgba(255,212,124,.42);
+  box-shadow:inset 0 0 0 8px rgba(255,212,124,.04);
+  color:var(--amber);font-size:25px;font-weight:800
+}
+
+/* Boutons Trader : orbes flottantes, même langage que Math Core / Redivider actuel.
+   Ils sont volontairement désactivés dans cette version de structure. */
+.trader-orbs-left,.trader-orbs-right{
+  position:fixed;
+  bottom:15px;
+  z-index:50;
+  display:flex;
+  align-items:flex-end;
+  gap:10px;
+  pointer-events:none
+}
+.trader-orbs-left{left:14px}
+.trader-orbs-right{right:14px}
+.trade-orb{
+  width:78px;height:78px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:2px solid var(--line-strong);
+  background:rgba(6,17,25,.94);
+  box-shadow:0 10px 32px rgba(0,0,0,.38),inset 0 0 0 6px rgba(255,255,255,.018);
+  color:var(--text);
+  pointer-events:auto
+}
+.trade-orb b{font-size:16px;line-height:1}
+.trade-orb span{font-size:8px;margin-top:5px;text-transform:uppercase;letter-spacing:.08em}
+.trade-orb:disabled{opacity:.84;cursor:not-allowed}
+.trade-orb.buy{border-color:rgba(112,240,198,.48);color:var(--green)}
+.trade-orb.sell{border-color:rgba(255,126,121,.48);color:var(--red)}
+.trade-orb.kill{width:88px;height:88px;border-color:rgba(255,86,86,.50);color:#ff9a96}
+
+.trader-footer{
+  margin-top:10px;
+  min-height:36px;
+  border-radius:10px;
+  padding:8px 12px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  color:var(--muted);
+  font-size:9px
+}
+
+@media(max-width:1180px){
+  .trader-primary{grid-template-columns:minmax(0,1.8fr) minmax(285px,.75fr)}
+  .secondary-grid{grid-template-columns:minmax(0,2fr) minmax(285px,.8fr)}
+}
+@media(max-width:820px){
+  body{padding:8px 8px 88px}
+  .trader-menu{position:static;align-items:flex-start;flex-wrap:wrap}
+  .brand{min-width:100%;flex-basis:100%}
+  .menu-actions{margin-left:auto}
+  .trader-primary,.secondary-grid{display:flex;flex-direction:column}
+  .graph-surface{order:1;min-height:420px}
+  .analysis-rail{order:2;display:flex;flex-direction:column}
+  .graph-placeholder{min-height:335px}
+  .compact-placeholder{min-height:150px}
+  .secondary-grid .market-surface{order:2;min-height:320px}
+  .secondary-grid .math-surface{order:1;min-height:250px}
+  .market-placeholder{min-height:230px}
+  .trade-orb{width:64px;height:64px}
+  .trade-orb.kill{width:70px;height:70px}
+  .trade-orb b{font-size:13px}
 }

@@ -1,41 +1,40 @@
 {
-  "build": "40.6.572",
+  "build": "40.6.573",
   "surface": "trader",
-  "release": "TRADER · CANONICAL FOUNDATION · LAYOUT REPAIR",
-  "parent_administrator": "40.6.571",
+  "release": "TRADER · LIGHT SHELL · FAMILIAR INTERFACE",
+  "parent_trader_build": "40.6.572",
+  "administrator_base": "40.6.571",
   "market_core": "38.15.11",
-  "status": "foundation_unvalidated_layout_repaired",
+  "published": true,
+  "status": "published_pending_terrain",
+  "terrain_verified": false,
+  "operator_validation": "PENDING",
   "execution": "disabled",
   "real_orders": false,
   "business_logic_duplicated": false,
-  "terrain_verified": false,
-  "operator_validation": "PENDING",
   "layout_truth": {
-    "source": "Fil Interface Crypto + Administrator existing arrangement",
-    "desktop_top": [
-      "Graphique Bougies",
-      "Profondeur above Lecture Technique"
+    "menu": "minimal",
+    "aether_feed": false,
+    "atlas_section": false,
+    "oracle_section": false,
+    "other_administrator_sections": false,
+    "primary_focus": "Graphique Bougies",
+    "right_support_panels": [
+      "Profondeur collapsible",
+      "Lecture Technique collapsible"
     ],
-    "desktop_below": [
+    "trader_controls": "round floating controls using Math Core / Redivider visual language",
+    "below_primary": [
       "Market",
-      "Math Core / actions"
-    ],
-    "preserve_existing_interface_order": true
+      "Math Core at right"
+    ]
   },
   "canonical_contract": {
     "single_responsive_page": true,
     "entry": "trading-desk.html",
     "pair_is_central_truth": true,
-    "mobile": [
-      "PAIR",
-      "Graphique",
-      "Profondeur",
-      "Lecture Technique",
-      "Math Core",
-      "Vente",
-      "REDIVIDER",
-      "Market drawer later"
-    ]
+    "no_new_ui_architecture": true,
+    "reuse_existing_owners": true
   },
   "owners_to_reuse": {
     "market": "../administrator/app.js#marketSnapshotPanel",
@@ -52,12 +51,5 @@
     "EUR/USD architecture",
     "Lecture Technique",
     "Market Microscope candles"
-  ],
-  "files": [
-    "trading-desk.html",
-    "trading-desk.css",
-    "trading-desk.js",
-    "build.json",
-    "README.md"
   ]
 }
