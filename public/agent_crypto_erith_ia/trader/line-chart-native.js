@@ -426,12 +426,18 @@
       if(stored)return applyResult(coin,{...stored,currency,truth:"database",external:false},requestedKey,String(error?.message||error));
       const fallback=fallbackMicroscope(coin,state.period);
       if(fallback)return applyResult(coin,fallback,requestedKey,String(error?.message||error));
-      state.loading=false;state.error=String(error?.message||error);state.refreshWarning=null;setLoading("Graphique Ligne indisponible · "+state.error);draw();return false;
+      state.loading=false;state.error="Historique Interface indisponible";state.refreshWarning=String(error?.message||error);setLoading("Historique indisponible · base Interface vide pour ce contexte");draw();return false;
     }
   }
   function setPeriod(period){
-    const p=Number(period);if(!PERIODS.includes(p))return;
-    state.period=p;syncPeriods();if(lineMode())void load("period");
+    const p=Number(period);if(!PERIODS.includes(p))return false;
+    const coin=selectedCoin(),ctx=externalContext();
+    if(!ctx&&coin&&state.historyBank&&state.historyBankKey===bankContextKey(coin,displayCurrency())&&!bestBankResult(state.historyBank,p)){
+      state.refreshWarning="Période "+periodLabel(p)+" absente de la base historique Interface · période courante conservée";
+      const truth=$("traderLinePeriodTruth");if(truth)truth.textContent=periodLabel(state.period)+" · DB";
+      return false;
+    }
+    state.period=p;syncPeriods();if(lineMode())void load("period");return true;
   }
   function snapshotState(){
     const a=analysisText(),coin=state.coin||selectedCoin()||null;
