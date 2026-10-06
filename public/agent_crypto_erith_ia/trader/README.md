@@ -1,52 +1,35 @@
-# ERITH.IA Trading Desk — 40.6.597
+# ERITH.IA Trading Desk — 40.6.598
 
 ## Objet
-Déboguer la synchronisation générale avant d’ajouter OKX compte / BUY / SELL.
+Corriger le bug terrain visible en 40.6.597 :
 
-Le Fil Crypto impose déjà :
-**PAIR sélectionnée = vérité centrale de la Trading Page.**
+> **Graphique Ligne indisponible · NetworkError when attempting to fetch resource**
 
-40.6.597 matérialise enfin cette règle avec un owner léger :
-`trader/pair-central-truth.js`.
+alors qu'une série historique réelle reste déjà affichée.
 
-## PAIR centrale
-La sélection Market produit une seule vérité :
-- id CoinGecko / id externe ;
-- symbole ;
-- quote réelle ;
-- PAIR ;
-- devise d’affichage ;
-- contexte New Listing ou Market ;
-- révision de sélection.
+## Cause
+Le Trader appelait CoinGecko directement mais ne possédait pas encore la résilience du Graphique Administrator :
+- fallback Microscope uniquement en 24 h ;
+- aucun cache exact pour 7j / 30j / 60j / 90j / 1a / Max ;
+- une actualisation réseau intermittente pouvait donc poser un état erreur au-dessus d'une série réelle déjà chargée.
 
-Un chip visible dans le header affiche :
-- **SYNC** : les owners interrogés sont cohérents ;
-- **SYNCING** : un owner charge encore ;
-- **MISMATCH** : incohérence prouvée.
+## Correctif
+`line-chart-native.js` reprend le principe de l'Interface :
+- cache navigateur exact **coin + devise + période** ;
+- maximum 14 contextes Trader ;
+- lecture possible du cache historique Administrator déjà présent sur la même origine ;
+- si une actualisation du **même contexte exact** échoue, la dernière série réelle reste utilisée ;
+- la vérité passe en **CACHE / REPLI** ;
+- l'overlay `Graphique Ligne indisponible` n'apparaît plus tant qu'une série exacte réelle est disponible.
 
-## Owners audités
-- Market ;
-- Graphique Ligne ;
-- Bougies ;
-- Profondeur ;
-- Lecture Technique ;
-- Math Core ;
-- Source Dock.
-
-Aucun ordre, aucune clé privée, aucun nouveau backend.
-
-## Correctifs de débogage inclus
-1. La fiche Market flottante est maintenant fermée immédiatement quand une autre PAIR est sélectionnée. Elle ne doit plus rester visuellement sur un ancien actif.
-2. Market ne modifie plus directement le DOM de Lecture Technique. Chaque surface garde son owner ; Market ne possède que la sélection centrale.
+Aucune donnée d'une autre PAIR, devise ou période n'est recyclée.
 
 ## Protégé
-- Administrator 40.6.571 ;
-- Market Core 38.15.11 ;
-- Graphique historique 40.6.594 ;
-- Interface filtrée 40.6.595 ;
-- Source Dock 40.6.596 ;
-- Bougies / Profondeur / EUR-USD / Math Core / Lecture Technique.
+- 40.6.594 : prix historiques / tooltip / EUR-USD ;
+- 40.6.595 : Interface filtrée ;
+- 40.6.596 : Source Dock natif ;
+- 40.6.597 : PAIR centrale + audit SYNC/MISMATCH ;
+- Bougies / Profondeur / Market / Math Core / Lecture Technique.
 
 ## Terrain
-Tester BTC → ETH → SOL → un autre actif.
-La PAIR du header et toutes les surfaces actives doivent converger sur le même actif.
+Tester plusieurs périodes, notamment **60j**, celle de la capture ayant reproduit le défaut.
