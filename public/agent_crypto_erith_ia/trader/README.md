@@ -1,16 +1,18 @@
-# ERITH.IA Trading Desk — 40.6.584
+# ERITH.IA Trading Desk — 40.6.585
 
-## Statut
-Correction bornée du header Trader.
+## Objet
+Nettoyage du cockpit Graphique par **propriétaires natifs**, sans ajouter de commandes Trader parallèles.
 
 ## Correction
-- Le **shell visuel du menu Administrator reste transposé**.
-- L'identité sémantique du Trader est restaurée :
-  - `ERITH.IA · TRADING DESK`
-  - `Agent-Crypto · Trader`
-- `ERITH.IA · MARKETS OBSERVATORY / Agent-Crypto @erith.IA` appartient à l'Administrator et n'est plus utilisé comme titre du Trader.
-- Navigation `Marché / Graphique` inchangée.
-- Aucun changement Graphique, Profondeur, Lecture Technique, Market, Fiche ou Math Core dans cette version.
+- suppression du faux bouton `Volume` ajouté par Trader ;
+- suppression du bouton `Profondeur` ajouté par Trader ;
+- suppression du deuxième groupe `AFFICHAGE EUR/USD` ajouté par Trader ;
+- le propriétaire **OKX Profondeur** injecte désormais l'unique bouton Profondeur ;
+- le propriétaire **Quote Currency** injecte l'unique groupe AFFICHAGE EUR/USD ;
+- le propriétaire **Bougies** injecte MICROSCOPE Ligne/Bougies ;
+- Légende / Analyse / Fiche restent les ponts existants de la barre Afficher.
 
-## Terrain
+## Inchangé
+Menu 40.6.584, Bougies, données, Market, Math Core, Lecture Technique et Fiche Market.
+
 Firefox : **PENDING CHRISTOPHE**.
