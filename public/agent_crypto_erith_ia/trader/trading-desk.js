@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.6.578";
+  const BUILD = "40.6.579";
   const ADMIN_BASE = "40.6.571";
   const DETAIL_KEY = "agent_crypto_erith_ia_clean_lens_detail_collapsed_v2";
   const profileNode = document.getElementById("viewportProfile");
@@ -136,7 +136,7 @@
     administratorBase: ADMIN_BASE,
     surface: "trader",
     execution: "disabled",
-    phase: "native-primary-plus-market-transpose",
+    phase: "native-full-skeleton-transpose",
     duplicatedBusinessLogic: false,
     mountedOwners: Object.freeze({
       candles: true,
@@ -144,7 +144,7 @@
       technicalReadingArchitecture: true,
       technicalReadingSRBridge: true,
       market: true,
-      mathCore: false
+      mathCore: true
     }),
     omittedSections: Object.freeze([
       "Aether","Atlas","Oracle","Veille","Sources","Decision Board","Other Administrator sections"
