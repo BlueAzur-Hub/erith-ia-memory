@@ -34,7 +34,7 @@ need('const BUILD="40.6.570"' in depth, "40.6.570 repaired depth owner not loade
 need("const quoteAmount=" in depth, "quoteAmount helper missing")
 need(re.search(r"\beur\s*\(", depth) is None, "legacy eur() call resurrected")
 need("function renderDepth(body,m)" in depth, "renderDepth missing")
-need("\${quoteAmount(bid)} / \${quoteAmount(ask)}" in depth, "depth bands do not use quoteAmount")
+need("${quoteAmount(bid)} / ${quoteAmount(ask)}" in depth, "depth bands do not use quoteAmount")
 need("const bands=[5,10,25]" in depth, "depth bands changed")
 need('state.tab==="depth"' in depth, "depth tab routing missing")
 need("document.body.appendChild(root)" in depth, "independent body portal missing")
