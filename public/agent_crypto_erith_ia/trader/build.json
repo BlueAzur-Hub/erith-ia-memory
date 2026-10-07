@@ -1,14 +1,14 @@
 {
-  "build": "40.6.620",
+  "build": "40.6.621",
   "surface": "trader",
-  "release": "TRADER · SINGLE-CHAR TICKER RESOLVER",
+  "release": "TRADER · CANONICAL ASSET IDENTITY",
   "parent_trader_build": "40.6.620",
-  "administrator_base": "40.6.620",
+  "administrator_base": "40.6.621",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406620_pending_firefox_terrain",
+  "status": "published_406621_pending_firefox_terrain",
   "terrain_verified": false,
-  "operator_validation": "PENDING_FIREFOX_406620",
+  "operator_validation": "PENDING_FIREFOX_406621",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
@@ -122,7 +122,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.620.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.621.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -134,10 +134,10 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Patch only R19/backend/private_backend.py; Bridge 1.9.13 stays unchanged.",
-    "Ctrl+F5 and verify TRADER · 40.6.620.",
-    "MemeCore M must resolve as M-USDC or M-USDT, never MEMECORE-*.",
-    "Retest OKB-USDC candles and Depth.",
+    "Keep current local Backend 1.4.6 patch and Bridge 1.9.13.",
+    "Ctrl+F5 only after TRADER 40.6.621 is visible.",
+    "MemeCore M: Ligne + Bougies + Profondeur must all use M.",
+    "Retest OKB.",
     "No real order."
   ],
   "restore_406607": {
@@ -474,5 +474,23 @@
     "backend_install_note": "coordination/inter_ai_dialogues/agent_crypto/BACKEND_1_4_6_SINGLE_CHAR_TICKER_PATCH.md",
     "backend_patch_artifact": "AGENT_CRYPTO_40.6.620_SINGLE_CHAR_TICKER_PATCH.zip",
     "backend_patch_delivery": "conversation_artifact"
+  },
+  "canonical_asset_identity_406621": {
+    "enabled": true,
+    "canonical_owner": "administrator/js/okx-market-pair-resolver.js::normalizeAsset",
+    "consumers": [
+      "Bougies",
+      "Profondeur",
+      "Market Instrument Resolver"
+    ],
+    "selected_m_truth": "M",
+    "btc_fallback_for_selected_m": false,
+    "memecore_alias_for_selected_m": false,
+    "backend_version": "1.4.6",
+    "bridge_version": "1.9.13",
+    "bridge_modified": false,
+    "market_core_modified": false,
+    "real_orders": false,
+    "terrain": "PENDING_FIREFOX"
   }
 }
