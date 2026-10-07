@@ -526,7 +526,7 @@
     state.loading=true;state.error=null;state.errorCode=null;
     const root=document.getElementById(ROOT);
     renderState();
-    if(root)root.querySelector("[data-amm-state]").textContent=\`CHARGEMENT · \${primary} · \${requestedBar} · résolution marché\`;
+    if(root)root.querySelector("[data-amm-state]").textContent=`CHARGEMENT · ${primary} · ${requestedBar} · résolution marché`;
     let inst=primary,rows=null,source=null,warning=null;
     try{
       const resolver=marketResolver();
@@ -538,9 +538,9 @@
           return false;
         }
         if(!resolution?.available){
-          state.instrument=\`\${selectedSymbol()}-\${displayCurrency()}\`;
+          state.instrument=`${selectedSymbol()}-${displayCurrency()}`;
           state.requestedInstrument=state.instrument;
-          throw codedError("MARKET_INSTRUMENT_UNAVAILABLE",\`\${selectedSymbol()} · \${resolution?.reason||"aucune paire de bougies compatible"}\`);
+          throw codedError("MARKET_INSTRUMENT_UNAVAILABLE",`${selectedSymbol()} · ${resolution?.reason||"aucune paire de bougies compatible"}`);
         }
         primary=resolution.instrument;
         state.requestedInstrument=primary;
@@ -549,7 +549,7 @@
         const pack=await resolver.fetchCandles({resolution,bar:requestedBar,limit:300,signal:controller.signal});
         rows=requireUsableRows((pack.rows||[]).map(normalizeCandle).filter(Boolean).sort((a,b)=>a.t-b.t),pack.instrument||primary);
         inst=String(pack.instrument||primary).toUpperCase();
-        source=\`\${pack.providerLabel||resolution.providerLabel||resolution.provider||"MARKET"} public candles\`;
+        source=`${pack.providerLabel||resolution.providerLabel||resolution.provider||"MARKET"} public candles`;
       }else{
         let lastPairError=null;
         for(let index=0;index<candidates.length;index++){
@@ -560,7 +560,7 @@
             rows=pack.rows;source=pack.source;inst=candidate;lastPairError=null;
             if(candidate!==primary){
               const quote=String(candidate).split("-").pop()||"?";
-              warning=\`\${primary} indisponible · paire active \${candidate} · cotation \${quote} non convertie en \${displayCurrency()}\`;
+              warning=`${primary} indisponible · paire active ${candidate} · cotation ${quote} non convertie en ${displayCurrency()}`;
             }
             break;
           }catch(error){
@@ -598,7 +598,7 @@
       }
     }
   }
-  function renderState(){const root=document.getElementById(ROOT);if(!root)return;const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=ext.active?(state.mode==="candles"?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const shownInstrument=activeInstrument(),shownBar=activeBar(),metaProvider=ext.active?String(ext.providerLabel||ext.provider||"EXTERNAL"):String(state.source||"Market public candles").replace(/ public candles$/i,""),hasValidSeries=state.rows.length>0&&!!state.loadedInstrument,isUnavailable=state.errorCode==="MARKET_INSTRUMENT_UNAVAILABLE";if(meta){meta.textContent=isUnavailable?\`\${selectedSymbol()} · \${shownBar} · 0 bougie · NON DISPONIBLE SUR SOURCES BOUGIES\`:state.error&&!hasValidSeries?\`\${shownInstrument} · \${shownBar} · 0 bougie · \${state.errorCode||"ERREUR"}\`:\`\${shownInstrument} · \${shownBar} · \${state.rows.length} bougies · \${metaProvider}\`;meta.title=state.error||"";}const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"Market public candles").replace(/ public candles$/i,""),transport=ext.active?"EXTERNAL PROVIDER":transportTruth().label,retention=hasValidSeries?\`dernière série valide conservée \${shownInstrument} · \${shownBar}\`:"aucune série valide chargée";st.textContent=state.loading?\`CHARGEMENT · \${state.requestedInstrument} · \${state.requestedBar} · \${transport}\`:state.error?\`ATTENTION · \${state.error} · \${retention}\`:\`\${provider} · \${transport} · \${freshness.status} · bougie \${shownBar} · dernière \${freshness.label} · reçu \${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule\`;st.title=state.error||"";}}
+  function renderState(){const root=document.getElementById(ROOT);if(!root)return;const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=ext.active?(state.mode==="candles"?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const shownInstrument=activeInstrument(),shownBar=activeBar(),metaProvider=ext.active?String(ext.providerLabel||ext.provider||"EXTERNAL"):String(state.source||"Market public candles").replace(/ public candles$/i,""),hasValidSeries=state.rows.length>0&&!!state.loadedInstrument,isUnavailable=state.errorCode==="MARKET_INSTRUMENT_UNAVAILABLE";if(meta){meta.textContent=isUnavailable?`${selectedSymbol()} · ${shownBar} · 0 bougie · NON DISPONIBLE SUR SOURCES BOUGIES`:state.error&&!hasValidSeries?`${shownInstrument} · ${shownBar} · 0 bougie · ${state.errorCode||"ERREUR"}`:`${shownInstrument} · ${shownBar} · ${state.rows.length} bougies · ${metaProvider}`;meta.title=state.error||"";}const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"Market public candles").replace(/ public candles$/i,""),transport=ext.active?"EXTERNAL PROVIDER":transportTruth().label,retention=hasValidSeries?`dernière série valide conservée ${shownInstrument} · ${shownBar}`:"aucune série valide chargée";st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · ${transport}`:state.error?`ATTENTION · ${state.error} · ${retention}`:`${provider} · ${transport} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;st.title=state.error||"";}}
   function visibleRows(){
     if(!state.rows.length)return [];
     const count=Math.max(20,Math.min(view.count||72,state.rows.length));
