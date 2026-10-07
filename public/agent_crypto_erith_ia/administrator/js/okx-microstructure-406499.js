@@ -24,7 +24,7 @@
     open:false,loading:false,asset:"BTC",requestedAsset:"BTC",loadedAsset:null,loadingAsset:null,pendingAsset:null,
     requestedQuote:"EUR",loadedQuote:null,loadingQuote:null,pendingQuote:null,
     pair:"BTC/EUR",quote:"EUR",capturedAt:null,sourceObservedAt:null,receivedAt:null,sourceAgeMs:null,freshness:"UNKNOWN",
-    bids:[],asks:[],tab:"book",error:null,backendVersion:null,lastLatencyMs:null,activeController:null,requestSeq:0,
+    bids:[],asks:[],tab:"book",error:null,errorCode:null,provider:"okx",backendVersion:null,lastLatencyMs:null,activeController:null,requestSeq:0,
     detached:false,floatX:null,floatY:null,floatW:null,floatH:null,dragging:false,dragDx:0,dragDy:0,minimized:false,maximized:false,restoreDetached:false,maxRestore:null
   };
   let liveTimer=0;
@@ -52,6 +52,7 @@
   const displayCurrency=()=>{try{return String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"EUR").toUpperCase();}catch(_){return "EUR";}};
   const externalContext=()=>{try{return globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()||{active:false};}catch(_){return {active:false};}};
   const pairResolver=()=>globalThis.AgentCryptoOkxMarketPairResolver||null;
+  const marketResolver=()=>globalThis.AgentCryptoMarketInstrumentResolver||null;
   const quoteCandidates=()=>{
     const ext=externalContext();
     const resolved=pairResolver()?.quoteCandidates?.({
@@ -453,11 +454,11 @@
     return true;
   }
 
-  function validateBookPayload(payload,requestedAsset,requestedQuote="EUR",nowMs=Date.now()){
+  function validateBookPayload(payload,requestedAsset,requestedQuote="EUR",nowMs=Date.now(),providerOverride=null){
     const asset=String(requestedAsset||"").trim().toUpperCase();
     if(!asset)throw bookError("ASSET_MISMATCH","actif demandé absent");
     if(payload?.read_only!==true)throw bookError("CONTRACT_INVALID","contrat read-only absent");
-    const ext=externalContext(),expectedProvider=ext.active?String(ext.provider||"").toLowerCase():"okx",actualProvider=String(payload?.provider||"").toLowerCase();
+    const ext=externalContext(),expectedProvider=String(providerOverride||(ext.active?ext.provider:"okx")||"").toLowerCase(),actualProvider=String(payload?.provider||"").toLowerCase();
     if(actualProvider!==expectedProvider)throw bookError("CONTRACT_INVALID",`provider ${actualProvider||"?"} != ${expectedProvider||"?"}`);
     if(String(payload?.status||"").toLowerCase()!=="ok")throw bookError("BACKEND_STATUS",payload?.error||("status "+payload?.status));
     const payloadAsset=String(payload?.asset||"").trim().toUpperCase();
@@ -490,7 +491,7 @@
     state.asset=next;state.requestedAsset=next;state.requestedQuote=nextQuote;state.loadedAsset=null;state.loadedQuote=null;
     state.pair=`${next}/${nextQuote}`;state.quote=nextQuote;
     state.bids=[];state.asks=[];state.capturedAt=null;state.sourceObservedAt=null;state.receivedAt=null;state.sourceAgeMs=null;
-    state.backendVersion=null;state.lastLatencyMs=null;state.freshness="UNKNOWN";
+    state.backendVersion=null;state.lastLatencyMs=null;state.freshness="UNKNOWN";state.provider=null;state.errorCode=null;
   }
 
   function normalizePublicOkxBook(payload,asset,quote){
@@ -520,8 +521,22 @@
       if(ext.active){
         const payload=await globalThis.AgentCryptoNewListingLiveAsset?.fetchOrderBook?.({limit:100,signal:controller.signal});
         if(!payload)throw bookError("EXTERNAL_BOOK_UNAVAILABLE","carnet New Listing indisponible");
-        const validated=validateBookPayload(payload,asset,ext.quote,Date.now());
-        return {...validated,latencyMs:Math.max(0,Math.round(performance.now()-started))};
+        const provider=String(ext.provider||"").toLowerCase();
+        const validated=validateBookPayload(payload,asset,ext.quote,Date.now(),provider);
+        return {...validated,provider:provider||"external",latencyMs:Math.max(0,Math.round(performance.now()-started))};
+      }
+      const resolver=marketResolver();
+      if(resolver?.resolve&&resolver?.fetchBook){
+        const resolution=await resolver.resolve({asset,currency:displayCurrency(),capability:"book",signal:controller.signal,publish:false});
+        if(!resolution?.available){
+          const e=bookError("MARKET_BOOK_UNAVAILABLE",`${asset} · ${resolution?.reason||"aucun carnet compatible trouvé"}`);
+          e.resolution=resolution;throw e;
+        }
+        const payload=await resolver.fetchBook({resolution,limit:100,signal:controller.signal});
+        const quote=String(payload?.quote||resolution.quote||"").toUpperCase();
+        const provider=String(payload?.provider||resolution.provider||"").toLowerCase();
+        const validated=validateBookPayload(payload,asset,quote,Date.now(),provider);
+        return {...validated,provider,instrument:resolution.instrument,latencyMs:Math.max(0,Math.round(performance.now()-started))};
       }
       for(const quote of candidates){
         try{
@@ -541,8 +556,8 @@
             if(!response.ok){const error=bookError("BACKEND_HTTP",`Backend 8790 OKX public ${asset}-${quote} HTTP ${response.status}`);error.status=response.status;throw error;}
             payload=normalizePublicOkxBook(await response.json(),asset,quote);
           }
-          const validated=validateBookPayload(payload,asset,quote,Date.now());
-          return {...validated,latencyMs:Math.max(0,Math.round(performance.now()-started))};
+          const validated=validateBookPayload(payload,asset,quote,Date.now(),"okx");
+          return {...validated,provider:"okx",latencyMs:Math.max(0,Math.round(performance.now()-started))};
         }catch(error){
           if(error?.name==="AbortError")throw error;
           errors.push(`${asset}/${quote}: ${String(error?.message||error)}`);
@@ -578,7 +593,7 @@
     const seq=++state.requestSeq;
     const controller=new AbortController();
     state.activeController=controller;state.loadingAsset=requestAsset;state.loadingQuote=requestQuote;state.pendingAsset=null;state.pendingQuote=null;
-    state.loading=true;state.error=null;state.freshness="UNKNOWN";
+    state.loading=true;state.error=null;state.errorCode=null;state.freshness="UNKNOWN";
     if(!options.automatic)render();
 
     let ok=false;
@@ -589,7 +604,7 @@
       }
       state.bids=result.bids;state.asks=result.asks;
       state.loadedAsset=result.asset;state.loadedQuote=result.quote;state.asset=result.asset;state.pair=result.pair;state.quote=result.quote;
-      state.backendVersion=String(result.payload?.backend_version||"?");
+      state.provider=String(result.provider||result.payload?.provider||"okx").toLowerCase();state.backendVersion=String(result.payload?.backend_version||"?");
       state.capturedAt=result.sourceObservedAt;state.sourceObservedAt=result.sourceObservedAt;state.receivedAt=result.receivedAt;state.sourceAgeMs=result.ageMs;
       state.lastLatencyMs=result.latencyMs;state.freshness="FRESH";state.error=null;ok=true;
     }catch(error){
@@ -598,7 +613,7 @@
         const freshState=classifyError(error);
         const ext=externalContext();const message=error?.name==="AbortError"?(ext.active?`${ext.providerLabel||ext.provider} : timeout / annulation carnet`:"Backend 8790 : timeout / annulation carnet"):String(error?.message||error);
         if(state.loadedAsset!==requestAsset||!acceptableQuotes.includes(state.loadedQuote))clearBookForAsset(requestAsset,requestQuote);
-        state.freshness=freshState;state.error=message;
+        state.freshness=freshState;state.errorCode=String(error?.code||"BOOK_LOAD_FAILED");state.error=message;
       }
     }finally{
       state.loading=false;state.loadingAsset=null;state.loadingQuote=null;state.activeController=null;
@@ -693,7 +708,7 @@
     const body=root?.querySelector("[data-oms-body]");
     if(!meta||!kpis||!body)return;
 
-    if(title)title.textContent=ext.active?`${String(ext.providerLabel||ext.provider||"SOURCE").toUpperCase()} · CARNET D’ORDRES`:"OKX · CARNET D’ORDRES";
+    if(title)title.textContent=ext.active?`${String(ext.providerLabel||ext.provider||"SOURCE").toUpperCase()} · CARNET D’ORDRES`:`${String(state.provider||"MARKET").toUpperCase()} · CARNET D’ORDRES`;
     const freshness=state.loading?"UNKNOWN":String(state.freshness||"UNKNOWN");
     if(live){live.dataset.state=freshness;live.textContent=freshness;}
     const sourceTime=state.sourceObservedAt?new Date(state.sourceObservedAt).toLocaleTimeString("fr-FR"):"source inconnue";
@@ -706,12 +721,12 @@
 
     if(state.loading&&!state.bids.length){
       kpis.innerHTML="";
-      body.innerHTML=`<div class="oms-note">Lecture du carnet ${esc(ext.active?(ext.providerLabel||ext.provider):"OKX via Backend local 8790")}…</div>`;
+      body.innerHTML=`<div class="oms-note">Lecture du carnet ${esc(ext.active?(ext.providerLabel||ext.provider):"via Resolver marché · Backend local 8790")}…</div>`;
       return;
     }
     if(state.error&&!state.bids.length){
       kpis.innerHTML="";
-      body.innerHTML=`<div class="oms-error">${esc(state.error)}<br><small>Le graphique reste utilisable. ${ext.active?"Vérifier la source publique du New Listing.":"Vérifier le Backend local 8790 si l’erreur persiste."}</small></div>`;
+      body.innerHTML=`<div class="oms-error">${esc(state.error)}<br><small>${state.errorCode==="MARKET_BOOK_UNAVAILABLE"?"Aucun carnet compatible trouvé. Le graphique Ligne reste utilisable.":ext.active?"Vérifier la source publique du New Listing.":"Erreur de source marché via Backend local 8790."}</small></div>`;
       return;
     }
     if(!state.bids.length||!state.asks.length){
@@ -745,8 +760,9 @@
     try{validateBookPayload({...fresh,observed_at_utc:""},"ETH","EUR",now);}catch(error){missingTimeRejected=error?.code==="SOURCE_TIME_INVALID";}
     try{validateBookPayload({...fresh,pair:"ETH-USDT"},"ETH","USDC",now);}catch(error){wrongQuoteRejected=error?.code==="QUOTE_MISMATCH";}
     const pairCandidates=pairResolver()?.instrumentCandidates?.({asset:"OKB",currency:"USD"})||["OKB-USDC","OKB-USDT"];
+    const resolverTruth=marketResolver()?.self_test?.()?.pass===true;
     const pairCandidatesOk=JSON.stringify(pairCandidates)===JSON.stringify(["OKB-USDC","OKB-USDT"]);
-    const pass=rows.length===2&&LIVE_MS===2000&&freshPass&&stablePass&&staleRejected&&wrongPairRejected&&missingTimeRejected&&wrongQuoteRejected&&pairCandidatesOk;
+    const pass=rows.length===2&&LIVE_MS===2000&&freshPass&&stablePass&&staleRejected&&wrongPairRejected&&missingTimeRejected&&wrongQuoteRejected&&pairCandidatesOk&&resolverTruth;
     return Object.freeze({build:BUILD,pass,checks:{
       lecture_technique_overlay:true,
       docked_glass_surface:true,
@@ -769,6 +785,7 @@
       live_refresh_2s:LIVE_MS===2000,
       refresh_only_while_open:true,
       local_backend_orderbook:true,
+    market_instrument_resolver:true,
       source_freshness_required:true,
       source_timestamp_not_fabricated:true,
       requested_asset_must_match_payload:true,
@@ -776,6 +793,7 @@
       eur_quote_preserved:true,
       usd_display_prefers_usdc_then_usdt:true,
       shared_pair_resolver:true,
+      market_instrument_resolver:resolverTruth,
       dynamic_selected_asset:true,
       okb_usd_candidates_usdc_then_usdt:pairCandidatesOk,
       stablecoin_never_relabelled_usd:true,

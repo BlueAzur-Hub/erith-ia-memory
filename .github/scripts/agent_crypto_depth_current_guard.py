@@ -10,6 +10,7 @@ from pathlib import Path
 ADMIN = Path("public/agent_crypto_erith_ia/administrator")
 DEPTH = ADMIN / "js/okx-microstructure-406499.js"
 PAIR = ADMIN / "js/okx-market-pair-resolver.js"
+RESOLVER = ADMIN / "js/market-instrument-resolver.js"
 INDEX = ADMIN / "index.html"
 BUILD = ADMIN / "build.json"
 
@@ -26,6 +27,7 @@ def need(value: bool, message: str) -> None:
 manifest = json.loads(BUILD.read_text(encoding="utf-8"))
 depth = DEPTH.read_text(encoding="utf-8")
 pair = PAIR.read_text(encoding="utf-8")
+resolver = RESOLVER.read_text(encoding="utf-8")
 index = INDEX.read_text(encoding="utf-8")
 current = str(manifest.get("build") or "").strip()
 
@@ -41,12 +43,21 @@ need("const bands=[5,10,25]" in depth, "depth bands changed")
 need('state.tab==="depth"' in depth, "depth tab routing missing")
 need("document.body.appendChild(root)" in depth, "independent body portal missing")
 need(f"okx-market-pair-resolver.js?v={current}" in index, "shared pair resolver cache token")
-need(index.find("js/okx-market-pair-resolver.js") < index.find("js/okx-microstructure-406499.js"), "pair resolver must load before Depth")
+need(f"market-instrument-resolver.js?v={current}" in index, "market instrument resolver cache token")
+need(index.find("js/okx-market-pair-resolver.js") < index.find("js/market-instrument-resolver.js") < index.find("js/okx-microstructure-406499.js"), "market resolver must load before Depth")
+need("AgentCryptoMarketInstrumentResolver" in depth, "Depth does not consume market instrument resolver")
+need("market_instrument_resolver:true" in depth, "Depth resolver export missing")
+need("fetchBook" in resolver and "btw_bitget_fallback" in resolver, "resolver book/Bitget contract missing")
 need("AgentCryptoOkxMarketPairResolver" in depth, "Depth does not consume shared pair resolver")
 need("typeof globalThis.getSelectedCoin" in depth, "canonical dynamic selection fallback missing")
 need("BTC|ETH|BNB|XRP|SOL|ADA" not in depth, "hardcoded selected-asset whitelist resurrected")
 need('["USDC","USDT"]' in pair, "USD pair order missing")
 need('asset:"OKB",currency:"USD"' in pair, "OKB pair self-test missing")
+
+resolver_scope = manifest.get("market_instrument_resolver_406619") or {}
+need(resolver_scope.get("enabled") is True, "market resolver manifest missing")
+need(resolver_scope.get("book_providers") == ["okx","bitget"], "book provider manifest drift")
+need(resolver_scope.get("backend_required") == "1.4.6", "resolver backend version drift")
 
 scope = manifest.get("okx_depth_multi_quote_render_repair_406570") or {}
 need(scope.get("enabled") is True, "40.6.570 repair manifest missing")
