@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/market-instrument-resolver.js'
       - 'public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js'
       - 'public/agent_crypto_erith_ia/administrator/index.html'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
@@ -14,6 +15,7 @@ on:
   pull_request:
     paths:
       - 'public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/market-instrument-resolver.js'
       - 'public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js'
       - 'public/agent_crypto_erith_ia/administrator/index.html'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
@@ -34,6 +36,7 @@ jobs:
       - name: Depth JavaScript syntax
         run: |
           node --check public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js
+          node --check public/agent_crypto_erith_ia/administrator/js/market-instrument-resolver.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
 
       - name: Deterministic pair and Depth self-test
@@ -42,6 +45,9 @@ jobs:
           require('./public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js');
           const pair=global.AgentCryptoOkxMarketPairResolver.self_test();
           if(!pair.pass){console.error(pair);process.exit(1);}
+          require('./public/agent_crypto_erith_ia/administrator/js/market-instrument-resolver.js');
+          const resolver=global.AgentCryptoMarketInstrumentResolver.self_test();
+          if(!resolver.pass || !resolver.checks?.btw_bitget_fallback){console.error(resolver);process.exit(1);}
           require('./public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js');
           const depth=global.AgentCryptoOkxMicrostructure.self_test();
           console.log(JSON.stringify({pair,depth},null,2));
