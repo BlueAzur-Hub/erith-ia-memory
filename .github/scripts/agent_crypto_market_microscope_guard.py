@@ -5,7 +5,9 @@ from pathlib import Path
 ROOT = Path("public/agent_crypto_erith_ia/administrator")
 INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
 JS_PATH = ROOT / "js/market-microscope-candles.js"
+PAIR_PATH = ROOT / "js/okx-market-pair-resolver.js"
 JS = JS_PATH.read_text(encoding="utf-8")
+PAIR = PAIR_PATH.read_text(encoding="utf-8")
 BUILD = json.loads((ROOT / "build.json").read_text(encoding="utf-8"))
 
 def need(ok, msg):
@@ -43,6 +45,12 @@ need("timeout_has_explicit_error:timeoutTruth" in JS, "timeout truth self-test")
 need("OKX_LOCAL_TIMEOUT" in JS, "explicit local timeout error")
 need("OKX_LOCAL_UNAVAILABLE" in JS, "explicit local backend unavailable error")
 need("canFallbackToUsdc(error)" in JS, "bounded EUR to USDC fallback")
+need(f"okx-market-pair-resolver.js?v={CURRENT}" in INDEX, "shared pair resolver cache token")
+need(INDEX.find("js/okx-market-pair-resolver.js") < INDEX.find("js/market-microscope-candles.js"), "pair resolver must load before Candles")
+need("AgentCryptoOkxMarketPairResolver" in JS, "Candles do not consume shared pair resolver")
+need("const instrumentCandidates=" in JS, "shared candidate projection missing")
+need('["USDC","USDT"]' in PAIR, "USD pair order missing")
+need('status===400||status===404' in PAIR, "bounded HTTP pair fallback missing")
 need('network:"OKX_PUBLIC_VIA_LOCAL_BACKEND_ON_DEMAND_OR_NEW_LISTING_PROVIDER"' in JS, "network truth")
 need('storage_scope:"INDICATOR_STATE_PLUS_INTERVAL_PREFERENCE"' in JS, "bounded storage scope")
 need('const BAR_STORAGE_KEY="agentCrypto.marketMicroscope.bar.v1"' in JS, "stable interval preference owner")
