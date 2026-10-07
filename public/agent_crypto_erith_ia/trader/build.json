@@ -1,12 +1,12 @@
 {
-  "build": "40.6.617",
+  "build": "40.6.618",
   "surface": "trader",
-  "release": "TRADER · CANDLES HTTP FALLBACK",
-  "parent_trader_build": "40.6.616",
-  "administrator_base": "40.6.617",
+  "release": "TRADER · BACKEND OKX DYNAMIC SPOT",
+  "parent_trader_build": "40.6.617",
+  "administrator_base": "40.6.618",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406617_pending_firefox_terrain",
+  "status": "published_406618_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -25,7 +25,7 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Trader header: TRADER · 40.6.617 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Trader header: TRADER · 40.6.618 + Prix live Binance + theme Metal/Glass + Administrator arrow",
       "Minimum nav: Livecheck + Marché + Graphique + Aether dynamic status",
       "Native status lane: Relancer + Rafraîchir + Décision + Sources + Chronos",
       "Graphique + Lecture Technique: native fullscreen/F11 geometry",
@@ -122,7 +122,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.617.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.618.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -134,14 +134,14 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader / Interface 40.6.617 with Backend 8790 active.",
-    "Select OKB → USD → Bougies 15m.",
-    "The first candidate remains OKB-USDC; if OKX/Backend returns HTTP 400 or 404, Bougies must continue to OKB-USDT instead of stopping on a JSON parse error.",
-    "If OKB-USDC succeeds, keep OKB-USDC; never relabel USDC or USDT as USD.",
-    "The Bougies header must show the actual loaded instrument and a non-zero candle count.",
-    "Open Profondeur and confirm it remains on OKB with its independently validated live pair.",
+    "Install / launch the repaired local R19 Backend package before the Firefox proof; web 40.6.618 cannot replace the already-running process on port 8790.",
+    "Firefox Ctrl+F5 and verify TRADER · 40.6.618.",
+    "Select OKB → USD → Bougies 5m or 15m.",
+    "Backend dynamic spot transport must accept OKB-USDC; if upstream rejects that pair, existing bounded fallback may try OKB-USDT.",
+    "Bougies must show the actual loaded instrument and a non-zero candle count, or expose the backend/upstream error detail explicitly.",
+    "Open Profondeur and confirm OKB remains FRESH and aligned.",
     "Repeat BTC → OKB → ETH with Bougies open.",
-    "Confirm Ligne, F11, Lecture Technique, Market, Math Core, Target Top, Market Flow and the OKB case-study report remain unchanged.",
+    "Confirm Ligne, F11, Lecture Technique, Market, Math Core, Target Top, Market Flow and OKB case study remain unchanged.",
     "No real order."
   ],
   "restore_406607": {
@@ -395,6 +395,25 @@
     "new_observer": false,
     "new_storage": false,
     "new_network": false,
+    "real_orders": false,
+    "terrain": "PENDING_FIREFOX"
+  },
+  "backend_okx_dynamic_spot_current": {
+    "enabled": true,
+    "repaired_backend_version": "1.4.5",
+    "root_cause": "local Backend 1.4.4 instrument whitelist blocked OKB before upstream OKX",
+    "allowed_quotes": [
+      "EUR",
+      "USDC",
+      "USDT"
+    ],
+    "pair_resolver_modified": false,
+    "depth_business_logic_modified": false,
+    "market_core_modified": false,
+    "presentation_modified": false,
+    "browser_error_truth_improved": true,
+    "local_backend_install_required": true,
+    "backend_package_sha256": "ceacb8a11a5024db7048e240d5c88689f4322b5b38c21db8b03799dfc9699878",
     "real_orders": false,
     "terrain": "PENDING_FIREFOX"
   }

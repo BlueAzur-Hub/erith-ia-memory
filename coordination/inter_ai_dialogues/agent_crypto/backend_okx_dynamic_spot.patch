@@ -1,0 +1,53 @@
+--- backend/private_backend.py.orig
++++ backend/private_backend.py
+@@
+-VERSION = "1.4.4"
+-BUILD = "40.6.500 OKX Local Transport Truth"
++VERSION = "1.4.5"
++BUILD = "OKX Dynamic Spot Transport"
+@@
+ OKX_INSTRUMENTS = {asset: f"{asset}-EUR" for asset in DEFAULT_ASSETS}
++OKX_PUBLIC_QUOTES = ("EUR", "USDC", "USDT")
+@@
++def _normalize_okx_public_asset(value: Any) -> str:
++    asset = str(value or "").strip().upper()
++    if not (2 <= len(asset) <= 16 and asset.isalnum()):
++        raise ValueError("unsupported OKX asset")
++    return asset
++
++def _normalize_okx_public_instrument(value: Any) -> str:
++    raw = str(value or "").strip().upper().replace("/", "-")
++    parts = raw.split("-")
++    if len(parts) != 2:
++        raise ValueError("unsupported OKX instrument")
++    asset = _normalize_okx_public_asset(parts[0])
++    quote = parts[1]
++    if quote not in OKX_PUBLIC_QUOTES:
++        raise ValueError("unsupported OKX quote")
++    return f"{asset}-{quote}"
+@@
+-    if asset_u not in DEFAULT_ASSETS:
+-        raise ValueError("unsupported asset")
+-    if quote_u not in {"EUR", "USD", "USDC"}:
++    asset_u = _normalize_okx_public_asset(asset or "BTC")
++    if quote_u not in {"EUR", "USD", "USDC", "USDT"}:
+         raise ValueError("unsupported quote")
+-    api_quote = "USDC" if quote_u in {"USD", "USDC"} else "EUR"
++    api_quote = "USDC" if quote_u == "USD" else quote_u
+@@
+-    if not inst or not any(inst == f"{asset}-{quote}" for asset in DEFAULT_ASSETS for quote in ("EUR", "USDC")):
+-        raise ValueError("unsupported OKX instrument")
++    params["instId"] = _normalize_okx_public_instrument(params.get("instId"))
+@@
++    assert _normalize_okx_public_instrument("OKB-USDC") == "OKB-USDC"
++    assert _normalize_okx_public_instrument("okb/usdt") == "OKB-USDT"
++    assert _okx_public_instrument("OKB", "USD")[2] == "OKB-USDC"
++    assert _okx_public_instrument("OKB", "USDT")[2] == "OKB-USDT"
+
+--- source/main.go.orig
++++ source/main.go
+@@
+-	backendVersion   = "1.4.4"
+-	interfaceBuild   = "40.6.500 · Administrator"
++	backendVersion   = "1.4.5"
++	interfaceBuild   = "Administrator"
