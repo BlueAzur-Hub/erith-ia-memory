@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.619",
+  "build": "40.6.620",
   "engine": "38.15.11",
-  "release": "TRADER · MARKET INSTRUMENT RESOLVER",
+  "release": "TRADER · SINGLE-CHAR TICKER RESOLVER",
   "published": true,
-  "status": "published_terrain_pending_406619",
-  "parent_build": "40.6.618",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.619",
-  "administrator_build": "40.6.619",
-  "build_label": "Build 40.6.619 · Administrator",
+  "status": "published_terrain_pending_406620",
+  "parent_build": "40.6.619",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.620",
+  "administrator_build": "40.6.620",
+  "build_label": "Build 40.6.620 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -18,7 +18,7 @@
   "lecture_technique_modified": false,
   "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": true,
+  "administrator_presentation_modified": false,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
@@ -31,8 +31,8 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_406619_MARKET_INSTRUMENT_RESOLVER",
-  "release_notes": "MARKET_INSTRUMENT_RESOLVER.md",
+  "terrain_proof": "PENDING_FIREFOX_406620_SINGLE_CHAR_TICKER",
+  "release_notes": "SINGLE_CHAR_TICKER_RESOLVER_406620.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -10692,6 +10692,50 @@
     "backend_package_source": "repository_main",
     "backend_delivery_kind": "STANDALONE_PRIVATE_BACKEND_PATCH",
     "control_center_1_4_6_published": false,
-    "control_center_note": "Existing Control Center compiled for Backend 1.4.5 may reject/signal 1.4.6 as not ready. Terrain 40.6.619 must launch backend/start_private_backend.cmd from the published patch until an integrated 1.4.6 Control Center is explicitly built and verified."
-  }
+    "control_center_note": "Integrated user-provided R19 is verified locally with Bridge 1.9.13 + Private Backend 1.4.6. 40.6.620 replaces only backend/private_backend.py inside that existing R19 and keeps Bridge 1.9.13 unchanged."
+  },
+  "single_char_ticker_406620": {
+    "enabled": true,
+    "parent": "40.6.619",
+    "browser_owner": "administrator/js/okx-market-pair-resolver.js",
+    "backend_required": "1.4.6",
+    "backend_patch": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40.6.620_SINGLE_CHAR_TICKER_PATCH.zip",
+    "backend_patch_sha256": "0c7fd9462543c3999d1969be12063f77217567d71d48a9e2a2fa16fb3be1b7fa",
+    "backend_private_backend_sha256": "bd4396cdc82532525deadc129058a33a2ef0aa6fdd45cddbebdd395483839cff",
+    "root_cause": "asset ticker validator required 2-16 characters in browser and Backend; MemeCore ticker M is one character",
+    "asset_symbol_length": [
+      1,
+      16
+    ],
+    "quote_symbol_length": [
+      2,
+      16
+    ],
+    "meme_core_expected_candidates": [
+      "M-USDC",
+      "M-USDT"
+    ],
+    "bridge_version": "1.9.13",
+    "bridge_modified": false,
+    "market_core_modified": false,
+    "candles_formula_modified": false,
+    "depth_rendering_modified": false,
+    "real_orders": false,
+    "terrain": "PENDING_FIREFOX"
+  },
+  "delivery": {
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40.6.620_SINGLE_CHAR_TICKER_PATCH.zip"
+  },
+  "stop_gate": {
+    "terrain": "PENDING_FIREFOX_CHRISTOPHE"
+  },
+  "next": [
+    "Stop only Backend in Aether Control, replace R19/backend/private_backend.py from the 40.6.620 patch, and keep Bridge 1.9.13 unchanged.",
+    "Restart Aether Control and verify BRIDGE V1.9.13 active/ready and PRIVATE BACKEND V1.4.6 active/ready.",
+    "Firefox Ctrl+F5 and verify TRADER · 40.6.620 / Administrator 40.6.620.",
+    "MemeCore (M) → USD → Bougies: resolver must request M-USDC then M-USDT, never MEMECORE-*.",
+    "MemeCore (M) → Profondeur: same resolved M pair/provider if a compatible public book is available.",
+    "OKB regression test: OKB-USDC candles and Depth remain functional.",
+    "No real order."
+  ]
 }

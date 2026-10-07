@@ -1,0 +1,13 @@
+--- backend/private_backend.py (R19 Backend 1.4.6)
++++ backend/private_backend.py (40.6.620 single-char ticker patch)
+@@
+ def _normalize_okx_public_asset(value: Any) -> str:
+     asset = str(value or "").strip().upper()
+-    if not (2 <= len(asset) <= 16 and asset.isalnum()):
++    if not (1 <= len(asset) <= 16 and asset.isalnum()):
+         raise ValueError("unsupported OKX asset")
+     return asset
+@@
+     assert _normalize_okx_public_instrument("OKB-USDC") == "OKB-USDC"
++    assert _normalize_okx_public_instrument("M-USDT") == "M-USDT"
++    assert _normalize_okx_public_asset("M") == "M"

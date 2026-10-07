@@ -1,14 +1,14 @@
 {
-  "build": "40.6.619",
+  "build": "40.6.620",
   "surface": "trader",
-  "release": "TRADER · MARKET INSTRUMENT RESOLVER",
-  "parent_trader_build": "40.6.618",
-  "administrator_base": "40.6.619",
+  "release": "TRADER · SINGLE-CHAR TICKER RESOLVER",
+  "parent_trader_build": "40.6.620",
+  "administrator_base": "40.6.620",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406619_pending_firefox_terrain",
+  "status": "published_406620_pending_firefox_terrain",
   "terrain_verified": false,
-  "operator_validation": "PENDING_FIREFOX",
+  "operator_validation": "PENDING_FIREFOX_406620",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
@@ -25,7 +25,7 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Trader header: TRADER · 40.6.619 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Trader header: TRADER · 40.6.620 + Prix live Binance + theme Metal/Glass + Administrator arrow",
       "Minimum nav: Livecheck + Marché + Graphique + Aether dynamic status",
       "Native status lane: Relancer + Rafraîchir + Décision + Sources + Chronos",
       "Graphique + Lecture Technique: native fullscreen/F11 geometry",
@@ -122,7 +122,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.619.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40.6.620_SINGLE_CHAR_TICKER_PATCH.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -134,15 +134,10 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Stop Backend 1.4.5 and launch the supplied R19 package with Private Backend 1.4.6; Bridge remains V1.9.13.",
-    "Firefox Ctrl+F5 and verify TRADER · 40.6.619 / Administrator 40.6.619.",
-    "OKB → USD → Bougies 5m or 15m: expected resolver OKX / OKB-USDC with non-zero candles.",
-    "BTW → USD → Bougies: expected resolver Bitget / BTW-USDT when Bitget SPOT catalog reports it online.",
-    "BTW → Profondeur: expected Bitget / BTW-USDT timestamped public orderbook when available.",
-    "Pick one unrelated random Market crypto: resolver must choose a real compatible venue/pair or show explicit unavailability; no BTC fallback and no per-symbol patch.",
-    "Verify DISPLAY / EXEC / SETTLE follows the resolved pair and no longer remains BTC-EUR for another selected asset.",
-    "Verify Ligne CoinGecko remains available if no exchange microstructure source exists.",
-    "Confirm Lecture Technique, Market Core 38.15.11, Target Top, Market Flow, Math Core, Aether and Strategy are not regressed.",
+    "Patch only R19/backend/private_backend.py; Bridge 1.9.13 stays unchanged.",
+    "Ctrl+F5 and verify TRADER · 40.6.620.",
+    "MemeCore M must resolve as M-USDC or M-USDT, never MEMECORE-*.",
+    "Retest OKB-USDC candles and Depth.",
     "No real order."
   ],
   "restore_406607": {
@@ -460,5 +455,20 @@
     "backend_patch_path": "coordination/inter_ai_dialogues/agent_crypto/BACKEND_1_4_6_MARKET_RESOLVER_PATCH.md",
     "backend_delivery_kind": "STANDALONE_PRIVATE_BACKEND_PATCH",
     "control_center_1_4_6_published": false
+  },
+  "single_char_ticker_406620": {
+    "enabled": true,
+    "root_cause": "one-character asset ticker rejected by browser and Backend validators",
+    "browser_candidates": [
+      "M-USDC",
+      "M-USDT"
+    ],
+    "backend_version": "1.4.6",
+    "bridge_version": "1.9.13",
+    "bridge_modified": false,
+    "market_core_modified": false,
+    "real_orders": false,
+    "patch_sha256": "0c7fd9462543c3999d1969be12063f77217567d71d48a9e2a2fa16fb3be1b7fa",
+    "terrain": "PENDING_FIREFOX"
   }
 }
