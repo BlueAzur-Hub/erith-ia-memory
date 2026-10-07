@@ -7,8 +7,8 @@
   "market_core": "38.15.11",
   "published": true,
   "status": "published_406621_pending_firefox_terrain",
-  "terrain_verified": false,
-  "operator_validation": "PENDING_FIREFOX_406621",
+  "terrain_verified": true,
+  "operator_validation": "PASS_FIREFOX_406621_M_BITGET_XAUT_OKX",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
@@ -134,10 +134,10 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Keep current local Backend 1.4.6 patch and Bridge 1.9.13.",
-    "Ctrl+F5 only after TRADER 40.6.621 is visible.",
-    "MemeCore M: Ligne + Bougies + Profondeur must all use M.",
-    "Retest OKB.",
+    "Freeze 40.6.621 as validated baseline.",
+    "Keep current Backend 1.4.6 R2 and Bridge 1.9.13.",
+    "Next bounded extension: Binance public orderbook for Binance-only resolved assets.",
+    "Retest M/Bitget, XAUT/OKX and OKB/OKX after any transport change.",
     "No real order."
   ],
   "restore_406607": {
@@ -491,7 +491,25 @@
     "bridge_modified": false,
     "market_core_modified": false,
     "real_orders": false,
-    "terrain": "PENDING_FIREFOX",
-    "guard_recheck": "FINAL_CONSISTENT_HEAD"
+    "terrain": "PASS_FIREFOX",
+    "guard_recheck": "FINAL_CONSISTENT_HEAD",
+    "terrain_cases": {
+      "memecore": {
+        "asset": "M",
+        "provider": "bitget",
+        "instrument": "M-USDT",
+        "candles": 300,
+        "book": "fresh",
+        "result": "PASS"
+      },
+      "xaut": {
+        "asset": "XAUT",
+        "provider": "okx",
+        "instrument": "XAUT-USDT",
+        "candles": 300,
+        "book": "fresh",
+        "result": "PASS"
+      }
+    }
   }
 }

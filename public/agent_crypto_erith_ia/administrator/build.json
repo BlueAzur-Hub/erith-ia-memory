@@ -29,9 +29,9 @@
   "static_asset_module_load": true,
   "canonical_entry_modified": true,
   "entry": "./",
-  "terrain_verified": false,
-  "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_406621_CANONICAL_ASSET_IDENTITY",
+  "terrain_verified": true,
+  "terrain_pending": false,
+  "terrain_proof": "PASS_FIREFOX_406621_M_BITGET_XAUT_OKX",
   "release_notes": "CANONICAL_ASSET_IDENTITY_406621.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
@@ -10730,15 +10730,13 @@
     "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.621.zip"
   },
   "stop_gate": {
-    "terrain": "PENDING_FIREFOX_CHRISTOPHE"
+    "terrain": "PASS_406621_CHRISTOPHE"
   },
   "next": [
-    "No new local Backend or Bridge install: keep the patched Private Backend 1.4.6 from 40.6.620 and Bridge 1.9.13.",
-    "After GitHub Pages shows TRADER 40.6.621, Firefox Ctrl+F5.",
-    "Select MemeCore M and verify Ligne, Bougies and Profondeur all keep canonical asset M.",
-    "Bougies must leave any previous BTC canvas immediately and resolve M-USDC/M-USDT through the Market Resolver.",
-    "Profondeur must never display MEMECORE-*; it must use the same canonical M resolution or explicit unavailability.",
-    "Regression: OKB Bougies + Profondeur remains valid.",
+    "Freeze canonical asset identity and Backend 1.4.6 R2 as validated baseline.",
+    "Do not change Bridge 1.9.13 or Market Core 38.15.11.",
+    "Next bounded extension: add Binance public orderbook support so Depth covers Binance-only resolved instruments, while keeping explicit unavailable truth when no book exists.",
+    "Regression set before any next release: M/Bitget, XAUT/OKX, OKB/OKX, plus one Binance-only or unavailable asset.",
     "No real order."
   ],
   "canonical_asset_identity_406621": {
@@ -10767,7 +10765,28 @@
     "candle_math_modified": false,
     "depth_rendering_modified": false,
     "real_orders": false,
-    "terrain": "PENDING_FIREFOX",
-    "guard_recheck": "FINAL_CONSISTENT_HEAD"
+    "terrain": "PASS_FIREFOX",
+    "guard_recheck": "FINAL_CONSISTENT_HEAD",
+    "terrain_cases": {
+      "memecore": {
+        "asset": "M",
+        "provider": "bitget",
+        "instrument": "M-USDT",
+        "candles": 300,
+        "book": "fresh",
+        "result": "PASS"
+      },
+      "xaut": {
+        "asset": "XAUT",
+        "provider": "okx",
+        "instrument": "XAUT-USDT",
+        "candles": 300,
+        "book": "fresh",
+        "result": "PASS"
+      }
+    },
+    "backend_r2_package": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BACKEND_1_4_6_MARKET_RESOLVER_R2_SINGLE_CHAR.zip",
+    "backend_r2_sha256": "6473f8bc3af0c7571e84b36b14bb34c3fa572ad7bc6ddc96140d76e59d90d42a",
+    "backend_file_sha256": "990134125c77dd7ba774d0225a00edb89f1668ec200c416fb7b8d72960ed158f"
   }
 }

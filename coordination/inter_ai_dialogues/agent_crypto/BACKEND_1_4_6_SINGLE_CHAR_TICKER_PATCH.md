@@ -50,3 +50,24 @@ Patched `private_backend.py` SHA-256:
 `bd4396cdc82532525deadc129058a33a2ef0aa6fdd45cddbebdd395483839cff`
 
 No order, wallet, withdrawal or exchange private key.
+
+
+## R2 — terrain-validated canonical package
+
+The first 1.4.6 package was incomplete for one-character tickers. The terrain-validated replacement is:
+
+`AGENT_CRYPTO_BACKEND_1_4_6_MARKET_RESOLVER_R2_SINGLE_CHAR.zip`
+
+SHA-256:
+`6473f8bc3af0c7571e84b36b14bb34c3fa572ad7bc6ddc96140d76e59d90d42a`
+
+Patched `private_backend.py` SHA-256:
+`990134125c77dd7ba774d0225a00edb89f1668ec200c416fb7b8d72960ed158f`
+
+Self-test: **PASS**.
+
+Terrain:
+- `M → Bitget → M-USDT` candles + book PASS.
+- `XAUT → OKX → XAUT-USDT` candles + book PASS.
+
+The previous standalone 1.4.6 package must not be used as canonical delivery for 40.6.621.
