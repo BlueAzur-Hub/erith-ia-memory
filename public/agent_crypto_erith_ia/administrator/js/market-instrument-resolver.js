@@ -8,7 +8,7 @@
   const BUILD="40.6.619";
   const CACHE_TTL_MS=60000;
   const cache=new Map();
-  let last=null,requestSeq=0;
+  let last=null;
   const pairOwner=()=>globalThis.AgentCryptoOkxMarketPairResolver||null;
   const quoteOwner=()=>globalThis.AgentCryptoQuoteCurrencyArchitecture||null;
   const normalizeAsset=value=>{
@@ -109,7 +109,6 @@
     const cached=cache.get(key);
     if(!options.force&&cached&&now-cached.at<=CACHE_TTL_MS)payload=cached.payload;
     if(!payload){
-      const seq=++requestSeq;
       const url=new URL(backendRoot()+"/market-resolve");
       url.searchParams.set("asset",asset);
       url.searchParams.set("currency",currency);
@@ -123,9 +122,6 @@
       try{raw=await response.json();}catch(_){}
       if(!response.ok){
         const e=new Error(String(raw?.error||raw?.detail||("Resolver marché HTTP "+response.status)));e.code="MARKET_RESOLVER_HTTP";e.status=response.status;throw e;
-      }
-      if(seq!==requestSeq&&options.latestOnly===true){
-        const e=new Error("résolution marché dépassée");e.code="MARKET_RESOLVER_SUPERSEDED";throw e;
       }
       payload=normalizePayload(raw,asset,currency);
       cache.set(key,{at:now,payload});
