@@ -1,38 +1,38 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.622",
+  "build": "40.6.623",
   "engine": "38.15.11",
-  "release": "TRADER · SUPPORT/RESISTANCE CURRENT EDGE",
+  "release": "TRADER · ASSET CONTEXT / STALE CANVAS TRUTH",
   "published": true,
-  "status": "SR_CURRENT_EDGE_FALLBACK_406622",
-  "parent_build": "40.6.621",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.622",
-  "administrator_build": "40.6.622",
-  "build_label": "Build 40.6.622 · Administrator",
+  "status": "ASSET_CONTEXT_STALE_CANVAS_406623",
+  "parent_build": "40.6.622",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.623",
+  "administrator_build": "40.6.623",
+  "build_label": "Build 40.6.623 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
   "aether_modified": false,
   "atlas_current_modified": false,
   "oracle_modified": false,
-  "lecture_technique_modified": true,
+  "lecture_technique_modified": false,
   "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": false,
+  "administrator_presentation_modified": true,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
   "new_recurring_timer": false,
   "new_observer": false,
   "new_storage_owner": false,
-  "new_business_network_request": true,
+  "new_business_network_request": false,
   "static_asset_module_load": true,
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_CHRISTOPHE_406622",
-  "release_notes": "SUPPORT_RESISTANCE_CURRENT_EDGE_406622.md",
+  "terrain_proof": "PENDING_FIREFOX_CHRISTOPHE_406623",
+  "release_notes": "ASSET_CONTEXT_STALE_CANVAS_406623.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -10046,14 +10046,21 @@
     "interval_programmatic_load_overwrites_preference": false,
     "storage_additive_only": true,
     "storage_deletion": false,
-    "terrain_checkpoint": "PENDING_FIREFOX_40.6.622",
+    "terrain_checkpoint": "PENDING_FIREFOX_40.6.623",
     "terrain_validated_by_operator": false,
     "runtime_behavior_changed": true,
     "presentation_changed": true,
     "instrument_resolver_owner": "js/market-instrument-resolver.js",
     "support_resistance_current_edge_fallback": true,
     "support_resistance_current_edge_rule": "VISIBLE_EXTREME_EQUAL_TO_CURRENT_ALLOWED_AS_INDICATIVE_FALLBACK",
-    "support_resistance_method": "PIVOTS_VISIBLES_W2"
+    "support_resistance_method": "PIVOTS_VISIBLES_W2",
+    "external_asset_selection_not_ignored": true,
+    "external_asset_context_reset": true,
+    "empty_series_canvas_cleared": true,
+    "empty_series_canvas_geometry_cleared": true,
+    "empty_series_inspector_cleared": true,
+    "external_asset_mode_preserved": true,
+    "external_asset_candles_reload_when_open": true
   },
   "microscope_checkpoint_cleanup_406569": {
     "scope": "METADATA_TRUTH_AND_TERRAIN_CHECKPOINT_ONLY",
@@ -10730,17 +10737,17 @@
     "backend_patch_delivery": "conversation_artifact"
   },
   "delivery": {
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.621.zip"
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.623.zip"
   },
   "stop_gate": {
-    "terrain": "PASS_406621_CHRISTOPHE"
+    "terrain": "PENDING_FIREFOX_CHRISTOPHE_406623"
   },
   "next": [
-    "40.6.623 — Top 10 Explorer: Top 10 Hausse 24h, Baisse 24h, Volume, Nouveaux Listings; click row => canonical selected asset; no transport/core changes.",
+    "40.6.624 — Top 10 Explorer: Top 10 Hausse 24h, Baisse 24h, Volume, Nouveaux Listings; click row => canonical selected asset; no transport/core changes.",
     "LAB only — Binance public orderbook: qualify off-production before any operator-stack deployment.",
-    "40.6.624 — OKX Account READ ONLY via local Backend; balances/assets/valuation only; no browser secret and no orders.",
-    "40.6.625 — Instrument Truth + Fee Truth + Micro-Ticket Validator.",
-    "40.6.626 — OKX Demo/Paper execution evidence; still no real order.",
+    "40.6.625 — OKX Account READ ONLY via local Backend; balances/assets/valuation only; no browser secret and no orders.",
+    "40.6.626 — Instrument Truth + Fee Truth + Micro-Ticket Validator.",
+    "40.6.627 — OKX Demo/Paper execution evidence; still no real order.",
     "Real execution remains out of scope until explicit later validation."
   ],
   "canonical_asset_identity_406621": {
@@ -10905,6 +10912,26 @@
       "current-edge support",
       "current-edge resistance"
     ],
+    "terrain": "PENDING_FIREFOX"
+  },
+  "asset_context_truth_406623": {
+    "enabled": true,
+    "owner": "js/market-microscope-candles.js",
+    "observed_defect": "STONK selected with no compatible candle series could leave the previous BTC candle canvas and inspector visible",
+    "root_cause": "external active selection was ignored by handleCanonicalSelectionChanged and the external-asset reset did not repaint the empty canvas",
+    "fix": [
+      "external active selections are no longer ignored",
+      "empty-series draw clears canvas geometry and inspector",
+      "external-asset event resets instrument/error context and repaints immediately",
+      "current Ligne/Bougies mode is preserved",
+      "when Bougies is open, the new external asset is loaded through the existing provider path"
+    ],
+    "resolver_changed": false,
+    "bridge_changed": false,
+    "backend_changed": false,
+    "market_core_modified": false,
+    "formulas_changed": false,
+    "real_order": false,
     "terrain": "PENDING_FIREFOX"
   }
 }
