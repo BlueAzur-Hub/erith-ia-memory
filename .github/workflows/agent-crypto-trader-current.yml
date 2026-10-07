@@ -119,6 +119,7 @@ jobs:
             "candles_selection_event_listener": 'window.addEventListener("agent-crypto:selected-market-changed",handleCanonicalSelectionChanged' in candles,
             "candles_no_legacy_function_wrapper": "__agentCryptoMicroscopeHook" not in candles and "__agentCryptoMicroscopeOriginal" not in candles,
             "candles_stale_canvas_clear": "stale_asset_canvas_cleared:true" in candles,
+            "graph_native_usd_current_cache_token": 'js/graph-native-usd-406520.js?v='+current in admin,
             "graph_top5_24h_canonical_owner": "top5_24h_canonical_history_owner:true" in graph_usd,
             "graph_top5_canonical_delegate": 'usd()&&!canonicalTop5History(p)?cmp(c,p,opt):o.apply(this,arguments)' in graph_usd,
             "graph_stale_usd_cache_refused": "coingecko-usd-stale-cache-refused" in graph_usd,
