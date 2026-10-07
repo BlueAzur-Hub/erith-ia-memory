@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const BUILD="40.6.622";
+const BUILD="40.6.623";
 const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
