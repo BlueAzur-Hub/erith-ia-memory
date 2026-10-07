@@ -526,25 +526,17 @@
         return {...validated,provider:provider||"external",latencyMs:Math.max(0,Math.round(performance.now()-started))};
       }
       const resolver=marketResolver();
-      if(resolver?.resolve){
+      if(resolver?.resolve&&resolver?.fetchBook){
         const resolution=await resolver.resolve({asset,currency:displayCurrency(),capability:"book",signal:controller.signal,publish:false});
         if(!resolution?.available){
           const e=bookError("MARKET_BOOK_UNAVAILABLE",`${asset} · ${resolution?.reason||"aucun carnet compatible trouvé"}`);
           e.resolution=resolution;throw e;
         }
-        if(resolution.provider!=="okx"){
-          const e=bookError("MARKET_BOOK_UNAVAILABLE",`${asset} · carnet ${resolution.providerLabel||resolution.provider} non raccordé`);
-          e.resolution=resolution;throw e;
-        }
-        const quote=String(resolution.quote||"").toUpperCase();
-        const url=new URL("https://www.okx.com/api/v5/market/books");
-        url.searchParams.set("instId",resolution.instrument);
-        url.searchParams.set("sz","100");
-        const response=await fetch(url,{cache:"no-store",signal:controller.signal,headers:{Accept:"application/json"}});
-        if(!response.ok){const error=bookError("BACKEND_HTTP",`Backend 8790 OKX public ${resolution.instrument} HTTP ${response.status}`);error.status=response.status;throw error;}
-        const payload=normalizePublicOkxBook(await response.json(),asset,quote);
-        const validated=validateBookPayload(payload,asset,quote,Date.now(),"okx");
-        return {...validated,provider:"okx",instrument:resolution.instrument,latencyMs:Math.max(0,Math.round(performance.now()-started))};
+        const payload=await resolver.fetchBook({resolution,limit:100,signal:controller.signal});
+        const quote=String(payload?.quote||resolution.quote||"").toUpperCase();
+        const provider=String(payload?.provider||resolution.provider||"").toLowerCase();
+        const validated=validateBookPayload(payload,asset,quote,Date.now(),provider);
+        return {...validated,provider,instrument:resolution.instrument,latencyMs:Math.max(0,Math.round(performance.now()-started))};
       }
       for(const quote of candidates){
         try{
