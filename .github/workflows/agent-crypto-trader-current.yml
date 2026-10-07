@@ -9,6 +9,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
+      - "public/agent_crypto_erith_ia/administrator/js/top10-explorer.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
       - "public/agent_crypto_erith_ia/administrator/js/aether.js"
@@ -22,6 +23,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
+      - "public/agent_crypto_erith_ia/administrator/js/top10-explorer.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
       - "public/agent_crypto_erith_ia/administrator/js/aether.js"
@@ -44,6 +46,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/app.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js
           node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
+          node --check public/agent_crypto_erith_ia/administrator/js/top10-explorer.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
           node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
           node --check public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js
@@ -65,6 +68,7 @@ jobs:
           aether=(root/"administrator"/"js"/"aether.js").read_text(encoding="utf-8")
           app=(root/"administrator"/"app.js").read_text(encoding="utf-8")
           candles=(root/"administrator"/"js"/"market-microscope-candles.js").read_text(encoding="utf-8")
+          top10=(root/"administrator"/"js"/"top10-explorer.js").read_text(encoding="utf-8")
           current=str(build.get("build","")).strip()
 
           forbidden=[
@@ -112,6 +116,13 @@ jobs:
             "candles_selection_event_listener": 'window.addEventListener("agent-crypto:selected-market-changed",handleCanonicalSelectionChanged' in candles,
             "candles_no_legacy_function_wrapper": "__agentCryptoMicroscopeHook" not in candles and "__agentCryptoMicroscopeOriginal" not in candles,
             "candles_stale_canvas_clear": "stale_asset_canvas_cleared:true" in candles,
+            "top10_loaded": "js/top10-explorer.js?v="+current in admin,
+            "top10_four_modes": all(token in top10 for token in ["gainers","losers","volume","listings"]),
+            "top10_canonical_market_owner": 'AtlasMarketUniverse1000?.universe?.(250)' in top10,
+            "top10_canonical_selection_owner": 'atlasSelectMarketCoin' in top10,
+            "top10_new_listing_owner": 'AgentCryptoNewListingsNativeCategory' in top10,
+            "top10_no_timer": "no_recurring_timer:true" in top10,
+            "top10_no_order": "no_real_order:true" in top10,
             "fullscreen_restore_no_cockpit_runtime": 'js/trader-cockpit-fit.js' not in admin,
             "fullscreen_restore_no_height_var": '--trader-target-top-analyst-height' not in admin,
             "first_paint_preserves_native_status_lane": ':not(#accueil):not(#livecheck):not(#market-zone)' in admin,
@@ -155,6 +166,7 @@ jobs:
             root/"administrator"/"js"/"aether.js",
             root/"administrator"/"js"/"okx-market-pair-resolver.js",
             root/"administrator"/"js"/"market-microscope-candles.js",
+            root/"administrator"/"js"/"top10-explorer.js",
             root/"administrator"/"js"/"okx-microstructure-406499.js",
             root/"trader"/"trading-desk.html",
             root/"trader"/"trader-runtime-mirror.js",
