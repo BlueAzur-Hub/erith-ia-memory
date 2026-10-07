@@ -1,12 +1,12 @@
 {
-  "build": "40.6.616",
+  "build": "40.6.617",
   "surface": "trader",
-  "release": "TRADER · CANDLES SELECTION SYNC",
-  "parent_trader_build": "40.6.615",
-  "administrator_base": "40.6.616",
+  "release": "TRADER · CANDLES HTTP FALLBACK",
+  "parent_trader_build": "40.6.616",
+  "administrator_base": "40.6.617",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406616_pending_firefox_terrain",
+  "status": "published_406617_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -25,7 +25,7 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Trader header: TRADER · 40.6.616 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Trader header: TRADER · 40.6.617 + Prix live Binance + theme Metal/Glass + Administrator arrow",
       "Minimum nav: Livecheck + Marché + Graphique + Aether dynamic status",
       "Native status lane: Relancer + Rafraîchir + Décision + Sources + Chronos",
       "Graphique + Lecture Technique: native fullscreen/F11 geometry",
@@ -122,7 +122,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.616.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.617.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -134,13 +134,14 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Administrator and Trader 40.6.616.",
-    "Open Bougies, then change selected asset BTC → OKB while Bougies stays open.",
-    "Bougies must immediately abandon BTC context, request OKB through the shared pair resolver and never keep a BTC candle canvas under an OKB selection.",
-    "If OKB-USDC is rejected, bounded fallback to OKB-USDT remains active and the actual quote must stay explicit.",
-    "Open Profondeur: it must remain on the same selected asset OKB and preserve the 40.6.615 pair-sync behavior.",
-    "Repeat OKB → ETH with Bougies open.",
-    "Confirm Ligne, F11, Lecture Technique, Market, Math Core and OKB case-study report remain unchanged.",
+    "Firefox Ctrl+F5 on Trader / Interface 40.6.617 with Backend 8790 active.",
+    "Select OKB → USD → Bougies 15m.",
+    "The first candidate remains OKB-USDC; if OKX/Backend returns HTTP 400 or 404, Bougies must continue to OKB-USDT instead of stopping on a JSON parse error.",
+    "If OKB-USDC succeeds, keep OKB-USDC; never relabel USDC or USDT as USD.",
+    "The Bougies header must show the actual loaded instrument and a non-zero candle count.",
+    "Open Profondeur and confirm it remains on OKB with its independently validated live pair.",
+    "Repeat BTC → OKB → ETH with Bougies open.",
+    "Confirm Ligne, F11, Lecture Technique, Market, Math Core, Target Top, Market Flow and the OKB case-study report remain unchanged.",
     "No real order."
   ],
   "restore_406607": {
@@ -369,5 +370,32 @@
     "new_storage": false,
     "new_network": false,
     "real_orders": false
+  },
+  "candles_http_fallback_406617": {
+    "enabled": true,
+    "parent": "40.6.616",
+    "owner": "administrator/js/market-microscope-candles.js",
+    "http_status_checked_before_json": true,
+    "http_400_404_can_try_next_pair": true,
+    "usd_candidates_preserved": [
+      "USDC",
+      "USDT"
+    ],
+    "okb_candidates_preserved": [
+      "OKB-USDC",
+      "OKB-USDT"
+    ],
+    "pair_resolver_modified": false,
+    "depth_modified": false,
+    "market_core_modified": false,
+    "presentation_modified": false,
+    "backend_modified": false,
+    "bridge_modified": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_storage": false,
+    "new_network": false,
+    "real_orders": false,
+    "terrain": "PENDING_FIREFOX"
   }
 }
