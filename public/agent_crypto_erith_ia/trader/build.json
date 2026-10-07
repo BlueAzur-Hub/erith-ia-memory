@@ -122,7 +122,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40.6.620_SINGLE_CHAR_TICKER_PATCH.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.620.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -469,6 +469,10 @@
     "market_core_modified": false,
     "real_orders": false,
     "patch_sha256": "0c7fd9462543c3999d1969be12063f77217567d71d48a9e2a2fa16fb3be1b7fa",
-    "terrain": "PENDING_FIREFOX"
+    "terrain": "PENDING_FIREFOX",
+    "backend_patch_repo": "coordination/inter_ai_dialogues/agent_crypto/BACKEND_1_4_6_SINGLE_CHAR_TICKER.patch",
+    "backend_install_note": "coordination/inter_ai_dialogues/agent_crypto/BACKEND_1_4_6_SINGLE_CHAR_TICKER_PATCH.md",
+    "backend_patch_artifact": "AGENT_CRYPTO_40.6.620_SINGLE_CHAR_TICKER_PATCH.zip",
+    "backend_patch_delivery": "conversation_artifact"
   }
 }
