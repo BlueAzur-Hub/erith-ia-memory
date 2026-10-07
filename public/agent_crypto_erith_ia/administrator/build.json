@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.623",
+  "build": "40.6.624",
   "engine": "38.15.11",
-  "release": "TRADER · ASSET CONTEXT / STALE CANVAS TRUTH",
+  "release": "TRADER · TOP 10 EXPLORER · BUREAUX PREP",
   "published": true,
-  "status": "ASSET_CONTEXT_STALE_CANVAS_406623",
-  "parent_build": "40.6.622",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.623",
-  "administrator_build": "40.6.623",
-  "build_label": "Build 40.6.623 · Administrator",
+  "status": "TOP10_EXPLORER_PREPARED_BLOCKED_BY_406623_TERRAIN",
+  "parent_build": "40.6.623",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.624",
+  "administrator_build": "40.6.624",
+  "build_label": "Build 40.6.624 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,8 +31,8 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_CHRISTOPHE_406623",
-  "release_notes": "ASSET_CONTEXT_STALE_CANVAS_406623.md",
+  "terrain_proof": "BLOCKED_BY_FIREFOX_406623_THEN_FIREFOX_406624",
+  "release_notes": "TOP10_EXPLORER_406624_PREP.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -10737,17 +10737,22 @@
     "backend_patch_delivery": "conversation_artifact"
   },
   "delivery": {
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.623.zip"
+    "zip": "NOT_PUBLISHED_DURING_OPERATOR_PAUSE",
+    "mode": "BUREAUX_DRAFT_ONLY",
+    "merge_allowed": false,
+    "blocker": "40.6.623 Firefox terrain proof"
   },
   "stop_gate": {
-    "terrain": "PENDING_FIREFOX_CHRISTOPHE_406623"
+    "terrain": "BLOCKED_BY_406623_FIREFOX",
+    "bureaux_pause": true,
+    "no_merge_during_operator_pause": true
   },
   "next": [
-    "40.6.624 — Top 10 Explorer: Top 10 Hausse 24h, Baisse 24h, Volume, Nouveaux Listings; click row => canonical selected asset; no transport/core changes.",
+    "40.6.625 — OKX Account READ ONLY via local Backend; balances/assets/valuation only; secrets local; no browser secret and no orders.",
     "LAB only — Binance public orderbook: qualify off-production before any operator-stack deployment.",
-    "40.6.625 — OKX Account READ ONLY via local Backend; balances/assets/valuation only; no browser secret and no orders.",
     "40.6.626 — Instrument Truth + Fee Truth + Micro-Ticket Validator.",
-    "40.6.627 — OKX Demo/Paper execution evidence; still no real order.",
+    "40.6.627 — OKX Demo / Paper execution evidence; still no real order.",
+    "Post-40.6.627 decision — Trader-specific BUY/SELL ticket may be enabled for DEMO only after gates; REDIVIDER remains protected unless explicitly reopened.",
     "Real execution remains out of scope until explicit later validation."
   ],
   "canonical_asset_identity_406621": {
@@ -10933,5 +10938,43 @@
     "formulas_changed": false,
     "real_order": false,
     "terrain": "PENDING_FIREFOX"
+  },
+  "top10_explorer_406624": {
+    "enabled": true,
+    "owner": "js/top10-explorer.js",
+    "placement": "#marketWorkspaceGrid before #marketSnapshotPanel",
+    "modes": [
+      "gainers",
+      "losers",
+      "volume",
+      "listings"
+    ],
+    "labels": [
+      "Hausse 24h",
+      "Baisse 24h",
+      "Volume 24h",
+      "Nouveaux listings"
+    ],
+    "maximum_rows": 10,
+    "market_source_owner": "AtlasMarketUniverse1000.universe(250)",
+    "market_selection_owner": "atlasSelectMarketCoin",
+    "new_listings_owner": "AgentCryptoNewListingsNativeCategory",
+    "new_listing_discovery_explicit_operator_action_only": true,
+    "canonical_selection_propagates_existing_event": true,
+    "duplicate_market": false,
+    "duplicate_graph": false,
+    "duplicate_fiche": false,
+    "duplicate_candles": false,
+    "duplicate_depth": false,
+    "new_recurring_timer": false,
+    "new_observer": false,
+    "new_storage_owner": false,
+    "new_business_network_owner": false,
+    "bridge_changed": false,
+    "backend_changed": false,
+    "market_core_modified": false,
+    "real_order": false,
+    "prepared_in_bureaux": true,
+    "merge_blocked_until": "40.6.623 Firefox terrain PASS"
   }
 }
