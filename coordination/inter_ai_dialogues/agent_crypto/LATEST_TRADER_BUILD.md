@@ -1,8 +1,8 @@
 # Latest Trader build
 
-- Current build: **40.6.623**
-- ZIP: **AGENT_CRYPTO_TRADER_40.6.623.zip**
+- Current build: **40.6.624**
+- ZIP: **AGENT_CRYPTO_TRADER_40.6.624.zip**
 - Previous retained build: **AGENT_CRYPTO_TRADER_40.6.611.zip**
 - Source: 
 
-[Download current build](./AGENT_CRYPTO_TRADER_40.6.623.zip)
+[Download current build](./AGENT_CRYPTO_TRADER_40.6.624.zip)
