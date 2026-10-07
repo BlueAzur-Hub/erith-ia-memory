@@ -46,6 +46,12 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
           node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node - <<'NODE'
+          require("./public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js");
+          const result=globalThis.AgentCryptoGraphNativeUsd406520?.self_test?.();
+          console.log(JSON.stringify(result,null,2));
+          if(!result?.pass||result?.checks?.top5_24h_canonical_history_owner!==true||result?.checks?.stale_usd_cache_refused!==true)process.exit(1);
+          NODE
           node --check public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js
           node --check public/agent_crypto_erith_ia/administrator/js/aether.js
 
