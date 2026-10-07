@@ -4,7 +4,7 @@
   "engine": "38.15.11",
   "release": "TRADER · CANONICAL ASSET IDENTITY",
   "published": true,
-  "status": "published_terrain_pending_406621",
+  "status": "CONSULTATION_V1_CERTIFIED_406621_R21",
   "parent_build": "40.6.620",
   "asset_token": "market-core-v2.0-alpha-build-40.6.621",
   "administrator_build": "40.6.621",
@@ -31,7 +31,7 @@
   "entry": "./",
   "terrain_verified": true,
   "terrain_pending": false,
-  "terrain_proof": "PASS_FIREFOX_406621_M_BITGET_XAUT_OKX",
+  "terrain_proof": "PASS_FIREFOX_406621_R21_OKB_FRESH + prior M_BITGET_XAUT_OKX",
   "release_notes": "CANONICAL_ASSET_IDENTITY_406621.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
@@ -10733,12 +10733,13 @@
     "terrain": "PASS_406621_CHRISTOPHE"
   },
   "next": [
-    "Restore Private Backend 1.4.6 R2 only.",
-    "Keep Trader/Administrator 40.6.621, Bridge 1.9.13 and Market Core 38.15.11 unchanged.",
-    "Verify /health then M/Bitget or OKB/OKX.",
-    "After restore PASS, freeze operator stack.",
-    "Binance book development must continue off-production only until Windows startup + /health + restart regression passes.",
-    "No real order."
+    "40.6.622 — Top 10 Explorer: Top 10 Hausse 24h, Baisse 24h, Volume, Nouveaux Listings; click row => canonical selected asset; no transport/core changes.",
+    "LAB only — Binance public orderbook: develop and qualify off-production against Windows startup, /health, restart, M/Bitget and XAUT/OKX regressions, then one Binance-only asset.",
+    "Aether Control 2.3.2R22 + Backend 1.4.7 — promote Binance book only after LAB qualification; Bridge 1.9.13 protocol remains protected unless evidence requires change.",
+    "40.6.623 — OKX Account READ ONLY via local Backend; balances/assets/valuation only; no browser secret and no orders.",
+    "40.6.624 — Instrument Truth + Fee Truth + Micro-Ticket Validator.",
+    "40.6.625 — OKX Demo/Paper execution evidence; still no real order.",
+    "Real execution remains out of scope until explicit later validation."
   ],
   "canonical_asset_identity_406621": {
     "enabled": true,
@@ -10850,5 +10851,37 @@
     ],
     "rule": "Freeze. Do not deploy 1.4.7/1.4.7 R2 on operator machine.",
     "status": "RESTORE_CANONICAL"
+  },
+  "consultation_v1_certification_20261007": {
+    "certified": true,
+    "scope": "read-only market consultation baseline",
+    "ui_build": "40.6.621",
+    "runtime_control": "2.3.2R21",
+    "bridge": "1.9.13",
+    "backend": "1.4.6 R2 Market Instrument Resolver",
+    "market_core": "38.15.11",
+    "terrain": [
+      "M → Bitget → M-USDT candles+book FRESH PASS",
+      "XAUT → OKX → XAUT-USDT candles+book FRESH PASS",
+      "OKB → OKX → OKB-USDC candles+book FRESH PASS"
+    ],
+    "static_checks": [
+      "canonical asset identity shared by Bougies/Depth/Market Resolver",
+      "one-character ticker M accepted",
+      "backend POST/PUT/DELETE blocked",
+      "real_orders=false",
+      "R21 wrong-version Backend shown incompatible",
+      "R21 unknown listener never auto-killed"
+    ],
+    "ci": [
+      "Version Truth PASS",
+      "Version Delivery PASS",
+      "Trader Current PASS",
+      "Depth Current PASS",
+      "Market Microscope Current PASS",
+      "Pages latest R21 PASS"
+    ],
+    "known_limit": "certified Backend 1.4.6 resolves Binance candles but Binance orderbook is not yet a certified capability",
+    "certification_kind": "engineering baseline certification, not external security/financial certification"
   }
 }

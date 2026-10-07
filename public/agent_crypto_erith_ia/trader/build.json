@@ -6,9 +6,9 @@
   "administrator_base": "40.6.621",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406621_pending_firefox_terrain",
+  "status": "CONSULTATION_V1_CERTIFIED_406621_R21",
   "terrain_verified": true,
-  "operator_validation": "PASS_FIREFOX_406621_M_BITGET_XAUT_OKX",
+  "operator_validation": "PASS_FIREFOX_406621_R21_OKB_FRESH + M_BITGET_XAUT_OKX",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
@@ -134,11 +134,12 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Restore Backend 1.4.6 R2.",
-    "No UI version change.",
-    "Verify /health and one known-good market.",
-    "Freeze operator stack after PASS.",
-    "Do not deploy Binance-book backend until off-production Windows qualification passes.",
+    "40.6.622 — Top 10 Explorer (Hausse/Baisse/Volume/Nouveaux) using existing Market data and canonical asset selection.",
+    "Qualify Binance Book off-production; no operator-stack deployment before full Windows regression PASS.",
+    "Promote qualified Binance Book as R22 + Backend 1.4.7 only after evidence.",
+    "40.6.623 — OKX Account READ ONLY.",
+    "40.6.624 — Instrument/Fee Truth + Micro-Ticket Validator.",
+    "40.6.625 — Demo/Paper execution evidence.",
     "No real order."
   ],
   "restore_406607": {
@@ -545,5 +546,21 @@
     "bridge": "1.9.13",
     "ui_build": "40.6.621",
     "status": "RESTORE_CANONICAL"
+  },
+  "consultation_v1_certification_20261007": {
+    "certified": true,
+    "ui_build": "40.6.621",
+    "runtime_control": "2.3.2R21",
+    "bridge": "1.9.13",
+    "backend": "1.4.6 R2",
+    "read_only": true,
+    "real_orders": false,
+    "terrain": [
+      "M/Bitget PASS",
+      "XAUT/OKX PASS",
+      "OKB/OKX PASS"
+    ],
+    "known_limit": "Binance orderbook not yet certified in Backend 1.4.6",
+    "certification_kind": "engineering baseline certification"
   }
 }
