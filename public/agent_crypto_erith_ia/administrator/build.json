@@ -10733,11 +10733,11 @@
     "terrain": "PASS_406621_CHRISTOPHE"
   },
   "next": [
-    "Install only Private Backend 1.4.7; keep Trader/Administrator 40.6.621 and Bridge 1.9.13 unchanged.",
-    "Regression: M → Bitget → M-USDT candles + book.",
-    "Regression: XAUT → OKX → XAUT-USDT candles + book.",
-    "Find one instrument resolved specifically to Binance and verify candles + book.",
-    "After Binance terrain PASS, freeze Consultation V1 and move to OKX Account READ ONLY.",
+    "Restore Private Backend 1.4.6 R2 only.",
+    "Keep Trader/Administrator 40.6.621, Bridge 1.9.13 and Market Core 38.15.11 unchanged.",
+    "Verify /health then M/Bitget or OKB/OKX.",
+    "After restore PASS, freeze operator stack.",
+    "Binance book development must continue off-production only until Windows startup + /health + restart regression passes.",
     "No real order."
   ],
   "canonical_asset_identity_406621": {
@@ -10791,7 +10791,7 @@
     "backend_file_sha256": "990134125c77dd7ba774d0225a00edb89f1668ec200c416fb7b8d72960ed158f"
   },
   "backend_1_4_7_binance_book": {
-    "enabled": true,
+    "enabled": false,
     "ui_build": "40.6.621",
     "version": "1.4.7",
     "build": "Market Instrument Resolver + Binance Book",
@@ -10828,6 +10828,27 @@
     "backend_sha256": "c54d6039d78d3dea5e76be307cdb96fe1ba3fb7d28bf00fbed75580ad0f79cff",
     "package": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BACKEND_1_4_7_BINANCE_BOOK.zip",
     "package_sha256": "63faab7b1bd3d9464c86c9b5b7cd3bdee9e168329983ed935560e6a2a5a533ed",
-    "terrain": "PENDING_FIREFOX_BINANCE_ONLY"
+    "terrain": "FAIL_WINDOWS_HEALTH",
+    "deployable": false,
+    "status": "QUARANTINED_WINDOWS_STARTUP_FAILURE",
+    "superseded_by": "Backend 1.4.6 R2 validated checkpoint",
+    "restore_required": true
+  },
+  "backend_restore_20261007": {
+    "active_backend": "1.4.6",
+    "build": "Market Instrument Resolver",
+    "package": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BACKEND_1_4_6_MARKET_RESOLVER_R2_SINGLE_CHAR.zip",
+    "package_sha256": "6473f8bc3af0c7571e84b36b14bb34c3fa572ad7bc6ddc96140d76e59d90d42a",
+    "backend_file_sha256": "990134125c77dd7ba774d0225a00edb89f1668ec200c416fb7b8d72960ed158f",
+    "bridge": "1.9.13",
+    "ui_build": "40.6.621",
+    "market_core": "38.15.11",
+    "terrain_cases": [
+      "M → Bitget → M-USDT candles+book PASS",
+      "XAUT → OKX → XAUT-USDT candles+book PASS",
+      "OKB → OKX → OKB-USDC candles+book PASS"
+    ],
+    "rule": "Freeze. Do not deploy 1.4.7/1.4.7 R2 on operator machine.",
+    "status": "RESTORE_CANONICAL"
   }
 }

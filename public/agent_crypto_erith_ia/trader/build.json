@@ -134,11 +134,11 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Keep Trader 40.6.621 unchanged.",
-    "Install Backend 1.4.7 only.",
-    "Verify M/Bitget and XAUT/OKX regressions.",
-    "Verify one Binance-resolved asset has Bougies + Profondeur.",
-    "Then proceed to OKX Account READ ONLY.",
+    "Restore Backend 1.4.6 R2.",
+    "No UI version change.",
+    "Verify /health and one known-good market.",
+    "Freeze operator stack after PASS.",
+    "Do not deploy Binance-book backend until off-production Windows qualification passes.",
     "No real order."
   ],
   "restore_406607": {
@@ -533,6 +533,17 @@
     },
     "bridge_modified": false,
     "real_orders": false,
-    "terrain": "PENDING_FIREFOX_BINANCE_ONLY"
+    "terrain": "FAIL_WINDOWS_HEALTH",
+    "enabled": false,
+    "deployable": false,
+    "status": "QUARANTINED_WINDOWS_STARTUP_FAILURE",
+    "superseded_by": "Backend 1.4.6 R2 validated checkpoint"
+  },
+  "backend_restore_20261007": {
+    "active_backend": "1.4.6",
+    "package": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BACKEND_1_4_6_MARKET_RESOLVER_R2_SINGLE_CHAR.zip",
+    "bridge": "1.9.13",
+    "ui_build": "40.6.621",
+    "status": "RESTORE_CANONICAL"
   }
 }
