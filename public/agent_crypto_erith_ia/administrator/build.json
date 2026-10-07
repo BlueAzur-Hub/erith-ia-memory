@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.623",
+  "build": "40.6.624",
   "engine": "38.15.11",
-  "release": "TRADER · ASSET CONTEXT / STALE CANVAS TRUTH",
+  "release": "TRADER · GRAPH PARITY · TOP 5 24H CANONICAL",
   "published": true,
-  "status": "ASSET_CONTEXT_STALE_CANVAS_406623",
-  "parent_build": "40.6.622",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.623",
-  "administrator_build": "40.6.623",
-  "build_label": "Build 40.6.623 · Administrator",
+  "status": "GRAPH_PARITY_TOP5_24H_CANONICAL_406624",
+  "parent_build": "40.6.623",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.624",
+  "administrator_build": "40.6.624",
+  "build_label": "Build 40.6.624 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,8 +31,8 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_CHRISTOPHE_406623",
-  "release_notes": "ASSET_CONTEXT_STALE_CANVAS_406623.md",
+  "terrain_proof": "PENDING_FIREFOX_CHRISTOPHE_406624",
+  "release_notes": "GRAPH_PARITY_TOP5_24H_406624.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -10737,18 +10737,18 @@
     "backend_patch_delivery": "conversation_artifact"
   },
   "delivery": {
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.623.zip"
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.624.zip"
   },
   "stop_gate": {
-    "terrain": "PENDING_FIREFOX_CHRISTOPHE_406623"
+    "terrain": "PENDING_FIREFOX_CHRISTOPHE_406624"
   },
   "next": [
-    "40.6.624 — Top 10 Explorer: Top 10 Hausse 24h, Baisse 24h, Volume, Nouveaux Listings; click row => canonical selected asset; no transport/core changes.",
-    "LAB only — Binance public orderbook: qualify off-production before any operator-stack deployment.",
-    "40.6.625 — OKX Account READ ONLY via local Backend; balances/assets/valuation only; no browser secret and no orders.",
-    "40.6.626 — Instrument Truth + Fee Truth + Micro-Ticket Validator.",
-    "40.6.627 — OKX Demo/Paper execution evidence; still no real order.",
-    "Real execution remains out of scope until explicit later validation."
+    "40.6.625 — Top 10 Explorer: Hausse 24h, Baisse 24h, Volume, Nouveaux Listings; reuse resident Market + canonical selection.",
+    "LAB only — Binance public orderbook: qualify off-production before operator-stack deployment.",
+    "40.6.626 — OKX Account READ ONLY.",
+    "40.6.627 — Instrument Truth + Fee Truth + Micro-Ticket Validator.",
+    "40.6.628 — OKX Demo / Paper execution evidence.",
+    "Real execution remains out of scope."
   ],
   "canonical_asset_identity_406621": {
     "enabled": true,
@@ -10931,6 +10931,27 @@
     "backend_changed": false,
     "market_core_modified": false,
     "formulas_changed": false,
+    "real_order": false,
+    "terrain": "PENDING_FIREFOX"
+  },
+  "graph_parity_top5_24h_406624": {
+    "enabled": true,
+    "defect": "Trader USD Top 5 24h Base100 could bypass the canonical comparison history owner and render an older CoinGecko USD cache while Administrator showed fresh direct histories",
+    "owner": "js/graph-native-usd-406520.js",
+    "canonical_owner_preserved": "app.js atlasFetchComparisonSeriesResilient rank-5 24h path",
+    "trigger": "period=1 and comparison preset=rank-5",
+    "fix": [
+      "USD wrapper delegates rank-5 24h back to the canonical comparison history owner",
+      "canonical source-family/storage/context keys are preserved for that route",
+      "USD relabel/tooltip/live overrides do not rewrite the canonical Top 5 route",
+      "stale USD comparison cache is refused outside the canonical route instead of silently rendered"
+    ],
+    "app_js_changed": false,
+    "market_core_modified": false,
+    "bridge_changed": false,
+    "backend_changed": false,
+    "candles_changed": false,
+    "depth_changed": false,
     "real_order": false,
     "terrain": "PENDING_FIREFOX"
   }
