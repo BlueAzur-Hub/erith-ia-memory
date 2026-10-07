@@ -98,6 +98,8 @@ jobs:
             "minimum_nav_aether_native_owner": admin.count('id="atlasAetherStatusToggle"')==1 and 'id="atlasAetherStatusLabel"' in admin,
             "minimum_nav_advanced_filtered": '#atlasAdminGraphToggle' in admin and '#atlasAdminCenterToggle' in admin and '#atlasAdminCenterDrawer' in admin and '#atlasAetherStatusToggle{display:inline-flex!important}' in admin,
             "minimum_nav_mirror_contract": "minimum_nav:true" in mirror and 'minimum_nav_items:Object.freeze(["Livecheck","Marché","Graphique","Aether"])' in mirror,
+            "minimum_nav_aether_inline_first_paint": 'atlas-v2-nav-advanced.atlas-admin-dock{\n      display:flex!important;flex:0 0 auto!important;margin-left:0!important' in admin,
+            "minimum_nav_aether_inline_mirror": 'atlas-v2-nav-advanced.atlas-admin-dock{display:flex!important;flex:0 0 auto!important;margin-left:0!important' in mirror,
             "minimum_nav_no_aether_clone": "createElement" not in "\n".join(line for line in mirror.splitlines() if "Aether" in line or "aether" in line),
             "fullscreen_restore_no_cockpit_runtime": 'js/trader-cockpit-fit.js' not in admin,
             "fullscreen_restore_no_height_var": '--trader-target-top-analyst-height' not in admin,
