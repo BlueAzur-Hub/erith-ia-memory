@@ -39,6 +39,10 @@ jobs:
       - name: Deterministic Microscope self-test
         run: |
           node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js');
+          const pair=global.AgentCryptoOkxMarketPairResolver.self_test();
+          console.log(JSON.stringify(pair,null,2));
+          if(!pair.pass) process.exit(1);
           require('./public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js');
           const r=global.AgentCryptoMarketMicroscope.self_test();
           console.log(JSON.stringify(r,null,2));
