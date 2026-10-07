@@ -1,12 +1,12 @@
 {
-  "build": "40.6.613",
+  "build": "40.6.614",
   "surface": "trader",
-  "release": "TRADER · MINIMUM SYNDICAL NAV",
-  "parent_trader_build": "40.6.612",
-  "administrator_base": "40.6.613",
+  "release": "TRADER · OKB CASE STUDY",
+  "parent_trader_build": "40.6.613",
+  "administrator_base": "40.6.614",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406613_pending_firefox_terrain",
+  "status": "published_406614_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -25,7 +25,7 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Trader header: TRADER · 40.6.613 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Trader header: TRADER · 40.6.614 + Prix live Binance + theme Metal/Glass + Administrator arrow",
       "Minimum nav: Livecheck + Marché + Graphique + Aether dynamic status",
       "Native status lane: Relancer + Rafraîchir + Décision + Sources + Chronos",
       "Graphique + Lecture Technique: native fullscreen/F11 geometry",
@@ -35,7 +35,8 @@
       "Math Core",
       "Bougies",
       "Profondeur",
-      "EUR/USD"
+      "EUR/USD",
+      "Collapsible OKB case study report at the bottom of Trader"
     ],
     "hidden_presentation_only": [
       "Atlas",
@@ -121,7 +122,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.613.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.614.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -133,11 +134,12 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.613.",
-    "Confirm minimum nav is exactly Livecheck, Marché, Graphique and Aether status; no Atlas/Oracle/Sources/Decision/Command Center leakage.",
-    "Click Aether: existing Aether Watch must open and close normally using the native owner.",
-    "Confirm F11/fullscreen and 40.6.612 fluidity are unchanged.",
-    "Confirm native status lane remains stable after repeated clicks."
+    "Firefox Ctrl+F5 on Trader 40.6.614.",
+    "Scroll to the very bottom: the OKB case-study line must appear collapsed by default.",
+    "Open the OKB line: market, tokenomics, X Layer, risks, levels, sources and Trader terrain diagnostic must remain readable.",
+    "Close and reopen it: native details behavior must remain stable without timers, observers or storage.",
+    "Confirm Graphique, Lecture Technique, Target Top, Market Flow, Market Snapshot, Math Core and F11 behavior are unchanged.",
+    "Known separate defect remains: when OKB is selected, Depth/Candles pair synchronization still needs the shared pair-resolver repair."
   ],
   "restore_406607": {
     "source_build": "40.6.601",
@@ -296,5 +298,23 @@
     "status_lane_modified": false,
     "market_core_modified": false,
     "real_order": false
+  },
+  "okb_case_study_406614": {
+    "enabled": true,
+    "owner": "administrator/index.html#traderOkbCaseStudy",
+    "default_state": "collapsed",
+    "report_date": "2026-10-07",
+    "sources": "official OKX + Exchange OS whitepaper + DefiLlama + CoinGecko",
+    "static_snapshot": true,
+    "live_market_owner_replaced": false,
+    "market_core_modified": false,
+    "candles_modified": false,
+    "depth_modified": false,
+    "pair_resolver_modified": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_storage": false,
+    "new_network": false,
+    "real_orders": false
   }
 }
