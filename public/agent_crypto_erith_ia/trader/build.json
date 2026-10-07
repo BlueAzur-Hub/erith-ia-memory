@@ -1,14 +1,14 @@
 {
-  "build": "40.6.623",
+  "build": "40.6.624",
   "surface": "trader",
-  "release": "TRADER · ASSET CONTEXT / STALE CANVAS TRUTH",
-  "parent_trader_build": "40.6.622",
-  "administrator_base": "40.6.623",
+  "release": "TRADER · GRAPH PARITY · TOP 5 24H CANONICAL",
+  "parent_trader_build": "40.6.623",
+  "administrator_base": "40.6.624",
   "market_core": "38.15.11",
   "published": true,
-  "status": "ASSET_CONTEXT_STALE_CANVAS_406623",
+  "status": "GRAPH_PARITY_TOP5_24H_CANONICAL_406624",
   "terrain_verified": false,
-  "operator_validation": "PENDING_FIREFOX_CHRISTOPHE_406623",
+  "operator_validation": "PENDING_FIREFOX_CHRISTOPHE_406624",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
@@ -128,7 +128,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.623.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.624.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -137,14 +137,14 @@
     "no_aether_thread": true,
     "administrator_business_logic_modified": true,
     "administrator_presentation_modified": false,
-    "terrain": "PENDING_FIREFOX_CHRISTOPHE_406623"
+    "terrain": "PENDING_FIREFOX_CHRISTOPHE_406624"
   },
   "next": [
-    "40.6.624 — Top 10 Explorer (Hausse/Baisse/Volume/Nouveaux) using existing Market data and canonical asset selection.",
+    "40.6.625 — Top 10 Explorer using existing Market data and canonical asset selection.",
     "Qualify Binance Book off-production; do not deploy until full Windows regression PASS.",
-    "40.6.625 — OKX Account READ ONLY.",
-    "40.6.626 — Instrument/Fee Truth + Micro-Ticket Validator.",
-    "40.6.627 — Demo/Paper execution evidence.",
+    "40.6.626 — OKX Account READ ONLY.",
+    "40.6.627 — Instrument/Fee Truth + Micro-Ticket Validator.",
+    "40.6.628 — Demo/Paper execution evidence.",
     "No real order."
   ],
   "restore_406607": {
@@ -581,6 +581,19 @@
     "bridge_changed": false,
     "backend_changed": false,
     "market_core_changed": false,
+    "real_orders": false,
+    "terrain": "PENDING_FIREFOX"
+  },
+  "graph_parity_top5_24h_406624": {
+    "enabled": true,
+    "owner": "administrator/js/graph-native-usd-406520.js",
+    "canonical_history_owner": "administrator/app.js atlasFetchComparisonSeriesResilient rank-5 24h path",
+    "canonical_route_preserved_in_usd": true,
+    "stale_usd_cache_refused": true,
+    "app_js_changed": false,
+    "market_core_changed": false,
+    "bridge_changed": false,
+    "backend_changed": false,
     "real_orders": false,
     "terrain": "PENDING_FIREFOX"
   }
