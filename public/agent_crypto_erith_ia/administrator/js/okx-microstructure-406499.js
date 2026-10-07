@@ -63,22 +63,20 @@
     return ext.active&&ext.quote?[String(ext.quote).toUpperCase()]:displayCurrency()==="USD"?["USDC","USDT"]:["EUR","USDC","USDT"];
   };
   const desiredQuote=()=>quoteCandidates()[0];
+  const normalizeSelectedAsset=value=>{
+    try{const canonical=pairResolver()?.normalizeAsset?.(value);if(canonical)return canonical;}catch(_){}
+    const symbol=String(value??"").trim().toUpperCase();
+    return /^[A-Z0-9]{1,16}$/.test(symbol)?symbol:null;
+  };
+  const DOM_ASSET_STOP=new Set(["USD","EUR","USDC","USDT","PRIX","PRICE","MARCHÉ","MARCHE","MARKET","ACTIF","CRYPTO"]);
   const selectedAsset=()=>{
-    const resolved=pairResolver()?.selectedAsset?.();
-    if(/^[A-Z0-9]{2,16}$/.test(String(resolved||"")))return String(resolved).toUpperCase();
-    const ext=externalContext();if(ext.active&&ext.base)return String(ext.base).toUpperCase();
-    try{
-      const coin=typeof globalThis.getSelectedCoin==="function"?globalThis.getSelectedCoin():null;
-      const symbol=String(coin?.symbol||"").trim().toUpperCase();
-      if(/^[A-Z0-9]{2,16}$/.test(symbol))return symbol;
-    }catch(_){}
-    const text=[
-      document.getElementById("detailCompactAsset")?.textContent,
-      document.getElementById("selectedAssetTitle")?.textContent,
-      document.querySelector("#top5Track .is-active")?.textContent
-    ].filter(Boolean).join(" ").toUpperCase();
-    const symbol=text.match(/\b[A-Z][A-Z0-9]{1,15}\b/)?.[0]||"BTC";
-    return /^(USD|EUR|USDC|USDT|PRIX|MARCHÉ|MARKET|ACTIF)$/.test(symbol)?"BTC":symbol;
+    const resolved=normalizeSelectedAsset(pairResolver()?.selectedAsset?.());if(resolved)return resolved;
+    const ext=externalContext(),external=normalizeSelectedAsset(ext.active?ext.base:null);if(external)return external;
+    try{const coin=typeof globalThis.getSelectedCoin==="function"?globalThis.getSelectedCoin():null;const canonical=normalizeSelectedAsset(coin?.symbol);if(canonical)return canonical;}catch(_){}
+    const text=[document.getElementById("detailCompactAsset")?.textContent,document.getElementById("selectedAssetTitle")?.textContent,document.querySelector("#top5Track .is-active")?.textContent].filter(Boolean).join(" ").toUpperCase();
+    const tokens=text.match(/\b[A-Z][A-Z0-9]{0,15}\b/g)||[];
+    for(const token of tokens){const canonical=normalizeSelectedAsset(token);if(canonical&&!DOM_ASSET_STOP.has(canonical))return canonical;}
+    return "BTC";
   };
   const normalizeRows=rows=>(Array.isArray(rows)?rows:[])
     .map(r=>[n(r?.[0]),n(r?.[1])])

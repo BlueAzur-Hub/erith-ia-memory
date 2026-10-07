@@ -49,6 +49,8 @@ need("AgentCryptoMarketInstrumentResolver" in depth, "Depth does not consume mar
 need("market_instrument_resolver:true" in depth, "Depth resolver export missing")
 need("fetchBook" in resolver and "btw_bitget_fallback" in resolver, "resolver book/Bitget contract missing")
 need("AgentCryptoOkxMarketPairResolver" in depth, "Depth does not consume shared pair resolver")
+need("normalizeSelectedAsset" in depth and "pairResolver()?.normalizeAsset" in depth, "Depth canonical asset normalizer missing")
+need("{2,16}" not in depth, "Depth private 2-char asset grammar resurrected")
 need("typeof globalThis.getSelectedCoin" in depth, "canonical dynamic selection fallback missing")
 need("BTC|ETH|BNB|XRP|SOL|ADA" not in depth, "hardcoded selected-asset whitelist resurrected")
 need('["USDC","USDT"]' in pair, "USD pair order missing")

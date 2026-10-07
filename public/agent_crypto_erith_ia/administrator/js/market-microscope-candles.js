@@ -6,7 +6,7 @@
    Fetch occurs only on explicit Bougies / interval / refresh / external-asset load. No recurring timer. */
 (()=>{
   "use strict";
-  const BUILD="40.6.619";
+  const BUILD="40.6.621";
   const HISTORICAL_CORE_BUILD="40.6.498";
   const EXTENSION_BUILD="40.6.529";
   const ROOT="atlasMarketMicroscope";
@@ -100,15 +100,15 @@
   const marketResolver=()=>globalThis.AgentCryptoMarketInstrumentResolver||null;
   const canTryNextPair=error=>pairResolver()?.canTryNext?.(error)??String(error?.code||"")==="OKX_CANDLES_UNAVAILABLE";
   const externalContext=()=>{try{return globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()||{active:false};}catch(_){return {active:false};}};
+  const normalizeSelectedAsset=value=>{
+    try{const canonical=pairResolver()?.normalizeAsset?.(value);if(canonical)return canonical;}catch(_){}
+    const symbol=String(value??"").trim().toUpperCase();
+    return /^[A-Z0-9]{1,16}$/.test(symbol)?symbol:null;
+  };
   const selectedSymbol=()=>{
-    const resolved=pairResolver()?.selectedAsset?.();
-    if(/^[A-Z0-9]{2,16}$/.test(String(resolved||"")))return String(resolved).toUpperCase();
-    const ext=externalContext();if(ext.active&&ext.base)return String(ext.base).toUpperCase();
-    try{
-      const coin=typeof globalThis.getSelectedCoin==="function"?globalThis.getSelectedCoin():null;
-      const symbol=String(coin?.symbol||"").trim().toUpperCase();
-      if(/^[A-Z0-9]{2,16}$/.test(symbol))return symbol;
-    }catch(_){}
+    const resolved=normalizeSelectedAsset(pairResolver()?.selectedAsset?.());if(resolved)return resolved;
+    const ext=externalContext(),external=normalizeSelectedAsset(ext.active?ext.base:null);if(external)return external;
+    try{const coin=typeof globalThis.getSelectedCoin==="function"?globalThis.getSelectedCoin():null;const canonical=normalizeSelectedAsset(coin?.symbol);if(canonical)return canonical;}catch(_){}
     return "BTC";
   };
   const displayCurrency=()=>globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.().displayCurrency||"EUR";
@@ -811,8 +811,8 @@
   }
   function handleCanonicalSelectionChanged(event){
     if(externalContext().active)return false;
-    const nextSymbol=String(event?.detail?.symbol||selectedSymbol()||"").trim().toUpperCase();
-    if(!/^[A-Z0-9]{2,16}$/.test(nextSymbol))return false;
+    const nextSymbol=normalizeSelectedAsset(event?.detail?.symbol||selectedSymbol());
+    if(!nextSymbol)return false;
     const candidates=instrumentCandidates();
     const primary=candidates[0]||`${nextSymbol}-${displayCurrency()==="USD"?"USDC":"EUR"}`;
     const currentBase=String(state.loadedInstrument||state.instrument||"").split("-")[0].toUpperCase();

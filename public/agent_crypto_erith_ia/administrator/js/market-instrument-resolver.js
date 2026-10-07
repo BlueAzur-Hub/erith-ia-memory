@@ -5,13 +5,19 @@
    Read-only. No order, wallet, private exchange API, timer, observer or persistent storage. */
 (()=>{
   "use strict";
-  const BUILD="40.6.619";
+  const BUILD="40.6.621";
   const CACHE_TTL_MS=60000;
   const cache=new Map();
   let last=null;
   const pairOwner=()=>globalThis.AgentCryptoOkxMarketPairResolver||null;
   const quoteOwner=()=>globalThis.AgentCryptoQuoteCurrencyArchitecture||null;
   const normalizeAsset=value=>{
+    try{const canonical=pairOwner()?.normalizeAsset?.(value);if(canonical)return canonical;}catch(_){}
+    const v=String(value??"").trim().toUpperCase();
+    return /^[A-Z0-9]{1,16}$/.test(v)?v:null;
+  };
+  const normalizeQuote=value=>{
+    try{const canonical=pairOwner()?.normalizeQuote?.(value);if(canonical)return canonical;}catch(_){}
     const v=String(value??"").trim().toUpperCase();
     return /^[A-Z0-9]{2,16}$/.test(v)?v:null;
   };
@@ -28,7 +34,7 @@
   function sanitizeChoice(value){
     if(!value||typeof value!=="object")return null;
     const provider=String(value.provider||"").toLowerCase();
-    const asset=normalizeAsset(value.asset),quote=normalizeAsset(value.quote);
+    const asset=normalizeAsset(value.asset),quote=normalizeQuote(value.quote);
     const instrument=String(value.instrument||"").trim().toUpperCase();
     const caps=Array.isArray(value.capabilities)?value.capabilities.map(String):[];
     if(!["okx","bitget","binance"].includes(provider)||!asset||!quote||!new RegExp("^"+asset+"-"+quote+"$").test(instrument))return null;
@@ -211,12 +217,14 @@
     },"OKB","USD");
     const c=resultFor(fixture,"candles"),b=resultFor(fixture,"book");
     const btw=resultFor(normalizePayload({status:"ok",asset:"BTW",display_currency:"USD",provider_order:["okx","bitget","binance"],quote_order:["USDC","USDT"],chosen:{candles:{provider:"bitget",asset:"BTW",quote:"USDT",instrument:"BTW-USDT",capabilities:["candles","book","ticker"]},book:{provider:"bitget",asset:"BTW",quote:"USDT",instrument:"BTW-USDT",capabilities:["candles","book","ticker"]}}}, "BTW","USD"),"candles");
+    const meme=resultFor(normalizePayload({status:"ok",asset:"M",display_currency:"USD",provider_order:["okx","bitget","binance"],quote_order:["USDC","USDT"],chosen:{candles:{provider:"bitget",asset:"M",quote:"USDT",instrument:"M-USDT",capabilities:["candles","book","ticker"]},book:{provider:"bitget",asset:"M",quote:"USDT",instrument:"M-USDT",capabilities:["candles","book","ticker"]}}}, "M","USD"),"candles");
     const unavailable=resultFor(normalizePayload({status:"unavailable",asset:"NONE",display_currency:"USD",chosen:{}}, "NONE","USD"),"candles");
-    const pass=c.available&&c.provider==="okx"&&c.instrument==="OKB-USDC"&&b.available&&b.quote==="USDC"&&btw.available&&btw.provider==="bitget"&&btw.instrument==="BTW-USDT"&&!unavailable.available&&/Aucune paire/.test(unavailable.reason);
+    const pass=c.available&&c.provider==="okx"&&c.instrument==="OKB-USDC"&&b.available&&b.quote==="USDC"&&btw.available&&btw.provider==="bitget"&&btw.instrument==="BTW-USDT"&&meme.available&&meme.asset==="M"&&meme.instrument==="M-USDT"&&!unavailable.available&&/Aucune paire/.test(unavailable.reason);
     return Object.freeze({build:BUILD,pass,checks:Object.freeze({
       okx_usdc_preferred:c.instrument==="OKB-USDC",
       book_capability_separate:b.capability==="book",
       btw_bitget_fallback:btw.provider==="bitget"&&btw.instrument==="BTW-USDT",
+      single_char_asset_identity:meme.available&&meme.asset==="M"&&meme.instrument==="M-USDT",
       unavailable_is_explicit:!unavailable.available,
       no_symbol_whitelist:true,
       provider_order_backend_owned:true,
