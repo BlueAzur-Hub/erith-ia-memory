@@ -1,14 +1,14 @@
 {
-  "build": "40.6.622",
+  "build": "40.6.623",
   "surface": "trader",
-  "release": "TRADER · SUPPORT/RESISTANCE CURRENT EDGE",
-  "parent_trader_build": "40.6.621",
-  "administrator_base": "40.6.622",
+  "release": "TRADER · ASSET CONTEXT / STALE CANVAS TRUTH",
+  "parent_trader_build": "40.6.622",
+  "administrator_base": "40.6.623",
   "market_core": "38.15.11",
   "published": true,
-  "status": "SR_CURRENT_EDGE_FALLBACK_406622",
+  "status": "ASSET_CONTEXT_STALE_CANVAS_406623",
   "terrain_verified": false,
-  "operator_validation": "PENDING_FIREFOX_CHRISTOPHE_406622",
+  "operator_validation": "PENDING_FIREFOX_CHRISTOPHE_406623",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
@@ -25,7 +25,7 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Trader header: TRADER · 40.6.620 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Trader header: TRADER · 40.6.623 + Prix live Binance + theme Metal/Glass + Administrator arrow",
       "Minimum nav: Livecheck + Marché + Graphique + Aether dynamic status",
       "Native status lane: Relancer + Rafraîchir + Décision + Sources + Chronos",
       "Graphique + Lecture Technique: native fullscreen/F11 geometry",
@@ -128,7 +128,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.622.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.623.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -137,14 +137,14 @@
     "no_aether_thread": true,
     "administrator_business_logic_modified": true,
     "administrator_presentation_modified": false,
-    "terrain": "PENDING_FIREFOX_CHRISTOPHE_406622"
+    "terrain": "PENDING_FIREFOX_CHRISTOPHE_406623"
   },
   "next": [
-    "40.6.623 — Top 10 Explorer (Hausse/Baisse/Volume/Nouveaux) using existing Market data and canonical asset selection.",
+    "40.6.624 — Top 10 Explorer (Hausse/Baisse/Volume/Nouveaux) using existing Market data and canonical asset selection.",
     "Qualify Binance Book off-production; do not deploy until full Windows regression PASS.",
-    "40.6.624 — OKX Account READ ONLY.",
-    "40.6.625 — Instrument/Fee Truth + Micro-Ticket Validator.",
-    "40.6.626 — Demo/Paper execution evidence.",
+    "40.6.625 — OKX Account READ ONLY.",
+    "40.6.626 — Instrument/Fee Truth + Micro-Ticket Validator.",
+    "40.6.627 — Demo/Paper execution evidence.",
     "No real order."
   ],
   "restore_406607": {
@@ -567,5 +567,21 @@
     ],
     "known_limit": "Binance orderbook not yet certified in Backend 1.4.6",
     "certification_kind": "engineering baseline certification"
+  },
+  "asset_context_truth_406623": {
+    "enabled": true,
+    "owner": "administrator/js/market-microscope-candles.js",
+    "stale_previous_asset_canvas_forbidden": true,
+    "stale_previous_asset_inspector_forbidden": true,
+    "external_asset_selection_not_ignored": true,
+    "mode_preserved": true,
+    "existing_provider_path_reused": true,
+    "new_timer": false,
+    "new_observer": false,
+    "bridge_changed": false,
+    "backend_changed": false,
+    "market_core_changed": false,
+    "real_orders": false,
+    "terrain": "PENDING_FIREFOX"
   }
 }
