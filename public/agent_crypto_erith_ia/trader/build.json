@@ -1,12 +1,12 @@
 {
-  "build": "40.6.618",
+  "build": "40.6.619",
   "surface": "trader",
-  "release": "TRADER · BACKEND OKX DYNAMIC SPOT",
-  "parent_trader_build": "40.6.617",
-  "administrator_base": "40.6.618",
+  "release": "TRADER · MARKET INSTRUMENT RESOLVER",
+  "parent_trader_build": "40.6.618",
+  "administrator_base": "40.6.619",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406618_pending_firefox_terrain",
+  "status": "published_406619_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -25,7 +25,7 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Trader header: TRADER · 40.6.618 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Trader header: TRADER · 40.6.619 + Prix live Binance + theme Metal/Glass + Administrator arrow",
       "Minimum nav: Livecheck + Marché + Graphique + Aether dynamic status",
       "Native status lane: Relancer + Rafraîchir + Décision + Sources + Chronos",
       "Graphique + Lecture Technique: native fullscreen/F11 geometry",
@@ -122,7 +122,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.618.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.619.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -134,14 +134,15 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Install / launch the repaired local R19 Backend package before the Firefox proof; web 40.6.618 cannot replace the already-running process on port 8790.",
-    "Firefox Ctrl+F5 and verify TRADER · 40.6.618.",
-    "Select OKB → USD → Bougies 5m or 15m.",
-    "Backend dynamic spot transport must accept OKB-USDC; if upstream rejects that pair, existing bounded fallback may try OKB-USDT.",
-    "Bougies must show the actual loaded instrument and a non-zero candle count, or expose the backend/upstream error detail explicitly.",
-    "Open Profondeur and confirm OKB remains FRESH and aligned.",
-    "Repeat BTC → OKB → ETH with Bougies open.",
-    "Confirm Ligne, F11, Lecture Technique, Market, Math Core, Target Top, Market Flow and OKB case study remain unchanged.",
+    "Stop Backend 1.4.5 and launch the supplied R19 package with Private Backend 1.4.6; Bridge remains V1.9.13.",
+    "Firefox Ctrl+F5 and verify TRADER · 40.6.619 / Administrator 40.6.619.",
+    "OKB → USD → Bougies 5m or 15m: expected resolver OKX / OKB-USDC with non-zero candles.",
+    "BTW → USD → Bougies: expected resolver Bitget / BTW-USDT when Bitget SPOT catalog reports it online.",
+    "BTW → Profondeur: expected Bitget / BTW-USDT timestamped public orderbook when available.",
+    "Pick one unrelated random Market crypto: resolver must choose a real compatible venue/pair or show explicit unavailability; no BTC fallback and no per-symbol patch.",
+    "Verify DISPLAY / EXEC / SETTLE follows the resolved pair and no longer remains BTC-EUR for another selected asset.",
+    "Verify Ligne CoinGecko remains available if no exchange microstructure source exists.",
+    "Confirm Lecture Technique, Market Core 38.15.11, Target Top, Market Flow, Math Core, Aether and Strategy are not regressed.",
     "No real order."
   ],
   "restore_406607": {
@@ -414,6 +415,45 @@
     "browser_error_truth_improved": true,
     "local_backend_install_required": true,
     "backend_package_sha256": "ceacb8a11a5024db7048e240d5c88689f4322b5b38c21db8b03799dfc9699878",
+    "real_orders": false,
+    "terrain": "PASS_FIREFOX_OKB_2026_10_07"
+  },
+  "market_instrument_resolver_406619": {
+    "enabled": true,
+    "parent": "40.6.618",
+    "owner": "administrator/js/market-instrument-resolver.js",
+    "backend_required": "1.4.6",
+    "providers": [
+      "okx",
+      "bitget",
+      "binance"
+    ],
+    "candles_providers": [
+      "okx",
+      "bitget",
+      "binance"
+    ],
+    "book_providers": [
+      "okx",
+      "bitget"
+    ],
+    "provider_priority": [
+      "okx",
+      "bitget",
+      "binance"
+    ],
+    "usd_quote_priority": [
+      "USDC",
+      "USDT"
+    ],
+    "dynamic_execution_truth": true,
+    "per_crypto_patch": false,
+    "btc_fallback": false,
+    "line_coingecko_preserved": true,
+    "btw_reference_case": "Bitget BTW-USDT",
+    "backend_package_sha256": "50bd25b4188274faaa50b19ee03008894d5ee4711f27579750515a52def511be",
+    "local_backend_install_required": true,
+    "market_core_modified": false,
     "real_orders": false,
     "terrain": "PENDING_FIREFOX"
   }
