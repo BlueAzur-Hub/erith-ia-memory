@@ -36,6 +36,18 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
 
+      - name: Deterministic pair and Depth self-test
+        run: |
+          node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js');
+          const pair=global.AgentCryptoOkxMarketPairResolver.self_test();
+          if(!pair.pass){console.error(pair);process.exit(1);}
+          require('./public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js');
+          const depth=global.AgentCryptoOkxMicrostructure.self_test();
+          console.log(JSON.stringify({pair,depth},null,2));
+          if(!depth.pass)process.exit(1);
+          NODE
+
       - name: Stable Depth current guard
         run: python .github/scripts/agent_crypto_depth_current_guard.py
 
