@@ -1,12 +1,12 @@
 {
-  "build": "40.6.615",
+  "build": "40.6.616",
   "surface": "trader",
-  "release": "TRADER · OKX PAIR SYNC",
-  "parent_trader_build": "40.6.614",
-  "administrator_base": "40.6.615",
+  "release": "TRADER · CANDLES SELECTION SYNC",
+  "parent_trader_build": "40.6.615",
+  "administrator_base": "40.6.616",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406615_pending_firefox_terrain",
+  "status": "published_406616_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -25,7 +25,7 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Trader header: TRADER · 40.6.615 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Trader header: TRADER · 40.6.616 + Prix live Binance + theme Metal/Glass + Administrator arrow",
       "Minimum nav: Livecheck + Marché + Graphique + Aether dynamic status",
       "Native status lane: Relancer + Rafraîchir + Décision + Sources + Chronos",
       "Graphique + Lecture Technique: native fullscreen/F11 geometry",
@@ -122,7 +122,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.615.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.616.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -134,12 +134,13 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.615.",
-    "Select OKB in Market and keep USD display active.",
-    "Open Bougies 5m: OKB-USDC may be rejected, then resolver must try OKB-USDT and display the actual quote truthfully.",
-    "Open Profondeur: it must follow OKB instead of remaining BTC/USDC and use the same ordered pair candidates.",
-    "Switch BTC → OKB → ETH with Profondeur open: the selected asset must follow within the normal open-window refresh cadence without retaining the prior asset.",
-    "Confirm F11, Graphique, Lecture Technique, Target Top, Market Flow, Market Snapshot, Math Core and OKB case-study report remain unchanged.",
+    "Firefox Ctrl+F5 on Administrator and Trader 40.6.616.",
+    "Open Bougies, then change selected asset BTC → OKB while Bougies stays open.",
+    "Bougies must immediately abandon BTC context, request OKB through the shared pair resolver and never keep a BTC candle canvas under an OKB selection.",
+    "If OKB-USDC is rejected, bounded fallback to OKB-USDT remains active and the actual quote must stay explicit.",
+    "Open Profondeur: it must remain on the same selected asset OKB and preserve the 40.6.615 pair-sync behavior.",
+    "Repeat OKB → ETH with Bougies open.",
+    "Confirm Ligne, F11, Lecture Technique, Market, Math Core and OKB case-study report remain unchanged.",
     "No real order."
   ],
   "restore_406607": {
@@ -349,6 +350,24 @@
     "new_timer": false,
     "new_observer": false,
     "new_storage": false,
+    "real_orders": false
+  },
+  "candles_selection_sync_406616": {
+    "enabled": true,
+    "canonical_event": "agent-crypto:selected-market-changed",
+    "event_owner": "administrator/app.js::atlasSetComparisonIds",
+    "consumer": "administrator/js/market-microscope-candles.js",
+    "stale_loaded_asset_cleared": true,
+    "stale_canvas_cleared": true,
+    "requested_instrument_rendered_before_success": true,
+    "legacy_global_function_wrapper_removed": true,
+    "pair_sync_406615_preserved": true,
+    "market_core_modified": false,
+    "presentation_modified": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_storage": false,
+    "new_network": false,
     "real_orders": false
   }
 }
