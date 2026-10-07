@@ -9,6 +9,7 @@ from pathlib import Path
 
 ADMIN = Path("public/agent_crypto_erith_ia/administrator")
 DEPTH = ADMIN / "js/okx-microstructure-406499.js"
+PAIR = ADMIN / "js/okx-market-pair-resolver.js"
 INDEX = ADMIN / "index.html"
 BUILD = ADMIN / "build.json"
 
@@ -24,6 +25,7 @@ def need(value: bool, message: str) -> None:
 
 manifest = json.loads(BUILD.read_text(encoding="utf-8"))
 depth = DEPTH.read_text(encoding="utf-8")
+pair = PAIR.read_text(encoding="utf-8")
 index = INDEX.read_text(encoding="utf-8")
 current = str(manifest.get("build") or "").strip()
 
@@ -38,6 +40,13 @@ need("${quoteAmount(bid)} / ${quoteAmount(ask)}" in depth, "depth bands do not u
 need("const bands=[5,10,25]" in depth, "depth bands changed")
 need('state.tab==="depth"' in depth, "depth tab routing missing")
 need("document.body.appendChild(root)" in depth, "independent body portal missing")
+need(f"okx-market-pair-resolver.js?v={current}" in index, "shared pair resolver cache token")
+need(index.find("js/okx-market-pair-resolver.js") < index.find("js/okx-microstructure-406499.js"), "pair resolver must load before Depth")
+need("AgentCryptoOkxMarketPairResolver" in depth, "Depth does not consume shared pair resolver")
+need("typeof globalThis.getSelectedCoin" in depth, "canonical dynamic selection fallback missing")
+need("BTC|ETH|BNB|XRP|SOL|ADA" not in depth, "hardcoded selected-asset whitelist resurrected")
+need('["USDC","USDT"]' in pair, "USD pair order missing")
+need('asset:"OKB",currency:"USD"' in pair, "OKB pair self-test missing")
 
 scope = manifest.get("okx_depth_multi_quote_render_repair_406570") or {}
 need(scope.get("enabled") is True, "40.6.570 repair manifest missing")
@@ -56,5 +65,6 @@ print(json.dumps({
     "market_core": manifest.get("market_core"),
     "legacy_eur_calls": 0,
     "depth_bands_bp": [5, 10, 25],
+    "pair_resolver": "js/okx-market-pair-resolver.js",
     "terrain": scope.get("terrain"),
 }, ensure_ascii=False, sort_keys=True))
