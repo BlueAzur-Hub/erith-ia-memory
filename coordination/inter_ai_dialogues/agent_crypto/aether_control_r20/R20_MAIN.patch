@@ -1,0 +1,90 @@
+--- R19/source/main.go
++++ R20/source/main.go
+@@
+-	appVersion       = "2.3.2R19"
++	appVersion       = "2.3.2R20"
+@@
+-	windowClass = "ERITH_ATLAS_CRYPTO_BRIDGE_DESKTOP_2_3_2R15"
+-	windowTitle = "Aether Control · Atlas-10 Crypto Bridge · 2.3.2R19"
++	windowClass = "ERITH_ATLAS_CRYPTO_BRIDGE_DESKTOP_2_3_2R20"
++	windowTitle = "Aether Control · Atlas-10 Crypto Bridge · 2.3.2R20"
+@@
+ 			if output, probeErr := probe.CombinedOutput(); probeErr == nil {
+-				appendLauncherLog("Python détecté via " + c.Display + " · " + strings.TrimSpace(string(output)))
++				if resolved, lookErr := exec.LookPath(c.Path); lookErr == nil {
++					c.Path = resolved
++				}
++				appendLauncherLog("Python détecté via " + c.Display + " · " + c.Path + " · " + strings.TrimSpace(string(output)))
+ 				return &c, nil
+@@
++func backendListenerPID() int {
++	query := `$p=(Get-NetTCPConnection -LocalAddress 127.0.0.1 -LocalPort 8790 -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty OwningProcess); if($p){$p}`
++	output, err := runHiddenCommand("powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", query)
++	if err != nil { return 0 }
++	pid, err := strconv.Atoi(strings.TrimSpace(string(output)))
++	if err != nil { return 0 }
++	return pid
++}
+@@
+ 	if isBackendHealthy() {
+@@
+ 	}
++	if pid := backendListenerPID(); pid > 0 {
++		return "", fmt.Errorf("port 8790 déjà occupé par PID %d mais /health n'est pas compatible · aucun kill automatique", pid)
++	}
+@@
+-	logFile, err := os.OpenFile(filepath.Join(logsDir, "backend.log"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644)
++	backendLogPath := filepath.Join(logsDir, "backend.log")
++	logFile, err := os.OpenFile(backendLogPath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644)
+@@
+-	args := append(append([]string{}, py.Prefix...), filepath.Join(backendDir, "private_backend.py"), "--quiet")
++	backendScript := filepath.Join(backendDir, "private_backend.py")
++	args := append(append([]string{}, py.Prefix...), "-u", backendScript, "--host", "127.0.0.1", "--port", "8790", "--quiet")
+ 	cmd := exec.Command(py.Path, args...)
+ 	cmd.Dir = backendDir
+ 	cmd.Stdout = logFile
+ 	cmd.Stderr = logFile
++	cmd.Env = append(os.Environ(), "PYTHONUNBUFFERED=1")
+ 	cmd.SysProcAttr = hiddenSysProcAttr()
++	appendLauncherLog("Backend R20 launch · python=" + py.Path + " · script=" + backendScript + " · host=127.0.0.1 · port=8790")
+@@
+-		logFile.Close()
+-		return "", err
++		_ = logFile.Close()
++		return "", fmt.Errorf("démarrage Python Backend impossible: %w", err)
+@@
++	done := make(chan error, 1)
+ 	go func() {
+ 		err := cmd.Wait()
+ 		_ = logFile.Close()
+ 		removeBackendPIDIf(pid)
+ 		appendLauncherLog(fmt.Sprintf("Processus Private Backend terminé: %v", err))
++		done <- err
+ 		requestRefresh()
+ 	}()
+-	deadline := time.Now().Add(8 * time.Second)
++	deadline := time.Now().Add(15 * time.Second)
+ 	for time.Now().Before(deadline) {
+ 		if isBackendHealthy() {
++			appendLauncherLog(fmt.Sprintf("Private Backend /health PASS · PID %d", pid))
+ 			return fmt.Sprintf("Private Backend démarré · PID %d", pid), nil
+ 		}
+-		if !processAlive(pid) {
+-			removeBackendPIDIf(pid)
+-			return "", fmt.Errorf("Private Backend terminé avant /health")
++		select {
++		case exitErr := <-done:
++			detail := tailFile(backendLogPath, 5000)
++			if detail == "" { detail = "aucun stderr/stdout Backend capturé" }
++			return "", fmt.Errorf("Private Backend terminé avant /health · %v · %s", exitErr, detail)
++		default:
+ 		}
+-		time.Sleep(180 * time.Millisecond)
++		time.Sleep(200 * time.Millisecond)
+ 	}
++	detail := tailFile(backendLogPath, 5000)
+@@
+-	return "", fmt.Errorf("Private Backend lancé mais /health ne répond pas")
++	if detail == "" { detail = "aucun stderr/stdout Backend capturé" }
++	return "", fmt.Errorf("Private Backend lancé mais /health ne répond pas après 15 s · %s", detail)
+ }
