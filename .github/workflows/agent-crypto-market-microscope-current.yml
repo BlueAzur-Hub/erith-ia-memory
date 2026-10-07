@@ -6,6 +6,8 @@ on:
     paths:
       - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
+      - "public/agent_crypto_erith_ia/administrator/js/market-instrument-resolver.js"
+      - "public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
@@ -16,6 +18,8 @@ on:
     paths:
       - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
+      - "public/agent_crypto_erith_ia/administrator/js/market-instrument-resolver.js"
+      - "public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
@@ -37,6 +41,8 @@ jobs:
         run: |
           node --check public/agent_crypto_erith_ia/administrator/app.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js
+          node --check public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js
+          node --check public/agent_crypto_erith_ia/administrator/js/market-instrument-resolver.js
           node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
 
       - name: Deterministic Microscope self-test
@@ -46,6 +52,13 @@ jobs:
           const pair=global.AgentCryptoOkxMarketPairResolver.self_test();
           console.log(JSON.stringify(pair,null,2));
           if(!pair.pass) process.exit(1);
+          require('./public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js');
+          const quote=global.AgentCryptoQuoteCurrencyArchitecture.self_test();
+          if(!quote.pass) process.exit(1);
+          require('./public/agent_crypto_erith_ia/administrator/js/market-instrument-resolver.js');
+          const resolver=global.AgentCryptoMarketInstrumentResolver.self_test();
+          console.log(JSON.stringify({quote,resolver},null,2));
+          if(!resolver.pass || !resolver.checks?.btw_bitget_fallback) process.exit(1);
           require('./public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js');
           const r=global.AgentCryptoMarketMicroscope.self_test();
           console.log(JSON.stringify(r,null,2));
@@ -87,6 +100,8 @@ jobs:
             root/"build.json",
             root/"app.js",
             root/"js/okx-market-pair-resolver.js",
+            root/"js/quote-currency-architecture-406497.js",
+            root/"js/market-instrument-resolver.js",
             root/"js/market-microscope-candles.js",
           ]
           optional=[
