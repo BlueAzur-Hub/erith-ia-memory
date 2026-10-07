@@ -10699,7 +10699,6 @@
     "parent": "40.6.619",
     "browser_owner": "administrator/js/okx-market-pair-resolver.js",
     "backend_required": "1.4.6",
-    "backend_patch": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40.6.620_SINGLE_CHAR_TICKER_PATCH.zip",
     "backend_patch_sha256": "0c7fd9462543c3999d1969be12063f77217567d71d48a9e2a2fa16fb3be1b7fa",
     "backend_private_backend_sha256": "bd4396cdc82532525deadc129058a33a2ef0aa6fdd45cddbebdd395483839cff",
     "root_cause": "asset ticker validator required 2-16 characters in browser and Backend; MemeCore ticker M is one character",
@@ -10721,10 +10720,14 @@
     "candles_formula_modified": false,
     "depth_rendering_modified": false,
     "real_orders": false,
-    "terrain": "PENDING_FIREFOX"
+    "terrain": "PENDING_FIREFOX",
+    "backend_patch_repo": "coordination/inter_ai_dialogues/agent_crypto/BACKEND_1_4_6_SINGLE_CHAR_TICKER.patch",
+    "backend_install_note": "coordination/inter_ai_dialogues/agent_crypto/BACKEND_1_4_6_SINGLE_CHAR_TICKER_PATCH.md",
+    "backend_patch_artifact": "AGENT_CRYPTO_40.6.620_SINGLE_CHAR_TICKER_PATCH.zip",
+    "backend_patch_delivery": "conversation_artifact"
   },
   "delivery": {
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40.6.620_SINGLE_CHAR_TICKER_PATCH.zip"
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.620.zip"
   },
   "stop_gate": {
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
