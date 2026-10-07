@@ -47,6 +47,12 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js
           node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
           node --check public/agent_crypto_erith_ia/administrator/js/top10-explorer.js
+          node - <<'NODE'
+          require("./public/agent_crypto_erith_ia/administrator/js/top10-explorer.js");
+          const result=globalThis.AgentCryptoTop10Explorer?.self_test?.();
+          console.log(JSON.stringify(result,null,2));
+          if(!result?.pass)process.exit(1);
+          NODE
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
           node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
           node --check public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js
@@ -123,6 +129,7 @@ jobs:
             "top10_new_listing_owner": 'AgentCryptoNewListingsNativeCategory' in top10,
             "top10_no_timer": "no_recurring_timer:true" in top10,
             "top10_no_order": "no_real_order:true" in top10,
+            "top10_strict_usd_truth": "strict_usd_no_eur_fallback:true" in top10,
             "fullscreen_restore_no_cockpit_runtime": 'js/trader-cockpit-fit.js' not in admin,
             "fullscreen_restore_no_height_var": '--trader-target-top-analyst-height' not in admin,
             "first_paint_preserves_native_status_lane": ':not(#accueil):not(#livecheck):not(#market-zone)' in admin,
