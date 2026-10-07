@@ -1,12 +1,12 @@
 {
-  "build": "40.6.612",
+  "build": "40.6.613",
   "surface": "trader",
-  "release": "TRADER · RESTORE FULLSCREEN CASCADE",
-  "parent_trader_build": "40.6.611",
-  "administrator_base": "40.6.612",
+  "release": "TRADER · MINIMUM SYNDICAL NAV",
+  "parent_trader_build": "40.6.612",
+  "administrator_base": "40.6.613",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406612_pending_firefox_terrain",
+  "status": "published_406613_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -25,9 +25,10 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Trader header: TRADER · 40.6.612 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Trader header: TRADER · 40.6.613 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Minimum nav: Livecheck + Marché + Graphique + Aether dynamic status",
       "Native status lane: Relancer + Rafraîchir + Décision + Sources + Chronos",
-      "Graphique + Lecture Technique: native fullscreen/F11 geometry restored",
+      "Graphique + Lecture Technique: native fullscreen/F11 geometry",
       "Target Top 5 below Graphique in normal document flow",
       "Market Flow below Target Top",
       "Market workspace",
@@ -120,7 +121,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.612.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.613.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -132,10 +133,11 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.612.",
-    "Confirm F11 restores the long-standing full-screen Graphique + Lecture Technique behavior.",
-    "Confirm TRADER · 40.6.612 and native status lane remain stable after repeated clicks.",
-    "Confirm Target Top and Market Flow remain below in normal scroll flow; no viewport compression."
+    "Firefox Ctrl+F5 on Trader 40.6.613.",
+    "Confirm minimum nav is exactly Livecheck, Marché, Graphique and Aether status; no Atlas/Oracle/Sources/Decision/Command Center leakage.",
+    "Click Aether: existing Aether Watch must open and close normally using the native owner.",
+    "Confirm F11/fullscreen and 40.6.612 fluidity are unchanged.",
+    "Confirm native status lane remains stable after repeated clicks."
   ],
   "restore_406607": {
     "source_build": "40.6.601",
@@ -270,6 +272,29 @@
     "market_core_modified": false,
     "graph_business_logic_modified": false,
     "lecture_technique_modified": false,
+    "real_order": false
+  },
+  "minimum_nav_406613": {
+    "enabled": true,
+    "source_first": true,
+    "owner": "Administrator native nav + trader surface CSS filter",
+    "native_livecheck": true,
+    "native_market": true,
+    "native_graph": true,
+    "native_aether": true,
+    "aether_cloned": false,
+    "aether_moved": false,
+    "aether_dynamic_label": true,
+    "extra_admin_controls_hidden": true,
+    "duplicated_owner": false,
+    "dom_move": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_storage": false,
+    "new_network": false,
+    "fullscreen_geometry_modified": false,
+    "status_lane_modified": false,
+    "market_core_modified": false,
     "real_order": false
   }
 }
