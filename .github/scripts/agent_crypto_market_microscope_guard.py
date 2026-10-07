@@ -6,8 +6,10 @@ ROOT = Path("public/agent_crypto_erith_ia/administrator")
 INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
 JS_PATH = ROOT / "js/market-microscope-candles.js"
 PAIR_PATH = ROOT / "js/okx-market-pair-resolver.js"
+APP_PATH = ROOT / "app.js"
 JS = JS_PATH.read_text(encoding="utf-8")
 PAIR = PAIR_PATH.read_text(encoding="utf-8")
+APP = APP_PATH.read_text(encoding="utf-8")
 BUILD = json.loads((ROOT / "build.json").read_text(encoding="utf-8"))
 
 def need(ok, msg):
@@ -31,7 +33,12 @@ need("localStorage?.setItem(INDICATOR_STORAGE_KEY" in JS, "localStorage persiste
 need("sessionStorage?.setItem(INDICATOR_STORAGE_KEY" in JS, "sessionStorage fallback")
 need("atlasCandlesTechnicalLevels406551" not in JS, "versioned DOM id remains")
 need("__agentCryptoMicroscope561" not in JS and "__agentCryptoMicroscope562" not in JS, "versioned hook marker remains")
-need("__agentCryptoMicroscopeHook" in JS and "__agentCryptoMicroscopeOriginal" in JS, "stable hook markers")
+need("__agentCryptoMicroscopeHook" not in JS and "__agentCryptoMicroscopeOriginal" not in JS, "legacy global selection wrapper remains")
+need('window.dispatchEvent(new CustomEvent("agent-crypto:selected-market-changed"' in APP, "canonical selection event owner missing")
+need('window.addEventListener("agent-crypto:selected-market-changed",handleCanonicalSelectionChanged' in JS, "Candles canonical selection listener missing")
+need("canonical_market_selection_event:true" in JS, "Candles event contract missing")
+need("stale_asset_canvas_cleared:true" in JS, "stale asset canvas truth missing")
+need('if(!state.rows.length&&!state.loadedInstrument)state.instrument=primary;' in JS, "requested instrument not projected before first successful load")
 need("movingAverage(state.rows,n).slice(view.start,view.start+rows.length)" in JS, "MA full-history projection")
 need("exponentialAverage(state.rows,n).slice(view.start,view.start+rows.length)" in JS, "EMA full-history projection")
 need('method:"PIVOTS_VISIBLES_W2"' in JS, "S/R method")
