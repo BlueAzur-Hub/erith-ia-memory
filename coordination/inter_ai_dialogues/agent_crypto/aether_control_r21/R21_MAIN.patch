@@ -1,0 +1,20 @@
+--- R20/source/main.go
++++ R21/source/main.go
+@@
+- appVersion = "2.3.2R20"
++ appVersion = "2.3.2R21"
+@@
++ backendHealthInfo()
++ backendProcessCommandLine(pid)
++ isKnownQuarantinedBackend(pid,h)
++ retireKnownQuarantinedBackend(pid,h)
+@@
++ if /health is ready/read-only but version != 1.4.6:
++   - if version == 1.4.7 and process command line belongs to AtlasCryptoBridge/private_backend.py:
++       taskkill only that quarantined PID
++       wait for 8790 release
++       continue with bundled Backend 1.4.6
++   - else refuse automatic kill
+@@
+- Backend wrong version could be shown active/ready
++ Backend wrong version is shown INCOMPATIBLE with expected V1.4.6
