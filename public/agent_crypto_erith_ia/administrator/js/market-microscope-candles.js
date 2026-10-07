@@ -81,9 +81,12 @@
     return Object.freeze({confirmed:!!backend,backend:backend||null,label:backend?backendLabel(backend):"TRANSPORT LOCAL NON CONFIRMÉ",owner:owner?.canonical_filename||null});
   }
   const timeoutError=(inst,bar)=>codedError("OKX_LOCAL_TIMEOUT",`${transportTruth().label} · délai ${REQUEST_TIMEOUT_MS/1000} s dépassé · ${inst} · ${bar}`);
-  const canFallbackToUsdc=error=>String(error?.code||"")==="OKX_CANDLES_UNAVAILABLE";
+  const pairResolver=()=>globalThis.AgentCryptoOkxMarketPairResolver||null;
+  const canFallbackToUsdc=error=>pairResolver()?.canTryNext?.(error)??String(error?.code||"")==="OKX_CANDLES_UNAVAILABLE";
   const externalContext=()=>{try{return globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()||{active:false};}catch(_){return {active:false};}};
   const selectedSymbol=()=>{
+    const resolved=pairResolver()?.selectedAsset?.();
+    if(/^[A-Z0-9]{2,16}$/.test(String(resolved||"")))return String(resolved).toUpperCase();
     const ext=externalContext();if(ext.active&&ext.base)return String(ext.base).toUpperCase();
     try{
       const coin=typeof globalThis.getSelectedCoin==="function"?globalThis.getSelectedCoin():null;
@@ -93,7 +96,19 @@
     return "BTC";
   };
   const displayCurrency=()=>globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.().displayCurrency||"EUR";
-  const desiredInstrument=()=>{const ext=externalContext();return ext.active&&ext.instrument?ext.instrument:`${selectedSymbol()}-${displayCurrency()==="USD"?"USDC":"EUR"}`;};
+  const instrumentCandidates=()=>{
+    const ext=externalContext(),asset=selectedSymbol(),currency=displayCurrency();
+    const resolved=pairResolver()?.instrumentCandidates?.({
+      asset,
+      currency,
+      externalInstrument:ext.active?ext.instrument:null,
+      externalQuote:ext.active?ext.quote:null
+    });
+    if(Array.isArray(resolved)&&resolved.length)return resolved.slice();
+    if(ext.active&&ext.instrument)return [String(ext.instrument).toUpperCase()];
+    return currency==="USD"?[`${asset}-USDC`,`${asset}-USDT`]:[`${asset}-EUR`,`${asset}-USDC`,`${asset}-USDT`];
+  };
+  const desiredInstrument=()=>instrumentCandidates()[0]||"BTC-EUR";
   const activeBar=()=>state.loadedBar||state.bar;
   const activeInstrument=()=>state.loadedInstrument||state.instrument;
   const requestKey=(instrument=state.requestedInstrument,bar=state.requestedBar)=>`${String(instrument||"").toUpperCase()}|${String(bar||"")}`;
@@ -473,7 +488,7 @@
     catch(error){if(signal?.aborted)throw error;throw codedError("OKX_LOCAL_UNAVAILABLE",`${transport.label} indisponible · ${inst} · ${bar}`);}
     let j;
     try{j=await r.json();}catch(_){throw codedError("OKX_RESPONSE_INVALID",`Réponse OKX illisible · ${transport.label} · ${inst}`);}
-    if(!r.ok)throw codedError("OKX_HTTP",`Candles ${inst}: HTTP ${r.status} · ${transport.label}`);
+    if(!r.ok){const error=codedError("OKX_HTTP",`Candles ${inst}: HTTP ${r.status} · ${transport.label}`);error.status=r.status;throw error;}
     if(String(j?.code)!=="0"||!Array.isArray(j?.data)||!j.data.length)throw codedError("OKX_CANDLES_UNAVAILABLE",`Candles ${inst}: code ${j?.code??"?"} · aucune série OKX disponible`);
     const rows=requireUsableRows(parseRows(j.data),inst);
     return {rows,source:"OKX public candles",transport:transport.label};
@@ -482,7 +497,8 @@
     mount();
     const requestedBar=BARS[options.bar]?options.bar:state.bar;
     state.bar=requestedBar;state.requestedBar=requestedBar;
-    const primary=desiredInstrument();state.requestedInstrument=primary;
+    const candidates=instrumentCandidates();
+    const primary=candidates[0]||desiredInstrument();state.requestedInstrument=primary;
     const token=++requestToken;
     try{activeController?.abort();}catch(_){}
     const controller=new AbortController();activeController=controller;
@@ -494,26 +510,35 @@
     if(root)root.querySelector("[data-amm-state]").textContent=`CHARGEMENT · ${primary} · ${requestedBar} · ${ext.active?(ext.providerLabel||ext.provider):"OKX"} public`;
     let inst=primary,rows=null,source=null,warning=null;
     try{
-      try{
-        const pack=await fetchInstrument(primary,{bar:requestedBar,signal:controller.signal});rows=pack.rows;source=pack.source;
-      }catch(error){
-        if(token!==requestToken)return false;
-        if(controller.signal.aborted){
-          if(timedOut)throw timeoutError(primary,requestedBar);
-          return false;
+      let lastPairError=null;
+      for(let index=0;index<candidates.length;index++){
+        const candidate=candidates[index];
+        try{
+          const pack=await fetchInstrument(candidate,{bar:requestedBar,signal:controller.signal});
+          rows=pack.rows;source=pack.source;inst=candidate;lastPairError=null;
+          if(candidate!==primary){
+            const quote=String(candidate).split("-").pop()||"?";
+            warning=`${primary} indisponible · paire active ${candidate} · cotation ${quote} non convertie en ${displayCurrency()}`;
+          }
+          break;
+        }catch(error){
+          if(token!==requestToken)return false;
+          if(controller.signal.aborted){
+            if(timedOut)throw timeoutError(primary,requestedBar);
+            return false;
+          }
+          lastPairError=error;
+          const hasNext=index+1<candidates.length;
+          if(ext.active||!hasNext||!canFallbackToUsdc(error))throw error;
         }
-        if(!ext.active&&displayCurrency()==="EUR"&&canFallbackToUsdc(error)){
-          const fallback=`${selectedSymbol()}-USDC`;
-          const pack=await fetchInstrument(fallback,{bar:requestedBar,signal:controller.signal});
-          rows=pack.rows;source=pack.source;inst=fallback;warning=`${primary} indisponible · fallback ${fallback} non converti en EUR`;
-        }else throw error;
       }
+      if(!rows&&lastPairError)throw lastPairError;
       if(token!==requestToken)return false;
       if(controller.signal.aborted){
         if(timedOut)throw timeoutError(primary,requestedBar);
         return false;
       }
-      state.instrument=inst;state.loadedInstrument=inst;state.loadedBar=requestedBar;state.source=source||"OKX public candles";state.rows=requireUsableRows(rows,inst);state.error=warning;state.errorCode=warning?"OKX_FALLBACK_USDC":null;state.lastLoadedAt=new Date().toISOString();
+      state.instrument=inst;state.loadedInstrument=inst;state.loadedBar=requestedBar;state.source=source||"OKX public candles";state.rows=requireUsableRows(rows,inst);state.error=warning;state.errorCode=warning?"OKX_PAIR_FALLBACK":null;state.lastLoadedAt=new Date().toISOString();
       resetView(false);renderState();draw();return true;
     }catch(error){
       if(token!==requestToken)return false;
