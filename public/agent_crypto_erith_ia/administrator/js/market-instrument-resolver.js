@@ -1,7 +1,7 @@
 /* Agent-Crypto — MARKET INSTRUMENT RESOLVER
    One owner for selected asset -> available venue/instrument/capability.
    Discovery is delegated to Private Backend 127.0.0.1:8790.
-   Provider policy: OKX first, then Binance for candles. Book remains provider-capability gated.
+   Provider policy: OKX first, then Bitget, then Binance. Book remains provider-capability gated.
    Read-only. No order, wallet, private exchange API, timer, observer or persistent storage. */
 (()=>{
   "use strict";
@@ -31,8 +31,8 @@
     const asset=normalizeAsset(value.asset),quote=normalizeAsset(value.quote);
     const instrument=String(value.instrument||"").trim().toUpperCase();
     const caps=Array.isArray(value.capabilities)?value.capabilities.map(String):[];
-    if(!["okx","binance"].includes(provider)||!asset||!quote||!new RegExp("^"+asset+"-"+quote+"$").test(instrument))return null;
-    return Object.freeze({provider,providerLabel:provider==="okx"?"OKX":"Binance",asset,quote,instrument,capabilities:Object.freeze(caps)});
+    if(!["okx","bitget","binance"].includes(provider)||!asset||!quote||!new RegExp("^"+asset+"-"+quote+"$").test(instrument))return null;
+    return Object.freeze({provider,providerLabel:provider==="okx"?"OKX":provider==="bitget"?"Bitget":"Binance",asset,quote,instrument,capabilities:Object.freeze(caps)});
   }
   function normalizePayload(payload,asset,currency){
     const p=payload&&typeof payload==="object"?payload:{};
@@ -69,7 +69,7 @@
       matches:payload.matches,
       backendVersion:payload.backendVersion,
       status:choice?"ok":"unavailable",
-      reason:choice?null:(cap==="book"?"Aucun carnet compatible trouvé sur les sources carnet connectées.":"Aucune paire de bougies compatible trouvée sur OKX ou Binance."),
+      reason:choice?null:(cap==="book"?"Aucun carnet compatible trouvé sur les sources carnet connectées.":"Aucune paire de bougies compatible trouvée sur OKX, Bitget ou Binance."),
       read_only:true
     });
   }
@@ -151,13 +151,44 @@
     }
     return Object.freeze({
       provider:String(raw.provider||r.provider).toLowerCase(),
-      providerLabel:String(raw.provider||r.provider).toLowerCase()==="okx"?"OKX":"Binance",
+      providerLabel:String(raw.provider||r.provider).toLowerCase()==="okx"?"OKX":String(raw.provider||r.provider).toLowerCase()==="bitget"?"Bitget":"Binance",
       instrument:String(raw.instrument||r.instrument).toUpperCase(),
       quote:String(raw.quote||r.quote).toUpperCase(),
       rows:raw.rows.slice(),
       backendVersion:String(raw.backend_version||r.backendVersion||"?"),
       observedAt:String(raw.observed_at_utc||""),
       read_only:true
+    });
+  }
+  async function fetchBook({resolution,limit=100,signal=null}={}){
+    const r=resolution;
+    if(!r?.available||!r.provider||!r.instrument){
+      const e=new Error(r?.reason||"Carnet indisponible");e.code="MARKET_BOOK_UNAVAILABLE";throw e;
+    }
+    const url=new URL(backendRoot()+"/market-book");
+    url.searchParams.set("provider",r.provider);
+    url.searchParams.set("instrument",r.instrument);
+    url.searchParams.set("limit",String(Math.max(5,Math.min(400,Number(limit)||100))));
+    let response;
+    try{response=await fetch(url,{cache:"no-store",signal,headers:{Accept:"application/json"}});}
+    catch(error){if(signal?.aborted)throw error;const e=new Error("Backend carnet indisponible · "+r.instrument);e.code="MARKET_BOOK_OFFLINE";throw e;}
+    let raw={};
+    try{raw=await response.json();}catch(_){}
+    if(!response.ok||String(raw?.status||"").toLowerCase()!=="ok"||!Array.isArray(raw?.bids)||!raw.bids.length||!Array.isArray(raw?.asks)||!raw.asks.length){
+      const e=new Error(String(raw?.error||raw?.detail||("Carnet "+r.instrument+" indisponible")));e.code="MARKET_BOOK_UNAVAILABLE";e.status=response.status;throw e;
+    }
+    return Object.freeze({
+      read_only:true,
+      provider:String(raw.provider||r.provider).toLowerCase(),
+      status:"ok",
+      asset:String(raw.asset||r.asset).toUpperCase(),
+      quote:String(raw.quote||r.quote).toUpperCase(),
+      pair:String(raw.pair||raw.instrument||r.instrument).toUpperCase(),
+      instrument:String(raw.instrument||r.instrument).toUpperCase(),
+      observed_at_utc:String(raw.observed_at_utc||""),
+      bids:raw.bids.slice(),
+      asks:raw.asks.slice(),
+      backend_version:String(raw.backend_version||r.backendVersion||"?")
     });
   }
   async function refreshSelected(reason="selected-market-changed"){
@@ -168,10 +199,10 @@
   function selfTest(){
     const fixture=normalizePayload({
       backend_version:"1.4.6",status:"ok",asset:"OKB",display_currency:"USD",
-      provider_order:["okx","binance"],quote_order:["USDC","USDT"],
+      provider_order:["okx","bitget","binance"],quote_order:["USDC","USDT"],
       matches:[
         {provider:"okx",asset:"OKB",quote:"USDC",instrument:"OKB-USDC",capabilities:["candles","book","ticker"]},
-        {provider:"binance",asset:"OKB",quote:"USDT",instrument:"OKB-USDT",capabilities:["candles","ticker"]}
+        {provider:"bitget",asset:"OKB",quote:"USDT",instrument:"OKB-USDT",capabilities:["candles","book","ticker"]}
       ],
       chosen:{
         candles:{provider:"okx",asset:"OKB",quote:"USDC",instrument:"OKB-USDC",capabilities:["candles","book","ticker"]},
@@ -179,11 +210,13 @@
       }
     },"OKB","USD");
     const c=resultFor(fixture,"candles"),b=resultFor(fixture,"book");
-    const unavailable=resultFor(normalizePayload({status:"unavailable",asset:"BTW",display_currency:"USD",chosen:{}}, "BTW","USD"),"candles");
-    const pass=c.available&&c.provider==="okx"&&c.instrument==="OKB-USDC"&&b.available&&b.quote==="USDC"&&!unavailable.available&&/Aucune paire/.test(unavailable.reason);
+    const btw=resultFor(normalizePayload({status:"ok",asset:"BTW",display_currency:"USD",provider_order:["okx","bitget","binance"],quote_order:["USDC","USDT"],chosen:{candles:{provider:"bitget",asset:"BTW",quote:"USDT",instrument:"BTW-USDT",capabilities:["candles","book","ticker"]},book:{provider:"bitget",asset:"BTW",quote:"USDT",instrument:"BTW-USDT",capabilities:["candles","book","ticker"]}}}, "BTW","USD"),"candles");
+    const unavailable=resultFor(normalizePayload({status:"unavailable",asset:"NONE",display_currency:"USD",chosen:{}}, "NONE","USD"),"candles");
+    const pass=c.available&&c.provider==="okx"&&c.instrument==="OKB-USDC"&&b.available&&b.quote==="USDC"&&btw.available&&btw.provider==="bitget"&&btw.instrument==="BTW-USDT"&&!unavailable.available&&/Aucune paire/.test(unavailable.reason);
     return Object.freeze({build:BUILD,pass,checks:Object.freeze({
       okx_usdc_preferred:c.instrument==="OKB-USDC",
       book_capability_separate:b.capability==="book",
+      btw_bitget_fallback:btw.provider==="bitget"&&btw.instrument==="BTW-USDT",
       unavailable_is_explicit:!unavailable.available,
       no_symbol_whitelist:true,
       provider_order_backend_owned:true,
@@ -191,9 +224,9 @@
     })});
   }
   globalThis.AgentCryptoMarketInstrumentResolver=Object.freeze({
-    build:BUILD,resolve,fetchCandles,refreshSelected,snapshot,self_test:selfTest,
+    build:BUILD,resolve,fetchCandles,fetchBook,refreshSelected,snapshot,self_test:selfTest,
     backend_root:backendRoot,selectedAsset,displayCurrency,publishExecutionTruth,
-    read_only:true,providers:Object.freeze(["okx","binance"]),line_fallback:"existing_coingecko",
+    read_only:true,providers:Object.freeze(["okx","bitget","binance"]),line_fallback:"existing_coingecko",
     recurring_timer:false,mutation_observer:false,storage_write:false,private_api:false,real_order:false,wallet:false
   });
   if(typeof window!=="undefined"){
