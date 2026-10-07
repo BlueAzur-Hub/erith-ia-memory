@@ -1,14 +1,14 @@
 {
-  "build": "40.6.623",
+  "build": "40.6.624",
   "surface": "trader",
-  "release": "TRADER · ASSET CONTEXT / STALE CANVAS TRUTH",
-  "parent_trader_build": "40.6.622",
-  "administrator_base": "40.6.623",
+  "release": "TRADER · TOP 10 EXPLORER · BUREAUX PREP",
+  "parent_trader_build": "40.6.623",
+  "administrator_base": "40.6.624",
   "market_core": "38.15.11",
   "published": true,
-  "status": "ASSET_CONTEXT_STALE_CANVAS_406623",
+  "status": "TOP10_EXPLORER_PREPARED_BLOCKED_BY_406623_TERRAIN",
   "terrain_verified": false,
-  "operator_validation": "PENDING_FIREFOX_CHRISTOPHE_406623",
+  "operator_validation": "BLOCKED_BY_FIREFOX_CHRISTOPHE_406623_THEN_406624",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
@@ -126,10 +126,13 @@
   "delivery": {
     "pr": "repository_history_authority",
     "merge_commit": "repository_history_authority",
-    "github_pages": "repository_actions_authority",
+    "github_pages": "NOT_TRIGGERED_UNTIL_MERGE",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.623.zip",
-    "javascript_syntax": "CI_REQUIRED"
+    "zip": "NOT_PUBLISHED_DURING_OPERATOR_PAUSE",
+    "javascript_syntax": "CI_REQUIRED",
+    "mode": "BUREAUX_DRAFT_ONLY",
+    "merge_allowed": false,
+    "blocker": "40.6.623 Firefox terrain proof"
   },
   "stop_gate": {
     "no_real_order": true,
@@ -137,14 +140,16 @@
     "no_aether_thread": true,
     "administrator_business_logic_modified": true,
     "administrator_presentation_modified": false,
-    "terrain": "PENDING_FIREFOX_CHRISTOPHE_406623"
+    "terrain": "BLOCKED_BY_406623_FIREFOX",
+    "bureaux_pause": true,
+    "no_merge_during_operator_pause": true
   },
   "next": [
-    "40.6.624 — Top 10 Explorer (Hausse/Baisse/Volume/Nouveaux) using existing Market data and canonical asset selection.",
-    "Qualify Binance Book off-production; do not deploy until full Windows regression PASS.",
     "40.6.625 — OKX Account READ ONLY.",
+    "Qualify Binance Book off-production; do not deploy until full Windows regression PASS.",
     "40.6.626 — Instrument/Fee Truth + Micro-Ticket Validator.",
     "40.6.627 — Demo/Paper execution evidence.",
+    "Post-40.6.627 — BUY/SELL ticket DEMO only if gates PASS; REDIVIDER protected unless explicitly reopened.",
     "No real order."
   ],
   "restore_406607": {
@@ -583,5 +588,28 @@
     "market_core_changed": false,
     "real_orders": false,
     "terrain": "PENDING_FIREFOX"
+  },
+  "top10_explorer_406624": {
+    "enabled": true,
+    "owner": "administrator/js/top10-explorer.js",
+    "modes": [
+      "gainers",
+      "losers",
+      "volume",
+      "listings"
+    ],
+    "resident_market_only_for_core_rankings": true,
+    "new_listing_existing_owner_reused": true,
+    "canonical_row_selection": true,
+    "no_duplicate_market": true,
+    "no_duplicate_graph": true,
+    "no_duplicate_math": true,
+    "no_duplicate_detail": true,
+    "no_duplicate_depth": true,
+    "bridge_changed": false,
+    "backend_changed": false,
+    "market_core_changed": false,
+    "real_orders": false,
+    "prepared_in_bureaux": true
   }
 }
