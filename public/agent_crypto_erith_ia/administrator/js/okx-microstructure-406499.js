@@ -51,16 +51,33 @@
   }
   const displayCurrency=()=>{try{return String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"EUR").toUpperCase();}catch(_){return "EUR";}};
   const externalContext=()=>{try{return globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()||{active:false};}catch(_){return {active:false};}};
-  const quoteCandidates=()=>{const ext=externalContext();return ext.active&&ext.quote?[String(ext.quote).toUpperCase()]:displayCurrency()==="USD"?["USDC","USDT"]:["EUR"];};
+  const pairResolver=()=>globalThis.AgentCryptoOkxMarketPairResolver||null;
+  const quoteCandidates=()=>{
+    const ext=externalContext();
+    const resolved=pairResolver()?.quoteCandidates?.({
+      currency:displayCurrency(),
+      externalQuote:ext.active?ext.quote:null
+    });
+    if(Array.isArray(resolved)&&resolved.length)return resolved.slice();
+    return ext.active&&ext.quote?[String(ext.quote).toUpperCase()]:displayCurrency()==="USD"?["USDC","USDT"]:["EUR","USDC","USDT"];
+  };
   const desiredQuote=()=>quoteCandidates()[0];
   const selectedAsset=()=>{
+    const resolved=pairResolver()?.selectedAsset?.();
+    if(/^[A-Z0-9]{2,16}$/.test(String(resolved||"")))return String(resolved).toUpperCase();
     const ext=externalContext();if(ext.active&&ext.base)return String(ext.base).toUpperCase();
-    const texts=[
+    try{
+      const coin=typeof globalThis.getSelectedCoin==="function"?globalThis.getSelectedCoin():null;
+      const symbol=String(coin?.symbol||"").trim().toUpperCase();
+      if(/^[A-Z0-9]{2,16}$/.test(symbol))return symbol;
+    }catch(_){}
+    const text=[
       document.getElementById("detailCompactAsset")?.textContent,
       document.getElementById("selectedAssetTitle")?.textContent,
       document.querySelector("#top5Track .is-active")?.textContent
     ].filter(Boolean).join(" ").toUpperCase();
-    return texts.match(/\b(BTC|ETH|BNB|XRP|SOL|ADA|DOGE|LINK|AVAX|LTC|DOT|SUI|APT|ARB|UNI|AAVE|NEAR|TAO|RENDER|ICP|SHIB|PEPE|XMR|ZEC)\b/)?.[1]||"BTC";
+    const symbol=text.match(/\b[A-Z][A-Z0-9]{1,15}\b/)?.[0]||"BTC";
+    return /^(USD|EUR|USDC|USDT|PRIX|MARCHÉ|MARKET|ACTIF)$/.test(symbol)?"BTC":symbol;
   };
   const normalizeRows=rows=>(Array.isArray(rows)?rows:[])
     .map(r=>[n(r?.[0]),n(r?.[1])])
@@ -514,14 +531,14 @@
             url.searchParams.set("asset",asset);
             url.searchParams.set("depth","100");
             const response=await fetch(url,{cache:"no-store",signal:controller.signal,headers:{Accept:"application/json"}});
-            if(!response.ok)throw bookError("BACKEND_HTTP","Backend 8790 orderbook HTTP "+response.status);
+            if(!response.ok){const error=bookError("BACKEND_HTTP","Backend 8790 orderbook HTTP "+response.status);error.status=response.status;throw error;}
             payload=await response.json();
           }else{
             const url=new URL("https://www.okx.com/api/v5/market/books");
             url.searchParams.set("instId",`${asset}-${quote}`);
             url.searchParams.set("sz","100");
             const response=await fetch(url,{cache:"no-store",signal:controller.signal,headers:{Accept:"application/json"}});
-            if(!response.ok)throw bookError("BACKEND_HTTP",`Backend 8790 OKX public ${asset}-${quote} HTTP ${response.status}`);
+            if(!response.ok){const error=bookError("BACKEND_HTTP",`Backend 8790 OKX public ${asset}-${quote} HTTP ${response.status}`);error.status=response.status;throw error;}
             payload=normalizePublicOkxBook(await response.json(),asset,quote);
           }
           const validated=validateBookPayload(payload,asset,quote,Date.now());
@@ -529,6 +546,9 @@
         }catch(error){
           if(error?.name==="AbortError")throw error;
           errors.push(`${asset}/${quote}: ${String(error?.message||error)}`);
+          const hasNext=quote!==candidates[candidates.length-1];
+          const mayTryNext=pairResolver()?.canTryNext?.(error);
+          if(hasNext&&mayTryNext===false)throw error;
         }
       }
       throw bookError("QUOTE_UNAVAILABLE",errors.join(" · ")||"aucune quote disponible");
@@ -539,12 +559,13 @@
     mount();
     const requested=String(options.asset||selectedAsset()||"BTC").trim().toUpperCase();
     const requestedQuote=String(options.quote||desiredQuote()).trim().toUpperCase();
+    const acceptableQuotes=Array.from(new Set([requestedQuote,...quoteCandidates()]));
     state.asset=requested;state.requestedAsset=requested;state.requestedQuote=requestedQuote;
 
     if(state.loading){
       if(requested!==state.loadingAsset||requestedQuote!==state.loadingQuote){
         state.pendingAsset=requested;state.pendingQuote=requestedQuote;
-        if(state.loadedAsset!==requested||state.loadedQuote!==requestedQuote)clearBookForAsset(requested,requestedQuote);
+        if(state.loadedAsset!==requested||!acceptableQuotes.includes(state.loadedQuote))clearBookForAsset(requested,requestedQuote);
         try{state.activeController?.abort();}catch(_){}
         render();
       }
@@ -553,7 +574,7 @@
 
     const requestAsset=requested;
     const requestQuote=requestedQuote;
-    if(state.loadedAsset!==requestAsset||state.loadedQuote!==requestQuote)clearBookForAsset(requestAsset,requestQuote);
+    if(state.loadedAsset!==requestAsset||!acceptableQuotes.includes(state.loadedQuote))clearBookForAsset(requestAsset,requestQuote);
     const seq=++state.requestSeq;
     const controller=new AbortController();
     state.activeController=controller;state.loadingAsset=requestAsset;state.loadingQuote=requestQuote;state.pendingAsset=null;state.pendingQuote=null;
@@ -576,7 +597,7 @@
       if(!superseded){
         const freshState=classifyError(error);
         const ext=externalContext();const message=error?.name==="AbortError"?(ext.active?`${ext.providerLabel||ext.provider} : timeout / annulation carnet`:"Backend 8790 : timeout / annulation carnet"):String(error?.message||error);
-        if(state.loadedAsset!==requestAsset||state.loadedQuote!==requestQuote)clearBookForAsset(requestAsset,requestQuote);
+        if(state.loadedAsset!==requestAsset||!acceptableQuotes.includes(state.loadedQuote))clearBookForAsset(requestAsset,requestQuote);
         state.freshness=freshState;state.error=message;
       }
     }finally{
@@ -723,7 +744,9 @@
     try{validateBookPayload({...fresh,asset:"BTC",pair:"BTC-EUR"},"ETH","EUR",now);}catch(error){wrongPairRejected=error?.code==="ASSET_MISMATCH"||error?.code==="PAIR_MISMATCH";}
     try{validateBookPayload({...fresh,observed_at_utc:""},"ETH","EUR",now);}catch(error){missingTimeRejected=error?.code==="SOURCE_TIME_INVALID";}
     try{validateBookPayload({...fresh,pair:"ETH-USDT"},"ETH","USDC",now);}catch(error){wrongQuoteRejected=error?.code==="QUOTE_MISMATCH";}
-    const pass=rows.length===2&&LIVE_MS===2000&&freshPass&&stablePass&&staleRejected&&wrongPairRejected&&missingTimeRejected&&wrongQuoteRejected;
+    const pairCandidates=pairResolver()?.instrumentCandidates?.({asset:"OKB",currency:"USD"})||["OKB-USDC","OKB-USDT"];
+    const pairCandidatesOk=JSON.stringify(pairCandidates)===JSON.stringify(["OKB-USDC","OKB-USDT"]);
+    const pass=rows.length===2&&LIVE_MS===2000&&freshPass&&stablePass&&staleRejected&&wrongPairRejected&&missingTimeRejected&&wrongQuoteRejected&&pairCandidatesOk;
     return Object.freeze({build:BUILD,pass,checks:{
       lecture_technique_overlay:true,
       docked_glass_surface:true,
@@ -752,6 +775,9 @@
       display_aware_quote:true,
       eur_quote_preserved:true,
       usd_display_prefers_usdc_then_usdt:true,
+      shared_pair_resolver:true,
+      dynamic_selected_asset:true,
+      okb_usd_candidates_usdc_then_usdt:pairCandidatesOk,
       stablecoin_never_relabelled_usd:true,
       dynamic_asset_units:true,
       stale_payload_rejected:staleRejected,
@@ -796,6 +822,8 @@
     recurring_timer:true,timer_scope:"OPEN_ONLY",
     mutation_observer:false,storage_write:false,
     external_asset_supported:true,
+    shared_pair_resolver:true,
+    dynamic_selected_asset:true,
     market_core_changed:false,strategy_changed:false
   });
 

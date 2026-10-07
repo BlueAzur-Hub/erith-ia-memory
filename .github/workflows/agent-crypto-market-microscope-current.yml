@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
@@ -12,6 +13,7 @@ on:
       - ".github/workflows/agent-crypto-market-microscope-current.yml"
   pull_request:
     paths:
+      - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/build.json"
@@ -30,11 +32,17 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: JavaScript syntax
-        run: node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js
+          node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
 
       - name: Deterministic Microscope self-test
         run: |
           node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js');
+          const pair=global.AgentCryptoOkxMarketPairResolver.self_test();
+          console.log(JSON.stringify(pair,null,2));
+          if(!pair.pass) process.exit(1);
           require('./public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js');
           const r=global.AgentCryptoMarketMicroscope.self_test();
           console.log(JSON.stringify(r,null,2));
@@ -75,6 +83,7 @@ jobs:
             root/"index.html",
             root/"build.json",
             root/"app.js",
+            root/"js/okx-market-pair-resolver.js",
             root/"js/market-microscope-candles.js",
           ]
           optional=[

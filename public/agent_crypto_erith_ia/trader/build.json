@@ -1,12 +1,12 @@
 {
-  "build": "40.6.614",
+  "build": "40.6.615",
   "surface": "trader",
-  "release": "TRADER · OKB CASE STUDY",
-  "parent_trader_build": "40.6.613",
-  "administrator_base": "40.6.614",
+  "release": "TRADER · OKX PAIR SYNC",
+  "parent_trader_build": "40.6.614",
+  "administrator_base": "40.6.615",
   "market_core": "38.15.11",
   "published": true,
-  "status": "published_406614_pending_firefox_terrain",
+  "status": "published_406615_pending_firefox_terrain",
   "terrain_verified": false,
   "operator_validation": "PENDING_FIREFOX",
   "execution": "disabled",
@@ -25,7 +25,7 @@
     "trader_adapter": "trader/trader-runtime-mirror.js",
     "trader_adapter_role": "presentation filter only",
     "visible_runtime_surfaces": [
-      "Trader header: TRADER · 40.6.614 + Prix live Binance + theme Metal/Glass + Administrator arrow",
+      "Trader header: TRADER · 40.6.615 + Prix live Binance + theme Metal/Glass + Administrator arrow",
       "Minimum nav: Livecheck + Marché + Graphique + Aether dynamic status",
       "Native status lane: Relancer + Rafraîchir + Décision + Sources + Chronos",
       "Graphique + Lecture Technique: native fullscreen/F11 geometry",
@@ -122,24 +122,25 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.614.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.615.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
     "no_real_order": true,
     "no_new_exchange_key": true,
     "no_aether_thread": true,
-    "administrator_business_logic_modified": false,
-    "administrator_presentation_modified": true,
+    "administrator_business_logic_modified": true,
+    "administrator_presentation_modified": false,
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Firefox Ctrl+F5 on Trader 40.6.614.",
-    "Scroll to the very bottom: the OKB case-study line must appear collapsed by default.",
-    "Open the OKB line: market, tokenomics, X Layer, risks, levels, sources and Trader terrain diagnostic must remain readable.",
-    "Close and reopen it: native details behavior must remain stable without timers, observers or storage.",
-    "Confirm Graphique, Lecture Technique, Target Top, Market Flow, Market Snapshot, Math Core and F11 behavior are unchanged.",
-    "Known separate defect remains: when OKB is selected, Depth/Candles pair synchronization still needs the shared pair-resolver repair."
+    "Firefox Ctrl+F5 on Trader 40.6.615.",
+    "Select OKB in Market and keep USD display active.",
+    "Open Bougies 5m: OKB-USDC may be rejected, then resolver must try OKB-USDT and display the actual quote truthfully.",
+    "Open Profondeur: it must follow OKB instead of remaining BTC/USDC and use the same ordered pair candidates.",
+    "Switch BTC → OKB → ETH with Profondeur open: the selected asset must follow within the normal open-window refresh cadence without retaining the prior asset.",
+    "Confirm F11, Graphique, Lecture Technique, Target Top, Market Flow, Market Snapshot, Math Core and OKB case-study report remain unchanged.",
+    "No real order."
   ],
   "restore_406607": {
     "source_build": "40.6.601",
@@ -315,6 +316,39 @@
     "new_observer": false,
     "new_storage": false,
     "new_network": false,
+    "real_orders": false
+  },
+  "okx_pair_sync_406615": {
+    "enabled": true,
+    "resolver": "administrator/js/okx-market-pair-resolver.js",
+    "resolver_stable_filename": true,
+    "shared_by": [
+      "Candles",
+      "Depth"
+    ],
+    "selected_asset": "canonical getSelectedCoin",
+    "usd_candidates": [
+      "USDC",
+      "USDT"
+    ],
+    "eur_candidates": [
+      "EUR",
+      "USDC",
+      "USDT"
+    ],
+    "okb_expected_candidates": [
+      "OKB-USDC",
+      "OKB-USDT"
+    ],
+    "depth_hardcoded_whitelist_removed": true,
+    "actual_quote_preserved": true,
+    "market_core_modified": false,
+    "graph_modified": false,
+    "lecture_technique_modified": false,
+    "presentation_modified": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_storage": false,
     "real_orders": false
   }
 }
