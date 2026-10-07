@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.612",
+  "build": "40.6.613",
   "engine": "38.15.11",
-  "release": "TRADER · RESTORE FULLSCREEN CASCADE",
+  "release": "TRADER · MINIMUM SYNDICAL NAV",
   "published": true,
-  "status": "published_terrain_pending_406612",
-  "parent_build": "40.6.611",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.612",
-  "administrator_build": "40.6.612",
-  "build_label": "Build 40.6.612 · Administrator",
+  "status": "published_terrain_pending_406613",
+  "parent_build": "40.6.612",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.613",
+  "administrator_build": "40.6.613",
+  "build_label": "Build 40.6.613 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,7 +31,7 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_406612_FULLSCREEN_RESTORE",
+  "terrain_proof": "PENDING_FIREFOX_406613_MINIMUM_NAV",
   "release_notes": "WORKSPACE_MEMORY_CURRENCY_LABEL_SYNC_40.6.571.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
@@ -10383,5 +10383,33 @@
       "40.6.611 native status lane + visible build",
       "40.6.612 fullscreen restore"
     ]
+  },
+  "trader_minimum_nav_406613": {
+    "enabled": true,
+    "parent": "40.6.612",
+    "scope": "TRADER_NAV_PRESENTATION_ONLY",
+    "items": [
+      "Livecheck",
+      "Marché",
+      "Graphique",
+      "Aether · dynamic state"
+    ],
+    "essential_native_targets": [
+      "livecheck",
+      "market-workspace",
+      "analyste"
+    ],
+    "aether_owner": "atlasAetherStatusToggle + js/aether.js",
+    "aether_button_cloned": false,
+    "aether_button_moved": false,
+    "advanced_admin_controls_visible": false,
+    "command_center_visible": false,
+    "fullscreen_geometry_modified": false,
+    "status_lane_modified": false,
+    "market_core_modified": false,
+    "business_logic_modified": false,
+    "real_order": false,
+    "automatic_order": false,
+    "terrain": "PENDING_FIREFOX"
   }
 }

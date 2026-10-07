@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const BUILD="40.6.612";
+const BUILD="40.6.613";
 const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
@@ -20,8 +20,11 @@ function mount(){
     style.textContent=[
       "body.atlas-trader-runtime-mirror main.shell > :not(#accueil):not(#livecheck):not(#market-zone){display:none!important}",
       "body.atlas-trader-runtime-mirror #accueil .atlas-view-switcher{display:none!important}",
-      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-advanced{display:none!important}",
-      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential [data-atlas-essential-target]:not([data-atlas-essential-target='market-workspace']):not([data-atlas-essential-target='analyste']){display:none!important}",
+      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-essential [data-atlas-essential-target]:not([data-atlas-essential-target='livecheck']):not([data-atlas-essential-target='market-workspace']):not([data-atlas-essential-target='analyste']){display:none!important}",
+      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-advanced.atlas-admin-dock{display:flex!important;flex:0 0 auto!important;margin-left:auto!important;width:auto!important;min-width:max-content!important}",
+      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-advanced .atlas-admin-command-bar{display:flex!important;align-items:center!important;width:auto!important;min-width:0!important}",
+      "body.atlas-trader-runtime-mirror #accueil .atlas-v2-nav-advanced .atlas-admin-command-shortcuts,body.atlas-trader-runtime-mirror #accueil #atlasAdminGraphToggle,body.atlas-trader-runtime-mirror #accueil #atlasAdminCenterToggle,body.atlas-trader-runtime-mirror #accueil #atlasAdminCenterDrawer{display:none!important}",
+      "body.atlas-trader-runtime-mirror #accueil #atlasAetherStatusToggle{display:inline-flex!important}",
       "body.atlas-trader-runtime-mirror #atlasMarketDomainSwitch{pointer-events:none!important;cursor:default!important}",
       "body.atlas-trader-runtime-mirror #market-zone{margin-top:12px}",
       "body.atlas-trader-runtime-mirror .shell{padding-bottom:28px}"
@@ -63,7 +66,11 @@ function mount(){
       filtered_presentation_only:true,
       real_orders:false,
       native_header:true,
-      header_injection:false
+      header_injection:false,
+  minimum_nav:true,
+  minimum_nav_items:Object.freeze(["Livecheck","Marché","Graphique","Aether"]),
+      minimum_nav:true,
+      minimum_nav_items:["Livecheck","Marché","Graphique","Aether"]
     }}));
   }catch(_){}
 
