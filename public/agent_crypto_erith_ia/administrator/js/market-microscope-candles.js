@@ -499,6 +499,7 @@
     state.bar=requestedBar;state.requestedBar=requestedBar;
     const candidates=instrumentCandidates();
     const primary=candidates[0]||desiredInstrument();state.requestedInstrument=primary;
+    if(!state.rows.length&&!state.loadedInstrument)state.instrument=primary;
     const token=++requestToken;
     try{activeController?.abort();}catch(_){}
     const controller=new AbortController();activeController=controller;
@@ -601,7 +602,11 @@
   function draw(crossIndex=null,crossPrice=null){
     const root=document.getElementById(ROOT),canvas=root?.querySelector("canvas");const rows=visibleRows();
     syncToolbarLayout();
-    if(!canvas||!rows.length)return;
+    if(!canvas)return;
+    if(!rows.length){
+      try{const ctx=canvas.getContext("2d");ctx?.clearRect?.(0,0,canvas.width||0,canvas.height||0);}catch(_){}
+      return;
+    }
     const rect=root.getBoundingClientRect(),dpr=devicePixelRatio||1,w=Math.max(500,rect.width),h=Math.max(280,rect.height);
     canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);canvas.style.width=w+"px";canvas.style.height=h+"px";
     const ctx=canvas.getContext("2d");ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
@@ -762,23 +767,41 @@
     const r=g.rows[i],tip=document.querySelector(`#${ROOT} [data-amm-tip]`);if(!tip)return;
     tip.innerHTML=inspectorMarkup(r);
   }
+  function handleCanonicalSelectionChanged(event){
+    if(externalContext().active)return false;
+    const nextSymbol=String(event?.detail?.symbol||selectedSymbol()||"").trim().toUpperCase();
+    if(!/^[A-Z0-9]{2,16}$/.test(nextSymbol))return false;
+    const candidates=instrumentCandidates();
+    const primary=candidates[0]||`${nextSymbol}-${displayCurrency()==="USD"?"USDC":"EUR"}`;
+    const currentBase=String(state.loadedInstrument||state.instrument||"").split("-")[0].toUpperCase();
+    if(currentBase!==nextSymbol){
+      requestToken+=1;
+      try{activeController?.abort();}catch(_){}
+      activeController=null;
+      state.loading=false;
+      state.rows=[];
+      state.error=null;
+      state.errorCode=null;
+      state.lastLoadedAt=null;
+      state.lastLevels=null;
+      state.loadedBar=null;
+      state.loadedInstrument=null;
+      state.instrument=primary;
+      state.requestedInstrument=primary;
+      renderTechnicalLevels(null);
+      resetView(false);
+      renderState();
+      draw();
+    }else{
+      state.requestedInstrument=primary;
+    }
+    if(state.mode==="candles"){
+      queueMicrotask(()=>{try{void load({bar:state.bar,reason:"selected-market-changed"});}catch(_){}});
+    }
+    return true;
+  }
   function installCanonicalSelectionHook(){
-    const names=["atlasSelectMarketCoin","atlasSetComparisonIds"];
-    let installed=false;
-    names.forEach(name=>{
-      const current=globalThis[name];
-      if(typeof current!=="function")return;
-      if(current.__agentCryptoMicroscopeHook===true){installed=true;return;}
-      const wrapped=function(...args){
-        const result=current.apply(this,args);
-        queueMicrotask(()=>{try{if(state.mode==="candles"&&!externalContext().active)void load({bar:state.bar,reason:`canonical:${name}`});}catch(_){}});
-        return result;
-      };
-      Object.defineProperty(wrapped,"__agentCryptoMicroscopeHook",{value:true});
-      Object.defineProperty(wrapped,"__agentCryptoMicroscopeOriginal",{value:current});
-      try{globalThis[name]=wrapped;if(globalThis[name]===wrapped)installed=true;}catch(_){}
-    });
-    return installed;
+    return typeof globalThis.addEventListener==="function";
   }
   function selfTest(){
     const near=(a,b,t=1e-9)=>Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(a-b)<=t;
@@ -804,8 +827,8 @@
     const indicatorFixture={ma:false,ema:true,sr:false,supertrend:true,boll:true,sar:true,vwap:true,vp:true};
     const indicatorRoundTrip=JSON.stringify(normalizeIndicatorState(JSON.parse(JSON.stringify(indicatorFixture))))===JSON.stringify(indicatorFixture);
     const pass=sample.length===5&&sample[0].t===1&&ma[0]===null&&Math.abs(ma[1]-2)<1e-9&&ema.some(Number.isFinite)&&Math.abs(delta-10)<1e-9&&barDurationMs("15m")===900000&&sr.method==="PIVOTS_VISIBLES_W2"&&maEmaFullHistory&&stReference&&bollReference&&sarReference&&vwapReferenceOk&&vpReferenceOk&&requestIdentityOk&&nullOhlcRejected&&incoherentOhlcRejected&&emptySeriesRejected&&timeoutTruth&&transportLabelTruth&&indicatorRoundTrip;
-    return Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),ma_ema_full_history_projection:maEmaFullHistory,candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",support_resistance_last_levels_clear_when_disabled:true,support_resistance_distance_signature:true,support_resistance_historical_reference_label:true,supertrend_method:st.method==="SUPERTREND_ATR_WILDER",supertrend_reference_10x3:stReference,supertrend_default_off:INDICATOR_DEFAULTS.supertrend===false,bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:INDICATOR_DEFAULTS.ma===true,ema_opt_in:INDICATOR_DEFAULTS.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,technical_sr_native_window:true,technical_sr_collapsible:true,technical_sr_compact_summary:true,technical_sr_price_priority:true,technical_sr_price_visibility:true,technical_sr_context_separate:true,technical_sr_no_confidence_label:true,supertrend_opt_in:true,supertrend_period_10_multiplier_3:true,bollinger_method:boll.method==="BOLLINGER_SMA_STDDEV",bollinger_reference_20x2:bollReference,bollinger_default_off:INDICATOR_DEFAULTS.boll===false,bollinger_opt_in:true,bollinger_period_20_multiplier_2:true,sar_method:sar.method==="PARABOLIC_SAR_CLASSIC",sar_reference_002_020:sarReference,sar_default_off:INDICATOR_DEFAULTS.sar===false,sar_opt_in:true,sar_step_002_max_020:true,vwap_method:vwapReference.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME",vwap_reference_window:vwapReferenceOk,vwap_label_window:true,vwap_default_off:INDICATOR_DEFAULTS.vwap===false,vwap_opt_in:true,volume_profile_method:vpReference.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX",volume_profile_reference_24_bins:vpReferenceOk,volume_profile_default_off:INDICATOR_DEFAULTS.vp===false,volume_profile_opt_in:true,volume_profile_bins_24:true,request_identity_key:requestIdentityOk,strict_null_ohlc_rejected:nullOhlcRejected,strict_incoherent_ohlc_rejected:incoherentOhlcRejected,empty_parsed_series_rejected:emptySeriesRejected,timeout_has_explicit_error:timeoutTruth,local_transport_truth_label:transportLabelTruth,canonical_market_selection_owner:typeof globalThis.getSelectedCoin==="function"||typeof document==="undefined",latest_request_wins:true,abort_previous_request:true,request_timeout_ms:REQUEST_TIMEOUT_MS,loaded_context_separate_from_requested_context:true,indicator_state_summary_refresh:true,indicator_state_roundtrip:indicatorRoundTrip,indicator_state_storage_key:INDICATOR_STORAGE_KEY==="agentCrypto.marketMicroscope.indicators.v1",bar_preference_default:normalizeBar("bad")==="15m",bar_preference_valid:normalizeBar("5m")==="5m",bar_preference_storage_key:BAR_STORAGE_KEY==="agentCrypto.marketMicroscope.bar.v1",default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
+    return Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),ma_ema_full_history_projection:maEmaFullHistory,candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",support_resistance_last_levels_clear_when_disabled:true,support_resistance_distance_signature:true,support_resistance_historical_reference_label:true,supertrend_method:st.method==="SUPERTREND_ATR_WILDER",supertrend_reference_10x3:stReference,supertrend_default_off:INDICATOR_DEFAULTS.supertrend===false,bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:INDICATOR_DEFAULTS.ma===true,ema_opt_in:INDICATOR_DEFAULTS.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,technical_sr_native_window:true,technical_sr_collapsible:true,technical_sr_compact_summary:true,technical_sr_price_priority:true,technical_sr_price_visibility:true,technical_sr_context_separate:true,technical_sr_no_confidence_label:true,supertrend_opt_in:true,supertrend_period_10_multiplier_3:true,bollinger_method:boll.method==="BOLLINGER_SMA_STDDEV",bollinger_reference_20x2:bollReference,bollinger_default_off:INDICATOR_DEFAULTS.boll===false,bollinger_opt_in:true,bollinger_period_20_multiplier_2:true,sar_method:sar.method==="PARABOLIC_SAR_CLASSIC",sar_reference_002_020:sarReference,sar_default_off:INDICATOR_DEFAULTS.sar===false,sar_opt_in:true,sar_step_002_max_020:true,vwap_method:vwapReference.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME",vwap_reference_window:vwapReferenceOk,vwap_label_window:true,vwap_default_off:INDICATOR_DEFAULTS.vwap===false,vwap_opt_in:true,volume_profile_method:vpReference.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX",volume_profile_reference_24_bins:vpReferenceOk,volume_profile_default_off:INDICATOR_DEFAULTS.vp===false,volume_profile_opt_in:true,volume_profile_bins_24:true,request_identity_key:requestIdentityOk,strict_null_ohlc_rejected:nullOhlcRejected,strict_incoherent_ohlc_rejected:incoherentOhlcRejected,empty_parsed_series_rejected:emptySeriesRejected,timeout_has_explicit_error:timeoutTruth,local_transport_truth_label:transportLabelTruth,canonical_market_selection_owner:typeof globalThis.getSelectedCoin==="function"||typeof document==="undefined",canonical_market_selection_event:true,stale_asset_canvas_cleared:true,latest_request_wins:true,abort_previous_request:true,request_timeout_ms:REQUEST_TIMEOUT_MS,loaded_context_separate_from_requested_context:true,indicator_state_summary_refresh:true,indicator_state_roundtrip:indicatorRoundTrip,indicator_state_storage_key:INDICATOR_STORAGE_KEY==="agentCrypto.marketMicroscope.indicators.v1",bar_preference_default:normalizeBar("bad")==="15m",bar_preference_valid:normalizeBar("5m")==="5m",bar_preference_storage_key:BAR_STORAGE_KEY==="agentCrypto.marketMicroscope.bar.v1",default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
   }
-  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active,lastLevels:state.lastLevels,request_key:requestKey()}),instrument:()=>activeInstrument(),technicalLevels:()=>state.lastLevels,indicatorState:()=>Object.freeze({...state.indicators}),resetView,viewport:()=>Object.freeze({...view}),installCanonicalSelectionHook,self_test:selfTest,read_only:true,network:"OKX_PUBLIC_VIA_LOCAL_BACKEND_ON_DEMAND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,latest_request_wins:true,request_timeout_ms:REQUEST_TIMEOUT_MS,indicator_state_persistence:true,indicator_storage_key:INDICATOR_STORAGE_KEY,interval_persistence:true,interval_storage_key:BAR_STORAGE_KEY,compact_meta:true,verbose_indicator_meta_removed:true,responsive_single_line_toolbar:true,interval_label_removed:true,narrow_wrap_two_rows:true,canvas_vertical_reclaim:true,stable_control_rows:true,view_layout_refresh_no_fetch:true,idempotent_mount_reparent:true,recurring_timer:false,mutation_observer:false,storage_write:true,storage_scope:"INDICATOR_STATE_PLUS_INTERVAL_PREFERENCE",real_order:false,market_core_changed:false,strategy_changed:false});
-  if(typeof document!=="undefined"){const boot=()=>{mount();installCanonicalSelectionHook();};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:v2mode",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:admin-graph",scheduleLayoutRefresh,{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(state.mode==="candles"&&!externalContext().active)void load({bar:state.bar,reason:"quote-architecture"});},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{requestToken+=1;try{activeController?.abort();}catch(_){}activeController=null;state.loading=false;mount();state.rows=[];state.error=null;state.lastLoadedAt=null;state.lastLevels=null;state.loadedBar=null;state.loadedInstrument=null;state.mode="native";renderTechnicalLevels(null);syncControls();},{passive:true});}
+  globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active,lastLevels:state.lastLevels,request_key:requestKey()}),instrument:()=>activeInstrument(),technicalLevels:()=>state.lastLevels,indicatorState:()=>Object.freeze({...state.indicators}),resetView,viewport:()=>Object.freeze({...view}),installCanonicalSelectionHook,self_test:selfTest,read_only:true,network:"OKX_PUBLIC_VIA_LOCAL_BACKEND_ON_DEMAND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,canonical_market_selection_event:true,stale_asset_canvas_cleared:true,latest_request_wins:true,request_timeout_ms:REQUEST_TIMEOUT_MS,indicator_state_persistence:true,indicator_storage_key:INDICATOR_STORAGE_KEY,interval_persistence:true,interval_storage_key:BAR_STORAGE_KEY,compact_meta:true,verbose_indicator_meta_removed:true,responsive_single_line_toolbar:true,interval_label_removed:true,narrow_wrap_two_rows:true,canvas_vertical_reclaim:true,stable_control_rows:true,view_layout_refresh_no_fetch:true,idempotent_mount_reparent:true,recurring_timer:false,mutation_observer:false,storage_write:true,storage_scope:"INDICATOR_STATE_PLUS_INTERVAL_PREFERENCE",real_order:false,market_core_changed:false,strategy_changed:false});
+  if(typeof document!=="undefined"){const boot=()=>{mount();installCanonicalSelectionHook();};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:v2mode",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:admin-graph",scheduleLayoutRefresh,{passive:true});window.addEventListener("agent-crypto:selected-market-changed",handleCanonicalSelectionChanged,{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",()=>{if(state.mode==="candles"&&!externalContext().active)void load({bar:state.bar,reason:"quote-architecture"});},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{requestToken+=1;try{activeController?.abort();}catch(_){}activeController=null;state.loading=false;mount();state.rows=[];state.error=null;state.lastLoadedAt=null;state.lastLevels=null;state.loadedBar=null;state.loadedInstrument=null;state.mode="native";renderTechnicalLevels(null);syncControls();},{passive:true});}
 })();
