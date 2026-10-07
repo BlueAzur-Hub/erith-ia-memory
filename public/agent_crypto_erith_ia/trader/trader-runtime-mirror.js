@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const BUILD="40.6.613";
+const BUILD="40.6.614";
 const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
@@ -70,7 +70,9 @@ function mount(){
   minimum_nav:true,
   minimum_nav_items:Object.freeze(["Livecheck","Marché","Graphique","Aether"]),
       minimum_nav:true,
-      minimum_nav_items:["Livecheck","Marché","Graphique","Aether"]
+      minimum_nav_items:["Livecheck","Marché","Graphique","Aether"],
+      okb_case_study:true,
+      okb_case_study_owner:"administrator/index.html#traderOkbCaseStudy"
     }}));
   }catch(_){}
 
@@ -101,6 +103,8 @@ globalThis.AgentCryptoTraderRuntimeMirror=Object.freeze({
   duplicated_detail_owner:false,
   real_orders:false,
   native_header:true,
-  header_injection:false
+  header_injection:false,
+  okb_case_study:true,
+  okb_case_study_owner:"administrator/index.html#traderOkbCaseStudy"
 });
 })();
