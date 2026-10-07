@@ -10665,9 +10665,9 @@
     ],
     "resolver_cache_seconds_browser": 60,
     "resolver_cache_seconds_backend": 90,
-    "backend_package": "AGENT_CRYPTO_AETHER_CONTROL_R19_BACKEND_OKX_LOCAL_TRANSPORT.zip",
-    "backend_package_sha256": "50bd25b4188274faaa50b19ee03008894d5ee4711f27579750515a52def511be",
-    "backend_patch_path": null,
+    "backend_package": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BACKEND_1_4_6_MARKET_RESOLVER_PATCH.zip",
+    "backend_package_sha256": "85a193b4b59eb397f7f67f414112d51878682addb9039c0ff8912286e8179782",
+    "backend_patch_path": "coordination/inter_ai_dialogues/agent_crypto/BACKEND_1_4_6_MARKET_RESOLVER_PATCH.md",
     "local_backend_install_required": true,
     "identity_scope": "selected Market symbol matched against live exchange SPOT base/quote catalogs",
     "contract_address_identity_proof": false,
@@ -10689,6 +10689,9 @@
     "real_order": false,
     "wallet": false,
     "terrain": "PENDING_FIREFOX",
-    "backend_package_source": "conversation artifact"
+    "backend_package_source": "repository_main",
+    "backend_delivery_kind": "STANDALONE_PRIVATE_BACKEND_PATCH",
+    "control_center_1_4_6_published": false,
+    "control_center_note": "Existing Control Center compiled for Backend 1.4.5 may reject/signal 1.4.6 as not ready. Terrain 40.6.619 must launch backend/start_private_backend.cmd from the published patch until an integrated 1.4.6 Control Center is explicitly built and verified."
   }
 }
