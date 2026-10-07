@@ -107,7 +107,7 @@
     if(mode==="volume"){
       const currency=displayCurrency();
       const volume=row=>currency==="USD"
-        ?positive(row.volume24hUsd??row.volumeUsd??row.volume24h)
+        ?positive(row.volume24hUsd??row.volumeUsd)
         :positive(row.volume24h);
       return rows.filter(row=>volume(row)!==null)
         .sort((a,b)=>volume(b)-volume(a)).slice(0,10);
@@ -118,14 +118,14 @@
   function corePrice(coin){
     const currency=displayCurrency();
     return currency==="USD"
-      ?positive(coin?.priceUsd??coin?.price_usd??coin?.price)
+      ?positive(coin?.priceUsd??coin?.price_usd)
       :positive(coin?.priceEur??coin?.price);
   }
 
   function coreVolume(coin){
     const currency=displayCurrency();
     return currency==="USD"
-      ?positive(coin?.volume24hUsd??coin?.volumeUsd??coin?.volume24h)
+      ?positive(coin?.volume24hUsd??coin?.volumeUsd)
       :positive(coin?.volume24h);
   }
 
@@ -382,6 +382,7 @@
       canonical_market_owner:"AtlasMarketUniverse1000",
       canonical_selection_owner:"atlasSelectMarketCoin",
       new_listing_owner:"AgentCryptoNewListingsNativeCategory",
+      strict_usd_no_eur_fallback:true,
       explicit_new_listing_discovery_only:true,
       no_duplicate_market:true,
       no_duplicate_graph:true,
@@ -401,6 +402,7 @@
     canonical_market_owner:"AtlasMarketUniverse1000",
     canonical_selection_owner:"atlasSelectMarketCoin",
     new_listing_owner:"AgentCryptoNewListingsNativeCategory",
+    strict_usd_no_eur_fallback:true,
     recurring_timer:false,mutation_observer:false,storage_write:false,real_order:false
   });
 
