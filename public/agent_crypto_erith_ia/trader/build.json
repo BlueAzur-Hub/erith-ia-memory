@@ -1,14 +1,14 @@
 {
-  "build": "40.6.621",
+  "build": "40.6.622",
   "surface": "trader",
-  "release": "TRADER · CANONICAL ASSET IDENTITY",
-  "parent_trader_build": "40.6.620",
-  "administrator_base": "40.6.621",
+  "release": "TRADER · SUPPORT/RESISTANCE CURRENT EDGE",
+  "parent_trader_build": "40.6.621",
+  "administrator_base": "40.6.622",
   "market_core": "38.15.11",
   "published": true,
-  "status": "CONSULTATION_V1_CERTIFIED_406621_R21",
-  "terrain_verified": true,
-  "operator_validation": "PASS_FIREFOX_406621_R21_OKB_FRESH + M_BITGET_XAUT_OKX",
+  "status": "SR_CURRENT_EDGE_FALLBACK_406622",
+  "terrain_verified": false,
+  "operator_validation": "PENDING_FIREFOX_CHRISTOPHE_406622",
   "execution": "disabled",
   "real_orders": false,
   "architecture": {
@@ -78,7 +78,13 @@
     ],
     "local_private_image": true,
     "initial_support_resistance_open": true,
-    "framing": "face-priority final crop"
+    "framing": "face-priority final crop",
+    "support_resistance_current_edge_fallback": true,
+    "current_edge_support_allowed": true,
+    "current_edge_resistance_allowed": true,
+    "method": "PIVOTS_VISIBLES_W2",
+    "transport_changed": false,
+    "resolver_changed": false
   },
   "market": {
     "source": "../data/crypto/latest.json + extended.json on demand",
@@ -122,7 +128,7 @@
     "merge_commit": "repository_history_authority",
     "github_pages": "repository_actions_authority",
     "persistent_folder": "coordination/inter_ai_dialogues/agent_crypto",
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.621.zip",
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.622.zip",
     "javascript_syntax": "CI_REQUIRED"
   },
   "stop_gate": {
@@ -131,15 +137,14 @@
     "no_aether_thread": true,
     "administrator_business_logic_modified": true,
     "administrator_presentation_modified": false,
-    "terrain": "PENDING_FIREFOX_CHRISTOPHE"
+    "terrain": "PENDING_FIREFOX_CHRISTOPHE_406622"
   },
   "next": [
-    "40.6.622 — Top 10 Explorer (Hausse/Baisse/Volume/Nouveaux) using existing Market data and canonical asset selection.",
-    "Qualify Binance Book off-production; no operator-stack deployment before full Windows regression PASS.",
-    "Promote qualified Binance Book as R22 + Backend 1.4.7 only after evidence.",
-    "40.6.623 — OKX Account READ ONLY.",
-    "40.6.624 — Instrument/Fee Truth + Micro-Ticket Validator.",
-    "40.6.625 — Demo/Paper execution evidence.",
+    "40.6.623 — Top 10 Explorer (Hausse/Baisse/Volume/Nouveaux) using existing Market data and canonical asset selection.",
+    "Qualify Binance Book off-production; do not deploy until full Windows regression PASS.",
+    "40.6.624 — OKX Account READ ONLY.",
+    "40.6.625 — Instrument/Fee Truth + Micro-Ticket Validator.",
+    "40.6.626 — Demo/Paper execution evidence.",
     "No real order."
   ],
   "restore_406607": {
