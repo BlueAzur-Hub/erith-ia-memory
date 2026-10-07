@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.620",
+  "build": "40.6.621",
   "engine": "38.15.11",
-  "release": "TRADER · SINGLE-CHAR TICKER RESOLVER",
+  "release": "TRADER · CANONICAL ASSET IDENTITY",
   "published": true,
-  "status": "published_terrain_pending_406620",
-  "parent_build": "40.6.619",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.620",
-  "administrator_build": "40.6.620",
-  "build_label": "Build 40.6.620 · Administrator",
+  "status": "published_terrain_pending_406621",
+  "parent_build": "40.6.620",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.621",
+  "administrator_build": "40.6.621",
+  "build_label": "Build 40.6.621 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,8 +31,8 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": true,
-  "terrain_proof": "PENDING_FIREFOX_406620_SINGLE_CHAR_TICKER",
-  "release_notes": "SINGLE_CHAR_TICKER_RESOLVER_406620.md",
+  "terrain_proof": "PENDING_FIREFOX_406621_CANONICAL_ASSET_IDENTITY",
+  "release_notes": "CANONICAL_ASSET_IDENTITY_406621.md",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -10727,18 +10727,46 @@
     "backend_patch_delivery": "conversation_artifact"
   },
   "delivery": {
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.620.zip"
+    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.621.zip"
   },
   "stop_gate": {
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Stop only Backend in Aether Control, replace R19/backend/private_backend.py from the 40.6.620 patch, and keep Bridge 1.9.13 unchanged.",
-    "Restart Aether Control and verify BRIDGE V1.9.13 active/ready and PRIVATE BACKEND V1.4.6 active/ready.",
-    "Firefox Ctrl+F5 and verify TRADER · 40.6.620 / Administrator 40.6.620.",
-    "MemeCore (M) → USD → Bougies: resolver must request M-USDC then M-USDT, never MEMECORE-*.",
-    "MemeCore (M) → Profondeur: same resolved M pair/provider if a compatible public book is available.",
-    "OKB regression test: OKB-USDC candles and Depth remain functional.",
+    "No new local Backend or Bridge install: keep the patched Private Backend 1.4.6 from 40.6.620 and Bridge 1.9.13.",
+    "After GitHub Pages shows TRADER 40.6.621, Firefox Ctrl+F5.",
+    "Select MemeCore M and verify Ligne, Bougies and Profondeur all keep canonical asset M.",
+    "Bougies must leave any previous BTC canvas immediately and resolve M-USDC/M-USDT through the Market Resolver.",
+    "Profondeur must never display MEMECORE-*; it must use the same canonical M resolution or explicit unavailability.",
+    "Regression: OKB Bougies + Profondeur remains valid.",
     "No real order."
-  ]
+  ],
+  "canonical_asset_identity_406621": {
+    "enabled": true,
+    "parent": "40.6.620",
+    "root_cause": "Candles, Depth and Market Instrument Resolver retained private 2-16 character asset validators after the pair owner was repaired; selected M diverged to BTC or MEMECORE.",
+    "canonical_owner": "administrator/js/okx-market-pair-resolver.js::normalizeAsset",
+    "consumers": [
+      "administrator/js/market-microscope-candles.js",
+      "administrator/js/okx-microstructure-406499.js",
+      "administrator/js/market-instrument-resolver.js"
+    ],
+    "consumer_private_symbol_grammar_removed": true,
+    "one_character_asset_supported": true,
+    "expected_identity": "M",
+    "forbidden_aliases": [
+      "BTC fallback for selected M",
+      "MEMECORE fallback for selected M"
+    ],
+    "backend_version": "1.4.6",
+    "backend_patch_from_406620_retained": true,
+    "bridge_version": "1.9.13",
+    "bridge_modified": false,
+    "market_core_modified": false,
+    "line_graph_modified": false,
+    "candle_math_modified": false,
+    "depth_rendering_modified": false,
+    "real_orders": false,
+    "terrain": "PENDING_FIREFOX"
+  }
 }
