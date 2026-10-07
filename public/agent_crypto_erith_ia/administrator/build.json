@@ -10733,10 +10733,11 @@
     "terrain": "PASS_406621_CHRISTOPHE"
   },
   "next": [
-    "Freeze canonical asset identity and Backend 1.4.6 R2 as validated baseline.",
-    "Do not change Bridge 1.9.13 or Market Core 38.15.11.",
-    "Next bounded extension: add Binance public orderbook support so Depth covers Binance-only resolved instruments, while keeping explicit unavailable truth when no book exists.",
-    "Regression set before any next release: M/Bitget, XAUT/OKX, OKB/OKX, plus one Binance-only or unavailable asset.",
+    "Install only Private Backend 1.4.7; keep Trader/Administrator 40.6.621 and Bridge 1.9.13 unchanged.",
+    "Regression: M → Bitget → M-USDT candles + book.",
+    "Regression: XAUT → OKX → XAUT-USDT candles + book.",
+    "Find one instrument resolved specifically to Binance and verify candles + book.",
+    "After Binance terrain PASS, freeze Consultation V1 and move to OKX Account READ ONLY.",
     "No real order."
   ],
   "canonical_asset_identity_406621": {
@@ -10788,5 +10789,45 @@
     "backend_r2_package": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BACKEND_1_4_6_MARKET_RESOLVER_R2_SINGLE_CHAR.zip",
     "backend_r2_sha256": "6473f8bc3af0c7571e84b36b14bb34c3fa572ad7bc6ddc96140d76e59d90d42a",
     "backend_file_sha256": "990134125c77dd7ba774d0225a00edb89f1668ec200c416fb7b8d72960ed158f"
+  },
+  "backend_1_4_7_binance_book": {
+    "enabled": true,
+    "ui_build": "40.6.621",
+    "version": "1.4.7",
+    "build": "Market Instrument Resolver + Binance Book",
+    "purpose": "add Binance public orderbook to the validated multi-provider resolver",
+    "providers": {
+      "okx": [
+        "candles",
+        "book",
+        "ticker"
+      ],
+      "bitget": [
+        "candles",
+        "book",
+        "ticker"
+      ],
+      "binance": [
+        "candles",
+        "book",
+        "ticker"
+      ]
+    },
+    "endpoint": "GET https://api.binance.com/api/v3/depth",
+    "auth_required": false,
+    "source_timestamp_mode": "backend_observed_at",
+    "reason": "Binance REST depth has no exchange event timestamp in its payload; do not fabricate one",
+    "bridge_version": "1.9.13",
+    "bridge_modified": false,
+    "market_core_modified": false,
+    "ui_modified": false,
+    "read_only": true,
+    "real_orders": false,
+    "self_test": "PASS",
+    "fixture_test": "BINANCE_BOOK_FIXTURE_PASS",
+    "backend_sha256": "c54d6039d78d3dea5e76be307cdb96fe1ba3fb7d28bf00fbed75580ad0f79cff",
+    "package": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BACKEND_1_4_7_BINANCE_BOOK.zip",
+    "package_sha256": "63faab7b1bd3d9464c86c9b5b7cd3bdee9e168329983ed935560e6a2a5a533ed",
+    "terrain": "PENDING_FIREFOX_BINANCE_ONLY"
   }
 }

@@ -134,10 +134,11 @@
     "terrain": "PENDING_FIREFOX_CHRISTOPHE"
   },
   "next": [
-    "Freeze 40.6.621 as validated baseline.",
-    "Keep current Backend 1.4.6 R2 and Bridge 1.9.13.",
-    "Next bounded extension: Binance public orderbook for Binance-only resolved assets.",
-    "Retest M/Bitget, XAUT/OKX and OKB/OKX after any transport change.",
+    "Keep Trader 40.6.621 unchanged.",
+    "Install Backend 1.4.7 only.",
+    "Verify M/Bitget and XAUT/OKX regressions.",
+    "Verify one Binance-resolved asset has Bougies + Profondeur.",
+    "Then proceed to OKX Account READ ONLY.",
     "No real order."
   ],
   "restore_406607": {
@@ -511,5 +512,27 @@
         "result": "PASS"
       }
     }
+  },
+  "backend_1_4_7_binance_book": {
+    "version": "1.4.7",
+    "ui_build_unchanged": "40.6.621",
+    "provider_symmetry": true,
+    "expected_capabilities": {
+      "okx": [
+        "candles",
+        "book"
+      ],
+      "bitget": [
+        "candles",
+        "book"
+      ],
+      "binance": [
+        "candles",
+        "book"
+      ]
+    },
+    "bridge_modified": false,
+    "real_orders": false,
+    "terrain": "PENDING_FIREFOX_BINANCE_ONLY"
   }
 }
