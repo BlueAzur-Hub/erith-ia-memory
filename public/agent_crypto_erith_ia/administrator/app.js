@@ -4780,6 +4780,20 @@ function atlasComparisonCompletionKey(ids = atlasComparisonIds(), period = Numbe
   return `${Number(period || 1)}:${(ids || []).join(",")}`;
 }
 
+function atlasBroadcastSelectedMarketChange(reason = "selection") {
+  const coin = getSelectedCoin();
+  try {
+    window.dispatchEvent(new CustomEvent("agent-crypto:selected-market-changed", {
+      detail: {
+        id: coin?.id || null,
+        symbol: coin?.symbol || null,
+        reason: String(reason || "selection")
+      }
+    }));
+  } catch (_) {}
+  return coin;
+}
+
 function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
   if(globalThis.__atlasExternalChartContext?.active === true){
     atlasExternalChartClear("canonical-comparison");
@@ -4813,6 +4827,7 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
     }
     atlasRenderComparisonControls();
     atlasWorkspaceScheduleSave?.(80);
+    atlasBroadcastSelectedMarketChange(options.preset || "empty");
     return;
   }
 
@@ -4841,6 +4856,7 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
   atlasWorkspaceSelectionIntentWrite("selected");
   atlasRenderComparisonControls();
   atlasWorkspaceScheduleSave?.(80);
+  atlasBroadcastSelectedMarketChange(options.preset || (unique.length > 1 ? "comparison" : "solo"));
   queueMicrotask(() => { void atlasRefreshSpotBook({ force: true }); });
 }
 
