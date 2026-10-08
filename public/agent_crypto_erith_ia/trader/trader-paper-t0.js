@@ -1,7 +1,7 @@
 /* Seven Heaven · T0 data-quality observation; does not certify G1 or trade. */
 (()=>{"use strict";
 const api=globalThis;
-let evidence=null, captureBusy=false, captureSeq=0;
+let evidence=null, captureBusy=false, captureSeq=0, strategyReadStatus=null;
 const safe=(fn)=>{try{return typeof fn==="function"?fn():null}catch(_){return null}};
 const stamp=v=>{const n=typeof v==="number"?v:Date.parse(String(v||""));return Number.isFinite(n)&&n>0?n:null};
 const pair=v=>{const m=String(v||"").toUpperCase().match(/^([A-Z0-9]+)[/-]([A-Z0-9]+)$/);return m?{base:m[1],quote:m[2]}:null};
@@ -51,14 +51,17 @@ function analyze(now=Date.now(),d=api){
  else flags.push("Carnet: paire, source ou fraicheur insuffisante");
  if(cp&&bp&&cp.quote!==bp.quote)flags.push("Devises de cotation differentes: "+cp.quote+" / "+bp.quote);
  if(cp&&cp.quote!==p.displayCurrency)facts.push("Affichage "+p.displayCurrency+" distinct de "+cp.quote+"; aucune conversion");
- const g1=gate?.available===true?gate.rows?.find(x=>Number(x.gate)===1):null;
- if(!g1)flags.push("G1 canonique non disponible");
+ const canonicalRows=gate?.available===true&&Array.isArray(gate.rows)?gate.rows:[];
+ const g1=canonicalRows.find(x=>Number(x.gate)===1)||null;
+ if(!g1)flags.push("G1 canonique inaccessible : "+(strategyReadStatus?.errors?.join("; ")||"source non chargee"));
+ if(canonicalRows.length&&canonicalRows.length!==9)flags.push("Matrice canonique partielle : "+canonicalRows.length+" gates");
  const datasets=dossier?.dataset||{};
  const integrity={};
  for(const key of ["experiment","after_cost"]){
-  const r=datasets[key];integrity[key]=r?.data_integrity_ready===true;
+  const r=datasets[key];integrity[key]=r?r.data_integrity_ready===true:null;
   if(r)facts.push("Integrite "+key+": "+(integrity[key]?"OK":"NON DEMONTREE")+" ("+r.rows+" lignes)");
-  if(!integrity[key])flags.push("Preuve G1, dataset "+key+": absente ou incomplete");
+  if(r&&!integrity[key])flags.push("Preuve G1, dataset "+key+": integrite non demontree");
+  if(!r)flags.push("Preuve G1, dataset "+key+": module non charge ; preuve NON evaluee");
  }
  flags.push("Capture d'observation seulement: ne certifie ni G1 ni Strategy A");
  return Object.freeze({schema:"trader_t0_data_quality_r3",capturedAt:new Date(now).toISOString(),
@@ -70,6 +73,9 @@ function analyze(now=Date.now(),d=api){
    receivedAt:candle.lastLoadedAt||null,assetMatches,loading:!!candle.loading,
    candleAccepted:candleOk,bookTime:seen,candleFresh:fresh,bookFresh:bookOk}),
   g1:Object.freeze({state:g1?.state||"UNKNOWN",owner:g1?.owner||null}),
+  gates:Object.freeze(canonicalRows.map(r=>Object.freeze({gate:r.gate,state:r.state,owner:r.owner}))),
+  governor:Object.freeze({level:safe(d.AgentCryptoStrategyASafetyCertification?.snapshot)?.level||"UNKNOWN",assetAuthorized:false}),
+  canonicalRead:Object.freeze({complete:canonicalRows.length===9,errors:Object.freeze([...(strategyReadStatus?.errors||[])])}),
   datasetIntegrity:Object.freeze(integrity),complete:candleOk&&bookOk&&!!p.chart?.qualified&&cp?.quote===bp?.quote,
   facts:Object.freeze(facts),flags:Object.freeze(flags),
   marketBrief:marketBrief(asset,candle,book,candleOk,bookOk,p.displayCurrency,d.AgentCryptoMarketMicroscope),
@@ -145,6 +151,9 @@ function report(v){
  const k=v.market;
  return v.capturedAt+" · "+(v.complete?"OBSERVATIONS CONCORDANTES":"DONNEES INCOMPLETES")+
   "\nG1 CANONIQUE: "+v.g1.state+" (inchangé)"+
+  "\nSTRATEGY A · GATES : "+(v.gates.length?v.gates.map(g=>"G"+g.gate+":"+g.state).join(" ; "):"non charges")+
+  "\nGouverneur: "+v.governor.level+" · aucun droit Paper pour cet actif"+
+  (v.canonicalRead.errors.length?"\nLecteurs canoniques: "+v.canonicalRead.errors.join(" ; "):"")+
   "\n\nDIAGNOSTIC BOUGIES"+
   "\nPaire: "+(k.loadedInstrument||"absente")+" · actif attendu: "+(k.selectedAsset||"?")+" · accord: "+(k.assetMatches?"OUI":"NON")+
   "\nIntervalle: "+(k.loadedBar||"?")+" · nombre de bougies: "+k.candleCount+" · chargement: "+(k.loading?"OUI":"NON")+
@@ -161,6 +170,42 @@ function paint(){
  const output=document.getElementById("traderPaperT0")?.querySelector("[data-t0-report]");
  if(output)output.textContent=report(evidence);
 }
+
+/* Explicit T0 read; only canonical Safety and Gate owner scripts, not the 28-module cascade. */
+const CANONICAL_READERS=Object.freeze([
+ {src:"./js/strategy-a-safety-certification.js",ready:()=>typeof api.AgentCryptoStrategyASafetyCertification?.certification_matrix==="function"},
+ {src:"./js/strategy-a-gate-canonical-truth.js",ready:()=>typeof api.AgentCryptoStrategyAGateCanonicalTruth?.snapshot==="function"}
+]);
+function acquireCanonical(spec){
+ if(spec.ready())return Promise.resolve(true);
+ const href=new URL(spec.src,document.baseURI).href;
+ const existing=Array.from(document.scripts||[]).find(x=>{
+  try{return x.src&&new URL(x.src,document.baseURI).pathname===new URL(href).pathname}catch(_){return false}
+ });
+ if(existing?.dataset?.agentCryptoEvidenceDemandState==="failed")return Promise.reject(new Error("CANONICAL_EXISTING_FAILURE "+spec.src));
+ const el=existing||document.createElement("script"),created=!existing;
+ return new Promise((resolve,reject)=>{
+  let finished=false;
+  const end=err=>{
+   if(finished)return;finished=true;clearTimeout(deadline);
+   el.removeEventListener?.("load",success);el.removeEventListener?.("error",failure);
+   if(err)reject(err);else resolve(true);
+  };
+  const success=()=>end(spec.ready()?null:new Error("CANONICAL_API_NOT_READY "+spec.src));
+  const failure=()=>end(new Error("CANONICAL_SCRIPT_UNAVAILABLE "+spec.src));
+  const deadline=setTimeout(()=>end(new Error("CANONICAL_LOAD_TIMEOUT "+spec.src)),7000);
+  el.addEventListener("load",success,{once:true});el.addEventListener("error",failure,{once:true});
+  if(created){el.src=href;el.async=false;el.dataset.agentCryptoTraderStrategyRead="explicit";document.head.appendChild(el)}
+  else if(spec.ready())end(null);
+ });
+}
+async function readCanonical(){
+ const errors=[];
+ for(const spec of CANONICAL_READERS){if(spec.ready())continue;try{await acquireCanonical(spec)}catch(e){errors.push(String(e?.message||e).slice(0,150))}}
+ const c=safe(api.AgentCryptoStrategyAGateCanonicalTruth?.snapshot);
+ return Object.freeze({available:c?.available===true&&c?.rows?.length===9,errors:Object.freeze(errors)});
+}
+
 const identity=()=>{const p=safe(api.AgentCryptoTraderPaperPreparation?.snapshot);return String(p?.asset?.id||"")+"|"+String(p?.asset?.symbol||"")+"|"+String(p?.displayCurrency||"");};
 function requireCandles(s,market,now){
  const asset=s?.asset;
@@ -192,13 +237,17 @@ async function capture(){
    try{await book.refresh({asset:asset.asset.symbol,automatic:false});}catch(_){}
   }
   if(token!==captureSeq||identity()!==start)return null;
-  evidence=analyze();paint();return evidence;
+  strategyReadStatus=await readCanonical();
+  if(token!==captureSeq||identity()!==start)return null;
+  evidence=analyze();paint();
+  try{api.AgentCryptoTraderPaperPreparation?.render?.()}catch(_){}
+  return evidence;
  }finally{
   captureBusy=false;
   if(button){button.disabled=false;button.textContent="Capturer T0 (sans stockage)";}
  }
 }
-function reset(){++captureSeq;evidence=null;paint()}
+function reset(){++captureSeq;evidence=null;strategyReadStatus=null;paint()}
 function mount(){
  if(document.getElementById("traderPaperT0"))return true;
  const parent=document.getElementById("traderPaperPreparation")?.querySelector(".paper-inner");
