@@ -71,8 +71,73 @@ function analyze(now=Date.now(),d=api){
    candleAccepted:candleOk,bookTime:seen,candleFresh:fresh,bookFresh:bookOk}),
   g1:Object.freeze({state:g1?.state||"UNKNOWN",owner:g1?.owner||null}),
   datasetIntegrity:Object.freeze(integrity),complete:candleOk&&bookOk&&!!p.chart?.qualified&&cp?.quote===bp?.quote,
-  facts:Object.freeze(facts),flags:Object.freeze(flags),gatePromoted:false,paperAuthorized:false,orderPlaced:false,persisted:false});
+  facts:Object.freeze(facts),flags:Object.freeze(flags),
+  marketBrief:marketBrief(asset,candle,book,candleOk,bookOk,p.displayCurrency,d.AgentCryptoMarketMicroscope),
+  gatePromoted:false,paperAuthorized:false,orderPlaced:false,persisted:false});
 }
+
+/* Market reading from already selected canonical snapshots; no new market owner. */
+function marketBrief(asset,candle,book,candleOk,bookOk,currency,owner=api.AgentCryptoMarketMicroscope){
+ const label="Observation uniquement. Ni strategie certifiee ni ordre.";
+ const cp=pair(candle?.loadedInstrument),bp=pair(book?.pair);
+ const rows=Array.isArray(candle?.rows)?candle.rows:[];
+ if(!asset||!candleOk||rows.length<10)return Object.freeze({available:false,reason:"Bougies valides/fraiches insuffisantes (minimum 10)",label});
+ const win=rows.slice(-20);
+ const first=Number(win[0]?.c),last=Number(win.at(-1)?.c);
+ const hi=win.map(x=>Number(x.h)),lo=win.map(x=>Number(x.l));
+ if(![first,last,...hi,...lo].every(v=>Number.isFinite(v)&&v>0)||first<=0)
+  return Object.freeze({available:false,reason:"OHLCV insuffisant pour la fenetre de lecture",label});
+ const high=Math.max(...hi),low=Math.min(...lo),change=(last/first-1)*100;
+ const v=win.slice(-10).map(r=>Number(r.v));
+ const volumeReady=v.length===10&&v.every(x=>Number.isFinite(x)&&x>=0);
+ const sum=a=>a.reduce((x,y)=>x+y,0);
+ const prior=volumeReady?sum(v.slice(0,5)):null,recent=volumeReady?sum(v.slice(5)):null;
+ const volumeRatio=prior>0?recent/prior:null;
+ let bid=null,ask=null,spreadBp=null,depthRatio=null;
+ if(bookOk&&cp&&bp&&cp.base===bp.base&&cp.quote===bp.quote&&book.bids?.length&&book.asks?.length){
+  const b=Number(book.bids[0]?.[0]),a=Number(book.asks[0]?.[0]);
+  if(Number.isFinite(b)&&Number.isFinite(a)&&a>=b&&b>0){
+   bid=b;ask=a;spreadBp=(a-b)/((a+b)/2)*10000;
+   const notional=side=>side.slice(0,20).reduce((acc,r)=>{
+    const p=Number(r?.[0]),q=Number(r?.[1]);
+    return acc+(Number.isFinite(p)&&p>0&&Number.isFinite(q)&&q>=0?p*q:0);
+   },0);
+   const askN=notional(book.asks);
+   depthRatio=askN>0?notional(book.bids)/askN:null;
+  }
+ }
+ const levels=safe(owner?.technicalLevels);
+ const levelsMatch=levels?.instrument===candle.loadedInstrument&&levels?.bar===candle.loadedBar&&
+   Number.isFinite(Number(levels.current))&&Math.abs(Number(levels.current)-last)<=Math.max(1e-8,last*1e-8);
+ const sl=levelsMatch&&Number.isFinite(levels.support?.price)?levels.support:null;
+ const rl=levelsMatch&&Number.isFinite(levels.resistance?.price)?levels.resistance:null;
+ return Object.freeze({available:true,asset:asset.symbol,pair:candle.loadedInstrument,quote:cp.quote,bar:candle.loadedBar,
+  candles:win.length,lastClose:last,changePct:change,low,high,volumeRatio,
+  bestBid:bid,bestAsk:ask,spreadBp,depthRatio,bookComparable:bid!==null&&ask!==null,
+  support:sl?Object.freeze({price:sl.price,touches:sl.touches}):null,
+  resistance:rl?Object.freeze({price:rl.price,touches:rl.touches}):null,
+  sourceLevels:!!(sl||rl),currency,label});
+}
+const marketFmt=n=>Number.isFinite(n)?Number(n).toLocaleString("fr-FR",{maximumFractionDigits:4}):"indisponible";
+function marketReport(m){
+ if(!m?.available)return"LECTURE DE MARCHE · non disponible : "+(m?.reason||"source absente");
+ const q=m.quote,sign=m.changePct>=0?"+":"";
+ return [
+  "LECTURE DE MARCHE · "+m.asset+" / "+q+" · "+m.bar+" · "+m.candles+" bougies",
+  "Derniere cloture : "+marketFmt(m.lastClose)+" "+q+" · variation sur fenetre : "+sign+marketFmt(m.changePct)+" %",
+  "Extremes observes : bas "+marketFmt(m.low)+" / haut "+marketFmt(m.high)+" "+q+" (ne constituent pas des supports certifies)",
+  "Volume cinq dernieres / cinq precedentes : "+(m.volumeRatio===null?"non exploitable":marketFmt(m.volumeRatio)+" x")+" (descriptif)",
+  m.bookComparable?"Carnet meme paire : BID "+marketFmt(m.bestBid)+" / ASK "+marketFmt(m.bestAsk)+" "+q+" · spread "+marketFmt(m.spreadBp)+" bp":
+                    "Carnet : prix non comparables ou source non fraiche",
+  "Profondeur BID/ASK (20 niveaux notionnels) : "+(m.depthRatio===null?"indisponible":marketFmt(m.depthRatio)+" x")+" (instantane, non predictif)",
+  m.sourceLevels?"Niveaux du moteur Bougies : S "+(m.support?marketFmt(m.support.price):"indisponible")+" / R "+(m.resistance?marketFmt(m.resistance.price):"indisponible")+" "+q:
+                  "Supports/resistances canoniques non disponibles ; les extremes ci-dessus sont uniquement descriptifs",
+  "Scenarios conditionnels : franchissement du haut observe = extension a surveiller ; rupture du bas = faiblesse a surveiller. Aucun signal.",
+  "Graphique "+m.currency+" / Bougies "+q+" : cotations distinctes, aucune conversion.",
+  m.label
+ ].join("\n");
+}
+
 const asUtc=v=>Number.isFinite(v)&&v>0?new Date(v).toISOString():"inconnue";
 const seconds=v=>Number.isFinite(v)?(v/1000).toFixed(1)+" s":"inconnu";
 function report(v){
@@ -88,6 +153,7 @@ function report(v){
   "\nDerniere ouverture: "+asUtc(k.lastCandle)+" · reception: "+(k.receivedAt||"inconnue")+
   "\nAge a T0: "+seconds(k.candleAgeMs)+" · seuil: "+seconds(k.candleLimitMs)+" · fraicheur: "+(k.candleFresh?"OUI":"NON")+
   "\nControle Bougies: "+(k.candleAccepted?"CONCORDANT":"NON CONFORME")+
+  "\n\n"+marketReport(v.marketBrief)+
   "\n\nSOURCES ET PREUVES\n"+v.facts.join("\n")+
   "\n\nLIMITES\n"+v.flags.join("\n");
 }
@@ -149,5 +215,5 @@ function mount(){
 if(!mount()){const onClick=()=>{if(mount())document.removeEventListener("click",onClick,true)};
  document.addEventListener("click",onClick,true);}
 for(const e of ["agent-crypto:selected-market-changed","agent-crypto:quote-architecture-changed"])api.addEventListener(e,reset,{passive:true});
-api.AgentCryptoTraderT0=Object.freeze({analyze,capture,mount,reset,report,snapshot:()=>evidence,read_only:true,gate_write:false,real_order:false,storage_write:false});
+api.AgentCryptoTraderT0=Object.freeze({analyze,capture,mount,reset,report,marketReport,marketBrief,snapshot:()=>evidence,read_only:true,gate_write:false,real_order:false,storage_write:false});
 })();
