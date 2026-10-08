@@ -1,14 +1,13 @@
-# Agent-Crypto · Trader 40.6.625 — R9 / native chart context
+# Agent-Crypto · Révision Trader R9-2 (runtime 40.6.624)
 Date: 2026-10-08
-Base: Trader 40.6.624 / Administrator 40.6.624 / Market Core 38.15.11
+Commit parent: 1931526ebf5eee2e86eeb4c098f7d87bf58c77fd
 
-Deploy these three Trader files under public/agent_crypto_erith_ia/trader/.
-Administrator index.html on GitHub main also received a strictly targeted editorial update in OKB case-study section 6; it is deliberately not duplicated in this compact package.
+Strict Trader/Administrator single-runtime build contract preserved at 40.6.624. New release is a narrowly scoped R9 context patch, not a forged global build version.
 
-- Binance R9 verified OHLCV remains unchanged and distinct from live OKX.
-- If selected asset is not archived (for example OKB), a separate read-only table reflects up to 12 existing CoinGecko USD chart points from the native runtime, explicitly marked NON LIVE / NON R9. The chart's period and timestamp are shown independently of R9 period.
-- No extra HTTP call, cache, storage, API key, bridge, backend, order or additional chart engine.
-- R9 errors now retain an explicit reason and can show the already-existing native chart evidence when qualified.
-- Legacy OKB case-study diagnostic was replaced with the validated 08/10/2026 Firefox finding.
-Tests: simulated R9 absence + native USD data, stale asset exclusion, mismatched archive rejection; JS syntax.
-Firefox operator acceptance still required for BTC R9 and OKB native display.
+- Verified Binance Spot R9 USDT OHLCV unchanged, SHA-256 and selection guards preserved.
+- OKB has no Binance archive. Separate CoinGecko USD table mirrors up to 12 points already in the active native chart broker. It is labelled HORS R9, non-live, with its own native chart timeframe and dates, and never creates a second chart or fetch.
+- Native mirror accepts only matching asset, ready broker, explicitly USD series and CoinGecko provenance; otherwise reports absence. Stale chart owners are rejected.
+- Updated OKB case-study diagnosis to Firefox BTC/OKB validation from 08 October 2026. Administrator business runtime otherwise unchanged.
+- No new API request, network owner, backend, bridge modification, recurring timer, orders or trading.
+- GitHub CI contract retained: original literal 'Jamais de substitution BTC' is preserved. Original stable mirror script path and BUILD 40.6.624 retained.
+- Firefox operator acceptance of new context section and BTC R9 still pending; distinguish CI pass from terrain.

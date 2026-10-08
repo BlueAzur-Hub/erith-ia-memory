@@ -89,7 +89,7 @@ async function refresh({reload=false}={}){
   const entry=catalog.coverage.find(x=>x.id===c.id&&x.period===period);
   if(!entry){
    write(p,"status",c.symbol+" · archive non disponible");
-   write(p,"detail","Pas d’archive Binance Spot R9 pour cet actif. Aucune substitution BTC. Historique graphique natif séparé ci-dessous.");
+   write(p,"detail","Pas d’archive Binance Spot R9 pour cet actif. Jamais de substitution BTC. Historique graphique natif séparé ci-dessous.");
    paintNative(p,c);
    return;
   }
