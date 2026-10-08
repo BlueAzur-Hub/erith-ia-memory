@@ -3,6 +3,7 @@
 const api=globalThis;
 let evidence=null, captureBusy=false, captureSeq=0, strategyReadStatus=null;
 let newSession=null;
+let paperExperiment=null,paperCaptureBusy=false;
 const safe=(fn)=>{try{return typeof fn==="function"?fn():null}catch(_){return null}};
 const stamp=v=>{const n=typeof v==="number"?v:Date.parse(String(v||""));return Number.isFinite(n)&&n>0?n:null};
 const pair=v=>{const m=String(v||"").toUpperCase().match(/^([A-Z0-9]+)[/-]([A-Z0-9]+)$/);return m?{base:m[1],quote:m[2]}:null};
@@ -246,7 +247,14 @@ function report(v){
 }
 function paint(){
  const output=document.getElementById("traderPaperT0")?.querySelector("[data-t0-report]");
- if(output)output.textContent=report(evidence)+sessionReport();
+ if(output)output.textContent=report(evidence)+sessionReport()+paperExperimentReport();
+ const root=document.getElementById("traderPaperT0");
+ const cycle=root?.querySelector("[data-paper-cycle]");
+ const finish=root?.querySelector("[data-paper-finish]");
+ const start=root?.querySelector("[data-t0-reset]");
+ if(cycle)cycle.disabled=!paperExperiment||paperExperiment.closed||paperExperiment.attempts>0||paperCaptureBusy||captureBusy||identity()!==paperExperiment.assetKey;
+ if(finish)finish.disabled=!paperExperiment||paperExperiment.closed||paperCaptureBusy||captureBusy;
+ if(start)start.disabled=paperCaptureBusy||captureBusy;
 }
 
 /* Explicit T0 read; only canonical safety/gate owners and the one missing Replay owner, never the 28-module cascade. */
@@ -357,12 +365,88 @@ function sessionReport(){
   "\nUne capture T0 suffit pour conclure cette seance.";
 }
 function beginNewSession(){
- if(captureBusy)return null;
+ if(captureBusy||paperCaptureBusy)return null;
  const p=safe(api.AgentCryptoTraderPaperPreparation?.snapshot);
- newSession=Object.freeze({since:new Date().toISOString(),assetKey:identity(),
-  asset:String(p?.asset?.symbol||"inconnu"),baseline:evidenceCounts(),captures:0});
+ if(!p?.asset?.symbol)return null;
+ const at=new Date().toISOString(),assetKey=identity(),asset=String(p.asset.symbol);
+ newSession=Object.freeze({since:at,assetKey,asset,baseline:evidenceCounts(),captures:0});
+ paperExperiment=Object.freeze({startedAt:at,endedAt:null,assetKey,asset,
+  baseline:prospectiveRows()?.length??null,attempts:0,closed:false,
+  status:"OUVERTE",blocker:null,cycleId:null,receiptOk:false});
  reset();
  return sessionSnapshot();
+}
+
+
+/* Session experiments are volatile; one explicit G3 Paper attempt per session. */
+const G3_OWNER=Object.freeze({
+ src:"./js/strategy-a-g3-prospective-t0-capture.js",
+ ready:()=>typeof api.AgentCryptoStrategyAG3ProspectiveT0Capture?.capture_once==="function"
+});
+function prospectiveRows(){
+ const rows=safe(api.AgentCryptoStrategyAG3ProspectiveT0Capture?.read);
+ return Array.isArray(rows)?rows:null;
+}
+function paperExperimentSnapshot(){
+ if(!paperExperiment)return null;
+ const rows=prospectiveRows(),current=rows?rows.length:null,baseline=paperExperiment.baseline;
+ return Object.freeze({
+  startedAt:paperExperiment.startedAt,endedAt:paperExperiment.endedAt,asset:paperExperiment.asset,
+  sameAsset:identity()===paperExperiment.assetKey,attempts:paperExperiment.attempts,
+  closed:paperExperiment.closed,busy:paperCaptureBusy,status:paperExperiment.status,
+  blocker:paperExperiment.blocker,cycleId:paperExperiment.cycleId,receiptOk:paperExperiment.receiptOk,
+  baseline,current,delta:Number.isInteger(current)&&Number.isInteger(baseline)?current-baseline:null,
+  historyPreserved:true,gatesPromoted:false,realOrders:false
+ });
+}
+function paperExperimentReport(){
+ const s=paperExperimentSnapshot();if(!s)return "";
+ const fmt=x=>x==null?"NON EVALUE":String(x);
+ return "\n\nEXPERIENCE STRATEGY A PAPER · "+s.status+
+  "\nActif: "+s.asset+" · debut: "+s.startedAt+(s.endedAt?" · fin: "+s.endedAt:"")+
+  "\nTentative de cycle: "+s.attempts+" / 1 · ID: "+fmt(s.cycleId)+
+  "\nPreuves prospectives G3: depart "+fmt(s.baseline)+" · actuel "+fmt(s.current)+" · variation "+fmt(s.delta)+
+  (s.blocker?"\nBlocage/limite: "+s.blocker:"")+
+  (s.sameAsset?"":"\nActif change : nouvelle experience requise.")+
+  "\nAucune archive effacee ; une tentative ne vaut ni gate PASS ni autorisation Paper."+
+  "\nTerminer la seance pour clore ce bilan.";
+}
+async function capturePaperOnce(){
+ if(!paperExperiment||paperExperiment.closed||paperExperiment.attempts>0||captureBusy||paperCaptureBusy)return null;
+ if(identity()!==paperExperiment.assetKey){
+  paperExperiment=Object.freeze({...paperExperiment,status:"ACTIF_CHANGE",blocker:"SELECTION_NON_CONCORDANTE"});
+  paint();return paperExperimentSnapshot();
+ }
+ const expected=paperExperiment.startedAt;
+ paperCaptureBusy=true;paint();
+ let receipt=null,blocker=null,prior=null;
+ try{
+  try{await acquireCanonical(G3_OWNER);}
+  catch(e){blocker="MODULE_G3_NON_CHARGE: "+String(e?.message||e).slice(0,110);}
+  if(!paperExperiment||paperExperiment.startedAt!==expected||paperExperiment.closed||identity()!==paperExperiment.assetKey)return null;
+  if(!blocker){
+   const owner=api.AgentCryptoStrategyAG3ProspectiveT0Capture;
+   prior=prospectiveRows();
+   try{receipt=owner.capture_once();}
+   catch(e){blocker="CAPTURE_G3_EXCEPTION: "+String(e?.message||e).slice(0,110);}
+  }
+  const ok=receipt?.ok===true;
+  blocker=blocker||(ok?null:String(receipt?.blocker||"PREUVE_NON_OBTENUE").slice(0,120));
+  paperExperiment=Object.freeze({...paperExperiment,
+   baseline:Number.isInteger(paperExperiment.baseline)?paperExperiment.baseline:(prior?prior.length:null),
+   attempts:1,status:ok?"CYCLE_G3_CAPTURE":"CYCLE_BLOQUE",receiptOk:ok,
+   cycleId:receipt?.cycle_id?String(receipt.cycle_id).slice(0,120):null,blocker});
+  return paperExperimentSnapshot();
+ }finally{
+  paperCaptureBusy=false;paint();
+ }
+}
+function finishPaperExperiment(){
+ if(!paperExperiment||paperExperiment.closed||captureBusy||paperCaptureBusy)return null;
+ paperExperiment=Object.freeze({...paperExperiment,endedAt:new Date().toISOString(),closed:true,
+  status:paperExperiment.attempts===0?"TERMINEE_SANS_TENTATIVE":
+   paperExperiment.receiptOk?"TERMINEE_AVEC_CYCLE":"TERMINEE_AVEC_BLOCAGE"});
+ paint();return paperExperimentSnapshot();
 }
 
 function reset(){++captureSeq;evidence=null;strategyReadStatus=null;paint()}
@@ -375,15 +459,20 @@ function mount(){
  el.innerHTML='<h4>PREUVE T0 · G1 QUALITE DES DONNEES</h4>'+
   '<p class="paper-note">Capture volontaire en lecture seule. Aucune promotion de gate.</p>'+
   '<button type="button" data-t0-capture>Capturer T0 (sans stockage)</button>'+
-  '<button type="button" data-t0-reset style="margin-left:8px">RESET · nouvelle séance</button>'+
+  '<button type="button" data-t0-reset style="margin-left:8px">Nouvelle expérience Paper · RESET</button>'+
+  '<button type="button" data-paper-cycle disabled style="margin-left:8px">Capturer 1 cycle Paper</button>'+
+  '<button type="button" data-paper-finish disabled style="margin-left:8px">Terminer la séance</button>'+
+  '<p class="paper-note">La capture Paper appelle volontairement le moteur canonique G3 : un tick Auto A Paper local peut être tenté. Aucun ordre réel.</p>'+
   '<pre data-t0-report style="white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.55 system-ui,sans-serif"></pre>';
  parent.appendChild(el);
  el.querySelector("[data-t0-capture]").addEventListener("click",capture);
  el.querySelector("[data-t0-reset]").addEventListener("click",beginNewSession);
+ el.querySelector("[data-paper-cycle]").addEventListener("click",capturePaperOnce);
+ el.querySelector("[data-paper-finish]").addEventListener("click",finishPaperExperiment);
  paint();return true;
 }
 if(!mount()){const onClick=()=>{if(mount())document.removeEventListener("click",onClick,true)};
  document.addEventListener("click",onClick,true);}
 for(const e of ["agent-crypto:selected-market-changed","agent-crypto:quote-architecture-changed"])api.addEventListener(e,reset,{passive:true});
-api.AgentCryptoTraderT0=Object.freeze({analyze,capture,mount,reset,begin_new_session:beginNewSession,session_snapshot:sessionSnapshot,report,marketReport,marketBrief,snapshot:()=>evidence,read_only:true,gate_write:false,real_order:false,storage_write:false});
+api.AgentCryptoTraderT0=Object.freeze({analyze,capture,mount,reset,begin_new_session:beginNewSession,session_snapshot:sessionSnapshot,paper_experiment_snapshot:paperExperimentSnapshot,capture_paper_once:capturePaperOnce,finish_paper_experiment:finishPaperExperiment,report,marketReport,marketBrief,snapshot:()=>evidence,read_only:true,gate_write:false,real_order:false,storage_write:false});
 })();
