@@ -8,6 +8,17 @@ const configs=[
  {details:"r7-btc-comparator",button:"r7-check",selects:[]},
  {details:"r9-compact",button:"r9-read",selects:["r9-asset","r9-period"],compact:true}
 ];
+// Firefox may re-anchor page scroll while the seven-row R9 table is
+// briefly replaced by the single-line SHA-256 loading text.
+// Reserve only the last rendered R9 table height; never scroll the window.
+function keepCompactTableHeight(){
+ const panel=$("r9-table");
+ if(!panel)return;
+ panel.style.overflowAnchor="none";
+ if(!panel.querySelector("table"))return;
+ const height=panel.getBoundingClientRect().height;
+ if(Number.isFinite(height)&&height>0)panel.style.minHeight=Math.ceil(height)+"px";
+}
 function ready(){
  const state=$("r10-automatic-status");
  const message=s=>{if(state)state.textContent=s};
@@ -26,11 +37,15 @@ function ready(){
  for(const config of configs){
   const details=$(config.details),button=$(config.button);
   if(!details||!button)continue;
+  // Capture before the existing R9 click handler replaces the table.
+  // Also protects manual reads, not only automatic period changes.
+  if(config.compact)button.addEventListener("click",keepCompactTableHeight,{capture:true});
   let lastKey=null,loading=false;
   const trigger=async()=>{
    if(!details.open||button.disabled||loading)return;
    const key=config.selects.map(id=>$(id)?.value||"").join("|")||"BTC";
    if(lastKey===key)return;
+   if(config.compact)keepCompactTableHeight();
    loading=true;
    try{
     if(config.compact){
