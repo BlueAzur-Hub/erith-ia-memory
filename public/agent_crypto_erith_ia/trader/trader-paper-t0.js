@@ -1,7 +1,7 @@
 /* Seven Heaven · T0 data-quality observation; does not certify G1 or trade. */
 (()=>{"use strict";
 const api=globalThis;
-let evidence=null;
+let evidence=null, captureBusy=false, captureSeq=0;
 const safe=(fn)=>{try{return typeof fn==="function"?fn():null}catch(_){return null}};
 const stamp=v=>{const n=typeof v==="number"?v:Date.parse(String(v||""));return Number.isFinite(n)&&n>0?n:null};
 const pair=v=>{const m=String(v||"").toUpperCase().match(/^([A-Z0-9]+)[/-]([A-Z0-9]+)$/);return m?{base:m[1],quote:m[2]}:null};
@@ -14,6 +14,10 @@ function analyze(now=Date.now(),d=api){
  const dossier=safe(d.AgentCryptoStrategyAEvidenceDossier?.snapshot);
  const asset=p.asset||null,flags=[],facts=[],rows=Array.isArray(candle.rows)?candle.rows:[];
  if(!asset)flags.push("Actif absent");
+ if(!d.AgentCryptoMarketMicroscope?.snapshot)flags.push("Moteur Bougies absent de cette vue");
+ if(!d.AgentCryptoOkxMicrostructure?.snapshot)flags.push("Moteur Carnet absent de cette vue");
+ if(!candle.loadedInstrument&&!(Array.isArray(candle.rows)&&candle.rows.length))flags.push("Bougies non chargees : mode "+(candle.mode||"inconnu")+" · erreur "+(candle.errorCode||candle.error||"aucune"));
+ if(!book.loadedAsset&&(!book.bids?.length||!book.asks?.length))flags.push("Carnet non charge : fenetre "+(book.open?"ouverte":"fermee")+" · etat "+(book.freshness||"inconnu")+" · erreur "+(book.errorCode||book.error||"aucune"));
  if(!p.chart?.qualified)flags.push("Graphique de cet actif non qualifie");
  else facts.push("Graphique: "+p.chart.points+" points, "+p.displayCurrency+", "+p.chart.source+" (non LIVE)");
  const cp=pair(candle.loadedInstrument),bp=pair(book.pair),barMs=BAR[String(candle.loadedBar||"").toLowerCase()]||null;
@@ -91,8 +95,44 @@ function paint(){
  const output=document.getElementById("traderPaperT0")?.querySelector("[data-t0-report]");
  if(output)output.textContent=report(evidence);
 }
-function capture(){evidence=analyze();paint();return evidence}
-function reset(){evidence=null;paint()}
+const identity=()=>{const p=safe(api.AgentCryptoTraderPaperPreparation?.snapshot);return String(p?.asset?.id||"")+"|"+String(p?.asset?.symbol||"")+"|"+String(p?.displayCurrency||"");};
+function requireCandles(s,market,now){
+ const asset=s?.asset;
+ const instrument=pair(market?.loadedInstrument),rows=market?.rows;
+ const interval=BAR[String(market?.loadedBar||"").toLowerCase()];
+ const last=Array.isArray(rows)&&rows.length?stamp(rows[rows.length-1]?.t):null;
+ return !(asset&&instrument?.base===asset.symbol&&Array.isArray(rows)&&rows.length>=2&&!market.loading&&interval&&last&&now-last>=-2000&&now-last<=interval*2.2);
+}
+function requireBook(s,market,owner,now){
+ const asset=s?.asset,loaded=pair(market?.pair),source=stamp(market?.sourceObservedAt||market?.capturedAt);
+ const max=Number(owner?.validation_contract?.fresh_max_age_ms);
+ return !(asset&&loaded?.base===asset.symbol&&market?.loadedAsset===asset.symbol&&loaded.quote===String(market?.loadedQuote||"").toUpperCase()&&
+  market?.bids?.length&&market?.asks?.length&&market?.freshness==="FRESH"&&source&&Number.isFinite(max)&&max>0&&now-source>=-2000&&now-source<=max);
+}
+async function capture(){
+ if(captureBusy)return null;
+ const token=++captureSeq,start=identity(),button=document.querySelector("#traderPaperT0 [data-t0-capture]");
+ captureBusy=true;
+ if(button){button.disabled=true;button.textContent="Lecture ponctuelle des sources…";}
+ try{
+  const asset=safe(api.AgentCryptoTraderPaperPreparation?.snapshot);
+  const candles=api.AgentCryptoMarketMicroscope,book=api.AgentCryptoOkxMicrostructure;
+  const current=Date.now();
+  if(asset?.asset&&candles&&requireCandles(asset,safe(candles.snapshot),current)&&typeof candles.load==="function"){
+   try{await candles.load({reason:"trader-t0-explicit-capture"});}catch(_){}
+  }
+  if(token!==captureSeq||identity()!==start)return null;
+  if(asset?.asset&&book&&requireBook(asset,safe(book.snapshot),book,Date.now())&&typeof book.refresh==="function"){
+   try{await book.refresh({asset:asset.asset.symbol,automatic:false});}catch(_){}
+  }
+  if(token!==captureSeq||identity()!==start)return null;
+  evidence=analyze();paint();return evidence;
+ }finally{
+  captureBusy=false;
+  if(button){button.disabled=false;button.textContent="Capturer T0 (sans stockage)";}
+ }
+}
+function reset(){++captureSeq;evidence=null;paint()}
 function mount(){
  if(document.getElementById("traderPaperT0"))return true;
  const parent=document.getElementById("traderPaperPreparation")?.querySelector(".paper-inner");
