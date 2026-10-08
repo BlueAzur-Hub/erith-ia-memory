@@ -455,7 +455,7 @@ async function capturePaperOnce(){
  }
  const expected=paperExperiment.startedAt;
  paperCaptureBusy=true;paint();
- let receipt=null,blocker=null,prior=null,runner=null,ownerStarted=false,stopConfirmed=false,openPaper=false;
+ let receipt=null,blocker=null,prior=null,runner=null,ownerStartAttempted=false,stopConfirmed=false,openPaper=false;
  try{
   // All imports are targeted; never open the global 28-module Evidence cascade.
   for(const spec of PAPER_ONE_SHOT_OWNERS){
@@ -473,8 +473,8 @@ async function capturePaperOnce(){
     // can run it, G3 explicitly ticks once and finally owner.stop cancels the timer.
     // This deliberate click is the only action permitted to lift a manual STOP.
     try{
+     ownerStartAttempted=true; // start can throw after arming a timer: STOP must still run
      const started=runner.start();
-     ownerStarted=true;
      const after=paperRunnerState(runner)||started;
      if(after?.enabled!==true)blocker="AUTO_A_START_REFUSE: "+String(after?.phase||after?.last_action||"INCONNU").slice(0,140);
      else{
@@ -483,7 +483,7 @@ async function capturePaperOnce(){
     }catch(e){blocker="AUTO_A_CYCLE_EXCEPTION: "+String(e?.message||e).slice(0,110);}
     finally{
      // Never leave the recurring Auto A scheduler running after this one-shot.
-     if(ownerStarted){
+     if(ownerStartAttempted){
       try{const stopped=runner.stop("Fin cycle unique Paper · arrêt automatique volontaire");
        stopConfirmed=paperRunnerState(runner)?.enabled===false||stopped?.enabled===false;
       }catch(e){blocker="ARRET_AUTO_A_EXCEPTION: "+String(e?.message||e).slice(0,100);}
@@ -492,7 +492,7 @@ async function capturePaperOnce(){
       }catch(_){}
      }
     }
-    if(ownerStarted&&!stopConfirmed)blocker="ARRET_AUTO_A_NON_CONFIRME · utiliser STOP operateur immediatement";
+    if(ownerStartAttempted&&!stopConfirmed)blocker="ARRET_AUTO_A_NON_CONFIRME · utiliser STOP operateur immediatement";
     if(openPaper)blocker=(blocker?blocker+" ; ":"")+"POSITION_PAPER_OUVERTE_A_SUIVRE · STOP ne clot pas la position";
    }
   }
@@ -500,8 +500,8 @@ async function capturePaperOnce(){
   blocker=blocker||(ok?null:String(receipt?.blocker||"PREUVE_NON_OBTENUE").slice(0,140));
   paperExperiment=Object.freeze({...paperExperiment,
    baseline:Number.isInteger(paperExperiment.baseline)?paperExperiment.baseline:(prior?prior.length:null),
-   attempts:1,status:!stopConfirmed&&ownerStarted?"ARRET_NON_CONFIRME":ok?"CYCLE_G3_CAPTURE":"CYCLE_BLOQUE",
-   receiptOk:ok,autoStopped:!ownerStarted||stopConfirmed,paperOpen:openPaper,
+   attempts:1,status:!stopConfirmed&&ownerStartAttempted?"ARRET_NON_CONFIRME":ok?"CYCLE_G3_CAPTURE":"CYCLE_BLOQUE",
+   receiptOk:ok,autoStopped:ownerStartAttempted?stopConfirmed:null,paperOpen:openPaper,
    cycleId:receipt?.cycle_id?String(receipt.cycle_id).slice(0,120):null,blocker});
   return paperExperimentSnapshot();
  }finally{

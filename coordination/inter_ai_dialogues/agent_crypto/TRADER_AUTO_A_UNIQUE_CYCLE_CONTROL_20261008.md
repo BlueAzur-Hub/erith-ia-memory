@@ -17,3 +17,8 @@ Aucun trade réel, aucun wallet, aucun réseau d'ordres. Cycle Paper purement lo
 
 ## Livraison
 Commit + ZIP compact, CI Trader et Archive, GitHub Pages, relais Notion. Ne demander qu'une seule validation Firefox après Pages SUCCESS, sans tests en boucle. Si l'un des contrôles échoue, ne pas recommencer automatiquement.
+
+## Correctif de sécurité de livraison
+- `ownerStartAttempted` est posé **avant** l'appel synchrone `start()`. Même si `start()` jette une exception après avoir armé un timer, `stop()` est appelé dans `finally`.
+- Si la prévalidation échoue et qu'aucun démarrage n'a été tenté, `autoStopped=null` : l'interface ne prétend plus qu'un Auto A déjà actif aurait été arrêté. Les refus restent fail-closed.
+- Aucun moteur ou garde canonique modifié ; pas de nouveau timer, aucune donnée effacée.
