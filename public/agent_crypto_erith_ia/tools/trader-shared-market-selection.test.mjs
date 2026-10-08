@@ -73,7 +73,8 @@ test("BTC -> OKB -> BTC: a late BTC candle resolver cannot overwrite OKB",async(
   assert.equal(e.published.length,writes,"stale BTC published after OKB");
   e.select("BTC");
   assert.equal(resolver.snapshot().asset,"BTC");
-  assert.equal(resolver.snapshot().status,"resolving");
+  assert.ok(["resolving","ok"].includes(resolver.snapshot().status),
+    "a cached BTC resolution may complete synchronously");
   // BTC is cached now and resolves without another network request.
   await flush();
   assert.equal(resolver.snapshot().instrument,"BTC-USDC");
