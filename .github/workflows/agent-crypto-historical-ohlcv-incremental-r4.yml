@@ -1,0 +1,70 @@
+name: Agent Crypto Historical OHLCV R4 Incremental Pilot
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-crypto-historical-ohlcv-incremental-r4.yml"
+      - "public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-ohlcv-r4-incremental
+  cancel-in-progress: false
+
+jobs:
+  append:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout source and archives
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Offline tests · must pass before live requests
+        run: |
+          python -m py_compile public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py
+          python public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py --self-test
+      - name: Append only new closed Binance spot candles
+        run: |
+          python public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py
+      - name: Verify index and immutable delta files
+        shell: bash
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, json
+          from pathlib import Path
+          base=Path("public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot")
+          index=json.loads((base/"index.json").read_text(encoding="utf-8"))
+          assert index["schema"]=="aerith.public.ohlcv.spot.cumulative.index.v1"
+          assert index["quote_asset"]=="USDT"
+          assert len(index["coverage"])==21 and index["series_count"]==21
+          assert index["candles_total"] >= 4452
+          for entry in [index["seed"],*index["deltas"]]:
+              content=(base/entry["file"]).read_bytes()
+              assert len(content)==entry["bytes"]
+              assert hashlib.sha256(content).hexdigest()==entry["sha256"]
+              assert gzip.decompress(content)
+          print({"R4":"PASS","deltas":len(index["deltas"]),
+                 "total_candles":index["candles_total"]})
+          PY
+      - name: Publish index and immutable new delta files only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot
+          if git diff --cached --quiet; then
+            echo "NOOP: archive already current"
+            exit 0
+          fi
+          git commit -m "Append verified Binance Spot OHLCV Top10 delta and cumulative coverage index (R4)"
+          git pull --rebase origin main
+          git push origin HEAD:main
