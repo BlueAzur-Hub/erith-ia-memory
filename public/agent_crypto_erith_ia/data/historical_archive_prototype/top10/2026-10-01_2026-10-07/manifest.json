@@ -1,0 +1,112 @@
+{
+  "schema": "aerith.market.top10.archive_manifest.v1",
+  "status": "prototype_read_only",
+  "snapshot_window": {
+    "start": "2026-10-01",
+    "end": "2026-10-07",
+    "first": "2026-10-01T06:00:08.017Z",
+    "last": "2026-10-07T22:00:44.550Z"
+  },
+  "anchor": {
+    "snapshot_id": "github-action-main_2026-10-07T22-00-44-550Z",
+    "at": "2026-10-07T22:00:44.550Z"
+  },
+  "assets": [
+    {
+      "id": "bitcoin",
+      "rank_at_reference": 1
+    },
+    {
+      "id": "ethereum",
+      "rank_at_reference": 2
+    },
+    {
+      "id": "tether",
+      "rank_at_reference": 3
+    },
+    {
+      "id": "binancecoin",
+      "rank_at_reference": 4
+    },
+    {
+      "id": "ripple",
+      "rank_at_reference": 5
+    },
+    {
+      "id": "usd-coin",
+      "rank_at_reference": 6
+    },
+    {
+      "id": "solana",
+      "rank_at_reference": 7
+    },
+    {
+      "id": "tron",
+      "rank_at_reference": 8
+    },
+    {
+      "id": "figure-heloc",
+      "rank_at_reference": 9
+    },
+    {
+      "id": "zcash",
+      "rank_at_reference": 10
+    }
+  ],
+  "asset_count": 10,
+  "observation_count": 30,
+  "price_records": 300,
+  "missing_price_records": 0,
+  "raw_source_bytes": 770806,
+  "prototype_json_bytes_utf8": 23463,
+  "provenance": [
+    {
+      "path": "data/history/2026-10-01.jsonl",
+      "git_blob_sha": "0abe478030e6a4724e4cc7486be89ce5a55cc168",
+      "records": 4,
+      "source_bytes": 102750
+    },
+    {
+      "path": "data/history/2026-10-02.jsonl",
+      "git_blob_sha": "6ab43638628dfff878357e4f34b6bec5a45e998c",
+      "records": 4,
+      "source_bytes": 102798
+    },
+    {
+      "path": "data/history/2026-10-03.jsonl",
+      "git_blob_sha": "14dc7f607493fab94f0b0c71c8171e91b0cd8d97",
+      "records": 5,
+      "source_bytes": 128512
+    },
+    {
+      "path": "data/history/2026-10-04.jsonl",
+      "git_blob_sha": "5ef3091a91a29490cd0cb18fc4b195e8285e7970",
+      "records": 5,
+      "source_bytes": 128349
+    },
+    {
+      "path": "data/history/2026-10-05.jsonl",
+      "git_blob_sha": "2d2a1174c6826f070d310bdd6da1ffb6150f5428",
+      "records": 4,
+      "source_bytes": 102651
+    },
+    {
+      "path": "data/history/2026-10-06.jsonl",
+      "git_blob_sha": "051e981effea17d7659cf3c4b8c70c8d3bd943ee",
+      "records": 4,
+      "source_bytes": 102879
+    },
+    {
+      "path": "data/history/2026-10-07.jsonl",
+      "git_blob_sha": "08e87fa065f4d324685735c2ac0dbcbf24ddd75c",
+      "records": 4,
+      "source_bytes": 102867
+    }
+  ],
+  "notes": [
+    "Relevés historiques existants, cadence irrégulière; aucune bougie OHLCV ni extrapolation.",
+    "Les prix EUR/USD proviennent des sources, ne pas assimiler le prix CoinGecko a une paire spot OKX.",
+    "Compacter 50 actifs vers 10 et moins de colonnes n'est PAS un benchmark gzip.",
+    "Validation terrain de l'archive détaillée et backfill OHLCV restent à faire."
+  ]
+}
