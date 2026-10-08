@@ -6,6 +6,77 @@ const safe=(fn)=>{try{return typeof fn==="function"?fn():null}catch(_){return nu
 const stamp=v=>{const n=typeof v==="number"?v:Date.parse(String(v||""));return Number.isFinite(n)&&n>0?n:null};
 const pair=v=>{const m=String(v||"").toUpperCase().match(/^([A-Z0-9]+)[/-]([A-Z0-9]+)$/);return m?{base:m[1],quote:m[2]}:null};
 const BAR=Object.freeze({"1m":60000,"5m":300000,"15m":900000,"1h":3600000,"4h":14400000,"1j":86400000});
+
+/* Existing canonical G1 evidence and current G2/G7 foundation; observation only. */
+function g1ProofDiagnostics(dossier,safety){
+ const count=v=>Number.isInteger(v)&&v>=0?v:null;
+ const str=v=>String(v??"INCONNU").slice(0,120);
+ const dataset=kind=>{
+  const r=dossier?.dataset?.[kind];
+  if(!r||typeof r!=="object")return null;
+  return Object.freeze({
+   rows:count(r.rows),integrity:r.data_integrity_ready===true?"READY":r.data_integrity_ready===false?"NOT_READY":"UNKNOWN",
+   missingIds:count(r.missing_ids),missingDates:count(r.missing_timestamps),
+   duplicateIds:Array.isArray(r.duplicate_ids)?Object.freeze(r.duplicate_ids.slice(0,3).map(str)):null,
+   duplicates:Array.isArray(r.duplicate_ids)?r.duplicate_ids.length:null,
+   chronology:r.chronological===true?"OK":r.chronological===false?"NON":"INCONNUE",
+   completed:count(r.after_cost_complete_rows),unknownNumbers:count(r.numeric_unknown_rows),
+   unverifiedAccounting:count(r.unverified_after_cost_rows)
+  });
+ };
+ const trades=Array.isArray(dossier?.after_cost?.trades)?dossier.after_cost.trades:[];
+ const missingCosts={};let knownCostDetails=0;
+ for(const trade of trades){
+  if(!Array.isArray(trade?.unknown_cost_components))continue;
+  knownCostDetails++;
+  for(const key of new Set(trade.unknown_cost_components.map(str)))
+   missingCosts[key]=(missingCosts[key]||0)+1;
+ }
+ const truth=safe(safety?.foundation_truth)||safe(safety?.certification_matrix)?.foundation_proof||null;
+ const owners=truth?.current_modules&&typeof truth.current_modules==="object"?truth.current_modules:null;
+ const modules=owners?Object.freeze(Object.entries(owners).map(([name,row])=>Object.freeze({
+  name:str(name),available:row?.available===true,compatible:row?.compatible===true,
+  build:row?.build?str(row.build):null,
+  missingMethods:Object.freeze(Array.isArray(row?.missing_methods)?row.missing_methods.map(str):[])
+ }))):null;
+ return Object.freeze({
+  experiment:dataset("experiment"),afterCost:dataset("after_cost"),
+  costDetailsCount:knownCostDetails,costComponents:Object.freeze(Object.entries(missingCosts).map(([name,rows])=>Object.freeze({name,rows}))),
+  foundation:Object.freeze({available:!!truth,currentPass:truth?.pass===true&&truth?.tested_builds_match_current===true,
+   source:truth?.source?str(truth.source):"INCONNUE",
+   binding:truth?.binding_reason?str(truth.binding_reason):"NON RENSEIGNE",
+   explicitStatus:truth?.latest_explicit_test?.status?str(truth.latest_explicit_test.status):"AUCUN TEST COURANT CONFIRME",
+   modules})
+ });
+}
+const diagnosticNumber=v=>v===null||v===undefined?"INCONNU":String(v);
+function g1ProofReport(v){
+ const d=v.g1Proof||{},f=d.foundation||{},fmt=(label,r)=>{
+  if(!r)return label+": module non charge ou preuve non evaluee";
+  const samples=r.duplicateIds?.length?" · exemples: "+r.duplicateIds.join(", "):"";
+  return label+": "+diagnosticNumber(r.rows)+" lignes · integrite "+r.integrity+
+   "\nIDs absents: "+diagnosticNumber(r.missingIds)+" · dates absentes: "+diagnosticNumber(r.missingDates)+
+   " · IDs dupliques: "+diagnosticNumber(r.duplicates)+samples+" · chronologie: "+r.chronology+
+   (label==="AFTER-COST"?"\nLignes numeriques inconnues: "+diagnosticNumber(r.unknownNumbers)+
+    " · comptabilites non verifiees: "+diagnosticNumber(r.unverifiedAccounting)+
+    " · lignes strictement completes: "+diagnosticNumber(r.completed)+"/"+diagnosticNumber(r.rows):"");
+ };
+ const g=n=>v.gates.find(x=>Number(x.gate)===n)?.state||"UNKNOWN";
+ const modules=f.modules?f.modules.map(m=>m.name+": "+(m.compatible?"compatible":m.available?"methodes manquantes":"ABSENT")+
+  (m.build?" (build "+m.build+")":"")+(m.missingMethods.length?" · "+m.missingMethods.join(", "):"")).join("\n"):"Modules requis : details non disponibles";
+ return "\n\nDIAGNOSTIC PREUVES G1 (lecture seule)\n"+
+  fmt("EXPERIMENT",d.experiment)+"\n"+fmt("AFTER-COST",d.afterCost)+
+  "\nCouts incomplets detailles: "+(d.costDetailsCount?d.costComponents.length?
+   d.costComponents.map(x=>x.name+" ("+x.rows+" lignes)").join(" ; "):
+   "aucune composante inconnue declaree dans "+d.costDetailsCount+" lignes documentees":
+   "non documentes par les lignes actuellement lues")+
+  "\n\nFONDATION G2 / G7 (aucun test declenche)\nEtats canoniques: G2="+g(2)+" ; G7="+g(7)+
+  "\nPreuve actuelle liee aux builds: "+(f.currentPass?"DEMONTRÉE":"NON DEMONTREE")+
+  "\nProprietaire/source: "+(f.available?f.source:"NON CHARGE")+" · lien des builds: "+(f.binding||"INCONNU")+
+  "\nDernier test explicite: "+(f.explicitStatus||"INCONNU")+"\n"+modules+
+  "\nObservations uniquement : aucun PASS et aucune permission Paper crees.";
+}
+
 function analyze(now=Date.now(),d=api){
  const p=safe(d.AgentCryptoTraderPaperPreparation?.snapshot)||{};
  const candle=safe(d.AgentCryptoMarketMicroscope?.snapshot)||{};
@@ -76,7 +147,7 @@ function analyze(now=Date.now(),d=api){
   gates:Object.freeze(canonicalRows.map(r=>Object.freeze({gate:r.gate,state:r.state,owner:r.owner}))),
   governor:Object.freeze({level:safe(d.AgentCryptoStrategyASafetyCertification?.snapshot)?.level||"UNKNOWN",assetAuthorized:false}),
   canonicalRead:Object.freeze({complete:canonicalRows.length===9,errors:Object.freeze([...(strategyReadStatus?.errors||[])])}),
-  datasetIntegrity:Object.freeze(integrity),complete:candleOk&&bookOk&&!!p.chart?.qualified&&cp?.quote===bp?.quote,
+  datasetIntegrity:Object.freeze(integrity),g1Proof:g1ProofDiagnostics(dossier,d.AgentCryptoStrategyASafetyCertification),complete:candleOk&&bookOk&&!!p.chart?.qualified&&cp?.quote===bp?.quote,
   facts:Object.freeze(facts),flags:Object.freeze(flags),
   marketBrief:marketBrief(asset,candle,book,candleOk,bookOk,p.displayCurrency,d.AgentCryptoMarketMicroscope),
   gatePromoted:false,paperAuthorized:false,orderPlaced:false,persisted:false});
@@ -163,7 +234,7 @@ function report(v){
   "\nAge a T0: "+seconds(k.candleAgeMs)+" · seuil: "+seconds(k.candleLimitMs)+" · fraicheur: "+(k.candleFresh?"OUI":"NON")+
   "\nControle Bougies: "+(k.candleAccepted?"CONCORDANT":"NON CONFORME")+
   "\n\n"+marketReport(v.marketBrief)+
-  "\n\nSOURCES ET PREUVES\n"+v.facts.join("\n")+
+  "\n\nSOURCES ET PREUVES\n"+v.facts.join("\n")+g1ProofReport(v)+
   "\n\nLIMITES\n"+v.flags.join("\n");
 }
 function paint(){

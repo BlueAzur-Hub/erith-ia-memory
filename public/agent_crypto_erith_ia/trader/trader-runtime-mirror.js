@@ -76,7 +76,7 @@ function mount(){
   if(!doc.getElementById("traderPaperT0Script")){
     const script=doc.createElement("script");
     script.id="traderPaperT0Script";
-    script.src=new URL("../trader/trader-paper-t0.js?view=canonical-read-light",doc.baseURI).href;
+    script.src=new URL("../trader/trader-paper-t0.js?view=g1-proof-diagnostic",doc.baseURI).href;
     const paper=doc.getElementById("traderPaperPreparationScript");
     if(paper&&!doc.getElementById("traderPaperPreparation"))
       paper.addEventListener("load",()=>doc.head.appendChild(script),{once:true});
