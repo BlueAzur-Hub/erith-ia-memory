@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const BUILD="40.6.624";
+const BUILD="40.6.625";
 const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
@@ -62,7 +62,7 @@ function mount(){
   if(!doc.getElementById("traderHistoricalPanelScript")){
     const script=doc.createElement("script");
     script.id="traderHistoricalPanelScript";
-    script.src=new URL("../trader/trader-historical-panel.js",doc.baseURI).href;
+    script.src=new URL("../trader/trader-historical-panel.js?v=40.6.625",doc.baseURI).href;
     doc.head.appendChild(script);
   }
   doc.title="ERITH.IA · Trading Desk — "+BUILD;
