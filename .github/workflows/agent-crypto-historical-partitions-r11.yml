@@ -1,0 +1,40 @@
+name: Agent Crypto R11 Offline Sealed Partitions Pilot
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-crypto-historical-partitions-r11.yml"
+      - "public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py"
+permissions:
+  contents: read
+concurrency:
+  group: agent-crypto-r11-offline-verification
+  cancel-in-progress: false
+jobs:
+  offline_partition_audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact snapshot
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile and synthetic negative tests (no network)
+        run: |
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py
+          python public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py --self-test
+      - name: Validate original R8 and existing R9 unchanged
+        run: |
+          python public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py --audit-existing
+          python public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py --verify
+      - name: R11 dry run and isolated immutable partition replay
+        run: |
+          python public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py --plan
+          python public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py --build --target "$RUNNER_TEMP/partitions_r11"
+          python public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py --verify --target "$RUNNER_TEMP/partitions_r11"
+      - name: Existing Firefox readers remain untouched
+        run: |
+          node --test public/agent_crypto_erith_ia/tools/historical-compact-reader.test.mjs public/agent_crypto_erith_ia/tools/historical-vault-automatic.test.mjs
