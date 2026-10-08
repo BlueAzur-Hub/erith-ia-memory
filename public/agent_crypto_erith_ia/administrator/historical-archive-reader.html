@@ -11,7 +11,7 @@ a{color:#b6ddf5}.metrics{display:flex;gap:10px;flex-wrap:wrap}.metric{min-width:
 .metric b{font-size:22px;display:block}.metric small{color:#c1d0e0}
 table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;border-bottom:1px solid #344a60;padding:8px}
 .scroll{overflow-x:auto}.good{color:#9adaab}.bad{color:#ffb3a8}.note{border-left:3px solid #72bac9;padding-left:12px}.fine{font-size:12px;color:#a9bbcc}
-</style></head><body>
+</style><link rel="stylesheet" href="./historical-f11.css"></head><body>
 <header><div><h1>Historical Archive Reader · R3</h1><p class="muted">Seven Heaven · vérification des chandelles historiques · lecture seule</p></div>
 <a href="./index.html">← Revenir à l'Interface</a></header>
 <section class="panel"><p class="note">Cet outil ne lit que des fichiers publics déjà présents sur GitHub Pages. Il ne modifie ni IndexedDB, ni localStorage, ni le Graphique, ni le Bridge. Aucun ordre et aucun envoi de données privées.</p>
@@ -19,8 +19,8 @@ table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;b
 <span id="status" class="muted" aria-live="polite">En attente</span></section>
 <section class="panel"><h2>Résultat et intégrité</h2><div class="metrics" id="metrics">Aucun test lancé.</div></section>
 <section class="panel"><h2>Chandelles vérifiées par actif</h2><p class="muted">Marché Binance Spot en <b>USDT</b>, différent des prix USD/EUR et des marchés OKX.</p><div class="scroll" id="table">En attente.</div></section>
-<section class="panel"><h2>Actifs non couverts</h2><div id="missing">En attente.</div></section>
-<section class="panel"><h2>Diagnostic</h2><div id="diagnostic">Aucune lecture effectuée.</div><p class="fine">Cette page vérifie l'archive R2. Elle ne la raccorde pas au Graphique. Les contrôles ne constituent pas un conseil de trading.</p></section>
+<div class="reader-foot"><section class="panel"><h2>Actifs non couverts</h2><div id="missing">En attente.</div></section>
+<section class="panel"><h2>Diagnostic</h2><div id="diagnostic">Aucune lecture effectuée.</div><p class="fine">Cette page vérifie l'archive R2. Elle ne la raccorde pas au Graphique. Les contrôles ne constituent pas un conseil de trading.</p></section></div>
 <script>
 (()=>{"use strict";
 const ROOT=new URL("../data/historical_archive_prototype/ohlcv_spot_pilot/",location.href);

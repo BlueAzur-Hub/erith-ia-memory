@@ -9,14 +9,14 @@ a{color:#aedcfa}button{background:#1a5370;color:white;border:1px solid #6ba4bb;b
 .cards{display:flex;flex-wrap:wrap;gap:10px}.card{border:1px solid #3b5971;border-radius:7px;background:#10283e;padding:12px;min-width:140px}.card b{display:block;font-size:23px}
 table{border-collapse:collapse;width:100%;font-size:13px}td,th{border-bottom:1px solid #34465c;text-align:left;padding:7px}th{color:#b9d5ed} .scroll{overflow:auto;max-height:400px} .warn{color:#f3cf87}
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.note{border-left:3px solid #80c4d9;padding:8px 12px;background:#0e1b2c}
-</style></head><body>
+</style><link rel="stylesheet" href="./historical-f11.css"></head><body>
 <header><div><h1>Inventaire historique crypto</h1><p class="muted">Seven Heaven · diagnostic autonome · lecture seule</p></div><a href="./index.html">← Revenir à l'Interface</a></header>
 <div class="pane"><p class="note">Ce diagnostic ne modifie ni IndexedDB ni localStorage, ne fait aucun ordre et ne transmet aucune donnée privée à GitHub. Les requêtes réseau lisent seulement les archives publiques déjà présentes dans le dépôt.</p><button id="run">Analyser</button> <button id="copy" disabled>Copier le résumé</button> <span id="status" class="muted">En attente</span></div>
 <section class="pane"><h2>Comptage</h2><div id="totals" class="cards"><span class="muted">Cliquer sur Analyser</span></div></section>
 <section class="pane"><h2>Couverture par capitalisation</h2><p class="muted">Présence d'au moins une série ≠ historique frais, complet ou durable. Les Top 5/10 suivent ici les rangs de capitalisation réels et ne remplacent pas le Top 5 canonique.</p><div id="core" class="scroll">En attente</div></section>
-<section class="pane"><h2>80 caches graphiques maximum · détail</h2><div class="scroll" id="chart">En attente</div></section>
-<section class="pane"><h2>Archives publiques GitHub</h2><div id="github">En attente</div></section>
-<section class="pane"><h2>Réserves et limites</h2><div id="limits" class="muted">Aucune validation terrain exécutée.</div></section>
+<details class="pane"><summary>Voir les 80 caches graphiques · liste détaillée</summary><p class="muted">Détail complet disponible à la demande, avec défilement interne.</p><div class="scroll" id="chart">En attente</div></details>
+<div class="two-col"><section class="pane"><h2>Archives publiques GitHub</h2><div id="github">En attente</div></section>
+<section class="pane"><h2>Réserves et limites</h2><div id="limits" class="muted">Aucune validation terrain exécutée.</div></section></div>
 <script>
 (function(){
 "use strict";
