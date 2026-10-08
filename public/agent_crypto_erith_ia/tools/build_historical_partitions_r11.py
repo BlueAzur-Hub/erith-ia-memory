@@ -12,12 +12,13 @@ import json
 import re
 import tempfile
 from pathlib import Path
-from append_historical_top10_ohlcv_r4 import MS, candle, parse_key, sha
+from append_historical_top10_ohlcv_r4 import BASE, MS, candle, parse_key, sha
 from build_historical_compact_r9 import COLUMNS, packed_json, verified_source
 
 UTC = dt.timezone.utc
 SCHEMA = "aerith.public.ohlcv.spot.partitions.r11.index.v1"
 BLOCK = "aerith.public.ohlcv.spot.partitions.r11.sealed.v1"
+PUBLISHED = BASE / "data/historical_archive_prototype/partitions_r11"
 
 def need(ok, why):
     if not ok:
@@ -82,10 +83,17 @@ def plan(source, source_sha, manifest, series):
                 chunks.append((name, lo, hi, []))
             chunks[-1][3].append(row)
         sealed, pending, tail_started = [], [], False
-        for name, lo, hi, bars in chunks:
+        for part_number, (name, lo, hi, bars) in enumerate(chunks):
+            # R2 starts mid-calendar bucket; seal its closed origin fragment
+            # but never falsely mark it as a complete calendar period.
+            partial_origin = bars[0][0] != lo
+            need(not partial_origin or part_number == 0,
+                 "Partial calendar bucket after origin")
             summary = {"bucket": name, "bucket_start_ms": lo,
                        "bucket_end_ms": hi, "first_open_ms": bars[0][0],
-                       "last_open_ms": bars[-1][0], "candles": len(bars)}
+                       "last_open_ms": bars[-1][0], "candles": len(bars),
+                       "boundary_kind": "partial_origin" if partial_origin
+                                        else "full_period"}
             complete = hi <= asof_ms and bars[-1][0]+step == hi
             if complete:
                 need(not tail_started, "Sealed bucket after unfinished bucket")
@@ -109,7 +117,7 @@ def plan(source, source_sha, manifest, series):
                         "last_open_ms": item["last_open_ms"],
                         "candles": len(rows), "sealed": sealed, "pending": pending})
     need(all_keys == set(series), "Unexpected R8 series")
-    catalog = {"schema": SCHEMA, "status": "OFFLINE_PILOT_ONLY",
+    catalog = {"schema": SCHEMA, "status": "SEALED_INDEX_WITH_VERIFIED_SOURCE_TAIL",
                "source": "Binance Spot", "quote_asset": "USDT",
                "basket_reference": manifest["reference"],
                "source_index_sha256": source_sha,
@@ -123,7 +131,7 @@ def plan(source, source_sha, manifest, series):
                                             for x in entries),
                "bucket_policy": {"24h": "UTC day", "7d": "UTC Monday week",
                                  "30d": "UTC calendar month"},
-               "note": "Unsealed candles remain only in the verified R8/R9 source",
+               "note": "Unsealed candles require the verified R8/R9 source for full replay",
                "series": entries}
     need(sum(e["candles"] for e in entries) == source["candles_total"],
          "Source candle count mismatch")
@@ -135,20 +143,48 @@ def ensure_destination(target):
          "Writes allowed only in an explicit partitions_r11 directory")
     return target
 
+def check_prior_catalog(prior, current):
+    """Reject rewrite, deletion or reordering of an already sealed series."""
+    need(prior["schema"] == current["schema"] == SCHEMA and
+         prior["source"] == current["source"] == "Binance Spot" and
+         prior["quote_asset"] == current["quote_asset"] == "USDT" and
+         prior["basket_reference"] == current["basket_reference"] and
+         prior["source_seed"] == current["source_seed"],
+         "Previously published R11 provenance mismatch")
+    need(prior["series_count"] == current["series_count"] == 21 and
+         len(prior["series"]) == len(current["series"]) and
+         prior["source_delta_count"] <= current["source_delta_count"] <= 100 and
+         prior["candles_total"] <= current["candles_total"] and
+         prior["source_index_updated_at"] <= current["source_index_updated_at"],
+         "Published R11 series or snapshot regressed")
+    for before, after in zip(prior["series"], current["series"]):
+        need(all(before[k] == after[k] for k in
+                 ("id", "pair", "period", "interval", "first_open_ms")) and
+             before["candles"] <= after["candles"] and
+             before["sealed"] == after["sealed"][:len(before["sealed"])],
+             "Sealed prefix changed or moved")
+    return True
+
 def build(target, catalog, blobs):
     target = ensure_destination(target)
-    result = "NOOP"
+    index = target/"index.json"
+    if index.exists():
+        check_prior_catalog(json.loads(index.read_text(encoding="utf-8")),
+                            catalog)
+    # Check every prior existing blob BEFORE adding any new file.
     for name, data in blobs.items():
         path = target/name
         if path.exists():
             need(path.read_bytes() == data, "Immutable partition conflict")
-        else:
+    result = "NOOP"
+    for name, data in blobs.items():
+        path = target/name
+        if not path.exists():
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
             result = "BUILT"
     payload = json.dumps(catalog, ensure_ascii=False, indent=2,
                          allow_nan=False).encode("utf-8")+b"\n"
-    index = target/"index.json"
     if not index.exists() or index.read_bytes() != payload:
         target.mkdir(parents=True, exist_ok=True)
         index.write_bytes(payload)
@@ -181,7 +217,8 @@ def verify(target, expected, series):
                          ("id", "pair", "period", "interval"))
                  and all(block[k] == part[k] for k in
                          ("bucket", "bucket_start_ms", "bucket_end_ms",
-                          "first_open_ms", "last_open_ms", "candles"))
+                          "first_open_ms", "last_open_ms", "candles",
+                          "boundary_kind"))
                  and len(block["rows"]) == part["candles"],
                  "Partition payload changed")
             reconstructed.extend(block["rows"])
@@ -239,8 +276,10 @@ def self_test():
     source["candles_total"] = sum(len(x) for x in values.values())
     catalog, zipped = plan(source, "a"*64, manifest, values)
     need(catalog["sealed_blocks_total"] == 21 and
-         catalog["pending_candles_total"] > 0,
-         "Expected sealed and pending fixtures")
+         catalog["pending_candles_total"] > 0 and
+         all(x["sealed"][0]["boundary_kind"] == "partial_origin"
+             for x in catalog["series"]),
+         "Expected sealed partial-origin and pending test fixtures")
     with tempfile.TemporaryDirectory() as d:
         dest = Path(d)/"partitions_r11"
         need(build(dest,catalog,zipped) == "BUILT","First build missing")
@@ -255,6 +294,11 @@ def self_test():
         except ValueError as e: need("SHA-256" in str(e),"Wrong tamper rejection")
         else: raise AssertionError("Tampered block accepted")
         file.write_bytes(original)
+        bad_prior = json.loads(json.dumps(catalog))
+        bad_prior["series"][0]["sealed"][0]["candles"] += 1
+        try: check_prior_catalog(catalog, bad_prior)
+        except ValueError: pass
+        else: raise AssertionError("Sealed prefix modification accepted")
         with (dest/"index.json").open("r",encoding="utf-8") as f: index = json.load(f)
         index["candles_total"] += 1
         (dest/"index.json").write_text(json.dumps(index),encoding="utf-8")
@@ -269,12 +313,12 @@ def self_test():
     except ValueError: pass
     else: raise AssertionError("Gap/duplicate accepted")
     print(json.dumps({"status":"R11_SELF_TEST_PASS","sealed":21,
-                      "tested":"idempotence,SHA-tamper,index-tamper,seam-gap"}))
+                      "tested":"partial-origin,idempotence,SHA-tamper,index-tamper,sealed-prefix,seam-gap"}))
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     choices=p.add_mutually_exclusive_group(required=True)
-    for opt in ("self-test","plan","build","verify"):
+    for opt in ("self-test","plan","build","verify","publish"):
         choices.add_argument("--"+opt,action="store_true")
     p.add_argument("--target",type=Path)
     a=p.parse_args()
@@ -289,6 +333,12 @@ def main():
               "sealed_blocks":catalog["sealed_blocks_total"],
               "pending_candles":catalog["pending_candles_total"],
               "bytes_proposed":sum(map(len,blocks.values()))}))
+        return
+    if a.publish:
+        need(a.target is None, "--publish accepts no target override")
+        result = build(PUBLISHED, catalog, blocks)
+        print(json.dumps({"write": result,
+                          **verify(PUBLISHED, catalog, series)}))
         return
     need(a.target is not None,"Specify --target explicitly")
     if a.build: print(json.dumps({"write":build(a.target,catalog,blocks),

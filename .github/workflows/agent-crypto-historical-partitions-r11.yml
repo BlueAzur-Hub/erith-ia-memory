@@ -1,40 +1,61 @@
-name: Agent Crypto R11 Offline Sealed Partitions Pilot
+name: Agent Crypto R11 Verified Partitions Publisher
 on:
   workflow_dispatch:
+  # GitHub cron is best effort; independent of the R10 schedule at :17.
+  schedule:
+    - cron: '52 * * * *'
   push:
     branches: [main]
     paths:
       - ".github/workflows/agent-crypto-historical-partitions-r11.yml"
       - "public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py"
 permissions:
-  contents: read
+  contents: write
 concurrency:
-  group: agent-crypto-r11-offline-verification
+  group: agent-crypto-r11-verified-partitions-publisher
   cancel-in-progress: false
 jobs:
-  offline_partition_audit:
+  publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 18
     steps:
-      - name: Checkout exact snapshot
+      - name: Checkout source and prior partitions
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Compile and synthetic negative tests (no network)
+      - name: Offline synthetic negative tests
         run: |
           python -m py_compile public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py
           python public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py --self-test
-      - name: Validate original R8 and existing R9 unchanged
+      - name: Validate source R8 and original compact R9
         run: |
           python public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py --audit-existing
           python public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py --verify
-      - name: R11 dry run and isolated immutable partition replay
+      - name: Check standalone partition replay before publication
         run: |
           python public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py --plan
           python public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py --build --target "$RUNNER_TEMP/partitions_r11"
           python public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py --verify --target "$RUNNER_TEMP/partitions_r11"
-      - name: Existing Firefox readers remain untouched
+      - name: Test existing Firefox historical readers
         run: |
           node --test public/agent_crypto_erith_ia/tools/historical-compact-reader.test.mjs public/agent_crypto_erith_ia/tools/historical-vault-automatic.test.mjs
+      - name: Append verified sealed partitions to GitHub
+        shell: bash
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py --publish
+          python public/agent_crypto_erith_ia/tools/build_historical_partitions_r11.py --verify --target public/agent_crypto_erith_ia/data/historical_archive_prototype/partitions_r11
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- public/agent_crypto_erith_ia/data/historical_archive_prototype/partitions_r11/
+          if git diff --cached --quiet; then
+            echo "NOOP: verified R11 index and sealed blocks unchanged"
+            exit 0
+          fi
+          git commit -m "Publish independently verified sealed OHLCV partitions (R11)"
+          git pull --rebase origin main
+          git push origin HEAD:main
