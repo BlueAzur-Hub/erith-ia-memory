@@ -25,10 +25,21 @@ function analyze(now=Date.now(),d=api){
   if(String(r?.confirm)==="0")unconfirmed++;
  });
  const last=rows.length?stamp(rows[rows.length-1]?.t):null;
- const fresh=!!(barMs&&last&&now-last>=-2000&&now-last<=barMs*2.2);
- const candleOk=!!(asset&&cp?.base===asset.symbol&&rows.length>=2&&!candle.loading&&invalid===0&&ordering===0&&gaps===0&&fresh);
+ const candleAge=last===null?null:now-last;
+ const candleLimit=barMs===null?null:barMs*2.2;
+ const fresh=!!(barMs&&last&&candleAge>=-2000&&candleAge<=candleLimit);
+ const assetMatches=!!(asset&&cp?.base===asset.symbol);
+ const candleOk=!!(assetMatches&&rows.length>=2&&!candle.loading&&invalid===0&&ordering===0&&gaps===0&&fresh);
  if(candleOk)facts.push("Bougies "+candle.loadedInstrument+": "+rows.length+" · source "+new Date(last).toISOString());
- else flags.push("Bougies: actif, integrite, continuite ou fraicheur non confirmes");
+ if(!assetMatches)flags.push("Bougies: actif "+(asset?.symbol||"?")+" != paire "+(candle.loadedInstrument||"absente"));
+ if(rows.length<2)flags.push("Bougies: serie insuffisante ("+rows.length+" points)");
+ if(candle.loading)flags.push("Bougies: chargement en cours");
+ if(!barMs)flags.push("Bougies: intervalle inconnu ("+(candle.loadedBar||"absent")+")");
+ if(invalid)flags.push("Bougies: OHLCV invalides = "+invalid);
+ if(ordering)flags.push("Bougies: horodatages non croissants = "+ordering);
+ if(gaps)flags.push("Bougies: ruptures temporelles = "+gaps);
+ if(last===null)flags.push("Bougies: date de derniere ouverture absente");
+ else if(!fresh)flags.push("Bougies: ouverture "+(candleAge<0?"future":"perimee")+" · age "+Math.round(candleAge/1000)+" s · limite "+(candleLimit===null?"inconnue":Math.round(candleLimit/1000)+" s"));
  const seen=stamp(book.sourceObservedAt||book.capturedAt),age=seen===null?null:now-seen;
  const max=Number(d.AgentCryptoOkxMicrostructure?.validation_contract?.fresh_max_age_ms);
  const bookOk=!!(asset&&bp?.base===asset.symbol&&book.loadedAsset===asset.symbol&&bp?.quote===String(book.loadedQuote||"").toUpperCase()&&book.bids?.length&&book.asks?.length&&book.freshness==="FRESH"&&seen!==null&&Number.isFinite(max)&&max>0&&age>=-2000&&age<=max);
@@ -49,17 +60,36 @@ function analyze(now=Date.now(),d=api){
  return Object.freeze({schema:"trader_t0_data_quality_r3",capturedAt:new Date(now).toISOString(),
   asset:asset?Object.freeze({...asset}):null,currency:p.displayCurrency||null,
   market:Object.freeze({candlePair:candle.loadedInstrument||null,bookPair:book.pair||null,
-   candleCount:rows.length,invalid,ordering,gaps,unconfirmed,lastCandle: last,bookTime:seen,candleFresh:fresh,bookFresh:bookOk}),
+   candleCount:rows.length,invalid,ordering,gaps,unconfirmed,lastCandle:last,
+   candleAgeMs:candleAge,candleLimitMs:candleLimit,loadedBar:candle.loadedBar||null,
+   loadedInstrument:candle.loadedInstrument||null,selectedAsset:asset?.symbol||null,
+   receivedAt:candle.lastLoadedAt||null,assetMatches,loading:!!candle.loading,
+   candleAccepted:candleOk,bookTime:seen,candleFresh:fresh,bookFresh:bookOk}),
   g1:Object.freeze({state:g1?.state||"UNKNOWN",owner:g1?.owner||null}),
   datasetIntegrity:Object.freeze(integrity),complete:candleOk&&bookOk&&!!p.chart?.qualified&&cp?.quote===bp?.quote,
   facts:Object.freeze(facts),flags:Object.freeze(flags),gatePromoted:false,paperAuthorized:false,orderPlaced:false,persisted:false});
 }
+const asUtc=v=>Number.isFinite(v)&&v>0?new Date(v).toISOString():"inconnue";
+const seconds=v=>Number.isFinite(v)?(v/1000).toFixed(1)+" s":"inconnu";
+function report(v){
+ if(!v)return"Pas de capture T0. Aucun stockage.";
+ const k=v.market;
+ return v.capturedAt+" · "+(v.complete?"OBSERVATIONS CONCORDANTES":"DONNEES INCOMPLETES")+
+  "\nG1 CANONIQUE: "+v.g1.state+" (inchangé)"+
+  "\n\nDIAGNOSTIC BOUGIES"+
+  "\nPaire: "+(k.loadedInstrument||"absente")+" · actif attendu: "+(k.selectedAsset||"?")+" · accord: "+(k.assetMatches?"OUI":"NON")+
+  "\nIntervalle: "+(k.loadedBar||"?")+" · nombre de bougies: "+k.candleCount+" · chargement: "+(k.loading?"OUI":"NON")+
+  "\nOHLCV invalides: "+k.invalid+" · horodatages non croissants: "+k.ordering+" · ruptures temporelles: "+k.gaps+
+  "\nBougies non confirmees: "+k.unconfirmed+" (information, pas un blocage)"+
+  "\nDerniere ouverture: "+asUtc(k.lastCandle)+" · reception: "+(k.receivedAt||"inconnue")+
+  "\nAge a T0: "+seconds(k.candleAgeMs)+" · seuil: "+seconds(k.candleLimitMs)+" · fraicheur: "+(k.candleFresh?"OUI":"NON")+
+  "\nControle Bougies: "+(k.candleAccepted?"CONCORDANT":"NON CONFORME")+
+  "\n\nSOURCES ET PREUVES\n"+v.facts.join("\n")+
+  "\n\nLIMITES\n"+v.flags.join("\n");
+}
 function paint(){
- const root=document.getElementById("traderPaperT0"),output=root?.querySelector("[data-t0-report]");
- if(!output)return;
- output.textContent=evidence?evidence.capturedAt+" · "+(evidence.complete?"OBSERVATIONS CONCORDANTES":"DONNEES INCOMPLETES")+
-  "\nG1 CANONIQUE: "+evidence.g1.state+" (inchangé)\n\n"+evidence.facts.join("\n")+
-  "\n\nLIMITES\n"+evidence.flags.join("\n"):"Pas de capture T0. Aucun stockage.";
+ const output=document.getElementById("traderPaperT0")?.querySelector("[data-t0-report]");
+ if(output)output.textContent=report(evidence);
 }
 function capture(){evidence=analyze();paint();return evidence}
 function reset(){evidence=null;paint()}
@@ -79,5 +109,5 @@ function mount(){
 if(!mount()){const onClick=()=>{if(mount())document.removeEventListener("click",onClick,true)};
  document.addEventListener("click",onClick,true);}
 for(const e of ["agent-crypto:selected-market-changed","agent-crypto:quote-architecture-changed"])api.addEventListener(e,reset,{passive:true});
-api.AgentCryptoTraderT0=Object.freeze({analyze,capture,mount,reset,snapshot:()=>evidence,read_only:true,gate_write:false,real_order:false,storage_write:false});
+api.AgentCryptoTraderT0=Object.freeze({analyze,capture,mount,reset,report,snapshot:()=>evidence,read_only:true,gate_write:false,real_order:false,storage_write:false});
 })();
