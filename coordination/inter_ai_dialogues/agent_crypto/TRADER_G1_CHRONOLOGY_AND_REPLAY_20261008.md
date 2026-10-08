@@ -22,3 +22,5 @@ Market Core 38.15.11 ; Trader 40.6.624 ; Bridge, Backend, sources marché, gouve
 
 ## ZIP
 Contient seulement les 3 scripts existants avec arborescence relative et cette note.
+## Publication
+GitHub : commit source 2808e9d051beb45174b2bc570399904ab66e2c4d ; contrôles locaux et ZIP CRC réussis. Cette mise à jour documentaire sert de point de reprise du processus de publication Pages. Le statut de déploiement et la validation Firefox doivent être constatés indépendamment, sans supposer SUCCESS.
