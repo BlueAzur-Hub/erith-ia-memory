@@ -58,6 +58,13 @@ function mount(){
     marketSwitch.disabled=true;
   }
 
+  // Inject only a standalone, read-only R9 viewer into the SAME runtime.
+  if(!doc.getElementById("traderHistoricalPanelScript")){
+    const script=doc.createElement("script");
+    script.id="traderHistoricalPanelScript";
+    script.src=new URL("../trader/trader-historical-panel.js",doc.baseURI).href;
+    doc.head.appendChild(script);
+  }
   doc.title="ERITH.IA · Trading Desk — "+BUILD;
   try{
     win.dispatchEvent(new CustomEvent("agent-crypto:trader-runtime-mirror",{detail:{

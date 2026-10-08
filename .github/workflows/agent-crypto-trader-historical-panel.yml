@@ -1,0 +1,29 @@
+name: Agent Crypto Trader Verified Archive R9
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-crypto-trader-historical-panel.yml"
+      - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
+      - "public/agent_crypto_erith_ia/trader/trader-historical-panel.js"
+      - "public/agent_crypto_erith_ia/tools/trader-historical-panel.test.mjs"
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify lazy Trader R9 UI syntax and behavior
+        run: |
+          node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
+          node --check public/agent_crypto_erith_ia/trader/trader-historical-panel.js
+          node --test public/agent_crypto_erith_ia/tools/trader-historical-panel.test.mjs
+      - name: Protect previous R9 and Trader selection tests
+        run: |
+          node --test public/agent_crypto_erith_ia/tools/historical-compact-reader.test.mjs public/agent_crypto_erith_ia/tools/historical-vault-automatic.test.mjs public/agent_crypto_erith_ia/tools/trader-shared-market-selection.test.mjs
