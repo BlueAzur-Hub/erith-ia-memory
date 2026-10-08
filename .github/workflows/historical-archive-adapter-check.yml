@@ -1,0 +1,28 @@
+name: Agent Crypto Historical Archive Adapter Check
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/historical-archive-adapter-check.yml"
+      - "public/agent_crypto_erith_ia/administrator/js/historical-archive-adapter.js"
+      - "public/agent_crypto_erith_ia/tools/historical-archive-adapter.test.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout real archived snapshots
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax check
+        run: node --check public/agent_crypto_erith_ia/administrator/js/historical-archive-adapter.js
+      - name: Offline archive adapter tests on authentic R2 and R4 files
+        run: node --test public/agent_crypto_erith_ia/tools/historical-archive-adapter.test.mjs

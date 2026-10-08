@@ -21,6 +21,8 @@ details{padding:10px 13px}.fine{font-size:12px;color:#acbed1}
 @media(max-width:1100px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.cols{grid-template-columns:1fr}}
 @media(max-width:600px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}body{padding:9px}.links{gap:7px}.scroll{max-height:45vh}}
 @media(max-height:720px) and (min-width:1000px){body{padding:8px}.board{margin:6px 0;padding:9px}header{margin-bottom:4px}.metric{padding:6px 9px}th,td{padding:4px 7px}h1{font-size:21px}}
+select{font:inherit;color:#ebf3fc;background:#143049;border:1px solid #6c9db3;border-radius:7px;padding:7px 10px}
+select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-top:7px}
 </style></head>
 <body>
 <header><div><h1>Coffre historique · Seven Heaven</h1><p class="muted">Une seule vue · Firefox + GitHub · lecture seule</p></div>
@@ -37,6 +39,15 @@ details{padding:10px 13px}.fine{font-size:12px;color:#acbed1}
 <p class="muted">Maximum 80 séries ; aucune conservation cumulative garantie ici</p>
 <div class="scroll" id="local">En attente</div><p id="local-message" class="fine">Aucun contrôle exécuté.</p></section>
 </div>
+<details class="board" id="r6-archive-adapter">
+<summary>R6 · Lire les chandelles archivées (sans toucher au Graphique)</summary>
+<div class="toolbar" style="margin-top:9px;gap:12px">
+<label for="r6-asset">Crypto</label><select id="r6-asset"><option value="bitcoin">BTC</option><option value="ethereum">ETH</option><option value="binancecoin">BNB</option><option value="ripple">XRP</option><option value="solana">SOL</option><option value="tron">TRX</option><option value="zcash">ZEC</option></select>
+<label for="r6-period">Période</label><select id="r6-period"><option value="24h">24 h · 5 min</option><option value="7d">7 j · 1 h</option><option value="30d">30 j · 4 h</option></select>
+<button type="button" id="r6-read">Lire la série</button><span id="r6-result" aria-live="polite" class="muted">En attente</span>
+</div><p id="r6-source" class="fine">Binance Spot / USDT. Source archivistique, pas un prix USD/EUR, ni un signal live.</p>
+<div id="r6-table" class="scroll">Sélectionne une crypto et une période, puis clique sur Lire la série.</div>
+</details>
 <details class="board"><summary>Informations techniques et limites</summary>
 <div id="details" class="fine">La source GitHub doit passer la vérification SHA-256, la décompression gzip, la chronologie et l'index de couverture. Aucun fichier local n'est envoyé sur Internet.</div></details>
 <script>
@@ -172,5 +183,28 @@ $("analyze").disabled=false;
 }
 $("analyze").addEventListener("click",()=>run().catch(e=>{$("status").textContent="Erreur : "+dmsg(e);$("analyze").disabled=false}));
 $("copy").addEventListener("click",()=>{if(!exported)return;navigator.clipboard.writeText(JSON.stringify(exported,null,2)).then(()=>{$("status").textContent="Bilan copié"},e=>{$("status").textContent="Copie impossible : "+dmsg(e)})});
+})();
+</script><script src="./js/historical-archive-adapter.js"></script>
+<script>
+(() => {"use strict";
+const $=id=>document.getElementById(id),btn=$("r6-read");
+const utc=n=>new Date(n).toLocaleString("fr-FR",{timeZone:"UTC",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})+" UTC";
+const number=n=>new Intl.NumberFormat("fr-FR",{maximumFractionDigits:8}).format(n);
+btn.addEventListener("click",async()=>{
+ btn.disabled=true;$("r6-result").textContent="Lecture et vérification…";$("r6-table").textContent="Chargement…";
+ try{
+  if(!window.SevenHistoricalArchive)throw Error("Module de lecture indisponible");
+  const data=await window.SevenHistoricalArchive.readSeries({assetId:$("r6-asset").value,period:$("r6-period").value});
+  const m=data.metadata;
+  $("r6-source").textContent="VALIDÉ · "+m.pair+" · "+m.source+" · "+m.quote+" · "+m.interval+" · "+m.points+" chandelles · de "+utc(m.firstOpenMs)+" à "+utc(m.lastOpenMs)+" · index "+m.archiveUpdatedAt+" · NON LIVE · Graphique non raccordé";
+  const table=document.createElement("table"),tr=document.createElement("tr");
+  ["UTC","Ouverture USDT","Plus haut","Plus bas","Clôture USDT","Volume base"].forEach(x=>{const th=document.createElement("th");th.textContent=x;tr.appendChild(th)});table.appendChild(tr);
+  data.candles.slice(-8).forEach(row=>{const item=document.createElement("tr");
+   [utc(row[0]),number(row[1]),number(row[2]),number(row[3]),number(row[4]),number(row[5])].forEach(val=>{const td=document.createElement("td");td.textContent=val;item.appendChild(td)});
+   table.appendChild(item)});
+  $("r6-table").replaceChildren(table);$("r6-result").textContent="Série lue et vérifiée";$("r6-result").className="good";
+ }catch(e){$("r6-table").textContent="Aucune chandelle affichée : contrôle refusé.";$("r6-result").textContent=String(e?.message||e).slice(0,150);$("r6-result").className="bad"}
+ finally{btn.disabled=false}
+});
 })();
 </script></body></html>
