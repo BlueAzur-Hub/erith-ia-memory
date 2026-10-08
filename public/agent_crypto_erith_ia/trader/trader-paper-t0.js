@@ -383,6 +383,39 @@ const G3_OWNER=Object.freeze({
  src:"./js/strategy-a-g3-prospective-t0-capture.js",
  ready:()=>typeof api.AgentCryptoStrategyAG3ProspectiveT0Capture?.capture_once==="function"
 });
+/* Targeted Paper-only owners. Loaded only on explicit operator cycle click. */
+const PAPER_ONE_SHOT_OWNERS=Object.freeze([
+ {src:"./js/strategy-a-paper-lifecycle.js",ready:()=>typeof api.AgentCryptoStrategyAPaperLifecycle?.create==="function"},
+ {src:"./js/strategy-a-auto-lifecycle-bridge.js",ready:()=>typeof api.AgentCryptoStrategyAAutoLifecycleBridge?.preflight==="function"},
+ {src:"./js/strategy-a-safety-certification.js",ready:()=>typeof api.AgentCryptoStrategyASafetyCertification?.snapshot==="function"},
+ G3_OWNER
+]);
+function paperRunner(){
+ return api.AgentCryptoAutoPaperRunner404265||api.AgentCryptoAutoPaperRunner||null;
+}
+function paperRunnerState(runner){return safe(runner?.state);}
+function paperOneShotPreflight(){
+ const selected=safe(api.AgentCryptoTraderPaperPreparation?.snapshot)?.asset;
+ const runner=paperRunner(),r=paperRunnerState(runner);
+ const safety=safe(api.AgentCryptoStrategyASafetyCertification?.snapshot);
+ const bridge=safe(api.AgentCryptoStrategyAAutoLifecycleBridge?.preflight);
+ const opened=Number(r?.opened),closed=Number(r?.closed);
+ const openKnown=Number.isFinite(opened)&&Number.isFinite(closed);
+ const issues=[];
+ if(String(selected?.symbol||"").toUpperCase()!=="BTC")issues.push("MOTEUR_AUTO_A_BTC_UNIQUEMENT");
+ if(!runner||typeof runner.start!=="function"||typeof runner.stop!=="function"||typeof runner.state!=="function")
+  issues.push("AUTO_A_OWNER_START_STOP_ABSENT");
+ if(r?.enabled===true)issues.push("AUTO_A_DEJA_ACTIF_STOP_MANUEL_REQUIS");
+ if(!r||r.enabled!==false)issues.push("AUTO_A_ETAT_NON_CONFIRME");
+ if(!openKnown)issues.push("POSITIONS_PAPER_NON_EVALUABLES");
+ else if(opened>closed)issues.push("POSITION_PAPER_DEJA_OUVERTE");
+ if(safety?.level!=="NORMAL"||safety?.new_trades_allowed!==true||safety?.auto_a_governor_connected!==true)
+  issues.push("SAFETY_GOVERNOR_NON_PRET");
+ if(bridge?.ready!==true)issues.push("LIFECYCLE_BRIDGE_NON_PRET"+(bridge?.blocked_reason?":"+String(bridge.blocked_reason).slice(0,80):""));
+ if(!G3_OWNER.ready())issues.push("G3_OWNER_ABSENT");
+ return Object.freeze({ready:issues.length===0,issues:Object.freeze(issues),runner,runnerState:r});
+}
+
 function prospectiveRows(){
  const rows=safe(api.AgentCryptoStrategyAG3ProspectiveT0Capture?.read);
  return Array.isArray(rows)?rows:null;
@@ -396,6 +429,7 @@ function paperExperimentSnapshot(){
   closed:paperExperiment.closed,busy:paperCaptureBusy,status:paperExperiment.status,
   blocker:paperExperiment.blocker,cycleId:paperExperiment.cycleId,receiptOk:paperExperiment.receiptOk,
   baseline,current,delta:Number.isInteger(current)&&Number.isInteger(baseline)?current-baseline:null,
+  autoStopped:paperExperiment.autoStopped??null,paperOpen:paperExperiment.paperOpen===true,
   historyPreserved:true,gatesPromoted:false,realOrders:false
  });
 }
@@ -407,6 +441,8 @@ function paperExperimentReport(){
   "\nTentative de cycle: "+s.attempts+" / 1 · ID: "+fmt(s.cycleId)+
   "\nPreuves prospectives G3: depart "+fmt(s.baseline)+" · actuel "+fmt(s.current)+" · variation "+fmt(s.delta)+
   (s.blocker?"\nBlocage/limite: "+s.blocker:"")+
+  (s.autoStopped===null?"":"\nAuto A STOP apres tentative: "+(s.autoStopped?"CONFIRME":"NON CONFIRME"))+
+  (s.paperOpen?"\nATTENTION: position Paper ouverte, suivi/reconciliation non termines.":"")+
   (s.sameAsset?"":"\nActif change : nouvelle experience requise.")+
   "\nAucune archive effacee ; une tentative ne vaut ni gate PASS ni autorisation Paper."+
   "\nTerminer la seance pour clore ce bilan.";
@@ -419,28 +455,60 @@ async function capturePaperOnce(){
  }
  const expected=paperExperiment.startedAt;
  paperCaptureBusy=true;paint();
- let receipt=null,blocker=null,prior=null;
+ let receipt=null,blocker=null,prior=null,runner=null,ownerStarted=false,stopConfirmed=false,openPaper=false;
  try{
-  try{await acquireCanonical(G3_OWNER);}
-  catch(e){blocker="MODULE_G3_NON_CHARGE: "+String(e?.message||e).slice(0,110);}
-  if(!paperExperiment||paperExperiment.startedAt!==expected||paperExperiment.closed||identity()!==paperExperiment.assetKey)return null;
+  // All imports are targeted; never open the global 28-module Evidence cascade.
+  for(const spec of PAPER_ONE_SHOT_OWNERS){
+   try{await acquireCanonical(spec);}
+   catch(e){blocker="DEPENDANCE_PAPER_NON_CHARGEE "+spec.src+": "+String(e?.message||e).slice(0,70);break;}
+   if(!paperExperiment||paperExperiment.startedAt!==expected||paperExperiment.closed||identity()!==paperExperiment.assetKey)return null;
+  }
   if(!blocker){
-   const owner=api.AgentCryptoStrategyAG3ProspectiveT0Capture;
-   prior=prospectiveRows();
-   try{receipt=owner.capture_once();}
-   catch(e){blocker="CAPTURE_G3_EXCEPTION: "+String(e?.message||e).slice(0,110);}
+   const pre=paperOneShotPreflight();
+   if(!pre.ready)blocker=pre.issues.join(" ; ").slice(0,290);
+   else {
+    runner=pre.runner;
+    prior=prospectiveRows();
+    // Synchronous owner API: start schedules an immediate timer; before the browser
+    // can run it, G3 explicitly ticks once and finally owner.stop cancels the timer.
+    // This deliberate click is the only action permitted to lift a manual STOP.
+    try{
+     const started=runner.start();
+     ownerStarted=true;
+     const after=paperRunnerState(runner)||started;
+     if(after?.enabled!==true)blocker="AUTO_A_START_REFUSE: "+String(after?.phase||after?.last_action||"INCONNU").slice(0,140);
+     else{
+      receipt=api.AgentCryptoStrategyAG3ProspectiveT0Capture.capture_once();
+     }
+    }catch(e){blocker="AUTO_A_CYCLE_EXCEPTION: "+String(e?.message||e).slice(0,110);}
+    finally{
+     // Never leave the recurring Auto A scheduler running after this one-shot.
+     if(ownerStarted){
+      try{const stopped=runner.stop("Fin cycle unique Paper · arrêt automatique volontaire");
+       stopConfirmed=paperRunnerState(runner)?.enabled===false||stopped?.enabled===false;
+      }catch(e){blocker="ARRET_AUTO_A_EXCEPTION: "+String(e?.message||e).slice(0,100);}
+      try{const afterStop=paperRunnerState(runner);
+       openPaper=Number.isFinite(Number(afterStop?.opened))&&Number.isFinite(Number(afterStop?.closed))&&Number(afterStop.opened)>Number(afterStop.closed);
+      }catch(_){}
+     }
+    }
+    if(ownerStarted&&!stopConfirmed)blocker="ARRET_AUTO_A_NON_CONFIRME · utiliser STOP operateur immediatement";
+    if(openPaper)blocker=(blocker?blocker+" ; ":"")+"POSITION_PAPER_OUVERTE_A_SUIVRE · STOP ne clot pas la position";
+   }
   }
   const ok=receipt?.ok===true;
-  blocker=blocker||(ok?null:String(receipt?.blocker||"PREUVE_NON_OBTENUE").slice(0,120));
+  blocker=blocker||(ok?null:String(receipt?.blocker||"PREUVE_NON_OBTENUE").slice(0,140));
   paperExperiment=Object.freeze({...paperExperiment,
    baseline:Number.isInteger(paperExperiment.baseline)?paperExperiment.baseline:(prior?prior.length:null),
-   attempts:1,status:ok?"CYCLE_G3_CAPTURE":"CYCLE_BLOQUE",receiptOk:ok,
+   attempts:1,status:!stopConfirmed&&ownerStarted?"ARRET_NON_CONFIRME":ok?"CYCLE_G3_CAPTURE":"CYCLE_BLOQUE",
+   receiptOk:ok,autoStopped:!ownerStarted||stopConfirmed,paperOpen:openPaper,
    cycleId:receipt?.cycle_id?String(receipt.cycle_id).slice(0,120):null,blocker});
   return paperExperimentSnapshot();
  }finally{
   paperCaptureBusy=false;paint();
  }
 }
+
 function finishPaperExperiment(){
  if(!paperExperiment||paperExperiment.closed||captureBusy||paperCaptureBusy)return null;
  paperExperiment=Object.freeze({...paperExperiment,endedAt:new Date().toISOString(),closed:true,
@@ -460,9 +528,9 @@ function mount(){
   '<p class="paper-note">Capture volontaire en lecture seule. Aucune promotion de gate.</p>'+
   '<button type="button" data-t0-capture>Capturer T0 (sans stockage)</button>'+
   '<button type="button" data-t0-reset style="margin-left:8px">Nouvelle expérience Paper · RESET</button>'+
-  '<button type="button" data-paper-cycle disabled style="margin-left:8px">Capturer 1 cycle Paper</button>'+
+  '<button type="button" data-paper-cycle disabled style="margin-left:8px">Demarrer Auto A · 1 cycle · STOP</button>'+
   '<button type="button" data-paper-finish disabled style="margin-left:8px">Terminer la séance</button>'+
-  '<p class="paper-note">La capture Paper appelle volontairement le moteur canonique G3 : un tick Auto A Paper local peut être tenté. Aucun ordre réel.</p>'+
+  '<p class="paper-note">Action explicite : leve STOP manuel, demarre Auto A pour un cycle Paper local puis STOP automatique dans la meme action. Peut ouvrir une position Paper simulee qui reste a suivre. Aucun ordre reel.</p>'+
   '<pre data-t0-report style="white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.55 system-ui,sans-serif"></pre>';
  parent.appendChild(el);
  el.querySelector("[data-t0-capture]").addEventListener("click",capture);
