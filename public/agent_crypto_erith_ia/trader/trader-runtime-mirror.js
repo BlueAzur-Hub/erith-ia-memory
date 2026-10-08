@@ -72,6 +72,16 @@ function mount(){
     script.src=new URL("../trader/trader-paper-preparation.js?v=proof-link-20261008",doc.baseURI).href;
     doc.head.appendChild(script);
   }
+  // R3 · T0/G1 est une vue d'observation; le dossier Paper reste l'unique parent.
+  if(!doc.getElementById("traderPaperT0Script")){
+    const script=doc.createElement("script");
+    script.id="traderPaperT0Script";
+    script.src=new URL("../trader/trader-paper-t0.js",doc.baseURI).href;
+    const paper=doc.getElementById("traderPaperPreparationScript");
+    if(paper&&!doc.getElementById("traderPaperPreparation"))
+      paper.addEventListener("load",()=>doc.head.appendChild(script),{once:true});
+    else doc.head.appendChild(script);
+  }
   doc.title="ERITH.IA · Trading Desk — "+BUILD;
   try{
     win.dispatchEvent(new CustomEvent("agent-crypto:trader-runtime-mirror",{detail:{
