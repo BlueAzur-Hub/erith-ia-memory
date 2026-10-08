@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-10-07T22:04:10.444022+00:00",
+  "generated_at": "2026-10-08T02:02:19.340284+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,10 +11,10 @@
   "causal_claim": false,
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 23,
-    "operator_eligible_24h": 23,
+    "events_24h": 21,
+    "operator_eligible_24h": 21,
     "context_only_24h": 0,
-    "critical_24h": 11,
+    "critical_24h": 9,
     "strong_24h": 7,
     "sources_ok": 15,
     "sources_total": 15,
@@ -31,7 +31,7 @@
         "distinct_sources": 2
       },
       "regulation": {
-        "events_72h": 20,
+        "events_72h": 18,
         "distinct_sources": 5
       },
       "leverage": {
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 50,
       "qualified_count": 3,
-      "latency_ms": 139,
+      "latency_ms": 215,
       "error": null
     },
     {
@@ -70,7 +70,7 @@
       "status": "ok",
       "fetched_count": 22,
       "qualified_count": 0,
-      "latency_ms": 143,
+      "latency_ms": 200,
       "error": null
     },
     {
@@ -81,7 +81,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 161,
+      "latency_ms": 178,
       "error": null
     },
     {
@@ -92,7 +92,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 357,
+      "latency_ms": 271,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 233,
+      "latency_ms": 482,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 23,
-      "latency_ms": 334,
+      "latency_ms": 428,
       "error": null
     },
     {
@@ -123,9 +123,9 @@
       "group": "crypto",
       "url": "https://decrypt.co/feed",
       "status": "ok",
-      "fetched_count": 37,
-      "qualified_count": 28,
-      "latency_ms": 96,
+      "fetched_count": 50,
+      "qualified_count": 40,
+      "latency_ms": 147,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 6,
-      "latency_ms": 775,
+      "latency_ms": 1400,
       "error": null
     },
     {
@@ -147,7 +147,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 167,
+      "latency_ms": 244,
       "error": null
     },
     {
@@ -157,8 +157,8 @@
       "url": "https://www.france24.com/fr/rss",
       "status": "ok",
       "fetched_count": 24,
-      "qualified_count": 1,
-      "latency_ms": 392,
+      "qualified_count": 2,
+      "latency_ms": 461,
       "error": null
     },
     {
@@ -169,7 +169,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 249,
+      "latency_ms": 300,
       "error": null
     },
     {
@@ -180,7 +180,7 @@
       "status": "ok",
       "fetched_count": 8,
       "qualified_count": 7,
-      "latency_ms": 293,
+      "latency_ms": 398,
       "error": null
     },
     {
@@ -191,7 +191,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 243,
+      "latency_ms": 273,
       "error": null
     },
     {
@@ -202,7 +202,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 123,
+      "latency_ms": 95,
       "error": null
     },
     {
@@ -213,7 +213,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 8185,
+      "latency_ms": 8259,
       "error": null
     }
   ],
@@ -1466,11 +1466,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-07T09:03:38+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.017804+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.017804+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.719534+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.719534+00:00",
       "freshness": {
         "iso": "2026-10-07T09:03:38+00:00",
-        "hours": 13.01,
+        "hours": 16.98,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2281,11 +2281,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-07T15:06:14+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.004417+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.004417+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.706515+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.706515+00:00",
       "freshness": {
         "iso": "2026-10-07T15:06:14+00:00",
-        "hours": 6.96,
+        "hours": 10.93,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2417,11 +2417,11 @@
       "event_type": "energy",
       "event_label": "Énergie / pétrole / matières premières",
       "event_time": "2026-10-07T15:34:31+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.649321+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.649321+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.405028+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.405028+00:00",
       "freshness": {
         "iso": "2026-10-07T15:34:31+00:00",
-        "hours": 6.49,
+        "hours": 10.46,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2554,11 +2554,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-05T04:21:58+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.165190+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.165190+00:00",
+      "first_seen_at": "2026-10-08T02:02:11.099057+00:00",
+      "last_seen_at": "2026-10-08T02:02:11.099057+00:00",
       "freshness": {
         "iso": "2026-10-05T04:21:58+00:00",
-        "hours": 65.7,
+        "hours": 69.67,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2817,11 +2817,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-01T09:59:30+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.153275+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.153275+00:00",
+      "first_seen_at": "2026-10-08T02:02:11.087196+00:00",
+      "last_seen_at": "2026-10-08T02:02:11.087196+00:00",
       "freshness": {
         "iso": "2026-10-01T09:59:30+00:00",
-        "hours": 156.08,
+        "hours": 160.04,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2949,11 +2949,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-01T08:05:03+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.160726+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.160726+00:00",
+      "first_seen_at": "2026-10-08T02:02:11.094998+00:00",
+      "last_seen_at": "2026-10-08T02:02:11.094998+00:00",
       "freshness": {
         "iso": "2026-10-01T08:05:03+00:00",
-        "hours": 157.98,
+        "hours": 161.95,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3215,11 +3215,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-05T18:12:28+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.721097+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.721097+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.496510+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.496510+00:00",
       "freshness": {
         "iso": "2026-10-05T18:12:28+00:00",
-        "hours": 51.86,
+        "hours": 55.83,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3757,11 +3757,11 @@
       "event_type": "energy",
       "event_label": "Énergie / pétrole / matières premières",
       "event_time": "2026-10-07T04:00:51+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.934729+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.934729+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.859761+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.859761+00:00",
       "freshness": {
         "iso": "2026-10-07T04:00:51+00:00",
-        "hours": 18.05,
+        "hours": 22.02,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3892,12 +3892,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-07T20:16:04+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.633118+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.633118+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.395042+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.395042+00:00",
       "freshness": {
         "iso": "2026-10-07T20:16:04+00:00",
-        "hours": 1.8,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 5.77,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -3945,7 +3945,7 @@
         "feed_2852f720d8c3c917"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -3968,6 +3968,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_2852f720d8c3c917"
+      ],
       "headline_original": "SEC and CFTC Crypto Rules 'Fall Short' of Clarity, Says Rep. French Hill",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
@@ -4411,11 +4414,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-10-07T16:06:03+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.999810+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.999810+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.699825+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.699825+00:00",
       "freshness": {
         "iso": "2026-10-07T16:06:03+00:00",
-        "hours": 5.97,
+        "hours": 9.94,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -5335,11 +5338,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-06T17:19:58+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.042311+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.042311+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.746514+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.746514+00:00",
       "freshness": {
         "iso": "2026-10-06T17:19:58+00:00",
-        "hours": 28.73,
+        "hours": 32.7,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5598,11 +5601,11 @@
       "event_type": "tokenomics",
       "event_label": "Tokenomics / unlock / burn",
       "event_time": "2026-10-07T18:59:32+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.863469+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.863469+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.813604+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.813604+00:00",
       "freshness": {
         "iso": "2026-10-07T18:59:32+00:00",
-        "hours": 3.07,
+        "hours": 7.04,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -5652,7 +5655,7 @@
         "feed_047fcb51b59387d4"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -5675,6 +5678,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_047fcb51b59387d4"
+      ],
       "headline_original": "Wells Fargo in talks with Kraken parent Payward for crypto trading liquidity",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
@@ -5996,11 +6002,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-06T22:16:03+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.679508+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.679508+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.427947+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.427947+00:00",
       "freshness": {
         "iso": "2026-10-06T22:16:03+00:00",
-        "hours": 23.8,
+        "hours": 27.77,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6128,11 +6134,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-06T19:46:04+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.686179+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.686179+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.433280+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.433280+00:00",
       "freshness": {
         "iso": "2026-10-06T19:46:04+00:00",
-        "hours": 26.3,
+        "hours": 30.27,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6260,11 +6266,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-05T21:48:03+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.709404+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.709404+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.474995+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.474995+00:00",
       "freshness": {
         "iso": "2026-10-05T21:48:03+00:00",
-        "hours": 48.27,
+        "hours": 52.24,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7058,11 +7064,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-06T20:30:24+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.800060+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.800060+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.613513+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.613513+00:00",
       "freshness": {
         "iso": "2026-10-06T20:30:24+00:00",
-        "hours": 25.56,
+        "hours": 29.53,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7188,11 +7194,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-06T14:37:55+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.802395+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.802395+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.615451+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.615451+00:00",
       "freshness": {
         "iso": "2026-10-06T14:37:55+00:00",
-        "hours": 31.44,
+        "hours": 35.4,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7318,11 +7324,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-05T15:40:00+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.048801+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.048801+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.666301+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.666301+00:00",
       "freshness": {
         "iso": "2026-10-05T15:40:00+00:00",
-        "hours": 54.4,
+        "hours": 58.37,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7446,11 +7452,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-05T12:47:36+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.804526+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.804526+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.617298+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.617298+00:00",
       "freshness": {
         "iso": "2026-10-05T12:47:36+00:00",
-        "hours": 57.27,
+        "hours": 61.24,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7576,11 +7582,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-01T16:16:07+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.806681+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.806681+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.619433+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.619433+00:00",
       "freshness": {
         "iso": "2026-10-01T16:16:07+00:00",
-        "hours": 149.8,
+        "hours": 153.77,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7706,11 +7712,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-01T15:03:35+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.808701+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.808701+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.623049+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.623049+00:00",
       "freshness": {
         "iso": "2026-10-01T15:03:35+00:00",
-        "hours": 151.01,
+        "hours": 154.98,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7966,11 +7972,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-07T04:11:33+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.932767+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.932767+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.857963+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.857963+00:00",
       "freshness": {
         "iso": "2026-10-07T04:11:33+00:00",
-        "hours": 17.87,
+        "hours": 21.84,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8097,11 +8103,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-07T15:36:11+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.002557+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.002557+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.702550+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.702550+00:00",
       "freshness": {
         "iso": "2026-10-07T15:36:11+00:00",
-        "hours": 6.46,
+        "hours": 10.43,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -8492,12 +8498,12 @@
       "event_type": "energy",
       "event_label": "Énergie / pétrole / matières premières",
       "event_time": "2026-10-07T10:35:09+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.901407+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.901407+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.842999+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.842999+00:00",
       "freshness": {
         "iso": "2026-10-07T10:35:09+00:00",
-        "hours": 11.48,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 15.45,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -8619,11 +8625,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-06T12:27:11+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.698827+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.698827+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.453055+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.453055+00:00",
       "freshness": {
         "iso": "2026-10-06T12:27:11+00:00",
-        "hours": 33.61,
+        "hours": 37.58,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9917,11 +9923,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-05T17:00:00+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.047025+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.047025+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.664700+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.664700+00:00",
       "freshness": {
         "iso": "2026-10-05T17:00:00+00:00",
-        "hours": 53.07,
+        "hours": 57.04,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -10175,11 +10181,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-06T13:02:33+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.945927+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.945927+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.870014+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.870014+00:00",
       "freshness": {
         "iso": "2026-10-06T13:02:33+00:00",
-        "hours": 33.02,
+        "hours": 36.99,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10698,12 +10704,12 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-07T12:40:31+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.886164+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.886164+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.827984+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.827984+00:00",
       "freshness": {
         "iso": "2026-10-07T12:40:31+00:00",
-        "hours": 9.39,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.36,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -10959,11 +10965,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-07T14:55:32+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.654701+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.654701+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.407799+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.407799+00:00",
       "freshness": {
         "iso": "2026-10-07T14:55:32+00:00",
-        "hours": 7.14,
+        "hours": 11.11,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -11090,11 +11096,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-07T09:45:35+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.016341+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.016341+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.718282+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.718282+00:00",
       "freshness": {
         "iso": "2026-10-07T09:45:35+00:00",
-        "hours": 12.31,
+        "hours": 16.28,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11217,12 +11223,12 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-05T22:30:20+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.707005+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.707005+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.470670+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.470670+00:00",
       "freshness": {
         "iso": "2026-10-05T22:30:20+00:00",
-        "hours": 47.56,
-        "label": "Récente · moins de 48 h",
+        "hours": 51.53,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -11717,6 +11723,141 @@
       "semantic_refresh_build": "40.6.418"
     },
     {
+      "id": "feed_a6fc10c107e38d3c",
+      "event_id": "feed_a6fc10c107e38d3c",
+      "fingerprint": "a6fc10c107e38d3c",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Tether Signs Deal With Kazakhstan's Central Bank to Explore a Stablecoin and Tokenized Assets",
+      "body": "Tether, issuer of the USDT stablecoin, will help Kazakhstan's central bank study a tenge-pegged token and put real-world assets on a blockchain.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/380347/tether-kazakhstan-central-bank-stablecoin-tokenized-assets",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 2,
+      "source_names": [
+        "Decrypt",
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://decrypt.co/380347/tether-kazakhstan-central-bank-stablecoin-tokenized-assets",
+        "https://www.coindesk.com/business/2026/10/07/tether-tapped-by-kazakhstan-s-central-bank-to-explore-stablecoin-and-tokenization"
+      ],
+      "declared_status": "reported",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-10-07T19:46:04+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.396807+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.822944+00:00",
+      "freshness": {
+        "iso": "2026-10-07T19:46:04+00:00",
+        "hours": 6.27,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 86,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 87,
+        "level": "Critique"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [
+        "USDT"
+      ],
+      "sectors": [
+        "Stablecoins",
+        "Marché global",
+        "RWA"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
+        "tone": "warn"
+      },
+      "confirmations": 2,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "macro"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "Macroéconomie / banque centrale",
+      "article_ids": [
+        "feed_a6fc10c107e38d3c",
+        "feed_6328555107435f50"
+      ],
+      "article_count": 2,
+      "cluster_reason": "headline_similarity",
+      "source_tier": 4,
+      "source_tier_label": "Média crypto spécialisé",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 65,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 45,
+        "reasons": [
+          "asset_anchor"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_a6fc10c107e38d3c",
+        "feed_6328555107435f50"
+      ],
+      "headline_original": "Tether Signs Deal With Kazakhstan's Central Bank to Explore a Stablecoin and Tokenized Assets",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Tether Signs Deal With Kazakhstan's Central Bank to Explore a Stablecoin and Tokenized Assets",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_d49c05ce8d91cc34",
       "event_id": "feed_d49c05ce8d91cc34",
       "fingerprint": "d49c05ce8d91cc34",
@@ -12004,12 +12145,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-07T10:38:23+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.899417+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.899417+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.841230+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.841230+00:00",
       "freshness": {
         "iso": "2026-10-07T10:38:23+00:00",
-        "hours": 11.43,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 15.4,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -12240,141 +12381,6 @@
       "semantic_refresh_build": "40.6.418"
     },
     {
-      "id": "feed_a6fc10c107e38d3c",
-      "event_id": "feed_a6fc10c107e38d3c",
-      "fingerprint": "a6fc10c107e38d3c",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Tether Signs Deal With Kazakhstan's Central Bank to Explore a Stablecoin and Tokenized Assets",
-      "body": "Tether, issuer of the USDT stablecoin, will help Kazakhstan's central bank study a tenge-pegged token and put real-world assets on a blockchain.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/380347/tether-kazakhstan-central-bank-stablecoin-tokenized-assets",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 2,
-      "source_names": [
-        "Decrypt",
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://decrypt.co/380347/tether-kazakhstan-central-bank-stablecoin-tokenized-assets",
-        "https://www.coindesk.com/business/2026/10/07/tether-tapped-by-kazakhstan-s-central-bank-to-explore-stablecoin-and-tokenization"
-      ],
-      "declared_status": "reported",
-      "event_type": "macro",
-      "event_label": "Macroéconomie / banque centrale",
-      "event_time": "2026-10-07T19:46:04+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.636662+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.879942+00:00",
-      "freshness": {
-        "iso": "2026-10-07T19:46:04+00:00",
-        "hours": 2.3,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 76,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 87,
-        "level": "Critique"
-      },
-      "direction": "impact de marché large, sens à confirmer",
-      "assets": [
-        "USDT"
-      ],
-      "sectors": [
-        "Stablecoins",
-        "Marché global",
-        "RWA"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
-        "tone": "warn"
-      },
-      "confirmations": 2,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "macro"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "Macroéconomie / banque centrale",
-      "article_ids": [
-        "feed_a6fc10c107e38d3c",
-        "feed_6328555107435f50"
-      ],
-      "article_count": 2,
-      "cluster_reason": "headline_similarity",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 64,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 45,
-        "reasons": [
-          "asset_anchor"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "merged_event_ids": [
-        "feed_a6fc10c107e38d3c",
-        "feed_6328555107435f50"
-      ],
-      "headline_original": "Tether Signs Deal With Kazakhstan's Central Bank to Explore a Stablecoin and Tokenized Assets",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Tether Signs Deal With Kazakhstan's Central Bank to Explore a Stablecoin and Tokenized Assets",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_423cface7ca4490b",
       "event_id": "feed_423cface7ca4490b",
       "fingerprint": "423cface7ca4490b",
@@ -12398,11 +12404,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-07T09:09:06+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.905328+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.905328+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.845652+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.845652+00:00",
       "freshness": {
         "iso": "2026-10-07T09:09:06+00:00",
-        "hours": 12.92,
+        "hours": 16.88,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12528,11 +12534,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-07T01:48:53+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.027969+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.027969+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.732186+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.732186+00:00",
       "freshness": {
         "iso": "2026-10-07T01:48:53+00:00",
-        "hours": 20.25,
+        "hours": 24.22,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12657,11 +12663,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-06T21:00:44+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.031351+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.031351+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.735606+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.735606+00:00",
       "freshness": {
         "iso": "2026-10-06T21:00:44+00:00",
-        "hours": 25.06,
+        "hours": 29.02,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12786,12 +12792,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-06T02:01:03+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.704320+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.704320+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.465813+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.465813+00:00",
       "freshness": {
         "iso": "2026-10-06T02:01:03+00:00",
-        "hours": 44.05,
-        "label": "Récente · moins de 48 h",
+        "hours": 48.02,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -13436,11 +13442,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-06T14:20:11+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.167075+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.167075+00:00",
+      "first_seen_at": "2026-10-08T02:02:11.100782+00:00",
+      "last_seen_at": "2026-10-08T02:02:11.100782+00:00",
       "freshness": {
         "iso": "2026-10-06T14:20:11+00:00",
-        "hours": 31.73,
+        "hours": 35.7,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -13561,11 +13567,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-01T16:16:32+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.159093+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.159093+00:00",
+      "first_seen_at": "2026-10-08T02:02:11.093539+00:00",
+      "last_seen_at": "2026-10-08T02:02:11.093539+00:00",
       "freshness": {
         "iso": "2026-10-01T16:16:32+00:00",
-        "hours": 149.79,
+        "hours": 153.76,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -13686,11 +13692,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-02T13:00:00+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.453892+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.453892+00:00",
+      "first_seen_at": "2026-10-08T02:02:11.869596+00:00",
+      "last_seen_at": "2026-10-08T02:02:11.869596+00:00",
       "freshness": {
         "iso": "2026-10-02T13:00:00+00:00",
-        "hours": 129.07,
+        "hours": 133.04,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -13943,11 +13949,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-10-06T15:26:41+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.694482+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.694482+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.446805+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.446805+00:00",
       "freshness": {
         "iso": "2026-10-06T15:26:41+00:00",
-        "hours": 30.62,
+        "hours": 34.59,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -14327,11 +14333,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-05T20:19:38+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.716597+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.716597+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.488555+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.488555+00:00",
       "freshness": {
         "iso": "2026-10-05T20:19:38+00:00",
-        "hours": 49.74,
+        "hours": 53.71,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -14966,12 +14972,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-07T12:34:13+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.888769+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.888769+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.830397+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.830397+00:00",
       "freshness": {
         "iso": "2026-10-07T12:34:13+00:00",
-        "hours": 9.5,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.47,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -15354,12 +15360,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-10-07T10:49:16+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.669416+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.669416+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.415085+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.415085+00:00",
       "freshness": {
         "iso": "2026-10-07T10:49:16+00:00",
-        "hours": 11.25,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 15.22,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -15604,11 +15610,11 @@
       "event_type": "tokenomics",
       "event_label": "Tokenomics / unlock / burn",
       "event_time": "2026-10-07T16:30:00+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.867759+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.867759+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.815683+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.815683+00:00",
       "freshness": {
         "iso": "2026-10-07T16:30:00+00:00",
-        "hours": 5.57,
+        "hours": 9.54,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -15658,7 +15664,7 @@
         "feed_831c331f7a67ee6b"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -15679,6 +15685,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_831c331f7a67ee6b"
+      ],
       "headline_original": "Polygon taps TRON’s $94 billion stablecoin supply for seamless cross-border transfers",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
@@ -15730,11 +15739,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-07T18:00:10+00:00",
-      "first_seen_at": "2026-10-07T22:04:01.991905+00:00",
-      "last_seen_at": "2026-10-07T22:04:01.991905+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.692268+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.692268+00:00",
       "freshness": {
         "iso": "2026-10-07T18:00:10+00:00",
-        "hours": 4.06,
+        "hours": 8.03,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -15782,7 +15791,7 @@
         "feed_82ea28728e31902a"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -15803,6 +15812,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_82ea28728e31902a"
+      ],
       "headline_original": "Hunter Biden confirms LAPTOP token ‘not a rug pull,’ just trolling Trumps",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
@@ -15854,11 +15866,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-07T08:06:35+00:00",
-      "first_seen_at": "2026-10-07T22:04:02.020508+00:00",
-      "last_seen_at": "2026-10-07T22:04:02.020508+00:00",
+      "first_seen_at": "2026-10-08T02:02:10.724325+00:00",
+      "last_seen_at": "2026-10-08T02:02:10.724325+00:00",
       "freshness": {
         "iso": "2026-10-07T08:06:35+00:00",
-        "hours": 13.96,
+        "hours": 17.93,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -15906,7 +15918,7 @@
         "feed_ce7ffa6c2999bb21"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -15927,6 +15939,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_ce7ffa6c2999bb21"
+      ],
       "headline_original": "Russia clears first crypto exchanges, custodians under new law",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
