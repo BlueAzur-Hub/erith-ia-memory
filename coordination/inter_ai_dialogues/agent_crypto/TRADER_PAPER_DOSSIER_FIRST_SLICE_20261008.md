@@ -1,0 +1,7 @@
+# Trader · première tranche de dossier Paper (8 octobre 2026)
+Départ : Trader validé en Firefox pour R9 BTCUSDT, affichage graphique natif EUR, OKB USD et bougies OKX. Priorité du fil : sortir de la répétition des tests et avancer vers un Trader utile sans casser les propriétaires.
+Cette tranche livre un dossier repliable en bas de Market, ACTIVÉ À LA DEMANDE, pour l'actif sélectionné : source, devise, couverture, horodatage, fraîcheur, garde-fous globaux de Strategy A, état de préparation strictement non autorisé.
+Architecture : uniquement le nouvel adaptateur `trader/trader-paper-preparation.js`, injecté par `trader-runtime-mirror.js` dans l'iframe Administrator déjà partagé. Aucun code Administrator, aucune stratégie, aucun marché ni prix modifié. Aucun nouvel ordre, fetch, stockage ou timer.
+Source de vérité : `getSelectedCoin`, `AgentCryptoQuoteCurrencyArchitecture.snapshot()`, `state.dataBroker.chart` avec cohérence asset/devise/contexte, `AgentCryptoStrategyAGateCanonicalTruth.snapshot()` pour les gates GLOBAUX. Les résultats globaux ne deviennent jamais un signal propre à l'actif. Aucune décision financière inventée.
+Garde-fous : données manquantes → 'non disponible'; décision non établie, Paper bloqué. Core 38.15.11, Bridge, stratégies réelles et Trader/Administrator build 40.6.624 inchangés.
+Tests de précommit : JS valide, BTC USD admis, BTC EUR rejette une série USD, OKB USD rejette BTC, sélection absente bloquée. Tests GH CI et Firefox restant à vérifier.

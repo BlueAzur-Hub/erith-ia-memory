@@ -65,6 +65,13 @@ function mount(){
     script.src=new URL("../trader/trader-historical-panel.js?v=r9-eur-sync-20261008",doc.baseURI).href;
     doc.head.appendChild(script);
   }
+  // New read-only PAPER preparation view, separate from all strategy owners.
+  if(!doc.getElementById("traderPaperPreparationScript")){
+    const script=doc.createElement("script");
+    script.id="traderPaperPreparationScript";
+    script.src=new URL("../trader/trader-paper-preparation.js",doc.baseURI).href;
+    doc.head.appendChild(script);
+  }
   doc.title="ERITH.IA · Trading Desk — "+BUILD;
   try{
     win.dispatchEvent(new CustomEvent("agent-crypto:trader-runtime-mirror",{detail:{
