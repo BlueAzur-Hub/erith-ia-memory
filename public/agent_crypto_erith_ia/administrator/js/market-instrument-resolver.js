@@ -9,6 +9,10 @@
   const CACHE_TTL_MS=60000;
   const cache=new Map();
   let last=null;
+  // Only the newest candle-resolution request may update the shared execution truth.
+  // Book lookups remain independent and never replace the candle snapshot.
+  let candleResolveGeneration=0;
+  let selectedRefreshGeneration=0;
   const pairOwner=()=>globalThis.AgentCryptoOkxMarketPairResolver||null;
   const quoteOwner=()=>globalThis.AgentCryptoQuoteCurrencyArchitecture||null;
   const normalizeAsset=value=>{
@@ -109,6 +113,7 @@
     const asset=normalizeAsset(options.asset)||selectedAsset();
     const currency=normalizeCurrency(options.currency||displayCurrency());
     const capability=options.capability==="book"?"book":"candles";
+    const generation=capability==="candles"?++candleResolveGeneration:null;
     const key=asset+"|"+currency;
     const now=Date.now();
     let payload=null;
@@ -130,11 +135,21 @@
         const e=new Error(String(raw?.error||raw?.detail||("Resolver marché HTTP "+response.status)));e.code="MARKET_RESOLVER_HTTP";e.status=response.status;throw e;
       }
       payload=normalizePayload(raw,asset,currency);
+      if(payload.asset!==asset||payload.currency!==currency){
+        const e=new Error("Réponse resolver hors contexte · "+asset+"/"+currency);
+        e.code="MARKET_RESOLVER_CONTEXT_MISMATCH";
+        throw e;
+      }
       cache.set(key,{at:now,payload});
     }
     const result=resultFor(payload,capability);
-    last=result;
-    if(options.publish!==false&&capability==="candles")publishExecutionTruth(result);
+    // Older BTC responses cannot overwrite OKB after a rapid market switch.
+    // An independent book resolution cannot alter the candle execution label.
+    if(capability==="candles"&&generation===candleResolveGeneration&&
+       asset===selectedAsset()&&currency===displayCurrency()){
+      last=result;
+      if(options.publish!==false)publishExecutionTruth(result);
+    }
     return result;
   }
   async function fetchCandles({resolution,bar="15m",limit=300,signal=null}={}){
@@ -198,8 +213,24 @@
     });
   }
   async function refreshSelected(reason="selected-market-changed"){
-    try{return await resolve({asset:selectedAsset(),currency:displayCurrency(),capability:"candles",publish:true,latestOnly:true});}
-    catch(error){last=Object.freeze({build:BUILD,available:false,capability:"candles",asset:selectedAsset(),currency:displayCurrency(),provider:null,instrument:null,quote:null,status:"error",reason:String(error?.message||error),read_only:true});publishExecutionTruth(last);return last;}
+    const generation=++selectedRefreshGeneration;
+    const asset=selectedAsset(),currency=displayCurrency();
+    // Report the newly requested market while its provider is resolving.
+    last=Object.freeze({build:BUILD,available:null,capability:"candles",
+      asset,currency,provider:null,instrument:null,quote:null,
+      status:"resolving",reason,read_only:true});
+    try{
+      return await resolve({asset,currency,capability:"candles",publish:true,latestOnly:true});
+    }catch(error){
+      // Do not let the failed request for a previous asset erase the new one.
+      if(generation!==selectedRefreshGeneration||
+         asset!==selectedAsset()||currency!==displayCurrency())return null;
+      last=Object.freeze({build:BUILD,available:false,capability:"candles",
+        asset,currency,provider:null,instrument:null,quote:null,
+        status:"error",reason:String(error?.message||error),read_only:true});
+      publishExecutionTruth(last);
+      return last;
+    }
   }
   function snapshot(){return last||Object.freeze({build:BUILD,available:null,asset:selectedAsset(),currency:displayCurrency(),status:"idle",read_only:true});}
   function selfTest(){

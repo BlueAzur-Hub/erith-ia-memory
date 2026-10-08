@@ -576,11 +576,16 @@
     state.asset=requested;state.requestedAsset=requested;state.requestedQuote=requestedQuote;
 
     if(state.loading){
-      if(requested!==state.loadingAsset||requestedQuote!==state.loadingQuote){
+      // When BTC -> OKB -> BTC happens before a response, the first BTC
+      // request may already be aborted. Always keep only the latest intent.
+      if(requested!==state.loadingAsset||requestedQuote!==state.loadingQuote||
+         state.activeController?.signal?.aborted){
         state.pendingAsset=requested;state.pendingQuote=requestedQuote;
         if(state.loadedAsset!==requested||!acceptableQuotes.includes(state.loadedQuote))clearBookForAsset(requested,requestedQuote);
         try{state.activeController?.abort();}catch(_){}
         render();
+      }else{
+        state.pendingAsset=null;state.pendingQuote=null;
       }
       return false;
     }
@@ -606,7 +611,8 @@
       state.capturedAt=result.sourceObservedAt;state.sourceObservedAt=result.sourceObservedAt;state.receivedAt=result.receivedAt;state.sourceAgeMs=result.ageMs;
       state.lastLatencyMs=result.latencyMs;state.freshness="FRESH";state.error=null;ok=true;
     }catch(error){
-      const superseded=error?.code==="SUPERSEDED_REQUEST"||(error?.name==="AbortError"&&state.pendingAsset&&state.pendingAsset!==requestAsset);
+      const superseded=error?.code==="SUPERSEDED_REQUEST"||
+        (error?.name==="AbortError"&&!!state.pendingAsset);
       if(!superseded){
         const freshState=classifyError(error);
         const ext=externalContext();const message=error?.name==="AbortError"?(ext.active?`${ext.providerLabel||ext.provider} : timeout / annulation carnet`:"Backend 8790 : timeout / annulation carnet"):String(error?.message||error);
@@ -849,6 +855,18 @@
     window.addEventListener("pageshow",boot,{passive:true});
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")clearLive();else if(state.open)scheduleLive();},{passive:true});
     window.addEventListener("resize",()=>{if(state.maximized)applyPlacement();else if(state.detached){rememberFloatRect();applyPlacement();}else if(state.open)snapToLectureTechnique();},{passive:true});
+    // Market selection is the canonical owner of the selected asset.
+    // Currency-only events cannot keep an old BTC orderbook in sync with OKB.
+    window.addEventListener("agent-crypto:selected-market-changed",event=>{
+      if(externalContext().active)return;
+      const announced=normalizeSelectedAsset(event?.detail?.symbol);
+      if(!announced||announced!==selectedAsset())return;
+      const next=announced,nextQuote=desiredQuote();
+      state.requestedAsset=next;state.requestedQuote=nextQuote;
+      if(state.loadedAsset!==next||!quoteCandidates().includes(state.loadedQuote))
+        clearBookForAsset(next,nextQuote);
+      if(state.open)void refresh({automatic:true,asset:next,quote:nextQuote});
+    },{passive:true});
     window.addEventListener("agent-crypto:quote-architecture-changed",()=>{
       if(externalContext().active)return;
       const next=selectedAsset();

@@ -1,0 +1,30 @@
+name: Agent Crypto Trader Shared Selection Regression
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-crypto-trader-shared-selection.yml"
+      - "public/agent_crypto_erith_ia/tools/trader-shared-market-selection.test.mjs"
+      - "public/agent_crypto_erith_ia/administrator/js/market-instrument-resolver.js"
+      - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
+permissions:
+  contents: read
+jobs:
+  native_market_pair_regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check shared runtime syntax
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/market-instrument-resolver.js
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+          node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
+      - name: Rapid selection and capability isolation tests
+        run: node --test public/agent_crypto_erith_ia/tools/trader-shared-market-selection.test.mjs
+      - name: Historical Firefox reader regressions
+        run: node --test public/agent_crypto_erith_ia/tools/historical-compact-reader.test.mjs public/agent_crypto_erith_ia/tools/historical-vault-automatic.test.mjs
