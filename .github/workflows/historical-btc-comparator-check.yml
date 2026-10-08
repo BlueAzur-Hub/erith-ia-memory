@@ -1,0 +1,26 @@
+name: Agent Crypto R7 BTC Source Comparator
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/historical-btc-comparator-check.yml"
+      - "public/agent_crypto_erith_ia/administrator/js/historical-btc-comparator.js"
+      - "public/agent_crypto_erith_ia/tools/historical-btc-comparator.test.mjs"
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Checkout real public archives
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax
+        run: node --check public/agent_crypto_erith_ia/administrator/js/historical-btc-comparator.js
+      - name: Offline source and failure-isolation tests
+        run: node --test public/agent_crypto_erith_ia/tools/historical-btc-comparator.test.mjs

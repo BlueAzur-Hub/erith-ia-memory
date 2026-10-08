@@ -48,7 +48,13 @@ select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-
 </div><p id="r6-source" class="fine">Binance Spot / USDT. Source archivistique, pas un prix USD/EUR, ni un signal live.</p>
 <div id="r6-table" class="scroll">Sélectionne une crypto et une période, puis clique sur Lire la série.</div>
 </details>
-<details class="board"><summary>Informations techniques et limites</summary>
+<details class="board" id="r7-btc-comparator">
+<summary>R7 · Comparer BTC : CoinGecko USD · Binance USDT · OKX USDC</summary>
+<p class="muted">Lecture indépendante : les trois prix n'ont ni la même devise ni nécessairement la même date. Aucun écart de prix calculé.</p>
+<div class="toolbar"><button type="button" id="r7-check">Comparer les sources BTC</button><span id="r7-status" class="muted" aria-live="polite">En attente</span></div>
+<div id="r7-table" class="scroll" style="margin-top:8px">Lecture sur demande uniquement.</div>
+<p class="fine" id="r7-warning">CoinGecko : snapshot public USD · Binance : dernière clôture archivée en USDT · OKX : ticker public BTC-USDC via Backend local si disponible. Aucune modification du Graphique.</p>
+</details><details class="board"><summary>Informations techniques et limites</summary>
 <div id="details" class="fine">La source GitHub doit passer la vérification SHA-256, la décompression gzip, la chronologie et l'index de couverture. Aucun fichier local n'est envoyé sur Internet.</div></details>
 <script>
 (()=>{"use strict";
@@ -204,6 +210,33 @@ btn.addEventListener("click",async()=>{
    table.appendChild(item)});
   $("r6-table").replaceChildren(table);$("r6-result").textContent="Série lue et vérifiée";$("r6-result").className="good";
  }catch(e){$("r6-table").textContent="Aucune chandelle affichée : contrôle refusé.";$("r6-result").textContent=String(e?.message||e).slice(0,150);$("r6-result").className="bad"}
+ finally{btn.disabled=false}
+});
+})();
+</script><script src="./js/historical-btc-comparator.js"></script>
+<script>
+(()=>{"use strict";
+const $=id=>document.getElementById(id),btn=$("r7-check");
+const iso=s=>{const t=Date.parse(s);return Number.isFinite(t)?new Date(t).toLocaleString("fr-FR",{timeZone:"UTC",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit"})+" UTC":"—"};
+const money=n=>new Intl.NumberFormat("fr-FR",{maximumFractionDigits:8}).format(n);
+btn.addEventListener("click",async()=>{
+ btn.disabled=true;$("r7-status").textContent="Vérification…";$("r7-table").textContent="Lecture en cours…";
+ try{
+  const api=window.SevenBTCSourceComparator;
+  if(!api)throw Error("Module R7 non chargé");
+  const result=await api.compare();
+  if(result.graphModified||result.priceSpreadCalculated||result.quoteRule!=="USD != USDT != USDC")throw Error("Contrat devise invalide");
+  const table=document.createElement("table"),head=document.createElement("tr");
+  ["Source","Instrument / devise","Prix observé","Date UTC","État"].forEach(x=>{const th=document.createElement("th");th.textContent=x;head.append(th)});table.append(head);
+  result.rows.forEach(r=>{const row=document.createElement("tr");const cols=[r.provider,r.market?r.market+" · "+r.quote:"—",
+   Number.isFinite(r.price)?money(r.price)+" "+r.quote:"—",r.observedAt?iso(r.observedAt):"—",
+   r.status==="UNAVAILABLE"?"Indisponible · "+r.error:(r.status==="STALE"?"Ancien relevé · ":"Relevé vérifié · ")+r.ageMinutes+" min"];
+   cols.forEach(value=>{const td=document.createElement("td");td.textContent=value;row.append(td)});table.append(row)});
+  $("r7-table").replaceChildren(table);
+  $("r7-status").textContent=result.rows.filter(r=>r.status!=="UNAVAILABLE").length+"/3 sources consultées · lecture seule";
+  $("r7-status").className="good";
+  $("r7-warning").textContent="Horaires non alignés ; USD ≠ USDT ≠ USDC. Aucun arbitrage, aucune conversion implicite, aucun ordre. L'absence du Bridge peut rendre OKX indisponible sans bloquer les autres sources.";
+ }catch(e){$("r7-table").textContent="Aucune valeur inventée : contrôle non validé.";$("r7-status").textContent=String(e?.message||e).slice(0,160);$("r7-status").className="bad"}
  finally{btn.disabled=false}
 });
 })();
