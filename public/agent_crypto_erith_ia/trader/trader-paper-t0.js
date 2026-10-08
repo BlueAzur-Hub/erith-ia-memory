@@ -2,6 +2,7 @@
 (()=>{"use strict";
 const api=globalThis;
 let evidence=null, captureBusy=false, captureSeq=0, strategyReadStatus=null;
+let newSession=null;
 const safe=(fn)=>{try{return typeof fn==="function"?fn():null}catch(_){return null}};
 const stamp=v=>{const n=typeof v==="number"?v:Date.parse(String(v||""));return Number.isFinite(n)&&n>0?n:null};
 const pair=v=>{const m=String(v||"").toUpperCase().match(/^([A-Z0-9]+)[/-]([A-Z0-9]+)$/);return m?{base:m[1],quote:m[2]}:null};
@@ -79,6 +80,7 @@ function g1ProofReport(v){
   "\nPreuve actuelle liee aux builds: "+(f.currentPass?"DEMONTRÉE":"NON DEMONTREE")+
   "\nProprietaire/source: "+(f.available?f.source:"NON CHARGE")+" · lien des builds: "+(f.binding||"INCONNU")+
   "\nDernier test explicite: "+(f.explicitStatus||"INCONNU")+"\n"+modules+
+  (!f.currentPass&&[2,7].some(n=>["PASS","FOUNDATION_PASS"].includes(g(n)))?"\nDIVERGENCE : PASS affiche par la matrice, mais preuve actuelle liee aux builds NON DEMONTREE; aucune autorisation Paper.":"")+
   "\nObservations uniquement : aucun PASS et aucune permission Paper crees.";
 }
 
@@ -244,7 +246,7 @@ function report(v){
 }
 function paint(){
  const output=document.getElementById("traderPaperT0")?.querySelector("[data-t0-report]");
- if(output)output.textContent=report(evidence);
+ if(output)output.textContent=report(evidence)+sessionReport();
 }
 
 /* Explicit T0 read; only canonical safety/gate owners and the one missing Replay owner, never the 28-module cascade. */
@@ -316,7 +318,9 @@ async function capture(){
   if(token!==captureSeq||identity()!==start)return null;
   strategyReadStatus=await readCanonical();
   if(token!==captureSeq||identity()!==start)return null;
-  evidence=analyze();paint();
+  evidence=analyze();
+  if(newSession&&identity()===newSession.assetKey) newSession=Object.freeze({...newSession,captures:newSession.captures+1});
+  paint();
   try{api.AgentCryptoTraderPaperPreparation?.render?.()}catch(_){}
   return evidence;
  }finally{
@@ -324,6 +328,43 @@ async function capture(){
   if(button){button.disabled=false;button.textContent="Capturer T0 (sans stockage)";}
  }
 }
+
+/* Non-destructive voluntary reset: baseline in volatile memory only. */
+function evidenceCounts(){
+ const d=safe(api.AgentCryptoStrategyAEvidenceDossier?.snapshot)?.dataset||{};
+ const n=r=>Number.isInteger(r?.rows)&&r.rows>=0?r.rows:null;
+ return Object.freeze({experiment:n(d.experiment),afterCost:n(d.after_cost)});
+}
+function sessionSnapshot(){
+ if(!newSession)return null;
+ const current=evidenceCounts(),same=identity()===newSession.assetKey;
+ const diff=(now,start)=>same&&Number.isInteger(now)&&Number.isInteger(start)?now-start:null;
+ return Object.freeze({since:newSession.since,asset:newSession.asset,captures:newSession.captures,
+  sameAsset:same,baseline:newSession.baseline,current,
+  experimentDelta:diff(current.experiment,newSession.baseline.experiment),
+  afterCostDelta:diff(current.afterCost,newSession.baseline.afterCost),
+  historyPreserved:true,stored:false});
+}
+function sessionReport(){
+ const r=sessionSnapshot();if(!r)return "";
+ const fmt=x=>x===null?"NON EVALUE":String(x);
+ return "\n\nSEANCE T0 · RESET SANS SUPPRESSION"+
+  "\nDebut: "+r.since+" · actif "+r.asset+" · captures "+r.captures+
+  (r.sameAsset?"":"\nActif change : RESET pour commencer une seance sur cet actif.")+
+  "\nExperiment : debut "+fmt(r.baseline.experiment)+" · actuel "+fmt(r.current.experiment)+" · delta "+fmt(r.experimentDelta)+
+  "\nAfter-cost : debut "+fmt(r.baseline.afterCost)+" · actuel "+fmt(r.current.afterCost)+" · delta "+fmt(r.afterCostDelta)+
+  "\nLes archives et gates ne sont pas effaces. Delta de compteurs, pas une certification."+
+  "\nUne capture T0 suffit pour conclure cette seance.";
+}
+function beginNewSession(){
+ if(captureBusy)return null;
+ const p=safe(api.AgentCryptoTraderPaperPreparation?.snapshot);
+ newSession=Object.freeze({since:new Date().toISOString(),assetKey:identity(),
+  asset:String(p?.asset?.symbol||"inconnu"),baseline:evidenceCounts(),captures:0});
+ reset();
+ return sessionSnapshot();
+}
+
 function reset(){++captureSeq;evidence=null;strategyReadStatus=null;paint()}
 function mount(){
  if(document.getElementById("traderPaperT0"))return true;
@@ -334,12 +375,15 @@ function mount(){
  el.innerHTML='<h4>PREUVE T0 · G1 QUALITE DES DONNEES</h4>'+
   '<p class="paper-note">Capture volontaire en lecture seule. Aucune promotion de gate.</p>'+
   '<button type="button" data-t0-capture>Capturer T0 (sans stockage)</button>'+
+  '<button type="button" data-t0-reset style="margin-left:8px">RESET · nouvelle séance</button>'+
   '<pre data-t0-report style="white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.55 system-ui,sans-serif"></pre>';
  parent.appendChild(el);
- el.querySelector("[data-t0-capture]").addEventListener("click",capture);paint();return true;
+ el.querySelector("[data-t0-capture]").addEventListener("click",capture);
+ el.querySelector("[data-t0-reset]").addEventListener("click",beginNewSession);
+ paint();return true;
 }
 if(!mount()){const onClick=()=>{if(mount())document.removeEventListener("click",onClick,true)};
  document.addEventListener("click",onClick,true);}
 for(const e of ["agent-crypto:selected-market-changed","agent-crypto:quote-architecture-changed"])api.addEventListener(e,reset,{passive:true});
-api.AgentCryptoTraderT0=Object.freeze({analyze,capture,mount,reset,report,marketReport,marketBrief,snapshot:()=>evidence,read_only:true,gate_write:false,real_order:false,storage_write:false});
+api.AgentCryptoTraderT0=Object.freeze({analyze,capture,mount,reset,begin_new_session:beginNewSession,session_snapshot:sessionSnapshot,report,marketReport,marketBrief,snapshot:()=>evidence,read_only:true,gate_write:false,real_order:false,storage_write:false});
 })();

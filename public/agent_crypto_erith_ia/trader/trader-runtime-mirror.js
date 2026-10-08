@@ -76,7 +76,7 @@ function mount(){
   if(!doc.getElementById("traderPaperT0Script")){
     const script=doc.createElement("script");
     script.id="traderPaperT0Script";
-    script.src=new URL("../trader/trader-paper-t0.js?view=g1-chronology-replay-20261008",doc.baseURI).href;
+    script.src=new URL("../trader/trader-paper-t0.js?view=reset-session-safe",doc.baseURI).href;
     const paper=doc.getElementById("traderPaperPreparationScript");
     if(paper&&!doc.getElementById("traderPaperPreparation"))
       paper.addEventListener("load",()=>doc.head.appendChild(script),{once:true});
