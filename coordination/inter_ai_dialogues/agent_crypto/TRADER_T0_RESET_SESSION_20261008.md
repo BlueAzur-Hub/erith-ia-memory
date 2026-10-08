@@ -9,3 +9,6 @@ Ce RESET ne purge pas les 1760 anciens cycles Experiment ni les 13 lignes After-
 Fichiers runtime modifiés : trader-paper-t0.js (UI et séance en mémoire), trader-runtime-mirror.js (cache-bust du même script). Aucun moteur de graphique, carnet, Bridge, code de trading, build ou Market Core modifié. Trader 40.6.624 / Market Core 38.15.11.
 
 Preuve de recette : syntaxe des deux JS, test du bouton, compteurs de départ 1760 et 13 non effacés, deux resets successifs. Livraison = commit GitHub main, ZIP compact, déploiement Pages vérifié, relève Notion. Une seule capture de terrain facultative suffit si le bouton est bien visible.
+
+## Traçabilité de livraison
+Code + ZIP sur `main` via `ee99d9685f94e648ff9262a91bde2116db503de7`. Vérifier distinctement le workflow Pages et les tests CI avant de déclarer le déploiement achevé. Le comportement Firefox n'est pas certifié par les tests synthétiques.
