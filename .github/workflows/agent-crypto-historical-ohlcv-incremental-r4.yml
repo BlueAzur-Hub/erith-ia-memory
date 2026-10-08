@@ -5,6 +5,10 @@ on:
   # last verified closed OHLCV candle, so timing jitter cannot create gaps.
   schedule:
     - cron: '17 * * * *'
+  # Fallback from the existing public market scheduled workflow.
+  workflow_run:
+    workflows: ["Atlas Public Crypto Market"]
+    types: [completed]
   push:
     branches: [main]
     paths:
@@ -24,7 +28,38 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  cadence:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'schedule' &&
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    outputs:
+      proceed: ${{ steps.gate.outputs.proceed }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: gate
+        name: Keep historical collection at most about once per hour
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os,json
+          from pathlib import Path
+          from datetime import datetime,timezone
+          if os.environ["EVENT_NAME"] in ("push","workflow_dispatch"):
+              print("proceed=true")
+          else:
+              path=Path("public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot/index.json")
+              captured=json.loads(path.read_text())["updated_at"]
+              delta=(datetime.now(timezone.utc)-datetime.fromisoformat(captured.replace("Z","+00:00"))).total_seconds()
+              print("proceed="+("true" if delta>=52*60 else "false"))
+          PY
   append:
+    needs: cadence
+    if: needs.cadence.outputs.proceed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

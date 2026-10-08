@@ -4,6 +4,11 @@ on:
   # GitHub cron is best effort; independent of the R10 schedule at :17.
   schedule:
     - cron: '52 * * * *'
+  # Event relays bot-origin R10 data updates; GITHUB_TOKEN push alone
+  # does not start dependent workflows.
+  workflow_run:
+    workflows: ["Agent Crypto Historical OHLCV R10 Synchronized Hourly Pilot"]
+    types: [completed]
   push:
     branches: [main]
     paths:
@@ -16,6 +21,10 @@ concurrency:
   cancel-in-progress: false
 jobs:
   publish:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 18
     steps:
