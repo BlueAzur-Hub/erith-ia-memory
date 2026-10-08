@@ -25,6 +25,9 @@ INDEX = FOLDER / "index.json"
 DELTAS = FOLDER / "deltas"
 MS = {"24h": (300000, "5m"), "7d": (3600000, "1h"), "30d": (14400000, "4h")}
 MAX_NEW_PER_SERIES = 240
+# R8 hourly automation is a bounded pilot. Browser reader R6 currently accepts
+# up to 150 delta files; stop well before that without destroying prior data.
+MAX_PILOT_DELTAS = 100
 API = ("https://data-api.binance.vision", "https://api.binance.com")
 
 
@@ -218,6 +221,15 @@ def incremental(now):
         check_prior_index(previous, manifest, seed, existing, assets, state)
     else:
         insist(not existing, "Delta archive exists without index: fail closed")
+    # R8 STOP: no new network requests or writes once pilot archive reaches its
+    # agreed cap. All existing files and index remain unchanged/readable.
+    if len(existing) >= MAX_PILOT_DELTAS:
+        print(json.dumps({"status": "PAUSED_CAP_REACHED",
+                          "reason": "R8 reader-safety pilot cap; upgrade archive reader/compaction before expanding",
+                          "delta_count": len(existing),
+                          "pilot_max_deltas": MAX_PILOT_DELTAS,
+                          "candles_total": previous["candles_total"] if previous else None}))
+        return
     now_ms = int(now.timestamp() * 1000)
     updates = []
     # Deterministic series order, bounded <= 240 new candles / series / run.
@@ -296,7 +308,10 @@ def self_test():
     else:
         raise AssertionError("Invalid OHLC was accepted")
     insist(state["unit"]["count"] == 3, "invalid bar mutated count")
-    print("SELF_TEST_PASS: append-only, idempotent no-op, duplicate, gap, OHLC, closed bars")
+    # R8: bounded pilot must end before the R6 reader's 150-delta safety limit.
+    insist(0 < MAX_PILOT_DELTAS <= 100 and MAX_PILOT_DELTAS < 150,
+           "R8 pilot count is not within the browser reader's ceiling")
+    print("SELF_TEST_PASS: append-only, idempotent no-op, duplicate, gap, OHLC, closed bars, R8 cap")
 
 
 def audit_existing():
