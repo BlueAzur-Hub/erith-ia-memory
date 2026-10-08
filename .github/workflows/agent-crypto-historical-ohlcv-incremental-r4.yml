@@ -31,9 +31,15 @@ jobs:
         run: |
           python -m py_compile public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py
           python public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py --self-test
+      - name: Replay existing archive twice · no network or writes
+        run: |
+          python public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py --audit-existing
       - name: Append only new closed Binance spot candles
         run: |
           python public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py
+      - name: Replay cumulative archive after append
+        run: |
+          python public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py --audit-existing
       - name: Verify index and immutable delta files
         shell: bash
         run: |

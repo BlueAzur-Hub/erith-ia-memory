@@ -1,0 +1,11 @@
+# Seven Heaven · Coffre historique unifié R5 (lecture seule)
+- Page publique : `administrator/historical-vault.html`.
+- Objectif : une seule vue adaptée à Firefox F11, sans page d'inventaire interminable.
+- Mesure locale : base IndexedDB `agent_crypto_storage_relief_40278`, magasin `payloads`, clé historique déjà existante, transaction **readonly**, métadonnées seulement. Caches limités à 80 entrées et variables pendant les consultations.
+- Mesure GitHub : charge `index.json`, `manifest.json`, le seed R2 gzip et tous les deltas R4. Vérifie chaque empreinte SHA-256, les colonnes OHLCV, les intervalles, les horodatages, les trous/doublons, la source Binance Spot USDT et la couverture publiée. Échec fermé : ne pas marquer valide si discordance.
+- Statistiques locales et persistantes **non additionnables** : séries de prix du cache ≠ chandelles OHLCV archivées.
+- 7 actifs R2 : BTC/ETH/BNB/XRP/SOL/TRX/ZEC. USDT, USDC, FIGR_HELOC toujours non qualifiés dans ce panier.
+- Aucun accès direct au Graphique, Trader, Bridge, Market Core ; aucune écriture navigateur, aucun ordre.
+- Page R3 reste un contrôle du **seed R2 seul**, d'où l'affichage immuable de 4 452 chandelles sur R3.
+- Avant d'activer une collecte quotidienne ou le Top 50 : exécution supplémentaire de R4, contrôle de continuité sans doublon, volumétrie puis décision.
+- R5 ne modifie pas les moteurs. La future connexion du Graphique est un autre chantier borné, à tester après l'approbation de la vue.

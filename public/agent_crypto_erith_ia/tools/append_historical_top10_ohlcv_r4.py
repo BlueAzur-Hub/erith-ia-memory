@@ -299,13 +299,35 @@ def self_test():
     print("SELF_TEST_PASS: append-only, idempotent no-op, duplicate, gap, OHLC, closed bars")
 
 
+def audit_existing():
+    """Rebuild R2 plus every delta twice without network or writes."""
+    m, assets, state, seed = read_seed()
+    deltas = get_deltas(assets, state)
+    insist(INDEX.exists(), "Cumulative index missing")
+    prior = json.loads(INDEX.read_text(encoding="utf-8"))
+    check_prior_index(prior, m, seed, deltas, assets, state)
+    first = coverage(assets, state)
+    m2, assets2, state2, seed2 = read_seed()
+    deltas2 = get_deltas(assets2, state2)
+    check_prior_index(prior, m2, seed2, deltas2, assets2, state2)
+    insist(first == coverage(assets2, state2), "Replay differs")
+    total = sum(x["candles"] for x in first)
+    insist(total == prior["candles_total"], "Replay changed candle count")
+    print(json.dumps({"status": "REPLAY_PASS", "deltas": len(deltas),
+                      "series": len(first), "candles": total,
+                      "duplicate_policy": "rejected", "network_calls": 0}))
+
+
 def main():
     import argparse
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--self-test", action="store_true")
+    ap.add_argument("--audit-existing", action="store_true")
     args = ap.parse_args()
     if args.self_test:
         self_test()
+    elif args.audit_existing:
+        audit_existing()
     else:
         incremental(dt.datetime.now(dt.timezone.utc))
 
