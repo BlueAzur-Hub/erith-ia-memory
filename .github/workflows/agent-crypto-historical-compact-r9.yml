@@ -1,0 +1,67 @@
+name: Agent Crypto R9 Immutable Compact Archive Pilot
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-crypto-historical-compact-r9.yml"
+      - "public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py"
+      - "public/agent_crypto_erith_ia/tools/historical-compact-reader.test.mjs"
+      - "public/agent_crypto_erith_ia/administrator/js/historical-compact-reader.js"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-compact-r9-pilot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout real R8 archives
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Offline conversion unit checks
+        run: |
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py
+          python public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py --self-test
+      - name: Rebuild compact snapshot from verified R8 originals
+        run: python public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py --build
+      - name: Verify complete numerical equality with all originals
+        run: python public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py --verify
+      - name: Install Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify targeted reading, corruption rejection, missing symbols
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/historical-compact-reader.js
+          node --test public/agent_crypto_erith_ia/tools/historical-compact-reader.test.mjs
+      - name: Confirm originals untouched
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --short -- public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot)"
+          echo "ORIGINALS_UNCHANGED: R2 / R4 / R8"
+      - name: Publish only new immutable blocks and compact index
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1/
+          if git diff --cached --quiet; then
+            echo "NOOP: compact snapshot has no new content"
+            exit 0
+          fi
+          git commit -m "Publish verified immutable per-series OHLCV compact snapshot R9"
+          git pull --rebase origin main
+          git push origin HEAD:main

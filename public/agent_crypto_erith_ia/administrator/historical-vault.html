@@ -54,6 +54,19 @@ select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-
 <div class="toolbar"><button type="button" id="r7-check">Comparer les sources BTC</button><span id="r7-status" class="muted" aria-live="polite">En attente</span></div>
 <div id="r7-table" class="scroll" style="margin-top:8px">Lecture sur demande uniquement.</div>
 <p class="fine" id="r7-warning">CoinGecko : snapshot public USD · Binance : dernière clôture archivée en USDT · OKX : ticker public BTC-USDC via Backend local si disponible. Aucune modification du Graphique.</p>
+</details><details class="board" id="r9-compact">
+<summary>R9 · Lire un bloc compact (prototype réversible)</summary>
+<p class="muted">Archive immuable par crypto et période. Lecture ciblée : un index + un seul bloc gzip. Aucun changement des lecteurs R6/R7 ni du Graphique.</p>
+<div class="toolbar">
+<label for="r9-asset">Crypto</label><select id="r9-asset">
+<option value="bitcoin">BTC</option><option value="ethereum">ETH</option><option value="binancecoin">BNB</option>
+<option value="ripple">XRP</option><option value="solana">SOL</option><option value="tron">TRX</option><option value="zcash">ZEC</option>
+</select>
+<label for="r9-period">Période</label><select id="r9-period"><option value="24h">24 h · 5 min</option><option value="7d">7 j · 1 h</option><option value="30d">30 j · 4 h</option></select>
+<button id="r9-read" type="button">Lire le bloc R9</button><span id="r9-status" class="muted" aria-live="polite">Lecture sur demande</span>
+</div>
+<p id="r9-source" class="fine">USDT Binance Spot · snapshot de l'archive R8 à sa date de construction, non live. Rien n'est supprimé.</p>
+<div id="r9-table" class="scroll" style="margin-top:8px">En attente.</div>
 </details><details class="board"><summary>Informations techniques et limites</summary>
 <div id="details" class="fine">La source GitHub doit passer la vérification SHA-256, la décompression gzip, la chronologie et l'index de couverture. Aucun fichier local n'est envoyé sur Internet.</div></details>
 <script>
@@ -237,6 +250,29 @@ btn.addEventListener("click",async()=>{
   $("r7-status").className="good";
   $("r7-warning").textContent="Horaires non alignés ; USD ≠ USDT ≠ USDC. Aucun arbitrage, aucune conversion implicite, aucun ordre. L'absence du Bridge peut rendre OKX indisponible sans bloquer les autres sources.";
  }catch(e){$("r7-table").textContent="Aucune valeur inventée : contrôle non validé.";$("r7-status").textContent=String(e?.message||e).slice(0,160);$("r7-status").className="bad"}
+ finally{btn.disabled=false}
+});
+})();
+</script><script src="./js/historical-compact-reader.js"></script>
+<script>
+(()=>{"use strict";
+const $=id=>document.getElementById(id),btn=$("r9-read");
+const fmt=n=>new Intl.NumberFormat("fr-FR",{maximumFractionDigits:8}).format(n);
+const utc=n=>new Date(n).toLocaleString("fr-FR",{timeZone:"UTC",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})+" UTC";
+btn.addEventListener("click",async()=>{
+ btn.disabled=true;$("r9-status").textContent="Lecture et validation du bloc…";$("r9-table").textContent="Vérification SHA-256…";
+ try{
+  if(!window.SevenCompactArchiveReader)throw Error("Lecteur compact R9 indisponible");
+  const x=await window.SevenCompactArchiveReader.readSeries({assetId:$("r9-asset").value,period:$("r9-period").value});
+  const m=x.metadata;
+  if(m.quote!=="USDT"||m.graphConnected||m.isLive||m.status!=="VALIDATED_SNAPSHOT")throw Error("Contrat R9 non respecté");
+  const t=document.createElement("table"),head=document.createElement("tr");
+  ["UTC","Ouverture USDT","Plus haut","Plus bas","Clôture USDT","Volume base"].forEach(s=>{const th=document.createElement("th");th.textContent=s;head.append(th)});t.append(head);
+  for(const row of x.candles.slice(-6)){const tr=document.createElement("tr");[utc(row[0]),fmt(row[1]),fmt(row[2]),fmt(row[3]),fmt(row[4]),fmt(row[5])].forEach(s=>{const td=document.createElement("td");td.textContent=s;tr.append(td)});t.append(tr)}
+  $("r9-table").replaceChildren(t);
+  $("r9-source").textContent="VALIDÉ · "+m.pair+" · "+m.period+" / "+m.interval+" · "+m.points+" chandelles · première "+utc(m.firstOpenMs)+" · dernière "+utc(m.lastOpenMs)+" · capture R8 : "+m.sourceIndexUpdatedAt+" · lecture 1 index + 1 bloc · non live, Graphique non raccordé.";
+  $("r9-status").textContent="Bloc exact vérifié (SHA-256 et OHLCV)";$("r9-status").className="good";
+ }catch(e){$("r9-table").textContent="Aucune série publiée sans validation.";$("r9-status").textContent=String(e?.message||e).slice(0,160);$("r9-status").className="bad"}
  finally{btn.disabled=false}
 });
 })();
