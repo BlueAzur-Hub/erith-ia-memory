@@ -62,7 +62,7 @@ function mount(){
   if(!doc.getElementById("traderHistoricalPanelScript")){
     const script=doc.createElement("script");
     script.id="traderHistoricalPanelScript";
-    script.src=new URL("../trader/trader-historical-panel.js?v=40.6.625",doc.baseURI).href;
+    script.src=new URL("../trader/trader-historical-panel.js?v=r9-eur-sync-20261008",doc.baseURI).href;
     doc.head.appendChild(script);
   }
   doc.title="ERITH.IA · Trading Desk — "+BUILD;

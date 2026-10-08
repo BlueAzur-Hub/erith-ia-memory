@@ -3,6 +3,11 @@
 const ID="traderVerifiedHistory",LABEL={"24h":"5 min","7d":"1 h","30d":"4 h"};
 let reader=null,catalog=null,sequence=0;
 const panel=()=>document.getElementById(ID);
+const displayCurrency=()=>{try{return globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency==="EUR"?"EUR":"USD";}catch(_){return"USD";}};
+function layout(p,currency){
+ const isEur=currency==="EUR",r9=p.querySelector("[data-history-r9]"),controls=p.querySelector("[data-history-controls]");
+ if(r9)r9.hidden=isEur;if(controls)controls.hidden=isEur;
+}
 const selected=()=>{try{const c=globalThis.getSelectedCoin?.();return c&&typeof c.id==="string"&&c.id&&typeof c.symbol==="string"?{id:c.id,symbol:c.symbol.toUpperCase()}:null;}catch(_){return null;}};
 function utc(x){const d=new Date(x);return Number.isFinite(d.getTime())?d.toLocaleString("fr-FR",{timeZone:"UTC",dateStyle:"short",timeStyle:"short"})+" UTC":"date inconnue";}
 function write(p,name,value){const e=p.querySelector("[data-history-"+name+"]");if(e)e.textContent=value;}
@@ -22,37 +27,52 @@ function loadReader(){
 
 /* Read-only projection of the native CoinGecko USD chart broker.
    NOT Binance R9 and NOT OHLCV. No new fetch, timer, storage or graph owner. */
-function nativeChart(coin){
+function nativeChart(coin,currency="USD"){
  let chart=null;
  try{chart=typeof state!=="undefined"?state?.dataBroker?.chart:null;}catch(_){}
  if(!chart||chart.status!=="ready"||chart.coinId!==coin.id||chart.result?.blocked)return null;
  const r=chart.result;
- if(String(r?.currency||"").toUpperCase()!=="USD"||
-    String(r?.quoteCurrency||"").toUpperCase()!=="USD"||
-    !/coingecko/i.test([r?.sourceFamily,r?.source,chart.source].join(" ")))return null;
+ const source=String([r?.sourceFamily,r?.source,chart.source,r?.originalSourceMode,r?.sourceMode].join(" "));
+ const family=/binance/i.test(source)?"Binance":/coingecko/i.test(source)?"CoinGecko":null;
+ if(!family)return null;
+ const explicit=String(r?.currency||r?.quoteCurrency||"").toUpperCase();
+ if(explicit&&explicit!==currency)return null;
+ if(currency==="USD"){
+   if(String(r?.currency||"").toUpperCase()!=="USD"||String(r?.quoteCurrency||"").toUpperCase()!=="USD"||family!=="CoinGecko")return null;
+ }else{
+   // Legacy EUR chart uses native context without :USD suffix; no relabel/conversion.
+   const context=String(chart.contextKey||"");
+   const nativeEurContext=context===`single:${coin.id}:${Number(chart.period||0)}`;
+   const directEur=/\bEUR\b|BTCEUR|\/EUR\b/i.test(String(r.source||""));
+   if(!explicit&&!nativeEurContext&&!directEur)return null;
+   if(/:USD$/.test(context))return null;
+ }
  if(!Array.isArray(r.series)||r.series.length<2)return null;
  const rows=r.series.filter(v=>Array.isArray(v)&&v.length>=2&&
    Number.isFinite(v[0])&&v[0]>0&&Number.isFinite(v[1])&&v[1]>0);
  if(rows.length<2||rows.some((v,i)=>i&&v[0]<=rows[i-1][0]))return null;
- return{rows:rows.slice(-12),count:rows.length,days:Number(chart.period||0),
-   source:String(r.source||chart.source||"CoinGecko USD"),asOf:r.generatedAt||chart.seriesTimestamp||null,
+ return{rows:rows.slice(-12),count:rows.length,days:Number(chart.period||0),currency,
+   source:String(r.source||chart.source||family+" "+currency),asOf:r.generatedAt||chart.seriesTimestamp||null,
    first:rows[0][0],last:rows[rows.length-1][0]};
 }
-function paintNative(p,coin){
+function paintNative(p,coin,currency="USD"){
  const host=p.querySelector("[data-history-native]");if(!host)return false;
  host.hidden=false;
  const label=host.querySelector("[data-native-status]"),body=host.querySelector("[data-native-rows]");
  body?.replaceChildren();
- const view=nativeChart(coin);
- if(!view){if(label)label.textContent="Aucun historique CoinGecko USD disponible dans le graphique actif pour cet actif.";return false;}
+ const heading=host.querySelector("[data-native-title]"),priceHeading=host.querySelector("[data-native-price-heading]");
+ if(heading)heading.textContent="HISTORIQUE DU GRAPHIQUE · "+currency+" · HORS R9";
+ if(priceHeading)priceHeading.textContent="Prix "+currency;
+ const view=nativeChart(coin,currency);
+ if(!view){if(label)label.textContent="Historique "+currency+" en attente du graphique natif. Aucune conversion ni substitution.";return false;}
  const periodLabel=({"1":"24 h","7":"7 j","30":"30 j","60":"60 j","90":"90 j","365":"1 an"})[String(view.days)]||view.days+" j";
- if(label)label.textContent=coin.symbol+" · "+view.count+" points CoinGecko USD · fenêtre graphique "+periodLabel+
+ if(label)label.textContent=coin.symbol+" · "+view.count+" points "+view.source+" · "+currency+" · fenêtre graphique "+periodLabel+
    " · "+utc(view.first)+" → "+utc(view.last)+
    " · "+(view.asOf?"série "+utc(view.asOf)+" · ":"")+
-   "cache/graphique natif · NON LIVE · NON R9";
+   "lecture du graphique natif · NON LIVE · NON R9";
  for(const [t,value] of view.rows.slice().reverse()){
   const tr=document.createElement("tr"),a=document.createElement("td"),b=document.createElement("td");
-  a.textContent=utc(t);b.textContent=value.toLocaleString("fr-FR",{maximumFractionDigits:8})+" USD";
+  a.textContent=utc(t);b.textContent=value.toLocaleString("fr-FR",{maximumFractionDigits:8})+" "+currency;
   tr.append(a,b);body?.appendChild(tr);
  }
  return true;
@@ -76,9 +96,21 @@ function paint(p,result){
 }
 async function refresh({reload=false}={}){
  const p=panel();if(!p?.open)return;
- const seq=++sequence,c=selected(),period=p.querySelector("[data-history-period]")?.value||"24h";
- empty(p);
+ const seq=++sequence,c=selected(),period=p.querySelector("[data-history-period]")?.value||"24h",currency=displayCurrency();
+ empty(p);layout(p,currency);
  if(!c){write(p,"status","Aucun actif sélectionné");return;}
+ if(currency==="EUR"){
+   const found=paintNative(p,c,"EUR");
+   write(p,"status",c.symbol+" · EUR · "+(found?"HISTORIQUE NATIF":"EN ATTENTE DU GRAPHIQUE"));
+   write(p,"detail","Affichage EUR du graphique existant, distinct des archives Binance R9 en USDT. Aucune conversion cachée.");
+   if(!found&&typeof globalThis.setTimeout==="function"){
+     for(const delay of [1200,4500])globalThis.setTimeout(()=>{
+       if(seq!==sequence||!p.open||selected()?.id!==c.id||displayCurrency()!=="EUR")return;
+       if(paintNative(p,c,"EUR"))write(p,"status",c.symbol+" · EUR · HISTORIQUE NATIF");
+     },delay);
+   }
+   return;
+ }
  write(p,"status",c.symbol+" · recherche d'archive…");
  write(p,"detail","Archive Binance Spot USDT, distincte des Bougies OKX USDC.");
  try{
@@ -130,6 +162,7 @@ function mount(){
    "#traderVerifiedHistory .history-scroll{overflow-x:auto}",
    "#traderVerifiedHistory [data-history-native]{margin-top:12px;padding:11px;border:1px solid #2d6370;border-radius:10px;background:#0a2b31}",
    "#traderVerifiedHistory [data-history-native][hidden]{display:none!important}",
+   "#traderVerifiedHistory [data-history-r9][hidden],#traderVerifiedHistory [data-history-controls][hidden]{display:none!important}",
    "#traderVerifiedHistory [data-history-native] h4{margin:0 0 7px;color:#9cfff1}",
    "#traderVerifiedHistory table{min-width:550px;width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}",
    "#traderVerifiedHistory td,#traderVerifiedHistory th{padding:7px;border-bottom:1px solid #2a4b59;text-align:right}",
@@ -141,19 +174,19 @@ function mount(){
  p.innerHTML=[
  '<summary><strong>HISTORIQUE VÉRIFIÉ · R9</strong>',
  '<span data-history-status>Fermé · aucune lecture</span></summary>',
- '<div class="history-body"><div class="history-controls">',
+ '<div class="history-body"><div class="history-controls" data-history-controls>',
  '<label for="traderHistoryPeriod">Période</label><select id="traderHistoryPeriod" data-history-period>',
  '<option value="24h">24 h · 5 min</option><option value="7d">7 j · 1 h</option>',
  '<option value="30d">30 j · 4 h</option></select>',
  '<button type="button" data-history-reload>Actualiser le catalogue</button></div>',
  '<p class="history-note" data-history-detail>Lecture à la demande, sans impact sur OKX.</p>',
- '<p data-history-meta>—</p><div class="history-scroll"><table>',
+ '<section data-history-r9><p data-history-meta>—</p><div class="history-scroll"><table>',
  '<thead><tr><th>Ouverture UTC</th><th>Ouverture USDT</th><th>Haut</th><th>Bas</th>',
  '<th>Clôture</th><th>Volume actif</th></tr></thead><tbody data-history-rows></tbody>',
- '</table></div><section data-history-native hidden aria-label="Historique du graphique natif, distinct de R9">',
- '<h4>HISTORIQUE DU GRAPHIQUE · CoinGecko USD · HORS R9</h4>',
+ '</table></div></section><section data-history-native hidden aria-label="Historique du graphique natif, distinct de R9">',
+ '<h4 data-native-title>HISTORIQUE DU GRAPHIQUE · USD · HORS R9</h4>',
  '<p class="history-note" data-native-status>En attente du graphique existant.</p>',
- '<div class="history-scroll"><table><thead><tr><th>Heure UTC</th><th>Prix USD</th></tr></thead>',
+ '<div class="history-scroll"><table><thead><tr><th>Heure UTC</th><th data-native-price-heading>Prix USD</th></tr></thead>',
  '<tbody data-native-rows></tbody></table></div></section></div>'
  ].join("");
  zone.appendChild(p);
@@ -164,6 +197,7 @@ function mount(){
  p.querySelector("[data-history-period]")?.addEventListener("change",()=>{if(p.open)void refresh();});
  p.querySelector("[data-history-reload]")?.addEventListener("click",()=>{if(p.open)void refresh({reload:true});});
  globalThis.addEventListener("agent-crypto:selected-market-changed",()=>{sequence++;if(p.open)void refresh();},{passive:true});
+ globalThis.addEventListener("agent-crypto:quote-architecture-changed",()=>{sequence++;if(p.open)void refresh();},{passive:true});
  return true;
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
