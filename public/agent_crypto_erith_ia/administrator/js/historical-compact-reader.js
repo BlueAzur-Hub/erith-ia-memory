@@ -47,6 +47,11 @@ async function index(){
  })().catch(e=>{indexPromise=null;throw e});
  return indexPromise;
 }
+// R10: re-check the tiny public catalog when a panel opens; no polling.
+async function refreshIndex(){
+ indexPromise=null;
+ return listCoverage();
+}
 async function listCoverage(){
  const catalog=await index();
  return{source:catalog.source,quote:catalog.quote_asset,updatedAt:catalog.source_index_updated_at,
@@ -91,5 +96,5 @@ async function readSeries({assetId,period}){
     downloadedArchives:1,readMode:"INDEX_PLUS_ONE_SERIES"},
   columns:COLS.slice(),candles:b.rows};
 }
-window.SevenCompactArchiveReader=Object.freeze({listCoverage,readSeries});
+window.SevenCompactArchiveReader=Object.freeze({listCoverage,readSeries,refreshIndex});
 })();

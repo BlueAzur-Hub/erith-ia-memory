@@ -1,4 +1,4 @@
-name: Agent Crypto Historical OHLCV R8 Hourly Bounded Pilot
+name: Agent Crypto Historical OHLCV R10 Synchronized Hourly Pilot
 on:
   workflow_dispatch:
   # GitHub schedules are UTC and may run late; requests always start at the
@@ -10,6 +10,11 @@ on:
     paths:
       - ".github/workflows/agent-crypto-historical-ohlcv-incremental-r4.yml"
       - "public/agent_crypto_erith_ia/tools/append_historical_top10_ohlcv_r4.py"
+      - "public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py"
+      - "public/agent_crypto_erith_ia/tools/historical-compact-reader.test.mjs"
+      - "public/agent_crypto_erith_ia/administrator/js/historical-compact-reader.js"
+      - "public/agent_crypto_erith_ia/administrator/js/historical-vault-automatic.js"
+      - "public/agent_crypto_erith_ia/tools/historical-vault-automatic.test.mjs"
 
 permissions:
   contents: write
@@ -64,17 +69,51 @@ jobs:
           print({"R4":"PASS","deltas":len(index["deltas"]),
                  "total_candles":index["candles_total"]})
           PY
-      - name: Publish index and immutable new delta files only
+      # R10: publish raw append and exact compact projection atomically,
+      # avoiding old compact catalogues after a new hourly R8 collection.
+      - name: Build compact projection from verified R8 state
+        run: |
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py
+          python public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py --self-test
+          python public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py --build
+          python public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py --verify
+      - name: Install Node.js 22 for offline browser reader checks
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify targeted browser readers and automatic lazy UI
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/historical-compact-reader.js
+          node --check public/agent_crypto_erith_ia/administrator/js/historical-vault-automatic.js
+          node --test public/agent_crypto_erith_ia/tools/historical-compact-reader.test.mjs public/agent_crypto_erith_ia/tools/historical-vault-automatic.test.mjs
+      - name: Check R2/R4/R8 source is append-only and compact catalog matches source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py --verify
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base=Path("public/agent_crypto_erith_ia/data/historical_archive_prototype")
+          raw=json.loads((base/"ohlcv_spot_pilot/index.json").read_text())
+          compact=json.loads((base/"compact_v1/index.json").read_text())
+          assert compact["candles_total"]==raw["candles_total"]
+          assert compact["source_delta_count"]==len(raw["deltas"])
+          assert compact["source_index_updated_at"]==raw["updated_at"]
+          assert compact["series_count"]==raw["series_count"]==21
+          print("R10_SYNC_EQUIVALENCE_PASS",compact["candles_total"])
+          PY
+      - name: Publish raw OHLCV and compact blocks as one commit
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot
+          git add -A -- public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot/ public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1/
           if git diff --cached --quiet; then
-            echo "NOOP: archive already current"
+            echo "NOOP: archive and compact projection already aligned"
             exit 0
           fi
-          git commit -m "Append verified Binance Spot OHLCV Top10 delta and cumulative coverage index (R4)"
+          git commit -m "Synchronize verified hourly OHLCV and immutable compact series atomically (R10)"
           git pull --rebase origin main
           git push origin HEAD:main

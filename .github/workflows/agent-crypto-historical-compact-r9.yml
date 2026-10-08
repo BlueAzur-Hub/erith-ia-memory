@@ -1,19 +1,13 @@
 name: Agent Crypto R9 Immutable Compact Archive Pilot
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/agent-crypto-historical-compact-r9.yml"
-      - "public/agent_crypto_erith_ia/tools/build_historical_compact_r9.py"
-      - "public/agent_crypto_erith_ia/tools/historical-compact-reader.test.mjs"
-      - "public/agent_crypto_erith_ia/administrator/js/historical-compact-reader.js"
+  # R10 owns automatic synchronization; this remains manual recovery only.
 
 permissions:
   contents: write
 
 concurrency:
-  group: agent-crypto-compact-r9-pilot
+  group: agent-crypto-ohlcv-r4-incremental
   cancel-in-progress: false
 
 jobs:
