@@ -1,8 +1,13 @@
-# Trader — T0 / diagnostic ciblé des bougies — 08 octobre 2026
+# Trader — T0 / diagnostic détaillé des bougies — 08 octobre 2026
 
-Modification bornée : le diagnostic T0 détaillé affiche paire chargée/attendue, intervalle, bougies invalides, ordre des timestamps, ruptures temporelles, bougies non confirmées (informatif seulement), dernière ouverture, date de réception, âge à T0 et seuil de fraîcheur.
-Conditions métier inchangées : OHLCV valides, horodatages croissants, zéro rupture, fraîcheur 2,2 × durée de l’intervalle, actif concordant. La qualité G1 ne reçoit aucun PASS.
-Aucun changement des propriétaires OKX Bougies/Carnet, Bridge, Backend, Market Core 38.15.11, Administrator, R9 ni ordre Paper/réel.
-Cache-bust sémantique de la page HTML et des scripts Trader pour éviter le module T0 ancien dans Firefox, aucun nouveau nom versionné.
-Tests : 13 assertions isolées PASS (validité, non confirmées, péremption, OHLCV, ruptures, ordre, actif, chargement, temps, G1, rendu, persistance). Une vraie capture Firefox reste à valider.
-À la prochaine capture unique, si le diagnostic indique des ruptures ou une dernière bougie ancienne, conserver les données et analyser leur provenance avant d'envisager un changement de seuil.
+Livraison en deux commits : correction du diagnostic T0 `fa45de1` et restauration du contrat exact de la page Trader `f327dde`. La seconde correction répond au test CI `mirror_loaded` qui exige `src="./trader-runtime-mirror.js"` sans argument de cache.
+
+**Changement métier** : aucun. Le module T0 affiche désormais séparément la paire attendue et chargée, le nombre de bougies, OHLCV invalides, horodatages non croissants, ruptures temporelles, bougies non confirmées (informatives), dernière ouverture, réception, âge et seuil (2,2 fois l'intervalle). Les refus spécifiques remplacent une phrase globale. `candleOk` conserve strictement ses conditions initiales. G1 est `EVIDENCE_REQUIRED` tant que Strategy A ne le change pas.
+
+**Entrypoint** : `trading-desk.html` garde son script original `trader-runtime-mirror.js` sans query pour satisfaire le contrat `Trader Current`. Le miroir utilise un argument de cache seulement pour le module `trader-paper-t0.js` afin de rafraîchir l'interface en cas de rechargement complet de Firefox.
+
+**Tests internes** : 13/13 assertions ciblées réussies sur la logique de diagnostic, mise en forme et garde-fous, avec données horodatées de test. `Trader Current` doit être revalidé après la restauration de l'entrypoint. Historique R9 inchangé.
+
+**Protections** : aucun moteur Bougies/Carnet, Bridge, Backend, Market Core 38.15.11, R9, gouverneur, stratégie, exécution ou stockage modifié. Build Trader/Administrator 40.6.624 intact.
+
+**Opérateur Firefox** : une fois CI/Pages SUCCESS, recharge forcée de la page si nécessaire (`Ctrl+Maj+R`), ouvre le dossier Paper et clique une fois sur `Capturer T0`. La nouvelle section « DIAGNOSTIC BOUGIES » nomme la condition exacte plutôt que masquer le motif.
