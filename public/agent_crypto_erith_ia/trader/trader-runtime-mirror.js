@@ -69,7 +69,7 @@ function mount(){
   if(!doc.getElementById("traderPaperPreparationScript")){
     const script=doc.createElement("script");
     script.id="traderPaperPreparationScript";
-    script.src=new URL("../trader/trader-paper-preparation.js",doc.baseURI).href;
+    script.src=new URL("../trader/trader-paper-preparation.js?v=proof-link-20261008",doc.baseURI).href;
     doc.head.appendChild(script);
   }
   doc.title="ERITH.IA · Trading Desk — "+BUILD;
