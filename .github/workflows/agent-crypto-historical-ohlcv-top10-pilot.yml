@@ -1,0 +1,69 @@
+name: Agent Crypto Historical OHLCV Top10 Pilot
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-crypto-historical-ohlcv-top10-pilot.yml"
+      - "public/agent_crypto_erith_ia/tools/collect_historical_top10_ohlcv.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-ohlcv-top10-pilot
+  cancel-in-progress: false
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate script, then run offline unit checks
+        run: |
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_historical_top10_ohlcv.py
+          python public/agent_crypto_erith_ia/tools/collect_historical_top10_ohlcv.py --self-test
+      - name: Collect bounded public Binance Spot OHLCV
+        run: |
+          python public/agent_crypto_erith_ia/tools/collect_historical_top10_ohlcv.py
+      - name: Validate archive integrity and coverage before publishing
+        shell: bash
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, json
+          from pathlib import Path
+          folder=Path("public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot")
+          manifest=json.loads((folder/"manifest.json").read_text())
+          compressed=(folder/manifest["archive"]).read_bytes()
+          assert hashlib.sha256(compressed).hexdigest()==manifest["archive_sha256"]
+          data=json.loads(gzip.decompress(compressed))
+          assert len(data["assets"]) >= 5
+          assert data["kind"]=="REAL_BINANCE_SPOT_OHLCV_NO_SYNTHETIC_BARS"
+          assert manifest["real_orders"] is False
+          assert manifest["quote_asset"] == "USDT"
+          assert len([a for a in data["assets"].values() if all("rows" in r for r in a["periods"].values())]) >= 5
+          print({"result":"PILOT_ARCHIVE_VALID","qualified":manifest["spot_pairs_qualified"],
+                 "gzip_bytes":len(compressed),"raw_bytes":manifest["archive_raw_bytes"]})
+          PY
+      - name: Commit only bounded pilot archive and manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot
+          if git diff --cached --quiet; then
+            echo "No change to archive."
+            exit 0
+          fi
+          git commit -m "Archive validated public spot OHLCV Top10 pilot (bounded)"
+          git pull --rebase origin main
+          git push origin HEAD:main
