@@ -144,6 +144,25 @@
     return list.length+"|"+last+"|"+versions[versionKey(name)];
   }
 
+  // Read-order repair: persist and source rows remain unchanged. Invalid timestamps stay missing.
+  // Scope only the evidence lists: Paper lifecycle/state ordering is not touched.
+  function evidenceTime(row){
+    const raw=row?.at||row?.captured_at||row?.timestamp||row?.created_at||"";
+    const n=Date.parse(String(raw));
+    return Number.isFinite(n)?n:null;
+  }
+  function chronologicalEvidenceRead(name,rows){
+    if(name!==STORE_CYCLES&&name!==STORE_AFTER)return rows;
+    const ordered=rows.slice();
+    ordered.sort((a,b)=>{
+      const ta=evidenceTime(a),tb=evidenceTime(b);
+      if(ta===null)return tb===null?0:1;
+      if(tb===null)return -1;
+      return ta-tb;
+    });
+    return ordered;
+  }
+
   function mergedRows(name,liveRows){
     const list=Array.isArray(liveRows)?liveRows:[];
     const key=name===STORE_CYCLES?"cycles":name===STORE_AFTER?"after_cost":"paper_states";
@@ -154,7 +173,7 @@
     for(const entry of mapFor(name).values())if(entry?.id&&entry?.payload)merged.set(String(entry.id),entry.payload);
     for(const row of list){const id=idFor(name,row);if(id)merged.set(String(id),row);}
     cache.sig=sig;
-    cache.rows=[...merged.values()];
+    cache.rows=chronologicalEvidenceRead(name,[...merged.values()]);
     return cache.rows.slice();
   }
 

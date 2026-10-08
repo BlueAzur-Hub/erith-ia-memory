@@ -21,7 +21,11 @@ function g1ProofDiagnostics(dossier,safety){
    duplicates:Array.isArray(r.duplicate_ids)?r.duplicate_ids.length:null,
    chronology:r.chronological===true?"OK":r.chronological===false?"NON":"INCONNUE",
    completed:count(r.after_cost_complete_rows),unknownNumbers:count(r.numeric_unknown_rows),
-   unverifiedAccounting:count(r.unverified_after_cost_rows)
+   unverifiedAccounting:count(r.unverified_after_cost_rows),
+   missingDateExamples:Object.freeze((Array.isArray(kind==="experiment"?dossier?.experiment_ledger?.cycles:dossier?.after_cost?.trades)?
+    (kind==="experiment"?dossier.experiment_ledger.cycles:dossier.after_cost.trades):[])
+    .filter(x=>!Number.isFinite(Date.parse(String(x?.at||x?.captured_at||x?.timestamp||x?.created_at||""))))
+    .slice(0,3).map(x=>str(x?.trade_id||x?.cycle_id||x?.replay_id||"ID NON FOURNI")))
   });
  };
  const trades=Array.isArray(dossier?.after_cost?.trades)?dossier.after_cost.trades:[];
@@ -57,6 +61,7 @@ function g1ProofReport(v){
   return label+": "+diagnosticNumber(r.rows)+" lignes · integrite "+r.integrity+
    "\nIDs absents: "+diagnosticNumber(r.missingIds)+" · dates absentes: "+diagnosticNumber(r.missingDates)+
    " · IDs dupliques: "+diagnosticNumber(r.duplicates)+samples+" · chronologie: "+r.chronology+
+   (r.missingDateExamples?.length?"\nDates manquantes, IDs exemples: "+r.missingDateExamples.join(", "):"")+
    (label==="AFTER-COST"?"\nLignes numeriques inconnues: "+diagnosticNumber(r.unknownNumbers)+
     " · comptabilites non verifiees: "+diagnosticNumber(r.unverifiedAccounting)+
     " · lignes strictement completes: "+diagnosticNumber(r.completed)+"/"+diagnosticNumber(r.rows):"");
@@ -242,9 +247,10 @@ function paint(){
  if(output)output.textContent=report(evidence);
 }
 
-/* Explicit T0 read; only canonical Safety and Gate owner scripts, not the 28-module cascade. */
+/* Explicit T0 read; only canonical safety/gate owners and the one missing Replay owner, never the 28-module cascade. */
 const CANONICAL_READERS=Object.freeze([
  {src:"./js/strategy-a-safety-certification.js",ready:()=>typeof api.AgentCryptoStrategyASafetyCertification?.certification_matrix==="function"},
+ {src:"./js/strategy-a-replay.js",ready:()=>typeof api.AgentCryptoStrategyAReplay?.self_test==="function"},
  {src:"./js/strategy-a-gate-canonical-truth.js",ready:()=>typeof api.AgentCryptoStrategyAGateCanonicalTruth?.snapshot==="function"}
 ]);
 function acquireCanonical(spec){
