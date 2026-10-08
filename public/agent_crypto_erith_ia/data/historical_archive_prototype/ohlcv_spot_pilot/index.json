@@ -3,7 +3,7 @@
   "source": "Binance Spot",
   "quote_asset": "USDT",
   "basket_reference": "github-action-main_2026-10-07T22-00-44-550Z",
-  "updated_at": "2026-10-08T17:54:28.408307Z",
+  "updated_at": "2026-10-08T19:30:01.323782Z",
   "seed": {
     "file": "ohlcv_top10_2026-10-08.json.gz",
     "bytes": 130593,
@@ -72,6 +72,13 @@
       "sha256": "7a06eddf1b51d9d7cba32767529702e0c96337d84d3630ef087513130cf26346",
       "updates": 21,
       "candles": 413
+    },
+    {
+      "file": "deltas/delta_20261008T193001Z.json.gz",
+      "bytes": 4791,
+      "sha256": "5dc9403ca4b0aa0cda7a7a6fc3d601543d6513665dc5606570032cb5ecbaca05",
+      "updates": 14,
+      "candles": 154
     }
   ],
   "coverage": [
@@ -81,8 +88,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791481500000,
-      "candles": 482
+      "last_open_ms": 1791487500000,
+      "candles": 502
     },
     {
       "id": "binancecoin",
@@ -90,8 +97,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791475200000,
-      "candles": 184
+      "last_open_ms": 1791482400000,
+      "candles": 186
     },
     {
       "id": "binancecoin",
@@ -108,8 +115,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791481500000,
-      "candles": 482
+      "last_open_ms": 1791487500000,
+      "candles": 502
     },
     {
       "id": "bitcoin",
@@ -117,8 +124,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791475200000,
-      "candles": 184
+      "last_open_ms": 1791482400000,
+      "candles": 186
     },
     {
       "id": "bitcoin",
@@ -135,8 +142,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791481500000,
-      "candles": 482
+      "last_open_ms": 1791487500000,
+      "candles": 502
     },
     {
       "id": "ethereum",
@@ -144,8 +151,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791475200000,
-      "candles": 184
+      "last_open_ms": 1791482400000,
+      "candles": 186
     },
     {
       "id": "ethereum",
@@ -162,8 +169,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791481500000,
-      "candles": 482
+      "last_open_ms": 1791487500000,
+      "candles": 502
     },
     {
       "id": "ripple",
@@ -171,8 +178,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791475200000,
-      "candles": 184
+      "last_open_ms": 1791482400000,
+      "candles": 186
     },
     {
       "id": "ripple",
@@ -189,8 +196,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791481500000,
-      "candles": 482
+      "last_open_ms": 1791487500000,
+      "candles": 502
     },
     {
       "id": "solana",
@@ -198,8 +205,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791475200000,
-      "candles": 184
+      "last_open_ms": 1791482400000,
+      "candles": 186
     },
     {
       "id": "solana",
@@ -216,8 +223,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791481500000,
-      "candles": 482
+      "last_open_ms": 1791487500000,
+      "candles": 502
     },
     {
       "id": "tron",
@@ -225,8 +232,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791475200000,
-      "candles": 184
+      "last_open_ms": 1791482400000,
+      "candles": 186
     },
     {
       "id": "tron",
@@ -243,8 +250,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791481500000,
-      "candles": 482
+      "last_open_ms": 1791487500000,
+      "candles": 502
     },
     {
       "id": "zcash",
@@ -252,8 +259,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791475200000,
-      "candles": 184
+      "last_open_ms": 1791482400000,
+      "candles": 186
     },
     {
       "id": "zcash",
@@ -266,6 +273,6 @@
     }
   ],
   "series_count": 21,
-  "candles_total": 5950,
+  "candles_total": 6104,
   "method": "Only contiguous closed candles; append immutable gzip deltas; no interpolation"
 }
