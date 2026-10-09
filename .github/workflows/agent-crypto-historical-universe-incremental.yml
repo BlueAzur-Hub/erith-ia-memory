@@ -1,5 +1,8 @@
-name: Agent Crypto Historical Universe Incremental — manual protected append
+name: Agent Crypto Historical Universe Incremental — controlled append
 on:
+  schedule:
+    # One bounded daily batch, rather than hourly commits or unlimited catch-up.
+    - cron: '37 3 * * *'
   workflow_dispatch:
     inputs:
       mode:
@@ -48,8 +51,16 @@ jobs:
           python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --verify
           python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --plan > "$RUNNER_TEMP/universe-incremental-plan.json"
           cat "$RUNNER_TEMP/universe-incremental-plan.json"
-      - name: One manual bounded append only
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+      - name: Assert collection is only scheduled or explicitly requested
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Event: ${{ github.event_name }}"
+          echo "Mode: ${{ inputs.mode || 'scheduled' }}"
+          test "${{ github.event_name }}" = "schedule" || test "${{ inputs.mode }}" = "collect" || echo "Plan-only execution; no network writing"
+      - name: One bounded incremental append (scheduled or manual)
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect')
         run: |
           python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --collect --enable-network
           python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --verify
@@ -58,8 +69,8 @@ jobs:
         run: |
           set -euo pipefail
           git diff --exit-code -- public/agent_crypto_erith_ia/administrator/ public/agent_crypto_erith_ia/trader/ public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot/ public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1/ public/agent_crypto_erith_ia/data/historical_archive_prototype/partitions_r11/ public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/index.json public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/blocks/
-      - name: Commit ONLY new append-only incremental data on explicit collect
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+      - name: Commit ONLY verified incremental data (scheduled or manual collect)
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect')
         shell: bash
         run: |
           set -euo pipefail
