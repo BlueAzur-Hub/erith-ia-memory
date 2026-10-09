@@ -6,8 +6,8 @@
   "provider_name": "Gold API + Yahoo Finance Futures + BCE",
   "bridge_required": false,
   "public_page_mode": "github_actions_archive_reader",
-  "last_attempt_at": "2026-10-08T21:17:53.857Z",
-  "last_success_at": "2026-10-08T21:17:53.857Z",
+  "last_attempt_at": "2026-10-09T06:05:35.528Z",
+  "last_success_at": "2026-10-09T06:05:35.528Z",
   "last_error": null,
   "assets_expected": 5,
   "assets_received": 5,
@@ -50,8 +50,8 @@
     "preserved": false,
     "file": "history/public_1y.json",
     "snapshots": 262,
-    "oldest_at": "2025-09-23T04:00:00.000Z",
-    "newest_at": "2026-10-08T04:00:00.000Z",
+    "oldest_at": "2025-09-24T04:00:00.000Z",
+    "newest_at": "2026-10-09T04:00:00.000Z",
     "series_points": {
       "gold": 263,
       "silver": 263,
@@ -67,14 +67,14 @@
     "file": "history/intraday_24h.json",
     "assets": 5,
     "series_points": {
-      "gold": 349,
-      "silver": 349,
-      "platinum": 347,
-      "palladium": 330,
-      "copper": 347
+      "gold": 301,
+      "silver": 301,
+      "platinum": 301,
+      "palladium": 273,
+      "copper": 301
     },
-    "oldest_at": "2026-10-07T15:00:00.000Z",
-    "newest_at": "2026-10-08T20:59:59.000Z",
+    "oldest_at": "2026-10-08T04:00:00.000Z",
+    "newest_at": "2026-10-09T05:55:44.000Z",
     "interval": "5m",
     "window_hours": 24,
     "source_id": "yahoo_finance"
@@ -83,10 +83,10 @@
     "available": true,
     "complete_24h": true,
     "file": "history/spot_48h.json",
-    "snapshots": 7,
-    "oldest_at": "2026-10-06T23:47:30.919Z",
-    "newest_at": "2026-10-08T21:17:53.857Z",
-    "span_hours": 45.506372,
+    "snapshots": 6,
+    "oldest_at": "2026-10-07T15:32:26.538Z",
+    "newest_at": "2026-10-09T06:05:35.528Z",
+    "span_hours": 38.552497,
     "retention_hours": 48,
     "minimum_complete_hours": 20,
     "source_id": "gold_api"
@@ -116,6 +116,6 @@
     "history_never_fabricated": true,
     "intraday_futures_and_current_spot_separated": true
   },
-  "updated_at": "2026-10-08T21:17:53.857Z",
+  "updated_at": "2026-10-09T06:05:35.528Z",
   "collector": "tools/collect_public_metals.py"
 }
