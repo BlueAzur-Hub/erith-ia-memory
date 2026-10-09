@@ -81,3 +81,18 @@ Attention : les archives cumulatives nouvelles ne sont **pas encore exploitées 
 ### Limite avant généralisation
 
 Ce journal garde sa limite de sécurité de **5 000 blocs** et la collecte quotidienne peut générer jusqu'à **36 segments par jour** (12 actifs, 3 périodes) ; sans rotation, l'arrêt de sûreté interviendrait en environ quatre à cinq mois selon les disponibilités. **Ne pas étendre automatiquement la cadence à 50/100/250 actifs** avant d'avoir mis en place des partitions historiques scellées et un catalogue conservant leur continuité. Le premier déploiement de cette cadence n'ajoute aucune fenêtre au Trader ; ce dernier ne lit pas encore les incréments du Top 50.
+
+
+## Rétrocollecte des périodes longues : 60/90 jours, un an, Max
+
+Une extension indépendante `tools/backfill_historical_periods.py` lit l'inventaire déjà vérifié des 24 actifs historiques, sans modifier les trois familles R10/Universe/Top50, ni Trader/Administrator.
+
+- `--plan` : sans réseau, identifie les propriétaires d'archives admissibles.
+- `--verify` : vérifie tous les blocs SHA-256 déjà publiés dans `universe/long-periods/` ; sans archive, renvoie `NOT_COLLECTED`.
+- `--collect --enable-network` : rétrocollecte manuelle seulement après tests et accord explicite. Workflow `Agent Crypto Historical Long Periods — validated backfill` → mode `collect`, aucun déclenchement sur push/PR.
+- Après qualification d'une paire **Binance Spot USDT**, 90 jours = 540 bougies 4 h et un an = 365 bougies quotidiennes, si les séries sont effectivement disponibles, complètes, clôturées et continues. **60 jours** = découpe d'un bloc 90 jours validé ; si le 90 jours manque, tentative d'un bloc séparé 60 jours = 360 bougies 4 h. Le manifeste distingue `verified`, `derived_from_90d` et `unavailable` ; aucune fausse bougie pour un actif trop récent.
+- **Max n'est pas couvert par une photographie d'un an** : la page peut seulement proposer Max lorsqu'un futur archivage paginé, depuis la première cotation vérifiable et jusqu'à la date demandée, aura prouvé sa couverture réelle.
+- L'index `universe/long-periods/index.json` est publié après validation ; fichiers gzip immuables par SHA-256, source et devise explicites, aucune fusion silencieuse avec le prix CoinGecko USD. Il s'agit de snapshots historiques initiaux : leur actualisation cumulative réclamera une extension distincte.
+- Les nouvelles périodes ne sont pas encore affichées par le lecteur historique actuel du Trader. Aucun nouveau panneau ou Graphique n'a été créé.
+
+**État de preuve :** tests hors réseau avant première collecte réelle ; ne pas annoncer de couverture 90 j/1 an sur les 24 actifs tant que le manifeste Binance réel et les contrôles GitHub ne l'ont pas établie.
