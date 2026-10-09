@@ -1,0 +1,10 @@
+{
+  "schema": "aerith.public.ohlcv.spot.bulk-backfill.resumption.v1",
+  "action": "resume_missing_months_once",
+  "months_per_run": 2,
+  "source": "Binance Spot USDT",
+  "storage": "immutable-github-releases",
+  "no_overwrite_existing_release": true,
+  "trader_unchanged": true,
+  "note": "One-time intentional kickstart of the existing shared multi-asset backfill, not a new Bitcoin-only collector. The GitHub Action still validates monthly checksum, CSV and provenance before publishing."
+}

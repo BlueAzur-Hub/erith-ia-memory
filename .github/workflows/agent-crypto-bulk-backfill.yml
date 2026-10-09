@@ -10,6 +10,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-resume.json'
   push:
     branches: [main]
     paths:
@@ -17,6 +18,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-resume.json'
 permissions:
   contents: write
 concurrency:
@@ -43,11 +45,30 @@ jobs:
           python public/agent_crypto_erith_ia/tools/historical_bulk_test.py
           python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
           python public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py --plan --max-months 2
-      - name: Authorize first import only if bootstrap is ADDED in main merge
+      - name: Authorize initial import or one-time explicit resumption only on a main merge
         id: allow
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
+          resume=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-resume.json
+          resume_flag=$(git diff --name-status HEAD^ HEAD -- "$resume" | cut -f1)
+          if [[ "$resume_flag" == A ]]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-resume.json')
+          d=json.loads(p.read_text())
+          assert d['schema']=='aerith.public.ohlcv.spot.bulk-backfill.resumption.v1'
+          assert d['action']=='resume_missing_months_once'
+          assert d['months_per_run']==2
+          assert d['storage']=='immutable-github-releases'
+          assert d['source']=='Binance Spot USDT'
+          assert d['no_overwrite_existing_release'] is True
+          assert d['trader_unchanged'] is True
+          PY
+            echo "approved=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           marker=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json
           status=$(git diff --name-status HEAD^ HEAD -- "$marker" | cut -f1)
           if [[ "$status" != A ]]; then
