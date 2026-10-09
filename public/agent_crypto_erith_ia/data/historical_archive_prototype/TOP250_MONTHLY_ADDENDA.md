@@ -1,0 +1,11 @@
+# Top250 · Import complémentaire des identités confirmées
+
+L'architecture actuelle comprend trois familles complémentaires :
+
+- **Propriétaires historiques (31)** dans les archives existantes Top50 et la Release originale mensuelle de bougies 1m.
+- **Nouvelles identités qualifiées (HYPE, DOT, ASTER ; puis suivantes)** dans `top250-identity-evidence.json` avec preuve du CoinGecko ID exact et paire Binance Spot USDT dans `top250-venue-audit.json`. **Une paire partageant un ticker sans preuve est exclue.**
+- **Releases mensuelles immuables**. Les mois absents, collectés par `orchestrate_historical_bulk.py`, utilisent maintenant l'inventaire étendu ; les mois déjà archivés ne sont jamais écrasés. Le moteur `supplement_historical_bulk.py` crée au besoin une *Release complémentaire* `crypto-spot-bulk-add-YYYY-MM-1m-HASH` qui ne contient que les paires nouvellement approuvées absentes de toutes les Releases antérieures pour le mois. Il vérifie les ZIP Binance natifs officiels `.CHECKSUM` et les bougies de 1m avant publication. Les manquantes portent la mention `unavailable`. Les nouveaux actifs ajoutés plus tard créent de nouvelles Releases complémentaires avec un identifiant fondé sur la liste des actifs concernés ; un pair déjà présent est ignoré.
+
+L'import complémentaire est borné à **3 mois par exécution**, jusqu'à 4 téléchargements en parallèle via le collecteur existant, et planifié chaque jour à 04:43 UTC. La première fusion de la PR doit déclencher immédiatement la première production (sous réserve de l'autorisation GitHub Actions). Le mode PR n'écrit aucune Release ; il valide en réseau les sources des identités supplémentaires sur un mois connu. Les ZIP massifs restent dans les Releases GitHub ; les petites preuves/manifestes restent dans les sources canoniques. Attention : la réussite du workflow et les comptages réels doivent être confirmés depuis les logs et les Releases, et non déduits du seul calendrier.
+
+Ce module ne traite pas les cryptos absentes de Binance Spot ou qui exigent un autre fournisseur. Il ne modifie pas le graphique Trader/Administrator, les anciennes archives, l'exécution ni Bridge. Les bougies Binance sont cotées en **USDT, non USD**. Les fichiers de périodes mensuelles ne signifient pas qu'on a prouvé `Max`.
