@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.624",
+  "build": "40.6.625",
   "engine": "38.15.11",
-  "release": "TRADER · GRAPH PARITY · TOP 5 24H CANONICAL",
+  "release": "TRADER · TOP EXPLORER · SHARED MARKET",
   "published": true,
-  "status": "GRAPH_PARITY_TOP5_24H_CANONICAL_406624",
-  "parent_build": "40.6.623",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.624",
-  "administrator_build": "40.6.624",
-  "build_label": "Build 40.6.624 · Administrator",
+  "status": "TOP_EXPLORER_SHARED_MARKET_PENDING_FIREFOX",
+  "parent_build": "40.6.624",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.625",
+  "administrator_build": "40.6.625",
+  "build_label": "Build 40.6.625 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -10737,13 +10737,13 @@
     "backend_patch_delivery": "conversation_artifact"
   },
   "delivery": {
-    "zip": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.624.zip"
+    "zip": "AGENT_CRYPTO_TRADER_40.6.625.zip (workflow artifact; verify CI before claiming publication)"
   },
   "stop_gate": {
     "terrain": "PENDING_FIREFOX_CHRISTOPHE_406624"
   },
   "next": [
-    "40.6.625 — Top 10 Explorer: Hausse 24h, Baisse 24h, Volume, Nouveaux Listings; reuse resident Market + canonical selection.",
+    "Top Explorer 10/20/50/100/250 — code CI à qualifier sur le terrain Firefox; surveiller changements Market et Nouveaux Listings.",
     "LAB only — Binance public orderbook: qualify off-production before operator-stack deployment.",
     "40.6.626 — OKX Account READ ONLY.",
     "40.6.627 — Instrument Truth + Fee Truth + Micro-Ticket Validator.",
