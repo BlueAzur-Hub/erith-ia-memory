@@ -15,7 +15,7 @@ on:
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-bootstrap.json'
   workflow_dispatch:
   schedule:
-    - cron: '24 * * * *'
+    - cron: '9,24,39,54 * * * *'
 permissions:
   contents: write
 concurrency:
@@ -47,7 +47,7 @@ jobs:
               --batch-size 4 --sleep 15 --output "$RUNNER_TEMP/top250-identity-evidence.json"
           else
             python public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py --probe \
-              --batch-size 4 --sleep 15 --output "$base/top250-identity-evidence.json"
+              --batch-size 8 --sleep 15 --output "$base/top250-identity-evidence.json"
             cp "$base/top250-identity-evidence.json" "$RUNNER_TEMP/top250-identity-evidence.json"
           fi
           python - <<'PY'
@@ -57,8 +57,14 @@ jobs:
           assert r["total_market_ranked"]==250
           assert 0<=r["approved_count"]<=r["checked_count"]<=r["candidate_count"]<=250
           if os.environ["GITHUB_EVENT_NAME"]=="pull_request":
-            assert r["checked_count"]==4, "Expected exactly four initial candidates"
-            assert any(x["status"]!="source_unavailable" for x in r["results"]), "CoinGecko source unavailable for entire PR; no silent verification"
+            baseline_path=pathlib.Path("public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-evidence.json")
+            baseline=json.loads(baseline_path.read_text())
+            expected=min(r["candidate_count"],baseline["checked_count"]+4)
+            assert r["checked_count"]==expected, f"Expected {expected} checked candidates after bounded PR probe"
+            old_ids={x["id"] for x in baseline["results"]}
+            checked_new=[x for x in r["results"] if x["id"] not in old_ids]
+            if checked_new:
+              assert any(x["status"]!="source_unavailable" for x in checked_new), "CoinGecko source unavailable for entire PR batch"
           print("TOP250 EXACT-ID",json.dumps({k:r[k] for k in ("candidate_count","checked_count","approved_count")},sort_keys=True))
           PY
       - name: Approve persistence only on original marker addition
