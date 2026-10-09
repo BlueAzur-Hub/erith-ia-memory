@@ -5,7 +5,7 @@
   "scope": "latest_verified_closed_month",
   "is_live": false,
   "max_is_all_time": false,
-  "archived_assets": 40,
+  "archived_assets": 50,
   "assets": [
     {
       "id": "bitcoin",
@@ -841,6 +841,216 @@
       "file": "bfusd.json.gz",
       "sha256": "27b8803e4345b0513125dea165df45f0fb7ce722e9921fde2943e1921dcee415",
       "bytes": 104002,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "ethereum-classic",
+      "rank": 68,
+      "name": "Ethereum Classic",
+      "symbol": "ETC",
+      "pair": "ETCUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-f2825a6aae73",
+      "source_zip_sha256": "a4482ad5b0c919cc76a79f89144d1b63c4015e733a0c399c43842fd9de167df3",
+      "file": "ethereum-classic.json.gz",
+      "sha256": "c41a63f783bd636c6bd776e411ad0fb0d28def0b9841fb66f55e15ed56ec5acb",
+      "bytes": 192026,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "arbitrum",
+      "rank": 71,
+      "name": "Arbitrum",
+      "symbol": "ARB",
+      "pair": "ARBUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-f2825a6aae73",
+      "source_zip_sha256": "0541dec20ac2b731b162a89a1f982e1a9bd443cbe86ebe0975806c7309c04248",
+      "file": "arbitrum.json.gz",
+      "sha256": "3d113cfb857789ce6875eef3292a61527f0bf133d89d449eac2952587545c91d",
+      "bytes": 254379,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "just",
+      "rank": 72,
+      "name": "JUST",
+      "symbol": "JST",
+      "pair": "JSTUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-f2825a6aae73",
+      "source_zip_sha256": "e3598930eedb0c91cc9ae9e45228ad9d6db8f95a900ef81375e5fedd05c2a470",
+      "file": "just.json.gz",
+      "sha256": "5c430b8fa88dbde0d4487c8ff35956e42376097e406becba86c6883eace88118",
+      "bytes": 249749,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "algorand",
+      "rank": 79,
+      "name": "Algorand",
+      "symbol": "ALGO",
+      "pair": "ALGOUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-f2825a6aae73",
+      "source_zip_sha256": "49370dfea72e9f2c5334735ce48a89408044395d52bbdc69e04b4ab5e8c2f5b6",
+      "file": "algorand.json.gz",
+      "sha256": "16dcb22f0d220c17c427eb3b16d1e33fa52171961cd9681ce94e885fe5524b78",
+      "bytes": 207865,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "filecoin",
+      "rank": 83,
+      "name": "Filecoin",
+      "symbol": "FIL",
+      "pair": "FILUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-f2825a6aae73",
+      "source_zip_sha256": "74fa1e39aad01407ed12437c2a1bb35ea8cb42c02d7ce4183dd6b2826b11551c",
+      "file": "filecoin.json.gz",
+      "sha256": "9217d25bf2dc6b6a37dbddfa50853dd4fc8f9c31e26832e65475d2aa931db041",
+      "bytes": 275410,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "nexo",
+      "rank": 85,
+      "name": "NEXO",
+      "symbol": "NEXO",
+      "pair": "NEXOUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-f2825a6aae73",
+      "source_zip_sha256": "f924db81eb4b3c9c9f5d650bf5139a9a2f44270b82f44e0e0353a08f7ee91f2a",
+      "file": "nexo.json.gz",
+      "sha256": "2350cd2ff2cf62ef6b1e6f5baae098a477157c8296859eb83c01a2f206f3bef7",
+      "bytes": 178041,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "aerodrome-finance",
+      "rank": 86,
+      "name": "Aerodrome Finance",
+      "symbol": "AERO",
+      "pair": "AEROUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-f2825a6aae73",
+      "source_zip_sha256": "03f2f1e2f08c5c633d4360620272f07f25f814eb18c91644c3b6207632173c33",
+      "file": "aerodrome-finance.json.gz",
+      "sha256": "ea19070bac2fea2bfc715695b685fae9ffe249eb71530a1d6b4dfb364402c967",
+      "bytes": 243782,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "layerzero",
+      "rank": 87,
+      "name": "LayerZero",
+      "symbol": "ZRO",
+      "pair": "ZROUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-f2825a6aae73",
+      "source_zip_sha256": "1747ea4a38ec80036442229b4d6aeaa6aff2da4ecb1586ed554ec62762b28fc2",
+      "file": "layerzero.json.gz",
+      "sha256": "dd4df56ddb5aa02434d0d1bd146a9f79d3ff18edb75e946c649c40a452942521",
+      "bytes": 230467,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "midnight-3",
+      "rank": 90,
+      "name": "Midnight",
+      "symbol": "NIGHT",
+      "pair": "NIGHTUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-f2825a6aae73",
+      "source_zip_sha256": "7945e1406eceb463a5e6821123ae6f0e123dc937650ba843f79f1a85dc252497",
+      "file": "midnight-3.json.gz",
+      "sha256": "45125e8055fe9a4dcfb1b10b3cc18a08646813b6aaadf44270979cb8494837d6",
+      "bytes": 232589,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "aptos",
+      "rank": 94,
+      "name": "Aptos",
+      "symbol": "APT",
+      "pair": "APTUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-f2825a6aae73",
+      "source_zip_sha256": "0b0b304183640be8da23fdc50ffd9602a65d95a7988ab2278f9ce5a72a196fe0",
+      "file": "aptos.json.gz",
+      "sha256": "ee1ba7acebde089762cd34c5687b4807e1882347b3a378391fd58ec961ed5be5",
+      "bytes": 238561,
       "series_counts": {
         "1m": 1440,
         "5m": 8640,
