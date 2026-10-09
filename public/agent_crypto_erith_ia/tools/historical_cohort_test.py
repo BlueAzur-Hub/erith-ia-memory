@@ -112,6 +112,21 @@ class CohortTests(unittest.TestCase):
                              "historical_data_incomplete")
             self.assertFalse(any(x["asset_id"]=="near" for x in index["blocks"]))
 
+    def test_unavailable_exchange_symbol_is_reported_without_guessing(self):
+        with tempfile.TemporaryDirectory() as d:
+            market,reg,old,out=fixture(d)
+            def mock(path,args):
+                if path.endswith("/exchangeInfo") and args["symbol"]=="NEARUSDT":
+                    raise RuntimeError("Binance returned unavailable pair")
+                return fake_get(path,args)
+            with patch.object(cohort,"get_json",side_effect=mock),patch.object(cohort.time,"time",return_value=1_800_000_000):
+                result=cohort.collect(market,reg,old,out)
+            self.assertEqual(result["new_assets"],12)
+            data=json.loads((out/"index.json").read_bytes())
+            near=next(x for x in data["assets"] if x["id"]=="near")
+            self.assertEqual(near["status"],"spot_exchange_lookup_failed")
+            self.assertFalse(any(x["asset_id"]=="near" for x in data["blocks"]))
+
     def test_ambiguous_coin_identity_and_malformed_rank_fail_closed(self):
         with tempfile.TemporaryDirectory() as d:
             market,reg,old,out=fixture(d)
