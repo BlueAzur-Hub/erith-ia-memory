@@ -1,0 +1,106 @@
+name: Agent Crypto Historical Long Periods — validated backfill
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        required: true
+        default: plan
+        type: choice
+        options: [plan, collect]
+        description: 'Offline coverage plan or one manual 60/90d + 1y Binance Spot backfill'
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-historical-long-periods.yml'
+      - 'public/agent_crypto_erith_ia/tools/backfill_historical_periods.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_long_periods_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_historical_coverage.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-historical-long-periods.yml'
+      - 'public/agent_crypto_erith_ia/tools/backfill_historical_periods.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_long_periods_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_historical_coverage.py'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-historical-long-periods-protected
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline syntax and data-integrity regressions
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/backfill_historical_periods.py
+          python public/agent_crypto_erith_ia/tools/historical_long_periods_test.py
+          python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
+      - name: Read-only long-period plan and source verification
+        run: |
+          python public/agent_crypto_erith_ia/tools/backfill_historical_periods.py --plan > "$RUNNER_TEMP/long-periods-plan.json"
+          cat "$RUNNER_TEMP/long-periods-plan.json"
+          python public/agent_crypto_erith_ia/tools/backfill_historical_periods.py --verify
+      - name: Collect long-period Binance Spot OHLCV only on explicit request
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        run: |
+          python public/agent_crypto_erith_ia/tools/backfill_historical_periods.py --collect --enable-network
+          python public/agent_crypto_erith_ia/tools/backfill_historical_periods.py --verify
+      - name: Protect all pre-existing archives and UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/partitions_r11/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/index.json \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/blocks/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/incremental/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50/
+      - name: Commit ONLY newly verified long-period archive
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        shell: bash
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/long-periods
+          git add -A -- "$target/"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: no complete verified long-period history'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Archive verified historical 60/90d and year Spot candles'
+          git pull --rebase origin main
+          python public/agent_crypto_erith_ia/tools/backfill_historical_periods.py --verify
+          git push origin HEAD:main
+      - name: Create delivery ZIP
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          folder="$RUNNER_TEMP/historical-long-periods"
+          mkdir -p "$folder"
+          cp public/agent_crypto_erith_ia/tools/backfill_historical_periods.py "$folder/"
+          cp public/agent_crypto_erith_ia/tools/historical_long_periods_test.py "$folder/"
+          if test -d public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/long-periods; then
+            cp -a public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/long-periods "$folder/"
+          fi
+          cd "$RUNNER_TEMP" && zip -qr "$GITHUB_WORKSPACE/historical-long-periods-delivery.zip" historical-long-periods
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historical-long-periods-delivery
+          path: historical-long-periods-delivery.zip
+          retention-days: 30

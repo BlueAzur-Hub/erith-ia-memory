@@ -92,7 +92,7 @@ def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10):
             last = block.get("last_open_ms", block.get("last_ms"))
             require(type(first) is int and type(last) is int and latest >= last,
                     "Historical bounds invalid")
-            coverage[period] = {"interval": block["interval"],
+            coverage[period] = {"pair": block["pair"], "interval": block["interval"],
                                 "first_open_ms": first, "last_open_ms": latest,
                                 "last_utc": utc(latest), "source": "Binance Spot",
                                 "quote": "USDT",
