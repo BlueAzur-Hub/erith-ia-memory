@@ -1,0 +1,107 @@
+name: Agent Crypto Shared Historical Archive Views
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-shared-history-views.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_btc_view.py'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_shared_views.py'
+      - 'public/agent_crypto_erith_ia/tools/shared_historical_views_test.py'
+      - 'public/agent_crypto_erith_ia/tools/shared-historical-view.test.mjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-shared-history-views.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_btc_view.py'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_shared_views.py'
+      - 'public/agent_crypto_erith_ia/tools/shared_historical_views_test.py'
+      - 'public/agent_crypto_erith_ia/tools/shared-historical-view.test.mjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
+  workflow_dispatch:
+  schedule:
+    - cron: '53 6 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-shared-history-views
+  cancel-in-progress: false
+jobs:
+  verified-shared-views:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Offline regression for all Top250 genuine identities and browsing
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_historical_shared_views.py
+          python public/agent_crypto_erith_ia/tools/shared_historical_views_test.py
+          python public/agent_crypto_erith_ia/tools/btc_annual_view_test.py
+          node --check public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js
+          node --test public/agent_crypto_erith_ia/tools/shared-historical-view.test.mjs
+      - name: Read real source ZIPs and verify one-minute integrity for every archived asset
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/build_historical_shared_views.py \
+            --output "$RUNNER_TEMP/shared_monthly_views" --workers 4
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"shared_monthly_views"
+          data=json.loads((root/"index.json").read_text())
+          assert data["schema"]=="aerith.public.ohlcv.shared.monthly-index.v1"
+          assert data["quote"]=="USDT" and data["is_live"] is False
+          assert 30<=data["archived_assets"]<=250
+          assert len(data["assets"])==data["archived_assets"]
+          for entry in data["assets"]:
+              raw=(root/entry["file"]).read_bytes()
+              assert len(raw)==entry["bytes"]
+              assert hashlib.sha256(raw).hexdigest()==entry["sha256"]
+              assert entry["source_zip_sha256"] and entry["native_1m_count"]>=40320
+              assert entry["series_counts"]["1m"]==1440
+          print("VERIFIED SHARED HISTORICAL ASSETS",data["archived_assets"],flush=True)
+          PY
+      - name: Publish only verified per-asset projections into canonical vault data
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_monthly_views
+          mkdir -p "$target"
+          cp -a "$RUNNER_TEMP/shared_monthly_views/." "$target/"
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "NOOP: verified monthly views have not changed"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "Publish verified multi-asset monthly OHLCV archive views"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Attach reproducibility index and source pointers
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-historical-archive-index
+          path: ${{ runner.temp }}/shared_monthly_views/index.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Keep Trader, Bridge and Administrator market inputs unchanged
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/crypto/
