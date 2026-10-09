@@ -59,3 +59,20 @@ Le dossier `universe/cohorts/top50/` est une future **archive OHLCV indépendant
 L'inventaire classe chaque ligne réelle du **Top 50**, en distinguant 12 actifs déjà archivés, des candidats nouvellement approuvés et des identités qui nécessitent une enquête. Le registre `historical-cohort-instruments.json` sélectionne 13 nouvelles associations CoinGecko ID ↔ symbole, sous réserve de l'existence réelle d'une paire Binance Spot / USDT ouverte, avec baseAsset, quoteAsset, permission SPOT et status TRADING concordants. Toute série doit comprendre la totalité des bougies clôturées attendues aux horizons 24 h (5 min), 7 j (1 h) et 30 j (4 h), sinon l'actif est explicitement marqué incomplet et non publié. Le ZIP GitHub Actions accompagne chaque run.
 
 **Il ne s'agit pas encore d'une couverture historique intégrale des 50 actifs** : les instruments non qualifiés et les 12 actifs déjà archivés ne sont pas duplicés. La collecte validée constitue un premier lot ponctuel ; la durabilité incrémentale et sa lecture dans Trader nécessitent une extension ultérieure, après contrôle des données réellement produites. Les identités atypiques `FIGR_HELOC`, `GRAM`, `M` ou `BUIDL` ne sont pas automatiquement converties en paires Binance.
+
+
+## Top 50 · journal incrémental des 12 nouveaux actifs
+
+La première collecte Top 50 du 9 octobre est validée : [GitHub Actions #37945474055](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/37945474055), [commit b962cd10d](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/b962cd10d8b33f91ae833491ae8efe0a0abf27ac), soit **12 nouveaux actifs / 36 séries / 7 632 bougies Binance Spot USDT**. CRO a échoué à la consultation `exchangeInfo`; ce n'est pas une archive. Au total, 24 actifs distincts sont archivés dans les trois familles existantes.
+
+Le nouveau script `tools/extend_historical_cohort.py` reprend les validations de `extend_historical_universe.py` et l'index déjà vérifié de `collect_historical_cohort.py`. Il **ne réécrit jamais** `universe/cohorts/top50/index.json`, ni les blocs d'origine, ni les archives Universe 5 actifs, ni R10/R11. Les données ajoutées sont conservées dans `universe/cohorts/top50/incremental/` (index séparé + blocs gzip immuables SHA-256), chaque segment débutant immédiatement après la dernière chandelle vérifiée de sa série. Paires USDT non équivalentes au prix USD CoinGecko.
+
+Commandes sûres :
+- `python public/agent_crypto_erith_ia/tools/extend_historical_cohort.py --plan` : plan lecture seule, **sans réseau**.
+- `python public/agent_crypto_erith_ia/tools/extend_historical_cohort.py --verify` : vérifie les 36 blocs d'origine et tous les nouveaux segments.
+- `python public/agent_crypto_erith_ia/tools/historical_cohort_incremental_test.py` : tests hors réseau (continuité, NOOP, lacunes, falsification SHA, paire incorrecte, archive originelle modifiée).
+- GitHub Actions → **Agent Crypto Historical Cohort Incremental — protected manual append** → `Run workflow` → `collect` : première collecte réelle explicite, avec `--enable-network`.
+
+La limite est de **288 nouvelles bougies par paire/période/passage**, pour 12 actifs et trois résolutions : 5 min (24 h), 1 h (7 j), 4 h (30 j). Si la fenêtre ancienne comporte davantage de données manquantes, les relances continueront dans l'ordre sans trous. Un NOOP n'écrit aucun fichier. Les `push` et PR n'effectuent **aucune collecte réseau**. Aucun horaire automatisé n'est ajouté au nouveau lot avant une première preuve réelle et l'analyse de capacité. L'ancien workflow quotidien Universe 5 actifs n'est pas modifié.
+
+Attention : les archives cumulatives nouvelles ne sont **pas encore exploitées par le panneau historique du Trader**. La validation DOGE concerne le snapshot Universe 5 actifs, pas cette nouvelle famille. La généralisation à Top 100/250 et la rotation des archives (cap de 5 000 segments) restent à concevoir et à valider. La première collecte réelle du nouveau journal n'a pas encore été exécutée à la livraison du code.
