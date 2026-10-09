@@ -87,6 +87,26 @@ class IdentityTests(unittest.TestCase):
         ledger["results"][0]["evidence"][0]["coin_id"]="wrong"
         with self.assertRaisesRegex(ValueError,"without exact identity"):
             m.validate_ledger(ledger,audit())
+    def test_eight_candidates_are_bounded_and_resumable(self):
+        source=audit()
+        for asset in source["assets"][59:66]:
+            asset["status"]="spot_candidate_identity_unverified"
+        request_ids=[]
+        def getter(coin_id,page):
+            request_ids.append(coin_id)
+            return []
+        ledger,attempts=m.process(source,batch_size=8,fetcher=getter,delay=0)
+        self.assertEqual(len(attempts),8)
+        self.assertEqual(ledger["checked_count"],8)
+        self.assertEqual(len(request_ids),8)
+        resumed,remaining=m.process(source,existing=ledger,batch_size=8,
+                                     fetcher=getter,delay=0)
+        self.assertEqual(len(remaining),2)
+        self.assertEqual(resumed["checked_count"],10)
+        self.assertEqual(len(set(request_ids)),10)
+        with self.assertRaisesRegex(ValueError,"Unbounded"):
+            m.process(source,batch_size=9,fetcher=getter,delay=0)
+
     def test_250_rank_frozen_no_arbitrary_batch(self):
         with self.assertRaisesRegex(ValueError,"Unbounded"):
             m.process(audit(),batch_size=250,fetcher=lambda a,p:[])
