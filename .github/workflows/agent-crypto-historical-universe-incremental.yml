@@ -16,6 +16,8 @@ on:
       - '.github/workflows/agent-crypto-historical-universe-incremental.yml'
       - 'public/agent_crypto_erith_ia/tools/extend_historical_universe.py'
       - 'public/agent_crypto_erith_ia/tools/historical_universe_incremental_test.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_archive_partitions.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_archive_partitions_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md'
   push:
     branches: [main]
@@ -23,6 +25,8 @@ on:
       - '.github/workflows/agent-crypto-historical-universe-incremental.yml'
       - 'public/agent_crypto_erith_ia/tools/extend_historical_universe.py'
       - 'public/agent_crypto_erith_ia/tools/historical_universe_incremental_test.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_archive_partitions.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_archive_partitions_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md'
 permissions:
   contents: write
@@ -45,6 +49,7 @@ jobs:
         run: |
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_historical_universe.py public/agent_crypto_erith_ia/tools/extend_historical_universe.py
           python public/agent_crypto_erith_ia/tools/historical_universe_incremental_test.py
+          python public/agent_crypto_erith_ia/tools/historical_archive_partitions_test.py
           python public/agent_crypto_erith_ia/tools/historical_universe_test.py
       - name: Verify complete source archive and appended chain offline
         run: |
