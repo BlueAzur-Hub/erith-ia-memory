@@ -1,7 +1,7 @@
 /* Seven Heaven · Trader verified R9 archive; read-only, no live-chart changes. */
 (()=>{"use strict";
-const ID="traderVerifiedHistory",LABEL={"24h":"5 min","7d":"1 h","30d":"4 h"};
-let reader=null,catalog=null,sequence=0,universeReader=null,universeCatalog=null,cohortReader=null,cohortCatalog=null;
+const ID="traderVerifiedHistory",LABEL={"24h":"5 min","7d":"1 h","30d":"4 h","60d":"4 h","90d":"4 h","1y":"1 j"};
+let reader=null,catalog=null,sequence=0,universeReader=null,universeCatalog=null,cohortReader=null,cohortCatalog=null,longReader=null,longCatalog=null;
 const panel=()=>document.getElementById(ID);
 const displayCurrency=()=>{try{return globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency==="EUR"?"EUR":"USD";}catch(_){return"USD";}};
 function layout(p,currency){
@@ -55,6 +55,21 @@ function loadCohortReader(){
   document.head.appendChild(script);
  }).catch(error=>{cohortReader=null;document.getElementById("traderHistoricalCohortLoader")?.remove();throw error;});
  return cohortReader;
+}
+function loadLongReader(){
+ if(globalThis.SevenHistoricalLongReader?.readSeries)return Promise.resolve(globalThis.SevenHistoricalLongReader);
+ if(longReader)return longReader;
+ longReader=new Promise((resolve,reject)=>{
+  const script=document.createElement("script");script.id="traderHistoricalLongLoader";
+  script.src=new URL("../trader/trader-historical-long-reader.js",document.baseURI).href;
+  script.onload=()=>{
+   const api=globalThis.SevenHistoricalLongReader;
+   api?.readSeries&&api?.refreshIndex?resolve(api):reject(Error("Lecteur longues périodes indisponible"));
+  };
+  script.onerror=()=>reject(Error("Chargement lecteur longues périodes impossible"));
+  document.head.appendChild(script);
+ }).catch(e=>{longReader=null;document.getElementById("traderHistoricalLongLoader")?.remove();throw e;});
+ return longReader;
 }
 /* Read-only projection of the native CoinGecko USD chart broker.
    NOT Binance R9 and NOT OHLCV. No new fetch, timer, storage or graph owner. */
@@ -114,7 +129,7 @@ function paint(p,result){
   m.isLive!==false||m.graphConnected!==false||!Array.isArray(rows))throw Error("Archive non qualifiée");
  write(p,"meta",m.pair+" · Binance Spot · USDT · "+m.interval+" · "+rows.length+
   " chandelles · "+utc(m.firstOpenMs)+" → "+utc(m.lastOpenMs)+
-  (m.status==="VALIDATED_ARCHIVE"?" · cumul vérifié ":m.archiveFamily==="universe"?" · borne fenêtre ":" · capture ")+utc(m.sourceIndexUpdatedAt)+" · SHA-256 vérifié · NON LIVE");
+  (m.archiveFamily==="long-periods"?" · capture longue ":m.status==="VALIDATED_ARCHIVE"?" · cumul vérifié ":m.archiveFamily==="universe"?" · borne fenêtre ":" · capture ")+utc(m.sourceIndexUpdatedAt)+" · SHA-256 vérifié · NON LIVE");
  const body=p.querySelector("[data-history-rows]");body?.replaceChildren();
  for(const row of rows.slice(-12).reverse()){
   const tr=document.createElement("tr");
@@ -144,6 +159,39 @@ async function refresh({reload=false}={}){
  }
  write(p,"status",c.symbol+" · recherche d'archive…");
  write(p,"detail","Archive Binance Spot USDT, distincte des Bougies OKX USDC.");
+ if(period==="60d"||period==="90d"||period==="1y"){
+  try{
+   const api=await loadLongReader();
+   if(seq!==sequence||!p.open||selected()?.id!==c.id)return;
+   if(reload||!longCatalog)longCatalog=await api.refreshIndex();
+   if(seq!==sequence||!p.open||selected()?.id!==c.id)return;
+   if(longCatalog?.archiveFamily!=="long-periods"||longCatalog.quote!=="USDT"||
+      !Array.isArray(longCatalog.coverage))throw Error("Catalogue longues périodes non qualifié");
+   const entry=longCatalog.coverage.find(x=>x.id===c.id&&x.period===period);
+   if(!entry){
+    write(p,"status",c.symbol+" · période longue indisponible");
+    write(p,"detail","Aucune archive complète Binance Spot USDT pour cette période. Aucune période inventée ni Max implicite.");
+    paintNative(p,c);
+    return;
+   }
+   write(p,"status",c.symbol+" · "+period+" · SHA-256 en cours…");
+   const data=await api.readSeries({assetId:c.id,period});
+   if(seq!==sequence||!p.open||selected()?.id!==c.id||
+      p.querySelector("[data-history-period]")?.value!==period)return;
+   if(data.metadata.id!==c.id||data.metadata.period!==period||
+      data.metadata.pair!==entry.pair||data.candles.length!==entry.candles)
+    throw Error("Longue série hors contexte");
+   paint(p,data);
+   write(p,"status",c.symbol+" · "+period+" · "+(data.metadata.derivedFrom90d?"DÉCOUPE 90J · ":"")+"ARCHIVE VÉRIFIÉE");
+   write(p,"detail","Archives longues Binance Spot USDT vérifiées : lecture seule, pas de conversion USDT/USD, aucun ordre, Max non mesuré.");
+  }catch(e){
+   if(seq!==sequence||!p.open)return;
+   empty(p);write(p,"status",c.symbol+" · longue archive indisponible");
+   write(p,"detail","Erreur longues périodes : "+String(e?.message||e).slice(0,150));
+   paintNative(p,c);
+  }
+  return;
+ }
  try{
   const api=await loadReader();if(seq!==sequence||!p.open)return;
   if(reload||!catalog)catalog=await api.refreshIndex();
@@ -233,12 +281,12 @@ function mount(){
  const p=document.createElement("details");p.id=ID;
  p.setAttribute("aria-label","Historique Binance Spot vérifié · lecture seule");
  p.innerHTML=[
- '<summary><strong>HISTORIQUE VÉRIFIÉ · R9 + UNIVERS + TOP50</strong>',
+ '<summary><strong>HISTORIQUE VÉRIFIÉ · R9 + UNIVERS + TOP50 + LONG</strong>',
  '<span data-history-status>Fermé · aucune lecture</span></summary>',
  '<div class="history-body"><div class="history-controls" data-history-controls>',
  '<label for="traderHistoryPeriod">Période</label><select id="traderHistoryPeriod" data-history-period>',
  '<option value="24h">24 h · 5 min</option><option value="7d">7 j · 1 h</option>',
- '<option value="30d">30 j · 4 h</option></select>',
+ '<option value="30d">30 j · 4 h</option><option value="60d">60 j · 4 h</option><option value="90d">90 j · 4 h</option><option value="1y">1 an · 1 jour</option></select>',
  '<button type="button" data-history-reload>Actualiser le catalogue</button></div>',
  '<p class="history-note" data-history-detail>Lecture à la demande, sans impact sur OKX.</p>',
  '<section data-history-r9><p data-history-meta>—</p><div class="history-scroll"><table>',
