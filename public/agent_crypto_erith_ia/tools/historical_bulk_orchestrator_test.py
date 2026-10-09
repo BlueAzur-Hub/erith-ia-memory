@@ -46,10 +46,10 @@ def fixture(month,folder,all_unavailable=False,tamper=False):
 class PlanTests(unittest.TestCase):
     def test_months_skip_existing_release_and_continue_backwards(self):
         now=dt.datetime(2026,10,9,tzinfo=UTC)
-        r=app.select_months(now,["crypto-spot-bulk-2026-09-1m"])
+        r=app.select_months(now,["crypto-spot-bulk-2026-09-1m"],count=2)
         self.assertEqual(r,["2026-08","2026-07"])
         r=app.select_months(now,["crypto-spot-bulk-2026-09-1m",
-                                "crypto-spot-bulk-2026-08-1m"])
+                                "crypto-spot-bulk-2026-08-1m"],count=2)
         self.assertEqual(r,["2026-07","2026-06"])
 
     def test_seven_months_complete_btc_year_without_changing_old_releases(self):
