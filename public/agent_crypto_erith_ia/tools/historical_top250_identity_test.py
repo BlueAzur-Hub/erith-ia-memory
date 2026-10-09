@@ -65,8 +65,10 @@ class IdentityTests(unittest.TestCase):
         item=m.inspect_asset(m.candidates(audit())[0],error)
         self.assertEqual(item["status"],"source_unavailable")
         self.assertEqual(item["evidence"],[])
-        existing={"schema":m.SCHEMA,"results":[{"id":"hyperliquid","rank":11,
-             "pair":"HYPEUSDT","status":"source_unavailable"}]}
+        existing={"schema":m.SCHEMA,"results":[
+          {"id":"hyperliquid","rank":11,"pair":"HYPEUSDT","status":"source_unavailable"},
+          {"id":"the-open-network","rank":32,"pair":"GRAMUSDT","status":"identity_not_confirmed"},
+          {"id":"polkadot","rank":51,"pair":"DOTUSDT","status":"identity_not_confirmed"}]}
         v,_=m.process(audit(),existing=existing,batch_size=1,
                       fetcher=lambda a,p:[ticker()],delay=0)
         self.assertEqual(v["approved_count"],1)
