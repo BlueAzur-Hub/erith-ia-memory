@@ -1,0 +1,123 @@
+name: Agent Crypto Bulk Monthly Spot Import - Multi Asset
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-bulk-monthly.yml'
+      - 'public/agent_crypto_erith_ia/tools/import_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_bulk_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-bulk-bootstrap.json'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-bulk-monthly.yml'
+      - 'public/agent_crypto_erith_ia/tools/import_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_bulk_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-bulk-bootstrap.json'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-bulk-monthly-spot-immutable
+  cancel-in-progress: false
+jobs:
+  multi_asset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      MONTH: '2026-09'
+      INTERVAL: '1m'
+      LIMIT: '31'
+      OUTPUT: '/tmp/aerith-bulk-month'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline provenance, ZIP tampering, timestamp and parallel-safety tests
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/import_historical_bulk.py
+          python public/agent_crypto_erith_ia/tools/historical_bulk_test.py
+          python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
+          python public/agent_crypto_erith_ia/tools/import_historical_bulk.py --plan --month "$MONTH" --interval "$INTERVAL" --limit "$LIMIT" > "$RUNNER_TEMP/bulk-plan.json"
+          cat "$RUNNER_TEMP/bulk-plan.json"
+      - name: Authorize only first main-merge bulk pilot
+        id: allow
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-bulk-bootstrap.json
+          status=$(git diff --name-status HEAD^ HEAD -- "$marker" | cut -f1)
+          if [[ "$status" != A ]]; then
+            echo 'approved=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-bulk-bootstrap.json').read_text())
+          assert x['schema']=='aerith.public.ohlcv.spot.bulk-monthly.bootstrap.v1'
+          assert x['action']=='import_month_once_after_main_merge'
+          assert x['month']=='2026-09' and x['interval']=='1m'
+          assert x['qualified_assets']==31 and x['source']=='Binance Spot'
+          assert x['storage']=='github-release'
+          PY
+          echo 'approved=true' >> "$GITHUB_OUTPUT"
+      - name: Multi-asset real monthly CSV import and verification
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && steps.allow.outputs.approved == 'true')
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/import_historical_bulk.py \
+            --import-month --month "$MONTH" --interval "$INTERVAL" \
+            --workers 4 --limit "$LIMIT" --output-dir "$OUTPUT"
+          python - <<'PY'
+          import json,os,pathlib
+          d=json.loads((pathlib.Path(os.environ['OUTPUT'])/'manifest.json').read_text())
+          assert d['schema']=='aerith.public.ohlcv.spot.bulk-monthly.index.v1'
+          assert d['requested']==31
+          assert d['verified']+d['unavailable']==31
+          assert d['verified']>=1, 'Zero validated assets: refuse archive promotion'
+          assert d['candles']==d['verified']*43200
+          for x in d['assets']:
+            if x['status']=='verified':
+              assert (pathlib.Path(os.environ['OUTPUT'])/x['file']).is_file()
+          print('MULTI-ASSET RESULT',json.dumps({k:d[k] for k in ('requested','verified','unavailable','candles','zip_bytes')},sort_keys=True))
+          PY
+      - name: Protect previous historical archives, Trader and Administrator
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
+            public/agent_crypto_erith_ia/core/
+      - name: Publish verified month as immutable GitHub Release, not Git history
+        if: github.event_name == 'push' && steps.allow.outputs.approved == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag=crypto-spot-bulk-2026-09-1m
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "::error::Release already exists; immutability guard forbids overwrite."
+            exit 1
+          fi
+          gh release create "$tag" \
+            "$OUTPUT"/*.zip "$OUTPUT"/manifest.json \
+            --target "$GITHUB_SHA" \
+            --title "Verified Binance Spot 1m monthly archives · September 2026" \
+            --notes "Source-qualified archived Top50 assets, native Binance public ZIP bytes and SHA-256 checked against each original .CHECKSUM. A missing or incomplete month is explicitly unavailable in manifest. USDT pairs only. No USD conversion, orders, or Max claim." \
+            --latest=false
+          gh release view "$tag" --json tagName,assets,url
+      - name: Upload portable benchmark and reviewed archive ZIPs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crypto-bulk-monthly-evidence
+          path: |
+            /tmp/aerith-bulk-month/manifest.json
+            /tmp/aerith-bulk-month/*.zip
+          if-no-files-found: warn
+          retention-days: 30
