@@ -1,0 +1,118 @@
+name: Agent Crypto Historical Remaining Top50 — identity-first Spot
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Plan (offline), probe (Binance read-only), or collect (verified OHLCV commit)'
+        type: choice
+        required: true
+        default: plan
+        options: [plan, probe, collect]
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-historical-remaining.yml'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-remaining-instruments.json'
+      - 'public/agent_crypto_erith_ia/tools/collect_historical_remaining.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_remaining_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_historical_coverage.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-historical-remaining.yml'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-remaining-instruments.json'
+      - 'public/agent_crypto_erith_ia/tools/collect_historical_remaining.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_remaining_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_historical_coverage.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-historical-remaining-top50
+  cancel-in-progress: false
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline syntax, identity and data-integrity tests
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_historical_remaining.py
+          python public/agent_crypto_erith_ia/tools/historical_remaining_test.py
+          python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
+      - name: Plan only and verify all original archives offline
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/collect_historical_remaining.py --plan > "$RUNNER_TEMP/remaining-plan.json"
+          cat "$RUNNER_TEMP/remaining-plan.json"
+          python public/agent_crypto_erith_ia/tools/collect_historical_remaining.py --verify
+          python public/agent_crypto_erith_ia/tools/audit_historical_coverage.py --compact > "$RUNNER_TEMP/top50-coverage.json"
+      - name: Probe Binance Spot pairs without publishing any files
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'probe'
+        run: |
+          python public/agent_crypto_erith_ia/tools/collect_historical_remaining.py --probe --enable-network > "$RUNNER_TEMP/remaining-probe.json"
+          cat "$RUNNER_TEMP/remaining-probe.json"
+      - name: Collect complete OHLCV of individually verified pairs (manual only)
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        run: |
+          python public/agent_crypto_erith_ia/tools/collect_historical_remaining.py --collect --enable-network
+          python public/agent_crypto_erith_ia/tools/collect_historical_remaining.py --verify
+          python public/agent_crypto_erith_ia/tools/audit_historical_coverage.py --compact > "$RUNNER_TEMP/top50-coverage-updated.json"
+      - name: Protect original histories, Trader and Administrator
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/partitions_r11/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/index.json \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/blocks/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/incremental/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50/
+      - name: Commit only new qualified additional OHLCV archive
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        shell: bash
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional
+          git add -A -- "$target/"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP — no new qualified candles'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Archive additional verified Top50 Binance Spot OHLCV'
+          git pull --rebase origin main
+          python public/agent_crypto_erith_ia/tools/collect_historical_remaining.py --verify
+          python public/agent_crypto_erith_ia/tools/audit_historical_coverage.py --compact > "$RUNNER_TEMP/verified-after-rebase.json"
+          git push origin HEAD:main
+      - name: Bundle auditable report and data (ZIP)
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/remaining-top50"
+          cp public/agent_crypto_erith_ia/tools/collect_historical_remaining.py "$RUNNER_TEMP/remaining-top50/"
+          cp public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-remaining-instruments.json "$RUNNER_TEMP/remaining-top50/"
+          cp "$RUNNER_TEMP"/remaining-*.json "$RUNNER_TEMP/remaining-top50/" 2>/dev/null || true
+          if test -d public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional; then
+            cp -a public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional "$RUNNER_TEMP/remaining-top50/"
+          fi
+          cd "$RUNNER_TEMP" && zip -qr "$GITHUB_WORKSPACE/remaining-top50-delivery.zip" remaining-top50
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: remaining-top50-delivery
+          path: remaining-top50-delivery.zip
+          retention-days: 30
