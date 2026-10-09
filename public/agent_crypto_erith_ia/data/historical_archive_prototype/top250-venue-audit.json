@@ -1,0 +1,2559 @@
+{
+  "approved_for_import": 31,
+  "assets": [
+    {
+      "can_import": true,
+      "id": "bitcoin",
+      "name": "Bitcoin",
+      "proposed_pair": "BTCUSDT",
+      "rank": 1,
+      "source_evidence": "Existing SHA-verified historical source owner: legacy_r10",
+      "status": "approved_existing_archive",
+      "symbol": "BTC"
+    },
+    {
+      "can_import": true,
+      "id": "ethereum",
+      "name": "Ethereum",
+      "proposed_pair": "ETHUSDT",
+      "rank": 2,
+      "source_evidence": "Existing SHA-verified historical source owner: legacy_r10",
+      "status": "approved_existing_archive",
+      "symbol": "ETH"
+    },
+    {
+      "can_import": false,
+      "id": "tether",
+      "name": "Tether",
+      "proposed_pair": "USDTUSDT",
+      "rank": 3,
+      "source_evidence": "USDTUSDT is not a valid Spot history",
+      "status": "self_quote_not_tradable",
+      "symbol": "USDT"
+    },
+    {
+      "can_import": true,
+      "id": "binancecoin",
+      "name": "BNB",
+      "proposed_pair": "BNBUSDT",
+      "rank": 4,
+      "source_evidence": "Existing SHA-verified historical source owner: legacy_r10",
+      "status": "approved_existing_archive",
+      "symbol": "BNB"
+    },
+    {
+      "can_import": true,
+      "id": "ripple",
+      "name": "XRP",
+      "proposed_pair": "XRPUSDT",
+      "rank": 5,
+      "source_evidence": "Existing SHA-verified historical source owner: legacy_r10",
+      "status": "approved_existing_archive",
+      "symbol": "XRP"
+    },
+    {
+      "can_import": true,
+      "id": "usd-coin",
+      "name": "USDC",
+      "proposed_pair": "USDCUSDT",
+      "rank": 6,
+      "source_evidence": "Existing SHA-verified historical source owner: universe",
+      "status": "approved_existing_archive",
+      "symbol": "USDC"
+    },
+    {
+      "can_import": true,
+      "id": "solana",
+      "name": "Solana",
+      "proposed_pair": "SOLUSDT",
+      "rank": 7,
+      "source_evidence": "Existing SHA-verified historical source owner: legacy_r10",
+      "status": "approved_existing_archive",
+      "symbol": "SOL"
+    },
+    {
+      "can_import": true,
+      "id": "tron",
+      "name": "TRON",
+      "proposed_pair": "TRXUSDT",
+      "rank": 8,
+      "source_evidence": "Existing SHA-verified historical source owner: legacy_r10",
+      "status": "approved_existing_archive",
+      "symbol": "TRX"
+    },
+    {
+      "can_import": false,
+      "id": "figure-heloc",
+      "name": "Figure Heloc",
+      "proposed_pair": null,
+      "rank": 9,
+      "source_evidence": "Ticker cannot safely map to Binance Spot",
+      "status": "nonstandard_symbol",
+      "symbol": "FIGR_HELOC"
+    },
+    {
+      "can_import": true,
+      "id": "zcash",
+      "name": "Zcash",
+      "proposed_pair": "ZECUSDT",
+      "rank": 10,
+      "source_evidence": "Existing SHA-verified historical source owner: legacy_r10",
+      "status": "approved_existing_archive",
+      "symbol": "ZEC"
+    },
+    {
+      "can_import": false,
+      "id": "hyperliquid",
+      "name": "Hyperliquid",
+      "proposed_pair": "HYPEUSDT",
+      "rank": 11,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "HYPE"
+    },
+    {
+      "can_import": true,
+      "id": "dogecoin",
+      "name": "Dogecoin",
+      "proposed_pair": "DOGEUSDT",
+      "rank": 12,
+      "source_evidence": "Existing SHA-verified historical source owner: universe",
+      "status": "approved_existing_archive",
+      "symbol": "DOGE"
+    },
+    {
+      "can_import": true,
+      "id": "usds",
+      "name": "USDS",
+      "proposed_pair": "USDSUSDT",
+      "rank": 13,
+      "source_evidence": "Existing SHA-verified historical source owner: top50_additional",
+      "status": "approved_existing_archive",
+      "symbol": "USDS"
+    },
+    {
+      "can_import": false,
+      "id": "monero",
+      "name": "Monero",
+      "proposed_pair": "XMRUSDT",
+      "rank": 14,
+      "source_evidence": "Binance pair not active Spot",
+      "status": "not_spot_trading",
+      "symbol": "XMR"
+    },
+    {
+      "can_import": false,
+      "id": "whitebit",
+      "name": "WhiteBIT Coin",
+      "proposed_pair": "WBTUSDT",
+      "rank": 15,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "WBT"
+    },
+    {
+      "can_import": true,
+      "id": "chainlink",
+      "name": "Chainlink",
+      "proposed_pair": "LINKUSDT",
+      "rank": 16,
+      "source_evidence": "Existing SHA-verified historical source owner: universe",
+      "status": "approved_existing_archive",
+      "symbol": "LINK"
+    },
+    {
+      "can_import": true,
+      "id": "cardano",
+      "name": "Cardano",
+      "proposed_pair": "ADAUSDT",
+      "rank": 17,
+      "source_evidence": "Existing SHA-verified historical source owner: universe",
+      "status": "approved_existing_archive",
+      "symbol": "ADA"
+    },
+    {
+      "can_import": false,
+      "id": "leo-token",
+      "name": "LEO Token",
+      "proposed_pair": "LEOUSDT",
+      "rank": 18,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "LEO"
+    },
+    {
+      "can_import": false,
+      "id": "rain",
+      "name": "Rain",
+      "proposed_pair": "RAINUSDT",
+      "rank": 19,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "RAIN"
+    },
+    {
+      "can_import": true,
+      "id": "stellar",
+      "name": "Stellar",
+      "proposed_pair": "XLMUSDT",
+      "rank": 20,
+      "source_evidence": "Existing SHA-verified historical source owner: universe",
+      "status": "approved_existing_archive",
+      "symbol": "XLM"
+    },
+    {
+      "can_import": true,
+      "id": "near",
+      "name": "NEAR Protocol",
+      "proposed_pair": "NEARUSDT",
+      "rank": 21,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "NEAR"
+    },
+    {
+      "can_import": true,
+      "id": "bitcoin-cash",
+      "name": "Bitcoin Cash",
+      "proposed_pair": "BCHUSDT",
+      "rank": 22,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "BCH"
+    },
+    {
+      "can_import": true,
+      "id": "litecoin",
+      "name": "Litecoin",
+      "proposed_pair": "LTCUSDT",
+      "rank": 23,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "LTC"
+    },
+    {
+      "can_import": false,
+      "id": "canton-network",
+      "name": "Canton",
+      "proposed_pair": "CCUSDT",
+      "rank": 24,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "CC"
+    },
+    {
+      "can_import": true,
+      "id": "ethena-usde",
+      "name": "Ethena USDe",
+      "proposed_pair": "USDEUSDT",
+      "rank": 25,
+      "source_evidence": "Existing SHA-verified historical source owner: top50_additional",
+      "status": "approved_existing_archive",
+      "symbol": "USDE"
+    },
+    {
+      "can_import": true,
+      "id": "uniswap",
+      "name": "Uniswap",
+      "proposed_pair": "UNIUSDT",
+      "rank": 26,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "UNI"
+    },
+    {
+      "can_import": false,
+      "id": "dai",
+      "name": "Dai",
+      "proposed_pair": "DAIUSDT",
+      "rank": 27,
+      "source_evidence": "Binance pair not active Spot",
+      "status": "not_spot_trading",
+      "symbol": "DAI"
+    },
+    {
+      "can_import": true,
+      "id": "avalanche-2",
+      "name": "Avalanche",
+      "proposed_pair": "AVAXUSDT",
+      "rank": 28,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "AVAX"
+    },
+    {
+      "can_import": true,
+      "id": "sui",
+      "name": "Sui",
+      "proposed_pair": "SUIUSDT",
+      "rank": 29,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "SUI"
+    },
+    {
+      "can_import": true,
+      "id": "usd1-wlfi",
+      "name": "USD1",
+      "proposed_pair": "USD1USDT",
+      "rank": 30,
+      "source_evidence": "Existing SHA-verified historical source owner: top50_additional",
+      "status": "approved_existing_archive",
+      "symbol": "USD1"
+    },
+    {
+      "can_import": false,
+      "id": "bitway",
+      "name": "Bitway",
+      "proposed_pair": "BTWUSDT",
+      "rank": 31,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "BTW"
+    },
+    {
+      "can_import": false,
+      "id": "the-open-network",
+      "name": "Gram (prev. Toncoin)",
+      "proposed_pair": "GRAMUSDT",
+      "rank": 32,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "GRAM"
+    },
+    {
+      "can_import": true,
+      "id": "hedera-hashgraph",
+      "name": "Hedera",
+      "proposed_pair": "HBARUSDT",
+      "rank": 33,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "HBAR"
+    },
+    {
+      "can_import": true,
+      "id": "quant-network",
+      "name": "Quant",
+      "proposed_pair": "QNTUSDT",
+      "rank": 34,
+      "source_evidence": "Existing SHA-verified historical source owner: top50_additional",
+      "status": "approved_existing_archive",
+      "symbol": "QNT"
+    },
+    {
+      "can_import": true,
+      "id": "tether-gold",
+      "name": "Tether Gold",
+      "proposed_pair": "XAUTUSDT",
+      "rank": 35,
+      "source_evidence": "Existing SHA-verified historical source owner: top50_additional",
+      "status": "approved_existing_archive",
+      "symbol": "XAUT"
+    },
+    {
+      "can_import": true,
+      "id": "shiba-inu",
+      "name": "Shiba Inu",
+      "proposed_pair": "SHIBUSDT",
+      "rank": 36,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "SHIB"
+    },
+    {
+      "can_import": false,
+      "id": "global-dollar",
+      "name": "Global Dollar",
+      "proposed_pair": "USDGUSDT",
+      "rank": 37,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USDG"
+    },
+    {
+      "can_import": true,
+      "id": "bittensor",
+      "name": "Bittensor",
+      "proposed_pair": "TAOUSDT",
+      "rank": 38,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "TAO"
+    },
+    {
+      "can_import": false,
+      "id": "crypto-com-chain",
+      "name": "Cronos",
+      "proposed_pair": "CROUSDT",
+      "rank": 39,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "CRO"
+    },
+    {
+      "can_import": false,
+      "id": "paypal-usd",
+      "name": "PayPal USD",
+      "proposed_pair": "PYUSDUSDT",
+      "rank": 40,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "PYUSD"
+    },
+    {
+      "can_import": true,
+      "id": "ethena",
+      "name": "Ethena",
+      "proposed_pair": "ENAUSDT",
+      "rank": 41,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "ENA"
+    },
+    {
+      "can_import": false,
+      "id": "okb",
+      "name": "OKB",
+      "proposed_pair": "OKBUSDT",
+      "rank": 42,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "OKB"
+    },
+    {
+      "can_import": true,
+      "id": "aave",
+      "name": "Aave",
+      "proposed_pair": "AAVEUSDT",
+      "rank": 43,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "AAVE"
+    },
+    {
+      "can_import": true,
+      "id": "pump-fun",
+      "name": "Pump.fun",
+      "proposed_pair": "PUMPUSDT",
+      "rank": 44,
+      "source_evidence": "Existing SHA-verified historical source owner: top50_additional",
+      "status": "approved_existing_archive",
+      "symbol": "PUMP"
+    },
+    {
+      "can_import": true,
+      "id": "ripple-usd",
+      "name": "Ripple USD",
+      "proposed_pair": "RLUSDUSDT",
+      "rank": 45,
+      "source_evidence": "Existing SHA-verified historical source owner: top50_additional",
+      "status": "approved_existing_archive",
+      "symbol": "RLUSD"
+    },
+    {
+      "can_import": false,
+      "id": "hashnote-usyc",
+      "name": "Circle USYC",
+      "proposed_pair": "USYCUSDT",
+      "rank": 46,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USYC"
+    },
+    {
+      "can_import": false,
+      "id": "memecore",
+      "name": "MemeCore",
+      "proposed_pair": null,
+      "rank": 47,
+      "source_evidence": "Ticker cannot safely map to Binance Spot",
+      "status": "nonstandard_symbol",
+      "symbol": "M"
+    },
+    {
+      "can_import": false,
+      "id": "ondo-us-dollar-yield",
+      "name": "Ondo US Dollar Yield",
+      "proposed_pair": "USDYUSDT",
+      "rank": 48,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USDY"
+    },
+    {
+      "can_import": true,
+      "id": "ondo-finance",
+      "name": "Ondo",
+      "proposed_pair": "ONDOUSDT",
+      "rank": 49,
+      "source_evidence": "Existing SHA-verified historical source owner: top50",
+      "status": "approved_existing_archive",
+      "symbol": "ONDO"
+    },
+    {
+      "can_import": false,
+      "id": "blackrock-usd-institutional-digital-liquidity-fund",
+      "name": "BlackRock USD Institutional Digital Liquidity Fund",
+      "proposed_pair": "BUIDLUSDT",
+      "rank": 50,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "BUIDL"
+    },
+    {
+      "can_import": false,
+      "id": "polkadot",
+      "name": "Polkadot",
+      "proposed_pair": "DOTUSDT",
+      "rank": 51,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "DOT"
+    },
+    {
+      "can_import": false,
+      "id": "aster-2",
+      "name": "Aster",
+      "proposed_pair": "ASTERUSDT",
+      "rank": 52,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ASTER"
+    },
+    {
+      "can_import": false,
+      "id": "worldcoin-wld",
+      "name": "Worldcoin",
+      "proposed_pair": "WLDUSDT",
+      "rank": 53,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "WLD"
+    },
+    {
+      "can_import": false,
+      "id": "pax-gold",
+      "name": "PAX Gold",
+      "proposed_pair": "PAXGUSDT",
+      "rank": 54,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "PAXG"
+    },
+    {
+      "can_import": false,
+      "id": "falcon-finance",
+      "name": "Falcon USD",
+      "proposed_pair": "USDFUSDT",
+      "rank": 55,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USDF"
+    },
+    {
+      "can_import": false,
+      "id": "mantle",
+      "name": "Mantle",
+      "proposed_pair": "MNTUSDT",
+      "rank": 56,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "MNT"
+    },
+    {
+      "can_import": false,
+      "id": "sky",
+      "name": "Sky",
+      "proposed_pair": "SKYUSDT",
+      "rank": 57,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "SKY"
+    },
+    {
+      "can_import": false,
+      "id": "world-liberty-financial",
+      "name": "World Liberty Financial",
+      "proposed_pair": "WLFIUSDT",
+      "rank": 58,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "WLFI"
+    },
+    {
+      "can_import": false,
+      "id": "internet-computer",
+      "name": "Internet Computer",
+      "proposed_pair": "ICPUSDT",
+      "rank": 59,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ICP"
+    },
+    {
+      "can_import": false,
+      "id": "morpho",
+      "name": "Morpho",
+      "proposed_pair": "MORPHOUSDT",
+      "rank": 60,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "MORPHO"
+    },
+    {
+      "can_import": false,
+      "id": "pepe",
+      "name": "Pepe",
+      "proposed_pair": "PEPEUSDT",
+      "rank": 61,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "PEPE"
+    },
+    {
+      "can_import": false,
+      "id": "spiko-amundi-overnight-swap-fund-eur",
+      "name": "Spiko Amundi Overnight Swap Fund (EUR)",
+      "proposed_pair": "EURSAFOUSDT",
+      "rank": 62,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "EURSAFO"
+    },
+    {
+      "can_import": false,
+      "id": "usdd",
+      "name": "USDD",
+      "proposed_pair": "USDDUSDT",
+      "rank": 63,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USDD"
+    },
+    {
+      "can_import": false,
+      "id": "united-stables",
+      "name": "United Stables",
+      "proposed_pair": null,
+      "rank": 64,
+      "source_evidence": "Ticker cannot safely map to Binance Spot",
+      "status": "nonstandard_symbol",
+      "symbol": "U"
+    },
+    {
+      "can_import": false,
+      "id": "htx-dao",
+      "name": "HTX DAO",
+      "proposed_pair": "HTXUSDT",
+      "rank": 65,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "HTX"
+    },
+    {
+      "can_import": false,
+      "id": "bitget-token",
+      "name": "Bitget Token",
+      "proposed_pair": "BGBUSDT",
+      "rank": 66,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "BGB"
+    },
+    {
+      "can_import": false,
+      "id": "bfusd",
+      "name": "BFUSD",
+      "proposed_pair": "BFUSDUSDT",
+      "rank": 67,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "BFUSD"
+    },
+    {
+      "can_import": false,
+      "id": "ethereum-classic",
+      "name": "Ethereum Classic",
+      "proposed_pair": "ETCUSDT",
+      "rank": 68,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ETC"
+    },
+    {
+      "can_import": false,
+      "id": "usdgo",
+      "name": "USDGO",
+      "proposed_pair": "USDGOUSDT",
+      "rank": 69,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USDGO"
+    },
+    {
+      "can_import": false,
+      "id": "jupiter-exchange-solana",
+      "name": "Jupiter",
+      "proposed_pair": "JUPUSDT",
+      "rank": 70,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "JUP"
+    },
+    {
+      "can_import": false,
+      "id": "arbitrum",
+      "name": "Arbitrum",
+      "proposed_pair": "ARBUSDT",
+      "rank": 71,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ARB"
+    },
+    {
+      "can_import": false,
+      "id": "just",
+      "name": "JUST",
+      "proposed_pair": "JSTUSDT",
+      "rank": 72,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "JST"
+    },
+    {
+      "can_import": false,
+      "id": "kaspa",
+      "name": "Kaspa",
+      "proposed_pair": "KASUSDT",
+      "rank": 73,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "KAS"
+    },
+    {
+      "can_import": false,
+      "id": "gatechain-token",
+      "name": "Gate",
+      "proposed_pair": "GTUSDT",
+      "rank": 74,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "GT"
+    },
+    {
+      "can_import": false,
+      "id": "cosmos",
+      "name": "Cosmos Hub",
+      "proposed_pair": "ATOMUSDT",
+      "rank": 75,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ATOM"
+    },
+    {
+      "can_import": false,
+      "id": "polygon-ecosystem-token",
+      "name": "POL (ex-MATIC)",
+      "proposed_pair": "POLUSDT",
+      "rank": 76,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "POL"
+    },
+    {
+      "can_import": false,
+      "id": "kucoin-shares",
+      "name": "KuCoin",
+      "proposed_pair": "KCSUSDT",
+      "rank": 77,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "KCS"
+    },
+    {
+      "can_import": false,
+      "id": "venice-token",
+      "name": "Venice Token",
+      "proposed_pair": "VVVUSDT",
+      "rank": 78,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "VVV"
+    },
+    {
+      "can_import": false,
+      "id": "algorand",
+      "name": "Algorand",
+      "proposed_pair": "ALGOUSDT",
+      "rank": 79,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ALGO"
+    },
+    {
+      "can_import": false,
+      "id": "blockchain-capital",
+      "name": "Blockchain Capital",
+      "proposed_pair": "BCAPUSDT",
+      "rank": 80,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "BCAP"
+    },
+    {
+      "can_import": false,
+      "id": "render-token",
+      "name": "Render",
+      "proposed_pair": "RENDERUSDT",
+      "rank": 81,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "RENDER"
+    },
+    {
+      "can_import": false,
+      "id": "pi-network",
+      "name": "Pi Network",
+      "proposed_pair": "PIUSDT",
+      "rank": 82,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "PI"
+    },
+    {
+      "can_import": false,
+      "id": "filecoin",
+      "name": "Filecoin",
+      "proposed_pair": "FILUSDT",
+      "rank": 83,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "FIL"
+    },
+    {
+      "can_import": false,
+      "id": "lighter",
+      "name": "Lighter",
+      "proposed_pair": "LITUSDT",
+      "rank": 84,
+      "source_evidence": "Binance pair not active Spot",
+      "status": "not_spot_trading",
+      "symbol": "LIT"
+    },
+    {
+      "can_import": false,
+      "id": "nexo",
+      "name": "NEXO",
+      "proposed_pair": "NEXOUSDT",
+      "rank": 85,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "NEXO"
+    },
+    {
+      "can_import": false,
+      "id": "aerodrome-finance",
+      "name": "Aerodrome Finance",
+      "proposed_pair": "AEROUSDT",
+      "rank": 86,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "AERO"
+    },
+    {
+      "can_import": false,
+      "id": "layerzero",
+      "name": "LayerZero",
+      "proposed_pair": "ZROUSDT",
+      "rank": 87,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ZRO"
+    },
+    {
+      "can_import": false,
+      "id": "open-usd",
+      "name": "Open USD",
+      "proposed_pair": "OUSDUSDT",
+      "rank": 88,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "OUSD"
+    },
+    {
+      "can_import": false,
+      "id": "superstate-short-duration-us-government-securities-fund-ustb",
+      "name": "Invesco Short Duration US Government Securities Fund",
+      "proposed_pair": "USTBUSDT",
+      "rank": 89,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USTB"
+    },
+    {
+      "can_import": false,
+      "id": "midnight-3",
+      "name": "Midnight",
+      "proposed_pair": "NIGHTUSDT",
+      "rank": 90,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "NIGHT"
+    },
+    {
+      "can_import": false,
+      "id": "blockstack",
+      "name": "Stacks",
+      "proposed_pair": "STXUSDT",
+      "rank": 91,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "STX"
+    },
+    {
+      "can_import": false,
+      "id": "xdce-crowd-sale",
+      "name": "XDC Network",
+      "proposed_pair": "XDCUSDT",
+      "rank": 92,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "XDC"
+    },
+    {
+      "can_import": false,
+      "id": "gho",
+      "name": "GHO",
+      "proposed_pair": "GHOUSDT",
+      "rank": 93,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "GHO"
+    },
+    {
+      "can_import": false,
+      "id": "aptos",
+      "name": "Aptos",
+      "proposed_pair": "APTUSDT",
+      "rank": 94,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "APT"
+    },
+    {
+      "can_import": false,
+      "id": "pancakeswap-token",
+      "name": "PancakeSwap",
+      "proposed_pair": "CAKEUSDT",
+      "rank": 95,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "CAKE"
+    },
+    {
+      "can_import": false,
+      "id": "injective-protocol",
+      "name": "Injective",
+      "proposed_pair": "INJUSDT",
+      "rank": 96,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "INJ"
+    },
+    {
+      "can_import": false,
+      "id": "stable-2",
+      "name": "​​Stable",
+      "proposed_pair": "STABLEUSDT",
+      "rank": 97,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "STABLE"
+    },
+    {
+      "can_import": false,
+      "id": "vechain",
+      "name": "VeChain",
+      "proposed_pair": "VETUSDT",
+      "rank": 98,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "VET"
+    },
+    {
+      "can_import": false,
+      "id": "dash",
+      "name": "Dash",
+      "proposed_pair": "DASHUSDT",
+      "rank": 99,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "DASH"
+    },
+    {
+      "can_import": false,
+      "id": "ether-fi",
+      "name": "Ether.fi",
+      "proposed_pair": "ETHFIUSDT",
+      "rank": 100,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ETHFI"
+    },
+    {
+      "can_import": false,
+      "id": "eutbl",
+      "name": "Spiko EU T-Bills Money Market Fund",
+      "proposed_pair": "EUTBLUSDT",
+      "rank": 101,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "EUTBL"
+    },
+    {
+      "can_import": false,
+      "id": "pyth-network",
+      "name": "Pyth Network",
+      "proposed_pair": "PYTHUSDT",
+      "rank": 102,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "PYTH"
+    },
+    {
+      "can_import": false,
+      "id": "raydium",
+      "name": "Raydium",
+      "proposed_pair": "RAYUSDT",
+      "rank": 103,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "RAY"
+    },
+    {
+      "can_import": false,
+      "id": "akedo",
+      "name": "Akedo",
+      "proposed_pair": "AKEUSDT",
+      "rank": 104,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "AKE"
+    },
+    {
+      "can_import": false,
+      "id": "flare-networks",
+      "name": "Flare",
+      "proposed_pair": "FLRUSDT",
+      "rank": 105,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "FLR"
+    },
+    {
+      "can_import": false,
+      "id": "beldex",
+      "name": "Beldex",
+      "proposed_pair": "BDXUSDT",
+      "rank": 106,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "BDX"
+    },
+    {
+      "can_import": false,
+      "id": "janus-henderson-anemoy-aaa-clo-fund",
+      "name": "Janus Henderson Anemoy AAA CLO Fund",
+      "proposed_pair": "JAAAUSDT",
+      "rank": 107,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "JAAA"
+    },
+    {
+      "can_import": false,
+      "id": "bianrensheng",
+      "name": "币安人生 (BinanceLife)",
+      "proposed_pair": null,
+      "rank": 108,
+      "source_evidence": "Ticker cannot safely map to Binance Spot",
+      "status": "nonstandard_symbol",
+      "symbol": "币安人生"
+    },
+    {
+      "can_import": false,
+      "id": "curve-dao-token",
+      "name": "Curve DAO",
+      "proposed_pair": "CRVUSDT",
+      "rank": 109,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "CRV"
+    },
+    {
+      "can_import": false,
+      "id": "usual-usd",
+      "name": "Usual USD",
+      "proposed_pair": "USD0USDT",
+      "rank": 110,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USD0"
+    },
+    {
+      "can_import": false,
+      "id": "kinesis-gold",
+      "name": "Kinesis Gold",
+      "proposed_pair": "KAUUSDT",
+      "rank": 111,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "KAU"
+    },
+    {
+      "can_import": false,
+      "id": "starknet",
+      "name": "Starknet",
+      "proposed_pair": "STRKUSDT",
+      "rank": 112,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "STRK"
+    },
+    {
+      "can_import": false,
+      "id": "official-trump",
+      "name": "Official Trump",
+      "proposed_pair": "TRUMPUSDT",
+      "rank": 113,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "TRUMP"
+    },
+    {
+      "can_import": false,
+      "id": "derive",
+      "name": "Derive",
+      "proposed_pair": "DRVUSDT",
+      "rank": 114,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "DRV"
+    },
+    {
+      "can_import": false,
+      "id": "pudgy-penguins",
+      "name": "Pudgy Penguins",
+      "proposed_pair": "PENGUUSDT",
+      "rank": 115,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "PENGU"
+    },
+    {
+      "can_import": false,
+      "id": "euro-coin",
+      "name": "EURC",
+      "proposed_pair": "EURCUSDT",
+      "rank": 116,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "EURC"
+    },
+    {
+      "can_import": false,
+      "id": "ylds",
+      "name": "YLDS",
+      "proposed_pair": "YLDSUSDT",
+      "rank": 117,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "YLDS"
+    },
+    {
+      "can_import": false,
+      "id": "true-usd",
+      "name": "TrueUSD",
+      "proposed_pair": "TUSDUSDT",
+      "rank": 118,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "TUSD"
+    },
+    {
+      "can_import": false,
+      "id": "fetch-ai",
+      "name": "Artificial Superintelligence Alliance",
+      "proposed_pair": "FETUSDT",
+      "rank": 119,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "FET"
+    },
+    {
+      "can_import": false,
+      "id": "usdtb",
+      "name": "USDtb",
+      "proposed_pair": "USDTBUSDT",
+      "rank": 120,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USDTB"
+    },
+    {
+      "can_import": false,
+      "id": "virtual-protocol",
+      "name": "Virtuals Protocol",
+      "proposed_pair": "VIRTUALUSDT",
+      "rank": 121,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "VIRTUAL"
+    },
+    {
+      "can_import": false,
+      "id": "pearl-2",
+      "name": "Pearl",
+      "proposed_pair": "PRLUSDT",
+      "rank": 122,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "PRL"
+    },
+    {
+      "can_import": false,
+      "id": "celestia",
+      "name": "Celestia",
+      "proposed_pair": "TIAUSDT",
+      "rank": 123,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "TIA"
+    },
+    {
+      "can_import": false,
+      "id": "grass",
+      "name": "Grass",
+      "proposed_pair": "GRASSUSDT",
+      "rank": 124,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "GRASS"
+    },
+    {
+      "can_import": false,
+      "id": "sei-network",
+      "name": "Sei",
+      "proposed_pair": "SEIUSDT",
+      "rank": 125,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "SEI"
+    },
+    {
+      "can_import": false,
+      "id": "a7a5",
+      "name": "A7A5",
+      "proposed_pair": "A7A5USDT",
+      "rank": 126,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "A7A5"
+    },
+    {
+      "can_import": false,
+      "id": "bitcoin-cash-sv",
+      "name": "Bitcoin SV",
+      "proposed_pair": "BSVUSDT",
+      "rank": 127,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "BSV"
+    },
+    {
+      "can_import": false,
+      "id": "hash-2",
+      "name": "Provenance Blockchain",
+      "proposed_pair": "HASHUSDT",
+      "rank": 128,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "HASH"
+    },
+    {
+      "can_import": false,
+      "id": "plasma",
+      "name": "Plasma",
+      "proposed_pair": "XPLUSDT",
+      "rank": 129,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "XPL"
+    },
+    {
+      "can_import": false,
+      "id": "pendle",
+      "name": "Pendle",
+      "proposed_pair": "PENDLEUSDT",
+      "rank": 130,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "PENDLE"
+    },
+    {
+      "can_import": false,
+      "id": "bittorrent",
+      "name": "BitTorrent",
+      "proposed_pair": "BTTUSDT",
+      "rank": 131,
+      "source_evidence": "Binance pair not active Spot",
+      "status": "not_spot_trading",
+      "symbol": "BTT"
+    },
+    {
+      "can_import": false,
+      "id": "pieverse",
+      "name": "Pieverse",
+      "proposed_pair": "PIEVERSEUSDT",
+      "rank": 132,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "PIEVERSE"
+    },
+    {
+      "can_import": false,
+      "id": "falcon-finance-ff",
+      "name": "Falcon Finance",
+      "proposed_pair": "FFUSDT",
+      "rank": 133,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "FF"
+    },
+    {
+      "can_import": false,
+      "id": "kaia",
+      "name": "Kaia",
+      "proposed_pair": "KAIAUSDT",
+      "rank": 134,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "KAIA"
+    },
+    {
+      "can_import": false,
+      "id": "usdai",
+      "name": "USDai",
+      "proposed_pair": "USDAIUSDT",
+      "rank": 135,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USDAI"
+    },
+    {
+      "can_import": false,
+      "id": "lido-dao",
+      "name": "Lido DAO",
+      "proposed_pair": "LDOUSDT",
+      "rank": 136,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "LDO"
+    },
+    {
+      "can_import": false,
+      "id": "unibase",
+      "name": "Unibase",
+      "proposed_pair": "UBUSDT",
+      "rank": 137,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "UB"
+    },
+    {
+      "can_import": false,
+      "id": "spx6900",
+      "name": "SPX6900",
+      "proposed_pair": "SPXUSDT",
+      "rank": 138,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "SPX"
+    },
+    {
+      "can_import": false,
+      "id": "sofiusd",
+      "name": "SoFiUSD",
+      "proposed_pair": "SOFIDUSDT",
+      "rank": 139,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "SOFID"
+    },
+    {
+      "can_import": false,
+      "id": "janus-henderson-anemoy-treasury-fund",
+      "name": "Janus Henderson Anemoy Treasury Fund",
+      "proposed_pair": "JTRSYUSDT",
+      "rank": 140,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "JTRSY"
+    },
+    {
+      "can_import": false,
+      "id": "first-digital-usd",
+      "name": "First Digital USD",
+      "proposed_pair": "FDUSDUSDT",
+      "rank": 141,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "FDUSD"
+    },
+    {
+      "can_import": false,
+      "id": "sun-token",
+      "name": "Sun Token",
+      "proposed_pair": "SUNUSDT",
+      "rank": 142,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "SUN"
+    },
+    {
+      "can_import": false,
+      "id": "tezos",
+      "name": "Tezos",
+      "proposed_pair": "XTZUSDT",
+      "rank": 143,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "XTZ"
+    },
+    {
+      "can_import": false,
+      "id": "ousg",
+      "name": "Ondo Short-Term U.S. Government Bond Fund",
+      "proposed_pair": "OUSGUSDT",
+      "rank": 144,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "OUSG"
+    },
+    {
+      "can_import": false,
+      "id": "apxusd",
+      "name": "apxUSD",
+      "proposed_pair": "APXUSDUSDT",
+      "rank": 145,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "APXUSD"
+    },
+    {
+      "can_import": false,
+      "id": "backpack",
+      "name": "Backpack",
+      "proposed_pair": "BPUSDT",
+      "rank": 146,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "BP"
+    },
+    {
+      "can_import": false,
+      "id": "decred",
+      "name": "Decred",
+      "proposed_pair": "DCRUSDT",
+      "rank": 147,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "DCR"
+    },
+    {
+      "can_import": false,
+      "id": "gnosis",
+      "name": "Gnosis",
+      "proposed_pair": "GNOUSDT",
+      "rank": 148,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "GNO"
+    },
+    {
+      "can_import": false,
+      "id": "ape-and-pepe",
+      "name": "Ape and Pepe",
+      "proposed_pair": "APEPEUSDT",
+      "rank": 149,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "APEPE"
+    },
+    {
+      "can_import": false,
+      "id": "re-protocol-reusd",
+      "name": "Re Protocol reUSD",
+      "proposed_pair": "REUSDUSDT",
+      "rank": 150,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "REUSD"
+    },
+    {
+      "can_import": false,
+      "id": "olympus",
+      "name": "Olympus",
+      "proposed_pair": "OHMUSDT",
+      "rank": 151,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "OHM"
+    },
+    {
+      "can_import": false,
+      "id": "the-graph",
+      "name": "The Graph",
+      "proposed_pair": "GRTUSDT",
+      "rank": 152,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "GRT"
+    },
+    {
+      "can_import": false,
+      "id": "bonk",
+      "name": "Bonk",
+      "proposed_pair": "BONKUSDT",
+      "rank": 153,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "BONK"
+    },
+    {
+      "can_import": false,
+      "id": "monad",
+      "name": "Monad",
+      "proposed_pair": "MONUSDT",
+      "rank": 154,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "MON"
+    },
+    {
+      "can_import": false,
+      "id": "kite-2",
+      "name": "Kite",
+      "proposed_pair": "KITEUSDT",
+      "rank": 155,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "KITE"
+    },
+    {
+      "can_import": false,
+      "id": "optimism",
+      "name": "Optimism",
+      "proposed_pair": "OPUSDT",
+      "rank": 156,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "OP"
+    },
+    {
+      "can_import": false,
+      "id": "terra-luna",
+      "name": "Terra",
+      "proposed_pair": "LUNCUSDT",
+      "rank": 157,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "LUNC"
+    },
+    {
+      "can_import": false,
+      "id": "arweave",
+      "name": "Arweave",
+      "proposed_pair": "ARUSDT",
+      "rank": 158,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "AR"
+    },
+    {
+      "can_import": false,
+      "id": "jito-governance-token",
+      "name": "Jito",
+      "proposed_pair": "JTOUSDT",
+      "rank": 159,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "JTO"
+    },
+    {
+      "can_import": false,
+      "id": "syrup",
+      "name": "Maple Finance",
+      "proposed_pair": "SYRUPUSDT",
+      "rank": 160,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "SYRUP"
+    },
+    {
+      "can_import": false,
+      "id": "ethereum-name-service",
+      "name": "Ethereum Name Service",
+      "proposed_pair": "ENSUSDT",
+      "rank": 161,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ENS"
+    },
+    {
+      "can_import": false,
+      "id": "conflux-token",
+      "name": "Conflux",
+      "proposed_pair": "CFXUSDT",
+      "rank": 162,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "CFX"
+    },
+    {
+      "can_import": false,
+      "id": "collector-crypt",
+      "name": "Collector Crypt",
+      "proposed_pair": "CARDSUSDT",
+      "rank": 163,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "CARDS"
+    },
+    {
+      "can_import": false,
+      "id": "floki",
+      "name": "FLOKI",
+      "proposed_pair": "FLOKIUSDT",
+      "rank": 164,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "FLOKI"
+    },
+    {
+      "can_import": false,
+      "id": "jasmycoin",
+      "name": "JasmyCoin",
+      "proposed_pair": "JASMYUSDT",
+      "rank": 165,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "JASMY"
+    },
+    {
+      "can_import": false,
+      "id": "compound-governance-token",
+      "name": "Compound",
+      "proposed_pair": "COMPUSDT",
+      "rank": 166,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "COMP"
+    },
+    {
+      "can_import": false,
+      "id": "iota",
+      "name": "IOTA",
+      "proposed_pair": "IOTAUSDT",
+      "rank": 167,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "IOTA"
+    },
+    {
+      "can_import": false,
+      "id": "apenft",
+      "name": "AINFT",
+      "proposed_pair": "NFTUSDT",
+      "rank": 168,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "NFT"
+    },
+    {
+      "can_import": false,
+      "id": "pons",
+      "name": "Pons",
+      "proposed_pair": "PONSUSDT",
+      "rank": 169,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "PONS"
+    },
+    {
+      "can_import": false,
+      "id": "meteora",
+      "name": "Meteora",
+      "proposed_pair": "METUSDT",
+      "rank": 170,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "MET"
+    },
+    {
+      "can_import": false,
+      "id": "zebec-network",
+      "name": "Zebec Network",
+      "proposed_pair": "ZBCNUSDT",
+      "rank": 171,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "ZBCN"
+    },
+    {
+      "can_import": false,
+      "id": "thorchain",
+      "name": "THORChain",
+      "proposed_pair": "RUNEUSDT",
+      "rank": 172,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "RUNE"
+    },
+    {
+      "can_import": false,
+      "id": "kinesis-silver",
+      "name": "Kinesis Silver",
+      "proposed_pair": "KAGUSDT",
+      "rank": 173,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "KAG"
+    },
+    {
+      "can_import": false,
+      "id": "bnb48-club-token",
+      "name": "KOGE",
+      "proposed_pair": "KOGEUSDT",
+      "rank": 174,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "KOGE"
+    },
+    {
+      "can_import": false,
+      "id": "safo",
+      "name": "Spiko Amundi Overnight Swap Fund",
+      "proposed_pair": "SAFOUSDT",
+      "rank": 175,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "SAFO"
+    },
+    {
+      "can_import": false,
+      "id": "theta-token",
+      "name": "Theta Network",
+      "proposed_pair": "THETAUSDT",
+      "rank": 176,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "THETA"
+    },
+    {
+      "can_import": false,
+      "id": "frax",
+      "name": "Legacy Frax Dollar",
+      "proposed_pair": "FRAXUSDT",
+      "rank": 177,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "FRAX"
+    },
+    {
+      "can_import": false,
+      "id": "akash-network",
+      "name": "Akash Network",
+      "proposed_pair": "AKTUSDT",
+      "rank": 178,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "AKT"
+    },
+    {
+      "can_import": false,
+      "id": "trust-wallet-token",
+      "name": "Trust Wallet",
+      "proposed_pair": "TWTUSDT",
+      "rank": 179,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "TWT"
+    },
+    {
+      "can_import": false,
+      "id": "crvusd",
+      "name": "crvUSD",
+      "proposed_pair": "CRVUSDUSDT",
+      "rank": 180,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "CRVUSD"
+    },
+    {
+      "can_import": false,
+      "id": "eigenlayer",
+      "name": "EigenCloud (prev. EigenLayer)",
+      "proposed_pair": "EIGENUSDT",
+      "rank": 181,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "EIGEN"
+    },
+    {
+      "can_import": false,
+      "id": "usx",
+      "name": "USX",
+      "proposed_pair": "USXUSDT",
+      "rank": 182,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USX"
+    },
+    {
+      "can_import": false,
+      "id": "dogwifcoin",
+      "name": "dogwifhat",
+      "proposed_pair": "WIFUSDT",
+      "rank": 183,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "WIF"
+    },
+    {
+      "can_import": false,
+      "id": "axie-infinity",
+      "name": "Axie Infinity",
+      "proposed_pair": "AXSUSDT",
+      "rank": 184,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "AXS"
+    },
+    {
+      "can_import": false,
+      "id": "tradable-na-rent-financing-platform-sstn",
+      "name": "Tradable NA Rent Financing Platform SSTN",
+      "proposed_pair": "PC0000031USDT",
+      "rank": 185,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "PC0000031"
+    },
+    {
+      "can_import": false,
+      "id": "grx-chain",
+      "name": "GRX Chain",
+      "proposed_pair": "GRXUSDT",
+      "rank": 186,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "GRX"
+    },
+    {
+      "can_import": false,
+      "id": "the-sandbox",
+      "name": "The Sandbox",
+      "proposed_pair": "SANDUSDT",
+      "rank": 187,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "SAND"
+    },
+    {
+      "can_import": false,
+      "id": "kamino",
+      "name": "Kamino",
+      "proposed_pair": "KMNOUSDT",
+      "rank": 188,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "KMNO"
+    },
+    {
+      "can_import": false,
+      "id": "basic-attention-token",
+      "name": "Basic Attention",
+      "proposed_pair": "BATUSDT",
+      "rank": 189,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "BAT"
+    },
+    {
+      "can_import": false,
+      "id": "shuffle-2",
+      "name": "Shuffle",
+      "proposed_pair": "SHFLUSDT",
+      "rank": 190,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "SHFL"
+    },
+    {
+      "can_import": false,
+      "id": "convex-finance",
+      "name": "Convex Finance",
+      "proposed_pair": "CVXUSDT",
+      "rank": 191,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "CVX"
+    },
+    {
+      "can_import": false,
+      "id": "zama",
+      "name": "Zama",
+      "proposed_pair": "ZAMAUSDT",
+      "rank": 192,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ZAMA"
+    },
+    {
+      "can_import": false,
+      "id": "societe-generale-forge-eurcv",
+      "name": "EUR CoinVertible",
+      "proposed_pair": "EURCVUSDT",
+      "rank": 193,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "EURCV"
+    },
+    {
+      "can_import": false,
+      "id": "useless-3",
+      "name": "Useless Coin",
+      "proposed_pair": "USELESSUSDT",
+      "rank": 194,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USELESS"
+    },
+    {
+      "can_import": false,
+      "id": "doublezero",
+      "name": "DoubleZero",
+      "proposed_pair": "2ZUSDT",
+      "rank": 195,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "2Z"
+    },
+    {
+      "can_import": false,
+      "id": "usa",
+      "name": "USAT",
+      "proposed_pair": "USATUSDT",
+      "rank": 196,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USAT"
+    },
+    {
+      "can_import": false,
+      "id": "origintrail",
+      "name": "OriginTrail",
+      "proposed_pair": "TRACUSDT",
+      "rank": 197,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "TRAC"
+    },
+    {
+      "can_import": false,
+      "id": "decentraland",
+      "name": "Decentraland",
+      "proposed_pair": "MANAUSDT",
+      "rank": 198,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "MANA"
+    },
+    {
+      "can_import": false,
+      "id": "agora-dollar",
+      "name": "AUSD",
+      "proposed_pair": "AUSDUSDT",
+      "rank": 199,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "AUSD"
+    },
+    {
+      "can_import": false,
+      "id": "mx-token",
+      "name": "MX",
+      "proposed_pair": "MXUSDT",
+      "rank": 200,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "MX"
+    },
+    {
+      "can_import": false,
+      "id": "vaulta",
+      "name": "Vaulta",
+      "proposed_pair": null,
+      "rank": 201,
+      "source_evidence": "Ticker cannot safely map to Binance Spot",
+      "status": "nonstandard_symbol",
+      "symbol": "A"
+    },
+    {
+      "can_import": false,
+      "id": "instadapp",
+      "name": "Fluid",
+      "proposed_pair": "FLUIDUSDT",
+      "rank": 202,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "FLUID"
+    },
+    {
+      "can_import": false,
+      "id": "sonic-3",
+      "name": "Sonic",
+      "proposed_pair": null,
+      "rank": 203,
+      "source_evidence": "Ticker cannot safely map to Binance Spot",
+      "status": "nonstandard_symbol",
+      "symbol": "S"
+    },
+    {
+      "can_import": false,
+      "id": "non-playable-coin",
+      "name": "Non-Playable Coin",
+      "proposed_pair": "NPCUSDT",
+      "rank": 204,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "NPC"
+    },
+    {
+      "can_import": false,
+      "id": "neo",
+      "name": "NEO",
+      "proposed_pair": "NEOUSDT",
+      "rank": 205,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "NEO"
+    },
+    {
+      "can_import": false,
+      "id": "apyusd",
+      "name": "apyUSD",
+      "proposed_pair": "APYUSDUSDT",
+      "rank": 206,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "APYUSD"
+    },
+    {
+      "can_import": false,
+      "id": "immutable-x",
+      "name": "Immutable",
+      "proposed_pair": "IMXUSDT",
+      "rank": 207,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "IMX"
+    },
+    {
+      "can_import": false,
+      "id": "chain-2",
+      "name": "Onyxcoin",
+      "proposed_pair": "XCNUSDT",
+      "rank": 208,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "XCN"
+    },
+    {
+      "can_import": false,
+      "id": "vision-3",
+      "name": "Vision",
+      "proposed_pair": "VSNUSDT",
+      "rank": 209,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "VSN"
+    },
+    {
+      "can_import": false,
+      "id": "spiko-us-t-bills-money-market-fund",
+      "name": "Spiko US T-Bills Money Market Fund",
+      "proposed_pair": "USTBLUSDT",
+      "rank": 210,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "USTBL"
+    },
+    {
+      "can_import": false,
+      "id": "swissborg",
+      "name": "SwissBorg",
+      "proposed_pair": "BORGUSDT",
+      "rank": 211,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "BORG"
+    },
+    {
+      "can_import": false,
+      "id": "tradable-apac-diversified-finance-provider-sstn",
+      "name": "Tradable APAC Diversified Finance Provider SSTN",
+      "proposed_pair": "PC0000033USDT",
+      "rank": 212,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "PC0000033"
+    },
+    {
+      "can_import": false,
+      "id": "fartcoin",
+      "name": "Fartcoin",
+      "proposed_pair": "FARTCOINUSDT",
+      "rank": 213,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "FARTCOIN"
+    },
+    {
+      "can_import": false,
+      "id": "chiliz",
+      "name": "Chiliz",
+      "proposed_pair": "CHZUSDT",
+      "rank": 214,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "CHZ"
+    },
+    {
+      "can_import": false,
+      "id": "btse-token",
+      "name": "BTSE Token",
+      "proposed_pair": "BTSEUSDT",
+      "rank": 215,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "BTSE"
+    },
+    {
+      "can_import": false,
+      "id": "coco-2",
+      "name": "coco",
+      "proposed_pair": "COCOUSDT",
+      "rank": 216,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "COCO"
+    },
+    {
+      "can_import": false,
+      "id": "railgun",
+      "name": "Railgun",
+      "proposed_pair": "RAILUSDT",
+      "rank": 217,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "RAIL"
+    },
+    {
+      "can_import": false,
+      "id": "circle-internet-group-bstock",
+      "name": "Circle Internet Group (bStocks Tokenized Stock)",
+      "proposed_pair": "CRCLBUSDT",
+      "rank": 218,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "CRCLB"
+    },
+    {
+      "can_import": false,
+      "id": "bedrock-token",
+      "name": "Bedrock",
+      "proposed_pair": "BRUSDT",
+      "rank": 219,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "BR"
+    },
+    {
+      "can_import": false,
+      "id": "gmt-token",
+      "name": "GoMining Token",
+      "proposed_pair": "GOMININGUSDT",
+      "rank": 220,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "GOMINING"
+    },
+    {
+      "can_import": false,
+      "id": "strategy-pp-variable-xstock",
+      "name": "Strategy PP Variable xStock",
+      "proposed_pair": "STRCXUSDT",
+      "rank": 221,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "STRCX"
+    },
+    {
+      "can_import": false,
+      "id": "zksync",
+      "name": "ZKsync",
+      "proposed_pair": "ZKUSDT",
+      "rank": 222,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ZK"
+    },
+    {
+      "can_import": false,
+      "id": "sentient",
+      "name": "Sentient",
+      "proposed_pair": "SENTUSDT",
+      "rank": 223,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "SENT"
+    },
+    {
+      "can_import": false,
+      "id": "gusd",
+      "name": "GUSD",
+      "proposed_pair": "GUSDUSDT",
+      "rank": 224,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "GUSD"
+    },
+    {
+      "can_import": false,
+      "id": "build-on",
+      "name": "BUILDon",
+      "proposed_pair": null,
+      "rank": 225,
+      "source_evidence": "Ticker cannot safely map to Binance Spot",
+      "status": "nonstandard_symbol",
+      "symbol": "B"
+    },
+    {
+      "can_import": false,
+      "id": "ecash",
+      "name": "eCash",
+      "proposed_pair": "XECUSDT",
+      "rank": 226,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "XEC"
+    },
+    {
+      "can_import": false,
+      "id": "aioz-network",
+      "name": "AIOZ Network",
+      "proposed_pair": "AIOZUSDT",
+      "rank": 227,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "AIOZ"
+    },
+    {
+      "can_import": false,
+      "id": "apecoin",
+      "name": "ApeCoin",
+      "proposed_pair": "APEUSDT",
+      "rank": 228,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "APE"
+    },
+    {
+      "can_import": false,
+      "id": "dgrid-ai",
+      "name": "DGrid AI",
+      "proposed_pair": "DGAIUSDT",
+      "rank": 229,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "DGAI"
+    },
+    {
+      "can_import": false,
+      "id": "superfarm",
+      "name": "SuperVerse",
+      "proposed_pair": "SUPERUSDT",
+      "rank": 230,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "SUPER"
+    },
+    {
+      "can_import": false,
+      "id": "orca",
+      "name": "Orca",
+      "proposed_pair": "ORCAUSDT",
+      "rank": 231,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "ORCA"
+    },
+    {
+      "can_import": false,
+      "id": "quack-ai",
+      "name": "Quack AI",
+      "proposed_pair": null,
+      "rank": 232,
+      "source_evidence": "Ticker cannot safely map to Binance Spot",
+      "status": "nonstandard_symbol",
+      "symbol": "Q"
+    },
+    {
+      "can_import": false,
+      "id": "geodnet",
+      "name": "Geodnet",
+      "proposed_pair": "GEODUSDT",
+      "rank": 233,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "GEOD"
+    },
+    {
+      "can_import": false,
+      "id": "safepal",
+      "name": "SafePal",
+      "proposed_pair": "SFPUSDT",
+      "rank": 234,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "SFP"
+    },
+    {
+      "can_import": false,
+      "id": "beam-2",
+      "name": "Beam",
+      "proposed_pair": "BEAMUSDT",
+      "rank": 235,
+      "source_evidence": "Binance pair not active Spot",
+      "status": "not_spot_trading",
+      "symbol": "BEAM"
+    },
+    {
+      "can_import": false,
+      "id": "1inch",
+      "name": "1INCH",
+      "proposed_pair": "1INCHUSDT",
+      "rank": 236,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "1INCH"
+    },
+    {
+      "can_import": false,
+      "id": "ultima",
+      "name": "Ultima",
+      "proposed_pair": "ULTIMAUSDT",
+      "rank": 237,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "ULTIMA"
+    },
+    {
+      "can_import": false,
+      "id": "havven",
+      "name": "Synthetix",
+      "proposed_pair": "SNXUSDT",
+      "rank": 238,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "SNX"
+    },
+    {
+      "can_import": false,
+      "id": "celium",
+      "name": "lium",
+      "proposed_pair": "SN51USDT",
+      "rank": 239,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "SN51"
+    },
+    {
+      "can_import": false,
+      "id": "jpycoin",
+      "name": "JPY Coin",
+      "proposed_pair": "JPYCUSDT",
+      "rank": 240,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "JPYC"
+    },
+    {
+      "can_import": false,
+      "id": "stronghold-token",
+      "name": "Stronghold",
+      "proposed_pair": "SHXUSDT",
+      "rank": 241,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "SHX"
+    },
+    {
+      "can_import": false,
+      "id": "golem",
+      "name": "Golem",
+      "proposed_pair": "GLMUSDT",
+      "rank": 242,
+      "source_evidence": "Binance Spot pair exists; CoinGecko asset identity not independently proven",
+      "status": "spot_candidate_identity_unverified",
+      "symbol": "GLM"
+    },
+    {
+      "can_import": false,
+      "id": "meta-2-2",
+      "name": "MetaDAO",
+      "proposed_pair": "METAUSDT",
+      "rank": 243,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "META"
+    },
+    {
+      "can_import": false,
+      "id": "aethir",
+      "name": "Aethir",
+      "proposed_pair": "ATHUSDT",
+      "rank": 244,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "ATH"
+    },
+    {
+      "can_import": false,
+      "id": "humanity",
+      "name": "Humanity",
+      "proposed_pair": null,
+      "rank": 245,
+      "source_evidence": "Ticker cannot safely map to Binance Spot",
+      "status": "nonstandard_symbol",
+      "symbol": "H"
+    },
+    {
+      "can_import": false,
+      "id": "jpysc",
+      "name": "JPYSC",
+      "proposed_pair": "JPYSCUSDT",
+      "rank": 246,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "JPYSC"
+    },
+    {
+      "can_import": false,
+      "id": "edgex",
+      "name": "edgeX",
+      "proposed_pair": "EDGEUSDT",
+      "rank": 247,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "EDGE"
+    },
+    {
+      "can_import": false,
+      "id": "cash-4",
+      "name": "CASH",
+      "proposed_pair": "CASHUSDT",
+      "rank": 248,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "CASH"
+    },
+    {
+      "can_import": false,
+      "id": "ozone-chain",
+      "name": "Ozone Chain",
+      "proposed_pair": "OZOUSDT",
+      "rank": 249,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "OZO"
+    },
+    {
+      "can_import": false,
+      "id": "avant-usd",
+      "name": "Avant USD",
+      "proposed_pair": "AVUSDUSDT",
+      "rank": 250,
+      "source_evidence": "Not listed as Binance symbol/USDT",
+      "status": "pair_absent",
+      "symbol": "AVUSD"
+    }
+  ],
+  "candidates_require_independent_identity": 96,
+  "market_snapshot_at": "2026-10-09T18:47:53.633Z",
+  "note": "A Binance ticker match is a venue candidate, NOT a verified CoinGecko asset ID. No fake 250 coverage.",
+  "probed_at_utc": "2026-10-09T19:26:45.763312+00:00",
+  "quote": "USDT",
+  "schema": "aerith.public.ohlcv.spot.discovery.top250.v1",
+  "snapshot_sha256": "79f4fd645a607b44898260b38bfaa8b91e70622702bb916fde1b6e7b1332342f",
+  "source": "CoinGecko Top250 snapshot + Binance Spot exchangeInfo",
+  "stages": [
+    {
+      "approved_current": 31,
+      "by_status": {
+        "approved_existing_archive": 31,
+        "nonstandard_symbol": 2,
+        "not_spot_trading": 2,
+        "pair_absent": 12,
+        "self_quote_not_tradable": 1,
+        "spot_candidate_identity_unverified": 2
+      },
+      "not_qualified": 19,
+      "spot_candidates_identity_review": 2,
+      "top": 50
+    },
+    {
+      "approved_current": 31,
+      "by_status": {
+        "approved_existing_archive": 31,
+        "nonstandard_symbol": 3,
+        "not_spot_trading": 3,
+        "pair_absent": 30,
+        "self_quote_not_tradable": 1,
+        "spot_candidate_identity_unverified": 32
+      },
+      "not_qualified": 69,
+      "spot_candidates_identity_review": 32,
+      "top": 100
+    },
+    {
+      "approved_current": 31,
+      "by_status": {
+        "approved_existing_archive": 31,
+        "nonstandard_symbol": 9,
+        "not_spot_trading": 5,
+        "pair_absent": 108,
+        "self_quote_not_tradable": 1,
+        "spot_candidate_identity_unverified": 96
+      },
+      "not_qualified": 219,
+      "spot_candidates_identity_review": 96,
+      "top": 250
+    }
+  ],
+  "total_ranked": 250,
+  "venue": "Binance Spot"
+}
