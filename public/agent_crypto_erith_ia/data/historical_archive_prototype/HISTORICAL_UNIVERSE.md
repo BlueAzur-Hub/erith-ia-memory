@@ -28,4 +28,20 @@ Le programme ne fait aucune requête avec --plan. --collect nécessite explicite
 
 ## Limites connues
 
-Ce pilote est une première archive ponctuelle, pas encore un collecteur incrémental multi-années. Un index existant bloque toute deuxième collecte implicite ; la stratégie durable ultérieure est partitions scellées + queue active, après mesure de la volumétrie. Le lecteur historique R9 du Trader ne lit pas encore ce catalogue : le raccordement Trader-only est une étape ultérieure, après validation de données réelles. Le ZIP est disponible comme artefact GitHub Actions ; le premier --collect manuel doit réussir avant toute affirmation que de nouveaux OHLCV Binance ont été archivés.
+L'index originel Universe reste une archive ponctuelle et immuable. Les 15 séries / 3 180 bougies initiales de 5 nouveaux actifs ont été capturées et vérifiées. Le Trader lit les nouveaux blocs via son panneau Historique R9 + UNIVERS (DOGE 24 h vérifié dans Firefox). Le lecteur Trader affiche encore le snapshot d'origine, et **ne lit pas les segments incrémentaux** : leur exploitation est un chantier ultérieur. Les ZIP sont des artefacts GitHub Actions.
+
+
+## Extension cumulative manuelle et sûre (après le pilote)
+
+Le nouvel outil `tools/extend_historical_universe.py` lit le catalogue Universe d'origine et contrôle les 15 blocs SHA-256 avant d'accepter toute écriture. Il ne recalcule jamais les bougies initiales et n'écrit ni dans `universe/index.json` ni dans `universe/blocks/`, ni dans le Graphique, le Trader ou l'Administrator.
+
+- `python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --verify` : lecture et vérification hors réseau de l'archive initiale et de toute la chaîne incrémentale.
+- `python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --plan` : fenêtres éligibles hors réseau, nombre de nouvelles bougies et reste à rattraper.
+- `python public/agent_crypto_erith_ia/tools/historical_universe_incremental_test.py` : régressions simulées hors réseau (absence, trou, arrêt, reprise, paire incorrecte, SHA-256).
+- `python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --collect --enable-network` : uniquement après décision explicite, avec accès aux endpoints publics Binance Spot. Sur GitHub : Actions → **Agent Crypto Historical Universe Incremental — manual protected append** → Run workflow → **collect**.
+
+Le ledger `universe/incremental/index.json` est séparé du pilote et référence des blocs `universe/incremental/blocks/` immuables, chacun avec SHA-256 et chaîne temporelle sans trou. Un bloc ne contient que des chandelles closes, attachées à l'actif, à la paire, à la période et à la devise USDT. Les données ne deviennent publiques dans le catalogue qu'après validation complète. La répétition d'une collecte sans nouvelle bougie close est un NOOP, sans écriture.
+
+Le lot est limité aux **5 actifs approuvés du pilote** et à **288 nouvelles chandelles par actif et par période** à chaque lancement ; les intervalles 5 min, 1 h, 4 h sont conservés. L'outil rattrape progressivement les interruptions sans sauter le temps : en cas de retard, plusieurs lancements distincts permettent le rattrapage. Si Binance refuse une paire ou retourne une série incomplète, la publication échoue sans modifier le ledger. Pas de planification horaire, pas d'ordre, pas de conversion USDT/USD.
+
+**Étapes non encore réalisées :** une première collecte réseau incrémentale réelle, une automatisation supervisée, l'extension Top 50/100/250 et le raccordement des nouveaux segments au lecteur du Trader. Aucun de ces points ne doit être annoncé comme terminé sur le seul résultat des tests hors réseau.
