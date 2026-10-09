@@ -1,0 +1,109 @@
+name: Agent Crypto Verified Multi-month Hourly History
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-hourly-history.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_hourly_views.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_hourly_views_test.py'
+      - 'public/agent_crypto_erith_ia/tools/shared-hourly-history.test.mjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/shared-hourly-history.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-hourly-history.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_hourly_views.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_hourly_views_test.py'
+      - 'public/agent_crypto_erith_ia/tools/shared-hourly-history.test.mjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/shared-hourly-history.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
+  workflow_dispatch:
+  schedule:
+    - cron: '59 6 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-verified-hourly-history
+  cancel-in-progress: false
+jobs:
+  verify-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run offline source, gap, SHA and Firefox-compatible reader regression
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_historical_hourly_views.py
+          python public/agent_crypto_erith_ia/tools/historical_hourly_views_test.py
+          node --check public/agent_crypto_erith_ia/administrator/js/shared-hourly-history.js
+          node --check public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js
+          node --test public/agent_crypto_erith_ia/tools/shared-hourly-history.test.mjs
+          node --test public/agent_crypto_erith_ia/tools/shared-historical-view.test.mjs
+      - name: Build authentic 60d 90d annual Max historical multi-asset views
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/build_historical_hourly_views.py \
+            --output "$RUNNER_TEMP/shared_hourly_views" --workers 4
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          folder=pathlib.Path(os.environ["RUNNER_TEMP"])/"shared_hourly_views"
+          j=json.loads((folder/"index.json").read_text())
+          assert j["schema"]=="aerith.public.ohlcv.shared.contiguous-hourly-index.v1"
+          assert j["is_live"] is False and j["max_is_all_time"] is False
+          assert 30<=j["archived_assets"]<=250 and j["quote"]=="USDT"
+          assert len(j["assets"])==j["archived_assets"]
+          assert any(e["id"]=="bitcoin" and e["months"]==12 and e["hourly_count"]==8760
+                     for e in j["assets"])
+          for e in j["assets"]:
+              raw=(folder/e["file"]).read_bytes()
+              assert len(raw)==e["bytes"]
+              assert hashlib.sha256(raw).hexdigest()==e["sha256"]
+              assert e["native_1m_count"]==60*e["hourly_count"]
+          print("VERIFIED MULTI MONTH HOURLY",j["archived_assets"],flush=True)
+          PY
+      - name: Publish only validated hourly views to canonical historical vault
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_hourly_views
+          mkdir -p "$target"
+          cp -a "$RUNNER_TEMP/shared_hourly_views/." "$target/"
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "NOOP: same verified hourly source months"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "Publish authenticated contiguous hourly histories for archived markets"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Deliver proof index
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-contiguous-hourly-history
+          path: ${{ runner.temp }}/shared_hourly_views/index.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Protect Trader, Market Core and Bridge
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/crypto/
