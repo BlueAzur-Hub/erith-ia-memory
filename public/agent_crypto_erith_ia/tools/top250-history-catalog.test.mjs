@@ -47,8 +47,10 @@ test("all original and addendum SHA256 ZIPs are accepted by the common reader",a
  assert.equal(f.node("top250-status").textContent.startsWith("Catalogue disponible"),true,
    f.node("top250-status").textContent);
  assert.equal(f.requests(),1);
- assert.equal(result.archived_assets,33);
- assert.equal(result.native_1m_candles,16555680);
+ assert.equal(result.archived_assets,catalog.archived_assets);
+ assert.ok(result.archived_assets>=40,"Previously verified 40 archives cannot disappear");
+ assert.equal(result.native_1m_candles,catalog.native_1m_candles);
+ assert.ok(result.native_1m_candles>=17483040,"Previously verified native candles cannot disappear");
  assert.equal(result.assets.length,250);
  const dot=result.assets.find(x=>x.id==="polkadot");
  assert.ok(dot.months.some(m=>m.release.includes("bulk-add-")));
