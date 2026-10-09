@@ -4,7 +4,7 @@
 One process selects missing MONTHS (not individual coins), imports the already
 qualified assets using import_historical_bulk.py and publishes immutable GitHub
 Releases. No changes to existing Trader/Administrator/Market or old OHLCV blocks.
-Conservative bound: one/two months per run; 1m native closed months, 7-day
+Bounded batch: seven months per run; 1m native closed months, 7-day
 publication grace. Release tags are checkpoints. No "Max" claim is made.
 """
 from __future__ import annotations
@@ -23,7 +23,7 @@ import import_historical_bulk as bulk
 PREFIX = "crypto-spot-bulk-"
 SUFFIX = "-1m"
 FIRST_SCAN = "2017-01"  # conservative earlier-than-Binance-since-launch search
-MAX_MONTHS_PER_RUN = 2
+MAX_MONTHS_PER_RUN = 7
 TAG = re.compile(r"^crypto-spot-bulk-(20\d{2}-(?:0[1-9]|1[0-2]))-1m$")
 UTC = dt.timezone.utc
 
