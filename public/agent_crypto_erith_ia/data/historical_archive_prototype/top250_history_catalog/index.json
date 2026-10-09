@@ -1,0 +1,5731 @@
+{
+  "schema": "aerith.public.ohlcv.top250.monthly-coverage-catalog.v1",
+  "source": "Binance Spot official monthly ZIPs",
+  "quote": "USDT",
+  "ranked": 250,
+  "rank_snapshot": "2026-10-09T18:47:53.633Z",
+  "release_months": 12,
+  "release_count": 15,
+  "archived_assets": 33,
+  "native_1m_candles": 16555680,
+  "groups": [
+    {
+      "top": 10,
+      "with_history": 8
+    },
+    {
+      "top": 50,
+      "with_history": 31
+    },
+    {
+      "top": 100,
+      "with_history": 33
+    },
+    {
+      "top": 250,
+      "with_history": 33
+    }
+  ],
+  "months": [
+    {
+      "month": "2025-10",
+      "release": "crypto-spot-bulk-2025-10-1m",
+      "verified": 29,
+      "unavailable": 5,
+      "candles": 1294560
+    },
+    {
+      "month": "2025-11",
+      "release": "crypto-spot-bulk-2025-11-1m",
+      "verified": 30,
+      "unavailable": 4,
+      "candles": 1296000
+    },
+    {
+      "month": "2025-12",
+      "release": "crypto-spot-bulk-2025-12-1m",
+      "verified": 30,
+      "unavailable": 4,
+      "candles": 1339200
+    },
+    {
+      "month": "2026-01",
+      "release": "crypto-spot-bulk-2026-01-1m",
+      "verified": 30,
+      "unavailable": 4,
+      "candles": 1339200
+    },
+    {
+      "month": "2026-02",
+      "release": "crypto-spot-bulk-2026-02-1m",
+      "verified": 31,
+      "unavailable": 3,
+      "candles": 1249920
+    },
+    {
+      "month": "2026-03",
+      "release": "crypto-spot-bulk-2026-03-1m",
+      "verified": 31,
+      "unavailable": 3,
+      "candles": 1383840
+    },
+    {
+      "month": "2026-04",
+      "release": "crypto-spot-bulk-2026-04-1m",
+      "verified": 32,
+      "unavailable": 2,
+      "candles": 1382400
+    },
+    {
+      "month": "2026-05",
+      "release": "crypto-spot-bulk-2026-05-1m",
+      "verified": 33,
+      "unavailable": 1,
+      "candles": 1473120
+    },
+    {
+      "month": "2026-06",
+      "release": "crypto-spot-bulk-2026-06-1m",
+      "verified": 33,
+      "unavailable": 1,
+      "candles": 1425600
+    },
+    {
+      "month": "2026-07",
+      "release": "crypto-spot-bulk-2026-07-1m",
+      "verified": 31,
+      "unavailable": 0,
+      "candles": 1383840
+    },
+    {
+      "month": "2026-07",
+      "release": "crypto-spot-bulk-add-2026-07-1m-688070fa4d52",
+      "verified": 2,
+      "unavailable": 1,
+      "candles": 89280
+    },
+    {
+      "month": "2026-08",
+      "release": "crypto-spot-bulk-2026-08-1m",
+      "verified": 31,
+      "unavailable": 0,
+      "candles": 1383840
+    },
+    {
+      "month": "2026-08",
+      "release": "crypto-spot-bulk-add-2026-08-1m-688070fa4d52",
+      "verified": 2,
+      "unavailable": 1,
+      "candles": 89280
+    },
+    {
+      "month": "2026-09",
+      "release": "crypto-spot-bulk-2026-09-1m",
+      "verified": 31,
+      "unavailable": 0,
+      "candles": 1339200
+    },
+    {
+      "month": "2026-09",
+      "release": "crypto-spot-bulk-add-2026-09-1m-688070fa4d52",
+      "verified": 2,
+      "unavailable": 1,
+      "candles": 86400
+    }
+  ],
+  "assets": [
+    {
+      "id": "bitcoin",
+      "rank": 1,
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2025-10.zip",
+          "sha256": "985d878cacbfdde85c9e0da2e8830ab913fe01bfdcde6e488563d8194df11f6b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2025-11.zip",
+          "sha256": "c54159d1216ab07f040a96d6678748e8746ac4200cba373fb6b758f2cdd1e5e5",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2025-12.zip",
+          "sha256": "7b47647352b01356dcd678a1438efb8baac03ed798785ed2179d428aab0cca9b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2026-01.zip",
+          "sha256": "d28b369da32a6ea84ba0af517b1847ab67b2fcc1e0e111c1b24d56ae07240cb9",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2026-02.zip",
+          "sha256": "cee2e913ed07e02834e2387c65ca430fe3576f620588bad8a02229238f385407",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2026-03.zip",
+          "sha256": "a2c1e689d39aa7877e218f436f15162e9a4436778a377d32e9d9b81b081381cd",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2026-04.zip",
+          "sha256": "318afd4f5acfbcfbb40fbe727a77eee8e9e7b54d8941589c78a32283d90b4a01",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2026-05.zip",
+          "sha256": "62983d93c35e26ec6c29116c629e443b7ddfe3d301aca83331ff58112199d8d0",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2026-06.zip",
+          "sha256": "c8e1d5e70b766dd2312fc9cd7085785bb25708e27e75c21a5a5aaba61a6d07f5",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2026-07.zip",
+          "sha256": "3ef15c84353da48e1c7c5fd99b9751cb036bf8986ed47f7cd1be63359c0d4f6b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2026-08.zip",
+          "sha256": "acab442e02745177063031d402929703ae983715010064b40cf811c4beb843d4",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2026-09.zip",
+          "sha256": "7a021fb5981cfdb1a56457d68fa81360ab27350c981ddfe63112b2322df44b56",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "ethereum",
+      "rank": 2,
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2025-10.zip",
+          "sha256": "a384d1bea37e4f59f7cae491a6f3f2dffe262259a4a0bc9324310a9aef16a843",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2025-11.zip",
+          "sha256": "30b80de8cbbd68edf2b2bf76154f60e6edb0f8365e08e6d5afc63657e26e0f7c",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2025-12.zip",
+          "sha256": "57b653e4ff3558fae8d2e6da616c40e6cfad4002f131584f82ae7a80bd228293",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2026-01.zip",
+          "sha256": "cadd060ab73bd03fee94708b78738144da76d007fc2170d8ad2cec678de7a654",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2026-02.zip",
+          "sha256": "1ddb64d08739a40b7f66a37bccf5ca5fec58339c7f01e83311086116f41b445f",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2026-03.zip",
+          "sha256": "5747c9f1f76be7afbf9513d50ea65ff6e979fa9684c75a775b6974e64c751844",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2026-04.zip",
+          "sha256": "8a2f0a2907764827ca3c52416bd9357c5d6213f3816fadbd0515bf504ea75ffd",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2026-05.zip",
+          "sha256": "bc0e625d18c0fa5378cecd0119aa20721b8830c24c3a55094f4c4c966ff8f710",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2026-06.zip",
+          "sha256": "770fdf44aac01dbe136e5b37a10501e57069af4048e76fbb3a3a2de2e9662934",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2026-07.zip",
+          "sha256": "1ad273218d6c33fd62515198276f00c0656ae002c0d1d9ab10cca0f5d0f7adc2",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2026-08.zip",
+          "sha256": "f2f2fe8da85467fb8ec8185e07f16f3af9f4ebcb266633ba494e76ac73c40c0c",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2026-09.zip",
+          "sha256": "827b46043bdc877d542edf8ff178dc0411cfa166a56fa73f2f850ad06c951b50",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "tether",
+      "rank": 3,
+      "symbol": "USDT",
+      "name": "Tether",
+      "market_status": "self_quote_not_tradable",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "binancecoin",
+      "rank": 4,
+      "symbol": "BNB",
+      "name": "BNB",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2025-10.zip",
+          "sha256": "7bfeb8f2d94e3df58edaa71c52cb45ea2107d096edba1f0c562b7c538743529d",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2025-11.zip",
+          "sha256": "991d89f1a096d58207bc803f69e554c8a3578342167b4c3687801706da9ac954",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2025-12.zip",
+          "sha256": "d7a1c0fca809b140fab5e07f20ca13322448c1d55bc6e63e42a6bcb75958fc67",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2026-01.zip",
+          "sha256": "b0d665cfcab2b12ddcf4f4ab2936c013178ef094bb773ea3ea43edb6e447c0e8",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2026-02.zip",
+          "sha256": "967d39b39ad38a8261fd0e1e9925a35a3f8cb0a8fa87a89f0a76225dd6847f06",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2026-03.zip",
+          "sha256": "2ab6f8bcfe0b2e7b553792f0c91a39f90691ee3e3319cad4304ffbc9e1c4253d",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2026-04.zip",
+          "sha256": "0484b805499b2486419fa3fcea6cd905602ac77d92906174e168c3261fc548eb",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2026-05.zip",
+          "sha256": "cc9bf02f8a5e175d543c4a0638ba497da11a163f4f350dee8c7b7f5883367c95",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2026-06.zip",
+          "sha256": "38e29791ad2b433c58ce80206220935f1b1b702f6a59bb0a21de82b39f267c84",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2026-07.zip",
+          "sha256": "239c3dbc7e86608f1eee5a8856ba4cd81b623dca0e6e169b1ecbfcb8f2c0a296",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2026-08.zip",
+          "sha256": "12eba4bd8dbbf61a04dd10f536f74521f4cb3590bcc5a40a46b98effdc31e9c1",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2026-09.zip",
+          "sha256": "eb80524463d5a7b8f2f8018a479835948997120aaa9ed738edae1ff18e78fa57",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "ripple",
+      "rank": 5,
+      "symbol": "XRP",
+      "name": "XRP",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2025-10.zip",
+          "sha256": "62d243fdd90cfaabc9ddaf9f18b92c20cae0961904e03aaedbe6a611452ddc83",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2025-11.zip",
+          "sha256": "057714b020871ce17c7161cd24c844bacc8191fc6051b4e65103619f26934453",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2025-12.zip",
+          "sha256": "1135342ebc45fd42a1d344882e08a44b2e8ad08f21f07a937ad48b5e313a932d",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2026-01.zip",
+          "sha256": "5e8ad6e007bd823daac2e5749cf3360dfe3e01b63a62613c5baf7874cf549bd2",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2026-02.zip",
+          "sha256": "27f418db27fdca46f507a6bc1e79f4613309aaa43327f554ed8d753c8120bc12",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2026-03.zip",
+          "sha256": "abce895ac39184541f9d91000570680503f95c076c7b5a2647060ccc72e176dc",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2026-04.zip",
+          "sha256": "fa1bc3a2dabaabd5e5fed3deff698ad92dcf3524c3b0297dec2f8b5d890d7b2c",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2026-05.zip",
+          "sha256": "56908ba1323042af99a041e6862e57bf6ea2615f163984d6f94bebe7f72f962b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2026-06.zip",
+          "sha256": "90cecd3b80ace2abbe3382e12f1ab7fc8c368f16a64860a74a8f74abf3f838d4",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2026-07.zip",
+          "sha256": "835f0da43f23c0d43431c81f9f5976794484b95c21b075b8de3a38c5b29eed16",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2026-08.zip",
+          "sha256": "c2d64e7fccc79a915659e4453b6423f49d9fbec2cf3ce8b4fcb33852c2c1f5cf",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2026-09.zip",
+          "sha256": "70f33c0a260df972a5e4179ad052880c944b4bb1a84136c193a3ea4d946ac52e",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "usd-coin",
+      "rank": 6,
+      "symbol": "USDC",
+      "name": "USDC",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2025-10.zip",
+          "sha256": "404d54db75344cb9361fa200b21e356a37a5c7f413421e889c7dabd132e618e6",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2025-11.zip",
+          "sha256": "c8f052fecb3455572356d9d5498e487c0d582b099e8cd46e2b9dad7a6dcc556c",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2025-12.zip",
+          "sha256": "3cf410277ed796dd7188c1969c351cfbb866b392c0337a6da3a5bb44732699ed",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2026-01.zip",
+          "sha256": "4cc8a187dc1bd0bdc3d015d9334d88895426c8e9f513f29abdece4b701e8dd3e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2026-02.zip",
+          "sha256": "08fbf4c1f8f45fd473aa17eb6d863f0d7ad9364311874ad7b2a311dc52d103ca",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2026-03.zip",
+          "sha256": "da83fd3b30e62182c2986271cb31d538a526127b7e019cab58cb72a6cc225e9a",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2026-04.zip",
+          "sha256": "ca436019940ef4ebbae4a841ca965838bcd1a64eed491c7f34b75d1c737bec59",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2026-05.zip",
+          "sha256": "beb915f1669d84f931c369600e6d7e2366eb2fb55b4dfbb3b10a1e2516bfcc04",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2026-06.zip",
+          "sha256": "4e6d629fafb0d29c134c4dcf95ba1367e7e8f643732e4e980137d86cd02083bd",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2026-07.zip",
+          "sha256": "50a7153894af1c5457484e8f57399d824333ce11daa47345eb16016647753bb6",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2026-08.zip",
+          "sha256": "f0b38140abd589db8bd7fd7dfdbb9ce76f7165453ba70aaf3cfdd3e239c4a4dc",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2026-09.zip",
+          "sha256": "0685329e9c246e996f14f3af1733fe3c38fc2f130a6d8cddf503f65ad100e15b",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "solana",
+      "rank": 7,
+      "symbol": "SOL",
+      "name": "Solana",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2025-10.zip",
+          "sha256": "af138c5fae53940a0da3d5af1a296a8ef22ffade83e054e4803a5d7371af3763",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2025-11.zip",
+          "sha256": "5188939b56b57813d2b39d4d5d184e0a6e3e44fc79206eb25e0c6e958cf3cb3d",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2025-12.zip",
+          "sha256": "8ff4ac3d9f3411c31a892585e6906a71df701e3febc195e1da685c244125f774",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2026-01.zip",
+          "sha256": "9d0fbac86d898a8a2b821d2856a5c282dc6b9638d8a83ef47e632edf4541e695",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2026-02.zip",
+          "sha256": "acfd300f0eabe9f1485e121222d67a03da180c539bd9e43b2afacc602f631120",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2026-03.zip",
+          "sha256": "b98d056aafa1b4e188a1863855749548ac4e062f5f1002e9da353795863216bc",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2026-04.zip",
+          "sha256": "259fd7109745c47858ee133cb0e97995f8b6b40cbd0727eefd6301304bac848e",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2026-05.zip",
+          "sha256": "e5be21fb183cf534a975db77567398f4b1a567c9ed24738bfafa409b7876c6b3",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2026-06.zip",
+          "sha256": "e165365110140912f07d5e250d0e7511b1b37c93db46ce8b7bb1a2ddf06c4b04",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2026-07.zip",
+          "sha256": "7980195ca8f511ca8e11d7903c0031f19cd274c034fae7f54768bf235ef64470",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2026-08.zip",
+          "sha256": "138412edb2c86df6109e0800b7b7399c6f7d2b4483d0e35ddf5921e70c0d08b6",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "SOLUSDT",
+          "file": "SOLUSDT-1m-2026-09.zip",
+          "sha256": "c18c258e478a84c3d87e88e2e16f17e5675bf087cb11bf789c0ae717c875ee0a",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "tron",
+      "rank": 8,
+      "symbol": "TRX",
+      "name": "TRON",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2025-10.zip",
+          "sha256": "cf4859544fd3d11f0701aec7ccbf0da68703a96ef93d79c2e0ea67430eb22aac",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2025-11.zip",
+          "sha256": "18906ae3b6999cab8920a26d3d75088a9c4013d72ece30f3199e57f765a395b1",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2025-12.zip",
+          "sha256": "dd4d6113cd9fcae7784a340ccb4800896f6929f24bb043d2607ecae97783fa04",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2026-01.zip",
+          "sha256": "5801e601a993125cbf3cded224c8ba781db68721c0a9e0e5cfe5623ddd017472",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2026-02.zip",
+          "sha256": "a65cc71458c809bf99f5c0c086872fcd260adfc0a81f2322ec0dc86b47ebe3c3",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2026-03.zip",
+          "sha256": "df689edda660ac8e6764369561744107ba928dd41839267d3eb6ab42717bd529",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2026-04.zip",
+          "sha256": "d4cd2701746ef19b4eb1d9e87b991e952a38e7f102bf362bab2f9c02cfe0e85c",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2026-05.zip",
+          "sha256": "7a3e56255efbe0baa81ccaa852cc6dd43e6ab70f326caf22508647eda33ba232",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2026-06.zip",
+          "sha256": "7ef6537ef0f7af7e2d4f231517f759694959d88bbf184fcbd50d34beb5baf4db",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2026-07.zip",
+          "sha256": "863d6fec3d7e43ddc392bcc6f78cb0e22217d9448f299c449a566d93756dcecd",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2026-08.zip",
+          "sha256": "7a186e62232d56d93c516f3b09fb8b4c2570249ca2b795dc04ed2996a8254024",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2026-09.zip",
+          "sha256": "b40b0f73450e9fb4597cd821f43577385898648ccda7a5bbbde8c98ebd451828",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "figure-heloc",
+      "rank": 9,
+      "symbol": "FIGR_HELOC",
+      "name": "Figure Heloc",
+      "market_status": "nonstandard_symbol",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "zcash",
+      "rank": 10,
+      "symbol": "ZEC",
+      "name": "Zcash",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2025-10.zip",
+          "sha256": "25d91a754d3768389de596777586396fa0984febea1f88f75d9e88a53b77f246",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2025-11.zip",
+          "sha256": "3bcdc8ed8069f79190d11e7852a96b78c4952c6e4e403aadbca923be86be61d6",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2025-12.zip",
+          "sha256": "7e1509a141ae8c6b56a3dbfe49b368e4cfc564a263ab9d96fa3a8c580e33057b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2026-01.zip",
+          "sha256": "63116c7fb6faf3a6f8b0b681aa54a7e09f53c17d8409905994a495231d4f4eb0",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2026-02.zip",
+          "sha256": "b5b41af4c97c23acc3a0957c46efeaf08d26ed55f3b7f4934035c03129f3d117",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2026-03.zip",
+          "sha256": "fc9f70603c786eb0861239cec6195bf2df9f36c423d4ee12f5b917bb2d660924",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2026-04.zip",
+          "sha256": "bed71e6e9048ff2bed43a1a22937e6824fa9064ee0de741cc0fec34c2a6be20b",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2026-05.zip",
+          "sha256": "aaadf60c5c37159a5a600b8917b5251ae7973928205aebc8764f089fe1d76a19",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2026-06.zip",
+          "sha256": "c6ed0bbbc27bc4b86325800f4bec631be261c43cb36ea437732d4b5f387c5117",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2026-07.zip",
+          "sha256": "c954ae9f6aaf17453fa9178f5356251155589749e2046ba73069500854398ffa",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2026-08.zip",
+          "sha256": "c65916c27ab1dbcc35ba6cf2cb4655d4cfb33b1426801e1dc136afc3837f304d",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2026-09.zip",
+          "sha256": "1a8f3e9b3a997db1accf122f2c4e0234b655fee5ca0ed83932f1455f3ec18bc0",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "hyperliquid",
+      "rank": 11,
+      "symbol": "HYPE",
+      "name": "Hyperliquid",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [
+        "2025-10",
+        "2025-11",
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09"
+      ],
+      "candles": 0
+    },
+    {
+      "id": "dogecoin",
+      "rank": 12,
+      "symbol": "DOGE",
+      "name": "Dogecoin",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2025-10.zip",
+          "sha256": "89f1752ce73fea4428d5ecff528c8fe93ccba1ec83c7a721eee9de51e48c8c12",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2025-11.zip",
+          "sha256": "cd6528452630714e586a2913d58bad1796f9fbfddb1eb0a7f3d46f5adcd6c2de",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2025-12.zip",
+          "sha256": "8d108055cf07b601984111d7df391db4330daa40542eee40fdfe9b3fa0a8f392",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2026-01.zip",
+          "sha256": "4950fb43efe016da18cf29f2d7675a8d4fb694963eb871741b019f797633537f",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2026-02.zip",
+          "sha256": "bcf1d323cc4fa5b078da5c74ee1259780143814f43c7e5ae013658ce7a534025",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2026-03.zip",
+          "sha256": "6dc36b26071b10e1d4a92eef546627562f35d874b71261aa0f25eeef336a6428",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2026-04.zip",
+          "sha256": "71b6ccd21abe4d4053a65418fb4984bcdfeb87e13b8073d4de6eb062cb689d4f",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2026-05.zip",
+          "sha256": "6d9eedc643d21a867085c4e7c8b7ee58fc6a7a796d604a19d364415f7d8949bc",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2026-06.zip",
+          "sha256": "18959935b2baf50c44130ac222114e2bcdee9c2450d4798107cf6f85137dc350",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2026-07.zip",
+          "sha256": "1cf28dc7d7e466bd7be0f2da698cecf32542d1044c1a6d316106453de2934368",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2026-08.zip",
+          "sha256": "ac6c9f0ecd41f903dab63c15076ed5c981b39021300d2a61d6b414312ac59a4b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "DOGEUSDT",
+          "file": "DOGEUSDT-1m-2026-09.zip",
+          "sha256": "4a14f7aaeef51e69d26107b8b78814e273789f7838aac62721bf895ac783a19a",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "usds",
+      "rank": 13,
+      "symbol": "USDS",
+      "name": "USDS",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2026-05",
+          "pair": "USDSUSDT",
+          "file": "USDSUSDT-1m-2026-05.zip",
+          "sha256": "56971846c4cdbc15d7b0e8eb2578950e81bf79aaa7dcb8be98b2d8056af73413",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "USDSUSDT",
+          "file": "USDSUSDT-1m-2026-06.zip",
+          "sha256": "e898da9355a1de4993a653fed9e39133382689ba47dcbdb78dabacd8700b9d32",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "USDSUSDT",
+          "file": "USDSUSDT-1m-2026-07.zip",
+          "sha256": "9d16f89f4f571ca25a83cb608c22820e1f5e5802e0af8c563a2feb215b843636",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "USDSUSDT",
+          "file": "USDSUSDT-1m-2026-08.zip",
+          "sha256": "02ffaff3102d80cd3939dacd67f06e79e318ef4eb8f3ad9f4b6ba860e747f486",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "USDSUSDT",
+          "file": "USDSUSDT-1m-2026-09.zip",
+          "sha256": "17708e8408fc73761ed35024d7c1fc0b984f26f916d72a07065fe740032e3fce",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [
+        "2025-10",
+        "2025-11",
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04"
+      ],
+      "candles": 220320
+    },
+    {
+      "id": "monero",
+      "rank": 14,
+      "symbol": "XMR",
+      "name": "Monero",
+      "market_status": "not_spot_trading",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "whitebit",
+      "rank": 15,
+      "symbol": "WBT",
+      "name": "WhiteBIT Coin",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "chainlink",
+      "rank": 16,
+      "symbol": "LINK",
+      "name": "Chainlink",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2025-10.zip",
+          "sha256": "437fb268f3e2a522894a8e484602dadde696e04ae4e03668556e98b3866a3346",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2025-11.zip",
+          "sha256": "d4c98a9b775960b06cbec4aee5e9c435e8534e674e214105d3971183b1b3be1d",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2025-12.zip",
+          "sha256": "58a247192cbfee0b44746f1fbb6ed749a53776d253c90ed4ab135aae45cb2af7",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2026-01.zip",
+          "sha256": "c8f7e670634eded324a7e51df4aa6b63434ac22059d647b33d44904eb1fa3793",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2026-02.zip",
+          "sha256": "60af77b6cc220faf061a9e48df6d8ca429f0826f7f0b73ad21856a7063c02c5f",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2026-03.zip",
+          "sha256": "5748a01da70cef0f73e29d5dc4d026cb2108787cc482c88cc1f4ae86b6e42107",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2026-04.zip",
+          "sha256": "e051d0a9b5674b6b2ad9c60a33b624759f5ac4c772944a3fbd46c5a5785207b4",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2026-05.zip",
+          "sha256": "93b44c81989b46adf7acd032dabd238483bb58c5a8f34c21650999dd7714f0bc",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2026-06.zip",
+          "sha256": "fdf3e54ab0426aeb40cb97e3ba4a0c5169d0d2af92046c1066f4fc06fed0345c",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2026-07.zip",
+          "sha256": "d2b1ca9f7d84efb97bf1fa658c18efce31cc7f15b1e1489436d88d6e053d40fb",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2026-08.zip",
+          "sha256": "c7a1e12faf1c61e3846432d3570fa2eb57c8ce8b711209444e854245cf43e85a",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2026-09.zip",
+          "sha256": "47e0c4088f9a17b3f86ffe6d3ba9b4215985cf09e49574ed96823f77def48ed1",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "cardano",
+      "rank": 17,
+      "symbol": "ADA",
+      "name": "Cardano",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2025-10.zip",
+          "sha256": "d8437030d4f82ed6788da1ac8d34563912b9246b760f51c6b7ab00f164fef5b8",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2025-11.zip",
+          "sha256": "e550aa57efd407f79458f3d22d9c823639acaa61dfcd53f28f4cd97874977c98",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2025-12.zip",
+          "sha256": "5a5264141cdd21a16fc5e498333e8bd2edd1adff922c64917b19f95a32d78e7c",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2026-01.zip",
+          "sha256": "4690a066eb3cb03bef3790f96858272236d549ce987c1c2701b6699d75f86cde",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2026-02.zip",
+          "sha256": "56a05789ae7ae04167e84ecb8bdfc181a91224da94ee462c56f6d96d610ad341",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2026-03.zip",
+          "sha256": "79bff8b12be9e6687ad6fbc6999000244747fbf96b51785835049d9e6675ca55",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2026-04.zip",
+          "sha256": "e270624a9150b568c964d24f6b85e4c130faa9cd65f238e3b4068bea7bcb0c76",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2026-05.zip",
+          "sha256": "be95bc2bcc0ebdccd7d824ed780aa79ea06e6595ecaa0dc1192039dc3372a9c0",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2026-06.zip",
+          "sha256": "90f68034260729d4f48b88ad7422b8798b4e8d4c16390cbb3db23d3b742b8396",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2026-07.zip",
+          "sha256": "856c6ae6f62b0ba1a0a43ebc6ecc3d2f2cfc7b72807331a4384f8c014c4f6d9e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2026-08.zip",
+          "sha256": "03e8cf5a9874442e2fd9981cc60588c0beed6ed8b47ff657c3ec6c397d8bb93b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2026-09.zip",
+          "sha256": "bb4d8a12037c66a1ef18a6f686ef90ec532dd1015d94dcbd4a219a2c1d2cdf3b",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "leo-token",
+      "rank": 18,
+      "symbol": "LEO",
+      "name": "LEO Token",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "rain",
+      "rank": 19,
+      "symbol": "RAIN",
+      "name": "Rain",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "stellar",
+      "rank": 20,
+      "symbol": "XLM",
+      "name": "Stellar",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2025-10.zip",
+          "sha256": "dda78f3bb95d4084d1847ba4a27b2ea0795e9c61e67699040f99c9d34b50bf4a",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2025-11.zip",
+          "sha256": "374f1ddd8b81361e2560c86eebbfa58c8875b41fd01b6788a5b459d2fac21b99",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2025-12.zip",
+          "sha256": "75c6817a63971d3eeb3f0480c7b3d271ea19fec6736829fcfdf8bc7649db1718",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2026-01.zip",
+          "sha256": "bbb4c6fe5ffdb3b2c333eb3b759a676a83f0cb2ccd6866d2aa48574717e3cf00",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2026-02.zip",
+          "sha256": "55fd1797938e8e566780295b8cfe3c3e8ef519d55678f0a9db33ef5ae6088e5a",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2026-03.zip",
+          "sha256": "02841009aa24f901ba125f8eb768b5ff827b5beddd91cd1a6818b560a378eea9",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2026-04.zip",
+          "sha256": "c6fe645017089af7cafd6a743fc3e1e542627d566d40532ea9c2e7889a1bd690",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2026-05.zip",
+          "sha256": "8d0c1a4f567dd33eb84dd25f6dce3d751f21c80e3af2f1ada2679958c0141d81",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2026-06.zip",
+          "sha256": "f1d55e2a23a3051f44a2bbe7638764901e3901b2494011ef5d07f788e2a9f74e",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2026-07.zip",
+          "sha256": "92dd735cb3f77bc7947fdc897f27c2a5a4e4600504cdb5778d6751ae058d978c",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2026-08.zip",
+          "sha256": "3a97c210b14aa9a9ff58dc2774f3ded00e4a85e642c7f23ffc9f825f2995cd77",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2026-09.zip",
+          "sha256": "ffbfe7e20a9e714393f5ad73224a1ac765ef5d78904af82920d9e55a4c45d0a6",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "near",
+      "rank": 21,
+      "symbol": "NEAR",
+      "name": "NEAR Protocol",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2025-10.zip",
+          "sha256": "79959f6013006ea78ff7189fa8223e2237033740b06b2cb57a90b443fd47a515",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2025-11.zip",
+          "sha256": "b12bccf4d57ca9a2e49938fe89ea71d4ba5f489290cae3d818a43f186de59bda",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2025-12.zip",
+          "sha256": "d3fb12a820931978beafa1683024b5ad64f8922fcf3bfda605f47f41a509f27b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2026-01.zip",
+          "sha256": "efe5cc10bae878b1cf89198cf3187a2fa56bb695a282220b59aec1c0a1c16f74",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2026-02.zip",
+          "sha256": "7cfba6395c51b4966bc9569ca26d95d795f98a568e75317d3a8061533f4dc0f3",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2026-03.zip",
+          "sha256": "6b77cb4291d91c6f25578cbf2db7f9aca9a182fce40597f057efb1ca0e9d53fd",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2026-04.zip",
+          "sha256": "3db22ae66afa48e0eead4bb285d8412cd0bba622d76d124c60db34e5f51c3682",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2026-05.zip",
+          "sha256": "8d33e3718f8fb2d29401f121d27a9270a8bad66acfed48a9d0cc120a55ed6ede",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2026-06.zip",
+          "sha256": "f244ce21b9b771ae73d363e43586f832213662b09a3251c7f385240ab99bd0f2",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2026-07.zip",
+          "sha256": "0f1b79e6c535afe17c8aa1e3ba0f8cfea29e10acfbfd533105fb16b9347473e0",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2026-08.zip",
+          "sha256": "37003043527fe47c68337300510485246682c1c3a0c7a8c71afabf6c382080b2",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "NEARUSDT",
+          "file": "NEARUSDT-1m-2026-09.zip",
+          "sha256": "b7cc729169f9a9f00062b33049496b43979bd1371f0ad8c63e8b1614ccf0ca8c",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "bitcoin-cash",
+      "rank": 22,
+      "symbol": "BCH",
+      "name": "Bitcoin Cash",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2025-10.zip",
+          "sha256": "465465e574a80a9fea5d8bd10704cfb39fbdb19925458629ae7330b1cb6e9684",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2025-11.zip",
+          "sha256": "e11a18bd56a30778a15bd377f7c6c89c28c800875a5a89958d4777b8b32f43a4",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2025-12.zip",
+          "sha256": "a844f55c693a5ca7ac28d897c34301863ac4edc65a638632dfca7ee5464c121a",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2026-01.zip",
+          "sha256": "082bb06da1504b6d68a96572c00825f6241874ae163d496984bdd9454613cad8",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2026-02.zip",
+          "sha256": "a8b730ac04108e3f99fcc5782ae421d084daed972ba5a4477707126b62f6af28",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2026-03.zip",
+          "sha256": "c8318181808928cb7ec04bf8b851d0ab5f18b367df9badaeff7c434f88b46ff2",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2026-04.zip",
+          "sha256": "f2b04167de5c7e5f34e15fc70e922289eb29ae4046d888945837d6cce645e6b7",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2026-05.zip",
+          "sha256": "43a5dc908cfc508ae2647fdbd274989fd5ef8c0b2683c1308b00817f66016f16",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2026-06.zip",
+          "sha256": "7669da8cd0d0e3af04be69d20df076bc5c48fe24470bbc99ba26bea8724cc638",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2026-07.zip",
+          "sha256": "b21107f2d666b41e44723a6136a69287d3115797efa69927fa06a211bddcfbab",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2026-08.zip",
+          "sha256": "bebaf4fea26388df8e45e80a766a457b78a191d72a4a95f74d100c183b66bb54",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "BCHUSDT",
+          "file": "BCHUSDT-1m-2026-09.zip",
+          "sha256": "5cbae101896c5bb2e79929f958a5279169906a69d45237197555b511ce34dbdb",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "litecoin",
+      "rank": 23,
+      "symbol": "LTC",
+      "name": "Litecoin",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2025-10.zip",
+          "sha256": "35f2df22a5f4893229d939c0a406ce95509e19a92826bc6db346a482e26c7d39",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2025-11.zip",
+          "sha256": "74e0a4ea11b6bd56834bcbff22bace0c60260d46b9adbbd2c9a5da0f6c895c94",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2025-12.zip",
+          "sha256": "e0218d722dab5c25ae260f928d48ddb47980c53bb9e1eacec0256f0a60739b8e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2026-01.zip",
+          "sha256": "ef6c453a18f74a6d2d470f936cbc0b4869dfd92a5f1733096266bb741df29a3d",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2026-02.zip",
+          "sha256": "90bde58c6d7804e7738629c1dfafb79d72162724ff4c573931387399cff016a8",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2026-03.zip",
+          "sha256": "a764ab37d34af087f97a1c7753f6feb6914f7fc2eea9dc64f927b70c6b67eff9",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2026-04.zip",
+          "sha256": "22741a217419d68ed0b4f4f75b6b9ef2e1ee6ce0b60a70aefc860e493bbf7e30",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2026-05.zip",
+          "sha256": "68783c22ae1071254ab76ed9652e14cdf87268fedae5c9a595bbab437e51b077",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2026-06.zip",
+          "sha256": "ef17d6bcf0624911718c2101be37764b8b58c071c80e5e66fb55c9c0bb6e69c6",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2026-07.zip",
+          "sha256": "fd20ac07d99f42a6d040a3564338605b0ddf829c812389d226140f1fff3e3623",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2026-08.zip",
+          "sha256": "f68a83b1d9866bf54fd4ac116cd3ddbcf1017e78be429791731f5fe8f15198e4",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2026-09.zip",
+          "sha256": "c2d1171dc24605b8635b9ae1589e1bd580c8bb7b9f9dc831d9354d7fd831fbdf",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "canton-network",
+      "rank": 24,
+      "symbol": "CC",
+      "name": "Canton",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ethena-usde",
+      "rank": 25,
+      "symbol": "USDE",
+      "name": "Ethena USDe",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2025-10.zip",
+          "sha256": "204d4da0bcf62074c81f9cb08be0d19230db6a7287f5a1af1c437d7c7acd79b6",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2025-11.zip",
+          "sha256": "62e8bef8cc608cd43d914923266adb6e8682c979386d556f2dd90555eff4d6bc",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2025-12.zip",
+          "sha256": "4fce73e0b6e28ffed0737ab3ecd96e9b618f968e84da75cd8b8940fbb72fd7df",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2026-01.zip",
+          "sha256": "8f47d3f211bde81e0c3ad5f50625eda1978ec72e2b7f28808801c30fdd73b54e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2026-02.zip",
+          "sha256": "fff528936269efe1ea50819fe7a85d45beaa2270c4e7b29ef987a3e986e8b84e",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2026-03.zip",
+          "sha256": "216b36923e1e757dec3d81bf65535709050573faee6f97fc6909aca2029efe5a",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2026-04.zip",
+          "sha256": "683b8e04bf00400afef65a0e80ede7b2add3415a4dcacdd057f40131f477eba6",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2026-05.zip",
+          "sha256": "2db632ce6d7cdd95084849a34dff1f92cffd29910c40f4afd2db9ceb743fca3d",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2026-06.zip",
+          "sha256": "ba9fa349a207a987c4471a8052dc7e41d7848a3352d69fffb355a61111834370",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2026-07.zip",
+          "sha256": "3ccd82ca8a2b91bd013d8f9a342fab02c700e43bf1f182cb060200a13c07e8e4",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2026-08.zip",
+          "sha256": "3f7c110e0cb71e3f90ca97a450e5a2880773280c38a3edf3446477a5a8b97f60",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "USDEUSDT",
+          "file": "USDEUSDT-1m-2026-09.zip",
+          "sha256": "8a9b88648e10829b68a8d19cb37655ab1d267f672aa651fc8581e263a0a8c166",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "uniswap",
+      "rank": 26,
+      "symbol": "UNI",
+      "name": "Uniswap",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2025-10.zip",
+          "sha256": "5e3b8f1bd7d03cf9a9094d243904da40668ce4c44de4f79fe904995596f8ef42",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2025-11.zip",
+          "sha256": "692e89469dc73e0f7c587d6aeffc6d500129b22cc49625dea738bc3fd3c948c7",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2025-12.zip",
+          "sha256": "f8ac753e63768ee727de4f88bc0096d4e780ea09e05246c34bef74de640284b6",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2026-01.zip",
+          "sha256": "f009c4e2ac092baacbf0813c158157fd6020904c8626d4886aea8943f94756c8",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2026-02.zip",
+          "sha256": "1e5530eb26acffcecf398e9446818a3cfe995906c4d616b2c3994fb8129e14b6",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2026-03.zip",
+          "sha256": "6fce026722569d86018dc2bb735fb24f11e59a09192efc7ce235653244ad42c0",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2026-04.zip",
+          "sha256": "8654f71521c3e9c2a66041382cf0db58d69e881466bcdc2a301017cb803cb201",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2026-05.zip",
+          "sha256": "179ca1fbf5a4a7c763c82a4ac418e8e021d6df922b58190c65cdbdde9af20373",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2026-06.zip",
+          "sha256": "ca0f71c8ee01cfda4ff7aec85852d3e542377ed1332e54877bebf589d44a0d12",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2026-07.zip",
+          "sha256": "eab7f5dacde4b6816c160b6deef468a780a38e0cd7a8fb010f507a7a4030c2c2",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2026-08.zip",
+          "sha256": "91c448b597564df21dcfd77c0885b4901e6c34f10451bb383a9b4895a6f07e6d",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "UNIUSDT",
+          "file": "UNIUSDT-1m-2026-09.zip",
+          "sha256": "5b0a3afcfcdee4be27b6468c1adb889fe4fabdc219c780c8c3415d752cf1fa6d",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "dai",
+      "rank": 27,
+      "symbol": "DAI",
+      "name": "Dai",
+      "market_status": "not_spot_trading",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "avalanche-2",
+      "rank": 28,
+      "symbol": "AVAX",
+      "name": "Avalanche",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2025-10.zip",
+          "sha256": "e965fd874b94c36b4c44a4bd630ab6ba4e931ec3afce9edb1aa4c24285a84758",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2025-11.zip",
+          "sha256": "89489bb1062d5d702a8011209388e3248f8709529c8d7036b955094a8b034d83",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2025-12.zip",
+          "sha256": "6464c58b341850ccc7212f23d82b5604c74944c916c5258936c4f42a1736c1df",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2026-01.zip",
+          "sha256": "f5bf424edcff231ee015c7861cc783872e2ff0950d9a0abcba1a8b020f16a1d4",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2026-02.zip",
+          "sha256": "00082e7f59024701e2e598bfce316b88abdd62e4168fb102147446d00d1eb294",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2026-03.zip",
+          "sha256": "d667c5051ccf45a88138d35a73e313aad0ab59a5e5f4232626baed13dc5ca695",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2026-04.zip",
+          "sha256": "a96afc67c105c0c17c9633058bf930048b77389897f19d9c5fdb153da7b68e11",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2026-05.zip",
+          "sha256": "e0364c18a91f71ebff731845fc663684ae7b4571c936e174d18f3b285f4a6876",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2026-06.zip",
+          "sha256": "e54a244ec6e3fcadf801419aa428f8b6182bdbe78dd4d5cffe34747a371d8f55",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2026-07.zip",
+          "sha256": "ff0d4d30dd7217a1a49b8a8288bde0197b335a447fdb06f776344b53d57b0b14",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2026-08.zip",
+          "sha256": "a81dde8798cc1262eeda7bb03d41a61ca09e80d93d2d7dbbd832c45a39a1633c",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "AVAXUSDT",
+          "file": "AVAXUSDT-1m-2026-09.zip",
+          "sha256": "bef7b67f8b8c409403bd48e950ae22bb5ca449254bb9c16bd35b1541378c5f53",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "sui",
+      "rank": 29,
+      "symbol": "SUI",
+      "name": "Sui",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2025-10.zip",
+          "sha256": "381a44b46df0898f3ab5b81dab95b88fbbffacbbeb53a7731b0b4f35e3e0270a",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2025-11.zip",
+          "sha256": "f345c296d1e53da6b700efe52e01fdc2a84768fdd273d5cf8715d2bb5fe72eca",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2025-12.zip",
+          "sha256": "b5b8014e399e92fd765639c572e9de9ddbdb8827afe6d1c72443550c7fe7c7b5",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2026-01.zip",
+          "sha256": "8cd54296c6bb7be564b4f868a4ad48fe3864ece28eb7dacd356e54979f4f3c17",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2026-02.zip",
+          "sha256": "05f1ebe3cbc7be70dbfcd2cba487fc96031d9d1cb525b97e0d65ccbdf75a6b85",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2026-03.zip",
+          "sha256": "2a5556b41417d408cc50ec173819f64db9a96b6fabd73b34e1b57bc14ddd16ce",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2026-04.zip",
+          "sha256": "295e0bbcce25932fe10f7b5c21bc427cc98344d9bd555442a79c218b5d468173",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2026-05.zip",
+          "sha256": "6e68b9dc5bee20d05d005630ba9bd3f01b1e2431b6dd972029002f4c6eec380a",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2026-06.zip",
+          "sha256": "175b625fe118758467b57de8020b04568bf4d9272df84ea44de16cb542fb19fe",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2026-07.zip",
+          "sha256": "01946778e73febf17d403d7591512839d6c6d8d68aa6ada68a6bf880f2ee8d37",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2026-08.zip",
+          "sha256": "5371936732f7065a62dacb64a74bda9f32bd1fa886c84537bdc0c3bebf36d143",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "SUIUSDT",
+          "file": "SUIUSDT-1m-2026-09.zip",
+          "sha256": "ca06dcadeac2f34df5e379834fcbb4e661b3ba61d1a078288781098c5a755b16",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "usd1-wlfi",
+      "rank": 30,
+      "symbol": "USD1",
+      "name": "USD1",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2025-10.zip",
+          "sha256": "dd6786a4f0f0b519a8d024bde1b33da83e1cb2ebbc1e19da5b010b4facd45492",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2025-11.zip",
+          "sha256": "b94111d2087fb8ab2f1dbbd529f32570c7c4c136a19740a6a07c3480b797cfc4",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2025-12.zip",
+          "sha256": "9b4153e50b3d4b3b17bfb0109da77996b50354a3c973e7d28782adc3f96f4693",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2026-01.zip",
+          "sha256": "ad07bc71ead772d92f3b491632162e8549b631b16ae414c8814123561ce9b4a8",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2026-02.zip",
+          "sha256": "5ceefb1e57c4a4c8d441b4141dc1e2137a73d9186c48ca94c78c04b4044317ff",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2026-03.zip",
+          "sha256": "dbb25b48908f67984a566eef851fdc8852be087c94988977b3611242a6ab8fed",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2026-04.zip",
+          "sha256": "5c5bdd264350f606009422c05461d12e27fb32e86a25ba0b340699f1668fbeda",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2026-05.zip",
+          "sha256": "0951cf0a8a7892600c62096bc0ee7f0b14f23230e42d2432109c159deebe863f",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2026-06.zip",
+          "sha256": "5c6cbf81d18006a56ecc3ca10852d2f09aa9327f3c7157e3a2f4fee98a7c2f93",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2026-07.zip",
+          "sha256": "82e7abec3d737c6f48c620525cfa7d5a83fe222bb51ec1f87c528a58224c2ada",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2026-08.zip",
+          "sha256": "69592a5617ba1ee4bee9a493e5023a562723e1fa4fe191f1cbe1bdbe1885c3a5",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "USD1USDT",
+          "file": "USD1USDT-1m-2026-09.zip",
+          "sha256": "95fedcddb1702838ae166dafb06222ee727a63fda31c9ec40daf862b78a72806",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "bitway",
+      "rank": 31,
+      "symbol": "BTW",
+      "name": "Bitway",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "the-open-network",
+      "rank": 32,
+      "symbol": "GRAM",
+      "name": "Gram (prev. Toncoin)",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "hedera-hashgraph",
+      "rank": 33,
+      "symbol": "HBAR",
+      "name": "Hedera",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2025-10.zip",
+          "sha256": "66223b7d5ea347fa69dc2718b992333e58fda3e8dccee826f6ffe9a1d6c533f7",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2025-11.zip",
+          "sha256": "bc01039e93887c916a40ad16317cc9a19e94ce24021a5e07a26193a2b74b8b00",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2025-12.zip",
+          "sha256": "3d2ffff772cfb4c8544c59d5865880784398b21a8196a64163d588af3965813c",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2026-01.zip",
+          "sha256": "1d267b1b468d7bf88a858ce924a316ccd8d2027244acae48c39a193d01255653",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2026-02.zip",
+          "sha256": "a0d094df5e0d568dec32dcaa4fb1342261dbdc325e3aab020fc065584e2f34fb",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2026-03.zip",
+          "sha256": "e8de3e5ee3676d491da8c5c143e37b5ec3e3c5a77e6d89b183746348910acabd",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2026-04.zip",
+          "sha256": "0bcd58a5c3b109ac53723702e643faecc60f818f4540595305860e599479f867",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2026-05.zip",
+          "sha256": "8b61adf9a42b89e3372ae1d0284f83bd384859771a395e0682c5ecb299a410a8",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2026-06.zip",
+          "sha256": "c2d9ca4c457bb43bc1da89c519a10890eafdbb2edb912697b067a83660f024c8",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2026-07.zip",
+          "sha256": "fb33c4fb15853ac703c38f80bb94038fb925749f00935c3086386adf3cb91074",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2026-08.zip",
+          "sha256": "86d7898505b2cd10a2602c7d660f342ede7d05e133b3b4bc7f4ca1b558bec579",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "HBARUSDT",
+          "file": "HBARUSDT-1m-2026-09.zip",
+          "sha256": "fc5975b7e9543cdbf756844c4d6beaae1b1073a5591bb3fe4756faf2f1d24b35",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "quant-network",
+      "rank": 34,
+      "symbol": "QNT",
+      "name": "Quant",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2025-10.zip",
+          "sha256": "a8a48282cf6000ec87658b7c8963a961747e4b9dab65e3e15da8d0ed4df1c4cf",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2025-11.zip",
+          "sha256": "d5a1f212eceb42bea1d16ab3bc8a89b9f9f14ae4570d80d71227bb0b9bd76444",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2025-12.zip",
+          "sha256": "40585e7066affa98c969693a8fb063089ebd8ef0c34070e7e908646519741d47",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2026-01.zip",
+          "sha256": "9ec3c151e1e44b2ad93cb0c3e35a030077ed67879329bf34d2fd4ac74c8b6f13",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2026-02.zip",
+          "sha256": "dbf47f0bbab01014eeee42a242ef392f16f872db83ecbca87cd1d4448ba2b16b",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2026-03.zip",
+          "sha256": "cdc5e7ef62c6900b96ab9eab699e7dd53efa9a19220275682e76b5bef8aed9c1",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2026-04.zip",
+          "sha256": "d5838e521230aa4f8ed63a964309eab6d20a818a440ba545e2e80cf7ff9a3052",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2026-05.zip",
+          "sha256": "f8218c94e76fe2ce9fa9c227ad0d12303173b27098c8916d483e4ca813855491",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2026-06.zip",
+          "sha256": "5bdb392650194e1d012bb2b364d1959e137d10c0dc5974ffc476487be8a54620",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2026-07.zip",
+          "sha256": "c681e9993ffd9c251403a2b993ca41aeb4531ac966117e076dc3de5a216615dc",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2026-08.zip",
+          "sha256": "796c27e15dd2fc27a2062e8a9bf35a412597d51c74a6c513e2c62be64fe5acfd",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "QNTUSDT",
+          "file": "QNTUSDT-1m-2026-09.zip",
+          "sha256": "30c4ad41b8f37dddb8c156c0514cf1c2b924f650a02a67b9543b3323f8eda882",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "tether-gold",
+      "rank": 35,
+      "symbol": "XAUT",
+      "name": "Tether Gold",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2026-04",
+          "pair": "XAUTUSDT",
+          "file": "XAUTUSDT-1m-2026-04.zip",
+          "sha256": "b1741862aa256ffb4634bc99e9e72e5b8e54cf8aefe98a97fa63da6bb47eb607",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "XAUTUSDT",
+          "file": "XAUTUSDT-1m-2026-05.zip",
+          "sha256": "4591611c7b0d5b432319c0b5a7f0e33d8d1e3275c447d1e4f9cfac68170c8108",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "XAUTUSDT",
+          "file": "XAUTUSDT-1m-2026-06.zip",
+          "sha256": "fa6f6d6f2deb6bdbbde937fb84ac352938fde88026bc2824485266d76dbda109",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "XAUTUSDT",
+          "file": "XAUTUSDT-1m-2026-07.zip",
+          "sha256": "d33d3a5720d8817a894b1da01b67b03b01a877eeb68bbef63fa332c96fb81c23",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "XAUTUSDT",
+          "file": "XAUTUSDT-1m-2026-08.zip",
+          "sha256": "37f8552f7f8109cd89fcff22814a0397087a57fad239edcdd71f22eb1e87ba2f",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "XAUTUSDT",
+          "file": "XAUTUSDT-1m-2026-09.zip",
+          "sha256": "ab0873deb672c5b937472e5d41aa72aad49781ff25ba9b4f6e0658e983435d36",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [
+        "2025-10",
+        "2025-11",
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-03"
+      ],
+      "candles": 263520
+    },
+    {
+      "id": "shiba-inu",
+      "rank": 36,
+      "symbol": "SHIB",
+      "name": "Shiba Inu",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2025-10.zip",
+          "sha256": "d834fc087a11574656564aab8f13606ffa81972b8c93d205f88fd0865d260039",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2025-11.zip",
+          "sha256": "8056a64fe89431377576cbce5fea4c5c3a5da38b59acb30efb2a2aeb97c7e371",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2025-12.zip",
+          "sha256": "ead71836eff1af6644e27e69d5bf30cbf905577341df9ac447064b941e5ad8e3",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2026-01.zip",
+          "sha256": "6abb360a444f057f8768b3dcec2a6ce2b97b7c71cb930b2e29f51b0fdeb012b6",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2026-02.zip",
+          "sha256": "3f704f5e5a997a2fe6f975fec4367905b51a7355a9cdec234349653158fcd2fd",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2026-03.zip",
+          "sha256": "802ef9144751408210c345ba99606c22bdff1597e6fbf30d0a7cefb44065c70d",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2026-04.zip",
+          "sha256": "86674f91b8e04cb1b343005600f4cd55cc8b373eaec99dd9854198ed03ffd69d",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2026-05.zip",
+          "sha256": "8b481e36f1457a1bde7387130917761e7f36bfb209c7eb17360efb6dcdff53f6",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2026-06.zip",
+          "sha256": "13149361239333dc9facf3b142dbaca1a757dd660c6940947f3dd9a8bef2dfb8",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2026-07.zip",
+          "sha256": "c23d6129e5b12b2c83334ae1e3b2e8956329fbe0398153577ffa3dc14433a0f5",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2026-08.zip",
+          "sha256": "5fa7398f6042a9b62ff4304ee3e1cfccd346efb5368e335c8a853809559ea977",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "SHIBUSDT",
+          "file": "SHIBUSDT-1m-2026-09.zip",
+          "sha256": "72e673de68b71d9788c8d588073cf79280f77c592a1b6bdfbb4f8b739e1d5cbf",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "global-dollar",
+      "rank": 37,
+      "symbol": "USDG",
+      "name": "Global Dollar",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "bittensor",
+      "rank": 38,
+      "symbol": "TAO",
+      "name": "Bittensor",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2025-10.zip",
+          "sha256": "aed19fd26ae0455f66c75c83b79367f0de32ceb04b5451d506384e12c35e97bc",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2025-11.zip",
+          "sha256": "2f5b7c61fd5311c03a28f7753c32c9a9e765e9701a112eeee8ae48d9aab422cc",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2025-12.zip",
+          "sha256": "e8c639fa498c05fe47e1103bc23e269105a1f8a18b2547de074bc64837c9871e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2026-01.zip",
+          "sha256": "db97093965aa2fea7180ee53b57996741ad314f1d3c266857c6b454cdfc5df74",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2026-02.zip",
+          "sha256": "322d4340868c671d7efdd92ee76d6b147721a773f155f6be91caf194080e8f1b",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2026-03.zip",
+          "sha256": "81f15ba0c5905b541ca732d6c6f60f8a8d5ac60fde01b51f1412d6551a9cb474",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2026-04.zip",
+          "sha256": "d97b4b76d3df3827252fe4655040cce618e013c0957f93c3fc211be931db3a17",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2026-05.zip",
+          "sha256": "26f33ab0104b4d5655b9a99e3f2013e6cf148735375c38f48b80123872b3943f",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2026-06.zip",
+          "sha256": "c3f7566e50758d896a433dff1c616b6159d19aa2289b6afff9e0a00cf5b27bca",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2026-07.zip",
+          "sha256": "274544a294e7d5a6f99b1ddf0550732123f0b2cf58da4039a5cae242c8cda8a7",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2026-08.zip",
+          "sha256": "10519be6e41657dab2e6c27acab9e52169a0a11ab133f6450e4249a6f20e7661",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "TAOUSDT",
+          "file": "TAOUSDT-1m-2026-09.zip",
+          "sha256": "ea3639b195d7cdfc3e46c4d0d2ba314106ad5029db92d3fa9267199c7e37f429",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "crypto-com-chain",
+      "rank": 39,
+      "symbol": "CRO",
+      "name": "Cronos",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "paypal-usd",
+      "rank": 40,
+      "symbol": "PYUSD",
+      "name": "PayPal USD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ethena",
+      "rank": 41,
+      "symbol": "ENA",
+      "name": "Ethena",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2025-10.zip",
+          "sha256": "bb14d113dba71a74a61b401138abcdaadbb19d97e8db136592ad44a31e4759cc",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2025-11.zip",
+          "sha256": "d799241cde7d55859a65f16d342e1078fc78d133f0951b53d1a8e8abc3b0df25",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2025-12.zip",
+          "sha256": "aa4aa4cc90f0750ecaaf946e064342b891634f52c5d42c4a6209d967e1206930",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2026-01.zip",
+          "sha256": "166f27a6f7e3d57b0d2f799e50aab317ed5af7dc71118b843084e2b1cbb703ec",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2026-02.zip",
+          "sha256": "935d74d21ba035a4a2ae7903ef4f76ea6c16289aaebca3114aa4150fee36bc2f",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2026-03.zip",
+          "sha256": "745f70ea63dc7c528403667999bdf3285a04e0de14f8166a746e2a916bba94df",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2026-04.zip",
+          "sha256": "d86b67853f84cd1b979bbc3355998653545b6325d9e48c7126fa30118888e656",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2026-05.zip",
+          "sha256": "482e91ecc3920452ed4eb6772b5e9ac5970d245d4aea209b1e7858e755ed4974",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2026-06.zip",
+          "sha256": "db95cc4d8f18d3e289dd5da788eb036d23fd218555cdf5e5ee95eea3857f918b",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2026-07.zip",
+          "sha256": "d7edf0c826592e17691f5c894e061283dd2cb29f0b0f1d9fdc40567fdbf48e11",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2026-08.zip",
+          "sha256": "bb51786fc3f079671b76a03df60ffca6bbf3bac7e0edd43b45d3c4fe6fb65007",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "ENAUSDT",
+          "file": "ENAUSDT-1m-2026-09.zip",
+          "sha256": "b5c7fa47fb2cbca38b60ca2dd1d2655561ecb1fc02dc6ded4fc7ceb4a078fb48",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "okb",
+      "rank": 42,
+      "symbol": "OKB",
+      "name": "OKB",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "aave",
+      "rank": 43,
+      "symbol": "AAVE",
+      "name": "Aave",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2025-10.zip",
+          "sha256": "efd628df8010baf840973cf6b26a0c490724c854e86cd66bdf71ab39f6849d67",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2025-11.zip",
+          "sha256": "9a68e6f6c26d8f83e523ace2be3893cebc92b621e5723d8ddf80647512ece688",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2025-12.zip",
+          "sha256": "6b9dbbbebbff3e440f261b8aaa7c43c63694a40ebfc8623a37e20bea7a8cf5bb",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2026-01.zip",
+          "sha256": "a0b7f0301328e102301ec02e901badaeca9fd769f316b350326a0f3fbfd6f075",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2026-02.zip",
+          "sha256": "285c0f1b696997420c8c2c2abacc8442921e3dfa5ad71db38b7e105d7bf51ac2",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2026-03.zip",
+          "sha256": "7b9839b40a6590918e556ae9e9177de04a62f37dde66419d492320ac67ab2349",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2026-04.zip",
+          "sha256": "ab6924045f344ebc77b481530cef937bf12c85bb538291c7bb601078777cda86",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2026-05.zip",
+          "sha256": "ac87e26b5dbf4af4c81e182da80e6e29398d0d2b9c5128d6e46f5709f8a23c0b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2026-06.zip",
+          "sha256": "4d5e309968490567c081b0da3d5dadd3f26a9ee59114fd8c9cd4e4d046e93640",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2026-07.zip",
+          "sha256": "ef629a915495f32a946e86d61dd2167bddbd1475a06b33c6ce4adc9bc50d3313",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2026-08.zip",
+          "sha256": "527d0dc5b9b86efbda693b0970c9537cc4130e576479fbbdf41be35d01e9d138",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "AAVEUSDT",
+          "file": "AAVEUSDT-1m-2026-09.zip",
+          "sha256": "90311cd1ffb27b7743249cd951dd7767f8fd482bd8b8d30b6d6491ac28532663",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "pump-fun",
+      "rank": 44,
+      "symbol": "PUMP",
+      "name": "Pump.fun",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2025-10.zip",
+          "sha256": "7b132422fd7f8e820e7ec344bd02597de272e8693adcfabae8774e208867de1f",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2025-11.zip",
+          "sha256": "bd5ea2cfa2bee553f991516f45d49487093c8c5eaec0301bcce6c0e4097fa7c9",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2025-12.zip",
+          "sha256": "fe5f0fba21ff2db18eba81cce6d006b7e00eda6d8878742b5bf18afabd091f85",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2026-01.zip",
+          "sha256": "aef2fd88bae6c3e6d2c4d4a81fd02e70b5c5cf51956b3340b2ebdb611b61fbe2",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2026-02.zip",
+          "sha256": "38cb3be3f99bb99dd6b41c1ab053597e2cdc7efc8969be5f02aadf35f65c2c5b",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2026-03.zip",
+          "sha256": "875b4e69fd58478bbe6e8b93787589675223f9e8780acc5bd6427b379996f3ec",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2026-04.zip",
+          "sha256": "d8b98f53486b3371fcd022c0392566ecf73479ffb07d49f0becd3dcca593fd82",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2026-05.zip",
+          "sha256": "9c4b2566c4a72dd9fd4323f8acde7d0f3a7d231bd170f2ad5b1072b0461caa77",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2026-06.zip",
+          "sha256": "e76b96d1224e4f94c9c69f13c7f07d57910fdc0d8af1f50165b58bfe8406714f",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2026-07.zip",
+          "sha256": "12fde58292e6dd0467410e37d65b0da3d1f60857163df678a612d930ed080b6d",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2026-08.zip",
+          "sha256": "388a8d130fdcb310c4793e09558d125433e1b5d7504dd5bc8f4a6df8035dd13b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "PUMPUSDT",
+          "file": "PUMPUSDT-1m-2026-09.zip",
+          "sha256": "41094324228f7e596784fa5f9def14f2c95b6753df750b517fbbd5cca60a018d",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "ripple-usd",
+      "rank": 45,
+      "symbol": "RLUSD",
+      "name": "Ripple USD",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2026-02",
+          "pair": "RLUSDUSDT",
+          "file": "RLUSDUSDT-1m-2026-02.zip",
+          "sha256": "5348b4d4b9adba7b3d136c22aab404eb791bbfa8819d40fa92d5b05223776693",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "RLUSDUSDT",
+          "file": "RLUSDUSDT-1m-2026-03.zip",
+          "sha256": "b5086147ab0917b5d4905ad70fa2329ffa65b5bd6a7ff36de56f2b4cd6280706",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "RLUSDUSDT",
+          "file": "RLUSDUSDT-1m-2026-04.zip",
+          "sha256": "0de671f545ddb72e9bada7c66fa9bb13d8053b9a6fdc2a562bdb855b6f53d6b3",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "RLUSDUSDT",
+          "file": "RLUSDUSDT-1m-2026-05.zip",
+          "sha256": "ccc49d3ef275021bb11d5b64224cf37268e86935531d9818fdb557b67f1b2607",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "RLUSDUSDT",
+          "file": "RLUSDUSDT-1m-2026-06.zip",
+          "sha256": "d8686b654c2bd9ab2049e2f029f0e3b590ffc6d770de158bf7cbe6f4e7b23f07",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "RLUSDUSDT",
+          "file": "RLUSDUSDT-1m-2026-07.zip",
+          "sha256": "cc4611aab4d5e9753a60192a15b546da157280245dcb66a3e8be26c798a71be9",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "RLUSDUSDT",
+          "file": "RLUSDUSDT-1m-2026-08.zip",
+          "sha256": "535d1616781e239a41e7b1a30664390059a91499556ed19379985386f79d12c8",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "RLUSDUSDT",
+          "file": "RLUSDUSDT-1m-2026-09.zip",
+          "sha256": "72ce871c4278bc48c679d73952909b298f767ba45cc131e6f938475cc0c8bac0",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [
+        "2025-10",
+        "2025-11",
+        "2025-12",
+        "2026-01"
+      ],
+      "candles": 348480
+    },
+    {
+      "id": "hashnote-usyc",
+      "rank": 46,
+      "symbol": "USYC",
+      "name": "Circle USYC",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "memecore",
+      "rank": 47,
+      "symbol": "M",
+      "name": "MemeCore",
+      "market_status": "nonstandard_symbol",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ondo-us-dollar-yield",
+      "rank": 48,
+      "symbol": "USDY",
+      "name": "Ondo US Dollar Yield",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ondo-finance",
+      "rank": 49,
+      "symbol": "ONDO",
+      "name": "Ondo",
+      "market_status": "approved_existing_archive",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2025-10.zip",
+          "sha256": "affce4031d8515933743bc54dad47ce29b7af93b9f0624d44a42e465797eaaa1",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2025-11.zip",
+          "sha256": "58e7f828078767adfc5e4879a9599182ec0ac539a8ea1fda61b9b47854dcf29e",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2025-12.zip",
+          "sha256": "3432aaa8d33fcc91fd1860c9f4cb90a20532c32d6a28aecf68d2b429e9afc99c",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2026-01.zip",
+          "sha256": "fa5019cff1ddac6e8bc43fb45518c47c6c3d82f563ae7160f0156eca4872f184",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2026-02.zip",
+          "sha256": "73e518c1196d94441358cc40be8a9d1b1485a79337c98bf2a6d06405fae253b3",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2026-03.zip",
+          "sha256": "04a2ba2375e4ceea869fa2a69a741c5ad3409b0d61cc18ae614109fb3d5642ee",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2026-04.zip",
+          "sha256": "4f5c67816885c262b6abe0a1973c8a88c4bb38bd8a2a627e42ca1196f06d4650",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2026-05.zip",
+          "sha256": "2046b90223bba0b61cfd078ef91d55805231a093247d4090c97035ef96a910ee",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2026-06.zip",
+          "sha256": "ddd054d76a347ca294c09442aec61a07d19882015cef7fc1a396c68baa0c0dcd",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2026-07.zip",
+          "sha256": "34aa46f852f0306cbe3ebd9657e57e5f42a861b55193878cc984110580d9bfca",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-07-1m"
+        },
+        {
+          "month": "2026-08",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2026-08.zip",
+          "sha256": "101fbaf9e3118ebf88ef51df8b30281d8cb90cd1d3318a4e709ad4cbeb18f913",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-08-1m"
+        },
+        {
+          "month": "2026-09",
+          "pair": "ONDOUSDT",
+          "file": "ONDOUSDT-1m-2026-09.zip",
+          "sha256": "751e3354e147c9041b1246385c43a795d24c7e2f22c2a73ca27c369d76b5a4be",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-09-1m"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "blackrock-usd-institutional-digital-liquidity-fund",
+      "rank": 50,
+      "symbol": "BUIDL",
+      "name": "BlackRock USD Institutional Digital Liquidity Fund",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "polkadot",
+      "rank": 51,
+      "symbol": "DOT",
+      "name": "Polkadot",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [
+        {
+          "month": "2025-10",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2025-10.zip",
+          "sha256": "0cb2186fa4391ee6178acf3a2f8a4d0adb2a3e4ce5ca0e0a7d9eaf980e8a595b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-10-1m"
+        },
+        {
+          "month": "2025-11",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2025-11.zip",
+          "sha256": "7f01cf0f334f0ad1fbf1d8d65a17914ae65dd4fd96bca5a8bf021009636ab4f1",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2025-12.zip",
+          "sha256": "47b0941d96c3aa95697e926cfe73859697ea48a8f1a49ea824dc4ceff470285e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2026-01.zip",
+          "sha256": "28c3338eac0671238555d91d0b8cf986401a074ae1a017a7bbafcdcdc7a5dd53",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2026-02.zip",
+          "sha256": "e216966da1639d3d94aa9887cf37158c5a30c0ce42d67870b170e482acc8438c",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2026-03.zip",
+          "sha256": "add362e56f8c06ec907de7a4144db35fdd20cca9b80808fea8f76ef32416514b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2026-04.zip",
+          "sha256": "aa21673256e829f0b8d5c7c9149e7cc70f1650dadf7268e8ae297f741d344462",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2026-05.zip",
+          "sha256": "6dd080e7e4cf7bcca5f4d8167fa7c8de723789353d7b4281d2217a69295eb602",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2026-06.zip",
+          "sha256": "4c12c6c2d4a83bda7dc40555584604e6f18f4fa83566fe08e67694c7d3bffd74",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2026-07.zip",
+          "sha256": "6cc3e9fb1e6396f0d6687180a67b36eb838c6b55a0bc72f01b6c3ac268d56db7",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-688070fa4d52"
+        },
+        {
+          "month": "2026-08",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2026-08.zip",
+          "sha256": "c02cfeb26ec0d04b1ad7e1733c04d8056b1a6abb618e7150c46c284917c38357",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-688070fa4d52"
+        },
+        {
+          "month": "2026-09",
+          "pair": "DOTUSDT",
+          "file": "DOTUSDT-1m-2026-09.zip",
+          "sha256": "1df77b0ecac3b2f2e955c7841a6d9c0a5311952cace1c0ff42ffc2c1fd80479c",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-688070fa4d52"
+        }
+      ],
+      "missing_months": [],
+      "candles": 525600
+    },
+    {
+      "id": "aster-2",
+      "rank": 52,
+      "symbol": "ASTER",
+      "name": "Aster",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [
+        {
+          "month": "2025-11",
+          "pair": "ASTERUSDT",
+          "file": "ASTERUSDT-1m-2025-11.zip",
+          "sha256": "c1aecf9500363e3089a9c8b650ffcf4848b8cf62bec63a9d8cb562e59959e01c",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2025-11-1m"
+        },
+        {
+          "month": "2025-12",
+          "pair": "ASTERUSDT",
+          "file": "ASTERUSDT-1m-2025-12.zip",
+          "sha256": "46bb6a7ada5915eeb8a696ac36ba1bd78241ac66f7ebe3ccd92b6292c2f0ab20",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2025-12-1m"
+        },
+        {
+          "month": "2026-01",
+          "pair": "ASTERUSDT",
+          "file": "ASTERUSDT-1m-2026-01.zip",
+          "sha256": "5c458d3c30985ab1360aa3bf60454709a4b94221cdbd44cbc7c4e0443e66710f",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-01-1m"
+        },
+        {
+          "month": "2026-02",
+          "pair": "ASTERUSDT",
+          "file": "ASTERUSDT-1m-2026-02.zip",
+          "sha256": "29bd5b4af2f4b2a8a5041bdd29ce12bc9f268e6b75f03a11b07757ab1d2a0de2",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2026-02-1m"
+        },
+        {
+          "month": "2026-03",
+          "pair": "ASTERUSDT",
+          "file": "ASTERUSDT-1m-2026-03.zip",
+          "sha256": "86ee9a5aabcf7b5280a05cd9d69e59180a3216062015aa82288ba3ceab869601",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-03-1m"
+        },
+        {
+          "month": "2026-04",
+          "pair": "ASTERUSDT",
+          "file": "ASTERUSDT-1m-2026-04.zip",
+          "sha256": "0885c2a21f834e1519858ce97589d95c18284021f6d309be39bdba3c95458f1b",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-04-1m"
+        },
+        {
+          "month": "2026-05",
+          "pair": "ASTERUSDT",
+          "file": "ASTERUSDT-1m-2026-05.zip",
+          "sha256": "26e267d2961a2daf31387e2f5e4f1fabaa9e2008d4f52dd98547854e2922dd20",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2026-05-1m"
+        },
+        {
+          "month": "2026-06",
+          "pair": "ASTERUSDT",
+          "file": "ASTERUSDT-1m-2026-06.zip",
+          "sha256": "ffefabc136dde9f66b5c4d32f0f68bd250d093e3963c1e3acbfbe096fe69c66e",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2026-06-1m"
+        },
+        {
+          "month": "2026-07",
+          "pair": "ASTERUSDT",
+          "file": "ASTERUSDT-1m-2026-07.zip",
+          "sha256": "0dc96b8a8ec14392065871ec43e6469d183d1c6a47b4f9af811c3708db0876ae",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-688070fa4d52"
+        },
+        {
+          "month": "2026-08",
+          "pair": "ASTERUSDT",
+          "file": "ASTERUSDT-1m-2026-08.zip",
+          "sha256": "011a06de3445e605a6bc411dc6dc1019af4b7217023ab1aca3d2b57bd1d1ff1a",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-688070fa4d52"
+        },
+        {
+          "month": "2026-09",
+          "pair": "ASTERUSDT",
+          "file": "ASTERUSDT-1m-2026-09.zip",
+          "sha256": "b42e35e9562b84d44b36118ca7bd1e8deaccc6752a459409a105c0a0db5ee376",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-688070fa4d52"
+        }
+      ],
+      "missing_months": [
+        "2025-10"
+      ],
+      "candles": 480960
+    },
+    {
+      "id": "worldcoin-wld",
+      "rank": 53,
+      "symbol": "WLD",
+      "name": "Worldcoin",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "pax-gold",
+      "rank": 54,
+      "symbol": "PAXG",
+      "name": "PAX Gold",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "falcon-finance",
+      "rank": 55,
+      "symbol": "USDF",
+      "name": "Falcon USD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "mantle",
+      "rank": 56,
+      "symbol": "MNT",
+      "name": "Mantle",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "sky",
+      "rank": 57,
+      "symbol": "SKY",
+      "name": "Sky",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "world-liberty-financial",
+      "rank": 58,
+      "symbol": "WLFI",
+      "name": "World Liberty Financial",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "internet-computer",
+      "rank": 59,
+      "symbol": "ICP",
+      "name": "Internet Computer",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "morpho",
+      "rank": 60,
+      "symbol": "MORPHO",
+      "name": "Morpho",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "pepe",
+      "rank": 61,
+      "symbol": "PEPE",
+      "name": "Pepe",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "spiko-amundi-overnight-swap-fund-eur",
+      "rank": 62,
+      "symbol": "EURSAFO",
+      "name": "Spiko Amundi Overnight Swap Fund (EUR)",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "usdd",
+      "rank": 63,
+      "symbol": "USDD",
+      "name": "USDD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "united-stables",
+      "rank": 64,
+      "symbol": "U",
+      "name": "United Stables",
+      "market_status": "nonstandard_symbol",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "htx-dao",
+      "rank": 65,
+      "symbol": "HTX",
+      "name": "HTX DAO",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "bitget-token",
+      "rank": 66,
+      "symbol": "BGB",
+      "name": "Bitget Token",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "bfusd",
+      "rank": 67,
+      "symbol": "BFUSD",
+      "name": "BFUSD",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ethereum-classic",
+      "rank": 68,
+      "symbol": "ETC",
+      "name": "Ethereum Classic",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "usdgo",
+      "rank": 69,
+      "symbol": "USDGO",
+      "name": "USDGO",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "jupiter-exchange-solana",
+      "rank": 70,
+      "symbol": "JUP",
+      "name": "Jupiter",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "arbitrum",
+      "rank": 71,
+      "symbol": "ARB",
+      "name": "Arbitrum",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "just",
+      "rank": 72,
+      "symbol": "JST",
+      "name": "JUST",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "kaspa",
+      "rank": 73,
+      "symbol": "KAS",
+      "name": "Kaspa",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "gatechain-token",
+      "rank": 74,
+      "symbol": "GT",
+      "name": "Gate",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "cosmos",
+      "rank": 75,
+      "symbol": "ATOM",
+      "name": "Cosmos Hub",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "polygon-ecosystem-token",
+      "rank": 76,
+      "symbol": "POL",
+      "name": "POL (ex-MATIC)",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "kucoin-shares",
+      "rank": 77,
+      "symbol": "KCS",
+      "name": "KuCoin",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "venice-token",
+      "rank": 78,
+      "symbol": "VVV",
+      "name": "Venice Token",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "algorand",
+      "rank": 79,
+      "symbol": "ALGO",
+      "name": "Algorand",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "blockchain-capital",
+      "rank": 80,
+      "symbol": "BCAP",
+      "name": "Blockchain Capital",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "render-token",
+      "rank": 81,
+      "symbol": "RENDER",
+      "name": "Render",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "pi-network",
+      "rank": 82,
+      "symbol": "PI",
+      "name": "Pi Network",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "filecoin",
+      "rank": 83,
+      "symbol": "FIL",
+      "name": "Filecoin",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "lighter",
+      "rank": 84,
+      "symbol": "LIT",
+      "name": "Lighter",
+      "market_status": "not_spot_trading",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "nexo",
+      "rank": 85,
+      "symbol": "NEXO",
+      "name": "NEXO",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "aerodrome-finance",
+      "rank": 86,
+      "symbol": "AERO",
+      "name": "Aerodrome Finance",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "layerzero",
+      "rank": 87,
+      "symbol": "ZRO",
+      "name": "LayerZero",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "open-usd",
+      "rank": 88,
+      "symbol": "OUSD",
+      "name": "Open USD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "superstate-short-duration-us-government-securities-fund-ustb",
+      "rank": 89,
+      "symbol": "USTB",
+      "name": "Invesco Short Duration US Government Securities Fund",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "midnight-3",
+      "rank": 90,
+      "symbol": "NIGHT",
+      "name": "Midnight",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "blockstack",
+      "rank": 91,
+      "symbol": "STX",
+      "name": "Stacks",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "xdce-crowd-sale",
+      "rank": 92,
+      "symbol": "XDC",
+      "name": "XDC Network",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "gho",
+      "rank": 93,
+      "symbol": "GHO",
+      "name": "GHO",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "aptos",
+      "rank": 94,
+      "symbol": "APT",
+      "name": "Aptos",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "pancakeswap-token",
+      "rank": 95,
+      "symbol": "CAKE",
+      "name": "PancakeSwap",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "injective-protocol",
+      "rank": 96,
+      "symbol": "INJ",
+      "name": "Injective",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "stable-2",
+      "rank": 97,
+      "symbol": "STABLE",
+      "name": "​​Stable",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "vechain",
+      "rank": 98,
+      "symbol": "VET",
+      "name": "VeChain",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "dash",
+      "rank": 99,
+      "symbol": "DASH",
+      "name": "Dash",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ether-fi",
+      "rank": 100,
+      "symbol": "ETHFI",
+      "name": "Ether.fi",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "eutbl",
+      "rank": 101,
+      "symbol": "EUTBL",
+      "name": "Spiko EU T-Bills Money Market Fund",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "pyth-network",
+      "rank": 102,
+      "symbol": "PYTH",
+      "name": "Pyth Network",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "raydium",
+      "rank": 103,
+      "symbol": "RAY",
+      "name": "Raydium",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "akedo",
+      "rank": 104,
+      "symbol": "AKE",
+      "name": "Akedo",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "flare-networks",
+      "rank": 105,
+      "symbol": "FLR",
+      "name": "Flare",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "beldex",
+      "rank": 106,
+      "symbol": "BDX",
+      "name": "Beldex",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "janus-henderson-anemoy-aaa-clo-fund",
+      "rank": 107,
+      "symbol": "JAAA",
+      "name": "Janus Henderson Anemoy AAA CLO Fund",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "bianrensheng",
+      "rank": 108,
+      "symbol": "币安人生",
+      "name": "币安人生 (BinanceLife)",
+      "market_status": "nonstandard_symbol",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "curve-dao-token",
+      "rank": 109,
+      "symbol": "CRV",
+      "name": "Curve DAO",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "usual-usd",
+      "rank": 110,
+      "symbol": "USD0",
+      "name": "Usual USD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "kinesis-gold",
+      "rank": 111,
+      "symbol": "KAU",
+      "name": "Kinesis Gold",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "starknet",
+      "rank": 112,
+      "symbol": "STRK",
+      "name": "Starknet",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "official-trump",
+      "rank": 113,
+      "symbol": "TRUMP",
+      "name": "Official Trump",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "derive",
+      "rank": 114,
+      "symbol": "DRV",
+      "name": "Derive",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "pudgy-penguins",
+      "rank": 115,
+      "symbol": "PENGU",
+      "name": "Pudgy Penguins",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "euro-coin",
+      "rank": 116,
+      "symbol": "EURC",
+      "name": "EURC",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ylds",
+      "rank": 117,
+      "symbol": "YLDS",
+      "name": "YLDS",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "true-usd",
+      "rank": 118,
+      "symbol": "TUSD",
+      "name": "TrueUSD",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "fetch-ai",
+      "rank": 119,
+      "symbol": "FET",
+      "name": "Artificial Superintelligence Alliance",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "usdtb",
+      "rank": 120,
+      "symbol": "USDTB",
+      "name": "USDtb",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "virtual-protocol",
+      "rank": 121,
+      "symbol": "VIRTUAL",
+      "name": "Virtuals Protocol",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "pearl-2",
+      "rank": 122,
+      "symbol": "PRL",
+      "name": "Pearl",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "celestia",
+      "rank": 123,
+      "symbol": "TIA",
+      "name": "Celestia",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "grass",
+      "rank": 124,
+      "symbol": "GRASS",
+      "name": "Grass",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "sei-network",
+      "rank": 125,
+      "symbol": "SEI",
+      "name": "Sei",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "a7a5",
+      "rank": 126,
+      "symbol": "A7A5",
+      "name": "A7A5",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "bitcoin-cash-sv",
+      "rank": 127,
+      "symbol": "BSV",
+      "name": "Bitcoin SV",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "hash-2",
+      "rank": 128,
+      "symbol": "HASH",
+      "name": "Provenance Blockchain",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "plasma",
+      "rank": 129,
+      "symbol": "XPL",
+      "name": "Plasma",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "pendle",
+      "rank": 130,
+      "symbol": "PENDLE",
+      "name": "Pendle",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "bittorrent",
+      "rank": 131,
+      "symbol": "BTT",
+      "name": "BitTorrent",
+      "market_status": "not_spot_trading",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "pieverse",
+      "rank": 132,
+      "symbol": "PIEVERSE",
+      "name": "Pieverse",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "falcon-finance-ff",
+      "rank": 133,
+      "symbol": "FF",
+      "name": "Falcon Finance",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "kaia",
+      "rank": 134,
+      "symbol": "KAIA",
+      "name": "Kaia",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "usdai",
+      "rank": 135,
+      "symbol": "USDAI",
+      "name": "USDai",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "lido-dao",
+      "rank": 136,
+      "symbol": "LDO",
+      "name": "Lido DAO",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "unibase",
+      "rank": 137,
+      "symbol": "UB",
+      "name": "Unibase",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "spx6900",
+      "rank": 138,
+      "symbol": "SPX",
+      "name": "SPX6900",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "sofiusd",
+      "rank": 139,
+      "symbol": "SOFID",
+      "name": "SoFiUSD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "janus-henderson-anemoy-treasury-fund",
+      "rank": 140,
+      "symbol": "JTRSY",
+      "name": "Janus Henderson Anemoy Treasury Fund",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "first-digital-usd",
+      "rank": 141,
+      "symbol": "FDUSD",
+      "name": "First Digital USD",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "sun-token",
+      "rank": 142,
+      "symbol": "SUN",
+      "name": "Sun Token",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "tezos",
+      "rank": 143,
+      "symbol": "XTZ",
+      "name": "Tezos",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ousg",
+      "rank": 144,
+      "symbol": "OUSG",
+      "name": "Ondo Short-Term U.S. Government Bond Fund",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "apxusd",
+      "rank": 145,
+      "symbol": "APXUSD",
+      "name": "apxUSD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "backpack",
+      "rank": 146,
+      "symbol": "BP",
+      "name": "Backpack",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "decred",
+      "rank": 147,
+      "symbol": "DCR",
+      "name": "Decred",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "gnosis",
+      "rank": 148,
+      "symbol": "GNO",
+      "name": "Gnosis",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ape-and-pepe",
+      "rank": 149,
+      "symbol": "APEPE",
+      "name": "Ape and Pepe",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "re-protocol-reusd",
+      "rank": 150,
+      "symbol": "REUSD",
+      "name": "Re Protocol reUSD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "olympus",
+      "rank": 151,
+      "symbol": "OHM",
+      "name": "Olympus",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "the-graph",
+      "rank": 152,
+      "symbol": "GRT",
+      "name": "The Graph",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "bonk",
+      "rank": 153,
+      "symbol": "BONK",
+      "name": "Bonk",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "monad",
+      "rank": 154,
+      "symbol": "MON",
+      "name": "Monad",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "kite-2",
+      "rank": 155,
+      "symbol": "KITE",
+      "name": "Kite",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "optimism",
+      "rank": 156,
+      "symbol": "OP",
+      "name": "Optimism",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "terra-luna",
+      "rank": 157,
+      "symbol": "LUNC",
+      "name": "Terra",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "arweave",
+      "rank": 158,
+      "symbol": "AR",
+      "name": "Arweave",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "jito-governance-token",
+      "rank": 159,
+      "symbol": "JTO",
+      "name": "Jito",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "syrup",
+      "rank": 160,
+      "symbol": "SYRUP",
+      "name": "Maple Finance",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ethereum-name-service",
+      "rank": 161,
+      "symbol": "ENS",
+      "name": "Ethereum Name Service",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "conflux-token",
+      "rank": 162,
+      "symbol": "CFX",
+      "name": "Conflux",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "collector-crypt",
+      "rank": 163,
+      "symbol": "CARDS",
+      "name": "Collector Crypt",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "floki",
+      "rank": 164,
+      "symbol": "FLOKI",
+      "name": "FLOKI",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "jasmycoin",
+      "rank": 165,
+      "symbol": "JASMY",
+      "name": "JasmyCoin",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "compound-governance-token",
+      "rank": 166,
+      "symbol": "COMP",
+      "name": "Compound",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "iota",
+      "rank": 167,
+      "symbol": "IOTA",
+      "name": "IOTA",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "apenft",
+      "rank": 168,
+      "symbol": "NFT",
+      "name": "AINFT",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "pons",
+      "rank": 169,
+      "symbol": "PONS",
+      "name": "Pons",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "meteora",
+      "rank": 170,
+      "symbol": "MET",
+      "name": "Meteora",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "zebec-network",
+      "rank": 171,
+      "symbol": "ZBCN",
+      "name": "Zebec Network",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "thorchain",
+      "rank": 172,
+      "symbol": "RUNE",
+      "name": "THORChain",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "kinesis-silver",
+      "rank": 173,
+      "symbol": "KAG",
+      "name": "Kinesis Silver",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "bnb48-club-token",
+      "rank": 174,
+      "symbol": "KOGE",
+      "name": "KOGE",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "safo",
+      "rank": 175,
+      "symbol": "SAFO",
+      "name": "Spiko Amundi Overnight Swap Fund",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "theta-token",
+      "rank": 176,
+      "symbol": "THETA",
+      "name": "Theta Network",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "frax",
+      "rank": 177,
+      "symbol": "FRAX",
+      "name": "Legacy Frax Dollar",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "akash-network",
+      "rank": 178,
+      "symbol": "AKT",
+      "name": "Akash Network",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "trust-wallet-token",
+      "rank": 179,
+      "symbol": "TWT",
+      "name": "Trust Wallet",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "crvusd",
+      "rank": 180,
+      "symbol": "CRVUSD",
+      "name": "crvUSD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "eigenlayer",
+      "rank": 181,
+      "symbol": "EIGEN",
+      "name": "EigenCloud (prev. EigenLayer)",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "usx",
+      "rank": 182,
+      "symbol": "USX",
+      "name": "USX",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "dogwifcoin",
+      "rank": 183,
+      "symbol": "WIF",
+      "name": "dogwifhat",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "axie-infinity",
+      "rank": 184,
+      "symbol": "AXS",
+      "name": "Axie Infinity",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "tradable-na-rent-financing-platform-sstn",
+      "rank": 185,
+      "symbol": "PC0000031",
+      "name": "Tradable NA Rent Financing Platform SSTN",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "grx-chain",
+      "rank": 186,
+      "symbol": "GRX",
+      "name": "GRX Chain",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "the-sandbox",
+      "rank": 187,
+      "symbol": "SAND",
+      "name": "The Sandbox",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "kamino",
+      "rank": 188,
+      "symbol": "KMNO",
+      "name": "Kamino",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "basic-attention-token",
+      "rank": 189,
+      "symbol": "BAT",
+      "name": "Basic Attention",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "shuffle-2",
+      "rank": 190,
+      "symbol": "SHFL",
+      "name": "Shuffle",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "convex-finance",
+      "rank": 191,
+      "symbol": "CVX",
+      "name": "Convex Finance",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "zama",
+      "rank": 192,
+      "symbol": "ZAMA",
+      "name": "Zama",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "societe-generale-forge-eurcv",
+      "rank": 193,
+      "symbol": "EURCV",
+      "name": "EUR CoinVertible",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "useless-3",
+      "rank": 194,
+      "symbol": "USELESS",
+      "name": "Useless Coin",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "doublezero",
+      "rank": 195,
+      "symbol": "2Z",
+      "name": "DoubleZero",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "usa",
+      "rank": 196,
+      "symbol": "USAT",
+      "name": "USAT",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "origintrail",
+      "rank": 197,
+      "symbol": "TRAC",
+      "name": "OriginTrail",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "decentraland",
+      "rank": 198,
+      "symbol": "MANA",
+      "name": "Decentraland",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "agora-dollar",
+      "rank": 199,
+      "symbol": "AUSD",
+      "name": "AUSD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "mx-token",
+      "rank": 200,
+      "symbol": "MX",
+      "name": "MX",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "vaulta",
+      "rank": 201,
+      "symbol": "A",
+      "name": "Vaulta",
+      "market_status": "nonstandard_symbol",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "instadapp",
+      "rank": 202,
+      "symbol": "FLUID",
+      "name": "Fluid",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "sonic-3",
+      "rank": 203,
+      "symbol": "S",
+      "name": "Sonic",
+      "market_status": "nonstandard_symbol",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "non-playable-coin",
+      "rank": 204,
+      "symbol": "NPC",
+      "name": "Non-Playable Coin",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "neo",
+      "rank": 205,
+      "symbol": "NEO",
+      "name": "NEO",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "apyusd",
+      "rank": 206,
+      "symbol": "APYUSD",
+      "name": "apyUSD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "immutable-x",
+      "rank": 207,
+      "symbol": "IMX",
+      "name": "Immutable",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "chain-2",
+      "rank": 208,
+      "symbol": "XCN",
+      "name": "Onyxcoin",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "vision-3",
+      "rank": 209,
+      "symbol": "VSN",
+      "name": "Vision",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "spiko-us-t-bills-money-market-fund",
+      "rank": 210,
+      "symbol": "USTBL",
+      "name": "Spiko US T-Bills Money Market Fund",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "swissborg",
+      "rank": 211,
+      "symbol": "BORG",
+      "name": "SwissBorg",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "tradable-apac-diversified-finance-provider-sstn",
+      "rank": 212,
+      "symbol": "PC0000033",
+      "name": "Tradable APAC Diversified Finance Provider SSTN",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "fartcoin",
+      "rank": 213,
+      "symbol": "FARTCOIN",
+      "name": "Fartcoin",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "chiliz",
+      "rank": 214,
+      "symbol": "CHZ",
+      "name": "Chiliz",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "btse-token",
+      "rank": 215,
+      "symbol": "BTSE",
+      "name": "BTSE Token",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "coco-2",
+      "rank": 216,
+      "symbol": "COCO",
+      "name": "coco",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "railgun",
+      "rank": 217,
+      "symbol": "RAIL",
+      "name": "Railgun",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "circle-internet-group-bstock",
+      "rank": 218,
+      "symbol": "CRCLB",
+      "name": "Circle Internet Group (bStocks Tokenized Stock)",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "bedrock-token",
+      "rank": 219,
+      "symbol": "BR",
+      "name": "Bedrock",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "gmt-token",
+      "rank": 220,
+      "symbol": "GOMINING",
+      "name": "GoMining Token",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "strategy-pp-variable-xstock",
+      "rank": 221,
+      "symbol": "STRCX",
+      "name": "Strategy PP Variable xStock",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "zksync",
+      "rank": 222,
+      "symbol": "ZK",
+      "name": "ZKsync",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "sentient",
+      "rank": 223,
+      "symbol": "SENT",
+      "name": "Sentient",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "gusd",
+      "rank": 224,
+      "symbol": "GUSD",
+      "name": "GUSD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "build-on",
+      "rank": 225,
+      "symbol": "B",
+      "name": "BUILDon",
+      "market_status": "nonstandard_symbol",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ecash",
+      "rank": 226,
+      "symbol": "XEC",
+      "name": "eCash",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "aioz-network",
+      "rank": 227,
+      "symbol": "AIOZ",
+      "name": "AIOZ Network",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "apecoin",
+      "rank": 228,
+      "symbol": "APE",
+      "name": "ApeCoin",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "dgrid-ai",
+      "rank": 229,
+      "symbol": "DGAI",
+      "name": "DGrid AI",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "superfarm",
+      "rank": 230,
+      "symbol": "SUPER",
+      "name": "SuperVerse",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "orca",
+      "rank": 231,
+      "symbol": "ORCA",
+      "name": "Orca",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "quack-ai",
+      "rank": 232,
+      "symbol": "Q",
+      "name": "Quack AI",
+      "market_status": "nonstandard_symbol",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "geodnet",
+      "rank": 233,
+      "symbol": "GEOD",
+      "name": "Geodnet",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "safepal",
+      "rank": 234,
+      "symbol": "SFP",
+      "name": "SafePal",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "beam-2",
+      "rank": 235,
+      "symbol": "BEAM",
+      "name": "Beam",
+      "market_status": "not_spot_trading",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "1inch",
+      "rank": 236,
+      "symbol": "1INCH",
+      "name": "1INCH",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ultima",
+      "rank": 237,
+      "symbol": "ULTIMA",
+      "name": "Ultima",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "havven",
+      "rank": 238,
+      "symbol": "SNX",
+      "name": "Synthetix",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "celium",
+      "rank": 239,
+      "symbol": "SN51",
+      "name": "lium",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "jpycoin",
+      "rank": 240,
+      "symbol": "JPYC",
+      "name": "JPY Coin",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "stronghold-token",
+      "rank": 241,
+      "symbol": "SHX",
+      "name": "Stronghold",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "golem",
+      "rank": 242,
+      "symbol": "GLM",
+      "name": "Golem",
+      "market_status": "spot_candidate_identity_unverified",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "meta-2-2",
+      "rank": 243,
+      "symbol": "META",
+      "name": "MetaDAO",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "aethir",
+      "rank": 244,
+      "symbol": "ATH",
+      "name": "Aethir",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "humanity",
+      "rank": 245,
+      "symbol": "H",
+      "name": "Humanity",
+      "market_status": "nonstandard_symbol",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "jpysc",
+      "rank": 246,
+      "symbol": "JPYSC",
+      "name": "JPYSC",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "edgex",
+      "rank": 247,
+      "symbol": "EDGE",
+      "name": "edgeX",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "cash-4",
+      "rank": 248,
+      "symbol": "CASH",
+      "name": "CASH",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "ozone-chain",
+      "rank": 249,
+      "symbol": "OZO",
+      "name": "Ozone Chain",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    },
+    {
+      "id": "avant-usd",
+      "rank": 250,
+      "symbol": "AVUSD",
+      "name": "Avant USD",
+      "market_status": "pair_absent",
+      "months": [],
+      "missing_months": [],
+      "candles": 0
+    }
+  ],
+  "note": "250 ranked assets are NOT 250 collected histories. Only verified monthly ZIPs count."
+}
