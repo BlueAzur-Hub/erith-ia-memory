@@ -62,10 +62,10 @@ def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10, additional_dir=
     extra = {}
     extension_result = remaining.verify(additional_dir, catalog)
     if extension_result["mode"] == "VERIFIED":
-        extension = json.loads((additional_dir / "index.json").read_bytes())
-        approved_extra = {a["id"] for a in extension["assets"]
+        extra_doc = json.loads((additional_dir / "index.json").read_bytes())
+        approved_extra = {a["id"] for a in extra_doc["assets"]
                           if a["status"] == "archived_spot"}
-        extra = {(b["asset_id"], b["period"]): b for b in extension["blocks"]}
+        extra = {(b["asset_id"], b["period"]): b for b in extra_doc["blocks"]}
         require(len(extra) == len(approved_extra)*len(PERIODS),
                 "Additional owner has incomplete historical coverage")
     root = json.loads((catalog / "index.json").read_bytes())
