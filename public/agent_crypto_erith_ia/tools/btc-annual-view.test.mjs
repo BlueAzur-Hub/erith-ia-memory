@@ -90,3 +90,16 @@ test("wrong source/quote or missing candle is refused",async()=>{
  });
  await assert.rejects(h.window.SevenBTCAnnualView.load(),/Source ou devise/);
 });
+
+test("BTC annual archive is visible first; old Top10 diagnostic is folded but intact",()=>{
+ const html=fs.readFileSync("public/agent_crypto_erith_ia/administrator/historical-archive-reader.html","utf8");
+ const main=html.indexOf('id="btc-year-lab" open'),old=html.indexOf('id="legacy-r3"');
+ assert.ok(main>0 && old>main,"BTC annual panel must precede the legacy prototype");
+ assert.match(html,/<details class="legacy-group" id="legacy-r3">/);
+ assert.match(html,/ancien prototype Top 10|Ancien diagnostic R3/);
+ for(const id of ["btc-year-period","btc-year-read","btc-year-curve",
+                   "btc-year-status","btc-year-table","start","copy","metrics","table","missing","diagnostic"]){
+   assert.equal(html.split('id="'+id+'"').length-1,1,"Duplicated or missing DOM id: "+id);
+ }
+ assert.match(html,/<script src="\.\/js\/btc-annual-view\.js"><\/script>/);
+});
