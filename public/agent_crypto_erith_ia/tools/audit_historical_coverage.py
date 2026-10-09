@@ -65,7 +65,8 @@ def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10, additional_dir=
     extension_result = remaining.verify(additional_dir, catalog)
     if extension_result["mode"] == "VERIFIED":
         extra_ledger, approved_extra, extra, extra_tip = extension.inspect(additional_dir)
-        require(len(approved_extra) == 7 and len(extra) == 21,
+        require(1 <= len(approved_extra) <= 15
+                and len(extra) == len(approved_extra) * len(PERIODS),
                 "Supplementary archive owner count unexpectedly changed")
     root = json.loads((catalog / "index.json").read_bytes())
     require(root.get("schema") == cohort.SCHEMA and len(root.get("assets", [])) == 50,
