@@ -7,7 +7,7 @@ import {createHash,webcrypto} from "node:crypto";
 
 const script=fs.readFileSync("public/agent_crypto_erith_ia/trader/trader-historical-universe-reader.js","utf8");
 const sha=raw=>createHash("sha256").update(raw).digest("hex");
-function fixture({corrupt=false,unapproved=false}={}){
+function fixture({corrupt=false,unapproved=false,marketAlias=false,approvedAlias=false}={}){
  const end=1_800_000_000_000,step=300_000,count=288,start=end-count*step;
  const rows=Array.from({length:count},(_,i)=>[start+i*step,10,12,9,11,3,33,2]);
  const block={schema:"aerith.public.ohlcv.spot.universe.block.v1",source:"Binance Spot",
@@ -18,11 +18,13 @@ function fixture({corrupt=false,unapproved=false}={}){
  const index={schema:"aerith.public.ohlcv.spot.universe.index.v1",
   source:"Binance Spot REST /api/v3/klines",quote:"USDT",
   publication:"MANUAL_BOUNDED_PILOT_NOT_LIVE",
-  universe_size:1,verified_series:1,verified_candles:count,
+  universe_size:marketAlias?2:1,verified_series:1,verified_candles:count,
   registry_sha256:"a".repeat(64),market:{sha256:"b".repeat(64)},
   snapshot_end_ms:end,assets:[{id:"dogecoin",symbol:"DOGE",rank:1,
     qualification:unapproved?"identity_review_required":"qualified_spot",
-    candidate_pair:"DOGEUSDT"}],
+    candidate_pair:"DOGEUSDT"},...(marketAlias?[{id:"figure-heloc",symbol:"FIGR_HELOC",rank:2,
+     qualification:approvedAlias?"qualified_spot":"identity_review_required",
+     candidate_pair:approvedAlias?"FIGR_HELOCUSDT":null}]:[])],
   blocks:[{file:"blocks/dogecoin_24h_"+checksum.slice(0,16)+".json.gz",
     sha256:checksum,asset_id:"dogecoin",pair:"DOGEUSDT",period:"24h",
     interval:"5m",candles:count,first_ms:start,last_ms:end-step}]};
@@ -70,5 +72,19 @@ test("Non-approved coin never downloads a compressed block",async()=>{
 test("Unknown selection never receives a substituted asset",async()=>{
  const f=fixture();
  await assert.rejects(()=>f.api.readSeries({assetId:"bitcoin",period:"24h"}),/absente/);
+ assert.equal(f.requests.length,1);
+});
+
+test("Real Top 20 includes unapproved FIGR_HELOC; DOGE archive still verifies",async()=>{
+ const f=fixture({marketAlias:true});
+ const catalog=await f.api.listCoverage();
+ assert.equal(catalog.coverage.length,1);
+ const doge=await f.api.readSeries({assetId:"dogecoin",period:"24h"});
+ assert.equal(doge.candles.length,288);
+ assert.equal(f.requests.length,2);
+});
+test("Exchange approved instrument cannot use the non-Spot underscore ticker",async()=>{
+ const f=fixture({marketAlias:true,approvedAlias:true});
+ await assert.rejects(()=>f.api.listCoverage(),/Paire non qualifiée/);
  assert.equal(f.requests.length,1);
 });
