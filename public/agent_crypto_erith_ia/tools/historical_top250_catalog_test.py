@@ -37,6 +37,27 @@ class Top250CoverageTests(unittest.TestCase):
         self.assertEqual(len(result["assets"][0]["months"]),1)
         self.assertEqual(result["assets"][1]["candles"],0)
 
+    def test_addendum_verified_month_joins_original_without_duplicate_time(self):
+        venue,monthly=self.setup_rows()
+        dot=next(a for a in venue["assets"] if a["id"]=="polkadot")
+        record={"asset_id":"polkadot","rank":dot["rank"],"pair":"DOTUSDT",
+          "quote":"USDT","source":"Binance Spot public monthly CSV",
+          "status":"verified","file":"DOTUSDT-1m-2026-09.zip",
+          "candles":43200,"sha256":"b"*64}
+        release={"tag_name":"crypto-spot-bulk-add-2026-09-1m-123456789abc",
+          "assets":[{"name":record["file"],"digest":"sha256:"+"b"*64}]}
+        manifest={"schema":"aerith.public.ohlcv.spot.bulk-monthly.index.v1",
+          "month":"2026-09","interval":"1m","requested":1,"verified":1,
+          "unavailable":0,"candles":43200,"assets":[record]}
+        monthly["addendum"]=(release,manifest)
+        result=cat.build(venue,monthly)
+        self.assertEqual(result["release_months"],1)
+        self.assertEqual(result["release_count"],2)
+        self.assertEqual(result["archived_assets"],2)
+        self.assertEqual(result["native_1m_candles"],86400)
+        self.assertEqual(next(x for x in result["assets"] if x["id"]=="polkadot")["months"][0]["release"],
+                         release["tag_name"])
+
     def test_unavailable_is_never_counted_as_candles(self):
         venue,monthly=self.setup_rows(False)
         result=cat.build(venue,monthly)
