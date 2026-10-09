@@ -1,0 +1,15 @@
+{
+  "schema": "aerith.public.ohlcv.spot.long-periods.bootstrap.request.v1",
+  "action": "collect_once_after_main_merge",
+  "archive": "universe/long-periods",
+  "source": "Binance Spot",
+  "quote": "USDT",
+  "frozen_top50_archived_assets": 31,
+  "horizons": [
+    "90d",
+    "60d",
+    "1y"
+  ],
+  "max_status": "NOT_AVAILABLE_FROM_THIS_SNAPSHOT",
+  "safety": "One-time source-qualified backfill. Never replace immutable archives, Bridge, Trader or Administrator."
+}
