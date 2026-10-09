@@ -13,6 +13,7 @@ import import_historical_bulk as bulk
 SCHEMA="aerith.public.ohlcv.top250.monthly-coverage-catalog.v1"
 HOME=ROOT/"data/historical_archive_prototype"
 TAG=re.compile(r"^crypto-spot-bulk-(20\d{2}-(?:0[1-9]|1[0-2]))-1m$")
+ADDENDUM=re.compile(r"^crypto-spot-bulk-add-(20\d{2}-(?:0[1-9]|1[0-2]))-1m-[a-f0-9]{12}$")
 REPO="BlueAzur-Hub/erith-ia-memory"
 
 def need(ok,message):
@@ -33,10 +34,10 @@ def listed_releases():
 def gather(releases,download):
     months={}
     for release in releases:
-        match=TAG.fullmatch(release.get("tag_name",""))
+        match=TAG.fullmatch(release.get("tag_name","")) or ADDENDUM.fullmatch(release.get("tag_name",""))
         if not match or release.get("draft"):continue
         month=match.group(1)
-        need(month not in months,"Repeated Release month")
+        need(release["tag_name"] not in months,"Repeated Release tag")
         manifest=[a for a in release["assets"] if a["name"]=="manifest.json"]
         need(len(manifest)==1,"Missing Release manifest")
         m=manifest[0]
@@ -52,9 +53,9 @@ def gather(releases,download):
              data.get("verified",0)+data.get("unavailable",0)==data.get("requested",0) and
              len(data.get("assets",[]))==data.get("requested",0),
              "Invalid Release manifest")
-        months[month]=(release,data)
+        months[release["tag_name"]]=(release,data)
     need(0<len(months)<=150,"No usable monthly source or excessive history")
-    return dict(sorted(months.items()))
+    return dict(sorted(months.items(),key=lambda item:(item[1][1]["month"],item[0])))
 
 def build(venue,monthly):
     need(venue.get("total_ranked")==250 and len(venue.get("assets",[]))==250,
@@ -68,7 +69,8 @@ def build(venue,monthly):
     need({v["rank"] for v in rows.values()}==set(range(1,251)),
          "Top250 ranking incomplete")
     summaries=[]
-    for month,(release,manifest) in monthly.items():
+    for _,(release,manifest) in monthly.items():
+        month=manifest["month"]
         present=set()
         for item in manifest["assets"]:
             aid=item["asset_id"]
@@ -86,23 +88,33 @@ def build(venue,monthly):
                 need(len(asset)==1 and asset[0].get("digest")=="sha256:"+item["sha256"]
                      and item["candles"]==bulk.bounds(month,"1m")[1],
                      "Unverified ZIP reference")
+                need(not any(x["month"]==month for x in rows[aid]["months"]),
+                     "Duplicate original/addendum month for asset")
+                if month in rows[aid]["missing_months"]:
+                    rows[aid]["missing_months"].remove(month)
                 rows[aid]["months"].append({"month":month,"pair":item["pair"],
                      "file":filename,"sha256":item["sha256"],
                      "candles":item["candles"],"release":release["tag_name"]})
                 rows[aid]["candles"]+=item["candles"]
             else:
                 need(item["status"]=="unavailable","Unknown evidence status")
-                rows[aid]["missing_months"].append(month)
+                if (month not in rows[aid]["missing_months"] and
+                    not any(x["month"]==month for x in rows[aid]["months"])):
+                    rows[aid]["missing_months"].append(month)
         summaries.append({"month":month,"release":release["tag_name"],
            "verified":manifest["verified"],"unavailable":manifest["unavailable"],
            "candles":manifest["candles"]})
     assets=sorted(rows.values(),key=lambda r:r["rank"])
+    for asset in assets:
+        asset["months"].sort(key=lambda row:row["month"])
+        asset["missing_months"].sort()
     groups=[{"top":n,"with_history":sum(bool(a["months"]) for a in assets[:n])}
             for n in (10,50,100,250)]
     return {"schema":SCHEMA,"source":"Binance Spot official monthly ZIPs",
             "quote":"USDT","ranked":250,
             "rank_snapshot":venue.get("market_snapshot_at"),
-            "release_months":len(summaries),
+            "release_months":len({r["month"] for r in summaries}),
+            "release_count":len(summaries),
             "archived_assets":groups[-1]["with_history"],
             "native_1m_candles":sum(a["candles"] for a in assets),
             "groups":groups,"months":summaries,"assets":assets,
