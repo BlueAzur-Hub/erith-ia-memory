@@ -17,11 +17,13 @@ import collect_historical_universe as pilot
 import extend_historical_cohort as extension
 import extend_historical_universe as universe
 import historical_archive_partitions as partitions
+import collect_historical_remaining as remaining
 
 BASE = pilot.ROOT / "data/historical_archive_prototype"
 R10 = BASE / "ohlcv_spot_pilot/index.json"
 UNIVERSE = BASE / "universe"
 COHORT = UNIVERSE / "cohorts/top50"
+ADDITIONAL = UNIVERSE / "cohorts/top50-additional"
 SCHEMA = "aerith.public.ohlcv.spot.coverage.top50.v1"
 PERIODS = ("24h", "7d", "30d")
 PENDING = {"identity_review_required", "spot_exchange_lookup_failed",
@@ -37,7 +39,7 @@ def utc(ms):
     return dt.datetime.fromtimestamp(ms / 1000, tz=dt.timezone.utc).isoformat()
 
 
-def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10):
+def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10, additional_dir=ADDITIONAL):
     # These existing validators read and hash all blobs, and verify incremental
     # continuity. They deliberately refuse corrupt/missing archive entries.
     cohort_check = cohort.verify(catalog)
@@ -57,6 +59,15 @@ def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10):
         legacy[c["id"]][key] = c
     require(len(legacy) == 7 and all(len(c) == 3 for c in legacy.values()),
             "Seven legacy assets / 21 series expected")
+    extra = {}
+    extension_result = remaining.verify(additional_dir, catalog)
+    if extension_result["mode"] == "VERIFIED":
+        extra_doc = json.loads((additional_dir / "index.json").read_bytes())
+        approved_extra = {a["id"] for a in extra_doc["assets"]
+                          if a["status"] == "archived_spot"}
+        extra = {(b["asset_id"], b["period"]): b for b in extra_doc["blocks"]}
+        require(len(extra) == len(approved_extra)*len(PERIODS),
+                "Additional owner has incomplete historical coverage")
     root = json.loads((catalog / "index.json").read_bytes())
     require(root.get("schema") == cohort.SCHEMA and len(root.get("assets", [])) == 50,
             "Top 50 snapshot invalid")
@@ -70,11 +81,14 @@ def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10):
         used.add(aid)
         owner = ("top50" if aid in a_ids else
                  "universe" if aid in u_ids else
-                 "legacy_r10" if aid in legacy else None)
+                 "legacy_r10" if aid in legacy else
+                 "top50_additional" if (aid, "24h") in extra else None)
         if owner == "top50":
             require(status == "archived_spot", "Top 50 status/owner mismatch")
         elif owner in ("universe", "legacy_r10"):
             require(status == "existing_archive_protected", "Existing owner mismatch")
+        elif owner == "top50_additional":
+            require(status in PENDING, "Additional archive overlaps existing owner")
         else:
             require(status in PENDING, "Unarchived asset status not qualified")
         coverage = {}
@@ -87,6 +101,9 @@ def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10):
             elif owner == "legacy_r10":
                 block = legacy[aid][period]
                 latest = block["last_open_ms"]
+            elif owner == "top50_additional":
+                block = extra[key]
+                latest = block["last_ms"]
             else:
                 continue
             first = block.get("first_open_ms", block.get("first_ms"))
@@ -100,30 +117,34 @@ def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10):
                                 "integrity": "source_index" if owner == "legacy_r10"
                                              else "sha256_verified"}
         items.append({"rank": expected_rank, "id": aid, "symbol": a["symbol"],
-                      "name": a["name"], "status": status,
+                      "name": a["name"],
+                      "status": "archived_spot_additional" if owner == "top50_additional" else status,
                       "archived": bool(owner), "archive_owner": owner,
                       "periods": coverage})
     owners = Counter(x["archive_owner"] for x in items if x["archived"])
     states = Counter(x["status"] for x in items)
-    require(sum(owners.values()) == 24 and owners == {"legacy_r10": 7,
-             "universe": 5, "top50": 12}, "Archived owner drift")
+    require(owners["legacy_r10"] == 7 and owners["universe"] == 5
+            and owners["top50"] == 12
+            and owners["top50_additional"] == len(extra)//len(PERIODS)
+            and sum(owners.values()) == 24 + len(extra)//len(PERIODS),
+            "Archived owner drift")
     require(sum(states.values()) == 50, "Market ranking incomplete")
     return {"schema": SCHEMA,
             "ranking_source": "Top50 immutable Cohort index; not current live Market",
             "market_snapshot_end_ms": root["snapshot_end_ms"],
             "market_snapshot_end_utc": utc(root["snapshot_end_ms"]),
-            "total_ranked": 50, "archived_assets": 24,
-            "unarchived_assets": 26,
+            "total_ranked": 50, "archived_assets": sum(owners.values()),
+            "unarchived_assets": 50-sum(owners.values()),
             "unarchived_statuses": {k:v for k,v in states.items() if k in PENDING},
             "archive_owners": dict(owners),
-            "original_series": 21 + len(u_original) + len(a_original),
+            "original_series": 21 + len(u_original) + len(a_original) + len(extra),
             "universe_incremental_chunks": len(u_ledger["chunks"]) + sum(p["chunks"] for p in u_ledger.get("partitions", [])),
             "cohort_incremental_chunks": len(a_ledger["chunks"]) + sum(p["chunks"] for p in a_ledger.get("partitions", [])),
             "universe_incremental_candles": sum(x["candles"] for x in u_ledger["chunks"]) + sum(p["candles"] for p in u_ledger.get("partitions", [])),
             "cohort_incremental_candles": sum(x["candles"] for x in a_ledger["chunks"]) + sum(p["candles"] for p in a_ledger.get("partitions", [])),
             "universe_sealed_partitions": len(u_ledger.get("partitions", [])),
             "cohort_sealed_partitions": len(a_ledger.get("partitions", [])),
-            "status_note": "24 of 50 have at least one 24h/7d/30d archive; not complete 60d/90d/1y/Max",
+            "status_note": "Coverage from a frozen Top50 market snapshot, not live rankings. 24h/7d/30d archive owners only; no implied complete 60d/90d/1y/Max.",
             "assets": items}
 
 

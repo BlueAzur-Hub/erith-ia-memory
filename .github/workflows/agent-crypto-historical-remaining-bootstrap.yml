@@ -1,0 +1,101 @@
+name: Agent Crypto Historical Remaining — one-time qualified bootstrap
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-historical-remaining-bootstrap.yml'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-remaining-bootstrap.json'
+  push:
+    branches: [main]
+    paths:
+      # This file is added ONCE. Archive data commits cannot retrigger.
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-remaining-bootstrap.json'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-historical-remaining-top50
+  cancel-in-progress: false
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate immutable Top50 sources and offline regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/historical_remaining_test.py
+          python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
+          python public/agent_crypto_erith_ia/tools/collect_historical_remaining.py --plan
+          python public/agent_crypto_erith_ia/tools/collect_historical_remaining.py --verify
+      - name: Prove one-time approval marker newly added to main
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-remaining-bootstrap.json
+          change=$(git diff --name-status HEAD^ HEAD -- "$marker" | cut -f1)
+          test "$change" = A || { echo 'Refuse: not the first addition of bootstrap request'; exit 1; }
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-remaining-bootstrap.json")
+          r=json.loads(p.read_text())
+          assert r["schema"]=="aerith.public.ohlcv.spot.remaining.bootstrap.request.v1"
+          assert r["action"]=="one_time_collect_after_main_merge"
+          assert r["expected_proposed"]==15 and r["existing_archive_owners"]==24
+          assert r["manual_review"]==11
+          assert r["output"]=="universe/cohorts/top50-additional"
+          PY
+          test ! -e public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional/index.json
+      - name: Collect verified Binance Spot OHLCV once (never on PR)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/collect_historical_remaining.py --collect --enable-network
+          python public/agent_crypto_erith_ia/tools/collect_historical_remaining.py --verify
+          python public/agent_crypto_erith_ia/tools/audit_historical_coverage.py --compact > "$RUNNER_TEMP/remaining-after-collect.json"
+          cat "$RUNNER_TEMP/remaining-after-collect.json"
+      - name: Publish ONLY newly verified supplementary archive
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional
+          git add -A -- "$target/"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP — no verified additional OHLCV archive'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Archive one-time verified additional Top50 historical candles'
+          git pull --rebase origin main
+          python public/agent_crypto_erith_ia/tools/collect_historical_remaining.py --verify
+          python public/agent_crypto_erith_ia/tools/audit_historical_coverage.py --compact > "$RUNNER_TEMP/remaining-after-rebase.json"
+          git push origin HEAD:main
+      - name: Report portable archive and proof
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/remaining-bootstrap-proof"
+          cp public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-remaining-bootstrap.json "$RUNNER_TEMP/remaining-bootstrap-proof/"
+          cp public/agent_crypto_erith_ia/tools/collect_historical_remaining.py "$RUNNER_TEMP/remaining-bootstrap-proof/"
+          cp "$RUNNER_TEMP"/remaining-after-*.json "$RUNNER_TEMP/remaining-bootstrap-proof/" 2>/dev/null || true
+          if test -d public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional; then
+            cp -a public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50-additional "$RUNNER_TEMP/remaining-bootstrap-proof/"
+          fi
+          cd "$RUNNER_TEMP" && zip -qr "$GITHUB_WORKSPACE/remaining-bootstrap-proof.zip" remaining-bootstrap-proof
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: remaining-bootstrap-proof
+          path: remaining-bootstrap-proof.zip
+          retention-days: 30

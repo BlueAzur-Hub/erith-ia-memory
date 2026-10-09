@@ -1,0 +1,37 @@
+{
+  "schema": "aerith.public.ohlcv.spot.remaining.instruments.v1",
+  "scope": "immutable-top50-snapshot",
+  "description": "EXPLICIT CANDIDATES ONLY, NOT LIVE-QUALIFIED: CoinGecko asset ID -> proposed Binance Spot base symbol. Live exchangeInfo and complete verified OHLCV required before archival.",
+  "source_quote": "USDT",
+  "source_venue": "Binance Spot",
+  "candidate_symbols": {
+    "hyperliquid": "HYPE",
+    "usds": "USDS",
+    "monero": "XMR",
+    "leo-token": "LEO",
+    "ethena-usde": "USDE",
+    "dai": "DAI",
+    "usd1-wlfi": "USD1",
+    "quant-network": "QNT",
+    "tether-gold": "XAUT",
+    "global-dollar": "USDG",
+    "crypto-com-chain": "CRO",
+    "paypal-usd": "PYUSD",
+    "okb": "OKB",
+    "pump-fun": "PUMP",
+    "ripple-usd": "RLUSD"
+  },
+  "manual_review": {
+    "tether": "Quote asset USDT itself; USDTUSDT is not a valid meaningful Spot price history.",
+    "figure-heloc": "Tokenized asset; ticker FIGR_HELOC is not a vetted Binance Spot base asset.",
+    "whitebit": "Venue-specific coin; cross-exchange ticker ownership not established.",
+    "rain": "RAIN ticker may collide with a different issuer.",
+    "canton-network": "CC ticker collision/issuer identity requires separate evidence.",
+    "bitway": "BTW identity is insufficient to assign a Binance Spot instrument.",
+    "the-open-network": "Snapshot symbol GRAM is not interchangeable with TON.",
+    "hashnote-usyc": "Tokenized yield fund; requires asset-specific verified instrument.",
+    "ondo-us-dollar-yield": "Yield token; don't confuse with ONDO spot token.",
+    "memecore": "Ticker M is ambiguous; symbol-only matching can attach a different token.",
+    "blackrock-usd-institutional-digital-liquidity-fund": "Institutional tokenized fund, not an assumed public USDT Spot instrument."
+  }
+}
