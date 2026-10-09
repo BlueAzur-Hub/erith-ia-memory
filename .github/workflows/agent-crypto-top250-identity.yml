@@ -6,6 +6,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py'
       - 'public/agent_crypto_erith_ia/tools/historical_top250_identity_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-bootstrap.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-expansion.json'
   push:
     branches: [main]
     paths:
@@ -13,6 +14,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py'
       - 'public/agent_crypto_erith_ia/tools/historical_top250_identity_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-bootstrap.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-expansion.json'
   workflow_dispatch:
   schedule:
     - cron: '9,24,39,54 * * * *'
@@ -38,6 +40,29 @@ jobs:
           python -m py_compile public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py
           python public/agent_crypto_erith_ia/tools/historical_top250_identity_test.py
           python public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py --plan
+      - name: Authorize one-time bounded Top250 identity expansion
+        id: expansion
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          marker=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-expansion.json
+          status=$(git diff --name-status HEAD^ HEAD -- "$marker" | cut -f1)
+          if [[ "$status" != A ]]; then
+            echo "approved=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-expansion.json').read_text())
+          assert d['schema']=='aerith.public.ohlcv.spot.top250.identity.expansion.v1'
+          assert d['action']=='qualify_next_unchecked_exact_ids_once'
+          assert d['max_batches']==2 and d['batch_size']==8
+          assert d['source']=='CoinGecko exact IDs / Binance Spot USDT'
+          assert d['no_symbol_only_approvals'] is True
+          assert d['no_trader_changes'] is True
+          PY
+          echo "approved=true" >> "$GITHUB_OUTPUT"
       - name: Qualify exact CoinGecko IDs using bounded official Binance-exchange tickers
         run: |
           set -euo pipefail
@@ -66,6 +91,24 @@ jobs:
             if checked_new:
               assert any(x["status"]!="source_unavailable" for x in checked_new), "CoinGecko source unavailable for entire PR batch"
           print("TOP250 EXACT-ID",json.dumps({k:r[k] for k in ("candidate_count","checked_count","approved_count")},sort_keys=True))
+          PY
+      - name: Qualify second source-verified batch only on approved expansion kickoff
+        if: github.event_name == 'push' && steps.expansion.outputs.approved == 'true'
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-evidence.json
+          python public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py --probe --batch-size 8 --sleep 15
+          cp "$target" "$RUNNER_TEMP/top250-identity-evidence.json"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-evidence.json')
+          d=json.loads(p.read_text())
+          assert d["checked_count"]==len(d["results"])<=96
+          assert d["approved_count"]<=d["checked_count"]
+          print("EXPANSION EXACT-ID",json.dumps({
+            "checked":d["checked_count"],"approved":d["approved_count"],
+            "candidates":d["candidate_count"]},sort_keys=True))
           PY
       - name: Approve persistence only on original marker addition
         id: permit
@@ -100,7 +143,7 @@ jobs:
             public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot/ \
             public/agent_crypto_erith_ia/core/
       - name: Commit only identity evidence ledger (never OHLCV files)
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && steps.permit.outputs.approved == 'true')
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && steps.permit.outputs.approved == 'true') || (github.event_name == 'push' && steps.expansion.outputs.approved == 'true')
         run: |
           set -euo pipefail
           target=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-evidence.json
