@@ -1,9 +1,13 @@
-name: Agent Crypto Historical Cohort Incremental — protected manual append
+name: Agent Crypto Historical Cohort Incremental — controlled daily append
 on:
+  # Stagger from the five-asset Universe collector (03:37 UTC).
+  # One bounded batch/day; never collect on PR or ordinary push.
+  schedule:
+    - cron: '17 4 * * *'
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Offline plan or one bounded collect for 12 approved Top 50 Spot assets'
+        description: 'Offline plan or one bounded collect for 12 approved Top 50 Spot assets; daily cron also collects'
         required: true
         type: choice
         default: plan
@@ -48,8 +52,8 @@ jobs:
           python public/agent_crypto_erith_ia/tools/extend_historical_cohort.py --plan > "$RUNNER_TEMP/top50-incremental-plan.json"
           cat "$RUNNER_TEMP/top50-incremental-plan.json"
           python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --verify
-      - name: Execute only explicitly requested Binance append
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+      - name: Execute scheduled or explicitly requested bounded Binance append
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect')
         run: |
           python public/agent_crypto_erith_ia/tools/extend_historical_cohort.py --collect --enable-network
           python public/agent_crypto_erith_ia/tools/extend_historical_cohort.py --verify
@@ -68,8 +72,8 @@ jobs:
             public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/incremental/ \
             public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50/index.json \
             public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50/blocks/
-      - name: Commit ONLY verified Top 50 cumulative files
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+      - name: Commit ONLY verified Top 50 cumulative files on collect
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect')
         shell: bash
         run: |
           set -euo pipefail
