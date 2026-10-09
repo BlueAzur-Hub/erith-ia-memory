@@ -75,9 +75,11 @@ def aggregate(rows,step):
         b[5]=round(b[5],10);b[6]=round(b[6],10)
     return result
 
-def parse_month(raw,month):
+def parse_month(raw,month,pair="BTCUSDT"):
+    """Shared native 1m OHLCV parser; BTC callers keep the original default."""
+    need(bool(bulk.PAIR.fullmatch(pair)),"Unqualified market pair")
     start,count,_=bulk.bounds(month,"1m")
-    name=f"BTCUSDT-1m-{month}.csv"
+    name=f"{pair}-1m-{month}.csv"
     with zipfile.ZipFile(io.BytesIO(raw)) as archive:
         need(archive.namelist()==[name],"Archive CSV identity mismatch")
         with archive.open(name) as stream:
