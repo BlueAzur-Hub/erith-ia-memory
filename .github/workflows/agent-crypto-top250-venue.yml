@@ -1,0 +1,114 @@
+name: Agent Crypto Top250 Venue Qualification - Safe Bulk Discovery
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '47 5 * * 1'
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-top250-venue.yml'
+      - 'public/agent_crypto_erith_ia/tools/probe_historical_top250.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_top250_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-top250-qualification-bootstrap.json'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-top250-venue.yml'
+      - 'public/agent_crypto_erith_ia/tools/probe_historical_top250.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_top250_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-top250-qualification-bootstrap.json'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-top250-venue-review
+  cancel-in-progress: false
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline Top250 rank, identity, Spot permission and negative checks
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/probe_historical_top250.py
+          python public/agent_crypto_erith_ia/tools/historical_top250_test.py
+          python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
+          python public/agent_crypto_erith_ia/tools/probe_historical_top250.py --plan
+      - name: Probe Binance exchangeInfo ONCE for all Top250
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/probe_historical_top250.py --probe --output "$RUNNER_TEMP/top250-venue-audit.json"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'top250-venue-audit.json'
+          d=json.loads(p.read_text())
+          assert d["schema"]=="aerith.public.ohlcv.spot.discovery.top250.v1"
+          assert d["total_ranked"]==len(d["assets"])==250
+          assert [x["rank"] for x in d["assets"]]==list(range(1,251))
+          assert [x["top"] for x in d["stages"]]==[50,100,250]
+          assert sum(x["can_import"] for x in d["assets"])==d["approved_for_import"]
+          assert d["approved_for_import"]>=20
+          print("TOP250 VERIFIED SUMMARY",json.dumps({k:d[k] for k in ("total_ranked","approved_for_import","candidates_require_independent_identity")},sort_keys=True))
+          PY
+      - name: Permit publication only after explicit first merged marker
+        id: bootstrap
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          marker=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-top250-qualification-bootstrap.json
+          mode=$(git diff --name-status HEAD^ HEAD -- "$marker" | cut -f1)
+          if [[ "$mode" != A ]]; then
+            echo 'approved=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-top250-qualification-bootstrap.json')
+          d=json.loads(p.read_text())
+          assert d["schema"]=="aerith.public.ohlcv.spot.top250.qualification.bootstrap.v1"
+          assert d["action"]=="publish_first_review_on_main_merge"
+          assert d["scope"]=="coin-gecko-top250" and d["venue"]=="Binance Spot"
+          assert d["no_unverified_pair_approval"] is True
+          PY
+          echo 'approved=true' >> "$GITHUB_OUTPUT"
+      - name: Preserve all trading UI, source market ranking and source archives
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/data/crypto/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot/ \
+            public/agent_crypto_erith_ia/core/
+      - name: Commit only ranked qualification audit, never historical ZIP
+        if: (github.event_name == 'push' && steps.bootstrap.outputs.approved == 'true') || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-venue-audit.json
+          cp "$RUNNER_TEMP/top250-venue-audit.json" "$target"
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "NOOP: no qualification changes"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Refresh source-qualified Top250 Binance venue discovery (review candidates only)'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Upload full 250-asset report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: top250-spot-venue-review
+          path: /tmp/top250-venue-audit.json
+          if-no-files-found: warn
+          retention-days: 30

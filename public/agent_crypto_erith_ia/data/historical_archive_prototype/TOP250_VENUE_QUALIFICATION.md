@@ -1,0 +1,11 @@
+# Coffre Top250 — qualification avant archivage
+
+Le classement source contient 250 actifs CoinGecko dans `data/crypto/latest.json`. L'audit `tools/probe_historical_top250.py` vérifie **en un seul appel réseau Binance** l'état du carnet des paires proposées, puis produit un rapport couvrant rangs 1–50, 1–100 et 1–250.
+
+**États et vérité :** `approved_existing_archive` signifie qu'une source historique Binance Spot USDT, reliée à l'ID CoinGecko, avait déjà été validée dans les archives. Cette approbation permet d'employer le moteur d'import mensuel. `spot_candidate_identity_unverified` signifie seulement que `SYMBOLUSDT` existe et est autorisé Spot : **la propriété du jeton n'est pas établie par cette concordance**, donc interdiction de l'archiver sous cet ID sans preuve indépendante. `approved_archive_spot_not_current` correspond à une ancienne source qualifiée, non autorisée aux nouvelles importations tant que sa négociabilité n'est pas résolue. `pair_absent`, `not_spot_trading`, `symbol_collision`, `nonstandard_symbol` et `self_quote_not_tradable` restent hors collecte.
+
+Le workflow `Agent Crypto Top250 Venue Qualification - Safe Bulk Discovery` réalise le contrôle en lecture seule en PR, et publie **uniquement le petit fichier JSON d'audit** dans le Git lors de la première fusion approuvée puis le met à jour hebdomadairement, sans modifier les caches, Graphiques, Trader, Administrator, collecteurs ou anciennes données OHLCV. Il téléverse également son rapport complet en artéfact GitHub Actions.
+
+Les prochains jalons 50 → 100 → 250 sont des **groupes d'actifs à qualifier et collecter**, pas trois programmes à réécrire. L'étape suivante consiste à confirmer automatiquement les identités candidates à l'aide de sources propres aux actifs (p.ex. marchés CoinGecko Binance pour l'ID exact), enregistrer une preuve stable dans le registre, puis alimenter le moteur mensuel `import_historical_bulk.py` avec les actifs **réellement qualifiés**. Les historiques incomplets, paires absentes et plateformes alternatives restent explicitement déclarés.
+
+Aucun nombre de cryptos archivées sur 250 ne doit être inféré du seul rapport de paires candidates. Les 31 actifs de septembre 2026 à 1m sont archivés séparément, dans la Release `crypto-spot-bulk-2026-09-1m`, pas dans ce rapport de découverte.
