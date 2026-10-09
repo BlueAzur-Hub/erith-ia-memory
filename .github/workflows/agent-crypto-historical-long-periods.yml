@@ -14,6 +14,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/backfill_historical_periods.py'
       - 'public/agent_crypto_erith_ia/tools/historical_long_periods_test.py'
       - 'public/agent_crypto_erith_ia/tools/audit_historical_coverage.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-long-periods-bootstrap.json'
   push:
     branches: [main]
     paths:
@@ -21,6 +22,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/backfill_historical_periods.py'
       - 'public/agent_crypto_erith_ia/tools/historical_long_periods_test.py'
       - 'public/agent_crypto_erith_ia/tools/audit_historical_coverage.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-long-periods-bootstrap.json'
 permissions:
   contents: write
 concurrency:
@@ -48,8 +50,35 @@ jobs:
           python public/agent_crypto_erith_ia/tools/backfill_historical_periods.py --plan > "$RUNNER_TEMP/long-periods-plan.json"
           cat "$RUNNER_TEMP/long-periods-plan.json"
           python public/agent_crypto_erith_ia/tools/backfill_historical_periods.py --verify
+      - name: Verify permission for one immutable long-period bootstrap
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: bootstrap
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-long-periods-bootstrap.json
+          change=$(git diff --name-status HEAD^ HEAD -- "$marker" | cut -f1)
+          if [[ "$change" != A ]]; then
+            echo 'approved=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-long-periods-bootstrap.json')
+          d=json.loads(p.read_text())
+          assert d['schema']=='aerith.public.ohlcv.spot.long-periods.bootstrap.request.v1'
+          assert d['action']=='collect_once_after_main_merge'
+          assert d['archive']=='universe/long-periods'
+          assert d['source']=='Binance Spot' and d['quote']=='USDT'
+          assert d['frozen_top50_archived_assets']==31
+          assert d['horizons']==['90d','60d','1y']
+          assert d['max_status']=='NOT_AVAILABLE_FROM_THIS_SNAPSHOT'
+          PY
+          test ! -e public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/long-periods/index.json
+          echo 'approved=true' >> "$GITHUB_OUTPUT"
       - name: Collect long-period Binance Spot OHLCV only on explicit request
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect') || (github.event_name == 'push' && steps.bootstrap.outputs.approved == 'true')
         run: |
           python public/agent_crypto_erith_ia/tools/backfill_historical_periods.py --collect --enable-network
           python public/agent_crypto_erith_ia/tools/backfill_historical_periods.py --verify
@@ -68,7 +97,7 @@ jobs:
             public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/incremental/ \
             public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50/
       - name: Commit ONLY newly verified long-period archive
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        if: (github.event_name == 'workflow_dispatch' && inputs.mode == 'collect') || (github.event_name == 'push' && steps.bootstrap.outputs.approved == 'true')
         shell: bash
         run: |
           set -euo pipefail

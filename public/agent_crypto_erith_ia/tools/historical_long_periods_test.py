@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline backfill regression: 24 qualified owners, source gaps and integrity."""
+"""Offline backfill regression: variable Top50 owners and SHA-256 integrity."""
 import json
 from pathlib import Path
 import tempfile
@@ -9,13 +9,13 @@ from unittest.mock import patch
 import backfill_historical_periods as m
 
 
-def source_report():
+def source_report(count=31):
     return {"market_snapshot_end_utc":"2026-10-09T12:00:00+00:00",
             "assets":[{"rank":i+1,"id":f"asset-{i}","symbol":f"T{i}",
                        "archived":True,"archive_owner":"top50",
                        "periods":{p:{"pair":f"T{i}USDT","quote":"USDT"}
                                   for p in ("24h","7d","30d")}}
-                       for i in range(24)]}
+                       for i in range(count)]}
 
 
 def fetch(endpoint, args, gap=False):
@@ -41,7 +41,7 @@ class LongPeriodTests(unittest.TestCase):
                  patch.object(m,"get_json",side_effect=fetch)):
                 result=m.collect(root,now_ms=1_800_000_000_000)
             self.assertEqual(result["state"],"VERIFIED")
-            self.assertEqual(result["blocks"],48)
+            self.assertEqual(result["blocks"],62)
             index=json.loads((root/"index.json").read_bytes())
             self.assertEqual(index["max_status"],"NOT_AVAILABLE_FROM_THIS_SNAPSHOT")
             self.assertEqual(index["assets"][0]["long_periods"]["60d"]["status"],
@@ -86,7 +86,7 @@ class LongPeriodTests(unittest.TestCase):
             self.assertEqual(data["assets"][5]["instrument_status"],
                              "not_binance_spot_trading")
             self.assertFalse(any(x["asset_id"]=="asset-5" for x in data["blocks"]))
-            self.assertEqual(m.validate(root)["archived_assets"],23)
+            self.assertEqual(m.validate(root)["archived_assets"],30)
 
     def test_unverified_pair_is_rejected_before_network(self):
         d=source_report()
@@ -97,6 +97,16 @@ class LongPeriodTests(unittest.TestCase):
         d["assets"][0]["periods"]["24h"]["quote"]="USD"
         with self.assertRaisesRegex(ValueError,"No source pair"):
             m.candidates(d)
+
+    def test_variable_owners_legacy_24_also_supported(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder)/"archive"
+            with patch.object(m.coverage,"summarize",return_value=source_report(24)), (
+                 patch.object(m,"get_json",side_effect=fetch)):
+                result=m.collect(root,now_ms=1_800_000_000_000)
+            self.assertEqual(result["state"],"VERIFIED")
+            self.assertEqual(result["archived_assets"],24)
+            self.assertEqual(result["blocks"],48)
 
 
 if __name__=="__main__":

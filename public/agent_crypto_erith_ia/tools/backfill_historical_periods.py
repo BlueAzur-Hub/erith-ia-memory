@@ -101,7 +101,7 @@ def validate(root=OUTPUT):
             doc.get("max_status") == "NOT_AVAILABLE_FROM_THIS_SNAPSHOT",
             "Archive rows or Max status invalid")
     approved = {a["id"]: a for a in rows}
-    require(len(approved) == 24, "Duplicate long-period owners")
+    require(len(approved) == len(rows), "Duplicate long-period owners")
     seen = set()
     for info in blocks:
         period = info["period"]
