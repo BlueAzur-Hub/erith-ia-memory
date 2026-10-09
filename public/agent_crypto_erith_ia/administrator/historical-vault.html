@@ -60,6 +60,26 @@ select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-
  </div>
  <p class="fine">La présence de données historiques ne signifie pas que la crypto est disponible sur Binance aujourd'hui. Les liens ouvrent les Releases GitHub qui conservent les ZIP originaux. Cette table est un index, pas encore le graphique multi-actifs du Trader.</p>
 </details>
+<details class="board" id="shared-month-reader" open>
+ <summary>Graphique historique commun · cryptomonnaies réellement archivées</summary>
+ <p class="muted">Même Coffre, même source, plusieurs cryptos : ce lecteur récupère une petite projection d'un <strong>mois Binance Spot vérifié</strong>, puis change de période localement. Les ZIP minute restent dans GitHub Releases. Pour une année BTC, le lecteur annuel juste après reste disponible.</p>
+ <div class="toolbar" style="margin:10px 0;gap:9px">
+  <label for="shared-asset">Crypto</label>
+  <select id="shared-asset" style="max-width:min(90vw,330px)"><option>Chargement…</option></select>
+  <label for="shared-period">Période</label>
+  <select id="shared-period">
+   <option value="24h">24 heures · 1 min</option>
+   <option value="7j">7 jours · 5 min</option>
+   <option value="30j" selected>30 jours · 5 min (si disponibles)</option>
+   <option value="mois">Mois source · 1 heure</option>
+  </select>
+  <button id="shared-read" type="button" disabled>Lire les bougies de l'actif</button>
+ </div>
+ <p id="shared-status" class="muted" aria-live="polite">Chargement de l'index historique…</p>
+ <canvas id="shared-curve" width="940" height="250" style="display:block;max-width:940px;width:100%;background:#0b1a29;border:1px solid #34516b;border-radius:8px" role="img" aria-label="Cours de clôture historique authentique en USDT"></canvas>
+ <p id="shared-source" class="fine">Dernier mois clos disponible seulement, non live. Aucune conversion implicite USDT → USD.</p>
+ <div class="scroll"><table id="shared-table"><tr><td>Lire un actif pour afficher ses dernières bougies.</td></tr></table></div>
+</details>
 <details class="board" id="btc-year-lab" open>
  <summary><strong>BTC/USDT · explorer les archives mensuelles de Bitcoin</strong></summary>
  <div class="btc-hero" aria-label="Repères de l'archive BTC">
@@ -330,4 +350,4 @@ btn.addEventListener("click",async()=>{
  finally{btn.disabled=false}
 });
 })();
-</script><script src="./js/historical-vault-automatic.js"></script><script src="./js/top250-history-catalog.js"></script><script src="./js/btc-annual-view.js"></script></body></html>
+</script><script src="./js/historical-vault-automatic.js"></script><script src="./js/top250-history-catalog.js"></script><script src="./js/btc-annual-view.js"></script><script src="./js/shared-historical-view.js"></script></body></html>
