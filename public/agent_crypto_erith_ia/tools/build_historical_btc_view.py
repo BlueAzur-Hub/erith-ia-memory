@@ -26,7 +26,7 @@ REPO="BlueAzur-Hub/erith-ia-memory"
 OUT=bulk.ROOT/"data/historical_archive_prototype/btc_annual_view"
 SCHEMA="aerith.public.ohlcv.btc.verified-monthly-view.v1"
 INDEX_SCHEMA="aerith.public.ohlcv.btc.verified-monthly-index.v1"
-MONTH=re.compile(r"^crypto-spot-bulk-(20\\d{2}-(?:0[1-9]|1[0-2]))-1m$")
+MONTH=re.compile(r"^crypto-spot-bulk-(20\d{2}-(?:0[1-9]|1[0-2]))-1m$")
 COLS=["open_time_ms","open","high","low","close","base_volume","quote_volume","trade_count"]
 MAX_MONTHS=12
 
@@ -147,7 +147,7 @@ def write(output,data):
            "series_counts":{key:len(value) for key,value in data["series"].items()},
            "quote":"USDT","pair":"BTCUSDT","max_is_all_time":False}
     (output/"btc-history-year.json.gz").write_bytes(compressed)
-    (output/"index.json").write_text(json.dumps(index,indent=2,sort_keys=True)+"\\n")
+    (output/"index.json").write_text(json.dumps(index,indent=2,sort_keys=True)+"\n")
     return index
 
 def cli():
