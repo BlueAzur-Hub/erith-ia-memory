@@ -20,6 +20,11 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/historical-archive-reader.html'
       - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - 'Agent Crypto Top250 - Verified Identity Monthly Addenda'
+      - 'Agent Crypto Historical 1m - Continuous Monthly Backfill'
+    types: [completed]
   schedule:
     - cron: '49 1,7,13,19 * * *'
 permissions:
@@ -29,6 +34,12 @@ concurrency:
   cancel-in-progress: false
 jobs:
   catalog:
+    # Do not publish from failed or PR-only upstream checks; scheduled catalog refreshes retain their own downstream daily cadences.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.event != 'schedule')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
