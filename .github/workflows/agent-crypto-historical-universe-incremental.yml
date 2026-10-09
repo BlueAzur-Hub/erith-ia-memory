@@ -1,0 +1,98 @@
+name: Agent Crypto Historical Universe Incremental — manual protected append
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Offline plan or one bounded, manual append of CLOSED Binance candles'
+        required: true
+        type: choice
+        default: plan
+        options: [plan, collect]
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-historical-universe-incremental.yml'
+      - 'public/agent_crypto_erith_ia/tools/extend_historical_universe.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_universe_incremental_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-historical-universe-incremental.yml'
+      - 'public/agent_crypto_erith_ia/tools/extend_historical_universe.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_universe_incremental_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-historical-universe-incremental-protected
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and run offline regression suite
+        run: |
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_historical_universe.py public/agent_crypto_erith_ia/tools/extend_historical_universe.py
+          python public/agent_crypto_erith_ia/tools/historical_universe_incremental_test.py
+          python public/agent_crypto_erith_ia/tools/historical_universe_test.py
+      - name: Verify complete source archive and appended chain offline
+        run: |
+          python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --verify
+          python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --plan > "$RUNNER_TEMP/universe-incremental-plan.json"
+          cat "$RUNNER_TEMP/universe-incremental-plan.json"
+      - name: One manual bounded append only
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        run: |
+          python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --collect --enable-network
+          python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --verify
+      - name: Protect Administrator, Trader, legacy archives and original universe
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- public/agent_crypto_erith_ia/administrator/ public/agent_crypto_erith_ia/trader/ public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot/ public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1/ public/agent_crypto_erith_ia/data/historical_archive_prototype/partitions_r11/ public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/index.json public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/blocks/
+      - name: Commit ONLY new append-only incremental data on explicit collect
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        shell: bash
+        run: |
+          set -euo pipefail
+          path=public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/incremental
+          git add -A -- "$path/"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'No new closed candles; nothing to commit'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Append verified closed OHLCV to immutable Universe incremental journal'
+          git pull --rebase origin main
+          python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --verify
+          git push origin HEAD:main
+      - name: Portable archive of scripts, manifests and append-only data
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/historical-universe-incremental"
+          cp public/agent_crypto_erith_ia/tools/collect_historical_universe.py "$RUNNER_TEMP/historical-universe-incremental/"
+          cp public/agent_crypto_erith_ia/tools/extend_historical_universe.py "$RUNNER_TEMP/historical-universe-incremental/"
+          cp public/agent_crypto_erith_ia/tools/historical_universe_incremental_test.py "$RUNNER_TEMP/historical-universe-incremental/"
+          cp public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md "$RUNNER_TEMP/historical-universe-incremental/"
+          cp public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/index.json "$RUNNER_TEMP/historical-universe-incremental/"
+          if test -d public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/incremental; then
+            cp -a public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/incremental "$RUNNER_TEMP/historical-universe-incremental/"
+          fi
+          cd "$RUNNER_TEMP" && zip -qr "$GITHUB_WORKSPACE/historical-universe-incremental-delivery.zip" historical-universe-incremental
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historical-universe-incremental-delivery
+          path: historical-universe-incremental-delivery.zip
+          retention-days: 30
