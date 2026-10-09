@@ -152,7 +152,8 @@ function display(view,metadata){
  byId("shared-source").textContent="Binance Spot · "+view.quote+" · mois "+metadata.month+
    " · "+format(view.rows[0][0])+" → "+format(view.rows.at(-1)[0])+
    " · source native : "+metadata.native_1m_count.toLocaleString("fr-FR")+
-   " bougies 1m · pas de temps réel · pas d'historique total";
+   " bougies 1m"+(metadata.months?" · "+metadata.months+" mois validés":"")+
+   " · pas de temps réel · Max = historique contigu archivé, pas historique total";
  const node=byId("shared-table"),head=document.createElement("tr");
  for(const title of ["UTC","Ouverture","Haut","Bas","Clôture","Volume base"]){
   const th=document.createElement("th");th.textContent=title;head.append(th);
@@ -172,8 +173,13 @@ async function show(){
  button.disabled=true;
  byId("shared-status").textContent="Lecture de l'archive vérifiée…";
  try{
-  const archive=await loadOne(id);
-  const selection=selectPeriod(archive,period);
+  const extra=Object.hasOwn({"60j":1,"90j":1,"1an":1,"Max":1},period);
+  const archive=extra
+    ? await window.SevenHourlyHistory.loadOne(id)
+    : await loadOne(id);
+  const selection=extra
+    ? window.SevenHourlyHistory.selectPeriod(archive,period)
+    : selectPeriod(archive,period);
   if(ticket===seq)display(selection,archive.metadata);
  }catch(e){
   if(ticket===seq){
@@ -199,7 +205,8 @@ async function init(){
 }
 byId("shared-read")?.addEventListener("click",()=>void show());
 byId("shared-period")?.addEventListener("change",()=>{
- if(cache.has(byId("shared-asset").value))void show();
+ if(Object.hasOwn({"60j":1,"90j":1,"1an":1,"Max":1},byId("shared-period").value) ||
+    cache.has(byId("shared-asset").value))void show();
 });
 byId("shared-asset")?.addEventListener("change",()=>{
  byId("shared-status").textContent="Actif sélectionné · cliquer pour lire le mois archivé";
