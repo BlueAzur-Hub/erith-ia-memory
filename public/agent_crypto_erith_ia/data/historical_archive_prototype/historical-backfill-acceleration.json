@@ -1,0 +1,10 @@
+{
+  "schema": "aerith.public.ohlcv.spot.bulk-backfill.acceleration.v1",
+  "action": "extend_one_year_shared_cohort",
+  "max_months_per_run": 7,
+  "storage": "immutable-github-releases",
+  "source": "Binance Spot USDT",
+  "no_overwrite_existing_release": true,
+  "trader_unchanged": true,
+  "note": "One-time immediate start of existing shared multi-asset historical importer. Publication of 7 months is conditional on native ZIP completeness, SHA256 and provenance. Subsequent automatic runs use same bounded capacity."
+}
