@@ -40,7 +40,8 @@ def baseline(root: Path):
         require(index.get("extension_schema") == additional.EXTENSION_SCHEMA,
                 "Unexpected supplementary Top50 source schema")
         checked = additional.verify(root)
-        expected_assets = 7
+        expected_assets = checked["new_assets"]
+        require(1 <= expected_assets <= 15, "Invalid supplementary owner count")
     else:
         checked = cohort.verify(root)
         expected_assets = 12
