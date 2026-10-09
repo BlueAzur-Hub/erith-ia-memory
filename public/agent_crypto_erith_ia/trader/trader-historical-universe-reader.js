@@ -33,10 +33,13 @@ async function catalog(){
        "Horodatage de collecte invalide");
   const approvals=new Map();
   for(const asset of index.assets){
+   // Unapproved Market tickers may contain underscores (e.g. FIGR_HELOC).
    need(/^[a-z0-9-]{2,100}$/.test(asset.id)&&
-     /^[A-Z0-9]{2,22}$/.test(asset.symbol),"Identité d'actif invalide");
+     typeof asset.symbol==="string"&&/^[A-Z0-9_-]{2,40}$/.test(asset.symbol),
+     "Identité d'actif invalide");
    if(asset.qualification==="qualified_spot"){
-    need(asset.candidate_pair===asset.symbol+"USDT","Paire non qualifiée");
+    need(/^[A-Z0-9]{2,22}$/.test(asset.symbol)&&
+     asset.candidate_pair===asset.symbol+"USDT","Paire non qualifiée");
     approvals.set(asset.id,asset.candidate_pair);
    }
   }
