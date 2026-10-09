@@ -91,15 +91,23 @@ test("wrong source/quote or missing candle is refused",async()=>{
  await assert.rejects(h.window.SevenBTCAnnualView.load(),/Source ou devise/);
 });
 
-test("BTC annual archive is visible first; old Top10 diagnostic is folded but intact",()=>{
- const html=fs.readFileSync("public/agent_crypto_erith_ia/administrator/historical-archive-reader.html","utf8");
- const main=html.indexOf('id="btc-year-lab" open'),old=html.indexOf('id="legacy-r3"');
- assert.ok(main>0 && old>main,"BTC annual panel must precede the legacy prototype");
- assert.match(html,/<details class="legacy-group" id="legacy-r3">/);
- assert.match(html,/ancien prototype Top 10|Ancien diagnostic R3/);
- for(const id of ["btc-year-period","btc-year-read","btc-year-curve",
-                   "btc-year-status","btc-year-table","start","copy","metrics","table","missing","diagnostic"]){
-   assert.equal(html.split('id="'+id+'"').length-1,1,"Duplicated or missing DOM id: "+id);
+test("canonical vault owns BTC annual and Top250; R3 diagnostic is not duplicated",()=>{
+ const main=fs.readFileSync("public/agent_crypto_erith_ia/administrator/historical-vault.html","utf8");
+ const legacy=fs.readFileSync("public/agent_crypto_erith_ia/administrator/historical-archive-reader.html","utf8");
+ const catalog=main.indexOf('id="top250-coverage" open');
+ const btc=main.indexOf('id="btc-year-lab" open');
+ const oldReader=main.indexOf('id="r6-archive-adapter"');
+ assert.ok(catalog>0&&btc>catalog&&oldReader>btc,
+   "The verified catalog and BTC annual reader must come before R6/R7/R9 diagnostics");
+ for(const id of ["btc-year-period","btc-year-read","btc-year-curve","btc-year-status",
+                  "btc-year-table","top250-summary","top250-rows","top250-status",
+                  "r6-read","r7-check","r9-read"]){
+   assert.equal(main.split('id="'+id+'"').length-1,1,"Vault DOM id duplicated/missing: "+id);
  }
- assert.match(html,/<script src="\.\/js\/btc-annual-view\.js"><\/script>/);
+ assert.match(main,/<script src="\.\/js\/btc-annual-view\.js"><\/script>/);
+ assert.match(main,/<script src="\.\/js\/top250-history-catalog\.js"><\/script>/);
+ assert.match(main,/historical-vault-automatic\.js/);
+ assert.doesNotMatch(legacy,/id="btc-year-lab"|id="top250-coverage"/);
+ assert.match(legacy,/id="metrics"/);
+ assert.match(legacy,/href="\.\/historical-vault\.html"/);
 });

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Seven Heaven · Coffre historique BTC et diagnostic Top 10</title>
+<title>Seven Heaven · Diagnostic historique R3</title>
 <style>
 :root{color-scheme:dark;font:14px/1.55 system-ui,sans-serif;color:#ebf4fc;background:#0c1625}*{box-sizing:border-box}
 body{max-width:1080px;margin:auto;padding:22px}header{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
@@ -20,58 +20,9 @@ table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;b
 .legacy-group[open]>summary{border-radius:10px 10px 0 0}
 .legacy-group>section,.legacy-group>.reader-foot{margin-left:10px;margin-right:10px}
 </style><link rel="stylesheet" href="./historical-f11.css"></head><body>
-<header><div><h1>Coffre historique · BTC</h1><p class="muted">Seven Heaven · 12 mois de bougies natives 1 minute archivées · lecture seule</p></div>
+<header><div><h1>Diagnostic historique · R3</h1><p class="muted">Ancien prototype Top 10 · 4 452 chandelles · lecture seule</p></div>
 <a href="./index.html">← Revenir à l'Interface</a></header>
-<section class="panel" id="top250-coverage">
- <h2>Coffre Top 250 · données historiques réellement disponibles</h2>
- <p class="muted">Le classement répertorie 250 cryptomonnaies. Une crypto est indiquée « archivée » uniquement lorsqu'un ZIP mensuel officiel a été vérifié et publié. Les autres ne sont pas inventées. Source actuelle : Binance Spot <b>USDT</b>.</p>
- <div class="metrics" id="top250-summary"><div class="metric">Chargement de l'index réel…</div></div>
- <p class="fine" id="top250-counts">Couverture Top 10 / 50 / 100 / 250 à vérifier.</p>
- <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0">
-  <label for="top250-limit">Univers</label>
-  <select id="top250-limit" style="background:#102f48;color:#e7f7ff;border:1px solid #6087a1;border-radius:7px;padding:8px">
-   <option value="10">Top 10</option><option value="50" selected>Top 50</option>
-   <option value="100">Top 100</option><option value="250">Top 250</option>
-  </select>
-  <input id="top250-search" type="search" placeholder="Rechercher une crypto…" aria-label="Rechercher une crypto du classement" style="background:#102f48;color:#e7f7ff;border:1px solid #6087a1;border-radius:7px;padding:9px;min-width:200px">
-  <label><input type="checkbox" id="top250-available"> Avec archives seulement</label>
- </div>
- <div id="top250-status" aria-live="polite" class="muted">Chargement…</div>
- <p id="top250-listed" class="fine"></p>
- <div class="scroll" style="max-height:420px;overflow-y:auto">
- <table><thead><tr><th>Rang</th><th>Crypto</th><th>Historique</th><th>Mois</th><th>Bougies 1m</th><th>Depuis</th><th>Dernière archive</th></tr></thead><tbody id="top250-rows"></tbody></table>
- </div>
- <p class="fine">La présence de données historiques ne signifie pas que la crypto est disponible sur Binance aujourd'hui. Les liens ouvrent les Releases GitHub qui conservent les ZIP originaux. Cette table est un index, pas encore le graphique multi-actifs du Trader.</p>
-</section>
-
-<details class="panel" id="btc-year-lab" open>
- <summary><strong>BTC/USDT · explorer les archives mensuelles de Bitcoin</strong></summary>
- <div class="btc-hero" aria-label="Repères de l'archive BTC">
-  <div class="metric"><small>Historique source validé</small><b>525 600 bougies</b><small>1 minute native · 365 jours</small></div>
-  <div class="metric"><small>Mois dans le Coffre</small><b>12 mois</b><small>Octobre 2025 → septembre 2026</small></div>
-  <div class="metric"><small>Nature des données</small><b>USDT · archive</b><small>Binance Spot · pas temps réel</small></div>
- </div>
- <p class="muted">Une source archivée Binance Spot BTC/USDT, plusieurs périodes d'affichage. Les ZIP mensuels authentiques restent dans GitHub Releases. Cette vue, reconstruite depuis ces mêmes bougies, est datée du dernier mois clos disponible. Aucun accès au Trader, aux ordres ou aux caches locaux. Les périodes affichées se terminent au dernier mois archivé, et non à la date du jour.</p>
- <label for="btc-year-period">Période archivée</label>
- <select id="btc-year-period" style="background:#102f48;color:#e7f7ff;border:1px solid #6087a1;border-radius:7px;padding:9px;min-width:100px">
-  <option value="24h">24 h</option>
-  <option value="7j">7 jours</option>
-  <option value="30j">30 jours</option>
-  <option value="60j">60 jours</option>
-  <option value="90j">90 jours</option>
-  <option value="1an" selected>1 an</option>
-  <option value="Max">Max archivé</option>
- </select>
- <button id="btc-year-read" type="button">Lire BTC depuis le Coffre</button>
- <p class="muted" id="btc-year-status" aria-live="polite">Aucune lecture lancée.</p>
- <canvas id="btc-year-curve" width="940" height="260" style="display:block;width:100%;max-width:940px;border:1px solid #34516b;border-radius:8px;background:#0b1a29" role="img" aria-label="Courbe de clôture Bitcoin historique en USDT"></canvas>
- <p class="fine" id="btc-year-coverage">La période Max correspond uniquement aux mois réellement archivés et vérifiés ; elle ne prétend pas couvrir Bitcoin depuis 2009.</p>
- <div class="scroll"><table id="btc-year-table"><tr><td>Huit dernières bougies visibles après lecture.</td></tr></table></div>
-</details>
-
-<details class="legacy-group" id="legacy-r3">
- <summary>Ancien diagnostic R3 · prototype Top 10 (7 actifs / 4 452 chandelles) — afficher</summary>
- <p class="muted">Le compteur <strong>7/10 · 4 452 chandelles</strong> appartient à l\x27ancien prototype Top 10, pas au Coffre BTC annuel ci-dessus. Le Coffre n\x27est pas encore relié au Trader.</p>
+<p class="panel note">Ancien contrôle Top 10 uniquement (7/10, 4 452 chandelles). Pour les archives réelles Top 250 et BTC : <a href="./historical-vault.html">ouvrir le Coffre historique central</a>.</p>
 <section class="panel"><p class="note">Cet outil ne lit que des fichiers publics déjà présents sur GitHub Pages. Il ne modifie ni IndexedDB, ni localStorage, ni le Graphique, ni le Bridge. Aucun ordre et aucun envoi de données privées.</p>
 <button id="start">Vérifier l'archive</button> <button id="copy" disabled>Copier le rapport</button>
 <span id="status" class="muted" aria-live="polite">En attente</span></section>
@@ -79,8 +30,6 @@ table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;b
 <section class="panel"><h2>Chandelles vérifiées par actif</h2><p class="muted">Marché Binance Spot en <b>USDT</b>, différent des prix USD/EUR et des marchés OKX.</p><div class="scroll" id="table">En attente.</div></section>
 <div class="reader-foot"><section class="panel"><h2>Actifs non couverts</h2><div id="missing">En attente.</div></section>
 <section class="panel"><h2>Diagnostic</h2><div id="diagnostic">Aucune lecture effectuée.</div><p class="fine">Cette page vérifie l'archive R2. Elle ne la raccorde pas au Graphique. Les contrôles ne constituent pas un conseil de trading.</p></section></div>
-</details>
-
 <script>
 (()=>{"use strict";
 const ROOT=new URL("../data/historical_archive_prototype/ohlcv_spot_pilot/",location.href);
@@ -156,4 +105,4 @@ metrics([["Vérification","ÉCHEC"]]);$("table").textContent="Non validé";$("mi
 $("start").addEventListener("click",run);
 $("copy").addEventListener("click",()=>{if(report)navigator.clipboard.writeText(JSON.stringify(report,null,2)).then(()=>{$("status").textContent="Rapport copié"},e=>{$("status").textContent="Copie indisponible : "+String(e)})});
 })();
-</script><script src="./js/btc-annual-view.js"></script><script src="./js/top250-history-catalog.js"></script></body></html>
+</script></body></html>

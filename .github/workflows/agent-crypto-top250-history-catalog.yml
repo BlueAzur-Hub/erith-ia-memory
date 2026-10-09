@@ -5,16 +5,20 @@ on:
       - '.github/workflows/agent-crypto-top250-history-catalog.yml'
       - 'public/agent_crypto_erith_ia/tools/build_historical_top250_catalog.py'
       - 'public/agent_crypto_erith_ia/tools/historical_top250_catalog_test.py'
+      - 'public/agent_crypto_erith_ia/tools/top250-history-catalog.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/top250-history-catalog.js'
       - 'public/agent_crypto_erith_ia/administrator/historical-archive-reader.html'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
   push:
     branches: [main]
     paths:
       - '.github/workflows/agent-crypto-top250-history-catalog.yml'
       - 'public/agent_crypto_erith_ia/tools/build_historical_top250_catalog.py'
       - 'public/agent_crypto_erith_ia/tools/historical_top250_catalog_test.py'
+      - 'public/agent_crypto_erith_ia/tools/top250-history-catalog.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/top250-history-catalog.js'
       - 'public/agent_crypto_erith_ia/administrator/historical-archive-reader.html'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
   workflow_dispatch:
   schedule:
     - cron: '49 1,7,13,19 * * *'
@@ -43,6 +47,7 @@ jobs:
           python -m py_compile public/agent_crypto_erith_ia/tools/build_historical_top250_catalog.py
           python public/agent_crypto_erith_ia/tools/historical_top250_catalog_test.py
           node --check public/agent_crypto_erith_ia/administrator/js/top250-history-catalog.js
+          node --test public/agent_crypto_erith_ia/tools/top250-history-catalog.test.mjs
       - name: Assemble 250 identity records from cryptographically checked Release manifests
         run: |
           set -euo pipefail
