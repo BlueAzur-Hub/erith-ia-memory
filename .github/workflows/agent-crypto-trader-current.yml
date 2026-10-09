@@ -172,6 +172,9 @@ jobs:
             root/"administrator"/"js"/"okx-microstructure-406499.js",
             root/"trader"/"trading-desk.html",
             root/"trader"/"trader-runtime-mirror.js",
+            root/"trader"/"trader-historical-panel.js",
+            root/"trader"/"trader-historical-universe-reader.js",
+            root/"trader"/"trader-historical-cohort-reader.js",
             root/"trader"/"build.json",
           ]
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
