@@ -16,6 +16,10 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_addendum_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-addendum-bootstrap.json'
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - 'Agent Crypto Top250 Exact Coin Identity - Bounded Proof'
+    types: [completed]
   schedule:
     - cron: '43 4 * * *'
 permissions:
@@ -25,6 +29,12 @@ concurrency:
   cancel-in-progress: false
 jobs:
   addenda:
+    # Only an exact-ID proof that succeeded on the main branch can trigger collection.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.event != 'pull_request')
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
@@ -91,7 +101,7 @@ jobs:
           PY
           echo "approved=true" >> "$GITHUB_OUTPUT"
       - name: Publish only new proven-ID monthly ZIP releases
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && steps.authorized.outputs.approved == 'true')
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && steps.authorized.outputs.approved == 'true') || github.event_name == 'workflow_run'
         run: |
           set -euo pipefail
           python public/agent_crypto_erith_ia/tools/supplement_historical_bulk.py --run --max-months 3 | tee "$RUNNER_TEMP/verified-identity-addendum-report.txt"
