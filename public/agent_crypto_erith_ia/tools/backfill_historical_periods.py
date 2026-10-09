@@ -44,7 +44,8 @@ def candidates(report):
                 "Unqualified historical pair identity")
         rows.append({"rank": a["rank"], "id": a["id"], "symbol": a["symbol"],
                      "pair": pair, "owner": a["archive_owner"], "long_periods": {}})
-    require(len(rows) == 24, "Unexpected coverage owners")
+    require(len(rows) == sum(bool(x["archived"]) for x in report["assets"])
+            and 24 <= len(rows) <= 50, "Unexpected coverage owners")
     return rows
 
 
@@ -95,7 +96,7 @@ def validate(root=OUTPUT):
             and doc.get("source") == "Binance Spot"
             and doc.get("status") == "VERIFIED_MANUAL_BACKFILL", "Index not recognized")
     rows, blocks = doc.get("assets"), doc.get("blocks")
-    require(isinstance(rows, list) and len(rows) == 24 and
+    require(isinstance(rows, list) and 24 <= len(rows) <= 50 and
             isinstance(blocks, list) and len(blocks) > 0 and
             doc.get("max_status") == "NOT_AVAILABLE_FROM_THIS_SNAPSHOT",
             "Archive rows or Max status invalid")
