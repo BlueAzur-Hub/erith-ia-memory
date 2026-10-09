@@ -183,6 +183,7 @@ jobs:
             root/"administrator"/"js"/"okx-market-pair-resolver.js",
             root/"administrator"/"js"/"market-microscope-candles.js",
             root/"administrator"/"js"/"graph-native-usd-406520.js",
+            root/"administrator"/"js"/"top10-explorer.js",
             root/"administrator"/"js"/"okx-microstructure-406499.js",
             root/"trader"/"trading-desk.html",
             root/"trader"/"trader-runtime-mirror.js",
@@ -191,6 +192,9 @@ jobs:
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
             for p in files:
               z.write(p,p.as_posix())
+          with zipfile.ZipFile(out,"r") as packed:
+            assert "public/agent_crypto_erith_ia/administrator/js/top10-explorer.js" in packed.namelist(), "Top explorer missing from Trader ZIP"
+            assert packed.testzip() is None, "Trader ZIP CRC failed"
           shutil.copy2(out,Path("/tmp")/out.name)
           with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
             fh.write(f"build={build}\n")
