@@ -1,0 +1,110 @@
+name: Agent Crypto Historical Cohort — qualified Top 50
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Offline plan or explicitly collect qualified new Top 50 historical series'
+        type: choice
+        options: [plan, collect]
+        default: plan
+        required: true
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-historical-cohort.yml'
+      - 'public/agent_crypto_erith_ia/tools/collect_historical_cohort.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_cohort_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-cohort-instruments.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-historical-cohort.yml'
+      - 'public/agent_crypto_erith_ia/tools/collect_historical_cohort.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_cohort_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-cohort-instruments.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-historical-cohort-qualified-manual
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python syntax and isolated offline regressions
+        run: |
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_historical_cohort.py
+          python public/agent_crypto_erith_ia/tools/historical_cohort_test.py
+      - name: Top 50 offline qualification plan and existing archive verification
+        run: |
+          python public/agent_crypto_erith_ia/tools/collect_historical_cohort.py --plan > "$RUNNER_TEMP/top50-cohort-plan.json"
+          cat "$RUNNER_TEMP/top50-cohort-plan.json"
+          python public/agent_crypto_erith_ia/tools/collect_historical_cohort.py --verify
+          python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --verify
+      - name: Manually collect first verified Top 50 cohort (no scheduling)
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        run: |
+          python public/agent_crypto_erith_ia/tools/collect_historical_cohort.py --collect --enable-network
+          python public/agent_crypto_erith_ia/tools/collect_historical_cohort.py --verify
+          python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --verify
+      - name: Guard Administrator, Trader, R10, Universe and incremental archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/partitions_r11/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/index.json \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/blocks/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/incremental/
+      - name: Publish only the new Top 50 cohort on explicit collect
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        shell: bash
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50
+          git add -A -- "$target/"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'No verified new data; no archive commit'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Archive verified qualified Top 50 historical Spot cohort'
+          git pull --rebase origin main
+          python public/agent_crypto_erith_ia/tools/collect_historical_cohort.py --verify
+          python public/agent_crypto_erith_ia/tools/extend_historical_universe.py --verify
+          git push origin HEAD:main
+      - name: Create auditable portable ZIP
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="$RUNNER_TEMP/historical-top50-cohort"
+          mkdir -p "$target"
+          cp public/agent_crypto_erith_ia/tools/collect_historical_cohort.py "$target/"
+          cp public/agent_crypto_erith_ia/tools/historical_cohort_test.py "$target/"
+          cp public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-cohort-instruments.json "$target/"
+          cp public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md "$target/"
+          if test -d public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50; then
+            cp -a public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/top50 "$target/"
+          fi
+          cd "$RUNNER_TEMP" && zip -qr "$GITHUB_WORKSPACE/historical-top50-cohort-delivery.zip" historical-top50-cohort
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historical-top50-cohort-delivery
+          path: historical-top50-cohort-delivery.zip
+          retention-days: 30
