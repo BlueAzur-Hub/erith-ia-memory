@@ -3,11 +3,20 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+  pull_request:
+    paths:
+      - ".github/workflows/agent-crypto-trader-historical-panel.yml"
+      - "public/agent_crypto_erith_ia/trader/trader-historical-panel.js"
+      - "public/agent_crypto_erith_ia/trader/trader-historical-universe-reader.js"
+      - "public/agent_crypto_erith_ia/tools/trader-historical-panel.test.mjs"
+      - "public/agent_crypto_erith_ia/tools/historical-universe-reader.test.mjs"
     paths:
       - ".github/workflows/agent-crypto-trader-historical-panel.yml"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
       - "public/agent_crypto_erith_ia/trader/trader-historical-panel.js"
+      - "public/agent_crypto_erith_ia/trader/trader-historical-universe-reader.js"
       - "public/agent_crypto_erith_ia/tools/trader-historical-panel.test.mjs"
+      - "public/agent_crypto_erith_ia/tools/historical-universe-reader.test.mjs"
 permissions:
   contents: read
 jobs:
@@ -23,7 +32,8 @@ jobs:
         run: |
           node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
           node --check public/agent_crypto_erith_ia/trader/trader-historical-panel.js
-          node --test public/agent_crypto_erith_ia/tools/trader-historical-panel.test.mjs
+          node --check public/agent_crypto_erith_ia/trader/trader-historical-universe-reader.js
+          node --test public/agent_crypto_erith_ia/tools/trader-historical-panel.test.mjs public/agent_crypto_erith_ia/tools/historical-universe-reader.test.mjs
       - name: Protect previous R9 and Trader selection tests
         run: |
           node --test public/agent_crypto_erith_ia/tools/historical-compact-reader.test.mjs public/agent_crypto_erith_ia/tools/historical-vault-automatic.test.mjs public/agent_crypto_erith_ia/tools/trader-shared-market-selection.test.mjs
