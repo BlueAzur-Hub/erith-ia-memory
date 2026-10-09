@@ -204,7 +204,13 @@ def collect(snapshot=MARKET, registry=REGISTRY, universe=UNIVERSE, output=OUTPUT
     for row in entries:
         if row["status"] != "candidate":
             continue
-        if not live_pair(row):
+        try:
+            supported = live_pair(row)
+        except (ValueError, RuntimeError, OSError) as exc:
+            row["status"] = "spot_exchange_lookup_failed"
+            row["reason"] = str(exc)[:140]
+            continue
+        if not supported:
             row["status"] = "spot_pair_not_qualified"
             continue
         try:
