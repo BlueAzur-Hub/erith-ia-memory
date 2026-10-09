@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Append-only historical Top 50 cohort: 12 previously verified Spot assets.
+"""Append-only historical Top 50 cohorts: 12 original plus 7 additional Spot assets.
 
 The cohort's immutable snapshot, the five-asset Universe and R10/R11 remain
 untouched. Reuse the proven Universe SHA-256, OHLCV, and instrument validators.
@@ -29,16 +29,28 @@ MODE = "MANUAL_APPEND_ONLY_CLOSED_CANDLES"
 
 
 def baseline(root: Path):
-    """Return 12 approved source instruments after verifying all original gzip."""
-    checked = cohort.verify(root)
-    require(checked.get("mode") == "VERIFIED" and
-            checked.get("new_assets") == 12 and
-            checked.get("series") == 36, "Cohort not verified or no longer twelve assets")
+    """Verify either original 12 or additional 7 approved Spot instrument owners."""
     raw = (root / "index.json").read_bytes()
     index = json.loads(raw)
+    # Reuse exactly the same incremental engine for both immutable snapshots.
+    # Source type and provenance are proved by the existing dedicated verifier.
+    is_additional = "extension_schema" in index
+    if is_additional:
+        import collect_historical_remaining as additional
+        require(index.get("extension_schema") == additional.EXTENSION_SCHEMA,
+                "Unexpected supplementary Top50 source schema")
+        checked = additional.verify(root)
+        expected_assets = 7
+    else:
+        checked = cohort.verify(root)
+        expected_assets = 12
+    require(checked.get("mode") == "VERIFIED" and
+            checked.get("new_assets") == expected_assets and
+            checked.get("series") == expected_assets * len(PERIODS),
+            "Unverified or unexpectedly changed Top50 source snapshot")
     approved = {a["id"]: a["pair"] for a in index["assets"]
                 if a.get("status") == "archived_spot"}
-    require(len(approved) == 12, "Unexpected cohort approvals")
+    require(len(approved) == expected_assets, "Unexpected cohort approvals")
     originals = {}
     for b in index["blocks"]:
         k = (b["asset_id"], b["period"])
