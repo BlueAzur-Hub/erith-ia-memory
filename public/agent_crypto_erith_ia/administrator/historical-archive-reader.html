@@ -21,6 +21,26 @@ table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;b
 <section class="panel"><h2>Chandelles vérifiées par actif</h2><p class="muted">Marché Binance Spot en <b>USDT</b>, différent des prix USD/EUR et des marchés OKX.</p><div class="scroll" id="table">En attente.</div></section>
 <div class="reader-foot"><section class="panel"><h2>Actifs non couverts</h2><div id="missing">En attente.</div></section>
 <section class="panel"><h2>Diagnostic</h2><div id="diagnostic">Aucune lecture effectuée.</div><p class="fine">Cette page vérifie l'archive R2. Elle ne la raccorde pas au Graphique. Les contrôles ne constituent pas un conseil de trading.</p></section></div>
+
+<details class="panel" id="btc-year-lab">
+ <summary><strong>Coffre BTC · 12 mois de bougies natives 1 minute · lecture seule</strong></summary>
+ <p class="muted">Une source archivée Binance Spot BTC/USDT, plusieurs périodes d'affichage. Les ZIP mensuels authentiques restent dans GitHub Releases. Cette vue, reconstruite depuis ces mêmes bougies, est datée du dernier mois clos disponible. Aucun accès au Trader, aux ordres ou aux caches locaux.</p>
+ <label for="btc-year-period">Période archivée</label>
+ <select id="btc-year-period" style="background:#102f48;color:#e7f7ff;border:1px solid #6087a1;border-radius:7px;padding:9px;min-width:100px">
+  <option value="24h">24 h</option>
+  <option value="7j">7 jours</option>
+  <option value="30j">30 jours</option>
+  <option value="60j">60 jours</option>
+  <option value="90j">90 jours</option>
+  <option value="1an" selected>1 an</option>
+  <option value="Max">Max archivé</option>
+ </select>
+ <button id="btc-year-read" type="button">Lire BTC depuis le Coffre</button>
+ <p class="muted" id="btc-year-status" aria-live="polite">Aucune lecture lancée.</p>
+ <canvas id="btc-year-curve" width="940" height="260" style="display:block;width:100%;max-width:940px;border:1px solid #34516b;border-radius:8px;background:#0b1a29" role="img" aria-label="Courbe de clôture Bitcoin historique en USDT"></canvas>
+ <p class="fine" id="btc-year-coverage">La période Max correspond uniquement aux mois réellement archivés et vérifiés ; elle ne prétend pas couvrir Bitcoin depuis 2009.</p>
+ <div class="scroll"><table id="btc-year-table"><tr><td>Huit dernières bougies visibles après lecture.</td></tr></table></div>
+</details>
 <script>
 (()=>{"use strict";
 const ROOT=new URL("../data/historical_archive_prototype/ohlcv_spot_pilot/",location.href);
@@ -96,4 +116,4 @@ metrics([["Vérification","ÉCHEC"]]);$("table").textContent="Non validé";$("mi
 $("start").addEventListener("click",run);
 $("copy").addEventListener("click",()=>{if(report)navigator.clipboard.writeText(JSON.stringify(report,null,2)).then(()=>{$("status").textContent="Rapport copié"},e=>{$("status").textContent="Copie indisponible : "+String(e)})});
 })();
-</script></body></html>
+</script><script src="./js/btc-annual-view.js"></script></body></html>
