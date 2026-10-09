@@ -1,0 +1,83 @@
+{
+  "approved_count": 3,
+  "candidate_count": 96,
+  "checked_count": 4,
+  "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
+  "quote": "USDT",
+  "results": [
+    {
+      "checked_at": "2026-10-09T19:42:50.084240+00:00",
+      "evidence": [
+        {
+          "base": "HYPE",
+          "coin_id": "hyperliquid",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "hyperliquid",
+          "trade_url": "https://www.binance.com/en/trade/HYPE_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "hyperliquid",
+      "pages": 1,
+      "pair": "HYPEUSDT",
+      "rank": 11,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "HYPE"
+    },
+    {
+      "checked_at": "2026-10-09T19:43:05.315975+00:00",
+      "evidence": [],
+      "id": "the-open-network",
+      "pages": 1,
+      "pair": "GRAMUSDT",
+      "rank": 32,
+      "status": "identity_not_confirmed",
+      "symbol": "GRAM"
+    },
+    {
+      "checked_at": "2026-10-09T19:43:20.458635+00:00",
+      "evidence": [
+        {
+          "base": "DOT",
+          "coin_id": "polkadot",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "polkadot",
+          "trade_url": "https://www.binance.com/en/trade/DOT_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "polkadot",
+      "pages": 1,
+      "pair": "DOTUSDT",
+      "rank": 51,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "DOT"
+    },
+    {
+      "checked_at": "2026-10-09T19:43:35.667708+00:00",
+      "evidence": [
+        {
+          "base": "ASTER",
+          "coin_id": "aster-2",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "aster-2",
+          "trade_url": "https://www.binance.com/en/trade/ASTER_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "aster-2",
+      "pages": 1,
+      "pair": "ASTERUSDT",
+      "rank": 52,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "ASTER"
+    }
+  ],
+  "review_required_count": 93,
+  "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
+  "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
+  "total_market_ranked": 250
+}
