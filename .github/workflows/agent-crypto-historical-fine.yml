@@ -1,0 +1,157 @@
+name: Agent Crypto Fine History — qualified 5m daily archive
+on:
+  schedule:
+    - cron: '21 5 * * *'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Plan only or bounded append/backfill'
+        required: true
+        default: plan
+        type: choice
+        options: [plan, append, backfill]
+      days:
+        description: '1 to 30 complete UTC days'
+        required: true
+        default: '30'
+        type: choice
+        options: ['1', '7', '30']
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-historical-fine.yml'
+      - 'public/agent_crypto_erith_ia/tools/collect_historical_fine.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_fine_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-fine-bootstrap.json'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-historical-fine.yml'
+      - 'public/agent_crypto_erith_ia/tools/collect_historical_fine.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_fine_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-fine-bootstrap.json'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-historical-fine-sealed
+  cancel-in-progress: false
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test fine history integrity and older archives
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_historical_fine.py
+          python public/agent_crypto_erith_ia/tools/historical_fine_test.py
+          python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
+          python public/agent_crypto_erith_ia/tools/collect_historical_fine.py --verify
+      - name: Authorize bootstrap only on exact new marker addition
+        id: bootstrap
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          marker=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-fine-bootstrap.json
+          state=$(git diff --name-status HEAD^ HEAD -- "$marker" | cut -f1)
+          if [[ "$state" != A ]]; then
+            echo 'approved=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-fine-bootstrap.json')
+          d=json.loads(p.read_text())
+          assert d['schema']=='aerith.public.ohlcv.spot.fine-history.bootstrap.v1'
+          assert d['action']=='bootstrap_once_after_main_merge'
+          assert d['asset_id']=='dogecoin' and d['pair']=='DOGEUSDT'
+          assert d['source']=='Binance Spot' and d['quote']=='USDT'
+          assert d['interval']=='5m' and d['days']==30
+          PY
+          test ! -e public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/fine-history/dogecoin/5m/index.json
+          echo 'approved=true' >> "$GITHUB_OUTPUT"
+      - name: Offline safe plan
+        if: github.event_name == 'workflow_dispatch' && inputs.action == 'plan'
+        run: |
+          set -euo pipefail
+          mode=bootstrap
+          if test -e public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/fine-history/dogecoin/5m/index.json; then mode=append; fi
+          python public/agent_crypto_erith_ia/tools/collect_historical_fine.py --plan --mode "$mode" --days 7
+      - name: Run one-time 30 closed-day 5m bootstrap
+        if: github.event_name == 'push' && steps.bootstrap.outputs.approved == 'true'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/collect_historical_fine.py --collect --enable-network --mode bootstrap --days 30
+          python public/agent_crypto_erith_ia/tools/collect_historical_fine.py --verify
+      - name: Scheduled bounded append, with catch-up
+        if: github.event_name == 'schedule'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/collect_historical_fine.py --collect --enable-network --mode append --days 7
+          python public/agent_crypto_erith_ia/tools/collect_historical_fine.py --verify
+      - name: Manual bounded backfill or append
+        if: github.event_name == 'workflow_dispatch' && inputs.action != 'plan'
+        run: |
+          set -euo pipefail
+          mode=$(jq -r '.inputs.action' "$GITHUB_EVENT_PATH")
+          days=$(jq -r '.inputs.days' "$GITHUB_EVENT_PATH")
+          case "$mode" in append|backfill) ;; *) exit 2 ;; esac
+          case "$days" in 1|7|30) ;; *) exit 2 ;; esac
+          python public/agent_crypto_erith_ia/tools/collect_historical_fine.py --collect --enable-network --mode "$mode" --days "$days"
+          python public/agent_crypto_erith_ia/tools/collect_historical_fine.py --verify
+      - name: Protect original archive and UI owners
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/partitions_r11/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/index.json \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/blocks/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/incremental/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/cohorts/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/long-periods/
+      - name: Publish only verified new 5m blocks and index
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.action != 'plan') || (github.event_name == 'push' && steps.bootstrap.outputs.approved == 'true')
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/fine-history/dogecoin/5m
+          git add -A -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: no new complete UTC day'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Archive verified fine 5m DOGE Binance Spot daily history'
+          git pull --rebase origin main
+          python public/agent_crypto_erith_ia/tools/collect_historical_fine.py --verify
+          git push origin HEAD:main
+      - name: Package portable validation ZIP
+        if: always()
+        run: |
+          set -euo pipefail
+          folder="$RUNNER_TEMP/fine-history-delivery"
+          mkdir -p "$folder"
+          cp public/agent_crypto_erith_ia/tools/collect_historical_fine.py "$folder/"
+          cp public/agent_crypto_erith_ia/tools/historical_fine_test.py "$folder/"
+          if test -d public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/fine-history/dogecoin/5m; then
+            cp -a public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/fine-history/dogecoin/5m "$folder/archive"
+          fi
+          cd "$RUNNER_TEMP"
+          zip -qr "$GITHUB_WORKSPACE/fine-history-delivery.zip" fine-history-delivery
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fine-history-delivery
+          path: fine-history-delivery.zip
+          retention-days: 30
