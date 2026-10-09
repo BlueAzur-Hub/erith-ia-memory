@@ -55,7 +55,7 @@ function validate(j){
   check(a.months.reduce((s,m)=>{
     check(/^\d{4}-(0[1-9]|1[0-2])$/.test(m.month)&&
       /^crypto-spot-bulk-(?:\d{4}-\d\d-1m|add-\d{4}-\d\d-1m-[a-f0-9]{12})$/.test(m.release)&&
-      /^[A-F0-9]+USDT$/.test(m.pair)&&/^[a-f0-9]{64}$/.test(m.sha256)&&
+      /^[A-Z0-9]{2,22}USDT$/.test(m.pair)&&/^[a-f0-9]{64}$/.test(m.sha256)&&
       Number.isInteger(m.candles)&&m.candles>0,"Pointeur historique non qualifié");
     return s+m.candles;
   },0)===a.candles,"Compte de bougies discordant");
