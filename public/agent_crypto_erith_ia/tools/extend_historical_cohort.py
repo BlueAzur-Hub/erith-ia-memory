@@ -16,6 +16,7 @@ import time
 
 import collect_historical_cohort as cohort
 import extend_historical_universe as engine
+import historical_archive_partitions as partitions
 from collect_historical_universe import (
     PERIODS, atomic_write, digest, encoded, require, validate_rows,
 )
@@ -69,7 +70,7 @@ def inspect(root: Path):
             "Cohort incremental journal exceeds capacity")
     last = {key: b["last_ms"] for key, b in originals.items()}
     names = set()
-    for b in chunks:
+    for b in partitions.all_chunks(root / "incremental", ledger):
         require(isinstance(b, dict) and
                 isinstance(b.get("file"), str) and
                 engine.NAME.fullmatch(b["file"]) and
@@ -158,6 +159,8 @@ def collect(root: Path, now_ms: int, max_rows: int):
             atomic_write(target, payload)
     new_index = {**ledger,
                  "chunks": [*ledger["chunks"], *(item[2] for item in prepared)]}
+    new_index, sealed = partitions.rotate(root / "incremental", new_index)
+    partitions.persist_partitions(root / "incremental", sealed, atomic_write)
     atomic_write(root / "incremental/index.json", encoded(new_index))
     inspect(root)
     return {"result": "APPENDED", "new_chunks": len(prepared),
@@ -182,7 +185,8 @@ def main():
         outcome = {"mode": "VERIFY", "assets": len(approved),
                    "baseline_series": len(originals),
                    "incremental_chunks": len(ledger["chunks"]),
-                   "incremental_candles": sum(x["candles"] for x in ledger["chunks"])}
+                   "incremental_candles": sum(x["candles"] for x in partitions.all_chunks(args.output_dir / "incremental", ledger)),
+                   "sealed_partitions": len(ledger.get("partitions", []))}
     elif args.plan:
         ledger, windows = plan(args.output_dir, int(time.time()*1000), args.max_rows)
         outcome = {"mode": "PLAN_OFFLINE", "existing_chunks": len(ledger["chunks"]),
