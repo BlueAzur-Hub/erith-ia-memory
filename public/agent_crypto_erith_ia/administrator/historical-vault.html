@@ -62,7 +62,7 @@ select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-
 </details>
 <details class="board" id="shared-month-reader" open>
  <summary>Graphique historique commun · cryptomonnaies réellement archivées</summary>
- <p class="muted">Même Coffre, même source, plusieurs cryptos : ce lecteur récupère une petite projection d'un <strong>mois Binance Spot vérifié</strong>, puis change de période localement. Les ZIP minute restent dans GitHub Releases. Pour une année BTC, le lecteur annuel juste après reste disponible.</p>
+ <p class="muted">Même Coffre, plusieurs cryptos : les périodes courtes proviennent du dernier mois clos ; 60 jours, 90 jours et un an lisent <strong>les mois complets consécutifs certifiés</strong>, uniquement lorsqu'ils existent. Chaque série est validée et chargée une seule fois par crypto. Les ZIP natifs restent dans GitHub Releases, aucune donnée temps réel.</p>
  <div class="toolbar" style="margin:10px 0;gap:9px">
   <label for="shared-asset">Crypto</label>
   <select id="shared-asset" style="max-width:min(90vw,330px)"><option>Chargement…</option></select>
@@ -72,6 +72,10 @@ select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-
    <option value="7j">7 jours · 5 min</option>
    <option value="30j" selected>30 jours · 5 min (si disponibles)</option>
    <option value="mois">Mois source · 1 heure</option>
+   <option value="60j">60 jours · 1 heure</option>
+   <option value="90j">90 jours · 1 heure</option>
+   <option value="1an">1 an · 1 heure (si archivé)</option>
+   <option value="Max">Max continu archivé · 1 heure</option>
   </select>
   <button id="shared-read" type="button" disabled>Lire les bougies de l'actif</button>
  </div>
@@ -350,4 +354,4 @@ btn.addEventListener("click",async()=>{
  finally{btn.disabled=false}
 });
 })();
-</script><script src="./js/historical-vault-automatic.js"></script><script src="./js/top250-history-catalog.js"></script><script src="./js/btc-annual-view.js"></script><script src="./js/shared-historical-view.js"></script></body></html>
+</script><script src="./js/historical-vault-automatic.js"></script><script src="./js/top250-history-catalog.js"></script><script src="./js/btc-annual-view.js"></script><script src="./js/shared-hourly-history.js"></script><script src="./js/shared-historical-view.js"></script></body></html>
