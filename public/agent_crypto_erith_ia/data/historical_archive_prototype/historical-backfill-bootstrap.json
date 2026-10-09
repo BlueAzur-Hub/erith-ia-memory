@@ -1,0 +1,10 @@
+{
+  "schema": "aerith.public.ohlcv.spot.bulk-backfill.bootstrap.v1",
+  "action": "start_continuous_monthly_archive",
+  "owner": "existing-verified-cohort",
+  "interval": "1m",
+  "months_per_run": 2,
+  "storage": "immutable-github-releases",
+  "max_status": "NOT_PROVEN",
+  "scope": "All 31 currently proven identities, automatic backward selection of missing full UTC months, no arbitrary per-token coding."
+}
