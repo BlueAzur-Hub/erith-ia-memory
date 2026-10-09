@@ -5,9 +5,9 @@
   "ranked": 250,
   "rank_snapshot": "2026-10-09T18:47:53.633Z",
   "release_months": 12,
-  "release_count": 15,
-  "archived_assets": 33,
-  "native_1m_candles": 16555680,
+  "release_count": 18,
+  "archived_assets": 40,
+  "native_1m_candles": 17483040,
   "groups": [
     {
       "top": 10,
@@ -19,11 +19,11 @@
     },
     {
       "top": 100,
-      "with_history": 33
+      "with_history": 40
     },
     {
       "top": 250,
-      "with_history": 33
+      "with_history": 40
     }
   ],
   "months": [
@@ -105,6 +105,13 @@
       "candles": 89280
     },
     {
+      "month": "2026-07",
+      "release": "crypto-spot-bulk-add-2026-07-1m-ac27d05c29d4",
+      "verified": 7,
+      "unavailable": 0,
+      "candles": 312480
+    },
+    {
       "month": "2026-08",
       "release": "crypto-spot-bulk-2026-08-1m",
       "verified": 31,
@@ -119,6 +126,13 @@
       "candles": 89280
     },
     {
+      "month": "2026-08",
+      "release": "crypto-spot-bulk-add-2026-08-1m-ac27d05c29d4",
+      "verified": 7,
+      "unavailable": 0,
+      "candles": 312480
+    },
+    {
       "month": "2026-09",
       "release": "crypto-spot-bulk-2026-09-1m",
       "verified": 31,
@@ -131,6 +145,13 @@
       "verified": 2,
       "unavailable": 1,
       "candles": 86400
+    },
+    {
+      "month": "2026-09",
+      "release": "crypto-spot-bulk-add-2026-09-1m-ac27d05c29d4",
+      "verified": 7,
+      "unavailable": 0,
+      "candles": 302400
     }
   ],
   "assets": [
@@ -3762,9 +3783,34 @@
       "symbol": "PAXG",
       "name": "PAX Gold",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "PAXGUSDT",
+          "file": "PAXGUSDT-1m-2026-07.zip",
+          "sha256": "0f7fc90694754e9414a8380f4e77c8f27022ccd3ed911da54bacece674f0d474",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-08",
+          "pair": "PAXGUSDT",
+          "file": "PAXGUSDT-1m-2026-08.zip",
+          "sha256": "d1387d856e2c39133a57084dc375940b077a38a42759edaf85bd36791d70b6e1",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-09",
+          "pair": "PAXGUSDT",
+          "file": "PAXGUSDT-1m-2026-09.zip",
+          "sha256": "0c332146369e660c1587279e69d6f5036241bdf6a4f40c6eb75b5b9fe3f17481",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-ac27d05c29d4"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "falcon-finance",
@@ -3792,9 +3838,34 @@
       "symbol": "SKY",
       "name": "Sky",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "SKYUSDT",
+          "file": "SKYUSDT-1m-2026-07.zip",
+          "sha256": "74d979f68a87883b6567cdab6ba725188d5c2e960655f5bb82799102e7232d57",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-08",
+          "pair": "SKYUSDT",
+          "file": "SKYUSDT-1m-2026-08.zip",
+          "sha256": "73cbb6f7c64f5fa87c2d4086aee9eff3bfe159c62110a62781889de30fbf4b46",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-09",
+          "pair": "SKYUSDT",
+          "file": "SKYUSDT-1m-2026-09.zip",
+          "sha256": "c62f14f5159a5f21f51d3c13a059e798107bee5989219614cc7018bb5218bf84",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-ac27d05c29d4"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "world-liberty-financial",
@@ -3802,9 +3873,34 @@
       "symbol": "WLFI",
       "name": "World Liberty Financial",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "WLFIUSDT",
+          "file": "WLFIUSDT-1m-2026-07.zip",
+          "sha256": "ad1577c6c180050553f36a6e7e94124a1864a9a976e76b578fb822ce0faaaeb3",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-08",
+          "pair": "WLFIUSDT",
+          "file": "WLFIUSDT-1m-2026-08.zip",
+          "sha256": "aebb867257dfc3c020ae9597e4f30ef03782864f03a0a6122c40b493b7f9504e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-09",
+          "pair": "WLFIUSDT",
+          "file": "WLFIUSDT-1m-2026-09.zip",
+          "sha256": "f9ca4b992574f61c447010fc56efdfd85898392336dce2f7b2a3a521a417f961",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-ac27d05c29d4"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "internet-computer",
@@ -3812,9 +3908,34 @@
       "symbol": "ICP",
       "name": "Internet Computer",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "ICPUSDT",
+          "file": "ICPUSDT-1m-2026-07.zip",
+          "sha256": "ed4aa83a2dd58a7fd03ac802bd49a2513d451701fa90e4d055299d2690d13bd2",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-08",
+          "pair": "ICPUSDT",
+          "file": "ICPUSDT-1m-2026-08.zip",
+          "sha256": "d16ac961fa2ea950ea53c04d06aec939457ee7d7b5078fc251c2460d65b4cc69",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-09",
+          "pair": "ICPUSDT",
+          "file": "ICPUSDT-1m-2026-09.zip",
+          "sha256": "6b42fe906800a50c80058457ef98f9e4d4a24b92d725c9fd7fe7776aaf613e6e",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-ac27d05c29d4"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "morpho",
@@ -3822,9 +3943,34 @@
       "symbol": "MORPHO",
       "name": "Morpho",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "MORPHOUSDT",
+          "file": "MORPHOUSDT-1m-2026-07.zip",
+          "sha256": "81d1bac77a68e758039c96ad26fe54cfaec181f7730ad1221c6aa0ac0e55ba2e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-08",
+          "pair": "MORPHOUSDT",
+          "file": "MORPHOUSDT-1m-2026-08.zip",
+          "sha256": "b471962868cc7e072297f46b30b22cbdd5a9ab264677a2c706d558f7ca8b7088",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-09",
+          "pair": "MORPHOUSDT",
+          "file": "MORPHOUSDT-1m-2026-09.zip",
+          "sha256": "9fdac402ab32e92939ef911db3d26fda90b682849e8cac209bd9f9d90912c135",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-ac27d05c29d4"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "pepe",
@@ -3832,9 +3978,34 @@
       "symbol": "PEPE",
       "name": "Pepe",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "PEPEUSDT",
+          "file": "PEPEUSDT-1m-2026-07.zip",
+          "sha256": "d99aeb6797ce7bfd8eddc5f1a62317c2d0d6f61d1f3af6353b381fd7e0c1dd14",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-08",
+          "pair": "PEPEUSDT",
+          "file": "PEPEUSDT-1m-2026-08.zip",
+          "sha256": "04170efdac22319119234bb90c0cc31efb95ec116b40319122feb7cc6f59966c",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-09",
+          "pair": "PEPEUSDT",
+          "file": "PEPEUSDT-1m-2026-09.zip",
+          "sha256": "7411bea7aa495709400f9cf37b9127a4386caa97d541ad6e650729a675f6feef",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-ac27d05c29d4"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "spiko-amundi-overnight-swap-fund-eur",
@@ -3892,9 +4063,34 @@
       "symbol": "BFUSD",
       "name": "BFUSD",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "BFUSDUSDT",
+          "file": "BFUSDUSDT-1m-2026-07.zip",
+          "sha256": "1a675f7eabe5c9a8e11b99fca4b02cc78d8770a3ff5cb77c0310fec5ca639fca",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-08",
+          "pair": "BFUSDUSDT",
+          "file": "BFUSDUSDT-1m-2026-08.zip",
+          "sha256": "d8c8227fec56018b68cd394b50f8f47d9a274cb7364f333f541d186dd279f1ce",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-ac27d05c29d4"
+        },
+        {
+          "month": "2026-09",
+          "pair": "BFUSDUSDT",
+          "file": "BFUSDUSDT-1m-2026-09.zip",
+          "sha256": "7ec19e07ad62893b06d3529fa9f4981428a6fc01ccbad8a6661d183e92525ab4",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-ac27d05c29d4"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "ethereum-classic",
