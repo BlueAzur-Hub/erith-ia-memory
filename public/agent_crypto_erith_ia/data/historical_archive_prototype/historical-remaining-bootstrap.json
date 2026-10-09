@@ -1,0 +1,10 @@
+{
+  "schema": "aerith.public.ohlcv.spot.remaining.bootstrap.request.v1",
+  "action": "one_time_collect_after_main_merge",
+  "source": "immutable_cohort_top50_index",
+  "output": "universe/cohorts/top50-additional",
+  "expected_proposed": 15,
+  "existing_archive_owners": 24,
+  "manual_review": 11,
+  "note": "One-time explicit approved initialization only. NEVER trigger collection from ordinary push, PR, schedule, or archive output changes."
+}
