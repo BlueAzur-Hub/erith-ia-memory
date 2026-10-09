@@ -28,7 +28,7 @@ ID = re.compile(r"^[a-z0-9-]{2,100}$")
 PAIR = re.compile(r"^[A-Z0-9]{2,22}USDT$")
 SHA = re.compile(r"^[0-9a-f]{64}$")
 STEP_SECONDS = 15
-MAX_BATCH = 4
+MAX_BATCH = 8
 MAX_PAGES = 3
 USER_AGENT = "SevenHeaven-CoinGecko-Spot-Identity/1.0"
 
@@ -181,7 +181,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--venue",type=Path,default=VENUE)
     p.add_argument("--ledger",type=Path,default=OUTPUT)
-    p.add_argument("--batch-size",type=int,default=4)
+    p.add_argument("--batch-size",type=int,default=8)
     p.add_argument("--sleep",type=float,default=STEP_SECONDS)
     p.add_argument("--output",type=Path,default=None)
     p.add_argument("--plan",action="store_true")
