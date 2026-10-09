@@ -1,0 +1,46 @@
+name: Agent Crypto Historical Coverage — Top 50 truth audit
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-historical-coverage.yml'
+      - 'public/agent_crypto_erith_ia/tools/audit_historical_coverage.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_coverage_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-historical-coverage.yml'
+      - 'public/agent_crypto_erith_ia/tools/audit_historical_coverage.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_coverage_test.py'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source-verified Top 50 archive audit (offline)
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
+          python public/agent_crypto_erith_ia/tools/audit_historical_coverage.py > "$GITHUB_WORKSPACE/historical-top50-coverage.json"
+          python public/agent_crypto_erith_ia/tools/audit_historical_coverage.py --unarchived-only > "$GITHUB_WORKSPACE/historical-top50-unarchived.json"
+          python - <<'PY'
+          import json
+          doc = json.load(open("historical-top50-coverage.json"))
+          print(f"ARCHIVED={doc['archived_assets']} MISSING={doc['unarchived_assets']} OF=50")
+          for item in doc["assets"]:
+              if not item["archived"]:
+                  print(item["rank"], item["id"], item["symbol"], item["status"])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: historical-top50-coverage-audit
+          path: |
+            historical-top50-coverage.json
+            historical-top50-unarchived.json
+          retention-days: 30
