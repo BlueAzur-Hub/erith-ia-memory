@@ -27,8 +27,8 @@ CG = "https://api.coingecko.com/api/v3"
 ID = re.compile(r"^[a-z0-9-]{2,100}$")
 PAIR = re.compile(r"^[A-Z0-9]{2,22}USDT$")
 SHA = re.compile(r"^[0-9a-f]{64}$")
-STEP_SECONDS = 7
-MAX_BATCH = 12
+STEP_SECONDS = 15
+MAX_BATCH = 4
 MAX_PAGES = 3
 USER_AGENT = "SevenHeaven-CoinGecko-Spot-Identity/1.0"
 
@@ -151,8 +151,11 @@ def process(audit,existing=None,batch_size=MAX_BATCH,fetcher=get_tickers,
     validate_ledger(ledger,audit)
     previous={x["id"]:x for x in ledger["results"]}
     # Retry only source failures. Negative identity evidence is not silently reversed.
-    todo=[a for a in queued if a["id"] not in previous or
-          previous[a["id"]]["status"] in ("source_unavailable","source_pagination_incomplete")]
+    todo=[a for a in queued if a["id"] not in previous]
+    if not todo:
+        # Do not let repeatedly rate-limited candidates starve the other 90+.
+        todo=[a for a in queued if
+              previous[a["id"]]["status"] in ("source_unavailable","source_pagination_incomplete")]
     todo=todo[:batch_size]
     results=[]
     for i,a in enumerate(todo):
@@ -178,7 +181,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--venue",type=Path,default=VENUE)
     p.add_argument("--ledger",type=Path,default=OUTPUT)
-    p.add_argument("--batch-size",type=int,default=12)
+    p.add_argument("--batch-size",type=int,default=4)
     p.add_argument("--sleep",type=float,default=STEP_SECONDS)
     p.add_argument("--output",type=Path,default=None)
     p.add_argument("--plan",action="store_true")

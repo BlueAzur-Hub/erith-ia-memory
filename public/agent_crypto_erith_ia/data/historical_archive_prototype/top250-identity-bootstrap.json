@@ -2,7 +2,7 @@
   "schema": "aerith.public.ohlcv.spot.top250.identity.bootstrap.v1",
   "action": "record_proven_coin_id_evidence_once",
   "candidates": 96,
-  "max_daily_batch": 12,
+  "max_hourly_batch": 4,
   "no_symbol_only_approvals": true,
   "source": "CoinGecko exact ID tickers, Binance Spot market, USDT quote",
   "note": "No OHLCV orders or Trader changes. Existing approved source owners remain untouched."

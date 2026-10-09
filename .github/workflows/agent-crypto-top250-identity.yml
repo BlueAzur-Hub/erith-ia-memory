@@ -15,7 +15,7 @@ on:
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-bootstrap.json'
   workflow_dispatch:
   schedule:
-    - cron: '24 6 * * *'
+    - cron: '24 * * * *'
 permissions:
   contents: write
 concurrency:
@@ -44,10 +44,10 @@ jobs:
           base=public/agent_crypto_erith_ia/data/historical_archive_prototype
           if [[ "$GITHUB_EVENT_NAME" == pull_request ]]; then
             python public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py --probe \
-              --batch-size 12 --sleep 7 --output "$RUNNER_TEMP/top250-identity-evidence.json"
+              --batch-size 4 --sleep 15 --output "$RUNNER_TEMP/top250-identity-evidence.json"
           else
             python public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py --probe \
-              --batch-size 12 --sleep 7 --output "$base/top250-identity-evidence.json"
+              --batch-size 4 --sleep 15 --output "$base/top250-identity-evidence.json"
             cp "$base/top250-identity-evidence.json" "$RUNNER_TEMP/top250-identity-evidence.json"
           fi
           python - <<'PY'
@@ -57,7 +57,7 @@ jobs:
           assert r["total_market_ranked"]==250
           assert 0<=r["approved_count"]<=r["checked_count"]<=r["candidate_count"]<=250
           if os.environ["GITHUB_EVENT_NAME"]=="pull_request":
-            assert r["checked_count"]==12, "Expected exactly twelve initial candidates"
+            assert r["checked_count"]==4, "Expected exactly four initial candidates"
             assert any(x["status"]!="source_unavailable" for x in r["results"]), "CoinGecko source unavailable for entire PR; no silent verification"
           print("TOP250 EXACT-ID",json.dumps({k:r[k] for k in ("candidate_count","checked_count","approved_count")},sort_keys=True))
           PY
@@ -79,7 +79,7 @@ jobs:
           d=json.loads(p.read_text())
           assert d["schema"]=="aerith.public.ohlcv.spot.top250.identity.bootstrap.v1"
           assert d["action"]=="record_proven_coin_id_evidence_once"
-          assert d["candidates"]==96 and d["max_daily_batch"]==12
+          assert d["candidates"]==96 and d["max_hourly_batch"]==4
           assert d["no_symbol_only_approvals"] is True
           PY
           echo "approved=true" >> "$GITHUB_OUTPUT"
