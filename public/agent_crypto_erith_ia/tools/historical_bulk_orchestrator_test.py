@@ -52,6 +52,16 @@ class PlanTests(unittest.TestCase):
                                 "crypto-spot-bulk-2026-08-1m"])
         self.assertEqual(r,["2026-07","2026-06"])
 
+    def test_seven_months_complete_btc_year_without_changing_old_releases(self):
+        now=dt.datetime(2026,10,9,tzinfo=UTC)
+        present=[app.tag(f"2026-{i:02d}") for i in range(5,10)]
+        months=app.select_months(now,present,count=7)
+        self.assertEqual(months,["2026-04","2026-03","2026-02",
+                                 "2026-01","2025-12","2025-11","2025-10"])
+        self.assertEqual(len(set(months)),7)
+        with self.assertRaisesRegex(ValueError,"Unbounded"):
+            app.select_months(now,present,count=8)
+
     def test_monthly_release_lag_and_all_future_months_refused(self):
         self.assertEqual(app.last_publishable(dt.datetime(2026,11,6,tzinfo=UTC)),"2026-09")
         self.assertEqual(app.last_publishable(dt.datetime(2026,11,8,tzinfo=UTC)),"2026-10")
