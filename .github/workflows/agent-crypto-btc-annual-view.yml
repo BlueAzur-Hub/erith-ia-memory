@@ -1,0 +1,102 @@
+name: Agent Crypto BTC Annual Historical Archive Reader
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-btc-annual-view.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_btc_view.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_annual_view_test.py'
+      - 'public/agent_crypto_erith_ia/tools/btc-annual-view.test.mjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/btc-annual-view.js'
+      - 'public/agent_crypto_erith_ia/administrator/historical-archive-reader.html'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-btc-annual-view.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_btc_view.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_annual_view_test.py'
+      - 'public/agent_crypto_erith_ia/tools/btc-annual-view.test.mjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/btc-annual-view.js'
+      - 'public/agent_crypto_erith_ia/administrator/historical-archive-reader.html'
+  workflow_dispatch:
+  schedule:
+    - cron: '37 12 10 * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-btc-annual-view
+  cancel-in-progress: false
+jobs:
+  btc-annual-view:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test identical-source aggregation and read-only annual browser contract
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_historical_btc_view.py
+          python public/agent_crypto_erith_ia/tools/btc_annual_view_test.py
+          node --check public/agent_crypto_erith_ia/administrator/js/btc-annual-view.js
+          node --test public/agent_crypto_erith_ia/tools/btc-annual-view.test.mjs
+      - name: Verify twelve original monthly BTC ZIPs and build compact historical projection
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/build_historical_btc_view.py \
+            --download --output "$RUNNER_TEMP/btc_annual_view"
+          python - <<'PY'
+          import json,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"btc_annual_view"
+          idx=json.loads((root/"index.json").read_text())
+          assert len(idx["source_months"])==12
+          assert idx["native_1m_count"] in (525600,527040)
+          assert idx["series_counts"]["1m"]==1440
+          assert idx["series_counts"]["5m"]==8640
+          assert idx["series_counts"]["1h"] in (8760,8784)
+          assert idx["quote"]=="USDT" and idx["max_is_all_time"] is False
+          PY
+      - name: Publish only verified annual view to GitHub Pages source
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_annual_view
+          mkdir -p "$target"
+          cp "$RUNNER_TEMP/btc_annual_view/index.json" "$target/index.json"
+          cp "$RUNNER_TEMP/btc_annual_view/btc-history-year.json.gz" "$target/btc-history-year.json.gz"
+          git add -- "$target/index.json" "$target/btc-history-year.json.gz"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "NOOP: same verified BTC monthly sources, no new projection"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "Refresh verified BTC annual historical archive view"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Deliver reproducibility report for independent review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: btc-annual-history-projection
+          path: |
+            ${{ runner.temp }}/btc_annual_view/index.json
+            ${{ runner.temp }}/btc_annual_view/btc-history-year.json.gz
+          if-no-files-found: error
+          retention-days: 30
+      - name: Protect Trader, Administrator core, Bridge and market inputs
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/crypto/
