@@ -7,7 +7,7 @@ import {createHash,webcrypto} from "node:crypto";
 
 const script=fs.readFileSync("public/agent_crypto_erith_ia/trader/trader-historical-universe-reader.js","utf8");
 const sha=raw=>createHash("sha256").update(raw).digest("hex");
-function fixture({corrupt=false,unapproved=false,marketAlias=false,approvedAlias=false}={}){
+function fixture({corrupt=false,unapproved=false,marketAlias=false,approvedAlias=false,incremental=false,ledgerTamper=false,gap=false,corruptIncremental=false}={}){
  const end=1_800_000_000_000,step=300_000,count=288,start=end-count*step;
  const rows=Array.from({length:count},(_,i)=>[start+i*step,10,12,9,11,3,33,2]);
  const block={schema:"aerith.public.ohlcv.spot.universe.block.v1",source:"Binance Spot",
@@ -28,11 +28,32 @@ function fixture({corrupt=false,unapproved=false,marketAlias=false,approvedAlias
   blocks:[{file:"blocks/dogecoin_24h_"+checksum.slice(0,16)+".json.gz",
     sha256:checksum,asset_id:"dogecoin",pair:"DOGEUSDT",period:"24h",
     interval:"5m",candles:count,first_ms:start,last_ms:end-step}]};
+ const indexBytes=Buffer.from(JSON.stringify(index));
+ const extraFirst=end+(gap?step:0),extraCount=3;
+ const extraRows=Array.from({length:extraCount},(_,i)=>[extraFirst+i*step,10,12,9,11,3,33,2]);
+ const chunk={schema:"aerith.public.ohlcv.spot.universe.incremental.chunk.v1",
+  source:"Binance Spot",quote:"USDT",asset_id:"dogecoin",pair:"DOGEUSDT",
+  period:"24h",interval:"5m",first_ms:extraFirst,
+  last_ms:extraFirst+(extraCount-1)*step,rows:extraRows};
+ const extraGzip=gzipSync(JSON.stringify(chunk)),chunkHash=sha(extraGzip);
+ const chunkMeta={asset_id:"dogecoin",pair:"DOGEUSDT",period:"24h",interval:"5m",
+  first_ms:chunk.first_ms,last_ms:chunk.last_ms,candles:extraCount,sha256:chunkHash,
+  file:"blocks/dogecoin_24h_"+chunk.first_ms+"_"+chunk.last_ms+"_"+chunkHash.slice(0,16)+".json.gz"};
+ const ledger={schema:"aerith.public.ohlcv.spot.universe.incremental.index.v1",
+  baseline_sha256:ledgerTamper?"0".repeat(64):sha(indexBytes),
+  quote:"USDT",source:"Binance Spot",mode:"MANUAL_APPEND_ONLY_CLOSED_CANDLES",
+  chunks:incremental?[chunkMeta]:[]};
  const requests=[];
  const get=async url=>{
+  // The optional manifest may be absent for older snapshots; keep old test counts unchanged.
+  if(url.endsWith("incremental/index.json")&&!incremental)return {ok:false,status:404};
   requests.push(url);
-  const buffer=url.endsWith("index.json")?Buffer.from(JSON.stringify(index)):
-      corrupt?Buffer.concat([compressed,Buffer.from("corrupt")]):compressed;
+  let buffer;
+  if(url.endsWith("incremental/index.json"))buffer=Buffer.from(JSON.stringify(ledger));
+  else if(url.endsWith("/index.json"))buffer=indexBytes;
+  else if(url.includes("/incremental/blocks/"))buffer=corruptIncremental?
+       Buffer.concat([extraGzip,Buffer.from("corrupt")]):extraGzip;
+  else buffer=corrupt?Buffer.concat([compressed,Buffer.from("corrupt")]):compressed;
   return{ok:true,status:200,arrayBuffer:async()=>Uint8Array.from(buffer).buffer};
  };
  const context={document:{currentScript:{src:"https://example.org/public/agent_crypto_erith_ia/trader/trader-historical-universe-reader.js"}},
@@ -87,4 +108,28 @@ test("Exchange approved instrument cannot use the non-Spot underscore ticker",as
  const f=fixture({marketAlias:true,approvedAlias:true});
  await assert.rejects(()=>f.api.listCoverage(),/Paire non qualifiée/);
  assert.equal(f.requests.length,1);
+});
+
+test("Verified Universe cumulative snapshot plus incremental OHLCV",async()=>{
+ const f=fixture({incremental:true});
+ const catalog=await f.api.listCoverage();
+ assert.equal(catalog.coverage[0].candles,291);
+ assert.equal(catalog.coverage[0].last_open_ms,1_800_000_000_000+2*300000);
+ const series=await f.api.readSeries({assetId:"dogecoin",period:"24h"});
+ assert.equal(series.metadata.status,"VALIDATED_ARCHIVE");
+ assert.equal(series.candles.length,291);
+ assert.equal(series.candles.at(-1)[0],1_800_000_000_000+2*300000);
+});
+test("Ledger bound to original SHA-256: tampering rejected",async()=>{
+ const f=fixture({incremental:true,ledgerTamper:true});
+ await assert.rejects(()=>f.api.listCoverage(),/Journal Universe non qualifié/);
+});
+test("Universe chronology gap rejected before reading OHLCV blocks",async()=>{
+ const f=fixture({incremental:true,gap:true});
+ await assert.rejects(()=>f.api.listCoverage(),/Continuité ou identité/);
+ assert.equal(f.requests.length,2);
+});
+test("Incremental SHA-256 tampering is rejected",async()=>{
+ const f=fixture({incremental:true,corruptIncremental:true});
+ await assert.rejects(()=>f.api.readSeries({assetId:"dogecoin",period:"24h"}),/SHA-256/);
 });
