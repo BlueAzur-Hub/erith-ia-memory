@@ -1,0 +1,8 @@
+{
+  "schema": "aerith.public.ohlcv.spot.incremental.bootstrap.request.v1",
+  "action": "append_once_after_main_merge",
+  "archive": "universe/cohorts/top50-additional/incremental",
+  "expected_assets": 7,
+  "source_quote": "USDT",
+  "reason": "Begin verified continuity for the seven newly archived Top50 assets without waiting for the next daily schedule; only first addition of this marker may activate network collection."
+}

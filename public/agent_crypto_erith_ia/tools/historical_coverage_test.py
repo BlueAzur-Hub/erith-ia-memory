@@ -15,10 +15,11 @@ class CoverageTests(unittest.TestCase):
         d = self.report
         self.assertEqual(d["total_ranked"], 50)
         self.assertEqual(len(d["assets"]), 50)
-        self.assertEqual(d["archived_assets"], 24)
-        self.assertEqual(d["unarchived_assets"], 26)
+        self.assertEqual(d["archived_assets"], 31)
+        self.assertEqual(d["unarchived_assets"], 19)
         self.assertEqual(d["archive_owners"],
-                         {"legacy_r10": 7, "universe": 5, "top50": 12})
+                         {"legacy_r10": 7, "universe": 5, "top50": 12,
+                          "top50_additional": 7})
         self.assertEqual([a["rank"] for a in d["assets"]], list(range(1, 51)))
         self.assertEqual(len(set(a["id"] for a in d["assets"])), 50)
 
@@ -41,13 +42,15 @@ class CoverageTests(unittest.TestCase):
         self.assertGreaterEqual(d["cohort_incremental_candles"], 432)
         self.assertGreaterEqual(d["universe_incremental_chunks"], 10)
         self.assertGreaterEqual(d["universe_incremental_candles"], 135)
-        self.assertEqual(d["original_series"], 72)
+        self.assertEqual(d["original_series"], 93)
+        self.assertGreaterEqual(d["additional_incremental_chunks"], 0)
+        self.assertGreaterEqual(d["additional_incremental_candles"], 0)
 
     def test_unresolved_instruments_are_explicit(self):
         d = self.report
         missing = [a for a in d["assets"] if not a["archived"]]
-        self.assertEqual(len(missing), 26)
-        self.assertEqual(sum(d["unarchived_statuses"].values()), 26)
+        self.assertEqual(len(missing), 19)
+        self.assertEqual(sum(d["unarchived_statuses"].values()), 19)
         self.assertTrue(any(a["symbol"] == "FIGR_HELOC" for a in missing))
         self.assertTrue(any(a["symbol"] == "CRO" for a in missing))
 

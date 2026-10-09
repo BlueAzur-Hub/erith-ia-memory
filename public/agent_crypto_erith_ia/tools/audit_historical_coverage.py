@@ -60,14 +60,14 @@ def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10, additional_dir=
     require(len(legacy) == 7 and all(len(c) == 3 for c in legacy.values()),
             "Seven legacy assets / 21 series expected")
     extra = {}
+    extra_ledger = {"chunks": [], "partitions": []}
+    extra_tip = {}
     extension_result = remaining.verify(additional_dir, catalog)
     if extension_result["mode"] == "VERIFIED":
-        extra_doc = json.loads((additional_dir / "index.json").read_bytes())
-        approved_extra = {a["id"] for a in extra_doc["assets"]
-                          if a["status"] == "archived_spot"}
-        extra = {(b["asset_id"], b["period"]): b for b in extra_doc["blocks"]}
-        require(len(extra) == len(approved_extra)*len(PERIODS),
-                "Additional owner has incomplete historical coverage")
+        extra_ledger, approved_extra, extra, extra_tip = extension.inspect(additional_dir)
+        require(1 <= len(approved_extra) <= 15
+                and len(extra) == len(approved_extra) * len(PERIODS),
+                "Supplementary archive owner count unexpectedly changed")
     root = json.loads((catalog / "index.json").read_bytes())
     require(root.get("schema") == cohort.SCHEMA and len(root.get("assets", [])) == 50,
             "Top 50 snapshot invalid")
@@ -102,8 +102,7 @@ def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10, additional_dir=
                 block = legacy[aid][period]
                 latest = block["last_open_ms"]
             elif owner == "top50_additional":
-                block = extra[key]
-                latest = block["last_ms"]
+                block, latest = extra[key], extra_tip[key]
             else:
                 continue
             first = block.get("first_open_ms", block.get("first_ms"))
@@ -138,6 +137,9 @@ def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10, additional_dir=
             "unarchived_statuses": {k:v for k,v in states.items() if k in PENDING},
             "archive_owners": dict(owners),
             "original_series": 21 + len(u_original) + len(a_original) + len(extra),
+            "additional_incremental_chunks": len(extra_ledger["chunks"]) + sum(p["chunks"] for p in extra_ledger.get("partitions", [])),
+            "additional_incremental_candles": sum(x["candles"] for x in extra_ledger["chunks"]) + sum(p["candles"] for p in extra_ledger.get("partitions", [])),
+            "additional_sealed_partitions": len(extra_ledger.get("partitions", [])),
             "universe_incremental_chunks": len(u_ledger["chunks"]) + sum(p["chunks"] for p in u_ledger.get("partitions", [])),
             "cohort_incremental_chunks": len(a_ledger["chunks"]) + sum(p["chunks"] for p in a_ledger.get("partitions", [])),
             "universe_incremental_candles": sum(x["candles"] for x in u_ledger["chunks"]) + sum(p["candles"] for p in u_ledger.get("partitions", [])),

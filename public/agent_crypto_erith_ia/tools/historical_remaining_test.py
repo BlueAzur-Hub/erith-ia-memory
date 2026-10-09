@@ -36,7 +36,8 @@ class RemainingCoverageTests(unittest.TestCase):
         self.assertEqual(sum(x["status"] == "identity_review_required" for x in rows),11)
         self.assertEqual(sum(x["pair"] is not None for x in rows),15)
         self.assertEqual(len(proof["baseline_sha256"]),64)
-        self.assertEqual(additional.verify()["mode"],"NOT_COLLECTED")
+        self.assertEqual(additional.verify()["mode"],"VERIFIED")
+        self.assertEqual(additional.verify()["new_assets"],7)
         self.assertIsNone(next(x for x in rows if x["id"]=="tether")["pair"])
         self.assertIsNone(next(x for x in rows if x["id"]=="memecore")["pair"])
 
