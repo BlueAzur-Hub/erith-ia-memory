@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""Offline exact-ID identity crosswalk tests for Top250 Binance Spot."""
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+import json
+
+import verify_historical_top250_identity as m
+
+def ticker(base="HYPE",coin_id="hyperliquid",market="binance",target="USDT",anomaly=False):
+    return {"base":base,"target":target,"market":{"identifier":market},
+            "coin_id":coin_id,"target_coin_id":"tether","is_anomaly":anomaly,
+            "is_stale":False,"trust_score":"green",
+            "trade_url":"https://www.binance.com/en/trade/HYPE_USDT"}
+
+def audit():
+    assets=[]
+    for i in range(1,251):
+        assets.append({"rank":i,"id":"asset-"+str(i),"symbol":"COIN"+str(i),
+                       "proposed_pair":"COIN"+str(i)+"USDT","status":"pair_absent"})
+    assets[10].update(id="hyperliquid",symbol="HYPE",
+                      proposed_pair="HYPEUSDT",status="spot_candidate_identity_unverified")
+    assets[31].update(id="the-open-network",symbol="GRAM",
+                      proposed_pair="GRAMUSDT",status="spot_candidate_identity_unverified")
+    assets[50].update(id="polkadot",symbol="DOT",
+                      proposed_pair="DOTUSDT",status="spot_candidate_identity_unverified")
+    return {"schema":m.AUDIT_SCHEMA,"total_ranked":250,"assets":assets}
+
+class IdentityTests(unittest.TestCase):
+    def test_requires_exact_id_spot_market_quote_and_valid_signal(self):
+        a=m.candidates(audit())[0]
+        self.assertEqual(len(m.extract([ticker()],a)),1)
+        for obj in (ticker(coin_id="someone-else"),ticker(market="okx"),
+                    ticker(target="BUSD"),ticker(anomaly=True),
+                    {**ticker(),"is_stale":True},
+                    {**ticker(),"trust_score":"red"}):
+            self.assertFalse(m.extract([obj],a))
+    def test_batch_processes_multiple_exact_ids_without_guessing(self):
+        counts=[]
+        def getter(a,p):
+            counts.append((a,p))
+            if a=="hyperliquid":return [ticker()]
+            if a=="the-open-network":return [ticker(base="GRAM",coin_id="different-gram")]
+            return []
+        ledger,attempts=m.process(audit(),batch_size=3,fetcher=getter,delay=0,now="test-date")
+        self.assertEqual(len(attempts),3)
+        self.assertEqual(ledger["approved_count"],1)
+        self.assertEqual(ledger["checked_count"],3)
+        self.assertEqual(ledger["results"][1]["status"],"identity_not_confirmed")
+        self.assertEqual(len(counts),3)
+        self.assertEqual(ledger["candidate_count"],3)
+    def test_resume_never_rechecks_approved_or_denied(self):
+        requests=[]
+        def getter(a,p):requests.append(a);return [ticker()] if a=="hyperliquid" else []
+        current,_=m.process(audit(),batch_size=1,fetcher=getter,delay=0)
+        updated,_=m.process(audit(),existing=current,batch_size=3,fetcher=getter,delay=0)
+        self.assertEqual(requests,["hyperliquid","the-open-network","polkadot"])
+        self.assertEqual(updated["checked_count"],3)
+        again,attempts=m.process(audit(),existing=updated,batch_size=3,fetcher=getter,delay=0)
+        self.assertEqual(len(attempts),0)
+        self.assertEqual(again["approved_count"],1)
+    def test_api_error_does_not_grant_approval(self):
+        def error(a,p):raise OSError("temporary upstream failure")
+        item=m.inspect_asset(m.candidates(audit())[0],error)
+        self.assertEqual(item["status"],"source_unavailable")
+        self.assertEqual(item["evidence"],[])
+        existing={"schema":m.SCHEMA,"results":[{"id":"hyperliquid","rank":11,
+             "pair":"HYPEUSDT","status":"source_unavailable"}]}
+        v,_=m.process(audit(),existing=existing,batch_size=1,
+                      fetcher=lambda a,p:[ticker()],delay=0)
+        self.assertEqual(v["approved_count"],1)
+    def test_unfinished_pagination_never_approves(self):
+        item=m.inspect_asset(m.candidates(audit())[0],
+              lambda a,p:[ticker()]*100)
+        self.assertEqual(item["status"],"source_pagination_incomplete")
+    def test_no_mutating_wrong_pair_or_fake_proof(self):
+        ledger={"schema":m.SCHEMA,"results":[{
+          "id":"hyperliquid","rank":11,"pair":"GRUMUSDT",
+          "status":"approved_coingecko_binance_spot","evidence":[{"coin_id":"hyperliquid",
+                "base":"HYPE","target":"USDT","market_identifier":"binance"}]}]}
+        with self.assertRaisesRegex(ValueError,"no longer matches"):
+            m.validate_ledger(ledger,audit())
+        ledger["results"][0]["pair"]="HYPEUSDT"
+        ledger["results"][0]["evidence"][0]["coin_id"]="wrong"
+        with self.assertRaisesRegex(ValueError,"without exact identity"):
+            m.validate_ledger(ledger,audit())
+    def test_250_rank_frozen_no_arbitrary_batch(self):
+        with self.assertRaisesRegex(ValueError,"Unbounded"):
+            m.process(audit(),batch_size=250,fetcher=lambda a,p:[])
+        x=audit();x["assets"].pop()
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/"audit.json";path.write_text(json.dumps(x))
+            with self.assertRaisesRegex(ValueError,"incomplete"):
+                m.load_audit(path)
+
+if __name__=="__main__":
+    unittest.main(verbosity=2)
