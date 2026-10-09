@@ -1,0 +1,10 @@
+{
+  "schema": "aerith.public.ohlcv.spot.bulk-monthly.bootstrap.v1",
+  "action": "import_month_once_after_main_merge",
+  "month": "2026-09",
+  "interval": "1m",
+  "qualified_assets": 31,
+  "source": "Binance Spot",
+  "storage": "github-release",
+  "note": "Read qualified Top50 archive registry; archive ZIPs checked with original Binance SHA256 and stored outside Git history."
+}
