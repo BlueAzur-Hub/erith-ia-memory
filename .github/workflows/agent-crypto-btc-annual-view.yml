@@ -8,6 +8,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/btc-annual-view.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/btc-annual-view.js'
       - 'public/agent_crypto_erith_ia/administrator/historical-archive-reader.html'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
   push:
     branches: [main]
     paths:
@@ -17,6 +18,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/btc-annual-view.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/btc-annual-view.js'
       - 'public/agent_crypto_erith_ia/administrator/historical-archive-reader.html'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
   workflow_dispatch:
   schedule:
     - cron: '37 12 10 * *'
