@@ -120,6 +120,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: top250-exact-identity-proofs
-          path: /tmp/top250-identity-evidence.json
-          if-no-files-found: warn
+          path: ${{ runner.temp }}/top250-identity-evidence.json
+          if-no-files-found: error
           retention-days: 30
