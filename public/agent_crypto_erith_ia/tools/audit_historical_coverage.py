@@ -16,6 +16,7 @@ import collect_historical_cohort as cohort
 import collect_historical_universe as pilot
 import extend_historical_cohort as extension
 import extend_historical_universe as universe
+import historical_archive_partitions as partitions
 
 BASE = pilot.ROOT / "data/historical_archive_prototype"
 R10 = BASE / "ohlcv_spot_pilot/index.json"
@@ -116,10 +117,12 @@ def summarize(catalog=COHORT, pilot_root=UNIVERSE, r10_path=R10):
             "unarchived_statuses": {k:v for k,v in states.items() if k in PENDING},
             "archive_owners": dict(owners),
             "original_series": 21 + len(u_original) + len(a_original),
-            "universe_incremental_chunks": len(u_ledger["chunks"]),
-            "cohort_incremental_chunks": len(a_ledger["chunks"]),
-            "universe_incremental_candles": sum(x["candles"] for x in u_ledger["chunks"]),
-            "cohort_incremental_candles": sum(x["candles"] for x in a_ledger["chunks"]),
+            "universe_incremental_chunks": len(u_ledger["chunks"]) + sum(p["chunks"] for p in u_ledger.get("partitions", [])),
+            "cohort_incremental_chunks": len(a_ledger["chunks"]) + sum(p["chunks"] for p in a_ledger.get("partitions", [])),
+            "universe_incremental_candles": sum(x["candles"] for x in u_ledger["chunks"]) + sum(p["candles"] for p in u_ledger.get("partitions", [])),
+            "cohort_incremental_candles": sum(x["candles"] for x in a_ledger["chunks"]) + sum(p["candles"] for p in a_ledger.get("partitions", [])),
+            "universe_sealed_partitions": len(u_ledger.get("partitions", [])),
+            "cohort_sealed_partitions": len(a_ledger.get("partitions", [])),
             "status_note": "24 of 50 have at least one 24h/7d/30d archive; not complete 60d/90d/1y/Max",
             "assets": items}
 

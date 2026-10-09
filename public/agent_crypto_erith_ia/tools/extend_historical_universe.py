@@ -14,6 +14,8 @@ from pathlib import Path
 import re
 import time
 
+import historical_archive_partitions as partitions
+
 from collect_historical_universe import (
     BLOCK_SCHEMA, OUTPUT, PERIODS, SCHEMA, atomic_write, digest, encoded,
     get_json, require, validate_index, validate_rows,
@@ -117,7 +119,7 @@ def inspect(root: Path):
             "Incremental ledger exceeds bounds")
     progress = {key: b["last_ms"] for key, b in series.items()}
     seen_names = set()
-    for meta in chunks:
+    for meta in partitions.all_chunks(root / "incremental", ledger):
         require(isinstance(meta, dict) and
                 isinstance(meta.get("file"), str) and
                 isinstance(meta.get("sha256"), str) and
@@ -219,6 +221,8 @@ def append(root: Path, now_ms: int, max_rows: int):
         else:
             atomic_write(dest, raw)
     new_ledger = {**ledger, "chunks": [*ledger["chunks"], *(x[2] for x in prepared)]}
+    new_ledger, sealed = partitions.rotate(root / "incremental", new_ledger)
+    partitions.persist_partitions(root / "incremental", sealed, atomic_write)
     atomic_write(root / "incremental/index.json", encoded(new_ledger))
     inspect(root)
     return {"result": "APPENDED", "new_chunks": len(prepared),
@@ -242,7 +246,8 @@ def main():
         ledger, assets, original, progress = inspect(args.output_dir)
         result = {"mode": "VERIFY", "assets": len(assets),
                   "baseline_series": len(original), "incremental_chunks": len(ledger["chunks"]),
-                  "incremental_candles": sum(x["candles"] for x in ledger["chunks"])}
+                  "incremental_candles": sum(x["candles"] for x in partitions.all_chunks(args.output_dir / "incremental", ledger)),
+                  "sealed_partitions": len(ledger.get("partitions", []))}
     elif args.plan:
         ledger, windows = readiness(args.output_dir, now_ms, args.max_rows)
         result = {"mode": "PLAN_OFFLINE", "new_requests": sum(bool(w["count"]) for w in windows),

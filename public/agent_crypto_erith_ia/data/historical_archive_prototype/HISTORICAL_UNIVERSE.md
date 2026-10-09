@@ -96,3 +96,16 @@ Une extension indépendante `tools/backfill_historical_periods.py` lit l'inventa
 - Les nouvelles périodes ne sont pas encore affichées par le lecteur historique actuel du Trader. Aucun nouveau panneau ou Graphique n'a été créé.
 
 **État de preuve :** tests hors réseau avant première collecte réelle ; ne pas annoncer de couverture 90 j/1 an sur les 24 actifs tant que le manifeste Binance réel et les contrôles GitHub ne l'ont pas établie.
+
+## Partitions scellées des journaux incrémentaux (métadonnées SHA-256)
+
+Le module commun `tools/historical_archive_partitions.py` étend les lecteurs **existants** `extend_historical_universe.py` et `extend_historical_cohort.py` sans créer un deuxième collecteur. Le dépôt garde **toutes les bougies gzip d'origine exactement à leur emplacement actuel** ; aucun fichier `blocks/` n'est déplacé, remplacé ou supprimé. Ce sont uniquement les **références du journal** qui sont déplacées vers des manifestes scellés, vérifiés par SHA-256.
+
+Chaque racine `incremental/index.json` peut désormais contenir deux listes : `partitions` (anciens manifestes gzip immuables) et `chunks` (références actives). L'ancien format contenant seulement `chunks` reste accepté ; aucun changement des 10 blocs Universe et des 24 blocs Top50 n'est nécessaire. Le lecteur de vérification reconstitue l'ordre **partitions → chunks actifs** ; il contrôle à chaque passage le hash du manifeste, toutes les bougies originales, leurs paires Binance/USDT et la continuité de chaque série. Les compteurs de l'inventaire cumulent les anciens segments scellés et les segments encore actifs pour éviter une fausse baisse de couverture après rotation.
+
+**Rotation automatique uniquement après une collecte validée :** seuil de **360** références actives ; conservation de **72** références dans l'index actif, scellage du reste en un ou plusieurs manifestes de taille bornée, écriture du manifeste scellé **avant** la publication atomique de l'index. Cette rotation n'a pas d'effet sur les périodes du Graphique ou du Trader et ne réclame pas de manipulation Firefox. Les seuils sont des mesures de protection des manifestes, pas des limites de rétention OHLCV : les blocs historiques restent durablement référencés et vérifiés. Pas d'effacement automatique ni de compression irréversible des chandelles.
+
+**Test de sûreté :** `python public/agent_crypto_erith_ia/tools/historical_archive_partitions_test.py` reproduit deux collectes successives pour Universe et Top50, une reprise et un NOOP, puis falsifie alternativement une partition SHA et une bougie gzip pour vérifier le rejet. Les workflows quotidiens exécutent ce test **hors réseau** avant tout accès Binance ; les événements PR/push ne collectent aucune bougie.
+
+**Limites :** maximum de **10 000 manifestes** de métadonnées scellées, soit un horizon très supérieur aux 5 000 anciennes références actives, mais pas une preuve de stockage illimité. Pour 50/100/250 actifs, surveiller la taille de GitHub, le coût des vérifications intégrales et envisager des contrôles incrémentaux par période. Une rotation n'a pas encore eu lieu dans les archives réelles, car leurs journaux contiennent actuellement 10 et 24 entrées. La première rotation en production reste à confirmer ; ne pas annoncer une rotation réussie avant les preuves GitHub.
+
