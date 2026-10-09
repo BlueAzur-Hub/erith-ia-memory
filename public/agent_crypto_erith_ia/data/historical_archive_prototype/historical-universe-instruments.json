@@ -1,0 +1,18 @@
+{
+  "schema": "aerith.public.ohlcv.spot.universe.instruments.v1",
+  "policy": "Market CoinGecko ID / ticker association must be explicitly approved; Binance Spot status and pair checked live before collection. No substitutes.",
+  "assets": {
+    "bitcoin": {"symbol": "BTC", "mode": "legacy"},
+    "ethereum": {"symbol": "ETH", "mode": "legacy"},
+    "binancecoin": {"symbol": "BNB", "mode": "legacy"},
+    "ripple": {"symbol": "XRP", "mode": "legacy"},
+    "solana": {"symbol": "SOL", "mode": "legacy"},
+    "tron": {"symbol": "TRX", "mode": "legacy"},
+    "zcash": {"symbol": "ZEC", "mode": "legacy"},
+    "dogecoin": {"symbol": "DOGE", "mode": "pilot"},
+    "chainlink": {"symbol": "LINK", "mode": "pilot"},
+    "cardano": {"symbol": "ADA", "mode": "pilot"},
+    "stellar": {"symbol": "XLM", "mode": "pilot"},
+    "usd-coin": {"symbol": "USDC", "mode": "pilot"}
+  }
+}

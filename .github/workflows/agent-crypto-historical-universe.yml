@@ -1,0 +1,84 @@
+name: Agent Crypto Historical Universe — bounded pilot
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'plan (offline) or collect (bounded Binance Spot requests)'
+        required: true
+        type: choice
+        default: plan
+        options: [plan, collect]
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-historical-universe.yml'
+      - 'public/agent_crypto_erith_ia/tools/collect_historical_universe.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_universe_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-universe-instruments.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-historical-universe-manual
+  cancel-in-progress: false
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify code syntax and isolated offline behaviour
+        run: |
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_historical_universe.py
+          python public/agent_crypto_erith_ia/tools/collect_historical_universe.py --self-test
+          python public/agent_crypto_erith_ia/tools/historical_universe_test.py
+      - name: Qualify Top 20 identities without network
+        run: |
+          python public/agent_crypto_erith_ia/tools/collect_historical_universe.py --plan --limit 20 > "$RUNNER_TEMP/historical-universe-plan.json"
+          cat "$RUNNER_TEMP/historical-universe-plan.json"
+      - name: Collect new Binance OHLCV only on explicit manual selection
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        run: |
+          python public/agent_crypto_erith_ia/tools/collect_historical_universe.py --collect --enable-network --limit 20
+          python public/agent_crypto_erith_ia/tools/collect_historical_universe.py --verify
+      - name: Ensure previous archives, Interface and Trader are not altered
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- public/agent_crypto_erith_ia/administrator public/agent_crypto_erith_ia/trader public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1 public/agent_crypto_erith_ia/data/historical_archive_prototype/partitions_r11
+      - name: Publish only the new isolated archive on manual collect
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'collect'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -- public/agent_crypto_erith_ia/data/historical_archive_prototype/universe/
+          git diff --cached --quiet && { echo 'NOOP: no new archive'; exit 0; }
+          git commit -m 'Archive verified historical universe pilot without touching R10 or Trader'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Produce portable ZIP of this release
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/agent-crypto-historical-universe"
+          cp public/agent_crypto_erith_ia/tools/collect_historical_universe.py "$RUNNER_TEMP/agent-crypto-historical-universe/"
+          cp public/agent_crypto_erith_ia/tools/historical_universe_test.py "$RUNNER_TEMP/agent-crypto-historical-universe/"
+          cp public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-universe-instruments.json "$RUNNER_TEMP/agent-crypto-historical-universe/"
+          cp public/agent_crypto_erith_ia/data/historical_archive_prototype/HISTORICAL_UNIVERSE.md "$RUNNER_TEMP/agent-crypto-historical-universe/"
+          if test -d public/agent_crypto_erith_ia/data/historical_archive_prototype/universe; then
+            cp -a public/agent_crypto_erith_ia/data/historical_archive_prototype/universe "$RUNNER_TEMP/agent-crypto-historical-universe/"
+          fi
+          cd "$RUNNER_TEMP" && zip -qr "$GITHUB_WORKSPACE/historical-universe-delivery.zip" agent-crypto-historical-universe
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historical-universe-delivery
+          path: historical-universe-delivery.zip
+          retention-days: 30
