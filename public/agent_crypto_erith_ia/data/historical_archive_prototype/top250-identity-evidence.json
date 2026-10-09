@@ -1,7 +1,7 @@
 {
-  "approved_count": 3,
+  "approved_count": 10,
   "candidate_count": 96,
-  "checked_count": 4,
+  "checked_count": 12,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
   "quote": "USDT",
   "results": [
@@ -74,9 +74,159 @@
       "rank": 52,
       "status": "approved_coingecko_binance_spot",
       "symbol": "ASTER"
+    },
+    {
+      "checked_at": "2026-10-09T20:51:44.799926+00:00",
+      "evidence": [],
+      "id": "worldcoin-wld",
+      "pages": 1,
+      "pair": "WLDUSDT",
+      "rank": 53,
+      "status": "identity_not_confirmed",
+      "symbol": "WLD"
+    },
+    {
+      "checked_at": "2026-10-09T20:51:59.943032+00:00",
+      "evidence": [
+        {
+          "base": "PAXG",
+          "coin_id": "pax-gold",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "pax-gold",
+          "trade_url": "https://www.binance.com/en/trade/PAXG_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "pax-gold",
+      "pages": 1,
+      "pair": "PAXGUSDT",
+      "rank": 54,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "PAXG"
+    },
+    {
+      "checked_at": "2026-10-09T20:52:15.104483+00:00",
+      "evidence": [
+        {
+          "base": "SKY",
+          "coin_id": "sky",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "sky",
+          "trade_url": "https://www.binance.com/en/trade/SKY_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "sky",
+      "pages": 1,
+      "pair": "SKYUSDT",
+      "rank": 57,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "SKY"
+    },
+    {
+      "checked_at": "2026-10-09T20:52:30.266931+00:00",
+      "evidence": [
+        {
+          "base": "WLFI",
+          "coin_id": "world-liberty-financial",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "world-liberty-financial",
+          "trade_url": "https://www.binance.com/en/trade/WLFI_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "world-liberty-financial",
+      "pages": 1,
+      "pair": "WLFIUSDT",
+      "rank": 58,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "WLFI"
+    },
+    {
+      "checked_at": "2026-10-09T20:52:45.446342+00:00",
+      "evidence": [
+        {
+          "base": "ICP",
+          "coin_id": "internet-computer",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "internet-computer",
+          "trade_url": "https://www.binance.com/en/trade/ICP_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "internet-computer",
+      "pages": 1,
+      "pair": "ICPUSDT",
+      "rank": 59,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "ICP"
+    },
+    {
+      "checked_at": "2026-10-09T20:53:00.637490+00:00",
+      "evidence": [
+        {
+          "base": "MORPHO",
+          "coin_id": "morpho",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "morpho",
+          "trade_url": "https://www.binance.com/en/trade/MORPHO_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "morpho",
+      "pages": 1,
+      "pair": "MORPHOUSDT",
+      "rank": 60,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "MORPHO"
+    },
+    {
+      "checked_at": "2026-10-09T20:53:15.819464+00:00",
+      "evidence": [
+        {
+          "base": "PEPE",
+          "coin_id": "pepe",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "pepe",
+          "trade_url": "https://www.binance.com/en/trade/PEPE_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "pepe",
+      "pages": 1,
+      "pair": "PEPEUSDT",
+      "rank": 61,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "PEPE"
+    },
+    {
+      "checked_at": "2026-10-09T20:53:30.984006+00:00",
+      "evidence": [
+        {
+          "base": "BFUSD",
+          "coin_id": "bfusd",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "bfusd",
+          "trade_url": "https://www.binance.com/en/trade/BFUSD_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "bfusd",
+      "pages": 1,
+      "pair": "BFUSDUSDT",
+      "rank": 67,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "BFUSD"
     }
   ],
-  "review_required_count": 93,
+  "review_required_count": 86,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
