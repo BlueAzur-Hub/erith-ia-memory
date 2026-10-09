@@ -170,7 +170,7 @@ def ensure_instruments(windows):
     for pair in pairs:
         entry = found.get(pair, {})
         require(entry.get("symbol") == pair and
-                entry.get("baseAsset") + "USDT" == pair and
+                entry.get("baseAsset") == pair[:-4] and
                 entry.get("quoteAsset") == "USDT" and
                 entry.get("status") == "TRADING" and
                 entry.get("isSpotTradingAllowed") is True and
