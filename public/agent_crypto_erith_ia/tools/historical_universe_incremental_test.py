@@ -150,5 +150,15 @@ class IncrementalTests(unittest.TestCase):
             self.assertFalse((root / "incremental/index.json").exists())
 
 
+    def test_missing_exchange_instrument_has_safe_failure_and_no_writes(self):
+        with tempfile.TemporaryDirectory() as d:
+            root, end = baseline(d)
+            with patch.object(incr, "get_json", return_value={"symbols": []}):
+                with self.assertRaisesRegex(ValueError, "no longer approved"):
+                    incr.append(root, end + 5 * 3_600_000, 288)
+            self.assertFalse((root / "incremental/index.json").exists())
+
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
