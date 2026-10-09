@@ -24,7 +24,7 @@ import audit_historical_coverage as coverage
 
 SNAPSHOT = ROOT / "data/crypto/latest.json"
 SCHEMA = "aerith.public.ohlcv.spot.discovery.top250.v1"
-MAX_SIZE = 10_000_000
+MAX_SIZE = 30_000_000
 ID = re.compile(r"^[a-z0-9-]{2,100}$")
 SYMBOL = re.compile(r"^[A-Z0-9]{2,22}$")
 ORIGINS = ("https://data-api.binance.vision", "https://api.binance.com")
@@ -73,7 +73,7 @@ def exchange_info():
     failures = []
     for host in ORIGINS:
         try:
-            req = urllib.request.Request(host+"/api/v3/exchangeInfo",
+            req = urllib.request.Request(host+"/api/v3/exchangeInfo?permissions=SPOT",
                   headers={"User-Agent":"SevenHeaven-Historical-Top250/1"})
             with urllib.request.urlopen(req, timeout=25) as r:
                 require(r.status == 200, "Bad Binance status")
@@ -84,7 +84,7 @@ def exchange_info():
                         "Binance exchangeInfo incomplete")
                 return doc
         except (OSError, urllib.error.URLError, ValueError) as exc:
-            failures.append(type(exc).__name__)
+            failures.append(host+": "+type(exc).__name__+" "+str(exc)[:200])
     raise RuntimeError("Cannot retrieve Binance Spot exchangeInfo: "+",".join(failures))
 
 def is_spot(s):
