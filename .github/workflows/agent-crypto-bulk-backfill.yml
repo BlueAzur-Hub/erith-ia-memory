@@ -11,6 +11,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-resume.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-acceleration.json'
   push:
     branches: [main]
     paths:
@@ -19,6 +20,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-resume.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-acceleration.json'
 permissions:
   contents: write
 concurrency:
@@ -44,12 +46,30 @@ jobs:
           python public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py
           python public/agent_crypto_erith_ia/tools/historical_bulk_test.py
           python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
-          python public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py --plan --max-months 2
+          python public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py --plan --max-months 7
       - name: Authorize initial import or one-time explicit resumption only on a main merge
         id: allow
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
+          acceleration=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-acceleration.json
+          acceleration_flag=$(git diff --name-status HEAD^ HEAD -- "$acceleration" | cut -f1)
+          if [[ "$acceleration_flag" == A ]]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-acceleration.json').read_text())
+          assert d['schema']=='aerith.public.ohlcv.spot.bulk-backfill.acceleration.v1'
+          assert d['action']=='extend_one_year_shared_cohort'
+          assert d['max_months_per_run']==7
+          assert d['storage']=='immutable-github-releases'
+          assert d['source']=='Binance Spot USDT'
+          assert d['no_overwrite_existing_release'] is True
+          assert d['trader_unchanged'] is True
+          PY
+            echo "approved=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           resume=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-resume.json
           resume_flag=$(git diff --name-status HEAD^ HEAD -- "$resume" | cut -f1)
           if [[ "$resume_flag" == A ]]; then
@@ -88,11 +108,11 @@ jobs:
           assert d['storage']=='immutable-github-releases'
           PY
           echo "approved=true" >> "$GITHUB_OUTPUT"
-      - name: Backfill 2 missing full historical months for every qualified archive owner
+      - name: Backfill 7 missing full historical months for every qualified archive owner
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && steps.allow.outputs.approved == 'true')
         run: |
           set -euo pipefail
-          python public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py --run --max-months 2 | tee "$RUNNER_TEMP/backfill-monthly-report.txt"
+          python public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py --run --max-months 7 | tee "$RUNNER_TEMP/backfill-monthly-report.txt"
       - name: Assert no Git mutation to existing historical assets or trading systems
         run: |
           set -euo pipefail
@@ -103,10 +123,10 @@ jobs:
             public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
             public/agent_crypto_erith_ia/core/
       - name: Deliver historical run report
-        if: always()
+        if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && steps.allow.outputs.approved == 'true'))
         uses: actions/upload-artifact@v4
         with:
           name: monthly-backfill-progress
-          path: /tmp/backfill-monthly-report.txt
-          if-no-files-found: warn
+          path: ${{ runner.temp }}/backfill-monthly-report.txt
+          if-no-files-found: error
           retention-days: 30
