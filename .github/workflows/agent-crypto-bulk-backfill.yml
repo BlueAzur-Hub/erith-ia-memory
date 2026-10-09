@@ -1,0 +1,91 @@
+name: Agent Crypto Historical 1m - Continuous Monthly Backfill
+on:
+  workflow_dispatch:
+  schedule:
+    # Four independent bounded runs/day; progress checkpoints live in Releases.
+    - cron: '19 1,7,13,19 * * *'
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-bulk-backfill.yml'
+      - 'public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-bulk-backfill.yml'
+      - 'public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-continuous-spot-bulk-release
+  cancel-in-progress: false
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline regression, Top50 identity and immutable release planning tests
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py
+          python public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py
+          python public/agent_crypto_erith_ia/tools/historical_bulk_test.py
+          python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
+          python public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py --plan --max-months 2
+      - name: Authorize first import only if bootstrap is ADDED in main merge
+        id: allow
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          marker=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json
+          status=$(git diff --name-status HEAD^ HEAD -- "$marker" | cut -f1)
+          if [[ "$status" != A ]]; then
+            echo "approved=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json')
+          d=json.loads(p.read_text())
+          assert d['schema']=='aerith.public.ohlcv.spot.bulk-backfill.bootstrap.v1'
+          assert d['action']=='start_continuous_monthly_archive'
+          assert d['owner']=='existing-verified-cohort'
+          assert d['interval']=='1m'
+          assert d['months_per_run']==2
+          assert d['storage']=='immutable-github-releases'
+          PY
+          echo "approved=true" >> "$GITHUB_OUTPUT"
+      - name: Backfill 2 missing full historical months for every qualified archive owner
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && steps.allow.outputs.approved == 'true')
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py --run --max-months 2 | tee "$RUNNER_TEMP/backfill-monthly-report.txt"
+      - name: Assert no Git mutation to existing historical assets or trading systems
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/crypto/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
+            public/agent_crypto_erith_ia/core/
+      - name: Deliver historical run report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monthly-backfill-progress
+          path: /tmp/backfill-monthly-report.txt
+          if-no-files-found: warn
+          retention-days: 30
