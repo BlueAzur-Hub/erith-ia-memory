@@ -74,9 +74,12 @@ def build(venue,monthly):
             aid=item["asset_id"]
             need(aid in rows and aid not in present,"Unknown/duplicate asset")
             present.add(aid)
-            need(item["rank"]==rows[aid]["rank"] and item["quote"]=="USDT" and
+            need(item["quote"]=="USDT" and
                  item["source"]=="Binance Spot public monthly CSV",
                  "Source, currency or ID mismatched")
+            if rows[aid]["months"]:
+                need(rows[aid]["months"][0]["pair"]==item["pair"],
+                     "Pair changed for exact CoinGecko ID")
             if item["status"]=="verified":
                 filename=item["file"]
                 asset=[x for x in release["assets"] if x["name"]==filename]
