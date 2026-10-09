@@ -1,7 +1,7 @@
 /* Seven Heaven · Trader verified R9 archive; read-only, no live-chart changes. */
 (()=>{"use strict";
 const ID="traderVerifiedHistory",LABEL={"24h":"5 min","7d":"1 h","30d":"4 h"};
-let reader=null,catalog=null,sequence=0;
+let reader=null,catalog=null,sequence=0,universeReader=null,universeCatalog=null;
 const panel=()=>document.getElementById(ID);
 const displayCurrency=()=>{try{return globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency==="EUR"?"EUR":"USD";}catch(_){return"USD";}};
 function layout(p,currency){
@@ -23,6 +23,22 @@ function loadReader(){
   document.head.appendChild(s);
  }).catch(e=>{reader=null;document.getElementById("traderHistoryR9Loader")?.remove();throw e;});
  return reader;
+}
+
+function loadUniverseReader(){
+ if(globalThis.SevenHistoricalUniverseReader?.readSeries)return Promise.resolve(globalThis.SevenHistoricalUniverseReader);
+ if(universeReader)return universeReader;
+ universeReader=new Promise((resolve,reject)=>{
+  const script=document.createElement("script");script.id="traderHistoricalUniverseLoader";
+  script.src=new URL("../trader/trader-historical-universe-reader.js",document.baseURI).href;
+  script.onload=()=>{
+   const api=globalThis.SevenHistoricalUniverseReader;
+   api?.readSeries&&api?.refreshIndex?resolve(api):reject(Error("Lecteur Univers indisponible"));
+  };
+  script.onerror=()=>reject(Error("Chargement lecteur Univers impossible"));
+  document.head.appendChild(script);
+ }).catch(e=>{universeReader=null;document.getElementById("traderHistoricalUniverseLoader")?.remove();throw e;});
+ return universeReader;
 }
 
 /* Read-only projection of the native CoinGecko USD chart broker.
@@ -83,7 +99,7 @@ function paint(p,result){
   m.isLive!==false||m.graphConnected!==false||!Array.isArray(rows))throw Error("Archive non qualifiée");
  write(p,"meta",m.pair+" · Binance Spot · USDT · "+m.interval+" · "+rows.length+
   " chandelles · "+utc(m.firstOpenMs)+" → "+utc(m.lastOpenMs)+
-  " · capture "+utc(m.sourceIndexUpdatedAt)+" · SHA-256 vérifié · NON LIVE");
+  (m.archiveFamily==="universe"?" · borne fenêtre ":" · capture ")+utc(m.sourceIndexUpdatedAt)+" · SHA-256 vérifié · NON LIVE");
  const body=p.querySelector("[data-history-rows]");body?.replaceChildren();
  for(const row of rows.slice(-12).reverse()){
   const tr=document.createElement("tr");
@@ -118,23 +134,37 @@ async function refresh({reload=false}={}){
   if(reload||!catalog)catalog=await api.refreshIndex();
   if(seq!==sequence||!p.open)return;
   if(!catalog?.snapshot||catalog.quote!=="USDT"||catalog.coverage?.length!==21)throw Error("Catalogue non qualifié");
-  const entry=catalog.coverage.find(x=>x.id===c.id&&x.period===period);
+  let entry=catalog.coverage.find(x=>x.id===c.id&&x.period===period);
+  let source=api,archiveName="R9",extensionError="";
+  if(!entry){
+   try{
+    const ext=await loadUniverseReader();
+    if(seq!==sequence||!p.open||selected()?.id!==c.id)return;
+    if(reload||!universeCatalog)universeCatalog=await ext.refreshIndex();
+    if(seq!==sequence||!p.open||selected()?.id!==c.id)return;
+    if(!universeCatalog?.snapshot||universeCatalog.quote!=="USDT"||
+      universeCatalog.archiveFamily!=="universe"||!Array.isArray(universeCatalog.coverage))
+      throw Error("Catalogue Univers non qualifié");
+    entry=universeCatalog.coverage.find(x=>x.id===c.id&&x.period===period);
+    if(entry){source=ext;archiveName="UNIVERS";}
+   }catch(e){extensionError=String(e?.message||e).slice(0,100);}
+  }
   if(!entry){
    write(p,"status",c.symbol+" · archive non disponible");
-   write(p,"detail","Pas d’archive Binance Spot R9 pour cet actif. Jamais de substitution BTC. Historique graphique natif séparé ci-dessous.");
+   write(p,"detail","Pas d’archive Binance Spot R9/Univers pour cet actif. Jamais de substitution BTC. Historique graphique natif séparé ci-dessous."+(extensionError?" · "+extensionError:""));
    paintNative(p,c);
    return;
   }
-  write(p,"status",c.symbol+" · contrôle SHA-256…");
-  const data=await api.readSeries({assetId:c.id,period});
+  write(p,"status",c.symbol+" · "+archiveName+" · contrôle SHA-256…");
+  const data=await source.readSeries({assetId:c.id,period});
   if(seq!==sequence||!p.open||selected()?.id!==c.id||
    p.querySelector("[data-history-period]")?.value!==period)return;
   if(data.metadata.id!==c.id||data.metadata.pair!==entry.pair||
    data.metadata.period!==period||data.candles.length!==entry.candles)
    throw Error("Réponse R9 hors contexte");
   paint(p,data);
-  write(p,"status",c.symbol+" · "+LABEL[period]+" · ARCHIVE VÉRIFIÉE");
-  write(p,"detail","Capture historique figée : aucune conversion USDT/USDC, aucun ordre.");
+  write(p,"status",c.symbol+" · "+LABEL[period]+" · "+archiveName+" · ARCHIVE VÉRIFIÉE");
+  write(p,"detail","Archive "+archiveName+" historique vérifiée : aucune conversion USDT/USDC, aucun ordre.");
  }catch(e){if(seq!==sequence||!p.open)return;empty(p);
   write(p,"status",c.symbol+" · archive indisponible");
   write(p,"detail","Erreur R9 : "+String(e?.message||e).slice(0,150)+" · aucune donnée inventée.");
@@ -172,7 +202,7 @@ function mount(){
  const p=document.createElement("details");p.id=ID;
  p.setAttribute("aria-label","Historique Binance Spot vérifié · lecture seule");
  p.innerHTML=[
- '<summary><strong>HISTORIQUE VÉRIFIÉ · R9</strong>',
+ '<summary><strong>HISTORIQUE VÉRIFIÉ · R9 + UNIVERS</strong>',
  '<span data-history-status>Fermé · aucune lecture</span></summary>',
  '<div class="history-body"><div class="history-controls" data-history-controls>',
  '<label for="traderHistoryPeriod">Période</label><select id="traderHistoryPeriod" data-history-period>',
