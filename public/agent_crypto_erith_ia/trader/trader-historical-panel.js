@@ -1,7 +1,7 @@
 /* Seven Heaven · Trader verified R9 archive; read-only, no live-chart changes. */
 (()=>{"use strict";
 const ID="traderVerifiedHistory",LABEL={"24h":"5 min","7d":"1 h","30d":"4 h"};
-let reader=null,catalog=null,sequence=0,universeReader=null,universeCatalog=null;
+let reader=null,catalog=null,sequence=0,universeReader=null,universeCatalog=null,cohortReader=null,cohortCatalog=null;
 const panel=()=>document.getElementById(ID);
 const displayCurrency=()=>{try{return globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency==="EUR"?"EUR":"USD";}catch(_){return"USD";}};
 function layout(p,currency){
@@ -41,6 +41,21 @@ function loadUniverseReader(){
  return universeReader;
 }
 
+function loadCohortReader(){
+ if(globalThis.SevenHistoricalCohortReader?.readSeries)return Promise.resolve(globalThis.SevenHistoricalCohortReader);
+ if(cohortReader)return cohortReader;
+ cohortReader=new Promise((resolve,reject)=>{
+  const script=document.createElement("script");script.id="traderHistoricalCohortLoader";
+  script.src=new URL("../trader/trader-historical-cohort-reader.js",document.baseURI).href;
+  script.onload=()=>{
+   const api=globalThis.SevenHistoricalCohortReader;
+   api?.readSeries&&api?.refreshIndex?resolve(api):reject(Error("Lecteur Top50 indisponible"));
+  };
+  script.onerror=()=>reject(Error("Chargement lecteur Top50 impossible"));
+  document.head.appendChild(script);
+ }).catch(error=>{cohortReader=null;document.getElementById("traderHistoricalCohortLoader")?.remove();throw error;});
+ return cohortReader;
+}
 /* Read-only projection of the native CoinGecko USD chart broker.
    NOT Binance R9 and NOT OHLCV. No new fetch, timer, storage or graph owner. */
 function nativeChart(coin,currency="USD"){
@@ -95,11 +110,11 @@ function paintNative(p,coin,currency="USD"){
 }
 function paint(p,result){
  const m=result.metadata,rows=result.candles;
- if(m.source!=="Binance Spot"||m.quote!=="USDT"||m.status!=="VALIDATED_SNAPSHOT"||
+ if(m.source!=="Binance Spot"||m.quote!=="USDT"||(m.status!=="VALIDATED_SNAPSHOT"&&m.status!=="VALIDATED_ARCHIVE")||
   m.isLive!==false||m.graphConnected!==false||!Array.isArray(rows))throw Error("Archive non qualifiée");
  write(p,"meta",m.pair+" · Binance Spot · USDT · "+m.interval+" · "+rows.length+
   " chandelles · "+utc(m.firstOpenMs)+" → "+utc(m.lastOpenMs)+
-  (m.archiveFamily==="universe"?" · borne fenêtre ":" · capture ")+utc(m.sourceIndexUpdatedAt)+" · SHA-256 vérifié · NON LIVE");
+  (m.archiveFamily==="universe"?" · borne fenêtre ":m.archiveFamily?.startsWith("top50")?" · cumul vérifié ":" · capture ")+utc(m.sourceIndexUpdatedAt)+" · SHA-256 vérifié · NON LIVE");
  const body=p.querySelector("[data-history-rows]");body?.replaceChildren();
  for(const row of rows.slice(-12).reverse()){
   const tr=document.createElement("tr");
@@ -150,8 +165,24 @@ async function refresh({reload=false}={}){
    }catch(e){extensionError=String(e?.message||e).slice(0,100);}
   }
   if(!entry){
+   try{
+    const ext=await loadCohortReader();
+    if(seq!==sequence||!p.open||selected()?.id!==c.id)return;
+    if(reload||!cohortCatalog)cohortCatalog=await ext.refreshIndex();
+    if(seq!==sequence||!p.open||selected()?.id!==c.id)return;
+    if(!cohortCatalog?.snapshot||cohortCatalog.quote!=="USDT"||
+       cohortCatalog.archiveFamily!=="top50"||cohortCatalog.coverage?.length!==57)
+     throw Error("Catalogue Top50 non qualifié");
+    entry=cohortCatalog.coverage.find(x=>x.id===c.id&&x.period===period);
+    if(entry){
+     source=ext;
+     archiveName=entry.family==="top50-additional"?"TOP50 COMPLÉMENTAIRE":"TOP50";
+    }
+   }catch(e){extensionError+=(extensionError?" · ":"")+String(e?.message||e).slice(0,100);}
+  }
+  if(!entry){
    write(p,"status",c.symbol+" · archive non disponible");
-   write(p,"detail","Pas d’archive Binance Spot R9/Univers pour cet actif. Jamais de substitution BTC. Historique graphique natif séparé ci-dessous."+(extensionError?" · "+extensionError:""));
+   write(p,"detail","Pas d’archive Binance Spot R9/Univers/Top50 pour cet actif. Jamais de substitution BTC. Historique graphique natif séparé ci-dessous."+(extensionError?" · "+extensionError:""));
    paintNative(p,c);
    return;
   }
@@ -167,7 +198,7 @@ async function refresh({reload=false}={}){
   write(p,"detail","Archive "+archiveName+" historique vérifiée : aucune conversion USDT/USDC, aucun ordre.");
  }catch(e){if(seq!==sequence||!p.open)return;empty(p);
   write(p,"status",c.symbol+" · archive indisponible");
-  write(p,"detail","Erreur R9 : "+String(e?.message||e).slice(0,150)+" · aucune donnée inventée.");
+  write(p,"detail","Erreur historique : "+String(e?.message||e).slice(0,150)+" · aucune donnée inventée.");
   paintNative(p,c);
  }
 }
@@ -202,7 +233,7 @@ function mount(){
  const p=document.createElement("details");p.id=ID;
  p.setAttribute("aria-label","Historique Binance Spot vérifié · lecture seule");
  p.innerHTML=[
- '<summary><strong>HISTORIQUE VÉRIFIÉ · R9 + UNIVERS</strong>',
+ '<summary><strong>HISTORIQUE VÉRIFIÉ · R9 + UNIVERS + TOP50</strong>',
  '<span data-history-status>Fermé · aucune lecture</span></summary>',
  '<div class="history-body"><div class="history-controls" data-history-controls>',
  '<label for="traderHistoryPeriod">Période</label><select id="traderHistoryPeriod" data-history-period>',
