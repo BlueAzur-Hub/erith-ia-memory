@@ -26,6 +26,7 @@ import urllib.request
 import zipfile
 
 import audit_historical_coverage as coverage
+from collect_historical_universe import ROOT
 
 SCHEMA = "aerith.public.ohlcv.spot.bulk-monthly.index.v1"
 HOST = "https://data.binance.vision"
@@ -35,6 +36,8 @@ INTERVALS = {"1m": 60_000, "5m": 300_000}
 MAX_PARALLEL = 6
 MAX_ZIP = 45_000_000
 USER_AGENT = "SevenHeaven-Crypto-BulkArchive/1.0"
+VENUE_AUDIT = ROOT / "data/historical_archive_prototype/top250-venue-audit.json"
+IDENTITY_LEDGER = ROOT / "data/historical_archive_prototype/top250-identity-evidence.json"
 
 def need(ok, why):
     if not ok:
@@ -43,7 +46,7 @@ def need(ok, why):
 def sha256(data):
     return hashlib.sha256(data).hexdigest()
 
-def inventory():
+def legacy_inventory():
     """Source is a verified, frozen Top50 history inventory, not ticker guesswork."""
     report = coverage.summarize()
     need(report["total_ranked"] == 50 and
@@ -67,6 +70,67 @@ def inventory():
         candidates.append({"id": aid, "symbol": symbol, "pair": pair,
                            "archive_owner": a["archive_owner"], "rank": a["rank"]})
     return candidates
+
+
+def confirmed_additions(venue_path=VENUE_AUDIT, ledger_path=IDENTITY_LEDGER):
+    """Strict source-specific evidence: NEVER infer a CoinGecko ID from a ticker."""
+    if not venue_path.is_file() or not ledger_path.is_file():
+        return []
+    venue=json.loads(venue_path.read_bytes())
+    ledger=json.loads(ledger_path.read_bytes())
+    need(venue.get("schema")=="aerith.public.ohlcv.spot.discovery.top250.v1"
+         and venue.get("total_ranked")==250
+         and len(venue.get("assets",[]))==250
+         and ledger.get("schema")=="aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1"
+         and ledger.get("total_market_ranked")==250
+         and ledger.get("candidate_count")>=0
+         and ledger.get("checked_count")==len(ledger.get("results",[])),
+         "Corrupt Top250 venue or identity provenance")
+    indexed={a["id"]:a for a in venue["assets"]}
+    need(len(indexed)==250,"Repeated CoinGecko ID in venue registry")
+    assets=[]
+    seen=set()
+    for evidence in ledger["results"]:
+        if evidence["status"]!="approved_coingecko_binance_spot":
+            continue
+        aid=evidence["id"]
+        need(aid in indexed and aid not in seen,"Unknown/repeated approved CoinGecko ID")
+        seen.add(aid)
+        original=indexed[aid]
+        pair=evidence["pair"]
+        symbol=evidence["symbol"]
+        proof=evidence.get("evidence")
+        need(original.get("status")=="spot_candidate_identity_unverified"
+             and original.get("rank")==evidence.get("rank")
+             and original.get("symbol")==symbol
+             and original.get("proposed_pair")==pair
+             and pair==symbol+"USDT" and PAIR.fullmatch(pair)
+             and isinstance(proof,list) and len(proof)>0
+             and all(p.get("coin_id")==aid
+                     and p.get("ticker_coin_id")==aid
+                     and p.get("base")==symbol
+                     and p.get("target")=="USDT"
+                     and p.get("market_identifier")=="binance"
+                     for p in proof),
+             "Identity approval inconsistent with exact CoinGecko/source pair: "+aid)
+        assets.append({"id":aid,"symbol":symbol,"pair":pair,
+                       "rank":original["rank"],"archive_owner":"coingecko-binance-exact-id"})
+    return sorted(assets,key=lambda a:a["rank"])
+
+
+def inventory():
+    """All historically qualified source identities, including exact-ID approvals."""
+    protected=legacy_inventory()
+    new=confirmed_additions()
+    ids={a["id"] for a in protected}
+    pairs={a["pair"] for a in protected}
+    for asset in new:
+        need(asset["id"] not in ids and asset["pair"] not in pairs,
+             "Conflicting source owner for new qualified identity")
+        ids.add(asset["id"])
+        pairs.add(asset["pair"])
+    return sorted([*protected,*new],key=lambda a:a["rank"])
+
 
 def bounds(month, interval):
     need(MONTH.fullmatch(month) and interval in INTERVALS,
@@ -189,7 +253,7 @@ def execute(month,interval,output,workers=4,limit=31,assets=None,getter=download
             rows[i]=task.result()
             print("BULK "+json.dumps(rows[i],sort_keys=True),flush=True)
     need(all(r is not None for r in rows),"Incomplete task result set")
-    manifest={"schema":SCHEMA,"market_scope":"qualified Top50 archived inventory",
+    manifest={"schema":SCHEMA,"market_scope":"qualified Top250 archive and exact-ID evidence",
               "source":"Binance public Spot monthly klines","quote":"USDT",
               "month":month,"interval":interval,
               "requested":len(approved),

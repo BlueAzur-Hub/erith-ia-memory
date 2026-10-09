@@ -1,0 +1,8 @@
+{
+  "schema": "aerith.public.ohlcv.spot.bulk-addendum.bootstrap.v1",
+  "action": "supplement_existing_native_1m_monthly_releases",
+  "max_months": 3,
+  "source": "Binance Spot USDT exact CoinGecko ID",
+  "no_overwrite_existing_release": true,
+  "note": "Only source-proven CoinGecko IDs enter a checksum-verified monthly addendum; existing Releases remain immutable. No Trader change."
+}

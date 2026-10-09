@@ -1,0 +1,115 @@
+name: Agent Crypto Top250 - Verified Identity Monthly Addenda
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-bulk-addendum.yml'
+      - 'public/agent_crypto_erith_ia/tools/import_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/supplement_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_bulk_addendum_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-addendum-bootstrap.json'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-bulk-addendum.yml'
+      - 'public/agent_crypto_erith_ia/tools/import_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/supplement_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_bulk_addendum_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-addendum-bootstrap.json'
+  workflow_dispatch:
+  schedule:
+    - cron: '43 4 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-continuous-spot-bulk-release
+  cancel-in-progress: false
+jobs:
+  addenda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source-owned CoinGecko ID registry and immutable monthly supplements
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/import_historical_bulk.py
+          python -m py_compile public/agent_crypto_erith_ia/tools/supplement_historical_bulk.py
+          python public/agent_crypto_erith_ia/tools/historical_bulk_addendum_test.py
+          python public/agent_crypto_erith_ia/tools/historical_bulk_test.py
+          python public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py
+          python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
+          python public/agent_crypto_erith_ia/tools/supplement_historical_bulk.py --plan --max-months 3
+      - name: PR only - independently download and validate September 2026 native 1m new-ID sources
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,sys
+          from pathlib import Path
+          sys.path.insert(0,'public/agent_crypto_erith_ia/tools')
+          import import_historical_bulk as m
+          assets=m.confirmed_additions()
+          assert {"hyperliquid","polkadot","aster-2"} <= {a["id"] for a in assets}
+          assert len(m.inventory())==len(m.legacy_inventory())+len(assets)
+          folder=Path('/tmp/top250-addendum-network')
+          result=m.execute('2026-09','1m',folder,workers=3,limit=len(assets),assets=assets)
+          assert result["requested"]==len(assets)
+          assert result["verified"]>=1, 'No verified native candle source'
+          assert result["verified"]+result["unavailable"]==len(assets)
+          assert result["candles"]==result["verified"]*43200
+          print('ADDENDUM PR VERIFIED',json.dumps({k:result[k] for k in
+              ('requested','verified','unavailable','candles','zip_bytes')},sort_keys=True))
+          PY
+      - name: Permit one-time production only for newly added bootstrap marker
+        id: authorized
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          path=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-addendum-bootstrap.json
+          flag=$(git diff --name-status HEAD^ HEAD -- "$path" | cut -f1)
+          if [[ "$flag" != A ]]; then
+            echo "approved=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-addendum-bootstrap.json')
+          v=json.loads(p.read_text())
+          assert v['schema']=='aerith.public.ohlcv.spot.bulk-addendum.bootstrap.v1'
+          assert v['action']=='supplement_existing_native_1m_monthly_releases'
+          assert v['max_months']==3
+          assert v['source']=='Binance Spot USDT exact CoinGecko ID'
+          assert v['no_overwrite_existing_release'] is True
+          PY
+          echo "approved=true" >> "$GITHUB_OUTPUT"
+      - name: Publish only new proven-ID monthly ZIP releases
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && steps.authorized.outputs.approved == 'true')
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/supplement_historical_bulk.py --run --max-months 3 | tee "$RUNNER_TEMP/verified-identity-addendum-report.txt"
+      - name: Assert all original archive owners and trading interfaces untouched
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/crypto/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
+            public/agent_crypto_erith_ia/core/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: top250-monthly-identity-addendum-report
+          path: |
+            /tmp/verified-identity-addendum-report.txt
+            /tmp/top250-addendum-network/manifest.json
+          if-no-files-found: warn
+          retention-days: 30
