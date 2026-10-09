@@ -1,7 +1,7 @@
 {
-  "approved_count": 10,
+  "approved_count": 20,
   "candidate_count": 96,
-  "checked_count": 12,
+  "checked_count": 28,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
   "quote": "USDT",
   "results": [
@@ -224,9 +224,269 @@
       "rank": 67,
       "status": "approved_coingecko_binance_spot",
       "symbol": "BFUSD"
+    },
+    {
+      "checked_at": "2026-10-09T23:51:05.046060+00:00",
+      "evidence": [
+        {
+          "base": "ETC",
+          "coin_id": "ethereum-classic",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "ethereum-classic",
+          "trade_url": "https://www.binance.com/en/trade/ETC_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "ethereum-classic",
+      "pages": 1,
+      "pair": "ETCUSDT",
+      "rank": 68,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "ETC"
+    },
+    {
+      "checked_at": "2026-10-09T23:51:20.211295+00:00",
+      "evidence": [],
+      "id": "jupiter-exchange-solana",
+      "pages": 1,
+      "pair": "JUPUSDT",
+      "rank": 70,
+      "status": "identity_not_confirmed",
+      "symbol": "JUP"
+    },
+    {
+      "checked_at": "2026-10-09T23:51:35.360501+00:00",
+      "evidence": [
+        {
+          "base": "ARB",
+          "coin_id": "arbitrum",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "arbitrum",
+          "trade_url": "https://www.binance.com/en/trade/ARB_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "arbitrum",
+      "pages": 1,
+      "pair": "ARBUSDT",
+      "rank": 71,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "ARB"
+    },
+    {
+      "checked_at": "2026-10-09T23:51:50.565962+00:00",
+      "evidence": [
+        {
+          "base": "JST",
+          "coin_id": "just",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "just",
+          "trade_url": "https://www.binance.com/en/trade/JST_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "just",
+      "pages": 1,
+      "pair": "JSTUSDT",
+      "rank": 72,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "JST"
+    },
+    {
+      "checked_at": "2026-10-09T23:52:05.755667+00:00",
+      "evidence": [],
+      "id": "cosmos",
+      "pages": 1,
+      "pair": "ATOMUSDT",
+      "rank": 75,
+      "status": "identity_not_confirmed",
+      "symbol": "ATOM"
+    },
+    {
+      "checked_at": "2026-10-09T23:52:20.920162+00:00",
+      "evidence": [],
+      "id": "polygon-ecosystem-token",
+      "pages": 1,
+      "pair": "POLUSDT",
+      "rank": 76,
+      "status": "identity_not_confirmed",
+      "symbol": "POL"
+    },
+    {
+      "checked_at": "2026-10-09T23:52:36.100109+00:00",
+      "evidence": [
+        {
+          "base": "ALGO",
+          "coin_id": "algorand",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "algorand",
+          "trade_url": "https://www.binance.com/en/trade/ALGO_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "algorand",
+      "pages": 1,
+      "pair": "ALGOUSDT",
+      "rank": 79,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "ALGO"
+    },
+    {
+      "checked_at": "2026-10-09T23:52:51.268394+00:00",
+      "evidence": [],
+      "id": "render-token",
+      "pages": 1,
+      "pair": "RENDERUSDT",
+      "rank": 81,
+      "status": "identity_not_confirmed",
+      "symbol": "RENDER"
+    },
+    {
+      "checked_at": "2026-10-09T23:52:51.532342+00:00",
+      "evidence": [
+        {
+          "base": "FIL",
+          "coin_id": "filecoin",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "filecoin",
+          "trade_url": "https://www.binance.com/en/trade/FIL_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "filecoin",
+      "pages": 1,
+      "pair": "FILUSDT",
+      "rank": 83,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "FIL"
+    },
+    {
+      "checked_at": "2026-10-09T23:53:06.698779+00:00",
+      "evidence": [
+        {
+          "base": "NEXO",
+          "coin_id": "nexo",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "nexo",
+          "trade_url": "https://www.binance.com/en/trade/NEXO_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "nexo",
+      "pages": 1,
+      "pair": "NEXOUSDT",
+      "rank": 85,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "NEXO"
+    },
+    {
+      "checked_at": "2026-10-09T23:53:21.882588+00:00",
+      "evidence": [
+        {
+          "base": "AERO",
+          "coin_id": "aerodrome-finance",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "aerodrome-finance",
+          "trade_url": "https://www.binance.com/en/trade/AERO_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "aerodrome-finance",
+      "pages": 1,
+      "pair": "AEROUSDT",
+      "rank": 86,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "AERO"
+    },
+    {
+      "checked_at": "2026-10-09T23:53:37.057637+00:00",
+      "evidence": [
+        {
+          "base": "ZRO",
+          "coin_id": "layerzero",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "layerzero",
+          "trade_url": "https://www.binance.com/en/trade/ZRO_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "layerzero",
+      "pages": 1,
+      "pair": "ZROUSDT",
+      "rank": 87,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "ZRO"
+    },
+    {
+      "checked_at": "2026-10-09T23:53:52.226926+00:00",
+      "evidence": [
+        {
+          "base": "NIGHT",
+          "coin_id": "midnight-3",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "midnight-3",
+          "trade_url": "https://www.binance.com/en/trade/NIGHT_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "midnight-3",
+      "pages": 1,
+      "pair": "NIGHTUSDT",
+      "rank": 90,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "NIGHT"
+    },
+    {
+      "checked_at": "2026-10-09T23:54:07.455480+00:00",
+      "evidence": [],
+      "id": "blockstack",
+      "pages": 1,
+      "pair": "STXUSDT",
+      "rank": 91,
+      "status": "identity_not_confirmed",
+      "symbol": "STX"
+    },
+    {
+      "checked_at": "2026-10-09T23:54:22.624149+00:00",
+      "evidence": [
+        {
+          "base": "APT",
+          "coin_id": "aptos",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "aptos",
+          "trade_url": "https://www.binance.com/en/trade/APT_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "aptos",
+      "pages": 1,
+      "pair": "APTUSDT",
+      "rank": 94,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "APT"
+    },
+    {
+      "checked_at": "2026-10-09T23:54:37.774387+00:00",
+      "evidence": [],
+      "id": "pancakeswap-token",
+      "pages": 1,
+      "pair": "CAKEUSDT",
+      "rank": 95,
+      "status": "identity_not_confirmed",
+      "symbol": "CAKE"
     }
   ],
-  "review_required_count": 86,
+  "review_required_count": 76,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
