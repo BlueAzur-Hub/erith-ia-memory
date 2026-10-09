@@ -3,13 +3,14 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-  pull_request:
     paths:
       - ".github/workflows/agent-crypto-trader-historical-panel.yml"
+      - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
       - "public/agent_crypto_erith_ia/trader/trader-historical-panel.js"
       - "public/agent_crypto_erith_ia/trader/trader-historical-universe-reader.js"
       - "public/agent_crypto_erith_ia/tools/trader-historical-panel.test.mjs"
       - "public/agent_crypto_erith_ia/tools/historical-universe-reader.test.mjs"
+  pull_request:
     paths:
       - ".github/workflows/agent-crypto-trader-historical-panel.yml"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
