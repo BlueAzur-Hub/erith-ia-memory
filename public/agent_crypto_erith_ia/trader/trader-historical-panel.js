@@ -30,7 +30,7 @@ function loadUniverseReader(){
  if(universeReader)return universeReader;
  universeReader=new Promise((resolve,reject)=>{
   const script=document.createElement("script");script.id="traderHistoricalUniverseLoader";
-  script.src=new URL("../trader/trader-historical-universe-reader.js",document.baseURI).href;
+  script.src=new URL("../trader/trader-historical-universe-reader.js?reader=cumulative-universe",document.baseURI).href;
   script.onload=()=>{
    const api=globalThis.SevenHistoricalUniverseReader;
    api?.readSeries&&api?.refreshIndex?resolve(api):reject(Error("Lecteur Univers indisponible"));
@@ -114,7 +114,7 @@ function paint(p,result){
   m.isLive!==false||m.graphConnected!==false||!Array.isArray(rows))throw Error("Archive non qualifiée");
  write(p,"meta",m.pair+" · Binance Spot · USDT · "+m.interval+" · "+rows.length+
   " chandelles · "+utc(m.firstOpenMs)+" → "+utc(m.lastOpenMs)+
-  (m.archiveFamily==="universe"?" · borne fenêtre ":m.archiveFamily?.startsWith("top50")?" · cumul vérifié ":" · capture ")+utc(m.sourceIndexUpdatedAt)+" · SHA-256 vérifié · NON LIVE");
+  (m.status==="VALIDATED_ARCHIVE"?" · cumul vérifié ":m.archiveFamily==="universe"?" · borne fenêtre ":" · capture ")+utc(m.sourceIndexUpdatedAt)+" · SHA-256 vérifié · NON LIVE");
  const body=p.querySelector("[data-history-rows]");body?.replaceChildren();
  for(const row of rows.slice(-12).reverse()){
   const tr=document.createElement("tr");
