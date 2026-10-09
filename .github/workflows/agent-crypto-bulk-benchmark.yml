@@ -1,0 +1,55 @@
+name: Agent Crypto Bulk Historical Benchmark - Read Only
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-bulk-benchmark.yml'
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Measure Binance public monthly 1m and 5m ZIPs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, io, json, pathlib, subprocess, time, zipfile
+          folder=pathlib.Path('/tmp/binance-bulk-measure')
+          folder.mkdir(exist_ok=True)
+          records=[]
+          for symbol in ('BTCUSDT','DOGEUSDT','ADAUSDT'):
+            for interval in ('1m','5m'):
+              filename=f'{symbol}-{interval}-2026-09.zip'
+              url=f'https://data.binance.vision/data/spot/monthly/klines/{symbol}/{interval}/{filename}'
+              filename_path=folder/filename
+              t=time.monotonic()
+              cp=subprocess.run(['curl','--fail','--location','--silent','--show-error','--connect-timeout','10','--max-time','95','--retry','1','-o',str(filename_path),url],capture_output=True,text=True,timeout=210)
+              dt=round(time.monotonic()-t,3)
+              item={'symbol':symbol,'interval':interval,'download_seconds':dt}
+              if cp.returncode:
+                item.update(status='DOWNLOAD_FAILED',error=cp.stderr[:150]);records.append(item);print('BENCH '+json.dumps(item),flush=True);continue
+              raw=filename_path.read_bytes()
+              item['zip_bytes']=len(raw)
+              expected=subprocess.run(['curl','--fail','--location','--silent','--show-error','--connect-timeout','10','--max-time','25',url+'.CHECKSUM'],capture_output=True,text=True,timeout=65)
+              item['sha256_ok']=expected.returncode==0 and hashlib.sha256(raw).hexdigest() in expected.stdout.lower()
+              try:
+                with zipfile.ZipFile(filename_path) as archive:
+                  items=archive.namelist()
+                  if len(items)!=1:raise ValueError('Expected exactly one CSV')
+                  with archive.open(items[0]) as z:
+                    first=None;last=None;count=0
+                    for row in csv.reader(io.TextIOWrapper(z,encoding='utf-8')):
+                      if len(row)!=12:raise ValueError('CSV columns not 12')
+                      ts=int(row[0]);last=ts
+                      if first is None:first=ts
+                      count+=1
+                item.update(status='OK',rows=count,unit='microseconds' if first>=10**15 else 'milliseconds',first=first,last=last)
+              except Exception as err:item.update(status='PARSE_FAILED',error=str(err)[:150])
+              records.append(item)
+              print('BENCH '+json.dumps(item,sort_keys=True),flush=True)
+          total={'files':len(records),'good':sum(z.get('status')=='OK' and z.get('sha256_ok') for z in records),'zip_bytes':sum(z.get('zip_bytes',0) for z in records),'transfer_seconds':round(sum(z.get('download_seconds',0) for z in records),2),'candles':sum(z.get('rows',0) for z in records)}
+          print('BENCH SUMMARY '+json.dumps(total,sort_keys=True),flush=True)
+          if total['good']!=total['files']:raise SystemExit('Downloaded ZIP or checksum unavailable; benchmark incomplete')
+          PY
