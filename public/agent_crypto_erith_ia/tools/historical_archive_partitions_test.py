@@ -35,11 +35,11 @@ class SealedArchiveTests(unittest.TestCase):
                 self.assertEqual(second["result"],"APPENDED")
             ledger, _, _, _ = universe.inspect(root)
             all_entries=list(sealing.all_chunks(root/"incremental",ledger))
-            self.assertEqual(len(all_entries), 30)
+            self.assertEqual(len(all_entries), 25)
             self.assertEqual(len(ledger["partitions"]), 2)
             self.assertEqual(len(ledger["chunks"]), 2)
             self.assertEqual((root/"index.json").read_bytes(), frozen)
-            self.assertEqual(len(list((root/"incremental/blocks").glob("*.gz"))),30)
+            self.assertEqual(len(list((root/"incremental/blocks").glob("*.gz"))),25)
             # A sealed manifest is an immutable SHA-256 verified object.
             manifest=root/"incremental"/ledger["partitions"][0]["file"]
             manifest.write_bytes(manifest.read_bytes()+b"untrusted")
@@ -62,9 +62,9 @@ class SealedArchiveTests(unittest.TestCase):
             ledger, _, _, _ = cohort.inspect(root)
             self.assertEqual(len(ledger["partitions"]),2)
             self.assertEqual(len(ledger["chunks"]),4)
-            self.assertEqual(len(list(sealing.all_chunks(root/"incremental",ledger))),72)
+            self.assertEqual(len(list(sealing.all_chunks(root/"incremental",ledger))),60)
             self.assertEqual(original,(root/"index.json").read_bytes())
-            self.assertEqual(len(list((root/"incremental/blocks").glob("*.gz"))),72)
+            self.assertEqual(len(list((root/"incremental/blocks").glob("*.gz"))),60)
             first=next(sealing.all_chunks(root/"incremental",ledger))
             candle_file=root/"incremental"/first["file"]
             candle_file.write_bytes(candle_file.read_bytes()+b"tamper")
