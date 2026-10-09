@@ -8,14 +8,14 @@ const r10=fs.readFileSync(".github/workflows/agent-crypto-historical-ohlcv-incre
 const r11=fs.readFileSync(".github/workflows/agent-crypto-historical-partitions-r11.yml","utf8");
 const flush=async()=>{for(let i=0;i<5;i++)await new Promise(ok=>setImmediate(ok));};
 function data(id="bitcoin",period="24h"){
- return {metadata:{id,period,pair:id==="bitcoin"?"BTCUSDT":"ETHUSDT",
+ return {metadata:{id,period,pair:id==="bitcoin"?"BTCUSDT":id==="dogecoin"?"DOGEUSDT":"ETHUSDT",
   source:"Binance Spot",quote:"USDT",status:"VALIDATED_SNAPSHOT",
   isLive:false,graphConnected:false,interval:"5m",
   firstOpenMs:1791430800000,lastOpenMs:1791431100000,
   sourceIndexUpdatedAt:"2026-10-08T04:51:17Z"},
   candles:[[1791430800000,1,2,0.5,1.5,3,5,5],[1791431100000,1.5,2,1,1.8,6,7,5]]};
 }
-function env({pending=false}={}){
+function env({pending=false,withUniverse=false}={}){
  let selected={id:"bitcoin",symbol:"BTC"},pendingResolve;
  const listeners={},counts={reader:0,index:0,blocks:[]};
  function element(tag="div"){
@@ -46,6 +46,13 @@ function env({pending=false}={}){
   async refreshIndex(){counts.index++;return catalog;},
   readSeries(x){counts.blocks.push(x);return pending?new Promise(ok=>pendingResolve=ok):Promise.resolve(data(x.assetId,x.period));}
  };
+ const universeCatalog={quote:"USDT",snapshot:true,archiveFamily:"universe",
+  coverage:[{id:"dogecoin",period:"24h",pair:"DOGEUSDT",candles:2}]};
+ const universeReader={
+  async refreshIndex(){counts.universeIndex=(counts.universeIndex||0)+1;return universeCatalog;},
+  async readSeries(x){counts.universeBlocks=(counts.universeBlocks||[]).concat([x]);
+   const result=data(x.assetId,x.period);result.metadata.archiveFamily="universe";return result;}
+ };
  const document={readyState:"complete",
   baseURI:"https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/administrator/index.html",
   head,createElement:element,getElementById(id){
@@ -56,7 +63,13 @@ function env({pending=false}={}){
  const context={Date,URL,document,getSelectedCoin:()=>selected,addEventListener(k,fn){listeners[k]=fn;}};
  head.appendChild=x=>{
   head.children.push(x);
-  if(x.tag==="script"){counts.reader++;context.SevenCompactArchiveReader=reader;x.onload?.();}
+  if(x.tag==="script"){
+    counts.reader++;
+    if(x.src?.includes("historical-universe-reader")) {
+      if(withUniverse)context.SevenHistoricalUniverseReader=universeReader;
+    }else context.SevenCompactArchiveReader=reader;
+    x.onload?.();
+  }
   return x;
  };
  vm.runInNewContext(panel,vm.createContext(context),{timeout:3000});
@@ -107,4 +120,16 @@ test("R10 fallback and R11 workflow_run chain exist, crons remain",()=>{
  assert.match(r10,/52\*60/);
  assert.match(r11,/workflows: \["Agent Crypto Historical OHLCV R10 Synchronized Hourly Pilot"\]/);
  assert.match(r11,/cron: '52 \* \* \* \*'/);
+});
+
+test("Trader reads DOGE from verified Universe when absent from original R9",async()=>{
+ const f=env({withUniverse:true});
+ f.select("dogecoin","DOGE");
+ f.open();await flush();
+ assert.equal(f.counts.blocks.length,0);
+ assert.equal(f.counts.universeBlocks.length,1);
+ assert.equal(f.counts.universeBlocks[0].assetId,"dogecoin");
+ assert.equal(f.p().parts["[data-history-rows]"].children.length,2);
+ assert.match(f.p().parts["[data-history-status]"].textContent,/UNIVERS · ARCHIVE VÉRIFIÉE/);
+ assert.match(f.p().parts["[data-history-meta]"].textContent,/DOGEUSDT.*SHA-256/);
 });
