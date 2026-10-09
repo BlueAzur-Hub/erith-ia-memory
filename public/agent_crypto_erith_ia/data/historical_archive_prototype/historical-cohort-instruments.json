@@ -1,0 +1,20 @@
+{
+  "schema": "aerith.public.ohlcv.spot.cohort.instruments.v1",
+  "cohort": "top50",
+  "policy": "Explicit CoinGecko ID to ticker candidates only. Excludes all 12 archived assets. Live Binance Spot base, quote, status and permissions must match; unknown or ambiguous instruments are never substituted.",
+  "candidate_symbols": {
+    "near": "NEAR",
+    "bitcoin-cash": "BCH",
+    "litecoin": "LTC",
+    "uniswap": "UNI",
+    "avalanche-2": "AVAX",
+    "sui": "SUI",
+    "hedera-hashgraph": "HBAR",
+    "shiba-inu": "SHIB",
+    "bittensor": "TAO",
+    "crypto-com-chain": "CRO",
+    "ethena": "ENA",
+    "aave": "AAVE",
+    "ondo-finance": "ONDO"
+  }
+}
