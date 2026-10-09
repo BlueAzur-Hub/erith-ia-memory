@@ -9,7 +9,6 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
-      - "public/agent_crypto_erith_ia/administrator/js/top10-explorer.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
       - "public/agent_crypto_erith_ia/administrator/js/aether.js"
@@ -23,7 +22,6 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
-      - "public/agent_crypto_erith_ia/administrator/js/top10-explorer.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
       - "public/agent_crypto_erith_ia/administrator/js/aether.js"
@@ -46,13 +44,6 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/app.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js
           node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
-          node --check public/agent_crypto_erith_ia/administrator/js/top10-explorer.js
-          node - <<'NODE'
-          require("./public/agent_crypto_erith_ia/administrator/js/top10-explorer.js");
-          const proof=globalThis.AgentCryptoTop10Explorer?.self_test?.();
-          console.log(JSON.stringify(proof,null,2));
-          if(!proof?.pass||proof?.checks?.five_supported_counts!==true||proof?.checks?.actual_gainers_sort!==true||proof?.checks?.actual_losers_sort!==true||proof?.checks?.actual_volume_sort!==true)process.exit(1);
-          NODE
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
           node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
           node - <<'NODE'
@@ -81,7 +72,6 @@ jobs:
           app=(root/"administrator"/"app.js").read_text(encoding="utf-8")
           candles=(root/"administrator"/"js"/"market-microscope-candles.js").read_text(encoding="utf-8")
           graph_usd=(root/"administrator"/"js"/"graph-native-usd-406520.js").read_text(encoding="utf-8")
-          top_explorer=(root/"administrator"/"js"/"top10-explorer.js").read_text(encoding="utf-8")
           current=str(build.get("build","")).strip()
 
           forbidden=[
@@ -140,11 +130,7 @@ jobs:
             "target_top_native_dom": 'id="targetTop5Cycle"' in admin and 'id="top5Track"' in admin,
             "admin_graph_present": 'id="analyste"' in admin and 'id="mainChart"' in admin,
             "admin_market_present": 'id="market-workspace"' in admin,
-            "top_explorer_script_loaded": admin.count('src="./js/top10-explorer.js"')==1,
-            "top_explorer_single_market_owner": 'AtlasMarketUniverse1000?.universe?.(250)' in top_explorer,
-            "top_explorer_canonical_select": 'globalThis.atlasSelectMarketCoin(coin)' in top_explorer,
-            "top_explorer_build_matches": f'const BUILD="{current}"' in top_explorer,
-            "top_explorer_no_extra_market_fetch": 'fetch(' not in top_explorer,
+            "top_explorer_absent": 'src="./js/top10-explorer.js"' not in admin,
             "admin_math_present": 'id="math"' in admin,
             "admin_detail_present": 'id="detailPanel"' in admin,
           }
@@ -183,7 +169,6 @@ jobs:
             root/"administrator"/"js"/"okx-market-pair-resolver.js",
             root/"administrator"/"js"/"market-microscope-candles.js",
             root/"administrator"/"js"/"graph-native-usd-406520.js",
-            root/"administrator"/"js"/"top10-explorer.js",
             root/"administrator"/"js"/"okx-microstructure-406499.js",
             root/"trader"/"trading-desk.html",
             root/"trader"/"trader-runtime-mirror.js",
@@ -192,9 +177,6 @@ jobs:
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
             for p in files:
               z.write(p,p.as_posix())
-          with zipfile.ZipFile(out,"r") as packed:
-            assert "public/agent_crypto_erith_ia/administrator/js/top10-explorer.js" in packed.namelist(), "Top explorer missing from Trader ZIP"
-            assert packed.testzip() is None, "Trader ZIP CRC failed"
           shutil.copy2(out,Path("/tmp")/out.name)
           with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
             fh.write(f"build={build}\n")
