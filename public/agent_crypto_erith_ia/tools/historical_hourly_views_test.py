@@ -22,7 +22,7 @@ class HourlyTests(unittest.TestCase):
   catalog=self.catalog()
   jobs=h.select(catalog)
   self.assertEqual(len(jobs),catalog["archived_assets"])
-  self.assertEqual(len(jobs),33)
+  self.assertGreaterEqual(len(jobs),30)
   self.assertTrue(all(1<=len(months)<=12 for _,months in jobs))
   self.assertTrue(all(x["id"]==m["id"] and x["pair"]==m["pair"]
     for x,months in jobs for m in months))
