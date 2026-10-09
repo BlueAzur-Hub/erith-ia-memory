@@ -1,0 +1,96 @@
+name: Agent Crypto Top250 Historical Coverage Catalog
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-top250-history-catalog.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_top250_catalog.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_top250_catalog_test.py'
+      - 'public/agent_crypto_erith_ia/administrator/js/top250-history-catalog.js'
+      - 'public/agent_crypto_erith_ia/administrator/historical-archive-reader.html'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-top250-history-catalog.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_top250_catalog.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_top250_catalog_test.py'
+      - 'public/agent_crypto_erith_ia/administrator/js/top250-history-catalog.js'
+      - 'public/agent_crypto_erith_ia/administrator/historical-archive-reader.html'
+  workflow_dispatch:
+  schedule:
+    - cron: '49 1,7,13,19 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-top250-history-coverage
+  cancel-in-progress: false
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Offline Top250 identity, release and coverage tests
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_historical_top250_catalog.py
+          python public/agent_crypto_erith_ia/tools/historical_top250_catalog_test.py
+          node --check public/agent_crypto_erith_ia/administrator/js/top250-history-catalog.js
+      - name: Assemble 250 identity records from cryptographically checked Release manifests
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/build_historical_top250_catalog.py --output "$RUNNER_TEMP/top250-catalog.json"
+          python - <<'PY'
+          import json,os,pathlib
+          src=pathlib.Path(os.environ["RUNNER_TEMP"])/"top250-catalog.json"
+          obj=json.loads(src.read_text())
+          assert obj["ranked"]==250 and len(obj["assets"])==250
+          assert obj["native_1m_candles"]>0 and obj["archived_assets"]>0
+          assert len(obj["groups"])==4 and obj["quote"]=="USDT"
+          print("CATALOG PROOF",json.dumps({"ranked":250,
+                  "archived_assets":obj["archived_assets"],
+                  "candles":obj["native_1m_candles"],
+                  "release_months":obj["release_months"]}))
+          PY
+      - name: Commit catalog only on main and never modify source Releases
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/index.json
+          mkdir -p "$(dirname "$target")"
+          cp "$RUNNER_TEMP/top250-catalog.json" "$target"
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "NOOP: same Top250 verified month coverage"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "Refresh actual Top250 monthly OHLCV archive coverage"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Publish readable coverage report as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: top250-historical-coverage-index
+          path: ${{ runner.temp }}/top250-catalog.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Protect Trader, charts and local caches
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/crypto/

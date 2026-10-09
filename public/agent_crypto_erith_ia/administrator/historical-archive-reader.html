@@ -22,6 +22,28 @@ table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;b
 </style><link rel="stylesheet" href="./historical-f11.css"></head><body>
 <header><div><h1>Coffre historique · BTC</h1><p class="muted">Seven Heaven · 12 mois de bougies natives 1 minute archivées · lecture seule</p></div>
 <a href="./index.html">← Revenir à l'Interface</a></header>
+<section class="panel" id="top250-coverage">
+ <h2>Coffre Top 250 · données historiques réellement disponibles</h2>
+ <p class="muted">Le classement répertorie 250 cryptomonnaies. Une crypto est indiquée « archivée » uniquement lorsqu'un ZIP mensuel officiel a été vérifié et publié. Les autres ne sont pas inventées. Source actuelle : Binance Spot <b>USDT</b>.</p>
+ <div class="metrics" id="top250-summary"><div class="metric">Chargement de l'index réel…</div></div>
+ <p class="fine" id="top250-counts">Couverture Top 10 / 50 / 100 / 250 à vérifier.</p>
+ <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0">
+  <label for="top250-limit">Univers</label>
+  <select id="top250-limit" style="background:#102f48;color:#e7f7ff;border:1px solid #6087a1;border-radius:7px;padding:8px">
+   <option value="10">Top 10</option><option value="50" selected>Top 50</option>
+   <option value="100">Top 100</option><option value="250">Top 250</option>
+  </select>
+  <input id="top250-search" type="search" placeholder="Rechercher une crypto…" aria-label="Rechercher une crypto du classement" style="background:#102f48;color:#e7f7ff;border:1px solid #6087a1;border-radius:7px;padding:9px;min-width:200px">
+  <label><input type="checkbox" id="top250-available"> Avec archives seulement</label>
+ </div>
+ <div id="top250-status" aria-live="polite" class="muted">Chargement…</div>
+ <p id="top250-listed" class="fine"></p>
+ <div class="scroll" style="max-height:420px;overflow-y:auto">
+ <table><thead><tr><th>Rang</th><th>Crypto</th><th>Historique</th><th>Mois</th><th>Bougies 1m</th><th>Depuis</th><th>Dernière archive</th></tr></thead><tbody id="top250-rows"></tbody></table>
+ </div>
+ <p class="fine">La présence de données historiques ne signifie pas que la crypto est disponible sur Binance aujourd'hui. Les liens ouvrent les Releases GitHub qui conservent les ZIP originaux. Cette table est un index, pas encore le graphique multi-actifs du Trader.</p>
+</section>
+
 <details class="panel" id="btc-year-lab" open>
  <summary><strong>BTC/USDT · explorer les archives mensuelles de Bitcoin</strong></summary>
  <div class="btc-hero" aria-label="Repères de l'archive BTC">
@@ -134,4 +156,4 @@ metrics([["Vérification","ÉCHEC"]]);$("table").textContent="Non validé";$("mi
 $("start").addEventListener("click",run);
 $("copy").addEventListener("click",()=>{if(report)navigator.clipboard.writeText(JSON.stringify(report,null,2)).then(()=>{$("status").textContent="Rapport copié"},e=>{$("status").textContent="Copie indisponible : "+String(e)})});
 })();
-</script><script src="./js/btc-annual-view.js"></script></body></html>
+</script><script src="./js/btc-annual-view.js"></script><script src="./js/top250-history-catalog.js"></script></body></html>
