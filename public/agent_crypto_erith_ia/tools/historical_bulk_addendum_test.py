@@ -40,7 +40,8 @@ def fixture(month,assets,folder):
     records=[]
     for i,a in enumerate(assets):
         row={"asset_id":a["id"],"rank":a["rank"],"pair":a["pair"],
-             "source":"Binance Spot public monthly CSV","quote":"USDT"}
+             "source":"Binance Spot public monthly CSV","quote":"USDT",
+             "month":month,"interval":"1m"}
         if i==0:
             row.update(status="verified",candles=count,file=name,
                        sha256=hashlib.sha256(data).hexdigest(),zip_bytes=len(data))
@@ -136,6 +137,33 @@ class SupplementTests(unittest.TestCase):
                          files=lambda tag:{"manifest.json"},
                          importer=wrong,publisher=lambda *a:called.append(a))
             self.assertEqual(called,[])
+
+
+    def test_incomplete_pairs_persist_negative_checkpoint_once(self):
+        with patch.object(bulk,"confirmed_additions",return_value=PROVEN), \
+             patch.object(bulk,"legacy_inventory",return_value=LEGACY):
+            month="2026-09"
+            tags=[original(month)]
+            evidence={}
+            def save(m,folder,manifest,assets):
+                self.assertEqual(manifest["verified"],1)
+                self.assertEqual(manifest["unavailable"],2)
+                names={x.name for x in folder.iterdir()}
+                self.assertIn("DOTUSDT-1m-2026-09.unavailable.json",names)
+                self.assertIn("ASTERUSDT-1m-2026-09.unavailable.json",names)
+                self.assertIn("HYPEUSDT-1m-2026-09.zip",names)
+                evidence["names"]=names
+                return "validated"
+            result=supp.run(now=NOW,limit=1,releases=tags,
+                      files=lambda name:{"manifest.json"},
+                      importer=fixture,publisher=save)
+            self.assertEqual(result["new_releases"],1)
+            self.assertEqual(result["months"][0]["unavailable"],2)
+            supplement=supp.add_tag(month,PROVEN)
+            jobs=supp.choose([*tags,supplement],PROVEN,
+                 lambda tag: evidence["names"] if tag==supplement
+                             else {"BTCUSDT-1m-2026-09.zip","manifest.json"},now=NOW)
+            self.assertEqual(jobs,[])
 
     def test_max_three_months_and_no_unproven_pairs(self):
         with self.assertRaisesRegex(ValueError,"Unsafe month"):

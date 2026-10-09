@@ -75,7 +75,8 @@ def choose(releases,approved,files,now=None,max_months=MAX_MONTHS_PER_RUN):
         for name in [bases[month],*addenda.get(month,[])]:
             present.update(files(name))
         waiting=[a for a in approved
-                 if f"{a['pair']}-1m-{month}.zip" not in present]
+                 if f"{a['pair']}-1m-{month}.zip" not in present
+                 and f"{a['pair']}-1m-{month}.unavailable.json" not in present]
         if waiting:
             pending.append({"month":month,"assets":waiting,
                             "base_tag":bases[month]})
@@ -95,10 +96,13 @@ def add_tag(month,assets):
 def publish(month,folder,manifest,assets):
     tag=add_tag(month,assets)
     source=sorted(folder.glob("*.zip"))
-    need(len(source)==manifest["verified"] and
-         (folder/"manifest.json").is_file(),
+    negatives=sorted(folder.glob("*.unavailable.json"))
+    need(len(source)==manifest["verified"]
+         and len(negatives)==manifest["unavailable"]
+         and (folder/"manifest.json").is_file(),
          "Manifest or original verified Binance files missing")
-    args=["gh","release","create",tag,*[str(x) for x in source],
+    args=["gh","release","create",tag,
+          *[str(x) for x in source],*[str(x) for x in negatives],
           str(folder/"manifest.json"),
           "--target",os.environ["GITHUB_SHA"],
           "--title",f"Top250 confirmed CoinGecko-ID monthly addendum · {month}",
@@ -109,7 +113,7 @@ def publish(month,folder,manifest,assets):
           "--latest=false"]
     subprocess.run(args,check=True,timeout=240)
     names=existing_files(tag)
-    expected={x.name for x in source}|{"manifest.json"}
+    expected={x.name for x in [*source,*negatives]}|{"manifest.json"}
     need(names==expected,"New release assets do not match validated list")
     return f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/releases/tag/{tag}"
 
@@ -142,6 +146,23 @@ def run(now=None,limit=MAX_MONTHS_PER_RUN,releases=None,files=None,
             folder=Path(folder_name)
             manifest=runner(month,assets,folder)
             candle_count=verify_month_output(folder,manifest,assets,month)
+            # Persistent negative markers prevent retrying an impossible full
+            # month forever. Explicit manual requalification can clear it.
+            for row in manifest["assets"]:
+                if row["status"]=="unavailable":
+                    pair=row["pair"]
+                    need(bulk.PAIR.fullmatch(pair)
+                         and row["month"]==month and row["interval"]=="1m",
+                         "Invalid negative checkpoint identity")
+                    marker=folder/(f"{pair}-1m-{month}.unavailable.json")
+                    marker.write_text(json.dumps({
+                        "schema":"aerith.public.ohlcv.spot.bulk-monthly.unavailable.v1",
+                        "month":month,"interval":"1m",
+                        "asset_id":row["asset_id"],"pair":pair,
+                        "source":"Binance Spot monthly native OHLCV",
+                        "status":"unavailable","reason":row.get("reason","not provided"),
+                        "no_synthetic_candles":True},
+                        sort_keys=True,indent=2)+"\n")
             result_url=save(month,folder,manifest,assets)
             total["months"].append({"month":month,"additional_assets_requested":len(assets),
                                     "verified":manifest["verified"],
