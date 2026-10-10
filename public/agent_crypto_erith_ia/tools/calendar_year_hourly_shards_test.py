@@ -17,16 +17,30 @@ class CalendarYearShardTests(unittest.TestCase):
         cls.infos={a["id"]:a for a,_ in m.candidates(cls.catalog)}
         cls.assets={a["id"]:a for a in cls.catalog["assets"]}
 
-    def test_btc_spans_all_26_verified_months_by_calendar_year(self):
+    def test_btc_retains_all_verified_months_by_calendar_year(self):
+        """Audit source truth rather than a stale 26-month fixture.
+
+        BTC gained June and July 2024 in the verified canonical catalogue.
+        Every current source month must belong to exactly one year shard:
+        neither silently truncated nor synthesized.
+        """
         info=self.infos["bitcoin"]
         src=self.assets["bitcoin"]
         groups=m.annual_groups(info,src)
-        self.assertEqual(len(groups),3)
-        self.assertEqual([x["year"] for x in groups],[2024,2025,2026])
-        self.assertEqual([len(x["source_months"]) for x in groups],[5,12,9])
-        self.assertEqual(sum(len(g["source_months"]) for g in groups),26)
-        self.assertEqual(info["first_verified_closed_month"],"2024-08")
-        self.assertEqual(info["last_verified_closed_month"],"2026-09")
+        source=sorted(x["month"] for x in src["months"])
+        grouped=[x["month"] for group in groups for x in group["source_months"]]
+        self.assertGreaterEqual(len(source),26)
+        self.assertEqual(len(source),len(set(source)))
+        self.assertEqual(grouped,source)
+        self.assertEqual(sum(len(g["source_months"]) for g in groups),
+                         len(source))
+        self.assertTrue(all(1<=len(g["source_months"])<=12 for g in groups))
+        self.assertEqual([g["year"] for g in groups],
+                         sorted({int(month[:4]) for month in source}))
+        self.assertTrue(all(int(month["month"][:4])==g["year"]
+            for g in groups for month in g["source_months"]))
+        self.assertEqual(info["first_verified_closed_month"],source[0])
+        self.assertEqual(info["last_verified_closed_month"],source[-1])
         self.assertTrue(all(g["span"]==0 for g in groups))
         self.assertEqual(len(m.signature(src)),64)
 
