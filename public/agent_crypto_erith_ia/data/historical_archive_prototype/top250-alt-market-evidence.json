@@ -1,6 +1,6 @@
 {
   "candidate_count": 144,
-  "checked_count": 102,
+  "checked_count": 105,
   "market_candidate_count": 33,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
@@ -252,10 +252,10 @@
       "symbol": "MNT"
     },
     {
-      "checked_at": "2026-10-10T01:40:21.444306+00:00",
+      "checked_at": "2026-10-10T20:39:58.097317+00:00",
       "id": "spiko-amundi-overnight-swap-fund-eur",
       "markets": [],
-      "pages_checked": 1,
+      "pages_checked": 3,
       "rank": 62,
       "status": "source_unavailable",
       "symbol": "EURSAFO"
@@ -805,6 +805,33 @@
       "rank": 142,
       "status": "source_unavailable",
       "symbol": "SUN"
+    },
+    {
+      "checked_at": "2026-10-10T20:40:18.533862+00:00",
+      "id": "ousg",
+      "markets": [],
+      "pages_checked": 2,
+      "rank": 144,
+      "status": "source_unavailable",
+      "symbol": "OUSG"
+    },
+    {
+      "checked_at": "2026-10-10T20:40:38.659659+00:00",
+      "id": "apxusd",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 145,
+      "status": "source_unavailable",
+      "symbol": "APXUSD"
+    },
+    {
+      "checked_at": "2026-10-10T20:40:58.779141+00:00",
+      "id": "backpack",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 146,
+      "status": "source_unavailable",
+      "symbol": "BP"
     },
     {
       "checked_at": "2026-10-10T17:25:20.352613+00:00",
@@ -1359,5 +1386,5 @@
     }
   ],
   "schema": "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
-  "source": "CoinGecko exact coin ID, exchange_ids okx or bitget; exact-ID CoinGecko contract matched to Bitget official chain"
+  "source": "CoinGecko exact coin ID, exchange_ids okx or bitget"
 }
