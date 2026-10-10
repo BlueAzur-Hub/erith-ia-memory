@@ -326,7 +326,8 @@ def select_pending_assets(qualified,tags,now=None,lookback=12,limit=MAX_ASSETS,
     # The default slot preserves the old newest-first behavior for manual
     # callers; production GITHUB_RUN_NUMBER advances on every workflow run.
     if new_assets and (rotation==0 or rotation%4!=0):
-        return months[0],new_assets[:limit]
+        offset=rotation%len(new_assets)
+        return months[0],(new_assets[offset:]+new_assets[:offset])[:limit]
     new_ids={a["id"] for a in new_assets}
     backlog=[]
     for month in months:
@@ -335,7 +336,9 @@ def select_pending_assets(qualified,tags,now=None,lookback=12,limit=MAX_ASSETS,
         if missing:
             backlog.append((month,missing))
     if not backlog:
-        return (months[0],new_assets[:limit]) if new_assets else (None,[])
+        if not new_assets:return None,[]
+        offset=rotation%len(new_assets)
+        return months[0],(new_assets[offset:]+new_assets[:offset])[:limit]
     month,missing=backlog[rotation%len(backlog)]
     offset=rotation%len(missing)
     return month,(missing[offset:]+missing[:offset])[:limit]

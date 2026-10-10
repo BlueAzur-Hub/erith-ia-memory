@@ -207,6 +207,24 @@ class NativeBitgetMonthTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"rotation"):
             m.select_pending_assets(coins,september,now,rotation=True)
 
+    def test_many_new_exact_id_assets_all_get_a_turn(self):
+        """A failing first group of 3 cannot permanently starve a new fourth."""
+        now=dt.datetime(2026,10,10,17,0,tzinfo=dt.timezone.utc)
+        qualified=[{**ASSET,"rank":60+i,"id":f"new-{i}",
+                    "symbol":f"N{i}","pair":f"N{i}USDT"}
+                   for i in range(8)]
+        chosen=set()
+        start_groups=[]
+        for slot in range(8):
+            month,batch=m.select_pending_assets(
+                qualified,set(),now,limit=3,rotation=slot)
+            self.assertEqual(month,"2026-09")
+            self.assertLessEqual(len(batch),3)
+            chosen.update(a["id"] for a in batch)
+            start_groups.append(batch[0]["id"])
+        self.assertEqual(chosen,{a["id"] for a in qualified})
+        self.assertGreater(len(set(start_groups)),3)
+
     def test_selection_never_promotes_unqualified_symbols(self):
         src=json.loads(m.proof.CATALOG.read_text())
         alt=json.loads(m.proof.EXACT.read_text())
