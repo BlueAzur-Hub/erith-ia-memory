@@ -270,7 +270,7 @@ async function show(){
  canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
  try{
   const extra=Object.hasOwn({"60j":1,"90j":1,"1an":1,"Max":1},period);
-  const alternative=(await getBitgetIndex()).assets.some(a=>a.id===id);
+  const alternative=(await getBitgetIndex().catch(()=>({assets:[]}))).assets.some(a=>a.id===id);
   if(alternative&&extra)throw Error("Bitget : 60j/90j/1an/Max non matérialisés ; choisir 24h, 7j, 30j ou Mois source.");
   const archive=alternative?await loadBitget(id):extra
     ? await window.SevenHourlyHistory.loadOne(id)
