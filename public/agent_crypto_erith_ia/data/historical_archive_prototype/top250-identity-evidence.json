@@ -1,5 +1,5 @@
 {
-  "approved_count": 74,
+  "approved_count": 76,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -892,23 +892,43 @@
       "symbol": "KAIA"
     },
     {
-      "checked_at": "2026-10-10T00:20:12.844414+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T17:24:44.501397+00:00",
+      "evidence": [
+        {
+          "base": "LDO",
+          "coin_id": "lido-dao",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "lido-dao",
+          "trade_url": "https://www.binance.com/en/trade/LDO_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "lido-dao",
+      "pages": 1,
       "pair": "LDOUSDT",
       "rank": 136,
-      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
-      "status": "source_unavailable",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "LDO"
     },
     {
-      "checked_at": "2026-10-10T00:20:27.910958+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T17:24:59.635822+00:00",
+      "evidence": [
+        {
+          "base": "FDUSD",
+          "coin_id": "first-digital-usd",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "first-digital-usd",
+          "trade_url": "https://www.binance.com/en/trade/FDUSD_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "first-digital-usd",
+      "pages": 1,
       "pair": "FDUSDUSDT",
       "rank": 141,
-      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
-      "status": "source_unavailable",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "FDUSD"
     },
     {
@@ -1712,7 +1732,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 22,
+  "review_required_count": 20,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
