@@ -5,9 +5,9 @@
   "ranked": 250,
   "rank_snapshot": "2026-10-09T18:47:53.633Z",
   "release_months": 28,
-  "release_count": 55,
-  "archived_assets": 104,
-  "native_1m_candles": 83852640,
+  "release_count": 58,
+  "archived_assets": 106,
+  "native_1m_candles": 84117600,
   "groups": [
     {
       "top": 10,
@@ -23,7 +23,7 @@
     },
     {
       "top": 250,
-      "with_history": 104
+      "with_history": 106
     }
   ],
   "months": [
@@ -260,6 +260,13 @@
     },
     {
       "month": "2026-07",
+      "release": "crypto-spot-bulk-add-2026-07-1m-1f7619d1e805",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 89280
+    },
+    {
+      "month": "2026-07",
       "release": "crypto-spot-bulk-add-2026-07-1m-5cce3ca0047d",
       "verified": 1,
       "unavailable": 1,
@@ -316,6 +323,13 @@
     },
     {
       "month": "2026-08",
+      "release": "crypto-spot-bulk-add-2026-08-1m-1f7619d1e805",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 89280
+    },
+    {
+      "month": "2026-08",
       "release": "crypto-spot-bulk-add-2026-08-1m-5cce3ca0047d",
       "verified": 2,
       "unavailable": 0,
@@ -366,6 +380,13 @@
     {
       "month": "2026-09",
       "release": "crypto-spot-bulk-add-2026-09-1m-1d4242c4d690",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 86400
+    },
+    {
+      "month": "2026-09",
+      "release": "crypto-spot-bulk-add-2026-09-1m-1f7619d1e805",
       "verified": 2,
       "unavailable": 0,
       "candles": 86400
@@ -12759,9 +12780,34 @@
       "symbol": "LDO",
       "name": "Lido DAO",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "LDOUSDT",
+          "file": "LDOUSDT-1m-2026-07.zip",
+          "sha256": "38d06b72d2ae668fd97ad1c88a692892b44cebed066bb91d1be072def219f871",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-1f7619d1e805"
+        },
+        {
+          "month": "2026-08",
+          "pair": "LDOUSDT",
+          "file": "LDOUSDT-1m-2026-08.zip",
+          "sha256": "659f351c9da4d1cc425307feb8907ff4d3e9e9e21fac1586d8278cc9f7a28a49",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-1f7619d1e805"
+        },
+        {
+          "month": "2026-09",
+          "pair": "LDOUSDT",
+          "file": "LDOUSDT-1m-2026-09.zip",
+          "sha256": "96c807e6c6e588964ec1fe69980d497ef33a47bb908d18f09a46b65a9206c75e",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-1f7619d1e805"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "unibase",
@@ -12809,9 +12855,34 @@
       "symbol": "FDUSD",
       "name": "First Digital USD",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "FDUSDUSDT",
+          "file": "FDUSDUSDT-1m-2026-07.zip",
+          "sha256": "e87f1d4dea272ef1b64e60d0dbb4739738df0f13c09848ba8098b521bcd14d76",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-1f7619d1e805"
+        },
+        {
+          "month": "2026-08",
+          "pair": "FDUSDUSDT",
+          "file": "FDUSDUSDT-1m-2026-08.zip",
+          "sha256": "a9881de8af84b15087fb8592e18a89c7b6de422956dc31b6aa3b2871ba73ffed",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-1f7619d1e805"
+        },
+        {
+          "month": "2026-09",
+          "pair": "FDUSDUSDT",
+          "file": "FDUSDUSDT-1m-2026-09.zip",
+          "sha256": "efa05088d7841baddabceca61411d93326cddb87d0d7f690796a69e44baac407",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-1f7619d1e805"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "sun-token",
