@@ -48,6 +48,8 @@ test("all original and addendum SHA256 ZIPs are accepted by the common reader",a
    f.node("top250-status").textContent);
  assert.equal(f.requests(),1);
  assert.equal(result.archived_assets,catalog.archived_assets);
+ assert.equal(f.node("top250-title").textContent,
+   "Coffre Top 250 · couverture réelle des historiques ("+result.archived_assets+"/250 archivés)");
  assert.ok(result.archived_assets>=40,"Previously verified 40 archives cannot disappear");
  assert.equal(result.native_1m_candles,catalog.native_1m_candles);
  assert.ok(result.native_1m_candles>=17483040,"Previously verified native candles cannot disappear");
@@ -63,4 +65,5 @@ test("tampered addendum release reference fails without published fake coverage"
  await settled(f);
  assert.equal(f.window.SevenTop250Catalog.read(),null);
  assert.match(f.node("top250-status").textContent,/Catalogue indisponible/);
+ assert.match(f.node("top250-title").textContent,/indisponible/);
 });
