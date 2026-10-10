@@ -414,11 +414,10 @@ def main():
               "official_priority_assets":len(official_priority(queue,archived))}))
         return
     priority=official_priority(queue,archived)
-    result=process(queue,prior,args.batch_size,
-                   checker=lambda a:inspect(a,exchange_getter=fetch_exchange),
-                   delay=args.sleep,excluded=archived,preferred=priority)
-    # Keep the two large inventories to once per hour in scheduled runs;
-    # a reviewed source-code push checks the new source promptly.
+    # Read two batch inventories BEFORE individual per-ID ticker requests:
+    # the old order exhausted CoinGecko's public API and returned HTTP 429
+    # before the independent contract route could even begin.
+    inventory=None
     number=os.environ.get("GITHUB_RUN_NUMBER","0")
     inventory_due=(os.environ.get("GITHUB_EVENT_NAME")=="push"
                    or (number.isdecimal() and int(number)%4==0))
@@ -427,16 +426,22 @@ def main():
             official=json.loads(OFFICIAL.read_text(encoding="utf-8"))
             cg=public_inventory(CG_PLATFORMS,40_000_000)
             bitget=public_inventory(BITGET_COINS,15_000_000)
-            result,added=enrich_contracts(queue,archived,result,official,cg,bitget)
-            print("EXACT CONTRACT SOURCE "+json.dumps(
-                {"qualified_ids":added,"count":len(added)},sort_keys=True),
-                flush=True)
+            inventory=(official,cg,bitget)
+            print("EXACT CONTRACT INVENTORIES LOADED",flush=True)
         except (OSError,ValueError,TypeError,KeyError,
                 json.JSONDecodeError) as exc:
             print("EXACT CONTRACT SOURCE UNAVAILABLE "+
                   type(exc).__name__+": "+str(exc)[:180],flush=True)
     else:
         print("EXACT CONTRACT SOURCE DEFERRED: hourly inventory quota",flush=True)
+    result=process(queue,prior,args.batch_size,
+                   checker=lambda a:inspect(a,exchange_getter=fetch_exchange),
+                   delay=args.sleep,excluded=archived,preferred=priority)
+    if inventory is not None:
+        result,added=enrich_contracts(queue,archived,result,*inventory)
+        print("EXACT CONTRACT SOURCE "+json.dumps(
+            {"qualified_ids":added,"count":len(added)},sort_keys=True),
+            flush=True)
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     tmp=OUTPUT.with_suffix(".tmp")
     tmp.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
