@@ -1,0 +1,99 @@
+name: Agent Crypto Verified Multi-source Native 1m Coverage
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-verified-multisource-coverage.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_verified_multisource_coverage.py'
+      - 'public/agent_crypto_erith_ia/tools/verified_multisource_coverage_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-verified-multisource-coverage.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_verified_multisource_coverage.py'
+      - 'public/agent_crypto_erith_ia/tools/verified_multisource_coverage_test.py'
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - 'Agent Crypto Bitget Verified Native Spot Monthly Sources'
+    types: [completed]
+  schedule:
+    - cron: '53 6,18 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-top250-verified-multisource-coverage
+  cancel-in-progress: false
+jobs:
+  verify-multisource:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.event != 'pull_request')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test source zip SHA, exact-ID owner, complete minute continuity and no double counts
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_verified_multisource_coverage.py
+          python public/agent_crypto_erith_ia/tools/verified_multisource_coverage_test.py
+          python public/agent_crypto_erith_ia/tools/build_verified_multisource_coverage.py --plan
+      - name: Validate already-published immutable Bitget source Releases
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/build_verified_multisource_coverage.py --build
+          src=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          cp "$src/top250_verified_multisource_index.json" "$RUNNER_TEMP/multisource-index.json"
+          for file in top250_history_catalog/index.json top250-alt-market-evidence.json top250-official-spot-instruments.json; do
+            sha256sum "$src/$file" | cut -d' ' -f1
+          done > "$RUNNER_TEMP/source-shas"
+      - name: Publish only independent coverage metadata against source ledgers
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          dir=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          git fetch origin main
+          index=1
+          for file in top250_history_catalog/index.json top250-alt-market-evidence.json top250-official-spot-instruments.json; do
+            expected=$(awk "NR==$index" "$RUNNER_TEMP/source-shas")
+            actual=$(git show "origin/main:$dir/$file" | sha256sum | cut -d' ' -f1)
+            if [[ "$actual" != "$expected" ]]; then
+              echo "::error::Source register changed while validating original ZIPs; refuse stale output"
+              exit 1
+            fi
+            index=$((index+1))
+          done
+          git reset --hard origin/main
+          cp "$RUNNER_TEMP/multisource-index.json" "$dir/top250_verified_multisource_index.json"
+          git add -- "$dir/top250_verified_multisource_index.json"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: multisource coverage unchanged'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Publish genuine multi-source Top250 coverage, no OHLCV changes'
+          git push origin HEAD:main
+      - name: Protect Trader, source ZIPs and all original readers
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_monthly_views/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_hourly_views/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards/
