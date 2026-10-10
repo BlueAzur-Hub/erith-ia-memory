@@ -177,9 +177,9 @@ def main():
         return
     result = audit(queue, archived)
     if all(x["status"] == "source_unavailable" for x in result["markets"].values()):
-        # A transient pair of upstream errors may not erase prior evidence.
-        print("OFFICIAL SPOT SOURCES UNAVAILABLE: original evidence unchanged", flush=True)
-        return
+        # Do not quietly certify an old snapshot as a fresh source census.
+        # Existing evidence stays untouched; CI reports an honest failure.
+        raise ValueError("Both official Spot sources unavailable; keeping prior audit")
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     tmp = OUTPUT.with_suffix(".tmp")
     tmp.write_text(json.dumps(result, indent=2, ensure_ascii=False, sort_keys=True) + "\n")
