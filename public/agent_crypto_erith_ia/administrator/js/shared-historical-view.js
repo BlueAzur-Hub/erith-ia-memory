@@ -242,7 +242,7 @@ function display(view,metadata){
  chart(view.rows);
  byId("shared-status").textContent="Vérifié · "+view.pair+" · "+view.rows.length.toLocaleString("fr-FR")+
    " bougies "+view.interval+" · périodes suivantes lues sans téléchargement";
- byId("shared-source").textContent="Binance Spot · "+view.quote+" · mois "+metadata.month+
+ byId("shared-source").textContent=(metadata.source==="Bitget Spot"?"Bitget Spot (7 champs natifs, sans transactions)":"Binance Spot")+" · "+view.quote+" · mois "+metadata.month+
    " · "+format(view.rows[0][0])+" → "+format(view.rows.at(-1)[0])+
    " · source native : "+metadata.native_1m_count.toLocaleString("fr-FR")+
    " bougies 1m"+(metadata.months?" · "+metadata.months+" mois validés":"")+
@@ -265,9 +265,14 @@ async function show(){
  const id=byId("shared-asset").value,period=byId("shared-period").value;
  button.disabled=true;
  byId("shared-status").textContent="Lecture de l'archive vérifiée…";
+ byId("shared-table").replaceChildren();
+ const canvas=byId("shared-curve");
+ canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
  try{
   const extra=Object.hasOwn({"60j":1,"90j":1,"1an":1,"Max":1},period);
-  const archive=extra
+  const alternative=(await getBitgetIndex()).assets.some(a=>a.id===id);
+  if(alternative&&extra)throw Error("Bitget : 60j/90j/1an/Max non matérialisés ; choisir 24h, 7j, 30j ou Mois source.");
+  const archive=alternative?await loadBitget(id):extra
     ? await window.SevenHourlyHistory.loadOne(id)
     : await loadOne(id);
   const selection=extra
@@ -284,13 +289,16 @@ async function show(){
 async function init(){
  try{
   const x=await getIndex();
+  let alt={assets:[]},warning="";
+  try{alt=await getBitgetIndex()}catch(e){warning=" · Bitget indisponible : "+String(e?.message||e)}
   const select=byId("shared-asset");select.replaceChildren();
-  for(const a of x.assets){
+  for(const a of [...x.assets,...alt.assets].sort((a,b)=>a.rank-b.rank)){
    const option=document.createElement("option");
    option.value=a.id;option.textContent="#"+a.rank+" · "+a.name+" ("+a.pair+")";
    select.append(option);
   }
-  byId("shared-status").textContent=x.archived_assets+" cryptos disponibles · données du dernier mois vérifié · lecture sur demande";
+  byId("shared-status").textContent=(x.archived_assets+alt.assets.length)+
+   " cryptos disponibles · dernier mois vérifié · lecture sur demande"+warning;
   byId("shared-read").disabled=false;
  }catch(e){
   byId("shared-status").textContent="Index indisponible : "+String(e?.message||e);
@@ -304,7 +312,18 @@ byId("shared-period")?.addEventListener("change",()=>{
 byId("shared-asset")?.addEventListener("change",()=>{
  byId("shared-status").textContent="Actif sélectionné · cliquer pour lire le mois archivé";
 });
+document.addEventListener("seven-vault-select",event=>{
+ const id=event.detail?.id,select=byId("shared-asset");
+ if(![...select.options].some(option=>option.value===id)){
+  byId("shared-status").textContent="Archive non disponible pour "+String(id);
+  return;
+ }
+ select.value=id;
+ byId("shared-month-reader").open=true;
+ void show();
+ byId("shared-month-reader").scrollIntoView({behavior:"smooth",block:"start"});
+});
 byId("shared-read").disabled=true;
 void init();
-window.SevenSharedHistory=Object.freeze({index:getIndex,loadOne,selectPeriod});
+window.SevenSharedHistory=Object.freeze({index:getIndex,loadOne,loadBitget,selectPeriod});
 })();
