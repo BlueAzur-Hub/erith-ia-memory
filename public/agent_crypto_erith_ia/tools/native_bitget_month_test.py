@@ -47,6 +47,24 @@ class NativeBitgetMonthTests(unittest.TestCase):
                                   fetcher=correct,delay=0)
             self.assertEqual(result2["assets"][0]["sha256"],entry["sha256"])
 
+    def test_one_incomplete_recent_page_falls_back_to_authentic_history(self):
+        first=m.bounds("2026-09")[0]
+        def insufficient_recent(pair,start,end,count):
+            rows,sha=correct(pair,start,end,count)
+            return (rows[:-1] if start==first else rows),sha
+        history=[]
+        def exact_history(pair,start,end,count):
+            history.append((start,count))
+            self.assertLessEqual(count,100)
+            return correct(pair,start,end,count)
+        with tempfile.TemporaryDirectory() as work:
+            result=m.execute_one(ASSET,"2026-09",Path(work),
+                        fetcher=insufficient_recent,delay=0,
+                        historical_fetcher=exact_history)
+            self.assertEqual(result["verified"],1)
+            self.assertEqual(len(history),10)
+            self.assertEqual(len(result["assets"][0]["raw_api_response_sha256"]),53)
+
     def test_missing_duplicate_wrong_quote_or_bad_value_halts(self):
         start,_,_=m.bounds("2026-09")
         good=[[str(start+i*m.STEP),"10","12","9","11","2","20"]
@@ -69,7 +87,7 @@ class NativeBitgetMonthTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             with self.assertRaisesRegex(ValueError,"Partial native"):
                 m.execute_one(ASSET,"2026-09",Path(temp),
-                              fetcher=broken,delay=0)
+                              fetcher=broken,historical_fetcher=broken,delay=0)
             self.assertEqual(list(Path(temp).iterdir()),[])
 
     def test_closed_month_and_release_identity(self):
