@@ -44,6 +44,34 @@ jobs:
           python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py --plan
           python public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py
           python public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py --plan
+      - name: PR only - inspect first official March 2023 Spot close-timestamp discrepancy
+        if: github.event_name == 'pull_request'
+        run: |
+          python - <<'PY'
+          import sys,io,csv,zipfile
+          sys.path.insert(0,'public/agent_crypto_erith_ia/tools')
+          import import_historical_bulk as b
+          for pair in ('BTCUSDT','XMRUSDT'):
+              month='2023-03'
+              name,url=b.url_for(pair,month,'1m')
+              z=b.download(url)
+              check=b.download(url+'.CHECKSUM',cap=8192).decode().strip().split()[0]
+              assert b.sha256(z)==check
+              first=None
+              with zipfile.ZipFile(io.BytesIO(z)) as arc:
+                  with arc.open(name[:-4]+'.csv') as stream:
+                      reader=csv.reader(io.TextIOWrapper(stream,encoding='utf-8-sig',newline=''))
+                      for n,fields in enumerate(reader,1):
+                          opened=int(fields[0])
+                          closed=int(fields[6])
+                          if not (opened+59999<=closed<opened+60000):
+                              first={'row':n,'opened':opened,'closed':closed,
+                                     'delta_ms':closed-opened,
+                                     'open_price':fields[1],'close_price':fields[4]}
+                              break
+              print('BINANCE 2023-03 VERIFIED SHA SOURCE FIRST TIMESTAMP MISMATCH',
+                    pair,check,first,flush=True)
+          PY
       - name: Acquire four older fully certified Binance native 1m months
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
