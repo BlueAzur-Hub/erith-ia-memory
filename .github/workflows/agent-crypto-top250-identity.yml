@@ -26,7 +26,7 @@ concurrency:
 jobs:
   identity:
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,20 +47,25 @@ jobs:
           set -euo pipefail
           marker=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-expansion.json
           status=$(git diff --name-status HEAD^ HEAD -- "$marker" | cut -f1)
-          if [[ "$status" != A ]]; then
+          if [[ "$status" != M ]]; then
             echo "approved=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           python - <<'PY'
-          import json
+          import json,subprocess
           from pathlib import Path
-          d=json.loads(Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-expansion.json').read_text())
-          assert d['schema']=='aerith.public.ohlcv.spot.top250.identity.expansion.v1'
-          assert d['action']=='qualify_next_unchecked_exact_ids_once'
-          assert d['max_batches']==2 and d['batch_size']==8
-          assert d['source']=='CoinGecko exact IDs / Binance Spot USDT'
-          assert d['no_symbol_only_approvals'] is True
-          assert d['no_trader_changes'] is True
+          p=Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-expansion.json')
+          now=json.loads(p.read_text())
+          old=json.loads(subprocess.check_output(
+              ['git','show','HEAD^:'+p.as_posix()],text=True))
+          assert now['schema']==old['schema']=='aerith.public.ohlcv.spot.top250.identity.expansion.v1'
+          assert now['action']==old['action']=='qualify_next_unchecked_exact_ids_once'
+          assert old['max_batches']==2 and 'phase' not in old
+          assert now['phase']=='full_candidate_pass'
+          assert now['max_batches']==9 and now['batch_size']==old['batch_size']==8
+          assert now['source']==old['source']=='CoinGecko exact IDs / Binance Spot USDT'
+          assert now['no_symbol_only_approvals'] is old['no_symbol_only_approvals'] is True
+          assert now['no_trader_changes'] is old['no_trader_changes'] is True
           PY
           echo "approved=true" >> "$GITHUB_OUTPUT"
       - name: Qualify exact CoinGecko IDs using bounded official Binance-exchange tickers
@@ -92,21 +97,37 @@ jobs:
               assert any(x["status"]!="source_unavailable" for x in checked_new), "CoinGecko source unavailable for entire PR batch"
           print("TOP250 EXACT-ID",json.dumps({k:r[k] for k in ("candidate_count","checked_count","approved_count")},sort_keys=True))
           PY
-      - name: Qualify second source-verified batch only on approved expansion kickoff
+      - name: Finish remaining exact-ID candidates in eight rate-limited batches
         if: github.event_name == 'push' && steps.expansion.outputs.approved == 'true'
         run: |
           set -euo pipefail
           target=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-evidence.json
-          python public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py --probe --batch-size 8 --sleep 15
-          cp "$target" "$RUNNER_TEMP/top250-identity-evidence.json"
-          python - <<'PY'
+          for batch in $(seq 2 9); do
+            remaining=$(python - <<'PY'
           import json
           from pathlib import Path
           p=Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-evidence.json')
-          d=json.loads(p.read_text())
-          assert d["checked_count"]==len(d["results"])<=96
+          obj=json.loads(p.read_text())
+          assert obj['candidate_count']==96
+          assert 28<=obj['checked_count']<=96
+          print(obj['candidate_count']-obj['checked_count'])
+          PY
+            )
+            if [[ "$remaining" == 0 ]]; then
+              echo "EXACT-ID COMPLETE: no unchecked candidates left"
+              break
+            fi
+            echo "EXACT-ID BATCH $batch OF 9 (remaining $remaining)"
+            python public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py --probe --batch-size 8 --sleep 15
+            cp "$target" "$RUNNER_TEMP/top250-identity-evidence.json"
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-evidence.json').read_text())
+          assert d["checked_count"]==len(d["results"])==d["candidate_count"]==96
           assert d["approved_count"]<=d["checked_count"]
-          print("EXPANSION EXACT-ID",json.dumps({
+          print("EXACT-ID COMPLETE",json.dumps({
             "checked":d["checked_count"],"approved":d["approved_count"],
             "candidates":d["candidate_count"]},sort_keys=True))
           PY
