@@ -57,7 +57,8 @@ class MultiSourceTests(unittest.TestCase):
         self.assertEqual(index["bitget_new_distinct_assets"],1)
         self.assertTrue(index["first_trade_not_proven"])
         self.assertTrue(index["does_not_replace_binance_readers"])
-        self.assertEqual(index["assets_with_12_consecutive_months"],80)
+        expected=sum(max((len(span) for span in m.spans([x["month"] for x in a["months"]])),default=0)>=12 for a in self.catalog["assets"])
+        self.assertEqual(index["assets_with_12_consecutive_months"],expected)
 
     def test_reject_tampered_zip_without_changing_catalog(self):
         tag,meta,raw=self.month()
