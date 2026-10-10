@@ -5,12 +5,16 @@ on:
       - '.github/workflows/agent-crypto-earliest-binance-native.yml'
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py'
   push:
     branches: [main]
     paths:
       - '.github/workflows/agent-crypto-earliest-binance-native.yml'
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py'
   workflow_dispatch:
   schedule:
     # Reuse the same small, source-verified 2-month pilot every two hours;
@@ -38,11 +42,23 @@ jobs:
           python -m py_compile public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py
           python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py
           python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py --plan
+          python public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py
+          python public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py --plan
       - name: Acquire four older fully certified Binance native 1m months
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py --collect --months 4
+      - name: PR only - verify original December 2023 XMR Spot ZIP and official CHECKSUM
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py --probe
+      - name: Collect up to twelve pre-delisting Monero full months (no new bot)
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py --collect --months 12
       - name: Assert original archives and protected trading code untouched
         if: always()
         run: |
