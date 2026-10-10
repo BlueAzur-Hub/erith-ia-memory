@@ -48,7 +48,7 @@ function createFixture(){
  content.set("index.json",Buffer.from(JSON.stringify(index)));
  return {content,index};
 }
-function harness(change=()=>{}){
+function harness(change=()=>{},alternative=null){
  const fixture=createFixture();
  const requests=[],nodes=new Map(),window={};
  function element(id){
@@ -69,7 +69,12 @@ function harness(change=()=>{}){
  };
  const fetchMock=async href=>{
   const u=new URL(href);
-  assert.equal(u.origin,url);assert.ok(u.pathname.startsWith(root));
+  assert.equal(u.origin,url);
+  if(alternative&&u.pathname.endsWith("/bitget_verified_views/index.json")){
+   requests.push("bitget/index.json");
+   return new Response(JSON.stringify(alternative),{status:200});
+  }
+  assert.ok(u.pathname.startsWith(root));
   const filename=u.pathname.slice(root.length),raw=fixture.content.get(filename);
   assert.ok(raw,"Unexpected archive: "+filename);
   requests.push(filename);
@@ -133,4 +138,35 @@ test("single HTML vault, no generated sibling dashboard",()=>{
  assert.ok(positions.every((p,i)=>i===0||p>positions[i-1]));
  assert.match(html,/src="\.\/js\/shared-historical-view\.js"/);
  assert.doesNotMatch(secondary,/id="shared-month-reader"/);
+});
+
+
+test("Bitget asset with no display name never shows undefined in shared dropdown",async()=>{
+ const sample={
+  schema:"aerith.public.ohlcv.verified-bitget-spot-month-views.v1",
+  source:"Bitget Spot public native 1m API",quote:"USDT",
+  not_exchange_signed:true,trade_count_available:false,archived_assets:1,
+  assets:[{
+   id:"cosmos",rank:75,symbol:"ATOM",pair:"ATOMUSDT",
+   month:"2026-09",months:["2026-08","2026-09"],
+   file:"cosmos-bitget-month.json.gz",
+   release:"crypto-spot-bitget-2026-09-1m-cosmos",
+   sha256:"a".repeat(64),source_zip_sha256:"b".repeat(64),
+   bytes:12000,native_1m_count:43200,total_verified_1m_count:87840,
+   series_counts:{"1m":1440,"5m":8640,"1h":720}
+  }]
+ };
+ const x=harness(()=>{},sample);
+ let options=[];
+ for(let tries=0;tries<40;tries++){
+  options=x.node("shared-asset").children;
+  if(options.length===3)break;
+  await new Promise(done=>setImmediate(done));
+ }
+ assert.equal(options.length,3);
+ const atom=options.find(o=>o.value==="cosmos");
+ assert.ok(atom,"Verified ATOM pair must be included in unified reader");
+ assert.equal(atom.textContent,"#75 · ATOM (ATOMUSDT)");
+ assert.doesNotMatch(atom.textContent,/undefined/);
+ assert.match(x.node("shared-status").textContent,/3 cryptos disponibles/);
 });
