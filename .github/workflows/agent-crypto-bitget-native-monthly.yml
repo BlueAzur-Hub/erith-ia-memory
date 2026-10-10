@@ -1,0 +1,55 @@
+name: Agent Crypto Bitget Verified Native Spot Monthly Sources
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-bitget-native-monthly.yml'
+      - 'public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py'
+      - 'public/agent_crypto_erith_ia/tools/native_bitget_month_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-bitget-native-monthly.yml'
+      - 'public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py'
+      - 'public/agent_crypto_erith_ia/tools/native_bitget_month_test.py'
+  workflow_dispatch:
+  schedule:
+    - cron: '29 5 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-bitget-immutable-native-month
+  cancel-in-progress: false
+jobs:
+  verify-and-collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test genuine native 1m ZIPs and fail-closed provenance
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py
+          python public/agent_crypto_erith_ia/tools/native_bitget_month_test.py
+          python public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py --plan
+      - name: Download proven exact-ID native Bitget full September Spot months
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py --collect --month 2026-09 --limit 3
+      - name: Guarantee source ZIPs never land in Git history or trading app
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/crypto/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_monthly_views/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_hourly_views/
