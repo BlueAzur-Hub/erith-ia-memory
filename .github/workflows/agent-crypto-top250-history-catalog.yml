@@ -24,6 +24,7 @@ on:
     workflows:
       - 'Agent Crypto Top250 - Verified Identity Monthly Addenda'
       - 'Agent Crypto Historical 1m - Continuous Monthly Backfill'
+      - 'Agent Crypto Verified Earliest Binance Native Months'
     types: [completed]
   schedule:
     - cron: '49 1,7,13,19 * * *'
