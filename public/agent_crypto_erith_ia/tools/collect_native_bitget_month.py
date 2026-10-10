@@ -143,7 +143,26 @@ def verified_month(asset,month,fetcher=fetch_page,delay=0.12,
                 size=min(HISTORY_LIMIT,(at+count*STEP-earlier)//STEP)
                 rows,history_hash=historical_fetcher(
                     asset["pair"],earlier,earlier+size*STEP,size)
-                pages.extend(verify_page(rows,earlier,size))
+                try:
+                    authenticated=verify_page(rows,earlier,size)
+                except ValueError as exc:
+                    # Diagnostic metadata only, never a replacement candle.
+                    observed=[]
+                    for source_row in rows[:HISTORY_LIMIT]:
+                        try:
+                            if isinstance(source_row,list) and source_row:
+                                observed.append(int(source_row[0]))
+                        except (ValueError,TypeError,OverflowError):
+                            pass
+                    diagnostic={"id":asset["id"],"expected_start_ms":earlier,
+                      "expected_last_ms":earlier+(size-1)*STEP,"expected":size,
+                      "observed":len(rows),
+                      "observed_min_ms":min(observed) if observed else None,
+                      "observed_max_ms":max(observed) if observed else None,
+                      "reason":str(exc)}
+                    raise ValueError("Historical Bitget 1m page rejected: "+
+                                     json.dumps(diagnostic,sort_keys=True)) from exc
+                pages.extend(authenticated)
                 hashes.append(history_hash)
                 if delay:time.sleep(min(delay,0.12))
         if delay and at+(LIMIT*STEP)<end:time.sleep(delay)
