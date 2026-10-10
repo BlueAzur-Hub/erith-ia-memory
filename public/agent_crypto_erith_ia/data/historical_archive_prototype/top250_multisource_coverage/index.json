@@ -2,10 +2,10 @@
   "schema": "aerith.public.ohlcv.top250.federated-native-archives.v1",
   "ranked": 250,
   "quote": "USDT",
-  "archived_assets": 113,
+  "archived_assets": 116,
   "binance_archived_assets": 106,
-  "bitget_archived_assets": 7,
-  "native_1m_candles": 84942720,
+  "bitget_archived_assets": 10,
+  "native_1m_candles": 85072320,
   "first_trade_date_known": false,
   "is_live": false,
   "note": "Two independent complete-month source formats. Native Bitget 7 fields; no synthetic trade count, no USDT=>USD.",
@@ -24,7 +24,7 @@
     },
     {
       "top": 250,
-      "archived": 113
+      "archived": 116
     }
   ],
   "assets": [
@@ -2063,10 +2063,10 @@
       "rank": 204,
       "symbol": "NPC",
       "name": "Non-Playable Coin",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "neo",
@@ -2213,20 +2213,20 @@
       "rank": 219,
       "symbol": "BR",
       "name": "Bedrock",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "gmt-token",
       "rank": 220,
       "symbol": "GOMINING",
       "name": "GoMining Token",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "strategy-pp-variable-xstock",
