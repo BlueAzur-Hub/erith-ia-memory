@@ -11,7 +11,7 @@
   const ctx = canvas.getContext("2d");
   const INDEX_SCHEMA = "aerith.public.ohlcv.calendar-year-hourly-shard-index.v1";
   const SHARD_SCHEMA = "aerith.public.ohlcv.calendar-year-hourly-shard.v1";
-  const safeFile = /^[a-z0-9-]+-\d{4}-span\d+\.json\.gz$/;
+  const safeFile = /^[a-z0-9-]+-\d{4}-span\d+(?:-[a-f0-9]{64})?\.json\.gz$/;
   let index, active, requestId = 0;
 
   function report(message, failed = false) {

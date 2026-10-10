@@ -97,8 +97,12 @@ def build_asset(info,asset,root):
     for group in annual_groups(info,asset):
         data=aggregate_group(asset,group,root)
         compressed=shared.pack(data)
+        # Immutable source growth must create a NEW yearly artifact rather
+        # than overwrite the old one or fail with a same-name collision.
+        # Full SHA-256 is the content identifier, not a build version.
+        content_sha=shared.digest(compressed)
         filename=(asset["id"]+"-"+str(group["year"])+"-span"+
-                  str(group["span"])+".json.gz")
+                  str(group["span"])+"-"+content_sha+".json.gz")
         files.append((filename,compressed,{
             "file":filename,"year":group["year"],"span":group["span"],
             "first_open_ms":data["first_open_ms"],
@@ -126,7 +130,7 @@ def verify_existing(old,folder,catalog):
             f=shard.get("file")
             if (not isinstance(f,str) or
                 not f.startswith(a["id"]+"-") or
-                not re.fullmatch(r"[a-z0-9-]+-\d{4}-span\d+\.json\.gz",f) or
+                not re.fullmatch(r"[a-z0-9-]+-\d{4}-span\d+(?:-[a-f0-9]{64})?\.json\.gz",f) or
                 not (folder/f).is_file() or
                 shared.digest((folder/f).read_bytes())!=shard.get("sha256")):
                 valid=False;break

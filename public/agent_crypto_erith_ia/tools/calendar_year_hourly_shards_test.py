@@ -98,6 +98,48 @@ class CalendarYearShardTests(unittest.TestCase):
             old["assets"][0]["source_signature"]="0"*64
             self.assertNotIn("bitcoin",m.verify_existing(old,folder,self.catalog))
 
+    def test_extended_year_never_overwrites_previous_immutable_chunk(self):
+        """A later verified month gets a new content hash and preserves old bytes."""
+        info=self.infos["bitcoin"]
+        asset=self.assets["bitcoin"]
+        group=m.annual_groups(info,asset)[0]
+        seed={"first_open_ms":1,"last_open_ms":2,
+              "native_1m_count":60,
+              "series":[[1,10,12,9,11,3,33,2]],
+              "source_months":[{"month":group["source_months"][0]["month"]}]}
+        grown=copy.deepcopy(seed)
+        grown["source_months"]=[
+            {"month":x["month"]} for x in group["source_months"]]
+        grown["native_1m_count"]=len(grown["source_months"])*60
+        grown["last_open_ms"]=3
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)
+            legacy=root/"bitcoin-2024-span0.json.gz"
+            legacy.write_bytes(b"previously published yearly shard: immutable")
+            with mock.patch.object(m,"annual_groups",return_value=[group]), (
+                 mock.patch.object(m,"aggregate_group",return_value=seed)):
+                initial=m.build_asset(info,asset,root)[0]
+            with mock.patch.object(m,"annual_groups",return_value=[group]), (
+                 mock.patch.object(m,"aggregate_group",return_value=grown)):
+                filename,compressed,meta=m.build_asset(info,asset,root)[0]
+            self.assertNotEqual(initial[0],filename)
+            self.assertTrue(filename.endswith(
+                m.shared.digest(compressed)+".json.gz"))
+            self.assertEqual(meta["sha256"],m.shared.digest(compressed))
+            with mock.patch.object(m,"candidates",return_value=[(info,asset)]), (
+                 mock.patch.object(m,"annual_groups",return_value=[group])), (
+                 mock.patch.object(m,"aggregate_group",return_value=grown)):
+                index=m.build(self.catalog,root,limit=1,workers=1)
+            self.assertEqual(
+                legacy.read_bytes(),b"previously published yearly shard: immutable")
+            self.assertEqual((root/filename).read_bytes(),compressed)
+            self.assertEqual(index["assets"][0]["shards"][0]["file"],filename)
+            self.assertIn("bitcoin",m.verify_existing(
+                index,root,self.catalog))
+        reader=(Path(__file__).resolve().parents[1] /
+                "administrator/js/historical-yearly-browser.js")
+        self.assertIn("(?:-[a-f0-9]{64})?",reader.read_text(encoding="utf-8"))
+
     def test_batch_limits_reject_unbounded_backfill(self):
         with tempfile.TemporaryDirectory() as td:
             with self.assertRaisesRegex(ValueError,"Unsafe daily"):
