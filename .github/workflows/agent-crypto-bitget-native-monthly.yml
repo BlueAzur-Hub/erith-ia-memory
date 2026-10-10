@@ -23,9 +23,9 @@ on:
     workflows: ['Agent Crypto Top250 Alternative Spot Market Discovery']
     types: [completed]
   schedule:
-    # Four bounded acquisitions daily; the source-publishing concurrency lock
+    # 48 bounded acquisition windows daily; the source-publishing concurrency lock
     # remains serial and each run handles at most three exact-ID assets.
-    - cron: '29 1,7,13,19 * * *'
+    - cron: '11,41 * * * *'
 permissions:
   contents: write
 concurrency:
