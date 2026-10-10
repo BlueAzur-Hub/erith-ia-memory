@@ -37,6 +37,33 @@ class AlternativeMarketTests(unittest.TestCase):
         status,proof,_=m.inspect(COIN,lambda *args:[ticker()]*100)
         self.assertEqual(status,"source_pagination_incomplete")
         self.assertEqual(proof,[])
+    def test_exchange_fallback_only_approves_explicit_original_coin_id(self):
+        def primary(coin,venue,page):return []
+        def alternative(coin,venue,page):
+            return [ticker(coin="okb",venue=venue)] if venue=="okx" else []
+        status,proof,pages=m.inspect(COIN,primary,alternative)
+        self.assertEqual(status,"exact_id_market_candidates")
+        self.assertEqual(len(proof),1)
+        self.assertEqual(proof[0]["coin_id"],"okb")
+        self.assertEqual(pages,4)
+        status,proof,_=m.inspect(COIN,primary,
+            lambda coin,venue,page:[ticker(coin="wrong",venue=venue)])
+        self.assertEqual(status,"market_not_confirmed")
+        self.assertFalse(proof)
+
+    def test_fallback_after_primary_api_failure_still_enforces_both_markets(self):
+        def fails(coin,venue,page):raise OSError("first CoinGecko route unavailable")
+        status,proof,_=m.inspect(COIN,fails,
+             lambda coin,venue,page:[ticker(coin="okb",venue=venue)])
+        self.assertEqual(status,"exact_id_market_candidates")
+        self.assertEqual(len(proof),2)
+        self.assertTrue(all(not item["exchange_instrument_confirmed"]
+                            and not item["native_1m_month_confirmed"] for item in proof))
+        status,proof,_=m.inspect(COIN,fails,
+             lambda coin,venue,page:(_ for _ in ()).throw(OSError("second unavailable")))
+        self.assertEqual(status,"source_unavailable")
+        self.assertFalse(proof)
+
     def test_batch_is_bounded_resume_and_has_no_archive_claim(self):
         other={"id":"monero","symbol":"XMR","rank":14,"name":"Monero"}
         queue=[other,COIN]
