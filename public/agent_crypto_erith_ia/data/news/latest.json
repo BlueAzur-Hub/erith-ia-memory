@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-10-10T20:08:42.558650+00:00",
+  "generated_at": "2026-10-10T23:38:13.286732+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,11 +11,11 @@
   "causal_claim": false,
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 4,
-    "operator_eligible_24h": 4,
+    "events_24h": 2,
+    "operator_eligible_24h": 2,
     "context_only_24h": 0,
-    "critical_24h": 2,
-    "strong_24h": 1,
+    "critical_24h": 1,
+    "strong_24h": 0,
     "sources_ok": 15,
     "sources_total": 15,
     "sources_failed": 0,
@@ -31,8 +31,8 @@
         "distinct_sources": 4
       },
       "regulation": {
-        "events_72h": 5,
-        "distinct_sources": 4
+        "events_72h": 4,
+        "distinct_sources": 3
       },
       "leverage": {
         "events_72h": 0,
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 50,
       "qualified_count": 4,
-      "latency_ms": 359,
+      "latency_ms": 484,
       "error": null
     },
     {
@@ -68,9 +68,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 31,
+      "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 254,
+      "latency_ms": 244,
       "error": null
     },
     {
@@ -81,7 +81,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 10,
-      "latency_ms": 152,
+      "latency_ms": 146,
       "error": null
     },
     {
@@ -92,7 +92,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 382,
+      "latency_ms": 387,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 22,
-      "latency_ms": 426,
+      "latency_ms": 355,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 25,
-      "latency_ms": 285,
+      "latency_ms": 205,
       "error": null
     },
     {
@@ -125,7 +125,7 @@
       "status": "ok",
       "fetched_count": 38,
       "qualified_count": 30,
-      "latency_ms": 167,
+      "latency_ms": 150,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 5,
-      "latency_ms": 675,
+      "latency_ms": 692,
       "error": null
     },
     {
@@ -147,7 +147,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 17,
-      "latency_ms": 217,
+      "latency_ms": 126,
       "error": null
     },
     {
@@ -158,7 +158,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 3,
-      "latency_ms": 300,
+      "latency_ms": 383,
       "error": null
     },
     {
@@ -169,7 +169,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 288,
+      "latency_ms": 258,
       "error": null
     },
     {
@@ -180,7 +180,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 10,
-      "latency_ms": 397,
+      "latency_ms": 373,
       "error": null
     },
     {
@@ -191,7 +191,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 274,
+      "latency_ms": 238,
       "error": null
     },
     {
@@ -202,7 +202,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 179,
+      "latency_ms": 150,
       "error": null
     },
     {
@@ -213,7 +213,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 10228,
+      "latency_ms": 8328,
       "error": null
     }
   ],
@@ -242,11 +242,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-09T06:51:32+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.122893+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.122893+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.729349+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.729349+00:00",
       "freshness": {
         "iso": "2026-10-09T06:51:32+00:00",
-        "hours": 37.28,
+        "hours": 40.78,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -521,11 +521,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-10-08T17:46:05+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.819700+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.819700+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.533512+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.533512+00:00",
       "freshness": {
         "iso": "2026-10-08T17:46:05+00:00",
-        "hours": 50.37,
+        "hours": 53.87,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -929,11 +929,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-09T07:34:44+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.930021+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.930021+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.578586+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.578586+00:00",
       "freshness": {
         "iso": "2026-10-09T07:34:44+00:00",
-        "hours": 36.56,
+        "hours": 40.06,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2294,11 +2294,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-09T13:50:00+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.435489+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.435489+00:00",
+      "first_seen_at": "2026-10-10T23:38:05.109337+00:00",
+      "last_seen_at": "2026-10-10T23:38:05.109337+00:00",
       "freshness": {
         "iso": "2026-10-09T13:50:00+00:00",
-        "hours": 30.31,
+        "hours": 33.8,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2426,11 +2426,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-05T04:21:58+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.446044+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.446044+00:00",
+      "first_seen_at": "2026-10-10T23:38:05.115305+00:00",
+      "last_seen_at": "2026-10-10T23:38:05.115305+00:00",
       "freshness": {
         "iso": "2026-10-05T04:21:58+00:00",
-        "hours": 135.78,
+        "hours": 139.27,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3500,11 +3500,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-09T03:46:37+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.429048+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.429048+00:00",
+      "first_seen_at": "2026-10-10T23:38:05.106790+00:00",
+      "last_seen_at": "2026-10-10T23:38:05.106790+00:00",
       "freshness": {
         "iso": "2026-10-09T03:46:37+00:00",
-        "hours": 40.37,
+        "hours": 43.86,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4278,11 +4278,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-10T12:00:00+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.074532+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.074532+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.704110+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.704110+00:00",
       "freshness": {
         "iso": "2026-10-10T12:00:00+00:00",
-        "hours": 8.14,
+        "hours": 11.63,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4814,11 +4814,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-09T20:39:17+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.898214+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.898214+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.559177+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.559177+00:00",
       "freshness": {
         "iso": "2026-10-09T20:39:17+00:00",
-        "hours": 23.49,
+        "hours": 26.98,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6416,11 +6416,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-09T14:59:00+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.978845+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.978845+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.649959+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.649959+00:00",
       "freshness": {
         "iso": "2026-10-09T14:59:00+00:00",
-        "hours": 29.16,
+        "hours": 32.65,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6546,11 +6546,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-06T20:30:24+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.980487+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.980487+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.651185+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.651185+00:00",
       "freshness": {
         "iso": "2026-10-06T20:30:24+00:00",
-        "hours": 95.64,
+        "hours": 99.13,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6676,11 +6676,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-06T14:37:55+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.982203+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.982203+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.652333+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.652333+00:00",
       "freshness": {
         "iso": "2026-10-06T14:37:55+00:00",
-        "hours": 101.51,
+        "hours": 105.0,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6806,11 +6806,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-05T15:40:00+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.138986+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.138986+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.800176+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.800176+00:00",
       "freshness": {
         "iso": "2026-10-05T15:40:00+00:00",
-        "hours": 124.48,
+        "hours": 127.97,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6934,11 +6934,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-05T12:47:36+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.983876+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.983876+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.653464+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.653464+00:00",
       "freshness": {
         "iso": "2026-10-05T12:47:36+00:00",
-        "hours": 127.35,
+        "hours": 130.84,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8506,11 +8506,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-08T15:55:55+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.947427+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.947427+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.590229+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.590229+00:00",
       "freshness": {
         "iso": "2026-10-08T15:55:55+00:00",
-        "hours": 52.21,
+        "hours": 55.7,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8638,11 +8638,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-09T16:22:45+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.909526+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.909526+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.565925+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.565925+00:00",
       "freshness": {
         "iso": "2026-10-09T16:22:45+00:00",
-        "hours": 27.76,
+        "hours": 31.26,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8895,11 +8895,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-09T15:51:53+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.912006+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.912006+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.567555+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.567555+00:00",
       "freshness": {
         "iso": "2026-10-09T15:51:53+00:00",
-        "hours": 28.28,
+        "hours": 31.77,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9027,11 +9027,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-10-09T15:20:36+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.913976+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.102769+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.568836+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.716640+00:00",
       "freshness": {
         "iso": "2026-10-09T15:20:36+00:00",
-        "hours": 28.8,
+        "hours": 32.29,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9165,7 +9165,7 @@
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-10-08T15:43:04+00:00",
       "first_seen_at": "2026-10-10T01:47:55.303799+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.339560+00:00",
+      "last_seen_at": "2026-10-10T23:38:05.071665+00:00",
       "freshness": {
         "iso": "2026-10-08T15:43:04+00:00",
         "hours": 34.08,
@@ -9300,11 +9300,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-05T17:00:00+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.137424+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.137424+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.799148+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.799148+00:00",
       "freshness": {
         "iso": "2026-10-05T17:00:00+00:00",
-        "hours": 123.14,
+        "hours": 126.63,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9692,11 +9692,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-09T10:14:59+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.112335+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.112335+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.723052+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.723052+00:00",
       "freshness": {
         "iso": "2026-10-09T10:14:59+00:00",
-        "hours": 33.89,
+        "hours": 37.38,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9820,11 +9820,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-09T12:04:07+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.802482+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.802482+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.522542+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.522542+00:00",
       "freshness": {
         "iso": "2026-10-09T12:04:07+00:00",
-        "hours": 32.07,
+        "hours": 35.57,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9948,11 +9948,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-09T10:34:37+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.923446+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.923446+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.574550+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.574550+00:00",
       "freshness": {
         "iso": "2026-10-09T10:34:37+00:00",
-        "hours": 33.57,
+        "hours": 37.06,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10205,11 +10205,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-09T09:08:09+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.118150+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.118150+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.726449+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.726449+00:00",
       "freshness": {
         "iso": "2026-10-09T09:08:09+00:00",
-        "hours": 35.01,
+        "hours": 38.5,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10599,11 +10599,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-10-09T11:09:04+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.106683+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.106683+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.719202+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.719202+00:00",
       "freshness": {
         "iso": "2026-10-09T11:09:04+00:00",
-        "hours": 32.99,
+        "hours": 36.48,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11389,11 +11389,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-09T06:40:54+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.125048+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.125048+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.730773+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.730773+00:00",
       "freshness": {
         "iso": "2026-10-09T06:40:54+00:00",
-        "hours": 37.46,
+        "hours": 40.95,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11520,11 +11520,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-10T05:43:00+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.087748+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.087748+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.708366+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.708366+00:00",
       "freshness": {
         "iso": "2026-10-10T05:43:00+00:00",
-        "hours": 14.43,
+        "hours": 17.92,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12561,11 +12561,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-08T16:14:46+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.827245+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.827245+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.538020+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.538020+00:00",
       "freshness": {
         "iso": "2026-10-08T16:14:46+00:00",
-        "hours": 51.9,
+        "hours": 55.39,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -12820,11 +12820,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-09T10:44:22+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.108313+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.108313+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.720250+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.720250+00:00",
       "freshness": {
         "iso": "2026-10-09T10:44:22+00:00",
-        "hours": 33.4,
+        "hours": 36.9,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12950,11 +12950,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-09T10:07:13+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.068917+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.068917+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.863587+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.863587+00:00",
       "freshness": {
         "iso": "2026-10-09T10:07:13+00:00",
-        "hours": 34.02,
+        "hours": 37.51,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -13466,11 +13466,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-06T14:20:11+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.447608+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.447608+00:00",
+      "first_seen_at": "2026-10-10T23:38:05.116391+00:00",
+      "last_seen_at": "2026-10-10T23:38:05.116391+00:00",
       "freshness": {
         "iso": "2026-10-06T14:20:11+00:00",
-        "hours": 101.81,
+        "hours": 105.3,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -13591,11 +13591,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-09T00:46:27+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.938745+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.938745+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.584154+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.584154+00:00",
       "freshness": {
         "iso": "2026-10-09T00:46:27+00:00",
-        "hours": 43.37,
+        "hours": 46.86,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -13723,11 +13723,11 @@
       "event_type": "onchain_movement",
       "event_label": "Mouvement on-chain / transferts",
       "event_time": "2026-10-08T18:46:04+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.814904+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.814904+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.530503+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.530503+00:00",
       "freshness": {
         "iso": "2026-10-08T18:46:04+00:00",
-        "hours": 49.37,
+        "hours": 52.87,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -13981,11 +13981,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-10-09T12:23:54+00:00",
-      "first_seen_at": "2026-10-10T20:08:32.104345+00:00",
-      "last_seen_at": "2026-10-10T20:08:32.104345+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.717674+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.717674+00:00",
       "freshness": {
         "iso": "2026-10-09T12:23:54+00:00",
-        "hours": 31.74,
+        "hours": 35.24,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -14494,11 +14494,11 @@
       "event_type": "onchain_movement",
       "event_label": "Mouvement on-chain / transferts",
       "event_time": "2026-10-08T15:24:16+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.948513+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.948513+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.591007+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.591007+00:00",
       "freshness": {
         "iso": "2026-10-08T15:24:16+00:00",
-        "hours": 52.74,
+        "hours": 56.23,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -15009,12 +15009,12 @@
       "event_type": "network",
       "event_label": "Upgrade / mainnet / réseau",
       "event_time": "2026-10-08T20:16:03+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.812877+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.812877+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.529073+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.529073+00:00",
       "freshness": {
         "iso": "2026-10-08T20:16:03+00:00",
-        "hours": 47.87,
-        "label": "Récente · moins de 48 h",
+        "hours": 51.37,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -15139,11 +15139,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-10-09T08:59:31+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.807346+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.807346+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.525627+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.525627+00:00",
       "freshness": {
         "iso": "2026-10-09T08:59:31+00:00",
-        "hours": 35.15,
+        "hours": 38.64,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -15390,11 +15390,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-09T20:14:02+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.900415+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.900415+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.560565+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.560565+00:00",
       "freshness": {
         "iso": "2026-10-09T20:14:02+00:00",
-        "hours": 23.91,
+        "hours": 27.4,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -15769,11 +15769,11 @@
       "event_type": "onchain_movement",
       "event_label": "Mouvement on-chain / transferts",
       "event_time": "2026-10-08T09:05:50+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.841786+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.841786+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.548084+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.548084+00:00",
       "freshness": {
         "iso": "2026-10-08T09:05:50+00:00",
-        "hours": 59.04,
+        "hours": 62.54,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -15899,11 +15899,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-09T05:25:27+00:00",
-      "first_seen_at": "2026-10-10T20:08:31.934378+00:00",
-      "last_seen_at": "2026-10-10T20:08:31.934378+00:00",
+      "first_seen_at": "2026-10-10T23:38:04.581215+00:00",
+      "last_seen_at": "2026-10-10T23:38:04.581215+00:00",
       "freshness": {
         "iso": "2026-10-09T05:25:27+00:00",
-        "hours": 38.72,
+        "hours": 42.21,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -15952,7 +15952,7 @@
         "feed_8112fb6520597c82"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -15973,6 +15973,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_8112fb6520597c82"
+      ],
       "headline_original": "Trump administration outlines quantum, AI initiatives in $6B science push",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
