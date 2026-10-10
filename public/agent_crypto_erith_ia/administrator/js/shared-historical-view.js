@@ -5,12 +5,13 @@
 (() => {
 "use strict";
 const base=new URL("../../data/historical_archive_prototype/shared_monthly_views/",document.currentScript.src);
+const bitgetBase=new URL("../../data/historical_archive_prototype/bitget_verified_views/",document.currentScript.src);
 const periods={"24h":["1m",1440],"7j":["5m",2016],"30j":["5m",8640],
                "mois":["1h",null]};
 const intervalMs={"1m":60000,"5m":300000,"1h":3600000};
 const byId=id=>document.getElementById(id);
 const need=(ok,msg)=>{if(!ok)throw Error(msg)};
-let index=null,loadingIndex=null,seq=0;
+let index=null,loadingIndex=null,bitgetIndex=null,bitgetLoading=null,seq=0;
 const cache=new Map(),inflight=new Map();
 const sha256=raw=>crypto.subtle.digest("SHA-256",raw).then(h=>
  Array.from(new Uint8Array(h),x=>x.toString(16).padStart(2,"0")).join(""));
@@ -63,6 +64,98 @@ async function getIndex(){
  })().catch(e=>{loadingIndex=null;throw e});
  return loadingIndex;
 }
+
+async function getBitgetIndex(){
+ if(bitgetIndex)return bitgetIndex;
+ if(!bitgetLoading)bitgetLoading=(async()=>{
+  need(crypto?.subtle&&typeof DecompressionStream==="function","Contrôle Bitget impossible");
+  const r=await fetch(new URL("index.json",bitgetBase),{cache:"no-store",credentials:"omit",redirect:"error"});
+  need(r.ok,"Index Bitget HTTP "+r.status);
+  const text=await r.text();
+  need(text.length>0&&text.length<150000,"Index Bitget trop volumineux");
+  const j=JSON.parse(text);
+  need(j.schema==="aerith.public.ohlcv.verified-bitget-spot-month-views.v1"&&
+   j.quote==="USDT"&&j.trade_count_available===false&&j.not_exchange_signed===true&&
+   j.source==="Bitget Spot public native 1m API"&&
+   j.assets?.length===j.archived_assets,"Index Bitget incorrect");
+  const seen=new Set();
+  for(const a of j.assets){
+   need(/^[a-z0-9-]{2,100}$/.test(a.id)&&!seen.has(a.id)&&
+    a.file===a.id+"-bitget-month.json.gz"&&
+    /^[A-Z0-9]{2,30}USDT$/.test(a.pair)&&
+    /^\d{4}-(?:0[1-9]|1[0-2])$/.test(a.month)&&
+    Array.isArray(a.months)&&a.months.includes(a.month)&&
+    /^crypto-spot-bitget-\d{4}-(?:0[1-9]|1[0-2])-1m-[a-z0-9-]+$/.test(a.release)&&
+    a.release.endsWith("-"+a.id)&&
+    /^[a-f0-9]{64}$/.test(a.sha256)&&
+    /^[a-f0-9]{64}$/.test(a.source_zip_sha256)&&
+    Number.isInteger(a.bytes)&&a.bytes>0&&a.bytes<=2000000&&
+    a.series_counts?.["1m"]===1440&&
+    [672,696,720,744].includes(a.series_counts?.["1h"])&&
+    Number.isInteger(a.native_1m_count)&&
+    Number.isInteger(a.total_verified_1m_count)&&
+    a.total_verified_1m_count>=a.native_1m_count,
+    "Identité ou intégrité Bitget incorrecte");
+   seen.add(a.id);
+  }
+  return bitgetIndex=j;
+ })().catch(e=>{bitgetLoading=null;throw e});
+ return bitgetLoading;
+}
+function verifyBitget(data,m){
+ need(data.schema==="aerith.public.ohlcv.verified-bitget-spot-month.v1"&&
+  data.asset_id===m.id&&data.pair===m.pair&&data.month===m.month&&
+  data.quote==="USDT"&&data.source==="Bitget Spot public native 1m API"&&
+  data.is_live===false&&data.not_exchange_signed===true&&
+  data.trade_count_available===false&&
+  data.native_columns?.join(",")==="open_time_ms,open,high,low,close,base_volume,quote_turnover"&&
+  data.source_release===m.release&&data.source_zip_sha256===m.source_zip_sha256&&
+  data.native_1m_count===m.native_1m_count&&
+  data.first_open_ms===m.first_open_ms&&data.last_open_ms===m.last_open_ms,
+  "Provenance native Bitget incorrecte");
+ for(const [interval,count] of Object.entries(m.series_counts)){
+  need(Object.hasOwn(intervalMs,interval),"Intervalle Bitget inconnu");
+  const series=data.series?.[interval],step=intervalMs[interval];
+  need(Array.isArray(series)&&series.length===count,"Série Bitget incomplète");
+  let previous=null;
+  for(const row of series){
+   need(Array.isArray(row)&&row.length===7&&row.every(Number.isFinite),
+    "Bitget utilise sept champs natifs");
+   const [ts,o,h,l,c,volume,quote]=row;
+   need(Number.isInteger(ts)&&ts%step===0&&(previous===null||ts===previous+step)&&
+    l>0&&l<=Math.min(o,c)&&Math.max(o,c)<=h&&volume>=0&&quote>=0,
+    "Continuité ou OHLCV Bitget incohérents");
+   previous=ts;
+  }
+  need(previous===Math.floor(m.last_open_ms/step)*step,"Fin de série Bitget incohérente");
+ }
+}
+async function loadBitget(id){
+ const cached=cache.get(id);if(cached)return cached;
+ if(inflight.has(id))return inflight.get(id);
+ const job=(async()=>{
+  const metadata=(await getBitgetIndex()).assets.find(a=>a.id===id);
+  need(!!metadata,"Cette crypto Bitget n'est pas archivée");
+  const url=new URL(metadata.file,bitgetBase);
+  need(url.origin===location.origin&&url.pathname.startsWith(bitgetBase.pathname),"Origine Bitget interdite");
+  const response=await fetch(url.href,{cache:"no-store",credentials:"omit",redirect:"error"});
+  need(response.ok,"Archive Bitget HTTP "+response.status);
+  const compressed=await response.arrayBuffer();
+  need(compressed.byteLength===metadata.bytes&&
+       await sha256(compressed)===metadata.sha256,"SHA-256 Bitget incorrect");
+  const plain=await new Response(new Blob([compressed]).stream().pipeThrough(
+     new DecompressionStream("gzip"))).text();
+  need(plain.length<7500000,"Archive Bitget décompressée trop grande");
+  const data=JSON.parse(plain);
+  verifyBitget(data,metadata);
+  const item={data,metadata:{...metadata,source:"Bitget Spot",months:metadata.months.length}};
+  cache.set(id,item);if(cache.size>3)cache.delete(cache.keys().next().value);
+  return item;
+ })().finally(()=>inflight.delete(id));
+ inflight.set(id,job);
+ return job;
+}
+
 function validateData(obj,m){
  need(obj?.schema==="aerith.public.ohlcv.shared.monthly-projection.v1"&&
       obj.asset_id===m.id&&obj.pair===m.pair&&obj.month===m.month&&
