@@ -1,7 +1,7 @@
 {
-  "candidate_count": 152,
-  "checked_count": 24,
-  "market_candidate_count": 0,
+  "candidate_count": 150,
+  "checked_count": 34,
+  "market_candidate_count": 2,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
   "quote": "USDT or USDC: never convert silently",
@@ -222,6 +222,134 @@
       "rank": 63,
       "status": "source_unavailable",
       "symbol": "USDD"
+    },
+    {
+      "checked_at": "2026-10-10T02:15:50.978907+00:00",
+      "id": "united-stables",
+      "markets": [],
+      "pages_checked": 3,
+      "rank": 64,
+      "status": "source_unavailable",
+      "symbol": "U"
+    },
+    {
+      "checked_at": "2026-10-10T02:16:06.341731+00:00",
+      "id": "htx-dao",
+      "markets": [],
+      "pages_checked": 1,
+      "rank": 65,
+      "status": "source_unavailable",
+      "symbol": "HTX"
+    },
+    {
+      "checked_at": "2026-10-10T02:16:21.493407+00:00",
+      "id": "bitget-token",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 66,
+      "status": "source_unavailable",
+      "symbol": "BGB"
+    },
+    {
+      "checked_at": "2026-10-10T02:16:36.642382+00:00",
+      "id": "usdgo",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 69,
+      "status": "source_unavailable",
+      "symbol": "USDGO"
+    },
+    {
+      "checked_at": "2026-10-10T02:16:51.790078+00:00",
+      "id": "jupiter-exchange-solana",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 70,
+      "status": "source_unavailable",
+      "symbol": "JUP"
+    },
+    {
+      "checked_at": "2026-10-10T02:17:06.947570+00:00",
+      "id": "kaspa",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 73,
+      "status": "source_unavailable",
+      "symbol": "KAS"
+    },
+    {
+      "checked_at": "2026-10-10T02:17:22.557927+00:00",
+      "id": "cosmos",
+      "markets": [
+        {
+          "base": "ATOM",
+          "coin_id": "cosmos",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "ATOMUSDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 3,
+      "rank": 75,
+      "status": "exact_id_market_candidates",
+      "symbol": "ATOM"
+    },
+    {
+      "checked_at": "2026-10-10T02:17:37.867254+00:00",
+      "id": "polygon-ecosystem-token",
+      "markets": [],
+      "pages_checked": 1,
+      "rank": 76,
+      "status": "source_unavailable",
+      "symbol": "POL"
+    },
+    {
+      "checked_at": "2026-10-10T02:17:53.021081+00:00",
+      "id": "venice-token",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 78,
+      "status": "source_unavailable",
+      "symbol": "VVV"
+    },
+    {
+      "checked_at": "2026-10-10T02:18:08.162237+00:00",
+      "id": "render-token",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 81,
+      "status": "source_unavailable",
+      "symbol": "RENDER"
+    },
+    {
+      "checked_at": "2026-10-10T02:18:23.308475+00:00",
+      "id": "pi-network",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 82,
+      "status": "source_unavailable",
+      "symbol": "PI"
+    },
+    {
+      "checked_at": "2026-10-10T02:18:38.735216+00:00",
+      "id": "lighter",
+      "markets": [
+        {
+          "base": "LIT",
+          "coin_id": "lighter",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "LITUSDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 2,
+      "rank": 84,
+      "status": "exact_id_market_candidates",
+      "symbol": "LIT"
     }
   ],
   "schema": "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
