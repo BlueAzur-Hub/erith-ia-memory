@@ -31,7 +31,8 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: agent-crypto-verified-hourly-history
+  # PR checks cannot cancel the canonical production rebuild or each other.
+  group: agent-crypto-verified-hourly-history-${{ github.event.pull_request.number || 'main' }}
   cancel-in-progress: false
 jobs:
   verify-and-build:
