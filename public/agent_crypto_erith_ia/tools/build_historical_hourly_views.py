@@ -10,7 +10,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 from pathlib import Path
 import re
-import subprocess
 import tempfile
 
 import build_historical_shared_views as shared
@@ -94,17 +93,10 @@ def from_rows(asset,sources):
 
 def build_one(item,root):
     asset,sources=item
-    folder=Path(root)/asset["id"]
-    folder.mkdir()
     verified=[]
     for src in sources:
-        sub=folder/src["month"]
-        sub.mkdir()
-        subprocess.run(["gh","release","download",src["release"],
-            "--pattern",src["file"],"--pattern","manifest.json",
-            "--dir",str(sub)],check=True,timeout=240,
-            capture_output=True,text=True)
-        rows=shared.source_record(src,sub)
+        folder=shared.source_folder(src,root)
+        rows=shared.source_record(src,folder)
         verified.append((src,rows))
     data=from_rows(asset,verified)
     binary=shared.pack(data)

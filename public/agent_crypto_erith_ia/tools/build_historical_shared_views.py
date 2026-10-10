@@ -14,8 +14,11 @@ import io
 import json
 from pathlib import Path
 import re
-import subprocess
 import tempfile
+import threading
+import time
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 import import_historical_bulk as bulk
 import build_historical_btc_view as candles
@@ -74,6 +77,70 @@ def pick(catalog):
     need(len({x["id"] for x in selected})==len(selected),"Duplicate asset ID")
     return selected
 
+# Download immutable public Release assets without the GitHub REST API. # The gh CLI performs a REST asset lookup for each source and exhausted # installation API quotas when the catalog grew beyond fifty assets.
+SOURCE_RELEASE=re.compile(r"^crypto-spot-bulk-(?:20\d{2}-(?:0[1-9]|1[0-2])-1m|add-20\d{2}-(?:0[1-9]|1[0-2])-1m-[a-f0-9]{12})$")
+SOURCE_FILE=re.compile(r"^[A-Z0-9]{1,40}-1m-20\d{2}-(?:0[1-9]|1[0-2])\.zip$")
+MAX_SOURCE_ZIP=40_000_000
+_SOURCE_LOCK_GUARD=threading.Lock()
+_SOURCE_LOCKS={}
+
+def download_public_asset(release, filename, destination, limit):
+    """Read one bounded public GitHub Release asset through the CDN, never REST."""
+    need(SOURCE_RELEASE.fullmatch(release) is not None and
+         (filename=="manifest.json" or SOURCE_FILE.fullmatch(filename) is not None),
+         "Unsafe public historical source reference")
+    url=("https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/"
+         +release+"/"+filename)
+    partial=destination.with_name(destination.name+".part")
+    for attempt in range(4):
+        try:
+            request=Request(url,headers={"User-Agent":"Seven-Heaven-Historical-Vault",
+                                         "Accept":"application/octet-stream"})
+            total=0
+            with urlopen(request,timeout=90) as response:
+                with partial.open("wb") as stream:
+                    while True:
+                        chunk=response.read(min(1048576,limit-total+1))
+                        if not chunk:break
+                        total+=len(chunk)
+                        need(total<=limit,"Historical source exceeds permitted size")
+                        stream.write(chunk)
+            need(total>0,"Empty historical source download")
+            partial.replace(destination)
+            return
+        except HTTPError as exc:
+            partial.unlink(missing_ok=True)
+            if exc.code not in (403,408,429,500,502,503,504) or attempt==3:
+                raise
+            time.sleep(2**attempt)
+        except (URLError, TimeoutError, ConnectionError):
+            partial.unlink(missing_ok=True)
+            if attempt==3:raise
+            time.sleep(2**attempt)
+        except Exception:
+            partial.unlink(missing_ok=True)
+            raise
+
+def source_folder(asset, root):
+    """Share verified Release downloads between worker threads in this build."""
+    release=asset["release"]
+    filename=asset["file"]
+    need(SOURCE_RELEASE.fullmatch(release) is not None and
+         SOURCE_FILE.fullmatch(filename) is not None and
+         filename==asset["pair"]+"-1m-"+asset["month"]+".zip",
+         "Unsafe public historical source reference")
+    folder=Path(root)/release
+    folder.mkdir(parents=True,exist_ok=True)
+    for name,limit in (("manifest.json",MAX_MANIFEST),
+                       (filename,MAX_SOURCE_ZIP)):
+        target=folder/name
+        with _SOURCE_LOCK_GUARD:
+            lock=_SOURCE_LOCKS.setdefault(str(target),threading.Lock())
+        with lock:
+            if not target.is_file():
+                download_public_asset(release,name,target,limit)
+    return folder
+
 def source_record(asset, folder):
     manifest_raw=(folder/"manifest.json").read_bytes()
     need(0<len(manifest_raw)<=MAX_MANIFEST,"Manifest size invalid")
@@ -118,11 +185,7 @@ def projection(asset, rows):
             "series":{"1m":minute,"5m":five,"1h":hour}}
 
 def prepare_one(asset,tmp):
-    folder=Path(tmp)/asset["id"]
-    folder.mkdir()
-    subprocess.run(["gh","release","download",asset["release"],
-                    "--pattern",asset["file"],"--pattern","manifest.json",
-                    "--dir",str(folder)],check=True,timeout=210)
+    folder=source_folder(asset,tmp)
     data=projection(asset,source_record(asset,folder))
     packed=pack(data)
     name=asset["id"]+".json.gz"

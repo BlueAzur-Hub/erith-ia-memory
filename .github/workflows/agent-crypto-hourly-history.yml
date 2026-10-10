@@ -21,15 +21,18 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
   workflow_dispatch:
   workflow_run:
+    # Hourly histories depend on the source Release catalog directly.
+    # Avoid a fourth workflow_run level (identity -> addenda -> catalog -> monthly -> hourly).
     workflows:
-      - 'Agent Crypto Shared Historical Archive Views'
+      - 'Agent Crypto Top250 Historical Coverage Catalog'
     types: [completed]
   schedule:
     - cron: '59 6 * * *'
 permissions:
   contents: write
 concurrency:
-  group: agent-crypto-verified-hourly-history
+  # PR checks cannot cancel the canonical production rebuild or each other.
+  group: agent-crypto-verified-hourly-history-${{ github.event.pull_request.number || 'main' }}
   cancel-in-progress: false
 jobs:
   verify-and-build:

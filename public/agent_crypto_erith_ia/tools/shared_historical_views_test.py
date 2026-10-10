@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Offline regression of shared market projections, coverage and SHA metadata."""
 import gzip
+import io
 import json
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 import build_historical_shared_views as s
@@ -53,6 +55,45 @@ class SharedHistoryTests(unittest.TestCase):
         self.assertFalse(p["max_is_all_time"])
         with self.assertRaisesRegex(ValueError,"Insufficient"):
             s.projection(a,rows[:-1])
+
+    def test_public_release_asset_download_avoids_rest_api(self):
+        release="crypto-spot-bulk-2026-09-1m"
+        with tempfile.TemporaryDirectory() as td:
+            target=Path(td)/"manifest.json"
+            with mock.patch.object(s,"urlopen",return_value=io.BytesIO(b"real-release-bytes")) as get:
+                s.download_public_asset(release,"manifest.json",target,100)
+                self.assertEqual(target.read_bytes(),b"real-release-bytes")
+                self.assertEqual(get.call_count,1)
+                request=get.call_args.args[0]
+                self.assertEqual(request.full_url,
+                    "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/"
+                    +release+"/manifest.json")
+                self.assertNotIn("api.github.com",request.full_url)
+
+    def test_release_manifest_is_cached_across_assets(self):
+        release="crypto-spot-bulk-2026-09-1m"
+        assets=[
+            {"release":release,"pair":"BTCUSDT","month":"2026-09",
+             "file":"BTCUSDT-1m-2026-09.zip"},
+            {"release":release,"pair":"ETHUSDT","month":"2026-09",
+             "file":"ETHUSDT-1m-2026-09.zip"}
+        ]
+        calls=[]
+        def fake_download(tag,name,target,limit):
+            calls.append((tag,name))
+            target.write_bytes(b"untrusted fixture bytes")
+        with tempfile.TemporaryDirectory() as td:
+            with mock.patch.object(s,"download_public_asset",side_effect=fake_download):
+                self.assertEqual(s.source_folder(assets[0],td),
+                                 s.source_folder(assets[1],td))
+                s.source_folder(assets[0],td)
+            self.assertEqual(calls,[(release,"manifest.json"),
+                                    (release,"BTCUSDT-1m-2026-09.zip"),
+                                    (release,"ETHUSDT-1m-2026-09.zip")])
+            with self.assertRaisesRegex(ValueError,"Unsafe public"):
+                s.source_folder({**assets[0],"release":"../../evil"},td)
+            with self.assertRaisesRegex(ValueError,"Unsafe public"):
+                s.source_folder({**assets[0],"file":"../manifest.json"},td)
 
     def test_deterministic_gzip_and_exact_index_hash(self):
         raw=s.pack({"month":"2026-09","asset_id":"bitcoin"})
