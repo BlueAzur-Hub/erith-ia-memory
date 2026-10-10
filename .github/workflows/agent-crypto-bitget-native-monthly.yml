@@ -17,6 +17,11 @@ on:
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json'
   workflow_dispatch:
+  # Discovery writes its exact-ID evidence using GITHUB_TOKEN. That push does
+  # not trigger downstream push workflows, but workflow_run does.
+  workflow_run:
+    workflows: ['Agent Crypto Top250 Alternative Spot Market Discovery']
+    types: [completed]
   schedule:
     # Four bounded acquisitions daily; the source-publishing concurrency lock
     # remains serial and each run handles at most three exact-ID assets.
@@ -30,6 +35,11 @@ concurrency:
   cancel-in-progress: false
 jobs:
   verify-and-collect:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.event != 'pull_request')
     runs-on: ubuntu-latest
     timeout-minutes: 28
     env:
@@ -37,7 +47,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          # Compare against the discovery job's original head commit; more
+          # than two unrelated commits may arrive before it finishes.
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -49,22 +61,35 @@ jobs:
           python public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py --plan
       - name: Only auto-collect for newly proven exact-ID Bitget assets
         id: eligible
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: >-
+          (github.event_name == 'push' || github.event_name == 'workflow_run') &&
+          github.ref == 'refs/heads/main'
+        env:
+          DISCOVERY_BASE_SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json,os,subprocess,sys
+          import json,os,re,subprocess,sys
           sys.path.insert(0,'public/agent_crypto_erith_ia/tools')
           import probe_native_bitget_spot as proof
           workflow='.github/workflows/agent-crypto-bitget-native-monthly.yml'
           collector='public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py'
           ledger='public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json'
           official='public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json'
+          event=os.environ.get('GITHUB_EVENT_NAME')
+          before=(os.environ.get('DISCOVERY_BASE_SHA','')
+                  if event=='workflow_run' else
+                  subprocess.check_output(['git','rev-parse','HEAD^'],
+                                          text=True).strip())
+          if not re.fullmatch(r'[0-9a-f]{40}',before):
+              raise ValueError('Unsafe or missing source workflow commit')
+          subprocess.run(['git','merge-base','--is-ancestor',before,'HEAD'],
+                         check=True,timeout=20)
           changed=set(subprocess.check_output(
-              ['git','diff','--name-only','HEAD^','HEAD'],text=True).splitlines())
+              ['git','diff','--name-only',before,'HEAD'],text=True).splitlines())
           permitted=False
           new_ids=set()
-          if workflow in changed or collector in changed:
+          if event=='push' and (workflow in changed or collector in changed):
               # A reviewed code change triggers one bounded collection.
               permitted=True
           elif ledger in changed or official in changed:
@@ -84,7 +109,7 @@ jobs:
               new_ids=updated_ids-old_ids
               permitted=bool(new_ids)
           print('BITGET NEW EXACT-ID SOURCE OWNERS',sorted(new_ids),
-                'approved',permitted,flush=True)
+                'source',event,'approved',permitted,flush=True)
           with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as file:
               file.write('collect='+str(permitted).lower()+'\n')
           PY
@@ -92,7 +117,9 @@ jobs:
         if: >-
           github.event_name != 'pull_request' &&
           github.ref == 'refs/heads/main' &&
-          (github.event_name != 'push' || steps.eligible.outputs.collect == 'true')
+          (github.event_name == 'schedule' ||
+           github.event_name == 'workflow_dispatch' ||
+           steps.eligible.outputs.collect == 'true')
         run: |
           set -euo pipefail
           python public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py --collect --month auto --lookback-months 12 --limit 3
