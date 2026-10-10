@@ -1,7 +1,7 @@
 {
   "candidate_count": 144,
-  "checked_count": 81,
-  "market_candidate_count": 7,
+  "checked_count": 89,
+  "market_candidate_count": 8,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
   "quote": "USDT or USDC: never convert silently",
@@ -162,25 +162,35 @@
       "symbol": "USYC"
     },
     {
-      "checked_at": "2026-10-10T01:38:46.116325+00:00",
+      "checked_at": "2026-10-10T19:24:48.667575+00:00",
       "id": "memecore",
-      "markets": [],
-      "pages_checked": 0,
+      "markets": [
+        {
+          "base": "M",
+          "coin_id": "memecore",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "MUSDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 2,
       "rank": 47,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "M"
     },
     {
-      "checked_at": "2026-10-10T01:39:01.218123+00:00",
+      "checked_at": "2026-10-10T19:25:04.526711+00:00",
       "id": "ondo-us-dollar-yield",
       "markets": [],
-      "pages_checked": 0,
+      "pages_checked": 2,
       "rank": 48,
       "status": "source_unavailable",
       "symbol": "USDY"
     },
     {
-      "checked_at": "2026-10-10T01:39:16.312618+00:00",
+      "checked_at": "2026-10-10T19:25:19.754797+00:00",
       "id": "blackrock-usd-institutional-digital-liquidity-fund",
       "markets": [],
       "pages_checked": 0,
@@ -198,10 +208,10 @@
       "symbol": "WLD"
     },
     {
-      "checked_at": "2026-10-10T01:39:47.019476+00:00",
+      "checked_at": "2026-10-10T19:25:34.995235+00:00",
       "id": "falcon-finance",
       "markets": [],
-      "pages_checked": 1,
+      "pages_checked": 0,
       "rank": 55,
       "status": "source_unavailable",
       "symbol": "USDF"
@@ -832,6 +842,78 @@
       "rank": 176,
       "status": "source_unavailable",
       "symbol": "THETA"
+    },
+    {
+      "checked_at": "2026-10-10T19:25:50.218621+00:00",
+      "id": "eigenlayer",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 181,
+      "status": "source_unavailable",
+      "symbol": "EIGEN"
+    },
+    {
+      "checked_at": "2026-10-10T19:26:05.611029+00:00",
+      "id": "dogwifcoin",
+      "markets": [],
+      "pages_checked": 2,
+      "rank": 183,
+      "status": "source_unavailable",
+      "symbol": "WIF"
+    },
+    {
+      "checked_at": "2026-10-10T19:26:20.834083+00:00",
+      "id": "usa",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 196,
+      "status": "source_unavailable",
+      "symbol": "USAT"
+    },
+    {
+      "checked_at": "2026-10-10T19:26:36.065650+00:00",
+      "id": "mx-token",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 200,
+      "status": "source_unavailable",
+      "symbol": "MX"
+    },
+    {
+      "checked_at": "2026-10-10T19:26:51.301482+00:00",
+      "id": "vaulta",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 201,
+      "status": "source_unavailable",
+      "symbol": "A"
+    },
+    {
+      "checked_at": "2026-10-10T19:27:06.681665+00:00",
+      "id": "instadapp",
+      "markets": [],
+      "pages_checked": 2,
+      "rank": 202,
+      "status": "source_unavailable",
+      "symbol": "FLUID"
+    },
+    {
+      "checked_at": "2026-10-10T19:27:21.915559+00:00",
+      "id": "sonic-3",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 203,
+      "status": "source_unavailable",
+      "symbol": "S"
+    },
+    {
+      "checked_at": "2026-10-10T19:27:37.139166+00:00",
+      "id": "non-playable-coin",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 204,
+      "status": "source_unavailable",
+      "symbol": "NPC"
     }
   ],
   "schema": "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
