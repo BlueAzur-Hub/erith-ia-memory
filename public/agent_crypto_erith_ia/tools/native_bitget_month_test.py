@@ -8,6 +8,7 @@ from pathlib import Path
 import tempfile
 import unittest
 import zipfile
+import urllib.parse
 
 import collect_native_bitget_month as m
 
@@ -89,6 +90,32 @@ class NativeBitgetMonthTests(unittest.TestCase):
                 m.execute_one(ASSET,"2026-09",Path(temp),
                               fetcher=broken,historical_fetcher=broken,delay=0)
             self.assertEqual(list(Path(temp).iterdir()),[])
+
+    def test_history_and_recent_api_boundaries_are_distinct(self):
+        start=m.bounds("2026-09")[0]
+        end=start+100*m.STEP
+        requested=[]
+        class FakeResponse(io.BytesIO):
+            status=200
+            def __enter__(self):return self
+            def __exit__(self,*args):self.close()
+        def fake_open(req,timeout):
+            parsed=urllib.parse.urlparse(req.full_url)
+            params=urllib.parse.parse_qs(parsed.query)
+            requested.append((parsed.path,int(params["startTime"][0]),
+                              int(params["endTime"][0])))
+            return FakeResponse(b'{"code":"00000","data":[]}')
+        for endpoint in (m.API,m.HISTORY_API):
+            rows,digest=m.fetch_page("ATOMUSDT",start,end,100,
+                                      opener=fake_open,endpoint=endpoint)
+            self.assertEqual(rows,[])
+            self.assertEqual(len(digest),64)
+        self.assertEqual(requested,[
+            ("/api/v3/market/candles",start-m.STEP,end-m.STEP),
+            ("/api/v3/market/history-candles",start,end)])
+        with self.assertRaisesRegex(ValueError,"Unsafe native"):
+            m.fetch_page("ATOMUSDT",start,end,101,
+                         opener=fake_open,endpoint=m.HISTORY_API)
 
     def test_closed_month_and_release_identity(self):
         self.assertEqual(m.bounds("2026-09")[2],43200)
