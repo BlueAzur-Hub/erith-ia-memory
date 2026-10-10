@@ -2,10 +2,10 @@
   "schema": "aerith.public.ohlcv.top250.federated-native-archives.v1",
   "ranked": 250,
   "quote": "USDT",
-  "archived_assets": 126,
-  "binance_archived_assets": 108,
+  "archived_assets": 127,
+  "binance_archived_assets": 109,
   "bitget_archived_assets": 18,
-  "native_1m_candles": 130618080,
+  "native_1m_candles": 131274720,
   "first_trade_date_known": false,
   "is_live": false,
   "note": "Two independent complete-month source formats. Native Bitget 7 fields; no synthetic trade count, no USDT=>USD.",
@@ -16,15 +16,15 @@
     },
     {
       "top": 50,
-      "archived": 35
+      "archived": 36
     },
     {
       "top": 100,
-      "archived": 63
+      "archived": 64
     },
     {
       "top": 250,
-      "archived": 126
+      "archived": 127
     }
   ],
   "assets": [
@@ -35,8 +35,8 @@
       "name": "Bitcoin",
       "source": "Binance Spot official native 1m ZIPs",
       "quote": "USDT",
-      "months": 40,
-      "native_1m_count": 1753920
+      "months": 42,
+      "native_1m_count": 1841760
     },
     {
       "id": "ethereum",
@@ -45,8 +45,8 @@
       "name": "Ethereum",
       "source": "Binance Spot official native 1m ZIPs",
       "quote": "USDT",
-      "months": 40,
-      "native_1m_count": 1753920
+      "months": 42,
+      "native_1m_count": 1841760
     },
     {
       "id": "tether",
@@ -163,10 +163,10 @@
       "rank": 14,
       "symbol": "XMR",
       "name": "Monero",
-      "source": null,
+      "source": "Binance Spot official native 1m ZIPs",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 11,
+      "native_1m_count": 480960
     },
     {
       "id": "whitebit",
