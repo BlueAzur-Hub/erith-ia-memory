@@ -99,8 +99,9 @@ class NativeBitgetProbeTests(unittest.TestCase):
         def open_exact(request,timeout):
             self.assertEqual(timeout,35)
             parsed=urllib.parse.urlparse(request.full_url)
-            self.assertEqual(parsed.scheme+"//"+parsed.netloc+parsed.path.replace(
-                "/", "/",1),"https//api.bitget.com/api/v3/market/candles")
+            self.assertEqual(parsed.scheme,"https")
+            self.assertEqual(parsed.netloc,"api.bitget.com")
+            self.assertEqual(parsed.path,"/api/v3/market/candles")
             values=urllib.parse.parse_qs(parsed.query)
             self.assertEqual(values["startTime"],[str(m.START_MS-m.STEP)])
             self.assertEqual(values["endTime"],[str(m.END_MS-m.STEP)])
