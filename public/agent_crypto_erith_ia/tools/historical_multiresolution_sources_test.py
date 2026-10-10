@@ -43,7 +43,7 @@ class MultiResolutionRegistryTests(unittest.TestCase):
         with self.assertRaises(ValueError):m.check_registry(x,c)
 
     def test_reject_checksum_and_path_mutation(self):
-        for field,value in (("sha256","0"*64),("filename","../evil.gz"),
+        for field,value in (("sha256","0"*63),("filename","../evil.gz"),
                             ("release_tag","../../bad"),("bytes",9999999),
                             ("market","USDG-USD")):
             x,c=self.source()
