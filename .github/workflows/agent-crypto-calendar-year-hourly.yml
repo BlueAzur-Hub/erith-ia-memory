@@ -54,16 +54,35 @@ jobs:
           set -euo pipefail
           catalog=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/index.json
           dest=public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards
-          git fetch origin main
-          real=$(git show "origin/main:$catalog" | sha256sum | cut -d' ' -f1)
-          expected=$(cat "$RUNNER_TEMP/catalog-sha")
-          if [[ "$real" != "$expected" ]]; then
-            echo "::error::Catalog changed while verifying annual source; refuse stale views"
-            exit 1
-          fi
+          staged="$RUNNER_TEMP/yearly-verified"
+          # One bounded refresh only: a concurrent monthly catalog commit must
+          # never make us publish shards built from stale source bytes.
+          for attempt in 1 2; do
+            git fetch origin main
+            real=$(git show "origin/main:$catalog" | sha256sum | cut -d' ' -f1)
+            expected=$(cat "$RUNNER_TEMP/catalog-sha")
+            if [[ "$real" == "$expected" ]]; then
+              break
+            fi
+            if [[ "$attempt" == 2 ]]; then
+              echo "::error::Catalog changed twice; refuse stale annual data"
+              exit 1
+            fi
+            echo "::notice::Verified month catalog advanced; recalculate once from latest main"
+            git reset --hard origin/main
+            python -m py_compile public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py
+            python public/agent_crypto_erith_ia/tools/calendar_year_hourly_shards_test.py
+            batch=2
+            if [[ "$GITHUB_EVENT_NAME" == schedule ]]; then batch=4; fi
+            python public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py --batch-size "$batch"
+            staged="$RUNNER_TEMP/yearly-refreshed"
+            mkdir -p "$staged"
+            cp -a "$dest/." "$staged/"
+            sha256sum "$catalog" | cut -d' ' -f1 > "$RUNNER_TEMP/catalog-sha"
+          done
           git reset --hard origin/main
           mkdir -p "$dest"
-          cp -a "$RUNNER_TEMP/yearly-verified/." "$dest/"
+          cp -a "$staged/." "$dest/"
           git add -- "$dest"
           git diff --cached --check
           if git diff --cached --quiet; then

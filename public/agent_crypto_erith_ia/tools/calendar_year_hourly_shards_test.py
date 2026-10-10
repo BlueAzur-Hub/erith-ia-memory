@@ -140,6 +140,21 @@ class CalendarYearShardTests(unittest.TestCase):
                 "administrator/js/historical-yearly-browser.js")
         self.assertIn("(?:-[a-f0-9]{64})?",reader.read_text(encoding="utf-8"))
 
+    def test_annual_publication_rechecks_catalog_after_bounded_refresh(self):
+        """Two catalog changes must fail closed, not publish stale yearly bytes."""
+        workflow=(Path(__file__).resolve().parents[3] /
+                  ".github/workflows/agent-crypto-calendar-year-hourly.yml")
+        text=workflow.read_text(encoding="utf-8")
+        self.assertIn("for attempt in 1 2; do",text)
+        self.assertIn("Catalog changed twice; refuse stale annual data",text)
+        self.assertIn("git reset --hard origin/main",text)
+        self.assertIn('staged="$RUNNER_TEMP/yearly-refreshed"',text)
+        self.assertIn('cp -a "$staged/." "$dest/"',text)
+        self.assertIn(
+            "python public/agent_crypto_erith_ia/tools/calendar_year_hourly_shards_test.py",
+            text)
+        self.assertIn('sha256sum "$catalog"',text)
+
     def test_batch_limits_reject_unbounded_backfill(self):
         with tempfile.TemporaryDirectory() as td:
             with self.assertRaisesRegex(ValueError,"Unsafe daily"):
