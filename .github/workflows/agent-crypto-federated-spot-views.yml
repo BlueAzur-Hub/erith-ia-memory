@@ -13,7 +13,11 @@ on:
       - 'public/agent_crypto_erith_ia/tools/bitget_verified_views_test.py'
   workflow_dispatch:
   workflow_run:
-    workflows: ['Agent Crypto Bitget Verified Native Spot Monthly Sources']
+    # Rebuild after either native source inventory changes. Binance source
+    # catalogue was previously disconnected from this existing federation.
+    workflows:
+      - 'Agent Crypto Bitget Verified Native Spot Monthly Sources'
+      - 'Agent Crypto Top250 Historical Coverage Catalog'
     types: [completed]
   schedule:
     - cron: '33 8,20 * * *'
@@ -27,7 +31,8 @@ jobs:
     if: >-
       github.event_name != 'workflow_run' ||
       (github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.head_branch == 'main')
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.event != 'pull_request')
     runs-on: ubuntu-latest
     timeout-minutes: 28
     env:
