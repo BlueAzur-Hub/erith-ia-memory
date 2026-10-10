@@ -327,10 +327,22 @@ def select_pending_assets(qualified,tags,now=None,lookback=12,limit=MAX_ASSETS,
         release_tag(a,month) in present for month in months)]
     # The default slot preserves the old newest-first behavior for manual
     # callers; production GITHUB_RUN_NUMBER advances on every workflow run.
+    new_ids={a["id"] for a in new_assets}
     if new_assets and (rotation==0 or rotation%4!=0):
         offset=rotation%len(new_assets)
-        return months[0],(new_assets[offset:]+new_assets[:offset])[:limit]
-    new_ids={a["id"] for a in new_assets}
+        chosen=(new_assets[offset:]+new_assets[:offset])[:limit]
+        # A new coin can use only one of the four bounded source slots.
+        # Fill the others with PREVIOUSLY archived exact-ID coins whose
+        # newest closed month is missing. Keep the same source month and
+        # validations; never substitute a ticker or stitch fake candles.
+        if len(chosen)<limit:
+            backfill=[a for a in qualified if a["id"] not in new_ids
+                      and release_tag(a,months[0]) not in present]
+            if backfill:
+                start=rotation%len(backfill)
+                order=backfill[start:]+backfill[:start]
+                chosen+=order[:limit-len(chosen)]
+        return months[0],chosen
     backlog=[]
     for month in months:
         missing=[a for a in qualified if a["id"] not in new_ids
