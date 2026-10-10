@@ -80,14 +80,53 @@ def fetch(coin_id,exchange,page):
         require(isinstance(obj.get("tickers"),list),"No source tickers")
         return obj["tickers"]
 
-def inspect(asset,getter=fetch):
+def fetch_exchange(coin_id,exchange,page):
+    """CoinGecko's second documented exact-ID route, never a symbol search."""
+    require(ID.fullmatch(coin_id) and exchange in EXCHANGES and 1<=page<=2,
+            "Unsafe exchange-specific exact-ID request")
+    params=urllib.parse.urlencode({"coin_ids":coin_id,"page":page})
+    url=f"https://api.coingecko.com/api/v3/exchanges/{exchange}/tickers?{params}"
+    req=urllib.request.Request(url,headers={
+        "User-Agent":"SevenHeaven-SpotArchiveDiscovery/1.0",
+        "Accept":"application/json"})
+    with urllib.request.urlopen(req,timeout=23) as response:
+        require(response.status==200,"Exchange source HTTP non-200")
+        raw=response.read(1500001)
+        require(0<len(raw)<=1500000,"Exchange source response too large")
+        obj=json.loads(raw)
+        require(isinstance(obj.get("tickers"),list),"Bad source exchange tickers")
+        return obj["tickers"]
+
+def inspect(asset,getter=fetch,exchange_getter=None):
     matches=[];pages=0
     try:
         for exchange in EXCHANGES:
             for page in (1,2):
-                rows=getter(asset["id"],exchange,page);pages+=1
-                matches.extend(exact_candidates(rows,asset,exchange))
-                if len(rows)<100:break
+                try:
+                    rows=getter(asset["id"],exchange,page)
+                except (OSError,ValueError,RuntimeError,TypeError,KeyError,json.JSONDecodeError):
+                    if exchange_getter is None or page!=1:
+                        raise
+                    # Retry through a different official exact-ID API route.
+                    rows=exchange_getter(asset["id"],exchange,page)
+                    pages+=1
+                    matches.extend(exact_candidates(rows,asset,exchange))
+                    if len(rows)>=100:
+                        return "source_pagination_incomplete",[],pages
+                    break
+                pages+=1
+                local=exact_candidates(rows,asset,exchange)
+                matches.extend(local)
+                if len(rows)<100:
+                    if not local and page==1 and exchange_getter is not None:
+                        # A previously absent market must be checked against
+                        # the independent CoinGecko exchange/coin-ID index.
+                        backup=exchange_getter(asset["id"],exchange,1)
+                        pages+=1
+                        matches.extend(exact_candidates(backup,asset,exchange))
+                        if len(backup)>=100:
+                            return "source_pagination_incomplete",[],pages
+                    break
             else:
                 return "source_pagination_incomplete",[],pages
         return ("exact_id_market_candidates" if matches else "market_not_confirmed",
@@ -167,7 +206,7 @@ def main():
               "candidate_count":250-len(archived),
               "checked":sum(x["id"] not in archived for x in prior["results"]) if prior else 0}))
         return
-    result=process(queue,prior,args.batch_size,delay=args.sleep,excluded=archived)
+    result=process(queue,prior,args.batch_size,checker=lambda a:inspect(a,exchange_getter=fetch_exchange),delay=args.sleep,excluded=archived)
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     tmp=OUTPUT.with_suffix(".tmp")
     tmp.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
