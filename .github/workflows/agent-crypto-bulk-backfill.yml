@@ -9,6 +9,8 @@ on:
       - '.github/workflows/agent-crypto-bulk-backfill.yml'
       - 'public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
+      - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt.py'
+      - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-resume.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-acceleration.json'
@@ -18,6 +20,8 @@ on:
       - '.github/workflows/agent-crypto-bulk-backfill.yml'
       - 'public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
+      - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt.py'
+      - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-resume.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-acceleration.json'
@@ -46,6 +50,7 @@ jobs:
           python public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py
           python public/agent_crypto_erith_ia/tools/historical_bulk_test.py
           python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
+          python public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py
           python public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py --plan --max-months 7
       - name: Authorize initial import or one-time explicit resumption only on a main merge
         id: allow
