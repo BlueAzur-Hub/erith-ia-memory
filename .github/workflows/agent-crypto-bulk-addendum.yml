@@ -6,6 +6,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/import_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/supplement_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_addendum_test.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_qualified_binance_spot_months.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_qualified_binance_spot_months_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-addendum-bootstrap.json'
   push:
     branches: [main]
@@ -14,6 +16,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/import_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/supplement_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_addendum_test.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_qualified_binance_spot_months.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_qualified_binance_spot_months_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-addendum-bootstrap.json'
   workflow_dispatch:
   workflow_run:
@@ -52,6 +56,8 @@ jobs:
           python -m py_compile public/agent_crypto_erith_ia/tools/import_historical_bulk.py
           python -m py_compile public/agent_crypto_erith_ia/tools/supplement_historical_bulk.py
           python public/agent_crypto_erith_ia/tools/historical_bulk_addendum_test.py
+          python public/agent_crypto_erith_ia/tools/collect_qualified_binance_spot_months_test.py
+          python public/agent_crypto_erith_ia/tools/collect_qualified_binance_spot_months.py --plan
           python public/agent_crypto_erith_ia/tools/historical_bulk_test.py
           python public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py
           python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
@@ -77,6 +83,11 @@ jobs:
           print('ADDENDUM PR VERIFIED',json.dumps({k:result[k] for k in
               ('requested','verified','unavailable','candles','zip_bytes')},sort_keys=True))
           PY
+      - name: PR only - verify 8 genuine Spot source months and exact project announcements
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/collect_qualified_binance_spot_months.py --probe
       - name: Permit one-time production only for newly added bootstrap marker
         id: authorized
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -105,6 +116,26 @@ jobs:
         run: |
           set -euo pipefail
           python public/agent_crypto_erith_ia/tools/supplement_historical_bulk.py --run --max-months 3 | tee "$RUNNER_TEMP/verified-identity-addendum-report.txt"
+      - name: Authorize a single new qualified-cohort acquisition after reviewed main merge
+        id: qualified
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          collector=public/agent_crypto_erith_ia/tools/collect_qualified_binance_spot_months.py
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- "$collector")" ]]; then
+            echo 'approved=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'approved=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Import genuine historical months for eight independently identified Top250 owners
+        if: >-
+          github.event_name == 'schedule' ||
+          github.event_name == 'workflow_dispatch' ||
+          (github.event_name == 'push' && github.ref == 'refs/heads/main' &&
+           steps.qualified.outputs.approved == 'true')
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/collect_qualified_binance_spot_months.py --collect --months 12 | tee "$RUNNER_TEMP/qualified-spot-monthly-report.txt"
       - name: Assert all original archive owners and trading interfaces untouched
         run: |
           set -euo pipefail
@@ -120,6 +151,7 @@ jobs:
           name: top250-monthly-identity-addendum-report
           path: |
             /tmp/verified-identity-addendum-report.txt
+            ${{ runner.temp }}/qualified-spot-monthly-report.txt
             /tmp/top250-addendum-network/manifest.json
           if-no-files-found: warn
           retention-days: 30
