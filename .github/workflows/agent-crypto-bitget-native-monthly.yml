@@ -18,7 +18,9 @@ on:
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json'
   workflow_dispatch:
   schedule:
-    - cron: '29 5 * * *'
+    # Four bounded acquisitions daily; the source-publishing concurrency lock
+    # remains serial and each run handles at most three exact-ID assets.
+    - cron: '29 1,7,13,19 * * *'
 permissions:
   contents: write
 concurrency:
