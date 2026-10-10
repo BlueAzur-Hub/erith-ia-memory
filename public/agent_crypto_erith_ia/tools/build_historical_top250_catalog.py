@@ -15,13 +15,16 @@ HOME=ROOT/"data/historical_archive_prototype"
 TAG=re.compile(r"^crypto-spot-bulk-(20\d{2}-(?:0[1-9]|1[0-2]))-1m$")
 ADDENDUM=re.compile(r"^crypto-spot-bulk-add-(20\d{2}-(?:0[1-9]|1[0-2]))-1m-[a-f0-9]{12}$")
 REPO="BlueAzur-Hub/erith-ia-memory"
+# Safety bounds scale with full-year and all-history sources, not a pilot.
+MAX_RELEASE_PAGES=100
+MAX_VERIFIED_MONTHLY_RELEASES=5000
 
 def need(ok,message):
     if not ok:raise ValueError(message)
 
 def listed_releases():
     result=[]
-    for page in range(1,8):
+    for page in range(1,MAX_RELEASE_PAGES+1):
         x=subprocess.run(["gh","api",f"repos/{REPO}/releases?per_page=100&page={page}"],
                          check=True,capture_output=True,text=True,timeout=90)
         rows=json.loads(x.stdout)
@@ -54,7 +57,8 @@ def gather(releases,download):
              len(data.get("assets",[]))==data.get("requested",0),
              "Invalid Release manifest")
         months[release["tag_name"]]=(release,data)
-    need(0<len(months)<=150,"No usable monthly source or excessive history")
+    need(0<len(months)<=MAX_VERIFIED_MONTHLY_RELEASES,
+         "No usable monthly source or excessive history")
     return dict(sorted(months.items(),key=lambda item:(item[1][1]["month"],item[0])))
 
 def build(venue,monthly):
