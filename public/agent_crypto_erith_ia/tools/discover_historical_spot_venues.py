@@ -204,13 +204,29 @@ def process(queue,prior=None,batch=MAX_BATCH,checker=inspect,delay=15,
             excluded=frozenset(),preferred=frozenset()):
     require(1<=batch<=MAX_BATCH and 0<=delay<=30,"Unbounded discovery batch")
     doc=prior or {"schema":SCHEMA,"results":[]};checked=validate(doc,queue)
-    waiting=[a for a in queue if a["id"] not in excluded and a["id"] not in checked]
-    if not waiting:
-        retriable={x["id"] for x in doc["results"] if x["status"] in
-                   ("source_unavailable","source_pagination_incomplete")}
-        waiting=[a for a in queue if a["id"] not in excluded and a["id"] in retriable]
-    # Rank symbol-matched official instruments first, without approving IDs.
-    waiting.sort(key=lambda a:(a["id"] not in preferred,a["rank"]))
+    unseen=[a for a in queue if a["id"] not in excluded and a["id"] not in checked]
+    # Reserve at most one third of a batch for stale source errors. Otherwise
+    # 429s from the first few exact IDs can block new qualification indefinitely.
+    now=dt.datetime.now(dt.timezone.utc)
+    recoverable={r["id"]:r for r in doc["results"] if r["status"] in
+                 ("source_unavailable","source_pagination_incomplete")}
+    retries=[]
+    for a in queue:
+        r=recoverable.get(a["id"])
+        if a["id"] in excluded or not r:
+            continue
+        try:
+            previous=dt.datetime.fromisoformat(r["checked_at"])
+            age=now-previous.astimezone(dt.timezone.utc)
+        except (ValueError,KeyError,TypeError,AttributeError):
+            age=dt.timedelta(days=1)
+        if age>=dt.timedelta(minutes=90):
+            retries.append(a)
+    # Prioritize official instruments only as scheduling hints, not identity proof.
+    unseen.sort(key=lambda a:(a["id"] not in preferred,a["rank"]))
+    retries.sort(key=lambda a:(a["id"] not in preferred,a["rank"]))
+    retry_limit=min(len(retries),max(1,batch//3)) if unseen else batch
+    waiting=[*retries[:retry_limit],*unseen[:batch-retry_limit]]
     records={x["id"]:x for x in doc["results"]}
     for i,a in enumerate(waiting[:batch]):
         if i and delay:time.sleep(delay)

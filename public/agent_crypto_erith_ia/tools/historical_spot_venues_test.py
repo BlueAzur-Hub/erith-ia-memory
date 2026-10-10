@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Offline fail-closed OKX/Bitget candidate identity checks."""
 import unittest
+import datetime as dt
 import json
 import tempfile
 from pathlib import Path
@@ -128,6 +129,30 @@ class AlternativeMarketTests(unittest.TestCase):
             m.process(queue,batch=250,checker=check,delay=0)
         last=m.process(queue,second,batch=1,checker=check,delay=0,excluded={"monero"})
         self.assertEqual(last["checked_count"],1)
+    def test_aged_source_errors_get_fair_retries_without_starving_new_assets(self):
+        now=dt.datetime.now(dt.timezone.utc)
+        old=(now-dt.timedelta(hours=4)).isoformat()
+        fresh=(now-dt.timedelta(minutes=5)).isoformat()
+        queue=[{"id":f"coin-{n}","rank":n,"symbol":f"C{n}","name":f"Coin {n}"}
+               for n in range(1,10)]
+        prior={"schema":m.SCHEMA,"results":[
+            {"id":"coin-1","rank":1,"symbol":"C1","status":"source_unavailable",
+             "markets":[],"checked_at":old},
+            {"id":"coin-2","rank":2,"symbol":"C2","status":"source_unavailable",
+             "markets":[],"checked_at":fresh}]}
+        seen=[]
+        def check(a):
+            seen.append(a["id"])
+            return "market_not_confirmed",[],1
+        result=m.process(queue,prior,batch=6,checker=check,delay=0,
+                         preferred={"coin-1","coin-3","coin-4"})
+        self.assertEqual(seen[0],"coin-1")
+        self.assertEqual(seen[1:3],["coin-3","coin-4"])
+        self.assertNotIn("coin-2",seen)
+        self.assertEqual(result["checked_count"],7)
+        self.assertEqual(result["market_candidate_count"],0)
+        self.assertTrue(result["market_only_not_archived"])
+
     def test_real_catalogue_identity_alignment_without_network(self):
         queue,archived=m.universe()
         self.assertEqual(len(queue),250)

@@ -298,6 +298,27 @@ def choose_missing_month(assets,tags,now=None,lookback=12):
         month=previous_month(month)
     return None
 
+def select_pending_assets(qualified,tags,now=None,lookback=12,limit=MAX_ASSETS):
+    """Fair bounded backlog: new exact-ID assets precede depth backfill.
+    
+    Look for the newest closed month across ALL independently qualified coins,
+    not permanently just the first three by rank. Never promote unqualified
+    symbol matches; Release tags are scheduling hints, not candle proofs.
+    """
+    require(1<=limit<=MAX_ASSETS and 1<=lookback<=12,
+            "Unsafe asset batch or backfill window")
+    require(len(qualified)==len({a["id"] for a in qualified}),
+            "Duplicate exact CoinGecko identities")
+    require(len(qualified)<=250,"Unbounded source candidates")
+    present=set(tags)
+    month=latest_closed_month(now)
+    for _ in range(lookback):
+        missing=[a for a in qualified if release_tag(a,month) not in present]
+        if missing:
+            return month,missing[:limit]
+        month=previous_month(month)
+    return None,[]
+
 def main():
     cli=argparse.ArgumentParser(description=__doc__)
     cli.add_argument("--plan",action="store_true")
@@ -315,7 +336,8 @@ def main():
     cat=json.loads(proof.CATALOG.read_text())
     ex=json.loads(proof.EXACT.read_text())
     spot=json.loads(proof.INSTRUMENTS.read_text())
-    selected=proof.candidates(cat,ex,spot)[:args.limit]
+    qualified=proof.candidates(cat,ex,spot)
+    selected=qualified[:args.limit]
     if args.plan:
         month=latest_closed_month() if args.month=="auto" else args.month
         bounds(month)
@@ -328,9 +350,12 @@ def main():
         return
     require(os.getenv("GITHUB_ACTIONS")=="true" and os.getenv("GH_TOKEN"),
             "Native month collection may run only under authorized GitHub Actions")
-    month=(choose_missing_month(selected,published_bitget_tags(),
-                                lookback=args.lookback_months)
-           if args.month=="auto" else args.month)
+    if args.month=="auto":
+        month,selected=select_pending_assets(
+            qualified,published_bitget_tags(),
+            lookback=args.lookback_months,limit=args.limit)
+    else:
+        month=args.month
     if month is None:
         print("BITGET NATIVE MONTH NOOP: all selected exact-ID assets have "
               "Release tags in the bounded closed-month window",flush=True)
