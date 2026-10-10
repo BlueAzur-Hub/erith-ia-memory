@@ -66,30 +66,41 @@ jobs:
         run: |
           set -euo pipefail
           base=public/agent_crypto_erith_ia/data/historical_archive_prototype
-          git fetch origin main
-          n=0
-          for name in top250_history_catalog/index.json top250-alt-market-evidence.json top250-official-spot-instruments.json; do
-            n=$((n+1))
-            expected=$(sed -n "$n"p "$RUNNER_TEMP/source-sha")
-            actual=$(git show "origin/main:$base/$name" | sha256sum | cut -d' ' -f1)
-            if [[ "$expected" != "$actual" ]]; then
-              echo "::error::Original Spot source proof changed; refuse stale federated view"
-              exit 1
+          # Workflows independently publish catalogs and annual/shard views.
+          # Retrying ONLY the immutable preverified output protects against
+          # non-fast-forward races; recheck all 3 source SHAs on each attempt.
+          for attempt in 1 2 3; do
+            git fetch origin main
+            n=0
+            for name in top250_history_catalog/index.json top250-alt-market-evidence.json top250-official-spot-instruments.json; do
+              n=$((n+1))
+              expected=$(sed -n "${n}p" "$RUNNER_TEMP/source-sha")
+              actual=$(git show "origin/main:$base/$name" | sha256sum | cut -d' ' -f1)
+              if [[ "$expected" != "$actual" ]]; then
+                echo "::error::Original Spot source proof changed; refuse stale federated view"
+                exit 1
+              fi
+            done
+            git reset --hard origin/main
+            cp -a "$RUNNER_TEMP/bitget_verified_views" "$base/"
+            cp -a "$RUNNER_TEMP/top250_multisource_coverage" "$base/"
+            git add -- "$base/bitget_verified_views" "$base/top250_multisource_coverage"
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              echo 'NOOP: federated source and checksum views unchanged'
+              exit 0
             fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Publish verified Bitget native Spot OHLCV and federated archive totals'
+            if git push origin HEAD:main; then
+              echo "Verified federated index published on attempt $attempt"
+              exit 0
+            fi
+            echo "Non-fast-forward or transient push failure ($attempt/3); recheck source fingerprints"
           done
-          git reset --hard origin/main
-          cp -a "$RUNNER_TEMP/bitget_verified_views" "$base/"
-          cp -a "$RUNNER_TEMP/top250_multisource_coverage" "$base/"
-          git add -- "$base/bitget_verified_views" "$base/top250_multisource_coverage"
-          git diff --cached --check
-          if git diff --cached --quiet; then
-            echo 'NOOP: federated source and checksum views unchanged'
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Publish verified Bitget native Spot OHLCV and federated archive totals'
-          git push origin HEAD:main
+          echo '::error::Federated index publication failed after bounded retries'
+          exit 1
       - name: Preserve original ZIP archives and all trading surfaces
         if: always()
         run: |
