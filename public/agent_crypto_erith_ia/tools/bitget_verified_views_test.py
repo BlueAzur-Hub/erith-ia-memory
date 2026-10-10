@@ -24,7 +24,7 @@ class BitgetFederationTests(unittest.TestCase):
         month="2026-09"
         tag=f"crypto-spot-bitget-{month}-1m-{asset['id']}"
         name=f"{asset['pair']}-1m-{month}.zip"
-        start,_,expected=b.bulk.bounds(month,"1m")
+        start,expected,_=b.bulk.bounds(month,"1m")
         self.assertEqual(expected,43200)
         text=io.StringIO(newline="")
         writer=csv.writer(text,lineterminator="\n")
