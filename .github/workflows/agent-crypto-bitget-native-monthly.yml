@@ -22,7 +22,9 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: agent-crypto-bitget-immutable-native-month
+  # PR checks are read-only; let them run without blocking the production
+  # native-month publisher. All production events stay strictly serialized.
+  group: ${{ github.event_name == 'pull_request' && format('agent-crypto-bitget-pr-{0}', github.event.pull_request.number) || 'agent-crypto-bitget-immutable-native-month' }}
   cancel-in-progress: false
 jobs:
   verify-and-collect:
