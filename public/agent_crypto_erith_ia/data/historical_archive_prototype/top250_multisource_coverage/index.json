@@ -2,10 +2,10 @@
   "schema": "aerith.public.ohlcv.top250.federated-native-archives.v1",
   "ranked": 250,
   "quote": "USDT",
-  "archived_assets": 107,
-  "binance_archived_assets": 104,
+  "archived_assets": 109,
+  "binance_archived_assets": 106,
   "bitget_archived_assets": 3,
-  "native_1m_candles": 84116160,
+  "native_1m_candles": 84515040,
   "first_trade_date_known": false,
   "is_live": false,
   "note": "Two independent complete-month source formats. Native Bitget 7 fields; no synthetic trade count, no USDT=>USD.",
@@ -24,7 +24,7 @@
     },
     {
       "top": 250,
-      "archived": 107
+      "archived": 109
     }
   ],
   "assets": [
@@ -775,8 +775,8 @@
       "name": "Cosmos Hub",
       "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 2,
-      "native_1m_count": 87840
+      "months": 3,
+      "native_1m_count": 132480
     },
     {
       "id": "polygon-ecosystem-token",
@@ -865,8 +865,8 @@
       "name": "Lighter",
       "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 2,
-      "native_1m_count": 87840
+      "months": 3,
+      "native_1m_count": 132480
     },
     {
       "id": "nexo",
@@ -995,8 +995,8 @@
       "name": "​​Stable",
       "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 2,
-      "native_1m_count": 87840
+      "months": 3,
+      "native_1m_count": 132480
     },
     {
       "id": "vechain",
@@ -1383,10 +1383,10 @@
       "rank": 136,
       "symbol": "LDO",
       "name": "Lido DAO",
-      "source": null,
+      "source": "Binance Spot official native 1m ZIPs",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 3,
+      "native_1m_count": 132480
     },
     {
       "id": "unibase",
@@ -1433,10 +1433,10 @@
       "rank": 141,
       "symbol": "FDUSD",
       "name": "First Digital USD",
-      "source": null,
+      "source": "Binance Spot official native 1m ZIPs",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 3,
+      "native_1m_count": 132480
     },
     {
       "id": "sun-token",
