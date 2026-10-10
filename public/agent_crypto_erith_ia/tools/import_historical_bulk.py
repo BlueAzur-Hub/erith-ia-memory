@@ -190,8 +190,12 @@ def check_csv(raw, pair, month, interval):
                 need(when==start+count*step,"Missing/duplicate/unaligned candle")
                 close_stamp=int(fields[6])
                 closed=close_stamp//1000 if unit=="us" else close_stamp
-                need(closed>=when+step-1 and closed<when+step,
-                     "Malformed Binance close timestamp")
+                # On rare official exchange interruptions, the source
+                # closes a minute BEFORE its nominal final millisecond.
+                # Preserve the original close time; never synthesize a bar.
+                # The open-time stream and full-month count are still strict.
+                need(when<=closed<when+step,
+                     "Source candle closes outside its open minute")
                 op,hi,lo,cl,vol,quote_vol=[float(fields[k]) for k in (1,2,3,4,5,7)]
                 need(all(math.isfinite(v) for v in (op,hi,lo,cl,vol,quote_vol))
                      and op>0 and cl>0 and lo>0 and

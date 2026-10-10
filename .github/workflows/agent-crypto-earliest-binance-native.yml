@@ -44,6 +44,27 @@ jobs:
           python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py --plan
           python public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py
           python public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py --plan
+      - name: PR only - verify genuine March ZIP rejects missing minute starts without synthetic fill
+        if: github.event_name == 'pull_request'
+        run: |
+          python - <<'PY'
+          import sys,tempfile
+          from pathlib import Path
+          sys.path.insert(0,'public/agent_crypto_erith_ia/tools')
+          import import_historical_bulk as b
+          for ident,rank,pair in [('bitcoin',1,'BTCUSDT'),
+                                 ('ethereum',2,'ETHUSDT'),
+                                 ('monero',14,'XMRUSDT')]:
+              asset={'id':ident,'rank':rank,'pair':pair,'symbol':pair[:-4],
+                     'archive_owner':'official-native-history'}
+              with tempfile.TemporaryDirectory(prefix='verified-march-') as td:
+                  proof=b.fetch_asset(asset,'2023-03','1m',Path(td))
+                  assert proof['status']=='unavailable',proof
+                  assert 'Missing/duplicate/unaligned candle' in proof['reason'],proof
+                  assert not list(Path(td).glob('*.zip'))
+                  print('MARCH 2023 REAL SOURCE HAS TRADING HALT GAPS, NOT FEDERATED',
+                        ident,proof['reason'],flush=True)
+          PY
       - name: Acquire four older fully certified Binance native 1m months
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
