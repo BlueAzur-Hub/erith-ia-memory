@@ -19,13 +19,13 @@ class BitgetFederationTests(unittest.TestCase):
         cls.spot=json.loads(proof.INSTRUMENTS.read_text())
         cls.asset=b.source_candidates(cls.catalog,cls.exact,cls.spot)["cosmos"]
 
-    def fixture(self,count=43200,asset=None):
+    def fixture(self,count=None,asset=None,month="2026-09"):
         asset=asset or self.asset
-        month="2026-09"
         tag=f"crypto-spot-bitget-{month}-1m-{asset['id']}"
         name=f"{asset['pair']}-1m-{month}.zip"
         start,expected,_=b.bulk.bounds(month,"1m")
-        self.assertEqual(expected,43200)
+        self.assertIn(expected,(40320,43200,44640))
+        if count is None: count=expected
         text=io.StringIO(newline="")
         writer=csv.writer(text,lineterminator="\n")
         for i in range(count):
@@ -75,6 +75,27 @@ class BitgetFederationTests(unittest.TestCase):
         self.assertFalse(obj["trade_count_available"])
         self.assertTrue(all(x["quote"]=="USDT" for x in union["assets"]))
         self.assertEqual(union["groups"][-1]["archived"],union["archived_assets"])
+
+
+    def test_two_native_months_count_all_archives_without_faking_old_chart(self):
+        aug,maug,daug=self.fixture(month="2026-08")
+        sep,msep,dsep=self.fixture(month="2026-09")
+        registry={aug:(maug(aug),daug),sep:(msep(sep),dsep)}
+        projections,alt,union=b.build(self.catalog,self.exact,self.spot,
+            [sep,aug],
+            metadata=lambda tag:registry[tag][0],
+            downloader=lambda tag,name,*args:registry[tag][1](tag,name,*args))
+        self.assertEqual(alt["archived_assets"],1)
+        entry=alt["assets"][0]
+        self.assertEqual(entry["months"],["2026-08","2026-09"])
+        self.assertEqual(entry["native_1m_count"],43200)
+        self.assertEqual(entry["total_verified_1m_count"],44640+43200)
+        self.assertEqual(union["bitget_archived_assets"],1)
+        self.assertEqual(union["native_1m_candles"],
+                         self.catalog["native_1m_candles"]+44640+43200)
+        self.assertEqual(next(x for x in union["assets"]
+                              if x["id"]=="cosmos")["months"],2)
+        self.assertEqual(len(projections),1)
 
     def test_short_source_month_is_rejected_even_if_manifest_claims_43200(self):
         tag,metadata,downloader=self.fixture(count=43199)
