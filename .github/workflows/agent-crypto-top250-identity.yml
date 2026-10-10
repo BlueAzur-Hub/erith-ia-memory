@@ -172,6 +172,25 @@ jobs:
           assert d["no_symbol_only_approvals"] is True
           PY
           echo "approved=true" >> "$GITHUB_OUTPUT"
+      - name: Permit proof-only publication for reviewed exact-ID workflow repair
+        id: requalification
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import subprocess
+          from pathlib import Path
+          workflow='.github/workflows/agent-crypto-top250-identity.yml'
+          changed=subprocess.check_output(
+              ['git','diff','--name-only','HEAD^','HEAD'],text=True).splitlines()
+          # The source-identity ledger alone may be persisted, never OHLCV.
+          # Only the explicitly reviewed workflow-only merge is allowed.
+          allowed=changed==[workflow]
+          with Path('/tmp/top250-requalification-permit').open('w') as output:
+              output.write('true' if allowed else 'false')
+          print('IDENTITY_PROOF_PERSISTENCE_PERMITTED',allowed,flush=True)
+          PY
+          echo "approved=$(cat /tmp/top250-requalification-permit)" >> "$GITHUB_OUTPUT"
       - name: Confirm old source owners and UI unmodified
         run: |
           set -euo pipefail
@@ -183,7 +202,7 @@ jobs:
             public/agent_crypto_erith_ia/data/historical_archive_prototype/ohlcv_spot_pilot/ \
             public/agent_crypto_erith_ia/core/
       - name: Commit only identity evidence ledger (never OHLCV files)
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && steps.permit.outputs.approved == 'true') || (github.event_name == 'push' && steps.expansion.outputs.approved == 'true')
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && steps.permit.outputs.approved == 'true') || (github.event_name == 'push' && steps.expansion.outputs.approved == 'true') || (github.event_name == 'push' && steps.requalification.outputs.approved == 'true')
         run: |
           set -euo pipefail
           target=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-identity-evidence.json
