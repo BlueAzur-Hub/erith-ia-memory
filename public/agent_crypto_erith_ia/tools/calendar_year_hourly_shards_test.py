@@ -155,6 +155,18 @@ class CalendarYearShardTests(unittest.TestCase):
             text)
         self.assertIn('sha256sum "$catalog"',text)
 
+    def test_existing_yearly_workflow_is_hourly_but_strictly_bounded(self):
+        """One serialized source-verified runner, at most four archived assets."""
+        workflow=(Path(__file__).resolve().parents[3] /
+                  ".github/workflows/agent-crypto-calendar-year-hourly.yml")
+        text=workflow.read_text(encoding="utf-8")
+        self.assertIn("cron: '21 * * * *'",text)
+        self.assertIn("group: agent-crypto-native-calendar-year-hourly",text)
+        self.assertIn("cancel-in-progress: false",text)
+        self.assertIn('if [[ "$GITHUB_EVENT_NAME" == schedule ]]; then batch=4; fi',
+                      text)
+        self.assertEqual(m.MAX_BATCH,4)
+
     def test_batch_limits_reject_unbounded_backfill(self):
         with tempfile.TemporaryDirectory() as td:
             with self.assertRaisesRegex(ValueError,"Unsafe daily"):
