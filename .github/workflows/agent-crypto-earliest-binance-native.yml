@@ -1,0 +1,55 @@
+name: Agent Crypto Verified Earliest Binance Native Months
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-earliest-binance-native.yml'
+      - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py'
+      - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-earliest-binance-native.yml'
+      - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py'
+      - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py'
+  workflow_dispatch:
+  schedule:
+    - cron: '7 4,12,20 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-earliest-binance-verified-backfill
+  cancel-in-progress: false
+jobs:
+  extend-original-months:
+    runs-on: ubuntu-latest
+    timeout-minutes: 27
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify immutable Binance ZIP import and no coin-genesis claims
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py
+          python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py
+          python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py --plan
+      - name: Acquire two older fully certified Binance native 1m months
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py --collect --months 2
+      - name: Assert original archives and protected trading code untouched
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_hourly_views/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_monthly_views/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards/
