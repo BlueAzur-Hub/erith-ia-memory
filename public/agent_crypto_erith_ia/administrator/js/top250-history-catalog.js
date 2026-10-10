@@ -74,6 +74,7 @@ async function init(){
   const t=await r.text();
   check(t.length>0&&t.length<2000000,"Catalogue trop volumineux");
   const next=JSON.parse(t);validate(next);catalog=next;
+  $("top250-title").textContent="Coffre Top 250 · couverture réelle des historiques ("+next.archived_assets+"/250 archivés)";
   const summary=$("top250-summary"),frag=document.createDocumentFragment();
   frag.append(metric("Identités classées","250"));
   frag.append(metric("Avec mois vérifiés",String(next.archived_assets)+"/250"));
@@ -84,7 +85,10 @@ async function init(){
   $("top250-counts").textContent=counts+" · Binance Spot USDT seulement ; les actifs absents nécessitent d'autres sources.";
   status.textContent="Catalogue disponible · seuls les mois complets validés sont comptabilisés";
   display();
- }catch(e){status.textContent="Catalogue indisponible : "+String(e?.message||e);}
+ }catch(e){
+  $("top250-title").textContent="Coffre Top 250 · couverture réelle des historiques (indisponible)";
+  status.textContent="Catalogue indisponible : "+String(e?.message||e);
+ }
 }
 for(const key of ["top250-limit","top250-search","top250-available"])
  $(key)?.addEventListener(key==="top250-search"?"input":"change",display);
