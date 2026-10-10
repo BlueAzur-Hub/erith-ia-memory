@@ -62,8 +62,15 @@ def fetch_page(pair,start,end,count,opener=urllib.request.urlopen,endpoint=API):
             1<=count<=max_rows and end-start==count*STEP and
             start%STEP==0 and end%STEP==0,
             "Unsafe native Bitget paging request")
+    # Production timing evidence shows different endpoint conventions:
+    # recent candles: (startTime, endTime] ; history: [startTime, endTime).
+    # Preserve the same exact expected [start,end) native minute set in
+    # verify_page. Never trim or fill the history API's response.
+    request_start=start if endpoint==HISTORY_API else start-STEP
+    request_end=end if endpoint==HISTORY_API else end-STEP
     params=urllib.parse.urlencode({"category":"SPOT","symbol":pair,"interval":"1m",
-        "startTime":start-STEP,"endTime":end-STEP,"type":"market","limit":count})
+        "startTime":request_start,"endTime":request_end,
+        "type":"market","limit":count})
     req=urllib.request.Request(endpoint+"?"+params,headers={
          "User-Agent":"SevenHeaven-NativeHistoricalArchive/1.0",
          "Accept":"application/json"})
