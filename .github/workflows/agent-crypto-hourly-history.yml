@@ -90,19 +90,40 @@ jobs:
         run: |
           set -euo pipefail
           target=public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_hourly_views
-          mkdir -p "$target"
-          cp -a "$RUNNER_TEMP/shared_hourly_views/." "$target/"
-          git add -- "$target"
-          git diff --cached --check
-          if git diff --cached --quiet; then
-            echo "NOOP: same verified hourly source months"
-            exit 0
-          fi
+          catalog=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/index.json
+          # Rebuilt files live outside the checkout. The authenticated source
+          # catalog MUST still match main before the result may be published.
+          source_sha=$(sha256sum "$catalog" | cut -d' ' -f1)
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m "Publish authenticated contiguous hourly histories for archived markets"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for attempt in 1 2 3; do
+            git fetch origin main
+            current_sha=$(git show "origin/main:$catalog" | sha256sum | cut -d' ' -f1)
+            if [[ "$source_sha" != "$current_sha" ]]; then
+              echo "::error::Source catalog changed while generating hourly views; refusing stale publish"
+              exit 1
+            fi
+            # Old-index conflicts are not evidence that rebuilt candles failed.
+            # Start a fresh verified-only commit on the current main tip instead
+            # of rebasing over a competing update to the same index.json.
+            git reset --hard origin/main
+            mkdir -p "$target"
+            cp -a "$RUNNER_TEMP/shared_hourly_views/." "$target/"
+            git add -- "$target"
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              echo "NOOP: canonical hourly sources already match verified result"
+              exit 0
+            fi
+            git commit -m "Publish authenticated contiguous hourly histories for archived markets"
+            if git push origin HEAD:main; then
+              echo "VERIFIED HOURLY PUBLISHED: attempt $attempt"
+              exit 0
+            fi
+            echo "::warning::Concurrent main update while publishing; retry $attempt of 3"
+          done
+          echo "::error::Concurrent updates prevented safe hourly publication"
+          exit 1
       - name: Deliver proof index
         if: always()
         uses: actions/upload-artifact@v4
