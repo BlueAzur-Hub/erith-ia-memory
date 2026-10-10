@@ -76,6 +76,19 @@ class NativeBitgetProbeTests(unittest.TestCase):
         self.assertEqual(p["assets"][0]["status"],"source_unavailable")
         self.assertEqual(p["full_native_months_archived"],0)
 
+    def test_temporal_diagnostic_does_not_approve_wrong_window(self):
+        cat,exact,spot=records()
+        wrong=[[str(m.START_MS+42*m.STEP),"10","12","9","11","3","33"],
+               [str(m.END_MS),"10","12","9","11","3","33"]]
+        probe=m.probe(cat,exact,spot,fetcher=lambda pair:(
+            {"code":"00000","data":wrong},"b"*64))
+        row=probe["assets"][0]
+        self.assertEqual(row["status"],"source_unavailable")
+        self.assertEqual(row["observed_first_ms"],m.START_MS+42*m.STEP)
+        self.assertEqual(row["observed_last_ms"],m.END_MS)
+        self.assertEqual(row["observed_in_window"],1)
+        self.assertEqual(probe["full_native_months_archived"],0)
+
     def test_real_registry_offline_integrity(self):
         actual=json.loads(m.CATALOG.read_text())
         alt=json.loads(m.EXACT.read_text())
