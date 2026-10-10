@@ -85,6 +85,26 @@ select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-
  <p id="shared-source" class="fine">Dernier mois clos disponible seulement, non live. Aucune conversion implicite USDT → USD.</p>
  <div class="scroll"><table id="shared-table"><tr><td>Lire un actif pour afficher ses dernières bougies.</td></tr></table></div>
 </details>
+<details class="board" id="vault-yearly-inline" open>
+ <summary><strong>Historique pluriannuel · blocs annuels vérifiés (BTC / ETH)</strong></summary>
+ <p class="muted">La même lecture SHA-256 et OHLCV que le lecteur annuel déjà validé : BTC et ETH sur les années réellement matérialisées. Pour les autres cryptos, aucun bloc annuel n'est annoncé avant sa publication. Toutes les cotations ici sont en USDT.</p>
+ <div class="toolbar" style="margin:10px 0;gap:9px">
+  <label for="vault-year-coin">Crypto</label><select id="vault-year-coin"><option>Chargement…</option></select>
+  <label for="vault-year-year">Année</label><select id="vault-year-year"><option>—</option></select>
+  <label for="vault-year-month">Période</label><select id="vault-year-month"><option value="all">Bloc complet</option></select>
+  <button id="vault-year-read" type="button" disabled>Lire les bougies annuelles</button>
+ </div>
+ <p id="vault-year-status" class="muted" aria-live="polite">Chargement des blocs vérifiés…</p>
+ <p id="vault-year-source" class="fine">Binance Spot USDT · ZIP mensuels sources certifiés.</p>
+ <canvas id="vault-year-curve" width="1120" height="420" style="display:block;width:100%;max-width:1120px;background:#0b1a29;border:1px solid #385d76;border-radius:9px" role="img" aria-label="Chandeliers pluriannuels des sources authentiques"></canvas>
+ <p id="vault-year-scope" class="fine">Périodes certifiées uniquement · sans interpolation ni conversion de devise.</p>
+ <div class="scroll"><table><thead><tr><th>UTC</th><th>Ouverture</th><th>Haut</th><th>Bas</th><th>Clôture</th><th>Volume base</th><th>Transactions</th></tr></thead>
+ <tbody id="vault-year-rows"><tr><td colspan="7">Aucune bougie chargée.</td></tr></tbody></table></div>
+</details>
+<details class="board">
+ <summary><strong>Outils de diagnostic (facultatifs)</strong></summary>
+ <p class="muted">Anciennes vues techniques conservées : <a href="./historical-inventory.html">inventaire du cache Firefox</a> · <a href="./historical-archive-reader.html">diagnostic R3</a> · <a href="./historical-yearly.html">lecteur annuel indépendant</a>. Le Coffre ci-dessus reste l'entrée utilisateur unique.</p>
+</details>
 <details class="board" id="btc-year-lab">
  <summary><strong>BTC/USDT · explorer les archives mensuelles de Bitcoin</strong></summary>
  <div class="btc-hero" aria-label="Repères de l'archive BTC">
@@ -355,4 +375,4 @@ btn.addEventListener("click",async()=>{
  finally{btn.disabled=false}
 });
 })();
-</script><script src="./js/historical-vault-automatic.js"></script><script src="./js/top250-history-catalog.js"></script><script src="./js/btc-annual-view.js"></script><script src="./js/shared-hourly-history.js"></script><script src="./js/shared-historical-view.js"></script></body></html>
+</script><script src="./js/historical-vault-automatic.js"></script><script src="./js/top250-history-catalog.js"></script><script src="./js/btc-annual-view.js"></script><script src="./js/shared-hourly-history.js"></script><script src="./js/shared-historical-view.js"></script><script src="./js/historical-yearly-browser.js"></script></body></html>
