@@ -1,32 +1,34 @@
 {
-  "archive_assets": 104,
+  "archive_assets": 106,
   "assets": [
     {
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
-          "first_month": "2024-08",
+          "first_month": "2024-06",
           "last_month": "2026-09",
-          "months": 26
+          "months": 28
         }
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2024-08",
+      "first_verified_closed_month": "2024-06",
       "id": "bitcoin",
       "last_verified_closed_month": "2026-09",
-      "longest_contiguous_months": 26,
-      "native_minutes": 1139040,
+      "longest_contiguous_months": 28,
+      "native_minutes": 1226880,
       "rank": 1,
       "symbol": "BTC",
       "token_creation_date_known": false,
-      "verified_months": 26,
+      "verified_months": 28,
       "year_shards": [
         {
-          "first_month": "2024-08",
+          "first_month": "2024-06",
           "last_month": "2024-12",
           "months": [
+            "2024-06",
+            "2024-07",
             "2024-08",
             "2024-09",
             "2024-10",
@@ -80,27 +82,29 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
-          "first_month": "2024-08",
+          "first_month": "2024-06",
           "last_month": "2026-09",
-          "months": 26
+          "months": 28
         }
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2024-08",
+      "first_verified_closed_month": "2024-06",
       "id": "ethereum",
       "last_verified_closed_month": "2026-09",
-      "longest_contiguous_months": 26,
-      "native_minutes": 1139040,
+      "longest_contiguous_months": 28,
+      "native_minutes": 1226880,
       "rank": 2,
       "symbol": "ETH",
       "token_creation_date_known": false,
-      "verified_months": 26,
+      "verified_months": 28,
       "year_shards": [
         {
-          "first_month": "2024-08",
+          "first_month": "2024-06",
           "last_month": "2024-12",
           "months": [
+            "2024-06",
+            "2024-07",
             "2024-08",
             "2024-09",
             "2024-10",
@@ -5735,19 +5739,37 @@
     {
       "at_least_12_consecutive_months": false,
       "at_least_24_consecutive_months": false,
-      "contiguous_runs": [],
+      "contiguous_runs": [
+        {
+          "first_month": "2026-07",
+          "last_month": "2026-09",
+          "months": 3
+        }
+      ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": null,
+      "first_verified_closed_month": "2026-07",
       "id": "lido-dao",
-      "last_verified_closed_month": null,
-      "longest_contiguous_months": 0,
-      "native_minutes": 0,
+      "last_verified_closed_month": "2026-09",
+      "longest_contiguous_months": 3,
+      "native_minutes": 132480,
       "rank": 136,
       "symbol": "LDO",
       "token_creation_date_known": false,
-      "verified_months": 0,
-      "year_shards": []
+      "verified_months": 3,
+      "year_shards": [
+        {
+          "first_month": "2026-07",
+          "last_month": "2026-09",
+          "months": [
+            "2026-07",
+            "2026-08",
+            "2026-09"
+          ],
+          "span": 0,
+          "year": 2026
+        }
+      ]
     },
     {
       "at_least_12_consecutive_months": false,
@@ -5820,19 +5842,37 @@
     {
       "at_least_12_consecutive_months": false,
       "at_least_24_consecutive_months": false,
-      "contiguous_runs": [],
+      "contiguous_runs": [
+        {
+          "first_month": "2026-07",
+          "last_month": "2026-09",
+          "months": 3
+        }
+      ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": null,
+      "first_verified_closed_month": "2026-07",
       "id": "first-digital-usd",
-      "last_verified_closed_month": null,
-      "longest_contiguous_months": 0,
-      "native_minutes": 0,
+      "last_verified_closed_month": "2026-09",
+      "longest_contiguous_months": 3,
+      "native_minutes": 132480,
       "rank": 141,
       "symbol": "FDUSD",
       "token_creation_date_known": false,
-      "verified_months": 0,
-      "year_shards": []
+      "verified_months": 3,
+      "year_shards": [
+        {
+          "first_month": "2026-07",
+          "last_month": "2026-09",
+          "months": [
+            "2026-07",
+            "2026-08",
+            "2026-09"
+          ],
+          "span": 0,
+          "year": 2026
+        }
+      ]
     },
     {
       "at_least_12_consecutive_months": false,
@@ -9375,5 +9415,5 @@
   "ranked": 250,
   "schema": "aerith.public.ohlcv.top250.verifiable-year-depth.v1",
   "source": "Verified Binance Spot monthly ZIP catalog",
-  "source_catalog_minutes": 83676960
+  "source_catalog_minutes": 84117600
 }
