@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Offline Top250 catalog regression: identities, unavailable months and SHA refs."""
 import json
+import hashlib
+from unittest import mock
 import unittest
 from pathlib import Path
 
@@ -25,6 +27,39 @@ class Top250CoverageTests(unittest.TestCase):
                   "verified":int(with_zip),"unavailable":int(not with_zip),
                   "candles":43200 if with_zip else 0,"assets":[row]}
         return venue,{"2026-09":(release,manifest)}
+
+    def test_full_history_not_capped_to_old_150_release_pilot(self):
+        """Offline simulated manifests only, never interpreted as live OHLCV."""
+        self.assertGreaterEqual(cat.MAX_VERIFIED_MONTHLY_RELEASES,1000)
+        manifest={"schema":cat.bulk.SCHEMA,"month":"2026-09",
+                  "interval":"1m","requested":1,"verified":1,
+                  "unavailable":0,"assets":[{"asset_id":"bitcoin"}]}
+        raw=json.dumps(manifest,sort_keys=True).encode()
+        releases=[{"tag_name":
+                  f"crypto-spot-bulk-add-2026-09-1m-{n:012x}",
+                  "draft":False,"assets":[{"name":"manifest.json",
+                  "digest":"sha256:"+hashlib.sha256(raw).hexdigest(),
+                  "size":len(raw)}]}
+                  for n in range(151)]
+        gathered=cat.gather(releases,lambda _:raw)
+        self.assertEqual(len(gathered),151)
+        releases[-1]["assets"][0]["digest"]="sha256:"+"0"*64
+        with self.assertRaisesRegex(ValueError,"Manifest checksum mismatch"):
+            cat.gather(releases,lambda _:raw)
+
+    def test_paged_release_inventory_does_not_stop_after_700_entries(self):
+        """Exercise pagination without network requests or any real ZIP writes."""
+        seen=[]
+        def mocked_run(args,**_):
+            page=int(args[-1].split("page=")[-1])
+            seen.append(page)
+            count=100 if page<=8 else 1
+            return type("Reply",(),{"stdout":json.dumps(
+                [{"tag_name":f"proof-{page}-{i}"} for i in range(count)])})()
+        with mock.patch.object(cat.subprocess,"run",side_effect=mocked_run):
+            result=cat.listed_releases()
+        self.assertEqual(len(result),801)
+        self.assertEqual(seen,list(range(1,10)))
 
     def test_full_250_with_only_one_real_verified_month(self):
         venue,monthly=self.setup_rows()
