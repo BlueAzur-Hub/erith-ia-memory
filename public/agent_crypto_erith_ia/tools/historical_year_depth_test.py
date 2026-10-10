@@ -36,8 +36,16 @@ class TruthfulDepthTests(unittest.TestCase):
         # Never hardcode 2024 as the oldest year: verified Binance
         # addenda continue moving the frontier backwards.
         source_years=sorted({int(m[:4]) for m in months})
-        self.assertEqual([s["year"] for s in btc["year_shards"]],
+        # A calendar year can legitimately contain MULTIPLE separated
+        # runs when the original Binance exchange halted trading.
+        # The unique calendar years are unchanged, but distinct shards
+        # preserve true gaps instead of stitching in fabricated candles.
+        self.assertEqual(sorted({s["year"] for s in btc["year_shards"]}),
                          source_years)
+        self.assertEqual(
+            [(s["year"],s["span"],s["months"]) for s in btc["year_shards"]],
+            [(s["year"],s["span"],s["months"]) for s in
+             years.annual_shards(years.spans(months))])
         all_months=[m for shard in btc["year_shards"]
                     for m in shard["months"]]
         self.assertEqual(all_months,sorted(months))
