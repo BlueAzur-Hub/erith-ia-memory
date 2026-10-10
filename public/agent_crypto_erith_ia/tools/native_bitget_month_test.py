@@ -134,9 +134,29 @@ class NativeBitgetMonthTests(unittest.TestCase):
             month=m.previous_month(month)
         self.assertIsNone(m.choose_missing_month([ASSET],months,now))
         with self.assertRaisesRegex(ValueError,"backfill window"):
-            m.choose_missing_month([ASSET],sep,now,lookback=13)
+            m.choose_missing_month([ASSET],sep,now,lookback=37)
         with self.assertRaisesRegex(ValueError,"closed"):
             m.bounds(dt.datetime.now(dt.timezone.utc).strftime("%Y-%m"))
+
+    def test_three_year_backfill_can_reach_older_verified_history(self):
+        """Reach before the last 12 months, never infer any pre-listing trades."""
+        now=dt.datetime(2026,10,10,17,0,tzinfo=dt.timezone.utc)
+        tags=set()
+        month="2026-09"
+        for _ in range(36):
+            if month!="2025-01":
+                tags.add(m.release_tag(ASSET,month))
+            month=m.previous_month(month)
+        self.assertEqual(m.choose_missing_month(
+            [ASSET],tags,now,lookback=36),"2025-01")
+        selected_month,assets=m.select_pending_assets(
+            [ASSET],tags,now,lookback=36,rotation=4,limit=1)
+        self.assertEqual(selected_month,"2025-01")
+        self.assertEqual([a["id"] for a in assets],[ASSET["id"]])
+        with self.assertRaisesRegex(ValueError,"backfill window"):
+            m.choose_missing_month([ASSET],tags,now,lookback=37)
+        with self.assertRaisesRegex(ValueError,"backfill window"):
+            m.select_pending_assets([ASSET],tags,now,lookback=37)
 
     def test_new_fourth_exact_id_not_starved_by_three_older_assets(self):
         """Regression: new eligible coin must not wait a year behind three backfills."""
@@ -265,7 +285,7 @@ class NativeBitgetMonthTests(unittest.TestCase):
         self.assertIn("new_ids=updated_ids-old_ids",text)
         self.assertIn("permitted=bool(new_ids)",text)
         self.assertIn("steps.eligible.outputs.collect == 'true'",text)
-        self.assertIn("--collect --month auto --lookback-months 12 --limit 4",text)
+        self.assertIn("--collect --month auto --lookback-months 36 --limit 4",text)
         self.assertIn("fetch-depth: 0",text)
         self.assertIn("11,41 * * * *",text)
         self.assertIn("Agent Crypto Top250 Alternative Spot Market Discovery",text)
