@@ -33,7 +33,7 @@ function validate(fed,bin,alt,depth){
   alt.archived_assets===fed.bitget_archived_assets&&
   alt.assets?.length===fed.bitget_archived_assets&&
   depth?.schema==="aerith.public.ohlcv.top250.verifiable-year-depth.v1"&&
-  depth.archive_assets===fed.binance_archived_assets&&depth.ranked===250,
+  depth.archive_assets<=fed.binance_archived_assets&&depth.source_catalog_minutes<=bin.native_1m_candles&&depth.ranked===250,
   "Les sources du Coffre ne concordent pas");
  const ids=new Set(),alternatives=new Map(alt.assets.map(a=>[a.id,a]));
  let total=0,have=0,binCount=0,altCount=0;
@@ -132,7 +132,7 @@ async function init(){
   $("top250-summary").replaceChildren(frag);
   $("top250-counts").textContent=fed.groups.map(x=>"Top "+x.top+" : "+x.archived+"/"+x.top).join(" · ")+
    " · les actifs avec une année vérifiée sont mesurés séparément";
-  status.textContent="Catalogue fédéré vérifié · une source par crypto · aucun prix inventé";
+  status.textContent="Catalogue fédéré vérifié · une source par crypto · aucun prix inventé"+(depth.archive_assets<fed.binance_archived_assets?" · index annuel en synchronisation ("+depth.archive_assets+"/"+fed.binance_archived_assets+")":"");
   show();
  }catch(e){
   $("top250-title").textContent="Coffre Top 250 · catalogue fédéré indisponible";
