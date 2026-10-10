@@ -1,0 +1,87 @@
+name: Agent Crypto Verified Calendar-year Hourly Archive
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-calendar-year-hourly.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py'
+      - 'public/agent_crypto_erith_ia/tools/calendar_year_hourly_shards_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-calendar-year-hourly.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py'
+      - 'public/agent_crypto_erith_ia/tools/calendar_year_hourly_shards_test.py'
+  workflow_dispatch:
+  schedule:
+    - cron: '21 1,9,17 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-native-calendar-year-hourly
+  cancel-in-progress: false
+jobs:
+  annual-shards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify no synthetic year and no 12-month truncation
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py
+          python public/agent_crypto_erith_ia/tools/calendar_year_hourly_shards_test.py
+          python public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py --plan
+      - name: Materialize next calendar-year native-hourly shards
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          catalog=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/index.json
+          batch=2
+          if [[ "$GITHUB_EVENT_NAME" == schedule ]]; then batch=4; fi
+          python public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py --batch-size "$batch"
+          source=public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards
+          mkdir -p "$RUNNER_TEMP/yearly-verified"
+          cp -a "$source/." "$RUNNER_TEMP/yearly-verified/"
+          sha256sum "$catalog" | cut -d' ' -f1 > "$RUNNER_TEMP/catalog-sha"
+      - name: Commit only derived year chunks with source catalog lock
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          catalog=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/index.json
+          dest=public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards
+          git fetch origin main
+          real=$(git show "origin/main:$catalog" | sha256sum | cut -d' ' -f1)
+          expected=$(cat "$RUNNER_TEMP/catalog-sha")
+          if [[ "$real" != "$expected" ]]; then
+            echo "::error::Catalog changed while verifying annual source; refuse stale views"
+            exit 1
+          fi
+          git reset --hard origin/main
+          mkdir -p "$dest"
+          cp -a "$RUNNER_TEMP/yearly-verified/." "$dest/"
+          git add -- "$dest"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: annual native hourly shards already current'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Publish verified calendar year hourly pieces without truncating source history'
+          git push origin HEAD:main
+      - name: Preserve existing Trader and R10 hourly/monthly viewers
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_hourly_views/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_monthly_views/
