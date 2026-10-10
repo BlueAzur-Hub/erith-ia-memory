@@ -188,6 +188,8 @@ class NativeBitgetMonthTests(unittest.TestCase):
         self.assertIn("steps.eligible.outputs.collect == 'true'",text)
         self.assertIn("--collect --month auto --lookback-months 12 --limit 3",text)
         self.assertIn("fetch-depth: 2",text)
+        self.assertIn("29 1,7,13,19 * * *",text)
+        self.assertIn("cancel-in-progress: false",text)
 
     def test_closed_month_and_release_identity(self):
         self.assertEqual(m.bounds("2026-09")[2],43200)
