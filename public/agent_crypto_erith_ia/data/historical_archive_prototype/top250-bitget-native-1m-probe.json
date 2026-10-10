@@ -1,0 +1,56 @@
+{
+  "assets": [
+    {
+      "full_native_1m_month_verified": false,
+      "id": "cosmos",
+      "pair": "ATOMUSDT",
+      "quote": "USDT",
+      "rank": 75,
+      "reason": "ValueError: Nonexistent, unaligned or repeated native 1m candle",
+      "sample_end_exclusive_ms": 1790700000000,
+      "sample_start_ms": 1790640000000,
+      "status": "source_unavailable",
+      "symbol": "ATOM",
+      "venue": "bitget"
+    },
+    {
+      "full_native_1m_month_verified": false,
+      "id": "lighter",
+      "pair": "LITUSDT",
+      "quote": "USDT",
+      "rank": 84,
+      "reason": "ValueError: Nonexistent, unaligned or repeated native 1m candle",
+      "sample_end_exclusive_ms": 1790700000000,
+      "sample_start_ms": 1790640000000,
+      "status": "source_unavailable",
+      "symbol": "LIT",
+      "venue": "bitget"
+    },
+    {
+      "full_native_1m_month_verified": false,
+      "id": "stable-2",
+      "pair": "STABLEUSDT",
+      "quote": "USDT",
+      "rank": 97,
+      "reason": "ValueError: Nonexistent, unaligned or repeated native 1m candle",
+      "sample_end_exclusive_ms": 1790700000000,
+      "sample_start_ms": 1790640000000,
+      "status": "source_unavailable",
+      "symbol": "STABLE",
+      "venue": "bitget"
+    }
+  ],
+  "complete_samples": 0,
+  "exact_id_and_instrument_required": true,
+  "full_native_months_archived": 0,
+  "interval": "1m",
+  "is_historical_archive": false,
+  "note": "Source API sample only. No complete monthly candle proof or synthetic fills.",
+  "quote": "USDT",
+  "sample_end_exclusive_ms": 1790700000000,
+  "sample_month": "2026-09",
+  "sample_start_ms": 1790640000000,
+  "sampled": 3,
+  "schema": "aerith.public.ohlcv.spot.bitget.exact-id-native-probe.v1",
+  "venue": "Bitget Spot"
+}
