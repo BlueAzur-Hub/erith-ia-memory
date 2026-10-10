@@ -5,7 +5,7 @@
   "scope": "latest_verified_closed_month",
   "is_live": false,
   "max_is_all_time": false,
-  "archived_assets": 102,
+  "archived_assets": 104,
   "assets": [
     {
       "id": "bitcoin",
@@ -1394,6 +1394,27 @@
       }
     },
     {
+      "id": "sei-network",
+      "rank": 125,
+      "name": "Sei",
+      "symbol": "SEI",
+      "pair": "SEIUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-6da8b98902e5",
+      "source_zip_sha256": "88b7cb4d1591d8d2967debc06711c68ad1cae64e539fc11f89839ffa31d149e5",
+      "file": "sei-network.json.gz",
+      "sha256": "3c0d087494e5027faeea645f0ebdc15f5454512e5172728428863393f34460ee",
+      "bytes": 263873,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
       "id": "plasma",
       "rank": 129,
       "name": "Plasma",
@@ -1450,6 +1471,27 @@
       "file": "falcon-finance-ff.json.gz",
       "sha256": "a360e5836a79a2e9d554c60a92092dfac262e36cb5c737f397ab4d7a1ae42d3c",
       "bytes": 262957,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "kaia",
+      "rank": 134,
+      "name": "Kaia",
+      "symbol": "KAIA",
+      "pair": "KAIAUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-6da8b98902e5",
+      "source_zip_sha256": "199972cb8be30360c84d513767b9c46a49f98c5c4747c73320590fdf60079475",
+      "file": "kaia.json.gz",
+      "sha256": "1fb47ccf2cee6fb8f3dd6e78a44b94a1ac2d3fd33d382e010206218a2ef64bcb",
+      "bytes": 164646,
       "series_counts": {
         "1m": 1440,
         "5m": 8640,
