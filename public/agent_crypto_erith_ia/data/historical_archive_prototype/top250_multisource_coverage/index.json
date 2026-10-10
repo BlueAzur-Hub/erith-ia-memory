@@ -2,10 +2,10 @@
   "schema": "aerith.public.ohlcv.top250.federated-native-archives.v1",
   "ranked": 250,
   "quote": "USDT",
-  "archived_assets": 116,
+  "archived_assets": 120,
   "binance_archived_assets": 106,
-  "bitget_archived_assets": 10,
-  "native_1m_candles": 85072320,
+  "bitget_archived_assets": 14,
+  "native_1m_candles": 85245120,
   "first_trade_date_known": false,
   "is_live": false,
   "note": "Two independent complete-month source formats. Native Bitget 7 fields; no synthetic trade count, no USDT=>USD.",
@@ -16,15 +16,15 @@
     },
     {
       "top": 50,
-      "archived": 33
+      "archived": 35
     },
     {
       "top": 100,
-      "archived": 60
+      "archived": 63
     },
     {
       "top": 250,
-      "archived": 116
+      "archived": 120
     }
   ],
   "assets": [
@@ -333,10 +333,10 @@
       "rank": 31,
       "symbol": "BTW",
       "name": "Bitway",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "the-open-network",
@@ -423,10 +423,10 @@
       "rank": 40,
       "symbol": "PYUSD",
       "name": "PayPal USD",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "ethena",
@@ -683,10 +683,10 @@
       "rank": 66,
       "symbol": "BGB",
       "name": "Bitget Token",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "bfusd",
@@ -2493,10 +2493,10 @@
       "rank": 247,
       "symbol": "EDGE",
       "name": "edgeX",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "cash-4",
