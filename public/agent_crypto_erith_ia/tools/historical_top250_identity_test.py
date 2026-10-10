@@ -60,6 +60,40 @@ class IdentityTests(unittest.TestCase):
         again,attempts=m.process(audit(),existing=updated,batch_size=3,fetcher=getter,delay=0)
         self.assertEqual(len(attempts),0)
         self.assertEqual(again["approved_count"],1)
+    def test_independent_exchange_route_requires_exact_source_coin_id(self):
+        item=m.candidates(audit())[0]
+        denied=m.inspect_asset(item,fetcher=lambda a,p:[],
+             exchange_fetcher=lambda a,p:[ticker(coin_id="wrong-coin")])
+        self.assertEqual(denied["status"],"identity_not_confirmed")
+        verified=m.inspect_asset(item,fetcher=lambda a,p:[],
+             exchange_fetcher=lambda a,p:[ticker(coin_id="hyperliquid")])
+        self.assertEqual(verified["status"],"approved_coingecko_binance_spot")
+        self.assertEqual(verified["evidence"][0]["ticker_coin_id"],"hyperliquid")
+        self.assertEqual(verified["pages"],2)
+
+    def test_recheck_denied_is_bounded_and_never_changes_approved(self):
+        ledger,_=m.process(audit(),batch_size=3,
+             fetcher=lambda coin,page:[ticker()] if coin=="hyperliquid" else [],
+             delay=0,now="2026-01-01T00:00:00+00:00")
+        calls=[]
+        def exchange(coin,page):
+            calls.append(coin)
+            return [ticker(base="GRAM",coin_id="the-open-network")] if coin=="the-open-network" else []
+        review,attempts=m.process(audit(),existing=ledger,batch_size=1,
+             fetcher=lambda coin,page:[],exchange_fetcher=exchange,
+             rescan_denied=True,delay=0,now="2026-01-02T00:00:00+00:00")
+        self.assertEqual(len(attempts),1)
+        self.assertEqual(attempts[0]["id"],"the-open-network")
+        self.assertEqual(review["approved_count"],2)
+        self.assertEqual(calls,["the-open-network"])
+        self.assertEqual(next(x for x in review["results"] if x["id"]=="hyperliquid"),
+                         next(x for x in ledger["results"] if x["id"]=="hyperliquid"))
+        follow,attempts=m.process(audit(),existing=review,batch_size=1,
+             fetcher=lambda coin,page:[],exchange_fetcher=lambda coin,page:[],
+             rescan_denied=True,delay=0,now="2026-01-03T00:00:00+00:00")
+        self.assertEqual(attempts[0]["id"],"polkadot")
+        self.assertEqual(follow["approved_count"],2)
+
     def test_api_error_does_not_grant_approval(self):
         def error(a,p):raise OSError("temporary upstream failure")
         item=m.inspect_asset(m.candidates(audit())[0],error)
