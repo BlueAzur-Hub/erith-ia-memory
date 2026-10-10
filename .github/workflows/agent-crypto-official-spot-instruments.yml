@@ -7,6 +7,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_spot_instruments_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_native_okx_daily_history.py'
       - 'public/agent_crypto_erith_ia/tools/native_okx_daily_history_test.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_additional_okx_daily_history.py'
+      - 'public/agent_crypto_erith_ia/tools/additional_okx_daily_history_test.py'
   push:
     branches: [main]
     paths:
@@ -15,6 +17,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_spot_instruments_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_native_okx_daily_history.py'
       - 'public/agent_crypto_erith_ia/tools/native_okx_daily_history_test.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_additional_okx_daily_history.py'
+      - 'public/agent_crypto_erith_ia/tools/additional_okx_daily_history_test.py'
   workflow_dispatch:
   schedule:
     - cron: '17 8 * * *'
@@ -40,6 +44,8 @@ jobs:
           python -m py_compile public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py
           python public/agent_crypto_erith_ia/tools/historical_spot_instruments_test.py
           python public/agent_crypto_erith_ia/tools/native_okx_daily_history_test.py
+          python public/agent_crypto_erith_ia/tools/additional_okx_daily_history_test.py
+          python public/agent_crypto_erith_ia/tools/collect_additional_okx_daily_history.py --plan
           python public/agent_crypto_erith_ia/tools/collect_native_okx_daily_history.py --plan
           python public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py --plan
       - name: PR only - verify genuine OKX 1Dutc Spot history across all available past years
@@ -58,6 +64,23 @@ jobs:
             python "$collector" --publish
           else
             echo "NOOP: no reviewed new OKX source collector in the main merge"
+          fi
+      - name: PR only - verify authentic multi-year OKX 1Dutc history for USDG PI and Flare
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/collect_additional_okx_daily_history.py --probe
+      - name: Publish additional OKX Spot historical daily sources to immutable release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          collector=public/agent_crypto_erith_ia/tools/collect_additional_okx_daily_history.py
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- "$collector")" ]]; then
+            python "$collector" --publish
+          else
+            echo "NOOP: no reviewed new secondary OKX source acquisition"
           fi
       - name: Read exactly two official public Spot instrument inventories
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
