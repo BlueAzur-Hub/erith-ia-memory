@@ -1,32 +1,34 @@
 {
-  "archive_assets": 108,
+  "archive_assets": 109,
   "assets": [
     {
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
-          "first_month": "2023-06",
+          "first_month": "2023-04",
           "last_month": "2026-09",
-          "months": 40
+          "months": 42
         }
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2023-06",
+      "first_verified_closed_month": "2023-04",
       "id": "bitcoin",
       "last_verified_closed_month": "2026-09",
-      "longest_contiguous_months": 40,
-      "native_minutes": 1753920,
+      "longest_contiguous_months": 42,
+      "native_minutes": 1841760,
       "rank": 1,
       "symbol": "BTC",
       "token_creation_date_known": false,
-      "verified_months": 40,
+      "verified_months": 42,
       "year_shards": [
         {
-          "first_month": "2023-06",
+          "first_month": "2023-04",
           "last_month": "2023-12",
           "months": [
+            "2023-04",
+            "2023-05",
             "2023-06",
             "2023-07",
             "2023-08",
@@ -102,27 +104,29 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
-          "first_month": "2023-06",
+          "first_month": "2023-04",
           "last_month": "2026-09",
-          "months": 40
+          "months": 42
         }
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2023-06",
+      "first_verified_closed_month": "2023-04",
       "id": "ethereum",
       "last_verified_closed_month": "2026-09",
-      "longest_contiguous_months": 40,
-      "native_minutes": 1753920,
+      "longest_contiguous_months": 42,
+      "native_minutes": 1841760,
       "rank": 2,
       "symbol": "ETH",
       "token_creation_date_known": false,
-      "verified_months": 40,
+      "verified_months": 42,
       "year_shards": [
         {
-          "first_month": "2023-06",
+          "first_month": "2023-04",
           "last_month": "2023-12",
           "months": [
+            "2023-04",
+            "2023-05",
             "2023-06",
             "2023-07",
             "2023-08",
@@ -956,19 +960,58 @@
     {
       "at_least_12_consecutive_months": false,
       "at_least_24_consecutive_months": false,
-      "contiguous_runs": [],
+      "contiguous_runs": [
+        {
+          "first_month": "2023-01",
+          "last_month": "2023-02",
+          "months": 2
+        },
+        {
+          "first_month": "2023-04",
+          "last_month": "2023-12",
+          "months": 9
+        }
+      ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": null,
+      "first_verified_closed_month": "2023-01",
       "id": "monero",
-      "last_verified_closed_month": null,
-      "longest_contiguous_months": 0,
-      "native_minutes": 0,
+      "last_verified_closed_month": "2023-12",
+      "longest_contiguous_months": 9,
+      "native_minutes": 480960,
       "rank": 14,
       "symbol": "XMR",
       "token_creation_date_known": false,
-      "verified_months": 0,
-      "year_shards": []
+      "verified_months": 11,
+      "year_shards": [
+        {
+          "first_month": "2023-01",
+          "last_month": "2023-02",
+          "months": [
+            "2023-01",
+            "2023-02"
+          ],
+          "span": 0,
+          "year": 2023
+        },
+        {
+          "first_month": "2023-04",
+          "last_month": "2023-12",
+          "months": [
+            "2023-04",
+            "2023-05",
+            "2023-06",
+            "2023-07",
+            "2023-08",
+            "2023-09",
+            "2023-10",
+            "2023-11",
+            "2023-12"
+          ],
+          "span": 1,
+          "year": 2023
+        }
+      ]
     },
     {
       "at_least_12_consecutive_months": false,
@@ -11085,5 +11128,5 @@
   "ranked": 250,
   "schema": "aerith.public.ohlcv.top250.verifiable-year-depth.v1",
   "source": "Verified Binance Spot monthly ZIP catalog",
-  "source_catalog_minutes": 129139200
+  "source_catalog_minutes": 129795840
 }
