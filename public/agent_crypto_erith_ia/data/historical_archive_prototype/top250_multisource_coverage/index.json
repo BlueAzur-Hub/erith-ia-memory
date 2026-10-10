@@ -2,10 +2,10 @@
   "schema": "aerith.public.ohlcv.top250.federated-native-archives.v1",
   "ranked": 250,
   "quote": "USDT",
-  "archived_assets": 124,
-  "binance_archived_assets": 106,
+  "archived_assets": 126,
+  "binance_archived_assets": 108,
   "bitget_archived_assets": 18,
-  "native_1m_candles": 85417920,
+  "native_1m_candles": 85861440,
   "first_trade_date_known": false,
   "is_live": false,
   "note": "Two independent complete-month source formats. Native Bitget 7 fields; no synthetic trade count, no USDT=>USD.",
@@ -24,7 +24,7 @@
     },
     {
       "top": 250,
-      "archived": 124
+      "archived": 126
     }
   ],
   "assets": [
@@ -775,8 +775,8 @@
       "name": "Cosmos Hub",
       "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 4,
-      "native_1m_count": 172800
+      "months": 5,
+      "native_1m_count": 217440
     },
     {
       "id": "polygon-ecosystem-token",
@@ -865,8 +865,8 @@
       "name": "Lighter",
       "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 4,
-      "native_1m_count": 172800
+      "months": 5,
+      "native_1m_count": 217440
     },
     {
       "id": "nexo",
@@ -995,8 +995,8 @@
       "name": "​​Stable",
       "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 3,
-      "native_1m_count": 132480
+      "months": 4,
+      "native_1m_count": 177120
     },
     {
       "id": "vechain",
@@ -1335,8 +1335,8 @@
       "name": "BitTorrent",
       "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 2,
-      "native_1m_count": 87840
+      "months": 3,
+      "native_1m_count": 132480
     },
     {
       "id": "pieverse",
@@ -1443,10 +1443,10 @@
       "rank": 142,
       "symbol": "SUN",
       "name": "Sun Token",
-      "source": null,
+      "source": "Binance Spot official native 1m ZIPs",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 3,
+      "native_1m_count": 132480
     },
     {
       "id": "tezos",
@@ -1573,10 +1573,10 @@
       "rank": 155,
       "symbol": "KITE",
       "name": "Kite",
-      "source": null,
+      "source": "Binance Spot official native 1m ZIPs",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 3,
+      "native_1m_count": 132480
     },
     {
       "id": "optimism",
