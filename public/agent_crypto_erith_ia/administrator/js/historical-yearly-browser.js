@@ -2,7 +2,9 @@
 /* Seven Heaven: a separate annual archive reader, NEVER an exchange request. */
 (() => {
   const ROOT = new URL("../data/historical_archive_prototype/calendar_year_hourly_shards/", location.href);
-  const $ = (id) => document.getElementById(id);
+  // One validated engine: standalone yearly page and inline Coffre use the same code.
+  const prefix = document.getElementById("vault-year-coin") ? "vault-year-" : "";
+  const $ = (id) => document.getElementById(prefix + id);
   const coin = $("coin"), year = $("year"), month = $("month"), read = $("read");
   const status = $("status"), source = $("source"), scope = $("scope");
   const tbody = $("rows"), canvas = $("curve");
@@ -205,6 +207,14 @@
   year.addEventListener("change", () => {++requestId;month.replaceChildren();loadYear();});
   month.addEventListener("change", redraw);
   read.addEventListener("click", loadYear);
+  if (prefix) document.addEventListener("seven-vault-select", (event) => {
+    if (!index || !index.assets.some(a => a.id === event.detail?.id)) {
+      return; // Other archived assets have no materialized annual block yet.
+    }
+    coin.value = event.detail.id;
+    populateYears();
+    void loadYear();
+  });
   emptyGraph("Chargement du registre annuel…");
   (async () => {
     try {
