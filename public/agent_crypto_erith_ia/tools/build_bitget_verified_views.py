@@ -85,7 +85,7 @@ def download(tag,name,max_bytes=ZIP_MAX,reader=urlopen):
 
 def check_source(raw,asset,month):
     """Verify every actual native Bitget source row, including exact minute count."""
-    expected_start,_,expected=bulk.bounds(month,"1m")
+    expected_start,expected,_=bulk.bounds(month,"1m")
     name=asset["pair"]+"-1m-"+month+".csv"
     rows=[]
     with zipfile.ZipFile(io.BytesIO(raw)) as archive:
