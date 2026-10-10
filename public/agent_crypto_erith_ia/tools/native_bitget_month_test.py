@@ -136,7 +136,7 @@ class NativeBitgetMonthTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"backfill window"):
             m.choose_missing_month([ASSET],sep,now,lookback=13)
         with self.assertRaisesRegex(ValueError,"closed"):
-            m.bounds("2026-10")
+            m.bounds(dt.datetime.now(dt.timezone.utc).strftime("%Y-%m"))
 
     def test_closed_month_and_release_identity(self):
         self.assertEqual(m.bounds("2026-09")[2],43200)
