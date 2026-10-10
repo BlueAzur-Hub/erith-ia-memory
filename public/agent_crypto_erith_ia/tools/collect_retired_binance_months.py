@@ -43,7 +43,10 @@ def historical_owner(catalog):
     x = items[0]
     require(x.get("rank") == RANK and x.get("symbol") == "XMR"
             and x.get("name") == "Monero", "Binance notice vs catalog identity mismatch")
-    require(x.get("months") == [], "Monero already archived; reconcile before republishing")
+    require(isinstance(x.get("months"), list) and
+            all(isinstance(m, dict) and m.get("pair") == PAIR and
+                m.get("month") in MONTHS for m in x["months"]),
+            "Existing Monero source/month contradicts official archived pair")
     require(bulk.PAIR.fullmatch(PAIR) is not None, "Invalid official Spot pair")
     return {"id": ASSET_ID, "symbol": "XMR", "pair": PAIR,
             "rank": RANK, "archive_owner": "official-binance-2024-02-06-delisting"}
