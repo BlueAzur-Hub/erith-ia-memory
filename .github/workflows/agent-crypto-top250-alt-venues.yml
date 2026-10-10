@@ -41,7 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           python public/agent_crypto_erith_ia/tools/discover_historical_spot_venues.py \
-            --probe --batch-size 12 --sleep 15
+            --probe --batch-size 4 --sleep 20
       - name: Persist market candidates only, no actual archive claims
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |

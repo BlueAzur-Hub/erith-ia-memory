@@ -285,6 +285,19 @@ class AlternativeMarketTests(unittest.TestCase):
         self.assertIsNone(m.contract_address("invalid"))
         self.assertIsNone(m.contract_address(123))
 
+    def test_batch_contract_inventory_precedes_individual_ticker_budget(self):
+        """A 429 from many tickers must not precede the one-shot batch proof."""
+        script=Path(m.__file__).read_text(encoding="utf-8")
+        self.assertLess(script.index("cg=public_inventory(CG_PLATFORMS"),
+                        script.index("    result=process(queue,prior,"))
+        self.assertLess(script.index("bitget=public_inventory(BITGET_COINS"),
+                        script.index("    result=process(queue,prior,"))
+        workflow=(Path(m.__file__).resolve().parents[3] /
+                  ".github/workflows/agent-crypto-top250-alt-venues.yml")
+        source=workflow.read_text(encoding="utf-8")
+        self.assertIn("--probe --batch-size 4 --sleep 20",source)
+        self.assertIn("cron: '6,21,36,51 * * * *'",source)
+
     def test_real_catalogue_identity_alignment_without_network(self):
         queue,archived=m.universe()
         self.assertEqual(len(queue),250)
