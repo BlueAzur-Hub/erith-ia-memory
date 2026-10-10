@@ -155,24 +155,32 @@ def official_priority(queue,archived,path=OFFICIAL):
     if not Path(path).is_file():
         return set()
     doc=json.loads(Path(path).read_text(encoding="utf-8"))
-    if (doc.get("schema")!="aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1"
-        or doc.get("archived_assets_at_audit")!=len(archived)):
+    if doc.get("schema")!="aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1":
         return set()
     rows=doc.get("assets")
-    require(doc.get("ranked")==250 and isinstance(rows,list)
-            and len(rows)==250-len(archived),
-            "Official candidate inventory incomplete")
+    audit_count=doc.get("archived_assets_at_audit")
+    # A successful archive extends the current archived set. It must not
+    # invalidate still-unarchived, exact-ID-matched official instruments.
+    # Reject a regressing count or any changed rank/symbol/identity.
+    if (doc.get("ranked")!=250 or not isinstance(rows,list)
+        or not isinstance(audit_count,int) or isinstance(audit_count,bool)
+        or audit_count<0 or audit_count>len(archived)
+        or len(rows)!=250-audit_count):
+        return set()
     byid={a["id"]:a for a in queue}
-    selected=set()
+    seen=set();selected=set()
     for x in rows:
         aid=x.get("id")
-        require(aid in byid and aid not in archived
+        require(aid in byid and aid not in seen
                 and x.get("rank")==byid[aid]["rank"]
                 and x.get("symbol")==byid[aid]["symbol"],
                 "Instrument scheduling hint does not belong to ranked Top250")
+        seen.add(aid)
         if x.get("instruments"):
             require(isinstance(x["instruments"],list),"Invalid official instrument matches")
-            selected.add(aid)
+            if aid not in archived: selected.add(aid)
+    require({a["id"] for a in queue if a["id"] not in archived}<=seen,
+            "Official candidate universe changed since audit")
     return selected
 
 def validate(doc,queue):
@@ -217,16 +225,20 @@ def process(queue,prior=None,batch=MAX_BATCH,checker=inspect,delay=15,
             continue
         try:
             previous=dt.datetime.fromisoformat(r["checked_at"])
+            require(previous.tzinfo is not None,"Discovery timestamp must include UTC offset")
             age=now-previous.astimezone(dt.timezone.utc)
         except (ValueError,KeyError,TypeError,AttributeError):
             age=dt.timedelta(days=1)
         if age>=dt.timedelta(minutes=90):
-            retries.append(a)
-    # Prioritize official instruments only as scheduling hints, not identity proof.
+            retries.append((age,a))
+    # Official Spot symbols are hints, never CoinGecko identity proofs.
+    # Oldest failed probes first: rechecking only low ranks forever starves
+    # other known matches whenever APIs remain rate-limited.
     unseen.sort(key=lambda a:(a["id"] not in preferred,a["rank"]))
-    retries.sort(key=lambda a:(a["id"] not in preferred,a["rank"]))
+    retries.sort(key=lambda item:(-item[0].total_seconds(),
+                                  item[1]["id"] not in preferred,item[1]["rank"]))
     retry_limit=min(len(retries),max(1,batch//3)) if unseen else batch
-    waiting=[*retries[:retry_limit],*unseen[:batch-retry_limit]]
+    waiting=[*(a for _,a in retries[:retry_limit]),*unseen[:batch-retry_limit]]
     records={x["id"]:x for x in doc["results"]}
     for i,a in enumerate(waiting[:batch]):
         if i and delay:time.sleep(delay)
