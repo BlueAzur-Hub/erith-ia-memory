@@ -36,11 +36,11 @@ jobs:
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py
           python public/agent_crypto_erith_ia/tools/native_bitget_month_test.py
           python public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py --plan
-      - name: Download proven exact-ID native Bitget full September Spot months
+      - name: Collect newest missing fully closed native Bitget month, exact IDs only
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
-          python public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py --collect --month 2026-09 --limit 3
+          python public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py --collect --month auto --lookback-months 12 --limit 3
       - name: Guarantee source ZIPs never land in Git history or trading app
         if: always()
         run: |

@@ -256,6 +256,7 @@ def build(catalog,exact,official,tags,metadata=release_info,downloader=download)
           "pair":asset["pair"],"quote":"USDT","month":source["month"],
           "months":months,"file":name,"sha256":digest(raw),"bytes":len(raw),
           "native_1m_count":len(source["rows"]),
+          "total_verified_1m_count":sum(len(x["rows"]) for x in collections[cid]),
           "source_zip_sha256":source["source_zip_sha256"],
           "release":source["release"],
           "first_open_ms":view["first_open_ms"],

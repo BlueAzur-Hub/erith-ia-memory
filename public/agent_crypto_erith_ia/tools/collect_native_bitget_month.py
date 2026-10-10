@@ -256,30 +256,89 @@ def publish(asset,month,folder,manifest):
         "--latest=false"],check=True,timeout=180)
     return tag
 
+
+def latest_closed_month(now=None):
+    """Latest entirely closed UTC calendar month, never the current partial month."""
+    now=now or dt.datetime.now(dt.timezone.utc)
+    require(now.tzinfo is not None,"Need timezone-aware UTC clock")
+    current=now.astimezone(dt.timezone.utc).replace(
+        day=1,hour=0,minute=0,second=0,microsecond=0)
+    return (current-dt.timedelta(days=1)).strftime("%Y-%m")
+
+def previous_month(month):
+    require(MONTH.fullmatch(month) is not None,"Unsafe source month")
+    year,value=map(int,month.split("-"))
+    year,value=(year-1,12) if value==1 else (year,value-1)
+    require(year>=2000,"Out of supported historical range")
+    return f"{year:04d}-{value:02d}"
+
+def published_bitget_tags():
+    """Only existing immutable Release tags are scheduling hints, not proof."""
+    proc=subprocess.run(["gh","release","list","--limit","1000",
+        "--json","tagName,isDraft"],check=True,capture_output=True,
+        text=True,timeout=45)
+    items=json.loads(proc.stdout)
+    require(isinstance(items,list) and len(items)<1000,
+            "Release inventory truncated: refuse misleading backfill plan")
+    require(all(isinstance(item,dict) for item in items),
+            "Malformed source Release inventory")
+    return {item["tagName"] for item in items
+            if not item.get("isDraft") and
+            isinstance(item.get("tagName"),str) and
+            item["tagName"].startswith("crypto-spot-bitget-")}
+
+def choose_missing_month(assets,tags,now=None,lookback=12):
+    """Newest missing closed month among exact-ID assets; retry holes, never infer genesis."""
+    require(assets and 1<=lookback<=12,"Unsafe backfill window")
+    month=latest_closed_month(now)
+    present=set(tags)
+    for _ in range(lookback):
+        if any(release_tag(asset,month) not in present for asset in assets):
+            return month
+        month=previous_month(month)
+    return None
+
 def main():
     cli=argparse.ArgumentParser(description=__doc__)
     cli.add_argument("--plan",action="store_true")
     cli.add_argument("--collect",action="store_true")
-    cli.add_argument("--month",default="2026-09")
+    cli.add_argument("--month",default="auto",
+                     help="Closed YYYY-MM or auto: newest missing closed month")
+    cli.add_argument("--lookback-months",type=int,default=12)
     cli.add_argument("--limit",type=int,default=MAX_ASSETS)
     args=cli.parse_args()
     require(args.plan != args.collect,"Choose --plan or --collect")
-    require(1<=args.limit<=MAX_ASSETS,"Unsafe asset limit")
-    bounds(args.month)
+    require(1<=args.limit<=MAX_ASSETS and 1<=args.lookback_months<=12,
+            "Unsafe collection or backfill limit")
+    require(args.month=="auto" or MONTH.fullmatch(args.month) is not None,
+            "Unsafe source month")
     cat=json.loads(proof.CATALOG.read_text())
     ex=json.loads(proof.EXACT.read_text())
     spot=json.loads(proof.INSTRUMENTS.read_text())
     selected=proof.candidates(cat,ex,spot)[:args.limit]
     if args.plan:
-        print("BITGET NATIVE MONTH PLAN "+json.dumps({"month":args.month,
+        month=latest_closed_month() if args.month=="auto" else args.month
+        bounds(month)
+        print("BITGET NATIVE MONTH PLAN "+json.dumps({"month":month,
+           "selection":"newest_missing_requires_release_inventory" if args.month=="auto"
+                        else "explicit_closed_month",
+           "lookback_months":args.lookback_months,
            "assets":selected,"max_pages_each":MAX_PAGES,"archives_published":0},
            sort_keys=True),flush=True)
         return
     require(os.getenv("GITHUB_ACTIONS")=="true" and os.getenv("GH_TOKEN"),
             "Native month collection may run only under authorized GitHub Actions")
+    month=(choose_missing_month(selected,published_bitget_tags(),
+                                lookback=args.lookback_months)
+           if args.month=="auto" else args.month)
+    if month is None:
+        print("BITGET NATIVE MONTH NOOP: all selected exact-ID assets have "
+              "Release tags in the bounded closed-month window",flush=True)
+        return
+    bounds(month)
     done=[];failed=[]
     for asset in selected:
-        tag=release_tag(asset,args.month)
+        tag=release_tag(asset,month)
         present=subprocess.run(["gh","release","view",tag,"--json","tagName"],
                 capture_output=True,timeout=35).returncode==0
         if present:
@@ -287,8 +346,8 @@ def main():
             continue
         with tempfile.TemporaryDirectory(prefix="bitget-real-month-") as tmp:
             try:
-                manifest=execute_one(asset,args.month,Path(tmp))
-                tag=publish(asset,args.month,Path(tmp),manifest)
+                manifest=execute_one(asset,month,Path(tmp))
+                tag=publish(asset,month,Path(tmp),manifest)
                 done.append({"id":asset["id"],"release":tag,"state":"new_verified",
                     "candles":manifest["candles"]})
             except (OSError,ValueError,RuntimeError,TypeError,OverflowError,
@@ -298,7 +357,7 @@ def main():
         print("BITGET SOURCE MONTH STATUS "+json.dumps({
             "verified":len(done),"unavailable":len(failed),
             "last":asset["id"]},sort_keys=True),flush=True)
-    print("BITGET NATIVE MONTH SUMMARY "+json.dumps({"month":args.month,
+    print("BITGET NATIVE MONTH SUMMARY "+json.dumps({"month":month,
           "verified":done,"unavailable":failed,"catalog_updated":False},
           sort_keys=True),flush=True)
 

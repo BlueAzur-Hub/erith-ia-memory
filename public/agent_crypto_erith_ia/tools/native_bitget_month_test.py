@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Offline proof: a Bitget month is exactly all native one-minute SPOT rows."""
 import csv
+import datetime as dt
 import hashlib
 import io
 import json
@@ -116,6 +117,26 @@ class NativeBitgetMonthTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Unsafe native"):
             m.fetch_page("ATOMUSDT",start,end,101,
                          opener=fake_open,endpoint=m.HISTORY_API)
+
+
+    def test_automatic_closed_month_skips_published_tags_and_walks_back(self):
+        now=dt.datetime(2026,10,10,17,0,tzinfo=dt.timezone.utc)
+        self.assertEqual(m.latest_closed_month(now),"2026-09")
+        self.assertEqual(m.previous_month("2026-01"),"2025-12")
+        sep={m.release_tag(ASSET,"2026-09")}
+        self.assertEqual(m.choose_missing_month([ASSET],sep,now),"2026-08")
+        aug=sep|{m.release_tag(ASSET,"2026-08")}
+        self.assertEqual(m.choose_missing_month([ASSET],aug,now),"2026-07")
+        months=set()
+        month="2026-09"
+        for _ in range(12):
+            months.add(m.release_tag(ASSET,month))
+            month=m.previous_month(month)
+        self.assertIsNone(m.choose_missing_month([ASSET],months,now))
+        with self.assertRaisesRegex(ValueError,"backfill window"):
+            m.choose_missing_month([ASSET],sep,now,lookback=13)
+        with self.assertRaisesRegex(ValueError,"closed"):
+            m.bounds(dt.datetime.now(dt.timezone.utc).strftime("%Y-%m"))
 
     def test_closed_month_and_release_identity(self):
         self.assertEqual(m.bounds("2026-09")[2],43200)
