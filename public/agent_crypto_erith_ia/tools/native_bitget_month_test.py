@@ -168,12 +168,26 @@ class NativeBitgetMonthTests(unittest.TestCase):
         alt=json.loads(m.proof.EXACT.read_text())
         venue=json.loads(m.proof.INSTRUMENTS.read_text())
         qualified=m.proof.candidates(src,alt,venue)
-        self.assertEqual(len(qualified),3)
+        exact_ids={a["id"] for a in qualified}
+        self.assertTrue({"cosmos","lighter","stable-2"}<=exact_ids)
+        self.assertEqual(len(exact_ids),len(qualified))
         month,batch=m.select_pending_assets(qualified,set(),
                  dt.datetime(2026,10,10,tzinfo=dt.timezone.utc),limit=3)
         self.assertEqual(month,"2026-09")
-        self.assertEqual({a["id"] for a in batch},
-                         {"cosmos","lighter","stable-2"})
+        self.assertEqual(len(batch),3)
+        self.assertTrue({a["id"] for a in batch}<=exact_ids)
+
+    def test_automatic_collect_is_wired_to_new_exact_id_evidence_only(self):
+        """New proof runs the existing verified collector; negatives never promote."""
+        workflow=Path(__file__).resolve().parents[3] / ".github/workflows/agent-crypto-bitget-native-monthly.yml"
+        text=workflow.read_text(encoding="utf-8")
+        self.assertIn("'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json'",text)
+        self.assertIn("'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json'",text)
+        self.assertIn("new_ids=updated_ids-old_ids",text)
+        self.assertIn("permitted=bool(new_ids)",text)
+        self.assertIn("steps.eligible.outputs.collect == 'true'",text)
+        self.assertIn("--collect --month auto --lookback-months 12 --limit 3",text)
+        self.assertIn("fetch-depth: 2",text)
 
     def test_closed_month_and_release_identity(self):
         self.assertEqual(m.bounds("2026-09")[2],43200)

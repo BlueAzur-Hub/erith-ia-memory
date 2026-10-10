@@ -11,13 +11,20 @@ on:
       - '.github/workflows/agent-crypto-bitget-native-monthly.yml'
       - 'public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py'
       - 'public/agent_crypto_erith_ia/tools/native_bitget_month_test.py'
+      # Trigger only after a newly persisted exact-ID venue proof or
+      # independently confirmed Spot instrument; the gate below ignores
+      # changes that do not increase the actually qualified set.
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json'
   workflow_dispatch:
   schedule:
     - cron: '29 5 * * *'
 permissions:
   contents: write
 concurrency:
-  group: agent-crypto-bitget-immutable-native-month
+  # PR checks are read-only; let them run without blocking the production
+  # native-month publisher. All production events stay strictly serialized.
+  group: ${{ github.event_name == 'pull_request' && format('agent-crypto-bitget-pr-{0}', github.event.pull_request.number) || 'agent-crypto-bitget-immutable-native-month' }}
   cancel-in-progress: false
 jobs:
   verify-and-collect:
@@ -27,6 +34,8 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -36,8 +45,52 @@ jobs:
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py
           python public/agent_crypto_erith_ia/tools/native_bitget_month_test.py
           python public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py --plan
+      - name: Only auto-collect for newly proven exact-ID Bitget assets
+        id: eligible
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,subprocess,sys
+          sys.path.insert(0,'public/agent_crypto_erith_ia/tools')
+          import probe_native_bitget_spot as proof
+          workflow='.github/workflows/agent-crypto-bitget-native-monthly.yml'
+          collector='public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py'
+          ledger='public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json'
+          official='public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json'
+          changed=set(subprocess.check_output(
+              ['git','diff','--name-only','HEAD^','HEAD'],text=True).splitlines())
+          permitted=False
+          new_ids=set()
+          if workflow in changed or collector in changed:
+              # A reviewed code change triggers one bounded collection.
+              permitted=True
+          elif ledger in changed or official in changed:
+              catalog=json.loads(proof.CATALOG.read_text())
+              latest_ledger=json.loads(proof.EXACT.read_text())
+              latest_official=json.loads(proof.INSTRUMENTS.read_text())
+              previous_ledger=(json.loads(subprocess.check_output(
+                  ['git','show','HEAD^:'+ledger],text=True))
+                  if ledger in changed else latest_ledger)
+              previous_official=(json.loads(subprocess.check_output(
+                  ['git','show','HEAD^:'+official],text=True))
+                  if official in changed else latest_official)
+              old_ids={a['id'] for a in proof.candidates(
+                  catalog,previous_ledger,previous_official)}
+              updated_ids={a['id'] for a in proof.candidates(
+                  catalog,latest_ledger,latest_official)}
+              new_ids=updated_ids-old_ids
+              permitted=bool(new_ids)
+          print('BITGET NEW EXACT-ID SOURCE OWNERS',sorted(new_ids),
+                'approved',permitted,flush=True)
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as file:
+              file.write('collect='+str(permitted).lower()+'\n')
+          PY
       - name: Collect newest missing fully closed native Bitget month, exact IDs only
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        if: >-
+          github.event_name != 'pull_request' &&
+          github.ref == 'refs/heads/main' &&
+          (github.event_name != 'push' || steps.eligible.outputs.collect == 'true')
         run: |
           set -euo pipefail
           python public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py --collect --month auto --lookback-months 12 --limit 3
