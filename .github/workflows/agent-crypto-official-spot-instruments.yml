@@ -3,14 +3,14 @@ on:
   pull_request:
     paths:
       - '.github/workflows/agent-crypto-official-spot-instruments.yml'
-      - 'public/agent_crypto_erith_ia/tools/audit_spot_instruments.py'
-      - 'public/agent_crypto_erith_ia/tools/spot_instrument_audit_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_spot_instruments_test.py'
   push:
     branches: [main]
     paths:
       - '.github/workflows/agent-crypto-official-spot-instruments.yml'
-      - 'public/agent_crypto_erith_ia/tools/audit_spot_instruments.py'
-      - 'public/agent_crypto_erith_ia/tools/spot_instrument_audit_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_spot_instruments_test.py'
   workflow_dispatch:
   schedule:
     - cron: '17 8 * * *'
@@ -30,35 +30,38 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Verify parser, invalid symbols and exact ranked Top250
+      - name: Validate official venue parsers and protected ranked Top250
         run: |
           set -euo pipefail
-          python -m py_compile public/agent_crypto_erith_ia/tools/audit_spot_instruments.py
-          python public/agent_crypto_erith_ia/tools/spot_instrument_audit_test.py
-          python public/agent_crypto_erith_ia/tools/audit_spot_instruments.py --plan
-      - name: Read only official OKX and Bitget Spot instruments
+          python -m py_compile public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py
+          python public/agent_crypto_erith_ia/tools/historical_spot_instruments_test.py
+          python public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py --plan
+      - name: Read exactly two official public Spot instrument inventories
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
-          python public/agent_crypto_erith_ia/tools/audit_spot_instruments.py --probe
+          python public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py --probe
           python - <<'PY'
           import json
           from pathlib import Path
           p=Path('public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json')
           r=json.loads(p.read_text())
-          assert r['schema']=='aerith.public.ohlcv.spot.top250.instrument-audit.v1'
-          assert r['ranked']==250 and r['remaining']==250-r['archived_assets']
-          assert r['none_are_archive_claims'] is True
-          assert r['symbol_only_not_identity_proof'] is True
-          assert len(r['assets'])==r['remaining']
-          assert all('months' not in asset and 'series' not in asset for asset in r['assets'])
-          for a in r['assets']:
-              for m in a['instruments']:
-                  assert m['exact_coingecko_id_proven'] is False
-                  assert m['full_native_1m_month_proven'] is False
-          print('READ-ONLY SPOT INSTRUMENT PROOF',r['symbol_candidate_assets'],flush=True)
+          assert r['schema']=='aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1'
+          assert r['ranked']==250 and r['candidate_count']==250-r['archived_assets_at_audit']
+          assert r['no_orders'] is True and r['no_synthetic_candles'] is True
+          assert len(r['assets'])==r['candidate_count']
+          assert any(v['status']=='success' for v in r['markets'].values())
+          for asset in r['assets']:
+              assert asset['archived'] is False
+              assert asset['coin_id_confirmed'] is False
+              assert asset['native_1m_month_confirmed'] is False
+              for instrument in asset['instruments']:
+                  assert instrument['exchange_instrument_confirmed'] is True
+                  assert instrument['coin_id_confirmed'] is False
+                  assert instrument['native_1m_month_confirmed'] is False
+          print('OFFICIAL SPOT SYMBOL-CANDIDATES',r['with_spot_instrument'],flush=True)
           PY
-      - name: Publish audit metadata alone, never historical candles
+      - name: Commit only venue instrument metadata
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
@@ -66,15 +69,15 @@ jobs:
           git add -- "$path"
           git diff --cached --check
           if git diff --cached --quiet; then
-            echo 'NOOP: instrument census unchanged'
+            echo 'NOOP: public Spot instrument audit unchanged'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Persist official Spot instrument candidates without identity approvals'
+          git commit -m 'Publish official Spot pair candidates without fabricating identities'
           git pull --rebase origin main
           git push origin HEAD:main
-      - name: Guard existing vault, trading desk, bridge and core
+      - name: Protect source archives, Trader, Bridge and Core
         if: always()
         run: |
           set -euo pipefail
