@@ -5,12 +5,16 @@ on:
       - '.github/workflows/agent-crypto-top250-alt-venues.yml'
       - 'public/agent_crypto_erith_ia/tools/discover_historical_spot_venues.py'
       - 'public/agent_crypto_erith_ia/tools/historical_spot_venues_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_spot_instruments_test.py'
   push:
     branches: [main]
     paths:
       - '.github/workflows/agent-crypto-top250-alt-venues.yml'
       - 'public/agent_crypto_erith_ia/tools/discover_historical_spot_venues.py'
       - 'public/agent_crypto_erith_ia/tools/historical_spot_venues_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_spot_instruments_test.py'
   workflow_dispatch:
   schedule:
     - cron: '6,21,36,51 * * * *'
@@ -35,19 +39,39 @@ jobs:
           set -euo pipefail
           python -m py_compile public/agent_crypto_erith_ia/tools/discover_historical_spot_venues.py
           python public/agent_crypto_erith_ia/tools/historical_spot_venues_test.py
+          python -m py_compile public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py
+          python public/agent_crypto_erith_ia/tools/historical_spot_instruments_test.py
           python public/agent_crypto_erith_ia/tools/discover_historical_spot_venues.py --plan
+          python public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py --plan
       - name: Read CoinGecko exact-ID OKX and Bitget market tickers in bounded batches
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           python public/agent_crypto_erith_ia/tools/discover_historical_spot_venues.py \
             --probe --batch-size 12 --sleep 15
+      - name: Collect official public OKX and Bitget Spot instruments without identity claims
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          # Schedule an independent venue instrument census once per day.
+          # The existing CoinGecko ticker workflow still runs every 15 min.
+          if [[ "$GITHUB_EVENT_NAME" == schedule ]]; then
+            hour=$(date -u +%H)
+            minute=$(date -u +%M)
+            if [[ "$hour" != "06" || "$minute" -ge 15 ]]; then
+              echo "OFFICIAL INSTRUMENT CENSUS: daily window not reached"
+              exit 0
+            fi
+          fi
+          python public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py --probe
       - name: Persist market candidates only, no actual archive claims
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           path=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json
+          instruments=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json
           git add -- "$path"
+          if [[ -f "$instruments" ]]; then git add -- "$instruments"; fi
           git diff --cached --check
           if git diff --cached --quiet; then
             echo 'NOOP: no new market candidates checked'
