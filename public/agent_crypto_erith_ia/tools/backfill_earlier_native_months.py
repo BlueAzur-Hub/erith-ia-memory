@@ -21,7 +21,7 @@ from orchestrate_historical_bulk import month_before, verify_month_output
 CATALOG=bulk.ROOT/"data/historical_archive_prototype/top250_history_catalog/index.json"
 PILOT_IDS=("bitcoin","ethereum")
 MAX_ASSETS=2
-MAX_MONTHS=2
+MAX_MONTHS=4
 MONTH=re.compile(r"^20\d{2}-(?:0[1-9]|1[0-2])$")
 
 def need(ok,reason):
