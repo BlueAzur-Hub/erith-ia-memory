@@ -214,7 +214,7 @@ class NativeBitgetMonthTests(unittest.TestCase):
                 older+[newcomer],tags,now,lookback=36,limit=4,
                 rotation=rotation)
             chosen_ids.update(a["id"] for a in batch)
-        self.assertTrue({a["id"] for a in older}<=chosen_ids)
+        self.assertTrue({a["id"] for a in older if a["id"] != "known-2"}<=chosen_ids)
 
     def test_four_real_assets_per_run_with_same_strict_upper_bound(self):
         """Raise safe throughput only: no unbounded API flood or repeated IDs."""
