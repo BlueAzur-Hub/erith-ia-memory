@@ -15,7 +15,7 @@ on:
   schedule:
     # Reuse the same small, source-verified 2-month pilot every two hours;
     # immutable Releases and a serial lock prevent duplicate writes.
-    - cron: '7 */2 * * *'
+    - cron: '7 * * * *'
 permissions:
   contents: write
 concurrency:
@@ -38,11 +38,11 @@ jobs:
           python -m py_compile public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py
           python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py
           python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py --plan
-      - name: Acquire two older fully certified Binance native 1m months
+      - name: Acquire four older fully certified Binance native 1m months
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
-          python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py --collect --months 2
+          python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py --collect --months 4
       - name: Assert original archives and protected trading code untouched
         if: always()
         run: |
