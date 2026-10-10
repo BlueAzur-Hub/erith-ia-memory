@@ -15,6 +15,7 @@ BASE=ROOT/"data/historical_archive_prototype"
 VENUE=BASE/"top250-venue-audit.json"
 CATALOG=BASE/"top250_history_catalog/index.json"
 OUTPUT=BASE/"top250-alt-market-evidence.json"
+OFFICIAL=BASE/"top250-official-spot-instruments.json"
 SCHEMA="aerith.public.ohlcv.spot.top250.alt-market-discovery.v1"
 EXCHANGES=("okx","bitget")
 QUOTES={"USDT":"tether","USDC":"usd-coin"}
@@ -98,41 +99,81 @@ def fetch_exchange(coin_id,exchange,page):
         return obj["tickers"]
 
 def inspect(asset,getter=fetch,exchange_getter=None):
-    matches=[];pages=0
-    try:
-        for exchange in EXCHANGES:
+    """Retain only complete venue-specific exact-ID proofs.
+
+    One exchange's 429 must not discard an independently proven instrument
+    from the other exchange. It never turns the failed venue into a negative.
+    """
+    matches=[];pages=0;unavailable=False;incomplete=False
+    errors=(OSError,ValueError,RuntimeError,TypeError,KeyError,json.JSONDecodeError)
+    for exchange in EXCHANGES:
+        local=[];venue_error=False
+        try:
             for page in (1,2):
                 try:
                     rows=getter(asset["id"],exchange,page)
-                except (OSError,ValueError,RuntimeError,TypeError,KeyError,json.JSONDecodeError):
+                except errors:
                     if exchange_getter is None or page!=1:
                         raise
-                    # Retry through a different official exact-ID API route.
                     rows=exchange_getter(asset["id"],exchange,page)
-                    pages+=1
-                    matches.extend(exact_candidates(rows,asset,exchange))
-                    if len(rows)>=100:
-                        return "source_pagination_incomplete",[],pages
-                    break
                 pages+=1
-                local=exact_candidates(rows,asset,exchange)
-                matches.extend(local)
+                local.extend(exact_candidates(rows,asset,exchange))
                 if len(rows)<100:
                     if not local and page==1 and exchange_getter is not None:
-                        # A previously absent market must be checked against
-                        # the independent CoinGecko exchange/coin-ID index.
-                        backup=exchange_getter(asset["id"],exchange,1)
+                        backup=exchange_getter(asset["id"],exchange,page)
                         pages+=1
-                        matches.extend(exact_candidates(backup,asset,exchange))
+                        local.extend(exact_candidates(backup,asset,exchange))
                         if len(backup)>=100:
-                            return "source_pagination_incomplete",[],pages
+                            incomplete=True
+                            venue_error=True
                     break
             else:
-                return "source_pagination_incomplete",[],pages
-        return ("exact_id_market_candidates" if matches else "market_not_confirmed",
-                sorted(matches,key=lambda x:(x["exchange"],x["quote"])),pages)
-    except (OSError,ValueError,RuntimeError,TypeError,KeyError,json.JSONDecodeError):
+                # No positive proof survives truncated pagination for this venue.
+                incomplete=True
+                venue_error=True
+        except errors:
+            unavailable=True
+            venue_error=True
+        if not venue_error:
+            matches.extend(local)
+    if matches:
+        # All included venue proofs were independently completed and checked.
+        seen=set();unique=[]
+        for x in sorted(matches,key=lambda v:(v["exchange"],v["quote"])):
+            k=(x["exchange"],x["quote"],x["market_pair_candidate"])
+            if k not in seen:
+                seen.add(k);unique.append(x)
+        return "exact_id_market_candidates",unique,pages
+    if incomplete:
+        return "source_pagination_incomplete",[],pages
+    if unavailable:
         return "source_unavailable",[],pages
+    return "market_not_confirmed",[],pages
+
+def official_priority(queue,archived,path=OFFICIAL):
+    """A symbol-only instrument is a scheduling hint, NEVER an ID approval."""
+    if not Path(path).is_file():
+        return set()
+    doc=json.loads(Path(path).read_text(encoding="utf-8"))
+    if (doc.get("schema")!="aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1"
+        or doc.get("archived_assets_at_audit")!=len(archived)):
+        return set()
+    rows=doc.get("assets")
+    require(doc.get("ranked")==250 and isinstance(rows,list)
+            and len(rows)==250-len(archived),
+            "Official candidate inventory incomplete")
+    byid={a["id"]:a for a in queue}
+    selected=set()
+    for x in rows:
+        aid=x.get("id")
+        require(aid in byid and aid not in archived
+                and x.get("rank")==byid[aid]["rank"]
+                and x.get("symbol")==byid[aid]["symbol"],
+                "Instrument scheduling hint does not belong to ranked Top250")
+        if x.get("instruments"):
+            require(isinstance(x["instruments"],list),"Invalid official instrument matches")
+            selected.add(aid)
+    return selected
 
 def validate(doc,queue):
     require(doc.get("schema")==SCHEMA and isinstance(doc.get("results"),list),
@@ -159,7 +200,8 @@ def validate(doc,queue):
                     "Unverified market or source ownership")
     return seen
 
-def process(queue,prior=None,batch=MAX_BATCH,checker=inspect,delay=15,excluded=frozenset()):
+def process(queue,prior=None,batch=MAX_BATCH,checker=inspect,delay=15,
+            excluded=frozenset(),preferred=frozenset()):
     require(1<=batch<=MAX_BATCH and 0<=delay<=30,"Unbounded discovery batch")
     doc=prior or {"schema":SCHEMA,"results":[]};checked=validate(doc,queue)
     waiting=[a for a in queue if a["id"] not in excluded and a["id"] not in checked]
@@ -167,6 +209,8 @@ def process(queue,prior=None,batch=MAX_BATCH,checker=inspect,delay=15,excluded=f
         retriable={x["id"] for x in doc["results"] if x["status"] in
                    ("source_unavailable","source_pagination_incomplete")}
         waiting=[a for a in queue if a["id"] not in excluded and a["id"] in retriable]
+    # Rank symbol-matched official instruments first, without approving IDs.
+    waiting.sort(key=lambda a:(a["id"] not in preferred,a["rank"]))
     records={x["id"]:x for x in doc["results"]}
     for i,a in enumerate(waiting[:batch]):
         if i and delay:time.sleep(delay)
@@ -204,9 +248,13 @@ def main():
     if args.plan:
         print("ALT MARKET PLAN "+json.dumps({"ranked":250,"archived":len(archived),
               "candidate_count":250-len(archived),
-              "checked":sum(x["id"] not in archived for x in prior["results"]) if prior else 0}))
+              "checked":sum(x["id"] not in archived for x in prior["results"]) if prior else 0,
+              "official_priority_assets":len(official_priority(queue,archived))}))
         return
-    result=process(queue,prior,args.batch_size,checker=lambda a:inspect(a,exchange_getter=fetch_exchange),delay=args.sleep,excluded=archived)
+    priority=official_priority(queue,archived)
+    result=process(queue,prior,args.batch_size,
+                   checker=lambda a:inspect(a,exchange_getter=fetch_exchange),
+                   delay=args.sleep,excluded=archived,preferred=priority)
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     tmp=OUTPUT.with_suffix(".tmp")
     tmp.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")

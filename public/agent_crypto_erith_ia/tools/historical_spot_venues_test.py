@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Offline fail-closed OKX/Bitget candidate identity checks."""
 import unittest
+import json
+import tempfile
+from pathlib import Path
 import discover_historical_spot_venues as m
 
 COIN={"id":"okb","symbol":"OKB","rank":42,"name":"OKB"}
@@ -32,10 +35,15 @@ class AlternativeMarketTests(unittest.TestCase):
             if venue=="bitget":raise OSError("API blocked")
             return [ticker()]
         status,proof,_=m.inspect(COIN,getter)
-        self.assertEqual(status,"source_unavailable")
-        self.assertEqual(proof,[])
+        # A complete OKX exact-ID proof remains valid even when Bitget is down.
+        self.assertEqual(status,"exact_id_market_candidates")
+        self.assertEqual(len(proof),1)
+        self.assertEqual(proof[0]["exchange"],"okx")
         status,proof,_=m.inspect(COIN,lambda *args:[ticker()]*100)
         self.assertEqual(status,"source_pagination_incomplete")
+        self.assertEqual(proof,[])
+        status,proof,_=m.inspect(COIN,lambda *args:(_ for _ in ()).throw(OSError("both unavailable")))
+        self.assertEqual(status,"source_unavailable")
         self.assertEqual(proof,[])
     def test_exchange_fallback_only_approves_explicit_original_coin_id(self):
         def primary(coin,venue,page):return []
@@ -63,6 +71,45 @@ class AlternativeMarketTests(unittest.TestCase):
              lambda coin,venue,page:(_ for _ in ()).throw(OSError("second unavailable")))
         self.assertEqual(status,"source_unavailable")
         self.assertFalse(proof)
+
+    def test_official_instrument_priority_is_only_a_work_queue_hint(self):
+        queue=[{"id":"asset-"+str(i),"rank":i,"symbol":"SYM"+str(i),"name":"Test"}
+               for i in range(1,251)]
+        archived={"asset-"+str(i) for i in range(3,251)}
+        payload={"schema":"aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+                 "ranked":250,"archived_assets_at_audit":248,
+                 "assets":[{"id":"asset-1","rank":1,"symbol":"SYM1","instruments":[]},
+                           {"id":"asset-2","rank":2,"symbol":"SYM2",
+                            "instruments":[{"exchange":"okx","instrument":"SYM2-USDT"}]}]}
+        with tempfile.TemporaryDirectory() as d:
+            path=Path(d)/"spot.json"
+            path.write_text(json.dumps(payload))
+            preferred=m.official_priority(queue,archived,path)
+            self.assertEqual(preferred,{"asset-2"})
+            selected=[]
+            def checked(asset):
+                selected.append(asset["id"])
+                return "market_not_confirmed",[],1
+            result=m.process(queue,batch=1,checker=checked,delay=0,
+                             excluded=archived,preferred=preferred)
+            self.assertEqual(selected,["asset-2"])
+            self.assertEqual(result["market_candidate_count"],0)
+            payload["assets"][1]["symbol"]="TAMPERED"
+            path.write_text(json.dumps(payload))
+            with self.assertRaisesRegex(ValueError,"does not belong"):
+                m.official_priority(queue,archived,path)
+            payload["archived_assets_at_audit"]=247
+            path.write_text(json.dumps(payload))
+            self.assertEqual(m.official_priority(queue,archived,path),set())
+
+    def test_failing_bitget_never_erases_okx_source_proof(self):
+        def get(coin,venue,page):
+            if venue=="bitget":raise OSError("CoinGecko unavailable")
+            return [ticker()]
+        result=m.inspect(COIN,get)
+        self.assertEqual(result[0],"exact_id_market_candidates")
+        self.assertEqual(result[1][0]["market_pair_candidate"],"OKB-USDT")
+        self.assertTrue(all(not x["native_1m_month_confirmed"] for x in result[1]))
 
     def test_batch_is_bounded_resume_and_has_no_archive_claim(self):
         other={"id":"monero","symbol":"XMR","rank":14,"name":"Monero"}
