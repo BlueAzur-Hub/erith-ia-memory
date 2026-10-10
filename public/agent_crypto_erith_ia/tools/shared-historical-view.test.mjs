@@ -64,6 +64,7 @@ function harness(change=()=>{}){
  const document={
   currentScript:{src:url+"/erith-ia-memory/public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js"},
   getElementById:element,
+  addEventListener(){},
   createElement:()=>element("created"+nodes.size)
  };
  const fetchMock=async href=>{
