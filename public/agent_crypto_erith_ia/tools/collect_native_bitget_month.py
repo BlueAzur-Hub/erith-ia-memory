@@ -374,7 +374,8 @@ def main():
     if args.month=="auto":
         month,selected=select_pending_assets(
             qualified,published_bitget_tags(),
-            lookback=args.lookback_months,limit=args.limit)
+            lookback=args.lookback_months,limit=args.limit,
+            rotation=int(os.environ.get("GITHUB_RUN_NUMBER","0")))
     else:
         month=args.month
     if month is None:
