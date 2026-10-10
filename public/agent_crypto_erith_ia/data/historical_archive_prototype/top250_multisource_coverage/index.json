@@ -2,10 +2,10 @@
   "schema": "aerith.public.ohlcv.top250.federated-native-archives.v1",
   "ranked": 250,
   "quote": "USDT",
-  "archived_assets": 130,
+  "archived_assets": 131,
   "binance_archived_assets": 109,
-  "bitget_archived_assets": 21,
-  "native_1m_candles": 131404320,
+  "bitget_archived_assets": 22,
+  "native_1m_candles": 131447520,
   "first_trade_date_known": false,
   "is_live": false,
   "note": "Two independent complete-month source formats. Native Bitget 7 fields; no synthetic trade count, no USDT=>USD.",
@@ -20,11 +20,11 @@
     },
     {
       "top": 100,
-      "archived": 64
+      "archived": 65
     },
     {
       "top": 250,
-      "archived": 130
+      "archived": 131
     }
   ],
   "assets": [
@@ -783,10 +783,10 @@
       "rank": 76,
       "symbol": "POL",
       "name": "POL (ex-MATIC)",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "kucoin-shares",
