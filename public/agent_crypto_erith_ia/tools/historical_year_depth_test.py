@@ -11,9 +11,10 @@ class TruthfulDepthTests(unittest.TestCase):
         return json.loads(years.CATALOG.read_text())
 
     def test_real_top250_one_year_truth_without_inception_claim(self):
-        result=years.build(self.catalog())
+        source=self.catalog()
+        result=years.build(source)
         self.assertEqual(len(result["assets"]),250)
-        self.assertEqual(result["archive_assets"],self.catalog()["archived_assets"])
+        self.assertEqual(result["archive_assets"],source["archived_assets"])
         self.assertGreaterEqual(result["assets_with_at_least_12_consecutive_closed_months"],25)
         self.assertLessEqual(result["assets_with_at_least_12_consecutive_closed_months"],
                              result["archive_assets"])
@@ -23,8 +24,14 @@ class TruthfulDepthTests(unittest.TestCase):
         self.assertTrue(result["month_is_not_token_creation_date"])
         btc=result["assets"][0]
         self.assertEqual(btc["id"],"bitcoin")
-        self.assertEqual(btc["first_verified_closed_month"],"2024-08")
-        self.assertEqual(btc["longest_contiguous_months"],26)
+        verified=next(a for a in source["assets"] if a["id"]=="bitcoin")
+        months=[item["month"] for item in verified["months"]]
+        self.assertGreaterEqual(len(months),24)
+        self.assertEqual(btc["first_verified_closed_month"],min(months))
+        self.assertEqual(btc["last_verified_closed_month"],max(months))
+        self.assertEqual(btc["native_minutes"],verified["candles"])
+        self.assertEqual(btc["longest_contiguous_months"],
+                         max(map(len,years.spans(months))))
         self.assertTrue(btc["at_least_24_consecutive_months"])
         self.assertEqual([s["year"] for s in btc["year_shards"]],[2024,2025,2026])
         self.assertFalse(btc["first_exchange_trade_known"])

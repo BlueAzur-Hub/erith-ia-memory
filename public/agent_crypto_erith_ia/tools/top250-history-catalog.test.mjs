@@ -102,3 +102,26 @@ test("the canonical vault mounts both verified readers without editing Trader",(
  assert.match(html,/src="\.\/js\/shared-historical-view\.js"/);
  assert.match(html,/id="vault-year-rows"/);
 });
+
+test("an older independently verified year-depth index never hides newly archived coins",async()=>{
+ const h=harness((file,data)=>{
+  if(file==="year_depth_index.json"){
+   data.archive_assets=104;
+   data.source_catalog_minutes=83676960;
+  }
+ });
+ await ready(h);
+ const result=h.window.SevenTop250Catalog.read();
+ assert.ok(result,"Historical year-depth lag must not hide the verified Top250: "+
+   h.element("top250-status").textContent);
+ assert.equal(result.archived_assets,fixtures.get("top250_multisource_coverage/index.json").archived_assets);
+ assert.match(h.element("top250-status").textContent,/index annuel en synchronisation/);
+});
+test("a future or impossible year-depth source is still rejected",async()=>{
+ const h=harness((file,data)=>{
+  if(file==="year_depth_index.json")data.source_catalog_minutes=9999999999999;
+ });
+ await ready(h);
+ assert.equal(h.window.SevenTop250Catalog.read(),null);
+ assert.match(h.element("top250-status").textContent,/Vérification refusée/);
+});

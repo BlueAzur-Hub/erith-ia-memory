@@ -13,6 +13,9 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_year_depth_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/index.json'
   workflow_dispatch:
+  workflow_run:
+    workflows: ['Agent Crypto Top250 Historical Coverage Catalog']
+    types: [completed]
   schedule:
     - cron: '39 7 * * *'
 permissions:
@@ -22,6 +25,11 @@ concurrency:
   cancel-in-progress: false
 jobs:
   year-depth:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.event != 'pull_request')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
