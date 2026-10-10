@@ -1,7 +1,7 @@
 {
-  "approved_count": 20,
+  "approved_count": 68,
   "candidate_count": 96,
-  "checked_count": 28,
+  "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
   "quote": "USDT",
   "results": [
@@ -484,9 +484,1169 @@
       "rank": 95,
       "status": "identity_not_confirmed",
       "symbol": "CAKE"
+    },
+    {
+      "checked_at": "2026-10-10T00:15:55.201935+00:00",
+      "evidence": [],
+      "id": "injective-protocol",
+      "pages": 1,
+      "pair": "INJUSDT",
+      "rank": 96,
+      "status": "identity_not_confirmed",
+      "symbol": "INJ"
+    },
+    {
+      "checked_at": "2026-10-10T00:16:10.327446+00:00",
+      "evidence": [
+        {
+          "base": "VET",
+          "coin_id": "vechain",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "vechain",
+          "trade_url": "https://www.binance.com/en/trade/VET_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "vechain",
+      "pages": 1,
+      "pair": "VETUSDT",
+      "rank": 98,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "VET"
+    },
+    {
+      "checked_at": "2026-10-10T00:16:25.469848+00:00",
+      "evidence": [
+        {
+          "base": "DASH",
+          "coin_id": "dash",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "dash",
+          "trade_url": "https://www.binance.com/en/trade/DASH_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "dash",
+      "pages": 1,
+      "pair": "DASHUSDT",
+      "rank": 99,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "DASH"
+    },
+    {
+      "checked_at": "2026-10-10T00:16:40.652705+00:00",
+      "evidence": [
+        {
+          "base": "ETHFI",
+          "coin_id": "ether-fi",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "ether-fi",
+          "trade_url": "https://www.binance.com/en/trade/ETHFI_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "ether-fi",
+      "pages": 1,
+      "pair": "ETHFIUSDT",
+      "rank": 100,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "ETHFI"
+    },
+    {
+      "checked_at": "2026-10-10T00:16:55.804258+00:00",
+      "evidence": [
+        {
+          "base": "PYTH",
+          "coin_id": "pyth-network",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "pyth-network",
+          "trade_url": "https://www.binance.com/en/trade/PYTH_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "pyth-network",
+      "pages": 1,
+      "pair": "PYTHUSDT",
+      "rank": 102,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "PYTH"
+    },
+    {
+      "checked_at": "2026-10-10T00:17:10.929221+00:00",
+      "evidence": [
+        {
+          "base": "RAY",
+          "coin_id": "raydium",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "raydium",
+          "trade_url": "https://www.binance.com/en/trade/RAY_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "raydium",
+      "pages": 1,
+      "pair": "RAYUSDT",
+      "rank": 103,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "RAY"
+    },
+    {
+      "checked_at": "2026-10-10T00:17:26.036187+00:00",
+      "evidence": [
+        {
+          "base": "CRV",
+          "coin_id": "curve-dao-token",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "curve-dao-token",
+          "trade_url": "https://www.binance.com/en/trade/CRV_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "curve-dao-token",
+      "pages": 1,
+      "pair": "CRVUSDT",
+      "rank": 109,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "CRV"
+    },
+    {
+      "checked_at": "2026-10-10T00:17:41.145251+00:00",
+      "evidence": [
+        {
+          "base": "STRK",
+          "coin_id": "starknet",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "starknet",
+          "trade_url": "https://www.binance.com/en/trade/STRK_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "starknet",
+      "pages": 1,
+      "pair": "STRKUSDT",
+      "rank": 112,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "STRK"
+    },
+    {
+      "checked_at": "2026-10-10T00:17:41.412163+00:00",
+      "evidence": [
+        {
+          "base": "TRUMP",
+          "coin_id": "official-trump",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "official-trump",
+          "trade_url": "https://www.binance.com/en/trade/TRUMP_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "official-trump",
+      "pages": 1,
+      "pair": "TRUMPUSDT",
+      "rank": 113,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "TRUMP"
+    },
+    {
+      "checked_at": "2026-10-10T00:17:56.541747+00:00",
+      "evidence": [
+        {
+          "base": "PENGU",
+          "coin_id": "pudgy-penguins",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "pudgy-penguins",
+          "trade_url": "https://www.binance.com/en/trade/PENGU_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "pudgy-penguins",
+      "pages": 1,
+      "pair": "PENGUUSDT",
+      "rank": 115,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "PENGU"
+    },
+    {
+      "checked_at": "2026-10-10T00:18:11.671066+00:00",
+      "evidence": [
+        {
+          "base": "TUSD",
+          "coin_id": "true-usd",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "true-usd",
+          "trade_url": "https://www.binance.com/en/trade/TUSD_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "true-usd",
+      "pages": 1,
+      "pair": "TUSDUSDT",
+      "rank": 118,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "TUSD"
+    },
+    {
+      "checked_at": "2026-10-10T00:18:26.802994+00:00",
+      "evidence": [],
+      "id": "fetch-ai",
+      "pages": 1,
+      "pair": "FETUSDT",
+      "rank": 119,
+      "status": "identity_not_confirmed",
+      "symbol": "FET"
+    },
+    {
+      "checked_at": "2026-10-10T00:18:41.972933+00:00",
+      "evidence": [
+        {
+          "base": "VIRTUAL",
+          "coin_id": "virtual-protocol",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "virtual-protocol",
+          "trade_url": "https://www.binance.com/en/trade/VIRTUAL_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "virtual-protocol",
+      "pages": 1,
+      "pair": "VIRTUALUSDT",
+      "rank": 121,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "VIRTUAL"
+    },
+    {
+      "checked_at": "2026-10-10T00:18:57.097304+00:00",
+      "evidence": [
+        {
+          "base": "TIA",
+          "coin_id": "celestia",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "celestia",
+          "trade_url": "https://www.binance.com/en/trade/TIA_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "celestia",
+      "pages": 1,
+      "pair": "TIAUSDT",
+      "rank": 123,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "TIA"
+    },
+    {
+      "checked_at": "2026-10-10T00:19:12.249987+00:00",
+      "evidence": [],
+      "id": "sei-network",
+      "pages": 1,
+      "pair": "SEIUSDT",
+      "rank": 125,
+      "status": "identity_not_confirmed",
+      "symbol": "SEI"
+    },
+    {
+      "checked_at": "2026-10-10T00:19:27.384708+00:00",
+      "evidence": [
+        {
+          "base": "XPL",
+          "coin_id": "plasma",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "plasma",
+          "trade_url": "https://www.binance.com/en/trade/XPL_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "plasma",
+      "pages": 1,
+      "pair": "XPLUSDT",
+      "rank": 129,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "XPL"
+    },
+    {
+      "checked_at": "2026-10-10T00:19:27.592280+00:00",
+      "evidence": [
+        {
+          "base": "PENDLE",
+          "coin_id": "pendle",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "pendle",
+          "trade_url": "https://www.binance.com/en/trade/PENDLE_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "pendle",
+      "pages": 1,
+      "pair": "PENDLEUSDT",
+      "rank": 130,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "PENDLE"
+    },
+    {
+      "checked_at": "2026-10-10T00:19:42.717305+00:00",
+      "evidence": [
+        {
+          "base": "FF",
+          "coin_id": "falcon-finance-ff",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "falcon-finance-ff",
+          "trade_url": "https://www.binance.com/en/trade/FF_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "falcon-finance-ff",
+      "pages": 1,
+      "pair": "FFUSDT",
+      "rank": 133,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "FF"
+    },
+    {
+      "checked_at": "2026-10-10T00:19:57.776937+00:00",
+      "evidence": [],
+      "id": "kaia",
+      "pair": "KAIAUSDT",
+      "rank": 134,
+      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
+      "status": "source_unavailable",
+      "symbol": "KAIA"
+    },
+    {
+      "checked_at": "2026-10-10T00:20:12.844414+00:00",
+      "evidence": [],
+      "id": "lido-dao",
+      "pair": "LDOUSDT",
+      "rank": 136,
+      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
+      "status": "source_unavailable",
+      "symbol": "LDO"
+    },
+    {
+      "checked_at": "2026-10-10T00:20:27.910958+00:00",
+      "evidence": [],
+      "id": "first-digital-usd",
+      "pair": "FDUSDUSDT",
+      "rank": 141,
+      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
+      "status": "source_unavailable",
+      "symbol": "FDUSD"
+    },
+    {
+      "checked_at": "2026-10-10T00:20:42.975327+00:00",
+      "evidence": [],
+      "id": "sun-token",
+      "pair": "SUNUSDT",
+      "rank": 142,
+      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
+      "status": "source_unavailable",
+      "symbol": "SUN"
+    },
+    {
+      "checked_at": "2026-10-10T00:20:58.108415+00:00",
+      "evidence": [
+        {
+          "base": "XTZ",
+          "coin_id": "tezos",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "tezos",
+          "trade_url": "https://www.binance.com/en/trade/XTZ_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "tezos",
+      "pages": 1,
+      "pair": "XTZUSDT",
+      "rank": 143,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "XTZ"
+    },
+    {
+      "checked_at": "2026-10-10T00:21:13.215630+00:00",
+      "evidence": [
+        {
+          "base": "DCR",
+          "coin_id": "decred",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "decred",
+          "trade_url": "https://www.binance.com/en/trade/DCR_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "decred",
+      "pages": 1,
+      "pair": "DCRUSDT",
+      "rank": 147,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "DCR"
+    },
+    {
+      "checked_at": "2026-10-10T00:21:13.432305+00:00",
+      "evidence": [
+        {
+          "base": "GNO",
+          "coin_id": "gnosis",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "gnosis",
+          "trade_url": "https://www.binance.com/en/trade/GNO_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "gnosis",
+      "pages": 1,
+      "pair": "GNOUSDT",
+      "rank": 148,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "GNO"
+    },
+    {
+      "checked_at": "2026-10-10T00:21:28.575432+00:00",
+      "evidence": [
+        {
+          "base": "GRT",
+          "coin_id": "the-graph",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "the-graph",
+          "trade_url": "https://www.binance.com/en/trade/GRT_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "the-graph",
+      "pages": 1,
+      "pair": "GRTUSDT",
+      "rank": 152,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "GRT"
+    },
+    {
+      "checked_at": "2026-10-10T00:21:43.716829+00:00",
+      "evidence": [
+        {
+          "base": "BONK",
+          "coin_id": "bonk",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "bonk",
+          "trade_url": "https://www.binance.com/en/trade/BONK_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "bonk",
+      "pages": 1,
+      "pair": "BONKUSDT",
+      "rank": 153,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "BONK"
+    },
+    {
+      "checked_at": "2026-10-10T00:21:58.813619+00:00",
+      "evidence": [],
+      "id": "kite-2",
+      "pages": 1,
+      "pair": "KITEUSDT",
+      "rank": 155,
+      "status": "identity_not_confirmed",
+      "symbol": "KITE"
+    },
+    {
+      "checked_at": "2026-10-10T00:22:13.933733+00:00",
+      "evidence": [
+        {
+          "base": "OP",
+          "coin_id": "optimism",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "optimism",
+          "trade_url": "https://www.binance.com/en/trade/OP_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "optimism",
+      "pages": 1,
+      "pair": "OPUSDT",
+      "rank": 156,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "OP"
+    },
+    {
+      "checked_at": "2026-10-10T00:22:29.067269+00:00",
+      "evidence": [],
+      "id": "terra-luna",
+      "pages": 1,
+      "pair": "LUNCUSDT",
+      "rank": 157,
+      "status": "identity_not_confirmed",
+      "symbol": "LUNC"
+    },
+    {
+      "checked_at": "2026-10-10T00:22:44.159688+00:00",
+      "evidence": [
+        {
+          "base": "AR",
+          "coin_id": "arweave",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "arweave",
+          "trade_url": "https://www.binance.com/en/trade/AR_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "arweave",
+      "pages": 1,
+      "pair": "ARUSDT",
+      "rank": 158,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "AR"
+    },
+    {
+      "checked_at": "2026-10-10T00:22:59.304302+00:00",
+      "evidence": [],
+      "id": "jito-governance-token",
+      "pages": 1,
+      "pair": "JTOUSDT",
+      "rank": 159,
+      "status": "identity_not_confirmed",
+      "symbol": "JTO"
+    },
+    {
+      "checked_at": "2026-10-10T00:22:59.522058+00:00",
+      "evidence": [],
+      "id": "syrup",
+      "pages": 1,
+      "pair": "SYRUPUSDT",
+      "rank": 160,
+      "status": "identity_not_confirmed",
+      "symbol": "SYRUP"
+    },
+    {
+      "checked_at": "2026-10-10T00:23:14.644420+00:00",
+      "evidence": [
+        {
+          "base": "ENS",
+          "coin_id": "ethereum-name-service",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "ethereum-name-service",
+          "trade_url": "https://www.binance.com/en/trade/ENS_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "ethereum-name-service",
+      "pages": 1,
+      "pair": "ENSUSDT",
+      "rank": 161,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "ENS"
+    },
+    {
+      "checked_at": "2026-10-10T00:23:29.743965+00:00",
+      "evidence": [],
+      "id": "conflux-token",
+      "pages": 1,
+      "pair": "CFXUSDT",
+      "rank": 162,
+      "status": "identity_not_confirmed",
+      "symbol": "CFX"
+    },
+    {
+      "checked_at": "2026-10-10T00:23:44.913217+00:00",
+      "evidence": [
+        {
+          "base": "FLOKI",
+          "coin_id": "floki",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "floki",
+          "trade_url": "https://www.binance.com/en/trade/FLOKI_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "floki",
+      "pages": 1,
+      "pair": "FLOKIUSDT",
+      "rank": 164,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "FLOKI"
+    },
+    {
+      "checked_at": "2026-10-10T00:24:00.045246+00:00",
+      "evidence": [
+        {
+          "base": "JASMY",
+          "coin_id": "jasmycoin",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "jasmycoin",
+          "trade_url": "https://www.binance.com/en/trade/JASMY_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "jasmycoin",
+      "pages": 1,
+      "pair": "JASMYUSDT",
+      "rank": 165,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "JASMY"
+    },
+    {
+      "checked_at": "2026-10-10T00:24:15.208199+00:00",
+      "evidence": [],
+      "id": "compound-governance-token",
+      "pages": 1,
+      "pair": "COMPUSDT",
+      "rank": 166,
+      "status": "identity_not_confirmed",
+      "symbol": "COMP"
+    },
+    {
+      "checked_at": "2026-10-10T00:24:30.327757+00:00",
+      "evidence": [
+        {
+          "base": "IOTA",
+          "coin_id": "iota",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "iota",
+          "trade_url": "https://www.binance.com/en/trade/IOTA_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "iota",
+      "pages": 1,
+      "pair": "IOTAUSDT",
+      "rank": 167,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "IOTA"
+    },
+    {
+      "checked_at": "2026-10-10T00:24:45.480332+00:00",
+      "evidence": [
+        {
+          "base": "MET",
+          "coin_id": "meteora",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "meteora",
+          "trade_url": "https://www.binance.com/en/trade/MET_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "meteora",
+      "pages": 1,
+      "pair": "METUSDT",
+      "rank": 170,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "MET"
+    },
+    {
+      "checked_at": "2026-10-10T00:24:45.717675+00:00",
+      "evidence": [
+        {
+          "base": "RUNE",
+          "coin_id": "thorchain",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "thorchain",
+          "trade_url": "https://www.binance.com/en/trade/RUNE_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "thorchain",
+      "pages": 1,
+      "pair": "RUNEUSDT",
+      "rank": 172,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "RUNE"
+    },
+    {
+      "checked_at": "2026-10-10T00:25:00.990703+00:00",
+      "evidence": [],
+      "id": "theta-token",
+      "pages": 1,
+      "pair": "THETAUSDT",
+      "rank": 176,
+      "status": "identity_not_confirmed",
+      "symbol": "THETA"
+    },
+    {
+      "checked_at": "2026-10-10T00:25:16.120583+00:00",
+      "evidence": [],
+      "id": "frax",
+      "pages": 1,
+      "pair": "FRAXUSDT",
+      "rank": 177,
+      "status": "identity_not_confirmed",
+      "symbol": "FRAX"
+    },
+    {
+      "checked_at": "2026-10-10T00:25:31.244259+00:00",
+      "evidence": [
+        {
+          "base": "TWT",
+          "coin_id": "trust-wallet-token",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "trust-wallet-token",
+          "trade_url": "https://www.binance.com/en/trade/TWT_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "trust-wallet-token",
+      "pages": 1,
+      "pair": "TWTUSDT",
+      "rank": 179,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "TWT"
+    },
+    {
+      "checked_at": "2026-10-10T00:25:46.408252+00:00",
+      "evidence": [],
+      "id": "eigenlayer",
+      "pages": 1,
+      "pair": "EIGENUSDT",
+      "rank": 181,
+      "status": "identity_not_confirmed",
+      "symbol": "EIGEN"
+    },
+    {
+      "checked_at": "2026-10-10T00:26:01.605250+00:00",
+      "evidence": [],
+      "id": "dogwifcoin",
+      "pages": 1,
+      "pair": "WIFUSDT",
+      "rank": 183,
+      "status": "identity_not_confirmed",
+      "symbol": "WIF"
+    },
+    {
+      "checked_at": "2026-10-10T00:26:16.736562+00:00",
+      "evidence": [
+        {
+          "base": "AXS",
+          "coin_id": "axie-infinity",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "axie-infinity",
+          "trade_url": "https://www.binance.com/en/trade/AXS_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "axie-infinity",
+      "pages": 1,
+      "pair": "AXSUSDT",
+      "rank": 184,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "AXS"
+    },
+    {
+      "checked_at": "2026-10-10T00:26:31.871700+00:00",
+      "evidence": [
+        {
+          "base": "SAND",
+          "coin_id": "the-sandbox",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "the-sandbox",
+          "trade_url": "https://www.binance.com/en/trade/SAND_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "the-sandbox",
+      "pages": 1,
+      "pair": "SANDUSDT",
+      "rank": 187,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "SAND"
+    },
+    {
+      "checked_at": "2026-10-10T00:26:32.104098+00:00",
+      "evidence": [
+        {
+          "base": "KMNO",
+          "coin_id": "kamino",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "kamino",
+          "trade_url": "https://www.binance.com/en/trade/KMNO_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "kamino",
+      "pages": 1,
+      "pair": "KMNOUSDT",
+      "rank": 188,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "KMNO"
+    },
+    {
+      "checked_at": "2026-10-10T00:26:47.240204+00:00",
+      "evidence": [
+        {
+          "base": "BAT",
+          "coin_id": "basic-attention-token",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "basic-attention-token",
+          "trade_url": "https://www.binance.com/en/trade/BAT_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "basic-attention-token",
+      "pages": 1,
+      "pair": "BATUSDT",
+      "rank": 189,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "BAT"
+    },
+    {
+      "checked_at": "2026-10-10T00:27:02.373317+00:00",
+      "evidence": [
+        {
+          "base": "CVX",
+          "coin_id": "convex-finance",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "convex-finance",
+          "trade_url": "https://www.binance.com/en/trade/CVX_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "convex-finance",
+      "pages": 1,
+      "pair": "CVXUSDT",
+      "rank": 191,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "CVX"
+    },
+    {
+      "checked_at": "2026-10-10T00:27:17.496969+00:00",
+      "evidence": [
+        {
+          "base": "ZAMA",
+          "coin_id": "zama",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "zama",
+          "trade_url": "https://www.binance.com/en/trade/ZAMA_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "zama",
+      "pages": 1,
+      "pair": "ZAMAUSDT",
+      "rank": 192,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "ZAMA"
+    },
+    {
+      "checked_at": "2026-10-10T00:27:32.605245+00:00",
+      "evidence": [
+        {
+          "base": "2Z",
+          "coin_id": "doublezero",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "doublezero",
+          "trade_url": "https://www.binance.com/en/trade/2Z_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "doublezero",
+      "pages": 1,
+      "pair": "2ZUSDT",
+      "rank": 195,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "2Z"
+    },
+    {
+      "checked_at": "2026-10-10T00:27:47.715347+00:00",
+      "evidence": [
+        {
+          "base": "MANA",
+          "coin_id": "decentraland",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "decentraland",
+          "trade_url": "https://www.binance.com/en/trade/MANA_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "decentraland",
+      "pages": 1,
+      "pair": "MANAUSDT",
+      "rank": 198,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "MANA"
+    },
+    {
+      "checked_at": "2026-10-10T00:28:02.830124+00:00",
+      "evidence": [
+        {
+          "base": "NEO",
+          "coin_id": "neo",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "neo",
+          "trade_url": "https://www.binance.com/en/trade/NEO_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "neo",
+      "pages": 1,
+      "pair": "NEOUSDT",
+      "rank": 205,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "NEO"
+    },
+    {
+      "checked_at": "2026-10-10T00:28:17.982412+00:00",
+      "evidence": [
+        {
+          "base": "IMX",
+          "coin_id": "immutable-x",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "immutable-x",
+          "trade_url": "https://www.binance.com/en/trade/IMX_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "immutable-x",
+      "pages": 1,
+      "pair": "IMXUSDT",
+      "rank": 207,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "IMX"
+    },
+    {
+      "checked_at": "2026-10-10T00:28:18.254987+00:00",
+      "evidence": [
+        {
+          "base": "CHZ",
+          "coin_id": "chiliz",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "chiliz",
+          "trade_url": "https://www.binance.com/en/trade/CHZ_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "chiliz",
+      "pages": 1,
+      "pair": "CHZUSDT",
+      "rank": 214,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "CHZ"
+    },
+    {
+      "checked_at": "2026-10-10T00:28:33.390579+00:00",
+      "evidence": [],
+      "id": "circle-internet-group-bstock",
+      "pages": 1,
+      "pair": "CRCLBUSDT",
+      "rank": 218,
+      "status": "identity_not_confirmed",
+      "symbol": "CRCLB"
+    },
+    {
+      "checked_at": "2026-10-10T00:28:48.528795+00:00",
+      "evidence": [
+        {
+          "base": "ZK",
+          "coin_id": "zksync",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "zksync",
+          "trade_url": "https://www.binance.com/en/trade/ZK_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "zksync",
+      "pages": 1,
+      "pair": "ZKUSDT",
+      "rank": 222,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "ZK"
+    },
+    {
+      "checked_at": "2026-10-10T00:29:03.649713+00:00",
+      "evidence": [
+        {
+          "base": "SENT",
+          "coin_id": "sentient",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "sentient",
+          "trade_url": "https://www.binance.com/en/trade/SENT_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "sentient",
+      "pages": 1,
+      "pair": "SENTUSDT",
+      "rank": 223,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "SENT"
+    },
+    {
+      "checked_at": "2026-10-10T00:29:18.849639+00:00",
+      "evidence": [
+        {
+          "base": "XEC",
+          "coin_id": "ecash",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "ecash",
+          "trade_url": "https://www.binance.com/en/trade/XEC_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "ecash",
+      "pages": 1,
+      "pair": "XECUSDT",
+      "rank": 226,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "XEC"
+    },
+    {
+      "checked_at": "2026-10-10T00:29:33.990068+00:00",
+      "evidence": [
+        {
+          "base": "APE",
+          "coin_id": "apecoin",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "apecoin",
+          "trade_url": "https://www.binance.com/en/trade/APE_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "apecoin",
+      "pages": 1,
+      "pair": "APEUSDT",
+      "rank": 228,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "APE"
+    },
+    {
+      "checked_at": "2026-10-10T00:29:49.169942+00:00",
+      "evidence": [],
+      "id": "superfarm",
+      "pages": 1,
+      "pair": "SUPERUSDT",
+      "rank": 230,
+      "status": "identity_not_confirmed",
+      "symbol": "SUPER"
+    },
+    {
+      "checked_at": "2026-10-10T00:30:04.442063+00:00",
+      "evidence": [
+        {
+          "base": "ORCA",
+          "coin_id": "orca",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "orca",
+          "trade_url": "https://www.binance.com/en/trade/ORCA_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "orca",
+      "pages": 1,
+      "pair": "ORCAUSDT",
+      "rank": 231,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "ORCA"
+    },
+    {
+      "checked_at": "2026-10-10T00:30:04.632631+00:00",
+      "evidence": [
+        {
+          "base": "SFP",
+          "coin_id": "safepal",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "safepal",
+          "trade_url": "https://www.binance.com/en/trade/SFP_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "safepal",
+      "pages": 1,
+      "pair": "SFPUSDT",
+      "rank": 234,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "SFP"
+    },
+    {
+      "checked_at": "2026-10-10T00:30:19.890809+00:00",
+      "evidence": [
+        {
+          "base": "1INCH",
+          "coin_id": "1inch",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "1inch",
+          "trade_url": "https://www.binance.com/en/trade/1INCH_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "1inch",
+      "pages": 1,
+      "pair": "1INCHUSDT",
+      "rank": 236,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "1INCH"
+    },
+    {
+      "checked_at": "2026-10-10T00:30:35.017097+00:00",
+      "evidence": [],
+      "id": "havven",
+      "pages": 1,
+      "pair": "SNXUSDT",
+      "rank": 238,
+      "status": "identity_not_confirmed",
+      "symbol": "SNX"
+    },
+    {
+      "checked_at": "2026-10-10T00:30:50.161709+00:00",
+      "evidence": [
+        {
+          "base": "GLM",
+          "coin_id": "golem",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "golem",
+          "trade_url": "https://www.binance.com/en/trade/GLM_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "golem",
+      "pages": 1,
+      "pair": "GLMUSDT",
+      "rank": 242,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "GLM"
     }
   ],
-  "review_required_count": 76,
+  "review_required_count": 28,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
