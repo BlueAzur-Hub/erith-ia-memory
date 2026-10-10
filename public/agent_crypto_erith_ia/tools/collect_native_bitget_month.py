@@ -34,6 +34,8 @@ MONTH=re.compile(r"^20\d{2}-(?:0[1-9]|1[0-2])$")
 LIMIT=1000
 STEP=60_000
 MAX_ASSETS=4
+# Three-year historical search horizon: never fabricate pre-listing candles.
+MAX_LOOKBACK_MONTHS=36
 MAX_PAGES=50
 MAX_RESPONSE=800_000
 MAX_ZIP=8_000_000
@@ -289,7 +291,7 @@ def published_bitget_tags():
 
 def choose_missing_month(assets,tags,now=None,lookback=12):
     """Newest missing closed month among exact-ID assets; retry holes, never infer genesis."""
-    require(assets and 1<=lookback<=12,"Unsafe backfill window")
+    require(assets and 1<=lookback<=MAX_LOOKBACK_MONTHS,"Unsafe backfill window")
     month=latest_closed_month(now)
     present=set(tags)
     for _ in range(lookback):
@@ -308,7 +310,7 @@ def select_pending_assets(qualified,tags,now=None,lookback=12,limit=MAX_ASSETS,
     Release tags are scheduling hints only; every selected month is still
     fetched, fully validated and SHA-256 archived by execute_one().
     """
-    require(1<=limit<=MAX_ASSETS and 1<=lookback<=12,
+    require(1<=limit<=MAX_ASSETS and 1<=lookback<=MAX_LOOKBACK_MONTHS,
             "Unsafe asset batch or backfill window")
     require(isinstance(rotation,int) and not isinstance(rotation,bool)
             and rotation>=0,"Invalid fair-rotation slot")
@@ -349,11 +351,11 @@ def main():
     cli.add_argument("--collect",action="store_true")
     cli.add_argument("--month",default="auto",
                      help="Closed YYYY-MM or auto: newest missing closed month")
-    cli.add_argument("--lookback-months",type=int,default=12)
+    cli.add_argument("--lookback-months",type=int,default=MAX_LOOKBACK_MONTHS)
     cli.add_argument("--limit",type=int,default=MAX_ASSETS)
     args=cli.parse_args()
     require(args.plan != args.collect,"Choose --plan or --collect")
-    require(1<=args.limit<=MAX_ASSETS and 1<=args.lookback_months<=12,
+    require(1<=args.limit<=MAX_ASSETS and 1<=args.lookback_months<=MAX_LOOKBACK_MONTHS,
             "Unsafe collection or backfill limit")
     require(args.month=="auto" or MONTH.fullmatch(args.month) is not None,
             "Unsafe source month")
