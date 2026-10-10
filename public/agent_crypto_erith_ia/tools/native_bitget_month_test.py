@@ -187,7 +187,16 @@ class NativeBitgetMonthTests(unittest.TestCase):
         self.assertIn("permitted=bool(new_ids)",text)
         self.assertIn("steps.eligible.outputs.collect == 'true'",text)
         self.assertIn("--collect --month auto --lookback-months 12 --limit 3",text)
-        self.assertIn("fetch-depth: 2",text)
+        self.assertIn("fetch-depth: 0",text)
+        self.assertIn("29 1,7,13,19 * * *",text)
+        self.assertIn("Agent Crypto Top250 Alternative Spot Market Discovery",text)
+        self.assertIn("github.event.workflow_run.conclusion == 'success'",text)
+        self.assertIn("github.event.workflow_run.head_branch == 'main'",text)
+        self.assertIn("DISCOVERY_BASE_SHA",text)
+        self.assertIn("'merge-base','--is-ancestor',before,'HEAD'",text)
+        self.assertIn("if event=='push' and (workflow in changed or collector in changed)",text)
+        self.assertIn("steps.eligible.outputs.collect == 'true'",text)
+        self.assertIn("cancel-in-progress: false",text)
 
     def test_closed_month_and_release_identity(self):
         self.assertEqual(m.bounds("2026-09")[2],43200)
