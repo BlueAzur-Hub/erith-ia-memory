@@ -132,11 +132,29 @@ def probe(catalog,identity,spot,fetcher=fetch,limit=MAX_ASSETS):
     for a in chosen:
         item={**a,"sample_start_ms":START_MS,"sample_end_exclusive_ms":END_MS,
               "full_native_1m_month_verified":False,"status":"source_unavailable"}
+        payload=None
         try:
             payload,sha=fetcher(a["pair"])
-            measured=normalized_window(payload["data"])
-            item.update(measured)
             item["response_sha256"]=sha
+            # Bounded timestamp diagnostics only. Never store unaudited rows
+            # or classify out-of-window candles as authentic source history.
+            raw=payload.get("data",[])
+            if isinstance(raw,list):
+                times=[]
+                for row in raw[:WINDOW]:
+                    try:
+                        if isinstance(row,list) and row:
+                            times.append(int(row[0]))
+                    except (ValueError,TypeError,OverflowError):
+                        pass
+                item["observed_row_count"]=len(raw)
+                if times:
+                    item["observed_first_ms"]=min(times)
+                    item["observed_last_ms"]=max(times)
+                    item["observed_in_window"]=sum(START_MS<=t<END_MS and t%STEP==0
+                                                  for t in times)
+            measured=normalized_window(raw)
+            item.update(measured)
             item["status"]=("sample_window_complete" if measured["complete_sample_window"]
                             else "sample_partial_not_archived")
         except (OSError,ValueError,TypeError,OverflowError,json.JSONDecodeError,
