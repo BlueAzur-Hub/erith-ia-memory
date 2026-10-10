@@ -163,6 +163,50 @@ class NativeBitgetMonthTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"batch"):
             m.select_pending_assets(qualified,set(),now,limit=4)
 
+    def test_scheduled_rotation_escapes_missing_month_and_first_three(self):
+        """Repeated failures of one month/asset cannot block older real sources."""
+        now=dt.datetime(2026,10,10,17,0,tzinfo=dt.timezone.utc)
+        coins=[{**ASSET,"rank":70+i,"id":f"source-{i}","symbol":f"R{i}",
+                "pair":f"R{i}USDT"} for i in range(5)]
+        september={m.release_tag(a,"2026-09") for a in coins}
+        first_month,first=m.select_pending_assets(
+            coins,september,now,limit=3,rotation=0)
+        self.assertEqual(first_month,"2026-08")
+        self.assertEqual([a["id"] for a in first],
+                         ["source-0","source-1","source-2"])
+        month,second=m.select_pending_assets(
+            coins,september,now,limit=3,rotation=1)
+        self.assertEqual(month,"2026-07")
+        self.assertEqual([a["id"] for a in second],
+                         ["source-1","source-2","source-3"])
+        month,third=m.select_pending_assets(
+            coins,september,now,limit=3,rotation=2)
+        self.assertEqual(month,"2026-06")
+        self.assertEqual([a["id"] for a in third],
+                         ["source-2","source-3","source-4"])
+
+    def test_new_proven_assets_prioritized_without_starving_backfill(self):
+        now=dt.datetime(2026,10,10,17,0,tzinfo=dt.timezone.utc)
+        coins=[{**ASSET,"rank":70+i,"id":f"known-{i}","symbol":f"K{i}",
+                "pair":f"K{i}USDT"} for i in range(4)]
+        newcomer={**ASSET,"rank":90,"id":"new-proof","symbol":"NEW",
+                  "pair":"NEWUSDT"}
+        september={m.release_tag(a,"2026-09") for a in coins}
+        for slot in (0,1,2,3):
+            month,group=m.select_pending_assets(
+                coins+[newcomer],september,now,limit=3,rotation=slot)
+            self.assertEqual(month,"2026-09")
+            self.assertEqual([a["id"] for a in group],["new-proof"])
+        older,group=m.select_pending_assets(
+            coins+[newcomer],september,now,limit=3,rotation=4)
+        self.assertNotEqual(older,"2026-09")
+        self.assertTrue(group)
+        self.assertNotIn("new-proof",{a["id"] for a in group})
+        with self.assertRaisesRegex(ValueError,"rotation"):
+            m.select_pending_assets(coins,september,now,rotation=-1)
+        with self.assertRaisesRegex(ValueError,"rotation"):
+            m.select_pending_assets(coins,september,now,rotation=True)
+
     def test_selection_never_promotes_unqualified_symbols(self):
         src=json.loads(m.proof.CATALOG.read_text())
         alt=json.loads(m.proof.EXACT.read_text())
