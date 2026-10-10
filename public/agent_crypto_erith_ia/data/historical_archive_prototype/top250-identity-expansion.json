@@ -1,10 +1,11 @@
 {
   "schema": "aerith.public.ohlcv.spot.top250.identity.expansion.v1",
   "action": "qualify_next_unchecked_exact_ids_once",
-  "max_batches": 2,
+  "max_batches": 9,
   "batch_size": 8,
   "source": "CoinGecko exact IDs / Binance Spot USDT",
   "no_symbol_only_approvals": true,
   "no_trader_changes": true,
-  "note": "One-time bounded resumption of the existing exact-ID proof ledger. No ticker-only approval, synthetic OHLCV, orders, interface changes or overwrite of historical Releases."
+  "note": "One-time continuation from the verified 28/96 exact-ID ledger, up to nine rate-limited batches of eight in a single audited GitHub run. The first batch runs normally, the remaining eight only on the main-branch modification of this marker. No symbol-only approval, synthetic OHLCV, orders, new pages or old-release replacement.",
+  "phase": "full_candidate_pass"
 }
