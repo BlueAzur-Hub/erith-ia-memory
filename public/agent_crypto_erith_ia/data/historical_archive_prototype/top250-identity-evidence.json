@@ -1,5 +1,5 @@
 {
-  "approved_count": 78,
+  "approved_count": 80,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -1092,13 +1092,23 @@
       "symbol": "OP"
     },
     {
-      "checked_at": "2026-10-10T00:22:29.067269+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T23:55:33.224534+00:00",
+      "evidence": [
+        {
+          "base": "LUNC",
+          "coin_id": "terra-luna",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "terra-luna",
+          "trade_url": "https://www.binance.com/en/trade/LUNC_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "terra-luna",
-      "pages": 1,
+      "pages": 2,
       "pair": "LUNCUSDT",
       "rank": 157,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "LUNC"
     },
     {
@@ -1122,13 +1132,23 @@
       "symbol": "AR"
     },
     {
-      "checked_at": "2026-10-10T00:22:59.304302+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T23:55:48.465568+00:00",
+      "evidence": [
+        {
+          "base": "JTO",
+          "coin_id": "jito-governance-token",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "jito-governance-token",
+          "trade_url": "https://www.binance.com/en/trade/JTO_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "jito-governance-token",
-      "pages": 1,
+      "pages": 2,
       "pair": "JTOUSDT",
       "rank": 159,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "JTO"
     },
     {
@@ -1752,7 +1772,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 18,
+  "review_required_count": 16,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
