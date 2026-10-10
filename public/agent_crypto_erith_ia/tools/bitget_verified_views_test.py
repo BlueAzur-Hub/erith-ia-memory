@@ -53,6 +53,39 @@ class BitgetFederationTests(unittest.TestCase):
         files={name:raw,"manifest.json":manifest_raw}
         return tag,(lambda t:meta),(lambda t,n,*args:files[n])
 
+    def test_binance_catalog_refresh_triggers_existing_federation(self):
+        """Both native sources must automatically update the same safe vault."""
+        workflow=(Path(__file__).resolve().parents[3] /
+                  ".github/workflows/agent-crypto-federated-spot-views.yml")
+        text=workflow.read_text(encoding="utf-8")
+        self.assertIn("Agent Crypto Top250 Historical Coverage Catalog",text)
+        self.assertIn("Agent Crypto Bitget Verified Native Spot Monthly Sources",text)
+        self.assertIn("github.event.workflow_run.conclusion == 'success'",text)
+        self.assertIn("github.event.workflow_run.head_branch == 'main'",text)
+        self.assertIn("github.event.workflow_run.event != 'pull_request'",text)
+        self.assertIn("cancel-in-progress: false",text)
+        self.assertIn('git show "origin/main:$base/$name"',text)
+        self.assertIn("refuse stale federated view",text)
+
+    def test_genuine_binance_candles_always_flow_into_federated_total(self):
+        """A new fully verified Binance month cannot be silently dropped."""
+        import copy
+        catalog=copy.deepcopy(self.catalog)
+        bitcoin=next(a for a in catalog["assets"] if a["id"]=="bitcoin")
+        before=b.federate(catalog,[])
+        # This is a counts-only fixture: actual catalog import checks ZIP/SHA
+        # before federate() ever sees a new source month.
+        bitcoin["candles"]+=43200
+        bitcoin["months"].append({"month":"2099-01","test_only":True})
+        catalog["native_1m_candles"]+=43200
+        after=b.federate(catalog,[])
+        self.assertEqual(after["native_1m_candles"]-before["native_1m_candles"],43200)
+        btc_before=next(a for a in before["assets"] if a["id"]=="bitcoin")
+        btc_after=next(a for a in after["assets"] if a["id"]=="bitcoin")
+        self.assertEqual(btc_after["months"],btc_before["months"]+1)
+        self.assertEqual(btc_after["native_1m_count"]-
+                         btc_before["native_1m_count"],43200)
+
     def test_full_verified_month_is_federated_without_fake_trade_count(self):
         tag,metadata,downloader=self.fixture()
         projections,alt,union=b.build(self.catalog,self.exact,self.spot,[tag],
