@@ -103,6 +103,58 @@ class AlternativeMarketTests(unittest.TestCase):
             path.write_text(json.dumps(payload))
             self.assertEqual(m.official_priority(queue,archived,path),set())
 
+    def test_official_priority_survives_real_archival_growth_without_symbol_proof(self):
+        """A 104-asset audit stays useful at 106, but only as a work queue."""
+        queue=[{"id":f"asset-{i}","rank":i,"symbol":f"SYM{i}","name":"Test"}
+               for i in range(1,251)]
+        archive_before={f"asset-{i}" for i in range(3,251)}
+        doc={"schema":"aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+             "ranked":250,"archived_assets_at_audit":248,
+             "assets":[
+                 {"id":"asset-1","rank":1,"symbol":"SYM1",
+                  "instruments":[{"venue":"bitget","instrument":"SYM1USDT"}]},
+                 {"id":"asset-2","rank":2,"symbol":"SYM2",
+                  "instruments":[{"venue":"bitget","instrument":"SYM2USDT"}]}
+             ]}
+        with tempfile.TemporaryDirectory() as d:
+            path=Path(d)/"official.json"
+            path.write_text(json.dumps(doc))
+            self.assertEqual(m.official_priority(queue,archive_before,path),
+                             {"asset-1","asset-2"})
+            archive_after=archive_before|{"asset-2"}
+            self.assertEqual(m.official_priority(queue,archive_after,path),
+                             {"asset-1"})
+            self.assertEqual(m.official_priority(queue,set(),path),set())
+            # Never allow a snapshot that excludes an unarchived new member.
+            doc["assets"][0]["id"]="another-coin"
+            path.write_text(json.dumps(doc))
+            with self.assertRaisesRegex(ValueError,"does not belong"):
+                m.official_priority(queue,archive_after,path)
+
+    def test_retries_rotate_oldest_failed_assets_first(self):
+        now=dt.datetime.now(dt.timezone.utc)
+        queue=[{"id":f"coin-{i}","rank":i,"symbol":f"C{i}","name":"Test"}
+               for i in range(1,9)]
+        prior={"schema":m.SCHEMA,"results":[
+            {"id":"coin-1","rank":1,"symbol":"C1","status":"source_unavailable",
+             "markets":[],"checked_at":(now-dt.timedelta(hours=2)).isoformat()},
+            {"id":"coin-2","rank":2,"symbol":"C2","status":"source_unavailable",
+             "markets":[],"checked_at":(now-dt.timedelta(hours=5)).isoformat()},
+            {"id":"coin-3","rank":3,"symbol":"C3","status":"source_unavailable",
+             "markets":[],"checked_at":(now-dt.timedelta(hours=3)).isoformat()},
+            {"id":"coin-4","rank":4,"symbol":"C4","status":"source_unavailable",
+             "markets":[],"checked_at":(now-dt.timedelta(minutes=7)).isoformat()}
+        ]}
+        scanned=[]
+        result=m.process(queue,prior,batch=6,delay=0,
+            checker=lambda a:(scanned.append(a["id"]) or
+                  ("market_not_confirmed",[],1)),
+            preferred={"coin-1","coin-5"})
+        self.assertEqual(scanned[:2],["coin-2","coin-3"])
+        self.assertEqual(scanned[2:],["coin-5","coin-6","coin-7","coin-8"])
+        self.assertNotIn("coin-4",scanned)
+        self.assertEqual(result["market_candidate_count"],0)
+
     def test_failing_bitget_never_erases_okx_source_proof(self):
         def get(coin,venue,page):
             if venue=="bitget":raise OSError("CoinGecko unavailable")
