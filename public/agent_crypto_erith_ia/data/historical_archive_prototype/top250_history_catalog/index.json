@@ -4,10 +4,10 @@
   "quote": "USDT",
   "ranked": 250,
   "rank_snapshot": "2026-10-09T18:47:53.633Z",
-  "release_months": 26,
-  "release_count": 53,
+  "release_months": 28,
+  "release_count": 55,
   "archived_assets": 104,
-  "native_1m_candles": 83676960,
+  "native_1m_candles": 83852640,
   "groups": [
     {
       "top": 10,
@@ -27,6 +27,20 @@
     }
   ],
   "months": [
+    {
+      "month": "2024-06",
+      "release": "crypto-spot-bulk-add-2024-06-1m-f5cd85e15712",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 86400
+    },
+    {
+      "month": "2024-07",
+      "release": "crypto-spot-bulk-add-2024-07-1m-f5cd85e15712",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 89280
+    },
     {
       "month": "2024-08",
       "release": "crypto-spot-bulk-2024-08-1m",
@@ -408,6 +422,22 @@
       "market_status": "approved_existing_archive",
       "months": [
         {
+          "month": "2024-06",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2024-06.zip",
+          "sha256": "90f4fc3f55918787848c71f4cd0f2f1a5851bbffaf6392e76e9ab555b7479d2b",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2024-06-1m-f5cd85e15712"
+        },
+        {
+          "month": "2024-07",
+          "pair": "BTCUSDT",
+          "file": "BTCUSDT-1m-2024-07.zip",
+          "sha256": "9cfd749fd2027a0c6f261bed607b49dd1256369fb41b784934544a3676f8162e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2024-07-1m-f5cd85e15712"
+        },
+        {
           "month": "2024-08",
           "pair": "BTCUSDT",
           "file": "BTCUSDT-1m-2024-08.zip",
@@ -617,7 +647,7 @@
         }
       ],
       "missing_months": [],
-      "candles": 1139040
+      "candles": 1226880
     },
     {
       "id": "ethereum",
@@ -626,6 +656,22 @@
       "name": "Ethereum",
       "market_status": "approved_existing_archive",
       "months": [
+        {
+          "month": "2024-06",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2024-06.zip",
+          "sha256": "27040862f050687c6da296108dfcfb29e0500e0f9c8dd73669146e9e68a128c0",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2024-06-1m-f5cd85e15712"
+        },
+        {
+          "month": "2024-07",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2024-07.zip",
+          "sha256": "bda530d17235096c0e619edff1bef56154923b980d7a73406ea66114966ba0d2",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2024-07-1m-f5cd85e15712"
+        },
         {
           "month": "2024-08",
           "pair": "ETHUSDT",
@@ -836,7 +882,7 @@
         }
       ],
       "missing_months": [],
-      "candles": 1139040
+      "candles": 1226880
     },
     {
       "id": "tether",
