@@ -78,7 +78,8 @@ def extract(tickers, asset):
         if (market.get("identifier")!="binance" or
             t.get("base")!=asset["symbol"] or t.get("target")!="USDT"):
             continue
-        if t.get("coin_id") not in (None,asset["id"]):continue
+        # A requested coin ID is not a substitute for a source-returned identity.
+        if t.get("coin_id") != asset["id"]:continue
         if t.get("target_coin_id") not in (None,"tether"):continue
         if t.get("is_anomaly") is True or t.get("is_stale") is True:continue
         if t.get("trust_score")=="red":continue
@@ -106,20 +107,62 @@ def get_tickers(coin_id, page):
         need(isinstance(body.get("tickers"),list),"CoinGecko response not tickers")
         return body["tickers"]
 
-def inspect_asset(asset,fetcher=get_tickers):
-    found=[]
+def get_exchange_tickers(coin_id, page):
+    """Independent CoinGecko route, constrained to an explicit exchange and coin ID.
+
+    A returned ticker still needs its OWN matching coin_id, market and pair.
+    Exchange-wide or symbol-only results never become evidence.
+    """
+    need(ID.fullmatch(coin_id) and 1<=page<=MAX_PAGES, "Unsafe CoinGecko exchange request")
+    params=urllib.parse.urlencode({"coin_ids":coin_id,"page":page})
+    url=f"{CG}/exchanges/binance/tickers?{params}"
+    req=urllib.request.Request(url,headers={"User-Agent":USER_AGENT,
+       "Accept":"application/json"})
+    with urllib.request.urlopen(req,timeout=22) as response:
+        need(response.status==200,"CoinGecko exchange route returned non-200")
+        raw=response.read(1_500_001)
+        need(0<len(raw)<=1_500_000,"CoinGecko exchange response too large")
+        body=json.loads(raw)
+        need(isinstance(body.get("tickers"),list),"CoinGecko exchange response not tickers")
+        return body["tickers"]
+
+def inspect_asset(asset,fetcher=get_tickers,exchange_fetcher=None):
+    checked_pages=0
     try:
+        # Original exact-coin route is authoritative when it returns a match.
         for page in range(1,MAX_PAGES+1):
             tickers=fetcher(asset["id"],page)
-            found.extend(extract(tickers,asset))
-            if len(tickers)<100:
-                return {"status":"approved_coingecko_binance_spot" if found else "identity_not_confirmed",
-                        "evidence":found[:5],"pages":page}
-        # Never assert absence if upstream pagination was truncated.
-        return {"status":"source_pagination_incomplete","evidence":[],"pages":MAX_PAGES}
+            checked_pages+=1
+            found=extract(tickers,asset)
+            if found:
+                return {"status":"approved_coingecko_binance_spot",
+                        "evidence":found[:5],"pages":checked_pages}
+            if len(tickers)<100:break
+        else:
+            # Never assert absence if upstream pagination was truncated.
+            return {"status":"source_pagination_incomplete",
+                    "evidence":[],"pages":checked_pages}
+
+        if exchange_fetcher is not None:
+            # Documented CoinGecko exchange route accepts coin_ids; it can
+            # expose a market omitted by the primary route's cached results.
+            for page in range(1,MAX_PAGES+1):
+                tickers=exchange_fetcher(asset["id"],page)
+                checked_pages+=1
+                found=extract(tickers,asset)
+                if found:
+                    return {"status":"approved_coingecko_binance_spot",
+                            "evidence":found[:5],"pages":checked_pages}
+                if len(tickers)<100:break
+            else:
+                return {"status":"source_pagination_incomplete",
+                        "evidence":[],"pages":checked_pages}
+        return {"status":"identity_not_confirmed",
+                "evidence":[],"pages":checked_pages}
     except (ValueError,OSError,urllib.error.HTTPError,urllib.error.URLError,
             TimeoutError,RuntimeError,json.JSONDecodeError) as exc:
         return {"status":"source_unavailable","evidence":[],
+                "pages":checked_pages,
                 "reason":(type(exc).__name__+": "+str(exc))[:180]}
 
 def validate_ledger(doc,audit):
@@ -144,7 +187,7 @@ def validate_ledger(doc,audit):
         seen.add(aid)
 
 def process(audit,existing=None,batch_size=MAX_BATCH,fetcher=get_tickers,
-            delay=STEP_SECONDS,now=None):
+            delay=STEP_SECONDS,now=None,exchange_fetcher=None,rescan_denied=False):
     need(1<=batch_size<=MAX_BATCH,"Unbounded identity verification batch")
     queued=candidates(audit)
     ledger=existing or {"schema":SCHEMA,"results":[]}
@@ -153,14 +196,22 @@ def process(audit,existing=None,batch_size=MAX_BATCH,fetcher=get_tickers,
     # Retry only source failures. Negative identity evidence is not silently reversed.
     todo=[a for a in queued if a["id"] not in previous]
     if not todo:
-        # Do not let repeatedly rate-limited candidates starve the other 90+.
-        todo=[a for a in queued if
-              previous[a["id"]]["status"] in ("source_unavailable","source_pagination_incomplete")]
+        # A prior negative is an observation, not a permanent verdict.
+        # Only explicit, bounded rescans revisit it. Rank by oldest evidence
+        # so recurring probes do not hammer the same first candidates.
+        if rescan_denied:
+            todo=sorted((a for a in queued if previous[a["id"]]["status"]
+                         in ("identity_not_confirmed","source_unavailable",
+                             "source_pagination_incomplete")),
+                        key=lambda a:(previous[a["id"]].get("checked_at",""),a["rank"]))
+        else:
+            todo=[a for a in queued if previous[a["id"]]["status"]
+                  in ("source_unavailable","source_pagination_incomplete")]
     todo=todo[:batch_size]
     results=[]
     for i,a in enumerate(todo):
         if i and delay>0:time.sleep(delay)
-        evidence=inspect_asset(a,fetcher)
+        evidence=inspect_asset(a,fetcher,exchange_fetcher)
         out={"id":a["id"],"rank":a["rank"],"symbol":a["symbol"],
              "pair":a["proposed_pair"],"checked_at":now or dt.datetime.now(dt.timezone.utc).isoformat(),**evidence}
         previous[a["id"]]=out
@@ -186,6 +237,8 @@ def main():
     p.add_argument("--output",type=Path,default=None)
     p.add_argument("--plan",action="store_true")
     p.add_argument("--probe",action="store_true")
+    p.add_argument("--rescan-denied",action="store_true",
+                   help="Boundedly recheck previously negative exact IDs")
     a=p.parse_args()
     need(not(a.plan and a.probe) and (a.plan or a.probe),"Select --plan or --probe")
     audit,digest=load_audit(a.venue)
@@ -199,7 +252,8 @@ def main():
              "checked":len(done),"audit_sha256":digest},sort_keys=True))
         return
     need(0<=a.sleep<=30,"Unsafe API delay")
-    ledger,attempts=process(audit,previous,a.batch_size,delay=a.sleep)
+    ledger,attempts=process(audit,previous,a.batch_size,delay=a.sleep,
+            exchange_fetcher=get_exchange_tickers,rescan_denied=a.rescan_denied)
     target=a.output or a.ledger
     target.parent.mkdir(parents=True,exist_ok=True)
     tmp=target.with_suffix(".tmp")
