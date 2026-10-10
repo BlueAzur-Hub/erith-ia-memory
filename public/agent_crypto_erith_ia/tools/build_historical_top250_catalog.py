@@ -92,8 +92,19 @@ def build(venue,monthly):
                 need(len(asset)==1 and asset[0].get("digest")=="sha256:"+item["sha256"]
                      and item["candles"]==bulk.bounds(month,"1m")[1],
                      "Unverified ZIP reference")
-                need(not any(x["month"]==month for x in rows[aid]["months"]),
-                     "Duplicate original/addendum month for asset")
+                existing=next((x for x in rows[aid]["months"]
+                               if x["month"]==month),None)
+                if existing is not None:
+                    # Two immutable Release families can both reference the
+                    # exact same official monthly Binance ZIP. Its SHA-256,
+                    # pair and minute count must all agree. Count it ONCE,
+                    # never add a second month or double-count the candles.
+                    need(existing["pair"]==item["pair"] and
+                         existing["sha256"]==item["sha256"] and
+                         existing["candles"]==item["candles"] and
+                         existing["file"]==filename,
+                         "Conflicting duplicate native ZIP for source month")
+                    continue
                 if month in rows[aid]["missing_months"]:
                     rows[aid]["missing_months"].remove(month)
                 rows[aid]["months"].append({"month":month,"pair":item["pair"],

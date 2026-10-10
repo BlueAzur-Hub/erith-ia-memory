@@ -93,6 +93,45 @@ class Top250CoverageTests(unittest.TestCase):
         self.assertEqual(next(x for x in result["assets"] if x["id"]=="polkadot")["months"][0]["release"],
                          release["tag_name"])
 
+    def test_two_immutable_releases_with_same_real_zip_count_once(self):
+        """Parallel native backfills may publish the same official source ZIP.
+
+        Cryptographically identical sources count one month and one minute
+        series, regardless of which immutable Release owns the reference.
+        """
+        venue,monthly=self.setup_rows()
+        first_release,first_manifest=monthly["2026-09"]
+        duplicate=json.loads(json.dumps(first_release))
+        duplicate["tag_name"]="crypto-spot-bulk-add-2026-09-1m-123456789abc"
+        copied=json.loads(json.dumps(first_manifest))
+        monthly["addendum"]=(duplicate,copied)
+        merged=cat.build(venue,monthly)
+        btc=next(a for a in merged["assets"] if a["id"]=="bitcoin")
+        self.assertEqual(merged["release_count"],2)
+        self.assertEqual(merged["release_months"],1)
+        self.assertEqual(merged["native_1m_candles"],43200)
+        self.assertEqual(merged["archived_assets"],1)
+        self.assertEqual(len(btc["months"]),1)
+        self.assertEqual(btc["candles"],43200)
+        # Reversed order may select a different source Release tag, but never
+        # add months, interpolate candles or change the verified SHA.
+        flipped=cat.build(venue,dict(reversed(list(monthly.items()))))
+        self.assertEqual(flipped["native_1m_candles"],43200)
+        self.assertEqual(len(flipped["assets"][0]["months"]),1)
+        self.assertEqual(flipped["assets"][0]["months"][0]["sha256"],"a"*64)
+
+    def test_same_month_with_different_native_source_sha_fails_closed(self):
+        venue,monthly=self.setup_rows()
+        first_release,first_manifest=monthly["2026-09"]
+        other=json.loads(json.dumps(first_release))
+        other["tag_name"]="crypto-spot-bulk-add-2026-09-1m-123456789abc"
+        other["assets"][0]["digest"]="sha256:"+"b"*64
+        manifest=json.loads(json.dumps(first_manifest))
+        manifest["assets"][0]["sha256"]="b"*64
+        monthly["addendum"]=(other,manifest)
+        with self.assertRaisesRegex(ValueError,"Conflicting duplicate native ZIP"):
+            cat.build(venue,monthly)
+
     def test_unavailable_is_never_counted_as_candles(self):
         venue,monthly=self.setup_rows(False)
         result=cat.build(venue,monthly)
