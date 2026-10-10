@@ -11,6 +11,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py'
+      - 'public/agent_crypto_erith_ia/tools/probe_missing_binance_spot_months.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-resume.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-acceleration.json'
@@ -22,6 +23,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py'
+      - 'public/agent_crypto_erith_ia/tools/probe_missing_binance_spot_months.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-bootstrap.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-resume.json'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-acceleration.json'
@@ -51,7 +53,24 @@ jobs:
           python public/agent_crypto_erith_ia/tools/historical_bulk_test.py
           python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
           python public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py
+          python public/agent_crypto_erith_ia/tools/probe_missing_binance_spot_months.py --plan
           python public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py --plan --max-months 7
+      - name: PR only - verify original months for missing Top250 Binance Spot candidates
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/probe_missing_binance_spot_months.py --probe --output "$RUNNER_TEMP/missing-binance-source-proofs.json"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])/'missing-binance-source-proofs.json'
+          x=json.loads(p.read_text())
+          assert x['releases_published']==0 and x['catalog_updated'] is False
+          assert x['coin_id_attribution_certified'] is False
+          assert x['candidate_months_verified']>=1, 'No genuinely available archived Spot source'
+          print('SOURCE MONTHS VERIFIED',x['candidate_months_verified'])
+          print('SOURCE OWNER CANDIDATES',x['candidate_owners'])
+          PY
       - name: Authorize initial import or one-time explicit resumption only on a main merge
         id: allow
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -136,6 +155,14 @@ jobs:
             public/agent_crypto_erith_ia/data/crypto/ \
             public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
             public/agent_crypto_erith_ia/core/
+      - name: PR only - preserve source discovery proof artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: top250-unarchived-source-month-discovery
+          path: ${{ runner.temp }}/missing-binance-source-proofs.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Deliver historical run report
         if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && steps.allow.outputs.approved == 'true'))
         uses: actions/upload-artifact@v4
