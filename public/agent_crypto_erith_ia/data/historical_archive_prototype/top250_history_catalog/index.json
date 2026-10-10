@@ -5,9 +5,9 @@
   "ranked": 250,
   "rank_snapshot": "2026-10-09T18:47:53.633Z",
   "release_months": 47,
-  "release_count": 137,
-  "archived_assets": 120,
-  "native_1m_candles": 155430720,
+  "release_count": 140,
+  "archived_assets": 121,
+  "native_1m_candles": 155563200,
   "groups": [
     {
       "top": 10,
@@ -23,7 +23,7 @@
     },
     {
       "top": 250,
-      "with_history": 120
+      "with_history": 121
     }
   ],
   "months": [
@@ -813,6 +813,13 @@
     },
     {
       "month": "2026-07",
+      "release": "crypto-spot-bulk-add-2026-07-1m-eb4521bdf70a",
+      "verified": 1,
+      "unavailable": 0,
+      "candles": 44640
+    },
+    {
+      "month": "2026-07",
       "release": "crypto-spot-bulk-add-2026-07-1m-f2825a6aae73",
       "verified": 9,
       "unavailable": 1,
@@ -897,6 +904,13 @@
     },
     {
       "month": "2026-08",
+      "release": "crypto-spot-bulk-add-2026-08-1m-eb4521bdf70a",
+      "verified": 1,
+      "unavailable": 0,
+      "candles": 44640
+    },
+    {
+      "month": "2026-08",
       "release": "crypto-spot-bulk-add-2026-08-1m-f2825a6aae73",
       "verified": 10,
       "unavailable": 0,
@@ -978,6 +992,13 @@
       "verified": 3,
       "unavailable": 0,
       "candles": 129600
+    },
+    {
+      "month": "2026-09",
+      "release": "crypto-spot-bulk-add-2026-09-1m-eb4521bdf70a",
+      "verified": 1,
+      "unavailable": 0,
+      "candles": 43200
     },
     {
       "month": "2026-09",
@@ -24296,9 +24317,34 @@
       "symbol": "LUNC",
       "name": "Terra",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "LUNCUSDT",
+          "file": "LUNCUSDT-1m-2026-07.zip",
+          "sha256": "9d20147e243e2b3395cb3c1e63c47ce2b3aa92bddbd99ce458b554ab4c1323a1",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-eb4521bdf70a"
+        },
+        {
+          "month": "2026-08",
+          "pair": "LUNCUSDT",
+          "file": "LUNCUSDT-1m-2026-08.zip",
+          "sha256": "fa0fc5aafb1223ed987b5b34b1cfb7f4a16b87b41e398b8852dca30db42ed771",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-eb4521bdf70a"
+        },
+        {
+          "month": "2026-09",
+          "pair": "LUNCUSDT",
+          "file": "LUNCUSDT-1m-2026-09.zip",
+          "sha256": "687c50d0603341559c3036dc3876e9b172f383d01f17c403079cbffb38f80050",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-eb4521bdf70a"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "arweave",
