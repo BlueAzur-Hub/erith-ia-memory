@@ -1,0 +1,83 @@
+name: Agent Crypto Bitget Exact-ID Native 1m Pilot
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-bitget-native-spot-probe.yml'
+      - 'public/agent_crypto_erith_ia/tools/probe_native_bitget_spot.py'
+      - 'public/agent_crypto_erith_ia/tools/native_bitget_spot_probe_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-bitget-native-spot-probe.yml'
+      - 'public/agent_crypto_erith_ia/tools/probe_native_bitget_spot.py'
+      - 'public/agent_crypto_erith_ia/tools/native_bitget_spot_probe_test.py'
+  workflow_dispatch:
+  schedule:
+    - cron: '13 18 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-bitget-native-spot-pilot
+  cancel-in-progress: false
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test exact-source CoinGecko IDs and native candle safeguards
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/probe_native_bitget_spot.py
+          python public/agent_crypto_erith_ia/tools/native_bitget_spot_probe_test.py
+          python public/agent_crypto_erith_ia/tools/probe_native_bitget_spot.py --plan
+      - name: Read bounded Bitget native SPOT one-minute samples
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/probe_native_bitget_spot.py --probe
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          src=Path("public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-bitget-native-1m-probe.json")
+          data=json.loads(src.read_text())
+          assert data['schema']=='aerith.public.ohlcv.spot.bitget.exact-id-native-probe.v1'
+          assert data['interval']=='1m' and data['quote']=='USDT'
+          assert data['is_historical_archive'] is False
+          assert data['full_native_months_archived']==0
+          assert all(x['full_native_1m_month_verified'] is False for x in data['assets'])
+          print("NATIVE 1M SAMPLE CHECK",data['complete_samples'],data['sampled'],flush=True)
+          PY
+      - name: Publish only read-only probe evidence
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          path=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-bitget-native-1m-probe.json
+          git add -- "$path"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "NOOP: same probe evidence"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Record exact-ID Bitget native Spot sample evidence, not an archive'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Guard trading surfaces and every original archive
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/crypto/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_hourly_views/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_monthly_views/
