@@ -1,0 +1,69 @@
+name: Agent Crypto Top250 Alternative Spot Market Discovery
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-top250-alt-venues.yml'
+      - 'public/agent_crypto_erith_ia/tools/discover_historical_spot_venues.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_spot_venues_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-top250-alt-venues.yml'
+      - 'public/agent_crypto_erith_ia/tools/discover_historical_spot_venues.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_spot_venues_test.py'
+  workflow_dispatch:
+  schedule:
+    - cron: '6,21,36,51 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-top250-alternative-market-discovery
+  cancel-in-progress: false
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test exact IDs, source safeguards and ranked Top250
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/discover_historical_spot_venues.py
+          python public/agent_crypto_erith_ia/tools/historical_spot_venues_test.py
+          python public/agent_crypto_erith_ia/tools/discover_historical_spot_venues.py --plan
+      - name: Read CoinGecko exact-ID OKX and Bitget market tickers in bounded batches
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/discover_historical_spot_venues.py \
+            --probe --batch-size 12 --sleep 15
+      - name: Persist market candidates only, no actual archive claims
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          path=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json
+          git add -- "$path"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: no new market candidates checked'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Persist rate-limited exact-ID OKX Bitget market candidates'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Protect source archives and all trading surfaces
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/crypto/
