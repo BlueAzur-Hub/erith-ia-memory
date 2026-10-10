@@ -85,7 +85,7 @@ class NativeBitgetMonthTests(unittest.TestCase):
                 rows.pop()
             return rows,digest
         with tempfile.TemporaryDirectory() as temp:
-            with self.assertRaisesRegex(ValueError,"Partial native"):
+            with self.assertRaisesRegex(ValueError,"Historical Bitget 1m page rejected"):
                 m.execute_one(ASSET,"2026-09",Path(temp),
                               fetcher=broken,historical_fetcher=broken,delay=0)
             self.assertEqual(list(Path(temp).iterdir()),[])
