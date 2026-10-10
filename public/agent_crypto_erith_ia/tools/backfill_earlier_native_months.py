@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import re
+import subprocess
 import tempfile
 
 import import_historical_bulk as bulk
@@ -59,14 +60,25 @@ def plan(catalog, months=MAX_MONTHS):
         cursor=month_before(cursor)
     return result
 
-def run(catalog, months=MAX_MONTHS, importer=None, publisher=None):
+def run(catalog, months=MAX_MONTHS, importer=None, publisher=None,
+        existing=None):
     jobs=plan(catalog,months)
     collect=importer or (lambda month,assets,folder:bulk.execute(
         month,"1m",folder,workers=2,limit=len(assets),assets=assets))
     publish=publisher or supplement.publish
+    def remote_exists(tag):
+        return subprocess.run(["gh","release","view",tag,"--json","tagName"],
+                              capture_output=True,timeout=35).returncode==0
+    is_published=existing or (lambda tag:False if publisher else remote_exists(tag))
     finished=[];unavailable=[]
     for job in jobs:
         month,assets=job["month"],job["assets"]
+        tag=supplement.add_tag(month,assets)
+        if is_published(tag):
+            # If the catalog hasn't indexed this immutable Release yet,
+            # stop and let its scheduled validator catch up. No repeat upload.
+            print("EARLIER MONTH ALREADY RELEASED "+tag,flush=True)
+            break
         with tempfile.TemporaryDirectory(prefix="seven-earliest-real-") as location:
             folder=Path(location)
             manifest=collect(month,assets,folder)
