@@ -33,7 +33,9 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: agent-crypto-continuous-spot-bulk-release
+  # Read-only PR tests must not queue behind 7-month production Releases.
+  # All main/scheduled publishers retain the same existing serial lock.
+  group: ${{ github.event_name == 'pull_request' && format('agent-crypto-top250-addenda-pr-{0}', github.event.pull_request.number) || 'agent-crypto-continuous-spot-bulk-release' }}
   cancel-in-progress: false
 jobs:
   addenda:
