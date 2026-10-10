@@ -1,7 +1,7 @@
 {
   "candidate_count": 146,
-  "checked_count": 58,
-  "market_candidate_count": 3,
+  "checked_count": 66,
+  "market_candidate_count": 6,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
   "quote": "USDT or USDC: never convert silently",
@@ -26,12 +26,22 @@
       "symbol": "FIGR_HELOC"
     },
     {
-      "checked_at": "2026-10-10T00:25:45.628572+00:00",
+      "checked_at": "2026-10-10T17:23:18.138155+00:00",
       "id": "hyperliquid",
-      "markets": [],
-      "pages_checked": 1,
+      "markets": [
+        {
+          "base": "HYPE",
+          "coin_id": "hyperliquid",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "HYPEUSDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 2,
       "rank": 11,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "HYPE"
     },
     {
@@ -53,10 +63,10 @@
       "symbol": "WBT"
     },
     {
-      "checked_at": "2026-10-10T00:26:30.678372+00:00",
+      "checked_at": "2026-10-10T17:23:33.643874+00:00",
       "id": "leo-token",
       "markets": [],
-      "pages_checked": 0,
+      "pages_checked": 1,
       "rank": 18,
       "status": "source_unavailable",
       "symbol": "LEO"
@@ -89,10 +99,10 @@
       "symbol": "DAI"
     },
     {
-      "checked_at": "2026-10-10T00:27:31.222129+00:00",
+      "checked_at": "2026-10-10T17:23:48.829671+00:00",
       "id": "bitway",
       "markets": [],
-      "pages_checked": 1,
+      "pages_checked": 0,
       "rank": 31,
       "status": "source_unavailable",
       "symbol": "BTW"
@@ -107,7 +117,7 @@
       "symbol": "GRAM"
     },
     {
-      "checked_at": "2026-10-10T00:28:01.263017+00:00",
+      "checked_at": "2026-10-10T17:24:04.023672+00:00",
       "id": "global-dollar",
       "markets": [],
       "pages_checked": 0,
@@ -576,6 +586,98 @@
       "rank": 124,
       "status": "source_unavailable",
       "symbol": "GRASS"
+    },
+    {
+      "checked_at": "2026-10-10T17:24:19.212312+00:00",
+      "id": "bitcoin-cash-sv",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 127,
+      "status": "source_unavailable",
+      "symbol": "BSV"
+    },
+    {
+      "checked_at": "2026-10-10T17:24:34.617431+00:00",
+      "id": "bittorrent",
+      "markets": [
+        {
+          "base": "BTT",
+          "coin_id": "bittorrent",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "BTTUSDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 2,
+      "rank": 131,
+      "status": "exact_id_market_candidates",
+      "symbol": "BTT"
+    },
+    {
+      "checked_at": "2026-10-10T17:24:49.968489+00:00",
+      "id": "lido-dao",
+      "markets": [],
+      "pages_checked": 1,
+      "rank": 136,
+      "status": "source_unavailable",
+      "symbol": "LDO"
+    },
+    {
+      "checked_at": "2026-10-10T17:25:05.158772+00:00",
+      "id": "sun-token",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 142,
+      "status": "source_unavailable",
+      "symbol": "SUN"
+    },
+    {
+      "checked_at": "2026-10-10T17:25:20.352613+00:00",
+      "id": "monad",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 154,
+      "status": "source_unavailable",
+      "symbol": "MON"
+    },
+    {
+      "checked_at": "2026-10-10T17:25:35.544618+00:00",
+      "id": "kite-2",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 155,
+      "status": "source_unavailable",
+      "symbol": "KITE"
+    },
+    {
+      "checked_at": "2026-10-10T17:25:51.082879+00:00",
+      "id": "terra-luna",
+      "markets": [
+        {
+          "base": "LUNC",
+          "coin_id": "terra-luna",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "LUNCUSDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 3,
+      "rank": 157,
+      "status": "exact_id_market_candidates",
+      "symbol": "LUNC"
+    },
+    {
+      "checked_at": "2026-10-10T17:26:06.433662+00:00",
+      "id": "jito-governance-token",
+      "markets": [],
+      "pages_checked": 1,
+      "rank": 159,
+      "status": "source_unavailable",
+      "symbol": "JTO"
     }
   ],
   "schema": "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
