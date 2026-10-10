@@ -24,7 +24,16 @@ class SharedHistoryTests(unittest.TestCase):
         self.assertIn("polkadot",{a["id"] for a in picked})
         self.assertIn("aster-2",{a["id"] for a in picked})
         self.assertGreaterEqual(len(picked),30)
-        self.assertTrue(all(a["month"]=="2026-09" for a in picked))
+        # A genuinely delisted market (such as XMR/USDT) has a valid
+        # latest archived month older than the active source cutoff.
+        # Never require one artificial global "latest" month.
+        source_by_id={a["id"]:a for a in current["assets"] if a["months"]}
+        for chosen in picked:
+            month=max(source_by_id[chosen["id"]]["months"],
+                      key=lambda x:x["month"])
+            self.assertEqual(chosen["month"],month["month"])
+            self.assertEqual(chosen["pair"],month["pair"])
+            self.assertEqual(chosen["sha256"],month["sha256"])
         self.assertTrue(any("-add-" in a["release"] for a in picked))
 
     def test_fake_asset_never_gets_a_projection(self):
