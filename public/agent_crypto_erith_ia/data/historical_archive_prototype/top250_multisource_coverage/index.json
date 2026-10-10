@@ -1,0 +1,2532 @@
+{
+  "schema": "aerith.public.ohlcv.top250.federated-native-archives.v1",
+  "ranked": 250,
+  "quote": "USDT",
+  "archived_assets": 107,
+  "binance_archived_assets": 104,
+  "bitget_archived_assets": 3,
+  "native_1m_candles": 83982240,
+  "first_trade_date_known": false,
+  "is_live": false,
+  "note": "Two independent complete-month source formats. Native Bitget 7 fields; no synthetic trade count, no USDT=>USD.",
+  "groups": [
+    {
+      "top": 10,
+      "archived": 8
+    },
+    {
+      "top": 50,
+      "archived": 32
+    },
+    {
+      "top": 100,
+      "archived": 59
+    },
+    {
+      "top": 250,
+      "archived": 107
+    }
+  ],
+  "assets": [
+    {
+      "id": "bitcoin",
+      "rank": 1,
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 28,
+      "native_1m_count": 1226880
+    },
+    {
+      "id": "ethereum",
+      "rank": 2,
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 28,
+      "native_1m_count": 1226880
+    },
+    {
+      "id": "tether",
+      "rank": 3,
+      "symbol": "USDT",
+      "name": "Tether",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "binancecoin",
+      "rank": 4,
+      "symbol": "BNB",
+      "name": "BNB",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "ripple",
+      "rank": 5,
+      "symbol": "XRP",
+      "name": "XRP",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "usd-coin",
+      "rank": 6,
+      "symbol": "USDC",
+      "name": "USDC",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "solana",
+      "rank": 7,
+      "symbol": "SOL",
+      "name": "Solana",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "tron",
+      "rank": 8,
+      "symbol": "TRX",
+      "name": "TRON",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "figure-heloc",
+      "rank": 9,
+      "symbol": "FIGR_HELOC",
+      "name": "Figure Heloc",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "zcash",
+      "rank": 10,
+      "symbol": "ZEC",
+      "name": "Zcash",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "hyperliquid",
+      "rank": 11,
+      "symbol": "HYPE",
+      "name": "Hyperliquid",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "dogecoin",
+      "rank": 12,
+      "symbol": "DOGE",
+      "name": "Dogecoin",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "usds",
+      "rank": 13,
+      "symbol": "USDS",
+      "name": "USDS",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 5,
+      "native_1m_count": 220320
+    },
+    {
+      "id": "monero",
+      "rank": 14,
+      "symbol": "XMR",
+      "name": "Monero",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "whitebit",
+      "rank": 15,
+      "symbol": "WBT",
+      "name": "WhiteBIT Coin",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "chainlink",
+      "rank": 16,
+      "symbol": "LINK",
+      "name": "Chainlink",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "cardano",
+      "rank": 17,
+      "symbol": "ADA",
+      "name": "Cardano",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "leo-token",
+      "rank": 18,
+      "symbol": "LEO",
+      "name": "LEO Token",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "rain",
+      "rank": 19,
+      "symbol": "RAIN",
+      "name": "Rain",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "stellar",
+      "rank": 20,
+      "symbol": "XLM",
+      "name": "Stellar",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "near",
+      "rank": 21,
+      "symbol": "NEAR",
+      "name": "NEAR Protocol",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "bitcoin-cash",
+      "rank": 22,
+      "symbol": "BCH",
+      "name": "Bitcoin Cash",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "litecoin",
+      "rank": 23,
+      "symbol": "LTC",
+      "name": "Litecoin",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "canton-network",
+      "rank": 24,
+      "symbol": "CC",
+      "name": "Canton",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "ethena-usde",
+      "rank": 25,
+      "symbol": "USDE",
+      "name": "Ethena USDe",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 12,
+      "native_1m_count": 525600
+    },
+    {
+      "id": "uniswap",
+      "rank": 26,
+      "symbol": "UNI",
+      "name": "Uniswap",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "dai",
+      "rank": 27,
+      "symbol": "DAI",
+      "name": "Dai",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "avalanche-2",
+      "rank": 28,
+      "symbol": "AVAX",
+      "name": "Avalanche",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "sui",
+      "rank": 29,
+      "symbol": "SUI",
+      "name": "Sui",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "usd1-wlfi",
+      "rank": 30,
+      "symbol": "USD1",
+      "name": "USD1",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 16,
+      "native_1m_count": 701280
+    },
+    {
+      "id": "bitway",
+      "rank": 31,
+      "symbol": "BTW",
+      "name": "Bitway",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "the-open-network",
+      "rank": 32,
+      "symbol": "GRAM",
+      "name": "Gram (prev. Toncoin)",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 2,
+      "native_1m_count": 87840
+    },
+    {
+      "id": "hedera-hashgraph",
+      "rank": 33,
+      "symbol": "HBAR",
+      "name": "Hedera",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "quant-network",
+      "rank": 34,
+      "symbol": "QNT",
+      "name": "Quant",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "tether-gold",
+      "rank": 35,
+      "symbol": "XAUT",
+      "name": "Tether Gold",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 6,
+      "native_1m_count": 263520
+    },
+    {
+      "id": "shiba-inu",
+      "rank": 36,
+      "symbol": "SHIB",
+      "name": "Shiba Inu",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "global-dollar",
+      "rank": 37,
+      "symbol": "USDG",
+      "name": "Global Dollar",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "bittensor",
+      "rank": 38,
+      "symbol": "TAO",
+      "name": "Bittensor",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "crypto-com-chain",
+      "rank": 39,
+      "symbol": "CRO",
+      "name": "Cronos",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "paypal-usd",
+      "rank": 40,
+      "symbol": "PYUSD",
+      "name": "PayPal USD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "ethena",
+      "rank": 41,
+      "symbol": "ENA",
+      "name": "Ethena",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "okb",
+      "rank": 42,
+      "symbol": "OKB",
+      "name": "OKB",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "aave",
+      "rank": 43,
+      "symbol": "AAVE",
+      "name": "Aave",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "pump-fun",
+      "rank": 44,
+      "symbol": "PUMP",
+      "name": "Pump.fun",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 12,
+      "native_1m_count": 525600
+    },
+    {
+      "id": "ripple-usd",
+      "rank": 45,
+      "symbol": "RLUSD",
+      "name": "Ripple USD",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 8,
+      "native_1m_count": 348480
+    },
+    {
+      "id": "hashnote-usyc",
+      "rank": 46,
+      "symbol": "USYC",
+      "name": "Circle USYC",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "memecore",
+      "rank": 47,
+      "symbol": "M",
+      "name": "MemeCore",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "ondo-us-dollar-yield",
+      "rank": 48,
+      "symbol": "USDY",
+      "name": "Ondo US Dollar Yield",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "ondo-finance",
+      "rank": 49,
+      "symbol": "ONDO",
+      "name": "Ondo",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 17,
+      "native_1m_count": 745920
+    },
+    {
+      "id": "blackrock-usd-institutional-digital-liquidity-fund",
+      "rank": 50,
+      "symbol": "BUIDL",
+      "name": "BlackRock USD Institutional Digital Liquidity Fund",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "polkadot",
+      "rank": 51,
+      "symbol": "DOT",
+      "name": "Polkadot",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 26,
+      "native_1m_count": 1139040
+    },
+    {
+      "id": "aster-2",
+      "rank": 52,
+      "symbol": "ASTER",
+      "name": "Aster",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 11,
+      "native_1m_count": 480960
+    },
+    {
+      "id": "worldcoin-wld",
+      "rank": 53,
+      "symbol": "WLD",
+      "name": "Worldcoin",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "pax-gold",
+      "rank": 54,
+      "symbol": "PAXG",
+      "name": "PAX Gold",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "falcon-finance",
+      "rank": 55,
+      "symbol": "USDF",
+      "name": "Falcon USD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "mantle",
+      "rank": 56,
+      "symbol": "MNT",
+      "name": "Mantle",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "sky",
+      "rank": 57,
+      "symbol": "SKY",
+      "name": "Sky",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 6,
+      "native_1m_count": 263520
+    },
+    {
+      "id": "world-liberty-financial",
+      "rank": 58,
+      "symbol": "WLFI",
+      "name": "World Liberty Financial",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 6,
+      "native_1m_count": 263520
+    },
+    {
+      "id": "internet-computer",
+      "rank": 59,
+      "symbol": "ICP",
+      "name": "Internet Computer",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "morpho",
+      "rank": 60,
+      "symbol": "MORPHO",
+      "name": "Morpho",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 6,
+      "native_1m_count": 263520
+    },
+    {
+      "id": "pepe",
+      "rank": 61,
+      "symbol": "PEPE",
+      "name": "Pepe",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "spiko-amundi-overnight-swap-fund-eur",
+      "rank": 62,
+      "symbol": "EURSAFO",
+      "name": "Spiko Amundi Overnight Swap Fund (EUR)",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "usdd",
+      "rank": 63,
+      "symbol": "USDD",
+      "name": "USDD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "united-stables",
+      "rank": 64,
+      "symbol": "U",
+      "name": "United Stables",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "htx-dao",
+      "rank": 65,
+      "symbol": "HTX",
+      "name": "HTX DAO",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "bitget-token",
+      "rank": 66,
+      "symbol": "BGB",
+      "name": "Bitget Token",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "bfusd",
+      "rank": 67,
+      "symbol": "BFUSD",
+      "name": "BFUSD",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 7,
+      "native_1m_count": 306720
+    },
+    {
+      "id": "ethereum-classic",
+      "rank": 68,
+      "symbol": "ETC",
+      "name": "Ethereum Classic",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "usdgo",
+      "rank": 69,
+      "symbol": "USDGO",
+      "name": "USDGO",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "jupiter-exchange-solana",
+      "rank": 70,
+      "symbol": "JUP",
+      "name": "Jupiter",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "arbitrum",
+      "rank": 71,
+      "symbol": "ARB",
+      "name": "Arbitrum",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "just",
+      "rank": 72,
+      "symbol": "JST",
+      "name": "JUST",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "kaspa",
+      "rank": 73,
+      "symbol": "KAS",
+      "name": "Kaspa",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "gatechain-token",
+      "rank": 74,
+      "symbol": "GT",
+      "name": "Gate",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "cosmos",
+      "rank": 75,
+      "symbol": "ATOM",
+      "name": "Cosmos Hub",
+      "source": "Bitget Spot native 1m HTTPS",
+      "quote": "USDT",
+      "months": 1,
+      "native_1m_count": 43200
+    },
+    {
+      "id": "polygon-ecosystem-token",
+      "rank": 76,
+      "symbol": "POL",
+      "name": "POL (ex-MATIC)",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "kucoin-shares",
+      "rank": 77,
+      "symbol": "KCS",
+      "name": "KuCoin",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "venice-token",
+      "rank": 78,
+      "symbol": "VVV",
+      "name": "Venice Token",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "algorand",
+      "rank": 79,
+      "symbol": "ALGO",
+      "name": "Algorand",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "blockchain-capital",
+      "rank": 80,
+      "symbol": "BCAP",
+      "name": "Blockchain Capital",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "render-token",
+      "rank": 81,
+      "symbol": "RENDER",
+      "name": "Render",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "pi-network",
+      "rank": 82,
+      "symbol": "PI",
+      "name": "Pi Network",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "filecoin",
+      "rank": 83,
+      "symbol": "FIL",
+      "name": "Filecoin",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "lighter",
+      "rank": 84,
+      "symbol": "LIT",
+      "name": "Lighter",
+      "source": "Bitget Spot native 1m HTTPS",
+      "quote": "USDT",
+      "months": 1,
+      "native_1m_count": 43200
+    },
+    {
+      "id": "nexo",
+      "rank": 85,
+      "symbol": "NEXO",
+      "name": "NEXO",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "aerodrome-finance",
+      "rank": 86,
+      "symbol": "AERO",
+      "name": "Aerodrome Finance",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 2,
+      "native_1m_count": 87840
+    },
+    {
+      "id": "layerzero",
+      "rank": 87,
+      "symbol": "ZRO",
+      "name": "LayerZero",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "open-usd",
+      "rank": 88,
+      "symbol": "OUSD",
+      "name": "Open USD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "superstate-short-duration-us-government-securities-fund-ustb",
+      "rank": 89,
+      "symbol": "USTB",
+      "name": "Invesco Short Duration US Government Securities Fund",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "midnight-3",
+      "rank": 90,
+      "symbol": "NIGHT",
+      "name": "Midnight",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 6,
+      "native_1m_count": 263520
+    },
+    {
+      "id": "blockstack",
+      "rank": 91,
+      "symbol": "STX",
+      "name": "Stacks",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "xdce-crowd-sale",
+      "rank": 92,
+      "symbol": "XDC",
+      "name": "XDC Network",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "gho",
+      "rank": 93,
+      "symbol": "GHO",
+      "name": "GHO",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "aptos",
+      "rank": 94,
+      "symbol": "APT",
+      "name": "Aptos",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "pancakeswap-token",
+      "rank": 95,
+      "symbol": "CAKE",
+      "name": "PancakeSwap",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "injective-protocol",
+      "rank": 96,
+      "symbol": "INJ",
+      "name": "Injective",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "stable-2",
+      "rank": 97,
+      "symbol": "STABLE",
+      "name": "​​Stable",
+      "source": "Bitget Spot native 1m HTTPS",
+      "quote": "USDT",
+      "months": 1,
+      "native_1m_count": 43200
+    },
+    {
+      "id": "vechain",
+      "rank": 98,
+      "symbol": "VET",
+      "name": "VeChain",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "dash",
+      "rank": 99,
+      "symbol": "DASH",
+      "name": "Dash",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "ether-fi",
+      "rank": 100,
+      "symbol": "ETHFI",
+      "name": "Ether.fi",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "eutbl",
+      "rank": 101,
+      "symbol": "EUTBL",
+      "name": "Spiko EU T-Bills Money Market Fund",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "pyth-network",
+      "rank": 102,
+      "symbol": "PYTH",
+      "name": "Pyth Network",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "raydium",
+      "rank": 103,
+      "symbol": "RAY",
+      "name": "Raydium",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "akedo",
+      "rank": 104,
+      "symbol": "AKE",
+      "name": "Akedo",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "flare-networks",
+      "rank": 105,
+      "symbol": "FLR",
+      "name": "Flare",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "beldex",
+      "rank": 106,
+      "symbol": "BDX",
+      "name": "Beldex",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "janus-henderson-anemoy-aaa-clo-fund",
+      "rank": 107,
+      "symbol": "JAAA",
+      "name": "Janus Henderson Anemoy AAA CLO Fund",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "bianrensheng",
+      "rank": 108,
+      "symbol": "币安人生",
+      "name": "币安人生 (BinanceLife)",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "curve-dao-token",
+      "rank": 109,
+      "symbol": "CRV",
+      "name": "Curve DAO",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "usual-usd",
+      "rank": 110,
+      "symbol": "USD0",
+      "name": "Usual USD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "kinesis-gold",
+      "rank": 111,
+      "symbol": "KAU",
+      "name": "Kinesis Gold",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "starknet",
+      "rank": 112,
+      "symbol": "STRK",
+      "name": "Starknet",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "official-trump",
+      "rank": 113,
+      "symbol": "TRUMP",
+      "name": "Official Trump",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 14,
+      "native_1m_count": 612000
+    },
+    {
+      "id": "derive",
+      "rank": 114,
+      "symbol": "DRV",
+      "name": "Derive",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "pudgy-penguins",
+      "rank": 115,
+      "symbol": "PENGU",
+      "name": "Pudgy Penguins",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 15,
+      "native_1m_count": 656640
+    },
+    {
+      "id": "euro-coin",
+      "rank": 116,
+      "symbol": "EURC",
+      "name": "EURC",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "ylds",
+      "rank": 117,
+      "symbol": "YLDS",
+      "name": "YLDS",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "true-usd",
+      "rank": 118,
+      "symbol": "TUSD",
+      "name": "TrueUSD",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "fetch-ai",
+      "rank": 119,
+      "symbol": "FET",
+      "name": "Artificial Superintelligence Alliance",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "usdtb",
+      "rank": 120,
+      "symbol": "USDTB",
+      "name": "USDtb",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "virtual-protocol",
+      "rank": 121,
+      "symbol": "VIRTUAL",
+      "name": "Virtuals Protocol",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 10,
+      "native_1m_count": 439200
+    },
+    {
+      "id": "pearl-2",
+      "rank": 122,
+      "symbol": "PRL",
+      "name": "Pearl",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "celestia",
+      "rank": 123,
+      "symbol": "TIA",
+      "name": "Celestia",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "grass",
+      "rank": 124,
+      "symbol": "GRASS",
+      "name": "Grass",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "sei-network",
+      "rank": 125,
+      "symbol": "SEI",
+      "name": "Sei",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 10,
+      "native_1m_count": 437760
+    },
+    {
+      "id": "a7a5",
+      "rank": 126,
+      "symbol": "A7A5",
+      "name": "A7A5",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "bitcoin-cash-sv",
+      "rank": 127,
+      "symbol": "BSV",
+      "name": "Bitcoin SV",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "hash-2",
+      "rank": 128,
+      "symbol": "HASH",
+      "name": "Provenance Blockchain",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "plasma",
+      "rank": 129,
+      "symbol": "XPL",
+      "name": "Plasma",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 6,
+      "native_1m_count": 263520
+    },
+    {
+      "id": "pendle",
+      "rank": 130,
+      "symbol": "PENDLE",
+      "name": "Pendle",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "bittorrent",
+      "rank": 131,
+      "symbol": "BTT",
+      "name": "BitTorrent",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "pieverse",
+      "rank": 132,
+      "symbol": "PIEVERSE",
+      "name": "Pieverse",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "falcon-finance-ff",
+      "rank": 133,
+      "symbol": "FF",
+      "name": "Falcon Finance",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 6,
+      "native_1m_count": 263520
+    },
+    {
+      "id": "kaia",
+      "rank": 134,
+      "symbol": "KAIA",
+      "name": "Kaia",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 7,
+      "native_1m_count": 305280
+    },
+    {
+      "id": "usdai",
+      "rank": 135,
+      "symbol": "USDAI",
+      "name": "USDai",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "lido-dao",
+      "rank": 136,
+      "symbol": "LDO",
+      "name": "Lido DAO",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "unibase",
+      "rank": 137,
+      "symbol": "UB",
+      "name": "Unibase",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "spx6900",
+      "rank": 138,
+      "symbol": "SPX",
+      "name": "SPX6900",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "sofiusd",
+      "rank": 139,
+      "symbol": "SOFID",
+      "name": "SoFiUSD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "janus-henderson-anemoy-treasury-fund",
+      "rank": 140,
+      "symbol": "JTRSY",
+      "name": "Janus Henderson Anemoy Treasury Fund",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "first-digital-usd",
+      "rank": 141,
+      "symbol": "FDUSD",
+      "name": "First Digital USD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "sun-token",
+      "rank": 142,
+      "symbol": "SUN",
+      "name": "Sun Token",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "tezos",
+      "rank": 143,
+      "symbol": "XTZ",
+      "name": "Tezos",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "ousg",
+      "rank": 144,
+      "symbol": "OUSG",
+      "name": "Ondo Short-Term U.S. Government Bond Fund",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "apxusd",
+      "rank": 145,
+      "symbol": "APXUSD",
+      "name": "apxUSD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "backpack",
+      "rank": 146,
+      "symbol": "BP",
+      "name": "Backpack",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "decred",
+      "rank": 147,
+      "symbol": "DCR",
+      "name": "Decred",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "gnosis",
+      "rank": 148,
+      "symbol": "GNO",
+      "name": "Gnosis",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "ape-and-pepe",
+      "rank": 149,
+      "symbol": "APEPE",
+      "name": "Ape and Pepe",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "re-protocol-reusd",
+      "rank": 150,
+      "symbol": "REUSD",
+      "name": "Re Protocol reUSD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "olympus",
+      "rank": 151,
+      "symbol": "OHM",
+      "name": "Olympus",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "the-graph",
+      "rank": 152,
+      "symbol": "GRT",
+      "name": "The Graph",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "bonk",
+      "rank": 153,
+      "symbol": "BONK",
+      "name": "Bonk",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "monad",
+      "rank": 154,
+      "symbol": "MON",
+      "name": "Monad",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "kite-2",
+      "rank": 155,
+      "symbol": "KITE",
+      "name": "Kite",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "optimism",
+      "rank": 156,
+      "symbol": "OP",
+      "name": "Optimism",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "terra-luna",
+      "rank": 157,
+      "symbol": "LUNC",
+      "name": "Terra",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "arweave",
+      "rank": 158,
+      "symbol": "AR",
+      "name": "Arweave",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "jito-governance-token",
+      "rank": 159,
+      "symbol": "JTO",
+      "name": "Jito",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "syrup",
+      "rank": 160,
+      "symbol": "SYRUP",
+      "name": "Maple Finance",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "ethereum-name-service",
+      "rank": 161,
+      "symbol": "ENS",
+      "name": "Ethereum Name Service",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "conflux-token",
+      "rank": 162,
+      "symbol": "CFX",
+      "name": "Conflux",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "collector-crypt",
+      "rank": 163,
+      "symbol": "CARDS",
+      "name": "Collector Crypt",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "floki",
+      "rank": 164,
+      "symbol": "FLOKI",
+      "name": "FLOKI",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "jasmycoin",
+      "rank": 165,
+      "symbol": "JASMY",
+      "name": "JasmyCoin",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "compound-governance-token",
+      "rank": 166,
+      "symbol": "COMP",
+      "name": "Compound",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "iota",
+      "rank": 167,
+      "symbol": "IOTA",
+      "name": "IOTA",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "apenft",
+      "rank": 168,
+      "symbol": "NFT",
+      "name": "AINFT",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "pons",
+      "rank": 169,
+      "symbol": "PONS",
+      "name": "Pons",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "meteora",
+      "rank": 170,
+      "symbol": "MET",
+      "name": "Meteora",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 6,
+      "native_1m_count": 263520
+    },
+    {
+      "id": "zebec-network",
+      "rank": 171,
+      "symbol": "ZBCN",
+      "name": "Zebec Network",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "thorchain",
+      "rank": 172,
+      "symbol": "RUNE",
+      "name": "THORChain",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "kinesis-silver",
+      "rank": 173,
+      "symbol": "KAG",
+      "name": "Kinesis Silver",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "bnb48-club-token",
+      "rank": 174,
+      "symbol": "KOGE",
+      "name": "KOGE",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "safo",
+      "rank": 175,
+      "symbol": "SAFO",
+      "name": "Spiko Amundi Overnight Swap Fund",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "theta-token",
+      "rank": 176,
+      "symbol": "THETA",
+      "name": "Theta Network",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "frax",
+      "rank": 177,
+      "symbol": "FRAX",
+      "name": "Legacy Frax Dollar",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "akash-network",
+      "rank": 178,
+      "symbol": "AKT",
+      "name": "Akash Network",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "trust-wallet-token",
+      "rank": 179,
+      "symbol": "TWT",
+      "name": "Trust Wallet",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "crvusd",
+      "rank": 180,
+      "symbol": "CRVUSD",
+      "name": "crvUSD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "eigenlayer",
+      "rank": 181,
+      "symbol": "EIGEN",
+      "name": "EigenCloud (prev. EigenLayer)",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "usx",
+      "rank": 182,
+      "symbol": "USX",
+      "name": "USX",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "dogwifcoin",
+      "rank": 183,
+      "symbol": "WIF",
+      "name": "dogwifhat",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "axie-infinity",
+      "rank": 184,
+      "symbol": "AXS",
+      "name": "Axie Infinity",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "tradable-na-rent-financing-platform-sstn",
+      "rank": 185,
+      "symbol": "PC0000031",
+      "name": "Tradable NA Rent Financing Platform SSTN",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "grx-chain",
+      "rank": 186,
+      "symbol": "GRX",
+      "name": "GRX Chain",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "the-sandbox",
+      "rank": 187,
+      "symbol": "SAND",
+      "name": "The Sandbox",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "kamino",
+      "rank": 188,
+      "symbol": "KMNO",
+      "name": "Kamino",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 10,
+      "native_1m_count": 439200
+    },
+    {
+      "id": "basic-attention-token",
+      "rank": 189,
+      "symbol": "BAT",
+      "name": "Basic Attention",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "shuffle-2",
+      "rank": 190,
+      "symbol": "SHFL",
+      "name": "Shuffle",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "convex-finance",
+      "rank": 191,
+      "symbol": "CVX",
+      "name": "Convex Finance",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "zama",
+      "rank": 192,
+      "symbol": "ZAMA",
+      "name": "Zama",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 6,
+      "native_1m_count": 263520
+    },
+    {
+      "id": "societe-generale-forge-eurcv",
+      "rank": 193,
+      "symbol": "EURCV",
+      "name": "EUR CoinVertible",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "useless-3",
+      "rank": 194,
+      "symbol": "USELESS",
+      "name": "Useless Coin",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "doublezero",
+      "rank": 195,
+      "symbol": "2Z",
+      "name": "DoubleZero",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 6,
+      "native_1m_count": 263520
+    },
+    {
+      "id": "usa",
+      "rank": 196,
+      "symbol": "USAT",
+      "name": "USAT",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "origintrail",
+      "rank": 197,
+      "symbol": "TRAC",
+      "name": "OriginTrail",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "decentraland",
+      "rank": 198,
+      "symbol": "MANA",
+      "name": "Decentraland",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "agora-dollar",
+      "rank": 199,
+      "symbol": "AUSD",
+      "name": "AUSD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "mx-token",
+      "rank": 200,
+      "symbol": "MX",
+      "name": "MX",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "vaulta",
+      "rank": 201,
+      "symbol": "A",
+      "name": "Vaulta",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "instadapp",
+      "rank": 202,
+      "symbol": "FLUID",
+      "name": "Fluid",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "sonic-3",
+      "rank": 203,
+      "symbol": "S",
+      "name": "Sonic",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "non-playable-coin",
+      "rank": 204,
+      "symbol": "NPC",
+      "name": "Non-Playable Coin",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "neo",
+      "rank": 205,
+      "symbol": "NEO",
+      "name": "NEO",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "apyusd",
+      "rank": 206,
+      "symbol": "APYUSD",
+      "name": "apyUSD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "immutable-x",
+      "rank": 207,
+      "symbol": "IMX",
+      "name": "Immutable",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "chain-2",
+      "rank": 208,
+      "symbol": "XCN",
+      "name": "Onyxcoin",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "vision-3",
+      "rank": 209,
+      "symbol": "VSN",
+      "name": "Vision",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "spiko-us-t-bills-money-market-fund",
+      "rank": 210,
+      "symbol": "USTBL",
+      "name": "Spiko US T-Bills Money Market Fund",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "swissborg",
+      "rank": 211,
+      "symbol": "BORG",
+      "name": "SwissBorg",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "tradable-apac-diversified-finance-provider-sstn",
+      "rank": 212,
+      "symbol": "PC0000033",
+      "name": "Tradable APAC Diversified Finance Provider SSTN",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "fartcoin",
+      "rank": 213,
+      "symbol": "FARTCOIN",
+      "name": "Fartcoin",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "chiliz",
+      "rank": 214,
+      "symbol": "CHZ",
+      "name": "Chiliz",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "btse-token",
+      "rank": 215,
+      "symbol": "BTSE",
+      "name": "BTSE Token",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "coco-2",
+      "rank": 216,
+      "symbol": "COCO",
+      "name": "coco",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "railgun",
+      "rank": 217,
+      "symbol": "RAIL",
+      "name": "Railgun",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "circle-internet-group-bstock",
+      "rank": 218,
+      "symbol": "CRCLB",
+      "name": "Circle Internet Group (bStocks Tokenized Stock)",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "bedrock-token",
+      "rank": 219,
+      "symbol": "BR",
+      "name": "Bedrock",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "gmt-token",
+      "rank": 220,
+      "symbol": "GOMINING",
+      "name": "GoMining Token",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "strategy-pp-variable-xstock",
+      "rank": 221,
+      "symbol": "STRCX",
+      "name": "Strategy PP Variable xStock",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "zksync",
+      "rank": 222,
+      "symbol": "ZK",
+      "name": "ZKsync",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "sentient",
+      "rank": 223,
+      "symbol": "SENT",
+      "name": "Sentient",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 6,
+      "native_1m_count": 263520
+    },
+    {
+      "id": "gusd",
+      "rank": 224,
+      "symbol": "GUSD",
+      "name": "GUSD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "build-on",
+      "rank": 225,
+      "symbol": "B",
+      "name": "BUILDon",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "ecash",
+      "rank": 226,
+      "symbol": "XEC",
+      "name": "eCash",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "aioz-network",
+      "rank": 227,
+      "symbol": "AIOZ",
+      "name": "AIOZ Network",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "apecoin",
+      "rank": 228,
+      "symbol": "APE",
+      "name": "ApeCoin",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "dgrid-ai",
+      "rank": 229,
+      "symbol": "DGAI",
+      "name": "DGrid AI",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "superfarm",
+      "rank": 230,
+      "symbol": "SUPER",
+      "name": "SuperVerse",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "orca",
+      "rank": 231,
+      "symbol": "ORCA",
+      "name": "Orca",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 15,
+      "native_1m_count": 656640
+    },
+    {
+      "id": "quack-ai",
+      "rank": 232,
+      "symbol": "Q",
+      "name": "Quack AI",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "geodnet",
+      "rank": 233,
+      "symbol": "GEOD",
+      "name": "Geodnet",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "safepal",
+      "rank": 234,
+      "symbol": "SFP",
+      "name": "SafePal",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "beam-2",
+      "rank": 235,
+      "symbol": "BEAM",
+      "name": "Beam",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "1inch",
+      "rank": 236,
+      "symbol": "1INCH",
+      "name": "1INCH",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "ultima",
+      "rank": 237,
+      "symbol": "ULTIMA",
+      "name": "Ultima",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "havven",
+      "rank": 238,
+      "symbol": "SNX",
+      "name": "Synthetix",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "celium",
+      "rank": 239,
+      "symbol": "SN51",
+      "name": "lium",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "jpycoin",
+      "rank": 240,
+      "symbol": "JPYC",
+      "name": "JPY Coin",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "stronghold-token",
+      "rank": 241,
+      "symbol": "SHX",
+      "name": "Stronghold",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "golem",
+      "rank": 242,
+      "symbol": "GLM",
+      "name": "Golem",
+      "source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "months": 20,
+      "native_1m_count": 876960
+    },
+    {
+      "id": "meta-2-2",
+      "rank": 243,
+      "symbol": "META",
+      "name": "MetaDAO",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "aethir",
+      "rank": 244,
+      "symbol": "ATH",
+      "name": "Aethir",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "humanity",
+      "rank": 245,
+      "symbol": "H",
+      "name": "Humanity",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "jpysc",
+      "rank": 246,
+      "symbol": "JPYSC",
+      "name": "JPYSC",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "edgex",
+      "rank": 247,
+      "symbol": "EDGE",
+      "name": "edgeX",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "cash-4",
+      "rank": 248,
+      "symbol": "CASH",
+      "name": "CASH",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "ozone-chain",
+      "rank": 249,
+      "symbol": "OZO",
+      "name": "Ozone Chain",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    },
+    {
+      "id": "avant-usd",
+      "rank": 250,
+      "symbol": "AVUSD",
+      "name": "Avant USD",
+      "source": null,
+      "quote": "USDT",
+      "months": 0,
+      "native_1m_count": 0
+    }
+  ]
+}
