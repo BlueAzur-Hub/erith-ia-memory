@@ -161,7 +161,24 @@ class NativeBitgetMonthTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Duplicate"):
             m.select_pending_assets([qualified[0],qualified[0]],set(),now)
         with self.assertRaisesRegex(ValueError,"batch"):
-            m.select_pending_assets(qualified,set(),now,limit=4)
+            m.select_pending_assets(qualified,set(),now,limit=5)
+
+    def test_four_real_assets_per_run_with_same_strict_upper_bound(self):
+        """Raise safe throughput only: no unbounded API flood or repeated IDs."""
+        now=dt.datetime(2026,10,10,17,0,tzinfo=dt.timezone.utc)
+        qualified=[{**ASSET,"rank":51+i,"id":f"spot-{i}",
+                    "symbol":f"S{i}","pair":f"S{i}USDT"} for i in range(9)]
+        observed=set()
+        for rotation in range(9):
+            month,batch=m.select_pending_assets(
+                qualified,set(),now,limit=4,rotation=rotation)
+            self.assertEqual(month,"2026-09")
+            self.assertEqual(len(batch),4)
+            self.assertEqual(len({a["id"] for a in batch}),4)
+            observed.update(a["id"] for a in batch)
+        self.assertEqual(observed,{a["id"] for a in qualified})
+        with self.assertRaisesRegex(ValueError,"batch"):
+            m.select_pending_assets(qualified,set(),now,limit=5)
 
     def test_scheduled_rotation_escapes_missing_month_and_first_three(self):
         """Repeated failures of one month/asset cannot block older real sources."""
@@ -248,7 +265,7 @@ class NativeBitgetMonthTests(unittest.TestCase):
         self.assertIn("new_ids=updated_ids-old_ids",text)
         self.assertIn("permitted=bool(new_ids)",text)
         self.assertIn("steps.eligible.outputs.collect == 'true'",text)
-        self.assertIn("--collect --month auto --lookback-months 12 --limit 3",text)
+        self.assertIn("--collect --month auto --lookback-months 12 --limit 4",text)
         self.assertIn("fetch-depth: 0",text)
         self.assertIn("11,41 * * * *",text)
         self.assertIn("Agent Crypto Top250 Alternative Spot Market Discovery",text)

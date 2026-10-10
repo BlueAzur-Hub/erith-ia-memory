@@ -24,7 +24,7 @@ on:
     types: [completed]
   schedule:
     # 48 bounded acquisition windows daily; the source-publishing concurrency lock
-    # remains serial and each run handles at most three exact-ID assets.
+    # remains serial and each run handles at most four exact-ID assets.
     - cron: '11,41 * * * *'
 permissions:
   contents: write
@@ -122,7 +122,7 @@ jobs:
            steps.eligible.outputs.collect == 'true')
         run: |
           set -euo pipefail
-          python public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py --collect --month auto --lookback-months 12 --limit 3
+          python public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py --collect --month auto --lookback-months 12 --limit 4
       - name: Guarantee source ZIPs never land in Git history or trading app
         if: always()
         run: |
