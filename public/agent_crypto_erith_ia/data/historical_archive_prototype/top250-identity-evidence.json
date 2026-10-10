@@ -1,5 +1,5 @@
 {
-  "approved_count": 72,
+  "approved_count": 74,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -792,13 +792,23 @@
       "symbol": "TIA"
     },
     {
-      "checked_at": "2026-10-10T00:19:12.249987+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T12:23:16.177991+00:00",
+      "evidence": [
+        {
+          "base": "SEI",
+          "coin_id": "sei-network",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "sei-network",
+          "trade_url": "https://www.binance.com/en/trade/SEI_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "sei-network",
-      "pages": 1,
+      "pages": 2,
       "pair": "SEIUSDT",
       "rank": 125,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "SEI"
     },
     {
@@ -862,13 +872,23 @@
       "symbol": "FF"
     },
     {
-      "checked_at": "2026-10-10T00:19:57.776937+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T12:23:31.313241+00:00",
+      "evidence": [
+        {
+          "base": "KAIA",
+          "coin_id": "kaia",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "kaia",
+          "trade_url": "https://www.binance.com/en/trade/KAIA_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "kaia",
+      "pages": 1,
       "pair": "KAIAUSDT",
       "rank": 134,
-      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
-      "status": "source_unavailable",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "KAIA"
     },
     {
@@ -1692,7 +1712,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 24,
+  "review_required_count": 22,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
