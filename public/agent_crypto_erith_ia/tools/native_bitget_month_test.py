@@ -138,6 +138,43 @@ class NativeBitgetMonthTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"closed"):
             m.bounds(dt.datetime.now(dt.timezone.utc).strftime("%Y-%m"))
 
+    def test_new_fourth_exact_id_not_starved_by_three_older_assets(self):
+        """Regression: new eligible coin must not wait a year behind three backfills."""
+        now=dt.datetime(2026,10,10,17,0,tzinfo=dt.timezone.utc)
+        qualified=[{**ASSET,"rank":75+i,"id":f"proven-{i}","symbol":f"T{i}",
+                    "pair":f"T{i}USDT"} for i in range(4)]
+        september={m.release_tag(a,"2026-09") for a in qualified[:3]}
+        month,batch=m.select_pending_assets(qualified,september,now,limit=3)
+        self.assertEqual(month,"2026-09")
+        self.assertEqual([a["id"] for a in batch],["proven-3"])
+        august=september|{m.release_tag(qualified[-1],"2026-09")}
+        month,batch=m.select_pending_assets(qualified,august,now,limit=3)
+        self.assertEqual(month,"2026-08")
+        self.assertEqual([a["id"] for a in batch],["proven-0","proven-1","proven-2"])
+        no_backlog=set()
+        cursor="2026-09"
+        for _ in range(12):
+            no_backlog.update(m.release_tag(a,cursor) for a in qualified)
+            cursor=m.previous_month(cursor)
+        self.assertEqual(m.select_pending_assets(qualified,no_backlog,now),
+                         (None,[]))
+        with self.assertRaisesRegex(ValueError,"Duplicate"):
+            m.select_pending_assets([qualified[0],qualified[0]],set(),now)
+        with self.assertRaisesRegex(ValueError,"batch"):
+            m.select_pending_assets(qualified,set(),now,limit=4)
+
+    def test_selection_never_promotes_unqualified_symbols(self):
+        src=json.loads(m.proof.CATALOG.read_text())
+        alt=json.loads(m.proof.EXACT.read_text())
+        venue=json.loads(m.proof.INSTRUMENTS.read_text())
+        qualified=m.proof.candidates(src,alt,venue)
+        self.assertEqual(len(qualified),3)
+        month,batch=m.select_pending_assets(qualified,set(),
+                 dt.datetime(2026,10,10,tzinfo=dt.timezone.utc),limit=3)
+        self.assertEqual(month,"2026-09")
+        self.assertEqual({a["id"] for a in batch},
+                         {"cosmos","lighter","stable-2"})
+
     def test_closed_month_and_release_identity(self):
         self.assertEqual(m.bounds("2026-09")[2],43200)
         self.assertEqual(m.release_tag(ASSET,"2026-09"),
