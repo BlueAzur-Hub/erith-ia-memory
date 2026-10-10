@@ -1,5 +1,5 @@
 {
-  "approved_count": 76,
+  "approved_count": 78,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -932,13 +932,23 @@
       "symbol": "FDUSD"
     },
     {
-      "checked_at": "2026-10-10T00:20:42.975327+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T20:41:01.972004+00:00",
+      "evidence": [
+        {
+          "base": "SUN",
+          "coin_id": "sun-token",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "sun-token",
+          "trade_url": "https://www.binance.com/en/trade/SUN_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "sun-token",
+      "pages": 1,
       "pair": "SUNUSDT",
       "rank": 142,
-      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
-      "status": "source_unavailable",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "SUN"
     },
     {
@@ -1042,13 +1052,23 @@
       "symbol": "BONK"
     },
     {
-      "checked_at": "2026-10-10T00:21:58.813619+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T20:41:17.214443+00:00",
+      "evidence": [
+        {
+          "base": "KITE",
+          "coin_id": "kite-2",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "kite-2",
+          "trade_url": "https://www.binance.com/en/trade/KITE_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "kite-2",
-      "pages": 1,
+      "pages": 2,
       "pair": "KITEUSDT",
       "rank": 155,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "KITE"
     },
     {
@@ -1732,7 +1752,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 20,
+  "review_required_count": 18,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
