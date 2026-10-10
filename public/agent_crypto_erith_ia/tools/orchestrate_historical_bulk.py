@@ -76,14 +76,40 @@ def select_months(now, present, count=MAX_MONTHS_PER_RUN, floor=FIRST_SCAN):
     return chosen
 
 
+MAX_RELEASE_PAGES = 100
+REPO = "BlueAzur-Hub/erith-ia-memory"
+
 def github_releases():
-    cp=subprocess.run(["gh","release","list","--limit","1000",
-                       "--json","tagName,isDraft"],
-                      capture_output=True,text=True,timeout=45,check=True)
-    result=json.loads(cp.stdout)
-    need(isinstance(result,list) and len(result)<1000,
-         "Release-list pagination limit reached; cannot safely plan")
-    return result
+    """Read all immutable source checkpoints; never plan from a truncated list.
+
+    The repository hosts many other Releases. Its global inventory can exceed
+    gh release list --limit 1000, so a missing page must fail closed rather
+    than duplicate or overwrite a published monthly ZIP.
+    """
+    result=[]
+    seen=set()
+    for page in range(1,MAX_RELEASE_PAGES+1):
+        proc=subprocess.run(["gh","api",
+            f"repos/{REPO}/releases?per_page=100&page={page}"],
+            capture_output=True,text=True,timeout=90,check=True)
+        rows=json.loads(proc.stdout)
+        need(isinstance(rows,list) and len(rows)<=100,
+             "Malformed official Release inventory page")
+        for record in rows:
+            need(isinstance(record,dict) and
+                 isinstance(record.get("tag_name"),str) and
+                 isinstance(record.get("draft"),bool),
+                 "Malformed official Release entry")
+            tag_name=record["tag_name"]
+            if TAG.fullmatch(tag_name):
+                need(tag_name not in seen,
+                     "Repeated immutable Release tag across pages")
+                seen.add(tag_name)
+                result.append({"tagName":tag_name,
+                               "isDraft":record["draft"]})
+        if len(rows)<100:
+            return result
+    raise ValueError("Release inventory pagination exhausted; refuse stale plan")
 
 
 def verify_month_output(folder: Path, manifest: dict, selected: list, month: str):

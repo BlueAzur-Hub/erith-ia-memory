@@ -52,6 +52,67 @@ class PlanTests(unittest.TestCase):
                                 "crypto-spot-bulk-2026-08-1m"],count=2)
         self.assertEqual(r,["2026-07","2026-06"])
 
+    def test_existing_bulk_collector_runs_eight_times_daily_without_expanding_batch(self):
+        wf=(Path(app.__file__).resolve().parents[3] /
+            ".github/workflows/agent-crypto-bulk-backfill.yml").read_text()
+        self.assertIn("cron: '19 */3 * * *'",wf)
+        self.assertIn("--run --max-months 7",wf)
+        self.assertIn("group: agent-crypto-continuous-spot-bulk-release",wf)
+        self.assertIn("cancel-in-progress: false",wf)
+        self.assertIn("timeout-minutes: 35",wf)
+        self.assertEqual(app.MAX_MONTHS_PER_RUN,7)
+        self.assertIn('git diff --name-only HEAD^ HEAD -- "$collector" "$workflow"',wf)
+        self.assertIn('if [[ -n "$(git diff --name-only',wf)
+        self.assertIn('echo "approved=true" >> "$GITHUB_OUTPUT"',wf)
+
+    def test_release_inventory_paginates_beyond_one_thousand_without_duplicates(self):
+        viewed=[]
+        def fake_call(cmd,**_):
+            page=int(cmd[-1].split("page=")[-1])
+            viewed.append(page)
+            # All full pages prior to the last are populated with unrelated
+            # tagged Releases; only precise monthly names may be checkpoints.
+            source=[{"tag_name":f"unrelated-{page}-{i}","draft":False}
+                    for i in range(100)]
+            if page==1:
+                source[0]={"tag_name":"crypto-spot-bulk-2026-09-1m",
+                           "draft":False}
+            if page==10:
+                source[0]={"tag_name":"crypto-spot-bulk-2025-01-1m",
+                           "draft":False}
+            if page==11: source=source[:2]
+            return type("Reply",(),{"stdout":json.dumps(source)})()
+        with patch.object(app.subprocess,"run",side_effect=fake_call):
+            found=app.github_releases()
+        self.assertEqual(viewed,list(range(1,12)))
+        self.assertEqual([x["tagName"] for x in found],
+                         ["crypto-spot-bulk-2026-09-1m",
+                          "crypto-spot-bulk-2025-01-1m"])
+        self.assertEqual(app.select_months(
+            dt.datetime(2026,10,9,tzinfo=UTC),found,count=1),
+            ["2026-08"])
+
+    def test_truncated_or_duplicate_release_pages_refused_before_collecting(self):
+        def duplicate(cmd,**_):
+            page=int(cmd[-1].split("page=")[-1])
+            source=[{"tag_name":f"unrelated-{page}-{i}","draft":False}
+                    for i in range(100)]
+            if page in (1,2):
+                source[0]={"tag_name":"crypto-spot-bulk-2026-09-1m",
+                           "draft":False}
+            return type("Reply",(),{"stdout":json.dumps(source)})()
+        with patch.object(app.subprocess,"run",side_effect=duplicate):
+            with self.assertRaisesRegex(ValueError,"Repeated immutable"):
+                app.github_releases()
+        def truncated(cmd,**_):
+            return type("Reply",(),{"stdout":json.dumps([
+                {"tag_name":f"unrelated-{i}","draft":False}
+                for i in range(100)])})()
+        with patch.object(app.subprocess,"run",side_effect=truncated), \
+             patch.object(app,"MAX_RELEASE_PAGES",2):
+            with self.assertRaisesRegex(ValueError,"pagination exhausted"):
+                app.github_releases()
+
     def test_seven_months_complete_btc_year_without_changing_old_releases(self):
         now=dt.datetime(2026,10,9,tzinfo=UTC)
         present=[app.tag(f"2026-{i:02d}") for i in range(5,10)]
