@@ -33,7 +33,18 @@ class TruthfulDepthTests(unittest.TestCase):
         self.assertEqual(btc["longest_contiguous_months"],
                          max(map(len,years.spans(months))))
         self.assertTrue(btc["at_least_24_consecutive_months"])
-        self.assertEqual([s["year"] for s in btc["year_shards"]],[2024,2025,2026])
+        # Never hardcode 2024 as the oldest year: verified Binance
+        # addenda continue moving the frontier backwards.
+        source_years=sorted({int(m[:4]) for m in months})
+        self.assertEqual([s["year"] for s in btc["year_shards"]],
+                         source_years)
+        all_months=[m for shard in btc["year_shards"]
+                    for m in shard["months"]]
+        self.assertEqual(all_months,sorted(months))
+        self.assertEqual(len(all_months),len(set(all_months)))
+        self.assertTrue(all(
+            all(m.startswith(str(shard["year"])) for m in shard["months"])
+            for shard in btc["year_shards"]))
         self.assertFalse(btc["first_exchange_trade_known"])
         self.assertFalse(btc["token_creation_date_known"])
         self.assertTrue(all(a["rank"]==i+1 for i,a in enumerate(result["assets"])))
