@@ -34,7 +34,7 @@ SPECS=(
  ("render-token","RENDER",81,"2024-08",
   "https://www.binance.com/en/support/announcement/detail/d1f2ae8d99b24439a7a900caa9bb6b3b"),
  ("pancakeswap-token","CAKE",95,"2021-01",
-  "https://www.binance.com/en/support/announcement/detail/0f5870aecd574798a729cf6147da87a8"),
+  "https://www.binance.com/en/support/announcement/detail/54181809083045e7ba2f9b80e4dfdcb4"),
  ("jito-governance-token","JTO",159,"2024-01",
   "https://www.binance.com/en/support/announcement/detail/6282d0aaa23040b6a68c1b9ad9fc3e74"),
  ("conflux-token","CFX",162,"2021-04",
