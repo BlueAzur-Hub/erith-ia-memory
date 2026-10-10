@@ -5,9 +5,9 @@
   "ranked": 250,
   "rank_snapshot": "2026-10-09T18:47:53.633Z",
   "release_months": 28,
-  "release_count": 58,
-  "archived_assets": 106,
-  "native_1m_candles": 84117600,
+  "release_count": 61,
+  "archived_assets": 108,
+  "native_1m_candles": 84382560,
   "groups": [
     {
       "top": 10,
@@ -23,7 +23,7 @@
     },
     {
       "top": 250,
-      "with_history": 106
+      "with_history": 108
     }
   ],
   "months": [
@@ -295,6 +295,13 @@
     },
     {
       "month": "2026-07",
+      "release": "crypto-spot-bulk-add-2026-07-1m-98a9e86329af",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 89280
+    },
+    {
+      "month": "2026-07",
       "release": "crypto-spot-bulk-add-2026-07-1m-ac27d05c29d4",
       "verified": 7,
       "unavailable": 0,
@@ -358,6 +365,13 @@
     },
     {
       "month": "2026-08",
+      "release": "crypto-spot-bulk-add-2026-08-1m-98a9e86329af",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 89280
+    },
+    {
+      "month": "2026-08",
       "release": "crypto-spot-bulk-add-2026-08-1m-ac27d05c29d4",
       "verified": 7,
       "unavailable": 0,
@@ -418,6 +432,13 @@
       "verified": 48,
       "unavailable": 0,
       "candles": 2073600
+    },
+    {
+      "month": "2026-09",
+      "release": "crypto-spot-bulk-add-2026-09-1m-98a9e86329af",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 86400
     },
     {
       "month": "2026-09",
@@ -12890,9 +12911,34 @@
       "symbol": "SUN",
       "name": "Sun Token",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "SUNUSDT",
+          "file": "SUNUSDT-1m-2026-07.zip",
+          "sha256": "9062f9160beff54dc0b788c9f75852d46cd5921a5733339fb6de88560e6bc036",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-98a9e86329af"
+        },
+        {
+          "month": "2026-08",
+          "pair": "SUNUSDT",
+          "file": "SUNUSDT-1m-2026-08.zip",
+          "sha256": "2b24bf7c5c691f9ac85600b17a39d7e8870c9b5cf6e2f001e8ad974f14518724",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-98a9e86329af"
+        },
+        {
+          "month": "2026-09",
+          "pair": "SUNUSDT",
+          "file": "SUNUSDT-1m-2026-09.zip",
+          "sha256": "f0dadfeb7f46505e08fcdc780b50c688257cce348f6bfdac82142327f24b13ab",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-98a9e86329af"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "tezos",
@@ -13825,9 +13871,34 @@
       "symbol": "KITE",
       "name": "Kite",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "KITEUSDT",
+          "file": "KITEUSDT-1m-2026-07.zip",
+          "sha256": "86b1311a1c0fcc3820a6fb874ae36113a78acac3c6a3fb6802bec97f08014296",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-98a9e86329af"
+        },
+        {
+          "month": "2026-08",
+          "pair": "KITEUSDT",
+          "file": "KITEUSDT-1m-2026-08.zip",
+          "sha256": "5dad0406a80e1ca8dbd7ff86f4b86972fb72f2abfca5bdf93ef1fc12130e5574",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-98a9e86329af"
+        },
+        {
+          "month": "2026-09",
+          "pair": "KITEUSDT",
+          "file": "KITEUSDT-1m-2026-09.zip",
+          "sha256": "7e32bd0941bbdd8da82fe6f83ca6b5fc58d40eeaa3cd12a451b0e541a610dc33",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-98a9e86329af"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "optimism",
