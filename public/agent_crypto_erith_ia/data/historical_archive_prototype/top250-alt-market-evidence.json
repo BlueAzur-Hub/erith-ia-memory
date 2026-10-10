@@ -1,7 +1,7 @@
 {
   "candidate_count": 144,
-  "checked_count": 89,
-  "market_candidate_count": 8,
+  "checked_count": 102,
+  "market_candidate_count": 33,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
   "quote": "USDT or USDC: never convert silently",
@@ -99,12 +99,25 @@
       "symbol": "DAI"
     },
     {
-      "checked_at": "2026-10-10T17:23:48.829671+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "bitway",
-      "markets": [],
+      "markets": [
+        {
+          "base": "BTW",
+          "coin_id": "bitway",
+          "contract_address": "0x444045b0ee1ee319a660a5e3d604ca0ffa35acaa",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "BTWUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 31,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "BTW"
     },
     {
@@ -135,12 +148,25 @@
       "symbol": "CRO"
     },
     {
-      "checked_at": "2026-10-10T18:21:19.937544+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "paypal-usd",
-      "markets": [],
-      "pages_checked": 1,
+      "markets": [
+        {
+          "base": "PYUSD",
+          "coin_id": "paypal-usd",
+          "contract_address": "0x6c3ea9036406852006290770bedfcaba0e23a0e8",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "PYUSDUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
       "rank": 40,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "PYUSD"
     },
     {
@@ -217,10 +243,10 @@
       "symbol": "USDF"
     },
     {
-      "checked_at": "2026-10-10T01:40:06.252977+00:00",
+      "checked_at": "2026-10-10T19:31:03.092054+00:00",
       "id": "mantle",
       "markets": [],
-      "pages_checked": 1,
+      "pages_checked": 3,
       "rank": 56,
       "status": "source_unavailable",
       "symbol": "MNT"
@@ -244,12 +270,25 @@
       "symbol": "USDD"
     },
     {
-      "checked_at": "2026-10-10T02:15:50.978907+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "united-stables",
-      "markets": [],
-      "pages_checked": 3,
+      "markets": [
+        {
+          "base": "U",
+          "coin_id": "united-stables",
+          "contract_address": "0xce24439f2d9c6a2289f741120fe202248b666666",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "UUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
       "rank": 64,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "U"
     },
     {
@@ -262,12 +301,25 @@
       "symbol": "HTX"
     },
     {
-      "checked_at": "2026-10-10T02:16:21.493407+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "bitget-token",
-      "markets": [],
+      "markets": [
+        {
+          "base": "BGB",
+          "coin_id": "bitget-token",
+          "contract_address": "0x54d2252757e1672eead234d27b1270728ff90581",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "BGBUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 66,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "BGB"
     },
     {
@@ -326,12 +378,25 @@
       "symbol": "ATOM"
     },
     {
-      "checked_at": "2026-10-10T02:17:37.867254+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "polygon-ecosystem-token",
-      "markets": [],
-      "pages_checked": 1,
+      "markets": [
+        {
+          "base": "POL",
+          "coin_id": "polygon-ecosystem-token",
+          "contract_address": "0x455e53cbb86018ac2b8092fdcd39d8444affc3f6",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "POLUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
       "rank": 76,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "POL"
     },
     {
@@ -435,21 +500,47 @@
       "symbol": "XDC"
     },
     {
-      "checked_at": "2026-10-10T06:19:49.137312+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "gho",
-      "markets": [],
+      "markets": [
+        {
+          "base": "GHO",
+          "coin_id": "gho",
+          "contract_address": "0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "GHOUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 93,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "GHO"
     },
     {
-      "checked_at": "2026-10-10T06:20:04.334495+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "pancakeswap-token",
-      "markets": [],
+      "markets": [
+        {
+          "base": "CAKE",
+          "coin_id": "pancakeswap-token",
+          "contract_address": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "CAKEUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 95,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "CAKE"
     },
     {
@@ -725,12 +816,25 @@
       "symbol": "MON"
     },
     {
-      "checked_at": "2026-10-10T17:25:35.544618+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "kite-2",
-      "markets": [],
+      "markets": [
+        {
+          "base": "KITE",
+          "coin_id": "kite-2",
+          "contract_address": "0x118b70df4f06fa5678e7d543e6066e028c8ea0c0",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "KITEUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 155,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "KITE"
     },
     {
@@ -762,12 +866,25 @@
       "symbol": "JTO"
     },
     {
-      "checked_at": "2026-10-10T18:22:05.153641+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "syrup",
-      "markets": [],
+      "markets": [
+        {
+          "base": "SYRUP",
+          "coin_id": "syrup",
+          "contract_address": "0x643c4e15d7d62ad0abec4a9bd4b001aa3ef52d66",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "SYRUPUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 160,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "SYRUP"
     },
     {
@@ -789,12 +906,25 @@
       "symbol": "CARDS"
     },
     {
-      "checked_at": "2026-10-10T18:22:50.595639+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "compound-governance-token",
-      "markets": [],
+      "markets": [
+        {
+          "base": "COMP",
+          "coin_id": "compound-governance-token",
+          "contract_address": "0xc00e94cb662c3520282e6f5717214004a7f26888",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "COMPUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 166,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "COMP"
     },
     {
@@ -844,12 +974,25 @@
       "symbol": "THETA"
     },
     {
-      "checked_at": "2026-10-10T19:25:50.218621+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "eigenlayer",
-      "markets": [],
+      "markets": [
+        {
+          "base": "EIGEN",
+          "coin_id": "eigenlayer",
+          "contract_address": "0xec53bf9167f50cdeb3ae105f56099aaab9061f83",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "EIGENUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 181,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "EIGEN"
     },
     {
@@ -862,21 +1005,47 @@
       "symbol": "WIF"
     },
     {
-      "checked_at": "2026-10-10T19:26:20.834083+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "usa",
-      "markets": [],
+      "markets": [
+        {
+          "base": "USAT",
+          "coin_id": "usa",
+          "contract_address": "0x07041776f5007aca2a54844f50503a18a72a8b68",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "USATUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 196,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "USAT"
     },
     {
-      "checked_at": "2026-10-10T19:26:36.065650+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "mx-token",
-      "markets": [],
+      "markets": [
+        {
+          "base": "MX",
+          "coin_id": "mx-token",
+          "contract_address": "0x11eef04c884e24d9b7b4760e7476d06ddf797f36",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "MXUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 200,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "MX"
     },
     {
@@ -907,15 +1076,288 @@
       "symbol": "S"
     },
     {
-      "checked_at": "2026-10-10T19:27:37.139166+00:00",
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "non-playable-coin",
-      "markets": [],
+      "markets": [
+        {
+          "base": "NPC",
+          "coin_id": "non-playable-coin",
+          "contract_address": "0x8ed97a637a790be1feff5e888d43629dc05408f6",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "NPCUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 204,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "NPC"
+    },
+    {
+      "checked_at": "2026-10-10T19:31:23.360211+00:00",
+      "id": "vision-3",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 209,
+      "status": "source_unavailable",
+      "symbol": "VSN"
+    },
+    {
+      "checked_at": "2026-10-10T19:31:43.627001+00:00",
+      "id": "fartcoin",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 213,
+      "status": "source_unavailable",
+      "symbol": "FARTCOIN"
+    },
+    {
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
+      "id": "bedrock-token",
+      "markets": [
+        {
+          "base": "BR",
+          "coin_id": "bedrock-token",
+          "contract_address": "0xff7d6a96ae471bbcd7713af9cb1feeb16cf56b41",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "BRUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 219,
+      "status": "exact_id_market_candidates",
+      "symbol": "BR"
+    },
+    {
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
+      "id": "gmt-token",
+      "markets": [
+        {
+          "base": "GOMINING",
+          "coin_id": "gmt-token",
+          "contract_address": "0x7ddc52c4de30e94be3a6a0a2b259b2850f421989",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "GOMININGUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 220,
+      "status": "exact_id_market_candidates",
+      "symbol": "GOMINING"
+    },
+    {
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
+      "id": "build-on",
+      "markets": [
+        {
+          "base": "B",
+          "coin_id": "build-on",
+          "contract_address": "0x6bdcce4a559076e37755a78ce0c06214e59e4444",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "BUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 225,
+      "status": "exact_id_market_candidates",
+      "symbol": "B"
+    },
+    {
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
+      "id": "dgrid-ai",
+      "markets": [
+        {
+          "base": "DGAI",
+          "coin_id": "dgrid-ai",
+          "contract_address": "0x10d4183389e99233db3cc981c43443ebd28ebd5e",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "DGAIUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 229,
+      "status": "exact_id_market_candidates",
+      "symbol": "DGAI"
+    },
+    {
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
+      "id": "superfarm",
+      "markets": [
+        {
+          "base": "SUPER",
+          "coin_id": "superfarm",
+          "contract_address": "0xe53ec727dbdeb9e2d5456c3be40cff031ab40a55",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "SUPERUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 230,
+      "status": "exact_id_market_candidates",
+      "symbol": "SUPER"
+    },
+    {
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
+      "id": "quack-ai",
+      "markets": [
+        {
+          "base": "Q",
+          "coin_id": "quack-ai",
+          "contract_address": "0xc07e1300dc138601fa6b0b59f8d0fa477e690589",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "QUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 232,
+      "status": "exact_id_market_candidates",
+      "symbol": "Q"
+    },
+    {
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
+      "id": "beam-2",
+      "markets": [
+        {
+          "base": "BEAM",
+          "coin_id": "beam-2",
+          "contract_address": "0x62d0a8458ed7719fdaf978fe5929c6d342b0bfce",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "BEAMUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 235,
+      "status": "exact_id_market_candidates",
+      "symbol": "BEAM"
+    },
+    {
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
+      "id": "havven",
+      "markets": [
+        {
+          "base": "SNX",
+          "coin_id": "havven",
+          "contract_address": "0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "SNXUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 238,
+      "status": "exact_id_market_candidates",
+      "symbol": "SNX"
+    },
+    {
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
+      "id": "aethir",
+      "markets": [
+        {
+          "base": "ATH",
+          "coin_id": "aethir",
+          "contract_address": "0xbe0ed4138121ecfc5c0e56b40517da27e6c5226b",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "ATHUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 244,
+      "status": "exact_id_market_candidates",
+      "symbol": "ATH"
+    },
+    {
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
+      "id": "humanity",
+      "markets": [
+        {
+          "base": "H",
+          "coin_id": "humanity",
+          "contract_address": "0xe76c5b78f93909d34404e9eb4c1f19e7582a5de1",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "HUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 245,
+      "status": "exact_id_market_candidates",
+      "symbol": "H"
+    },
+    {
+      "checked_at": "2026-10-10T19:32:03.974701+00:00",
+      "id": "edgex",
+      "markets": [
+        {
+          "base": "EDGE",
+          "coin_id": "edgex",
+          "contract_address": "0xb0076de78dc50581770bba1d211ddc0ad4f2a241",
+          "contract_platform": "ethereum",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "EDGEUSDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 247,
+      "status": "exact_id_market_candidates",
+      "symbol": "EDGE"
     }
   ],
   "schema": "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
-  "source": "CoinGecko exact coin ID, exchange_ids okx or bitget"
+  "source": "CoinGecko exact coin ID, exchange_ids okx or bitget; exact-ID CoinGecko contract matched to Bitget official chain"
 }
