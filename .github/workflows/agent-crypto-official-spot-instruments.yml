@@ -9,6 +9,9 @@ on:
       - 'public/agent_crypto_erith_ia/tools/native_okx_daily_history_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_additional_okx_daily_history.py'
       - 'public/agent_crypto_erith_ia/tools/additional_okx_daily_history_test.py'
+      - 'public/agent_crypto_erith_ia/tools/verify_historical_multiresolution_sources.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_multiresolution_sources_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json'
   push:
     branches: [main]
     paths:
@@ -19,6 +22,9 @@ on:
       - 'public/agent_crypto_erith_ia/tools/native_okx_daily_history_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_additional_okx_daily_history.py'
       - 'public/agent_crypto_erith_ia/tools/additional_okx_daily_history_test.py'
+      - 'public/agent_crypto_erith_ia/tools/verify_historical_multiresolution_sources.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_multiresolution_sources_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json'
   workflow_dispatch:
   schedule:
     - cron: '17 8 * * *'
@@ -45,6 +51,8 @@ jobs:
           python public/agent_crypto_erith_ia/tools/historical_spot_instruments_test.py
           python public/agent_crypto_erith_ia/tools/native_okx_daily_history_test.py
           python public/agent_crypto_erith_ia/tools/additional_okx_daily_history_test.py
+          python public/agent_crypto_erith_ia/tools/historical_multiresolution_sources_test.py
+          python public/agent_crypto_erith_ia/tools/verify_historical_multiresolution_sources.py --offline
           python public/agent_crypto_erith_ia/tools/collect_additional_okx_daily_history.py --plan
           python public/agent_crypto_erith_ia/tools/collect_native_okx_daily_history.py --plan
           python public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py --plan
@@ -82,6 +90,11 @@ jobs:
           else
             echo "NOOP: no reviewed new secondary OKX source acquisition"
           fi
+      - name: PR only - independently retrieve five published OKX archive gzips and validate SHA and native OHLCV
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/verify_historical_multiresolution_sources.py --verify
       - name: Read exactly two official public Spot instrument inventories
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
