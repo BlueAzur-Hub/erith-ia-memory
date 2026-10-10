@@ -1,0 +1,62 @@
+{
+  "schema": "aerith.public.ohlcv.okx.native-utc-daily-source-index.v1",
+  "ranked_universe": 250,
+  "source": "OKX Spot public /api/v5/market/history-candles",
+  "native_interval": "1Dutc",
+  "native_quote": "USDT",
+  "verified_assets": 2,
+  "native_daily_candles": 5579,
+  "native_1m_candles": 0,
+  "contributes_to_canonical_1m_top250_count": false,
+  "archive_source_checksums_exchange_signed": false,
+  "integrity": "Github Release asset SHA-256 and response digests; source API responses are not exchange-signed",
+  "no_interpolation": true,
+  "no_quote_conversion": true,
+  "proof_release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-okb-cro",
+  "proof_manifest": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-okx-spot-native-daily-2026-09-okb-cro/manifest.json",
+  "release_manifest_sha256": "9f6fa2ad173b914f13ad5c246fbaa188fba2c1d5de9030981a1b2c251f74d59b",
+  "source_probe_run": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38095432594",
+  "assets": [
+    {
+      "id": "okb",
+      "rank": 42,
+      "symbol": "OKB",
+      "market": "OKB-USDT",
+      "quote": "USDT",
+      "native_interval": "1Dutc",
+      "native_candles": 3114,
+      "first_open_utc": "2018-03-23",
+      "last_open_utc": "2026-09-30",
+      "observed_interior_missing_days": 0,
+      "first_exchange_trade_not_proven": true,
+      "release_asset": "okb-OKB-USDT-1Dutc.json.gz",
+      "release_asset_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-okx-spot-native-daily-2026-09-okb-cro/okb-OKB-USDT-1Dutc.json.gz",
+      "release_asset_size": 110708,
+      "release_asset_sha256": "2fb37f109d5b9f1b181208b3d38a6724d47830b043326149a4d1108dbb80652d"
+    },
+    {
+      "id": "crypto-com-chain",
+      "rank": 39,
+      "symbol": "CRO",
+      "market": "CRO-USDT",
+      "quote": "USDT",
+      "native_interval": "1Dutc",
+      "native_candles": 2465,
+      "first_open_utc": "2020-01-01",
+      "last_open_utc": "2026-09-30",
+      "observed_interior_missing_days": 0,
+      "first_exchange_trade_not_proven": true,
+      "release_asset": "crypto-com-chain-CRO-USDT-1Dutc.json.gz",
+      "release_asset_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-okx-spot-native-daily-2026-09-okb-cro/crypto-com-chain-CRO-USDT-1Dutc.json.gz",
+      "release_asset_size": 91236,
+      "release_asset_sha256": "4b23582016fea5a4e93343108afbc79b79238c796f0e56a3b5bf3389dab8228d"
+    }
+  ],
+  "limitations": [
+    "This source contains daily UTC OHLCV, not native 1m bars.",
+    "Only 2 sources are verified in this index. It does not demonstrate full Top250 coverage.",
+    "Source data come from OKX Spot only, with original quote USDT, not historical USD.",
+    "Does not establish the first-ever token price or inception date.",
+    "Do not count these rows in the Binance/Bitget native 1m federated catalog."
+  ]
+}
