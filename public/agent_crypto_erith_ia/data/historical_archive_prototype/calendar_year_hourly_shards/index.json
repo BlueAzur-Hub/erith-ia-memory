@@ -4,9 +4,9 @@
   "quote": "USDT",
   "is_live": false,
   "ranked": 250,
-  "source_catalog_archived": 104,
+  "source_catalog_archived": 108,
   "materialized_assets": 2,
-  "remaining_archived_assets": 102,
+  "remaining_archived_assets": 106,
   "year_shards": 6,
   "max_is_all_time": false,
   "first_exchange_trade_date_not_proven": true,
@@ -18,20 +18,32 @@
       "symbol": "BTC",
       "pair": "BTCUSDT",
       "quote": "USDT",
-      "source_signature": "60f67bd1659a69b4c3e2204c5dcf43413ada7788c97199581219dd2a7ad4a1ec",
-      "verified_months": 26,
+      "source_signature": "6b284cc908b241d46e5b69ab9acb480b44fec9cad4bb944e3226c771b28d0efe",
+      "verified_months": 28,
       "shards": [
         {
-          "file": "bitcoin-2024-span0.json.gz",
+          "file": "bitcoin-2024-span0-a0a2ddd29db1dc5a4e40fcf98104887484a010d0181bd2e47cbd1f0d5275d883.json.gz",
           "year": 2024,
           "span": 0,
-          "first_open_ms": 1722470400000,
+          "first_open_ms": 1717200000000,
           "last_open_ms": 1735686000000,
-          "first_month": "2024-08",
+          "first_month": "2024-06",
           "last_month": "2024-12",
-          "hourly_count": 3672,
-          "native_1m_count": 220320,
+          "hourly_count": 5136,
+          "native_1m_count": 308160,
           "source_months": [
+            {
+              "month": "2024-06",
+              "release": "crypto-spot-bulk-add-2024-06-1m-f5cd85e15712",
+              "source_zip_sha256": "90f4fc3f55918787848c71f4cd0f2f1a5851bbffaf6392e76e9ab555b7479d2b",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2024-07",
+              "release": "crypto-spot-bulk-add-2024-07-1m-f5cd85e15712",
+              "source_zip_sha256": "9cfd749fd2027a0c6f261bed607b49dd1256369fb41b784934544a3676f8162e",
+              "native_1m_count": 44640
+            },
             {
               "month": "2024-08",
               "release": "crypto-spot-bulk-2024-08-1m",
@@ -63,11 +75,11 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "79c9183d6aa7efa7b1f76cf1814efbc5469d4f07f7298fcf2dac7e8776eccbdc",
-          "bytes": 134897
+          "sha256": "a0a2ddd29db1dc5a4e40fcf98104887484a010d0181bd2e47cbd1f0d5275d883",
+          "bytes": 187572
         },
         {
-          "file": "bitcoin-2025-span0.json.gz",
+          "file": "bitcoin-2025-span0-5c31374a56e961a66b2d398a49a529f2bce01fdbd534db6e0404c113d8cc43de.json.gz",
           "year": 2025,
           "span": 0,
           "first_open_ms": 1735689600000,
@@ -154,7 +166,7 @@
           "bytes": 324885
         },
         {
-          "file": "bitcoin-2026-span0.json.gz",
+          "file": "bitcoin-2026-span0-0a96e552a4e678e402d3e516e93ac14c83fb6cc139cb04f02afd0b063ab326df.json.gz",
           "year": 2026,
           "span": 0,
           "first_open_ms": 1767225600000,
@@ -231,20 +243,32 @@
       "symbol": "ETH",
       "pair": "ETHUSDT",
       "quote": "USDT",
-      "source_signature": "9cb99bf13ad9e08093c17f1ee3ac7f6a3e45dda4cfa1f2c1829d343d9d1f9a11",
-      "verified_months": 26,
+      "source_signature": "4f7902b356df5ae3452a9ead723f6660bbc953d6048954efe5e8c192b551ef6e",
+      "verified_months": 28,
       "shards": [
         {
-          "file": "ethereum-2024-span0.json.gz",
+          "file": "ethereum-2024-span0-7b060f0be82766149ad3c35747fa7058d9e7f7cb06fde288717461d6b41ac9b2.json.gz",
           "year": 2024,
           "span": 0,
-          "first_open_ms": 1722470400000,
+          "first_open_ms": 1717200000000,
           "last_open_ms": 1735686000000,
-          "first_month": "2024-08",
+          "first_month": "2024-06",
           "last_month": "2024-12",
-          "hourly_count": 3672,
-          "native_1m_count": 220320,
+          "hourly_count": 5136,
+          "native_1m_count": 308160,
           "source_months": [
+            {
+              "month": "2024-06",
+              "release": "crypto-spot-bulk-add-2024-06-1m-f5cd85e15712",
+              "source_zip_sha256": "27040862f050687c6da296108dfcfb29e0500e0f9c8dd73669146e9e68a128c0",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2024-07",
+              "release": "crypto-spot-bulk-add-2024-07-1m-f5cd85e15712",
+              "source_zip_sha256": "bda530d17235096c0e619edff1bef56154923b980d7a73406ea66114966ba0d2",
+              "native_1m_count": 44640
+            },
             {
               "month": "2024-08",
               "release": "crypto-spot-bulk-2024-08-1m",
@@ -276,11 +300,11 @@
               "native_1m_count": 44640
             }
           ],
-          "sha256": "82862f4e17481c075b97031c82298b54134d8fa82bda18f05bd10986dabc5f3c",
-          "bytes": 127066
+          "sha256": "7b060f0be82766149ad3c35747fa7058d9e7f7cb06fde288717461d6b41ac9b2",
+          "bytes": 176681
         },
         {
-          "file": "ethereum-2025-span0.json.gz",
+          "file": "ethereum-2025-span0-0567b61dea8e63089dfddd330c2f0f73bf463710bd1f747310d6d2ebd76e863e.json.gz",
           "year": 2025,
           "span": 0,
           "first_open_ms": 1735689600000,
@@ -367,7 +391,7 @@
           "bytes": 305183
         },
         {
-          "file": "ethereum-2026-span0.json.gz",
+          "file": "ethereum-2026-span0-2381a28673bb043ae5873626ce6e7ea89e6dddcfe52fe75656c04159871c9481.json.gz",
           "year": 2026,
           "span": 0,
           "first_open_ms": 1767225600000,
