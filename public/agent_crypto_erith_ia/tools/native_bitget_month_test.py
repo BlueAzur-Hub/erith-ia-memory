@@ -183,6 +183,39 @@ class NativeBitgetMonthTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"batch"):
             m.select_pending_assets(qualified,set(),now,limit=5)
 
+    def test_unfilled_new_source_slots_collect_real_missing_months(self):
+        """One newly qualified coin should not waste three validated depth slots."""
+        now=dt.datetime(2026,10,10,17,0,tzinfo=dt.timezone.utc)
+        older=[{**ASSET,"rank":51+i,"id":f"known-{i}",
+                "symbol":f"K{i}","pair":f"K{i}USDT"} for i in range(5)]
+        newcomer={**ASSET,"rank":99,"id":"new-proof","symbol":"NEW",
+                  "pair":"NEWUSDT"}
+        # Prior release proves these five were previously archived,
+        # but none has a complete newest month (September) yet.
+        tags={m.release_tag(a,"2026-08") for a in older}
+        month,chosen=m.select_pending_assets(
+            older+[newcomer],tags,now,lookback=36,limit=4,rotation=1)
+        self.assertEqual(month,"2026-09")
+        self.assertEqual([a["id"] for a in chosen],
+                         ["new-proof","known-1","known-2","known-3"])
+        self.assertEqual(len({a["id"] for a in chosen}),4)
+        # Never add already-published September, even if August exists.
+        tags.add(m.release_tag(older[2],"2026-09"))
+        month,selected=m.select_pending_assets(
+            older+[newcomer],tags,now,lookback=36,limit=4,rotation=1)
+        self.assertEqual(month,"2026-09")
+        self.assertNotIn("known-2",{a["id"] for a in selected})
+        self.assertLessEqual(len(selected),4)
+        # A failed earlier run does not lock out another set of real
+        # previously archived identities from receiving the spare slots.
+        chosen_ids=set()
+        for rotation in (1,2,3,5,6,7):
+            _,batch=m.select_pending_assets(
+                older+[newcomer],tags,now,lookback=36,limit=4,
+                rotation=rotation)
+            chosen_ids.update(a["id"] for a in batch)
+        self.assertTrue({a["id"] for a in older}<=chosen_ids)
+
     def test_four_real_assets_per_run_with_same_strict_upper_bound(self):
         """Raise safe throughput only: no unbounded API flood or repeated IDs."""
         now=dt.datetime(2026,10,10,17,0,tzinfo=dt.timezone.utc)
