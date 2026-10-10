@@ -144,8 +144,8 @@ def verify_release(tag,asset,metadata=release_info,downloader=download):
     need(set(named)=={"manifest.json",archive_file},
          "Unexpected or missing immutable source files")
     manifest_raw=downloader(tag,"manifest.json",MANIFEST_MAX)
-    need(digest(manifest_raw)=="".join(named["manifest.json"]["digest"].split("sha256:")[-1:]) and
-         len(manifest_raw)==named["manifest.json"]["size"],
+    need(named["manifest.json"].get("digest")=="sha256:"+digest(manifest_raw) and
+         len(manifest_raw)==named["manifest.json"].get("size"),
          "Bitget manifest GitHub asset checksum mismatch")
     m=json.loads(manifest_raw)
     need(m.get("schema")==bitget.SCHEMA and m.get("native_month_proven") is True
