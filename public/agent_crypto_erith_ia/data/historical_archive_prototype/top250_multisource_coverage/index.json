@@ -2,10 +2,10 @@
   "schema": "aerith.public.ohlcv.top250.federated-native-archives.v1",
   "ranked": 250,
   "quote": "USDT",
-  "archived_assets": 109,
+  "archived_assets": 112,
   "binance_archived_assets": 106,
-  "bitget_archived_assets": 3,
-  "native_1m_candles": 84515040,
+  "bitget_archived_assets": 6,
+  "native_1m_candles": 84644640,
   "first_trade_date_known": false,
   "is_live": false,
   "note": "Two independent complete-month source formats. Native Bitget 7 fields; no synthetic trade count, no USDT=>USD.",
@@ -16,15 +16,15 @@
     },
     {
       "top": 50,
-      "archived": 32
+      "archived": 33
     },
     {
       "top": 100,
-      "archived": 59
+      "archived": 60
     },
     {
       "top": 250,
-      "archived": 109
+      "archived": 112
     }
   ],
   "assets": [
@@ -133,10 +133,10 @@
       "rank": 11,
       "symbol": "HYPE",
       "name": "Hyperliquid",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "dogecoin",
@@ -1333,10 +1333,10 @@
       "rank": 131,
       "symbol": "BTT",
       "name": "BitTorrent",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "pieverse",
@@ -1593,10 +1593,10 @@
       "rank": 157,
       "symbol": "LUNC",
       "name": "Terra",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "arweave",
