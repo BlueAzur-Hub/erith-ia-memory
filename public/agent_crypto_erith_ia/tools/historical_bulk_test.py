@@ -17,7 +17,8 @@ PAIRS=["BTCUSDT","DOGEUSDT","ADAUSDT"]
 ASSETS=[{"id":x[:-4].lower(),"symbol":x[:-4],"pair":x,"rank":i+1,
          "archive_owner":"verified"} for i,x in enumerate(PAIRS)]
 
-def build(pair,interval="5m",incomplete=False,gap=False,spoof=False):
+def build(pair,interval="5m",incomplete=False,gap=False,spoof=False,
+          early_close=False,bad_close=False):
     begin,n,end=m.bounds(MONTH,interval)
     step=m.INTERVALS[interval]
     target=n-1 if incomplete else n
@@ -26,7 +27,9 @@ def build(pair,interval="5m",incomplete=False,gap=False,spoof=False):
     for i in range(target):
         ts=begin+(i+(1 if gap and i==42 else 0))*step
         micro=ts*1000
-        writer.writerow([micro,"10","12","9","11","25",micro+step*1000-1,
+        closing=(micro+step*1000//2 if early_close and i==42 else
+                 (micro-1 if bad_close and i==42 else micro+step*1000-1))
+        writer.writerow([micro,"10","12","9","11","25",closing,
                          "275","3","0","0","0"])
     b=io.BytesIO()
     name=f"{pair}-{interval}-{MONTH}.csv" if not spoof else "bitcoin-evil.csv"
@@ -95,6 +98,12 @@ class BulkTests(unittest.TestCase):
                     build(PAIRS[0],incomplete=True)):
             with self.assertRaises(ValueError):
                 m.check_csv(raw,PAIRS[0],MONTH,INTERVAL)
+
+    def test_early_source_close_allowed_without_fabricating_missing_minutes(self):
+        verified=m.check_csv(build(PAIRS[0],early_close=True),PAIRS[0],MONTH,INTERVAL)
+        self.assertEqual(verified["candles"],8064)
+        with self.assertRaisesRegex(ValueError,"closes outside"):
+            m.check_csv(build(PAIRS[0],bad_close=True),PAIRS[0],MONTH,INTERVAL)
 
     def test_restart_immutable_asset_kept(self):
         zipmap={PAIRS[0]:build(PAIRS[0])}
