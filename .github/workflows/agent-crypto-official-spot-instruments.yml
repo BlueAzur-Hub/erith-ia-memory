@@ -51,7 +51,7 @@ jobs:
           assert r['none_are_archive_claims'] is True
           assert r['symbol_only_not_identity_proof'] is True
           assert len(r['assets'])==r['remaining']
-          assert all(not a['months'] for a in [])  # No monthly OHLCV is ever produced.
+          assert all('months' not in asset and 'series' not in asset for asset in r['assets'])
           for a in r['assets']:
               for m in a['instruments']:
                   assert m['exact_coingecko_id_proven'] is False
