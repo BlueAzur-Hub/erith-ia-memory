@@ -5,9 +5,9 @@
   "ranked": 250,
   "rank_snapshot": "2026-10-09T18:47:53.633Z",
   "release_months": 12,
-  "release_count": 30,
-  "archived_assets": 100,
-  "native_1m_candles": 33684480,
+  "release_count": 33,
+  "archived_assets": 102,
+  "native_1m_candles": 33949440,
   "groups": [
     {
       "top": 10,
@@ -19,11 +19,11 @@
     },
     {
       "top": 100,
-      "with_history": 55
+      "with_history": 56
     },
     {
       "top": 250,
-      "with_history": 100
+      "with_history": 102
     }
   ],
   "months": [
@@ -120,6 +120,13 @@
     },
     {
       "month": "2026-07",
+      "release": "crypto-spot-bulk-add-2026-07-1m-1d4242c4d690",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 89280
+    },
+    {
+      "month": "2026-07",
       "release": "crypto-spot-bulk-add-2026-07-1m-5cce3ca0047d",
       "verified": 1,
       "unavailable": 1,
@@ -162,6 +169,13 @@
     },
     {
       "month": "2026-08",
+      "release": "crypto-spot-bulk-add-2026-08-1m-1d4242c4d690",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 89280
+    },
+    {
+      "month": "2026-08",
       "release": "crypto-spot-bulk-add-2026-08-1m-5cce3ca0047d",
       "verified": 2,
       "unavailable": 0,
@@ -201,6 +215,13 @@
       "verified": 31,
       "unavailable": 0,
       "candles": 1339200
+    },
+    {
+      "month": "2026-09",
+      "release": "crypto-spot-bulk-add-2026-09-1m-1d4242c4d690",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 86400
     },
     {
       "month": "2026-09",
@@ -5137,9 +5158,34 @@
       "symbol": "INJ",
       "name": "Injective",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "INJUSDT",
+          "file": "INJUSDT-1m-2026-07.zip",
+          "sha256": "b13b6864ed5c8375f261c67f4686e2d65fbe3eea935c59dd7fff2abc6527b7ee",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-1d4242c4d690"
+        },
+        {
+          "month": "2026-08",
+          "pair": "INJUSDT",
+          "file": "INJUSDT-1m-2026-08.zip",
+          "sha256": "c7ecc4cc85ff14d47d6596beaa8b749c0528f51b86a284b7f5d4b62520d0b5da",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-1d4242c4d690"
+        },
+        {
+          "month": "2026-09",
+          "pair": "INJUSDT",
+          "file": "INJUSDT-1m-2026-09.zip",
+          "sha256": "45b53b7ec09446ed827ba465b63c3b208f18f1cd405c876bb72ff7e8be424c0d",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-1d4242c4d690"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "stable-2",
@@ -5857,9 +5903,34 @@
       "symbol": "FET",
       "name": "Artificial Superintelligence Alliance",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "FETUSDT",
+          "file": "FETUSDT-1m-2026-07.zip",
+          "sha256": "cc66b83b1bf73c6ab91af122a9acd0cceec93007071e81a736a1920694d6dea7",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-1d4242c4d690"
+        },
+        {
+          "month": "2026-08",
+          "pair": "FETUSDT",
+          "file": "FETUSDT-1m-2026-08.zip",
+          "sha256": "e377782f5a68cd075fcb3a86ce96387db3631279d10087c06a8414f914e307dd",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-1d4242c4d690"
+        },
+        {
+          "month": "2026-09",
+          "pair": "FETUSDT",
+          "file": "FETUSDT-1m-2026-09.zip",
+          "sha256": "c27b0ecf8f54f15cae366d0b372b45cb963a1629f7ef4d1ee8008227230ce14d",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-1d4242c4d690"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "usdtb",
