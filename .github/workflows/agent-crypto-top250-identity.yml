@@ -76,8 +76,13 @@ jobs:
             python public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py --probe \
               --batch-size 4 --sleep 15 --rescan-denied --output "$RUNNER_TEMP/top250-identity-evidence.json"
           else
+            # Frequent schedules stay deliberately small. A reviewed main
+            # push performs one extra bounded batch; never a 32-asset spike.
+            batch_size=4
+            if [[ "$GITHUB_EVENT_NAME" == schedule ]]; then batch_size=2; fi
             python public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py --probe \
-              --batch-size 8 --sleep 15 --rescan-denied --output "$base/top250-identity-evidence.json"
+              --batch-size "$batch_size" --sleep 15 --rescan-denied \
+              --output "$base/top250-identity-evidence.json"
             cp "$base/top250-identity-evidence.json" "$RUNNER_TEMP/top250-identity-evidence.json"
           fi
           python - <<'PY'
@@ -102,9 +107,9 @@ jobs:
         run: |
           set -euo pipefail
           base=public/agent_crypto_erith_ia/data/historical_archive_prototype
-          for batch in 2 3 4; do
+          for batch in 2; do
             python public/agent_crypto_erith_ia/tools/verify_historical_top250_identity.py \
-              --probe --batch-size 8 --sleep 15 --rescan-denied \
+              --probe --batch-size 4 --sleep 15 --rescan-denied \
               --output "$base/top250-identity-evidence.json"
             cp "$base/top250-identity-evidence.json" "$RUNNER_TEMP/top250-identity-evidence.json"
           done
