@@ -1,7 +1,7 @@
 {
   "candidate_count": 144,
-  "checked_count": 73,
-  "market_candidate_count": 6,
+  "checked_count": 81,
+  "market_candidate_count": 7,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
   "quote": "USDT or USDC: never convert silently",
@@ -126,16 +126,16 @@
       "symbol": "USDG"
     },
     {
-      "checked_at": "2026-10-10T01:37:45.214468+00:00",
+      "checked_at": "2026-10-10T18:21:04.798089+00:00",
       "id": "crypto-com-chain",
       "markets": [],
-      "pages_checked": 1,
+      "pages_checked": 3,
       "rank": 39,
       "status": "source_unavailable",
       "symbol": "CRO"
     },
     {
-      "checked_at": "2026-10-10T01:38:00.644253+00:00",
+      "checked_at": "2026-10-10T18:21:19.937544+00:00",
       "id": "paypal-usd",
       "markets": [],
       "pages_checked": 1,
@@ -144,16 +144,16 @@
       "symbol": "PYUSD"
     },
     {
-      "checked_at": "2026-10-10T01:38:15.922856+00:00",
+      "checked_at": "2026-10-10T18:21:35.015013+00:00",
       "id": "okb",
       "markets": [],
-      "pages_checked": 1,
+      "pages_checked": 0,
       "rank": 42,
       "status": "source_unavailable",
       "symbol": "OKB"
     },
     {
-      "checked_at": "2026-10-10T01:38:31.017626+00:00",
+      "checked_at": "2026-10-10T18:21:50.083740+00:00",
       "id": "hashnote-usyc",
       "markets": [],
       "pages_checked": 0,
@@ -750,6 +750,88 @@
       "rank": 159,
       "status": "source_unavailable",
       "symbol": "JTO"
+    },
+    {
+      "checked_at": "2026-10-10T18:22:05.153641+00:00",
+      "id": "syrup",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 160,
+      "status": "source_unavailable",
+      "symbol": "SYRUP"
+    },
+    {
+      "checked_at": "2026-10-10T18:22:20.445577+00:00",
+      "id": "conflux-token",
+      "markets": [],
+      "pages_checked": 1,
+      "rank": 162,
+      "status": "source_unavailable",
+      "symbol": "CFX"
+    },
+    {
+      "checked_at": "2026-10-10T18:22:35.528328+00:00",
+      "id": "collector-crypt",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 163,
+      "status": "source_unavailable",
+      "symbol": "CARDS"
+    },
+    {
+      "checked_at": "2026-10-10T18:22:50.595639+00:00",
+      "id": "compound-governance-token",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 166,
+      "status": "source_unavailable",
+      "symbol": "COMP"
+    },
+    {
+      "checked_at": "2026-10-10T18:23:05.668678+00:00",
+      "id": "apenft",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 168,
+      "status": "source_unavailable",
+      "symbol": "NFT"
+    },
+    {
+      "checked_at": "2026-10-10T18:23:20.751758+00:00",
+      "id": "pons",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 169,
+      "status": "source_unavailable",
+      "symbol": "PONS"
+    },
+    {
+      "checked_at": "2026-10-10T18:23:35.927236+00:00",
+      "id": "zebec-network",
+      "markets": [
+        {
+          "base": "ZBCN",
+          "coin_id": "zebec-network",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "ZBCNUSDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 2,
+      "rank": 171,
+      "status": "exact_id_market_candidates",
+      "symbol": "ZBCN"
+    },
+    {
+      "checked_at": "2026-10-10T18:23:51.106784+00:00",
+      "id": "theta-token",
+      "markets": [],
+      "pages_checked": 1,
+      "rank": 176,
+      "status": "source_unavailable",
+      "symbol": "THETA"
     }
   ],
   "schema": "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
