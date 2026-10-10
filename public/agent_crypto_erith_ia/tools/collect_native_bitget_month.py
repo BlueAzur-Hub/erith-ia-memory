@@ -160,6 +160,10 @@ def verified_month(asset,month,fetcher=fetch_page,delay=0.12,
                       "observed_min_ms":min(observed) if observed else None,
                       "observed_max_ms":max(observed) if observed else None,
                       "reason":str(exc)}
+                    # Emit complete bounded timing metadata once. The
+                    # high-level manifest intentionally truncates error text.
+                    print("BITGET HISTORY TIME WINDOW "+json.dumps(
+                          diagnostic,sort_keys=True),flush=True)
                     raise ValueError("Historical Bitget 1m page rejected: "+
                                      json.dumps(diagnostic,sort_keys=True)) from exc
                 pages.extend(authenticated)
