@@ -61,6 +61,9 @@ class PlanTests(unittest.TestCase):
         self.assertIn("cancel-in-progress: false",wf)
         self.assertIn("timeout-minutes: 35",wf)
         self.assertEqual(app.MAX_MONTHS_PER_RUN,7)
+        self.assertIn('git diff --name-only HEAD^ HEAD -- "$collector" "$workflow"',wf)
+        self.assertIn('if [[ -n "$(git diff --name-only',wf)
+        self.assertIn('echo "approved=true" >> "$GITHUB_OUTPUT"',wf)
 
     def test_release_inventory_paginates_beyond_one_thousand_without_duplicates(self):
         viewed=[]
