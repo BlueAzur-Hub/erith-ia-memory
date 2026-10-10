@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Fail-closed Bitget native 1m offline tests: samples NEVER archival claims."""
 import hashlib
+import io
 import json
 import unittest
+import urllib.parse
 import probe_native_bitget_spot as m
 
 def records():
@@ -88,6 +90,28 @@ class NativeBitgetProbeTests(unittest.TestCase):
         self.assertEqual(row["observed_last_ms"],m.END_MS)
         self.assertEqual(row["observed_in_window"],1)
         self.assertEqual(probe["full_native_months_archived"],0)
+
+    def test_bitget_start_is_exclusive_and_end_is_inclusive(self):
+        class FakeResponse(io.BytesIO):
+            status=200
+            def __enter__(self):return self
+            def __exit__(self,*args):self.close()
+        def open_exact(request,timeout):
+            self.assertEqual(timeout,35)
+            parsed=urllib.parse.urlparse(request.full_url)
+            self.assertEqual(parsed.scheme,"https")
+            self.assertEqual(parsed.netloc,"api.bitget.com")
+            self.assertEqual(parsed.path,"/api/v3/market/candles")
+            values=urllib.parse.parse_qs(parsed.query)
+            self.assertEqual(values["startTime"],[str(m.START_MS-m.STEP)])
+            self.assertEqual(values["endTime"],[str(m.END_MS-m.STEP)])
+            self.assertEqual(values["category"],["SPOT"])
+            self.assertEqual(values["interval"],["1m"])
+            self.assertEqual(values["limit"],["1000"])
+            return FakeResponse(json.dumps({"code":"00000","data":candles()}).encode())
+        payload,sha=m.fetch("ATOMUSDT",opener=open_exact)
+        self.assertEqual(len(sha),64)
+        self.assertEqual(m.normalized_window(payload["data"])["sample_count"],1000)
 
     def test_real_registry_offline_integrity(self):
         actual=json.loads(m.CATALOG.read_text())

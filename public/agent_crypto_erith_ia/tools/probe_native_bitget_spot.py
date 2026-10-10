@@ -83,7 +83,10 @@ def candidates(catalog,identity,spot):
 def fetch(pair, opener=urllib.request.urlopen):
     require(PAIR.fullmatch(pair) is not None,"Unsafe Bitget instrument")
     params=urllib.parse.urlencode({"category":"SPOT","symbol":pair,
-        "interval":"1m","startTime":START_MS,"endTime":END_MS,
+        # Bitget uses >startTime and <=endTime for bounded 1m pages.
+        # Request one minute before each desired edge; validation still
+        # demands the exact intended [START_MS,END_MS) 1000-minute window.
+        "interval":"1m","startTime":START_MS-STEP,"endTime":END_MS-STEP,
         "type":"market","limit":WINDOW})
     request=urllib.request.Request(API+"?"+params,headers={
         "User-Agent":"SevenHeaven-VerifiedNativeSpotSampling/1.0",
