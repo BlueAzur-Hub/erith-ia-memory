@@ -12,6 +12,44 @@ const fixtures=new Map([
  ["bitget_verified_views/index.json",JSON.parse(fs.readFileSync(dir+"bitget_verified_views/index.json","utf8"))],
  ["year_depth_index.json",JSON.parse(fs.readFileSync(dir+"year_depth_index.json","utf8"))]
 ]);
+// Build a SELF-CONSISTENT test-only federation from the two genuine source
+// indexes. The published multi-source index is updated asynchronously after
+// fresh Binance Releases, and its temporary lag must not deadlock the
+// upstream catalog builder's OFFLINE UI tests. This fixture is never written
+// to GitHub or accepted as an actual published/historical archive.
+const sourceBin=fixtures.get("top250_history_catalog/index.json");
+const sourceAlt=fixtures.get("bitget_verified_views/index.json");
+const testFed=structuredClone(fixtures.get("top250_multisource_coverage/index.json"));
+const altById=new Map(sourceAlt.assets.map(a=>[a.id,a]));
+for(let i=0;i<sourceBin.assets.length;i++){
+ const src=sourceBin.assets[i],row=testFed.assets[i];
+ assert.equal(src.id,row.id,"Top250 exact identity changed in test inputs");
+ assert.equal(src.symbol,row.symbol,"Top250 exact symbol changed in test inputs");
+ const alt=altById.get(src.id);
+ assert.ok(!(src.months.length&&alt),"Two sources claim one owner");
+ if(src.months.length){
+  row.source="Binance Spot official native 1m ZIPs";
+  row.months=src.months.length;
+  row.native_1m_count=src.candles;
+ }else if(alt){
+  row.source="Bitget Spot native 1m HTTPS";
+  row.months=alt.months.length;
+  row.native_1m_count=alt.total_verified_1m_count;
+ }else{
+  row.source=null;row.months=0;row.native_1m_count=0;
+ }
+}
+testFed.binance_archived_assets=sourceBin.archived_assets;
+testFed.bitget_archived_assets=sourceAlt.archived_assets;
+testFed.archived_assets=testFed.assets.filter(a=>a.months>0).length;
+testFed.native_1m_candles=testFed.assets.reduce((n,a)=>n+a.native_1m_count,0);
+testFed.groups=testFed.groups.map(g=>({...g,
+ archived:testFed.assets.slice(0,g.top).filter(a=>a.months>0).length}));
+assert.equal(testFed.archived_assets,
+ testFed.binance_archived_assets+testFed.bitget_archived_assets,
+ "A source identity collision invalidated this offline fixture");
+fixtures.set("top250_multisource_coverage/index.json",testFed);
+
 const base="https://blueazur-hub.github.io",path="/erith-ia-memory/public/agent_crypto_erith_ia/data/historical_archive_prototype/";
 function harness(mutate=()=>{}){
  const nodes=new Map(),requests=[],events=[];
@@ -71,6 +109,18 @@ test("single Top250 uses authentic Binance plus Bitget count and year-depth sepa
  assert.ok(h.element("top250-summary").children.length>0);
  assert.ok(d.assets_with_at_least_12_consecutive_closed_months<=f.archived_assets);
  assert.equal(result.assets.length,250);
+});
+test("a lagging federated count is still strictly refused at runtime",async()=>{
+ const h=harness((file,data)=>{
+  if(file==="top250_multisource_coverage/index.json"){
+   const btc=data.assets.find(a=>a.id==="bitcoin");
+   btc.months-=1;btc.native_1m_count-=43200;
+   data.native_1m_candles-=43200;
+  }
+ });
+ await ready(h);
+ assert.equal(h.window.SevenTop250Catalog.read(),null);
+ assert.match(h.element("top250-status").textContent,/Archive Binance altérée/);
 });
 test("a forged Bitget month cannot silently inflate federated count",async()=>{
  const h=harness((file,data)=>{
