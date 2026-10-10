@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import os
 from pathlib import Path
 import re
 import time
@@ -299,10 +300,13 @@ def contract_matches(queue,archived,official,coins,bitget_coins):
             "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1"
             and official.get("ranked")==250,"Official Spot audit unavailable")
     present={}
+    cg_symbols={}
     for record in coins:
         if not isinstance(record,dict):continue
         cid,platforms=record.get("id"),record.get("platforms")
         if not isinstance(cid,str) or not isinstance(platforms,dict):continue
+        if isinstance(record.get("symbol"),str):
+            cg_symbols[cid]=record["symbol"].upper()
         for platform,address in platforms.items():
             normalized=contract_address(address)
             if platform in CHAINS.values() and normalized:
@@ -316,7 +320,7 @@ def contract_matches(queue,archived,official,coins,bitget_coins):
     result={}
     for asset in queue:
         aid,symbol=asset["id"],asset["symbol"]
-        if aid in archived:continue
+        if aid in archived or cg_symbols.get(aid)!=symbol:continue
         row=official_map.get(aid)
         if not row or row.get("rank")!=asset["rank"] or row.get("symbol")!=symbol:
             continue
@@ -413,20 +417,26 @@ def main():
     result=process(queue,prior,args.batch_size,
                    checker=lambda a:inspect(a,exchange_getter=fetch_exchange),
                    delay=args.sleep,excluded=archived,preferred=priority)
-    # The inventory route can continue qualifying identities even if the
-    # per-coin ticker endpoint is throttled. Failure must never become proof.
-    try:
-        official=json.loads(OFFICIAL.read_text(encoding="utf-8"))
-        cg=public_inventory(CG_PLATFORMS,40_000_000)
-        bitget=public_inventory(BITGET_COINS,15_000_000)
-        result,added=enrich_contracts(queue,archived,result,official,cg,bitget)
-        print("EXACT CONTRACT SOURCE "+json.dumps(
-            {"qualified_ids":added,"count":len(added)},sort_keys=True),
-            flush=True)
-    except (OSError,ValueError,TypeError,KeyError,
-            json.JSONDecodeError) as exc:
-        print("EXACT CONTRACT SOURCE UNAVAILABLE "+
-              type(exc).__name__+": "+str(exc)[:180],flush=True)
+    # Keep the two large inventories to once per hour in scheduled runs;
+    # a reviewed source-code push checks the new source promptly.
+    number=os.environ.get("GITHUB_RUN_NUMBER","0")
+    inventory_due=(os.environ.get("GITHUB_EVENT_NAME")=="push"
+                   or (number.isdecimal() and int(number)%4==0))
+    if inventory_due:
+        try:
+            official=json.loads(OFFICIAL.read_text(encoding="utf-8"))
+            cg=public_inventory(CG_PLATFORMS,40_000_000)
+            bitget=public_inventory(BITGET_COINS,15_000_000)
+            result,added=enrich_contracts(queue,archived,result,official,cg,bitget)
+            print("EXACT CONTRACT SOURCE "+json.dumps(
+                {"qualified_ids":added,"count":len(added)},sort_keys=True),
+                flush=True)
+        except (OSError,ValueError,TypeError,KeyError,
+                json.JSONDecodeError) as exc:
+            print("EXACT CONTRACT SOURCE UNAVAILABLE "+
+                  type(exc).__name__+": "+str(exc)[:180],flush=True)
+    else:
+        print("EXACT CONTRACT SOURCE DEFERRED: hourly inventory quota",flush=True)
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     tmp=OUTPUT.with_suffix(".tmp")
     tmp.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
