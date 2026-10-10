@@ -2,10 +2,10 @@
   "schema": "aerith.public.ohlcv.top250.federated-native-archives.v1",
   "ranked": 250,
   "quote": "USDT",
-  "archived_assets": 112,
+  "archived_assets": 113,
   "binance_archived_assets": 106,
-  "bitget_archived_assets": 6,
-  "native_1m_candles": 84644640,
+  "bitget_archived_assets": 7,
+  "native_1m_candles": 84687840,
   "first_trade_date_known": false,
   "is_live": false,
   "note": "Two independent complete-month source formats. Native Bitget 7 fields; no synthetic trade count, no USDT=>USD.",
@@ -24,7 +24,7 @@
     },
     {
       "top": 250,
-      "archived": 112
+      "archived": 113
     }
   ],
   "assets": [
@@ -1733,10 +1733,10 @@
       "rank": 171,
       "symbol": "ZBCN",
       "name": "Zebec Network",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "thorchain",
