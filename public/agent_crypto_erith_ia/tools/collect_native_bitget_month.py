@@ -298,26 +298,47 @@ def choose_missing_month(assets,tags,now=None,lookback=12):
         month=previous_month(month)
     return None
 
-def select_pending_assets(qualified,tags,now=None,lookback=12,limit=MAX_ASSETS):
-    """Fair bounded backlog: new exact-ID assets precede depth backfill.
-    
-    Look for the newest closed month across ALL independently qualified coins,
-    not permanently just the first three by rank. Never promote unqualified
-    symbol matches; Release tags are scheduling hints, not candle proofs.
+def select_pending_assets(qualified,tags,now=None,lookback=12,limit=MAX_ASSETS,
+                          rotation=0):
+    """Fair genuine-month backfill without starving newly qualified Spot assets.
+
+    Three out of four scheduled runs prioritize never-archived exact-ID assets.
+    Other runs rotate both closed months and previously archived assets, so
+    a permanently unavailable month cannot trap the entire depth queue.
+    Release tags are scheduling hints only; every selected month is still
+    fetched, fully validated and SHA-256 archived by execute_one().
     """
     require(1<=limit<=MAX_ASSETS and 1<=lookback<=12,
             "Unsafe asset batch or backfill window")
+    require(isinstance(rotation,int) and not isinstance(rotation,bool)
+            and rotation>=0,"Invalid fair-rotation slot")
     require(len(qualified)==len({a["id"] for a in qualified}),
             "Duplicate exact CoinGecko identities")
     require(len(qualified)<=250,"Unbounded source candidates")
     present=set(tags)
-    month=latest_closed_month(now)
+    cursor=latest_closed_month(now)
+    months=[]
     for _ in range(lookback):
-        missing=[a for a in qualified if release_tag(a,month) not in present]
+        months.append(cursor)
+        cursor=previous_month(cursor)
+    new_assets=[a for a in qualified if not any(
+        release_tag(a,month) in present for month in months)]
+    # The default slot preserves the old newest-first behavior for manual
+    # callers; production GITHUB_RUN_NUMBER advances on every workflow run.
+    if new_assets and (rotation==0 or rotation%4!=0):
+        return months[0],new_assets[:limit]
+    new_ids={a["id"] for a in new_assets}
+    backlog=[]
+    for month in months:
+        missing=[a for a in qualified if a["id"] not in new_ids
+                 and release_tag(a,month) not in present]
         if missing:
-            return month,missing[:limit]
-        month=previous_month(month)
-    return None,[]
+            backlog.append((month,missing))
+    if not backlog:
+        return (months[0],new_assets[:limit]) if new_assets else (None,[])
+    month,missing=backlog[rotation%len(backlog)]
+    offset=rotation%len(missing)
+    return month,(missing[offset:]+missing[:offset])[:limit]
 
 def main():
     cli=argparse.ArgumentParser(description=__doc__)
