@@ -2,8 +2,8 @@ name: Agent Crypto Historical 1m - Continuous Monthly Backfill
 on:
   workflow_dispatch:
   schedule:
-    # Four independent bounded runs/day; progress checkpoints live in Releases.
-    - cron: '19 1,7,13,19 * * *'
+    # Eight serial bounded runs/day; source ZIPs remain immutable Releases.
+    - cron: '19 */3 * * *'
   pull_request:
     paths:
       - '.github/workflows/agent-crypto-bulk-backfill.yml'
