@@ -1,5 +1,5 @@
 {
-  "approved_count": 70,
+  "approved_count": 72,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -512,13 +512,23 @@
       "symbol": "CAKE"
     },
     {
-      "checked_at": "2026-10-10T00:15:55.201935+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T06:04:24.253843+00:00",
+      "evidence": [
+        {
+          "base": "INJ",
+          "coin_id": "injective-protocol",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "injective-protocol",
+          "trade_url": "https://www.binance.com/en/trade/INJ_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "injective-protocol",
-      "pages": 1,
+      "pages": 2,
       "pair": "INJUSDT",
       "rank": 96,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "INJ"
     },
     {
@@ -722,13 +732,23 @@
       "symbol": "TUSD"
     },
     {
-      "checked_at": "2026-10-10T00:18:26.802994+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T06:04:39.679321+00:00",
+      "evidence": [
+        {
+          "base": "FET",
+          "coin_id": "fetch-ai",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "fetch-ai",
+          "trade_url": "https://www.binance.com/en/trade/FET_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "fetch-ai",
-      "pages": 1,
+      "pages": 2,
       "pair": "FETUSDT",
       "rank": 119,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "FET"
     },
     {
@@ -1672,7 +1692,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 26,
+  "review_required_count": 24,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
