@@ -13,7 +13,9 @@ on:
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py'
   workflow_dispatch:
   schedule:
-    - cron: '7 4,12,20 * * *'
+    # Reuse the same small, source-verified 2-month pilot every two hours;
+    # immutable Releases and a serial lock prevent duplicate writes.
+    - cron: '7 */2 * * *'
 permissions:
   contents: write
 concurrency:
