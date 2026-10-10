@@ -40,15 +40,19 @@ def candidates(catalog):
     result=[]
     for cid in IDS:
         asset=indexed[cid]
-        require(asset["months"]==0 and asset["source"] is None,
-                "Owner was already archived; refresh source queue")
+        if asset["months"]>0:
+            require(asset["source"] in ("Binance Spot official native 1m ZIPs",
+                                        "Bitget Spot native 1m HTTPS"),
+                    "Conflicting already archived source owner")
+            continue
+        require(asset["source"] is None, "Pending owner has unexpected source")
         symbol=asset["symbol"]
         pair=symbol+"USDT"
         if bulk.PAIR.fullmatch(pair) is None: continue
         result.append({"id":cid,"rank":asset["rank"],"symbol":symbol,
                        "pair":pair,"archive_owner":"CANDIDATE_ONLY_UNPROVEN"})
-    require(result and len({a["pair"] for a in result})==len(result),
-            "No unique source pair candidates")
+    require(len({a["pair"] for a in result})==len(result),
+            "Repeated source pair candidates")
     return sorted(result,key=lambda a:a["rank"])
 
 def run(catalog,months=MONTHS,importer=bulk.execute):
