@@ -129,34 +129,36 @@ def get_exchange_tickers(coin_id, page):
 def inspect_asset(asset,fetcher=get_tickers,exchange_fetcher=None):
     checked_pages=0
     try:
-        # Original exact-coin route is authoritative when it returns a match.
+        # Keep the original full-pagination gate: even a positive ticker
+        # cannot be published when a response is known to be truncated.
+        found=[]
         for page in range(1,MAX_PAGES+1):
             tickers=fetcher(asset["id"],page)
             checked_pages+=1
-            found=extract(tickers,asset)
-            if found:
-                return {"status":"approved_coingecko_binance_spot",
-                        "evidence":found[:5],"pages":checked_pages}
+            found.extend(extract(tickers,asset))
             if len(tickers)<100:break
         else:
-            # Never assert absence if upstream pagination was truncated.
             return {"status":"source_pagination_incomplete",
                     "evidence":[],"pages":checked_pages}
+        if found:
+            return {"status":"approved_coingecko_binance_spot",
+                    "evidence":found[:5],"pages":checked_pages}
 
         if exchange_fetcher is not None:
-            # Documented CoinGecko exchange route accepts coin_ids; it can
-            # expose a market omitted by the primary route's cached results.
+            # Documented CoinGecko exchange route accepts coin_ids; all
+            # returned market proofs still require a source-returned ID.
+            secondary=[]
             for page in range(1,MAX_PAGES+1):
                 tickers=exchange_fetcher(asset["id"],page)
                 checked_pages+=1
-                found=extract(tickers,asset)
-                if found:
-                    return {"status":"approved_coingecko_binance_spot",
-                            "evidence":found[:5],"pages":checked_pages}
+                secondary.extend(extract(tickers,asset))
                 if len(tickers)<100:break
             else:
                 return {"status":"source_pagination_incomplete",
                         "evidence":[],"pages":checked_pages}
+            if secondary:
+                return {"status":"approved_coingecko_binance_spot",
+                        "evidence":secondary[:5],"pages":checked_pages}
         return {"status":"identity_not_confirmed",
                 "evidence":[],"pages":checked_pages}
     except (ValueError,OSError,urllib.error.HTTPError,urllib.error.URLError,
