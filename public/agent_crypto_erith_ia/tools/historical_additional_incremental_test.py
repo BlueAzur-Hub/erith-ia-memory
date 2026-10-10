@@ -78,11 +78,21 @@ class AdditionalIncrementalTests(unittest.TestCase):
                 if endpoint.endswith("/klines") and params["symbol"] == "USDSUSDT":
                     return data[:-1]
                 return data
+            # The real archived cohort may already have a valid incremental
+            # journal; rejection must preserve it byte-for-byte, not erase it.
+            existing = root/"incremental/index.json"
+            before_journal = existing.read_bytes() if existing.exists() else None
+            before_files = {p.relative_to(root): p.read_bytes()
+                            for p in (root/"incremental").rglob("*") if p.is_file()}
             with patch.object(engine, "get_json", side_effect=invalid):
                 with self.assertRaisesRegex(ValueError, "Missing candle"):
                     incremental.collect(root, end + 5 * 3_600_000, 288)
             self.assertEqual((root/"index.json").read_bytes(), frozen)
-            self.assertFalse((root/"incremental/index.json").exists())
+            self.assertEqual(existing.read_bytes() if existing.exists() else None,
+                             before_journal)
+            self.assertEqual({p.relative_to(root): p.read_bytes()
+                              for p in (root/"incremental").rglob("*") if p.is_file()},
+                             before_files)
 
     def test_wrong_spot_pair_cannot_be_archived(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -92,11 +102,19 @@ class AdditionalIncrementalTests(unittest.TestCase):
                 if endpoint.endswith("/exchangeInfo"):
                     data["symbols"][0]["quoteAsset"] = "USDC"
                 return data
+            existing = root/"incremental/index.json"
+            before_journal = existing.read_bytes() if existing.exists() else None
+            before_files = {p.relative_to(root): p.read_bytes()
+                            for p in (root/"incremental").rglob("*") if p.is_file()}
             with patch.object(engine, "get_json", side_effect=wrong):
                 with self.assertRaisesRegex(ValueError, "no longer approved"):
                     incremental.collect(root, end + 5 * 3_600_000, 288)
             self.assertEqual((root/"index.json").read_bytes(), frozen)
-            self.assertFalse((root/"incremental/index.json").exists())
+            self.assertEqual(existing.read_bytes() if existing.exists() else None,
+                             before_journal)
+            self.assertEqual({p.relative_to(root): p.read_bytes()
+                              for p in (root/"incremental").rglob("*") if p.is_file()},
+                             before_files)
 
     def test_sealed_reference_partition_preserves_every_block(self):
         with tempfile.TemporaryDirectory() as folder:
