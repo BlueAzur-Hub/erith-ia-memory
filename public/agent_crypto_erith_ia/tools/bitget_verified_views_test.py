@@ -108,7 +108,7 @@ class BitgetFederationTests(unittest.TestCase):
         self.assertEqual(out[0][5],7.)
         self.assertEqual(out[0][6],77.)
         with self.assertRaisesRegex(ValueError,"contiguous"):
-            b.aggregate([rows[0],{**{}}],300000)
+            b.aggregate([rows[0],[120000,11.,13.,10.,12.,4.,44.]],300000)
 
 if __name__=="__main__":
     unittest.main(verbosity=2)
