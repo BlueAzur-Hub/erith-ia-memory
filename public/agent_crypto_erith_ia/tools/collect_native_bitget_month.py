@@ -38,6 +38,8 @@ MAX_PAGES=50
 MAX_RESPONSE=800_000
 MAX_ZIP=8_000_000
 API=proof.API
+HISTORY_API="https://api.bitget.com/api/v3/market/history-candles"
+HISTORY_LIMIT=100
 
 def require(ok,msg):
     if not ok:raise ValueError(msg)
@@ -53,14 +55,16 @@ def bounds(month):
                  "Only fully closed native months may be archived")
     return int(start.timestamp()*1000),int(next_month.timestamp()*1000),count
 
-def fetch_page(pair,start,end,count,opener=urllib.request.urlopen):
-    require(PAIR.fullmatch(pair) is not None and
-            1<=count<=LIMIT and end-start==count*STEP and
+def fetch_page(pair,start,end,count,opener=urllib.request.urlopen,endpoint=API):
+    max_rows=HISTORY_LIMIT if endpoint==HISTORY_API else LIMIT
+    require(endpoint in (API,HISTORY_API) and
+            PAIR.fullmatch(pair) is not None and
+            1<=count<=max_rows and end-start==count*STEP and
             start%STEP==0 and end%STEP==0,
             "Unsafe native Bitget paging request")
     params=urllib.parse.urlencode({"category":"SPOT","symbol":pair,"interval":"1m",
         "startTime":start-STEP,"endTime":end-STEP,"type":"market","limit":count})
-    req=urllib.request.Request(API+"?"+params,headers={
+    req=urllib.request.Request(endpoint+"?"+params,headers={
          "User-Agent":"SevenHeaven-NativeHistoricalArchive/1.0",
          "Accept":"application/json"})
     last=None
@@ -83,6 +87,10 @@ def fetch_page(pair,start,end,count,opener=urllib.request.urlopen):
             if attempt==2:break
             time.sleep(2**attempt)
     raise RuntimeError("Source native Spot API failed: "+type(last).__name__)
+
+def fetch_history_page(pair,start,end,count):
+    """Official Bitget historical Spot API: maximum 100 genuine 1m rows per call."""
+    return fetch_page(pair,start,end,count,endpoint=HISTORY_API)
 
 def verify_page(rows,start,count):
     require(isinstance(rows,list) and len(rows)==count,"Partial native 1m page")
@@ -108,7 +116,8 @@ def verify_page(rows,start,count):
     require(set(raw_rows)==set(expected),"Missing source minute in native page")
     return [raw_rows[t] for t in expected]
 
-def verified_month(asset,month,fetcher=fetch_page,delay=0.12):
+def verified_month(asset,month,fetcher=fetch_page,delay=0.12,
+                   historical_fetcher=fetch_history_page):
     start,end,expected=bounds(month)
     require(expected<=MAX_PAGES*LIMIT and asset["quote"]=="USDT"
             and asset["venue"]=="bitget" and PAIR.fullmatch(asset["pair"]) is not None,
@@ -116,9 +125,27 @@ def verified_month(asset,month,fetcher=fetch_page,delay=0.12):
     pages=[]; hashes=[]
     for at in range(start,end,LIMIT*STEP):
         count=min(LIMIT,(end-at)//STEP)
-        rows,digest=fetcher(asset["pair"],at,at+count*STEP,count)
-        pages.extend(verify_page(rows,at,count))
-        hashes.append(digest)
+        recent=None
+        try:
+            rows,digest=fetcher(asset["pair"],at,at+count*STEP,count)
+            recent=verify_page(rows,at,count)
+        except (RuntimeError,ValueError) as exc:
+            # The current-spot endpoint exposes only its recent candle range.
+            # Older intervals require the separately documented history API.
+            # Never accept a partial page from either endpoint.
+            print("BITGET NATIVE PAGE FALLBACK "+json.dumps({
+                "asset":asset["id"],"month":month,"start_ms":at,
+                "reason":str(exc)[:80]},sort_keys=True),flush=True)
+        if recent is not None:
+            pages.extend(recent);hashes.append(digest)
+        else:
+            for earlier in range(at,at+count*STEP,HISTORY_LIMIT*STEP):
+                size=min(HISTORY_LIMIT,(at+count*STEP-earlier)//STEP)
+                rows,history_hash=historical_fetcher(
+                    asset["pair"],earlier,earlier+size*STEP,size)
+                pages.extend(verify_page(rows,earlier,size))
+                hashes.append(history_hash)
+                if delay:time.sleep(min(delay,0.12))
         if delay and at+(LIMIT*STEP)<end:time.sleep(delay)
     require(len(pages)==expected and pages[0][0]==str(start)
             and pages[-1][0]==str(end-STEP),
@@ -151,9 +178,11 @@ def release_tag(asset,month):
             MONTH.fullmatch(month) is not None,"Unsafe source release identity")
     return "crypto-spot-bitget-"+month+"-1m-"+asset["id"]
 
-def execute_one(asset,month,folder,fetcher=fetch_page,delay=0.12):
+def execute_one(asset,month,folder,fetcher=fetch_page,delay=0.12,
+                historical_fetcher=fetch_history_page):
     require(folder.is_dir(),"Need bounded empty working directory")
-    rows,digests=verified_month(asset,month,fetcher=fetcher,delay=delay)
+    rows,digests=verified_month(asset,month,fetcher=fetcher,delay=delay,
+                               historical_fetcher=historical_fetcher)
     filename,raw=make_zip(asset,month,rows)
     sha=hashlib.sha256(raw).hexdigest()
     dest=folder/filename
