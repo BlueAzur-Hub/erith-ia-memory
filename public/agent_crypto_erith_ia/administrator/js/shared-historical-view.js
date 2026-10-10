@@ -294,7 +294,7 @@ async function init(){
   const select=byId("shared-asset");select.replaceChildren();
   for(const a of [...x.assets,...alt.assets].sort((a,b)=>a.rank-b.rank)){
    const option=document.createElement("option");
-   option.value=a.id;option.textContent="#"+a.rank+" · "+a.name+" ("+a.pair+")";
+   option.value=a.id;option.textContent="#"+a.rank+" · "+(a.name||a.symbol||a.id)+" ("+a.pair+")";
    select.append(option);
   }
   byId("shared-status").textContent=(x.archived_assets+alt.assets.length)+
