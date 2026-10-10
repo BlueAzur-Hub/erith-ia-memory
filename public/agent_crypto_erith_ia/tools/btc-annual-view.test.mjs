@@ -95,7 +95,7 @@ test("canonical vault owns BTC annual and Top250; R3 diagnostic is not duplicate
  const main=fs.readFileSync("public/agent_crypto_erith_ia/administrator/historical-vault.html","utf8");
  const legacy=fs.readFileSync("public/agent_crypto_erith_ia/administrator/historical-archive-reader.html","utf8");
  const catalog=main.indexOf('id="top250-coverage" open');
- const btc=main.indexOf('id="btc-year-lab" open');
+ const btc=main.indexOf('id="btc-year-lab"'); // preserved but collapsed by default to avoid duplicate interfaces
  const oldReader=main.indexOf('id="r6-archive-adapter"');
  assert.ok(catalog>0&&btc>catalog&&oldReader>btc,
    "The verified catalog and BTC annual reader must come before R6/R7/R9 diagnostics");
