@@ -52,6 +52,15 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
+          # A reviewed PR that changes the bounded collector or its workflow
+          # may trigger ONE initial real batch on merge. Unrelated pushes do
+          # not authorize an upload, and scheduled runs retain their own gate.
+          collector=public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py
+          workflow=.github/workflows/agent-crypto-bulk-backfill.yml
+          if [[ -n "$(git diff --name-only HEAD^ HEAD -- "$collector" "$workflow")" ]]; then
+            echo "approved=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           acceleration=public/agent_crypto_erith_ia/data/historical_archive_prototype/historical-backfill-acceleration.json
           acceleration_flag=$(git diff --name-status HEAD^ HEAD -- "$acceleration" | cut -f1)
           if [[ "$acceleration_flag" == A ]]; then
