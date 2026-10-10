@@ -1,0 +1,44 @@
+name: Agent Crypto Yearly Firefox Reader Smoke
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-yearly-firefox-reader.yml'
+      - 'public/agent_crypto_erith_ia/administrator/historical-yearly.html'
+      - 'public/agent_crypto_erith_ia/administrator/js/historical-yearly-browser.js'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-yearly-firefox-reader.yml'
+      - 'public/agent_crypto_erith_ia/administrator/historical-yearly.html'
+      - 'public/agent_crypto_erith_ia/administrator/js/historical-yearly-browser.js'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
+permissions:
+  contents: read
+jobs:
+  verify-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Confirm stable read-only annual reader and valid JavaScript
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/js/historical-yearly-browser.js
+          python - <<'PY'
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia/administrator")
+          page=(root/"historical-yearly.html").read_text()
+          js=(root/"js/historical-yearly-browser.js").read_text()
+          main=(root/"historical-vault.html").read_text()
+          assert '<script defer src="./js/historical-yearly-browser.js"></script>' in page
+          assert 'href="./historical-yearly.html"' in main
+          assert 'id="coin"' in page and 'id="year"' in page and 'id="month"' in page
+          assert "crypto.subtle.digest(" in js and 'DecompressionStream("gzip")' in js
+          assert "data.native_1m_count !== data.series.length * 60" in js
+          assert 'data.first_trade_date_known !== false' in js
+          assert 'cache:"no-store"' in js
+          assert "Binance Spot USDT" in js
+          assert "innerHTML" not in js and "fetch(" in js
+          print("YEARLY FIREFOX SHA256/OHLC UI SMOKE SUCCESS")
+          PY
