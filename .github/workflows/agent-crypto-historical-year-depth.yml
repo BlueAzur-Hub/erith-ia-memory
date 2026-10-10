@@ -1,0 +1,84 @@
+name: Agent Crypto Top250 Genuine One-year Source Coverage
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-historical-year-depth.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_year_depth.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_year_depth_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-historical-year-depth.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_historical_year_depth.py'
+      - 'public/agent_crypto_erith_ia/tools/historical_year_depth_test.py'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/index.json'
+  workflow_dispatch:
+  schedule:
+    - cron: '39 7 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-top250-genuine-one-year-source
+  cancel-in-progress: false
+jobs:
+  year-depth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert real source ZIP months, chronological gaps and year coverage
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_historical_year_depth.py
+          python public/agent_crypto_erith_ia/tools/historical_year_depth_test.py
+          python public/agent_crypto_erith_ia/tools/build_historical_year_depth.py --plan
+      - name: Materialize yearly source-coverage metadata only
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          catalog=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/index.json
+          python public/agent_crypto_erith_ia/tools/build_historical_year_depth.py
+          cp public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json \
+             "$RUNNER_TEMP/year_depth_index.json"
+          sha256sum "$catalog" | cut -d' ' -f1 > "$RUNNER_TEMP/catalog-sha"
+      - name: Publish proof-only index against unchanged canonical catalog
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          catalog=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/index.json
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json
+          git fetch origin main
+          actual=$(git show "origin/main:$catalog" | sha256sum | cut -d' ' -f1)
+          expected=$(cat "$RUNNER_TEMP/catalog-sha")
+          if [[ "$actual" != "$expected" ]]; then
+            echo "::error::Source catalog changed; refuse stale historical depth index"
+            exit 1
+          fi
+          git reset --hard origin/main
+          cp "$RUNNER_TEMP/year_depth_index.json" "$target"
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: truthful year-depth index already current'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Publish proven 12-month historic depth and annual shard map'
+          git push origin HEAD:main
+      - name: Assert no original archive or trading modifications
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_monthly_views/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_hourly_views/
