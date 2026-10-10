@@ -1,0 +1,92 @@
+name: Agent Crypto Authentic Binance Bitget Federated Spot Views
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-federated-spot-views.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_bitget_verified_views.py'
+      - 'public/agent_crypto_erith_ia/tools/bitget_verified_views_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-federated-spot-views.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_bitget_verified_views.py'
+      - 'public/agent_crypto_erith_ia/tools/bitget_verified_views_test.py'
+  workflow_dispatch:
+  schedule:
+    - cron: '33 8,20 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-authentic-federated-spot-views
+  cancel-in-progress: false
+jobs:
+  source-verified-alternatives:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test genuine seven-field 1m source records and checksum gates
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_bitget_verified_views.py
+          python public/agent_crypto_erith_ia/tools/bitget_verified_views_test.py
+          python public/agent_crypto_erith_ia/tools/build_bitget_verified_views.py --plan
+      - name: Verify real Bitget releases and build source-specific Firefox projections
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          base=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          python public/agent_crypto_erith_ia/tools/build_bitget_verified_views.py --build
+          cp -a "$base/bitget_verified_views" "$RUNNER_TEMP/bitget_verified_views"
+          cp -a "$base/top250_multisource_coverage" "$RUNNER_TEMP/top250_multisource_coverage"
+          for name in top250_history_catalog/index.json top250-alt-market-evidence.json top250-official-spot-instruments.json; do
+            sha256sum "$base/$name" | cut -d' ' -f1 >> "$RUNNER_TEMP/source-sha"
+          done
+      - name: Publish only checked alternative source and federated coverage indexes
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          base=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          git fetch origin main
+          n=0
+          for name in top250_history_catalog/index.json top250-alt-market-evidence.json top250-official-spot-instruments.json; do
+            n=$((n+1))
+            expected=$(sed -n "$n"p "$RUNNER_TEMP/source-sha")
+            actual=$(git show "origin/main:$base/$name" | sha256sum | cut -d' ' -f1)
+            if [[ "$expected" != "$actual" ]]; then
+              echo "::error::Original Spot source proof changed; refuse stale federated view"
+              exit 1
+            fi
+          done
+          git reset --hard origin/main
+          cp -a "$RUNNER_TEMP/bitget_verified_views" "$base/"
+          cp -a "$RUNNER_TEMP/top250_multisource_coverage" "$base/"
+          git add -- "$base/bitget_verified_views" "$base/top250_multisource_coverage"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: federated source and checksum views unchanged'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Publish verified Bitget native Spot OHLCV and federated archive totals'
+          git push origin HEAD:main
+      - name: Preserve original ZIP archives and all trading surfaces
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_monthly_views/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/shared_hourly_views/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards/
