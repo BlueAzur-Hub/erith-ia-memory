@@ -262,6 +262,136 @@ def process(queue,prior=None,batch=MAX_BATCH,checker=inspect,delay=15,
     validate(output,queue)
     return output
 
+# Contract-based exact-ID corroboration uses two public source inventories,
+# rather than accepting a ticker as proof of ownership. It is intentionally
+# restricted to unambiguous EVM contracts with independently named chains.
+CONTRACT=re.compile(r"^0x[0-9a-f]{40}$")
+CHAINS={
+    "ERC20":"ethereum", "ETH":"ethereum", "ETHEREUM":"ethereum",
+    "BEP20":"binance-smart-chain", "BSC":"binance-smart-chain",
+    "ARB":"arbitrum-one", "ARBITRUM":"arbitrum-one",
+    "BASE":"base", "MATIC":"polygon-pos", "POLYGON":"polygon-pos",
+    "OP":"optimistic-ethereum", "OPTIMISM":"optimistic-ethereum",
+}
+CG_PLATFORMS="https://api.coingecko.com/api/v3/coins/list?include_platform=true"
+BITGET_COINS="https://api.bitget.com/api/v2/spot/public/coins"
+
+def contract_address(value):
+    if not isinstance(value,str):return None
+    normalized=value.strip().lower()
+    if not CONTRACT.fullmatch(normalized) or int(normalized[2:],16)==0:
+        return None
+    return normalized
+
+def contract_matches(queue,archived,official,coins,bitget_coins):
+    """CoinGecko exact ID + same on-chain contract + Bitget genuine Spot pair.
+
+    A shared ticker, token name, unverified network alias, duplicate contract
+    or non-EVM native currency NEVER qualifies as historical OHLCV provenance.
+    """
+    require(isinstance(coins,list) and isinstance(bitget_coins,dict)
+            and bitget_coins.get("code")=="00000"
+            and isinstance(bitget_coins.get("data"),list),
+            "Missing complete independent public contract sources")
+    require(len(coins)>1000 and len(bitget_coins["data"])>100,
+            "Unexpectedly partial asset inventory")
+    require(official.get("schema")==
+            "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1"
+            and official.get("ranked")==250,"Official Spot audit unavailable")
+    present={}
+    for record in coins:
+        if not isinstance(record,dict):continue
+        cid,platforms=record.get("id"),record.get("platforms")
+        if not isinstance(cid,str) or not isinstance(platforms,dict):continue
+        for platform,address in platforms.items():
+            normalized=contract_address(address)
+            if platform in CHAINS.values() and normalized:
+                present.setdefault((platform,normalized),set()).add(cid)
+    bitget={}
+    for record in bitget_coins["data"]:
+        if isinstance(record,dict) and isinstance(record.get("coin"),str):
+            bitget.setdefault(record["coin"].upper(),[]).append(record)
+    official_map={a.get("id"):a for a in official.get("assets",[])
+                  if isinstance(a,dict)}
+    result={}
+    for asset in queue:
+        aid,symbol=asset["id"],asset["symbol"]
+        if aid in archived:continue
+        row=official_map.get(aid)
+        if not row or row.get("rank")!=asset["rank"] or row.get("symbol")!=symbol:
+            continue
+        pair=symbol+"USDT"
+        instruments=row.get("instruments",[])
+        if not isinstance(instruments,list) or not any(
+            isinstance(p,dict) and p.get("venue")=="bitget"
+            and p.get("instrument")==pair and p.get("base")==symbol
+            and p.get("quote")=="USDT"
+            and p.get("exchange_instrument_confirmed") is True
+            for p in instruments):
+            continue
+        records=bitget.get(symbol,[])
+        if len(records)!=1 or not isinstance(records[0].get("chains"),list):
+            continue
+        found=[]
+        for chain in records[0]["chains"]:
+            if not isinstance(chain,dict):continue
+            network=CHAINS.get(str(chain.get("chain","")).upper())
+            address=contract_address(chain.get("contractAddress"))
+            if network and address and present.get((network,address))=={aid}:
+                found.append((network,address))
+        # More than one independently matching chain is acceptable, but the
+        # CoinGecko ownership must be unique for each respective contract.
+        if found:
+            platform,address=sorted(set(found))[0]
+            result[aid]={"coin_id":aid,"exchange":"bitget","base":symbol,
+                         "quote":"USDT","market_pair_candidate":pair,
+                         "exchange_instrument_confirmed":False,
+                         "native_1m_month_confirmed":False,
+                         "proof_method":"exact_coin_id_matching_evm_contract",
+                         "contract_platform":platform,
+                         "contract_address":address}
+    return result
+
+def public_inventory(url,max_size):
+    require(url in (CG_PLATFORMS,BITGET_COINS),"Unapproved inventory source")
+    req=urllib.request.Request(url,headers={
+        "User-Agent":"SevenHeaven-Coffre-ContractProof/1.0",
+        "Accept":"application/json"})
+    with urllib.request.urlopen(req,timeout=40) as response:
+        require(response.status==200,"Official inventory returned non-200")
+        raw=response.read(max_size+1)
+        require(0<len(raw)<=max_size,"Official inventory incomplete/oversized")
+    return json.loads(raw)
+
+def enrich_contracts(queue,archived,doc,official,coingecko,bitget):
+    """Append only verified first-owner contract proofs to existing ledger."""
+    matches=contract_matches(queue,archived,official,coingecko,bitget)
+    records={r["id"]:r for r in doc["results"]}
+    now=dt.datetime.now(dt.timezone.utc).isoformat()
+    additions=[]
+    for asset in queue:
+        aid=asset["id"]
+        if aid not in matches:continue
+        previous=records.get(aid)
+        if previous and previous["status"]=="exact_id_market_candidates":
+            continue
+        records[aid]={"id":aid,"rank":asset["rank"],"symbol":asset["symbol"],
+                      "status":"exact_id_market_candidates",
+                      "markets":[matches[aid]],"pages_checked":0,
+                      "checked_at":now}
+        additions.append(aid)
+    updated=dict(doc)
+    updated["results"]=sorted(records.values(),key=lambda r:r["rank"])
+    updated["checked_count"]=sum(r["id"] not in archived
+                                 for r in updated["results"])
+    updated["market_candidate_count"]=sum(bool(r["markets"])
+        and r["id"] not in archived for r in updated["results"])
+    if additions:
+        updated["source"]=(doc["source"]+
+             "; exact-ID CoinGecko contract matched to Bitget official chain")
+    validate(updated,queue)
+    return updated,additions
+
 def main():
     cli=argparse.ArgumentParser(description=__doc__)
     cli.add_argument("--plan",action="store_true")
@@ -283,6 +413,20 @@ def main():
     result=process(queue,prior,args.batch_size,
                    checker=lambda a:inspect(a,exchange_getter=fetch_exchange),
                    delay=args.sleep,excluded=archived,preferred=priority)
+    # The inventory route can continue qualifying identities even if the
+    # per-coin ticker endpoint is throttled. Failure must never become proof.
+    try:
+        official=json.loads(OFFICIAL.read_text(encoding="utf-8"))
+        cg=public_inventory(CG_PLATFORMS,40_000_000)
+        bitget=public_inventory(BITGET_COINS,15_000_000)
+        result,added=enrich_contracts(queue,archived,result,official,cg,bitget)
+        print("EXACT CONTRACT SOURCE "+json.dumps(
+            {"qualified_ids":added,"count":len(added)},sort_keys=True),
+            flush=True)
+    except (OSError,ValueError,TypeError,KeyError,
+            json.JSONDecodeError) as exc:
+        print("EXACT CONTRACT SOURCE UNAVAILABLE "+
+              type(exc).__name__+": "+str(exc)[:180],flush=True)
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     tmp=OUTPUT.with_suffix(".tmp")
     tmp.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
