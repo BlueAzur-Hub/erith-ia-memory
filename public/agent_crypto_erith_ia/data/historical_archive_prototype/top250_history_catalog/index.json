@@ -5,9 +5,9 @@
   "ranked": 250,
   "rank_snapshot": "2026-10-09T18:47:53.633Z",
   "release_months": 12,
-  "release_count": 27,
-  "archived_assets": 98,
-  "native_1m_candles": 33464160,
+  "release_count": 30,
+  "archived_assets": 100,
+  "native_1m_candles": 33684480,
   "groups": [
     {
       "top": 10,
@@ -15,15 +15,15 @@
     },
     {
       "top": 50,
-      "with_history": 31
+      "with_history": 32
     },
     {
       "top": 100,
-      "with_history": 53
+      "with_history": 55
     },
     {
       "top": 250,
-      "with_history": 98
+      "with_history": 100
     }
   ],
   "months": [
@@ -120,6 +120,13 @@
     },
     {
       "month": "2026-07",
+      "release": "crypto-spot-bulk-add-2026-07-1m-5cce3ca0047d",
+      "verified": 1,
+      "unavailable": 1,
+      "candles": 44640
+    },
+    {
+      "month": "2026-07",
       "release": "crypto-spot-bulk-add-2026-07-1m-688070fa4d52",
       "verified": 2,
       "unavailable": 1,
@@ -155,6 +162,13 @@
     },
     {
       "month": "2026-08",
+      "release": "crypto-spot-bulk-add-2026-08-1m-5cce3ca0047d",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 89280
+    },
+    {
+      "month": "2026-08",
       "release": "crypto-spot-bulk-add-2026-08-1m-688070fa4d52",
       "verified": 2,
       "unavailable": 1,
@@ -187,6 +201,13 @@
       "verified": 31,
       "unavailable": 0,
       "candles": 1339200
+    },
+    {
+      "month": "2026-09",
+      "release": "crypto-spot-bulk-add-2026-09-1m-5cce3ca0047d",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 86400
     },
     {
       "month": "2026-09",
@@ -2536,9 +2557,28 @@
       "symbol": "GRAM",
       "name": "Gram (prev. Toncoin)",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
-      "missing_months": [],
-      "candles": 0
+      "months": [
+        {
+          "month": "2026-08",
+          "pair": "GRAMUSDT",
+          "file": "GRAMUSDT-1m-2026-08.zip",
+          "sha256": "9b9e37225fd61aafafb0fb1688eef64751a0d807c0cf0ea7a82f8f8230d011a2",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-5cce3ca0047d"
+        },
+        {
+          "month": "2026-09",
+          "pair": "GRAMUSDT",
+          "file": "GRAMUSDT-1m-2026-09.zip",
+          "sha256": "78bf23162be4f762b12c204f7f1780c67d4f3726f785ab4d3fb825b5209c54b1",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-5cce3ca0047d"
+        }
+      ],
+      "missing_months": [
+        "2026-07"
+      ],
+      "candles": 87840
     },
     {
       "id": "hedera-hashgraph",
@@ -3836,9 +3876,34 @@
       "symbol": "WLD",
       "name": "Worldcoin",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "WLDUSDT",
+          "file": "WLDUSDT-1m-2026-07.zip",
+          "sha256": "a5ef208fbfc73685cf4930916d1fd5e46225c7a57d6d2903db18807923a72e82",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-5cce3ca0047d"
+        },
+        {
+          "month": "2026-08",
+          "pair": "WLDUSDT",
+          "file": "WLDUSDT-1m-2026-08.zip",
+          "sha256": "bf2d93ffc5e7bc19c5a6b8e2f958e3a4b2d4c1b16d5d77258d17a105fcdba150",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-5cce3ca0047d"
+        },
+        {
+          "month": "2026-09",
+          "pair": "WLDUSDT",
+          "file": "WLDUSDT-1m-2026-09.zip",
+          "sha256": "d3d710ad90ffd043f2fd773993f00e0161fe3b0fc2a0a2893bd97322b69f0104",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-5cce3ca0047d"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "pax-gold",
