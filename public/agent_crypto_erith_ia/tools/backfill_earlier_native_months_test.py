@@ -56,6 +56,21 @@ class EarlierSourceTests(unittest.TestCase):
         (folder/"manifest.json").write_text(json.dumps(manifest))
         return manifest
 
+    def test_same_bounded_pilot_can_run_every_two_hours(self):
+        """Only cadence changes; never expand the source or month limits."""
+        workflow=(Path(m.__file__).resolve().parents[3] /
+                  ".github/workflows/agent-crypto-earliest-binance-native.yml")
+        content=workflow.read_text(encoding="utf-8")
+        self.assertIn("cron: '7 */2 * * *'",content)
+        self.assertIn("group: agent-crypto-earliest-binance-verified-backfill",
+                      content)
+        self.assertIn("cancel-in-progress: false",content)
+        self.assertIn("timeout-minutes: 27",content)
+        self.assertIn("--collect --months 2",content)
+        self.assertEqual(m.MAX_ASSETS,2)
+        self.assertEqual(m.MAX_MONTHS,2)
+        self.assertEqual(m.PILOT_IDS,("bitcoin","ethereum"))
+
     def test_no_publication_after_source_missing(self):
         cat=self.catalog()
         published=[]
