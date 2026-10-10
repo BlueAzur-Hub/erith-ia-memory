@@ -279,7 +279,7 @@ class AlternativeMarketTests(unittest.TestCase):
             [coin],set(),filled,official,coins,spot)
         self.assertEqual(added,[])
         self.assertEqual(unchanged["results"],filled["results"])
-        with self.assertRaisesRegex(ValueError,"incomplete"):
+        with self.assertRaisesRegex(ValueError,"partial asset inventory"):
             m.contract_matches([coin],set(),official,[],spot)
         self.assertIsNone(m.contract_address("0x"+"0"*40))
         self.assertIsNone(m.contract_address("invalid"))
