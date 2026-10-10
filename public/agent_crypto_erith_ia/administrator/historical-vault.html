@@ -23,7 +23,9 @@ details{padding:10px 13px}.fine{font-size:12px;color:#acbed1}
 @media(max-height:720px) and (min-width:1000px){body{padding:8px}.board{margin:6px 0;padding:9px}header{margin-bottom:4px}.metric{padding:6px 9px}th,td{padding:4px 7px}h1{font-size:21px}}
 select{font:inherit;color:#ebf3fc;background:#143049;border:1px solid #6c9db3;border-radius:7px;padding:7px 10px}
 select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-top:7px}
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
+.vault-select{padding:5px 10px;white-space:nowrap;font-size:12px}
+#top250-coverage table{min-width:810px}
 #top250-coverage summary,#btc-year-lab summary{font-size:16px;color:#e3f4ff;margin-bottom:9px}
 #top250-coverage input[type=search]{font:inherit}
 #top250-coverage input[type=checkbox]{accent-color:#6cd6e9}
@@ -35,13 +37,12 @@ select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-
 </style></head>
 <body>
 <header><div><h1>Coffre historique · Seven Heaven</h1><p class="muted">Une seule vue · Firefox + GitHub · lecture seule</p></div>
-<nav class="links"><a href="./historical-inventory.html">Détail Firefox</a>
-<a href="./historical-archive-reader.html">Diagnostic R3</a><a href="./historical-yearly.html">Historique pluriannuel</a><a href="./index.html">← Interface</a></nav></header>
-<section class="board"><p class="note">Le cache Firefox change au fil des consultations ; l'archive GitHub conserve les chandelles validées. <b>Ces nombres ne s'additionnent pas.</b> Les données Binance Spot sont cotées en USDT, pas en USD ou EUR.</p>
+<nav class="links"><a href="./index.html">← Interface</a></nav></header>
+<section class="board"><p class="note"><strong>Un seul Coffre :</strong> Binance + Bitget, bougies vérifiées et blocs annuels au même endroit. Le cache Firefox est distinct des archives GitHub ; leurs compteurs ne s'additionnent pas. <b>Prix archivés en USDT, non convertis en USD/EUR, pas en temps réel.</b></p>
 <div class="toolbar"><button id="analyze">Analyser le Coffre</button><button id="copy" disabled>Copier le bilan</button><span id="status" class="muted" aria-live="polite">Prêt pour la vérification</span><span id="r10-automatic-status" class="muted" aria-live="polite">R10 · automatique au chargement</span></div></section>
 <details class="board" id="top250-coverage" open>
  <summary id="top250-title">Coffre Top 250 · couverture réelle des historiques (chargement…)</summary>
- <p class="muted">Le classement répertorie 250 cryptomonnaies. Une crypto est indiquée « archivée » uniquement lorsqu'un ZIP mensuel officiel a été vérifié et publié. Les autres ne sont pas inventées. Source actuelle : Binance Spot <b>USDT</b>.</p>
+ <p class="muted">Le classement répertorie 250 cryptomonnaies. Une crypto est indiquée « archivée » uniquement lorsqu'un ZIP mensuel officiel a été vérifié et publié. Les autres ne sont pas inventées. Sources : <b>Binance Spot USDT</b> et <b>Bitget Spot USDT</b>, formats natifs distincts. Un mois archivé ne signifie pas un an de données.</p>
  <div class="metrics" id="top250-summary"><div class="metric">Chargement de l'index réel…</div></div>
  <p class="fine" id="top250-counts">Couverture Top 10 / 50 / 100 / 250 à vérifier.</p>
  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0">
@@ -56,13 +57,13 @@ select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-
  <div id="top250-status" aria-live="polite" class="muted">Chargement…</div>
  <p id="top250-listed" class="fine"></p>
  <div class="scroll" style="max-height:420px;overflow-y:auto">
- <table><thead><tr><th>Rang</th><th>Crypto</th><th>Historique</th><th>Mois</th><th>Bougies 1m</th><th>Depuis</th><th>Dernière archive</th></tr></thead><tbody id="top250-rows"></tbody></table>
+ <table><thead><tr><th>Rang</th><th>Crypto</th><th>Historique</th><th>Mois</th><th>Bougies 1m</th><th>Depuis</th><th>Dernière archive</th><th>Consulter</th></tr></thead><tbody id="top250-rows"></tbody></table>
  </div>
- <p class="fine">La présence de données historiques ne signifie pas que la crypto est disponible sur Binance aujourd'hui. Les liens ouvrent les Releases GitHub qui conservent les ZIP originaux. Cette table est un index, pas encore le graphique multi-actifs du Trader.</p>
+ <p class="fine">La présence de données historiques ne signifie pas que la crypto est disponible sur Binance aujourd'hui. Cliquer sur « Voir les bougies » pour ouvrir la crypto dans le graphique ci-dessous. Les ZIP originaux restent dans GitHub Releases, sans toucher au Trader.</p>
 </details>
 <details class="board" id="shared-month-reader" open>
  <summary>Graphique historique commun · cryptomonnaies réellement archivées</summary>
- <p class="muted">Même Coffre, plusieurs cryptos : les périodes courtes proviennent du dernier mois clos ; 60 jours, 90 jours et un an lisent <strong>les mois complets consécutifs certifiés</strong>, uniquement lorsqu'ils existent. Chaque série est validée et chargée une seule fois par crypto. Les ZIP natifs restent dans GitHub Releases, aucune donnée temps réel.</p>
+ <p class="muted">Un graphique commun pour les cryptos Binance et Bitget. 24h, 7j, 30j et mois source lisent le dernier mois vérifié. Binance propose aussi 60j, 90j, 1an et Max lorsque ces périodes existent ; les longues périodes Bitget restent indisponibles tant qu'elles ne sont pas matérialisées. Jamais de données synthétiques.</p>
  <div class="toolbar" style="margin:10px 0;gap:9px">
   <label for="shared-asset">Crypto</label>
   <select id="shared-asset" style="max-width:min(90vw,330px)"><option>Chargement…</option></select>
@@ -84,7 +85,7 @@ select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-
  <p id="shared-source" class="fine">Dernier mois clos disponible seulement, non live. Aucune conversion implicite USDT → USD.</p>
  <div class="scroll"><table id="shared-table"><tr><td>Lire un actif pour afficher ses dernières bougies.</td></tr></table></div>
 </details>
-<details class="board" id="btc-year-lab" open>
+<details class="board" id="btc-year-lab">
  <summary><strong>BTC/USDT · explorer les archives mensuelles de Bitcoin</strong></summary>
  <div class="btc-hero" aria-label="Repères de l'archive BTC">
   <div class="metric"><small>Historique source validé</small><b>525 600 bougies</b><small>1 minute native · 365 jours</small></div>
