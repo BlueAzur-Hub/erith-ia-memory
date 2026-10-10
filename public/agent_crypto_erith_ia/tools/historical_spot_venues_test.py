@@ -205,6 +205,86 @@ class AlternativeMarketTests(unittest.TestCase):
         self.assertEqual(result["market_candidate_count"],0)
         self.assertTrue(result["market_only_not_archived"])
 
+    def test_exact_contract_proof_requires_unique_id_chain_and_spot_pair(self):
+        """A token ticker is never enough: both inventories must attest one contract."""
+        coin={"id":"memecore","rank":47,"symbol":"M","name":"MemeCore"}
+        address="0x"+"12"*20
+        coins=[{"id":f"unrelated-{i}","symbol":"u","platforms":{}}
+               for i in range(1001)]
+        coins.append({"id":"memecore","symbol":"m",
+                      "platforms":{"ethereum":address}})
+        spot_rows=[{"coin":f"OTHER{i}","chains":[]} for i in range(101)]
+        spot_rows.append({"coin":"M","chains":[{"chain":"ERC20",
+                          "contractAddress":address.upper()}]})
+        spot={"code":"00000","data":spot_rows}
+        official={"schema":"aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+                  "ranked":250,"assets":[{"id":"memecore","rank":47,"symbol":"M",
+                   "instruments":[{"venue":"bitget","instrument":"MUSDT",
+                     "base":"M","quote":"USDT",
+                     "exchange_instrument_confirmed":True}]}]}
+        expected=m.contract_matches([coin],set(),official,coins,spot)
+        self.assertEqual(expected["memecore"]["proof_method"],
+                         "exact_coin_id_matching_evm_contract")
+        self.assertEqual(expected["memecore"]["market_pair_candidate"],"MUSDT")
+        self.assertFalse(expected["memecore"]["native_1m_month_confirmed"])
+        self.assertEqual(m.contract_matches([coin],{"memecore"},
+                         official,coins,spot),{})
+        same_symbol_other_id=coins[:-1]+[
+            {"id":"someone-else","symbol":"m",
+             "platforms":{"ethereum":address}}]
+        self.assertEqual(m.contract_matches(
+            [coin],set(),official,same_symbol_other_id,spot),{})
+        duplicated=coins+[{"id":"other-claim","symbol":"m",
+                           "platforms":{"ethereum":address}}]
+        self.assertEqual(m.contract_matches([coin],set(),
+                         official,duplicated,spot),{})
+        wrong_network={"code":"00000","data":spot_rows[:-1]+[
+            {"coin":"M","chains":[{"chain":"UNKNOWN",
+                                      "contractAddress":address}]}]}
+        self.assertEqual(m.contract_matches([coin],set(),official,
+                         coins,wrong_network),{})
+        wrong_contract={"code":"00000","data":spot_rows[:-1]+[
+            {"coin":"M","chains":[{"chain":"ERC20",
+                          "contractAddress":"0x"+"34"*20}]}]}
+        self.assertEqual(m.contract_matches([coin],set(),official,
+                         coins,wrong_contract),{})
+        bad_instrument={**official,"assets":[{
+            **official["assets"][0],"instruments":[]}]}
+        self.assertEqual(m.contract_matches([coin],set(),
+                         bad_instrument,coins,spot),{})
+
+    def test_exact_contract_ledger_enrichment_is_idempotent_fail_closed(self):
+        coin={"id":"memecore","rank":47,"symbol":"M","name":"MemeCore"}
+        address="0x"+"ab"*20
+        coins=[{"id":f"else-{i}","symbol":"e","platforms":{}}
+               for i in range(1001)]+[
+            {"id":"memecore","symbol":"m","platforms":{"ethereum":address}}]
+        spot={"code":"00000","data":[
+            {"coin":f"OTHER{i}","chains":[]} for i in range(101)]+[
+            {"coin":"M","chains":[{"chain":"ERC20","contractAddress":address}]}]}
+        official={"schema":"aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+                  "ranked":250,"assets":[{"id":"memecore","rank":47,"symbol":"M",
+                  "instruments":[{"venue":"bitget","instrument":"MUSDT",
+                   "base":"M","quote":"USDT",
+                   "exchange_instrument_confirmed":True}]}]}
+        empty={"schema":m.SCHEMA,"source":"CoinGecko ID",
+               "results":[],"checked_count":0,"market_candidate_count":0}
+        filled,added=m.enrich_contracts([coin],set(),empty,official,coins,spot)
+        self.assertEqual(added,["memecore"])
+        self.assertEqual(filled["checked_count"],1)
+        self.assertEqual(filled["market_candidate_count"],1)
+        self.assertEqual(filled["results"][0]["status"],
+                         "exact_id_market_candidates")
+        unchanged,added=m.enrich_contracts(
+            [coin],set(),filled,official,coins,spot)
+        self.assertEqual(added,[])
+        self.assertEqual(unchanged["results"],filled["results"])
+        with self.assertRaisesRegex(ValueError,"partial asset inventory"):
+            m.contract_matches([coin],set(),official,[],spot)
+        self.assertIsNone(m.contract_address("0x"+"0"*40))
+        self.assertIsNone(m.contract_address("invalid"))
+        self.assertIsNone(m.contract_address(123))
+
     def test_real_catalogue_identity_alignment_without_network(self):
         queue,archived=m.universe()
         self.assertEqual(len(queue),250)
