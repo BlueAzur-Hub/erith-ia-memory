@@ -21,8 +21,10 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
   workflow_dispatch:
   workflow_run:
+    # Hourly histories depend on the source Release catalog directly.
+    # Avoid a fourth workflow_run level (identity -> addenda -> catalog -> monthly -> hourly).
     workflows:
-      - 'Agent Crypto Shared Historical Archive Views'
+      - 'Agent Crypto Top250 Historical Coverage Catalog'
     types: [completed]
   schedule:
     - cron: '59 6 * * *'
