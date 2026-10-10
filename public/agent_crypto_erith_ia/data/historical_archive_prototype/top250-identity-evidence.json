@@ -1,5 +1,5 @@
 {
-  "approved_count": 68,
+  "approved_count": 70,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -26,13 +26,23 @@
       "symbol": "HYPE"
     },
     {
-      "checked_at": "2026-10-09T19:43:05.315975+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T01:47:15.769914+00:00",
+      "evidence": [
+        {
+          "base": "GRAM",
+          "coin_id": "the-open-network",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "the-open-network",
+          "trade_url": "https://www.binance.com/en/trade/GRAM_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "the-open-network",
-      "pages": 1,
+      "pages": 2,
       "pair": "GRAMUSDT",
       "rank": 32,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "GRAM"
     },
     {
@@ -76,13 +86,23 @@
       "symbol": "ASTER"
     },
     {
-      "checked_at": "2026-10-09T20:51:44.799926+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-10T01:47:30.953714+00:00",
+      "evidence": [
+        {
+          "base": "WLD",
+          "coin_id": "worldcoin-wld",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "worldcoin-wld",
+          "trade_url": "https://www.binance.com/en/trade/WLD_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "worldcoin-wld",
-      "pages": 1,
+      "pages": 2,
       "pair": "WLDUSDT",
       "rank": 53,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "WLD"
     },
     {
@@ -246,13 +266,14 @@
       "symbol": "ETC"
     },
     {
-      "checked_at": "2026-10-09T23:51:20.211295+00:00",
+      "checked_at": "2026-10-10T01:47:46.067657+00:00",
       "evidence": [],
       "id": "jupiter-exchange-solana",
       "pages": 1,
       "pair": "JUPUSDT",
       "rank": 70,
-      "status": "identity_not_confirmed",
+      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
+      "status": "source_unavailable",
       "symbol": "JUP"
     },
     {
@@ -296,23 +317,25 @@
       "symbol": "JST"
     },
     {
-      "checked_at": "2026-10-09T23:52:05.755667+00:00",
+      "checked_at": "2026-10-10T01:48:01.095134+00:00",
       "evidence": [],
       "id": "cosmos",
-      "pages": 1,
+      "pages": 0,
       "pair": "ATOMUSDT",
       "rank": 75,
-      "status": "identity_not_confirmed",
+      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
+      "status": "source_unavailable",
       "symbol": "ATOM"
     },
     {
-      "checked_at": "2026-10-09T23:52:20.920162+00:00",
+      "checked_at": "2026-10-10T01:48:01.257419+00:00",
       "evidence": [],
       "id": "polygon-ecosystem-token",
-      "pages": 1,
+      "pages": 0,
       "pair": "POLUSDT",
       "rank": 76,
-      "status": "identity_not_confirmed",
+      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
+      "status": "source_unavailable",
       "symbol": "POL"
     },
     {
@@ -336,13 +359,14 @@
       "symbol": "ALGO"
     },
     {
-      "checked_at": "2026-10-09T23:52:51.268394+00:00",
+      "checked_at": "2026-10-10T01:48:16.274773+00:00",
       "evidence": [],
       "id": "render-token",
-      "pages": 1,
+      "pages": 0,
       "pair": "RENDERUSDT",
       "rank": 81,
-      "status": "identity_not_confirmed",
+      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
+      "status": "source_unavailable",
       "symbol": "RENDER"
     },
     {
@@ -446,13 +470,14 @@
       "symbol": "NIGHT"
     },
     {
-      "checked_at": "2026-10-09T23:54:07.455480+00:00",
+      "checked_at": "2026-10-10T01:48:31.293328+00:00",
       "evidence": [],
       "id": "blockstack",
-      "pages": 1,
+      "pages": 0,
       "pair": "STXUSDT",
       "rank": 91,
-      "status": "identity_not_confirmed",
+      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
+      "status": "source_unavailable",
       "symbol": "STX"
     },
     {
@@ -476,13 +501,14 @@
       "symbol": "APT"
     },
     {
-      "checked_at": "2026-10-09T23:54:37.774387+00:00",
+      "checked_at": "2026-10-10T01:48:46.313611+00:00",
       "evidence": [],
       "id": "pancakeswap-token",
-      "pages": 1,
+      "pages": 0,
       "pair": "CAKEUSDT",
       "rank": 95,
-      "status": "identity_not_confirmed",
+      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
+      "status": "source_unavailable",
       "symbol": "CAKE"
     },
     {
@@ -1646,7 +1672,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 28,
+  "review_required_count": 26,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
