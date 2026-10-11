@@ -30,11 +30,13 @@ class KrakenNativeDailyProof(unittest.TestCase):
         fed,daily,official=self.owners()
         selected=m.candidate_owners(fed,daily,official)
         self.assertEqual({a["id"] for a in selected},
-            {"sofiusd","euro-coin","apxusd","cash-4"})
+            {"dai","sofiusd","euro-coin","apxusd","cash-4"})
         self.assertEqual({a["quote"] for a in selected},{"USDT","USDC"})
-        self.assertEqual(len({a["symbol"] for a in selected}),4)
+        self.assertEqual(len({a["symbol"] for a in selected}),5)
         self.assertTrue(all(a["original_named_notice"].startswith(
             "https://blog.kraken.com/product/asset-listings/")
+            or (a["id"]=="dai" and a["original_named_notice"]==
+                "https://blog.kraken.com/news/kraken-is-supporting-dais-multi-collateral-upgrade")
             for a in selected))
         self.assertTrue(all(a["coingecko_identity_url"]==
             "https://www.coingecko.com/en/coins/"+a["id"]
@@ -45,6 +47,27 @@ class KrakenNativeDailyProof(unittest.TestCase):
         published["asset_count"]+=1
         self.assertNotIn("sofiusd",
             {a["id"] for a in m.candidate_owners(fed,published,official)})
+
+    def test_dai_multicollateral_does_not_inherit_sai_legacy_candles(self):
+        fed,daily,official=self.owners()
+        candidates=m.candidate_owners(fed,daily,official)
+        dai=next(a for a in candidates if a["id"]=="dai")
+        self.assertEqual((dai["rank"],dai["symbol"],dai["name"],dai["pair"]),
+                         (27,"DAI","Dai","DAI/USDT"))
+        self.assertEqual(dai["first_listed_ms"],
+                         int(dt.datetime(2019,12,2,tzinfo=dt.timezone.utc).timestamp()*1000))
+        self.assertEqual(dai["original_named_notice"],
+          "https://blog.kraken.com/news/kraken-is-supporting-dais-multi-collateral-upgrade")
+        prior=(dai["first_listed_ms"]//1000)-86400
+        original=[prior,"1.00","1.02","0.98","1.01","1.00","12",4]
+        with self.assertRaisesRegex(ValueError,"predates"):
+            m.source_rows([original],dai)
+        # The old original Kraken Sep-2019 listing later became SAI.
+        # An incorrect generic notice must never attest *current* DAI.
+        incorrect=copy.deepcopy(fed)
+        next(a for a in incorrect["assets"] if a["id"]=="dai")["name"]="Sai"
+        with self.assertRaisesRegex(ValueError,"original-owner"):
+            m.candidate_owners(incorrect,daily,official)
 
     def test_no_alias_or_quote_roulette_or_stale_official_pair(self):
         f,d,official=self.owners()
