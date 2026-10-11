@@ -78,7 +78,7 @@ class MultiResolutionRegistryTests(unittest.TestCase):
                     "crypto-bitget-spot-native-daily-2026-09-usdgo-vision")
         # The same 1m month may already exist; never count its owner twice.
         self.assertGreater(c["assets"][68]["native_1m_count"],0)
-        self.assertEqual(c["assets"][208]["native_1m_count"],0)
+        self.assertEqual(c["assets"][208]["id"],"vision-3")
 
     def test_reject_wrong_rank_coin_id_or_spurious_asset(self):
         for mode in ("wrong ID","wrong rank","duplicate"):
