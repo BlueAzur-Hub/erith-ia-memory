@@ -15,18 +15,20 @@ import tempfile
 
 import collect_native_okx_daily_history as daily
 
-TAG="crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons"
+TAG="crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s"
 PROOFS=(
- ("venice-token",78,"VVV","Venice Token",
-  "https://www.okx.com/en-sg/help/okx-to-list-vvv-usdt-venice-for-spot-trading"),
- ("grass",124,"GRASS","Grass",
-  "https://www.okx.com/en-eu/help/okx-to-list-grass-grass-for-spot-trading"),
- ("monad",154,"MON","Monad",
-  "https://www.okx.com/fr-fr/help/okx-to-list-mon-monad-for-spot-trading"),
- ("collector-crypt",163,"CARDS","Collector Crypt",
-  "https://www.okx.com/en-sg/help/okx-to-list-cards-usdt-collector-crypt-for-spot-trading"),
- ("pons",169,"PONS","Pons",
-  "https://www.okx.com/en-gb/help/okx-to-list-pons-usdt-pons-family-for-spot-trading"),
+ ("leo-token",18,"LEO","LEO Token",
+  "https://www.okx.com/en-ae/help/okx-to-adjust-the-minimum-trade-amount-of-spots-2023-11-29"),
+ ("canton-network",24,"CC","Canton",
+  "https://www.okx.com/en-us/help/okx-to-list-cc-canton-for-spot-trading"),
+ ("apenft",168,"NFT","AINFT",
+  "https://www.okx.com/en-eu/help/okx-will-list-apenft-nft-token-for-spot-trading-and-launch-nft-staking"),
+ ("vaulta",201,"A","Vaulta",
+  "https://www.okx.com/en-eu/help/okx-completed-eos-token-migration"),
+ ("instadapp",202,"FLUID","Fluid",
+  "https://www.okx.com/en-us/help/okx-to-list-fluid-fluid-for-spot-trading"),
+ ("sonic-3",203,"S","Sonic",
+  "https://www.okx.com/en-gb/help/okx-completed-ftm-token-migration"),
 )
 
 def owners(fed,venues):
@@ -105,7 +107,7 @@ def publish(payloads):
         cmd=["gh","release","create",TAG,
              *(str(folder/x["filename"]) for x in docs),
              str(folder/"manifest.json"),
-             "--title","Native OKX Spot UTC daily history · VVV, GRASS, MON, CARDS, PONS",
+             "--title","Native OKX Spot UTC daily history · LEO, CC, NFT, A, FLUID, S",
              "--notes","Original public OKX Spot 1Dutc OHLCV, with timestamps, original USDT quote and SHA-256 of retrieved responses. Unlike Binance ZIPs, OKX responses are not exchange-signed archives. Not yet part of the canonical native 1m Top250 counter. No trading orders and no interpolated candles.",
              "--target",os.environ["GITHUB_SHA"],"--latest=false"]
         proc=subprocess.run(cmd,capture_output=True,text=True,timeout=150)
@@ -126,12 +128,12 @@ def main():
     spot=json.loads(daily.VENUES.read_text(encoding="utf-8"))
     qualified=owners(fed,spot)
     if args.plan:
-        print("OKX FIVE VERIFIED DAILY PLAN "+json.dumps({
+        print("OKX SIX VERIFIED DAILY PLAN "+json.dumps({
             "owners":qualified,"source_interval":"1Dutc","published":False},
             sort_keys=True));return
     rows=daily.collect(qualified)
     if args.probe:
-        print("OKX FIVE VERIFIED DAILY SOURCE PROBE COMPLETE; NO PUBLICATION",flush=True)
+        print("OKX SIX VERIFIED DAILY SOURCE PROBE COMPLETE; NO PUBLICATION",flush=True)
         return
     publish(rows)
 
