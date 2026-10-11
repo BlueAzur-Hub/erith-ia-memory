@@ -37,7 +37,7 @@ MAX_PAGES=65
 MAX_RESPONSE=250000
 MAX_CANDLES=3700
 MAX_ASSETS=15
-TAG="crypto-bitget-spot-native-daily-2026-09-single-symbol-owners"
+TAG="crypto-bitget-spot-native-daily-2026-09-project-listings"
 SCHEMA="aerith.bitget.native-exchange-daily-history.verified-response.v1"
 SHA=re.compile(r"^[a-f0-9]{64}$")
 PAIR=re.compile(r"^[A-Z0-9]{1,28}USDT$")
@@ -120,14 +120,61 @@ def single_symbol_candidates(minute,identity,official):
          "Repeated original Spot pair")
     return sorted(result,key=lambda a:a["rank"])
 
+NAMED_SPOT_PROOFS=(
+  ("htx-dao",65,"HTX","HTX DAO",
+   "https://www.bitget.com/asia/support/articles/12560603805507"),
+  ("kaspa",73,"KAS","Kaspa",
+   "https://www.bitget.com/support/articles/12560603785075"),
+  ("bitcoin-cash-sv",127,"BSV","Bitcoin SV",
+   "https://www.bitget.com/support/articles/12560603799193"),
+  ("fartcoin",213,"FARTCOIN","Fartcoin",
+   "https://www.bitget.com/support/articles/12560603818135"),
+)
+
+def named_spot_candidates(minute,official):
+    """CoinGecko exact-ID owner + Bitget named Spot project notice + live instrument."""
+    need(minute.get("schema")==
+         "aerith.public.ohlcv.top250.federated-native-archives.v1"
+         and minute.get("ranked")==250 and len(minute.get("assets",[]))==250
+         and official.get("schema")==
+         "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+         "Untrusted Top250 or official Bitget Spot inventory")
+    known={a["id"]:a for a in minute["assets"]}
+    spot={a["id"]:a for a in official["assets"]}
+    need(len(known)==250,"Repeated CoinGecko ranked owner")
+    selected=[]
+    for cid,rank,sym,name,notice in NAMED_SPOT_PROOFS:
+        a=known.get(cid)
+        need(a and a["rank"]==rank and a["symbol"]==sym
+             and a["name"]==name and a["quote"]=="USDT" and a["months"]==0
+             and len([x for x in known.values() if x["symbol"]==sym])==1,
+             "Wrong or ambiguous named project CoinGecko identity: "+cid)
+        need(notice.startswith("https://www.bitget.com/")
+             and "/support/articles/" in notice,
+             "Missing original project-named Bitget Spot listing proof")
+        inst=spot.get(cid);pair=sym+"USDT"
+        need(inst and inst["rank"]==rank and inst["symbol"]==sym
+             and any(x.get("venue")=="bitget"
+                     and x.get("base")==sym and x.get("quote")=="USDT"
+                     and x.get("instrument")==pair
+                     and x.get("exchange_instrument_confirmed") is True
+                     for x in inst.get("instruments",[])),
+             "No independently confirmed original Bitget Spot pair: "+cid)
+        selected.append({"id":cid,"rank":rank,"symbol":sym,"pair":pair,
+                         "quote":"USDT","venue":"bitget",
+                         "identity_evidence":notice})
+    need(len(selected)==len(NAMED_SPOT_PROOFS)
+         and len({a["pair"] for a in selected})==len(selected),
+         "Duplicated project Spot identity")
+    return selected
+
 def qualified_assets():
     # The old Top250 pilot catalog can lag behind the actual living 1m
     # federation; qualify with the current 250 CoinGecko IDs and ranks.
     minute=json.loads((source_proof.BASE/"top250_multisource_coverage/index.json").read_text())
-    exact=json.loads(source_proof.EXACT.read_text())
     official=json.loads(source_proof.INSTRUMENTS.read_text())
     daily=json.loads((source_proof.BASE/"top250_multiresolution_sources/index.json").read_text())
-    candidates=single_symbol_candidates(minute,exact,official)
+    candidates=named_spot_candidates(minute,official)
     candidates=filter_unarchived(candidates,minute,daily)
     # A strict ranked batch bound limits runtime. Others remain eligible
     # for later verified releases and are never counted as archived.
@@ -300,6 +347,7 @@ def publish(verified,failures):
             (folder/name).write_bytes(compressed)
             docs.append({"id":payload["owner"]["id"],"rank":payload["owner"]["rank"],
                 "pair":payload["market"],"quote":"USDT","interval":"1D",
+                "identity_evidence":payload["owner"].get("identity_evidence"),
                 "native_daily_count":payload["native_candles"],
                 "first_source_ms":payload["earliest_returned_ms"],
                 "last_source_ms":payload["latest_returned_ms"],
