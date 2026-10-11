@@ -155,6 +155,50 @@ class NativeAlternativeDailyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"named non-EVM"):
             m.candidates(minute,daily,ledger,official)
 
+    def test_ultima_original_kucoin_listing_time_and_owner_not_guessed(self):
+        owner={"id":"ultima","rank":237,"name":"Ultima","symbol":"ULTIMA",
+               "venue":"kucoin","pair":"ULTIMA-USDT","quote":"USDT",
+               "identity_proof":{
+                   "coin_id":"ultima","exchange":"kucoin","base":"ULTIMA",
+                   "quote":"USDT","market_pair_candidate":"ULTIMA-USDT",
+                   "proof_method":"original_named_spot_listing",
+                   "original_named_spot_notice":
+                     "https://www.kucoin.com/announcement/ua-ultima-ultima-gets-listed-on-kucoin",
+                   "exchange_instrument_confirmed":False,
+                   "native_1m_month_confirmed":False}}
+        start=m.NAMED_ORIGINAL_SPOT_FIRST_UTC_DAY[
+            ("ultima","kucoin","ULTIMA-USDT")]
+        self.assertIsNone(m.verify_named_venue_opening(owner,start))
+        self.assertIsNone(m.verify_named_venue_opening(owner,start+m.DAY))
+        with self.assertRaisesRegex(ValueError,"predate"):
+            m.verify_named_venue_opening(owner,start-m.DAY)
+        wrong=copy.deepcopy(owner)
+        wrong["identity_proof"]["original_named_spot_notice"]="https://example.invalid"
+        with self.assertRaisesRegex(ValueError,"owner or immutable listing"):
+            m.verify_named_venue_opening(wrong,start)
+        # Guard cannot be bypassed by swapping a prior project's owner/pair.
+        wrong=copy.deepcopy(owner)
+        wrong["rank"]=200
+        with self.assertRaisesRegex(ValueError,"owner or immutable listing"):
+            m.verify_named_venue_opening(wrong,start)
+        # End-to-end source rows: an authentic bar before the KuCoin listing
+        # never becomes an invented ULTIMA history, even with valid OHLCV.
+        with patch.object(m,"START",start-2*m.DAY):
+            def before(o,left,right):
+                stamp=start-m.DAY
+                row=[str(stamp//1000),"2","2","3","1","4","8"]
+                return ([row] if left<=stamp<right else [],"a"*64)
+            with self.assertRaisesRegex(ValueError,"predate"):
+                m.acquire(owner,getter=before)
+            def after(o,left,right):
+                stamp=start
+                row=[str(stamp//1000),"2","2","3","1","4","8"]
+                return ([row] if left<=stamp<right else [],"a"*64)
+            verified=m.acquire(owner,getter=after)
+        self.assertEqual(verified["earliest_returned_ms"],start)
+        self.assertEqual(verified["native_candles"],1)
+        self.assertEqual(verified["original_quote"],"USDT")
+
     def test_original_gate_ohlcv_and_confirmed_quote_and_daily_timestamp(self):
         stamp=m.END-m.DAY
         row=[str(stamp//1000),"23","2","3","1","2","4","true"]
