@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import vm from "node:vm";
 const panel=fs.readFileSync("public/agent_crypto_erith_ia/trader/trader-historical-panel.js","utf8");
-const trader=fs.readFileSync("public/agent_crypto_erith_ia/trader/trading-desk.html","utf8");
+const mirror=fs.readFileSync("public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js","utf8");
 const r10=fs.readFileSync(".github/workflows/agent-crypto-historical-ohlcv-incremental-r4.yml","utf8");
 const r11=fs.readFileSync(".github/workflows/agent-crypto-historical-partitions-r11.yml","utf8");
 const flush=async()=>{for(let i=0;i<5;i++)await new Promise(ok=>setImmediate(ok));};
@@ -54,7 +54,7 @@ function env({pending=false,withUniverse=false}={}){
    const result=data(x.assetId,x.period);result.metadata.archiveFamily="universe";return result;}
  };
  const document={readyState:"complete",
-  baseURI:"https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/trader/trading-desk.html",
+  baseURI:"https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/administrator/index.html",
   head,createElement:element,getElementById(id){
    if(id==="market-zone")return zone;
    if(id==="traderVerifiedHistory")return mounted;
@@ -81,9 +81,8 @@ function env({pending=false,withUniverse=false}={}){
   resolve(v){pendingResolve(v);}
  };
 }
-test("Direct Trader page loads the verified history reader without creating market owners",()=>{
- assert.match(trader,/trader-historical-panel\.js/);
- assert.doesNotMatch(trader,/<iframe|trader-runtime-mirror\.js/);
+test("Shared Administrator runtime is retained and no duplicate market owner is introduced",()=>{
+ assert.match(mirror,/traderHistoricalPanelScript/);
  assert.match(panel,/SevenCompactArchiveReader/);
  assert.doesNotMatch(panel,/AgentCryptoMarketMicroscope\s*=|AgentCryptoMarketInstrumentResolver\s*=/);
 });
