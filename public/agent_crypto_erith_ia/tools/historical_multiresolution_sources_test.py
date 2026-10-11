@@ -25,10 +25,10 @@ class MultiResolutionRegistryTests(unittest.TestCase):
                      if a.get("release_tag")=="crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"]
         self.assertEqual(len(alternative),8)
         self.assertEqual(sum(a["native_candles"] for a in alternative),10034)
-        self.assertEqual(len(approved),48)
-        self.assertEqual(registry["native_daily_candles"],42382)
+        self.assertEqual(len(approved),49)
+        self.assertEqual(registry["native_daily_candles"],45210)
         known={a["id"] for a in approved}
-        self.assertEqual(len(known),48)
+        self.assertEqual(len(known),49)
         self.assertEqual({a["id"] for a in alternative},{
             "rain","ondo-us-dollar-yield","mantle","usdd",
             "gatechain-token","kucoin-shares","akedo","derive"})
@@ -73,7 +73,7 @@ class MultiResolutionRegistryTests(unittest.TestCase):
         sources={a["id"]:a for a in approved}
         minute_ids={a["id"] for a in minute["assets"] if a["native_1m_count"]>0}
         self.assertFalse(set(expected) & minute_ids)
-        self.assertEqual(len(set(sources)|minute_ids),189)
+        self.assertEqual(len(set(sources)|minute_ids),190)
         self.assertEqual(sum(bars for _,bars,_ in expected.values()),10472)
         for cid,(rank,bars,sha) in expected.items():
             with self.subTest(cid=cid):
@@ -90,6 +90,41 @@ class MultiResolutionRegistryTests(unittest.TestCase):
                     "crypto-gate-kucoin-spot-native-daily-2026-09-8e71573a011c"))
                 self.assertEqual(a["source_attestation"],"verified-original-spot-owner")
                 self.assertIn("top250-alt-market-evidence.json#",a["identity_evidence"])
+
+    def test_tether_has_genuine_kucoin_usdc_not_usd_daily_archive(self):
+        registry,minute=self.source()
+        assets=m.check_registry(registry,minute)
+        tether=next(a for a in assets if a["id"]=="tether")
+        self.assertEqual(registry["quote"],"mixed-native-USDT-USDC")
+        self.assertEqual((tether["rank"],tether["name"],tether["symbol"]),
+                         (3,"Tether","USDT"))
+        self.assertEqual((tether["venue"],tether["market"],tether["quote"]),
+                         ("KuCoin Spot","USDT-USDC","USDC"))
+        self.assertEqual((tether["bar"],tether["native_candles"],
+                          tether["gaps_within_observed_span"]),
+                         ("1D",2828,71))
+        self.assertEqual(tether["earliest_source_ms"],1540339200000)
+        self.assertEqual(tether["latest_source_ms"],1790726400000)
+        self.assertEqual(tether["filename"],"tether-USDT-USDC-1D.json.gz")
+        self.assertEqual(tether["sha256"],
+            "7110d3bcd6bcf7033cdf0f0b3584e72da3fbf92ef5ef004603a29cf9883a88ad")
+        self.assertEqual(tether["release_tag"],
+            "crypto-gate-kucoin-spot-native-daily-2026-09-170e06b173cd")
+        self.assertNotEqual(tether["quote"],"USD")
+        for mutation,value in (
+            ("quote","USD"),("quote","USDT"),("market","USDT-USD"),
+            ("market","USDT-USDT"),("source_attestation","false"),
+            ("gaps_within_observed_span",0),("sha256","f"*64)
+        ):
+            modified=copy.deepcopy(registry)
+            next(a for a in modified["assets"] if a["id"]=="tether")[mutation]=value
+            with self.subTest(mutation=mutation),self.assertRaises(ValueError):
+                m.check_registry(modified,minute)
+        for top in ("USDT","USDC","USD"):
+            changed=copy.deepcopy(registry)
+            changed["quote"]=top
+            with self.subTest(global_quote=top),self.assertRaises(ValueError):
+                m.check_registry(changed,minute)
 
     def test_original_bitget_daily_timezone_and_real_gaps_are_not_fabricated(self):
         x,c=self.source()
