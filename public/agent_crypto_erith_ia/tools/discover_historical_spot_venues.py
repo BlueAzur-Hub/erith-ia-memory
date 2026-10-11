@@ -478,6 +478,11 @@ NAMED_ORIGINAL_SPOT_LISTINGS=(
      "https://www.gate.com/pt-br/announcements/article/27532"),
     ("akash-network",178,"AKT","Akash Network","gate","USDT",
      "https://www.gate.com/fr/announcements/article/19761/Gate.io-will-list-Akash-Network-AKT"),
+    # Original KuCoin Spot notice names Ultima's project, symbol, native
+    # network and USDT pair, including its 2026-01-16 opening date.
+    # Its later BSC -> Ultima Chain migration does not alter the owner's ID.
+    ("ultima",237,"ULTIMA","Ultima","kucoin","USDT",
+     "https://www.kucoin.com/announcement/ua-ultima-ultima-gets-listed-on-kucoin"),
 )
 
 def named_original_spot_proof(owner,source):
