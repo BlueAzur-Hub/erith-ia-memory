@@ -170,15 +170,27 @@ def verify_source(a,opener=urlopen):
     data=json.loads(decoded)
     owner=data["owner"]
     is_okx=a["venue"]=="OKX Spot"
-    expected_schema=("aerith.okx.native-utc-daily-history.verified-response.v1"
+    is_alt=a["venue"] in ("Gate Spot","KuCoin Spot")
+    expected_schema=("aerith.original-spot-native-daily.verified-source.v1"
+         if is_alt else "aerith.okx.native-utc-daily-history.verified-response.v1"
          if is_okx else
          "aerith.bitget.native-exchange-daily-history.verified-response.v1")
+    source_venue=(data.get("venue") if is_alt else data.get("exchange"))
+    if is_alt:
+        expected_venue="gate" if a["venue"]=="Gate Spot" else "kucoin"
+        need(source_venue==expected_venue
+             and data.get("original_quote")=="USDT"
+             and data.get("no_synthetic_candles") is True
+             and data.get("no_currency_conversion") is True
+             and data.get("queried_all_bounded_windows") is True
+             and data.get("genesis_or_first_trade_proven") is False,
+             "Gate KuCoin native provenance, bounded coverage or original quote false")
     need(data.get("schema")==expected_schema
-         and data.get("exchange")==a["venue"]
+         and source_venue==(expected_venue if is_alt else a["venue"])
          and data.get("native_interval")==a["bar"]
-         and data.get("quote")=="USDT"
-         and data.get("filled_by_our_collector") is False
-         and data.get("canonical_1m_federation_modified") is False
+         and (data.get("original_quote") if is_alt else data.get("quote"))=="USDT"
+         and (is_alt or (data.get("filled_by_our_collector") is False
+                         and data.get("canonical_1m_federation_modified") is False))
          and owner.get("id")==a["id"] and owner.get("rank")==a["rank"]
          and owner.get("symbol")==a["symbol"]
          and data.get("market")==a["market"]
@@ -189,10 +201,12 @@ def verify_source(a,opener=urlopen):
     rows=data.get("native_daily_rows")
     need(isinstance(rows,list) and len(rows)==a["native_candles"],
          "Source missing original daily OHLCV rows")
-    expected_len=9 if is_okx else 7
-    need(all(isinstance(row,list) and len(row)==expected_len for row in rows),
+    need(all(isinstance(row,list) and
+             (len(row) in (7,8) if a["venue"]=="Gate Spot"
+              else len(row)==(9 if is_okx else 7))
+             for row in rows),
          "Changed original Spot OHLCV field structure")
-    ts=[int(row[0]) for row in rows]
+    ts=[int(row[0])*(1000 if is_alt else 1) for row in rows]
     need(ts[0]==a["earliest_source_ms"] and ts[-1]==a["latest_source_ms"]
          and all(b>a and (b-a)%DAY==0 for a,b in zip(ts,ts[1:])),
          "Original session dates out of order, duplicated or shifted")
@@ -203,6 +217,32 @@ def verify_source(a,opener=urlopen):
         need(all(row[8]=="1" for row in rows)
              and all(stamp%DAY==0 for stamp in ts) and gaps==0,
              "OKX returned unconfirmed or nonnative 1Dutc bars")
+    elif is_alt:
+        from collect_native_alt_spot_daily import parse_bar
+        proof=owner.get("identity_proof")
+        code="gate" if a["venue"]=="Gate Spot" else "kucoin"
+        need(owner.get("venue")==code
+             and owner.get("pair")==a["market"]
+             and owner.get("quote")=="USDT"
+             and isinstance(proof,dict)
+             and proof.get("coin_id")==a["id"]
+             and proof.get("exchange")==code
+             and proof.get("base")==a["symbol"]
+             and proof.get("quote")=="USDT"
+             and proof.get("market_pair_candidate")==a["market"]
+             and data.get("source_api")==a.get("source_api")
+             and data.get("calendar_days_without_source_bars")==gaps
+             and data.get("source_response_hashes_exchange_signed") is False,
+             "Wrong Gate KuCoin original exact CoinGecko identity or unfilled source days")
+        if proof.get("proof_method") is not None:
+            need(proof["proof_method"]=="exact_coin_id_matching_evm_contract"
+                 and isinstance(proof.get("contract_address"),str)
+                 and re.fullmatch(r"0x[a-fA-F0-9]{40}",proof["contract_address"]),
+                 "Unverified original token contract identity")
+        for original,stamp in zip(rows,ts):
+            parsed_stamp,_=parse_bar(original,code)
+            need(parsed_stamp==stamp,
+                 "Gate KuCoin OHLCV native prices, volumes or timestamps invalid")
     else:
         offset=a["native_session_start_modulo_utc_day_ms"]
         if a.get("source_attestation")=="original-named-spot-listing":
@@ -221,10 +261,12 @@ def verify_source(a,opener=urlopen):
             need(min(o,h,l,c)>0 and l<=min(o,c) and max(o,c)<=h
                  and min(v,q)>=0,
                  "Native Bitget Spot candle price or volume outside reality")
-    digests=data.get("native_source_response_sha256")
+    digests=(data.get("source_response_sha256") if is_alt
+             else data.get("native_source_response_sha256"))
     need(isinstance(digests,list) and bool(digests)
          and all(isinstance(sha,str) and SHA.fullmatch(sha) for sha in digests)
-         and data.get("source_response_digests_are_exchange_signed") is False,
+         and (data.get("source_response_hashes_exchange_signed") is False if is_alt
+              else data.get("source_response_digests_are_exchange_signed") is False),
          "Original API response integrity digests absent or falsely signed")
     return {"id":a["id"],"native_daily_candles":len(rows),
             "gzip_sha256":a["sha256"],"source":url}
