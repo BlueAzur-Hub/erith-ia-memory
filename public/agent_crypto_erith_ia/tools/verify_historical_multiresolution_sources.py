@@ -93,7 +93,7 @@ def check_registry(index,catalog):
                  and isinstance(a.get("identity_evidence"),str)
                  and a["identity_evidence"].startswith("https://www.okx.com/"),
                  "OKX native 1Dutc provenance invalid")
-        else:
+        elif is_bitget:
             offset=a.get("native_session_start_modulo_utc_day_ms")
             need(offset in (0,57_600_000)
                  and a["earliest_source_ms"]%DAY==offset
@@ -117,6 +117,23 @@ def check_registry(index,catalog):
                      a.get("identity_evidence")==
                          canonical+"top250-alt-market-evidence.json#"+cid,
                      "Unproven exact Bitget CoinGecko-to-instrument ownership")
+        else:
+            canonical=("https://github.com/BlueAzur-Hub/erith-ia-memory/"
+                       "blob/main/public/agent_crypto_erith_ia/"
+                       "data/historical_archive_prototype/")
+            need(a.get("identity_evidence")==
+                 canonical+"top250-alt-market-evidence.json#"+cid
+                 and a.get("instrument_evidence")==
+                 canonical+"top250-official-spot-instruments.json#"+cid
+                 and a.get("source_attestation")=="verified-original-spot-owner"
+                 and a.get("original_source_api")==
+                     ("https://api.gateio.ws/api/v4/spot/candlesticks"
+                      if is_gate else
+                      "https://api.kucoin.com/api/v1/market/candles")
+                 and a.get("native_session_start_modulo_utc_day_ms")==0
+                 and a["earliest_source_ms"]%DAY==0
+                 and a["latest_source_ms"]%DAY==0,
+                 "Independent Gate/KuCoin original Spot owner not verified")
         need(isinstance(a.get("bytes"),int) and
              0<a["bytes"]<=MAX_FILE and
              isinstance(a.get("sha256"),str) and SHA.fullmatch(a["sha256"]),
