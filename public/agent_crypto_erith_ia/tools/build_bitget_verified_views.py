@@ -44,8 +44,54 @@ def need(ok,msg):
 def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
-def source_candidates(catalog,exact,official):
-    return {a["id"]:a for a in probe.candidates(catalog,exact,official)}
+def source_candidates(catalog,exact,official,federated=None):
+    """Preserve vetted original Bitget owners after a live census rotates.
+
+    Exact archived Spot owners are no longer listed in today's UNARCHIVED
+    candidate census. Their previously verified original 1m source remains
+    valid if both the immutable ranked ID and original exact-ID market proof
+    still agree, and all Release ZIP hashes are checked separately.
+    """
+    selected={a["id"]:a for a in probe.candidates(catalog,exact,official)}
+    if federated is None:
+        federated=json.loads(FEDERATED.read_text(encoding="utf-8"))
+    need(federated.get("schema")==FEDERATED_SCHEMA
+         and federated.get("ranked")==250
+         and len(federated.get("assets",[]))==250,
+         "Untrusted previously verified Bitget archive register")
+    catalog_ids={a["id"]:a for a in catalog["assets"]}
+    proven={a["id"]:a for a in exact["results"]}
+    need(len(catalog_ids)==250,"Duplicate ranked archive source owner")
+    for row in federated["assets"]:
+        if (row.get("source")!="Bitget Spot native 1m HTTPS"
+                or row.get("native_1m_count",0)<=0):
+            continue
+        cid=row["id"]
+        owner=catalog_ids.get(cid)
+        source=proven.get(cid)
+        need(owner and row.get("rank")==owner["rank"] and
+             row.get("symbol")==owner["symbol"] and
+             row.get("quote")=="USDT" and not owner["months"]
+             and source and source.get("rank")==owner["rank"]
+             and source.get("symbol")==owner["symbol"]
+             and source.get("status")=="exact_id_market_candidates",
+             "Previously verified Bitget owner identity drift")
+        pair=owner["symbol"]+"USDT"
+        need(any(m.get("coin_id")==cid and
+                 m.get("exchange")=="bitget"
+                 and m.get("base")==owner["symbol"]
+                 and m.get("quote")=="USDT"
+                 and m.get("market_pair_candidate")==pair
+                 for m in source.get("markets",[])),
+             "Previously verified Bitget original Spot pair missing")
+        preserved={"id":cid,"rank":owner["rank"],
+                   "symbol":owner["symbol"],"pair":pair,
+                   "venue":"bitget","quote":"USDT"}
+        if cid in selected:
+            need(selected[cid]==preserved,
+                 "Live candidate conflicts with original proven Bitget source")
+        selected[cid]=preserved
+    return selected
 
 def listed_tags():
     cp=subprocess.run(["gh","release","list","--limit","1000",

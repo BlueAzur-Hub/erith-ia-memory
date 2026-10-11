@@ -19,6 +19,27 @@ class BitgetFederationTests(unittest.TestCase):
         cls.spot=json.loads(proof.INSTRUMENTS.read_text())
         cls.asset=b.source_candidates(cls.catalog,cls.exact,cls.spot)["cosmos"]
 
+    def test_current_federation_persists_original_sources_after_census_rotation(self):
+        import copy
+        candidates=b.source_candidates(self.catalog,self.exact,self.spot)
+        # These source minutes are published, so the live instrument census
+        # no longer labels them NEW/UNARCHIVED; original owner remains real.
+        self.assertTrue({"cosmos","lighter","stable-2"}<=set(candidates))
+        live=json.loads(b.FEDERATED.read_text())
+        for cid in ("cosmos","lighter","stable-2"):
+            self.assertEqual(candidates[cid]["venue"],"bitget")
+            self.assertEqual(candidates[cid]["quote"],"USDT")
+        altered=copy.deepcopy(live)
+        old=next(a for a in altered["assets"] if a["id"]=="cosmos")
+        old["symbol"]="FAKE"
+        with self.assertRaisesRegex(ValueError,"identity drift"):
+            b.source_candidates(self.catalog,self.exact,self.spot,altered)
+        altered=copy.deepcopy(self.exact)
+        old=next(a for a in altered["results"] if a["id"]=="cosmos")
+        old["markets"]=[]
+        with self.assertRaisesRegex(ValueError,"original Spot pair"):
+            b.source_candidates(self.catalog,altered,self.spot,live)
+
     def fixture(self,count=None,asset=None,month="2026-09"):
         asset=asset or self.asset
         tag=f"crypto-spot-bitget-{month}-1m-{asset['id']}"
