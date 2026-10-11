@@ -344,9 +344,9 @@ class AlternativeMarketTests(unittest.TestCase):
     def test_batch_contract_inventory_precedes_individual_ticker_budget(self):
         """A 429 from many tickers must not precede the one-shot batch proof."""
         script=Path(m.__file__).read_text(encoding="utf-8")
-        self.assertLess(script.index("cg=public_inventory(CG_PLATFORMS"),
+        self.assertLess(script.index("coingecko_inventory=public_inventory(CG_PLATFORMS"),
                         script.index("    result=process(queue,prior,"))
-        self.assertLess(script.index("bitget=public_inventory(BITGET_COINS"),
+        self.assertLess(script.index("bitget_inventory=public_inventory(BITGET_COINS"),
                         script.index("    result=process(queue,prior,"))
         workflow=(Path(m.__file__).resolve().parents[3] /
                   ".github/workflows/agent-crypto-top250-alt-venues.yml")
@@ -394,6 +394,94 @@ class AlternativeMarketTests(unittest.TestCase):
         invented["assets"][0]["native_candles"]=0
         with self.assertRaisesRegex(ValueError,"Daily catalogue identity"):
             m.active_archive_ids(queue,minute,invented)
+
+    def test_independent_contract_source_verifies_unique_original_owner(self):
+        import prove_public_spot_contracts as contract
+        owner={"id":"mantle","rank":56,"symbol":"MNT","name":"Mantle"}
+        queue=[{"id":f"dummy-{i}","rank":i,"symbol":f"C{i}",
+                "name":"Other"} for i in range(1,251)]
+        queue[55]=owner
+        addr="0x"+"ab"*20
+        coins=[{"id":f"not-{i}","symbol":"other","platforms":{}}
+               for i in range(1001)]
+        coins.append({"id":"mantle","symbol":"mnt",
+                      "platforms":{"ethereum":addr}})
+        official={"schema":contract.SCHEMA,"ranked":250,
+                  "assets":[{"id":"mantle","rank":56,"symbol":"MNT",
+                      "instruments":[{"venue":"gate","base":"MNT",
+                          "quote":"USDT","instrument":"MNT_USDT",
+                          "exchange_instrument_confirmed":True},
+                          {"venue":"kucoin","base":"MNT","quote":"USDC",
+                          "instrument":"MNT-USDC",
+                          "exchange_instrument_confirmed":True}]}]}
+        gate=[{"currency":f"Other{i}","chains":[]} for i in range(101)]
+        gate.append({"currency":"MNT","chains":[
+            {"name":"ETH","addr":addr}],"trade_disabled":False})
+        kucoin={"code":"200000","data":[
+            {"currency":f"Other{i}","chains":[]} for i in range(101)]+[
+            {"currency":"MNT","chains":[
+                {"chainName":"ERC20","contractAddress":addr}]}]}
+        a=contract.proven_contracts(queue,set(),official,coins,gate,"gate")
+        b=contract.proven_contracts(queue,set(),official,coins,kucoin,"kucoin")
+        self.assertEqual(a["mantle"]["market_pair_candidate"],"MNT_USDT")
+        self.assertEqual(b["mantle"]["market_pair_candidate"],"MNT-USDC")
+        self.assertEqual(a["mantle"]["coin_id"],"mantle")
+        self.assertFalse(a["mantle"]["native_1m_month_confirmed"])
+        self.assertFalse(b["mantle"]["exchange_instrument_confirmed"])
+        self.assertEqual(contract.proven_contracts(
+            queue,{"mantle"},official,coins,gate,"gate"),{})
+        # One source symbol is never enough; contract must be unique.
+        collision=coins+[{"id":"other-claim","symbol":"mnt",
+                          "platforms":{"ethereum":addr}}]
+        self.assertEqual(contract.proven_contracts(
+            queue,set(),official,collision,gate,"gate"),{})
+        wrong=json.loads(json.dumps(gate))
+        wrong[-1]["chains"][0]["addr"]="0x"+"cd"*20
+        self.assertEqual(contract.proven_contracts(
+            queue,set(),official,coins,wrong,"gate"),{})
+        wrongOfficial=json.loads(json.dumps(official))
+        wrongOfficial["assets"][0]["instruments"][0]["instrument"]="WRONG_USDT"
+        self.assertNotIn("mantle",contract.proven_contracts(
+            queue,set(),wrongOfficial,coins,gate,"gate"))
+        with self.assertRaisesRegex(ValueError,"incomplete"):
+            contract.proven_contracts(queue,set(),official,[],gate,"gate")
+        with self.assertRaisesRegex(ValueError,"KuCoin"):
+            contract.proven_contracts(queue,set(),official,coins,
+                {"code":"400","data":kucoin["data"]},"kucoin")
+        self.assertNotIn("mantle",contract.proven_contracts(
+            queue,set(),official,coins,
+            gate[:-1]+[{"currency":"MNT","chains":gate[-1]["chains"],
+                       "trade_disabled":True}],"gate"))
+
+    def test_gate_kucoin_contract_provenance_updates_only_candidate_ledger(self):
+        import prove_public_spot_contracts as contract
+        addr="0x"+"12"*20
+        queue=[{"id":f"dummy-{i}","rank":i,"symbol":f"Q{i}",
+                "name":"Other"} for i in range(1,251)]
+        queue[55]={"id":"mantle","rank":56,"symbol":"MNT","name":"Mantle"}
+        official={"schema":contract.SCHEMA,"ranked":250,
+                  "assets":[{"id":"mantle","rank":56,"symbol":"MNT",
+                             "instruments":[{"venue":"gate","base":"MNT",
+                                 "quote":"USDT","instrument":"MNT_USDT",
+                                 "exchange_instrument_confirmed":True}]}]}
+        cg=[{"id":f"other-{i}","symbol":"other","platforms":{}}
+            for i in range(1001)]+[
+            {"id":"mantle","symbol":"mnt","platforms":{"ethereum":addr}}]
+        gate=[{"currency":f"OTHER{i}","chains":[]} for i in range(101)]+[
+            {"currency":"MNT","chains":[{"name":"ETH","addr":addr}]}]
+        empty={"schema":m.SCHEMA,"source":"CoinGecko exact ID",
+               "results":[],"checked_count":0,"market_candidate_count":0}
+        result,added=m.enrich_independent_contracts(
+            queue,set(),empty,official,cg,{"gate":gate})
+        self.assertEqual(added,["mantle"])
+        self.assertEqual(result["market_candidate_count"],1)
+        self.assertEqual(result["results"][0]["markets"][0]["exchange"],"gate")
+        self.assertEqual(result["results"][0]["markets"][0]["quote"],"USDT")
+        self.assertFalse(result["results"][0]["markets"][0]["native_1m_month_confirmed"])
+        new,again=m.enrich_independent_contracts(
+            queue,set(),result,official,cg,{"gate":gate})
+        self.assertEqual(again,[])
+        self.assertEqual(result["results"],new["results"])
 
     def test_real_ranked_universe_excludes_every_living_archive(self):
         # Integration check: the current source indexes drive discovery,
