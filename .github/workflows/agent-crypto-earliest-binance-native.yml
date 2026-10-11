@@ -27,7 +27,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: agent-crypto-earliest-binance-verified-backfill
+  group: agent-crypto-btc-native-older-source
   cancel-in-progress: false
 jobs:
   extend-original-months:
