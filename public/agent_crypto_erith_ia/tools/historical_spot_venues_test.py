@@ -434,7 +434,7 @@ class AlternativeMarketTests(unittest.TestCase):
         result,new=m.enrich_named_original_spot(owners,set(),doc,official)
         self.assertEqual(new,[t[0] for t in sorted(
             m.NAMED_ORIGINAL_SPOT_LISTINGS,key=lambda v:v[1])])
-        self.assertEqual(result["market_candidate_count"],4)
+        self.assertEqual(result["market_candidate_count"],5)
         self.assertEqual({r["id"] for r in result["results"]},set(new))
         for record in result["results"]:
             original=next(x for x in owners if x["id"]==record["id"])
@@ -458,7 +458,7 @@ class AlternativeMarketTests(unittest.TestCase):
         tampered=json.loads(json.dumps(official))
         tampered["assets"][0]["instruments"][0]["exchange_instrument_confirmed"]=False
         rebuilt,added=m.enrich_named_original_spot(owners,set(),doc,tampered)
-        self.assertEqual(len(added),3)
+        self.assertEqual(len(added),4)
         # Original KuCoin notice (with named Spot pair) is not sufficient
         # without the *independent* current official instrument proof.
         ultima=next(x for x in result["results"] if x["id"]=="ultima")
@@ -475,6 +475,24 @@ class AlternativeMarketTests(unittest.TestCase):
         rebuilt,added=m.enrich_named_original_spot(owners,set(),doc,wrong_official)
         self.assertNotIn("ultima",added)
         self.assertFalse(any(z["id"]=="ultima" for z in rebuilt["results"]))
+        # Gate first-party issuer named GUSD must never be conflated with
+        # Gemini Dollar or a different stablecoin bearing the ticker GUSD.
+        gate=next(x for x in result["results"] if x["id"]=="gusd")
+        self.assertEqual(gate["markets"][0]["market_pair_candidate"],"GUSD_USDT")
+        self.assertEqual(gate["markets"][0]["original_named_spot_notice"],
+                         "https://www.gate.com/fr/announcements/article/46834")
+        owner=next(x for x in owners if x["id"]=="gusd")
+        self.assertEqual(owner["name"],"GUSD")
+        self.assertFalse(m.named_original_spot_proof(
+            {**owner,"name":"Gemini Dollar"},gate["markets"][0]))
+        self.assertFalse(m.named_original_spot_proof(
+            owner,{**gate["markets"][0],"exchange":"kucoin"}))
+        broken=json.loads(json.dumps(official))
+        market=next(x for x in broken["assets"] if x["id"]=="gusd")
+        market["instruments"][0]["instrument"]="GUSD_USDC"
+        rejected,new=m.enrich_named_original_spot(owners,set(),doc,broken)
+        self.assertNotIn("gusd",new)
+        self.assertFalse(any(x["id"]=="gusd" for x in rejected["results"]))
         misnamed=list(owners)
         original=next(x for x in owners if x["id"]=="akash-network")
         misnamed[original["rank"]-1]={**original,"name":"Fake Cloud"}
