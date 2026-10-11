@@ -344,9 +344,9 @@ class AlternativeMarketTests(unittest.TestCase):
     def test_batch_contract_inventory_precedes_individual_ticker_budget(self):
         """A 429 from many tickers must not precede the one-shot batch proof."""
         script=Path(m.__file__).read_text(encoding="utf-8")
-        self.assertLess(script.index("cg=public_inventory(CG_PLATFORMS"),
+        self.assertLess(script.index("coingecko_inventory=public_inventory(CG_PLATFORMS"),
                         script.index("    result=process(queue,prior,"))
-        self.assertLess(script.index("bitget=public_inventory(BITGET_COINS"),
+        self.assertLess(script.index("bitget_inventory=public_inventory(BITGET_COINS"),
                         script.index("    result=process(queue,prior,"))
         workflow=(Path(m.__file__).resolve().parents[3] /
                   ".github/workflows/agent-crypto-top250-alt-venues.yml")
