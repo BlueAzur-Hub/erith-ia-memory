@@ -12,6 +12,25 @@ def owner():
             "quote":"USDT","venue":"bitget"}
 
 class DailyHistoryTests(unittest.TestCase):
+    def test_never_archive_an_asset_already_in_minute_or_daily(self):
+        cohort=[owner(),{**owner(),"id":"another","rank":50,
+                          "symbol":"X","pair":"XUSDT"}]
+        minute={"schema":"aerith.public.ohlcv.top250.federated-native-archives.v1",
+                "ranked":250,"assets":[{"id":f"dummy-{i}","rank":i,
+                      "symbol":f"T{i}","quote":"USDT","months":0}
+                      for i in range(1,251)]}
+        minute["assets"][46]={"id":"memecore","rank":47,"symbol":"M",
+                              "quote":"USDT","months":0}
+        minute["assets"][49]={"id":"another","rank":50,"symbol":"X",
+                              "quote":"USDT","months":1}
+        daily={"schema":"aerith.public.crypto.multiresolution-sources.v1",
+               "asset_count":0,"assets":[]}
+        self.assertEqual([a["id"] for a in
+                          m.filter_unarchived(cohort,minute,daily)],["memecore"])
+        daily["assets"]=[{"id":"memecore"}]
+        daily["asset_count"]=1
+        self.assertEqual(m.filter_unarchived(cohort,minute,daily),[])
+
     def test_native_rows_and_true_unfilled_gaps(self):
         t=m.END-5*m.DAY
         def fetch(pair,start,end):
