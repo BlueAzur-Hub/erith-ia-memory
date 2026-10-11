@@ -147,7 +147,7 @@ def main():
     args=p.parse_args()
     fed=json.loads(daily.FED.read_text(encoding="utf-8"))
     spot=json.loads(daily.VENUES.read_text(encoding="utf-8"))
-    registry=json.loads((daily.FED.parent/
+    registry=json.loads((daily.FED.parent.parent/
                "top250_multiresolution_sources/index.json").read_text(encoding="utf-8"))
     qualified=owners(fed,spot,registry)
     if args.plan:
