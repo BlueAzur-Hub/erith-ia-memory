@@ -5,7 +5,7 @@
   "scope": "latest_verified_closed_month",
   "is_live": false,
   "max_is_all_time": false,
-  "archived_assets": 120,
+  "archived_assets": 121,
   "assets": [
     {
       "id": "bitcoin",
@@ -1828,6 +1828,27 @@
       "file": "optimism.json.gz",
       "sha256": "a488d627c75afbb46dfae92afa189855a2bbeafe9767cbda98d94cd1ab202fe4",
       "bytes": 243133,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "terra-luna",
+      "rank": 157,
+      "name": "Terra",
+      "symbol": "LUNC",
+      "pair": "LUNCUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-eb4521bdf70a",
+      "source_zip_sha256": "687c50d0603341559c3036dc3876e9b172f383d01f17c403079cbffb38f80050",
+      "file": "terra-luna.json.gz",
+      "sha256": "273e74ebd0a86e54aec6404adc883b24d9af73ab9aa46a0c63c9a9f85851e0ba",
+      "bytes": 287572,
       "series_counts": {
         "1m": 1440,
         "5m": 8640,
