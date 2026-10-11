@@ -13,6 +13,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_multiresolution_sources_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_native_bitget_daily_history.py'
       - 'public/agent_crypto_erith_ia/tools/native_bitget_daily_history_test.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_native_alt_spot_daily.py'
+      - 'public/agent_crypto_erith_ia/tools/native_alt_spot_daily_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json'
   push:
     branches: [main]
@@ -28,10 +30,12 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_multiresolution_sources_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_native_bitget_daily_history.py'
       - 'public/agent_crypto_erith_ia/tools/native_bitget_daily_history_test.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_native_alt_spot_daily.py'
+      - 'public/agent_crypto_erith_ia/tools/native_alt_spot_daily_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json'
   workflow_dispatch:
   schedule:
-    - cron: '17 8 * * *'
+    - cron: '17 2,8,14,20 * * *'
 permissions:
   contents: write
 concurrency:
@@ -57,10 +61,36 @@ jobs:
           python public/agent_crypto_erith_ia/tools/additional_okx_daily_history_test.py
           python public/agent_crypto_erith_ia/tools/historical_multiresolution_sources_test.py
           python public/agent_crypto_erith_ia/tools/native_bitget_daily_history_test.py
+          python public/agent_crypto_erith_ia/tools/native_alt_spot_daily_test.py
+          python public/agent_crypto_erith_ia/tools/collect_native_alt_spot_daily.py --plan
           python public/agent_crypto_erith_ia/tools/collect_native_bitget_daily_history.py --plan
           python public/agent_crypto_erith_ia/tools/verify_historical_multiresolution_sources.py --offline
           python public/agent_crypto_erith_ia/tools/collect_additional_okx_daily_history.py --plan
           python public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py --plan
+      - name: PR only - probe actual Gate and KuCoin daily OHLCV for exact CoinGecko IDs
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          collector=public/agent_crypto_erith_ia/tools/collect_native_alt_spot_daily.py
+          base=$(git merge-base origin/main HEAD)
+          if [[ -n "$(git diff --name-only "$base" HEAD -- "$collector")" ]]; then
+            python "$collector" --probe --limit 2
+          else
+            echo "NOOP: no new source collector; preserves API quotas"
+          fi
+      - name: Publish only independently qualified native Gate KuCoin daily Releases
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          collector=public/agent_crypto_erith_ia/tools/collect_native_alt_spot_daily.py
+          if [[ "${{ github.event_name }}" == "schedule" ]] ||
+             [[ -n "$(git diff --name-only HEAD^ HEAD -- "$collector")" ]]; then
+            python "$collector" --publish --limit 8
+          else
+            echo "NOOP: no scheduled or newly reviewed Gate KuCoin source cohort"
+          fi
       - name: PR only - retrieve genuine Bitget historical 1D for exact-ID missing Spot owners
         if: github.event_name == 'pull_request'
         run: |
