@@ -211,3 +211,45 @@ test("UI changing pilot and period routes to verified archive and renders OHLCV 
  assert.match(x.node("shared-status").textContent,/interruption/);
  assert.equal(x.node("shared-table").children.length,9);
 });
+
+
+test("Max explains the missing archive dates without making the user guess",async()=>{
+ const x=harness(null,true);
+ for(let i=0;i<100&&x.node("shared-asset").children.length!==5;i++)
+  await new Promise(done=>setImmediate(done));
+ x.node("shared-asset").value="bitcoin";
+ x.node("shared-period").value="Max";
+ x.node("shared-read").dispatch("click");
+ for(let i=0;i<250&&!x.node("shared-status").textContent.includes("SHA-256 vérifié");i++)
+  await new Promise(done=>setImmediate(done));
+ assert.match(x.node("shared-explanation").textContent,/VOUS REGARDEZ : BTCUSDT/);
+ assert.match(x.node("shared-explanation").textContent,/Max/);
+ assert.match(x.node("shared-gaps").textContent,/ATTENTION — archive incomplète/);
+ assert.match(x.node("shared-gaps").textContent,/sans données/);
+ assert.match(x.node("shared-gaps").textContent,/Bande orange/);
+ assert.match(x.node("shared-range").textContent,/370 bougies visibles/);
+ assert.equal(x.node("shared-prev").disabled,true);
+ assert.equal(x.node("shared-next").disabled,true);
+ x.node("shared-zoom-in").dispatch("click");
+ assert.match(x.node("shared-range").textContent,/185 bougies visibles/);
+ assert.equal(x.node("shared-prev").disabled,false);
+ x.node("shared-prev").dispatch("click");
+ assert.equal(x.node("shared-next").disabled,false);
+ x.node("shared-reset").dispatch("click");
+ assert.match(x.node("shared-range").textContent,/370 bougies visibles/);
+ assert.equal(x.node("shared-next").disabled,true);
+ const n=x.requests.length;
+ x.node("shared-style").value="line";
+ x.node("shared-style").dispatch("change");
+ assert.equal(x.requests.length,n,"Changing display style must not refetch history");
+});
+test("legacy assets keep their prior reader and navigation stays disabled",()=>{
+ const js=fs.readFileSync("public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js","utf8");
+ const html=fs.readFileSync("public/agent_crypto_erith_ia/administrator/historical-vault.html","utf8");
+ assert.match(js,/navigationIds\.forEach\(id=>byId\(id\)\.disabled=true\)/);
+ assert.match(js,/maxVolume=Math\.max\(\.\.\.groups\.map\(g=>g\.base\/g\.n\)/);
+ for(const id of ["shared-explanation","shared-legend","shared-gaps","shared-range",
+                  "shared-prev","shared-zoom-in","shared-zoom-out","shared-next","shared-reset"]){
+  assert.ok(html.includes('id="'+id+'"'),"Missing user-facing control "+id);
+ }
+});
