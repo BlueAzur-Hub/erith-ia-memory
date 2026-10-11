@@ -301,13 +301,20 @@ class NativeBitgetMonthTests(unittest.TestCase):
         venue=json.loads(m.proof.INSTRUMENTS.read_text())
         qualified=m.proof.candidates(src,alt,venue)
         exact_ids={a["id"] for a in qualified}
-        self.assertTrue({"cosmos","lighter","stable-2"}<=exact_ids)
+        # Previously eligible Cosmos, Lighter and Stable now have real
+        # minute archives. Do not re-select them from the rotating census.
+        self.assertTrue({"cosmos","lighter","stable-2"}.isdisjoint(exact_ids))
         self.assertEqual(len(exact_ids),len(qualified))
-        month,batch=m.select_pending_assets(qualified,set(),
-                 dt.datetime(2026,10,10,tzinfo=dt.timezone.utc),limit=3)
-        self.assertEqual(month,"2026-09")
-        self.assertEqual(len(batch),3)
-        self.assertTrue({a["id"] for a in batch}<=exact_ids)
+        source={a["id"]:a for a in src["assets"]}
+        self.assertTrue(all(source[a["id"]]["months"]==0 for a in qualified))
+        self.assertTrue(all(a["venue"]=="bitget" and a["quote"]=="USDT"
+                            for a in qualified))
+        if qualified:
+            month,batch=m.select_pending_assets(qualified,set(),
+                     dt.datetime(2026,10,10,tzinfo=dt.timezone.utc),limit=3)
+            self.assertEqual(month,"2026-09")
+            self.assertTrue(1<=len(batch)<=3)
+            self.assertTrue({a["id"] for a in batch}<=exact_ids)
 
     def test_automatic_collect_is_wired_to_new_exact_id_evidence_only(self):
         """New proof runs the existing verified collector; negatives never promote."""
