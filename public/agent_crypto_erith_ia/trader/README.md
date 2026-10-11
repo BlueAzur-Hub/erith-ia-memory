@@ -1,66 +1,55 @@
-# ERITH.IA Trading Desk — 40.6.601
+# ERITH.IA Trading Desk — 40.6.627
 
-## INTERFACE RUNTIME MIRROR
+## Architecture active
 
-40.6.600 est rejetée comme architecture finale.
+Le Trader est de nouveau une **page autonome** :
 
-Le diagnostic complet montre que le Graphique de l'Interface n'est pas un simple lecteur de cache exportable : il appartient au runtime vivant `administrator/app.js`, avec son état, ses périodes, sa validation, son rendu Chart.js, ses refreshs et ses propriétaires additionnels.
+`public/agent_crypto_erith_ia/trader/trading-desk.html`
 
-Depuis 40.6.589, le Trader reconstruisait progressivement ses propres propriétaires. Cette branche est arrêtée.
+Il ne charge plus `administrator/index.html` dans une iframe et ne charge plus de runtime miroir.
 
-## Décision 40.6.601
+Le Trader peut réutiliser des styles et modules de données canoniques de l’Administrator, mais il possède son propre DOM, son propre point d’entrée et ses propres contrôles de présentation.
 
-Le Trader monte directement :
+## Périmètre actuel
 
-`../administrator/index.html`
+Conservé dans le Trader :
 
-dans une frame same-origin, puis `trader-runtime-mirror.js` applique uniquement un filtre de présentation.
-
-Le Trader utilise donc réellement :
-
-- le même `administrator/app.js` ;
-- le même Graphique ;
-- le même Market ;
-- la même Lecture Technique ;
-- le même Math Core ;
-- les mêmes Bougies ;
-- la même Profondeur ;
-- la même architecture EUR/USD ;
-- les mêmes caches localStorage / IndexedDB ;
-- le même Bridge / transport OKX ;
-- les mêmes règles réseau et Data Truth.
-
-Aucune copie du moteur Graphique, Market, Math ou Detail n'est chargée par `trading-desk.html`.
-
-## Présentation Trader
-
-Le runtime reste Administrator, mais la page Trader masque seulement les grandes familles hors mission. Sont conservés :
-
-- header de vérité ;
-- Marché ;
 - Graphique ;
 - Lecture Technique ;
 - Market ;
 - Math Core ;
-- Bougies ;
-- Profondeur ;
-- EUR/USD.
+- Bougies OKX publiques ;
+- Profondeur / carnet OKX public ;
+- historique vérifié / Coffre ;
+- cas d’école BTC intégré directement dans `trading-desk.html`.
 
-Le filtrage ne modifie aucun owner métier Administrator.
+Retiré du Trader actif :
 
-## Fichiers Trader historiques
+- Strategy A ;
+- Paper ;
+- T0 / Auto A ;
+- runtime miroir Administrator.
 
-Les anciens fichiers tels que `line-chart-native.js`, `market-transpose.js`, `math-core-transpose.js`, etc. restent dans le dépôt pour l'historique Git, mais **ne sont plus chargés par la page Trader**.
+Strategy A reste dans l’Interface / Administrator. Aucun changement de son propriétaire métier n’est revendiqué ici.
 
-## Diagnostic futur
+## Cas d’école BTC
 
-Si un défaut apparaît :
+BTC devient l’actif de référence du Trader pour vérifier la cohérence entre :
 
-1. reproduire la même action dans Administrator ;
-2. si Administrator et Trader échouent pareil : bug owner Administrator ;
-3. si Administrator fonctionne et Trader échoue : bug du filtre `trader-runtime-mirror.js` ;
-4. ne jamais recréer un owner Trader parallèle.
+Market → Graphique → Lecture Technique → Bougies → Carnet → Historique vérifié → futur compte OKX privé.
+
+Le Coffre reste une couche historique distincte. Les archives Binance Spot USDT ne sont jamais renommées USD ou USDC.
+
+## Prochaine étape
+
+Raccorder le compte OKX réel par le chemin sécurisé prévu :
+
+local → Bridge → Aether Trust → API privée OKX.
+
+Premier jalon : lecture des soldes, ordres, exécutions et frais. Aucune permission de retrait n’est nécessaire. L’exécution réelle reste désactivée tant que ce jalon n’est pas validé.
 
 ## Sécurité
 
-READ ONLY. Aucun ordre réel. Aucune clé privée. Aucun nouveau transport.
+Aucun secret OKX dans GitHub Pages, le DOM, localStorage ou IndexedDB.
+
+Market Core 38.15.11 protégé.
