@@ -65,7 +65,7 @@ class TradeAuditTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"pair or day"):
             source.inspect_trades(raw,"ETHUSDT-trades-2023-03-24.zip",
                                   "2023-03-24",{source.prior.ledger()[1]["2023-03-24"].pop()})
-        with self.assertRaisesRegex(Exception):
+        with self.assertRaises(Exception):
             source.inspect_trades(b"broken-zip",name,"2023-03-24",
                                   source.prior.ledger()[1]["2023-03-24"])
 
