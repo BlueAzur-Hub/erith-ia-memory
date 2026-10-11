@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch real Bitget Spot 1D UTC OHLCV for exact-identity unarchived Top250 assets.
+"""Fetch original native Bitget Spot 1D OHLCV for unarchived Top250 assets.
 
 Original public exchange records only. No interpolation, currency conversion,
 or inflated 1m Top250 counts. Release payloads are immutable with SHA-256,
@@ -27,6 +27,9 @@ import probe_native_bitget_spot as source_proof
 REPO="BlueAzur-Hub/erith-ia-memory"
 ENDPOINT="https://api.bitget.com/api/v3/market/history-candles"
 DAY=86400000
+# 1D Bitget sessions may open at 00:00 UTC or 00:00 UTC+8. Preserve
+# native timestamps and distinguish this from OKX native 1Dutc history.
+NATIVE_DAY_BOUNDARIES=(0,16*60*60*1000)
 START=int(dt.datetime(2017,1,1,tzinfo=dt.timezone.utc).timestamp()*1000)
 END=int(dt.datetime(2026,10,1,tzinfo=dt.timezone.utc).timestamp()*1000)
 WINDOW_DAYS=80
@@ -35,7 +38,7 @@ MAX_RESPONSE=250000
 MAX_CANDLES=3700
 MAX_ASSETS=15
 TAG="crypto-bitget-spot-native-daily-2026-09-qualified"
-SCHEMA="aerith.bitget.native-utc-daily-history.verified-response.v1"
+SCHEMA="aerith.bitget.native-exchange-daily-history.verified-response.v1"
 SHA=re.compile(r"^[a-f0-9]{64}$")
 PAIR=re.compile(r"^[A-Z0-9]{1,28}USDT$")
 
@@ -92,7 +95,8 @@ def parse_row(row):
     need(isinstance(row,list) and len(row)>=7 and
          all(isinstance(v,str) for v in row[:7]),"Invalid original Bitget daily row")
     stamp=int(row[0])
-    need(START<=stamp<END and stamp%DAY==0,"Not a closed UTC Spot daily candle")
+    need(START<=stamp<END and stamp%DAY in NATIVE_DAY_BOUNDARIES,
+         "Not a closed native Bitget Spot daily candle; timestamp="+str(stamp))
     o,h,l,c,v,q=map(dec,row[1:7])
     need(min(o,h,l,c)>0 and l<=min(o,c) and max(o,c)<=h
          and min(v,q)>=0,"Native daily OHLCV invalid")
@@ -132,6 +136,7 @@ def acquire(owner,fetcher=request_page):
     need(owner["venue"]=="bitget" and owner["quote"]=="USDT"
          and PAIR.fullmatch(owner["pair"]),"Unsafe exact-ID source owner")
     unique={}
+    session_modulo=None
     digests=[]
     segments=0
     current=END
@@ -151,6 +156,10 @@ def acquire(owner,fetcher=request_page):
             if boundary==current and current==END:
                 continue
             stamp,native=parse_row(row)
+            if session_modulo is None:
+                session_modulo=stamp%DAY
+            need(stamp%DAY==session_modulo,
+                 "Mixed exchange daily opening times: cannot silently normalize")
             if stamp<begin or stamp>=current:
                 # The official history endpoint may return an extra boundary
                 # candle. Never misrepresent it as part of the requested range.
@@ -175,12 +184,14 @@ def acquire(owner,fetcher=request_page):
         "utc_start_inclusive_ms":START,"utc_end_exclusive_ms":END,
         "earliest_returned_ms":stamps[0],"latest_returned_ms":stamps[-1],
         "native_candles":len(stamps),"calendar_days_without_native_bars":gaps,
+        "native_session_start_modulo_utc_day_ms":session_modulo,
         "covered_query_start_ms":START,
         "first_trade_or_genesis_proven":False,
         "native_source_response_sha256":digests,
         "source_response_digests_are_exchange_signed":False,
         "filled_by_our_collector":False,
         "canonical_1m_federation_modified":False,
+        "native_daily_timezone_not_normalized":True,
         "source_columns":["timestamp_ms","open","high","low","close",
                           "base_volume","quote_turnover"],
         "native_daily_rows":[unique[t] for t in stamps],
@@ -250,7 +261,7 @@ def publish(verified,failures):
             *(str(folder/d["filename"]) for d in docs),
             str(folder/"manifest.json"),
             "--title","Authentic Bitget Spot native daily history · exact-ID Top250",
-            "--notes","Original Bitget Spot historical 1D OHLCV in USDT, 2017-01-01 to 2026-09-30 search range; real timestamps only, native missing days preserved, original API response SHA-256 per segment. No trade genesis claim. Separate from 1m archives.",
+            "--notes","Original Bitget Spot historical 1D OHLCV in USDT, 2017-01-01 to 2026-09-30 requested range. Native exchange daily session times (often UTC+8) are preserved, NEVER relabelled 1Dutc. Real source timestamps only, missing days preserved; API response SHA-256 per segment. No trade genesis claim. Separate from 1m archives.",
             "--target",os.environ["GITHUB_SHA"],"--latest=false"],
             capture_output=True,text=True,timeout=180)
         need(proc.returncode==0,"Could not publish verified Bitget release: "+
