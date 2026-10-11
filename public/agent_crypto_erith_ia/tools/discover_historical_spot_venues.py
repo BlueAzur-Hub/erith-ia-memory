@@ -518,6 +518,7 @@ def main():
               "official_priority_assets":len(official_priority(queue,archived))}))
         return
     priority=official_priority(queue,archived)
+    spot_snapshot=json.loads(OFFICIAL.read_text(encoding="utf-8")) if OFFICIAL.is_file() else None
     # Read two batch inventories BEFORE individual per-ID ticker requests:
     # the old order exhausted CoinGecko's public API and returned HTTP 429
     # before the independent contract route could even begin.
@@ -539,7 +540,9 @@ def main():
     else:
         print("EXACT CONTRACT SOURCE DEFERRED: hourly inventory quota",flush=True)
     result=process(queue,prior,args.batch_size,
-                   checker=lambda a:inspect(a,exchange_getter=fetch_exchange),
+                   checker=lambda a:inspect(a,exchange_getter=fetch_exchange,
+                      exchanges=(source_venues_for(a,spot_snapshot)
+                                 if spot_snapshot is not None else ("okx","bitget"))),
                    delay=args.sleep,excluded=archived,preferred=priority)
     if inventory is not None:
         result,added=enrich_contracts(queue,archived,result,*inventory)
