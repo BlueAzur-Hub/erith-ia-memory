@@ -13,8 +13,8 @@ class MultiResolutionRegistryTests(unittest.TestCase):
     def test_source_registry_grows_without_miscounting_native_minutes(self):
         x,c=self.source()
         verified=m.check_registry(x,c)
-        self.assertGreaterEqual(len(verified),29)
-        self.assertGreaterEqual(sum(a["native_candles"] for a in verified),21876)
+        self.assertGreaterEqual(len(verified),37)
+        self.assertGreaterEqual(sum(a["native_candles"] for a in verified),31910)
         self.assertEqual(x["native_1m_added"],0)
         self.assertEqual(len({(a["id"],a["bar"]) for a in verified}),len(verified))
 
@@ -79,6 +79,59 @@ class MultiResolutionRegistryTests(unittest.TestCase):
         # The same 1m month may already exist; never count its owner twice.
         self.assertGreater(c["assets"][68]["native_1m_count"],0)
         self.assertEqual(c["assets"][208]["id"],"vision-3")
+
+    def test_eight_original_gate_kucoin_archives_preserve_source_sha_and_true_gaps(self):
+        index,minute=self.source()
+        m.check_registry(index,minute)
+        refs={a["id"]:a for a in index["assets"]}
+        expected=(
+            ("rain",19,"KuCoin Spot",268,0,"75fea4cb0ef3651303a6f1c46a60f95ee95e6b48da0ba0aa12bda801b226358a"),
+            ("ondo-us-dollar-yield",48,"Gate Spot",111,0,"5090e5423e5b51477d62e592336dc35a73c5deefd4048eae59dcf6d9344e88e7"),
+            ("mantle",56,"Gate Spot",1158,0,"0ab5d36540ed171b5be70fbb5a5a06a2da6444d7b1842d9197e408e1df2cb095"),
+            ("usdd",63,"KuCoin Spot",1598,0,"9cc8e304fd01de5234933c04bf85eb7ee26c29495fbc06f9905ed8ef32b1b163"),
+            ("gatechain-token",74,"Gate Spot",2720,0,"6b00dcdf9d443d5a948570cae52c66a78dc34661128d7637ab25a73d29cd43aa"),
+            ("kucoin-shares",77,"KuCoin Spot",3187,78,"fab3d9c6d3ab399ba4a8ee6036c6207137d85319122306c0589555455a993ba2"),
+            ("akedo",104,"Gate Spot",368,0,"69ddb9626da03db4998d578106ecde359ee6665032438c70def5e4b5be6bbbe4"),
+            ("derive",114,"Gate Spot",624,0,"b0579e9d47edff0eea699d1e3c8ab0867000a49961dafcbac441827677423358"),
+        )
+        for cid,rank,venue,bars,gaps,sha in expected:
+            a=refs[cid]
+            with self.subTest(coin=cid):
+                self.assertEqual((a["rank"],a["venue"],a["bar"],a["quote"]),
+                                 (rank,venue,"1D","USDT"))
+                self.assertEqual((a["native_candles"],a["gaps_within_observed_span"]),
+                                 (bars,gaps))
+                self.assertEqual(a["sha256"],sha)
+                self.assertEqual(a["release_tag"],
+                      "crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5")
+                self.assertIn("top250-alt-market-evidence.json#",a["identity_evidence"])
+                self.assertEqual(a["native_session_start_modulo_utc_day_ms"],0)
+        from_federation={a["id"] for a in minute["assets"]
+                         if a["native_1m_count"]>0}
+        new_native={row[0] for row in expected}
+        self.assertFalse(new_native & from_federation)
+        self.assertEqual(len(from_federation|{a["id"] for a in index["assets"]}),178)
+
+    def test_reject_falsified_gate_kucoin_source_provenance_and_gaps(self):
+        index,minute=self.source()
+        source=next(i for i,a in enumerate(index["assets"])
+                    if a["id"]=="kucoin-shares")
+        for field,bad in (
+            ("quote","USD"),
+            ("market","KCS_BTC"),
+            ("venue","Gate Spot"),
+            ("gaps_within_observed_span",0),
+            ("native_session_start_modulo_utc_day_ms",57600000),
+            ("identity_evidence","https://example.net/false-coin"),
+            ("instrument_evidence","https://example.net/false-pair"),
+            ("source_api","https://example.net/fake"),
+            ("sha256","0"*64),
+            ("filename","../KCS-USDT-1D.json.gz")
+        ):
+            modified=copy.deepcopy(index)
+            modified["assets"][source][field]=bad
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                m.check_registry(modified,minute)
 
     def test_reject_wrong_rank_coin_id_or_spurious_asset(self):
         for mode in ("wrong ID","wrong rank","duplicate"):
