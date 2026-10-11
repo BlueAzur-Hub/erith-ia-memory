@@ -87,6 +87,67 @@ class AlternativeMarketTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"market venue cohort"):
             m.inspect(COIN,get,exchanges=("untrusted",))
 
+    def test_kraken_and_coinbase_gdax_exact_coin_id_proof_is_never_symbol_only(self):
+        kraken=m.exact_candidates([ticker(venue="kraken")],COIN,"kraken")
+        gdax=m.exact_candidates([ticker(venue="gdax",quote="USDC")],COIN,"coinbase")
+        self.assertEqual(kraken[0]["market_pair_candidate"],"OKB/USDT")
+        self.assertEqual(gdax[0]["market_pair_candidate"],"OKB-USDC")
+        self.assertEqual(gdax[0]["exchange"],"coinbase")
+        self.assertFalse(gdax[0]["exchange_instrument_confirmed"])
+        self.assertFalse(kraken[0]["native_1m_month_confirmed"])
+        self.assertEqual(m.exact_candidates([ticker(venue="coinbase")],
+                                            COIN,"coinbase"),[])
+        self.assertEqual(m.exact_candidates([ticker(venue="gdax",
+                                        coin="unrelated")],COIN,"coinbase"),[])
+        self.assertEqual(m.exact_candidates([ticker(venue="kraken",
+                                        base="ANOTHER")],COIN,"kraken"),[])
+        self.assertEqual(m.exact_candidates([ticker(venue="kraken",
+                                        quote="BTC")],COIN,"kraken"),[])
+
+    def test_six_venue_official_quote_pair_routes_but_not_source_ownership(self):
+        proof={"schema":"aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+               "ranked":250,"assets":[{"id":"okb","rank":42,"symbol":"OKB",
+                   "instruments":[
+                    {"venue":"kraken","instrument":"OKB/USDT",
+                     "base":"OKB","quote":"USDT",
+                     "exchange_instrument_confirmed":True},
+                    {"venue":"coinbase","instrument":"OKB-USDC",
+                     "base":"OKB","quote":"USDC",
+                     "exchange_instrument_confirmed":True}]}]}
+        self.assertEqual(m.source_venues_for(COIN,proof),("kraken","coinbase"))
+        def get(coin,venue,page):
+            self.assertEqual(coin,"okb")
+            self.assertEqual(page,1)
+            return [ticker(venue="gdax",quote="USDC") if venue=="coinbase"
+                    else ticker(venue="kraken")]
+        status,proofs,_=m.inspect(COIN,get,exchanges=("kraken","coinbase"))
+        self.assertEqual(status,"exact_id_market_candidates")
+        self.assertEqual({z["exchange"] for z in proofs},{"kraken","coinbase"})
+        self.assertTrue(all(z["coin_id"]=="okb"
+                            and z["exchange_instrument_confirmed"] is False
+                            and z["native_1m_month_confirmed"] is False
+                            for z in proofs))
+        forged=json.loads(json.dumps(proof))
+        forged["assets"][0]["instruments"][0]["instrument"]="OKB-USDT"
+        with self.assertRaisesRegex(ValueError,"Unverified official"):
+            m.source_venues_for(COIN,forged)
+
+    def test_coinbase_gdax_api_paths_are_explicit_and_not_a_symbol_search(self):
+        from unittest.mock import patch
+        class FakeResponse:
+            status=200
+            def __enter__(self):return self
+            def __exit__(self,*args):return False
+            def read(self,n):return b'{"tickers":[]}'
+        with patch.object(m.urllib.request,"urlopen",return_value=FakeResponse()) as opened:
+            self.assertEqual(m.fetch("okb","coinbase",1),[])
+            self.assertIn("exchange_ids=gdax",opened.call_args.args[0].full_url)
+            self.assertNotIn("exchange_ids=coinbase",opened.call_args.args[0].full_url)
+            self.assertEqual(m.fetch_exchange("okb","coinbase",1),[])
+            self.assertIn("/exchanges/gdax/tickers",
+                          opened.call_args.args[0].full_url)
+            self.assertIn("coin_ids=okb",opened.call_args.args[0].full_url)
+
     def test_source_error_and_pagination_fail_closed(self):
         def getter(coin,venue,page):
             if venue=="bitget":raise OSError("API blocked")
