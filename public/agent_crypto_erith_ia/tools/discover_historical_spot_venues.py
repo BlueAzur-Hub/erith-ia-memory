@@ -463,6 +463,99 @@ def contract_matches(queue,archived,official,coins,bitget_coins):
                          "contract_address":address}
     return result
 
+# Exception for non-EVM native chains whose genuine project identity is
+# explicitly NAMED in a historical original Spot listing. Every tuple binds
+# exactly one frozen ranked CoinGecko owner, venue, quote, instrument and
+# immutable official project notice. Do not infer any owner from symbols.
+NAMED_ORIGINAL_SPOT_LISTINGS=(
+    ("xdce-crowd-sale",92,"XDC","XDC Network","kucoin","USDT",
+     "https://www.kucoin.com/announcement/en-xinfin-network-xdc-gets-listed-on-kucoin"),
+    ("beldex",106,"BDX","Beldex","gate","USDT",
+     "https://www.gate.com/pt-br/announcements/article/27532"),
+    ("akash-network",178,"AKT","Akash Network","gate","USDT",
+     "https://www.gate.com/fr/announcements/article/19761/Gate.io-will-list-Akash-Network-AKT"),
+)
+
+def named_original_spot_proof(owner,source):
+    """Require full original project notice AND immutable CoinGecko owner ID."""
+    if not isinstance(owner,dict) or not isinstance(source,dict):
+        return False
+    cid=owner.get("id")
+    for aid,rank,symbol,name,venue,quote,notice in NAMED_ORIGINAL_SPOT_LISTINGS:
+        if cid!=aid:continue
+        pair=symbol+("_" if venue=="gate" else "-")+quote
+        return (owner.get("rank")==rank and owner.get("symbol")==symbol
+                and owner.get("name")==name
+                and source.get("coin_id")==aid
+                and source.get("exchange")==venue
+                and source.get("base")==symbol
+                and source.get("quote")==quote
+                and source.get("market_pair_candidate")==pair
+                and source.get("proof_method")=="original_named_spot_listing"
+                and source.get("original_named_spot_notice")==notice
+                and source.get("exchange_instrument_confirmed") is False
+                and source.get("native_1m_month_confirmed") is False)
+    return False
+
+def enrich_named_original_spot(queue,archived,doc,official):
+    """One-time exact-name venue attestation for specified non-EVM owners.
+
+    The independent source's listing must explicitly name the project and Spot
+    pair. The current live instrument must ALSO be independently present.
+    This is only a discovery candidate, NOT historical OHLCV.
+    """
+    require(official.get("schema")==
+            "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1"
+            and official.get("ranked")==250,
+            "Original named Spot attestation requires official market census")
+    ranked={a["id"]:a for a in queue}
+    require(len(ranked)==250,"Frozen ranked universe changed")
+    instrument={a["id"]:a for a in official.get("assets",[])}
+    records={a["id"]:a for a in doc["results"]}
+    added=[]
+    now=dt.datetime.now(dt.timezone.utc).isoformat()
+    for aid,rank,symbol,name,venue,quote,notice in NAMED_ORIGINAL_SPOT_LISTINGS:
+        owner=ranked.get(aid)
+        require(owner and owner["rank"]==rank and owner["symbol"]==symbol
+                and owner["name"]==name and
+                len([z for z in queue if z["symbol"]==symbol])==1,
+                "Original project-name Spot attestation ambiguous: "+aid)
+        if aid in archived:
+            continue
+        row=instrument.get(aid)
+        pair=symbol+("_" if venue=="gate" else "-")+quote
+        if not row or row.get("rank")!=rank or row.get("symbol")!=symbol:
+            continue
+        if not any(m.get("venue")==venue and m.get("instrument")==pair
+                   and m.get("base")==symbol and m.get("quote")==quote
+                   and m.get("exchange_instrument_confirmed") is True
+                   for m in row.get("instruments",[])):
+            continue
+        previous=records.get(aid)
+        if previous and previous.get("status")=="exact_id_market_candidates":
+            continue
+        source={"coin_id":aid,"exchange":venue,"base":symbol,"quote":quote,
+                "market_pair_candidate":pair,
+                "exchange_instrument_confirmed":False,
+                "native_1m_month_confirmed":False,
+                "proof_method":"original_named_spot_listing",
+                "original_named_spot_notice":notice}
+        require(named_original_spot_proof(owner,source),
+                "Official original named Spot identity changed")
+        records[aid]={"id":aid,"rank":rank,"symbol":symbol,
+                      "status":"exact_id_market_candidates","markets":[source],
+                      "pages_checked":0,"checked_at":now}
+        added.append(aid)
+    updated=dict(doc)
+    updated["results"]=sorted(records.values(),key=lambda x:x["rank"])
+    updated["checked_count"]=sum(x["id"] not in archived for x in updated["results"])
+    updated["market_candidate_count"]=sum(
+        bool(x["markets"]) and x["id"] not in archived for x in updated["results"])
+    if added:
+        updated["source"]=doc["source"]+"; immutable original named Spot listing attestation"
+    validate(updated,queue)
+    return updated,added
+
 def public_inventory(url,max_size):
     require(url in (CG_PLATFORMS,BITGET_COINS,GATE_COINS,KUCOIN_COINS),
             "Unapproved inventory source")
@@ -615,6 +708,12 @@ def main():
             print("GATE KUCOIN EXACT CONTRACT SOURCE "+json.dumps(
                 {"qualified_ids":added,"count":len(added),
                  "sources":sorted(other_venues)},sort_keys=True),flush=True)
+    if spot_snapshot is not None:
+        result,added=enrich_named_original_spot(
+            queue,archived,result,spot_snapshot)
+        print("NAMED ORIGINAL SPOT SOURCE "+json.dumps(
+            {"qualified_ids":added,"count":len(added)},sort_keys=True),
+            flush=True)
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     tmp=OUTPUT.with_suffix(".tmp")
     tmp.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")

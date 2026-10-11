@@ -103,7 +103,10 @@ def candidates(minute,daily,ledger,official):
                 continue
             # The CoinGecko proof is independently exact-ID, not a venue ticker.
             method=proof.get("proof_method")
-            if method is not None:
+            if method=="original_named_spot_listing":
+                need(owners.named_original_spot_proof(m,proof),
+                     "Original named non-EVM Spot listing does not prove CoinGecko ID")
+            elif method is not None:
                 need(method=="exact_coin_id_matching_evm_contract"
                      and proof.get("contract_platform") in
                         owners.CHAINS.values()
