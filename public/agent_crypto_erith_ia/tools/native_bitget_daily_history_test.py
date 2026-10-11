@@ -13,7 +13,7 @@ def owner():
 
 class DailyHistoryTests(unittest.TestCase):
     def test_native_rows_and_true_unfilled_gaps(self):
-        t=m.START
+        t=m.END-5*m.DAY
         def fetch(pair,start,end):
             self.assertEqual(pair,"MUSDT")
             sample=[]
