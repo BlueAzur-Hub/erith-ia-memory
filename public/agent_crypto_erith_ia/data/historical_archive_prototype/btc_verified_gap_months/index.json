@@ -1,0 +1,62 @@
+{
+  "schema": "seven.btc.verified-gap-months.v1",
+  "scope": "independent_source_qualified_months_not_in_strict_full_month_catalog",
+  "updated_utc": "2026-10-11T18:15:00Z",
+  "asset_id": "bitcoin",
+  "symbol": "BTC",
+  "venue": "Binance Spot",
+  "pair": "BTCUSDT",
+  "quote": "USDT",
+  "resolution": "1m",
+  "is_live": false,
+  "can_extend_strict_contiguous_year_views": false,
+  "can_be_queried_as_source_rows": true,
+  "synthetic_candles": 0,
+  "full_month_catalog": "../top250_history_catalog/index.json",
+  "note": "This index is separate from the 59 source-complete calendar months. A market halt is a provenance-preserving source gap, not fabricated candles. The original ZIP remains immutable in GitHub Releases. Never label the archived 1m sequence as uninterrupted.",
+  "months": [
+    {
+      "month": "2023-03",
+      "status": "verified_native_source_with_gaps",
+      "first_open_utc": "2023-03-01T00:00:00Z",
+      "last_open_utc": "2023-03-31T23:59:00Z",
+      "expected_calendar_minutes": 44640,
+      "native_rows": 44560,
+      "missing_calendar_minutes": 80,
+      "gaps": [
+        {
+          "start_utc": "2023-03-24T12:40:00Z",
+          "end_exclusive_utc": "2023-03-24T14:00:00Z",
+          "missing_minutes": 80
+        }
+      ],
+      "checksum_verified": true,
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2023-03.zip",
+          "size_bytes": 2300446,
+          "sha256": "5591171a15f210af647a2fb68ab8cbad45a3a595cfe9a0eec9d06e5e84928bec"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2023-03.zip.CHECKSUM",
+          "size_bytes": 88,
+          "sha256": "f7f452c298b3a650fbc9604688eec17f76938db8a0bf19c168625e9e88b14077"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2023-03.sqlite",
+          "size_bytes": 6434816,
+          "sha256": "62171fe4b2a71880581c02b673e0e908902835c1b1fdcf8e5d3c5e41129ebd53"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2023-03.json",
+          "size_bytes": 1001,
+          "sha256": "f0ca7727e73912377a037662f9857fe8f540109e5bb1958ab379a5d8112c5146"
+        }
+      },
+      "release_tag": "btc-spot-native-gap-2023-03",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2023-03",
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1m/BTCUSDT-1m-2023-03.zip",
+      "source_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1m/BTCUSDT-1m-2023-03.zip.CHECKSUM"
+    }
+  ]
+}
