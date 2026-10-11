@@ -1,7 +1,3 @@
-# Source: immutable ranked Top250 CoinGecko identities as archived in Seven Heaven historical_archive_prototype (GitHub main)
-# Snapshot status: 2026-10-11; native 1m and native 1D are DIFFERENT resolutions. Provider USDC/USDT are never converted to USD.
-# Data files: top250_multisource_coverage/index.json + top250_multiresolution_sources/index.json
-# Data files (OHLCV original): immutable GitHub Releases referenced by source catalogues; CSV contains METADATA, not the raw OHLCV bars.
 rank,coingecko_id,symbol,name,archive_status,native_1m_candles,native_1m_source,native_1d_candles,native_1d_source,native_1d_market,native_1d_quote,native_1d_first_utc,native_1d_last_utc,native_1d_missing_calendar_days,native_1d_release_tag
 1,bitcoin,BTC,Bitcoin,1m,2191680,Binance Spot official native 1m ZIPs,0,,,,,,0,
 2,ethereum,ETH,Ethereum,1m,2191680,Binance Spot official native 1m ZIPs,0,,,,,,0,
@@ -29,7 +25,7 @@ rank,coingecko_id,symbol,name,archive_status,native_1m_candles,native_1m_source,
 24,canton-network,CC,Canton,1D,0,,231,OKX Spot,CC-USDT,USDT,2026-02-12,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s
 25,ethena-usde,USDE,Ethena USDe,1m,525600,Binance Spot official native 1m ZIPs,0,,,,,,0,
 26,uniswap,UNI,Uniswap,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
-27,dai,DAI,Dai,ABSENT,0,,0,,,,,,0,
+27,dai,DAI,Dai,1D,0,,709,Kraken Spot,DAI/USDT,USDT,2024-10-21,2026-09-30,1,crypto-kraken-spot-native-daily-2026-09-8eccaa5378b9
 28,avalanche-2,AVAX,Avalanche,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
 29,sui,SUI,Sui,1m,1753920,Binance Spot official native 1m ZIPs,0,,,,,,0,
 30,usd1-wlfi,USD1,USD1,1m,701280,Binance Spot official native 1m ZIPs,0,,,,,,0,
