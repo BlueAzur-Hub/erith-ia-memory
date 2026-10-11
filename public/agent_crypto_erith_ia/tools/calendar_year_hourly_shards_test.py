@@ -35,8 +35,11 @@ class CalendarYearShardTests(unittest.TestCase):
         self.assertEqual(sum(len(g["source_months"]) for g in groups),
                          len(source))
         self.assertTrue(all(1<=len(g["source_months"])<=12 for g in groups))
-        self.assertEqual([g["year"] for g in groups],
+        years=[g["year"] for g in groups]
+        self.assertEqual(years,sorted(years))
+        self.assertEqual(sorted(set(years)),
                          sorted({int(month[:4]) for month in source}))
+        self.assertEqual(len({(g["year"],g["span"]) for g in groups}),len(groups))
         self.assertTrue(all(int(month["month"][:4])==g["year"]
             for g in groups for month in g["source_months"]))
         self.assertEqual(info["first_verified_closed_month"],source[0])
