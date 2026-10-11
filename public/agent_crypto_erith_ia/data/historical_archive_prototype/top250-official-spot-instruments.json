@@ -5,10 +5,20 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "tether",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "USDT",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "USDT-USDC",
+          "native_1m_month_confirmed": false,
+          "quote": "USDC",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 3,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "USDT"
     },
     {
@@ -35,10 +45,29 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "rain",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "RAIN",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "RAIN_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "RAIN",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "RAIN-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 19,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "RAIN"
     },
     {
@@ -65,10 +94,20 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "ondo-us-dollar-yield",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "USDY",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "USDY_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 48,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "USDY"
     },
     {
@@ -95,10 +134,29 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "mantle",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "MNT",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "MNT_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "MNT",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "MNT-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 56,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "MNT"
     },
     {
@@ -115,30 +173,87 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "usdd",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "USDD",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "USDD_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "USDD",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "USDD-USDC",
+          "native_1m_month_confirmed": false,
+          "quote": "USDC",
+          "venue": "kucoin"
+        },
+        {
+          "base": "USDD",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "USDD-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 63,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "USDD"
     },
     {
       "archived": false,
       "coin_id_confirmed": false,
       "id": "gatechain-token",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "GT",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "GT_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 74,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "GT"
     },
     {
       "archived": false,
       "coin_id_confirmed": false,
       "id": "kucoin-shares",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "KCS",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "KCS-USDC",
+          "native_1m_month_confirmed": false,
+          "quote": "USDC",
+          "venue": "kucoin"
+        },
+        {
+          "base": "KCS",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "KCS-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 77,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "KCS"
     },
     {
@@ -184,6 +299,24 @@
           "native_1m_month_confirmed": false,
           "quote": "USDT",
           "venue": "bitget"
+        },
+        {
+          "base": "XDC",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "XDC_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "XDC",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "XDC-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
         }
       ],
       "native_1m_month_confirmed": false,
@@ -205,20 +338,58 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "akedo",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "AKE",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "AKE_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "AKE",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "AKE-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 104,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "AKE"
     },
     {
       "archived": false,
       "coin_id_confirmed": false,
       "id": "beldex",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "BDX",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "BDX_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "BDX",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "BDX-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 106,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "BDX"
     },
     {
@@ -265,10 +436,20 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "derive",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "DRV",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "DRV_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 114,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "DRV"
     },
     {
@@ -324,6 +505,24 @@
           "native_1m_month_confirmed": false,
           "quote": "USDT",
           "venue": "bitget"
+        },
+        {
+          "base": "PRL",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "PRL_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "PRL",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "PRL-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
         }
       ],
       "native_1m_month_confirmed": false,
@@ -355,10 +554,29 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "pieverse",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "PIEVERSE",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "PIEVERSE_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "PIEVERSE",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "PIEVERSE-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 132,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "PIEVERSE"
     },
     {
@@ -375,20 +593,58 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "unibase",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "UB",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "UB_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "UB",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "UB-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 137,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "UB"
     },
     {
       "archived": false,
       "coin_id_confirmed": false,
       "id": "spx6900",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "SPX",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "SPX_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "SPX",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "SPX-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 138,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "SPX"
     },
     {
@@ -445,10 +701,20 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "ape-and-pepe",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "APEPE",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "APEPE_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 149,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "APEPE"
     },
     {
@@ -505,30 +771,78 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "frax",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "FRAX",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "FRAX_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "FRAX",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "FRAX-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 177,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "FRAX"
     },
     {
       "archived": false,
       "coin_id_confirmed": false,
       "id": "akash-network",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "AKT",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "AKT_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "AKT",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "AKT-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 178,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "AKT"
     },
     {
       "archived": false,
       "coin_id_confirmed": false,
       "id": "crvusd",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "CRVUSD",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "CRVUSD_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 180,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "CRVUSD"
     },
     {
@@ -585,20 +899,58 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "useless-3",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "USELESS",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "USELESS_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "USELESS",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "USELESS-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 194,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "USELESS"
     },
     {
       "archived": false,
       "coin_id_confirmed": false,
       "id": "origintrail",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "TRAC",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "TRAC_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "TRAC",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "TRAC-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 197,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "TRAC"
     },
     {
@@ -625,10 +977,29 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "chain-2",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "XCN",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "XCN_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "XCN",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "XCN-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 208,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "XCN"
     },
     {
@@ -715,40 +1086,98 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "gusd",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "GUSD",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "GUSD_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 224,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "GUSD"
     },
     {
       "archived": false,
       "coin_id_confirmed": false,
       "id": "aioz-network",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "AIOZ",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "AIOZ_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "AIOZ",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "AIOZ-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 227,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "AIOZ"
     },
     {
       "archived": false,
       "coin_id_confirmed": false,
       "id": "geodnet",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "GEOD",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "GEOD_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 233,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "GEOD"
     },
     {
       "archived": false,
       "coin_id_confirmed": false,
       "id": "ultima",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "ULTIMA",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "ULTIMA_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        },
+        {
+          "base": "ULTIMA",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "ULTIMA-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "kucoin"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 237,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "ULTIMA"
     },
     {
@@ -775,10 +1204,20 @@
       "archived": false,
       "coin_id_confirmed": false,
       "id": "stronghold-token",
-      "instruments": [],
+      "instruments": [
+        {
+          "base": "SHX",
+          "coin_id_confirmed": false,
+          "exchange_instrument_confirmed": true,
+          "instrument": "SHX_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT",
+          "venue": "gate"
+        }
+      ],
       "native_1m_month_confirmed": false,
       "rank": 241,
-      "status": "no_verifiable_instrument",
+      "status": "instrument_candidates_not_identity_proof",
       "symbol": "SHX"
     },
     {
@@ -833,14 +1272,28 @@
     }
   ],
   "candidate_count": 80,
-  "checked_at": "2026-10-11T01:32:32.217797+00:00",
+  "checked_at": "2026-10-11T01:47:58.399882+00:00",
   "markets": {
     "bitget": {
       "instruments": 538,
       "reason": null,
-      "source_sha256": "65963cb659d0f616fc2d7f1bd670f9504a1ed59ad05a915afdf7d138ca40ccd8",
+      "source_sha256": "48011b801ad0b6e2770d9badbfda45c7426aa61a3fc8ef2051628e9cc199b378",
       "status": "success",
       "url": "https://api.bitget.com/api/v3/market/instruments?category=SPOT"
+    },
+    "gate": {
+      "instruments": 2112,
+      "reason": null,
+      "source_sha256": "0dde9b5a21c12ee69f7c280b8f659a702909ba5205ffcaae3d816083763a5979",
+      "status": "success",
+      "url": "https://api.gateio.ws/api/v4/spot/currency_pairs"
+    },
+    "kucoin": {
+      "instruments": 871,
+      "reason": null,
+      "source_sha256": "87e82b8efb174665c887cb8f389fcee7059b0944e2637498ee096dfea583fa3e",
+      "status": "success",
+      "url": "https://api.kucoin.com/api/v2/symbols"
     },
     "okx": {
       "instruments": 709,
@@ -855,6 +1308,6 @@
   "note": "Symbol-matched official instruments are candidates ONLY. CoinGecko-ID ↔ venue instrument provenance and complete native one-minute OHLCV are mandatory before any new archive.",
   "ranked": 250,
   "schema": "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
-  "source": "Official public OKX and Bitget Spot instrument inventories",
-  "with_spot_instrument": 3
+  "source": "Official public OKX, Bitget, Gate and KuCoin Spot instrument inventories",
+  "with_spot_instrument": 28
 }
