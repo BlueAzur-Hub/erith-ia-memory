@@ -174,11 +174,11 @@ class NativeAlternativeDailyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"predate"):
             m.verify_named_venue_opening(owner,bound-m.DAY)
         wrong={**owner,"name":"Gemini Dollar"}
-        with self.assertRaisesRegex(ValueError,"original"):
+        with self.assertRaisesRegex(ValueError,"Original named"):
             m.verify_named_venue_opening(wrong,bound)
         swapped={**owner,"identity_proof":{
                 **owner["identity_proof"],"market_pair_candidate":"GUSD_USDC"}}
-        with self.assertRaisesRegex(ValueError,"original"):
+        with self.assertRaisesRegex(ValueError,"Original named"):
             m.verify_named_venue_opening(swapped,bound)
 
     def test_ultima_original_kucoin_listing_time_and_owner_not_guessed(self):
