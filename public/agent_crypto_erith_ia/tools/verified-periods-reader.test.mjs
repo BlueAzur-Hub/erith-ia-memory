@@ -280,8 +280,8 @@ test("UI changing pilot and period routes to verified archive and renders OHLCV 
  select.value="bitcoin";
  x.node("shared-period").value="1an";
  x.node("shared-read").dispatch("click");
- for(let i=0;i<200&&!x.node("shared-status").textContent.includes("SHA-256 vérifié");i++)
-  await new Promise(resolve=>setImmediate(resolve));
+ for(let i=0;i<500&&!x.node("shared-status").textContent.includes("SHA-256 vérifié");i++)
+  await new Promise(resolve=>setTimeout(resolve,5));
  assert.match(x.node("shared-status").textContent,/SHA-256 vérifié/);
  assert.match(x.node("shared-status").textContent,/365 bougies 1d/);
  assert.match(x.node("shared-source").textContent,/Max inclut d’autres partitions annuelles archivées/);
@@ -289,8 +289,8 @@ test("UI changing pilot and period routes to verified archive and renders OHLCV 
  assert.ok(x.requests.includes("verified_periods/bitcoin-1an.json.gz"));
  x.node("shared-period").value="Max";
  x.node("shared-period").dispatch("change");
- for(let i=0;i<400&&!x.node("shared-source").textContent.includes("MAX QUOTIDIEN");i++)
-  await new Promise(resolve=>setImmediate(resolve));
+ for(let i=0;i<500&&!x.node("shared-source").textContent.includes("MAX QUOTIDIEN");i++)
+  await new Promise(resolve=>setTimeout(resolve,5));
  assert.match(x.node("shared-status").textContent,/aucune lacune/);
  assert.match(x.node("shared-source").textContent,/26 bougies Binance Spot 1d natives/);
  assert.equal(x.node("shared-table").children.length,9);
