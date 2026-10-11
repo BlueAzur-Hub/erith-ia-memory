@@ -25,6 +25,7 @@ def check(raw,expected,month):
     expected_csv='BTCUSDT-1m-'+month+'.csv'
     total=0
     invalid_closes=[]
+    invalid_close_count=0
     gaps=[]
     previous=None
     with zipfile.ZipFile(io.BytesIO(raw)) as archive:
@@ -49,6 +50,7 @@ def check(raw,expected,month):
                                  'end_ms_exclusive':t,
                                  'minutes':(t-predecessor)//60000})
                 if not t<=end_t<t+60000:
+                    invalid_close_count+=1
                     record={'open_time_utc':datetime.fromtimestamp(
                          t/1000,timezone.utc).isoformat(),
                          'open_ms':t,'close_ms':end_t,'difference_ms':end_t-t}
@@ -66,8 +68,9 @@ def check(raw,expected,month):
             'native_rows':total,
             'missing_minutes':sum(v['minutes'] for v in gaps),
             'timestamp_close_anomaly_examples':invalid_closes,
+            'close_timestamp_anomaly_count':invalid_close_count,
             'anomaly_example_count':len(invalid_closes),
-            'requires_manual_source_review':bool(invalid_closes),
+            'requires_manual_source_review':invalid_close_count>0,
             'source_original_saved_by_probe':False}
 
 
