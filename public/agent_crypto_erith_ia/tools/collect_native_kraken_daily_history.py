@@ -127,7 +127,10 @@ def source_decimal(value):
     return x
 
 def source_rows(rows,owner):
-    need(isinstance(rows,list) and 1<=len(rows)<=720,
+    # Kraken may return 720 completed entries *plus* the current
+    # unfinished session. Accept this documented bounded envelope only;
+    # the unfinished (and post-cutoff) session is NEVER archived.
+    need(isinstance(rows,list) and 1<=len(rows)<=721,
          "Unbounded or absent Kraken native daily OHLC rows")
     accepted=[]; last=None; zero_trade=0
     for row in rows:

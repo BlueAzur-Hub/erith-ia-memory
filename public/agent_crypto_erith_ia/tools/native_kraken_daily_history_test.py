@@ -132,6 +132,26 @@ class KrakenNativeDailyProof(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"No closed"):
             m.source_rows([row(m.END//1000)],owner)
 
+    def test_bounded_720_closed_kraken_days_plus_one_unclosed_session(self):
+        # The source can legitimately return 720 completed rows followed by
+        # the live unfinished candle. Archive only the former.
+        owner=next(a for a in m.candidate_owners(*self.owners())
+                   if a["id"]=="dai")
+        first=(m.END//1000)-720*86400
+        candle=lambda stamp:[stamp,"1.00","1.01","0.99","1.00",
+                              "1.00","5.3",6]
+        rows=[candle(first+i*86400) for i in range(721)]
+        self.assertEqual(rows[-1][0]*1000,m.END)
+        proof=m.source_rows(rows,owner)
+        self.assertEqual((proof["bars"],proof["gaps"]),(720,0))
+        self.assertEqual(proof["last_ms"],m.END-m.DAY)
+        self.assertEqual(len(proof["rows"]),720)
+        with self.assertRaisesRegex(ValueError,"Unbounded"):
+            m.source_rows(rows+[candle(first+721*86400)],owner)
+        too_old=candle((owner["first_listed_ms"]//1000)-86400)
+        with self.assertRaisesRegex(ValueError,"predates"):
+            m.source_rows([too_old]+rows[:-1],owner)
+
     def test_immutable_release_requires_real_main_ci(self):
         owner=next(a for a in m.candidate_owners(*self.owners())
                    if a["id"]=="dai")
