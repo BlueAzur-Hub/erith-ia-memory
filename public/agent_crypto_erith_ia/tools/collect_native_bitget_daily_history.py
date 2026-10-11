@@ -37,7 +37,7 @@ MAX_PAGES=65
 MAX_RESPONSE=250000
 MAX_CANDLES=3700
 MAX_ASSETS=15
-TAG="crypto-bitget-spot-native-daily-2026-09-qualified"
+TAG="crypto-bitget-spot-native-daily-2026-09-single-symbol-owners"
 SCHEMA="aerith.bitget.native-exchange-daily-history.verified-response.v1"
 SHA=re.compile(r"^[a-f0-9]{64}$")
 PAIR=re.compile(r"^[A-Z0-9]{1,28}USDT$")
@@ -67,6 +67,59 @@ def filter_unarchived(candidates,minute,daily):
     need(len(picked)<=250,"Unbounded source cohort")
     return sorted(picked,key=lambda a:a["rank"])
 
+SINGLE_SYMBOL_OWNERS=(
+    ("memecore",47,"M"),
+    ("united-stables",64,"U"),
+    ("build-on",225,"B"),
+    ("quack-ai",232,"Q"),
+    ("humanity",245,"H"),
+)
+
+def single_symbol_candidates(minute,identity,official):
+    """One-letter tickers require BOTH real venue proof and exact owner proof.
+
+    The conservative legacy 1m sampler excludes one-letter symbols; this
+    separate exact-ID cohort never weakens its validation or changes it.
+    """
+    need(minute.get("ranked")==250 and len(minute.get("assets",[]))==250
+         and identity.get("schema")==
+             "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1"
+         and official.get("schema")==
+             "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+         "Missing original identity and venue evidence")
+    catalog={x["id"]:x for x in minute["assets"]}
+    proofs={x["id"]:x for x in identity["results"]}
+    spots={x["id"]:x for x in official["assets"]}
+    need(len(catalog)==250,"Repeated canonical owners")
+    result=[]
+    for cid,rank,symbol in SINGLE_SYMBOL_OWNERS:
+        own=catalog.get(cid);evidence=proofs.get(cid);inst=spots.get(cid)
+        need(own and own["rank"]==rank and own["symbol"]==symbol and
+             own["quote"]=="USDT" and own["months"]==0 and
+             len([a for a in catalog.values() if a["symbol"]==symbol])==1,
+             "Unknown or ambiguous single-character CoinGecko owner: "+cid)
+        pair=symbol+"USDT"
+        need(evidence and evidence["rank"]==rank and
+             evidence["symbol"]==symbol and
+             evidence["status"]=="exact_id_market_candidates" and
+             any(m.get("exchange")=="bitget" and m.get("coin_id")==cid
+                 and m.get("base")==symbol and m.get("quote")=="USDT"
+                 and m.get("market_pair_candidate")==pair
+                 for m in evidence.get("markets",[])),
+             "No exact-ID Bitget market proof for "+cid)
+        need(inst and inst["rank"]==rank and inst["symbol"]==symbol and
+             any(m.get("venue")=="bitget" and m.get("base")==symbol and
+                 m.get("quote")=="USDT" and m.get("instrument")==pair and
+                 m.get("exchange_instrument_confirmed") is True
+                 for m in inst.get("instruments",[])),
+             "No independently verified public Bitget Spot instrument: "+cid)
+        result.append({"id":cid,"rank":rank,"symbol":symbol,"pair":pair,
+                       "venue":"bitget","quote":"USDT"})
+    need(len(result)==len(SINGLE_SYMBOL_OWNERS) and
+         len({x["pair"] for x in result})==len(result),
+         "Repeated original Spot pair")
+    return sorted(result,key=lambda a:a["rank"])
+
 def qualified_assets():
     # The old Top250 pilot catalog can lag behind the actual living 1m
     # federation; qualify with the current 250 CoinGecko IDs and ranks.
@@ -74,7 +127,7 @@ def qualified_assets():
     exact=json.loads(source_proof.EXACT.read_text())
     official=json.loads(source_proof.INSTRUMENTS.read_text())
     daily=json.loads((source_proof.BASE/"top250_multiresolution_sources/index.json").read_text())
-    candidates=source_proof.candidates(minute,exact,official)
+    candidates=single_symbol_candidates(minute,exact,official)
     candidates=filter_unarchived(candidates,minute,daily)
     # A strict ranked batch bound limits runtime. Others remain eligible
     # for later verified releases and are never counted as archived.
