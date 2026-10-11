@@ -49,9 +49,9 @@ on:
 permissions:
   contents: write
 concurrency:
-  # PR checks cannot cancel the canonical production rebuild or each other.
+  # A new commit may replace only its own PR checks; canonical main builds never cancel.
   group: agent-crypto-verified-hourly-history-${{ github.event.pull_request.number || 'main' }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   btc-native-daily-audit:
     # Only official Binance native Spot 1d; no interpolation or venue mixing.
