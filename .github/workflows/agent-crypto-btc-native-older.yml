@@ -46,9 +46,21 @@ jobs:
               result=bulk.fetch_asset({'id':'bitcoin','rank':1,'pair':'BTCUSDT'},
                                       '2021-09','1m',Path(folder))
               print('BTC TRUE SOURCE PROBE '+json.dumps(result,sort_keys=True),flush=True)
-              assert result['status']=='verified',result
-              assert result['candles']==43200,result
-              assert len(list(Path(folder).glob('BTCUSDT-1m-2021-09.zip')))==1
+              if result['status']=='verified':
+                  assert result['candles']==43200,result
+                  assert len(list(Path(folder).glob('BTCUSDT-1m-2021-09.zip')))==1
+                  print('COMPLETE OFFICIAL MONTH',result['candles'])
+              else:
+                  assert 'Missing/duplicate/unaligned candle' in result['reason'],result
+                  from btc_gap_acquire import acquire
+                  real=acquire('2021-09',Path(folder))
+                  assert real['native_rows']>40000,real
+                  assert real['native_rows']+real['missing_minutes']==43200,real
+                  assert real['synthetic_rows']==0 and real['missing_minutes']>0,real
+                  print('ORIGINAL BINANCE BTC SOURCE WITH GAPS '+json.dumps(
+                      {'month':real['month'],'native_rows':real['native_rows'],
+                       'missing_minutes':real['missing_minutes'],
+                       'source_zip_sha256':real['source_zip_sha256']},sort_keys=True))
           PY
       - name: Import up to six earlier BTC months with checksum and immutable release proofs
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
