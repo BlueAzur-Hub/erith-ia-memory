@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build one read-only Bitcoin source-quality catalog from immutable GitHub Releases.
+"""Independent, read-only audit of Bitcoin gap Releases; not the canonical gap index.
 
 No downloads of large ZIPs, no trading writes and no synthetic candles.
 A release is indexed only when its manifest digest, ZIP SHA-256 identity,
@@ -19,7 +19,7 @@ import tempfile
 REPO = "BlueAzur-Hub/erith-ia-memory"
 HOME = Path(__file__).resolve().parents[1] / "data/historical_archive_prototype"
 FULL_CATALOG = HOME / "top250_history_catalog/index.json"
-OUTPUT = HOME / "btc_verified_gap_months/index.json"
+OUTPUT = HOME / "btc_source_gap_audit/index.json"
 TAG = re.compile(r"^btc-spot-native-gap-(20\d{2}-(?:0[1-9]|1[0-2]))$")
 SHA = re.compile(r"^[0-9a-f]{64}$")
 MAX_RELEASE_PAGES = 100
