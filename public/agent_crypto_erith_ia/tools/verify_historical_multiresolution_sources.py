@@ -38,7 +38,7 @@ def check_registry(index,catalog):
     need(index.get("schema")==SCHEMA
          and index.get("ranked_universe")==250
          and index.get("native_bar")=="per-source-native-daily"
-         and index.get("quote")=="USDT"
+         and index.get("quote") in ("USDT","mixed-native-USDT-USDC")
          and index.get("separate_from_native_1m_index") is True
          and index.get("native_1m_added")==0
          and index.get("exchange_signed_checksum") is False
@@ -54,6 +54,12 @@ def check_registry(index,catalog):
     need(isinstance(entries,list) and 1<=len(entries)<=250
          and len(entries)==index.get("asset_count"),
          "Unbounded or missing source references")
+    advertised_quotes={a.get("quote") for a in entries}
+    need(advertised_quotes in ({"USDT"},{"USDT","USDC"})
+         and index.get("quote")==(
+              "USDT" if advertised_quotes=={"USDT"} else
+              "mixed-native-USDT-USDC"),
+         "Global native quote declaration misrepresents source currencies")
     seen=set();total=0
     for a in entries:
         cid=a["id"];coin=ranked.get(cid)
@@ -69,13 +75,18 @@ def check_registry(index,catalog):
         is_kucoin=venue=="KuCoin Spot"
         need(is_okx or is_bitget or is_gate or is_kucoin,
              "Unknown native Spot candle provider")
-        expected_market=(a["symbol"]+"_USDT" if is_gate
-             else a["symbol"]+"-USDT" if is_okx or is_kucoin
-             else a["symbol"]+"USDT")
+        quote=a.get("quote")
+        need(quote in ("USDT","USDC")
+             and (quote=="USDT" if is_okx or is_bitget else True)
+             and a["symbol"]!=quote,
+             "Mislabelled original native daily quote")
+        expected_market=(a["symbol"]+"_"+quote if is_gate
+             else a["symbol"]+"-"+quote if is_okx or is_kucoin
+             else a["symbol"]+quote)
         expected_bar="1Dutc" if is_okx else "1D"
         need(a.get("bar")==expected_bar and
-             a.get("market")==expected_market and
-             a.get("quote")=="USDT","Mislabelled native daily pair or granularity")
+             a.get("market")==expected_market,
+             "Mislabelled native daily pair or granularity")
         need(isinstance(a.get("native_candles"),int)
              and 1<=a["native_candles"]<=4500
              and isinstance(a.get("earliest_source_ms"),int)

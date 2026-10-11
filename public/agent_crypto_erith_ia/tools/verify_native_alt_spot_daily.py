@@ -20,12 +20,17 @@ def check_payload(document,indexed,url):
     need(indexed.get("venue") in ("Gate Spot","KuCoin Spot"),
          "Unrecognized independently acquired native venue")
     venue=("gate" if indexed["venue"]=="Gate Spot" else "kucoin")
+    quote=indexed.get("quote")
+    need(quote in ("USDT","USDC") and indexed["symbol"]!=quote
+         and indexed["market"]==indexed["symbol"]+
+             ("_" if venue=="gate" else "-")+quote,
+         "Original native USDT/USDC Spot pair or source quote spoofed")
     own=document.get("owner",{})
     evidence=own.get("identity_proof",{})
     need(document.get("schema")==original.SCHEMA
          and document.get("venue")==venue
          and document.get("source_api")==original.MARKETS[venue]
-         and document.get("original_quote")=="USDT"
+         and document.get("original_quote")==quote
          and document.get("native_interval")=="1D"
          and document.get("market")==indexed["market"]
          and document.get("no_synthetic_candles") is True
@@ -39,12 +44,12 @@ def check_payload(document,indexed,url):
          and own.get("name")==indexed["name"]
          and own.get("venue")==venue
          and own.get("pair")==indexed["market"]
-         and own.get("quote")=="USDT",
+         and own.get("quote")==quote,
          "Original exact ranked owner, symbol, pair or quote changed")
     need(evidence.get("coin_id")==own["id"]
          and evidence.get("exchange")==venue
          and evidence.get("base")==own["symbol"]
-         and evidence.get("quote")=="USDT"
+         and evidence.get("quote")==quote
          and evidence.get("market_pair_candidate")==own["pair"],
          "Native source no longer matches the original CoinGecko proof")
     proof_method=evidence.get("proof_method")
