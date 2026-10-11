@@ -67,6 +67,20 @@ class DailyHistoryTests(unittest.TestCase):
         self.assertEqual(x["native_daily_rows"][0][0],str(stamp))
         self.assertTrue(x["native_daily_timezone_not_normalized"])
 
+    def test_out_of_requested_window_is_excluded_never_reassigned(self):
+        # Upstream Bitget history may return more than the requested range.
+        stamp=m.END-3*m.DAY+57600000
+        outside=m.END-8*m.DAY+57600000
+        def fetch(pair,start,end):
+            rows=[[str(outside),"2","3","1","2","4","8"],
+                  [str(stamp),"2","3","1","2","4","8"]]
+            return rows,"c"*64
+        with patch.object(m,"START",m.END-5*m.DAY):
+            data=m.acquire(owner(),fetcher=fetch)
+        self.assertEqual(data["native_candles"],1)
+        self.assertGreaterEqual(data["out_of_window_native_rows_excluded"],1)
+        self.assertEqual(data["native_daily_rows"][0][0],str(stamp))
+
     def test_fail_wrong_native_price_timestamp_and_duplicate(self):
         ts=m.END-3*m.DAY
         good=[str(ts),"2.0","3","1","2","1","2"]
