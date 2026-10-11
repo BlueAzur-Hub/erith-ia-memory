@@ -132,7 +132,7 @@ class MultiResolutionRegistryTests(unittest.TestCase):
         index,catalog=self.source()
         for field,forged in (
             ("rank",999),("symbol","NOTXDC"),("quote","USD"),
-            ("market","XDC-USDC"),("sha256","0"*64),
+            ("market","XDC-USDC"),("sha256","0"*63),
             ("source_attestation","unchecked"),
             ("gaps_within_observed_span",1),
             ("identity_evidence","https://example.invalid/identity"),
