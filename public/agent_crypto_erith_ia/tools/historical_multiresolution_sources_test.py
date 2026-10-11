@@ -114,7 +114,7 @@ class MultiResolutionRegistryTests(unittest.TestCase):
         for mutation,value in (
             ("quote","USD"),("quote","USDT"),("market","USDT-USD"),
             ("market","USDT-USDT"),("source_attestation","false"),
-            ("gaps_within_observed_span",0),("sha256","f"*64)
+            ("gaps_within_observed_span",0),("sha256","f"*63)
         ):
             modified=copy.deepcopy(registry)
             next(a for a in modified["assets"] if a["id"]=="tether")[mutation]=value
