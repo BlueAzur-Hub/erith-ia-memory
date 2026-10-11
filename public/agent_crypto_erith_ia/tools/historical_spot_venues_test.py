@@ -354,6 +354,56 @@ class AlternativeMarketTests(unittest.TestCase):
         self.assertIn("--probe --batch-size 4 --sleep 20",source)
         self.assertIn("cron: '6,21,36,51 * * * *'",source)
 
+    def test_original_named_spot_only_qualifies_exact_frozen_native_owner(self):
+        owners=[{"id":f"asset-{i}","rank":i,"name":f"Asset {i}",
+                 "symbol":f"C{i}"} for i in range(1,251)]
+        official_rows=[]
+        for cid,rank,symbol,name,venue,quote,notice in m.NAMED_ORIGINAL_SPOT_LISTINGS:
+            owners[rank-1]={"id":cid,"rank":rank,"symbol":symbol,"name":name}
+            pair=symbol+("_" if venue=="gate" else "-")+quote
+            official_rows.append({"id":cid,"rank":rank,"symbol":symbol,
+                "instruments":[{"venue":venue,"instrument":pair,
+                                "base":symbol,"quote":quote,
+                                "exchange_instrument_confirmed":True}]})
+        doc={"schema":m.SCHEMA,"ranked":250,"results":[],
+             "checked_count":0,"market_candidate_count":0,
+             "source":"Original ranked CoinGecko owner"}
+        official={"schema":"aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+                  "ranked":250,"assets":official_rows}
+        result,new=m.enrich_named_original_spot(owners,set(),doc,official)
+        self.assertEqual(new,[t[0] for t in sorted(
+            m.NAMED_ORIGINAL_SPOT_LISTINGS,key=lambda v:v[1])])
+        self.assertEqual(result["market_candidate_count"],3)
+        self.assertEqual({r["id"] for r in result["results"]},set(new))
+        for record in result["results"]:
+            original=next(x for x in owners if x["id"]==record["id"])
+            self.assertTrue(m.named_original_spot_proof(original,record["markets"][0]))
+            fake=json.loads(json.dumps(record["markets"][0]))
+            fake["original_named_spot_notice"]="https://other-site.invalid"
+            self.assertFalse(m.named_original_spot_proof(original,fake))
+            fake=dict(record["markets"][0],quote="USD")
+            self.assertFalse(m.named_original_spot_proof(original,fake))
+            fake=dict(record["markets"][0],coin_id="other-asset")
+            self.assertFalse(m.named_original_spot_proof(original,fake))
+            fake_owner={**original,"name":"Unrelated owner"}
+            self.assertFalse(m.named_original_spot_proof(fake_owner,record["markets"][0]))
+        unchanged,added=m.enrich_named_original_spot(owners,set(),result,official)
+        self.assertEqual(added,[])
+        self.assertEqual(unchanged["results"],result["results"])
+        after,added=m.enrich_named_original_spot(
+            owners,{m.NAMED_ORIGINAL_SPOT_LISTINGS[0][0]},result,official)
+        self.assertEqual(added,[])
+        self.assertEqual(after["results"],result["results"])
+        tampered=json.loads(json.dumps(official))
+        tampered["assets"][0]["instruments"][0]["exchange_instrument_confirmed"]=False
+        rebuilt,added=m.enrich_named_original_spot(owners,set(),doc,tampered)
+        self.assertEqual(len(added),2)
+        misnamed=list(owners)
+        original=next(x for x in owners if x["id"]=="akash-network")
+        misnamed[original["rank"]-1]={**original,"name":"Fake Cloud"}
+        with self.assertRaisesRegex(ValueError,"ambiguous"):
+            m.enrich_named_original_spot(misnamed,set(),doc,official)
+
     def test_real_catalogue_identity_alignment_without_network(self):
         queue,archived=m.universe()
         self.assertEqual(len(queue),250)
