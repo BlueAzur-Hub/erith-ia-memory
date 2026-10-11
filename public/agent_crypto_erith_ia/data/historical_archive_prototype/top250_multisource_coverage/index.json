@@ -2,10 +2,10 @@
   "schema": "aerith.public.ohlcv.top250.federated-native-archives.v1",
   "ranked": 250,
   "quote": "USDT",
-  "archived_assets": 141,
+  "archived_assets": 144,
   "binance_archived_assets": 121,
-  "bitget_archived_assets": 20,
-  "native_1m_candles": 157128480,
+  "bitget_archived_assets": 23,
+  "native_1m_candles": 157258080,
   "first_trade_date_known": false,
   "is_live": false,
   "note": "Two independent complete-month source formats. Native Bitget 7 fields; no synthetic trade count, no USDT=>USD.",
@@ -20,11 +20,11 @@
     },
     {
       "top": 100,
-      "archived": 69
+      "archived": 71
     },
     {
       "top": 250,
-      "archived": 141
+      "archived": 144
     }
   ],
   "assets": [
@@ -713,10 +713,10 @@
       "rank": 69,
       "symbol": "USDGO",
       "name": "USDGO",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "jupiter-exchange-solana",
@@ -953,10 +953,10 @@
       "rank": 93,
       "symbol": "GHO",
       "name": "GHO",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "aptos",
@@ -1623,10 +1623,10 @@
       "rank": 160,
       "symbol": "SYRUP",
       "name": "Maple Finance",
-      "source": null,
+      "source": "Bitget Spot native 1m HTTPS",
       "quote": "USDT",
-      "months": 0,
-      "native_1m_count": 0
+      "months": 1,
+      "native_1m_count": 43200
     },
     {
       "id": "ethereum-name-service",
