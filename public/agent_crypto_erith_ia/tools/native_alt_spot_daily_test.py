@@ -155,6 +155,32 @@ class NativeAlternativeDailyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"named non-EVM"):
             m.candidates(minute,daily,ledger,official)
 
+    def test_gate_issuer_named_gusd_spot_cannot_inherit_gemini_old_bars(self):
+        owner={"id":"gusd","rank":224,"name":"GUSD","symbol":"GUSD",
+               "venue":"gate","pair":"GUSD_USDT","quote":"USDT",
+               "identity_proof":{
+                   "coin_id":"gusd","exchange":"gate","base":"GUSD",
+                   "quote":"USDT","market_pair_candidate":"GUSD_USDT",
+                   "proof_method":"original_named_spot_listing",
+                   "original_named_spot_notice":
+                       "https://www.gate.com/fr/announcements/article/46834",
+                   "exchange_instrument_confirmed":False,
+                   "native_1m_month_confirmed":False}}
+        bound=m.NAMED_ORIGINAL_SPOT_FIRST_UTC_DAY[
+            ("gusd","gate","GUSD_USDT")]
+        self.assertEqual(bound,1756339200000)
+        self.assertIsNone(m.verify_named_venue_opening(owner,bound))
+        self.assertIsNone(m.verify_named_venue_opening(owner,bound+m.DAY))
+        with self.assertRaisesRegex(ValueError,"predate"):
+            m.verify_named_venue_opening(owner,bound-m.DAY)
+        wrong={**owner,"name":"Gemini Dollar"}
+        with self.assertRaisesRegex(ValueError,"Original named"):
+            m.verify_named_venue_opening(wrong,bound)
+        swapped={**owner,"identity_proof":{
+                **owner["identity_proof"],"market_pair_candidate":"GUSD_USDC"}}
+        with self.assertRaisesRegex(ValueError,"Original named"):
+            m.verify_named_venue_opening(swapped,bound)
+
     def test_ultima_original_kucoin_listing_time_and_owner_not_guessed(self):
         owner={"id":"ultima","rank":237,"name":"Ultima","symbol":"ULTIMA",
                "venue":"kucoin","pair":"ULTIMA-USDT","quote":"USDT",
