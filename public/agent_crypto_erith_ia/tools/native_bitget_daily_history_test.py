@@ -90,7 +90,7 @@ class DailyHistoryTests(unittest.TestCase):
            "assets":official}
         proven=m.named_spot_candidates(c,s)
         self.assertEqual([a["id"] for a in proven],
-            ["htx-dao","kaspa","bitcoin-cash-sv","fartcoin"])
+            ["usdgo","vision-3"])
         self.assertTrue(all("/support/articles/" in a["identity_evidence"]
                             for a in proven))
         c["assets"][64]["name"]="Another token"
