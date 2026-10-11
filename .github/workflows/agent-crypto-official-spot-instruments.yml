@@ -88,8 +88,12 @@ jobs:
           set -euo pipefail
           collector=public/agent_crypto_erith_ia/tools/collect_native_alt_spot_daily.py
           if [[ "${{ github.event_name }}" == "schedule" ]] ||
-             [[ -n "$(git diff --name-only HEAD^ HEAD -- "$collector")" ]]; then
-            python "$collector" --publish --limit 8
+             [[ -n "$(git diff --name-only HEAD^ HEAD -- "$collector" ".github/workflows/agent-crypto-official-spot-instruments.yml")" ]]; then
+            # Exactly two serialized and idempotent cohorts, each <=8
+            # independently qualified owners. Never duplicate a Release.
+            for cohort in 1 2; do
+              python "$collector" --publish --limit 8
+            done
           else
             echo "NOOP: no scheduled or newly reviewed Gate KuCoin source cohort"
           fi
