@@ -93,10 +93,10 @@ class DailyHistoryTests(unittest.TestCase):
             ["usdgo","vision-3"])
         self.assertTrue(all("/support/articles/" in a["identity_evidence"]
                             for a in proven))
-        c["assets"][64]["name"]="Another token"
+        c["assets"][68]["name"]="Another token"
         with self.assertRaisesRegex(ValueError,"CoinGecko identity"):
             m.named_spot_candidates(c,s)
-        c["assets"][64]["name"]="HTX DAO"
+        c["assets"][68]["name"]="USDGO"
         s["assets"][0]["instruments"][0]["instrument"]="WRONGUSDT"
         with self.assertRaisesRegex(ValueError,"Spot pair"):
             m.named_spot_candidates(c,s)
