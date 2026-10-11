@@ -60,7 +60,6 @@ jobs:
           python public/agent_crypto_erith_ia/tools/collect_native_bitget_daily_history.py --plan
           python public/agent_crypto_erith_ia/tools/verify_historical_multiresolution_sources.py --offline
           python public/agent_crypto_erith_ia/tools/collect_additional_okx_daily_history.py --plan
-          python public/agent_crypto_erith_ia/tools/collect_native_okx_daily_history.py --plan
           python public/agent_crypto_erith_ia/tools/audit_historical_spot_instruments.py --plan
       - name: PR only - retrieve genuine Bitget historical 1D for exact-ID missing Spot owners
         if: github.event_name == 'pull_request'
@@ -85,11 +84,6 @@ jobs:
           else
             echo "NOOP: no reviewed Bitget native daily collector changed"
           fi
-      - name: PR only - verify genuine OKX 1Dutc Spot history across all available past years
-        if: github.event_name == 'pull_request'
-        run: |
-          set -euo pipefail
-          python public/agent_crypto_erith_ia/tools/collect_native_okx_daily_history.py --probe
       - name: Publish first original OKX Spot daily historical source without rewriting Top250 1m
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
