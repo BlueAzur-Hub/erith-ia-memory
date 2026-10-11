@@ -11,8 +11,8 @@
   "response_sha256_inside_each_native_payload": true,
   "synthetic_bars_added_by_collector": false,
   "first_exchange_trade_date_not_proven": true,
-  "asset_count": 57,
-  "native_daily_candles": 51476,
+  "asset_count": 58,
+  "native_daily_candles": 52185,
   "assets": [
     {
       "id": "tether",
@@ -101,6 +101,32 @@
       "bytes": 8936,
       "sha256": "0d3c356cd3d14763b7e079d13354aee8f55dbd452c0193a1747a36f32330c797",
       "identity_evidence": "https://www.okx.com/en-us/help/okx-to-list-cc-canton-for-spot-trading"
+    },
+    {
+      "id": "dai",
+      "rank": 27,
+      "name": "Dai",
+      "symbol": "DAI",
+      "market": "DAI/USDT",
+      "venue": "Kraken Spot",
+      "bar": "1D",
+      "quote": "USDT",
+      "earliest_source_ms": 1729468800000,
+      "latest_source_ms": 1790726400000,
+      "native_candles": 709,
+      "gaps_within_observed_span": 1,
+      "native_session_start_modulo_utc_day_ms": 0,
+      "release_tag": "crypto-kraken-spot-native-daily-2026-09-8eccaa5378b9",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-kraken-spot-native-daily-2026-09-8eccaa5378b9",
+      "filename": "dai-DAI-USDT-1D.json.gz",
+      "bytes": 19550,
+      "sha256": "a99fcd71b0201bb943717001734fcf0b0eeb101052396a22257019b594144a63",
+      "source_attestation": "original-named-spot-listing",
+      "identity_evidence": "https://blog.kraken.com/news/kraken-is-supporting-dais-multi-collateral-upgrade",
+      "instrument_evidence": "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json#dai",
+      "original_source_api": "https://api.kraken.com/0/public/OHLC",
+      "source_instrument_api": "https://api.kraken.com/0/public/AssetPairs",
+      "first_listed_ms": 1575244800000
     },
     {
       "id": "global-dollar",
