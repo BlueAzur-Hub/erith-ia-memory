@@ -1,5 +1,5 @@
 {
-  "approved_count": 84,
+  "approved_count": 85,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -1352,10 +1352,10 @@
       "symbol": "THETA"
     },
     {
-      "checked_at": "2026-10-10T00:25:16.120583+00:00",
+      "checked_at": "2026-10-11T16:45:35.657702+00:00",
       "evidence": [],
       "id": "frax",
-      "pages": 1,
+      "pages": 2,
       "pair": "FRAXUSDT",
       "rank": 177,
       "status": "identity_not_confirmed",
@@ -1382,13 +1382,23 @@
       "symbol": "TWT"
     },
     {
-      "checked_at": "2026-10-10T00:25:46.408252+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-11T16:45:50.962361+00:00",
+      "evidence": [
+        {
+          "base": "EIGEN",
+          "coin_id": "eigenlayer",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "eigenlayer",
+          "trade_url": "https://www.binance.com/en/trade/EIGEN_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "eigenlayer",
-      "pages": 1,
+      "pages": 2,
       "pair": "EIGENUSDT",
       "rank": 181,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "EIGEN"
     },
     {
@@ -1812,7 +1822,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 12,
+  "review_required_count": 11,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
