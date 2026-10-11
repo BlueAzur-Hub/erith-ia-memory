@@ -15,6 +15,8 @@ ROOT=Path(__file__).resolve().parents[1]
 BASE=ROOT/"data/historical_archive_prototype"
 VENUE=BASE/"top250-venue-audit.json"
 CATALOG=BASE/"top250_history_catalog/index.json"
+LIVE_MINUTE=BASE/"top250_multisource_coverage/index.json"
+LIVE_DAILY=BASE/"top250_multiresolution_sources/index.json"
 OUTPUT=BASE/"top250-alt-market-evidence.json"
 OFFICIAL=BASE/"top250-official-spot-instruments.json"
 SCHEMA="aerith.public.ohlcv.spot.top250.alt-market-discovery.v1"
@@ -27,6 +29,57 @@ MAX_BATCH=12
 def require(ok,message):
     if not ok: raise ValueError(message)
 
+def active_archive_ids(queue, minute, daily):
+    """Treat BOTH published native source registries as archive truth.
+
+    The old Binance-only history catalog omits both newer minute and native
+    daily acquisitions. Never spend discovery quotas on already archived IDs.
+    A Spot instrument candidate or a probe is NOT an archive.
+    """
+    require(minute.get("schema")==
+            "aerith.public.ohlcv.top250.federated-native-archives.v1"
+            and minute.get("ranked")==250
+            and len(minute.get("assets",[]))==250,
+            "Missing living native-minute source catalogue")
+    require(daily.get("schema")==
+            "aerith.public.crypto.multiresolution-sources.v1"
+            and daily.get("asset_count")==len(daily.get("assets",[])),
+            "Missing living native-daily source catalogue")
+    expected={a["id"]:a for a in queue}
+    require(len(expected)==250,"Repeated Top250 ranked owner")
+    rows={a["id"]:a for a in minute["assets"]}
+    require(len(rows)==250 and set(rows)==set(expected),
+            "Minute catalogue owner universe changed")
+    archived=set()
+    for aid,source in rows.items():
+        owner=expected[aid]
+        require(source["rank"]==owner["rank"] and
+                source["symbol"]==owner["symbol"] and
+                source["quote"]=="USDT" and
+                isinstance(source["native_1m_count"],int) and
+                source["native_1m_count"]>=0,
+                "Minute catalogue identity or native count mismatch")
+        if source["native_1m_count"]>0:
+            archived.add(aid)
+    require(len(archived)==minute["archived_assets"],
+            "Minute catalogue headline differs from verified rows")
+    seen=set()
+    for source in daily["assets"]:
+        aid=source["id"]
+        owner=expected.get(aid)
+        require(owner is not None and aid not in seen and
+                source["rank"]==owner["rank"] and
+                source["symbol"]==owner["symbol"] and
+                source["quote"] in ("USDT","USDC") and
+                isinstance(source["native_candles"],int) and
+                source["native_candles"]>0 and
+                source.get("release_url") and source.get("sha256"),
+                "Daily catalogue identity or source metadata missing")
+        seen.add(aid)
+        archived.add(aid)
+    return archived
+
+
 def universe(venue=VENUE,catalog=CATALOG):
     v=json.loads(venue.read_text())
     c=json.loads(catalog.read_text())
@@ -34,7 +87,6 @@ def universe(venue=VENUE,catalog=CATALOG):
             len(v.get("assets",[]))==len(c.get("assets",[]))==250,
             "Ranked source incomplete")
     idx={a["id"]:a for a in c["assets"]}
-    archived={a["id"] for a in c["assets"] if a["months"]}
     require(len(idx)==len({a["id"] for a in v["assets"]})==250,
             "Repeated source identity")
     queue=[]
@@ -43,7 +95,15 @@ def universe(venue=VENUE,catalog=CATALOG):
                 a["symbol"]==idx[a["id"]]["symbol"] and ID.fullmatch(a["id"]),
                 "Venue/catalog exact ID mismatch")
         queue.append({k:a[k] for k in ("id","rank","symbol","name")})
-    return sorted(queue,key=lambda x:x["rank"]),archived
+    queue.sort(key=lambda x:x["rank"])
+    minute=json.loads(LIVE_MINUTE.read_text())
+    daily=json.loads(LIVE_DAILY.read_text())
+    archived=active_archive_ids(queue,minute,daily)
+    # Legacy Binance history may be narrower, but must never contradict
+    # the union of actually published native minute/daily source inventories.
+    require({a["id"] for a in c["assets"] if a["months"]}<=archived,
+            "Historic archive vanished from living native source registers")
+    return queue,archived
 
 def exact_candidates(tickers,asset,exchange):
     require(exchange in EXCHANGES and isinstance(tickers,list),"Bad exchange response")
