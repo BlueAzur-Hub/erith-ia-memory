@@ -51,8 +51,30 @@ class CrossVenueChecks(unittest.TestCase):
             m.check_coinbase(bad)
         dup=coinbase_response()
         dup["json"].append(dup["json"][0])
-        with self.assertRaisesRegex(ValueError,"duplicate"):
+        with self.assertRaisesRegex(ValueError,"Duplicate"):
             m.check_coinbase(dup)
+
+    def test_coinbase_extra_candles_outside_window_are_not_counted(self):
+        original=coinbase_response()
+        # Coinbase historical candles may include adjoining UTC endpoints.
+        original["json"].append([int(m.END/1000),27900,28000,27920,27950,1.5])
+        original["json"].append([int((m.START-m.MINUTE)/1000),27900,28000,27920,27950,1.5])
+        result=m.check_coinbase(original)
+        self.assertEqual(result["outside_requested_window"],2)
+        self.assertEqual(result["minute_candles"],80)
+        self.assertEqual(result["positive_volume_minutes"],80)
+        self.assertEqual(result["missing_minutes"],0)
+        self.assertEqual(result["conclusion"],
+            "historic_btc_usd_trading_verified_entire_interval")
+
+    def test_outside_only_is_not_evidence_of_no_trading(self):
+        original=coinbase_response()
+        original["json"]=[[int(m.END/1000),27900,28000,27920,27950,1.5]]
+        result=m.check_coinbase(original)
+        self.assertEqual(result["minute_candles"],0)
+        self.assertEqual(result["outside_requested_window"],1)
+        self.assertEqual(result["conclusion"],
+            "inconclusive_no_qualifying_candles_with_extras")
 
     def test_unavailable_coinbase_cannot_be_called_no_trading(self):
         x=m.check_coinbase({"status":"http_restricted","http_status":403})
