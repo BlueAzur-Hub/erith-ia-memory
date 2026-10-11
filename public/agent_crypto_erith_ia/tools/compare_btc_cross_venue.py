@@ -103,7 +103,8 @@ def check_coinbase(result):
                "response_sha256":result.get("sha256"),
                "http_status":result.get("http_status"),
                "minute_candles":0, "positive_volume_minutes":0,
-               "negative_or_invalid_rows":0, "missing_minutes":EXPECTED}
+               "negative_or_invalid_rows":0, "missing_minutes":EXPECTED,
+               "outside_requested_window":0,"outside_samples_utc":[]}
     if result["status"] != "http_200":
         checked["conclusion"] = "inconclusive_source_unavailable"
         return checked
@@ -116,12 +117,20 @@ def check_coinbase(result):
              "Invalid Coinbase historical OHLCV row")
         ts=x[0]*1000
         low,high,opening,closing,volume=map(Decimal,map(str,x[1:6]))
-        need(isinstance(ts,int) and ts%MINUTE==0 and START<=ts<END
-             and ts not in timestamps and all(v.is_finite()
-             for v in (low,high,opening,closing,volume))
+        need(isinstance(ts,int) and ts%MINUTE==0
+             and all(v.is_finite() for v in (low,high,opening,closing,volume))
              and low>0 and low<=min(opening,closing)
              and max(opening,closing)<=high and volume>=0,
-             "Invalid Coinbase minute timestamp, OHLCV or duplicate")
+             "Invalid Coinbase minute timestamp or OHLCV")
+        # Coinbase Exchange documentation warns the candles response can
+        # include bars outside the exact requested time interval. Those
+        # must be accounted for but NEVER counted towards the 80-minute proof.
+        if not START<=ts<END:
+            checked["outside_requested_window"]+=1
+            if len(checked["outside_samples_utc"])<5:
+                checked["outside_samples_utc"].append(iso(ts))
+            continue
+        need(ts not in timestamps,"Duplicate Coinbase minute candle")
         timestamps[ts]=(volume,opening,high,low,closing)
     checked["minute_candles"]=len(timestamps)
     checked["positive_volume_minutes"]=sum(v[0]>0 for v in timestamps.values())
@@ -139,7 +148,9 @@ def check_coinbase(result):
        if checked["all_80_minutes_present"] and checked["positive_volume_minutes"]==80
        else "historic_btc_usd_trading_verified_partial_interval"
        if checked["positive_volume_minutes"]>0
-       else "no_verified_trades_in_response")
+       else "inconclusive_no_qualifying_candles_with_extras"
+       if checked["outside_requested_window"] else
+       "no_verified_trades_in_response")
     return checked
 
 
