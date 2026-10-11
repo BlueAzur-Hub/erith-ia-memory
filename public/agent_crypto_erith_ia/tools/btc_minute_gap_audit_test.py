@@ -98,7 +98,7 @@ class Tests(unittest.TestCase):
         self.assertTrue(all(u.startswith(audit.DAY_ORIGIN) for u in urls))
         self.assertTrue(urls[1].endswith(".CHECKSUM"))
         with self.assertRaisesRegex(ValueError,"date"):
-            audit.day_source("2023-99-24",downloader)
+            audit.day_source("2023/03/24",downloader)
 
     def test_daily_archive_missing_is_not_interpolated(self):
         self.assertIsNone(audit.day_source(
