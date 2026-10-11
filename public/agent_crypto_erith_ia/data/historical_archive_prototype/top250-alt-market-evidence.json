@@ -1,7 +1,7 @@
 {
-  "candidate_count": 60,
+  "candidate_count": 57,
   "checked_count": 39,
-  "market_candidate_count": 3,
+  "market_candidate_count": 0,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
   "quote": "USDT or USDC: never convert silently",
@@ -577,10 +577,10 @@
       "symbol": "LIT"
     },
     {
-      "checked_at": "2026-10-10T06:18:48.197727+00:00",
+      "checked_at": "2026-10-11T02:55:23.252847+00:00",
       "id": "open-usd",
       "markets": [],
-      "pages_checked": 0,
+      "pages_checked": 3,
       "rank": 88,
       "status": "source_unavailable",
       "symbol": "OUSD"
@@ -1421,6 +1421,24 @@
       "symbol": "WIF"
     },
     {
+      "checked_at": "2026-10-11T02:56:03.480570+00:00",
+      "id": "tradable-na-rent-financing-platform-sstn",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 185,
+      "status": "source_unavailable",
+      "symbol": "PC0000031"
+    },
+    {
+      "checked_at": "2026-10-11T02:56:23.626823+00:00",
+      "id": "grx-chain",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 186,
+      "status": "source_unavailable",
+      "symbol": "GRX"
+    },
+    {
       "checked_at": "2026-10-11T01:57:49.640109+00:00",
       "id": "useless-3",
       "markets": [
@@ -1964,8 +1982,17 @@
       "rank": 247,
       "status": "exact_id_market_candidates",
       "symbol": "EDGE"
+    },
+    {
+      "checked_at": "2026-10-11T02:55:43.329889+00:00",
+      "id": "cash-4",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 248,
+      "status": "source_unavailable",
+      "symbol": "CASH"
     }
   ],
   "schema": "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
-  "source": "CoinGecko exact coin ID, independent exchange-specific Spot tickers; immutable original named Spot listing attestation"
+  "source": "CoinGecko exact coin ID, independent exchange-specific Spot tickers"
 }
