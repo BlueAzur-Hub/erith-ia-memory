@@ -68,7 +68,7 @@ def verify_named_venue_opening(owner,first_native_day):
         return
     need(owners.named_original_spot_proof(
          owner,owner.get("identity_proof")),
-         "Original KuCoin project owner or immutable listing notice changed")
+         "Original named Spot project owner or immutable listing notice changed")
     need(first_native_day>=NAMED_ORIGINAL_SPOT_FIRST_UTC_DAY[key],
          "Native Spot candles predate the original named project listing")
 
