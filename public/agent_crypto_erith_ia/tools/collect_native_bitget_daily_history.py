@@ -68,12 +68,13 @@ def filter_unarchived(candidates,minute,daily):
     return sorted(picked,key=lambda a:a["rank"])
 
 def qualified_assets():
-    cat=json.loads(source_proof.CATALOG.read_text())
+    # The old Top250 pilot catalog can lag behind the actual living 1m
+    # federation; qualify with the current 250 CoinGecko IDs and ranks.
+    minute=json.loads((source_proof.BASE/"top250_multisource_coverage/index.json").read_text())
     exact=json.loads(source_proof.EXACT.read_text())
     official=json.loads(source_proof.INSTRUMENTS.read_text())
-    candidates=source_proof.candidates(cat,exact,official)
-    minute=json.loads((source_proof.BASE/"top250_multisource_coverage/index.json").read_text())
     daily=json.loads((source_proof.BASE/"top250_multiresolution_sources/index.json").read_text())
+    candidates=source_proof.candidates(minute,exact,official)
     candidates=filter_unarchived(candidates,minute,daily)
     # A strict ranked batch bound limits runtime. Others remain eligible
     # for later verified releases and are never counted as archived.
