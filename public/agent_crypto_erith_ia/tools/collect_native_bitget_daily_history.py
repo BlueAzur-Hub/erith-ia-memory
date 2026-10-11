@@ -48,7 +48,10 @@ def qualified_assets():
     official=json.loads(source_proof.INSTRUMENTS.read_text())
     candidates=source_proof.candidates(cat,exact,official)
     need(len(candidates)==len({c["id"] for c in candidates}) and
-         len(candidates)<=MAX_ASSETS,"Ambiguous or oversized exact-ID cohort")
+         len(candidates)<=250,"Ambiguous or unbounded exact-ID cohort")
+    # A strict ranked batch bound limits runtime; unretrieved candidates
+    # remain eligible for later immutable cohorts, never falsely counted.
+    candidates=candidates[:MAX_ASSETS]
     for a in candidates:
         need(PAIR.fullmatch(a["pair"]) and a["quote"]=="USDT" and
              a["venue"]=="bitget" and a["rank"]>=1 and a["rank"]<=250,
@@ -116,6 +119,14 @@ def acquire(owner,fetcher=request_page):
         digests.append(sha)
         segment_seen={}
         for row in source_rows:
+            # Bitget may return one additional boundary interval. Exclude it
+            # without creating or modifying any native source candle.
+            need(isinstance(row,list) and row and
+                 isinstance(row[0],str) and row[0].isdigit(),
+                 "Invalid native source timestamp")
+            boundary=int(row[0])
+            if boundary==current and current==END:
+                continue
             stamp,native=parse_row(row)
             if stamp<begin or stamp>=current:
                 # The official history endpoint may return an extra boundary
