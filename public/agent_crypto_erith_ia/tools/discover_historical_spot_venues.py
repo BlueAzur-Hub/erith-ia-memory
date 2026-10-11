@@ -250,6 +250,44 @@ def official_priority(queue,archived,path=OFFICIAL):
             "Official candidate universe changed since audit")
     return selected
 
+def source_venues_for(asset,official):
+    """Use official Spot pairs to bound exact-ID CoinGecko requests.
+
+    A market instrument is only a query hint: even an exact ticker symbol
+    NEVER proves CoinGecko ownership without independently matched coin_id.
+    Existing two-venue fallback stays available for not-yet-audited symbols.
+    """
+    require(official.get("schema")==
+            "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1"
+            and official.get("ranked")==250,
+            "Missing trusted official instrument census")
+    rows=[r for r in official.get("assets",[]) if r.get("id")==asset["id"]]
+    require(len(rows)<=1,"Repeated official source owner")
+    if not rows:
+        return ("okx","bitget")
+    row=rows[0]
+    require(row.get("rank")==asset["rank"] and
+            row.get("symbol")==asset["symbol"],
+            "Official venue owner changed since CoinGecko ranking")
+    selected=[]
+    for item in row.get("instruments",[]):
+        venue=item.get("venue")
+        quote=item.get("quote")
+        base=asset["symbol"]
+        if venue not in EXCHANGES or quote not in QUOTES:
+            continue
+        expected=(base+"_"+quote if venue=="gate" else
+                  base+"-"+quote if venue in ("okx","kucoin") else
+                  base+quote)
+        require(item.get("exchange_instrument_confirmed") is True and
+                item.get("base")==base and
+                item.get("instrument")==expected,
+                "Unverified official Spot instrument cannot direct discovery")
+        if venue not in selected:
+            selected.append(venue)
+    return tuple(selected) if selected else ("okx","bitget")
+
+
 def validate(doc,queue):
     require(doc.get("schema")==SCHEMA and isinstance(doc.get("results"),list),
             "Bad discovery evidence ledger")
