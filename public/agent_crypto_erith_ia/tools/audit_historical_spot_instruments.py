@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only official OKX/Bitget Spot instrument audit for unarchived Top250.
+"""Read-only four-venue official Spot instrument audit for missing Top250 assets.
 
 An instrument match is NEVER proof of a CoinGecko asset identity, a historical
 OHLCV month, an archive, or a trading permission. No order endpoints or keys.
@@ -22,6 +22,8 @@ SCHEMA = "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1"
 ENDPOINTS = {
     "okx": "https://www.okx.com/api/v5/public/instruments?instType=SPOT",
     "bitget": "https://api.bitget.com/api/v3/market/instruments?category=SPOT",
+    "gate": "https://api.gateio.ws/api/v4/spot/currency_pairs",
+    "kucoin": "https://api.kucoin.com/api/v2/symbols",
 }
 QUOTES = frozenset({"USDT", "USDC"})
 PAIR = re.compile(r"^[A-Z0-9]{1,30}$")
@@ -47,12 +49,18 @@ def fetch_document(venue):
 
 
 def parse_instruments(venue, document):
-    need(venue in ENDPOINTS and isinstance(document, dict), "Unknown instrument source")
+    need(venue in ENDPOINTS, "Unknown instrument source")
+    if venue == "gate":
+        need(isinstance(document, list), "Gate expected public Spot list")
+    else:
+        need(isinstance(document, dict), "Expected venue Spot response object")
     if venue == "okx":
         need(document.get("code") == "0", "OKX rejected public Spot request")
-    else:
+    elif venue == "bitget":
         need(document.get("code") == "00000", "Bitget rejected public Spot request")
-    data = document.get("data")
+    elif venue == "kucoin":
+        need(document.get("code") == "200000", "KuCoin rejected public Spot request")
+    data = document if venue == "gate" else document.get("data")
     need(isinstance(data, list) and 0 < len(data) <= 100000,
          "Official Spot instrument inventory missing or unbounded")
     symbols = {}
@@ -64,11 +72,22 @@ def parse_instruments(venue, document):
             inst = item.get("instId")
             is_spot = item.get("instType") == "SPOT" and item.get("state") == "live"
             expected = f"{base}-{quote}"
-        else:
+        elif venue == "bitget":
             base, quote = item.get("baseCoin"), item.get("quoteCoin")
             inst = item.get("symbol")
             is_spot = item.get("category") == "SPOT" and item.get("status") == "online"
             expected = f"{base}{quote}"
+        elif venue == "gate":
+            base, quote = item.get("base"), item.get("quote")
+            inst = item.get("id")
+            # Never classify buy-only, sell-only or halted pairs as tradable.
+            is_spot = item.get("trade_status") == "tradable"
+            expected = f"{base}_{quote}"
+        else:  # kucoin public /api/v2/symbols, Spot only.
+            base, quote = item.get("baseCurrency"), item.get("quoteCurrency")
+            inst = item.get("symbol")
+            is_spot = item.get("enableTrading") is True
+            expected = f"{base}-{quote}"
         if not is_spot or not isinstance(base, str) or not PAIR.fullmatch(base):
             continue
         if quote not in QUOTES or base == quote or inst != expected:
@@ -134,7 +153,7 @@ def build(queue, archived, sources, clock=None):
         "schema": SCHEMA, "ranked": 250, "archived_assets_at_audit": len(archived),
         "candidate_count": len(records),
         "with_spot_instrument": sum(bool(x["instruments"]) for x in records),
-        "source": "Official public OKX and Bitget Spot instrument inventories",
+        "source": "Official public OKX, Bitget, Gate and KuCoin Spot instrument inventories",
         "checked_at": clock or dt.datetime.now(dt.timezone.utc).isoformat(),
         "markets": metadata, "assets": records,
         "note": ("Symbol-matched official instruments are candidates ONLY. "
@@ -179,7 +198,7 @@ def main():
     if all(x["status"] == "source_unavailable" for x in result["markets"].values()):
         # Do not quietly certify an old snapshot as a fresh source census.
         # Existing evidence stays untouched; CI reports an honest failure.
-        raise ValueError("Both official Spot sources unavailable; keeping prior audit")
+        raise ValueError("All official Spot sources unavailable; keeping prior audit")
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     tmp = OUTPUT.with_suffix(".tmp")
     tmp.write_text(json.dumps(result, indent=2, ensure_ascii=False, sort_keys=True) + "\n")

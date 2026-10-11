@@ -31,7 +31,7 @@ PROOFS=(
   "https://www.okx.com/en-gb/help/okx-completed-ftm-token-migration"),
 )
 
-def owners(fed,venues):
+def owners(fed,venues,published=None):
     daily.need(fed.get("schema")==
           "aerith.public.ohlcv.top250.federated-native-archives.v1"
           and fed.get("ranked")==250 and len(fed.get("assets",[]))==250
@@ -42,6 +42,15 @@ def owners(fed,venues):
           "Missing official venue inventory")
     indexed={a["id"]:a for a in fed["assets"]}
     instruments={a["id"]:a for a in venues.get("assets",[])}
+    # This immutable historical cohort has already been released. An
+    # official audit now excludes archived owners: do not require their
+    # old trading-pair hint or recollect unchanged native candles.
+    refs={} if published is None else {a["id"]:a for a in published.get("assets",[])}
+    if published is not None:
+        daily.need(published.get("schema")==
+              "aerith.public.crypto.multiresolution-sources.v1" and
+              len(refs)==published.get("asset_count")==len(published.get("assets",[])),
+              "Malformed existing native daily archive registry")
     result=[]
     for cid,rank,ticker,name,proof in PROOFS:
         row=indexed.get(cid)
@@ -49,6 +58,18 @@ def owners(fed,venues):
              row["symbol"]==ticker and row["name"]==name and
              row["months"]==0 and row["source"] is None and row["quote"]=="USDT",
              "Exact ranked crypto ID changed or 1m already archived: "+cid)
+        prior=refs.get(cid)
+        if prior:
+            daily.need(prior.get("rank")==rank and
+                 prior.get("symbol")==ticker and prior.get("name")==name and
+                 prior.get("venue")=="OKX Spot" and
+                 prior.get("market")==ticker+"-USDT" and
+                 prior.get("bar")=="1Dutc" and prior.get("quote")=="USDT" and
+                 prior.get("release_tag")==TAG and
+                 isinstance(prior.get("native_candles"),int) and
+                 prior["native_candles"]>0 and prior.get("sha256"),
+                 "Published native daily source identity or checksum mismatch: "+cid)
+            continue
         venue=instruments.get(cid)
         daily.need(venue and venue["rank"]==rank and venue["symbol"]==ticker
              and any(x.get("venue")=="okx" and x.get("base")==ticker
@@ -62,7 +83,7 @@ def owners(fed,venues):
         result.append({"id":cid,"rank":rank,"name":name,
             "symbol":ticker,"quote":"USDT","instrument":ticker+"-USDT",
             "identity_evidence":proof})
-    daily.need(len(result)==len(PROOFS)==len({x["instrument"] for x in result}),
+    daily.need(len(result)==len({x["instrument"] for x in result}),
                "Repeated Spot owner")
     return result
 
@@ -126,11 +147,17 @@ def main():
     args=p.parse_args()
     fed=json.loads(daily.FED.read_text(encoding="utf-8"))
     spot=json.loads(daily.VENUES.read_text(encoding="utf-8"))
-    qualified=owners(fed,spot)
+    registry=json.loads((daily.FED.parent.parent/
+               "top250_multiresolution_sources/index.json").read_text(encoding="utf-8"))
+    qualified=owners(fed,spot,registry)
     if args.plan:
         print("OKX SIX VERIFIED DAILY PLAN "+json.dumps({
             "owners":qualified,"source_interval":"1Dutc","published":False},
             sort_keys=True));return
+    if not qualified:
+        print("OKX SIX VERIFIED DAILY NOOP: all original sources already "
+              "published, do not recreate the immutable Release",flush=True)
+        return
     rows=daily.collect(qualified)
     if args.probe:
         print("OKX SIX VERIFIED DAILY SOURCE PROBE COMPLETE; NO PUBLICATION",flush=True)
