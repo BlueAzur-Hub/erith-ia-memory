@@ -13,6 +13,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/btc_minute_rest_test.py'
       - 'public/agent_crypto_erith_ia/tools/audit_btc_trade_gaps.py'
       - 'public/agent_crypto_erith_ia/tools/btc_trade_gap_test.py'
+      - 'public/agent_crypto_erith_ia/tools/compare_btc_cross_venue.py'
+      - 'public/agent_crypto_erith_ia/tools/compare_btc_cross_venue_test.py'
   push:
     branches: [main]
     paths:
@@ -27,6 +29,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/btc_minute_rest_test.py'
       - 'public/agent_crypto_erith_ia/tools/audit_btc_trade_gaps.py'
       - 'public/agent_crypto_erith_ia/tools/btc_trade_gap_test.py'
+      - 'public/agent_crypto_erith_ia/tools/compare_btc_cross_venue.py'
+      - 'public/agent_crypto_erith_ia/tools/compare_btc_cross_venue_test.py'
   workflow_dispatch:
     inputs:
       month:
@@ -40,6 +44,99 @@ concurrency:
   group: btc-native-gap-recovery
   cancel-in-progress: false
 jobs:
+  btc-cross-venue-march2023:
+    # Only evidence. Never alter BTCUSDT sources or Trader.
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test official Binance UTC scope and fail-closed independent venue data
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/compare_btc_cross_venue.py
+          python public/agent_crypto_erith_ia/tools/compare_btc_cross_venue_test.py
+          python public/agent_crypto_erith_ia/tools/compare_btc_cross_venue.py --audit-only
+      - name: Query exact Coinbase minute history and Kraken original trades
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          python - <<'PY'
+          import hashlib,os,json,pathlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/data/historical_archive_prototype")
+          manifest=root/"btc_cross_exchange_incident_2023_03_24/index.json"
+          original=hashlib.sha256((root/"btc_verified_gap_months/index.json").read_bytes()).hexdigest()
+          if manifest.is_file():
+              obj=json.loads(manifest.read_text())
+              if (obj.get("schema")=="seven.crypto.btc.cross-venue-incident-evidence.v1"
+                  and obj.get("requested_minutes")==80 and
+                  obj.get("binance",{}).get("gap_source_catalog_sha256")==original):
+                  pathlib.Path(os.environ["RUNNER_TEMP"],"cross-venue-noop").touch()
+                  print("NOOP: the exact Binance incident has already been compared")
+          PY
+          if [[ -f "$RUNNER_TEMP/cross-venue-noop" ]]; then exit 0; fi
+          python public/agent_crypto_erith_ia/tools/compare_btc_cross_venue.py --output "$RUNNER_TEMP/btc_cross_exchange_incident_2023_03_24"
+          python - <<'PY'
+          import json,os,pathlib
+          path=pathlib.Path(os.environ["RUNNER_TEMP"])/"btc_cross_exchange_incident_2023_03_24"/"index.json"
+          obj=json.loads(path.read_text())
+          assert obj["requested_minutes"]==80
+          assert obj["binance"]["native_1m_gap_minutes"]==80
+          assert obj["binance_missing_1m_recovered"]==0
+          assert obj["coinbase_exchange"]["pair"]=="BTC-USD"
+          assert obj["kraken_spot"]["pair"]=="XBTUSD"
+          assert obj["kraken_spot"]["samples_attempted"]==5
+          assert obj["comparing_not_replacing_binance_bars"] is True
+          print("CROSS-VENUE REAL RESULTS",json.dumps({
+           "coinbase_minute_bars":obj["coinbase_exchange"]["minute_candles"],
+           "coinbase_positive_volume":obj["coinbase_exchange"]["positive_volume_minutes"],
+           "coinbase_status":obj["coinbase_exchange"]["source_status"],
+           "kraken_exact_trading_probes":obj["kraken_spot"]["exact_minute_trade_probes"],
+           "kraken_probe_statuses":[x["source_status"] for x in obj["kraken_spot"]["probes"]]
+           },sort_keys=True))
+          PY
+      - name: Publish exact source-qualified BTC cross-venue evidence separately
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if [[ -f "$RUNNER_TEMP/cross-venue-noop" ]]; then exit 0; fi
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          for attempt in 1 2 3; do
+            git fetch origin main
+            old=$(sha256sum "$root/btc_verified_gap_months/index.json" | cut -d' ' -f1)
+            newest=$(git show "origin/main:$root/btc_verified_gap_months/index.json" | sha256sum | cut -d' ' -f1)
+            if [[ "$old" != "$newest" ]]; then
+              echo "::error::Binance canonical minute source changed during venue comparison"
+              exit 1
+            fi
+            git reset --hard origin/main
+            mkdir -p "$root/btc_cross_exchange_incident_2023_03_24"
+            cp -a "$RUNNER_TEMP/btc_cross_exchange_incident_2023_03_24/." "$root/btc_cross_exchange_incident_2023_03_24/"
+            git add -- "$root/btc_cross_exchange_incident_2023_03_24"
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              echo "NOOP: identical cross-venue evidence published"
+              exit 0
+            fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Publish BTC March 2023 Coinbase Kraken independent trading evidence'
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: btc-2023-cross-venue-audit
+          path: ${{ runner.temp }}/btc_cross_exchange_incident_2023_03_24/index.json
+          if-no-files-found: ignore
+          retention-days: 30
   btc-trade-original-pilot:
     # Three representative archived days; source-qualified trades, no fake 1m OHLCV.
     if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
