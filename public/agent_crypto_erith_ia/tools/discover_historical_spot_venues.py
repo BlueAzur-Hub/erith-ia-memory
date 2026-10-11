@@ -6,6 +6,7 @@ import datetime as dt
 import json
 import os
 from pathlib import Path
+import prove_public_spot_contracts as independent_contracts
 import re
 import time
 import urllib.parse
@@ -380,6 +381,8 @@ CHAINS={
 }
 CG_PLATFORMS="https://api.coingecko.com/api/v3/coins/list?include_platform=true"
 BITGET_COINS="https://api.bitget.com/api/v2/spot/public/coins"
+GATE_COINS="https://api.gateio.ws/api/v4/spot/currencies"
+KUCOIN_COINS="https://api.kucoin.com/api/v3/currencies"
 
 def contract_address(value):
     if not isinstance(value,str):return None
@@ -461,7 +464,8 @@ def contract_matches(queue,archived,official,coins,bitget_coins):
     return result
 
 def public_inventory(url,max_size):
-    require(url in (CG_PLATFORMS,BITGET_COINS),"Unapproved inventory source")
+    require(url in (CG_PLATFORMS,BITGET_COINS,GATE_COINS,KUCOIN_COINS),
+            "Unapproved inventory source")
     req=urllib.request.Request(url,headers={
         "User-Agent":"SevenHeaven-Coffre-ContractProof/1.0",
         "Accept":"application/json"})
@@ -500,6 +504,43 @@ def enrich_contracts(queue,archived,doc,official,coingecko,bitget):
     validate(updated,queue)
     return updated,additions
 
+def enrich_independent_contracts(queue,archived,doc,official,coingecko,sources):
+    """Add only uniquely proven Gate/KuCoin contracts to the candidate ledger."""
+    require(isinstance(sources,dict) and
+            all(k in ("gate","kucoin") for k in sources),
+            "Unknown independent Spot contract source")
+    found={}
+    for venue,source in sources.items():
+        matches=independent_contracts.proven_contracts(
+            queue,archived,official,coingecko,source,venue)
+        for aid,p in matches.items():
+            found.setdefault(aid,[]).append(p)
+    indexed={x["id"]:x for x in doc["results"]}
+    now=dt.datetime.now(dt.timezone.utc).isoformat()
+    added=[]
+    for asset in queue:
+        aid=asset["id"]
+        if aid not in found or aid in archived:
+            continue
+        previous=indexed.get(aid)
+        if previous and previous["status"]=="exact_id_market_candidates":
+            continue
+        matches=sorted(found[aid],key=lambda p:(p["exchange"],p["quote"]))
+        indexed[aid]={"id":aid,"rank":asset["rank"],
+            "symbol":asset["symbol"],"status":"exact_id_market_candidates",
+            "markets":matches,"pages_checked":0,"checked_at":now}
+        added.append(aid)
+    output=dict(doc)
+    output["results"]=sorted(indexed.values(),key=lambda x:x["rank"])
+    output["checked_count"]=sum(x["id"] not in archived for x in output["results"])
+    output["market_candidate_count"]=sum(
+        bool(x["markets"]) and x["id"] not in archived for x in output["results"])
+    if added:
+        output["source"]=(doc["source"]+
+            "; independently matched CoinGecko contract to original Gate/KuCoin coin chain")
+    validate(output,queue)
+    return output,added
+
 def main():
     cli=argparse.ArgumentParser(description=__doc__)
     cli.add_argument("--plan",action="store_true")
@@ -522,21 +563,36 @@ def main():
     # Read two batch inventories BEFORE individual per-ID ticker requests:
     # the old order exhausted CoinGecko's public API and returned HTTP 429
     # before the independent contract route could even begin.
-    inventory=None
+    official_inventory=None
+    coingecko_inventory=None
+    bitget_inventory=None
+    other_venues={}
     number=os.environ.get("GITHUB_RUN_NUMBER","0")
     inventory_due=(os.environ.get("GITHUB_EVENT_NAME")=="push"
                    or (number.isdecimal() and int(number)%4==0))
     if inventory_due:
         try:
-            official=json.loads(OFFICIAL.read_text(encoding="utf-8"))
-            cg=public_inventory(CG_PLATFORMS,40_000_000)
-            bitget=public_inventory(BITGET_COINS,15_000_000)
-            inventory=(official,cg,bitget)
-            print("EXACT CONTRACT INVENTORIES LOADED",flush=True)
+            official_inventory=json.loads(OFFICIAL.read_text(encoding="utf-8"))
+            coingecko_inventory=public_inventory(CG_PLATFORMS,40_000_000)
+            print("EXACT COINGECKO CONTRACT INVENTORY LOADED",flush=True)
         except (OSError,ValueError,TypeError,KeyError,
                 json.JSONDecodeError) as exc:
-            print("EXACT CONTRACT SOURCE UNAVAILABLE "+
+            print("EXACT CONTRACT OWNER INVENTORY UNAVAILABLE "+
                   type(exc).__name__+": "+str(exc)[:180],flush=True)
+        if coingecko_inventory is not None:
+            try:
+                bitget_inventory=public_inventory(BITGET_COINS,15_000_000)
+            except (OSError,ValueError,TypeError,KeyError,
+                    json.JSONDecodeError) as exc:
+                print("BITGET CONTRACT INVENTORY UNAVAILABLE "+
+                      type(exc).__name__+": "+str(exc)[:180],flush=True)
+            for venue,url in (("gate",GATE_COINS),("kucoin",KUCOIN_COINS)):
+                try:
+                    other_venues[venue]=public_inventory(url,25_000_000)
+                except (OSError,ValueError,TypeError,KeyError,
+                        json.JSONDecodeError) as exc:
+                    print("INDEPENDENT CONTRACT SOURCE UNAVAILABLE "+venue+" "+
+                          type(exc).__name__+": "+str(exc)[:180],flush=True)
     else:
         print("EXACT CONTRACT SOURCE DEFERRED: hourly inventory quota",flush=True)
     result=process(queue,prior,args.batch_size,
@@ -544,11 +600,21 @@ def main():
                       exchanges=(source_venues_for(a,spot_snapshot)
                                  if spot_snapshot is not None else ("okx","bitget"))),
                    delay=args.sleep,excluded=archived,preferred=priority)
-    if inventory is not None:
-        result,added=enrich_contracts(queue,archived,result,*inventory)
-        print("EXACT CONTRACT SOURCE "+json.dumps(
-            {"qualified_ids":added,"count":len(added)},sort_keys=True),
-            flush=True)
+    if official_inventory is not None and coingecko_inventory is not None:
+        if bitget_inventory is not None:
+            result,added=enrich_contracts(
+                queue,archived,result,official_inventory,
+                coingecko_inventory,bitget_inventory)
+            print("BITGET EXACT CONTRACT SOURCE "+json.dumps(
+                {"qualified_ids":added,"count":len(added)},sort_keys=True),
+                flush=True)
+        if other_venues:
+            result,added=enrich_independent_contracts(
+                queue,archived,result,official_inventory,
+                coingecko_inventory,other_venues)
+            print("GATE KUCOIN EXACT CONTRACT SOURCE "+json.dumps(
+                {"qualified_ids":added,"count":len(added),
+                 "sources":sorted(other_venues)},sort_keys=True),flush=True)
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     tmp=OUTPUT.with_suffix(".tmp")
     tmp.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
