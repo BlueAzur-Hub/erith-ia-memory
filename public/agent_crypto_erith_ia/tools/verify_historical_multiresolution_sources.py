@@ -94,15 +94,24 @@ def check_registry(index,catalog):
                  and a["earliest_source_ms"]%DAY==offset
                  and a["latest_source_ms"]%DAY==offset,
                  "Original Bitget 1D daily session UTC offset modified")
-            need(a.get("identity_evidence")==
-                 ("https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/"
-                  "public/agent_crypto_erith_ia/data/historical_archive_prototype/"
-                  "top250-alt-market-evidence.json#"+cid)
-                 and a.get("instrument_evidence")==
-                 ("https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/"
-                  "public/agent_crypto_erith_ia/data/historical_archive_prototype/"
-                  "top250-official-spot-instruments.json#"+cid),
-                 "Unproven exact Bitget CoinGecko-to-instrument ownership")
+            canonical="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/"
+            official=canonical+"top250-official-spot-instruments.json#"+cid
+            need(a.get("instrument_evidence")==official,
+                 "Missing independently confirmed Bitget instrument owner")
+            named=a.get("source_attestation")=="original-named-spot-listing"
+            if named:
+                notice=a.get("identity_evidence")
+                need(isinstance(notice,str) and
+                     notice.startswith(("https://www.bitget.com/support/articles/",
+                                        "https://www.bitget.com/asia/support/articles/",
+                                        "https://www.bitget.com/fr/support/articles/"))
+                     and notice.rsplit("/",1)[-1].isdigit(),
+                     "No official named Bitget project evidence")
+            else:
+                need("source_attestation" not in a and
+                     a.get("identity_evidence")==
+                         canonical+"top250-alt-market-evidence.json#"+cid,
+                     "Unproven exact Bitget CoinGecko-to-instrument ownership")
         need(isinstance(a.get("bytes"),int) and
              0<a["bytes"]<=MAX_FILE and
              isinstance(a.get("sha256"),str) and SHA.fullmatch(a["sha256"]),
@@ -177,6 +186,9 @@ def verify_source(a,opener=urlopen):
              "OKX returned unconfirmed or nonnative 1Dutc bars")
     else:
         offset=a["native_session_start_modulo_utc_day_ms"]
+        if a.get("source_attestation")=="original-named-spot-listing":
+            need(owner.get("identity_evidence")==a.get("identity_evidence"),
+                 "Bitget named original listing disagrees with archived exact owner")
         need(all(t%DAY==offset for t in ts)
              and data.get("native_session_start_modulo_utc_day_ms")==offset
              and data.get("native_daily_timezone_not_normalized") is True
