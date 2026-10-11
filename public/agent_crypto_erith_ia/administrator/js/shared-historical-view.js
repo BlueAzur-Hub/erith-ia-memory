@@ -238,23 +238,131 @@ function chart(rows){
  });
  ctx.stroke();
 }
+let visual=null,hoverInstalled=false;
+function verifiedChart(rows,interval,gaps){
+ const canvas=byId("shared-curve"),ctx=canvas.getContext("2d"),w=canvas.width,h=canvas.height;
+ const left=64,right=w-25,top=28,bottom=h-35,priceBottom=Math.floor(h*.71);
+ const volumeTop=Math.floor(h*.77),volumeBottom=h-34,space=Math.max(1,right-left);
+ const begin=rows[0][0],finish=rows.at(-1)[0],step=({"1m":60000,"5m":300000,"1h":3600000,"1d":86400000})[interval];
+ const xOf=t=>left+(t-begin)/(finish-begin||1)*space;
+ const lo=Math.min(...rows.map(r=>r[3])),hi=Math.max(...rows.map(r=>r[2])),range=hi-lo||1;
+ const yOf=p=>top+(hi-p)/range*(priceBottom-top);
+ const groupWidth=5;const groups=[];let current=null,previous=null;
+ // Rendering aggregation only: do not change the 35 certified source arrays.
+ for(const r of rows){
+  const t=r[0],slot=Math.floor((xOf(t)-left)/groupWidth);
+  const separated=previous!==null && t!==previous+step;
+  if(separated)current=null;
+  if(!current||current.slot!==slot){
+   current={slot,first:t,last:t,o:r[1],h:r[2],l:r[3],c:r[4],
+     base:r[5],quote:r[6],trades:r[7],n:1,breakBefore:separated};
+   groups.push(current);
+  }else{
+   current.last=t;current.h=Math.max(current.h,r[2]);current.l=Math.min(current.l,r[3]);
+   current.c=r[4];current.base+=r[5];current.quote+=r[6];current.trades+=r[7];current.n++;
+  }
+  previous=t;
+ }
+ ctx.fillStyle="#0b1a29";ctx.fillRect(0,0,w,h);
+ ctx.font="12px system-ui";ctx.textAlign="right";ctx.fillStyle="#b8d5e4";
+ for(let i=0;i<=4;i++){
+  const p=lo+(hi-lo)*i/4,y=yOf(p);
+  ctx.strokeStyle="rgba(124,162,184,.17)";ctx.lineWidth=1;ctx.beginPath();
+  ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();
+  ctx.fillText(new Intl.NumberFormat("fr-FR",{maximumFractionDigits:2}).format(p),left-7,y+3);
+ }
+ for(const gap of gaps||[]){
+  const gx=xOf(gap.start_ms),gr=xOf(gap.end_exclusive_ms);
+  ctx.fillStyle="rgba(226,166,77,.18)";
+  ctx.fillRect(gx,top,Math.max(2,gr-gx),volumeBottom-top);
+  ctx.strokeStyle="#d9aa59";ctx.beginPath();ctx.moveTo(gx,top);ctx.lineTo(gx,volumeBottom);ctx.stroke();
+ }
+ ctx.textAlign="left";ctx.fillStyle="#bfd5e4";
+ ctx.fillText("Binance Spot · "+interval+" · USDT · prix",left,17);
+ ctx.fillText("Volume base",left,volumeTop-5);
+ const maxVolume=Math.max(...groups.map(g=>g.base),1);
+ const choice=byId("shared-style")?.value||"candles";
+ let drawing=false;
+ for(const g of groups){
+  const x=xOf((g.first+g.last)/2),bull=g.c>=g.o;
+  const color=bull?"#69cbae":"#f29289";
+  const barHeight=(g.base/maxVolume)*(volumeBottom-volumeTop);
+  ctx.fillStyle=bull?"rgba(89,183,152,.45)":"rgba(220,115,112,.45)";
+  ctx.fillRect(x-2,volumeBottom-barHeight,4,barHeight);
+  if(choice==="line"){
+   if(g.breakBefore&&drawing){ctx.stroke();drawing=false;}
+   if(!drawing){ctx.beginPath();ctx.moveTo(x,yOf(g.c));drawing=true;}
+   else ctx.lineTo(x,yOf(g.c));
+  }else{
+   ctx.strokeStyle=color;ctx.lineWidth=1;ctx.beginPath();
+   ctx.moveTo(x,yOf(g.h));ctx.lineTo(x,yOf(g.l));ctx.stroke();
+   ctx.fillStyle=color;
+   ctx.fillRect(x-2,Math.min(yOf(g.o),yOf(g.c)),Math.max(2,Math.min(groupWidth-1,4)),Math.max(1,Math.abs(yOf(g.c)-yOf(g.o))));
+  }
+ }
+ if(choice==="line"&&drawing){ctx.strokeStyle="#8cd7ef";ctx.lineWidth=1.5;ctx.stroke();}
+ ctx.textAlign="center";ctx.fillStyle="#b8d5e4";
+ for(let i=0;i<=4;i++){
+  const time=begin+(finish-begin)*i/4,x=xOf(time);
+  ctx.fillText(new Date(time).toLocaleDateString("fr-FR",{timeZone:"UTC"}),x,h-12);
+ }
+ visual={canvas,groups,xOf};
+ if(!hoverInstalled&&typeof canvas.addEventListener==="function"){
+  canvas.addEventListener("pointermove",ev=>{
+   if(!visual)return;
+   const bounds=visual.canvas.getBoundingClientRect();
+   const at=(ev.clientX-bounds.left)*visual.canvas.width/bounds.width;
+   let g=null,distance=Infinity;
+   for(const item of visual.groups){
+    const dx=Math.abs(visual.xOf((item.first+item.last)/2)-at);
+    if(dx<distance){distance=dx;g=item;}
+   }
+   if(!g||distance>15)return;
+   const fmt=n=>new Intl.NumberFormat("fr-FR",{maximumFractionDigits:8}).format(n);
+   byId("shared-hover").textContent=
+     format(g.first)+(g.n>1?" → "+format(g.last):"")+
+     " · O "+fmt(g.o)+" · H "+fmt(g.h)+" · B "+fmt(g.l)+" · C "+fmt(g.c)+
+     " USDT · Vol "+fmt(g.base)+" · Tx "+fmt(g.trades)+
+     (g.n>1?" · Regroupement visuel de "+g.n+" bougies réelles":"");
+  });
+  hoverInstalled=true;
+ }
+}
 function display(view,metadata){
- chart(view.rows);
+ const certified=metadata.scope==="certified-core5";
+ visual=null;
+ if(certified)verifiedChart(view.rows,view.interval,view.gaps);
+ else chart(view.rows);
+ const suffix=certified?" · SHA-256 vérifié · "+view.period+" · "+
+   (view.gaps.length?view.gaps.length+" interruption(s) documentée(s)":"aucune lacune"):
+   " · périodes suivantes lues sans téléchargement";
  byId("shared-status").textContent="Vérifié · "+view.pair+" · "+view.rows.length.toLocaleString("fr-FR")+
-   " bougies "+view.interval+" · périodes suivantes lues sans téléchargement";
- byId("shared-source").textContent=(metadata.source==="Bitget Spot"?"Bitget Spot (7 champs natifs, sans transactions)":"Binance Spot")+" · "+view.quote+" · mois "+metadata.month+
+   " bougies "+view.interval+suffix;
+ byId("shared-source").textContent=certified?
+   "Binance Spot · USDT natif · "+format(view.rows[0][0])+" → "+format(view.rows.at(-1)[0])+
+   " · 12 mois clos (2025-10 → 2026-09) validés à la minute · "+
+   "Max = partitions historiques matérialisées, PAS création de l'actif · "+
+   "ruptures non raccordées · jamais temps réel ni USD converti":
+   (metadata.source==="Bitget Spot"?"Bitget Spot (7 champs natifs, sans transactions)":"Binance Spot")+
+   " · "+view.quote+" · mois "+metadata.month+
    " · "+format(view.rows[0][0])+" → "+format(view.rows.at(-1)[0])+
    " · source native : "+metadata.native_1m_count.toLocaleString("fr-FR")+
    " bougies 1m"+(metadata.months?" · "+metadata.months+" mois validés":"")+
    " · pas de temps réel · Max = historique contigu archivé, pas historique total";
+ byId("shared-hover").textContent=certified?
+   "Survol : prix, volumes et transactions. Un groupe visuel n'est pas une bougie native supplémentaire.":
+   "Courbe historique · aucun prix inventé · source en USDT.";
  const node=byId("shared-table"),head=document.createElement("tr");
- for(const title of ["UTC","Ouverture","Haut","Bas","Clôture","Volume base"]){
+ const columns=certified?["UTC","Ouverture","Haut","Bas","Clôture","Volume base","Volume quote","Transactions"]:
+   ["UTC","Ouverture","Haut","Bas","Clôture","Volume base"];
+ for(const title of columns){
   const th=document.createElement("th");th.textContent=title;head.append(th);
  }
  node.replaceChildren(head);
  for(const r of view.rows.slice(-8)){
   const tr=document.createElement("tr");
-  for(const v of [format(r[0]),r[1],r[2],r[3],r[4],r[5]]){
+  const values=certified?[format(r[0]),...r.slice(1)]:[format(r[0]),...r.slice(1,6)];
+  for(const v of values){
    const td=document.createElement("td");td.textContent=String(v);tr.append(td);
   }
   node.append(tr);
@@ -269,16 +377,23 @@ async function show(){
  const canvas=byId("shared-curve");
  canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
  try{
-  const extra=Object.hasOwn({"60j":1,"90j":1,"1an":1,"Max":1},period);
-  const alternative=(await getBitgetIndex().catch(()=>({assets:[]}))).assets.some(a=>a.id===id);
-  if(alternative&&extra)throw Error("Bitget : 60j/90j/1an/Max non matérialisés ; choisir 24h, 7j, 30j ou Mois source.");
-  const archive=alternative?await loadBitget(id):extra
-    ? await window.SevenHourlyHistory.loadOne(id)
-    : await loadOne(id);
-  const selection=extra
-    ? window.SevenHourlyHistory.selectPeriod(archive,period)
-    : selectPeriod(archive,period);
-  if(ticket===seq)display(selection,archive.metadata);
+  if(window.SevenVerifiedPeriods?.isPilot(id)&&period!=="mois"){
+   const archive=await window.SevenVerifiedPeriods.load(id,period);
+   if(ticket===seq)display({rows:archive.rows,interval:archive.data.resolution,
+      pair:archive.data.pair,quote:"USDT",asset_id:id,month:archive.metadata.month,
+      gaps:archive.data.gaps,period},archive.metadata);
+  }else{
+   const extra=Object.hasOwn({"60j":1,"90j":1,"1an":1,"Max":1},period);
+   const alternative=(await getBitgetIndex().catch(()=>({assets:[]}))).assets.some(a=>a.id===id);
+   if(alternative&&extra)throw Error("Bitget : 60j/90j/1an/Max non matérialisés ; choisir 24h, 7j, 30j ou Mois source.");
+   const archive=alternative?await loadBitget(id):extra
+     ? await window.SevenHourlyHistory.loadOne(id)
+     : await loadOne(id);
+   const selection=extra
+     ? window.SevenHourlyHistory.selectPeriod(archive,period)
+     : selectPeriod(archive,period);
+   if(ticket===seq)display(selection,archive.metadata);
+  }
  }catch(e){
   if(ticket===seq){
    byId("shared-status").textContent="Lecture refusée : "+String(e?.message||e);
@@ -306,11 +421,14 @@ async function init(){
 }
 byId("shared-read")?.addEventListener("click",()=>void show());
 byId("shared-period")?.addEventListener("change",()=>{
- if(Object.hasOwn({"60j":1,"90j":1,"1an":1,"Max":1},byId("shared-period").value) ||
+ if(window.SevenVerifiedPeriods?.isPilot(byId("shared-asset").value)||
+    Object.hasOwn({"60j":1,"90j":1,"1an":1,"Max":1},byId("shared-period").value) ||
     cache.has(byId("shared-asset").value))void show();
 });
+byId("shared-style")?.addEventListener("change",()=>{if(visual)void show();});
 byId("shared-asset")?.addEventListener("change",()=>{
- byId("shared-status").textContent="Actif sélectionné · cliquer pour lire le mois archivé";
+ if(window.SevenVerifiedPeriods?.isPilot(byId("shared-asset").value))void show();
+ else byId("shared-status").textContent="Actif sélectionné · cliquer pour lire le mois archivé";
 });
 document.addEventListener("seven-vault-select",event=>{
  const id=event.detail?.id,select=byId("shared-asset");
