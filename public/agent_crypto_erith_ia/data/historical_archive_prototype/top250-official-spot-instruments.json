@@ -1,5 +1,5 @@
 {
-  "archived_assets_at_audit": 193,
+  "archived_assets_at_audit": 194,
   "assets": [
     {
       "archived": false,
@@ -618,35 +618,6 @@
     {
       "archived": false,
       "coin_id_confirmed": false,
-      "id": "ultima",
-      "instruments": [
-        {
-          "base": "ULTIMA",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "ULTIMA_USDT",
-          "native_1m_month_confirmed": false,
-          "quote": "USDT",
-          "venue": "gate"
-        },
-        {
-          "base": "ULTIMA",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "ULTIMA-USDT",
-          "native_1m_month_confirmed": false,
-          "quote": "USDT",
-          "venue": "kucoin"
-        }
-      ],
-      "native_1m_month_confirmed": false,
-      "rank": 237,
-      "status": "instrument_candidates_not_identity_proof",
-      "symbol": "ULTIMA"
-    },
-    {
-      "archived": false,
-      "coin_id_confirmed": false,
       "id": "celium",
       "instruments": [],
       "native_1m_month_confirmed": false,
@@ -725,20 +696,20 @@
       "symbol": "AVUSD"
     }
   ],
-  "candidate_count": 57,
-  "checked_at": "2026-10-11T14:56:58.545435+00:00",
+  "candidate_count": 56,
+  "checked_at": "2026-10-11T15:01:32.558458+00:00",
   "markets": {
     "bitget": {
       "instruments": 538,
       "reason": null,
-      "source_sha256": "81590c976c9d80fe057e1d7f54569aa087fd84deccafa2d1e9581552544706a7",
+      "source_sha256": "a7c8e64734099bc9210d6f3f90bf4355b97c16e128e2a1c7f3266734a3cc87a2",
       "status": "success",
       "url": "https://api.bitget.com/api/v3/market/instruments?category=SPOT"
     },
     "coinbase": {
       "instruments": 25,
       "reason": null,
-      "source_sha256": "abe4c87507287d716a3167e2176eb4f709ef25a55bf00383f021d66b457fe7a9",
+      "source_sha256": "d1bf4efba0c80a3e7424f845edff5818fea9eb093440e170fca7a1a960f03721",
       "status": "success",
       "url": "https://api.exchange.coinbase.com/products"
     },
@@ -752,7 +723,7 @@
     "kraken": {
       "instruments": 90,
       "reason": null,
-      "source_sha256": "cfb9705dd76d0d68505028def3308b8f880370f45557d7a34f43cc9b001387f6",
+      "source_sha256": "2fac1dc8f5088ecad66ee3d2d8ff2a5290331ffadb1f130d48f69772b5118c8a",
       "status": "success",
       "url": "https://api.kraken.com/0/public/AssetPairs"
     },
@@ -777,5 +748,5 @@
   "ranked": 250,
   "schema": "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
   "source": "Official public OKX, Bitget, Gate, KuCoin, Kraken and Coinbase Exchange Spot instrument inventories",
-  "with_spot_instrument": 9
+  "with_spot_instrument": 8
 }
