@@ -148,57 +148,15 @@
   </style>
 
   <style id="atlasAdminHoverLogoutStyle">
-    /* Owner hover: a REAL Déconnexion button overlays the Administration button exactly. */
-    .atlas-admin-account-hover{
-      position:relative!important;
-      display:inline-flex!important;
-      align-items:stretch!important;
-      flex:0 0 auto!important;
-      overflow:visible!important;
-      isolation:isolate!important;
-    }
-    .atlas-admin-account-hover>#btnAdminAccountToggle{
-      position:relative!important;
-      z-index:1!important;
-      flex:0 0 auto!important;
-    }
-    .atlas-admin-account-hover>.atlas-admin-hover-logout{
-      --view-accent:#ff91a4;
-      position:absolute!important;
-      inset:0!important;
-      z-index:2!important;
-      width:100%!important;
-      min-width:100%!important;
-      max-width:none!important;
-      height:100%!important;
-      min-height:29px!important;
-      margin:0!important;
-      padding:5px 10px!important;
-      border-radius:9px!important;
-      border:1px solid rgba(255,145,164,.62)!important;
-      background:linear-gradient(180deg,rgba(78,24,37,.98),rgba(29,12,20,.99))!important;
+    /* ONE control, TWO actions:
+       normal = Administration/Aether Trust;
+       owner + hover = the same control becomes Déconnexion. */
+    #btnAdminAccountToggle[data-hover-action="logout"]{
+      --view-accent:#ff91a4!important;
+      border-color:rgba(255,145,164,.72)!important;
+      background:linear-gradient(180deg,rgba(78,24,37,.96),rgba(29,12,20,.98))!important;
       color:#ffe9ed!important;
-      box-shadow:0 0 0 2px rgba(255,145,164,.07),0 0 14px rgba(255,91,120,.10)!important;
-      opacity:0!important;
-      visibility:hidden!important;
-      pointer-events:none!important;
-      transform:none!important;
-    }
-    .atlas-admin-account-hover[data-owner="1"]:hover>.atlas-admin-hover-logout,
-    .atlas-admin-account-hover[data-owner="1"]:focus-within>.atlas-admin-hover-logout{
-      opacity:1!important;
-      visibility:visible!important;
-      pointer-events:auto!important;
-    }
-    .atlas-admin-account-hover>.atlas-admin-hover-logout:hover,
-    .atlas-admin-account-hover>.atlas-admin-hover-logout:focus-visible{
-      border-color:rgba(255,145,164,.88)!important;
-      background:linear-gradient(180deg,rgba(92,28,44,.99),rgba(35,13,23,.99))!important;
-      box-shadow:0 0 0 2px rgba(255,145,164,.10),0 0 18px rgba(255,91,120,.16)!important;
-      outline:none!important;
-    }
-    .atlas-admin-account-hover[data-owner="0"]>.atlas-admin-hover-logout{
-      display:none!important;
+      box-shadow:0 0 0 2px rgba(255,145,164,.08),0 0 14px rgba(255,91,120,.10)!important;
     }
   </style>
 
@@ -206,29 +164,43 @@
     (() => {
       "use strict";
       const SESSION_KEY="agent_crypto_local_access_session_v1";
-      const WRAPPER_ID="atlasAdminAccountHover";
-      const LOGOUT_ID="btnAdminHoverLogout";
+      const BUTTON_ID="btnAdminAccountToggle";
+      const LABEL_ID="adminAccountLinkText";
 
       function isOwner(){
         try{return sessionStorage.getItem(SESSION_KEY)==="owner";}catch(_){return false;}
       }
 
+      function setMode(mode){
+        const button=document.getElementById(BUTTON_ID);
+        const label=document.getElementById(LABEL_ID);
+        if(!button||!label)return false;
+
+        const logoutMode=mode==="logout"&&isOwner();
+        button.dataset.hoverAction=logoutMode?"logout":"administration";
+        label.textContent=logoutMode?"Déconnexion":"Administration";
+        button.setAttribute(
+          "aria-label",
+          logoutMode
+            ?"Se déconnecter de la session Administrateur"
+            :"Ouvrir l’administration locale"
+        );
+        button.title=logoutMode?"Déconnexion":"Administration · Aether Trust";
+        return logoutMode;
+      }
+
       function sync(){
-        const wrapper=document.getElementById(WRAPPER_ID);
-        const logout=document.getElementById(LOGOUT_ID);
-        const owner=isOwner();
-        if(wrapper)wrapper.dataset.owner=owner?"1":"0";
-        if(logout){
-          logout.hidden=!owner;
-          logout.setAttribute("aria-hidden",owner?"false":"true");
-        }
-        return owner;
+        const button=document.getElementById(BUTTON_ID);
+        if(!button)return false;
+        button.dataset.ownerSession=isOwner()?"1":"0";
+        setMode("administration");
+        return isOwner();
       }
 
       function logout(){
         try{
           window.dispatchEvent(new CustomEvent("aether-trust:logout-requested",{
-            detail:{source:"administration-overlay-button"}
+            detail:{source:"administration-button"}
           }));
         }catch(_){}
         try{sessionStorage.removeItem(SESSION_KEY);}catch(_){}
@@ -236,15 +208,32 @@
       }
 
       function bind(){
-        const button=document.getElementById(LOGOUT_ID);
-        if(button&&button.dataset.bound!=="1"){
-          button.dataset.bound="1";
-          button.addEventListener("click",event=>{
-            event.preventDefault();
-            event.stopPropagation();
-            logout();
-          });
-        }
+        const button=document.getElementById(BUTTON_ID);
+        if(!button||button.dataset.adminDualActionBound==="1"){sync();return;}
+        button.dataset.adminDualActionBound="1";
+
+        button.addEventListener("pointerenter",()=>{
+          if(isOwner())setMode("logout");
+        });
+        button.addEventListener("pointerleave",()=>{
+          setMode("administration");
+        });
+
+        // Same button: only when the owner is hovering in "Déconnexion" mode
+        // do we consume the click and log out. Otherwise canonical Administration/Aether Trust stays owner.
+        document.addEventListener("click",event=>{
+          if(event?.isTrusted!==true)return;
+          const target=event.target instanceof Element
+            ? event.target.closest("#"+BUTTON_ID)
+            : null;
+          if(!target)return;
+          if(!isOwner()||target.dataset.hoverAction!=="logout")return;
+
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          logout();
+        },true);
+
         sync();
         window.addEventListener("atlas:v2mode",sync,{passive:true});
         window.addEventListener("pageshow",sync,{passive:true});
@@ -255,10 +244,13 @@
 
       globalThis.ErithAdminHoverLogout=Object.freeze({
         sync,
+        setMode,
         logout,
         session_key:SESSION_KEY,
-        real_overlay_button:true,
-        same_geometry:true
+        one_button:true,
+        actions:Object.freeze(["administration","logout"]),
+        extra_button:false,
+        menu:false
       });
     })();
   </script>
@@ -3616,24 +3608,15 @@
                 </svg>
                 <span>Intermédiaire</span>
               </button>
-              <span class="atlas-admin-account-hover" id="atlasAdminAccountHover">
-                <button class="atlas-view-button atlas-view-button-admin" id="btnAdminAccountToggle"
-                        type="button" data-atlas-view-mode="advanced" aria-pressed="false"
-                        aria-label="Ouvrir l’administration locale">
-                  <svg class="atlas-view-button-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"></path>
-                    <path d="M9.5 12.2 11.2 14l3.7-4"></path>
-                  </svg>
-                  <span id="adminAccountLinkText">Administration</span>
-                </button>
-                <button class="atlas-view-button atlas-admin-hover-logout" id="btnAdminHoverLogout"
-                        type="button"
-                        aria-label="Se déconnecter de l’administration locale"
-                        title="Déconnexion"
-                        hidden>
-                  Déconnexion
-                </button>
-              </span>
+              <button class="atlas-view-button atlas-view-button-admin" id="btnAdminAccountToggle"
+                      type="button" data-atlas-view-mode="advanced" aria-pressed="false"
+                      aria-label="Ouvrir l’administration locale">
+                <svg class="atlas-view-button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3 19 6v5c0 4.6-2.8 8.1-7 10-4.2-1.9-7-5.4-7-10V6l7-3Z"></path>
+                  <path d="M9.5 12.2 11.2 14l3.7-4"></path>
+                </svg>
+                <span id="adminAccountLinkText">Administration</span>
+              </button>
             </div>
             <button class="agent-help-toggle"
                     id="atlasHelpToggle"
