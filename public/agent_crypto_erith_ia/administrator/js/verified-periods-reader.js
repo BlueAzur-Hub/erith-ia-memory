@@ -6,6 +6,7 @@
 "use strict";
 const root=new URL("../../data/historical_archive_prototype/verified_periods/",document.currentScript.src);
 const btcDeepRoot=new URL("../btc_max_integrated/",root);
+const btcDailyRoot=new URL("../btc_native_daily_reconciliation/",root);
 const pairs=Object.freeze({bitcoin:"BTCUSDT",ethereum:"ETHUSDT",binancecoin:"BNBUSDT",ripple:"XRPUSDT",solana:"SOLUSDT"});
 const windows=Object.freeze({"24h":["1m",1440],"7j":["5m",2016],"30j":["1h",720],
   "60j":["1h",1440],"90j":["1h",2160],"1an":["1d",365],"Max":["1d",null]});
@@ -114,6 +115,99 @@ async function loadDeepBtc(){
             missing_days:meta.missing_days,month:"2026-09",
             native_1m_count:525600},
          rows};
+}
+async function loadOfficialDailyBtc(){
+ async function fetchNative(filename,maxBytes){
+  need(filename==="index.json"||filename==="bitcoin-Max.json.gz",
+       "Fichier BTC 1d non autorisé");
+  const url=new URL(filename,btcDailyRoot);
+  need(url.origin===location.origin&&url.pathname.startsWith(btcDailyRoot.pathname),
+       "Archive journalière hors du Coffre");
+  const response=await fetch(url.href,{credentials:"omit",redirect:"error",cache:"no-store"});
+  need(response.ok,"Bougies Binance quotidiennes non publiées : HTTP "+response.status);
+  const raw=await response.arrayBuffer();
+  need(raw.byteLength>0&&raw.byteLength<=maxBytes,"Taille du Max quotidien incohérente");
+  return raw;
+ }
+ const manifest=JSON.parse(new TextDecoder().decode(await fetchNative("index.json",180000)));
+ const count=manifest.native_1d_recovered;
+ need(manifest.schema==="seven.crypto.btc.native-1d-reconciliation-index.v1"&&
+      manifest.asset_id==="bitcoin"&&manifest.pair==="BTCUSDT"&&manifest.quote==="USDT"&&
+      manifest.is_live===false&&manifest.is_all_time===false&&
+      manifest.file==="bitcoin-Max.json.gz"&&
+      manifest.source_model==="different_native_1d_and_1m_provenance"&&
+      manifest.reconciliation_policy==="official_native_1d_with_majority_source_corroboration_v2"&&
+      Number.isInteger(manifest.original_bars)&&manifest.original_bars===3049&&
+      Number.isInteger(count)&&count===26&&manifest.unresolved_count===0&&
+      manifest.bars===3075&&manifest.missing_minutes_unchanged===5881&&
+      Number.isInteger(manifest.bytes)&&manifest.bytes>0&&manifest.bytes<350000&&
+      shaPattern.test(manifest.sha256)&&shaPattern.test(manifest.original_btc_max_sha256)&&
+      manifest.first_open_ms===Date.UTC(2018,4,1)&&
+      manifest.last_open_ms===Date.UTC(2026,8,30)&&
+      Array.isArray(manifest.gaps)&&manifest.gaps.length===0&&
+      Array.isArray(manifest.source_dates)&&manifest.source_dates.length===26&&
+      manifest.source_dates.every(s=>s.status==="recovered"&&
+             s.source?.pair==="BTCUSDT"&&s.source?.quote==="USDT"&&
+             s.source?.interval==="1d"&&shaPattern.test(s.source?.zip_sha256)&&
+             shaPattern.test(s.source?.checksum_sha256)),
+      "Le registre BTC 1d complet n'est pas certifié (ne pas réutiliser l'ancien Max)");
+ const zipped=await fetchNative(manifest.file,350000);
+ need(zipped.byteLength===manifest.bytes&&await digest(zipped)===manifest.sha256,
+      "Empreinte SHA-256 du nouveau Max Binance 1d incorrecte");
+ const plain=await new Response(new Blob([zipped]).stream()
+                  .pipeThrough(new DecompressionStream("gzip"))).text();
+ need(new TextEncoder().encode(plain).byteLength<13000000,
+      "Bougies BTC 1d décompressées trop volumineuses");
+ const data=JSON.parse(plain),rows=data.rows;
+ need(data.schema==="seven.crypto.btc.native-1d-reconciliation.v1"&&
+      data.asset_id==="bitcoin"&&data.pair==="BTCUSDT"&&data.quote==="USDT"&&
+      data.interval==="1d"&&data.is_live===false&&data.is_all_time===false&&
+      data.scope==="qualified_1m_daily_plus_official_native_1d"&&
+      data.source==="Binance Spot original verified 1m and native 1d"&&
+      data.columns?.join(",")===cols&&
+      data.native_1m_gaps_preserved===true&&
+      data.original_btc_max_sha256===manifest.original_btc_max_sha256&&
+      Array.isArray(rows)&&rows.length===manifest.bars&&
+      rows[0]?.[0]===manifest.first_open_ms&&
+      rows.at(-1)?.[0]===manifest.last_open_ms&&
+      Array.isArray(data.native_1d_overrides)&&data.native_1d_overrides.length===26,
+      "Le contenu Binance 1d ne correspond pas à son manifeste");
+ let previous=null;
+ for(const r of rows){
+  need(Array.isArray(r)&&r.length===8&&r.every(Number.isFinite),
+       "Une bougie native quotidienne est non numérique");
+  const [t,o,h,l,close,base,quote,trades]=r;
+  need(Number.isInteger(t)&&t%steps["1d"]===0&&
+       (previous===null||t===previous+steps["1d"])&&
+       l>0&&l<=Math.min(o,close)&&Math.max(o,close)<=h&&
+       base>=0&&quote>=0&&Number.isInteger(trades)&&trades>=0,
+       "Max quotidien non continu ou OHLCV incorrect");
+  previous=t;
+ }
+ need(JSON.stringify(data.gaps)===JSON.stringify(manifest.gaps)&&
+      listGaps(rows,steps["1d"]).length===0,
+      "La projection est interrompue malgré la certification native 1d");
+ const existing=new Set(rows.map(r=>r[0])),added=new Set();
+ for(const proof of data.native_1d_overrides){
+  const ts=proof.open_time_ms;
+  need(Number.isInteger(ts)&&existing.has(ts)&&!added.has(ts)&&
+       proof.native_1d?.interval==="1d"&&
+       proof.native_1d?.venue==="Binance Spot"&&
+       proof.native_1d?.pair==="BTCUSDT"&&
+       proof.native_1d?.quote==="USDT"&&
+       proof.native_1d?.archive_url?.startsWith("https://data.binance.vision/data/spot/")&&
+       shaPattern.test(proof.native_1d?.zip_sha256)&&
+       shaPattern.test(proof.native_1d?.checksum_sha256)&&
+       proof.native_1m_missing_minutes>0,
+       "Une bougie native 1d n'a pas sa provenance officielle certifiée");
+  added.add(ts);
+ }
+ return {data:{...data,resolution:"1d",period:"Max"},
+  metadata:{scope:"certified-core5",integrated:true,native_daily:true,
+    source:"Binance Spot 1m vérifié + 1d officiel",pair:"BTCUSDT",
+    quote:"USDT",month:"2026-09",missing_days:0,
+    missing_source_minutes:5881,native_1d_recovered:26,native_1m_count:525600},
+  rows};
 }
 function validIndex(j){
  need(j?.schema==="seven.crypto.verified-period-index"&&
@@ -224,9 +318,9 @@ async function load(id,period){
  const work=(async()=>{
   let result;
   if(id==="bitcoin"&&period==="Max"){
-   // Explicitly refuse old 1,795-day Max: the source-backed 2018–2026
-   // projection is the only accepted BTC deep history.
-   result=await loadDeepBtc();
+   // Fail closed: the rebuilt 3,075-day Binance-native daily series is
+   // the ONLY accepted BTC Max. Never display obsolete 1,795/3,049-day Max.
+   result=await loadOfficialDailyBtc();
   }else{
    const a=(await getIndex()).assets.find(x=>x.id===id);
    need(!!a,"Identité non indexée");
