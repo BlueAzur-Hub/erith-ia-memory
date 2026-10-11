@@ -1,0 +1,73 @@
+name: Agent Crypto BTC Native Older Month Imports
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-btc-native-older.yml'
+      - 'public/agent_crypto_erith_ia/tools/backfill_btc_native.py'
+      - 'public/agent_crypto_erith_ia/tools/backfill_btc_native_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-btc-native-older.yml'
+      - 'public/agent_crypto_erith_ia/tools/backfill_btc_native.py'
+      - 'public/agent_crypto_erith_ia/tools/backfill_btc_native_test.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-btc-native-older-source
+  cancel-in-progress: false
+jobs:
+  import-btc-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify Bitcoin identity, bounded source months, errors and retries
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/backfill_btc_native.py
+          python public/agent_crypto_erith_ia/tools/backfill_btc_native_test.py
+          python public/agent_crypto_erith_ia/tools/backfill_btc_native.py --plan --months 6
+      - name: PR probe - actual original 2021-09 Binance BTC Spot ZIP and official CHECKSUM
+        if: github.event_name == 'pull_request'
+        run: |
+          python - <<'PY'
+          import tempfile,sys,json
+          from pathlib import Path
+          sys.path.insert(0,'public/agent_crypto_erith_ia/tools')
+          import import_historical_bulk as bulk
+          with tempfile.TemporaryDirectory() as folder:
+              result=bulk.fetch_asset({'id':'bitcoin','rank':1,'pair':'BTCUSDT'},
+                                      '2021-09','1m',Path(folder))
+              print('BTC TRUE SOURCE PROBE '+json.dumps(result,sort_keys=True),flush=True)
+              if result['status']=='verified':
+                  assert result['candles']==43200,result
+                  assert len(list(Path(folder).glob('BTCUSDT-1m-2021-09.zip')))==1
+                  print('COMPLETE OFFICIAL MONTH',result['candles'])
+              else:
+                  assert 'Missing/duplicate/unaligned candle' in result['reason'],result
+                  from btc_gap_acquire import acquire
+                  real=acquire('2021-09',Path(folder))
+                  assert real['native_rows']>40000,real
+                  assert real['native_rows']+real['missing_minutes']==43200,real
+                  assert real['synthetic_rows']==0 and real['missing_minutes']>0,real
+                  print('ORIGINAL BINANCE BTC SOURCE WITH GAPS '+json.dumps(
+                      {'month':real['month'],'native_rows':real['native_rows'],
+                       'missing_minutes':real['missing_minutes'],
+                       'source_zip_sha256':real['source_zip_sha256']},sort_keys=True))
+          PY
+      - name: Import up to six earlier BTC months with checksum and immutable release proofs
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/backfill_btc_native.py --collect --months 6
+      - name: Verify protected trading files unchanged
+        if: always()
+        run: |
+          git diff --exit-code --             public/agent_crypto_erith_ia/trader/             public/agent_crypto_erith_ia/administrator/             public/agent_crypto_erith_ia/core/             public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards/
