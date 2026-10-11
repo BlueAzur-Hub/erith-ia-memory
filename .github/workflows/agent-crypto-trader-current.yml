@@ -4,27 +4,25 @@ on:
   pull_request:
     paths:
       - "public/agent_crypto_erith_ia/trader/**"
-      - "public/agent_crypto_erith_ia/administrator/index.html"
-      - "public/agent_crypto_erith_ia/administrator/app.js"
-      - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
-      - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
+      - "public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js"
+      - "public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport.js"
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
-      - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
-      - "public/agent_crypto_erith_ia/administrator/js/aether.js"
+      - "public/agent_crypto_erith_ia/tools/trader-historical-panel.test.mjs"
+      - "public/agent_crypto_erith_ia/tools/trader-shared-market-selection.test.mjs"
       - ".github/workflows/agent-crypto-trader-current.yml"
   push:
     branches: [main]
     paths:
       - "public/agent_crypto_erith_ia/trader/**"
-      - "public/agent_crypto_erith_ia/administrator/index.html"
-      - "public/agent_crypto_erith_ia/administrator/app.js"
-      - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
-      - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
+      - "public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js"
+      - "public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport.js"
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
-      - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
-      - "public/agent_crypto_erith_ia/administrator/js/aether.js"
+      - "public/agent_crypto_erith_ia/tools/trader-historical-panel.test.mjs"
+      - "public/agent_crypto_erith_ia/tools/trader-shared-market-selection.test.mjs"
       - ".github/workflows/agent-crypto-trader-current.yml"
 
 permissions:
@@ -36,122 +34,95 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
       - name: JavaScript syntax
         shell: bash
         run: |
           set -euo pipefail
-          node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
-          node --check public/agent_crypto_erith_ia/administrator/app.js
-          node --check public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js
-          node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
-          node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
-          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
-          node - <<'NODE'
-          require("./public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js");
-          const result=globalThis.AgentCryptoGraphNativeUsd406520?.self_test?.();
-          console.log(JSON.stringify(result,null,2));
-          if(!result?.pass||result?.checks?.top5_24h_canonical_history_owner!==true||result?.checks?.stale_usd_cache_refused!==true)process.exit(1);
-          NODE
-          node --check public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js
-          node --check public/agent_crypto_erith_ia/administrator/js/aether.js
+          for file in \
+            public/agent_crypto_erith_ia/trader/line-chart-native.js \
+            public/agent_crypto_erith_ia/trader/market-fiche-native.js \
+            public/agent_crypto_erith_ia/trader/market-transpose.js \
+            public/agent_crypto_erith_ia/trader/math-core-transpose.js \
+            public/agent_crypto_erith_ia/trader/new-listings-transpose.js \
+            public/agent_crypto_erith_ia/trader/pair-central-truth.js \
+            public/agent_crypto_erith_ia/trader/source-dock-native.js \
+            public/agent_crypto_erith_ia/trader/technical-reading-data-sync.js \
+            public/agent_crypto_erith_ia/trader/technical-reading-transpose.js \
+            public/agent_crypto_erith_ia/trader/trader-fidelity.js \
+            public/agent_crypto_erith_ia/trader/trader-historical-panel.js \
+            public/agent_crypto_erith_ia/trader/trader-historical-universe-reader.js \
+            public/agent_crypto_erith_ia/trader/trader-historical-long-reader.js \
+            public/agent_crypto_erith_ia/trader/trader-historical-cohort-reader.js \
+            public/agent_crypto_erith_ia/trader/trading-desk.js \
+            public/agent_crypto_erith_ia/administrator/js/quote-currency-architecture-406497.js \
+            public/agent_crypto_erith_ia/administrator/js/okx-local-backend-transport.js \
+            public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js \
+            public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js \
+            public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+          do
+            node --check "$file"
+          done
 
-      - name: Trader single-runtime contract
+      - name: Trader direct-page contract
+        shell: bash
         run: |
+          set -euo pipefail
           python - <<'PY'
           import json
           from pathlib import Path
 
-          root=Path("public/agent_crypto_erith_ia")
-          trader=root/"trader"
+          trader=Path("public/agent_crypto_erith_ia/trader")
           html=(trader/"trading-desk.html").read_text(encoding="utf-8")
-          mirror=(trader/"trader-runtime-mirror.js").read_text(encoding="utf-8")
           build=json.loads((trader/"build.json").read_text(encoding="utf-8"))
-          admin=(root/"administrator"/"index.html").read_text(encoding="utf-8")
-          admin_build=json.loads((root/"administrator"/"build.json").read_text(encoding="utf-8"))
-          aether=(root/"administrator"/"js"/"aether.js").read_text(encoding="utf-8")
-          app=(root/"administrator"/"app.js").read_text(encoding="utf-8")
-          candles=(root/"administrator"/"js"/"market-microscope-candles.js").read_text(encoding="utf-8")
-          graph_usd=(root/"administrator"/"js"/"graph-native-usd-406520.js").read_text(encoding="utf-8")
           current=str(build.get("build","")).strip()
 
-          forbidden=[
+          required_scripts=[
             "line-chart-native.js",
             "market-transpose.js",
             "math-core-transpose.js",
             "technical-reading-transpose.js",
-            "source-dock-native.js",
-            "market-fiche-native.js",
             "pair-central-truth.js",
+            "trader-historical-panel.js",
+            "trading-desk.js",
           ]
+          forbidden=[
+            "<iframe",
+            "trader-runtime-mirror.js",
+            "trader-paper-preparation.js",
+            "trader-paper-t0.js",
+          ]
+
           checks={
-            "build_format": bool(current) and current.count(".")==2 and all(part.isdigit() for part in current.split(".")),
+            "build_format": bool(current) and current.count(".")==2 and all(p.isdigit() for p in current.split(".")),
             "entry_build_matches": current in html,
-            "mirror_build_matches": f'const BUILD="{current}"' in mirror,
-            "administrator_build_matches": str(admin_build.get("build","")).strip()==current,
-            "administrator_index_matches": current in admin,
-            "administrator_frame": 'src="../administrator/index.html' in html,
-            "trader_surface_query": 'surface=trader' in html,
-            "mirror_loaded": 'src="./trader-runtime-mirror.js"' in html,
-            "legacy_runtime_not_loaded": all(name not in html for name in forbidden),
-            "market_zone_filter": "#market-zone" in mirror,
-            "presentation_only": "filtered_presentation_only:true" in mirror,
-            "no_duplicate_chart": "duplicated_chart_owner:false" in mirror,
-            "no_duplicate_market": "duplicated_market_owner:false" in mirror,
-            "read_only": build["execution"]=="disabled" and build["real_orders"] is False,
-            "native_trader_badge": 'id="traderSurfaceBadge">TRADER · '+current+'</span>' in admin,
-            "native_admin_arrow": 'id="traderSurfaceAdminLink"' in admin and '>↗</a>' in admin,
-            "native_header_first_paint": 'id="agentCryptoTraderFirstPaint"' in admin,
-            "no_late_header_injection": "traderRuntimeBadge" not in mirror and "traderRuntimeAdminLink" not in mirror and "traderBadge.textContent" not in mirror,
-            "native_status_lane_present": all(token in admin for token in ['id="livecheck"', 'id="btnLivecheck"', 'id="btnRefresh"', 'id="decisionCard"', 'id="sourceActiveCard"', 'id="sourceTimeCard"']),
-            "native_status_lane_not_first_paint_hidden": 'html[data-agent-crypto-surface="trader"] #livecheck{display:none!important}' not in admin,
-            "mirror_preserves_native_status_lane": ':not(#accueil):not(#livecheck):not(#market-zone)' in mirror,
-            "aether_trader_ribbon_disabled": 'const AETHER_RIBBON_ENABLED=AETHER_SURFACE!=="trader"' in aether,
-            "aether_trader_native_phase": 'aetherPhaseApply("native","trader-ribbon-disabled")' in aether,
-            "minimum_nav_livecheck_first_paint": '[data-atlas-essential-target]:not([data-atlas-essential-target="livecheck"]):not([data-atlas-essential-target="market-workspace"]):not([data-atlas-essential-target="analyste"])' in admin,
-            "minimum_nav_aether_native_owner": admin.count('id="atlasAetherStatusToggle"')==1 and 'id="atlasAetherStatusLabel"' in admin,
-            "minimum_nav_advanced_filtered": '#atlasAdminGraphToggle' in admin and '#atlasAdminCenterToggle' in admin and '#atlasAdminCenterDrawer' in admin and '#atlasAetherStatusToggle{display:inline-flex!important}' in admin,
-            "minimum_nav_mirror_contract": "minimum_nav:true" in mirror and 'minimum_nav_items:Object.freeze(["Livecheck","Marché","Graphique","Aether"])' in mirror,
-            "minimum_nav_no_aether_clone": "createElement" not in "\n".join(line for line in mirror.splitlines() if "Aether" in line or "aether" in line),
-            "pair_resolver_loaded": 'js/okx-market-pair-resolver.js?v='+current in admin,
-            "pair_resolver_stable_filename": "okx-market-pair-resolver-406" not in admin,
-            "pair_resolver_before_consumers": admin.find("js/okx-market-pair-resolver.js") < admin.find("js/market-microscope-candles.js") < admin.find("js/okx-microstructure-406499.js"),
-            "canonical_selection_event_owner": 'agent-crypto:selected-market-changed' in app and 'atlasBroadcastSelectedMarketChange' in app,
-            "candles_selection_event_listener": 'window.addEventListener("agent-crypto:selected-market-changed",handleCanonicalSelectionChanged' in candles,
-            "candles_no_legacy_function_wrapper": "__agentCryptoMicroscopeHook" not in candles and "__agentCryptoMicroscopeOriginal" not in candles,
-            "candles_stale_canvas_clear": "stale_asset_canvas_cleared:true" in candles,
-            "graph_native_usd_current_cache_token": 'js/graph-native-usd-406520.js?v='+current in admin,
-            "graph_top5_24h_canonical_owner": "top5_24h_canonical_history_owner:true" in graph_usd,
-            "graph_top5_canonical_delegate": 'usd()&&!canonicalTop5History(p)?cmp(c,p,opt):o.apply(this,arguments)' in graph_usd,
-            "graph_stale_usd_cache_refused": "coingecko-usd-stale-cache-refused" in graph_usd,
-            "graph_no_app_rewrite": "app_js_changed:false" in graph_usd,
-            "fullscreen_restore_no_cockpit_runtime": 'js/trader-cockpit-fit.js' not in admin,
-            "fullscreen_restore_no_height_var": '--trader-target-top-analyst-height' not in admin,
-            "first_paint_preserves_native_status_lane": ':not(#accueil):not(#livecheck):not(#market-zone)' in admin,
-            "target_top_native_dom": 'id="targetTop5Cycle"' in admin and 'id="top5Track"' in admin,
-            "admin_graph_present": 'id="analyste"' in admin and 'id="mainChart"' in admin,
-            "admin_market_present": 'id="market-workspace"' in admin,
-            "top_explorer_absent": 'src="./js/top10-explorer.js"' not in admin,
-            "admin_math_present": 'id="math"' in admin,
-            "admin_detail_present": 'id="detailPanel"' in admin,
+            "standalone_dom": 'id="market-zone"' in html and 'id="marketWorkspaceGrid"' in html and 'id="math"' in html,
+            "btc_case_inline": 'id="traderBtcCaseStudy"' in html,
+            "verified_history_slot": 'id="traderHistoryMount"' in html and "trader-historical-panel.js" in html,
+            "required_scripts": all(name in html for name in required_scripts),
+            "no_mirror_or_iframe": all(token not in html for token in forbidden),
+            "strategy_a_not_loaded": "Strategy A" in html and "trader-paper-preparation.js" not in html and "trader-paper-t0.js" not in html,
+            "read_only": build.get("execution")=="disabled" and build.get("real_orders") is False,
+            "build_direct_truth": build.get("architecture",{}).get("iframe_administrator") is False and build.get("architecture",{}).get("runtime_mirror_loaded") is False,
+            "market_core_protected": str(build.get("market_core"))=="38.15.11",
           }
           print(json.dumps(checks,indent=2,ensure_ascii=False))
           if not all(checks.values()):
-              raise SystemExit("Trader single-runtime contract failed")
+              raise SystemExit("Trader direct-page contract failed")
           PY
 
-      - name: No parallel Trader owners in entrypoint
+      - name: Trader focused tests
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          html=Path("public/agent_crypto_erith_ia/trader/trading-desk.html").read_text(encoding="utf-8")
-          scripts=[line.strip() for line in html.splitlines() if "<script" in line]
-          print("\n".join(scripts))
-          assert len(scripts)==1, scripts
-          assert "trader-runtime-mirror.js" in scripts[0]
-          PY
+          node --test \
+            public/agent_crypto_erith_ia/tools/trader-historical-panel.test.mjs \
+            public/agent_crypto_erith_ia/tools/historical-universe-reader.test.mjs \
+            public/agent_crypto_erith_ia/tools/historical-long-reader.test.mjs \
+            public/agent_crypto_erith_ia/tools/trader-shared-market-selection.test.mjs
 
-
-      - name: Package compact Trader patch
+      - name: Package standalone Trader
         id: package
         shell: bash
         run: |
@@ -159,28 +130,36 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import json, zipfile, os, shutil
+
           root=Path("public/agent_crypto_erith_ia")
-          build=json.loads((root/"trader"/"build.json").read_text(encoding="utf-8"))["build"]
+          trader=root/"trader"
+          build=json.loads((trader/"build.json").read_text(encoding="utf-8"))["build"]
           out=Path(f"AGENT_CRYPTO_TRADER_{build}.zip")
-          files=[
-            root/"administrator"/"index.html",
-            root/"administrator"/"build.json",
-            root/"administrator"/"js"/"aether.js",
-            root/"administrator"/"js"/"okx-market-pair-resolver.js",
+
+          files=[]
+          for p in trader.iterdir():
+            if p.is_file() and p.suffix in {".html",".js",".css",".json",".md"}:
+              files.append(p)
+
+          shared=[
+            root/"administrator"/"style.css",
+            root/"administrator"/"admin-windows.css",
+            root/"administrator"/"admin-visual-assets.css",
+            root/"administrator"/"admin-technical-reading-classic-opacity.css",
+            root/"administrator"/"market-reading-depth.css",
+            root/"administrator"/"help-layer.css",
+            root/"administrator"/"js"/"quote-currency-architecture-406497.js",
+            root/"administrator"/"js"/"okx-local-backend-transport.js",
+            root/"administrator"/"js"/"new-listings-live-asset-406529.js",
             root/"administrator"/"js"/"market-microscope-candles.js",
-            root/"administrator"/"js"/"graph-native-usd-406520.js",
             root/"administrator"/"js"/"okx-microstructure-406499.js",
-            root/"trader"/"trading-desk.html",
-            root/"trader"/"trader-runtime-mirror.js",
-            root/"trader"/"trader-historical-panel.js",
-            root/"trader"/"trader-historical-universe-reader.js",
-            root/"trader"/"trader-historical-long-reader.js",
-            root/"trader"/"trader-historical-cohort-reader.js",
-            root/"trader"/"build.json",
           ]
+          files.extend(p for p in shared if p.exists())
+
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
-            for p in files:
+            for p in sorted(set(files)):
               z.write(p,p.as_posix())
+
           shutil.copy2(out,Path("/tmp")/out.name)
           with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
             fh.write(f"build={build}\n")
@@ -193,7 +172,7 @@ jobs:
           name: AGENT_CRYPTO_TRADER_${{ steps.package.outputs.build }}
           path: ${{ steps.package.outputs.zip }}
 
-      - name: Persist cumulative Trader builds in coordination
+      - name: Persist current Trader package
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         env:
@@ -203,22 +182,7 @@ jobs:
           set -euo pipefail
           target="coordination/inter_ai_dialogues/agent_crypto"
           current_zip="/tmp/$ZIP_NAME"
-          previous_zip="/tmp/AGENT_CRYPTO_TRADER_40.6.611.zip"
-          previous_commit="443b7850bcc3b116cc949f37095a9a61d41dee14"
-
           test -f "$current_zip"
-
-          git fetch --depth=1 origin "$previous_commit" || true
-          if git cat-file -e "$previous_commit^{commit}" 2>/dev/null; then
-            git archive --format=zip --output="$previous_zip" "$previous_commit" \
-              public/agent_crypto_erith_ia/administrator/index.html \
-              public/agent_crypto_erith_ia/administrator/build.json \
-              public/agent_crypto_erith_ia/administrator/js/aether.js \
-              public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js \
-              public/agent_crypto_erith_ia/trader/trading-desk.html \
-              public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js \
-              public/agent_crypto_erith_ia/trader/build.json
-          fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -226,38 +190,26 @@ jobs:
           for attempt in 1 2 3; do
             git fetch origin main
             git checkout -B trader-build-publish origin/main
-
             cp "$current_zip" "$target/$ZIP_NAME"
-            if [ -f "$previous_zip" ] && [ ! -f "$target/AGENT_CRYPTO_TRADER_40.6.611.zip" ]; then
-              cp "$previous_zip" "$target/AGENT_CRYPTO_TRADER_40.6.611.zip"
-            fi
-
             cat > "$target/LATEST_TRADER_BUILD.md" <<EOF
           # Latest Trader build
 
           - Current build: **$BUILD**
           - ZIP: **$ZIP_NAME**
-          - Previous retained build: **AGENT_CRYPTO_TRADER_40.6.611.zip**
+          - Architecture: **standalone Trader page**
           - Source: `public/agent_crypto_erith_ia/trader/build.json`
 
           [Download current build](./$ZIP_NAME)
           EOF
 
             git add "$target/$ZIP_NAME" "$target/LATEST_TRADER_BUILD.md"
-            [ -f "$target/AGENT_CRYPTO_TRADER_40.6.611.zip" ] && git add "$target/AGENT_CRYPTO_TRADER_40.6.611.zip"
-
             if git diff --cached --quiet; then
-              echo "Builds already persisted."
               exit 0
             fi
-
             git commit -m "agent-crypto: persist Trader build $BUILD [skip ci]"
             if git push origin HEAD:main; then
-              echo "Persisted Trader builds in $target"
               exit 0
             fi
             sleep 2
           done
-
-          echo "Could not persist Trader build after retries." >&2
           exit 1
