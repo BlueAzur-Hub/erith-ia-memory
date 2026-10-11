@@ -32,6 +32,7 @@ def verify(raw: bytes, checksum: str, month: str, pair: str = 'BTCUSDT'):
     total = (end-first)//60_000
     last = None
     gaps=[]
+    close_time_anomalies=[]
     count=0
     timestamp_unit=None
     original_rows=[]
@@ -60,7 +61,14 @@ def verify(raw: bytes, checksum: str, month: str, pair: str = 'BTCUSDT'):
                                      'minutes':(ts-before)//60_000})
                     ct=int(r[6]);close=ct//1000 if unit=='us' else ct
                     if not ts<=close<ts+60_000:
-                        raise AdmissionError('Invalid close timestamp')
+                        # The original ZIP can contain rare wrong *close_time*
+                        # values. Preserve the original 12-column row as evidence,
+                        # never fix its timestamp or silently certify the candle.
+                        close_time_anomalies.append({'open_time_ms':ts,
+                            'source_close_time_ms':close,
+                            'offset_from_open_ms':close-ts})
+                        if len(close_time_anomalies)>2:
+                            raise AdmissionError('Too many source close-time anomalies')
                     try:
                         vals=[Decimal(r[i]) for i in (1,2,3,4,5,7,9,10)]
                         count_trades=int(r[8])
@@ -86,5 +94,11 @@ def verify(raw: bytes, checksum: str, month: str, pair: str = 'BTCUSDT'):
             'native_rows':count,'missing_minutes':missing,
             'gaps':gaps,'first_open_ms':original_rows[0][0],
             'last_open_ms':last,'timestamp_unit':timestamp_unit,
-            'synthetic_rows':0,'status':'source_verified_gaps' if missing else 'source_verified_complete',
+            'close_time_anomaly_count':len(close_time_anomalies),
+            'close_time_anomalies':close_time_anomalies,
+            'close_time_anomalies_kept_original':bool(close_time_anomalies),
+            'synthetic_rows':0,
+            'status':('source_with_gaps_and_close_time_anomaly'
+                      if close_time_anomalies else
+                      ('source_verified_gaps' if missing else 'source_verified_complete')),
             'canonical_import':False}, original_rows

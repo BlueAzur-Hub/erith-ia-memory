@@ -127,7 +127,8 @@ def run(catalog,months=MAX_BATCH,collect=None,publish=None,exists=None,
                 issue=next(a for a in manifest["assets"] if a["status"]=="unavailable")
                 reason=issue.get('reason','No verified source data')
                 if ('Missing/duplicate/unaligned candle' in reason or
-                    'Month incomplete:' in reason):
+                    'Month incomplete:' in reason or
+                    'Source candle closes outside its open minute' in reason):
                     try:
                         partial=do_collect_gap(month,folder)
                         require(partial.get('missing_minutes',0)>0 and
@@ -141,6 +142,8 @@ def run(catalog,months=MAX_BATCH,collect=None,publish=None,exists=None,
                         results.append({'month':month,'status':'published_with_gaps',
                                         'native_1m_candles':partial['native_rows'],
                                         'missing_minutes':partial['missing_minutes'],
+                                        'close_time_anomaly_count':partial.get('close_time_anomaly_count',0),
+                                        'quality_status':partial.get('status','source_gap'),
                                         'source_sha256':partial['source_zip_sha256'],
                                         'tag':gap_tag(month),'url':url})
                         print('BTC OLDER AUTHENTIC GAPS '+json.dumps(results[-1],sort_keys=True),flush=True)
