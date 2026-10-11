@@ -71,7 +71,7 @@ def source_candidates(catalog,exact,official,federated=None):
         source=proven.get(cid)
         need(owner and row.get("rank")==owner["rank"] and
              row.get("symbol")==owner["symbol"] and
-             row.get("quote")=="USDT" and not owner["months"]
+             row.get("quote")=="USDT"
              and source and source.get("rank")==owner["rank"]
              and source.get("symbol")==owner["symbol"]
              and source.get("status")=="exact_id_market_candidates",
@@ -241,13 +241,30 @@ def projection(proven):
          "Native Bitget historical projection broken")
     return data
 
-def federate(catalog,items):
+def federate(catalog,items,verified_overlap=frozenset()):
+    """One primary 1m owner per CoinGecko ID after genuine Binance backfill.
+
+    Both independently verified immutable ZIP sources remain intact, but the
+    canonical 1m union represents an overlapping owner only once (Binance
+    primary) and never sums Bitget's verified minutes a second time.
+    """
     ids={a["id"] for a in catalog["assets"] if a["months"]}
-    fresh={}
+    allowed=set(verified_overlap)
+    need(allowed<=ids,"Unverified Bitget/Binance source overlap")
+    fresh={};seen=set()
     for a in items:
-        need(a["id"] not in ids and a["id"] not in fresh,
-             "Conflicting Binance/Bitget CoinGecko source owners")
-        fresh[a["id"]]=a
+        cid=a["id"]
+        need(cid not in seen and isinstance(a.get("months"),int)
+             and isinstance(a.get("native_1m_count"),int)
+             and a["months"]>0 and a["native_1m_count"]>0,
+             "Conflicting or invalid verified Bitget source owner")
+        seen.add(cid)
+        if cid in ids:
+            need(cid in allowed,
+                 "Conflicting Binance/Bitget CoinGecko source owners")
+            continue
+        fresh[cid]=a
+    need(allowed<=seen,"Permitted overlapping source was not verified")
     result=[]
     for a in catalog["assets"]:
         alternate=fresh.get(a["id"])
@@ -316,7 +333,11 @@ def build(catalog,exact,official,tags,metadata=release_info,downloader=download)
     owner=[{"id":a["id"],"months":len(collections[a["id"]]),
             "native_1m_count":sum(len(x["rows"]) for x in collections[a["id"]])}
            for a in metas]
-    combined=federate(catalog,owner)
+    # Explicitly allow an already checked Bitget ZIP if Binance acquired
+    # the same ranked owner later. Both ZIP releases remain immutable.
+    binance_ids={a["id"] for a in catalog["assets"] if a["months"]}
+    overlap={a["id"] for a in owner if a["id"] in binance_ids}
+    combined=federate(catalog,owner,verified_overlap=overlap)
     return projections,altindex,combined
 
 def main():
