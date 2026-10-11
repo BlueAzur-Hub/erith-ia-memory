@@ -47,7 +47,7 @@ TAG="crypto-okx-spot-native-daily-2026-09-okb-cro"
 def need(test, message):
     if not test: raise ValueError(message)
 
-def assets(fed,venue):
+def assets(fed,venue,published=None):
     need(fed.get("schema")=="aerith.public.ohlcv.top250.federated-native-archives.v1"
          and fed.get("ranked")==250 and len(fed.get("assets",[]))==250
          and len({a["id"] for a in fed["assets"]})==250,
