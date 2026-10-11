@@ -7,6 +7,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_btc_native.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_btc_native_test.py'
+      - 'public/agent_crypto_erith_ia/tools/build_btc_source_gap_index.py'
+      - 'public/agent_crypto_erith_ia/tools/build_btc_source_gap_index_test.py'
       - 'public/agent_crypto_erith_ia/tools/probe_btc_source_timestamps.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py'
@@ -18,6 +20,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_btc_native.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_btc_native_test.py'
+      - 'public/agent_crypto_erith_ia/tools/build_btc_source_gap_index.py'
+      - 'public/agent_crypto_erith_ia/tools/build_btc_source_gap_index_test.py'
       - 'public/agent_crypto_erith_ia/tools/probe_btc_source_timestamps.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py'
@@ -76,6 +80,30 @@ jobs:
         run: |
           set -euo pipefail
           python public/agent_crypto_erith_ia/tools/backfill_btc_native.py --collect --months 6
+      - name: Build proven BTC gap-source catalog from immutable Releases (no fabricated rows)
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/build_btc_source_gap_index_test.py
+          python public/agent_crypto_erith_ia/tools/build_btc_source_gap_index.py --output "$RUNNER_TEMP/btc-gap-source-index.json"
+      - name: Commit only data provenance index on main, never source ZIPs or trading code
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_verified_gap_months/index.json
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p "$(dirname "$target")"
+          cp "$RUNNER_TEMP/btc-gap-source-index.json" "$target"
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "NOOP: source-qualified BTC gaps already indexed"
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m "Index immutable BTC source months with gaps and original SHA256 proofs"
+            git push origin HEAD:main
+          fi
       - name: PR only - verify original December 2023 XMR Spot ZIP and official CHECKSUM
         if: github.event_name == 'pull_request'
         run: |
