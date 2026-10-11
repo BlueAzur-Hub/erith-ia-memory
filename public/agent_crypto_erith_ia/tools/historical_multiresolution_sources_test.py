@@ -126,6 +126,50 @@ class MultiResolutionRegistryTests(unittest.TestCase):
             with self.subTest(global_quote=top),self.assertRaises(ValueError):
                 m.check_registry(changed,minute)
 
+    def test_original_kucoin_quote_proof_checks_source_payload_not_just_filename(self):
+        from verify_native_alt_spot_daily import check_payload
+        registry,_=self.source()
+        indexed=copy.deepcopy(next(a for a in registry["assets"] if a["id"]=="tether"))
+        stamp=1790726400000
+        indexed["earliest_source_ms"]=stamp
+        indexed["latest_source_ms"]=stamp
+        indexed["native_candles"]=1
+        indexed["gaps_within_observed_span"]=0
+        original=[str(stamp//1000),"0.9999","1.0000",
+                  "1.0001","0.9998","3.0","3.1"]
+        proof={"coin_id":"tether","exchange":"kucoin","base":"USDT",
+               "quote":"USDC","market_pair_candidate":"USDT-USDC",
+               "proof_method":"exact_coin_id_matching_evm_contract",
+               "contract_platform":"ethereum",
+               "contract_address":"0xdac17f958d2ee523a2206206994597c13d831ec7"}
+        owner={"id":"tether","rank":3,"symbol":"USDT","name":"Tether",
+               "venue":"kucoin","pair":"USDT-USDC","quote":"USDC",
+               "identity_proof":proof}
+        source={"schema":"aerith.original-spot-native-daily.verified-source.v1",
+                "owner":owner,"venue":"kucoin",
+                "source_api":"https://api.kucoin.com/api/v1/market/candles",
+                "original_quote":"USDC","native_interval":"1D",
+                "market":"USDT-USDC","no_synthetic_candles":True,
+                "no_currency_conversion":True,"queried_all_bounded_windows":True,
+                "genesis_or_first_trade_proven":False,"native_candles":1,
+                "native_daily_rows":[original],"earliest_returned_ms":stamp,
+                "latest_returned_ms":stamp,"calendar_days_without_source_bars":0,
+                "source_response_sha256":["a"*64],
+                "source_response_hashes_exchange_signed":False}
+        result=check_payload(source,indexed,"https://github.com/source")
+        self.assertEqual(result["native_daily_candles"],1)
+        for field,value in (
+            ("original_quote","USD"),("original_quote","USDT"),
+            ("market","USDT-USD"),("native_interval","1m")):
+            incorrect=copy.deepcopy(source)
+            incorrect[field]=value
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                check_payload(incorrect,indexed,"https://github.com/source")
+        bad=copy.deepcopy(source)
+        bad["owner"]["identity_proof"]["quote"]="USD"
+        with self.assertRaises(ValueError):
+            check_payload(bad,indexed,"https://github.com/source")
+
     def test_original_bitget_daily_timezone_and_real_gaps_are_not_fabricated(self):
         x,c=self.source()
         bitget=[a for a in x["assets"] if a["venue"]=="Bitget Spot"]
