@@ -25,10 +25,10 @@ class MultiResolutionRegistryTests(unittest.TestCase):
                      if a.get("release_tag")=="crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"]
         self.assertEqual(len(alternative),8)
         self.assertEqual(sum(a["native_candles"] for a in alternative),10034)
-        self.assertEqual(len(approved),49)
-        self.assertEqual(registry["native_daily_candles"],45210)
+        self.assertGreaterEqual(len(approved),52)
+        self.assertGreaterEqual(registry["native_daily_candles"],50717)
         known={a["id"] for a in approved}
-        self.assertEqual(len(known),49)
+        self.assertEqual(len(known),len(approved))
         self.assertEqual({a["id"] for a in alternative},{
             "rain","ondo-us-dollar-yield","mantle","usdd",
             "gatechain-token","kucoin-shares","akedo","derive"})
@@ -73,7 +73,7 @@ class MultiResolutionRegistryTests(unittest.TestCase):
         sources={a["id"]:a for a in approved}
         minute_ids={a["id"] for a in minute["assets"] if a["native_1m_count"]>0}
         self.assertFalse(set(expected) & minute_ids)
-        self.assertEqual(len(set(sources)|minute_ids),190)
+        self.assertGreaterEqual(len(set(sources)|minute_ids),193)
         self.assertEqual(sum(bars for _,bars,_ in expected.values()),10472)
         for cid,(rank,bars,sha) in expected.items():
             with self.subTest(cid=cid):
@@ -90,6 +90,59 @@ class MultiResolutionRegistryTests(unittest.TestCase):
                     "crypto-gate-kucoin-spot-native-daily-2026-09-8e71573a011c"))
                 self.assertEqual(a["source_attestation"],"verified-original-spot-owner")
                 self.assertIn("top250-alt-market-evidence.json#",a["identity_evidence"])
+
+    def test_original_xdc_beldex_akash_immutable_daily_cohort(self):
+        registry,minute=self.source()
+        checked=m.check_registry(registry,minute)
+        rows={a["id"]:a for a in checked}
+        actual={
+            "xdce-crowd-sale":(92,"XDC","KuCoin Spot","XDC-USDT",
+                1973,1620345600000,
+                "e31031f3528a8e55d610b03ab82c5531408877f5f2f1843069fcfbc1e7cd32d2"),
+            "beldex":(106,"BDX","Gate Spot","BDX_USDT",
+                1505,1660780800000,
+                "8a397789c7d616be2746c36d361282ea734811acafdc362ed1afbb19d2baa368"),
+            "akash-network":(178,"AKT","Gate Spot","AKT_USDT",
+                2029,1615507200000,
+                "9c0e6b5c45ebd24df0c299c12795a7e4ca6196252d70fa0696e96f66ea3c5dc1")
+        }
+        for cid,(rank,symbol,venue,pair,bars,first,digest) in actual.items():
+            with self.subTest(cid=cid):
+                a=rows[cid]
+                self.assertEqual((a["rank"],a["symbol"],a["venue"],a["market"]),
+                                 (rank,symbol,venue,pair))
+                self.assertEqual((a["native_candles"],
+                                  a["gaps_within_observed_span"]), (bars,0))
+                self.assertEqual(a["earliest_source_ms"],first)
+                self.assertEqual(a["latest_source_ms"],1790726400000)
+                self.assertEqual(a["bar"],"1D")
+                self.assertEqual(a["quote"],"USDT")
+                self.assertEqual(a["sha256"],digest)
+                self.assertEqual(a["source_attestation"],
+                                 "verified-original-spot-owner")
+                self.assertEqual(a["release_tag"],
+                    "crypto-gate-kucoin-spot-native-daily-2026-09-dcb93d4569f4")
+                self.assertNotIn(cid,{x["id"] for x in minute["assets"]
+                                     if x["native_1m_count"]>0})
+        self.assertEqual(sum(v[4] for v in actual.values()),5507)
+        self.assertEqual(len(checked),52)
+        self.assertEqual(registry["native_daily_candles"],50717)
+
+    def test_refuse_forged_xdc_contract_owner_and_native_quote(self):
+        index,catalog=self.source()
+        for field,forged in (
+            ("rank",999),("symbol","NOTXDC"),("quote","USD"),
+            ("market","XDC-USDC"),("sha256","0"*63),
+            ("source_attestation","unchecked"),
+            ("gaps_within_observed_span",1),
+            ("identity_evidence","https://example.invalid/identity"),
+            ("original_source_api","https://example.invalid/ohlcv")
+        ):
+            changed=copy.deepcopy(index)
+            row=next(a for a in changed["assets"] if a["id"]=="xdce-crowd-sale")
+            row[field]=forged
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                m.check_registry(changed,catalog)
 
     def test_tether_has_genuine_kucoin_usdc_not_usd_daily_archive(self):
         registry,minute=self.source()
