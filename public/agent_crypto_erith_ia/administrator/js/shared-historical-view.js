@@ -319,7 +319,7 @@ function verifiedChart(rows,interval,gaps,pair){
     if(at>=visual.xOf(gap.start_ms)&&at<=visual.xOf(gap.end_exclusive_ms)){
      byId("shared-hover").textContent="ARCHIVES ABSENTES : "+dateOnly(gap.start_ms)+
        " → "+dateOnly(gap.end_exclusive_ms-86400000)+" · "+
-       gap.missing_bars+" bougies manquantes. Aucun prix inventé.";
+       gap.missing_bars+" bougies journalières non certifiées. Des minutes sources peuvent exister ; aucune bougie inventée.";
      return;
     }
    }
@@ -397,9 +397,12 @@ function display(view,metadata){
  byId("shared-status").textContent="Vérifié · "+view.pair+" · "+view.rows.length.toLocaleString("fr-FR")+
    " bougies "+view.interval+suffix;
  byId("shared-source").textContent=certified?
-   "Binance Spot · "+view.pair+" · prix cotés en USDT · "+dateOnly(view.rows[0][0])+" → "+dateOnly(view.rows.at(-1)[0])+
-   " · Derniers 12 mois clos vérifiés à la minute (oct. 2025 à sept. 2026) ; Max inclut d’autres partitions annuelles archivées · "+
-   "Aucune interpolation · pas de prix en direct ni de conversion en USD":
+   (metadata.integrated?
+     "BTC/USDT · MAX SOURCE RECONSTRUIT · 80 mois complets + 21 mois partiels authentiques de mai 2018 à septembre 2026 · "+
+     metadata.missing_days+" journées sans bougie 1j complète, minutes sources conservées · Binance Spot USDT · pas de temps réel ni interpolation":
+     "Binance Spot · "+view.pair+" · prix cotés en USDT · "+dateOnly(view.rows[0][0])+" → "+dateOnly(view.rows.at(-1)[0])+
+     " · Derniers 12 mois clos vérifiés à la minute (oct. 2025 à sept. 2026) ; Max inclut d’autres partitions annuelles archivées · "+
+     "Aucune interpolation · pas de prix en direct ni de conversion en USD"):
    (metadata.source==="Bitget Spot"?"Bitget Spot (7 champs natifs, sans transactions)":"Binance Spot")+
    " · "+view.quote+" · mois "+metadata.month+
    " · "+format(view.rows[0][0])+" → "+format(view.rows.at(-1)[0])+
@@ -409,7 +412,7 @@ function display(view,metadata){
  if(certified){
   const step=({"1m":60000,"5m":300000,"1h":3600000,"1d":86400000})[view.interval];
   const begin=dateOnly(view.rows[0][0]),end=dateOnly(view.rows.at(-1)[0]);
-  const period=view.period==="Max"?"Max (toutes les partitions publiées)":view.period;
+  const period=view.period==="Max"?(metadata.integrated?"Max BTC reconstruit · sources complètes et partielles":"Max (partitions publiées)"):view.period;
   byId("shared-explanation").textContent=
     "VOUS REGARDEZ : "+view.pair+" · "+period+" · du "+begin+" au "+end+
     " · "+view.rows.length.toLocaleString("fr-FR")+" bougies de "+
@@ -418,8 +421,8 @@ function display(view,metadata){
   byId("shared-gaps").textContent=view.gaps.length?
     "ATTENTION — archive incomplète : "+view.gaps.map(g=>
       "du "+dateOnly(g.start_ms)+" au "+dateOnly(g.end_exclusive_ms-step)+
-      " ("+g.missing_bars+" "+(view.interval==="1d"?"jours":"bougies")+" sans données)").join(" ; ")+
-    ". Bande orange = absence réelle d’archives, pas une chute du prix.":
+      " ("+g.missing_bars+" "+(view.interval==="1d"?"journées sans bougie quotidienne complète":"bougies absentes")+")").join(" ; ")+
+    ". Bande orange = absence de bougie certifiée, pas une chute du prix. Des minutes partielles peuvent exister dans le Coffre.":
     "COUVERTURE : aucune lacune dans la période affichée.";
  }
  byId("shared-hover").textContent=certified?
