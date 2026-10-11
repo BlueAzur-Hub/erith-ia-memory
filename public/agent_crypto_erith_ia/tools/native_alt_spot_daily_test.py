@@ -111,6 +111,50 @@ class NativeAlternativeDailyTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 m.acquire(wrong,getter=lambda *args:([], "a"*64))
 
+    def test_verified_original_named_native_spot_is_not_a_symbol_guess(self):
+        minute,daily,ledger,official=catalogs()
+        # AKT has its own native Cosmos chain: no EVM-contract matching.
+        own={"id":"akash-network","rank":178,"name":"Akash Network",
+             "symbol":"AKT","native_1m_count":0}
+        minute["assets"][177]=own
+        notice="https://www.gate.com/fr/announcements/article/19761/Gate.io-will-list-Akash-Network-AKT"
+        proof={"coin_id":"akash-network","exchange":"gate",
+               "base":"AKT","quote":"USDT",
+               "market_pair_candidate":"AKT_USDT",
+               "exchange_instrument_confirmed":False,
+               "native_1m_month_confirmed":False,
+               "proof_method":"original_named_spot_listing",
+               "original_named_spot_notice":notice}
+        ledger["results"].append({"id":"akash-network","rank":178,
+            "symbol":"AKT","status":"exact_id_market_candidates",
+            "markets":[proof]})
+        official["assets"].append({"id":"akash-network","rank":178,"symbol":"AKT",
+            "instruments":[{"venue":"gate","instrument":"AKT_USDT",
+                            "base":"AKT","quote":"USDT",
+                            "exchange_instrument_confirmed":True}]})
+        assets=m.candidates(minute,daily,ledger,official)
+        result=next(a for a in assets if a["id"]=="akash-network")
+        self.assertEqual(result["pair"],"AKT_USDT")
+        self.assertEqual(result["venue"],"gate")
+        self.assertEqual(result["quote"],"USDT")
+        for field,value in (
+            ("original_named_spot_notice","https://bogus.invalid"),
+            ("quote","USD"),
+            ("coin_id","unrelated"),
+            ("base","FAKE")
+        ):
+            wrong=copy.deepcopy(ledger)
+            wrong["results"][-1]["markets"][0][field]=value
+            if field=="quote" or field=="base" or field=="coin_id":
+                self.assertNotIn("akash-network",{x["id"] for x in
+                    m.candidates(minute,daily,wrong,official)})
+            else:
+                with self.assertRaisesRegex(ValueError,"named non-EVM"):
+                    m.candidates(minute,daily,wrong,official)
+        minute["assets"][177]["name"]="Another Akash"
+        with self.assertRaisesRegex(ValueError,"named non-EVM"):
+            m.candidates(minute,daily,ledger,official)
+
     def test_original_gate_ohlcv_and_confirmed_quote_and_daily_timestamp(self):
         stamp=m.END-m.DAY
         row=[str(stamp//1000),"23","2","3","1","2","4","true"]
