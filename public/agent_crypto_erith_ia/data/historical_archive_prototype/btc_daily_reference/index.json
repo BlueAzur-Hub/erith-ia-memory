@@ -1,0 +1,35 @@
+{
+  "asset_id": "bitcoin",
+  "daily_candle_provenance": {
+    "independent_native_1d_days": 26,
+    "minute_complete_derived_days": 3049
+  },
+  "daily_coverage_pct": 100,
+  "first_open_utc": "2018-05-01T00:00:00Z",
+  "gaps_in_daily_series": 0,
+  "is_all_time": false,
+  "is_live": false,
+  "last_open_utc": "2026-09-30T00:00:00Z",
+  "locked_source": {
+    "data_bytes": 125545,
+    "data_path": "btc_native_daily_reconciliation/bitcoin-Max.json.gz",
+    "data_sha256": "812acb4a087cc43163760a6b397506bb7cb4bbcf8eca692fc686ef9f618b8bfd",
+    "index_path": "btc_native_daily_reconciliation/index.json",
+    "index_sha256": "d5cac5421886c27e259b6731ef2cf7b61b0785f3529f3c694799b98f7de6f9b5",
+    "source_catalog_sha256": {
+      "btc_max_integrated/index.json": "3394db88734a8ab534d2e48ab989a26f069fc9679bd1b9ee70381bec76708196",
+      "btc_verified_gap_months/index.json": "e205874d92c2df202487e7f607ccb9667c7dcd66d487f696809e791d8aece70e"
+    }
+  },
+  "minute_coverage_not_claimed": true,
+  "notes": "Frozen source reference. Do not rewrite source archives. Daily 1d continuity does not repair missing native 1m candles. No USD conversion and not BTC all-time.",
+  "one_minute_complete": false,
+  "one_minute_missing_original": 5881,
+  "pair": "BTCUSDT",
+  "quote": "USDT",
+  "resolution": "1d",
+  "schema": "seven.crypto.btc.daily-reference.v1",
+  "status": "verified_frozen_closed_interval",
+  "utc_day_count": 3075,
+  "venue": "Binance Spot"
+}
