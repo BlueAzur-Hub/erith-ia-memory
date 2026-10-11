@@ -6,80 +6,17 @@
   "is_live": false,
   "is_all_time": false,
   "file": "bitcoin-Max.json.gz",
-  "bytes": 124028,
-  "sha256": "e13a4b1cce4cb55bda00ce32d1727adf764ef38075277502ee52ae0d0a89e701",
-  "bars": 3064,
+  "bytes": 125545,
+  "sha256": "812acb4a087cc43163760a6b397506bb7cb4bbcf8eca692fc686ef9f618b8bfd",
+  "bars": 3075,
   "original_bars": 3049,
-  "native_1d_recovered": 15,
-  "unresolved_count": 11,
-  "unresolved_dates": [
-    "2018-06-26",
-    "2018-06-27",
-    "2018-10-19",
-    "2019-08-15",
-    "2020-04-25",
-    "2020-06-28",
-    "2021-02-11",
-    "2021-04-20",
-    "2021-04-25",
-    "2021-08-13",
-    "2021-09-29"
-  ],
+  "native_1d_recovered": 26,
+  "unresolved_count": 0,
+  "unresolved_dates": [],
   "missing_minutes_unchanged": 5881,
   "first_open_ms": 1525132800000,
   "last_open_ms": 1790726400000,
-  "gaps": [
-    {
-      "start_ms": 1529971200000,
-      "end_exclusive_ms": 1530144000000,
-      "missing_bars": 2
-    },
-    {
-      "start_ms": 1539907200000,
-      "end_exclusive_ms": 1539993600000,
-      "missing_bars": 1
-    },
-    {
-      "start_ms": 1565827200000,
-      "end_exclusive_ms": 1565913600000,
-      "missing_bars": 1
-    },
-    {
-      "start_ms": 1587772800000,
-      "end_exclusive_ms": 1587859200000,
-      "missing_bars": 1
-    },
-    {
-      "start_ms": 1593302400000,
-      "end_exclusive_ms": 1593388800000,
-      "missing_bars": 1
-    },
-    {
-      "start_ms": 1613001600000,
-      "end_exclusive_ms": 1613088000000,
-      "missing_bars": 1
-    },
-    {
-      "start_ms": 1618876800000,
-      "end_exclusive_ms": 1618963200000,
-      "missing_bars": 1
-    },
-    {
-      "start_ms": 1619308800000,
-      "end_exclusive_ms": 1619395200000,
-      "missing_bars": 1
-    },
-    {
-      "start_ms": 1628812800000,
-      "end_exclusive_ms": 1628899200000,
-      "missing_bars": 1
-    },
-    {
-      "start_ms": 1632873600000,
-      "end_exclusive_ms": 1632960000000,
-      "missing_bars": 1
-    }
-  ],
+  "gaps": [],
   "source_catalog_sha256": {
     "btc_max_integrated/index.json": "3394db88734a8ab534d2e48ab989a26f069fc9679bd1b9ee70381bec76708196",
     "btc_verified_gap_months/index.json": "e205874d92c2df202487e7f607ccb9667c7dcd66d487f696809e791d8aece70e"
@@ -89,10 +26,22 @@
     {
       "date": "2018-06-26",
       "open_time_ms": 1529971200000,
-      "status": "needs_review",
+      "status": "recovered",
       "native_minute_absent": 600,
+      "source": {
+        "interval": "1d",
+        "venue": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "archive_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-06.zip",
+        "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-06.zip.CHECKSUM",
+        "zip_sha256": "9cd929f61b53ef27850b51824f3ae9bfbd32500398f60c8248d2502c8cc272d6",
+        "checksum_sha256": "b0a218a732e7c5e04eaf1480ef20b7870e96f44a24dc08c7f7c50c770ddf3b29",
+        "file": "BTCUSDT-1d-2018-06.zip"
+      },
       "corroborated_days": 28,
-      "conflicting_days": [
+      "matching_days": 25,
+      "mismatched_reference_days": [
         {
           "date": "2018-06-01",
           "equal": false
@@ -105,26 +54,27 @@
           "date": "2018-06-20",
           "equal": false
         }
-      ],
-      "source": {
-        "interval": "1d",
-        "venue": "Binance Spot",
-        "pair": "BTCUSDT",
-        "quote": "USDT",
-        "archive_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-06.zip",
-        "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-06.zip.CHECKSUM",
-        "zip_sha256": "9cd929f61b53ef27850b51824f3ae9bfbd32500398f60c8248d2502c8cc272d6",
-        "checksum_sha256": "b0a218a732e7c5e04eaf1480ef20b7870e96f44a24dc08c7f7c50c770ddf3b29",
-        "file": "BTCUSDT-1d-2018-06.zip"
-      }
+      ]
     },
     {
       "date": "2018-06-27",
       "open_time_ms": 1530057600000,
-      "status": "needs_review",
+      "status": "recovered",
       "native_minute_absent": 105,
+      "source": {
+        "interval": "1d",
+        "venue": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "archive_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-06.zip",
+        "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-06.zip.CHECKSUM",
+        "zip_sha256": "9cd929f61b53ef27850b51824f3ae9bfbd32500398f60c8248d2502c8cc272d6",
+        "checksum_sha256": "b0a218a732e7c5e04eaf1480ef20b7870e96f44a24dc08c7f7c50c770ddf3b29",
+        "file": "BTCUSDT-1d-2018-06.zip"
+      },
       "corroborated_days": 28,
-      "conflicting_days": [
+      "matching_days": 25,
+      "mismatched_reference_days": [
         {
           "date": "2018-06-01",
           "equal": false
@@ -137,18 +87,7 @@
           "date": "2018-06-20",
           "equal": false
         }
-      ],
-      "source": {
-        "interval": "1d",
-        "venue": "Binance Spot",
-        "pair": "BTCUSDT",
-        "quote": "USDT",
-        "archive_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-06.zip",
-        "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-06.zip.CHECKSUM",
-        "zip_sha256": "9cd929f61b53ef27850b51824f3ae9bfbd32500398f60c8248d2502c8cc272d6",
-        "checksum_sha256": "b0a218a732e7c5e04eaf1480ef20b7870e96f44a24dc08c7f7c50c770ddf3b29",
-        "file": "BTCUSDT-1d-2018-06.zip"
-      }
+      ]
     },
     {
       "date": "2018-07-04",
@@ -166,20 +105,15 @@
         "checksum_sha256": "b001956fb8dd560896726bf3c604e2ec9c45d25b802338767165d480dde8a70c",
         "file": "BTCUSDT-1d-2018-07.zip"
       },
-      "corroborated_days": 30
+      "corroborated_days": 30,
+      "matching_days": 30,
+      "mismatched_reference_days": []
     },
     {
       "date": "2018-10-19",
       "open_time_ms": 1539907200000,
-      "status": "needs_review",
+      "status": "recovered",
       "native_minute_absent": 210,
-      "corroborated_days": 30,
-      "conflicting_days": [
-        {
-          "date": "2018-10-11",
-          "equal": false
-        }
-      ],
       "source": {
         "interval": "1d",
         "venue": "Binance Spot",
@@ -190,7 +124,15 @@
         "zip_sha256": "50483687294e6aa225ded362010a0cd6deef013c36413f2b15ebe887ae8324bd",
         "checksum_sha256": "f6b823db88392fb9f9990894419188c231cf2c3f8cbc2bcc3addfba2318f3e43",
         "file": "BTCUSDT-1d-2018-10.zip"
-      }
+      },
+      "corroborated_days": 30,
+      "matching_days": 29,
+      "mismatched_reference_days": [
+        {
+          "date": "2018-10-11",
+          "equal": false
+        }
+      ]
     },
     {
       "date": "2018-11-14",
@@ -208,7 +150,9 @@
         "checksum_sha256": "d85ee1687f6a86ee65965572e739bdbfd933049ceb357c9ffc4b5ec9c9ac0450",
         "file": "BTCUSDT-1d-2018-11.zip"
       },
-      "corroborated_days": 29
+      "corroborated_days": 29,
+      "matching_days": 29,
+      "mismatched_reference_days": []
     },
     {
       "date": "2019-03-12",
@@ -226,7 +170,9 @@
         "checksum_sha256": "29d5d48622887994cc15d7bb29bf27daad850980223a9547c118a9e1318998ce",
         "file": "BTCUSDT-1d-2019-03.zip"
       },
-      "corroborated_days": 30
+      "corroborated_days": 30,
+      "matching_days": 30,
+      "mismatched_reference_days": []
     },
     {
       "date": "2019-05-15",
@@ -244,7 +190,9 @@
         "checksum_sha256": "190c25ce78645d52164343519784e905c2a041090c446dcb57ee92ace67bac79",
         "file": "BTCUSDT-1d-2019-05.zip"
       },
-      "corroborated_days": 30
+      "corroborated_days": 30,
+      "matching_days": 30,
+      "mismatched_reference_days": []
     },
     {
       "date": "2019-06-07",
@@ -262,20 +210,15 @@
         "checksum_sha256": "8c7c4638b104964114a35a7430b3c7481bc8426ef8de521be8527556f330d22a",
         "file": "BTCUSDT-1d-2019-06.zip"
       },
-      "corroborated_days": 29
+      "corroborated_days": 29,
+      "matching_days": 29,
+      "mismatched_reference_days": []
     },
     {
       "date": "2019-08-15",
       "open_time_ms": 1565827200000,
-      "status": "needs_review",
+      "status": "recovered",
       "native_minute_absent": 480,
-      "corroborated_days": 30,
-      "conflicting_days": [
-        {
-          "date": "2019-08-20",
-          "equal": false
-        }
-      ],
       "source": {
         "interval": "1d",
         "venue": "Binance Spot",
@@ -286,7 +229,15 @@
         "zip_sha256": "b33dc2c6b606598d8daa5db45d60b568b42d2d4ec33b8f4cd9303da1ee6a58c4",
         "checksum_sha256": "a804c1f592afe99a4592c8f4be7c181eb3c2651ef0d2469a1d6e007a78cd636f",
         "file": "BTCUSDT-1d-2019-08.zip"
-      }
+      },
+      "corroborated_days": 30,
+      "matching_days": 29,
+      "mismatched_reference_days": [
+        {
+          "date": "2019-08-20",
+          "equal": false
+        }
+      ]
     },
     {
       "date": "2019-11-13",
@@ -304,7 +255,9 @@
         "checksum_sha256": "c0b0eef290238fee733c19c7d8e9e30b361379d548c12277c77631a7dcf68ae4",
         "file": "BTCUSDT-1d-2019-11.zip"
       },
-      "corroborated_days": 28
+      "corroborated_days": 28,
+      "matching_days": 28,
+      "mismatched_reference_days": []
     },
     {
       "date": "2019-11-25",
@@ -322,7 +275,9 @@
         "checksum_sha256": "c0b0eef290238fee733c19c7d8e9e30b361379d548c12277c77631a7dcf68ae4",
         "file": "BTCUSDT-1d-2019-11.zip"
       },
-      "corroborated_days": 28
+      "corroborated_days": 28,
+      "matching_days": 28,
+      "mismatched_reference_days": []
     },
     {
       "date": "2020-02-09",
@@ -340,7 +295,9 @@
         "checksum_sha256": "25294bf541f3e3df9d6ab4e54686e4ec1cb51e37743dd98874ae63c6d4ccf137",
         "file": "BTCUSDT-1d-2020-02.zip"
       },
-      "corroborated_days": 27
+      "corroborated_days": 27,
+      "matching_days": 27,
+      "mismatched_reference_days": []
     },
     {
       "date": "2020-02-19",
@@ -358,7 +315,9 @@
         "checksum_sha256": "25294bf541f3e3df9d6ab4e54686e4ec1cb51e37743dd98874ae63c6d4ccf137",
         "file": "BTCUSDT-1d-2020-02.zip"
       },
-      "corroborated_days": 27
+      "corroborated_days": 27,
+      "matching_days": 27,
+      "mismatched_reference_days": []
     },
     {
       "date": "2020-03-04",
@@ -376,20 +335,15 @@
         "checksum_sha256": "624823f5918f48849cfe5440aec9428eb17306aebea72723d1345349655902d3",
         "file": "BTCUSDT-1d-2020-03.zip"
       },
-      "corroborated_days": 30
+      "corroborated_days": 30,
+      "matching_days": 30,
+      "mismatched_reference_days": []
     },
     {
       "date": "2020-04-25",
       "open_time_ms": 1587772800000,
-      "status": "needs_review",
+      "status": "recovered",
       "native_minute_absent": 150,
-      "corroborated_days": 29,
-      "conflicting_days": [
-        {
-          "date": "2020-04-09",
-          "equal": false
-        }
-      ],
       "source": {
         "interval": "1d",
         "venue": "Binance Spot",
@@ -400,24 +354,21 @@
         "zip_sha256": "bf4674f7aaf5baafea9e1d73c95344558b381dfe0c117110a156a0d64d8d5cf5",
         "checksum_sha256": "07d7b773cd389a4c11833835fa5bc533e13153ca4188cec006169ad1dcd45316",
         "file": "BTCUSDT-1d-2020-04.zip"
-      }
+      },
+      "corroborated_days": 29,
+      "matching_days": 28,
+      "mismatched_reference_days": [
+        {
+          "date": "2020-04-09",
+          "equal": false
+        }
+      ]
     },
     {
       "date": "2020-06-28",
       "open_time_ms": 1593302400000,
-      "status": "needs_review",
+      "status": "recovered",
       "native_minute_absent": 210,
-      "corroborated_days": 29,
-      "conflicting_days": [
-        {
-          "date": "2020-06-14",
-          "equal": false
-        },
-        {
-          "date": "2020-06-24",
-          "equal": false
-        }
-      ],
       "source": {
         "interval": "1d",
         "venue": "Binance Spot",
@@ -428,7 +379,19 @@
         "zip_sha256": "19e9ffb7c77e0b8c7bc17d6c47fdc52eb50fcb61ac8d94d32b9c13eb17c700d6",
         "checksum_sha256": "4b65bd8810637e719db962a16266e3a6455be09bb453cffd7246584f0b9450c0",
         "file": "BTCUSDT-1d-2020-06.zip"
-      }
+      },
+      "corroborated_days": 29,
+      "matching_days": 27,
+      "mismatched_reference_days": [
+        {
+          "date": "2020-06-14",
+          "equal": false
+        },
+        {
+          "date": "2020-06-24",
+          "equal": false
+        }
+      ]
     },
     {
       "date": "2020-11-30",
@@ -446,7 +409,9 @@
         "checksum_sha256": "94e8e6b9fa473d172b50e98f2e359f84131e6eb3d13a25983f6a444587d55f5f",
         "file": "BTCUSDT-1d-2020-11.zip"
       },
-      "corroborated_days": 29
+      "corroborated_days": 29,
+      "matching_days": 29,
+      "mismatched_reference_days": []
     },
     {
       "date": "2020-12-21",
@@ -464,7 +429,9 @@
         "checksum_sha256": "d7f4ac7d5be8435a4cffebaaa3894112f8ea282b94f24ac842fa146917c4bea9",
         "file": "BTCUSDT-1d-2020-12.zip"
       },
-      "corroborated_days": 29
+      "corroborated_days": 29,
+      "matching_days": 29,
+      "mismatched_reference_days": []
     },
     {
       "date": "2020-12-25",
@@ -482,24 +449,15 @@
         "checksum_sha256": "d7f4ac7d5be8435a4cffebaaa3894112f8ea282b94f24ac842fa146917c4bea9",
         "file": "BTCUSDT-1d-2020-12.zip"
       },
-      "corroborated_days": 29
+      "corroborated_days": 29,
+      "matching_days": 29,
+      "mismatched_reference_days": []
     },
     {
       "date": "2021-02-11",
       "open_time_ms": 1613001600000,
-      "status": "needs_review",
+      "status": "recovered",
       "native_minute_absent": 79,
-      "corroborated_days": 27,
-      "conflicting_days": [
-        {
-          "date": "2021-02-04",
-          "equal": false
-        },
-        {
-          "date": "2021-02-08",
-          "equal": false
-        }
-      ],
       "source": {
         "interval": "1d",
         "venue": "Binance Spot",
@@ -510,7 +468,19 @@
         "zip_sha256": "f18254dc4a70f396494be83a6081cfafd1935aaef42aef5a12f18b0244edeb27",
         "checksum_sha256": "15ac316d6a4d564d8716ba3cbfa19ee19e359a3ef4d7117c9cb50227d70861af",
         "file": "BTCUSDT-1d-2021-02.zip"
-      }
+      },
+      "corroborated_days": 27,
+      "matching_days": 25,
+      "mismatched_reference_days": [
+        {
+          "date": "2021-02-04",
+          "equal": false
+        },
+        {
+          "date": "2021-02-08",
+          "equal": false
+        }
+      ]
     },
     {
       "date": "2021-03-06",
@@ -528,15 +498,29 @@
         "checksum_sha256": "391f801e7cad5064b2c1346d6203f1c53078deab679234df0fbb38f6c962efbd",
         "file": "BTCUSDT-1d-2021-03.zip"
       },
-      "corroborated_days": 30
+      "corroborated_days": 30,
+      "matching_days": 30,
+      "mismatched_reference_days": []
     },
     {
       "date": "2021-04-20",
       "open_time_ms": 1618876800000,
-      "status": "needs_review",
+      "status": "recovered",
       "native_minute_absent": 150,
+      "source": {
+        "interval": "1d",
+        "venue": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "archive_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-04.zip",
+        "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-04.zip.CHECKSUM",
+        "zip_sha256": "3dd852f06608173dec98b7210f6a38728ef221f08717b362b4f3f09436e0a5fe",
+        "checksum_sha256": "d5c5c5995743b15c0759d16fb0b2a81356a8c410bd8421d0a238f4b9c99ad473",
+        "file": "BTCUSDT-1d-2021-04.zip"
+      },
       "corroborated_days": 28,
-      "conflicting_days": [
+      "matching_days": 25,
+      "mismatched_reference_days": [
         {
           "date": "2021-04-01",
           "equal": false
@@ -549,26 +533,27 @@
           "date": "2021-04-23",
           "equal": false
         }
-      ],
-      "source": {
-        "interval": "1d",
-        "venue": "Binance Spot",
-        "pair": "BTCUSDT",
-        "quote": "USDT",
-        "archive_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-04.zip",
-        "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-04.zip.CHECKSUM",
-        "zip_sha256": "3dd852f06608173dec98b7210f6a38728ef221f08717b362b4f3f09436e0a5fe",
-        "checksum_sha256": "d5c5c5995743b15c0759d16fb0b2a81356a8c410bd8421d0a238f4b9c99ad473",
-        "file": "BTCUSDT-1d-2021-04.zip"
-      }
+      ]
     },
     {
       "date": "2021-04-25",
       "open_time_ms": 1619308800000,
-      "status": "needs_review",
+      "status": "recovered",
       "native_minute_absent": 284,
+      "source": {
+        "interval": "1d",
+        "venue": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "archive_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-04.zip",
+        "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-04.zip.CHECKSUM",
+        "zip_sha256": "3dd852f06608173dec98b7210f6a38728ef221f08717b362b4f3f09436e0a5fe",
+        "checksum_sha256": "d5c5c5995743b15c0759d16fb0b2a81356a8c410bd8421d0a238f4b9c99ad473",
+        "file": "BTCUSDT-1d-2021-04.zip"
+      },
       "corroborated_days": 28,
-      "conflicting_days": [
+      "matching_days": 25,
+      "mismatched_reference_days": [
         {
           "date": "2021-04-01",
           "equal": false
@@ -581,31 +566,13 @@
           "date": "2021-04-23",
           "equal": false
         }
-      ],
-      "source": {
-        "interval": "1d",
-        "venue": "Binance Spot",
-        "pair": "BTCUSDT",
-        "quote": "USDT",
-        "archive_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-04.zip",
-        "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2021-04.zip.CHECKSUM",
-        "zip_sha256": "3dd852f06608173dec98b7210f6a38728ef221f08717b362b4f3f09436e0a5fe",
-        "checksum_sha256": "d5c5c5995743b15c0759d16fb0b2a81356a8c410bd8421d0a238f4b9c99ad473",
-        "file": "BTCUSDT-1d-2021-04.zip"
-      }
+      ]
     },
     {
       "date": "2021-08-13",
       "open_time_ms": 1628812800000,
-      "status": "needs_review",
+      "status": "recovered",
       "native_minute_absent": 270,
-      "corroborated_days": 30,
-      "conflicting_days": [
-        {
-          "date": "2021-08-19",
-          "equal": false
-        }
-      ],
       "source": {
         "interval": "1d",
         "venue": "Binance Spot",
@@ -616,24 +583,21 @@
         "zip_sha256": "68612e3fb74c184f97e4d3b2e061dd3743156401a6813ab897014b0b35caedd7",
         "checksum_sha256": "c85cec46b9b63ae8838d885d01fa7db644473141b518987b152a00e6cb0dd79e",
         "file": "BTCUSDT-1d-2021-08.zip"
-      }
+      },
+      "corroborated_days": 30,
+      "matching_days": 29,
+      "mismatched_reference_days": [
+        {
+          "date": "2021-08-19",
+          "equal": false
+        }
+      ]
     },
     {
       "date": "2021-09-29",
       "open_time_ms": 1632873600000,
-      "status": "needs_review",
+      "status": "recovered",
       "native_minute_absent": 120,
-      "corroborated_days": 29,
-      "conflicting_days": [
-        {
-          "date": "2021-09-21",
-          "equal": false
-        },
-        {
-          "date": "2021-09-23",
-          "equal": false
-        }
-      ],
       "source": {
         "interval": "1d",
         "venue": "Binance Spot",
@@ -644,7 +608,19 @@
         "zip_sha256": "9f6535a0fe8a417b0909d230e4a02f6a9933eb23c770f54c9f6bf140e8d02257",
         "checksum_sha256": "6ebb428fc8a0ad23af7bffd52de4ff26972685113ec6b8e3f67ba448356685db",
         "file": "BTCUSDT-1d-2021-09.zip"
-      }
+      },
+      "corroborated_days": 29,
+      "matching_days": 27,
+      "mismatched_reference_days": [
+        {
+          "date": "2021-09-21",
+          "equal": false
+        },
+        {
+          "date": "2021-09-23",
+          "equal": false
+        }
+      ]
     },
     {
       "date": "2023-03-24",
@@ -662,8 +638,11 @@
         "checksum_sha256": "4ae87b95b41803371c50754d4e9d66bfdc29009b17452dc5b499784525cff52e",
         "file": "BTCUSDT-1d-2023-03.zip"
       },
-      "corroborated_days": 30
+      "corroborated_days": 30,
+      "matching_days": 30,
+      "mismatched_reference_days": []
     }
   ],
-  "source_model": "different_native_1d_and_1m_provenance"
+  "source_model": "different_native_1d_and_1m_provenance",
+  "reconciliation_policy": "official_native_1d_with_majority_source_corroboration_v2"
 }
