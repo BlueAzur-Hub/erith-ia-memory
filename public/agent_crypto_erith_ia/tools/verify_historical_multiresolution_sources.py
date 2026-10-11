@@ -2,7 +2,7 @@
 """Verify the single public multi-resolution source registry without rewriting 1m.
 
 All source archives remain immutable GitHub Release assets. This registry
-references exact native OKX 1Dutc and Bitget 1D Spot bars and does NOT mark an asset
+references exact native OKX 1Dutc, Bitget, Gate and KuCoin 1D Spot bars and does NOT mark an asset
 archived in the independent native 1m Top250 catalogue.
 """
 from __future__ import annotations
@@ -24,7 +24,7 @@ SCHEMA="aerith.public.crypto.multiresolution-sources.v1"
 REPO="https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/"
 SHA=re.compile(r"^[0-9a-f]{64}$")
 FILE=re.compile(r"^[a-z0-9-]{1,90}-[A-Z0-9-]+-1D(?:utc)?\.json\.gz$")
-TAG=re.compile(r"^crypto-(?:okx|bitget)-spot-native-daily-2026-09-[a-z0-9-]+$")
+TAG=re.compile(r"^(?:crypto-(?:okx|bitget)-spot-native-daily-2026-09-[a-z0-9-]+|crypto-gate-kucoin-spot-native-daily-2026-09-[0-9a-f]{12})$")
 DAY=86_400_000
 END=1790812800000
 MAX_FILE=600_000
@@ -64,8 +64,12 @@ def check_registry(index,catalog):
         venue=a.get("venue")
         is_okx=venue=="OKX Spot"
         is_bitget=venue=="Bitget Spot"
-        need(is_okx or is_bitget,"Unknown native Spot candle provider")
-        expected_market=(a["symbol"]+"-USDT" if is_okx
+        is_gate=venue=="Gate Spot"
+        is_kucoin=venue=="KuCoin Spot"
+        need(is_okx or is_bitget or is_gate or is_kucoin,
+             "Unknown native Spot candle provider")
+        expected_market=(a["symbol"]+"-USDT" if is_okx or is_kucoin
+                         else a["symbol"]+"_USDT" if is_gate
                          else a["symbol"]+"USDT")
         expected_bar="1Dutc" if is_okx else "1D"
         need(a.get("bar")==expected_bar and
@@ -88,7 +92,7 @@ def check_registry(index,catalog):
                  and isinstance(a.get("identity_evidence"),str)
                  and a["identity_evidence"].startswith("https://www.okx.com/"),
                  "OKX native 1Dutc provenance invalid")
-        else:
+        elif is_bitget:
             offset=a.get("native_session_start_modulo_utc_day_ms")
             need(offset in (0,57_600_000)
                  and a["earliest_source_ms"]%DAY==offset
@@ -112,6 +116,19 @@ def check_registry(index,catalog):
                      a.get("identity_evidence")==
                          canonical+"top250-alt-market-evidence.json#"+cid,
                      "Unproven exact Bitget CoinGecko-to-instrument ownership")
+        if is_gate or is_kucoin:
+            canonical="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/"
+            source=("https://api.gateio.ws/api/v4/spot/candlesticks"
+                    if is_gate else "https://api.kucoin.com/api/v1/market/candles")
+            need(a.get("native_session_start_modulo_utc_day_ms")==0
+                 and a["earliest_source_ms"]%DAY==0
+                 and a["latest_source_ms"]%DAY==0
+                 and a.get("source_api")==source
+                 and a.get("identity_evidence")==
+                     canonical+"top250-alt-market-evidence.json#"+cid
+                 and a.get("instrument_evidence")==
+                     canonical+"top250-official-spot-instruments.json#"+cid,
+                 "Gate/KuCoin native Spot quote, UTC source or exact-ID provenance changed")
         need(isinstance(a.get("bytes"),int) and
              0<a["bytes"]<=MAX_FILE and
              isinstance(a.get("sha256"),str) and SHA.fullmatch(a["sha256"]),
@@ -119,7 +136,9 @@ def check_registry(index,catalog):
         filename=cid+"-"+expected_market+"-"+expected_bar+".json.gz"
         tag=a.get("release_tag")
         need(isinstance(tag,str) and TAG.fullmatch(tag)
-             and tag.startswith("crypto-"+("okx" if is_okx else "bitget")+"-")
+             and (tag.startswith("crypto-okx-") if is_okx else
+                  tag.startswith("crypto-bitget-") if is_bitget else
+                  tag.startswith("crypto-gate-kucoin-spot-native-daily-"))
              and a.get("release_url")==REPO.replace("/download/","/tag/")+tag
              and a.get("filename")==filename
              and FILE.fullmatch(a["filename"]),
