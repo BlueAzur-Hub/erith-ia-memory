@@ -107,6 +107,31 @@ class BitgetFederationTests(unittest.TestCase):
         self.assertEqual(btc_after["native_1m_count"]-
                          btc_before["native_1m_count"],43200)
 
+    def test_syrup_binance_overlap_keeps_bitget_proof_without_double_count(self):
+        """A genuine second venue must not be rejected or counted twice."""
+        source=b.source_candidates(self.catalog,self.exact,self.spot)
+        self.assertIn("syrup",source)
+        self.assertEqual(source["syrup"]["pair"],"SYRUPUSDT")
+        syrup=next(a for a in self.catalog["assets"] if a["id"]=="syrup")
+        self.assertTrue(syrup["months"])
+        previous=json.loads((b.ALT/"index.json").read_text())
+        original=next(a for a in previous["assets"] if a["id"]=="syrup")
+        item={"id":"syrup","months":len(original["months"]),
+              "native_1m_count":original["total_verified_1m_count"]}
+        combined=b.federate(self.catalog,[item])
+        row=next(a for a in combined["assets"] if a["id"]=="syrup")
+        self.assertEqual(row["source"],"Binance Spot official native 1m ZIPs")
+        self.assertEqual(row["native_1m_count"],syrup["candles"])
+        self.assertEqual(combined["archived_assets"],self.catalog["archived_assets"])
+        self.assertEqual(combined["bitget_archived_assets"],0)
+        self.assertEqual(combined["native_1m_candles"],
+                         self.catalog["native_1m_candles"])
+        tampered=json.loads(json.dumps(previous))
+        old=next(a for a in tampered["assets"] if a["id"]=="syrup")
+        old["symbol"]="FAKE"
+        with self.assertRaisesRegex(ValueError,"identity drift"):
+            b.source_candidates(self.catalog,self.exact,self.spot,alt_index=tampered)
+
     def test_full_verified_month_is_federated_without_fake_trade_count(self):
         tag,metadata,downloader=self.fixture()
         projections,alt,union=b.build(self.catalog,self.exact,self.spot,[tag],
