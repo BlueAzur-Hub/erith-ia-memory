@@ -16,6 +16,7 @@ from decimal import Decimal, InvalidOperation
 from urllib.request import Request, urlopen
 
 import import_historical_bulk as bulk
+import verify_native_alt_spot_daily as independent_daily
 
 ROOT=bulk.ROOT/"data/historical_archive_prototype"
 REGISTRY=ROOT/"top250_multiresolution_sources/index.json"
@@ -23,8 +24,8 @@ FED=ROOT/"top250_multisource_coverage/index.json"
 SCHEMA="aerith.public.crypto.multiresolution-sources.v1"
 REPO="https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/"
 SHA=re.compile(r"^[0-9a-f]{64}$")
-FILE=re.compile(r"^[a-z0-9-]{1,90}-[A-Z0-9-]+-1D(?:utc)?\.json\.gz$")
-TAG=re.compile(r"^crypto-(?:okx|bitget)-spot-native-daily-2026-09-[a-z0-9-]+$")
+FILE=re.compile(r"^[a-z0-9-]{1,90}-[A-Z0-9_-]+-1D(?:utc)?\.json\.gz$")
+TAG=re.compile(r"^crypto-(?:okx|bitget|gate-kucoin)-spot-native-daily-2026-09-[a-z0-9-]+$")
 DAY=86_400_000
 END=1790812800000
 MAX_FILE=600_000
@@ -64,9 +65,13 @@ def check_registry(index,catalog):
         venue=a.get("venue")
         is_okx=venue=="OKX Spot"
         is_bitget=venue=="Bitget Spot"
-        need(is_okx or is_bitget,"Unknown native Spot candle provider")
-        expected_market=(a["symbol"]+"-USDT" if is_okx
-                         else a["symbol"]+"USDT")
+        is_gate=venue=="Gate Spot"
+        is_kucoin=venue=="KuCoin Spot"
+        need(is_okx or is_bitget or is_gate or is_kucoin,
+             "Unknown native Spot candle provider")
+        expected_market=(a["symbol"]+"_USDT" if is_gate
+             else a["symbol"]+"-USDT" if is_okx or is_kucoin
+             else a["symbol"]+"USDT")
         expected_bar="1Dutc" if is_okx else "1D"
         need(a.get("bar")==expected_bar and
              a.get("market")==expected_market and
@@ -88,7 +93,7 @@ def check_registry(index,catalog):
                  and isinstance(a.get("identity_evidence"),str)
                  and a["identity_evidence"].startswith("https://www.okx.com/"),
                  "OKX native 1Dutc provenance invalid")
-        else:
+        elif is_bitget:
             offset=a.get("native_session_start_modulo_utc_day_ms")
             need(offset in (0,57_600_000)
                  and a["earliest_source_ms"]%DAY==offset
@@ -112,6 +117,23 @@ def check_registry(index,catalog):
                      a.get("identity_evidence")==
                          canonical+"top250-alt-market-evidence.json#"+cid,
                      "Unproven exact Bitget CoinGecko-to-instrument ownership")
+        else:
+            canonical=("https://github.com/BlueAzur-Hub/erith-ia-memory/"
+                       "blob/main/public/agent_crypto_erith_ia/"
+                       "data/historical_archive_prototype/")
+            need(a.get("identity_evidence")==
+                 canonical+"top250-alt-market-evidence.json#"+cid
+                 and a.get("instrument_evidence")==
+                 canonical+"top250-official-spot-instruments.json#"+cid
+                 and a.get("source_attestation")=="verified-original-spot-owner"
+                 and a.get("original_source_api")==
+                     ("https://api.gateio.ws/api/v4/spot/candlesticks"
+                      if is_gate else
+                      "https://api.kucoin.com/api/v1/market/candles")
+                 and a.get("native_session_start_modulo_utc_day_ms")==0
+                 and a["earliest_source_ms"]%DAY==0
+                 and a["latest_source_ms"]%DAY==0,
+                 "Independent Gate/KuCoin original Spot owner not verified")
         need(isinstance(a.get("bytes"),int) and
              0<a["bytes"]<=MAX_FILE and
              isinstance(a.get("sha256"),str) and SHA.fullmatch(a["sha256"]),
@@ -119,7 +141,8 @@ def check_registry(index,catalog):
         filename=cid+"-"+expected_market+"-"+expected_bar+".json.gz"
         tag=a.get("release_tag")
         need(isinstance(tag,str) and TAG.fullmatch(tag)
-             and tag.startswith("crypto-"+("okx" if is_okx else "bitget")+"-")
+             and tag.startswith("crypto-"+("okx" if is_okx else
+                    "bitget" if is_bitget else "gate-kucoin")+"-")
              and a.get("release_url")==REPO.replace("/download/","/tag/")+tag
              and a.get("filename")==filename
              and FILE.fullmatch(a["filename"]),
@@ -149,6 +172,10 @@ def verify_source(a,opener=urlopen):
     decoded=gzip.decompress(blob)
     need(0<len(decoded)<=MAX_PAYLOAD,"Oversized original OHLCV source")
     data=json.loads(decoded)
+    if a["venue"] in ("Gate Spot","KuCoin Spot"):
+        # Source JSON was downloaded and SHA256 checked above; verify all
+        # original seven/eight-field bars independently without resampling.
+        return independent_daily.check_payload(data,a,url)
     owner=data["owner"]
     is_okx=a["venue"]=="OKX Spot"
     expected_schema=("aerith.okx.native-utc-daily-history.verified-response.v1"

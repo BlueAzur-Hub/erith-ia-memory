@@ -18,6 +18,42 @@ class MultiResolutionRegistryTests(unittest.TestCase):
         self.assertEqual(x["native_1m_added"],0)
         self.assertEqual(len({(a["id"],a["bar"]) for a in verified}),len(verified))
 
+    def test_eight_original_gate_kucoin_venues_with_immutable_hashes_and_gaps(self):
+        registry,catalog=self.source()
+        approved=m.check_registry(registry,catalog)
+        alternative=[a for a in approved
+                     if a["venue"] in ("Gate Spot","KuCoin Spot")]
+        self.assertEqual(len(alternative),8)
+        self.assertEqual(sum(a["native_candles"] for a in alternative),10034)
+        self.assertEqual(len(approved),37)
+        self.assertEqual(registry["native_daily_candles"],31910)
+        known={a["id"] for a in approved}
+        self.assertEqual(len(known),37)
+        self.assertEqual({a["id"] for a in alternative},{
+            "rain","ondo-us-dollar-yield","mantle","usdd",
+            "gatechain-token","kucoin-shares","akedo","derive"})
+        kucoin=next(a for a in alternative if a["id"]=="kucoin-shares")
+        self.assertEqual(kucoin["gaps_within_observed_span"],78)
+        self.assertEqual(kucoin["native_candles"],3187)
+        self.assertTrue(all(a["quote"]=="USDT" and a["bar"]=="1D"
+                        and a["source_attestation"]=="verified-original-spot-owner"
+                        and a["native_session_start_modulo_utc_day_ms"]==0
+                        for a in alternative))
+        for name,value in (
+            ("source_attestation","unverified"),
+            ("original_source_api","https://example.invalid/api"),
+            ("instrument_evidence","https://not-a-spot-market.test"),
+            ("market","DUMMY_USDT"),
+            ("sha256","0"*63),
+            ("gaps_within_observed_span",0),
+        ):
+            changed=copy.deepcopy(registry)
+            bad=next(a for a in changed["assets"]
+                     if a["id"]=="kucoin-shares")
+            bad[name]=value
+            with self.subTest(name=name),self.assertRaises(ValueError):
+                m.check_registry(changed,catalog)
+
     def test_original_bitget_daily_timezone_and_real_gaps_are_not_fabricated(self):
         x,c=self.source()
         bitget=[a for a in x["assets"] if a["venue"]=="Bitget Spot"]
