@@ -1,19 +1,33 @@
 {
   "candidate_count": 80,
-  "checked_count": 50,
-  "market_candidate_count": 1,
+  "checked_count": 56,
+  "market_candidate_count": 20,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
   "quote": "USDT or USDC: never convert silently",
   "ranked": 250,
   "results": [
     {
-      "checked_at": "2026-10-10T17:29:26.431253+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "tether",
-      "markets": [],
-      "pages_checked": 3,
+      "markets": [
+        {
+          "base": "USDT",
+          "coin_id": "tether",
+          "contract_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "contract_platform": "ethereum",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.kucoin.com/api/v3/currencies",
+          "market_pair_candidate": "USDT-USDC",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDC"
+        }
+      ],
+      "pages_checked": 0,
       "rank": 3,
-      "status": "source_pagination_incomplete",
+      "status": "exact_id_market_candidates",
       "symbol": "USDT"
     },
     {
@@ -72,12 +86,26 @@
       "symbol": "LEO"
     },
     {
-      "checked_at": "2026-10-10T17:30:11.845837+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "rain",
-      "markets": [],
+      "markets": [
+        {
+          "base": "RAIN",
+          "coin_id": "rain",
+          "contract_address": "0x25118290e6a5f4139381d072181157035864099d",
+          "contract_platform": "arbitrum-one",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.kucoin.com/api/v3/currencies",
+          "market_pair_candidate": "RAIN-USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 19,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "RAIN"
     },
     {
@@ -207,12 +235,26 @@
       "symbol": "M"
     },
     {
-      "checked_at": "2026-10-10T19:25:04.526711+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "ondo-us-dollar-yield",
-      "markets": [],
-      "pages_checked": 2,
+      "markets": [
+        {
+          "base": "USDY",
+          "coin_id": "ondo-us-dollar-yield",
+          "contract_address": "0x96f6ef951840721adbf46ac996b59e0235cb985c",
+          "contract_platform": "ethereum",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "USDY_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
       "rank": 48,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "USDY"
     },
     {
@@ -243,12 +285,39 @@
       "symbol": "USDF"
     },
     {
-      "checked_at": "2026-10-10T19:31:03.092054+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "mantle",
-      "markets": [],
-      "pages_checked": 3,
+      "markets": [
+        {
+          "base": "MNT",
+          "coin_id": "mantle",
+          "contract_address": "0x3c3a81e81dc49a522a592e7622a7e711c06bf354",
+          "contract_platform": "ethereum",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "MNT_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        },
+        {
+          "base": "MNT",
+          "coin_id": "mantle",
+          "contract_address": "0x3c3a81e81dc49a522a592e7622a7e711c06bf354",
+          "contract_platform": "ethereum",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.kucoin.com/api/v3/currencies",
+          "market_pair_candidate": "MNT-USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
       "rank": 56,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "MNT"
     },
     {
@@ -261,12 +330,26 @@
       "symbol": "EURSAFO"
     },
     {
-      "checked_at": "2026-10-10T23:53:55.919374+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "usdd",
-      "markets": [],
-      "pages_checked": 3,
+      "markets": [
+        {
+          "base": "USDD",
+          "coin_id": "usdd",
+          "contract_address": "0x4f8e5de400de08b164e7421b3ee387f461becd1a",
+          "contract_platform": "ethereum",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.kucoin.com/api/v3/currencies",
+          "market_pair_candidate": "USDD-USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
       "rank": 63,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "USDD"
     },
     {
@@ -420,12 +503,22 @@
       "symbol": "POL"
     },
     {
-      "checked_at": "2026-10-10T06:18:17.828708+00:00",
+      "checked_at": "2026-10-11T01:57:29.334338+00:00",
       "id": "kucoin-shares",
-      "markets": [],
+      "markets": [
+        {
+          "base": "KCS",
+          "coin_id": "kucoin-shares",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "KCS-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 1,
       "rank": 77,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "KCS"
     },
     {
@@ -592,12 +685,39 @@
       "symbol": "EUTBL"
     },
     {
-      "checked_at": "2026-10-10T06:20:50.257022+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "akedo",
-      "markets": [],
+      "markets": [
+        {
+          "base": "AKE",
+          "coin_id": "akedo",
+          "contract_address": "0x2c3a8ee94ddd97244a93bc48298f97d2c412f7db",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "AKE_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        },
+        {
+          "base": "AKE",
+          "coin_id": "akedo",
+          "contract_address": "0x2c3a8ee94ddd97244a93bc48298f97d2c412f7db",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.kucoin.com/api/v3/currencies",
+          "market_pair_candidate": "AKE-USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 104,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "AKE"
     },
     {
@@ -655,12 +775,26 @@
       "symbol": "KAU"
     },
     {
-      "checked_at": "2026-10-10T12:42:01.737614+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "derive",
-      "markets": [],
-      "pages_checked": 1,
+      "markets": [
+        {
+          "base": "DRV",
+          "coin_id": "derive",
+          "contract_address": "0xb1d1eae60eea9525032a6dcb4c1ce336a1de71be",
+          "contract_platform": "ethereum",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "DRV_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
       "rank": 114,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "DRV"
     },
     {
@@ -755,12 +889,39 @@
       "symbol": "BTT"
     },
     {
-      "checked_at": "2026-10-10T17:30:57.633974+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "pieverse",
-      "markets": [],
-      "pages_checked": 1,
+      "markets": [
+        {
+          "base": "PIEVERSE",
+          "coin_id": "pieverse",
+          "contract_address": "0x0e63b9c287e32a05e6b9ab8ee8df88a2760225a9",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "PIEVERSE_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        },
+        {
+          "base": "PIEVERSE",
+          "coin_id": "pieverse",
+          "contract_address": "0x0e63b9c287e32a05e6b9ab8ee8df88a2760225a9",
+          "contract_platform": "ethereum",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.kucoin.com/api/v3/currencies",
+          "market_pair_candidate": "PIEVERSE-USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
       "rank": 132,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "PIEVERSE"
     },
     {
@@ -782,21 +943,75 @@
       "symbol": "LDO"
     },
     {
-      "checked_at": "2026-10-10T17:31:27.862884+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "unibase",
-      "markets": [],
+      "markets": [
+        {
+          "base": "UB",
+          "coin_id": "unibase",
+          "contract_address": "0x40b8129b786d766267a7a118cf8c07e31cdb6fde",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "UB_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        },
+        {
+          "base": "UB",
+          "coin_id": "unibase",
+          "contract_address": "0x40b8129b786d766267a7a118cf8c07e31cdb6fde",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.kucoin.com/api/v3/currencies",
+          "market_pair_candidate": "UB-USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 137,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "UB"
     },
     {
-      "checked_at": "2026-10-10T17:31:42.968482+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "spx6900",
-      "markets": [],
+      "markets": [
+        {
+          "base": "SPX",
+          "coin_id": "spx6900",
+          "contract_address": "0xe0f63a424a4439cbe457d80e4f4b51ad25b2c56c",
+          "contract_platform": "ethereum",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "SPX_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        },
+        {
+          "base": "SPX",
+          "coin_id": "spx6900",
+          "contract_address": "0xe0f63a424a4439cbe457d80e4f4b51ad25b2c56c",
+          "contract_platform": "ethereum",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.kucoin.com/api/v3/currencies",
+          "market_pair_candidate": "SPX-USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 138,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "SPX"
     },
     {
@@ -854,12 +1069,26 @@
       "symbol": "BP"
     },
     {
-      "checked_at": "2026-10-10T23:54:16.309010+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "ape-and-pepe",
-      "markets": [],
-      "pages_checked": 2,
+      "markets": [
+        {
+          "base": "APEPE",
+          "coin_id": "ape-and-pepe",
+          "contract_address": "0xa3f751662e282e83ec3cbc387d225ca56dd63d3a",
+          "contract_platform": "polygon-pos",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "APEPE_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
       "rank": 149,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "APEPE"
     },
     {
@@ -1093,12 +1322,26 @@
       "symbol": "AKT"
     },
     {
-      "checked_at": "2026-10-11T01:51:34.928543+00:00",
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
       "id": "crvusd",
-      "markets": [],
+      "markets": [
+        {
+          "base": "CRVUSD",
+          "coin_id": "crvusd",
+          "contract_address": "0xf939e0a03fb07f59a73314e73794be0e57ac1b4e",
+          "contract_platform": "ethereum",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "CRVUSD_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 180,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "CRVUSD"
     },
     {
@@ -1133,6 +1376,34 @@
       "symbol": "WIF"
     },
     {
+      "checked_at": "2026-10-11T01:57:49.640109+00:00",
+      "id": "useless-3",
+      "markets": [
+        {
+          "base": "USELESS",
+          "coin_id": "useless-3",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "USELESS_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        },
+        {
+          "base": "USELESS",
+          "coin_id": "useless-3",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "USELESS-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 2,
+      "rank": 194,
+      "status": "exact_id_market_candidates",
+      "symbol": "USELESS"
+    },
+    {
       "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "usa",
       "markets": [
@@ -1153,6 +1424,34 @@
       "rank": 196,
       "status": "exact_id_market_candidates",
       "symbol": "USAT"
+    },
+    {
+      "checked_at": "2026-10-11T01:58:09.924117+00:00",
+      "id": "origintrail",
+      "markets": [
+        {
+          "base": "TRAC",
+          "coin_id": "origintrail",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "TRAC_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        },
+        {
+          "base": "TRAC",
+          "coin_id": "origintrail",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "TRAC-USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 2,
+      "rank": 197,
+      "status": "exact_id_market_candidates",
+      "symbol": "TRAC"
     },
     {
       "checked_at": "2026-10-10T19:32:03.974701+00:00",
@@ -1224,6 +1523,42 @@
       "rank": 204,
       "status": "exact_id_market_candidates",
       "symbol": "NPC"
+    },
+    {
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
+      "id": "chain-2",
+      "markets": [
+        {
+          "base": "XCN",
+          "coin_id": "chain-2",
+          "contract_address": "0x7324c7c0d95cebc73eea7e85cbaac0dbdf88a05b",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "XCN_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        },
+        {
+          "base": "XCN",
+          "coin_id": "chain-2",
+          "contract_address": "0x9c632e6aaa3ea73f91554f8a3cb2ed2f29605e0c",
+          "contract_platform": "base",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.kucoin.com/api/v3/currencies",
+          "market_pair_candidate": "XCN-USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 208,
+      "status": "exact_id_market_candidates",
+      "symbol": "XCN"
     },
     {
       "checked_at": "2026-10-10T19:31:23.360211+00:00",
@@ -1310,6 +1645,42 @@
       "symbol": "B"
     },
     {
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
+      "id": "aioz-network",
+      "markets": [
+        {
+          "base": "AIOZ",
+          "coin_id": "aioz-network",
+          "contract_address": "0x33d08d8c7a168333a85285a68c0042b39fc3741d",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "AIOZ_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        },
+        {
+          "base": "AIOZ",
+          "coin_id": "aioz-network",
+          "contract_address": "0x33d08d8c7a168333a85285a68c0042b39fc3741d",
+          "contract_platform": "binance-smart-chain",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.kucoin.com/api/v3/currencies",
+          "market_pair_candidate": "AIOZ-USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 227,
+      "status": "exact_id_market_candidates",
+      "symbol": "AIOZ"
+    },
+    {
       "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "dgrid-ai",
       "markets": [
@@ -1376,6 +1747,29 @@
       "symbol": "Q"
     },
     {
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
+      "id": "geodnet",
+      "markets": [
+        {
+          "base": "GEOD",
+          "coin_id": "geodnet",
+          "contract_address": "0xac0f66379a6d7801d7726d5a943356a172549adb",
+          "contract_platform": "polygon-pos",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "GEOD_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 233,
+      "status": "exact_id_market_candidates",
+      "symbol": "GEOD"
+    },
+    {
       "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "beam-2",
       "markets": [
@@ -1418,6 +1812,29 @@
       "rank": 238,
       "status": "exact_id_market_candidates",
       "symbol": "SNX"
+    },
+    {
+      "checked_at": "2026-10-11T01:58:30.383256+00:00",
+      "id": "stronghold-token",
+      "markets": [
+        {
+          "base": "SHX",
+          "coin_id": "stronghold-token",
+          "contract_address": "0x516d31321928700c6b4fb0db0c8c6bc5d6799787",
+          "contract_platform": "ethereum",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "independent_original_venue_contract_inventory": "https://api.gateio.ws/api/v4/spot/currencies",
+          "market_pair_candidate": "SHX_USDT",
+          "native_1m_month_confirmed": false,
+          "proof_method": "exact_coin_id_matching_evm_contract",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 241,
+      "status": "exact_id_market_candidates",
+      "symbol": "SHX"
     },
     {
       "checked_at": "2026-10-10T19:32:03.974701+00:00",
@@ -1487,5 +1904,5 @@
     }
   ],
   "schema": "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
-  "source": "CoinGecko exact coin ID, independent exchange-specific Spot tickers"
+  "source": "CoinGecko exact coin ID, independent exchange-specific Spot tickers; independently matched CoinGecko contract to original Gate/KuCoin coin chain"
 }
