@@ -17,6 +17,7 @@ from urllib.request import Request, urlopen
 
 import import_historical_bulk as bulk
 import verify_native_alt_spot_daily as independent_daily
+import collect_native_kraken_daily_history as kraken
 
 ROOT=bulk.ROOT/"data/historical_archive_prototype"
 REGISTRY=ROOT/"top250_multiresolution_sources/index.json"
@@ -25,7 +26,7 @@ SCHEMA="aerith.public.crypto.multiresolution-sources.v1"
 REPO="https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/"
 SHA=re.compile(r"^[0-9a-f]{64}$")
 FILE=re.compile(r"^[a-z0-9-]{1,90}-[A-Z0-9_-]+-1D(?:utc)?\.json\.gz$")
-TAG=re.compile(r"^crypto-(?:okx|bitget|gate-kucoin)-spot-native-daily-2026-09-[a-z0-9-]+$")
+TAG=re.compile(r"^crypto-(?:okx|bitget|gate-kucoin|kraken)-spot-native-daily-2026-09-[a-z0-9-]+$")
 DAY=86_400_000
 END=1790812800000
 MAX_FILE=600_000
@@ -73,7 +74,8 @@ def check_registry(index,catalog):
         is_bitget=venue=="Bitget Spot"
         is_gate=venue=="Gate Spot"
         is_kucoin=venue=="KuCoin Spot"
-        need(is_okx or is_bitget or is_gate or is_kucoin,
+        is_kraken=venue=="Kraken Spot"
+        need(is_okx or is_bitget or is_gate or is_kucoin or is_kraken,
              "Unknown native Spot candle provider")
         quote=a.get("quote")
         need(quote in ("USDT","USDC")
@@ -81,6 +83,7 @@ def check_registry(index,catalog):
              and a["symbol"]!=quote,
              "Mislabelled original native daily quote")
         expected_market=(a["symbol"]+"_"+quote if is_gate
+             else a["symbol"]+"/"+quote if is_kraken
              else a["symbol"]+"-"+quote if is_okx or is_kucoin
              else a["symbol"]+quote)
         expected_bar="1Dutc" if is_okx else "1D"
@@ -128,6 +131,28 @@ def check_registry(index,catalog):
                      a.get("identity_evidence")==
                          canonical+"top250-alt-market-evidence.json#"+cid,
                      "Unproven exact Bitget CoinGecko-to-instrument ownership")
+        elif is_kraken:
+            named={c[0]:c for c in kraken.NAMED}.get(cid)
+            canonical=("https://github.com/BlueAzur-Hub/erith-ia-memory/"
+                       "blob/main/public/agent_crypto_erith_ia/"
+                       "data/historical_archive_prototype/")
+            need(named is not None
+                 and (cid,a["rank"],a["symbol"],a["name"],a["market"])==
+                     (named[0],named[1],named[2],named[3],named[4])
+                 and a.get("identity_evidence")==named[6]
+                 and a.get("source_attestation")=="original-named-spot-listing"
+                 and a.get("first_listed_ms")==int(
+                     kraken.dt.datetime.fromisoformat(named[5]).replace(
+                         tzinfo=kraken.dt.timezone.utc).timestamp()*1000)
+                 and a["earliest_source_ms"]>=a["first_listed_ms"]
+                 and a.get("original_source_api")==kraken.API+"OHLC"
+                 and a.get("source_instrument_api")==kraken.API+"AssetPairs"
+                 and a.get("instrument_evidence")==
+                     canonical+"top250-official-spot-instruments.json#"+cid
+                 and a.get("native_session_start_modulo_utc_day_ms")==0
+                 and a["earliest_source_ms"]%DAY==0
+                 and a["latest_source_ms"]%DAY==0,
+                 "Kraken immutable named original Spot owner/quote attestation invalid")
         else:
             canonical=("https://github.com/BlueAzur-Hub/erith-ia-memory/"
                        "blob/main/public/agent_crypto_erith_ia/"
@@ -149,11 +174,11 @@ def check_registry(index,catalog):
              0<a["bytes"]<=MAX_FILE and
              isinstance(a.get("sha256"),str) and SHA.fullmatch(a["sha256"]),
              "Unverified original gzip SHA")
-        filename=cid+"-"+expected_market+"-"+expected_bar+".json.gz"
+        filename=cid+"-"+expected_market.replace("/","-")+"-"+expected_bar+".json.gz"
         tag=a.get("release_tag")
         need(isinstance(tag,str) and TAG.fullmatch(tag)
              and tag.startswith("crypto-"+("okx" if is_okx else
-                    "bitget" if is_bitget else "gate-kucoin")+"-")
+                    "bitget" if is_bitget else "kraken" if is_kraken else "gate-kucoin")+"-")
              and a.get("release_url")==REPO.replace("/download/","/tag/")+tag
              and a.get("filename")==filename
              and FILE.fullmatch(a["filename"]),
@@ -183,6 +208,8 @@ def verify_source(a,opener=urlopen):
     decoded=gzip.decompress(blob)
     need(0<len(decoded)<=MAX_PAYLOAD,"Oversized original OHLCV source")
     data=json.loads(decoded)
+    if a["venue"]=="Kraken Spot":
+        return verify_kraken_native_payload(data,a,url)
     if a["venue"] in ("Gate Spot","KuCoin Spot"):
         # Source JSON was downloaded and SHA256 checked above; verify all
         # original seven/eight-field bars independently without resampling.
@@ -246,6 +273,55 @@ def verify_source(a,opener=urlopen):
          and data.get("source_response_digests_are_exchange_signed") is False,
          "Original API response integrity digests absent or falsely signed")
     return {"id":a["id"],"native_daily_candles":len(rows),
+            "gzip_sha256":a["sha256"],"source":url}
+
+
+def verify_kraken_native_payload(data,a,url):
+    """Independent post-Release native OHLCV verification, no aggregation."""
+    need(isinstance(data,dict)
+         and data.get("schema")==kraken.SCHEMA
+         and data.get("exchange")=="Kraken Spot"
+         and data.get("venue")=="kraken"
+         and data.get("coin_id")==a["id"]
+         and data.get("rank")==a["rank"]
+         and data.get("symbol")==a["symbol"]
+         and data.get("name")==a["name"]
+         and data.get("market")==a["market"]
+         and data.get("original_quote")==a["quote"]
+         and data.get("native_interval")=="1D"
+         and data.get("source_api")==kraken.API+"OHLC"
+         and data.get("source_instrument_api")==kraken.API+"AssetPairs"
+         and data.get("first_listed_ms")==a["first_listed_ms"]
+         and data.get("original_named_spot_notice")==a["identity_evidence"]
+         and data.get("coingecko_identity_url")==
+             "https://www.coingecko.com/en/coins/"+a["id"]
+         and data.get("no_synthetic_candles") is True
+         and data.get("no_currency_conversion") is True
+         and data.get("genesis_or_first_trade_proven") is False
+         and data.get("source_has_only_last_720_daily_rows") is True
+         and data.get("source_response_hashes_exchange_signed") is False,
+         "Incorrect Kraken original market owner/quote/source chronology")
+    sha=data.get("source_response_sha256")
+    need(isinstance(sha,list) and len(sha)==2 and
+         all(isinstance(x,str) and SHA.fullmatch(x) for x in sha),
+         "Kraken original API source response digests missing")
+    original=data.get("original_rows")
+    need(isinstance(original,list) and len(original)==a["native_candles"]
+         and len(original)<=720,
+         "Kraken original traded daily OHLCV rows missing or replaced")
+    proof=kraken.source_rows(original,{"first_listed_ms":a["first_listed_ms"]})
+    need(proof["bars"]==a["native_candles"]
+         and proof["first_ms"]==a["earliest_source_ms"]
+         and proof["last_ms"]==a["latest_source_ms"]
+         and proof["gaps"]==a["gaps_within_observed_span"]
+         and data.get("calendar_days_without_source_bars")==proof["gaps"]
+         and data.get("earliest_source_ms")==proof["first_ms"]
+         and data.get("latest_source_ms")==proof["last_ms"]
+         and data.get("native_candles")==proof["bars"]
+         and isinstance(data.get("zero_trade_days_excluded"),int)
+         and data["zero_trade_days_excluded"]>=0,
+         "Kraken original 1D timestamps, count or source gaps modified")
+    return {"id":a["id"],"native_daily_candles":proof["bars"],
             "gzip_sha256":a["sha256"],"source":url}
 
 def main():

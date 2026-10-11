@@ -17,6 +17,13 @@ class KrakenNativeDailyProof(unittest.TestCase):
         f=m.read(m.FED)
         d=m.read(m.DAILY)
         o=m.read(m.OFFICIAL)
+        # Test the explicit original project-owner matching, even after
+        # those immutable releases have been indexed in the real Coffre.
+        d=copy.deepcopy(d)
+        original={row[0] for row in m.NAMED}
+        d["assets"]=[a for a in d["assets"] if a["id"] not in original]
+        d["asset_count"]=len(d["assets"])
+        d["native_daily_candles"]=sum(a["native_candles"] for a in d["assets"])
         return f,d,o
 
     def test_all_original_named_coin_ids_match_canonical_frozen_ranking(self):
