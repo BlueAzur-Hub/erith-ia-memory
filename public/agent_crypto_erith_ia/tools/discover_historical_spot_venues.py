@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only Top250 exact-ID market discovery: OKX and Bitget, NOT an OHLCV archive."""
+"""Read-only Top250 exact-ID market discovery: four Spot exchanges, NOT OHLCV."""
 from __future__ import annotations
 import argparse
 import datetime as dt
@@ -20,7 +20,7 @@ LIVE_DAILY=BASE/"top250_multiresolution_sources/index.json"
 OUTPUT=BASE/"top250-alt-market-evidence.json"
 OFFICIAL=BASE/"top250-official-spot-instruments.json"
 SCHEMA="aerith.public.ohlcv.spot.top250.alt-market-discovery.v1"
-EXCHANGES=("okx","bitget")
+EXCHANGES=("okx","bitget","gate","kucoin")
 QUOTES={"USDT":"tether","USDC":"usd-coin"}
 ID=re.compile(r"^[a-z0-9-]{2,100}$")
 ALNUM=re.compile(r"^[A-Z0-9]{1,30}$")
@@ -119,7 +119,9 @@ def exact_candidates(tickers,asset,exchange):
         if t.get("target_coin_id") not in (None,QUOTES[quote]):continue
         if t.get("is_anomaly") is True or t.get("is_stale") is True or t.get("trust_score")=="red":
             continue
-        pair=base+"-"+quote if exchange=="okx" else base+quote
+        pair=(base+"_"+quote if exchange=="gate" else
+              base+"-"+quote if exchange in ("okx","kucoin") else
+              base+quote)
         evidence={"coin_id":asset["id"],"exchange":exchange,"base":base,
                   "quote":quote,"market_pair_candidate":pair,
                   "exchange_instrument_confirmed":False,
@@ -159,15 +161,19 @@ def fetch_exchange(coin_id,exchange,page):
         require(isinstance(obj.get("tickers"),list),"Bad source exchange tickers")
         return obj["tickers"]
 
-def inspect(asset,getter=fetch,exchange_getter=None):
+def inspect(asset,getter=fetch,exchange_getter=None,exchanges=("okx","bitget")):
     """Retain only complete venue-specific exact-ID proofs.
 
     One exchange's 429 must not discard an independently proven instrument
     from the other exchange. It never turns the failed venue into a negative.
     """
+    require(isinstance(exchanges,(tuple,list)) and len(exchanges)>0
+            and len(exchanges)==len(set(exchanges))
+            and all(e in EXCHANGES for e in exchanges),
+            "Untrusted exact-ID market venue cohort")
     matches=[];pages=0;unavailable=False;incomplete=False
     errors=(OSError,ValueError,RuntimeError,TypeError,KeyError,json.JSONDecodeError)
-    for exchange in EXCHANGES:
+    for exchange in exchanges:
         local=[];venue_error=False
         try:
             for page in (1,2):
@@ -315,7 +321,7 @@ def process(queue,prior=None,batch=MAX_BATCH,checker=inspect,delay=15,
             "checked_count":sum(x["id"] not in excluded for x in result),
             "market_candidate_count":sum(bool(x["markets"]) and x["id"] not in excluded
                                          for x in result),
-            "source":"CoinGecko exact coin ID, exchange_ids okx or bitget",
+            "source":"CoinGecko exact coin ID, independent exchange-specific Spot tickers",
             "quote":"USDT or USDC: never convert silently",
             "market_only_not_archived":True,
             "note":"Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
