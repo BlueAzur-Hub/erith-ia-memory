@@ -109,9 +109,6 @@ class RestAndTrades(unittest.TestCase):
                 return {"status":"api_200","rows":[matching,candidate],
                         "response_sha256":"f"*64,"bytes":250}
             return {"status":"api_200","rows":[],"response_sha256":"b"*64,"bytes":2}
-        def orig(entry,tmp):
-            return {t-60000:m.previous.valid_row(matching,t-60000,t)},
-                {"source_zip_sha256":entry["source_zip_sha256"]}
         def orig_ok(entry,tmp):
             return ({t-60000:m.previous.valid_row(matching,t-60000,t)},
                     {"source_zip_sha256":entry["source_zip_sha256"]})
