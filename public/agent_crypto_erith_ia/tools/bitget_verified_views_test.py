@@ -48,10 +48,19 @@ class BitgetFederationTests(unittest.TestCase):
         syrup=next(a for a in self.catalog["assets"] if a["id"]=="syrup")
         original=next(a for a in live["assets"] if a["id"]=="syrup")
         self.assertTrue(syrup["months"])
-        self.assertEqual(original["source"],"Bitget Spot native 1m HTTPS")
+        # A genuine backfilled Binance archive is now the primary source;
+        # the original Bitget proof remains independently available below.
+        self.assertEqual(original["source"],"Binance Spot official native 1m ZIPs")
         selected=b.source_candidates(self.catalog,self.exact,self.spot,live)
-        self.assertIn("syrup",selected)
-        self.assertEqual(selected["syrup"]["pair"],"SYRUPUSDT")
+        # Binance-primary SYRUP must not trigger an accidental second
+        # Bitget import, but its independently proven original venue remains.
+        self.assertNotIn("syrup",selected)
+        prior=copy.deepcopy(live)
+        prior_syrup=next(a for a in prior["assets"] if a["id"]=="syrup")
+        prior_syrup["source"]="Bitget Spot native 1m HTTPS"
+        prior_syrup["native_1m_count"]=43200
+        original_bitget=b.source_candidates(self.catalog,self.exact,self.spot,prior)
+        self.assertEqual(original_bitget["syrup"]["pair"],"SYRUPUSDT")
         alt={"id":"syrup","months":1,"native_1m_count":43200}
         # Unchecked overlap remains forbidden; new source owner or rows
         # cannot silently overwrite Binance's native 1m primary series.
@@ -68,7 +77,7 @@ class BitgetFederationTests(unittest.TestCase):
         proof=next(a for a in altered["results"] if a["id"]=="syrup")
         proof["markets"]=[]
         with self.assertRaisesRegex(ValueError,"original Spot pair"):
-            b.source_candidates(self.catalog,altered,self.spot,live)
+            b.source_candidates(self.catalog,altered,self.spot,prior)
         with self.assertRaisesRegex(ValueError,"not verified"):
             b.federate(self.catalog,[],verified_overlap={"syrup"})
 
