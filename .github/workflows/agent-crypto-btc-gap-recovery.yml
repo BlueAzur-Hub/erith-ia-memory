@@ -39,7 +39,7 @@ jobs:
           python public/agent_crypto_erith_ia/tools/btc_gap_acquire_test.py
       - name: Download original Binance Spot ZIP with official CHECKSUM
         env:
-          BTC_MONTH: ${{ github.event_name == 'workflow_dispatch' && inputs.month || '2023-03' }}
+          BTC_MONTH: ${{ github.event_name == 'workflow_dispatch' && inputs.month || '2020-12' }}
         run: |
           set -euo pipefail
           [[ "$BTC_MONTH" =~ ^20[0-9]{2}-(0[1-9]|1[0-2])$ ]]
@@ -55,12 +55,18 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
-          BTC_MONTH: ${{ github.event_name == 'workflow_dispatch' && inputs.month || '2023-03' }}
+          BTC_MONTH: ${{ github.event_name == 'workflow_dispatch' && inputs.month || '2020-12' }}
         run: |
           set -euo pipefail
           tag="btc-spot-native-gap-$BTC_MONTH"
           if gh release view "$tag" >/dev/null 2>&1; then
-            echo "::error::Existing immutable release $tag must be inspected; refusing overwrite"
+            local_sha=$(python -c 'import json,os,pathlib; m=os.environ["BTC_MONTH"]; p=pathlib.Path(os.environ["RUNNER_TEMP"])/"btc-month"/f"BTCUSDT-1m-{m}.json"; print(json.loads(p.read_text())["source_zip_sha256"])')
+            remote_sha=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$tag" --jq ".assets[] | select(.name == \"BTCUSDT-1m-$BTC_MONTH.zip\") | .digest")
+            if [[ "$remote_sha" == "sha256:$local_sha" ]]; then
+              echo "IMMUTABLE SOURCE ALREADY VERIFIED: $tag (no duplicate publication)"
+              exit 0
+            fi
+            echo "::error::Existing source Release checksum differs; refuse overwrite"
             exit 1
           fi
           gh release create "$tag" "$RUNNER_TEMP/btc-month/"* --target "$GITHUB_SHA"             --title "BTCUSDT official native 1m gap-aware source $BTC_MONTH"             --notes "Original Binance Spot source ZIP, official CHECKSUM, SHA-256 verified manifest, queryable SQLite. No synthetic candles. RESEARCH ONLY: not a canonical full-month archive; do not combine USDT with USD."             --latest=false
