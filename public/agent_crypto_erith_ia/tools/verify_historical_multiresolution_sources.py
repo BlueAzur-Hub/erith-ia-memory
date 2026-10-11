@@ -141,7 +141,8 @@ def check_registry(index,catalog):
         filename=cid+"-"+expected_market+"-"+expected_bar+".json.gz"
         tag=a.get("release_tag")
         need(isinstance(tag,str) and TAG.fullmatch(tag)
-             and tag.startswith("crypto-"+("okx" if is_okx else "bitget")+"-")
+             and tag.startswith("crypto-"+("okx" if is_okx else
+                    "bitget" if is_bitget else "gate-kucoin")+"-")
              and a.get("release_url")==REPO.replace("/download/","/tag/")+tag
              and a.get("filename")==filename
              and FILE.fullmatch(a["filename"]),
