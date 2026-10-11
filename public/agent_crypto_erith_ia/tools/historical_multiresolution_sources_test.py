@@ -10,13 +10,30 @@ class MultiResolutionRegistryTests(unittest.TestCase):
     def source(self):
         return json.loads(m.REGISTRY.read_text()), json.loads(m.FED.read_text())
 
-    def test_sixteen_unique_sources_and_zero_miscounted_minutes(self):
+    def test_twenty_three_unique_sources_and_zero_miscounted_minutes(self):
         x,c=self.source()
         verified=m.check_registry(x,c)
-        self.assertEqual(len(verified),16)
-        self.assertEqual(sum(a["native_candles"] for a in verified),14628)
+        self.assertEqual(len(verified),23)
+        self.assertEqual(sum(a["native_candles"] for a in verified),17467)
         self.assertEqual(x["native_1m_added"],0)
-        self.assertEqual(len({(a["id"],a["bar"]) for a in verified}),16)
+        self.assertEqual(len({(a["id"],a["bar"]) for a in verified}),23)
+
+    def test_original_bitget_daily_timezone_and_real_gaps_are_not_fabricated(self):
+        x,c=self.source()
+        bitget=[a for a in x["assets"] if a["venue"]=="Bitget Spot"]
+        self.assertEqual(len(bitget),7)
+        self.assertEqual(sum(a["native_candles"] for a in bitget),2839)
+        self.assertTrue(all(a["bar"]=="1D" and
+                 a["native_session_start_modulo_utc_day_ms"]==57600000
+                 and a["gaps_within_observed_span"]>0 for a in bitget))
+        for field,value in (("native_session_start_modulo_utc_day_ms",0),
+                            ("gaps_within_observed_span",-1),
+                            ("market","GHOSTUSDT"),("bar","1Dutc")):
+            bad=copy.deepcopy(x)
+            target=next(a for a in bad["assets"] if a["venue"]=="Bitget Spot")
+            target[field]=value
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                m.check_registry(bad,c)
 
     def test_reject_wrong_rank_coin_id_or_spurious_asset(self):
         for mode in ("wrong ID","wrong rank","duplicate"):
