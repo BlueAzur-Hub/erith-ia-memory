@@ -269,7 +269,7 @@ test("Max explains the missing archive dates without making the user guess",asyn
  assert.match(x.node("shared-explanation").textContent,/VOUS REGARDEZ : BTCUSDT/);
  assert.match(x.node("shared-explanation").textContent,/Max/);
  assert.match(x.node("shared-gaps").textContent,/ATTENTION — archive incomplète/);
- assert.match(x.node("shared-gaps").textContent,/sans données/);
+ assert.match(x.node("shared-gaps").textContent,/sans bougie quotidienne complète/);
  assert.match(x.node("shared-gaps").textContent,/Bande orange/);
  assert.match(x.node("shared-range").textContent,/3.?049 bougies visibles/);
  assert.equal(x.node("shared-prev").disabled,true);
