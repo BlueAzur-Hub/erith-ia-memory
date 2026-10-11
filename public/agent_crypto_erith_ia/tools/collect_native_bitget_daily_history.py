@@ -138,6 +138,7 @@ def acquire(owner,fetcher=request_page):
          and PAIR.fullmatch(owner["pair"]),"Unsafe exact-ID source owner")
     unique={}
     session_modulo=None
+    excluded_native_rows=0
     digests=[]
     segments=0
     current=END
@@ -154,19 +155,17 @@ def acquire(owner,fetcher=request_page):
                  isinstance(row[0],str) and row[0].isdigit(),
                  "Invalid native source timestamp")
             boundary=int(row[0])
-            if boundary==current and current==END:
+            if boundary<begin or boundary>=current:
+                # Bitget sometimes includes rows outside startTime/endTime.
+                # Never attach an out-of-window candle to another source
+                # interval, even if it is a genuine exchange record.
+                excluded_native_rows+=1
                 continue
             stamp,native=parse_row(row)
             if session_modulo is None:
                 session_modulo=stamp%DAY
             need(stamp%DAY==session_modulo,
                  "Mixed exchange daily opening times: cannot silently normalize")
-            if stamp<begin or stamp>=current:
-                # The official history endpoint may return an extra boundary
-                # candle. Never misrepresent it as part of the requested range.
-                need(begin-DAY<=stamp<=current,
-                     "Unrelated native Bitget history date")
-                continue
             need(stamp not in segment_seen,"Repeated native daily timestamp")
             segment_seen[stamp]=native
             need(stamp not in unique,"Overlapping history segment duplicated")
@@ -187,6 +186,9 @@ def acquire(owner,fetcher=request_page):
         "native_candles":len(stamps),"calendar_days_without_native_bars":gaps,
         "native_session_start_modulo_utc_day_ms":session_modulo,
         "covered_query_start_ms":START,
+        "historical_source_exhaustion_proven":False,
+        "out_of_window_native_rows_excluded":excluded_native_rows,
+        "requested_80_day_segments":segments,
         "first_trade_or_genesis_proven":False,
         "native_source_response_sha256":digests,
         "source_response_digests_are_exchange_signed":False,
@@ -214,7 +216,8 @@ def collect(owners):
                 "id":owner["id"],"pair":owner["pair"],"candles":data["native_candles"],
                 "first":data["earliest_returned_ms"],
                 "last":data["latest_returned_ms"],
-                "gaps":data["calendar_days_without_native_bars"]},sort_keys=True),
+                "gaps":data["calendar_days_without_native_bars"],
+                "out_of_window":data["out_of_window_native_rows_excluded"]},sort_keys=True),
                 flush=True)
         except (ValueError,RuntimeError,OSError) as exc:
             failures.append({"id":owner["id"],
