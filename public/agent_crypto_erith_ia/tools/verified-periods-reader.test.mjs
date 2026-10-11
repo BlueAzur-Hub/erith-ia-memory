@@ -201,7 +201,7 @@ test("UI changing pilot and period routes to verified archive and renders OHLCV 
   await new Promise(resolve=>setImmediate(resolve));
  assert.match(x.node("shared-status").textContent,/SHA-256 vérifié/);
  assert.match(x.node("shared-status").textContent,/365 bougies 1d/);
- assert.match(x.node("shared-source").textContent,/Max = partitions historiques matérialisées/);
+ assert.match(x.node("shared-source").textContent,/Max inclut d’autres partitions annuelles archivées/);
  assert.equal(x.node("shared-table").children.length,9);
  assert.ok(x.requests.includes("verified_periods/bitcoin-1an.json.gz"));
  x.node("shared-period").value="Max";
