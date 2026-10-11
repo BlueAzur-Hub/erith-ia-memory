@@ -76,7 +76,7 @@ class BTCBackfillTests(unittest.TestCase):
     def test_real_source_gap_enters_immutable_separate_release(self):
         pending,_=m.plan(self.catalog,2)
         calls=[]
-        def source(month,asset,folder):
+        def source(month,folder):
             if month==pending[0]:
                 item={"asset_id":"bitcoin","rank":1,"pair":"BTCUSDT",
                       "source":"Binance Spot public monthly CSV",
@@ -88,7 +88,7 @@ class BTCBackfillTests(unittest.TestCase):
                           "candles":0,"zip_bytes":0,"assets":[item]}
                 (folder/"manifest.json").write_text(json.dumps(manifest))
                 return manifest
-            return fixture(month,asset,folder)
+            return fixture(month,None,folder)
         def gap_source(month,folder):
             calls.append(("preserved",month))
             return {"native_rows":43200-80,"missing_minutes":80,
