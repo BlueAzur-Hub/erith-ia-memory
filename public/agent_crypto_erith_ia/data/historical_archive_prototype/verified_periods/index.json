@@ -1,0 +1,622 @@
+{
+  "schema": "seven.crypto.verified-period-index",
+  "quote": "USDT",
+  "is_live": false,
+  "is_all_time": false,
+  "source": "Binance Spot native verified 1m ZIPs",
+  "scope": "12 verified closed months plus available annual shards",
+  "core_assets": 5,
+  "periods_per_asset": 7,
+  "assets": [
+    {
+      "id": "bitcoin",
+      "pair": "BTCUSDT",
+      "quote": "USDT",
+      "verified_closed_months": 12,
+      "verified_native_minutes": 525600,
+      "first_month": "2025-10",
+      "last_month": "2026-09",
+      "max_scope": "materialized_calendar_year_shards_not_all_time",
+      "periods": [
+        {
+          "period": "24h",
+          "resolution": "1m",
+          "file": "bitcoin-24h.json.gz",
+          "sha256": "ecbc0cd67e7ae7e68b572e851a3c18d89f2fed3f8a12c6c6df19e21429d81d78",
+          "bytes": 43966,
+          "bars": 1440,
+          "start_ms": 1790726400000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "9aa8b605855ecccf7f26ccaeae086402eeb3181c51779584a992ae8c4979a52c",
+            "40170f9a9b95a9ce455f9fde13b21a41f26f2fe26b80256eae5392322d01957a"
+          ]
+        },
+        {
+          "period": "7j",
+          "resolution": "5m",
+          "file": "bitcoin-7j.json.gz",
+          "sha256": "4c85efc5515b95e353a8e234bbcdb4f281fd408725b6a23af7e8c3f1e6635153",
+          "bytes": 66518,
+          "bars": 2016,
+          "start_ms": 1790208000000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "9aa8b605855ecccf7f26ccaeae086402eeb3181c51779584a992ae8c4979a52c",
+            "40170f9a9b95a9ce455f9fde13b21a41f26f2fe26b80256eae5392322d01957a"
+          ]
+        },
+        {
+          "period": "30j",
+          "resolution": "1h",
+          "file": "bitcoin-30j.json.gz",
+          "sha256": "f43cb8cd5ecc3454b93b3e11654ff6c5dcca86a366d86fbf560a8002ea62d452",
+          "bytes": 27915,
+          "bars": 720,
+          "start_ms": 1788220800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "9aa8b605855ecccf7f26ccaeae086402eeb3181c51779584a992ae8c4979a52c",
+            "40170f9a9b95a9ce455f9fde13b21a41f26f2fe26b80256eae5392322d01957a"
+          ]
+        },
+        {
+          "period": "60j",
+          "resolution": "1h",
+          "file": "bitcoin-60j.json.gz",
+          "sha256": "ba779682daef781648ee0928dc25eb21665ff056432c25db67f139d1da1b1dcb",
+          "bytes": 53646,
+          "bars": 1440,
+          "start_ms": 1785628800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "9aa8b605855ecccf7f26ccaeae086402eeb3181c51779584a992ae8c4979a52c",
+            "40170f9a9b95a9ce455f9fde13b21a41f26f2fe26b80256eae5392322d01957a"
+          ]
+        },
+        {
+          "period": "90j",
+          "resolution": "1h",
+          "file": "bitcoin-90j.json.gz",
+          "sha256": "e2ef94912f5d8853ab74cad561d8d9150ae4caeb0d2a19396e04da0ad53f463d",
+          "bytes": 79417,
+          "bars": 2160,
+          "start_ms": 1783036800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "9aa8b605855ecccf7f26ccaeae086402eeb3181c51779584a992ae8c4979a52c",
+            "40170f9a9b95a9ce455f9fde13b21a41f26f2fe26b80256eae5392322d01957a"
+          ]
+        },
+        {
+          "period": "1an",
+          "resolution": "1d",
+          "file": "bitcoin-1an.json.gz",
+          "sha256": "26baafc7db12e4de7051b173512f955f9035c6308b5be4cf7fb459b12effdcee",
+          "bytes": 16401,
+          "bars": 365,
+          "start_ms": 1759276800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "9aa8b605855ecccf7f26ccaeae086402eeb3181c51779584a992ae8c4979a52c",
+            "40170f9a9b95a9ce455f9fde13b21a41f26f2fe26b80256eae5392322d01957a"
+          ]
+        },
+        {
+          "period": "Max",
+          "resolution": "1d",
+          "file": "bitcoin-Max.json.gz",
+          "sha256": "ae07d077910d98361f914da442e2936a88ebcf42e2e29bc737d9d0ebe1e23d76",
+          "bytes": 76132,
+          "bars": 1795,
+          "start_ms": 1633046400000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 1,
+          "source_projections": [
+            "3818f2940e01c7d665a84d699553548ae2cd8b7005d8911e66f558853b5af8d1",
+            "7c8c6efa840e720fd0c9885002515ff12cca36f9a34a65932aef4221954dcd7f",
+            "d7c638cd5fa674c98e60a4386cb87ad6edab29e1ab36ef071f0bc861a0c3f74a",
+            "c16cc2e7762c182af4fcd6a5cc2b6ac25ec9bfe43b0b8e4dff10fbe02c611904",
+            "40008f156df5fb11918a474770490deadba6741b8809e8beaa92d4d8535c55c0",
+            "b8b664004171aa3d9210d6840f2a7038a58e1f6d09ee652bde780020ace63857",
+            "36499d282610ad50a1662a6777a875e4b7846438dec92cca87ff479a807fcec2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ethereum",
+      "pair": "ETHUSDT",
+      "quote": "USDT",
+      "verified_closed_months": 12,
+      "verified_native_minutes": 525600,
+      "first_month": "2025-10",
+      "last_month": "2026-09",
+      "max_scope": "materialized_calendar_year_shards_not_all_time",
+      "periods": [
+        {
+          "period": "24h",
+          "resolution": "1m",
+          "file": "ethereum-24h.json.gz",
+          "sha256": "54e45d23642f1b4445ad56434173675c6c9494aeec1b78b58eff139753c9d31c",
+          "bytes": 40305,
+          "bars": 1440,
+          "start_ms": 1790726400000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "1d451adf7e6b320f6b2c5f818e20b774d45ab846d3640f6faa1847a67305ce89",
+            "b25d227e894a72934a920870dd21e8e5afe72c3cd79c9ed6f8dd994bbe9c83a8"
+          ]
+        },
+        {
+          "period": "7j",
+          "resolution": "5m",
+          "file": "ethereum-7j.json.gz",
+          "sha256": "4a8ce3bac74e69a89aa57cc1e7d24ba3959c97c18f4ff6753403b739a7a39040",
+          "bytes": 61328,
+          "bars": 2016,
+          "start_ms": 1790208000000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "1d451adf7e6b320f6b2c5f818e20b774d45ab846d3640f6faa1847a67305ce89",
+            "b25d227e894a72934a920870dd21e8e5afe72c3cd79c9ed6f8dd994bbe9c83a8"
+          ]
+        },
+        {
+          "period": "30j",
+          "resolution": "1h",
+          "file": "ethereum-30j.json.gz",
+          "sha256": "ea8a6be84c72c9a702945a27a05e3e735ad4852f51dc9f89c42a7ae73dca6f36",
+          "bytes": 26448,
+          "bars": 720,
+          "start_ms": 1788220800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "1d451adf7e6b320f6b2c5f818e20b774d45ab846d3640f6faa1847a67305ce89",
+            "b25d227e894a72934a920870dd21e8e5afe72c3cd79c9ed6f8dd994bbe9c83a8"
+          ]
+        },
+        {
+          "period": "60j",
+          "resolution": "1h",
+          "file": "ethereum-60j.json.gz",
+          "sha256": "bb6afac8a23673ca4fc5821443268af46d66eb321f020b70a7aa75d97fa1d9a4",
+          "bytes": 50453,
+          "bars": 1440,
+          "start_ms": 1785628800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "1d451adf7e6b320f6b2c5f818e20b774d45ab846d3640f6faa1847a67305ce89",
+            "b25d227e894a72934a920870dd21e8e5afe72c3cd79c9ed6f8dd994bbe9c83a8"
+          ]
+        },
+        {
+          "period": "90j",
+          "resolution": "1h",
+          "file": "ethereum-90j.json.gz",
+          "sha256": "7bad00f3d483a3f24f72f1f9263f6c03bf593b1b1f389593039cbda1ac98959a",
+          "bytes": 74622,
+          "bars": 2160,
+          "start_ms": 1783036800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "1d451adf7e6b320f6b2c5f818e20b774d45ab846d3640f6faa1847a67305ce89",
+            "b25d227e894a72934a920870dd21e8e5afe72c3cd79c9ed6f8dd994bbe9c83a8"
+          ]
+        },
+        {
+          "period": "1an",
+          "resolution": "1d",
+          "file": "ethereum-1an.json.gz",
+          "sha256": "1709a7ac1fc9519f6e676291996e9ba87fbe12f12507276bdad7bfec5626769d",
+          "bytes": 15637,
+          "bars": 365,
+          "start_ms": 1759276800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "1d451adf7e6b320f6b2c5f818e20b774d45ab846d3640f6faa1847a67305ce89",
+            "b25d227e894a72934a920870dd21e8e5afe72c3cd79c9ed6f8dd994bbe9c83a8"
+          ]
+        },
+        {
+          "period": "Max",
+          "resolution": "1d",
+          "file": "ethereum-Max.json.gz",
+          "sha256": "35c49f9715bf7ed434ff44663fd735f7a4aa8dbe04ad26c80cbafde0104b17e9",
+          "bytes": 72061,
+          "bars": 1795,
+          "start_ms": 1633046400000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 1,
+          "source_projections": [
+            "d98e3c36567d3d1bd22e902717e4e7adc8860463a0f5aee3681581eebbf64350",
+            "768f40daff79f4d41e0d763806d386afc8dcf0a0801b0161a6eefdffd8a76a63",
+            "731338f9de9354ebbf1654c752e04e2e61df1c46c961f63c01f50b1eb3892a66",
+            "585c714dfcb7baf3d959346950327c558143afee39246905a1ca0359e399ce9c",
+            "390ead6ac987f02fd4e7746e4de3e9e2b5d6aa9601e3ba0963f2b07515b17fc8",
+            "f16edafaa9ec39697fc805e6397aee02d2e4c920b7471dd711a9c8889a1e8399",
+            "c20316cf600cfe0e9e1807770997a935e7a95e32ed3e9ff6a68562ac115bf5b6"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "binancecoin",
+      "pair": "BNBUSDT",
+      "quote": "USDT",
+      "verified_closed_months": 12,
+      "verified_native_minutes": 525600,
+      "first_month": "2025-10",
+      "last_month": "2026-09",
+      "max_scope": "materialized_calendar_year_shards_not_all_time",
+      "periods": [
+        {
+          "period": "24h",
+          "resolution": "1m",
+          "file": "binancecoin-24h.json.gz",
+          "sha256": "63787226165b7d5449f81095fc70c8da758481a62ff8c737e21af42959e722f6",
+          "bytes": 35330,
+          "bars": 1440,
+          "start_ms": 1790726400000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ce38ef9d667f5331dbf2b458216ab2e811ec83b691e53fb9589ce4eae96c2d66",
+            "e2cb643c411a73d5e6cc2255e1e2fad7e618da36ba3547cc7002df9d16b5cbc9"
+          ]
+        },
+        {
+          "period": "7j",
+          "resolution": "5m",
+          "file": "binancecoin-7j.json.gz",
+          "sha256": "74728a59ce2a73b8afc4495f7f15230a36623c1c17c965529eeab764daaac19d",
+          "bytes": 53299,
+          "bars": 2016,
+          "start_ms": 1790208000000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ce38ef9d667f5331dbf2b458216ab2e811ec83b691e53fb9589ce4eae96c2d66",
+            "e2cb643c411a73d5e6cc2255e1e2fad7e618da36ba3547cc7002df9d16b5cbc9"
+          ]
+        },
+        {
+          "period": "30j",
+          "resolution": "1h",
+          "file": "binancecoin-30j.json.gz",
+          "sha256": "6bb3f1e9702aa3e941b97d5d298ccf645ee9e09e107220949f1e730aaf102285",
+          "bytes": 24035,
+          "bars": 720,
+          "start_ms": 1788220800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ce38ef9d667f5331dbf2b458216ab2e811ec83b691e53fb9589ce4eae96c2d66",
+            "e2cb643c411a73d5e6cc2255e1e2fad7e618da36ba3547cc7002df9d16b5cbc9"
+          ]
+        },
+        {
+          "period": "60j",
+          "resolution": "1h",
+          "file": "binancecoin-60j.json.gz",
+          "sha256": "36e120c1ab383b0aeed96671c05ef4546b27447047bf5d5055d5c396e2e6ce98",
+          "bytes": 45612,
+          "bars": 1440,
+          "start_ms": 1785628800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ce38ef9d667f5331dbf2b458216ab2e811ec83b691e53fb9589ce4eae96c2d66",
+            "e2cb643c411a73d5e6cc2255e1e2fad7e618da36ba3547cc7002df9d16b5cbc9"
+          ]
+        },
+        {
+          "period": "90j",
+          "resolution": "1h",
+          "file": "binancecoin-90j.json.gz",
+          "sha256": "82cce92f8b3830cf38a9f250470c3ff54bd497bace785f9b369228d0cdb81287",
+          "bytes": 67009,
+          "bars": 2160,
+          "start_ms": 1783036800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ce38ef9d667f5331dbf2b458216ab2e811ec83b691e53fb9589ce4eae96c2d66",
+            "e2cb643c411a73d5e6cc2255e1e2fad7e618da36ba3547cc7002df9d16b5cbc9"
+          ]
+        },
+        {
+          "period": "1an",
+          "resolution": "1d",
+          "file": "binancecoin-1an.json.gz",
+          "sha256": "8ae066cc104d16e2725594eefd9d37baaf02075c5c58bbf78386aa94921a27ac",
+          "bytes": 14310,
+          "bars": 365,
+          "start_ms": 1759276800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ce38ef9d667f5331dbf2b458216ab2e811ec83b691e53fb9589ce4eae96c2d66",
+            "e2cb643c411a73d5e6cc2255e1e2fad7e618da36ba3547cc7002df9d16b5cbc9"
+          ]
+        },
+        {
+          "period": "Max",
+          "resolution": "1d",
+          "file": "binancecoin-Max.json.gz",
+          "sha256": "23b85119a07ac6204fae74a9054b2098e296558d0fc92c62f8936297f075d9ef",
+          "bytes": 63627,
+          "bars": 1795,
+          "start_ms": 1633046400000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 1,
+          "source_projections": [
+            "0e18aaacbea6442fe3c14d0599fed2a7e10c9916fd9a9f8c74699e95edc3b91c",
+            "13af12ea5b4e95a4f072a6012c3fb3607325504cfb6dac6a334548be84b47e3b",
+            "1f5c53bf634144e0ccf9b237b05f6376f8fedd624545517c21f50388201cdcad",
+            "aba6bf91a4a9ae98b7fd9dfdf835d738a3e9a096adc575e9e89fd146abc913cb",
+            "b203b7821d4f53f4084a831411e08614f55623a56da41625970a64e0cc476acb",
+            "900c72c235e84bbf233afc3a3554e34370b1ad43c1cedf56fddbc6dfd95aa582",
+            "ca9bd656f7e67b652f20d5634536716726d5842f3b29ee1c6f696e79488a7223"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ripple",
+      "pair": "XRPUSDT",
+      "quote": "USDT",
+      "verified_closed_months": 12,
+      "verified_native_minutes": 525600,
+      "first_month": "2025-10",
+      "last_month": "2026-09",
+      "max_scope": "materialized_calendar_year_shards_not_all_time",
+      "periods": [
+        {
+          "period": "24h",
+          "resolution": "1m",
+          "file": "ripple-24h.json.gz",
+          "sha256": "8d842afa8fad0487dd83d933e978d844304893540be1b54ca4881da65f299e2c",
+          "bytes": 34986,
+          "bars": 1440,
+          "start_ms": 1790726400000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "a4a3568f138c4e53bfc3ec7754bfef4fb136eaa96c646edb5721fbae5af6c826",
+            "41437311c3ebff36d7355ef5e441d5ee3e4c5e72a256e57b3352d35c9f5a4032"
+          ]
+        },
+        {
+          "period": "7j",
+          "resolution": "5m",
+          "file": "ripple-7j.json.gz",
+          "sha256": "572bbb35eda4e1cd5b2896cf101ad844c606c8e5e3cb46cc48d0081d2398178b",
+          "bytes": 54949,
+          "bars": 2016,
+          "start_ms": 1790208000000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "a4a3568f138c4e53bfc3ec7754bfef4fb136eaa96c646edb5721fbae5af6c826",
+            "41437311c3ebff36d7355ef5e441d5ee3e4c5e72a256e57b3352d35c9f5a4032"
+          ]
+        },
+        {
+          "period": "30j",
+          "resolution": "1h",
+          "file": "ripple-30j.json.gz",
+          "sha256": "b4f97423903523dbe54f47f818d9df1c3694cb082e4f02342924027e8bbff7c5",
+          "bytes": 24450,
+          "bars": 720,
+          "start_ms": 1788220800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "a4a3568f138c4e53bfc3ec7754bfef4fb136eaa96c646edb5721fbae5af6c826",
+            "41437311c3ebff36d7355ef5e441d5ee3e4c5e72a256e57b3352d35c9f5a4032"
+          ]
+        },
+        {
+          "period": "60j",
+          "resolution": "1h",
+          "file": "ripple-60j.json.gz",
+          "sha256": "b388e7f72e29d371a9ee9a0928efa3e38f382f05a30f31f7dc58f0647a2d7bec",
+          "bytes": 46355,
+          "bars": 1440,
+          "start_ms": 1785628800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "a4a3568f138c4e53bfc3ec7754bfef4fb136eaa96c646edb5721fbae5af6c826",
+            "41437311c3ebff36d7355ef5e441d5ee3e4c5e72a256e57b3352d35c9f5a4032"
+          ]
+        },
+        {
+          "period": "90j",
+          "resolution": "1h",
+          "file": "ripple-90j.json.gz",
+          "sha256": "555f5b6abb74445c4ab6f83cf300117f614ab25f172b7c1c5639bfe4d4ca86aa",
+          "bytes": 67837,
+          "bars": 2160,
+          "start_ms": 1783036800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "a4a3568f138c4e53bfc3ec7754bfef4fb136eaa96c646edb5721fbae5af6c826",
+            "41437311c3ebff36d7355ef5e441d5ee3e4c5e72a256e57b3352d35c9f5a4032"
+          ]
+        },
+        {
+          "period": "1an",
+          "resolution": "1d",
+          "file": "ripple-1an.json.gz",
+          "sha256": "6e04ce8d47819ca3e19b96430a1a3e917d77867b255aeeac8fbf7d5f642e3fa2",
+          "bytes": 14313,
+          "bars": 365,
+          "start_ms": 1759276800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "a4a3568f138c4e53bfc3ec7754bfef4fb136eaa96c646edb5721fbae5af6c826",
+            "41437311c3ebff36d7355ef5e441d5ee3e4c5e72a256e57b3352d35c9f5a4032"
+          ]
+        },
+        {
+          "period": "Max",
+          "resolution": "1d",
+          "file": "ripple-Max.json.gz",
+          "sha256": "32093490d4623769d5311fb0a81601c5fb3361827cdf5839c05b0d638a5869c7",
+          "bytes": 64194,
+          "bars": 1795,
+          "start_ms": 1633046400000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 1,
+          "source_projections": [
+            "871da6a2aadc8d1f7aab66b58ff0ac83fe8c4069031ade6a265e5e1e328d4359",
+            "4257e827190fb1713854bd9c332cdfaea564c09adcff8a2c14b594232defd7eb",
+            "035c90c16c2e4c84535d3d5d900d903215905a923ab63654bec36aca4c070b38",
+            "914111f30721101d6f7e514674e14e9225e619f38783b4e231f992d7c149defe",
+            "f68d37a235a0f96175876d15bfeb9ce2bd69f26e17dcb2cec128e72a16cdaf77",
+            "d5e8712beb65adee9ff1dc2a839adf62a5ced07f264882cf57430760204ebe0b",
+            "bb7d9bfc8d16566a97bfa0154ca2130fffa3c086d9310e1f16131ba489eac2f4"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solana",
+      "pair": "SOLUSDT",
+      "quote": "USDT",
+      "verified_closed_months": 12,
+      "verified_native_minutes": 525600,
+      "first_month": "2025-10",
+      "last_month": "2026-09",
+      "max_scope": "materialized_calendar_year_shards_not_all_time",
+      "periods": [
+        {
+          "period": "24h",
+          "resolution": "1m",
+          "file": "solana-24h.json.gz",
+          "sha256": "e49bb5d0dc6fce99c716ee9cf81319117714ad485b0e239467735cca93814711",
+          "bytes": 35141,
+          "bars": 1440,
+          "start_ms": 1790726400000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ee3b902ac5284b6d248cd0ae417e612e076f42ab1fe66fa3a01e25f87abe1560",
+            "4b69cd57fc07415672c149684ba479958590961060b7c44a5f1f2577389082db"
+          ]
+        },
+        {
+          "period": "7j",
+          "resolution": "5m",
+          "file": "solana-7j.json.gz",
+          "sha256": "2621225d1b543c85b16420204803e1390cee7adeaa6bfb72b6c649dac0acbb3e",
+          "bytes": 53874,
+          "bars": 2016,
+          "start_ms": 1790208000000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ee3b902ac5284b6d248cd0ae417e612e076f42ab1fe66fa3a01e25f87abe1560",
+            "4b69cd57fc07415672c149684ba479958590961060b7c44a5f1f2577389082db"
+          ]
+        },
+        {
+          "period": "30j",
+          "resolution": "1h",
+          "file": "solana-30j.json.gz",
+          "sha256": "ff3b05869f71f573723956dea7f7c852685c45dc64c2c4075a28623da284f6c8",
+          "bytes": 23613,
+          "bars": 720,
+          "start_ms": 1788220800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ee3b902ac5284b6d248cd0ae417e612e076f42ab1fe66fa3a01e25f87abe1560",
+            "4b69cd57fc07415672c149684ba479958590961060b7c44a5f1f2577389082db"
+          ]
+        },
+        {
+          "period": "60j",
+          "resolution": "1h",
+          "file": "solana-60j.json.gz",
+          "sha256": "6af4430c6d7a79f390777825838697aea11af90403b184ac91081323da690fe7",
+          "bytes": 44876,
+          "bars": 1440,
+          "start_ms": 1785628800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ee3b902ac5284b6d248cd0ae417e612e076f42ab1fe66fa3a01e25f87abe1560",
+            "4b69cd57fc07415672c149684ba479958590961060b7c44a5f1f2577389082db"
+          ]
+        },
+        {
+          "period": "90j",
+          "resolution": "1h",
+          "file": "solana-90j.json.gz",
+          "sha256": "0b5334376409c9d7993494e2b4a6898a45eed010e81710d3c506caf1171737cf",
+          "bytes": 65544,
+          "bars": 2160,
+          "start_ms": 1783036800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ee3b902ac5284b6d248cd0ae417e612e076f42ab1fe66fa3a01e25f87abe1560",
+            "4b69cd57fc07415672c149684ba479958590961060b7c44a5f1f2577389082db"
+          ]
+        },
+        {
+          "period": "1an",
+          "resolution": "1d",
+          "file": "solana-1an.json.gz",
+          "sha256": "f013abe558b218ff6e42a561508c691a4ba658d72d7f04b511017136749e43b6",
+          "bytes": 14347,
+          "bars": 365,
+          "start_ms": 1759276800000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 0,
+          "source_projections": [
+            "ee3b902ac5284b6d248cd0ae417e612e076f42ab1fe66fa3a01e25f87abe1560",
+            "4b69cd57fc07415672c149684ba479958590961060b7c44a5f1f2577389082db"
+          ]
+        },
+        {
+          "period": "Max",
+          "resolution": "1d",
+          "file": "solana-Max.json.gz",
+          "sha256": "d28630a160f71ae84f0087b7a01cd133717226eb478162486f343cabb6d1154f",
+          "bytes": 63301,
+          "bars": 1736,
+          "start_ms": 1633046400000,
+          "end_exclusive_ms": 1790812800000,
+          "gaps": 2,
+          "source_projections": [
+            "7cd5f374a4b95b1a577d6611a33a879f8b2caf48cc0d0ae5822408f7ab02ba05",
+            "8e27efb28549fed6af627a586fac4ecdd01b89f0f4c364e1c28e7e8cb4a3ba89",
+            "6b58390d63f1bd9cdf9276d2d9406496eeda8409df0206a82b51e860efeebfaa",
+            "73ba8f419cbfeb1edce40c753e64f121d7bcc7f57ed9e55eaa0e1bc88c6e29ab",
+            "0d2202511d32e205d969dbd98c1e6af58caa1744a5ad77a88f76678b5ea3e053",
+            "231daa745566c8ffbb7aceb7f5c7f98a73ef4e9625a151659ac7f0d435aa887a",
+            "95adf2f11023e6aab7fdcd6e724a7adb4b1e4f623a236c3401e3572cc3e87f67"
+          ]
+        }
+      ]
+    }
+  ]
+}
