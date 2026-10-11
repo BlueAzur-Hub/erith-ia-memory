@@ -6,6 +6,9 @@ on:
       - 'public/agent_crypto_erith_ia/tools/btc_gap_archive.py'
       - 'public/agent_crypto_erith_ia/tools/btc_gap_acquire.py'
       - 'public/agent_crypto_erith_ia/tools/btc_gap_acquire_test.py'
+      - 'public/agent_crypto_erith_ia/tools/freeze_btc_daily_reference.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_btc_minute_gaps.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_minute_gap_audit_test.py'
   push:
     branches: [main]
     paths:
@@ -13,6 +16,9 @@ on:
       - 'public/agent_crypto_erith_ia/tools/btc_gap_archive.py'
       - 'public/agent_crypto_erith_ia/tools/btc_gap_acquire.py'
       - 'public/agent_crypto_erith_ia/tools/btc_gap_acquire_test.py'
+      - 'public/agent_crypto_erith_ia/tools/freeze_btc_daily_reference.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_btc_minute_gaps.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_minute_gap_audit_test.py'
   workflow_dispatch:
     inputs:
       month:
@@ -26,6 +32,114 @@ concurrency:
   group: btc-native-gap-recovery
   cancel-in-progress: false
 jobs:
+  btc-reference-and-minute-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source SHA, frozen 3075-day reference and official 1m parser
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/btc_minute_gap_audit_test.py
+          python public/agent_crypto_erith_ia/tools/freeze_btc_daily_reference.py --check-only
+          python public/agent_crypto_erith_ia/tools/audit_btc_minute_gaps.py --audit-only
+      - name: Audit official Binance daily 1m ZIPs for 26 BTC gaps
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/data/historical_archive_prototype")
+          frozen=root/"btc_daily_reference/index.json"
+          audited=root/"btc_minute_gap_audit/index.json"
+          inputs={
+            "gap_catalog_sha256":hashlib.sha256((root/"btc_verified_gap_months/index.json").read_bytes()).hexdigest(),
+            "daily_reference_sha256":json.loads((root/"btc_native_daily_reconciliation/index.json").read_text())["sha256"]}
+          if frozen.is_file() and audited.is_file():
+              reference=json.loads(frozen.read_text())
+              ledger=json.loads(audited.read_text())
+              payload=root/"btc_minute_gap_audit"/ledger.get("candidate_file","none")
+              if (reference["locked_source"]["data_sha256"]==inputs["daily_reference_sha256"] and
+                  ledger.get("canonical_sources")==inputs and
+                  ledger.get("source_policy")=="binance_official_daily_1m_vs_sha_verified_monthly_1m.v1" and
+                  ledger.get("original_missing_minutes")==5881 and
+                  ledger.get("dates_audited")==26 and payload.is_file() and
+                  hashlib.sha256(payload.read_bytes()).hexdigest()==ledger.get("candidate_sha256")):
+                  pathlib.Path(os.environ["RUNNER_TEMP"],"btc-minute-audit-noop").touch()
+                  print("NOOP: reference and independent minute source audit unchanged")
+          PY
+          if [[ -f "$RUNNER_TEMP/btc-minute-audit-noop" ]]; then exit 0; fi
+          mkdir -p "$RUNNER_TEMP/btc_daily_reference" "$RUNNER_TEMP/btc_minute_gap_audit"
+          python public/agent_crypto_erith_ia/tools/freeze_btc_daily_reference.py --output "$RUNNER_TEMP/btc_daily_reference/index.json"
+          python public/agent_crypto_erith_ia/tools/audit_btc_minute_gaps.py --output "$RUNNER_TEMP/btc_minute_gap_audit"
+          python - <<'PY'
+          import gzip,hashlib,json,os,pathlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])
+          ref=json.loads((root/"btc_daily_reference/index.json").read_text())
+          ix=json.loads((root/"btc_minute_gap_audit/index.json").read_text())
+          raw=(root/"btc_minute_gap_audit"/ix["candidate_file"]).read_bytes()
+          obj=json.loads(gzip.decompress(raw))
+          assert ref["utc_day_count"]==3075 and ref["daily_coverage_pct"]==100
+          assert ref["one_minute_complete"] is False
+          assert ix["dates_audited"]==26 and ix["original_missing_minutes"]==5881
+          assert ix["recovered_native_minutes"]+ix["still_missing_minutes"]==5881
+          assert ix["minute_series_patched"] is False and len(ix["days"])==26
+          assert len(raw)==ix["candidate_bytes"]
+          assert hashlib.sha256(raw).hexdigest()==ix["candidate_sha256"]
+          assert len(obj["rows"])==ix["recovered_native_minutes"]
+          assert obj["synthetic_rows"]==0 and obj["interval"]=="1m"
+          print("BTC VERIFIED 1M GAPS:",ix["recovered_native_minutes"],"authentic candidates;",
+                ix["still_missing_minutes"],"unresolved; 1D reference unchanged")
+          PY
+      - name: Publish locked BTC daily reference and separate source minute evidence
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if [[ -f "$RUNNER_TEMP/btc-minute-audit-noop" ]]; then exit 0; fi
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          for attempt in 1 2 3; do
+            git fetch origin main
+            for source in btc_verified_gap_months/index.json btc_native_daily_reconciliation/index.json btc_native_daily_reconciliation/bitcoin-Max.json.gz; do
+              old=$(sha256sum "$root/$source" | cut -d' ' -f1)
+              now=$(git show "origin/main:$root/$source" | sha256sum | cut -d' ' -f1)
+              if [[ "$old" != "$now" ]]; then
+                echo "::error::BTC immutable reference source changed during minute audit"
+                exit 1
+              fi
+            done
+            git reset --hard origin/main
+            mkdir -p "$root/btc_daily_reference" "$root/btc_minute_gap_audit"
+            cp -a "$RUNNER_TEMP/btc_daily_reference/." "$root/btc_daily_reference/"
+            cp -a "$RUNNER_TEMP/btc_minute_gap_audit/." "$root/btc_minute_gap_audit/"
+            git add -- "$root/btc_daily_reference" "$root/btc_minute_gap_audit"
+            git diff --cached --check
+            if git diff --cached --quiet; then echo 'NOOP: reference and minute report identical'; exit 0; fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Publish frozen BTC daily truth and original 1m gap audit'
+            if git push origin HEAD:main; then
+              echo 'FROZEN BTC DAILY REFERENCE AND OFFICIAL MINUTE AUDIT PUBLISHED'
+              exit 0
+            fi
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: btc-1d-reference-1m-source-audit
+          path: |
+            ${{ runner.temp }}/btc_daily_reference/index.json
+            ${{ runner.temp }}/btc_minute_gap_audit/index.json
+          if-no-files-found: ignore
+          retention-days: 30
   repair-native-daily:
     # Reuse this existing BTC-only workflow while broader historical collection
     # is busy. The main hourly workflow independently provides the same audit.
