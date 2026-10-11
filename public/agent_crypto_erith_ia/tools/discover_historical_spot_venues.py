@@ -483,6 +483,10 @@ NAMED_ORIGINAL_SPOT_LISTINGS=(
     # Its later BSC -> Ultima Chain migration does not alter the owner's ID.
     ("ultima",237,"ULTIMA","Ultima","kucoin","USDT",
      "https://www.kucoin.com/announcement/ua-ultima-ultima-gets-listed-on-kucoin"),
+    # Gate's own yield-bearing GUSD, not Gemini's unrelated stablecoin.
+    # Official issuer-named spot announcement: GUSD/USDT, 2025-08-28.
+    ("gusd",224,"GUSD","GUSD","gate","USDT",
+     "https://www.gate.com/fr/announcements/article/46834"),
 )
 
 def named_original_spot_proof(owner,source):
