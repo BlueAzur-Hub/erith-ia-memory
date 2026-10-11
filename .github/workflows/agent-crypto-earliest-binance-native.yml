@@ -7,6 +7,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_btc_native.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_btc_native_test.py'
+      - 'public/agent_crypto_erith_ia/tools/probe_btc_source_timestamps.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py'
   push:
@@ -17,6 +18,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_btc_native.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_btc_native_test.py'
+      - 'public/agent_crypto_erith_ia/tools/probe_btc_source_timestamps.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py'
   workflow_dispatch:
@@ -27,7 +29,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: agent-crypto-earliest-binance-verified-backfill
+  group: agent-crypto-btc-native-older-source
   cancel-in-progress: false
 jobs:
   extend-original-months:
@@ -79,6 +81,10 @@ jobs:
         run: |
           set -euo pipefail
           python public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py --probe
+      - name: PR only - inspect December 2020 genuine BTC source close times
+        if: github.event_name == 'pull_request'
+        run: |
+          python public/agent_crypto_erith_ia/tools/probe_btc_source_timestamps.py --month 2020-12
       - name: Collect up to twelve pre-delisting Monero full months (no new bot)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
