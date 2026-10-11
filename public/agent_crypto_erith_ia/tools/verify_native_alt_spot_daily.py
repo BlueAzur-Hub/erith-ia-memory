@@ -48,7 +48,10 @@ def check_payload(document,indexed,url):
          and evidence.get("market_pair_candidate")==own["pair"],
          "Native source no longer matches the original CoinGecko proof")
     proof_method=evidence.get("proof_method")
-    if proof_method is not None:
+    if proof_method=="original_named_spot_listing":
+        need(original.owners.named_original_spot_proof(own,evidence),
+             "Original official Spot listing and frozen CoinGecko owner disagree")
+    elif proof_method is not None:
         need(proof_method=="exact_coin_id_matching_evm_contract"
              and evidence.get("contract_platform") in
                  original.owners.CHAINS.values()
