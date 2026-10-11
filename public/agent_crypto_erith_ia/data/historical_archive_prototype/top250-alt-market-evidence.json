@@ -1,7 +1,7 @@
 {
-  "candidate_count": 80,
-  "checked_count": 56,
-  "market_candidate_count": 20,
+  "candidate_count": 60,
+  "checked_count": 39,
+  "market_candidate_count": 3,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
   "quote": "USDT or USDC: never convert silently",
@@ -531,10 +531,10 @@
       "symbol": "VVV"
     },
     {
-      "checked_at": "2026-10-10T06:18:33.015402+00:00",
+      "checked_at": "2026-10-11T02:33:35.028636+00:00",
       "id": "blockchain-capital",
       "markets": [],
-      "pages_checked": 0,
+      "pages_checked": 3,
       "rank": 80,
       "status": "source_unavailable",
       "symbol": "BCAP"
@@ -604,12 +604,24 @@
       "symbol": "STX"
     },
     {
-      "checked_at": "2026-10-10T06:19:33.959841+00:00",
+      "checked_at": "2026-10-11T02:34:35.505119+00:00",
       "id": "xdce-crowd-sale",
-      "markets": [],
+      "markets": [
+        {
+          "base": "XDC",
+          "coin_id": "xdce-crowd-sale",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "XDC-USDT",
+          "native_1m_month_confirmed": false,
+          "original_named_spot_notice": "https://www.kucoin.com/announcement/en-xinfin-network-xdc-gets-listed-on-kucoin",
+          "proof_method": "original_named_spot_listing",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 92,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "XDC"
     },
     {
@@ -730,12 +742,24 @@
       "symbol": "FLR"
     },
     {
-      "checked_at": "2026-10-10T12:40:45.317854+00:00",
+      "checked_at": "2026-10-11T02:34:35.505119+00:00",
       "id": "beldex",
-      "markets": [],
-      "pages_checked": 1,
+      "markets": [
+        {
+          "base": "BDX",
+          "coin_id": "beldex",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "BDX_USDT",
+          "native_1m_month_confirmed": false,
+          "original_named_spot_notice": "https://www.gate.com/pt-br/announcements/article/27532",
+          "proof_method": "original_named_spot_listing",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
       "rank": 106,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "BDX"
     },
     {
@@ -1313,12 +1337,24 @@
       "symbol": "FRAX"
     },
     {
-      "checked_at": "2026-10-11T01:51:14.889208+00:00",
+      "checked_at": "2026-10-11T02:34:35.505119+00:00",
       "id": "akash-network",
-      "markets": [],
+      "markets": [
+        {
+          "base": "AKT",
+          "coin_id": "akash-network",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "AKT_USDT",
+          "native_1m_month_confirmed": false,
+          "original_named_spot_notice": "https://www.gate.com/fr/announcements/article/19761/Gate.io-will-list-Akash-Network-AKT",
+          "proof_method": "original_named_spot_listing",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 178,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "AKT"
     },
     {
@@ -1365,6 +1401,15 @@
       "rank": 181,
       "status": "exact_id_market_candidates",
       "symbol": "EIGEN"
+    },
+    {
+      "checked_at": "2026-10-11T02:34:35.291438+00:00",
+      "id": "usx",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 182,
+      "status": "source_unavailable",
+      "symbol": "USX"
     },
     {
       "checked_at": "2026-10-10T19:26:05.611029+00:00",
@@ -1623,6 +1668,15 @@
       "symbol": "GOMINING"
     },
     {
+      "checked_at": "2026-10-11T02:33:55.081775+00:00",
+      "id": "gusd",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 224,
+      "status": "source_unavailable",
+      "symbol": "GUSD"
+    },
+    {
       "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "build-on",
       "markets": [
@@ -1792,6 +1846,15 @@
       "symbol": "BEAM"
     },
     {
+      "checked_at": "2026-10-11T02:34:15.186913+00:00",
+      "id": "ultima",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 237,
+      "status": "source_unavailable",
+      "symbol": "ULTIMA"
+    },
+    {
       "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "havven",
       "markets": [
@@ -1904,5 +1967,5 @@
     }
   ],
   "schema": "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
-  "source": "CoinGecko exact coin ID, independent exchange-specific Spot tickers; independently matched CoinGecko contract to original Gate/KuCoin coin chain"
+  "source": "CoinGecko exact coin ID, independent exchange-specific Spot tickers; immutable original named Spot listing attestation"
 }
