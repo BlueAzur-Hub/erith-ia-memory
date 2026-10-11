@@ -66,7 +66,7 @@ class OfficialInstrumentsTests(unittest.TestCase):
             ("MNT","USDT"):"MNT_USDT",
             ("GT","USDC"):"GT_USDC",
             ("FUT","USDT"):"FUT_USDT"})
-        with self.assertRaisesRegex(ValueError,"Gate expected"):
+        with self.assertRaisesRegex(ValueError,"Gate/Coinbase"):
             m.parse_instruments("gate",{"data":data})
         with self.assertRaisesRegex(ValueError,"inventory"):
             m.parse_instruments("gate",[])
