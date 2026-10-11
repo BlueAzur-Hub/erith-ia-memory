@@ -69,7 +69,7 @@ class DailyHistoryTests(unittest.TestCase):
             m.single_symbol_candidates(cat,identity,instruments)
         identity["results"][0]["markets"][0]["coin_id"]="memecore"
         instruments["assets"][0]["instruments"][0]["exchange_instrument_confirmed"]=False
-        with self.assertRaisesRegex(ValueError,"official"):
+        with self.assertRaisesRegex(ValueError,"Bitget Spot instrument"):
             m.single_symbol_candidates(cat,identity,instruments)
 
     def test_native_rows_and_true_unfilled_gaps(self):
