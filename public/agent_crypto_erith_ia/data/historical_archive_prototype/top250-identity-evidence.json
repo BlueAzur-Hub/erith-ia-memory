@@ -1,5 +1,5 @@
 {
-  "approved_count": 85,
+  "approved_count": 87,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -1402,13 +1402,23 @@
       "symbol": "EIGEN"
     },
     {
-      "checked_at": "2026-10-10T00:26:01.605250+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-11T20:38:48.542194+00:00",
+      "evidence": [
+        {
+          "base": "WIF",
+          "coin_id": "dogwifcoin",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "dogwifcoin",
+          "trade_url": "https://www.binance.com/en/trade/WIF_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "dogwifcoin",
-      "pages": 1,
+      "pages": 2,
       "pair": "WIFUSDT",
       "rank": 183,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "WIF"
     },
     {
@@ -1632,13 +1642,23 @@
       "symbol": "CHZ"
     },
     {
-      "checked_at": "2026-10-10T00:28:33.390579+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-11T20:39:03.858705+00:00",
+      "evidence": [
+        {
+          "base": "CRCLB",
+          "coin_id": "circle-internet-group-bstock",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "circle-internet-group-bstock",
+          "trade_url": "https://www.binance.com/en/trade/CRCLB_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "circle-internet-group-bstock",
-      "pages": 1,
+      "pages": 2,
       "pair": "CRCLBUSDT",
       "rank": 218,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "CRCLB"
     },
     {
@@ -1822,7 +1842,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 11,
+  "review_required_count": 9,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
