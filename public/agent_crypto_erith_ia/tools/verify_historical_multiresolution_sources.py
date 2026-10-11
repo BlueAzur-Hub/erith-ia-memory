@@ -2,7 +2,7 @@
 """Verify the single public multi-resolution source registry without rewriting 1m.
 
 All source archives remain immutable GitHub Release assets. This registry
-only references the original OKX 1Dutc Spot bars and does NOT mark an asset
+references exact native OKX 1Dutc and Bitget 1D Spot bars and does NOT mark an asset
 archived in the independent native 1m Top250 catalogue.
 """
 from __future__ import annotations
@@ -12,6 +12,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+from decimal import Decimal, InvalidOperation
 from urllib.request import Request, urlopen
 
 import import_historical_bulk as bulk
@@ -22,8 +23,8 @@ FED=ROOT/"top250_multisource_coverage/index.json"
 SCHEMA="aerith.public.crypto.multiresolution-sources.v1"
 REPO="https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/"
 SHA=re.compile(r"^[0-9a-f]{64}$")
-FILE=re.compile(r"^[a-z0-9-]{1,90}-[A-Z0-9]+-USDT-1Dutc\.json\.gz$")
-TAG=re.compile(r"^crypto-okx-spot-native-daily-2026-09-[a-z0-9-]+$")
+FILE=re.compile(r"^[a-z0-9-]{1,90}-[A-Z0-9-]+-1D(?:utc)?\.json\.gz$")
+TAG=re.compile(r"^crypto-(?:okx|bitget)-spot-native-daily-2026-09-[a-z0-9-]+$")
 DAY=86_400_000
 END=1790812800000
 MAX_FILE=600_000
@@ -35,7 +36,7 @@ def need(ok,msg):
 def check_registry(index,catalog):
     need(index.get("schema")==SCHEMA
          and index.get("ranked_universe")==250
-         and index.get("native_bar")=="1Dutc"
+         and index.get("native_bar")=="per-source-native-daily"
          and index.get("quote")=="USDT"
          and index.get("separate_from_native_1m_index") is True
          and index.get("native_1m_added")==0
@@ -43,96 +44,157 @@ def check_registry(index,catalog):
          and index.get("synthetic_bars_added_by_collector") is False,
          "Untrusted separate native daily registry")
     need(catalog.get("schema")==
-         "aerith.public.ohlcv.top250.federated-native-archives.v1" and
-         catalog.get("ranked")==250 and len(catalog.get("assets",[]))==250,
+         "aerith.public.ohlcv.top250.federated-native-archives.v1"
+         and catalog.get("ranked")==250 and len(catalog.get("assets",[]))==250,
          "Untrusted ranked Top250 owners")
     ranked={x["id"]:x for x in catalog["assets"]}
     need(len(ranked)==250,"Duplicate Top250 identity")
     entries=index.get("assets")
-    need(isinstance(entries,list) and 1<=len(entries)<=250 and
-         len(entries)==index.get("asset_count"),
-         "Unbounded or missing source history references")
-    seen=set()
-    total=0
+    need(isinstance(entries,list) and 1<=len(entries)<=250
+         and len(entries)==index.get("asset_count"),
+         "Unbounded or missing source references")
+    seen=set();total=0
     for a in entries:
-        cid=a["id"]
-        coin=ranked.get(cid)
-        need(cid not in seen and coin is not None,"Repeated/unknown CoinGecko owner")
+        cid=a["id"];coin=ranked.get(cid)
+        need(cid not in seen and coin is not None,"Repeated or unknown owner")
         seen.add(cid)
-        need(coin["rank"]==a["rank"] and coin["symbol"]==a["symbol"] and
-             coin["name"]==a["name"] and coin["quote"]=="USDT",
-             "Rank, symbol or quote changed")
-        need(a.get("venue")=="OKX Spot" and a.get("bar")=="1Dutc"
-             and a.get("quote")=="USDT" and
-             a.get("market")==a["symbol"]+"-USDT",
-             "Daily source market mismatched")
-        need(isinstance(a.get("native_candles"),int) and
-             1<=a["native_candles"]<=4500 and
-             a.get("gaps_within_observed_span")==0 and
-             isinstance(a.get("earliest_source_ms"),int) and
-             isinstance(a.get("latest_source_ms"),int) and
-             a["latest_source_ms"]<END and
-             a["earliest_source_ms"]>0 and
-             (a["latest_source_ms"]-a["earliest_source_ms"])//DAY+1
-                ==a["native_candles"],
-             "Misleading source OHLCV day-span coverage")
-        need(isinstance(a.get("bytes"),int) and 0<a["bytes"]<=MAX_FILE and
+        need(coin["rank"]==a["rank"] and coin["symbol"]==a["symbol"]
+             and coin["name"]==a["name"] and coin["quote"]=="USDT",
+             "Rank, CoinGecko symbol, owner name or quote changed")
+        venue=a.get("venue")
+        is_okx=venue=="OKX Spot"
+        is_bitget=venue=="Bitget Spot"
+        need(is_okx or is_bitget,"Unknown native Spot candle provider")
+        expected_market=(a["symbol"]+"-USDT" if is_okx
+                         else a["symbol"]+"USDT")
+        expected_bar="1Dutc" if is_okx else "1D"
+        need(a.get("bar")==expected_bar and
+             a.get("market")==expected_market and
+             a.get("quote")=="USDT","Mislabelled native daily pair or granularity")
+        need(isinstance(a.get("native_candles"),int)
+             and 1<=a["native_candles"]<=4500
+             and isinstance(a.get("earliest_source_ms"),int)
+             and isinstance(a.get("latest_source_ms"),int)
+             and 0<a["earliest_source_ms"]<=a["latest_source_ms"]<END
+             and isinstance(a.get("gaps_within_observed_span"),int)
+             and a["gaps_within_observed_span"]>=0
+             and ((a["latest_source_ms"]-a["earliest_source_ms"])//DAY+1
+                  ==a["native_candles"]+a["gaps_within_observed_span"]),
+             "Misleading day span or invented source gaps")
+        if is_okx:
+            need(a["gaps_within_observed_span"]==0
+                 and a["earliest_source_ms"]%DAY==0
+                 and a["latest_source_ms"]%DAY==0
+                 and isinstance(a.get("identity_evidence"),str)
+                 and a["identity_evidence"].startswith("https://www.okx.com/"),
+                 "OKX native 1Dutc provenance invalid")
+        else:
+            offset=a.get("native_session_start_modulo_utc_day_ms")
+            need(offset in (0,57_600_000)
+                 and a["earliest_source_ms"]%DAY==offset
+                 and a["latest_source_ms"]%DAY==offset,
+                 "Original Bitget 1D daily session UTC offset modified")
+            need(a.get("identity_evidence")==
+                 ("https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/"
+                  "public/agent_crypto_erith_ia/data/historical_archive_prototype/"
+                  "top250-alt-market-evidence.json#"+cid)
+                 and a.get("instrument_evidence")==
+                 ("https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/"
+                  "public/agent_crypto_erith_ia/data/historical_archive_prototype/"
+                  "top250-official-spot-instruments.json#"+cid),
+                 "Unproven exact Bitget CoinGecko-to-instrument ownership")
+        need(isinstance(a.get("bytes"),int) and
+             0<a["bytes"]<=MAX_FILE and
              isinstance(a.get("sha256"),str) and SHA.fullmatch(a["sha256"]),
-             "Unverified native gzip digest")
-        need(isinstance(a.get("release_tag"),str) and
-             TAG.fullmatch(a["release_tag"]) and
-             a.get("release_url")==REPO.replace("/download/","/tag/")+a["release_tag"]
-             and isinstance(a.get("filename"),str) and FILE.fullmatch(a["filename"]) and
-             a["filename"]==cid+"-"+a["market"]+"-1Dutc.json.gz",
-             "Unsafe immutable source reference")
-        need(isinstance(a.get("identity_evidence"),str) and
-             a["identity_evidence"].startswith("https://www.okx.com/"),
-             "Missing venue project identity proof")
+             "Unverified original gzip SHA")
+        filename=cid+"-"+expected_market+"-"+expected_bar+".json.gz"
+        tag=a.get("release_tag")
+        need(isinstance(tag,str) and TAG.fullmatch(tag)
+             and tag.startswith("crypto-"+("okx" if is_okx else "bitget")+"-")
+             and a.get("release_url")==REPO.replace("/download/","/tag/")+tag
+             and a.get("filename")==filename
+             and FILE.fullmatch(a["filename"]),
+             "Unsafe immutable native source reference")
         total+=a["native_candles"]
-    need(total==index.get("native_daily_candles"),"Multiresolution total mismatch")
+    need(total==index.get("native_daily_candles"),
+         "Daily source registry total mismatch")
     return entries
+
+def verified_decimal(raw):
+    need(isinstance(raw,str),"Native source price not original decimal text")
+    try:value=Decimal(raw)
+    except InvalidOperation as exc:
+        raise ValueError("Nondecimal original daily OHLCV") from exc
+    need(value.is_finite(),"Nonfinite native OHLCV")
+    return value
 
 def verify_source(a,opener=urlopen):
     url=REPO+a["release_tag"]+"/"+a["filename"]
-    request=Request(url,headers={"User-Agent":"SevenHeaven-Historical-SHA-Registry/1.0"})
-    with opener(request,timeout=90) as response:
-        need(response.status==200,"Source archive HTTP unavailable")
+    req=Request(url,headers={"User-Agent":"SevenHeaven-Historical-SHA-Registry/1.0"})
+    with opener(req,timeout=90) as response:
+        need(response.status==200,"Native archive unavailable")
         blob=response.read(MAX_FILE+1)
-    need(len(blob)==a["bytes"] and
-         hashlib.sha256(blob).hexdigest()==a["sha256"],
-         "Immutable source archive SHA-256 mismatch")
+    need(len(blob)==a["bytes"]
+         and hashlib.sha256(blob).hexdigest()==a["sha256"],
+         "Original gzip bytes differ from indexed SHA-256")
     decoded=gzip.decompress(blob)
-    need(0<len(decoded)<=MAX_PAYLOAD,"Oversized source OHLCV decode")
+    need(0<len(decoded)<=MAX_PAYLOAD,"Oversized original OHLCV source")
     data=json.loads(decoded)
     owner=data["owner"]
-    need(data.get("schema")=="aerith.okx.native-utc-daily-history.verified-response.v1"
-         and data.get("exchange")=="OKX Spot"
-         and data.get("native_interval")=="1Dutc"
+    is_okx=a["venue"]=="OKX Spot"
+    expected_schema=("aerith.okx.native-utc-daily-history.verified-response.v1"
+         if is_okx else
+         "aerith.bitget.native-exchange-daily-history.verified-response.v1")
+    need(data.get("schema")==expected_schema
+         and data.get("exchange")==a["venue"]
+         and data.get("native_interval")==a["bar"]
          and data.get("quote")=="USDT"
          and data.get("filled_by_our_collector") is False
          and data.get("canonical_1m_federation_modified") is False
-         and owner["id"]==a["id"] and owner["rank"]==a["rank"] and
-         owner["symbol"]==a["symbol"] and
-         data["market"]==a["market"] and
-         data["native_candles"]==a["native_candles"] and
-         data["earliest_returned_ms"]==a["earliest_source_ms"] and
-         data["latest_returned_ms"]==a["latest_source_ms"],
-         "Historical 1Dutc source ownership/integrity mismatch")
+         and owner.get("id")==a["id"] and owner.get("rank")==a["rank"]
+         and owner.get("symbol")==a["symbol"]
+         and data.get("market")==a["market"]
+         and data.get("native_candles")==a["native_candles"]
+         and data.get("earliest_returned_ms")==a["earliest_source_ms"]
+         and data.get("latest_returned_ms")==a["latest_source_ms"],
+         "Wrong source owner, venue, native resolution or genuine OHLCV count")
     rows=data.get("native_daily_rows")
     need(isinstance(rows,list) and len(rows)==a["native_candles"],
-         "Missing native OHLCV entries")
-    ts=[int(r[0]) for r in rows]
-    need(all(b-a==DAY for a,b in zip(ts,ts[1:])) and
-         ts[0]==a["earliest_source_ms"] and
-         ts[-1]==a["latest_source_ms"] and
-         all(isinstance(r,list) and len(r)==9 and r[8]=="1" for r in rows),
-         "Unverified, non-contiguous or incomplete native UTC bars")
-    need(isinstance(data.get("native_source_response_sha256"),list) and
-         bool(data["native_source_response_sha256"]) and
-         all(isinstance(d,str) and SHA.fullmatch(d)
-             for d in data["native_source_response_sha256"]) and
-         data.get("source_response_digests_are_exchange_signed") is False,
-         "Source API response digests absent or falsely signed")
+         "Source missing original daily OHLCV rows")
+    expected_len=9 if is_okx else 7
+    need(all(isinstance(row,list) and len(row)==expected_len for row in rows),
+         "Changed original Spot OHLCV field structure")
+    ts=[int(row[0]) for row in rows]
+    need(ts[0]==a["earliest_source_ms"] and ts[-1]==a["latest_source_ms"]
+         and all(b>a and (b-a)%DAY==0 for a,b in zip(ts,ts[1:])),
+         "Original session dates out of order, duplicated or shifted")
+    gaps=sum((b-a)//DAY-1 for a,b in zip(ts,ts[1:]))
+    need(gaps==a["gaps_within_observed_span"],
+         "Invented or hidden native Spot day gaps")
+    if is_okx:
+        need(all(row[8]=="1" for row in rows)
+             and all(stamp%DAY==0 for stamp in ts) and gaps==0,
+             "OKX returned unconfirmed or nonnative 1Dutc bars")
+    else:
+        offset=a["native_session_start_modulo_utc_day_ms"]
+        need(all(t%DAY==offset for t in ts)
+             and data.get("native_session_start_modulo_utc_day_ms")==offset
+             and data.get("native_daily_timezone_not_normalized") is True
+             and data.get("calendar_days_without_native_bars")==gaps
+             and data.get("historical_source_exhaustion_proven") is False,
+             "Bitget native 1D timezone or query scope falsely re-labelled")
+        for row in rows:
+            need(all(isinstance(v,str) for v in row[:7]),
+                 "Reconstructed Bitget native daily decimal fields")
+            o,h,l,c,v,q=map(verified_decimal,row[1:7])
+            need(min(o,h,l,c)>0 and l<=min(o,c) and max(o,c)<=h
+                 and min(v,q)>=0,
+                 "Native Bitget Spot candle price or volume outside reality")
+    digests=data.get("native_source_response_sha256")
+    need(isinstance(digests,list) and bool(digests)
+         and all(isinstance(sha,str) and SHA.fullmatch(sha) for sha in digests)
+         and data.get("source_response_digests_are_exchange_signed") is False,
+         "Original API response integrity digests absent or falsely signed")
     return {"id":a["id"],"native_daily_candles":len(rows),
             "gzip_sha256":a["sha256"],"source":url}
 
