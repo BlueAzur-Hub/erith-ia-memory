@@ -305,5 +305,52 @@ class AlternativeMarketTests(unittest.TestCase):
         self.assertIn("bitcoin",archived)
         self.assertIn("okb",{a["id"] for a in queue if a["id"] not in archived})
 
+    def test_live_archive_union_skips_existing_minute_and_daily_without_id_guessing(self):
+        queue=[{"id":f"asset-{i}","rank":i,"symbol":f"T{i}",
+                "name":f"Asset {i}"} for i in range(1,251)]
+        rows=[{"id":a["id"],"rank":a["rank"],"symbol":a["symbol"],
+               "quote":"USDT","native_1m_count":0} for a in queue]
+        rows[0]["native_1m_count"]=43200
+        minute={"schema":"aerith.public.ohlcv.top250.federated-native-archives.v1",
+                "ranked":250,"archived_assets":1,"assets":rows}
+        bar={"id":"asset-2","rank":2,"symbol":"T2","quote":"USDT",
+             "native_candles":20,"release_url":"https://github.com/source/release",
+             "sha256":"a"*64}
+        daily={"schema":"aerith.public.crypto.multiresolution-sources.v1",
+               "asset_count":1,"assets":[bar]}
+        self.assertEqual(m.active_archive_ids(queue,minute,daily),
+                         {"asset-1","asset-2"})
+        # An already archived asset is not discovered again when the older
+        # Binance-only catalog does not know about its native daily history.
+        import copy
+        duplicate=copy.deepcopy(daily)
+        duplicate["assets"][0]={**bar,"id":"asset-1","rank":1,"symbol":"T1"}
+        self.assertEqual(m.active_archive_ids(queue,minute,duplicate),{"asset-1"})
+        wrong=copy.deepcopy(daily)
+        wrong["assets"][0]["symbol"]="WRONG"
+        with self.assertRaisesRegex(ValueError,"Daily catalogue identity"):
+            m.active_archive_ids(queue,minute,wrong)
+        stale=copy.deepcopy(minute)
+        stale["archived_assets"]=2
+        with self.assertRaisesRegex(ValueError,"headline"):
+            m.active_archive_ids(queue,stale,daily)
+        invented=copy.deepcopy(daily)
+        invented["assets"][0]["native_candles"]=0
+        with self.assertRaisesRegex(ValueError,"Daily catalogue identity"):
+            m.active_archive_ids(queue,minute,invented)
+
+    def test_real_ranked_universe_excludes_every_living_archive(self):
+        # Integration check: the current source indexes drive discovery,
+        # not old legacy-month counts or raw Spot instrument candidates.
+        queue,excluded=m.universe()
+        minute=json.loads(m.LIVE_MINUTE.read_text())
+        daily=json.loads(m.LIVE_DAILY.read_text())
+        observed={a["id"] for a in minute["assets"]
+                  if a["native_1m_count"]>0}
+        observed.update(a["id"] for a in daily["assets"])
+        self.assertEqual(len(queue),250)
+        self.assertEqual(excluded,observed)
+        self.assertEqual(len(queue)-len(excluded),250-len(observed))
+
 if __name__=="__main__":
     unittest.main(verbosity=2)
