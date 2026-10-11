@@ -50,6 +50,23 @@ PAIR={
   "gate":re.compile(r"^[A-Z0-9]{1,30}_(?:USDT|USDC)$"),
   "kucoin":re.compile(r"^[A-Z0-9]{1,30}-(?:USDT|USDC)$"),
 }
+# Original KuCoin Spot announcement: trading began 2026-01-16 09:00 UTC.
+# Native 1D opens at 00:00 UTC, so accept the genuine Jan 16 first session
+# but reject any old/prior-token candles falsely relabeled as ULTIMA.
+NAMED_ORIGINAL_SPOT_FIRST_UTC_DAY={
+  ("ultima","kucoin","ULTIMA-USDT"):
+    int(dt.datetime(2026,1,16,tzinfo=dt.timezone.utc).timestamp()*1000),
+}
+
+def verify_named_venue_opening(owner,first_native_day):
+    key=(owner.get("id"),owner.get("venue"),owner.get("pair"))
+    if key not in NAMED_ORIGINAL_SPOT_FIRST_UTC_DAY:
+        return
+    need(owners.named_original_spot_proof(
+         owner,owner.get("identity_proof")),
+         "Original KuCoin project owner or immutable listing notice changed")
+    need(first_native_day>=NAMED_ORIGINAL_SPOT_FIRST_UTC_DAY[key],
+         "Native Spot candles predate the original named project listing")
 
 def need(cond,message):
     if not cond:
@@ -237,6 +254,7 @@ def acquire(owner,getter=page):
     need(current==START,"Native source paging did not cover historic bound")
     need(bool(unique),"No original native OHLCV candle available")
     dates=sorted(unique)
+    verify_named_venue_opening(owner,dates[0])
     span=(dates[-1]-dates[0])//DAY+1
     gaps=span-len(dates)
     need(gaps>=0 and len(dates)<=MAX_CANDLES,
