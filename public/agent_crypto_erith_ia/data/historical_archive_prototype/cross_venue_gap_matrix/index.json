@@ -1,0 +1,3318 @@
+{
+  "asset_list": [
+    "BTC",
+    "ETH",
+    "BNB",
+    "XRP",
+    "SOL"
+  ],
+  "btc_expected_gap_minutes": 5881,
+  "btc_gap_windows_total": 27,
+  "focus_windows": [
+    "2020-12-21",
+    "2021-08-13",
+    "2021-09-29",
+    "2023-03-24"
+  ],
+  "historical_product_listing_is_not_inferred_from_today": true,
+  "input_btc_gap_catalog_sha256": "e205874d92c2df202487e7f607ccb9667c7dcd66d487f696809e791d8aece70e",
+  "note": "BTC outage intervals are NOT automatically verified as Binance outage intervals for ETH BNB XRP SOL. Positive USD candles/spot trades prove activity only on named exchange, not Binance USDT candles. No historical source was rewritten, no minute OHLCV interpolated.",
+  "original_sources_modified": false,
+  "policy": "native_venue_candles_utc_exact_non_fungible_quotes.v1",
+  "protected_daily_reference_sha256": "812acb4a087cc43163760a6b397506bb7cb4bbcf8eca692fc686ef9f618b8bfd",
+  "rows": [
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 600,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 600,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 3,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 600,
+        "quote": "USD",
+        "request_count": 3,
+        "requests": [
+          {
+            "end_utc": "2018-06-26T06:10:00Z",
+            "http_status": null,
+            "sha256": "12bc5323c2fcec938dd5f2b01e02178949c6ecb48a32b05702919d49bf4033e7",
+            "start_utc": "2018-06-26T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2018-06-26T02%3A00%3A00Z&end=2018-06-26T06%3A10%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2018-06-26T10:20:00Z",
+            "http_status": null,
+            "sha256": "9bcea4eab55add9c2ad235fc86471cd2a89d7beb37d7d9d8f75ef35ddb7088eb",
+            "start_utc": "2018-06-26T06:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2018-06-26T06%3A10%3A00Z&end=2018-06-26T10%3A20%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2018-06-26T12:00:00Z",
+            "http_status": null,
+            "sha256": "c3442209293e745bc00001dec6eeafb1f8ac0a84dcd7f0bfdf82552263df50cc",
+            "start_utc": "2018-06-26T10:20:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2018-06-26T10%3A20%3A00Z&end=2018-06-26T12%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "6229",
+            "open": "6228.2",
+            "timestamp": "2018-06-26T02:00:00Z",
+            "volume": "1.41916213"
+          },
+          {
+            "close": "6203.5",
+            "open": "6204.36",
+            "timestamp": "2018-06-26T11:59:00Z",
+            "volume": "2.28185614"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 2,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "XBTUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "10c80252b71fba3eb746b16f7d0f70a284d538a6d462529cdb45e534635f7678",
+            "status": "http_200",
+            "time_utc": "2018-06-26T02:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1529978400000000000",
+            "verified_trades_at_minute": 1
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "582bc72ca72dc4941fcd3c3a80101b01f5b2b062b5fa83863f3f354b26ab4e71",
+            "status": "http_200",
+            "time_utc": "2018-06-26T07:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1529996400000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "a03070d03660fb4fa303495408a22d0a4f7963c3f00030b61797759ad7c1a05e",
+            "status": "http_200",
+            "time_utc": "2018-06-26T11:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1530014340000000000",
+            "verified_trades_at_minute": 10
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 600,
+      "window_end_exclusive_utc": "2018-06-26T12:00:00Z",
+      "window_start_utc": "2018-06-26T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 105,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 105,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 105,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2018-06-27T14:45:00Z",
+            "http_status": null,
+            "sha256": "1b3499c5d789890e526fd1519ed78237759678c4760fc87ae086436847036b80",
+            "start_utc": "2018-06-27T13:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2018-06-27T13%3A00%3A00Z&end=2018-06-27T14%3A45%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "6085.05",
+            "open": "6085.04",
+            "timestamp": "2018-06-27T13:00:00Z",
+            "volume": "2.9656"
+          },
+          {
+            "close": "6054.94",
+            "open": "6054.19",
+            "timestamp": "2018-06-27T14:44:00Z",
+            "volume": "1.7931603"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 105,
+      "window_end_exclusive_utc": "2018-06-27T14:45:00Z",
+      "window_start_utc": "2018-06-27T13:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 457,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 457,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 2,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 457,
+        "quote": "USD",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2018-07-04T04:33:00Z",
+            "http_status": null,
+            "sha256": "1329c9e894556172bfa4a15abff7e6d3c036b70b26d1254d4bdfd5a610931e98",
+            "start_utc": "2018-07-04T00:23:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2018-07-04T00%3A23%3A00Z&end=2018-07-04T04%3A33%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2018-07-04T08:00:00Z",
+            "http_status": null,
+            "sha256": "e6883277ab5bf39617e2288e244b42f1e0df48107e80ff6a393a8c12c79565e5",
+            "start_utc": "2018-07-04T04:33:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2018-07-04T04%3A33%3A00Z&end=2018-07-04T08%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "6492.71",
+            "open": "6492.7",
+            "timestamp": "2018-07-04T00:23:00Z",
+            "volume": "5.72856965"
+          },
+          {
+            "close": "6470.94",
+            "open": "6471.94",
+            "timestamp": "2018-07-04T07:59:00Z",
+            "volume": "1.54834835"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 457,
+      "window_end_exclusive_utc": "2018-07-04T08:00:00Z",
+      "window_start_utc": "2018-07-04T00:23:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 210,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 210,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 210,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2018-10-19T09:30:00Z",
+            "http_status": null,
+            "sha256": "d3f2a6a4a2a1b379e7db00b52269ded50bd8096e4fe2960edf933cb878594d56",
+            "start_utc": "2018-10-19T06:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2018-10-19T06%3A00%3A00Z&end=2018-10-19T09%3A30%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "6370",
+            "open": "6375",
+            "timestamp": "2018-10-19T06:00:00Z",
+            "volume": "11.18600031"
+          },
+          {
+            "close": "6376.75",
+            "open": "6376.76",
+            "timestamp": "2018-10-19T09:29:00Z",
+            "volume": "1.32770321"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 210,
+      "window_end_exclusive_utc": "2018-10-19T09:30:00Z",
+      "window_start_utc": "2018-10-19T06:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 420,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 420,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 2,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 420,
+        "quote": "USD",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2018-11-14T06:10:00Z",
+            "http_status": null,
+            "sha256": "39506643b7ca8364e35e9ee8d6bc09d2068945f61e36f1906a497280aed3669f",
+            "start_utc": "2018-11-14T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2018-11-14T02%3A00%3A00Z&end=2018-11-14T06%3A10%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2018-11-14T09:00:00Z",
+            "http_status": null,
+            "sha256": "0c7086b6e8b1a7ec0b561c71d789f4460edd09e96670b91ec0d3bf62616cc8d5",
+            "start_utc": "2018-11-14T06:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2018-11-14T06%3A10%3A00Z&end=2018-11-14T09%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "6276",
+            "open": "6276",
+            "timestamp": "2018-11-14T02:00:00Z",
+            "volume": "3.30373693"
+          },
+          {
+            "close": "6274.69",
+            "open": "6274.68",
+            "timestamp": "2018-11-14T08:59:00Z",
+            "volume": "1.06248431"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 420,
+      "window_end_exclusive_utc": "2018-11-14T09:00:00Z",
+      "window_start_utc": "2018-11-14T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 360,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 360,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 2,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 360,
+        "quote": "USD",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2019-03-12T06:10:00Z",
+            "http_status": null,
+            "sha256": "4c3dae523614430a3c479cd32b17f1704858675becd574c65bfd3a3639ab5610",
+            "start_utc": "2019-03-12T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2019-03-12T02%3A00%3A00Z&end=2019-03-12T06%3A10%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2019-03-12T08:00:00Z",
+            "http_status": null,
+            "sha256": "0b56c105c245c672d3816cb829b7bb9843e64b5bb1f5a834529983cd37e9bd87",
+            "start_utc": "2019-03-12T06:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2019-03-12T06%3A10%3A00Z&end=2019-03-12T08%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "3820.82",
+            "open": "3820.81",
+            "timestamp": "2019-03-12T02:00:00Z",
+            "volume": "3.32570802"
+          },
+          {
+            "close": "3825",
+            "open": "3824.99",
+            "timestamp": "2019-03-12T07:59:00Z",
+            "volume": "0.15389373"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 360,
+      "window_end_exclusive_utc": "2019-03-12T08:00:00Z",
+      "window_start_utc": "2019-03-12T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 600,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 600,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 3,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 600,
+        "quote": "USD",
+        "request_count": 3,
+        "requests": [
+          {
+            "end_utc": "2019-05-15T07:10:00Z",
+            "http_status": null,
+            "sha256": "b92da0172b9594d922d2a78f6ba26bc2e26de3b57463be00b0d72f2cee71bc1f",
+            "start_utc": "2019-05-15T03:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2019-05-15T03%3A00%3A00Z&end=2019-05-15T07%3A10%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2019-05-15T11:20:00Z",
+            "http_status": null,
+            "sha256": "a48e64a43e09cd99eaba5e3353404fbf699d92f318ee72bed2f38213aee4af67",
+            "start_utc": "2019-05-15T07:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2019-05-15T07%3A10%3A00Z&end=2019-05-15T11%3A20%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2019-05-15T13:00:00Z",
+            "http_status": null,
+            "sha256": "a6d1be759d850aff4264e60254fff229520de4d43d4d5787b936068f5d8f76aa",
+            "start_utc": "2019-05-15T11:20:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2019-05-15T11%3A20%3A00Z&end=2019-05-15T13%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "8071.01",
+            "open": "8066.43",
+            "timestamp": "2019-05-15T03:00:00Z",
+            "volume": "5.80048478"
+          },
+          {
+            "close": "7989.34",
+            "open": "7996.28",
+            "timestamp": "2019-05-15T12:59:00Z",
+            "volume": "3.34079845"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 600,
+      "window_end_exclusive_utc": "2019-05-15T13:00:00Z",
+      "window_start_utc": "2019-05-15T03:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 61,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 61,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 61,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2019-06-07T22:15:00Z",
+            "http_status": null,
+            "sha256": "197d123f66df0fc6b716a357c081f0180ec6974747bfd5cad6436579bb903672",
+            "start_utc": "2019-06-07T21:14:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2019-06-07T21%3A14%3A00Z&end=2019-06-07T22%3A15%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "7942.26",
+            "open": "7926.97",
+            "timestamp": "2019-06-07T21:14:00Z",
+            "volume": "5.50953471"
+          },
+          {
+            "close": "7972.08",
+            "open": "7968.58",
+            "timestamp": "2019-06-07T22:14:00Z",
+            "volume": "1.41798311"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 61,
+      "window_end_exclusive_utc": "2019-06-07T22:15:00Z",
+      "window_start_utc": "2019-06-07T21:14:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 480,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 480,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 2,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 480,
+        "quote": "USD",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2019-08-15T06:10:00Z",
+            "http_status": null,
+            "sha256": "eadaf3bd02f0be89824681bff288bbb6351cca8e9f1ffbf42c8420069e95946b",
+            "start_utc": "2019-08-15T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2019-08-15T02%3A00%3A00Z&end=2019-08-15T06%3A10%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2019-08-15T10:00:00Z",
+            "http_status": null,
+            "sha256": "1b57e15e3ed311d382e028a3c24d5b7187e820ef10cfbb9b4406e66a14748929",
+            "start_utc": "2019-08-15T06:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2019-08-15T06%3A10%3A00Z&end=2019-08-15T10%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "10047.42",
+            "open": "10047.7",
+            "timestamp": "2019-08-15T02:00:00Z",
+            "volume": "2.60705954"
+          },
+          {
+            "close": "9951.51",
+            "open": "9970.41",
+            "timestamp": "2019-08-15T09:59:00Z",
+            "volume": "14.90888363"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 480,
+      "window_end_exclusive_utc": "2019-08-15T10:00:00Z",
+      "window_start_utc": "2019-08-15T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 140,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 140,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 140,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2019-11-13T04:20:00Z",
+            "http_status": null,
+            "sha256": "3a91c550072107ff50ac81f5d0212647630d8cec871b24b295b7818de0ab82b8",
+            "start_utc": "2019-11-13T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2019-11-13T02%3A00%3A00Z&end=2019-11-13T04%3A20%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "8763.55",
+            "open": "8764.9",
+            "timestamp": "2019-11-13T02:00:00Z",
+            "volume": "1.8364444"
+          },
+          {
+            "close": "8720.11",
+            "open": "8720.1",
+            "timestamp": "2019-11-13T04:19:00Z",
+            "volume": "2.42754304"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 140,
+      "window_end_exclusive_utc": "2019-11-13T04:20:00Z",
+      "window_start_utc": "2019-11-13T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 3,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 3,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 3,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2019-11-13T05:33:00Z",
+            "http_status": null,
+            "sha256": "b89d349bad3bd77bd209ff11b62635230d4bf6f9a25e09675cdd85e708403264",
+            "start_utc": "2019-11-13T05:30:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2019-11-13T05%3A30%3A00Z&end=2019-11-13T05%3A33%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "8731.82",
+            "open": "8735.83",
+            "timestamp": "2019-11-13T05:30:00Z",
+            "volume": "10.29233638"
+          },
+          {
+            "close": "8732.5",
+            "open": "8729.4",
+            "timestamp": "2019-11-13T05:32:00Z",
+            "volume": "0.93000977"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 3,
+      "window_end_exclusive_utc": "2019-11-13T05:33:00Z",
+      "window_start_utc": "2019-11-13T05:30:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 120,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 120,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 120,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2019-11-25T04:00:00Z",
+            "http_status": null,
+            "sha256": "cb103b45f9924fa18855a2b0a754b0f5eb247a8bd0feb0a16be28013e8f3d69d",
+            "start_utc": "2019-11-25T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2019-11-25T02%3A00%3A00Z&end=2019-11-25T04%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "6723.51",
+            "open": "6723.97",
+            "timestamp": "2019-11-25T02:00:00Z",
+            "volume": "20.70223989"
+          },
+          {
+            "close": "6675",
+            "open": "6697.85",
+            "timestamp": "2019-11-25T03:59:00Z",
+            "volume": "41.29196717"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 120,
+      "window_end_exclusive_utc": "2019-11-25T04:00:00Z",
+      "window_start_utc": "2019-11-25T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 60,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 60,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 60,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-02-09T03:00:00Z",
+            "http_status": null,
+            "sha256": "1825881d5a7109598aac695d2e5a27eb639a24e7cec4815afca96a8deb8994ba",
+            "start_utc": "2020-02-09T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-02-09T02%3A00%3A00Z&end=2020-02-09T03%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "9950.56",
+            "open": "9957",
+            "timestamp": "2020-02-09T02:00:00Z",
+            "volume": "2.63788163"
+          },
+          {
+            "close": "9975.46",
+            "open": "9970",
+            "timestamp": "2020-02-09T02:59:00Z",
+            "volume": "4.08525045"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 60,
+      "window_end_exclusive_utc": "2020-02-09T03:00:00Z",
+      "window_start_utc": "2020-02-09T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 354,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 354,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 2,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 354,
+        "quote": "USD",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2020-02-19T15:46:00Z",
+            "http_status": null,
+            "sha256": "6d2c760217611e144f827e9f16c647e097073cb6c2b6177fc96bba0fbdc25bb5",
+            "start_utc": "2020-02-19T11:36:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-02-19T11%3A36%3A00Z&end=2020-02-19T15%3A46%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2020-02-19T17:30:00Z",
+            "http_status": null,
+            "sha256": "a99db8606ed655b593f24d7b6dac06eb2daf97963b8b289be52445d6e4cddddd",
+            "start_utc": "2020-02-19T15:46:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-02-19T15%3A46%3A00Z&end=2020-02-19T17%3A30%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "10165.49",
+            "open": "10172.08",
+            "timestamp": "2020-02-19T11:36:00Z",
+            "volume": "7.40269119"
+          },
+          {
+            "close": "10289.97",
+            "open": "10275.85",
+            "timestamp": "2020-02-19T17:29:00Z",
+            "volume": "38.83870592"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 354,
+      "window_end_exclusive_utc": "2020-02-19T17:30:00Z",
+      "window_start_utc": "2020-02-19T11:36:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 128,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 128,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 128,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-03-04T11:30:00Z",
+            "http_status": null,
+            "sha256": "0531e63c53c178c39188ef5d4f183b973261ffbe86370786ba20cfa375af300e",
+            "start_utc": "2020-03-04T09:22:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-03-04T09%3A22%3A00Z&end=2020-03-04T11%3A30%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "8806.88",
+            "open": "8805.52",
+            "timestamp": "2020-03-04T09:22:00Z",
+            "volume": "0.27336653"
+          },
+          {
+            "close": "8732.04",
+            "open": "8732.03",
+            "timestamp": "2020-03-04T11:29:00Z",
+            "volume": "2.10312462"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 128,
+      "window_end_exclusive_utc": "2020-03-04T11:30:00Z",
+      "window_start_utc": "2020-03-04T09:22:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 150,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 150,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 150,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-04-25T04:30:00Z",
+            "http_status": null,
+            "sha256": "ec12ba41ec2714628f70cb6e8417b9ce349c092241ae599d711cd00a23bece8a",
+            "start_utc": "2020-04-25T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-04-25T02%3A00%3A00Z&end=2020-04-25T04%3A30%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "7493.15",
+            "open": "7492.67",
+            "timestamp": "2020-04-25T02:00:00Z",
+            "volume": "7.16409322"
+          },
+          {
+            "close": "7514.69",
+            "open": "7512.12",
+            "timestamp": "2020-04-25T04:29:00Z",
+            "volume": "0.59169372"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 150,
+      "window_end_exclusive_utc": "2020-04-25T04:30:00Z",
+      "window_start_utc": "2020-04-25T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 210,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 210,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 210,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-06-28T05:30:00Z",
+            "http_status": null,
+            "sha256": "4f320111c5749c747242ebc4bb8dc808ca0ca2517239cbd5d6ca79ba3f90745d",
+            "start_utc": "2020-06-28T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-06-28T02%3A00%3A00Z&end=2020-06-28T05%3A30%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "8967.72",
+            "open": "8964.47",
+            "timestamp": "2020-06-28T02:00:00Z",
+            "volume": "0.84786965"
+          },
+          {
+            "close": "8969.51",
+            "open": "8967.7",
+            "timestamp": "2020-06-28T05:29:00Z",
+            "volume": "1.1121959"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 210,
+      "window_end_exclusive_utc": "2020-06-28T05:30:00Z",
+      "window_start_utc": "2020-06-28T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 60,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 60,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 60,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-11-30T07:00:00Z",
+            "http_status": null,
+            "sha256": "e3de6c8e543ecb9d9acae8e1c09ef8e3844d96d1ed01c328bd7609e5b36e0420",
+            "start_utc": "2020-11-30T06:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-11-30T06%3A00%3A00Z&end=2020-11-30T07%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "18540.97",
+            "open": "18539.95",
+            "timestamp": "2020-11-30T06:00:00Z",
+            "volume": "3.11477706"
+          },
+          {
+            "close": "18549.66",
+            "open": "18550",
+            "timestamp": "2020-11-30T06:59:00Z",
+            "volume": "4.48223259"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 60,
+      "window_end_exclusive_utc": "2020-11-30T07:00:00Z",
+      "window_start_utc": "2020-11-30T06:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 230,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 230,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 230,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-12-21T18:00:00Z",
+            "http_status": null,
+            "sha256": "fe015f4172b2e27390ff79251023b1d6be9c7d2e88f2e96f7ec21a60a5234896",
+            "start_utc": "2020-12-21T14:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-12-21T14%3A10%3A00Z&end=2020-12-21T18%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "22678.91",
+            "open": "22647.61",
+            "timestamp": "2020-12-21T14:10:00Z",
+            "volume": "34.92979094"
+          },
+          {
+            "close": "22725.88",
+            "open": "22742.11",
+            "timestamp": "2020-12-21T17:59:00Z",
+            "volume": "12.36530913"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 3,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "XBTUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "91ec2f20ec33f5c8ce8c2d7bf4b005d9bafbf8a1aa0d1eef521b7a00d99cbe36",
+            "status": "http_200",
+            "time_utc": "2020-12-21T14:10:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1608559800000000000",
+            "verified_trades_at_minute": 47
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "174a5adc945d83ed52add983040b1676748246e4b341230c2607775f11010cbc",
+            "status": "http_200",
+            "time_utc": "2020-12-21T16:05:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1608566700000000000",
+            "verified_trades_at_minute": 30
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "88c6dbee0a67c72c732f34aee1553671f88c5f06b6d9eac26e5dc1d3415eb2e2",
+            "status": "http_200",
+            "time_utc": "2020-12-21T17:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1608573540000000000",
+            "verified_trades_at_minute": 21
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 230,
+      "window_end_exclusive_utc": "2020-12-21T18:00:00Z",
+      "window_start_utc": "2020-12-21T14:10:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 60,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 60,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 60,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-12-25T03:00:00Z",
+            "http_status": null,
+            "sha256": "e3324c60d30b147ee485a4b86fc410b663d70368a584861e4658ce0f40a4cee4",
+            "start_utc": "2020-12-25T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-12-25T02%3A00%3A00Z&end=2020-12-25T03%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "23587.35",
+            "open": "23592.69",
+            "timestamp": "2020-12-25T02:00:00Z",
+            "volume": "1.63014879"
+          },
+          {
+            "close": "23446.56",
+            "open": "23464.56",
+            "timestamp": "2020-12-25T02:59:00Z",
+            "volume": "8.40018849"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 60,
+      "window_end_exclusive_utc": "2020-12-25T03:00:00Z",
+      "window_start_utc": "2020-12-25T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 79,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 79,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 79,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2021-02-11T05:00:00Z",
+            "http_status": null,
+            "sha256": "5102e1a6e54b47b0b934f85f2bc550af0cb0f60e1922de866bd4285d3161b645",
+            "start_utc": "2021-02-11T03:41:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-02-11T03%3A41%3A00Z&end=2021-02-11T05%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "44879.92",
+            "open": "44876.39",
+            "timestamp": "2021-02-11T03:41:00Z",
+            "volume": "8.18819549"
+          },
+          {
+            "close": "44775.36",
+            "open": "44746.88",
+            "timestamp": "2021-02-11T04:59:00Z",
+            "volume": "25.48988351"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 79,
+      "window_end_exclusive_utc": "2021-02-11T05:00:00Z",
+      "window_start_utc": "2021-02-11T03:41:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 90,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 90,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 90,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2021-03-06T03:30:00Z",
+            "http_status": null,
+            "sha256": "185650170ea32115498fdc2cf33fd37c69a7446c8918b8c2c6a603339bb9c449",
+            "start_utc": "2021-03-06T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-03-06T02%3A00%3A00Z&end=2021-03-06T03%3A30%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "48633.17",
+            "open": "48642.62",
+            "timestamp": "2021-03-06T02:00:00Z",
+            "volume": "6.64024652"
+          },
+          {
+            "close": "48641.71",
+            "open": "48597.06",
+            "timestamp": "2021-03-06T03:29:00Z",
+            "volume": "5.39220349"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 90,
+      "window_end_exclusive_utc": "2021-03-06T03:30:00Z",
+      "window_start_utc": "2021-03-06T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 150,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 150,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 150,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2021-04-20T04:30:00Z",
+            "http_status": null,
+            "sha256": "4a218523c11a405ed62c09b9f342bc88f2f9f16608b75936d9be76fe26636dd9",
+            "start_utc": "2021-04-20T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-04-20T02%3A00%3A00Z&end=2021-04-20T04%3A30%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "54888.08",
+            "open": "54869.25",
+            "timestamp": "2021-04-20T02:00:00Z",
+            "volume": "10.11207753"
+          },
+          {
+            "close": "54783.6",
+            "open": "54800.69",
+            "timestamp": "2021-04-20T04:29:00Z",
+            "volume": "7.66564494"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 150,
+      "window_end_exclusive_utc": "2021-04-20T04:30:00Z",
+      "window_start_utc": "2021-04-20T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 284,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 284,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 2,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 284,
+        "quote": "USD",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2021-04-25T08:11:00Z",
+            "http_status": null,
+            "sha256": "440be8c9a9c2e420b29ceefc2e8e34a934adaa19bacf3293c94f0ad7b48eb21f",
+            "start_utc": "2021-04-25T04:01:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-04-25T04%3A01%3A00Z&end=2021-04-25T08%3A11%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2021-04-25T08:45:00Z",
+            "http_status": null,
+            "sha256": "647fdcc77b40b36daeaf5e06bf88f97f4822534512418d9622ffa09caa830c6d",
+            "start_utc": "2021-04-25T08:11:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-04-25T08%3A11%3A00Z&end=2021-04-25T08%3A45%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "49767.74",
+            "open": "49763.91",
+            "timestamp": "2021-04-25T04:01:00Z",
+            "volume": "11.79052112"
+          },
+          {
+            "close": "49770.77",
+            "open": "49748.34",
+            "timestamp": "2021-04-25T08:44:00Z",
+            "volume": "2.09327638"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 284,
+      "window_end_exclusive_utc": "2021-04-25T08:45:00Z",
+      "window_start_utc": "2021-04-25T04:01:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 270,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 270,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 2,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 270,
+        "quote": "USD",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2021-08-13T06:10:00Z",
+            "http_status": null,
+            "sha256": "d20a79d24b7d2847fc5dc211701705cf6a771b472f2f19305a3a1ba268dd84e8",
+            "start_utc": "2021-08-13T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-08-13T02%3A00%3A00Z&end=2021-08-13T06%3A10%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2021-08-13T06:30:00Z",
+            "http_status": null,
+            "sha256": "3194909a643fda12714e95caa6b4cbf544d0cd465ac6ad14a2d5ab824a2b2e8c",
+            "start_utc": "2021-08-13T06:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-08-13T06%3A10%3A00Z&end=2021-08-13T06%3A30%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "44903.87",
+            "open": "44869.76",
+            "timestamp": "2021-08-13T02:00:00Z",
+            "volume": "4.22329604"
+          },
+          {
+            "close": "45551.66",
+            "open": "45533.91",
+            "timestamp": "2021-08-13T06:29:00Z",
+            "volume": "1.83164771"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 3,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "XBTUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "251e899d4bc297c9ec2c59964b68fe4ae4964a5ea4119b58104370f8fc1cf8fc",
+            "status": "http_200",
+            "time_utc": "2021-08-13T02:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1628820000000000000",
+            "verified_trades_at_minute": 39
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "5b70ff3c756a7cdca32f7128b07af6eb2c93fb2e65f982b10fa7763e605d9e14",
+            "status": "http_200",
+            "time_utc": "2021-08-13T04:15:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1628828100000000000",
+            "verified_trades_at_minute": 25
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "fb26d8dac4174fb5e9c18e969ab526ff08cb5a0b23e64579250e72c96e611548",
+            "status": "http_200",
+            "time_utc": "2021-08-13T06:29:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1628836140000000000",
+            "verified_trades_at_minute": 6
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 270,
+      "window_end_exclusive_utc": "2021-08-13T06:30:00Z",
+      "window_start_utc": "2021-08-13T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 120,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 120,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 120,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2021-09-29T09:00:00Z",
+            "http_status": null,
+            "sha256": "9827e507c6ff468256612440d6b087d2788c4fd9397d12088eacf9d18cd14971",
+            "start_utc": "2021-09-29T07:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-09-29T07%3A00%3A00Z&end=2021-09-29T09%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "42454.62",
+            "open": "42450.1",
+            "timestamp": "2021-09-29T07:00:00Z",
+            "volume": "2.99474285"
+          },
+          {
+            "close": "42371.77",
+            "open": "42386.25",
+            "timestamp": "2021-09-29T08:59:00Z",
+            "volume": "5.48709704"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": null,
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 120,
+      "window_end_exclusive_utc": "2021-09-29T09:00:00Z",
+      "window_start_utc": "2021-09-29T07:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": false,
+      "asset": "BTC",
+      "binance_alt": null,
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 80,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 80,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "BTC-USD",
+        "positive_volume_minutes": 80,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2023-03-24T14:00:00Z",
+            "http_status": null,
+            "sha256": "f68982d5d668f08508eaefbf24b92258635183e830df1020c57d4ddbdfd56b1a",
+            "start_utc": "2023-03-24T12:40:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2023-03-24T12%3A40%3A00Z&end=2023-03-24T14%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "27996.94",
+            "open": "27977.82",
+            "timestamp": "2023-03-24T12:40:00Z",
+            "volume": "13.07960663"
+          },
+          {
+            "close": "28013.66",
+            "open": "27953.51",
+            "timestamp": "2023-03-24T13:59:00Z",
+            "volume": "33.15643263"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 3,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "XBTUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "b2515b419053cea005805d45a22dd74cd0838ef0f6c94af9f4c0a71d6f027972",
+            "status": "http_200",
+            "time_utc": "2023-03-24T12:40:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1679661600000000000",
+            "verified_trades_at_minute": 19
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "c99ff39731bcf3ae6f36c9f37b059883e5ee621dd305214abd075ef5c2a49553",
+            "status": "http_200",
+            "time_utc": "2023-03-24T13:20:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1679664000000000000",
+            "verified_trades_at_minute": 117
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "8c3754739c20e81bb1138b0c71e6fdec96ce51e7a03aab80beb015eb69f5581c",
+            "status": "http_200",
+            "time_utc": "2023-03-24T13:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1679666340000000000",
+            "verified_trades_at_minute": 51
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": true,
+      "window_calendar_minutes": 80,
+      "window_end_exclusive_utc": "2023-03-24T14:00:00Z",
+      "window_start_utc": "2023-03-24T12:40:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "ETH",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 230,
+        "interval": "1m",
+        "missing_minutes": 230,
+        "outside_window_rows_excluded": 0,
+        "pair": "ETHUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-12-21T18:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2020-12-21T14:10:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=ETHUSDT&interval=1m&startTime=1608559800000&endTime=1608573540000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 230,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 230,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "ETH-USD",
+        "positive_volume_minutes": 230,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-12-21T18:00:00Z",
+            "http_status": null,
+            "sha256": "6bff111f746f6fca885902ef63e739ca83e8dd2df4aca4ba571a4a1f214afa9b",
+            "start_utc": "2020-12-21T14:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/ETH-USD/candles?start=2020-12-21T14%3A10%3A00Z&end=2020-12-21T18%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "608.3",
+            "open": "607.51",
+            "timestamp": "2020-12-21T14:10:00Z",
+            "volume": "116.74333579"
+          },
+          {
+            "close": "604.78",
+            "open": "604.97",
+            "timestamp": "2020-12-21T17:59:00Z",
+            "volume": "116.88552669"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 3,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "ETHUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "960dd8233661e40806f89ea2868b100c8a8184596fa7bb2e01f1c09d9de80b4d",
+            "status": "http_200",
+            "time_utc": "2020-12-21T14:10:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1608559800000000000",
+            "verified_trades_at_minute": 9
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "e5418d875f70db7ece41e2c827ddde0387862056dbc1540f05cfaced6f3ffa42",
+            "status": "http_200",
+            "time_utc": "2020-12-21T16:05:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1608566700000000000",
+            "verified_trades_at_minute": 31
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "273070faacbff2bece68553c98084a38b6caae1d2ef09ddf3c9954325dedd1b6",
+            "status": "http_200",
+            "time_utc": "2020-12-21T17:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1608573540000000000",
+            "verified_trades_at_minute": 7
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 230,
+      "window_end_exclusive_utc": "2020-12-21T18:00:00Z",
+      "window_start_utc": "2020-12-21T14:10:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "ETH",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 270,
+        "interval": "1m",
+        "missing_minutes": 270,
+        "outside_window_rows_excluded": 0,
+        "pair": "ETHUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2021-08-13T06:10:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-08-13T02:00:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=ETHUSDT&interval=1m&startTime=1628820000000&endTime=1628834940000&limit=1000"
+          },
+          {
+            "end_utc": "2021-08-13T06:30:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-08-13T06:10:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=ETHUSDT&interval=1m&startTime=1628835000000&endTime=1628836140000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 270,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 270,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 2,
+        "pair": "ETH-USD",
+        "positive_volume_minutes": 270,
+        "quote": "USD",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2021-08-13T06:10:00Z",
+            "http_status": null,
+            "sha256": "9faf167e9f52105f43f6fe0d0b302649cfb0bf1b10615a0e7cdf2c1d6d56ee47",
+            "start_utc": "2021-08-13T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/ETH-USD/candles?start=2021-08-13T02%3A00%3A00Z&end=2021-08-13T06%3A10%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2021-08-13T06:30:00Z",
+            "http_status": null,
+            "sha256": "e5bab132c1d07722463c68a9b0fe0c584027c27389777b92323467c701eb5581",
+            "start_utc": "2021-08-13T06:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/ETH-USD/candles?start=2021-08-13T06%3A10%3A00Z&end=2021-08-13T06%3A30%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "3092.09",
+            "open": "3090.15",
+            "timestamp": "2021-08-13T02:00:00Z",
+            "volume": "59.69590997"
+          },
+          {
+            "close": "3146.55",
+            "open": "3144.21",
+            "timestamp": "2021-08-13T06:29:00Z",
+            "volume": "22.35790133"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 3,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "ETHUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "f8770b8304412e35326c3e3faac475feaa7a834b92e282b87bf6680de1c0a398",
+            "status": "http_200",
+            "time_utc": "2021-08-13T02:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1628820000000000000",
+            "verified_trades_at_minute": 8
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "d311592409478758f767ab5a1350d10a7894c5d99aa93e2335960ae6bd52c5bc",
+            "status": "http_200",
+            "time_utc": "2021-08-13T04:15:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1628828100000000000",
+            "verified_trades_at_minute": 24
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "bf278d68b8fe2a809245a6add2c80caa3a31e0b773b869fe030fabffcf83c8bd",
+            "status": "http_200",
+            "time_utc": "2021-08-13T06:29:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1628836140000000000",
+            "verified_trades_at_minute": 12
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 270,
+      "window_end_exclusive_utc": "2021-08-13T06:30:00Z",
+      "window_start_utc": "2021-08-13T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "ETH",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 120,
+        "interval": "1m",
+        "missing_minutes": 120,
+        "outside_window_rows_excluded": 0,
+        "pair": "ETHUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2021-09-29T09:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-09-29T07:00:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=ETHUSDT&interval=1m&startTime=1632898800000&endTime=1632905940000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 120,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 120,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "ETH-USD",
+        "positive_volume_minutes": 120,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2021-09-29T09:00:00Z",
+            "http_status": null,
+            "sha256": "971a96e2510be0c185e946d5e71d8ffe8c7d5ffe9ee5b8cf1dd9ab0dc30567f9",
+            "start_utc": "2021-09-29T07:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/ETH-USD/candles?start=2021-09-29T07%3A00%3A00Z&end=2021-09-29T09%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "2927.39",
+            "open": "2929",
+            "timestamp": "2021-09-29T07:00:00Z",
+            "volume": "142.82242854"
+          },
+          {
+            "close": "2917.66",
+            "open": "2919.18",
+            "timestamp": "2021-09-29T08:59:00Z",
+            "volume": "31.57283424"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 3,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "ETHUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "4cb61b0c80b67c0032fe046fd343e972e56832dadea747eb628b1525a76050f1",
+            "status": "http_200",
+            "time_utc": "2021-09-29T07:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1632898800000000000",
+            "verified_trades_at_minute": 3
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "94a3551769803e8f1fe12cdf799d1673bbf1b4ae208ab21ba678bfe77ee24d75",
+            "status": "http_200",
+            "time_utc": "2021-09-29T08:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1632902400000000000",
+            "verified_trades_at_minute": 9
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "789bf65ff695cff99159f2002021a78c0af3f1fd361279df70c7df50cf4ad09e",
+            "status": "http_200",
+            "time_utc": "2021-09-29T08:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1632905940000000000",
+            "verified_trades_at_minute": 8
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 120,
+      "window_end_exclusive_utc": "2021-09-29T09:00:00Z",
+      "window_start_utc": "2021-09-29T07:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "ETH",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 80,
+        "interval": "1m",
+        "missing_minutes": 80,
+        "outside_window_rows_excluded": 0,
+        "pair": "ETHUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2023-03-24T14:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2023-03-24T12:40:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=ETHUSDT&interval=1m&startTime=1679661600000&endTime=1679666340000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 80,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 80,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "ETH-USD",
+        "positive_volume_minutes": 80,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2023-03-24T14:00:00Z",
+            "http_status": null,
+            "sha256": "d1950b4fec1a400df2f0a0d38b071e52bb69e7c5e425c589248af85dba6b87d9",
+            "start_utc": "2023-03-24T12:40:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/ETH-USD/candles?start=2023-03-24T12%3A40%3A00Z&end=2023-03-24T14%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "1774.65",
+            "open": "1773.69",
+            "timestamp": "2023-03-24T12:40:00Z",
+            "volume": "243.40715056"
+          },
+          {
+            "close": "1769.46",
+            "open": "1767.28",
+            "timestamp": "2023-03-24T13:59:00Z",
+            "volume": "189.8519952"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 3,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "ETHUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "3f3eeb9b27ad450c9ddb009acbf388c0595492e5613ee78f98309bc01ee1a787",
+            "status": "http_200",
+            "time_utc": "2023-03-24T12:40:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1679661600000000000",
+            "verified_trades_at_minute": 19
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "bd4404fa71c01755db347bbb99eeeffa180310b0c6287735b038258503e0397d",
+            "status": "http_200",
+            "time_utc": "2023-03-24T13:20:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1679664000000000000",
+            "verified_trades_at_minute": 6
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "3382c7e4fe257a61fdbf8703c790c6829426be47658c1d3dcfba44b305226765",
+            "status": "http_200",
+            "time_utc": "2023-03-24T13:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=ETHUSD&since=1679666340000000000",
+            "verified_trades_at_minute": 30
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 80,
+      "window_end_exclusive_utc": "2023-03-24T14:00:00Z",
+      "window_start_utc": "2023-03-24T12:40:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "BNB",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 230,
+        "interval": "1m",
+        "missing_minutes": 230,
+        "outside_window_rows_excluded": 0,
+        "pair": "BNBUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-12-21T18:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2020-12-21T14:10:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=BNBUSDT&interval=1m&startTime=1608559800000&endTime=1608573540000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 230,
+        "interval": "1m",
+        "missing_minutes": 230,
+        "outside_window_rows_excluded": 0,
+        "pair": "BNB-USD",
+        "positive_volume_minutes": 0,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-12-21T18:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2020-12-21T14:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BNB-USD/candles?start=2020-12-21T14%3A10%3A00Z&end=2020-12-21T18%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "historical_product_listing_unconfirmed",
+      "independent_usd_trading_demonstrated": false,
+      "kraken": {
+        "exact_minute_positive_probes": 0,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "BNBUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2020-12-21T14:10:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1608559800000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2020-12-21T16:05:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1608566700000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2020-12-21T17:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1608573540000000000",
+            "verified_trades_at_minute": 0
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 230,
+      "window_end_exclusive_utc": "2020-12-21T18:00:00Z",
+      "window_start_utc": "2020-12-21T14:10:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "BNB",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 270,
+        "interval": "1m",
+        "missing_minutes": 270,
+        "outside_window_rows_excluded": 0,
+        "pair": "BNBUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2021-08-13T06:10:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-08-13T02:00:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=BNBUSDT&interval=1m&startTime=1628820000000&endTime=1628834940000&limit=1000"
+          },
+          {
+            "end_utc": "2021-08-13T06:30:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-08-13T06:10:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=BNBUSDT&interval=1m&startTime=1628835000000&endTime=1628836140000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 270,
+        "interval": "1m",
+        "missing_minutes": 270,
+        "outside_window_rows_excluded": 0,
+        "pair": "BNB-USD",
+        "positive_volume_minutes": 0,
+        "quote": "USD",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2021-08-13T06:10:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-08-13T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BNB-USD/candles?start=2021-08-13T02%3A00%3A00Z&end=2021-08-13T06%3A10%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2021-08-13T06:30:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-08-13T06:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BNB-USD/candles?start=2021-08-13T06%3A10%3A00Z&end=2021-08-13T06%3A30%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "historical_product_listing_unconfirmed",
+      "independent_usd_trading_demonstrated": false,
+      "kraken": {
+        "exact_minute_positive_probes": 0,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "BNBUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2021-08-13T02:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1628820000000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2021-08-13T04:15:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1628828100000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2021-08-13T06:29:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1628836140000000000",
+            "verified_trades_at_minute": 0
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 270,
+      "window_end_exclusive_utc": "2021-08-13T06:30:00Z",
+      "window_start_utc": "2021-08-13T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "BNB",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 120,
+        "interval": "1m",
+        "missing_minutes": 120,
+        "outside_window_rows_excluded": 0,
+        "pair": "BNBUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2021-09-29T09:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-09-29T07:00:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=BNBUSDT&interval=1m&startTime=1632898800000&endTime=1632905940000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 120,
+        "interval": "1m",
+        "missing_minutes": 120,
+        "outside_window_rows_excluded": 0,
+        "pair": "BNB-USD",
+        "positive_volume_minutes": 0,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2021-09-29T09:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-09-29T07:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BNB-USD/candles?start=2021-09-29T07%3A00%3A00Z&end=2021-09-29T09%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "historical_product_listing_unconfirmed",
+      "independent_usd_trading_demonstrated": false,
+      "kraken": {
+        "exact_minute_positive_probes": 0,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "BNBUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2021-09-29T07:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1632898800000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2021-09-29T08:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1632902400000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2021-09-29T08:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1632905940000000000",
+            "verified_trades_at_minute": 0
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 120,
+      "window_end_exclusive_utc": "2021-09-29T09:00:00Z",
+      "window_start_utc": "2021-09-29T07:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "BNB",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 80,
+        "interval": "1m",
+        "missing_minutes": 80,
+        "outside_window_rows_excluded": 0,
+        "pair": "BNBUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2023-03-24T14:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2023-03-24T12:40:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=BNBUSDT&interval=1m&startTime=1679661600000&endTime=1679666340000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 80,
+        "interval": "1m",
+        "missing_minutes": 80,
+        "outside_window_rows_excluded": 0,
+        "pair": "BNB-USD",
+        "positive_volume_minutes": 0,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2023-03-24T14:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2023-03-24T12:40:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/BNB-USD/candles?start=2023-03-24T12%3A40%3A00Z&end=2023-03-24T14%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "historical_product_listing_unconfirmed",
+      "independent_usd_trading_demonstrated": false,
+      "kraken": {
+        "exact_minute_positive_probes": 0,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "BNBUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2023-03-24T12:40:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1679661600000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2023-03-24T13:20:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1679664000000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "7ce1ec0ac0bbfe4b763c2769b7216fa0b6317ace9e93fc0d8260d09746dec407",
+            "status": "http_200",
+            "time_utc": "2023-03-24T13:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=BNBUSD&since=1679666340000000000",
+            "verified_trades_at_minute": 0
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 80,
+      "window_end_exclusive_utc": "2023-03-24T14:00:00Z",
+      "window_start_utc": "2023-03-24T12:40:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "XRP",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 230,
+        "interval": "1m",
+        "missing_minutes": 230,
+        "outside_window_rows_excluded": 0,
+        "pair": "XRPUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-12-21T18:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2020-12-21T14:10:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=XRPUSDT&interval=1m&startTime=1608559800000&endTime=1608573540000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 230,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 230,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "XRP-USD",
+        "positive_volume_minutes": 230,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2020-12-21T18:00:00Z",
+            "http_status": null,
+            "sha256": "0e7967f83c496da787605628f02a5fadd2ddb2b4c0491b7bc773ae60a8c96f88",
+            "start_utc": "2020-12-21T14:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/XRP-USD/candles?start=2020-12-21T14%3A10%3A00Z&end=2020-12-21T18%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "0.5176",
+            "open": "0.5165",
+            "timestamp": "2020-12-21T14:10:00Z",
+            "volume": "102944.795094"
+          },
+          {
+            "close": "0.5186",
+            "open": "0.5184",
+            "timestamp": "2020-12-21T17:59:00Z",
+            "volume": "78763.296794"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 3,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "XRPUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "29c9fc8fa70386013d18eefe624c85a3c28185a366ba5260048f6e92d4d94a7e",
+            "status": "http_200",
+            "time_utc": "2020-12-21T14:10:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1608559800000000000",
+            "verified_trades_at_minute": 10
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "0b320fe3821c86ced621079047d4825c140a773f0bc9f9e3c0ed3dc267dc5660",
+            "status": "http_200",
+            "time_utc": "2020-12-21T16:05:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1608566700000000000",
+            "verified_trades_at_minute": 16
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "b2708d2bd9272c4cd4e3f8441a1ca675cac4e82412f2e5395458d72b0696a1eb",
+            "status": "http_200",
+            "time_utc": "2020-12-21T17:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1608573540000000000",
+            "verified_trades_at_minute": 6
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 230,
+      "window_end_exclusive_utc": "2020-12-21T18:00:00Z",
+      "window_start_utc": "2020-12-21T14:10:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "XRP",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 270,
+        "interval": "1m",
+        "missing_minutes": 270,
+        "outside_window_rows_excluded": 0,
+        "pair": "XRPUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2021-08-13T06:10:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-08-13T02:00:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=XRPUSDT&interval=1m&startTime=1628820000000&endTime=1628834940000&limit=1000"
+          },
+          {
+            "end_utc": "2021-08-13T06:30:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-08-13T06:10:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=XRPUSDT&interval=1m&startTime=1628835000000&endTime=1628836140000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": false,
+        "candles_present": 0,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 270,
+        "pair": "XRP-USD",
+        "positive_volume_minutes": 0,
+        "quote": "USD",
+        "request_count": 0,
+        "status": "skipped_official_trading_suspension"
+      },
+      "coinbase_market_eligibility": "coinbase_xrp_trading_suspended",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 2,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "XRPUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "bea860a4e57913be66a874aed8c8274df37b145aeba37cbedce13a64d877acb6",
+            "status": "http_200",
+            "time_utc": "2021-08-13T02:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1628820000000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "47133e276c4a176a38530d0648c290eae29a7c78aecbc2e8207828e8451f2253",
+            "status": "http_200",
+            "time_utc": "2021-08-13T04:15:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1628828100000000000",
+            "verified_trades_at_minute": 25
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "c697ad100bd68230d946608921a43d809fcb91d4179521a8d5cbd7ebc37e1712",
+            "status": "http_200",
+            "time_utc": "2021-08-13T06:29:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1628836140000000000",
+            "verified_trades_at_minute": 6
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 270,
+      "window_end_exclusive_utc": "2021-08-13T06:30:00Z",
+      "window_start_utc": "2021-08-13T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "XRP",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 120,
+        "interval": "1m",
+        "missing_minutes": 120,
+        "outside_window_rows_excluded": 0,
+        "pair": "XRPUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2021-09-29T09:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-09-29T07:00:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=XRPUSDT&interval=1m&startTime=1632898800000&endTime=1632905940000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": false,
+        "candles_present": 0,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 120,
+        "pair": "XRP-USD",
+        "positive_volume_minutes": 0,
+        "quote": "USD",
+        "request_count": 0,
+        "status": "skipped_official_trading_suspension"
+      },
+      "coinbase_market_eligibility": "coinbase_xrp_trading_suspended",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 2,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "XRPUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "67fa1071c9a7e2d2111ae5e6e019b607703a7efba80ef89e0dd35f9ac88f9177",
+            "status": "http_200",
+            "time_utc": "2021-09-29T07:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1632898800000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "1659aa3d068fdf909e1785b5b8cf7f7fac46b937f59489cff95ad2310af1caec",
+            "status": "http_200",
+            "time_utc": "2021-09-29T08:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1632902400000000000",
+            "verified_trades_at_minute": 2
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "dc7471f5acb479c70749db45591554d44a33a61342e546d1eda6236cfe235266",
+            "status": "http_200",
+            "time_utc": "2021-09-29T08:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1632905940000000000",
+            "verified_trades_at_minute": 1
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 120,
+      "window_end_exclusive_utc": "2021-09-29T09:00:00Z",
+      "window_start_utc": "2021-09-29T07:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "XRP",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 80,
+        "interval": "1m",
+        "missing_minutes": 80,
+        "outside_window_rows_excluded": 0,
+        "pair": "XRPUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2023-03-24T14:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2023-03-24T12:40:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=XRPUSDT&interval=1m&startTime=1679661600000&endTime=1679666340000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": false,
+        "candles_present": 0,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 80,
+        "pair": "XRP-USD",
+        "positive_volume_minutes": 0,
+        "quote": "USD",
+        "request_count": 0,
+        "status": "skipped_official_trading_suspension"
+      },
+      "coinbase_market_eligibility": "coinbase_xrp_trading_suspended",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 3,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "XRPUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "78702eeeddfeb0c18deef9912c4d506936764c090f3cec1e758ecd75c41b18a6",
+            "status": "http_200",
+            "time_utc": "2023-03-24T12:40:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1679661600000000000",
+            "verified_trades_at_minute": 18
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "0776ccce0d733920b8fb49c60a9c3cd7bba3c9c8c433e0eef9c4ac0300fbb35f",
+            "status": "http_200",
+            "time_utc": "2023-03-24T13:20:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1679664000000000000",
+            "verified_trades_at_minute": 6
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "ec00dea8031b7fa045f8f69085099913f021e8102de9ca95e7bdbbbb2a76fbf9",
+            "status": "http_200",
+            "time_utc": "2023-03-24T13:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=XRPUSD&since=1679666340000000000",
+            "verified_trades_at_minute": 6
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 80,
+      "window_end_exclusive_utc": "2023-03-24T14:00:00Z",
+      "window_start_utc": "2023-03-24T12:40:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "SOL",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 270,
+        "interval": "1m",
+        "missing_minutes": 270,
+        "outside_window_rows_excluded": 0,
+        "pair": "SOLUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2021-08-13T06:10:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-08-13T02:00:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=SOLUSDT&interval=1m&startTime=1628820000000&endTime=1628834940000&limit=1000"
+          },
+          {
+            "end_utc": "2021-08-13T06:30:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-08-13T06:10:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=SOLUSDT&interval=1m&startTime=1628835000000&endTime=1628836140000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": true,
+        "candles_present": 269,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 270,
+        "interval": "1m",
+        "missing_minutes": 1,
+        "outside_window_rows_excluded": 2,
+        "pair": "SOL-USD",
+        "positive_volume_minutes": 269,
+        "quote": "USD",
+        "request_count": 2,
+        "requests": [
+          {
+            "end_utc": "2021-08-13T06:10:00Z",
+            "http_status": null,
+            "sha256": "09b44de030c7419a6e13650e1e20203dccdb13712d6d546a1ab776a96f5dd8f4",
+            "start_utc": "2021-08-13T02:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/SOL-USD/candles?start=2021-08-13T02%3A00%3A00Z&end=2021-08-13T06%3A10%3A00Z&granularity=60"
+          },
+          {
+            "end_utc": "2021-08-13T06:30:00Z",
+            "http_status": null,
+            "sha256": "0d521736cd6ac0ae3ada6ac10b1b4f560cf71f9e1b7d3de570f8b1f240f3964f",
+            "start_utc": "2021-08-13T06:10:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/SOL-USD/candles?start=2021-08-13T06%3A10%3A00Z&end=2021-08-13T06%3A30%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "42.295",
+            "open": "42.27",
+            "timestamp": "2021-08-13T02:00:00Z",
+            "volume": "21.597"
+          },
+          {
+            "close": "42.667",
+            "open": "42.677",
+            "timestamp": "2021-08-13T06:29:00Z",
+            "volume": "9.677"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 2,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "SOLUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "79f46a91d290ce5ef588854ac5c2517afbdb4583499a917dbf100885210e823e",
+            "status": "http_200",
+            "time_utc": "2021-08-13T02:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=SOLUSD&since=1628820000000000000",
+            "verified_trades_at_minute": 4
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "adf97062bb952c5a021e13ce52a5bdf980c3236270f1b56c28b7a8671449a428",
+            "status": "http_200",
+            "time_utc": "2021-08-13T04:15:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=SOLUSD&since=1628828100000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "e1bb818b6d559ac2feb52511f13ab33262f7182df8d574435883665eacb861c5",
+            "status": "http_200",
+            "time_utc": "2021-08-13T06:29:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=SOLUSD&since=1628836140000000000",
+            "verified_trades_at_minute": 1
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 270,
+      "window_end_exclusive_utc": "2021-08-13T06:30:00Z",
+      "window_start_utc": "2021-08-13T02:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "SOL",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 120,
+        "interval": "1m",
+        "missing_minutes": 120,
+        "outside_window_rows_excluded": 0,
+        "pair": "SOLUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2021-09-29T09:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2021-09-29T07:00:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=SOLUSDT&interval=1m&startTime=1632898800000&endTime=1632905940000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 120,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 120,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "SOL-USD",
+        "positive_volume_minutes": 120,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2021-09-29T09:00:00Z",
+            "http_status": null,
+            "sha256": "1004c48a14cd7121db7d774bf944a3fbe03538ec42790832fa059174fd2db97b",
+            "start_utc": "2021-09-29T07:00:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/SOL-USD/candles?start=2021-09-29T07%3A00%3A00Z&end=2021-09-29T09%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "139.337",
+            "open": "139.342",
+            "timestamp": "2021-09-29T07:00:00Z",
+            "volume": "418.872"
+          },
+          {
+            "close": "137.83",
+            "open": "138.039",
+            "timestamp": "2021-09-29T08:59:00Z",
+            "volume": "1082.607"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 2,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "SOLUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "61539fe16028b6eeb3159a9bb6370fb74e9921bc562fb68553e405251fb26b8e",
+            "status": "http_200",
+            "time_utc": "2021-09-29T07:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=SOLUSD&since=1632898800000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "0ab43b101cc4c5d8a4f4c73764717b675aaf1529a9b76040733eb07594b349b4",
+            "status": "http_200",
+            "time_utc": "2021-09-29T08:00:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=SOLUSD&since=1632902400000000000",
+            "verified_trades_at_minute": 8
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "0953d7be9809cca78a00d8cfa9933d62482aa9b952f7174aacd0ec29374a2862",
+            "status": "http_200",
+            "time_utc": "2021-09-29T08:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=SOLUSD&since=1632905940000000000",
+            "verified_trades_at_minute": 2
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 120,
+      "window_end_exclusive_utc": "2021-09-29T09:00:00Z",
+      "window_start_utc": "2021-09-29T07:00:00Z"
+    },
+    {
+      "alt_asset_binance_window_not_assumed_missing": true,
+      "asset": "SOL",
+      "binance_alt": {
+        "all_minutes_traded": false,
+        "at_least_one_minute_traded": false,
+        "candles_present": 0,
+        "exchange": "Binance Spot",
+        "expected_minutes": 80,
+        "interval": "1m",
+        "missing_minutes": 80,
+        "outside_window_rows_excluded": 0,
+        "pair": "SOLUSDT",
+        "positive_volume_minutes": 0,
+        "quote": "USDT",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2023-03-24T14:00:00Z",
+            "http_status": null,
+            "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "start_utc": "2023-03-24T12:40:00Z",
+            "status": "http_200",
+            "url": "https://data-api.binance.vision/api/v3/klines?symbol=SOLUSDT&interval=1m&startTime=1679661600000&endTime=1679666340000&limit=1000"
+          }
+        ],
+        "response_errors": [],
+        "status": "verified_api_response"
+      },
+      "coinbase": {
+        "all_minutes_traded": true,
+        "at_least_one_minute_traded": true,
+        "candles_present": 80,
+        "exchange": "Coinbase Exchange",
+        "expected_minutes": 80,
+        "interval": "1m",
+        "missing_minutes": 0,
+        "outside_window_rows_excluded": 1,
+        "pair": "SOL-USD",
+        "positive_volume_minutes": 80,
+        "quote": "USD",
+        "request_count": 1,
+        "requests": [
+          {
+            "end_utc": "2023-03-24T14:00:00Z",
+            "http_status": null,
+            "sha256": "bbd7d4c8e6327156f3dc03d0fa3a89beaeb8ae8eb69b99688e902c8fe67bb5d4",
+            "start_utc": "2023-03-24T12:40:00Z",
+            "status": "http_200",
+            "url": "https://api.exchange.coinbase.com/products/SOL-USD/candles?start=2023-03-24T12%3A40%3A00Z&end=2023-03-24T14%3A00%3A00Z&granularity=60"
+          }
+        ],
+        "response_errors": [],
+        "sample_bars": [
+          {
+            "close": "21.6",
+            "open": "21.58",
+            "timestamp": "2023-03-24T12:40:00Z",
+            "volume": "1323.949"
+          },
+          {
+            "close": "21.59",
+            "open": "21.56",
+            "timestamp": "2023-03-24T13:59:00Z",
+            "volume": "2790.939"
+          }
+        ],
+        "status": "verified_api_response"
+      },
+      "coinbase_market_eligibility": "possible_historical_pair_verify_from_data",
+      "independent_usd_trading_demonstrated": true,
+      "kraken": {
+        "exact_minute_positive_probes": 2,
+        "exchange": "Kraken Spot",
+        "not_entire_interval_coverage": true,
+        "pair": "SOLUSD",
+        "points": [
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "9dc232e3a2a46e897590512d40927b4ebf02ac3538d392e8773c65c202f545e8",
+            "status": "http_200",
+            "time_utc": "2023-03-24T12:40:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=SOLUSD&since=1679661600000000000",
+            "verified_trades_at_minute": 0
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "62242d543f987b3513caad83b81c34fd451d038543a4b2c38fe3aff1824aecc2",
+            "status": "http_200",
+            "time_utc": "2023-03-24T13:20:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=SOLUSD&since=1679664000000000000",
+            "verified_trades_at_minute": 14
+          },
+          {
+            "http_status": null,
+            "page_rows": 1000,
+            "response_sha256": "6ad7805d924a5fa76aebe389f82a3d63e14558efb3101c6373931d4cf0d30cde",
+            "status": "http_200",
+            "time_utc": "2023-03-24T13:59:00Z",
+            "url": "https://api.kraken.com/0/public/Trades?pair=SOLUSD&since=1679666340000000000",
+            "verified_trades_at_minute": 10
+          }
+        ],
+        "quote": "USD",
+        "sample_minutes_attempted": 3
+      },
+      "source_btc_binance_gap": false,
+      "window_calendar_minutes": 80,
+      "window_end_exclusive_utc": "2023-03-24T14:00:00Z",
+      "window_start_utc": "2023-03-24T12:40:00Z"
+    }
+  ],
+  "schema": "seven.crypto.cross-venue-historical-gap-matrix.v1",
+  "summary": {
+    "BNB": {
+      "binance_alt_pair_windows_with_bars": 0,
+      "calendar_minutes": 700,
+      "coinbase_any_trade_windows": 0,
+      "coinbase_complete_windows": 0,
+      "independent_trading_windows": 0,
+      "kraken_any_trade_windows": 0,
+      "windows": 4
+    },
+    "BTC": {
+      "binance_alt_pair_windows_with_bars": 0,
+      "calendar_minutes": 5881,
+      "coinbase_any_trade_windows": 27,
+      "coinbase_complete_windows": 27,
+      "independent_trading_windows": 27,
+      "kraken_any_trade_windows": 4,
+      "windows": 27
+    },
+    "ETH": {
+      "binance_alt_pair_windows_with_bars": 0,
+      "calendar_minutes": 700,
+      "coinbase_any_trade_windows": 4,
+      "coinbase_complete_windows": 4,
+      "independent_trading_windows": 4,
+      "kraken_any_trade_windows": 4,
+      "windows": 4
+    },
+    "SOL": {
+      "binance_alt_pair_windows_with_bars": 0,
+      "calendar_minutes": 470,
+      "coinbase_any_trade_windows": 3,
+      "coinbase_complete_windows": 2,
+      "independent_trading_windows": 3,
+      "kraken_any_trade_windows": 3,
+      "windows": 3
+    },
+    "XRP": {
+      "binance_alt_pair_windows_with_bars": 0,
+      "calendar_minutes": 700,
+      "coinbase_any_trade_windows": 1,
+      "coinbase_complete_windows": 1,
+      "independent_trading_windows": 4,
+      "kraken_any_trade_windows": 4,
+      "windows": 4
+    }
+  },
+  "trader_modified": false
+}
