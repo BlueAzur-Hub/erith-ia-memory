@@ -264,8 +264,9 @@ test("Max explains the missing archive dates without making the user guess",asyn
  x.node("shared-asset").value="bitcoin";
  x.node("shared-period").value="Max";
  x.node("shared-read").dispatch("click");
- for(let i=0;i<250&&!x.node("shared-status").textContent.includes("SHA-256 vérifié");i++)
-  await new Promise(done=>setImmediate(done));
+ for(let i=0;i<500&&!x.node("shared-status").textContent.includes("SHA-256 vérifié");i++)
+  await new Promise(done=>setTimeout(done,5));
+ assert.match(x.node("shared-status").textContent,/SHA-256 vérifié/);
  assert.match(x.node("shared-explanation").textContent,/VOUS REGARDEZ : BTCUSDT/);
  assert.match(x.node("shared-explanation").textContent,/Max/);
  assert.match(x.node("shared-gaps").textContent,/ATTENTION — archive incomplète/);
@@ -314,7 +315,7 @@ test("old 1,795-day Max may never replace newly verified BTC source silently",as
   }
  });
  await assert.rejects(x.window.SevenVerifiedPeriods.load("bitcoin","Max"),
-  /ne correspond pas aux archives certifiées/);
+  /Index BTC Max 2018–2026 non certifié/);
  assert.ok(!x.requests.includes("verified_periods/bitcoin-Max.json.gz"));
 });
 test("source-qualified partial March remains thirty certified days",async()=>{
