@@ -89,7 +89,9 @@ jobs:
                 "btc_max_integrated/index.json": hashlib.sha256((root/"btc_max_integrated/index.json").read_bytes()).hexdigest(),
                 "btc_verified_gap_months/index.json": hashlib.sha256((root/"btc_verified_gap_months/index.json").read_bytes()).hexdigest()}
               archive=out/old.get("file","unavailable")
-              if (old.get("source_catalog_sha256")==original and archive.is_file() and
+              if (old.get("source_catalog_sha256")==original and
+                  old.get("reconciliation_policy")=="official_native_1d_with_majority_source_corroboration_v2" and
+                  archive.is_file() and
                   hashlib.sha256(archive.read_bytes()).hexdigest()==old.get("sha256")):
                   pathlib.Path(os.environ["RUNNER_TEMP"],"native-daily-reconciled").touch()
                   print("NOOP: native 1d audit already materialized for this source snapshot")

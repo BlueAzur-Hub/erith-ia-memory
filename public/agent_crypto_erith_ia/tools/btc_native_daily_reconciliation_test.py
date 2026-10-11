@@ -126,5 +126,39 @@ class NativeDailyRecovery(unittest.TestCase):
             self.assertEqual(status["source_dates"][0]["status"],"needs_review")
 
 
+    def test_official_native_1d_with_single_old_1m_disagreement_is_accepted_and_logged(self):
+        # Four independent matching source days and one old derived difference.
+        # Keep the official native 1d for the missing date, WITHOUT overwriting
+        # the source-complete minute-derived other days or hiding their mismatch.
+        dates=["2023-03-20","2023-03-21","2023-03-22",
+               "2023-03-23","2023-03-24","2023-03-25"]
+        missing=utc("2023-03-24")
+        base=[]
+        for day in dates:
+            if day=="2023-03-24":continue
+            row=[utc(day),100.,110.,90.,105.,750.,78000.,123]
+            if day=="2023-03-21":row[4]=106.
+            base.append(row)
+        mocked={"rows":base}
+        metadata={"sha256":"a"*64}
+        def fake_read(_):
+            return metadata,mocked,[missing],{missing:80},{"catalog":"d"*64}
+        zipname,zipped,checksum=zip_bundle("2023-03",dates)
+        def download(url,_cap):
+            return checksum if url.endswith(".CHECKSUM") else zipped
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch.object(target,"read_original",side_effect=fake_read):
+                report=target.reconcile(home=tmp,output=tmp,downloader=download)
+        self.assertEqual(report["native_1d_recovered"],1)
+        self.assertEqual(report["unresolved_count"],0)
+        self.assertEqual(report["bars"],6)
+        self.assertEqual(report["source_dates"][0]["matching_days"],4)
+        self.assertEqual(len(report["source_dates"][0]["mismatched_reference_days"]),1)
+        self.assertEqual(report["source_dates"][0]["mismatched_reference_days"][0]["date"],
+                         "2023-03-21")
+        self.assertEqual(report["reconciliation_policy"],
+                         "official_native_1d_with_majority_source_corroboration_v2")
+
+
 if __name__=="__main__":
     unittest.main(verbosity=2)

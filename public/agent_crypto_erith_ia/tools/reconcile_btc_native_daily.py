@@ -239,21 +239,32 @@ def reconcile(home=HOME, output=OUT, downloader=get_https):
                         "equal":matches(original[test_ts],row)})
             conflicts=[x for x in comparisons if not x["equal"]]
             proof=src["proof"]
-            if len(comparisons)<1 or conflicts:
+            # A certified *native 1d* exchange archive is not mathematically
+            # guaranteed to match every 1m aggregation after historical data
+            # revisions. Preserve differences as separate evidence. Never
+            # overwrite existing certified 1m-derived days in the base view.
+            # Quarantine only when >20% of independently comparable native
+            # daily bars disagree (or when none can corroborate the source).
+            review = len(comparisons)<1 or len(conflicts)*5 > len(comparisons)
+            if review:
                 records.append({"date":iso(t),"open_time_ms":t,
                   "status":"needs_review","native_minute_absent":minute_gaps[t],
                   "corroborated_days":len(comparisons),
-                  "conflicting_days":conflicts[:6],"source":proof})
+                  "conflicting_days":conflicts,"source":proof})
                 continue
             bar=src["bars"][t]
             verified.validate([bar],"1d")
             recovered.append(bar)
             source_proofs.append({"open_time_ms":t,"date":iso(t),
                 "native_1d":proof,"corroborated_days":len(comparisons),
+                "matching_days":len(comparisons)-len(conflicts),
+                "mismatched_reference_days":conflicts,
                 "native_1m_missing_minutes":minute_gaps[t]})
             records.append({"date":iso(t),"open_time_ms":t,"status":"recovered",
                 "native_minute_absent":minute_gaps[t],
-                "source":proof,"corroborated_days":len(comparisons)})
+                "source":proof,"corroborated_days":len(comparisons),
+                "matching_days":len(comparisons)-len(conflicts),
+                "mismatched_reference_days":conflicts})
     all_rows={r[0]:r for r in base["rows"]}
     for r in recovered:
         require(r[0] not in all_rows, "Duplicated native daily candle")
@@ -287,7 +298,8 @@ def reconcile(home=HOME, output=OUT, downloader=get_https):
        "first_open_ms":final[0][0],"last_open_ms":final[-1][0],
        "gaps":obj["gaps"],"source_catalog_sha256":digests,
        "original_btc_max_sha256":index["sha256"],
-       "source_dates":records,"source_model":"different_native_1d_and_1m_provenance"}
+       "source_dates":records,"source_model":"different_native_1d_and_1m_provenance",
+       "reconciliation_policy":"official_native_1d_with_majority_source_corroboration_v2"}
     (out/"index.json").write_text(json.dumps(status,indent=2,ensure_ascii=False)+"\n")
     print("BTC NATIVE 1D RECONCILIATION",json.dumps({
         "missing_days_initial":26,"native_1d_recovered":len(recovered),
