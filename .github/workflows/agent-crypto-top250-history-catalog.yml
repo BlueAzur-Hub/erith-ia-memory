@@ -82,15 +82,15 @@ jobs:
                   "candles":obj["native_1m_candles"],
                   "release_months":obj["release_months"]}))
           PY
-      - name: Verify BTC original gap Releases and build companion source-quality catalog
+      - name: Independently audit BTC gap Releases without publishing a second canonical catalog
         run: |
           set -euo pipefail
           python public/agent_crypto_erith_ia/tools/build_btc_gap_catalog.py \
             --catalog "$RUNNER_TEMP/top250-catalog.json" \
-            --output "$RUNNER_TEMP/btc-gap-catalog.json"
+            --output "$RUNNER_TEMP/btc-gap-audit.json"
           python - <<'PY'
           import json,os,pathlib
-          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"btc-gap-catalog.json"
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"btc-gap-audit.json"
           j=json.loads(p.read_text())
           assert j["schema"]=="seven.btc.source-quality-catalog.v1"
           assert j["gap_months"]>0 and j["unique_months_total"]==j["complete_months_in_canonical"]+j["gap_months"]
@@ -106,12 +106,9 @@ jobs:
         run: |
           set -euo pipefail
           target=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/index.json
-          gap_target=public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_verified_gap_months/index.json
           mkdir -p "$(dirname "$target")"
           cp "$RUNNER_TEMP/top250-catalog.json" "$target"
-          mkdir -p "$(dirname "$gap_target")"
-          cp "$RUNNER_TEMP/btc-gap-catalog.json" "$gap_target"
-          git add -- "$target" "$gap_target"
+          git add -- "$target"
           git diff --cached --check
           if git diff --cached --quiet; then
             echo "NOOP: same Top250 verified month coverage"
@@ -129,7 +126,7 @@ jobs:
           name: top250-historical-coverage-index
           path: |
             ${{ runner.temp }}/top250-catalog.json
-            ${{ runner.temp }}/btc-gap-catalog.json
+            ${{ runner.temp }}/btc-gap-audit.json
           if-no-files-found: error
           retention-days: 30
       - name: Protect Trader, charts and local caches
