@@ -260,8 +260,9 @@ def reconcile(home=HOME, output=OUT, downloader=get_https):
         all_rows[r[0]]=r
     final=[all_rows[t] for t in sorted(all_rows)]
     verified.validate(final,"1d",allow_gaps=True)
-    require(len(records)==26 and len(set(r["open_time_ms"] for r in records))==26
-            and len(final)==3049+len(recovered),
+    require(len(records)==len(missing) and
+            len(set(r["open_time_ms"] for r in records))==len(missing) and
+            len(final)==len(base["rows"])+len(recovered),
             "A day was silently dropped or fabricated")
     unresolved=[r for r in records if r["status"]!="recovered"]
     obj={"schema":SCHEMA,"asset_id":"bitcoin","pair":"BTCUSDT","quote":"USDT",
