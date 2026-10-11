@@ -48,7 +48,9 @@ class BitgetFederationTests(unittest.TestCase):
         syrup=next(a for a in self.catalog["assets"] if a["id"]=="syrup")
         original=next(a for a in live["assets"] if a["id"]=="syrup")
         self.assertTrue(syrup["months"])
-        self.assertEqual(original["source"],"Bitget Spot native 1m HTTPS")
+        # A genuine backfilled Binance archive is now the primary source;
+        # the original Bitget proof remains independently available below.
+        self.assertEqual(original["source"],"Binance Spot official native 1m ZIPs")
         selected=b.source_candidates(self.catalog,self.exact,self.spot,live)
         self.assertIn("syrup",selected)
         self.assertEqual(selected["syrup"]["pair"],"SYRUPUSDT")
