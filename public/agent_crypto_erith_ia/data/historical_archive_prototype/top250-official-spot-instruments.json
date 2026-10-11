@@ -1,5 +1,5 @@
 {
-  "archived_assets_at_audit": 198,
+  "archived_assets_at_audit": 199,
   "assets": [
     {
       "archived": false,
@@ -20,26 +20,6 @@
       "rank": 15,
       "status": "no_verifiable_instrument",
       "symbol": "WBT"
-    },
-    {
-      "archived": false,
-      "coin_id_confirmed": false,
-      "id": "dai",
-      "instruments": [
-        {
-          "base": "DAI",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "DAI/USDT",
-          "native_1m_month_confirmed": false,
-          "quote": "USDT",
-          "venue": "kraken"
-        }
-      ],
-      "native_1m_month_confirmed": false,
-      "rank": 27,
-      "status": "instrument_candidates_not_identity_proof",
-      "symbol": "DAI"
     },
     {
       "archived": false,
@@ -589,27 +569,27 @@
       "symbol": "AVUSD"
     }
   ],
-  "candidate_count": 52,
-  "checked_at": "2026-10-11T15:50:53.711395+00:00",
+  "candidate_count": 51,
+  "checked_at": "2026-10-11T15:56:45.226558+00:00",
   "markets": {
     "bitget": {
       "instruments": 538,
       "reason": null,
-      "source_sha256": "baa48a46cd5f87ef2a64c9d60bbe17a3152e5e2a15420991f38903fe2cb9065d",
+      "source_sha256": "d2627173d8c9f2800ae5c55064ab011c7edf72c2c50ab0c0cffb62f6370ab251",
       "status": "success",
       "url": "https://api.bitget.com/api/v3/market/instruments?category=SPOT"
     },
     "coinbase": {
       "instruments": 25,
       "reason": null,
-      "source_sha256": "5815c6a7ca878a738956f37e33b862c24a45b294f0a4cca28095291a7a0939b4",
+      "source_sha256": "46bc4151f3d7ae0ca50938fb9ec42381fe4c23758ba038d7f01f4e116cd105ba",
       "status": "success",
       "url": "https://api.exchange.coinbase.com/products"
     },
     "gate": {
       "instruments": 2112,
       "reason": null,
-      "source_sha256": "638acc6bfcc78b74f74c19decf97b448a96ce1bc61728b624651a4d0a7da5f96",
+      "source_sha256": "d0c1f1ee52d673657c6905500e7f8b3e9ec7cffbf4304f0ccedf7e4143a0dd48",
       "status": "success",
       "url": "https://api.gateio.ws/api/v4/spot/currency_pairs"
     },
@@ -641,5 +621,5 @@
   "ranked": 250,
   "schema": "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
   "source": "Official public OKX, Bitget, Gate, KuCoin, Kraken and Coinbase Exchange Spot instrument inventories",
-  "with_spot_instrument": 4
+  "with_spot_instrument": 3
 }
