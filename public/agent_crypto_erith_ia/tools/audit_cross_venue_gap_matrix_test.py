@@ -32,7 +32,7 @@ class MatrixTests(TestCase):
         self.assertEqual(assets.count("BTC"),27)
         self.assertEqual(assets.count("ETH"),4)
         self.assertEqual(assets.count("BNB"),4)
-        self.assertEqual(assets.count("XRP"),1)
+        self.assertEqual(assets.count("XRP"),4)
         self.assertEqual(assets.count("SOL"),3)
 
     def test_coinbase_candle_outside_utc_is_excluded_but_validated(self):
@@ -104,11 +104,11 @@ class MatrixTests(TestCase):
             with patch.object(m.time,"sleep",return_value=None):
                 r=m.perform(output=Path(temp)/"index.json",request=provider)
             saved=json.loads((Path(temp)/"index.json").read_text())
-        self.assertEqual(len(r["rows"]),39)
+        self.assertEqual(len(r["rows"]),42)
         self.assertEqual(r["summary"]["BTC"]["windows"],27)
         self.assertEqual(r["summary"]["ETH"]["windows"],4)
         self.assertEqual(r["summary"]["BNB"]["windows"],4)
-        self.assertEqual(r["summary"]["XRP"]["windows"],1)
+        self.assertEqual(r["summary"]["XRP"]["windows"],4)
         self.assertEqual(r["summary"]["SOL"]["windows"],3)
         self.assertEqual(r["btc_expected_gap_minutes"],5881)
         self.assertEqual(r["btc_gap_windows_total"],27)
