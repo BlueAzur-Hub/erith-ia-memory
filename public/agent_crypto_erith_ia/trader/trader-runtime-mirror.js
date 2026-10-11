@@ -58,12 +58,64 @@ function mount(){
     marketSwitch.disabled=true;
   }
 
-  // Trader-only BTC school case. Replaces the legacy OKB panel without changing Administrator behavior.
-  if(!doc.getElementById("traderBtcCaseStudyScript")){
-    const script=doc.createElement("script");
-    script.id="traderBtcCaseStudyScript";
-    script.src=new URL("../trader/trader-btc-case-study.js?case=btc",doc.baseURI).href;
-    doc.head.appendChild(script);
+  // Reuse the existing Trader case-study block from the shared runtime and retarget it to BTC here only.
+  const caseStudy=doc.getElementById("traderOkbCaseStudy");
+  if(caseStudy){
+    caseStudy.dataset.traderCaseStudy="BTC";
+    caseStudy.setAttribute("aria-label","Cas d’école BTC · lecture terrain du Trader");
+    caseStudy.innerHTML=[
+      '<summary>',
+        '<span class="okb-case-kicker">CAS D’ÉCOLE</span>',
+        '<span class="okb-case-title">BTC · lecture terrain · marché → historique → compte OKX</span>',
+        '<span class="okb-case-summary-metrics" aria-label="Résumé du cas d’école BTC">',
+          '<span>BTC actif de référence</span>',
+          '<span>Coffre conservé</span>',
+          '<span>OKX public actif</span>',
+          '<span>Compte privé : prochaine étape</span>',
+        '</span>',
+        '<span class="okb-case-chevron" aria-hidden="true">⌄</span>',
+      '</summary>',
+      '<div class="okb-case-body">',
+        '<div class="okb-case-meta">',
+          '<span><b>But :</b> rendre lisible une opération BTC de bout en bout</span>',
+          '<span><b>Règle :</b> aucune fusion silencieuse des sources</span>',
+          '<span><b>Exécution réelle :</b> non activée à ce stade</span>',
+        '</div>',
+        '<div class="okb-case-grid">',
+          '<article class="okb-case-card">',
+            '<h3>1 · BTC devient le cas d’école central</h3>',
+            '<p>BTC sert de référence pour vérifier la cohérence entre <strong>Market, Graphique, Lecture Technique, Bougies et Carnet</strong>. Le Trader doit montrer la même sélection d’actif partout.</p>',
+            '<p>Ce panneau ne fixe aucun prix et ne fabrique aucune valeur : il décrit le parcours opérateur.</p>',
+          '</article>',
+          '<article class="okb-case-card">',
+            '<h3>2 · Historique vérifié : on le garde</h3>',
+            '<p>Le lecteur historique reste relié au <strong>Coffre vérifié</strong>. Les archives Binance Spot USDT restent distinctes des données live et distinctes des bougies OKX publiques.</p>',
+            '<p>Le Coffre sert de mémoire et de preuve historique ; il ne devient pas un moteur d’ordre.</p>',
+          '</article>',
+          '<article class="okb-case-card">',
+            '<h3>3 · OKX public : marché et microstructure</h3>',
+            '<p>Les bougies et le carnet OKX publics continuent de fournir la lecture de l’instrument : bid, ask, spread, profondeur et chandelles.</p>',
+            '<p><strong>Cette couche ne lit pas le compte personnel.</strong> Elle reste séparée des données privées.</p>',
+          '</article>',
+          '<article class="okb-case-card okb-case-warning">',
+            '<h3>4 · Compte OKX privé : prochaine couche</h3>',
+            '<p>Le compte réel doit passer par le <strong>backend local / Bridge</strong> puis l’authentification <strong>Aether Trust</strong>. Les secrets ne doivent jamais être exposés dans GitHub Pages ni dans le navigateur.</p>',
+            '<p>Première cible : lecture du compte réel — soldes, ordres, exécutions et frais — avant toute permission d’envoi d’ordre.</p>',
+          '</article>',
+          '<article class="okb-case-card">',
+            '<h3>5 · Ce que le Trader devra rendre lisible</h3>',
+            '<p>Pour BTC, l’opérateur devra pouvoir lire au même endroit : <strong>solde BTC, solde de cotation, ordre ouvert, ordre exécuté, prix d’exécution, quantité, frais et historique</strong>.</p>',
+            '<p>Le but est précisément d’éviter l’illisibilité rencontrée sur l’interface OKX.</p>',
+          '</article>',
+          '<article class="okb-case-card okb-case-warning">',
+            '<h3>6 · Strategy A n’appartient plus à ce parcours Trader</h3>',
+            '<p>Strategy A reste dans l’Interface Administrator, mais n’est plus chargée dans le Trader. Le chantier BTC du Trader est maintenant séparé du chantier Strategy A.</p>',
+            '<p>La suite logique est donc : <strong>lecture privée OKX via Bridge + Trust</strong>, puis seulement plus tard l’exécution réelle avec validations explicites.</p>',
+          '</article>',
+        '</div>',
+        '<p class="okb-case-foot">Cas BTC du Trader · Coffre conservé · OKX public conservé · Strategy A sortie du Trader · compte privé non connecté à ce stade.</p>',
+      '</div>'
+    ].join("");
   }
 
   // Inject only a standalone, read-only R9 viewer into the SAME runtime.
@@ -88,7 +140,7 @@ function mount(){
   minimum_nav:true,
   minimum_nav_items:Object.freeze(["Livecheck","Marché","Graphique","Aether"]),
       btc_case_study:true,
-      btc_case_study_owner:"trader/trader-btc-case-study.js",
+      btc_case_study_owner:"trader-runtime-mirror.js",
       strategy_a_in_trader:false
     }}));
   }catch(_){}
