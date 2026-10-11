@@ -31,6 +31,47 @@ class DailyHistoryTests(unittest.TestCase):
         daily["asset_count"]=1
         self.assertEqual(m.filter_unarchived(cohort,minute,daily),[])
 
+    def test_single_character_bitget_owner_proven_by_two_independent_sources(self):
+        rows=[{"id":f"other-{i}","rank":i,"symbol":f"T{i}",
+               "quote":"USDT","months":0} for i in range(1,251)]
+        led=[];spot=[]
+        for cid,rank,sym in m.SINGLE_SYMBOL_OWNERS:
+            rows[rank-1]={"id":cid,"rank":rank,"symbol":sym,
+                          "quote":"USDT","months":0}
+            led.append({"id":cid,"rank":rank,"symbol":sym,
+                        "status":"exact_id_market_candidates",
+                        "markets":[{"exchange":"bitget","coin_id":cid,
+                                    "base":sym,"quote":"USDT",
+                                    "market_pair_candidate":sym+"USDT"}]})
+            spot.append({"id":cid,"rank":rank,"symbol":sym,
+                         "instruments":[{"venue":"bitget","base":sym,
+                                         "quote":"USDT",
+                                         "instrument":sym+"USDT",
+                                         "exchange_instrument_confirmed":True}]})
+        cat={"ranked":250,"assets":rows}
+        identity={"schema":"aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
+                  "results":led}
+        instruments={"schema":"aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+                     "assets":spot}
+        found=m.single_symbol_candidates(cat,identity,instruments)
+        self.assertEqual([a["id"] for a in found],
+            ["memecore","united-stables","build-on","quack-ai","humanity"])
+        self.assertEqual([a["pair"] for a in found],
+            ["MUSDT","UUSDT","BUSDT","QUSDT","HUSDT"])
+        # An ambiguous one-letter ticker, wrong market identity or a
+        # missing independent official instrument must refuse acquisition.
+        cat["assets"][0]["symbol"]="M"
+        with self.assertRaisesRegex(ValueError,"ambiguous"):
+            m.single_symbol_candidates(cat,identity,instruments)
+        cat["assets"][0]["symbol"]="T1"
+        identity["results"][0]["markets"][0]["coin_id"]="unrelated"
+        with self.assertRaisesRegex(ValueError,"exact-ID"):
+            m.single_symbol_candidates(cat,identity,instruments)
+        identity["results"][0]["markets"][0]["coin_id"]="memecore"
+        instruments["assets"][0]["instruments"][0]["exchange_instrument_confirmed"]=False
+        with self.assertRaisesRegex(ValueError,"Bitget Spot instrument"):
+            m.single_symbol_candidates(cat,identity,instruments)
+
     def test_native_rows_and_true_unfilled_gaps(self):
         t=m.END-5*m.DAY
         def fetch(pair,start,end):
