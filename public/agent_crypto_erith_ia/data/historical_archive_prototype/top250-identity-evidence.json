@@ -1,5 +1,5 @@
 {
-  "approved_count": 82,
+  "approved_count": 84,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -1252,13 +1252,23 @@
       "symbol": "JASMY"
     },
     {
-      "checked_at": "2026-10-10T00:24:15.208199+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-11T11:35:44.093393+00:00",
+      "evidence": [
+        {
+          "base": "COMP",
+          "coin_id": "compound-governance-token",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "compound-governance-token",
+          "trade_url": "https://www.binance.com/en/trade/COMP_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "compound-governance-token",
-      "pages": 1,
+      "pages": 2,
       "pair": "COMPUSDT",
       "rank": 166,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "COMP"
     },
     {
@@ -1322,13 +1332,23 @@
       "symbol": "RUNE"
     },
     {
-      "checked_at": "2026-10-10T00:25:00.990703+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-11T11:35:59.315463+00:00",
+      "evidence": [
+        {
+          "base": "THETA",
+          "coin_id": "theta-token",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "theta-token",
+          "trade_url": "https://www.binance.com/en/trade/THETA_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "theta-token",
-      "pages": 1,
+      "pages": 2,
       "pair": "THETAUSDT",
       "rank": 176,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "THETA"
     },
     {
@@ -1792,7 +1812,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 14,
+  "review_required_count": 12,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
