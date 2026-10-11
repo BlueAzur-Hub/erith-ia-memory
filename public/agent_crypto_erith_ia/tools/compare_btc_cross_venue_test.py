@@ -51,7 +51,7 @@ class CrossVenueChecks(unittest.TestCase):
             m.check_coinbase(bad)
         dup=coinbase_response()
         dup["json"].append(dup["json"][0])
-        with self.assertRaisesRegex(ValueError,"duplicate"):
+        with self.assertRaisesRegex(ValueError,"Duplicate"):
             m.check_coinbase(dup)
 
     def test_coinbase_extra_candles_outside_window_are_not_counted(self):
