@@ -42,15 +42,38 @@ PAIR=re.compile(r"^[A-Z0-9]{1,28}USDT$")
 def need(cond,msg):
     if not cond: raise ValueError(msg)
 
+def filter_unarchived(candidates,minute,daily):
+    """Require the current living 1m + 1D source indexes, not a stale pilot list."""
+    need(minute.get("schema")=="aerith.public.ohlcv.top250.federated-native-archives.v1"
+         and minute.get("ranked")==250 and len(minute.get("assets",[]))==250
+         and daily.get("schema")=="aerith.public.crypto.multiresolution-sources.v1"
+         and len(daily.get("assets",[]))==daily.get("asset_count"),
+         "Missing canonical top250 source inventories")
+    byid={a["id"]:a for a in minute["assets"]}
+    existing={a["id"] for a in daily["assets"]}
+    need(len(byid)==250 and len(candidates)==len({a["id"] for a in candidates}),
+         "Ambiguous exact source owner")
+    picked=[]
+    for a in candidates:
+        m=byid.get(a["id"])
+        need(m is not None and m["rank"]==a["rank"] and
+             m["symbol"]==a["symbol"] and m["quote"]=="USDT",
+             "Rank/quote of exact CoinGecko source changed")
+        if m["months"]==0 and a["id"] not in existing:
+            picked.append(a)
+    need(len(picked)<=250,"Unbounded source cohort")
+    return sorted(picked,key=lambda a:a["rank"])
+
 def qualified_assets():
     cat=json.loads(source_proof.CATALOG.read_text())
     exact=json.loads(source_proof.EXACT.read_text())
     official=json.loads(source_proof.INSTRUMENTS.read_text())
     candidates=source_proof.candidates(cat,exact,official)
-    need(len(candidates)==len({c["id"] for c in candidates}) and
-         len(candidates)<=250,"Ambiguous or unbounded exact-ID cohort")
-    # A strict ranked batch bound limits runtime; unretrieved candidates
-    # remain eligible for later immutable cohorts, never falsely counted.
+    minute=json.loads((source_proof.BASE/"top250_multisource_coverage/index.json").read_text())
+    daily=json.loads((source_proof.BASE/"top250_multiresolution_sources/index.json").read_text())
+    candidates=filter_unarchived(candidates,minute,daily)
+    # A strict ranked batch bound limits runtime. Others remain eligible
+    # for later verified releases and are never counted as archived.
     candidates=candidates[:MAX_ASSETS]
     for a in candidates:
         need(PAIR.fullmatch(a["pair"]) and a["quote"]=="USDT" and
