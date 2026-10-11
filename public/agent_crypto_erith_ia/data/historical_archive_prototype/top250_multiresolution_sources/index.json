@@ -11,8 +11,8 @@
   "response_sha256_inside_each_native_payload": true,
   "synthetic_bars_added_by_collector": false,
   "first_exchange_trade_date_not_proven": true,
-  "asset_count": 52,
-  "native_daily_candles": 50717,
+  "asset_count": 53,
+  "native_daily_candles": 50975,
   "assets": [
     {
       "id": "tether",
@@ -1131,6 +1131,30 @@
       "identity_evidence": "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json#geodnet",
       "instrument_evidence": "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json#geodnet",
       "original_source_api": "https://api.gateio.ws/api/v4/spot/candlesticks"
+    },
+    {
+      "id": "ultima",
+      "rank": 237,
+      "name": "Ultima",
+      "symbol": "ULTIMA",
+      "market": "ULTIMA-USDT",
+      "venue": "KuCoin Spot",
+      "bar": "1D",
+      "quote": "USDT",
+      "earliest_source_ms": 1768521600000,
+      "latest_source_ms": 1790726400000,
+      "native_candles": 258,
+      "gaps_within_observed_span": 0,
+      "native_session_start_modulo_utc_day_ms": 0,
+      "release_tag": "crypto-gate-kucoin-spot-native-daily-2026-09-7ef2c120eab5",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-7ef2c120eab5",
+      "filename": "ultima-ULTIMA-USDT-1D.json.gz",
+      "bytes": 9217,
+      "sha256": "ff68bcb1b0700561f2ee5769914c05c88da6eab352d39b15153613fd5ebf30b2",
+      "source_attestation": "verified-original-spot-owner",
+      "identity_evidence": "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json#ultima",
+      "instrument_evidence": "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json#ultima",
+      "original_source_api": "https://api.kucoin.com/api/v1/market/candles"
     },
     {
       "id": "stronghold-token",
