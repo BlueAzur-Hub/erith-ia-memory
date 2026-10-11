@@ -51,14 +51,9 @@ function selectionResponse(asset,quote="USDC",provider="okx"){
     chosen:{candles:chosen,book:chosen},matches:[chosen]};}};
 }
 
-test("Trader is its own page and loads its direct market owners",()=>{
-  assert.doesNotMatch(traderSrc,/<iframe|trader-runtime-mirror\.js/);
-  assert.match(traderSrc,/line-chart-native\.js/);
-  assert.match(traderSrc,/pair-central-truth\.js/);
-  assert.match(traderSrc,/market-transpose\.js/);
-  assert.match(traderSrc,/trader-historical-panel\.js/);
-  assert.match(traderSrc,/id="traderBtcCaseStudy"/);
-  assert.doesNotMatch(traderSrc,/trader-paper-preparation\.js|trader-paper-t0\.js/);
+test("Trader embeds the canonical Administrator runtime instead of old market owners",()=>{
+  assert.match(traderSrc,/src="\.\.\/administrator\/index\.html\?surface=trader"/);
+  assert.doesNotMatch(traderSrc,/line-chart-native\.js|pair-central-truth\.js|market-transpose\.js/);
 });
 
 test("BTC -> OKB -> BTC: a late BTC candle resolver cannot overwrite OKB",async()=>{
