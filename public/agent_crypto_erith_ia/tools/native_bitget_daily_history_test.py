@@ -101,6 +101,42 @@ class DailyHistoryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Spot pair"):
             m.named_spot_candidates(c,s)
 
+    def test_archived_named_owner_does_not_require_stale_candidate_instrument(self):
+        rows=[{"id":f"other-{i}","rank":i,"symbol":f"Z{i}",
+               "name":"Other","quote":"USDT","months":0}
+              for i in range(1,251)]
+        for cid,rank,sym,name,notice in m.NAMED_SPOT_PROOFS:
+            rows[rank-1]={"id":cid,"rank":rank,"symbol":sym,
+                          "name":name,"quote":"USDT","months":0}
+        rows[68]["months"]=1
+        minute={"schema":"aerith.public.ohlcv.top250.federated-native-archives.v1",
+                "ranked":250,"assets":rows}
+        daily={"schema":"aerith.public.crypto.multiresolution-sources.v1",
+               "asset_count":1,"assets":[{"id":"vision-3"}]}
+        # Both already exist. Official census may legitimately exclude them.
+        official={"schema":"aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+                  "assets":[]}
+        named=m.named_spot_candidates(minute,official,daily)
+        self.assertEqual(named,[])
+        self.assertEqual(m.filter_unarchived(named,minute,daily),[])
+        # A corrupted owner must still be rejected even if archived.
+        minute["assets"][68]["symbol"]="WRONG"
+        with self.assertRaisesRegex(ValueError,"CoinGecko identity"):
+            m.named_spot_candidates(minute,official,daily)
+        minute["assets"][68]["symbol"]="USDGO"
+        daily["assets"].append({"id":"vision-3"})
+        with self.assertRaisesRegex(ValueError,"native-daily"):
+            m.named_spot_candidates(minute,official,daily)
+
+    def test_empty_archived_cohort_never_fetches_or_republishes(self):
+        with patch.object(m,"qualified_assets",return_value=[]):
+            with patch.object(m,"collect",side_effect=AssertionError("network")):
+                with patch.object(m,"publish",side_effect=AssertionError("release")):
+                    for mode in ("--probe","--publish"):
+                        with self.subTest(mode=mode),patch("sys.argv",
+                                ["collect_native_bitget_daily_history.py",mode]):
+                            m.main()
+
     def test_native_rows_and_true_unfilled_gaps(self):
         t=m.END-5*m.DAY
         def fetch(pair,start,end):
