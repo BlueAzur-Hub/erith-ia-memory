@@ -10,13 +10,13 @@ class MultiResolutionRegistryTests(unittest.TestCase):
     def source(self):
         return json.loads(m.REGISTRY.read_text()), json.loads(m.FED.read_text())
 
-    def test_original_5_unique_sources_and_zero_miscounted_minutes(self):
+    def test_ten_unique_sources_and_zero_miscounted_minutes(self):
         x,c=self.source()
         verified=m.check_registry(x,c)
-        self.assertEqual(len(verified),5)
-        self.assertEqual(sum(a["native_candles"] for a in verified),8004)
+        self.assertEqual(len(verified),10)
+        self.assertEqual(sum(a["native_candles"] for a in verified),8486)
         self.assertEqual(x["native_1m_added"],0)
-        self.assertEqual(len({(a["id"],a["bar"]) for a in verified}),5)
+        self.assertEqual(len({(a["id"],a["bar"]) for a in verified}),10)
 
     def test_reject_wrong_rank_coin_id_or_spurious_asset(self):
         for mode in ("wrong ID","wrong rank","duplicate"):
