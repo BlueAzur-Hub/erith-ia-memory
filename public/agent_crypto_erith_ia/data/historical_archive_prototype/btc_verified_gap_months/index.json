@@ -1,7 +1,6 @@
 {
   "schema": "seven.btc.verified-gap-months.v1",
   "scope": "independent_source_qualified_months_not_in_strict_full_month_catalog",
-  "updated_utc": "2026-10-11T18:15:00Z",
   "asset_id": "bitcoin",
   "symbol": "BTC",
   "venue": "Binance Spot",
@@ -12,51 +11,1026 @@
   "can_extend_strict_contiguous_year_views": false,
   "can_be_queried_as_source_rows": true,
   "synthetic_candles": 0,
+  "source_release_count": 21,
+  "verified_native_rows": 911399,
+  "missing_calendar_minutes": 5881,
+  "release_manifest_set_sha256": "92e19a6d2f7bb990a94562e73365937e0ab228575b1c46c30dd93ac16888d3ce",
   "full_month_catalog": "../top250_history_catalog/index.json",
-  "note": "This index is separate from the 59 source-complete calendar months. A market halt is a provenance-preserving source gap, not fabricated candles. The original ZIP remains immutable in GitHub Releases. Never label the archived 1m sequence as uninterrupted.",
+  "note": "Original ZIP + verified source-manifest proofs. Gap-month candle rows stay separate from complete-month catalog; do not interpolate, double-count or claim all-time coverage.",
   "months": [
     {
-      "month": "2023-03",
-      "status": "verified_native_source_with_gaps",
-      "first_open_utc": "2023-03-01T00:00:00Z",
-      "last_open_utc": "2023-03-31T23:59:00Z",
+      "month": "2018-06",
+      "status": "source_verified_gaps",
+      "native_rows": 42495,
+      "expected_calendar_minutes": 43200,
+      "missing_calendar_minutes": 705,
+      "gaps": [
+        {
+          "start_utc": "2018-06-26T02:00:00Z",
+          "end_exclusive_utc": "2018-06-26T12:00:00Z",
+          "missing_minutes": 600,
+          "start_ms": 1529978400000,
+          "end_ms_exclusive": 1530014400000
+        },
+        {
+          "start_utc": "2018-06-27T13:00:00Z",
+          "end_exclusive_utc": "2018-06-27T14:45:00Z",
+          "missing_minutes": 105,
+          "start_ms": 1530104400000,
+          "end_ms_exclusive": 1530110700000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2018-06-01T00:00:00Z",
+      "last_open_utc": "2018-06-30T23:59:00Z",
+      "source_zip_sha256": "37645243b11525adb1fb04c64cfd03ba64407d488640a9c94aadac145b1e2c85",
+      "release_tag": "btc-spot-native-gap-2018-06",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2018-06",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2018-06.zip",
+          "bytes": 2042278,
+          "sha256": "37645243b11525adb1fb04c64cfd03ba64407d488640a9c94aadac145b1e2c85"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2018-06.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "5117a2ea13234d7b28189e39fc3a543a30138e68904acd8c5332810b225e1ca5"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2018-06.sqlite",
+          "bytes": 5664768,
+          "sha256": "bd43b7694259492fde7f18072f5b83235c81d25a3fa78b670476a5ff334a623f"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2018-06.json",
+          "bytes": 1221,
+          "sha256": "69d31172e9bc7de840a22bb14c5d34685694767f40503630d00af7760f5b5539"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2018-07",
+      "status": "source_verified_gaps",
+      "native_rows": 44183,
       "expected_calendar_minutes": 44640,
+      "missing_calendar_minutes": 457,
+      "gaps": [
+        {
+          "start_utc": "2018-07-04T00:23:00Z",
+          "end_exclusive_utc": "2018-07-04T08:00:00Z",
+          "missing_minutes": 457,
+          "start_ms": 1530663780000,
+          "end_ms_exclusive": 1530691200000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2018-07-01T00:00:00Z",
+      "last_open_utc": "2018-07-31T23:59:00Z",
+      "source_zip_sha256": "84e642279217d5577111c0ea8800a9a14439582c2c9860369f1adcdcb7a5f83e",
+      "release_tag": "btc-spot-native-gap-2018-07",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2018-07",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2018-07.zip",
+          "bytes": 2135665,
+          "sha256": "84e642279217d5577111c0ea8800a9a14439582c2c9860369f1adcdcb7a5f83e"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2018-07.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "f6820c588fd56cfa520d92824dd47286d1b325c232bde8421f76cf179205dadb"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2018-07.sqlite",
+          "bytes": 5902336,
+          "sha256": "6fa7ae5b267e68cbeece67c19d6506ad03a9229773051b0923cb573602262859"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2018-07.json",
+          "bytes": 1113,
+          "sha256": "4d6fe8c7489616555f491f54348bfca0dd1500c5d8281342f02376c8964abb2b"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2018-10",
+      "status": "source_verified_gaps",
+      "native_rows": 44430,
+      "expected_calendar_minutes": 44640,
+      "missing_calendar_minutes": 210,
+      "gaps": [
+        {
+          "start_utc": "2018-10-19T06:00:00Z",
+          "end_exclusive_utc": "2018-10-19T09:30:00Z",
+          "missing_minutes": 210,
+          "start_ms": 1539928800000,
+          "end_ms_exclusive": 1539941400000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2018-10-01T00:00:00Z",
+      "last_open_utc": "2018-10-31T23:59:00Z",
+      "source_zip_sha256": "566429da1b107e73e18af6c865bf23c8ae9dd049d24be36b45da3d36874366e0",
+      "release_tag": "btc-spot-native-gap-2018-10",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2018-10",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2018-10.zip",
+          "bytes": 2071463,
+          "sha256": "566429da1b107e73e18af6c865bf23c8ae9dd049d24be36b45da3d36874366e0"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2018-10.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "9dc55f6f8d39c79f98f03bb2c9ec80c672011383222750f2f6426551813df617"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2018-10.sqlite",
+          "bytes": 5857280,
+          "sha256": "613f4ce400a011a2333d94052dd8eaaa38e04c80e362a0bd0d5d047772ac6caf"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2018-10.json",
+          "bytes": 1113,
+          "sha256": "d54cff6e042478914af6bb723b54902c51516ae86f1317bd2d2eb36850df262d"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2018-11",
+      "status": "source_verified_gaps",
+      "native_rows": 42780,
+      "expected_calendar_minutes": 43200,
+      "missing_calendar_minutes": 420,
+      "gaps": [
+        {
+          "start_utc": "2018-11-14T02:00:00Z",
+          "end_exclusive_utc": "2018-11-14T09:00:00Z",
+          "missing_minutes": 420,
+          "start_ms": 1542160800000,
+          "end_ms_exclusive": 1542186000000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2018-11-01T00:00:00Z",
+      "last_open_utc": "2018-11-30T23:59:00Z",
+      "source_zip_sha256": "930aa36136ca5f814fcd16765feb637d6e56f16c080f32291a207d0ae66b6572",
+      "release_tag": "btc-spot-native-gap-2018-11",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2018-11",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2018-11.zip",
+          "bytes": 2059163,
+          "sha256": "930aa36136ca5f814fcd16765feb637d6e56f16c080f32291a207d0ae66b6572"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2018-11.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "69ec34f40978b7d3f70d2c19e210eda18e10d5f1c7e59dda62e5aa7374d2f8e4"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2018-11.sqlite",
+          "bytes": 5697536,
+          "sha256": "919da4af4f7501c99c6abba107443482962f8a42daa7495120f73a102db1f479"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2018-11.json",
+          "bytes": 1113,
+          "sha256": "d5537e480c3d4044bfba8a34dd15faa6ab9c5ab5218c751ae07b914338c6795d"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2019-03",
+      "status": "source_verified_gaps",
+      "native_rows": 44280,
+      "expected_calendar_minutes": 44640,
+      "missing_calendar_minutes": 360,
+      "gaps": [
+        {
+          "start_utc": "2019-03-12T02:00:00Z",
+          "end_exclusive_utc": "2019-03-12T08:00:00Z",
+          "missing_minutes": 360,
+          "start_ms": 1552356000000,
+          "end_ms_exclusive": 1552377600000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2019-03-01T00:00:00Z",
+      "last_open_utc": "2019-03-31T23:59:00Z",
+      "source_zip_sha256": "30f0b1d9a47950ced20f62045291669f984a55552181769ff3f1df8433a93e09",
+      "release_tag": "btc-spot-native-gap-2019-03",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2019-03",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2019-03.zip",
+          "bytes": 2089484,
+          "sha256": "30f0b1d9a47950ced20f62045291669f984a55552181769ff3f1df8433a93e09"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2019-03.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "8ad8b14282ae4b2464446de4e7f9dff5e70515881e1f0d50734e5d04cb3542b8"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2019-03.sqlite",
+          "bytes": 5885952,
+          "sha256": "2067a84e6dce49cd219daeb7088deab207e5aa660aed8b9942ddc6fa0b25c0eb"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2019-03.json",
+          "bytes": 1113,
+          "sha256": "bd7c0d2a06c24294cfaed5ebc243e659d6b6bf7c704b80bc95f1a09b46ce89b9"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2019-05",
+      "status": "source_verified_gaps",
+      "native_rows": 44040,
+      "expected_calendar_minutes": 44640,
+      "missing_calendar_minutes": 600,
+      "gaps": [
+        {
+          "start_utc": "2019-05-15T03:00:00Z",
+          "end_exclusive_utc": "2019-05-15T13:00:00Z",
+          "missing_minutes": 600,
+          "start_ms": 1557889200000,
+          "end_ms_exclusive": 1557925200000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2019-05-01T00:00:00Z",
+      "last_open_utc": "2019-05-31T23:59:00Z",
+      "source_zip_sha256": "7a32f26d7f878332384dc61dde639e49c5007c2b45d6bc360b0bec37817baa08",
+      "release_tag": "btc-spot-native-gap-2019-05",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2019-05",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2019-05.zip",
+          "bytes": 2198447,
+          "sha256": "7a32f26d7f878332384dc61dde639e49c5007c2b45d6bc360b0bec37817baa08"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2019-05.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "b814b7ede7f46310af9df8028318a6ff9422cfdf0b603990e598843ea7d31402"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2019-05.sqlite",
+          "bytes": 5939200,
+          "sha256": "d53380d1f734fb6a257d474f493afd9db47ba3679dc22a3f1406d2c7ddc48cba"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2019-05.json",
+          "bytes": 1113,
+          "sha256": "0e30f5f8d439eb5d613ec98e328d0b9cce6d27887b469e6c0d16e1b6358956fc"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2019-06",
+      "status": "source_verified_gaps",
+      "native_rows": 43139,
+      "expected_calendar_minutes": 43200,
+      "missing_calendar_minutes": 61,
+      "gaps": [
+        {
+          "start_utc": "2019-06-07T21:14:00Z",
+          "end_exclusive_utc": "2019-06-07T22:15:00Z",
+          "missing_minutes": 61,
+          "start_ms": 1559942040000,
+          "end_ms_exclusive": 1559945700000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2019-06-01T00:00:00Z",
+      "last_open_utc": "2019-06-30T23:59:00Z",
+      "source_zip_sha256": "8c7acbfa0d71c87f6ba965e8d62ec83b258b4a3aaab9a8c17f708ece35214a1a",
+      "release_tag": "btc-spot-native-gap-2019-06",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2019-06",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2019-06.zip",
+          "bytes": 2177693,
+          "sha256": "8c7acbfa0d71c87f6ba965e8d62ec83b258b4a3aaab9a8c17f708ece35214a1a"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2019-06.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "1f78c1ce387302fd916953cc2cf27b6f91419664b51563345359be92087cde8c"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2019-06.sqlite",
+          "bytes": 5894144,
+          "sha256": "26b3b6207008c31f13a3cae96bb8ac8f9d8b65a1a943bc35b0fa6c11b8416364"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2019-06.json",
+          "bytes": 1111,
+          "sha256": "39cc37bb858050b7cea21b546163eafe39b3ba31d782b09c748d554837c5a98a"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2019-08",
+      "status": "source_verified_gaps",
+      "native_rows": 44160,
+      "expected_calendar_minutes": 44640,
+      "missing_calendar_minutes": 480,
+      "gaps": [
+        {
+          "start_utc": "2019-08-15T02:00:00Z",
+          "end_exclusive_utc": "2019-08-15T10:00:00Z",
+          "missing_minutes": 480,
+          "start_ms": 1565834400000,
+          "end_ms_exclusive": 1565863200000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2019-08-01T00:00:00Z",
+      "last_open_utc": "2019-08-31T23:59:00Z",
+      "source_zip_sha256": "367c5ece72129de80347c34bbd24e6f5f868711ce66b0a830c6945c4259e7d33",
+      "release_tag": "btc-spot-native-gap-2019-08",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2019-08",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2019-08.zip",
+          "bytes": 2207879,
+          "sha256": "367c5ece72129de80347c34bbd24e6f5f868711ce66b0a830c6945c4259e7d33"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2019-08.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "ff1a3280f3c60022562fc45c5c67e3c880910920cdf844ba11c2889fb989d3ae"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2019-08.sqlite",
+          "bytes": 6098944,
+          "sha256": "5cc7524acd740ad9d700c3be51aeb4e2e0fde9daaa56bf516cd02bfdc3686b9e"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2019-08.json",
+          "bytes": 1113,
+          "sha256": "cdc796740ff23ccb8c93320ca3b10bf12bcf23382069f0c9a8b700f3b74e621d"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2019-11",
+      "status": "source_verified_gaps",
+      "native_rows": 42937,
+      "expected_calendar_minutes": 43200,
+      "missing_calendar_minutes": 263,
+      "gaps": [
+        {
+          "start_utc": "2019-11-13T02:00:00Z",
+          "end_exclusive_utc": "2019-11-13T04:20:00Z",
+          "missing_minutes": 140,
+          "start_ms": 1573610400000,
+          "end_ms_exclusive": 1573618800000
+        },
+        {
+          "start_utc": "2019-11-13T05:30:00Z",
+          "end_exclusive_utc": "2019-11-13T05:33:00Z",
+          "missing_minutes": 3,
+          "start_ms": 1573623000000,
+          "end_ms_exclusive": 1573623180000
+        },
+        {
+          "start_utc": "2019-11-25T02:00:00Z",
+          "end_exclusive_utc": "2019-11-25T04:00:00Z",
+          "missing_minutes": 120,
+          "start_ms": 1574647200000,
+          "end_ms_exclusive": 1574654400000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2019-11-01T00:00:00Z",
+      "last_open_utc": "2019-11-30T23:59:00Z",
+      "source_zip_sha256": "6a896c7a603a2c8deb12233e53c3f8fbc2676b8c0b7b85fcf53a3b57fad021d7",
+      "release_tag": "btc-spot-native-gap-2019-11",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2019-11",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2019-11.zip",
+          "bytes": 2133961,
+          "sha256": "6a896c7a603a2c8deb12233e53c3f8fbc2676b8c0b7b85fcf53a3b57fad021d7"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2019-11.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "63735dcf579a72ab69813751ec77f6dcf1db8789cbc7822c0830bb3d4b9940cc"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2019-11.sqlite",
+          "bytes": 5779456,
+          "sha256": "e38fce5d94d270a2e8c22eb5441850ce54337e6f2e643a8438449a6f143b18db"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2019-11.json",
+          "bytes": 1217,
+          "sha256": "0c4550f70c83b8dc30a830aeff2e3fd8b5bcfbeffaa2eb50c9442048b243174f"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2020-02",
+      "status": "source_verified_gaps",
+      "native_rows": 41346,
+      "expected_calendar_minutes": 41760,
+      "missing_calendar_minutes": 414,
+      "gaps": [
+        {
+          "start_utc": "2020-02-09T02:00:00Z",
+          "end_exclusive_utc": "2020-02-09T03:00:00Z",
+          "missing_minutes": 60,
+          "start_ms": 1581213600000,
+          "end_ms_exclusive": 1581217200000
+        },
+        {
+          "start_utc": "2020-02-19T11:36:00Z",
+          "end_exclusive_utc": "2020-02-19T17:30:00Z",
+          "missing_minutes": 354,
+          "start_ms": 1582112160000,
+          "end_ms_exclusive": 1582133400000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2020-02-01T00:00:00Z",
+      "last_open_utc": "2020-02-29T23:59:00Z",
+      "source_zip_sha256": "05aedf91c80f579da396951b1d9e84587d02c9684352e1ff17d4468f556c674e",
+      "release_tag": "btc-spot-native-gap-2020-02",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2020-02",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2020-02.zip",
+          "bytes": 2077466,
+          "sha256": "05aedf91c80f579da396951b1d9e84587d02c9684352e1ff17d4468f556c674e"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2020-02.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "d4002dcc1c1e9367fe6fa2369db5159802b3755092e8d451b7cd955012e0c3bf"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2020-02.sqlite",
+          "bytes": 5652480,
+          "sha256": "c67cb4675e6bf1754fc14edeead45ee2e9d348708d8f99a0e3bf89131d6429b8"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2020-02.json",
+          "bytes": 1110,
+          "sha256": "0ca59a15acaa7a06faa0823da81edbd890702a1023a9b5ae33a18671f46766ee"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2020-03",
+      "status": "source_verified_gaps",
+      "native_rows": 44512,
+      "expected_calendar_minutes": 44640,
+      "missing_calendar_minutes": 128,
+      "gaps": [
+        {
+          "start_utc": "2020-03-04T09:22:00Z",
+          "end_exclusive_utc": "2020-03-04T11:30:00Z",
+          "missing_minutes": 128,
+          "start_ms": 1583313720000,
+          "end_ms_exclusive": 1583321400000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2020-03-01T00:00:00Z",
+      "last_open_utc": "2020-03-31T23:59:00Z",
+      "source_zip_sha256": "ee5d21ec0f3c5bdef1da330d8b74d8571779fe757bb7e9f272847d36b95a71a2",
+      "release_tag": "btc-spot-native-gap-2020-03",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2020-03",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2020-03.zip",
+          "bytes": 2277959,
+          "sha256": "ee5d21ec0f3c5bdef1da330d8b74d8571779fe757bb7e9f272847d36b95a71a2"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2020-03.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "4718c863caa68ad83696ec88ee8da8ff2ffe7b2e826b5f31c8f604d3f3c3f9d5"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2020-03.sqlite",
+          "bytes": 6078464,
+          "sha256": "708e39d5bc978b64b8ff47da670d012baea74aa93fe453db600e441b83d5f72f"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2020-03.json",
+          "bytes": 1003,
+          "sha256": "7aa4ed6fd1a21a76219cb2397dde45f7e91848c9f5258a393e5df7011a73caf7"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2020-04",
+      "status": "source_verified_gaps",
+      "native_rows": 43050,
+      "expected_calendar_minutes": 43200,
+      "missing_calendar_minutes": 150,
+      "gaps": [
+        {
+          "start_utc": "2020-04-25T02:00:00Z",
+          "end_exclusive_utc": "2020-04-25T04:30:00Z",
+          "missing_minutes": 150,
+          "start_ms": 1587780000000,
+          "end_ms_exclusive": 1587789000000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2020-04-01T00:00:00Z",
+      "last_open_utc": "2020-04-30T23:59:00Z",
+      "source_zip_sha256": "83e052ee74ede21aa617830c121ce052e5f29b735710fe65159fc594b2028301",
+      "release_tag": "btc-spot-native-gap-2020-04",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2020-04",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2020-04.zip",
+          "bytes": 2164104,
+          "sha256": "83e052ee74ede21aa617830c121ce052e5f29b735710fe65159fc594b2028301"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2020-04.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "319de1c73dbfacfa89db2ddaa96754bd8845dcbc09f3e8e9c899cdb13b966940"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2020-04.sqlite",
+          "bytes": 5836800,
+          "sha256": "fb2a17d9c566f75e24ad49db8db4b74e28540f415e88c7c2a725f962a444705c"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2020-04.json",
+          "bytes": 1003,
+          "sha256": "c4da1fbf788e7acdbd62645618e408754b84fed3235b7830575024a5379ef128"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2020-06",
+      "status": "source_verified_gaps",
+      "native_rows": 42990,
+      "expected_calendar_minutes": 43200,
+      "missing_calendar_minutes": 210,
+      "gaps": [
+        {
+          "start_utc": "2020-06-28T02:00:00Z",
+          "end_exclusive_utc": "2020-06-28T05:30:00Z",
+          "missing_minutes": 210,
+          "start_ms": 1593309600000,
+          "end_ms_exclusive": 1593322200000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2020-06-01T00:00:00Z",
+      "last_open_utc": "2020-06-30T23:59:00Z",
+      "source_zip_sha256": "4f7a6721f2b9f0a74d66ce7818c73dad002a454e11a5280485e3c123d27f7698",
+      "release_tag": "btc-spot-native-gap-2020-06",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2020-06",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2020-06.zip",
+          "bytes": 2131275,
+          "sha256": "4f7a6721f2b9f0a74d66ce7818c73dad002a454e11a5280485e3c123d27f7698"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2020-06.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "9ec3b9a915b3f580f276795fc422fcdcde974ee1492850dd997242b6875768df"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2020-06.sqlite",
+          "bytes": 5787648,
+          "sha256": "bb429b9b612af5bc7d8aa73635e5beddb5f5a0b8c06aa8d812b1e9e55daac095"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2020-06.json",
+          "bytes": 1003,
+          "sha256": "0a1fe9897e7fca338ebe83bd736e97419a7cab62ffacdc48d00ac7212b83f505"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2020-11",
+      "status": "source_verified_gaps",
+      "native_rows": 43140,
+      "expected_calendar_minutes": 43200,
+      "missing_calendar_minutes": 60,
+      "gaps": [
+        {
+          "start_utc": "2020-11-30T06:00:00Z",
+          "end_exclusive_utc": "2020-11-30T07:00:00Z",
+          "missing_minutes": 60,
+          "start_ms": 1606716000000,
+          "end_ms_exclusive": 1606719600000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2020-11-01T00:00:00Z",
+      "last_open_utc": "2020-11-30T23:59:00Z",
+      "source_zip_sha256": "07ff8e3aa21d340a9e25c32644a4cd6c15e4280879d39815159eb5c858895488",
+      "release_tag": "btc-spot-native-gap-2020-11",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2020-11",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2020-11.zip",
+          "bytes": 2228577,
+          "sha256": "07ff8e3aa21d340a9e25c32644a4cd6c15e4280879d39815159eb5c858895488"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2020-11.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "cc312803c2342d2232a5356e37499a5db1c062f0e87aeb270cec2674ad8a4304"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2020-11.sqlite",
+          "bytes": 6123520,
+          "sha256": "11d169b85cc537c527b94482ab22ae404981c133d0cdbb7f604c9b3ccfd19667"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2020-11.json",
+          "bytes": 1001,
+          "sha256": "6b9dd93c9389a1d490c491ce36eb35b086aba383089eb59e3997badbd019c7c3"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2020-12",
+      "status": "source_with_gaps_and_close_time_anomaly",
+      "native_rows": 44350,
+      "expected_calendar_minutes": 44640,
+      "missing_calendar_minutes": 290,
+      "gaps": [
+        {
+          "start_utc": "2020-12-21T14:10:00Z",
+          "end_exclusive_utc": "2020-12-21T18:00:00Z",
+          "missing_minutes": 230,
+          "start_ms": 1608559800000,
+          "end_ms_exclusive": 1608573600000
+        },
+        {
+          "start_utc": "2020-12-25T02:00:00Z",
+          "end_exclusive_utc": "2020-12-25T03:00:00Z",
+          "missing_minutes": 60,
+          "start_ms": 1608861600000,
+          "end_ms_exclusive": 1608865200000
+        }
+      ],
+      "close_time_anomaly_count": 1,
+      "close_time_anomalies": [
+        {
+          "offset_from_open_ms": -1299479,
+          "open_time_ms": 1608559740000,
+          "source_close_time_ms": 1608558440521
+        }
+      ],
+      "first_open_utc": "2020-12-01T00:00:00Z",
+      "last_open_utc": "2020-12-31T23:59:00Z",
+      "source_zip_sha256": "a53a9352fd808d10981f68191138b39ef142e15ca88e03a061309f1699419749",
+      "release_tag": "btc-spot-native-gap-2020-12",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2020-12",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2020-12.zip",
+          "bytes": 2304125,
+          "sha256": "a53a9352fd808d10981f68191138b39ef142e15ca88e03a061309f1699419749"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2020-12.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "6b9bfbdd4eec50493e8d98e3503202deecd4026944177651cf976e9d7d66954f"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2020-12.sqlite",
+          "bytes": 6291456,
+          "sha256": "713ca49812a9a363158168eaafd2a23f37b89307d5a5d2cb1ce8e69341bce6b3"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2020-12.json",
+          "bytes": 1373,
+          "sha256": "c89623670d492651179a70a309aed648d8dda6064410c6d73ecb8fbda0ab7ab6"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2021-02",
+      "status": "source_verified_gaps",
+      "native_rows": 40241,
+      "expected_calendar_minutes": 40320,
+      "missing_calendar_minutes": 79,
+      "gaps": [
+        {
+          "start_utc": "2021-02-11T03:41:00Z",
+          "end_exclusive_utc": "2021-02-11T05:00:00Z",
+          "missing_minutes": 79,
+          "start_ms": 1613014860000,
+          "end_ms_exclusive": 1613019600000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2021-02-01T00:00:00Z",
+      "last_open_utc": "2021-02-28T23:59:00Z",
+      "source_zip_sha256": "21723e4951ba30037cb8417278b7cf4a38d47c625b1cb5ac97864d539ae6d407",
+      "release_tag": "btc-spot-native-gap-2021-02",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2021-02",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2021-02.zip",
+          "bytes": 2157176,
+          "sha256": "21723e4951ba30037cb8417278b7cf4a38d47c625b1cb5ac97864d539ae6d407"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2021-02.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "cd696e7bb6c52ceaf14551a95e183e13276e5d9695f4a8568393323b90352ab8"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2021-02.sqlite",
+          "bytes": 5730304,
+          "sha256": "2ac5098c984bfcd04c38960414d96617221cf8d1717042c1bde88f5117a0effd"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2021-02.json",
+          "bytes": 1001,
+          "sha256": "b278e1258f6452440d01c02e840d523661acaaf089fe6c2f576f79853dd20a89"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2021-03",
+      "status": "source_verified_gaps",
+      "native_rows": 44550,
+      "expected_calendar_minutes": 44640,
+      "missing_calendar_minutes": 90,
+      "gaps": [
+        {
+          "start_utc": "2021-03-06T02:00:00Z",
+          "end_exclusive_utc": "2021-03-06T03:30:00Z",
+          "missing_minutes": 90,
+          "start_ms": 1614996000000,
+          "end_ms_exclusive": 1615001400000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2021-03-01T00:00:00Z",
+      "last_open_utc": "2021-03-31T23:59:00Z",
+      "source_zip_sha256": "54387ec23e27440b220c693b94e97c21dbb3a82d3b7606fd8cfe9f40a69cc85b",
+      "release_tag": "btc-spot-native-gap-2021-03",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2021-03",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2021-03.zip",
+          "bytes": 2375057,
+          "sha256": "54387ec23e27440b220c693b94e97c21dbb3a82d3b7606fd8cfe9f40a69cc85b"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2021-03.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "98d262588a2d0d4adcb792e822f2a3536e734ad73d3588a07a88b1567fc0c1e8"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2021-03.sqlite",
+          "bytes": 6332416,
+          "sha256": "98d5b17e6bf6838340768e9cc7152f5986afea739f8135e8f127aa6b13d5bc26"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2021-03.json",
+          "bytes": 1001,
+          "sha256": "730534e311f930efad5d6fa220d09a3b7885b3a7d6a7fa3b249482eb95fabed8"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2021-04",
+      "status": "source_verified_gaps",
+      "native_rows": 42766,
+      "expected_calendar_minutes": 43200,
+      "missing_calendar_minutes": 434,
+      "gaps": [
+        {
+          "start_utc": "2021-04-20T02:00:00Z",
+          "end_exclusive_utc": "2021-04-20T04:30:00Z",
+          "missing_minutes": 150,
+          "start_ms": 1618884000000,
+          "end_ms_exclusive": 1618893000000
+        },
+        {
+          "start_utc": "2021-04-25T04:01:00Z",
+          "end_exclusive_utc": "2021-04-25T08:45:00Z",
+          "missing_minutes": 284,
+          "start_ms": 1619323260000,
+          "end_ms_exclusive": 1619340300000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2021-04-01T00:00:00Z",
+      "last_open_utc": "2021-04-30T23:59:00Z",
+      "source_zip_sha256": "016ea34ee7e52c4783c1e03ec65c710361c1ccf228d3a4c0b44a4d0baa859641",
+      "release_tag": "btc-spot-native-gap-2021-04",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2021-04",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2021-04.zip",
+          "bytes": 2265385,
+          "sha256": "016ea34ee7e52c4783c1e03ec65c710361c1ccf228d3a4c0b44a4d0baa859641"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2021-04.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "c43526463f085cac189d8adaf064ed7119a41994f9ebe116da4c5a98410d1304"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2021-04.sqlite",
+          "bytes": 6082560,
+          "sha256": "8c05742b274c0232f0c6ccb28c5c33c657371f1530bd43013b80cb72da9e7f94"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2021-04.json",
+          "bytes": 1111,
+          "sha256": "5f6913dd2af592e2c98ae30e2b041457bf54a63c81e742cf49363a119e5cdc88"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2021-08",
+      "status": "source_verified_gaps",
+      "native_rows": 44370,
+      "expected_calendar_minutes": 44640,
+      "missing_calendar_minutes": 270,
+      "gaps": [
+        {
+          "start_utc": "2021-08-13T02:00:00Z",
+          "end_exclusive_utc": "2021-08-13T06:30:00Z",
+          "missing_minutes": 270,
+          "start_ms": 1628820000000,
+          "end_ms_exclusive": 1628836200000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2021-08-01T00:00:00Z",
+      "last_open_utc": "2021-08-31T23:59:00Z",
+      "source_zip_sha256": "8e886c3aeb7eb625493e875bfaf181eeb5a316dad424c86d042ad2c73cad563b",
+      "release_tag": "btc-spot-native-gap-2021-08",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2021-08",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2021-08.zip",
+          "bytes": 2309698,
+          "sha256": "8e886c3aeb7eb625493e875bfaf181eeb5a316dad424c86d042ad2c73cad563b"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2021-08.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "4c2c370669bac15866081a45ffc9a5bd7b578351e75ed8070e99342defb48512"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2021-08.sqlite",
+          "bytes": 6295552,
+          "sha256": "2390fc99719252dcc06595dfe635e2bcc1c87d68a52f94ba3c4e3a67ea14a3e0"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2021-08.json",
+          "bytes": 1003,
+          "sha256": "09fb3753e9741c761e76a115612c1ca69e75938e1f23928323c461ff663943ee"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2021-09",
+      "status": "source_verified_gaps",
+      "native_rows": 43080,
+      "expected_calendar_minutes": 43200,
+      "missing_calendar_minutes": 120,
+      "gaps": [
+        {
+          "start_utc": "2021-09-29T07:00:00Z",
+          "end_exclusive_utc": "2021-09-29T09:00:00Z",
+          "missing_minutes": 120,
+          "start_ms": 1632898800000,
+          "end_ms_exclusive": 1632906000000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2021-09-01T00:00:00Z",
+      "last_open_utc": "2021-09-30T23:59:00Z",
+      "source_zip_sha256": "27edb4a4623701ba3c5b3f6d4de1848964abb31188036236827fd28cf9bdb853",
+      "release_tag": "btc-spot-native-gap-2021-09",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2021-09",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2021-09.zip",
+          "bytes": 2172157,
+          "sha256": "27edb4a4623701ba3c5b3f6d4de1848964abb31188036236827fd28cf9bdb853"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2021-09.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "4a7ec240cd440ffcc7cb5a1cbd43a68d20ebbb05abfb4d602948d69fc4db20b0"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2021-09.sqlite",
+          "bytes": 6107136,
+          "sha256": "7cd43f8ecf795836f208d463e645811d951e004b84649282d786e81be1c68c28"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2021-09.json",
+          "bytes": 1003,
+          "sha256": "5f30f9b8c7d3cebea44742eb819b440e4d10476eab48ef7d84a70bca570b5697"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2023-03",
+      "status": "source_verified_gaps",
       "native_rows": 44560,
+      "expected_calendar_minutes": 44640,
       "missing_calendar_minutes": 80,
       "gaps": [
         {
           "start_utc": "2023-03-24T12:40:00Z",
           "end_exclusive_utc": "2023-03-24T14:00:00Z",
-          "missing_minutes": 80
+          "missing_minutes": 80,
+          "start_ms": 1679661600000,
+          "end_ms_exclusive": 1679666400000
         }
       ],
-      "checksum_verified": true,
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2023-03-01T00:00:00Z",
+      "last_open_utc": "2023-03-31T23:59:00Z",
+      "source_zip_sha256": "5591171a15f210af647a2fb68ab8cbad45a3a595cfe9a0eec9d06e5e84928bec",
+      "release_tag": "btc-spot-native-gap-2023-03",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2023-03",
       "files": {
         "archive": {
           "name": "BTCUSDT-1m-2023-03.zip",
-          "size_bytes": 2300446,
+          "bytes": 2300446,
           "sha256": "5591171a15f210af647a2fb68ab8cbad45a3a595cfe9a0eec9d06e5e84928bec"
         },
         "checksum": {
           "name": "BTCUSDT-1m-2023-03.zip.CHECKSUM",
-          "size_bytes": 88,
+          "bytes": 88,
           "sha256": "f7f452c298b3a650fbc9604688eec17f76938db8a0bf19c168625e9e88b14077"
         },
         "sqlite": {
           "name": "BTCUSDT-1m-2023-03.sqlite",
-          "size_bytes": 6434816,
+          "bytes": 6434816,
           "sha256": "62171fe4b2a71880581c02b673e0e908902835c1b1fdcf8e5d3c5e41129ebd53"
         },
         "manifest": {
           "name": "BTCUSDT-1m-2023-03.json",
-          "size_bytes": 1001,
+          "bytes": 1001,
           "sha256": "f0ca7727e73912377a037662f9857fe8f540109e5bb1958ab379a5d8112c5146"
         }
       },
-      "release_tag": "btc-spot-native-gap-2023-03",
-      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2023-03",
-      "source_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1m/BTCUSDT-1m-2023-03.zip",
-      "source_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1m/BTCUSDT-1m-2023-03.zip.CHECKSUM"
+      "can_extend_strict_contiguous_year_views": false
     }
   ]
 }
