@@ -1,5 +1,5 @@
 {
-  "archived_assets_at_audit": 194,
+  "archived_assets_at_audit": 198,
   "assets": [
     {
       "archived": false,
@@ -164,44 +164,6 @@
     {
       "archived": false,
       "coin_id_confirmed": false,
-      "id": "euro-coin",
-      "instruments": [
-        {
-          "base": "EURC",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "EURC-USDC",
-          "native_1m_month_confirmed": false,
-          "quote": "USDC",
-          "venue": "coinbase"
-        },
-        {
-          "base": "EURC",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "EURC/USDC",
-          "native_1m_month_confirmed": false,
-          "quote": "USDC",
-          "venue": "kraken"
-        },
-        {
-          "base": "EURC",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "EURC-USDC",
-          "native_1m_month_confirmed": false,
-          "quote": "USDC",
-          "venue": "okx"
-        }
-      ],
-      "native_1m_month_confirmed": false,
-      "rank": 116,
-      "status": "instrument_candidates_not_identity_proof",
-      "symbol": "EURC"
-    },
-    {
-      "archived": false,
-      "coin_id_confirmed": false,
       "id": "ylds",
       "instruments": [],
       "native_1m_month_confirmed": false,
@@ -290,35 +252,6 @@
     {
       "archived": false,
       "coin_id_confirmed": false,
-      "id": "sofiusd",
-      "instruments": [
-        {
-          "base": "SOFID",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "SOFID/USDC",
-          "native_1m_month_confirmed": false,
-          "quote": "USDC",
-          "venue": "kraken"
-        },
-        {
-          "base": "SOFID",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "SOFID/USDT",
-          "native_1m_month_confirmed": false,
-          "quote": "USDT",
-          "venue": "kraken"
-        }
-      ],
-      "native_1m_month_confirmed": false,
-      "rank": 139,
-      "status": "instrument_candidates_not_identity_proof",
-      "symbol": "SOFID"
-    },
-    {
-      "archived": false,
-      "coin_id_confirmed": false,
       "id": "janus-henderson-anemoy-treasury-fund",
       "instruments": [],
       "native_1m_month_confirmed": false,
@@ -335,26 +268,6 @@
       "rank": 144,
       "status": "no_verifiable_instrument",
       "symbol": "OUSG"
-    },
-    {
-      "archived": false,
-      "coin_id_confirmed": false,
-      "id": "apxusd",
-      "instruments": [
-        {
-          "base": "APXUSD",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "APXUSD/USDC",
-          "native_1m_month_confirmed": false,
-          "quote": "USDC",
-          "venue": "kraken"
-        }
-      ],
-      "native_1m_month_confirmed": false,
-      "rank": 145,
-      "status": "instrument_candidates_not_identity_proof",
-      "symbol": "APXUSD"
     },
     {
       "archived": false,
@@ -658,26 +571,6 @@
     {
       "archived": false,
       "coin_id_confirmed": false,
-      "id": "cash-4",
-      "instruments": [
-        {
-          "base": "CASH",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "CASH/USDC",
-          "native_1m_month_confirmed": false,
-          "quote": "USDC",
-          "venue": "kraken"
-        }
-      ],
-      "native_1m_month_confirmed": false,
-      "rank": 248,
-      "status": "instrument_candidates_not_identity_proof",
-      "symbol": "CASH"
-    },
-    {
-      "archived": false,
-      "coin_id_confirmed": false,
       "id": "ozone-chain",
       "instruments": [],
       "native_1m_month_confirmed": false,
@@ -696,27 +589,27 @@
       "symbol": "AVUSD"
     }
   ],
-  "candidate_count": 56,
-  "checked_at": "2026-10-11T15:29:35.197827+00:00",
+  "candidate_count": 52,
+  "checked_at": "2026-10-11T15:36:23.576089+00:00",
   "markets": {
     "bitget": {
       "instruments": 538,
       "reason": null,
-      "source_sha256": "50b4db89d81cb4a5141c7d03d1920c62b35706dbd0c7f014df1c2da33435c972",
+      "source_sha256": "9f52fb8ebddb8ef71fc66d4ce0609847924382aa5a44f45242e6df4b393a3ca0",
       "status": "success",
       "url": "https://api.bitget.com/api/v3/market/instruments?category=SPOT"
     },
     "coinbase": {
       "instruments": 25,
       "reason": null,
-      "source_sha256": "94ccd38942a738d004e0b3e8a29c213564fc4438b4d3663c0d74045c22e3f07e",
+      "source_sha256": "7a85b38d8f4c93b298d0a380527d4b306477d99caed1021ff53269982032f5b0",
       "status": "success",
       "url": "https://api.exchange.coinbase.com/products"
     },
     "gate": {
       "instruments": 2112,
       "reason": null,
-      "source_sha256": "d0c1f1ee52d673657c6905500e7f8b3e9ec7cffbf4304f0ccedf7e4143a0dd48",
+      "source_sha256": "638acc6bfcc78b74f74c19decf97b448a96ce1bc61728b624651a4d0a7da5f96",
       "status": "success",
       "url": "https://api.gateio.ws/api/v4/spot/currency_pairs"
     },
@@ -748,5 +641,5 @@
   "ranked": 250,
   "schema": "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
   "source": "Official public OKX, Bitget, Gate, KuCoin, Kraken and Coinbase Exchange Spot instrument inventories",
-  "with_spot_instrument": 8
+  "with_spot_instrument": 4
 }
