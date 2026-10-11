@@ -73,6 +73,45 @@ class BTCBackfillTests(unittest.TestCase):
                   exists=lambda mo:mo==planned[0])
         self.assertEqual(actual,[planned[1]])
         self.assertEqual(out["results"][0]["status"],"existing_release_wait_for_catalog")
+    def test_real_source_gap_enters_immutable_separate_release(self):
+        pending,_=m.plan(self.catalog,2)
+        calls=[]
+        def source(month,asset,folder):
+            if month==pending[0]:
+                item={"asset_id":"bitcoin","rank":1,"pair":"BTCUSDT",
+                      "source":"Binance Spot public monthly CSV",
+                      "quote":"USDT","interval":"1m","month":month,
+                      "status":"unavailable",
+                      "reason":"ValueError: Missing/duplicate/unaligned candle"}
+                manifest={"schema":m.bulk.SCHEMA,"month":month,"interval":"1m",
+                          "requested":1,"verified":0,"unavailable":1,
+                          "candles":0,"zip_bytes":0,"assets":[item]}
+                (folder/"manifest.json").write_text(json.dumps(manifest))
+                return manifest
+            return fixture(month,asset,folder)
+        def gap_source(month,folder):
+            calls.append(("preserved",month))
+            return {"native_rows":43200-80,"missing_minutes":80,
+                    "synthetic_rows":0,"source_zip_sha256":"a"*64}
+        def gap_publish(month,folder,proof):
+            calls.append(("released",month))
+            return "https://example.invalid/partial"
+        out=m.run(self.catalog,2,collect=source,
+                  publish=lambda *a:"https://example.invalid/full",
+                  exists=lambda mo:False,known_gap=lambda mo:False,
+                  collect_gap=gap_source,publish_partial=gap_publish)
+        self.assertEqual([v["status"] for v in out["results"]],
+                         ["published_with_gaps","published"])
+        self.assertEqual(out["gap_months"],1)
+        self.assertEqual(out["full_months"],1)
+        self.assertEqual(calls,[("preserved",pending[0]),("released",pending[0])])
+
+    def test_completed_gap_release_is_skipped_for_next_season(self):
+        months,_=m.plan(self.catalog,3)
+        skipped,owner=m.plan(self.catalog,2,has_gap=lambda mo:mo==months[0])
+        self.assertEqual(skipped,months[1:3])
+        self.assertEqual(owner["pair"],"BTCUSDT")
+
     def test_final_2017_scan_floor(self):
         clone=json.loads(json.dumps(self.catalog))
         btc=next(x for x in clone["assets"] if x["id"]=="bitcoin")
