@@ -1,0 +1,246 @@
+{
+  "binance_originals_unchanged": true,
+  "coinbase_originals_unchanged": true,
+  "cross_venue_matrix_sha256": "91f59fe5eb781df210d87cf53ab916b76f24a293c8155963e01c1654a1359910",
+  "no_synthetic_minutes": true,
+  "notes": "KuCoin BNB-USDT listed June 19 2019. Exact independent historical spot evidence; does not imply Binance-generated candles or full global price coverage.",
+  "quote_separated": true,
+  "samples": [
+    {
+      "asset": "BNB",
+      "binance_pair": "BNBUSDT",
+      "binance_spot_rows_in_window": 0,
+      "kucoin": {
+        "conclusion": "some_historical_kucoin_trading_verified",
+        "end_exclusive_utc": "2020-12-21T18:00:00Z",
+        "expected_minutes": 230,
+        "http_status": null,
+        "minute_bars": 230,
+        "missing_minutes": 0,
+        "outside_window_bars": 0,
+        "pair": "BNB-USDT",
+        "positive_volume_minutes": 123,
+        "quote": "USDT",
+        "response_sha256": "4df5b37b661984681c8fa2e597137b447bc2dec4dc85ab816319736755e2afa8",
+        "samples": [
+          {
+            "base_volume": "1.0627",
+            "close": "32.203",
+            "minute_utc": "2020-12-21T14:10:00Z",
+            "open": "32.218"
+          },
+          {
+            "base_volume": "0",
+            "close": "32.218",
+            "minute_utc": "2020-12-21T17:59:00Z",
+            "open": "32.218"
+          }
+        ],
+        "source_status": "http_200",
+        "start_utc": "2020-12-21T14:10:00Z",
+        "url": "https://api.kucoin.com/api/v1/market/candles?symbol=BNB-USDT&type=1min&startAt=1608559800&endAt=1608573599",
+        "venue": "KuCoin Spot"
+      },
+      "no_cross_exchange_candle_substitution": true,
+      "original_binance_gap_reference": "2020-12-21T14:10:00Z",
+      "source_btc_window_minutes": 230
+    },
+    {
+      "asset": "BNB",
+      "binance_pair": "BNBUSDT",
+      "binance_spot_rows_in_window": 0,
+      "kucoin": {
+        "conclusion": "all_minutes_traded_on_independent_kucoin",
+        "end_exclusive_utc": "2021-08-13T06:30:00Z",
+        "expected_minutes": 270,
+        "http_status": null,
+        "minute_bars": 270,
+        "missing_minutes": 0,
+        "outside_window_bars": 0,
+        "pair": "BNB-USDT",
+        "positive_volume_minutes": 270,
+        "quote": "USDT",
+        "response_sha256": "158cc0f6eaf44a6331f133d1d01a227946f636cff8e11a2715b6babebdeecdc4",
+        "samples": [
+          {
+            "base_volume": "8.77001546",
+            "close": "393.211",
+            "minute_utc": "2021-08-13T02:00:00Z",
+            "open": "393.1"
+          },
+          {
+            "base_volume": "46.3198305",
+            "close": "396.416",
+            "minute_utc": "2021-08-13T06:29:00Z",
+            "open": "396.329"
+          }
+        ],
+        "source_status": "http_200",
+        "start_utc": "2021-08-13T02:00:00Z",
+        "url": "https://api.kucoin.com/api/v1/market/candles?symbol=BNB-USDT&type=1min&startAt=1628820000&endAt=1628836199",
+        "venue": "KuCoin Spot"
+      },
+      "no_cross_exchange_candle_substitution": true,
+      "original_binance_gap_reference": "2021-08-13T02:00:00Z",
+      "source_btc_window_minutes": 270
+    },
+    {
+      "asset": "BNB",
+      "binance_pair": "BNBUSDT",
+      "binance_spot_rows_in_window": 0,
+      "kucoin": {
+        "conclusion": "all_minutes_traded_on_independent_kucoin",
+        "end_exclusive_utc": "2021-09-29T09:00:00Z",
+        "expected_minutes": 120,
+        "http_status": null,
+        "minute_bars": 120,
+        "missing_minutes": 0,
+        "outside_window_bars": 0,
+        "pair": "BNB-USDT",
+        "positive_volume_minutes": 120,
+        "quote": "USDT",
+        "response_sha256": "e5989342c939ccdb0b22046fe4a97404d53e4597b7002b3901489e611d28a16d",
+        "samples": [
+          {
+            "base_volume": "30.4980363",
+            "close": "344.727",
+            "minute_utc": "2021-09-29T07:00:00Z",
+            "open": "344.704"
+          },
+          {
+            "base_volume": "28.71641997",
+            "close": "344.613",
+            "minute_utc": "2021-09-29T08:59:00Z",
+            "open": "344.622"
+          }
+        ],
+        "source_status": "http_200",
+        "start_utc": "2021-09-29T07:00:00Z",
+        "url": "https://api.kucoin.com/api/v1/market/candles?symbol=BNB-USDT&type=1min&startAt=1632898800&endAt=1632905999",
+        "venue": "KuCoin Spot"
+      },
+      "no_cross_exchange_candle_substitution": true,
+      "original_binance_gap_reference": "2021-09-29T07:00:00Z",
+      "source_btc_window_minutes": 120
+    },
+    {
+      "asset": "BNB",
+      "binance_pair": "BNBUSDT",
+      "binance_spot_rows_in_window": 0,
+      "kucoin": {
+        "conclusion": "all_minutes_traded_on_independent_kucoin",
+        "end_exclusive_utc": "2023-03-24T14:00:00Z",
+        "expected_minutes": 80,
+        "http_status": null,
+        "minute_bars": 80,
+        "missing_minutes": 0,
+        "outside_window_bars": 0,
+        "pair": "BNB-USDT",
+        "positive_volume_minutes": 80,
+        "quote": "USDT",
+        "response_sha256": "3c448a4c56b2d9ca17d0171cf93fcf3d0fdd9c4fe0c5db3cfc503301564ebc3f",
+        "samples": [
+          {
+            "base_volume": "6.8334",
+            "close": "323.56",
+            "minute_utc": "2023-03-24T12:40:00Z",
+            "open": "323.434"
+          },
+          {
+            "base_volume": "25.4198",
+            "close": "322.693",
+            "minute_utc": "2023-03-24T13:59:00Z",
+            "open": "322.484"
+          }
+        ],
+        "source_status": "http_200",
+        "start_utc": "2023-03-24T12:40:00Z",
+        "url": "https://api.kucoin.com/api/v1/market/candles?symbol=BNB-USDT&type=1min&startAt=1679661600&endAt=1679666399",
+        "venue": "KuCoin Spot"
+      },
+      "no_cross_exchange_candle_substitution": true,
+      "original_binance_gap_reference": "2023-03-24T12:40:00Z",
+      "source_btc_window_minutes": 80
+    },
+    {
+      "asset": "SOL",
+      "binance_pair": "SOLUSDT",
+      "binance_spot_rows_in_window": 0,
+      "coinbase_second_independent_query": {
+        "historical_missing_minutes": [
+          "2021-08-13T04:53:00Z"
+        ],
+        "missing_source_minute_on_kucoin": [
+          {
+            "kucoin_native_trade": true,
+            "minute_utc": "2021-08-13T04:53:00Z"
+          }
+        ],
+        "pair": "SOL-USD",
+        "quote": "USD",
+        "requests": [
+          {
+            "response_sha256": "09b44de030c7419a6e13650e1e20203dccdb13712d6d546a1ab776a96f5dd8f4",
+            "source_url": "https://api.exchange.coinbase.com/products/SOL-USD/candles?start=2021-08-13T02%3A00%3A00Z&end=2021-08-13T06%3A10%3A00Z&granularity=60",
+            "status": "http_200"
+          },
+          {
+            "response_sha256": "0d521736cd6ac0ae3ada6ac10b1b4f560cf71f9e1b7d3de570f8b1f240f3964f",
+            "source_url": "https://api.exchange.coinbase.com/products/SOL-USD/candles?start=2021-08-13T06%3A10%3A00Z&end=2021-08-13T06%3A30%3A00Z&granularity=60",
+            "status": "http_200"
+          }
+        ],
+        "status": "verified_api_response",
+        "valid_minute_bars": 269
+      },
+      "kucoin": {
+        "conclusion": "some_historical_kucoin_trading_verified",
+        "end_exclusive_utc": "2021-08-13T06:30:00Z",
+        "expected_minutes": 270,
+        "http_status": null,
+        "minute_bars": 270,
+        "missing_minutes": 0,
+        "outside_window_bars": 0,
+        "pair": "SOL-USDT",
+        "positive_volume_minutes": 185,
+        "quote": "USDT",
+        "response_sha256": "812a1e887930abb48b076541db962bb40934f423b98f1ddb2754bbbbad198a67",
+        "samples": [
+          {
+            "base_volume": "46.80176408",
+            "close": "42.3",
+            "minute_utc": "2021-08-13T02:00:00Z",
+            "open": "42.243"
+          },
+          {
+            "base_volume": "0.82894027",
+            "close": "42.681",
+            "minute_utc": "2021-08-13T06:29:00Z",
+            "open": "42.681"
+          }
+        ],
+        "source_status": "http_200",
+        "start_utc": "2021-08-13T02:00:00Z",
+        "url": "https://api.kucoin.com/api/v1/market/candles?symbol=SOL-USDT&type=1min&startAt=1628820000&endAt=1628836199",
+        "venue": "KuCoin Spot"
+      },
+      "no_cross_exchange_candle_substitution": true,
+      "original_binance_gap_reference": "2021-08-13T02:00:00Z",
+      "source_btc_window_minutes": 270
+    }
+  ],
+  "schema": "seven.crypto.kucoin-bnb-sol-source-crosscheck.v1",
+  "source_policy": "kucoin_spot_native_1m_gap_evidence_non_fungible_quotes.v1",
+  "summary": {
+    "BNB": {
+      "fully_traded_windows": 3,
+      "traded_windows": 4,
+      "windows": 4
+    },
+    "SOL": {
+      "fully_traded_windows": 0,
+      "traded_windows": 1,
+      "windows": 1
+    }
+  }
+}
