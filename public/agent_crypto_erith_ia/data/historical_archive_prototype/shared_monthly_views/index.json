@@ -5,7 +5,7 @@
   "scope": "latest_verified_closed_month",
   "is_live": false,
   "max_is_all_time": false,
-  "archived_assets": 121,
+  "archived_assets": 122,
   "assets": [
     {
       "id": "bitcoin",
@@ -1891,6 +1891,27 @@
       "file": "jito-governance-token.json.gz",
       "sha256": "c6ea697d1db5f5f0ae2a8ede34b25aa090791ffbe58311b9ab780615f84623ee",
       "bytes": 241884,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "syrup",
+      "rank": 160,
+      "name": "Maple Finance",
+      "symbol": "SYRUP",
+      "pair": "SYRUPUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-c4209f16c030",
+      "source_zip_sha256": "f6b50fc6ed783789aab365a5c3c2540421b6e9be8c8b25f8c53763d9f0263f7c",
+      "file": "syrup.json.gz",
+      "sha256": "a0ee8bd45e418e4c132aace4c8526ae5b8a8d1998b698e6de2bc135ab57c083b",
+      "bytes": 221903,
       "series_counts": {
         "1m": 1440,
         "5m": 8640,
