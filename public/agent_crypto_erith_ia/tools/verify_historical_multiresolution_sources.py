@@ -172,6 +172,10 @@ def verify_source(a,opener=urlopen):
     decoded=gzip.decompress(blob)
     need(0<len(decoded)<=MAX_PAYLOAD,"Oversized original OHLCV source")
     data=json.loads(decoded)
+    if a["venue"] in ("Gate Spot","KuCoin Spot"):
+        # Source JSON was downloaded and SHA256 checked above; verify all
+        # original seven/eight-field bars independently without resampling.
+        return independent_daily.check_payload(data,a,url)
     owner=data["owner"]
     is_okx=a["venue"]=="OKX Spot"
     expected_schema=("aerith.okx.native-utc-daily-history.verified-response.v1"
