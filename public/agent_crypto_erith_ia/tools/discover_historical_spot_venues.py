@@ -6,6 +6,7 @@ import datetime as dt
 import json
 import os
 from pathlib import Path
+import prove_public_spot_contracts as independent_contracts
 import re
 import time
 import urllib.parse
@@ -502,6 +503,43 @@ def enrich_contracts(queue,archived,doc,official,coingecko,bitget):
              "; exact-ID CoinGecko contract matched to Bitget official chain")
     validate(updated,queue)
     return updated,additions
+
+def enrich_independent_contracts(queue,archived,doc,official,coingecko,sources):
+    """Add only uniquely proven Gate/KuCoin contracts to the candidate ledger."""
+    require(isinstance(sources,dict) and
+            all(k in ("gate","kucoin") for k in sources),
+            "Unknown independent Spot contract source")
+    found={}
+    for venue,source in sources.items():
+        matches=independent_contracts.proven_contracts(
+            queue,archived,official,coingecko,source,venue)
+        for aid,p in matches.items():
+            found.setdefault(aid,[]).append(p)
+    indexed={x["id"]:x for x in doc["results"]}
+    now=dt.datetime.now(dt.timezone.utc).isoformat()
+    added=[]
+    for asset in queue:
+        aid=asset["id"]
+        if aid not in found or aid in archived:
+            continue
+        previous=indexed.get(aid)
+        if previous and previous["status"]=="exact_id_market_candidates":
+            continue
+        matches=sorted(found[aid],key=lambda p:(p["exchange"],p["quote"]))
+        indexed[aid]={"id":aid,"rank":asset["rank"],
+            "symbol":asset["symbol"],"status":"exact_id_market_candidates",
+            "markets":matches,"pages_checked":0,"checked_at":now}
+        added.append(aid)
+    output=dict(doc)
+    output["results"]=sorted(indexed.values(),key=lambda x:x["rank"])
+    output["checked_count"]=sum(x["id"] not in archived for x in output["results"])
+    output["market_candidate_count"]=sum(
+        bool(x["markets"]) and x["id"] not in archived for x in output["results"])
+    if added:
+        output["source"]=(doc["source"]+
+            "; independently matched CoinGecko contract to original Gate/KuCoin coin chain")
+    validate(output,queue)
+    return output,added
 
 def main():
     cli=argparse.ArgumentParser(description=__doc__)
