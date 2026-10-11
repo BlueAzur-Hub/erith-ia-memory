@@ -72,7 +72,7 @@ class NativeDailyRecovery(unittest.TestCase):
             target.fetch_verified("2023/03",downloader=download)
 
     def test_monthly_unavailable_falls_back_to_exact_day_not_other_market(self):
-        name,payload,checksum=zip_bundle("2023-03",["2023-03-24"])
+        name,payload,checksum=zip_bundle("2023-03-24",["2023-03-24"])
         asked=[]
         def download(url,_cap):
             asked.append(url)
@@ -119,7 +119,7 @@ class NativeDailyRecovery(unittest.TestCase):
             self.assertEqual(status["source_model"],
                              "different_native_1d_and_1m_provenance")
             # One deliberately conflicting unaffected original day: reject.
-            fake["rows"][0][4]=130.
+            fake["rows"][0][4]=106.
             with patch.object(target,"read_original",side_effect=fake_read):
                 status=target.reconcile(home=tmp,output=tmp,downloader=download)
             self.assertEqual(status["native_1d_recovered"],0)
