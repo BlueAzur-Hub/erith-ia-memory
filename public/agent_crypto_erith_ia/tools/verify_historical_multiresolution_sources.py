@@ -16,6 +16,7 @@ from decimal import Decimal, InvalidOperation
 from urllib.request import Request, urlopen
 
 import import_historical_bulk as bulk
+import verify_native_alt_spot_daily as independent_daily
 
 ROOT=bulk.ROOT/"data/historical_archive_prototype"
 REGISTRY=ROOT/"top250_multiresolution_sources/index.json"
@@ -23,8 +24,8 @@ FED=ROOT/"top250_multisource_coverage/index.json"
 SCHEMA="aerith.public.crypto.multiresolution-sources.v1"
 REPO="https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/"
 SHA=re.compile(r"^[0-9a-f]{64}$")
-FILE=re.compile(r"^[a-z0-9-]{1,90}-[A-Z0-9-]+-1D(?:utc)?\.json\.gz$")
-TAG=re.compile(r"^crypto-(?:okx|bitget)-spot-native-daily-2026-09-[a-z0-9-]+$")
+FILE=re.compile(r"^[a-z0-9-]{1,90}-[A-Z0-9_-]+-1D(?:utc)?\.json\.gz$")
+TAG=re.compile(r"^crypto-(?:okx|bitget|gate-kucoin)-spot-native-daily-2026-09-[a-z0-9-]+$")
 DAY=86_400_000
 END=1790812800000
 MAX_FILE=600_000
