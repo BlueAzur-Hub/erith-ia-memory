@@ -252,7 +252,7 @@ async function refresh({reload=false}={}){
 }
 function mount(){
  if(panel())return true;
- const zone=document.getElementById("market-zone");if(!zone)return false;
+ const zone=document.getElementById("traderHistoryMount")||document.getElementById("market-zone");if(!zone)return false;
  if(!document.getElementById("traderVerifiedHistoryStyle")){
   const style=document.createElement("style");style.id="traderVerifiedHistoryStyle";
   style.textContent=[
