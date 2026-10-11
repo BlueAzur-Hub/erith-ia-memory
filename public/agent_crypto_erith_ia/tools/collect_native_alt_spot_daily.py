@@ -3,7 +3,7 @@
 
 A verified venue symbol is NOT enough. Only qualified original CoinGecko IDs,
 an independently confirmed active Spot instrument and actual native exchange
-OHLCV rows may be archived. Never interpolate gaps or relabel USDT as USD.
+OHLCV rows may be archived. Never interpolate gaps, or relabel native USDT/USDC quotes as USD.
 """
 from __future__ import annotations
 
@@ -47,8 +47,8 @@ MARKETS={
 IDENTITY=re.compile(r"^[a-z0-9-]{2,100}$")
 SHA=re.compile(r"^[a-f0-9]{64}$")
 PAIR={
-  "gate":re.compile(r"^[A-Z0-9]{1,30}_USDT$"),
-  "kucoin":re.compile(r"^[A-Z0-9]{1,30}-USDT$"),
+  "gate":re.compile(r"^[A-Z0-9]{1,30}_(?:USDT|USDC)$"),
+  "kucoin":re.compile(r"^[A-Z0-9]{1,30}-(?:USDT|USDC)$"),
 }
 
 def need(cond,message):
@@ -88,14 +88,16 @@ def candidates(minute,daily,ledger,official):
             venue=proof.get("exchange")
             if venue not in MARKETS or proof.get("coin_id")!=cid:
                 continue
-            if proof.get("base")!=m["symbol"] or proof.get("quote")!="USDT":
+            quote=proof.get("quote")
+            if (proof.get("base")!=m["symbol"] or
+                quote not in ("USDT","USDC") or m["symbol"]==quote):
                 continue
-            pair=(m["symbol"]+"_USDT" if venue=="gate"
-                  else m["symbol"]+"-USDT")
+            pair=(m["symbol"]+"_"+quote if venue=="gate"
+                  else m["symbol"]+"-"+quote)
             if proof.get("market_pair_candidate")!=pair:
                 continue
             if not any(i.get("venue")==venue and i.get("instrument")==pair
-                  and i.get("base")==m["symbol"] and i.get("quote")=="USDT"
+                  and i.get("base")==m["symbol"] and i.get("quote")==quote
                   and i.get("exchange_instrument_confirmed") is True
                   for i in inst.get("instruments",[])):
                 continue
@@ -108,10 +110,10 @@ def candidates(minute,daily,ledger,official):
                      and owners.contract_address(proof.get("contract_address")),
                      "Incorrect original CoinGecko EVM contract proof")
             sources.append({"id":cid,"rank":m["rank"],"symbol":m["symbol"],
-                "name":m["name"],"venue":venue,"pair":pair,"quote":"USDT",
+                "name":m["name"],"venue":venue,"pair":pair,"quote":quote,
                 "identity_proof":proof})
         if sources:
-            sources.sort(key=lambda x:(x["venue"]!="gate",x["venue"]))
+            sources.sort(key=lambda x:(x["quote"]!="USDT",x["venue"]!="gate",x["venue"]))
             result.append(sources[0])
     result.sort(key=lambda x:x["rank"])
     need(len(result)==len({a["id"] for a in result}),
@@ -196,8 +198,11 @@ def page(owner,start,end,opener=urlopen):
 
 def acquire(owner,getter=page):
     need(owner.get("venue") in MARKETS
-         and PAIR[owner["venue"]].fullmatch(owner.get("pair",""))
-         and owner.get("quote")=="USDT"
+         and isinstance(owner.get("pair"),str)
+         and PAIR[owner["venue"]].fullmatch(owner["pair"])
+         and owner.get("quote") in ("USDT","USDC")
+         and owner["pair"]==(owner["symbol"]+("_" if owner["venue"]=="gate" else "-")+owner["quote"])
+         and owner["symbol"]!=owner["quote"]
          and IDENTITY.fullmatch(owner.get("id","")),
          "Untrusted exact owner and native quote")
     unique={};responses=[]
@@ -237,7 +242,7 @@ def acquire(owner,getter=page):
       "schema":SCHEMA,"owner":owner,
       "venue":owner["venue"],"market":owner["pair"],
       "source_api":MARKETS[owner["venue"]],
-      "original_quote":"USDT","native_interval":"1D",
+      "original_quote":owner["quote"],"native_interval":"1D",
       "native_candles":len(dates),
       "earliest_returned_ms":dates[0],"latest_returned_ms":dates[-1],
       "calendar_days_without_source_bars":gaps,
@@ -257,7 +262,7 @@ def pack(data):
     return gzip.compress(contents,mtime=0)
 
 def release_tag(cohort):
-    names=",".join(x["id"]+"-"+x["venue"] for x in cohort)
+    names=",".join(x["id"]+"-"+x["venue"]+"-"+x["quote"] for x in cohort)
     digest=hashlib.sha256(names.encode()).hexdigest()[:12]
     return "crypto-gate-kucoin-spot-native-daily-2026-09-"+digest
 
@@ -313,7 +318,7 @@ def publish(valid,unavailable,tag):
             entries.append({
                 "id":owner["id"],"rank":owner["rank"],
                 "symbol":owner["symbol"],"venue":owner["venue"],
-                "market":owner["pair"],"original_quote":"USDT",
+                "market":owner["pair"],"original_quote":owner["quote"],
                 "interval":"1D","native_daily_bars":src["native_candles"],
                 "gaps":src["calendar_days_without_source_bars"],
                 "first_ms":src["earliest_returned_ms"],
@@ -325,7 +330,10 @@ def publish(valid,unavailable,tag):
             "source":"Gate/KuCoin official public Spot OHLCV",
             "assets":entries,"unavailable":unavailable,
             "source_responses_exchange_signed":False,
-            "quote":"USDT","native_interval":"1D",
+            "quote":(entries[0]["original_quote"] if len({a["original_quote"] for a in entries})==1
+                     else "mixed-native-USDT-USDC"),
+            "quotes":sorted({a["original_quote"] for a in entries}),
+            "native_interval":"1D",
             "no_synthetic_bars":True,"no_currency_conversion":True,
             "not_yet_counted_in_canonical_index":True,
         }
@@ -335,7 +343,7 @@ def publish(valid,unavailable,tag):
               *(str(dest/a["filename"]) for a in entries),
               str(dest/"manifest.json"),
               "--title","Original Gate KuCoin Spot native historical daily OHLCV",
-              "--notes","Verified actual public Spot native daily bars with original USDT quote, per-source SHA-256 and true source gaps. Neither trade genesis nor completeness before venue listing is asserted; no invented bars or orders. Indexed only after independent download verification.",
+              "--notes","Verified actual public Spot native daily bars in the explicit original per-asset USDT or USDC quote (NEVER USD), per-source SHA-256 and true source gaps. Neither trade genesis nor completeness before venue listing is asserted; no invented bars or orders. Indexed only after independent download verification.",
               "--target",os.environ["GITHUB_SHA"],"--latest=false"]
         proc=subprocess.run(args,capture_output=True,text=True,timeout=180)
         need(proc.returncode==0,
