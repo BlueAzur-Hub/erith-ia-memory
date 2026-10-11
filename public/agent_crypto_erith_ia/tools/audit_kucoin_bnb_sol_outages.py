@@ -121,15 +121,24 @@ def audit(output=OUTPUT,fetch=base.fetch):
         if a=="SOL":
             # Re-fetch Coinbase's 1m response for precise UTC missing minute;
             # never assume which minute was absent from the summary count.
-            cp_url=base.coinbase_url(a,s,e)
-            rsp=fetch(cp_url,base.CBASE)
-            cb={"status":rsp["status"],"pair":"SOL-USD","quote":"USD",
-                "source_url":cp_url,"response_sha256":rsp.get("sha256")}
-            if rsp["status"]=="http_200":
-                original,_=base.parse_coinbase(rsp["json"],s,e)
+            original={}
+            probes=[]
+            for cb_start,cb_end in base.slices(s,e):
+                cp_url=base.coinbase_url(a,cb_start,cb_end)
+                rsp=fetch(cp_url,base.CBASE)
+                probes.append({"source_url":cp_url,"status":rsp["status"],
+                               "response_sha256":rsp.get("sha256")})
+                if rsp["status"]=="http_200":
+                    piece,_=base.parse_coinbase(rsp["json"],cb_start,cb_end)
+                    need(not set(piece)&set(original),"Coinbase independent minute is duplicated")
+                    original.update(piece)
+            cb={"status":"verified_api_response" if all(
+                  q["status"]=="http_200" for q in probes) else "inconclusive_api",
+                "pair":"SOL-USD","quote":"USD",
+                "requests":probes,"valid_minute_bars":len(original)}
+            if cb["status"]=="verified_api_response":
                 missing=sorted(set(range(s,e,base.M))-set(original))
                 cb["historical_missing_minutes"]=[base.iso(t) for t in missing]
-                cb["valid_minute_bars"]=len(original)
                 cb["missing_source_minute_on_kucoin"]=[
                     {"minute_utc":base.iso(t),
                      "kucoin_native_trade":t in candles and candles[t][4]>0}
