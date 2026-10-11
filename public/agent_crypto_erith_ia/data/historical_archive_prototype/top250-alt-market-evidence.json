@@ -1,6 +1,6 @@
 {
-  "candidate_count": 82,
-  "checked_count": 49,
+  "candidate_count": 80,
+  "checked_count": 50,
   "market_candidate_count": 1,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
@@ -360,12 +360,22 @@
       "symbol": "KAS"
     },
     {
-      "checked_at": "2026-10-10T06:18:02.552533+00:00",
+      "checked_at": "2026-10-11T01:50:34.596618+00:00",
       "id": "gatechain-token",
-      "markets": [],
-      "pages_checked": 3,
+      "markets": [
+        {
+          "base": "GT",
+          "coin_id": "gatechain-token",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "GT_USDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 2,
       "rank": 74,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "GT"
     },
     {
@@ -1065,6 +1075,33 @@
       "symbol": "THETA"
     },
     {
+      "checked_at": "2026-10-11T01:50:54.807861+00:00",
+      "id": "frax",
+      "markets": [],
+      "pages_checked": 2,
+      "rank": 177,
+      "status": "source_unavailable",
+      "symbol": "FRAX"
+    },
+    {
+      "checked_at": "2026-10-11T01:51:14.889208+00:00",
+      "id": "akash-network",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 178,
+      "status": "source_unavailable",
+      "symbol": "AKT"
+    },
+    {
+      "checked_at": "2026-10-11T01:51:34.928543+00:00",
+      "id": "crvusd",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 180,
+      "status": "source_unavailable",
+      "symbol": "CRVUSD"
+    },
+    {
       "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "eigenlayer",
       "markets": [
@@ -1450,5 +1487,5 @@
     }
   ],
   "schema": "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
-  "source": "CoinGecko exact coin ID, exchange_ids okx or bitget"
+  "source": "CoinGecko exact coin ID, independent exchange-specific Spot tickers"
 }
