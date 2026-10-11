@@ -64,6 +64,53 @@ class NativeAlternativeDailyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"contract proof"):
             m.candidates(minute,daily,broken,official)
 
+    def test_exact_tether_usdt_usdc_native_quote_is_never_usd(self):
+        minute,daily,ledger,official=catalogs()
+        minute["assets"][2]={"id":"tether","rank":3,"name":"Tether",
+                             "symbol":"USDT","native_1m_count":0}
+        proof={"exchange":"kucoin","coin_id":"tether",
+               "base":"USDT","quote":"USDC",
+               "market_pair_candidate":"USDT-USDC",
+               "proof_method":"exact_coin_id_matching_evm_contract",
+               "contract_platform":"ethereum",
+               "contract_address":"0xdac17f958d2ee523a2206206994597c13d831ec7"}
+        ledger["results"].append({"id":"tether","rank":3,"symbol":"USDT",
+            "status":"exact_id_market_candidates","markets":[proof]})
+        official["assets"].append({"id":"tether","rank":3,"symbol":"USDT",
+            "instruments":[{"venue":"kucoin","base":"USDT","quote":"USDC",
+                            "instrument":"USDT-USDC",
+                            "exchange_instrument_confirmed":True}]})
+        qualified=m.candidates(minute,daily,ledger,official)
+        own=next(a for a in qualified if a["id"]=="tether")
+        self.assertEqual(own["pair"],"USDT-USDC")
+        self.assertEqual(own["venue"],"kucoin")
+        self.assertEqual(own["quote"],"USDC")
+        with patch.object(m,"START",m.END-3*m.DAY):
+            stamp=m.END-m.DAY
+            original=[str(stamp//1000),"0.9999","1.0002",
+                      "1.0003","0.9998","5.0","5.1"]
+            payload=m.acquire(own,getter=lambda o,start,end:
+                ([original] if start<=stamp<end else [],"a"*64))
+        self.assertEqual(payload["native_candles"],1)
+        self.assertEqual(payload["original_quote"],"USDC")
+        self.assertNotEqual(payload["original_quote"],"USD")
+        self.assertEqual(payload["native_daily_rows"],[original])
+        self.assertEqual(m.pack(payload),m.pack(payload))
+        altered=copy.deepcopy(ledger)
+        altered["results"][-1]["markets"][0]["quote"]="USD"
+        self.assertNotIn("tether",{a["id"] for a in
+                         m.candidates(minute,daily,altered,official)})
+        altered=copy.deepcopy(official)
+        altered["assets"][-1]["instruments"][0]["quote"]="USD"
+        self.assertNotIn("tether",{a["id"] for a in
+                         m.candidates(minute,daily,ledger,altered)})
+        for wrong in ({**own,"quote":"USD"},
+                      {**own,"pair":"USDT-USD"},
+                      {**own,"pair":"USDT-USDT"},
+                      {**own,"quote":"USDT"}):
+            with self.assertRaises(ValueError):
+                m.acquire(wrong,getter=lambda *args:([], "a"*64))
+
     def test_original_gate_ohlcv_and_confirmed_quote_and_daily_timestamp(self):
         stamp=m.END-m.DAY
         row=[str(stamp//1000),"23","2","3","1","2","4","true"]
