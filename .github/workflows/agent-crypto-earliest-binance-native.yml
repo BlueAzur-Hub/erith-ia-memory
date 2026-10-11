@@ -5,6 +5,8 @@ on:
       - '.github/workflows/agent-crypto-earliest-binance-native.yml'
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py'
+      - 'public/agent_crypto_erith_ia/tools/backfill_btc_native.py'
+      - 'public/agent_crypto_erith_ia/tools/backfill_btc_native_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py'
   push:
@@ -13,12 +15,14 @@ on:
       - '.github/workflows/agent-crypto-earliest-binance-native.yml'
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py'
       - 'public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py'
+      - 'public/agent_crypto_erith_ia/tools/backfill_btc_native.py'
+      - 'public/agent_crypto_erith_ia/tools/backfill_btc_native_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py'
       - 'public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py'
   workflow_dispatch:
   schedule:
-    # Reuse the same small, source-verified 2-month pilot every two hours;
-    # immutable Releases and a serial lock prevent duplicate writes.
+    # Reuse the existing hourly runner for bounded BTC source recovery;
+    # immutable source releases and serial lock prevent duplicate writes.
     - cron: '7 * * * *'
 permissions:
   contents: write
@@ -39,9 +43,9 @@ jobs:
       - name: Verify immutable Binance ZIP import and no coin-genesis claims
         run: |
           set -euo pipefail
-          python -m py_compile public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py
-          python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months_test.py
-          python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py --plan
+          python -m py_compile public/agent_crypto_erith_ia/tools/backfill_btc_native.py
+          python public/agent_crypto_erith_ia/tools/backfill_btc_native_test.py
+          python public/agent_crypto_erith_ia/tools/backfill_btc_native.py --plan
           python public/agent_crypto_erith_ia/tools/collect_retired_binance_months_test.py
           python public/agent_crypto_erith_ia/tools/collect_retired_binance_months.py --plan
       - name: PR only - verify genuine March ZIP rejects missing minute starts without synthetic fill
@@ -65,11 +69,11 @@ jobs:
                   print('MARCH 2023 REAL SOURCE HAS TRADING HALT GAPS, NOT FEDERATED',
                         ident,proof['reason'],flush=True)
           PY
-      - name: Acquire four older fully certified Binance native 1m months
+      - name: Acquire six older BTC months (full or source-qualified gaps)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
-          python public/agent_crypto_erith_ia/tools/backfill_earlier_native_months.py --collect --months 4
+          python public/agent_crypto_erith_ia/tools/backfill_btc_native.py --collect --months 6
       - name: PR only - verify original December 2023 XMR Spot ZIP and official CHECKSUM
         if: github.event_name == 'pull_request'
         run: |
