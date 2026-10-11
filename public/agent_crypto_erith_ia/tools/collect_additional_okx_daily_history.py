@@ -18,7 +18,7 @@ import collect_native_okx_daily_history as daily
 TAG="crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s"
 PROOFS=(
  ("leo-token",18,"LEO","LEO Token",
-  "https://www.okx.com/fr-fr/price/unus-sed-leo-leo"),
+  "https://www.okx.com/en-ae/help/okx-to-adjust-the-minimum-trade-amount-of-spots-2023-11-29"),
  ("canton-network",24,"CC","Canton",
   "https://www.okx.com/en-us/help/okx-to-list-cc-canton-for-spot-trading"),
  ("apenft",168,"NFT","AINFT",
