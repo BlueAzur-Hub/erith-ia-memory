@@ -563,7 +563,10 @@ def main():
     # Read two batch inventories BEFORE individual per-ID ticker requests:
     # the old order exhausted CoinGecko's public API and returned HTTP 429
     # before the independent contract route could even begin.
-    inventory=None
+    official_inventory=None
+    coingecko_inventory=None
+    bitget_inventory=None
+    other_venues={}
     number=os.environ.get("GITHUB_RUN_NUMBER","0")
     inventory_due=(os.environ.get("GITHUB_EVENT_NAME")=="push"
                    or (number.isdecimal() and int(number)%4==0))
