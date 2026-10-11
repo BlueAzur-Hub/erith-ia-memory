@@ -30,7 +30,7 @@ class KuCoinEvidence(TestCase):
         market,extra=m.parse(rows,t,t+m.base.M)
         self.assertEqual(len(market),1)
         self.assertEqual(extra,1)
-        self.assertEqual(market[t][4],10.01)
+        self.assertEqual(str(market[t][4]),"10.01")
         with self.assertRaisesRegex(ValueError,"Invalid KuCoin original OHLCV"):
             m.parse({"code":"200000","data":[[
                str(t//1000),"320","325","310","315","10","3290"]]},
