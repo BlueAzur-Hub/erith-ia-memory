@@ -112,6 +112,12 @@ class BTCBackfillTests(unittest.TestCase):
         self.assertEqual(skipped,months[1:3])
         self.assertEqual(owner["pair"],"BTCUSDT")
 
+    def test_completed_full_release_is_skipped_before_catalog_refresh(self):
+        months,_=m.plan(self.catalog,5)
+        skipped,owner=m.plan(self.catalog,3,has_complete=lambda mo: mo in months[:2])
+        self.assertEqual(skipped,months[2:5])
+        self.assertEqual(owner["pair"],"BTCUSDT")
+
     def test_final_2017_scan_floor(self):
         clone=json.loads(json.dumps(self.catalog))
         btc=next(x for x in clone["assets"] if x["id"]=="bitcoin")
