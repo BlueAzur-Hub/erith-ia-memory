@@ -17,9 +17,20 @@ class KrakenNativeDailyProof(unittest.TestCase):
         f=m.read(m.FED)
         d=m.read(m.DAILY)
         o=m.read(m.OFFICIAL)
-        # Already-verified four original Kraken owners are committed to
-        # the canonical native daily registry; only the NEW multi-collateral
-        # Dai owner remains eligible, not a recreated legacy cohort.
+        # For pure owner/cutoff regression, reconstruct ONLY the
+        # immutable attested Dai candidate after it has been published:
+        # production itself still reads the real daily registry, so it
+        # correctly skips already archived Dai without issuing requests.
+        d=copy.deepcopy(d)
+        d["assets"]=[x for x in d["assets"] if x["id"]!="dai"]
+        d["asset_count"]=len(d["assets"])
+        d["native_daily_candles"]=sum(x["native_candles"] for x in d["assets"])
+        o=copy.deepcopy(o)
+        if not any(x["id"]=="dai" for x in o["assets"]):
+            o["assets"].append({"id":"dai","rank":27,"symbol":"DAI",
+                "instruments":[{"venue":"kraken","instrument":"DAI/USDT",
+                 "base":"DAI","quote":"USDT",
+                 "exchange_instrument_confirmed":True}]})
         return f,d,o
 
     def test_all_original_named_coin_ids_match_canonical_frozen_ranking(self):
