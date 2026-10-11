@@ -42,6 +42,32 @@ class OKXExpandedSourceTests(unittest.TestCase):
             with self.subTest(mutation=mutation):
                 with self.assertRaises(ValueError):addon.owners(fed,venue)
 
+    def test_existing_native_release_not_recollected_when_official_census_rotates(self):
+        fed,_=fixture()
+        # The current official audit omits owners that already have real 1D
+        # OHLCV. This is not evidence of a missing trading pair.
+        venues={"schema":"aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+                "assets":[]}
+        rows=[]
+        for cid,rank,ticker,name,_ in addon.PROOFS:
+            rows.append({"id":cid,"rank":rank,"symbol":ticker,"name":name,
+                "venue":"OKX Spot","market":ticker+"-USDT","bar":"1Dutc",
+                "quote":"USDT","native_candles":1,"sha256":"a"*64,
+                "release_tag":addon.TAG})
+        published={"schema":"aerith.public.crypto.multiresolution-sources.v1",
+                   "asset_count":len(rows),"assets":rows}
+        self.assertEqual(addon.owners(fed,venues,published),[])
+        # Missing one source record is not silently certified as archived:
+        # without venue proof, collection must fail closed.
+        missing={"schema":published["schema"],"asset_count":len(rows)-1,
+                 "assets":rows[:-1]}
+        with self.assertRaisesRegex(ValueError,"Official native OKX"):
+            addon.owners(fed,venues,missing)
+        changed={"schema":published["schema"],"asset_count":len(rows),
+                 "assets":[{**rows[0],"market":"OTHER-USDT"},*rows[1:]]}
+        with self.assertRaisesRegex(ValueError,"Published native"):
+            addon.owners(fed,venues,changed)
+
     def test_cannot_claim_usd_price_or_relabel_daily_as_minute(self):
         fed,venue=fixture()
         fed["assets"][17]["quote"]="USD"
