@@ -600,11 +600,21 @@ def main():
                       exchanges=(source_venues_for(a,spot_snapshot)
                                  if spot_snapshot is not None else ("okx","bitget"))),
                    delay=args.sleep,excluded=archived,preferred=priority)
-    if inventory is not None:
-        result,added=enrich_contracts(queue,archived,result,*inventory)
-        print("EXACT CONTRACT SOURCE "+json.dumps(
-            {"qualified_ids":added,"count":len(added)},sort_keys=True),
-            flush=True)
+    if official_inventory is not None and coingecko_inventory is not None:
+        if bitget_inventory is not None:
+            result,added=enrich_contracts(
+                queue,archived,result,official_inventory,
+                coingecko_inventory,bitget_inventory)
+            print("BITGET EXACT CONTRACT SOURCE "+json.dumps(
+                {"qualified_ids":added,"count":len(added)},sort_keys=True),
+                flush=True)
+        if other_venues:
+            result,added=enrich_independent_contracts(
+                queue,archived,result,official_inventory,
+                coingecko_inventory,other_venues)
+            print("GATE KUCOIN EXACT CONTRACT SOURCE "+json.dumps(
+                {"qualified_ids":added,"count":len(added),
+                 "sources":sorted(other_venues)},sort_keys=True),flush=True)
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     tmp=OUTPUT.with_suffix(".tmp")
     tmp.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
