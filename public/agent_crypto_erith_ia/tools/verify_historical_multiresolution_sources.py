@@ -65,9 +65,13 @@ def check_registry(index,catalog):
         venue=a.get("venue")
         is_okx=venue=="OKX Spot"
         is_bitget=venue=="Bitget Spot"
-        need(is_okx or is_bitget,"Unknown native Spot candle provider")
-        expected_market=(a["symbol"]+"-USDT" if is_okx
-                         else a["symbol"]+"USDT")
+        is_gate=venue=="Gate Spot"
+        is_kucoin=venue=="KuCoin Spot"
+        need(is_okx or is_bitget or is_gate or is_kucoin,
+             "Unknown native Spot candle provider")
+        expected_market=(a["symbol"]+"_USDT" if is_gate
+             else a["symbol"]+"-USDT" if is_okx or is_kucoin
+             else a["symbol"]+"USDT")
         expected_bar="1Dutc" if is_okx else "1D"
         need(a.get("bar")==expected_bar and
              a.get("market")==expected_market and
