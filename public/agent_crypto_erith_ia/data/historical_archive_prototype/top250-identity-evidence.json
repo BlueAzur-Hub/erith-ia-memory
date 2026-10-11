@@ -1,5 +1,5 @@
 {
-  "approved_count": 87,
+  "approved_count": 89,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -1742,13 +1742,23 @@
       "symbol": "APE"
     },
     {
-      "checked_at": "2026-10-10T00:29:49.169942+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-11T23:59:15.296625+00:00",
+      "evidence": [
+        {
+          "base": "SUPER",
+          "coin_id": "superfarm",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "superfarm",
+          "trade_url": "https://www.binance.com/en/trade/SUPER_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "superfarm",
-      "pages": 1,
+      "pages": 2,
       "pair": "SUPERUSDT",
       "rank": 230,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "SUPER"
     },
     {
@@ -1812,13 +1822,23 @@
       "symbol": "1INCH"
     },
     {
-      "checked_at": "2026-10-10T00:30:35.017097+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-11T23:59:30.603100+00:00",
+      "evidence": [
+        {
+          "base": "SNX",
+          "coin_id": "havven",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "havven",
+          "trade_url": "https://www.binance.com/en/trade/SNX_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "havven",
-      "pages": 1,
+      "pages": 2,
       "pair": "SNXUSDT",
       "rank": 238,
-      "status": "identity_not_confirmed",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "SNX"
     },
     {
@@ -1842,7 +1862,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 9,
+  "review_required_count": 7,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
