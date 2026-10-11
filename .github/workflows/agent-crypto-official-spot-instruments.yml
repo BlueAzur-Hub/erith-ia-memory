@@ -16,6 +16,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/native_bitget_daily_history_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_native_alt_spot_daily.py'
       - 'public/agent_crypto_erith_ia/tools/native_alt_spot_daily_test.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_native_kraken_daily_history.py'
+      - 'public/agent_crypto_erith_ia/tools/native_kraken_daily_history_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json'
   push:
     branches: [main]
@@ -34,6 +36,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/native_bitget_daily_history_test.py'
       - 'public/agent_crypto_erith_ia/tools/collect_native_alt_spot_daily.py'
       - 'public/agent_crypto_erith_ia/tools/native_alt_spot_daily_test.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_native_kraken_daily_history.py'
+      - 'public/agent_crypto_erith_ia/tools/native_kraken_daily_history_test.py'
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json'
   workflow_dispatch:
   schedule:
@@ -64,6 +68,8 @@ jobs:
           python public/agent_crypto_erith_ia/tools/historical_multiresolution_sources_test.py
           python public/agent_crypto_erith_ia/tools/native_bitget_daily_history_test.py
           python public/agent_crypto_erith_ia/tools/native_alt_spot_daily_test.py
+          python public/agent_crypto_erith_ia/tools/native_kraken_daily_history_test.py
+          python public/agent_crypto_erith_ia/tools/collect_native_kraken_daily_history.py --plan
           python public/agent_crypto_erith_ia/tools/collect_native_alt_spot_daily.py --plan
           python public/agent_crypto_erith_ia/tools/collect_native_bitget_daily_history.py --plan
           python public/agent_crypto_erith_ia/tools/verify_historical_multiresolution_sources.py --offline
@@ -96,6 +102,30 @@ jobs:
             done
           else
             echo "NOOP: no scheduled or newly reviewed Gate KuCoin source cohort"
+          fi
+      - name: PR only - probe authentic Kraken Spot closed daily OHLCV for named owners
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          script=public/agent_crypto_erith_ia/tools/collect_native_kraken_daily_history.py
+          base=$(git merge-base origin/main HEAD)
+          if [[ -n "$(git diff --name-only "$base" HEAD -- "$script")" ]]; then
+            python "$script" --probe --limit 4
+          else
+            echo "NOOP: no Kraken native acquisition source changed"
+          fi
+      - name: Publish only independently attested Kraken native daily Spot archive
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          script=public/agent_crypto_erith_ia/tools/collect_native_kraken_daily_history.py
+          if [[ "${{ github.event_name }}" == "schedule" ]] ||
+             [[ -n "$(git diff --name-only HEAD^ HEAD -- "$script" ".github/workflows/agent-crypto-official-spot-instruments.yml")" ]]; then
+            python "$script" --publish --limit 4
+          else
+            echo "NOOP: no scheduled or newly reviewed Kraken source cohort"
           fi
       - name: PR only - retrieve genuine Bitget historical 1D for exact-ID missing Spot owners
         if: github.event_name == 'pull_request'
