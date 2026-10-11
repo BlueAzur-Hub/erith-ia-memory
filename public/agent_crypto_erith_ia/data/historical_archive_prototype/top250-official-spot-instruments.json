@@ -1,26 +1,6 @@
 {
-  "archived_assets_at_audit": 189,
+  "archived_assets_at_audit": 190,
   "assets": [
-    {
-      "archived": false,
-      "coin_id_confirmed": false,
-      "id": "tether",
-      "instruments": [
-        {
-          "base": "USDT",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "USDT-USDC",
-          "native_1m_month_confirmed": false,
-          "quote": "USDC",
-          "venue": "kucoin"
-        }
-      ],
-      "native_1m_month_confirmed": false,
-      "rank": 3,
-      "status": "instrument_candidates_not_identity_proof",
-      "symbol": "USDT"
-    },
     {
       "archived": false,
       "coin_id_confirmed": false,
@@ -774,20 +754,20 @@
       "symbol": "AVUSD"
     }
   ],
-  "candidate_count": 61,
-  "checked_at": "2026-10-11T02:25:01.637482+00:00",
+  "candidate_count": 60,
+  "checked_at": "2026-10-11T02:33:44.392242+00:00",
   "markets": {
     "bitget": {
       "instruments": 538,
       "reason": null,
-      "source_sha256": "193b18d4e2e745f938339bd06cfd897b409f31fde314a739a17d4baaab3ea518",
+      "source_sha256": "143cab52bff64a5b669e32317811427c362c46b38163db923ba3fb7fc07619ad",
       "status": "success",
       "url": "https://api.bitget.com/api/v3/market/instruments?category=SPOT"
     },
     "gate": {
       "instruments": 2112,
       "reason": null,
-      "source_sha256": "65c1fd3dfe3c0b603e528f1bb29f82ad438cb2ae4fcc1351733ce1fc2462329e",
+      "source_sha256": "0dde9b5a21c12ee69f7c280b8f659a702909ba5205ffcaae3d816083763a5979",
       "status": "success",
       "url": "https://api.gateio.ws/api/v4/spot/currency_pairs"
     },
@@ -812,5 +792,5 @@
   "ranked": 250,
   "schema": "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
   "source": "Official public OKX, Bitget, Gate and KuCoin Spot instrument inventories",
-  "with_spot_instrument": 9
+  "with_spot_instrument": 8
 }
