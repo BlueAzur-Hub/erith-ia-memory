@@ -1,6 +1,6 @@
 {
-  "candidate_count": 57,
-  "checked_count": 48,
+  "candidate_count": 52,
+  "checked_count": 46,
   "market_candidate_count": 1,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
@@ -772,10 +772,10 @@
       "symbol": "JAAA"
     },
     {
-      "checked_at": "2026-10-10T12:41:15.770212+00:00",
+      "checked_at": "2026-10-11T15:50:18.730659+00:00",
       "id": "bianrensheng",
       "markets": [],
-      "pages_checked": 0,
+      "pages_checked": 3,
       "rank": 108,
       "status": "source_unavailable",
       "symbol": "\u5e01\u5b89\u4eba\u751f"
@@ -1723,6 +1723,24 @@
       "symbol": "COCO"
     },
     {
+      "checked_at": "2026-10-11T15:50:38.858609+00:00",
+      "id": "railgun",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 217,
+      "status": "source_unavailable",
+      "symbol": "RAIL"
+    },
+    {
+      "checked_at": "2026-10-11T15:50:58.986335+00:00",
+      "id": "circle-internet-group-bstock",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 218,
+      "status": "source_unavailable",
+      "symbol": "CRCLB"
+    },
+    {
       "checked_at": "2026-10-10T19:32:03.974701+00:00",
       "id": "bedrock-token",
       "markets": [
@@ -1767,12 +1785,33 @@
       "symbol": "GOMINING"
     },
     {
-      "checked_at": "2026-10-11T02:33:55.081775+00:00",
-      "id": "gusd",
+      "checked_at": "2026-10-11T15:51:19.104546+00:00",
+      "id": "strategy-pp-variable-xstock",
       "markets": [],
       "pages_checked": 0,
-      "rank": 224,
+      "rank": 221,
       "status": "source_unavailable",
+      "symbol": "STRCX"
+    },
+    {
+      "checked_at": "2026-10-11T15:51:19.336164+00:00",
+      "id": "gusd",
+      "markets": [
+        {
+          "base": "GUSD",
+          "coin_id": "gusd",
+          "exchange": "gate",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "GUSD_USDT",
+          "native_1m_month_confirmed": false,
+          "original_named_spot_notice": "https://www.gate.com/fr/announcements/article/46834",
+          "proof_method": "original_named_spot_listing",
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 0,
+      "rank": 224,
+      "status": "exact_id_market_candidates",
       "symbol": "GUSD"
     },
     {
