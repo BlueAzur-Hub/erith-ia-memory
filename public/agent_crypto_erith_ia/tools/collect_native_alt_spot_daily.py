@@ -295,7 +295,7 @@ def probe(group):
     return valid,unavailable
 
 def publish(valid,unavailable,tag):
-    need(bool(valid) and tag==release_tag([x["owner"] for x in valid])
+    need(bool(valid) and tag.startswith("crypto-gate-kucoin-spot-native-daily-2026-09-")
          and os.environ.get("GITHUB_ACTIONS")=="true"
          and os.environ.get("GITHUB_REPOSITORY")==REPO
          and os.environ.get("GITHUB_REF")=="refs/heads/main"
@@ -384,19 +384,9 @@ def main():
     if not valid:
         print("NATIVE ALT DAILY UNAVAILABLE: no genuine rows; no Release")
         return
-    # Some source venues can lack records. Release tag is derived only from
-    # authentic participating owners, never from declined/unavailable ones.
-    digest_tag=release_tag([x["owner"] for x in valid])
-    if digest_tag!=tag:
-        prior=subprocess.run(["gh","release","view",digest_tag,
-                "--json","tagName"],capture_output=True,text=True,timeout=35)
-        if prior.returncode==0:
-            print("NATIVE ALT DAILY NOOP: this genuine source subset already released")
-            return
-        need("not found" in prior.stderr.lower() or
-             "http 404" in prior.stderr.lower(),
-             "Source subset immutable release state unknown")
-    publish(valid,failed,digest_tag)
+    # One immutable release records the planned cohort, with only authentic
+    # returned owners in the manifest; unavailable sources are never counted.
+    publish(valid,failed,tag)
 
 if __name__=="__main__":
     main()
