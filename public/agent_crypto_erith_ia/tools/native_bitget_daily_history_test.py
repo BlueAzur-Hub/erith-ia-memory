@@ -52,6 +52,21 @@ class DailyHistoryTests(unittest.TestCase):
         self.assertEqual(d["native_interval"],"1D")
         self.assertEqual(m.compress(d),m.compress(d))
 
+    def test_original_bitget_utc_plus_eight_daily_session_is_preserved(self):
+        # Native 1D Spot rows can start at 00:00 local UTC+8, i.e. 16:00 UTC.
+        stamp=m.END-4*m.DAY+16*60*60*1000
+        self.assertEqual(m.parse_row([str(stamp),"2","3","1","2","4","8"])[0],
+                         stamp)
+        def fetch(pair,start,end):
+            if start<=stamp<end:
+                return [[str(stamp),"2","3","1","2","4","8"]],"f"*64
+            return [],"e"*64
+        with patch.object(m,"START",m.END-7*m.DAY):
+            x=m.acquire(owner(),fetcher=fetch)
+        self.assertEqual(x["native_session_start_modulo_utc_day_ms"],57600000)
+        self.assertEqual(x["native_daily_rows"][0][0],str(stamp))
+        self.assertTrue(x["native_daily_timezone_not_normalized"])
+
     def test_fail_wrong_native_price_timestamp_and_duplicate(self):
         ts=m.END-3*m.DAY
         good=[str(ts),"2.0","3","1","2","1","2"]
