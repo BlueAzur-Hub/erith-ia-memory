@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only Top250 exact-ID market discovery: OKX and Bitget, NOT an OHLCV archive."""
+"""Read-only Top250 exact-ID market discovery: four Spot exchanges, NOT OHLCV."""
 from __future__ import annotations
 import argparse
 import datetime as dt
@@ -20,7 +20,7 @@ LIVE_DAILY=BASE/"top250_multiresolution_sources/index.json"
 OUTPUT=BASE/"top250-alt-market-evidence.json"
 OFFICIAL=BASE/"top250-official-spot-instruments.json"
 SCHEMA="aerith.public.ohlcv.spot.top250.alt-market-discovery.v1"
-EXCHANGES=("okx","bitget")
+EXCHANGES=("okx","bitget","gate","kucoin")
 QUOTES={"USDT":"tether","USDC":"usd-coin"}
 ID=re.compile(r"^[a-z0-9-]{2,100}$")
 ALNUM=re.compile(r"^[A-Z0-9]{1,30}$")
@@ -119,7 +119,9 @@ def exact_candidates(tickers,asset,exchange):
         if t.get("target_coin_id") not in (None,QUOTES[quote]):continue
         if t.get("is_anomaly") is True or t.get("is_stale") is True or t.get("trust_score")=="red":
             continue
-        pair=base+"-"+quote if exchange=="okx" else base+quote
+        pair=(base+"_"+quote if exchange=="gate" else
+              base+"-"+quote if exchange in ("okx","kucoin") else
+              base+quote)
         evidence={"coin_id":asset["id"],"exchange":exchange,"base":base,
                   "quote":quote,"market_pair_candidate":pair,
                   "exchange_instrument_confirmed":False,
@@ -159,15 +161,19 @@ def fetch_exchange(coin_id,exchange,page):
         require(isinstance(obj.get("tickers"),list),"Bad source exchange tickers")
         return obj["tickers"]
 
-def inspect(asset,getter=fetch,exchange_getter=None):
+def inspect(asset,getter=fetch,exchange_getter=None,exchanges=("okx","bitget")):
     """Retain only complete venue-specific exact-ID proofs.
 
     One exchange's 429 must not discard an independently proven instrument
     from the other exchange. It never turns the failed venue into a negative.
     """
+    require(isinstance(exchanges,(tuple,list)) and len(exchanges)>0
+            and len(exchanges)==len(set(exchanges))
+            and all(e in EXCHANGES for e in exchanges),
+            "Untrusted exact-ID market venue cohort")
     matches=[];pages=0;unavailable=False;incomplete=False
     errors=(OSError,ValueError,RuntimeError,TypeError,KeyError,json.JSONDecodeError)
-    for exchange in EXCHANGES:
+    for exchange in exchanges:
         local=[];venue_error=False
         try:
             for page in (1,2):
@@ -244,6 +250,44 @@ def official_priority(queue,archived,path=OFFICIAL):
             "Official candidate universe changed since audit")
     return selected
 
+def source_venues_for(asset,official):
+    """Use official Spot pairs to bound exact-ID CoinGecko requests.
+
+    A market instrument is only a query hint: even an exact ticker symbol
+    NEVER proves CoinGecko ownership without independently matched coin_id.
+    Existing two-venue fallback stays available for not-yet-audited symbols.
+    """
+    require(official.get("schema")==
+            "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1"
+            and official.get("ranked")==250,
+            "Missing trusted official instrument census")
+    rows=[r for r in official.get("assets",[]) if r.get("id")==asset["id"]]
+    require(len(rows)<=1,"Repeated official source owner")
+    if not rows:
+        return ("okx","bitget")
+    row=rows[0]
+    require(row.get("rank")==asset["rank"] and
+            row.get("symbol")==asset["symbol"],
+            "Official venue owner changed since CoinGecko ranking")
+    selected=[]
+    for item in row.get("instruments",[]):
+        venue=item.get("venue")
+        quote=item.get("quote")
+        base=asset["symbol"]
+        if venue not in EXCHANGES or quote not in QUOTES:
+            continue
+        expected=(base+"_"+quote if venue=="gate" else
+                  base+"-"+quote if venue in ("okx","kucoin") else
+                  base+quote)
+        require(item.get("exchange_instrument_confirmed") is True and
+                item.get("base")==base and
+                item.get("instrument")==expected,
+                "Unverified official Spot instrument cannot direct discovery")
+        if venue not in selected:
+            selected.append(venue)
+    return tuple(selected) if selected else ("okx","bitget")
+
+
 def validate(doc,queue):
     require(doc.get("schema")==SCHEMA and isinstance(doc.get("results"),list),
             "Bad discovery evidence ledger")
@@ -315,7 +359,7 @@ def process(queue,prior=None,batch=MAX_BATCH,checker=inspect,delay=15,
             "checked_count":sum(x["id"] not in excluded for x in result),
             "market_candidate_count":sum(bool(x["markets"]) and x["id"] not in excluded
                                          for x in result),
-            "source":"CoinGecko exact coin ID, exchange_ids okx or bitget",
+            "source":"CoinGecko exact coin ID, independent exchange-specific Spot tickers",
             "quote":"USDT or USDC: never convert silently",
             "market_only_not_archived":True,
             "note":"Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
@@ -474,6 +518,7 @@ def main():
               "official_priority_assets":len(official_priority(queue,archived))}))
         return
     priority=official_priority(queue,archived)
+    spot_snapshot=json.loads(OFFICIAL.read_text(encoding="utf-8")) if OFFICIAL.is_file() else None
     # Read two batch inventories BEFORE individual per-ID ticker requests:
     # the old order exhausted CoinGecko's public API and returned HTTP 429
     # before the independent contract route could even begin.
@@ -495,7 +540,9 @@ def main():
     else:
         print("EXACT CONTRACT SOURCE DEFERRED: hourly inventory quota",flush=True)
     result=process(queue,prior,args.batch_size,
-                   checker=lambda a:inspect(a,exchange_getter=fetch_exchange),
+                   checker=lambda a:inspect(a,exchange_getter=fetch_exchange,
+                      exchanges=(source_venues_for(a,spot_snapshot)
+                                 if spot_snapshot is not None else ("okx","bitget"))),
                    delay=args.sleep,excluded=archived,preferred=priority)
     if inventory is not None:
         result,added=enrich_contracts(queue,archived,result,*inventory)

@@ -31,6 +31,62 @@ class AlternativeMarketTests(unittest.TestCase):
         b=m.exact_candidates([ticker(venue="bitget",quote="USDC")],COIN,"bitget")
         self.assertEqual(b[0]["quote"],"USDC")
         self.assertEqual(b[0]["market_pair_candidate"],"OKBUSDC")
+    def test_gate_kucoin_exact_coin_identity_and_native_pair_grammar(self):
+        for venue,pair in (("gate","OKB_USDT"),("kucoin","OKB-USDT")):
+            with self.subTest(venue=venue):
+                verified=m.exact_candidates([ticker(venue=venue)],COIN,venue)
+                self.assertEqual(len(verified),1)
+                self.assertEqual(verified[0]["market_pair_candidate"],pair)
+                self.assertEqual(verified[0]["coin_id"],"okb")
+                self.assertFalse(verified[0]["exchange_instrument_confirmed"])
+                self.assertFalse(verified[0]["native_1m_month_confirmed"])
+                self.assertEqual(m.exact_candidates(
+                    [ticker(coin="wrong",venue=venue)],COIN,venue),[])
+                self.assertEqual(m.exact_candidates(
+                    [ticker(venue=venue,base="FAKE")],COIN,venue),[])
+                self.assertEqual(m.exact_candidates(
+                    [{**ticker(venue=venue),"trust_score":"red"}],COIN,venue),[])
+
+    def test_only_officially_confirmed_gate_kucoin_venues_direct_exact_id_queries(self):
+        proof={"schema":"aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+               "ranked":250,"assets":[
+                 {"id":"okb","rank":42,"symbol":"OKB",
+                  "instruments":[
+                    {"venue":"gate","instrument":"OKB_USDT","base":"OKB",
+                     "quote":"USDT","exchange_instrument_confirmed":True},
+                    {"venue":"kucoin","instrument":"OKB-USDC","base":"OKB",
+                     "quote":"USDC","exchange_instrument_confirmed":True}]}]}
+        self.assertEqual(m.source_venues_for(COIN,proof),("gate","kucoin"))
+        seen=[]
+        def get(coin,venue,page):
+            seen.append((coin,venue,page))
+            return [ticker(venue=venue)]
+        status,owners,_=m.inspect(COIN,get,exchanges=m.source_venues_for(COIN,proof))
+        self.assertEqual(status,"exact_id_market_candidates")
+        self.assertEqual({x["exchange"] for x in owners},{"gate","kucoin"})
+        self.assertEqual({v for _,v,_ in seen},{"gate","kucoin"})
+        self.assertFalse(any(x["exchange_instrument_confirmed"] for x in owners))
+        # An instrument match cannot become an owner if its name/rank moved.
+        altered=json.loads(json.dumps(proof))
+        altered["assets"][0]["symbol"]="NOT-OKB"
+        with self.assertRaisesRegex(ValueError,"owner changed"):
+            m.source_venues_for(COIN,altered)
+        altered=json.loads(json.dumps(proof))
+        altered["assets"][0]["instruments"][0]["instrument"]="WRONG_USDT"
+        with self.assertRaisesRegex(ValueError,"Unverified official"):
+            m.source_venues_for(COIN,altered)
+        altered=json.loads(json.dumps(proof))
+        altered["assets"][0]["instruments"][0]["exchange_instrument_confirmed"]=False
+        with self.assertRaisesRegex(ValueError,"Unverified official"):
+            m.source_venues_for(COIN,altered)
+        self.assertEqual(m.source_venues_for(
+            {"id":"other","rank":1,"symbol":"AAA","name":"Other"},proof),
+            ("okx","bitget"))
+        with self.assertRaisesRegex(ValueError,"market venue cohort"):
+            m.inspect(COIN,get,exchanges=("gate","gate"))
+        with self.assertRaisesRegex(ValueError,"market venue cohort"):
+            m.inspect(COIN,get,exchanges=("untrusted",))
+
     def test_source_error_and_pagination_fail_closed(self):
         def getter(coin,venue,page):
             if venue=="bitget":raise OSError("API blocked")
