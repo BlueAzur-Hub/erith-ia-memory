@@ -86,6 +86,65 @@ class OfficialInstrumentsTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"KuCoin"):
             m.parse_instruments("kucoin",{"code":"400000","data":rows})
 
+    def test_kraken_original_wsname_and_status_never_auto_approve_owner(self):
+        good={"wsname":"DAI/USDT","altname":"DAIUSDT","status":"online"}
+        usdc={"wsname":"EURC/USDC","status":"online"}
+        inactive={"wsname":"FAKE/USDT","status":"cancel_only"}
+        unknown={"wsname":"WRONG/USDT-ALT","status":"online"}
+        parsed=m.parse_instruments("kraken",{"error":[],"result":{
+            "DAIUSDT":good,"EURCUSDC":usdc,"FAKEUSDT":inactive,
+            "WRONGUSDT":unknown}})
+        self.assertEqual(parsed,{
+            ("DAI","USDT"):"DAI/USDT",
+            ("EURC","USDC"):"EURC/USDC"})
+        with self.assertRaisesRegex(ValueError,"Kraken rejected"):
+            m.parse_instruments("kraken",{"error":["EGeneral:Offline"],
+                                           "result":{"DAIUSDT":good}})
+        with self.assertRaisesRegex(ValueError,"Kraken rejected"):
+            m.parse_instruments("kraken",{"error":[],"result":[]})
+        with self.assertRaisesRegex(ValueError,"inventory"):
+            m.parse_instruments("kraken",{"error":[],"result":{}})
+
+    def test_coinbase_exchange_spot_products_do_not_claim_futures_or_halted_pairs(self):
+        def product(base,quote="USDT",status="online",disabled=False,
+                    cancel=False,post=False):
+            return {"id":base+"-"+quote,"base_currency":base,
+                "quote_currency":quote,"status":status,
+                "trading_disabled":disabled,"cancel_only":cancel,
+                "post_only":post}
+        src=[
+            product("DAI","USDC"),product("EURC","USDT"),
+            product("OFF",status="offline"),product("HALT",disabled=True),
+            product("CANCEL",cancel=True),product("POST",post=True),
+            product("FAKE","BTC"),
+            {**product("WRONG"),"id":"WRONG-USDC"}
+        ]
+        parsed=m.parse_instruments("coinbase",src)
+        self.assertEqual(parsed,{("DAI","USDC"):"DAI-USDC",
+                                 ("EURC","USDT"):"EURC-USDT"})
+        with self.assertRaisesRegex(ValueError,"Gate/Coinbase"):
+            m.parse_instruments("coinbase",{"data":src})
+
+    def test_six_venues_discovery_remains_candidate_only(self):
+        data=m.build(universe(),{"asset-1"},{
+            "coinbase":{"status":"success",
+                        "symbols":{("COIN2","USDC"):"COIN2-USDC"},
+                        "sha256":"a"*64},
+            "kraken":{"status":"success",
+                      "symbols":{("COIN2","USDT"):"COIN2/USDT"},
+                      "sha256":"b"*64}
+        },clock="proof-time")
+        c=next(x for x in data["assets"] if x["id"]=="asset-2")
+        self.assertEqual({x["venue"] for x in c["instruments"]},
+                         {"coinbase","kraken"})
+        self.assertFalse(c["coin_id_confirmed"])
+        self.assertFalse(c["native_1m_month_confirmed"])
+        self.assertFalse(c["archived"])
+        self.assertTrue(all(x["exchange_instrument_confirmed"]
+                            and x["coin_id_confirmed"] is False
+                            and x["native_1m_month_confirmed"] is False
+                            for x in c["instruments"]))
+
     def test_four_venue_symbol_matching_never_certifies_coin_identity(self):
         original=universe()
         # This is a pure scheduling hint; the same symbol might belong to a
