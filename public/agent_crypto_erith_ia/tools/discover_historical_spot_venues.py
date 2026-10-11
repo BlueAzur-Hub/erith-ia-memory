@@ -572,15 +572,27 @@ def main():
                    or (number.isdecimal() and int(number)%4==0))
     if inventory_due:
         try:
-            official=json.loads(OFFICIAL.read_text(encoding="utf-8"))
-            cg=public_inventory(CG_PLATFORMS,40_000_000)
-            bitget=public_inventory(BITGET_COINS,15_000_000)
-            inventory=(official,cg,bitget)
-            print("EXACT CONTRACT INVENTORIES LOADED",flush=True)
+            official_inventory=json.loads(OFFICIAL.read_text(encoding="utf-8"))
+            coingecko_inventory=public_inventory(CG_PLATFORMS,40_000_000)
+            print("EXACT COINGECKO CONTRACT INVENTORY LOADED",flush=True)
         except (OSError,ValueError,TypeError,KeyError,
                 json.JSONDecodeError) as exc:
-            print("EXACT CONTRACT SOURCE UNAVAILABLE "+
+            print("EXACT CONTRACT OWNER INVENTORY UNAVAILABLE "+
                   type(exc).__name__+": "+str(exc)[:180],flush=True)
+        if coingecko_inventory is not None:
+            try:
+                bitget_inventory=public_inventory(BITGET_COINS,15_000_000)
+            except (OSError,ValueError,TypeError,KeyError,
+                    json.JSONDecodeError) as exc:
+                print("BITGET CONTRACT INVENTORY UNAVAILABLE "+
+                      type(exc).__name__+": "+str(exc)[:180],flush=True)
+            for venue,url in (("gate",GATE_COINS),("kucoin",KUCOIN_COINS)):
+                try:
+                    other_venues[venue]=public_inventory(url,25_000_000)
+                except (OSError,ValueError,TypeError,KeyError,
+                        json.JSONDecodeError) as exc:
+                    print("INDEPENDENT CONTRACT SOURCE UNAVAILABLE "+venue+" "+
+                          type(exc).__name__+": "+str(exc)[:180],flush=True)
     else:
         print("EXACT CONTRACT SOURCE DEFERRED: hourly inventory quota",flush=True)
     result=process(queue,prior,args.batch_size,
