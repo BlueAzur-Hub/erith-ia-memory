@@ -5,9 +5,9 @@
   "ranked": 250,
   "rank_snapshot": "2026-10-09T18:47:53.633Z",
   "release_months": 86,
-  "release_count": 226,
-  "archived_assets": 122,
-  "native_1m_candles": 220082400,
+  "release_count": 229,
+  "archived_assets": 123,
+  "native_1m_candles": 220214880,
   "groups": [
     {
       "top": 10,
@@ -23,7 +23,7 @@
     },
     {
       "top": 250,
-      "with_history": 122
+      "with_history": 123
     }
   ],
   "months": [
@@ -1394,6 +1394,13 @@
     },
     {
       "month": "2026-07",
+      "release": "crypto-spot-bulk-add-2026-07-1m-cd1f0d3bdca3",
+      "verified": 1,
+      "unavailable": 0,
+      "candles": 44640
+    },
+    {
+      "month": "2026-07",
       "release": "crypto-spot-bulk-add-2026-07-1m-dd119f454c94",
       "verified": 3,
       "unavailable": 0,
@@ -1492,6 +1499,13 @@
     },
     {
       "month": "2026-08",
+      "release": "crypto-spot-bulk-add-2026-08-1m-cd1f0d3bdca3",
+      "verified": 1,
+      "unavailable": 0,
+      "candles": 44640
+    },
+    {
+      "month": "2026-08",
       "release": "crypto-spot-bulk-add-2026-08-1m-dd119f454c94",
       "verified": 3,
       "unavailable": 0,
@@ -1587,6 +1601,13 @@
       "verified": 8,
       "unavailable": 0,
       "candles": 345600
+    },
+    {
+      "month": "2026-09",
+      "release": "crypto-spot-bulk-add-2026-09-1m-cd1f0d3bdca3",
+      "verified": 1,
+      "unavailable": 0,
+      "candles": 43200
     },
     {
       "month": "2026-09",
@@ -44128,9 +44149,34 @@
       "symbol": "CRCLB",
       "name": "Circle Internet Group (bStocks Tokenized Stock)",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "CRCLBUSDT",
+          "file": "CRCLBUSDT-1m-2026-07.zip",
+          "sha256": "f13df65591f0c4bcd9d8129ca80bf28c0c2738a8054b6fe84a0a7a98f8142f0e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-cd1f0d3bdca3"
+        },
+        {
+          "month": "2026-08",
+          "pair": "CRCLBUSDT",
+          "file": "CRCLBUSDT-1m-2026-08.zip",
+          "sha256": "7699e5ba191a60aea8bb5a767dd4e3dd19a6b689d07d501d40a99404bbe8eb6e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-cd1f0d3bdca3"
+        },
+        {
+          "month": "2026-09",
+          "pair": "CRCLBUSDT",
+          "file": "CRCLBUSDT-1m-2026-09.zip",
+          "sha256": "096263da02d1446597b44809cdaf147c39f154435d27ecaa2e739ccb803688d3",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-cd1f0d3bdca3"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "bedrock-token",
