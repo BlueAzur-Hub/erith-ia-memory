@@ -115,7 +115,45 @@ function fixture(){
     annual:"d".repeat(64)}};
  blobs.set("btc_max_integrated/index.json",Buffer.from(JSON.stringify(deepMeta)));
  blobs.set("btc_max_integrated/bitcoin-Max.json.gz",deepZip);
- return {blobs,index,before,deep,deepMeta};
+ // Synthetic fixture for tests ONLY. Production prices originate exclusively
+ // from verified Binance official 1d ZIPs, not from this mock test file.
+ const nativeRows=[];
+ for(let t=first;t<end;t+=day)nativeRows.push([t,100,105,99,101,2,201,3]);
+ const recovered=[...missing].sort((a,b)=>a-b).map(ts=>({
+    open_time_ms:ts,date:new Date(ts).toISOString().slice(0,10),
+    native_1d:{interval:"1d",venue:"Binance Spot",pair:"BTCUSDT",
+      quote:"USDT",archive_url:"https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-06.zip",
+      checksum_url:"https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1d/BTCUSDT-1d-2018-06.zip.CHECKSUM",
+      zip_sha256:"d".repeat(64),checksum_sha256:"e".repeat(64)},
+    corroborated_days:20,matching_days:20,mismatched_reference_days:[],
+    native_1m_missing_minutes:80
+ }));
+ const native={schema:"seven.crypto.btc.native-1d-reconciliation.v1",
+    asset_id:"bitcoin",pair:"BTCUSDT",quote:"USDT",interval:"1d",
+    is_live:false,is_all_time:false,
+    scope:"qualified_1m_daily_plus_official_native_1d",
+    columns:deep.columns,
+    source:"Binance Spot original verified 1m and native 1d",
+    native_1m_gaps_preserved:true,rows:nativeRows,
+    native_1d_overrides:recovered,gaps:[],
+    original_btc_max_sha256:deepMeta.sha256};
+ const nativeZip=gzipSync(Buffer.from(JSON.stringify(native)));
+ const nativeMeta={schema:"seven.crypto.btc.native-1d-reconciliation-index.v1",
+    asset_id:"bitcoin",pair:"BTCUSDT",quote:"USDT",
+    is_live:false,is_all_time:false,
+    file:"bitcoin-Max.json.gz",bytes:nativeZip.length,sha256:hash(nativeZip),
+    bars:3075,original_bars:3049,native_1d_recovered:26,unresolved_count:0,
+    unresolved_dates:[],missing_minutes_unchanged:5881,
+    first_open_ms:first,last_open_ms:end-day,gaps:[],
+    source_catalog_sha256:{full:"a".repeat(64),partial:"b".repeat(64)},
+    original_btc_max_sha256:deepMeta.sha256,
+    source_dates:recovered.map(p=>({date:p.date,open_time_ms:p.open_time_ms,
+       status:"recovered",source:p.native_1d})),
+    source_model:"different_native_1d_and_1m_provenance",
+    reconciliation_policy:"official_native_1d_with_majority_source_corroboration_v2"};
+ blobs.set("btc_native_daily_reconciliation/index.json",Buffer.from(JSON.stringify(nativeMeta)));
+ blobs.set("btc_native_daily_reconciliation/bitcoin-Max.json.gz",nativeZip);
+ return {blobs,index,before,deep,deepMeta,native,nativeMeta};
 }
 function harness(modifier=null,withCommon=false){
  const fx=fixture(), requests=[],nodes=new Map(),window={},events={};
@@ -179,15 +217,16 @@ test("seven windows across five original-source-qualified market identities",asy
  assert.equal(catalog.assets.length,5);
  for(const id of Object.keys(pairs))for(const period of Object.keys(periods)){
   const result=await x.window.SevenVerifiedPeriods.load(id,period);
-  assert.equal(result.rows.length,id==="bitcoin"&&period==="Max"?3049:periods[period][1]);
+  assert.equal(result.rows.length,id==="bitcoin"&&period==="Max"?3075:periods[period][1]);
   assert.equal(result.data.quote,"USDT");
   assert.equal(result.data.pair,pairs[id]);
-  assert.equal(result.data.gaps.length,id==="bitcoin"&&period==="Max"?2:period==="Max"?1:0);
+  assert.equal(result.data.gaps.length,id==="bitcoin"&&period==="Max"?0:period==="Max"?1:0);
  }
  assert.equal(x.requests.length,37);
  await x.window.SevenVerifiedPeriods.load("solana","Max");
  assert.equal(x.requests.length,37,"Last period remains cached");
- assert.ok(x.requests.includes("btc_max_integrated/bitcoin-Max.json.gz"));
+ assert.ok(x.requests.includes("btc_native_daily_reconciliation/bitcoin-Max.json.gz"));
+ assert.ok(!x.requests.includes("btc_max_integrated/bitcoin-Max.json.gz"));
  assert.ok(!x.requests.includes("verified_periods/bitcoin-Max.json.gz"));
 });
 test("SHA-256 tampering refuses display even for plausible OHLCV",async()=>{
@@ -241,8 +280,8 @@ test("UI changing pilot and period routes to verified archive and renders OHLCV 
  select.value="bitcoin";
  x.node("shared-period").value="1an";
  x.node("shared-read").dispatch("click");
- for(let i=0;i<200&&!x.node("shared-status").textContent.includes("SHA-256 vérifié");i++)
-  await new Promise(resolve=>setImmediate(resolve));
+ for(let i=0;i<500&&!x.node("shared-status").textContent.includes("SHA-256 vérifié");i++)
+  await new Promise(resolve=>setTimeout(resolve,5));
  assert.match(x.node("shared-status").textContent,/SHA-256 vérifié/);
  assert.match(x.node("shared-status").textContent,/365 bougies 1d/);
  assert.match(x.node("shared-source").textContent,/Max inclut d’autres partitions annuelles archivées/);
@@ -250,9 +289,10 @@ test("UI changing pilot and period routes to verified archive and renders OHLCV 
  assert.ok(x.requests.includes("verified_periods/bitcoin-1an.json.gz"));
  x.node("shared-period").value="Max";
  x.node("shared-period").dispatch("change");
- for(let i=0;i<200&&!x.node("shared-status").textContent.includes("interruption(s)");i++)
-  await new Promise(resolve=>setImmediate(resolve));
- assert.match(x.node("shared-status").textContent,/interruption/);
+ for(let i=0;i<500&&!x.node("shared-source").textContent.includes("MAX QUOTIDIEN");i++)
+  await new Promise(resolve=>setTimeout(resolve,5));
+ assert.match(x.node("shared-status").textContent,/aucune lacune/);
+ assert.match(x.node("shared-source").textContent,/26 bougies Binance Spot 1d natives/);
  assert.equal(x.node("shared-table").children.length,9);
 });
 
@@ -269,19 +309,19 @@ test("Max explains the missing archive dates without making the user guess",asyn
  assert.match(x.node("shared-status").textContent,/SHA-256 vérifié/);
  assert.match(x.node("shared-explanation").textContent,/VOUS REGARDEZ : BTCUSDT/);
  assert.match(x.node("shared-explanation").textContent,/Max/);
- assert.match(x.node("shared-gaps").textContent,/ATTENTION — archive incomplète/);
- assert.match(x.node("shared-gaps").textContent,/sans bougie quotidienne complète/);
- assert.match(x.node("shared-gaps").textContent,/Bande orange/);
- assert.match(x.node("shared-range").textContent,/3.?049 bougies visibles/);
+ assert.match(x.node("shared-gaps").textContent,/COUVERTURE 1 JOUR/);
+ assert.match(x.node("shared-gaps").textContent,/5 881 minutes manquantes/);
+ assert.doesNotMatch(x.node("shared-gaps").textContent,/Bande orange/);
+ assert.match(x.node("shared-range").textContent,/3.?075 bougies visibles/);
  assert.equal(x.node("shared-prev").disabled,true);
  assert.equal(x.node("shared-next").disabled,true);
  x.node("shared-zoom-in").dispatch("click");
- assert.match(x.node("shared-range").textContent,/1.?524 bougies visibles/);
+ assert.match(x.node("shared-range").textContent,/1.?537 bougies visibles/);
  assert.equal(x.node("shared-prev").disabled,false);
  x.node("shared-prev").dispatch("click");
  assert.equal(x.node("shared-next").disabled,false);
  x.node("shared-reset").dispatch("click");
- assert.match(x.node("shared-range").textContent,/3.?049 bougies visibles/);
+ assert.match(x.node("shared-range").textContent,/3.?075 bougies visibles/);
  assert.equal(x.node("shared-next").disabled,true);
  const n=x.requests.length;
  x.node("shared-style").value="line";
@@ -301,7 +341,7 @@ test("legacy assets keep their prior reader and navigation stays disabled",()=>{
 
 test("deep BTC SHA-256 tampering must block the new Max",async()=>{
  const x=harness((name,bytes)=>{
-  if(name==="btc_max_integrated/bitcoin-Max.json.gz"){
+  if(name==="btc_native_daily_reconciliation/bitcoin-Max.json.gz"){
    const changed=Buffer.from(bytes);changed[8]^=1;return changed;
   }
  });
@@ -309,21 +349,24 @@ test("deep BTC SHA-256 tampering must block the new Max",async()=>{
 });
 test("old 1,795-day Max may never replace newly verified BTC source silently",async()=>{
  const x=harness((name,bytes)=>{
-  if(name==="btc_max_integrated/index.json"){
+  if(name==="btc_native_daily_reconciliation/index.json"){
    const index=JSON.parse(bytes);index.bars=1795;
    return Buffer.from(JSON.stringify(index));
   }
  });
  await assert.rejects(x.window.SevenVerifiedPeriods.load("bitcoin","Max"),
-  /Index BTC Max 2018–2026 non certifié/);
+  /Le registre BTC 1d complet n.est pas certifié/);
  assert.ok(!x.requests.includes("verified_periods/bitcoin-Max.json.gz"));
 });
 test("source-qualified partial March remains thirty certified days",async()=>{
  const x=harness();
  const a=await x.window.SevenVerifiedPeriods.load("bitcoin","Max");
  assert.equal(a.metadata.integrated,true);
- assert.equal(a.rows.length,3049);
+ assert.equal(a.rows.length,3075);
+ assert.equal(a.metadata.native_daily,true);
  const start=Date.UTC(2023,2,1),end=Date.UTC(2023,3,1);
- assert.equal(a.rows.filter(r=>r[0]>=start&&r[0]<end).length,30);
- assert.equal(a.data.gaps.find(g=>g.start_ms===Date.UTC(2023,2,24))?.missing_bars,1);
+ assert.equal(a.rows.filter(r=>r[0]>=start&&r[0]<end).length,31);
+ assert.equal(a.data.gaps.length,0);
+ assert.equal(a.data.native_1d_overrides.length,26);
+ assert.equal(a.metadata.missing_source_minutes,5881);
 });

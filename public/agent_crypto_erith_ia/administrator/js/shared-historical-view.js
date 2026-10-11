@@ -397,7 +397,9 @@ function display(view,metadata){
  byId("shared-status").textContent="Vérifié · "+view.pair+" · "+view.rows.length.toLocaleString("fr-FR")+
    " bougies "+view.interval+suffix;
  byId("shared-source").textContent=certified?
-   (metadata.integrated?
+   (metadata.native_daily?
+     "BTC/USDT · MAX QUOTIDIEN : 3 075 jours · 26 bougies Binance Spot 1d natives vérifiées et 3 049 journées dérivées des minutes complètes · 5 881 minutes originales toujours absentes · USDT, jamais USD converti · sans interpolation":
+    metadata.integrated?
      "BTC/USDT · MAX SOURCE RECONSTRUIT · 80 mois complets + 21 mois partiels authentiques de mai 2018 à septembre 2026 · "+
      metadata.missing_days+" journées sans bougie 1j complète, minutes sources conservées · Binance Spot USDT · pas de temps réel ni interpolation":
      "Binance Spot · "+view.pair+" · prix cotés en USDT · "+dateOnly(view.rows[0][0])+" → "+dateOnly(view.rows.at(-1)[0])+
@@ -412,18 +414,21 @@ function display(view,metadata){
  if(certified){
   const step=({"1m":60000,"5m":300000,"1h":3600000,"1d":86400000})[view.interval];
   const begin=dateOnly(view.rows[0][0]),end=dateOnly(view.rows.at(-1)[0]);
-  const period=view.period==="Max"?(metadata.integrated?"Max BTC reconstruit · sources complètes et partielles":"Max (partitions publiées)"):view.period;
+  const period=view.period==="Max"?(metadata.native_daily?"Max BTC vérifié · journées natives Binance 1d":metadata.integrated?"Max BTC reconstruit · sources complètes et partielles":"Max (partitions publiées)"):view.period;
   byId("shared-explanation").textContent=
     "VOUS REGARDEZ : "+view.pair+" · "+period+" · du "+begin+" au "+end+
     " · "+view.rows.length.toLocaleString("fr-FR")+" bougies de "+
     (view.interval==="1d"?"1 jour":view.interval==="1h"?"1 heure":view.interval==="1m"?"1 minute":"5 minutes")+
-    ". Cotation historique Binance Spot USDT, pas les prix d’aujourd’hui.";
+    ". Cotation historique Binance Spot USDT, pas les prix d’aujourd’hui."+
+    (metadata.native_daily?" Les 26 anciennes journées incomplètes à la minute utilisent les véritables bougies quotidiennes Binance 1d.":"");
   byId("shared-gaps").textContent=view.gaps.length?
     "ATTENTION — archive incomplète : "+view.gaps.map(g=>
       "du "+dateOnly(g.start_ms)+" au "+dateOnly(g.end_exclusive_ms-step)+
       " ("+g.missing_bars+" "+(view.interval==="1d"?"journées sans bougie quotidienne complète":"bougies absentes")+")").join(" ; ")+
     ". Bande orange = absence de bougie certifiée, pas une chute du prix. Des minutes partielles peuvent exister dans le Coffre.":
-    "COUVERTURE : aucune lacune dans la période affichée.";
+    (metadata.native_daily?
+      "COUVERTURE 1 JOUR : 3 075/3 075 journées. Les 26 journées rétablies proviennent de bougies Binance 1d officielles ; les 5 881 minutes manquantes à la résolution 1m restent signalées dans le Coffre.":
+      "COUVERTURE : aucune lacune dans la période affichée.");
  }
  byId("shared-hover").textContent=certified?
    "Survole les bougies pour voir les cours et les volumes exacts ; les colonnes condensées portent leur nombre de bougies sources.":
