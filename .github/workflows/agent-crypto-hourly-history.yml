@@ -6,6 +6,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/build_historical_hourly_views.py'
       - 'public/agent_crypto_erith_ia/tools/historical_hourly_views_test.py'
       - 'public/agent_crypto_erith_ia/tools/build_verified_periods.py'
+      - 'public/agent_crypto_erith_ia/tools/build_btc_integrated_max.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_integrated_max_test.py'
       - 'public/agent_crypto_erith_ia/tools/verified_periods_test.py'
       - 'public/agent_crypto_erith_ia/tools/verified_periods_pages_smoke.py'
       - 'public/agent_crypto_erith_ia/tools/verified-periods-reader.test.mjs'
@@ -21,6 +23,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/build_historical_hourly_views.py'
       - 'public/agent_crypto_erith_ia/tools/historical_hourly_views_test.py'
       - 'public/agent_crypto_erith_ia/tools/build_verified_periods.py'
+      - 'public/agent_crypto_erith_ia/tools/build_btc_integrated_max.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_integrated_max_test.py'
       - 'public/agent_crypto_erith_ia/tools/verified_periods_test.py'
       - 'public/agent_crypto_erith_ia/tools/verified_periods_pages_smoke.py'
       - 'public/agent_crypto_erith_ia/tools/verified-periods-reader.test.mjs'
@@ -45,6 +49,100 @@ concurrency:
   group: agent-crypto-verified-hourly-history-${{ github.event.pull_request.number || 'main' }}
   cancel-in-progress: false
 jobs:
+  btc-integrated-max:
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      GH_TOKEN: ${{ github.token }}
+    concurrency:
+      group: btc-integrated-max-source-repair
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate BTC monthly original sources and no synthesized daily candles
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_btc_integrated_max.py
+          python public/agent_crypto_erith_ia/tools/btc_integrated_max_test.py
+          python public/agent_crypto_erith_ia/tools/build_btc_integrated_max.py --audit-only
+      - name: Reconstruct once for any changed verified source fingerprint
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/data/historical_archive_prototype")
+          dest=root/"btc_max_integrated"
+          source={k:hashlib.sha256((root/k).read_bytes()).hexdigest()
+            for k in ("top250_history_catalog/index.json",
+                      "btc_verified_gap_months/index.json",
+                      "calendar_year_hourly_shards/index.json")}
+          if (dest/"index.json").exists():
+              old=json.loads((dest/"index.json").read_text())
+              payload=dest/old.get("file","not-found")
+              if old.get("source_catalog_sha256")==source and payload.is_file() and hashlib.sha256(payload.read_bytes()).hexdigest()==old.get("sha256"):
+                  pathlib.Path(os.environ["RUNNER_TEMP"],"btc-max-unchanged").touch()
+                  print("NOOP: published BTC Max sources unchanged")
+          PY
+          if [[ -f "$RUNNER_TEMP/btc-max-unchanged" ]]; then exit 0; fi
+          python public/agent_crypto_erith_ia/tools/build_btc_integrated_max.py --output "$RUNNER_TEMP/btc_max_integrated"
+          python - <<'PY'
+          import gzip,hashlib,json,os,pathlib
+          folder=pathlib.Path(os.environ["RUNNER_TEMP"])/"btc_max_integrated"
+          idx=json.loads((folder/"index.json").read_text())
+          raw=(folder/idx["file"]).read_bytes()
+          assert len(raw)==idx["bytes"]
+          assert hashlib.sha256(raw).hexdigest()==idx["sha256"]
+          data=json.loads(gzip.decompress(raw))
+          assert len(data["rows"])==idx["bars"] and data["pair"]=="BTCUSDT"
+          march=next(x for x in data["source_months"] if x["month"]=="2023-03")
+          assert march["valid_daily_rows"]==30 and march["missing_source_minutes"]==80
+          print("VERIFIED BTC MAX",idx["bars"],"authentic days")
+          PY
+      - name: Commit independently without rewriting the existing certified Top5 windows
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if [[ -f "$RUNNER_TEMP/btc-max-unchanged" ]]; then exit 0; fi
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          for attempt in 1 2 3; do
+            git fetch origin main
+            for relative in top250_history_catalog/index.json btc_verified_gap_months/index.json calendar_year_hourly_shards/index.json; do
+              original=$(sha256sum "$root/$relative" | cut -d' ' -f1)
+              current=$(git show "origin/main:$root/$relative" | sha256sum | cut -d' ' -f1)
+              if [[ "$original" != "$current" ]]; then
+                echo "::error::Canonical source changed while reconstructing BTC Max"
+                exit 1
+              fi
+            done
+            git reset --hard origin/main
+            mkdir -p "$root/btc_max_integrated"
+            cp -a "$RUNNER_TEMP/btc_max_integrated/." "$root/btc_max_integrated/"
+            git add -- "$root/btc_max_integrated"
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              echo 'NOOP: new BTC Max already published'
+              exit 0
+            fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Publish verified gap-aware BTC Max native historical view'
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: btc-integrated-max-audit
+          path: ${{ runner.temp }}/btc_max_integrated/index.json
+          if-no-files-found: ignore
+          retention-days: 30
   public-pages-smoke:
     # Independent network audit: GitHub Pages bytes must match all committed SHAs.
     # No new scheduled workflow; this job belongs to the historical workflow.
