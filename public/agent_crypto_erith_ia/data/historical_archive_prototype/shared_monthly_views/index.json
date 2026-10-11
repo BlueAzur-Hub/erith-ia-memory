@@ -5,7 +5,7 @@
   "scope": "latest_verified_closed_month",
   "is_live": false,
   "max_is_all_time": false,
-  "archived_assets": 122,
+  "archived_assets": 123,
   "assets": [
     {
       "id": "bitcoin",
@@ -2395,6 +2395,27 @@
       "file": "chiliz.json.gz",
       "sha256": "3e3cdf098bc746b78d45608b660a1ae496aa0d07e85c7ad163f4d43accd33ee7",
       "bytes": 211006,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "circle-internet-group-bstock",
+      "rank": 218,
+      "name": "Circle Internet Group (bStocks Tokenized Stock)",
+      "symbol": "CRCLB",
+      "pair": "CRCLBUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-cd1f0d3bdca3",
+      "source_zip_sha256": "096263da02d1446597b44809cdaf147c39f154435d27ecaa2e739ccb803688d3",
+      "file": "circle-internet-group-bstock.json.gz",
+      "sha256": "7b8da050ed0d13217512c8d79aadb75f0513013f47bdf49e89b80cde3e572201",
+      "bytes": 226377,
       "series_counts": {
         "1m": 1440,
         "5m": 8640,
