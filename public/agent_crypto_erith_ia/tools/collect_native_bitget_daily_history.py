@@ -127,7 +127,7 @@ NAMED_SPOT_PROOFS=(
    "https://www.bitget.com/support/articles/12560603845590"),
 )
 
-def named_spot_candidates(minute,official):
+def named_spot_candidates(minute,official,daily=None):
     """CoinGecko exact-ID owner + Bitget named Spot project notice + live instrument."""
     need(minute.get("schema")==
          "aerith.public.ohlcv.top250.federated-native-archives.v1"
@@ -137,17 +137,28 @@ def named_spot_candidates(minute,official):
          "Untrusted Top250 or official Bitget Spot inventory")
     known={a["id"]:a for a in minute["assets"]}
     spot={a["id"]:a for a in official["assets"]}
+    prior_daily={a["id"] for a in (daily or {}).get("assets",[])}
+    need(daily is None or (daily.get("schema")==
+             "aerith.public.crypto.multiresolution-sources.v1"
+             and len(prior_daily)==daily.get("asset_count")
+             and len(prior_daily)==len(daily.get("assets",[]))),
+         "Untrusted existing native-daily source owners")
     need(len(known)==250,"Repeated CoinGecko ranked owner")
     selected=[]
     for cid,rank,sym,name,notice in NAMED_SPOT_PROOFS:
         a=known.get(cid)
         need(a and a["rank"]==rank and a["symbol"]==sym
-             and a["name"]==name and a["quote"]=="USDT" and a["months"]==0
+             and a["name"]==name and a["quote"]=="USDT"
              and len([x for x in known.values() if x["symbol"]==sym])==1,
              "Wrong or ambiguous named project CoinGecko identity: "+cid)
         need(notice.startswith("https://www.bitget.com/")
              and "/support/articles/" in notice,
              "Missing original project-named Bitget Spot listing proof")
+        # The official candidate census may stop listing already archived
+        # owners, especially after the minute federation catches up.
+        # Still validate their exact Top250 owner, but never reacquire them.
+        if a["months"]>0 or cid in prior_daily:
+            continue
         inst=spot.get(cid);pair=sym+"USDT"
         need(inst and inst["rank"]==rank and inst["symbol"]==sym
              and any(x.get("venue")=="bitget"
@@ -159,7 +170,7 @@ def named_spot_candidates(minute,official):
         selected.append({"id":cid,"rank":rank,"symbol":sym,"pair":pair,
                          "quote":"USDT","venue":"bitget",
                          "identity_evidence":notice})
-    need(len(selected)==len(NAMED_SPOT_PROOFS)
+    need(len({a["id"] for a in selected})==len(selected)
          and len({a["pair"] for a in selected})==len(selected),
          "Duplicated project Spot identity")
     return selected
@@ -170,7 +181,7 @@ def qualified_assets():
     minute=json.loads((source_proof.BASE/"top250_multisource_coverage/index.json").read_text())
     official=json.loads(source_proof.INSTRUMENTS.read_text())
     daily=json.loads((source_proof.BASE/"top250_multiresolution_sources/index.json").read_text())
-    candidates=named_spot_candidates(minute,official)
+    candidates=named_spot_candidates(minute,official,daily)
     candidates=filter_unarchived(candidates,minute,daily)
     # A strict ranked batch bound limits runtime. Others remain eligible
     # for later verified releases and are never counted as archived.
@@ -384,6 +395,12 @@ def main():
             "assets":owners,"native_interval":"1D",
             "query_from":"2017-01-01","end_exclusive":"2026-10-01",
             "published":False},sort_keys=True))
+        return
+    if not owners:
+        # An already committed immutable Release must not be re-downloaded or
+        # re-created after native 1m catches up or the daily registry is linked.
+        print("BITGET NATIVE DAILY NOOP: all qualified owners already archived; "
+              "no new release and no synthetic data",flush=True)
         return
     acquired,failed=collect(owners)
     if opts.probe:
