@@ -1,0 +1,157 @@
+{
+  "binance": {
+    "gap_source_catalog_sha256": "e205874d92c2df202487e7f607ccb9667c7dcd66d487f696809e791d8aece70e",
+    "native_1m_gap_minutes": 80,
+    "pair": "BTCUSDT",
+    "quote": "USDT",
+    "venue": "Binance Spot"
+  },
+  "binance_missing_1m_recovered": 0,
+  "coinbase_exchange": {
+    "all_80_minutes_present": true,
+    "conclusion": "historic_btc_usd_trading_verified_entire_interval",
+    "expected_minutes": 80,
+    "http_status": null,
+    "interval": "1m",
+    "minute_candles": 80,
+    "missing_minutes": 0,
+    "negative_or_invalid_rows": 0,
+    "outside_requested_window": 1,
+    "outside_samples_utc": [
+      "2023-03-24T14:00:00Z"
+    ],
+    "pair": "BTC-USD",
+    "positive_volume_minutes": 80,
+    "quote": "USD",
+    "requested_end_exclusive_utc": "2023-03-24T14:00:00Z",
+    "requested_first_open_utc": "2023-03-24T12:40:00Z",
+    "response_sha256": "f68982d5d668f08508eaefbf24b92258635183e830df1020c57d4ddbdfd56b1a",
+    "samples": [
+      {
+        "btc_volume": "13.07960663",
+        "close_usd": "27996.94",
+        "high_usd": "28011.48",
+        "low_usd": "27961.2",
+        "open_time_utc": "2023-03-24T12:40:00Z",
+        "open_usd": "27977.82"
+      },
+      {
+        "btc_volume": "29.23590617",
+        "close_usd": "27744.22",
+        "high_usd": "27855.33",
+        "low_usd": "27742.57",
+        "open_time_utc": "2023-03-24T13:20:00Z",
+        "open_usd": "27812.75"
+      },
+      {
+        "btc_volume": "33.15643263",
+        "close_usd": "28013.66",
+        "high_usd": "28025.07",
+        "low_usd": "27931.84",
+        "open_time_utc": "2023-03-24T13:59:00Z",
+        "open_usd": "27953.51"
+      }
+    ],
+    "source_status": "http_200",
+    "source_url": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2023-03-24T12%3A40%3A00Z&end=2023-03-24T14%3A00%3A00Z&granularity=60",
+    "venue": "Coinbase Exchange"
+  },
+  "comparing_not_replacing_binance_bars": true,
+  "data_represent_real_independent_venue": true,
+  "end_exclusive_utc": "2023-03-24T14:00:00Z",
+  "first_utc": "2023-03-24T12:40:00Z",
+  "incident": "Binance Spot outage 2023-03-24",
+  "kraken_spot": {
+    "exact_minute_trade_probes": 5,
+    "pair": "XBTUSD",
+    "probes": [
+      {
+        "conclusion": "historical_trade_verified_exact_minute",
+        "example": {
+          "btc_volume": "0.00273140",
+          "price_usd": "27977.50000",
+          "trade_time_utc": "2023-03-24T12:40:03Z"
+        },
+        "http_status": null,
+        "minute_open_utc": "2023-03-24T12:40:00Z",
+        "page_trade_count": 1000,
+        "response_sha256": "b2515b419053cea005805d45a22dd74cd0838ef0f6c94af9f4c0a71d6f027972",
+        "source_status": "http_200",
+        "source_url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1679661600000000000",
+        "trades_at_exact_minute": 19,
+        "verified_trade_in_this_minute": true
+      },
+      {
+        "conclusion": "historical_trade_verified_exact_minute",
+        "example": {
+          "btc_volume": "0.01199827",
+          "price_usd": "28016.30000",
+          "trade_time_utc": "2023-03-24T12:59:04Z"
+        },
+        "http_status": null,
+        "minute_open_utc": "2023-03-24T12:59:00Z",
+        "page_trade_count": 1000,
+        "response_sha256": "e899b9e9424106fcd3130e7e23b9dce45083da8a4155f41e6b2f3fc62e5dd758",
+        "source_status": "http_200",
+        "source_url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1679662740000000000",
+        "trades_at_exact_minute": 21,
+        "verified_trade_in_this_minute": true
+      },
+      {
+        "conclusion": "historical_trade_verified_exact_minute",
+        "example": {
+          "btc_volume": "0.03854010",
+          "price_usd": "27863.10000",
+          "trade_time_utc": "2023-03-24T13:19:05Z"
+        },
+        "http_status": null,
+        "minute_open_utc": "2023-03-24T13:19:00Z",
+        "page_trade_count": 1000,
+        "response_sha256": "b70e97b4bfd069b2788f7a8a235a836c6a476fe5df3406bc691c9eb1961e9f36",
+        "source_status": "http_200",
+        "source_url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1679663940000000000",
+        "trades_at_exact_minute": 166,
+        "verified_trade_in_this_minute": true
+      },
+      {
+        "conclusion": "historical_trade_verified_exact_minute",
+        "example": {
+          "btc_volume": "0.50000000",
+          "price_usd": "27845.00000",
+          "trade_time_utc": "2023-03-24T13:39:03Z"
+        },
+        "http_status": null,
+        "minute_open_utc": "2023-03-24T13:39:00Z",
+        "page_trade_count": 1000,
+        "response_sha256": "7c3bf7157f67fa3a559bfcd329fd973940659907064a3779786cbe01ba2f0b66",
+        "source_status": "http_200",
+        "source_url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1679665140000000000",
+        "trades_at_exact_minute": 62,
+        "verified_trade_in_this_minute": true
+      },
+      {
+        "conclusion": "historical_trade_verified_exact_minute",
+        "example": {
+          "btc_volume": "0.08847072",
+          "price_usd": "27936.80000",
+          "trade_time_utc": "2023-03-24T13:59:00Z"
+        },
+        "http_status": null,
+        "minute_open_utc": "2023-03-24T13:59:00Z",
+        "page_trade_count": 1000,
+        "response_sha256": "8c3754739c20e81bb1138b0c71e6fdec96ce51e7a03aab80beb015eb69f5581c",
+        "source_status": "http_200",
+        "source_url": "https://api.kraken.com/0/public/Trades?pair=XBTUSD&since=1679666340000000000",
+        "trades_at_exact_minute": 51,
+        "verified_trade_in_this_minute": true
+      }
+    ],
+    "quote": "USD",
+    "samples_attempted": 5,
+    "venue": "Kraken Spot"
+  },
+  "limitations": "Kraken Trades probe only 5 minutes, not all 80; Coinbase historical candle count reflects 1-minute OHLCV only if response available. Independent USD venues are not Binance USDT.",
+  "other_venues_trading_during_binance_outage": true,
+  "requested_minutes": 80,
+  "schema": "seven.crypto.btc.cross-venue-incident-evidence.v1"
+}
