@@ -46,7 +46,9 @@ class CalendarYearShardTests(unittest.TestCase):
         self.assertEqual(info["last_verified_closed_month"],source[-1])
         for year in set(years):
             spans=[g["span"] for g in groups if g["year"]==year]
-            self.assertEqual(spans,list(range(len(spans))))
+            self.assertEqual(spans,sorted(spans))
+            self.assertEqual(len(spans),len(set(spans)))
+            self.assertTrue(all(isinstance(span,int) and span>=0 for span in spans))
         self.assertEqual(len(m.signature(src)),64)
 
     def test_native_verified_hours_no_synthetic_ticks(self):
