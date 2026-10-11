@@ -53,7 +53,7 @@ def is_release_published(tag):
     return proc.returncode==0
 
 
-def plan(catalog,months=MAX_BATCH,has_gap=None):
+def plan(catalog,months=MAX_BATCH,has_gap=None,has_complete=None):
     require(1<=months<=MAX_BATCH,"Unbounded BTC batch")
     item,owner=btc_owner(catalog)
     known={x["month"] for x in item["months"]}
@@ -61,7 +61,8 @@ def plan(catalog,months=MAX_BATCH,has_gap=None):
     pending=[]
     cursor=month_before(floor)
     while cursor>=FIRST_BINANCE_SCAN and len(pending)<months:
-        if cursor not in known and not (has_gap and has_gap(cursor)):
+        if (cursor not in known and not (has_gap and has_gap(cursor))
+                and not (has_complete and has_complete(cursor))):
             pending.append(cursor)
         cursor=month_before(cursor)
     return pending,owner
@@ -93,7 +94,13 @@ def run(catalog,months=MAX_BATCH,collect=None,publish=None,exists=None,
         collect_gap=None,publish_partial=None,known_gap=None):
     has_gap=known_gap or ((lambda mo:False) if (collect or publish) else
                           (lambda mo:is_release_published(gap_tag(mo))))
-    pending,asset=plan(catalog,months,has_gap=has_gap)
+    # Existing Release tags are durable progress even before the scheduled
+    # canonical catalog incorporates them. Never repeatedly select the same
+    # six months while the catalog is catching up.
+    complete_remote=(lambda mo:is_release_published(
+        supplement.add_tag(mo,[{'id':IDENTITY,'pair':EXPECTED_PAIR}])))
+    remote_complete=complete_remote if (collect is None and publish is None) else None
+    pending,asset=plan(catalog,months,has_gap=has_gap,has_complete=remote_complete)
     do_collect=collect or (lambda month,folder:bulk.execute(
         month,"1m",folder,workers=1,limit=1,assets=[asset]))
     do_publish=publish or (lambda month,folder,index: supplement.publish(
