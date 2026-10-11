@@ -4,6 +4,8 @@ on:
     paths:
       - '.github/workflows/agent-crypto-top250-history-catalog.yml'
       - 'public/agent_crypto_erith_ia/tools/build_historical_top250_catalog.py'
+      - 'public/agent_crypto_erith_ia/tools/build_btc_gap_catalog.py'
+      - 'public/agent_crypto_erith_ia/tools/build_btc_gap_catalog_test.py'
       - 'public/agent_crypto_erith_ia/tools/historical_top250_catalog_test.py'
       - 'public/agent_crypto_erith_ia/tools/top250-history-catalog.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/top250-history-catalog.js'
@@ -14,6 +16,8 @@ on:
     paths:
       - '.github/workflows/agent-crypto-top250-history-catalog.yml'
       - 'public/agent_crypto_erith_ia/tools/build_historical_top250_catalog.py'
+      - 'public/agent_crypto_erith_ia/tools/build_btc_gap_catalog.py'
+      - 'public/agent_crypto_erith_ia/tools/build_btc_gap_catalog_test.py'
       - 'public/agent_crypto_erith_ia/tools/historical_top250_catalog_test.py'
       - 'public/agent_crypto_erith_ia/tools/top250-history-catalog.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/top250-history-catalog.js'
@@ -59,6 +63,7 @@ jobs:
           set -euo pipefail
           python -m py_compile public/agent_crypto_erith_ia/tools/build_historical_top250_catalog.py
           python public/agent_crypto_erith_ia/tools/historical_top250_catalog_test.py
+          python public/agent_crypto_erith_ia/tools/build_btc_gap_catalog_test.py
           node --check public/agent_crypto_erith_ia/administrator/js/top250-history-catalog.js
           node --test public/agent_crypto_erith_ia/tools/top250-history-catalog.test.mjs
       - name: Assemble 250 identity records from cryptographically checked Release manifests
@@ -77,14 +82,36 @@ jobs:
                   "candles":obj["native_1m_candles"],
                   "release_months":obj["release_months"]}))
           PY
+      - name: Verify BTC original gap Releases and build companion source-quality catalog
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/build_btc_gap_catalog.py \
+            --catalog "$RUNNER_TEMP/top250-catalog.json" \
+            --output "$RUNNER_TEMP/btc-gap-catalog.json"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"btc-gap-catalog.json"
+          j=json.loads(p.read_text())
+          assert j["schema"]=="seven.btc.source-quality-catalog.v1"
+          assert j["gap_months"]>0 and j["unique_months_total"]==j["complete_months_in_canonical"]+j["gap_months"]
+          assert j["unique_native_rows_total"]==j["complete_native_candles_in_canonical"]+j["gap_month_native_rows"]
+          print("BTC SOURCE-QUALIFIED COVERAGE",json.dumps({
+            "full_months":j["complete_months_in_canonical"],
+            "gap_months":j["gap_months"],
+            "unique_months":j["unique_months_total"],
+            "earliest_month":j["earliest_covered_month"]},sort_keys=True))
+          PY
       - name: Commit catalog only on main and never modify source Releases
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           target=public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_history_catalog/index.json
+          gap_target=public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_verified_gap_months/index.json
           mkdir -p "$(dirname "$target")"
           cp "$RUNNER_TEMP/top250-catalog.json" "$target"
-          git add -- "$target"
+          mkdir -p "$(dirname "$gap_target")"
+          cp "$RUNNER_TEMP/btc-gap-catalog.json" "$gap_target"
+          git add -- "$target" "$gap_target"
           git diff --cached --check
           if git diff --cached --quiet; then
             echo "NOOP: same Top250 verified month coverage"
@@ -100,7 +127,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: top250-historical-coverage-index
-          path: ${{ runner.temp }}/top250-catalog.json
+          path: |
+            ${{ runner.temp }}/top250-catalog.json
+            ${{ runner.temp }}/btc-gap-catalog.json
           if-no-files-found: error
           retention-days: 30
       - name: Protect Trader, charts and local caches
