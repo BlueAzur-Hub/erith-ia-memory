@@ -1,0 +1,70 @@
+name: Agent Crypto BTC Native Gap Recovery
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-btc-gap-recovery.yml'
+      - 'public/agent_crypto_erith_ia/tools/btc_gap_archive.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_gap_acquire.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_gap_acquire_test.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-btc-gap-recovery.yml'
+      - 'public/agent_crypto_erith_ia/tools/btc_gap_archive.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_gap_acquire.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_gap_acquire_test.py'
+  workflow_dispatch:
+    inputs:
+      month:
+        description: 'Original BTCUSDT 1m month YYYY-MM'
+        required: true
+        type: string
+        default: '2023-03'
+permissions:
+  contents: write
+concurrency:
+  group: btc-native-gap-recovery
+  cancel-in-progress: false
+jobs:
+  verify-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify no synthetic candles, bad checksum refusal, gap ledger and SQLite
+        run: |
+          python public/agent_crypto_erith_ia/tools/btc_gap_acquire_test.py
+      - name: Download original Binance Spot ZIP with official CHECKSUM
+        env:
+          BTC_MONTH: ${{ github.event_name == 'workflow_dispatch' && inputs.month || '2023-03' }}
+        run: |
+          set -euo pipefail
+          [[ "$BTC_MONTH" =~ ^20[0-9]{2}-(0[1-9]|1[0-2])$ ]]
+          python public/agent_crypto_erith_ia/tools/btc_gap_acquire.py --month "$BTC_MONTH" --output "$RUNNER_TEMP/btc-month"
+      - name: Upload actual ZIP, SQLite, source CHECKSUM and evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: btc-official-native-source
+          path: ${{ runner.temp }}/btc-month/*
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish immutable research Release only after main merge
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BTC_MONTH: ${{ github.event_name == 'workflow_dispatch' && inputs.month || '2023-03' }}
+        run: |
+          set -euo pipefail
+          tag="btc-spot-native-gap-$BTC_MONTH"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "::error::Existing immutable release $tag must be inspected; refusing overwrite"
+            exit 1
+          fi
+          gh release create "$tag" "$RUNNER_TEMP/btc-month/"* --target "$GITHUB_SHA"             --title "BTCUSDT official native 1m gap-aware source $BTC_MONTH"             --notes "Original Binance Spot source ZIP, official CHECKSUM, SHA-256 verified manifest, queryable SQLite. No synthetic candles. RESEARCH ONLY: not a canonical full-month archive; do not combine USDT with USD."             --latest=false
+      - name: No trading or UI changes
+        if: always()
+        run: |
+          git diff --exit-code -- public/agent_crypto_erith_ia/trader/             public/agent_crypto_erith_ia/administrator/             public/agent_crypto_erith_ia/core/
