@@ -380,6 +380,8 @@ CHAINS={
 }
 CG_PLATFORMS="https://api.coingecko.com/api/v3/coins/list?include_platform=true"
 BITGET_COINS="https://api.bitget.com/api/v2/spot/public/coins"
+GATE_COINS="https://api.gateio.ws/api/v4/spot/currencies"
+KUCOIN_COINS="https://api.kucoin.com/api/v3/currencies"
 
 def contract_address(value):
     if not isinstance(value,str):return None
@@ -461,7 +463,8 @@ def contract_matches(queue,archived,official,coins,bitget_coins):
     return result
 
 def public_inventory(url,max_size):
-    require(url in (CG_PLATFORMS,BITGET_COINS),"Unapproved inventory source")
+    require(url in (CG_PLATFORMS,BITGET_COINS,GATE_COINS,KUCOIN_COINS),
+            "Unapproved inventory source")
     req=urllib.request.Request(url,headers={
         "User-Agent":"SevenHeaven-Coffre-ContractProof/1.0",
         "Accept":"application/json"})
