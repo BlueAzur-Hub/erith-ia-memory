@@ -1,6 +1,6 @@
 (()=>{
 "use strict";
-const BUILD="40.6.625";
+const BUILD="40.6.626";
 const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
@@ -58,6 +58,14 @@ function mount(){
     marketSwitch.disabled=true;
   }
 
+  // Trader-only BTC school case. Replaces the legacy OKB panel without changing Administrator behavior.
+  if(!doc.getElementById("traderBtcCaseStudyScript")){
+    const script=doc.createElement("script");
+    script.id="traderBtcCaseStudyScript";
+    script.src=new URL("../trader/trader-btc-case-study.js?case=btc",doc.baseURI).href;
+    doc.head.appendChild(script);
+  }
+
   // Inject only a standalone, read-only R9 viewer into the SAME runtime.
   if(!doc.getElementById("traderHistoricalPanelScript")){
     const script=doc.createElement("script");
@@ -65,23 +73,9 @@ function mount(){
     script.src=new URL("../trader/trader-historical-panel.js?reader=top50-cohorts",doc.baseURI).href;
     doc.head.appendChild(script);
   }
-  // New read-only PAPER preparation view, separate from all strategy owners.
-  if(!doc.getElementById("traderPaperPreparationScript")){
-    const script=doc.createElement("script");
-    script.id="traderPaperPreparationScript";
-    script.src=new URL("../trader/trader-paper-preparation.js?v=proof-link-20261008",doc.baseURI).href;
-    doc.head.appendChild(script);
-  }
-  // R3 · T0/G1 est une vue d'observation; le dossier Paper reste l'unique parent.
-  if(!doc.getElementById("traderPaperT0Script")){
-    const script=doc.createElement("script");
-    script.id="traderPaperT0Script";
-    script.src=new URL("../trader/trader-paper-t0.js?view=paper-one-shot-safe-stop",doc.baseURI).href;
-    const paper=doc.getElementById("traderPaperPreparationScript");
-    if(paper&&!doc.getElementById("traderPaperPreparation"))
-      paper.addEventListener("load",()=>doc.head.appendChild(script),{once:true});
-    else doc.head.appendChild(script);
-  }
+  const traderBadge=doc.getElementById("traderSurfaceBadge");
+  if(traderBadge)traderBadge.textContent="TRADER · "+BUILD;
+
   doc.title="ERITH.IA · Trading Desk — "+BUILD;
   try{
     win.dispatchEvent(new CustomEvent("agent-crypto:trader-runtime-mirror",{detail:{
@@ -93,10 +87,9 @@ function mount(){
       header_injection:false,
   minimum_nav:true,
   minimum_nav_items:Object.freeze(["Livecheck","Marché","Graphique","Aether"]),
-      minimum_nav:true,
-      minimum_nav_items:["Livecheck","Marché","Graphique","Aether"],
-      okb_case_study:true,
-      okb_case_study_owner:"administrator/index.html#traderOkbCaseStudy"
+      btc_case_study:true,
+      btc_case_study_owner:"trader/trader-btc-case-study.js",
+      strategy_a_in_trader:false
     }}));
   }catch(_){}
 
@@ -128,7 +121,8 @@ globalThis.AgentCryptoTraderRuntimeMirror=Object.freeze({
   real_orders:false,
   native_header:true,
   header_injection:false,
-  okb_case_study:true,
-  okb_case_study_owner:"administrator/index.html#traderOkbCaseStudy"
+  btc_case_study:true,
+  btc_case_study_owner:"trader/trader-btc-case-study.js",
+  strategy_a_in_trader:false
 });
 })();
