@@ -83,8 +83,20 @@ select:focus-visible{outline:2px solid #a5dcec}#r6-table{max-height:27vh;margin-
   <button id="shared-read" type="button" disabled>Lire les bougies de l'actif</button>
  </div>
  <p id="shared-status" class="muted" aria-live="polite">Chargement de l'index historique…</p>
+ <p id="shared-explanation" class="note" aria-live="polite"><b>Lecture :</b> une bougie représente une période de cotation. Le graphique Max peut couvrir plusieurs années, mais ce ne sont pas des cours en direct. Sélectionne une crypto et une période pour commencer.</p>
+ <p id="shared-legend" class="fine" aria-label="Légende des bougies et des volumes"><span style="color:#69cbae;font-weight:700">■ Vert : clôture au-dessus de l'ouverture</span> · <span style="color:#f29289;font-weight:700">■ Rouge : clôture sous l'ouverture</span> · <span style="color:#d9aa59;font-weight:700">■ Orange : archive absente</span> · <b>Volume : quantité échangée en crypto (pas en USDT)</b></p>
+ <p id="shared-gaps" class="fine" aria-live="polite">Les dates et la durée des archives manquantes seront indiquées ici.</p>
+ <div class="toolbar" aria-label="Navigation dans l'historique" style="margin:9px 0">
+  <span class="fine"><b>Explorer l'histoire :</b></span>
+  <button type="button" id="shared-prev" disabled aria-label="Afficher la période précédente">← Avant</button>
+  <button type="button" id="shared-zoom-in" disabled aria-label="Zoomer sur les bougies">Zoom +</button>
+  <button type="button" id="shared-zoom-out" disabled aria-label="Dézoomer sur les bougies">Zoom −</button>
+  <button type="button" id="shared-next" disabled aria-label="Afficher la période suivante">Après →</button>
+  <button type="button" id="shared-reset" disabled aria-label="Afficher toutes les bougies sélectionnées">Tout voir</button>
+  <span id="shared-range" class="fine" aria-live="polite">Affichage complet · navigation disponible pour les cinq cryptos pilotes.</span>
+ </div>
  <canvas id="shared-curve" width="1100" height="370" style="display:block;width:100%;max-width:1100px;background:#0b1a29;border:1px solid #34516b;border-radius:8px" role="img" aria-label="Bougies historiques OHLC, prix et volumes authentiques en USDT"></canvas>
- <p id="shared-hover" class="fine" aria-live="polite">Survolez les bougies pour lire les dates, les prix et les volumes. Une lacune reste visible et n’est jamais reliée.</p>
+ <p id="shared-hover" class="fine" aria-live="polite">Survole le graphique : dates, ouverture, plus haut, plus bas, clôture et volume seront détaillés ici. Tu peux aussi lire les valeurs exactes dans le tableau situé dessous.</p>
  <p id="shared-source" class="fine">Dernier mois clos disponible seulement, non live. Aucune conversion implicite USDT → USD.</p>
  <div class="scroll"><table id="shared-table"><tr><td>Lire un actif pour afficher ses dernières bougies.</td></tr></table></div>
 </details>

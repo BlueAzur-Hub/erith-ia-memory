@@ -239,9 +239,9 @@ function chart(rows){
  ctx.stroke();
 }
 let visual=null,hoverInstalled=false;
-function verifiedChart(rows,interval,gaps){
+function verifiedChart(rows,interval,gaps,pair){
  const canvas=byId("shared-curve"),ctx=canvas.getContext("2d"),w=canvas.width,h=canvas.height;
- const left=64,right=w-25,top=28,bottom=h-35,priceBottom=Math.floor(h*.71);
+ const left=94,right=w-77,top=30,bottom=h-35,priceBottom=Math.floor(h*.71);
  const volumeTop=Math.floor(h*.77),volumeBottom=h-34,space=Math.max(1,right-left);
  const begin=rows[0][0],finish=rows.at(-1)[0],step=({"1m":60000,"5m":300000,"1h":3600000,"1d":86400000})[interval];
  const xOf=t=>left+(t-begin)/(finish-begin||1)*space;
@@ -278,15 +278,17 @@ function verifiedChart(rows,interval,gaps){
   ctx.strokeStyle="#d9aa59";ctx.beginPath();ctx.moveTo(gx,top);ctx.lineTo(gx,volumeBottom);ctx.stroke();
  }
  ctx.textAlign="left";ctx.fillStyle="#bfd5e4";
- ctx.fillText("Binance Spot · "+interval+" · USDT · prix",left,17);
- ctx.fillText("Volume base",left,volumeTop-5);
- const maxVolume=Math.max(...groups.map(g=>g.base),1);
+ ctx.fillText(pair.replace("USDT","/USDT")+" · bougies "+interval+" · prix en USDT",left,17);
+ ctx.fillText("Volume moyen par bougie ("+pair.replace("USDT","")+")",left,volumeTop-5);
+ // Buckets contain different numbers of genuine candles. Compare *mean* native volume,
+ // never raw bucket sums, otherwise a multi-day column looks artificially enormous.
+ const maxVolume=Math.max(...groups.map(g=>g.base/g.n),1);
  const choice=byId("shared-style")?.value||"candles";
  let drawing=false;
  for(const g of groups){
   const x=xOf((g.first+g.last)/2),bull=g.c>=g.o;
   const color=bull?"#69cbae":"#f29289";
-  const barHeight=(g.base/maxVolume)*(volumeBottom-volumeTop);
+  const barHeight=((g.base/g.n)/maxVolume)*(volumeBottom-volumeTop);
   ctx.fillStyle=bull?"rgba(89,183,152,.45)":"rgba(220,115,112,.45)";
   ctx.fillRect(x-2,volumeBottom-barHeight,4,barHeight);
   if(choice==="line"){
@@ -301,17 +303,26 @@ function verifiedChart(rows,interval,gaps){
   }
  }
  if(choice==="line"&&drawing){ctx.strokeStyle="#8cd7ef";ctx.lineWidth=1.5;ctx.stroke();}
- ctx.textAlign="center";ctx.fillStyle="#b8d5e4";
+ ctx.fillStyle="#b8d5e4";
  for(let i=0;i<=4;i++){
   const time=begin+(finish-begin)*i/4,x=xOf(time);
+  ctx.textAlign=i===0?"left":i===4?"right":"center";
   ctx.fillText(new Date(time).toLocaleDateString("fr-FR",{timeZone:"UTC"}),x,h-12);
  }
- visual={canvas,groups,xOf};
+ visual={canvas,groups,xOf,gaps:gaps||[],pair};
  if(!hoverInstalled&&typeof canvas.addEventListener==="function"){
   canvas.addEventListener("pointermove",ev=>{
    if(!visual)return;
    const bounds=visual.canvas.getBoundingClientRect();
    const at=(ev.clientX-bounds.left)*visual.canvas.width/bounds.width;
+   for(const gap of visual.gaps){
+    if(at>=visual.xOf(gap.start_ms)&&at<=visual.xOf(gap.end_exclusive_ms)){
+     byId("shared-hover").textContent="ARCHIVES ABSENTES : "+dateOnly(gap.start_ms)+
+       " → "+dateOnly(gap.end_exclusive_ms-86400000)+" · "+
+       gap.missing_bars+" bougies manquantes. Aucun prix inventé.";
+     return;
+    }
+   }
    let g=null,distance=Infinity;
    for(const item of visual.groups){
     const dx=Math.abs(visual.xOf((item.first+item.last)/2)-at);
@@ -322,35 +333,97 @@ function verifiedChart(rows,interval,gaps){
    byId("shared-hover").textContent=
      format(g.first)+(g.n>1?" → "+format(g.last):"")+
      " · O "+fmt(g.o)+" · H "+fmt(g.h)+" · B "+fmt(g.l)+" · C "+fmt(g.c)+
-     " USDT · Vol "+fmt(g.base)+" · Tx "+fmt(g.trades)+
-     (g.n>1?" · Regroupement visuel de "+g.n+" bougies réelles":"");
+     " USDT · Vol total "+fmt(g.base)+" "+visual.pair.replace("USDT","")+
+     " · Vol moyen "+fmt(g.base/g.n)+" par bougie · Transactions "+fmt(g.trades)+
+     (g.n>1?" · "+g.n+" bougies réelles regroupées à l’écran":"");
   });
   hoverInstalled=true;
  }
 }
+const dateOnly=ms=>new Date(ms).toLocaleDateString("fr-FR",{timeZone:"UTC",day:"2-digit",month:"long",year:"numeric"});
+let activeCertified=null,displayStart=0,displayEnd=0;
+const navigationIds=["shared-prev","shared-zoom-in","shared-zoom-out","shared-next","shared-reset"];
+function drawWindow(){
+ if(!activeCertified)return;
+ const v=activeCertified,rows=v.rows.slice(displayStart,displayEnd);
+ if(!rows.length)return;
+ const ms=({"1m":60000,"5m":300000,"1h":3600000,"1d":86400000})[v.interval];
+ const gaps=v.gaps.filter(g=>g.start_ms>=rows[0][0]&&g.end_exclusive_ms<=rows.at(-1)[0]+ms);
+ verifiedChart(rows,v.interval,gaps,v.pair);
+ byId("shared-range").textContent="Affichage : "+dateOnly(rows[0][0])+" → "+
+    dateOnly(rows.at(-1)[0])+" · "+rows.length.toLocaleString("fr-FR")+
+    " bougies visibles / "+v.rows.length.toLocaleString("fr-FR")+
+    " dans l'archive. Zoom sans téléchargement.";
+ byId("shared-prev").disabled=displayStart===0;
+ byId("shared-next").disabled=displayEnd===v.rows.length;
+ byId("shared-zoom-in").disabled=rows.length<=48;
+ byId("shared-zoom-out").disabled=rows.length===v.rows.length;
+ byId("shared-reset").disabled=rows.length===v.rows.length;
+}
+function moveWindow(direction){
+ if(!activeCertified)return;
+ const total=activeCertified.rows.length,span=displayEnd-displayStart;
+ const shift=Math.max(1,Math.floor(span*.75))*direction;
+ displayStart=Math.max(0,Math.min(total-span,displayStart+shift));
+ displayEnd=displayStart+span;
+ drawWindow();
+}
+function zoomWindow(inward){
+ if(!activeCertified)return;
+ const total=activeCertified.rows.length,old=displayEnd-displayStart;
+ const span=inward?Math.max(48,Math.floor(old/2)):Math.min(total,old*2);
+ // Zoom towards the newest observations in the currently selected window.
+ displayStart=Math.max(0,Math.min(total-span,displayEnd-span));
+ displayEnd=displayStart+span;
+ drawWindow();
+}
 function display(view,metadata){
  const certified=metadata.scope==="certified-core5";
- visual=null;
- if(certified)verifiedChart(view.rows,view.interval,view.gaps);
- else chart(view.rows);
+ visual=null;activeCertified=null;
+ if(certified){
+  activeCertified=view;displayStart=0;displayEnd=view.rows.length;
+  drawWindow();
+ }else{
+  chart(view.rows);
+  navigationIds.forEach(id=>byId(id).disabled=true);
+  byId("shared-range").textContent="Navigation détaillée réservée aux cinq archives certifiées.";
+  byId("shared-explanation").textContent="Lecture historique de "+view.pair+
+    " · cotation en USDT, pas un prix en direct.";
+  byId("shared-gaps").textContent="Historique hérité : couverture limitée aux périodes publiées pour cet actif.";
+ }
  const suffix=certified?" · SHA-256 vérifié · "+view.period+" · "+
    (view.gaps.length?view.gaps.length+" interruption(s) documentée(s)":"aucune lacune"):
    " · périodes suivantes lues sans téléchargement";
  byId("shared-status").textContent="Vérifié · "+view.pair+" · "+view.rows.length.toLocaleString("fr-FR")+
    " bougies "+view.interval+suffix;
  byId("shared-source").textContent=certified?
-   "Binance Spot · USDT natif · "+format(view.rows[0][0])+" → "+format(view.rows.at(-1)[0])+
-   " · 12 mois clos (2025-10 → 2026-09) validés à la minute · "+
-   "Max = partitions historiques matérialisées, PAS création de l'actif · "+
-   "ruptures non raccordées · jamais temps réel ni USD converti":
+   "Binance Spot · "+view.pair+" · prix cotés en USDT · "+dateOnly(view.rows[0][0])+" → "+dateOnly(view.rows.at(-1)[0])+
+   " · Derniers 12 mois clos vérifiés à la minute (oct. 2025 à sept. 2026) ; Max inclut d’autres partitions annuelles archivées · "+
+   "Aucune interpolation · pas de prix en direct ni de conversion en USD":
    (metadata.source==="Bitget Spot"?"Bitget Spot (7 champs natifs, sans transactions)":"Binance Spot")+
    " · "+view.quote+" · mois "+metadata.month+
    " · "+format(view.rows[0][0])+" → "+format(view.rows.at(-1)[0])+
    " · source native : "+metadata.native_1m_count.toLocaleString("fr-FR")+
    " bougies 1m"+(metadata.months?" · "+metadata.months+" mois validés":"")+
    " · pas de temps réel · Max = historique contigu archivé, pas historique total";
+ if(certified){
+  const step=({"1m":60000,"5m":300000,"1h":3600000,"1d":86400000})[view.interval];
+  const begin=dateOnly(view.rows[0][0]),end=dateOnly(view.rows.at(-1)[0]);
+  const period=view.period==="Max"?"Max (toutes les partitions publiées)":view.period;
+  byId("shared-explanation").textContent=
+    "VOUS REGARDEZ : "+view.pair+" · "+period+" · du "+begin+" au "+end+
+    " · "+view.rows.length.toLocaleString("fr-FR")+" bougies de "+
+    (view.interval==="1d"?"1 jour":view.interval==="1h"?"1 heure":view.interval==="1m"?"1 minute":"5 minutes")+
+    ". Cotation historique Binance Spot USDT, pas les prix d’aujourd’hui.";
+  byId("shared-gaps").textContent=view.gaps.length?
+    "ATTENTION — archive incomplète : "+view.gaps.map(g=>
+      "du "+dateOnly(g.start_ms)+" au "+dateOnly(g.end_exclusive_ms-step)+
+      " ("+g.missing_bars+" "+(view.interval==="1d"?"jours":"bougies")+" sans données)").join(" ; ")+
+    ". Bande orange = absence réelle d’archives, pas une chute du prix.":
+    "COUVERTURE : aucune lacune dans la période affichée.";
+ }
  byId("shared-hover").textContent=certified?
-   "Survol : prix, volumes et transactions. Un groupe visuel n'est pas une bougie native supplémentaire.":
+   "Survole les bougies pour voir les cours et les volumes exacts ; les colonnes condensées portent leur nombre de bougies sources.":
    "Courbe historique · aucun prix inventé · source en USDT.";
  const node=byId("shared-table"),head=document.createElement("tr");
  const columns=certified?["UTC","Ouverture","Haut","Bas","Clôture","Volume base","Volume quote","Transactions"]:
@@ -425,7 +498,17 @@ byId("shared-period")?.addEventListener("change",()=>{
     Object.hasOwn({"60j":1,"90j":1,"1an":1,"Max":1},byId("shared-period").value) ||
     cache.has(byId("shared-asset").value))void show();
 });
-byId("shared-style")?.addEventListener("change",()=>{if(visual)void show();});
+byId("shared-style")?.addEventListener("change",()=>{
+ if(activeCertified)drawWindow();else if(visual)void show();
+});
+byId("shared-prev")?.addEventListener("click",()=>moveWindow(-1));
+byId("shared-next")?.addEventListener("click",()=>moveWindow(1));
+byId("shared-zoom-in")?.addEventListener("click",()=>zoomWindow(true));
+byId("shared-zoom-out")?.addEventListener("click",()=>zoomWindow(false));
+byId("shared-reset")?.addEventListener("click",()=>{
+ if(!activeCertified)return;
+ displayStart=0;displayEnd=activeCertified.rows.length;drawWindow();
+});
 byId("shared-asset")?.addEventListener("change",()=>{
  if(window.SevenVerifiedPeriods?.isPilot(byId("shared-asset").value))void show();
  else byId("shared-status").textContent="Actif sélectionné · cliquer pour lire le mois archivé";
