@@ -40,6 +40,38 @@ class BitgetFederationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"original Spot pair"):
             b.source_candidates(self.catalog,altered,self.spot,live)
 
+    def test_verified_bitget_syrup_remains_valid_after_new_binance_months(self):
+        import copy
+        live=json.loads(b.FEDERATED.read_text())
+        # Real current source state: SYRUP was Bitget Spot first, then
+        # authentic Binance ZIP backfill added a month for the same owner.
+        syrup=next(a for a in self.catalog["assets"] if a["id"]=="syrup")
+        original=next(a for a in live["assets"] if a["id"]=="syrup")
+        self.assertTrue(syrup["months"])
+        self.assertEqual(original["source"],"Bitget Spot native 1m HTTPS")
+        selected=b.source_candidates(self.catalog,self.exact,self.spot,live)
+        self.assertIn("syrup",selected)
+        self.assertEqual(selected["syrup"]["pair"],"SYRUPUSDT")
+        alt={"id":"syrup","months":1,"native_1m_count":43200}
+        # Unchecked overlap remains forbidden; new source owner or rows
+        # cannot silently overwrite Binance's native 1m primary series.
+        with self.assertRaisesRegex(ValueError,"Conflicting Binance/Bitget"):
+            b.federate(self.catalog,[alt])
+        joined=b.federate(self.catalog,[alt],verified_overlap={"syrup"})
+        self.assertEqual(joined["archived_assets"],self.catalog["archived_assets"])
+        self.assertEqual(joined["native_1m_candles"],self.catalog["native_1m_candles"])
+        self.assertEqual(joined["bitget_archived_assets"],0)
+        updated=next(a for a in joined["assets"] if a["id"]=="syrup")
+        self.assertEqual(updated["source"],"Binance Spot official native 1m ZIPs")
+        self.assertEqual(updated["native_1m_count"],syrup["candles"])
+        altered=copy.deepcopy(self.exact)
+        proof=next(a for a in altered["results"] if a["id"]=="syrup")
+        proof["markets"]=[]
+        with self.assertRaisesRegex(ValueError,"original Spot pair"):
+            b.source_candidates(self.catalog,altered,self.spot,live)
+        with self.assertRaisesRegex(ValueError,"not verified"):
+            b.federate(self.catalog,[],verified_overlap={"syrup"})
+
     def fixture(self,count=None,asset=None,month="2026-09"):
         asset=asset or self.asset
         tag=f"crypto-spot-bitget-{month}-1m-{asset['id']}"
