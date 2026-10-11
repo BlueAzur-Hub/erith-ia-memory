@@ -18,6 +18,7 @@ import tempfile
 import build_historical_shared_views as shared
 import build_historical_btc_view as candle
 import build_historical_year_depth as depth
+import yearly_shard_reuse
 
 HOME=shared.HOME
 CATALOG=shared.CATALOG
@@ -91,10 +92,17 @@ def aggregate_group(asset,group,temp_root):
             "native_1m_count":minutes,"interval":"1h",
             "columns":candle.COLS,"source_months":proven,"series":points}
 
-def build_asset(info,asset,root):
+def build_asset(info,asset,root,previous_asset=None,published_root=None):
     need(ASSET.fullmatch(asset["id"]) is not None,"Unsafe CoinGecko asset ID")
     files=[]
     for group in annual_groups(info,asset):
+        cached=(yearly_shard_reuse.reuse(group,previous_asset,published_root,shared.digest)
+                if published_root is not None else None)
+        if cached is not None:
+            files.append(cached)
+            print('REUSED VERIFIED YEAR SHARD '+json.dumps({'id':asset['id'],
+                  'year':group['year'],'span':group['span']},sort_keys=True),flush=True)
+            continue
         data=aggregate_group(asset,group,root)
         compressed=shared.pack(data)
         # Immutable source growth must create a NEW yearly artifact rather
@@ -144,12 +152,15 @@ def build(catalog,folder,limit=2,workers=2):
     previous_file=folder/"index.json"
     previous=json.loads(previous_file.read_text()) if previous_file.exists() else None
     existing=verify_existing(previous,folder,catalog)
+    previous_by_id={x['id']:x for x in (previous or {}).get('assets',[])
+                    if isinstance(x,dict) and isinstance(x.get('id'),str)}
     candidates_all=candidates(catalog)
     queued=[(info,row) for info,row in candidates_all if row["id"] not in existing]
     picked=queued[:limit]
     with tempfile.TemporaryDirectory(prefix="seven-yearly-view-") as td:
         with ThreadPoolExecutor(max_workers=workers) as pool:
-            tasks={pool.submit(build_asset,info,row,Path(td)):row
+            tasks={pool.submit(build_asset,info,row,Path(td),
+                    previous_by_id.get(row['id']),folder):row
                    for info,row in picked}
             for job in as_completed(tasks):
                 row=tasks[job]
