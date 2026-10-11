@@ -171,9 +171,9 @@ class MultiResolutionRegistryTests(unittest.TestCase):
         have={a["id"] for a in minute["assets"] if a["native_1m_count"]>0}
         self.assertNotIn("ultima",have)
         native={a["id"] for a in registry["assets"]}
-        self.assertEqual(len(have|native),194)
-        self.assertEqual(registry["asset_count"],53)
-        self.assertEqual(registry["native_daily_candles"],50975)
+        self.assertGreaterEqual(len(have|native),198)
+        self.assertGreaterEqual(registry["asset_count"],57)
+        self.assertGreaterEqual(registry["native_daily_candles"],51476)
 
     def test_ultima_source_cannot_silently_claim_earlier_candles_or_usd(self):
         registry,minute=self.source()
@@ -291,17 +291,20 @@ class MultiResolutionRegistryTests(unittest.TestCase):
     def test_named_bitget_source_proof_requires_original_project_notice(self):
         x,c=self.source()
         named=next(a for a in x["assets"]
-                   if a.get("source_attestation")=="original-named-spot-listing")
+                   if a.get("source_attestation")=="original-named-spot-listing"
+                   and a["venue"]=="Bitget Spot")
         self.assertIn("/support/articles/",named["identity_evidence"])
         self.assertEqual(len([a for a in x["assets"]
-             if a.get("source_attestation")=="original-named-spot-listing"]),6)
+             if a.get("source_attestation")=="original-named-spot-listing"
+             and a["venue"]=="Bitget Spot"]),6)
         for field,value in (("source_attestation","unproven"),
                             ("identity_evidence","https://example.net/fake"),
                             ("identity_evidence","https://www.bitget.com/price/BTC"),
                             ("instrument_evidence","https://example.net/instrument")):
             bad=copy.deepcopy(x)
             entry=next(a for a in bad["assets"]
-                       if a.get("source_attestation")=="original-named-spot-listing")
+                       if a.get("source_attestation")=="original-named-spot-listing"
+                       and a["venue"]=="Bitget Spot")
             entry[field]=value
             with self.subTest(field=field),self.assertRaises(ValueError):
                 m.check_registry(bad,c)
@@ -332,6 +335,58 @@ class MultiResolutionRegistryTests(unittest.TestCase):
         # The same 1m month may already exist; never count its owner twice.
         self.assertGreater(c["assets"][68]["native_1m_count"],0)
         self.assertEqual(c["assets"][208]["id"],"vision-3")
+
+    def test_kraken_four_true_daily_release_owners_sha_native_quotes_and_gaps(self):
+        index,minute=self.source()
+        sources={a["id"]:a for a in m.check_registry(index,minute)}
+        expected={
+          "euro-coin":(116,"EURC","EURC/USDC","USDC",378,0,
+                      "8978c8b0b843998a25a00cbc262b398d30f4b52d21c5c6a54c815a90a24be14b"),
+          "sofiusd":(139,"SOFID","SOFID/USDT","USDT",18,9,
+                     "4bd767992959c84c008d19623d531207bb6e3f48fd527aebb2105bc54167a96a"),
+          "apxusd":(145,"APXUSD","APXUSD/USDC","USDC",39,121,
+                    "404dee26d4e816a60bc915f2f7815b7ef548ec35a37abdbc9dfdd1870ff6d68c"),
+          "cash-4":(248,"CASH","CASH/USDC","USDC",66,175,
+                    "9e6d0d6c2e434d0bd97b8436dafccdee23ed95e5f5d2bce0662e254ee77efc7d")
+        }
+        for cid,(rank,sym,pair,quote,count,gaps,digest) in expected.items():
+            with self.subTest(cid=cid):
+                source=sources[cid]
+                self.assertEqual((source["rank"],source["symbol"],
+                    source["market"],source["quote"],source["venue"]),
+                    (rank,sym,pair,quote,"Kraken Spot"))
+                self.assertEqual((source["native_candles"],
+                    source["gaps_within_observed_span"]),(count,gaps))
+                self.assertEqual(source["sha256"],digest)
+                self.assertEqual(source["release_tag"],
+                    "crypto-kraken-spot-native-daily-2026-09-1455fca808cb")
+                self.assertEqual(source["original_source_api"],
+                    "https://api.kraken.com/0/public/OHLC")
+                self.assertIn("/asset-listings/",source["identity_evidence"])
+                self.assertEqual(source["native_session_start_modulo_utc_day_ms"],0)
+        self.assertEqual(sum(x[4] for x in expected.values()),501)
+        self.assertGreaterEqual(index["asset_count"],57)
+        self.assertGreaterEqual(index["native_daily_candles"],51476)
+        minute_ids={a["id"] for a in minute["assets"] if a["native_1m_count"]>0}
+        self.assertFalse(set(expected)&minute_ids)
+        self.assertEqual(len(minute_ids|set(sources)),198)
+
+    def test_reject_forged_kraken_original_owner_quote_dates_and_provider(self):
+        index,minute=self.source()
+        for field,spoof in (
+            ("rank",999),("quote","USD"),("venue","KuCoin Spot"),
+            ("market","SOFID/USD"),("source_attestation","unverified"),
+            ("identity_evidence","https://example.invalid/listed"),
+            ("first_listed_ms",1540000000000),
+            ("original_source_api","https://example.invalid/ohlc"),
+            ("instrument_evidence","https://example.invalid/source"),
+            ("gaps_within_observed_span",0),("sha256","0"*63)
+        ):
+            altered=copy.deepcopy(index)
+            ref=next(a for a in altered["assets"] if a["id"]=="sofiusd")
+            ref[field]=spoof
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                m.check_registry(altered,minute)
 
     def test_reject_wrong_rank_coin_id_or_spurious_asset(self):
         for mode in ("wrong ID","wrong rank","duplicate"):
