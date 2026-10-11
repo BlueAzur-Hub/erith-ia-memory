@@ -1,0 +1,255 @@
+# Source: immutable ranked Top250 CoinGecko identities as archived in Seven Heaven historical_archive_prototype (GitHub main)
+# Snapshot status: 2026-10-11; native 1m and native 1D are DIFFERENT resolutions. Provider USDC/USDT are never converted to USD.
+# Data files: top250_multisource_coverage/index.json + top250_multiresolution_sources/index.json
+# Data files (OHLCV original): immutable GitHub Releases referenced by source catalogues; CSV contains METADATA, not the raw OHLCV bars.
+rank,coingecko_id,symbol,name,archive_status,native_1m_candles,native_1m_source,native_1d_candles,native_1d_source,native_1d_market,native_1d_quote,native_1d_first_utc,native_1d_last_utc,native_1d_missing_calendar_days,native_1d_release_tag
+1,bitcoin,BTC,Bitcoin,1m,2191680,Binance Spot official native 1m ZIPs,0,,,,,,0,
+2,ethereum,ETH,Ethereum,1m,2191680,Binance Spot official native 1m ZIPs,0,,,,,,0,
+3,tether,USDT,Tether,1D,0,,2828,KuCoin Spot,USDT-USDC,USDC,2018-10-24,2026-09-30,71,crypto-gate-kucoin-spot-native-daily-2026-09-170e06b173cd
+4,binancecoin,BNB,BNB,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+5,ripple,XRP,XRP,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+6,usd-coin,USDC,USDC,1m,1841760,Binance Spot official native 1m ZIPs,0,,,,,,0,
+7,solana,SOL,Solana,1m,1974240,Binance Spot official native 1m ZIPs,0,,,,,,0,
+8,tron,TRX,TRON,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+9,figure-heloc,FIGR_HELOC,Figure Heloc,ABSENT,0,,0,,,,,,0,
+10,zcash,ZEC,Zcash,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+11,hyperliquid,HYPE,Hyperliquid,1m,128160,Bitget Spot native 1m HTTPS,0,,,,,,0,
+12,dogecoin,DOGE,Dogecoin,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+13,usds,USDS,USDS,1m,220320,Binance Spot official native 1m ZIPs,0,,,,,,0,
+14,monero,XMR,Monero,1m,480960,Binance Spot official native 1m ZIPs,0,,,,,,0,
+15,whitebit,WBT,WhiteBIT Coin,ABSENT,0,,0,,,,,,0,
+16,chainlink,LINK,Chainlink,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+17,cardano,ADA,Cardano,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+18,leo-token,LEO,LEO Token,1D,0,,2465,OKX Spot,LEO-USDT,USDT,2020-01-01,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s
+19,rain,RAIN,Rain,1D,0,,268,KuCoin Spot,RAIN-USDT,USDT,2026-01-06,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5
+20,stellar,XLM,Stellar,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+21,near,NEAR,NEAR Protocol,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+22,bitcoin-cash,BCH,Bitcoin Cash,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+23,litecoin,LTC,Litecoin,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+24,canton-network,CC,Canton,1D,0,,231,OKX Spot,CC-USDT,USDT,2026-02-12,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s
+25,ethena-usde,USDE,Ethena USDe,1m,525600,Binance Spot official native 1m ZIPs,0,,,,,,0,
+26,uniswap,UNI,Uniswap,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+27,dai,DAI,Dai,ABSENT,0,,0,,,,,,0,
+28,avalanche-2,AVAX,Avalanche,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+29,sui,SUI,Sui,1m,1753920,Binance Spot official native 1m ZIPs,0,,,,,,0,
+30,usd1-wlfi,USD1,USD1,1m,701280,Binance Spot official native 1m ZIPs,0,,,,,,0,
+31,bitway,BTW,Bitway,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+32,the-open-network,GRAM,Gram (prev. Toncoin),1m,87840,Binance Spot official native 1m ZIPs,0,,,,,,0,
+33,hedera-hashgraph,HBAR,Hedera,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+34,quant-network,QNT,Quant,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+35,tether-gold,XAUT,Tether Gold,1m,263520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+36,shiba-inu,SHIB,Shiba Inu,1m,1974240,Binance Spot official native 1m ZIPs,0,,,,,,0,
+37,global-dollar,USDG,Global Dollar,1D,0,,477,OKX Spot,USDG-USDT,USDT,2025-06-11,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-usdg-pi-flr
+38,bittensor,TAO,Bittensor,1m,1271520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+39,crypto-com-chain,CRO,Cronos,1D,0,,2465,OKX Spot,CRO-USDT,USDT,2020-01-01,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-okb-cro
+40,paypal-usd,PYUSD,PayPal USD,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+41,ethena,ENA,Ethena,1m,1271520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+42,okb,OKB,OKB,1D,0,,3114,OKX Spot,OKB-USDT,USDT,2018-03-23,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-okb-cro
+43,aave,AAVE,Aave,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+44,pump-fun,PUMP,Pump.fun,1m,525600,Binance Spot official native 1m ZIPs,0,,,,,,0,
+45,ripple-usd,RLUSD,Ripple USD,1m,348480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+46,hashnote-usyc,USYC,Circle USYC,ABSENT,0,,0,,,,,,0,
+47,memecore,M,MemeCore,1D,0,,450,Bitget Spot,MUSDT,USDT,2025-07-02,2026-09-29,5,crypto-bitget-spot-native-daily-2026-09-single-symbol-owners
+48,ondo-us-dollar-yield,USDY,Ondo US Dollar Yield,1D,0,,111,Gate Spot,USDY_USDT,USDT,2026-06-12,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5
+49,ondo-finance,ONDO,Ondo,1m,745920,Binance Spot official native 1m ZIPs,0,,,,,,0,
+50,blackrock-usd-institutional-digital-liquidity-fund,BUIDL,BlackRock USD Institutional Digital Liquidity Fund,ABSENT,0,,0,,,,,,0,
+51,polkadot,DOT,Polkadot,1m,2014560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+52,aster-2,ASTER,Aster,1m,480960,Binance Spot official native 1m ZIPs,0,,,,,,0,
+53,worldcoin-wld,WLD,Worldcoin,1m,1404000,Binance Spot official native 1m ZIPs,0,,,,,,0,
+54,pax-gold,PAXG,PAX Gold,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+55,falcon-finance,USDF,Falcon USD,ABSENT,0,,0,,,,,,0,
+56,mantle,MNT,Mantle,1D,0,,1158,Gate Spot,MNT_USDT,USDT,2023-07-31,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5
+57,sky,SKY,Sky,1m,263520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+58,world-liberty-financial,WLFI,World Liberty Financial,1m,263520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+59,internet-computer,ICP,Internet Computer,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+60,morpho,MORPHO,Morpho,1m,263520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+61,pepe,PEPE,Pepe,1m,1491840,Binance Spot official native 1m ZIPs,0,,,,,,0,
+62,spiko-amundi-overnight-swap-fund-eur,EURSAFO,Spiko Amundi Overnight Swap Fund (EUR),ABSENT,0,,0,,,,,,0,
+63,usdd,USDD,USDD,1D,0,,1598,KuCoin Spot,USDD-USDT,USDT,2022-05-17,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5
+64,united-stables,U,United Stables,1D,0,,128,Bitget Spot,UUSDT,USDT,2026-05-24,2026-09-29,1,crypto-bitget-spot-native-daily-2026-09-single-symbol-owners
+65,htx-dao,HTX,HTX DAO,1D,0,,941,Bitget Spot,HTXUSDT,USDT,2024-02-21,2026-09-29,11,crypto-bitget-spot-native-daily-2026-09-project-listings
+66,bitget-token,BGB,Bitget Token,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+67,bfusd,BFUSD,BFUSD,1m,306720,Binance Spot official native 1m ZIPs,0,,,,,,0,
+68,ethereum-classic,ETC,Ethereum Classic,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+69,usdgo,USDGO,USDGO,1m+1D,43200,Bitget Spot native 1m HTTPS,209,Bitget Spot,USDGOUSDT,USDT,2026-03-03,2026-09-29,2,crypto-bitget-spot-native-daily-2026-09-usdgo-vision
+70,jupiter-exchange-solana,JUP,Jupiter,1m,1051200,Binance Spot official native 1m ZIPs,0,,,,,,0,
+71,arbitrum,ARB,Arbitrum,1m,1579680,Binance Spot official native 1m ZIPs,0,,,,,,0,
+72,just,JST,JUST,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+73,kaspa,KAS,Kaspa,1D,0,,1226,Bitget Spot,KASUSDT,USDT,2023-05-08,2026-09-29,15,crypto-bitget-spot-native-daily-2026-09-project-listings
+74,gatechain-token,GT,Gate,1D,0,,2720,Gate Spot,GT_USDT,USDT,2019-04-21,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5
+75,cosmos,ATOM,Cosmos Hub,1m,217440,Bitget Spot native 1m HTTPS,0,,,,,,0,
+76,polygon-ecosystem-token,POL,POL (ex-MATIC),1m,1051200,Binance Spot official native 1m ZIPs,0,,,,,,0,
+77,kucoin-shares,KCS,KuCoin,1D,0,,3187,KuCoin Spot,KCS-USDT,USDT,2017-10-23,2026-09-30,78,crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5
+78,venice-token,VVV,Venice Token,1D,0,,16,OKX Spot,VVV-USDT,USDT,2026-09-15,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons
+79,algorand,ALGO,Algorand,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+80,blockchain-capital,BCAP,Blockchain Capital,ABSENT,0,,0,,,,,,0,
+81,render-token,RENDER,Render,1m,1051200,Binance Spot official native 1m ZIPs,0,,,,,,0,
+82,pi-network,PI,Pi Network,1D,0,,588,OKX Spot,PI-USDT,USDT,2025-02-20,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-usdg-pi-flr
+83,filecoin,FIL,Filecoin,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+84,lighter,LIT,Lighter,1m,217440,Bitget Spot native 1m HTTPS,0,,,,,,0,
+85,nexo,NEXO,NEXO,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+86,aerodrome-finance,AERO,Aerodrome Finance,1m,87840,Binance Spot official native 1m ZIPs,0,,,,,,0,
+87,layerzero,ZRO,LayerZero,1m,921600,Binance Spot official native 1m ZIPs,0,,,,,,0,
+88,open-usd,OUSD,Open USD,ABSENT,0,,0,,,,,,0,
+89,superstate-short-duration-us-government-securities-fund-ustb,USTB,Invesco Short Duration US Government Securities Fund,ABSENT,0,,0,,,,,,0,
+90,midnight-3,NIGHT,Midnight,1m,263520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+91,blockstack,STX,Stacks,1m,525600,Binance Spot official native 1m ZIPs,0,,,,,,0,
+92,xdce-crowd-sale,XDC,XDC Network,1D,0,,1973,KuCoin Spot,XDC-USDT,USDT,2021-05-07,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-dcb93d4569f4
+93,gho,GHO,GHO,1m+1D,43200,Bitget Spot native 1m HTTPS,415,Bitget Spot,GHOUSDT,USDT,2025-08-06,2026-09-29,5,crypto-bitget-spot-native-daily-2026-09-qualified
+94,aptos,APT,Aptos,1m,1712160,Binance Spot official native 1m ZIPs,0,,,,,,0,
+95,pancakeswap-token,CAKE,PancakeSwap,1m,1051200,Binance Spot official native 1m ZIPs,0,,,,,,0,
+96,injective-protocol,INJ,Injective,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+97,stable-2,STABLE,​​Stable,1m,177120,Bitget Spot native 1m HTTPS,0,,,,,,0,
+98,vechain,VET,VeChain,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+99,dash,DASH,Dash,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+100,ether-fi,ETHFI,Ether.fi,1m,1052640,Binance Spot official native 1m ZIPs,0,,,,,,0,
+101,eutbl,EUTBL,Spiko EU T-Bills Money Market Fund,ABSENT,0,,0,,,,,,0,
+102,pyth-network,PYTH,Pyth Network,1m,1097280,Binance Spot official native 1m ZIPs,0,,,,,,0,
+103,raydium,RAY,Raydium,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+104,akedo,AKE,Akedo,1D,0,,368,Gate Spot,AKE_USDT,USDT,2025-09-28,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5
+105,flare-networks,FLR,Flare,1D,0,,1360,OKX Spot,FLR-USDT,USDT,2023-01-10,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-usdg-pi-flr
+106,beldex,BDX,Beldex,1D,0,,1505,Gate Spot,BDX_USDT,USDT,2022-08-18,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-dcb93d4569f4
+107,janus-henderson-anemoy-aaa-clo-fund,JAAA,Janus Henderson Anemoy AAA CLO Fund,ABSENT,0,,0,,,,,,0,
+108,bianrensheng,币安人生,币安人生 (BinanceLife),ABSENT,0,,0,,,,,,0,
+109,curve-dao-token,CRV,Curve DAO,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+110,usual-usd,USD0,Usual USD,ABSENT,0,,0,,,,,,0,
+111,kinesis-gold,KAU,Kinesis Gold,ABSENT,0,,0,,,,,,0,
+112,starknet,STRK,Starknet,1m,1097280,Binance Spot official native 1m ZIPs,0,,,,,,0,
+113,official-trump,TRUMP,Official Trump,1m,612000,Binance Spot official native 1m ZIPs,0,,,,,,0,
+114,derive,DRV,Derive,1D,0,,624,Gate Spot,DRV_USDT,USDT,2025-01-15,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5
+115,pudgy-penguins,PENGU,Pudgy Penguins,1m,656640,Binance Spot official native 1m ZIPs,0,,,,,,0,
+116,euro-coin,EURC,EURC,1D,0,,378,Kraken Spot,EURC/USDC,USDC,2025-09-18,2026-09-30,0,crypto-kraken-spot-native-daily-2026-09-1455fca808cb
+117,ylds,YLDS,YLDS,ABSENT,0,,0,,,,,,0,
+118,true-usd,TUSD,TrueUSD,1m,1579680,Binance Spot official native 1m ZIPs,0,,,,,,0,
+119,fetch-ai,FET,Artificial Superintelligence Alliance,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+120,usdtb,USDTB,USDtb,ABSENT,0,,0,,,,,,0,
+121,virtual-protocol,VIRTUAL,Virtuals Protocol,1m,439200,Binance Spot official native 1m ZIPs,0,,,,,,0,
+122,pearl-2,PRL,Pearl,ABSENT,0,,0,,,,,,0,
+123,celestia,TIA,Celestia,1m,1271520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+124,grass,GRASS,Grass,1D,0,,160,OKX Spot,GRASS-USDT,USDT,2026-04-24,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons
+125,sei-network,SEI,Sei,1m,920160,Binance Spot official native 1m ZIPs,0,,,,,,0,
+126,a7a5,A7A5,A7A5,ABSENT,0,,0,,,,,,0,
+127,bitcoin-cash-sv,BSV,Bitcoin SV,1D,0,,1064,Bitget Spot,BSVUSDT,USDT,2023-10-19,2026-09-29,13,crypto-bitget-spot-native-daily-2026-09-project-listings
+128,hash-2,HASH,Provenance Blockchain,ABSENT,0,,0,,,,,,0,
+129,plasma,XPL,Plasma,1m,263520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+130,pendle,PENDLE,Pendle,1m,1404000,Binance Spot official native 1m ZIPs,0,,,,,,0,
+131,bittorrent,BTT,BitTorrent,1m,132480,Bitget Spot native 1m HTTPS,0,,,,,,0,
+132,pieverse,PIEVERSE,Pieverse,1D,0,,321,Gate Spot,PIEVERSE_USDT,USDT,2025-11-14,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819
+133,falcon-finance-ff,FF,Falcon Finance,1m,263520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+134,kaia,KAIA,Kaia,1m,305280,Binance Spot official native 1m ZIPs,0,,,,,,0,
+135,usdai,USDAI,USDai,ABSENT,0,,0,,,,,,0,
+136,lido-dao,LDO,Lido DAO,1m,1008000,Binance Spot official native 1m ZIPs,0,,,,,,0,
+137,unibase,UB,Unibase,1D,0,,384,Gate Spot,UB_USDT,USDT,2025-09-12,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819
+138,spx6900,SPX,SPX6900,1D,0,,662,Gate Spot,SPX_USDT,USDT,2024-12-08,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819
+139,sofiusd,SOFID,SoFiUSD,1D,0,,18,Kraken Spot,SOFID/USDT,USDT,2026-09-04,2026-09-30,9,crypto-kraken-spot-native-daily-2026-09-1455fca808cb
+140,janus-henderson-anemoy-treasury-fund,JTRSY,Janus Henderson Anemoy Treasury Fund,ABSENT,0,,0,,,,,,0,
+141,first-digital-usd,FDUSD,First Digital USD,1m,659520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+142,sun-token,SUN,Sun Token,1m,1008000,Binance Spot official native 1m ZIPs,0,,,,,,0,
+143,tezos,XTZ,Tezos,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+144,ousg,OUSG,Ondo Short-Term U.S. Government Bond Fund,ABSENT,0,,0,,,,,,0,
+145,apxusd,APXUSD,apxUSD,1D,0,,39,Kraken Spot,APXUSD/USDC,USDC,2026-04-20,2026-09-26,121,crypto-kraken-spot-native-daily-2026-09-1455fca808cb
+146,backpack,BP,Backpack,ABSENT,0,,0,,,,,,0,
+147,decred,DCR,Decred,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+148,gnosis,GNO,Gnosis,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+149,ape-and-pepe,APEPE,Ape and Pepe,1D,0,,680,Gate Spot,APEPE_USDT,USDT,2024-11-20,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819
+150,re-protocol-reusd,REUSD,Re Protocol reUSD,ABSENT,0,,0,,,,,,0,
+151,olympus,OHM,Olympus,ABSENT,0,,0,,,,,,0,
+152,the-graph,GRT,The Graph,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+153,bonk,BONK,Bonk,1m,1183680,Binance Spot official native 1m ZIPs,0,,,,,,0,
+154,monad,MON,Monad,1D,0,,192,OKX Spot,MON-USDT,USDT,2026-03-23,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons
+155,kite-2,KITE,Kite,1m,132480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+156,optimism,OP,Optimism,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+157,terra-luna,LUNC,Terra,1m,132480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+158,arweave,AR,Arweave,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+159,jito-governance-token,JTO,Jito,1m,1051200,Binance Spot official native 1m ZIPs,0,,,,,,0,
+160,syrup,SYRUP,Maple Finance,1m+1D,132480,Binance Spot official native 1m ZIPs,507,Bitget Spot,SYRUPUSDT,USDT,2025-05-05,2026-09-29,6,crypto-bitget-spot-native-daily-2026-09-qualified
+161,ethereum-name-service,ENS,Ethereum Name Service,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+162,conflux-token,CFX,Conflux,1m,1051200,Binance Spot official native 1m ZIPs,0,,,,,,0,
+163,collector-crypt,CARDS,Collector Crypt,1D,0,,98,OKX Spot,CARDS-USDT,USDT,2026-06-25,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons
+164,floki,FLOKI,FLOKI,1m,1491840,Binance Spot official native 1m ZIPs,0,,,,,,0,
+165,jasmycoin,JASMY,JasmyCoin,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+166,compound-governance-token,COMP,Compound,1m,525600,Binance Spot official native 1m ZIPs,0,,,,,,0,
+167,iota,IOTA,IOTA,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+168,apenft,NFT,AINFT,1D,0,,1785,OKX Spot,NFT-USDT,USDT,2021-11-11,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s
+169,pons,PONS,Pons,1D,0,,16,OKX Spot,PONS-USDT,USDT,2026-09-15,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons
+170,meteora,MET,Meteora,1m,263520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+171,zebec-network,ZBCN,Zebec Network,1m,87840,Bitget Spot native 1m HTTPS,0,,,,,,0,
+172,thorchain,RUNE,THORChain,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+173,kinesis-silver,KAG,Kinesis Silver,ABSENT,0,,0,,,,,,0,
+174,bnb48-club-token,KOGE,KOGE,ABSENT,0,,0,,,,,,0,
+175,safo,SAFO,Spiko Amundi Overnight Swap Fund,ABSENT,0,,0,,,,,,0,
+176,theta-token,THETA,Theta Network,1m,525600,Binance Spot official native 1m ZIPs,0,,,,,,0,
+177,frax,FRAX,Legacy Frax Dollar,ABSENT,0,,0,,,,,,0,
+178,akash-network,AKT,Akash Network,1D,0,,2029,Gate Spot,AKT_USDT,USDT,2021-03-12,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-dcb93d4569f4
+179,trust-wallet-token,TWT,Trust Wallet,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+180,crvusd,CRVUSD,crvUSD,1D,0,,1141,Gate Spot,CRVUSD_USDT,USDT,2023-08-17,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819
+181,eigenlayer,EIGEN,EigenCloud (prev. EigenLayer),1m,1006560,Binance Spot official native 1m ZIPs,0,,,,,,0,
+182,usx,USX,USX,ABSENT,0,,0,,,,,,0,
+183,dogwifcoin,WIF,dogwifhat,1m,1051200,Binance Spot official native 1m ZIPs,0,,,,,,0,
+184,axie-infinity,AXS,Axie Infinity,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+185,tradable-na-rent-financing-platform-sstn,PC0000031,Tradable NA Rent Financing Platform SSTN,ABSENT,0,,0,,,,,,0,
+186,grx-chain,GRX,GRX Chain,ABSENT,0,,0,,,,,,0,
+187,the-sandbox,SAND,The Sandbox,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+188,kamino,KMNO,Kamino,1m,439200,Binance Spot official native 1m ZIPs,0,,,,,,0,
+189,basic-attention-token,BAT,Basic Attention,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+190,shuffle-2,SHFL,Shuffle,ABSENT,0,,0,,,,,,0,
+191,convex-finance,CVX,Convex Finance,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+192,zama,ZAMA,Zama,1m,263520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+193,societe-generale-forge-eurcv,EURCV,EUR CoinVertible,ABSENT,0,,0,,,,,,0,
+194,useless-3,USELESS,Useless Coin,1D,0,,447,Gate Spot,USELESS_USDT,USDT,2025-07-11,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819
+195,doublezero,2Z,DoubleZero,1m,263520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+196,usa,USAT,USAT,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+197,origintrail,TRAC,OriginTrail,1D,0,,885,Gate Spot,TRAC_USDT,USDT,2024-04-29,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819
+198,decentraland,MANA,Decentraland,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+199,agora-dollar,AUSD,AUSD,ABSENT,0,,0,,,,,,0,
+200,mx-token,MX,MX,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+201,vaulta,A,Vaulta,1D,0,,490,OKX Spot,A-USDT,USDT,2025-05-29,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s
+202,instadapp,FLUID,Fluid,1D,0,,553,OKX Spot,FLUID-USDT,USDT,2025-03-27,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s
+203,sonic-3,S,Sonic,1D,0,,618,OKX Spot,S-USDT,USDT,2025-01-21,2026-09-30,0,crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s
+204,non-playable-coin,NPC,Non-Playable Coin,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+205,neo,NEO,NEO,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+206,apyusd,APYUSD,apyUSD,ABSENT,0,,0,,,,,,0,
+207,immutable-x,IMX,Immutable,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+208,chain-2,XCN,Onyxcoin,1D,0,,1643,Gate Spot,XCN_USDT,USDT,2022-04-02,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819
+209,vision-3,VSN,Vision,1D,0,,290,Bitget Spot,VSNUSDT,USDT,2025-12-11,2026-09-29,3,crypto-bitget-spot-native-daily-2026-09-usdgo-vision
+210,spiko-us-t-bills-money-market-fund,USTBL,Spiko US T-Bills Money Market Fund,ABSENT,0,,0,,,,,,0,
+211,swissborg,BORG,SwissBorg,ABSENT,0,,0,,,,,,0,
+212,tradable-apac-diversified-finance-provider-sstn,PC0000033,Tradable APAC Diversified Finance Provider SSTN,ABSENT,0,,0,,,,,,0,
+213,fartcoin,FARTCOIN,Fartcoin,1D,0,,679,Bitget Spot,FARTCOINUSDT,USDT,2024-11-12,2026-09-29,8,crypto-bitget-spot-native-daily-2026-09-project-listings
+214,chiliz,CHZ,Chiliz,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+215,btse-token,BTSE,BTSE Token,ABSENT,0,,0,,,,,,0,
+216,coco-2,COCO,coco,ABSENT,0,,0,,,,,,0,
+217,railgun,RAIL,Railgun,ABSENT,0,,0,,,,,,0,
+218,circle-internet-group-bstock,CRCLB,Circle Internet Group (bStocks Tokenized Stock),ABSENT,0,,0,,,,,,0,
+219,bedrock-token,BR,Bedrock,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+220,gmt-token,GOMINING,GoMining Token,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+221,strategy-pp-variable-xstock,STRCX,Strategy PP Variable xStock,ABSENT,0,,0,,,,,,0,
+222,zksync,ZK,ZKsync,1m,921600,Binance Spot official native 1m ZIPs,0,,,,,,0,
+223,sentient,SENT,Sentient,1m,263520,Binance Spot official native 1m ZIPs,0,,,,,,0,
+224,gusd,GUSD,GUSD,ABSENT,0,,0,,,,,,0,
+225,build-on,B,BUILDon,1D,0,,491,Bitget Spot,BUSDT,USDT,2025-05-21,2026-09-29,6,crypto-bitget-spot-native-daily-2026-09-single-symbol-owners
+226,ecash,XEC,eCash,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+227,aioz-network,AIOZ,AIOZ Network,1D,0,,2003,Gate Spot,AIOZ_USDT,USDT,2021-04-07,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-8e71573a011c
+228,apecoin,APE,ApeCoin,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+229,dgrid-ai,DGAI,DGrid AI,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+230,superfarm,SUPER,SuperVerse,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+231,orca,ORCA,Orca,1m,656640,Binance Spot official native 1m ZIPs,0,,,,,,0,
+232,quack-ai,Q,Quack AI,1D,0,,390,Bitget Spot,QUSDT,USDT,2025-09-01,2026-09-29,4,crypto-bitget-spot-native-daily-2026-09-single-symbol-owners
+233,geodnet,GEOD,Geodnet,1D,0,,828,Gate Spot,GEOD_USDT,USDT,2024-06-25,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-8e71573a011c
+234,safepal,SFP,SafePal,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+235,beam-2,BEAM,Beam,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+236,1inch,1INCH,1INCH,1m,1752480,Binance Spot official native 1m ZIPs,0,,,,,,0,
+237,ultima,ULTIMA,Ultima,1D,0,,258,KuCoin Spot,ULTIMA-USDT,USDT,2026-01-16,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-7ef2c120eab5
+238,havven,SNX,Synthetix,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+239,celium,SN51,lium,ABSENT,0,,0,,,,,,0,
+240,jpycoin,JPYC,JPY Coin,ABSENT,0,,0,,,,,,0,
+241,stronghold-token,SHX,Stronghold,1D,0,,1478,Gate Spot,SHX_USDT,USDT,2022-09-14,2026-09-30,0,crypto-gate-kucoin-spot-native-daily-2026-09-8e71573a011c
+242,golem,GLM,Golem,1m,1579680,Binance Spot official native 1m ZIPs,0,,,,,,0,
+243,meta-2-2,META,MetaDAO,ABSENT,0,,0,,,,,,0,
+244,aethir,ATH,Aethir,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+245,humanity,H,Humanity,1D,0,,458,Bitget Spot,HUSDT,USDT,2025-06-24,2026-09-29,5,crypto-bitget-spot-native-daily-2026-09-single-symbol-owners
+246,jpysc,JPYSC,JPYSC,ABSENT,0,,0,,,,,,0,
+247,edgex,EDGE,edgeX,1m,43200,Bitget Spot native 1m HTTPS,0,,,,,,0,
+248,cash-4,CASH,CASH,1D,0,,66,Kraken Spot,CASH/USDC,USDC,2026-01-27,2026-09-24,175,crypto-kraken-spot-native-daily-2026-09-1455fca808cb
+249,ozone-chain,OZO,Ozone Chain,ABSENT,0,,0,,,,,,0,
+250,avant-usd,AVUSD,Avant USD,ABSENT,0,,0,,,,,,0,
