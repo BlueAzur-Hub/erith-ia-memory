@@ -7,6 +7,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_hourly_views_test.py'
       - 'public/agent_crypto_erith_ia/tools/build_verified_periods.py'
       - 'public/agent_crypto_erith_ia/tools/verified_periods_test.py'
+      - 'public/agent_crypto_erith_ia/tools/verified_periods_pages_smoke.py'
       - 'public/agent_crypto_erith_ia/tools/shared-hourly-history.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-hourly-history.js'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js'
@@ -19,6 +20,7 @@ on:
       - 'public/agent_crypto_erith_ia/tools/historical_hourly_views_test.py'
       - 'public/agent_crypto_erith_ia/tools/build_verified_periods.py'
       - 'public/agent_crypto_erith_ia/tools/verified_periods_test.py'
+      - 'public/agent_crypto_erith_ia/tools/verified_periods_pages_smoke.py'
       - 'public/agent_crypto_erith_ia/tools/shared-hourly-history.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-hourly-history.js'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js'
@@ -39,6 +41,21 @@ concurrency:
   group: agent-crypto-verified-hourly-history-${{ github.event.pull_request.number || 'main' }}
   cancel-in-progress: false
 jobs:
+  public-pages-smoke:
+    # Independent network audit: GitHub Pages bytes must match all committed SHAs.
+    # No new scheduled workflow; this job belongs to the historical workflow.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch all 35 published gzip files, compare hashes and validate OHLCV
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/verified_periods_pages_smoke.py
+          python public/agent_crypto_erith_ia/tools/verified_periods_pages_smoke.py
   verified-core-periods:
     # Reuse the existing historical workflow: no new scheduler or collector.
     runs-on: ubuntu-latest
