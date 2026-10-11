@@ -49,7 +49,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   btc-top5-venue-history-matrix:
-    # Read-only, asset-aware, 39 historical tests. Never rewrites Binance sources.
+    # Read-only, asset-aware, 42 historical checks. Never rewrites Binance sources.
     if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     timeout-minutes: 35
@@ -84,7 +84,7 @@ jobs:
               and previous.get("protected_daily_reference_sha256")==frozen["locked_source"]["data_sha256"]
               and previous.get("btc_gap_windows_total")==27
               and previous.get("btc_expected_gap_minutes")==5881
-              and len(previous.get("rows",[]))==39):
+              and len(previous.get("rows",[]))==42):
               pathlib.Path(os.environ["RUNNER_TEMP"],"cross-venue-matrix-noop").touch()
               print("NOOP: existing 39-window exchange-specific audit immutable")
           PY
@@ -100,9 +100,9 @@ jobs:
           data=json.loads(path.read_text())
           assert data["schema"]=="seven.crypto.cross-venue-historical-gap-matrix.v1"
           assert data["btc_gap_windows_total"]==27 and data["btc_expected_gap_minutes"]==5881
-          assert len(data["rows"])==39 and data["trader_modified"] is False
+          assert len(data["rows"])==42 and data["trader_modified"] is False
           assert {a:d["windows"] for a,d in data["summary"].items()}=={
-              "BTC":27,"ETH":4,"BNB":4,"XRP":1,"SOL":3}
+              "BTC":27,"ETH":4,"BNB":4,"XRP":4,"SOL":3}
           assert sum(x["window_calendar_minutes"] for x in data["rows"] if x["asset"]=="BTC")==5881
           for row in data["rows"]:
               assert row["coinbase"]["quote"]=="USD"
