@@ -72,6 +72,35 @@ class DailyHistoryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Bitget Spot instrument"):
             m.single_symbol_candidates(cat,identity,instruments)
 
+    def test_named_project_bitget_spot_sources_must_pass_independent_venue_proof(self):
+        rows=[{"id":f"dummy-{i}","rank":i,"symbol":f"Z{i}",
+               "name":"Other","quote":"USDT","months":0}
+              for i in range(1,251)]
+        official=[]
+        for cid,rank,sym,name,notice in m.NAMED_SPOT_PROOFS:
+            rows[rank-1]={"id":cid,"rank":rank,"symbol":sym,
+                          "name":name,"quote":"USDT","months":0}
+            official.append({"id":cid,"rank":rank,"symbol":sym,
+                             "instruments":[{"venue":"bitget","base":sym,
+                                "quote":"USDT","instrument":sym+"USDT",
+                                "exchange_instrument_confirmed":True}]})
+        c={"schema":"aerith.public.ohlcv.top250.federated-native-archives.v1",
+           "ranked":250,"assets":rows}
+        s={"schema":"aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+           "assets":official}
+        proven=m.named_spot_candidates(c,s)
+        self.assertEqual([a["id"] for a in proven],
+            ["htx-dao","kaspa","bitcoin-cash-sv","fartcoin"])
+        self.assertTrue(all("/support/articles/" in a["identity_evidence"]
+                            for a in proven))
+        c["assets"][64]["name"]="Another token"
+        with self.assertRaisesRegex(ValueError,"CoinGecko identity"):
+            m.named_spot_candidates(c,s)
+        c["assets"][64]["name"]="HTX DAO"
+        s["assets"][0]["instruments"][0]["instrument"]="WRONGUSDT"
+        with self.assertRaisesRegex(ValueError,"Spot pair"):
+            m.named_spot_candidates(c,s)
+
     def test_native_rows_and_true_unfilled_gaps(self):
         t=m.END-5*m.DAY
         def fetch(pair,start,end):
