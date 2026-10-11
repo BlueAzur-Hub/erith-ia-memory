@@ -1,5 +1,20 @@
 # Seven Heaven · Coffre historique Top 250 — passation canonique
 
+## MISE À JOUR PRIORITAIRE — reprise BTC, 11 octobre 2026
+
+**Lire cette section avant les chiffres historiques plus bas**, qui sont des constats antérieurs.
+
+- **BTC Binance Spot BTC/USDT en 1m : 80 mois calendaires complets / 3 510 720 bougies** selon le registre annuel (premier mois complet : 2018-05 ; dernier : 2026-09). **21 mois supplémentaires avec lacunes / 911 399 bougies originales / 5 881 minutes absentes**, selon le registre de provenance indépendant. Ne pas compter les mois avec lacunes comme mois complets ni comme série sans rupture.
+- Registre complet : `public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json`. Registre des interruptions : `public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_verified_gap_months/index.json`. Tous les chiffres sont des inventaires publiés, pas un test Firefox du graphique Trader.
+- Les PR **#340, #341, #342, #343, #344, #347, #348** sont fusionnées : réutilisation SHA-256 des blocs, conservation des interruptions BTC, rattrapage ancien sur cron GitHub existant, sérialisation des collecteurs, validation indépendante des Releases, **un seul générateur en production du registre partiel**. Archive officielle de mars 2023 : **44 560 bougies sur 44 640 minutes, 80 absentes** ; ZIP original + CHECKSUM + SQLite dans la Release `btc-spot-native-gap-2023-03`.
+- **MAX n'a pas la même sémantique partout.** Ligne Trader : bouton Max (= 36500) utilise l'owner historique Interface ou un fournisseur d'échange qui peut limiter à ~300 bougies journalières ; pas de preuve de branchement à toutes les archives du Coffre. Market Microscope Bougies : chaîne marché OKX/Backend, indépendante. Coffre : **Max = historique contigu archivé**, vue horaire actuelle au maximum 12 mois, pas « depuis 2009 ». CoinGecko fournit des points de prix/volume (souvent USD), **pas les chandelles Binance 1m BTC/USDT**. La panne actuelle du graphique Trader Max n'est pas expliquée par les données du Coffre et demeure à diagnostiquer plus tard.
+- **Règle d'affichage** : jamais de bougies ou volumes synthétiques pour fermer une lacune ; conserver les interruptions à la résolution 1m, ne pas joindre arbitrairement deux places/devises. Pour agrégation 1h/1j, conserver les prix authentiques disponibles et publier un indicateur explicite de couverture (par ex. 59/60 minutes), ne pas certifier « complet » ce qui est partiel.
+- **Prochaine sœur IA :** poursuivre les imports originaux BTC vers Binance 2017 sans nouvel automate ; vérifier cohérence Releases/index complet/index partiel/vues horaires ; construire et TESTER **un lecteur autonome de Coffre** sur une période englobant mars 2023 avec OHLCV réels, gaps et couverture ; prouver le « Max réellement disponible » ; **aucun changement du Trader, de l'Interface, du Bridge, Market Core ou IndexedDB avant consentement explicite de l'utilisateur**. Ne pas réactiver l'automation ChatGPT désactivée.
+- Détails remis au Notion canonique : https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099
+
+---
+
+
 **Date du contrôle : 2026-10-11 (heure locale France).**
 **Dépôt de vérité :** https://github.com/BlueAzur-Hub/erith-ia-memory
 **Interface publique unique du Coffre :** https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/administrator/historical-vault.html
