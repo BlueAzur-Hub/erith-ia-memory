@@ -5,6 +5,8 @@ on:
       - '.github/workflows/agent-crypto-hourly-history.yml'
       - 'public/agent_crypto_erith_ia/tools/build_historical_hourly_views.py'
       - 'public/agent_crypto_erith_ia/tools/historical_hourly_views_test.py'
+      - 'public/agent_crypto_erith_ia/tools/build_verified_periods.py'
+      - 'public/agent_crypto_erith_ia/tools/verified_periods_test.py'
       - 'public/agent_crypto_erith_ia/tools/shared-hourly-history.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-hourly-history.js'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js'
@@ -15,6 +17,8 @@ on:
       - '.github/workflows/agent-crypto-hourly-history.yml'
       - 'public/agent_crypto_erith_ia/tools/build_historical_hourly_views.py'
       - 'public/agent_crypto_erith_ia/tools/historical_hourly_views_test.py'
+      - 'public/agent_crypto_erith_ia/tools/build_verified_periods.py'
+      - 'public/agent_crypto_erith_ia/tools/verified_periods_test.py'
       - 'public/agent_crypto_erith_ia/tools/shared-hourly-history.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-hourly-history.js'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js'
@@ -35,6 +39,83 @@ concurrency:
   group: agent-crypto-verified-hourly-history-${{ github.event.pull_request.number || 'main' }}
   cancel-in-progress: false
 jobs:
+  verified-core-periods:
+    # Reuse the existing historical workflow: no new scheduler or collector.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: agent-crypto-verified-core-periods-${{ github.event.pull_request.number || 'main' }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify identities, gaps, OHLCV and genuine one-year source coverage
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/build_verified_periods.py
+          python public/agent_crypto_erith_ia/tools/verified_periods_test.py
+      - name: Compile seven original-source-qualified periods for five crypto markets
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/build_verified_periods.py --output "$RUNNER_TEMP/verified_periods"
+          python - <<'PY'
+          import gzip, hashlib, json, os, pathlib
+          folder = pathlib.Path(os.environ['RUNNER_TEMP'])/'verified_periods'
+          index = json.loads((folder/'index.json').read_text())
+          assert index['schema']=='seven.crypto.verified-period-index'
+          assert index['core_assets']==5 and index['periods_per_asset']==7
+          assert len(index['assets'])==5
+          for asset in index['assets']:
+              assert len(asset['periods'])==7
+              for record in asset['periods']:
+                  raw=(folder/record['file']).read_bytes()
+                  assert len(raw)==record['bytes']
+                  assert hashlib.sha256(raw).hexdigest()==record['sha256']
+                  payload=json.loads(gzip.decompress(raw))
+                  assert len(payload['rows'])==record['bars']
+                  assert payload['quote']=='USDT' and payload['is_live'] is False
+                  assert len(payload['gaps'])==record['gaps']
+          print('VERIFIED TOP FIVE: 35 period files and complete SHA-256 verification')
+          PY
+      - name: Publish verified windows in the existing canonical Coffre
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          target="$root/verified_periods"
+          git fetch origin main
+          for relative in shared_monthly_views/index.json shared_hourly_views/index.json calendar_year_hourly_shards/index.json; do
+            path="$root/$relative"
+            original=$(sha256sum "$path" | cut -d ' ' -f1)
+            current=$(git show "origin/main:$path" | sha256sum | cut -d ' ' -f1)
+            if [[ "$original" != "$current" ]]; then
+              echo "::error::Verified source changed during build: $relative"
+              exit 1
+            fi
+          done
+          git reset --hard origin/main
+          mkdir -p "$target"
+          cp -a "$RUNNER_TEMP/verified_periods/." "$target/"
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: 35 verified views already published'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Publish five-market verified daily-to-year historical period projections'
+          git push origin HEAD:main
+      - name: Attach verified period manifest for audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-core-period-manifest
+          path: ${{ runner.temp }}/verified_periods/index.json
+          if-no-files-found: warn
+          retention-days: 30
   verify-and-build:
     # Do not publish from failed or PR-only upstream checks; scheduled catalog refreshes retain their own downstream daily cadences.
     if: >-
