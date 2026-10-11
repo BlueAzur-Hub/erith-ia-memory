@@ -8,6 +8,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/build_verified_periods.py'
       - 'public/agent_crypto_erith_ia/tools/verified_periods_test.py'
       - 'public/agent_crypto_erith_ia/tools/verified_periods_pages_smoke.py'
+      - 'public/agent_crypto_erith_ia/tools/verified-periods-reader.test.mjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/verified-periods-reader.js'
       - 'public/agent_crypto_erith_ia/tools/shared-hourly-history.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-hourly-history.js'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js'
@@ -21,6 +23,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/build_verified_periods.py'
       - 'public/agent_crypto_erith_ia/tools/verified_periods_test.py'
       - 'public/agent_crypto_erith_ia/tools/verified_periods_pages_smoke.py'
+      - 'public/agent_crypto_erith_ia/tools/verified-periods-reader.test.mjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/verified-periods-reader.js'
       - 'public/agent_crypto_erith_ia/tools/shared-hourly-history.test.mjs'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-hourly-history.js'
       - 'public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js'
@@ -161,6 +165,8 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/shared-historical-view.js
           node --test public/agent_crypto_erith_ia/tools/shared-hourly-history.test.mjs
           node --test public/agent_crypto_erith_ia/tools/shared-historical-view.test.mjs
+          node --check public/agent_crypto_erith_ia/administrator/js/verified-periods-reader.js
+          node --test public/agent_crypto_erith_ia/tools/verified-periods-reader.test.mjs
       - name: Build authentic 60d 90d annual Max historical multi-asset views
         run: |
           set -euo pipefail
