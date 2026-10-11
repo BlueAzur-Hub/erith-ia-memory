@@ -1,5 +1,5 @@
 {
-  "archived_assets_at_audit": 120,
+  "archived_assets_at_audit": 121,
   "assets": [
     {
       "archived": false,
@@ -1172,26 +1172,6 @@
     {
       "archived": false,
       "coin_id_confirmed": false,
-      "id": "terra-luna",
-      "instruments": [
-        {
-          "base": "LUNC",
-          "coin_id_confirmed": false,
-          "exchange_instrument_confirmed": true,
-          "instrument": "LUNCUSDT",
-          "native_1m_month_confirmed": false,
-          "quote": "USDT",
-          "venue": "bitget"
-        }
-      ],
-      "native_1m_month_confirmed": false,
-      "rank": 157,
-      "status": "instrument_candidates_not_identity_proof",
-      "symbol": "LUNC"
-    },
-    {
-      "archived": false,
-      "coin_id_confirmed": false,
       "id": "syrup",
       "instruments": [
         {
@@ -2183,13 +2163,13 @@
       "symbol": "AVUSD"
     }
   ],
-  "candidate_count": 130,
-  "checked_at": "2026-10-10T23:45:36.638013+00:00",
+  "candidate_count": 129,
+  "checked_at": "2026-10-11T00:05:50.734038+00:00",
   "markets": {
     "bitget": {
       "instruments": 538,
       "reason": null,
-      "source_sha256": "37cf4c6c4db78cd36cf2137d820444eed7bc8210769542c4aab00f2c965df700",
+      "source_sha256": "2120c5b065e05b772ed76c592aa09644c4f128da3f3cc9d36d21b2a8f59ccf39",
       "status": "success",
       "url": "https://api.bitget.com/api/v3/market/instruments?category=SPOT"
     },
@@ -2207,5 +2187,5 @@
   "ranked": 250,
   "schema": "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
   "source": "Official public OKX and Bitget Spot instrument inventories",
-  "with_spot_instrument": 53
+  "with_spot_instrument": 52
 }
