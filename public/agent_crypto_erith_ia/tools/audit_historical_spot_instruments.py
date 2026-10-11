@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only four-venue official Spot instrument audit for missing Top250 assets.
+"""Read-only six-venue official Spot instrument audit for missing Top250 assets.
 
 An instrument match is NEVER proof of a CoinGecko asset identity, a historical
 OHLCV month, an archive, or a trading permission. No order endpoints or keys.
@@ -24,6 +24,8 @@ ENDPOINTS = {
     "bitget": "https://api.bitget.com/api/v3/market/instruments?category=SPOT",
     "gate": "https://api.gateio.ws/api/v4/spot/currency_pairs",
     "kucoin": "https://api.kucoin.com/api/v2/symbols",
+    "kraken": "https://api.kraken.com/0/public/AssetPairs",
+    "coinbase": "https://api.exchange.coinbase.com/products",
 }
 QUOTES = frozenset({"USDT", "USDC"})
 PAIR = re.compile(r"^[A-Z0-9]{1,30}$")
@@ -50,17 +52,25 @@ def fetch_document(venue):
 
 def parse_instruments(venue, document):
     need(venue in ENDPOINTS, "Unknown instrument source")
-    if venue == "gate":
-        need(isinstance(document, list), "Gate expected public Spot list")
+    if venue in ("gate","coinbase"):
+        need(isinstance(document,list),
+             "Gate/Coinbase public Spot list must be an array")
     else:
-        need(isinstance(document, dict), "Expected venue Spot response object")
+        need(isinstance(document,dict),
+             "Expected venue Spot response object")
     if venue == "okx":
         need(document.get("code") == "0", "OKX rejected public Spot request")
     elif venue == "bitget":
         need(document.get("code") == "00000", "Bitget rejected public Spot request")
     elif venue == "kucoin":
         need(document.get("code") == "200000", "KuCoin rejected public Spot request")
-    data = document if venue == "gate" else document.get("data")
+    elif venue == "kraken":
+        need(document.get("error")==[] and
+             isinstance(document.get("result"),dict),
+             "Kraken rejected original public AssetPairs response")
+    data=(document if venue in ("gate","coinbase") else
+          list(document["result"].values()) if venue=="kraken"
+          else document.get("data"))
     need(isinstance(data, list) and 0 < len(data) <= 100000,
          "Official Spot instrument inventory missing or unbounded")
     symbols = {}
@@ -83,11 +93,25 @@ def parse_instruments(venue, document):
             # Never classify buy-only, sell-only or halted pairs as tradable.
             is_spot = item.get("trade_status") == "tradable"
             expected = f"{base}_{quote}"
-        else:  # kucoin public /api/v2/symbols, Spot only.
+        elif venue=="kucoin":  # original public /api/v2/symbols Spot only
             base, quote = item.get("baseCurrency"), item.get("quoteCurrency")
             inst = item.get("symbol")
             is_spot = item.get("enableTrading") is True
             expected = f"{base}-{quote}"
+        elif venue=="coinbase":  # Exchange public Spot /products, not brokerage
+            base, quote = item.get("base_currency"), item.get("quote_currency")
+            inst=item.get("id")
+            is_spot=(item.get("status")=="online"
+                     and item.get("trading_disabled") is False
+                     and item.get("cancel_only") is False
+                     and item.get("post_only") is False)
+            expected=f"{base}-{quote}"
+        else:  # Kraken AssetPairs uses public original pair name e.g. DAI/USDT
+            inst=item.get("wsname")
+            split=inst.split("/") if isinstance(inst,str) else []
+            base,quote=split if len(split)==2 else (None,None)
+            is_spot=item.get("status")=="online"
+            expected=f"{base}/{quote}"
         if not is_spot or not isinstance(base, str) or not PAIR.fullmatch(base):
             continue
         if quote not in QUOTES or base == quote or inst != expected:
@@ -153,7 +177,7 @@ def build(queue, archived, sources, clock=None):
         "schema": SCHEMA, "ranked": 250, "archived_assets_at_audit": len(archived),
         "candidate_count": len(records),
         "with_spot_instrument": sum(bool(x["instruments"]) for x in records),
-        "source": "Official public OKX, Bitget, Gate and KuCoin Spot instrument inventories",
+        "source": "Official public OKX, Bitget, Gate, KuCoin, Kraken and Coinbase Exchange Spot instrument inventories",
         "checked_at": clock or dt.datetime.now(dt.timezone.utc).isoformat(),
         "markets": metadata, "assets": records,
         "note": ("Symbol-matched official instruments are candidates ONLY. "
