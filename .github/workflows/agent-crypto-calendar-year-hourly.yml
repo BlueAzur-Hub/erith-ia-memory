@@ -5,12 +5,16 @@ on:
       - '.github/workflows/agent-crypto-calendar-year-hourly.yml'
       - 'public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py'
       - 'public/agent_crypto_erith_ia/tools/calendar_year_hourly_shards_test.py'
+      - 'public/agent_crypto_erith_ia/tools/yearly_shard_reuse.py'
+      - 'public/agent_crypto_erith_ia/tools/yearly_shard_reuse_test.py'
   push:
     branches: [main]
     paths:
       - '.github/workflows/agent-crypto-calendar-year-hourly.yml'
       - 'public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py'
       - 'public/agent_crypto_erith_ia/tools/calendar_year_hourly_shards_test.py'
+      - 'public/agent_crypto_erith_ia/tools/yearly_shard_reuse.py'
+      - 'public/agent_crypto_erith_ia/tools/yearly_shard_reuse_test.py'
   workflow_dispatch:
   schedule:
     - cron: '21 * * * *'
@@ -35,6 +39,7 @@ jobs:
           set -euo pipefail
           python -m py_compile public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py
           python public/agent_crypto_erith_ia/tools/calendar_year_hourly_shards_test.py
+          python public/agent_crypto_erith_ia/tools/yearly_shard_reuse_test.py
           python public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py --plan
       - name: Materialize next calendar-year native-hourly shards
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -72,6 +77,7 @@ jobs:
             git reset --hard origin/main
             python -m py_compile public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py
             python public/agent_crypto_erith_ia/tools/calendar_year_hourly_shards_test.py
+          python public/agent_crypto_erith_ia/tools/yearly_shard_reuse_test.py
             batch=2
             if [[ "$GITHUB_EVENT_NAME" == schedule ]]; then batch=4; fi
             python public/agent_crypto_erith_ia/tools/build_calendar_year_hourly_shards.py --batch-size "$batch"
