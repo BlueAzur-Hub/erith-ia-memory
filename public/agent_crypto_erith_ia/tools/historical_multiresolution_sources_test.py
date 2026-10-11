@@ -10,19 +10,19 @@ class MultiResolutionRegistryTests(unittest.TestCase):
     def source(self):
         return json.loads(m.REGISTRY.read_text()), json.loads(m.FED.read_text())
 
-    def test_twenty_three_unique_sources_and_zero_miscounted_minutes(self):
+    def test_twenty_seven_unique_sources_and_zero_miscounted_minutes(self):
         x,c=self.source()
         verified=m.check_registry(x,c)
-        self.assertEqual(len(verified),23)
-        self.assertEqual(sum(a["native_candles"] for a in verified),17467)
+        self.assertEqual(len(verified),27)
+        self.assertEqual(sum(a["native_candles"] for a in verified),21377)
         self.assertEqual(x["native_1m_added"],0)
-        self.assertEqual(len({(a["id"],a["bar"]) for a in verified}),23)
+        self.assertEqual(len({(a["id"],a["bar"]) for a in verified}),27)
 
     def test_original_bitget_daily_timezone_and_real_gaps_are_not_fabricated(self):
         x,c=self.source()
         bitget=[a for a in x["assets"] if a["venue"]=="Bitget Spot"]
-        self.assertEqual(len(bitget),7)
-        self.assertEqual(sum(a["native_candles"] for a in bitget),2839)
+        self.assertEqual(len(bitget),11)
+        self.assertEqual(sum(a["native_candles"] for a in bitget),6749)
         self.assertTrue(all(a["bar"]=="1D" and
                  a["native_session_start_modulo_utc_day_ms"]==57600000
                  and a["gaps_within_observed_span"]>0 for a in bitget))
@@ -32,6 +32,24 @@ class MultiResolutionRegistryTests(unittest.TestCase):
             bad=copy.deepcopy(x)
             target=next(a for a in bad["assets"] if a["venue"]=="Bitget Spot")
             target[field]=value
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                m.check_registry(bad,c)
+
+    def test_named_bitget_source_proof_requires_original_project_notice(self):
+        x,c=self.source()
+        named=next(a for a in x["assets"]
+                   if a.get("source_attestation")=="original-named-spot-listing")
+        self.assertIn("/support/articles/",named["identity_evidence"])
+        self.assertEqual(len([a for a in x["assets"]
+             if a.get("source_attestation")=="original-named-spot-listing"]),4)
+        for field,value in (("source_attestation","unproven"),
+                            ("identity_evidence","https://example.net/fake"),
+                            ("identity_evidence","https://www.bitget.com/price/BTC"),
+                            ("instrument_evidence","https://example.net/instrument")):
+            bad=copy.deepcopy(x)
+            entry=next(a for a in bad["assets"]
+                       if a.get("source_attestation")=="original-named-spot-listing")
+            entry[field]=value
             with self.subTest(field=field),self.assertRaises(ValueError):
                 m.check_registry(bad,c)
 
