@@ -1,7 +1,7 @@
 {
   "candidate_count": 57,
-  "checked_count": 45,
-  "market_candidate_count": 0,
+  "checked_count": 48,
+  "market_candidate_count": 1,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
   "quote": "USDT or USDC: never convert silently",
@@ -763,10 +763,10 @@
       "symbol": "BDX"
     },
     {
-      "checked_at": "2026-10-10T12:41:00.535148+00:00",
+      "checked_at": "2026-10-11T14:52:18.924063+00:00",
       "id": "janus-henderson-anemoy-aaa-clo-fund",
       "markets": [],
-      "pages_checked": 0,
+      "pages_checked": 3,
       "rank": 107,
       "status": "source_unavailable",
       "symbol": "JAAA"
@@ -1687,6 +1687,15 @@
       "symbol": "BORG"
     },
     {
+      "checked_at": "2026-10-11T14:52:38.988048+00:00",
+      "id": "tradable-apac-diversified-finance-provider-sstn",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 212,
+      "status": "source_unavailable",
+      "symbol": "PC0000033"
+    },
+    {
       "checked_at": "2026-10-10T19:31:43.627001+00:00",
       "id": "fartcoin",
       "markets": [],
@@ -1694,6 +1703,24 @@
       "rank": 213,
       "status": "source_unavailable",
       "symbol": "FARTCOIN"
+    },
+    {
+      "checked_at": "2026-10-11T14:52:59.055629+00:00",
+      "id": "btse-token",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 215,
+      "status": "source_unavailable",
+      "symbol": "BTSE"
+    },
+    {
+      "checked_at": "2026-10-11T14:53:19.116796+00:00",
+      "id": "coco-2",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 216,
+      "status": "source_unavailable",
+      "symbol": "COCO"
     },
     {
       "checked_at": "2026-10-10T19:32:03.974701+00:00",
@@ -1918,12 +1945,24 @@
       "symbol": "BEAM"
     },
     {
-      "checked_at": "2026-10-11T02:34:15.186913+00:00",
+      "checked_at": "2026-10-11T14:53:19.343993+00:00",
       "id": "ultima",
-      "markets": [],
+      "markets": [
+        {
+          "base": "ULTIMA",
+          "coin_id": "ultima",
+          "exchange": "kucoin",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "ULTIMA-USDT",
+          "native_1m_month_confirmed": false,
+          "original_named_spot_notice": "https://www.kucoin.com/announcement/ua-ultima-ultima-gets-listed-on-kucoin",
+          "proof_method": "original_named_spot_listing",
+          "quote": "USDT"
+        }
+      ],
       "pages_checked": 0,
       "rank": 237,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "ULTIMA"
     },
     {
@@ -2048,5 +2087,5 @@
     }
   ],
   "schema": "aerith.public.ohlcv.spot.top250.alt-market-discovery.v1",
-  "source": "CoinGecko exact coin ID, independent exchange-specific Spot tickers"
+  "source": "CoinGecko exact coin ID, independent exchange-specific Spot tickers; immutable original named Spot listing attestation"
 }
