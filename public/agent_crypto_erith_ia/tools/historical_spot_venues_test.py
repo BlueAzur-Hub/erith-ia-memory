@@ -303,7 +303,7 @@ class AlternativeMarketTests(unittest.TestCase):
         self.assertEqual(len(queue),250)
         self.assertTrue(50<=len(archived)<250)
         self.assertIn("bitcoin",archived)
-        self.assertIn("okb",{a["id"] for a in queue if a["id"] not in archived})
+        self.assertIn("okb",archived)
 
     def test_live_archive_union_skips_existing_minute_and_daily_without_id_guessing(self):
         queue=[{"id":f"asset-{i}","rank":i,"symbol":f"T{i}",
