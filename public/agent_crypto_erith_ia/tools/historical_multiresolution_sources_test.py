@@ -369,7 +369,48 @@ class MultiResolutionRegistryTests(unittest.TestCase):
         self.assertGreaterEqual(index["native_daily_candles"],51476)
         minute_ids={a["id"] for a in minute["assets"] if a["native_1m_count"]>0}
         self.assertFalse(set(expected)&minute_ids)
-        self.assertEqual(len(minute_ids|set(sources)),198)
+        self.assertGreaterEqual(len(minute_ids|set(sources)),199)
+
+    def test_current_multicollateral_dai_original_native_spot_not_sai(self):
+        index,minute=self.source()
+        rows={a["id"]:a for a in m.check_registry(index,minute)}
+        a=rows["dai"]
+        self.assertEqual((a["id"],a["rank"],a["name"],a["symbol"]),
+                         ("dai",27,"Dai","DAI"))
+        self.assertEqual((a["venue"],a["market"],a["quote"],a["bar"]),
+                         ("Kraken Spot","DAI/USDT","USDT","1D"))
+        self.assertEqual((a["native_candles"],a["gaps_within_observed_span"]),
+                         (709,1))
+        self.assertEqual(a["earliest_source_ms"],1729468800000)
+        self.assertEqual(a["latest_source_ms"],1790726400000)
+        self.assertEqual(a["first_listed_ms"],1575244800000)
+        self.assertEqual(a["identity_evidence"],
+            "https://blog.kraken.com/news/kraken-is-supporting-dais-multi-collateral-upgrade")
+        self.assertEqual(a["release_tag"],
+            "crypto-kraken-spot-native-daily-2026-09-8eccaa5378b9")
+        self.assertEqual(a["sha256"],
+            "a99fcd71b0201bb943717001734fcf0b0eeb101052396a22257019b594144a63")
+        self.assertGreaterEqual(len(rows),58)
+        self.assertGreaterEqual(index["native_daily_candles"],52185)
+        minute_ids={x["id"] for x in minute["assets"] if x["native_1m_count"]>0}
+        self.assertNotIn("dai",minute_ids)
+        self.assertEqual(len(minute_ids|set(rows)),199)
+
+    def test_multicollateral_dai_original_owner_and_gap_tampering_rejected(self):
+        index,minute=self.source()
+        for field,changed in (
+            ("name","SAI"),("rank",999),("symbol","SAI"),
+            ("quote","USD"),("market","DAI/USD"),
+            ("first_listed_ms",1490000000000),
+            ("gaps_within_observed_span",0),
+            ("identity_evidence",
+                 "https://blog.kraken.com/news/link-dai-trading-starts-september-25"),
+            ("sha256","0"*63)
+        ):
+            r=copy.deepcopy(index)
+            next(a for a in r["assets"] if a["id"]=="dai")[field]=changed
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                m.check_registry(r,minute)
 
     def test_reject_forged_kraken_original_owner_quote_dates_and_provider(self):
         index,minute=self.source()
