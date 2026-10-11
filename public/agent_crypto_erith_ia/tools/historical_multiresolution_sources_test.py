@@ -22,13 +22,13 @@ class MultiResolutionRegistryTests(unittest.TestCase):
         registry,catalog=self.source()
         approved=m.check_registry(registry,catalog)
         alternative=[a for a in approved
-                     if a["venue"] in ("Gate Spot","KuCoin Spot")]
+                     if a.get("release_tag")=="crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"]
         self.assertEqual(len(alternative),8)
         self.assertEqual(sum(a["native_candles"] for a in alternative),10034)
-        self.assertEqual(len(approved),37)
-        self.assertEqual(registry["native_daily_candles"],31910)
+        self.assertEqual(len(approved),48)
+        self.assertEqual(registry["native_daily_candles"],42382)
         known={a["id"] for a in approved}
-        self.assertEqual(len(known),37)
+        self.assertEqual(len(known),48)
         self.assertEqual({a["id"] for a in alternative},{
             "rain","ondo-us-dollar-yield","mantle","usdd",
             "gatechain-token","kucoin-shares","akedo","derive"})
@@ -53,6 +53,43 @@ class MultiResolutionRegistryTests(unittest.TestCase):
             bad[name]=value
             with self.subTest(name=name),self.assertRaises(ValueError):
                 m.check_registry(changed,catalog)
+
+    def test_two_additional_immutable_gate_kucoin_cohorts_have_original_native_rows(self):
+        registry,minute=self.source()
+        approved=m.check_registry(registry,minute)
+        expected={
+            "pieverse":(132,321,"a4e5521fc4709c6cdb17ba10470f212b5fb0f330e60a72289790ec6acec078fa"),
+            "unibase":(137,384,"7c1b19c41f33eddf0da25a3acc541f13380f01438d1d477bcc70c45f6f4858f6"),
+            "spx6900":(138,662,"ce61e4ad928d1b94ca8ec13663384f61bdf6408454b57a28491aeca0f5487cde"),
+            "ape-and-pepe":(149,680,"8848715fce175713e62d89bf7b04edd76223b13d54a64b8c3932851fbe982a4d"),
+            "crvusd":(180,1141,"75029b49a2664dd0e436a6af3fc5f9c4385ce863140122c2d21f52f3cd1a75dd"),
+            "useless-3":(194,447,"c307c1d7c6affb6e12b703b591078bf4a94235837155e462cdb86025b451f2b3"),
+            "origintrail":(197,885,"537228bfca087fce1544912b200ccf71867d76781a908c3d8a5f2aeb7cd6b9b6"),
+            "chain-2":(208,1643,"44a084e83da8d5a69261e906884f99d8e99a96437d97fffef02fc150801bc86a"),
+            "aioz-network":(227,2003,"66e5b5a3bae444763fc087d47dd415f2fa6a8d7cfc1d752a1a8eb2ea7bf202b8"),
+            "geodnet":(233,828,"cc599ee105ae608f9b46d77ecc2a1f5c629966de9b30de70a7c4866f49cd3db1"),
+            "stronghold-token":(241,1478,"f54058fdf4896929936e02a2c9e84d45abaa17dcde6854bb581bed983a1d11a5")
+        }
+        sources={a["id"]:a for a in approved}
+        minute_ids={a["id"] for a in minute["assets"] if a["native_1m_count"]>0}
+        self.assertFalse(set(expected) & minute_ids)
+        self.assertEqual(len(set(sources)|minute_ids),189)
+        self.assertEqual(sum(bars for _,bars,_ in expected.values()),10472)
+        for cid,(rank,bars,sha) in expected.items():
+            with self.subTest(cid=cid):
+                a=sources[cid]
+                self.assertEqual(a["rank"],rank)
+                self.assertEqual(a["native_candles"],bars)
+                self.assertEqual(a["sha256"],sha)
+                self.assertEqual(a["gaps_within_observed_span"],0)
+                self.assertEqual(a["venue"],"Gate Spot")
+                self.assertEqual(a["bar"],"1D")
+                self.assertEqual(a["quote"],"USDT")
+                self.assertIn(a["release_tag"],(
+                    "crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819",
+                    "crypto-gate-kucoin-spot-native-daily-2026-09-8e71573a011c"))
+                self.assertEqual(a["source_attestation"],"verified-original-spot-owner")
+                self.assertIn("top250-alt-market-evidence.json#",a["identity_evidence"])
 
     def test_original_bitget_daily_timezone_and_real_gaps_are_not_fabricated(self):
         x,c=self.source()
