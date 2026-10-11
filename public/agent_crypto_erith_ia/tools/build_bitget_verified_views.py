@@ -44,35 +44,61 @@ def need(ok,msg):
 def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
-def source_candidates(catalog,exact,official,federated=None):
-    """Preserve vetted original Bitget owners after a live census rotates.
+def source_candidates(catalog,exact,official,federated=None,alt_index=None):
+    """Keep independently verified Bitget owners after Binance catches up.
 
-    Exact archived Spot owners are no longer listed in today's UNARCHIVED
-    candidate census. Their previously verified original 1m source remains
-    valid if both the immutable ranked ID and original exact-ID market proof
-    still agree, and all Release ZIP hashes are checked separately.
+    The federated index has one *selected* owner per ranked ID. The separate
+    Bitget archive index retains original native ZIP evidence even if Binance
+    later becomes the selected source for the same CoinGecko owner.
     """
     selected={a["id"]:a for a in probe.candidates(catalog,exact,official)}
     if federated is None:
         federated=json.loads(FEDERATED.read_text(encoding="utf-8"))
+    if alt_index is None:
+        alt_index=json.loads((ALT/"index.json").read_text(encoding="utf-8"))
     need(federated.get("schema")==FEDERATED_SCHEMA
          and federated.get("ranked")==250
          and len(federated.get("assets",[]))==250,
          "Untrusted previously verified Bitget archive register")
+    need(alt_index.get("schema")==INDEX_SCHEMA
+         and alt_index.get("quote")=="USDT"
+         and alt_index.get("archived_assets")==len(alt_index.get("assets",[])),
+         "Untrusted independent Bitget original archive register")
     catalog_ids={a["id"]:a for a in catalog["assets"]}
     proven={a["id"]:a for a in exact["results"]}
     need(len(catalog_ids)==250,"Duplicate ranked archive source owner")
+    old_federated={}
     for row in federated["assets"]:
-        if (row.get("source")!="Bitget Spot native 1m HTTPS"
-                or row.get("native_1m_count",0)<=0):
-            continue
-        cid=row["id"]
-        owner=catalog_ids.get(cid)
+        if row.get("source")=="Bitget Spot native 1m HTTPS" and row.get("native_1m_count",0)>0:
+            need(row["id"] not in old_federated,
+                 "Duplicate previously verified Bitget owner")
+            old_federated[row["id"]]=row
+    alt_owners={}
+    for row in alt_index["assets"]:
+        cid=row.get("id")
+        need(cid not in alt_owners and cid in catalog_ids
+             and row.get("rank")==catalog_ids[cid]["rank"]
+             and row.get("symbol")==catalog_ids[cid]["symbol"]
+             and row.get("quote")=="USDT"
+             and isinstance(row.get("months"),list) and len(row["months"])>0
+             and row.get("total_verified_1m_count",0)>0
+             and row.get("pair")==row["symbol"]+"USDT",
+             "Previously verified independent Bitget owner identity drift")
+        alt_owners[cid]=row
+    need(set(old_federated)<=set(alt_owners),
+         "Previously selected Bitget archive missing from independent register")
+    for cid,row in old_federated.items():
+        independent=alt_owners[cid]
+        need(row.get("rank")==independent["rank"]
+             and row.get("symbol")==independent["symbol"]
+             and row.get("quote")=="USDT"
+             and row.get("months")==len(independent["months"])
+             and row.get("native_1m_count")==independent["total_verified_1m_count"],
+             "Previously verified Bitget owner identity drift")
+    for cid,row in alt_owners.items():
+        owner=catalog_ids[cid]
         source=proven.get(cid)
-        need(owner and row.get("rank")==owner["rank"] and
-             row.get("symbol")==owner["symbol"] and
-             row.get("quote")=="USDT" and not owner["months"]
-             and source and source.get("rank")==owner["rank"]
+        need(source and source.get("rank")==owner["rank"]
              and source.get("symbol")==owner["symbol"]
              and source.get("status")=="exact_id_market_candidates",
              "Previously verified Bitget owner identity drift")
@@ -242,15 +268,38 @@ def projection(proven):
     return data
 
 def federate(catalog,items):
+    """Prefer Binance for a shared owner; never discard Bitget source proof."""
     ids={a["id"] for a in catalog["assets"] if a["months"]}
+    ranked={a["id"]:a for a in catalog["assets"]}
     fresh={}
+    # An overlap is permitted ONLY for a previously independently archived
+    # Bitget ID. build() verifies its actual source ZIPs again before this.
+    previous=json.loads((ALT/"index.json").read_text(encoding="utf-8"))
+    need(previous.get("schema")==INDEX_SCHEMA,
+         "Untrusted independent Bitget overlap register")
+    old={a["id"]:a for a in previous["assets"]}
+    need(len(old)==len(previous["assets"]),
+         "Duplicate independent Bitget overlap owner")
     for a in items:
-        need(a["id"] not in ids and a["id"] not in fresh,
+        cid=a["id"]
+        need(cid in ranked and cid not in fresh
+             and isinstance(a.get("months"),int) and a["months"]>0
+             and isinstance(a.get("native_1m_count"),int)
+             and a["native_1m_count"]>0,
              "Conflicting Binance/Bitget CoinGecko source owners")
-        fresh[a["id"]]=a
+        if cid in ids:
+            proof=old.get(cid)
+            need(proof and proof.get("rank")==ranked[cid]["rank"]
+                 and proof.get("symbol")==ranked[cid]["symbol"]
+                 and proof.get("quote")=="USDT",
+                 "Conflicting Binance/Bitget CoinGecko source owners")
+        fresh[cid]=a
+    # The selected federated view counts each ranked CoinGecko ID once.
+    # Native Bitget ZIPs for overlapping owners remain in ALT/index.json.
+    selected={cid:a for cid,a in fresh.items() if cid not in ids}
     result=[]
     for a in catalog["assets"]:
-        alternate=fresh.get(a["id"])
+        alternate=selected.get(a["id"])
         if alternate:
             result.append({"id":a["id"],"rank":a["rank"],"symbol":a["symbol"],
               "name":a["name"],"source":"Bitget Spot native 1m HTTPS",
@@ -263,15 +312,15 @@ def federate(catalog,items):
               "native_1m_count":a["candles"]})
     have=sum(bool(x["months"]) for x in result)
     minutes=sum(x["native_1m_count"] for x in result)
-    need(have==catalog["archived_assets"]+len(fresh) and
+    need(have==catalog["archived_assets"]+len(selected) and
          minutes==catalog["native_1m_candles"]+
-            sum(x["native_1m_count"] for x in fresh.values()),
+            sum(x["native_1m_count"] for x in selected.values()),
          "Native federated archived ownership or one-minute count inconsistent")
     return {"schema":FEDERATED_SCHEMA,"ranked":250,"quote":"USDT",
        "archived_assets":have,"binance_archived_assets":catalog["archived_assets"],
-       "bitget_archived_assets":len(fresh),"native_1m_candles":minutes,
+       "bitget_archived_assets":len(selected),"native_1m_candles":minutes,
        "first_trade_date_known":False,"is_live":False,
-       "note":"Two independent complete-month source formats. Native Bitget 7 fields; no synthetic trade count, no USDT=>USD.",
+       "note":"One selected source per CoinGecko ID; independently verified Bitget ZIPs retained even when Binance overlaps. No synthetic trade count or USDT=>USD.",
        "groups":[{"top":k,"archived":sum(bool(x["months"]) for x in result[:k])}
                  for k in (10,50,100,250)],
        "assets":result}
