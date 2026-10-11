@@ -37,7 +37,7 @@ MAX_PAGES=65
 MAX_RESPONSE=250000
 MAX_CANDLES=3700
 MAX_ASSETS=15
-TAG="crypto-bitget-spot-native-daily-2026-09-project-listings"
+TAG="crypto-bitget-spot-native-daily-2026-09-usdgo-vision"
 SCHEMA="aerith.bitget.native-exchange-daily-history.verified-response.v1"
 SHA=re.compile(r"^[a-f0-9]{64}$")
 PAIR=re.compile(r"^[A-Z0-9]{1,28}USDT$")
@@ -121,14 +121,10 @@ def single_symbol_candidates(minute,identity,official):
     return sorted(result,key=lambda a:a["rank"])
 
 NAMED_SPOT_PROOFS=(
-  ("htx-dao",65,"HTX","HTX DAO",
-   "https://www.bitget.com/asia/support/articles/12560603805507"),
-  ("kaspa",73,"KAS","Kaspa",
-   "https://www.bitget.com/support/articles/12560603785075"),
-  ("bitcoin-cash-sv",127,"BSV","Bitcoin SV",
-   "https://www.bitget.com/support/articles/12560603799193"),
-  ("fartcoin",213,"FARTCOIN","Fartcoin",
-   "https://www.bitget.com/support/articles/12560603818135"),
+  ("usdgo",69,"USDGO","USDGO",
+   "https://www.bitget.com/asia/support/articles/12560603859340"),
+  ("vision-3",209,"VSN","Vision",
+   "https://www.bitget.com/support/articles/12560603845590"),
 )
 
 def named_spot_candidates(minute,official):
