@@ -26,6 +26,99 @@ concurrency:
   group: btc-native-gap-recovery
   cancel-in-progress: false
 jobs:
+  repair-native-daily:
+    # Reuse this existing BTC-only workflow while broader historical collection
+    # is busy. The main hourly workflow independently provides the same audit.
+    # Output is idempotent: source SHA + policy + archive SHA decide NOOP.
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify native 1d checksum, gap and source-corroboration unit tests
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/btc_native_daily_reconciliation_test.py
+          python public/agent_crypto_erith_ia/tools/reconcile_btc_native_daily.py --audit-only
+      - name: Download and certify the 26 missing-day Binance BTCUSDT 1d originals
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/data/historical_archive_prototype")
+          target=root/"btc_native_daily_reconciliation"
+          if (target/"index.json").is_file():
+              old=json.loads((target/"index.json").read_text())
+              source={k:hashlib.sha256((root/k).read_bytes()).hexdigest()
+                for k in ("btc_max_integrated/index.json","btc_verified_gap_months/index.json")}
+              archive=target/old.get("file","missing")
+              if (old.get("source_catalog_sha256")==source and
+                  old.get("reconciliation_policy")=="official_native_1d_with_majority_source_corroboration_v2" and
+                  archive.is_file() and
+                  hashlib.sha256(archive.read_bytes()).hexdigest()==old.get("sha256")):
+                  pathlib.Path(os.environ["RUNNER_TEMP"],"native-daily-noop").touch()
+                  print("NOOP: all 26 original native daily sources already audited")
+          PY
+          if [[ -f "$RUNNER_TEMP/native-daily-noop" ]]; then exit 0; fi
+          python public/agent_crypto_erith_ia/tools/reconcile_btc_native_daily.py --output "$RUNNER_TEMP/btc_native_daily_reconciliation"
+          python - <<'PY'
+          import gzip,hashlib,json,os,pathlib
+          folder=pathlib.Path(os.environ["RUNNER_TEMP"])/"btc_native_daily_reconciliation"
+          index=json.loads((folder/"index.json").read_text())
+          raw=(folder/index["file"]).read_bytes()
+          obj=json.loads(gzip.decompress(raw))
+          assert hashlib.sha256(raw).hexdigest()==index["sha256"]
+          assert index["bars"]==index["native_1d_recovered"]+index["original_bars"]
+          assert index["native_1d_recovered"]+index["unresolved_count"]==26
+          assert len(obj["native_1d_overrides"])==index["native_1d_recovered"]
+          assert index["missing_minutes_unchanged"]==5881
+          print("BTC VERIFIED OFFICIAL NATIVE 1D",index["native_1d_recovered"],
+                "recovered; pending",index["unresolved_dates"])
+          PY
+      - name: Publish only the new auditable native 1d series, without changing original 1m
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if [[ -f "$RUNNER_TEMP/native-daily-noop" ]]; then exit 0; fi
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          for attempt in 1 2 3; do
+            git fetch origin main
+            for source in btc_max_integrated/index.json btc_verified_gap_months/index.json; do
+              a=$(sha256sum "$root/$source" | cut -d' ' -f1)
+              b=$(git show "origin/main:$root/$source" | sha256sum | cut -d' ' -f1)
+              if [[ "$a" != "$b" ]]; then
+                echo "::error::BTC historical source changed during native 1d collection"
+                exit 1
+              fi
+            done
+            git reset --hard origin/main
+            mkdir -p "$root/btc_native_daily_reconciliation"
+            cp -a "$RUNNER_TEMP/btc_native_daily_reconciliation/." "$root/btc_native_daily_reconciliation/"
+            git add -- "$root/btc_native_daily_reconciliation"
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              echo 'NOOP: Binance daily reconciliation already published'
+              exit 0
+            fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Publish audited 26-day Binance native BTC 1d reconciliation'
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          echo "::error::Concurrent changes prevented publishing the BTC 1d audit"
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: btc-native-daily-short-audit
+          path: ${{ runner.temp }}/btc_native_daily_reconciliation/index.json
+          if-no-files-found: ignore
+          retention-days: 30
   verify-original:
     runs-on: ubuntu-latest
     timeout-minutes: 30
