@@ -9,6 +9,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/freeze_btc_daily_reference.py'
       - 'public/agent_crypto_erith_ia/tools/audit_btc_minute_gaps.py'
       - 'public/agent_crypto_erith_ia/tools/btc_minute_gap_audit_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_btc_minute_rest.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_minute_rest_test.py'
   push:
     branches: [main]
     paths:
@@ -19,6 +21,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/freeze_btc_daily_reference.py'
       - 'public/agent_crypto_erith_ia/tools/audit_btc_minute_gaps.py'
       - 'public/agent_crypto_erith_ia/tools/btc_minute_gap_audit_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_btc_minute_rest.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_minute_rest_test.py'
   workflow_dispatch:
     inputs:
       month:
@@ -32,6 +36,119 @@ concurrency:
   group: btc-native-gap-recovery
   cancel-in-progress: false
 jobs:
+  btc-rest-and-trade-inventory:
+    # This is evidence-only, not a live market feed or a trading component.
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recheck 3075-day immutable truth and offline API/trade audit tests
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/audit_btc_minute_rest.py
+          python -m py_compile public/agent_crypto_erith_ia/tools/btc_minute_rest_test.py
+          python public/agent_crypto_erith_ia/tools/btc_minute_rest_test.py
+          python public/agent_crypto_erith_ia/tools/audit_btc_minute_rest.py --audit-only
+      - name: Check whether identical source-locked research already exists
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/data/historical_archive_prototype")
+          folder=root/"btc_minute_api_research"
+          manifest=folder/"index.json"
+          if not manifest.is_file(): raise SystemExit(0)
+          old=json.loads(manifest.read_text())
+          candidate=folder/old.get("candidate_file","absent")
+          prior=hashlib.sha256((root/"btc_minute_gap_audit/index.json").read_bytes()).hexdigest()
+          daily=json.loads((root/"btc_daily_reference/index.json").read_text())
+          original=hashlib.sha256((root/"btc_verified_gap_months/index.json").read_bytes()).hexdigest()
+          if (old.get("source_policy")=="official_spot_btcusdt_1m_rest_utc_exact_with_native_witness.v1"
+              and old.get("prior_minute_audit_sha256")==prior
+              and old.get("frozen_daily_reference_sha256")==daily["locked_source"]["data_sha256"]
+              and old.get("source_gap_catalog_sha256")==original
+              and old.get("days_checked")==26 and old.get("original_missing_minutes")==5881
+              and candidate.is_file() and
+              hashlib.sha256(candidate.read_bytes()).hexdigest()==old.get("candidate_sha256")):
+              pathlib.Path(os.environ["RUNNER_TEMP"],"btc-rest-noop").touch()
+              print("NOOP: REST and trades ZIP research previously published on this source snapshot")
+          PY
+      - name: Query the original REST minutes and inventory native trade archives
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if [[ -f "$RUNNER_TEMP/btc-rest-noop" ]]; then exit 0; fi
+          python public/agent_crypto_erith_ia/tools/audit_btc_minute_rest.py --output "$RUNNER_TEMP/btc_minute_api_research"
+          python - <<'PY'
+          import gzip,hashlib,json,os,pathlib
+          out=pathlib.Path(os.environ["RUNNER_TEMP"])/"btc_minute_api_research"
+          idx=json.loads((out/"index.json").read_text())
+          raw=(out/idx["candidate_file"]).read_bytes()
+          obj=json.loads(gzip.decompress(raw))
+          assert idx["schema"]=="seven.crypto.btc.native-minute-rest-research-index.v1"
+          assert idx["original_missing_minutes"]==5881 and idx["days_checked"]==26
+          assert idx["rest_native_1m_accepted"]+idx["still_missing_or_not_certified"]==5881
+          assert len(idx["trade_archives_inventory"])==52
+          assert idx["trade_archives_downloaded"]==0 and idx["trade_candles_reconstructed"]==0
+          assert idx["accepted_minutes_applied_to_1m_source"] is False
+          assert len(raw)==idx["candidate_bytes"]
+          assert hashlib.sha256(raw).hexdigest()==idx["candidate_sha256"]
+          assert len(obj["rows"])==idx["rest_native_1m_accepted"]
+          assert obj["synthetic_rows"]==0
+          assert sum(x["gap_minutes"] for x in idx["requests"])==5881
+          print("BTC AUTHENTIC REST GAP QUERY PASS:",
+                idx["rest_native_1m_accepted"],"certified API minutes;",
+                idx["still_missing_or_not_certified"],"still missing/not certified",
+                "API inconclusive:",idx["api_inconclusive_requested_minutes"])
+          PY
+      - name: Publish separate source-gated BTC historical research evidence
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if [[ -f "$RUNNER_TEMP/btc-rest-noop" ]]; then exit 0; fi
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          for attempt in 1 2 3; do
+            git fetch origin main
+            for file in btc_minute_gap_audit/index.json btc_daily_reference/index.json btc_verified_gap_months/index.json; do
+              local_sha=$(sha256sum "$root/$file" | cut -d' ' -f1)
+              latest_sha=$(git show "origin/main:$root/$file" | sha256sum | cut -d' ' -f1)
+              if [[ "$local_sha" != "$latest_sha" ]]; then
+                echo "::error::Canonical source changed during Binance REST minute audit"
+                exit 1
+              fi
+            done
+            git reset --hard origin/main
+            mkdir -p "$root/btc_minute_api_research"
+            cp -a "$RUNNER_TEMP/btc_minute_api_research/." "$root/btc_minute_api_research/"
+            git add -- "$root/btc_minute_api_research"
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              echo 'NOOP: same original Binance REST source evidence already published'
+              exit 0
+            fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Publish read-only Binance REST BTC minute and trade-source evidence'
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          echo "::error::Could not publish isolated source audit after concurrent changes"
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: btc-rest-minute-trade-inventory
+          path: ${{ runner.temp }}/btc_minute_api_research/index.json
+          if-no-files-found: ignore
+          retention-days: 30
   btc-reference-and-minute-audit:
     runs-on: ubuntu-latest
     timeout-minutes: 45
