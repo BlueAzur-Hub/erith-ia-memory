@@ -74,6 +74,9 @@ def build(releases,load_manifest):
                 j.get('canonical_import') is False and
                 j.get('synthetic_rows')==0,
                 'Source qualification or BTC exchange identity incorrect')
+        require(j.get('status') in ('source_verified_gaps',
+                'source_with_gaps_and_close_time_anomaly'),
+                'Unrecognized partial source quality status')
         good,miss,total=(j.get('native_rows'),j.get('missing_minutes'),
                          j.get('expected_minutes'))
         require(all(isinstance(x,int) for x in (good,miss,total)) and
