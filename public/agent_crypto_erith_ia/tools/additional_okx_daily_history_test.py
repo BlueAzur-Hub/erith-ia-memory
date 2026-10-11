@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline evidence and immutable source cohort tests for USDG, PI and FLR."""
+"""Offline proofs and immutable native sources for five further OKX Spot assets."""
 import unittest
 import collect_additional_okx_daily_history as addon
 
@@ -22,29 +22,29 @@ def fixture():
         "assets":instruments})
 
 class OKXExpandedSourceTests(unittest.TestCase):
-    def test_three_exact_project_names_and_official_pairs(self):
+    def test_five_exact_project_names_and_official_pairs(self):
         result=addon.owners(*fixture())
         self.assertEqual([x["id"] for x in result],
-                         ["global-dollar","pi-network","flare-networks"])
+                         ["venice-token","grass","monad","collector-crypt","pons"])
         self.assertEqual([x["instrument"] for x in result],
-                         ["USDG-USDT","PI-USDT","FLR-USDT"])
-        self.assertEqual(len({x["identity_evidence"] for x in result}),3)
+                         ["VVV-USDT","GRASS-USDT","MON-USDT","CARDS-USDT","PONS-USDT"])
+        self.assertEqual(len({x["identity_evidence"] for x in result}),5)
 
     def test_never_claim_wrong_market_id_or_already_archived(self):
         for mutation in ("name","rank","pair","owner"):
             fed,venue=fixture()
-            if mutation=="name": fed["assets"][36]["name"]="Fake"
-            if mutation=="rank": fed["assets"][36]["rank"]=999
+            if mutation=="name": fed["assets"][77]["name"]="Fake"
+            if mutation=="rank": fed["assets"][77]["rank"]=999
             if mutation=="pair": venue["assets"][0]["instruments"][0]["instrument"]="WRONG-USDT"
             if mutation=="owner":
-                fed["assets"][36]["months"]=1
-                fed["assets"][36]["source"]="Binance Spot official native 1m ZIPs"
+                fed["assets"][77]["months"]=1
+                fed["assets"][77]["source"]="Binance Spot official native 1m ZIPs"
             with self.subTest(mutation=mutation):
                 with self.assertRaises(ValueError):addon.owners(fed,venue)
 
     def test_cannot_claim_usd_price_or_relabel_daily_as_minute(self):
         fed,venue=fixture()
-        fed["assets"][36]["quote"]="USD"
+        fed["assets"][77]["quote"]="USD"
         with self.assertRaisesRegex(ValueError,"Exact ranked"):
             addon.owners(fed,venue)
 

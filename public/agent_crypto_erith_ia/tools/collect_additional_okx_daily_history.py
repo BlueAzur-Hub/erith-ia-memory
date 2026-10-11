@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""Acquire second independently named OKX Spot UTC-daily source cohort.
+"""Acquire a separately verified native OKX UTC-daily Spot source cohort.
 
-Global Dollar, Pi Network and Flare are each independently identified by
-their official OKX spot-listing notices. Never convert USDT to USD and never
+Each asset has independent proof of its real named OKX Spot listing. Never convert USDT to USD and never
 count 1Dutc bars as 1m. Reuses source validation from OKX first cohort.
 """
 from __future__ import annotations
@@ -16,14 +15,18 @@ import tempfile
 
 import collect_native_okx_daily_history as daily
 
-TAG="crypto-okx-spot-native-daily-2026-09-usdg-pi-flr"
+TAG="crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons"
 PROOFS=(
- ("global-dollar",37,"USDG","Global Dollar",
-  "https://www.okx.com/en-gb/help/okx-will-launch-usdg-usdt-for-spot-trading"),
- ("pi-network",82,"PI","Pi Network",
-  "https://www.okx.com/en-us/help/okx-to-list-pi-pi-network-for-spot-trading"),
- ("flare-networks",105,"FLR","Flare",
-  "https://www.okx.com/en-us/help/okx-to-distribute-flare-network-flr-airdrop-and-enable-spot-trading"),
+ ("venice-token",78,"VVV","Venice Token",
+  "https://www.okx.com/en-sg/help/okx-to-list-vvv-usdt-venice-for-spot-trading"),
+ ("grass",124,"GRASS","Grass",
+  "https://www.okx.com/en-eu/help/okx-to-list-grass-grass-for-spot-trading"),
+ ("monad",154,"MON","Monad",
+  "https://www.okx.com/fr-fr/help/okx-to-list-mon-monad-for-spot-trading"),
+ ("collector-crypt",163,"CARDS","Collector Crypt",
+  "https://www.okx.com/en-sg/help/okx-to-list-cards-usdt-collector-crypt-for-spot-trading"),
+ ("pons",169,"PONS","Pons",
+  "https://www.okx.com/en-gb/help/okx-to-list-pons-usdt-pons-family-for-spot-trading"),
 )
 
 def owners(fed,venues):
@@ -102,7 +105,7 @@ def publish(payloads):
         cmd=["gh","release","create",TAG,
              *(str(folder/x["filename"]) for x in docs),
              str(folder/"manifest.json"),
-             "--title","Native OKX Spot UTC daily history · Global Dollar, Pi, Flare",
+             "--title","Native OKX Spot UTC daily history · VVV, GRASS, MON, CARDS, PONS",
              "--notes","Original public OKX Spot 1Dutc OHLCV, with timestamps, original USDT quote and SHA-256 of retrieved responses. Unlike Binance ZIPs, OKX responses are not exchange-signed archives. Not yet part of the canonical native 1m Top250 counter. No trading orders and no interpolated candles.",
              "--target",os.environ["GITHUB_SHA"],"--latest=false"]
         proc=subprocess.run(cmd,capture_output=True,text=True,timeout=150)
@@ -123,12 +126,12 @@ def main():
     spot=json.loads(daily.VENUES.read_text(encoding="utf-8"))
     qualified=owners(fed,spot)
     if args.plan:
-        print("OKX THREE MORE DAILY PLAN "+json.dumps({
+        print("OKX FIVE VERIFIED DAILY PLAN "+json.dumps({
             "owners":qualified,"source_interval":"1Dutc","published":False},
             sort_keys=True));return
     rows=daily.collect(qualified)
     if args.probe:
-        print("OKX SECONDARY SOURCE PROBE COMPLETE; NO PUBLICATION",flush=True)
+        print("OKX FIVE VERIFIED DAILY SOURCE PROBE COMPLETE; NO PUBLICATION",flush=True)
         return
     publish(rows)
 
