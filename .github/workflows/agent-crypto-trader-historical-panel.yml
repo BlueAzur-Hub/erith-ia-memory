@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/agent-crypto-trader-historical-panel.yml"
-      - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
+      - "public/agent_crypto_erith_ia/trader/trading-desk.html"
       - "public/agent_crypto_erith_ia/trader/trader-historical-panel.js"
       - "public/agent_crypto_erith_ia/trader/trader-historical-universe-reader.js"
       - "public/agent_crypto_erith_ia/trader/trader-historical-long-reader.js"
@@ -15,7 +15,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/agent-crypto-trader-historical-panel.yml"
-      - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
+      - "public/agent_crypto_erith_ia/trader/trading-desk.html"
       - "public/agent_crypto_erith_ia/trader/trader-historical-panel.js"
       - "public/agent_crypto_erith_ia/trader/trader-historical-universe-reader.js"
       - "public/agent_crypto_erith_ia/trader/trader-historical-long-reader.js"
@@ -35,7 +35,6 @@ jobs:
           node-version: "22"
       - name: Verify lazy Trader R9 UI syntax and behavior
         run: |
-          node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
           node --check public/agent_crypto_erith_ia/trader/trader-historical-panel.js
           node --check public/agent_crypto_erith_ia/trader/trader-historical-universe-reader.js
           node --check public/agent_crypto_erith_ia/trader/trader-historical-long-reader.js
