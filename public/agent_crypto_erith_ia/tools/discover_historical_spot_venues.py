@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only Top250 exact-ID market discovery: four Spot exchanges, NOT OHLCV."""
+"""Read-only Top250 exact-ID market discovery: six Spot exchanges, NOT OHLCV."""
 from __future__ import annotations
 import argparse
 import datetime as dt
@@ -21,7 +21,8 @@ LIVE_DAILY=BASE/"top250_multiresolution_sources/index.json"
 OUTPUT=BASE/"top250-alt-market-evidence.json"
 OFFICIAL=BASE/"top250-official-spot-instruments.json"
 SCHEMA="aerith.public.ohlcv.spot.top250.alt-market-discovery.v1"
-EXCHANGES=("okx","bitget","gate","kucoin")
+EXCHANGES=("okx","bitget","gate","kucoin","kraken","coinbase")
+COINGECKO_IDS={"coinbase":"gdax"}
 QUOTES={"USDT":"tether","USDC":"usd-coin"}
 ID=re.compile(r"^[a-z0-9-]{2,100}$")
 ALNUM=re.compile(r"^[A-Z0-9]{1,30}$")
@@ -113,7 +114,7 @@ def exact_candidates(tickers,asset,exchange):
         if not isinstance(t,dict):continue
         market=t.get("market") or {}
         base,quote=t.get("base"),t.get("target")
-        if not isinstance(market,dict) or market.get("identifier")!=exchange:continue
+        if not isinstance(market,dict) or market.get("identifier")!=COINGECKO_IDS.get(exchange,exchange):continue
         if (base!=asset["symbol"] or not isinstance(base,str) or
             not ALNUM.fullmatch(base) or quote not in QUOTES or base==quote):continue
         if t.get("coin_id")!=asset["id"]:continue
@@ -121,7 +122,8 @@ def exact_candidates(tickers,asset,exchange):
         if t.get("is_anomaly") is True or t.get("is_stale") is True or t.get("trust_score")=="red":
             continue
         pair=(base+"_"+quote if exchange=="gate" else
-              base+"-"+quote if exchange in ("okx","kucoin") else
+              base+"/"+quote if exchange=="kraken" else
+              base+"-"+quote if exchange in ("okx","kucoin","coinbase") else
               base+quote)
         evidence={"coin_id":asset["id"],"exchange":exchange,"base":base,
                   "quote":quote,"market_pair_candidate":pair,
@@ -133,7 +135,7 @@ def exact_candidates(tickers,asset,exchange):
 def fetch(coin_id,exchange,page):
     require(ID.fullmatch(coin_id) and exchange in EXCHANGES and 1<=page<=2,
             "Unsafe exact-ID source request")
-    params=urllib.parse.urlencode({"exchange_ids":exchange,"page":page})
+    params=urllib.parse.urlencode({"exchange_ids":COINGECKO_IDS.get(exchange,exchange),"page":page})
     url=f"https://api.coingecko.com/api/v3/coins/{coin_id}/tickers?{params}"
     req=urllib.request.Request(url,headers={"User-Agent":"SevenHeaven-SpotArchiveDiscovery/1.0",
                                             "Accept":"application/json"})
@@ -150,7 +152,8 @@ def fetch_exchange(coin_id,exchange,page):
     require(ID.fullmatch(coin_id) and exchange in EXCHANGES and 1<=page<=2,
             "Unsafe exchange-specific exact-ID request")
     params=urllib.parse.urlencode({"coin_ids":coin_id,"page":page})
-    url=f"https://api.coingecko.com/api/v3/exchanges/{exchange}/tickers?{params}"
+    url=(f"https://api.coingecko.com/api/v3/exchanges/"
+         f"{COINGECKO_IDS.get(exchange,exchange)}/tickers?{params}")
     req=urllib.request.Request(url,headers={
         "User-Agent":"SevenHeaven-SpotArchiveDiscovery/1.0",
         "Accept":"application/json"})
@@ -278,7 +281,8 @@ def source_venues_for(asset,official):
         if venue not in EXCHANGES or quote not in QUOTES:
             continue
         expected=(base+"_"+quote if venue=="gate" else
-                  base+"-"+quote if venue in ("okx","kucoin") else
+                  base+"/"+quote if venue=="kraken" else
+                  base+"-"+quote if venue in ("okx","kucoin","coinbase") else
                   base+quote)
         require(item.get("exchange_instrument_confirmed") is True and
                 item.get("base")==base and
