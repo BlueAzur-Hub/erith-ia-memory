@@ -25,8 +25,8 @@ class MultiResolutionRegistryTests(unittest.TestCase):
                      if a.get("release_tag")=="crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"]
         self.assertEqual(len(alternative),8)
         self.assertEqual(sum(a["native_candles"] for a in alternative),10034)
-        self.assertGreaterEqual(len(approved),52)
-        self.assertGreaterEqual(registry["native_daily_candles"],50717)
+        self.assertGreaterEqual(len(approved),53)
+        self.assertGreaterEqual(registry["native_daily_candles"],50975)
         known={a["id"] for a in approved}
         self.assertEqual(len(known),len(approved))
         self.assertEqual({a["id"] for a in alternative},{
@@ -125,8 +125,8 @@ class MultiResolutionRegistryTests(unittest.TestCase):
                 self.assertNotIn(cid,{x["id"] for x in minute["assets"]
                                      if x["native_1m_count"]>0})
         self.assertEqual(sum(v[4] for v in actual.values()),5507)
-        self.assertEqual(len(checked),52)
-        self.assertEqual(registry["native_daily_candles"],50717)
+        self.assertGreaterEqual(len(checked),53)
+        self.assertGreaterEqual(registry["native_daily_candles"],50975)
 
     def test_refuse_forged_xdc_contract_owner_and_native_quote(self):
         index,catalog=self.source()
@@ -143,6 +143,54 @@ class MultiResolutionRegistryTests(unittest.TestCase):
             row[field]=forged
             with self.subTest(field=field),self.assertRaises(ValueError):
                 m.check_registry(changed,catalog)
+
+    def test_ultima_original_kucoin_immutable_native_daily_release(self):
+        registry,minute=self.source()
+        m.check_registry(registry,minute)
+        record=next(a for a in registry["assets"] if a["id"]=="ultima")
+        self.assertEqual((record["rank"],record["name"],record["symbol"]),
+                         (237,"Ultima","ULTIMA"))
+        self.assertEqual((record["venue"],record["market"],record["quote"],
+                          record["bar"]),("KuCoin Spot","ULTIMA-USDT","USDT","1D"))
+        self.assertEqual((record["native_candles"],
+                          record["gaps_within_observed_span"]),(258,0))
+        self.assertEqual(record["earliest_source_ms"],1768521600000)
+        self.assertEqual(record["latest_source_ms"],1790726400000)
+        self.assertEqual(record["source_attestation"],"verified-original-spot-owner")
+        self.assertEqual(record["original_source_api"],
+                         "https://api.kucoin.com/api/v1/market/candles")
+        self.assertEqual(record["release_tag"],
+              "crypto-gate-kucoin-spot-native-daily-2026-09-7ef2c120eab5")
+        self.assertEqual(record["sha256"],
+             "ff68bcb1b0700561f2ee5769914c05c88da6eab352d39b15153613fd5ebf30b2")
+        # The original named project notice is independently recorded in the
+        # exact-ID discovery ledger. The archive must never infer pre-2026
+        # daily prices from this specific KuCoin pair.
+        self.assertIn("top250-alt-market-evidence.json#ultima",
+                      record["identity_evidence"])
+        have={a["id"] for a in minute["assets"] if a["native_1m_count"]>0}
+        self.assertNotIn("ultima",have)
+        native={a["id"] for a in registry["assets"]}
+        self.assertEqual(len(have|native),194)
+        self.assertEqual(registry["asset_count"],53)
+        self.assertEqual(registry["native_daily_candles"],50975)
+
+    def test_ultima_source_cannot_silently_claim_earlier_candles_or_usd(self):
+        registry,minute=self.source()
+        for field,value in (
+            ("earliest_source_ms",1768435200000),
+            ("native_candles",259),
+            ("quote","USD"),
+            ("market","OTHER-USDT"),
+            ("sha256","f"*63),
+            ("source_attestation","unproven"),
+            ("original_source_api","https://example.invalid/fake")
+        ):
+            mutated=copy.deepcopy(registry)
+            line=next(a for a in mutated["assets"] if a["id"]=="ultima")
+            line[field]=value
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                m.check_registry(mutated,minute)
 
     def test_tether_has_genuine_kucoin_usdc_not_usd_daily_archive(self):
         registry,minute=self.source()
