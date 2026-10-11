@@ -6,9 +6,9 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
-          "first_month": "2018-05",
+          "first_month": "2018-03",
           "last_month": "2018-05",
-          "months": 1
+          "months": 3
         },
         {
           "first_month": "2018-08",
@@ -73,20 +73,22 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2018-05",
+      "first_verified_closed_month": "2018-03",
       "id": "bitcoin",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 3510720,
+      "native_minutes": 3598560,
       "rank": 1,
       "symbol": "BTC",
       "token_creation_date_known": false,
-      "verified_months": 80,
+      "verified_months": 82,
       "year_shards": [
         {
-          "first_month": "2018-05",
+          "first_month": "2018-03",
           "last_month": "2018-05",
           "months": [
+            "2018-03",
+            "2018-04",
             "2018-05"
           ],
           "span": 0,
@@ -16165,5 +16167,5 @@
   "ranked": 250,
   "schema": "aerith.public.ohlcv.top250.verifiable-year-depth.v1",
   "source": "Verified Binance Spot monthly ZIP catalog",
-  "source_catalog_minutes": 220214880
+  "source_catalog_minutes": 220302720
 }
