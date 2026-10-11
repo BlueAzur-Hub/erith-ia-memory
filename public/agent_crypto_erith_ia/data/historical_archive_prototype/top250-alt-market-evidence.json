@@ -1,7 +1,7 @@
 {
-  "candidate_count": 130,
-  "checked_count": 94,
-  "market_candidate_count": 28,
+  "candidate_count": 82,
+  "checked_count": 49,
+  "market_candidate_count": 1,
   "market_only_not_archived": true,
   "note": "Candidate market evidence only. Exchange instrument and complete genuine 1m source required before archival.",
   "quote": "USDT or USDC: never convert silently",
@@ -323,12 +323,22 @@
       "symbol": "BGB"
     },
     {
-      "checked_at": "2026-10-10T02:16:36.642382+00:00",
+      "checked_at": "2026-10-11T01:18:11.726900+00:00",
       "id": "usdgo",
-      "markets": [],
-      "pages_checked": 0,
+      "markets": [
+        {
+          "base": "USDGO",
+          "coin_id": "usdgo",
+          "exchange": "bitget",
+          "exchange_instrument_confirmed": false,
+          "market_pair_candidate": "USDGOUSDT",
+          "native_1m_month_confirmed": false,
+          "quote": "USDT"
+        }
+      ],
+      "pages_checked": 2,
       "rank": 69,
-      "status": "source_unavailable",
+      "status": "exact_id_market_candidates",
       "symbol": "USDGO"
     },
     {
@@ -1017,6 +1027,33 @@
       "rank": 171,
       "status": "exact_id_market_candidates",
       "symbol": "ZBCN"
+    },
+    {
+      "checked_at": "2026-10-11T01:18:32.069718+00:00",
+      "id": "kinesis-silver",
+      "markets": [],
+      "pages_checked": 1,
+      "rank": 173,
+      "status": "source_unavailable",
+      "symbol": "KAG"
+    },
+    {
+      "checked_at": "2026-10-11T01:18:52.339127+00:00",
+      "id": "bnb48-club-token",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 174,
+      "status": "source_unavailable",
+      "symbol": "KOGE"
+    },
+    {
+      "checked_at": "2026-10-11T01:19:12.601789+00:00",
+      "id": "safo",
+      "markets": [],
+      "pages_checked": 0,
+      "rank": 175,
+      "status": "source_unavailable",
+      "symbol": "SAFO"
     },
     {
       "checked_at": "2026-10-10T18:23:51.106784+00:00",
