@@ -15,6 +15,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/btc_trade_gap_test.py'
       - 'public/agent_crypto_erith_ia/tools/compare_btc_cross_venue.py'
       - 'public/agent_crypto_erith_ia/tools/compare_btc_cross_venue_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix_test.py'
   push:
     branches: [main]
     paths:
@@ -31,6 +33,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/btc_trade_gap_test.py'
       - 'public/agent_crypto_erith_ia/tools/compare_btc_cross_venue.py'
       - 'public/agent_crypto_erith_ia/tools/compare_btc_cross_venue_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix_test.py'
   workflow_dispatch:
     inputs:
       month:
@@ -44,6 +48,106 @@ concurrency:
   group: btc-native-gap-recovery
   cancel-in-progress: false
 jobs:
+  btc-top5-venue-history-matrix:
+    # Read-only, asset-aware, 42 historical checks. Never rewrites Binance sources.
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert 27 BTC source gaps, 12 alt-asset windows and no conflated USD USDT
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix.py
+          python public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix_test.py
+          python public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix.py --audit-only
+      - name: Refuse duplicate source-specific published audit
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/data/historical_archive_prototype")
+          target=root/"cross_venue_gap_matrix/index.json"
+          if not target.is_file():raise SystemExit(0)
+          previous=json.loads(target.read_text())
+          originals=hashlib.sha256((root/"btc_verified_gap_months/index.json").read_bytes()).hexdigest()
+          frozen=json.loads((root/"btc_daily_reference/index.json").read_text())
+          if (previous.get("schema")=="seven.crypto.cross-venue-historical-gap-matrix.v1"
+              and previous.get("policy")=="native_venue_candles_utc_exact_non_fungible_quotes.v1"
+              and previous.get("input_btc_gap_catalog_sha256")==originals
+              and previous.get("protected_daily_reference_sha256")==frozen["locked_source"]["data_sha256"]
+              and previous.get("btc_gap_windows_total")==27
+              and previous.get("btc_expected_gap_minutes")==5881
+              and len(previous.get("rows",[]))==42):
+              pathlib.Path(os.environ["RUNNER_TEMP"],"cross-venue-matrix-noop").touch()
+              print("NOOP: existing 39-window exchange-specific audit immutable")
+          PY
+      - name: Compare BTC full gaps and Top5 source-qualified historic markets
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if [[ -f "$RUNNER_TEMP/cross-venue-matrix-noop" ]]; then exit 0; fi
+          python public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix.py --output "$RUNNER_TEMP/cross_venue_gap_matrix/index.json"
+          python - <<'PY'
+          import json,os,pathlib
+          path=pathlib.Path(os.environ["RUNNER_TEMP"])/"cross_venue_gap_matrix"/"index.json"
+          data=json.loads(path.read_text())
+          assert data["schema"]=="seven.crypto.cross-venue-historical-gap-matrix.v1"
+          assert data["btc_gap_windows_total"]==27 and data["btc_expected_gap_minutes"]==5881
+          assert len(data["rows"])==42 and data["trader_modified"] is False
+          assert {a:d["windows"] for a,d in data["summary"].items()}=={
+              "BTC":27,"ETH":4,"BNB":4,"XRP":4,"SOL":3}
+          assert sum(x["window_calendar_minutes"] for x in data["rows"] if x["asset"]=="BTC")==5881
+          for row in data["rows"]:
+              assert row["coinbase"]["quote"]=="USD"
+              assert row["coinbase"]["candles_present"]<=row["window_calendar_minutes"]
+              if row["binance_alt"]:
+                  assert row["binance_alt"]["quote"]=="USDT"
+              if row["kraken"]:
+                  assert row["kraken"]["quote"]=="USD"
+          print("VERIFIED BTC+TOP5 HISTORICAL MATRIX",json.dumps(data["summary"],sort_keys=True))
+          PY
+      - name: Commit verified independent exchange comparisons to source-locked index
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if [[ -f "$RUNNER_TEMP/cross-venue-matrix-noop" ]]; then exit 0; fi
+          base=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          for attempt in 1 2 3; do
+            git fetch origin main
+            for p in btc_verified_gap_months/index.json btc_daily_reference/index.json; do
+              old=$(sha256sum "$base/$p" | cut -d' ' -f1)
+              new=$(git show "origin/main:$base/$p" | sha256sum | cut -d' ' -f1)
+              if [[ "$old" != "$new" ]]; then
+                echo "::error::The canonical source changed during external exchange audit"
+                exit 1
+              fi
+            done
+            git reset --hard origin/main
+            mkdir -p "$base/cross_venue_gap_matrix"
+            cp "$RUNNER_TEMP/cross_venue_gap_matrix/index.json" "$base/cross_venue_gap_matrix/index.json"
+            git add -- "$base/cross_venue_gap_matrix/index.json"
+            git diff --cached --check
+            if git diff --cached --quiet; then echo 'NOOP: audit already published'; exit 0; fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Publish multi-venue BTC Top5 authenticated historical gap matrix'
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: btc-top5-cross-venue-matrix-evidence
+          path: ${{ runner.temp }}/cross_venue_gap_matrix/index.json
+          if-no-files-found: ignore
+          retention-days: 30
   btc-cross-venue-march2023:
     # Only evidence. Never alter BTCUSDT sources or Trader.
     if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
