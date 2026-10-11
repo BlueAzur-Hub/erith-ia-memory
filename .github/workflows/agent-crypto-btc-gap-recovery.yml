@@ -17,6 +17,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/compare_btc_cross_venue_test.py'
       - 'public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix.py'
       - 'public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_kucoin_bnb_sol_outages.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_kucoin_bnb_sol_outages_test.py'
   push:
     branches: [main]
     paths:
@@ -35,6 +37,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/compare_btc_cross_venue_test.py'
       - 'public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix.py'
       - 'public/agent_crypto_erith_ia/tools/audit_cross_venue_gap_matrix_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_kucoin_bnb_sol_outages.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_kucoin_bnb_sol_outages_test.py'
   workflow_dispatch:
     inputs:
       month:
@@ -48,6 +52,89 @@ concurrency:
   group: btc-native-gap-recovery
   cancel-in-progress: false
 jobs:
+  bnb-kucoin-independent-history:
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate KuCoin native Spot OHLCV, quote and timestamps
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/audit_kucoin_bnb_sol_outages.py
+          python public/agent_crypto_erith_ia/tools/audit_kucoin_bnb_sol_outages_test.py
+          python public/agent_crypto_erith_ia/tools/audit_kucoin_bnb_sol_outages.py --audit-only
+      - name: Verify KuCoin BNB and SOL histories at exact independent UTC windows
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          base=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/data/historical_archive_prototype")
+          src=root/"cross_venue_gap_matrix/index.json"
+          old=root/"kucoin_bnb_sol_crosscheck/index.json"
+          if old.is_file():
+              j=json.loads(old.read_text())
+              if (j.get("schema")=="seven.crypto.kucoin-bnb-sol-source-crosscheck.v1"
+                  and j.get("source_policy")=="kucoin_spot_native_1m_gap_evidence_non_fungible_quotes.v1"
+                  and j.get("cross_venue_matrix_sha256")==hashlib.sha256(src.read_bytes()).hexdigest()
+                  and len(j.get("samples",[]))==5):
+                  pathlib.Path(os.environ["RUNNER_TEMP"],"kucoin-noop").touch()
+                  print("NOOP: existing five-window KuCoin historical source evidence")
+          PY
+          if [[ -f "$RUNNER_TEMP/kucoin-noop" ]]; then exit 0; fi
+          python public/agent_crypto_erith_ia/tools/audit_kucoin_bnb_sol_outages.py --output "$RUNNER_TEMP/kucoin_bnb_sol_crosscheck/index.json"
+          python - <<'PY'
+          import json,os,pathlib
+          obj=json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/"kucoin_bnb_sol_crosscheck/index.json").read_text())
+          assert obj["schema"]=="seven.crypto.kucoin-bnb-sol-source-crosscheck.v1"
+          assert len(obj["samples"])==5
+          assert obj["summary"]["BNB"]["windows"]==4
+          assert obj["summary"]["SOL"]["windows"]==1
+          assert obj["no_synthetic_minutes"] is True
+          assert obj["binance_originals_unchanged"] is True
+          assert all(r["kucoin"]["quote"]=="USDT" for r in obj["samples"])
+          print("KUCOIN BNB SOL NATIVE EVIDENCE",json.dumps(obj["summary"],sort_keys=True))
+          PY
+      - name: Publish independent KuCoin source comparison, preserving canonical prices
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if [[ -f "$RUNNER_TEMP/kucoin-noop" ]]; then exit 0; fi
+          base=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          for attempt in 1 2 3; do
+            git fetch origin main
+            sha_a=$(sha256sum "$base/cross_venue_gap_matrix/index.json" | cut -d' ' -f1)
+            sha_b=$(git show "origin/main:$base/cross_venue_gap_matrix/index.json" | sha256sum | cut -d' ' -f1)
+            if [[ "$sha_a" != "$sha_b" ]]; then
+              echo "::error::Upstream cross-venue matrix changed during independent KuCoin verification"
+              exit 1
+            fi
+            git reset --hard origin/main
+            mkdir -p "$base/kucoin_bnb_sol_crosscheck"
+            cp "$RUNNER_TEMP/kucoin_bnb_sol_crosscheck/index.json" "$base/kucoin_bnb_sol_crosscheck/index.json"
+            git add -- "$base/kucoin_bnb_sol_crosscheck/index.json"
+            git diff --cached --check
+            if git diff --cached --quiet; then echo "NOOP"; exit 0; fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Publish independent historical KuCoin BNB SOL spot verification'
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kucoin-bnb-sol-spot-gap-evidence
+          path: ${{ runner.temp }}/kucoin_bnb_sol_crosscheck/index.json
+          if-no-files-found: ignore
+          retention-days: 30
   btc-top5-venue-history-matrix:
     # Read-only, asset-aware, 42 historical checks. Never rewrites Binance sources.
     if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
