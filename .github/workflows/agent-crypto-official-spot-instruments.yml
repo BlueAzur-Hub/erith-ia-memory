@@ -41,7 +41,9 @@ on:
       - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json'
   workflow_dispatch:
   schedule:
-    - cron: '17 2,8,14,20 * * *'
+    # Hourly: archive already-proven exact-ID owners promptly, with existing
+    # concurrency, immutable Release and source-identity guards unchanged.
+    - cron: '17 * * * *'
 permissions:
   contents: write
 concurrency:
