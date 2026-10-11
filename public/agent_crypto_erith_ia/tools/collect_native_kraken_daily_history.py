@@ -30,13 +30,19 @@ OFFICIAL=ROOT/"top250-official-spot-instruments.json"
 REPO="BlueAzur-Hub/erith-ia-memory"
 DAY=86400000
 END=int(dt.datetime(2026,10,1,tzinfo=dt.timezone.utc).timestamp()*1000)
-MAX_ASSETS=4
+MAX_ASSETS=5
 MAX_BYTES=800000
 API="https://api.kraken.com/0/public/"
 SCHEMA="aerith.kraken.native-daily-historical-original-spot.v1"
 # Original Kraken project-named notices, verified independently of Kraken's
 # active instrument snapshot. Listed calendar UTC day bounds are fail-closed.
 NAMED=(
+    # Current MakerDAO MULTI-collateral DAI, not the original
+    # Single-Collateral Dai renamed SAI in the dated Kraken migration notice.
+    # The source boundary must be after the Dec-2019 upgrade, not
+    # a legacy pre-upgrade listing that later became SAI.
+    ("dai",27,"DAI","Dai","DAI/USDT","2019-12-02",
+     "https://blog.kraken.com/news/kraken-is-supporting-dais-multi-collateral-upgrade"),
     ("euro-coin",116,"EURC","EURC","EURC/USDC","2025-09-18",
      "https://blog.kraken.com/product/asset-listings/eurc-is-available-for-trading"),
     ("sofiusd",139,"SOFID","SoFiUSD","SOFID/USDT","2026-09-04",
@@ -71,8 +77,10 @@ def candidate_owners(fed,daily,official):
         need(a and a["rank"]==rank and a["symbol"]==symbol and
              a["name"]==name and a["quote"]=="USDT" and
              len([x for x in owner.values() if x["symbol"]==symbol])==1 and
-             notice.startswith("https://blog.kraken.com/product/asset-listings/") and
-             notice.endswith("-is-available-for-trading"),
+             ((notice.startswith("https://blog.kraken.com/product/asset-listings/")
+               and notice.endswith("-is-available-for-trading"))
+              or (cid=="dai" and notice==
+                "https://blog.kraken.com/news/kraken-is-supporting-dais-multi-collateral-upgrade")),
              "Changed named Kraken project original-owner attestation: "+cid)
         if a["native_1m_count"]>0 or cid in already:
             continue
