@@ -11,8 +11,8 @@
   "response_sha256_inside_each_native_payload": true,
   "synthetic_bars_added_by_collector": false,
   "first_exchange_trade_date_not_proven": true,
-  "asset_count": 58,
-  "native_daily_candles": 52185,
+  "asset_count": 59,
+  "native_daily_candles": 52584,
   "assets": [
     {
       "id": "tether",
@@ -1143,6 +1143,30 @@
       "source_attestation": "original-named-spot-listing",
       "identity_evidence": "https://www.bitget.com/support/articles/12560603818135",
       "instrument_evidence": "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json#fartcoin"
+    },
+    {
+      "id": "gusd",
+      "rank": 224,
+      "name": "GUSD",
+      "symbol": "GUSD",
+      "market": "GUSD_USDT",
+      "venue": "Gate Spot",
+      "bar": "1D",
+      "quote": "USDT",
+      "earliest_source_ms": 1756339200000,
+      "latest_source_ms": 1790726400000,
+      "native_candles": 399,
+      "gaps_within_observed_span": 0,
+      "native_session_start_modulo_utc_day_ms": 0,
+      "release_tag": "crypto-gate-kucoin-spot-native-daily-2026-09-954abbc9629f",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-954abbc9629f",
+      "filename": "gusd-GUSD_USDT-1D.json.gz",
+      "bytes": 9756,
+      "sha256": "070dfe354ccce68b240f60fd454f0dcb094252e863eae6a293aa975d77872646",
+      "source_attestation": "verified-original-spot-owner",
+      "identity_evidence": "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-alt-market-evidence.json#gusd",
+      "instrument_evidence": "https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top250-official-spot-instruments.json#gusd",
+      "original_source_api": "https://api.gateio.ws/api/v4/spot/candlesticks"
     },
     {
       "id": "build-on",
