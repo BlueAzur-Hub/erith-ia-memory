@@ -11,6 +11,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/btc_minute_gap_audit_test.py'
       - 'public/agent_crypto_erith_ia/tools/audit_btc_minute_rest.py'
       - 'public/agent_crypto_erith_ia/tools/btc_minute_rest_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_btc_trade_gaps.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_trade_gap_test.py'
   push:
     branches: [main]
     paths:
@@ -23,6 +25,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/btc_minute_gap_audit_test.py'
       - 'public/agent_crypto_erith_ia/tools/audit_btc_minute_rest.py'
       - 'public/agent_crypto_erith_ia/tools/btc_minute_rest_test.py'
+      - 'public/agent_crypto_erith_ia/tools/audit_btc_trade_gaps.py'
+      - 'public/agent_crypto_erith_ia/tools/btc_trade_gap_test.py'
   workflow_dispatch:
     inputs:
       month:
@@ -36,6 +40,104 @@ concurrency:
   group: btc-native-gap-recovery
   cancel-in-progress: false
 jobs:
+  btc-trade-original-pilot:
+    # Three representative archived days; source-qualified trades, no fake 1m OHLCV.
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test source archive checksums, trade order, timestamps, and no invented candles
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/audit_btc_trade_gaps.py
+          python public/agent_crypto_erith_ia/tools/btc_trade_gap_test.py
+          python public/agent_crypto_erith_ia/tools/audit_btc_trade_gaps.py --audit-only
+      - name: Check whether identical trade research has already been published
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          root=pathlib.Path("public/agent_crypto_erith_ia/data/historical_archive_prototype")
+          path=root/"btc_trade_gap_pilot/index.json"
+          if not path.is_file():raise SystemExit(0)
+          idx=json.loads(path.read_text())
+          ref=json.loads((root/"btc_daily_reference/index.json").read_text())
+          catalog=hashlib.sha256((root/"btc_verified_gap_months/index.json").read_bytes()).hexdigest()
+          if (idx.get("schema")=="seven.crypto.btc.trades-gap-pilot.v1"
+              and idx.get("sample_count")==3
+              and idx.get("source_gap_catalog_sha256")==catalog
+              and idx.get("source_daily_reference_sha256")==ref["locked_source"]["data_sha256"]):
+              pathlib.Path(os.environ["RUNNER_TEMP"],"btc-trades-pilot-noop").touch()
+              print("NOOP: exactly this 3-day source evidence already published")
+          PY
+      - name: Download only 3 source-qualified BTC trades ZIPs and check original activity
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if [[ -f "$RUNNER_TEMP/btc-trades-pilot-noop" ]]; then exit 0; fi
+          python public/agent_crypto_erith_ia/tools/audit_btc_trade_gaps.py --output "$RUNNER_TEMP/btc_trade_gap_pilot"
+          python - <<'PY'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"btc_trade_gap_pilot"/"index.json"
+          j=json.loads(p.read_text())
+          assert j["schema"]=="seven.crypto.btc.trades-gap-pilot.v1"
+          assert j["sample_count"]==3 and j["original_missing_1m_global"]==5881
+          assert j["minute_candles_reconstructed"]==0
+          assert len(j["records"])==3
+          assert j["sample_missing_1m"]>0
+          for row in j["records"]:
+              assert row["native_klines_created"]==0
+              if row["source_status"]=="sha256_verified":
+                  assert row["native_trade_rows"]>0
+                  assert len(row["zip_sha256"])==64
+                  assert len(row["checksum_sha256"])==64
+                  assert row["trade_rows_in_kline_gaps"] <= row["native_trade_rows"]
+          print("BTC TRADE ZIP SHA PILOT: VERIFIED",j["verified_trade_source_dates"],
+            "of 3; native trade activity",j["observed_trades_in_gap_minutes"],
+            "trades in",j["observed_gap_minutes_with_trades"],"missing-minute slots")
+          PY
+      - name: Publish separate BTC original-trades evidence with locked historical inputs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          if [[ -f "$RUNNER_TEMP/btc-trades-pilot-noop" ]]; then exit 0; fi
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          for attempt in 1 2 3; do
+            git fetch origin main
+            for p in btc_verified_gap_months/index.json btc_daily_reference/index.json; do
+              previous=$(sha256sum "$root/$p" | cut -d' ' -f1)
+              latest=$(git show "origin/main:$root/$p" | sha256sum | cut -d' ' -f1)
+              if [[ "$previous" != "$latest" ]]; then
+                echo "::error::BTC canonical source changed during original-trades pilot"
+                exit 1
+              fi
+            done
+            git reset --hard origin/main
+            mkdir -p "$root/btc_trade_gap_pilot"
+            cp -a "$RUNNER_TEMP/btc_trade_gap_pilot/." "$root/btc_trade_gap_pilot/"
+            git add -- "$root/btc_trade_gap_pilot"
+            git diff --cached --check
+            if git diff --cached --quiet; then echo 'NOOP: already published'; exit 0; fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Record verified original BTC trade activity inside minute gaps'
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: btc-native-trade-gap-source-pilot
+          path: ${{ runner.temp }}/btc_trade_gap_pilot/index.json
+          if-no-files-found: ignore
+          retention-days: 30
   btc-rest-and-trade-inventory:
     # This is evidence-only, not a live market feed or a trading component.
     if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
