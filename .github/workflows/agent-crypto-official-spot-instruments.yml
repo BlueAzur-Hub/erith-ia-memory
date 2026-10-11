@@ -193,8 +193,27 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'Publish official Spot pair candidates without fabricating identities'
-          git pull --rebase origin main
-          git push origin HEAD:main
+          # Other vetted archive or discovery jobs can advance main while this
+          # read-only source audit queries four external instrument endpoints.
+          # Never replay an older Spot snapshot over a newer published one.
+          prior_blob="$(git rev-parse "HEAD^:$path")"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            latest_blob="$(git rev-parse "origin/main:$path")"
+            if [ "$latest_blob" != "$prior_blob" ]; then
+              echo 'NOTICE: concurrent vetted Spot census already updated the'
+              echo 'canonical instrument snapshot; leave its newer bytes intact.'
+              exit 0
+            fi
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo 'Original Spot instrument snapshot committed successfully.'
+              exit 0
+            fi
+            echo "Remote main advanced after fetch; bounded retry $attempt/3"
+          done
+          echo 'ERROR: metadata publication was not confirmed after 3 attempts'
+          exit 1
       - name: Protect source archives, Trader, Bridge and Core
         if: always()
         run: |
