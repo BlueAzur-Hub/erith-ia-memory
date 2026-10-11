@@ -73,7 +73,49 @@ function fixture(){
   scope:"12 verified closed months plus available annual shards",
   core_assets:5,periods_per_asset:7,assets};
  blobs.set("verified_periods/index.json",Buffer.from(JSON.stringify(index)));
- return {blobs,index,before};
+ // Published deep-BTC source fixture: 2018-05..2026-09, 3,049 true daily
+ // observations, one discontinuity for 24 March 2023 and 25 earlier days.
+ const first=Date.UTC(2018,4,1),missing=new Set([
+  ...Array.from({length:25},(_,i)=>Date.UTC(2018,5,1+i)),
+  Date.UTC(2023,2,24)
+ ]);
+ const deepRows=[];
+ for(let t=first;t<end;t+=day){
+  if(!missing.has(t))deepRows.push([t,100,105,99,101,2,201,3]);
+ }
+ assert.equal(deepRows.length,3049);
+ const deepGaps=gaps(deepRows,day);
+ const sourceMonths=[];
+ for(let y=2018;y<=2026;y++)for(let month=1;month<=12;month++){
+  const d=Date.UTC(y,month-1,1);
+  if(d<first||d>=end)continue;
+  const iso=y+"-"+String(month).padStart(2,"0");
+  const partial=(iso==="2023-03"||sourceMonths.filter(x=>x.type==="partial").length<20);
+  sourceMonths.push({month:iso,type:partial?"partial":"complete",
+   source_sha256:"a".repeat(64),native_rows:partial?44560:44640,
+   ...(iso==="2023-03"?{missing_source_minutes:80,valid_daily_rows:30,
+    omitted_incomplete_days:[{day_ms:Date.UTC(2023,2,24),observed_minutes:1360,missing_minutes:80}]}:{})});
+ }
+ assert.equal(sourceMonths.length,101);
+ const deep={schema:"seven.crypto.btc.integrated-max.v1",asset_id:"bitcoin",
+  pair:"BTCUSDT",quote:"USDT",is_live:false,is_all_time:false,
+  source:"Binance Spot native monthly ZIPs, checked SHA-256",
+  interval:"1d",scope:"complete_and_qualified_partial_2018_2026",
+  columns:["open_time_ms","open","high","low","close","base_volume","quote_volume","trade_count"],
+  first_open_ms:first,last_open_ms:end-day,
+  gaps:deepGaps,source_months:sourceMonths,rows:deepRows};
+ const deepZip=gzipSync(Buffer.from(JSON.stringify(deep)));
+ const deepMeta={schema:"seven.crypto.btc.integrated-max-index.v1",
+  asset_id:"bitcoin",pair:"BTCUSDT",quote:"USDT",is_live:false,is_all_time:false,
+  file:"bitcoin-Max.json.gz",bytes:deepZip.length,sha256:hash(deepZip),bars:3049,
+  first_open_ms:first,last_open_ms:end-day,source_months:101,
+  complete_months:80,partial_months:21,missing_days:26,
+  missing_source_minutes:5881,gaps:deepGaps,
+  source_catalog_sha256:{full:"b".repeat(64),partial:"c".repeat(64),
+    annual:"d".repeat(64)}};
+ blobs.set("btc_max_integrated/index.json",Buffer.from(JSON.stringify(deepMeta)));
+ blobs.set("btc_max_integrated/bitcoin-Max.json.gz",deepZip);
+ return {blobs,index,before,deep,deepMeta};
 }
 function harness(modifier=null,withCommon=false){
  const fx=fixture(), requests=[],nodes=new Map(),window={},events={};
@@ -137,14 +179,16 @@ test("seven windows across five original-source-qualified market identities",asy
  assert.equal(catalog.assets.length,5);
  for(const id of Object.keys(pairs))for(const period of Object.keys(periods)){
   const result=await x.window.SevenVerifiedPeriods.load(id,period);
-  assert.equal(result.rows.length,periods[period][1]);
+  assert.equal(result.rows.length,id==="bitcoin"&&period==="Max"?3049:periods[period][1]);
   assert.equal(result.data.quote,"USDT");
   assert.equal(result.data.pair,pairs[id]);
-  assert.equal(result.data.gaps.length,period==="Max"?1:0);
+  assert.equal(result.data.gaps.length,id==="bitcoin"&&period==="Max"?2:period==="Max"?1:0);
  }
- assert.equal(x.requests.length,36);
+ assert.equal(x.requests.length,37);
  await x.window.SevenVerifiedPeriods.load("solana","Max");
- assert.equal(x.requests.length,36,"Last period remains cached");
+ assert.equal(x.requests.length,37,"Last period remains cached");
+ assert.ok(x.requests.includes("btc_max_integrated/bitcoin-Max.json.gz"));
+ assert.ok(!x.requests.includes("verified_periods/bitcoin-Max.json.gz"));
 });
 test("SHA-256 tampering refuses display even for plausible OHLCV",async()=>{
  const x=harness((filename,raw)=>{
@@ -167,15 +211,15 @@ test("missing gap must be declared even with valid gzip checksum",async()=>{
  const x=harness((filename,raw,fx)=>{
   if(filename==="verified_periods/index.json"){
    const j=JSON.parse(raw);
-   const a=j.assets.find(a=>a.id==="bitcoin").periods.find(p=>p.period==="Max");
-   const mutated={...fx.before["bitcoin/Max"],gaps:[]};
+   const a=j.assets.find(a=>a.id==="solana").periods.find(p=>p.period==="Max");
+   const mutated={...fx.before["solana/Max"],gaps:[]};
    const zip=gzipSync(Buffer.from(JSON.stringify(mutated)));
-   fx.blobs.set("verified_periods/bitcoin-Max.json.gz",zip);
+   fx.blobs.set("verified_periods/solana-Max.json.gz",zip);
    a.sha256=hash(zip);a.bytes=zip.length;
    return Buffer.from(JSON.stringify(j));
   }
  });
- await assert.rejects(x.window.SevenVerifiedPeriods.load("bitcoin","Max"),/Lacunes Max/);
+ await assert.rejects(x.window.SevenVerifiedPeriods.load("solana","Max"),/Lacunes Max/);
 });
 test("single Coffre HTML mounts certified source ahead of legacy reader",()=>{
  const html=fs.readFileSync("public/agent_crypto_erith_ia/administrator/historical-vault.html","utf8");
@@ -220,23 +264,24 @@ test("Max explains the missing archive dates without making the user guess",asyn
  x.node("shared-asset").value="bitcoin";
  x.node("shared-period").value="Max";
  x.node("shared-read").dispatch("click");
- for(let i=0;i<250&&!x.node("shared-status").textContent.includes("SHA-256 vérifié");i++)
-  await new Promise(done=>setImmediate(done));
+ for(let i=0;i<500&&!x.node("shared-status").textContent.includes("SHA-256 vérifié");i++)
+  await new Promise(done=>setTimeout(done,5));
+ assert.match(x.node("shared-status").textContent,/SHA-256 vérifié/);
  assert.match(x.node("shared-explanation").textContent,/VOUS REGARDEZ : BTCUSDT/);
  assert.match(x.node("shared-explanation").textContent,/Max/);
  assert.match(x.node("shared-gaps").textContent,/ATTENTION — archive incomplète/);
- assert.match(x.node("shared-gaps").textContent,/sans données/);
+ assert.match(x.node("shared-gaps").textContent,/sans bougie quotidienne complète/);
  assert.match(x.node("shared-gaps").textContent,/Bande orange/);
- assert.match(x.node("shared-range").textContent,/370 bougies visibles/);
+ assert.match(x.node("shared-range").textContent,/3.?049 bougies visibles/);
  assert.equal(x.node("shared-prev").disabled,true);
  assert.equal(x.node("shared-next").disabled,true);
  x.node("shared-zoom-in").dispatch("click");
- assert.match(x.node("shared-range").textContent,/185 bougies visibles/);
+ assert.match(x.node("shared-range").textContent,/1.?524 bougies visibles/);
  assert.equal(x.node("shared-prev").disabled,false);
  x.node("shared-prev").dispatch("click");
  assert.equal(x.node("shared-next").disabled,false);
  x.node("shared-reset").dispatch("click");
- assert.match(x.node("shared-range").textContent,/370 bougies visibles/);
+ assert.match(x.node("shared-range").textContent,/3.?049 bougies visibles/);
  assert.equal(x.node("shared-next").disabled,true);
  const n=x.requests.length;
  x.node("shared-style").value="line";
@@ -252,4 +297,33 @@ test("legacy assets keep their prior reader and navigation stays disabled",()=>{
                   "shared-prev","shared-zoom-in","shared-zoom-out","shared-next","shared-reset"]){
   assert.ok(html.includes('id="'+id+'"'),"Missing user-facing control "+id);
  }
+});
+
+test("deep BTC SHA-256 tampering must block the new Max",async()=>{
+ const x=harness((name,bytes)=>{
+  if(name==="btc_max_integrated/bitcoin-Max.json.gz"){
+   const changed=Buffer.from(bytes);changed[8]^=1;return changed;
+  }
+ });
+ await assert.rejects(x.window.SevenVerifiedPeriods.load("bitcoin","Max"),/SHA-256/);
+});
+test("old 1,795-day Max may never replace newly verified BTC source silently",async()=>{
+ const x=harness((name,bytes)=>{
+  if(name==="btc_max_integrated/index.json"){
+   const index=JSON.parse(bytes);index.bars=1795;
+   return Buffer.from(JSON.stringify(index));
+  }
+ });
+ await assert.rejects(x.window.SevenVerifiedPeriods.load("bitcoin","Max"),
+  /Index BTC Max 2018–2026 non certifié/);
+ assert.ok(!x.requests.includes("verified_periods/bitcoin-Max.json.gz"));
+});
+test("source-qualified partial March remains thirty certified days",async()=>{
+ const x=harness();
+ const a=await x.window.SevenVerifiedPeriods.load("bitcoin","Max");
+ assert.equal(a.metadata.integrated,true);
+ assert.equal(a.rows.length,3049);
+ const start=Date.UTC(2023,2,1),end=Date.UTC(2023,3,1);
+ assert.equal(a.rows.filter(r=>r[0]>=start&&r[0]<end).length,30);
+ assert.equal(a.data.gaps.find(g=>g.start_ms===Date.UTC(2023,2,24))?.missing_bars,1);
 });

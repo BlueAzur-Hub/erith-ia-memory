@@ -5,6 +5,7 @@
 (() => {
 "use strict";
 const root=new URL("../../data/historical_archive_prototype/verified_periods/",document.currentScript.src);
+const btcDeepRoot=new URL("../btc_max_integrated/",root);
 const pairs=Object.freeze({bitcoin:"BTCUSDT",ethereum:"ETHUSDT",binancecoin:"BNBUSDT",ripple:"XRPUSDT",solana:"SOLUSDT"});
 const windows=Object.freeze({"24h":["1m",1440],"7j":["5m",2016],"30j":["1h",720],
   "60j":["1h",1440],"90j":["1h",2160],"1an":["1d",365],"Max":["1d",null]});
@@ -30,6 +31,89 @@ async function read(filename,cap){
  const raw=await reply.arrayBuffer();
  need(raw.byteLength>0&&raw.byteLength<=cap,"Taille d'archive invalide");
  return raw;
+}
+async function readDeep(filename,cap){
+ need(filename==="index.json"||filename==="bitcoin-Max.json.gz",
+      "Fichier BTC source non autorisé");
+ const url=new URL(filename,btcDeepRoot);
+ need(url.origin===location.origin&&url.pathname.startsWith(btcDeepRoot.pathname),
+      "Source profonde BTC hors du Coffre");
+ const response=await fetch(url.href,{credentials:"omit",redirect:"error",cache:"no-store"});
+ need(response.ok,"Historique BTC approfondi non publié : HTTP "+response.status);
+ const raw=await response.arrayBuffer();
+ need(raw.byteLength>0&&raw.byteLength<=cap,"Taille BTC profonde inattendue");
+ return raw;
+}
+async function loadDeepBtc(){
+ const rawManifest=await readDeep("index.json",250000);
+ const meta=JSON.parse(new TextDecoder().decode(rawManifest));
+ need(meta.schema==="seven.crypto.btc.integrated-max-index.v1"&&
+      meta.asset_id==="bitcoin"&&meta.pair==="BTCUSDT"&&meta.quote==="USDT"&&
+      meta.is_live===false&&meta.is_all_time===false&&
+      meta.file==="bitcoin-Max.json.gz"&&
+      Number.isInteger(meta.bytes)&&meta.bytes>0&&meta.bytes<=300000&&
+      shaPattern.test(meta.sha256)&&
+      meta.source_months>=101&&meta.complete_months>=80&&meta.partial_months>=21&&
+      Number.isInteger(meta.bars)&&meta.bars>=3000&&
+      meta.first_open_ms===Date.UTC(2018,4,1)&&
+      meta.last_open_ms===Date.UTC(2026,8,30)&&
+      Number.isInteger(meta.missing_days)&&meta.missing_days>=0&&
+      Number.isInteger(meta.missing_source_minutes)&&meta.missing_source_minutes>=0&&
+      Array.isArray(meta.gaps)&&
+      Object.values(meta.source_catalog_sha256||{}).length===3&&
+      Object.values(meta.source_catalog_sha256).every(v=>shaPattern.test(v)),
+      "Index BTC Max 2018–2026 non certifié");
+ const compressed=await readDeep(meta.file,300000);
+ need(compressed.byteLength===meta.bytes&&
+      await digest(compressed)===meta.sha256,
+      "SHA-256 archive Max BTC intégrée incorrect");
+ const plain=await new Response(new Blob([compressed]).stream()
+              .pipeThrough(new DecompressionStream("gzip"))).text();
+ need(new TextEncoder().encode(plain).byteLength<13000000,
+      "Projection BTC profonde décompressée trop grande");
+ const obj=JSON.parse(plain),rows=obj.rows;
+ need(obj.schema==="seven.crypto.btc.integrated-max.v1"&&
+      obj.asset_id==="bitcoin"&&obj.pair==="BTCUSDT"&&obj.quote==="USDT"&&
+      obj.is_live===false&&obj.is_all_time===false&&
+      obj.interval==="1d"&&obj.is_all_time===false&&
+      obj.columns?.join(",")===cols&&
+      obj.scope==="complete_and_qualified_partial_2018_2026"&&
+      obj.source==="Binance Spot native monthly ZIPs, checked SHA-256"&&
+      Array.isArray(rows)&&rows.length===meta.bars&&
+      rows[0]?.[0]===meta.first_open_ms&&
+      rows.at(-1)?.[0]===meta.last_open_ms&&
+      Array.isArray(obj.source_months)&&obj.source_months.length===meta.source_months,
+      "BTC Max profond ne correspond pas aux archives certifiées");
+ let previous=null;
+ for(const r of rows){
+  need(Array.isArray(r)&&r.length===8&&r.every(Number.isFinite),
+       "OHLCV BTC non numérique");
+  const [t,o,h,l,close,base,quote,trades]=r;
+  need(Number.isInteger(t)&&t%steps["1d"]===0&&
+      (previous===null||t>previous)&&
+      l>0&&l<=Math.min(o,close)&&Math.max(o,close)<=h&&
+      base>=0&&quote>=0&&Number.isInteger(trades)&&trades>=0,
+      "OHLCV ou chronologie BTC Max invalide");
+  previous=t;
+ }
+ const computedGaps=listGaps(rows,steps["1d"]);
+ need(JSON.stringify(computedGaps)===JSON.stringify(meta.gaps)&&
+      JSON.stringify(computedGaps)===JSON.stringify(obj.gaps)&&
+      computedGaps.reduce((sum,g)=>sum+g.missing_bars,0)===meta.missing_days,
+      "Incohérence des interruptions BTC Max");
+ const march=obj.source_months.find(m=>m.month==="2023-03");
+ need(march?.type==="partial"&&march.native_rows===44560&&
+      march.missing_source_minutes===80&&march.valid_daily_rows===30&&
+      march.omitted_incomplete_days?.length===1&&
+      march.omitted_incomplete_days[0].missing_minutes===80,
+      "Mars 2023 ne conserve pas ses 30 journées vérifiées");
+ return {data:{...obj,resolution:"1d",period:"Max",gaps:computedGaps},
+         metadata:{scope:"certified-core5",integrated:true,
+            source:"Binance Spot vérifié",pair:"BTCUSDT",quote:"USDT",
+            complete_months:meta.complete_months,partial_months:meta.partial_months,
+            missing_days:meta.missing_days,month:"2026-09",
+            native_1m_count:525600},
+         rows};
 }
 function validIndex(j){
  need(j?.schema==="seven.crypto.verified-period-index"&&
@@ -138,18 +222,25 @@ async function load(id,period){
  }
  if(pending.has(key))return pending.get(key);
  const work=(async()=>{
-  const a=(await getIndex()).assets.find(x=>x.id===id);
-  need(!!a,"Identité non indexée");
-  const meta=a.periods.find(x=>x.period===period);
-  need(!!meta,"Période non publiée");
-  const compressed=await read(meta.file,200000);
-  need(compressed.byteLength===meta.bytes&&await digest(compressed)===meta.sha256,
-       "Empreinte SHA-256 du Coffre incorrecte");
-  const plain=await new Response(new Blob([compressed]).stream()
-            .pipeThrough(new DecompressionStream("gzip"))).text();
-  need(new TextEncoder().encode(plain).byteLength<=8000000,
-       "Projection décompressée trop grande");
-  const result=validate(JSON.parse(plain),meta,a);
+  let result;
+  if(id==="bitcoin"&&period==="Max"){
+   // Explicitly refuse old 1,795-day Max: the source-backed 2018–2026
+   // projection is the only accepted BTC deep history.
+   result=await loadDeepBtc();
+  }else{
+   const a=(await getIndex()).assets.find(x=>x.id===id);
+   need(!!a,"Identité non indexée");
+   const meta=a.periods.find(x=>x.period===period);
+   need(!!meta,"Période non publiée");
+   const compressed=await read(meta.file,200000);
+   need(compressed.byteLength===meta.bytes&&await digest(compressed)===meta.sha256,
+        "Empreinte SHA-256 du Coffre incorrecte");
+   const plain=await new Response(new Blob([compressed]).stream()
+             .pipeThrough(new DecompressionStream("gzip"))).text();
+   need(new TextEncoder().encode(plain).byteLength<=8000000,
+        "Projection décompressée trop grande");
+   result=validate(JSON.parse(plain),meta,a);
+  }
   cache.set(key,result);
   if(cache.size>8)cache.delete(cache.keys().next().value);
   return result;
