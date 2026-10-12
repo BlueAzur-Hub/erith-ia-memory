@@ -1,0 +1,268 @@
+{
+  "schema": "seven.crypto.top50-source-expansion-verified-checkpoint.v1",
+  "rank_universe": "Original canonical ranks 26-50; six separately selected original Spot USDT markets",
+  "canonical_source_plan": {
+    "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/index.json",
+    "git_blob_sha": "956f9265b6853ec0ad1ae1af0d3e020a5ff41efb"
+  },
+  "consolidated_index": {
+    "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/collection_index.json",
+    "git_blob_sha": "e92a110e6b18bcdc55cb4e8942fb4642c96fd14e",
+    "workflow": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38203576127",
+    "success_jobs": 7
+  },
+  "original_batches": [
+    {
+      "name": "2020-q1",
+      "git_blob_sha": "34c5e0457d215a2c1afec68bc9c8361f8797c2c9",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/batches/2020-q1.json",
+      "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-spot-2020-q1"
+    },
+    {
+      "name": "2020-q2",
+      "git_blob_sha": "881a77a9c122f450ba9f473cfee1cb247ca9177d",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/batches/2020-q2.json",
+      "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-spot-2020-q2"
+    },
+    {
+      "name": "2020-q3",
+      "git_blob_sha": "e75d64a8a114615e593b205f4ec90579df69e5a5",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/batches/2020-q3.json",
+      "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-spot-2020-q3"
+    },
+    {
+      "name": "2020-q4",
+      "git_blob_sha": "e7ed89e7cd522d5efc4111e259b6fc9cb342b960",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/batches/2020-q4.json",
+      "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-spot-2020-q4"
+    },
+    {
+      "name": "2021-q1",
+      "git_blob_sha": "37147614c1a38a0119ab8a1b6ffe8b4225990519",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/batches/2021-q1.json",
+      "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-spot-2021-q1"
+    },
+    {
+      "name": "2021-apr",
+      "git_blob_sha": "7b2d6f41e74b8aa1b32d33986dc6100054b7e19a",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/batches/2021-apr.json",
+      "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-spot-2021-apr"
+    }
+  ],
+  "source_months": {
+    "checked": 96,
+    "verified": 39,
+    "before_official_pair_listing": 48,
+    "not_available_or_not_verified": 9
+  },
+  "asset_1m_checks": [
+    {
+      "coin_id": "uniswap",
+      "market": "UNIUSDT",
+      "rank": 26,
+      "verified_months": 8,
+      "first_verified_candle_utc": "2020-09-17T03:00:00+00:00",
+      "last_verified_candle_utc": "2021-04-30T23:59:00+00:00",
+      "native_1m_candles": 324306,
+      "missing_calendar_1m_in_verified_months": 24174,
+      "before_official_pair_listing": [
+        "2020-01",
+        "2020-02",
+        "2020-03",
+        "2020-04",
+        "2020-05",
+        "2020-06",
+        "2020-07",
+        "2020-08"
+      ],
+      "unavailable_archive_months": [],
+      "original_source_quarantine_rows": 0,
+      "first_verifiable_source_is_not_proof_of_market_launch": true
+    },
+    {
+      "coin_id": "avalanche-2",
+      "market": "AVAXUSDT",
+      "rank": 28,
+      "verified_months": 8,
+      "first_verified_candle_utc": "2020-09-22T06:30:00+00:00",
+      "last_verified_candle_utc": "2021-04-30T23:59:00+00:00",
+      "native_1m_candles": 316896,
+      "missing_calendar_1m_in_verified_months": 31584,
+      "before_official_pair_listing": [
+        "2020-01",
+        "2020-02",
+        "2020-03",
+        "2020-04",
+        "2020-05",
+        "2020-06",
+        "2020-07",
+        "2020-08"
+      ],
+      "unavailable_archive_months": [],
+      "original_source_quarantine_rows": 0,
+      "first_verifiable_source_is_not_proof_of_market_launch": true
+    },
+    {
+      "coin_id": "hedera-hashgraph",
+      "market": "HBARUSDT",
+      "rank": 33,
+      "verified_months": 16,
+      "first_verified_candle_utc": "2020-01-01T00:00:00+00:00",
+      "last_verified_candle_utc": "2021-04-30T23:59:00+00:00",
+      "native_1m_candles": 697984,
+      "missing_calendar_1m_in_verified_months": 1856,
+      "before_official_pair_listing": [],
+      "unavailable_archive_months": [],
+      "original_source_quarantine_rows": 0,
+      "first_verifiable_source_is_not_proof_of_market_launch": true
+    },
+    {
+      "coin_id": "quant-network",
+      "market": "QNTUSDT",
+      "rank": 34,
+      "verified_months": 0,
+      "first_verified_candle_utc": null,
+      "last_verified_candle_utc": null,
+      "native_1m_candles": 0,
+      "missing_calendar_1m_in_verified_months": 0,
+      "before_official_pair_listing": [
+        "2020-01",
+        "2020-02",
+        "2020-03",
+        "2020-04",
+        "2020-05",
+        "2020-06",
+        "2020-07",
+        "2020-08",
+        "2020-09",
+        "2020-10",
+        "2020-11",
+        "2020-12",
+        "2021-01",
+        "2021-02",
+        "2021-03",
+        "2021-04"
+      ],
+      "unavailable_archive_months": [],
+      "original_source_quarantine_rows": 0,
+      "first_verifiable_source_is_not_proof_of_market_launch": true
+    },
+    {
+      "coin_id": "aave",
+      "market": "AAVEUSDT",
+      "rank": 43,
+      "verified_months": 7,
+      "first_verified_candle_utc": "2020-10-15T03:00:00+00:00",
+      "last_verified_candle_utc": "2021-04-30T23:59:00+00:00",
+      "native_1m_candles": 283986,
+      "missing_calendar_1m_in_verified_months": 21294,
+      "before_official_pair_listing": [],
+      "unavailable_archive_months": [
+        {
+          "month": "2020-01",
+          "http_status": 404,
+          "market_inactivity_proven": false
+        },
+        {
+          "month": "2020-02",
+          "http_status": 404,
+          "market_inactivity_proven": false
+        },
+        {
+          "month": "2020-03",
+          "http_status": 404,
+          "market_inactivity_proven": false
+        },
+        {
+          "month": "2020-04",
+          "http_status": 404,
+          "market_inactivity_proven": false
+        },
+        {
+          "month": "2020-05",
+          "http_status": 404,
+          "market_inactivity_proven": false
+        },
+        {
+          "month": "2020-06",
+          "http_status": 404,
+          "market_inactivity_proven": false
+        },
+        {
+          "month": "2020-07",
+          "http_status": 404,
+          "market_inactivity_proven": false
+        },
+        {
+          "month": "2020-08",
+          "http_status": 404,
+          "market_inactivity_proven": false
+        },
+        {
+          "month": "2020-09",
+          "http_status": 404,
+          "market_inactivity_proven": false
+        }
+      ],
+      "original_source_quarantine_rows": 0,
+      "first_verifiable_source_is_not_proof_of_market_launch": true
+    },
+    {
+      "coin_id": "shiba-inu",
+      "market": "SHIBUSDT",
+      "rank": 36,
+      "verified_months": 0,
+      "first_verified_candle_utc": null,
+      "last_verified_candle_utc": null,
+      "native_1m_candles": 0,
+      "missing_calendar_1m_in_verified_months": 0,
+      "before_official_pair_listing": [
+        "2020-01",
+        "2020-02",
+        "2020-03",
+        "2020-04",
+        "2020-05",
+        "2020-06",
+        "2020-07",
+        "2020-08",
+        "2020-09",
+        "2020-10",
+        "2020-11",
+        "2020-12",
+        "2021-01",
+        "2021-02",
+        "2021-03",
+        "2021-04"
+      ],
+      "unavailable_archive_months": [],
+      "original_source_quarantine_rows": 0,
+      "first_verifiable_source_is_not_proof_of_market_launch": true
+    }
+  ],
+  "sums": {
+    "previous_total_regular_added_this_chantier": 19797951,
+    "new_native_regular_1m": 1623172,
+    "current_total_regular_added_this_chantier": 21421123,
+    "unchanged_prior_quarantine": 286734,
+    "new_original_quarantine": 0,
+    "total_original_quarantine": 286734,
+    "raw_calendar_minutes_missing_in_verified_source_months": 78908
+  },
+  "policy": {
+    "zero_fill": false,
+    "source_not_available_does_not_prove_absence_of_trades": true,
+    "not_fully_complete_1m": true,
+    "prior_canonical_source_not_modified": true,
+    "trader_interface_bridge_market_core_unchanged": true,
+    "no_spot_futures_mixing": true,
+    "original_quote_USDT": true,
+    "consolidation_is_not_global_all_time_coverage": true
+  },
+  "next_evidence_requiring_work": [
+    "AAVEUSDT initial listing date/earlier predecessor 2020-01–09 originals (HTTP 404)",
+    "new monthly sources after original QNTUSDT and SHIBUSDT listing in 2021",
+    "WBT WhiteBIT exact CoinGecko ownership and redistribution policy",
+    "HYPE earlier verified Bitget Spot 1m, separate from perp sources",
+    "LEO RAIN CC original Spot high-frequency historical API reach and source license"
+  ]
+}
