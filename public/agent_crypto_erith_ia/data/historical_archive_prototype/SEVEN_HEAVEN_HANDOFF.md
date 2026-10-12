@@ -1,5 +1,23 @@
 # SEVEN HEAVEN — PASSATION DU COFFRE HISTORIQUE CRYPTO
 
+## 13 octobre 2026 — CLÔTURE ACTUELLE SEVEN HEAVEN / PASSATION AU FIL SUIVANT
+
+**Ce checkpoint prime sur les anciens états WBT/HYPE ci-dessous.** L'utilisateur a explicitement demandé la fin du fil, la mise à jour Notion et la passation. Les collectes de WBT ont été faites et vérifiées sur les fichiers privés; **ne pas demander une nouvelle copie du ZIP de 38 Mo**.
+
+- **WBT WhiteBIT Spot WBT/USDT : 2 172 121 bougies 1m natives privées**, 1 509 journées du 25/08/2022 13:59 UTC au 11/10/2026 23:59 UTC (première journée 601 minutes, puis 1 508 journées complètes, aucun trou entre les bougies observées). **Données et prix originaux absents de GitHub** (accords de redistribution WhiteBIT à clarifier), seule une [fiche métadonnées](./wbt_private_status.json) publique, bien affichée sur la [page Firefox historique](https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/administrator/historical-vault.html). Pas de bougies WBT dans le graphique public ni dans le Trader.
+- **Coffre Top250 Firefox rétabli et capture utilisateur confirmée** : 145/250 cryptos avec sources 1m publiques Binance/Bitget, **229 852 800 bougies 1m** dans la sélection de sources (126 actifs primaires Binance, 19 Bitget; Cosmos présent chez les deux sans doubler). Ces chiffres **ne sont pas** l'union toutes résolutions : l'inventaire large décompte **200/250** avec au moins 1m ou 1D, pas nécessairement depuis la création.
+- **Nouvelle acquisition HYPE prouvée** : sur Bitget Spot `HYPEUSDT`, janvier **2025** complet **44 640 bougies natives 1m**, SHA-256 de l'archive source `f96daa25070fdda07117d72317e88cdd9b458b550c257182731b49187b11dc1a`. [Release immuable](https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-spot-bitget-2025-01-1m-hyperliquid) et [GitHub Actions succès #38317653157](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38317653157). Ajouter **après vérification** ce mois à l'index catalogué de HYPE (ancienne sélection : 3 mois / 128 160 lignes) ; **ne pas annoncer qu'il figure déjà dans le Top250**.
+- **Bloquant CI 1** : [Top250 Historical Coverage Catalog #38315960105](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38315960105) FAIL dans le test Node : ancienne hypothèse `Two sources claim one owner`, fausse depuis que Cosmos existe sur Binance ET Bitget ; autres assertions test figées sur index fédéré synchrone. Corriger tests et valider garde-fous, sans inventer de bougies.
+- **Bloquant CI 2** : [Top250 Alternative Spot Market Discovery #38313055464](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38313055464) FAIL : écart de snapshot entre `top250-venue-audit.json` et `top250_history_catalog/index.json`, **209/250 rangs** divergents + **7 tickers** non conformes à l'identité actuelle. Ne **jamais** fabriquer une correspondance par symbole ni muter les bougies historiques ; réconcilier par coin-id et conserver la traçabilité des classements datés.
+- **Collecteur Bitget automatique** : workflow du 12 octobre SUCCESS mais **NOOP**, faute d'actifs nouvellement qualifiés. Ne pas compter un NOOP comme collecte. Pilote HYPE distinct réellement publié.
+- **Derniers commits** : réparation tableau/fiche `e54c389c24ce1d7b3f7450512a83ec9ef4d320cb` ; pilote HYPE workflow `180a5356330f51104c8ad2c41160ec8595aa8d4f` ; ajustement du contrôle des minutes Bitget dans la vitrine `7a16030b8d33c42b23e0be3afa491e6833a3353e`. La CI catalogue était déjà en échec avant le pilote HYPE; ne pas déduire « CI verte » du seul succès du pilote.
+- **Notion master** : [AETHER · AGENT-CRYPTO INTERFACE](https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099) actualisé à la clôture (section dédiée Seven au début), séparé des récents checkpoints Trader Aerith-10.
+- **Prochaine sœur IA** : (1) relire les Release et réparer proprement les deux workflows CI, (2) intégrer l'archive HYPE janvier 2025 au bon registre avec SHA sans double comptage, (3) poursuivre une vraie collecte Spot HYPE mensuelle et les autres actifs du Top250 manquants (LEO, OKB, RAIN, CC etc.) ; conserver OHLCV natifs et provenance, pas de faux cours ou d'archives imaginées. Aucun changement Trader/Interface sans validation utilisateur.
+
+**STOP de fin de fil : pas de nouvelles modifications après cette passation.** Aucun processus ChatGPT en arrière-plan promis. Les GitHub Actions programmées du dépôt ont leur propre cycle indépendamment du fil.
+
+---
+
 **Date du checkpoint : 12 octobre 2026 · Clôture de fil Aerith-7 · Destinataire : Aerith-7 / sœur IA suivante.**
 
 ## Clé de reprise immédiate (à copier dans le prochain fil)
