@@ -1,0 +1,354 @@
+{
+  "schema": "seven.crypto.top25-expanded-source-quality.v1",
+  "source_indexes": [
+    {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/earlier_collection_index.json",
+      "blob_sha": "b515968edc243864a59c3115d725cfa2e6d3e33c"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/later_collection_index.json",
+      "blob_sha": "ee6dd7861b40c18fab26c513c3308b41c989326a"
+    }
+  ],
+  "source_month_manifest_blobs": [
+    {
+      "scope": "2018",
+      "market_batch": "2018-q1",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/earlier_batches/2018-q1.json",
+      "git_blob_sha": "44556b583fcac70b8fea433c55a25a615f4dac1c"
+    },
+    {
+      "scope": "2018",
+      "market_batch": "2018-q2",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/earlier_batches/2018-q2.json",
+      "git_blob_sha": "35dbce9cf8a7d7b421244ab28153d9401ee5b8b1"
+    },
+    {
+      "scope": "2018",
+      "market_batch": "2018-q3",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/earlier_batches/2018-q3.json",
+      "git_blob_sha": "13954ca1b69ff186f5aaca5211bd65d8520d0825"
+    },
+    {
+      "scope": "2018",
+      "market_batch": "2018-q4",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/earlier_batches/2018-q4.json",
+      "git_blob_sha": "31aedbfbbb35200c90063ad156a2dd0336734d81"
+    },
+    {
+      "scope": "2020_2021",
+      "market_batch": "2020-q1",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/later_batches/2020-q1.json",
+      "git_blob_sha": "db0bc1ca8a8776a05a1fe0fe64420c24ded751a8"
+    },
+    {
+      "scope": "2020_2021",
+      "market_batch": "2020-q2",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/later_batches/2020-q2.json",
+      "git_blob_sha": "57233ca4e8bd1b68f335a03038a77db6bdc6a4ae"
+    },
+    {
+      "scope": "2020_2021",
+      "market_batch": "2020-q3",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/later_batches/2020-q3.json",
+      "git_blob_sha": "4b26ec1a4437690e09f5bcf0678adf2f19e7586b"
+    },
+    {
+      "scope": "2020_2021",
+      "market_batch": "2020-q4",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/later_batches/2020-q4.json",
+      "git_blob_sha": "128caa75904c375aabec6ab60385f43c2a8bb8a6"
+    },
+    {
+      "scope": "2020_2021",
+      "market_batch": "2021-q1",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/later_batches/2021-q1.json",
+      "git_blob_sha": "125d4c5a5633bcc32d4a2af0dac310316cc58906"
+    },
+    {
+      "scope": "2020_2021",
+      "market_batch": "2021-apr",
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/later_batches/2021-apr.json",
+      "git_blob_sha": "4ea29853022cd55e729338b9a6b0b6d7b463cc55"
+    }
+  ],
+  "assets": [
+    {
+      "id": "bitcoin-cash",
+      "original_2018": {
+        "source_verified_months": 0,
+        "regular_native_1m": 0,
+        "quarantine_rows": 0,
+        "quarantine_months": [],
+        "calendar_source_missing_minutes": 0,
+        "unavailable_source_months": [],
+        "first_regular_source_open": null
+      },
+      "original_2020_2021": {
+        "source_verified_months": 16,
+        "regular_native_1m": 697984,
+        "quarantine_rows": 0,
+        "quarantine_months": [],
+        "calendar_source_missing_minutes": 1856,
+        "unavailable_source_months": [],
+        "first_regular_source_open": "2020-01-01T00:00:00+00:00"
+      }
+    },
+    {
+      "id": "cardano",
+      "original_2018": {
+        "source_verified_months": 9,
+        "regular_native_1m": 370926,
+        "quarantine_rows": 0,
+        "quarantine_months": [],
+        "calendar_source_missing_minutes": 25074,
+        "unavailable_source_months": [
+          {
+            "month": "2018-01",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-02",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-03",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          }
+        ],
+        "first_regular_source_open": "2018-04-17T04:02:00+00:00"
+      },
+      "original_2020_2021": {
+        "source_verified_months": 16,
+        "regular_native_1m": 697984,
+        "quarantine_rows": 0,
+        "quarantine_months": [],
+        "calendar_source_missing_minutes": 1856,
+        "unavailable_source_months": [],
+        "first_regular_source_open": "2020-01-01T00:00:00+00:00"
+      }
+    },
+    {
+      "id": "chainlink",
+      "original_2018": {
+        "source_verified_months": 0,
+        "regular_native_1m": 0,
+        "quarantine_rows": 0,
+        "quarantine_months": [],
+        "calendar_source_missing_minutes": 0,
+        "unavailable_source_months": [
+          {
+            "month": "2018-01",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-02",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-03",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-04",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-05",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-06",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-07",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-08",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-09",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-10",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-11",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-12",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          }
+        ],
+        "first_regular_source_open": null
+      },
+      "original_2020_2021": {
+        "source_verified_months": 16,
+        "regular_native_1m": 697984,
+        "quarantine_rows": 0,
+        "quarantine_months": [],
+        "calendar_source_missing_minutes": 1856,
+        "unavailable_source_months": [],
+        "first_regular_source_open": "2020-01-01T00:00:00+00:00"
+      }
+    },
+    {
+      "id": "dogecoin",
+      "original_2018": {
+        "source_verified_months": 0,
+        "regular_native_1m": 0,
+        "quarantine_rows": 0,
+        "quarantine_months": [],
+        "calendar_source_missing_minutes": 0,
+        "unavailable_source_months": [],
+        "first_regular_source_open": null
+      },
+      "original_2020_2021": {
+        "source_verified_months": 16,
+        "regular_native_1m": 697984,
+        "quarantine_rows": 0,
+        "quarantine_months": [],
+        "calendar_source_missing_minutes": 1856,
+        "unavailable_source_months": [],
+        "first_regular_source_open": "2020-01-01T00:00:00+00:00"
+      }
+    },
+    {
+      "id": "litecoin",
+      "original_2018": {
+        "source_verified_months": 12,
+        "regular_native_1m": 483363,
+        "quarantine_rows": 38260,
+        "quarantine_months": [
+          {
+            "month": "2018-02",
+            "source_pair": "LTCUSDT",
+            "offgrid_rows": 1201,
+            "original_rows": 38260,
+            "original_status": "original_timestamp_quarantine",
+            "source_release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q1/LTCUSDT-1m-2018-02.zip"
+          }
+        ],
+        "calendar_source_missing_minutes": 1917,
+        "unavailable_source_months": [],
+        "first_regular_source_open": "2018-01-01T00:00:00+00:00"
+      },
+      "original_2020_2021": {
+        "source_verified_months": 16,
+        "regular_native_1m": 697985,
+        "quarantine_rows": 0,
+        "quarantine_months": [],
+        "calendar_source_missing_minutes": 1855,
+        "unavailable_source_months": [],
+        "first_regular_source_open": "2020-01-01T00:00:00+00:00"
+      }
+    },
+    {
+      "id": "stellar",
+      "original_2018": {
+        "source_verified_months": 8,
+        "regular_native_1m": 307238,
+        "quarantine_rows": 0,
+        "quarantine_months": [],
+        "calendar_source_missing_minutes": 45562,
+        "unavailable_source_months": [
+          {
+            "month": "2018-01",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-02",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-03",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          },
+          {
+            "month": "2018-04",
+            "status": "source_unavailable",
+            "http_code": 404,
+            "no_trading_absence_proved": true
+          }
+        ],
+        "first_regular_source_open": "2018-05-31T09:30:00+00:00"
+      },
+      "original_2020_2021": {
+        "source_verified_months": 16,
+        "regular_native_1m": 697985,
+        "quarantine_rows": 0,
+        "quarantine_months": [],
+        "calendar_source_missing_minutes": 1855,
+        "unavailable_source_months": [],
+        "first_regular_source_open": "2020-01-01T00:00:00+00:00"
+      }
+    }
+  ],
+  "counters": {
+    "verified_month_pair_sources": 125,
+    "new_original_strict_native_1m": 5349433,
+    "original_quarantined_native_rows": 38260,
+    "calendar_gaps_within_strict_source_months": 83687,
+    "source_quarantine_months": 1,
+    "source_unavailable_2018": 19,
+    "source_unavailable_2020_2021": 0
+  },
+  "rules": {
+    "source_zip_and_checksum_sha256_required": true,
+    "venue_quote_identity_preserved": true,
+    "source_404_is_not_no_global_trading": true,
+    "source_first_candle_is_not_first_listing_proof": true,
+    "offgrid_millisecond_unchanged": true,
+    "offgrid_excluded_from_regular_minute_series": true,
+    "no_ohlcv_interpolation": true,
+    "trader_interface_bridge_unchanged": true
+  },
+  "excluded_other_instruments": [
+    "DOGEUSDT before official July 2019 listing",
+    "BCHABCUSDT predecessor before the BCHUSDT rename",
+    "KuCoin USDT-USDC and Figure Markets independent sources"
+  ],
+  "not_all_time_certified": true
+}
