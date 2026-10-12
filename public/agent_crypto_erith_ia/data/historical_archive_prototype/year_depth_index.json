@@ -1,10 +1,15 @@
 {
-  "archive_assets": 125,
+  "archive_assets": 126,
   "assets": [
     {
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2017-10",
+          "last_month": "2017-11",
+          "months": 2
+        },
         {
           "first_month": "2018-03",
           "last_month": "2018-05",
@@ -73,16 +78,26 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2018-03",
+      "first_verified_closed_month": "2017-10",
       "id": "bitcoin",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 3598560,
+      "native_minutes": 3686400,
       "rank": 1,
       "symbol": "BTC",
       "token_creation_date_known": false,
-      "verified_months": 82,
+      "verified_months": 84,
       "year_shards": [
+        {
+          "first_month": "2017-10",
+          "last_month": "2017-11",
+          "months": [
+            "2017-10",
+            "2017-11"
+          ],
+          "span": 0,
+          "year": 2017
+        },
         {
           "first_month": "2018-03",
           "last_month": "2018-05",
@@ -91,7 +106,7 @@
             "2018-04",
             "2018-05"
           ],
-          "span": 0,
+          "span": 1,
           "year": 2018
         },
         {
@@ -101,7 +116,7 @@
             "2018-08",
             "2018-09"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2018
         },
         {
@@ -110,7 +125,7 @@
           "months": [
             "2018-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2018
         },
         {
@@ -120,7 +135,7 @@
             "2019-01",
             "2019-02"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2019
         },
         {
@@ -129,7 +144,7 @@
           "months": [
             "2019-04"
           ],
-          "span": 3,
+          "span": 4,
           "year": 2019
         },
         {
@@ -138,7 +153,7 @@
           "months": [
             "2019-07"
           ],
-          "span": 4,
+          "span": 5,
           "year": 2019
         },
         {
@@ -148,7 +163,7 @@
             "2019-09",
             "2019-10"
           ],
-          "span": 5,
+          "span": 6,
           "year": 2019
         },
         {
@@ -157,7 +172,7 @@
           "months": [
             "2019-12"
           ],
-          "span": 6,
+          "span": 7,
           "year": 2019
         },
         {
@@ -166,7 +181,7 @@
           "months": [
             "2020-01"
           ],
-          "span": 6,
+          "span": 7,
           "year": 2020
         },
         {
@@ -175,7 +190,7 @@
           "months": [
             "2020-05"
           ],
-          "span": 7,
+          "span": 8,
           "year": 2020
         },
         {
@@ -187,7 +202,7 @@
             "2020-09",
             "2020-10"
           ],
-          "span": 8,
+          "span": 9,
           "year": 2020
         },
         {
@@ -196,7 +211,7 @@
           "months": [
             "2021-01"
           ],
-          "span": 9,
+          "span": 10,
           "year": 2021
         },
         {
@@ -207,7 +222,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 10,
+          "span": 11,
           "year": 2021
         },
         {
@@ -218,7 +233,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 11,
+          "span": 12,
           "year": 2021
         },
         {
@@ -238,7 +253,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 11,
+          "span": 12,
           "year": 2022
         },
         {
@@ -248,7 +263,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 11,
+          "span": 12,
           "year": 2023
         },
         {
@@ -265,7 +280,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 12,
+          "span": 13,
           "year": 2023
         },
         {
@@ -285,7 +300,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 12,
+          "span": 13,
           "year": 2024
         },
         {
@@ -305,7 +320,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 12,
+          "span": 13,
           "year": 2025
         },
         {
@@ -322,7 +337,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 12,
+          "span": 13,
           "year": 2026
         }
       ]
@@ -331,6 +346,16 @@
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -349,16 +374,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "ethereum",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 2,
       "symbol": "ETH",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -367,7 +413,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -378,7 +424,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -398,7 +444,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -408,7 +454,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -425,7 +471,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -445,7 +491,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -465,7 +511,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -482,7 +528,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -509,6 +555,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -526,16 +582,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "binancecoin",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 4,
       "symbol": "BNB",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -544,7 +621,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -555,7 +632,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -575,7 +652,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -585,7 +662,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -602,7 +679,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -622,7 +699,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -642,7 +719,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -659,7 +736,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -668,6 +745,16 @@
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -686,16 +773,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "ripple",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 5,
       "symbol": "XRP",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -704,7 +812,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -715,7 +823,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -735,7 +843,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -745,7 +853,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -762,7 +870,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -782,7 +890,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -802,7 +910,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -819,7 +927,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -828,6 +936,16 @@
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -846,16 +964,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "usd-coin",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2456640,
+      "native_minutes": 2678400,
       "rank": 6,
       "symbol": "USDC",
       "token_creation_date_known": false,
-      "verified_months": 56,
+      "verified_months": 61,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -864,7 +1003,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -875,7 +1014,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -891,7 +1030,7 @@
             "2022-07",
             "2022-08"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -908,7 +1047,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -928,7 +1067,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -948,7 +1087,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -965,7 +1104,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -974,6 +1113,16 @@
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": 2
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -997,16 +1146,35 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-09",
       "id": "solana",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2632320,
+      "native_minutes": 2764800,
       "rank": 7,
       "symbol": "SOL",
       "token_creation_date_known": false,
-      "verified_months": 60,
+      "verified_months": 63,
       "year_shards": [
+        {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": [
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -1015,7 +1183,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -1025,7 +1193,7 @@
             "2021-10",
             "2021-11"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -1045,7 +1213,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2022
         },
         {
@@ -1054,7 +1222,7 @@
           "months": [
             "2023-01"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -1071,7 +1239,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2023
         },
         {
@@ -1091,7 +1259,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2024
         },
         {
@@ -1111,7 +1279,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2025
         },
         {
@@ -1128,7 +1296,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2026
         }
       ]
@@ -1137,6 +1305,16 @@
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -1160,16 +1338,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "tron",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2672640,
+      "native_minutes": 2894400,
       "rank": 8,
       "symbol": "TRX",
       "token_creation_date_known": false,
-      "verified_months": 61,
+      "verified_months": 66,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -1178,7 +1377,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -1188,7 +1387,7 @@
             "2021-10",
             "2021-11"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -1208,7 +1407,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2022
         },
         {
@@ -1218,7 +1417,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -1235,7 +1434,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2023
         },
         {
@@ -1255,7 +1454,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2024
         },
         {
@@ -1275,7 +1474,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2025
         },
         {
@@ -1292,7 +1491,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2026
         }
       ]
@@ -1319,6 +1518,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -1341,16 +1550,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "zcash",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2672640,
+      "native_minutes": 2894400,
       "rank": 10,
       "symbol": "ZEC",
       "token_creation_date_known": false,
-      "verified_months": 61,
+      "verified_months": 66,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -1359,7 +1589,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -1369,7 +1599,7 @@
             "2021-10",
             "2021-11"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -1389,7 +1619,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2022
         },
         {
@@ -1399,7 +1629,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -1416,7 +1646,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2023
         },
         {
@@ -1436,7 +1666,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2024
         },
         {
@@ -1456,7 +1686,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2025
         },
         {
@@ -1473,7 +1703,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2026
         }
       ]
@@ -1500,6 +1730,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -1517,16 +1757,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "dogecoin",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 12,
       "symbol": "DOGE",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -1535,7 +1796,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -1546,7 +1807,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -1566,7 +1827,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -1576,7 +1837,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -1593,7 +1854,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -1613,7 +1874,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -1633,7 +1894,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -1650,7 +1911,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -1770,6 +2031,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -1787,16 +2058,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "chainlink",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 16,
       "symbol": "LINK",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -1805,7 +2097,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -1816,7 +2108,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -1836,7 +2128,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -1846,7 +2138,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -1863,7 +2155,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -1883,7 +2175,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -1903,7 +2195,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -1920,7 +2212,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -1930,6 +2222,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -1947,16 +2249,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "cardano",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 17,
       "symbol": "ADA",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -1965,7 +2288,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -1976,7 +2299,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -1996,7 +2319,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -2006,7 +2329,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -2023,7 +2346,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -2043,7 +2366,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -2063,7 +2386,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -2080,7 +2403,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -2124,6 +2447,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -2141,16 +2474,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "stellar",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 20,
       "symbol": "XLM",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -2159,7 +2513,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -2170,7 +2524,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -2190,7 +2544,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -2200,7 +2554,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -2217,7 +2571,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -2237,7 +2591,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -2257,7 +2611,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -2274,7 +2628,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -2283,6 +2637,11 @@
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -2301,16 +2660,25 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2021-01",
       "id": "near",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2761920,
       "rank": 21,
       "symbol": "NEAR",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 63,
       "year_shards": [
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 0,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -2319,7 +2687,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 1,
           "year": 2021
         },
         {
@@ -2330,7 +2698,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2021
         },
         {
@@ -2350,7 +2718,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2022
         },
         {
@@ -2360,7 +2728,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2023
         },
         {
@@ -2377,7 +2745,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2023
         },
         {
@@ -2397,7 +2765,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2024
         },
         {
@@ -2417,7 +2785,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2025
         },
         {
@@ -2434,7 +2802,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2026
         }
       ]
@@ -2443,6 +2811,16 @@
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -2461,16 +2839,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "bitcoin-cash",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 22,
       "symbol": "BCH",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -2479,7 +2878,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -2490,7 +2889,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -2510,7 +2909,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -2520,7 +2919,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -2537,7 +2936,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -2557,7 +2956,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -2577,7 +2976,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -2594,7 +2993,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -2603,6 +3002,16 @@
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -2621,16 +3030,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "litecoin",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 23,
       "symbol": "LTC",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -2639,7 +3069,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -2650,7 +3080,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -2670,7 +3100,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -2680,7 +3110,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -2697,7 +3127,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -2717,7 +3147,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -2737,7 +3167,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -2754,7 +3184,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -2833,6 +3263,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-10",
+          "last_month": "2020-10",
+          "months": 1
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -2850,16 +3290,34 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-10",
       "id": "uniswap",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2806560,
       "rank": 26,
       "symbol": "UNI",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 64,
       "year_shards": [
+        {
+          "first_month": "2020-10",
+          "last_month": "2020-10",
+          "months": [
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -2868,7 +3326,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -2879,7 +3337,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -2899,7 +3357,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -2909,7 +3367,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -2926,7 +3384,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -2946,7 +3404,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -2966,7 +3424,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -2983,7 +3441,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -3010,6 +3468,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-10",
+          "last_month": "2020-10",
+          "months": 1
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -3027,16 +3495,34 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-10",
       "id": "avalanche-2",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2806560,
       "rank": 28,
       "symbol": "AVAX",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 64,
       "year_shards": [
+        {
+          "first_month": "2020-10",
+          "last_month": "2020-10",
+          "months": [
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -3045,7 +3531,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -3056,7 +3542,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -3076,7 +3562,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -3086,7 +3572,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -3103,7 +3589,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -3123,7 +3609,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -3143,7 +3629,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -3160,7 +3646,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -3373,6 +3859,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -3390,16 +3886,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "hedera-hashgraph",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 33,
       "symbol": "HBAR",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -3408,7 +3925,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -3419,7 +3936,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -3439,7 +3956,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -3449,7 +3966,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -3466,7 +3983,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -3486,7 +4003,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -3506,7 +4023,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -3523,7 +4040,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -4107,6 +4624,11 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -4124,16 +4646,25 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2021-01",
       "id": "aave",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2761920,
       "rank": 43,
       "symbol": "AAVE",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 63,
       "year_shards": [
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 0,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -4142,7 +4673,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 1,
           "year": 2021
         },
         {
@@ -4153,7 +4684,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2021
         },
         {
@@ -4173,7 +4704,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2022
         },
         {
@@ -4183,7 +4714,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2023
         },
         {
@@ -4200,7 +4731,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2023
         },
         {
@@ -4220,7 +4751,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2024
         },
         {
@@ -4240,7 +4771,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2025
         },
         {
@@ -4257,7 +4788,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2026
         }
       ]
@@ -4484,6 +5015,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": 2
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -4501,16 +5042,35 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-09",
       "id": "polkadot",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2849760,
       "rank": 51,
       "symbol": "DOT",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 65,
       "year_shards": [
+        {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": [
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -4519,7 +5079,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -4530,7 +5090,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -4550,7 +5110,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -4560,7 +5120,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -4577,7 +5137,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -4597,7 +5157,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -4617,7 +5177,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -4634,7 +5194,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -4789,6 +5349,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": 2
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -4806,16 +5376,35 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-09",
       "id": "pax-gold",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2849760,
       "rank": 54,
       "symbol": "PAXG",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 65,
       "year_shards": [
+        {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": [
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -4824,7 +5413,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -4835,7 +5424,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -4855,7 +5444,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -4865,7 +5454,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -4882,7 +5471,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -4902,7 +5491,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -4922,7 +5511,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -4939,7 +5528,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -5531,6 +6120,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -5548,16 +6147,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "ethereum-classic",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 68,
       "symbol": "ETC",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -5566,7 +6186,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -5577,7 +6197,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -5597,7 +6217,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -5607,7 +6227,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -5624,7 +6244,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -5644,7 +6264,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -5664,7 +6284,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -5681,7 +6301,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -5886,6 +6506,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": 2
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -5903,16 +6533,35 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-09",
       "id": "just",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2849760,
       "rank": 72,
       "symbol": "JST",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 65,
       "year_shards": [
+        {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": [
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -5921,7 +6570,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -5932,7 +6581,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -5952,7 +6601,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -5962,7 +6611,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -5979,7 +6628,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -5999,7 +6648,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -6019,7 +6668,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -6036,7 +6685,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -6078,19 +6727,37 @@
     {
       "at_least_12_consecutive_months": false,
       "at_least_24_consecutive_months": false,
-      "contiguous_runs": [],
+      "contiguous_runs": [
+        {
+          "first_month": "2026-07",
+          "last_month": "2026-09",
+          "months": 3
+        }
+      ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": null,
+      "first_verified_closed_month": "2026-07",
       "id": "cosmos",
-      "last_verified_closed_month": null,
-      "longest_contiguous_months": 0,
-      "native_minutes": 0,
+      "last_verified_closed_month": "2026-09",
+      "longest_contiguous_months": 3,
+      "native_minutes": 132480,
       "rank": 75,
       "symbol": "ATOM",
       "token_creation_date_known": false,
-      "verified_months": 0,
-      "year_shards": []
+      "verified_months": 3,
+      "year_shards": [
+        {
+          "first_month": "2026-07",
+          "last_month": "2026-09",
+          "months": [
+            "2026-07",
+            "2026-08",
+            "2026-09"
+          ],
+          "span": 0,
+          "year": 2026
+        }
+      ]
     },
     {
       "at_least_12_consecutive_months": true,
@@ -6203,6 +6870,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -6220,16 +6897,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "algorand",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 79,
       "symbol": "ALGO",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -6238,7 +6936,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -6249,7 +6947,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -6269,7 +6967,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -6279,7 +6977,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -6296,7 +6994,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -6316,7 +7014,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -6336,7 +7034,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -6353,7 +7051,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -6471,6 +7169,11 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -6488,16 +7191,25 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2021-01",
       "id": "filecoin",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2761920,
       "rank": 83,
       "symbol": "FIL",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 63,
       "year_shards": [
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 0,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -6506,7 +7218,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 1,
           "year": 2021
         },
         {
@@ -6517,7 +7229,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2021
         },
         {
@@ -6537,7 +7249,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2022
         },
         {
@@ -6547,7 +7259,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2023
         },
         {
@@ -6564,7 +7276,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2023
         },
         {
@@ -6584,7 +7296,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2024
         },
         {
@@ -6604,7 +7316,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2025
         },
         {
@@ -6621,7 +7333,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2026
         }
       ]
@@ -7278,6 +7990,11 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -7295,16 +8012,25 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2021-01",
       "id": "injective-protocol",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2761920,
       "rank": 96,
       "symbol": "INJ",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 63,
       "year_shards": [
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 0,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -7313,7 +8039,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 1,
           "year": 2021
         },
         {
@@ -7324,7 +8050,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2021
         },
         {
@@ -7344,7 +8070,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2022
         },
         {
@@ -7354,7 +8080,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2023
         },
         {
@@ -7371,7 +8097,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2023
         },
         {
@@ -7391,7 +8117,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2024
         },
         {
@@ -7411,7 +8137,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2025
         },
         {
@@ -7428,7 +8154,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2026
         }
       ]
@@ -7455,6 +8181,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -7472,16 +8208,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "vechain",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 98,
       "symbol": "VET",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -7490,7 +8247,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -7501,7 +8258,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -7521,7 +8278,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -7531,7 +8288,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -7548,7 +8305,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -7568,7 +8325,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -7588,7 +8345,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -7605,7 +8362,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -7615,6 +8372,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -7632,16 +8399,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "dash",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 99,
       "symbol": "DASH",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -7650,7 +8438,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -7661,7 +8449,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -7681,7 +8469,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -7691,7 +8479,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -7708,7 +8496,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -7728,7 +8516,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -7748,7 +8536,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -7765,7 +8553,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -8190,6 +8978,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": 2
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -8207,16 +9005,35 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-09",
       "id": "curve-dao-token",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2849760,
       "rank": 109,
       "symbol": "CRV",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 65,
       "year_shards": [
+        {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": [
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -8225,7 +9042,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -8236,7 +9053,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -8256,7 +9073,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -8266,7 +9083,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -8283,7 +9100,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -8303,7 +9120,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -8323,7 +9140,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -8340,7 +9157,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -8635,6 +9452,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -8657,16 +9484,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "true-usd",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2412000,
+      "native_minutes": 2633760,
       "rank": 118,
       "symbol": "TUSD",
       "token_creation_date_known": false,
-      "verified_months": 55,
+      "verified_months": 60,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -8675,7 +9523,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -8685,7 +9533,7 @@
             "2021-10",
             "2021-11"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -8701,7 +9549,7 @@
             "2022-07",
             "2022-08"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2022
         },
         {
@@ -8718,7 +9566,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2023
         },
         {
@@ -8738,7 +9586,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2024
         },
         {
@@ -8758,7 +9606,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2025
         },
         {
@@ -8775,7 +9623,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2026
         }
       ]
@@ -8784,6 +9632,16 @@
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -8802,16 +9660,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "fetch-ai",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 119,
       "symbol": "FET",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -8820,7 +9699,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -8831,7 +9710,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -8851,7 +9730,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -8861,7 +9740,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -8878,7 +9757,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -8898,7 +9777,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -8918,7 +9797,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -8935,7 +9814,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -9904,6 +10783,16 @@
       "at_least_24_consecutive_months": false,
       "contiguous_runs": [
         {
+          "first_month": "2020-10",
+          "last_month": "2020-10",
+          "months": 1
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-05",
           "months": 1
@@ -9936,23 +10825,41 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-10",
       "id": "sun-token",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 16,
-      "native_minutes": 2016000,
+      "native_minutes": 2105280,
       "rank": 142,
       "symbol": "SUN",
       "token_creation_date_known": false,
-      "verified_months": 46,
+      "verified_months": 48,
       "year_shards": [
+        {
+          "first_month": "2020-10",
+          "last_month": "2020-10",
+          "months": [
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-05",
           "months": [
             "2021-05"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -9961,7 +10868,7 @@
           "months": [
             "2021-07"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -9971,7 +10878,7 @@
             "2021-10",
             "2021-11"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2021
         },
         {
@@ -9991,7 +10898,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2022
         },
         {
@@ -10001,7 +10908,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2023
         },
         {
@@ -10018,7 +10925,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 4,
+          "span": 6,
           "year": 2023
         },
         {
@@ -10033,7 +10940,7 @@
             "2024-06",
             "2024-07"
           ],
-          "span": 4,
+          "span": 6,
           "year": 2024
         },
         {
@@ -10044,7 +10951,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 5,
+          "span": 7,
           "year": 2025
         },
         {
@@ -10061,7 +10968,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 5,
+          "span": 7,
           "year": 2026
         }
       ]
@@ -10070,6 +10977,16 @@
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -10093,16 +11010,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "tezos",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2672640,
+      "native_minutes": 2894400,
       "rank": 143,
       "symbol": "XTZ",
       "token_creation_date_known": false,
-      "verified_months": 61,
+      "verified_months": 66,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -10111,7 +11049,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -10121,7 +11059,7 @@
             "2021-10",
             "2021-11"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -10141,7 +11079,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2022
         },
         {
@@ -10151,7 +11089,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -10168,7 +11106,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2023
         },
         {
@@ -10188,7 +11126,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2024
         },
         {
@@ -10208,7 +11146,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2025
         },
         {
@@ -10225,7 +11163,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2026
         }
       ]
@@ -10286,6 +11224,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-08",
+          "last_month": "2020-10",
+          "months": 3
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -10303,16 +11251,36 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-08",
       "id": "decred",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2894400,
       "rank": 147,
       "symbol": "DCR",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 66,
       "year_shards": [
+        {
+          "first_month": "2020-08",
+          "last_month": "2020-10",
+          "months": [
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -10321,7 +11289,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -10332,7 +11300,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -10352,7 +11320,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -10362,7 +11330,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -10379,7 +11347,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -10399,7 +11367,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -10419,7 +11387,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -10436,7 +11404,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -10653,6 +11621,11 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -10670,16 +11643,25 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2021-01",
       "id": "the-graph",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2761920,
       "rank": 152,
       "symbol": "GRT",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 63,
       "year_shards": [
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 0,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -10688,7 +11670,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 1,
           "year": 2021
         },
         {
@@ -10699,7 +11681,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2021
         },
         {
@@ -10719,7 +11701,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2022
         },
         {
@@ -10729,7 +11711,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2023
         },
         {
@@ -10746,7 +11728,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2023
         },
         {
@@ -10766,7 +11748,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2024
         },
         {
@@ -10786,7 +11768,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2025
         },
         {
@@ -10803,7 +11785,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2026
         }
       ]
@@ -11985,6 +12967,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -12002,16 +12994,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "compound-governance-token",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 24,
-      "native_minutes": 1445760,
+      "native_minutes": 1667520,
       "rank": 166,
       "symbol": "COMP",
       "token_creation_date_known": false,
-      "verified_months": 33,
+      "verified_months": 38,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -12020,7 +13033,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -12031,7 +13044,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -12042,7 +13055,7 @@
             "2022-02",
             "2022-03"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -12053,7 +13066,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -12073,7 +13086,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -12090,7 +13103,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -12099,6 +13112,16 @@
       "at_least_12_consecutive_months": true,
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -12117,16 +13140,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "iota",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 167,
       "symbol": "IOTA",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -12135,7 +13179,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -12146,7 +13190,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -12166,7 +13210,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -12176,7 +13220,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -12193,7 +13237,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -12213,7 +13257,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -12233,7 +13277,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -12250,7 +13294,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -12361,6 +13405,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-10",
+          "last_month": "2020-10",
+          "months": 1
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -12378,16 +13432,34 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-10",
       "id": "thorchain",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2806560,
       "rank": 172,
       "symbol": "RUNE",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 64,
       "year_shards": [
+        {
+          "first_month": "2020-10",
+          "last_month": "2020-10",
+          "months": [
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -12396,7 +13468,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -12407,7 +13479,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -12427,7 +13499,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -12437,7 +13509,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -12454,7 +13526,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -12474,7 +13546,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -12494,7 +13566,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -12511,7 +13583,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -12572,6 +13644,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -12589,16 +13671,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "theta-token",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 24,
-      "native_minutes": 1445760,
+      "native_minutes": 1667520,
       "rank": 176,
       "symbol": "THETA",
       "token_creation_date_known": false,
-      "verified_months": 33,
+      "verified_months": 38,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -12607,7 +13710,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -12618,7 +13721,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -12629,7 +13732,7 @@
             "2022-02",
             "2022-03"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -12640,7 +13743,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -12660,7 +13763,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -12677,7 +13780,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -13064,6 +14167,11 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -13081,16 +14189,25 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2021-01",
       "id": "axie-infinity",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2761920,
       "rank": 184,
       "symbol": "AXS",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 63,
       "year_shards": [
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 0,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -13099,7 +14216,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 1,
           "year": 2021
         },
         {
@@ -13110,7 +14227,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2021
         },
         {
@@ -13130,7 +14247,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2022
         },
         {
@@ -13140,7 +14257,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2023
         },
         {
@@ -13157,7 +14274,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2023
         },
         {
@@ -13177,7 +14294,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2024
         },
         {
@@ -13197,7 +14314,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2025
         },
         {
@@ -13214,7 +14331,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2026
         }
       ]
@@ -13258,6 +14375,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": 2
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -13280,16 +14407,35 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-09",
       "id": "the-sandbox",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2672640,
+      "native_minutes": 2805120,
       "rank": 187,
       "symbol": "SAND",
       "token_creation_date_known": false,
-      "verified_months": 61,
+      "verified_months": 64,
       "year_shards": [
+        {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": [
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -13298,7 +14444,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -13308,7 +14454,7 @@
             "2021-10",
             "2021-11"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -13328,7 +14474,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2022
         },
         {
@@ -13338,7 +14484,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -13355,7 +14501,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2023
         },
         {
@@ -13375,7 +14521,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2024
         },
         {
@@ -13395,7 +14541,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2025
         },
         {
@@ -13412,7 +14558,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 3,
+          "span": 5,
           "year": 2026
         }
       ]
@@ -13478,6 +14624,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -13495,16 +14651,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "basic-attention-token",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 189,
       "symbol": "BAT",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -13513,7 +14690,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -13524,7 +14701,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -13544,7 +14721,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -13554,7 +14731,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -13571,7 +14748,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -13591,7 +14768,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -13611,7 +14788,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -13628,7 +14805,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -13946,6 +15123,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": 2
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -13963,16 +15150,35 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-09",
       "id": "decentraland",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2849760,
       "rank": 198,
       "symbol": "MANA",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 65,
       "year_shards": [
+        {
+          "first_month": "2020-09",
+          "last_month": "2020-10",
+          "months": [
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -13981,7 +15187,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -13992,7 +15198,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -14012,7 +15218,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -14022,7 +15228,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -14039,7 +15245,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -14059,7 +15265,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -14079,7 +15285,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -14096,7 +15302,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -14208,6 +15414,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -14225,16 +15441,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "neo",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 205,
       "symbol": "NEO",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -14243,7 +15480,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -14254,7 +15491,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -14274,7 +15511,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -14284,7 +15521,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -14301,7 +15538,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -14321,7 +15558,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -14341,7 +15578,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -14358,7 +15595,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -14619,6 +15856,16 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": 4
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -14636,16 +15883,37 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2020-07",
       "id": "chiliz",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2939040,
       "rank": 214,
       "symbol": "CHZ",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 67,
       "year_shards": [
+        {
+          "first_month": "2020-07",
+          "last_month": "2020-10",
+          "months": [
+            "2020-07",
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -14654,7 +15922,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2021
         },
         {
@@ -14665,7 +15933,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2021
         },
         {
@@ -14685,7 +15953,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2022
         },
         {
@@ -14695,7 +15963,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 3,
           "year": 2023
         },
         {
@@ -14712,7 +15980,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2023
         },
         {
@@ -14732,7 +16000,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2024
         },
         {
@@ -14752,7 +16020,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2025
         },
         {
@@ -14769,7 +16037,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 4,
           "year": 2026
         }
       ]
@@ -15700,6 +16968,11 @@
       "at_least_24_consecutive_months": true,
       "contiguous_runs": [
         {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2021-05",
           "last_month": "2021-07",
           "months": 3
@@ -15717,16 +16990,25 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2021-05",
+      "first_verified_closed_month": "2021-01",
       "id": "1inch",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 42,
-      "native_minutes": 2717280,
+      "native_minutes": 2761920,
       "rank": 236,
       "symbol": "1INCH",
       "token_creation_date_known": false,
-      "verified_months": 62,
+      "verified_months": 63,
       "year_shards": [
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 0,
+          "year": 2021
+        },
         {
           "first_month": "2021-05",
           "last_month": "2021-07",
@@ -15735,7 +17017,7 @@
             "2021-06",
             "2021-07"
           ],
-          "span": 0,
+          "span": 1,
           "year": 2021
         },
         {
@@ -15746,7 +17028,7 @@
             "2021-11",
             "2021-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2021
         },
         {
@@ -15766,7 +17048,7 @@
             "2022-11",
             "2022-12"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2022
         },
         {
@@ -15776,7 +17058,7 @@
             "2023-01",
             "2023-02"
           ],
-          "span": 1,
+          "span": 2,
           "year": 2023
         },
         {
@@ -15793,7 +17075,7 @@
             "2023-11",
             "2023-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2023
         },
         {
@@ -15813,7 +17095,7 @@
             "2024-11",
             "2024-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2024
         },
         {
@@ -15833,7 +17115,7 @@
             "2025-11",
             "2025-12"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2025
         },
         {
@@ -15850,7 +17132,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 2,
+          "span": 3,
           "year": 2026
         }
       ]
@@ -15877,6 +17159,16 @@
       "at_least_24_consecutive_months": false,
       "contiguous_runs": [
         {
+          "first_month": "2020-08",
+          "last_month": "2020-10",
+          "months": 3
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": 1
+        },
+        {
           "first_month": "2026-07",
           "last_month": "2026-09",
           "months": 3
@@ -15884,16 +17176,36 @@
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2026-07",
+      "first_verified_closed_month": "2020-08",
       "id": "havven",
       "last_verified_closed_month": "2026-09",
       "longest_contiguous_months": 3,
-      "native_minutes": 132480,
+      "native_minutes": 309600,
       "rank": 238,
       "symbol": "SNX",
       "token_creation_date_known": false,
-      "verified_months": 3,
+      "verified_months": 7,
       "year_shards": [
+        {
+          "first_month": "2020-08",
+          "last_month": "2020-10",
+          "months": [
+            "2020-08",
+            "2020-09",
+            "2020-10"
+          ],
+          "span": 0,
+          "year": 2020
+        },
+        {
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "months": [
+            "2021-01"
+          ],
+          "span": 1,
+          "year": 2021
+        },
         {
           "first_month": "2026-07",
           "last_month": "2026-09",
@@ -15902,7 +17214,7 @@
             "2026-08",
             "2026-09"
           ],
-          "span": 0,
+          "span": 2,
           "year": 2026
         }
       ]
@@ -16203,5 +17515,5 @@
   "ranked": 250,
   "schema": "aerith.public.ohlcv.top250.verifiable-year-depth.v1",
   "source": "Verified Binance Spot monthly ZIP catalog",
-  "source_catalog_minutes": 220567680
+  "source_catalog_minutes": 228504960
 }
