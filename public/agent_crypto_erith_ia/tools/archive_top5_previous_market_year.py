@@ -26,6 +26,11 @@ def prepare():
     source.ASSETS=ASSETS
 def stage(quarter,out):
     need(quarter in QUARTERS,"Invalid 2018 quarter")
+    if quarter != "q1":
+        # These quarters already have published, source-verified releases.
+        # Preserve their EXACT manifest format; never replace immutable files.
+        prepare()
+        return source.stage(quarter,out)
     # Source ZIPs with unusable source timestamps become explicit quarantined
     # records, NOT proof of a trade outage and NOT synthetic candle repairs.
     strict.QUARTERS=QUARTERS
