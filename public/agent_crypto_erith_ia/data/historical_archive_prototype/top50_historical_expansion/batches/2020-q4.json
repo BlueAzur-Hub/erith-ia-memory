@@ -1,0 +1,792 @@
+{
+  "assets": [
+    "uniswap",
+    "avalanche-2",
+    "hedera-hashgraph",
+    "quant-network",
+    "shiba-inu",
+    "aave"
+  ],
+  "batch": "2020-q4",
+  "distinct_venue_quote_pairs": true,
+  "months": [
+    "2020-10",
+    "2020-11",
+    "2020-12"
+  ],
+  "native_1m_missing_minutes_in_strict_sources": 21744,
+  "no_synthetic_bars": true,
+  "not_all_time_guaranteed": true,
+  "original_native_ohlcv_rows": 508176,
+  "pre_pair_listing_month_pairs": 6,
+  "quarantined_native_rows": 0,
+  "quarantined_original_month_pairs": 0,
+  "raw_original_source_zips_stored_in_release": true,
+  "records": [
+    {
+      "asset_id": "aave",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-10-15T03:00:00+00:00",
+      "last_source_open_utc": "2020-10-31T23:59:00+00:00",
+      "missing_1m_minutes": 20340,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-10-15T03:00:00Z",
+          "missing_minutes": 20340,
+          "start_utc": "2020-10-01T00:00:00Z"
+        }
+      ],
+      "month": "2020-10",
+      "native_rows": 24300,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "AAVEUSDT-1m-2020-10.zip.CHECKSUM",
+        "sha256": "83f3b58ef02215ddd7dd8e98782824be958b3bf7b6f6d085470ce8c51258cfa3",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AAVEUSDT-1m-2020-10.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/AAVEUSDT/1m/AAVEUSDT-1m-2020-10.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/AAVEUSDT/1m/AAVEUSDT-1m-2020-10.zip",
+      "pair": "AAVEUSDT",
+      "quote": "USDT",
+      "rank": 43,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 742671,
+        "name": "AAVEUSDT-1m-2020-10.zip",
+        "sha256": "39d952d2ce7550424fae401384acd743c527c44cf6f9663c02c4b1a51f332244",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AAVEUSDT-1m-2020-10.zip"
+      },
+      "sqlite": {
+        "bytes": 2912256,
+        "name": "AAVEUSDT-1m-2020-10.sqlite",
+        "sha256": "d00e217c4830cb49929141756a8f4f89fa2aa0705c489026eec42fdda285b365",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AAVEUSDT-1m-2020-10.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "AAVE",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "aave",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-11-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-11-30T23:59:00+00:00",
+      "missing_1m_minutes": 60,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-11-30T07:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-11-30T06:00:00Z"
+        }
+      ],
+      "month": "2020-11",
+      "native_rows": 43140,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "AAVEUSDT-1m-2020-11.zip.CHECKSUM",
+        "sha256": "e6eb27eb57cd24609da1476059787b9fcc7eba975497960e25365b15a0a348e6",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AAVEUSDT-1m-2020-11.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/AAVEUSDT/1m/AAVEUSDT-1m-2020-11.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/AAVEUSDT/1m/AAVEUSDT-1m-2020-11.zip",
+      "pair": "AAVEUSDT",
+      "quote": "USDT",
+      "rank": 43,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1676321,
+        "name": "AAVEUSDT-1m-2020-11.zip",
+        "sha256": "fcdb1e68c67f9edb0aa0628f730371571acb0f9edb2e49de2b4ca0fad84087ae",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AAVEUSDT-1m-2020-11.zip"
+      },
+      "sqlite": {
+        "bytes": 5316608,
+        "name": "AAVEUSDT-1m-2020-11.sqlite",
+        "sha256": "dc72359e51a324fd309174d86420ab10f735e2237fcc86046352411eb3844ce0",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AAVEUSDT-1m-2020-11.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "AAVE",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "aave",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 1,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-12-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-12-31T23:59:00+00:00",
+      "missing_1m_minutes": 291,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-12-21T18:00:00Z",
+          "missing_minutes": 231,
+          "start_utc": "2020-12-21T14:09:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-12-25T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-12-25T02:00:00Z"
+        }
+      ],
+      "month": "2020-12",
+      "native_rows": 44349,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "AAVEUSDT-1m-2020-12.zip.CHECKSUM",
+        "sha256": "b10a10602ea619effdc0431701774c21cdc04dcb7bfb8c902ca6afb25222411f",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AAVEUSDT-1m-2020-12.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/AAVEUSDT/1m/AAVEUSDT-1m-2020-12.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/AAVEUSDT/1m/AAVEUSDT-1m-2020-12.zip",
+      "pair": "AAVEUSDT",
+      "quote": "USDT",
+      "rank": 43,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1764483,
+        "name": "AAVEUSDT-1m-2020-12.zip",
+        "sha256": "b46ea82784e2aaa5ada8c86298ba994a9f1a1cf766f1454b45df096a5838a94e",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AAVEUSDT-1m-2020-12.zip"
+      },
+      "sqlite": {
+        "bytes": 5472256,
+        "name": "AAVEUSDT-1m-2020-12.sqlite",
+        "sha256": "17870c73b5d8ee3328d3bcc72e818fefe3d7b4d8e6da7bb61366d7c535086d83",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AAVEUSDT-1m-2020-12.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "AAVE",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "avalanche-2",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": true,
+      "first_source_open_utc": "2020-10-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-10-31T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2020-10",
+      "native_rows": 44640,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "AVAXUSDT-1m-2020-10.zip.CHECKSUM",
+        "sha256": "3eaf9b5a26b5fb8e535d84fe2f8075abe183ecbf2a2722ede59b2b0bedbd140a",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AVAXUSDT-1m-2020-10.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/kk-KZ/support/announcement/detail/202d37b746bf46e3ae72b256799007ea",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/AVAXUSDT/1m/AVAXUSDT-1m-2020-10.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/AVAXUSDT/1m/AVAXUSDT-1m-2020-10.zip",
+      "pair": "AVAXUSDT",
+      "quote": "USDT",
+      "rank": 28,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1162716,
+        "name": "AVAXUSDT-1m-2020-10.zip",
+        "sha256": "099a86437b9e6d67ab7cc353e68cecd47d9bab387c734983d69fe5c319c6a301",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AVAXUSDT-1m-2020-10.zip"
+      },
+      "sqlite": {
+        "bytes": 5128192,
+        "name": "AVAXUSDT-1m-2020-10.sqlite",
+        "sha256": "4b2d6cac1da6656a50f231e9dec768ef6261652713c59aee3a1aeba5b53659e9",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AVAXUSDT-1m-2020-10.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "AVAX",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "avalanche-2",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": true,
+      "first_source_open_utc": "2020-11-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-11-30T23:59:00+00:00",
+      "missing_1m_minutes": 60,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-11-30T07:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-11-30T06:00:00Z"
+        }
+      ],
+      "month": "2020-11",
+      "native_rows": 43140,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "AVAXUSDT-1m-2020-11.zip.CHECKSUM",
+        "sha256": "21da9b1dc82e93adab0c638c92215ea4f1e8e7798bc49032bfd9d0fc507fdcdb",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AVAXUSDT-1m-2020-11.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/kk-KZ/support/announcement/detail/202d37b746bf46e3ae72b256799007ea",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/AVAXUSDT/1m/AVAXUSDT-1m-2020-11.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/AVAXUSDT/1m/AVAXUSDT-1m-2020-11.zip",
+      "pair": "AVAXUSDT",
+      "quote": "USDT",
+      "rank": 28,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1145243,
+        "name": "AVAXUSDT-1m-2020-11.zip",
+        "sha256": "b83eabe2f4eaed46b3ffeb8f335ecad5eb6c5129e366d79af2542028baa282c5",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AVAXUSDT-1m-2020-11.zip"
+      },
+      "sqlite": {
+        "bytes": 4968448,
+        "name": "AVAXUSDT-1m-2020-11.sqlite",
+        "sha256": "b9a1f7b40cae6653652632da1d208ed97d4632d0f0623c7b29f4654813012ef8",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AVAXUSDT-1m-2020-11.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "AVAX",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "avalanche-2",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 1,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": true,
+      "first_source_open_utc": "2020-12-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-12-31T23:59:00+00:00",
+      "missing_1m_minutes": 291,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-12-21T18:00:00Z",
+          "missing_minutes": 231,
+          "start_utc": "2020-12-21T14:09:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-12-25T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-12-25T02:00:00Z"
+        }
+      ],
+      "month": "2020-12",
+      "native_rows": 44349,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "AVAXUSDT-1m-2020-12.zip.CHECKSUM",
+        "sha256": "1bb62310a2cdb1b2c2b8cf4f5517c3036bccce414c0a92a1b9577a2a613bc656",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AVAXUSDT-1m-2020-12.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/kk-KZ/support/announcement/detail/202d37b746bf46e3ae72b256799007ea",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/AVAXUSDT/1m/AVAXUSDT-1m-2020-12.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/AVAXUSDT/1m/AVAXUSDT-1m-2020-12.zip",
+      "pair": "AVAXUSDT",
+      "quote": "USDT",
+      "rank": 28,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1227854,
+        "name": "AVAXUSDT-1m-2020-12.zip",
+        "sha256": "237e9044c6f742f2d7228a5bfc865f44faabab0706f5ab392f2935334126f7ec",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AVAXUSDT-1m-2020-12.zip"
+      },
+      "sqlite": {
+        "bytes": 5124096,
+        "name": "AVAXUSDT-1m-2020-12.sqlite",
+        "sha256": "3b0cee6c489df7b6a23fd00ddcfc18613f4a831b3f2905b1a8c28e0f5ea957da",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/AVAXUSDT-1m-2020-12.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "AVAX",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "hedera-hashgraph",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-10-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-10-31T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2020-10",
+      "native_rows": 44640,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "HBARUSDT-1m-2020-10.zip.CHECKSUM",
+        "sha256": "b2e632fa6ec9464c97c61a97093b45534d0a7be4d0a015bdc12de77658353a28",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/HBARUSDT-1m-2020-10.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/HBARUSDT/1m/HBARUSDT-1m-2020-10.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/HBARUSDT/1m/HBARUSDT-1m-2020-10.zip",
+      "pair": "HBARUSDT",
+      "quote": "USDT",
+      "rank": 33,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 772839,
+        "name": "HBARUSDT-1m-2020-10.zip",
+        "sha256": "638d53b4c8edd33aebe2625e2f2d8e83593a47e91a0306ca21b556052bf09d0f",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/HBARUSDT-1m-2020-10.zip"
+      },
+      "sqlite": {
+        "bytes": 5058560,
+        "name": "HBARUSDT-1m-2020-10.sqlite",
+        "sha256": "99870352cc7f9db49c3e1e6fae6aabb196ead241a099c2106a0f417b69b72509",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/HBARUSDT-1m-2020-10.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "HBAR",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "hedera-hashgraph",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-11-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-11-30T23:59:00+00:00",
+      "missing_1m_minutes": 60,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-11-30T07:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-11-30T06:00:00Z"
+        }
+      ],
+      "month": "2020-11",
+      "native_rows": 43140,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "HBARUSDT-1m-2020-11.zip.CHECKSUM",
+        "sha256": "cac429d0737ee263ce51470262fbb979833b48daee11151d7b2fa37b74b95b38",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/HBARUSDT-1m-2020-11.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/HBARUSDT/1m/HBARUSDT-1m-2020-11.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/HBARUSDT/1m/HBARUSDT-1m-2020-11.zip",
+      "pair": "HBARUSDT",
+      "quote": "USDT",
+      "rank": 33,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 977127,
+        "name": "HBARUSDT-1m-2020-11.zip",
+        "sha256": "944967cf0c2ead8e97d1afaa9054e44a2c5516e036e5c430f6afadde3effd707",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/HBARUSDT-1m-2020-11.zip"
+      },
+      "sqlite": {
+        "bytes": 4988928,
+        "name": "HBARUSDT-1m-2020-11.sqlite",
+        "sha256": "753f35e7f904a4009621af6142e8432ecc3203228227741e52bebe4d345a03b3",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/HBARUSDT-1m-2020-11.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "HBAR",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "hedera-hashgraph",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 1,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-12-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-12-31T23:59:00+00:00",
+      "missing_1m_minutes": 291,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-12-21T18:00:00Z",
+          "missing_minutes": 231,
+          "start_utc": "2020-12-21T14:09:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-12-25T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-12-25T02:00:00Z"
+        }
+      ],
+      "month": "2020-12",
+      "native_rows": 44349,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "HBARUSDT-1m-2020-12.zip.CHECKSUM",
+        "sha256": "550b8e407fc29a7f6f7c16b1c0831f779b7897aa3928850eeb81c3c650d7f61b",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/HBARUSDT-1m-2020-12.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/HBARUSDT/1m/HBARUSDT-1m-2020-12.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/HBARUSDT/1m/HBARUSDT-1m-2020-12.zip",
+      "pair": "HBARUSDT",
+      "quote": "USDT",
+      "rank": 33,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1213505,
+        "name": "HBARUSDT-1m-2020-12.zip",
+        "sha256": "7da09f443ce78e98769a71a6eaeeee0769d1b881334f44464efe01583aff4256",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/HBARUSDT-1m-2020-12.zip"
+      },
+      "sqlite": {
+        "bytes": 5214208,
+        "name": "HBARUSDT-1m-2020-12.sqlite",
+        "sha256": "135b03bbd6ad380b0b9dcc238da5e48a3efcd025c03cf8168318fee33a3d9205",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/HBARUSDT-1m-2020-12.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "HBAR",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "quant-network",
+      "calendar_minutes": 44640,
+      "first_pair_date_proven_by_official_notice": true,
+      "missing_original_1m_not_interpreted_as_outage": true,
+      "month": "2020-10",
+      "native_rows": 0,
+      "no_synthetic_ohlcv": true,
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/053a6010adc844e29e3859a460e32d12",
+      "original_source_trades_absent_not_inferred": true,
+      "pair": "QNTUSDT",
+      "quote": "USDT",
+      "rank": 34,
+      "resolution": "1m",
+      "source_http_not_requested": true,
+      "status": "before_official_pair_listing",
+      "symbol": "QNT",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "quant-network",
+      "calendar_minutes": 43200,
+      "first_pair_date_proven_by_official_notice": true,
+      "missing_original_1m_not_interpreted_as_outage": true,
+      "month": "2020-11",
+      "native_rows": 0,
+      "no_synthetic_ohlcv": true,
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/053a6010adc844e29e3859a460e32d12",
+      "original_source_trades_absent_not_inferred": true,
+      "pair": "QNTUSDT",
+      "quote": "USDT",
+      "rank": 34,
+      "resolution": "1m",
+      "source_http_not_requested": true,
+      "status": "before_official_pair_listing",
+      "symbol": "QNT",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "quant-network",
+      "calendar_minutes": 44640,
+      "first_pair_date_proven_by_official_notice": true,
+      "missing_original_1m_not_interpreted_as_outage": true,
+      "month": "2020-12",
+      "native_rows": 0,
+      "no_synthetic_ohlcv": true,
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/053a6010adc844e29e3859a460e32d12",
+      "original_source_trades_absent_not_inferred": true,
+      "pair": "QNTUSDT",
+      "quote": "USDT",
+      "rank": 34,
+      "resolution": "1m",
+      "source_http_not_requested": true,
+      "status": "before_official_pair_listing",
+      "symbol": "QNT",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "shiba-inu",
+      "calendar_minutes": 44640,
+      "first_pair_date_proven_by_official_notice": true,
+      "missing_original_1m_not_interpreted_as_outage": true,
+      "month": "2020-10",
+      "native_rows": 0,
+      "no_synthetic_ohlcv": true,
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/f1fe616e688b452f9d736753cb2d947a",
+      "original_source_trades_absent_not_inferred": true,
+      "pair": "SHIBUSDT",
+      "quote": "USDT",
+      "rank": 36,
+      "resolution": "1m",
+      "source_http_not_requested": true,
+      "status": "before_official_pair_listing",
+      "symbol": "SHIB",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "shiba-inu",
+      "calendar_minutes": 43200,
+      "first_pair_date_proven_by_official_notice": true,
+      "missing_original_1m_not_interpreted_as_outage": true,
+      "month": "2020-11",
+      "native_rows": 0,
+      "no_synthetic_ohlcv": true,
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/f1fe616e688b452f9d736753cb2d947a",
+      "original_source_trades_absent_not_inferred": true,
+      "pair": "SHIBUSDT",
+      "quote": "USDT",
+      "rank": 36,
+      "resolution": "1m",
+      "source_http_not_requested": true,
+      "status": "before_official_pair_listing",
+      "symbol": "SHIB",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "shiba-inu",
+      "calendar_minutes": 44640,
+      "first_pair_date_proven_by_official_notice": true,
+      "missing_original_1m_not_interpreted_as_outage": true,
+      "month": "2020-12",
+      "native_rows": 0,
+      "no_synthetic_ohlcv": true,
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/f1fe616e688b452f9d736753cb2d947a",
+      "original_source_trades_absent_not_inferred": true,
+      "pair": "SHIBUSDT",
+      "quote": "USDT",
+      "rank": 36,
+      "resolution": "1m",
+      "source_http_not_requested": true,
+      "status": "before_official_pair_listing",
+      "symbol": "SHIB",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "uniswap",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": true,
+      "first_source_open_utc": "2020-10-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-10-31T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2020-10",
+      "native_rows": 44640,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "UNIUSDT-1m-2020-10.zip.CHECKSUM",
+        "sha256": "dde9b7bf3190d9dacc9269d83b6ea70535ae80cae09f96836db3d0f661cf1adb",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/UNIUSDT-1m-2020-10.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/64d3dbe17d114c24b6c0007f48459f5f",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/UNIUSDT/1m/UNIUSDT-1m-2020-10.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/UNIUSDT/1m/UNIUSDT-1m-2020-10.zip",
+      "pair": "UNIUSDT",
+      "quote": "USDT",
+      "rank": 26,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1760655,
+        "name": "UNIUSDT-1m-2020-10.zip",
+        "sha256": "c120613d313ae2c90447f092e10f230e1b9c36649c06bc76aaee096fac1497e8",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/UNIUSDT-1m-2020-10.zip"
+      },
+      "sqlite": {
+        "bytes": 5455872,
+        "name": "UNIUSDT-1m-2020-10.sqlite",
+        "sha256": "9be77483e40da2fd5ba8887bd4171e31c5d1f4a81f782229989757888a92b18c",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/UNIUSDT-1m-2020-10.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "UNI",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "uniswap",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": true,
+      "first_source_open_utc": "2020-11-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-11-30T23:59:00+00:00",
+      "missing_1m_minutes": 60,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-11-30T07:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-11-30T06:00:00Z"
+        }
+      ],
+      "month": "2020-11",
+      "native_rows": 43140,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "UNIUSDT-1m-2020-11.zip.CHECKSUM",
+        "sha256": "01bd66cbbac8de9490f0afd515c2eefc1779205640139f0ea90d18500ce70f23",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/UNIUSDT-1m-2020-11.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/64d3dbe17d114c24b6c0007f48459f5f",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/UNIUSDT/1m/UNIUSDT-1m-2020-11.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/UNIUSDT/1m/UNIUSDT-1m-2020-11.zip",
+      "pair": "UNIUSDT",
+      "quote": "USDT",
+      "rank": 26,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1790722,
+        "name": "UNIUSDT-1m-2020-11.zip",
+        "sha256": "5d7a911532d4d0a7b36ef006cf4799cac287e5e0ea11bef41c3f6577cca2a2da",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/UNIUSDT-1m-2020-11.zip"
+      },
+      "sqlite": {
+        "bytes": 5345280,
+        "name": "UNIUSDT-1m-2020-11.sqlite",
+        "sha256": "3c382a27c440e2070d0bdd3fd83631ee97cda86ed24654452e38a22bf290d969",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/UNIUSDT-1m-2020-11.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "UNI",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "uniswap",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 1,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": true,
+      "first_source_open_utc": "2020-12-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-12-31T23:59:00+00:00",
+      "missing_1m_minutes": 291,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-12-21T18:00:00Z",
+          "missing_minutes": 231,
+          "start_utc": "2020-12-21T14:09:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-12-25T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-12-25T02:00:00Z"
+        }
+      ],
+      "month": "2020-12",
+      "native_rows": 44349,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "UNIUSDT-1m-2020-12.zip.CHECKSUM",
+        "sha256": "80834496a57570ca5c636d3ed2162fc2bf7eff46ec43d7d0d9ba472c4f970e27",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/UNIUSDT-1m-2020-12.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/64d3dbe17d114c24b6c0007f48459f5f",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/UNIUSDT/1m/UNIUSDT-1m-2020-12.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/UNIUSDT/1m/UNIUSDT-1m-2020-12.zip",
+      "pair": "UNIUSDT",
+      "quote": "USDT",
+      "rank": 26,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1777246,
+        "name": "UNIUSDT-1m-2020-12.zip",
+        "sha256": "ab0a79eed146c0c351b46d11849b203e335338ee98a65b6ae5f184ebf5fb79dc",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/UNIUSDT-1m-2020-12.zip"
+      },
+      "sqlite": {
+        "bytes": 5423104,
+        "name": "UNIUSDT-1m-2020-12.sqlite",
+        "sha256": "bf78d60a3cbef86e3cc2b5a0abf97744987dc0300b787066099d4c365eaccfab",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-2020-q4/UNIUSDT-1m-2020-12.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "UNI",
+      "venue": "Binance Spot"
+    }
+  ],
+  "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-spot-2020-q4",
+  "release_tag": "crypto-top50-original-spot-2020-q4",
+  "schema": "seven.crypto.top50-original-spot-batch.v1",
+  "source_verified_month_pairs": 12,
+  "strict_1m_month_pairs": 12,
+  "strict_utc_aligned_native_rows": 508176,
+  "target_month_pairs": 18,
+  "top50_reference": {
+    "expansion_plan_sha256": "c3a9c95b63159e6c330ffcd27e0a1e0d1ef87c63f0526db29c4ea71ffdcc0b4a",
+    "top250_catalog_sha256": "b548dfdb7c5f7dabd41d4669bf690c0edf99fc47ecf605665094c5dd8e621bd0"
+  },
+  "trader_interface_modified": false,
+  "unavailable_or_unverified_month_pairs": 0
+}
