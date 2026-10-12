@@ -9,6 +9,7 @@ import json
 import hashlib
 from pathlib import Path
 import archive_top5_historical_quarters as source
+import archive_top5_first_market_year as strict
 
 ROOT=Path(__file__).resolve().parents[1]/"data/historical_archive_prototype"
 OLD=ROOT/"top5_earlier_source_vault/history_index.json"
@@ -25,8 +26,15 @@ def prepare():
     source.ASSETS=ASSETS
 def stage(quarter,out):
     need(quarter in QUARTERS,"Invalid 2018 quarter")
-    prepare()
-    return source.stage(quarter,out)
+    # Source ZIPs with unusable source timestamps become explicit quarantined
+    # records, NOT proof of a trade outage and NOT synthetic candle repairs.
+    strict.QUARTERS=QUARTERS
+    doc=strict.stage(quarter,out)
+    doc["schema"]="seven.crypto.top5-earlier-quarter-native-vault.v1"
+    doc["quarantined_source_months"]=sum(
+        r["status"]=="invalid_source_needs_review" for r in doc["rows"])
+    (out/"manifest.json").write_text(json.dumps(doc,indent=2,sort_keys=True)+"\n")
+    return doc
 def merge(folder,out):
     earlier=json.loads(OLD.read_text(encoding="utf-8"))
     need(earlier["schema"]=="seven.crypto.top5-earlier-native-history-roadmap.v2"
