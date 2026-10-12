@@ -1,0 +1,988 @@
+{
+  "assets": [
+    "dogecoin",
+    "chainlink",
+    "cardano",
+    "stellar",
+    "bitcoin-cash",
+    "litecoin"
+  ],
+  "batch": "2020-q4",
+  "distinct_venue_quote_pairs": true,
+  "months": [
+    "2020-10",
+    "2020-11",
+    "2020-12"
+  ],
+  "native_1m_missing_minutes_in_strict_sources": 2106,
+  "no_synthetic_bars": true,
+  "not_all_time_guaranteed": true,
+  "original_native_ohlcv_rows": 792774,
+  "pre_pair_listing_month_pairs": 0,
+  "quarantined_native_rows": 0,
+  "quarantined_original_month_pairs": 0,
+  "raw_original_source_zips_stored_in_release": true,
+  "records": [
+    {
+      "asset_id": "bitcoin-cash",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-10-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-10-31T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2020-10",
+      "native_rows": 44640,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "BCHUSDT-1m-2020-10.zip.CHECKSUM",
+        "sha256": "243197322b44a6da55cc145df327985846baac4e22af1b70d796d7406ef4619f",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/BCHUSDT-1m-2020-10.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BCHUSDT/1m/BCHUSDT-1m-2020-10.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/BCHUSDT/1m/BCHUSDT-1m-2020-10.zip",
+      "pair": "BCHUSDT",
+      "quote": "USDT",
+      "rank": 22,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1865463,
+        "name": "BCHUSDT-1m-2020-10.zip",
+        "sha256": "39642363335ac72280fe76cfa9e0b52d5f34a4856b5e2ecab93260984c7a7628",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/BCHUSDT-1m-2020-10.zip"
+      },
+      "sqlite": {
+        "bytes": 5689344,
+        "name": "BCHUSDT-1m-2020-10.sqlite",
+        "sha256": "5ebba3ab1a7552c3dbfe8cfc3353221bfeb0d1de64d0e5025b66591cd1de08fa",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/BCHUSDT-1m-2020-10.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "BCH",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "bitcoin-cash",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-11-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-11-30T23:59:00+00:00",
+      "missing_1m_minutes": 60,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-11-30T07:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-11-30T06:00:00Z"
+        }
+      ],
+      "month": "2020-11",
+      "native_rows": 43140,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "BCHUSDT-1m-2020-11.zip.CHECKSUM",
+        "sha256": "2309f1de28f934185e1cae9045601e7b5fed9780f257fa7e56ea402e6f9593d1",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/BCHUSDT-1m-2020-11.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BCHUSDT/1m/BCHUSDT-1m-2020-11.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/BCHUSDT/1m/BCHUSDT-1m-2020-11.zip",
+      "pair": "BCHUSDT",
+      "quote": "USDT",
+      "rank": 22,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1913974,
+        "name": "BCHUSDT-1m-2020-11.zip",
+        "sha256": "470776bfbf97a2b6d94e79a8d8541292486ab96d33ee66267cebd3ff35c8e3f8",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/BCHUSDT-1m-2020-11.zip"
+      },
+      "sqlite": {
+        "bytes": 5578752,
+        "name": "BCHUSDT-1m-2020-11.sqlite",
+        "sha256": "f895a9e099705474199704b3574fd2c4345aa01077a8a48ea457af52c1905fec",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/BCHUSDT-1m-2020-11.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "BCH",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "bitcoin-cash",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 1,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-12-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-12-31T23:59:00+00:00",
+      "missing_1m_minutes": 291,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-12-21T18:00:00Z",
+          "missing_minutes": 231,
+          "start_utc": "2020-12-21T14:09:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-12-25T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-12-25T02:00:00Z"
+        }
+      ],
+      "month": "2020-12",
+      "native_rows": 44349,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "BCHUSDT-1m-2020-12.zip.CHECKSUM",
+        "sha256": "a459d07692af8d111787478160a5dd6af6583c6ebf92054a0bc1392461c2df85",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/BCHUSDT-1m-2020-12.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BCHUSDT/1m/BCHUSDT-1m-2020-12.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/BCHUSDT/1m/BCHUSDT-1m-2020-12.zip",
+      "pair": "BCHUSDT",
+      "quote": "USDT",
+      "rank": 22,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1979044,
+        "name": "BCHUSDT-1m-2020-12.zip",
+        "sha256": "d9f6e960c21343ec01ec90715503dbb63469a932e6b4c47610be58a039513b79",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/BCHUSDT-1m-2020-12.zip"
+      },
+      "sqlite": {
+        "bytes": 5734400,
+        "name": "BCHUSDT-1m-2020-12.sqlite",
+        "sha256": "4232451eb5af8341997dc73e5762d9116665ad95535897d7e62b095deb22e969",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/BCHUSDT-1m-2020-12.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "BCH",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "cardano",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-10-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-10-31T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2020-10",
+      "native_rows": 44640,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "ADAUSDT-1m-2020-10.zip.CHECKSUM",
+        "sha256": "9620093062934681bd5ed3ab02a680ecd2a1e3dae2224ac8a3929e2e9d92402e",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/ADAUSDT-1m-2020-10.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/360002770711",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2020-10.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2020-10.zip",
+      "pair": "ADAUSDT",
+      "quote": "USDT",
+      "rank": 17,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1737567,
+        "name": "ADAUSDT-1m-2020-10.zip",
+        "sha256": "e01e326374a2b5c74345a818e964179145add5b3b139b6b2fa2ae827c9b41217",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/ADAUSDT-1m-2020-10.zip"
+      },
+      "sqlite": {
+        "bytes": 5599232,
+        "name": "ADAUSDT-1m-2020-10.sqlite",
+        "sha256": "97541ca99086f935e2ab05439a6feae834a36ab2892a0fb570b146e96ec5934c",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/ADAUSDT-1m-2020-10.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "ADA",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "cardano",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-11-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-11-30T23:59:00+00:00",
+      "missing_1m_minutes": 60,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-11-30T07:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-11-30T06:00:00Z"
+        }
+      ],
+      "month": "2020-11",
+      "native_rows": 43140,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "ADAUSDT-1m-2020-11.zip.CHECKSUM",
+        "sha256": "a2f8d6c014c22b1f89e9e28980d624a0f0cba795f013873bec5bbcbedf65158a",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/ADAUSDT-1m-2020-11.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/360002770711",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2020-11.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2020-11.zip",
+      "pair": "ADAUSDT",
+      "quote": "USDT",
+      "rank": 17,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1790613,
+        "name": "ADAUSDT-1m-2020-11.zip",
+        "sha256": "65b4c5fcab00bab55213ccf4d065767bf334e59e4df1d8016724a122265ca9ef",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/ADAUSDT-1m-2020-11.zip"
+      },
+      "sqlite": {
+        "bytes": 5505024,
+        "name": "ADAUSDT-1m-2020-11.sqlite",
+        "sha256": "be5793733004dea520f9eebea95c5f7607adb43f8c59ded75c6155c812b3c88e",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/ADAUSDT-1m-2020-11.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "ADA",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "cardano",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 1,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-12-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-12-31T23:59:00+00:00",
+      "missing_1m_minutes": 291,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-12-21T18:00:00Z",
+          "missing_minutes": 231,
+          "start_utc": "2020-12-21T14:09:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-12-25T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-12-25T02:00:00Z"
+        }
+      ],
+      "month": "2020-12",
+      "native_rows": 44349,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "ADAUSDT-1m-2020-12.zip.CHECKSUM",
+        "sha256": "609ebe190c7dacf6765cc0b007a216e5d2ccf221bdaee852b40385c7fc677989",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/ADAUSDT-1m-2020-12.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/360002770711",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2020-12.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2020-12.zip",
+      "pair": "ADAUSDT",
+      "quote": "USDT",
+      "rank": 17,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1881307,
+        "name": "ADAUSDT-1m-2020-12.zip",
+        "sha256": "00e02361849759f9671269982f08cfd031b48779ca97809ea121d5a725304624",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/ADAUSDT-1m-2020-12.zip"
+      },
+      "sqlite": {
+        "bytes": 5689344,
+        "name": "ADAUSDT-1m-2020-12.sqlite",
+        "sha256": "2639e3df3222c896d27e8a91a854626ae37c22cba41072ef0fdca1857de90518",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/ADAUSDT-1m-2020-12.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "ADA",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "chainlink",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-10-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-10-31T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2020-10",
+      "native_rows": 44640,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "LINKUSDT-1m-2020-10.zip.CHECKSUM",
+        "sha256": "0919812bedf7e193c087461dc8e4f41dc52a579e89d6babdf57ad894d142b353",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LINKUSDT-1m-2020-10.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2020-10.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2020-10.zip",
+      "pair": "LINKUSDT",
+      "quote": "USDT",
+      "rank": 16,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1896888,
+        "name": "LINKUSDT-1m-2020-10.zip",
+        "sha256": "96f54fe72a8af36f27bc2e059b14bd73f8c0e78abfc8e68571714d2c9a225502",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LINKUSDT-1m-2020-10.zip"
+      },
+      "sqlite": {
+        "bytes": 5681152,
+        "name": "LINKUSDT-1m-2020-10.sqlite",
+        "sha256": "3d72b87ae6bd32cc7d9a88f6e23db52261cd5fec9810e25a2f76f8c7bd591ba7",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LINKUSDT-1m-2020-10.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "LINK",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "chainlink",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-11-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-11-30T23:59:00+00:00",
+      "missing_1m_minutes": 60,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-11-30T07:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-11-30T06:00:00Z"
+        }
+      ],
+      "month": "2020-11",
+      "native_rows": 43140,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "LINKUSDT-1m-2020-11.zip.CHECKSUM",
+        "sha256": "042a5a2609d392ce97aa73140f4b77d5a355ed5f43448d051047f5a811abc07d",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LINKUSDT-1m-2020-11.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2020-11.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2020-11.zip",
+      "pair": "LINKUSDT",
+      "quote": "USDT",
+      "rank": 16,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1896255,
+        "name": "LINKUSDT-1m-2020-11.zip",
+        "sha256": "def1468b9f228f9eb22fa4eacb774d5ede6778792993b691ae798b866e4de9f9",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LINKUSDT-1m-2020-11.zip"
+      },
+      "sqlite": {
+        "bytes": 5591040,
+        "name": "LINKUSDT-1m-2020-11.sqlite",
+        "sha256": "35718a8f6fc9d2a21dbce49675a63e74f2043497092ace2dfac89af4bb284ffc",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LINKUSDT-1m-2020-11.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "LINK",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "chainlink",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 1,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-12-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-12-31T23:59:00+00:00",
+      "missing_1m_minutes": 291,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-12-21T18:00:00Z",
+          "missing_minutes": 231,
+          "start_utc": "2020-12-21T14:09:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-12-25T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-12-25T02:00:00Z"
+        }
+      ],
+      "month": "2020-12",
+      "native_rows": 44349,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "LINKUSDT-1m-2020-12.zip.CHECKSUM",
+        "sha256": "f07d0f460b7d9929410686d72757b7a61e0ce741e64fc8493f11f943c7d90110",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LINKUSDT-1m-2020-12.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2020-12.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2020-12.zip",
+      "pair": "LINKUSDT",
+      "quote": "USDT",
+      "rank": 16,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1909622,
+        "name": "LINKUSDT-1m-2020-12.zip",
+        "sha256": "aa3981cb23321828e4b7d965593a5f001587e52cc883a494167e800fea4ee053",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LINKUSDT-1m-2020-12.zip"
+      },
+      "sqlite": {
+        "bytes": 5705728,
+        "name": "LINKUSDT-1m-2020-12.sqlite",
+        "sha256": "5c653bab7c067a2c93b45f6e6835722909367002b58fe93624b40d1155bcdff5",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LINKUSDT-1m-2020-12.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "LINK",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "dogecoin",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": true,
+      "first_source_open_utc": "2020-10-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-10-31T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2020-10",
+      "native_rows": 44640,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "DOGEUSDT-1m-2020-10.zip.CHECKSUM",
+        "sha256": "9b87574efd33ff530e1846adb5795322e509de8e5f0e655f48fa155cafa0109e",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/DOGEUSDT-1m-2020-10.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en-IN/support/announcement/detail/360030488211",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/DOGEUSDT/1m/DOGEUSDT-1m-2020-10.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/DOGEUSDT/1m/DOGEUSDT-1m-2020-10.zip",
+      "pair": "DOGEUSDT",
+      "quote": "USDT",
+      "rank": 12,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1165073,
+        "name": "DOGEUSDT-1m-2020-10.zip",
+        "sha256": "50fa3dee59c3122043de5ab043c6f913a93742f3427721632ea60ac5cc13d0e8",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/DOGEUSDT-1m-2020-10.zip"
+      },
+      "sqlite": {
+        "bytes": 5283840,
+        "name": "DOGEUSDT-1m-2020-10.sqlite",
+        "sha256": "45893375c1f44341c29f49626b7d85120925bc5802c42cd8a8b9614c412d7f40",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/DOGEUSDT-1m-2020-10.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "DOGE",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "dogecoin",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": true,
+      "first_source_open_utc": "2020-11-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-11-30T23:59:00+00:00",
+      "missing_1m_minutes": 60,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-11-30T07:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-11-30T06:00:00Z"
+        }
+      ],
+      "month": "2020-11",
+      "native_rows": 43140,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "DOGEUSDT-1m-2020-11.zip.CHECKSUM",
+        "sha256": "ee7298680144ae08ae8137f764c827ec1b76ee5973d369c6de5c1c4bdfa60b1c",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/DOGEUSDT-1m-2020-11.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en-IN/support/announcement/detail/360030488211",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/DOGEUSDT/1m/DOGEUSDT-1m-2020-11.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/DOGEUSDT/1m/DOGEUSDT-1m-2020-11.zip",
+      "pair": "DOGEUSDT",
+      "quote": "USDT",
+      "rank": 12,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1329317,
+        "name": "DOGEUSDT-1m-2020-11.zip",
+        "sha256": "eebdce45d2403a99520878ea2ff1a03f5157e93819e8b2e4f08a1e6d39f592b2",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/DOGEUSDT-1m-2020-11.zip"
+      },
+      "sqlite": {
+        "bytes": 5218304,
+        "name": "DOGEUSDT-1m-2020-11.sqlite",
+        "sha256": "ebaeebf6ad5e2f7697db3b8e36ab6fd97ae9e632fda324b1d6267686111f5a9a",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/DOGEUSDT-1m-2020-11.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "DOGE",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "dogecoin",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 1,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": true,
+      "first_source_open_utc": "2020-12-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-12-31T23:59:00+00:00",
+      "missing_1m_minutes": 291,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-12-21T18:00:00Z",
+          "missing_minutes": 231,
+          "start_utc": "2020-12-21T14:09:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-12-25T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-12-25T02:00:00Z"
+        }
+      ],
+      "month": "2020-12",
+      "native_rows": 44349,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "DOGEUSDT-1m-2020-12.zip.CHECKSUM",
+        "sha256": "bf94e597efc5abe88e326f0b7919ca0106e46e5fcdf3588481df515603a58d1f",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/DOGEUSDT-1m-2020-12.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en-IN/support/announcement/detail/360030488211",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/DOGEUSDT/1m/DOGEUSDT-1m-2020-12.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/DOGEUSDT/1m/DOGEUSDT-1m-2020-12.zip",
+      "pair": "DOGEUSDT",
+      "quote": "USDT",
+      "rank": 12,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1532417,
+        "name": "DOGEUSDT-1m-2020-12.zip",
+        "sha256": "3de28d75db8cfc0284c23542a21d7114b3e213558cac2fce2a9d299956bcd4c9",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/DOGEUSDT-1m-2020-12.zip"
+      },
+      "sqlite": {
+        "bytes": 5439488,
+        "name": "DOGEUSDT-1m-2020-12.sqlite",
+        "sha256": "14a94d77b151e988cc5df77a89ebb87b39615fd1c96357abe74a6eff6286b423",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/DOGEUSDT-1m-2020-12.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "DOGE",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "litecoin",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-10-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-10-31T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2020-10",
+      "native_rows": 44640,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "LTCUSDT-1m-2020-10.zip.CHECKSUM",
+        "sha256": "102be0b6fa2e90d9176770ab188a6cc09c63698f5bd7c051b53a8d9327fc818a",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LTCUSDT-1m-2020-10.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2020-10.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2020-10.zip",
+      "pair": "LTCUSDT",
+      "quote": "USDT",
+      "rank": 23,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1777500,
+        "name": "LTCUSDT-1m-2020-10.zip",
+        "sha256": "d4541624ca1859f88be2c1800bd623a3500257238056c86028ab1ea7cc658a76",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LTCUSDT-1m-2020-10.zip"
+      },
+      "sqlite": {
+        "bytes": 5533696,
+        "name": "LTCUSDT-1m-2020-10.sqlite",
+        "sha256": "b65e79489375b0d420c510595706f8e3d89667a838304e61a7da6e3c2806b219",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LTCUSDT-1m-2020-10.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "LTC",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "litecoin",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-11-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-11-30T23:59:00+00:00",
+      "missing_1m_minutes": 60,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-11-30T07:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-11-30T06:00:00Z"
+        }
+      ],
+      "month": "2020-11",
+      "native_rows": 43140,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "LTCUSDT-1m-2020-11.zip.CHECKSUM",
+        "sha256": "e6f78819389eb76a3e0e9c363ed7234955d1588b565d7dd9047f6808941ba991",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LTCUSDT-1m-2020-11.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2020-11.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2020-11.zip",
+      "pair": "LTCUSDT",
+      "quote": "USDT",
+      "rank": 23,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1911658,
+        "name": "LTCUSDT-1m-2020-11.zip",
+        "sha256": "811d734d21df8038bdd2ecbf8d8922fe0437fe067f345b55a19dcdbffd5d8e7e",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LTCUSDT-1m-2020-11.zip"
+      },
+      "sqlite": {
+        "bytes": 5492736,
+        "name": "LTCUSDT-1m-2020-11.sqlite",
+        "sha256": "ea7e63372fa95894254836a9165cec6facb2260f3a65c5a88cc0b51ebdcf39c8",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LTCUSDT-1m-2020-11.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "LTC",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "litecoin",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 1,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-12-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-12-31T23:59:00+00:00",
+      "missing_1m_minutes": 291,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-12-21T18:00:00Z",
+          "missing_minutes": 231,
+          "start_utc": "2020-12-21T14:09:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-12-25T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-12-25T02:00:00Z"
+        }
+      ],
+      "month": "2020-12",
+      "native_rows": 44349,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "LTCUSDT-1m-2020-12.zip.CHECKSUM",
+        "sha256": "2daa5308b739411cd89587b772226aaad2173d97c738a6aea586f1e833c6f9d4",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LTCUSDT-1m-2020-12.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2020-12.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2020-12.zip",
+      "pair": "LTCUSDT",
+      "quote": "USDT",
+      "rank": 23,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 2035666,
+        "name": "LTCUSDT-1m-2020-12.zip",
+        "sha256": "dd52a815275bb21385c08aa16afb6dd16bd49fd58d02b5befcaa7ae7cf713ea2",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LTCUSDT-1m-2020-12.zip"
+      },
+      "sqlite": {
+        "bytes": 5791744,
+        "name": "LTCUSDT-1m-2020-12.sqlite",
+        "sha256": "d981e29f173343da5661b14ef1c2000f756d055711791e6f40fe2575cbfd2f8c",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/LTCUSDT-1m-2020-12.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "LTC",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "stellar",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-10-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-10-31T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2020-10",
+      "native_rows": 44640,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "XLMUSDT-1m-2020-10.zip.CHECKSUM",
+        "sha256": "66ba897cdde4188c4e41365ce695cfc92efe4985aead43afc2247582af30ca1f",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/XLMUSDT-1m-2020-10.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2020-10.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2020-10.zip",
+      "pair": "XLMUSDT",
+      "quote": "USDT",
+      "rank": 20,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1581011,
+        "name": "XLMUSDT-1m-2020-10.zip",
+        "sha256": "47965d2c69e39e11a58ce207f5ba81443901f33278950fdfef53bbae4c3b9f56",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/XLMUSDT-1m-2020-10.zip"
+      },
+      "sqlite": {
+        "bytes": 5480448,
+        "name": "XLMUSDT-1m-2020-10.sqlite",
+        "sha256": "7535c53856111c1c0187f443e0f2026cd8a37d9eaeb57fa048cbfeee1ce3509f",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/XLMUSDT-1m-2020-10.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "XLM",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "stellar",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-11-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-11-30T23:59:00+00:00",
+      "missing_1m_minutes": 60,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-11-30T07:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-11-30T06:00:00Z"
+        }
+      ],
+      "month": "2020-11",
+      "native_rows": 43140,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "XLMUSDT-1m-2020-11.zip.CHECKSUM",
+        "sha256": "a4571de003c27df99d34f19769170034cc670b9cf9b5890cfe7290933852098d",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/XLMUSDT-1m-2020-11.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2020-11.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2020-11.zip",
+      "pair": "XLMUSDT",
+      "quote": "USDT",
+      "rank": 20,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1678321,
+        "name": "XLMUSDT-1m-2020-11.zip",
+        "sha256": "d093fde19fb2707b35e0fa71390104fa07cd2c1bad506d1f21954ccf5226974b",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/XLMUSDT-1m-2020-11.zip"
+      },
+      "sqlite": {
+        "bytes": 5406720,
+        "name": "XLMUSDT-1m-2020-11.sqlite",
+        "sha256": "c5284105b727b040383845d6f29130ee0b430c990eec3035b4835ed1a598ce0d",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/XLMUSDT-1m-2020-11.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "XLM",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "stellar",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 1,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2020-12-01T00:00:00+00:00",
+      "last_source_open_utc": "2020-12-31T23:59:00+00:00",
+      "missing_1m_minutes": 291,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2020-12-21T18:00:00Z",
+          "missing_minutes": 231,
+          "start_utc": "2020-12-21T14:09:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-12-25T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-12-25T02:00:00Z"
+        }
+      ],
+      "month": "2020-12",
+      "native_rows": 44349,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "XLMUSDT-1m-2020-12.zip.CHECKSUM",
+        "sha256": "4946074210c56320ec764a63a63307569059f8e20937ed96a91dadc74d98398c",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/XLMUSDT-1m-2020-12.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2020-12.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2020-12.zip",
+      "pair": "XLMUSDT",
+      "quote": "USDT",
+      "rank": 20,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1870017,
+        "name": "XLMUSDT-1m-2020-12.zip",
+        "sha256": "34a8eda21987b52dd4c2576dfedd12abe9028585c682ca227d71037ed93c694c",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/XLMUSDT-1m-2020-12.zip"
+      },
+      "sqlite": {
+        "bytes": 5652480,
+        "name": "XLMUSDT-1m-2020-12.sqlite",
+        "sha256": "40ad085480623cd1ff4e8c5d8c38eb9f7dd0b35d91c1539ee86357ddcf76beeb",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-later-original-spot-2020-q4/XLMUSDT-1m-2020-12.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "XLM",
+      "venue": "Binance Spot"
+    }
+  ],
+  "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top25-later-original-spot-2020-q4",
+  "release_tag": "crypto-top25-later-original-spot-2020-q4",
+  "schema": "seven.crypto.top25-later-spot-batch.v1",
+  "source_verified_month_pairs": 18,
+  "strict_1m_month_pairs": 18,
+  "strict_utc_aligned_native_rows": 792774,
+  "target_month_pairs": 18,
+  "top25_reference": {
+    "expansion_plan_sha256": "18b4bfb17e5b4dad21b9a96761eba5518c4d0ed287ff43f440bf84c676a7b761",
+    "top250_catalog_sha256": "b548dfdb7c5f7dabd41d4669bf690c0edf99fc47ecf605665094c5dd8e621bd0"
+  },
+  "trader_interface_modified": false,
+  "unavailable_or_unverified_month_pairs": 0
+}
