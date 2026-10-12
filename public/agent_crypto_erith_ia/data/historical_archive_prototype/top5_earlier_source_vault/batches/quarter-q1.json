@@ -1,0 +1,512 @@
+{
+  "assets": [
+    "ethereum",
+    "binancecoin",
+    "ripple",
+    "solana"
+  ],
+  "disclaimer": "No file is invented for unavailable months. Original partial data contain only real source timestamps; source gaps are explicitly retained.",
+  "first_month": "2020-01",
+  "first_trade_not_proven": true,
+  "fully_complete_source_months": 3,
+  "is_all_time": false,
+  "last_month": "2020-03",
+  "native_1m_candles": 391494,
+  "native_1m_missing": 1626,
+  "no_exchange_substitution": true,
+  "no_synthetic_rows": true,
+  "original_close_time_anomalies": 0,
+  "original_identity_index_sha256": "b548dfdb7c5f7dabd41d4669bf690c0edf99fc47ecf605665094c5dd8e621bd0",
+  "quarter": "q1",
+  "quote": "USDT",
+  "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-original-2020-01_2020-03",
+  "release_tag": "crypto-top5-binance-original-2020-01_2020-03",
+  "requested_source_months": 12,
+  "rows": [
+    {
+      "asset_id": "binancecoin",
+      "expected_calendar_minutes": 44640,
+      "first_source_month_not_proven": true,
+      "gap_windows": [],
+      "market_pair": "BNBUSDT",
+      "missing_native_minutes": 0,
+      "month": "2020-01",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "BNBUSDT-1m-2020-01.zip.CHECKSUM",
+        "sha256": "186a2764461fc9233e553c09ffeac98534fc2c707f2ad79a61d9a7b932687799",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/BNBUSDT-1m-2020-01.zip.CHECKSUM"
+      },
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2020-01.zip.CHECKSUM",
+      "original_source": {
+        "bytes": 1807642,
+        "name": "BNBUSDT-1m-2020-01.zip",
+        "sha256": "dc00309ea9f1f8a78d8c17c4c638d96fba09f870f89190a4e2a2898beb951756",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/BNBUSDT-1m-2020-01.zip"
+      },
+      "quote": "USDT",
+      "resolution": "1m",
+      "source_checksum_sha256": "186a2764461fc9233e553c09ffeac98534fc2c707f2ad79a61d9a7b932687799",
+      "source_close_time_anomalies": 0,
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2020-01.zip",
+      "source_zip_sha256": "dc00309ea9f1f8a78d8c17c4c638d96fba09f870f89190a4e2a2898beb951756",
+      "sqlite": {
+        "bytes": 5615616,
+        "name": "BNBUSDT-1m-2020-01.sqlite",
+        "rows": 44640,
+        "sha256": "b57d7b9994fab63ee18093eee27b8f42cd0930d419021b54fc6c136cb0bab204",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/BNBUSDT-1m-2020-01.sqlite"
+      },
+      "status": "complete_native_1m",
+      "synthetic_candles": 0,
+      "token_creation_date_not_inferred": true,
+      "venue": "Binance Spot",
+      "verified_native_rows": 44640,
+      "zero_volume_original_candles": 37
+    },
+    {
+      "asset_id": "binancecoin",
+      "expected_calendar_minutes": 41760,
+      "first_source_month_not_proven": true,
+      "gap_windows": [
+        {
+          "end_exclusive_utc": "2020-02-09T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-02-09T02:00:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-02-19T17:30:00Z",
+          "missing_minutes": 354,
+          "start_utc": "2020-02-19T11:36:00Z"
+        }
+      ],
+      "market_pair": "BNBUSDT",
+      "missing_native_minutes": 414,
+      "month": "2020-02",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "BNBUSDT-1m-2020-02.zip.CHECKSUM",
+        "sha256": "9e392bd95d7901c3036dc3b9b99e6265039993cdf001337dfeb121fa109077f9",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/BNBUSDT-1m-2020-02.zip.CHECKSUM"
+      },
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2020-02.zip.CHECKSUM",
+      "original_source": {
+        "bytes": 1761073,
+        "name": "BNBUSDT-1m-2020-02.zip",
+        "sha256": "a1e525fa329ac711bb7ff96df9215eafd58895b1bc407633261599a5340e25d8",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/BNBUSDT-1m-2020-02.zip"
+      },
+      "quote": "USDT",
+      "resolution": "1m",
+      "source_checksum_sha256": "9e392bd95d7901c3036dc3b9b99e6265039993cdf001337dfeb121fa109077f9",
+      "source_close_time_anomalies": 0,
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2020-02.zip",
+      "source_zip_sha256": "a1e525fa329ac711bb7ff96df9215eafd58895b1bc407633261599a5340e25d8",
+      "sqlite": {
+        "bytes": 5271552,
+        "name": "BNBUSDT-1m-2020-02.sqlite",
+        "rows": 41346,
+        "sha256": "4ce69bb28501144a52085cd2174f126e0f14474995fc5a72161c53b7233681a9",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/BNBUSDT-1m-2020-02.sqlite"
+      },
+      "status": "partial_or_close_time_anomaly",
+      "synthetic_candles": 0,
+      "token_creation_date_not_inferred": true,
+      "venue": "Binance Spot",
+      "verified_native_rows": 41346,
+      "zero_volume_original_candles": 1
+    },
+    {
+      "asset_id": "binancecoin",
+      "expected_calendar_minutes": 44640,
+      "first_source_month_not_proven": true,
+      "gap_windows": [
+        {
+          "end_exclusive_utc": "2020-03-04T11:30:00Z",
+          "missing_minutes": 128,
+          "start_utc": "2020-03-04T09:22:00Z"
+        }
+      ],
+      "market_pair": "BNBUSDT",
+      "missing_native_minutes": 128,
+      "month": "2020-03",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "BNBUSDT-1m-2020-03.zip.CHECKSUM",
+        "sha256": "7ed78f0539c4b059975e564909447ff8c5ed2df70b7a5a13d0bd66fd742511d9",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/BNBUSDT-1m-2020-03.zip.CHECKSUM"
+      },
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2020-03.zip.CHECKSUM",
+      "original_source": {
+        "bytes": 1912125,
+        "name": "BNBUSDT-1m-2020-03.zip",
+        "sha256": "f7e16726913964b66692be4e286ed343f03a44d3f9b9f550ab7ad47bcf73f474",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/BNBUSDT-1m-2020-03.zip"
+      },
+      "quote": "USDT",
+      "resolution": "1m",
+      "source_checksum_sha256": "7ed78f0539c4b059975e564909447ff8c5ed2df70b7a5a13d0bd66fd742511d9",
+      "source_close_time_anomalies": 0,
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2020-03.zip",
+      "source_zip_sha256": "f7e16726913964b66692be4e286ed343f03a44d3f9b9f550ab7ad47bcf73f474",
+      "sqlite": {
+        "bytes": 5701632,
+        "name": "BNBUSDT-1m-2020-03.sqlite",
+        "rows": 44512,
+        "sha256": "fa5eed4e5870ee0924b7f48e1580de5c59a3faef97b9114a926513cd5b98e98b",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/BNBUSDT-1m-2020-03.sqlite"
+      },
+      "status": "partial_or_close_time_anomaly",
+      "synthetic_candles": 0,
+      "token_creation_date_not_inferred": true,
+      "venue": "Binance Spot",
+      "verified_native_rows": 44512,
+      "zero_volume_original_candles": 0
+    },
+    {
+      "asset_id": "ethereum",
+      "expected_calendar_minutes": 44640,
+      "first_source_month_not_proven": true,
+      "gap_windows": [],
+      "market_pair": "ETHUSDT",
+      "missing_native_minutes": 0,
+      "month": "2020-01",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "ETHUSDT-1m-2020-01.zip.CHECKSUM",
+        "sha256": "a2494615bdbe25431d234450ef610b676637b8018dc4a79442f0a3c99338e3df",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/ETHUSDT-1m-2020-01.zip.CHECKSUM"
+      },
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2020-01.zip.CHECKSUM",
+      "original_source": {
+        "bytes": 1957705,
+        "name": "ETHUSDT-1m-2020-01.zip",
+        "sha256": "48886abc91602bcd38a79ca6af913e294dc2e2ea653bcac419699cb471a56f4c",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/ETHUSDT-1m-2020-01.zip"
+      },
+      "quote": "USDT",
+      "resolution": "1m",
+      "source_checksum_sha256": "a2494615bdbe25431d234450ef610b676637b8018dc4a79442f0a3c99338e3df",
+      "source_close_time_anomalies": 0,
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2020-01.zip",
+      "source_zip_sha256": "48886abc91602bcd38a79ca6af913e294dc2e2ea653bcac419699cb471a56f4c",
+      "sqlite": {
+        "bytes": 5783552,
+        "name": "ETHUSDT-1m-2020-01.sqlite",
+        "rows": 44640,
+        "sha256": "85afe8d975438640192f1e43cb51b06ce4e03304b0b12aca2bd00a54de556631",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/ETHUSDT-1m-2020-01.sqlite"
+      },
+      "status": "complete_native_1m",
+      "synthetic_candles": 0,
+      "token_creation_date_not_inferred": true,
+      "venue": "Binance Spot",
+      "verified_native_rows": 44640,
+      "zero_volume_original_candles": 0
+    },
+    {
+      "asset_id": "ethereum",
+      "expected_calendar_minutes": 41760,
+      "first_source_month_not_proven": true,
+      "gap_windows": [
+        {
+          "end_exclusive_utc": "2020-02-09T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-02-09T02:00:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-02-19T17:30:00Z",
+          "missing_minutes": 354,
+          "start_utc": "2020-02-19T11:36:00Z"
+        }
+      ],
+      "market_pair": "ETHUSDT",
+      "missing_native_minutes": 414,
+      "month": "2020-02",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "ETHUSDT-1m-2020-02.zip.CHECKSUM",
+        "sha256": "be4945e16a3a2a5e271bb911db27e063a3670f5004c175ee4afd824113c72673",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/ETHUSDT-1m-2020-02.zip.CHECKSUM"
+      },
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2020-02.zip.CHECKSUM",
+      "original_source": {
+        "bytes": 1899967,
+        "name": "ETHUSDT-1m-2020-02.zip",
+        "sha256": "bf55b325926b016c2de79ed5ce5ce066ec72a4d652700be356ded28b3209728e",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/ETHUSDT-1m-2020-02.zip"
+      },
+      "quote": "USDT",
+      "resolution": "1m",
+      "source_checksum_sha256": "be4945e16a3a2a5e271bb911db27e063a3670f5004c175ee4afd824113c72673",
+      "source_close_time_anomalies": 0,
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2020-02.zip",
+      "source_zip_sha256": "bf55b325926b016c2de79ed5ce5ce066ec72a4d652700be356ded28b3209728e",
+      "sqlite": {
+        "bytes": 5439488,
+        "name": "ETHUSDT-1m-2020-02.sqlite",
+        "rows": 41346,
+        "sha256": "a9d54aea7d2810f6a04aca0e334c6b418f1bb72b0b4da376af2ac6ca06a74f9c",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/ETHUSDT-1m-2020-02.sqlite"
+      },
+      "status": "partial_or_close_time_anomaly",
+      "synthetic_candles": 0,
+      "token_creation_date_not_inferred": true,
+      "venue": "Binance Spot",
+      "verified_native_rows": 41346,
+      "zero_volume_original_candles": 0
+    },
+    {
+      "asset_id": "ethereum",
+      "expected_calendar_minutes": 44640,
+      "first_source_month_not_proven": true,
+      "gap_windows": [
+        {
+          "end_exclusive_utc": "2020-03-04T11:30:00Z",
+          "missing_minutes": 128,
+          "start_utc": "2020-03-04T09:22:00Z"
+        }
+      ],
+      "market_pair": "ETHUSDT",
+      "missing_native_minutes": 128,
+      "month": "2020-03",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "ETHUSDT-1m-2020-03.zip.CHECKSUM",
+        "sha256": "a1b28fbc7254b248d147ebfc18e201b9942b4a189030d49e4d3f6df132562f7f",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/ETHUSDT-1m-2020-03.zip.CHECKSUM"
+      },
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2020-03.zip.CHECKSUM",
+      "original_source": {
+        "bytes": 2057355,
+        "name": "ETHUSDT-1m-2020-03.zip",
+        "sha256": "4be4045d288edf14305d486ac2f74df763664633a81dee2c9bf856aa4bc57298",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/ETHUSDT-1m-2020-03.zip"
+      },
+      "quote": "USDT",
+      "resolution": "1m",
+      "source_checksum_sha256": "a1b28fbc7254b248d147ebfc18e201b9942b4a189030d49e4d3f6df132562f7f",
+      "source_close_time_anomalies": 0,
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2020-03.zip",
+      "source_zip_sha256": "4be4045d288edf14305d486ac2f74df763664633a81dee2c9bf856aa4bc57298",
+      "sqlite": {
+        "bytes": 5894144,
+        "name": "ETHUSDT-1m-2020-03.sqlite",
+        "rows": 44512,
+        "sha256": "966966cc7dc517b617802f355d743b60760cae868abfbde8d0ffa00a7e3bb71a",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/ETHUSDT-1m-2020-03.sqlite"
+      },
+      "status": "partial_or_close_time_anomaly",
+      "synthetic_candles": 0,
+      "token_creation_date_not_inferred": true,
+      "venue": "Binance Spot",
+      "verified_native_rows": 44512,
+      "zero_volume_original_candles": 0
+    },
+    {
+      "asset_id": "ripple",
+      "expected_calendar_minutes": 44640,
+      "first_source_month_not_proven": true,
+      "gap_windows": [],
+      "market_pair": "XRPUSDT",
+      "missing_native_minutes": 0,
+      "month": "2020-01",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "XRPUSDT-1m-2020-01.zip.CHECKSUM",
+        "sha256": "93aa945bf2a5815ef4f0155c5132b4f66d0f92b8c1dd95f595002be9bb15d1e7",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/XRPUSDT-1m-2020-01.zip.CHECKSUM"
+      },
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2020-01.zip.CHECKSUM",
+      "original_source": {
+        "bytes": 1782612,
+        "name": "XRPUSDT-1m-2020-01.zip",
+        "sha256": "f5b5a7c25b482d37f72cc3958da314bc5b0cc10cd7ab005f66fd5af0fcb81090",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/XRPUSDT-1m-2020-01.zip"
+      },
+      "quote": "USDT",
+      "resolution": "1m",
+      "source_checksum_sha256": "93aa945bf2a5815ef4f0155c5132b4f66d0f92b8c1dd95f595002be9bb15d1e7",
+      "source_close_time_anomalies": 0,
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2020-01.zip",
+      "source_zip_sha256": "f5b5a7c25b482d37f72cc3958da314bc5b0cc10cd7ab005f66fd5af0fcb81090",
+      "sqlite": {
+        "bytes": 5582848,
+        "name": "XRPUSDT-1m-2020-01.sqlite",
+        "rows": 44640,
+        "sha256": "14dac7956053fbd042db2c7e19ff6b60b4e94100f63c8239fab353b27b414c85",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/XRPUSDT-1m-2020-01.sqlite"
+      },
+      "status": "complete_native_1m",
+      "synthetic_candles": 0,
+      "token_creation_date_not_inferred": true,
+      "venue": "Binance Spot",
+      "verified_native_rows": 44640,
+      "zero_volume_original_candles": 6
+    },
+    {
+      "asset_id": "ripple",
+      "expected_calendar_minutes": 41760,
+      "first_source_month_not_proven": true,
+      "gap_windows": [
+        {
+          "end_exclusive_utc": "2020-02-09T03:00:00Z",
+          "missing_minutes": 60,
+          "start_utc": "2020-02-09T02:00:00Z"
+        },
+        {
+          "end_exclusive_utc": "2020-02-19T17:30:00Z",
+          "missing_minutes": 354,
+          "start_utc": "2020-02-19T11:36:00Z"
+        }
+      ],
+      "market_pair": "XRPUSDT",
+      "missing_native_minutes": 414,
+      "month": "2020-02",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "XRPUSDT-1m-2020-02.zip.CHECKSUM",
+        "sha256": "994b7da15775af7af40720b59cf132295163830c48031915cda45d50f9ba90f5",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/XRPUSDT-1m-2020-02.zip.CHECKSUM"
+      },
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2020-02.zip.CHECKSUM",
+      "original_source": {
+        "bytes": 1745583,
+        "name": "XRPUSDT-1m-2020-02.zip",
+        "sha256": "0814ef265b082c7991aa170414349936b7148c70417ab154a11dee6148920cca",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/XRPUSDT-1m-2020-02.zip"
+      },
+      "quote": "USDT",
+      "resolution": "1m",
+      "source_checksum_sha256": "994b7da15775af7af40720b59cf132295163830c48031915cda45d50f9ba90f5",
+      "source_close_time_anomalies": 0,
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2020-02.zip",
+      "source_zip_sha256": "0814ef265b082c7991aa170414349936b7148c70417ab154a11dee6148920cca",
+      "sqlite": {
+        "bytes": 5259264,
+        "name": "XRPUSDT-1m-2020-02.sqlite",
+        "rows": 41346,
+        "sha256": "8930e172262fdd556abf3ef3e82b5837908e983681f8676fffa8c5bd1dacbb0c",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/XRPUSDT-1m-2020-02.sqlite"
+      },
+      "status": "partial_or_close_time_anomaly",
+      "synthetic_candles": 0,
+      "token_creation_date_not_inferred": true,
+      "venue": "Binance Spot",
+      "verified_native_rows": 41346,
+      "zero_volume_original_candles": 1
+    },
+    {
+      "asset_id": "ripple",
+      "expected_calendar_minutes": 44640,
+      "first_source_month_not_proven": true,
+      "gap_windows": [
+        {
+          "end_exclusive_utc": "2020-03-04T11:30:00Z",
+          "missing_minutes": 128,
+          "start_utc": "2020-03-04T09:22:00Z"
+        }
+      ],
+      "market_pair": "XRPUSDT",
+      "missing_native_minutes": 128,
+      "month": "2020-03",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "XRPUSDT-1m-2020-03.zip.CHECKSUM",
+        "sha256": "1a6b17cccd9473f3e34d6a876b9b3dae7c97762366e63e0f6e2ff63497ecd0c3",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/XRPUSDT-1m-2020-03.zip.CHECKSUM"
+      },
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2020-03.zip.CHECKSUM",
+      "original_source": {
+        "bytes": 1855759,
+        "name": "XRPUSDT-1m-2020-03.zip",
+        "sha256": "a9f638f06662821192c3f69f99afcab9994803b94cc27d36c8235a6d906fb9d9",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/XRPUSDT-1m-2020-03.zip"
+      },
+      "quote": "USDT",
+      "resolution": "1m",
+      "source_checksum_sha256": "1a6b17cccd9473f3e34d6a876b9b3dae7c97762366e63e0f6e2ff63497ecd0c3",
+      "source_close_time_anomalies": 0,
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2020-03.zip",
+      "source_zip_sha256": "a9f638f06662821192c3f69f99afcab9994803b94cc27d36c8235a6d906fb9d9",
+      "sqlite": {
+        "bytes": 5648384,
+        "name": "XRPUSDT-1m-2020-03.sqlite",
+        "rows": 44512,
+        "sha256": "bd644b3f16f02272c4d36e60c93106f166751963285b6687e54ff6cf04aa38ab",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top5-binance-original-2020-01_2020-03/XRPUSDT-1m-2020-03.sqlite"
+      },
+      "status": "partial_or_close_time_anomaly",
+      "synthetic_candles": 0,
+      "token_creation_date_not_inferred": true,
+      "venue": "Binance Spot",
+      "verified_native_rows": 44512,
+      "zero_volume_original_candles": 2
+    },
+    {
+      "asset_id": "solana",
+      "market_pair": "SOLUSDT",
+      "month": "2020-01",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2020-01.zip.CHECKSUM",
+      "quote": "USDT",
+      "source_http_status": 404,
+      "source_network_status": "http_unavailable",
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2020-01.zip",
+      "status": "source_unavailable",
+      "verified_native_rows": 0
+    },
+    {
+      "asset_id": "solana",
+      "market_pair": "SOLUSDT",
+      "month": "2020-02",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2020-02.zip.CHECKSUM",
+      "quote": "USDT",
+      "source_http_status": 404,
+      "source_network_status": "http_unavailable",
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2020-02.zip",
+      "status": "source_unavailable",
+      "verified_native_rows": 0
+    },
+    {
+      "asset_id": "solana",
+      "market_pair": "SOLUSDT",
+      "month": "2020-03",
+      "no_invented_bars": true,
+      "no_substitution": true,
+      "official_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2020-03.zip.CHECKSUM",
+      "quote": "USDT",
+      "source_http_status": 404,
+      "source_network_status": "http_unavailable",
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2020-03.zip",
+      "status": "source_unavailable",
+      "verified_native_rows": 0
+    }
+  ],
+  "schema": "seven.crypto.top5-earlier-quarter-native-vault.v1",
+  "source": "Original Binance Spot 1m ZIP and official CHECKSUM; stored full native OHLCV as queryable SQLite",
+  "source_unavailable_months": 3,
+  "source_verified_months": 9,
+  "trader_interface_modified": false
+}

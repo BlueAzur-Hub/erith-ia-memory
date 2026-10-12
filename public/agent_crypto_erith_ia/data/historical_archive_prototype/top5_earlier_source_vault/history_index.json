@@ -1,0 +1,68 @@
+{
+  "all_time_history_not_proven": true,
+  "assets": [
+    "ethereum",
+    "binancecoin",
+    "ripple",
+    "solana"
+  ],
+  "covered_source_month_span": "2020-01 to 2021-04 (not coin inception)",
+  "jan_apr_2021": {
+    "index_path": "top5_earlier_source_vault/index.json",
+    "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-earlier-2021-01_2021-04",
+    "source_months_verified": 16,
+    "stored_original_candles": 688789
+  },
+  "native_source_gaps_minutes": 21281,
+  "no_interpolated_candles": true,
+  "original_native_1m_archived": 2471359,
+  "other_stored_2021_noncomplete_months_in_separate_vault": true,
+  "quarters_2020": [
+    {
+      "index_path": "top5_earlier_source_vault/batches/quarter-q1.json",
+      "manifest_sha256": "306e3af4f2d5bce703bfefefce9aff957d9a6b43dd347b3809d710f49e146ffb",
+      "missing_native_minutes": 1626,
+      "native_1m_candles": 391494,
+      "quarter": "q1",
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-original-2020-01_2020-03",
+      "source_months_unavailable": 3,
+      "source_months_verified": 9
+    },
+    {
+      "index_path": "top5_earlier_source_vault/batches/quarter-q2.json",
+      "manifest_sha256": "ddb24c46263f8ee42a74455b7e32c16c63beb1165c0988c13b09f75e2f88ca12",
+      "missing_native_minutes": 1080,
+      "native_1m_candles": 392040,
+      "quarter": "q2",
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-original-2020-04_2020-06",
+      "source_months_unavailable": 3,
+      "source_months_verified": 9
+    },
+    {
+      "index_path": "top5_earlier_source_vault/batches/quarter-q3.json",
+      "manifest_sha256": "db8d1db7f03cfb6fe66053ec5add34bf7f82589c30771e3694ddcdce08d3a234",
+      "missing_native_minutes": 14760,
+      "native_1m_candles": 470520,
+      "quarter": "q3",
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-original-2020-07_2020-09",
+      "source_months_unavailable": 1,
+      "source_months_verified": 11
+    },
+    {
+      "index_path": "top5_earlier_source_vault/batches/quarter-q4.json",
+      "manifest_sha256": "3af78791937092650af06db9e274a88bac6b2294d5c30576abcd048217fb79a8",
+      "missing_native_minutes": 1404,
+      "native_1m_candles": 528516,
+      "quarter": "q4",
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-original-2020-10_2020-12",
+      "source_months_unavailable": 0,
+      "source_months_verified": 12
+    }
+  ],
+  "quote": "USDT",
+  "schema": "seven.crypto.top5-earlier-native-history-roadmap.v1",
+  "source": "Original Binance Spot 1m OHLCV, official source ZIP+CHECKSUM, queryable SQLite in immutable Releases",
+  "source_months_scanned": 64,
+  "source_months_unavailable": 7,
+  "source_months_verified": 57
+}
