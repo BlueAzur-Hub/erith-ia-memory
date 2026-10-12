@@ -166,7 +166,7 @@ function ledgerMovement(row,ccy,sourceLabel){
   const amount=valid?Number(raw):NaN;
   const unsigned=raw.replace(/^[+-]/,"");
   const [integer,decimal]=unsigned.split(".");
-  const value=valid?integer.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(decimal!==undefined?","+decimal:""):"montant non disponible";
+  const value=!valid?"montant non disponible":ccy==="EUR"?Math.abs(amount).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2}):integer.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(decimal!==undefined?","+decimal:"");
   const direction=!valid?"Variation indisponible":amount>0?"Entrée sur le compte":amount<0?"Sortie du compte":"Aucune variation";
   const sign=valid&&amount>0?"+":valid&&amount<0?"−":"";
   const type=String(row?.type??"").slice(0,12);
@@ -174,6 +174,7 @@ function ledgerMovement(row,ccy,sourceLabel){
   return {
     timestamp:Number(row?.ts??row?.cTime??row?.uTime)||0,
     balanceChange:amount,
+    originalAmount:raw,
     type,subType,
     date:ledgerDate(row),
     source:sourceLabel==="Trading"?"Compte de trading":"Compte de financement",
@@ -262,7 +263,7 @@ function ledgerPaint(results){
       list.appendChild(li);
       if(references){
         const technical=document.createElement("li");
-        technical.textContent=entry.date+" · "+entry.source+" · "+entry.currency+" · type/sous-type "+(entry.reference||"non fournis");
+        technical.textContent=entry.date+" · "+entry.source+" · "+entry.currency+" · montant exact "+(entry.originalAmount||"non fourni")+" · type/sous-type "+(entry.reference||"non fournis");
         references.appendChild(technical);
       }
     }
@@ -451,8 +452,8 @@ function mount(){
     '<article class="okx-card"><span>Gain / perte actuel</span><b data-okx-pnl>—</b><small data-okx-pnlhint>Valeur actuelle − montant investi</small></article>',
     '</div><p class="okx-position-proof" data-okx-positionproof>Historique d’acquisition en cours de qualification.</p><div class="okx-activity">',
     '<article class="okx-card"><span>Ordres ouverts</span><b data-okx-pending>—</b><small>SPOT OKX</small></article>',
-    '<article class="okx-card"><span>Historique</span><b data-okx-history>—</b><small>ordres · 3 mois</small></article>',
-    '<article class="okx-card"><span>Exécutions</span><b data-okx-fills>—</b><small>3 derniers mois</small></article>',
+    '<article class="okx-card"><span>Historique Spot</span><b data-okx-history>—</b><small>Ordres Spot · 3 mois, hors achat PayPal</small></article>',
+    '<article class="okx-card"><span>Exécutions Spot</span><b data-okx-fills>—</b><small>Transactions Spot · 3 mois, hors achat PayPal</small></article>',
     '<article class="okx-card"><span>Frais BTC-USDC</span><b data-okx-fees>—</b><small>tarification du compte</small></article>',
     '</div><section class="okx-ledger" aria-label="Historique financier OKX en lecture seule"><div class="okx-ledger-head"><strong>HISTORIQUE DU COMPTE OKX</strong><button type="button" data-okx-ledgerrefresh>Actualiser l’historique</button></div><p role="status" data-okx-ledgerstatus>En attente de connexion.</p><div class="okx-ledger-summary" data-okx-ledgersummary hidden><strong data-okx-ledgersummarydate>—</strong><span data-okx-ledgersummaryeur>—</span><span>→</span><strong data-okx-ledgersummarybtc>—</strong><span>· Taux déduit : <b data-okx-ledgersummaryrate>—</b></span><small>Rapprochement indicatif des écritures OKX, pas une preuve du paiement externe ni du coût de toutes les acquisitions.</small></div><p data-okx-ledgerwarning></p><details class="okx-ledger-movements"><summary data-okx-ledgerdetailcount>Afficher les mouvements détaillés</summary><p class="okx-ledger-note">Chaque ligne correspond à une variation de solde, pas nécessairement à un achat distinct.</p><ul class="okx-ledger-results" data-okx-ledgerentries></ul></details><details class="okx-ledger-technical"><summary>Afficher les références et les sources OKX</summary><p data-okx-ledgercoverage>En attente de lecture.</p><ol data-okx-ledgerreferences></ol></details></section><form class="okx-auth" data-okx-auth hidden><small data-okx-authstatus>Aether Trust requis.</small><input data-okx-secret type="password" minlength="6" autocomplete="current-password" placeholder="Mot de passe Aether Trust"><button data-okx-connect type="submit">Connecter</button></form>',
     '<div class="okx-foot"><b data-okx-bridge>Bridge local 8787 · OKX Private REST</b><span>Dernière lecture : <span data-okx-updated>—</span></span><button type="button" data-okx-refresh>Actualiser</button></div></div>'
