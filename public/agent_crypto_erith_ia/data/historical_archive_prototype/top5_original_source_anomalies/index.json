@@ -1,0 +1,347 @@
+{
+  "assets": [
+    {
+      "all_gaps_are_outages": false,
+      "classified_source_quality": "requires_original_timestamp_investigation",
+      "duplicate_open_time_rows": 0,
+      "exchange": "Binance Spot",
+      "expected_calendar_minutes": 40320,
+      "first_original_open_utc": "2018-02-01T00:00:00+00:00",
+      "last_original_open_utc": "2018-02-28T23:59:00+00:00",
+      "market_pair": "ETHUSDT",
+      "misaligned_time_rows": 1201,
+      "missing_calendar_minutes": 3260,
+      "month": "2018-02",
+      "native_rows_in_target_month": 37060,
+      "official_checksum_sha256": "bf7c4ba5bb98654d4a045a451ca8430b897d294daf8e9ff633daa23cff978b67",
+      "original_month_rewritten": false,
+      "out_of_order_rows": 0,
+      "provenance": "Original Binance official Spot monthly 1m CSV, exact market and SHA-256-verified ZIP; read-only.",
+      "quote": "USDT",
+      "raw_original_rows": 38261,
+      "rows_outside_target_month": 0,
+      "source_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2018-02.zip.CHECKSUM",
+      "source_file_bytes": 1767861,
+      "source_time_anomaly_examples": [
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170354800,
+          "open_utc": "2018-02-09T09:59:14.800000+00:00",
+          "source_row": 10110
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170414800,
+          "open_utc": "2018-02-09T10:00:14.800000+00:00",
+          "source_row": 10111
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170474800,
+          "open_utc": "2018-02-09T10:01:14.800000+00:00",
+          "source_row": 10112
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170534800,
+          "open_utc": "2018-02-09T10:02:14.800000+00:00",
+          "source_row": 10113
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170594800,
+          "open_utc": "2018-02-09T10:03:14.800000+00:00",
+          "source_row": 10114
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170654800,
+          "open_utc": "2018-02-09T10:04:14.800000+00:00",
+          "source_row": 10115
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170714800,
+          "open_utc": "2018-02-09T10:05:14.800000+00:00",
+          "source_row": 10116
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170774800,
+          "open_utc": "2018-02-09T10:06:14.800000+00:00",
+          "source_row": 10117
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170834800,
+          "open_utc": "2018-02-09T10:07:14.800000+00:00",
+          "source_row": 10118
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170894800,
+          "open_utc": "2018-02-09T10:08:14.800000+00:00",
+          "source_row": 10119
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170954800,
+          "open_utc": "2018-02-09T10:09:14.800000+00:00",
+          "source_row": 10120
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171014800,
+          "open_utc": "2018-02-09T10:10:14.800000+00:00",
+          "source_row": 10121
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171074800,
+          "open_utc": "2018-02-09T10:11:14.800000+00:00",
+          "source_row": 10122
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171134800,
+          "open_utc": "2018-02-09T10:12:14.800000+00:00",
+          "source_row": 10123
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171194800,
+          "open_utc": "2018-02-09T10:13:14.800000+00:00",
+          "source_row": 10124
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171254800,
+          "open_utc": "2018-02-09T10:14:14.800000+00:00",
+          "source_row": 10125
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171314800,
+          "open_utc": "2018-02-09T10:15:14.800000+00:00",
+          "source_row": 10126
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171374800,
+          "open_utc": "2018-02-09T10:16:14.800000+00:00",
+          "source_row": 10127
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171434800,
+          "open_utc": "2018-02-09T10:17:14.800000+00:00",
+          "source_row": 10128
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171494800,
+          "open_utc": "2018-02-09T10:18:14.800000+00:00",
+          "source_row": 10129
+        }
+      ],
+      "source_trade_absence_proven": false,
+      "source_zip_sha256": "efc4785f374ecfe70b5dd85f81e04e7c06f32acc9770f50602e6e57e41c8ee69",
+      "source_zip_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2018-02.zip",
+      "synthetic_candles": 0
+    },
+    {
+      "all_gaps_are_outages": false,
+      "classified_source_quality": "requires_original_timestamp_investigation",
+      "duplicate_open_time_rows": 0,
+      "exchange": "Binance Spot",
+      "expected_calendar_minutes": 40320,
+      "first_original_open_utc": "2018-02-01T00:00:00+00:00",
+      "last_original_open_utc": "2018-02-28T23:59:00+00:00",
+      "market_pair": "BNBUSDT",
+      "misaligned_time_rows": 1201,
+      "missing_calendar_minutes": 3260,
+      "month": "2018-02",
+      "native_rows_in_target_month": 37060,
+      "official_checksum_sha256": "50be3e187b3d96909db4244d0d872461f3bb3015622e00464992680c9928fc3d",
+      "original_month_rewritten": false,
+      "out_of_order_rows": 0,
+      "provenance": "Original Binance official Spot monthly 1m CSV, exact market and SHA-256-verified ZIP; read-only.",
+      "quote": "USDT",
+      "raw_original_rows": 38261,
+      "rows_outside_target_month": 0,
+      "source_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2018-02.zip.CHECKSUM",
+      "source_file_bytes": 1536239,
+      "source_time_anomaly_examples": [
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170355787,
+          "open_utc": "2018-02-09T09:59:15.787000+00:00",
+          "source_row": 10110
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170415787,
+          "open_utc": "2018-02-09T10:00:15.787000+00:00",
+          "source_row": 10111
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170475787,
+          "open_utc": "2018-02-09T10:01:15.787000+00:00",
+          "source_row": 10112
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170535787,
+          "open_utc": "2018-02-09T10:02:15.787000+00:00",
+          "source_row": 10113
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170595787,
+          "open_utc": "2018-02-09T10:03:15.787000+00:00",
+          "source_row": 10114
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170655787,
+          "open_utc": "2018-02-09T10:04:15.787000+00:00",
+          "source_row": 10115
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170715787,
+          "open_utc": "2018-02-09T10:05:15.787000+00:00",
+          "source_row": 10116
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170775787,
+          "open_utc": "2018-02-09T10:06:15.787000+00:00",
+          "source_row": 10117
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170835787,
+          "open_utc": "2018-02-09T10:07:15.787000+00:00",
+          "source_row": 10118
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170895787,
+          "open_utc": "2018-02-09T10:08:15.787000+00:00",
+          "source_row": 10119
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518170955787,
+          "open_utc": "2018-02-09T10:09:15.787000+00:00",
+          "source_row": 10120
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171015787,
+          "open_utc": "2018-02-09T10:10:15.787000+00:00",
+          "source_row": 10121
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171075787,
+          "open_utc": "2018-02-09T10:11:15.787000+00:00",
+          "source_row": 10122
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171135787,
+          "open_utc": "2018-02-09T10:12:15.787000+00:00",
+          "source_row": 10123
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171195787,
+          "open_utc": "2018-02-09T10:13:15.787000+00:00",
+          "source_row": 10124
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171255787,
+          "open_utc": "2018-02-09T10:14:15.787000+00:00",
+          "source_row": 10125
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171315787,
+          "open_utc": "2018-02-09T10:15:15.787000+00:00",
+          "source_row": 10126
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171375787,
+          "open_utc": "2018-02-09T10:16:15.787000+00:00",
+          "source_row": 10127
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171435787,
+          "open_utc": "2018-02-09T10:17:15.787000+00:00",
+          "source_row": 10128
+        },
+        {
+          "in_target_month": true,
+          "minute_aligned": false,
+          "open_ms": 1518171495787,
+          "open_utc": "2018-02-09T10:18:15.787000+00:00",
+          "source_row": 10129
+        }
+      ],
+      "source_trade_absence_proven": false,
+      "source_zip_sha256": "d102076d2c3f5bf4a8712c64f9a990be7c21e042cbfffc19a999f7b9296bab06",
+      "source_zip_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2018-02.zip",
+      "synthetic_candles": 0
+    }
+  ],
+  "no_native_source_rewritten": true,
+  "no_synthetic_ohlcv": true,
+  "policy": "Forensic read-only. An untrusted source row is never automatically imported as a valid 1m bar.",
+  "schema": "seven.crypto.binance-2018-feb-source-anomaly-audit.v1",
+  "trader_interface_modified": false
+}
