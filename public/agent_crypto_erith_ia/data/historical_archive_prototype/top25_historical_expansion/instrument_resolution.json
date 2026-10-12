@@ -95,11 +95,17 @@
       "current_native_1m_source": null,
       "current_complete_native_1m_months": 0,
       "source_daily": null,
-      "market": null,
-      "venue": null,
-      "status": "no_original_instrument_confirmed",
+      "market": "WBT_USDT",
+      "venue": "WhiteBIT Spot",
+      "status": "official_spot_pair_documented_native_ohlcv_still_unarchived",
       "note": "Specific WBT token identity must be proved, do not infer WBTUSDT on Binance",
-      "ranked_id_confirmed": true
+      "ranked_id_confirmed": true,
+      "exact_source_pair_symbol": "WBT_USDT",
+      "instrument_evidence": "https://help.whitebit.com/hc/en-gb/articles/19480314291613-How-to-buy-WBT",
+      "official_api_docs": "https://docs-old.whitebit.com/public/http-v4/",
+      "public_api_market_inventory": "https://whitebit.com/api/v4/public/markets",
+      "needs": "Confirm market in current WhiteBIT public API, prove exact WBT coin_id, acquire original authenticated OHLCV endpoint/cadence/history with source hash; do not mix WhiteBIT WBT_USDT with Binance USDT or futures.",
+      "original_1m_months_verified": 0
     },
     {
       "rank": 16,
@@ -328,11 +334,13 @@
       "usds"
     ],
     "identity_or_original_bulk_source_still_needs_evidence": [
-      "whitebit",
       "hyperliquid",
       "leo-token",
       "rain",
       "canton-network"
+    ],
+    "official_spot_pair_documented_not_yet_archived": [
+      "whitebit"
     ]
   },
   "policy": {
