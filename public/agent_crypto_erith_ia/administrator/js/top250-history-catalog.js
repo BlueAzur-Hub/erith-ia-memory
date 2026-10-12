@@ -33,7 +33,9 @@ function validate(fed,bin,alt,depth){
   alt.assets?.length===alt.archived_assets,"Index Bitget incorrect");
  check(depth?.schema==="aerith.public.ohlcv.top250.verifiable-year-depth.v1"&&
   depth.ranked===250&&depth.assets?.length===250&&
-  depth.assets_with_at_least_24_consecutive_closed_months<=depth.assets_with_at_least_12_consecutive_closed_months,
+  depth.assets_with_at_least_24_consecutive_closed_months<=depth.assets_with_at_least_12_consecutive_closed_months&&
+  depth.archive_assets<=bin.archived_assets&&
+  depth.source_catalog_minutes<=bin.native_1m_candles,
   "Index de profondeur annuel incorrect");
  const ids=new Set(),altIds=new Set();let binTotal=0,binArchived=0;
  for(let i=0;i<250;i++){
@@ -57,6 +59,15 @@ function validate(fed,bin,alt,depth){
    Number.isInteger(a.total_verified_1m_count)&&a.total_verified_1m_count>0&&
    fed.assets[a.rank-1]?.id===a.id&&fed.assets[a.rank-1]?.symbol===a.symbol,
    "Source Bitget invalide : "+a.id);
+  check(a.months.every(m=>/^[0-9]{4}-[0-9]{2}$/.test(m))&&
+   new Set(a.months).size===a.months.length,
+   "Mois Bitget incorrects : "+a.id);
+  const expectedMinuteCount=a.months.reduce((n,m)=>{
+   const year=Number(m.slice(0,4)),month=Number(m.slice(5,7));
+   return n+(Date.UTC(year,month,1)-Date.UTC(year,month-1,1))/60000;
+  },0);
+  check(expectedMinuteCount===a.total_verified_1m_count,
+   "Source Bitget native minute count invalid: "+a.id);
   altIds.add(a.id);
  }
  // Les quatre index sont des instantanés autonomes : ne pas exiger
