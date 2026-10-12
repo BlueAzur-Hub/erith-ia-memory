@@ -41,6 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
+          node --check public/agent_crypto_erith_ia/trader/trader-okx-account.js
           node --check public/agent_crypto_erith_ia/administrator/app.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js
           node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
@@ -172,6 +173,7 @@ jobs:
             root/"administrator"/"js"/"okx-microstructure-406499.js",
             root/"trader"/"trading-desk.html",
             root/"trader"/"trader-runtime-mirror.js",
+            root/"trader"/"trader-okx-account.js",
             root/"trader"/"trader-historical-panel.js",
             root/"trader"/"trader-historical-universe-reader.js",
             root/"trader"/"trader-historical-long-reader.js",
