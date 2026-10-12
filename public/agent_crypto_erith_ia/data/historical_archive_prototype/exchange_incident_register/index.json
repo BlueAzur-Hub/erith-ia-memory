@@ -43,6 +43,10 @@
     "btc_remaining_trade_audit/index.json": {
       "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json",
       "git_blob_sha": "ac0de5f81eb0c1db7caaca2e5a1312b617628621"
+    },
+    "top5_original_gap_audit/index.json": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_original_gap_audit/index.json",
+      "git_blob_sha": "f4f159ff099683b3a70a0090d5fe34fb65d55880"
     }
   },
   "btc": {
@@ -1322,6 +1326,250 @@
       "each_missing_month_status": "not_certified_complete_not_zero_trading",
       "no_claim_about_inception_dates": true,
       "no_gap_candles_invented": true
+    },
+    "original_altcoin_month_audit": {
+      "source": {
+        "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_original_gap_audit/index.json",
+        "git_blob_sha": "f4f159ff099683b3a70a0090d5fe34fb65d55880"
+      },
+      "original_months_verified": 14,
+      "original_native_1m_rows": 612999,
+      "original_missing_1m_minutes": 1881,
+      "assets": [
+        {
+          "asset_id": "ethereum",
+          "pair": "ETHUSDT",
+          "original_months_verified": 3,
+          "original_native_1m_rows": 132010,
+          "original_missing_1m_minutes": 470,
+          "month_statuses": [
+            {
+              "month": "2021-08",
+              "source_verified": true,
+              "native_1m_rows": 44370,
+              "missing_1m": 270,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2021-08-13T06:30:00Z",
+                  "missing_minutes": 270,
+                  "start_utc": "2021-08-13T02:00:00Z"
+                }
+              ]
+            },
+            {
+              "month": "2021-09",
+              "source_verified": true,
+              "native_1m_rows": 43080,
+              "missing_1m": 120,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2021-09-29T09:00:00Z",
+                  "missing_minutes": 120,
+                  "start_utc": "2021-09-29T07:00:00Z"
+                }
+              ]
+            },
+            {
+              "month": "2023-03",
+              "source_verified": true,
+              "native_1m_rows": 44560,
+              "missing_1m": 80,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2023-03-24T14:00:00Z",
+                  "missing_minutes": 80,
+                  "start_utc": "2023-03-24T12:40:00Z"
+                }
+              ]
+            }
+          ],
+          "no_original_trades_in_gaps_verified": false
+        },
+        {
+          "asset_id": "binancecoin",
+          "pair": "BNBUSDT",
+          "original_months_verified": 3,
+          "original_native_1m_rows": 132010,
+          "original_missing_1m_minutes": 470,
+          "month_statuses": [
+            {
+              "month": "2021-08",
+              "source_verified": true,
+              "native_1m_rows": 44370,
+              "missing_1m": 270,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2021-08-13T06:30:00Z",
+                  "missing_minutes": 270,
+                  "start_utc": "2021-08-13T02:00:00Z"
+                }
+              ]
+            },
+            {
+              "month": "2021-09",
+              "source_verified": true,
+              "native_1m_rows": 43080,
+              "missing_1m": 120,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2021-09-29T09:00:00Z",
+                  "missing_minutes": 120,
+                  "start_utc": "2021-09-29T07:00:00Z"
+                }
+              ]
+            },
+            {
+              "month": "2023-03",
+              "source_verified": true,
+              "native_1m_rows": 44560,
+              "missing_1m": 80,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2023-03-24T14:00:00Z",
+                  "missing_minutes": 80,
+                  "start_utc": "2023-03-24T12:40:00Z"
+                }
+              ]
+            }
+          ],
+          "no_original_trades_in_gaps_verified": false
+        },
+        {
+          "asset_id": "ripple",
+          "pair": "XRPUSDT",
+          "original_months_verified": 3,
+          "original_native_1m_rows": 132010,
+          "original_missing_1m_minutes": 470,
+          "month_statuses": [
+            {
+              "month": "2021-08",
+              "source_verified": true,
+              "native_1m_rows": 44370,
+              "missing_1m": 270,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2021-08-13T06:30:00Z",
+                  "missing_minutes": 270,
+                  "start_utc": "2021-08-13T02:00:00Z"
+                }
+              ]
+            },
+            {
+              "month": "2021-09",
+              "source_verified": true,
+              "native_1m_rows": 43080,
+              "missing_1m": 120,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2021-09-29T09:00:00Z",
+                  "missing_minutes": 120,
+                  "start_utc": "2021-09-29T07:00:00Z"
+                }
+              ]
+            },
+            {
+              "month": "2023-03",
+              "source_verified": true,
+              "native_1m_rows": 44560,
+              "missing_1m": 80,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2023-03-24T14:00:00Z",
+                  "missing_minutes": 80,
+                  "start_utc": "2023-03-24T12:40:00Z"
+                }
+              ]
+            }
+          ],
+          "no_original_trades_in_gaps_verified": false
+        },
+        {
+          "asset_id": "solana",
+          "pair": "SOLUSDT",
+          "original_months_verified": 5,
+          "original_native_1m_rows": 216969,
+          "original_missing_1m_minutes": 471,
+          "month_statuses": [
+            {
+              "month": "2021-08",
+              "source_verified": true,
+              "native_1m_rows": 44370,
+              "missing_1m": 270,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2021-08-13T06:30:00Z",
+                  "missing_minutes": 270,
+                  "start_utc": "2021-08-13T02:00:00Z"
+                }
+              ]
+            },
+            {
+              "month": "2021-09",
+              "source_verified": true,
+              "native_1m_rows": 43080,
+              "missing_1m": 120,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2021-09-29T09:00:00Z",
+                  "missing_minutes": 120,
+                  "start_utc": "2021-09-29T07:00:00Z"
+                }
+              ]
+            },
+            {
+              "month": "2021-12",
+              "source_verified": true,
+              "native_1m_rows": 44640,
+              "missing_1m": 0,
+              "native_close_time_anomalies": 1,
+              "gaps": []
+            },
+            {
+              "month": "2023-02",
+              "source_verified": true,
+              "native_1m_rows": 40319,
+              "missing_1m": 1,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2023-02-14T16:40:00Z",
+                  "missing_minutes": 1,
+                  "start_utc": "2023-02-14T16:39:00Z"
+                }
+              ]
+            },
+            {
+              "month": "2023-03",
+              "source_verified": true,
+              "native_1m_rows": 44560,
+              "missing_1m": 80,
+              "native_close_time_anomalies": 0,
+              "gaps": [
+                {
+                  "end_exclusive_utc": "2023-03-24T14:00:00Z",
+                  "missing_minutes": 80,
+                  "start_utc": "2023-03-24T12:40:00Z"
+                }
+              ]
+            }
+          ],
+          "no_original_trades_in_gaps_verified": false
+        }
+      ],
+      "restrictions": "Missing native 1m source records do not imply missing external-market activity or prove zero same-exchange trades; no synthetic candles.",
+      "data_earlier_than_first_verified_month_not_certified": true,
+      "derived_monthly_gaps_separate_from_complete_catalog": true
     }
   },
   "cross_venue_altcoin_tests": {
