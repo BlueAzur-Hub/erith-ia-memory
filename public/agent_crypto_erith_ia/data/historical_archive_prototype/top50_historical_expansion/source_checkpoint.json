@@ -1,0 +1,109 @@
+{
+  "schema": "seven.crypto.top50-plus-provider-original-source-checkpoint.v1",
+  "checkpoint_date_utc": "2026-10-12",
+  "previous_accepted_native_1m_source_rows": 19797951,
+  "newly_accepted_native_1m_source_rows": 1857622,
+  "newly_source_verified_market_months": 46,
+  "cumulative_accepted_native_1m_archival_source_rows": 21655573,
+  "previously_isolated_raw_source_rows": 286734,
+  "additional_quarantined_raw_source_rows": 0,
+  "unique_after_deduplicating_all_previous_canonical_1m": false,
+  "source_families": [
+    {
+      "name": "ranked-top50-2020-to-2021-original-binance",
+      "index_path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/collection_index.json",
+      "index_blob_sha": "e92a110e6b18bcdc55cb4e8942fb4642c96fd14e",
+      "venue": "Binance Spot",
+      "quote": "USDT",
+      "granularity": "1m",
+      "native_rows": 1623172,
+      "months": 39,
+      "before_official_market_listing_months": 48,
+      "unavailable_market_months": 9,
+      "quarantined_native_rows": 0,
+      "ci_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38203576127"
+    },
+    {
+      "name": "official-first-listing-months-QNT-SHIB",
+      "index_path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/first_listing_months/index.json",
+      "index_blob_sha": "ac0463bb92ce820d372d2d3c039c4bdc22c6b365",
+      "venue": "Binance Spot",
+      "quote": "USDT",
+      "granularity": "1m",
+      "native_rows": 34980,
+      "months": 2,
+      "calendar_minutes_before_market_listing": 54300,
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-spot-first-listing-shib-qnt-2021",
+      "ci_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38204170689"
+    },
+    {
+      "name": "AAVE-predecessor-LEND-source-not-relabelled",
+      "index_path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/lend_pre_aave/index.json",
+      "index_blob_sha": "38a53c1f0ce5ad1035ad5fde3fa9b8c304b8c521",
+      "venue": "Binance Spot",
+      "source_market": "LENDUSDT",
+      "later_market": "AAVEUSDT",
+      "native_rows": 199470,
+      "months": 5,
+      "months_unavailable": 4,
+      "token_conversion_ratio": "100 LEND = 1 AAVE",
+      "prohibited_auto_price_conversion": true,
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-lend-before-aave-2020",
+      "ci_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38204408700"
+    }
+  ],
+  "new_native_provider_daily_source": {
+    "ranked_id": "hyperliquid",
+    "rank": 11,
+    "venue": "Bitget Spot",
+    "source_market": "HYPEUSDT",
+    "granularity": "native 1D, NOT 1m",
+    "original_days": 644,
+    "calendar_days_without_native_bar": 8,
+    "no_relabelled_1m": true,
+    "source_native_session_utc_phase_ms": 57600000,
+    "first_session_spans_official_spot_market_listing": true,
+    "history_index_path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/hype_original_daily/index.json",
+    "history_index_blob_sha": "d3cd5e125d506e7cb96d281ec3015f65b19b21bb",
+    "timezone_evidence_path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/hype_original_daily/listing_session_reconciliation.json",
+    "timezone_evidence_blob_sha": "bc9aaf99de5c2f0fbfcb2a128f67cbd93025c684",
+    "immutable_release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top25-bitget-hype-native-daily-2026-09",
+    "ci_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38204102501",
+    "http_response_sha_digests_are_exchange_signed": false
+  },
+  "other_provider_spot_instrument_provenance": {
+    "ranked_id": "whitebit",
+    "rank": 15,
+    "venue": "WhiteBIT Spot",
+    "market": "WBT_USDT",
+    "official_source_status": "exact_whitebit_spot_instrument_verified",
+    "original_spot_market_verified": true,
+    "tradesEnabled_was_reported_true": true,
+    "native_1m_candles_archived": 0,
+    "source_http_response_sha256": "a693da505f2a9aa2036f0bfb9edc1e8ea45c19a45661659f03055cd369f46dae",
+    "index_path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/whitebit_market/index.json",
+    "index_blob_sha": "d246694eb54e1da3f595684e3ddc3c0ad3bd5775",
+    "ci_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38203790528",
+    "provider_historical_ohlcv_redistribution_rights_not_assumed": true
+  },
+  "ranking_unmodified": {
+    "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/index.json",
+    "blob_sha": "956f9265b6853ec0ad1ae1af0d3e020a5ff41efb"
+  },
+  "unresolved": [
+    "original 1m coverage of WhiteBIT WBT_USDT, redistribution license",
+    "earlier native Bitget HYPEUSDT 1m month coverage (new 1D is not 1m)",
+    "Top50 remaining rank26-50 markets, provider-native authentic archives, and complete source gaps",
+    "original native trades not checked for all candidate no-trade intervals",
+    "canonical 1m federation and Trader/Interface require future separate acceptance"
+  ],
+  "hard_guards": {
+    "no_synthetic_ohlcv": true,
+    "no_venue_quote_substitution": true,
+    "no_btc_mixed_pricing": true,
+    "no_source_timestamp_rounding": true,
+    "preserve_binance_old_market_names": true,
+    "no_indefinite_completeness_claim": true,
+    "market_core_and_trader_interface_untouched": true
+  }
+}
