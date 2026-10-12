@@ -14,22 +14,21 @@ from pathlib import Path
 from zipfile import ZipFile
 import audit_top5_incomplete_months as audit
 
-TARGETS=("ETHUSDT","BNBUSDT")
-MONTH="2018-02"
+TARGETS=(("ETHUSDT","2017-12"),("BNBUSDT","2017-12"),("ETHUSDT","2018-02"),("BNBUSDT","2018-02"))
 MAX_ANOMALY_EXAMPLES=20
 def need(condition, why):
     if not condition:raise ValueError(why)
-def read(pair):
-    url,checkurl=audit.source_urls(pair,MONTH)
+def read(pair,month):
+    url,checkurl=audit.source_urls(pair,month)
     zipobj=audit.fetch(url,audit.MAX_ZIP)
     need(zipobj["status"]=="downloaded","Official source ZIP unavailable: "+pair)
     ck=audit.fetch(checkurl,2048)
     need(ck["status"]=="downloaded","Official ZIP checksum unavailable: "+pair)
     raw=zipobj["bytes"]
     checksum=ck["bytes"]
-    name=f"{pair}-1m-{MONTH}.zip"
+    name=f"{pair}-1m-{month}.zip"
     audit.check_checksum(checksum,raw,name)
-    start,end,calendar=audit.month_bounds(MONTH)
+    start,end,calendar=audit.month_bounds(month)
     sample=[]
     wrong_calendar=0
     misaligned=0
@@ -42,7 +41,7 @@ def read(pair):
     max_ts=None
     cols=[]
     with ZipFile(io.BytesIO(raw)) as z:
-        expected=f"{pair}-1m-{MONTH}.csv"
+        expected=f"{pair}-1m-{month}.csv"
         need(z.namelist()==[expected],"Unexpected original market file")
         with z.open(expected) as stream:
             for row in csv.reader(io.TextIOWrapper(stream,encoding="utf-8-sig",newline="")):
@@ -71,7 +70,7 @@ def read(pair):
     need(source_rows>0 and len(cols)==0,"Malformed Binance source field structure")
     result={
         "exchange":"Binance Spot","market_pair":pair,"quote":"USDT",
-        "month":MONTH,"source_zip_url":url,"source_checksum_url":checkurl,
+        "month":month,"source_zip_url":url,"source_checksum_url":checkurl,
         "source_zip_sha256":hashlib.sha256(raw).hexdigest(),
         "official_checksum_sha256":hashlib.sha256(checksum).hexdigest(),
         "source_file_bytes":len(raw),"raw_original_rows":source_rows,
@@ -99,7 +98,7 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument("--output",type=Path,required=True)
     a=p.parse_args()
-    rows=[read(p) for p in TARGETS]
+    rows=[read(p,m) for p,m in TARGETS]
     doc={"schema":"seven.crypto.binance-2018-feb-source-anomaly-audit.v1",
          "assets":rows,
          "no_native_source_rewritten":True,"no_synthetic_ohlcv":True,
