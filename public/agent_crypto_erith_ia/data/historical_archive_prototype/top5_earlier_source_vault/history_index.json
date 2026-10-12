@@ -235,5 +235,35 @@
       "official_notice": "https://www.binance.com/es-LA/support/announcement/detail/cf77f566c9b64cc791fc152679175de8",
       "pair": "SOLUSDT"
     }
+  },
+  "related_published_source_vaults": {
+    "additional_partial_months": {
+      "index_path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_partial_source_vault/index.json",
+      "blob_sha": "b61fafd5189447dce3949d35d61453e47b5fdcb2",
+      "original_source_1m_rows": 612999,
+      "month_pair_archives": 14,
+      "additive_to_regular_early_sources": true,
+      "source_release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-partial-months-2026-10"
+    },
+    "quarantine_not_integrated_into_utc_1m": {
+      "index_path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_timestamp_source_quarantine/index.json",
+      "blob_sha": "6fd18a24774160daf5bf1ee2e7cc4fb2e65395e1",
+      "original_source_rows_with_exact_milliseconds": 165650,
+      "original_offgrid_rows": 43204,
+      "month_pair_archives": 4,
+      "additive_to_regular_early_sources": false,
+      "source_release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-binance-early-offgrid-original-sources",
+      "strict_calendar_1m_approved": false
+    },
+    "sums": {
+      "regular_early_months": 128,
+      "regular_later_partial_months": 14,
+      "regular_authentic_source_rows_1m": 6166535,
+      "additional_raw_quarantined_native_rows": 165650,
+      "combined_raw_source_rows_including_quarantine": 6322185,
+      "distinct_source_month_pair_files": 146,
+      "no_synthetic_rows": true,
+      "note": "Quarantined offgrid native source rows are NOT automatically accepted as UTC-aligned 1m. Exclude from price-chart continuity and any headline for aligned original 1m."
+    }
   }
 }
