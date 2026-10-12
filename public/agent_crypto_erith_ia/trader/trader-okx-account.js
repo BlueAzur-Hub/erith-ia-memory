@@ -7,8 +7,11 @@ const TOKEN_KEY="agent_crypto_bridge_owner_token_v1";
 const ROLE_KEY="agent_crypto_local_access_session_v1";
 const BRIDGE="http://127.0.0.1:8787";
 const AUTO_REFRESH_MS=60000;
+const LEDGER_REFRESH_MS=300000;
 let timer=0;
 let inflight=null;
+let ledgerInFlight=null;
+let ledgerCheckedAt=0;
 
 const panel=()=>document.getElementById(PANEL_ID);
 const q=(name)=>panel()?.querySelector(`[data-okx-${name}]`)||null;
@@ -100,6 +103,118 @@ function paintData(account,orders,fills,fees){
   showAuth(false);
 }
 
+
+/* Les journaux OKX sont lus à la demande et restent en mémoire vive uniquement.
+   Ils prouvent des mouvements, jamais automatiquement le coût d'un achat PayPal. */
+function ledgerClear(message){
+  ledgerCheckedAt=0;
+  text("ledgerstatus",message);
+  const entries=q("ledgerentries");
+  if(entries)entries.replaceChildren();
+}
+function ledgerDate(row){
+  const raw=Number(row?.ts??row?.cTime??row?.uTime);
+  if(!Number.isFinite(raw)||raw<=0)return "date inconnue";
+  const when=new Date(raw<1e11?raw*1000:raw);
+  return Number.isFinite(when.getTime())?when.toLocaleString("fr-FR"):"date inconnue";
+}
+function ledgerMovement(row,ccy,sourceLabel){
+  const label=ledgerDate(row);
+  const amount=Number(row?.balChg??row?.sz??row?.amt);
+  const amountText=Number.isFinite(amount)?fmt(amount)+" "+ccy:"montant indisponible";
+  const type=String(row?.type??"").slice(0,12);
+  const subType=String(row?.subType??"").slice(0,12);
+  const reason=type||subType?" · référence de catégorie OKX "+[type,subType].filter(Boolean).join("/"):"";
+  return label+" · "+sourceLabel+" · "+amountText+reason;
+}
+function ledgerPaint(results){
+  const list=q("ledgerentries");
+  if(list)list.replaceChildren();
+  const issues=[];
+  const totals=[];
+  const recent=[];
+  let success=0,recordsCount=0,hasMore=false;
+  for(const ccy of ["BTC","EUR"]){
+    const item=results[ccy];
+    if(!item?.ok){
+      issues.push(ccy+" : "+(item?.status===404?"Bridge ancien : route financière absente":item?.status===403?"accès Aether Trust Owner requis":item?.status===401?"session Aether Trust expirée":"lecture indisponible"));
+      continue;
+    }
+    const payload=item.payload;
+    if(payload?.ccy!==ccy||payload?.read_only!==true||!payload?.sources){
+      issues.push(ccy+" : réponse financière inattendue");continue;
+    }
+    for(const [key,label] of [["trading_account","Trading"],["funding_account","Financement"]]){
+      const stream=payload.sources[key];
+      if(!stream||!Array.isArray(stream.records)){
+        issues.push(label+" "+ccy+" : format indisponible");continue;
+      }
+      const state=String(stream.state||"unavailable");
+      const count=stream.records.length;
+      if(state==="ok")success++;else issues.push(label+" "+ccy+" : "+(state==="partial"?"lecture partielle":"source indisponible"));
+      recordsCount+=count;
+      hasMore=hasMore||Boolean(stream.has_more);
+      totals.push(label+" "+ccy+" : "+count+" mouvement"+(count!==1?"s":"")+(stream.has_more?" (suite possible)":""));
+      for(const row of stream.records){
+        if(!row||typeof row!=="object")continue;
+        const ts=Number(row.ts??row.cTime??row.uTime)||0;
+        recent.push({ts,label:ledgerMovement(row,ccy,label)});
+      }
+    }
+  }
+  recent.sort((a,b)=>b.ts-a.ts);
+  if(list){
+    for(const entry of recent.slice(0,12)){
+      const li=document.createElement("li");
+      li.textContent=entry.label;
+      list.appendChild(li);
+    }
+    if(!recent.length){
+      const li=document.createElement("li");
+      li.textContent=success?"Aucun mouvement renvoyé sur les périodes accessibles.":"Aucune écriture vérifiable retournée.";
+      list.appendChild(li);
+    }
+  }
+  const statusParts=[];
+  if(totals.length)statusParts.push(totals.join(" · "));
+  if(issues.length)statusParts.push("À vérifier : "+issues.join(" ; "));
+  if(hasMore)statusParts.push("historique potentiellement incomplet");
+  text("ledgerstatus",statusParts.join(" | ")||"Aucun journal financier disponible.");
+  text("positionproof",recordsCount
+    ?recordsCount+" écriture(s) financières consultée(s), sans preuve suffisante du coût PayPal en EUR. Prix moyen et gain non calculés."
+    :"Aucun coût d'acquisition certifié dans les journaux consultés. Retrouver le justificatif officiel d'achat en EUR.");
+  text("avgcost","NON PROUVÉ");
+  text("committed","NON PROUVÉ");
+  text("pnl","HISTORIQUE À RAPPROCHER");
+}
+async function refreshLedger(force=false){
+  if(ledgerInFlight)return ledgerInFlight;
+  if(!token()){ledgerClear("Authentification Aether Trust nécessaire.");return false;}
+  if(!force&&Date.now()-ledgerCheckedAt<LEDGER_REFRESH_MS)return true;
+  text("ledgerstatus","Lecture des journaux financiers BTC puis EUR…");
+  ledgerInFlight=(async()=>{
+    const result={};
+    for(const ccy of ["BTC","EUR"]){
+      try{
+        const payload=await bridge("/okx/ledger?ccy="+ccy+"&pages=1");
+        result[ccy]={ok:true,payload};
+      }catch(error){
+        result[ccy]={ok:false,status:Number(error?.status)||0};
+        if(error?.status===401)break;
+      }
+    }
+    if(token())ledgerPaint(result);
+    else ledgerClear("Session Aether Trust terminée.");
+    ledgerCheckedAt=Date.now();
+    return true;
+  })().catch(()=>{
+    text("ledgerstatus","Lecture financière impossible ; les soldes précédents restent disponibles.");
+    ledgerCheckedAt=Date.now();
+    return false;
+  }).finally(()=>{ledgerInFlight=null;});
+  return ledgerInFlight;
+}
+
 async function refresh({force=false}={}){
   if(inflight&&!force)return inflight;
   const t=token();
@@ -117,9 +232,10 @@ async function refresh({force=false}={}){
         bridge("/okx/account"),bridge("/okx/orders"),bridge("/okx/fills"),bridge("/okx/fees?instId=BTC-USDC")
       ]);
       paintData(account,orders,fills,fees);
+      void refreshLedger(force);
       return true;
     }catch(error){
-      if(error?.status===401){saveToken("");setState("locked","SESSION BRIDGE À RÉAUTHENTIFIER");showAuth(true,"La session Bridge n'est plus valide. Entre le mot de passe Aether Trust.");}
+      if(error?.status===401){saveToken("");ledgerClear("Session Aether Trust expirée.");setState("locked","SESSION BRIDGE À RÉAUTHENTIFIER");showAuth(true,"La session Bridge n'est plus valide. Entre le mot de passe Aether Trust.");}
       else{setState("error","OKX / BRIDGE INDISPONIBLE");text("updated",shortError(error));}
       return false;
     }finally{inflight=null;}
@@ -155,6 +271,8 @@ function logoutBridge(){
   if(!t){saveToken("");return;}
   fetch(BRIDGE+"/auth/logout",{method:"POST",headers:{Accept:"application/json","Content-Type":"application/json",Authorization:`Bearer ${t}`},body:"{}",cache:"no-store",keepalive:true}).catch(()=>{});
   saveToken("");
+  ledgerClear("Session terminée : journaux financiers masqués.");
+  setState("locked","AETHER TRUST REQUIS");
 }
 
 function mount(){
@@ -185,6 +303,11 @@ function mount(){
       "#traderOkxAccountPanel [data-okx-fees]{white-space:pre-line;overflow-wrap:normal;word-break:keep-all}",
       "#traderOkxAccountPanel .okx-card.primary b{font-size:15px;color:#fff1c7}",
       "#traderOkxAccountPanel .okx-card small{display:block;margin-top:3px;color:#91a9b7;font-size:8.5px;line-height:1.3}",
+      "#traderOkxAccountPanel .okx-ledger{margin-top:10px;padding:11px;border:1px solid rgba(83,222,222,.20);border-radius:10px;background:rgba(4,17,27,.7)}",
+      "#traderOkxAccountPanel .okx-ledger-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;color:#a5efe7}",
+      "#traderOkxAccountPanel [data-okx-ledgerstatus]{font-size:11px;line-height:1.65;color:#f4d39b;overflow-wrap:anywhere}",
+      "#traderOkxAccountPanel .okx-ledger-note{font-size:10px;color:#99b2c0;line-height:1.5}",
+      "#traderOkxAccountPanel .okx-ledger-results{margin:6px 0 0;padding-left:17px;max-height:235px;overflow:auto;color:#d6e9ee;font-size:11px;line-height:1.65}",
       "#traderOkxAccountPanel .okx-foot{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:8px;color:#8ea4ba;font-size:9.5px}",
       "#traderOkxAccountPanel button,#traderOkxAccountPanel input{border:1px solid #436d7a;border-radius:8px;background:#123743;color:#fff;padding:7px 10px}",
       "#traderOkxAccountPanel button{cursor:pointer;font-weight:700}",
@@ -215,7 +338,7 @@ function mount(){
     '<article class="okx-card"><span>Historique</span><b data-okx-history>—</b><small>ordres · 3 mois</small></article>',
     '<article class="okx-card"><span>Exécutions</span><b data-okx-fills>—</b><small>3 derniers mois</small></article>',
     '<article class="okx-card"><span>Frais BTC-USDC</span><b data-okx-fees>—</b><small>tarification du compte</small></article>',
-    '</div><form class="okx-auth" data-okx-auth hidden><small data-okx-authstatus>Aether Trust requis.</small><input data-okx-secret type="password" minlength="6" autocomplete="current-password" placeholder="Mot de passe Aether Trust"><button data-okx-connect type="submit">Connecter</button></form>',
+    '</div><section class="okx-ledger" aria-label="Historique financier OKX en lecture seule"><div class="okx-ledger-head"><strong>HISTORIQUE FINANCIER · BTC / EUR</strong><button type="button" data-okx-ledgerrefresh>Lire les mouvements</button></div><p data-okx-ledgerstatus>En attente de connexion.</p><p class="okx-ledger-note">Journaux Trading et Financement. Un mouvement BTC ne prouve pas à lui seul le prix payé en EUR par PayPal.</p><ul class="okx-ledger-results" data-okx-ledgerentries></ul></section><form class="okx-auth" data-okx-auth hidden><small data-okx-authstatus>Aether Trust requis.</small><input data-okx-secret type="password" minlength="6" autocomplete="current-password" placeholder="Mot de passe Aether Trust"><button data-okx-connect type="submit">Connecter</button></form>',
     '<div class="okx-foot"><b data-okx-bridge>Bridge local 8787 · OKX Private REST</b><span>Dernière lecture : <span data-okx-updated>—</span></span><button type="button" data-okx-refresh>Actualiser</button></div></div>'
   ].join("");
   const caseStudy=document.getElementById("traderOkbCaseStudy");
@@ -227,6 +350,7 @@ function mount(){
   }
   p.querySelector("[data-okx-auth]")?.addEventListener("submit",submitInlineAuth);
   p.querySelector("[data-okx-refresh]")?.addEventListener("click",()=>void refresh({force:true}));
+  p.querySelector("[data-okx-ledgerrefresh]")?.addEventListener("click",()=>void refreshLedger(true));
   p.addEventListener("toggle",()=>{if(p.open)void refresh({force:true});});
   bindCanonicalTrust();
   window.addEventListener("aether-trust:logout-requested",logoutBridge,{passive:true});
