@@ -5,11 +5,11 @@
   "quote_asset": "USDT",
   "basket_reference": "github-action-main_2026-10-07T22-00-44-550Z",
   "source_index_file": "ohlcv_spot_pilot/index.json",
-  "source_index_sha256": "c92bd5693018c03b5416a02041f8d9b4523fe6083296ca29bbb547cf8d6d916e",
-  "source_index_updated_at": "2026-10-11T23:39:20.707819Z",
+  "source_index_sha256": "87dc8aa9c551018c0b79c593388b3fe8113ad51d1e6ef084b094a7fb6702423f",
+  "source_index_updated_at": "2026-10-12T01:21:17.689485Z",
   "series_count": 21,
-  "candles_total": 13160,
-  "source_delta_count": 29,
+  "candles_total": 13328,
+  "source_delta_count": 30,
   "source_seed": {
     "file": "ohlcv_top10_2026-10-08.json.gz",
     "bytes": 130593,
@@ -22,11 +22,11 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791761400000,
-      "candles": 1415,
-      "file": "series/binancecoin_24h_3b5272b0a6bbe55c.json.gz",
-      "bytes": 36443,
-      "sha256": "3b5272b0a6bbe55c6969abb592a48d1fabad5ce919bd60ad92265010ea909d94"
+      "last_open_ms": 1791767700000,
+      "candles": 1436,
+      "file": "series/binancecoin_24h_05a0576a7e4685bd.json.gz",
+      "bytes": 36964,
+      "sha256": "05a0576a7e4685bdc252b1555e4f6b10839093c4a69ce0a6a2485f6f746684a0"
     },
     {
       "id": "binancecoin",
@@ -34,59 +34,59 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791756000000,
-      "candles": 262,
-      "file": "series/binancecoin_7d_0146d1333ebcedab.json.gz",
+      "last_open_ms": 1791763200000,
+      "candles": 264,
+      "file": "series/binancecoin_7d_eda1b9783a4b3319.json.gz",
+      "bytes": 8283,
+      "sha256": "eda1b9783a4b3319b3504e8a0a817285a7d5178c68acc1a59ecc3d82a79d1c48"
+    },
+    {
+      "id": "binancecoin",
+      "pair": "BNBUSDT",
+      "period": "30d",
+      "interval": "4h",
+      "first_open_ms": 1788825600000,
+      "last_open_ms": 1791748800000,
+      "candles": 204,
+      "file": "series/binancecoin_30d_81c7763b7c84306f.json.gz",
+      "bytes": 6952,
+      "sha256": "81c7763b7c84306f621be59f80db5428374a9cbb9461262af5b8d79c6aabeb25"
+    },
+    {
+      "id": "bitcoin",
+      "pair": "BTCUSDT",
+      "period": "24h",
+      "interval": "5m",
+      "first_open_ms": 1791337200000,
+      "last_open_ms": 1791767700000,
+      "candles": 1436,
+      "file": "series/bitcoin_24h_1a10d24122815d7c.json.gz",
+      "bytes": 45657,
+      "sha256": "1a10d24122815d7ccd6ddcbc75410f34d26cab348f96d2c96d41b07ec55f4355"
+    },
+    {
+      "id": "bitcoin",
+      "pair": "BTCUSDT",
+      "period": "7d",
+      "interval": "1h",
+      "first_open_ms": 1790816400000,
+      "last_open_ms": 1791763200000,
+      "candles": 264,
+      "file": "series/bitcoin_7d_c9b4a323a7a5b4c4.json.gz",
+      "bytes": 10029,
+      "sha256": "c9b4a323a7a5b4c43fc67fbd84a901b403877c143df5e6d816f4e271d0fb96d5"
+    },
+    {
+      "id": "bitcoin",
+      "pair": "BTCUSDT",
+      "period": "30d",
+      "interval": "4h",
+      "first_open_ms": 1788825600000,
+      "last_open_ms": 1791748800000,
+      "candles": 204,
+      "file": "series/bitcoin_30d_407836ee744b3741.json.gz",
       "bytes": 8223,
-      "sha256": "0146d1333ebcedabeb4c5973439deeaad2b731f47ad7c2d37eca1124ea284566"
-    },
-    {
-      "id": "binancecoin",
-      "pair": "BNBUSDT",
-      "period": "30d",
-      "interval": "4h",
-      "first_open_ms": 1788825600000,
-      "last_open_ms": 1791734400000,
-      "candles": 203,
-      "file": "series/binancecoin_30d_bf500deef771026e.json.gz",
-      "bytes": 6925,
-      "sha256": "bf500deef771026ecaca29f3145dd2c63929870da9c414f4f98130976ad44b9a"
-    },
-    {
-      "id": "bitcoin",
-      "pair": "BTCUSDT",
-      "period": "24h",
-      "interval": "5m",
-      "first_open_ms": 1791337200000,
-      "last_open_ms": 1791761400000,
-      "candles": 1415,
-      "file": "series/bitcoin_24h_eb2e0733510adfe0.json.gz",
-      "bytes": 44992,
-      "sha256": "eb2e0733510adfe05c03ba07bb4a5bede335997004c2f7c229f60289efeecfba"
-    },
-    {
-      "id": "bitcoin",
-      "pair": "BTCUSDT",
-      "period": "7d",
-      "interval": "1h",
-      "first_open_ms": 1790816400000,
-      "last_open_ms": 1791756000000,
-      "candles": 262,
-      "file": "series/bitcoin_7d_08d1a7d2d976641b.json.gz",
-      "bytes": 9959,
-      "sha256": "08d1a7d2d976641b2db859d17957a8dc83d39a69cf59b4fb3e1cdaf929862da6"
-    },
-    {
-      "id": "bitcoin",
-      "pair": "BTCUSDT",
-      "period": "30d",
-      "interval": "4h",
-      "first_open_ms": 1788825600000,
-      "last_open_ms": 1791734400000,
-      "candles": 203,
-      "file": "series/bitcoin_30d_03073dd4e971edf1.json.gz",
-      "bytes": 8184,
-      "sha256": "03073dd4e971edf14802c7b073e2087bb567421f869a6b8bd5ad83ea5c2315a7"
+      "sha256": "407836ee744b37419912c2b4d6226209dea1a3cb029b1b8b162e9bcbc44b7b5b"
     },
     {
       "id": "ethereum",
@@ -94,11 +94,11 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791761400000,
-      "candles": 1415,
-      "file": "series/ethereum_24h_edd35262ff64a18e.json.gz",
-      "bytes": 41987,
-      "sha256": "edd35262ff64a18ebdbd9425ea1a5e385d640dd854f1df63106a1c2ea317ede1"
+      "last_open_ms": 1791767700000,
+      "candles": 1436,
+      "file": "series/ethereum_24h_c01a9289042f6fcf.json.gz",
+      "bytes": 42593,
+      "sha256": "c01a9289042f6fcfa80443c18aae94ae25ea2cf0f8f2af3cdd7e3caa7f9f9280"
     },
     {
       "id": "ethereum",
@@ -106,11 +106,11 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791756000000,
-      "candles": 262,
-      "file": "series/ethereum_7d_f9128b4d3507a2d4.json.gz",
-      "bytes": 9210,
-      "sha256": "f9128b4d3507a2d470450d82eeeec60f28cc0571bc136ca19ad43883f7f9934c"
+      "last_open_ms": 1791763200000,
+      "candles": 264,
+      "file": "series/ethereum_7d_272672834f8e3a8b.json.gz",
+      "bytes": 9273,
+      "sha256": "272672834f8e3a8b7d49391b2a822cf8a4e0a6798664fe3ef7f44a06f6e634e0"
     },
     {
       "id": "ethereum",
@@ -118,11 +118,11 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1791734400000,
-      "candles": 203,
-      "file": "series/ethereum_30d_f080c9d0fe91cccb.json.gz",
-      "bytes": 7674,
-      "sha256": "f080c9d0fe91cccb0bab66809499692ca280d7654ad4e4d3e7ba3da7d5b4ccc6"
+      "last_open_ms": 1791748800000,
+      "candles": 204,
+      "file": "series/ethereum_30d_9ae7a8d91674a552.json.gz",
+      "bytes": 7712,
+      "sha256": "9ae7a8d91674a5526cd2128701a6cda5f5af63a911022998ac38095d27e6a141"
     },
     {
       "id": "ripple",
@@ -130,11 +130,11 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791761400000,
-      "candles": 1415,
-      "file": "series/ripple_24h_9ddf81d44fcda30c.json.gz",
-      "bytes": 35690,
-      "sha256": "9ddf81d44fcda30c1187ff7729950b0d52cf4749fc9ad03afd42d73490d903d9"
+      "last_open_ms": 1791767700000,
+      "candles": 1436,
+      "file": "series/ripple_24h_23d14da5fb678b80.json.gz",
+      "bytes": 36182,
+      "sha256": "23d14da5fb678b800b57049abb2e0b0f4bb605bc2c09116edfc0734cdacb3564"
     },
     {
       "id": "ripple",
@@ -142,11 +142,11 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791756000000,
-      "candles": 262,
-      "file": "series/ripple_7d_01ff9b88026b9cf9.json.gz",
-      "bytes": 8051,
-      "sha256": "01ff9b88026b9cf969662ba2172420626969c62ec4666d62bd08b343e6c43b91"
+      "last_open_ms": 1791763200000,
+      "candles": 264,
+      "file": "series/ripple_7d_160cce3170276704.json.gz",
+      "bytes": 8114,
+      "sha256": "160cce317027670413ea33af694cd3cccc85be34a8ef8d1f71ced40f41dbac24"
     },
     {
       "id": "ripple",
@@ -154,71 +154,71 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1791734400000,
-      "candles": 203,
-      "file": "series/ripple_30d_4729fdfc349a392b.json.gz",
+      "last_open_ms": 1791748800000,
+      "candles": 204,
+      "file": "series/ripple_30d_6177fb68b8cb1556.json.gz",
+      "bytes": 6919,
+      "sha256": "6177fb68b8cb1556ffcec514d91c0384ea5e714a1e7e3cc5e77e5a05978cd3a3"
+    },
+    {
+      "id": "solana",
+      "pair": "SOLUSDT",
+      "period": "24h",
+      "interval": "5m",
+      "first_open_ms": 1791337200000,
+      "last_open_ms": 1791767700000,
+      "candles": 1436,
+      "file": "series/solana_24h_c91bf94dfde5d452.json.gz",
+      "bytes": 36218,
+      "sha256": "c91bf94dfde5d452d4736e3a1df2ed9a3e3eea4c214c8862a5e27fcb778b1c9c"
+    },
+    {
+      "id": "solana",
+      "pair": "SOLUSDT",
+      "period": "7d",
+      "interval": "1h",
+      "first_open_ms": 1790816400000,
+      "last_open_ms": 1791763200000,
+      "candles": 264,
+      "file": "series/solana_7d_0837bf1a3101a714.json.gz",
+      "bytes": 8136,
+      "sha256": "0837bf1a3101a714b01a05f2bc91213a68b88ebb01934f4962c87b51c882b4f0"
+    },
+    {
+      "id": "solana",
+      "pair": "SOLUSDT",
+      "period": "30d",
+      "interval": "4h",
+      "first_open_ms": 1788825600000,
+      "last_open_ms": 1791748800000,
+      "candles": 204,
+      "file": "series/solana_30d_22472fb961d82476.json.gz",
+      "bytes": 6886,
+      "sha256": "22472fb961d8247655cea78e1ca7667101d610dfdc97d6ddc2b954baa1403196"
+    },
+    {
+      "id": "tron",
+      "pair": "TRXUSDT",
+      "period": "24h",
+      "interval": "5m",
+      "first_open_ms": 1791337200000,
+      "last_open_ms": 1791767700000,
+      "candles": 1436,
+      "file": "series/tron_24h_503a173807264b9b.json.gz",
+      "bytes": 28308,
+      "sha256": "503a173807264b9b99b6a0b658b546ec6898ee28e23541eb1f73a0d8d0b0b7a9"
+    },
+    {
+      "id": "tron",
+      "pair": "TRXUSDT",
+      "period": "7d",
+      "interval": "1h",
+      "first_open_ms": 1790816400000,
+      "last_open_ms": 1791763200000,
+      "candles": 264,
+      "file": "series/tron_7d_358eaad5624bc686.json.gz",
       "bytes": 6888,
-      "sha256": "4729fdfc349a392b87118285194fedf0923fb7713a80a66855be2264e10979b5"
-    },
-    {
-      "id": "solana",
-      "pair": "SOLUSDT",
-      "period": "24h",
-      "interval": "5m",
-      "first_open_ms": 1791337200000,
-      "last_open_ms": 1791761400000,
-      "candles": 1415,
-      "file": "series/solana_24h_71e391d77c57138c.json.gz",
-      "bytes": 35711,
-      "sha256": "71e391d77c57138cfa7f8328ae8d50ece92e57c4f0db9e68526c6c3a0d9c7332"
-    },
-    {
-      "id": "solana",
-      "pair": "SOLUSDT",
-      "period": "7d",
-      "interval": "1h",
-      "first_open_ms": 1790816400000,
-      "last_open_ms": 1791756000000,
-      "candles": 262,
-      "file": "series/solana_7d_36b81c9638edd275.json.gz",
-      "bytes": 8079,
-      "sha256": "36b81c9638edd275e3fcbe006ac73d56958e76f03c527f76883b77bb7a072112"
-    },
-    {
-      "id": "solana",
-      "pair": "SOLUSDT",
-      "period": "30d",
-      "interval": "4h",
-      "first_open_ms": 1788825600000,
-      "last_open_ms": 1791734400000,
-      "candles": 203,
-      "file": "series/solana_30d_614f22c34bd861a4.json.gz",
-      "bytes": 6855,
-      "sha256": "614f22c34bd861a4a4fe5309b2e9929d6937547262c2f401d62d45900d9f170a"
-    },
-    {
-      "id": "tron",
-      "pair": "TRXUSDT",
-      "period": "24h",
-      "interval": "5m",
-      "first_open_ms": 1791337200000,
-      "last_open_ms": 1791761400000,
-      "candles": 1415,
-      "file": "series/tron_24h_865db559cf30a05a.json.gz",
-      "bytes": 27947,
-      "sha256": "865db559cf30a05ac8d05594efe94b69a6605092f6243324a80b5eb50de9d0e7"
-    },
-    {
-      "id": "tron",
-      "pair": "TRXUSDT",
-      "period": "7d",
-      "interval": "1h",
-      "first_open_ms": 1790816400000,
-      "last_open_ms": 1791756000000,
-      "candles": 262,
-      "file": "series/tron_7d_a0faef824900744b.json.gz",
-      "bytes": 6838,
-      "sha256": "a0faef824900744b6469f53d15e3c902a9dc316235706df237850f5f39c92984"
+      "sha256": "358eaad5624bc686809f0fe4324191fc8a3b9478bc3094be6105376aa9478939"
     },
     {
       "id": "tron",
@@ -226,11 +226,11 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1791734400000,
-      "candles": 203,
-      "file": "series/tron_30d_9b4a871f4b597609.json.gz",
-      "bytes": 5977,
-      "sha256": "9b4a871f4b5976090b219167903eb087e6d742994606149a9196221af638587c"
+      "last_open_ms": 1791748800000,
+      "candles": 204,
+      "file": "series/tron_30d_af817ea5e71af088.json.gz",
+      "bytes": 6003,
+      "sha256": "af817ea5e71af088bd82ad5a2260f51b41b1dda177f3e552c9bf27a91c0a7cb3"
     },
     {
       "id": "zcash",
@@ -238,11 +238,11 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791761400000,
-      "candles": 1415,
-      "file": "series/zcash_24h_ee65dba123259d60.json.gz",
-      "bytes": 39320,
-      "sha256": "ee65dba123259d601cc96efe5c23c83868e43b1116535b7cbb5752491a3a349f"
+      "last_open_ms": 1791767700000,
+      "candles": 1436,
+      "file": "series/zcash_24h_7bd51e4654d51fc2.json.gz",
+      "bytes": 39889,
+      "sha256": "7bd51e4654d51fc2841167bc39feb0dae0121635b0c10fa38c0297bf902708e5"
     },
     {
       "id": "zcash",
@@ -250,11 +250,11 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791756000000,
-      "candles": 262,
-      "file": "series/zcash_7d_89199c8109f17836.json.gz",
-      "bytes": 8763,
-      "sha256": "89199c8109f1783693fca2c48e510f6e0e226cffc442e6debf9e206e8af14ac9"
+      "last_open_ms": 1791763200000,
+      "candles": 264,
+      "file": "series/zcash_7d_40042d8fd64db87a.json.gz",
+      "bytes": 8825,
+      "sha256": "40042d8fd64db87a9748116e816b837bdd27c515e0251bd5ad2195767fa502c8"
     },
     {
       "id": "zcash",
@@ -262,11 +262,11 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1791734400000,
-      "candles": 203,
-      "file": "series/zcash_30d_658766b4faa660c8.json.gz",
-      "bytes": 7408,
-      "sha256": "658766b4faa660c827c296bd9c2025ff282d479241152ba9a5c70acc524f70f7"
+      "last_open_ms": 1791748800000,
+      "candles": 204,
+      "file": "series/zcash_30d_4ef3ca67654eb180.json.gz",
+      "bytes": 7441,
+      "sha256": "4ef3ca67654eb1806fd488ddd5d796eb92c871bffb5b54b24d6665cbc61c50c0"
     }
   ],
   "read_contract": "Fetch index and requested series block only; never infer live status"
