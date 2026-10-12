@@ -6,18 +6,60 @@
     "ripple",
     "solana"
   ],
-  "covered_source_month_span": "2019-01 to 2021-04 (not coin inception)",
+  "covered_source_month_span": "2018-01 to 2021-04 (not coin inception)",
   "jan_apr_2021": {
     "index_path": "top5_earlier_source_vault/index.json",
     "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-earlier-2021-01_2021-04",
     "source_months_verified": 16,
     "stored_original_candles": 688789
   },
-  "native_source_gaps_minutes": 26573,
+  "native_source_gaps_minutes": 37010,
   "no_interpolated_candles": true,
-  "original_native_1m_archived": 4042867,
+  "original_native_1m_archived": 5355790,
   "other_stored_2021_noncomplete_months_in_separate_vault": true,
   "previous_2020_2021_archive_counts_preserved": true,
+  "quarters_2018": [
+    {
+      "index_path": "top5_earlier_source_vault/batches/quarter-2018-q1.json",
+      "missing_native_minutes": 250,
+      "native_1m_candles": 178310,
+      "quarter": "q1",
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-original-2018-01_2018-03",
+      "source_manifest_sha256": "c6cf49b772ec18468562f873bdf1baa9f99e73647f396777f621c3092cc4381e",
+      "source_months_unavailable": 8,
+      "source_months_verified": 4
+    },
+    {
+      "index_path": "top5_earlier_source_vault/batches/quarter-2018-q2.json",
+      "missing_native_minutes": 6926,
+      "native_1m_candles": 342994,
+      "quarter": "q2",
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-original-2018-04_2018-06",
+      "source_manifest_sha256": "751cac010f1fcc79a6886e38961a10d76dafc67545ad6a3144289c4601c09859",
+      "source_months_unavailable": 4,
+      "source_months_verified": 8
+    },
+    {
+      "index_path": "top5_earlier_source_vault/batches/quarter-2018-q3.json",
+      "missing_native_minutes": 1371,
+      "native_1m_candles": 396069,
+      "quarter": "q3",
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-original-2018-07_2018-09",
+      "source_manifest_sha256": "ca1e7255c6ec106fdc5bc0c38207969701d40675882b4fa34a6d8b025cb25640",
+      "source_months_unavailable": 3,
+      "source_months_verified": 9
+    },
+    {
+      "index_path": "top5_earlier_source_vault/batches/quarter-2018-q4.json",
+      "missing_native_minutes": 1890,
+      "native_1m_candles": 395550,
+      "quarter": "q4",
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top5-binance-original-2018-10_2018-12",
+      "source_manifest_sha256": "d5ce952564db2031301771f9ec4d817e1d6e1c2152ffd0652eb5eb4e2cb13f13",
+      "source_months_unavailable": 3,
+      "source_months_verified": 9
+    }
+  ],
   "quarters_2019": [
     {
       "index_path": "top5_earlier_source_vault/batches/quarter-2019-q1.json",
@@ -103,12 +145,13 @@
     }
   ],
   "quote": "USDT",
-  "schema": "seven.crypto.top5-earlier-native-history-roadmap.v2",
+  "schema": "seven.crypto.top5-earlier-native-history-roadmap.v3",
   "source": "Original Binance Spot 1m OHLCV, official source ZIP+CHECKSUM, queryable SQLite in immutable Releases",
   "source_gap_interpretation": {
+    "classification_rechecked_against_2018_original_sources": true,
     "classification_rechecked_against_2019_original_sources": true,
     "distinct_from_original_source_gap_count": true,
-    "original_calendar_missing_1m_in_verified_archives": 26573,
+    "original_calendar_missing_1m_in_verified_archives": 37010,
     "pair_launch_classifications": [
       {
         "asset_id": "solana",
@@ -141,9 +184,29 @@
       }
     ],
     "proven_pre_pair_launch_absences_1m": 14760,
-    "unclassified_or_known_operational_1m_outside_this_pair_launch": 11813
+    "unclassified_or_known_operational_1m_outside_this_pair_launch": 22250
   },
-  "source_months_scanned": 112,
-  "source_months_unavailable": 19,
-  "source_months_verified": 93
+  "source_months_scanned": 160,
+  "source_months_unavailable": 37,
+  "source_months_verified": 123,
+  "spot_pair_first_listing_sources": {
+    "BNBUSDT": {
+      "announced_available_utc_date": "2017-11-06",
+      "exact_first_minute_not_proven": true,
+      "official_notice": "https://www.binance.com/pt-BR/support/announcement/detail/115002584432"
+    },
+    "ETHUSDT": {
+      "market_start_utc": "2017-08-17T04:00:00Z",
+      "official_notice": "https://www.binance.com/en/support/announcement/detail/115001094331"
+    },
+    "SOLUSDT": {
+      "market_start_utc": "2020-08-11T06:00:00Z",
+      "official_notice": "https://www.binance.com/es-LA/support/announcement/detail/cf77f566c9b64cc791fc152679175de8"
+    },
+    "XRPUSDT": {
+      "announced_available_utc_date": "2018-05-04",
+      "exact_first_minute_not_proven": true,
+      "official_notice": "https://www.binance.com/en-NZ/support/announcement/detail/360003376012"
+    }
+  }
 }
