@@ -5,9 +5,9 @@
   "ranked": 250,
   "rank_snapshot": "2026-10-09T18:47:53.633Z",
   "release_months": 88,
-  "release_count": 231,
-  "archived_assets": 123,
-  "native_1m_candles": 220302720,
+  "release_count": 234,
+  "archived_assets": 125,
+  "native_1m_candles": 220567680,
   "groups": [
     {
       "top": 10,
@@ -23,7 +23,7 @@
     },
     {
       "top": 250,
-      "with_history": 123
+      "with_history": 125
     }
   ],
   "months": [
@@ -1373,6 +1373,13 @@
     },
     {
       "month": "2026-07",
+      "release": "crypto-spot-bulk-add-2026-07-1m-7d3af6a0a133",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 89280
+    },
+    {
+      "month": "2026-07",
       "release": "crypto-spot-bulk-add-2026-07-1m-9641358aee99",
       "verified": 47,
       "unavailable": 1,
@@ -1478,6 +1485,13 @@
     },
     {
       "month": "2026-08",
+      "release": "crypto-spot-bulk-add-2026-08-1m-7d3af6a0a133",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 89280
+    },
+    {
+      "month": "2026-08",
       "release": "crypto-spot-bulk-add-2026-08-1m-9641358aee99",
       "verified": 48,
       "unavailable": 0,
@@ -1577,6 +1591,13 @@
     {
       "month": "2026-09",
       "release": "crypto-spot-bulk-add-2026-09-1m-6da8b98902e5",
+      "verified": 2,
+      "unavailable": 0,
+      "candles": 86400
+    },
+    {
+      "month": "2026-09",
+      "release": "crypto-spot-bulk-add-2026-09-1m-7d3af6a0a133",
       "verified": 2,
       "unavailable": 0,
       "candles": 86400
@@ -45619,9 +45640,34 @@
       "symbol": "SUPER",
       "name": "SuperVerse",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "SUPERUSDT",
+          "file": "SUPERUSDT-1m-2026-07.zip",
+          "sha256": "a92c9816ba09b0fa885e69e92d1c6249db8097b7e559db4b4491c886dc3b954d",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-7d3af6a0a133"
+        },
+        {
+          "month": "2026-08",
+          "pair": "SUPERUSDT",
+          "file": "SUPERUSDT-1m-2026-08.zip",
+          "sha256": "342f467c4145a83f6d17a117bd24a8c8b45277bb72d26716ccf2781dd9380dfd",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-7d3af6a0a133"
+        },
+        {
+          "month": "2026-09",
+          "pair": "SUPERUSDT",
+          "file": "SUPERUSDT-1m-2026-09.zip",
+          "sha256": "ca6286dcde42cc23e1d4e2b02116d2395c8f0372999300dfc1174bcefbe7f70f",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-7d3af6a0a133"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "orca",
@@ -46917,9 +46963,34 @@
       "symbol": "SNX",
       "name": "Synthetix",
       "market_status": "spot_candidate_identity_unverified",
-      "months": [],
+      "months": [
+        {
+          "month": "2026-07",
+          "pair": "SNXUSDT",
+          "file": "SNXUSDT-1m-2026-07.zip",
+          "sha256": "7bf0f1eaaadf940ec2ca68593006d23681631a2d0afb0fe09517926fc9d08545",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-07-1m-7d3af6a0a133"
+        },
+        {
+          "month": "2026-08",
+          "pair": "SNXUSDT",
+          "file": "SNXUSDT-1m-2026-08.zip",
+          "sha256": "a8a7586860a2f38c0f5e1c233077915044f767f10ad9cdbacd95b87f8987d487",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-08-1m-7d3af6a0a133"
+        },
+        {
+          "month": "2026-09",
+          "pair": "SNXUSDT",
+          "file": "SNXUSDT-1m-2026-09.zip",
+          "sha256": "1b5ad98c6ae098cc4e39eda168d1153e8e91dc3a4e21f46ac3ca6591a621734b",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-add-2026-09-1m-7d3af6a0a133"
+        }
+      ],
       "missing_months": [],
-      "candles": 0
+      "candles": 132480
     },
     {
       "id": "celium",
