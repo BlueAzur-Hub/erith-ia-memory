@@ -1,0 +1,204 @@
+name: Agent Crypto Top25 Special Spot Original Archives
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-top25-special-spot.yml'
+      - 'public/agent_crypto_erith_ia/tools/archive_top25_special_spot.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-top25-special-spot-market-originals
+  cancel-in-progress: false
+jobs:
+  preserve-native-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        asset: [near, monero, ethena-usde, usds]
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check frozen source ranks and exact original exchange markets
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/archive_top25_special_spot.py
+          python public/agent_crypto_erith_ia/tools/archive_top25_special_spot.py --self-test
+      - name: Preserve bounded original month ZIP, official CHECKSUM and exact OHLCV SQLite
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/archive_top25_special_spot.py \
+            --batch ${{ matrix.asset }} \
+            --output "$RUNNER_TEMP/top25-special-original"
+      - name: Validate all original SHA-256, source calendars, quarantine and early-listing guards
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import pathlib,os,json,hashlib
+          root=pathlib.Path(os.environ["RUNNER_TEMP"])/"top25-special-original"
+          j=json.loads((root/"manifest.json").read_text())
+          assert j["schema"]=="seven.crypto.top25-special-original-spot-batch.v1"
+          assert j["no_synthetic_bars"] and j["trader_interface_modified"] is False
+          assert j["source_verified_month_pairs"]+j["pre_pair_listing_month_pairs"]+j["unavailable_or_unverified_month_pairs"]==j["target_month_pairs"]
+          assert j["strict_utc_aligned_native_rows"]+j["quarantined_native_rows"]==j["original_native_ohlcv_rows"]
+          sources={"manifest.json"}
+          for r in j["records"]:
+              assert r["quote"]=="USDT" and r["venue"]=="Binance Spot" and r["no_synthetic_ohlcv"]
+              if r["status"] in ("native_1m_complete","native_1m_partial","original_timestamp_quarantine"):
+                  assert r["native_rows"]>0
+                  for key in ("source_zip","official_checksum","sqlite"):
+                      v=r[key];f=root/v["name"]
+                      assert v["name"] not in sources and f.is_file()
+                      assert f.stat().st_size==v["bytes"]
+                      assert hashlib.sha256(f.read_bytes()).hexdigest()==v["sha256"]
+                      sources.add(v["name"])
+                  if r["strict_utc_aligned"]:
+                      assert r["native_rows"]+r["missing_1m_minutes"]==r["calendar_minutes"]
+                  else: assert r["excluded_from_utc_1m_calendar"]
+              else: assert r["native_rows"]==0
+          assert sources=={f.name for f in root.iterdir()}
+          print("SPECIAL SPOT SOURCE SHA VERIFIED",j["batch"],j["original_native_ohlcv_rows"])
+          PY
+      - name: Publish checksum-authenticated original Binance sources as immutable GitHub Release
+        run: |
+          set -euo pipefail
+          tag="crypto-top25-special-original-spot-${{ matrix.asset }}"
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          folder="$RUNNER_TEMP/top25-special-original"
+          git fetch origin main
+          for f in top250_multisource_coverage/index.json top25_historical_expansion/index.json; do
+            current=$(sha256sum "$root/$f"|cut -d' ' -f1)
+            latest=$(git show "origin/main:$root/$f"|sha256sum|cut -d' ' -f1)
+            test "$current" = "$latest" || { echo "::error::Original source ranking drift";exit 1; }
+          done
+          if gh release view "$tag" --json tagName >/dev/null 2>"$RUNNER_TEMP/error.txt"; then
+            mkdir -p "$RUNNER_TEMP/existing"
+            gh release download "$tag" --pattern manifest.json --dir "$RUNNER_TEMP/existing"
+            cmp "$RUNNER_TEMP/existing/manifest.json" "$folder/manifest.json" || {
+              echo "::error::Existing original source manifest differs";exit 1;
+            }
+          else
+            if ! grep -Eqi 'release not found|HTTP 404|not found' "$RUNNER_TEMP/error.txt";then
+              cat "$RUNNER_TEMP/error.txt";exit 1
+            fi
+            gh release create "$tag" "$folder"/* --target "$GITHUB_SHA" \
+              --title "Top25 original Spot source ${{ matrix.asset }} authenticated OHLCV" \
+              --notes "Original Spot month ZIPs with Binance CHECKSUM, millisecond-faithful SQLite, preserved source gaps, pre-first-trade months explicit. No invented candles, no perpetual futures substitution and no Trader changes." \
+              --latest=false
+          fi
+          gh release view "$tag" --json assets,isDraft,url > "$RUNNER_TEMP/receipt.json"
+          python - <<'PY'
+          import json,pathlib,os
+          base=pathlib.Path(os.environ["RUNNER_TEMP"])
+          x=json.loads((base/"receipt.json").read_text())
+          a={v["name"]:v["size"] for v in x["assets"]}
+          b={v.name:v.stat().st_size for v in (base/"top25-special-original").iterdir()}
+          assert not x["isDraft"] and a==b
+          print("AUTHENTIC SPECIAL MARKET ARCHIVE PUBLISHED",x["url"],len(a))
+          PY
+      - name: Save independently checkable market manifest
+        run: |
+          cp "$RUNNER_TEMP/top25-special-original/manifest.json" "$RUNNER_TEMP/market-${{ matrix.asset }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: original-top25-special-${{ matrix.asset }}
+          path: ${{ runner.temp }}/market-${{ matrix.asset }}.json
+          retention-days: 30
+      - name: Protect all canonical history and trading software
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/
+  consolidate-market-proofs:
+    needs: preserve-native-source
+    if: needs.preserve-native-source.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: original-top25-special-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/source-docs
+      - name: Join four source-exact markets without inventing continuity
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,pathlib,hashlib
+          folder=pathlib.Path(os.environ["RUNNER_TEMP"])/"source-docs"
+          configured={"near":"NEARUSDT","monero":"XMRUSDT","ethena-usde":"USDEUSDT","usds":"USDSUSDT"}
+          expected_counts={"near":7,"monero":24,"ethena-usde":4,"usds":6}
+          items=[]
+          for asset,pair in configured.items():
+              raw=(folder/f"market-{asset}.json").read_bytes()
+              j=json.loads(raw)
+              assert j["schema"]=="seven.crypto.top25-special-original-spot-batch.v1"
+              assert j["batch"]==asset and len(j["records"])==expected_counts[asset]
+              assert all(r["pair"]==pair and r["asset_id"]==asset for r in j["records"])
+              assert j["no_synthetic_bars"] and j["distinct_venue_quote_pairs"] and not j["trader_interface_modified"]
+              items.append({"id":asset,"original_pair":pair,"release_page":j["release_page"],
+                            "manifest_sha256":hashlib.sha256(raw).hexdigest(),
+                            "requested_source_months":j["target_month_pairs"],
+                            "verified_source_months":j["source_verified_month_pairs"],
+                            "regular_native_1m":j["strict_utc_aligned_native_rows"],
+                            "quarantined_original_rows":j["quarantined_native_rows"],
+                            "prelisting_months":j["pre_pair_listing_month_pairs"],
+                            "unverified_source_months":j["unavailable_or_unverified_month_pairs"]})
+          total=sum(r["requested_source_months"] for r in items)
+          assert total==41
+          data={"schema":"seven.crypto.top25-special-spot-consolidation.v1","original_source_candidates":41,
+                "verified_months":sum(x["verified_source_months"] for x in items),
+                "regular_native_1m":sum(x["regular_native_1m"] for x in items),
+                "original_quarantined_rows":sum(x["quarantined_original_rows"] for x in items),
+                "prelisting_months":sum(x["prelisting_months"] for x in items),
+                "unverified_months":sum(x["unverified_source_months"] for x in items),
+                "no_synthetic_candles":True,"quote":"USDT",
+                "not_all_time_coverage":True,"no_perpetual_futures":True,
+                "no_trader_interface_modification":True,"markets":items}
+          assert data["verified_months"]+data["prelisting_months"]+data["unverified_months"]==41
+          out=pathlib.Path(os.environ["RUNNER_TEMP"])/"special-index.json"
+          out.write_text(json.dumps(data,indent=2,sort_keys=True)+"\n")
+          print("SPECIAL SPOT ORIGINAL HISTORY VERIFIED",data["regular_native_1m"],data["verified_months"])
+          PY
+      - name: Commit new source manifest index only
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          folder="$root/top25_historical_expansion/special_markets"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            for f in top250_multisource_coverage/index.json top25_historical_expansion/index.json;do
+              a=$(sha256sum "$root/$f"|cut -d' ' -f1)
+              b=$(git show "origin/main:$root/$f"|sha256sum|cut -d' ' -f1)
+              test "$a" = "$b" || { echo "::error::Protected universe drift";exit 1; }
+            done
+            git reset --hard origin/main
+            mkdir -p "$folder"
+            cp "$RUNNER_TEMP/special-index.json" "$folder/index.json"
+            for market in near monero ethena-usde usds;do
+              cp "$RUNNER_TEMP/source-docs/market-$market.json" "$folder/$market.json"
+            done
+            git add -- "$folder"
+            git diff --cached --check
+            if git diff --cached --quiet;then exit 0;fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Coffre: preserve original XMR NEAR USDE USDS spot histories separately'
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
