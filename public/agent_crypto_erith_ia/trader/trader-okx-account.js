@@ -10,6 +10,7 @@ const AUTO_REFRESH_MS=60000;
 const LEDGER_REFRESH_MS=300000;
 const EUR_REFRESH_MS=60000;
 const EUR_MAX_AGE_MS=120000;
+const ENTRY_RETRY_MS=300000;
 let timer=0;
 let inflight=null;
 let ledgerInFlight=null;
@@ -20,6 +21,9 @@ let lastSpotExecutions=0;
 let eurQuote=null;
 let eurCheckedAt=0;
 let eurInFlight=null;
+let entryQuote=null;
+let entryAttemptAt=0;
+let entryInFlight=null;
 
 const panel=()=>document.getElementById(PANEL_ID);
 const q=(name)=>panel()?.querySelector(`[data-okx-${name}]`)||null;
@@ -136,9 +140,83 @@ async function refreshEuroPrice(force=false){
   return eurInFlight;
 }
 
+
+/* Comparaison historique : clôture d'une bougie Binance BTC/EUR d'une minute
+   précédant le mouvement OKX, non prix exact de transaction ni commission PayPal. */
+async function fetchEntryMinute(timestamp){
+  if(!Number.isFinite(timestamp)||timestamp<=0)return null;
+  const minute=Math.floor((timestamp-5000)/60000)*60000;
+  const hosts=["https://data-api.binance.vision/api/v3/klines","https://api.binance.com/api/v3/klines"];
+  for(const host of hosts){
+    const url=host+"?symbol=BTCEUR&interval=1m&startTime="+minute+"&endTime="+(minute+59999)+"&limit=1";
+    const controller=new AbortController(),deadline=setTimeout(()=>controller.abort(),6500);
+    try{
+      const response=await fetch(url,{method:"GET",cache:"no-store",credentials:"omit",signal:controller.signal});
+      if(!response.ok)continue;
+      const data=await response.json();
+      const candle=Array.isArray(data)?data[0]:null;
+      if(!Array.isArray(candle)||Number(candle[0])!==minute)continue;
+      const [open,high,low,close]=[1,2,3,4].map(i=>Number(candle[i]));
+      const volume=Number(candle[5]),trades=Number(candle[8]);
+      if([open,high,low,close,volume,trades].some(n=>!Number.isFinite(n)) ||
+         low<=1000||high>=10000000||low>high||open<low||open>high||close<low||close>high||
+         volume<=0||trades<=0)continue;
+      return {minute,open,high,low,close,source:"Binance Spot BTC/EUR · bougie 1 minute"};
+    }catch(_){/* Repli sur l'autre hôte public */}
+    finally{clearTimeout(deadline);}
+  }
+  return null;
+}
+async function refreshEntryQuote(force=false){
+  const match=ledgerPosition?.matched;
+  if(!token()||!match||!Number.isFinite(match.timestamp))return false;
+  const timestamp=match.timestamp;
+  if(entryQuote&&entryQuote.timestamp===timestamp)return true;
+  if(entryInFlight)return entryInFlight;
+  if(!force&&Date.now()-entryAttemptAt<ENTRY_RETRY_MS)return false;
+  entryAttemptAt=Date.now();
+  entryInFlight=(async()=>{
+    const benchmark=await fetchEntryMinute(timestamp);
+    if(!token()||ledgerPosition?.matched?.timestamp!==timestamp)return false;
+    entryQuote=benchmark?{...benchmark,timestamp}:null;
+    updatePositionView();
+    return Boolean(benchmark);
+  })().catch(()=>{entryQuote=null;if(token())updatePositionView();return false;})
+    .finally(()=>{entryInFlight=null;});
+  return entryInFlight;
+}
+function signedMoney(amount){
+  return (amount>0?"+":amount<0?"−":"")+moneyEUR(Math.abs(amount));
+}
+function updateCostBreakdown(position,quote){
+  const match=position?.matched;
+  if(!match||!quote||!Number.isFinite(currentBtcHeld) ||
+    Math.abs(currentBtcHeld-match.btc)>=Math.max(1e-12,match.btc*1e-7)){
+    text("costbreakdown","Coût initial et variation du marché : données concordantes attendues.");
+    return;
+  }
+  if(!entryQuote||entryQuote.timestamp!==match.timestamp){
+    text("costbreakdown","Écart de prix initial et évolution du Bitcoin : référence BTC/EUR historique non vérifiée. Aucuns frais supposés.");
+    return;
+  }
+  const oldValue=match.btc*entryQuote.close;
+  const initial=oldValue-match.eur;
+  const later=currentBtcHeld*quote.price-oldValue;
+  const total=currentBtcHeld*quote.price-match.eur;
+  const time=new Date(entryQuote.minute).toLocaleString("fr-FR",{timeZone:"UTC",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  text("costbreakdown","Écart de prix initial estimé : "+signedMoney(initial)+
+    " · Variation du Bitcoin depuis l'achat : "+signedMoney(later)+
+    " · Différence totale : "+signedMoney(total)+
+    " | Référence "+entryQuote.source+" du "+time+" UTC"+
+    ", cours indicatif "+moneyEUR(entryQuote.close)+"/BTC"+
+    " (plus bas "+moneyEUR(entryQuote.low)+", plus haut "+moneyEUR(entryQuote.high)+
+    "). Ce n'est pas une commission PayPal mesurée.");
+}
+
 /* Le coût et la performance sont qualifiés séparément. Une écriture OKX n'est pas une facture PayPal. */
 function updatePositionView(){
   const position=ledgerPosition;
+  updateCostBreakdown(position,freshEuroQuote());
   const quote=freshEuroQuote();
   text("eurestimate",quote&&Number.isFinite(currentBtcHeld)&&currentBtcHeld>0
     ?"Estimation en EUR : "+moneyEUR(currentBtcHeld*quote.price)+" · "+quote.source
@@ -213,6 +291,8 @@ function ledgerClear(message){
   ledgerPosition=null;
   eurQuote=null;
   eurCheckedAt=0;
+  entryQuote=null;
+  entryAttemptAt=0;
   updatePositionView();
   text("ledgerstatus",message);
   const entries=q("ledgerentries");
@@ -300,7 +380,8 @@ function ledgerPaint(results){
   if(summary)summary.hidden=matches.length!==1||credits.length!==1||debits.length!==1;
   ledgerPosition={recordsCount,matched:null};
   if(matches.length===1&&credits.length===1&&debits.length===1&&!issues.length&&!hasMore){
-    ledgerPosition.matched={btc:matches[0].btc.balanceChange,eur:Math.abs(matches[0].eur.balanceChange)};
+    ledgerPosition.matched={btc:matches[0].btc.balanceChange,eur:Math.abs(matches[0].eur.balanceChange),timestamp:matches[0].btc.timestamp};
+    if(entryQuote?.timestamp!==matches[0].btc.timestamp)entryQuote=null;
   }
   if(summary&&!summary.hidden){
     const {btc,eur}=matches[0];
@@ -349,6 +430,7 @@ function ledgerPaint(results){
   text("ledgerwarning",issues.length?"Attention : certaines sources ne sont pas disponibles ; les résultats peuvent être incomplets.":hasMore?"Attention : d'autres mouvements peuvent exister dans l'historique.":"Ces écritures incluent éventuellement des transferts entre comptes : elles ne représentent pas nécessairement des achats distincts.");
   updatePositionView();
   void refreshEuroPrice();
+  void refreshEntryQuote();
 }
 
 async function refreshLedger(force=false){
@@ -520,7 +602,7 @@ function mount(){
     '<article class="okx-card"><span>Prix moyen d’achat</span><b data-okx-avgcost>—</b><small data-okx-avgcosthint>Calculé seulement avec un historique prouvé</small></article>',
     '<article class="okx-card"><span>Montant total investi</span><b data-okx-committed>—</b><small data-okx-committedhint>Achats + frais prouvés</small></article>',
     '<article class="okx-card"><span>Gain / perte actuel</span><b data-okx-pnl>—</b><small data-okx-pnlhint>Valeur actuelle − montant investi</small></article>',
-    '</div><p class="okx-position-proof" data-okx-positionproof>Historique d’acquisition en cours de qualification.</p><div class="okx-activity">',
+    '</div><p class="okx-position-proof" data-okx-positionproof>Historique d’acquisition en cours de qualification.</p><p class="okx-position-proof" data-okx-costbreakdown>Coût d’entrée et variation du marché : recherche de cotation historique.</p><div class="okx-activity">',
     '<article class="okx-card"><span>Ordres ouverts</span><b data-okx-pending>—</b><small>SPOT OKX</small></article>',
     '<article class="okx-card"><span>Historique Spot</span><b data-okx-history>—</b><small>Ordres Spot · 3 mois, hors achat PayPal</small></article>',
     '<article class="okx-card"><span>Exécutions Spot</span><b data-okx-fills>—</b><small>Transactions Spot · 3 mois, hors achat PayPal</small></article>',
