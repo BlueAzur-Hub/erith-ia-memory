@@ -1,0 +1,55 @@
+# SEVEN HEAVEN — PASSATION DU COFFRE HISTORIQUE CRYPTO
+
+**Date du checkpoint : 12 octobre 2026 · Clôture de fil Aerith-7 · Destinataire : Aerith-7 / sœur IA suivante.**
+
+## Clé de reprise immédiate (à copier dans le prochain fil)
+
+> Active Aerith-7 / Seven Heaven selon les modules du dépôt `core/SEVEN_GATE.md`, `core/AERITH_7_PERSONALITY_CORE.md`, `core/AERITH_LIVING_REFLECTION_HEART.md`, `core/ATLAS_DES_MODULES.md`, `core/SEVEN_MEMORY_PRESERVATION.md` et la continuité des sœurs Aerith-7/8/9. Ce checkpoint GitHub est la source canonique de reprise pour le Coffre historique Agent-Crypto. Lire les fichiers liés ci-dessous, vérifier `main`, les Releases et les contrôles CI AVANT de présenter des chiffres ou d'agir. Objectif utilisateur : **Top 250 → Top 500 → Top 1000 cryptomonnaies, historique authentique aussi loin que les sources le permettent, prix et OHLCV**, réutilisables d'abord par le Trader puis, seulement après validation, par l'Interface. Poursuivre les archives et la vérification dès ce fil, sans demander de refaire les étapes déjà accomplies. Ne jamais inventer de bougies ou de continuité.
+
+## État SOURCE VÉRIFIÉ à la clôture
+
+Dépôt : https://github.com/BlueAzur-Hub/erith-ia-memory, branche `main`.
+Notion master : https://app.notion.com/p/AETHER-AGENT-CRYPTO-INTERFACE-3e07754fe08481eb95c7cdc4fd8ff099
+
+- **21 655 573 bougies natives OHLCV 1m** archivées dans les nouvelles archives sources publiées au cours du chantier. Attention : somme des archives additionnelles, **NON dédupliquée contre l'ancien catalogue canonique Top 250** et **NON preuve d'une série complète** depuis la création des monnaies.
+- **286 734 lignes originales à horodatages particuliers** conservées **en quarantaine**, hors grille strictement à la minute ; ne pas les ajouter aux séries régulières.
+- **644 bougies originales 1D HYPE/USDT, Bitget Spot**, source distincte ; ne pas les compter comme minutes.
+- Nouveau lot Top 50 : **1 623 172** bougies 1m natives ; **39/96 mois/paire** authentifiés, **48 avant cotation officielle**, **9 archives AAVEUSDT 2020 janvier–septembre indisponibles**, **0 en quarantaine**, **78 908 emplacements calendaires sans minute** dans les 39 archives (comportent de la pré-cotation ; ce ne sont pas toutes des pannes).
+- UNI/USDT **324 306**, AVAX/USDT **316 896**, HBAR/USDT **697 984**, AAVE/USDT **283 986** dans ce lot. QNT/USDT et SHIB/USDT n'existaient pas encore dans cette fenêtre 2020–avril 2021.
+- Premiers mois officiels QNT/USDT (juillet 2021) **3 960** et SHIB/USDT (mai 2021) **31 020**, soit **34 980 bougies 1m** supplémentaires. Les **54 300 minutes** pré-listing de ces deux mois ne sont pas des pannes.
+- Marché antérieur d'AAVE : **LEND/USDT**, **5 mois mai–septembre 2020**, **199 470 bougies natives 1m**. **100 LEND = 1 AAVE** était une migration de jeton : NE PAS renommer ou recalculer les bougies LEND comme si elles étaient des bougies AAVE ; 4 mois LEND antérieurs ZIP 404.
+- Le Top 50 de ce cycle apporte donc **46 nouveaux mois/paire vérifiés et 1 857 622 nouvelles 1m régulières** : 1 623 172 + 34 980 + 199 470. Le bilan cumulé passe de 19 797 951 à **21 655 573** ; la quarantaine reste **286 734**.
+- WBT/USDT est officiellement identifié **sur WhiteBIT Spot** via sa propre API : **0 bougie WBT native 1m authentifiée/archivée**. Préserver les conditions de licence et de redistribution avant toute mise en Release publique.
+- HYPE/USDT : **Bitget Spot**, 644 bougies 1D originales décembre 2024–septembre 2026, plus **trois mois Spot 1m** déjà présents dans l'ancien catalogue. Pas de substitution par un perpétuel ou une source quotidienne inventée à la minute. La première bougie journalière est ouverte à l'heure native UTC+8 et recoupe la séance de lancement sans être une bougie 1m.
+- Les autres cas particuliers Top25 restent LEO/USDT sur OKX Spot (1D), RAIN/USDT sur KuCoin Spot (1D), CC/USDT sur OKX Spot (1D), XMR Binance delisté 2024, USDS issu de DAI en 2026, USDE coté 2025, chaîne BCC → BCHABC → BCH avec une bifurcation blockchain distincte d'un changement de symbole.
+
+## Liens canoniques et preuves à relire en premier
+
+1. [Checkpoint général Top50 + sources externes](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/source_checkpoint.json) : périmètre, totaux, sources, garanties et travaux non résolus.
+2. [Audit de qualité Top50](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/source_quality_checkpoint.json).
+3. [Index Top50 des 39 archives](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/collection_index.json) et [CI #38203576127 — 7/7 succès](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38203576127).
+4. [Premières archives SHIB/QNT](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/first_listing_months/index.json), [Release](https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-spot-first-listing-shib-qnt-2021), [CI #38204170689](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38204170689).
+5. [Archives LEND avant AAVE](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/lend_pre_aave/index.json), [Release](https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-lend-before-aave-2020), [CI #38204408700](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38204408700).
+6. [HYPE Bitget Spot 1D](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/hype_original_daily/index.json), [Release](https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top25-bitget-hype-native-daily-2026-09), [CI #38204102501](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38204102501).
+7. [Identité WBT / WhiteBIT Spot](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/whitebit_market/index.json), [CI #38203790528](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38203790528).
+8. [Univers classé Top50, rangs 26–50](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top50_historical_expansion/index.json), [registre des 15 actifs du Top25](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/instrument_resolution.json) et [historique initial 2017–2021](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_earlier_source_vault/history_index.json).
+9. [BCHABC, BCC et fork](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/cash_lineage/index.json), plus [quarantaine originale des timestamps](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_timestamp_source_quarantine/index.json).
+
+## Ordre opératoire proposé à la sœur suivante
+
+1. **Audit de réception** : lire le checkpoint `source_checkpoint.json`, les CI et les Releases, contrôler l'état réel de `main`. Comparer manifestes, ZIP, SHA-256 et SQLite aux index ; chiffrer les 1m réelles, les minutes absentes et les mois manquants. Ne pas additionner une même archive entre le catalogue existant et un backfill comme si elle était nouvelle.
+2. **Poursuivre la vraie couverture Top50, non la seule vitrine** : scanner rangs 26–50 avec identité coin-id/pair/résolution/venue, puis collecter les mois sources authentiques récupérables. Ne PAS confondre les rangs ou homonymes (GRAM, M/MemeCore, USYC, BUIDL, etc.). En priorité : combler les mois disponibles après les premières cotations, et examiner AAVEUSDT 2020-01 à 09 via l'ancien LENDUSDT déjà archivé sans substitution ni fausse conversion.
+3. **Résoudre les fournisseurs à part** : WhiteBIT WBT_USDT (droits/licence, provenance et export natif) ; Bitget Spot HYPE/USDT (profondeur 1m sans contrats perpétuels) ; OKX / KuCoin (LEO, CC, RAIN au pas 1m si sources originales offertes), Monero pré-2019 via une vraie autre cotation/bourse plutôt que déduire « rien » d'un ZIP 404.
+4. **Étendre Top100, puis Top250**, avec collecte bornée en lots trimestriels/mensuels, inventaire source exact, provenance SHA-256, contrôles CI, GitHub Releases contenant de **vraies données**, stockage SQLite indexable. Définir un taux de couverture *par actif × période × résolution × place et quote*, et séparer la preuve d'existence du marché de la preuve de disponibilité de chaque bougie.
+5. **Dernière seulement : branchement Trader**, lorsque la cohérence et la couverture source auront été prouvées et acceptées explicitement par le propriétaire. Aucun changement de l'Interface ou du Trader n'a été autorisé durant ce chantier.
+
+## Règles impératives de conservation et d'exploitation
+
+- Pas de bougie synthétique, pas d'interpolation de trous, pas de changement de devise caché, pas de confusion USD/USDT/USDC, pas de transformations de blockchain fork ou de swap en « mêmes bougies », pas de confusion Spot/futures.
+- Un code HTTP 404 pour une archive source ne signifie ni « aucune transaction », ni « bourse inactive », ni « crypto non créée ». Une heure d'ouverture originale non alignée doit être conservée en **quarantaine sans arrondir**.
+- Préserver les archives sources originales sur GitHub Releases et les index/manifestes avec empreintes sur `main` ; prouver le succès de la CI et relire `main` avant d'affirmer une livraison. Ne jamais inventer une disponibilité non vérifiée.
+- Protéger `Trader`, `Interface`, `Bridge`, `Market Core 38.15.11` ainsi que les anciens catalogues ; éviter les versions chiffrées dans les noms de fichiers/fonctions ; aucune création de tableau/panneau de présentation gratuit.
+- Les chiffres cumulatifs de ce projet sont des **sommes d'archives additionnelles**, non un inventaire dédupliqué de tous les historiques existants : garder toujours cette nuance. Toute promesse de « Top 250 entièrement complet » serait fausse à ce stade.
+- STOP en cas de boucle/saturation/erreur de flux ; passer en mode texte et reprendre du dernier commit source vérifié.
+
+**Statut de clôture : reprise du prochain fil uniquement à partir des sources canoniques ci-dessus ; aucune opération en arrière-plan promise par ce document.**
