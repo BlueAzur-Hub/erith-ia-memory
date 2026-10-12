@@ -49,7 +49,24 @@ def stage(q,out,workers=3):
         tasks={pool.submit(source.early.save_one,asset,month,out):(asset,month)
                for asset in ASSETS for month in QUARTERS[q]}
         for future in as_completed(tasks):
-            val=future.result()
+            cid,month=tasks[future]
+            try:
+                val=future.result()
+            except (ValueError,OSError,OverflowError,UnicodeError) as exc:
+                # Keep this exact original month visible as invalid, never as
+                # "no trades" or a verified missing source. Do not publish it.
+                pair=source.early.audit.TARGETS[cid][0]
+                zipname=f"{pair}-1m-{month}.zip"
+                for suffix in (".zip",".zip.CHECKSUM",".sqlite"):
+                    candidate=out/(f"{pair}-1m-{month}"+suffix)
+                    if candidate.exists(): candidate.unlink()
+                val={"asset_id":cid,"month":month,"market_pair":pair,
+                     "quote":"USDT","no_invented_bars":True,
+                     "source_url":source.early.audit.source_urls(pair,month)[0],
+                     "status":"invalid_source_needs_review",
+                     "source_validation_error_type":type(exc).__name__,
+                     "source_validation_error":str(exc)[:180],
+                     "verified_native_rows":0}
             need((val["asset_id"],val["month"])==tasks[future],
                  "Wrong native Spot asset/month owner")
             # Do not claim all pre-start 1m records were trading suspensions.
