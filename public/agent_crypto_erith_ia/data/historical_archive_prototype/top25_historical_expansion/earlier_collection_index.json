@@ -1,0 +1,80 @@
+{
+  "assets": [
+    {
+      "id": "chainlink",
+      "pair": "LINKUSDT",
+      "quarantined_native_1m": 0,
+      "regular_native_1m": 0
+    },
+    {
+      "id": "cardano",
+      "pair": "ADAUSDT",
+      "quarantined_native_1m": 0,
+      "regular_native_1m": 370926
+    },
+    {
+      "id": "stellar",
+      "pair": "XLMUSDT",
+      "quarantined_native_1m": 0,
+      "regular_native_1m": 307238
+    },
+    {
+      "id": "litecoin",
+      "pair": "LTCUSDT",
+      "quarantined_native_1m": 38260,
+      "regular_native_1m": 483363
+    }
+  ],
+  "before_listing_months": 0,
+  "candidate_market_months": 48,
+  "existing_top5_and_top250_catalog_unchanged": true,
+  "history_scope": "2018-01 through 2018-12 (no artificial pre-listing or all-time history)",
+  "no_complete_all_time_claim": true,
+  "no_synthetic_candles": true,
+  "quarantined_native_1m": 38260,
+  "quote": "USDT",
+  "regular_native_1m": 1161527,
+  "release_manifests": [
+    {
+      "batch": "2018-q1",
+      "manifest_sha256": "43929f4245cd53014835e8bd864a26c891938d5ddec982ef5138108f2c6f3770",
+      "quarantined_native": 38260,
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top25-earlier-original-spot-2018-q1",
+      "source_unavailable": 9,
+      "strict_native": 89155,
+      "verified": 3
+    },
+    {
+      "batch": "2018-q2",
+      "manifest_sha256": "6b3106e9385334f1ca3e2a42b912c200aacf78769eab422197f7a435f45bbaa0",
+      "quarantined_native": 0,
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top25-earlier-original-spot-2018-q2",
+      "source_unavailable": 4,
+      "strict_native": 280753,
+      "verified": 8
+    },
+    {
+      "batch": "2018-q3",
+      "manifest_sha256": "7b3069b26c33d0d0d8e53f5803dc9298c5fe5714d4597335a13db56fea8824ce",
+      "quarantined_native": 0,
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top25-earlier-original-spot-2018-q3",
+      "source_unavailable": 3,
+      "strict_native": 396069,
+      "verified": 9
+    },
+    {
+      "batch": "2018-q4",
+      "manifest_sha256": "8ea9c4ad4c3785f7a58ff6df948cb5a217ffdbe249e0edf4cc0b6e539744332d",
+      "quarantined_native": 0,
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top25-earlier-original-spot-2018-q4",
+      "source_unavailable": 3,
+      "strict_native": 395550,
+      "verified": 9
+    }
+  ],
+  "schema": "seven.crypto.top25-earlier-spot-consolidation.v1",
+  "source_batches": 4,
+  "source_verified_months": 29,
+  "unverified_months": 19,
+  "venue": "Binance Spot"
+}

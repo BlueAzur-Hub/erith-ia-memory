@@ -1,0 +1,547 @@
+{
+  "assets": [
+    "chainlink",
+    "cardano",
+    "stellar",
+    "litecoin"
+  ],
+  "batch": "2018-q2",
+  "distinct_venue_quote_pairs": true,
+  "months": [
+    "2018-04",
+    "2018-05",
+    "2018-06"
+  ],
+  "native_1m_missing_minutes_in_strict_sources": 69167,
+  "no_synthetic_bars": true,
+  "not_all_time_guaranteed": true,
+  "original_native_ohlcv_rows": 280753,
+  "pre_pair_listing_month_pairs": 0,
+  "quarantined_native_rows": 0,
+  "quarantined_original_month_pairs": 0,
+  "raw_original_source_zips_stored_in_release": true,
+  "records": [
+    {
+      "asset_id": "cardano",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2018-04-17T04:02:00+00:00",
+      "last_source_open_utc": "2018-04-30T23:59:00+00:00",
+      "missing_1m_minutes": 23282,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2018-04-17T04:02:00Z",
+          "missing_minutes": 23282,
+          "start_utc": "2018-04-01T00:00:00Z"
+        }
+      ],
+      "month": "2018-04",
+      "native_rows": 19918,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "ADAUSDT-1m-2018-04.zip.CHECKSUM",
+        "sha256": "d1db4591c86a9f1e2f9eb93daf37b6bc8ad9df15c22bced5b4a7e90f4679eee7",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/ADAUSDT-1m-2018-04.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/360002770711",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2018-04.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2018-04.zip",
+      "pair": "ADAUSDT",
+      "quote": "USDT",
+      "rank": 17,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 821021,
+        "name": "ADAUSDT-1m-2018-04.zip",
+        "sha256": "0727dd148c4d6cfcd901f42863a9a1dc20bd82a2468711f889a00c6b51c6cfb1",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/ADAUSDT-1m-2018-04.zip"
+      },
+      "sqlite": {
+        "bytes": 2486272,
+        "name": "ADAUSDT-1m-2018-04.sqlite",
+        "sha256": "2ef1978aad5f6953f032fce1798bcad7d11f368bcf52bf6b0a522ce07e69c828",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/ADAUSDT-1m-2018-04.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "ADA",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "cardano",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2018-05-01T00:00:00+00:00",
+      "last_source_open_utc": "2018-05-31T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2018-05",
+      "native_rows": 44640,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "ADAUSDT-1m-2018-05.zip.CHECKSUM",
+        "sha256": "44adaeb174de59d6dbc0277ae84171f52a924c835d8b90af0317bcf837090fce",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/ADAUSDT-1m-2018-05.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/360002770711",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2018-05.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2018-05.zip",
+      "pair": "ADAUSDT",
+      "quote": "USDT",
+      "rank": 17,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1804392,
+        "name": "ADAUSDT-1m-2018-05.zip",
+        "sha256": "539c30269d1aa6b279b7fb3a566127657254e3f38dc065a1748c3e4c27065c52",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/ADAUSDT-1m-2018-05.zip"
+      },
+      "sqlite": {
+        "bytes": 5521408,
+        "name": "ADAUSDT-1m-2018-05.sqlite",
+        "sha256": "b7a31e64574dc58b52cbc303a98d6cb511179783cebc3b82affb5fedffb36e78",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/ADAUSDT-1m-2018-05.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "ADA",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "cardano",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2018-06-01T00:00:00+00:00",
+      "last_source_open_utc": "2018-06-30T23:59:00+00:00",
+      "missing_1m_minutes": 705,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2018-06-26T12:00:00Z",
+          "missing_minutes": 600,
+          "start_utc": "2018-06-26T02:00:00Z"
+        },
+        {
+          "end_exclusive_utc": "2018-06-27T14:45:00Z",
+          "missing_minutes": 105,
+          "start_utc": "2018-06-27T13:00:00Z"
+        }
+      ],
+      "month": "2018-06",
+      "native_rows": 42495,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "ADAUSDT-1m-2018-06.zip.CHECKSUM",
+        "sha256": "19c15a63496c22c9f84d63f2b1fcba5e0a427436caef13beacf5ca447457cd5e",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/ADAUSDT-1m-2018-06.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/360002770711",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2018-06.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/ADAUSDT/1m/ADAUSDT-1m-2018-06.zip",
+      "pair": "ADAUSDT",
+      "quote": "USDT",
+      "rank": 17,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1703199,
+        "name": "ADAUSDT-1m-2018-06.zip",
+        "sha256": "02aadacf60433951a497acefe2b9fd5f1225e87f5d3377f71ecbc48832f24499",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/ADAUSDT-1m-2018-06.zip"
+      },
+      "sqlite": {
+        "bytes": 5312512,
+        "name": "ADAUSDT-1m-2018-06.sqlite",
+        "sha256": "0aa7ec2c0551a29b5e6d0839a2e96da587797dead72b4e10859e2244276943d0",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/ADAUSDT-1m-2018-06.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "ADA",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "chainlink",
+      "calendar_minutes": 43200,
+      "first_pair_date_proven_by_official_notice": false,
+      "http_code": 404,
+      "month": "2018-04",
+      "native_rows": 0,
+      "no_synthetic_ohlcv": true,
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2018-04.zip.CHECKSUM",
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2018-04.zip",
+      "pair": "LINKUSDT",
+      "quote": "USDT",
+      "rank": 16,
+      "resolution": "1m",
+      "source_unavailable_does_not_prove_pair_nonexistence": true,
+      "status": "source_unavailable",
+      "symbol": "LINK",
+      "transport_status": "http_unavailable",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "chainlink",
+      "calendar_minutes": 44640,
+      "first_pair_date_proven_by_official_notice": false,
+      "http_code": 404,
+      "month": "2018-05",
+      "native_rows": 0,
+      "no_synthetic_ohlcv": true,
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2018-05.zip.CHECKSUM",
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2018-05.zip",
+      "pair": "LINKUSDT",
+      "quote": "USDT",
+      "rank": 16,
+      "resolution": "1m",
+      "source_unavailable_does_not_prove_pair_nonexistence": true,
+      "status": "source_unavailable",
+      "symbol": "LINK",
+      "transport_status": "http_unavailable",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "chainlink",
+      "calendar_minutes": 43200,
+      "first_pair_date_proven_by_official_notice": false,
+      "http_code": 404,
+      "month": "2018-06",
+      "native_rows": 0,
+      "no_synthetic_ohlcv": true,
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2018-06.zip.CHECKSUM",
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LINKUSDT/1m/LINKUSDT-1m-2018-06.zip",
+      "pair": "LINKUSDT",
+      "quote": "USDT",
+      "rank": 16,
+      "resolution": "1m",
+      "source_unavailable_does_not_prove_pair_nonexistence": true,
+      "status": "source_unavailable",
+      "symbol": "LINK",
+      "transport_status": "http_unavailable",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "litecoin",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2018-04-01T00:00:00+00:00",
+      "last_source_open_utc": "2018-04-30T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2018-04",
+      "native_rows": 43200,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "LTCUSDT-1m-2018-04.zip.CHECKSUM",
+        "sha256": "74dc931fcf3cddefdf66d4929f83c0e1ad730e572922e53b301894a797aacadc",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/LTCUSDT-1m-2018-04.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2018-04.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2018-04.zip",
+      "pair": "LTCUSDT",
+      "quote": "USDT",
+      "rank": 23,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1667462,
+        "name": "LTCUSDT-1m-2018-04.zip",
+        "sha256": "89cc853e1a9153ef1bea9e5cabe8b0fe30fbbd80eb487e827544f698c0e800f2",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/LTCUSDT-1m-2018-04.zip"
+      },
+      "sqlite": {
+        "bytes": 5427200,
+        "name": "LTCUSDT-1m-2018-04.sqlite",
+        "sha256": "d25e6c63729d8a443884aff736a2403658d175ab1a5d5ba7ccc1c8f76ec28924",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/LTCUSDT-1m-2018-04.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "LTC",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "litecoin",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2018-05-01T00:00:00+00:00",
+      "last_source_open_utc": "2018-05-31T23:59:00+00:00",
+      "missing_1m_minutes": 0,
+      "missing_intervals": [],
+      "month": "2018-05",
+      "native_rows": 44640,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "LTCUSDT-1m-2018-05.zip.CHECKSUM",
+        "sha256": "53310e4b78d42bf49469662032f75683460965d773fb3d9509dc6531283e7724",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/LTCUSDT-1m-2018-05.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2018-05.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2018-05.zip",
+      "pair": "LTCUSDT",
+      "quote": "USDT",
+      "rank": 23,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1691181,
+        "name": "LTCUSDT-1m-2018-05.zip",
+        "sha256": "041a23d30b643eae390863caf9933c59ddb09e814dfe51600c51749a9424a7d1",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/LTCUSDT-1m-2018-05.zip"
+      },
+      "sqlite": {
+        "bytes": 5599232,
+        "name": "LTCUSDT-1m-2018-05.sqlite",
+        "sha256": "07da86604da7db3084a6a674b4f034770fed3affbdc14ade6ca97c65dfece5dc",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/LTCUSDT-1m-2018-05.sqlite"
+      },
+      "status": "native_1m_complete",
+      "strict_utc_aligned": true,
+      "symbol": "LTC",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "litecoin",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2018-06-01T00:00:00+00:00",
+      "last_source_open_utc": "2018-06-30T23:59:00+00:00",
+      "missing_1m_minutes": 705,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2018-06-26T12:00:00Z",
+          "missing_minutes": 600,
+          "start_utc": "2018-06-26T02:00:00Z"
+        },
+        {
+          "end_exclusive_utc": "2018-06-27T14:45:00Z",
+          "missing_minutes": 105,
+          "start_utc": "2018-06-27T13:00:00Z"
+        }
+      ],
+      "month": "2018-06",
+      "native_rows": 42495,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "LTCUSDT-1m-2018-06.zip.CHECKSUM",
+        "sha256": "cb3a973822ae25a43684264ab9b1ffefb4397f5a6f76f467db03e23e8be46d0e",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/LTCUSDT-1m-2018-06.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2018-06.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/LTCUSDT/1m/LTCUSDT-1m-2018-06.zip",
+      "pair": "LTCUSDT",
+      "quote": "USDT",
+      "rank": 23,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1617461,
+        "name": "LTCUSDT-1m-2018-06.zip",
+        "sha256": "8e9910b38dacc3a520c28b3c081aec63ad3906869c38862ee606abb6d7f19f83",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/LTCUSDT-1m-2018-06.zip"
+      },
+      "sqlite": {
+        "bytes": 5259264,
+        "name": "LTCUSDT-1m-2018-06.sqlite",
+        "sha256": "671d79c395a1b43ffcbcce23cb85ab7b71beb41118819e4b1565e808dc82128d",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/LTCUSDT-1m-2018-06.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "LTC",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "stellar",
+      "calendar_minutes": 43200,
+      "first_pair_date_proven_by_official_notice": false,
+      "http_code": 404,
+      "month": "2018-04",
+      "native_rows": 0,
+      "no_synthetic_ohlcv": true,
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2018-04.zip.CHECKSUM",
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2018-04.zip",
+      "pair": "XLMUSDT",
+      "quote": "USDT",
+      "rank": 20,
+      "resolution": "1m",
+      "source_unavailable_does_not_prove_pair_nonexistence": true,
+      "status": "source_unavailable",
+      "symbol": "XLM",
+      "transport_status": "http_unavailable",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "stellar",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2018-05-31T09:30:00+00:00",
+      "last_source_open_utc": "2018-05-31T23:59:00+00:00",
+      "missing_1m_minutes": 43770,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2018-05-31T09:30:00Z",
+          "missing_minutes": 43770,
+          "start_utc": "2018-05-01T00:00:00Z"
+        }
+      ],
+      "month": "2018-05",
+      "native_rows": 870,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "XLMUSDT-1m-2018-05.zip.CHECKSUM",
+        "sha256": "bce9f4d2b6c5015e5a1b80629738578090d52fc4a31e6972d7f8bb353fefb832",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/XLMUSDT-1m-2018-05.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2018-05.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2018-05.zip",
+      "pair": "XLMUSDT",
+      "quote": "USDT",
+      "rank": 20,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 31868,
+        "name": "XLMUSDT-1m-2018-05.zip",
+        "sha256": "c6681d4b9b7e1a6c7026743ffe9c1bcfecab2f0674aae69cd61c863761238b22",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/XLMUSDT-1m-2018-05.zip"
+      },
+      "sqlite": {
+        "bytes": 122880,
+        "name": "XLMUSDT-1m-2018-05.sqlite",
+        "sha256": "83566d5bbc8d63dfc53be4ba1773d6e981dc5a5f13801a881837a7e7b79929ab",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/XLMUSDT-1m-2018-05.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "XLM",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "stellar",
+      "calendar_minutes": 43200,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": false,
+      "first_source_open_utc": "2018-06-01T00:00:00+00:00",
+      "last_source_open_utc": "2018-06-30T23:59:00+00:00",
+      "missing_1m_minutes": 705,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2018-06-26T12:00:00Z",
+          "missing_minutes": 600,
+          "start_utc": "2018-06-26T02:00:00Z"
+        },
+        {
+          "end_exclusive_utc": "2018-06-27T14:45:00Z",
+          "missing_minutes": 105,
+          "start_utc": "2018-06-27T13:00:00Z"
+        }
+      ],
+      "month": "2018-06",
+      "native_rows": 42495,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "XLMUSDT-1m-2018-06.zip.CHECKSUM",
+        "sha256": "ffd2f6962512af150ddc7f78946bde499465473bb572732d925c28e1a2348d50",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/XLMUSDT-1m-2018-06.zip.CHECKSUM"
+      },
+      "official_pair_notice": null,
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2018-06.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/XLMUSDT/1m/XLMUSDT-1m-2018-06.zip",
+      "pair": "XLMUSDT",
+      "quote": "USDT",
+      "rank": 20,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1388143,
+        "name": "XLMUSDT-1m-2018-06.zip",
+        "sha256": "6c2284e853fe31ade6c7670b0becd8082987e4fe4b96ccd2820933b6a6b4eed3",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/XLMUSDT-1m-2018-06.zip"
+      },
+      "sqlite": {
+        "bytes": 5074944,
+        "name": "XLMUSDT-1m-2018-06.sqlite",
+        "sha256": "a487a854b5092042a8b5a53a51f84b5adcf1d04e9d2fb002302e4f1e8be227e0",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top25-earlier-original-spot-2018-q2/XLMUSDT-1m-2018-06.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "XLM",
+      "venue": "Binance Spot"
+    }
+  ],
+  "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top25-earlier-original-spot-2018-q2",
+  "release_tag": "crypto-top25-earlier-original-spot-2018-q2",
+  "schema": "seven.crypto.top25-earlier-spot-batch.v1",
+  "source_verified_month_pairs": 8,
+  "strict_1m_month_pairs": 8,
+  "strict_utc_aligned_native_rows": 280753,
+  "target_month_pairs": 12,
+  "top25_reference": {
+    "expansion_plan_sha256": "18b4bfb17e5b4dad21b9a96761eba5518c4d0ed287ff43f440bf84c676a7b761",
+    "top250_catalog_sha256": "b548dfdb7c5f7dabd41d4669bf690c0edf99fc47ecf605665094c5dd8e621bd0"
+  },
+  "trader_interface_modified": false,
+  "unavailable_or_unverified_month_pairs": 4
+}
