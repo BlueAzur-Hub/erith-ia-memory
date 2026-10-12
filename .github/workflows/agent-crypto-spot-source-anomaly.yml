@@ -1,0 +1,81 @@
+name: Agent Crypto Original Spot Source Timestamp Diagnostics
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-spot-source-anomaly.yml'
+      - 'public/agent_crypto_erith_ia/tools/inspect_historical_month_source.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-original-feb-2018-source-audit
+  cancel-in-progress: false
+jobs:
+  validate-original-source-boundaries:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile strict source reader
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/inspect_historical_month_source.py
+          python public/agent_crypto_erith_ia/tools/archive_top5_first_market_year.py --self-test
+      - name: Inspect exact original February 2018 ETH and BNB monthly sources with official CHECKSUM
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/inspect_historical_month_source.py \
+            --output "$RUNNER_TEMP/feb-2018-timestamp-quality.json"
+      - name: Enforce evidence authenticity and forbid silent native OHLCV repairs
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os,json,pathlib
+          r=json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/"feb-2018-timestamp-quality.json").read_text())
+          assert r["schema"]=="seven.crypto.binance-2018-feb-source-anomaly-audit.v1"
+          assert r["no_native_source_rewritten"] and r["no_synthetic_ohlcv"]
+          assert {v["market_pair"] for v in r["assets"]}=={"ETHUSDT","BNBUSDT"}
+          for v in r["assets"]:
+              assert len(v["source_zip_sha256"])==64 and len(v["official_checksum_sha256"])==64
+              assert v["native_rows_in_target_month"]+v["missing_calendar_minutes"]==v["expected_calendar_minutes"]
+              assert not v["source_trade_absence_proven"]
+          print("ORIGINAL FEB 2018 SOURCES DOCUMENTED WITHOUT OHLCV ALTERATIONS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: original-feb-2018-source-diagnostics
+          path: ${{ runner.temp }}/feb-2018-timestamp-quality.json
+          retention-days: 30
+      - name: Store provenance-only diagnosis on main
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          target="$root/top5_original_source_anomalies/index.json"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p "$(dirname "$target")"
+            cp "$RUNNER_TEMP/feb-2018-timestamp-quality.json" "$target"
+            git add -- "$target"
+            git diff --cached --check
+            if git diff --cached --quiet; then exit 0; fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m "Audit exact native Binance February 2018 source time boundaries"
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
+      - name: Preserve all original and trading components
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_earlier_source_vault/
