@@ -1,0 +1,50 @@
+{
+  "bch_2019_other_source": "top25_historical_expansion/collection_index.json",
+  "bchabc_2019_other_source": "top25_historical_expansion/bchabc_pre_rename/index.json",
+  "market_lineage": [
+    {
+      "first_listing_official_evidence": {
+        "announcement": "https://www.binance.com/ar/support/announcement/detail/360019790191",
+        "official_market_end_utc": "2018-11-15T16:40:00Z",
+        "official_source_listing_notice": "https://www.binance.com/en/support/announcement/detail/115002707391",
+        "source_original_pair": "BCCUSDT",
+        "source_pair_first_available_date_utc": "2017-11-11",
+        "source_pair_first_exact_minute_unverified": true,
+        "transition": "Bitcoin Cash chain fork; BCC pre-fork is NOT silently interchangeable with BCHABC post-fork"
+      },
+      "name": "bcc-pre-fork",
+      "quarantined_native_rows": 82824,
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top25-authentic-bch-lineage-bcc-pre-fork",
+      "source_manifest_sha256": "5250ca68a8ba97ef137b5dda717e14d64a50ccaf6e746590d0fe612dad7db6c5",
+      "source_market": "BCCUSDT",
+      "source_months_verified": 12,
+      "strict_native_1m": 424235,
+      "unverified_source_months": 0
+    },
+    {
+      "first_listing_official_evidence": {
+        "announcement": "https://www.binance.com/en/support/announcement/detail/360019875411",
+        "official_market_start_utc": "2018-11-16T08:00:00Z",
+        "source_original_pair": "BCHABCUSDT",
+        "transition": "The post-fork BCHABCUSDT trade market is distinct from the pre-fork BCCUSDT"
+      },
+      "name": "bchabc-2018",
+      "quarantined_native_rows": 0,
+      "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top25-authentic-bch-lineage-bchabc-2018",
+      "source_manifest_sha256": "cf5937749ecd5579097ec896af6b75f818ccd389f497c89f868c18d6ac158ce0",
+      "source_market": "BCHABCUSDT",
+      "source_months_verified": 2,
+      "strict_native_1m": 65760,
+      "unverified_source_months": 0
+    }
+  ],
+  "no_synthetic_rows": true,
+  "original_markets_not_merged": true,
+  "original_strict_1m": 489995,
+  "quarantined_source_rows": 82824,
+  "schema": "seven.crypto.top25-bch-source-lineage-consolidation.v1",
+  "source_batch_count": 2,
+  "source_month_candidates": 14,
+  "verified_source_months": 14,
+  "warning": "Chain fork BCC\u2192BCHABC differs from market symbol change BCHABC\u2192BCH. Do not automatically splice prices across fork."
+}
