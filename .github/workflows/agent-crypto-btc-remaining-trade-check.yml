@@ -1,0 +1,112 @@
+name: Agent Crypto BTC Remaining Original Trades Audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-btc-remaining-trade-check.yml'
+      - 'public/agent_crypto_erith_ia/tools/audit_remaining_btc_trade_gaps.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-btc-remaining-original-trades
+  cancel-in-progress: false
+jobs:
+  original-trade-shards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate source locks, parser and guardrails before historical network requests
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/audit_remaining_btc_trade_gaps.py
+          python public/agent_crypto_erith_ia/tools/btc_trade_gap_test.py
+      - name: Download only unchecked BTC Spot trade dates and verify Binance ZIP with official CHECKSUM
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/audit_remaining_btc_trade_gaps.py \
+            --shard ${{ matrix.shard }} --shards 4 \
+            --output "$RUNNER_TEMP/btc-trade-shard-${{ matrix.shard }}.json"
+      - name: Archive per-day source authenticity or explicit unavailability
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: btc-trade-shard-${{ matrix.shard }}
+          path: ${{ runner.temp }}/btc-trade-shard-${{ matrix.shard }}.json
+          retention-days: 30
+          if-no-files-found: ignore
+      - name: Verify protected sources and trading application remain untouched
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_verified_gap_months/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_daily_reference/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_trade_gap_pilot/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/
+  consolidate:
+    needs: original-trade-shards
+    if: needs.original-trade-shards.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read four independent shard reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: btc-trade-shard-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/btc-raw-trade-checks
+      - name: Fail closed on missing evidence and reconcile all 4971 original gap-minutes
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/audit_remaining_btc_trade_gaps.py \
+            --merge "$RUNNER_TEMP/btc-raw-trade-checks" \
+            --output "$RUNNER_TEMP/btc-remaining-original-trades.json"
+          sha256sum "$RUNNER_TEMP/btc-remaining-original-trades.json"
+      - name: Retain independently reproducible proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: btc-remaining-original-trade-proof
+          path: ${{ runner.temp }}/btc-remaining-original-trades.json
+          retention-days: 30
+      - name: Publish only the derived audit, preserving every canonical source
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          target="$root/btc_remaining_trade_audit/index.json"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            for source in \
+              btc_verified_gap_months/index.json \
+              btc_daily_reference/index.json \
+              btc_trade_gap_pilot/index.json; do
+              old=$(sha256sum "$root/$source" | cut -d' ' -f1)
+              new=$(git show "origin/main:$root/$source" | sha256sum | cut -d' ' -f1)
+              test "$old" = "$new" || { echo "::error::Protected source changed during audit"; exit 1; }
+            done
+            git reset --hard origin/main
+            mkdir -p "$(dirname "$target")"
+            cp "$RUNNER_TEMP/btc-remaining-original-trades.json" "$target"
+            git add -- "$target"
+            git diff --cached --check
+            if git diff --cached --quiet; then echo "NOOP: report identical"; exit 0; fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Audit 23 remaining BTC native Spot trade gap days with source checksum evidence'
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
