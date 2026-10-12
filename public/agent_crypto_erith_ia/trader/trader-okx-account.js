@@ -52,9 +52,10 @@ function asset(account,ccy){
   const fu=fundingRows(account).find(row=>String(row?.ccy||"").toUpperCase()===code)||null;
   const trTotal=Number(tr?.cashBal??tr?.eq),trAvail=Number(tr?.availBal),trFrozen=Number(tr?.frozenBal);
   const fuTotal=Number(fu?.bal),fuAvail=Number(fu?.availBal),fuFrozen=Number(fu?.frozenBal);
+  const trEqUsd=Number(tr?.eqUsd);
   const present=Boolean(tr||fu);
   const sum=(a,b)=>Number.isFinite(a)&&Number.isFinite(b)?a+b:Number.isFinite(a)?a:Number.isFinite(b)?b:NaN;
-  return {present,total:sum(trTotal,fuTotal),available:sum(trAvail,fuAvail),frozen:sum(trFrozen,fuFrozen),trading:Number.isFinite(trTotal)?trTotal:NaN,funding:Number.isFinite(fuTotal)?fuTotal:NaN};
+  return {present,total:sum(trTotal,fuTotal),available:sum(trAvail,fuAvail),frozen:sum(trFrozen,fuFrozen),trading:Number.isFinite(trTotal)?trTotal:NaN,funding:Number.isFinite(fuTotal)?fuTotal:NaN,eqUsd:Number.isFinite(trEqUsd)?trEqUsd:NaN};
 }
 function feeLabel(payload){
   const row=Array.isArray(payload?.fees)?payload.fees[0]:null;
@@ -78,12 +79,19 @@ function showAuth(show,message="Session Aether Trust Bridge requise"){
   if(show)text("authstatus",message);
 }
 function paintData(account,orders,fills,fees){
-  paintAsset("BTC",asset(account,"BTC"));
-  paintAsset("USDC",asset(account,"USDC"));
-  paintAsset("EUR",asset(account,"EUR"));
+  const btc=asset(account,"BTC"),usdc=asset(account,"USDC"),eur=asset(account,"EUR");
+  const fillRows=Array.isArray(fills?.fills_3m)?fills.fills_3m:[];
+  paintAsset("BTC",btc);
+  paintAsset("USDC",usdc);
+  paintAsset("EUR",eur);
+  text("positionvalue",Number.isFinite(btc.eqUsd)?btc.eqUsd.toLocaleString("fr-FR",{style:"currency",currency:"USD",maximumFractionDigits:2}):"—");
+  text("avgcost","NON PROUVÉ");
+  text("committed","NON PROUVÉ");
+  text("pnl","EN ATTENTE HISTORIQUE");
+  text("positionproof",fillRows.length?(fillRows.length+" fill(s) sur 3 mois · couverture d'acquisition à vérifier"):"0 fill sur 3 mois · base d'acquisition antérieure ou externe à retrouver");
   text("pending",Array.isArray(orders?.pending)?orders.pending.length:0);
   text("history",Array.isArray(orders?.history_3m)?orders.history_3m.length:0);
-  text("fills",Array.isArray(fills?.fills_3m)?fills.fills_3m.length:0);
+  text("fills",fillRows.length);
   text("fees",feeLabel(fees));
   text("bridge",`Bridge ${account?.bridge_version||orders?.bridge_version||"—"} · ${account?.site||"OKX"} · READ ONLY`);
   const date=new Date(account?.fetched_at||Date.now());
@@ -164,6 +172,11 @@ function mount(){
       "#traderOkxAccountPanel .okx-ro{margin-left:auto;padding:4px 8px;border:1px solid rgba(88,239,156,.26);border-radius:999px;color:#8cf2b5;font-size:10px;letter-spacing:.08em}",
       "#traderOkxAccountPanel .okx-body{border-top:1px solid rgba(83,222,222,.14);padding:10px 14px 12px}",
       "#traderOkxAccountPanel .okx-primary{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:8px}",
+      "#traderOkxAccountPanel .okx-position{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:7px}",
+      "#traderOkxAccountPanel .okx-position .okx-card{border-color:rgba(255,209,117,.16)}",
+      "#traderOkxAccountPanel .okx-position [data-okx-positionvalue]{color:#fff1c7}",
+      "#traderOkxAccountPanel .okx-position [data-okx-avgcost],#traderOkxAccountPanel .okx-position [data-okx-committed],#traderOkxAccountPanel .okx-position [data-okx-pnl]{font-size:11px;color:#d6b879}",
+      "#traderOkxAccountPanel .okx-position-proof{margin:6px 2px 0;color:#8ea4ba;font-size:9px}",
       "#traderOkxAccountPanel .okx-activity{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:7px}",
       "#traderOkxAccountPanel .okx-card{min-width:0;padding:9px 11px;border:1px solid rgba(142,164,186,.14);border-radius:9px;background:rgba(5,18,28,.58)}",
       "#traderOkxAccountPanel .okx-card.primary{background:linear-gradient(180deg,rgba(8,31,43,.82),rgba(4,19,29,.72));border-color:rgba(83,222,222,.22)}",
@@ -180,8 +193,8 @@ function mount(){
       "#traderOkxAccountPanel .okx-auth input{min-width:0;width:100%;height:34px;box-sizing:border-box}",
       "#traderOkxAccountPanel .okx-auth button{height:34px;white-space:nowrap}",
       "#traderOkxAccountPanel .okx-auth small{color:#d9c08d;white-space:nowrap}",
-      "@media(max-width:1200px){#traderOkxAccountPanel .okx-primary{grid-template-columns:1fr 1fr 1fr}#traderOkxAccountPanel .okx-activity{grid-template-columns:repeat(2,minmax(0,1fr))}}",
-      "@media(max-width:760px){#traderOkxAccountPanel .okx-primary,#traderOkxAccountPanel .okx-activity{grid-template-columns:1fr}#traderOkxAccountPanel .okx-auth{grid-template-columns:1fr}#traderOkxAccountPanel .okx-auth small{white-space:normal}.okx-ro{margin-left:0!important}}"
+      "@media(max-width:1200px){#traderOkxAccountPanel .okx-primary{grid-template-columns:1fr 1fr 1fr}#traderOkxAccountPanel .okx-position,#traderOkxAccountPanel .okx-activity{grid-template-columns:repeat(2,minmax(0,1fr))}}",
+      "@media(max-width:760px){#traderOkxAccountPanel .okx-primary,#traderOkxAccountPanel .okx-position,#traderOkxAccountPanel .okx-activity{grid-template-columns:1fr}#traderOkxAccountPanel .okx-auth{grid-template-columns:1fr}#traderOkxAccountPanel .okx-auth small{white-space:normal}.okx-ro{margin-left:0!important}}"
     ].join("");document.head.appendChild(style);
   }
   const p=document.createElement("details");p.id=PANEL_ID;p.open=true;p.dataset.state="loading";
@@ -192,8 +205,13 @@ function mount(){
     '<article class="okx-card primary"><span>BTC détenu</span><b data-okx-btc>—</b><small data-okx-btcdetail>Trading / Funding</small></article>',
     '<article class="okx-card primary"><span>USDC disponible</span><b data-okx-usdc>—</b><small data-okx-usdcdetail>Trading / Funding</small></article>',
     '<article class="okx-card primary"><span>EUR disponible</span><b data-okx-eur>—</b><small data-okx-eurdetail>Trading / Funding</small></article>',
-    '</div><div class="okx-activity">',
-    '<article class="okx-card"><span>Ordres ouverts</span><b data-okx-pending>—</b><small>SPOT OKX</small></article>',
+    '</div><div class="okx-position">',
+    '<article class="okx-card"><span>Valeur BTC actuelle</span><b data-okx-positionvalue>—</b><small>Équivalent USD retourné par OKX</small></article>',
+    '<article class="okx-card"><span>Coût moyen acquisition</span><b data-okx-avgcost>—</b><small>PRU · seulement si historique prouvé</small></article>',
+    '<article class="okx-card"><span>Capital engagé</span><b data-okx-committed>—</b><small>Achats + frais prouvés</small></article>',
+    '<article class="okx-card"><span>P&L latent</span><b data-okx-pnl>—</b><small>Valeur actuelle − base de coût</small></article>',
+    '</div><p class="okx-position-proof" data-okx-positionproof>Historique d’acquisition en cours de qualification.</p><div class="okx-activity">',
+    '<article class="okx-card"><span>Ordres ouverts</span><b data-okx-pending>—</b><small>SPOT OKX</small></article>'
     '<article class="okx-card"><span>Historique</span><b data-okx-history>—</b><small>ordres · 3 mois</small></article>',
     '<article class="okx-card"><span>Fills</span><b data-okx-fills>—</b><small>exécutions · 3 mois</small></article>',
     '<article class="okx-card"><span>Frais BTC-USDC</span><b data-okx-fees>—</b><small>barème du compte</small></article>',
