@@ -1,0 +1,348 @@
+{
+  "schema": "seven.crypto.top25-instrument-resolution.v1",
+  "date_utc": "2026-10-12",
+  "canonical_ranked_catalog": {
+    "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+    "git_blob_sha": "5446dc85c93660ce80a85db7fe2b32093fb2d8ff"
+  },
+  "canonical_top25_plan": {
+    "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/index.json",
+    "git_blob_sha": "ffef541fccb56d42d7187960c44e706f4a962466"
+  },
+  "canonical_native_daily_catalog": {
+    "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json",
+    "git_blob_sha": "b0081d8085b4deb9b1ec17e41e291d5cbba4f959"
+  },
+  "universe": "ranks 11 to 25 exact canonical IDs, not substitutes",
+  "source_scope": [
+    {
+      "rank": 11,
+      "id": "hyperliquid",
+      "symbol": "HYPE",
+      "asset_name": "Hyperliquid",
+      "current_native_1m_source": "Bitget Spot native 1m HTTPS",
+      "current_complete_native_1m_months": 3,
+      "source_daily": null,
+      "market": "HYPEUSDT",
+      "venue": "Bitget Spot",
+      "status": "native_1m_existing_3_months",
+      "note": "DO NOT use the Binance/Bitget HYPE perpetual-futures contract as Spot history",
+      "first_minute_proof": null,
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 12,
+      "id": "dogecoin",
+      "symbol": "DOGE",
+      "asset_name": "Dogecoin",
+      "current_native_1m_source": "Binance Spot official native 1m ZIPs",
+      "current_complete_native_1m_months": 62,
+      "source_daily": null,
+      "market": "DOGEUSDT",
+      "venue": "Binance Spot",
+      "status": "historical_month_sources_archived",
+      "first_minute_proof": {
+        "utc": "2019-07-05T12:00:00Z",
+        "url": "https://www.binance.com/en-IN/support/announcement/detail/360030488211"
+      },
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 13,
+      "id": "usds",
+      "symbol": "USDS",
+      "asset_name": "USDS",
+      "current_native_1m_source": "Binance Spot official native 1m ZIPs",
+      "current_complete_native_1m_months": 5,
+      "source_daily": null,
+      "market": "USDSUSDT",
+      "venue": "Binance Spot",
+      "status": "2026_official_rebrand_with_predecessor_DAI",
+      "first_minute_proof": {
+        "utc": "2026-04-09T08:00:00Z",
+        "url": "https://www.binance.com/en/support/announcement/detail/3c4abe4314554c9592d9a2f433c34c8d"
+      },
+      "lineage": {
+        "previous_token": "DAI",
+        "conversion_ratio": "1 DAI = 1 USDS",
+        "conversion_is_not_market_candle_conversion": true
+      },
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 14,
+      "id": "monero",
+      "symbol": "XMR",
+      "asset_name": "Monero",
+      "current_native_1m_source": "Binance Spot official native 1m ZIPs",
+      "current_complete_native_1m_months": 11,
+      "source_daily": null,
+      "market": "XMRUSDT",
+      "venue": "Binance Spot",
+      "status": "historical_delisted_spot",
+      "market_end": {
+        "utc": "2024-02-20T03:00:00Z",
+        "url": "https://www.binance.com/en-IN/support/announcement/detail/f73b083ba6834771b07dbe5319917ae5"
+      },
+      "note": "Never use perpetuals after delisting as Spot",
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 15,
+      "id": "whitebit",
+      "symbol": "WBT",
+      "asset_name": "WhiteBIT Coin",
+      "current_native_1m_source": null,
+      "current_complete_native_1m_months": 0,
+      "source_daily": null,
+      "market": null,
+      "venue": null,
+      "status": "no_original_instrument_confirmed",
+      "note": "Specific WBT token identity must be proved, do not infer WBTUSDT on Binance",
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 16,
+      "id": "chainlink",
+      "symbol": "LINK",
+      "asset_name": "Chainlink",
+      "current_native_1m_source": "Binance Spot official native 1m ZIPs",
+      "current_complete_native_1m_months": 62,
+      "source_daily": null,
+      "market": "LINKUSDT",
+      "venue": "Binance Spot",
+      "status": "official_listing_found_and_2019_2021_sources_archived",
+      "first_minute_proof": {
+        "utc": "2019-01-16T10:00:00Z",
+        "url": "https://www.binance.com/es-LA/support/announcement/detail/360021982271"
+      },
+      "note": "2018 LINKUSDT original monthly ZIPs not available; LINK/BTC separate pair if sourced",
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 17,
+      "id": "cardano",
+      "symbol": "ADA",
+      "asset_name": "Cardano",
+      "current_native_1m_source": "Binance Spot official native 1m ZIPs",
+      "current_complete_native_1m_months": 62,
+      "source_daily": null,
+      "market": "ADAUSDT",
+      "venue": "Binance Spot",
+      "status": "native_1m_archived_2018_2021",
+      "first_minute_proof": null,
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 18,
+      "id": "leo-token",
+      "symbol": "LEO",
+      "asset_name": "LEO Token",
+      "current_native_1m_source": null,
+      "current_complete_native_1m_months": 0,
+      "source_daily": {
+        "market": "LEO-USDT",
+        "venue": "OKX Spot",
+        "bar": "1Dutc",
+        "source_original_candles": 2465,
+        "source_release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s",
+        "source_sha256": "cb691957a55bc91e837c8f81c55956a157de0db4c8ba67c99e0bbca2900f2ed2"
+      },
+      "market": "LEO-USDT",
+      "venue": "OKX Spot",
+      "status": "original_native_daily_existing",
+      "first_minute_proof": null,
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 19,
+      "id": "rain",
+      "symbol": "RAIN",
+      "asset_name": "Rain",
+      "current_native_1m_source": null,
+      "current_complete_native_1m_months": 0,
+      "source_daily": {
+        "market": "RAIN-USDT",
+        "venue": "KuCoin Spot",
+        "bar": "1D",
+        "source_original_candles": 268,
+        "source_release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5",
+        "source_sha256": "75fea4cb0ef3651303a6f1c46a60f95ee95e6b48da0ba0aa12bda801b226358a"
+      },
+      "market": "RAIN-USDT",
+      "venue": "KuCoin Spot",
+      "status": "original_native_daily_existing",
+      "first_minute_proof": {
+        "utc": "2026-01-06T10:00:00Z",
+        "url": "https://www.kucoin.com/announcement/en-rain-rain-gets-listed-on-kucoin"
+      },
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 20,
+      "id": "stellar",
+      "symbol": "XLM",
+      "asset_name": "Stellar",
+      "current_native_1m_source": "Binance Spot official native 1m ZIPs",
+      "current_complete_native_1m_months": 62,
+      "source_daily": null,
+      "market": "XLMUSDT",
+      "venue": "Binance Spot",
+      "status": "native_1m_archived_2018_2021",
+      "first_minute_proof": null,
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 21,
+      "id": "near",
+      "symbol": "NEAR",
+      "asset_name": "NEAR Protocol",
+      "current_native_1m_source": "Binance Spot official native 1m ZIPs",
+      "current_complete_native_1m_months": 62,
+      "source_daily": null,
+      "market": "NEARUSDT",
+      "venue": "Binance Spot",
+      "status": "original_spot_listing_proven_needs_earlier_backfill",
+      "first_minute_proof": {
+        "utc": "2020-10-14T05:00:00Z",
+        "url": "https://www.binance.com/en/support/announcement/detail/1110b21de22e4633bc34710cc4ed2ce3"
+      },
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 22,
+      "id": "bitcoin-cash",
+      "symbol": "BCH",
+      "asset_name": "Bitcoin Cash",
+      "current_native_1m_source": "Binance Spot official native 1m ZIPs",
+      "current_complete_native_1m_months": 62,
+      "source_daily": null,
+      "market": "BCHUSDT",
+      "venue": "Binance Spot",
+      "status": "native_fork_lineage_under_source_verification",
+      "lineage": [
+        {
+          "pair": "BCCUSDT",
+          "first_date_utc": "2017-11-11",
+          "evidence": "https://www.binance.com/en/support/announcement/detail/115002707391",
+          "kind": "before_fork"
+        },
+        {
+          "pair": "BCHABCUSDT",
+          "start_utc": "2018-11-16T08:00:00Z",
+          "evidence": "https://www.binance.com/en/support/announcement/detail/360019875411",
+          "kind": "after_fork"
+        },
+        {
+          "pair": "BCHUSDT",
+          "rename_utc": "2019-11-28T10:00:00Z",
+          "evidence": "https://www.binance.com/zh-TC/support/announcement/detail/360037219511",
+          "kind": "symbol_rename"
+        }
+      ],
+      "warning": "Do NOT splice BCC and BCHABC across blockchain fork as identical OHLCV.",
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 23,
+      "id": "litecoin",
+      "symbol": "LTC",
+      "asset_name": "Litecoin",
+      "current_native_1m_source": "Binance Spot official native 1m ZIPs",
+      "current_complete_native_1m_months": 62,
+      "source_daily": null,
+      "market": "LTCUSDT",
+      "venue": "Binance Spot",
+      "status": "original_2018_2021_archived_offgrid_february_2018",
+      "first_minute_proof": null,
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 24,
+      "id": "canton-network",
+      "symbol": "CC",
+      "asset_name": "Canton",
+      "current_native_1m_source": null,
+      "current_complete_native_1m_months": 0,
+      "source_daily": {
+        "market": "CC-USDT",
+        "venue": "OKX Spot",
+        "bar": "1Dutc",
+        "source_original_candles": 231,
+        "source_release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s",
+        "source_sha256": "0d3c356cd3d14763b7e079d13354aee8f55dbd452c0193a1747a36f32330c797"
+      },
+      "market": "CC-USDT",
+      "venue": "OKX Spot",
+      "status": "original_native_daily_existing",
+      "first_minute_proof": {
+        "utc": "2026-02-12T10:00:00Z",
+        "url": "https://www.okx.com/en-sg/help/okx-to-list-cc-canton-for-spot-trading"
+      },
+      "ranked_id_confirmed": true
+    },
+    {
+      "rank": 25,
+      "id": "ethena-usde",
+      "symbol": "USDE",
+      "asset_name": "Ethena USDe",
+      "current_native_1m_source": "Binance Spot official native 1m ZIPs",
+      "current_complete_native_1m_months": 12,
+      "source_daily": null,
+      "market": "USDEUSDT",
+      "venue": "Binance Spot",
+      "status": "2025_spot_listing_original_minute_backfill_open",
+      "first_minute_proof": {
+        "utc": "2025-09-09T12:00:00Z",
+        "url": "https://www.binance.com/en-AE/support/announcement/detail/aebac85d4dd3470c9cd52df6f98d0811"
+      },
+      "note": "USDe is not ENA governance token",
+      "ranked_id_confirmed": true
+    }
+  ],
+  "subprojects": {
+    "bcc_bchabc_original_sources": {
+      "workflow_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38202645141",
+      "status": "running_not_yet_counted"
+    },
+    "native_daily_venue_already_present": [
+      "leo-token",
+      "rain",
+      "canton-network"
+    ],
+    "real_exchange_listing_or_delisting_proved": [
+      "dogecoin",
+      "usds",
+      "monero",
+      "chainlink",
+      "rain",
+      "near",
+      "bitcoin-cash",
+      "canton-network",
+      "ethena-usde"
+    ],
+    "official_1m_source_to_collect_next": [
+      "near",
+      "monero",
+      "ethena-usde",
+      "usds"
+    ],
+    "identity_or_original_bulk_source_still_needs_evidence": [
+      "whitebit",
+      "hyperliquid",
+      "leo-token",
+      "rain",
+      "canton-network"
+    ]
+  },
+  "policy": {
+    "spot_not_futures": true,
+    "no_cross_quote_conversion": true,
+    "first_listing_not_coin_creation": true,
+    "no_price_splicing_over_fork": true,
+    "no_synthetic_candles": true,
+    "original_timestamp_retained": true,
+    "no_claim_of_complete_top25": true,
+    "trader_interface_unchanged": true
+  }
+}
