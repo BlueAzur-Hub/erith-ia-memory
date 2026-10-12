@@ -1,0 +1,181 @@
+{
+  "schema": "seven.crypto.top10-expansion-plan.v1",
+  "snapshot_date": "2026-10-12",
+  "ranked_reference": "top250_multisource_coverage/index.json",
+  "source_snapshot_git_blob_sha": "5446dc85c93660ce80a85db7fe2b32093fb2d8ff",
+  "universe_locked_to_ranked_ids": true,
+  "assets": [
+    {
+      "rank": 1,
+      "id": "bitcoin",
+      "name": "Bitcoin",
+      "symbol": "BTC",
+      "existing_complete_native_1m_months": 82,
+      "existing_complete_native_1m_candles": 3598560,
+      "existing_monthly_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "method": "existing Top 5 historical or original complete month coverage",
+      "need": "coverage proof and any native gaps outstanding"
+    },
+    {
+      "rank": 2,
+      "id": "ethereum",
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "existing_complete_native_1m_months": 62,
+      "existing_complete_native_1m_candles": 2717280,
+      "existing_monthly_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "method": "existing Top 5 historical or original complete month coverage",
+      "need": "coverage proof and any native gaps outstanding"
+    },
+    {
+      "rank": 3,
+      "id": "tether",
+      "name": "Tether",
+      "symbol": "USDT",
+      "existing_complete_native_1m_months": 0,
+      "existing_complete_native_1m_candles": 0,
+      "existing_monthly_source": null,
+      "quote": "USDT",
+      "method": "independent KuCoin USDT-USDC native daily 1D, not Binance USDT-USDT",
+      "existing_native_daily": {
+        "venue": "KuCoin Spot",
+        "market": "USDT-USDC",
+        "quote": "USDC",
+        "bars": 2828,
+        "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-170e06b173cd",
+        "source_file_sha256": "7110d3bcd6bcf7033cdf0f0b3584e72da3fbf92ef5ef004603a29cf9883a88ad"
+      },
+      "need": "native independent 1m source and full period audit not yet found"
+    },
+    {
+      "rank": 4,
+      "id": "binancecoin",
+      "name": "BNB",
+      "symbol": "BNB",
+      "existing_complete_native_1m_months": 62,
+      "existing_complete_native_1m_candles": 2717280,
+      "existing_monthly_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "method": "existing Top 5 historical or original complete month coverage",
+      "need": "coverage proof and any native gaps outstanding"
+    },
+    {
+      "rank": 5,
+      "id": "ripple",
+      "name": "XRP",
+      "symbol": "XRP",
+      "existing_complete_native_1m_months": 62,
+      "existing_complete_native_1m_candles": 2717280,
+      "existing_monthly_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "method": "existing Top 5 historical or original complete month coverage",
+      "need": "coverage proof and any native gaps outstanding"
+    },
+    {
+      "rank": 6,
+      "id": "usd-coin",
+      "name": "USDC",
+      "symbol": "USDC",
+      "existing_complete_native_1m_months": 56,
+      "existing_complete_native_1m_candles": 2456640,
+      "existing_monthly_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "method": "original Binance Spot 1m archive + official CHECKSUM planned; external source unchanged",
+      "target_pair": "USDCUSDT",
+      "first_market_evidence": {
+        "date": "2018-12-15T03:00:00Z",
+        "official": "https://www.binance.com/en/support/announcement/detail/360020702932"
+      },
+      "status": "backfill_pending"
+    },
+    {
+      "rank": 7,
+      "id": "solana",
+      "name": "Solana",
+      "symbol": "SOL",
+      "existing_complete_native_1m_months": 60,
+      "existing_complete_native_1m_candles": 2632320,
+      "existing_monthly_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "method": "existing Top 5 historical or original complete month coverage",
+      "need": "coverage proof and any native gaps outstanding"
+    },
+    {
+      "rank": 8,
+      "id": "tron",
+      "name": "TRON",
+      "symbol": "TRX",
+      "existing_complete_native_1m_months": 61,
+      "existing_complete_native_1m_candles": 2672640,
+      "existing_monthly_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "method": "original Binance Spot 1m archive + official CHECKSUM planned; external source unchanged",
+      "target_pair": "TRXUSDT",
+      "first_market_evidence": {
+        "date": null,
+        "official": null,
+        "note": "TRXUSDT exact first listing not yet verified; infer no earlier launch date from archive absence"
+      },
+      "status": "backfill_pending"
+    },
+    {
+      "rank": 9,
+      "id": "figure-heloc",
+      "name": "Figure Heloc",
+      "symbol": "FIGR_HELOC",
+      "existing_complete_native_1m_months": 0,
+      "existing_complete_native_1m_candles": 0,
+      "existing_monthly_source": null,
+      "quote": "USDT",
+      "method": "Figure Markets provider; no Binance mapping established",
+      "need": "Verify the exact Figure Markets spot pair, official bulk OHLCV endpoint and permitted historical downloads; never invent a Binance pair"
+    },
+    {
+      "rank": 10,
+      "id": "zcash",
+      "name": "Zcash",
+      "symbol": "ZEC",
+      "existing_complete_native_1m_months": 61,
+      "existing_complete_native_1m_candles": 2672640,
+      "existing_monthly_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "method": "original Binance Spot 1m archive + official CHECKSUM planned; external source unchanged",
+      "target_pair": "ZECUSDT",
+      "first_market_evidence": {
+        "date": "2019-03-21T04:00:00Z",
+        "official": "https://www.binance.com/en/support/announcement/detail/360025239772"
+      },
+      "status": "backfill_pending"
+    }
+  ],
+  "actions": {
+    "binance_backfill": [
+      "usd-coin",
+      "tron",
+      "zcash"
+    ],
+    "native_daily_coverage": [
+      "tether"
+    ],
+    "provider_verification": [
+      "figure-heloc"
+    ],
+    "existing": [
+      "bitcoin",
+      "ethereum",
+      "binancecoin",
+      "ripple",
+      "solana"
+    ]
+  },
+  "policy": {
+    "never_replace_ranked_assets": true,
+    "no_synthetic_candles": true,
+    "never_conflate_USD_USDC_USDT": true,
+    "pairs_venue_specific": true,
+    "first_listing_not_coin_creation": true,
+    "original_trader_interface_unchanged": true
+  }
+}
