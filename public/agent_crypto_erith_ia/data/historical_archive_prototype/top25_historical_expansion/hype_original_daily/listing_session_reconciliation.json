@@ -1,0 +1,39 @@
+{
+  "schema": "seven.crypto.hype-original-bitget-native-day-listing-reconciliation.v1",
+  "historical_frozen_source_report": {
+    "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/hype_original_daily/index.json",
+    "git_blob_sha": "80ead9c5c0e3f0a28686ddd93ec9c430e50381da"
+  },
+  "original_venue": "Bitget Spot",
+  "original_market": "HYPEUSDT",
+  "rank": 11,
+  "coin_id": "hyperliquid",
+  "source_native_interval": "1D",
+  "source_native_session_utc_open": "2024-12-17T16:00:00Z",
+  "source_native_session_end_exclusive": "2024-12-18T16:00:00Z",
+  "official_spot_pair_open": "2024-12-18T10:00:00Z",
+  "official_spot_first_listing": "https://www.bitget.com/fr/support/articles/12560603819985",
+  "opening_at_native_session_hours": 18,
+  "source_open_predates_first_market_trade_possible_but_full_daily_session_contains_listing": true,
+  "original_bar_timestamp_is_not_the_timestamp_of_first_executed_trade": true,
+  "native_session_is_utc_plus_8": true,
+  "original_ohlcv_not_modified": true,
+  "previous_1d_source_rows_observed": 644,
+  "official_exchange_response_sha256": [
+    "72c5529689472ced72faedc0f9a2653bb0954c04ae89af330dc784a3a2f6203b",
+    "8210d4f477d4cb84effbdc38af2d9a1ab8ea3d4aa42e2bd552942cd7d0c6ad3c",
+    "504ebf30ae95d4a116bdbdf76349fce0876e8d5e14a794d94f2efcc4332a9576",
+    "b5976daff6e747b41a904204970b3e7e923b12c5ae3daecf7b192985ed713d51",
+    "efa910bdd6e2cf24d9427dee7eaf03c2fa982072951ef0d03f9ab2e800584b36",
+    "cfd377389f161e285f172d3f2bf9a67eb5f421057bb9e11d6f610e51c171106d",
+    "736f05c808cbab2c41ab0c16109f33dff601f211a1ca0d8651fc3393aa5266c9",
+    "052b3951239e64694b402da345dd491b6cdc6402af5aecf6810e55c59b93749b",
+    "a968d631466afc75480616b64f0365669d61cc280259a8b10026dfa904dc9df7"
+  ],
+  "source_digests_not_exchange_signed": true,
+  "audit_classification": "native_UTC_plus_8_day_session_includes_listing_not_an_unproven_prelisting_trade",
+  "accounting": "A legitimate daily candle may have a session open before trading started within that day. Accept only when source timestamp is exactly the native UTC+8 midnight session containing the official open, not because trading before listing is inferred.",
+  "no_synthetic_candles": true,
+  "no_canonical_1m_revision": true,
+  "trader_interface_unchanged": true
+}
