@@ -24,6 +24,8 @@ La présence dans les catalogues de juillet et d'août est connue, mais **ces de
 - Somme des résultats nets : **+10,6559 USDT** pour les **115 tickets distincts de 20 USDT**.
 - Moyenne par opération : **+0,0927 USDT** (environ 9 centimes USDT).
 
+Les résultats par actif affichés dans le tableau sont arrondis à quatre décimales : leur somme affichée est de +10,6561 USDT, contre **+10,6559 USDT calculés avant l'arrondi par actif** (écart d'arrondi de 0,0002 USDT).
+
 **IMPORTANT : +10,6559 USDT n'est ni un revenu réel, ni un taux de rendement, ni une preuve de rentabilité future.** Les tickets ne constituent pas un portefeuille à capital fixe ; les signaux de plusieurs cryptos peuvent se chevaucher. Le choix des 20 actifs est une sélection actuelle et non une reconstitution sans biais des actifs qui auraient été connus à l'époque. Le mois analysé n'est pas une validation hors-échantillon indépendante.
 
 | Actif | Opérations | Positives | Résultat fictif net (USDT) | Variation du cours septembre (conservation brute) |
