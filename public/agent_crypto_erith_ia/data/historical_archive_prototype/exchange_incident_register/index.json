@@ -39,6 +39,10 @@
     "btc_daily_reference/index.json": {
       "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_daily_reference/index.json",
       "git_blob_sha": "cbfa67a5d14ff56146e12fa5d83f0672cee802a6"
+    },
+    "btc_remaining_trade_audit/index.json": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json",
+      "git_blob_sha": "ac0de5f81eb0c1db7caaca2e5a1312b617628621"
     }
   },
   "btc": {
@@ -47,8 +51,8 @@
     "total_missing_minutes": 5881,
     "windows_count": 27,
     "coinbase_usd_positive_minutes": 5881,
-    "binance_trade_zip_zero_trade_proven_minutes": 910,
-    "binance_trade_unchecked_minutes": 4971,
+    "binance_trade_zip_zero_trade_proven_minutes": 5881,
+    "binance_trade_unchecked_minutes": 0,
     "windows_with_relevant_official_notice": 26,
     "windows_without_notice_proof": 1,
     "official_notice_categories": {
@@ -72,7 +76,12 @@
         "binance_trades": {
           "original_zip_checked": true,
           "zero_trades_in_window": true,
-          "zip_sha256": "a7f370d401b868ea656a9f7ab9aa11edf975c96d1bf1cf249dae63917e87427a"
+          "original_file_date": "2018-06-26",
+          "zip_sha256": "a7f370d401b868ea656a9f7ab9aa11edf975c96d1bf1cf249dae63917e87427a",
+          "checksum_sha256": "4f21ad7785adb6c86a4f20fa93fe3c8c82d3e2a8e2e0eeddb52027126cceaf74",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_trade_gap_pilot/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -107,9 +116,14 @@
         "missing_native_1m_minutes": 105,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2018-06-27",
+          "zip_sha256": "6f09a481cacbd2528daf062540bb69efbcfc874b9726598106fe287d08ff1d63",
+          "checksum_sha256": "c77116cc5360b4aaca4b3ef5cee047a5a67321d5a89aecaaf0e2f399383cc701",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -137,9 +151,14 @@
         "missing_native_1m_minutes": 457,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2018-07-04",
+          "zip_sha256": "cac2cfb8b013627d221994d4a9304dae780d7a21d1c52cdd88e7e7c12e40f324",
+          "checksum_sha256": "d02aa4caa29362fdfcc486a9eb45d2e02c935bf2d7e7fed0d31ec9a705e23624",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -167,9 +186,14 @@
         "missing_native_1m_minutes": 210,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2018-10-19",
+          "zip_sha256": "4363b7ce374f76376fe1b58ffe5da58d29aa4dc2f7f75270783ca2e09168d8f5",
+          "checksum_sha256": "57c33e002e941781efc2f8e7b9ac06977edaff98d7cc9bc4cb503fdc2d1378e5",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -197,9 +221,14 @@
         "missing_native_1m_minutes": 420,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2018-11-14",
+          "zip_sha256": "d37d84fb1845c7c0ae495a41de1ea914c6393c6d4a10b862693eec263fc0cb7c",
+          "checksum_sha256": "537a36920d427aade0ed5b9fc6e9156564bb3ad097bb81520f42e3a65a90d1a6",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -227,9 +256,14 @@
         "missing_native_1m_minutes": 360,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2019-03-12",
+          "zip_sha256": "7c1570a8fbc654324ac247eedf7940734c9c92f95111b06735c4bd78e55f0e7a",
+          "checksum_sha256": "7e086b65299f20e9da9f20872c180a2683950fbeb33a2026ca565f884dfe7468",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -257,9 +291,14 @@
         "missing_native_1m_minutes": 600,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2019-05-15",
+          "zip_sha256": "28aa9ee6f8dcc2e288028d1860a363b564e4b33ebddf8d6d0564281981a7b340",
+          "checksum_sha256": "c7af83f7347f6dc6d2fecb8b7d688ce108f9f99c4e6103f164dce41a91c57787",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -287,9 +326,14 @@
         "missing_native_1m_minutes": 61,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2019-06-07",
+          "zip_sha256": "36fe8b749a592bdf35eb43893d9f690ac711a4b7f3c47aeb582dfc4475a725b2",
+          "checksum_sha256": "46478062d138aa5985ccc72b78ce7c09b4d958dc3ffa54aaf82ea26165811829",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -317,9 +361,14 @@
         "missing_native_1m_minutes": 480,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2019-08-15",
+          "zip_sha256": "7035f6a30fd56d8fa374ad27159d8ed37ad9a269fce5d8a20fa6ec38e7cc923e",
+          "checksum_sha256": "ac04907a394da231b15866500b7f450e551425fff92bf9c2b83c481c48a0bbd9",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -347,9 +396,14 @@
         "missing_native_1m_minutes": 140,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2019-11-13",
+          "zip_sha256": "f959696378390c84f99bdca94689cce8ea3d4285b6087690017de900afff7f1f",
+          "checksum_sha256": "7d5ffb36ff2def7ff91802cba9fa5c66f7ed454f58346f1ebda5014163270c70",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -377,9 +431,14 @@
         "missing_native_1m_minutes": 3,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2019-11-13",
+          "zip_sha256": "f959696378390c84f99bdca94689cce8ea3d4285b6087690017de900afff7f1f",
+          "checksum_sha256": "7d5ffb36ff2def7ff91802cba9fa5c66f7ed454f58346f1ebda5014163270c70",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -407,9 +466,14 @@
         "missing_native_1m_minutes": 120,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2019-11-25",
+          "zip_sha256": "51aacff2da4a50b9a525cb8ca39c13b9e4466664be0899b3cfc75e5999feb322",
+          "checksum_sha256": "350239450506a9f0377d955e3902c5a07475beaeb453cbb8b4045c481c325dad",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -437,9 +501,14 @@
         "missing_native_1m_minutes": 60,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2020-02-09",
+          "zip_sha256": "6434073701e5a1f632687f2f393e3d6b76e61c3751a696ae4256d9d5f3c4f9dc",
+          "checksum_sha256": "699ad900387e05e170ac3b008280aa388fb5f01ac1bb9962cb8c4c796210f4bb",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -467,9 +536,14 @@
         "missing_native_1m_minutes": 354,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2020-02-19",
+          "zip_sha256": "7b44fd210ad5b8bd3c8cc7532eef17098bc94e33c58e2edd74ac3e495b487681",
+          "checksum_sha256": "d7e44fcbfe24e82507668de65873e767016e2c154dfdd5e743eeb88075910023",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -497,9 +571,14 @@
         "missing_native_1m_minutes": 128,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2020-03-04",
+          "zip_sha256": "6232286c5167bc752565df7309e58a84684ebc5f2dada85f06ed0907ae3dee83",
+          "checksum_sha256": "f7f85da7abca0f594cdf277ef4fa2d5168b5d277ae53f1c3553a2b9c4f95d40c",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -527,9 +606,14 @@
         "missing_native_1m_minutes": 150,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2020-04-25",
+          "zip_sha256": "ece2e987106801a4d768a0718fa5e608b7cb2fcd42518881ded1d905659a8afa",
+          "checksum_sha256": "7960c627829cb8ce0f2878b20837ac3d50afc8bbd1535b488255a69220afeac6",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -557,9 +641,14 @@
         "missing_native_1m_minutes": 210,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2020-06-28",
+          "zip_sha256": "6e5fb6fd19cbedf6e05fa54aa1fc3d2dafd31b39a31f5e7115cbd1f7e76aa900",
+          "checksum_sha256": "6fa26f46d32c2c4eb5ef53e7dccc0f0027baa59b8e39efada58a7bd3dc1d95a7",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -587,9 +676,14 @@
         "missing_native_1m_minutes": 60,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2020-11-30",
+          "zip_sha256": "b9e71d7ec026f67922b4a83d029e2b895de0ed7a86ef95d008e6858e95499a23",
+          "checksum_sha256": "a9285bce03bbd7fbf357f52923429831a5a6bde1cd8eaa70f157c726aba96c19",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -619,7 +713,12 @@
         "binance_trades": {
           "original_zip_checked": true,
           "zero_trades_in_window": true,
-          "zip_sha256": "1a8afbb9894e8ae20dc0a8c85ac4a146a524c0083348e954beb36a9464302c6d"
+          "original_file_date": "2020-12-21",
+          "zip_sha256": "1a8afbb9894e8ae20dc0a8c85ac4a146a524c0083348e954beb36a9464302c6d",
+          "checksum_sha256": "15b4e47cff62cb79487ab82fd544bb7ec0b46b70df385292adf6084607d868c1",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_trade_gap_pilot/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -654,9 +753,14 @@
         "missing_native_1m_minutes": 60,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2020-12-25",
+          "zip_sha256": "86398154238d58697b8b9ab7307bb1a2aa2169a1f3ad5a028d55da98af6d88f1",
+          "checksum_sha256": "af4147a2f967ee721552407c7cb776524989b23912e1a38c292a284a199c89fc",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -684,9 +788,14 @@
         "missing_native_1m_minutes": 79,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2021-02-11",
+          "zip_sha256": "bac373963d2976fe0e85e58822f48aaa756553380df95ab212db274f9b9eac00",
+          "checksum_sha256": "8a302fcc50959def2f5bdf0d56df787885078cc7c173dde90be5ce7ab42b008c",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -714,9 +823,14 @@
         "missing_native_1m_minutes": 90,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2021-03-06",
+          "zip_sha256": "af279ee874c8a01f49423e55e9a8b119cd85def266791cd7714679dd5930a1a5",
+          "checksum_sha256": "be8a140773c165eb744f3e662935d005e2da19f45080bf940d69e3c116e1effa",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -744,9 +858,14 @@
         "missing_native_1m_minutes": 150,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2021-04-20",
+          "zip_sha256": "8ec8739203f0c6c1de3598f4267ddec882c3bfd73724803bccb9da9309758336",
+          "checksum_sha256": "94b368d1ffc00c9d8f0031956498cd5c259c9d06e268d8a9f73919f773c3b059",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -774,9 +893,14 @@
         "missing_native_1m_minutes": 284,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2021-04-25",
+          "zip_sha256": "36ab0d1f692d9f6564beca7698fc8c093c62e987acdda15a4fceecb05e358995",
+          "checksum_sha256": "98cbbc394185f1d4fc229c0159f3c81e7ebbb301e8b0dd74f057ae50e0ca8d32",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -804,9 +928,14 @@
         "missing_native_1m_minutes": 270,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2021-08-13",
+          "zip_sha256": "b2f7b429e31fad43eca4d84eedb70d19e65c5e997f1cfe870b1000850624a2c6",
+          "checksum_sha256": "86855237e09af20f31ee957d016895cbb61ca5f70c8837b9c138ef08f85c5a15",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -841,9 +970,14 @@
         "missing_native_1m_minutes": 120,
         "binance_1m_candles_in_gap": 0,
         "binance_trades": {
-          "original_zip_checked": false,
-          "zero_trades_in_window": null,
-          "zip_sha256": null
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "original_file_date": "2021-09-29",
+          "zip_sha256": "3c09d4153e29b4b81c8ad30308db2ad9360d510d1297a1ad9a3faaa06d85e6ce",
+          "checksum_sha256": "a9a4da5c62c1ad9306848d2c34fe852365dc9f9e3ea75d32f43f2296d8f16681",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -873,7 +1007,12 @@
         "binance_trades": {
           "original_zip_checked": true,
           "zero_trades_in_window": true,
-          "zip_sha256": "bceaa0b664b055318c22e509d33c04d532da143e7de41ca2fc3457100439c587"
+          "original_file_date": "2023-03-24",
+          "zip_sha256": "bceaa0b664b055318c22e509d33c04d532da143e7de41ca2fc3457100439c587",
+          "checksum_sha256": "d27fe9d9b81e16fb5cd05c863795fd959d6efc11e07052e4994da942a6108117",
+          "rows_in_gap": 0,
+          "source": "Binance Spot official native daily trades ZIP and .CHECKSUM",
+          "proof_report": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_trade_gap_pilot/index.json"
         },
         "coinbase": {
           "exchange": "Coinbase Exchange",
@@ -898,7 +1037,14 @@
         },
         "synthetic_candles_permitted": false
       }
-    ]
+    ],
+    "original_trade_verified_dates": 26,
+    "original_trade_verified_windows": 27,
+    "new_independent_trade_verification_source": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_remaining_trade_audit/index.json",
+      "git_blob_sha": "ac0de5f81eb0c1db7caaca2e5a1312b617628621"
+    },
+    "qualification_notice": "Original source archives prove zero Binance BTCUSDT Spot trades in all 5881 missing kline minutes. This does not prove any outage occurred on other exchanges or certify BTC price history before the archived dates."
   },
   "top5": {
     "coverage": [
@@ -1241,10 +1387,10 @@
     "limitations": "42 selected windows, not full historical 1m coverage for ETH/BNB/XRP/SOL. KuCoin BNB positive trading in 4/4 windows, Coinbase SOL one missing minute supported by KuCoin positive candle; Kraken trades often samples only."
   },
   "unresolved": [
-    "Verify 4971 BTC gap minutes against native Binance Spot trade archives before claiming zero original trades.",
     "Verify exact minute-level exchange trading status and archived trades for documented 2019-03-12 02:00–08:00 maintenance; clarify still unexplained 2019-11-13 05:30–05:33 UTC.",
     "Reconcile official resume estimates against precise Binance 1m gaps, especially 2018-06-26.",
     "Audit ETH, BNB, XRP, SOL original gap-months and independent native daily OHLCV, then earliest genuine pair listings.",
-    "No Trader, Interface, Bridge, Market Core, original archive, or local cache was changed."
+    "No Trader, Interface, Bridge, Market Core, original archive, or local cache was changed.",
+    "Find and confirm the precise official cause of 2019-11-13 05:30–05:33 UTC even though original Binance BTCUSDT trade ZIP confirms zero transactions."
   ]
 }
