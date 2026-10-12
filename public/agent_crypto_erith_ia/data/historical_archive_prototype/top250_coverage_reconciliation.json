@@ -1,0 +1,5344 @@
+{
+  "schema": "seven.crypto.top250.coverage-reconciliation.readonly",
+  "checkpoint_date_utc": "2026-10-12",
+  "status": "INDEX_RECONCILIATION_ONLY_NOT_A_SOURCE_FILE_REAUDIT_OR_ALL_TIME_COMPLETENESS_CERTIFICATE",
+  "source_indexes": [
+    {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+      "git_blob_sha": "5446dc85c93660ce80a85db7fe2b32093fb2d8ff"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multiresolution_sources/index.json",
+      "git_blob_sha": "b0081d8085b4deb9b1ec17e41e291d5cbba4f959"
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json",
+      "git_blob_sha": "7bd4adc6c9c79b555c91c60a46c1df4965b267ae"
+    }
+  ],
+  "safeguards": {
+    "no_prices_created": true,
+    "no_ohlcv_created": true,
+    "no_source_index_modified": true,
+    "no_auto_relabeling": true,
+    "market_core_trader_interface_untouched": true,
+    "source_exchange_and_quote_separated": true,
+    "no_quote_normalization": true
+  },
+  "summary": {
+    "total_ranked": 250,
+    "native_1m_assets": 145,
+    "native_daily_assets": 58,
+    "dual_resolution_assets": 3,
+    "unique_covered_assets": 200,
+    "no_native_series_in_both_catalogs": 50,
+    "federated_complete_month_1m_rows": 222132960,
+    "native_daily_rows": 52185,
+    "binance_assets_with_12_consecutive_closed_months": 108,
+    "binance_assets_with_24_consecutive_closed_months": 86,
+    "ranges": [
+      {
+        "range": "1-10",
+        "covered": 9,
+        "missing": 1
+      },
+      {
+        "range": "11-25",
+        "covered": 14,
+        "missing": 1
+      },
+      {
+        "range": "26-50",
+        "covered": 23,
+        "missing": 2
+      },
+      {
+        "range": "51-100",
+        "covered": 45,
+        "missing": 5
+      },
+      {
+        "range": "101-250",
+        "covered": 109,
+        "missing": 41
+      }
+    ]
+  },
+  "limitations": [
+    "Presence of at least one source archive is not all-time historical completeness.",
+    "Verified closed months, native daily bars, and additional Release backfills are different catalogs; do not silently add or deduplicate them.",
+    "Year-depth index is a separate Binance-only historical snapshot and may cover different months than federation; its counts are not added to federal minute counts.",
+    "No source ZIP/release byte was re-downloaded and independently SHA-256 replayed in this reconciliation; trusted published indexes are enumerated by Git blob SHA.",
+    "No inferred token inception or first exchange trade time; native daily source observed gaps are source-reported, not inferred trade outages.",
+    "No cross-exchange or quote substitution, no bar interpolation, no live price certification, and no automatic Trader activation."
+  ],
+  "priority_no_series_top50": [
+    {
+      "rank": 9,
+      "id": "figure-heloc",
+      "symbol": "FIGR_HELOC"
+    },
+    {
+      "rank": 15,
+      "id": "whitebit",
+      "symbol": "WBT"
+    },
+    {
+      "rank": 46,
+      "id": "hashnote-usyc",
+      "symbol": "USYC"
+    },
+    {
+      "rank": 50,
+      "id": "blackrock-usd-institutional-digital-liquidity-fund",
+      "symbol": "BUIDL"
+    }
+  ],
+  "assets": [
+    {
+      "rank": 1,
+      "id": "bitcoin",
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 82,
+        "native_1m_rows": 3598560
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 84,
+        "first_verified_closed_month": "2017-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 2,
+      "id": "ethereum",
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 3,
+      "id": "tether",
+      "symbol": "USDT",
+      "name": "Tether",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "KuCoin Spot",
+        "market": "USDT-USDC",
+        "quote": "USDC",
+        "resolution": "1D",
+        "native_candles": 2828,
+        "earliest_source_ms": 1540339200000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 71,
+        "source_archive_sha256": "7110d3bcd6bcf7033cdf0f0b3584e72da3fbf92ef5ef004603a29cf9883a88ad",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-170e06b173cd"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 4,
+      "id": "binancecoin",
+      "symbol": "BNB",
+      "name": "BNB",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 5,
+      "id": "ripple",
+      "symbol": "XRP",
+      "name": "XRP",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 6,
+      "id": "usd-coin",
+      "symbol": "USDC",
+      "name": "USDC",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 56,
+        "native_1m_rows": 2456640
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 61,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 7,
+      "id": "solana",
+      "symbol": "SOL",
+      "name": "Solana",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 60,
+        "native_1m_rows": 2632320
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 63,
+        "first_verified_closed_month": "2020-09",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 8,
+      "id": "tron",
+      "symbol": "TRX",
+      "name": "TRON",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 61,
+        "native_1m_rows": 2672640
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 66,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 9,
+      "id": "figure-heloc",
+      "symbol": "FIGR_HELOC",
+      "name": "Figure Heloc",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 10,
+      "id": "zcash",
+      "symbol": "ZEC",
+      "name": "Zcash",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 61,
+        "native_1m_rows": 2672640
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 66,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 11,
+      "id": "hyperliquid",
+      "symbol": "HYPE",
+      "name": "Hyperliquid",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 3,
+        "native_1m_rows": 128160
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 12,
+      "id": "dogecoin",
+      "symbol": "DOGE",
+      "name": "Dogecoin",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 13,
+      "id": "usds",
+      "symbol": "USDS",
+      "name": "USDS",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 5,
+        "native_1m_rows": 220320
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 5,
+        "first_verified_closed_month": "2026-05",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 5,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 14,
+      "id": "monero",
+      "symbol": "XMR",
+      "name": "Monero",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 11,
+        "native_1m_rows": 480960
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 11,
+        "first_verified_closed_month": "2023-01",
+        "last_verified_closed_month": "2023-12",
+        "longest_contiguous_closed_months": 9,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 15,
+      "id": "whitebit",
+      "symbol": "WBT",
+      "name": "WhiteBIT Coin",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 16,
+      "id": "chainlink",
+      "symbol": "LINK",
+      "name": "Chainlink",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 17,
+      "id": "cardano",
+      "symbol": "ADA",
+      "name": "Cardano",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 18,
+      "id": "leo-token",
+      "symbol": "LEO",
+      "name": "LEO Token",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "LEO-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 2465,
+        "earliest_source_ms": 1577836800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "cb691957a55bc91e837c8f81c55956a157de0db4c8ba67c99e0bbca2900f2ed2",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 19,
+      "id": "rain",
+      "symbol": "RAIN",
+      "name": "Rain",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "KuCoin Spot",
+        "market": "RAIN-USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 268,
+        "earliest_source_ms": 1767657600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "75fea4cb0ef3651303a6f1c46a60f95ee95e6b48da0ba0aa12bda801b226358a",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 20,
+      "id": "stellar",
+      "symbol": "XLM",
+      "name": "Stellar",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 21,
+      "id": "near",
+      "symbol": "NEAR",
+      "name": "NEAR Protocol",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 63,
+        "first_verified_closed_month": "2021-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 22,
+      "id": "bitcoin-cash",
+      "symbol": "BCH",
+      "name": "Bitcoin Cash",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 23,
+      "id": "litecoin",
+      "symbol": "LTC",
+      "name": "Litecoin",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 24,
+      "id": "canton-network",
+      "symbol": "CC",
+      "name": "Canton",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "CC-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 231,
+        "earliest_source_ms": 1770854400000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "0d3c356cd3d14763b7e079d13354aee8f55dbd452c0193a1747a36f32330c797",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 25,
+      "id": "ethena-usde",
+      "symbol": "USDE",
+      "name": "Ethena USDe",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 12,
+        "native_1m_rows": 525600
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 12,
+        "first_verified_closed_month": "2025-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 12,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 26,
+      "id": "uniswap",
+      "symbol": "UNI",
+      "name": "Uniswap",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 64,
+        "first_verified_closed_month": "2020-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 27,
+      "id": "dai",
+      "symbol": "DAI",
+      "name": "Dai",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Kraken Spot",
+        "market": "DAI/USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 709,
+        "earliest_source_ms": 1729468800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 1,
+        "source_archive_sha256": "a99fcd71b0201bb943717001734fcf0b0eeb101052396a22257019b594144a63",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-kraken-spot-native-daily-2026-09-8eccaa5378b9"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 28,
+      "id": "avalanche-2",
+      "symbol": "AVAX",
+      "name": "Avalanche",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 64,
+        "first_verified_closed_month": "2020-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 29,
+      "id": "sui",
+      "symbol": "SUI",
+      "name": "Sui",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 40,
+        "native_1m_rows": 1753920
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 40,
+        "first_verified_closed_month": "2023-06",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 40,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 30,
+      "id": "usd1-wlfi",
+      "symbol": "USD1",
+      "name": "USD1",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 16,
+        "native_1m_rows": 701280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 16,
+        "first_verified_closed_month": "2025-06",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 16,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 31,
+      "id": "bitway",
+      "symbol": "BTW",
+      "name": "Bitway",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 32,
+      "id": "the-open-network",
+      "symbol": "GRAM",
+      "name": "Gram (prev. Toncoin)",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 2,
+        "native_1m_rows": 87840
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 2,
+        "first_verified_closed_month": "2026-08",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 2,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 33,
+      "id": "hedera-hashgraph",
+      "symbol": "HBAR",
+      "name": "Hedera",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 34,
+      "id": "quant-network",
+      "symbol": "QNT",
+      "name": "Quant",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 58,
+        "native_1m_rows": 2540160
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 58,
+        "first_verified_closed_month": "2021-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 35,
+      "id": "tether-gold",
+      "symbol": "XAUT",
+      "name": "Tether Gold",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 6,
+        "native_1m_rows": 263520
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 6,
+        "first_verified_closed_month": "2026-04",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 6,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 36,
+      "id": "shiba-inu",
+      "symbol": "SHIB",
+      "name": "Shiba Inu",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 60,
+        "native_1m_rows": 2632320
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 60,
+        "first_verified_closed_month": "2021-06",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 37,
+      "id": "global-dollar",
+      "symbol": "USDG",
+      "name": "Global Dollar",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "USDG-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 477,
+        "earliest_source_ms": 1749600000000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "cf1a44cc00d43a7e4e0721300cac85b0f5d5339d4ec1dbd991c94f95fe62dcdb",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-usdg-pi-flr"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 38,
+      "id": "bittensor",
+      "symbol": "TAO",
+      "name": "Bittensor",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 29,
+        "native_1m_rows": 1271520
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 29,
+        "first_verified_closed_month": "2024-05",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 29,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 39,
+      "id": "crypto-com-chain",
+      "symbol": "CRO",
+      "name": "Cronos",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "CRO-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 2465,
+        "earliest_source_ms": 1577836800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "4b23582016fea5a4e93343108afbc79b79238c796f0e56a3b5bf3389dab8228d",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-okb-cro"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 40,
+      "id": "paypal-usd",
+      "symbol": "PYUSD",
+      "name": "PayPal USD",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 41,
+      "id": "ethena",
+      "symbol": "ENA",
+      "name": "Ethena",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 29,
+        "native_1m_rows": 1271520
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 29,
+        "first_verified_closed_month": "2024-05",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 29,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 42,
+      "id": "okb",
+      "symbol": "OKB",
+      "name": "OKB",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "OKB-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 3114,
+        "earliest_source_ms": 1521763200000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "2fb37f109d5b9f1b181208b3d38a6724d47830b043326149a4d1108dbb80652d",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-okb-cro"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 43,
+      "id": "aave",
+      "symbol": "AAVE",
+      "name": "Aave",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 63,
+        "first_verified_closed_month": "2021-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 44,
+      "id": "pump-fun",
+      "symbol": "PUMP",
+      "name": "Pump.fun",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 12,
+        "native_1m_rows": 525600
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 12,
+        "first_verified_closed_month": "2025-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 12,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 45,
+      "id": "ripple-usd",
+      "symbol": "RLUSD",
+      "name": "Ripple USD",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 8,
+        "native_1m_rows": 348480
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 8,
+        "first_verified_closed_month": "2026-02",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 8,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 46,
+      "id": "hashnote-usyc",
+      "symbol": "USYC",
+      "name": "Circle USYC",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 47,
+      "id": "memecore",
+      "symbol": "M",
+      "name": "MemeCore",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "MUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 450,
+        "earliest_source_ms": 1751472000000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 5,
+        "source_archive_sha256": "707c8bf72a3849fac2a5e2d64e20608749456be3422f5b3f8b794ee647cf18ac",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-single-symbol-owners"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 48,
+      "id": "ondo-us-dollar-yield",
+      "symbol": "USDY",
+      "name": "Ondo US Dollar Yield",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "USDY_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 111,
+        "earliest_source_ms": 1781222400000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "5090e5423e5b51477d62e592336dc35a73c5deefd4048eae59dcf6d9344e88e7",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 49,
+      "id": "ondo-finance",
+      "symbol": "ONDO",
+      "name": "Ondo",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 17,
+        "native_1m_rows": 745920
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 17,
+        "first_verified_closed_month": "2025-05",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 17,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 50,
+      "id": "blackrock-usd-institutional-digital-liquidity-fund",
+      "symbol": "BUIDL",
+      "name": "BlackRock USD Institutional Digital Liquidity Fund",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 51,
+      "id": "polkadot",
+      "symbol": "DOT",
+      "name": "Polkadot",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 65,
+        "first_verified_closed_month": "2020-09",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 52,
+      "id": "aster-2",
+      "symbol": "ASTER",
+      "name": "Aster",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 11,
+        "native_1m_rows": 480960
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 11,
+        "first_verified_closed_month": "2025-11",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 11,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 53,
+      "id": "worldcoin-wld",
+      "symbol": "WLD",
+      "name": "Worldcoin",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 38,
+        "native_1m_rows": 1666080
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 38,
+        "first_verified_closed_month": "2023-08",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 38,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 54,
+      "id": "pax-gold",
+      "symbol": "PAXG",
+      "name": "PAX Gold",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 65,
+        "first_verified_closed_month": "2020-09",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 55,
+      "id": "falcon-finance",
+      "symbol": "USDF",
+      "name": "Falcon USD",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 56,
+      "id": "mantle",
+      "symbol": "MNT",
+      "name": "Mantle",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "MNT_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 1158,
+        "earliest_source_ms": 1690761600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "0ab5d36540ed171b5be70fbb5a5a06a2da6444d7b1842d9197e408e1df2cb095",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 57,
+      "id": "sky",
+      "symbol": "SKY",
+      "name": "Sky",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 12,
+        "native_1m_rows": 525600
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 12,
+        "first_verified_closed_month": "2025-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 12,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 58,
+      "id": "world-liberty-financial",
+      "symbol": "WLFI",
+      "name": "World Liberty Financial",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 12,
+        "native_1m_rows": 525600
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 12,
+        "first_verified_closed_month": "2025-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 12,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 59,
+      "id": "internet-computer",
+      "symbol": "ICP",
+      "name": "Internet Computer",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 61,
+        "native_1m_rows": 2672640
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 61,
+        "first_verified_closed_month": "2021-06",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 60,
+      "id": "morpho",
+      "symbol": "MORPHO",
+      "name": "Morpho",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 11,
+        "native_1m_rows": 480960
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 11,
+        "first_verified_closed_month": "2025-11",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 11,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 61,
+      "id": "pepe",
+      "symbol": "PEPE",
+      "name": "Pepe",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 40,
+        "native_1m_rows": 1753920
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 40,
+        "first_verified_closed_month": "2023-06",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 40,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 62,
+      "id": "spiko-amundi-overnight-swap-fund-eur",
+      "symbol": "EURSAFO",
+      "name": "Spiko Amundi Overnight Swap Fund (EUR)",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 63,
+      "id": "usdd",
+      "symbol": "USDD",
+      "name": "USDD",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "KuCoin Spot",
+        "market": "USDD-USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 1598,
+        "earliest_source_ms": 1652745600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "9cc8e304fd01de5234933c04bf85eb7ee26c29495fbc06f9905ed8ef32b1b163",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 64,
+      "id": "united-stables",
+      "symbol": "U",
+      "name": "United Stables",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "UUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 128,
+        "earliest_source_ms": 1779638400000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 1,
+        "source_archive_sha256": "6241e63e1f9c256022ced7b22f74e1d1ffe33f285badb01c195e4883e183cc9a",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-single-symbol-owners"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 65,
+      "id": "htx-dao",
+      "symbol": "HTX",
+      "name": "HTX DAO",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "HTXUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 941,
+        "earliest_source_ms": 1708531200000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 11,
+        "source_archive_sha256": "ecfdfe4953f081644ce9560384f42c66a5edf3c606aeadce8cc0f61efd362628",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-project-listings"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 66,
+      "id": "bitget-token",
+      "symbol": "BGB",
+      "name": "Bitget Token",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 67,
+      "id": "bfusd",
+      "symbol": "BFUSD",
+      "name": "BFUSD",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 13,
+        "native_1m_rows": 568800
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 13,
+        "first_verified_closed_month": "2025-09",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 13,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 68,
+      "id": "ethereum-classic",
+      "symbol": "ETC",
+      "name": "Ethereum Classic",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 69,
+      "id": "usdgo",
+      "symbol": "USDGO",
+      "name": "USDGO",
+      "coverage": "native_1m_and_native_daily",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "USDGOUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 209,
+        "earliest_source_ms": 1772553600000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 2,
+        "source_archive_sha256": "ecfb9b68ccea047ec1a4d05f1eeb200a91fbb1f0ee03bfbc20efb1ec5bba1196",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-usdgo-vision"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 70,
+      "id": "jupiter-exchange-solana",
+      "symbol": "JUP",
+      "name": "Jupiter",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 32,
+        "native_1m_rows": 1401120
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 32,
+        "first_verified_closed_month": "2024-02",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 32,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 71,
+      "id": "arbitrum",
+      "symbol": "ARB",
+      "name": "Arbitrum",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 42,
+        "native_1m_rows": 1841760
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 42,
+        "first_verified_closed_month": "2023-04",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 72,
+      "id": "just",
+      "symbol": "JST",
+      "name": "JUST",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 65,
+        "first_verified_closed_month": "2020-09",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 73,
+      "id": "kaspa",
+      "symbol": "KAS",
+      "name": "Kaspa",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "KASUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 1226,
+        "earliest_source_ms": 1683561600000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 15,
+        "source_archive_sha256": "e69e92dbe258308045b6e14db2cf09658d4a0624e741825a71d76b9a02b0027f",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-project-listings"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 74,
+      "id": "gatechain-token",
+      "symbol": "GT",
+      "name": "Gate",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "GT_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 2720,
+        "earliest_source_ms": 1555804800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "6b00dcdf9d443d5a948570cae52c66a78dc34661128d7637ab25a73d29cd43aa",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 75,
+      "id": "cosmos",
+      "symbol": "ATOM",
+      "name": "Cosmos Hub",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 5,
+        "native_1m_rows": 217440
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 3,
+        "first_verified_closed_month": "2026-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 3,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 76,
+      "id": "polygon-ecosystem-token",
+      "symbol": "POL",
+      "name": "POL (ex-MATIC)",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 24,
+        "native_1m_rows": 1051200
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 24,
+        "first_verified_closed_month": "2024-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 24,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 77,
+      "id": "kucoin-shares",
+      "symbol": "KCS",
+      "name": "KuCoin",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "KuCoin Spot",
+        "market": "KCS-USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 3187,
+        "earliest_source_ms": 1508716800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 78,
+        "source_archive_sha256": "fab3d9c6d3ab399ba4a8ee6036c6207137d85319122306c0589555455a993ba2",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 78,
+      "id": "venice-token",
+      "symbol": "VVV",
+      "name": "Venice Token",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "VVV-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 16,
+        "earliest_source_ms": 1789430400000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "a75cd59160e0a1dc5f8266c2846d8921f0e0d4da3cf7b3fd10da1b0e100d84c8",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 79,
+      "id": "algorand",
+      "symbol": "ALGO",
+      "name": "Algorand",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 80,
+      "id": "blockchain-capital",
+      "symbol": "BCAP",
+      "name": "Blockchain Capital",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 81,
+      "id": "render-token",
+      "symbol": "RENDER",
+      "name": "Render",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 26,
+        "native_1m_rows": 1139040
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 26,
+        "first_verified_closed_month": "2024-08",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 26,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 82,
+      "id": "pi-network",
+      "symbol": "PI",
+      "name": "Pi Network",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "PI-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 588,
+        "earliest_source_ms": 1740009600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "b60a1723cb5592930530a09d23197c63cacd59739b97f404443d5fc5b50be151",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-usdg-pi-flr"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 83,
+      "id": "filecoin",
+      "symbol": "FIL",
+      "name": "Filecoin",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 63,
+        "first_verified_closed_month": "2021-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 84,
+      "id": "lighter",
+      "symbol": "LIT",
+      "name": "Lighter",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 5,
+        "native_1m_rows": 217440
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 85,
+      "id": "nexo",
+      "symbol": "NEXO",
+      "name": "NEXO",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 52,
+        "native_1m_rows": 2279520
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 52,
+        "first_verified_closed_month": "2022-05",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 86,
+      "id": "aerodrome-finance",
+      "symbol": "AERO",
+      "name": "Aerodrome Finance",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 2,
+        "native_1m_rows": 87840
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 2,
+        "first_verified_closed_month": "2026-08",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 2,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 87,
+      "id": "layerzero",
+      "symbol": "ZRO",
+      "name": "LayerZero",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 27,
+        "native_1m_rows": 1183680
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 27,
+        "first_verified_closed_month": "2024-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 27,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 88,
+      "id": "open-usd",
+      "symbol": "OUSD",
+      "name": "Open USD",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 89,
+      "id": "superstate-short-duration-us-government-securities-fund-ustb",
+      "symbol": "USTB",
+      "name": "Invesco Short Duration US Government Securities Fund",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 90,
+      "id": "midnight-3",
+      "symbol": "NIGHT",
+      "name": "Midnight",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 6,
+        "native_1m_rows": 263520
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 6,
+        "first_verified_closed_month": "2026-04",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 6,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 91,
+      "id": "blockstack",
+      "symbol": "STX",
+      "name": "Stacks",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 24,
+        "native_1m_rows": 1051200
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 24,
+        "first_verified_closed_month": "2024-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 24,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 92,
+      "id": "xdce-crowd-sale",
+      "symbol": "XDC",
+      "name": "XDC Network",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "KuCoin Spot",
+        "market": "XDC-USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 1973,
+        "earliest_source_ms": 1620345600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "e31031f3528a8e55d610b03ab82c5531408877f5f2f1843069fcfbc1e7cd32d2",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-dcb93d4569f4"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 93,
+      "id": "gho",
+      "symbol": "GHO",
+      "name": "GHO",
+      "coverage": "native_1m_and_native_daily",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "GHOUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 415,
+        "earliest_source_ms": 1754496000000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 5,
+        "source_archive_sha256": "ea8286800bf6bdad998a6d9668d17983a54fbcfd39949e78204f5c774b6edd81",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-qualified"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 94,
+      "id": "aptos",
+      "symbol": "APT",
+      "name": "Aptos",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 45,
+        "native_1m_rows": 1974240
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 45,
+        "first_verified_closed_month": "2022-11",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 95,
+      "id": "pancakeswap-token",
+      "symbol": "CAKE",
+      "name": "PancakeSwap",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 36,
+        "native_1m_rows": 1578240
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 36,
+        "first_verified_closed_month": "2023-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 36,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 96,
+      "id": "injective-protocol",
+      "symbol": "INJ",
+      "name": "Injective",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 63,
+        "first_verified_closed_month": "2021-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 97,
+      "id": "stable-2",
+      "symbol": "STABLE",
+      "name": "​​Stable",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 4,
+        "native_1m_rows": 177120
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 98,
+      "id": "vechain",
+      "symbol": "VET",
+      "name": "VeChain",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 99,
+      "id": "dash",
+      "symbol": "DASH",
+      "name": "Dash",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 100,
+      "id": "ether-fi",
+      "symbol": "ETHFI",
+      "name": "Ether.fi",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 30,
+        "native_1m_rows": 1314720
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 30,
+        "first_verified_closed_month": "2024-04",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 30,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 101,
+      "id": "eutbl",
+      "symbol": "EUTBL",
+      "name": "Spiko EU T-Bills Money Market Fund",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 102,
+      "id": "pyth-network",
+      "symbol": "PYTH",
+      "name": "Pyth Network",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 31,
+        "native_1m_rows": 1359360
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 31,
+        "first_verified_closed_month": "2024-03",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 31,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 103,
+      "id": "raydium",
+      "symbol": "RAY",
+      "name": "Raydium",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 58,
+        "native_1m_rows": 2540160
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 58,
+        "first_verified_closed_month": "2021-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 104,
+      "id": "akedo",
+      "symbol": "AKE",
+      "name": "Akedo",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "AKE_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 368,
+        "earliest_source_ms": 1759017600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "69ddb9626da03db4998d578106ecde359ee6665032438c70def5e4b5be6bbbe4",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 105,
+      "id": "flare-networks",
+      "symbol": "FLR",
+      "name": "Flare",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "FLR-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 1360,
+        "earliest_source_ms": 1673308800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "38b99ea83896b9a66ae26908d85e5afa3dd840250cdb82e31ae51a1d00785fad",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-usdg-pi-flr"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 106,
+      "id": "beldex",
+      "symbol": "BDX",
+      "name": "Beldex",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "BDX_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 1505,
+        "earliest_source_ms": 1660780800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "8a397789c7d616be2746c36d361282ea734811acafdc362ed1afbb19d2baa368",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-dcb93d4569f4"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 107,
+      "id": "janus-henderson-anemoy-aaa-clo-fund",
+      "symbol": "JAAA",
+      "name": "Janus Henderson Anemoy AAA CLO Fund",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 108,
+      "id": "bianrensheng",
+      "symbol": "币安人生",
+      "name": "币安人生 (BinanceLife)",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 109,
+      "id": "curve-dao-token",
+      "symbol": "CRV",
+      "name": "Curve DAO",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 65,
+        "first_verified_closed_month": "2020-09",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 110,
+      "id": "usual-usd",
+      "symbol": "USD0",
+      "name": "Usual USD",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 111,
+      "id": "kinesis-gold",
+      "symbol": "KAU",
+      "name": "Kinesis Gold",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 112,
+      "id": "starknet",
+      "symbol": "STRK",
+      "name": "Starknet",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 31,
+        "native_1m_rows": 1359360
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 31,
+        "first_verified_closed_month": "2024-03",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 31,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 113,
+      "id": "official-trump",
+      "symbol": "TRUMP",
+      "name": "Official Trump",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 20,
+        "native_1m_rows": 874080
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 20,
+        "first_verified_closed_month": "2025-02",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 20,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 114,
+      "id": "derive",
+      "symbol": "DRV",
+      "name": "Derive",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "DRV_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 624,
+        "earliest_source_ms": 1736899200000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "b0579e9d47edff0eea699d1e3c8ab0867000a49961dafcbac441827677423358",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 115,
+      "id": "pudgy-penguins",
+      "symbol": "PENGU",
+      "name": "Pudgy Penguins",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 21,
+        "native_1m_rows": 918720
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 21,
+        "first_verified_closed_month": "2025-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 21,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 116,
+      "id": "euro-coin",
+      "symbol": "EURC",
+      "name": "EURC",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Kraken Spot",
+        "market": "EURC/USDC",
+        "quote": "USDC",
+        "resolution": "1D",
+        "native_candles": 378,
+        "earliest_source_ms": 1758153600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "8978c8b0b843998a25a00cbc262b398d30f4b52d21c5c6a54c815a90a24be14b",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-kraken-spot-native-daily-2026-09-1455fca808cb"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 117,
+      "id": "ylds",
+      "symbol": "YLDS",
+      "name": "YLDS",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 118,
+      "id": "true-usd",
+      "symbol": "TUSD",
+      "name": "TrueUSD",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 55,
+        "native_1m_rows": 2412000
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 60,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 119,
+      "id": "fetch-ai",
+      "symbol": "FET",
+      "name": "Artificial Superintelligence Alliance",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 120,
+      "id": "usdtb",
+      "symbol": "USDTB",
+      "name": "USDtb",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 121,
+      "id": "virtual-protocol",
+      "symbol": "VIRTUAL",
+      "name": "Virtuals Protocol",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 16,
+        "native_1m_rows": 701280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 16,
+        "first_verified_closed_month": "2025-05",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 14,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 122,
+      "id": "pearl-2",
+      "symbol": "PRL",
+      "name": "Pearl",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 123,
+      "id": "celestia",
+      "symbol": "TIA",
+      "name": "Celestia",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 35,
+        "native_1m_rows": 1533600
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 35,
+        "first_verified_closed_month": "2023-11",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 35,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 124,
+      "id": "grass",
+      "symbol": "GRASS",
+      "name": "Grass",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "GRASS-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 160,
+        "earliest_source_ms": 1776988800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "b9e15e94025a77ce3f0ae5ac1a5cebe5b1ab5f72e84a6dfe58b985d7bf1adb34",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 125,
+      "id": "sei-network",
+      "symbol": "SEI",
+      "name": "Sei",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 30,
+        "native_1m_rows": 1313280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 30,
+        "first_verified_closed_month": "2023-09",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 18,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 126,
+      "id": "a7a5",
+      "symbol": "A7A5",
+      "name": "A7A5",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 127,
+      "id": "bitcoin-cash-sv",
+      "symbol": "BSV",
+      "name": "Bitcoin SV",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "BSVUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 1064,
+        "earliest_source_ms": 1697731200000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 13,
+        "source_archive_sha256": "30dd45faf8a1b59fb8a2464ebc71c24633af2512660d7c3d9d53bc430af99017",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-project-listings"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 128,
+      "id": "hash-2",
+      "symbol": "HASH",
+      "name": "Provenance Blockchain",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 129,
+      "id": "plasma",
+      "symbol": "XPL",
+      "name": "Plasma",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 12,
+        "native_1m_rows": 525600
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 12,
+        "first_verified_closed_month": "2025-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 12,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 130,
+      "id": "pendle",
+      "symbol": "PENDLE",
+      "name": "Pendle",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 38,
+        "native_1m_rows": 1666080
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 38,
+        "first_verified_closed_month": "2023-08",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 38,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 131,
+      "id": "bittorrent",
+      "symbol": "BTT",
+      "name": "BitTorrent",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 3,
+        "native_1m_rows": 132480
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 132,
+      "id": "pieverse",
+      "symbol": "PIEVERSE",
+      "name": "Pieverse",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "PIEVERSE_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 321,
+        "earliest_source_ms": 1763078400000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "a4e5521fc4709c6cdb17ba10470f212b5fb0f330e60a72289790ec6acec078fa",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 133,
+      "id": "falcon-finance-ff",
+      "symbol": "FF",
+      "name": "Falcon Finance",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 12,
+        "native_1m_rows": 525600
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 12,
+        "first_verified_closed_month": "2025-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 12,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 134,
+      "id": "kaia",
+      "symbol": "KAIA",
+      "name": "Kaia",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 16,
+        "native_1m_rows": 698400
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 16,
+        "first_verified_closed_month": "2024-11",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 12,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 135,
+      "id": "usdai",
+      "symbol": "USDAI",
+      "name": "USDai",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 136,
+      "id": "lido-dao",
+      "symbol": "LDO",
+      "name": "Lido DAO",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 37,
+        "native_1m_rows": 1621440
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 37,
+        "first_verified_closed_month": "2022-06",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 16,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 137,
+      "id": "unibase",
+      "symbol": "UB",
+      "name": "Unibase",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "UB_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 384,
+        "earliest_source_ms": 1757635200000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "7c1b19c41f33eddf0da25a3acc541f13380f01438d1d477bcc70c45f6f4858f6",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 138,
+      "id": "spx6900",
+      "symbol": "SPX",
+      "name": "SPX6900",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "SPX_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 662,
+        "earliest_source_ms": 1733616000000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "ce61e4ad928d1b94ca8ec13663384f61bdf6408454b57a28491aeca0f5487cde",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 139,
+      "id": "sofiusd",
+      "symbol": "SOFID",
+      "name": "SoFiUSD",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Kraken Spot",
+        "market": "SOFID/USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 18,
+        "earliest_source_ms": 1788480000000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 9,
+        "source_archive_sha256": "4bd767992959c84c008d19623d531207bb6e3f48fd527aebb2105bc54167a96a",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-kraken-spot-native-daily-2026-09-1455fca808cb"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 140,
+      "id": "janus-henderson-anemoy-treasury-fund",
+      "symbol": "JTRSY",
+      "name": "Janus Henderson Anemoy Treasury Fund",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 141,
+      "id": "first-digital-usd",
+      "symbol": "FDUSD",
+      "name": "First Digital USD",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 24,
+        "native_1m_rows": 1052640
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 24,
+        "first_verified_closed_month": "2023-08",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 12,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 142,
+      "id": "sun-token",
+      "symbol": "SUN",
+      "name": "Sun Token",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 46,
+        "native_1m_rows": 2016000
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 48,
+        "first_verified_closed_month": "2020-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 16,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 143,
+      "id": "tezos",
+      "symbol": "XTZ",
+      "name": "Tezos",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 61,
+        "native_1m_rows": 2672640
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 66,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 144,
+      "id": "ousg",
+      "symbol": "OUSG",
+      "name": "Ondo Short-Term U.S. Government Bond Fund",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 145,
+      "id": "apxusd",
+      "symbol": "APXUSD",
+      "name": "apxUSD",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Kraken Spot",
+        "market": "APXUSD/USDC",
+        "quote": "USDC",
+        "resolution": "1D",
+        "native_candles": 39,
+        "earliest_source_ms": 1776643200000,
+        "latest_source_ms": 1790380800000,
+        "gaps_within_observed_span": 121,
+        "source_archive_sha256": "404dee26d4e816a60bc915f2f7815b7ef548ec35a37abdbc9dfdd1870ff6d68c",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-kraken-spot-native-daily-2026-09-1455fca808cb"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 146,
+      "id": "backpack",
+      "symbol": "BP",
+      "name": "Backpack",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 147,
+      "id": "decred",
+      "symbol": "DCR",
+      "name": "Decred",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 66,
+        "first_verified_closed_month": "2020-08",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 148,
+      "id": "gnosis",
+      "symbol": "GNO",
+      "name": "Gnosis",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 58,
+        "native_1m_rows": 2540160
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 58,
+        "first_verified_closed_month": "2021-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 149,
+      "id": "ape-and-pepe",
+      "symbol": "APEPE",
+      "name": "Ape and Pepe",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "APEPE_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 680,
+        "earliest_source_ms": 1732060800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "8848715fce175713e62d89bf7b04edd76223b13d54a64b8c3932851fbe982a4d",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 150,
+      "id": "re-protocol-reusd",
+      "symbol": "REUSD",
+      "name": "Re Protocol reUSD",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 151,
+      "id": "olympus",
+      "symbol": "OHM",
+      "name": "Olympus",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 152,
+      "id": "the-graph",
+      "symbol": "GRT",
+      "name": "The Graph",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 63,
+        "first_verified_closed_month": "2021-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 153,
+      "id": "bonk",
+      "symbol": "BONK",
+      "name": "Bonk",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 33,
+        "native_1m_rows": 1445760
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 33,
+        "first_verified_closed_month": "2024-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 33,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 154,
+      "id": "monad",
+      "symbol": "MON",
+      "name": "Monad",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "MON-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 192,
+        "earliest_source_ms": 1774224000000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "dbb62bbd1074b28a90dd2ee18c9c5841d02c370a3031e3698a8e5da780f551ff",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 155,
+      "id": "kite-2",
+      "symbol": "KITE",
+      "name": "Kite",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 10,
+        "native_1m_rows": 437760
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 10,
+        "first_verified_closed_month": "2025-12",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 10,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 156,
+      "id": "optimism",
+      "symbol": "OP",
+      "name": "Optimism",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 50,
+        "native_1m_rows": 2191680
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 50,
+        "first_verified_closed_month": "2022-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 157,
+      "id": "terra-luna",
+      "symbol": "LUNC",
+      "name": "Terra",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 13,
+        "native_1m_rows": 570240
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 13,
+        "first_verified_closed_month": "2022-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 12,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 158,
+      "id": "arweave",
+      "symbol": "AR",
+      "name": "Arweave",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 61,
+        "native_1m_rows": 2672640
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 61,
+        "first_verified_closed_month": "2021-06",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 159,
+      "id": "jito-governance-token",
+      "symbol": "JTO",
+      "name": "Jito",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 33,
+        "native_1m_rows": 1445760
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 33,
+        "first_verified_closed_month": "2024-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 33,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 160,
+      "id": "syrup",
+      "symbol": "SYRUP",
+      "name": "Maple Finance",
+      "coverage": "native_1m_and_native_daily",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 12,
+        "native_1m_rows": 525600
+      },
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "SYRUPUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 507,
+        "earliest_source_ms": 1746460800000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 6,
+        "source_archive_sha256": "553b2fc830762fc6531ae6ce4f5dc4b71cef0c3f73e59baf1c40ca68710eef43",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-qualified"
+      },
+      "independent_binance_year_depth": {
+        "verified_closed_months": 12,
+        "first_verified_closed_month": "2025-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 12,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 161,
+      "id": "ethereum-name-service",
+      "symbol": "ENS",
+      "name": "Ethereum Name Service",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 57,
+        "native_1m_rows": 2496960
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 57,
+        "first_verified_closed_month": "2021-12",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 162,
+      "id": "conflux-token",
+      "symbol": "CFX",
+      "name": "Conflux",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 52,
+        "native_1m_rows": 2280960
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 52,
+        "first_verified_closed_month": "2021-05",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 36,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 163,
+      "id": "collector-crypt",
+      "symbol": "CARDS",
+      "name": "Collector Crypt",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "CARDS-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 98,
+        "earliest_source_ms": 1782345600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "5899a5b881d88cf56be6362d2867eccbf4812f317023efc50fa9548f8f3c82a8",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 164,
+      "id": "floki",
+      "symbol": "FLOKI",
+      "name": "FLOKI",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 40,
+        "native_1m_rows": 1753920
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 40,
+        "first_verified_closed_month": "2023-06",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 40,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 165,
+      "id": "jasmycoin",
+      "symbol": "JASMY",
+      "name": "JasmyCoin",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 57,
+        "native_1m_rows": 2496960
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 57,
+        "first_verified_closed_month": "2021-12",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 166,
+      "id": "compound-governance-token",
+      "symbol": "COMP",
+      "name": "Compound",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 33,
+        "native_1m_rows": 1445760
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 38,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 24,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 167,
+      "id": "iota",
+      "symbol": "IOTA",
+      "name": "IOTA",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 168,
+      "id": "apenft",
+      "symbol": "NFT",
+      "name": "AINFT",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "NFT-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 1785,
+        "earliest_source_ms": 1636588800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "4a850997b5d98131f314ff3b92c6f29b654bd9c76e53d81f8727c45ccfb50df6",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 169,
+      "id": "pons",
+      "symbol": "PONS",
+      "name": "Pons",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "PONS-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 16,
+        "earliest_source_ms": 1789430400000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "a45a18061662477102f445cb1281f0989b914ffa0c10500dfe3af5a838c4f50a",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-vvv-grass-mon-cards-pons"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 170,
+      "id": "meteora",
+      "symbol": "MET",
+      "name": "Meteora",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 10,
+        "native_1m_rows": 437760
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 10,
+        "first_verified_closed_month": "2025-12",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 10,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 171,
+      "id": "zebec-network",
+      "symbol": "ZBCN",
+      "name": "Zebec Network",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 2,
+        "native_1m_rows": 87840
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 172,
+      "id": "thorchain",
+      "symbol": "RUNE",
+      "name": "THORChain",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 64,
+        "first_verified_closed_month": "2020-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 173,
+      "id": "kinesis-silver",
+      "symbol": "KAG",
+      "name": "Kinesis Silver",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 174,
+      "id": "bnb48-club-token",
+      "symbol": "KOGE",
+      "name": "KOGE",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 175,
+      "id": "safo",
+      "symbol": "SAFO",
+      "name": "Spiko Amundi Overnight Swap Fund",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 176,
+      "id": "theta-token",
+      "symbol": "THETA",
+      "name": "Theta Network",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 33,
+        "native_1m_rows": 1445760
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 38,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 24,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 177,
+      "id": "frax",
+      "symbol": "FRAX",
+      "name": "Legacy Frax Dollar",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 178,
+      "id": "akash-network",
+      "symbol": "AKT",
+      "name": "Akash Network",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "AKT_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 2029,
+        "earliest_source_ms": 1615507200000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "9c0e6b5c45ebd24df0c299c12795a7e4ca6196252d70fa0696e96f66ea3c5dc1",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-dcb93d4569f4"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 179,
+      "id": "trust-wallet-token",
+      "symbol": "TWT",
+      "name": "Trust Wallet",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 62,
+        "first_verified_closed_month": "2021-05",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 180,
+      "id": "crvusd",
+      "symbol": "CRVUSD",
+      "name": "crvUSD",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "CRVUSD_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 1141,
+        "earliest_source_ms": 1692230400000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "75029b49a2664dd0e436a6af3fc5f9c4385ce863140122c2d21f52f3cd1a75dd",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 181,
+      "id": "eigenlayer",
+      "symbol": "EIGEN",
+      "name": "EigenCloud (prev. EigenLayer)",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 23,
+        "native_1m_rows": 1006560
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 23,
+        "first_verified_closed_month": "2024-11",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 23,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 182,
+      "id": "usx",
+      "symbol": "USX",
+      "name": "USX",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 183,
+      "id": "dogwifcoin",
+      "symbol": "WIF",
+      "name": "dogwifhat",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 30,
+        "native_1m_rows": 1314720
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 30,
+        "first_verified_closed_month": "2024-04",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 30,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 184,
+      "id": "axie-infinity",
+      "symbol": "AXS",
+      "name": "Axie Infinity",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 63,
+        "first_verified_closed_month": "2021-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 185,
+      "id": "tradable-na-rent-financing-platform-sstn",
+      "symbol": "PC0000031",
+      "name": "Tradable NA Rent Financing Platform SSTN",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 186,
+      "id": "grx-chain",
+      "symbol": "GRX",
+      "name": "GRX Chain",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 187,
+      "id": "the-sandbox",
+      "symbol": "SAND",
+      "name": "The Sandbox",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 61,
+        "native_1m_rows": 2672640
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 64,
+        "first_verified_closed_month": "2020-09",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 188,
+      "id": "kamino",
+      "symbol": "KMNO",
+      "name": "Kamino",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 16,
+        "native_1m_rows": 701280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 16,
+        "first_verified_closed_month": "2025-06",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 16,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 189,
+      "id": "basic-attention-token",
+      "symbol": "BAT",
+      "name": "Basic Attention",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 190,
+      "id": "shuffle-2",
+      "symbol": "SHFL",
+      "name": "Shuffle",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 191,
+      "id": "convex-finance",
+      "symbol": "CVX",
+      "name": "Convex Finance",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 56,
+        "native_1m_rows": 2452320
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 56,
+        "first_verified_closed_month": "2022-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 192,
+      "id": "zama",
+      "symbol": "ZAMA",
+      "name": "Zama",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 7,
+        "native_1m_rows": 308160
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 7,
+        "first_verified_closed_month": "2026-03",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 7,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 193,
+      "id": "societe-generale-forge-eurcv",
+      "symbol": "EURCV",
+      "name": "EUR CoinVertible",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 194,
+      "id": "useless-3",
+      "symbol": "USELESS",
+      "name": "Useless Coin",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "USELESS_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 447,
+        "earliest_source_ms": 1752192000000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "c307c1d7c6affb6e12b703b591078bf4a94235837155e462cdb86025b451f2b3",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 195,
+      "id": "doublezero",
+      "symbol": "2Z",
+      "name": "DoubleZero",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 11,
+        "native_1m_rows": 480960
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 11,
+        "first_verified_closed_month": "2025-11",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 11,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 196,
+      "id": "usa",
+      "symbol": "USAT",
+      "name": "USAT",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 197,
+      "id": "origintrail",
+      "symbol": "TRAC",
+      "name": "OriginTrail",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "TRAC_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 885,
+        "earliest_source_ms": 1714348800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "537228bfca087fce1544912b200ccf71867d76781a908c3d8a5f2aeb7cd6b9b6",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 198,
+      "id": "decentraland",
+      "symbol": "MANA",
+      "name": "Decentraland",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 65,
+        "first_verified_closed_month": "2020-09",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 199,
+      "id": "agora-dollar",
+      "symbol": "AUSD",
+      "name": "AUSD",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 200,
+      "id": "mx-token",
+      "symbol": "MX",
+      "name": "MX",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 201,
+      "id": "vaulta",
+      "symbol": "A",
+      "name": "Vaulta",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "A-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 490,
+        "earliest_source_ms": 1748476800000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "0e2741670fed90897ec00f7a6288ccfab828aa95a5a59f7bc445dd9d2b38537b",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 202,
+      "id": "instadapp",
+      "symbol": "FLUID",
+      "name": "Fluid",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "FLUID-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 553,
+        "earliest_source_ms": 1743033600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "7c4d6df217c253a7e7f69d4e8e40fed5d3a598eb5856491fe8a12cb7041b42b9",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 203,
+      "id": "sonic-3",
+      "symbol": "S",
+      "name": "Sonic",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "OKX Spot",
+        "market": "S-USDT",
+        "quote": "USDT",
+        "resolution": "1Dutc",
+        "native_candles": 618,
+        "earliest_source_ms": 1737417600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "c72c926f0bf3da683588be6fef818394151b09413ecc0070d3ec996e15120a06",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 204,
+      "id": "non-playable-coin",
+      "symbol": "NPC",
+      "name": "Non-Playable Coin",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 205,
+      "id": "neo",
+      "symbol": "NEO",
+      "name": "NEO",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 206,
+      "id": "apyusd",
+      "symbol": "APYUSD",
+      "name": "apyUSD",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 207,
+      "id": "immutable-x",
+      "symbol": "IMX",
+      "name": "Immutable",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 55,
+        "native_1m_rows": 2407680
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 55,
+        "first_verified_closed_month": "2022-02",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 208,
+      "id": "chain-2",
+      "symbol": "XCN",
+      "name": "Onyxcoin",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "XCN_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 1643,
+        "earliest_source_ms": 1648857600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "44a084e83da8d5a69261e906884f99d8e99a96437d97fffef02fc150801bc86a",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-edfaafab1819"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 209,
+      "id": "vision-3",
+      "symbol": "VSN",
+      "name": "Vision",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "VSNUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 290,
+        "earliest_source_ms": 1765468800000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 3,
+        "source_archive_sha256": "89df11525a3585450450c73d5bfe8117f1945ec5601adce787b0f4e0784bca65",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-usdgo-vision"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 210,
+      "id": "spiko-us-t-bills-money-market-fund",
+      "symbol": "USTBL",
+      "name": "Spiko US T-Bills Money Market Fund",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 211,
+      "id": "swissborg",
+      "symbol": "BORG",
+      "name": "SwissBorg",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 212,
+      "id": "tradable-apac-diversified-finance-provider-sstn",
+      "symbol": "PC0000033",
+      "name": "Tradable APAC Diversified Finance Provider SSTN",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 213,
+      "id": "fartcoin",
+      "symbol": "FARTCOIN",
+      "name": "Fartcoin",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "FARTCOINUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 679,
+        "earliest_source_ms": 1731427200000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 8,
+        "source_archive_sha256": "a9c7929d3287edaccefeff7e73734f0933aeb51389c56d649ea1ba76a084ce91",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-project-listings"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 214,
+      "id": "chiliz",
+      "symbol": "CHZ",
+      "name": "Chiliz",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 67,
+        "first_verified_closed_month": "2020-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 215,
+      "id": "btse-token",
+      "symbol": "BTSE",
+      "name": "BTSE Token",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 216,
+      "id": "coco-2",
+      "symbol": "COCO",
+      "name": "coco",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 217,
+      "id": "railgun",
+      "symbol": "RAIL",
+      "name": "Railgun",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 218,
+      "id": "circle-internet-group-bstock",
+      "symbol": "CRCLB",
+      "name": "Circle Internet Group (bStocks Tokenized Stock)",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 3,
+        "native_1m_rows": 132480
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 3,
+        "first_verified_closed_month": "2026-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 3,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 219,
+      "id": "bedrock-token",
+      "symbol": "BR",
+      "name": "Bedrock",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 220,
+      "id": "gmt-token",
+      "symbol": "GOMINING",
+      "name": "GoMining Token",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 221,
+      "id": "strategy-pp-variable-xstock",
+      "symbol": "STRCX",
+      "name": "Strategy PP Variable xStock",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 222,
+      "id": "zksync",
+      "symbol": "ZK",
+      "name": "ZKsync",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 27,
+        "native_1m_rows": 1183680
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 27,
+        "first_verified_closed_month": "2024-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 27,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 223,
+      "id": "sentient",
+      "symbol": "SENT",
+      "name": "Sentient",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 8,
+        "native_1m_rows": 348480
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 8,
+        "first_verified_closed_month": "2026-02",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 8,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 224,
+      "id": "gusd",
+      "symbol": "GUSD",
+      "name": "GUSD",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 225,
+      "id": "build-on",
+      "symbol": "B",
+      "name": "BUILDon",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "BUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 491,
+        "earliest_source_ms": 1747843200000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 6,
+        "source_archive_sha256": "c88575abbb24ffa801caa51d8cfdfcd9298fd7b90394223fdc182f853043f266",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-single-symbol-owners"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 226,
+      "id": "ecash",
+      "symbol": "XEC",
+      "name": "eCash",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 57,
+        "native_1m_rows": 2495520
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 57,
+        "first_verified_closed_month": "2021-10",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 227,
+      "id": "aioz-network",
+      "symbol": "AIOZ",
+      "name": "AIOZ Network",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "AIOZ_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 2003,
+        "earliest_source_ms": 1617753600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "66e5b5a3bae444763fc087d47dd415f2fa6a8d7cfc1d752a1a8eb2ea7bf202b8",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-8e71573a011c"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 228,
+      "id": "apecoin",
+      "symbol": "APE",
+      "name": "ApeCoin",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 53,
+        "native_1m_rows": 2322720
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 53,
+        "first_verified_closed_month": "2022-04",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 229,
+      "id": "dgrid-ai",
+      "symbol": "DGAI",
+      "name": "DGrid AI",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 230,
+      "id": "superfarm",
+      "symbol": "SUPER",
+      "name": "SuperVerse",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 3,
+        "native_1m_rows": 132480
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 3,
+        "first_verified_closed_month": "2026-07",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 3,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 231,
+      "id": "orca",
+      "symbol": "ORCA",
+      "name": "Orca",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 21,
+        "native_1m_rows": 918720
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 21,
+        "first_verified_closed_month": "2025-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 21,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 232,
+      "id": "quack-ai",
+      "symbol": "Q",
+      "name": "Quack AI",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "QUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 390,
+        "earliest_source_ms": 1756742400000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 4,
+        "source_archive_sha256": "a2fea11c66eb171c9e5f7162eae31e800ee813e308ed1e05102a76911c25cc5c",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-single-symbol-owners"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 233,
+      "id": "geodnet",
+      "symbol": "GEOD",
+      "name": "Geodnet",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "GEOD_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 828,
+        "earliest_source_ms": 1719273600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "cc599ee105ae608f9b46d77ecc2a1f5c629966de9b30de70a7c4866f49cd3db1",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-8e71573a011c"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 234,
+      "id": "safepal",
+      "symbol": "SFP",
+      "name": "SafePal",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 61,
+        "native_1m_rows": 2672640
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 61,
+        "first_verified_closed_month": "2021-05",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 235,
+      "id": "beam-2",
+      "symbol": "BEAM",
+      "name": "Beam",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 236,
+      "id": "1inch",
+      "symbol": "1INCH",
+      "name": "1INCH",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 62,
+        "native_1m_rows": 2717280
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 63,
+        "first_verified_closed_month": "2021-01",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 237,
+      "id": "ultima",
+      "symbol": "ULTIMA",
+      "name": "Ultima",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "KuCoin Spot",
+        "market": "ULTIMA-USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 258,
+        "earliest_source_ms": 1768521600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "ff68bcb1b0700561f2ee5769914c05c88da6eab352d39b15153613fd5ebf30b2",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-7ef2c120eab5"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 238,
+      "id": "havven",
+      "symbol": "SNX",
+      "name": "Synthetix",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 3,
+        "native_1m_rows": 132480
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 7,
+        "first_verified_closed_month": "2020-08",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 3,
+        "at_least_12_consecutive_months": false,
+        "at_least_24_consecutive_months": false
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 239,
+      "id": "celium",
+      "symbol": "SN51",
+      "name": "lium",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 240,
+      "id": "jpycoin",
+      "symbol": "JPYC",
+      "name": "JPY Coin",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 241,
+      "id": "stronghold-token",
+      "symbol": "SHX",
+      "name": "Stronghold",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Gate Spot",
+        "market": "SHX_USDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 1478,
+        "earliest_source_ms": 1663113600000,
+        "latest_source_ms": 1790726400000,
+        "gaps_within_observed_span": 0,
+        "source_archive_sha256": "f54058fdf4896929936e02a2c9e84d45abaa17dcde6854bb581bed983a1d11a5",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-8e71573a011c"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 242,
+      "id": "golem",
+      "symbol": "GLM",
+      "name": "Golem",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Binance Spot official native 1m ZIPs",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 42,
+        "native_1m_rows": 1841760
+      },
+      "daily": null,
+      "independent_binance_year_depth": {
+        "verified_closed_months": 42,
+        "first_verified_closed_month": "2023-04",
+        "last_verified_closed_month": "2026-09",
+        "longest_contiguous_closed_months": 42,
+        "at_least_12_consecutive_months": true,
+        "at_least_24_consecutive_months": true
+      },
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 243,
+      "id": "meta-2-2",
+      "symbol": "META",
+      "name": "MetaDAO",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 244,
+      "id": "aethir",
+      "symbol": "ATH",
+      "name": "Aethir",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 245,
+      "id": "humanity",
+      "symbol": "H",
+      "name": "Humanity",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Bitget Spot",
+        "market": "HUSDT",
+        "quote": "USDT",
+        "resolution": "1D",
+        "native_candles": 458,
+        "earliest_source_ms": 1750780800000,
+        "latest_source_ms": 1790697600000,
+        "gaps_within_observed_span": 5,
+        "source_archive_sha256": "881af193eec96d17ca8dcd0db1f91538c7934440c65431283af0774b5f1b4534",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-bitget-spot-native-daily-2026-09-single-symbol-owners"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 246,
+      "id": "jpysc",
+      "symbol": "JPYSC",
+      "name": "JPYSC",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 247,
+      "id": "edgex",
+      "symbol": "EDGE",
+      "name": "edgeX",
+      "coverage": "native_1m_only",
+      "minute": {
+        "venue": "Bitget Spot native 1m HTTPS",
+        "quote": "USDT",
+        "verified_complete_months_in_federation": 1,
+        "native_1m_rows": 43200
+      },
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 248,
+      "id": "cash-4",
+      "symbol": "CASH",
+      "name": "CASH",
+      "coverage": "native_daily_only",
+      "minute": null,
+      "daily": {
+        "venue": "Kraken Spot",
+        "market": "CASH/USDC",
+        "quote": "USDC",
+        "resolution": "1D",
+        "native_candles": 66,
+        "earliest_source_ms": 1769472000000,
+        "latest_source_ms": 1790208000000,
+        "gaps_within_observed_span": 175,
+        "source_archive_sha256": "9e6d0d6c2e434d0bd97b8436dafccdee23ed95e5f5d2bce0662e254ee77efc7d",
+        "release": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-kraken-spot-native-daily-2026-09-1455fca808cb"
+      },
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 249,
+      "id": "ozone-chain",
+      "symbol": "OZO",
+      "name": "Ozone Chain",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    },
+    {
+      "rank": 250,
+      "id": "avant-usd",
+      "symbol": "AVUSD",
+      "name": "Avant USD",
+      "coverage": "no_native_series_in_these_two_catalogs",
+      "minute": null,
+      "daily": null,
+      "independent_binance_year_depth": null,
+      "coin_first_trade_verified": false,
+      "complete_since_first_trade_certified": false
+    }
+  ]
+}
