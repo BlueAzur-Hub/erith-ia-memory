@@ -1,0 +1,328 @@
+{
+  "schema": "seven.crypto.top25-special-instruments-resolution-checkpoint.v1",
+  "date_utc": "2026-10-12",
+  "ranked_scope": "Canonical ranks 11-25, each retained; the completed Top10 and historical vault not modified.",
+  "previous_extra_archived_strict_source_rows": 18188854,
+  "previous_quarantined_native_rows": 203910,
+  "new_native_source_market_months": 41,
+  "new_strict_1m_original_source_rows": 1609097,
+  "new_quarantined_original_source_rows": 82824,
+  "cumulative_archived_strict_source_rows_during_chantier": 19797951,
+  "cumulative_extra_quarantined_source_rows_during_chantier": 286734,
+  "counting_scope": "Unique newly archived exchange+market+month releases across this work sequence only; NOT proof of unique coverage after intersecting older canonical catalog, NOT exhaustive history.",
+  "source_documents": {
+    "instrument_resolution": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/instrument_resolution.json",
+      "blob_sha": "8c9ab9ff363acf7044d15c2ec94771ba2ffdfbcc"
+    },
+    "market_cash_fork": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/cash_lineage/index.json",
+      "blob_sha": "619322dc5666700ce6b2ea1f0a3ff83841f5e9df",
+      "ci_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38202645141"
+    },
+    "market_special_spot": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/special_markets/index.json",
+      "blob_sha": "d9c144617a2995ba49b06bdd3a1348d2a9a2a343",
+      "ci_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38202826900"
+    }
+  },
+  "ranks_11_to_25": [
+    {
+      "rank": 11,
+      "id": "hyperliquid",
+      "symbol": "HYPE",
+      "venue": "Bitget Spot",
+      "source_spot_market": "HYPEUSDT",
+      "listing_proof": null,
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 3,
+      "existing_daily": null,
+      "source_resolution": "native_1m_existing_3_months",
+      "new_original_native_1m_from_current_operation": 0,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 12,
+      "id": "dogecoin",
+      "symbol": "DOGE",
+      "venue": "Binance Spot",
+      "source_spot_market": "DOGEUSDT",
+      "listing_proof": {
+        "utc": "2019-07-05T12:00:00Z",
+        "url": "https://www.binance.com/en-IN/support/announcement/detail/360030488211"
+      },
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 62,
+      "existing_daily": null,
+      "source_resolution": "historical_month_sources_archived",
+      "new_original_native_1m_from_current_operation": 0,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 13,
+      "id": "usds",
+      "symbol": "USDS",
+      "venue": "Binance Spot",
+      "source_spot_market": "USDSUSDT",
+      "listing_proof": {
+        "utc": "2026-04-09T08:00:00Z",
+        "url": "https://www.binance.com/en/support/announcement/detail/3c4abe4314554c9592d9a2f433c34c8d"
+      },
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 5,
+      "existing_daily": null,
+      "source_resolution": "2026_official_rebrand_with_predecessor_DAI",
+      "new_original_native_1m_from_current_operation": 251520,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 14,
+      "id": "monero",
+      "symbol": "XMR",
+      "venue": "Binance Spot",
+      "source_spot_market": "XMRUSDT",
+      "listing_proof": null,
+      "delisting_proof": {
+        "utc": "2024-02-20T03:00:00Z",
+        "url": "https://www.binance.com/en-IN/support/announcement/detail/f73b083ba6834771b07dbe5319917ae5"
+      },
+      "preserved_original_native_complete_months_in_prior_catalog": 11,
+      "existing_daily": null,
+      "source_resolution": "historical_delisted_spot",
+      "new_original_native_1m_from_current_operation": 418836,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 15,
+      "id": "whitebit",
+      "symbol": "WBT",
+      "venue": "WhiteBIT Spot",
+      "source_spot_market": "WBT_USDT",
+      "listing_proof": null,
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 0,
+      "existing_daily": null,
+      "source_resolution": "official_spot_pair_documented_native_ohlcv_still_unarchived",
+      "new_original_native_1m_from_current_operation": 0,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 16,
+      "id": "chainlink",
+      "symbol": "LINK",
+      "venue": "Binance Spot",
+      "source_spot_market": "LINKUSDT",
+      "listing_proof": {
+        "utc": "2019-01-16T10:00:00Z",
+        "url": "https://www.binance.com/es-LA/support/announcement/detail/360021982271"
+      },
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 62,
+      "existing_daily": null,
+      "source_resolution": "official_listing_found_and_2019_2021_sources_archived",
+      "new_original_native_1m_from_current_operation": 0,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 17,
+      "id": "cardano",
+      "symbol": "ADA",
+      "venue": "Binance Spot",
+      "source_spot_market": "ADAUSDT",
+      "listing_proof": null,
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 62,
+      "existing_daily": null,
+      "source_resolution": "native_1m_archived_2018_2021",
+      "new_original_native_1m_from_current_operation": 0,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 18,
+      "id": "leo-token",
+      "symbol": "LEO",
+      "venue": "OKX Spot",
+      "source_spot_market": "LEO-USDT",
+      "listing_proof": null,
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 0,
+      "existing_daily": {
+        "market": "LEO-USDT",
+        "venue": "OKX Spot",
+        "bars": 2465
+      },
+      "source_resolution": "original_native_daily_existing",
+      "new_original_native_1m_from_current_operation": 0,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 19,
+      "id": "rain",
+      "symbol": "RAIN",
+      "venue": "KuCoin Spot",
+      "source_spot_market": "RAIN-USDT",
+      "listing_proof": {
+        "utc": "2026-01-06T10:00:00Z",
+        "url": "https://www.kucoin.com/announcement/en-rain-rain-gets-listed-on-kucoin"
+      },
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 0,
+      "existing_daily": {
+        "market": "RAIN-USDT",
+        "venue": "KuCoin Spot",
+        "bars": 268
+      },
+      "source_resolution": "original_native_daily_existing",
+      "new_original_native_1m_from_current_operation": 0,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 20,
+      "id": "stellar",
+      "symbol": "XLM",
+      "venue": "Binance Spot",
+      "source_spot_market": "XLMUSDT",
+      "listing_proof": null,
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 62,
+      "existing_daily": null,
+      "source_resolution": "native_1m_archived_2018_2021",
+      "new_original_native_1m_from_current_operation": 0,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 21,
+      "id": "near",
+      "symbol": "NEAR",
+      "venue": "Binance Spot",
+      "source_spot_market": "NEARUSDT",
+      "listing_proof": {
+        "utc": "2020-10-14T05:00:00Z",
+        "url": "https://www.binance.com/en/support/announcement/detail/1110b21de22e4633bc34710cc4ed2ce3"
+      },
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 62,
+      "existing_daily": null,
+      "source_resolution": "original_spot_listing_proven_needs_earlier_backfill",
+      "new_original_native_1m_from_current_operation": 285306,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 22,
+      "id": "bitcoin-cash",
+      "symbol": "BCH",
+      "venue": "Binance Spot",
+      "source_spot_market": "BCHUSDT",
+      "listing_proof": null,
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 62,
+      "existing_daily": null,
+      "source_resolution": "native_fork_lineage_under_source_verification",
+      "new_original_native_1m_from_current_operation": 489995,
+      "original_1m_quarantine_from_current_operation": 82824,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 23,
+      "id": "litecoin",
+      "symbol": "LTC",
+      "venue": "Binance Spot",
+      "source_spot_market": "LTCUSDT",
+      "listing_proof": null,
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 62,
+      "existing_daily": null,
+      "source_resolution": "original_2018_2021_archived_offgrid_february_2018",
+      "new_original_native_1m_from_current_operation": 0,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 24,
+      "id": "canton-network",
+      "symbol": "CC",
+      "venue": "OKX Spot",
+      "source_spot_market": "CC-USDT",
+      "listing_proof": {
+        "utc": "2026-02-12T10:00:00Z",
+        "url": "https://www.okx.com/en-sg/help/okx-to-list-cc-canton-for-spot-trading"
+      },
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 0,
+      "existing_daily": {
+        "market": "CC-USDT",
+        "venue": "OKX Spot",
+        "bars": 231
+      },
+      "source_resolution": "original_native_daily_existing",
+      "new_original_native_1m_from_current_operation": 0,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    },
+    {
+      "rank": 25,
+      "id": "ethena-usde",
+      "symbol": "USDE",
+      "venue": "Binance Spot",
+      "source_spot_market": "USDEUSDT",
+      "listing_proof": {
+        "utc": "2025-09-09T12:00:00Z",
+        "url": "https://www.binance.com/en-AE/support/announcement/detail/aebac85d4dd3470c9cd52df6f98d0811"
+      },
+      "delisting_proof": null,
+      "preserved_original_native_complete_months_in_prior_catalog": 12,
+      "existing_daily": null,
+      "source_resolution": "2025_spot_listing_original_minute_backfill_open",
+      "new_original_native_1m_from_current_operation": 163440,
+      "original_1m_quarantine_from_current_operation": 0,
+      "source_listing_does_not_prove_full_original_history": true
+    }
+  ],
+  "unresolved_cases": {
+    "whitebit_wbt": {
+      "official_spot_pair": "WBT_USDT",
+      "first_party_proof": "https://help.whitebit.com/hc/en-gb/articles/19480314291613-How-to-buy-WBT",
+      "original_archive_status": "0 verified native 1m archives in this Top25 vault",
+      "additional_risk": "WhiteBIT historical export documentation describes kline licensing and restrictions on commercial use; review terms and redistribution rights before publishing their OHLCV as public GitHub Releases.",
+      "original_market_export_docs": "https://help.whitebit.com/hc/en-gb/articles/21922302527773-Historical-Market-Data"
+    },
+    "hyperliquid_hype": {
+      "existing_bitget_native_1m_months": 3,
+      "issue": "earlier Bitget Spot source depth not yet certified. Futures instruments must not replace Spot"
+    },
+    "other_provider_daily_only": [
+      "leo-token",
+      "rain",
+      "canton-network"
+    ],
+    "monero_source_before_march_2019": {
+      "searched_months": 14,
+      "original_source_response": "HTTP 404",
+      "source_404_does_not_prove_no_prior_XMR_trades": true
+    },
+    "prior_instruments": {
+      "usds_prior_market": "DAI source separated from 2026 USDS spot token conversion",
+      "bch_pre_fork_splicing_banned": true,
+      "link_2018_unavailable_USDT_market_listed_2019_01_16": true
+    }
+  },
+  "quality_constraints": {
+    "no_synthetic_ohlcv": true,
+    "no_silent_venue_conversion": true,
+    "no_spot_futures_interchange": true,
+    "no_timestamp_rounding": true,
+    "no_bridge_market_core_trader_interface_mutation": true,
+    "no_claim_top25_complete": true
+  }
+}
