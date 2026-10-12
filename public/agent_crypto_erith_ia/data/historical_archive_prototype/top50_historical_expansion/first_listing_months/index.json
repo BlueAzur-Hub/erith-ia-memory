@@ -1,0 +1,144 @@
+{
+  "months_by_original_market": {
+    "QNTUSDT": "2021-07",
+    "SHIBUSDT": "2021-05"
+  },
+  "native_granularity": "1m",
+  "native_quote": "USDT",
+  "no_price_or_volume_adjustment": true,
+  "no_synthetic_candles": true,
+  "not_all_time_history": true,
+  "original_listing_start": {
+    "QNTUSDT": {
+      "official": "https://www.binance.com/en/support/announcement/detail/053a6010adc844e29e3859a460e32d12",
+      "utc": "2021-07-29T06:00:00Z"
+    },
+    "SHIBUSDT": {
+      "official": "https://www.binance.com/en/support/announcement/detail/f1fe616e688b452f9d736753cb2d947a",
+      "utc": "2021-05-10T11:00:00Z"
+    }
+  },
+  "original_market_pairs": [
+    "SHIBUSDT",
+    "QNTUSDT"
+  ],
+  "prelisting_plus_other_missing_calendar_minutes": 54300,
+  "ranked_catalog_pins": {
+    "expansion_plan_sha256": "c3a9c95b63159e6c330ffcd27e0a1e0d1ef87c63f0526db29c4ea71ffdcc0b4a",
+    "top250_catalog_sha256": "b548dfdb7c5f7dabd41d4669bf690c0edf99fc47ecf605665094c5dd8e621bd0"
+  },
+  "records": [
+    {
+      "asset_id": "quant-network",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": true,
+      "first_source_open_utc": "2021-07-29T06:00:00+00:00",
+      "last_source_open_utc": "2021-07-31T23:59:00+00:00",
+      "missing_1m_minutes": 40680,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2021-07-29T06:00:00Z",
+          "missing_minutes": 40680,
+          "start_utc": "2021-07-01T00:00:00Z"
+        }
+      ],
+      "month": "2021-07",
+      "native_rows": 3960,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 88,
+        "name": "QNTUSDT-1m-2021-07.zip.CHECKSUM",
+        "sha256": "b62c40c2222f776c0b8b147eadee13adb2d011d37dc79ac0a93688e69befa94e",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-first-listing-shib-qnt-2021/QNTUSDT-1m-2021-07.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/053a6010adc844e29e3859a460e32d12",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/QNTUSDT/1m/QNTUSDT-1m-2021-07.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/QNTUSDT/1m/QNTUSDT-1m-2021-07.zip",
+      "pair": "QNTUSDT",
+      "quote": "USDT",
+      "rank": 34,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 132348,
+        "name": "QNTUSDT-1m-2021-07.zip",
+        "sha256": "0b8d880f2afc6d766ef023c7f27966338fe994670202e37e23d2f0892ad56588",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-first-listing-shib-qnt-2021/QNTUSDT-1m-2021-07.zip"
+      },
+      "sqlite": {
+        "bytes": 516096,
+        "name": "QNTUSDT-1m-2021-07.sqlite",
+        "sha256": "601e90bd1af8a365ac20e948040cb49c4fc2dc56f1c4fb8c190783705388f7fe",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-first-listing-shib-qnt-2021/QNTUSDT-1m-2021-07.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "QNT",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset_id": "shiba-inu",
+      "calendar_minutes": 44640,
+      "close_time_anomalies": 0,
+      "excluded_from_utc_1m_calendar": false,
+      "first_pair_date_proven_by_official_notice": true,
+      "first_source_open_utc": "2021-05-10T11:00:00+00:00",
+      "last_source_open_utc": "2021-05-31T23:59:00+00:00",
+      "missing_1m_minutes": 13620,
+      "missing_intervals": [
+        {
+          "end_exclusive_utc": "2021-05-10T11:00:00Z",
+          "missing_minutes": 13620,
+          "start_utc": "2021-05-01T00:00:00Z"
+        }
+      ],
+      "month": "2021-05",
+      "native_rows": 31020,
+      "no_synthetic_ohlcv": true,
+      "offgrid_native_rows": 0,
+      "official_checksum": {
+        "bytes": 89,
+        "name": "SHIBUSDT-1m-2021-05.zip.CHECKSUM",
+        "sha256": "8e533c3da04cbb6f5ca6e035ad94240238d403abff0cb02b9ec5dbd01899a1ea",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-first-listing-shib-qnt-2021/SHIBUSDT-1m-2021-05.zip.CHECKSUM"
+      },
+      "official_pair_notice": "https://www.binance.com/en/support/announcement/detail/f1fe616e688b452f9d736753cb2d947a",
+      "original_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/SHIBUSDT/1m/SHIBUSDT-1m-2021-05.zip.CHECKSUM",
+      "original_price_and_volume_strings_preserved": true,
+      "original_source_trades_absent_not_inferred": true,
+      "original_source_url": "https://data.binance.vision/data/spot/monthly/klines/SHIBUSDT/1m/SHIBUSDT-1m-2021-05.zip",
+      "pair": "SHIBUSDT",
+      "quote": "USDT",
+      "rank": 36,
+      "resolution": "1m",
+      "source_validation_note": null,
+      "source_zip": {
+        "bytes": 1462242,
+        "name": "SHIBUSDT-1m-2021-05.zip",
+        "sha256": "40e669260f9435d32e90cff7ef53b11328b05319e71d8cdd22aa536a16a51338",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-first-listing-shib-qnt-2021/SHIBUSDT-1m-2021-05.zip"
+      },
+      "sqlite": {
+        "bytes": 4001792,
+        "name": "SHIBUSDT-1m-2021-05.sqlite",
+        "sha256": "4b7a146f708b15e82ddd7275941eb2253be4cbd66ca01e7bc281993663240c4d",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-top50-original-spot-first-listing-shib-qnt-2021/SHIBUSDT-1m-2021-05.sqlite"
+      },
+      "status": "native_1m_partial",
+      "strict_utc_aligned": true,
+      "symbol": "SHIB",
+      "venue": "Binance Spot"
+    }
+  ],
+  "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-top50-original-spot-first-listing-shib-qnt-2021",
+  "schema": "seven.crypto.top50-first-listing-original-months.v1",
+  "source": "Original Binance Spot native monthly 1m ZIP plus official CHECKSUM",
+  "strict_native_original_rows": 34980,
+  "trader_interface_unchanged": true,
+  "verified_original_month_pairs": 2
+}
