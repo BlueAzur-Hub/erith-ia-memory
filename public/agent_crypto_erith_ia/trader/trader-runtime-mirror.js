@@ -63,7 +63,7 @@ function mount(){
   if(!doc.getElementById("traderOkxAccountScript")){
     const script=doc.createElement("script");
     script.id="traderOkxAccountScript";
-    script.src=new URL("../trader/trader-okx-account.js?feature=okx-private-read-compact",doc.baseURI).href;
+    script.src=new URL("../trader/trader-okx-account.js?feature=okx-private-read-compact-2",doc.baseURI).href;
     doc.head.appendChild(script);
   }
   if(!doc.getElementById("traderHistoricalPanelScript")){
