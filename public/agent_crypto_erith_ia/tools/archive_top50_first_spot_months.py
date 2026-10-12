@@ -13,7 +13,7 @@ import archive_top50_pilot_spot as original
 
 ROOT=Path(__file__).resolve().parents[1]/"data/historical_archive_prototype"
 REPO="BlueAzur-Hub/erith-ia-memory"
-TAG="crypto-top50-original-first-listing-shib-qnt-2021"
+TAG="crypto-top50-original-spot-first-listing-shib-qnt-2021"
 TARGETS=(("shiba-inu","2021-05"),("quant-network","2021-07"))
 def need(v,why):
     if not v:raise ValueError(why)
