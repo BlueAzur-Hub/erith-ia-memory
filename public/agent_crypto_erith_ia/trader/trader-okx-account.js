@@ -62,7 +62,7 @@ function feeLabel(payload){
   const maker=row.maker??row.makerU??row.makerUSDC,taker=row.taker??row.takerU??row.takerUSDC;
   if(maker==null&&taker==null)return"OK";
   const pct=v=>Number.isFinite(Number(v))?(Number(v)*100).toLocaleString("fr-FR",{maximumFractionDigits:4})+" %":"—";
-  return `Maker ${pct(maker)} · Taker ${pct(taker)}`;
+  return `Maker ${pct(maker)}\nTaker ${pct(taker)}`;
 }
 function paintAsset(code,data){
   text(code.toLowerCase(),data.present?`${fmt(data.total)} ${code}`:"—");
@@ -169,17 +169,19 @@ function mount(){
       "#traderOkxAccountPanel .okx-card.primary{background:linear-gradient(180deg,rgba(8,31,43,.82),rgba(4,19,29,.72));border-color:rgba(83,222,222,.22)}",
       "#traderOkxAccountPanel .okx-card span{display:block;color:#8ea4ba;font-size:8.5px;text-transform:uppercase;letter-spacing:.07em}",
       "#traderOkxAccountPanel .okx-card b{display:block;margin-top:3px;color:#eefafa;font-size:13px;line-height:1.25;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}",
+      "#traderOkxAccountPanel [data-okx-fees]{white-space:pre-line;overflow-wrap:normal;word-break:keep-all}",
       "#traderOkxAccountPanel .okx-card.primary b{font-size:15px;color:#fff1c7}",
       "#traderOkxAccountPanel .okx-card small{display:block;margin-top:3px;color:#91a9b7;font-size:8.5px;line-height:1.3}",
       "#traderOkxAccountPanel .okx-foot{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:8px;color:#8ea4ba;font-size:9.5px}",
       "#traderOkxAccountPanel button,#traderOkxAccountPanel input{border:1px solid #436d7a;border-radius:8px;background:#123743;color:#fff;padding:7px 10px}",
       "#traderOkxAccountPanel button{cursor:pointer;font-weight:700}",
-      "#traderOkxAccountPanel .okx-auth{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 0;padding:10px;border:1px solid rgba(255,201,103,.25);border-radius:10px;background:rgba(45,29,8,.25)}",
+      "#traderOkxAccountPanel .okx-auth{display:grid;grid-template-columns:auto minmax(220px,1fr) auto;align-items:center;gap:8px;margin:8px 0 0;padding:8px 10px;border:1px solid rgba(255,201,103,.25);border-radius:10px;background:rgba(45,29,8,.25)}",
       "#traderOkxAccountPanel .okx-auth[hidden]{display:none!important}",
-      "#traderOkxAccountPanel .okx-auth input{min-width:220px}",
-      "#traderOkxAccountPanel .okx-auth small{color:#d9c08d}",
+      "#traderOkxAccountPanel .okx-auth input{min-width:0;width:100%;height:34px;box-sizing:border-box}",
+      "#traderOkxAccountPanel .okx-auth button{height:34px;white-space:nowrap}",
+      "#traderOkxAccountPanel .okx-auth small{color:#d9c08d;white-space:nowrap}",
       "@media(max-width:1200px){#traderOkxAccountPanel .okx-primary{grid-template-columns:1fr 1fr 1fr}#traderOkxAccountPanel .okx-activity{grid-template-columns:repeat(2,minmax(0,1fr))}}",
-      "@media(max-width:760px){#traderOkxAccountPanel .okx-primary,#traderOkxAccountPanel .okx-activity{grid-template-columns:1fr}.okx-ro{margin-left:0!important}}"
+      "@media(max-width:760px){#traderOkxAccountPanel .okx-primary,#traderOkxAccountPanel .okx-activity{grid-template-columns:1fr}#traderOkxAccountPanel .okx-auth{grid-template-columns:1fr}#traderOkxAccountPanel .okx-auth small{white-space:normal}.okx-ro{margin-left:0!important}}"
     ].join("");document.head.appendChild(style);
   }
   const p=document.createElement("details");p.id=PANEL_ID;p.open=true;p.dataset.state="loading";
