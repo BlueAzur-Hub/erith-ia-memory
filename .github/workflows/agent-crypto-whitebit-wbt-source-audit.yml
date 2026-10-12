@@ -1,0 +1,86 @@
+name: Agent Crypto WBT WhiteBIT Official Spot Instrument Audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-whitebit-wbt-source-audit.yml'
+      - 'public/agent_crypto_erith_ia/tools/probe_whitebit_wbt_spot.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: crypto-whitebit-wbt-spot-instrument-metadata
+  cancel-in-progress: false
+jobs:
+  instrument-provenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read only — verify ranked WBT asset and official WhiteBIT public Spot market metadata
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/probe_whitebit_wbt_spot.py
+          python public/agent_crypto_erith_ia/tools/probe_whitebit_wbt_spot.py \
+            --output "$RUNNER_TEMP/wbt-spot-instrument.json"
+      - name: Verify absence of any unlicensed OHLCV extraction or fabricated data
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib,os
+          a=pathlib.Path(os.environ["RUNNER_TEMP"])/"wbt-spot-instrument.json"
+          j=json.loads(a.read_text())
+          assert j["schema"]=="seven.crypto.top25-whitebit-instrument-proof.v1"
+          assert j["rank"]==15 and j["ranked_coin_id"]=="whitebit"
+          assert j["venue"]=="WhiteBIT Spot" and j["pair"]=="WBT_USDT"
+          assert j["native_original_1m_ohlcv_archived"]==0
+          assert j["no_ohlcv_download_performed"]
+          assert j["historical_data_redistribution_rights_not_granted_or_assumed"]
+          if j["original_market_proven"]:
+              assert j["status"]=="exact_whitebit_spot_instrument_verified"
+              assert j["instrument"]["type"]=="spot" and j["instrument"]["stock"]=="WBT"
+          else:
+              assert j["status"] in ("exact_instrument_absent","source_unavailable_or_invalid")
+          print("WBT SPOT MARKET SOURCE METADATA PROVENANCE",j["status"])
+          PY
+      - name: Persist source-proof diagnostics in the Coffre only
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          out="$root/top25_historical_expansion/whitebit_market/index.json"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            for f in top250_multisource_coverage/index.json top25_historical_expansion/instrument_resolution.json; do
+              a=$(sha256sum "$root/$f" | cut -d' ' -f1)
+              b=$(git show "origin/main:$root/$f" | sha256sum | cut -d' ' -f1)
+              test "$a" = "$b" || { echo "::error::Rank/quote ownership changed";exit 1; }
+            done
+            git reset --hard origin/main
+            mkdir -p "$(dirname "$out")"
+            cp "$RUNNER_TEMP/wbt-spot-instrument.json" "$out"
+            git add -- "$out"
+            git diff --cached --check
+            if git diff --cached --quiet;then exit 0;fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m "Audit original WhiteBIT WBT spot instrument without distributing OHLCV"
+            if git push origin HEAD:main;then exit 0;fi
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: whitebit-wbt-spot-provenance
+          path: ${{ runner.temp }}/wbt-spot-instrument.json
+          retention-days: 30
+      - name: Protect Trader, Market Core and all original minute OHLCV
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/
