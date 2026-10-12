@@ -111,6 +111,9 @@ function ledgerClear(message){
   text("ledgerstatus",message);
   const entries=q("ledgerentries");
   if(entries)entries.replaceChildren();
+  const references=q("ledgerreferences");if(references)references.replaceChildren();
+  text("ledgercoverage","—");
+  text("ledgerwarning","");
 }
 function ledgerDate(row){
   const raw=Number(row?.ts??row?.cTime??row?.uTime);
@@ -119,17 +122,32 @@ function ledgerDate(row){
   return Number.isFinite(when.getTime())?when.toLocaleString("fr-FR"):"date inconnue";
 }
 function ledgerMovement(row,ccy,sourceLabel){
-  const label=ledgerDate(row);
-  const amount=Number(row?.balChg??row?.sz??row?.amt);
-  const amountText=Number.isFinite(amount)?fmt(amount)+" "+ccy:"montant indisponible";
+  const raw=String(row?.balChg??row?.sz??row?.amt??"").trim();
+  const valid=/^[+-]?\d+(?:\.\d+)?$/.test(raw)&&Number.isFinite(Number(raw));
+  const amount=valid?Number(raw):NaN;
+  const unsigned=raw.replace(/^[+-]/,"");
+  const [integer,decimal]=unsigned.split(".");
+  const value=valid?integer.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(decimal!==undefined?","+decimal:""):"montant non disponible";
+  const direction=!valid?"Variation indisponible":amount>0?"Entrée sur le compte":amount<0?"Sortie du compte":"Aucune variation";
+  const sign=valid&&amount>0?"+":valid&&amount<0?"−":"";
   const type=String(row?.type??"").slice(0,12);
   const subType=String(row?.subType??"").slice(0,12);
-  const reason=type||subType?" · référence de catégorie OKX "+[type,subType].filter(Boolean).join("/"):"";
-  return label+" · "+sourceLabel+" · "+amountText+reason;
+  return {
+    timestamp:Number(row?.ts??row?.cTime??row?.uTime)||0,
+    date:ledgerDate(row),
+    source:sourceLabel==="Trading"?"Compte de trading":"Compte de financement",
+    currency:ccy,
+    direction,
+    amount:valid?sign+value+" "+ccy:"Montant indisponible",
+    sign:amount>0?"credit":amount<0?"debit":"neutral",
+    reference:[type,subType].filter(Boolean).join("/")
+  };
 }
 function ledgerPaint(results){
   const list=q("ledgerentries");
+  const references=q("ledgerreferences");
   if(list)list.replaceChildren();
+  if(references)references.replaceChildren();
   const issues=[];
   const totals=[];
   const recent=[];
@@ -137,7 +155,7 @@ function ledgerPaint(results){
   for(const ccy of ["BTC","EUR"]){
     const item=results[ccy];
     if(!item?.ok){
-      issues.push(ccy+" : "+(item?.status===404?"Bridge ancien : route financière absente":item?.status===403?"accès Aether Trust Owner requis":item?.status===401?"session Aether Trust expirée":"lecture indisponible"));
+      issues.push(ccy+" : "+(item?.status===404?"Bridge ancien : route financière absente":item?.status===403?"accès Aether Trust requis":item?.status===401?"session expirée":"lecture indisponible"));
       continue;
     }
     const payload=item.payload;
@@ -156,37 +174,55 @@ function ledgerPaint(results){
       hasMore=hasMore||Boolean(stream.has_more);
       totals.push(label+" "+ccy+" : "+count+" mouvement"+(count!==1?"s":"")+(stream.has_more?" (suite possible)":""));
       for(const row of stream.records){
-        if(!row||typeof row!=="object")continue;
-        const ts=Number(row.ts??row.cTime??row.uTime)||0;
-        recent.push({ts,label:ledgerMovement(row,ccy,label)});
+        if(row&&typeof row==="object")recent.push(ledgerMovement(row,ccy,label));
       }
     }
   }
-  recent.sort((a,b)=>b.ts-a.ts);
+  recent.sort((a,b)=>b.timestamp-a.timestamp);
   if(list){
-    for(const entry of recent.slice(0,12)){
+    for(const entry of recent.slice(0,20)){
       const li=document.createElement("li");
-      li.textContent=entry.label;
+      li.className="okx-ledger-item";
+      const meta=document.createElement("div");
+      meta.className="okx-ledger-meta";
+      const source=document.createElement("strong");
+      source.textContent=entry.source;
+      const date=document.createElement("span");
+      date.textContent=entry.date;
+      meta.append(source,date);
+      const direction=document.createElement("div");
+      direction.className="okx-ledger-direction";
+      direction.textContent=entry.direction;
+      const amount=document.createElement("strong");
+      amount.className="okx-ledger-amount okx-ledger-"+entry.sign;
+      amount.textContent=entry.amount;
+      li.append(meta,direction,amount);
       list.appendChild(li);
+      if(references){
+        const technical=document.createElement("li");
+        technical.textContent=entry.date+" · "+entry.source+" · "+entry.currency+" · type/sous-type "+(entry.reference||"non fournis");
+        references.appendChild(technical);
+      }
     }
     if(!recent.length){
       const li=document.createElement("li");
+      li.className="okx-ledger-empty";
       li.textContent=success?"Aucun mouvement renvoyé sur les périodes accessibles.":"Aucune écriture vérifiable retournée.";
       list.appendChild(li);
     }
   }
-  const statusParts=[];
-  if(totals.length)statusParts.push(totals.join(" · "));
-  if(issues.length)statusParts.push("À vérifier : "+issues.join(" ; "));
-  if(hasMore)statusParts.push("historique potentiellement incomplet");
-  text("ledgerstatus",statusParts.join(" | ")||"Aucun journal financier disponible.");
+  text("ledgerstatus",recordsCount?recordsCount+" mouvements financiers retrouvés":"Aucun mouvement financier retrouvé");
+  const technicalStatus=totals.concat(issues.length?["À vérifier : "+issues.join(" ; ")]:[],hasMore?["D'autres pages d'historique peuvent exister."]:[]);
+  text("ledgercoverage",technicalStatus.join(" · ")||"Aucune source disponible.");
+  text("ledgerwarning",issues.length?"Attention : certaines sources ne sont pas disponibles ; les résultats peuvent être incomplets.":hasMore?"Attention : d'autres mouvements peuvent exister dans l'historique.":"Ces écritures incluent éventuellement des transferts entre comptes : elles ne représentent pas nécessairement des achats distincts.");
   text("positionproof",recordsCount
-    ?recordsCount+" écriture(s) financières consultée(s), sans preuve suffisante du coût PayPal en EUR. Prix moyen et gain non calculés."
+    ?recordsCount+" mouvements financiers consultés. Le coût de l'achat PayPal en EUR et le gain ne sont pas encore certifiés."
     :"Aucun coût d'acquisition certifié dans les journaux consultés. Retrouver le justificatif officiel d'achat en EUR.");
   text("avgcost","NON PROUVÉ");
   text("committed","NON PROUVÉ");
   text("pnl","HISTORIQUE À RAPPROCHER");
 }
+
 async function refreshLedger(force=false){
   if(ledgerInFlight)return ledgerInFlight;
   if(!token()){ledgerClear("Authentification Aether Trust nécessaire.");return false;}
@@ -280,7 +316,7 @@ function mount(){
   const zone=document.getElementById("market-zone");if(!zone)return false;
   if(!document.getElementById(STYLE_ID)){
     const style=document.createElement("style");style.id=STYLE_ID;style.textContent=[
-      "#traderOkxAccountPanel{grid-column:1/-1;display:block;box-sizing:border-box;width:99%;margin:14px auto 0;color:#d7eff0;background:linear-gradient(180deg,rgba(7,29,42,.97),rgba(5,19,29,.96));border:1px solid rgba(83,222,222,.34);border-radius:14px;overflow:hidden;font:12px system-ui,sans-serif}",
+      "#traderOkxAccountPanel{grid-column:1/-1;display:block;box-sizing:border-box;width:99%;margin:14px auto 0;color:#d7eff0;background:linear-gradient(180deg,rgba(7,29,42,.97),rgba(5,19,29,.96));border:1px solid rgba(83,222,222,.34);border-radius:14px;overflow:hidden;font:14px system-ui,sans-serif}",
       "#traderOkxAccountPanel>summary{padding:13px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;flex-wrap:wrap;list-style:none;font-size:14px;font-weight:800}",
       "#traderOkxAccountPanel>summary::-webkit-details-marker{display:none}",
       "#traderOkxAccountPanel .okx-live-dot{width:9px;height:9px;border-radius:50%;background:#8796a1;box-shadow:0 0 0 3px rgba(135,150,161,.12)}",
@@ -294,21 +330,38 @@ function mount(){
       "#traderOkxAccountPanel .okx-position .okx-card{border-color:rgba(255,209,117,.16)}",
       "#traderOkxAccountPanel .okx-position [data-okx-positionvalue]{color:#fff1c7}",
       "#traderOkxAccountPanel .okx-position [data-okx-avgcost],#traderOkxAccountPanel .okx-position [data-okx-committed],#traderOkxAccountPanel .okx-position [data-okx-pnl]{font-size:11px;color:#d6b879}",
-      "#traderOkxAccountPanel .okx-position-proof{margin:6px 2px 0;color:#8ea4ba;font-size:9px}",
+      "#traderOkxAccountPanel .okx-position-proof{margin:6px 2px 0;color:#8ea4ba;font-size:14px;line-height:1.5}",
       "#traderOkxAccountPanel .okx-activity{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:7px}",
       "#traderOkxAccountPanel .okx-card{min-width:0;padding:9px 11px;border:1px solid rgba(142,164,186,.14);border-radius:9px;background:rgba(5,18,28,.58)}",
       "#traderOkxAccountPanel .okx-card.primary{background:linear-gradient(180deg,rgba(8,31,43,.82),rgba(4,19,29,.72));border-color:rgba(83,222,222,.22)}",
-      "#traderOkxAccountPanel .okx-card span{display:block;color:#8ea4ba;font-size:8.5px;text-transform:uppercase;letter-spacing:.07em}",
-      "#traderOkxAccountPanel .okx-card b{display:block;margin-top:3px;color:#eefafa;font-size:13px;line-height:1.25;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}",
+      "#traderOkxAccountPanel .okx-card span{display:block;color:#8ea4ba;font-size:12px;text-transform:uppercase;letter-spacing:.07em}",
+      "#traderOkxAccountPanel .okx-card b{display:block;margin-top:3px;color:#eefafa;font-size:16px;line-height:1.35;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}",
       "#traderOkxAccountPanel [data-okx-fees]{white-space:pre-line;overflow-wrap:normal;word-break:keep-all}",
-      "#traderOkxAccountPanel .okx-card.primary b{font-size:15px;color:#fff1c7}",
-      "#traderOkxAccountPanel .okx-card small{display:block;margin-top:3px;color:#91a9b7;font-size:8.5px;line-height:1.3}",
-      "#traderOkxAccountPanel .okx-ledger{margin-top:10px;padding:11px;border:1px solid rgba(83,222,222,.20);border-radius:10px;background:rgba(4,17,27,.7)}",
-      "#traderOkxAccountPanel .okx-ledger-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;color:#a5efe7}",
-      "#traderOkxAccountPanel [data-okx-ledgerstatus]{font-size:11px;line-height:1.65;color:#f4d39b;overflow-wrap:anywhere}",
-      "#traderOkxAccountPanel .okx-ledger-note{font-size:10px;color:#99b2c0;line-height:1.5}",
-      "#traderOkxAccountPanel .okx-ledger-results{margin:6px 0 0;padding-left:17px;max-height:235px;overflow:auto;color:#d6e9ee;font-size:11px;line-height:1.65}",
-      "#traderOkxAccountPanel .okx-foot{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:8px;color:#8ea4ba;font-size:9.5px}",
+      "#traderOkxAccountPanel .okx-card.primary b{font-size:18px;color:#fff1c7}",
+      "#traderOkxAccountPanel .okx-card small{display:block;margin-top:3px;color:#91a9b7;font-size:12px;line-height:1.45}",
+      "#traderOkxAccountPanel .okx-ledger{margin-top:14px;padding:18px;border:1px solid rgba(83,222,222,.27);border-radius:11px;background:rgba(4,17,27,.76)}",
+      "#traderOkxAccountPanel .okx-ledger-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;color:#b6faf0}",
+      "#traderOkxAccountPanel .okx-ledger-head strong{font-size:20px;line-height:1.4;letter-spacing:.015em}",
+      "#traderOkxAccountPanel .okx-ledger-head button{font-size:15px;min-height:44px;padding:9px 16px}",
+      "#traderOkxAccountPanel [data-okx-ledgerstatus]{display:block;font-size:18px;line-height:1.5;font-weight:750;color:#ffe09b;margin:16px 0 8px}",
+      "#traderOkxAccountPanel .okx-ledger-note,#traderOkxAccountPanel [data-okx-ledgerwarning]{font-size:14px;line-height:1.6;color:#bed3e3;margin:8px 0}",
+      "#traderOkxAccountPanel .okx-ledger-results{list-style:none;display:grid;gap:10px;margin:18px 0;padding:0;max-height:none;overflow:visible}",
+      "#traderOkxAccountPanel .okx-ledger-item{display:grid;grid-template-columns:minmax(220px,1fr) minmax(190px,1fr) minmax(300px,1.3fr);align-items:center;gap:14px;min-width:0;border:1px solid rgba(120,179,197,.25);border-radius:10px;background:rgba(12,36,50,.75);padding:15px 18px}",
+      "#traderOkxAccountPanel .okx-ledger-meta{display:flex;flex-direction:column;gap:5px;min-width:0}",
+      "#traderOkxAccountPanel .okx-ledger-meta strong{font-size:15px;color:#effbff;font-weight:750}",
+      "#traderOkxAccountPanel .okx-ledger-meta span{font-size:13px;color:#c0d2de;line-height:1.45}",
+      "#traderOkxAccountPanel .okx-ledger-direction{font-size:15px;font-weight:650;color:#daebf2}",
+      "#traderOkxAccountPanel .okx-ledger-amount{font-size:clamp(18px,1.5vw,22px);font-weight:800;line-height:1.35;text-align:right;overflow-wrap:anywhere;letter-spacing:.012em;font-variant-numeric:tabular-nums}",
+      "#traderOkxAccountPanel .okx-ledger-credit{color:#76f4b5}",
+      "#traderOkxAccountPanel .okx-ledger-debit{color:#ffd39b}",
+      "#traderOkxAccountPanel .okx-ledger-neutral{color:#e1edf1}",
+      "#traderOkxAccountPanel .okx-ledger-empty{font-size:15px;line-height:1.6;padding:12px 0;color:#d6e9ee}",
+      "#traderOkxAccountPanel .okx-ledger-technical{margin-top:14px;border-top:1px solid rgba(120,179,197,.2);padding-top:11px;color:#b6cfdc}",
+      "#traderOkxAccountPanel .okx-ledger-technical summary{cursor:pointer;font-size:14px;font-weight:650;line-height:1.5;padding:7px 0}",
+      "#traderOkxAccountPanel .okx-ledger-technical p,#traderOkxAccountPanel .okx-ledger-technical li{font-size:13px;line-height:1.6;overflow-wrap:anywhere}",
+      "@media(max-width:1050px){#traderOkxAccountPanel .okx-ledger-item{grid-template-columns:minmax(150px,1fr) minmax(150px,1fr)}#traderOkxAccountPanel .okx-ledger-amount{grid-column:1/-1;text-align:left}}",
+      "@media(max-width:640px){#traderOkxAccountPanel .okx-ledger-item{grid-template-columns:1fr;gap:9px}#traderOkxAccountPanel .okx-ledger-amount{grid-column:1}#traderOkxAccountPanel .okx-ledger-head strong{font-size:18px}}",
+      "#traderOkxAccountPanel .okx-foot{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:8px;color:#8ea4ba;font-size:12px}",
       "#traderOkxAccountPanel button,#traderOkxAccountPanel input{border:1px solid #436d7a;border-radius:8px;background:#123743;color:#fff;padding:7px 10px}",
       "#traderOkxAccountPanel button{cursor:pointer;font-weight:700}",
       "#traderOkxAccountPanel .okx-auth{display:grid;grid-template-columns:auto minmax(220px,1fr) auto;align-items:center;gap:8px;margin:8px 0 0;padding:8px 10px;border:1px solid rgba(255,201,103,.25);border-radius:10px;background:rgba(45,29,8,.25)}",
@@ -338,7 +391,7 @@ function mount(){
     '<article class="okx-card"><span>Historique</span><b data-okx-history>—</b><small>ordres · 3 mois</small></article>',
     '<article class="okx-card"><span>Exécutions</span><b data-okx-fills>—</b><small>3 derniers mois</small></article>',
     '<article class="okx-card"><span>Frais BTC-USDC</span><b data-okx-fees>—</b><small>tarification du compte</small></article>',
-    '</div><section class="okx-ledger" aria-label="Historique financier OKX en lecture seule"><div class="okx-ledger-head"><strong>HISTORIQUE FINANCIER · BTC / EUR</strong><button type="button" data-okx-ledgerrefresh>Lire les mouvements</button></div><p data-okx-ledgerstatus>En attente de connexion.</p><p class="okx-ledger-note">Journaux Trading et Financement. Un mouvement BTC ne prouve pas à lui seul le prix payé en EUR par PayPal.</p><ul class="okx-ledger-results" data-okx-ledgerentries></ul></section><form class="okx-auth" data-okx-auth hidden><small data-okx-authstatus>Aether Trust requis.</small><input data-okx-secret type="password" minlength="6" autocomplete="current-password" placeholder="Mot de passe Aether Trust"><button data-okx-connect type="submit">Connecter</button></form>',
+    '</div><section class="okx-ledger" aria-label="Historique financier OKX en lecture seule"><div class="okx-ledger-head"><strong>HISTORIQUE DU COMPTE OKX</strong><button type="button" data-okx-ledgerrefresh>Actualiser l’historique</button></div><p role="status" data-okx-ledgerstatus>En attente de connexion.</p><p class="okx-ledger-note">Chaque ligne indique un mouvement de solde, et non nécessairement un achat ou une vente. Le prix réellement payé par PayPal reste à confirmer.</p><p data-okx-ledgerwarning></p><ul class="okx-ledger-results" data-okx-ledgerentries></ul><details class="okx-ledger-technical"><summary>Afficher les références et les sources OKX</summary><p data-okx-ledgercoverage>En attente de lecture.</p><ol data-okx-ledgerreferences></ol></details></section><form class="okx-auth" data-okx-auth hidden><small data-okx-authstatus>Aether Trust requis.</small><input data-okx-secret type="password" minlength="6" autocomplete="current-password" placeholder="Mot de passe Aether Trust"><button data-okx-connect type="submit">Connecter</button></form>',
     '<div class="okx-foot"><b data-okx-bridge>Bridge local 8787 · OKX Private REST</b><span>Dernière lecture : <span data-okx-updated>—</span></span><button type="button" data-okx-refresh>Actualiser</button></div></div>'
   ].join("");
   const caseStudy=document.getElementById("traderOkbCaseStudy");
