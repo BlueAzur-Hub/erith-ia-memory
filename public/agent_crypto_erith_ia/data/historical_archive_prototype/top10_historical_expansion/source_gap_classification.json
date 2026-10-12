@@ -1,0 +1,113 @@
+{
+  "schema": "seven.crypto.top10-original-market-gap-qualification.v1",
+  "date_utc": "2026-10-12",
+  "parent_index_path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top10_historical_expansion/collection_index.json",
+  "batch_index_git_blobs": {
+    "2018-q1": "25b03f000871f55841888623daa5bd5e9a5a3b40",
+    "2018-q2": "bd0ce7969383ebb11cae25574db6d7b692a477b3",
+    "2018-q3": "0444b1a1a525bf531a8e68fb38353a76b7fdcd15",
+    "2018-q4": "ecee15818cd9964a862db09ed00065a249aa682d",
+    "2019-q1": "3124be5b5ae2c60c50c8bbd739d258d93a73cdb2",
+    "2019-q2": "027a5b8aae2b7cf5e958f11018c2860205898598",
+    "2019-q3": "3819bda65625298465ef4640e19fd5c4f6a7b5cb",
+    "2019-q4": "a64b445af8fb8c2ea6ad837b4b0276e968734789",
+    "2020-q1": "3a72c641597f5ec20b481365c5035674e3dcad33",
+    "2020-q2": "06fc30e96c8fe4abc34e619465172cc3a887eb76",
+    "2020-q3": "de4a8ac395354d59738e7453c469fa2a1511d58c",
+    "2020-q4": "bf5e18a6568daef13a7d02dce6369e1ad640be36",
+    "2021-q1": "af38223bf970bf5cbaaedd5d5c22eff4d0ce5e2e",
+    "2021-apr": "93460f5e76d3c1c1977894707a9dcf39a0788dff"
+  },
+  "target_verified_months": 90,
+  "total_original_native_1m": 3867386,
+  "total_raw_missing_calendar_minutes": 76774,
+  "official_prelisting_minutes": 49380,
+  "assets": [
+    {
+      "id": "usd-coin",
+      "pair": "USDCUSDT",
+      "rank": 6,
+      "source_verified_months": 29,
+      "complete_source_months": 14,
+      "partial_source_months": 15,
+      "native_1m_original_rows": 1246108,
+      "raw_calendar_gaps_in_verified_months": 23972,
+      "official_prelisting_calendar_minutes": 20340,
+      "gaps_after_official_listing_in_verified_months": 3632,
+      "first_original_source_open_utc": "2018-12-15T03:12:00+00:00",
+      "last_original_source_open_utc": "2021-04-30T23:59:00+00:00",
+      "official_market_start": {
+        "date_utc": "2018-12-15T03:00:00Z",
+        "url": "https://www.binance.com/en/support/announcement/detail/360020702932"
+      },
+      "source_unavailable_months": [],
+      "interpretation": "Official prelisting minutes are not outages; later gaps require separate original trade evidence."
+    },
+    {
+      "id": "tron",
+      "pair": "TRXUSDT",
+      "rank": 8,
+      "source_verified_months": 35,
+      "complete_source_months": 17,
+      "partial_source_months": 18,
+      "native_1m_original_rows": 1513098,
+      "raw_calendar_gaps_in_verified_months": 20502,
+      "official_prelisting_calendar_minutes": null,
+      "gaps_after_official_listing_in_verified_months": null,
+      "first_original_source_open_utc": "2018-06-11T11:30:00+00:00",
+      "last_original_source_open_utc": "2021-04-30T23:59:00+00:00",
+      "official_market_start": null,
+      "source_unavailable_months": [
+        {
+          "month": "2018-01",
+          "http_status": 404,
+          "no_market_absence_proven": true
+        },
+        {
+          "month": "2018-02",
+          "http_status": 404,
+          "no_market_absence_proven": true
+        },
+        {
+          "month": "2018-03",
+          "http_status": 404,
+          "no_market_absence_proven": true
+        },
+        {
+          "month": "2018-04",
+          "http_status": 404,
+          "no_market_absence_proven": true
+        },
+        {
+          "month": "2018-05",
+          "http_status": 404,
+          "no_market_absence_proven": true
+        }
+      ],
+      "interpretation": "Exact initial market listing not yet verified. Source starts in June 2018; Jan–May source 404 is not a proof of no global trading."
+    },
+    {
+      "id": "zcash",
+      "pair": "ZECUSDT",
+      "rank": 10,
+      "source_verified_months": 26,
+      "complete_source_months": 12,
+      "partial_source_months": 14,
+      "native_1m_original_rows": 1108180,
+      "raw_calendar_gaps_in_verified_months": 32300,
+      "official_prelisting_calendar_minutes": 29040,
+      "gaps_after_official_listing_in_verified_months": 3260,
+      "first_original_source_open_utc": "2019-03-21T04:00:00+00:00",
+      "last_original_source_open_utc": "2021-04-30T23:59:00+00:00",
+      "official_market_start": {
+        "date_utc": "2019-03-21T04:00:00Z",
+        "url": "https://www.binance.com/en/support/announcement/detail/360025239772"
+      },
+      "source_unavailable_months": [],
+      "interpretation": "Official prelisting minutes are not outages; later gaps require separate original trade evidence."
+    }
+  ],
+  "source_policy": "Only Binance original 1m ZIP plus official CHECKSUM, no native trades proved for these gaps; original USDT quote maintained. Do not conflate with KuCoin stablecoin USDT/USDC or FIGR_HELOC.",
+  "no_synthetic_candles": true,
+  "no_trader_interface_change": true
+}
