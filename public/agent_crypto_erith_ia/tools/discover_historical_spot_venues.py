@@ -83,27 +83,41 @@ def active_archive_ids(queue, minute, daily):
 
 
 def universe(venue=VENUE,catalog=CATALOG):
+    """Use the latest frozen Top250 ranking, never historical venue ranks.
+
+    The venue census is a historical snapshot; moving ranks and newly
+    admitted exact IDs must not be treated as symbol/contract identity.
+    The live minute and daily registers independently prove the current
+    exact owner ID, current symbol and ranking below.
+    """
     v=json.loads(venue.read_text())
     c=json.loads(catalog.read_text())
     require(v.get("total_ranked")==c.get("ranked")==250 and
             len(v.get("assets",[]))==len(c.get("assets",[]))==250,
             "Ranked source incomplete")
-    idx={a["id"]:a for a in c["assets"]}
-    require(len(idx)==len({a["id"] for a in v["assets"]})==250,
-            "Repeated source identity")
-    queue=[]
-    for a in v["assets"]:
-        require(a["id"] in idx and a["rank"]==idx[a["id"]]["rank"] and
-                a["symbol"]==idx[a["id"]]["symbol"] and ID.fullmatch(a["id"]),
-                "Venue/catalog exact ID mismatch")
-        queue.append({k:a[k] for k in ("id","rank","symbol","name")})
-    queue.sort(key=lambda x:x["rank"])
+    old=v["assets"]
+    require(len({a["id"] for a in old})==250 and
+            {a["rank"] for a in old}==set(range(1,251)) and
+            all(ID.fullmatch(a["id"]) for a in old),
+            "Historic venue census corrupted")
+    current=c["assets"]
+    require(len({a["id"] for a in current})==250 and
+            {a["rank"] for a in current}==set(range(1,251)) and
+            all(ID.fullmatch(a["id"]) and
+                isinstance(a.get("symbol"),str) and
+                ALNUM.fullmatch(a["symbol"]) and
+                isinstance(a.get("name"),str) and a["name"]
+                for a in current),
+            "Current exact-ID Top250 catalogue invalid")
+    # Never transplant the old snapshot's rank or an old ticker into a
+    # newer owner. Matching identities comes exclusively from the current
+    # monthly catalog and the living minute/daily source registries.
+    queue=[{k:a[k] for k in ("id","rank","symbol","name")}
+           for a in sorted(current,key=lambda x:x["rank"])]
     minute=json.loads(LIVE_MINUTE.read_text())
     daily=json.loads(LIVE_DAILY.read_text())
     archived=active_archive_ids(queue,minute,daily)
-    # Legacy Binance history may be narrower, but must never contradict
-    # the union of actually published native minute/daily source inventories.
-    require({a["id"] for a in c["assets"] if a["months"]}<=archived,
+    require({a["id"] for a in current if a["months"]}<=archived,
             "Historic archive vanished from living native source registers")
     return queue,archived
 
