@@ -86,7 +86,7 @@ jobs:
           dir="$RUNNER_TEMP/top50-original-batch"
           root=public/agent_crypto_erith_ia/data/historical_archive_prototype
           git fetch origin main
-          for name in top500_multisource_coverage/index.json top50_historical_expansion/index.json top25_historical_expansion/resolution_checkpoint.json; do
+          for name in top250_multisource_coverage/index.json top50_historical_expansion/index.json top25_historical_expansion/resolution_checkpoint.json; do
             old=$(sha256sum "$root/$name" | cut -d' ' -f1)
             new=$(git show "origin/main:$root/$name" | sha256sum | cut -d' ' -f1)
             test "$old" = "$new" || { echo "::error::Top50 ranked identity changed";exit 1; }
@@ -130,7 +130,7 @@ jobs:
           git diff --exit-code -- \
             public/agent_crypto_erith_ia/trader/ \
             public/agent_crypto_erith_ia/administrator/ \
-            public/agent_crypto_erith_ia/data/historical_archive_prototype/top500_multisource_coverage/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/ \
             public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_earlier_source_vault/ \
             public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/resolution_checkpoint.json
   consolidate-top50:
@@ -221,7 +221,7 @@ jobs:
           out="$root/top50_historical_expansion/collection_index.json"
           for retry in 1 2 3; do
             git fetch origin main
-            for file in top500_multisource_coverage/index.json top50_historical_expansion/index.json top25_historical_expansion/resolution_checkpoint.json; do
+            for file in top250_multisource_coverage/index.json top50_historical_expansion/index.json top25_historical_expansion/resolution_checkpoint.json; do
               a=$(sha256sum "$root/$file"|cut -d' ' -f1)
               b=$(git show "origin/main:$root/$file"|sha256sum|cut -d' ' -f1)
               test "$a" = "$b" || { echo "::error::Top50 universe changed since source collection";exit 1; }
