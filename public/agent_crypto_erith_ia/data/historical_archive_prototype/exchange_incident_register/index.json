@@ -1,0 +1,1135 @@
+{
+  "schema": "seven.crypto.exchange-incident-and-top5-coverage.v1",
+  "as_of_utc": "2026-10-12",
+  "historical_data_until_exclusive_utc": "2026-10-01T00:00:00Z",
+  "policy": "No synthetic candles, no silent exchange/quote substitution, 1m source gaps remain explicit, first archived month is not listing genesis.",
+  "sources": {
+    "cross_venue_gap_matrix/index.json": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/cross_venue_gap_matrix/index.json",
+      "git_blob_sha": "b47c5c9b5b7ead00d6c917f9434c78454c854cb3"
+    },
+    "btc_verified_gap_months/index.json": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_verified_gap_months/index.json",
+      "git_blob_sha": "98860831cbb6896def336d3a88c1318f751bd190"
+    },
+    "btc_trade_gap_pilot/index.json": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_trade_gap_pilot/index.json",
+      "git_blob_sha": "1a782b8341889fc5494740cfdc556241ce9f5cc2"
+    },
+    "kucoin_bnb_sol_crosscheck/index.json": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/kucoin_bnb_sol_crosscheck/index.json",
+      "git_blob_sha": "4c5d9c771c8b0f10a16484d359cdcf66e3ce98e0"
+    },
+    "top250_multisource_coverage/index.json": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+      "git_blob_sha": "5446dc85c93660ce80a85db7fe2b32093fb2d8ff"
+    },
+    "calendar_year_hourly_shards/index.json": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/calendar_year_hourly_shards/index.json",
+      "git_blob_sha": "8b560200e1ff9f6963a7b6730ba1aef4ef534ecb"
+    },
+    "year_depth_index.json": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json",
+      "git_blob_sha": "6962655b0c099a0f4cf101be0350deff14772848"
+    },
+    "verified_periods/index.json": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/verified_periods/index.json",
+      "git_blob_sha": "03c81915e62bf7cb0331032bea6679f34b8ae658"
+    },
+    "btc_daily_reference/index.json": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_daily_reference/index.json",
+      "git_blob_sha": "cbfa67a5d14ff56146e12fa5d83f0672cee802a6"
+    }
+  },
+  "btc": {
+    "exchange": "Binance Spot",
+    "pair": "BTCUSDT",
+    "total_missing_minutes": 5881,
+    "windows_count": 27,
+    "coinbase_usd_positive_minutes": 5881,
+    "binance_trade_zip_zero_trade_proven_minutes": 910,
+    "binance_trade_unchecked_minutes": 4971,
+    "windows_with_relevant_official_notice": 25,
+    "windows_without_notice_proof": 2,
+    "official_notice_categories": {
+      "maintenance_programmee": 14,
+      "maintenance_systeme": 5,
+      "incident_securite": 1,
+      "cause_non_documentee": 2,
+      "maintenance_non_programmee": 5
+    },
+    "warning": "An official announcement on the same date does not prove every minute of a given gap is due to the announced event; discrepancies are noted.",
+    "windows": [
+      {
+        "index": 1,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2018-06-26T02:00:00Z",
+        "end_exclusive_utc": "2018-06-26T12:00:00Z",
+        "missing_native_1m_minutes": 600,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "zip_sha256": "a7f370d401b868ea656a9f7ab9aa11edf975c96d1bf1cf249dae63917e87427a"
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 600,
+          "complete_for_window": true
+        },
+        "kraken": {
+          "exchange": "Kraken Spot",
+          "pair": "XBTUSD",
+          "quote": "USD",
+          "sampled_minutes": 3,
+          "positive_probes": 2,
+          "minute_complete_not_verified": true
+        },
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/360005098352",
+          "note": "Attention : reprise officielle annoncée à 09:30 UTC, mais lacune jusqu'à 12:00 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 2,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2018-06-27T13:00:00Z",
+        "end_exclusive_utc": "2018-06-27T14:45:00Z",
+        "missing_native_1m_minutes": 105,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 105,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_systeme",
+          "url": "https://www.binance.com/en/support/announcement/detail/360005481092",
+          "note": "Reprise officielle à 14:45 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 3,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2018-07-04T00:23:00Z",
+        "end_exclusive_utc": "2018-07-04T08:00:00Z",
+        "missing_native_1m_minutes": 457,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 457,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "incident_securite",
+          "url": "https://www.binance.com/en/support/announcement/detail/360006675312",
+          "note": "Incident SYS et suspension Binance, début de l'incident le 3 juillet",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 4,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2018-10-19T06:00:00Z",
+        "end_exclusive_utc": "2018-10-19T09:30:00Z",
+        "missing_native_1m_minutes": 210,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 210,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_systeme",
+          "url": "https://www.binance.com/en/support/announcement/detail/360018158112",
+          "note": "Reprise officielle à 09:30 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 5,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2018-11-14T02:00:00Z",
+        "end_exclusive_utc": "2018-11-14T09:00:00Z",
+        "missing_native_1m_minutes": 420,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 420,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/360019455112",
+          "note": "Début 02:00 UTC, durée initiale estimée",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 6,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2019-03-12T02:00:00Z",
+        "end_exclusive_utc": "2019-03-12T08:00:00Z",
+        "missing_native_1m_minutes": 360,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 360,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "cause_non_documentee",
+          "url": null,
+          "note": "Pas d'annonce officielle correspondante identifiée dans cet audit",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 7,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2019-05-15T03:00:00Z",
+        "end_exclusive_utc": "2019-05-15T13:00:00Z",
+        "missing_native_1m_minutes": 600,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 600,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/360028054052",
+          "note": "Début annoncé à 03:00 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 8,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2019-06-07T21:14:00Z",
+        "end_exclusive_utc": "2019-06-07T22:15:00Z",
+        "missing_native_1m_minutes": 61,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 61,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_systeme",
+          "url": "https://www.binance.com/en/support/announcement/detail/360029308091",
+          "note": "Maintenance annoncée vers 20:00–23:00 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 9,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2019-08-15T02:00:00Z",
+        "end_exclusive_utc": "2019-08-15T10:00:00Z",
+        "missing_native_1m_minutes": 480,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 480,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/360032315391",
+          "note": "Début annoncé à 02:00 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 10,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2019-11-13T02:00:00Z",
+        "end_exclusive_utc": "2019-11-13T04:20:00Z",
+        "missing_native_1m_minutes": 140,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 140,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_systeme",
+          "url": "https://www.binance.com/en/support/announcement/detail/360036184631",
+          "note": "Reprise à 04:20 UTC ; uniquement l'intervalle 02:00–04:20",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 11,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2019-11-13T05:30:00Z",
+        "end_exclusive_utc": "2019-11-13T05:33:00Z",
+        "missing_native_1m_minutes": 3,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 3,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "cause_non_documentee",
+          "url": null,
+          "note": "Pas d'annonce officielle correspondante identifiée dans cet audit",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 12,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2019-11-25T02:00:00Z",
+        "end_exclusive_utc": "2019-11-25T04:00:00Z",
+        "missing_native_1m_minutes": 120,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 120,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_systeme",
+          "url": "https://www.binance.com/en/support/announcement/detail/360036374472",
+          "note": "Reprise officielle à 04:00 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 13,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2020-02-09T02:00:00Z",
+        "end_exclusive_utc": "2020-02-09T03:00:00Z",
+        "missing_native_1m_minutes": 60,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 60,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/360039215732",
+          "note": "Fenêtre annoncée 02:00–03:00 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 14,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2020-02-19T11:36:00Z",
+        "end_exclusive_utc": "2020-02-19T17:30:00Z",
+        "missing_native_1m_minutes": 354,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 354,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_non_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/360039975131",
+          "note": "Maintenance temporaire, reprise à 17:30 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 15,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2020-03-04T09:22:00Z",
+        "end_exclusive_utc": "2020-03-04T11:30:00Z",
+        "missing_native_1m_minutes": 128,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 128,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_non_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/360040075852",
+          "note": "Maintenance temporaire, reprise à 11:30 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 16,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2020-04-25T02:00:00Z",
+        "end_exclusive_utc": "2020-04-25T04:30:00Z",
+        "missing_native_1m_minutes": 150,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 150,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/360042668671",
+          "note": "Début annoncé à 02:00 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 17,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2020-06-28T02:00:00Z",
+        "end_exclusive_utc": "2020-06-28T05:30:00Z",
+        "missing_native_1m_minutes": 210,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 210,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/a9d34695cd9345c7a648a882fcd3bcc0",
+          "note": "Durée annoncée 2h, lacune 3h30 ; fin exacte à vérifier",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 18,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2020-11-30T06:00:00Z",
+        "end_exclusive_utc": "2020-11-30T07:00:00Z",
+        "missing_native_1m_minutes": 60,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 60,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/f5e4c4bca0e440e8b832494faf74016e",
+          "note": "Début annoncé à 06:00 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 19,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2020-12-21T14:10:00Z",
+        "end_exclusive_utc": "2020-12-21T18:00:00Z",
+        "missing_native_1m_minutes": 230,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "zip_sha256": "1a8afbb9894e8ae20dc0a8c85ac4a146a524c0083348e954beb36a9464302c6d"
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 230,
+          "complete_for_window": true
+        },
+        "kraken": {
+          "exchange": "Kraken Spot",
+          "pair": "XBTUSD",
+          "quote": "USD",
+          "sampled_minutes": 3,
+          "positive_probes": 3,
+          "minute_complete_not_verified": true
+        },
+        "official_binance": {
+          "classification": "maintenance_non_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/b05b72a7608943b186b981b4cc733e4e",
+          "note": "Maintenance temporaire ; archive Binance trades originale vérifiée",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 20,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2020-12-25T02:00:00Z",
+        "end_exclusive_utc": "2020-12-25T03:00:00Z",
+        "missing_native_1m_minutes": 60,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 60,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/38b072b7f1004812a16f9bbd53206ca7",
+          "note": "Reprise annoncée à 03:00 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 21,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2021-02-11T03:41:00Z",
+        "end_exclusive_utc": "2021-02-11T05:00:00Z",
+        "missing_native_1m_minutes": 79,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 79,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_non_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/aad7639a0ed9424bad585b508a61a433",
+          "note": "Maintenance temporaire, reprise à 05:00 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 22,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2021-03-06T02:00:00Z",
+        "end_exclusive_utc": "2021-03-06T03:30:00Z",
+        "missing_native_1m_minutes": 90,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 90,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/f02cab4e685b46da803bb0a680546d4b",
+          "note": "Début 02:00 UTC, durée annoncée approximative",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 23,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2021-04-20T02:00:00Z",
+        "end_exclusive_utc": "2021-04-20T04:30:00Z",
+        "missing_native_1m_minutes": 150,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 150,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/69e82a64b2c442b18eb1cf11934b27eb",
+          "note": "Début 02:00 UTC, reprise 04:30 UTC",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 24,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2021-04-25T04:01:00Z",
+        "end_exclusive_utc": "2021-04-25T08:45:00Z",
+        "missing_native_1m_minutes": 284,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 284,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/849160fe70214641baa6385619595aa1",
+          "note": "Début 04:00 UTC, durée annoncée 4h, lacune 4h44",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 25,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2021-08-13T02:00:00Z",
+        "end_exclusive_utc": "2021-08-13T06:30:00Z",
+        "missing_native_1m_minutes": 270,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 270,
+          "complete_for_window": true
+        },
+        "kraken": {
+          "exchange": "Kraken Spot",
+          "pair": "XBTUSD",
+          "quote": "USD",
+          "sampled_minutes": 3,
+          "positive_probes": 3,
+          "minute_complete_not_verified": true
+        },
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/92a9a5bc0129427f8e9928c9b7b09836",
+          "note": "Début 02:00 UTC, durée estimée 4h, lacune 4h30",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 26,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2021-09-29T07:00:00Z",
+        "end_exclusive_utc": "2021-09-29T09:00:00Z",
+        "missing_native_1m_minutes": 120,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": false,
+          "zero_trades_in_window": null,
+          "zip_sha256": null
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 120,
+          "complete_for_window": true
+        },
+        "kraken": null,
+        "official_binance": {
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/e2f674fc961d48af9b28edd82896607c",
+          "note": "Début 07:00 UTC, environ 2h",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      },
+      {
+        "index": 27,
+        "exchange": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "start_utc": "2023-03-24T12:40:00Z",
+        "end_exclusive_utc": "2023-03-24T14:00:00Z",
+        "missing_native_1m_minutes": 80,
+        "binance_1m_candles_in_gap": 0,
+        "binance_trades": {
+          "original_zip_checked": true,
+          "zero_trades_in_window": true,
+          "zip_sha256": "bceaa0b664b055318c22e509d33c04d532da143e7de41ca2fc3457100439c587"
+        },
+        "coinbase": {
+          "exchange": "Coinbase Exchange",
+          "pair": "BTC-USD",
+          "quote": "USD",
+          "positive_volume_minutes": 80,
+          "complete_for_window": true
+        },
+        "kraken": {
+          "exchange": "Kraken Spot",
+          "pair": "XBTUSD",
+          "quote": "USD",
+          "sampled_minutes": 3,
+          "positive_probes": 3,
+          "minute_complete_not_verified": true
+        },
+        "official_binance": {
+          "classification": "maintenance_non_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/813a31506e9f478ea8c1058b425df87a",
+          "note": "Reprise 14:00 UTC, interruption officielle commencée à 11:27 UTC ; lacune étudiée commence à 12:40",
+          "whole_gap_cause_proven": false
+        },
+        "synthetic_candles_permitted": false
+      }
+    ]
+  },
+  "top5": {
+    "coverage": [
+      {
+        "id": "bitcoin",
+        "symbol": "BTC",
+        "venue": "Binance Spot",
+        "pair": "BTCUSDT",
+        "quote": "USDT",
+        "native_1m": {
+          "verified_complete_months": 82,
+          "candles": 3598560,
+          "first_complete_month": "2018-03",
+          "last_complete_month": "2026-09",
+          "longest_contiguous_months": 42,
+          "other_months_not_automatically_missing": true
+        },
+        "derived_1h": {
+          "archived_candles": 59976,
+          "shard_count": 20,
+          "first_shard_utc": "2018-03-01T00:00:00.000Z",
+          "last_shard_utc": "2026-09-30T23:00:00.000Z",
+          "continuous_between_bounds": false
+        },
+        "derived_1d": {
+          "period_max_bars": 1795,
+          "period_max_gaps": 1,
+          "period_max_from_utc": "2021-10-01T00:00:00.000Z",
+          "period_max_end_exclusive_utc": "2026-10-01T00:00:00.000Z",
+          "one_year_bars": 365,
+          "native_independent_daily_claim": false
+        },
+        "mixed_provenance_1d_reference": {
+          "bars": 3075,
+          "start_utc": "2018-05-01T00:00:00Z",
+          "end_utc": "2026-09-30T00:00:00Z",
+          "native_exchange_1d_bars": 26,
+          "derived_from_complete_1m_bars": 3049,
+          "source_sha256": "812acb4a087cc43163760a6b397506bb7cb4bbcf8eca692fc686ef9f618b8bfd"
+        }
+      },
+      {
+        "id": "ethereum",
+        "symbol": "ETH",
+        "venue": "Binance Spot",
+        "pair": "ETHUSDT",
+        "quote": "USDT",
+        "native_1m": {
+          "verified_complete_months": 62,
+          "candles": 2717280,
+          "first_complete_month": "2021-05",
+          "last_complete_month": "2026-09",
+          "longest_contiguous_months": 42,
+          "other_months_not_automatically_missing": true
+        },
+        "derived_1h": {
+          "archived_candles": 45288,
+          "shard_count": 8,
+          "first_shard_utc": "2021-05-01T00:00:00.000Z",
+          "last_shard_utc": "2026-09-30T23:00:00.000Z",
+          "continuous_between_bounds": false
+        },
+        "derived_1d": {
+          "period_max_bars": 1795,
+          "period_max_gaps": 1,
+          "period_max_from_utc": "2021-10-01T00:00:00.000Z",
+          "period_max_end_exclusive_utc": "2026-10-01T00:00:00.000Z",
+          "one_year_bars": 365,
+          "native_independent_daily_claim": false
+        }
+      },
+      {
+        "id": "binancecoin",
+        "symbol": "BNB",
+        "venue": "Binance Spot",
+        "pair": "BNBUSDT",
+        "quote": "USDT",
+        "native_1m": {
+          "verified_complete_months": 62,
+          "candles": 2717280,
+          "first_complete_month": "2021-05",
+          "last_complete_month": "2026-09",
+          "longest_contiguous_months": 42,
+          "other_months_not_automatically_missing": true
+        },
+        "derived_1h": {
+          "archived_candles": 45288,
+          "shard_count": 8,
+          "first_shard_utc": "2021-05-01T00:00:00.000Z",
+          "last_shard_utc": "2026-09-30T23:00:00.000Z",
+          "continuous_between_bounds": false
+        },
+        "derived_1d": {
+          "period_max_bars": 1795,
+          "period_max_gaps": 1,
+          "period_max_from_utc": "2021-10-01T00:00:00.000Z",
+          "period_max_end_exclusive_utc": "2026-10-01T00:00:00.000Z",
+          "one_year_bars": 365,
+          "native_independent_daily_claim": false
+        }
+      },
+      {
+        "id": "ripple",
+        "symbol": "XRP",
+        "venue": "Binance Spot",
+        "pair": "XRPUSDT",
+        "quote": "USDT",
+        "native_1m": {
+          "verified_complete_months": 62,
+          "candles": 2717280,
+          "first_complete_month": "2021-05",
+          "last_complete_month": "2026-09",
+          "longest_contiguous_months": 42,
+          "other_months_not_automatically_missing": true
+        },
+        "derived_1h": {
+          "archived_candles": 45288,
+          "shard_count": 8,
+          "first_shard_utc": "2021-05-01T00:00:00.000Z",
+          "last_shard_utc": "2026-09-30T23:00:00.000Z",
+          "continuous_between_bounds": false
+        },
+        "derived_1d": {
+          "period_max_bars": 1795,
+          "period_max_gaps": 1,
+          "period_max_from_utc": "2021-10-01T00:00:00.000Z",
+          "period_max_end_exclusive_utc": "2026-10-01T00:00:00.000Z",
+          "one_year_bars": 365,
+          "native_independent_daily_claim": false
+        }
+      },
+      {
+        "id": "solana",
+        "symbol": "SOL",
+        "venue": "Binance Spot",
+        "pair": "SOLUSDT",
+        "quote": "USDT",
+        "native_1m": {
+          "verified_complete_months": 60,
+          "candles": 2632320,
+          "first_complete_month": "2021-05",
+          "last_complete_month": "2026-09",
+          "longest_contiguous_months": 42,
+          "other_months_not_automatically_missing": true
+        },
+        "derived_1h": {
+          "archived_candles": 43872,
+          "shard_count": 8,
+          "first_shard_utc": "2021-05-01T00:00:00.000Z",
+          "last_shard_utc": "2026-09-30T23:00:00.000Z",
+          "continuous_between_bounds": false
+        },
+        "derived_1d": {
+          "period_max_bars": 1736,
+          "period_max_gaps": 2,
+          "period_max_from_utc": "2021-10-01T00:00:00.000Z",
+          "period_max_end_exclusive_utc": "2026-10-01T00:00:00.000Z",
+          "one_year_bars": 365,
+          "native_independent_daily_claim": false
+        }
+      }
+    ],
+    "scope": "1m complete-month catalogs and 1h derived shards; Max daily periods are derived. Independent BTC mixed-provenance daily source shown separately; no all-time certification."
+  },
+  "cross_venue_altcoin_tests": {
+    "comparison_matrix_summary": {
+      "BNB": {
+        "binance_alt_pair_windows_with_bars": 0,
+        "calendar_minutes": 700,
+        "coinbase_any_trade_windows": 0,
+        "coinbase_complete_windows": 0,
+        "independent_trading_windows": 0,
+        "kraken_any_trade_windows": 0,
+        "windows": 4
+      },
+      "BTC": {
+        "binance_alt_pair_windows_with_bars": 0,
+        "calendar_minutes": 5881,
+        "coinbase_any_trade_windows": 27,
+        "coinbase_complete_windows": 27,
+        "independent_trading_windows": 27,
+        "kraken_any_trade_windows": 4,
+        "windows": 27
+      },
+      "ETH": {
+        "binance_alt_pair_windows_with_bars": 0,
+        "calendar_minutes": 700,
+        "coinbase_any_trade_windows": 4,
+        "coinbase_complete_windows": 4,
+        "independent_trading_windows": 4,
+        "kraken_any_trade_windows": 4,
+        "windows": 4
+      },
+      "SOL": {
+        "binance_alt_pair_windows_with_bars": 0,
+        "calendar_minutes": 470,
+        "coinbase_any_trade_windows": 3,
+        "coinbase_complete_windows": 2,
+        "independent_trading_windows": 3,
+        "kraken_any_trade_windows": 3,
+        "windows": 3
+      },
+      "XRP": {
+        "binance_alt_pair_windows_with_bars": 0,
+        "calendar_minutes": 700,
+        "coinbase_any_trade_windows": 1,
+        "coinbase_complete_windows": 1,
+        "independent_trading_windows": 4,
+        "kraken_any_trade_windows": 4,
+        "windows": 4
+      }
+    },
+    "kucoin_summary": {
+      "BNB": {
+        "fully_traded_windows": 3,
+        "traded_windows": 4,
+        "windows": 4
+      },
+      "SOL": {
+        "fully_traded_windows": 0,
+        "traded_windows": 1,
+        "windows": 1
+      }
+    },
+    "limitations": "42 selected windows, not full historical 1m coverage for ETH/BNB/XRP/SOL. KuCoin BNB positive trading in 4/4 windows, Coinbase SOL one missing minute supported by KuCoin positive candle; Kraken trades often samples only."
+  },
+  "unresolved": [
+    "Verify 4971 BTC gap minutes against native Binance Spot trade archives before claiming zero original trades.",
+    "Clarify cause of missing BTC 1m on 2019-03-12 02:00–08:00 and 2019-11-13 05:30–05:33 UTC.",
+    "Reconcile official resume estimates against precise Binance 1m gaps, especially 2018-06-26.",
+    "Audit ETH, BNB, XRP, SOL original gap-months and independent native daily OHLCV, then earliest genuine pair listings.",
+    "No Trader, Interface, Bridge, Market Core, original archive, or local cache was changed."
+  ]
+}
