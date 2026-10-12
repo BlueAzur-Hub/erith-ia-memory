@@ -1,0 +1,147 @@
+name: Agent Crypto Top5 Earlier Original Spot Vault
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-top5-earlier-vault.yml'
+      - 'public/agent_crypto_erith_ia/tools/archive_top5_earlier_months.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-top5-earlier-original-source-2021
+  cancel-in-progress: false
+jobs:
+  archive-older-original-months:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_TAG: crypto-top5-binance-earlier-2021-01_2021-04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test original source checksums, SQLite precision and protected Top5 pair identity
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            public/agent_crypto_erith_ia/tools/audit_top5_incomplete_months.py \
+            public/agent_crypto_erith_ia/tools/archive_top5_partial_months.py \
+            public/agent_crypto_erith_ia/tools/archive_top5_earlier_months.py
+          python public/agent_crypto_erith_ia/tools/archive_top5_earlier_months.py --self-test
+      - name: Acquire the sixteen 2021 Jan-Apr original Binance 1m months and preserve genuine OHLCV
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/archive_top5_earlier_months.py \
+            --stage --output "$RUNNER_TEMP/earlier-native-spot-source" --workers 3
+      - name: Require original source SHA, original UTC gaps, retained exchange and exact SQL rows
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib,os,hashlib
+          folder=pathlib.Path(os.environ["RUNNER_TEMP"])/"earlier-native-spot-source"
+          manifest=json.loads((folder/"manifest.json").read_text())
+          assert manifest["schema"]=="seven.crypto.top5-original-earlier-source-vault.v1"
+          assert manifest["source_months_verified"]+manifest["source_months_unavailable"]==16
+          assert manifest["source_months_verified"]>=8
+          assert len(manifest["rows"])==16
+          expected={"manifest.json"}
+          for item in manifest["rows"]:
+              assert item["quote"]=="USDT" and item["no_invented_bars"] is True
+              if item["status"] not in ("complete_native_1m","partial_or_close_time_anomaly"):
+                  assert item["verified_native_rows"]==0
+                  continue
+              assert item["verified_native_rows"]+item["missing_native_minutes"]==item["expected_calendar_minutes"]
+              assert sum(x["missing_minutes"] for x in item["gap_windows"])==item["missing_native_minutes"]
+              for k in ("original_source","official_checksum","sqlite"):
+                  a=item[k]
+                  assert a["name"] not in expected
+                  expected.add(a["name"])
+                  f=folder/a["name"]
+                  assert f.is_file() and f.stat().st_size==a["bytes"]
+                  assert hashlib.sha256(f.read_bytes()).hexdigest()==a["sha256"]
+          assert expected=={x.name for x in folder.iterdir()}
+          print("2021 ORIGINAL TOP5 SOURCE ARCHIVED",json.dumps({
+             k:manifest[k] for k in ("source_months_verified","source_months_unavailable",
+               "verified_original_candles","missing_native_minutes_in_verified_months")},sort_keys=True))
+          PY
+      - name: Publish all genuine source ZIPs, official SHA witnesses and SQLite query stores
+        run: |
+          set -euo pipefail
+          folder="$RUNNER_TEMP/earlier-native-spot-source"
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          git fetch origin main
+          old=$(sha256sum "$root/top250_multisource_coverage/index.json" | cut -d' ' -f1)
+          new=$(git show "origin/main:$root/top250_multisource_coverage/index.json" | sha256sum | cut -d' ' -f1)
+          test "$old" = "$new" || { echo "::error::Top250 source identity changed"; exit 1; }
+          if gh release view "$SOURCE_TAG" --json tagName >/dev/null 2>"$RUNNER_TEMP/release-stderr.txt"; then
+            mkdir -p "$RUNNER_TEMP/existing-source"
+            gh release download "$SOURCE_TAG" --pattern manifest.json --dir "$RUNNER_TEMP/existing-source"
+            cmp "$RUNNER_TEMP/existing-source/manifest.json" "$folder/manifest.json" || {
+              echo "::error::Immutable source release differs"; exit 1;
+            }
+          else
+            if ! grep -Eqi 'release not found|HTTP 404|not found' "$RUNNER_TEMP/release-stderr.txt"; then
+              cat "$RUNNER_TEMP/release-stderr.txt";exit 1
+            fi
+            gh release create "$SOURCE_TAG" "$folder"/* \
+              --target "$GITHUB_SHA" \
+              --title "Top5 Binance original historical 1m OHLCV January–April 2021" \
+              --notes "Authenticated native Binance Spot OHLCV for ETH BNB XRP SOL. Each original ZIP has official checksum plus a queryable SQLite. Source gaps preserved and certified per market and month. No synthetic data or Trader modification." \
+              --latest=false
+          fi
+          gh release view "$SOURCE_TAG" --json assets,isDraft,url > "$RUNNER_TEMP/release-proof.json"
+          python - <<'PY'
+          import json,os,pathlib
+          tmp=pathlib.Path(os.environ["RUNNER_TEMP"])
+          actual=json.loads((tmp/"release-proof.json").read_text())
+          original={p.name:p.stat().st_size for p in (tmp/"earlier-native-spot-source").iterdir()}
+          published={p["name"]:p["size"] for p in actual["assets"]}
+          assert not actual["isDraft"] and published==original,"Release truncated or modified"
+          print("ORIGINAL 2021 SOURCE RELEASE",actual["url"],len(original),"immutable source files")
+          PY
+      - name: Index historical sources separately from the strict full-month canonical catalog
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          file="$root/top5_earlier_source_vault/index.json"
+          bundle="$RUNNER_TEMP/earlier-native-spot-source/manifest.json"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            old=$(sha256sum "$root/top250_multisource_coverage/index.json" | cut -d' ' -f1)
+            new=$(git show "origin/main:$root/top250_multisource_coverage/index.json" | sha256sum | cut -d' ' -f1)
+            test "$old" = "$new" || { echo "::error::Source identity changed during GitHub Release"; exit 1; }
+            git reset --hard origin/main
+            mkdir -p "$(dirname "$file")"
+            cp "$bundle" "$file"
+            git add -- "$file"
+            git diff --cached --check
+            if git diff --cached --quiet;then
+              echo "NOOP: historical 2021 proof already indexed"
+              exit 0
+            fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Coffre: add source-authentic earlier 2021 ETH BNB XRP SOL OHLCV archive'
+            if git push origin HEAD:main;then exit 0;fi
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: top5-older-original-source-manifest
+          path: ${{ runner.temp }}/earlier-native-spot-source/manifest.json
+          retention-days: 30
+          if-no-files-found: ignore
+      - name: Refuse changes to trading sources and applications
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_daily_reference/
