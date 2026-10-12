@@ -1061,7 +1061,122 @@
         }
       }
     ],
-    "scope": "1m complete-month catalogs and 1h derived shards; Max daily periods are derived. Independent BTC mixed-provenance daily source shown separately; no all-time certification."
+    "scope": "1m complete-month catalogs and 1h derived shards; Max daily periods are derived. Independent BTC mixed-provenance daily source shown separately; no all-time certification.",
+    "source_month_completeness": {
+      "method": "Independent month-grid difference from published verified Binance original 1m year_depth_index, not the exchange genesis",
+      "source_path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/year_depth_index.json",
+      "source_git_blob_sha": "6962655b0c099a0f4cf101be0350deff14772848",
+      "assets": [
+        {
+          "id": "bitcoin",
+          "symbol": "BTC",
+          "quote": "USDT",
+          "exchange": "Binance Spot",
+          "observed_span_first_complete_month": "2018-03",
+          "observed_span_last_complete_month": "2026-09",
+          "calendar_months_within_observed_span": 103,
+          "certified_source_complete_months": 82,
+          "not_certified_complete_months": 21,
+          "not_certified_months": [
+            "2018-06",
+            "2018-07",
+            "2018-10",
+            "2018-11",
+            "2019-03",
+            "2019-05",
+            "2019-06",
+            "2019-08",
+            "2019-11",
+            "2020-02",
+            "2020-03",
+            "2020-04",
+            "2020-06",
+            "2020-11",
+            "2020-12",
+            "2021-02",
+            "2021-03",
+            "2021-04",
+            "2021-08",
+            "2021-09",
+            "2023-03"
+          ],
+          "semantic_warning": "A month not certified complete may contain valid native source rows; it is NOT equivalent to no trades or no historical data"
+        },
+        {
+          "id": "ethereum",
+          "symbol": "ETH",
+          "quote": "USDT",
+          "exchange": "Binance Spot",
+          "observed_span_first_complete_month": "2021-05",
+          "observed_span_last_complete_month": "2026-09",
+          "calendar_months_within_observed_span": 65,
+          "certified_source_complete_months": 62,
+          "not_certified_complete_months": 3,
+          "not_certified_months": [
+            "2021-08",
+            "2021-09",
+            "2023-03"
+          ],
+          "semantic_warning": "A month not certified complete may contain valid native source rows; it is NOT equivalent to no trades or no historical data"
+        },
+        {
+          "id": "binancecoin",
+          "symbol": "BNB",
+          "quote": "USDT",
+          "exchange": "Binance Spot",
+          "observed_span_first_complete_month": "2021-05",
+          "observed_span_last_complete_month": "2026-09",
+          "calendar_months_within_observed_span": 65,
+          "certified_source_complete_months": 62,
+          "not_certified_complete_months": 3,
+          "not_certified_months": [
+            "2021-08",
+            "2021-09",
+            "2023-03"
+          ],
+          "semantic_warning": "A month not certified complete may contain valid native source rows; it is NOT equivalent to no trades or no historical data"
+        },
+        {
+          "id": "ripple",
+          "symbol": "XRP",
+          "quote": "USDT",
+          "exchange": "Binance Spot",
+          "observed_span_first_complete_month": "2021-05",
+          "observed_span_last_complete_month": "2026-09",
+          "calendar_months_within_observed_span": 65,
+          "certified_source_complete_months": 62,
+          "not_certified_complete_months": 3,
+          "not_certified_months": [
+            "2021-08",
+            "2021-09",
+            "2023-03"
+          ],
+          "semantic_warning": "A month not certified complete may contain valid native source rows; it is NOT equivalent to no trades or no historical data"
+        },
+        {
+          "id": "solana",
+          "symbol": "SOL",
+          "quote": "USDT",
+          "exchange": "Binance Spot",
+          "observed_span_first_complete_month": "2021-05",
+          "observed_span_last_complete_month": "2026-09",
+          "calendar_months_within_observed_span": 65,
+          "certified_source_complete_months": 60,
+          "not_certified_complete_months": 5,
+          "not_certified_months": [
+            "2021-08",
+            "2021-09",
+            "2021-12",
+            "2023-02",
+            "2023-03"
+          ],
+          "semantic_warning": "A month not certified complete may contain valid native source rows; it is NOT equivalent to no trades or no historical data"
+        }
+      ],
+      "each_missing_month_status": "not_certified_complete_not_zero_trading",
+      "no_claim_about_inception_dates": true,
+      "no_gap_candles_invented": true
+    }
   },
   "cross_venue_altcoin_tests": {
     "comparison_matrix_summary": {
