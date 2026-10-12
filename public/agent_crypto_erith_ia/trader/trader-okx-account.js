@@ -194,7 +194,13 @@ function mount(){
     '</div><form class="okx-auth" data-okx-auth hidden><small data-okx-authstatus>Aether Trust requis.</small><input data-okx-secret type="password" minlength="6" autocomplete="current-password" placeholder="Mot de passe Aether Trust"><button data-okx-connect type="submit">Connecter le compte</button></form>',
     '<div class="okx-foot"><b data-okx-bridge>Bridge local 8787 · OKX Private REST</b><span>Dernière lecture : <span data-okx-updated>—</span></span><button type="button" data-okx-refresh>Actualiser</button><span>P&L : prochain bloc · historique des acquisitions à reconstruire sans invention.</span></div></div>'
   ].join("");
-  zone.insertBefore(p,zone.firstChild);
+  const caseStudy=document.getElementById("traderOkbCaseStudy");
+  if(caseStudy?.parentElement===zone)zone.insertBefore(p,caseStudy);
+  else{
+    const analyst=document.getElementById("analyste");
+    if(analyst?.parentElement===zone)analyst.insertAdjacentElement("afterend",p);
+    else zone.appendChild(p);
+  }
   p.querySelector("[data-okx-auth]")?.addEventListener("submit",submitInlineAuth);
   p.querySelector("[data-okx-refresh]")?.addEventListener("click",()=>void refresh({force:true}));
   p.addEventListener("toggle",()=>{if(p.open)void refresh({force:true});});
