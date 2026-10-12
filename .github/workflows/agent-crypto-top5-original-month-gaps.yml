@@ -1,0 +1,136 @@
+name: Agent Crypto Top5 Original Noncomplete Month Audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-top5-original-month-gaps.yml'
+      - 'public/agent_crypto_erith_ia/tools/audit_top5_incomplete_months.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-top5-native-incomplete-months
+  cancel-in-progress: false
+jobs:
+  original-months:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        asset: [ethereum, binancecoin, ripple, solana]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile, test synthetic fixture, and protect exact market pair
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/audit_top5_incomplete_months.py
+          python public/agent_crypto_erith_ia/tools/audit_top5_incomplete_months.py --self-test
+      - name: Audit every original native Binance minute within the exact missing-certified months
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/audit_top5_incomplete_months.py \
+            --asset ${{ matrix.asset }} \
+            --output "$RUNNER_TEMP/altcoin-gap-${{ matrix.asset }}.json"
+      - name: Archive real source evidence and explicit inconclusive cases
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: altcoin-gap-${{ matrix.asset }}
+          path: ${{ runner.temp }}/altcoin-gap-${{ matrix.asset }}.json
+          retention-days: 30
+          if-no-files-found: ignore
+      - name: Assert original trading components not modified
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_daily_reference/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/btc_verified_gap_months/
+  consolidate:
+    needs: original-months
+    if: needs.original-months.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: altcoin-gap-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/top5-original-months
+      - name: Validate every result, avoid conflating missing candles with no trades
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,pathlib
+          base=pathlib.Path(os.environ["RUNNER_TEMP"])/"top5-original-months"
+          assets=("ethereum","binancecoin","ripple","solana")
+          rows=[]
+          for asset in assets:
+              item=json.loads((base/f"altcoin-gap-{asset}.json").read_text())
+              assert item["schema"]=="seven.crypto.top5-original-altcoin-month-gap-audit.v1"
+              assert item["asset_id"]==asset and item["no_interpolation"] is True
+              assert item["months_targeted"]==len(item["months"])
+              assert all(r["pair"]==item["pair"] and r["quote"]=="USDT" for r in item["months"])
+              assert all(r["synthetic_rows"]==0 for r in item["months"])
+              assert item["months_verified"]==sum(r["source_verified"] for r in item["months"])
+              for r in item["months"]:
+                  if r["source_verified"]:
+                      assert r["source_rows"]+r["missing_1m"]==r["calendar_minutes"]
+                      assert sum(x["missing_minutes"] for x in r["gaps"])==r["missing_1m"]
+                      assert len(r["zip_sha256"])==64 and len(r["checksum_sha256"])==64
+                  else:
+                      assert r["status"] not in ("native_source_complete_month","native_source_partially_missing_or_anomalous")
+              rows.append(item)
+          assert sum(x["months_targeted"] for x in rows)==14
+          merged={"schema":"seven.crypto.top5-original-altcoin-native-gap-evidence.v1",
+                  "assets":rows,"assets_scanned":4,"months_targeted":14,
+                  "months_source_verified":sum(x["months_verified"] for x in rows),
+                  "source_native_rows":sum(x["source_rows_verified"] for x in rows),
+                  "missing_native_1m":sum(x["source_missing_1m"] for x in rows),
+                  "policy":"Original Binance Spot native 1m ZIP/CHECKSUM only. Zero trades in gaps not implied. No fabricated candles. Missing source never means no trading.",
+                  "btc_original_trade_sources_modified":False,
+                  "trader_modified":False}
+          dest=pathlib.Path(os.environ["RUNNER_TEMP"])/"top5-original-month-evidence.json"
+          dest.write_text(json.dumps(merged,sort_keys=True,indent=2)+"\n")
+          print("TOP5 NATIVE MONTH GAP VERIFICATION",json.dumps({k:merged[k] for k in ("months_source_verified","months_targeted","source_native_rows","missing_native_1m")},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: top5-original-month-gap-evidence
+          path: ${{ runner.temp }}/top5-original-month-evidence.json
+          retention-days: 30
+      - name: Publish only the merged audit and check for source drift
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          target="$root/top5_original_gap_audit/index.json"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            for src in year_depth_index.json top250_multisource_coverage/index.json btc_verified_gap_months/index.json; do
+              old=$(sha256sum "$root/$src" | cut -d' ' -f1)
+              new=$(git show "origin/main:$root/$src" | sha256sum | cut -d' ' -f1)
+              test "$old" = "$new" || { echo "::error::Source changed during native gap audit"; exit 1; }
+            done
+            git reset --hard origin/main
+            mkdir -p "$(dirname "$target")"
+            cp "$RUNNER_TEMP/top5-original-month-evidence.json" "$target"
+            git add -- "$target"
+            git diff --cached --check
+            if git diff --cached --quiet; then echo "NOOP: identical source proof"; exit 0; fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Publish source-verified ETH BNB XRP SOL original monthly gap classifications'
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          exit 1
