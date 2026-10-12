@@ -10,45 +10,11 @@ const fixtures=new Map([
  ["top250_multisource_coverage/index.json",JSON.parse(fs.readFileSync(dir+"top250_multisource_coverage/index.json","utf8"))],
  ["top250_history_catalog/index.json",JSON.parse(fs.readFileSync(dir+"top250_history_catalog/index.json","utf8"))],
  ["bitget_verified_views/index.json",JSON.parse(fs.readFileSync(dir+"bitget_verified_views/index.json","utf8"))],
- ["year_depth_index.json",JSON.parse(fs.readFileSync(dir+"year_depth_index.json","utf8"))]
+ ["year_depth_index.json",JSON.parse(fs.readFileSync(dir+"year_depth_index.json","utf8"))],
+ ["wbt_private_status.json",JSON.parse(fs.readFileSync(dir+"wbt_private_status.json","utf8"))]
 ]);
-// Build a SELF-CONSISTENT test-only federation from the two genuine source
-// indexes. The published multi-source index is updated asynchronously after
-// fresh Binance Releases, and its temporary lag must not deadlock the
-// upstream catalog builder's OFFLINE UI tests. This fixture is never written
-// to GitHub or accepted as an actual published/historical archive.
-const sourceBin=fixtures.get("top250_history_catalog/index.json");
-const sourceAlt=fixtures.get("bitget_verified_views/index.json");
-const testFed=structuredClone(fixtures.get("top250_multisource_coverage/index.json"));
-const altById=new Map(sourceAlt.assets.map(a=>[a.id,a]));
-for(let i=0;i<sourceBin.assets.length;i++){
- const src=sourceBin.assets[i],row=testFed.assets[i];
- assert.equal(src.id,row.id,"Top250 exact identity changed in test inputs");
- assert.equal(src.symbol,row.symbol,"Top250 exact symbol changed in test inputs");
- const alt=altById.get(src.id);
- assert.ok(!(src.months.length&&alt),"Two sources claim one owner");
- if(src.months.length){
-  row.source="Binance Spot official native 1m ZIPs";
-  row.months=src.months.length;
-  row.native_1m_count=src.candles;
- }else if(alt){
-  row.source="Bitget Spot native 1m HTTPS";
-  row.months=alt.months.length;
-  row.native_1m_count=alt.total_verified_1m_count;
- }else{
-  row.source=null;row.months=0;row.native_1m_count=0;
- }
-}
-testFed.binance_archived_assets=sourceBin.archived_assets;
-testFed.bitget_archived_assets=sourceAlt.archived_assets;
-testFed.archived_assets=testFed.assets.filter(a=>a.months>0).length;
-testFed.native_1m_candles=testFed.assets.reduce((n,a)=>n+a.native_1m_count,0);
-testFed.groups=testFed.groups.map(g=>({...g,
- archived:testFed.assets.slice(0,g.top).filter(a=>a.months>0).length}));
-assert.equal(testFed.archived_assets,
- testFed.binance_archived_assets+testFed.bitget_archived_assets,
- "A source identity collision invalidated this offline fixture");
-fixtures.set("top250_multisource_coverage/index.json",testFed);
+// Use real, independently verified source indexes. Their snapshots do not
+// have to share the same collection time or count. No mock candles added.
 
 const base="https://blueazur-hub.github.io",path="/erith-ia-memory/public/agent_crypto_erith_ia/data/historical_archive_prototype/";
 function harness(mutate=()=>{}){
@@ -89,28 +55,28 @@ function harness(mutate=()=>{}){
  return {window,nodes,element,requests,events};
 }
 async function ready(h){
- for(let i=0;i<50;i++){
-  if(!h.element("top250-status").textContent.includes("Contrôle des index"))return;
+ for(let i=0;i<80;i++){
+  const status=h.element("top250-status").textContent;
+  if(status.includes("Sources indépendantes validées")||status.includes("Vérification refusée"))
+   return;
   await new Promise(resolve=>setImmediate(resolve));
  }
- throw Error("Timed out while loading the verified Top250");
+ throw Error("Timed out while loading Top250");
 }
-test("single Top250 uses authentic Binance plus Bitget count and year-depth separately",async()=>{
+test("actual asynchronous source snapshots render Binance and Bitget without double counting",async()=>{
  const h=harness();await ready(h);
  const f=fixtures.get("top250_multisource_coverage/index.json");
- const d=fixtures.get("year_depth_index.json");
  const result=h.window.SevenTop250Catalog.read();
- assert.ok(result,"Expected fully validated federated catalog: "+h.element("top250-status").textContent);
+ assert.ok(result,"Expected validated exact-ID source catalogs: "+h.element("top250-status").textContent);
+ assert.equal(result.assets.length,250);
  assert.equal(result.archived_assets,f.archived_assets);
- assert.equal(result.binance_archived_assets+result.bitget_archived_assets,f.archived_assets);
- assert.equal(h.requests.length,4);
- assert.match(h.element("top250-title").textContent,/Binance \+ Bitget/);
+ assert.match(h.element("top250-title").textContent,/archives publiques/);
  assert.match(h.element("top250-counts").textContent,/Top 250/);
  assert.ok(h.element("top250-summary").children.length>0);
- assert.ok(d.assets_with_at_least_12_consecutive_closed_months<=f.archived_assets);
- assert.equal(result.assets.length,250);
+ assert.ok(h.element("top250-rows").children.length>0);
+ assert.match(h.element("top250-status").textContent,/Sources indépendantes validées/);
 });
-test("a lagging federated count is still strictly refused at runtime",async()=>{
+test("old federated monthly counter does not hide newer genuine Binance sources",async()=>{
  const h=harness((file,data)=>{
   if(file==="top250_multisource_coverage/index.json"){
    const btc=data.assets.find(a=>a.id==="bitcoin");
@@ -119,29 +85,51 @@ test("a lagging federated count is still strictly refused at runtime",async()=>{
   }
  });
  await ready(h);
- assert.equal(h.window.SevenTop250Catalog.read(),null);
- assert.match(h.element("top250-status").textContent,/Archive Binance altérée/);
+ assert.ok(h.window.SevenTop250Catalog.read());
+ assert.match(h.element("top250-status").textContent,/index fédéré plus ancien/);
 });
-test("a forged Bitget month cannot silently inflate federated count",async()=>{
+test("tampering a genuine Binance source count blocks the view",async()=>{
  const h=harness((file,data)=>{
-  if(file==="top250_multisource_coverage/index.json"){
-   const bitget=data.assets.find(x=>x.source?.startsWith("Bitget"));
-   bitget.months+=1;bitget.native_1m_count+=43200;
-   data.native_1m_candles+=43200;
-  }
+  if(file==="top250_history_catalog/index.json")
+   data.assets[0].candles+=1;
  });
  await ready(h);
  assert.equal(h.window.SevenTop250Catalog.read(),null);
- assert.match(h.element("top250-status").textContent,/Vérification refusée/);
+ assert.match(h.element("top250-status").textContent,/Sources mensuelles Binance incohérentes/);
 });
-test("Binance and Bitget sources remain distinct rather than fabricated exchanges",async()=>{
+test("forged Bitget native minute count cannot enter the catalog",async()=>{
+ const h=harness((file,data)=>{
+  if(file==="bitget_verified_views/index.json")data.assets[0].total_verified_1m_count+=1440;
+ });
+ await ready(h);
+ assert.equal(h.window.SevenTop250Catalog.read(),null);
+ assert.match(h.element("top250-status").textContent,/Source Bitget native minute count invalid/);
+});
+test("a changed frozen Top250 exact coin identity is rejected",async()=>{
+ const h=harness((file,data)=>{
+  if(file==="top250_history_catalog/index.json")data.assets[0].id="fake-bitcoin";
+ });
+ await ready(h);
+ assert.equal(h.window.SevenTop250Catalog.read(),null);
+ assert.match(h.element("top250-status").textContent,/Identité ou comptage Binance incorrect/);
+});
+test("the WBT private proof is shown without publishing source prices",async()=>{
+ const h=harness();await ready(h);
+ for(let i=0;i<30;i++){
+  if(h.element("wbt-private-status").textContent.includes("Métadonnées publiques"))break;
+  await new Promise(resolve=>setImmediate(resolve));
+ }
+ assert.match(h.element("wbt-private-status").textContent,/aucun prix publié/);
+ assert.equal(fixtures.get("wbt_private_status.json").candle_rows,2172121);
+});
+test("a corrupted frozen federation header is still refused",async()=>{
  const h=harness((file,data)=>{
   if(file==="top250_multisource_coverage/index.json")
    data.binance_archived_assets+=1;
  });
  await ready(h);
  assert.equal(h.window.SevenTop250Catalog.read(),null);
- assert.match(h.element("top250-status").textContent,/Vérification refusée/);
+ assert.match(h.element("top250-status").textContent,/Index fédéré incorrect/);
 });
 test("the canonical vault mounts both verified readers without editing Trader",()=>{
  const html=fs.readFileSync(root+"administrator/historical-vault.html","utf8");
@@ -153,19 +141,15 @@ test("the canonical vault mounts both verified readers without editing Trader",(
  assert.match(html,/id="vault-year-rows"/);
 });
 
-test("an older independently verified year-depth index never hides newly archived coins",async()=>{
+test("an older year-depth index does not block the current 1m sources",async()=>{
  const h=harness((file,data)=>{
   if(file==="year_depth_index.json"){
-   data.archive_assets=104;
-   data.source_catalog_minutes=83676960;
+   data.archive_assets=104;data.source_catalog_minutes=83676960;
   }
  });
  await ready(h);
- const result=h.window.SevenTop250Catalog.read();
- assert.ok(result,"Historical year-depth lag must not hide the verified Top250: "+
-   h.element("top250-status").textContent);
- assert.equal(result.archived_assets,fixtures.get("top250_multisource_coverage/index.json").archived_assets);
- assert.match(h.element("top250-status").textContent,/index annuel en synchronisation/);
+ assert.ok(h.window.SevenTop250Catalog.read());
+ assert.match(h.element("top250-status").textContent,/Sources indépendantes validées/);
 });
 test("a future or impossible year-depth source is still rejected",async()=>{
  const h=harness((file,data)=>{
