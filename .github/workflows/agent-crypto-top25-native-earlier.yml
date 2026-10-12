@@ -1,0 +1,246 @@
+name: Agent Crypto Top25 Original 2018 LINK ADA XLM LTC
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-top25-native-earlier.yml'
+      - 'public/agent_crypto_erith_ia/tools/archive_top25_earlier_spot.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-top25-earlier-source-2018
+  cancel-in-progress: false
+jobs:
+  original-month-batches:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        batch:
+          - '2018-q1'
+          - '2018-q2'
+          - '2018-q3'
+          - '2018-q4'
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify rank frozen, original source parser and SQLite precision
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/archive_top25_earlier_spot.py
+          python public/agent_crypto_erith_ia/tools/archive_top25_earlier_spot.py --self-test
+      - name: Retrieve only selected original Binance Spot pair-months
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/archive_top25_earlier_spot.py \
+            --batch ${{ matrix.batch }} --output "$RUNNER_TEMP/top25-original-batch"
+      - name: Validate all source SHA256 and strict UTC vs quarantined original source separation
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os,json,pathlib,hashlib
+          folder=pathlib.Path(os.environ["RUNNER_TEMP"])/"top25-original-batch"
+          m=json.loads((folder/"manifest.json").read_text())
+          assert m["schema"]=="seven.crypto.top25-earlier-spot-batch.v1"
+          assert m["source_verified_month_pairs"]+m["pre_pair_listing_month_pairs"]+m["unavailable_or_unverified_month_pairs"]==m["target_month_pairs"]
+          assert m["strict_utc_aligned_native_rows"]+m["quarantined_native_rows"]==m["original_native_ohlcv_rows"]
+          assert m["no_synthetic_bars"] and m["trader_interface_modified"] is False
+          assert all("2018-01"<=r["month"]<="2018-12" for r in m["records"])
+          expected={"manifest.json"}
+          for row in m["records"]:
+              assert row["quote"]=="USDT" and row["no_synthetic_ohlcv"] and row["venue"]=="Binance Spot"
+              if row["status"] in ("native_1m_complete","native_1m_partial","original_timestamp_quarantine"):
+                  assert row["native_rows"]>0 and row["source_zip"]["name"] not in expected
+                  for key in ("source_zip","official_checksum","sqlite"):
+                      entry=row[key];p=folder/entry["name"]
+                      assert entry["name"] not in expected
+                      assert p.is_file() and p.stat().st_size==entry["bytes"]
+                      assert hashlib.sha256(p.read_bytes()).hexdigest()==entry["sha256"]
+                      expected.add(entry["name"])
+                  if row["strict_utc_aligned"]:
+                      assert row["native_rows"]+row["missing_1m_minutes"]==row["calendar_minutes"]
+                      assert sum(g["missing_minutes"] for g in row["missing_intervals"])==row["missing_1m_minutes"]
+                      assert row["offgrid_native_rows"]==0
+                  else: assert row["offgrid_native_rows"]>0 and row["excluded_from_utc_1m_calendar"]
+              else:
+                  assert row["native_rows"]==0
+          assert {p.name for p in folder.iterdir()}==expected
+          print("TOP25 HISTORICAL SOURCE BATCH VERIFIED",
+                 m["batch"],m["source_verified_month_pairs"],m["original_native_ohlcv_rows"])
+          PY
+      - name: Preserve checksum-exact original source ZIP and native SQLite in immutable GitHub Release
+        run: |
+          set -euo pipefail
+          batch=${{ matrix.batch }}
+          tag="crypto-top25-earlier-original-spot-$batch"
+          dir="$RUNNER_TEMP/top25-original-batch"
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          git fetch origin main
+          for name in top250_multisource_coverage/index.json top25_historical_expansion/index.json top25_historical_expansion/collection_index.json; do
+            old=$(sha256sum "$root/$name" | cut -d' ' -f1)
+            new=$(git show "origin/main:$root/$name" | sha256sum | cut -d' ' -f1)
+            test "$old" = "$new" || { echo "::error::Top25 ranked identity changed";exit 1; }
+          done
+          if gh release view "$tag" --json tagName >/dev/null 2>"$RUNNER_TEMP/tag-err.txt"; then
+            mkdir -p "$RUNNER_TEMP/previous"
+            gh release download "$tag" --pattern manifest.json --dir "$RUNNER_TEMP/previous"
+            cmp "$RUNNER_TEMP/previous/manifest.json" "$dir/manifest.json" || {
+              echo "::error::Existing immutable native OHLCV source differs";exit 1;
+            }
+          else
+            if ! grep -Eqi 'release not found|HTTP 404|not found' "$RUNNER_TEMP/tag-err.txt";then
+              cat "$RUNNER_TEMP/tag-err.txt";exit 1
+            fi
+            gh release create "$tag" "$dir"/* --target "$GITHUB_SHA" \
+              --title "Top25 2018 Binance original Spot LINK ADA XLM LTC $batch" \
+              --notes "Exact original Binance Spot 1m monthly ZIPs with official checksum witnesses and lossless SQLite. Original market quote USDT, pre-listing months explicit, irregular original timestamps quarantined; no synthetic OHLCV. Trader untouched." \
+              --latest=false
+          fi
+          gh release view "$tag" --json assets,isDraft,url > "$RUNNER_TEMP/actual-release.json"
+          python - <<'PY'
+          import os,pathlib,json
+          base=pathlib.Path(os.environ["RUNNER_TEMP"])
+          actual=json.loads((base/"actual-release.json").read_text())
+          files={p.name:p.stat().st_size for p in (base/"top25-original-batch").iterdir()}
+          published={a["name"]:a["size"] for a in actual["assets"]}
+          assert not actual["isDraft"] and files==published
+          print("TOP25 IMMUTABLE ORIGINAL SOURCE RELEASE",actual["url"],len(published))
+          PY
+      - name: Copy independently checkable manifest for roll-up
+        run: |
+          cp "$RUNNER_TEMP/top25-original-batch/manifest.json" "$RUNNER_TEMP/batch-${{ matrix.batch }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: top25-spot-batch-${{ matrix.batch }}
+          path: ${{ runner.temp }}/batch-${{ matrix.batch }}.json
+          retention-days: 30
+      - name: Assert no original existing vault or trader application changed
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_earlier_source_vault/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top25_historical_expansion/collection_index.json
+  consolidate-top25:
+    needs: original-month-batches
+    if: needs.original-month-batches.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: top25-spot-batch-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/top25-batches
+      - name: Independently reconcile 48 original candidate month-pairs, source statuses and all true OHLCV
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,pathlib,hashlib,calendar
+          from collections import Counter
+          base=pathlib.Path(os.environ["RUNNER_TEMP"])/"top25-batches"
+          names=tuple(f"2018-q{q}" for q in range(1,5))
+          rows=[]
+          by_asset=Counter()
+          by_asset_quarantine=Counter()
+          bad=[]
+          sha={}
+          for n in names:
+              raw=(base/f"batch-{n}.json").read_bytes()
+              j=json.loads(raw)
+              assert j["schema"]=="seven.crypto.top25-earlier-spot-batch.v1" and j["batch"]==n
+              assert j["no_synthetic_bars"] and j["trader_interface_modified"] is False
+              assert j["target_month_pairs"]==len(j["records"])
+              assert j["strict_utc_aligned_native_rows"]+j["quarantined_native_rows"]==j["original_native_ohlcv_rows"]
+              sha[n]=hashlib.sha256(raw).hexdigest()
+              for r in j["records"]:
+                  k=(r["asset_id"],r["month"])
+                  assert r["asset_id"] in ("chainlink","cardano","stellar","litecoin") and r["quote"]=="USDT"
+                  if r["status"] in ("native_1m_complete","native_1m_partial"):
+                      by_asset[r["asset_id"]]+=r["native_rows"]
+                  elif r["status"]=="original_timestamp_quarantine":
+                      by_asset_quarantine[r["asset_id"]]+=r["native_rows"]
+                  elif r["status"] not in ("before_official_pair_listing","source_unavailable",
+                          "checksum_unavailable","original_requires_manual_source_review"):
+                      raise ValueError("Unrecognized provenance status: "+r["status"])
+                  rows.append(r)
+              if j["source_verified_month_pairs"]<j["target_month_pairs"]:
+                  bad.append(n)
+          assert len(rows)==48 and len({(r["asset_id"],r["month"]) for r in rows})==48
+          expected_markets={"chainlink":"LINKUSDT","cardano":"ADAUSDT","stellar":"XLMUSDT","litecoin":"LTCUSDT"}
+          assert all(r["pair"]==expected_markets[r["asset_id"]] for r in rows)
+          reports=[]
+          for n in names:
+              doc=json.loads((base/f"batch-{n}.json").read_text())
+              reports.append({"batch":n,"release_page":doc["release_page"],
+                  "manifest_sha256":sha[n],"verified":doc["source_verified_month_pairs"],
+                  "strict_native":doc["strict_utc_aligned_native_rows"],
+                  "quarantined_native":doc["quarantined_native_rows"],
+                  "source_unavailable":doc["unavailable_or_unverified_month_pairs"]})
+          summary={"schema":"seven.crypto.top25-earlier-spot-consolidation.v1",
+                   "history_scope":"2018-01 through 2018-12 (no artificial pre-listing or all-time history)",
+                   "assets":[{"id":k,"pair":v,
+                     "regular_native_1m":by_asset[k],
+                     "quarantined_native_1m":by_asset_quarantine[k]} for k,v in expected_markets.items()],
+                   "source_batches":len(names),"candidate_market_months":len(rows),
+                   "source_verified_months":sum(r["status"] in ("native_1m_complete","native_1m_partial","original_timestamp_quarantine") for r in rows),
+                   "before_listing_months":sum(r["status"]=="before_official_pair_listing" for r in rows),
+                   "unverified_months":sum(r["status"] in ("source_unavailable","checksum_unavailable","original_requires_manual_source_review") for r in rows),
+                   "regular_native_1m":sum(by_asset.values()),
+                   "quarantined_native_1m":sum(by_asset_quarantine.values()),
+                   "no_synthetic_candles":True,"venue":"Binance Spot","quote":"USDT",
+                   "existing_top5_and_top250_catalog_unchanged":True,
+                   "no_complete_all_time_claim":True,
+                   "release_manifests":reports}
+          assert summary["source_verified_months"]+summary["before_listing_months"]+summary["unverified_months"]==48
+          out=pathlib.Path(os.environ["RUNNER_TEMP"])/"top25-native-spot-summary.json"
+          out.write_text(json.dumps(summary,indent=2,sort_keys=True)+"\n")
+          print("TOP25 BACKFILL RECONCILED",json.dumps({k:summary[k] for k in (
+             "candidate_market_months","source_verified_months","before_listing_months",
+             "unverified_months","regular_native_1m","quarantined_native_1m")}))
+          PY
+      - name: Publish only new Top25 expansion manifest and immutable batch indexes on main
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          out="$root/top25_historical_expansion/earlier_collection_index.json"
+          for retry in 1 2 3; do
+            git fetch origin main
+            for file in top250_multisource_coverage/index.json top25_historical_expansion/index.json top25_historical_expansion/collection_index.json; do
+              a=$(sha256sum "$root/$file"|cut -d' ' -f1)
+              b=$(git show "origin/main:$root/$file"|sha256sum|cut -d' ' -f1)
+              test "$a" = "$b" || { echo "::error::Top25 universe changed since source collection";exit 1; }
+            done
+            git reset --hard origin/main
+            mkdir -p "$root/top25_historical_expansion/earlier_batches"
+            cp "$RUNNER_TEMP/top25-native-spot-summary.json" "$out"
+            for q in q1 q2 q3 q4; do
+              cp "$RUNNER_TEMP/top25-batches/batch-2018-$q.json" "$root/top25_historical_expansion/earlier_batches/2018-$q.json"
+            done
+            git add -- "$root/top25_historical_expansion"
+            git diff --cached --check
+            if git diff --cached --quiet; then echo "NOOP: index already identical";exit 0;fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m "Coffre: original 2018 LINK ADA XLM LTC native source candles"
+            if git push origin HEAD:main;then exit 0;fi
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: top25-native-historical-index
+          path: ${{ runner.temp }}/top25-native-spot-summary.json
+          retention-days: 30
