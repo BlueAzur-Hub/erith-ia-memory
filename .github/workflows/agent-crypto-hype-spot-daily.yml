@@ -36,6 +36,7 @@ jobs:
           python public/agent_crypto_erith_ia/tools/archive_hype_bitget_daily.py \
             --collect --output "$RUNNER_TEMP/original-hype"
       - name: Assert original source integrity, no false 1m claims and no invented daily sessions
+        id: source_quality
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -43,6 +44,18 @@ jobs:
           base=pathlib.Path(os.environ["RUNNER_TEMP"])/"original-hype"
           j=json.loads((base/"manifest.json").read_text())
           assert j["schema"]=="seven.crypto.top25-hype-original-spot-daily.v1"
+          # Fail closed for native exchange candles predating official HYPE Spot listing.
+          if j["status"]=="quarantine_provenance_before_official_spot_listing":
+              assert j["original_pair"]=="HYPEUSDT" and j["venue"]=="Bitget Spot"
+              assert j["source_native_daily_rows_observed_not_accepted"]>0
+              assert j["pre_official_listing_source_rows"]>0
+              assert j["original_native_daily_candles_accepted"]==0
+              assert j["native_ohlcv_published"] is False and j["no_relabel_or_candle_synthesis"]
+              assert {p.name for p in base.iterdir()}=={"manifest.json"}
+              with open(os.environ["GITHUB_OUTPUT"],"a") as f:f.write("publish=false\n")
+              print("HYPE SOURCE QUARANTINED; NOT A VERIFIED SPOT DAILY ARCHIVE")
+              raise SystemExit(0)
+          assert j["status"]=="source_post_official_listing_verified"
           assert j["venue"]=="Bitget Spot" and j["pair"]=="HYPEUSDT" and j["original_quote"]=="USDT"
           assert j["not_1m_candles"] and j["no_synthetic_candles"] and not j["trader_interface_modified"]
           assert j["original_daily_bars"]>=4 and not j["source_response_digests_are_exchange_signed"]
@@ -56,9 +69,11 @@ jobs:
           assert data["native_source_response_sha256"]==j["native_response_sha256"]
           assert data["filled_by_our_collector"] is False and not data["canonical_1m_federation_modified"]
           assert {p.name for p in base.iterdir()}=={info["name"],"manifest.json"}
+          with open(os.environ["GITHUB_OUTPUT"],"a") as f:f.write("publish=true\n")
           print("BITGET HYPE SPOT ORIGINAL DAILY SOURCE CERTIFIED",j["original_daily_bars"])
           PY
       - name: Preserve unchanged original venue source in immutable GitHub Release
+        if: steps.source_quality.outputs.publish == 'true'
         run: |
           set -euo pipefail
           folder="$RUNNER_TEMP/original-hype"
@@ -94,7 +109,7 @@ jobs:
           assert not j["isDraft"] and expected==actual
           print("BITGET HYPE DAILY RELEASE",j["url"],len(actual))
           PY
-      - name: Add independent HYPE daily index on main, no Trader and no 1m catalog changes
+      - name: Persist HYPE accepted daily OR chronological source-quarantine diagnostic without OHLCV leakage
         run: |
           set -euo pipefail
           root=public/agent_crypto_erith_ia/data/historical_archive_prototype
