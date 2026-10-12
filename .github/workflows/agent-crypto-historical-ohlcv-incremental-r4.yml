@@ -5,7 +5,8 @@ on:
   # last verified closed OHLCV candle, so timing jitter cannot create gaps.
   schedule:
     - cron: '17 * * * *'
-  # Fallback from the existing public market scheduled workflow.
+  # Fallback from successful public-market schedule or manual dispatch;
+  # the 52-minute gate prevents duplicate collection when events overlap.
   workflow_run:
     workflows: ["Atlas Public Crypto Market"]
     types: [completed]
@@ -32,7 +33,8 @@ jobs:
     if: >-
       github.event_name != 'workflow_run' ||
       (github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.event == 'schedule' &&
+       (github.event.workflow_run.event == 'schedule' ||
+        github.event.workflow_run.event == 'workflow_dispatch') &&
        github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     outputs:
