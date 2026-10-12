@@ -1,0 +1,54 @@
+{
+  "schema": "seven.crypto.wbt.private-evidence.status.v1",
+  "asset_id": "whitebit",
+  "rank_at_checkpoint": 15,
+  "symbol": "WBT",
+  "market": "WBT_USDT",
+  "venue": "WhiteBIT Spot",
+  "quote": "USDT",
+  "resolution": "1m",
+  "checkpoint_date_utc": "2026-10-12",
+  "first_open_utc": "2022-08-25T13:59:00Z",
+  "last_open_utc": "2026-10-11T23:59:00Z",
+  "represented_days": 1509,
+  "partial_first_day_rows": 601,
+  "full_days": 1508,
+  "candle_rows": 2172121,
+  "internal_missing_minute_slots": 0,
+  "years": [
+    {
+      "year": 2022,
+      "days": 129,
+      "rows": 184921
+    },
+    {
+      "year": 2023,
+      "days": 365,
+      "rows": 525600
+    },
+    {
+      "year": 2024,
+      "days": 366,
+      "rows": 527040
+    },
+    {
+      "year": 2025,
+      "days": 365,
+      "rows": 525600
+    },
+    {
+      "year": 2026,
+      "days": 284,
+      "rows": 408960
+    }
+  ],
+  "audit_basis": "SHA-256 and chronological/OHLCV replay of private original source files supplied by repository owner; no independent venue trade-by-trade attestation",
+  "private_manifest_sha256": "981e6905ebd6af37fef1cdb9c5486f08bfc1dd4d51dccfca503fb6e9ca0c8dad",
+  "private_full_days_zip_sha256": "e5433ac26d385f4d4132ed48875d33dfef6424955cf6589217e4ac93308b059e",
+  "first_day_source_sha256": "bb369918d96601f9ce42879bb73d70ddba51d4ae3b3328fbabd26b0cd3a1f508",
+  "publication_status": "SUMMARY_METADATA_ONLY_SOURCE_CANDLES_NOT_PUBLISHED",
+  "provenance_note": "Source originale et données de prix restent privées; absence de source sur GitHub Pages n'est pas absence d'historique.",
+  "use_scope": "Archives privées de recherche, conditions WhiteBIT à respecter",
+  "not_live": true,
+  "trader_imported": false
+}
