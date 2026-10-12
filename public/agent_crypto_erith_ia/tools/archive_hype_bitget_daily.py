@@ -56,8 +56,13 @@ def collect():
             result["utc_end_exclusive_ms"]==END,
             "Wrong native Spot daily source owner or timeline")
     first_utc_day=int(dt.datetime(2024,12,18,tzinfo=dt.timezone.utc).timestamp()*1000)
-    require(result["earliest_returned_ms"]>=first_utc_day,
-            "HYPE native daily source predates official spot exchange listing day")
+    # Preserve the source discrepancy as an audit finding. A Bitget public
+    # candle with an opening before its own public Spot listing is NOT yet
+    # admissible as native HYPE Spot historical OHLCV; never promote it.
+    result["pre_listing_source_timestamps_detected"]=(
+        result["earliest_returned_ms"]<first_utc_day)
+    result["pre_listing_source_rows"]=sum(
+        int(row[0])<first_utc_day for row in result["native_daily_rows"])
     require(result["latest_returned_ms"]<END and
             result["native_candles"]>3 and
             result["filled_by_our_collector"] is False and
@@ -68,11 +73,38 @@ def stage(out):
     require(not out.exists(),"Refuse rewriting original native HYPE files")
     data,pins=collect()
     out.mkdir(parents=True)
+    if data["pre_listing_source_timestamps_detected"]:
+        report={
+            "schema":"seven.crypto.top25-hype-original-spot-daily.v1",
+            "status":"quarantine_provenance_before_official_spot_listing",
+            "original_pair":"HYPEUSDT","venue":"Bitget Spot","original_granularity":"1D",
+            "first_official_spot_trading_utc":FIRST_SPOT,
+            "first_official_spot_announcement":OFFICIAL,
+            "canonical_market_pins":pins,
+            "first_native_source_open_ms":data["earliest_returned_ms"],
+            "latest_native_source_open_ms":data["latest_returned_ms"],
+            "source_native_daily_rows_observed_not_accepted":data["native_candles"],
+            "pre_official_listing_source_rows":data["pre_listing_source_rows"],
+            "response_sha256":data["native_source_response_sha256"],
+            "source_digests_exchange_signed":False,
+            "native_ohlcv_published":False,
+            "original_native_daily_candles_accepted":0,
+            "original_native_minute_candles_accepted":0,
+            "no_relabel_or_candle_synthesis":True,"trader_interface_modified":False,
+            "investigation":"Why the public Bitget SPOT history endpoint returns daily timestamps earlier than the independently published HYPE Spot listing; verify instrument identity/migration and native 1D timezone."
+        }
+        (out/"manifest.json").write_text(json.dumps(report,indent=2,sort_keys=True)+"\n")
+        print("HYPE SPOT SOURCE PRELISTING QUARANTINE "+json.dumps({
+            "first_open_ms":report["first_native_source_open_ms"],
+            "native_rows_not_accepted":data["native_candles"],
+            "before_listing":data["pre_listing_source_rows"]}),flush=True)
+        return report
     name="hyperliquid-HYPEUSDT-BitgetSpot-1D.json.gz"
     packed=source.compress(data)
     (out/name).write_bytes(packed)
     summary={
         "schema":"seven.crypto.top25-hype-original-spot-daily.v1",
+        "status":"source_post_official_listing_verified",
         "venue":"Bitget Spot","pair":PAIR,"ranked_coin_id":ID,
         "canonical_market_pins":pins,
         "official_spot_pair_launch_utc":FIRST_SPOT,
