@@ -1,0 +1,241 @@
+{
+  "schema": "seven.crypto.top25-expansion-plan.v1",
+  "date_utc": "2026-10-12",
+  "ranked_reference": "top250_multisource_coverage/index.json",
+  "source_ranked_catalog_git_blob_sha": "5446dc85c93660ce80a85db7fe2b32093fb2d8ff",
+  "existing_top10_plan": "top10_historical_expansion/index.json",
+  "target_ranks": "11–25",
+  "added_ranks_count": 15,
+  "added_assets": [
+    {
+      "rank": 11,
+      "id": "hyperliquid",
+      "symbol": "HYPE",
+      "name": "Hyperliquid",
+      "existing_native_complete_months": 3,
+      "existing_native_1m": 128160,
+      "known_spot_source": "Bitget Spot native 1m HTTPS",
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "keep Bitget Spot native source separate; check earlier historical listings independently"
+    },
+    {
+      "rank": 12,
+      "id": "dogecoin",
+      "symbol": "DOGE",
+      "name": "Dogecoin",
+      "existing_native_complete_months": 62,
+      "existing_native_1m": 2717280,
+      "known_spot_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "historical Binance native 1m ZIP with original CHECKSUM; verify exact market pair and first listing"
+    },
+    {
+      "rank": 13,
+      "id": "usds",
+      "symbol": "USDS",
+      "name": "USDS",
+      "existing_native_complete_months": 5,
+      "existing_native_1m": 220320,
+      "known_spot_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "historical Binance native 1m ZIP with original CHECKSUM; verify exact market pair and first listing"
+    },
+    {
+      "rank": 14,
+      "id": "monero",
+      "symbol": "XMR",
+      "name": "Monero",
+      "existing_native_complete_months": 11,
+      "existing_native_1m": 480960,
+      "known_spot_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "historical Binance native 1m ZIP with original CHECKSUM; verify exact market pair and first listing"
+    },
+    {
+      "rank": 15,
+      "id": "whitebit",
+      "symbol": "WBT",
+      "name": "WhiteBIT Coin",
+      "existing_native_complete_months": 0,
+      "existing_native_1m": 0,
+      "known_spot_source": null,
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "provider instrument / authenticated source needed, no invented Binance pair"
+    },
+    {
+      "rank": 16,
+      "id": "chainlink",
+      "symbol": "LINK",
+      "name": "Chainlink",
+      "existing_native_complete_months": 62,
+      "existing_native_1m": 2717280,
+      "known_spot_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "historical Binance native 1m ZIP with original CHECKSUM; verify exact market pair and first listing"
+    },
+    {
+      "rank": 17,
+      "id": "cardano",
+      "symbol": "ADA",
+      "name": "Cardano",
+      "existing_native_complete_months": 62,
+      "existing_native_1m": 2717280,
+      "known_spot_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "historical Binance native 1m ZIP with original CHECKSUM; verify exact market pair and first listing"
+    },
+    {
+      "rank": 18,
+      "id": "leo-token",
+      "symbol": "LEO",
+      "name": "LEO Token",
+      "existing_native_complete_months": 0,
+      "existing_native_1m": 0,
+      "known_spot_source": null,
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": {
+        "venue": "OKX Spot",
+        "market": "LEO-USDT",
+        "bar": "1Dutc",
+        "count": 2465,
+        "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s"
+      },
+      "source_policy": "provider instrument / authenticated source needed, no invented Binance pair"
+    },
+    {
+      "rank": 19,
+      "id": "rain",
+      "symbol": "RAIN",
+      "name": "Rain",
+      "existing_native_complete_months": 0,
+      "existing_native_1m": 0,
+      "known_spot_source": null,
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": {
+        "venue": "KuCoin Spot",
+        "market": "RAIN-USDT",
+        "bar": "1D",
+        "count": 268,
+        "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-gate-kucoin-spot-native-daily-2026-09-370f70bb12a5"
+      },
+      "source_policy": "provider instrument / authenticated source needed, no invented Binance pair"
+    },
+    {
+      "rank": 20,
+      "id": "stellar",
+      "symbol": "XLM",
+      "name": "Stellar",
+      "existing_native_complete_months": 62,
+      "existing_native_1m": 2717280,
+      "known_spot_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "historical Binance native 1m ZIP with original CHECKSUM; verify exact market pair and first listing"
+    },
+    {
+      "rank": 21,
+      "id": "near",
+      "symbol": "NEAR",
+      "name": "NEAR Protocol",
+      "existing_native_complete_months": 62,
+      "existing_native_1m": 2717280,
+      "known_spot_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "historical Binance native 1m ZIP with original CHECKSUM; verify exact market pair and first listing"
+    },
+    {
+      "rank": 22,
+      "id": "bitcoin-cash",
+      "symbol": "BCH",
+      "name": "Bitcoin Cash",
+      "existing_native_complete_months": 62,
+      "existing_native_1m": 2717280,
+      "known_spot_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "historical Binance native 1m ZIP with original CHECKSUM; verify exact market pair and first listing"
+    },
+    {
+      "rank": 23,
+      "id": "litecoin",
+      "symbol": "LTC",
+      "name": "Litecoin",
+      "existing_native_complete_months": 62,
+      "existing_native_1m": 2717280,
+      "known_spot_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "historical Binance native 1m ZIP with original CHECKSUM; verify exact market pair and first listing"
+    },
+    {
+      "rank": 24,
+      "id": "canton-network",
+      "symbol": "CC",
+      "name": "Canton",
+      "existing_native_complete_months": 0,
+      "existing_native_1m": 0,
+      "known_spot_source": null,
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": {
+        "venue": "OKX Spot",
+        "market": "CC-USDT",
+        "bar": "1Dutc",
+        "count": 231,
+        "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-okx-spot-native-daily-2026-09-leo-cc-nft-a-fluid-s"
+      },
+      "source_policy": "provider instrument / authenticated source needed, no invented Binance pair"
+    },
+    {
+      "rank": 25,
+      "id": "ethena-usde",
+      "symbol": "USDE",
+      "name": "Ethena USDe",
+      "existing_native_complete_months": 12,
+      "existing_native_1m": 525600,
+      "known_spot_source": "Binance Spot official native 1m ZIPs",
+      "quote": "USDT",
+      "verified_native_daily_from_other_exchange": null,
+      "source_policy": "historical Binance native 1m ZIP with original CHECKSUM; verify exact market pair and first listing"
+    }
+  ],
+  "group_counts": {
+    "existing_binance_spot_native_1m": 10,
+    "other_native_spot_1m": 1,
+    "no_native_1m": 4
+  },
+  "fixed_policy": {
+    "preserve_top25_as_ranked": true,
+    "no_synthetic_ohlcv": true,
+    "no_auto_price_quote_conversion": true,
+    "listing_precedes_gap_claim": true,
+    "no_trader_interface_changes": true
+  },
+  "pilot_market_ids": [
+    "dogecoin",
+    "chainlink",
+    "cardano",
+    "stellar",
+    "bitcoin-cash",
+    "litecoin"
+  ],
+  "special_markets": [
+    "hyperliquid",
+    "usds",
+    "monero",
+    "whitebit",
+    "leo-token",
+    "rain",
+    "near",
+    "canton-network",
+    "ethena-usde"
+  ],
+  "note": "Pilot assets are a bounded subset, not the whole Top25. All other rank 11–25 markets remain in the plan and must be resolved separately."
+}
