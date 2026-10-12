@@ -162,37 +162,41 @@ function mount(){
       "#traderOkxAccountPanel[data-state='error'] .okx-live-dot{background:#ff8799}",
       "#traderOkxAccountPanel [data-okx-state]{color:#85e9df;font-size:11px;font-weight:700}",
       "#traderOkxAccountPanel .okx-ro{margin-left:auto;padding:4px 8px;border:1px solid rgba(88,239,156,.26);border-radius:999px;color:#8cf2b5;font-size:10px;letter-spacing:.08em}",
-      "#traderOkxAccountPanel .okx-body{border-top:1px solid rgba(83,222,222,.16);padding:12px 14px 14px}",
-      "#traderOkxAccountPanel .okx-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}",
-      "#traderOkxAccountPanel .okx-card{min-width:0;padding:10px;border:1px solid rgba(142,164,186,.17);border-radius:10px;background:rgba(5,18,28,.72)}",
-      "#traderOkxAccountPanel .okx-card span{display:block;color:#8ea4ba;font-size:9px;text-transform:uppercase;letter-spacing:.06em}",
-      "#traderOkxAccountPanel .okx-card b{display:block;margin-top:4px;color:#eefafa;font-size:13px;line-height:1.3;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}",
-      "#traderOkxAccountPanel .okx-card small{display:block;margin-top:4px;color:#91a9b7;font-size:9px;line-height:1.35}",
-      "#traderOkxAccountPanel .okx-foot{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:10px;color:#8ea4ba;font-size:10px}",
+      "#traderOkxAccountPanel .okx-body{border-top:1px solid rgba(83,222,222,.14);padding:10px 14px 12px}",
+      "#traderOkxAccountPanel .okx-primary{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:8px}",
+      "#traderOkxAccountPanel .okx-activity{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:7px}",
+      "#traderOkxAccountPanel .okx-card{min-width:0;padding:9px 11px;border:1px solid rgba(142,164,186,.14);border-radius:9px;background:rgba(5,18,28,.58)}",
+      "#traderOkxAccountPanel .okx-card.primary{background:linear-gradient(180deg,rgba(8,31,43,.82),rgba(4,19,29,.72));border-color:rgba(83,222,222,.22)}",
+      "#traderOkxAccountPanel .okx-card span{display:block;color:#8ea4ba;font-size:8.5px;text-transform:uppercase;letter-spacing:.07em}",
+      "#traderOkxAccountPanel .okx-card b{display:block;margin-top:3px;color:#eefafa;font-size:13px;line-height:1.25;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}",
+      "#traderOkxAccountPanel .okx-card.primary b{font-size:15px;color:#fff1c7}",
+      "#traderOkxAccountPanel .okx-card small{display:block;margin-top:3px;color:#91a9b7;font-size:8.5px;line-height:1.3}",
+      "#traderOkxAccountPanel .okx-foot{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:8px;color:#8ea4ba;font-size:9.5px}",
       "#traderOkxAccountPanel button,#traderOkxAccountPanel input{border:1px solid #436d7a;border-radius:8px;background:#123743;color:#fff;padding:7px 10px}",
       "#traderOkxAccountPanel button{cursor:pointer;font-weight:700}",
       "#traderOkxAccountPanel .okx-auth{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 0;padding:10px;border:1px solid rgba(255,201,103,.25);border-radius:10px;background:rgba(45,29,8,.25)}",
       "#traderOkxAccountPanel .okx-auth[hidden]{display:none!important}",
       "#traderOkxAccountPanel .okx-auth input{min-width:220px}",
       "#traderOkxAccountPanel .okx-auth small{color:#d9c08d}",
-      "@media(max-width:1200px){#traderOkxAccountPanel .okx-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}",
-      "@media(max-width:760px){#traderOkxAccountPanel .okx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.okx-ro{margin-left:0!important}}"
+      "@media(max-width:1200px){#traderOkxAccountPanel .okx-primary{grid-template-columns:1fr 1fr 1fr}#traderOkxAccountPanel .okx-activity{grid-template-columns:repeat(2,minmax(0,1fr))}}",
+      "@media(max-width:760px){#traderOkxAccountPanel .okx-primary,#traderOkxAccountPanel .okx-activity{grid-template-columns:1fr}.okx-ro{margin-left:0!important}}"
     ].join("");document.head.appendChild(style);
   }
   const p=document.createElement("details");p.id=PANEL_ID;p.open=true;p.dataset.state="loading";
   p.setAttribute("aria-label","Compte OKX réel · lecture seule via Aether Trust");
   p.innerHTML=[
     '<summary><i class="okx-live-dot" aria-hidden="true"></i><strong>COMPTE OKX · RÉEL</strong><span data-okx-state>INITIALISATION…</span><span class="okx-ro">READ ONLY · AUCUN ORDRE</span></summary>',
-    '<div class="okx-body"><div class="okx-grid">',
-    '<article class="okx-card"><span>BTC</span><b data-okx-btc>—</b><small data-okx-btcdetail>Trading / Funding</small></article>',
-    '<article class="okx-card"><span>USDC</span><b data-okx-usdc>—</b><small data-okx-usdcdetail>Trading / Funding</small></article>',
-    '<article class="okx-card"><span>EUR</span><b data-okx-eur>—</b><small data-okx-eurdetail>Trading / Funding</small></article>',
+    '<div class="okx-body"><div class="okx-primary">',
+    '<article class="okx-card primary"><span>BTC détenu</span><b data-okx-btc>—</b><small data-okx-btcdetail>Trading / Funding</small></article>',
+    '<article class="okx-card primary"><span>USDC disponible</span><b data-okx-usdc>—</b><small data-okx-usdcdetail>Trading / Funding</small></article>',
+    '<article class="okx-card primary"><span>EUR disponible</span><b data-okx-eur>—</b><small data-okx-eurdetail>Trading / Funding</small></article>',
+    '</div><div class="okx-activity">',
     '<article class="okx-card"><span>Ordres ouverts</span><b data-okx-pending>—</b><small>SPOT OKX</small></article>',
     '<article class="okx-card"><span>Historique</span><b data-okx-history>—</b><small>ordres · 3 mois</small></article>',
     '<article class="okx-card"><span>Fills</span><b data-okx-fills>—</b><small>exécutions · 3 mois</small></article>',
     '<article class="okx-card"><span>Frais BTC-USDC</span><b data-okx-fees>—</b><small>barème du compte</small></article>',
-    '</div><form class="okx-auth" data-okx-auth hidden><small data-okx-authstatus>Aether Trust requis.</small><input data-okx-secret type="password" minlength="6" autocomplete="current-password" placeholder="Mot de passe Aether Trust"><button data-okx-connect type="submit">Connecter le compte</button></form>',
-    '<div class="okx-foot"><b data-okx-bridge>Bridge local 8787 · OKX Private REST</b><span>Dernière lecture : <span data-okx-updated>—</span></span><button type="button" data-okx-refresh>Actualiser</button><span>P&L : prochain bloc · historique des acquisitions à reconstruire sans invention.</span></div></div>'
+    '</div><form class="okx-auth" data-okx-auth hidden><small data-okx-authstatus>Aether Trust requis.</small><input data-okx-secret type="password" minlength="6" autocomplete="current-password" placeholder="Mot de passe Aether Trust"><button data-okx-connect type="submit">Connecter</button></form>',
+    '<div class="okx-foot"><b data-okx-bridge>Bridge local 8787 · OKX Private REST</b><span>Dernière lecture : <span data-okx-updated>—</span></span><button type="button" data-okx-refresh>Actualiser</button></div></div>'
   ].join("");
   const caseStudy=document.getElementById("traderOkbCaseStudy");
   if(caseStudy?.parentElement===zone)zone.insertBefore(p,caseStudy);
