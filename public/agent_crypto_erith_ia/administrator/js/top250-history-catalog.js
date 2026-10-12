@@ -24,81 +24,87 @@ function validate(fed,bin,alt,depth){
  check(fed?.schema==="aerith.public.ohlcv.top250.federated-native-archives.v1"&&
   fed.ranked===250&&fed.quote==="USDT"&&fed.is_live===false&&
   fed.assets?.length===250&&Number.isInteger(fed.archived_assets)&&
-  Number.isInteger(fed.binance_archived_assets)&&Number.isInteger(fed.bitget_archived_assets)&&
   fed.archived_assets===fed.binance_archived_assets+fed.bitget_archived_assets,
-  "Catalogue fédéré Top250 incorrect");
+  "Index fédéré incorrect");
  check(bin?.schema==="aerith.public.ohlcv.top250.monthly-coverage-catalog.v1"&&
-  bin.archived_assets===fed.binance_archived_assets&&bin.assets?.length===250&&
-  alt?.schema==="aerith.public.ohlcv.verified-bitget-spot-month-views.v1"&&
-  alt.archived_assets===fed.bitget_archived_assets&&
-  alt.assets?.length===fed.bitget_archived_assets&&
-  depth?.schema==="aerith.public.ohlcv.top250.verifiable-year-depth.v1"&&
-  depth.archive_assets<=fed.binance_archived_assets&&depth.source_catalog_minutes<=bin.native_1m_candles&&depth.ranked===250,
-  "Les sources du Coffre ne concordent pas");
- const ids=new Set(),alternatives=new Map(alt.assets.map(a=>[a.id,a]));
- let total=0,have=0,binCount=0,altCount=0;
+  bin.assets?.length===250&&Number.isInteger(bin.archived_assets)&&
+  Number.isInteger(bin.native_1m_candles),"Index Binance incorrect");
+ check(alt?.schema==="aerith.public.ohlcv.verified-bitget-spot-month-views.v1"&&
+  alt.assets?.length===alt.archived_assets,"Index Bitget incorrect");
+ check(depth?.schema==="aerith.public.ohlcv.top250.verifiable-year-depth.v1"&&
+  depth.ranked===250&&depth.assets?.length===250&&
+  depth.assets_with_at_least_24_consecutive_closed_months<=depth.assets_with_at_least_12_consecutive_closed_months,
+  "Index de profondeur annuel incorrect");
+ const ids=new Set(),altIds=new Set();let binTotal=0,binArchived=0;
  for(let i=0;i<250;i++){
-  const a=fed.assets[i],origin=bin.assets[i];
-  check(a.rank===i+1&&a.id===origin.id&&a.symbol===origin.symbol&&
-   !ids.has(a.id)&&typeof a.name==="string"&&
-   Number.isInteger(a.months)&&a.months>=0&&
-   Number.isInteger(a.native_1m_count)&&a.native_1m_count>=0,
-   "Identités fédérées incohérentes");
-  ids.add(a.id);total+=a.native_1m_count;
-  const archived=a.months>0;
-  if(archived)have++;
-  if(origin.months.length){
-   check(a.months===origin.months.length&&a.native_1m_count===origin.candles&&
-    a.source==="Binance Spot official native 1m ZIPs","Archive Binance altérée");
-   binCount++;
-  }else if(archived){
-   const b=alternatives.get(a.id);
-   check(!!b&&b.symbol===a.symbol&&Array.isArray(b.months)&&
-    b.months.length===a.months&&
-    b.total_verified_1m_count===a.native_1m_count&&
-    a.source==="Bitget Spot native 1m HTTPS","Archive Bitget incohérente");
-   altCount++;
-  }else check(a.native_1m_count===0&&a.source===null,"Fausse archive signalée");
+  const f=fed.assets[i],b=bin.assets[i];
+  check(f.rank===i+1&&f.id===b.id&&f.symbol===b.symbol&&!ids.has(f.id)&&
+   typeof f.name==="string"&&Array.isArray(b.months)&&
+   Number.isInteger(b.candles)&&b.candles>=0,"Identité ou comptage Binance incorrect : rang "+(i+1));
+  ids.add(f.id);
+  const expected=b.months.reduce((n,m)=>n+m.candles,0);
+  check(expected===b.candles&&b.months.every(m=>/^\\d{4}-\\d\\d$/.test(m.month)&&
+   Number.isInteger(m.candles)&&m.candles>0),
+   "Sources mensuelles Binance incohérentes : "+f.id);
+  if(b.months.length)binArchived++;
+  binTotal+=b.candles;
  }
- check(have===fed.archived_assets&&binCount===fed.binance_archived_assets&&
-  altCount===fed.bitget_archived_assets&&total===fed.native_1m_candles,
-  "Comptage fédéré incohérent");
- check(depth.assets_with_at_least_12_consecutive_closed_months<=binCount&&
-  depth.assets_with_at_least_24_consecutive_closed_months<=
-  depth.assets_with_at_least_12_consecutive_closed_months,
-  "Indice annuel incohérent");
+ check(binArchived===bin.archived_assets&&binTotal===bin.native_1m_candles,
+  "Comptes Binance incohérents");
+ for(const a of alt.assets){
+  check(ids.has(a.id)&&!altIds.has(a.id)&&
+   Array.isArray(a.months)&&a.months.length>0&&
+   Number.isInteger(a.total_verified_1m_count)&&a.total_verified_1m_count>0&&
+   fed.assets[a.rank-1]?.id===a.id&&fed.assets[a.rank-1]?.symbol===a.symbol,
+   "Source Bitget invalide : "+a.id);
+  altIds.add(a.id);
+ }
+ // Les quatre index sont des instantanés autonomes : ne pas exiger
+ // l'égalité des compteurs entre collectes exécutées à des heures différentes.
+}
+function currentView(){
+ const alternatives=new Map(bitget.assets.map(a=>[a.id,a]));
+ return catalog.assets.map(a=>{
+  const b=binance.assets[a.rank-1],secondary=alternatives.get(a.id);
+  const binActive=b.months.length>0;
+  return {asset:a,primary:binActive?"Binance":secondary?"Bitget":null,
+   months:binActive?b.months.length:(secondary?.months?.length||0),
+   count:binActive?b.candles:(secondary?.total_verified_1m_count||0),
+   first:binActive?b.months[0]?.month:(secondary?.months?.[0]||"—"),
+   lastMonth:binActive?b.months.at(-1)?.month:(secondary?.month||"—"),
+   release:binActive?b.months.at(-1)?.release:(secondary?.release||null),
+   both:binActive&&!!secondary};
+ });
 }
 function show(){
- if(!catalog)return;
+ if(!catalog||!binance||!bitget)return;
  const limit=Number($("top250-limit").value),query=$("top250-search").value.trim().toLowerCase();
  const only=$("top250-available").checked;
- const rows=catalog.assets.filter(a=>a.rank<=limit&&(!only||a.months>0||(a.id==="whitebit"&&privateWBT))&&
-   (!query||[a.id,a.symbol,a.name,String(a.rank)].some(x=>x.toLowerCase().includes(query))));
- const frag=document.createDocumentFragment(),altMap=new Map(bitget.assets.map(a=>[a.id,a]));
- for(const a of rows){
-  const row=document.createElement("tr"),source=binance.assets[a.rank-1];
-  const wbt=a.id==="whitebit"&&privateWBT?.asset_id==="whitebit";
+ const view=currentView();
+ const rows=view.filter(v=>{
+  const a=v.asset,wbt=a.id==="whitebit"&&privateWBT;
+  return a.rank<=limit&&(!only||v.primary||wbt)&&
+   (!query||[a.id,a.symbol,a.name,String(a.rank)].some(x=>x.toLowerCase().includes(query)));
+ });
+ const frag=document.createDocumentFragment();
+ for(const v of rows){
+  const a=v.asset,wbt=a.id==="whitebit"&&privateWBT;
+  const row=document.createElement("tr");
   cell(row,a.rank);cell(row,a.name+" · "+a.symbol);
-  cell(row,a.months?(source.months.length?"Binance Spot":"Bitget Spot"):wbt?"WhiteBIT Spot · privé vérifié":"À collecter");
-  cell(row,wbt?"—":a.months);
-  cell(row,wbt?privateWBT.candle_rows.toLocaleString("fr-FR")+" (privé)":a.native_1m_count.toLocaleString("fr-FR"));
-  const b=altMap.get(a.id);
-  cell(row,source.months[0]?.month??b?.months?.[0]??(wbt?privateWBT.first_open_utc.slice(0,10):"—"));
+  cell(row,v.primary?(v.primary==="Binance"?"Binance Spot":"Bitget Spot")+(v.both?" · Bitget aussi":""):
+   wbt?"WhiteBIT Spot · privé vérifié":"À collecter");
+  cell(row,v.primary?v.months:"—");
+  cell(row,v.primary?v.count.toLocaleString("fr-FR"):(wbt?privateWBT.candle_rows.toLocaleString("fr-FR")+" (privé)":"0"));
+  cell(row,v.primary?v.first:(wbt?privateWBT.first_open_utc.slice(0,10):"—"));
   const last=cell(row,wbt?privateWBT.last_open_utc.slice(0,10)+" · privé":"—");
-  let tag=null,label=null;
-  if(source.months.length){
-   const item=source.months.at(-1);tag=item.release;label=item.month+" · ZIP";
-  }else if(b){
-   tag=b.release;label=b.month+" · ZIP";
-  }
-  if(tag&&/^crypto-spot-(?:bulk|bitget)-[a-zA-Z0-9-]+$/.test(tag)){
-   const aLink=document.createElement("a");
-   aLink.href="https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/"+encodeURIComponent(tag);
-   aLink.textContent=label;aLink.rel="noopener noreferrer";aLink.target="_blank";
-   last.replaceChildren(aLink);
-  }
+  if(v.primary&&/^crypto-spot-(?:bulk|bitget)-[a-zA-Z0-9-]+$/.test(v.release||"")){
+   const link=document.createElement("a");
+   link.href="https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/"+encodeURIComponent(v.release);
+   link.textContent=v.lastMonth+" · ZIP";link.rel="noopener noreferrer";link.target="_blank";
+   last.replaceChildren(link);
+  }else if(v.primary){last.textContent=v.lastMonth+" · archives";}
   const action=cell(row,"");
-  if(a.months){
+  if(v.primary){
    const btn=document.createElement("button");btn.type="button";
    btn.textContent="Voir les bougies";btn.className="vault-select";
    btn.setAttribute("aria-label","Consulter les bougies de "+a.name);
@@ -106,15 +112,14 @@ function show(){
     "seven-vault-select",{detail:{id:a.id}})));
    action.append(btn);
   }else if(wbt){
-   const aLink=document.createElement("a");aLink.href="#wbt-private-proof";
-   aLink.textContent="Statut privé";action.append(aLink);
+   const link=document.createElement("a");link.href="#wbt-private-proof";
+   link.textContent="Statut privé";action.append(link);
   }else action.textContent="—";
   frag.append(row);
  }
  $("top250-rows").replaceChildren(frag);
- $("top250-listed").textContent=rows.length+" actifs affichés · Binance / Bitget : archives publiques · WBT : preuve privée distincte, non consultable en ligne · pas de cours live";
+ $("top250-listed").textContent=rows.length+" actifs affichés · données publiques Binance / Bitget · WBT archivé en privé et non consultable en ligne";
 }
-
 function validatePrivateWbt(v){
  check(v?.schema==="seven.crypto.wbt.private-evidence.status.v1"&&
   v.asset_id==="whitebit"&&v.symbol==="WBT"&&v.venue==="WhiteBIT Spot"&&
@@ -149,7 +154,7 @@ function showPrivateWbt(){
  status.textContent="Métadonnées publiques uniquement · source WhiteBIT Spot WBT/USDT vérifiée sur fichiers privés · aucun prix publié, aucune lecture Trader.";
 }
 async function init(){
- const status=$("top250-status");status.textContent="Contrôle des index fédérés…";
+ const status=$("top250-status");status.textContent="Contrôle indépendant des index en cours…";
  try{
   const [fed,bin,alt,depth]=await Promise.all([
    getJson("top250_multisource_coverage/index.json",300000),
@@ -157,34 +162,45 @@ async function init(){
    getJson("bitget_verified_views/index.json",150000),
    getJson("year_depth_index.json",1200000)
   ]);
-  validate(fed,bin,alt,depth);catalog=fed;binance=bin;bitget=alt;yearDepth=depth;
-  $("top250-title").textContent="Coffre Top 250 · Binance + Bitget ("+fed.archived_assets+"/250 archivés)";
-  const frag=document.createDocumentFragment();
+  validate(fed,bin,alt,depth);
+  catalog=fed;binance=bin;bitget=alt;yearDepth=depth;
+  const view=currentView(),pub=view.filter(v=>v.primary);
+  const binCount=view.filter(v=>v.primary==="Binance").length;
+  const bitOnly=view.filter(v=>v.primary==="Bitget").length;
+  const overlap=view.filter(v=>v.both).length;
+  const nativeRows=pub.reduce((s,v)=>s+v.count,0);
+  const srcDifferent=bin.archived_assets!==fed.binance_archived_assets||
+   bin.native_1m_candles+alt.assets.reduce((s,a)=>s+a.total_verified_1m_count,0)!==fed.native_1m_candles;
+  $("top250-title").textContent="Coffre Top 250 · archives publiques ("+pub.length+"/250)";
+  const metrics=document.createDocumentFragment();
   for(const [label,value] of [
-   ["Univers classé","250"],["Au moins un mois",fed.archived_assets+"/250"],
-   ["≥ 12 mois vérifiés (Binance)",String(depth.assets_with_at_least_12_consecutive_closed_months)],
-   ["≥ 24 mois vérifiés (Binance)",String(depth.assets_with_at_least_24_consecutive_closed_months)],
-   ["Sources Binance / Bitget",fed.binance_archived_assets+" / "+fed.bitget_archived_assets],
-   ["Bougies 1 min",fed.native_1m_candles.toLocaleString("fr-FR")]
-  ])frag.append(metric(label,value));
-  $("top250-summary").replaceChildren(frag);
-  $("top250-counts").textContent=fed.groups.map(x=>"Top "+x.top+" : "+x.archived+"/"+x.top).join(" · ")+
-   " · les actifs avec une année vérifiée sont mesurés séparément";
-  status.textContent="Catalogue fédéré vérifié · une source par crypto · aucun prix inventé"+(depth.archive_assets<fed.binance_archived_assets?" · index annuel en synchronisation ("+depth.archive_assets+"/"+fed.binance_archived_assets+")":"");
+   ["Univers classé","250"],["Au moins une archive publique",pub.length+"/250"],
+   ["≥ 12 mois dans l'indice annuel Binance",String(depth.assets_with_at_least_12_consecutive_closed_months)],
+   ["≥ 24 mois dans l'indice annuel Binance",String(depth.assets_with_at_least_24_consecutive_closed_months)],
+   ["Sources principales Binance / Bitget",binCount+" / "+bitOnly],
+   ["Bougies 1 min dans la sélection de sources",nativeRows.toLocaleString("fr-FR")]
+  ])metrics.append(metric(label,value));
+  $("top250-summary").replaceChildren(metrics);
+  $("top250-counts").textContent=[10,50,100,250].map(n=>
+   "Top "+n+" : "+view.filter(v=>v.asset.rank<=n&&v.primary).length+"/"+n).join(" · ")+
+   (overlap?" · "+overlap+" actif également sur Bitget, sans double comptage":"");
+  status.textContent="Sources indépendantes validées · Binance et Bitget sans doublon"+
+   (srcDifferent?" · index fédéré plus ancien, données sources affichées directement":"")+
+   " · aucun prix inventé";
   show();
-  void getJson("wbt_private_status.json",12000).then(v=>{
-   validatePrivateWbt(v);privateWBT=v;showPrivateWbt();show();
-  }).catch(e=>{
-   const target=$("wbt-private-status");
-   if(target)target.textContent="Fiche WBT non chargée : "+String(e?.message||e);
-  });
  }catch(e){
-  $("top250-title").textContent="Coffre Top 250 · catalogue fédéré indisponible";
+  $("top250-title").textContent="Coffre Top 250 · sources indisponibles";
   status.textContent="Vérification refusée : "+String(e?.message||e);
  }
 }
 for(const key of ["top250-limit","top250-search","top250-available"])
  $(key)?.addEventListener(key==="top250-search"?"input":"change",show);
+void getJson("wbt_private_status.json",12000).then(v=>{
+ validatePrivateWbt(v);privateWBT=v;showPrivateWbt();show();
+}).catch(e=>{
+ const target=$("wbt-private-status");
+ if(target)target.textContent="Fiche WBT non chargée : "+String(e?.message||e);
+});
 void init();
 window.SevenTop250Catalog=Object.freeze({read:()=>catalog});
 })();
