@@ -8,6 +8,8 @@ const ROLE_KEY="agent_crypto_local_access_session_v1";
 const BRIDGE="http://127.0.0.1:8787";
 const AUTO_REFRESH_MS=60000;
 const LEDGER_REFRESH_MS=300000;
+const EUR_REFRESH_MS=60000;
+const EUR_MAX_AGE_MS=120000;
 let timer=0;
 let inflight=null;
 let ledgerInFlight=null;
@@ -15,6 +17,9 @@ let ledgerCheckedAt=0;
 let ledgerPosition=null;
 let currentBtcHeld=NaN;
 let lastSpotExecutions=0;
+let eurQuote=null;
+let eurCheckedAt=0;
+let eurInFlight=null;
 
 const panel=()=>document.getElementById(PANEL_ID);
 const q=(name)=>panel()?.querySelector(`[data-okx-${name}]`)||null;
@@ -85,20 +90,81 @@ function showAuth(show,message="Session Aether Trust Bridge requise"){
   if(show)text("authstatus",message);
 }
 
+
+/* Cotation de marché PUBLIQUE, sans clé Aether Trust ou solde personnel.
+   Son heure de réception n'est pas une garantie d'exécution chez OKX. */
+const moneyEUR=n=>n.toLocaleString("fr-FR",{style:"currency",currency:"EUR",minimumFractionDigits:2,maximumFractionDigits:2});
+function freshEuroQuote(){
+  if(!eurQuote||!Number.isFinite(eurQuote.price)||eurQuote.price<=1000)return null;
+  const age=Date.now()-eurQuote.receivedAt;
+  return age>=0&&age<EUR_MAX_AGE_MS?eurQuote:null;
+}
+async function marketBtcEur(){
+  const sources=[
+    {name:"Binance Spot BTC/EUR",url:"https://api.binance.com/api/v3/ticker/price?symbol=BTCEUR",
+      price:d=>d?.symbol==="BTCEUR"?Number(d.price):NaN},
+    {name:"Kraken Spot XBT/EUR",url:"https://api.kraken.com/0/public/Ticker?pair=XBTEUR",
+      price:d=>Array.isArray(d?.error)&&d.error.length===0?Number(d?.result?.XXBTZEUR?.c?.[0]):NaN}
+  ];
+  for(const source of sources){
+    const controller=new AbortController();
+    const deadline=setTimeout(()=>controller.abort(),6500);
+    try{
+      const response=await fetch(source.url,{method:"GET",cache:"no-store",credentials:"omit",signal:controller.signal});
+      if(!response.ok)continue;
+      const price=source.price(await response.json());
+      if(Number.isFinite(price)&&price>1000&&price<10000000)
+        return {price,source:source.name,receivedAt:Date.now()};
+    }catch(_){/* repli sur la seconde source publique */}
+    finally{clearTimeout(deadline);}
+  }
+  return null;
+}
+async function refreshEuroPrice(force=false){
+  if(!token()||!Number.isFinite(currentBtcHeld)||currentBtcHeld<=0)return false;
+  if(eurInFlight)return eurInFlight;
+  if(!force&&Date.now()-eurCheckedAt<EUR_REFRESH_MS)return Boolean(freshEuroQuote());
+  eurCheckedAt=Date.now();
+  eurInFlight=(async()=>{
+    const next=await marketBtcEur();
+    if(!token())return false;
+    eurQuote=next;
+    updatePositionView();
+    return Boolean(next);
+  })().catch(()=>{eurQuote=null;if(token())updatePositionView();return false;})
+    .finally(()=>{eurInFlight=null;});
+  return eurInFlight;
+}
+
 /* Le coût et la performance sont qualifiés séparément. Une écriture OKX n'est pas une facture PayPal. */
 function updatePositionView(){
   const position=ledgerPosition;
+  const quote=freshEuroQuote();
+  text("eurestimate",quote&&Number.isFinite(currentBtcHeld)&&currentBtcHeld>0
+    ?"Estimation en EUR : "+moneyEUR(currentBtcHeld*quote.price)+" · "+quote.source
+    :"Estimation en EUR : cours BTC/EUR indisponible");
   if(position?.matched){
     const sameHolding=Number.isFinite(currentBtcHeld)&&Math.abs(currentBtcHeld-position.matched.btc)<Math.max(1e-12,position.matched.btc*1e-7);
     if(sameHolding){
       const euro=v=>v.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2});
       text("avgcost",euro(position.matched.eur/position.matched.btc)+" €/BTC");
       text("committed",euro(position.matched.eur)+" € rapprochés");
-      text("pnl","CHANGE USD/EUR À VÉRIFIER");
-      text("positionproof","Les écritures du 5 octobre correspondent au BTC détenu. Taux et dépense indicatifs ; justificatif d'achat et conversion USD/EUR nécessaires pour un gain vérifié.");
+      if(quote){
+        const valeurEur=currentBtcHeld*quote.price;
+        const resultat=valeurEur-position.matched.eur;
+        const sens=resultat>0?"+":resultat<0?"−":"";
+        const pourcent=Math.abs(100*resultat/position.matched.eur).toLocaleString("fr-FR",{minimumFractionDigits:1,maximumFractionDigits:2});
+        text("pnl",sens+moneyEUR(Math.abs(resultat))+" ("+sens+pourcent+" %)");
+        text("positionproof","Estimation sur l'achat EUR/BTC rapproché et la cotation publique "+quote.source+
+          " reçue à "+new Date(quote.receivedAt).toLocaleTimeString("fr-FR")+
+          ". Paiement PayPal non recertifié par l'API, frais et écarts d'exécution exclus.");
+      }else{
+        text("pnl","COURS BTC/EUR INDISPONIBLE");
+        text("positionproof","Achat EUR/BTC rapproché ; aucun résultat calculé sans cotation publique BTC/EUR accessible.");
+      }
       text("avgcosthint","Taux déduit des écritures OKX, non prix moyen certifié");
       text("committedhint","Montant du mouvement, paiement externe à confirmer");
-      text("pnlhint","Valeur actuelle en USD ; dépense en EUR");
+      text("pnlhint",quote?"Gain / perte estimé en EUR, hors frais de revente":"En attente d’un cours BTC/EUR vérifiable");
       return;
     }
     text("positionproof","Mouvement EUR/BTC retrouvé, mais quantité BTC détenue différente. Coût de la position totale non établi.");
@@ -127,6 +193,7 @@ function paintData(account,orders,fills,fees){
   lastSpotExecutions=fillRows.length;
   text("positionvalue",Number.isFinite(btc.eqUsd)?btc.eqUsd.toLocaleString("fr-FR",{style:"currency",currency:"USD",maximumFractionDigits:2}):"—");
   updatePositionView();
+  void refreshEuroPrice();
   text("pending",Array.isArray(orders?.pending)?orders.pending.length:0);
   text("history",Array.isArray(orders?.history_3m)?orders.history_3m.length:0);
   text("fills",fillRows.length);
@@ -144,6 +211,8 @@ function paintData(account,orders,fills,fees){
 function ledgerClear(message){
   ledgerCheckedAt=0;
   ledgerPosition=null;
+  eurQuote=null;
+  eurCheckedAt=0;
   updatePositionView();
   text("ledgerstatus",message);
   const entries=q("ledgerentries");
@@ -279,6 +348,7 @@ function ledgerPaint(results){
   text("ledgercoverage",technicalStatus.join(" · ")||"Aucune source disponible.");
   text("ledgerwarning",issues.length?"Attention : certaines sources ne sont pas disponibles ; les résultats peuvent être incomplets.":hasMore?"Attention : d'autres mouvements peuvent exister dans l'historique.":"Ces écritures incluent éventuellement des transferts entre comptes : elles ne représentent pas nécessairement des achats distincts.");
   updatePositionView();
+  void refreshEuroPrice();
 }
 
 async function refreshLedger(force=false){
@@ -387,7 +457,7 @@ function mount(){
       "#traderOkxAccountPanel .okx-position{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:7px}",
       "#traderOkxAccountPanel .okx-position .okx-card{border-color:rgba(255,209,117,.16)}",
       "#traderOkxAccountPanel .okx-position [data-okx-positionvalue]{color:#fff1c7}",
-      "#traderOkxAccountPanel .okx-position [data-okx-avgcost],#traderOkxAccountPanel .okx-position [data-okx-committed],#traderOkxAccountPanel .okx-position [data-okx-pnl]{font-size:11px;color:#d6b879}",
+      "#traderOkxAccountPanel .okx-position [data-okx-avgcost],#traderOkxAccountPanel .okx-position [data-okx-committed],#traderOkxAccountPanel .okx-position [data-okx-pnl]{font-size:13px;color:#d6b879}",
       "#traderOkxAccountPanel .okx-position-proof{margin:6px 2px 0;color:#8ea4ba;font-size:14px;line-height:1.5}",
       "#traderOkxAccountPanel .okx-activity{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:7px}",
       "#traderOkxAccountPanel .okx-card{min-width:0;padding:9px 11px;border:1px solid rgba(142,164,186,.14);border-radius:9px;background:rgba(5,18,28,.58)}",
@@ -446,7 +516,7 @@ function mount(){
     '<article class="okx-card primary"><span>USDC disponible</span><b data-okx-usdc>—</b><small data-okx-usdcdetail>Trading / Funding</small></article>',
     '<article class="okx-card primary"><span>EUR disponible</span><b data-okx-eur>—</b><small data-okx-eurdetail>Trading / Funding</small></article>',
     '</div><div class="okx-position">',
-    '<article class="okx-card"><span>Valeur BTC actuelle</span><b data-okx-positionvalue>—</b><small>Équivalent USD retourné par OKX</small></article>',
+    '<article class="okx-card"><span>Valeur BTC actuelle</span><b data-okx-positionvalue>—</b><small>Équivalent USD retourné par OKX</small><small data-okx-eurestimate>Estimation en EUR : cotation en attente</small></article>',
     '<article class="okx-card"><span>Prix moyen d’achat</span><b data-okx-avgcost>—</b><small data-okx-avgcosthint>Calculé seulement avec un historique prouvé</small></article>',
     '<article class="okx-card"><span>Montant total investi</span><b data-okx-committed>—</b><small data-okx-committedhint>Achats + frais prouvés</small></article>',
     '<article class="okx-card"><span>Gain / perte actuel</span><b data-okx-pnl>—</b><small data-okx-pnlhint>Valeur actuelle − montant investi</small></article>',
