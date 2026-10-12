@@ -56,11 +56,20 @@ def collect():
             result["utc_end_exclusive_ms"]==END,
             "Wrong native Spot daily source owner or timeline")
     first_utc_day=int(dt.datetime(2024,12,18,tzinfo=dt.timezone.utc).timestamp()*1000)
-    # Preserve the source discrepancy as an audit finding. A Bitget public
-    # candle with an opening before its own public Spot listing is NOT yet
-    # admissible as native HYPE Spot historical OHLCV; never promote it.
+    # Source-native Bitget daily session can begin at 00:00 UTC+8 =
+    # 16:00 UTC on the preceding calendar day. Its daily open time before
+    # the spot listing hour is not an invented pre-listing trade when the
+    # SAME native day spans the official market opening at 2024-12-18 10Z.
+    listing_ms=int(dt.datetime(2024,12,18,10,tzinfo=dt.timezone.utc).timestamp()*1000)
+    first_open=result["earliest_returned_ms"]
+    first_session_spans_listing=(first_open<=listing_ms<first_open+source.DAY)
+    source_phase=result["native_session_start_modulo_utc_day_ms"]
+    first_session_overlap_allowed=(
+        first_session_spans_listing and source_phase==16*60*60*1000)
+    result["first_source_session_spans_official_listing"]=first_session_spans_listing
+    result["official_listing_inside_native_utc8_session"]=first_session_overlap_allowed
     result["pre_listing_source_timestamps_detected"]=(
-        result["earliest_returned_ms"]<first_utc_day)
+        first_open<first_utc_day and not first_session_overlap_allowed)
     result["pre_listing_source_rows"]=sum(
         int(row[0])<first_utc_day for row in result["native_daily_rows"])
     require(result["latest_returned_ms"]<END and
@@ -124,11 +133,15 @@ def stage(out):
         "query_coverage_does_not_prove_market_genesis":True,
         "not_1m_candles":True,"trader_interface_modified":False,
         "no_synthetic_candles":True,"no_price_quote_conversion":True,
+        "native_utc8_first_session_spans_original_spot_listing":
+             data["official_listing_inside_native_utc8_session"],
+        "first_native_session_utc_open_ms":data["earliest_returned_ms"],
+        "official_listing_mid_session_not_a_prelisting_trade_claim":True,
         "original_native_payload":{
             "name":name,"bytes":len(packed),
             "sha256":hashlib.sha256(packed).hexdigest(),
             "url":f"https://github.com/{REPO}/releases/download/{TAG}/{name}"},
-        "readme":"Original native Bitget daily exchange opens are preserved, including UTC+8 sessions where applicable. This is NOT normalized to 1Dutc or fused with Binance Spot 1m."
+        "readme":"Original Bitget daily native session starts at 16:00 UTC (midnight UTC+8). The first session overlaps the official HYPE Spot listing on 18 Dec 2024 at 10:00 UTC; its session open one day earlier does NOT prove a pre-listing transaction. We preserve original OHLCV without timezone conversion, NEVER normalizing to 1Dutc or 1m."
     }
     (out/"manifest.json").write_text(json.dumps(summary,indent=2,sort_keys=True)+"\n")
     require({p.name for p in out.iterdir()}=={"manifest.json",name},
