@@ -49,13 +49,13 @@
     "coinbase_usd_positive_minutes": 5881,
     "binance_trade_zip_zero_trade_proven_minutes": 910,
     "binance_trade_unchecked_minutes": 4971,
-    "windows_with_relevant_official_notice": 25,
-    "windows_without_notice_proof": 2,
+    "windows_with_relevant_official_notice": 26,
+    "windows_without_notice_proof": 1,
     "official_notice_categories": {
-      "maintenance_programmee": 14,
+      "maintenance_programmee": 15,
       "maintenance_systeme": 5,
       "incident_securite": 1,
-      "cause_non_documentee": 2,
+      "cause_non_documentee": 1,
       "maintenance_non_programmee": 5
     },
     "warning": "An official announcement on the same date does not prove every minute of a given gap is due to the announced event; discrepancies are noted.",
@@ -240,9 +240,9 @@
         },
         "kraken": null,
         "official_binance": {
-          "classification": "cause_non_documentee",
-          "url": null,
-          "note": "Pas d'annonce officielle correspondante identifiée dans cet audit",
+          "classification": "maintenance_programmee",
+          "url": "https://www.binance.com/en/support/announcement/detail/360024825992",
+          "note": "Binance official System Upgrade Notice published 2019-03-11 03:59; scheduled Spot trading suspension from 2019-03-12 02:00 UTC, estimated 8 hours. Native gap ends 08:00 UTC; official published estimate does not by itself prove exact resumption or native transactions.",
           "whole_gap_cause_proven": false
         },
         "synthetic_candles_permitted": false
@@ -1127,7 +1127,7 @@
   },
   "unresolved": [
     "Verify 4971 BTC gap minutes against native Binance Spot trade archives before claiming zero original trades.",
-    "Clarify cause of missing BTC 1m on 2019-03-12 02:00–08:00 and 2019-11-13 05:30–05:33 UTC.",
+    "Verify exact minute-level exchange trading status and archived trades for documented 2019-03-12 02:00–08:00 maintenance; clarify still unexplained 2019-11-13 05:30–05:33 UTC.",
     "Reconcile official resume estimates against precise Binance 1m gaps, especially 2018-06-26.",
     "Audit ETH, BNB, XRP, SOL original gap-months and independent native daily OHLCV, then earliest genuine pair listings.",
     "No Trader, Interface, Bridge, Market Core, original archive, or local cache was changed."
