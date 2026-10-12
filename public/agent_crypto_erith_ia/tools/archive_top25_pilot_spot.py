@@ -43,11 +43,11 @@ def pin_catalog():
  raw=CATALOG.read_bytes();j=json.loads(raw)
  plan=json.loads(PLAN.read_text(encoding="utf-8"))
  need(j["ranked"]==250 and j["quote"]=="USDT" and plan["schema"]=="seven.crypto.top25-expansion-plan.v1",
-      "Frozen Top250/Top10 identity not found")
- need(plan["source_snapshot_git_blob_sha"]!="" and
+      "Frozen Top250/Top25 identity not found")
+ need(plan["source_ranked_catalog_git_blob_sha"]!="" and
       {x["id"] for x in plan["added_assets"]}=={x["id"] for x in j["assets"][10:25]}
       and set(ASSETS)==set(plan["pilot_market_ids"]),
-      "Top10 selection changed")
+      "Top25 source identity changed")
  indexed={x["id"]:x for x in j["assets"]}
  for aid,cfg in ASSETS.items():
     entry=indexed[aid]
