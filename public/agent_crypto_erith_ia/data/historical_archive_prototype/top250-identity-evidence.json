@@ -1,5 +1,5 @@
 {
-  "approved_count": 89,
+  "approved_count": 91,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -266,14 +266,23 @@
       "symbol": "ETC"
     },
     {
-      "checked_at": "2026-10-10T01:47:46.067657+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-12T05:47:26.284827+00:00",
+      "evidence": [
+        {
+          "base": "JUP",
+          "coin_id": "jupiter-exchange-solana",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "jupiter-exchange-solana",
+          "trade_url": "https://www.binance.com/en/trade/JUP_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "jupiter-exchange-solana",
-      "pages": 1,
+      "pages": 2,
       "pair": "JUPUSDT",
       "rank": 70,
-      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
-      "status": "source_unavailable",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "JUP"
     },
     {
@@ -317,14 +326,23 @@
       "symbol": "JST"
     },
     {
-      "checked_at": "2026-10-10T01:48:01.095134+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-12T05:47:41.617979+00:00",
+      "evidence": [
+        {
+          "base": "ATOM",
+          "coin_id": "cosmos",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "cosmos",
+          "trade_url": "https://www.binance.com/en/trade/ATOM_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "cosmos",
-      "pages": 0,
+      "pages": 2,
       "pair": "ATOMUSDT",
       "rank": 75,
-      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
-      "status": "source_unavailable",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "ATOM"
     },
     {
@@ -1862,7 +1880,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 7,
+  "review_required_count": 5,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
