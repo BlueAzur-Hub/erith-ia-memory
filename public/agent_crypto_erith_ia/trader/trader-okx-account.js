@@ -12,6 +12,9 @@ let timer=0;
 let inflight=null;
 let ledgerInFlight=null;
 let ledgerCheckedAt=0;
+let ledgerPosition=null;
+let currentBtcHeld=NaN;
+let lastSpotExecutions=0;
 
 const panel=()=>document.getElementById(PANEL_ID);
 const q=(name)=>panel()?.querySelector(`[data-okx-${name}]`)||null;
@@ -81,17 +84,49 @@ function showAuth(show,message="Session Aether Trust Bridge requise"){
   const auth=q("auth");if(auth)auth.hidden=!show;
   if(show)text("authstatus",message);
 }
+
+/* Le coût et la performance sont qualifiés séparément. Une écriture OKX n'est pas une facture PayPal. */
+function updatePositionView(){
+  const position=ledgerPosition;
+  if(position?.matched){
+    const sameHolding=Number.isFinite(currentBtcHeld)&&Math.abs(currentBtcHeld-position.matched.btc)<Math.max(1e-12,position.matched.btc*1e-7);
+    if(sameHolding){
+      const euro=v=>v.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2});
+      text("avgcost",euro(position.matched.eur/position.matched.btc)+" €/BTC");
+      text("committed",euro(position.matched.eur)+" € rapprochés");
+      text("pnl","CHANGE USD/EUR À VÉRIFIER");
+      text("positionproof","Les écritures du 5 octobre correspondent au BTC détenu. Taux et dépense indicatifs ; justificatif d'achat et conversion USD/EUR nécessaires pour un gain vérifié.");
+      text("avgcosthint","Taux déduit des écritures OKX, non prix moyen certifié");
+      text("committedhint","Montant du mouvement, paiement externe à confirmer");
+      text("pnlhint","Valeur actuelle en USD ; dépense en EUR");
+      return;
+    }
+    text("positionproof","Mouvement EUR/BTC retrouvé, mais quantité BTC détenue différente. Coût de la position totale non établi.");
+  }else if(position?.recordsCount>0){
+    text("positionproof",position.recordsCount+" mouvements financiers retrouvés, mais acquisition complète non démontrée.");
+  }else{
+    text("positionproof",lastSpotExecutions
+      ?lastSpotExecutions+" exécutions Spot récentes ; acquisition totale non démontrée."
+      :"0 exécution Spot sur 3 mois ; l'achat en euros relève d'un historique financier distinct.");
+  }
+  text("avgcost","NON PROUVÉ");
+  text("committed","NON PROUVÉ");
+  text("pnl","À VÉRIFIER");
+  text("avgcosthint","Historique d'acquisition à rapprocher");
+  text("committedhint","Achats + frais prouvés");
+  text("pnlhint","Valeur actuelle et montant investi doivent être dans la même devise");
+}
+
 function paintData(account,orders,fills,fees){
   const btc=asset(account,"BTC"),usdc=asset(account,"USDC"),eur=asset(account,"EUR");
   const fillRows=Array.isArray(fills?.fills_3m)?fills.fills_3m:[];
   paintAsset("BTC",btc);
   paintAsset("USDC",usdc);
   paintAsset("EUR",eur);
+  currentBtcHeld=btc.present?btc.total:NaN;
+  lastSpotExecutions=fillRows.length;
   text("positionvalue",Number.isFinite(btc.eqUsd)?btc.eqUsd.toLocaleString("fr-FR",{style:"currency",currency:"USD",maximumFractionDigits:2}):"—");
-  text("avgcost","NON PROUVÉ");
-  text("committed","NON PROUVÉ");
-  text("pnl","HISTORIQUE À RETROUVER");
-  text("positionproof",fillRows.length?(fillRows.length+" fill(s) sur 3 mois · couverture d'acquisition à vérifier"):"0 fill sur 3 mois · base d'acquisition antérieure ou externe à retrouver");
+  updatePositionView();
   text("pending",Array.isArray(orders?.pending)?orders.pending.length:0);
   text("history",Array.isArray(orders?.history_3m)?orders.history_3m.length:0);
   text("fills",fillRows.length);
@@ -108,6 +143,8 @@ function paintData(account,orders,fills,fees){
    Ils prouvent des mouvements, jamais automatiquement le coût d'un achat PayPal. */
 function ledgerClear(message){
   ledgerCheckedAt=0;
+  ledgerPosition=null;
+  updatePositionView();
   text("ledgerstatus",message);
   const entries=q("ledgerentries");
   if(entries)entries.replaceChildren();
@@ -191,6 +228,10 @@ function ledgerPaint(results){
   const matches=credits.flatMap(btc=>debits.filter(eur=>Math.abs(btc.timestamp-eur.timestamp)<=120000).map(eur=>({btc,eur})));
   const summary=q("ledgersummary");
   if(summary)summary.hidden=matches.length!==1||credits.length!==1||debits.length!==1;
+  ledgerPosition={recordsCount,matched:null};
+  if(matches.length===1&&credits.length===1&&debits.length===1&&!issues.length&&!hasMore){
+    ledgerPosition.matched={btc:matches[0].btc.balanceChange,eur:Math.abs(matches[0].eur.balanceChange)};
+  }
   if(summary&&!summary.hidden){
     const {btc,eur}=matches[0];
     const eurPaid=Math.abs(eur.balanceChange);
@@ -236,12 +277,7 @@ function ledgerPaint(results){
   const technicalStatus=totals.concat(issues.length?["À vérifier : "+issues.join(" ; ")]:[],hasMore?["D'autres pages d'historique peuvent exister."]:[]);
   text("ledgercoverage",technicalStatus.join(" · ")||"Aucune source disponible.");
   text("ledgerwarning",issues.length?"Attention : certaines sources ne sont pas disponibles ; les résultats peuvent être incomplets.":hasMore?"Attention : d'autres mouvements peuvent exister dans l'historique.":"Ces écritures incluent éventuellement des transferts entre comptes : elles ne représentent pas nécessairement des achats distincts.");
-  text("positionproof",recordsCount
-    ?recordsCount+" mouvements financiers consultés. Le coût de l'achat PayPal en EUR et le gain ne sont pas encore certifiés."
-    :"Aucun coût d'acquisition certifié dans les journaux consultés. Retrouver le justificatif officiel d'achat en EUR.");
-  text("avgcost","NON PROUVÉ");
-  text("committed","NON PROUVÉ");
-  text("pnl","HISTORIQUE À RAPPROCHER");
+  updatePositionView();
 }
 
 async function refreshLedger(force=false){
@@ -410,9 +446,9 @@ function mount(){
     '<article class="okx-card primary"><span>EUR disponible</span><b data-okx-eur>—</b><small data-okx-eurdetail>Trading / Funding</small></article>',
     '</div><div class="okx-position">',
     '<article class="okx-card"><span>Valeur BTC actuelle</span><b data-okx-positionvalue>—</b><small>Équivalent USD retourné par OKX</small></article>',
-    '<article class="okx-card"><span>Prix moyen d’achat</span><b data-okx-avgcost>—</b><small>Calculé seulement avec un historique prouvé</small></article>',
-    '<article class="okx-card"><span>Montant total investi</span><b data-okx-committed>—</b><small>Achats + frais prouvés</small></article>',
-    '<article class="okx-card"><span>Gain / perte actuel</span><b data-okx-pnl>—</b><small>Valeur actuelle − montant investi</small></article>',
+    '<article class="okx-card"><span>Prix moyen d’achat</span><b data-okx-avgcost>—</b><small data-okx-avgcosthint>Calculé seulement avec un historique prouvé</small></article>',
+    '<article class="okx-card"><span>Montant total investi</span><b data-okx-committed>—</b><small data-okx-committedhint>Achats + frais prouvés</small></article>',
+    '<article class="okx-card"><span>Gain / perte actuel</span><b data-okx-pnl>—</b><small data-okx-pnlhint>Valeur actuelle − montant investi</small></article>',
     '</div><p class="okx-position-proof" data-okx-positionproof>Historique d’acquisition en cours de qualification.</p><div class="okx-activity">',
     '<article class="okx-card"><span>Ordres ouverts</span><b data-okx-pending>—</b><small>SPOT OKX</small></article>',
     '<article class="okx-card"><span>Historique</span><b data-okx-history>—</b><small>ordres · 3 mois</small></article>',
