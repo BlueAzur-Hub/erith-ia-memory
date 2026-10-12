@@ -5,7 +5,7 @@
   "scope": "latest_verified_closed_month",
   "is_live": false,
   "max_is_all_time": false,
-  "archived_assets": 123,
+  "archived_assets": 125,
   "assets": [
     {
       "id": "bitcoin",
@@ -2507,6 +2507,27 @@
       }
     },
     {
+      "id": "superfarm",
+      "rank": 230,
+      "name": "SuperVerse",
+      "symbol": "SUPER",
+      "pair": "SUPERUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-7d3af6a0a133",
+      "source_zip_sha256": "ca6286dcde42cc23e1d4e2b02116d2395c8f0372999300dfc1174bcefbe7f70f",
+      "file": "superfarm.json.gz",
+      "sha256": "517b8e541f84f83ab8cc3760ce7bc4d936c6d6cc216e523ed8de5597e843e120",
+      "bytes": 185687,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
       "id": "orca",
       "rank": 231,
       "name": "Orca",
@@ -2563,6 +2584,27 @@
       "file": "1inch.json.gz",
       "sha256": "69949f97a9bf0b8ccd892fe84d5bf17c0dbe79459684cce7cadf028ccbd6f1f2",
       "bytes": 186130,
+      "series_counts": {
+        "1m": 1440,
+        "5m": 8640,
+        "1h": 720
+      }
+    },
+    {
+      "id": "havven",
+      "rank": 238,
+      "name": "Synthetix",
+      "symbol": "SNX",
+      "pair": "SNXUSDT",
+      "month": "2026-09",
+      "first_open_ms": 1788220800000,
+      "last_open_ms": 1790812740000,
+      "native_1m_count": 43200,
+      "release": "crypto-spot-bulk-add-2026-09-1m-7d3af6a0a133",
+      "source_zip_sha256": "1b5ad98c6ae098cc4e39eda168d1153e8e91dc3a4e21f46ac3ca6591a621734b",
+      "file": "havven.json.gz",
+      "sha256": "a9f8d8331f5f7d9ba4b2a1414f69eb1c877923be2b5c3b1a6a70bacd0e33a1f4",
+      "bytes": 202006,
       "series_counts": {
         "1m": 1440,
         "5m": 8640,
