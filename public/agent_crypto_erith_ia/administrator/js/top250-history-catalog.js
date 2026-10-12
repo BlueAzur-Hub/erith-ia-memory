@@ -43,7 +43,7 @@ function validate(fed,bin,alt,depth){
    Number.isInteger(b.candles)&&b.candles>=0,"Identité ou comptage Binance incorrect : rang "+(i+1));
   ids.add(f.id);
   const expected=b.months.reduce((n,m)=>n+m.candles,0);
-  check(expected===b.candles&&b.months.every(m=>/^\\d{4}-\\d\\d$/.test(m.month)&&
+  check(expected===b.candles&&b.months.every(m=>/^[0-9]{4}-[0-9]{2}$/.test(m.month)&&
    Number.isInteger(m.candles)&&m.candles>0),
    "Sources mensuelles Binance incohérentes : "+f.id);
   if(b.months.length)binArchived++;
