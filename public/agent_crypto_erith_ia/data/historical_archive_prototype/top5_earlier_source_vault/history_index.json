@@ -64,5 +64,42 @@
   "source": "Original Binance Spot 1m OHLCV, official source ZIP+CHECKSUM, queryable SQLite in immutable Releases",
   "source_months_scanned": 64,
   "source_months_unavailable": 7,
-  "source_months_verified": 57
+  "source_months_verified": 57,
+  "source_gap_interpretation": {
+    "original_calendar_missing_1m_in_verified_archives": 21281,
+    "proven_pre_pair_launch_absences_1m": 14760,
+    "unclassified_or_known_operational_1m_outside_this_pair_launch": 6521,
+    "distinct_from_original_source_gap_count": true,
+    "pair_launch_classifications": [
+      {
+        "asset_id": "solana",
+        "spot_market_pair": "SOLUSDT",
+        "venue": "Binance Spot",
+        "quote": "USDT",
+        "interval_from_utc": "2020-08-01T00:00:00Z",
+        "interval_end_exclusive_utc": "2020-08-11T06:00:00Z",
+        "calendar_minutes": 14760,
+        "classification": "before_official_pair_launch_not_exchange_outage",
+        "official_spot_pair_launch_utc": "2020-08-11T06:00:00Z",
+        "official_pair_listing_notice": "https://www.binance.com/es-LA/support/announcement/detail/cf77f566c9b64cc791fc152679175de8",
+        "separate_earlier_binance_sol_markets": {
+          "official_first_bnb_btc_busd_trading_utc": "2020-04-09T04:00:00Z",
+          "official_notice": "https://www.binance.com/en-IN/support/announcement/detail/360041562392",
+          "note": "SOL was trading on other Binance quote pairs months before the SOLUSDT market launched; these earlier OHLCV cannot be substituted silently."
+        },
+        "proof": {
+          "source_index": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_earlier_source_vault/batches/quarter-q3.json",
+          "source_git_blob_sha": "662816814a4e7c5dd9767ffadfabe075ec884009",
+          "source_row_verified_native_minutes": 29880,
+          "source_missing_minutes": 14760,
+          "source_missing_interval": {
+            "end_exclusive_utc": "2020-08-11T06:00:00Z",
+            "missing_minutes": 14760,
+            "start_utc": "2020-08-01T00:00:00Z"
+          }
+        },
+        "warning": "A missing 1m row before the named market's official listing is NOT an outage. This adjustment is a classification only; original ZIP and source calendar gaps unchanged."
+      }
+    ]
+  }
 }
