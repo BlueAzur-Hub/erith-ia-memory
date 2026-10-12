@@ -1,0 +1,127 @@
+name: Agent Crypto Authentic HYPE Bitget Spot Historical 1D
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-hype-spot-daily.yml'
+      - 'public/agent_crypto_erith_ia/tools/archive_hype_bitget_daily.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-hype-original-spot-native-daily
+  cancel-in-progress: false
+jobs:
+  verify-original-hype-daily:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: crypto-top25-bitget-hype-native-daily-2026-09
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify exact HYPE project, spot pairing, native daily-only interval
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/archive_hype_bitget_daily.py
+          python public/agent_crypto_erith_ia/tools/archive_hype_bitget_daily.py --self-test
+      - name: Collect only genuine Bitget Spot native daily OHLCV since Dec 2024
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/archive_hype_bitget_daily.py \
+            --collect --output "$RUNNER_TEMP/original-hype"
+      - name: Assert original source integrity, no false 1m claims and no invented daily sessions
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import pathlib,os,gzip,json,hashlib,datetime
+          base=pathlib.Path(os.environ["RUNNER_TEMP"])/"original-hype"
+          j=json.loads((base/"manifest.json").read_text())
+          assert j["schema"]=="seven.crypto.top25-hype-original-spot-daily.v1"
+          assert j["venue"]=="Bitget Spot" and j["pair"]=="HYPEUSDT" and j["original_quote"]=="USDT"
+          assert j["not_1m_candles"] and j["no_synthetic_candles"] and not j["trader_interface_modified"]
+          assert j["original_daily_bars"]>=4 and not j["source_response_digests_are_exchange_signed"]
+          info=j["original_native_payload"]
+          packed=(base/info["name"]).read_bytes()
+          assert len(packed)==info["bytes"] and hashlib.sha256(packed).hexdigest()==info["sha256"]
+          data=json.loads(gzip.decompress(packed))
+          assert data["market"]=="HYPEUSDT" and data["exchange"]=="Bitget Spot"
+          assert data["native_interval"]=="1D" and data["native_candles"]==j["original_daily_bars"]
+          assert len(data["native_daily_rows"])==j["original_daily_bars"]
+          assert data["native_source_response_sha256"]==j["native_response_sha256"]
+          assert data["filled_by_our_collector"] is False and not data["canonical_1m_federation_modified"]
+          assert {p.name for p in base.iterdir()}=={info["name"],"manifest.json"}
+          print("BITGET HYPE SPOT ORIGINAL DAILY SOURCE CERTIFIED",j["original_daily_bars"])
+          PY
+      - name: Preserve unchanged original venue source in immutable GitHub Release
+        run: |
+          set -euo pipefail
+          folder="$RUNNER_TEMP/original-hype"
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          git fetch origin main
+          for file in top250_multisource_coverage/index.json top25_historical_expansion/index.json;do
+            a=$(sha256sum "$root/$file"|cut -d' ' -f1)
+            b=$(git show "origin/main:$root/$file"|sha256sum|cut -d' ' -f1)
+            test "$a" = "$b" || { echo "::error::Spot source coin ID changed";exit 1; }
+          done
+          if gh release view "$TAG" --json tagName >/dev/null 2>"$RUNNER_TEMP/release-error.txt";then
+            mkdir -p "$RUNNER_TEMP/previous"
+            gh release download "$TAG" --pattern manifest.json --dir "$RUNNER_TEMP/previous"
+            cmp "$RUNNER_TEMP/previous/manifest.json" "$folder/manifest.json" || {
+              echo "::error::Immutable Bitget history differs";exit 1;
+            }
+          else
+            if ! grep -Eqi 'release not found|HTTP 404|not found' "$RUNNER_TEMP/release-error.txt";then
+              cat "$RUNNER_TEMP/release-error.txt";exit 1
+            fi
+            gh release create "$TAG" "$folder"/* --target "$GITHUB_SHA" \
+              --title "HYPE Bitget Spot authentic historical 1D source" \
+              --notes "Native Bitget Spot HYPEUSDT 1D source, 2024-12 to 2026-09 (requested). No 1m restoration claimed, original exchange 1D sessions and exact OHLCV preserved in gzip, response SHA-256 digests are NOT exchange-signed, no synthetic rows, never substitute HYPE futures." \
+              --latest=false
+          fi
+          gh release view "$TAG" --json assets,isDraft,url > "$RUNNER_TEMP/proven-release.json"
+          python - <<'PY'
+          import os,pathlib,json
+          base=pathlib.Path(os.environ["RUNNER_TEMP"])
+          j=json.loads((base/"proven-release.json").read_text())
+          expected={p.name:p.stat().st_size for p in (base/"original-hype").iterdir()}
+          actual={p["name"]:p["size"] for p in j["assets"]}
+          assert not j["isDraft"] and expected==actual
+          print("BITGET HYPE DAILY RELEASE",j["url"],len(actual))
+          PY
+      - name: Add independent HYPE daily index on main, no Trader and no 1m catalog changes
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          output="$root/top25_historical_expansion/hype_original_daily/index.json"
+          for attempt in 1 2 3;do
+            git fetch origin main
+            for file in top250_multisource_coverage/index.json top25_historical_expansion/index.json;do
+              a=$(sha256sum "$root/$file"|cut -d' ' -f1)
+              b=$(git show "origin/main:$root/$file"|sha256sum|cut -d' ' -f1)
+              test "$a" = "$b" || { echo "::error::Protected market source changed";exit 1; }
+            done
+            git reset --hard origin/main
+            mkdir -p "$(dirname "$output")"
+            cp "$RUNNER_TEMP/original-hype/manifest.json" "$output"
+            git add -- "$output"
+            git diff --cached --check
+            if git diff --cached --quiet;then exit 0;fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Coffre: preserve HYPE source-native Bitget Spot 1D history separately'
+            if git push origin HEAD:main;then exit 0;fi
+          done
+          exit 1
+      - name: Enforce no existing production source mutation
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/
