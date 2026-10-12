@@ -16,7 +16,7 @@ const text=(name,value)=>{const el=q(name);if(el)el.textContent=String(value??"�
 const token=()=>{try{return sessionStorage.getItem(TOKEN_KEY)||"";}catch(_){return"";}};
 const owner=()=>{try{return sessionStorage.getItem(ROLE_KEY)==="owner";}catch(_){return false;}};
 const saveToken=value=>{try{if(value)sessionStorage.setItem(TOKEN_KEY,value);else sessionStorage.removeItem(TOKEN_KEY);}catch(_){}};
-const fmt=(value,digits=8)=>Number.isFinite(Number(value))?Number(value).toLocaleString("fr-FR",{maximumFractionDigits:digits}):"—";
+const fmt=value=>{const n=Number(value);if(!Number.isFinite(n))return"—";const digits=Math.abs(n)>0&&Math.abs(n)<1?16:8;return n.toLocaleString("fr-FR",{maximumFractionDigits:digits});};
 const shortError=error=>String(error?.message||error||"Erreur inconnue").replace(/\s+/g," ").slice(0,180);
 
 async function bridge(path,{method="GET",body=null,auth=true,keepalive=false}={}){
