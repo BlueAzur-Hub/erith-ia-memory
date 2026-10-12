@@ -1,0 +1,81 @@
+name: Agent Crypto HYPE Spot Original Minute Backfill
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-hype-spot-minute-backfill.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-hype-spot-original-month
+  cancel-in-progress: false
+
+jobs:
+  archive-original-hype-month:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test native Bitget source checks offline
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py
+          python public/agent_crypto_erith_ia/tools/native_bitget_month_test.py
+      - name: Verify original spot identity and collect only January 2025
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, pathlib, sys, tempfile
+          root=pathlib.Path("public/agent_crypto_erith_ia")
+          base=root/"data/historical_archive_prototype"
+          sys.path.insert(0,str(root/"tools"))
+          import collect_native_bitget_month as native
+          f=json.loads((base/"top250_multisource_coverage/index.json").read_text())
+          b=json.loads((base/"bitget_verified_views/index.json").read_text())
+          owner=next((a for a in f["assets"] if a["id"]=="hyperliquid"),None)
+          past=next((a for a in b["assets"] if a["id"]=="hyperliquid"),None)
+          assert f["ranked"]==250 and owner is not None and owner["rank"]==11
+          assert owner["symbol"]=="HYPE" and owner["quote"]=="USDT"
+          assert owner["source"]=="Bitget Spot native 1m HTTPS"
+          assert owner["native_1m_count"]>0 and owner["months"]>0
+          assert past is not None and past["pair"]=="HYPEUSDT"
+          assert past["id"]==owner["id"] and past["symbol"]==owner["symbol"]
+          assert "2025-01" not in past["months"]
+          asset={"id":"hyperliquid","rank":11,"name":"Hyperliquid",
+                 "symbol":"HYPE","pair":"HYPEUSDT","venue":"bitget",
+                 "quote":"USDT"}
+          month="2025-01"
+          start,end,count=native.bounds(month)
+          assert count==44640 and end-start==44640*60000
+          with tempfile.TemporaryDirectory(prefix="verified-hype-spot-") as temp:
+              folder=pathlib.Path(temp)
+              manifest=native.execute_one(asset,month,folder,delay=0.12)
+              assert manifest["verified"]==1 and manifest["candles"]==44640
+              assert manifest["no_synthetic_candles"] is True
+              assert manifest["assets"][0]["asset_id"]=="hyperliquid"
+              assert manifest["assets"][0]["pair"]=="HYPEUSDT"
+              tag=native.publish(asset,month,folder,manifest)
+              assert tag==native.release_tag(asset,month)
+              print("ORIGINAL HYPE JANUARY 2025 ARCHIVED",
+                    json.dumps({"market":"Bitget Spot HYPEUSDT",
+                                "month":month,"native_1m":manifest["candles"],
+                                "release":tag,"sha256":manifest["assets"][0]["sha256"]}),
+                    flush=True)
+          PY
+      - name: Confirm no trading interface files were changed
+        if: always()
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- public/agent_crypto_erith_ia/administrator/ \
+             public/agent_crypto_erith_ia/trader/ \
+             public/agent_crypto_erith_ia/core/ \
+             public/agent_crypto_erith_ia/data/crypto/
