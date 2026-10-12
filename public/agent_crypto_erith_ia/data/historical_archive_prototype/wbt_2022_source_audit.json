@@ -1,0 +1,99 @@
+{
+  "schema": "seven.crypto.wbt.2022.source-evidence.audit.v1",
+  "status": "BOUNDED_SOURCE_DISCOVERY_NO_BACKFILL_CERTIFIED",
+  "reviewed_on": "2026-10-12",
+  "scope": {
+    "asset_id": "whitebit",
+    "ticker": "WBT",
+    "market": "WBT_USDT",
+    "resolution": "1m",
+    "objective_window_utc": [
+      "2022-08-29",
+      "2022-12-28"
+    ],
+    "exclude_interchangeability": [
+      "WBT_TUSD",
+      "USD instead of USDT",
+      "other exchange Spot"
+    ]
+  },
+  "official_whitebit_documentation": {
+    "http_rest_url": "https://docs-old.whitebit.com/public/http-v1/",
+    "kline_endpoint": "GET https://whitebit.com/api/v1/public/kline",
+    "exact_query_parameters": {
+      "market": "WBT_USDT",
+      "interval": "1m",
+      "start": "UNIX_UTC_SECONDS",
+      "end": "UNIX_UTC_SECONDS",
+      "limit": "1..1440"
+    },
+    "response_fields_in_documented_order": [
+      "timestamp",
+      "open",
+      "close",
+      "high",
+      "low",
+      "volume_stock",
+      "volume_deal"
+    ],
+    "max_candles_per_request": 1440,
+    "websocket_docs_url": "https://github.com/whitebit-exchange/api-docs/blob/main/pages/public/websocket.mdx",
+    "websocket_method": "candles_request",
+    "websocket_parameters": [
+      "WBT_USDT",
+      "start_seconds",
+      "end_seconds",
+      60
+    ],
+    "published_history_policy": "From start of data collection, which is not necessarily start of market trading",
+    "history_policy_url": "https://help.whitebit.com/hc/en-gb/articles/21922302527773-Historical-Market-Data",
+    "reuse_permission": "Written consent required for K-lines per official historical-market-data disclaimer; do not redistribute without authorization"
+  },
+  "verified_user_whitebit_archive_metadata": {
+    "venue": "WhiteBIT Spot",
+    "market": "WBT/USDT",
+    "day_utc": "2022-12-31",
+    "filename": "kline-1m_WBT_USDT_20221231_0000.csv.tar.gz",
+    "sha256": "b522f1b2441d0b3f241e9ce66339d4121af9b27c070eb9740e6bcb6f31ca3ed1",
+    "native_rows": 1440,
+    "first_utc": "2022-12-31T00:00:00Z",
+    "last_utc": "2022-12-31T23:59:00Z",
+    "missing_internal_minutes": 0,
+    "zero_volume_rows": 171,
+    "provenance_limit": "Source file supplied by user; market deduced from filename and corresponding exchange screenshots; source CSV has a market header but rows do not populate market"
+  },
+  "htx_2022_probes": {
+    "months": [
+      "2022-09",
+      "2022-10",
+      "2022-11",
+      "2022-12"
+    ],
+    "results": "0 of 4 verified: futures.huobi.com DNS failure and speculative futures.htx.com mirror 404; not evidence of absent trading",
+    "official_documentation": "https://github.com/hbdmapi/huobi_public_data",
+    "market_venue_separate": "HTX/Huobi Spot is independent from WhiteBIT Spot"
+  },
+  "bounded_direct_rest_probe": {
+    "target_windows_utc": [
+      "2022-08-29",
+      "2022-09-22",
+      "2022-12-28"
+    ],
+    "attempted_from_assistant_environment": true,
+    "response": "not_available",
+    "reason": "network DNS resolution and browsing tool do not expose API responses",
+    "no_zero_bars_inferred": true,
+    "not_source_proven": true
+  },
+  "decisions": {
+    "preserve_originals": true,
+    "no_synthetic_ohlcv": true,
+    "no_public_licensed_raw_data": true,
+    "no_interpolation": true,
+    "no_exchange_or_quote_substitution": true,
+    "no_trader_or_interface_changes": true,
+    "no_recurring_bot_created": true,
+    "all_time_history_completeness_claim": false
+  },
+  "next_validation": "Obtain written permission or use a source legally authorized for k-line access, probe one bounded historical day through documented HTTP V1 or WebSocket; validate native timestamps/OHLCV, then backfill in verifiable bounded chunks only if availability and usage rights confirmed."
+}
