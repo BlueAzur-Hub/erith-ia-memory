@@ -87,13 +87,13 @@ function paintData(account,orders,fills,fees){
   text("positionvalue",Number.isFinite(btc.eqUsd)?btc.eqUsd.toLocaleString("fr-FR",{style:"currency",currency:"USD",maximumFractionDigits:2}):"—");
   text("avgcost","NON PROUVÉ");
   text("committed","NON PROUVÉ");
-  text("pnl","EN ATTENTE HISTORIQUE");
+  text("pnl","HISTORIQUE À RETROUVER");
   text("positionproof",fillRows.length?(fillRows.length+" fill(s) sur 3 mois · couverture d'acquisition à vérifier"):"0 fill sur 3 mois · base d'acquisition antérieure ou externe à retrouver");
   text("pending",Array.isArray(orders?.pending)?orders.pending.length:0);
   text("history",Array.isArray(orders?.history_3m)?orders.history_3m.length:0);
   text("fills",fillRows.length);
   text("fees",feeLabel(fees));
-  text("bridge",`Bridge ${account?.bridge_version||orders?.bridge_version||"—"} · ${account?.site||"OKX"} · READ ONLY`);
+  text("bridge",`Bridge ${account?.bridge_version||orders?.bridge_version||"—"} · ${account?.site||"OKX"} · LECTURE SEULE`);
   const date=new Date(account?.fetched_at||Date.now());
   text("updated",Number.isFinite(date.getTime())?date.toLocaleString("fr-FR"):"à l'instant");
   setState("ready","COMPTE OKX RÉEL · CONNECTÉ");
@@ -200,21 +200,21 @@ function mount(){
   const p=document.createElement("details");p.id=PANEL_ID;p.open=true;p.dataset.state="loading";
   p.setAttribute("aria-label","Compte OKX réel · lecture seule via Aether Trust");
   p.innerHTML=[
-    '<summary><i class="okx-live-dot" aria-hidden="true"></i><strong>COMPTE OKX · RÉEL</strong><span data-okx-state>INITIALISATION…</span><span class="okx-ro">READ ONLY · AUCUN ORDRE</span></summary>',
+    '<summary><i class="okx-live-dot" aria-hidden="true"></i><strong>COMPTE OKX · RÉEL</strong><span data-okx-state>INITIALISATION…</span><span class="okx-ro">LECTURE SEULE · AUCUN ORDRE</span></summary>',
     '<div class="okx-body"><div class="okx-primary">',
     '<article class="okx-card primary"><span>BTC détenu</span><b data-okx-btc>—</b><small data-okx-btcdetail>Trading / Funding</small></article>',
     '<article class="okx-card primary"><span>USDC disponible</span><b data-okx-usdc>—</b><small data-okx-usdcdetail>Trading / Funding</small></article>',
     '<article class="okx-card primary"><span>EUR disponible</span><b data-okx-eur>—</b><small data-okx-eurdetail>Trading / Funding</small></article>',
     '</div><div class="okx-position">',
     '<article class="okx-card"><span>Valeur BTC actuelle</span><b data-okx-positionvalue>—</b><small>Équivalent USD retourné par OKX</small></article>',
-    '<article class="okx-card"><span>Coût moyen acquisition</span><b data-okx-avgcost>—</b><small>PRU · seulement si historique prouvé</small></article>',
-    '<article class="okx-card"><span>Capital engagé</span><b data-okx-committed>—</b><small>Achats + frais prouvés</small></article>',
-    '<article class="okx-card"><span>P&L latent</span><b data-okx-pnl>—</b><small>Valeur actuelle − base de coût</small></article>',
+    '<article class="okx-card"><span>Prix moyen d’achat</span><b data-okx-avgcost>—</b><small>Calculé seulement avec un historique prouvé</small></article>',
+    '<article class="okx-card"><span>Montant total investi</span><b data-okx-committed>—</b><small>Achats + frais prouvés</small></article>',
+    '<article class="okx-card"><span>Gain / perte actuel</span><b data-okx-pnl>—</b><small>Valeur actuelle − montant investi</small></article>',
     '</div><p class="okx-position-proof" data-okx-positionproof>Historique d’acquisition en cours de qualification.</p><div class="okx-activity">',
-    '<article class="okx-card"><span>Ordres ouverts</span><b data-okx-pending>—</b><small>SPOT OKX</small></article>'
+    '<article class="okx-card"><span>Ordres ouverts</span><b data-okx-pending>—</b><small>SPOT OKX</small></article>',
     '<article class="okx-card"><span>Historique</span><b data-okx-history>—</b><small>ordres · 3 mois</small></article>',
-    '<article class="okx-card"><span>Fills</span><b data-okx-fills>—</b><small>exécutions · 3 mois</small></article>',
-    '<article class="okx-card"><span>Frais BTC-USDC</span><b data-okx-fees>—</b><small>barème du compte</small></article>',
+    '<article class="okx-card"><span>Exécutions</span><b data-okx-fills>—</b><small>3 derniers mois</small></article>',
+    '<article class="okx-card"><span>Frais BTC-USDC</span><b data-okx-fees>—</b><small>tarification du compte</small></article>',
     '</div><form class="okx-auth" data-okx-auth hidden><small data-okx-authstatus>Aether Trust requis.</small><input data-okx-secret type="password" minlength="6" autocomplete="current-password" placeholder="Mot de passe Aether Trust"><button data-okx-connect type="submit">Connecter</button></form>',
     '<div class="okx-foot"><b data-okx-bridge>Bridge local 8787 · OKX Private REST</b><span>Dernière lecture : <span data-okx-updated>—</span></span><button type="button" data-okx-refresh>Actualiser</button></div></div>'
   ].join("");
