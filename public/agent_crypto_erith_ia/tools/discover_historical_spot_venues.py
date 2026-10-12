@@ -105,7 +105,7 @@ def universe(venue=VENUE,catalog=CATALOG):
             {a["rank"] for a in current}==set(range(1,251)) and
             all(ID.fullmatch(a["id"]) and
                 isinstance(a.get("symbol"),str) and
-                ALNUM.fullmatch(a["symbol"]) and
+                a["symbol"].strip() and len(a["symbol"])<=100 and
                 isinstance(a.get("name"),str) and a["name"]
                 for a in current),
             "Current exact-ID Top250 catalogue invalid")
