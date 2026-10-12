@@ -1,0 +1,509 @@
+{
+  "assets": [
+    {
+      "asset_id": "ethereum",
+      "months": [
+        {
+          "calendar_minutes": 44640,
+          "checksum_sha256": "8e7e087f25e7fad771e6d408c704f0652b734cf4348c1d40f95adf3213658995",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2021-08.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 44640,
+          "first_utc": "2021-08-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-08-13T06:30:00Z",
+              "missing_minutes": 270,
+              "start_utc": "2021-08-13T02:00:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2021-09-01T00:00:00Z",
+          "missing_1m": 270,
+          "month": "2021-08",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "ETHUSDT",
+          "quote": "USDT",
+          "source_rows": 44370,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2021-08.zip",
+          "zero_volume_native_candles": 0,
+          "zip_bytes": 2197307,
+          "zip_sha256": "e6d65e00e8eb757c748c61469268d921f679968e40b9329b04d66ed5392c0073"
+        },
+        {
+          "calendar_minutes": 43200,
+          "checksum_sha256": "ca8d9445cbdb5d530cfd53a35c6b52316845ac1237c5eedaee4f4324d6bae97e",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2021-09.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 43200,
+          "first_utc": "2021-09-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-09-29T09:00:00Z",
+              "missing_minutes": 120,
+              "start_utc": "2021-09-29T07:00:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2021-10-01T00:00:00Z",
+          "missing_1m": 120,
+          "month": "2021-09",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "ETHUSDT",
+          "quote": "USDT",
+          "source_rows": 43080,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2021-09.zip",
+          "zero_volume_native_candles": 0,
+          "zip_bytes": 2070369,
+          "zip_sha256": "5bbfb9f41522b2fd1472e4f4b164a5ba4711b02aab37eebe0b2b25a1286c90a9"
+        },
+        {
+          "calendar_minutes": 44640,
+          "checksum_sha256": "58eef72e2f37ec8dcf5339ff5953809faecc86edd13bc87d407f2e84adc6a46e",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2023-03.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 44640,
+          "first_utc": "2023-03-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2023-03-24T14:00:00Z",
+              "missing_minutes": 80,
+              "start_utc": "2023-03-24T12:40:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2023-04-01T00:00:00Z",
+          "missing_1m": 80,
+          "month": "2023-03",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "ETHUSDT",
+          "quote": "USDT",
+          "source_rows": 44560,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2023-03.zip",
+          "zero_volume_native_candles": 72,
+          "zip_bytes": 2052232,
+          "zip_sha256": "e2552c2298f4b67027bfa1f7da364b0d398e96a76dae8fa2085dddf357f60a69"
+        }
+      ],
+      "months_not_verified": 0,
+      "months_targeted": 3,
+      "months_verified": 3,
+      "no_interpolation": true,
+      "pair": "ETHUSDT",
+      "quote": "USDT",
+      "schema": "seven.crypto.top5-original-altcoin-month-gap-audit.v1",
+      "source": "Binance Spot monthly original native 1m ZIP with official CHECKSUM",
+      "source_missing_1m": 470,
+      "source_rows_verified": 132010,
+      "trader_modified": false,
+      "zero_source_transactions_in_missing_minutes_proven": false
+    },
+    {
+      "asset_id": "binancecoin",
+      "months": [
+        {
+          "calendar_minutes": 44640,
+          "checksum_sha256": "22e44af3e3d0805cf88368c0722cea592f0cd297dc41093f8922dd243acce7ca",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2021-08.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 44640,
+          "first_utc": "2021-08-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-08-13T06:30:00Z",
+              "missing_minutes": 270,
+              "start_utc": "2021-08-13T02:00:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2021-09-01T00:00:00Z",
+          "missing_1m": 270,
+          "month": "2021-08",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "BNBUSDT",
+          "quote": "USDT",
+          "source_rows": 44370,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2021-08.zip",
+          "zero_volume_native_candles": 0,
+          "zip_bytes": 1998032,
+          "zip_sha256": "58e8696c35ff5d9deaef65fd4f8f82b5c27d199b879d198f88ed456cd8ba7ecb"
+        },
+        {
+          "calendar_minutes": 43200,
+          "checksum_sha256": "75ffcea2b1876e736dad5f7f3e98eaa3cc715f156e721f9b5ec4c771059a7b00",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2021-09.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 43200,
+          "first_utc": "2021-09-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-09-29T09:00:00Z",
+              "missing_minutes": 120,
+              "start_utc": "2021-09-29T07:00:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2021-10-01T00:00:00Z",
+          "missing_1m": 120,
+          "month": "2021-09",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "BNBUSDT",
+          "quote": "USDT",
+          "source_rows": 43080,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2021-09.zip",
+          "zero_volume_native_candles": 0,
+          "zip_bytes": 1704633,
+          "zip_sha256": "848a9f6d7dbe4e817ee8c2f2ee9c2ef95eb89bb09bf5ffb34e296ad885ff6b0c"
+        },
+        {
+          "calendar_minutes": 44640,
+          "checksum_sha256": "b894dec968e8d0142376e0fe1e52207460a7bb69c5ed6ca14c8bc992f445a924",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2023-03.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 44640,
+          "first_utc": "2023-03-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2023-03-24T14:00:00Z",
+              "missing_minutes": 80,
+              "start_utc": "2023-03-24T12:40:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2023-04-01T00:00:00Z",
+          "missing_1m": 80,
+          "month": "2023-03",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "BNBUSDT",
+          "quote": "USDT",
+          "source_rows": 44560,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2023-03.zip",
+          "zero_volume_native_candles": 72,
+          "zip_bytes": 1605486,
+          "zip_sha256": "9b5896c952fa761f41cdf329ddc532068517208320f3b8781ca52b03015e8e3b"
+        }
+      ],
+      "months_not_verified": 0,
+      "months_targeted": 3,
+      "months_verified": 3,
+      "no_interpolation": true,
+      "pair": "BNBUSDT",
+      "quote": "USDT",
+      "schema": "seven.crypto.top5-original-altcoin-month-gap-audit.v1",
+      "source": "Binance Spot monthly original native 1m ZIP with official CHECKSUM",
+      "source_missing_1m": 470,
+      "source_rows_verified": 132010,
+      "trader_modified": false,
+      "zero_source_transactions_in_missing_minutes_proven": false
+    },
+    {
+      "asset_id": "ripple",
+      "months": [
+        {
+          "calendar_minutes": 44640,
+          "checksum_sha256": "39e9df7740d14cb49ad8ae01f7eadeec83a65d7a9ed2ed66398716367b6fe3e6",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2021-08.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 44640,
+          "first_utc": "2021-08-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-08-13T06:30:00Z",
+              "missing_minutes": 270,
+              "start_utc": "2021-08-13T02:00:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2021-09-01T00:00:00Z",
+          "missing_1m": 270,
+          "month": "2021-08",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "XRPUSDT",
+          "quote": "USDT",
+          "source_rows": 44370,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2021-08.zip",
+          "zero_volume_native_candles": 0,
+          "zip_bytes": 1948777,
+          "zip_sha256": "7e5dab7bdaeec266cf58ff7e4809d49dad1959f379e32a381bae476a6560e09e"
+        },
+        {
+          "calendar_minutes": 43200,
+          "checksum_sha256": "fa1d5768f92a2269738afd9de7c3ae3ae26c5edd9c0da5a84daac9fe49cfaf3a",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2021-09.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 43200,
+          "first_utc": "2021-09-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-09-29T09:00:00Z",
+              "missing_minutes": 120,
+              "start_utc": "2021-09-29T07:00:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2021-10-01T00:00:00Z",
+          "missing_1m": 120,
+          "month": "2021-09",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "XRPUSDT",
+          "quote": "USDT",
+          "source_rows": 43080,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2021-09.zip",
+          "zero_volume_native_candles": 0,
+          "zip_bytes": 1690390,
+          "zip_sha256": "beaa16e73e57586ac20975c930d1d74f2ab44534169222f52eaffeda270a6006"
+        },
+        {
+          "calendar_minutes": 44640,
+          "checksum_sha256": "e150bb1b2c6ae2dfce26e6b5d781aa26864e718b2153ba4b0c8b504e30b6217c",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2023-03.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 44640,
+          "first_utc": "2023-03-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2023-03-24T14:00:00Z",
+              "missing_minutes": 80,
+              "start_utc": "2023-03-24T12:40:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2023-04-01T00:00:00Z",
+          "missing_1m": 80,
+          "month": "2023-03",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "XRPUSDT",
+          "quote": "USDT",
+          "source_rows": 44560,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/XRPUSDT/1m/XRPUSDT-1m-2023-03.zip",
+          "zero_volume_native_candles": 72,
+          "zip_bytes": 1648065,
+          "zip_sha256": "2b203759453af143ae3f26dca22237cb1a4db6f6423e009ce5e5f459859a7f70"
+        }
+      ],
+      "months_not_verified": 0,
+      "months_targeted": 3,
+      "months_verified": 3,
+      "no_interpolation": true,
+      "pair": "XRPUSDT",
+      "quote": "USDT",
+      "schema": "seven.crypto.top5-original-altcoin-month-gap-audit.v1",
+      "source": "Binance Spot monthly original native 1m ZIP with official CHECKSUM",
+      "source_missing_1m": 470,
+      "source_rows_verified": 132010,
+      "trader_modified": false,
+      "zero_source_transactions_in_missing_minutes_proven": false
+    },
+    {
+      "asset_id": "solana",
+      "months": [
+        {
+          "calendar_minutes": 44640,
+          "checksum_sha256": "4488bc863fd6bf61c5b53be2aca5e6de7e4d4edf1a399435b1d7df4be1a6464e",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2021-08.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 44640,
+          "first_utc": "2021-08-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-08-13T06:30:00Z",
+              "missing_minutes": 270,
+              "start_utc": "2021-08-13T02:00:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2021-09-01T00:00:00Z",
+          "missing_1m": 270,
+          "month": "2021-08",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "SOLUSDT",
+          "quote": "USDT",
+          "source_rows": 44370,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2021-08.zip",
+          "zero_volume_native_candles": 0,
+          "zip_bytes": 1957175,
+          "zip_sha256": "7dcee841a8a512f4aab0cb72986c41621f1aed09d16c3677d5c8b960013bad84"
+        },
+        {
+          "calendar_minutes": 43200,
+          "checksum_sha256": "d61cb1d2397e7e2d5bbb9619158093189cc618b8aa5e1a06a6fa19df6b475771",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2021-09.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 43200,
+          "first_utc": "2021-09-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2021-09-29T09:00:00Z",
+              "missing_minutes": 120,
+              "start_utc": "2021-09-29T07:00:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2021-10-01T00:00:00Z",
+          "missing_1m": 120,
+          "month": "2021-09",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "SOLUSDT",
+          "quote": "USDT",
+          "source_rows": 43080,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2021-09.zip",
+          "zero_volume_native_candles": 0,
+          "zip_bytes": 1811076,
+          "zip_sha256": "f1ef01c54bacaa75a07c3a79a9116f842a065ffb13557cee7b5c10537a7ce923"
+        },
+        {
+          "calendar_minutes": 44640,
+          "checksum_sha256": "5e88c7b1afa3b0f6ee6c4ebca6a64740a72e0d26865fa3aea2add1c2270ba6ef",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2021-12.zip.CHECKSUM",
+          "close_time_anomalies": 1,
+          "expected_minutes": 44640,
+          "first_utc": "2021-12-01T00:00:00Z",
+          "gaps": [],
+          "last_exclusive_utc": "2022-01-01T00:00:00Z",
+          "missing_1m": 0,
+          "month": "2021-12",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "SOLUSDT",
+          "quote": "USDT",
+          "source_rows": 44640,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2021-12.zip",
+          "zero_volume_native_candles": 0,
+          "zip_bytes": 1793674,
+          "zip_sha256": "08fc0993fd2aa0d7b844a65ceed970e84e71e4162b71ed7bee8c2f56e20bcee9"
+        },
+        {
+          "calendar_minutes": 40320,
+          "checksum_sha256": "c87b2c73d61c056387e7140f4a40037cfc3d94a703c65073bbd3e8b8506e66a3",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2023-02.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 40320,
+          "first_utc": "2023-02-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2023-02-14T16:40:00Z",
+              "missing_minutes": 1,
+              "start_utc": "2023-02-14T16:39:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2023-03-01T00:00:00Z",
+          "missing_1m": 1,
+          "month": "2023-02",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "SOLUSDT",
+          "quote": "USDT",
+          "source_rows": 40319,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2023-02.zip",
+          "zero_volume_native_candles": 0,
+          "zip_bytes": 1441766,
+          "zip_sha256": "c896994f054d5e9f0949638a860579242dbaad843be1a1e1fd538ace9026de69"
+        },
+        {
+          "calendar_minutes": 44640,
+          "checksum_sha256": "02e183527e349a0eb8247c0d1cf126a8764b9ccb55c758aa43774f972958b883",
+          "checksum_url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2023-03.zip.CHECKSUM",
+          "close_time_anomalies": 0,
+          "expected_minutes": 44640,
+          "first_utc": "2023-03-01T00:00:00Z",
+          "gaps": [
+            {
+              "end_exclusive_utc": "2023-03-24T14:00:00Z",
+              "missing_minutes": 80,
+              "start_utc": "2023-03-24T12:40:00Z"
+            }
+          ],
+          "last_exclusive_utc": "2023-04-01T00:00:00Z",
+          "missing_1m": 80,
+          "month": "2023-03",
+          "no_trades_in_missing_minutes_proven": false,
+          "original_ohlcv_preserved": true,
+          "pair": "SOLUSDT",
+          "quote": "USDT",
+          "source_rows": 44560,
+          "source_verified": true,
+          "status": "native_source_partially_missing_or_anomalous",
+          "synthetic_ohlcv_rows": 0,
+          "synthetic_rows": 0,
+          "url": "https://data.binance.vision/data/spot/monthly/klines/SOLUSDT/1m/SOLUSDT-1m-2023-03.zip",
+          "zero_volume_native_candles": 72,
+          "zip_bytes": 1595263,
+          "zip_sha256": "d2a5434672a7f758c8d536a07645b6a499526892d605a63dbaaa96a5e32ffcee"
+        }
+      ],
+      "months_not_verified": 0,
+      "months_targeted": 5,
+      "months_verified": 5,
+      "no_interpolation": true,
+      "pair": "SOLUSDT",
+      "quote": "USDT",
+      "schema": "seven.crypto.top5-original-altcoin-month-gap-audit.v1",
+      "source": "Binance Spot monthly original native 1m ZIP with official CHECKSUM",
+      "source_missing_1m": 471,
+      "source_rows_verified": 216969,
+      "trader_modified": false,
+      "zero_source_transactions_in_missing_minutes_proven": false
+    }
+  ],
+  "assets_scanned": 4,
+  "btc_original_trade_sources_modified": false,
+  "missing_native_1m": 1881,
+  "months_source_verified": 14,
+  "months_targeted": 14,
+  "policy": "Original Binance Spot native 1m ZIP/CHECKSUM only. Zero trades in gaps not implied. No fabricated candles. Missing source never means no trading.",
+  "schema": "seven.crypto.top5-original-altcoin-native-gap-evidence.v1",
+  "source_native_rows": 612999,
+  "trader_modified": false
+}
