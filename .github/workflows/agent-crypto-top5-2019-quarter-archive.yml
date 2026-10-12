@@ -1,0 +1,202 @@
+name: Agent Crypto Top5 Original 2019 Quarterly History
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-top5-2019-quarter-archive.yml'
+      - 'public/agent_crypto_erith_ia/tools/archive_top5_prior_history.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-top5-original-history-2019
+  cancel-in-progress: false
+jobs:
+  original-quarter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        quarter: [q1, q2, q3, q4]
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate official source SHA, SQL precision and bounded source identity
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            public/agent_crypto_erith_ia/tools/archive_top5_historical_quarters.py \
+            public/agent_crypto_erith_ia/tools/archive_top5_prior_history.py \
+            public/agent_crypto_erith_ia/tools/archive_top5_earlier_months.py \
+            public/agent_crypto_erith_ia/tools/archive_top5_partial_months.py
+          python public/agent_crypto_erith_ia/tools/archive_top5_prior_history.py --self-test
+      - name: Verify frozen Top250 native market identity remains unchanged
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          git fetch origin main
+          old=$(sha256sum "$root/top250_multisource_coverage/index.json" | cut -d' ' -f1)
+          new=$(git show "origin/main:$root/top250_multisource_coverage/index.json" | sha256sum | cut -d' ' -f1)
+          test "$old" = "$new" || { echo "::error::Canonical original market identity changed"; exit 1; }
+      - name: Read only - download all market-pair originals for the quarter, preserve gaps, write exact OHLCV SQLite
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/archive_top5_prior_history.py \
+            --quarter ${{ matrix.quarter }} \
+            --output "$RUNNER_TEMP/top5-2019-quarter-source" 
+      - name: Verify every SHA-256 and every native calendar count before publication
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os,json,pathlib,hashlib
+          base=pathlib.Path(os.environ["RUNNER_TEMP"])/"top5-2019-quarter-source"
+          data=json.loads((base/"manifest.json").read_text())
+          assert data["requested_source_months"]==12
+          assert data["source_verified_months"]+data["source_unavailable_months"]==12
+          assert data["source_verified_months"]>=6
+          assert data["no_synthetic_rows"] is True and data["quote"]=="USDT"
+          assert len(data["rows"])==12
+          listed={"manifest.json"}
+          for r in data["rows"]:
+              assert r["quote"]=="USDT" and r["no_invented_bars"] is True
+              if r["status"] not in ("complete_native_1m","partial_or_close_time_anomaly"):
+                  assert r["verified_native_rows"]==0
+                  continue
+              assert r["verified_native_rows"]+r["missing_native_minutes"]==r["expected_calendar_minutes"]
+              assert sum(g["missing_minutes"] for g in r["gap_windows"])==r["missing_native_minutes"]
+              for key in ("original_source","official_checksum","sqlite"):
+                  proof=r[key]
+                  assert proof["name"] not in listed
+                  listed.add(proof["name"])
+                  path=base/proof["name"]
+                  assert path.stat().st_size==proof["bytes"]
+                  assert hashlib.sha256(path.read_bytes()).hexdigest()==proof["sha256"]
+          assert {p.name for p in base.iterdir()}==listed
+          print("2019 ORIGINAL NATIVE SOURCE CHECKS PASS",data["quarter"],
+                data["source_verified_months"],data["native_1m_candles"])
+          PY
+      - name: Publish immutable original Binance source release for this 2019 quarter
+        run: |
+          set -euo pipefail
+          quarter=${{ matrix.quarter }}
+          case "$quarter" in
+            q1) tag=crypto-top5-binance-original-2019-01_2019-03;;
+            q2) tag=crypto-top5-binance-original-2019-04_2019-06;;
+            q3) tag=crypto-top5-binance-original-2019-07_2019-09;;
+            q4) tag=crypto-top5-binance-original-2019-10_2019-12;;
+            *) exit 1;;
+          esac
+          dir="$RUNNER_TEMP/top5-2019-quarter-source"
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          git fetch origin main
+          old=$(sha256sum "$root/top250_multisource_coverage/index.json" | cut -d' ' -f1)
+          new=$(git show "origin/main:$root/top250_multisource_coverage/index.json" | sha256sum | cut -d' ' -f1)
+          test "$old" = "$new" || { echo "::error::Market catalog changed"; exit 1; }
+          if gh release view "$tag" --json tagName >/dev/null 2>"$RUNNER_TEMP/tag-error.txt"; then
+            mkdir -p "$RUNNER_TEMP/existing"
+            gh release download "$tag" --pattern manifest.json --dir "$RUNNER_TEMP/existing"
+            cmp "$RUNNER_TEMP/existing/manifest.json" "$dir/manifest.json" || {
+              echo "::error::Immutable historical Release differs"; exit 1;
+            }
+          else
+            if ! grep -Eqi 'release not found|HTTP 404|not found' "$RUNNER_TEMP/tag-error.txt"; then
+              cat "$RUNNER_TEMP/tag-error.txt";exit 1
+            fi
+            gh release create "$tag" "$dir"/* \
+              --target "$GITHUB_SHA" \
+              --title "Binance Spot authenticated source OHLCV $quarter 2019" \
+              --notes "Exact original ETH BNB XRP SOL Spot 1m ZIPs and Binance CHECKSUM proofs, plus SQLite source stores. No interpolated candles; source gaps and listing uncertainties recorded." \
+              --latest=false
+          fi
+          gh release view "$tag" --json assets,isDraft,url > "$RUNNER_TEMP/release-proof.json"
+          python - <<'PY'
+          import json,os,pathlib
+          base=pathlib.Path(os.environ["RUNNER_TEMP"])
+          data=json.loads((base/"release-proof.json").read_text())
+          actual={p["name"]:p["size"] for p in data["assets"]}
+          expected={p.name:p.stat().st_size for p in (base/"top5-2019-quarter-source").iterdir()}
+          assert data["isDraft"] is False and actual==expected
+          print("IMMUTABLE QUARTERLY RELEASE VERIFIED",data["url"],len(expected))
+          PY
+      - name: Preserve unmodified quarterly source manifest as uniquely named artifact
+        run: |
+          set -euo pipefail
+          cp "$RUNNER_TEMP/top5-2019-quarter-source/manifest.json" "$RUNNER_TEMP/quarter-${{ matrix.quarter }}.json"
+      - name: Upload evidence for independently recombining 2019 quarterly reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-quarter-${{ matrix.quarter }}
+          path: ${{ runner.temp }}/quarter-${{ matrix.quarter }}.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: No price-originals, Trader or Interface changed
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_original_gap_audit/
+  consolidate-year:
+    needs: original-quarter
+    if: needs.original-quarter.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: source-quarter-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/quarters
+      - name: Reconcile four source-verified 2019 periods with 2021 authentic history
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/archive_top5_prior_history.py \
+            --merge "$RUNNER_TEMP/quarters" \
+            --output "$RUNNER_TEMP/top5-original-history-index.json"
+      - name: Publish manifest indexes on main, never the immutable original source ZIPs
+        run: |
+          set -euo pipefail
+          root=public/agent_crypto_erith_ia/data/historical_archive_prototype
+          index="$root/top5_earlier_source_vault/history_index.json"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            old=$(sha256sum "$root/top250_multisource_coverage/index.json" | cut -d' ' -f1)
+            new=$(git show "origin/main:$root/top250_multisource_coverage/index.json" | sha256sum | cut -d' ' -f1)
+            test "$old" = "$new" || { echo "::error::Historical source mapping drift"; exit 1; }
+            git reset --hard origin/main
+            mkdir -p "$root/top5_earlier_source_vault/batches"
+            cp "$RUNNER_TEMP/top5-original-history-index.json" "$index"
+            for q in q1 q2 q3 q4; do
+              cp "$RUNNER_TEMP/quarters/quarter-$q.json" \
+                 "$root/top5_earlier_source_vault/batches/quarter-2019-$q.json"
+            done
+            git add -- "$index" "$root/top5_earlier_source_vault/batches"
+            git diff --cached --check
+            if git diff --cached --quiet;then echo "NOOP: all native 2019 indexes present"; exit 0; fi
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Coffre: preserve authentic source history 2019 for ETH BNB XRP SOL'
+            if git push origin HEAD:main;then exit 0;fi
+          done
+          exit 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: top5-2019-historical-source-summary
+          path: ${{ runner.temp }}/top5-original-history-index.json
+          retention-days: 30
+          if-no-files-found: ignore
