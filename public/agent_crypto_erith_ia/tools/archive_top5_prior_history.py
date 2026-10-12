@@ -32,7 +32,7 @@ def merge(folder,out):
     need(earlier["schema"]=="seven.crypto.top5-earlier-native-history-roadmap.v1"
          and earlier["source_months_scanned"]==64
          and earlier["source_months_verified"]==57
-         and earlier["covered_source_month_span"]=="2020-01 to 2021-04",
+         and earlier["covered_source_month_span"]=="2020-01 to 2021-04 (not coin inception)",
          "Earlier original-source starting index drift")
     need(earlier["source_gap_interpretation"]["proven_pre_pair_launch_absences_1m"]==14760,
          "Proven SOLUSDT listing must remain qualified")
