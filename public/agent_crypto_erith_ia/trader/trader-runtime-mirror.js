@@ -58,7 +58,14 @@ function mount(){
     marketSwitch.disabled=true;
   }
 
-  // Inject only a standalone, read-only R9 viewer into the SAME runtime.
+  // Trader-only read surfaces mounted inside the SAME Administrator runtime.
+  // No duplicated market/chart owner and no real order route.
+  if(!doc.getElementById("traderOkxAccountScript")){
+    const script=doc.createElement("script");
+    script.id="traderOkxAccountScript";
+    script.src=new URL("../trader/trader-okx-account.js",doc.baseURI).href;
+    doc.head.appendChild(script);
+  }
   if(!doc.getElementById("traderHistoricalPanelScript")){
     const script=doc.createElement("script");
     script.id="traderHistoricalPanelScript";
@@ -79,7 +86,10 @@ function mount(){
       minimum_nav:true,
       minimum_nav_items:["Livecheck","Marché","Graphique","Aether"],
       btc_case_study:true,
-      btc_case_study_owner:"administrator/index.html#traderOkbCaseStudy"
+      btc_case_study_owner:"administrator/index.html#traderOkbCaseStudy",
+      okx_private_read:true,
+      okx_account_owner:"trader/trader-okx-account.js",
+      okx_bridge:"127.0.0.1:8787"
     }}));
   }catch(_){}
 
@@ -112,6 +122,9 @@ globalThis.AgentCryptoTraderRuntimeMirror=Object.freeze({
   native_header:true,
   header_injection:false,
   btc_case_study:true,
-  btc_case_study_owner:"administrator/index.html#traderOkbCaseStudy"
+  btc_case_study_owner:"administrator/index.html#traderOkbCaseStudy",
+  okx_private_read:true,
+  okx_account_owner:"trader/trader-okx-account.js",
+  okx_bridge:"127.0.0.1:8787"
 });
 })();
