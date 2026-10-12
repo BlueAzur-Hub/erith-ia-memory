@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 35
     env:
       GH_TOKEN: ${{ github.token }}
-      TAG: crypto-top50-original-first-listing-shib-qnt-2021
+      TAG: crypto-top50-original-spot-first-listing-shib-qnt-2021
     steps:
       - uses: actions/checkout@v4
         with:
