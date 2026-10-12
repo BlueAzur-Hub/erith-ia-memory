@@ -11,13 +11,157 @@
   "can_extend_strict_contiguous_year_views": false,
   "can_be_queried_as_source_rows": true,
   "synthetic_candles": 0,
-  "source_release_count": 21,
-  "verified_native_rows": 911399,
-  "missing_calendar_minutes": 5881,
-  "release_manifest_set_sha256": "92e19a6d2f7bb990a94562e73365937e0ab228575b1c46c30dd93ac16888d3ce",
+  "source_release_count": 24,
+  "verified_native_rows": 1020054,
+  "missing_calendar_minutes": 29706,
+  "release_manifest_set_sha256": "2354e884a6d13b3da70af632cb5e31d54d030cf4761451339dbb0ee58bb78c8a",
   "full_month_catalog": "../top250_history_catalog/index.json",
   "note": "Original ZIP + verified source-manifest proofs. Gap-month candle rows stay separate from complete-month catalog; do not interpolate, double-count or claim all-time coverage.",
   "months": [
+    {
+      "month": "2017-08",
+      "status": "source_verified_gaps",
+      "native_rows": 21360,
+      "expected_calendar_minutes": 44640,
+      "missing_calendar_minutes": 23280,
+      "gaps": [
+        {
+          "start_utc": "2017-08-01T00:00:00Z",
+          "end_exclusive_utc": "2017-08-17T04:00:00Z",
+          "missing_minutes": 23280,
+          "start_ms": 1501545600000,
+          "end_ms_exclusive": 1502942400000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2017-08-17T04:00:00Z",
+      "last_open_utc": "2017-08-31T23:59:00Z",
+      "source_zip_sha256": "4f96569190147d64b7ce55f6760dc3e7962aeb3e209c969b200200e3d7045e70",
+      "release_tag": "btc-spot-native-gap-2017-08",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2017-08",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2017-08.zip",
+          "bytes": 595271,
+          "sha256": "4f96569190147d64b7ce55f6760dc3e7962aeb3e209c969b200200e3d7045e70"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2017-08.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "647f2025e7ed77c6c82302b74db0e42717aa9647f60eea35523fdad9b41c28f4"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2017-08.sqlite",
+          "bytes": 2682880,
+          "sha256": "9ca679a88f7cbf6bfad6de3588abf72edce962c1ef55d4cea2f54b3afb7ee396"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2017-08.json",
+          "bytes": 1117,
+          "sha256": "ca0f1b6293dffd42bb71dc158bc62cbb4a6c9351d7434c3e6ec02893834f3702"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2017-09",
+      "status": "source_with_gaps_and_close_time_anomaly",
+      "native_rows": 42780,
+      "expected_calendar_minutes": 43200,
+      "missing_calendar_minutes": 420,
+      "gaps": [
+        {
+          "start_utc": "2017-09-06T16:00:00Z",
+          "end_exclusive_utc": "2017-09-06T23:00:00Z",
+          "missing_minutes": 420,
+          "start_ms": 1504713600000,
+          "end_ms_exclusive": 1504738800000
+        }
+      ],
+      "close_time_anomaly_count": 1,
+      "close_time_anomalies": [
+        {
+          "offset_from_open_ms": 60000,
+          "open_time_ms": 1504713540000,
+          "source_close_time_ms": 1504713600000
+        }
+      ],
+      "first_open_utc": "2017-09-01T00:00:00Z",
+      "last_open_utc": "2017-09-30T23:59:00Z",
+      "source_zip_sha256": "b4e525fa0549688dca9e09cc24093f50526db2a255d03961791da3bfd7c24d81",
+      "release_tag": "btc-spot-native-gap-2017-09",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2017-09",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2017-09.zip",
+          "bytes": 1394854,
+          "sha256": "b4e525fa0549688dca9e09cc24093f50526db2a255d03961791da3bfd7c24d81"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2017-09.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "50b17e0903e8f657910c08b76b91fddede36fb8584404ff0bebdde627373f683"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2017-09.sqlite",
+          "bytes": 5373952,
+          "sha256": "a8318c5df594176689bd0feb8ae1d49dcffa826eb8e65fd9382cdfcf1bc82459"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2017-09.json",
+          "bytes": 1263,
+          "sha256": "5c97b26d7db5d674174ee1b91204a2245af3cd4f162b6accf91c43b94ecbaa7d"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
+    {
+      "month": "2018-01",
+      "status": "source_verified_gaps",
+      "native_rows": 44515,
+      "expected_calendar_minutes": 44640,
+      "missing_calendar_minutes": 125,
+      "gaps": [
+        {
+          "start_utc": "2018-01-04T03:01:00Z",
+          "end_exclusive_utc": "2018-01-04T05:06:00Z",
+          "missing_minutes": 125,
+          "start_ms": 1515034860000,
+          "end_ms_exclusive": 1515042360000
+        }
+      ],
+      "close_time_anomaly_count": 0,
+      "close_time_anomalies": [],
+      "first_open_utc": "2018-01-01T00:00:00Z",
+      "last_open_utc": "2018-01-31T23:59:00Z",
+      "source_zip_sha256": "9fbad8f35c0694a2aca3552ccc9da73d95ccf1546dd4e4c67fcc8a3707d80a90",
+      "release_tag": "btc-spot-native-gap-2018-01",
+      "release_url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/btc-spot-native-gap-2018-01",
+      "files": {
+        "archive": {
+          "name": "BTCUSDT-1m-2018-01.zip",
+          "bytes": 2192643,
+          "sha256": "9fbad8f35c0694a2aca3552ccc9da73d95ccf1546dd4e4c67fcc8a3707d80a90"
+        },
+        "checksum": {
+          "name": "BTCUSDT-1m-2018-01.zip.CHECKSUM",
+          "bytes": 88,
+          "sha256": "5d25263e8353627b650b1920966e5c3306841be458f933ddc30f63314964ade0"
+        },
+        "sqlite": {
+          "name": "BTCUSDT-1m-2018-01.sqlite",
+          "bytes": 6152192,
+          "sha256": "821ce67574556799c4e03701551aab01ced794e555bd656a6fafd9789c4b013b"
+        },
+        "manifest": {
+          "name": "BTCUSDT-1m-2018-01.json",
+          "bytes": 1113,
+          "sha256": "700ea48c96a3acfc18b7d241feadba73090ac82f41274089ae412257dd30eff5"
+        }
+      },
+      "can_extend_strict_contiguous_year_views": false
+    },
     {
       "month": "2018-06",
       "status": "source_verified_gaps",
