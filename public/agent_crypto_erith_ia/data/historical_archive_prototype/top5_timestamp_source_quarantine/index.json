@@ -1,0 +1,175 @@
+{
+  "excluded_from_strict_calendar_1m_catalog": true,
+  "native_quote": "USDT",
+  "no_synthetic_candles": true,
+  "original_archive_files_retained": true,
+  "original_offgrid_rows": 43204,
+  "original_unmodified_native_ohlcv_rows": 165650,
+  "parent_source_anomaly_audit_path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top5_original_source_anomalies/index.json",
+  "parent_source_anomaly_audit_sha256": "2e4b4b75af5f3cb88cf07e65c03f76b0e4dd037260ddd49662a806b10f0325ec",
+  "records": [
+    {
+      "calendar_missing_exact_minute_slots": 20477,
+      "cross_quote_conversion": false,
+      "market_pair": "BNBUSDT",
+      "month": "2017-12",
+      "official_checksum": {
+        "bytes": 88,
+        "name": "BNBUSDT-1m-2017-12.zip.CHECKSUM",
+        "sha256": "7311288cd7ed5a094358db34a7cb5dd78993236de10fd74ee9bc44e6b8fc9c03",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/BNBUSDT-1m-2017-12.zip.CHECKSUM"
+      },
+      "original_offgrid_open_times": 20401,
+      "original_rows": 44564,
+      "original_source_file": {
+        "bytes": 1406672,
+        "name": "BNBUSDT-1m-2017-12.zip",
+        "sha256": "fb0f45f432ae762ff7ccc9f966ab7dc1bc643fbdde298c1d728fceff6de458cc",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/BNBUSDT-1m-2017-12.zip"
+      },
+      "original_strict_minute_aligned_rows": 24163,
+      "quote": "USDT",
+      "source_checksum_sha256": "7311288cd7ed5a094358db34a7cb5dd78993236de10fd74ee9bc44e6b8fc9c03",
+      "source_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2017-12.zip.CHECKSUM",
+      "source_ohlcv_recomputed": false,
+      "source_status": "original_sha256_verified_quarantined_offgrid",
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2017-12.zip",
+      "source_zip_sha256": "fb0f45f432ae762ff7ccc9f966ab7dc1bc643fbdde298c1d728fceff6de458cc",
+      "sqlite": {
+        "bytes": 5181440,
+        "name": "BNBUSDT-1m-2017-12.sqlite",
+        "rows": 44564,
+        "sha256": "ee0fa74fa824b13a239a611f332cea4d5c6d0410603b1c268d98fe3c0e194fe3",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/BNBUSDT-1m-2017-12.sqlite"
+      },
+      "sqlite_keeps_original_millisecond_open_time": true,
+      "synthetic_ohlcv": 0,
+      "utc_minute_calendar_aggregation_allowed": false,
+      "venue": "Binance Spot"
+    },
+    {
+      "calendar_missing_exact_minute_slots": 20477,
+      "cross_quote_conversion": false,
+      "market_pair": "ETHUSDT",
+      "month": "2017-12",
+      "official_checksum": {
+        "bytes": 88,
+        "name": "ETHUSDT-1m-2017-12.zip.CHECKSUM",
+        "sha256": "56f1b711478524b43e2ed61aa95ecd5157795dd9de3432a9604901d9872dd3b0",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/ETHUSDT-1m-2017-12.zip.CHECKSUM"
+      },
+      "original_offgrid_open_times": 20401,
+      "original_rows": 44564,
+      "original_source_file": {
+        "bytes": 2102389,
+        "name": "ETHUSDT-1m-2017-12.zip",
+        "sha256": "3b6a9be23a2f36d0a2934f9c3b979ada13d0e405f73d69978db637b685389b16",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/ETHUSDT-1m-2017-12.zip"
+      },
+      "original_strict_minute_aligned_rows": 24163,
+      "quote": "USDT",
+      "source_checksum_sha256": "56f1b711478524b43e2ed61aa95ecd5157795dd9de3432a9604901d9872dd3b0",
+      "source_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2017-12.zip.CHECKSUM",
+      "source_ohlcv_recomputed": false,
+      "source_status": "original_sha256_verified_quarantined_offgrid",
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2017-12.zip",
+      "source_zip_sha256": "3b6a9be23a2f36d0a2934f9c3b979ada13d0e405f73d69978db637b685389b16",
+      "sqlite": {
+        "bytes": 5664768,
+        "name": "ETHUSDT-1m-2017-12.sqlite",
+        "rows": 44564,
+        "sha256": "c0f4a9569cdefb198ae18736e0a5c4f413c04d1cd7c9c31e2a92d693d036a058",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/ETHUSDT-1m-2017-12.sqlite"
+      },
+      "sqlite_keeps_original_millisecond_open_time": true,
+      "synthetic_ohlcv": 0,
+      "utc_minute_calendar_aggregation_allowed": false,
+      "venue": "Binance Spot"
+    },
+    {
+      "calendar_missing_exact_minute_slots": 3260,
+      "cross_quote_conversion": false,
+      "market_pair": "BNBUSDT",
+      "month": "2018-02",
+      "official_checksum": {
+        "bytes": 88,
+        "name": "BNBUSDT-1m-2018-02.zip.CHECKSUM",
+        "sha256": "50be3e187b3d96909db4244d0d872461f3bb3015622e00464992680c9928fc3d",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/BNBUSDT-1m-2018-02.zip.CHECKSUM"
+      },
+      "original_offgrid_open_times": 1201,
+      "original_rows": 38261,
+      "original_source_file": {
+        "bytes": 1536239,
+        "name": "BNBUSDT-1m-2018-02.zip",
+        "sha256": "d102076d2c3f5bf4a8712c64f9a990be7c21e042cbfffc19a999f7b9296bab06",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/BNBUSDT-1m-2018-02.zip"
+      },
+      "original_strict_minute_aligned_rows": 37060,
+      "quote": "USDT",
+      "source_checksum_sha256": "50be3e187b3d96909db4244d0d872461f3bb3015622e00464992680c9928fc3d",
+      "source_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2018-02.zip.CHECKSUM",
+      "source_ohlcv_recomputed": false,
+      "source_status": "original_sha256_verified_quarantined_offgrid",
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/BNBUSDT/1m/BNBUSDT-1m-2018-02.zip",
+      "source_zip_sha256": "d102076d2c3f5bf4a8712c64f9a990be7c21e042cbfffc19a999f7b9296bab06",
+      "sqlite": {
+        "bytes": 4710400,
+        "name": "BNBUSDT-1m-2018-02.sqlite",
+        "rows": 38261,
+        "sha256": "dbfdd513d951e00320090dc684f47ff10d35c4777decedbf4c8d1719c8ee5f79",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/BNBUSDT-1m-2018-02.sqlite"
+      },
+      "sqlite_keeps_original_millisecond_open_time": true,
+      "synthetic_ohlcv": 0,
+      "utc_minute_calendar_aggregation_allowed": false,
+      "venue": "Binance Spot"
+    },
+    {
+      "calendar_missing_exact_minute_slots": 3260,
+      "cross_quote_conversion": false,
+      "market_pair": "ETHUSDT",
+      "month": "2018-02",
+      "official_checksum": {
+        "bytes": 88,
+        "name": "ETHUSDT-1m-2018-02.zip.CHECKSUM",
+        "sha256": "bf7c4ba5bb98654d4a045a451ca8430b897d294daf8e9ff633daa23cff978b67",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/ETHUSDT-1m-2018-02.zip.CHECKSUM"
+      },
+      "original_offgrid_open_times": 1201,
+      "original_rows": 38261,
+      "original_source_file": {
+        "bytes": 1767861,
+        "name": "ETHUSDT-1m-2018-02.zip",
+        "sha256": "efc4785f374ecfe70b5dd85f81e04e7c06f32acc9770f50602e6e57e41c8ee69",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/ETHUSDT-1m-2018-02.zip"
+      },
+      "original_strict_minute_aligned_rows": 37060,
+      "quote": "USDT",
+      "source_checksum_sha256": "bf7c4ba5bb98654d4a045a451ca8430b897d294daf8e9ff633daa23cff978b67",
+      "source_checksum_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2018-02.zip.CHECKSUM",
+      "source_ohlcv_recomputed": false,
+      "source_status": "original_sha256_verified_quarantined_offgrid",
+      "source_url": "https://data.binance.vision/data/spot/monthly/klines/ETHUSDT/1m/ETHUSDT-1m-2018-02.zip",
+      "source_zip_sha256": "efc4785f374ecfe70b5dd85f81e04e7c06f32acc9770f50602e6e57e41c8ee69",
+      "sqlite": {
+        "bytes": 4988928,
+        "name": "ETHUSDT-1m-2018-02.sqlite",
+        "rows": 38261,
+        "sha256": "850f1de22e77edd81cbb560304f0ac55d3a8913aff3147fbc39d9699c908b763",
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/download/crypto-binance-early-offgrid-original-sources/ETHUSDT-1m-2018-02.sqlite"
+      },
+      "sqlite_keeps_original_millisecond_open_time": true,
+      "synthetic_ohlcv": 0,
+      "utc_minute_calendar_aggregation_allowed": false,
+      "venue": "Binance Spot"
+    }
+  ],
+  "release_page": "https://github.com/BlueAzur-Hub/erith-ia-memory/releases/tag/crypto-binance-early-offgrid-original-sources",
+  "release_tag": "crypto-binance-early-offgrid-original-sources",
+  "schema": "seven.crypto.early-original-source-quarantine.v1",
+  "source": "Original Binance Spot ZIP and official CHECKSUM per asset/month",
+  "source_months": 4,
+  "status": "QUERYABLE_SOURCE_QUARANTINE_NOT_CONTINUOUS_MARKET_HISTORY",
+  "trader_interface_modified": false
+}
