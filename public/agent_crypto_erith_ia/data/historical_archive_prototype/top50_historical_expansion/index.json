@@ -1,0 +1,423 @@
+{
+  "schema": "seven.crypto.top50-original-backfill-plan.v1",
+  "date_utc": "2026-10-12",
+  "source_catalog": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_multisource_coverage/index.json",
+  "source_catalog_git_blob_sha": "5446dc85c93660ce80a85db7fe2b32093fb2d8ff",
+  "source_daily_catalog_git_blob_sha": "b0081d8085b4deb9b1ec17e41e291d5cbba4f959",
+  "universe": "Ranked original Top250 assets positions 26 through 50; none may be replaced or relabelled",
+  "added_assets": [
+    {
+      "rank": 26,
+      "id": "uniswap",
+      "symbol": "UNI",
+      "name": "Uniswap",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 62,
+      "quote": "USDT",
+      "prior_verified_native_rows": 2717280,
+      "already_native_daily": null,
+      "pilot_source_requested": {
+        "venue": "Binance Spot",
+        "pair": "UNIUSDT",
+        "quote": "USDT",
+        "resolution": "1m",
+        "target_months": "2020-01 to 2021-04",
+        "first_spot_pair_opening_not_yet_claimed": true
+      },
+      "status": "archive_pilot_pending"
+    },
+    {
+      "rank": 27,
+      "id": "dai",
+      "symbol": "DAI",
+      "name": "Dai",
+      "source": null,
+      "months": 0,
+      "quote": "USDT",
+      "prior_verified_native_rows": 0,
+      "already_native_daily": {
+        "venue": "Kraken Spot",
+        "market": "DAI/USDT",
+        "days": 709
+      },
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 28,
+      "id": "avalanche-2",
+      "symbol": "AVAX",
+      "name": "Avalanche",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 62,
+      "quote": "USDT",
+      "prior_verified_native_rows": 2717280,
+      "already_native_daily": null,
+      "pilot_source_requested": {
+        "venue": "Binance Spot",
+        "pair": "AVAXUSDT",
+        "quote": "USDT",
+        "resolution": "1m",
+        "target_months": "2020-01 to 2021-04",
+        "first_spot_pair_opening_not_yet_claimed": true
+      },
+      "status": "archive_pilot_pending"
+    },
+    {
+      "rank": 29,
+      "id": "sui",
+      "symbol": "SUI",
+      "name": "Sui",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 40,
+      "quote": "USDT",
+      "prior_verified_native_rows": 1753920,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 30,
+      "id": "usd1-wlfi",
+      "symbol": "USD1",
+      "name": "USD1",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 16,
+      "quote": "USDT",
+      "prior_verified_native_rows": 701280,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 31,
+      "id": "bitway",
+      "symbol": "BTW",
+      "name": "Bitway",
+      "source": "Bitget Spot native 1m HTTPS",
+      "months": 1,
+      "quote": "USDT",
+      "prior_verified_native_rows": 43200,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 32,
+      "id": "the-open-network",
+      "symbol": "GRAM",
+      "name": "Gram (prev. Toncoin)",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 2,
+      "quote": "USDT",
+      "prior_verified_native_rows": 87840,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 33,
+      "id": "hedera-hashgraph",
+      "symbol": "HBAR",
+      "name": "Hedera",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 62,
+      "quote": "USDT",
+      "prior_verified_native_rows": 2717280,
+      "already_native_daily": null,
+      "pilot_source_requested": {
+        "venue": "Binance Spot",
+        "pair": "HBARUSDT",
+        "quote": "USDT",
+        "resolution": "1m",
+        "target_months": "2020-01 to 2021-04",
+        "first_spot_pair_opening_not_yet_claimed": true
+      },
+      "status": "archive_pilot_pending"
+    },
+    {
+      "rank": 34,
+      "id": "quant-network",
+      "symbol": "QNT",
+      "name": "Quant",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 58,
+      "quote": "USDT",
+      "prior_verified_native_rows": 2540160,
+      "already_native_daily": null,
+      "pilot_source_requested": {
+        "venue": "Binance Spot",
+        "pair": "QNTUSDT",
+        "quote": "USDT",
+        "resolution": "1m",
+        "target_months": "2020-01 to 2021-04",
+        "first_spot_pair_opening_not_yet_claimed": true
+      },
+      "status": "archive_pilot_pending"
+    },
+    {
+      "rank": 35,
+      "id": "tether-gold",
+      "symbol": "XAUT",
+      "name": "Tether Gold",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 6,
+      "quote": "USDT",
+      "prior_verified_native_rows": 263520,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 36,
+      "id": "shiba-inu",
+      "symbol": "SHIB",
+      "name": "Shiba Inu",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 60,
+      "quote": "USDT",
+      "prior_verified_native_rows": 2632320,
+      "already_native_daily": null,
+      "pilot_source_requested": {
+        "venue": "Binance Spot",
+        "pair": "SHIBUSDT",
+        "quote": "USDT",
+        "resolution": "1m",
+        "target_months": "2020-01 to 2021-04",
+        "first_spot_pair_opening_not_yet_claimed": true
+      },
+      "status": "archive_pilot_pending"
+    },
+    {
+      "rank": 37,
+      "id": "global-dollar",
+      "symbol": "USDG",
+      "name": "Global Dollar",
+      "source": null,
+      "months": 0,
+      "quote": "USDT",
+      "prior_verified_native_rows": 0,
+      "already_native_daily": {
+        "venue": "OKX Spot",
+        "market": "USDG-USDT",
+        "days": 477
+      },
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 38,
+      "id": "bittensor",
+      "symbol": "TAO",
+      "name": "Bittensor",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 29,
+      "quote": "USDT",
+      "prior_verified_native_rows": 1271520,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 39,
+      "id": "crypto-com-chain",
+      "symbol": "CRO",
+      "name": "Cronos",
+      "source": null,
+      "months": 0,
+      "quote": "USDT",
+      "prior_verified_native_rows": 0,
+      "already_native_daily": {
+        "venue": "OKX Spot",
+        "market": "CRO-USDT",
+        "days": 2465
+      },
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 40,
+      "id": "paypal-usd",
+      "symbol": "PYUSD",
+      "name": "PayPal USD",
+      "source": "Bitget Spot native 1m HTTPS",
+      "months": 1,
+      "quote": "USDT",
+      "prior_verified_native_rows": 43200,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 41,
+      "id": "ethena",
+      "symbol": "ENA",
+      "name": "Ethena",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 29,
+      "quote": "USDT",
+      "prior_verified_native_rows": 1271520,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 42,
+      "id": "okb",
+      "symbol": "OKB",
+      "name": "OKB",
+      "source": null,
+      "months": 0,
+      "quote": "USDT",
+      "prior_verified_native_rows": 0,
+      "already_native_daily": {
+        "venue": "OKX Spot",
+        "market": "OKB-USDT",
+        "days": 3114
+      },
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 43,
+      "id": "aave",
+      "symbol": "AAVE",
+      "name": "Aave",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 62,
+      "quote": "USDT",
+      "prior_verified_native_rows": 2717280,
+      "already_native_daily": null,
+      "pilot_source_requested": {
+        "venue": "Binance Spot",
+        "pair": "AAVEUSDT",
+        "quote": "USDT",
+        "resolution": "1m",
+        "target_months": "2020-01 to 2021-04",
+        "first_spot_pair_opening_not_yet_claimed": true
+      },
+      "status": "archive_pilot_pending"
+    },
+    {
+      "rank": 44,
+      "id": "pump-fun",
+      "symbol": "PUMP",
+      "name": "Pump.fun",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 12,
+      "quote": "USDT",
+      "prior_verified_native_rows": 525600,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 45,
+      "id": "ripple-usd",
+      "symbol": "RLUSD",
+      "name": "Ripple USD",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 8,
+      "quote": "USDT",
+      "prior_verified_native_rows": 348480,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 46,
+      "id": "hashnote-usyc",
+      "symbol": "USYC",
+      "name": "Circle USYC",
+      "source": null,
+      "months": 0,
+      "quote": "USDT",
+      "prior_verified_native_rows": 0,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 47,
+      "id": "memecore",
+      "symbol": "M",
+      "name": "MemeCore",
+      "source": null,
+      "months": 0,
+      "quote": "USDT",
+      "prior_verified_native_rows": 0,
+      "already_native_daily": {
+        "venue": "Bitget Spot",
+        "market": "MUSDT",
+        "days": 450
+      },
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 48,
+      "id": "ondo-us-dollar-yield",
+      "symbol": "USDY",
+      "name": "Ondo US Dollar Yield",
+      "source": null,
+      "months": 0,
+      "quote": "USDT",
+      "prior_verified_native_rows": 0,
+      "already_native_daily": {
+        "venue": "Gate Spot",
+        "market": "USDY_USDT",
+        "days": 111
+      },
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 49,
+      "id": "ondo-finance",
+      "symbol": "ONDO",
+      "name": "Ondo",
+      "source": "Binance Spot official native 1m ZIPs",
+      "months": 17,
+      "quote": "USDT",
+      "prior_verified_native_rows": 745920,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    },
+    {
+      "rank": 50,
+      "id": "blackrock-usd-institutional-digital-liquidity-fund",
+      "symbol": "BUIDL",
+      "name": "BlackRock USD Institutional Digital Liquidity Fund",
+      "source": null,
+      "months": 0,
+      "quote": "USDT",
+      "prior_verified_native_rows": 0,
+      "already_native_daily": null,
+      "pilot_source_requested": null,
+      "status": "retain_identity_separate_research"
+    }
+  ],
+  "pilot_assets": [
+    "uniswap",
+    "avalanche-2",
+    "hedera-hashgraph",
+    "quant-network",
+    "aave",
+    "shiba-inu"
+  ],
+  "pilot_exchange": "Binance Spot",
+  "pilot_quote": "USDT",
+  "pilot_month_window": "2020-01 through 2021-04",
+  "pilot_candidate_market_month_pairs": 96,
+  "source_original_archive_requirement": "Binance Spot monthly native 1m ZIP and official CHECKSUM required; save precise native OHLCV with timestamp; empty/404 is not no trading",
+  "fragile_identifiers_to_keep_distinct": [
+    "GRAM compared with TON",
+    "M is MemeCore not MAGA",
+    "USYC and BUIDL are tokenized financial instruments, not invented Binance pairs",
+    "XAUT needs correct Tether Gold identity"
+  ],
+  "no_synthetic_bars": true,
+  "no_chart_commit": true,
+  "canonical_market_core_unchanged": true
+}
