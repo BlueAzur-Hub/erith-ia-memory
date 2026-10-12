@@ -114,6 +114,8 @@ function ledgerClear(message){
   const references=q("ledgerreferences");if(references)references.replaceChildren();
   text("ledgercoverage","—");
   text("ledgerwarning","");
+  text("ledgerdetailcount","Afficher les mouvements détaillés");
+  const summary=q("ledgersummary");if(summary)summary.hidden=true;
 }
 function ledgerDate(row){
   const raw=Number(row?.ts??row?.cTime??row?.uTime);
@@ -134,6 +136,8 @@ function ledgerMovement(row,ccy,sourceLabel){
   const subType=String(row?.subType??"").slice(0,12);
   return {
     timestamp:Number(row?.ts??row?.cTime??row?.uTime)||0,
+    balanceChange:amount,
+    type,subType,
     date:ledgerDate(row),
     source:sourceLabel==="Trading"?"Compte de trading":"Compte de financement",
     currency:ccy,
@@ -179,6 +183,23 @@ function ledgerPaint(results){
     }
   }
   recent.sort((a,b)=>b.timestamp-a.timestamp);
+  text("ledgerdetailcount","Afficher les "+recordsCount+" mouvements détaillés");
+  /* Association prudente de deux écritures OKX : sortie EUR 30/321 et entrée BTC 30/320.
+     Une paire de mouvements ne certifie ni le mode de paiement externe, ni tout le coût historique. */
+  const credits=recent.filter(x=>x.source==="Compte de trading"&&x.currency==="BTC"&&x.type==="30"&&x.subType==="320"&&Number.isFinite(x.balanceChange)&&x.balanceChange>0);
+  const debits=recent.filter(x=>x.source==="Compte de trading"&&x.currency==="EUR"&&x.type==="30"&&x.subType==="321"&&Number.isFinite(x.balanceChange)&&x.balanceChange<0);
+  const matches=credits.flatMap(btc=>debits.filter(eur=>Math.abs(btc.timestamp-eur.timestamp)<=120000).map(eur=>({btc,eur})));
+  const summary=q("ledgersummary");
+  if(summary)summary.hidden=matches.length!==1||credits.length!==1||debits.length!==1;
+  if(summary&&!summary.hidden){
+    const {btc,eur}=matches[0];
+    const eurPaid=Math.abs(eur.balanceChange);
+    const euro=v=>v.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2});
+    text("ledgersummarydate",btc.date.split(" ")[0]);
+    text("ledgersummaryeur",euro(eurPaid)+" € sortis");
+    text("ledgersummarybtc",fmt(btc.balanceChange)+" BTC reçus");
+    text("ledgersummaryrate",euro(eurPaid/btc.balanceChange)+" €/BTC");
+  }
   if(list){
     for(const entry of recent.slice(0,20)){
       const li=document.createElement("li");
@@ -345,6 +366,12 @@ function mount(){
       "#traderOkxAccountPanel .okx-ledger-head button{font-size:13px;min-height:34px;padding:6px 11px}",
       "#traderOkxAccountPanel [data-okx-ledgerstatus]{display:block;font-size:14px;line-height:1.5;font-weight:750;color:#ffe09b;margin:10px 0 6px}",
       "#traderOkxAccountPanel .okx-ledger-note,#traderOkxAccountPanel [data-okx-ledgerwarning]{font-size:13px;line-height:1.5;color:#bed3e3;margin:8px 0}",
+      "#traderOkxAccountPanel .okx-ledger-summary{display:flex;flex-wrap:wrap;gap:7px 15px;align-items:center;padding:10px 12px;margin:8px 0;background:rgba(11,42,53,.7);border:1px solid rgba(99,191,190,.25);border-radius:8px;color:#d4e9f0;font-size:13px;line-height:1.5}",
+      "#traderOkxAccountPanel .okx-ledger-summary[hidden]{display:none!important}",
+      "#traderOkxAccountPanel .okx-ledger-summary strong{color:#f0fcfa;font-size:14px}",
+      "#traderOkxAccountPanel .okx-ledger-summary small{flex-basis:100%;font-size:12px;color:#a8bfca;line-height:1.5}",
+      "#traderOkxAccountPanel .okx-ledger-movements{margin-top:10px;border-top:1px solid rgba(120,179,197,.18);padding-top:8px}",
+      "#traderOkxAccountPanel .okx-ledger-movements>summary{cursor:pointer;font-size:13px;font-weight:650;padding:7px 0;color:#c2e5ed}",
       "#traderOkxAccountPanel .okx-ledger-results{list-style:none;display:grid;gap:7px;margin:12px 0;padding:0;max-height:none;overflow:visible}",
       "#traderOkxAccountPanel .okx-ledger-item{display:grid;grid-template-columns:minmax(220px,1fr) minmax(190px,1fr) minmax(300px,1.3fr);align-items:center;gap:9px;min-width:0;border:1px solid rgba(120,179,197,.25);border-radius:10px;background:rgba(12,36,50,.75);padding:10px 13px}",
       "#traderOkxAccountPanel .okx-ledger-meta{display:flex;flex-direction:column;gap:3px;min-width:0}",
@@ -391,7 +418,7 @@ function mount(){
     '<article class="okx-card"><span>Historique</span><b data-okx-history>—</b><small>ordres · 3 mois</small></article>',
     '<article class="okx-card"><span>Exécutions</span><b data-okx-fills>—</b><small>3 derniers mois</small></article>',
     '<article class="okx-card"><span>Frais BTC-USDC</span><b data-okx-fees>—</b><small>tarification du compte</small></article>',
-    '</div><section class="okx-ledger" aria-label="Historique financier OKX en lecture seule"><div class="okx-ledger-head"><strong>HISTORIQUE DU COMPTE OKX</strong><button type="button" data-okx-ledgerrefresh>Actualiser l’historique</button></div><p role="status" data-okx-ledgerstatus>En attente de connexion.</p><p class="okx-ledger-note">Chaque ligne indique un mouvement de solde, et non nécessairement un achat ou une vente. Le prix réellement payé par PayPal reste à confirmer.</p><p data-okx-ledgerwarning></p><ul class="okx-ledger-results" data-okx-ledgerentries></ul><details class="okx-ledger-technical"><summary>Afficher les références et les sources OKX</summary><p data-okx-ledgercoverage>En attente de lecture.</p><ol data-okx-ledgerreferences></ol></details></section><form class="okx-auth" data-okx-auth hidden><small data-okx-authstatus>Aether Trust requis.</small><input data-okx-secret type="password" minlength="6" autocomplete="current-password" placeholder="Mot de passe Aether Trust"><button data-okx-connect type="submit">Connecter</button></form>',
+    '</div><section class="okx-ledger" aria-label="Historique financier OKX en lecture seule"><div class="okx-ledger-head"><strong>HISTORIQUE DU COMPTE OKX</strong><button type="button" data-okx-ledgerrefresh>Actualiser l’historique</button></div><p role="status" data-okx-ledgerstatus>En attente de connexion.</p><div class="okx-ledger-summary" data-okx-ledgersummary hidden><strong data-okx-ledgersummarydate>—</strong><span data-okx-ledgersummaryeur>—</span><span>→</span><strong data-okx-ledgersummarybtc>—</strong><span>· Taux déduit : <b data-okx-ledgersummaryrate>—</b></span><small>Rapprochement indicatif des écritures OKX, pas une preuve du paiement externe ni du coût de toutes les acquisitions.</small></div><p data-okx-ledgerwarning></p><details class="okx-ledger-movements"><summary data-okx-ledgerdetailcount>Afficher les mouvements détaillés</summary><p class="okx-ledger-note">Chaque ligne correspond à une variation de solde, pas nécessairement à un achat distinct.</p><ul class="okx-ledger-results" data-okx-ledgerentries></ul></details><details class="okx-ledger-technical"><summary>Afficher les références et les sources OKX</summary><p data-okx-ledgercoverage>En attente de lecture.</p><ol data-okx-ledgerreferences></ol></details></section><form class="okx-auth" data-okx-auth hidden><small data-okx-authstatus>Aether Trust requis.</small><input data-okx-secret type="password" minlength="6" autocomplete="current-password" placeholder="Mot de passe Aether Trust"><button data-okx-connect type="submit">Connecter</button></form>',
     '<div class="okx-foot"><b data-okx-bridge>Bridge local 8787 · OKX Private REST</b><span>Dernière lecture : <span data-okx-updated>—</span></span><button type="button" data-okx-refresh>Actualiser</button></div></div>'
   ].join("");
   const caseStudy=document.getElementById("traderOkbCaseStudy");
