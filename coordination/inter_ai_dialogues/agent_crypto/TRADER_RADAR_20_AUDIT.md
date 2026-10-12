@@ -65,9 +65,59 @@ Sources officielles (consultées le 12 octobre 2026) :
 ## Statut
 
 - **Sélection et couverture indexée de juillet-septembre : PASS DOCUMENTAIRE 20/20.**
-- **Relecture binaire et re-hachage des séries : NON EFFECTUÉS.**
+- **Contrôle des 20 projections compressées de septembre : GZIP CRC32 ET 720 BOUGIES HORAIRES CONTIGUËS PAR ACTIF VÉRIFIÉS.** Les ZIP source d'origine ne sont pas indépendamment re-téléchargés ni re-hachés.
 - **Disponibilité/volume/spread des paires autorisées OKX EEE pour le compte : NON VÉRIFIÉS.**
-- **Backtest des signaux sur bougies brutes : NON EXÉCUTÉ.**
-- **Résultats financiers réels ou simulés : AUCUN RÉSULTAT À ANNONCER.**
+- **Pilotage sur septembre (agrégats horaires authentiques) : EXÉCUTÉ — SIMULATION INDICATIVE ; TEST 92 JOURS ET CONDITIONS OKX NON EFFECTUÉS.**
+- **Résultat de première simulation : +115,77 USDT fictifs cumulés sur 69 opérations indépendantes de 100 USDT ; NOTIONNEL TOTAL RECYCLÉ 6 900 USDT, NON RENDEMENT D'UN PORTEFEUILLE.**
 
 Prochaine action utile : contrôles des instruments autorisés du compte OKX Europe **en lecture seule**, puis exécution reproductible d'un backtest figé sur les archives de juillet à septembre 2026. Ne pas créer un radar visuel ou un moteur parallèle avant ces preuves.
+
+## Premier test chiffré réalisé — SEPTEMBRE 2026, 20 actifs, 720 bougies horaires chacun
+
+**Statut : PILOTE INDICATIF NON CERTIFIÉ OKX.** Données reprises directement dans les 20 fichiers GitHub `shared_monthly_views/<coin_id>.json.gz` (projections Binance Spot 1h de septembre 2026). Chaque archive a été décodée à partir des octets GitHub, contrôlée par **CRC32 GZIP**, puis vérifiée pour : identité CoinGecko, paire/quote USDT, mois septembre, **720 bougies horaires contiguës**, cohérence OHLCV et volumes numériques.
+
+**Règle figée avant les deux lots de résultats :**
+- Construire des périodes UTC consécutives de 4h à partir des bougies horaires.
+- À la clôture d'une période 4h : hausse du cours de clôture d'au moins **3 %** par rapport à la période précédente **ET** volume coté USDT au moins **2 fois** la moyenne des **20 périodes 4h précédentes** ; la moyenne exclut la période du signal.
+- **Acheter fictivement à l'ouverture des quatre heures suivantes**, puis **revendre fictivement 24h plus tard** (à la clôture de la sixième bougie de 4h après le signal). Pas de positions simultanées sur la même crypto dans le simulateur ; nouveau signal possible ensuite.
+- **100 USDT fictifs par opération, indépendamment des autres.** Frais supposés 0,20 % à l'achat + 0,20 % à la vente ; glissement défavorable supposé 0,15 % chaque sens. Coûts estimés ≈ 0,70 % aller-retour, non historiques certifiés OKX EEE.
+- Aucun capital de portefeuille partagé, aucun effet de levier, aucune prédiction IA, aucun carnet OKX passé reconstitué. Les changements de frais OKX du 25 septembre ne sont pas calibrés ici ; cette hypothèse uniforme est **provisoire**.
+
+| Groupe | Actif | Opérations | Gagnantes | Résultat fictif (100 USDT/op.) | Achat & conservation du mois (autre méthode) |
+|---|---|---:|---:|---:|---:|
+| A | ETH | 2 | 1 | −0,15 USDT | +8,09 % |
+| A | SOL | 3 | 0 | −0,83 USDT | +13,81 % |
+| A | XRP | 4 | 2 | −7,57 USDT | +7,23 % |
+| A | ADA | 3 | 2 | +0,39 USDT | +23,80 % |
+| A | LINK | 4 | 1 | −5,68 USDT | +25,97 % |
+| B | AVAX | 5 | 3 | +11,23 USDT | +50,16 % |
+| B | SUI | 3 | 2 | +14,19 USDT | +59,06 % |
+| B | NEAR | 8 | 4 | +33,61 USDT | +176,09 % |
+| B | UNI | 4 | 2 | +23,94 USDT | +68,58 % |
+| B | AAVE | 3 | 1 | −2,08 USDT | +27,59 % |
+| C | LTC | 2 | 1 | +4,96 USDT | +37,55 % |
+| C | BCH | 4 | 3 | +10,24 USDT | +23,05 % |
+| C | DOT | 6 | 4 | +4,97 USDT | +44,58 % |
+| C | HBAR | 2 | 2 | +6,36 USDT | +41,29 % |
+| C | XLM | 3 | 2 | +1,69 USDT | +26,75 % |
+| D | DOGE | 2 | 1 | +2,11 USDT | +13,34 % |
+| D | PEPE | 4 | 3 | +15,32 USDT | +19,39 % |
+| D | SHIB | 2 | 1 | +0,24 USDT | +12,82 % |
+| D | APT | 1 | 1 | +12,48 USDT | +42,78 % |
+| D | ARB | 4 | 2 | −9,67 USDT | +84,17 % |
+
+**Totaux : 20/20 fichiers valides ; 14 400 bougies horaires testées ; 69 opérations indépendantes (38 gagnantes, 31 perdantes). Résultat net fictif agrégé = +115,7696 USDT pour 69 engagements nominaux distincts de 100 USDT, soit +1,68 % en moyenne par opération.** Ces montants représentent l'addition de gains/pertes indépendants, **pas la performance d'un portefeuille de 100, 1 000 ou 6 900 USDT**.
+
+**Lecture des risques :** parmi les échecs, XRP a produit une opération à environ **−12,09 %**, DOT environ **−10,45 %**, ARB environ **−14,02 %**, après coûts supposés. Une hausse de prix/volume ne garantit ni continuité ni profit.
+
+**Comparateur descriptif** : l'achat et la conservation sur la totalité de septembre (mêmes hypothèses de coûts de marché au début et à la fin) a montré une hausse dans les 20 actifs, **moyenne non pondérée environ +40,30 %**. Ce comparateur reste **non directement comparable** au modèle d'opérations indépendantes : durées d'exposition, capital engagé et risque sont différents. Le marché haussier du mois rend le pilote particulièrement peu probant pour d'autres régimes.
+
+### Ce qui reste INCONNU / NON DÉMONTRÉ
+
+- Performance hors de septembre (juillet-août, période de marché baissier, mouvements rares, tests répétés).
+- Courbes de capital, contraintes d'exposition multi-actifs, drawdown de portefeuille, corrélation des signaux simultanés.
+- Cours acheteur/vendeur et frais exacts **sur OKX Europe** pour chacune des 20 paires ; instruments autorisés du **compte utilisateur**, taille minimum, devises de règlement.
+- Slippage réel et liquidité aux instants de décision ; spread de Binance/USDT **non équivalent** à OKX/EUR, USD unifié ou USDC.
+- Test 92 jours complet du 1er juillet au 30 septembre, comparaison équitable achat/conservation, périodes tenues à l'écart et résistance des résultats aux variations de paramètres.
+
+**Conclusion de travail :** le pipeline technique de lecture des données et de replay sur septembre est confirmé. **Aucune rentabilité fiable/OKX n'est certifiée**. Ne pas ajuster les seuils sur septembre après avoir vu ce test ; réserver les données futures et les autres régimes à une validation indépendante.
