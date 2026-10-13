@@ -190,7 +190,7 @@ def build(catalog_path:Path,out:Path,workers=4):
             index.append(rec)
             print(f"VERIFIED {rec['pair']} {rec['month']} {rec['hours']} h",flush=True)
     index.sort(key=lambda x:(SYMBOLS.index(x['pair'][:-4]),x['month']))
-    need(len(index)==60 and sum(x['hours'] for x in index)==sum(calendar.monthrange(2026,m)[1]*24*20 for m in (7,8,9)), 'Unexpected coverage')
+    need(len(index)==len(SYMBOLS)*len(MONTHS) and sum(x['hours'] for x in index)==len(SYMBOLS)*sum(calendar.monthrange(*map(int,month.split('-')))[1]*24 for month in MONTHS), 'Unexpected coverage')
     global_result={'schema':'erith.trader.radar20.flows.index.v1',
                    'markets':20,'months':list(MONTHS),'source':'Canonical historical Top250 release catalog',
                    'entries':index,'sample_size_warning':'60 independent monthly simulations are NOT one portfolio backtest',

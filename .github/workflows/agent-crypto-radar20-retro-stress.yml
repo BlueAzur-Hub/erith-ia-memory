@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/agent-crypto-radar20-retro-stress.yml'
+      - 'public/agent_crypto_erith_ia/tools/build_radar20_flows.py'
 permissions:
   contents: write
 concurrency:
