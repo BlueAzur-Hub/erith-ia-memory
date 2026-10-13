@@ -58,7 +58,7 @@ assert.equal(badge.dataset.visibleQuote,"USDT");
 assert.equal(quote.snapshot().executionInstrument,"BTC-USDC","Hidden Market state must remain untouched");
 external={active:true,id:"concrete",provider:"okx",instrument:"CT-USDC",quote:"USDT"};
 listeners.get("agent-crypto:external-asset-changed")();
-assert.match(badge.innerHTML,/PAIRE NON VALIDÉE/,"Malformed external pair must fail closed");
+assert.match(badge.innerHTML,/PAIRE EXTERNE NON VALIDÉE/,"Malformed external pair must fail closed");
 assert.doesNotMatch(badge.innerHTML,/BTC-USDC/);
 external={active:false};
 listeners.get("agent-crypto:external-asset-changed")();
