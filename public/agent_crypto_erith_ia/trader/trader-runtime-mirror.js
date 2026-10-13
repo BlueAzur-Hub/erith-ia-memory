@@ -72,6 +72,17 @@ function mount(){
     script.src=new URL("../trader/trader-historical-panel.js?reader=top50-cohorts",doc.baseURI).href;
     doc.head.appendChild(script);
   }
+  // Trader-only CT/USDT one-minute watch. Reuses the canonical candle owner:
+  // one request per minute, visible tab only, no Administrator mutation or order.
+  if(!doc.getElementById("traderCtMinuteWatchScript")){
+    const script=doc.createElement("script");
+    script.id="traderCtMinuteWatchScript";
+    script.src=new URL("../trader/trader-candles-minute-watch.js",doc.baseURI).href;
+    script.onerror=()=>{
+      if(status){status.textContent="Suivi minute CT indisponible";status.dataset.state="error";}
+    };
+    doc.head.appendChild(script);
+  }
   // Native Trader-only module. Contract and panel execute in the iframe that
   // owns the navigation, sessionStorage and private OKX read surface.
   if(!doc.getElementById("traderAiCtContractScript")){
