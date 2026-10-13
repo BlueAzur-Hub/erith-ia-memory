@@ -15,7 +15,9 @@ const owner=()=>globalThis.AgentCryptoNewListingsNativeCategory;
 const external=()=>globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()||null;
 const lineOwner=()=>globalThis.AtlasExternalChart;
 const stage=()=>document.documentElement?.dataset?.atlasGraphBootPhase;
-let restoring=false,restored=false,attempted=false,lastError=null,bootWait=null;
+let restoring=false,restored=false,lastError=null,bootWait=null;
+let attempts=0,retryTimer=null,initialTimer=null;
+const MAX_ATTEMPTS=3;
 let activeLabel=false,watcher=null,originalLabels=null;
 
 const isCt=ctx=>Boolean(ctx?.active&&ctx.id===ID&&ctx.provider===PROVIDER
@@ -35,7 +37,11 @@ function save(){
     lastError=null;return true;
   }catch(_){lastError="stockage local indisponible";return false;}
 }
-function clear(){try{localStorage.removeItem(KEY);}catch(_){}}
+function cancelPending(){
+  if(retryTimer){clearTimeout(retryTimer);retryTimer=null;}
+  if(initialTimer){clearTimeout(initialTimer);initialTimer=null;}
+}
+function clear(){cancelPending();try{localStorage.removeItem(KEY);}catch(_){}}
 function isLine(){
   const x=lineOwner()?.state?.()||{};
   return Boolean(isCt(external())&&x.active&&x.coin_id===ID
@@ -118,7 +124,7 @@ window.addEventListener(CONTEXT_EVENT,onContext,{passive:true});
 window.addEventListener("agent-crypto:new-listing-line-ready",event=>{
   if(event?.detail?.id!==ID||!isLine())return;
   if(stored())save();
-  if(restoring){restored=true;lastError=null;}
+  restored=true;restoring=false;lastError=null;cancelPending();
   mountLabel();indication("");
 },{passive:true});
 document.addEventListener("click",event=>{
@@ -128,45 +134,76 @@ document.addEventListener("click",event=>{
   }
 },{passive:true});
 
-async function restore(){
-  if(attempted||!stored()||document.visibilityState==="hidden")return false;
-  if(!["ready","error"].includes(stage()))return false; // Wait for canonical V7 boot barrier, even in explicit storage-error state.
-  if(external()?.active){attempted=true;return false;} // Never override active intent.
-  const api=owner();
-  if(typeof api?.selectById!=="function"||typeof lineOwner()?.present!=="function")return false;
-  attempted=true;restoring=true;lastError=null;
-  indication("CT · restauration du graphique Ligne 24h…");
-  let ok=false;
-  try{ok=await api.selectById(ID);}catch(error){lastError=String(error?.message||error);}
-  restoring=false;
-  if(!ok||!isLine()){
-    if(!lastError)lastError=api.snapshot?.()?.lastError||"graphique Ligne CT indisponible";
-    indication("CT · graphique Ligne indisponible : vérifier OKX",true);
-    return false;
-  }
-  save();restored=true;mountLabel();indication("");
+function restoreDone(){
+  if(!isLine())return false;
+  restoring=false;restored=true;lastError=null;cancelPending();
+  save();mountLabel();indication("");
   return true;
 }
-function boot(){
-  if(isCt(external())){
-    save();mountLabel();return;
+function latestReason(api){
+  const reason=String(api?.snapshot?.()?.lastError||lastError||"série Ligne non publiée").trim();
+  return reason.slice(0,115);
+}
+function planRetry(api){
+  if(attempts>=MAX_ATTEMPTS||!stored()){
+    indication("CT · Graphique Ligne indisponible : "+latestReason(api),true);
+    return;
   }
-  if(!stored())return;
+  indication("CT · données en attente, nouvelle tentative de chargement…");
+  if(retryTimer)clearTimeout(retryTimer);
+  retryTimer=setTimeout(()=>{
+    retryTimer=null;
+    if(!stored()||restored||document.visibilityState!=="visible")return;
+    // Never displace an operator's different external asset.
+    if(external()?.active&&!isCt(external()))return;
+    void restore();
+  },attempts===1?4000:9000);
+}
+async function restore(){
+  if(restoring||restored||attempts>=MAX_ATTEMPTS||!stored()||document.visibilityState==="hidden")return false;
+  if(!["ready","error"].includes(stage()))return false;
+  if(external()?.active&&!isCt(external()))return false;
+  const api=owner();
+  if(typeof api?.selectById!=="function"||typeof lineOwner()?.present!=="function"){
+    lastError="modules du graphique non initialisés";
+    return false;
+  }
+  if(restoreDone())return true;
+  attempts++;restoring=true;lastError=null;
+  indication("CT · récupération de la courbe Ligne 24h ("+attempts+"/"+MAX_ATTEMPTS+")…");
+  let ok=false;
+  try{ok=await api.selectById(ID);}
+  catch(error){lastError=String(error?.message||error);}
+  // A line-ready event may already have marked this attempt successful.
+  if(restoreDone())return true;
+  restoring=false;
+  if(!ok||!isLine()){
+    if(!lastError)lastError=latestReason(api);
+    planRetry(api);
+    return false;
+  }
+  return restoreDone();
+}
+function boot(){
+  if(restoreDone())return;
+  if(!stored()||restoring||restored||attempts>=MAX_ATTEMPTS)return;
   if(document.visibilityState!=="visible")return;
-  if(["ready","error"].includes(stage()))void restore();
-  else waitForCanonicalBoot();
+  if(["ready","error"].includes(stage())){
+    if(!initialTimer){
+      // Allow the canonical Market / V7 startup render to settle first.
+      initialTimer=setTimeout(()=>{initialTimer=null;void restore();},1100);
+    }
+  }else waitForCanonicalBoot();
 }
 function waitForCanonicalBoot(){
-  if(bootWait||attempted||!stored())return;
-  // Only observe the canonical boot gate, disconnect as soon as it becomes ready.
+  if(bootWait||restoring||restored||attempts>=MAX_ATTEMPTS||!stored())return;
   bootWait=new MutationObserver(()=>{
     if(!["ready","error"].includes(stage()))return;
-    bootWait?.disconnect();bootWait=null;
-    if(document.visibilityState==="visible")void restore();
+    bootWait?.disconnect();bootWait=null;boot();
   });
   bootWait.observe(document.documentElement,{attributes:true,attributeFilter:["data-atlas-graph-boot-phase"]});
   if(["ready","error"].includes(stage())){
-    bootWait.disconnect();bootWait=null;void restore();
+    bootWait.disconnect();bootWait=null;boot();
   }
 }
 document.addEventListener("visibilitychange",()=>{
@@ -177,7 +214,7 @@ boot();
 
 globalThis.AgentCryptoTraderCtSelectionMemory=Object.freeze({
  snapshot:()=>Object.freeze({
-  selected:isCt(external()),saved:!!stored(),restoring,restored,
+  selected:isCt(external()),saved:!!stored(),restoring,restored,attempts,maxAttempts:MAX_ATTEMPTS,
   view:"line",lineReady:isLine(),labelActive:activeLabel,
   lastError,identity:stored()?.instrument||null
  }),
