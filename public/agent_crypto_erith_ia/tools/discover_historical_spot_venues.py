@@ -32,11 +32,13 @@ def require(ok,message):
     if not ok: raise ValueError(message)
 
 def active_archive_ids(queue, minute, daily):
-    """Treat BOTH published native source registries as archive truth.
+    """Union independently verified old 1m/1d sources by exact coin ID.
 
-    The old Binance-only history catalog omits both newer minute and native
-    daily acquisitions. Never spend discovery quotas on already archived IDs.
-    A Spot instrument candidate or a probe is NOT an archive.
+    A frozen 250-asset snapshot may predate the current ranked Top250 and
+    include delisted-from-rank assets. Rank never proves source ownership.
+    Previously validated historical rows remain counted in their own dated
+    source registry, but only still-current exact IDs enter the discovery
+    exclusion set. Never infer a match from rank or ticker alone.
     """
     require(minute.get("schema")==
             "aerith.public.ohlcv.top250.federated-native-archives.v1"
@@ -49,35 +51,53 @@ def active_archive_ids(queue, minute, daily):
             "Missing living native-daily source catalogue")
     expected={a["id"]:a for a in queue}
     require(len(expected)==250,"Repeated Top250 ranked owner")
-    rows={a["id"]:a for a in minute["assets"]}
-    require(len(rows)==250 and set(rows)==set(expected),
-            "Minute catalogue owner universe changed")
+    rows={}
+    ranks=set()
     archived=set()
-    for aid,source in rows.items():
-        owner=expected[aid]
-        require(source["rank"]==owner["rank"] and
-                source["symbol"]==owner["symbol"] and
-                source["quote"]=="USDT" and
-                isinstance(source["native_1m_count"],int) and
-                source["native_1m_count"]>=0,
+    old_archived=0
+    for source in minute["assets"]:
+        aid=source["id"]
+        rank=source.get("rank")
+        require(aid not in rows and isinstance(rank,int)
+                and rank not in ranks and 1<=rank<=250
+                and isinstance(source.get("symbol"),str) and source["symbol"]
+                and source.get("quote")=="USDT"
+                and isinstance(source.get("native_1m_count"),int)
+                and source["native_1m_count"]>=0,
                 "Minute catalogue identity or native count mismatch")
+        rows[aid]=source
+        ranks.add(rank)
+        if source["native_1m_count"]>0:
+            old_archived+=1
+        owner=expected.get(aid)
+        if owner is None:
+            continue
+        require(source["symbol"]==owner["symbol"],
+                "Minute catalogue exact owner symbol mismatch")
         if source["native_1m_count"]>0:
             archived.add(aid)
-    require(len(archived)==minute["archived_assets"],
+    require(len(rows)==250 and ranks==set(range(1,251))
+            and old_archived==minute["archived_assets"],
             "Minute catalogue headline differs from verified rows")
     seen=set()
     for source in daily["assets"]:
         aid=source["id"]
-        owner=expected.get(aid)
-        require(owner is not None and aid not in seen and
-                source["rank"]==owner["rank"] and
-                source["symbol"]==owner["symbol"] and
-                source["quote"] in ("USDT","USDC") and
-                isinstance(source["native_candles"],int) and
-                source["native_candles"]>0 and
-                source.get("release_url") and source.get("sha256"),
+        require(aid not in seen
+                and isinstance(source.get("rank"),int)
+                and isinstance(source.get("symbol"),str) and source["symbol"]
+                and source.get("quote") in ("USDT","USDC")
+                and isinstance(source.get("native_candles"),int)
+                and source["native_candles"]>0
+                and source.get("release_url")
+                and isinstance(source.get("sha256"),str)
+                and re.fullmatch(r"[a-f0-9]{64}",source["sha256"]),
                 "Daily catalogue identity or source metadata missing")
         seen.add(aid)
+        owner=expected.get(aid)
+        if owner is None:
+            continue
+        require(source["symbol"]==owner["symbol"],
+                "Daily catalogue identity or source metadata missing")
         archived.add(aid)
     return archived
 
@@ -116,7 +136,10 @@ def universe(venue=VENUE,catalog=CATALOG):
            for a in sorted(current,key=lambda x:x["rank"])]
     minute=json.loads(LIVE_MINUTE.read_text())
     daily=json.loads(LIVE_DAILY.read_text())
+    # An immutable Binance ZIP may have been imported after the independent
+    # minute/1D snapshot. These verified catalog months are a separate input.
     archived=active_archive_ids(queue,minute,daily)
+    archived.update(a["id"] for a in current if a["months"])
     require({a["id"] for a in current if a["months"]}<=archived,
             "Historic archive vanished from living native source registers")
     return queue,archived
