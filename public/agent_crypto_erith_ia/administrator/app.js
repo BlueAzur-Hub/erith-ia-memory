@@ -6921,6 +6921,7 @@ function atlasRenderComparisonCaption(
   unavailableItems = [],
   requestedCount = null
 ) {
+  if (atlasExternalChartActive()) return;
   const periodLabel = atlasChartPeriodLabel(period);
   const unavailableCount = Array.isArray(unavailableItems)
     ? unavailableItems.length
@@ -12146,6 +12147,7 @@ async function atlasRespectComparisonRequestSpacing(signal = null, period = Numb
 }
 
 function atlasRenderComparisonDetail(entries, period) {
+  if (atlasExternalChartActive()) return;
   const coins = entries.map(entry => entry.coin);
   const primary = getSelectedCoin() || coins[0];
   atlasBrokerSeedSpot(primary);

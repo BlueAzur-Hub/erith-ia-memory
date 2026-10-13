@@ -37,6 +37,8 @@ assert.match(app,/function atlasExternalChartDetail\([^]*?atlasEnsureSourceDock\
 assert.match(app,/Prix snapshot \$\{currency\}/,"External price currency must be sourced");
 assert.match(app,/Dernier point \(\$\{currency\}\)/,"External last point must carry series currency");
 assert.match(app,/function drawComparisonChart\([^]*?atlasExternalChartActive\(\)\) return \[\];/);
+assert.match(app,/function atlasRenderComparisonDetail\([^]*?if \(atlasExternalChartActive\(\)\) return;/);
+assert.match(app,/function atlasRenderComparisonCaption\([^]*?if \(atlasExternalChartActive\(\)\) return;/);
 
 const start=facade.indexOf("  function activeExternalId(){");
 const finish=facade.indexOf("  function selectedCoin(){",start);
