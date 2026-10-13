@@ -68,8 +68,20 @@
     const symbol=String(value??"").trim().toUpperCase();
     return /^[A-Z0-9]{1,16}$/.test(symbol)?symbol:null;
   };
+  // Visible external graph wins over a stale Market/BTC fallback. Do not infer CT
+  // from a workspace slot alone: require the rendered graph and selected listing ID.
+  const visibleExternalAsset=()=>{
+    try{
+      const graph=globalThis.AtlasExternalChart?.state?.();
+      const listing=globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.();
+      if(graph?.active&&listing?.selectedId&&String(graph.coin_id)===String(listing.selectedId))
+        return normalizeSelectedAsset(listing.selectedSymbol);
+    }catch(_){}
+    return null;
+  };
   const DOM_ASSET_STOP=new Set(["USD","EUR","USDC","USDT","PRIX","PRICE","MARCHÉ","MARCHE","MARKET","ACTIF","CRYPTO"]);
   const selectedAsset=()=>{
+    const visible=visibleExternalAsset();if(visible)return visible;
     const resolved=normalizeSelectedAsset(pairResolver()?.selectedAsset?.());if(resolved)return resolved;
     const ext=externalContext(),external=normalizeSelectedAsset(ext.active?ext.base:null);if(external)return external;
     try{const coin=typeof globalThis.getSelectedCoin==="function"?globalThis.getSelectedCoin():null;const canonical=normalizeSelectedAsset(coin?.symbol);if(canonical)return canonical;}catch(_){}
@@ -570,8 +582,19 @@
 
   async function refresh(options={}){
     mount();
-    const requested=String(options.asset||selectedAsset()||"BTC").trim().toUpperCase();
-    const requestedQuote=String(options.quote||desiredQuote()).trim().toUpperCase();
+    const visible=visibleExternalAsset(),ext=externalContext();
+    // No BTC (or guessed market pair) may be loaded for a visible external graph.
+    // Wait for the matching public exchange context, then the existing open-only
+    // 2-second refresh/event path will retry normally.
+    if(visible&&(!ext.active||normalizeSelectedAsset(ext.base)!==visible)){
+      clearBookForAsset(visible,"USDT");
+      state.error="Contexte public du graphique externe non synchronisé · carnet indisponible";
+      state.errorCode="EXTERNAL_CONTEXT_MISSING";
+      render();
+      return false;
+    }
+    const requested=String(visible||options.asset||selectedAsset()||"BTC").trim().toUpperCase();
+    const requestedQuote=String(visible&&ext.active?ext.quote:(options.quote||desiredQuote())).trim().toUpperCase();
     const acceptableQuotes=Array.from(new Set([requestedQuote,...quoteCandidates()]));
     state.asset=requested;state.requestedAsset=requested;state.requestedQuote=requestedQuote;
 
@@ -712,6 +735,22 @@
     const body=root?.querySelector("[data-oms-body]");
     if(!meta||!kpis||!body)return;
 
+    const visible=visibleExternalAsset();
+    const expected=visible||normalizeSelectedAsset(ext.active?ext.base:null);
+    const inconsistent=!!expected&&(
+      state.loadedAsset!==expected||
+      (ext.active&&state.loadedQuote!==normalizeSelectedAsset(ext.quote))||
+      (visible&&!ext.active)
+    );
+    if(inconsistent){
+      if(title)title.textContent="CARNET D’ORDRES · SYNCHRONISATION";
+      if(live){live.dataset.state="UNKNOWN";live.textContent="UNKNOWN";}
+      meta.textContent=expected+"/"+(ext.active?ext.quote:"?")+" · carnet non synchronisé";
+      kpis.innerHTML="";
+      body.innerHTML='<div class="oms-note">La paire du carnet ne correspond pas au graphique. Aucune profondeur affichée avant une lecture publique concordante.</div>';
+      return;
+    }
+
     if(title)title.textContent=ext.active?`${String(ext.providerLabel||ext.provider||"SOURCE").toUpperCase()} · CARNET D’ORDRES`:`${String(state.provider||"MARKET").toUpperCase()} · CARNET D’ORDRES`;
     const freshness=state.loading?"UNKNOWN":String(state.freshness||"UNKNOWN");
     if(live){live.dataset.state=freshness;live.textContent=freshness;}
@@ -793,6 +832,8 @@
       source_freshness_required:true,
       source_timestamp_not_fabricated:true,
       requested_asset_must_match_payload:true,
+      visible_external_graph_guard:true,
+      no_btc_fallback_on_visible_ct:true,
       display_aware_quote:true,
       eur_quote_preserved:true,
       usd_display_prefers_usdc_then_usdt:true,
@@ -875,6 +916,18 @@
       if(state.loadedAsset!==next||state.loadedQuote!==nextQuote)clearBookForAsset(next,nextQuote);
       try{state.activeController?.abort();}catch(_){}
       if(state.open)void refresh({asset:next,quote:nextQuote});
+    },{passive:true});
+    // External series is committed after asynchronous candle retrieval; avoid
+    // a stale market carnet when CT becomes the visible line.
+    window.addEventListener("agent-crypto:new-listing-line-ready",()=>{
+      if(!state.open)return;
+      const next=visibleExternalAsset();
+      if(!next)return;
+      const nextQuote=desiredQuote();
+      if(state.loadedAsset!==next||state.loadedQuote!==nextQuote)
+        clearBookForAsset(next,nextQuote);
+      render();
+      void refresh({automatic:true});
     },{passive:true});
     window.addEventListener("agent-crypto:external-asset-changed",()=>{
       const next=selectedAsset(),nextQuote=desiredQuote();
