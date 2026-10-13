@@ -98,7 +98,7 @@ class BitgetFederationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"not verified"):
             b.federate(self.catalog,[],verified_overlap={"syrup"})
 
-    def fixture(self,count=None,asset=None,month="2026-09"):
+    def fixture(self,count=None,asset=None,month="2026-09",historical_rank=None):
         asset=asset or self.asset
         tag=f"crypto-spot-bitget-{month}-1m-{asset['id']}"
         name=f"{asset['pair']}-1m-{month}.zip"
@@ -120,7 +120,8 @@ class BitgetFederationTests(unittest.TestCase):
                   "unavailable":0,"candles":expected,
                   "native_source_columns":["timestamp","open","high","low",
                      "close","base_volume","quote_turnover"],
-                  "assets":[{"asset_id":asset["id"],"rank":asset["rank"],
+                  "assets":[{"asset_id":asset["id"],
+                            "rank":asset["rank"] if historical_rank is None else historical_rank,
                       "pair":asset["pair"],"quote":"USDT",
                       "source":importer.SOURCE,"status":"verified",
                       "file":name,"sha256":b.digest(raw),
@@ -188,6 +189,27 @@ class BitgetFederationTests(unittest.TestCase):
         self.assertTrue(all(x["quote"]=="USDT" for x in union["assets"]))
         self.assertEqual(union["groups"][-1]["archived"],union["archived_assets"])
 
+
+    def test_immutable_release_rank_differs_without_source_ownership_drift(self):
+        # Its actual Release manifests remain hash-bound to the old valid rank.
+        old_rank=1 if self.asset["rank"]!=1 else 2
+        tag,metadata,downloader=self.fixture(historical_rank=old_rank)
+        projections,alt,union=b.build(
+            self.catalog,self.exact,self.spot,[tag],metadata,downloader)
+        self.assertEqual(len(projections),1)
+        self.assertEqual(alt["assets"][0]["id"],self.asset["id"])
+        self.assertEqual(alt["assets"][0]["rank"],self.asset["rank"])
+        filename=self.asset["pair"]+"-1m-2026-09.zip"
+        self.assertEqual(alt["assets"][0]["source_zip_sha256"],
+                         b.digest(downloader(tag,filename)))
+        self.assertEqual(union["bitget_archived_assets"],1)
+
+    def test_invalid_historic_rank_rejected_even_with_matching_hashes(self):
+        for fake_rank in (0,251,"2",True):
+            with self.subTest(fake_rank=fake_rank):
+                tag,metadata,downloader=self.fixture(historical_rank=fake_rank)
+                with self.assertRaisesRegex(ValueError,"asset ID, month"):
+                    b.verify_release(tag,self.asset,metadata,downloader)
 
     def test_two_native_months_count_all_archives_without_faking_old_chart(self):
         aug,maug,daug=self.fixture(month="2026-08")
