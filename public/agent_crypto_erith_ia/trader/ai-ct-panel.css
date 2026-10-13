@@ -1,44 +1,28 @@
-/* Panneau pilote indépendant, n'intervient pas dans le runtime Administrator. */
-#aiCtToggle{position:static;border:1px solid #48b5c5;color:#e6fbff;background:#092834;border-radius:9px;padding:9px 14px;font-weight:750;cursor:pointer;box-shadow:0 2px 16px #0008}
-#aiCtPanel[hidden]{display:none!important}
-#aiCtPanel{position:static;width:99%;margin:12px auto 22px;max-height:none;overflow:visible;box-sizing:border-box;border:1px solid #43a5b4;border-radius:12px;background:#071925;color:#f1fbff;padding:17px 17px 14px;box-shadow:0 10px 40px #000c;font:14px/1.4 system-ui,sans-serif}
-#aiCtPanel header{display:flex;justify-content:space-between;gap:8px;align-items:center}
-#aiCtPanel h2{margin:0;font-size:18px}
-#aiCtPanel .ai-ct-close{border:0;background:none;color:#d6e9f1;font-size:24px;cursor:pointer}
-#aiCtPanel p{margin:8px 0;color:#b5cad4;font-size:12px}
-#aiCtPanel .ai-ct-actions{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
-#aiCtPanel .ai-ct-actions button{border:1px solid #457c8f;background:#163a4b;color:white;padding:9px;border-radius:8px;cursor:pointer}
-#aiCtPanel button:disabled{opacity:.45;cursor:not-allowed}
-#aiCtStatus{color:#a8d6e4;min-height:20px}
-#aiCtDetails{border-top:1px solid #25444f;margin-top:9px;padding-top:5px}
-#aiCtDetails .ai-ct-row{display:flex;gap:12px;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1c3440}
-#aiCtDetails .ai-ct-row span{color:#b8cdd6}
-#aiCtDetails .ai-ct-row strong{max-width:55%;text-align:right;font-variant-numeric:tabular-nums}
-#aiCtDetails .ai-ct-warning{color:#ffd09d}
-
-
-/* Le bouton appartient au vrai menu horizontal du Trader. */
-#aiCtToggle[hidden]{display:none!important}
-#accueil .atlas-v2-nav-essential #aiCtToggle{
- display:inline-flex!important;position:static!important;inset:auto!important;
- align-items:center!important;justify-content:center!important;
- padding:7px 12px!important;margin:0!important;min-height:34px!important;
- border:1px solid #2d7183!important;border-radius:9px!important;
- background:#082a38!important;color:#dbfbff!important;
- font:700 12px system-ui,sans-serif!important;line-height:1.2!important;
- box-shadow:none!important;white-space:nowrap!important;flex:0 0 auto!important;
-}
-#accueil .atlas-v2-nav-essential #aiCtToggle[aria-expanded="true"]{
- background:#114859!important;border-color:#59cede!important;
-}
-#market-zone #aiCtPanel{
- grid-column:1/-1;box-sizing:border-box;width:99%;max-width:none;
- margin:12px auto 22px;position:static;scroll-margin-top:18px;
- padding:18px 22px;border-radius:14px;background:#071d2a;
-}
-#market-zone #aiCtPanel[hidden]{display:none!important}
-#market-zone #aiCtPanel .ai-ct-case{margin-top:18px;padding:12px;
- border:1px solid #2a5869;border-radius:10px;background:#092634}
-#market-zone #aiCtPanel .ai-ct-case summary{cursor:pointer;font-weight:700;color:#b8f3e9}
-#market-zone #aiCtPanel .ai-ct-case p{color:#c0d9e3;font-size:13px;line-height:1.55}
-@media(max-width:850px){#market-zone #aiCtPanel{padding:12px}}
+/* Trader uniquement — assistance CT dans la Lecture Technique repliable existante.
+   Aucune géométrie du panneau parent, de l'Administrator ou du graphique n'est modifiée. */
+#detailPanel #aiCtPanel{width:100%;box-sizing:border-box;min-width:0;margin:8px 0;border:1px solid rgba(83,190,202,.38);border-radius:10px;background:rgba(3,19,30,.55);color:#e5f6fa}
+#detailPanel #aiCtPanel[hidden]{display:none!important}
+#detailPanel #aiCtPanel>summary{cursor:pointer}
+#detailPanel #aiCtPanel>summary b{color:#a6eff7}
+#detailPanel #aiCtPanel>summary small{color:#bed0db}
+#detailPanel #aiCtPanel .ai-ct-panel-body{min-width:0;box-sizing:border-box;padding:10px 12px 13px}
+#detailPanel #aiCtPanel .ai-ct-intro{margin:2px 0 10px;color:#c0d7e1;font:12px/1.5 system-ui,sans-serif}
+#detailPanel #aiCtPanel .ai-ct-modes{display:flex;gap:6px;flex-wrap:wrap;margin:5px 0 10px}
+#detailPanel #aiCtPanel .ai-ct-modes button,#detailPanel #aiCtPanel .ai-ct-actions button{appearance:none;cursor:pointer;min-height:30px;padding:6px 10px;border:1px solid #426e7c;border-radius:7px;background:#102f3c;color:#d9f0f5;font:600 12px/1.3 system-ui,sans-serif}
+#detailPanel #aiCtPanel .ai-ct-modes button[aria-pressed="true"]{color:#05212c;border-color:#83e0e9;background:#8ee4ed}
+#detailPanel #aiCtPanel button:focus-visible{outline:2px solid #b3f0f5;outline-offset:2px}
+#detailPanel #aiCtPanel button:disabled{opacity:.45;cursor:not-allowed}
+#detailPanel #aiCtPanel .ai-ct-lesson{padding:7px 11px;border:1px solid rgba(113,204,214,.22);border-radius:8px;background:rgba(2,20,28,.48)}
+#detailPanel #aiCtPanel .ai-ct-lesson p{margin:7px 0;color:#d2e8ed;font:12px/1.55 system-ui,sans-serif;overflow-wrap:anywhere}
+#detailPanel #aiCtPanel .ai-ct-lesson .ai-ct-source{font-weight:700;color:#9ee4e8}
+#detailPanel #aiCtPanel .ai-ct-actions{display:flex;gap:6px;flex-wrap:wrap;margin:11px 0 5px}
+#detailPanel #aiCtPanel #aiCtStatus{min-height:18px;margin:7px 0;color:#acd5e1;font:12px/1.45 system-ui,sans-serif}
+#detailPanel #aiCtPanel #aiCtDetails{min-width:0}
+#detailPanel #aiCtPanel .ai-ct-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid rgba(116,184,199,.15);font:12px/1.4 system-ui,sans-serif}
+#detailPanel #aiCtPanel .ai-ct-row span{color:#bacdd8}
+#detailPanel #aiCtPanel .ai-ct-row strong{text-align:right;max-width:56%;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#detailPanel #aiCtPanel .ai-ct-warning{color:#ffce91;font:12px/1.5 system-ui,sans-serif}
+#detailPanel #aiCtPanel .ai-ct-case{margin:12px 0 0;padding:8px 10px;border:1px solid rgba(111,180,193,.23);border-radius:8px;background:rgba(9,36,46,.44)}
+#detailPanel #aiCtPanel .ai-ct-case>summary{color:#b1e9e9;cursor:pointer;font:650 12px/1.4 system-ui,sans-serif}
+#detailPanel #aiCtPanel .ai-ct-case p{color:#c1d8df;font:12px/1.55 system-ui,sans-serif}
+@media(max-width:700px){#detailPanel #aiCtPanel .ai-ct-row{align-items:flex-start}#detailPanel #aiCtPanel .ai-ct-row strong{max-width:60%}}

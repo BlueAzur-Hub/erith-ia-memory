@@ -6,20 +6,15 @@ const BRIDGE='http://127.0.0.1:8787';
 const BACKEND='http://127.0.0.1:8790';
 const TOKEN_KEY='agent_crypto_bridge_owner_token_v1';
 const ROLE_KEY='agent_crypto_local_access_session_v1';
-const nav=document.querySelector('#accueil .atlas-v2-nav-essential');
-const zone=document.getElementById('market-zone');
-if(!nav||!zone||document.getElementById('aiCtToggle'))return;
-const btn=document.createElement('button');
-btn.id='aiCtToggle';btn.type='button';btn.className='atlas-quick-link';btn.textContent='IA · Concrete';
-btn.setAttribute('aria-controls','aiCtPanel');btn.setAttribute('aria-expanded','false');
+const detailBody=document.getElementById('detailPanelBody');
+if(!detailBody||document.getElementById('aiCtPanel'))return;
 const template=document.createElement('template');
-template.innerHTML="<section id=\"aiCtPanel\" role=\"region\" aria-label=\"Passerelle IA, pilote Concrete\" hidden>\n    <header><h2>Passerelle IA · Concrete</h2><button class=\"ai-ct-close\" type=\"button\" id=\"aiCtClose\" aria-label=\"Fermer\">×</button></header>\n    <p>Lecture privée sur ton PC · aucun ordre réel · marché CT/USDC.</p>\n    <div class=\"ai-ct-actions\"><button id=\"aiCtRead\" type=\"button\">Lire ma position CT</button><button id=\"aiCtCopy\" type=\"button\" disabled>Copier le résumé privé</button></div>\n    <p id=\"aiCtStatus\" role=\"status\" aria-live=\"polite\">Prêt · aucune consultation automatique.</p>\n    <div id=\"aiCtDetails\"></div>\n    <details class=\"ai-ct-case\">\n      <summary>Cas d’école · Concrete CT — lecture et risques</summary>\n      <p><strong>Position réelle :</strong> marché CT/USDC, quantité et frais lus via le Bridge local uniquement sur demande. Une vente fictive estimée à partir du carnet ne garantit aucun prix réel.</p>\n      <p><strong>Analyse publique :</strong> les bougies CT/USDT proviennent d’un autre marché. Elles servent au contexte, sans être assimilées au prix CT/USDC ou à une mesure de ton gain personnel.</p>\n      <p><strong>Contrôles :</strong> volatilité, volumes, liquidité, commission, fraîcheur et archives disponibles doivent être qualifiés. Aucune recommandation ni ordre automatique.</p>\n    </details>\n  </section>";
+template.innerHTML="<details id=\"aiCtPanel\" class=\"atlas-detail-subwindow atlas-primary-detail-window ai-ct-reading\" data-detail-window=\"ai-ct\">\n  <summary><span><b>IA · Concrete (CT)</b><small>Apprendre · Analyser · position privée CT/USDC</small></span><em id=\"aiCtExpandState\" data-window-state>Ouvrir</em></summary>\n  <div class=\"atlas-detail-subwindow-body ai-ct-panel-body\">\n    <p class=\"ai-ct-intro\">Assistance à la lecture du marché Concrete · aucun ordre réel. Le graphique public CT/USDT et ta position CT/USDC restent distincts.</p>\n    <div class=\"ai-ct-modes\" role=\"group\" aria-label=\"Mode d'assistance Concrete\">\n      <button id=\"aiCtModeLearn\" type=\"button\" aria-controls=\"aiCtLesson\" aria-pressed=\"true\">Apprendre</button>\n      <button id=\"aiCtModeAnalyze\" type=\"button\" aria-controls=\"aiCtLesson\" aria-pressed=\"false\">Analyser</button>\n    </div>\n    <div id=\"aiCtLesson\" class=\"ai-ct-lesson\" role=\"status\" aria-live=\"polite\"></div>\n    <div class=\"ai-ct-actions\">\n      <button id=\"aiCtRead\" type=\"button\">Lire ma position CT/USDC</button>\n      <button id=\"aiCtCopy\" type=\"button\" disabled>Copier le résumé privé</button>\n    </div>\n    <p id=\"aiCtStatus\" role=\"status\" aria-live=\"polite\">Prêt · aucune consultation privée automatique.</p>\n    <div id=\"aiCtDetails\"></div>\n    <details class=\"ai-ct-case\">\n      <summary>Cas d'école · Concrete CT — lecture et risques</summary>\n      <p><strong>Position réelle :</strong> marché CT/USDC, quantité et frais lus via le Bridge local uniquement sur demande. Une vente fictive estimée à partir du carnet ne garantit aucun prix réel.</p>\n      <p><strong>Analyse publique :</strong> les bougies CT/USDT proviennent d'un autre marché. Elles servent au contexte, sans être assimilées au prix CT/USDC ou à une mesure de ton gain personnel.</p>\n      <p><strong>Contrôles :</strong> volatilité, volumes, liquidité, commissions, fraîcheur et archives doivent être qualifiés. Aucun ordre automatique.</p>\n    </details>\n  </div>\n</details>";
 const panel=template.content.firstElementChild;
 const body=panel.querySelector('#aiCtDetails'),status=panel.querySelector('#aiCtStatus');
-const read=panel.querySelector('#aiCtRead'),copy=panel.querySelector('#aiCtCopy'),close=panel.querySelector('#aiCtClose');
-nav.appendChild(btn);
-const history=zone.querySelector('#traderVerifiedHistory');
-if(history)zone.insertBefore(panel,history);else zone.appendChild(panel);
+const read=panel.querySelector('#aiCtRead'),copy=panel.querySelector('#aiCtCopy');
+const anchor=detailBody.querySelector('#detailCompactStrip');
+if(anchor)anchor.insertAdjacentElement('afterend',panel);else detailBody.prepend(panel);
 const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.id='aiCtNativeStyle';
 sheet.href=new URL('../trader/ai-ct-panel.css?scope=native',document.baseURI).href;
 document.head.appendChild(sheet);
@@ -62,15 +57,79 @@ async function refresh(){latest=null;copy.disabled=true;read.disabled=true;body.
   copy.disabled=false;
  }catch(e){state('Non disponible : '+String(e.message||e).slice(0,140));}
  finally{read.disabled=false;}}
-if(btn.dataset.aiCtBound!=='1'){
- btn.dataset.aiCtBound='1';
- btn.addEventListener('click',()=>{
-  panel.hidden=!panel.hidden;
-  btn.setAttribute('aria-expanded',String(!panel.hidden));
-  if(!panel.hidden){panel.scrollIntoView({behavior:'auto',block:'start'});}
- });
+const lesson=panel.querySelector('#aiCtLesson');
+const learnButton=panel.querySelector('#aiCtModeLearn');
+const analyzeButton=panel.querySelector('#aiCtModeAnalyze');
+const expandLabel=panel.querySelector('#aiCtExpandState');
+let helpMode='learn',helpTopic='';
+const INDICATORS=Object.freeze({
+ ma:'MA : moyenne des derniers prix de clôture. Elle lisse les variations ; elle ne prévoit pas le prochain mouvement.',
+ ema:'EMA : moyenne qui accorde plus de poids aux prix récents ; elle peut réagir plus vite, mais générer de faux signaux.',
+ sr:'S/R : support et résistance sont des zones repérées dans les cours passés, pas des barrières garanties.',
+ supertrend:'SUPER : indicateur calculé avec la volatilité. Un changement de couleur ou de sens peut être tardif.',
+ boll:'BOLL : bandes de Bollinger mesurant la dispersion autour d’une moyenne ; toucher une bande ne suffit pas pour acheter ou vendre.',
+ sar:'SAR : points de suivi de tendance ; en marché hésitant, ils peuvent changer de côté fréquemment.',
+ vwap:'VWAP : prix moyen pondéré par les volumes sur la fenêtre calculée ; ce n’est pas un prix d’exécution garanti.',
+ vp:'VP : répartition estimée du volume par zone de prix à partir des bougies ; ce n’est pas le carnet d’ordres réel.'
+});
+const periods=Object.freeze({'1m':60000,'5m':300000,'15m':900000,'1h':3600000,'4h':14400000,'1d':86400000});
+const fmt=(n,d=6)=>Number(n).toLocaleString('fr-FR',{maximumFractionDigits:d});
+function paintLesson(){
+ const info=globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||{};
+ const instrument=String(info.loadedInstrument||'').toUpperCase();
+ const interval=String(info.loadedBar||'');
+ const rows=Array.isArray(info.rows)?info.rows:[];
+ const valid=info.mode==='candles'&&/^CT-(USDT|USDC)$/.test(instrument)&&rows.length>0;
+ const lines=[];
+ if(!valid){
+   lines.push('Sélectionne Concrete (CT), affiche Bougies et charge sa période. Aucune analyse ne sera inventée pour un autre actif.');
+ }else{
+   const bar=rows[rows.length-1],open=Number(bar.o),close=Number(bar.c);
+   const volume=Number(bar.v),time=Number(bar.t),age=Date.now()-time;
+   const fresh=Number.isFinite(age)&&age>=0&&age<=(periods[interval]||900000)*2;
+   lines.push('Source graphique : '+instrument+' · période '+interval+' · '+rows.length+' bougies. CT/USDT ne représente pas le prix de revente de ta position CT/USDC.');
+   if(!fresh)lines.push('DONNÉES ANCIENNES ou heure non vérifiée : suspendre toute interprétation de mouvement récent et actualiser les bougies.');
+   if(Number.isFinite(open)&&Number.isFinite(close)){
+     const color=close>open?'verte (progression)':close<open?'rouge (recul)':'neutre';
+     lines.push('Bougie affichée : '+color+' · ouverture '+fmt(open)+' · dernier cours '+fmt(close)+' '+instrument.split('-')[1]+'. La bougie en cours peut encore changer.');
+   }
+   if(helpMode==='learn'){
+     lines.push('Une bougie indique quatre prix : ouverture, plus haut, plus bas et dernier cours/clôture pour l’intervalle sélectionné.');
+     lines.push('Le volume mesure la quantité négociée sur la période, pas la quantité des ordres en attente. '+(Number.isFinite(volume)?'Volume de cette bougie : '+fmt(volume,2)+' CT (potentiellement en cours).':'Volume de cette bougie indisponible.'));
+     lines.push('Le carnet montre des intentions d’achat et de vente qui peuvent être retirées. Pour une vente réelle, vérifie le marché CT/USDC.');
+   }else{
+     const levels=globalThis.AgentCryptoMarketMicroscope?.technicalLevels?.();
+     if(levels?.instrument===instrument&&levels?.bar===interval){
+       const support=Number(levels.support?.price),resistance=Number(levels.resistance?.price);
+       if(Number.isFinite(support)&&Number.isFinite(resistance))
+         lines.push('Repères du graphique : support '+fmt(support)+' · résistance '+fmt(resistance)+' '+instrument.split('-')[1]+'. Ce sont des zones d’observation, pas des ordres ni des prévisions.');
+     }
+     lines.push('Analyse prudente : une seule bougie ou un déséquilibre visible du carnet ne confirme pas une tendance. Croiser plusieurs bougies, volumes, fraîcheur et liquidité avant d’interpréter.');
+     lines.push('Ta position est en CT/USDC. Pour son solde, ses frais et une estimation de revente, utilise « Lire ma position CT/USDC » ci-dessous ; cette lecture privée est manuelle.');
+   }
+   if(!fresh)lines.push('Les données anciennes ne doivent jamais être qualifiées de signal actuel.');
+ }
+ if(helpMode==='learn'&&helpTopic&&INDICATORS[helpTopic])lines.push('Indicateur choisi — '+INDICATORS[helpTopic]);
+ lesson.replaceChildren();
+ lines.forEach((line,i)=>{const p=document.createElement('p');p.textContent=line;if(i===0)p.className='ai-ct-source';lesson.appendChild(p);});
 }
-close.addEventListener('click',()=>{panel.hidden=true;btn.setAttribute('aria-expanded','false');});
+function setHelpMode(mode){
+ helpMode=mode==='analyze'?'analyze':'learn';
+ learnButton.setAttribute('aria-pressed',String(helpMode==='learn'));
+ analyzeButton.setAttribute('aria-pressed',String(helpMode==='analyze'));
+ paintLesson();
+}
+learnButton.addEventListener('click',()=>setHelpMode('learn'));
+analyzeButton.addEventListener('click',()=>setHelpMode('analyze'));
+panel.addEventListener('toggle',()=>{expandLabel.textContent=panel.open?'Réduire':'Ouvrir';if(panel.open)paintLesson();});
+document.getElementById('atlasMarketMicroscope')?.addEventListener('click',event=>{
+ const chosen=event.target?.closest?.('[data-amm-indicator]');
+ if(!chosen||!INDICATORS[chosen.dataset.ammIndicator])return;
+ helpTopic=chosen.dataset.ammIndicator;
+ if(panel.open&&helpMode==='learn')queueMicrotask(paintLesson);
+});
+window.addEventListener('agent-crypto:candles-technical-levels',()=>{if(panel.open)paintLesson();},{passive:true});
+setHelpMode('learn');
 read.addEventListener('click',refresh);
 copy.addEventListener('click',async()=>{
  if(!latest)return;
