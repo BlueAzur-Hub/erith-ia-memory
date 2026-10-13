@@ -6,6 +6,7 @@ on:
       - "public/agent_crypto_erith_ia/trader/**"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/app.js"
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
@@ -19,6 +20,7 @@ on:
       - "public/agent_crypto_erith_ia/trader/**"
       - "public/agent_crypto_erith_ia/administrator/index.html"
       - "public/agent_crypto_erith_ia/administrator/app.js"
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
@@ -43,6 +45,8 @@ jobs:
           node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
           node --check public/agent_crypto_erith_ia/trader/trader-okx-account.js
           node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
+          node --check public/agent_crypto_erith_ia/trader/ct-selection-memory.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js
           node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
@@ -55,6 +59,26 @@ jobs:
           NODE
           node --check public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js
           node --check public/agent_crypto_erith_ia/administrator/js/aether.js
+
+      - name: CT V7 single selection authority contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          root=Path("public/agent_crypto_erith_ia")
+          app=(root/"administrator/app.js").read_text(encoding="utf-8")
+          native=(root/"administrator/js/new-listings-native-category.js").read_text(encoding="utf-8")
+          ct=(root/"trader/ct-selection-memory.js").read_text(encoding="utf-8")
+          assert "traderExternalSelection: atlasTraderExternalSelectionNormalize" in app
+          assert 'agent-crypto:graph-context-ready' in app and 'agent-crypto:workspace-restored' in app
+          assert 'atlasTraderExternalSelectionCommit?.(spec)' in native
+          assert 'atlasTraderExternalSelectionClear?.()' in native
+          assert 'atlasTraderExternalSelectionRead()&&!atlasExternalChartActive()' in app
+          assert 'Graph Context V7 / IndexedDB' in ct
+          assert 'localStorage.setItem' not in ct and 'localStorage.getItem' not in ct
+          assert 'setTimeout(' not in ct and 'MutationObserver' not in ct
+          assert 'selectById(ID)' in ct
+          print("V7 CT continuity invariants OK")
+          PY
 
       - name: Trader single-runtime contract
         run: |
@@ -165,6 +189,8 @@ jobs:
           out=Path(f"AGENT_CRYPTO_TRADER_{build}.zip")
           files=[
             root/"administrator"/"index.html",
+            root/"administrator"/"app.js",
+            root/"administrator"/"js"/"new-listings-native-category.js",
             root/"administrator"/"build.json",
             root/"administrator"/"js"/"aether.js",
             root/"administrator"/"js"/"okx-market-pair-resolver.js",
@@ -173,6 +199,7 @@ jobs:
             root/"administrator"/"js"/"okx-microstructure-406499.js",
             root/"trader"/"trading-desk.html",
             root/"trader"/"trader-runtime-mirror.js",
+            root/"trader"/"ct-selection-memory.js",
             root/"trader"/"ai-ct-contract.js",
             root/"trader"/"ai-ct-panel.js",
             root/"trader"/"ai-ct-panel.css",

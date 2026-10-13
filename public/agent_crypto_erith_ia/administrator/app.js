@@ -12777,6 +12777,12 @@ function atlasPrepareChartSelection(coin, period = 1, options = {}) {
 }
 
 async function renderAnalystPanel(options = {}) {
+  if(atlasTraderExternalSelectionRead()&&!atlasExternalChartActive()){
+    drawChartLoading(els.mainChart,"CT · Ligne 24 h · restauration",
+      "Attente de données réelles OKX CT/USDT · aucun prix fictif.");
+    atlasWorkspaceRenderStrip?.();
+    return false;
+  }
   if(globalThis.__atlasExternalChartContext?.active === true && options.external403113 !== true){
     return atlasExternalChartRender(
       atlasExternalChartPeriod(),
@@ -17436,6 +17442,7 @@ function atlasExternalChartSetPresentation(kind,value){
   }
 
   atlasChartV2SyncControls();
+  if(atlasTraderExternalSelectionRead())atlasTraderExternalSelectionSavePresentation();
   void atlasExternalChartRender(
     atlasExternalChartPeriod(),
     {forceRefresh:false, presentation403114:true}
@@ -17622,6 +17629,15 @@ function atlasExternalChartPresent(coin, period = 1, result = null, options = {}
     ctx.volume403114 = true;
     ctx.legend403114 = false;
     ctx.analysis403114 = true;
+  }
+  const savedCT=coin.id==="concrete"?atlasTraderExternalSelectionRead():null;
+  if(savedCT?.presentation){
+    const p=savedCT.presentation;
+    ctx.view403114=p.view;
+    ctx.scale403114=p.view==="base100"?"linear":p.scale;
+    ctx.volume403114=p.volume!==false;
+    ctx.legend403114=p.legend===true;
+    ctx.analysis403114=p.analysis!==false;
   }
   ctx.lastPresentationKey403114 = "";
 
@@ -46481,6 +46497,18 @@ function atlasGraphContextV7NormalizeOracle(raw = {}) {
   };
 }
 
+function atlasTraderExternalSelectionNormalize(raw) {
+  if(raw?.id!=="concrete"||raw?.provider!=="okx"||raw?.instrument!=="CT-USDT"||raw?.view!=="line")return null;
+  const p=raw.presentation&&typeof raw.presentation==="object"?raw.presentation:{};
+  return {
+    id:"concrete",provider:"okx",instrument:"CT-USDT",view:"line",periodDays:1,
+    presentation:{
+      view:p.view==="base100"?"base100":"price",
+      scale:p.scale==="logarithmic"?"logarithmic":"linear",
+      volume:p.volume!==false,legend:p.legend===true,analysis:p.analysis!==false
+    }
+  };
+}
 function atlasGraphContextV7Normalize(raw = {}) {
   const source = raw && typeof raw === "object" ? raw : {};
   return {
@@ -46488,6 +46516,7 @@ function atlasGraphContextV7Normalize(raw = {}) {
     activeSurface: source.activeSurface === "oracle" ? "oracle" : "market",
     market: atlasGraphContextV7NormalizeMarket(source.market || atlasGraphContextV7NeutralMarket()),
     oracle: atlasGraphContextV7NormalizeOracle(source.oracle || {}),
+    traderExternalSelection: atlasTraderExternalSelectionNormalize(source.traderExternalSelection),
     savedAt: String(source.savedAt || ""),
     savedAtMs: Number(source.savedAtMs || 0),
     sequence: Math.max(0,Number(source.sequence || 0)),
@@ -46690,7 +46719,9 @@ function atlasGraphContextV7CommitMarket(lastAction="user-market") {
     ...current,
     activeSurface:current.activeSurface === "oracle" ? "oracle" : "market",
     market:atlasGraphContextV7CaptureMarket(),
-    oracle:current.oracle || atlasGraphContextV7CaptureOracle()
+    oracle:current.oracle || atlasGraphContextV7CaptureOracle(),
+    traderExternalSelection:/^(handler-(comparison|market-|ribbon|solo|top3|top5|clear|reset)|workspace-slot-)/.test(String(lastAction))
+      ? null : current.traderExternalSelection
   },lastAction);
 }
 
@@ -46712,7 +46743,10 @@ function atlasGraphContextV7PatchMarket(patch={},lastAction="user-market-semanti
 function atlasGraphContextV7PatchOracle(patch={},lastAction="user-oracle",activate=true) {
   const current = atlasGraphContextV7Read() || atlasGraphContextV7SeedNeutral("v7-seed-before-oracle") || {};
   const oracle = atlasGraphContextV7NormalizeOracle({...current.oracle,...patch});
-  return atlasGraphContextV7Store({...current,activeSurface:activate?"oracle":current.activeSurface,oracle},lastAction);
+  return atlasGraphContextV7Store({
+    ...current,activeSurface:activate?"oracle":current.activeSurface,oracle,
+    traderExternalSelection:activate?null:current.traderExternalSelection
+  },lastAction);
 }
 
 function atlasGraphContextV7SetSurface(surface="market",lastAction="user-surface") {
@@ -46721,9 +46755,55 @@ function atlasGraphContextV7SetSurface(surface="market",lastAction="user-surface
     ...current,
     activeSurface:surface === "oracle" ? "oracle" : "market",
     market:current.market || atlasGraphContextV7CaptureMarket(),
-    oracle:current.oracle || atlasGraphContextV7CaptureOracle()
+    oracle:current.oracle || atlasGraphContextV7CaptureOracle(),
+    traderExternalSelection:surface==="oracle"?null:current.traderExternalSelection
   },lastAction);
 }
+
+/* The trusted CT row click persists the selection before OKX requests.
+   V7 IndexedDB remains the ONLY current selection authority. */
+function atlasTraderExternalSelectionRead() {
+  return document.documentElement?.dataset?.agentCryptoSurface==="trader"
+    ? atlasGraphContextV7Read()?.traderExternalSelection||null:null;
+}
+function atlasTraderExternalSelectionCommit(spec) {
+  if(document.documentElement?.dataset?.agentCryptoSurface!=="trader")return false;
+  const identity=atlasTraderExternalSelectionNormalize({
+    id:spec?.id,provider:spec?.provider,instrument:spec?.providerSymbol,view:"line"
+  });
+  if(!identity)return false;
+  const current=atlasGraphContextV7Read();
+  if(!current)return false;
+  const saved=atlasGraphContextV7Store({
+    ...current,traderExternalSelection:identity
+  },"handler-trader-select-ct");
+  if(!saved)return false;
+  state.chartViewV2.oracle=false;
+  atlasChartV2SyncControls?.();
+  atlasWorkspaceRenderStrip?.();
+  return true;
+}
+function atlasTraderExternalSelectionClear() {
+  if(document.documentElement?.dataset?.agentCryptoSurface!=="trader")return false;
+  const current=atlasGraphContextV7Read();
+  if(!current?.traderExternalSelection)return true;
+  const saved=atlasGraphContextV7Store({
+    ...current,traderExternalSelection:null
+  },"handler-trader-exit-ct");
+  if(saved)atlasWorkspaceRenderStrip?.();
+  return !!saved;
+}
+function atlasTraderExternalSelectionSavePresentation() {
+  const current=atlasGraphContextV7Read();
+  if(!atlasTraderExternalSelectionRead()||!atlasExternalChartActive()
+      ||atlasExternalChartContext.coin?.id!=="concrete")return false;
+  return !!atlasGraphContextV7Store({
+    ...current,
+    traderExternalSelection:{...current.traderExternalSelection,presentation:atlasExternalPresentation()}
+  },"handler-trader-ct-presentation");
+}
+globalThis.atlasTraderExternalSelectionCommit=atlasTraderExternalSelectionCommit;
+globalThis.atlasTraderExternalSelectionClear=atlasTraderExternalSelectionClear;
 
 function atlasGraphContextV7ApplyPeripheralState(market) {
   if (!market) return;
@@ -46758,7 +46838,9 @@ function atlasGraphContextV7ApplyRuntime(context,{controls=true}={}) {
     state.chartViewV2 = {
       ...state.chartViewV2,
       ...market.chartView,
-      oracle:context.activeSurface === "oracle",
+      oracle:context.activeSurface === "oracle"
+        && !(document.documentElement?.dataset?.agentCryptoSurface==="trader"
+          && context.traderExternalSelection),
       oracleView:oracle.view,
       oracleHorizon:oracle.horizon,
       oracleZoom:oracle.zoom
@@ -46875,6 +46957,7 @@ async function atlasGraphContextV7Initialize() {
     atlasGraphContextV7BootPhase = readFailed ? "error" : "ready";
     try { document.documentElement.dataset.atlasGraphBootPhase = atlasGraphContextV7BootPhase; } catch {}
     atlasGraphContextV7RefreshStatusUi();
+    window.dispatchEvent(new CustomEvent("agent-crypto:graph-context-ready"));
     return atlasGraphContextV7Read();
   })();
   return atlasGraphContextV7InitPromise;
@@ -47715,6 +47798,20 @@ function atlasWorkspaceRenderStrip(options = {}) {
     return;
   }
 
+  const traderCT=atlasTraderExternalSelectionRead();
+  if(traderCT){
+    const line=globalThis.AtlasExternalChart?.state?.();
+    const ready=line?.active===true&&line.coin_id==="concrete"&&Number(line.period)===1
+      &&!line.loading&&!line.error;
+    root.dataset.state=options.restored===true?"restored":"current";
+    kicker.textContent=options.restored===true?"SESSION RESTAURÉE":"ESPACE MÉMORISÉ";
+    primary.textContent="CT · Concrete · 24h · Prix USD · Ligne · Externe (hors Top 250)";
+    secondary.textContent=ready
+      ?"CT · OKX CT/USDT · série réelle chargée · sélection conservée par V7"
+      :"CT · OKX CT/USDT · historique réel en attente de chargement";
+    atlasWorkspaceSlotsRender();
+    return;
+  }
   const comparison = atlasComparisonActive();
   const period = atlasChartPeriodLabel(Number(state.chartPeriodDays || 1));
   const workspaceDisplayCurrency = (() => {
@@ -47923,7 +48020,9 @@ function atlasWorkspaceRestoreAfterMarket() {
   state.chartViewV2.oracleZoom = oracleSaved.zoom;
   atlasOracleSurface = oracleSaved.surface;
   atlasOracleV0AssetId = oracleSaved.asset;
-  state.chartViewV2.oracle = sessionSaved?.activeSurface === "oracle";
+  state.chartViewV2.oracle = sessionSaved?.activeSurface === "oracle"
+    && !(document.documentElement?.dataset?.agentCryptoSurface==="trader"
+      && sessionSaved?.traderExternalSelection);
   try {
     localStorage.setItem(ATLAS_ORACLE_VIEW_STATE_KEY, JSON.stringify(oracleSaved));
     localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, oracleSaved.asset || "");
@@ -47948,6 +48047,7 @@ function atlasWorkspaceRestoreAfterMarket() {
 
   atlasWorkspaceRenderStrip({ restored:true });
   atlasWorkspaceScheduleSave(180);
+  window.dispatchEvent(new CustomEvent("agent-crypto:workspace-restored"));
   return true;
 }
 

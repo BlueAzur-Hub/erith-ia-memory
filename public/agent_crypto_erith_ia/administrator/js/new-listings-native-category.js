@@ -30,7 +30,8 @@
     "#targetTop5Cycle","#marketFlowCycle",
     "#marketRows tr[data-market-row-id403115]",
     "#top5Track > *",
-    "[data-top5-id]","[data-compare-primary]","[data-chart-preset]"
+    "[data-top5-id]","[data-compare-primary]","[data-chart-preset]",
+    "[data-chart-display='oracle']"
   ].join(",");
 
   const FRIENDLY=Object.freeze({
@@ -854,12 +855,23 @@
       const row=event.target?.closest?.(`tr[${ROOT_ATTR}]`);
       if(!button&&!row)return;
       event.preventDefault();event.stopPropagation();
-      void select(resolveSpec(button?.dataset?.newListingOpen||row?.getAttribute(ROOT_ATTR)));
+      const spec=resolveSpec(button?.dataset?.newListingOpen||row?.getAttribute(ROOT_ATTR));
+      if(event.isTrusted===true){
+        if(spec?.id==="concrete")globalThis.atlasTraderExternalSelectionCommit?.(spec);
+        else globalThis.atlasTraderExternalSelectionClear?.();
+      }
+      void select(spec);
     });
     body.addEventListener("keydown",event=>{
       const row=event.target?.closest?.(`tr[${ROOT_ATTR}]`);
       if(!row||!["Enter"," "].includes(event.key))return;
-      event.preventDefault();event.stopPropagation();void select(resolveSpec(row.getAttribute(ROOT_ATTR)));
+      event.preventDefault();event.stopPropagation();
+      const spec=resolveSpec(row.getAttribute(ROOT_ATTR));
+      if(event.isTrusted===true){
+        if(spec?.id==="concrete")globalThis.atlasTraderExternalSelectionCommit?.(spec);
+        else globalThis.atlasTraderExternalSelectionClear?.();
+      }
+      void select(spec);
     });
   }
 
@@ -869,7 +881,10 @@
     button.addEventListener("click",event=>{
       event.preventDefault();event.stopImmediatePropagation();
       const next=!state.enabled;
-      if(!next&&(state.selected||state.pending))deactivate();
+      if(!next&&(state.selected||state.pending)){
+        if(event.isTrusted===true)globalThis.atlasTraderExternalSelectionClear?.();
+        deactivate();
+      }
       state.enabled=next;
       button.classList.toggle("active",state.enabled);button.classList.toggle("is-active",state.enabled);
       button.setAttribute("aria-pressed",state.enabled?"true":"false");
@@ -892,7 +907,10 @@
         const category=document.getElementById(BUTTON_ID);
         category?.classList.remove("active","is-active");
         category?.setAttribute("aria-pressed","false");
-        if(state.selected||state.pending)deactivate();
+        if(state.selected||state.pending){
+          if(event.isTrusted===true)globalThis.atlasTraderExternalSelectionClear?.();
+          deactivate();
+        }
       }
     },true);
   }
@@ -946,6 +964,7 @@
       if(event.target?.closest?.(`tr[${ROOT_ATTR}]`))return;
       const canonical=event.target?.closest?.(CANONICAL_EXIT_SELECTOR);
       if(!canonical)return;
+      if(event.isTrusted===true)globalThis.atlasTraderExternalSelectionClear?.();
       deactivate({clearChart:false});
     },true);
   }
