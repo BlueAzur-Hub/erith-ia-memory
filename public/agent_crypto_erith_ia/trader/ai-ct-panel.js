@@ -15,6 +15,28 @@ const body=panel.querySelector('#aiCtDetails'),status=panel.querySelector('#aiCt
 const read=panel.querySelector('#aiCtRead'),copy=panel.querySelector('#aiCtCopy');
 const anchor=detailBody.querySelector('#detailCompactStrip');
 if(anchor)anchor.insertAdjacentElement('afterend',panel);else detailBody.prepend(panel);
+/* Raccourci Trader : ouvre la Lecture Technique existante, jamais un second panneau. */
+const nav=document.querySelector('#accueil .atlas-v2-nav-essential');
+if(nav&&!document.getElementById('aiCtToggle')){
+ const btn=document.createElement('button');
+ btn.id='aiCtToggle';btn.type='button';btn.className='atlas-quick-link';
+ btn.textContent='IA · Concrete';
+ btn.setAttribute('aria-controls','aiCtPanel');
+ btn.setAttribute('aria-expanded','false');
+ nav.appendChild(btn);
+ btn.addEventListener('click',()=>{
+  const detail=document.getElementById('detailPanel');
+  if(detail?.hidden||document.getElementById('analyste')?.classList.contains('detail-collapsed')){
+   document.getElementById('detailPanelToggle')?.click();
+  }
+  panel.open=true;
+  btn.setAttribute('aria-expanded','true');
+  panel.scrollIntoView({behavior:'auto',block:'nearest'});
+ });
+ panel.addEventListener('toggle',()=>{
+  btn.setAttribute('aria-expanded',String(panel.open));
+ });
+}
 const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.id='aiCtNativeStyle';
 sheet.href=new URL('../trader/ai-ct-panel.css?scope=native',document.baseURI).href;
 document.head.appendChild(sheet);
