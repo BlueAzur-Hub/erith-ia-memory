@@ -1,0 +1,43 @@
+name: Agent Crypto Learning Lab Read Only
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
+      - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
+      - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
+      - ".github/workflows/agent-crypto-learning-lab.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  read-only-laboratory:
+    if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify syntax and dossier behavior
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/js/learning-lab.js
+          node --test public/agent_crypto_erith_ia/tools/learning-lab.test.mjs
+      - name: Protect all historical vault, Trader wrapper and Market Core changes in the PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            git fetch origin main
+            baseline="$(git merge-base HEAD origin/main)"
+          else
+            baseline="HEAD^"
+          fi
+          git diff --exit-code "$baseline" HEAD -- \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/administrator/app.js
