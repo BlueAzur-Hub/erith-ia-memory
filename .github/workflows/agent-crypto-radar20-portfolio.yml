@@ -1,0 +1,117 @@
+name: Agent Crypto Radar20 Shared Capital Portfolio
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-radar20-portfolio.yml'
+      - 'public/agent_crypto_erith_ia/tools/trader_radar20_portfolio.py'
+      - 'public/agent_crypto_erith_ia/tools/test_trader_radar20_portfolio.py'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish audited paper portfolio data on public GitHub Pages'
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-radar20-portfolio
+  cancel-in-progress: false
+jobs:
+  one-shared-paper-portfolio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pack canonical verified 60 monthly JSON snapshots (read-only)
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os,pathlib,zipfile,json
+          root=pathlib.Path('public/agent_crypto_erith_ia/data/trader_flux/radar20')
+          index=json.loads((root/'index.json').read_text())
+          assert index['schema']=='erith.trader.radar20.flows.index.v1'
+          assert len(index['entries'])==60 and index['markets']==20
+          assert len({row['path'] for row in index['entries']})==60
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'radar20-source.zip'
+          with zipfile.ZipFile(p,'w',compression=zipfile.ZIP_DEFLATED) as archive:
+            archive.write(root/'index.json','index.json')
+            for entry in index['entries']:
+              path=entry['path']
+              assert not path.startswith('/') and '..' not in pathlib.PurePosixPath(path).parts
+              archive.write(root/path,path)
+          print('PACKED 60 validated input references into',p,flush=True)
+          PY
+      - name: Automated regression and source integrity tests
+        env:
+          RADAR20_SOURCE_ZIP: ${{ runner.temp }}/radar20-source.zip
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/trader_radar20_portfolio.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_trader_radar20_portfolio.py -v
+      - name: Recompute single cash ledger, 24 parameter comparisons and passive benchmarks
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/trader_radar20_portfolio.py \
+            --zip "$RUNNER_TEMP/radar20-source.zip" \
+            --out "$RUNNER_TEMP/radar20-portfolio"
+      - name: Check artifacts, cash balance and published SHA-256 index
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib,hashlib,os
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])/'radar20-portfolio'
+          summary=json.loads((root/'summary.json').read_text())
+          trades=json.loads((root/'trades.json').read_text())
+          equity=json.loads((root/'equity.json').read_text())
+          index=json.loads((root/'index.json').read_text())
+          assert len(summary['scenarios'])==24
+          assert len(equity['rows'])==2208
+          assert summary['sources']['source_entries']==60
+          assert summary['market_count']==20
+          assert len(trades['trades'])==summary['primary']['completed_trades']
+          assert not summary['orders_enabled'] and not summary['strategy_certified']
+          assert len(index['data'])==3
+          for item in index['data']:
+            p=root/item['path']; raw=p.read_bytes()
+            assert p.is_file() and p.stat().st_size==item['bytes']
+            assert hashlib.sha256(raw).hexdigest()==item['sha256']
+          print('PASS: 20 markets; 60 source files; 2208 hourly points; single shared portfolio',flush=True)
+          PY
+      - name: Preserve reproducible results for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: radar20-shared-portfolio-verification
+          path: ${{ runner.temp }}/radar20-portfolio/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Publish only if explicitly approved for this run
+        if: ${{ github.ref == 'refs/heads/main' && (inputs.publish == true || (github.event_name == 'push' && contains(github.event.head_commit.message, '[radar20-portfolio-publish]'))) }}
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/trader_flux/radar20_portfolio
+          mkdir -p "$target"
+          cp -a "$RUNNER_TEMP/radar20-portfolio/." "$target/"
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: already published byte-identical summaries'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Publish verified Radar20 shared-capital paper portfolio'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Never modify Trader, Bridge, Market Core or source vault
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
+            public/agent_crypto_erith_ia/core/
