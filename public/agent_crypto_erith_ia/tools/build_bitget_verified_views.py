@@ -49,7 +49,7 @@ def source_candidates(catalog,exact,official,federated=None):
 
     Exact archived Spot owners are no longer listed in today's UNARCHIVED
     candidate census. Their previously verified original 1m source remains
-    valid if both the immutable ranked ID and original exact-ID market proof
+    valid if both the immutable coin ID and original exact-ID market proof
     still agree, and all Release ZIP hashes are checked separately.
     """
     selected={a["id"]:a for a in probe.candidates(catalog,exact,official)}
@@ -69,10 +69,16 @@ def source_candidates(catalog,exact,official,federated=None):
         cid=row["id"]
         owner=catalog_ids.get(cid)
         source=proven.get(cid)
-        need(owner and row.get("rank")==owner["rank"] and
-             row.get("symbol")==owner["symbol"] and
+        # A historic Top250 ranking can move. Never compare its rank with
+        # today's catalog rank; the immutable coin ID, symbol, independently
+        # identified Spot market and source ZIP hashes prove ownership.
+        # An old archived asset that left today's Top250 stays in Releases
+        # and its dated register; it is not silently remapped to a new coin.
+        if owner is None:
+            continue
+        need(row.get("symbol")==owner["symbol"] and
              row.get("quote")=="USDT"
-             and source and source.get("rank")==owner["rank"]
+             and source and source.get("id")==cid
              and source.get("symbol")==owner["symbol"]
              and source.get("status")=="exact_id_market_candidates",
              "Previously verified Bitget owner identity drift")
