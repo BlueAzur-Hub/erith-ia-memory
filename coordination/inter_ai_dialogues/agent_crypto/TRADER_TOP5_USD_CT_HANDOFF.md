@@ -1,3 +1,23 @@
+# RESTAURATION 40.6.626 PUBLIÉE — 13 OCTOBRE 2026
+
+**Statut canonique à ce jour : code publié et contrôles GitHub réussis ; validation terrain Firefox attendue.**
+
+- PR #366 fusionnée : https://github.com/BlueAzur-Hub/erith-ia-memory/pull/366
+- Commit de restauration main : https://github.com/BlueAzur-Hub/erith-ia-memory/commit/82fb87e4beea75bddcdbcc70ec488254e7a3489f
+- Archive ZIP : `coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_TRADER_40.6.626.zip`, ajoutée au commit https://github.com/BlueAzur-Hub/erith-ia-memory/commit/af143e17768b07d1b5dc8a85796b142cbd79131d. Git blob SHA **1deb1324930116aad3956c7e39808f82e4bd6170** (SHA-1 Git, **non** SHA-256).
+- Pages : https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38407926476 — **SUCCESS** pour le ZIP 40.6.626.
+- Actions sur main : **SUCCESS** Trader Current, Depth Current, Market Microscope Current, Version Truth, Version Delivery, R9 Verified Archive et Shared Selection Regression.
+- Correctif 1 : `administrator/js/okx-microstructure-406499.js` refuse les chiffres BTC lorsque le graphique externe actuel est CT ; les prix du carnet conservent les petites décimales ; contrôle aussi le marché canonique et la divergence active du graphe. Aucune donnée de marché falsifiée.
+- Correctif 2 : `administrator/js/graph-native-usd-406520.js` emploie uniquement des snapshots USD natifs CoinGecko (5/5, âge 15 min max, change disponible) dans l'infobulle Top 5 ; sinon affiche « — ». L'historique canonique EUR reste EUR, ne jamais l'étiqueter USD.
+- Les versions d'affichage Trader et Administrator sont désormais **40.6.626**, cache-busting scripts actualisé, point d'entrée iframe canonique inchangé.
+- PR #367 (proposition USD précédente) close sans merge car intégrée à la PR #366.
+
+**NON validé dans Firefox opérateur** : Top 5 EUR puis USD, survol des courbes et instantanés, sélection CT Ligne 24h, carnet CT/USDT ou indisponible, retour BTC, Lecture Technique CT, deux Ctrl+F5 successifs, emplacements A/B/C avec Maj+clic, Vider/Oracle et panne réseau. Les mécanismes Graph Context V7 et mémoires A/B/C ont été étudiés, mais non modifiés dans cette réparation. La migration des séries historiques Top 5 réellement natives USD reste un chantier distinct.
+
+**Protection confirmée par diff** : Market Core 38.15.11, Coffre historique, Atlas, Oracle, Bridge, portefeuille privé, ordres réels : non modifiés. Si défaut terrain, créer un correctif isolé ou faire rollback ciblé, jamais supprimer les données historiques.
+
+---
+
 # PASSATION SEVEN HEAVEN — AUDIT TOP 5 / USD / CT / CARNET
 Date : 13 octobre 2026. Dossier maître : https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099
 Passation CT antérieure : https://app.notion.com/p/3f87754fe08481b7b80bfbe30d905e9f
