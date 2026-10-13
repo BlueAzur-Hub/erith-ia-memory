@@ -57,6 +57,7 @@ function createHarness({idbData=new Map(),legacyData=new Map(),idbWorks=true,leg
     ATLAS_GRAPH_CONTEXT_V7_STORE:"state",
     atlasWorkspaceReadJson(key){try{return JSON.parse(localStorage.getItem(key)||"null")}catch{return null}},
     localStorage,
+    ATLAS_RELEASE:"40.6.631",
     atlasScannerTransaction:false,atlasScannerQueuedRequest:false,
     atlasWorkspaceCapture:()=>({schema:"agent_crypto_workspace_v2",displayCurrency:"USD",savedAt:new Date().toISOString(),comparisonIds:["bitcoin"]}),
     atlasWorkspaceVisibleExternal:()=>external,
