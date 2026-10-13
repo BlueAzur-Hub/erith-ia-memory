@@ -62,6 +62,10 @@ jobs:
         run: |
           set -euo pipefail
           target=public/agent_crypto_erith_ia/data/trader_flux/radar20_execution
+          if [ ! -d "$target" ]; then
+            echo 'NOOP: observation window not yet started; no directory to publish'
+            exit 0
+          fi
           git add -- "$target"
           git diff --cached --check
           if git diff --cached --quiet; then
