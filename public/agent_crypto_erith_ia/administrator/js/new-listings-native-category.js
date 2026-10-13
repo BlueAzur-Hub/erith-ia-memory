@@ -852,6 +852,13 @@
         // may remain behind a Market Top 5 chart.
         state.selected=previousSelection;
         state.lastResult=previousResult;
+        // If the exchange was loaded but no CT line was published, release its
+        // provisional source. Otherwise the old Top 5 could inherit a CT label.
+        if(!previousSelection){
+          const chart=globalThis.AtlasExternalChart?.state?.();
+          if(!chart?.active||chart.coin_id!==spec.id)
+            try{globalThis.AgentCryptoNewListingLiveAsset?.deactivate?.();}catch(_){}
+        }
         renderCategory();
       }
       finishRequest(request);
