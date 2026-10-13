@@ -72,15 +72,24 @@
   };
   // Visible external graph wins over a stale Market/BTC fallback. Do not infer CT
   // from a workspace slot alone: require the rendered graph and selected listing ID.
+  const externalGraphAsset=(graph,listing)=>
+    graph?.active&&listing?.selectedId&&String(graph.coin_id)===String(listing.selectedId)
+      ?normalizeSelectedAsset(listing.selectedSymbol):null;
   const visibleExternalAsset=()=>{
     try{
-      const graph=globalThis.AtlasExternalChart?.state?.();
-      const listing=globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.();
-      if(graph?.active&&listing?.selectedId&&String(graph.coin_id)===String(listing.selectedId))
-        return normalizeSelectedAsset(listing.selectedSymbol);
-    }catch(_){}
-    return null;
+      return externalGraphAsset(
+        globalThis.AtlasExternalChart?.state?.(),
+        globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.()
+      );
+    }catch(_){return null;}
   };
+  const externalReady=(asset,external)=>
+    !asset||!!(external?.active&&normalizeSelectedAsset(external.base)===asset);
+  const bookMismatch=(requestedAsset,requestedQuote,expectedAsset,expectedQuote)=>
+    !!expectedAsset&&(
+      requestedAsset!==expectedAsset||
+      (!!expectedQuote&&requestedQuote!==expectedQuote)
+    );
   const DOM_ASSET_STOP=new Set(["USD","EUR","USDC","USDT","PRIX","PRICE","MARCHÉ","MARCHE","MARKET","ACTIF","CRYPTO"]);
   const selectedAsset=()=>{
     const visible=visibleExternalAsset();if(visible)return visible;
@@ -588,7 +597,7 @@
     // No BTC (or guessed market pair) may be loaded for a visible external graph.
     // Wait for the matching public exchange context, then the existing open-only
     // 2-second refresh/event path will retry normally.
-    if(visible&&(!ext.active||normalizeSelectedAsset(ext.base)!==visible)){
+    if(!externalReady(visible,ext)){
       clearBookForAsset(visible,"USDT");
       state.error="Contexte public du graphique externe non synchronisé · carnet indisponible";
       state.errorCode="EXTERNAL_CONTEXT_MISSING";
@@ -739,11 +748,8 @@
 
     const visible=visibleExternalAsset();
     const expected=visible||normalizeSelectedAsset(ext.active?ext.base:null);
-    const inconsistent=!!expected&&(
-      state.loadedAsset!==expected||
-      (ext.active&&state.loadedQuote!==normalizeSelectedAsset(ext.quote))||
-      (visible&&!ext.active)
-    );
+    const inconsistent=bookMismatch(state.loadedAsset,state.loadedQuote,expected,ext.active?ext.quote:null)||
+      (visible&&!externalReady(visible,ext));
     if(inconsistent){
       if(title)title.textContent="CARNET D’ORDRES · SYNCHRONISATION";
       if(live){live.dataset.state="UNKNOWN";live.textContent="UNKNOWN";}
@@ -805,10 +811,16 @@
     try{validateBookPayload({...fresh,observed_at_utc:""},"ETH","EUR",now);}catch(error){missingTimeRejected=error?.code==="SOURCE_TIME_INVALID";}
     try{validateBookPayload({...fresh,pair:"ETH-USDT"},"ETH","USDC",now);}catch(error){wrongQuoteRejected=error?.code==="QUOTE_MISMATCH";}
     const precisionOk=fmtPrice(0.368788).includes(",368788")&&fmtPrice(83150.45).includes(",45");
+    const graphPriorityOk=externalGraphAsset({active:true,coin_id:"concrete"},{selectedId:"concrete",selectedSymbol:"CT"})==="CT"&&
+      externalGraphAsset({active:true,coin_id:"bitcoin"},{selectedId:"concrete",selectedSymbol:"CT"})===null;
+    const orderbookSafetyOk=bookMismatch("BTC","USDC","CT","USDT")&&
+      !bookMismatch("CT","USDT","CT","USDT")&&
+      !externalReady("CT",{active:true,base:"BTC"})&&
+      externalReady("CT",{active:true,base:"CT"});
     const pairCandidates=pairResolver()?.instrumentCandidates?.({asset:"OKB",currency:"USD"})||["OKB-USDC","OKB-USDT"];
     const resolverTruth=marketResolver()?.self_test?.()?.pass===true;
     const pairCandidatesOk=JSON.stringify(pairCandidates)===JSON.stringify(["OKB-USDC","OKB-USDT"]);
-    const pass=rows.length===2&&LIVE_MS===2000&&freshPass&&stablePass&&staleRejected&&wrongPairRejected&&missingTimeRejected&&wrongQuoteRejected&&pairCandidatesOk&&resolverTruth&&precisionOk;
+    const pass=rows.length===2&&LIVE_MS===2000&&freshPass&&stablePass&&staleRejected&&wrongPairRejected&&missingTimeRejected&&wrongQuoteRejected&&pairCandidatesOk&&resolverTruth&&precisionOk&&graphPriorityOk&&orderbookSafetyOk;
     return Object.freeze({build:BUILD,pass,checks:{
       lecture_technique_overlay:true,
       docked_glass_surface:true,
@@ -838,6 +850,8 @@
       visible_external_graph_guard:true,
       no_btc_fallback_on_visible_ct:true,
       small_price_levels_preserved:precisionOk,
+      ct_graph_priority_test:graphPriorityOk,
+      wrong_btc_book_hidden_test:orderbookSafetyOk,
       display_aware_quote:true,
       eur_quote_preserved:true,
       usd_display_prefers_usdc_then_usdt:true,
