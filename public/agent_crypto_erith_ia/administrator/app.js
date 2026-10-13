@@ -46769,13 +46769,14 @@ function atlasTraderExternalSelectionRead() {
 function atlasTraderExternalSelectionCommit(spec) {
   if(document.documentElement?.dataset?.agentCryptoSurface!=="trader")return false;
   const identity=atlasTraderExternalSelectionNormalize({
-    id:spec?.id,provider:spec?.provider,instrument:spec?.providerSymbol,view:"line"
+    id:spec?.id,provider:spec?.provider,instrument:spec?.providerSymbol,view:"line",
+    presentation:spec?.presentation
   });
   if(!identity)return false;
   const current=atlasGraphContextV7Read();
   if(!current)return false;
   const saved=atlasGraphContextV7Store({
-    ...current,traderExternalSelection:identity
+    ...current,activeSurface:"market",traderExternalSelection:identity
   },"handler-trader-select-ct");
   if(!saved)return false;
   state.chartViewV2.oracle=false;
@@ -47205,6 +47206,12 @@ function atlasWorkspaceSlotRead(slotId) {
 
 function atlasWorkspaceSlotSummary(snapshot) {
   const saved = snapshot?.workspace || snapshot || {};
+  const external=atlasTraderExternalSelectionNormalize(saved.traderExternalSelection);
+  if(external){
+    const p=external.presentation||{};
+    const view=p.view==="base100"?"Base 100":"Prix USD";
+    return `CT · Concrete · Ligne · 24h · ${view} · ${p.scale==="logarithmic"?"Log":"Normale"}`;
+  }
 
   if (saved.marketDomain === "metals") {
     const parallel = saved.parallelMarket || {};
@@ -47286,6 +47293,27 @@ function atlasWorkspaceSlotWrite(slotId, options = {}) {
   }
 
   const snapshot = atlasWorkspaceCapture();
+  if(document.documentElement?.dataset?.agentCryptoSurface==="trader"){
+    const intent=atlasTraderExternalSelectionRead();
+    const external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
+    const chart=globalThis.AtlasExternalChart?.state?.();
+    const ctVisible=chart?.active===true&&chart.coin_id==="concrete";
+    if(intent||ctVisible){
+      const valid=intent?.id==="concrete"&&intent.instrument==="CT-USDT"
+        &&external?.active===true&&external.id==="concrete"
+        &&external.provider==="okx"&&external.providerSymbol==="CT-USDT"
+        &&external.nativeMarket===true
+        &&chart?.active===true&&chart.coin_id==="concrete"
+        &&Number(chart.period)===1&&!chart.loading&&!chart.error;
+      if(!valid){
+        atlasWorkspaceSlotFlash("CT · COURBE NON PRÊTE · MÉMOIRE NON MODIFIÉE","warning");
+        return false;
+      }
+      snapshot.traderExternalSelection=atlasTraderExternalSelectionNormalize({
+        ...intent,presentation:atlasExternalPresentation()
+      });
+    }
+  }
   const payload = {
     schema: "agent_crypto_comparison_memory_slot_v1",
     slot,
@@ -47353,6 +47381,39 @@ function atlasWorkspaceSlotRecall(slotId) {
   if (!record) return atlasWorkspaceSlotWrite(slot);
 
   const saved = record.workspace;
+  if(saved.traderExternalSelection){
+    const ct=atlasTraderExternalSelectionNormalize(saved.traderExternalSelection);
+    if(document.documentElement?.dataset?.agentCryptoSurface!=="trader"||!ct){
+      atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · CT NON COMPATIBLE AVEC CETTE VUE`,"warning");
+      return false;
+    }
+    const api=globalThis.AgentCryptoNewListingsNativeCategory;
+    if(typeof api?.selectById!=="function"){
+      atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · NOUVEAUX LISTINGS INDISPONIBLE`,"warning");
+      return false;
+    }
+    if(!atlasTraderExternalSelectionCommit({
+      id:ct.id,provider:ct.provider,providerSymbol:ct.instrument,
+      presentation:ct.presentation
+    })){
+      atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · SÉLECTION V7 NON ENREGISTRÉE`,"warning");
+      return false;
+    }
+    atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · CHARGEMENT CT/USDT`,"restored");
+    void Promise.resolve(api.selectById(ct.id)).then(ok=>{
+      if(atlasTraderExternalSelectionRead()?.id!==ct.id)return;
+      if(!ok){
+        atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · COURBE CT INDISPONIBLE`,"warning");
+        return;
+      }
+      atlasWorkspaceRenderStrip();
+      atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} RESTAURÉE · CT`,"restored");
+    }).catch(()=>{
+      if(atlasTraderExternalSelectionRead()?.id===ct.id)
+        atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · CHARGEMENT CT ÉCHOUÉ`,"warning");
+    });
+    return true;
+  }
 
   if (saved.marketDomain === "metals") {
     const parallel = saved.parallelMarket || {};
