@@ -70,6 +70,10 @@
   }
   function syncMarket(){
     if (!follow || !root?.open) return;
+    // A comparison can show a BTC headline while still drawing 3–5 assets.
+    // Explicit toolbar state has priority over the incidental leading ticker.
+    const comparisons=["btnChartTop3","btnChartTop5","btnChartGainers","btnChartLosers","btnChartVolume5"];
+    if (comparisons.some(id=>byId(id)?.classList?.contains?.("active"))) return;
     const title=(byId("atlasChartInsightOverlayTitle")?.textContent||"").trim();
     // Do not equate a Top 3/Top 5 comparative view with one selected coin.
     const match=/^(BTC|CT|Q)\s*[·:—-]/i.exec(title);
