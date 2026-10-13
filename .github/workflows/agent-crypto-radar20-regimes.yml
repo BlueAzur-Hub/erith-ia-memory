@@ -1,0 +1,45 @@
+name: Agent Crypto Radar20 Historical Regime Diagnostic
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-radar20-regimes.yml'
+      - 'public/agent_crypto_erith_ia/tools/analyze_radar20_regimes.py'
+      - 'public/agent_crypto_erith_ia/tools/test_analyze_radar20_regimes.py'
+      - 'public/agent_crypto_erith_ia/data/trader_flux/radar20_regimes/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate descriptive filters and source integrity
+        env:
+          RADAR20_REGIME_DATA_ROOT: public/agent_crypto_erith_ia/data/trader_flux
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/analyze_radar20_regimes.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_analyze_radar20_regimes.py -v
+      - name: Rebuild exactly from canonical 120 monthly JSONs and two published cash ledgers
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/analyze_radar20_regimes.py \
+            --data-root public/agent_crypto_erith_ia/data/trader_flux \
+            --out "$RUNNER_TEMP/regimes"
+          target=public/agent_crypto_erith_ia/data/trader_flux/radar20_regimes
+          for file in index.json summary.json annotated_trades.json; do
+            cmp "$RUNNER_TEMP/regimes/$file" "$target/$file"
+          done
+          echo 'PASS: all 258 annotated trades match immutable published inputs byte-for-byte'
+      - name: Guard against live order or portfolio runtime mutation
+        run: |
+          set -euo pipefail
+          git diff --exit-code -- public/agent_crypto_erith_ia/trader \
+            public/agent_crypto_erith_ia/administrator \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype
