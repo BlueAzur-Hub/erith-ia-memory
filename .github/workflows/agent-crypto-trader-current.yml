@@ -71,6 +71,9 @@ jobs:
       - name: Workspace chip CT/BTC truth in Interface and Trader
         run: node tests/agent_crypto_workspace_visible_external.cjs
 
+      - name: Cross-market candle identity and quote truth
+        run: node tests/agent_crypto_market_context_identity.cjs
+
       - name: CT V7 restored view and no implicit viewport jump
         run: node tests/agent_crypto_ct_v7_authority.cjs
 
@@ -208,6 +211,8 @@ jobs:
             root/"administrator"/"build.json",
             root/"administrator"/"js"/"aether.js",
             root/"administrator"/"js"/"okx-market-pair-resolver.js",
+            root/"administrator"/"js"/"market-instrument-resolver.js",
+            root/"administrator"/"js"/"quote-currency-architecture-406497.js",
             root/"administrator"/"js"/"market-microscope-candles.js",
             root/"administrator"/"js"/"graph-native-usd-406520.js",
             root/"administrator"/"js"/"okx-microstructure-406499.js",
