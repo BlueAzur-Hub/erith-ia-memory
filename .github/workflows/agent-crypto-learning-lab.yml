@@ -7,19 +7,12 @@ on:
       - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - ".github/workflows/agent-crypto-learning-lab.yml"
-  push:
-    branches: [main]
-    paths:
-      - "public/agent_crypto_erith_ia/administrator/index.html"
-      - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
-      - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
-      - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
-      - ".github/workflows/agent-crypto-learning-lab.yml"
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   read-only-laboratory:
+    if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
