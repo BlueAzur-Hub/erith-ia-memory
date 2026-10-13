@@ -47231,27 +47231,74 @@ function atlasWorkspaceSlotStorageKey(slotId) {
   return slot ? `${ATLAS_WORKSPACE_SLOT_PREFIX}${slot}` : "";
 }
 
-function atlasWorkspaceSlotRead(slotId) {
-  const slot = atlasWorkspaceSlotNormalizeId(slotId);
-  if (!slot) return null;
+// A/B/C records have distinct keys in V7's existing IndexedDB object store.
+// No schema upgrade and no modification of the V7 graph-session record.
+const ATLAS_WORKSPACE_SLOT_DB_PREFIX="comparison_memory_slot_v1_";
+const atlasWorkspaceSlotCache=new Map();
+let atlasWorkspaceSlotHydration=null;
 
-  const stored = atlasWorkspaceReadJson(
-    atlasWorkspaceSlotStorageKey(slot)
-  );
-
-  if (
-    !stored
-    || stored.schema !== "agent_crypto_comparison_memory_slot_v1"
-    || !stored.workspace
-    || typeof stored.workspace !== "object"
-  ) {
-    return null;
-  }
-
-  return {
-    ...stored,
-    slot
-  };
+function atlasWorkspaceSlotValidRecord(stored,slot){
+  return stored?.schema==="agent_crypto_comparison_memory_slot_v1"
+    &&stored?.slot===slot&&stored.workspace&&typeof stored.workspace==="object"
+    ?{...stored,slot}:null;
+}
+function atlasWorkspaceSlotChoose(a,b){
+  if(!a)return b||null;
+  if(!b)return a;
+  return (Date.parse(a.savedAt||"")||0)>=(Date.parse(b.savedAt||"")||0)?a:b;
+}
+function atlasWorkspaceSlotRead(slotId){
+  const slot=atlasWorkspaceSlotNormalizeId(slotId);
+  if(!slot)return null;
+  const legacy=atlasWorkspaceSlotValidRecord(
+    atlasWorkspaceReadJson(atlasWorkspaceSlotStorageKey(slot)),slot);
+  return atlasWorkspaceSlotChoose(atlasWorkspaceSlotCache.get(slot),legacy);
+}
+async function atlasWorkspaceSlotDbRead(slot){
+  const db=await atlasGraphContextV7OpenDb();
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction(ATLAS_GRAPH_CONTEXT_V7_STORE,"readonly");
+    const req=tx.objectStore(ATLAS_GRAPH_CONTEXT_V7_STORE).get(ATLAS_WORKSPACE_SLOT_DB_PREFIX+slot);
+    req.onsuccess=()=>resolve(atlasWorkspaceSlotValidRecord(req.result?.payload,slot));
+    req.onerror=()=>reject(req.error||tx.error||new Error("Lecture mémoire IndexedDB impossible"));
+    tx.onabort=()=>reject(tx.error||new Error("Lecture mémoire IndexedDB annulée"));
+  });
+}
+async function atlasWorkspaceSlotDbWrite(slot,payload){
+  const db=await atlasGraphContextV7OpenDb();
+  await new Promise((resolve,reject)=>{
+    const tx=db.transaction(ATLAS_GRAPH_CONTEXT_V7_STORE,"readwrite");
+    tx.objectStore(ATLAS_GRAPH_CONTEXT_V7_STORE).put({
+      id:ATLAS_WORKSPACE_SLOT_DB_PREFIX+slot,
+      schema:"agent_crypto_comparison_memory_slot_v1",
+      savedAt:payload.savedAt,
+      payload
+    });
+    tx.oncomplete=()=>resolve(true);
+    tx.onerror=()=>reject(tx.error||new Error("Écriture mémoire IndexedDB impossible"));
+    tx.onabort=()=>reject(tx.error||new Error("Écriture mémoire IndexedDB annulée"));
+  });
+  const verified=await atlasWorkspaceSlotDbRead(slot);
+  if(!verified||JSON.stringify(verified)!==JSON.stringify(payload))
+    throw new Error("Mémoire IndexedDB non vérifiée après écriture");
+  return verified;
+}
+function atlasWorkspaceSlotHydrate(){
+  if(atlasWorkspaceSlotHydration)return atlasWorkspaceSlotHydration;
+  atlasWorkspaceSlotHydration=Promise.all(ATLAS_WORKSPACE_SLOT_IDS.map(async slot=>{
+    try{
+      const dbRecord=await atlasWorkspaceSlotDbRead(slot);
+      const selected=atlasWorkspaceSlotChoose(dbRecord,atlasWorkspaceSlotRead(slot));
+      if(selected)atlasWorkspaceSlotCache.set(slot,selected);
+    }catch(error){
+      // Still allow reading/writing the legacy slot if IndexedDB is unavailable.
+      console.warn("Mémoire A/B/C : IndexedDB indisponible",slot,error?.name||error);
+    }
+  })).then(()=>{
+    atlasWorkspaceSlotsRender();
+    return true;
+  });
+  return atlasWorkspaceSlotHydration;
 }
 
 function atlasWorkspaceSlotSummary(snapshot) {
@@ -47331,9 +47378,10 @@ function atlasWorkspaceSlotFlash(message, stateName = "stored") {
   }, 3200);
 }
 
-function atlasWorkspaceSlotWrite(slotId, options = {}) {
+async function atlasWorkspaceSlotWrite(slotId, options = {}) {
   const slot = atlasWorkspaceSlotNormalizeId(slotId);
   if (!slot) return false;
+  await atlasWorkspaceSlotHydrate();
 
   if (atlasScannerTransaction || atlasScannerQueuedRequest) {
     atlasWorkspaceSlotFlash(
@@ -47378,18 +47426,33 @@ function atlasWorkspaceSlotWrite(slotId, options = {}) {
     workspace: snapshot
   };
 
-  try {
-    localStorage.setItem(
-      atlasWorkspaceSlotStorageKey(slot),
-      JSON.stringify(payload)
-    );
-  } catch {
-    atlasWorkspaceSlotFlash(
-      `MÉMOIRE ${slot} NON ENREGISTRÉE`,
-      "warning"
-    );
+  let stored=false;
+  let dbError=null,legacyError=null;
+  try{
+    const verified=await atlasWorkspaceSlotDbWrite(slot,payload);
+    atlasWorkspaceSlotCache.set(slot,verified);
+    stored=true;
+  }catch(error){
+    dbError=error;
+    // Fallback only; never delete local market/history keys.
+    try{
+      localStorage.setItem(atlasWorkspaceSlotStorageKey(slot),JSON.stringify(payload));
+      const verified=atlasWorkspaceSlotValidRecord(
+        atlasWorkspaceReadJson(atlasWorkspaceSlotStorageKey(slot)),slot);
+      if(!verified||JSON.stringify(verified)!==JSON.stringify(payload))
+        throw new Error("Relecture localStorage différente");
+      atlasWorkspaceSlotCache.set(slot,verified);
+      stored=true;
+    }catch(fallbackError){legacyError=fallbackError;}
+  }
+  if(!stored){
+    const quota=[dbError,legacyError].some(e=>e?.name==="QuotaExceededError"
+      ||e?.name==="NS_ERROR_DOM_QUOTA_REACHED");
+    console.error("Échec sauvegarde mémoire A/B/C",{slot,dbError,legacyError});
+    atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · ${quota?"STOCKAGE SATURÉ":"STOCKAGE INDISPONIBLE"}`,"warning");
     return false;
   }
+
 
   atlasWorkspaceSlotsRender();
   atlasWorkspaceSlotFlash(
@@ -47431,8 +47494,9 @@ function atlasWorkspaceSlotValidIds(saved) {
   };
 }
 
-function atlasWorkspaceSlotRecall(slotId) {
+async function atlasWorkspaceSlotRecall(slotId) {
   const slot = atlasWorkspaceSlotNormalizeId(slotId);
+  await atlasWorkspaceSlotHydrate();
   const record = atlasWorkspaceSlotRead(slot);
   if (!record) return atlasWorkspaceSlotWrite(slot);
 
@@ -47698,9 +47762,10 @@ function atlasWorkspaceSlotsRender() {
     });
 }
 
-function atlasWorkspaceSlotActivate(event, slotId) {
+async function atlasWorkspaceSlotActivate(event, slotId) {
   const slot = atlasWorkspaceSlotNormalizeId(slotId);
   if (!slot) return false;
+  await atlasWorkspaceSlotHydrate();
 
   if (atlasWorkspaceSlotHoldConsumed) {
     atlasWorkspaceSlotHoldConsumed = false;
@@ -47723,6 +47788,7 @@ function atlasWorkspaceSlotActivate(event, slotId) {
 }
 
 function atlasWorkspaceSlotsInit() {
+  void atlasWorkspaceSlotHydrate();
   const root = document.getElementById("atlasWorkspaceSlots");
   if (!root || root.dataset.initialized === "true") {
     atlasWorkspaceSlotsRender();
