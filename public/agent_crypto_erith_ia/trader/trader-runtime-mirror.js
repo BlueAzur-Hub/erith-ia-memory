@@ -74,7 +74,7 @@ function mount(){
   }
   // Trader-only CT/USDT one-minute watch. Reuses the canonical candle owner:
   // one request per minute, visible tab only, no Administrator mutation or order.
-  if(!doc.getElementById("traderCtMinuteWatchScript")){
+  if(!win.AgentCryptoMarketMinuteRefresh&&!doc.getElementById("traderCtMinuteWatchScript")){
     const script=doc.createElement("script");
     script.id="traderCtMinuteWatchScript";
     script.src=new URL("../trader/trader-candles-minute-watch.js",doc.baseURI).href;
