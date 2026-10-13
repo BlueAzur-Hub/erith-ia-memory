@@ -784,7 +784,7 @@
     return true;
   }
 
-  async function select(spec){
+  async function select(spec,{scroll=false}={}){
     if(!spec)return false;
     const request=beginRequest(spec);
     state.lastError=null;
