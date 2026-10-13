@@ -55,8 +55,8 @@
         &&!!quote&&instrument.split("-")[1]===quote;
       return Object.freeze({owner:"external",instrument:valid?instrument:null,
         quote:valid?quote:null,label:valid
-          ?`SOURCE ${instrument} · COTATION ${quote} · PRIX BRUTS ${quote} · AUCUN ORDRE`
-          :"SOURCE EXTERNE · PAIRE NON VALIDÉE · AUCUN ORDRE"});
+          ?`PAIRE EXTERNE ${instrument} · COTATION ${quote} · AFFICHAGE DISTINCT · AUCUN ORDRE`
+          :"PAIRE EXTERNE NON VALIDÉE · AUCUN ORDRE"});
     }
     const instrument=String(market.executionInstrument||"").toUpperCase();
     const quote=String(market.settlementAsset||"").toUpperCase();
