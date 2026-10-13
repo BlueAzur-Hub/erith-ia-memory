@@ -812,7 +812,8 @@
       if(!await renderLine(spec,1,request)||!isCurrent(request))return false;
       try{globalThis.AgentCryptoMarketFicheDisplay406518?.apply?.("new-listing-category-select");}catch(_){}
       hideLegacyUx();
-      document.getElementById("analyste")?.scrollIntoView({behavior:"smooth",block:"start"});
+      // Only explicit navigation controls own viewport position.
+      // Selecting/restoring an external listing never repositions the page.
       return true;
     }catch(error){
       if(!isCurrent(request))return false;
