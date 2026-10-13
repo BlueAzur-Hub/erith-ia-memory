@@ -68,3 +68,24 @@ html[data-agent-crypto-surface="trader"] #atlasHelpLayer .agent-help-hint{displa
 #accueil .atlas-v2-nav-essential #aiCtToggle:focus-visible{
  outline:2px solid #a2eff8;outline-offset:2px;
 }
+
+/* Correctif grille héritée du menu : bouton texte seul, sans colonne d'icône.
+   Trader uniquement. Ne touche pas aux liens Livecheck / Marché / Graphique. */
+html[data-agent-crypto-surface="trader"] #accueil .atlas-v2-nav-essential #aiCtToggle{
+  display:inline-flex!important;
+  grid-template-columns:none!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  flex:0 0 auto!important;
+  box-sizing:border-box!important;
+  width:max-content!important;
+  min-width:max-content!important;
+  max-width:none!important;
+  min-height:34px!important;
+  padding:7px 13px!important;
+  font:700 12px/1.2 system-ui,sans-serif!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-align:center!important;
+}
