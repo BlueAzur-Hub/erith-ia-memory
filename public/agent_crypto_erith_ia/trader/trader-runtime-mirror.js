@@ -5,29 +5,6 @@ const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
 
-// The entrypoint loads one runtime script only. CT is a read-only
-// Trader extension, loaded here in strict dependency order.
-// It never creates a chart, market, order or Administrator owner.
-function loadCtReadOnlyExtension(){
-  if(document.getElementById("traderAiCtContractLoader"))return;
-  const fail=()=>{const b=document.getElementById("aiCtToggle");if(b){b.disabled=true;b.title="Lecture CT indisponible";}};
-  const contract=document.createElement("script");
-  contract.id="traderAiCtContractLoader";
-  contract.src=new URL("./ai-ct-contract.js",document.baseURI).href;
-  contract.onerror=fail;
-  contract.onload=()=>{
-    if(!globalThis.AgentCryptoAiCtContract){fail();return;}
-    const panel=document.createElement("script");
-    panel.id="traderAiCtPanelLoader";
-    panel.src=new URL("./ai-ct-panel.js",document.baseURI).href;
-    panel.onerror=fail;
-    document.body.appendChild(panel);
-  };
-  document.body.appendChild(contract);
-}
-loadCtReadOnlyExtension();
-
-
 function mount(){
   let win,doc;
   try{win=frame.contentWindow;doc=frame.contentDocument||win?.document;}catch(_){return false;}
@@ -94,6 +71,27 @@ function mount(){
     script.id="traderHistoricalPanelScript";
     script.src=new URL("../trader/trader-historical-panel.js?reader=top50-cohorts",doc.baseURI).href;
     doc.head.appendChild(script);
+  }
+  // Native Trader-only module. Contract and panel execute in the iframe that
+  // owns the navigation, sessionStorage and private OKX read surface.
+  if(!doc.getElementById("traderAiCtContractScript")){
+    const contract=doc.createElement("script");
+    contract.id="traderAiCtContractScript";
+    contract.src=new URL("../trader/ai-ct-contract.js?scope=native",doc.baseURI).href;
+    const reportFailure=()=>{
+      if(status){status.textContent="Passerelle IA CT indisponible (script non chargé)";status.dataset.state="error";}
+    };
+    contract.onerror=reportFailure;
+    contract.onload=()=>{
+      if(!win.AgentCryptoAiCtContract){reportFailure();return;}
+      if(doc.getElementById("traderAiCtPanelScript"))return;
+      const panel=doc.createElement("script");
+      panel.id="traderAiCtPanelScript";
+      panel.src=new URL("../trader/ai-ct-panel.js?scope=native",doc.baseURI).href;
+      panel.onerror=reportFailure;
+      doc.head.appendChild(panel);
+    };
+    doc.head.appendChild(contract);
   }
   doc.title="ERITH.IA · Trading Desk — "+BUILD;
   try{

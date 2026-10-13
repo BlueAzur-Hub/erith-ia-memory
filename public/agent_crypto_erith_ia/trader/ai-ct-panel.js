@@ -6,10 +6,23 @@ const BRIDGE='http://127.0.0.1:8787';
 const BACKEND='http://127.0.0.1:8790';
 const TOKEN_KEY='agent_crypto_bridge_owner_token_v1';
 const ROLE_KEY='agent_crypto_local_access_session_v1';
-const btn=document.getElementById('aiCtToggle'),panel=document.getElementById('aiCtPanel');
-const body=document.getElementById('aiCtDetails'),status=document.getElementById('aiCtStatus');
-const read=document.getElementById('aiCtRead'),copy=document.getElementById('aiCtCopy'),close=document.getElementById('aiCtClose');
-if(!btn||!panel||!body||!status||!read||!copy||!close)return;
+const nav=document.querySelector('#accueil .atlas-v2-nav-essential');
+const zone=document.getElementById('market-zone');
+if(!nav||!zone||document.getElementById('aiCtToggle'))return;
+const btn=document.createElement('button');
+btn.id='aiCtToggle';btn.type='button';btn.className='atlas-quick-link';btn.textContent='IA · Concrete';
+btn.setAttribute('aria-controls','aiCtPanel');btn.setAttribute('aria-expanded','false');
+const template=document.createElement('template');
+template.innerHTML="<section id=\"aiCtPanel\" role=\"region\" aria-label=\"Passerelle IA, pilote Concrete\" hidden>\n    <header><h2>Passerelle IA · Concrete</h2><button class=\"ai-ct-close\" type=\"button\" id=\"aiCtClose\" aria-label=\"Fermer\">×</button></header>\n    <p>Lecture privée sur ton PC · aucun ordre réel · marché CT/USDC.</p>\n    <div class=\"ai-ct-actions\"><button id=\"aiCtRead\" type=\"button\">Lire ma position CT</button><button id=\"aiCtCopy\" type=\"button\" disabled>Copier le résumé privé</button></div>\n    <p id=\"aiCtStatus\" role=\"status\" aria-live=\"polite\">Prêt · aucune consultation automatique.</p>\n    <div id=\"aiCtDetails\"></div>\n    <details class=\"ai-ct-case\">\n      <summary>Cas d’école · Concrete CT — lecture et risques</summary>\n      <p><strong>Position réelle :</strong> marché CT/USDC, quantité et frais lus via le Bridge local uniquement sur demande. Une vente fictive estimée à partir du carnet ne garantit aucun prix réel.</p>\n      <p><strong>Analyse publique :</strong> les bougies CT/USDT proviennent d’un autre marché. Elles servent au contexte, sans être assimilées au prix CT/USDC ou à une mesure de ton gain personnel.</p>\n      <p><strong>Contrôles :</strong> volatilité, volumes, liquidité, commission, fraîcheur et archives disponibles doivent être qualifiés. Aucune recommandation ni ordre automatique.</p>\n    </details>\n  </section>";
+const panel=template.content.firstElementChild;
+const body=panel.querySelector('#aiCtDetails'),status=panel.querySelector('#aiCtStatus');
+const read=panel.querySelector('#aiCtRead'),copy=panel.querySelector('#aiCtCopy'),close=panel.querySelector('#aiCtClose');
+nav.appendChild(btn);
+const history=zone.querySelector('#traderVerifiedHistory');
+if(history)zone.insertBefore(panel,history);else zone.appendChild(panel);
+const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.id='aiCtNativeStyle';
+sheet.href=new URL('../trader/ai-ct-panel.css?scope=native',document.baseURI).href;
+document.head.appendChild(sheet);
 let latest=null;
 function state(message){status.textContent=message;}
 function field(label,value){const row=document.createElement('div');row.className='ai-ct-row';
@@ -49,45 +62,12 @@ async function refresh(){latest=null;copy.disabled=true;read.disabled=true;body.
   copy.disabled=false;
  }catch(e){state('Non disponible : '+String(e.message||e).slice(0,140));}
  finally{read.disabled=false;}}
-/* L'interface Trader partage l'iframe Administrator, mais ne modifie aucun fichier
-   du runtime Administrator. Les contrôles IA restent ceux du document Trader. */
-function dockInTrader(){
- const frame=document.getElementById('traderInterfaceRuntime');
- let doc;
- try{doc=frame?.contentDocument;}catch(_){return false;}
- const nav=doc?.querySelector('#accueil .atlas-v2-nav-essential');
- const zone=doc?.getElementById('market-zone');
- if(!nav||!zone||!doc.head)return false;
- if(!doc.getElementById('traderAiCtStyle')){
-  const sheet=doc.createElement('link');sheet.id='traderAiCtStyle';sheet.rel='stylesheet';
-  sheet.href=new URL('./ai-ct-panel.css',document.baseURI).href;
-  doc.head.appendChild(sheet);
- }
- if(btn.ownerDocument!==doc)doc.adoptNode(btn);
- if(btn.parentElement!==nav)nav.appendChild(btn);
- btn.classList.add('atlas-quick-link');
- btn.removeAttribute('aria-haspopup');
- btn.hidden=false;
- if(panel.ownerDocument!==doc)doc.adoptNode(panel);
- if(panel.parentElement!==zone){
-  const history=doc.getElementById('traderVerifiedHistory');
-  if(history?.parentElement===zone)zone.insertBefore(panel,history);
-  else zone.appendChild(panel);
- }
- // Le bouton dans la navigation et le panneau caché ailleurs :
- // pas de surface vide superposée à la Lecture Technique.
- return true;
-}
-const traderFrame=document.getElementById('traderInterfaceRuntime');
-traderFrame?.addEventListener('load',()=>{try{dockInTrader();}catch(_){/* aucun contrôle cassé */}});
-try{if(traderFrame?.contentDocument?.readyState==='complete')dockInTrader();}catch(_){/* same-origin uniquement */}
-
 if(btn.dataset.aiCtBound!=='1'){
  btn.dataset.aiCtBound='1';
  btn.addEventListener('click',()=>{
   panel.hidden=!panel.hidden;
   btn.setAttribute('aria-expanded',String(!panel.hidden));
-  if(!panel.hidden){panel.scrollIntoView({behavior:'smooth',block:'start'});}
+  if(!panel.hidden){panel.scrollIntoView({behavior:'auto',block:'start'});}
  });
 }
 close.addEventListener('click',()=>{panel.hidden=true;btn.setAttribute('aria-expanded','false');});
