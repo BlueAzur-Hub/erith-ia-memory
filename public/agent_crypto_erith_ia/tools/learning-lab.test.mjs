@@ -49,6 +49,8 @@ function boot(query="?surface=trader"){
   const registry=new Map(),legacy=new Elem("details",registry),parent=new Elem("section",registry);
   legacy.id="traderOkbCaseStudy";parent.append(legacy);
   const graphTitle=new Elem("strong",registry);graphTitle.id="atlasChartInsightOverlayTitle";
+  const top5Button=new Elem("button",registry);top5Button.id="btnChartTop5";
+  top5Button.active=false;top5Button.classList.contains=name=>name==="active"&&top5Button.active;
   const storage=new Map();
   const doc={
     readyState:"complete",
@@ -63,7 +65,7 @@ function boot(query="?surface=trader"){
     window:{},MutationObserver:class{observe(){}},console
   };
   vm.runInNewContext(source,sandbox,{timeout:1000});
-  return {registry,legacy,parent,sandbox,storage,graphTitle,
+  return {registry,legacy,parent,sandbox,storage,graphTitle,top5Button,
           get:id=>registry.get(id)};
 }
 test("Trader HTML mounts only the isolated lab, with no new account capability",()=>{
@@ -105,6 +107,20 @@ test("Follow mode does not interpret a Top 5 comparison as a single crypto",()=>
   t.get("lab-mode-toggle").fire("click");
   t.get("lab-mode-toggle").fire("click");
   assert.equal(t.sandbox.window.AgentCryptoLearningLab.read().asset,"CT");
+});
+test("an old BTC headline cannot override CT while Top 5 remains active",()=>{
+  const h=boot(),api=h.sandbox.window.AgentCryptoLearningLab;
+  api.select("CT");
+  h.get("agentCryptoLearningLab").open=true;
+  h.graphTitle.textContent="BTC · Bitcoin · 24h prix USD historique conservé";
+  h.top5Button.active=true;
+  h.get("lab-mode-toggle").fire("click");
+  assert.equal(api.read().mode,"follow");
+  assert.equal(api.read().asset,"CT");
+  h.top5Button.active=false;
+  h.get("lab-mode-toggle").fire("click");
+  h.get("lab-mode-toggle").fire("click");
+  assert.equal(api.read().asset,"BTC");
 });
 test("The journal contains no bundled account balances or private bridge data",()=>{
   assert.doesNotMatch(source,/9[,.]99\s*CT|3[,.]522\s*USDC|0[,.]3525526|CT\-USDC.*9,99/);
