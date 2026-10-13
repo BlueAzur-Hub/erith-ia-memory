@@ -1,0 +1,123 @@
+name: Agent Crypto Radar20 Retrospective Stress
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-radar20-retro-stress.yml'
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-radar20-retro-stress
+  cancel-in-progress: false
+jobs:
+  frozen-retrospective:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Existing collector and shared-cash regression tests
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_build_radar20_flows.py -v
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_trader_radar20_portfolio.py -v
+      - name: Verify 60 original archives and replay fixed strategy Apr-Jun 2026
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os,sys,pathlib,zipfile,json,hashlib,datetime as dt
+          sys.path.insert(0,'public/agent_crypto_erith_ia/tools')
+          import build_radar20_flows as builder
+          import trader_radar20_portfolio as sim
+          months=('2026-04','2026-05','2026-06')
+          builder.MONTHS=months
+          output=pathlib.Path(os.environ['RUNNER_TEMP'])/'radar20-retro'
+          sources=output/'sources'
+          index=builder.build(builder.CATALOG,sources,workers=4)
+          assert index['markets']==20 and index['months']==list(months)
+          assert len(index['entries'])==60 and sum(x['hours'] for x in index['entries'])==43680
+          packed=output/'inputs.zip'
+          with zipfile.ZipFile(packed,'w',compression=zipfile.ZIP_DEFLATED) as z:
+            z.write(sources/'index.json','index.json')
+            for item in index['entries']:
+              p=sources/item['path']; b=p.read_bytes()
+              assert len(b)==item['bytes'] and hashlib.sha256(b).hexdigest()==item['sha256']
+              z.write(p,item['path'])
+          sim.MONTHS=months
+          sim.BASE_MS=int(dt.datetime(2026,4,1,tzinfo=dt.timezone.utc).timestamp()*1000)
+          sim.TOTAL_HOURS=2184
+          series,proof=sim.load_verified_zip(packed)
+          assert proof['source_entries']==60 and proof['hours_per_market']==2184
+          fixed=sim.simulate(series,threshold=50,hold=48,fee=.008,capital=400,ticket=100,max_positions=4)
+          costs=[]
+          for fee in (.008,.010,.012,.016):
+            r=sim.simulate(series,threshold=50,hold=48,fee=fee,capital=400,ticket=100,max_positions=4)
+            b=sim.buy_hold(series,fee=fee,capital=400)
+            costs.append({'total_cost_pct':round(fee*100,2),'trades':r['completed_trades'],
+               'net_usdt':r['total_profit_net_usdt'],'drawdown_usdt':r['drawdown_usdt'],
+               'drawdown_pct':r['drawdown_pct'],
+               'same_slots_reference_usdt':r['theoretical_matched_20asset_basket_profit_net_usdt'],
+               'fully_invested_passive_usdt':b['total_profit_net_usdt']})
+          report={'schema':'erith.trader.radar20.retrospective-stress.v1',
+             'period':['2026-04-01','2026-06-30'],'markets':20,'archives':60,
+             'hours_per_market':2184,'capital_usdt':400,
+             'frozen_parameters':{'threshold_buy_pct':50,'hold_hours':48,'ticket_usdt':100,
+               'maximum_positions':4,'roundtrip_cost_pct':.8},
+             'source_manifest_sha256':proof['source_manifest_sha256'],
+             'primary':{k:v for k,v in fixed.items() if k not in ('trades','equity_hourly')},
+             'monthly':sim.monthly_breakdown(fixed['trades']),
+             'realistic_cost_hypotheses_not_actual_OKX_fills':costs,
+             'evaluation':'RETROSPECTIVE_STRESS_NOT_FORWARD_OUT_OF_SAMPLE',
+             'limitations':['April-June PRECEDES model development: not prospective validation',
+               '20 currencies selected using later information: possible selection bias',
+               'Binance Spot USDT does not prove OKX execution costs',
+               'Reference matching time and notional is not risk matched',
+               'Passive benchmark has different market exposure and order minimums'],
+             'orders_enabled':False,'strategy_certified':False}
+          def emit(name,obj):
+            content=(json.dumps(obj,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False)+'\n').encode()
+            (output/name).write_bytes(content)
+            return {'path':name,'bytes':len(content),'sha256':hashlib.sha256(content).hexdigest()}
+          docs=[emit('summary.json',report),
+                emit('trades.json',{'orders_enabled':False,'trades':fixed['trades']}),
+                emit('equity.json',{'columns':['time_ms','equity_usdt','positions','cash_usdt'],
+                   'rows':fixed['equity_hourly']})]
+          emit('index.json',{'schema':'erith.trader.radar20.retrospective-stress.index.v1',
+             'source_sha256':proof['source_manifest_sha256'],'files':docs,
+             'orders_enabled':False,'strategy_certified':False})
+          assert len(fixed['equity_hourly'])==2184 and len(fixed['trades'])==fixed['completed_trades']
+          print('VERIFIED RETROSPECTIVE RESULT',json.dumps(costs),flush=True)
+          packed.unlink()
+          PY
+      - name: Preserve derived verified source archive and simulation results
+        uses: actions/upload-artifact@v4
+        with:
+          name: radar20-apr-jun-regime-stress
+          path: ${{ runner.temp }}/radar20-retro/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish verified study in separate derived data directory
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && contains(github.event.head_commit.message, '[radar20-retro-publish]') }}
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/trader_flux/radar20_retro_stress
+          mkdir -p "$target"
+          cp -a "$RUNNER_TEMP/radar20-retro/." "$target/"
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Publish verified Radar20 April-June retrospective stress'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Protected code and historical source archives remain untouched
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
+            public/agent_crypto_erith_ia/core/
