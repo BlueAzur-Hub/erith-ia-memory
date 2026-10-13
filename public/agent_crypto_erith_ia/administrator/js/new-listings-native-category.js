@@ -775,6 +775,11 @@
     const caption=document.getElementById("chartCaption");
     if(caption){const t=caption.querySelector(".chart-caption-text");if(t)t.textContent=`${spec.symbol} · Nouveau listing · ${spec.providerLabel} ${spec.pair} · données réelles · ${result.series.length} points`;}
     hideLegacyUx();
+    // Event emitted only AFTER a real external line series is published by
+    // the canonical chart owner. Other readers may react without new owners.
+    window.dispatchEvent(new CustomEvent("agent-crypto:new-listing-line-ready",{
+      detail:{id:spec.id,symbol:spec.symbol,graph:"line",periodDays:Number(days||1),provider:spec.provider}
+    }));
     return true;
   }
 

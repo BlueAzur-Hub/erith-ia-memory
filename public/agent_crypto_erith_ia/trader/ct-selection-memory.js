@@ -115,6 +115,12 @@ function onContext(event){
   }else{clear();unmountLabel();}
 }
 window.addEventListener(CONTEXT_EVENT,onContext,{passive:true});
+window.addEventListener("agent-crypto:new-listing-line-ready",event=>{
+  if(event?.detail?.id!==ID||!isLine())return;
+  if(stored())save();
+  if(restoring){restored=true;lastError=null;}
+  mountLabel();indication("");
+},{passive:true});
 document.addEventListener("click",event=>{
   if(!isCt(external()))return;
   if(event.target?.closest?.("[data-chart-view],[data-chart-scale],[data-chart-display],.period-btn[data-period]")){
@@ -124,7 +130,7 @@ document.addEventListener("click",event=>{
 
 async function restore(){
   if(attempted||!stored()||document.visibilityState==="hidden")return false;
-  if(stage()!=="ready")return false; // Let canonical V7 hydrate before external replay.
+  if(!["ready","error"].includes(stage()))return false; // Wait for canonical V7 boot barrier, even in explicit storage-error state.
   if(external()?.active){attempted=true;return false;} // Never override active intent.
   const api=owner();
   if(typeof api?.selectById!=="function"||typeof lineOwner()?.present!=="function")return false;
@@ -147,19 +153,19 @@ function boot(){
   }
   if(!stored())return;
   if(document.visibilityState!=="visible")return;
-  if(stage()==="ready")void restore();
+  if(["ready","error"].includes(stage()))void restore();
   else waitForCanonicalBoot();
 }
 function waitForCanonicalBoot(){
   if(bootWait||attempted||!stored())return;
   // Only observe the canonical boot gate, disconnect as soon as it becomes ready.
   bootWait=new MutationObserver(()=>{
-    if(stage()!=="ready")return;
+    if(!["ready","error"].includes(stage()))return;
     bootWait?.disconnect();bootWait=null;
     if(document.visibilityState==="visible")void restore();
   });
   bootWait.observe(document.documentElement,{attributes:true,attributeFilter:["data-atlas-graph-boot-phase"]});
-  if(stage()==="ready"){
+  if(["ready","error"].includes(stage())){
     bootWait.disconnect();bootWait=null;void restore();
   }
 }
