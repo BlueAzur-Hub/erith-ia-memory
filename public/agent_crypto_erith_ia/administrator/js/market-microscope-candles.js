@@ -3,7 +3,7 @@
    40.6.529 additive extension: New Listing external context can reuse this exact chart shell
    for Ligne + Bougies without mutating Market Core/state.coins.
    Default Market path remains OKX public and Native Prix/Base100 remains untouched.
-   Fetch occurs only on explicit Bougies / interval / refresh / external-asset load. No recurring timer. */
+   Explicit loading remains; the shared Trader/Interface 1m view also refreshes every minute while visible. */
 (()=>{
   "use strict";
   const BUILD="40.6.623";
@@ -890,4 +890,57 @@
   }
   globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active,lastLevels:state.lastLevels,request_key:requestKey()}),instrument:()=>activeInstrument(),technicalLevels:()=>state.lastLevels,indicatorState:()=>Object.freeze({...state.indicators}),resetView,viewport:()=>Object.freeze({...view}),installCanonicalSelectionHook,self_test:selfTest,read_only:true,http_status_checked_before_json:true,pair_fallback_http_400_404:true,response_invalid_does_not_mask_http_status:true,response_error_detail:true,zero_series_truth:true,network:"MARKET_RESOLVER_VIA_LOCAL_BACKEND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,canonical_market_selection_event:true,stale_asset_canvas_cleared:true,external_asset_selection_not_ignored:true,empty_series_inspector_cleared:true,external_asset_mode_preserved:true,latest_request_wins:true,request_timeout_ms:REQUEST_TIMEOUT_MS,indicator_state_persistence:true,indicator_storage_key:INDICATOR_STORAGE_KEY,interval_persistence:true,interval_storage_key:BAR_STORAGE_KEY,compact_meta:true,verbose_indicator_meta_removed:true,responsive_single_line_toolbar:true,interval_label_removed:true,narrow_wrap_two_rows:true,canvas_vertical_reclaim:true,stable_control_rows:true,view_layout_refresh_no_fetch:true,idempotent_mount_reparent:true,recurring_timer:false,mutation_observer:false,storage_write:true,storage_scope:"INDICATOR_STATE_PLUS_INTERVAL_PREFERENCE",real_order:false,market_core_changed:false,strategy_changed:false});
   if(typeof document!=="undefined"){const boot=()=>{mount();installCanonicalSelectionHook();};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:v2mode",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:admin-graph",scheduleLayoutRefresh,{passive:true});window.addEventListener("agent-crypto:selected-market-changed",handleCanonicalSelectionChanged,{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",event=>{if(String(event?.detail?.reason||"").startsWith("market-instrument-resolver"))return;if(state.mode==="candles"&&!externalContext().active)void load({bar:state.bar,reason:"quote-architecture"});},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{const primary=instrumentCandidates()[0]||desiredInstrument();requestToken+=1;try{activeController?.abort();}catch(_){}activeController=null;state.loading=false;mount();state.rows=[];state.error=null;state.errorCode=null;state.lastLoadedAt=null;state.lastLevels=null;state.loadedBar=null;state.loadedInstrument=null;state.instrument=primary;state.requestedInstrument=primary;renderTechnicalLevels(null);resetView(false);renderState();syncControls();draw();if(state.mode==="candles")queueMicrotask(()=>{try{void load({bar:state.bar,reason:"external-asset-changed"});}catch(_){}});},{passive:true});}
+})();
+
+/* Shared Trader / Interface 1m candle refresh. READ ONLY, no order routes. */
+(()=>{
+  "use strict";
+  if(globalThis.AgentCryptoMarketMinuteRefresh)return;
+  const REFRESH_MS=60000, POLL_MS=10000, STALE_MS=125000;
+  let lastAttempt=0,busy=false,timer=null,lastResult=null;
+  const owner=()=>globalThis.AgentCryptoMarketMicroscope;
+  const snapshot=()=>{try{return owner()?.snapshot?.()||null;}catch(_){return null;}};
+  const active=s=>s?.mode==="candles"&&s?.bar==="1m"&&!!s.loadedInstrument&&Array.isArray(s.rows)&&s.rows.length>0;
+  function ageMs(s){const rows=s?.rows||[],t=Number(rows[rows.length-1]?.t);return Number.isFinite(t)&&t>0?Math.max(0,Date.now()-t):null;}
+  function badge(){
+    const title=document.querySelector("#atlasMarketMicroscope .amm-title");
+    if(!title)return null;
+    let el=document.getElementById("marketMinuteAutoRefreshStatus");
+    if(!el){el=document.createElement("span");el.id="marketMinuteAutoRefreshStatus";
+      el.setAttribute("role","status");el.setAttribute("aria-live","polite");
+      el.style.cssText="display:inline-block;margin-left:8px;padding:2px 6px;border:1px solid #3b7782;border-radius:6px;background:#082532;color:#c8ebf3;font:600 11px system-ui,sans-serif";
+      title.appendChild(el);}
+    return el;
+  }
+  function paint(s){
+    const el=badge();if(!el)return;
+    if(!active(s)){el.hidden=true;return;}el.hidden=false;
+    const age=ageMs(s),stale=age===null||age>STALE_MS;
+    const label=age===null?"date inconnue":age<120000?Math.floor(age/1000)+" s":Math.floor(age/60000)+" min";
+    el.style.color=stale?"#ffcf91":"#a2eee0";
+    el.style.borderColor=stale?"#db8153":"#3b7782";
+    el.textContent=busy||s.loading?"AUTO 1m · actualisation…":stale?"AUTO 1m · DONNÉES ANCIENNES ("+label+")":"AUTO 1m · bougie "+label;
+    if(lastResult===false&&!busy&&!s.loading)el.textContent+=" · vérifier la source";
+    el.title="Age reel de la derniere bougie, pas de la derniere selection. Aucun ordre n'est emis.";
+  }
+  async function tick(){
+    const s=snapshot();paint(s);
+    if(document.visibilityState==="hidden"||!active(s)||busy||s.loading||typeof owner()?.load!=="function")return false;
+    const view=owner()?.viewport?.();
+    if(view&&Number.isFinite(view.start)&&Number.isFinite(view.count)&&view.start+view.count<s.rows.length-2)return false;
+    const now=Date.now();
+    if(now-lastAttempt<REFRESH_MS)return false;
+    const last=Date.parse(String(s.lastLoadedAt||""));
+    if(Number.isFinite(last)&&now-last<REFRESH_MS)return false;
+    lastAttempt=now;busy=true;paint(s);
+    try{lastResult=(await owner().load({bar:"1m",reason:"minute-auto-refresh"}))===true;}
+    catch(_){lastResult=false;}
+    finally{busy=false;paint(snapshot());}
+    return lastResult;
+  }
+  function boot(){if(timer!==null)return;void tick();timer=setInterval(()=>{void tick();},POLL_MS);}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")void tick();});
+  window.addEventListener("pageshow",()=>{void tick();},{passive:true});
+  globalThis.AgentCryptoMarketMinuteRefresh=Object.freeze({tick,snapshot:()=>({lastAttempt,busy,lastResult,refreshMs:REFRESH_MS,readOnly:true}),read_only:true,real_orders:false});
 })();
