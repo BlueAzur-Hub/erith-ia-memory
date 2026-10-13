@@ -121,6 +121,10 @@
         moment.append(elt("p",null,"13–14 octobre 2026 : une position CT/USDC a été observée en lecture seule dans le Bridge. Les estimations de revente varient selon l’heure et le mécanisme. Aucune quantité détenue, aucun coût privé ni résultat du compte n’est publié dans ce module."));
         moment.append(elt("p",null,"Pour connaître la valeur effective, ouvrir le panneau privé OKX du Trader. Une estimation positive n’est pas un gain réalisé."));
         pane.append(moment);
+        const dossier=elt("a","lab-link","Lire l’étude documentaire complète CT ↗");
+        dossier.href="../laboratoire/cas-ecole-concrete.md";
+        dossier.target="_blank";dossier.rel="noopener noreferrer";
+        pane.append(dossier);
       }
       if(asset==="BTC"){
         const explanation=elt("p","lab-hint","Le rapport BTC canonique est repris ci-dessous, sans copie ni deuxième moteur.");
