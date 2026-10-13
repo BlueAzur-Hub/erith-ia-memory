@@ -37,9 +37,11 @@ function top5Tooltip(original,args){
     &&Number.isInteger(point?.dataIndex)&&point.dataIndex>=data.length-1;
   const datasets=typeof atlasChartPriceDatasets==="function"?atlasChartPriceDatasets(chart):[];
   const book=typeof state!=="undefined"?state?.dataBroker?.spotBook:null;
-  const snapshots=atEnd&&datasets.length===5?datasets.map(d=>top5NativeUsd(d?.atlasCoin||chart?.$atlasCoin,book)):null;
-  const native=!!snapshots&&snapshots.every(Boolean);
+  const coinIds=datasets.map(d=>String(d?.atlasCoin?.id||"")).filter(Boolean);
+  const distinct=coinIds.length===5&&new Set(coinIds).size===5;
+  const snapshots=atEnd&&distinct?datasets.map(d=>top5NativeUsd(d.atlasCoin,book)):null;
   const originalLive=globalThis.atlasChartLivePresentation;
+  const native=typeof originalLive==="function"&&!!snapshots&&snapshots.every(Boolean);
   let result;
   try{
     if(native&&typeof originalLive==="function")
