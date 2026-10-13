@@ -6525,7 +6525,8 @@ function atlasRenderChartValueOverlay() {
 }
 
 function atlasChartV2RedrawFromBroker() {
-  if (atlasTraderCtSelectionOwnsView() || atlasExternalChartActive()) return;
+  if (atlasTraderCtSelectionOwnsView()) return;
+  if (atlasExternalChartActive()) return;
   const chart = state.dataBroker?.chart;
   if (chart?.status !== "ready" || !atlasChartContextMatches(chart)) {
     atlasChartV2SyncControls();
@@ -11821,7 +11822,8 @@ function atlasAtomicRefreshComparisonChart(chart, canvas, normalizedEntries, per
 }
 
 function drawComparisonChart(canvas, entries, period, chartKey = "") {
-  if (atlasTraderCtSelectionOwnsView() || atlasExternalChartActive()) return [];
+  if (atlasTraderCtSelectionOwnsView()) return [];
+  if (atlasExternalChartActive()) return [];
   if (!canvas || !Array.isArray(entries) || entries.length < 1) {
     state.dataBroker.comparison.renderedIds = [];
     return [];
