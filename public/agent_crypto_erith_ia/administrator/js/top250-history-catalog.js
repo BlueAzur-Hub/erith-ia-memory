@@ -21,71 +21,112 @@ async function getJson(name,limit=2000000){
  return JSON.parse(body);
 }
 function validate(fed,bin,alt,depth){
- check(fed?.schema==="aerith.public.ohlcv.top250.federated-native-archives.v1"&&
-  fed.ranked===250&&fed.quote==="USDT"&&fed.is_live===false&&
-  fed.assets?.length===250&&Number.isInteger(fed.archived_assets)&&
-  fed.archived_assets===fed.binance_archived_assets+fed.bitget_archived_assets,
-  "Index fédéré incorrect");
- check(bin?.schema==="aerith.public.ohlcv.top250.monthly-coverage-catalog.v1"&&
-  bin.assets?.length===250&&Number.isInteger(bin.archived_assets)&&
-  Number.isInteger(bin.native_1m_candles),"Index Binance incorrect");
- check(alt?.schema==="aerith.public.ohlcv.verified-bitget-spot-month-views.v1"&&
-  alt.assets?.length===alt.archived_assets,"Index Bitget incorrect");
- check(depth?.schema==="aerith.public.ohlcv.top250.verifiable-year-depth.v1"&&
-  depth.ranked===250&&depth.assets?.length===250&&
-  depth.assets_with_at_least_24_consecutive_closed_months<=depth.assets_with_at_least_12_consecutive_closed_months&&
-  depth.archive_assets<=bin.archived_assets&&
-  depth.source_catalog_minutes<=bin.native_1m_candles,
-  "Index de profondeur annuel incorrect");
- const ids=new Set(),altIds=new Set();let binTotal=0,binArchived=0;
- for(let i=0;i<250;i++){
-  const f=fed.assets[i],b=bin.assets[i];
-  check(f.rank===i+1&&f.id===b.id&&f.symbol===b.symbol&&!ids.has(f.id)&&
-   typeof f.name==="string"&&Array.isArray(b.months)&&
-   Number.isInteger(b.candles)&&b.candles>=0,"Identité ou comptage Binance incorrect : rang "+(i+1));
-  ids.add(f.id);
-  const expected=b.months.reduce((n,m)=>n+m.candles,0);
-  check(expected===b.candles&&b.months.every(m=>/^[0-9]{4}-[0-9]{2}$/.test(m.month)&&
-   Number.isInteger(m.candles)&&m.candles>0),
-   "Sources mensuelles Binance incohérentes : "+f.id);
-  if(b.months.length)binArchived++;
-  binTotal+=b.candles;
- }
- check(binArchived===bin.archived_assets&&binTotal===bin.native_1m_candles,
-  "Comptes Binance incohérents");
- for(const a of alt.assets){
-  check(ids.has(a.id)&&!altIds.has(a.id)&&
-   Array.isArray(a.months)&&a.months.length>0&&
-   Number.isInteger(a.total_verified_1m_count)&&a.total_verified_1m_count>0&&
-   fed.assets[a.rank-1]?.id===a.id&&fed.assets[a.rank-1]?.symbol===a.symbol,
-   "Source Bitget invalide : "+a.id);
-  check(a.months.every(m=>/^[0-9]{4}-[0-9]{2}$/.test(m))&&
-   new Set(a.months).size===a.months.length,
-   "Mois Bitget incorrects : "+a.id);
-  const expectedMinuteCount=a.months.reduce((n,m)=>{
-   const year=Number(m.slice(0,4)),month=Number(m.slice(5,7));
-   return n+(Date.UTC(year,month,1)-Date.UTC(year,month-1,1))/60000;
-  },0);
-  check(expectedMinuteCount===a.total_verified_1m_count,
-   "Source Bitget native minute count invalid: "+a.id);
-  altIds.add(a.id);
- }
- // Les quatre index sont des instantanés autonomes : ne pas exiger
- // l'égalité des compteurs entre collectes exécutées à des heures différentes.
+  // Each index is a dated, internally consistent snapshot. Rank is NOT
+  // an immutable identity and cannot join Binance/Bitget histories.
+  check(fed?.schema==="aerith.public.ohlcv.top250.federated-native-archives.v1"&&
+   fed.ranked===250&&fed.quote==="USDT"&&fed.is_live===false&&
+   fed.assets?.length===250&&Number.isInteger(fed.archived_assets)&&
+   fed.archived_assets===fed.binance_archived_assets+fed.bitget_archived_assets,
+   "Index fédéré incorrect");
+  check(bin?.schema==="aerith.public.ohlcv.top250.monthly-coverage-catalog.v1"&&
+   bin.ranked===250&&bin.assets?.length===250&&
+   Number.isInteger(bin.archived_assets)&&Number.isInteger(bin.native_1m_candles),
+   "Index Binance incorrect");
+  check(alt?.schema==="aerith.public.ohlcv.verified-bitget-spot-month-views.v1"&&
+   alt.quote==="USDT"&&alt.assets?.length===alt.archived_assets,
+   "Index Bitget incorrect");
+  check(depth?.schema==="aerith.public.ohlcv.top250.verifiable-year-depth.v1"&&
+   depth.ranked===250&&depth.assets?.length===250&&
+   depth.assets_with_at_least_24_consecutive_closed_months<=depth.assets_with_at_least_12_consecutive_closed_months&&
+   depth.archive_assets<=bin.archived_assets&&
+   depth.source_catalog_minutes<=bin.native_1m_candles,
+   "Index de profondeur annuel incorrect");
+  const oldIds=new Map(),oldSymbols=new Map(),currentIds=new Map();
+  let fedTotal=0,fedBin=0,fedBitget=0,binTotal=0,binArchived=0;
+  for(let i=0;i<250;i++){
+    const f=fed.assets[i],b=bin.assets[i];
+    check(f?.rank===i+1&&typeof f.id==="string"&&f.id&&
+     typeof f.symbol==="string"&&f.symbol&&typeof f.name==="string"&&
+     !oldIds.has(f.id),"Identité du classement fédéré incorrecte : "+(i+1));
+    oldIds.set(f.id,f);
+    if(!oldSymbols.has(f.symbol))oldSymbols.set(f.symbol,new Set());
+    oldSymbols.get(f.symbol).add(f.id);
+    const count=Number(f.native_1m_count);
+    check(Number.isInteger(count)&&count>=0&&f.quote==="USDT"&&
+     (f.source===null||f.source==="Binance Spot official native 1m ZIPs"||
+      f.source==="Bitget Spot native 1m HTTPS")&&
+     (f.source===null)===(count===0),
+     "Source fédérée non conforme : "+f.id);
+    fedTotal+=count;
+    if(f.source==="Binance Spot official native 1m ZIPs")fedBin++;
+    if(f.source==="Bitget Spot native 1m HTTPS")fedBitget++;
+    check(b?.rank===i+1&&typeof b.id==="string"&&b.id&&
+     typeof b.symbol==="string"&&b.symbol&&Array.isArray(b.months)&&
+     Number.isInteger(b.candles)&&b.candles>=0&&!currentIds.has(b.id),
+     "Identité ou comptage Binance incorrect : rang "+(i+1));
+    currentIds.set(b.id,b);
+    const expected=b.months.reduce((n,m)=>n+m.candles,0);
+    check(expected===b.candles&&b.months.every(m=>
+     /^\d{4}-(?:0[1-9]|1[0-2])$/.test(m.month)&&
+     Number.isInteger(m.candles)&&m.candles>0&&
+     m.pair===b.symbol+"USDT"&&/^[a-f0-9]{64}$/.test(m.sha256)),
+     "Sources mensuelles Binance incohérentes : "+b.id);
+    if(b.months.length)binArchived++;
+    binTotal+=b.candles;
+  }
+  check(fedBin===fed.binance_archived_assets&&fedBitget===fed.bitget_archived_assets&&
+   fedTotal===fed.native_1m_candles&&fedBin+fedBitget===fed.archived_assets,
+   "Comptes fédérés incohérents");
+  check(binArchived===bin.archived_assets&&binTotal===bin.native_1m_candles,
+   "Comptes Binance incohérents");
+  // Same exact ID must retain its symbol. Reject an archived instrument that
+  // steals an old ID's ticker; do not confuse a new rank with new ownership.
+  for(const b of currentIds.values()){
+    const old=oldIds.get(b.id);
+    check(!old||old.symbol===b.symbol,
+     "Identité ou comptage Binance incorrect : "+b.id);
+    if(b.months.length)
+      check(!oldSymbols.has(b.symbol)||oldSymbols.get(b.symbol).has(b.id),
+       "Identité ou comptage Binance incorrect : "+b.id);
+  }
+  const altIds=new Set();
+  for(const a of alt.assets){
+    const historical=oldIds.get(a.id),current=currentIds.get(a.id);
+    check(historical&&!altIds.has(a.id)&&
+     a.rank===historical.rank&&a.symbol===historical.symbol&&
+     (!current||current.symbol===a.symbol)&&
+     a.pair===a.symbol+"USDT"&&a.quote==="USDT"&&
+     /^[a-f0-9]{64}$/.test(a.sha256)&&
+     /^[a-f0-9]{64}$/.test(a.source_zip_sha256)&&
+     Array.isArray(a.months)&&a.months.length>0&&
+     Number.isInteger(a.total_verified_1m_count)&&a.total_verified_1m_count>0,
+     "Source Bitget invalide : "+a.id);
+    check(a.months.every(m=>/^\d{4}-(?:0[1-9]|1[0-2])$/.test(m))&&
+     new Set(a.months).size===a.months.length,
+     "Mois Bitget incorrects : "+a.id);
+    const expectedMinuteCount=a.months.reduce((n,m)=>{
+      const year=Number(m.slice(0,4)),month=Number(m.slice(5,7));
+      return n+(Date.UTC(year,month,1)-Date.UTC(year,month-1,1))/60000;
+    },0);
+    check(expectedMinuteCount===a.total_verified_1m_count,
+     "Source Bitget native minute count invalid: "+a.id);
+    altIds.add(a.id);
+  }
 }
 function currentView(){
- const alternatives=new Map(bitget.assets.map(a=>[a.id,a]));
- return catalog.assets.map(a=>{
-  const b=binance.assets[a.rank-1],secondary=alternatives.get(a.id);
-  const binActive=b.months.length>0;
-  return {asset:a,primary:binActive?"Binance":secondary?"Bitget":null,
-   months:binActive?b.months.length:(secondary?.months?.length||0),
-   count:binActive?b.candles:(secondary?.total_verified_1m_count||0),
-   first:binActive?b.months[0]?.month:(secondary?.months?.[0]||"—"),
-   lastMonth:binActive?b.months.at(-1)?.month:(secondary?.month||"—"),
-   release:binActive?b.months.at(-1)?.release:(secondary?.release||null),
-   both:binActive&&!!secondary};
- });
+  // Latest ranked Binance catalog is the displayed Top250 universe.
+  // Older Bitget and federated records remain independent dated evidence.
+  const alternatives=new Map(bitget.assets.map(a=>[a.id,a]));
+  return catalog.assets.map(a=>{
+   const secondary=alternatives.get(a.id),binActive=a.months.length>0;
+   return {asset:a,primary:binActive?"Binance":secondary?"Bitget":null,
+    months:binActive?a.months.length:(secondary?.months?.length||0),
+    count:binActive?a.candles:(secondary?.total_verified_1m_count||0),
+    first:binActive?a.months[0]?.month:(secondary?.months?.[0]||"—"),
+    lastMonth:binActive?a.months.at(-1)?.month:(secondary?.month||"—"),
+    release:binActive?a.months.at(-1)?.release:(secondary?.release||null),
+    both:binActive&&!!secondary};
+  });
 }
 function show(){
  if(!catalog||!binance||!bitget)return;
@@ -174,7 +215,7 @@ async function init(){
    getJson("year_depth_index.json",1200000)
   ]);
   validate(fed,bin,alt,depth);
-  catalog=fed;binance=bin;bitget=alt;yearDepth=depth;
+  catalog=bin;binance=bin;bitget=alt;yearDepth=depth;
   const view=currentView(),pub=view.filter(v=>v.primary);
   const binCount=view.filter(v=>v.primary==="Binance").length;
   const bitOnly=view.filter(v=>v.primary==="Bitget").length;
@@ -196,7 +237,7 @@ async function init(){
    "Top "+n+" : "+view.filter(v=>v.asset.rank<=n&&v.primary).length+"/"+n).join(" · ")+
    (overlap?" · "+overlap+" actif également sur Bitget, sans double comptage":"");
   status.textContent="Sources indépendantes validées · Binance et Bitget sans doublon"+
-   (srcDifferent?" · index fédéré plus ancien, données sources affichées directement":"")+
+   (srcDifferent?" · instantanés historiques distincts, sources reliées par identifiant exact":"")+
    " · aucun prix inventé";
   show();
  }catch(e){
