@@ -811,6 +811,11 @@
       globalThis.AgentCryptoMarketMicroscope?.setMode?.("native");
       if(!await renderLine(spec,1,request)||!isCurrent(request))return false;
       try{globalThis.AgentCryptoMarketFicheDisplay406518?.apply?.("new-listing-category-select");}catch(_){}
+      // Last writer of the visible Fiche is the selected external listing,
+      // not the Market BTC subprofile retained for later explicit return.
+      if(isCurrent(request)&&globalThis.AtlasExternalChart?.state?.()?.coin_id===spec.id){
+        patchNativeFiche(spec,state.coinCache.get(spec.id)||coinFromSpec(spec),state.lastResult);
+      }
       hideLegacyUx();
       // Only explicit navigation controls own viewport position.
       // Selecting/restoring an external listing never repositions the page.
