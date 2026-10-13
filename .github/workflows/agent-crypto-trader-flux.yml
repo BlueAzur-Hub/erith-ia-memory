@@ -62,7 +62,9 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Publier uniquement si demandé explicitement au lancement
-        if: ${{ inputs.publish == true && github.ref == 'refs/heads/main' }}
+        # One-shot approved publish on this commit; later push runs do not publish
+        # unless their commit message contains the marker. Manual dispatch also works.
+        if: ${{ github.ref == 'refs/heads/main' && (inputs.publish == true || (github.event_name == 'push' && contains(github.event.head_commit.message, '[trader-flux-publish]'))) }}
         run: |
           set -euo pipefail
           target=public/agent_crypto_erith_ia/data/trader_flux
