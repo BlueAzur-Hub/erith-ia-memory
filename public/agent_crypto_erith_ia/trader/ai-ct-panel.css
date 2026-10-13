@@ -1,0 +1,17 @@
+/* Panneau pilote indépendant, n'intervient pas dans le runtime Administrator. */
+#aiCtToggle{position:fixed;right:16px;top:12px;z-index:30;border:1px solid #48b5c5;color:#e6fbff;background:#092834;border-radius:9px;padding:9px 14px;font-weight:750;cursor:pointer;box-shadow:0 2px 16px #0008}
+#aiCtPanel[hidden]{display:none!important}
+#aiCtPanel{position:fixed;top:59px;right:16px;z-index:31;width:min(430px,calc(100vw - 32px));max-height:calc(100vh - 72px);overflow:auto;box-sizing:border-box;border:1px solid #43a5b4;border-radius:12px;background:#071925;color:#f1fbff;padding:17px 17px 14px;box-shadow:0 10px 40px #000c;font:14px/1.4 system-ui,sans-serif}
+#aiCtPanel header{display:flex;justify-content:space-between;gap:8px;align-items:center}
+#aiCtPanel h2{margin:0;font-size:18px}
+#aiCtPanel .ai-ct-close{border:0;background:none;color:#d6e9f1;font-size:24px;cursor:pointer}
+#aiCtPanel p{margin:8px 0;color:#b5cad4;font-size:12px}
+#aiCtPanel .ai-ct-actions{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+#aiCtPanel .ai-ct-actions button{border:1px solid #457c8f;background:#163a4b;color:white;padding:9px;border-radius:8px;cursor:pointer}
+#aiCtPanel button:disabled{opacity:.45;cursor:not-allowed}
+#aiCtStatus{color:#a8d6e4;min-height:20px}
+#aiCtDetails{border-top:1px solid #25444f;margin-top:9px;padding-top:5px}
+#aiCtDetails .ai-ct-row{display:flex;gap:12px;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1c3440}
+#aiCtDetails .ai-ct-row span{color:#b8cdd6}
+#aiCtDetails .ai-ct-row strong{max-width:55%;text-align:right;font-variant-numeric:tabular-nums}
+#aiCtDetails .ai-ct-warning{color:#ffd09d}

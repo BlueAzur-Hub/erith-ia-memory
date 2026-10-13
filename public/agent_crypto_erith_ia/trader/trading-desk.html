@@ -13,6 +13,7 @@
     #traderBootstrapStatus[data-state="ready"]{opacity:0;transition:opacity .8s ease 1.2s}
     #traderBootstrapStatus[data-state="error"]{color:#ff9caa;border-color:rgba(255,92,120,.45);opacity:1}
   </style>
+  <link rel="stylesheet" href="./ai-ct-panel.css">
 </head>
 <body>
   <iframe
@@ -23,6 +24,16 @@
     referrerpolicy="same-origin">
   </iframe>
   <div id="traderBootstrapStatus" role="status" aria-live="polite">Chargement du runtime Interface…</div>
+  <button id="aiCtToggle" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="aiCtPanel">IA · Concrete</button>
+  <section id="aiCtPanel" role="dialog" aria-label="Passerelle IA, pilote Concrete" hidden>
+    <header><h2>Passerelle IA · Concrete</h2><button class="ai-ct-close" type="button" id="aiCtClose" aria-label="Fermer">×</button></header>
+    <p>Lecture privée sur ton PC · aucun ordre réel · marché CT/USDC.</p>
+    <div class="ai-ct-actions"><button id="aiCtRead" type="button">Lire ma position CT</button><button id="aiCtCopy" type="button" disabled>Copier le résumé privé</button></div>
+    <p id="aiCtStatus" role="status" aria-live="polite">Prêt · aucune consultation automatique.</p>
+    <div id="aiCtDetails"></div>
+  </section>
   <script src="./trader-runtime-mirror.js?feature=okx-private-read"></script>
+  <script src="./ai-ct-contract.js"></script>
+  <script src="./ai-ct-panel.js"></script>
 </body>
 </html>
