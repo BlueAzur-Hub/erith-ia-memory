@@ -92,7 +92,7 @@ test("old federated monthly counter does not hide newer genuine Binance sources"
  });
  await ready(h);
  assert.ok(h.window.SevenTop250Catalog.read());
- assert.match(h.element("top250-status").textContent,/index fédéré plus ancien/);
+ assert.match(h.element("top250-status").textContent,/instantanés historiques distincts/);
 });
 test("tampering a genuine Binance source count blocks the view",async()=>{
  const h=harness((file,data)=>{
