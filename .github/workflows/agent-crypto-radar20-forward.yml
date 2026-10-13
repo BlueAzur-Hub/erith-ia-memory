@@ -1,0 +1,78 @@
+name: Agent Crypto Radar20 Forward A-B Research
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-radar20-forward.yml'
+      - 'public/agent_crypto_erith_ia/tools/trader_radar20_forward.py'
+      - 'public/agent_crypto_erith_ia/data/trader_flux/radar20_forward/experiment.json'
+  schedule:
+    - cron: '19 14 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-radar20-forward
+  cancel-in-progress: false
+jobs:
+  forward-paper-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source and frozen protocol
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/trader_radar20_forward.py
+          python - <<'PY'
+          import importlib.util,pathlib,hashlib
+          p=pathlib.Path('public/agent_crypto_erith_ia/tools/trader_radar20_forward.py')
+          spec=importlib.util.spec_from_file_location('forward',p)
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          cfg=mod.load_protocol()
+          assert not cfg['trading_orders_enabled']
+          assert mod.markettrend({s:[] for s in mod.SYMBOLS},0) is None
+          assert mod.simulate({s:[] for s in mod.SYMBOLS},cfg,False,.8)['closed_trades']==0
+          print('PASS frozen protocol, 20 pairs, zero initial trades')
+          PY
+      - name: Acquire verified closed days and recompute A/B portfolio
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/trader_radar20_forward.py
+      - name: Verify all saved source and result hashes
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import pathlib,json,hashlib
+          root=pathlib.Path('public/agent_crypto_erith_ia/data/trader_flux/radar20_forward')
+          idx=json.loads((root/'index.json').read_text())
+          assert idx['orders_enabled'] is False
+          assert idx['config_sha256']==hashlib.sha256((root/'experiment.json').read_bytes()).hexdigest()
+          for item in idx['days']+idx['okx']+idx['outputs']:
+              assert hashlib.sha256((root/item['file']).read_bytes()).hexdigest()==item['sha256']
+          report=json.loads((root/'summary.json').read_text())
+          assert report['no_live_orders'] and not report['strategy_certified']
+          assert len(report['variants'])==6
+          print('PASS immutable-source indexes and six fee-stress variants')
+          PY
+      - name: Publish only independently checked derived observations
+        run: |
+          set -euo pipefail
+          git add -- public/agent_crypto_erith_ia/data/trader_flux/radar20_forward/
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: no new verified observation'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Archive forward Radar20 paper-only A-B observations'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Protected code unchanged
+        if: always()
+        run: |
+          git diff --exit-code -- public/agent_crypto_erith_ia/trader/ public/agent_crypto_erith_ia/administrator/ public/agent_crypto_erith_ia/data/historical_archive_prototype/ public/agent_crypto_erith_ia/core/
