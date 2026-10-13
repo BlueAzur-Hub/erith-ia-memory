@@ -125,25 +125,6 @@ function mount(){
 }
 
 
-/* Optional CT IA data panel lives in the parent Trader document.
-   This adds no chart, market, strategy or order owner to Administrator. */
-function loadAiCtPilot(){
-  if(document.getElementById("agentCryptoAiCtContractScript"))return;
-  const contract=document.createElement("script");
-  contract.id="agentCryptoAiCtContractScript";
-  contract.src=new URL("./ai-ct-contract.js",document.baseURI).href;
-  contract.addEventListener("load",()=>{
-    if(document.getElementById("agentCryptoAiCtPanelScript"))return;
-    const panelScript=document.createElement("script");
-    panelScript.id="agentCryptoAiCtPanelScript";
-    panelScript.src=new URL("./ai-ct-panel.js",document.baseURI).href;
-    document.head.appendChild(panelScript);
-  },{once:true});
-  document.head.appendChild(contract);
-}
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",loadAiCtPilot,{once:true});
-else loadAiCtPilot();
-
 frame.addEventListener("load",()=>{
   if(!mount()&&status){
     status.textContent="Interface chargée mais filtrage Trader indisponible";

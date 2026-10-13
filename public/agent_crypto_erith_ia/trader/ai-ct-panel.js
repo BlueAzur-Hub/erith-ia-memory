@@ -49,37 +49,47 @@ async function refresh(){latest=null;copy.disabled=true;read.disabled=true;body.
   copy.disabled=false;
  }catch(e){state('Non disponible : '+String(e.message||e).slice(0,140));}
  finally{read.disabled=false;}}
-/* Trader-only docking: same-origin iframe, no Administrator source changes. */
+/* L'interface Trader partage l'iframe Administrator, mais ne modifie aucun fichier
+   du runtime Administrator. Les contrôles IA restent ceux du document Trader. */
 function dockInTrader(){
  const frame=document.getElementById('traderInterfaceRuntime');
  let doc;
  try{doc=frame?.contentDocument;}catch(_){return false;}
+ const nav=doc?.querySelector('#accueil .atlas-v2-nav-essential');
  const zone=doc?.getElementById('market-zone');
- if(!zone||!doc.head)return false;
- let host=doc.getElementById('traderAiCtDock');
- if(!host){
-  host=doc.createElement('section');host.id='traderAiCtDock';
-  host.setAttribute('aria-label','Analyse IA de la position Concrete');
- }
+ if(!nav||!zone||!doc.head)return false;
  if(!doc.getElementById('traderAiCtStyle')){
   const sheet=doc.createElement('link');sheet.id='traderAiCtStyle';sheet.rel='stylesheet';
   sheet.href=new URL('./ai-ct-panel.css',document.baseURI).href;
   doc.head.appendChild(sheet);
  }
- // Moving existing nodes preserves their click handlers and locally held data.
- host.append(doc.adoptNode(btn),doc.adoptNode(panel));
- if(host.parentElement!==zone){
+ if(btn.ownerDocument!==doc)doc.adoptNode(btn);
+ if(btn.parentElement!==nav)nav.appendChild(btn);
+ btn.classList.add('atlas-quick-link');
+ btn.removeAttribute('aria-haspopup');
+ btn.hidden=false;
+ if(panel.ownerDocument!==doc)doc.adoptNode(panel);
+ if(panel.parentElement!==zone){
   const history=doc.getElementById('traderVerifiedHistory');
-  if(history?.parentElement===zone)zone.insertBefore(host,history);
-  else zone.appendChild(host);
+  if(history?.parentElement===zone)zone.insertBefore(panel,history);
+  else zone.appendChild(panel);
  }
+ // Le bouton dans la navigation et le panneau caché ailleurs :
+ // pas de surface vide superposée à la Lecture Technique.
  return true;
 }
 const traderFrame=document.getElementById('traderInterfaceRuntime');
-traderFrame?.addEventListener('load',()=>{try{dockInTrader();}catch(_){/* fallback: pilot remains standalone */}});
-try{if(traderFrame?.contentDocument?.readyState==='complete')dockInTrader();}catch(_){/* origin guard */}
+traderFrame?.addEventListener('load',()=>{try{dockInTrader();}catch(_){/* aucun contrôle cassé */}});
+try{if(traderFrame?.contentDocument?.readyState==='complete')dockInTrader();}catch(_){/* same-origin uniquement */}
 
-btn.addEventListener('click',()=>{panel.hidden=!panel.hidden;btn.setAttribute('aria-expanded',String(!panel.hidden));});
+if(btn.dataset.aiCtBound!=='1'){
+ btn.dataset.aiCtBound='1';
+ btn.addEventListener('click',()=>{
+  panel.hidden=!panel.hidden;
+  btn.setAttribute('aria-expanded',String(!panel.hidden));
+  if(!panel.hidden){panel.scrollIntoView({behavior:'smooth',block:'start'});}
+ });
+}
 close.addEventListener('click',()=>{panel.hidden=true;btn.setAttribute('aria-expanded','false');});
 read.addEventListener('click',refresh);
 copy.addEventListener('click',async()=>{
