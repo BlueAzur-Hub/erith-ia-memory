@@ -895,7 +895,7 @@
 /* Shared Trader / Interface 1m candle refresh. READ ONLY, no order routes. */
 (()=>{
   "use strict";
-  if(globalThis.AgentCryptoMarketMinuteRefresh)return;
+  if(typeof document==="undefined"||typeof window==="undefined"||globalThis.AgentCryptoMarketMinuteRefresh)return;
   const REFRESH_MS=60000, POLL_MS=10000, STALE_MS=125000;
   let lastAttempt=0,busy=false,timer=null,lastResult=null;
   const owner=()=>globalThis.AgentCryptoMarketMicroscope;
