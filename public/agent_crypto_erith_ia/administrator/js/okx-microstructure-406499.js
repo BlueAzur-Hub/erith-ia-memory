@@ -85,6 +85,13 @@
   };
   const externalReady=(asset,external)=>
     !asset||!!(external?.active&&normalizeSelectedAsset(external.base)===asset);
+  const externalGraphConflict=(graph,external)=>
+    !!(external?.active&&graph?.active&&
+      String(graph.coin_id||"")!==String(external.id||""));
+  const visibleGraphConflict=()=>{
+    try{return externalGraphConflict(globalThis.AtlasExternalChart?.state?.(),externalContext());}
+    catch(_){return false;}
+  };
   const bookMismatch=(requestedAsset,requestedQuote,expectedAsset,expectedQuote)=>
     !!expectedAsset&&(
       requestedAsset!==expectedAsset||
@@ -597,8 +604,8 @@
     // No BTC (or guessed market pair) may be loaded for a visible external graph.
     // Wait for the matching public exchange context, then the existing open-only
     // 2-second refresh/event path will retry normally.
-    if(!externalReady(visible,ext)){
-      clearBookForAsset(visible,"USDT");
+    if(!externalReady(visible,ext)||visibleGraphConflict()){
+      clearBookForAsset(visible||normalizeSelectedAsset(ext.base)||"BTC",ext.active?ext.quote:"USDT");
       state.error="Contexte public du graphique externe non synchronisé · carnet indisponible";
       state.errorCode="EXTERNAL_CONTEXT_MISSING";
       render();
@@ -749,7 +756,7 @@
     const visible=visibleExternalAsset();
     const expected=visible||normalizeSelectedAsset(ext.active?ext.base:null);
     const inconsistent=bookMismatch(state.loadedAsset,state.loadedQuote,expected,ext.active?ext.quote:null)||
-      (visible&&!externalReady(visible,ext));
+      (visible&&!externalReady(visible,ext))||visibleGraphConflict();
     if(inconsistent){
       if(title)title.textContent="CARNET D’ORDRES · SYNCHRONISATION";
       if(live){live.dataset.state="UNKNOWN";live.textContent="UNKNOWN";}
@@ -816,7 +823,9 @@
     const orderbookSafetyOk=bookMismatch("BTC","USDC","CT","USDT")&&
       !bookMismatch("CT","USDT","CT","USDT")&&
       !externalReady("CT",{active:true,base:"BTC"})&&
-      externalReady("CT",{active:true,base:"CT"});
+      externalReady("CT",{active:true,base:"CT"})&&
+      externalGraphConflict({active:true,coin_id:"bitcoin"},{active:true,id:"concrete"})&&
+      !externalGraphConflict({active:true,coin_id:"concrete"},{active:true,id:"concrete"});
     const pairCandidates=pairResolver()?.instrumentCandidates?.({asset:"OKB",currency:"USD"})||["OKB-USDC","OKB-USDT"];
     const resolverTruth=marketResolver()?.self_test?.()?.pass===true;
     const pairCandidatesOk=JSON.stringify(pairCandidates)===JSON.stringify(["OKB-USDC","OKB-USDT"]);
