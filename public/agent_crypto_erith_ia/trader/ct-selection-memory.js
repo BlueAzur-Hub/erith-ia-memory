@@ -85,8 +85,8 @@
 
   async function restore(){
     if(restoreAttempted||!stored())return false;
-    restoreAttempted=true;
     if(document.visibilityState==="hidden")return false;
+    restoreAttempted=true;
     const active=external();
     if(active?.active)return false; // Never overwrite another live operator selection.
     const api=owner();
@@ -129,6 +129,10 @@
   // If already selected on first load, seed the preference without changing the graph.
   if(isCt(external()))save();
   else if(stored())void restore();
+  // On an initially backgrounded tab, resume once visible without a polling loop.
+  document.addEventListener("visibilitychange",()=>{
+    if(document.visibilityState==="visible"&&!restoreAttempted&&stored())void restore();
+  },{passive:true});
 
   globalThis.AgentCryptoTraderCtSelectionMemory=Object.freeze({
     snapshot:()=>Object.freeze({saved:!!stored(),restoring,restored,lastError,identity:stored()?.instrument||null}),
