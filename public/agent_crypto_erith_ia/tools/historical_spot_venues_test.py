@@ -540,6 +540,23 @@ class AlternativeMarketTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Daily catalogue identity"):
             m.active_archive_ids(queue,minute,invented)
 
+    def test_historical_rank_rotation_preserves_exact_owner(self):
+        queue=[{"id":f"asset-{i}","rank":i,"symbol":f"T{i}",
+                "name":f"Asset {i}"} for i in range(1,251)]
+        minute={"schema":"aerith.public.ohlcv.top250.federated-native-archives.v1",
+                "ranked":250,"archived_assets":1,"assets":[
+                    {"id":a["id"],"rank":a["rank"],"symbol":a["symbol"],
+                     "quote":"USDT","native_1m_count":43200 if a["rank"]==2 else 0}
+                    for a in queue]}
+        # Old archive positions can move without changing the immutable ID.
+        minute["assets"][1]["rank"],minute["assets"][2]["rank"]=3,2
+        daily={"schema":"aerith.public.crypto.multiresolution-sources.v1",
+               "asset_count":0,"assets":[]}
+        self.assertEqual(m.active_archive_ids(queue,minute,daily),{"asset-2"})
+        minute["assets"][1]["symbol"]="WRONG"
+        with self.assertRaisesRegex(ValueError,"exact owner symbol"):
+            m.active_archive_ids(queue,minute,daily)
+
     def test_independent_contract_source_verifies_unique_original_owner(self):
         import prove_public_spot_contracts as contract
         owner={"id":"mantle","rank":56,"symbol":"MNT","name":"Mantle"}
@@ -634,9 +651,12 @@ class AlternativeMarketTests(unittest.TestCase):
         queue,excluded=m.universe()
         minute=json.loads(m.LIVE_MINUTE.read_text())
         daily=json.loads(m.LIVE_DAILY.read_text())
+        current={a["id"]:a for a in queue}
         observed={a["id"] for a in minute["assets"]
-                  if a["native_1m_count"]>0}
-        observed.update(a["id"] for a in daily["assets"])
+                  if a["native_1m_count"]>0 and a["id"] in current}
+        observed.update(a["id"] for a in daily["assets"] if a["id"] in current)
+        catalog=json.loads(m.CATALOG.read_text())
+        observed.update(a["id"] for a in catalog["assets"] if a["months"])
         self.assertEqual(len(queue),250)
         self.assertEqual(excluded,observed)
         self.assertEqual(len(queue)-len(excluded),250-len(observed))

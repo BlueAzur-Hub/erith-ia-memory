@@ -17,7 +17,7 @@ class BitgetFederationTests(unittest.TestCase):
         cls.catalog=json.loads(b.CATALOG.read_text())
         cls.exact=json.loads(proof.EXACT.read_text())
         cls.spot=json.loads(proof.INSTRUMENTS.read_text())
-        cls.asset=b.source_candidates(cls.catalog,cls.exact,cls.spot)["cosmos"]
+        cls.asset=b.source_candidates(cls.catalog,cls.exact,cls.spot)["lighter"]
 
     def test_current_federation_persists_original_sources_after_census_rotation(self):
         import copy
@@ -39,6 +39,23 @@ class BitgetFederationTests(unittest.TestCase):
         old["markets"]=[]
         with self.assertRaisesRegex(ValueError,"original Spot pair"):
             b.source_candidates(self.catalog,altered,self.spot,live)
+
+    def test_rank_rotation_preserves_exact_cosmos_spot_proof(self):
+        old=json.loads(b.FEDERATED.read_text())
+        historical=next(x for x in old["assets"] if x["id"]=="cosmos")
+        current=next(x for x in self.catalog["assets"] if x["id"]=="cosmos")
+        self.assertNotEqual(historical["rank"],current["rank"])
+        self.assertEqual(historical["symbol"],current["symbol"])
+        source=b.source_candidates(self.catalog,self.exact,self.spot,old)["cosmos"]
+        self.assertEqual(source["id"],"cosmos")
+        self.assertEqual(source["rank"],current["rank"])
+        self.assertEqual(source["pair"],"ATOMUSDT")
+        import copy
+        forged=copy.deepcopy(old)
+        fake=next(x for x in forged["assets"] if x["id"]=="cosmos")
+        fake["symbol"]="WRONG"
+        with self.assertRaisesRegex(ValueError,"identity drift"):
+            b.source_candidates(self.catalog,self.exact,self.spot,forged)
 
     def test_verified_bitget_syrup_remains_valid_after_new_binance_months(self):
         import copy
@@ -189,7 +206,7 @@ class BitgetFederationTests(unittest.TestCase):
         self.assertEqual(union["native_1m_candles"],
                          self.catalog["native_1m_candles"]+44640+43200)
         self.assertEqual(next(x for x in union["assets"]
-                              if x["id"]=="cosmos")["months"],2)
+                              if x["id"]=="lighter")["months"],2)
         self.assertEqual(len(projections),1)
 
     def test_short_source_month_is_rejected_even_if_manifest_claims_43200(self):
@@ -206,7 +223,7 @@ class BitgetFederationTests(unittest.TestCase):
 
     def test_wrong_coin_id_cannot_take_verified_other_coin_history(self):
         tag,metadata,downloader=self.fixture()
-        untrusted=tag.replace("cosmos","unknown-coin")
+        untrusted=tag.replace("lighter","unknown-coin")
         projections,alt,union=b.build(self.catalog,self.exact,self.spot,[untrusted],
                                       metadata,downloader)
         self.assertEqual(len(projections),0)

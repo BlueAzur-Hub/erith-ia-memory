@@ -65,11 +65,17 @@ async function ready(h){
 }
 test("actual asynchronous source snapshots render Binance and Bitget without double counting",async()=>{
  const h=harness();await ready(h);
- const f=fixtures.get("top250_multisource_coverage/index.json");
+ const source=fixtures.get("top250_history_catalog/index.json");
+ const alt=fixtures.get("bitget_verified_views/index.json");
  const result=h.window.SevenTop250Catalog.read();
  assert.ok(result,"Expected validated exact-ID source catalogs: "+h.element("top250-status").textContent);
  assert.equal(result.assets.length,250);
- assert.equal(result.archived_assets,f.archived_assets);
+ assert.equal(result.archived_assets,source.archived_assets);
+ assert.equal(result.rank_snapshot,source.rank_snapshot);
+ const byId=new Map(source.assets.map(a=>[a.id,a]));
+ const expected=source.archived_assets+alt.assets.filter(a=>
+   byId.has(a.id)&&!byId.get(a.id).months.length).length;
+ assert.ok(h.element("top250-title").textContent.includes(expected+"/250"));
  assert.match(h.element("top250-title").textContent,/archives publiques/);
  assert.match(h.element("top250-counts").textContent,/Top 250/);
  assert.ok(h.element("top250-summary").children.length>0);
@@ -86,7 +92,7 @@ test("old federated monthly counter does not hide newer genuine Binance sources"
  });
  await ready(h);
  assert.ok(h.window.SevenTop250Catalog.read());
- assert.match(h.element("top250-status").textContent,/index fédéré plus ancien/);
+ assert.match(h.element("top250-status").textContent,/instantanés historiques distincts/);
 });
 test("tampering a genuine Binance source count blocks the view",async()=>{
  const h=harness((file,data)=>{
@@ -112,6 +118,24 @@ test("a changed frozen Top250 exact coin identity is rejected",async()=>{
  await ready(h);
  assert.equal(h.window.SevenTop250Catalog.read(),null);
  assert.match(h.element("top250-status").textContent,/Identité ou comptage Binance incorrect/);
+});
+test("historic rank drift cannot transplant candles across owners",async()=>{
+ const h=harness();await ready(h);
+ const b=fixtures.get("top250_history_catalog/index.json");
+ const f=fixtures.get("top250_multisource_coverage/index.json");
+ assert.notEqual(f.assets.find(a=>a.id==="cosmos").rank,
+   b.assets.find(a=>a.id==="cosmos").rank);
+ assert.equal(h.window.SevenTop250Catalog.read().assets[0].id,"bitcoin");
+ assert.equal(b.assets.find(a=>a.id==="bitcoin").months[0].pair,"BTCUSDT");
+ assert.match(h.element("top250-status").textContent,/Sources indépendantes validées/);
+});
+test("Bitget source with falsified owner ticker is refused",async()=>{
+ const h=harness((file,data)=>{
+  if(file==="bitget_verified_views/index.json")
+   data.assets.find(a=>a.id==="cosmos").symbol="OTHER";
+ });await ready(h);
+ assert.equal(h.window.SevenTop250Catalog.read(),null);
+ assert.match(h.element("top250-status").textContent,/Source Bitget invalide/);
 });
 test("the WBT private proof is shown without publishing source prices",async()=>{
  const h=harness();await ready(h);

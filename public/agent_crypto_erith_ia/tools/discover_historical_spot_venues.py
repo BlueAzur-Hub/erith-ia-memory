@@ -32,11 +32,13 @@ def require(ok,message):
     if not ok: raise ValueError(message)
 
 def active_archive_ids(queue, minute, daily):
-    """Treat BOTH published native source registries as archive truth.
+    """Union independently verified old 1m/1d sources by exact coin ID.
 
-    The old Binance-only history catalog omits both newer minute and native
-    daily acquisitions. Never spend discovery quotas on already archived IDs.
-    A Spot instrument candidate or a probe is NOT an archive.
+    A frozen 250-asset snapshot may predate the current ranked Top250 and
+    include delisted-from-rank assets. Rank never proves source ownership.
+    Previously validated historical rows remain counted in their own dated
+    source registry, but only still-current exact IDs enter the discovery
+    exclusion set. Never infer a match from rank or ticker alone.
     """
     require(minute.get("schema")==
             "aerith.public.ohlcv.top250.federated-native-archives.v1"
@@ -49,35 +51,53 @@ def active_archive_ids(queue, minute, daily):
             "Missing living native-daily source catalogue")
     expected={a["id"]:a for a in queue}
     require(len(expected)==250,"Repeated Top250 ranked owner")
-    rows={a["id"]:a for a in minute["assets"]}
-    require(len(rows)==250 and set(rows)==set(expected),
-            "Minute catalogue owner universe changed")
+    rows={}
+    ranks=set()
     archived=set()
-    for aid,source in rows.items():
-        owner=expected[aid]
-        require(source["rank"]==owner["rank"] and
-                source["symbol"]==owner["symbol"] and
-                source["quote"]=="USDT" and
-                isinstance(source["native_1m_count"],int) and
-                source["native_1m_count"]>=0,
+    old_archived=0
+    for source in minute["assets"]:
+        aid=source["id"]
+        rank=source.get("rank")
+        require(aid not in rows and isinstance(rank,int)
+                and rank not in ranks and 1<=rank<=250
+                and isinstance(source.get("symbol"),str) and source["symbol"]
+                and source.get("quote")=="USDT"
+                and isinstance(source.get("native_1m_count"),int)
+                and source["native_1m_count"]>=0,
                 "Minute catalogue identity or native count mismatch")
+        rows[aid]=source
+        ranks.add(rank)
+        if source["native_1m_count"]>0:
+            old_archived+=1
+        owner=expected.get(aid)
+        if owner is None:
+            continue
+        require(source["symbol"]==owner["symbol"],
+                "Minute catalogue exact owner symbol mismatch")
         if source["native_1m_count"]>0:
             archived.add(aid)
-    require(len(archived)==minute["archived_assets"],
+    require(len(rows)==250 and ranks==set(range(1,251))
+            and old_archived==minute["archived_assets"],
             "Minute catalogue headline differs from verified rows")
     seen=set()
     for source in daily["assets"]:
         aid=source["id"]
-        owner=expected.get(aid)
-        require(owner is not None and aid not in seen and
-                source["rank"]==owner["rank"] and
-                source["symbol"]==owner["symbol"] and
-                source["quote"] in ("USDT","USDC") and
-                isinstance(source["native_candles"],int) and
-                source["native_candles"]>0 and
-                source.get("release_url") and source.get("sha256"),
+        require(aid not in seen
+                and isinstance(source.get("rank"),int)
+                and isinstance(source.get("symbol"),str) and source["symbol"]
+                and source.get("quote") in ("USDT","USDC")
+                and isinstance(source.get("native_candles"),int)
+                and source["native_candles"]>0
+                and source.get("release_url")
+                and isinstance(source.get("sha256"),str)
+                and re.fullmatch(r"[a-f0-9]{64}",source["sha256"]),
                 "Daily catalogue identity or source metadata missing")
         seen.add(aid)
+        owner=expected.get(aid)
+        if owner is None:
+            continue
+        require(source["symbol"]==owner["symbol"],
+                "Daily catalogue identity or source metadata missing")
         archived.add(aid)
     return archived
 
@@ -116,7 +136,10 @@ def universe(venue=VENUE,catalog=CATALOG):
            for a in sorted(current,key=lambda x:x["rank"])]
     minute=json.loads(LIVE_MINUTE.read_text())
     daily=json.loads(LIVE_DAILY.read_text())
+    # An immutable Binance ZIP may have been imported after the independent
+    # minute/1D snapshot. These verified catalog months are a separate input.
     archived=active_archive_ids(queue,minute,daily)
+    archived.update(a["id"] for a in current if a["months"])
     require({a["id"] for a in current if a["months"]}<=archived,
             "Historic archive vanished from living native source registers")
     return queue,archived
@@ -236,7 +259,7 @@ def inspect(asset,getter=fetch,exchange_getter=None,exchanges=("okx","bitget")):
     return "market_not_confirmed",[],pages
 
 def official_priority(queue,archived,path=OFFICIAL):
-    """A symbol-only instrument is a scheduling hint, NEVER an ID approval."""
+    """A dated official instrument census offers hints, not source ownership."""
     if not Path(path).is_file():
         return set()
     doc=json.loads(Path(path).read_text(encoding="utf-8"))
@@ -244,28 +267,29 @@ def official_priority(queue,archived,path=OFFICIAL):
         return set()
     rows=doc.get("assets")
     audit_count=doc.get("archived_assets_at_audit")
-    # A successful archive extends the current archived set. It must not
-    # invalidate still-unarchived, exact-ID-matched official instruments.
-    # Reject a regressing count or any changed rank/symbol/identity.
     if (doc.get("ranked")!=250 or not isinstance(rows,list)
         or not isinstance(audit_count,int) or isinstance(audit_count,bool)
-        or audit_count<0 or audit_count>len(archived)
+        or audit_count<0 or audit_count>250 or audit_count>len(archived)
         or len(rows)!=250-audit_count):
         return set()
     byid={a["id"]:a for a in queue}
+    historical={a["id"]:a for a in json.loads(LIVE_MINUTE.read_text())["assets"]}
     seen=set();selected=set()
     for x in rows:
         aid=x.get("id")
-        require(aid in byid and aid not in seen
-                and x.get("rank")==byid[aid]["rank"]
-                and x.get("symbol")==byid[aid]["symbol"],
+        original=byid.get(aid) or historical.get(aid)
+        require(original is not None and aid not in seen
+                and x.get("symbol")==original["symbol"]
+                and isinstance(x.get("rank"),int)
+                and 1<=x["rank"]<=250,
                 "Instrument scheduling hint does not belong to ranked Top250")
         seen.add(aid)
-        if x.get("instruments"):
-            require(isinstance(x["instruments"],list),"Invalid official instrument matches")
-            if aid not in archived: selected.add(aid)
-    require({a["id"] for a in queue if a["id"] not in archived}<=seen,
-            "Official candidate universe changed since audit")
+        require(isinstance(x.get("instruments"),list),
+                "Invalid official instrument matches")
+        if aid in byid and aid not in archived and x["instruments"]:
+            selected.add(aid)
+    # A newer ranked snapshot legitimately has different unarchived IDs.
+    # Unknown current owners get the conservative two-venue fallback.
     return selected
 
 def source_venues_for(asset,official):
@@ -284,8 +308,7 @@ def source_venues_for(asset,official):
     if not rows:
         return ("okx","bitget")
     row=rows[0]
-    require(row.get("rank")==asset["rank"] and
-            row.get("symbol")==asset["symbol"],
+    require(row.get("symbol")==asset["symbol"],
             "Official venue owner changed since CoinGecko ranking")
     selected=[]
     for item in row.get("instruments",[]):
@@ -310,14 +333,21 @@ def source_venues_for(asset,official):
 def validate(doc,queue):
     require(doc.get("schema")==SCHEMA and isinstance(doc.get("results"),list),
             "Bad discovery evidence ledger")
-    idx={a["id"]:a for a in queue};seen=set()
+    idx={a["id"]:a for a in queue}
+    # Historic exact-ID evidence may reference seven assets no longer in
+    # today's ranked universe. Keep the dated proof, never rename or reuse it.
+    frozen={a["id"]:a for a in json.loads(LIVE_MINUTE.read_text())["assets"]}
+    seen=set();current_checked=set()
     for row in doc["results"]:
         aid=row.get("id")
-        require(aid in idx and aid not in seen and
-                row.get("rank")==idx[aid]["rank"] and
-                row.get("symbol")==idx[aid]["symbol"],
+        owner=idx.get(aid) or frozen.get(aid)
+        require(owner is not None and aid not in seen and
+                row.get("symbol")==owner["symbol"] and
+                isinstance(row.get("rank"),int) and 1<=row["rank"]<=250,
                 "Discovery identity changed")
         seen.add(aid)
+        if aid in idx:
+            current_checked.add(aid)
         require(row.get("status") in ("exact_id_market_candidates","market_not_confirmed",
                "source_pagination_incomplete","source_unavailable") and
                isinstance(row.get("markets"),list),"Unknown discovery status")
@@ -330,7 +360,8 @@ def validate(doc,queue):
                     p.get("exchange_instrument_confirmed") is False and
                     p.get("native_1m_month_confirmed") is False,
                     "Unverified market or source ownership")
-    return seen
+    return current_checked
+
 
 def process(queue,prior=None,batch=MAX_BATCH,checker=inspect,delay=15,
             excluded=frozenset(),preferred=frozenset()):
@@ -375,8 +406,8 @@ def process(queue,prior=None,batch=MAX_BATCH,checker=inspect,delay=15,
     result=sorted(records.values(),key=lambda x:x["rank"])
     output={"schema":SCHEMA,"ranked":250,
             "candidate_count":len(queue)-len(excluded),
-            "checked_count":sum(x["id"] not in excluded for x in result),
-            "market_candidate_count":sum(bool(x["markets"]) and x["id"] not in excluded
+            "checked_count":sum(x["id"] in {a["id"] for a in queue} and x["id"] not in excluded for x in result),
+            "market_candidate_count":sum(bool(x["markets"]) and x["id"] in {a["id"] for a in queue} and x["id"] not in excluded
                                          for x in result),
             "source":"CoinGecko exact coin ID, independent exchange-specific Spot tickers",
             "quote":"USDT or USDC: never convert silently",
@@ -652,9 +683,9 @@ def enrich_independent_contracts(queue,archived,doc,official,coingecko,sources):
         added.append(aid)
     output=dict(doc)
     output["results"]=sorted(indexed.values(),key=lambda x:x["rank"])
-    output["checked_count"]=sum(x["id"] not in archived for x in output["results"])
+    output["checked_count"]=sum(x["id"] in {a["id"] for a in queue} and x["id"] not in archived for x in output["results"])
     output["market_candidate_count"]=sum(
-        bool(x["markets"]) and x["id"] not in archived for x in output["results"])
+        bool(x["markets"]) and x["id"] in {a["id"] for a in queue} and x["id"] not in archived for x in output["results"])
     if added:
         output["source"]=(doc["source"]+
             "; independently matched CoinGecko contract to original Gate/KuCoin coin chain")
@@ -675,7 +706,7 @@ def main():
     if args.plan:
         print("ALT MARKET PLAN "+json.dumps({"ranked":250,"archived":len(archived),
               "candidate_count":250-len(archived),
-              "checked":sum(x["id"] not in archived for x in prior["results"]) if prior else 0,
+              "checked":sum(x["id"] in {a["id"] for a in queue} and x["id"] not in archived for x in prior["results"]) if prior else 0,
               "official_priority_assets":len(official_priority(queue,archived))}))
         return
     priority=official_priority(queue,archived)
