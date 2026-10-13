@@ -1,0 +1,81 @@
+name: Agent Crypto Trader Flux Historique
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-trader-flux.yml'
+      - 'public/agent_crypto_erith_ia/tools/eth_flow_pilot.py'
+      - 'public/agent_crypto_erith_ia/tools/publish_trader_flux.py'
+      - 'public/agent_crypto_erith_ia/tools/test_eth_flow_pilot.py'
+      - 'public/agent_crypto_erith_ia/tools/test_publish_trader_flux.py'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publier les vues vérifiées dans GitHub Pages (oui/non)'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-trader-flux
+  cancel-in-progress: false
+
+jobs:
+  extract-verified-flows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Tests locaux autonomes, aucune source réelle modifiée
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_eth_flow_pilot.py' -v
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_publish_trader_flux.py' -v
+      - name: Télécharger la seule archive ETH du Coffre déjà recensée
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/eth-source"
+          gh release download crypto-spot-bulk-2026-09-1m \
+            -R BlueAzur-Hub/erith-ia-memory \
+            -p ETHUSDT-1m-2026-09.zip \
+            -D "$RUNNER_TEMP/eth-source"
+      - name: Vérifier SHA, lire 12 colonnes, produire des vues HTTP lisibles
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/publish_trader_flux.py \
+            --zip "$RUNNER_TEMP/eth-source/ETHUSDT-1m-2026-09.zip" \
+            --out "$RUNNER_TEMP/trader-flux"
+      - name: Conserver le résultat pour revue (même sans publication)
+        uses: actions/upload-artifact@v4
+        with:
+          name: trader-eth-flux-json
+          path: ${{ runner.temp }}/trader-flux/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publier uniquement si demandé explicitement au lancement
+        if: ${{ inputs.publish == true && github.ref == 'refs/heads/main' }}
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/trader_flux
+          mkdir -p "$target"
+          cp -a "$RUNNER_TEMP/trader-flux/." "$target/"
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: contenu vérifié déjà publié'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Publish verified ETH taker flow JSON views'
+          git pull --rebase origin main
+          git push origin HEAD:main
