@@ -30,6 +30,8 @@
   let liveTimer=0;
   const n=v=>{const x=Number(v);return Number.isFinite(x)?x:null;};
   const fmt=(v,d=2)=>Number.isFinite(v)?v.toLocaleString("fr-FR",{maximumFractionDigits:d}):"—";
+  // Market price precision must not round CT (~0.368788) to 0.37.
+  const fmtPrice=v=>{const x=n(v);if(x===null)return"—";const a=Math.abs(x);return fmt(x,a>=100?2:a>=1?4:a>=.01?6:a>=.0001?8:a>=1e-8?12:16);};
   const quoteAmount=(v,quote=state.quote)=>Number.isFinite(v)?(String(quote||"").toUpperCase()==="EUR"?v.toLocaleString("fr-FR",{maximumFractionDigits:0})+" €":v.toLocaleString("fr-FR",{maximumFractionDigits:2})+" "+String(quote||"").toUpperCase()):"—";
   const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
   const bookError=(code,message)=>{const error=new Error(message);error.code=code;return error;};
@@ -678,7 +680,7 @@
     return ordered.map(r=>`
       <div class="oms-level ${side}">
         <i class="bar" style="width:${Math.max(3,r.cumulative/max*100).toFixed(1)}%"></i>
-        <span class="price">${fmt(r.price,2)}</span>
+        <span class="price">${fmtPrice(r.price)}</span>
         <span>${fmt(r.qty,6)}</span>
         <span>${fmt(r.cumulative,6)}</span>
       </div>`).join("");
@@ -698,7 +700,7 @@
       <div class="oms-book">
         <div class="oms-book-head"><span>Prix</span><span>${esc(state.loadedAsset||state.requestedAsset||state.asset)}</span><span>Cumul ${esc(state.loadedAsset||state.requestedAsset||state.asset)}</span></div>
         ${rowsHtml(state.asks,"ask",6)}
-        <div class="oms-midline"><b>${fmt(m.mid,2)}</b><small>SPREAD ${fmt(m.spread,2)} · ${fmt(m.spreadBp,2)} bp</small></div>
+        <div class="oms-midline"><b>${fmtPrice(m.mid)}</b><small>SPREAD ${fmtPrice(m.spread)} · ${fmt(m.spreadBp,2)} bp</small></div>
         ${rowsHtml(state.bids,"bid",6)}
       </div>
       <div class="oms-note">Le carnet se rafraîchit toutes les 2 s uniquement tant que cette fenêtre est ouverte. Vue read-only : aucune exécution.</div>`;
@@ -780,10 +782,10 @@
 
     const m=metrics();
     kpis.innerHTML=`
-      <span><small>BEST BID</small><b>${fmt(m.bid,2)}</b></span>
-      <span><small>BEST ASK</small><b>${fmt(m.ask,2)}</b></span>
-      <span><small>SPREAD</small><b>${fmt(m.spread,2)} · ${fmt(m.spreadBp,2)} bp</b></span>
-      <span><small>MID</small><b>${fmt(m.mid,2)}</b></span>
+      <span><small>BEST BID</small><b>${fmtPrice(m.bid)}</b></span>
+      <span><small>BEST ASK</small><b>${fmtPrice(m.ask)}</b></span>
+      <span><small>SPREAD</small><b>${fmtPrice(m.spread)} · ${fmt(m.spreadBp,2)} bp</b></span>
+      <span><small>MID</small><b>${fmtPrice(m.mid)}</b></span>
       <span><small>BID TOP20 · ${esc(state.quote)}</small><b>${quoteAmount(m.bid20)}</b></span>
       <span><small>ASK TOP20 · ${esc(state.quote)}</small><b>${quoteAmount(m.ask20)}</b></span>`;
 
@@ -802,10 +804,11 @@
     try{validateBookPayload({...fresh,asset:"BTC",pair:"BTC-EUR"},"ETH","EUR",now);}catch(error){wrongPairRejected=error?.code==="ASSET_MISMATCH"||error?.code==="PAIR_MISMATCH";}
     try{validateBookPayload({...fresh,observed_at_utc:""},"ETH","EUR",now);}catch(error){missingTimeRejected=error?.code==="SOURCE_TIME_INVALID";}
     try{validateBookPayload({...fresh,pair:"ETH-USDT"},"ETH","USDC",now);}catch(error){wrongQuoteRejected=error?.code==="QUOTE_MISMATCH";}
+    const precisionOk=fmtPrice(0.368788).includes(",368788")&&fmtPrice(83150.45).includes(",45");
     const pairCandidates=pairResolver()?.instrumentCandidates?.({asset:"OKB",currency:"USD"})||["OKB-USDC","OKB-USDT"];
     const resolverTruth=marketResolver()?.self_test?.()?.pass===true;
     const pairCandidatesOk=JSON.stringify(pairCandidates)===JSON.stringify(["OKB-USDC","OKB-USDT"]);
-    const pass=rows.length===2&&LIVE_MS===2000&&freshPass&&stablePass&&staleRejected&&wrongPairRejected&&missingTimeRejected&&wrongQuoteRejected&&pairCandidatesOk&&resolverTruth;
+    const pass=rows.length===2&&LIVE_MS===2000&&freshPass&&stablePass&&staleRejected&&wrongPairRejected&&missingTimeRejected&&wrongQuoteRejected&&pairCandidatesOk&&resolverTruth&&precisionOk;
     return Object.freeze({build:BUILD,pass,checks:{
       lecture_technique_overlay:true,
       docked_glass_surface:true,
@@ -834,6 +837,7 @@
       requested_asset_must_match_payload:true,
       visible_external_graph_guard:true,
       no_btc_fallback_on_visible_ct:true,
+      small_price_levels_preserved:precisionOk,
       display_aware_quote:true,
       eur_quote_preserved:true,
       usd_display_prefers_usdc_then_usdt:true,
