@@ -209,7 +209,13 @@ def verify_release(tag,asset,metadata=release_info,downloader=download):
          and m.get("unavailable")==0 and len(m.get("assets",[]))==1,
          "Unqualified Bitget month source manifest")
     row=m["assets"][0]
-    need(row.get("asset_id")==asset["id"] and row.get("rank")==asset["rank"]
+    # This rank is the historical ranking at the time the immutable
+    # Release was created, not today's rank. SHA-256 already binds it to the
+    # verified manifest; never use the new ranking to reassign a ZIP.
+    historic_rank=row.get("rank")
+    need(row.get("asset_id")==asset["id"]
+         and isinstance(historic_rank,int) and not isinstance(historic_rank,bool)
+         and 1<=historic_rank<=250
          and row.get("pair")==asset["pair"] and row.get("quote")=="USDT"
          and row.get("source")==bitget.SOURCE and row.get("status")=="verified"
          and row.get("file")==archive_file and row.get("candles")==bulk.bounds(month,"1m")[1]
