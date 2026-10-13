@@ -269,7 +269,7 @@ def official_priority(queue,archived,path=OFFICIAL):
     audit_count=doc.get("archived_assets_at_audit")
     if (doc.get("ranked")!=250 or not isinstance(rows,list)
         or not isinstance(audit_count,int) or isinstance(audit_count,bool)
-        or audit_count<0 or audit_count>250
+        or audit_count<0 or audit_count>250 or audit_count>len(archived)
         or len(rows)!=250-audit_count):
         return set()
     byid={a["id"]:a for a in queue}
