@@ -6525,6 +6525,7 @@ function atlasRenderChartValueOverlay() {
 }
 
 function atlasChartV2RedrawFromBroker() {
+  if (atlasTraderCtSelectionOwnsView()) return;
   const chart = state.dataBroker?.chart;
   if (chart?.status !== "ready" || !atlasChartContextMatches(chart)) {
     atlasChartV2SyncControls();
@@ -7391,6 +7392,8 @@ const atlasOverlayAxesPlugin = {
 };
 
 function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
+  // CT must be the only visible line while its saved V7 intent is current.
+  if (atlasTraderCtSelectionOwnsView() && result?.coin?.id!=="concrete") return;
   if (!canvas) return;
 
   const period = Number(result?.periodDays || state.chartPeriodDays || 1);
@@ -11817,6 +11820,7 @@ function atlasAtomicRefreshComparisonChart(chart, canvas, normalizedEntries, per
 }
 
 function drawComparisonChart(canvas, entries, period, chartKey = "") {
+  if (atlasTraderCtSelectionOwnsView()) return [];
   if (!canvas || !Array.isArray(entries) || entries.length < 1) {
     state.dataBroker.comparison.renderedIds = [];
     return [];
@@ -12593,6 +12597,7 @@ function atlasRefreshSelectedDetailOnly() {
 }
 
 function atlasRenderCompactDetailSummary(coin = null) {
+  if (atlasTraderCtSelectionOwnsView() && coin?.id!=="concrete") return;
   const strip = document.getElementById("detailCompactStrip");
 
   if (!coin) {
@@ -12658,6 +12663,7 @@ function atlasRenderCompactDetailSummary(coin = null) {
 }
 
 function atlasRenderChartResult(c, period, result, chartKey, forceRedraw = false) {
+  if (atlasTraderCtSelectionOwnsView() && c?.id!=="concrete") return;
   atlasBrokerCommitChart(c, period, result, "ready");
   const periodLabel = atlasChartPeriodLabel(period);
   const fingerprint = atlasChartResultFingerprint(result);
@@ -14003,6 +14009,9 @@ function atlasWorkspaceStoredChartResult(coin, period) {
 }
 
 function atlasWorkspaceRestoreCachedGraph(ids, period, preset) {
+  // Never render the retained Market/BTC cache when V7 says CT is active.
+  // Restore CT directly via its existing OKX native listing owner.
+  if (atlasTraderCtSelectionOwnsView()) return false;
   const coins = (ids || [])
     .map(id => state.coins.find(coin => coin.id === id))
     .filter(Boolean);
@@ -18999,6 +19008,9 @@ function atlasSelectedSpotFor(coin) {
 }
 
 function atlasRenderAssetDetail(c, period, result = null, mode = "loading") {
+  // While CT owns the visible chart, a late BTC/Market callback must not
+  // overwrite the CT detail card with unrelated canonical market values.
+  if (atlasTraderCtSelectionOwnsView() && c?.id!=="concrete") return;
   atlasRenderCompactDetailSummary(c);
   const periodLabel = atlasChartPeriodLabel(period);
   const ratio = c?.volume24h && c?.marketCap ? `${((c.volume24h / c.marketCap) * 100).toFixed(2)} %` : "Donnée manquante";
@@ -46762,9 +46774,19 @@ function atlasGraphContextV7SetSurface(surface="market",lastAction="user-surface
 
 /* The trusted CT row click persists the selection before OKX requests.
    V7 IndexedDB remains the ONLY current selection authority. */
-function atlasTraderExternalSelectionRead() {
+function atlasTraderIsRuntime() {
   return document.documentElement?.dataset?.agentCryptoSurface==="trader"
+    || new URLSearchParams(location.search).get("surface")==="trader";
+}
+function atlasTraderExternalSelectionRead() {
+  return atlasTraderIsRuntime()
     ? atlasGraphContextV7Read()?.traderExternalSelection||null:null;
+}
+// Canonical V7 external selection owns the visible chart until the operator
+// explicitly leaves CT. The Top 250 market subprofile stays available for a
+// future return, but must never be painted over the restored external view.
+function atlasTraderCtSelectionOwnsView() {
+  return atlasTraderExternalSelectionRead()?.id==="concrete";
 }
 function atlasTraderExternalSelectionCommit(spec) {
   if(document.documentElement?.dataset?.agentCryptoSurface!=="trader")return false;
@@ -48022,7 +48044,11 @@ function atlasWorkspaceRestoreAfterMarket() {
   atlasRenderComparisonControls();
   atlasChartV2SyncControls();
   atlasRenderOracleV0();
-  atlasWorkspaceRestoreCachedGraph(ids, period, state.dataBroker.comparison.preset);
+  // V7 external identity takes precedence over the retained Market subprofile.
+  // The latter is preserved in V7 but is not the initially visible selection.
+  if (!atlasTraderCtSelectionOwnsView()) {
+    atlasWorkspaceRestoreCachedGraph(ids, period, state.dataBroker.comparison.preset);
+  }
 
   const savedGraphMode = ATLAS_ADMIN_GRAPH_MODES.includes(graphSaved.graphMode) ? graphSaved.graphMode : "normal";
   try { localStorage.setItem(ATLAS_ADMIN_GRAPH_MODE_KEY, savedGraphMode); } catch {}
