@@ -754,7 +754,7 @@
     if(!meta||!kpis||!body)return;
 
     const visible=visibleExternalAsset();
-    const expected=visible||normalizeSelectedAsset(ext.active?ext.base:null);
+    const expected=visible||normalizeSelectedAsset(ext.active?ext.base:null)||selectedAsset();
     const inconsistent=bookMismatch(state.loadedAsset,state.loadedQuote,expected,ext.active?ext.quote:null)||
       (visible&&!externalReady(visible,ext))||visibleGraphConflict();
     if(inconsistent){
