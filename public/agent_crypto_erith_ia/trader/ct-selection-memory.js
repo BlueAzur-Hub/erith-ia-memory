@@ -15,6 +15,16 @@ const owner=()=>globalThis.AgentCryptoNewListingsNativeCategory;
 const external=()=>globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()||null;
 const lineOwner=()=>globalThis.AtlasExternalChart;
 const stage=()=>document.documentElement?.dataset?.atlasGraphBootPhase;
+// Read the EXISTING classic-script bootstrap barrier used by BTC/V7.
+// Unlike stage()==="ready", this flips only after BTC's real workspace
+// restoration was applied, so CT cannot race with or be overwritten by it.
+function canonicalWorkspaceReady(){
+  try{
+    return stage()==="ready"
+      && typeof atlasWorkspaceRestored!=="undefined"
+      && atlasWorkspaceRestored===true;
+  }catch(_){return false;}
+}
 let restoring=false,restored=false,lastError=null,bootWait=null;
 let attempts=0,retryTimer=null,initialTimer=null;
 const MAX_ATTEMPTS=3;
@@ -41,7 +51,7 @@ function cancelPending(){
   if(retryTimer){clearTimeout(retryTimer);retryTimer=null;}
   if(initialTimer){clearTimeout(initialTimer);initialTimer=null;}
 }
-function clear(){cancelPending();try{localStorage.removeItem(KEY);}catch(_){}}
+function clear(){cancelPending();bootWait?.disconnect();bootWait=null;try{localStorage.removeItem(KEY);}catch(_){}}
 function isLine(){
   const x=lineOwner()?.state?.()||{};
   return Boolean(isCt(external())&&x.active&&x.coin_id===ID
@@ -161,7 +171,7 @@ function planRetry(api){
 }
 async function restore(){
   if(restoring||restored||attempts>=MAX_ATTEMPTS||!stored()||document.visibilityState==="hidden")return false;
-  if(!["ready","error"].includes(stage()))return false;
+  if(!canonicalWorkspaceReady())return false;
   if(external()?.active&&!isCt(external()))return false;
   const api=owner();
   if(typeof api?.selectById!=="function"||typeof lineOwner()?.present!=="function"){
@@ -188,21 +198,32 @@ function boot(){
   if(restoreDone())return;
   if(!stored()||restoring||restored||attempts>=MAX_ATTEMPTS)return;
   if(document.visibilityState!=="visible")return;
-  if(["ready","error"].includes(stage())){
+  if(canonicalWorkspaceReady()){
+    bootWait?.disconnect();bootWait=null;
     if(!initialTimer){
-      // Allow the canonical Market / V7 startup render to settle first.
-      initialTimer=setTimeout(()=>{initialTimer=null;void restore();},1100);
+      // Defer one browser turn after the SAME completed restore used by BTC:
+      // no invented 1100 ms delay and no V7/market write.
+      initialTimer=setTimeout(()=>{initialTimer=null;void restore();},0);
     }
   }else waitForCanonicalBoot();
 }
 function waitForCanonicalBoot(){
   if(bootWait||restoring||restored||attempts>=MAX_ATTEMPTS||!stored())return;
+  const watchRoot=document.getElementById("atlasWorkspaceReprise");
+  if(!watchRoot){
+    indication("CT · attente de l'Espace mémorisé");
+    return;
+  }
+  indication("CT · attente de restauration de l'Espace mémorisé");
   bootWait=new MutationObserver(()=>{
-    if(!["ready","error"].includes(stage()))return;
-    bootWait?.disconnect();bootWait=null;boot();
+    if(!canonicalWorkspaceReady())return;
+    bootWait?.disconnect();bootWait=null;
+    boot();
   });
-  bootWait.observe(document.documentElement,{attributes:true,attributeFilter:["data-atlas-graph-boot-phase"]});
-  if(["ready","error"].includes(stage())){
+  // BTC's own atlasWorkspaceRenderStrip runs at the END of
+  // atlasWorkspaceRestoreAfterMarket. Observe that existing UI, not a timer.
+  bootWait.observe(watchRoot,{childList:true,characterData:true,subtree:true,attributes:true,attributeFilter:["data-state"]});
+  if(canonicalWorkspaceReady()){
     bootWait.disconnect();bootWait=null;boot();
   }
 }
