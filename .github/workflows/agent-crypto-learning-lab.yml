@@ -33,10 +33,17 @@ jobs:
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/administrator/js/learning-lab.js
           node --test public/agent_crypto_erith_ia/tools/learning-lab.test.mjs
-      - name: Protect historical vault, the Trader wrapper, and Market Core
+      - name: Protect all historical vault, Trader wrapper and Market Core changes in the PR
+        shell: bash
         run: |
           set -euo pipefail
-          git diff --exit-code HEAD^ HEAD -- \
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            git fetch origin main
+            baseline="$(git merge-base HEAD origin/main)"
+          else
+            baseline="HEAD^"
+          fi
+          git diff --exit-code "$baseline" HEAD -- \
             public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
             public/agent_crypto_erith_ia/trader/ \
             public/agent_crypto_erith_ia/core/ \
