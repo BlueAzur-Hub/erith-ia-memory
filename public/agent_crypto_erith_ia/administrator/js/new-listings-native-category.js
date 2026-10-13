@@ -784,10 +784,29 @@
     return true;
   }
 
-  async function select(spec){
-    if(!spec)return false;
+  // Two readers requesting the SAME listing share one network/graph operation.
+  // Only a genuinely different selection supersedes and aborts its predecessor.
+  // This prevents the Trader V7 restorer and memory A/B/C recall from cancelling CT.
+  function select(spec){
+    if(!spec)return Promise.resolve(false);
+    const flight=state.selectionFlight;
+    if(flight&&flight.id===spec.id&&flight.revision===state.requestRevision
+       &&!flight.controller.signal.aborted)return flight.promise;
     const request=beginRequest(spec);
+    const promise=selectRequested(spec,request);
+    const owner={id:spec.id,revision:request.revision,controller:request.controller,promise};
+    state.selectionFlight=owner;
+    void promise.then(
+      ()=>{if(state.selectionFlight===owner)state.selectionFlight=null;},
+      ()=>{if(state.selectionFlight===owner)state.selectionFlight=null;}
+    );
+    return promise;
+  }
+  async function selectRequested(spec,request){
     state.lastError=null;
+    const previousSelection=state.selected;
+    const previousResult=state.lastResult;
+    let published=false;
     try{
       if(upper(spec.quote)!==displayCurrency()&&!quoteRate(spec.quote,displayCurrency())){
         await fetchQuoteRates({signal:request.controller.signal});
@@ -817,6 +836,8 @@
         patchNativeFiche(spec,state.coinCache.get(spec.id)||coinFromSpec(spec),state.lastResult);
       }
       hideLegacyUx();
+      // Only a published, identity-checked CT line confirms the external view.
+      published=true;
       // Only explicit navigation controls own viewport position.
       // Selecting/restoring an external listing never repositions the page.
       return true;
@@ -825,7 +846,23 @@
       state.lastError=String(error?.message||error);
       const note=document.getElementById(NOTE_ID);if(note)note.textContent=`Nouveau listing ${spec.symbol} · ${state.lastError}`;
       return false;
-    }finally{finishRequest(request);}
+    }finally{
+      if(isCurrent(request)&&!published){
+        // Restore the previous listing owner on failure: no phantom CT selection
+        // may remain behind a Market Top 5 chart.
+        state.selected=previousSelection;
+        state.lastResult=previousResult;
+        // If the exchange was loaded but no CT line was published, release its
+        // provisional source. Otherwise the old Top 5 could inherit a CT label.
+        if(!previousSelection){
+          const chart=globalThis.AtlasExternalChart?.state?.();
+          if(!chart?.active||chart.coin_id!==spec.id)
+            try{globalThis.AgentCryptoNewListingLiveAsset?.deactivate?.();}catch(_){}
+        }
+        renderCategory();
+      }
+      finishRequest(request);
+    }
   }
 
   function deactivate({clearChart=true}={}){

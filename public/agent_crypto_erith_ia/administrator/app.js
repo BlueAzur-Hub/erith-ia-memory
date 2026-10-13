@@ -47513,6 +47513,7 @@ async function atlasWorkspaceSlotRecall(slotId) {
       return false;
     }
     const trader=atlasTraderIsRuntime();
+    const previousIntent=trader?atlasTraderExternalSelectionRead():null;
     if(trader&&!atlasTraderExternalSelectionCommit({
       id:ct.id,provider:ct.provider,providerSymbol:ct.instrument,
       presentation:ct.presentation
@@ -47520,19 +47521,45 @@ async function atlasWorkspaceSlotRecall(slotId) {
       atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · SÉLECTION V7 NON ENREGISTRÉE`,"warning");
       return false;
     }
+    const committedSequence=trader?Number(atlasGraphContextV7Read()?.sequence||0):0;
+    // The data owner, not the saved intention, proves what the user can see.
+    const lineReady=()=>{
+      const line=globalThis.AtlasExternalChart?.state?.()||{};
+      const source=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()||{};
+      return line.active===true&&line.coin_id===ct.id
+        &&Number(line.period)===1&&!line.loading&&!line.error
+        &&source.active===true&&source.id===ct.id
+        &&source.provider===ct.provider&&source.providerSymbol===ct.instrument;
+    };
+    // A failed recall is a rejected operator transaction. Restore ONLY the
+    // V7 intent written by this recall, never an intervening operator choice.
+    const rollbackFailedRecall=()=>{
+      if(!trader)return;
+      const current=atlasGraphContextV7Read();
+      if(current?.traderExternalSelection?.id!==ct.id
+        ||Number(current.sequence)!==committedSequence)return;
+      atlasGraphContextV7Store({
+        ...current,traderExternalSelection:previousIntent
+      },"handler-trader-ct-recall-rollback",{system:true,operator:false});
+    };
     atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · CHARGEMENT CT/USDT`,"restored");
     void Promise.resolve(api.selectById(ct.id)).then(ok=>{
       if(trader&&atlasTraderExternalSelectionRead()?.id!==ct.id)return;
-      if(!trader&&globalThis.AtlasExternalChart?.state?.()?.coin_id!==ct.id)return;
-      if(!ok){
+      if(!ok||!lineReady()){
+        // Do not display CT intent with an old BTC/Top 5 chart.
+        rollbackFailedRecall();
+        atlasWorkspaceRenderStrip();
         atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · COURBE CT INDISPONIBLE`,"warning");
         return;
       }
       atlasWorkspaceRenderStrip();
       atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} RESTAURÉE · CT`,"restored");
     }).catch(()=>{
-      if(!trader||atlasTraderExternalSelectionRead()?.id===ct.id)
+      if(!trader||atlasTraderExternalSelectionRead()?.id===ct.id){
+        rollbackFailedRecall();
+        atlasWorkspaceRenderStrip();
         atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · CHARGEMENT CT ÉCHOUÉ`,"warning");
+      }
     });
     return true;
   }

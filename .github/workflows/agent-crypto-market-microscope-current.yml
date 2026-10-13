@@ -83,6 +83,8 @@ jobs:
         run: node tests/agent_crypto_market_context_identity.cjs
       - name: A/B/C IndexedDB slot persistence and legacy fallback
         run: node tests/agent_crypto_workspace_slot_storage.cjs
+      - name: Trader CT single-flight and A/B/C rollback
+        run: node tests/agent_crypto_trader_ct_recall.cjs
 
       - name: Canonical runtime guard
         run: python .github/scripts/agent_crypto_market_microscope_guard.py
