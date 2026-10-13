@@ -9,8 +9,8 @@ function section(a,b){
   return app.slice(i,j);
 }
 const chip=section("function atlasWorkspaceVisibleExternal(){","// Repaint the chip only");
-const slotWrite=section("function atlasWorkspaceSlotWrite(slotId, options = {}) {","function atlasWorkspaceSlotValidIds(");
-const slotRecall=section("function atlasWorkspaceSlotRecall(slotId) {","function atlasWorkspaceSlotsRender()");
+const slotWrite=section("async function atlasWorkspaceSlotWrite(slotId, options = {}) {","function atlasWorkspaceSlotValidIds(");
+const slotRecall=section("async function atlasWorkspaceSlotRecall(slotId) {","function atlasWorkspaceSlotsRender()");
 const CT={id:"concrete",provider:"okx",instrument:"CT-USDT",view:"line",presentation:{view:"price",scale:"linear",volume:true}};
 const chart={active:true,coin_id:"concrete",symbol:"CT",period:1,loading:false,error:null,
   presentation:{view:"price",scale:"linear",volume:true}};
@@ -44,28 +44,14 @@ chart.loading=true;context.render();
 assert.match(elements.atlasWorkspaceRepriseSecondary.textContent,/en attente de chargement/);
 chart.loading=false;
 
-let wrote=null,flashed=null;
-const store={
-  ...context,
-  atlasWorkspaceSlotNormalizeId: s=>s,
-  atlasScannerTransaction:false,atlasScannerQueuedRequest:false,
-  atlasWorkspaceCapture:()=>({selectedCoinId:"bitcoin",comparisonPreset:"solo",displayCurrency:"USD"}),
-  atlasTraderIsRuntime:()=>false,
-  atlasTraderExternalSelectionNormalize:raw=>raw.id==="concrete"&&raw.instrument==="CT-USDT"?raw:null,
-  atlasWorkspaceSlotStorageKey:s=>s,
-  localStorage:{setItem:(key,value)=>{wrote={key,payload:JSON.parse(value)}}},
-  atlasWorkspaceSlotFlash:(msg)=>{flashed=msg},
-  ATLAS_RELEASE:"test",
-  Date,JSON
-};
-vm.runInNewContext(slotWrite+"\nthis.write=atlasWorkspaceSlotWrite;",store);
-assert.equal(store.write("A",{overwrite:true}),true);
-assert.equal(wrote.payload.workspace.traderExternalSelection.id,"concrete","Administrator A must store CT, never BTC under CT view");
-assert.equal(wrote.payload.workspace.displayCurrency,"USD");
-wrote=null;chart.loading=true;
-assert.equal(store.write("A",{overwrite:true}),false,"No overwrite on unfinished CT chart");
-assert.equal(wrote,null,"Existing slot intact if CT not ready");
-chart.loading=false;
+// The actual asynchronous save, persisted reload, and fail-closed behavior
+// are exercised in agent_crypto_workspace_slot_storage.cjs.
+assert.match(slotWrite,/atlasWorkspaceVisibleExternal\(\)/,"Active external chart must be captured");
+assert.match(slotWrite,/!visible.loading&&!visible.error/,"Unready CT must not overwrite a slot");
+assert.match(slotWrite,/atlasTraderExternalSelectionNormalize/,"CT identity must be persisted");
+assert.match(slotWrite,/await atlasWorkspaceSlotDbWrite\(slot,payload\)/,"A/B/C must verify IndexedDB write");
+assert.match(slotWrite,/STOCKAGE SATURÉ/,"Storage failure must not be silent");
+assert.match(slotRecall,/await atlasWorkspaceSlotHydrate\(\)/,"Recall must await IndexedDB hydration");
 
 assert.match(slotRecall,/if\(trader&&!atlasTraderExternalSelectionCommit/,"Only Trader commits V7 when recalling CT");
 assert.match(slotRecall,/globalThis.AgentCryptoNewListingsNativeCategory\?\.deactivate/,"BTC slot must deactivate external CT before market draw");

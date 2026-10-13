@@ -70,6 +70,8 @@ jobs:
 
       - name: Workspace chip CT/BTC truth in Interface and Trader
         run: node tests/agent_crypto_workspace_visible_external.cjs
+      - name: A/B/C IndexedDB slot persistence and legacy fallback
+        run: node tests/agent_crypto_workspace_slot_storage.cjs
 
       - name: Cross-market candle identity and quote truth
         run: node tests/agent_crypto_market_context_identity.cjs
