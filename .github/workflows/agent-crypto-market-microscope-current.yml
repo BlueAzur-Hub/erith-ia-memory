@@ -81,6 +81,8 @@ jobs:
 
       - name: Cross-market candle identity and quote truth
         run: node tests/agent_crypto_market_context_identity.cjs
+      - name: A/B/C IndexedDB slot persistence and legacy fallback
+        run: node tests/agent_crypto_workspace_slot_storage.cjs
 
       - name: Canonical runtime guard
         run: python .github/scripts/agent_crypto_market_microscope_guard.py
