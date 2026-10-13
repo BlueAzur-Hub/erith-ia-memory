@@ -49,7 +49,7 @@ assert.equal(badge.dataset.contextOwner,"market");
 external={active:true,id:"concrete",provider:"okx",instrument:"CT-USDT",quote:"USDT"};
 listeners.get("agent-crypto:external-asset-changed")();
 assert.match(badge.innerHTML,/AFFICHAGE USD/);
-assert.match(badge.innerHTML,/SOURCE CT-USDT/);
+assert.match(badge.innerHTML,/PAIRE EXTERNE CT-USDT/);
 assert.match(badge.innerHTML,/COTATION USDT/);
 assert.doesNotMatch(badge.innerHTML,/BTC-USDC|EXEC BTC/);
 assert.equal(badge.dataset.contextOwner,"external");
