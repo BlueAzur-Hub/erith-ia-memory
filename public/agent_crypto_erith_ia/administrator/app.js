@@ -47154,6 +47154,10 @@ function atlasWorkspaceCapture() {
     schema: "agent_crypto_workspace_v2",
     release: ATLAS_RELEASE,
     savedAt: new Date().toISOString(),
+    displayCurrency:(() => {
+      const c=String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"").toUpperCase();
+      return c==="USD"||c==="EUR"?c:null;
+    })(),
     interfaceMode: atlasV2Mode(),
     graphMode: atlasWorkspaceCurrentGraphMode(),
     detailCollapsed,
@@ -47255,7 +47259,8 @@ function atlasWorkspaceSlotSummary(snapshot) {
   const external=atlasTraderExternalSelectionNormalize(saved.traderExternalSelection);
   if(external){
     const p=external.presentation||{};
-    const view=p.view==="base100"?"Base 100":"Prix USD";
+    const currency=saved.displayCurrency==="USD"||saved.displayCurrency==="EUR"?saved.displayCurrency:"devise non mémorisée";
+    const view=p.view==="base100"?"Base 100":`Prix ${currency}`;
     return `CT · Concrete · Ligne · 24h · ${view} · ${p.scale==="logarithmic"?"Log":"Normale"}`;
   }
 
@@ -47300,7 +47305,7 @@ function atlasWorkspaceSlotSummary(snapshot) {
   };
   const view = saved.chartView?.view === "base100"
     ? "Base 100"
-    : "Prix EUR";
+    : `Prix ${saved.displayCurrency==="USD"||saved.displayCurrency==="EUR"?saved.displayCurrency:"devise non mémorisée"}`;
   const scale = saved.chartView?.scale === "logarithmic"
     ? "Log"
     : "Normale";
@@ -47321,8 +47326,8 @@ function atlasWorkspaceSlotFlash(message, stateName = "stored") {
   kicker.textContent = String(message || "MÉMOIRE ACTUALISÉE");
 
   atlasWorkspaceRestoredFlashTimer = window.setTimeout(() => {
-    root.dataset.state = "current";
-    kicker.textContent = "ESPACE MÉMORISÉ";
+    // Restore the label for the CURRENT visible surface (not the BTC subprofile).
+    atlasWorkspaceRenderStrip();
   }, 3200);
 }
 
@@ -47339,25 +47344,30 @@ function atlasWorkspaceSlotWrite(slotId, options = {}) {
   }
 
   const snapshot = atlasWorkspaceCapture();
-  if(document.documentElement?.dataset?.agentCryptoSurface==="trader"){
-    const intent=atlasTraderExternalSelectionRead();
-    const external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
-    const chart=globalThis.AtlasExternalChart?.state?.();
-    const ctVisible=chart?.active===true&&chart.coin_id==="concrete";
-    if(intent||ctVisible){
-      const valid=intent?.id==="concrete"&&intent.instrument==="CT-USDT"
-        &&external?.active===true&&external.id==="concrete"
-        &&external.provider==="okx"&&external.providerSymbol==="CT-USDT"
-        &&external.nativeMarket===true
-        &&chart?.active===true&&chart.coin_id==="concrete"
-        &&Number(chart.period)===1&&!chart.loading&&!chart.error;
-      if(!valid){
-        atlasWorkspaceSlotFlash("CT · COURBE NON PRÊTE · MÉMOIRE NON MODIFIÉE","warning");
-        return false;
-      }
-      snapshot.traderExternalSelection=atlasTraderExternalSelectionNormalize({
-        ...intent,presentation:atlasExternalPresentation()
-      });
+  const visible=atlasWorkspaceVisibleExternal();
+  const trader=atlasTraderIsRuntime();
+  const intent=atlasTraderExternalSelectionRead();
+  if(visible||intent){
+    const exchange=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
+    const supported=visible?.id==="concrete"&&visible.period===1
+      &&!visible.loading&&!visible.error
+      &&exchange?.active===true&&exchange.id==="concrete"
+      &&exchange.provider==="okx"&&exchange.providerSymbol==="CT-USDT"
+      &&exchange.nativeMarket===true
+      &&(!trader||intent?.id==="concrete"&&intent.instrument==="CT-USDT");
+    if(!supported){
+      atlasWorkspaceSlotFlash("VUE EXTERNE NON PRÊTE · MÉMOIRE NON MODIFIÉE","warning");
+      return false;
+    }
+    // The existing A/B/C slot owns its own snapshot. Admin may recall CT from
+    // it without creating a second V7 restart owner; Trader retains V7 intent.
+    snapshot.traderExternalSelection=atlasTraderExternalSelectionNormalize({
+      id:"concrete",provider:"okx",instrument:"CT-USDT",view:"line",
+      presentation:atlasExternalPresentation()
+    });
+    if(!snapshot.traderExternalSelection){
+      atlasWorkspaceSlotFlash("CT · IDENTITÉ INVALIDE · MÉMOIRE NON MODIFIÉE","warning");
+      return false;
     }
   }
   const payload = {
@@ -47429,8 +47439,8 @@ function atlasWorkspaceSlotRecall(slotId) {
   const saved = record.workspace;
   if(saved.traderExternalSelection){
     const ct=atlasTraderExternalSelectionNormalize(saved.traderExternalSelection);
-    if(document.documentElement?.dataset?.agentCryptoSurface!=="trader"||!ct){
-      atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · CT NON COMPATIBLE AVEC CETTE VUE`,"warning");
+    if(!ct){
+      atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · CT INVALIDE`,"warning");
       return false;
     }
     const api=globalThis.AgentCryptoNewListingsNativeCategory;
@@ -47438,7 +47448,8 @@ function atlasWorkspaceSlotRecall(slotId) {
       atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · NOUVEAUX LISTINGS INDISPONIBLE`,"warning");
       return false;
     }
-    if(!atlasTraderExternalSelectionCommit({
+    const trader=atlasTraderIsRuntime();
+    if(trader&&!atlasTraderExternalSelectionCommit({
       id:ct.id,provider:ct.provider,providerSymbol:ct.instrument,
       presentation:ct.presentation
     })){
@@ -47447,7 +47458,8 @@ function atlasWorkspaceSlotRecall(slotId) {
     }
     atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · CHARGEMENT CT/USDT`,"restored");
     void Promise.resolve(api.selectById(ct.id)).then(ok=>{
-      if(atlasTraderExternalSelectionRead()?.id!==ct.id)return;
+      if(trader&&atlasTraderExternalSelectionRead()?.id!==ct.id)return;
+      if(!trader&&globalThis.AtlasExternalChart?.state?.()?.coin_id!==ct.id)return;
       if(!ok){
         atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · COURBE CT INDISPONIBLE`,"warning");
         return;
@@ -47455,7 +47467,7 @@ function atlasWorkspaceSlotRecall(slotId) {
       atlasWorkspaceRenderStrip();
       atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} RESTAURÉE · CT`,"restored");
     }).catch(()=>{
-      if(atlasTraderExternalSelectionRead()?.id===ct.id)
+      if(!trader||atlasTraderExternalSelectionRead()?.id===ct.id)
         atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · CHARGEMENT CT ÉCHOUÉ`,"warning");
     });
     return true;
@@ -47530,6 +47542,16 @@ function atlasWorkspaceSlotRecall(slotId) {
       keepOverlay: false
     }
   );
+  // Leaving an external slot must release CT before painting the Market slot.
+  // Never erase the BTC market subprofile; only clear the external selection.
+  if(atlasTraderExternalSelectionRead()&&!atlasTraderExternalSelectionClear()){
+    atlasWorkspaceSlotFlash(`MÉMOIRE ${slot} · SORTIE CT IMPOSSIBLE`,"warning");
+    return false;
+  }
+  if(atlasExternalChartActive()){
+    try{globalThis.AgentCryptoNewListingsNativeCategory?.deactivate?.({clearChart:true});}catch(_){}
+    if(atlasExternalChartActive())atlasExternalChartClear("workspace-slot-market");
+  }
 
   const selection = atlasWorkspaceSlotValidIds(saved);
   const ids = selection.ids;
@@ -47874,6 +47896,22 @@ function atlasWorkspaceSelectionLabel() {
   return symbols.length ? symbols.join("/") : `${ids.length} actifs`;
 }
 
+function atlasWorkspaceVisibleExternal(){
+  const line=globalThis.AtlasExternalChart?.state?.();
+  if(!line?.active||!line.coin_id)return null;
+  const chart=globalThis.__atlasExternalChartContext||{};
+  const coin=chart.coin?.id===line.coin_id?chart.coin:{};
+  const currency=String(chart.result?.currency||chart.result?.quoteCurrency||
+    globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"USD").toUpperCase();
+  return {
+    id:String(line.coin_id),symbol:String(line.symbol||coin.symbol||"ACTIF").toUpperCase(),
+    name:String(coin.name||line.symbol||"Actif externe"),
+    period:Number(line.period||1),loading:line.loading===true,error:line.error||null,
+    currency:currency==="EUR"?"EUR":"USD",
+    presentation:line.presentation||atlasExternalPresentation()
+  };
+}
+
 function atlasWorkspaceRenderStrip(options = {}) {
   const root = document.getElementById("atlasWorkspaceReprise");
   const kicker = document.getElementById("atlasWorkspaceRepriseKicker");
@@ -47905,17 +47943,30 @@ function atlasWorkspaceRenderStrip(options = {}) {
     return;
   }
 
+  const external=atlasWorkspaceVisibleExternal();
   const traderCT=atlasTraderExternalSelectionRead();
-  if(traderCT){
-    const line=globalThis.AtlasExternalChart?.state?.();
-    const ready=line?.active===true&&line.coin_id==="concrete"&&Number(line.period)===1
-      &&!line.loading&&!line.error;
+  if(external||traderCT){
+    const coin=external||{
+      id:"concrete",symbol:"CT",name:"Concrete",period:1,
+      currency:"USD",loading:true,error:null,
+      presentation:traderCT.presentation||{}
+    };
+    const persisted=!!(traderCT&&traderCT.id===coin.id);
+    const active=!!external;
+    const presentation=coin.presentation||{};
+    const period=atlasChartPeriodLabel(coin.period);
+    const view=presentation.view==="base100"?"Base 100":`Prix ${coin.currency}`;
+    const scale=presentation.scale==="logarithmic"?"Log":"Normale";
     root.dataset.state=options.restored===true?"restored":"current";
-    kicker.textContent=options.restored===true?"SESSION RESTAURÉE":"ESPACE MÉMORISÉ";
-    primary.textContent="CT · Concrete · 24h · Prix USD · Ligne · Externe (hors Top 250)";
-    secondary.textContent=ready
-      ?"CT · OKX CT/USDT · série réelle chargée · sélection conservée par V7"
-      :"CT · OKX CT/USDT · historique réel en attente de chargement";
+    kicker.textContent=options.restored===true&&persisted
+      ?"SESSION RESTAURÉE":persisted?"ESPACE MÉMORISÉ":"VUE EXTERNE ACTIVE";
+    primary.textContent=`${coin.symbol} · ${coin.name} · ${period} · ${view} · ${scale} · Externe (hors Top 250)`;
+    const pair=coin.id==="concrete"?"OKX CT/USDT":"actif "+coin.symbol;
+    secondary.textContent=active&&!coin.loading&&!coin.error
+      ?`${coin.symbol} · ${pair} · série réelle chargée · ${persisted?"sélection V7 mémorisée":"profil Marché V7 conservé séparément"}`
+      :coin.error
+        ?`${coin.symbol} · ${pair} · données indisponibles · ${coin.error}`
+        :`${coin.symbol} · ${pair} · historique réel en attente de chargement`;
     atlasWorkspaceSlotsRender();
     return;
   }
@@ -47966,6 +48017,10 @@ function atlasWorkspaceRenderStrip(options = {}) {
     }, 4800);
   }
 }
+// Repaint the chip only when the canonical external line has been published.
+// No timer, observer, new persistence authority, network, or scroll action.
+window.addEventListener("agent-crypto:new-listing-line-ready",()=>atlasWorkspaceRenderStrip(),{passive:true});
+window.addEventListener("agent-crypto:external-asset-changed",()=>atlasWorkspaceRenderStrip(),{passive:true});
 
 function atlasWorkspaceRestoreAfterMarket() {
   if (!atlasGraphContextV7Ready) return false;
