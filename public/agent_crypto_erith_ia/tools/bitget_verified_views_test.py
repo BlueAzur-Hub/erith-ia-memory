@@ -40,6 +40,23 @@ class BitgetFederationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"original Spot pair"):
             b.source_candidates(self.catalog,altered,self.spot,live)
 
+    def test_rank_rotation_preserves_exact_cosmos_spot_proof(self):
+        old=json.loads(b.FEDERATED.read_text())
+        historical=next(x for x in old["assets"] if x["id"]=="cosmos")
+        current=next(x for x in self.catalog["assets"] if x["id"]=="cosmos")
+        self.assertNotEqual(historical["rank"],current["rank"])
+        self.assertEqual(historical["symbol"],current["symbol"])
+        source=b.source_candidates(self.catalog,self.exact,self.spot,old)["cosmos"]
+        self.assertEqual(source["id"],"cosmos")
+        self.assertEqual(source["rank"],current["rank"])
+        self.assertEqual(source["pair"],"ATOMUSDT")
+        import copy
+        forged=copy.deepcopy(old)
+        fake=next(x for x in forged["assets"] if x["id"]=="cosmos")
+        fake["symbol"]="WRONG"
+        with self.assertRaisesRegex(ValueError,"identity drift"):
+            b.source_candidates(self.catalog,self.exact,self.spot,forged)
+
     def test_verified_bitget_syrup_remains_valid_after_new_binance_months(self):
         import copy
         live=json.loads(b.FEDERATED.read_text())
