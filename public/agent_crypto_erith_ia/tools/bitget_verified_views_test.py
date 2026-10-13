@@ -17,7 +17,7 @@ class BitgetFederationTests(unittest.TestCase):
         cls.catalog=json.loads(b.CATALOG.read_text())
         cls.exact=json.loads(proof.EXACT.read_text())
         cls.spot=json.loads(proof.INSTRUMENTS.read_text())
-        cls.asset=b.source_candidates(cls.catalog,cls.exact,cls.spot)["cosmos"]
+        cls.asset=b.source_candidates(cls.catalog,cls.exact,cls.spot)["lighter"]
 
     def test_current_federation_persists_original_sources_after_census_rotation(self):
         import copy
@@ -206,7 +206,7 @@ class BitgetFederationTests(unittest.TestCase):
         self.assertEqual(union["native_1m_candles"],
                          self.catalog["native_1m_candles"]+44640+43200)
         self.assertEqual(next(x for x in union["assets"]
-                              if x["id"]=="cosmos")["months"],2)
+                              if x["id"]=="lighter")["months"],2)
         self.assertEqual(len(projections),1)
 
     def test_short_source_month_is_rejected_even_if_manifest_claims_43200(self):
@@ -223,7 +223,7 @@ class BitgetFederationTests(unittest.TestCase):
 
     def test_wrong_coin_id_cannot_take_verified_other_coin_history(self):
         tag,metadata,downloader=self.fixture()
-        untrusted=tag.replace("cosmos","unknown-coin")
+        untrusted=tag.replace("lighter","unknown-coin")
         projections,alt,union=b.build(self.catalog,self.exact,self.spot,[untrusted],
                                       metadata,downloader)
         self.assertEqual(len(projections),0)
