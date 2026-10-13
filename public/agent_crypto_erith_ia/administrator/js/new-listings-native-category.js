@@ -633,6 +633,14 @@
     return allSpecs().find(spec=>String(spec.id).toLowerCase()===key||String(spec.symbol).toLowerCase()===key||String(spec.providerSymbol).toLowerCase()===key)||null;
   }
 
+  // Public read-only entry for an exact existing New Listing identity.
+  // A caller restores identity; select() retrieves fresh provider data.
+  async function selectById(id){
+    const spec=resolveSpec(id);
+    if(!spec)return false;
+    return select(spec);
+  }
+
   function periodConfig(days){
     const d=Number(days||1);
     if(d<=1)return {bar:"5m",limit:320};
@@ -1004,7 +1012,7 @@
   }
 
   globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
-    build:MODULE_VERSION,mount,discover,select,deactivate,snapshot,self_test:selfTest,
+    build:MODULE_VERSION,mount,discover,select,selectById,deactivate,snapshot,self_test:selfTest,
     identity_enrichment:"GitHub static identity memory first with real PNG assets; CoinGecko batch only for unresolved known ids; exact id+symbol proof; fail-open",
     identity_logos:true,
     safe_radar:true,

@@ -104,6 +104,16 @@ function mount(){
     };
     doc.head.appendChild(contract);
   }
+  // Trader-only continuity, deliberately not loaded in the public Interface.
+  if(!doc.getElementById("traderCtSelectionMemoryScript")){
+    const script=doc.createElement("script");
+    script.id="traderCtSelectionMemoryScript";
+    script.src=new URL("../trader/ct-selection-memory.js",doc.baseURI).href;
+    script.onerror=()=>{
+      if(status){status.textContent="Mémoire CT du Trader indisponible";status.dataset.state="error";}
+    };
+    doc.head.appendChild(script);
+  }
   doc.title="ERITH.IA · Trading Desk — "+BUILD;
   try{
     win.dispatchEvent(new CustomEvent("agent-crypto:trader-runtime-mirror",{detail:{
