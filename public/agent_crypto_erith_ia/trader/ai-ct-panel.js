@@ -49,6 +49,36 @@ async function refresh(){latest=null;copy.disabled=true;read.disabled=true;body.
   copy.disabled=false;
  }catch(e){state('Non disponible : '+String(e.message||e).slice(0,140));}
  finally{read.disabled=false;}}
+/* Trader-only docking: same-origin iframe, no Administrator source changes. */
+function dockInTrader(){
+ const frame=document.getElementById('traderInterfaceRuntime');
+ let doc;
+ try{doc=frame?.contentDocument;}catch(_){return false;}
+ const zone=doc?.getElementById('market-zone');
+ if(!zone||!doc.head)return false;
+ let host=doc.getElementById('traderAiCtDock');
+ if(!host){
+  host=doc.createElement('section');host.id='traderAiCtDock';
+  host.setAttribute('aria-label','Analyse IA de la position Concrete');
+ }
+ if(!doc.getElementById('traderAiCtStyle')){
+  const sheet=doc.createElement('link');sheet.id='traderAiCtStyle';sheet.rel='stylesheet';
+  sheet.href=new URL('./ai-ct-panel.css',document.baseURI).href;
+  doc.head.appendChild(sheet);
+ }
+ // Moving existing nodes preserves their click handlers and locally held data.
+ host.append(doc.adoptNode(btn),doc.adoptNode(panel));
+ if(host.parentElement!==zone){
+  const history=doc.getElementById('traderVerifiedHistory');
+  if(history?.parentElement===zone)zone.insertBefore(host,history);
+  else zone.appendChild(host);
+ }
+ return true;
+}
+const traderFrame=document.getElementById('traderInterfaceRuntime');
+traderFrame?.addEventListener('load',()=>{try{dockInTrader();}catch(_){/* fallback: pilot remains standalone */}});
+try{if(traderFrame?.contentDocument?.readyState==='complete')dockInTrader();}catch(_){/* origin guard */}
+
 btn.addEventListener('click',()=>{panel.hidden=!panel.hidden;btn.setAttribute('aria-expanded',String(!panel.hidden));});
 close.addEventListener('click',()=>{panel.hidden=true;btn.setAttribute('aria-expanded','false');});
 read.addEventListener('click',refresh);

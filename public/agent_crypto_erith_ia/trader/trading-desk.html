@@ -25,13 +25,21 @@
   </iframe>
   <div id="traderBootstrapStatus" role="status" aria-live="polite">Chargement du runtime Interface…</div>
   <button id="aiCtToggle" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="aiCtPanel">IA · Concrete</button>
-  <section id="aiCtPanel" role="dialog" aria-label="Passerelle IA, pilote Concrete" hidden>
+  <section id="aiCtPanel" role="region" aria-label="Passerelle IA, pilote Concrete" hidden>
     <header><h2>Passerelle IA · Concrete</h2><button class="ai-ct-close" type="button" id="aiCtClose" aria-label="Fermer">×</button></header>
     <p>Lecture privée sur ton PC · aucun ordre réel · marché CT/USDC.</p>
     <div class="ai-ct-actions"><button id="aiCtRead" type="button">Lire ma position CT</button><button id="aiCtCopy" type="button" disabled>Copier le résumé privé</button></div>
     <p id="aiCtStatus" role="status" aria-live="polite">Prêt · aucune consultation automatique.</p>
     <div id="aiCtDetails"></div>
+    <details class="ai-ct-case">
+      <summary>Cas d’école · Concrete CT — lecture et risques</summary>
+      <p><strong>Position réelle :</strong> marché CT/USDC, quantité et frais lus via le Bridge local uniquement sur demande. Une vente fictive estimée à partir du carnet ne garantit aucun prix réel.</p>
+      <p><strong>Analyse publique :</strong> les bougies CT/USDT proviennent d’un autre marché. Elles servent au contexte, sans être assimilées au prix CT/USDC ou à une mesure de ton gain personnel.</p>
+      <p><strong>Contrôles :</strong> volatilité, volumes, liquidité, commission, fraîcheur et archives disponibles doivent être qualifiés. Aucune recommandation ni ordre automatique.</p>
+    </details>
   </section>
   <script src="./trader-runtime-mirror.js?feature=okx-private-read"></script>
+  <script src="./ai-ct-contract.js"></script>
+  <script src="./ai-ct-panel.js"></script>
 </body>
 </html>

@@ -15,3 +15,14 @@
 #aiCtDetails .ai-ct-row span{color:#b8cdd6}
 #aiCtDetails .ai-ct-row strong{max-width:55%;text-align:right;font-variant-numeric:tabular-nums}
 #aiCtDetails .ai-ct-warning{color:#ffd09d}
+
+/* Trader-only in-page section. Overrides the legacy floating prototype. */
+#traderAiCtDock{grid-column:1/-1;display:block;box-sizing:border-box;width:99%;margin:14px auto 24px;padding:14px 16px;border:1px solid #326372;border-radius:14px;background:#071d2a;color:#e5f4f8;font:13px/1.5 system-ui,sans-serif}
+#traderAiCtDock #aiCtToggle{position:static;inset:auto;transform:none;box-shadow:none;padding:10px 16px;display:block;width:100%;text-align:left;background:#103341;border:1px solid #326372;border-radius:10px;font-size:14px}
+#traderAiCtDock #aiCtPanel{position:static;inset:auto;box-shadow:none;margin-top:10px;width:100%;max-height:none;overflow:visible;border-radius:10px;padding:16px 18px;background:#071925}
+#traderAiCtDock .ai-ct-case{margin-top:16px;padding:12px 14px;border:1px solid #2a5869;border-radius:10px;background:#092634}
+#traderAiCtDock .ai-ct-case summary{cursor:pointer;font-weight:700;color:#b8f3e9}
+#traderAiCtDock .ai-ct-case p{color:#c0d9e3;font-size:13px;line-height:1.55}
+#traderAiCtDock #aiCtDetails{max-width:960px}
+#traderAiCtDock #aiCtDetails .ai-ct-row{gap:16px}
+#traderAiCtDock #aiCtDetails .ai-ct-row strong{max-width:65%}
