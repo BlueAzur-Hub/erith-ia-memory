@@ -45,6 +45,31 @@
     const after=JSON.stringify({i:state.executionInstrument,s:state.settlementAsset,p:state.executionProvider,a:state.executionAvailable});
     render();if(before!==after&&shouldEmit)emit(reason);return true;
   }
+  // Display currency is a presentation choice; the exchange quote is separate.
+  // Never render the retained BTC market as the active CT external instrument.
+  function visibleMarketContext(external={},market=state){
+    if(external?.active){
+      const instrument=String(external.instrument||"").toUpperCase();
+      const quote=String(external.quote||"").toUpperCase();
+      const valid=/^[A-Z0-9]+-[A-Z0-9]+$/.test(instrument)
+        &&!!quote&&instrument.split("-")[1]===quote;
+      return Object.freeze({owner:"external",instrument:valid?instrument:null,
+        quote:valid?quote:null,label:valid
+          ?`SOURCE ${instrument} · COTATION ${quote} · PRIX BRUTS ${quote} · AUCUN ORDRE`
+          :"SOURCE EXTERNE · PAIRE NON VALIDÉE · AUCUN ORDRE"});
+    }
+    const instrument=String(market.executionInstrument||"").toUpperCase();
+    const quote=String(market.settlementAsset||"").toUpperCase();
+    const valid=market.executionAvailable===true&&market.executionProvider!=="legacy"
+      &&/^[A-Z0-9]+-[A-Z0-9]+$/.test(instrument)&&instrument.split("-")[1]===quote;
+    return Object.freeze({owner:"market",instrument:valid?instrument:null,
+      quote:valid?quote:null,label:valid
+        ?`SOURCE MARCHÉ ${instrument} · COTATION ${quote} · AUCUN ORDRE`
+        :"SOURCE MARCHÉ NON CONFIRMÉE · AUCUN ORDRE"});
+  }
+  function externalContext(){
+    try{return globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()||{};}catch(_){return {};}
+  }
   function style(){
     if(document.getElementById(ROOT_ID+"Style"))return;
     const s=document.createElement("style");s.id=ROOT_ID+"Style";
@@ -56,11 +81,12 @@
     if(typeof document==="undefined")return snapshot();
     const h=host();if(!h)return snapshot();style();
     let root=document.getElementById(ROOT_ID);
-    if(!root){root=document.createElement("span");root.id=ROOT_ID;root.setAttribute("aria-label","Architecture devise d'affichage et exécution");h.appendChild(root);}
-    const execLabel=state.executionAvailable&&state.executionInstrument?esc(state.executionInstrument):"INDISPONIBLE";
-    const settleLabel=state.executionAvailable&&state.settlementAsset?esc(state.settlementAsset):"—";
-    root.innerHTML=`<small>AFFICHAGE</small><button type="button" data-aqca="EUR" class="${state.displayCurrency==="EUR"?"is-active":""}" aria-pressed="${state.displayCurrency==="EUR"}">EUR</button><button type="button" data-aqca="USD" class="${state.displayCurrency==="USD"?"is-active":""}" aria-pressed="${state.displayCurrency==="USD"}">USD</button><span class="aqca-truth">DISPLAY ${esc(state.displayCurrency)} · EXEC ${execLabel} · SETTLE ${settleLabel}</span>`;
+    if(!root){root=document.createElement("span");root.id=ROOT_ID;root.setAttribute("aria-label","Devise affichée et source de marché en lecture seule");h.appendChild(root);}
+    const context=visibleMarketContext(externalContext());
+    root.innerHTML=`<small>AFFICHAGE</small><button type="button" data-aqca="EUR" class="${state.displayCurrency==="EUR"?"is-active":""}" aria-pressed="${state.displayCurrency==="EUR"}">EUR</button><button type="button" data-aqca="USD" class="${state.displayCurrency==="USD"?"is-active":""}" aria-pressed="${state.displayCurrency==="USD"}">USD</button><span class="aqca-truth">AFFICHAGE ${esc(state.displayCurrency)} · ${esc(context.label)}</span>`;
     root.querySelectorAll("[data-aqca]").forEach(b=>b.addEventListener("click",()=>setDisplayCurrency(b.dataset.aqca,{reason:"operator-ui"})));
+    root.title="La devise d'affichage ne convertit pas les bougies cotées en USDT ou USDC. Le contexte marché est en lecture seule, sans passage d'ordre.";
+    root.dataset.contextOwner=context.owner;root.dataset.visibleInstrument=context.instrument||"";root.dataset.visibleQuote=context.quote||"";
     root.dataset.build=BUILD;root.dataset.executionInstrument=state.executionInstrument||"";root.dataset.settlementAsset=state.settlementAsset||"";root.dataset.executionProvider=state.executionProvider||"";root.dataset.executionAvailable=String(state.executionAvailable);
     return snapshot();
   }
@@ -70,15 +96,21 @@
     const separated=state.displayCurrency==="USD"&&state.executionInstrument===before.executionInstrument&&state.settlementAsset===before.settlementAsset;
     setExecutionTruth({available:true,instrument:"OKB-USDC",settlementAsset:"USDC",provider:"okx"},{reason:"self-test",emit:false});
     const dynamic=state.executionInstrument==="OKB-USDC"&&state.settlementAsset==="USDC"&&state.executionProvider==="okx"&&state.executionAvailable===true;
+    const marketLabel=visibleMarketContext({active:false}).label;
+    const externalLabel=visibleMarketContext({active:true,instrument:"CT-USDT",quote:"USDT"}).label;
+    const contextSeparation=marketLabel.includes("OKB-USDC")&&!marketLabel.includes("CT-USDT")
+      &&externalLabel.includes("CT-USDT")&&!externalLabel.includes("OKB-USDC")&&!externalLabel.includes("EXEC")
+      &&externalLabel.includes("USDT")&&externalLabel.includes("AUCUN ORDRE");
     setExecutionTruth({available:false,asset:"BTW"},{reason:"self-test",emit:false});
     const unavailable=state.executionAvailable===false&&state.executionInstrument===null&&state.settlementAsset===null;
     Object.assign(state,before);render();
-    return Object.freeze({build:BUILD,pass:separated&&dynamic&&unavailable,checks:{display_changes_without_execution_mutation:separated,dynamic_execution_truth:dynamic,unavailable_execution_truth:unavailable,no_persistent_storage:true,no_order:true}});
+    return Object.freeze({build:BUILD,pass:separated&&dynamic&&unavailable&&contextSeparation,checks:{display_changes_without_execution_mutation:separated,dynamic_execution_truth:dynamic,unavailable_execution_truth:unavailable,external_market_context_separate:contextSeparation,no_persistent_storage:true,no_order:true}});
   }
   globalThis.AgentCryptoQuoteCurrencyArchitecture=Object.freeze({build:BUILD,snapshot,render,setDisplayCurrency,setExecutionInstrument,setSettlementAsset,setExecutionTruth,self_test:selfTest,display_only:true,execution_truth_dynamic:true,execution_mutation_from_display:false,storage_write:false,recurring_timer:false,mutation_observer:false,real_order:false,wallet:false,market_core_changed:false,strategy_changed:false});
   if(typeof document!=="undefined"){
     const mount=()=>{try{render();}catch(_){}};
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
     window.addEventListener("pageshow",mount,{passive:true});
+    window.addEventListener("agent-crypto:external-asset-changed",mount,{passive:true});
   }
 })();
