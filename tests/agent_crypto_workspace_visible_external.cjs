@@ -22,7 +22,8 @@ const context={
   globalThis:{
     AtlasExternalChart:{state:()=>chart},
     __atlasExternalChartContext:{coin:{id:"concrete",name:"Concrete",symbol:"CT"},result:{currency:"USD"}},
-    AgentCryptoQuoteCurrencyArchitecture:{snapshot:()=>({displayCurrency:"USD"})}
+    AgentCryptoQuoteCurrencyArchitecture:{snapshot:()=>({displayCurrency:"USD"})},
+    AgentCryptoNewListingLiveAsset:{snapshot:()=>snapshot}
   },
   atlasParallelMarketDomain:()=> "crypto",
   atlasTraderExternalSelectionRead:()=>savedIntent,
