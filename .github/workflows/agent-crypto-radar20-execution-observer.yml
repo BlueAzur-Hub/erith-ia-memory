@@ -1,0 +1,83 @@
+name: Agent Crypto Radar20 Public Execution Witness
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-radar20-execution-observer.yml'
+      - 'public/agent_crypto_erith_ia/tools/observe_radar20_execution.py'
+      - 'public/agent_crypto_erith_ia/tools/test_observe_radar20_execution.py'
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: agent-crypto-radar20-execution-observer
+  cancel-in-progress: false
+jobs:
+  record-public-books-after-completed-signals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check immutable Radar protocol and regression tests
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/observe_radar20_execution.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_observe_radar20_execution.py -v
+      - name: Verify public-only Binance and OKX API accessibility
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/observe_radar20_execution.py --smoke
+      - name: Snapshot finished Binance candles and fresh public OKX books (no account login)
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/observe_radar20_execution.py
+      - name: Validate public-only hourly evidence and all past hashes
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,hashlib,pathlib
+          root=pathlib.Path('public/agent_crypto_erith_ia/data/trader_flux/radar20_execution')
+          index=root/'index.json'
+          if not index.exists():
+              print('WAITING: observer begins 2026-10-14 UTC');raise SystemExit(0)
+          obj=json.loads(index.read_text())
+          assert obj['orders_enabled'] is False and obj['account_fees_published'] is False
+          assert obj['protocol_sha256']=='212833da065e71420bc01dc77fb296749b993ee0f6d7856cc5e2b0b560d833d6'
+          for it in obj['observations']:
+              p=root/it['file']
+              raw=p.read_bytes()
+              assert hashlib.sha256(raw).hexdigest()==it['sha256']
+              event=json.loads(raw)
+              assert event['orders_enabled'] is False
+              assert event['authenticated_account_data_accessed'] is False
+              assert event['authenticated_fee_included'] is False
+          print('PASS',len(obj['observations']),'immutable public hourly evidence records')
+          PY
+      - name: Commit only public execution observations, never Trader/Bridge/Vault
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/trader_flux/radar20_execution
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NOOP: before start, outside window or hour already archived'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Archive public Radar20 hourly execution witness'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Verify protected code and vault unchanged
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
+            public/agent_crypto_erith_ia/core/
