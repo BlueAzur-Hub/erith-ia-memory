@@ -5,6 +5,29 @@ const frame=document.getElementById("traderInterfaceRuntime");
 const status=document.getElementById("traderBootstrapStatus");
 if(!frame)return;
 
+// The entrypoint loads one runtime script only. CT is a read-only
+// Trader extension, loaded here in strict dependency order.
+// It never creates a chart, market, order or Administrator owner.
+function loadCtReadOnlyExtension(){
+  if(document.getElementById("traderAiCtContractLoader"))return;
+  const fail=()=>{const b=document.getElementById("aiCtToggle");if(b){b.disabled=true;b.title="Lecture CT indisponible";}};
+  const contract=document.createElement("script");
+  contract.id="traderAiCtContractLoader";
+  contract.src=new URL("./ai-ct-contract.js",document.baseURI).href;
+  contract.onerror=fail;
+  contract.onload=()=>{
+    if(!globalThis.AgentCryptoAiCtContract){fail();return;}
+    const panel=document.createElement("script");
+    panel.id="traderAiCtPanelLoader";
+    panel.src=new URL("./ai-ct-panel.js",document.baseURI).href;
+    panel.onerror=fail;
+    document.body.appendChild(panel);
+  };
+  document.body.appendChild(contract);
+}
+loadCtReadOnlyExtension();
+
+
 function mount(){
   let win,doc;
   try{win=frame.contentWindow;doc=frame.contentDocument||win?.document;}catch(_){return false;}
