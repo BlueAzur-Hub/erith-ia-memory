@@ -316,7 +316,20 @@
     };
   }
 
+  function activeExternalId(){
+    try{
+      const graph=globalThis.AtlasExternalChart?.state?.();
+      return graph?.active&&graph?.coin_id?String(graph.coin_id):"";
+    }catch(_){return "";}
+  }
+  function ficheCoinAllowed(coin){
+    const expected=activeExternalId();
+    return !expected||!!(coin&&String(coin.id)===expected);
+  }
+
   function selectedCoin(){
+    const ext=activeExternalId();
+    if(ext)return coinForId(ext);
     const {strip}=compactNodes();
     const id=strip?.dataset?.activeCryptoId
       ||document.querySelector('#marketRows tr.is-selected[data-market-row-id403115]')?.dataset?.marketRowId403115
@@ -328,6 +341,7 @@
   function applyCompactFiche(coin=null){
     if(typeof document==="undefined")return false;
     const resolved=coin||selectedCoin();
+    if(!ficheCoinAllowed(resolved))return false;
     const currency=displayCurrency();
     const nodes=compactNodes();
     if(!nodes.strip||!nodes.label||!nodes.value||!resolved)return false;
@@ -375,6 +389,7 @@
   function applyGridFiche(coin=null){
     if(typeof document==="undefined")return false;
     const resolved=coin||selectedCoin();
+    if(!ficheCoinAllowed(resolved))return false;
     const grid=document.getElementById("assetDetailGrid");
     if(!grid||!resolved)return false;
 
@@ -412,6 +427,7 @@
 
   function applyFiche(reason="projection"){
     const coin=selectedCoin();
+    if(!ficheCoinAllowed(coin))return false;
     const a=applyCompactFiche(coin);
     const b=applyGridFiche(coin);
     const c=applyOpenMarketHelp(coin,{refreshNative:displayCurrency()!=="USD"});

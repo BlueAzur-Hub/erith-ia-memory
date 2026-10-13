@@ -63,6 +63,11 @@ jobs:
       - name: CT orderbook and native USD Top 5 source safeguards
         run: node tests/agent_crypto_market_integrity.cjs
 
+      - name: External graph and Technical Reading identity
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/market-fiche-display-406518.js
+          node tests/agent_crypto_external_fiche_consistency.cjs
+
       - name: CT V7 restored view and no implicit viewport jump
         run: node tests/agent_crypto_ct_v7_authority.cjs
 

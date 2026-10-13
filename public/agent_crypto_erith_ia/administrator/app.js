@@ -6526,6 +6526,7 @@ function atlasRenderChartValueOverlay() {
 
 function atlasChartV2RedrawFromBroker() {
   if (atlasTraderCtSelectionOwnsView()) return;
+  if (atlasExternalChartActive()) return;
   const chart = state.dataBroker?.chart;
   if (chart?.status !== "ready" || !atlasChartContextMatches(chart)) {
     atlasChartV2SyncControls();
@@ -6920,6 +6921,7 @@ function atlasRenderComparisonCaption(
   unavailableItems = [],
   requestedCount = null
 ) {
+  if (atlasExternalChartActive()) return;
   const periodLabel = atlasChartPeriodLabel(period);
   const unavailableCount = Array.isArray(unavailableItems)
     ? unavailableItems.length
@@ -7394,6 +7396,7 @@ const atlasOverlayAxesPlugin = {
 function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
   // CT must be the only visible line while its saved V7 intent is current.
   if (atlasTraderCtSelectionOwnsView() && result?.coin?.id!=="concrete") return;
+  if (atlasExternalChartDetailMismatch(result?.coin)) return;
   if (!canvas) return;
 
   const period = Number(result?.periodDays || state.chartPeriodDays || 1);
@@ -11821,6 +11824,7 @@ function atlasAtomicRefreshComparisonChart(chart, canvas, normalizedEntries, per
 
 function drawComparisonChart(canvas, entries, period, chartKey = "") {
   if (atlasTraderCtSelectionOwnsView()) return [];
+  if (atlasExternalChartActive()) return [];
   if (!canvas || !Array.isArray(entries) || entries.length < 1) {
     state.dataBroker.comparison.renderedIds = [];
     return [];
@@ -12143,6 +12147,7 @@ async function atlasRespectComparisonRequestSpacing(signal = null, period = Numb
 }
 
 function atlasRenderComparisonDetail(entries, period) {
+  if (atlasExternalChartActive()) return;
   const coins = entries.map(entry => entry.coin);
   const primary = getSelectedCoin() || coins[0];
   atlasBrokerSeedSpot(primary);
@@ -12598,6 +12603,7 @@ function atlasRefreshSelectedDetailOnly() {
 
 function atlasRenderCompactDetailSummary(coin = null) {
   if (atlasTraderCtSelectionOwnsView() && coin?.id!=="concrete") return;
+  if (atlasExternalChartDetailMismatch(coin)) return;
   const strip = document.getElementById("detailCompactStrip");
 
   if (!coin) {
@@ -12664,6 +12670,7 @@ function atlasRenderCompactDetailSummary(coin = null) {
 
 function atlasRenderChartResult(c, period, result, chartKey, forceRedraw = false) {
   if (atlasTraderCtSelectionOwnsView() && c?.id!=="concrete") return;
+  if (atlasExternalChartDetailMismatch(c)) return;
   atlasBrokerCommitChart(c, period, result, "ready");
   const periodLabel = atlasChartPeriodLabel(period);
   const fingerprint = atlasChartResultFingerprint(result);
@@ -17374,6 +17381,13 @@ function atlasExternalChartActive(){
     && !!atlasExternalChartContext.coin?.id;
 }
 
+// The currently displayed external chart owns the visible detail, not the
+// canonical Market BTC subprofile retained for explicit return.
+function atlasExternalChartDetailMismatch(coin){
+  return atlasExternalChartActive()
+    && String(coin?.id||"")!==String(atlasExternalChartContext.coin?.id||"");
+}
+
 
 function atlasExternalPresentation(){
   const ctx=atlasExternalChartContext;
@@ -17521,10 +17535,17 @@ function atlasExternalChartDetail(coin,period,result=null,mode="loading"){
   const coverage=Number.isFinite(coverageHours)
     ? (coverageHours<48?`${coverageHours.toFixed(1)} h`:`${(coverageHours/24).toFixed(1)} j`)
     : "—";
-  const lastPrice=Number(metrics.lastPrice);
+  const lastPrice=metrics.lastPrice==null?NaN:Number(metrics.lastPrice);
   const lastAt=Number(metrics.lastTimestamp);
   const firstAt=Number(metrics.firstTimestamp);
-  const priceNow=Number(coin?.priceEur??coin?.price);
+  const preference=String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"EUR").toUpperCase();
+  const currency=["USD","EUR"].includes(String(result?.currency||"").toUpperCase())
+    ?String(result.currency).toUpperCase()
+    :(preference==="USD"?"USD":"EUR");
+  const rawPrice=currency==="USD"?coin?.priceUsd:(coin?.priceEur??coin?.price);
+  const priceNow=rawPrice==null?NaN:Number(rawPrice);
+  const formatExternalPrice=value=>Number.isFinite(value)
+    ?(currency==="USD"?atlasFormatUSD(value):atlasFormatEUR(value)):"—";
 
   setText(els.selectedAssetTitle,`${coin.name} — ${coin.symbol} · HORS TOP 250`);
   atlasRenderCompactDetailSummary(coin);
@@ -17534,12 +17555,12 @@ function atlasExternalChartDetail(coin,period,result=null,mode="loading"){
       <div><b>Actif</b><span>${escapeHtml(coin.name)} (${escapeHtml(coin.symbol)})</span></div>
       <div><b>Statut</b><span>Hors Top 250 · contexte graphique externe</span></div>
       <div><b>Rang snapshot</b><span>${escapeHtml(String(coin.rank??"—"))}</span></div>
-      <div><b>Prix snapshot EUR</b><span>${Number.isFinite(priceNow)?escapeHtml(atlasFormatEUR(priceNow)):"—"}</span></div>
+      <div><b>Prix snapshot ${currency}</b><span>${escapeHtml(formatExternalPrice(priceNow))}</span></div>
       <div><b>Période graphique</b><span>${escapeHtml(periodLabel)}</span></div>
       <div><b>Source historique</b><span>${escapeHtml(result?.source||"CoinGecko market_chart EUR")}</span></div>
       <div><b>Points / couverture</b><span>${points||"—"} · ${escapeHtml(coverage)}</span></div>
       <div><b>Premier point</b><span>${Number.isFinite(firstAt)?escapeHtml(atlasChartLabelFull(firstAt)):"—"}</span></div>
-      <div><b>Dernier point</b><span>${Number.isFinite(lastPrice)?escapeHtml(atlasFormatEUR(lastPrice)):"—"} · ${Number.isFinite(lastAt)?escapeHtml(atlasChartLabelFull(lastAt)):"—"}</span></div>
+      <div><b>Dernier point (${currency})</b><span>${escapeHtml(formatExternalPrice(lastPrice))} · ${Number.isFinite(lastAt)?escapeHtml(atlasChartLabelFull(lastAt)):"—"}</span></div>
       <div><b>Intégrité</b><span>${mode==="valid"?"Validée":mode==="blocked"?"Indisponible":"Chargement"}</span></div>
       <div><b>Oracle</b><span>Isolé · non alimenté par cet actif externe</span></div>
       <div><b>Comparaison</b><span>Non injecté dans le panier canonique</span></div>`;
@@ -17548,6 +17569,8 @@ function atlasExternalChartDetail(coin,period,result=null,mode="loading"){
   atlasSetCompactReading(
     `Lecture : ${String(coin.symbol||coin.name||"ACTIF").toUpperCase()} est affiché dans un contexte historique externe isolé du Top 250 et de l’Oracle.`
   );
+  // Source Dock follows the same visible coin without changing Market selection.
+  atlasEnsureSourceDock(coin);
 }
 
 function atlasExternalChartDraw(coin,period,result){
@@ -19011,6 +19034,7 @@ function atlasRenderAssetDetail(c, period, result = null, mode = "loading") {
   // While CT owns the visible chart, a late BTC/Market callback must not
   // overwrite the CT detail card with unrelated canonical market values.
   if (atlasTraderCtSelectionOwnsView() && c?.id!=="concrete") return;
+  if (atlasExternalChartDetailMismatch(c)) return;
   atlasRenderCompactDetailSummary(c);
   const periodLabel = atlasChartPeriodLabel(period);
   const ratio = c?.volume24h && c?.marketCap ? `${((c.volume24h / c.marketCap) * 100).toFixed(2)} %` : "Donnée manquante";
@@ -50466,6 +50490,7 @@ async function atlasLoadSourceDockMetadata(coin, options = {}) {
 }
 
 function atlasEnsureSourceDock(coin, options = {}) {
+  if (atlasExternalChartDetailMismatch(coin)) return;
   atlasSourceDockLoadCache();
   if (!coin?.id) {
     state.sourceDock.activeCoinId = null;
