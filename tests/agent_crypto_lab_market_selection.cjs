@@ -14,20 +14,20 @@ assert.doesNotMatch(liveOwner,/scrollIntoView\(/,
 
 const calls=[],btc={id:"bitcoin",symbol:"BTC"},q={id:"quack-ai",symbol:"Q"};
 let allowQ=true,selected=btc,external=null,selectionId=null,commitOK=true,categoryEnabled=false;
-let resolveCT=null,delayCT=false;
+let resolveCT=null,delayCT=false,mode="candles";
 const owner={
   async selectById(id){
     calls.push("new-listing:"+id);
     if(id!=="concrete")return false;
     if(delayCT)return new Promise(resolve=>{resolveCT=()=>resolve(false);});
     external={active:true,id:"concrete",provider:"okx",instrument:"CT-USDT"};
-    selectionId="concrete";
+    selectionId="concrete";mode="native";
     return true;
   },
   snapshot:()=>({selectedId:selectionId,enabled:categoryEnabled}),
   deactivate(){
     calls.push("deactivate");
-    selectionId=null;external=null;
+    selectionId=null;external=null;mode="native";
   }
 };
 const document={readyState:"loading",addEventListener(){},
@@ -38,6 +38,7 @@ const document={readyState:"loading",addEventListener(){},
 const context={document,location:{search:"?surface=trader"},URLSearchParams,console,
   AgentCryptoNewListingsNativeCategory:owner,
   AgentCryptoNewListingLiveAsset:{snapshot:()=>external},
+  AgentCryptoMarketMicroscope:{snapshot:()=>({mode}),setMode(next){calls.push("mode:"+next);mode=next;}},
   atlasMarketExactTop250:id=>[btc,...(allowQ?[q]:[])].find(c=>c.id===id)||null,
   atlasSelectMarketCoin(coin){calls.push("select:"+coin.id);selected=coin;},
   getSelectedCoin:()=>selected,
@@ -55,10 +56,12 @@ assert.equal(api.real_order,false);
 (async()=>{
   assert.equal(await api.request("CT"),true);
   assert.equal(calls[0],"new-listing:concrete");
-  assert.deepEqual(calls.slice(0,3),["new-listing:concrete","filter:new","commit:CT-USDT"]);
+  assert.deepEqual(calls.slice(0,4),["new-listing:concrete","filter:new","mode:candles","commit:CT-USDT"]);
+  assert.equal(mode,"candles");
   assert.match(api.snapshot().truth,/CT\/USDT/);
   assert.equal(await api.request("BTC"),true);
-  assert.deepEqual(calls.slice(3,7),["clear-memory","deactivate","filter:all","select:bitcoin"]);
+  assert.deepEqual(calls.slice(4,9),["clear-memory","deactivate","filter:all","select:bitcoin","mode:candles"]);
+  assert.equal(mode,"candles");
   assert.equal(selected.id,"bitcoin");
   assert.equal(external,null);
   assert.equal(await api.request("Q"),true);
