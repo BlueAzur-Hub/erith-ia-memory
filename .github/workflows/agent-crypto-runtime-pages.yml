@@ -1,6 +1,6 @@
 # Market data on main MUST NOT redeploy this static frontend.
-# Merging this PR is permitted only after Settings > Pages > Source=GitHub Actions.
-# The Pages Source setting is the sole activation switch; no repository variable.
+# Protected: do not publish until the owner explicitly enables Pages Actions
+# AND AGENT_CRYPTO_RUNTIME_PAGES_ENABLED=true. No site rebuild for ordinary PRs.
 name: Agent Crypto - runtime only Pages
 on:
   pull_request:
@@ -14,9 +14,6 @@ on:
       - '!public/agent_crypto_erith_ia/data/**'
       - '!public/agent_crypto_erith_ia/administrator/index-[0-9]*.html'
       - '!public/agent_crypto_erith_ia/**/*.zip'
-      - 'index.html'
-      - 'app.js'
-      - 'style.css'
   push:
     branches: [main]
     paths:
@@ -29,13 +26,10 @@ on:
       - '!public/agent_crypto_erith_ia/data/**'
       - '!public/agent_crypto_erith_ia/administrator/index-[0-9]*.html'
       - '!public/agent_crypto_erith_ia/**/*.zip'
-      - 'index.html'
-      - 'app.js'
-      - 'style.css'
   workflow_dispatch:
     inputs:
       publish:
-        description: 'Deploy only when Pages source is GitHub Actions and explicit repo variable is true'
+        description: 'Publish only with Pages Actions + AGENT_CRYPTO_RUNTIME_PAGES_ENABLED=true'
         required: true
         type: boolean
         default: false
@@ -49,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      # Only three small code locations are required by PR/disabled-run tests.
+      # Only small code locations are required by PR/disabled-run tests.
       # Never hydrate large frontend/media directories for a routine test.
       - uses: actions/checkout@v4
         with:
@@ -76,29 +70,26 @@ jobs:
       - name: Checkout full frontend only for authorised publication
         if: >-
           github.ref == 'refs/heads/main' &&
+          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         uses: actions/checkout@v4
         with:
           filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            /*
-            !/assets/
-            !/coordination/
-            !/private/
-            !/Phoenix/
-            !/release_package_404222/
-            !/.github/
+            /tools/
+            /public/agent_crypto_erith_ia/
             !/public/agent_crypto_erith_ia/data/
             !/public/agent_crypto_erith_ia/administrator/index-[0-9]*.html
-            !/**/*.zip
-            !/**/*.jsonl
-            !/**/*.gz
-      # PRs and data-only commits do not rebuild a 142 MB candidate.
+            !/public/agent_crypto_erith_ia/**/*.zip
+            !/public/agent_crypto_erith_ia/**/*.jsonl
+            !/public/agent_crypto_erith_ia/**/*.gz
+      # PRs and data-only commits do not rebuild the Agent-Crypto site.
       # Build the frontend only for an explicitly authorised main deployment.
       - name: Build lightweight runtime only for authorised publication
         if: >-
           github.ref == 'refs/heads/main' &&
+          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         env:
           IMAGE_REF: main
@@ -106,19 +97,22 @@ jobs:
       - name: Check frontend budget and exclude cold archives
         if: >-
           github.ref == 'refs/heads/main' &&
+          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         run: |
           du -sh _runtime_pages
-          cat _runtime_pages/runtime-publication.json
+          cat _runtime_pages/public/agent_crypto_erith_ia/runtime-publication.json
           if find _runtime_pages -type f \( -name '*.jsonl' -o -name '*.json.gz' \) | grep -q .; then exit 1; fi
       - name: Configure Pages after explicit opt-in
         if: >-
           github.ref == 'refs/heads/main' &&
+          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         uses: actions/configure-pages@v5
       - name: Upload bounded Pages artifact after explicit opt-in
         if: >-
           github.ref == 'refs/heads/main' &&
+          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         uses: actions/upload-pages-artifact@v4
         with:
