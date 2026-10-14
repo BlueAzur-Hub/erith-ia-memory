@@ -26,7 +26,7 @@ test("five pilot assets supply exactly seven prepared historical periods",()=>{
  for(const id of ["bitcoin","ethereum","binancecoin","ripple","solana"]){
   const p=cat.assets.find(a=>a.id===id).prepared;
   assert.equal(p.length,7);
-  assert.ok(p.every(x=>x.snapshot&&!x.isLive&&!x.isAllTime));
+  assert.ok(p.every(x=>x.snapshot&&!x.isLive&&!x.isAllTime&&x.points>0&&x.bytes>0));
   assert.equal(query({id,period:"Max"}).status,"PREPARED_SNAPSHOT");
  }
  assert.equal(query({id:"concrete",period:"24h"}).status,"UNKNOWN_ASSET");
