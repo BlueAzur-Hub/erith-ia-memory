@@ -42,6 +42,14 @@ Path: public/agent_crypto_erith_ia/data/oracle_evidence/
 - No exhaustive sensitive-data or licensing audit has been completed.
   Do not copy personal OKX account data to Oracle evidence.
 
+
+## CRITICAL - three delivery tiers (user decision)
+1. **CLEAN_UPLOAD PATCH**: `tools/build-code-patch.py` compares exact Git refs, includes changed runtime code only, ZIP with per-file SHA-256 and deletion manifest; routine budget 1,000,000 bytes. Initial one-time PNG relocation remains a separate external asset migration and is flagged as a dependency in patch metadata. Uploading a code patch without the moved images would break the view.
+2. **PAGES SITE**: entire static served bundle, not a patch. Earlier candidate around 790 MB is still too large for routine re-packaging. CI on pull_request now builds only the small code patch. `tools/build-selective-pages.py` runs only on an explicit manual `workflow_dispatch` for inspect-only; never silently deploy. To truly deploy thin, relocate/archive historical data serving off Pages with SHA/CORS tests, then validate Firefox.
+3. **COLD VAULT**: history and 75 Oracle JSONL chunks remain unchanged in GitHub public and are excluded from the Page artifact only. Their future use as "Les Yeux de l'Oracle" requires T0-versus-outcome evaluation; it is not a trading signal.
+
+The full Crypto conversation records old UPLOAD ONLY / CLEAN_UPLOAD releases with only ~6-8 modified files, sometimes a 20 KB emergency ZIP. Their small patch size must never be conflated with a ~790 MB Pages artifact.
+
 ## Validation checklist before merging to main
 - Verify all 39 destination blobs have identical SHA as original blobs.
 - Check 5 updated active source files and all relative image URLs.
