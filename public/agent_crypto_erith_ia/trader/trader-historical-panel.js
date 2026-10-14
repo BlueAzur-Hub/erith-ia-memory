@@ -11,7 +11,7 @@ function layout(p,currency){
 const selected=()=>{try{const c=globalThis.getSelectedCoin?.();return c&&typeof c.id==="string"&&c.id&&typeof c.symbol==="string"?{id:c.id,symbol:c.symbol.toUpperCase()}:null;}catch(_){return null;}};
 function utc(x){const d=new Date(x);return Number.isFinite(d.getTime())?d.toLocaleString("fr-FR",{timeZone:"UTC",dateStyle:"short",timeStyle:"short"})+" UTC":"date inconnue";}
 function write(p,name,value){const e=p.querySelector("[data-history-"+name+"]");if(e)e.textContent=value;}
-function empty(p){p.querySelector("[data-history-rows]")?.replaceChildren();write(p,"meta","—");const native=p.querySelector("[data-history-native]");if(native){native.hidden=true;native.querySelector("[data-native-rows]")?.replaceChildren();}}
+function empty(p){p.querySelector("[data-history-rows]")?.replaceChildren();write(p,"meta","—");const t=p.querySelector("[data-history-r9] .history-scroll");if(t)t.hidden=true;const native=p.querySelector("[data-history-native]");if(native){native.hidden=true;native.querySelector("[data-native-rows]")?.replaceChildren();}}
 function loadReader(){
  if(globalThis.SevenCompactArchiveReader?.readSeries)return Promise.resolve(globalThis.SevenCompactArchiveReader);
  if(reader)return reader;
@@ -177,6 +177,7 @@ function paint(p,result){
  write(p,"meta",m.pair+" · Binance Spot · USDT · "+m.interval+" · "+rows.length+
   " chandelles · "+utc(m.firstOpenMs)+" → "+utc(m.lastOpenMs)+
   (m.archiveFamily==="long-periods"?" · capture longue ":m.status==="VALIDATED_ARCHIVE"?" · cumul vérifié ":m.archiveFamily==="universe"?" · borne fenêtre ":" · capture ")+utc(m.sourceIndexUpdatedAt)+" · SHA-256 vérifié · NON LIVE");
+ const table=p.querySelector("[data-history-r9] .history-scroll");if(table)table.hidden=false;
  const body=p.querySelector("[data-history-rows]");body?.replaceChildren();
  for(const row of rows.slice(-12).reverse()){
   const tr=document.createElement("tr");
