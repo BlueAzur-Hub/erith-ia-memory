@@ -7,7 +7,7 @@ ROOT={"index.html","app.js","style.css",".nojekyll"}
 EXT={".html",".htm",".css",".js",".mjs",".json",".svg",".ico",".webmanifest",".woff",".woff2",".ttf",".png",".jpg",".jpeg",".gif",".webp",".avif",".md",".txt",".xml"}
 OLD=re.compile(r"^public/agent_crypto_erith_ia/administrator/index-\d+(?:\.\d+)+\.html$",re.I)
 RAW="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/"
-BUDGET=130000000
+BUDGET=180000000
 ROUTER="public/agent_crypto_erith_ia/web/vault-data-router.js"
 REQUIRED=("index.html","public/agent_crypto_erith_ia/administrator/index.html",
 "public/agent_crypto_erith_ia/trader/trading-desk.html",

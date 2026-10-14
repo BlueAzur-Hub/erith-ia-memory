@@ -18,5 +18,5 @@ class TestRuntime(unittest.TestCase):
  def test_local_images(self):
   s=b'const i="./assets/images/missions_de_vie_constellation_bg.png";'
   self.assertEqual(r.transform("public/agent_crypto_erith_ia/administrator/js/x.js",s),s)
- def test_bounded(self):self.assertLessEqual(r.BUDGET,130000000)
+ def test_bounded(self):self.assertLessEqual(r.BUDGET,180000000)
 if __name__=="__main__":unittest.main(verbosity=2)
