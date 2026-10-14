@@ -82,12 +82,14 @@
           ||!external?.active||external.id!=="concrete"
           ||external.provider!=="okx"||external.instrument!=="CT-USDT")
           throw Error("Contexte CT/USDT public non confirmé");
+        const filter=byId("atlasNewListingsButton406528");
+        if(filter && owner.snapshot?.()?.enabled!==true)filter.click();
         const saved=globalThis.atlasTraderExternalSelectionCommit?.({
           id:"concrete",provider:"okx",providerSymbol:"CT-USDT"
         })===true;
         showSelectionTruth(saved
-          ?"CT · Trader synchronisé · OKX CT/USDT · mémoire V7 confirmée"
-          :"CT · Trader synchronisé · OKX CT/USDT · mémoire V7 non confirmée");
+          ?"CT · graphique OKX CT/USDT confirmé · Market Nouveau listing · mémoire V7 confirmée · carnet selon fraîcheur"
+          :"CT · graphique OKX CT/USDT confirmé · mémoire V7 non confirmée · carnet selon fraîcheur");
       }else{
         const coin=exactCoreCoin(next);
         if(!coin)throw Error(next+" absent du Market canonique : aucune substitution par BTC/CT");
@@ -97,6 +99,10 @@
         if(typeof clear==="function"&&clear()!==true)
           throw Error("Retour Market refusé : mémoire CT encore active");
         globalThis.AgentCryptoNewListingsNativeCategory?.deactivate?.({clearChart:false});
+        // Use the existing native Market filter: never leave CT highlighted
+        // under a successful BTC/Q selection.
+        const all=document.querySelector?.('.filter-btn[data-filter="all"]');
+        if(all)all.click();
         globalThis.atlasSelectMarketCoin(coin);
         if(globalThis.getSelectedCoin?.()?.id!==coin.id)
           throw Error("Le Market n'a pas confirmé "+next);
