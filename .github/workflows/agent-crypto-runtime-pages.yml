@@ -9,6 +9,7 @@ on:
       - 'tools/build-runtime-pages.py'
       - 'tools/test-runtime-pages.py'
       - 'tools/test-vault-data-router.mjs'
+      - 'tools/check-vault-raw-access.py'
       - 'public/agent_crypto_erith_ia/**'
       - '!public/agent_crypto_erith_ia/data/**'
       - '!public/agent_crypto_erith_ia/administrator/index-[0-9]*.html'
@@ -23,6 +24,7 @@ on:
       - 'tools/build-runtime-pages.py'
       - 'tools/test-runtime-pages.py'
       - 'tools/test-vault-data-router.mjs'
+      - 'tools/check-vault-raw-access.py'
       - 'public/agent_crypto_erith_ia/**'
       - '!public/agent_crypto_erith_ia/data/**'
       - '!public/agent_crypto_erith_ia/administrator/index-[0-9]*.html'
@@ -75,6 +77,10 @@ jobs:
           python tools/test-runtime-pages.py
           node --test tools/test-vault-data-router.mjs
           node --check public/agent_crypto_erith_ia/web/vault-data-router.js
+      - name: Verify real Raw GitHub URLs and browser CORS headers
+        env:
+          IMAGE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python tools/check-vault-raw-access.py --image-ref "$IMAGE_REF"
       - name: Build runtime site without cold archives
         run: python tools/build-runtime-pages.py --source . --destination _runtime_pages
       - name: Validate budget
