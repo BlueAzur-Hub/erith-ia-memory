@@ -155,3 +155,43 @@ test("The journal contains no bundled account balances or private bridge data",(
   assert.match(source,/localStorage\.setItem/);
   assert.match(source,/textContent/);
 });
+
+function descendants(node, predicate){
+  const found=[];
+  const walk=n=>{if(predicate(n))found.push(n);for(const c of n.children)walk(c);};
+  walk(node);return found;
+}
+function activateTab(t,id){
+  const tab=descendants(t.get("agentCryptoLearningLab"),n=>n.dataset.labTab===id)[0];
+  assert.ok(tab,"Missing laboratory tab "+id);tab.fire("click");
+}
+test("Empty fees are not silently treated as zero, but explicit zero is permitted",()=>{
+  const t=boot();
+  activateTab(t,"simulation");
+  const pane=t.get("lab-content");
+  const inputs=descendants(pane,n=>n.tagName==="INPUT");
+  assert.equal(inputs.length,5);
+  ["4","0,35","0,38","","0,1"].forEach((v,i)=>{inputs[i].value=v;inputs[i].fire("input");});
+  const button=descendants(pane,n=>n.tagName==="BUTTON")[0];
+  button.fire("click");
+  assert.match(descendants(pane,n=>n.tagName==="OUTPUT")[0].textContent,/incomplète|invalide/);
+  inputs[3].value="0";inputs[3].fire("input");button.fire("click");
+  assert.match(descendants(pane,n=>n.tagName==="OUTPUT")[0].textContent,/Quantité fictive/);
+});
+test("Simulation inputs survive tab switches and stay separated by asset",()=>{
+  const t=boot(),api=t.sandbox.window.AgentCryptoLearningLab;
+  api.select("CT");activateTab(t,"simulation");
+  let inputs=descendants(t.get("lab-content"),n=>n.tagName==="INPUT");
+  inputs[0].value="12,50";inputs[0].fire("input");
+  inputs[3].value="0,2";inputs[3].fire("input");
+  activateTab(t,"coffre");activateTab(t,"simulation");
+  inputs=descendants(t.get("lab-content"),n=>n.tagName==="INPUT");
+  assert.equal(inputs[0].value,"12,50");
+  assert.equal(inputs[3].value,"0,2");
+  api.select("Q");activateTab(t,"simulation");
+  inputs=descendants(t.get("lab-content"),n=>n.tagName==="INPUT");
+  assert.equal(inputs[0].value,"");
+  api.select("CT");activateTab(t,"simulation");
+  inputs=descendants(t.get("lab-content"),n=>n.tagName==="INPUT");
+  assert.equal(inputs[0].value,"12,50");
+});
