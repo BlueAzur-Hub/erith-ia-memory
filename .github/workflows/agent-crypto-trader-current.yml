@@ -84,6 +84,9 @@ jobs:
       - name: Cross-market candle identity and quote truth
         run: node tests/agent_crypto_market_context_identity.cjs
 
+      - name: Trader historical selection identity and native quote
+        run: node tests/agent_crypto_trader_historical_identity.cjs
+
       - name: CT V7 restored view and no implicit viewport jump
         run: node tests/agent_crypto_ct_v7_authority.cjs
 
