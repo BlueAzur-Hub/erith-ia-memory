@@ -57,6 +57,23 @@ class BitgetFederationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"identity drift"):
             b.source_candidates(self.catalog,self.exact,self.spot,forged)
 
+    def test_binance_primary_still_discovers_prior_bitget_source_index(self):
+        # The primary federated owner may switch, but original Bitget
+        # Releases and verified months must not disappear from a rebuild.
+        fed=json.loads(b.FEDERATED.read_text())
+        source_index=json.loads((b.ALT/"index.json").read_text())
+        for row in fed["assets"]:
+            if row["id"]=="cosmos":
+                row["source"]="Binance Spot official native 1m ZIPs"
+        preserved=b.source_candidates(self.catalog,self.exact,self.spot,
+                                      fed,source_index)
+        self.assertEqual(preserved["cosmos"]["pair"],"ATOMUSDT")
+        self.assertEqual(preserved["cosmos"]["venue"],"bitget")
+        forged=copy.deepcopy(source_index)
+        next(x for x in forged["assets"] if x["id"]=="cosmos")["pair"]="OTHERUSDT"
+        with self.assertRaisesRegex(ValueError,"Untrusted original Bitget"):
+            b.source_candidates(self.catalog,self.exact,self.spot,fed,forged)
+
     def test_verified_bitget_syrup_remains_valid_after_new_binance_months(self):
         import copy
         live=json.loads(b.FEDERATED.read_text())
