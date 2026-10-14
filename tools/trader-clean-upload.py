@@ -27,7 +27,7 @@ def pack(base, head, destination):
     names = sorted(set(
         p.decode("utf-8") for p in
         subprocess.check_output(["git", "diff", "--no-renames", "--name-only", "-z", base, head, "--",
-                                 ROOT + "trader/", ROOT + "administrator/", ROOT + "laboratoire/"]).split(b"\\0")
+                                 ROOT + "trader/", ROOT + "administrator/", ROOT + "laboratoire/"]).split(bytes([0]))
         if p))
     selected, deleted, excluded, media = [], [], [], []
     for name in names:
