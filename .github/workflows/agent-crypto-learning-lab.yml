@@ -40,7 +40,7 @@ jobs:
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/administrator/js/learning-lab.js
           node --test public/agent_crypto_erith_ia/tools/learning-lab.test.mjs
-      - name: Validate 40.6.635 manifests and BTC panel restoration
+      - name: Validate 40.6.636 manifests and BTC panel restoration
         shell: bash
         run: |
           set -euo pipefail
@@ -63,6 +63,7 @@ jobs:
             prefix+"trader/build.json",
             prefix+"trader/trading-desk.html",
             prefix+"trader/trader-runtime-mirror.js",
+            prefix+"trader/trader-historical-panel.js",
           }
           changed=set(subprocess.check_output(
             ["git","diff","--name-only",base,"HEAD","--",prefix+"trader/"],
@@ -84,32 +85,32 @@ jobs:
             assert actual==expected, f"Unexpected fields changed in {path}"
             return actual
           admin=jsondiff(prefix+"administrator/build.json",{
-            "build":"40.6.635","parent_build":"40.6.634",
-            "administrator_build":"40.6.635",
-            "build_label":"Build 40.6.635 · Administrator",
-            "release":"LABORATOIRE IA · PROVENANCE ET SAISIES · COFFRE BITGET",
-            "status":"LABORATOIRE_SOURCES_FRAIS_BITGET_CI_PENDING_FIREFOX",
+            "build":"40.6.636","parent_build":"40.6.635",
+            "administrator_build":"40.6.636",
+            "build_label":"Build 40.6.636 · Administrator",
+            "release":"HISTORIQUE CT/Q · SOURCES EXTERNES LISIBLES ET SÉPARÉES",
+            "status":"TRADER_HISTORIQUE_EXTERNE_CI_PENDING_FIREFOX",
             "new_observer":True,"new_storage_owner":True,
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
           trader=jsondiff(prefix+"trader/build.json",{
-            "build":"40.6.635","parent_trader_build":"40.6.634",
-            "administrator_base":"40.6.635",
-            "release":"LABORATOIRE IA · PROVENANCE ET SAISIES · COFFRE BITGET",
-            "status":"LABORATOIRE_SOURCES_FRAIS_BITGET_CI_PENDING_FIREFOX",
+            "build":"40.6.636","parent_trader_build":"40.6.635",
+            "administrator_base":"40.6.636",
+            "release":"HISTORIQUE CT/Q · SOURCES EXTERNES LISIBLES ET SÉPARÉES",
+            "status":"TRADER_HISTORIQUE_EXTERNE_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
-          for f in allowed-{prefix+"trader/build.json"}:
-            assert current(f)==previous(f).replace("40.6.634","40.6.635"),f"Non-version Trader change: {f}"
+          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js"}:
+            assert current(f)==previous(f).replace("40.6.635","40.6.636"),f"Non-version Trader change: {f}"
           index=current(prefix+"administrator/index.html")
           assert admin["engine"]==trader["market_core"]=="38.15.11"
-          assert admin["build"]==trader["build"]=="40.6.635"
-          assert 'name="agent-crypto-loaded-build" content="40.6.635"' in index
-          assert 'js/learning-lab.js?v=40.6.635' in index
-          assert 'css/learning-lab.css?v=40.6.635' in index
+          assert admin["build"]==trader["build"]=="40.6.636"
+          assert 'name="agent-crypto-loaded-build" content="40.6.636"' in index
+          assert 'js/learning-lab.js?v=40.6.636' in index
+          assert 'css/learning-lab.css?v=40.6.636' in index
           assert trader["real_orders"] is False and admin["real_order"] is False
           assert trader["terrain_verified"] is False
-          print("Lab 40.6.635: manifests and protected fields OK")
+          print("Lab 40.6.636: manifests and protected fields OK")
           PY
       - name: Prepare stable-name GitHub source ZIP
         run: |
