@@ -23,6 +23,7 @@ const nodes={"[data-history-asset]":asset,"[data-history-period]":period,
   "[data-history-r9]":r9,"[data-history-controls]":controls,
   "[data-history-r9] .history-scroll":scroll,"[data-history-native]":native,
   "[data-history-rows]":rows,"[data-history-meta]":meta,
+  "[data-native-price-heading]":priceHeading,
   "[data-history-status]":status,"[data-history-detail]":detail};
 panel.querySelector=selector=>nodes[selector]||null;
 const document={readyState:"loading",addEventListener(){},
