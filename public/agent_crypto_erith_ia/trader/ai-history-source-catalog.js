@@ -26,9 +26,11 @@ function compile(inventory,verified){
    need(PERIODS.includes(p.period)&&SHA.test(p.sha256),"période ou preuve invalide");
    need(p.file===entry.id+"-"+p.period+".json.gz","fichier période non canonique");
    need(["1m","5m","1h","1d"].includes(p.resolution),"résolution non autorisée");
+   need(Number.isInteger(p.bars)&&p.bars>0&&Number.isInteger(p.bytes)&&p.bytes>0,
+    "dimensions de l'archive manquantes");
    const a=assets.get(entry.id);
    need(!a.prepared.some(x=>x.period===p.period),"période doublée");
-   a.prepared.push({period:p.period,resolution:p.resolution,points:p.points,bytes:p.bytes,
+   a.prepared.push({period:p.period,resolution:p.resolution,points:p.bars,bytes:p.bytes,
     sha256:p.sha256,file:p.file,path:"../data/historical_archive_prototype/verified_periods/"+p.file,
     quote:verified.quote,venue:"Binance Spot",derived:true,retrievable:true,
     snapshot:true,isLive:false,isAllTime:false,
