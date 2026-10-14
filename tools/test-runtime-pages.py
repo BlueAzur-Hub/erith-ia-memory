@@ -15,6 +15,13 @@ class TestRuntime(unittest.TestCase):
   out=r.transform("public/agent_crypto_erith_ia/administrator/index.html",s).decode()
   self.assertIn('src="../web/vault-data-router.js"',out)
   self.assertIn(r.RAW+"assets/images/technical-reading/technical-random-01.png",out)
+ def test_preview_image_revision(self):
+  revision="f941c6d56fbc509d1c567ed81042ad55cda01dbf"
+  snippet=b'<head><img src="../../../assets/images/technical-reading/technical-random-01.png">'
+  page=r.transform("public/agent_crypto_erith_ia/administrator/index.html",snippet,image_ref=revision).decode()
+  self.assertIn(r.IMAGE_RAW_ROOT+revision+"/assets/images/technical-reading/technical-random-01.png",page)
+  self.assertNotIn(r.RAW+"assets/images/",page)
+  with self.assertRaises(ValueError):r.image_raw_base("../main")
  def test_local_images(self):
   s=b'const i="./assets/images/missions_de_vie_constellation_bg.png";'
   self.assertEqual(r.transform("public/agent_crypto_erith_ia/administrator/js/x.js",s),s)
