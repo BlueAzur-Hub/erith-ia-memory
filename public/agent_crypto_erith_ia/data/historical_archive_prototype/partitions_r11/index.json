@@ -4,18 +4,18 @@
   "source": "Binance Spot",
   "quote_asset": "USDT",
   "basket_reference": "github-action-main_2026-10-07T22-00-44-550Z",
-  "source_index_sha256": "893123d12aff6e750a0fda72d976222af2a3e075a021855441970aa36ed1fc4a",
-  "source_index_updated_at": "2026-10-14T07:39:33.117325Z",
-  "source_delta_count": 42,
+  "source_index_sha256": "50c732350b7096e31b392ce4e3c85d0b649f38a82bda2bdaa88b1a92f596d89b",
+  "source_index_updated_at": "2026-10-14T11:46:46.848925Z",
+  "source_delta_count": 43,
   "source_seed": {
     "file": "ohlcv_top10_2026-10-08.json.gz",
     "bytes": 130593,
     "sha256": "14d4abe6d2af78b948ad3c8bc9bbc664c2929a46a8192331c15e6d20cef7ec65"
   },
   "series_count": 21,
-  "candles_total": 18354,
+  "candles_total": 18739,
   "sealed_blocks_total": 70,
-  "pending_candles_total": 1575,
+  "pending_candles_total": 1960,
   "bucket_policy": {
     "24h": "UTC day",
     "7d": "UTC Monday week",
@@ -29,8 +29,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791963000000,
-      "candles": 2087,
+      "last_open_ms": 1791978000000,
+      "candles": 2137,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -123,10 +123,10 @@
           "bucket_start_ms": 1791936000000,
           "bucket_end_ms": 1792022400000,
           "first_open_ms": 1791936000000,
-          "last_open_ms": 1791963000000,
-          "candles": 91,
+          "last_open_ms": 1791978000000,
+          "candles": 141,
           "boundary_kind": "full_period",
-          "rows_sha256": "7b4e398ffe5ca484e30cc0d27b05456e6b03440a9bcc9a7391754b56db298643"
+          "rows_sha256": "1fad7032e1bebde9c34c2c2f8455770c6d45c1ead0f4844c6f621a6eac331832"
         }
       ]
     },
@@ -136,8 +136,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791957600000,
-      "candles": 318,
+      "last_open_ms": 1791972000000,
+      "candles": 322,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -170,10 +170,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1791957600000,
-          "candles": 55,
+          "last_open_ms": 1791972000000,
+          "candles": 59,
           "boundary_kind": "full_period",
-          "rows_sha256": "710e9cb03d46e8ff6c7f7f1b5f122458925e480b0cefaf36ffd5bb5096f6c199"
+          "rows_sha256": "31462ad3ead0643116031051c6063edd7d5e33fa12d4946a580ce13e7d96b110"
         }
       ]
     },
@@ -183,8 +183,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1791936000000,
-      "candles": 217,
+      "last_open_ms": 1791950400000,
+      "candles": 218,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -205,10 +205,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1791936000000,
-          "candles": 79,
+          "last_open_ms": 1791950400000,
+          "candles": 80,
           "boundary_kind": "full_period",
-          "rows_sha256": "90c2429e586703d1f32958f5b271816db4afcdf948c5a8a7f8e04c5bf568ed9c"
+          "rows_sha256": "e1f5ca9cbba69a8d6bbb857870b9ea5c4b75c2459c9b5246ed783bf851772039"
         }
       ]
     },
@@ -218,8 +218,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791963000000,
-      "candles": 2087,
+      "last_open_ms": 1791978000000,
+      "candles": 2137,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -312,10 +312,10 @@
           "bucket_start_ms": 1791936000000,
           "bucket_end_ms": 1792022400000,
           "first_open_ms": 1791936000000,
-          "last_open_ms": 1791963000000,
-          "candles": 91,
+          "last_open_ms": 1791978000000,
+          "candles": 141,
           "boundary_kind": "full_period",
-          "rows_sha256": "721912afcdbbd468b0dfb989ab91697d5465b80a11ce6f5a7feaab1d8ec3f1b9"
+          "rows_sha256": "89d4ae46c55d0cd9de9b76f3633cc22cd2093b91f55dfcb81f5ae2b98497de37"
         }
       ]
     },
@@ -325,8 +325,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791957600000,
-      "candles": 318,
+      "last_open_ms": 1791972000000,
+      "candles": 322,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -359,10 +359,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1791957600000,
-          "candles": 55,
+          "last_open_ms": 1791972000000,
+          "candles": 59,
           "boundary_kind": "full_period",
-          "rows_sha256": "3cbcf9a67b85dbef27a46c2fb1e7c7efae7f7e9191a0d66668d2829773fd60c1"
+          "rows_sha256": "27539aec2bf9325458ec395f2b5ed281b6fd61b4a8326b9900834587ffff14e0"
         }
       ]
     },
@@ -372,8 +372,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1791936000000,
-      "candles": 217,
+      "last_open_ms": 1791950400000,
+      "candles": 218,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -394,10 +394,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1791936000000,
-          "candles": 79,
+          "last_open_ms": 1791950400000,
+          "candles": 80,
           "boundary_kind": "full_period",
-          "rows_sha256": "99f0afb9db28acd45c9ac564e0bdcd02357833e6457e187feda4028749db289c"
+          "rows_sha256": "bd3d024f33e0b2826db9f4ed1c087cbf6cef6e3e36ac0ff5144537f652913f52"
         }
       ]
     },
@@ -407,8 +407,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791963000000,
-      "candles": 2087,
+      "last_open_ms": 1791978000000,
+      "candles": 2137,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -501,10 +501,10 @@
           "bucket_start_ms": 1791936000000,
           "bucket_end_ms": 1792022400000,
           "first_open_ms": 1791936000000,
-          "last_open_ms": 1791963000000,
-          "candles": 91,
+          "last_open_ms": 1791978000000,
+          "candles": 141,
           "boundary_kind": "full_period",
-          "rows_sha256": "a5f0769a815986536b613eb871ccd018f1dcc58cf14c1a00cb62ea668bc15581"
+          "rows_sha256": "b6553b45236030facfd23d08cbb889119d166b4fef276e826a508001d4352cf6"
         }
       ]
     },
@@ -514,8 +514,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791957600000,
-      "candles": 318,
+      "last_open_ms": 1791972000000,
+      "candles": 322,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -548,10 +548,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1791957600000,
-          "candles": 55,
+          "last_open_ms": 1791972000000,
+          "candles": 59,
           "boundary_kind": "full_period",
-          "rows_sha256": "8d6471498e3a9ca04a9d582b8695b3baf96fc0ccc4805e0e4679d8e388ee01ec"
+          "rows_sha256": "e0ea23db9cc43a75058f1195020535ee7099bc47e705cefa8303275be4a25bbc"
         }
       ]
     },
@@ -561,8 +561,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1791936000000,
-      "candles": 217,
+      "last_open_ms": 1791950400000,
+      "candles": 218,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -583,10 +583,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1791936000000,
-          "candles": 79,
+          "last_open_ms": 1791950400000,
+          "candles": 80,
           "boundary_kind": "full_period",
-          "rows_sha256": "196eb0bfba582c1a61742c836a5ba2fe9e67c71b2ee51c4341c6e525a07a825a"
+          "rows_sha256": "42097d8e7ceaa9228d3dcd89f094bcb7a3871cfda4292559ee8ad2e027a87d3a"
         }
       ]
     },
@@ -596,8 +596,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791963000000,
-      "candles": 2087,
+      "last_open_ms": 1791978000000,
+      "candles": 2137,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -690,10 +690,10 @@
           "bucket_start_ms": 1791936000000,
           "bucket_end_ms": 1792022400000,
           "first_open_ms": 1791936000000,
-          "last_open_ms": 1791963000000,
-          "candles": 91,
+          "last_open_ms": 1791978000000,
+          "candles": 141,
           "boundary_kind": "full_period",
-          "rows_sha256": "26fbe7a06e8f5ad2fea8c75a0951d4a0f184b498e2aa13943bae557224ae6aa9"
+          "rows_sha256": "9faa65d5d525b82ff9d55e812eb0204234a47cf8b7eee96ad7005faf5d51ff8b"
         }
       ]
     },
@@ -703,8 +703,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791957600000,
-      "candles": 318,
+      "last_open_ms": 1791972000000,
+      "candles": 322,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -737,10 +737,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1791957600000,
-          "candles": 55,
+          "last_open_ms": 1791972000000,
+          "candles": 59,
           "boundary_kind": "full_period",
-          "rows_sha256": "d50558198a6715426b1ff9770ec7bf303bea7f922c92ddebdd748b6f133b3ac0"
+          "rows_sha256": "98f3453164c562555aea9690d0fb04cd555a9a2b963fa00c938a9e1871a15d62"
         }
       ]
     },
@@ -750,8 +750,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1791936000000,
-      "candles": 217,
+      "last_open_ms": 1791950400000,
+      "candles": 218,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -772,10 +772,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1791936000000,
-          "candles": 79,
+          "last_open_ms": 1791950400000,
+          "candles": 80,
           "boundary_kind": "full_period",
-          "rows_sha256": "c9edc10787d3b5b2db6ec06a4c879744116adde7d3fb908bba9993715932ac86"
+          "rows_sha256": "1558f2bdd0b53d7f4a64a69d417fbc4a2d75b3b8fc2f73757bbd373288cc7e92"
         }
       ]
     },
@@ -785,8 +785,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791963000000,
-      "candles": 2087,
+      "last_open_ms": 1791978000000,
+      "candles": 2137,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -879,10 +879,10 @@
           "bucket_start_ms": 1791936000000,
           "bucket_end_ms": 1792022400000,
           "first_open_ms": 1791936000000,
-          "last_open_ms": 1791963000000,
-          "candles": 91,
+          "last_open_ms": 1791978000000,
+          "candles": 141,
           "boundary_kind": "full_period",
-          "rows_sha256": "ae5b050d7112083022a5cf1c4e5282032224665e23877ecdafc326198cce074f"
+          "rows_sha256": "ef74921027f9030071a8158cf23b180249ae0f096c376e2ffef9c43e9a770199"
         }
       ]
     },
@@ -892,8 +892,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791957600000,
-      "candles": 318,
+      "last_open_ms": 1791972000000,
+      "candles": 322,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -926,10 +926,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1791957600000,
-          "candles": 55,
+          "last_open_ms": 1791972000000,
+          "candles": 59,
           "boundary_kind": "full_period",
-          "rows_sha256": "36fd5a5c12cdbf116073dbcfb8daf1c5809a5db5b4dc1bec94b986c9244b9103"
+          "rows_sha256": "ebc6ac352d4087637a0bfb7b35822e113dea0a27ddcb79052296992436a800ba"
         }
       ]
     },
@@ -939,8 +939,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1791936000000,
-      "candles": 217,
+      "last_open_ms": 1791950400000,
+      "candles": 218,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -961,10 +961,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1791936000000,
-          "candles": 79,
+          "last_open_ms": 1791950400000,
+          "candles": 80,
           "boundary_kind": "full_period",
-          "rows_sha256": "9d0f39186157d7ba407056e59e4e9b9e2cc69f07d821323b3b30f9bb480994a1"
+          "rows_sha256": "7885f1bc9c10dd8c4e400d7e2c780dc9ad5d6f8387ae1d3e23e6edd8a91a3309"
         }
       ]
     },
@@ -974,8 +974,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791963000000,
-      "candles": 2087,
+      "last_open_ms": 1791978000000,
+      "candles": 2137,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -1068,10 +1068,10 @@
           "bucket_start_ms": 1791936000000,
           "bucket_end_ms": 1792022400000,
           "first_open_ms": 1791936000000,
-          "last_open_ms": 1791963000000,
-          "candles": 91,
+          "last_open_ms": 1791978000000,
+          "candles": 141,
           "boundary_kind": "full_period",
-          "rows_sha256": "2c35d5eec20e10cdccfa27b99cb8aee28a81e18930bd6e9cc3a788eeeb17660c"
+          "rows_sha256": "240d8ed566095f0d1abdac7d8b3900fa8b382ad2bf03425e0d1e710195fb0805"
         }
       ]
     },
@@ -1081,8 +1081,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791957600000,
-      "candles": 318,
+      "last_open_ms": 1791972000000,
+      "candles": 322,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -1115,10 +1115,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1791957600000,
-          "candles": 55,
+          "last_open_ms": 1791972000000,
+          "candles": 59,
           "boundary_kind": "full_period",
-          "rows_sha256": "9676335a20b2d58dbc3bc5a9183bbc6469f48bea5559ead94680151e35a8349e"
+          "rows_sha256": "bad9379a39f627a1818466e5cc5b1543f3f2c8c52a05875c9364177dddb39070"
         }
       ]
     },
@@ -1128,8 +1128,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1791936000000,
-      "candles": 217,
+      "last_open_ms": 1791950400000,
+      "candles": 218,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -1150,10 +1150,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1791936000000,
-          "candles": 79,
+          "last_open_ms": 1791950400000,
+          "candles": 80,
           "boundary_kind": "full_period",
-          "rows_sha256": "b8299c1433d8d954620b0f8c4f721871047c5692f9f8e031ebc02d7ee2a5de00"
+          "rows_sha256": "933544ae7d0e344a4cdb728c8905832d226187628a0248d23ebabb85fa6c4483"
         }
       ]
     },
@@ -1163,8 +1163,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1791963000000,
-      "candles": 2087,
+      "last_open_ms": 1791978000000,
+      "candles": 2137,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -1257,10 +1257,10 @@
           "bucket_start_ms": 1791936000000,
           "bucket_end_ms": 1792022400000,
           "first_open_ms": 1791936000000,
-          "last_open_ms": 1791963000000,
-          "candles": 91,
+          "last_open_ms": 1791978000000,
+          "candles": 141,
           "boundary_kind": "full_period",
-          "rows_sha256": "1cbe59494614cc7241961e2abbf17c9e3545beba4629f0d4119a8147536aec1a"
+          "rows_sha256": "5afe56be8256d4121452537b0f5325c92095e9e54c7840a59607fb48c7c7653b"
         }
       ]
     },
@@ -1270,8 +1270,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1791957600000,
-      "candles": 318,
+      "last_open_ms": 1791972000000,
+      "candles": 322,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -1304,10 +1304,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1791957600000,
-          "candles": 55,
+          "last_open_ms": 1791972000000,
+          "candles": 59,
           "boundary_kind": "full_period",
-          "rows_sha256": "8cbe11c473a1cf70246066b26eb67fab47b7d17e5f4ca221bd07182abf3caf9b"
+          "rows_sha256": "15ef203fa00e4fb873f6f51c0df02889a4ac28cb1269c46be8690d2d083d1124"
         }
       ]
     },
@@ -1317,8 +1317,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1791936000000,
-      "candles": 217,
+      "last_open_ms": 1791950400000,
+      "candles": 218,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -1339,10 +1339,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1791936000000,
-          "candles": 79,
+          "last_open_ms": 1791950400000,
+          "candles": 80,
           "boundary_kind": "full_period",
-          "rows_sha256": "b71f21780695897a1d41ad9d4e05e346f40e9cd08a854c9dbfb96f3fac287043"
+          "rows_sha256": "a314a915a4cb0b25cfb6bc7e424885969640149520253ac573af499b519dd76d"
         }
       ]
     }
