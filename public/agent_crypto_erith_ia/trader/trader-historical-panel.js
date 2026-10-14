@@ -25,8 +25,11 @@ function selected(){
  const base=String(ext?.base||"").toUpperCase(),quote=String(ext?.quote||"").toUpperCase();
  if(ext?.active&&typeof ext.id==="string"&&ext.id&&
    /^[A-Z0-9]+$/.test(base)&&/^(USDT|USDC|USD|EUR)$/.test(quote)&&
-   String(ext.instrument||"").toUpperCase()===base+"-"+quote)
-   return {id:ext.id,symbol:base,origin:"external",quote};
+   String(ext.instrument||"").toUpperCase()===base+"-"+quote){
+   const observed=inspectedChart(displayCurrency());
+   return observed&&observed.id===ext.id&&observed.symbol===base&&observed.quote===quote
+     ?{id:ext.id,symbol:base,origin:"external",quote}:null;
+ }
  try{
   const c=globalThis.getSelectedCoin?.();
   if(c&&typeof c.id==="string"&&c.id&&typeof c.symbol==="string"&&c.id)
@@ -227,8 +230,13 @@ async function refresh({reload=false}={}){
  const seq=++sequence,c=selected(),period=p.querySelector("[data-history-period]")?.value||"24h",currency=displayCurrency();
  empty(p);layout(p,currency);
  if(!c){
-  write(p,"status","Aucun actif historique identifié");
-  write(p,"detail","Choisir un actif ci-dessus ou charger son graphique : aucune archive ni donnée ne sera inventée.");
+  let external=null;
+  try{external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();}catch(_){}
+  const pending=external?.active&&external.id&&external.base;
+  write(p,"status",pending?String(external.base).toUpperCase()+" · historique externe en attente":"Aucun actif historique identifié");
+  write(p,"detail",pending
+    ?"Graphique externe non confirmé : aucune donnée du Market BTC ne remplace cet actif."
+    :"Choisir un actif ci-dessus ou charger son graphique : aucune archive ni donnée ne sera inventée.");
   return;
  }
  if(c.origin==="external"){
