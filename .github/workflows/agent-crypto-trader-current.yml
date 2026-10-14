@@ -42,7 +42,24 @@ jobs:
   validate-trader:
     runs-on: ubuntu-latest
     steps:
+      # The Trader test suite must not hydrate cold historical data, media or
+      # unrelated repository projects just to validate a small code change.
       - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tests/
+            /tools/
+            /public/agent_crypto_erith_ia/trader/
+            /public/agent_crypto_erith_ia/administrator/
+            /public/agent_crypto_erith_ia/laboratoire/
+            !/public/agent_crypto_erith_ia/administrator/assets/visual/
+            !/public/agent_crypto_erith_ia/administrator/assets/images/
+            !/public/agent_crypto_erith_ia/trader/assets/
+            !/**/*.zip
+            !/**/*.jsonl
+            !/**/*.gz
 
       - name: JavaScript syntax
         shell: bash
