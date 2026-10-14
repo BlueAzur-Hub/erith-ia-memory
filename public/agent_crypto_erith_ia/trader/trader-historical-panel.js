@@ -226,7 +226,8 @@ async function refresh({reload=false}={}){
   const found=paintNative(p,c,currency);
   write(p,"status",c.symbol+" · graphique externe consulté · "+(found?"POINTS DISPONIBLES":"EN ATTENTE"));
   write(p,"detail","Source du graphique "+c.symbol+" · cotation native "+c.quote+
-    " · hors Top 250 et hors Coffre R9. Aucun autre actif ni ordre réel.");
+    " · hors Top 250 et hors Coffre R9. Le choix d'archive « "+(LABEL[period]||period)+
+    " » ne découpe pas les bougies externes : le tableau montre la résolution et les dates réellement chargées par le graphique. Aucun autre actif ni ordre réel.");
   return;
  }
  if(currency==="EUR"){
