@@ -101,6 +101,51 @@ function nativeChart(coin,currency="USD"){
    source:String(r.source||chart.source||family+" "+currency),asOf:r.generatedAt||chart.seriesTimestamp||null,
    first:rows[0][0],last:rows[rows.length-1][0]};
 }
+
+/* External CT/Q graph and R9 are different owners. Read without refetching. */
+function inspectedChart(currency="USD"){
+ let ext=null,chart=null,micro=null;
+ try{ext=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();}catch(_){}
+ try{chart=typeof state!=="undefined"?state?.dataBroker?.chart:null;}catch(_){}
+ const base=String(ext?.base||"").toUpperCase(),quote=String(ext?.quote||"").toUpperCase(),
+   provider=String(ext?.provider||"").toLowerCase(),pair=base+"/"+quote;
+ if(!ext?.active||!ext.id||!/^[A-Z0-9]+$/.test(base)||!/^(USDT|USDC|USD|EUR)$/.test(quote)||
+   String(ext.instrument||"").toUpperCase()!==base+"-"+quote)return null;
+ const verified=(rows)=>Array.isArray(rows)&&rows.length>=2&&rows.every((v,i)=>
+   Array.isArray(v)&&v.length>=2&&Number.isFinite(v[0])&&v[0]>0&&
+   Number.isFinite(v[1])&&v[1]>0&&(!i||v[0]>rows[i-1][0]));
+ let rows,source,unit,days,asOf;
+ const r=chart?.result||{};
+ const name=String(r.source||"");
+ if(chart?.status==="ready"&&chart.coinId===ext.id&&!r.blocked
+   &&r.sourceMode==="new-listing-exchange-native"
+   &&String(r.provider||"").toLowerCase()===provider
+   &&String(r.currency||"").toUpperCase()===currency
+   &&String(r.quoteCurrency||"").toUpperCase()===currency
+   &&name.includes(pair)&&name.toLowerCase().includes(provider)
+   &&(quote===currency||name.includes(quote+"/"+currency+" CoinGecko"))
+   &&verified(r.series)){
+    rows=r.series;source=name;unit=currency;days=Number(chart.period||r.periodDays||0);
+    asOf=r.generatedAt||chart.seriesTimestamp||null;
+ }else{
+    try{micro=globalThis.AgentCryptoMarketMicroscope?.snapshot?.();}catch(_){}
+    const raw=micro?.rows;
+    if(!micro?.external||micro.loading||
+       String(micro.loadedInstrument||"").toUpperCase()!==base+"-"+quote||
+       !String(micro.source||"").toLowerCase().includes(provider)
+       ||!Array.isArray(raw)||raw.length<2||
+       !raw.every((v,i)=>[v.t,v.o,v.h,v.l,v.c].every(z=>Number.isFinite(z)&&z>0)
+         &&v.h>=Math.max(v.o,v.c,v.l)&&v.l<=Math.min(v.o,v.c,v.h)
+         &&(v.v==null||(Number.isFinite(v.v)&&v.v>=0))
+         &&(!i||v.t>raw[i-1].t)))return null;
+    rows=raw.map(v=>[v.t,v.c]);unit=quote;days=null;
+    source=String(micro.source)+" · clôtures natives "+String(micro.loadedBar||micro.bar||"");
+    asOf=micro.lastLoadedAt||null;
+ }
+ return {external:true,symbol:base,id:ext.id,pair,quote,
+   currency:unit,rows:rows.slice(-12),count:rows.length,days,
+   source,first:rows[0][0],last:rows[rows.length-1][0],asOf};
+}
 function paintNative(p,coin,currency="USD"){
  const host=p.querySelector("[data-history-native]");if(!host)return false;
  host.hidden=false;
