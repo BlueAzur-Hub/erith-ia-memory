@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Offline regression: two genuine source schemas, never a synthetic trade count."""
 import csv
+import copy
 import io
 import json
 from pathlib import Path
@@ -44,6 +45,9 @@ class BitgetFederationTests(unittest.TestCase):
         old=json.loads(b.FEDERATED.read_text())
         historical=next(x for x in old["assets"] if x["id"]=="cosmos")
         current=next(x for x in self.catalog["assets"] if x["id"]=="cosmos")
+        # Ranking is live: generate a genuine historical-rank drift fixture
+        # instead of assuming two separately refreshed indexes differ today.
+        historical["rank"]=current["rank"]+1
         self.assertNotEqual(historical["rank"],current["rank"])
         self.assertEqual(historical["symbol"],current["symbol"])
         source=b.source_candidates(self.catalog,self.exact,self.spot,old)["cosmos"]
