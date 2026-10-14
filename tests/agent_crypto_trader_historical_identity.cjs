@@ -65,11 +65,14 @@ assert.equal(api.read_only,true);
   assert.match(status.textContent,/^CT · USDT · HISTORIQUE NATIF$/);
   assert.match(detail.textContent,/EUR demandé/);
   assert.match(detail.textContent,/sans conversion/);
-  // Automatic Market BTC selection cannot be overwritten with resident CT.
+  // Automatic history follows the visible CT/USDT identity even when the
+  // canonical Market keeps BTC as its return subprofile. Manual BTC/Q above
+  // still cannot borrow CT's prices.
   asset.value="auto";
   await api.refresh();
-  assert.equal(native.hidden,true,"auto Market BTC cannot borrow external CT");
-  // With no Market owner, automatic selection legitimately follows CT.
+  assert.equal(native.hidden,false,"auto history must follow visible external CT");
+  assert.match(status.textContent,/^CT · graphique externe consulté · POINTS DISPONIBLES$/);
+  assert.equal(body.children.length,2);
   market=null;
   await api.refresh();
   assert.equal(native.hidden,false);
