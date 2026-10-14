@@ -44,7 +44,12 @@
   };
   const fmt = (n,unit) => Number.isFinite(n)
     ? new Intl.NumberFormat("fr-FR",{maximumFractionDigits:6}).format(n)+(unit||"") : "—";
-  const decimal = value => Number(String(value||"").trim().replace(",","."));
+  const decimal = value => {
+    const raw=String(value??"").trim().replace(",",".");
+    return raw && /^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)$/.test(raw) ? Number(raw) : NaN;
+  };
+  // Keep educational inputs in this session, per dossier. Never persist financial examples.
+  const simulationDrafts=Object.create(null);
   let asset="BTC", tab="synthese", follow=false, root, legacy, pane, tabsNode, observer;
   function journalRead(){
     try {
@@ -162,7 +167,13 @@
       ["Frais par opération (%)","0,2"],
       ["Glissement à la sortie (%)","0,1"]
     ],inputs=[];
-    for(const [label,placeholder] of fields){const [field,input]=labeledNumber(label,placeholder);grid.append(field);inputs.push(input);}
+    const draft=simulationDrafts[asset]||(simulationDrafts[asset]=Array(fields.length).fill(""));
+    for(const [label,placeholder] of fields){
+      const [field,input]=labeledNumber(label,placeholder),index=inputs.length;
+      input.value=draft[index];
+      input.addEventListener("input",()=>{draft[index]=input.value;});
+      grid.append(field);inputs.push(input);
+    }
     const button=elt("button","lab-action","Calculer une simulation");
     button.type="button";
     const output=elt("output","lab-note","Renseigne les cinq paramètres, puis calcule.");
@@ -174,6 +185,9 @@
       }
       const bought=capital*(1-fee/100)/entry;
       const sold=bought*exit*(1-slip/100)*(1-fee/100);
+      if(!Number.isFinite(bought)||!Number.isFinite(sold)){
+        output.textContent="Calcul non représentable : réduire les montants saisis.";return;
+      }
       output.textContent="Quantité fictive : "+fmt(bought)+" "+asset+" · revente nette simulée : "+
         fmt(sold," unité(s) de cotation")+" · écart : "+fmt(sold-capital)+" ("+
         fmt((sold/capital-1)*100," %")+"). Prix, frais et glissement sont hypothétiques ; aucune exécution réelle.";
