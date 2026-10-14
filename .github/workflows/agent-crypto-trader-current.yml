@@ -36,7 +36,7 @@ on:
       - ".github/workflows/agent-crypto-trader-current.yml"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate-trader:
@@ -206,148 +206,25 @@ jobs:
           PY
 
 
-      - name: Package compact Trader patch
+      - name: Verify changed-file CLEAN_UPLOAD rules
+        run: python tests/test_trader_clean_upload.py
+
+      - name: Package changed Trader files only
         id: package
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          import json, zipfile, os, shutil
-          root=Path("public/agent_crypto_erith_ia")
-          build=json.loads((root/"trader"/"build.json").read_text(encoding="utf-8"))["build"]
-          out=Path(f"AGENT_CRYPTO_TRADER_{build}.zip")
-          files=[
-            root/"administrator"/"index.html",
-            root/"administrator"/"app.js",
-            root/"administrator"/"js"/"new-listings-native-category.js",
-            root/"administrator"/"build.json",
-            root/"administrator"/"js"/"aether.js",
-            root/"administrator"/"js"/"okx-market-pair-resolver.js",
-            root/"administrator"/"js"/"market-instrument-resolver.js",
-            root/"administrator"/"js"/"quote-currency-architecture-406497.js",
-            root/"administrator"/"js"/"market-microscope-candles.js",
-            root/"administrator"/"js"/"graph-native-usd-406520.js",
-            root/"administrator"/"js"/"learning-lab.js",
-            root/"administrator"/"css"/"learning-lab.css",
-            root/"administrator"/"js"/"okx-microstructure-406499.js",
-            root/"trader"/"trading-desk.html",
-            root/"trader"/"trader-runtime-mirror.js",
-            root/"trader"/"ct-selection-memory.js",
-            root/"trader"/"ai-ct-contract.js",
-            root/"trader"/"ai-ct-panel.js",
-            root/"trader"/"ai-ct-panel.css",
-            root/"trader"/"trader-okx-account.js",
-            root/"trader"/"trader-historical-panel.js",
-            root/"trader"/"trader-historical-universe-reader.js",
-            root/"trader"/"trader-historical-long-reader.js",
-            root/"trader"/"trader-historical-cohort-reader.js",
-            root/"trader"/"build.json",
-            root/"trader"/"ai-source-inventory.js",
-            root/"trader"/"historical-inventory.html",
-            root/"trader"/"ai-history-source-catalog.js",
-            root/"trader"/"source-catalogue.html",
-            root/"trader"/"ai-verified-history-reader.js",
-            root/"trader"/"verified-reader.html",
-          ]
-          # Package the Laboratory source and its human/IA case studies, not
-          # just the HTML script references. Keep the published file name stable.
-          files+=sorted(p for p in (root/"laboratoire").rglob("*") if p.is_file())
-          with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
-            for p in files:
-              z.write(p,p.as_posix())
-          with zipfile.ZipFile(out) as z:
-            names=set(z.namelist())
-            required={
-              (root/"administrator"/"js"/"learning-lab.js").as_posix(),
-              (root/"administrator"/"css"/"learning-lab.css").as_posix(),
-              (root/"laboratoire"/"cas-ecole-concrete.md").as_posix(),
-              (root/"laboratoire"/"REPRISE_SEVEN_HEAVEN.md").as_posix(),
-              *((root/"trader"/name).as_posix() for name in (
-               "ai-source-inventory.js","historical-inventory.html",
-               "ai-history-source-catalog.js","source-catalogue.html",
-               "ai-verified-history-reader.js","verified-reader.html")),
-            }
-            assert required <= names, "Laboratory dependencies missing from Trader ZIP"
-            assert len(names)==len(z.namelist()), "Duplicate ZIP entry"
-            assert z.testzip() is None, "Damaged Trader ZIP"
-          shutil.copy2(out,Path("/tmp")/out.name)
-          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
-            fh.write(f"build={build}\n")
-            fh.write(f"zip={out.name}\n")
-          print(out,out.stat().st_size)
-          PY
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: AGENT_CRYPTO_TRADER_${{ steps.package.outputs.build }}
-          path: ${{ steps.package.outputs.zip }}
-
-      - name: Persist cumulative Trader builds in coordination
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        shell: bash
         env:
-          BUILD: ${{ steps.package.outputs.build }}
-          ZIP_NAME: ${{ steps.package.outputs.zip }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
-          target="coordination/inter_ai_dialogues/agent_crypto"
-          current_zip="/tmp/$ZIP_NAME"
-          previous_zip="/tmp/AGENT_CRYPTO_TRADER_40.6.611.zip"
-          previous_commit="443b7850bcc3b116cc949f37095a9a61d41dee14"
+          git fetch --no-tags --filter=blob:none --depth=1 origin "$BASE_SHA" "$HEAD_SHA"
+          python tools/trader-clean-upload.py --base "$BASE_SHA" --head "$HEAD_SHA" --output out/AGENT_CRYPTO_TRADER_CLEAN_UPLOAD.zip
 
-          test -f "$current_zip"
-
-          git fetch --depth=1 origin "$previous_commit" || true
-          if git cat-file -e "$previous_commit^{commit}" 2>/dev/null; then
-            git archive --format=zip --output="$previous_zip" "$previous_commit" \
-              public/agent_crypto_erith_ia/administrator/index.html \
-              public/agent_crypto_erith_ia/administrator/build.json \
-              public/agent_crypto_erith_ia/administrator/js/aether.js \
-              public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js \
-              public/agent_crypto_erith_ia/trader/trading-desk.html \
-              public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js \
-              public/agent_crypto_erith_ia/trader/build.json
-          fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          for attempt in 1 2 3; do
-            git fetch origin main
-            git checkout -B trader-build-publish origin/main
-
-            cp "$current_zip" "$target/$ZIP_NAME"
-            if [ -f "$previous_zip" ] && [ ! -f "$target/AGENT_CRYPTO_TRADER_40.6.611.zip" ]; then
-              cp "$previous_zip" "$target/AGENT_CRYPTO_TRADER_40.6.611.zip"
-            fi
-
-            cat > "$target/LATEST_TRADER_BUILD.md" <<EOF
-          # Latest Trader build
-
-          - Current build: **$BUILD**
-          - ZIP: **$ZIP_NAME**
-          - Previous retained build: **AGENT_CRYPTO_TRADER_40.6.611.zip**
-          - Source: `public/agent_crypto_erith_ia/trader/build.json`
-
-          [Download current build](./$ZIP_NAME)
-          EOF
-
-            git add "$target/$ZIP_NAME" "$target/LATEST_TRADER_BUILD.md"
-            [ -f "$target/AGENT_CRYPTO_TRADER_40.6.611.zip" ] && git add "$target/AGENT_CRYPTO_TRADER_40.6.611.zip"
-
-            if git diff --cached --quiet; then
-              echo "Builds already persisted."
-              exit 0
-            fi
-
-            git commit -m "agent-crypto: persist Trader build $BUILD [skip ci]"
-            if git push origin HEAD:main; then
-              echo "Persisted Trader builds in $target"
-              exit 0
-            fi
-            sleep 2
-          done
-
-          echo "Could not persist Trader build after retries." >&2
-          exit 1
+      - name: Upload only the small Trader patch and SHA-256
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-crypto-trader-clean-upload
+          path: |
+            out/AGENT_CRYPTO_TRADER_CLEAN_UPLOAD.zip
+            out/AGENT_CRYPTO_TRADER_CLEAN_UPLOAD.zip.sha256
+          if-no-files-found: error
+          retention-days: 14
