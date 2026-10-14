@@ -132,7 +132,8 @@
       const depth=globalThis.AgentCryptoOkxMicrostructure?.snapshot?.();
       if(depth?.open)void globalThis.AgentCryptoOkxMicrostructure?.refresh?.({asset:ctx.base,quote:ctx.quote});
     }catch(_){}
-    try{document.getElementById("analyste")?.scrollIntoView({behavior:"smooth",block:"start"});}catch(_){}
+    // Selecting a public instrument changes the chart, not the operator's
+    // viewport. An explicit navigation button remains responsible for scrolling.
     return snapshot();
   }
 
