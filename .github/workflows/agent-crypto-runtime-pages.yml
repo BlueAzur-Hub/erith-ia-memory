@@ -1,6 +1,6 @@
 # Market data on main MUST NOT redeploy this static frontend.
-# Protected: do not publish until the owner explicitly enables Pages Actions
-# AND AGENT_CRYPTO_RUNTIME_PAGES_ENABLED=true. No site rebuild for ordinary PRs.
+# Pages Source is configured as GitHub Actions by the site owner.
+# Publish only frontend-code changes on main. Data-only commits never trigger Pages.
 name: Agent Crypto - lightweight multisite Pages
 on:
   pull_request:
@@ -57,7 +57,7 @@ on:
   workflow_dispatch:
     inputs:
       publish:
-        description: 'Publish only with Pages Actions + AGENT_CRYPTO_RUNTIME_PAGES_ENABLED=true'
+        description: 'Manual publish after Pages Source is set to GitHub Actions'
         required: true
         type: boolean
         default: false
@@ -100,7 +100,6 @@ jobs:
       - name: Checkout full frontend only for authorised publication
         if: >-
           github.ref == 'refs/heads/main' &&
-          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         uses: actions/checkout@v4
         with:
@@ -128,55 +127,11 @@ jobs:
             !/public/agent_crypto_erith_ia/**/*.zip
             !/public/agent_crypto_erith_ia/**/*.jsonl
             !/public/agent_crypto_erith_ia/**/*.gz
-      # Temporary scoped dry-run: hydrate only chosen frontend sources once,
-      # never publish from a PR and never hydrate the historical Coffre.
-      - name: Checkout multisite sources for isolated preflight
-        if: github.event_name == 'pull_request' && github.head_ref == 'seven/visual-assets-pages-selective'
-        uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /tools/
-            /index.html
-            /app.js
-            /style.css
-            /assets/
-            !/assets/images/technical-reading/
-            !/assets/images/visual/
-            /public/index.html
-            /public/app.js
-            /public/style.css
-            /public/*.md
-            /public/lego/
-            /public/liora-jardin-reves-doux/
-            /public/charlene_salon/
-            /public/memory_cards/
-            /public/agent_crypto_erith_ia/
-            !/public/agent_crypto_erith_ia/data/
-            !/public/agent_crypto_erith_ia/administrator/index-[0-9]*.html
-            !/public/agent_crypto_erith_ia/**/*.zip
-            !/public/agent_crypto_erith_ia/**/*.jsonl
-            !/public/agent_crypto_erith_ia/**/*.gz
-      - name: Build multisite preview and inspect budget without deployment
-        if: github.event_name == 'pull_request' && github.head_ref == 'seven/visual-assets-pages-selective'
-        env:
-          IMAGE_REF: ${{ github.event.pull_request.head.sha }}
-        run: |
-          python tools/build-runtime-pages.py --source . --destination _runtime_pages_preview --image-ref "$IMAGE_REF"
-          du -sh _runtime_pages_preview
-          test -f _runtime_pages_preview/index.html
-          test -f _runtime_pages_preview/public/lego/rising-phoenix/index.html
-          test -f _runtime_pages_preview/public/liora-jardin-reves-doux/index.html
-          test -f _runtime_pages_preview/public/agent_crypto_erith_ia/trader/trading-desk.html
-          test ! -d _runtime_pages_preview/public/agent_crypto_erith_ia/data
-          cat _runtime_pages_preview/public/agent_crypto_erith_ia/runtime-publication.json
       # PRs and data-only commits do not rebuild the Agent-Crypto site.
       # Build the frontend only for an explicitly authorised main deployment.
       - name: Build lightweight multisite only for authorised publication
         if: >-
           github.ref == 'refs/heads/main' &&
-          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         env:
           IMAGE_REF: main
@@ -184,7 +139,6 @@ jobs:
       - name: Check frontend budget and exclude cold archives
         if: >-
           github.ref == 'refs/heads/main' &&
-          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         run: |
           du -sh _runtime_pages
@@ -193,13 +147,11 @@ jobs:
       - name: Configure Pages after explicit opt-in
         if: >-
           github.ref == 'refs/heads/main' &&
-          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         uses: actions/configure-pages@v5
       - name: Upload bounded Pages artifact after explicit opt-in
         if: >-
           github.ref == 'refs/heads/main' &&
-          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         uses: actions/upload-pages-artifact@v4
         with:
@@ -207,7 +159,6 @@ jobs:
   deploy-runtime:
     if: >-
       github.ref == 'refs/heads/main' &&
-      vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
       (github.event_name == 'push' || inputs.publish == true)
     needs: build-runtime
     runs-on: ubuntu-latest
