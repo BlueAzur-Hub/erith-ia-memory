@@ -8,6 +8,9 @@ on:
       - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
+      - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
+      - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
+      - "public/agent_crypto_erith_ia/laboratoire/**"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
@@ -22,6 +25,9 @@ on:
       - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js"
+      - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
+      - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
+      - "public/agent_crypto_erith_ia/laboratoire/**"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
@@ -219,6 +225,8 @@ jobs:
             root/"administrator"/"js"/"quote-currency-architecture-406497.js",
             root/"administrator"/"js"/"market-microscope-candles.js",
             root/"administrator"/"js"/"graph-native-usd-406520.js",
+            root/"administrator"/"js"/"learning-lab.js",
+            root/"administrator"/"css"/"learning-lab.css",
             root/"administrator"/"js"/"okx-microstructure-406499.js",
             root/"trader"/"trading-desk.html",
             root/"trader"/"trader-runtime-mirror.js",
@@ -233,9 +241,23 @@ jobs:
             root/"trader"/"trader-historical-cohort-reader.js",
             root/"trader"/"build.json",
           ]
+          # Package the Laboratory source and its human/IA case studies, not
+          # just the HTML script references. Keep the published file name stable.
+          files+=sorted(p for p in (root/"laboratoire").rglob("*") if p.is_file())
           with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED) as z:
             for p in files:
               z.write(p,p.as_posix())
+          with zipfile.ZipFile(out) as z:
+            names=set(z.namelist())
+            required={
+              (root/"administrator"/"js"/"learning-lab.js").as_posix(),
+              (root/"administrator"/"css"/"learning-lab.css").as_posix(),
+              (root/"laboratoire"/"cas-ecole-concrete.md").as_posix(),
+              (root/"laboratoire"/"REPRISE_SEVEN_HEAVEN.md").as_posix(),
+            }
+            assert required <= names, "Laboratory dependencies missing from Trader ZIP"
+            assert len(names)==len(z.namelist()), "Duplicate ZIP entry"
+            assert z.testzip() is None, "Damaged Trader ZIP"
           shutil.copy2(out,Path("/tmp")/out.name)
           with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
             fh.write(f"build={build}\n")
