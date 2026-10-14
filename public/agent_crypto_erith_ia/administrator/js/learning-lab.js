@@ -51,6 +51,84 @@
   // Keep educational inputs in this session, per dossier. Never persist financial examples.
   const simulationDrafts=Object.create(null);
   let asset="BTC", tab="synthese", follow=false, root, legacy, pane, tabsNode, observer;
+  // The Lab is only an operator control: the existing Market and New Listing
+  // owners do the actual selection, loads, technical reading and depth.
+  let selectionRevision=0,selectionPending=false,selectionTruth="Dossier pédagogique · aucune sélection Trader demandée";
+  const marketIds=Object.freeze({BTC:"bitcoin",Q:"quack-ai"});
+  function showSelectionTruth(message){
+    selectionTruth=message;
+    const node=byId("lab-market-sync-state");
+    if(node)node.textContent=message;
+  }
+  function exactCoreCoin(symbol){
+    const id=marketIds[symbol];
+    const coin=typeof globalThis.atlasMarketExactTop250==="function"
+      ?globalThis.atlasMarketExactTop250(id):null;
+    return coin?.id===id&&String(coin.symbol||"").toUpperCase()===symbol?coin:null;
+  }
+  async function requestTraderAsset(next){
+    if(!ASSETS[next])return false;
+    const revision=++selectionRevision;
+    const retainCandles=globalThis.AgentCryptoMarketMicroscope?.snapshot?.()?.mode==="candles";
+    selectionPending=true;
+    showSelectionTruth(next+" · synchronisation du Trader en cours…");
+    try{
+      if(next==="CT"){
+        const owner=globalThis.AgentCryptoNewListingsNativeCategory;
+        if(typeof owner?.selectById!=="function")throw Error("Sélecteur natif CT indisponible");
+        const accepted=await owner.selectById("concrete");
+        if(revision!==selectionRevision)return false;
+        const external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
+        if(!accepted||owner.snapshot?.()?.selectedId!=="concrete"
+          ||!external?.active||external.id!=="concrete"
+          ||external.provider!=="okx"||external.instrument!=="CT-USDT")
+          throw Error("Contexte CT/USDT public non confirmé");
+        const filter=byId("atlasNewListingsButton406528");
+        if(filter && owner.snapshot?.()?.enabled!==true)filter.click();
+        if(retainCandles)globalThis.AgentCryptoMarketMicroscope?.setMode?.("candles");
+        const saved=globalThis.atlasTraderExternalSelectionCommit?.({
+          id:"concrete",provider:"okx",providerSymbol:"CT-USDT"
+        })===true;
+        showSelectionTruth(saved
+          ?"CT · graphique OKX CT/USDT confirmé · Market Nouveau listing · mémoire V7 confirmée · carnet selon fraîcheur"
+          :"CT · graphique OKX CT/USDT confirmé · mémoire V7 non confirmée · carnet selon fraîcheur");
+      }else{
+        const coin=exactCoreCoin(next);
+        if(!coin)throw Error(next+" absent du Market canonique : aucune substitution par BTC/CT");
+        if(typeof globalThis.atlasSelectMarketCoin!=="function")
+          throw Error("Sélection Market canonique indisponible");
+        const clear=globalThis.atlasTraderExternalSelectionClear;
+        if(typeof clear==="function"&&clear()!==true)
+          throw Error("Retour Market refusé : mémoire CT encore active");
+        globalThis.AgentCryptoNewListingsNativeCategory?.deactivate?.({clearChart:false});
+        // Use the existing native Market filter: never leave CT highlighted
+        // under a successful BTC/Q selection.
+        const all=document.querySelector?.('.filter-btn[data-filter="all"]');
+        if(all)all.click();
+        globalThis.atlasSelectMarketCoin(coin);
+        if(retainCandles)globalThis.AgentCryptoMarketMicroscope?.setMode?.("candles");
+        if(globalThis.getSelectedCoin?.()?.id!==coin.id)
+          throw Error("Le Market n'a pas confirmé "+next);
+        showSelectionTruth(next+" · Market sélectionné · chargement des panneaux par les propriétaires existants");
+      }
+      return true;
+    }catch(error){
+      if(revision!==selectionRevision)return false;
+      showSelectionTruth(next+" · sélection non confirmée : "+String(error?.message||error).slice(0,160)
+        +" · aucune donnée d'un autre actif ne sera substituée");
+      follow=false;render();
+      return false;
+    }finally{
+      if(revision===selectionRevision)selectionPending=false;
+    }
+  }
+  // Deliberately no new chart, book, storage, polling or private API owner.
+  globalThis.AgentCryptoLearningLabMarketSelection=Object.freeze({
+    request:requestTraderAsset,
+    snapshot:()=>Object.freeze({asset,pending:selectionPending,truth:selectionTruth,
+      read_only:true,real_order:false}),
+    real_order:false
+  });
   function journalRead(){
     try {
       const parsed=JSON.parse(localStorage.getItem(KEY)||"[]");
@@ -74,7 +152,7 @@
     return nav;
   }
   function syncMarket(){
-    if (!follow || !root?.open) return;
+    if (!follow || !root?.open || selectionPending) return;
     // A comparison can show a BTC headline while still drawing 3–5 assets.
     // Explicit toolbar state has priority over the incidental leading ticker.
     const comparisons=["btnChartTop3","btnChartTop5","btnChartGainers","btnChartLosers","btnChartVolume5"];
@@ -142,7 +220,7 @@
       pane.append(sourceLinks(data));
     } else if (tab==="marche"){
       pane.append(card("Marché public",data.market),card("Interprétation prudente",data.risks));
-      pane.append(elt("p","lab-hint","Le Laboratoire ne change ni le graphique, ni les bougies, ni l’instrument du carnet. Les prix live sont à lire dans les panneaux originaux du Trader."));
+      pane.append(elt("p","lab-hint","Un clic sur BTC, CT ou Q demande la sélection au propriétaire Market existant. La synchronisation est confirmée ou refusée explicitement ; le Laboratoire ne produit aucun cours et aucun ordre."));
     } else if(tab==="coffre"){
       pane.append(card("Disponibilité des preuves",data.vault));
       const link=elt("a","lab-link","Ouvrir le Coffre historique vérifié ↗");
@@ -237,7 +315,11 @@
     const picker=elt("div","lab-picker");
     for(const [id,data] of Object.entries(ASSETS)){
       const b=elt("button","lab-asset",id+" · "+data.name);b.type="button";b.dataset.labAsset=id;
-      b.addEventListener("click",()=>select(id));picker.append(b);
+      b.addEventListener("click",()=>{
+        follow=true;
+        select(id);
+        void requestTraderAsset(id);
+      });picker.append(b);
     }
     const modeButton=elt("button","lab-action lab-mode-toggle");modeButton.id="lab-mode-toggle";modeButton.type="button";
     modeButton.addEventListener("click",()=>{follow=!follow;render();syncMarket();});
@@ -247,7 +329,11 @@
     tabsNode=elt("div","lab-tabs");tabsNode.setAttribute("role","tablist");tabsNode.setAttribute("aria-label","Rubriques du Laboratoire");
     pane=elt("div","lab-pane");
     pane.id="lab-content";pane.setAttribute("role","tabpanel");
-    body.append(header,assetLabel,modeLabel,tabsNode,pane);
+    const marketState=elt("p","lab-hint",selectionTruth);
+    marketState.id="lab-market-sync-state";
+    marketState.setAttribute("role","status");
+    marketState.setAttribute("aria-live","polite");
+    body.append(header,assetLabel,modeLabel,marketState,tabsNode,pane);
     root.append(summary,body);
     // The canonical BTC report is a separate ownership boundary: never move,
     // nest or hide it. Place the collapsed Lab AFTER its unchanged sibling.

@@ -132,7 +132,8 @@
       const depth=globalThis.AgentCryptoOkxMicrostructure?.snapshot?.();
       if(depth?.open)void globalThis.AgentCryptoOkxMicrostructure?.refresh?.({asset:ctx.base,quote:ctx.quote});
     }catch(_){}
-    try{document.getElementById("analyste")?.scrollIntoView({behavior:"smooth",block:"start"});}catch(_){}
+    // Selecting a public instrument changes the chart, not the operator's
+    // viewport. An explicit navigation button remains responsible for scrolling.
     return snapshot();
   }
 
@@ -161,8 +162,18 @@
     })).filter(r=>[r.t,r.o,r.h,r.l,r.c].every(Number.isFinite)).sort((a,b)=>a.t-b.t);
   }
 
+  // Every asynchronous public book/candle response must still belong to the
+  // exact active request. A prior CT/USDT response cannot be reused after BTC,
+  // Q, or a new CT request takes ownership of the display.
+  function requireCurrentMarket(revision,ctx){
+    if(revision!==state.loadRevision||!state.active||
+       state.active.id!==ctx.id||state.active.provider!==ctx.provider||
+       state.active.providerSymbol!==ctx.providerSymbol)
+      throw new Error("Contexte externe modifié pendant le chargement · données anciennes refusées");
+  }
+
   async function fetchCandles({bar="15m",limit=300,signal=null}={}){
-    const ctx=snapshot();
+    const ctx=snapshot(),revision=state.loadRevision;
     if(!ctx.active)throw new Error("Aucun New Listing actif");
     const lim=Math.max(20,Math.min(1000,Number(limit)||300));
     if(ctx.provider==="okx"){
@@ -171,6 +182,7 @@
       u.searchParams.set("bar",BAR_OKX[bar]||"15m");
       u.searchParams.set("limit",String(Math.min(300,lim)));
       const j=await json(u,{signal});
+      requireCurrentMarket(revision,ctx);
       if(String(j?.code)!=="0")throw new Error(j?.msg||"OKX candles error");
       const rows=normalizeCandles(j?.data);
       if(!rows.length)throw new Error(`Aucune bougie OKX ${ctx.providerSymbol}`);
@@ -182,6 +194,7 @@
     u.searchParams.set("interval",BAR_BITGET[bar]||"15m");
     u.searchParams.set("limit",String(lim));
     const j=await json(u,{signal});
+      requireCurrentMarket(revision,ctx);
     if(String(j?.code)!=="00000")throw new Error(j?.msg||"Bitget candles error");
     const rows=normalizeCandles(j?.data);
     if(!rows.length)throw new Error(`Aucune bougie Bitget ${ctx.providerSymbol}`);
@@ -189,13 +202,14 @@
   }
 
   async function fetchOrderBook({limit=100,signal=null}={}){
-    const ctx=snapshot();
+    const ctx=snapshot(),revision=state.loadRevision;
     if(!ctx.active)throw new Error("Aucun New Listing actif");
     const lim=Math.max(5,Math.min(1000,Number(limit)||100));
     if(ctx.provider==="okx"){
       const u=new URL(OKX+"/api/v5/market/books");
       u.searchParams.set("instId",ctx.providerSymbol);u.searchParams.set("sz",String(Math.min(400,lim)));
       const j=await json(u,{signal});
+      requireCurrentMarket(revision,ctx);
       const row=Array.isArray(j?.data)?j.data[0]:null;
       const ts=n(row?.ts);
       if(String(j?.code)!=="0"||!(ts>0))throw new Error(j?.msg||"OKX orderbook error");
@@ -204,6 +218,7 @@
     const u=new URL(BITGET+"/api/v3/market/orderbook");
     u.searchParams.set("category","SPOT");u.searchParams.set("symbol",ctx.providerSymbol);u.searchParams.set("limit",String(lim));
     const j=await json(u,{signal});
+      requireCurrentMarket(revision,ctx);
     const row=j?.data||{},ts=n(row?.ts);
     if(String(j?.code)!=="00000"||!(ts>0))throw new Error(j?.msg||"Bitget orderbook error");
     return frozen({read_only:true,provider:"bitget",status:"ok",asset:ctx.base,pair:ctx.instrument,observed_at_utc:new Date(ts).toISOString(),bids:row?.b||[],asks:row?.a||[],backend_version:"bitget-public-v3",external_asset:true});
