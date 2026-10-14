@@ -1,7 +1,7 @@
 # Market data on main MUST NOT redeploy this static frontend.
 # Protected: do not publish until the owner explicitly enables Pages Actions
 # AND AGENT_CRYPTO_RUNTIME_PAGES_ENABLED=true. No site rebuild for ordinary PRs.
-name: Agent Crypto - runtime only Pages
+name: Agent Crypto - lightweight multisite Pages
 on:
   pull_request:
     paths:
@@ -11,9 +11,23 @@ on:
       - 'tools/test-vault-data-router.mjs'
       - 'tools/check-vault-raw-access.py'
       - 'public/agent_crypto_erith_ia/**'
+      - 'index.html'
+      - 'app.js'
+      - 'style.css'
+      - 'assets/**'
+      - 'public/index.html'
+      - 'public/app.js'
+      - 'public/style.css'
+      - 'public/*.md'
+      - 'public/lego/**'
+      - 'public/liora-jardin-reves-doux/**'
+      - 'public/charlene_salon/**'
+      - 'public/memory_cards/**'
       - '!public/agent_crypto_erith_ia/data/**'
       - '!public/agent_crypto_erith_ia/administrator/index-[0-9]*.html'
       - '!public/agent_crypto_erith_ia/**/*.zip'
+      - '!assets/images/technical-reading/**'
+      - '!assets/images/visual/**'
   push:
     branches: [main]
     paths:
@@ -23,9 +37,23 @@ on:
       - 'tools/test-vault-data-router.mjs'
       - 'tools/check-vault-raw-access.py'
       - 'public/agent_crypto_erith_ia/**'
+      - 'index.html'
+      - 'app.js'
+      - 'style.css'
+      - 'assets/**'
+      - 'public/index.html'
+      - 'public/app.js'
+      - 'public/style.css'
+      - 'public/*.md'
+      - 'public/lego/**'
+      - 'public/liora-jardin-reves-doux/**'
+      - 'public/charlene_salon/**'
+      - 'public/memory_cards/**'
       - '!public/agent_crypto_erith_ia/data/**'
       - '!public/agent_crypto_erith_ia/administrator/index-[0-9]*.html'
       - '!public/agent_crypto_erith_ia/**/*.zip'
+      - '!assets/images/technical-reading/**'
+      - '!assets/images/visual/**'
   workflow_dispatch:
     inputs:
       publish:
@@ -78,6 +106,20 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /tools/
+            /index.html
+            /app.js
+            /style.css
+            /assets/
+            !/assets/images/technical-reading/
+            !/assets/images/visual/
+            /public/index.html
+            /public/app.js
+            /public/style.css
+            /public/*.md
+            /public/lego/
+            /public/liora-jardin-reves-doux/
+            /public/charlene_salon/
+            /public/memory_cards/
             /public/agent_crypto_erith_ia/
             !/public/agent_crypto_erith_ia/data/
             !/public/agent_crypto_erith_ia/administrator/index-[0-9]*.html
@@ -86,7 +128,7 @@ jobs:
             !/public/agent_crypto_erith_ia/**/*.gz
       # PRs and data-only commits do not rebuild the Agent-Crypto site.
       # Build the frontend only for an explicitly authorised main deployment.
-      - name: Build lightweight runtime only for authorised publication
+      - name: Build lightweight multisite only for authorised publication
         if: >-
           github.ref == 'refs/heads/main' &&
           vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&

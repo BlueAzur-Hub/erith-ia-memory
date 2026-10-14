@@ -3,14 +3,23 @@
 import argparse,json,os,re,shutil,subprocess
 from html.parser import HTMLParser
 from pathlib import Path
-# Canonical published project: never include any sibling project or repository root app.
+# Publish the existing shared site and its sibling projects; archive data stay outside Pages.
 SCOPE="public/agent_crypto_erith_ia/"
 MANIFEST=SCOPE+"runtime-publication.json"
 EXT={".html",".htm",".css",".js",".mjs",".json",".svg",".ico",".webmanifest",".woff",".woff2",".ttf",".png",".jpg",".jpeg",".gif",".webp",".avif",".md",".txt",".xml"}
 OLD=re.compile(r"^public/agent_crypto_erith_ia/administrator/index-\d+(?:\.\d+)+\.html$",re.I)
 RAW="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/"
 IMAGE_RAW_ROOT="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/"
-BUDGET=100000000
+BUDGET=360000000
+SHARED_ROOT={"index.html","app.js","style.css"}
+SHARED_PUBLIC={"public/index.html","public/app.js","public/style.css"}
+SHARED_PREFIXES=("assets/","public/lego/","public/liora-jardin-reves-doux/","public/charlene_salon/","public/memory_cards/")
+CRYPTO_EXTERNAL_IMAGES=("assets/images/technical-reading/","assets/images/visual/")
+SHARED_REQUIRED=("index.html","app.js","style.css","public/index.html",
+                 "public/lego/rising-phoenix/index.html",
+                 "public/liora-jardin-reves-doux/index.html")
+SHARED_EXT=EXT|{".pdf",".zip"}
+
 ROUTER="public/agent_crypto_erith_ia/web/vault-data-router.js"
 REQUIRED=("public/agent_crypto_erith_ia/administrator/index.html",
 "public/agent_crypto_erith_ia/trader/trading-desk.html",
@@ -20,8 +29,16 @@ REQUIRED=("public/agent_crypto_erith_ia/administrator/index.html",
 "public/agent_crypto_erith_ia/trader/verified-reader.html",
 "public/agent_crypto_erith_ia/laboratoire/cas-ecole-concrete.md",ROUTER)
 def include(n):
- if not n.startswith(SCOPE) or "/data/" in n or "/downloads/" in n or "/releases/" in n or OLD.fullmatch(n):return False
- return Path(n).suffix.lower() in EXT
+ if n.startswith(SCOPE):
+  if "/data/" in n or "/downloads/" in n or "/releases/" in n or OLD.fullmatch(n):return False
+  return Path(n).suffix.lower() in EXT
+ # Do not accidentally publish private, coordination, historical ZIP or any unknown repo root.
+ if n in SHARED_ROOT or n in SHARED_PUBLIC:return True
+ if n.startswith(CRYPTO_EXTERNAL_IMAGES):return False
+ if n.startswith(SHARED_PREFIXES):
+  return Path(n).suffix.lower() in SHARED_EXT
+ if n.startswith("public/") and n.count("/")==1 and Path(n).suffix.lower() in EXT:return True
+ return False
 def image_raw_base(image_ref):
  if image_ref!="main" and not re.fullmatch(r"[0-9a-f]{40}",image_ref):raise ValueError("Invalid image source revision")
  return IMAGE_RAW_ROOT+image_ref+"/"
@@ -64,8 +81,11 @@ def build(src,dst,image_ref="main"):
   if f.suffix.lower() in {".html",".htm",".css",".js",".mjs"}:out.write_bytes(transform(n,f.read_bytes(),image_ref=image_ref))
   else:shutil.copyfile(f,out)
  (dst/".nojekyll").touch()
- missing=[p for p in REQUIRED if not (dst/p).is_file()]
- for n in ("public/agent_crypto_erith_ia/administrator/index.html","public/agent_crypto_erith_ia/trader/trading-desk.html"):
+ missing=[p for p in REQUIRED+SHARED_REQUIRED if not (dst/p).is_file()]
+ for n in ("index.html","public/lego/rising-phoenix/index.html",
+           "public/liora-jardin-reves-doux/index.html",
+           "public/agent_crypto_erith_ia/administrator/index.html",
+           "public/agent_crypto_erith_ia/trader/trading-desk.html"):
   p=dst/n
   if not p.exists():continue
   h=Refs();h.feed(p.read_text(encoding="utf-8"))
@@ -76,13 +96,14 @@ def build(src,dst,image_ref="main"):
    if dst not in target.parents or not target.is_file():missing.append(n+" -> "+u)
  if missing:raise ValueError("Missing references: "+repr(missing[:25]))
  if list(dst.rglob("*.json.gz")) or list(dst.rglob("*.jsonl")):raise ValueError("Cold archive leaked into Pages")
- # Publication includes precisely the chosen project; only .nojekyll is a Pages root control.
+ # Publication includes the existing root and sibling pages; never a data vault or build artefact.
  invalid=[p.relative_to(dst).as_posix() for p in dst.rglob("*") if p.is_file()
           and p.relative_to(dst).as_posix()!=".nojekyll"
-          and not p.relative_to(dst).as_posix().startswith(SCOPE)]
+          and not include(p.relative_to(dst).as_posix())]
  if invalid:raise ValueError("Out-of-scope files in Pages: "+repr(invalid[:10]))
- report={"schema":"aerith.crypto.pages.runtime-only.v1","publication_scope":SCOPE,
- "scope_strict":True,"runtime_files":len(selected),
+ report={"schema":"aerith.crypto.pages.multisite.v1","publication_scope":"shared-root+public-projects+agent-crypto",
+ "scope_strict":True,"protected_sites":list(SHARED_REQUIRED),
+ "runtime_files":len(selected),
  "runtime_source_bytes":size,"vault_excluded_files":excluded,"vault_excluded_bytes":excluded_bytes,
  "historical_data_in_pages":False,"images_externalized_to_raw":True,"image_source_revision":image_ref,
  "router":ROUTER,"source":RAW,"real_orders":False,"firefox_verified":False}
