@@ -177,7 +177,7 @@ function paintNative(p,coin,currency="USD"){
    " · "+utc(view.first)+" → "+utc(view.last)+
    " · "+(view.asOf?"série "+utc(view.asOf)+" · ":"")+
    (view.external?"Graphique "+view.symbol+" "+view.pair+
-    (view.id!==coin.id?" · sélection Market "+coin.symbol+" différente":"")+
+    (view.id!==coin.id?(coin.origin==="manual"?" · consultation historique "+coin.symbol+" distincte":" · sélection Market "+coin.symbol+" différente"):"")+
     " · source externe, NON CERTIFIÉ COFFRE":"lecture du graphique natif · NON LIVE")+" · NON R9";
  for(const [t,value] of view.rows.slice().reverse()){
   const tr=document.createElement("tr"),a=document.createElement("td"),b=document.createElement("td");
