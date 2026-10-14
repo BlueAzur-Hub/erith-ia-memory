@@ -12,6 +12,7 @@ test("actual 250 ranked asset identities and owners stay distinct",()=>{
  assert.equal(x.assets.length,250);
  assert.equal(x.totals.minute+x.totals.daily-x.totals.both,x.totals.either);
  assert.equal(x.totals.missing,250-x.totals.either);
+ assert.equal(x.totals.daily+x.totals.outOfUniverse,x.totals.dailyCatalog);
  assert.equal(new Set(x.assets.map(a=>a.id)).size,250);
  assert.equal(x.verifiedCompleteness,false);
 });
@@ -25,7 +26,8 @@ test("Q is native Bitget daily, not a fabricated R9 minute archive",()=>{
 });
 test("identities, ranks, quote and gaps must be authenticated",()=>{
  const m=structuredClone(native),d=structuredClone(day);
- d.assets[0].id="wrong-id";assert.throws(()=>api().assemble(m,d),/identité journalière/);
+ d.assets[0].id="wrong-id";const drift=api().assemble(m,d);
+ assert.ok(drift.outOfUniverse.some(x=>x.id==="wrong-id"));
  const d2=structuredClone(day);d2.assets[0].gaps_within_observed_span=-1;
  assert.throws(()=>api().assemble(m,d2),/lacunes journalières/);
  const m2=structuredClone(native);m2.assets[1].rank=m2.assets[0].rank;
@@ -34,4 +36,11 @@ test("identities, ranks, quote and gaps must be authenticated",()=>{
 test("inventory has no exchange orders, account access, or local writes",()=>{
  assert.doesNotMatch(script,/(placeOrder|createOrder|localStorage|indexedDB|fetch\s*\(.+POST)/i);
  assert.match(script,/credentials:"omit"/);
+});
+
+test("Historical catalog keeps obsolete Top250 memberships explicit",()=>{
+ const x=api().assemble(native,day);
+ assert.equal(x.totals.outOfUniverse,2);
+ assert.ok(x.outOfUniverse.some(a=>a.id==="geodnet"));
+ assert.ok(x.outOfUniverse.some(a=>a.id==="cash-4"));
 });
