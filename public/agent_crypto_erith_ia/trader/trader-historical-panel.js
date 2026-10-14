@@ -152,11 +152,11 @@ function paintNative(p,coin,currency="USD"){
  const label=host.querySelector("[data-native-status]"),body=host.querySelector("[data-native-rows]");
  body?.replaceChildren();
  const heading=host.querySelector("[data-native-title]"),priceHeading=host.querySelector("[data-native-price-heading]");
+ const view=nativeChart(coin,currency)||inspectedChart(currency);
  if(heading)heading.textContent=(view?.external?"GRAPHIQUE EXTERNE CONSULTÉ · ":"HISTORIQUE DU GRAPHIQUE · ")+(view?.currency||currency)+" · HORS R9";
  if(priceHeading)priceHeading.textContent="Prix "+(view?.currency||currency);
- const view=nativeChart(coin,currency)||inspectedChart(currency);
  if(!view){host.hidden=true;return false;}
- const periodLabel=({"1":"24 h","7":"7 j","30":"30 j","60":"60 j","90":"90 j","365":"1 an"})[String(view.days)]||view.days+" j";
+ const periodLabel=({"1":"24 h","7":"7 j","30":"30 j","60":"60 j","90":"90 j","365":"1 an"})[String(view.days)]||(view.days?"fenêtre "+view.days+" j":"bougies chargées");
  if(label)label.textContent=(view.external?view.symbol:coin.symbol)+" · "+view.count+" points "+view.source+" · "+view.currency+" · fenêtre graphique "+periodLabel+
    " · "+utc(view.first)+" → "+utc(view.last)+
    " · "+(view.asOf?"série "+utc(view.asOf)+" · ":"")+
