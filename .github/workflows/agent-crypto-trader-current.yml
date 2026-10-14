@@ -104,6 +104,9 @@ jobs:
       - name: Trader historical selection identity and native quote
         run: node tests/agent_crypto_trader_historical_identity.cjs
 
+      - name: Trader Lab buttons use canonical BTC CT Q owners
+        run: node tests/agent_crypto_lab_market_selection.cjs
+
       - name: CT V7 restored view and no implicit viewport jump
         run: node tests/agent_crypto_ct_v7_authority.cjs
 
