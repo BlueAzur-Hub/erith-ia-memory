@@ -5,6 +5,8 @@ import fs from "node:fs";
 const ledger=JSON.parse(fs.readFileSync(new URL("../laboratoire/catalogue-preuves.json",import.meta.url),"utf8"));
 const runtime=fs.readFileSync(new URL("../administrator/js/learning-lab.js",import.meta.url),"utf8");
 const IDs=["bitcoin","concrete","quack-ai"];
+const schema=JSON.parse(fs.readFileSync(new URL("../laboratoire/contrat-observation.schema.json",import.meta.url),"utf8"));
+const example=JSON.parse(fs.readFileSync(new URL("../laboratoire/exemple-observation-ct.json",import.meta.url),"utf8"));
 test("Catalog contains precisely the planned three stable identities",()=>{
   assert.equal(ledger.schema,"aerith.lab.evidence-catalog.v1");
   assert.deepEqual(ledger.assets.map(x=>x.id),IDs);
@@ -59,4 +61,25 @@ test("Evidence tab is non-trading, read-only and has an honest offline fallback"
  assert.match(runtime,/if\(asset!==selected \|\| tab!=="preuves"/);
  assert.doesNotMatch(runtime,/\b(placeOrder|submitOrder|sendOrder|tradeAPI)\s*\(/);
  new Function(runtime);
+});
+
+test("AI observation schema forbids trades and includes provenance and missingness",()=>{
+ assert.equal(schema.properties.execution_allowed.const,false);
+ assert.ok(schema.required.includes("observed_at"));
+ assert.ok(schema.required.includes("source"));
+ assert.ok(schema.properties.measurements);
+ assert.ok(schema.properties.conversion);
+ assert.ok(schema.properties.quality.enum.includes("not_verified"));
+ assert.equal(schema.additionalProperties,false);
+ assert.equal(example.schema,schema.properties.schema.const);
+ assert.equal(example.execution_allowed,false);
+ for(const key of schema.required)assert.ok(Object.hasOwn(example,key),"missing "+key);
+ assert.equal(example.source.kind,"user_screenshot");
+ assert.equal(example.received_at,null);
+ assert.equal(example.instrument,"CT-USDT");
+ assert.equal(example.quote,"USDT");
+ assert.equal(example.measurements.best_bid,0.362);
+ assert.equal(example.measurements.best_ask,0.36219);
+ assert.ok(example.warnings.some(s=>s.includes("CT-USDC")));
+ assert.equal(JSON.stringify(example).includes("0.3525526"),false);
 });
