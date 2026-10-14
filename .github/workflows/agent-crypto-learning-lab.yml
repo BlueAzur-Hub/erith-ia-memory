@@ -11,6 +11,8 @@ on:
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - "public/agent_crypto_erith_ia/laboratoire/catalogue-preuves.json"
+      - "public/agent_crypto_erith_ia/laboratoire/contrat-observation.schema.json"
+      - "public/agent_crypto_erith_ia/laboratoire/exemple-observation-ct.json"
       - "public/agent_crypto_erith_ia/tools/learning-lab-evidence.test.mjs"
       - ".github/workflows/agent-crypto-learning-lab.yml"
   push:
@@ -25,6 +27,8 @@ on:
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - "public/agent_crypto_erith_ia/laboratoire/catalogue-preuves.json"
+      - "public/agent_crypto_erith_ia/laboratoire/contrat-observation.schema.json"
+      - "public/agent_crypto_erith_ia/laboratoire/exemple-observation-ct.json"
       - "public/agent_crypto_erith_ia/tools/learning-lab-evidence.test.mjs"
   workflow_dispatch:
 permissions:
