@@ -46,7 +46,7 @@
     ? new Intl.NumberFormat("fr-FR",{maximumFractionDigits:6}).format(n)+(unit||"") : "—";
   const decimal = value => {
     const raw=String(value??"").trim().replace(",",".");
-    return raw && /^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)$/.test(raw) ? Number(raw) : NaN;
+    return raw && /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(raw) ? Number(raw) : NaN;
   };
   // Keep educational inputs in this session, per dossier. Never persist financial examples.
   const simulationDrafts=Object.create(null);
