@@ -11,6 +11,9 @@ on:
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs"
+      - "public/agent_crypto_erith_ia/tools/ai-history-source-catalog.test.mjs"
+      - "public/agent_crypto_erith_ia/trader/ai-history-source-catalog.js"
+      - "public/agent_crypto_erith_ia/trader/source-catalogue.html"
       - "public/agent_crypto_erith_ia/trader/ai-source-inventory.js"
       - "public/agent_crypto_erith_ia/trader/historical-inventory.html"
       - ".github/workflows/agent-crypto-learning-lab.yml"
@@ -26,6 +29,9 @@ on:
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs"
+      - "public/agent_crypto_erith_ia/tools/ai-history-source-catalog.test.mjs"
+      - "public/agent_crypto_erith_ia/trader/ai-history-source-catalog.js"
+      - "public/agent_crypto_erith_ia/trader/source-catalogue.html"
       - "public/agent_crypto_erith_ia/trader/ai-source-inventory.js"
       - "public/agent_crypto_erith_ia/trader/historical-inventory.html"
   workflow_dispatch:
@@ -46,7 +52,8 @@ jobs:
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/administrator/js/learning-lab.js
           node --check public/agent_crypto_erith_ia/trader/ai-source-inventory.js
-          node --test public/agent_crypto_erith_ia/tools/learning-lab.test.mjs public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs
+          node --check public/agent_crypto_erith_ia/trader/ai-history-source-catalog.js
+          node --test public/agent_crypto_erith_ia/tools/learning-lab.test.mjs public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs public/agent_crypto_erith_ia/tools/ai-history-source-catalog.test.mjs
       - name: Validate 40.6.638 manifests and BTC panel restoration
         shell: bash
         run: |
