@@ -19,7 +19,7 @@ function validate(data,meta,assetId,symbol){
  need(data?.schema==="seven.crypto.verified-period-projection","schéma de la projection");
  need(data.asset_id===assetId&&data.pair===symbol+"USDT"&&data.quote==="USDT",
   "identité ou devise échangée");
- need(data.period===meta.period&&data.interval===meta.resolution&&data.is_live===false,
+ need(data.period===meta.period&&data.resolution===meta.resolution&&data.is_live===false,
   "période ou statut non fiable");
  need(data.scope==="materialized_verified_history"||
   data.scope==="last_verified_closed_archive_window","portée non reconnue");
