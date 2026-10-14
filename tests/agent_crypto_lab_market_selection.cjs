@@ -7,6 +7,10 @@ const path=require("node:path");
 const vm=require("node:vm");
 const source=fs.readFileSync(path.join(__dirname,
   "../public/agent_crypto_erith_ia/administrator/js/learning-lab.js"),"utf8");
+const liveOwner=fs.readFileSync(path.join(__dirname,
+  "../public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js"),"utf8");
+assert.doesNotMatch(liveOwner,/scrollIntoView\(/,
+  "native CT selection must not scroll away from the Laboratory");
 
 const calls=[],btc={id:"bitcoin",symbol:"BTC"},q={id:"quack-ai",symbol:"Q"};
 let allowQ=true,selected=btc,external=null,selectionId=null,commitOK=true,categoryEnabled=false;
