@@ -133,3 +133,37 @@ test("Trader reads DOGE from verified Universe when absent from original R9",asy
  assert.match(f.p().parts["[data-history-status]"].textContent,/UNIVERS · ARCHIVE VÉRIFIÉE/);
  assert.match(f.p().parts["[data-history-meta]"].textContent,/DOGEUSDT.*SHA-256/);
 });
+
+function observedFixture({foreign=false,missingFx=false,rawCandles=false}={}){
+ const series=Array.from({length:300},(_,i)=>[1791940000000+i*300000,0.35+i/100000]);
+ const ctx={active:true,id:"concrete",base:"CT",quote:"USDT",provider:"okx",instrument:"CT-USDT"};
+ const chart={status:"ready",coinId:foreign?"quack-ai":"concrete",period:1,
+  result:{blocked:false,provider:"okx",sourceMode:"new-listing-exchange-native",
+   currency:"USD",quoteCurrency:"USD",source:missingFx?"OKX CT/USDT candles":"OKX CT/USDT candles · USDT/USD CoinGecko",
+   series,generatedAt:"2026-10-14T01:10:00Z"}};
+ const microscope=rawCandles?{external:true,loadedInstrument:"CT-USDT",source:"OKX public candles",loadedBar:"5m",
+  rows:Array.from({length:300},(_,i)=>({t:1791940000000+i*300000,o:.35,h:.38,l:.34,c:.36,v:100}))}:null;
+ const box={document:{readyState:"loading",addEventListener(){}},state:{dataBroker:{chart}},
+  AgentCryptoNewListingLiveAsset:{snapshot:()=>ctx},
+  AgentCryptoMarketMicroscope:{snapshot:()=>microscope}};
+ vm.runInNewContext(panel,vm.createContext(box),{timeout:3000});
+ return box.AgentCryptoTraderHistoricalPanel.inspectChart("USD");
+}
+test("CT external graph numbers remain accessible while Market selection is Q",()=>{
+ const x=observedFixture();assert.ok(x);
+ assert.equal(x.id,"concrete");assert.equal(x.symbol,"CT");assert.equal(x.currency,"USD");
+ assert.equal(x.quote,"USDT");assert.equal(x.count,300);assert.equal(x.rows.length,12);
+ assert.match(x.source,/USDT\/USD CoinGecko/);
+});
+test("External data must not be relabelled as native USD without explicit FX proof",()=>{
+ assert.equal(observedFixture({foreign:true}),null);
+ assert.equal(observedFixture({missingFx:true}),null);
+ const native=observedFixture({foreign:true,rawCandles:true});
+ assert.ok(native);assert.equal(native.id,"concrete");assert.equal(native.count,300);
+ assert.equal(native.currency,"USDT");assert.equal(native.rows.length,12);
+});
+test("The view uses no second account owner, fetch or archive mutation",()=>{
+ assert.match(panel,/GRAPHIQUE EXTERNE CONSULTÉ/);
+ assert.match(panel,/sélection Market/);
+ assert.doesNotMatch(panel,/AgentCryptoNewListingLiveAsset\s*=|AgentCryptoMarketMicroscope\s*=/);
+});
