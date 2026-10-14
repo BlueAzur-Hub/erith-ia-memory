@@ -152,18 +152,20 @@ function paintNative(p,coin,currency="USD"){
  const label=host.querySelector("[data-native-status]"),body=host.querySelector("[data-native-rows]");
  body?.replaceChildren();
  const heading=host.querySelector("[data-native-title]"),priceHeading=host.querySelector("[data-native-price-heading]");
- if(heading)heading.textContent="HISTORIQUE DU GRAPHIQUE · "+currency+" · HORS R9";
- if(priceHeading)priceHeading.textContent="Prix "+currency;
- const view=nativeChart(coin,currency);
- if(!view){if(label)label.textContent="Historique "+currency+" en attente du graphique natif. Aucune conversion ni substitution.";return false;}
+ if(heading)heading.textContent=(view?.external?"GRAPHIQUE EXTERNE CONSULTÉ · ":"HISTORIQUE DU GRAPHIQUE · ")+(view?.currency||currency)+" · HORS R9";
+ if(priceHeading)priceHeading.textContent="Prix "+(view?.currency||currency);
+ const view=nativeChart(coin,currency)||inspectedChart(currency);
+ if(!view){host.hidden=true;return false;}
  const periodLabel=({"1":"24 h","7":"7 j","30":"30 j","60":"60 j","90":"90 j","365":"1 an"})[String(view.days)]||view.days+" j";
- if(label)label.textContent=coin.symbol+" · "+view.count+" points "+view.source+" · "+currency+" · fenêtre graphique "+periodLabel+
+ if(label)label.textContent=(view.external?view.symbol:coin.symbol)+" · "+view.count+" points "+view.source+" · "+view.currency+" · fenêtre graphique "+periodLabel+
    " · "+utc(view.first)+" → "+utc(view.last)+
    " · "+(view.asOf?"série "+utc(view.asOf)+" · ":"")+
-   "lecture du graphique natif · NON LIVE · NON R9";
+   (view.external?"Graphique "+view.symbol+" "+view.pair+
+    (view.id!==coin.id?" · sélection Market "+coin.symbol+" différente":"")+
+    " · source externe, NON CERTIFIÉ COFFRE":"lecture du graphique natif · NON LIVE")+" · NON R9";
  for(const [t,value] of view.rows.slice().reverse()){
   const tr=document.createElement("tr"),a=document.createElement("td"),b=document.createElement("td");
-  a.textContent=utc(t);b.textContent=value.toLocaleString("fr-FR",{maximumFractionDigits:8})+" "+currency;
+  a.textContent=utc(t);b.textContent=value.toLocaleString("fr-FR",{maximumFractionDigits:8})+" "+view.currency;
   tr.append(a,b);body?.appendChild(tr);
  }
  return true;
@@ -352,8 +354,11 @@ function mount(){
  p.querySelector("[data-history-reload]")?.addEventListener("click",()=>{if(p.open)void refresh({reload:true});});
  globalThis.addEventListener("agent-crypto:selected-market-changed",()=>{sequence++;if(p.open)void refresh();},{passive:true});
  globalThis.addEventListener("agent-crypto:quote-architecture-changed",()=>{sequence++;if(p.open)void refresh();},{passive:true});
+ for(const name of ["agent-crypto:new-listing-line-ready","agent-crypto:external-asset-changed","agent-crypto:trader-line-loaded"]){
+  globalThis.addEventListener(name,()=>{if(p.open){const coin=selected();if(coin)paintNative(p,coin,displayCurrency());}},{passive:true});
+ }
  return true;
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
-globalThis.AgentCryptoTraderHistoricalPanel=Object.freeze({mount,refresh,read_only:true,is_live:false,quote:"USDT",real_orders:false});
+globalThis.AgentCryptoTraderHistoricalPanel=Object.freeze({mount,refresh,inspectChart:inspectedChart,read_only:true,is_live:false,quote:"USDT",real_orders:false});
 })();
