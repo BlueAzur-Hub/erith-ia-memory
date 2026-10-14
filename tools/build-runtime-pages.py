@@ -109,7 +109,35 @@ def build(src,dst,image_ref="main"):
  "router":ROUTER,"source":RAW,"real_orders":False,"firefox_verified":False}
  (dst/MANIFEST).write_text(json.dumps(report,indent=2)+"\n")
  return report
+def plan(src):
+ """Inspect only Git tree metadata: does not download or reconstruct the vault."""
+ src=Path(src).resolve()
+ rows=subprocess.check_output(["git","-C",str(src),"ls-tree","-r","-l","HEAD"]).decode("utf-8").splitlines()
+ selected={};excluded_count=0;excluded_bytes=0;groups={"crypto":0,"shared":0}
+ for row in rows:
+  if "\t" not in row:continue
+  header,n=row.split("\t",1)
+  fields=header.split()
+  if len(fields)!=4 or fields[1]!="blob" or fields[0]=="120000" or fields[3]=="-":continue
+  size=int(fields[3])
+  if include(n):
+   selected[n]=size
+   groups["crypto" if n.startswith(SCOPE) else "shared"]+=size
+  else:
+   excluded_count+=1
+   excluded_bytes+=size
+ missing=[n for n in REQUIRED+SHARED_REQUIRED if n not in selected]
+ if missing:raise ValueError("Required Pages routes missing: "+repr(missing))
+ total=sum(selected.values())
+ if total>BUDGET:raise ValueError("Pages source budget exceeded: "+str(total))
+ return {"schema":"aerith.crypto.pages.multisite.plan.v1",
+         "source_bytes":total,"file_count":len(selected),"group_source_bytes":groups,
+         "excluded_file_count":excluded_count,"excluded_bytes":excluded_bytes,
+         "required_routes":list(REQUIRED+SHARED_REQUIRED),
+         "cold_vault_included":False,"eligible_for_publication":True}
+
 if __name__=="__main__":
  a=argparse.ArgumentParser();a.add_argument("--source",default=".");a.add_argument("--destination",default="_runtime_pages")
  a.add_argument("--image-ref",default="main",help="main in production, PR commit SHA for pre-merge preview")
- v=a.parse_args();print(json.dumps(build(v.source,v.destination,image_ref=v.image_ref),indent=2))
+ a.add_argument("--plan-only",action="store_true",help="read git metadata only; no sources, media or vault hydrated")
+ v=a.parse_args();print(json.dumps(plan(v.source) if v.plan_only else build(v.source,v.destination,image_ref=v.image_ref),indent=2))

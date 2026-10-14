@@ -56,4 +56,23 @@ class TestRuntime(unittest.TestCase):
    output=[p.relative_to(dst).as_posix() for p in dst.rglob("*") if p.is_file()]
    self.assertTrue(all(r.include(n) or n==".nojekyll" for n in output))
 
+ def test_real_git_tree_plan(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   src=Path(tmp)/"repo";src.mkdir()
+   for n in r.REQUIRED+r.SHARED_REQUIRED:
+    p=src/n;p.parent.mkdir(parents=True,exist_ok=True);p.write_text("ok",encoding="utf-8")
+   huge=src/"public/agent_crypto_erith_ia/data/oracle_evidence/large.jsonl"
+   huge.parent.mkdir(parents=True,exist_ok=True);huge.write_text("private evidence",encoding="utf-8")
+   img=src/"assets/images/visual/admin-chart-office.png"
+   img.parent.mkdir(parents=True,exist_ok=True);img.write_bytes(b"binary")
+   subprocess.run(["git","init","-q",str(src)],check=True)
+   subprocess.run(["git","-C",str(src),"add","-A"],check=True)
+   subprocess.run(["git","-C",str(src),"-c","user.name=CI","-c","user.email=ci@example.com","commit","-qm","sample"],check=True)
+   item=r.plan(src)
+   self.assertTrue(item["eligible_for_publication"])
+   self.assertEqual(item["file_count"],len(r.REQUIRED+r.SHARED_REQUIRED))
+   self.assertFalse(item["cold_vault_included"])
+   self.assertGreater(item["excluded_bytes"],0)
+   self.assertEqual(item["group_source_bytes"]["shared"],len(r.SHARED_REQUIRED)*2)
+
 if __name__=="__main__":unittest.main(verbosity=2)

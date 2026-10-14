@@ -91,6 +91,8 @@ jobs:
           python tools/test-runtime-pages.py
           node --test tools/test-vault-data-router.mjs
           node --check public/agent_crypto_erith_ia/web/vault-data-router.js
+      - name: Check full multisite source manifest from Git trees (no image/blob checkout)
+        run: python tools/build-runtime-pages.py --source . --plan-only
       - name: Verify real Raw GitHub URLs and browser CORS headers
         env:
           IMAGE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
