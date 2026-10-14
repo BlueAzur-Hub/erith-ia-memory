@@ -29,7 +29,7 @@ test("five pilot assets supply exactly seven prepared historical periods",()=>{
   assert.ok(p.every(x=>x.snapshot&&!x.isLive&&!x.isAllTime));
   assert.equal(query({id,period:"Max"}).status,"PREPARED_SNAPSHOT");
  }
- assert.equal(query({id:"concrete",period:"24h"}).status,"PERIOD_NOT_PREPARED");
+ assert.equal(query({id:"concrete",period:"24h"}).status,"UNKNOWN_ASSET");
 });
 test("reader refuses fabricated periods, unsupported asset and replacement quote",()=>{
  assert.equal(query({id:"fabricated",period:"24h"}).status,"UNKNOWN_ASSET");
