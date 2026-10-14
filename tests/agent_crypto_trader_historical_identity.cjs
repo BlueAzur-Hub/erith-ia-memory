@@ -74,6 +74,13 @@ assert.equal(api.read_only,true);
   await api.refresh();
   assert.equal(native.hidden,false);
   assert.match(status.textContent,/^CT · graphique externe consulté · POINTS DISPONIBLES$/);
+  assert.match(detail.textContent,/choix d'archive « 5 min » ne découpe pas les bougies externes/);
+  assert.match(nativeStatus.textContent,/clôtures natives 5m/);
+  // The R9 selector can request another period without silently resampling CT.
+  period.value="7d";
+  await api.refresh();
+  assert.match(detail.textContent,/choix d'archive « 1 h » ne découpe pas les bougies externes/);
+  assert.equal(body.children.length,2);
   // A later loading request for a different instrument must invalidate the CT view.
   micro.loadedInstrument="BTC-USDT";
   await api.refresh();
