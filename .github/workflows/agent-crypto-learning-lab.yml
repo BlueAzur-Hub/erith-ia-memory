@@ -10,6 +10,8 @@ on:
       - "public/agent_crypto_erith_ia/trader/trading-desk.html"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
+      - "public/agent_crypto_erith_ia/laboratoire/catalogue-preuves.json"
+      - "public/agent_crypto_erith_ia/tools/learning-lab-evidence.test.mjs"
       - ".github/workflows/agent-crypto-learning-lab.yml"
   push:
     branches: [main]
@@ -22,6 +24,8 @@ on:
       - "public/agent_crypto_erith_ia/trader/trading-desk.html"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
+      - "public/agent_crypto_erith_ia/laboratoire/catalogue-preuves.json"
+      - "public/agent_crypto_erith_ia/tools/learning-lab-evidence.test.mjs"
   workflow_dispatch:
 permissions:
   contents: read
@@ -40,6 +44,7 @@ jobs:
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/administrator/js/learning-lab.js
           node --test public/agent_crypto_erith_ia/tools/learning-lab.test.mjs
+          node --test public/agent_crypto_erith_ia/tools/learning-lab-evidence.test.mjs
       - name: Validate 40.6.633 manifest and presentation-only upgrade
         shell: bash
         run: |
