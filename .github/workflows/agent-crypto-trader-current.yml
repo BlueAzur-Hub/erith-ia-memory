@@ -240,6 +240,12 @@ jobs:
             root/"trader"/"trader-historical-long-reader.js",
             root/"trader"/"trader-historical-cohort-reader.js",
             root/"trader"/"build.json",
+            root/"trader"/"ai-source-inventory.js",
+            root/"trader"/"historical-inventory.html",
+            root/"trader"/"ai-history-source-catalog.js",
+            root/"trader"/"source-catalogue.html",
+            root/"trader"/"ai-verified-history-reader.js",
+            root/"trader"/"verified-reader.html",
           ]
           # Package the Laboratory source and its human/IA case studies, not
           # just the HTML script references. Keep the published file name stable.
@@ -254,6 +260,10 @@ jobs:
               (root/"administrator"/"css"/"learning-lab.css").as_posix(),
               (root/"laboratoire"/"cas-ecole-concrete.md").as_posix(),
               (root/"laboratoire"/"REPRISE_SEVEN_HEAVEN.md").as_posix(),
+              *((root/"trader"/name).as_posix() for name in (
+               "ai-source-inventory.js","historical-inventory.html",
+               "ai-history-source-catalog.js","source-catalogue.html",
+               "ai-verified-history-reader.js","verified-reader.html")),
             }
             assert required <= names, "Laboratory dependencies missing from Trader ZIP"
             assert len(names)==len(z.namelist()), "Duplicate ZIP entry"
