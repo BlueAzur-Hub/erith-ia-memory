@@ -34,7 +34,7 @@ class TestRuntime(unittest.TestCase):
   self.assertIn(r.RAW.encode()+name.encode(),resolved)
   self.assertNotIn(b'file:"seven_bg_01_citadelle_celeste.png"',resolved)
   self.assertFalse(r.include("assets/images/technical-reading/technical-aube-aerith8.png"))
-  def test_local_images(self):
+ def test_local_images(self):
   s=b'const i="./assets/images/missions_de_vie_constellation_bg.png";'
   self.assertEqual(r.transform("public/agent_crypto_erith_ia/administrator/js/x.js",s),s)
  def test_bounded(self):self.assertLessEqual(r.BUDGET,360000000)
