@@ -1,0 +1,106 @@
+# Market data on main MUST NOT redeploy this static frontend.
+# Disabled until Settings > Pages > Source=GitHub Actions and variable
+# AGENT_CRYPTO_RUNTIME_PAGES_ENABLED is set to 'true'.
+name: Agent Crypto - runtime only Pages
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-runtime-pages.yml'
+      - 'tools/build-runtime-pages.py'
+      - 'tools/test-runtime-pages.py'
+      - 'tools/test-vault-data-router.mjs'
+      - 'public/agent_crypto_erith_ia/**'
+      - '!public/agent_crypto_erith_ia/data/**'
+      - '!public/agent_crypto_erith_ia/administrator/index-[0-9]*.html'
+      - '!public/agent_crypto_erith_ia/**/*.zip'
+      - 'index.html'
+      - 'app.js'
+      - 'style.css'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-runtime-pages.yml'
+      - 'tools/build-runtime-pages.py'
+      - 'tools/test-runtime-pages.py'
+      - 'tools/test-vault-data-router.mjs'
+      - 'public/agent_crypto_erith_ia/**'
+      - '!public/agent_crypto_erith_ia/data/**'
+      - '!public/agent_crypto_erith_ia/administrator/index-[0-9]*.html'
+      - '!public/agent_crypto_erith_ia/**/*.zip'
+      - 'index.html'
+      - 'app.js'
+      - 'style.css'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Deploy only when Pages source is GitHub Actions and explicit repo variable is true'
+        required: true
+        type: boolean
+        default: false
+concurrency:
+  group: agent-crypto-runtime-pages
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  build-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit tests
+        run: |
+          python tools/test-runtime-pages.py
+          node --test tools/test-vault-data-router.mjs
+          node --check public/agent_crypto_erith_ia/web/vault-data-router.js
+      - name: Build runtime site without cold archives
+        run: python tools/build-runtime-pages.py --source . --destination _runtime_pages
+      - name: Validate budget
+        run: |
+          du -sh _runtime_pages
+          cat _runtime_pages/runtime-publication.json
+          if find _runtime_pages -type f \( -name '*.jsonl' -o -name '*.json.gz' \) | grep -q .; then exit 1; fi
+      - name: PR evidence only, no deployment
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: crypto-runtime-audit
+          path: _runtime_pages/runtime-publication.json
+          retention-days: 7
+      - name: Configure Pages after explicit opt-in
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
+          (github.event_name == 'push' || inputs.publish == true)
+        uses: actions/configure-pages@v5
+      - name: Upload bounded Pages artifact after explicit opt-in
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
+          (github.event_name == 'push' || inputs.publish == true)
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _runtime_pages
+  deploy-runtime:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
+      (github.event_name == 'push' || inputs.publish == true)
+    needs: build-runtime
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy runtime only
+        id: deployment
+        uses: actions/deploy-pages@v4
