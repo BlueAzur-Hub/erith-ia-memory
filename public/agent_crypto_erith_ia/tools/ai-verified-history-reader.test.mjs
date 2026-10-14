@@ -38,7 +38,7 @@ test("tampering with SHA or OHLCV is rejected",async()=>{
  await assert.rejects(ctx.AgentCryptoVerifiedHistoryReader.read({assetId:"bitcoin",period:"24h"}),/SHA-256 invalide/);
  source.sha256=original;
  const fake={schema:"seven.crypto.verified-period-projection",asset_id:"bitcoin",pair:"BTCUSDT",quote:"USDT",
-  is_live:false,period:"24h",interval:"1m",scope:"last_verified_closed_archive_window",
+  is_live:false,period:"24h",resolution:"1m",scope:"last_verified_closed_archive_window",
   rows:[[1,5,4,2,3,1,1,1],[60001,5,6,2,3,1,1,1]],gaps:[],start_ms:1,end_exclusive_ms:120001};
  assert.throws(()=>ctx.AgentCryptoVerifiedHistoryReader.validate(fake,{period:"24h",resolution:"1m",points:2,sha256:original},"bitcoin","BTC"),/prix ou volume/);
 });
