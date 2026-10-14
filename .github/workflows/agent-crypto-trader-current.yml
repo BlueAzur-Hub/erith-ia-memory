@@ -83,6 +83,9 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js
           node --check public/agent_crypto_erith_ia/administrator/js/aether.js
 
+      - name: Refuse late external order books and candles after selection change
+        run: node tests/agent_crypto_external_market_race.cjs
+
       - name: CT orderbook and native USD Top 5 source safeguards
         run: node tests/agent_crypto_market_integrity.cjs
 
