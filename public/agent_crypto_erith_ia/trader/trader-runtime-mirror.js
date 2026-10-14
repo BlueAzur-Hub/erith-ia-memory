@@ -69,7 +69,7 @@ function mount(){
   if(!doc.getElementById("traderHistoricalPanelScript")){
     const script=doc.createElement("script");
     script.id="traderHistoricalPanelScript";
-    script.src=new URL("../trader/trader-historical-panel.js?reader=top50-cohorts",doc.baseURI).href;
+    script.src=new URL("../trader/trader-historical-panel.js?reader=visible-coffre",doc.baseURI).href;
     doc.head.appendChild(script);
   }
   // Trader-only CT/USDT one-minute watch. Reuses the canonical candle owner:
