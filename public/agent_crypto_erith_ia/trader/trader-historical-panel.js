@@ -17,13 +17,22 @@ function selected(){
  const choice=panel()?.querySelector("[data-history-asset]")?.value||"auto";
  if(choice!=="auto"&&Object.hasOwn(MANUAL,choice))
    return {id:choice,symbol:MANUAL[choice],origin:"manual"};
+ // An explicitly displayed external asset wins over the retained Market
+ // subprofile, which can still be BTC. During a CT request, show CT waiting,
+ // never silently substitute BTC until the external data is confirmed.
+ let ext=null;
+ try{ext=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();}catch(_){}
+ const base=String(ext?.base||"").toUpperCase(),quote=String(ext?.quote||"").toUpperCase();
+ if(ext?.active&&typeof ext.id==="string"&&ext.id&&
+   /^[A-Z0-9]+$/.test(base)&&/^(USDT|USDC|USD|EUR)$/.test(quote)&&
+   String(ext.instrument||"").toUpperCase()===base+"-"+quote)
+   return {id:ext.id,symbol:base,origin:"external",quote};
  try{
   const c=globalThis.getSelectedCoin?.();
   if(c&&typeof c.id==="string"&&c.id&&typeof c.symbol==="string"&&c.id)
    return {id:c.id,symbol:c.symbol.toUpperCase(),origin:"market"};
  }catch(_){}
- const external=inspectedChart(displayCurrency());
- return external?{id:external.id,symbol:external.symbol,origin:"external",quote:external.quote}:null;
+ return null;
 }
 function utc(x){const d=new Date(x);return Number.isFinite(d.getTime())?d.toLocaleString("fr-FR",{timeZone:"UTC",dateStyle:"short",timeStyle:"short"})+" UTC":"date inconnue";}
 function write(p,name,value){const e=p.querySelector("[data-history-"+name+"]");if(e)e.textContent=value;}
