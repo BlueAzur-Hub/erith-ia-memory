@@ -65,6 +65,11 @@ function render(view,node){
  if(summary)summary.textContent="Minute : "+view.totals.minute+" · Journalier : "+view.totals.daily+
   " · Dans le Top250 (union) : "+view.totals.either+"/250 · Sans source : "+view.totals.missing+
   " · Archives 1D hors univers actuel : "+view.totals.outOfUniverse;
+ const others=document.getElementById("outside");
+ if(others)others.textContent=view.outOfUniverse.length
+  ?"Archives du catalogue quotidien conservées, hors classement actuel : "+
+   view.outOfUniverse.map(x=>x.symbol+" ("+x.id+", ancien rang "+x.rank+")").join(" ; ")+"."
+  :"Aucune archive hors univers courant.";
  for(const a of view.assets){
   const tr=document.createElement("tr");
   const fields=[String(a.rank),a.symbol,a.minute?"1m · "+a.minute.months+" mois":"—",
