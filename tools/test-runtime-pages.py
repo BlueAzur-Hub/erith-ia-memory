@@ -25,7 +25,16 @@ class TestRuntime(unittest.TestCase):
   self.assertIn(r.IMAGE_RAW_ROOT+revision+"/assets/images/technical-reading/technical-random-01.png",page)
   self.assertNotIn(r.RAW+"assets/images/",page)
   with self.assertRaises(ValueError):r.image_raw_base("../main")
- def test_local_images(self):
+ def test_seven_portable_original_images_stay_on_raw(self):
+  name="assets/SEVEN_PORTABLE_TERMINAL/seven_bg_01_citadelle_celeste.png"
+  self.assertFalse(r.include(name))
+  self.assertTrue(r.include("assets/SEVEN_PORTABLE_TERMINAL/script.js"))
+  js=b'const scenes=[{file:"seven_bg_01_citadelle_celeste.png"}];'
+  resolved=r.transform("assets/SEVEN_PORTABLE_TERMINAL/script.js",js,external_images=(name,))
+  self.assertIn(r.RAW.encode()+name.encode(),resolved)
+  self.assertNotIn(b'file:"seven_bg_01_citadelle_celeste.png"',resolved)
+  self.assertFalse(r.include("assets/images/technical-reading/technical-aube-aerith8.png"))
+  def test_local_images(self):
   s=b'const i="./assets/images/missions_de_vie_constellation_bg.png";'
   self.assertEqual(r.transform("public/agent_crypto_erith_ia/administrator/js/x.js",s),s)
  def test_bounded(self):self.assertLessEqual(r.BUDGET,360000000)

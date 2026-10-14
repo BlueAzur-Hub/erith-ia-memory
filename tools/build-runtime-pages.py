@@ -15,6 +15,8 @@ SHARED_ROOT={"index.html","app.js","style.css"}
 SHARED_PUBLIC={"public/index.html","public/app.js","public/style.css"}
 SHARED_PREFIXES=("assets/","public/lego/","public/liora-jardin-reves-doux/","public/charlene_salon/","public/memory_cards/")
 CRYPTO_EXTERNAL_IMAGES=("assets/images/technical-reading/","assets/images/visual/")
+SEVEN_PORTABLE="assets/SEVEN_PORTABLE_TERMINAL/"
+EXTERNAL_IMAGE_EXT={".png",".jpg",".jpeg",".webp",".gif",".avif",".svg"}
 SHARED_REQUIRED=("index.html","app.js","style.css","public/index.html",
                  "public/lego/rising-phoenix/index.html",
                  "public/liora-jardin-reves-doux/index.html")
@@ -35,6 +37,7 @@ def include(n):
  # Do not accidentally publish private, coordination, historical ZIP or any unknown repo root.
  if n in SHARED_ROOT or n in SHARED_PUBLIC:return True
  if n.startswith(CRYPTO_EXTERNAL_IMAGES):return False
+ if n.startswith(SEVEN_PORTABLE) and Path(n).suffix.lower() in EXTERNAL_IMAGE_EXT:return False
  if n.startswith(SHARED_PREFIXES):
   return Path(n).suffix.lower() in SHARED_EXT
  if n.startswith("public/") and n.count("/")==1 and Path(n).suffix.lower() in EXT:return True
@@ -42,10 +45,21 @@ def include(n):
 def image_raw_base(image_ref):
  if image_ref!="main" and not re.fullmatch(r"[0-9a-f]{40}",image_ref):raise ValueError("Invalid image source revision")
  return IMAGE_RAW_ROOT+image_ref+"/"
-def transform(n,b,image_ref="main"):
+def transform(n,b,image_ref="main",external_images=()):
  if Path(n).suffix.lower() not in {".html",".htm",".css",".js",".mjs"}:return b
  t=b.decode("utf-8")
  image_base=image_raw_base(image_ref)
+ if n.startswith(SEVEN_PORTABLE) and external_images:
+  # Literals in scripts, HTML and CSS point to immutable public original images.
+  # Base path is computed relative to each real source file, never by basename alone.
+  parent=Path(n).parent
+  rewrites=[]
+  for filename in external_images:
+   rel=os.path.relpath(filename,start=str(parent)).replace(os.sep,"/")
+   rewrites.append((rel,image_base+filename))
+  for rel,url in sorted(rewrites,key=lambda pair:len(pair[0]),reverse=True):
+   t=t.replace(rel,url)
+
  for prefix in ("../../../../assets/images/","../../../assets/images/","../../assets/images/"):
   t=t.replace(prefix,image_base+"assets/images/")
  if n.startswith("public/agent_crypto_erith_ia/") and n.endswith(".html"):
@@ -67,6 +81,7 @@ def build(src,dst,image_ref="main"):
  src,dst=Path(src).resolve(),Path(dst).resolve()
  if src==dst or not src.is_dir() or (dst.exists() and any(dst.iterdir())):raise ValueError("Unsafe build destination")
  paths=subprocess.check_output(["git","-C",str(src),"ls-files","-z"]).split(b"\0")
+ external_images=tuple(p.decode("utf-8") for p in paths if p and p.decode("utf-8").startswith(SEVEN_PORTABLE) and Path(p.decode("utf-8")).suffix.lower() in EXTERNAL_IMAGE_EXT)
  selected=[];size=0;excluded=0;excluded_bytes=0
  for part in paths:
   if not part:continue
@@ -78,7 +93,7 @@ def build(src,dst,image_ref="main"):
  if size>BUDGET:raise ValueError("Runtime too large: "+str(size))
  for n,f in selected:
   out=dst/n;out.parent.mkdir(parents=True,exist_ok=True)
-  if f.suffix.lower() in {".html",".htm",".css",".js",".mjs"}:out.write_bytes(transform(n,f.read_bytes(),image_ref=image_ref))
+  if f.suffix.lower() in {".html",".htm",".css",".js",".mjs"}:out.write_bytes(transform(n,f.read_bytes(),image_ref=image_ref,external_images=external_images))
   else:shutil.copyfile(f,out)
  (dst/".nojekyll").touch()
  missing=[p for p in REQUIRED+SHARED_REQUIRED if not (dst/p).is_file()]
