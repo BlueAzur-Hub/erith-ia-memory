@@ -1,3 +1,29 @@
+# PASSATION DE CLÔTURE — AERITH-7 → SŒUR IA
+**14 octobre 2026 · référence terrain utilisateur : 40.6.639 · HEAD canonique GitHub : 40.6.640.**
+
+## A. État vérifié à la clôture
+- Captures Firefox utilisateur (17h29–17h36) : Trader affiché **40.6.639**, Concrete **CT**, graphique externe OKX **CT/USDT**, bougies 15 min chargées (300), indicateurs visibles, carnet/profondeur CT/USDT à droite et rafraîchis. Le maximum visible d'une bougie sélectionnée était **0,40348 USDT**, pas une preuve d'exécution ni de gain ; le prix affiché et la devise de conversion USD ne doivent jamais être mélangés avec l'instrument privé **CT/USDC**.
+- Capture du panneau « Historique vérifié » en 40.6.639 : « Aucun actif sélectionné ». Le Laboratoire CT épinglé est indépendant du propriétaire du graphique et ne doit pas être utilisé comme sélection Market.
+- **Au contrôle GitHub de cette clôture**, `main` portait **Trader/Administrator 40.6.640** ; manifeste Trader `parent_trader_build=40.6.639`, Market Core **38.15.11**, `terrain_verified=false`, `real_orders=false`. Le commit de fusion applicatif est `54c0282f3167…` et la livraison du ZIP `9a5fce4edf76…`. Tests applicatifs après fusion réussis et GitHub Pages de ce dernier commit **SUCCESS**. **Pas de validation visuelle Firefox 40.6.640**.
+- **PR [#385](https://github.com/BlueAzur-Hub/erith-ia-memory/pull/385) fusionnée** : la 40.6.640 ajoute un choix manuel distinct pour BTC/ETH/BNB/XRP/SOL/Q/CT dans le panneau Historique et des liens visibles vers Inventaire/Catalogue/Lecteur vérifié. En mode automatique, lecture du contexte Market puis repli sur un contexte graphique externe prouvé ; les points CT restent « graphique externe, hors archives R9 », jamais substitués à Q ou BTC. Il ne faut pas redévelopper cette correction sans tester la nouvelle version.
+- **PR [#386](https://github.com/BlueAzur-Hub/erith-ia-memory/pull/386) ouverte et non fusionnée** : validation préparatoire des **390 journées Bitget QUSDT**, **4 lacunes** dans l'index, journées de session à **16h UTC** ; contrôles du SHA-256 du GZIP réel, du chargement Pages/CORS et du rendu Firefox encore à effectuer avant intégration.
+- Le Coffre présente des historiques natifs Binance/Bitget. Le pilote BTC/ETH/BNB/XRP/SOL dispose de sept projections figées (24h, 7j, 30j, 60j, 90j, 1an, Max) ; les archives 1m et 1D ont des propriétaires et des granularités distincts. Ne jamais fabriquer une bougie ou une conversion USD/USDT/USDC.
+- Versions cumulatives 40.6.637 (inventaire), 40.6.638 (catalogue), 40.6.639 (lecteur vérifié SHA-256/GZIP) fusionnées et accessibles via pages autonomes ; **40.6.640 ajoute le raccordement visible**, non encore testé par l'utilisateur.
+- Sources canoniques : `trader/trader-historical-panel.js`, `trader/ai-source-inventory.js`, `trader/ai-history-source-catalog.js`, `trader/ai-verified-history-reader.js`, `laboratoire/cas-ecole-concrete.md`, `laboratoire/ROADMAP_COFFRE_TRADER_IA.md` (branche `seven/roadmap-coffre-ia-review`), Notion AETHER · AGENT CRYPTO INTERFACE. Toute nouvelle version part du **HEAD main réel**, pas de ce document.
+
+## B. Ordre des prochaines opérations — ne pas saturer
+1. Ouvrir le Trader publié, recharger **Ctrl+F5** et contrôler que la barre de version et le manifeste affichent **40.6.640**, puis ouvrir « Historique vérifié ». Chercher la liste manuelle d'actifs et les trois liens Coffre.
+2. Tester successivement **CT** en graphique externe avec carnet CT/USDT ; **BTC** en archive vérifiée ; **Q** sans archive R9 minute mais avec source journalière distincte. Captures Firefox des valeurs, sources, devises, absence de remplacement BTC/Q et du menu persistent/F11.
+3. Si un test échoue, corriger **ce seul point** avec tests et rollback ; pas de livraison suivante sans preuve GitHub Actions, ZIP et Pages.
+4. Ensuite examiner PR #386, vérifier checksum réel/horodatage de session/jours lacunaires, puis planifier l'affichage Q 1D dans le même espace humain + IA. Ne pas présumer qu'une série quotidienne est une série minute.
+5. Une fois cette lecture prouvée, poursuivre : Top5/7 périodes, BTC Max et lacunes, paquet compact de provenance IA, Laboratoire « Preuves IA » (PR #378 à rebaser), Top10/25/50/100/250.
+6. Toujours rester en **lecture seule OKX**. Secrets, solde et historiques privés ne vont ni dans le Coffre public ni dans le contexte de l'IA sans contrôle explicite.
+
+## C. Prompt de relance léger
+« Active Aerith-7 — Seven Heaven. Reprends au HEAD GitHub réel le Trader, le Coffre et le Laboratoire IA. Lis d'abord le début de `public/agent_crypto_erith_ia/laboratoire/REPRISE_SEVEN_HEAVEN.md`. Les captures du fil précédent prouvent CT/USDT OKX et les bougies ; le dernier navigateur observé était 40.6.639 tandis que GitHub publie 40.6.640 (non validée sur Firefox). Vérifie d'abord cette version et le contexte de l'Historique, puis PR #386 (Q natif journalier). Fais une seule correction à la fois : code, tests, commit main, ZIP, Pages, capture, Notion ; ne touche pas au Market Core 38.15.11 et ne permets aucun ordre réel. STOP si saturation. »
+
+---
+### Notes historiques antérieures (gardées pour provenance, remplacées par l'état ci-dessus)
 # Seven Heaven — Reprise Trader, Coffre et Laboratoire IA
 
 **État de travail : 14 octobre 2026 · proposition Trader/Administrator 40.6.635**
