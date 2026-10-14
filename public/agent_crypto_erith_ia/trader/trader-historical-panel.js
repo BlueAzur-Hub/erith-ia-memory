@@ -162,13 +162,22 @@ function inspectedChart(currency="USD"){
    currency:unit,rows:rows.slice(-12),count:rows.length,days,
    source,first:rows[0][0],last:rows[rows.length-1][0],asOf};
 }
+/* The fallback belongs to the *selected* identity, never to whichever
+   unrelated external chart happens to be resident (e.g. BTC selected, CT loaded). */
+function matchingChart(coin,currency){
+ const native=nativeChart(coin,currency);
+ if(native)return native;
+ const external=inspectedChart(currency);
+ return external&&external.id===coin.id&&external.symbol===coin.symbol&&
+   (!coin.quote||coin.quote===external.quote)?external:null;
+}
 function paintNative(p,coin,currency="USD"){
  const host=p.querySelector("[data-history-native]");if(!host)return false;
  host.hidden=false;
  const label=host.querySelector("[data-native-status]"),body=host.querySelector("[data-native-rows]");
  body?.replaceChildren();
  const heading=host.querySelector("[data-native-title]"),priceHeading=host.querySelector("[data-native-price-heading]");
- const view=nativeChart(coin,currency)||inspectedChart(currency);
+ const view=matchingChart(coin,currency);
  if(heading)heading.textContent=(view?.external?"GRAPHIQUE EXTERNE CONSULTÉ · ":"HISTORIQUE DU GRAPHIQUE · ")+(view?.currency||currency)+" · HORS R9";
  if(priceHeading)priceHeading.textContent="Prix "+(view?.currency||currency);
  if(!view){host.hidden=true;return false;}
@@ -222,12 +231,20 @@ async function refresh({reload=false}={}){
  }
  if(currency==="EUR"){
    const found=paintNative(p,c,"EUR");
-   write(p,"status",c.symbol+" · EUR · "+(found?"HISTORIQUE NATIF":"EN ATTENTE DU GRAPHIQUE"));
-   write(p,"detail","Affichage EUR du graphique existant, distinct des archives Binance R9 en USDT. Aucune conversion cachée.");
+   // A CT-USDT external graph stays USDT even if the operator selected EUR.
+   const shown=found?p.querySelector("[data-native-price-heading]")?.textContent?.replace(/^Prix\s+/,"")||"EUR":"EUR";
+   write(p,"status",c.symbol+" · "+shown+" · "+(found?"HISTORIQUE NATIF":"EN ATTENTE DU GRAPHIQUE"));
+   write(p,"detail",shown==="EUR"
+     ?"Affichage EUR du graphique existant, distinct des archives Binance R9 en USDT. Aucune conversion cachée."
+     :"Affichage EUR demandé ; le graphique consulté fournit des prix natifs "+shown+
+      ", affichés sans conversion ni assimilation à un cours EUR.");
    if(!found&&typeof globalThis.setTimeout==="function"){
      for(const delay of [1200,4500])globalThis.setTimeout(()=>{
        if(seq!==sequence||!p.open||selected()?.id!==c.id||displayCurrency()!=="EUR")return;
-       if(paintNative(p,c,"EUR"))write(p,"status",c.symbol+" · EUR · HISTORIQUE NATIF");
+       if(paintNative(p,c,"EUR")){
+         const unit=p.querySelector("[data-native-price-heading]")?.textContent?.replace(/^Prix\s+/,"")||"EUR";
+         write(p,"status",c.symbol+" · "+unit+" · HISTORIQUE NATIF");
+       }
      },delay);
    }
    return;
