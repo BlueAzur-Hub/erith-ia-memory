@@ -51,3 +51,14 @@ Attention : les snapshots datés sont différents. Leurs variations, prix et éc
 - **D — Évaluer la robustesse** : faire le même exercice sur BTC et Q ; comparer les erreurs et la variance, y compris les cas perdants.
 
 **Pas de signal de trading, pas d’ordre réel, pas de conseiller automatique.** La décision et toute exécution éventuelle restent humaines.
+
+## 7. Pourquoi le tableau « Historique vérifié » pouvait rester vide
+
+**Observation Firefox (14 octobre, 03h05)** : CT/USDT affichait une courbe de 300 points alors que la sélection globale Market correspondait à **Q**, et que le dossier Laboratoire était **BTC épinglé**.
+
+- Le lecteur **R9 / Univers / Top50** recherche uniquement une archive Binance vérifiée de la **sélection Market** (ici Q). « Q · archive non disponible » ne signifie pas que la courbe CT a disparu.
+- Le graphique externe **CT/USDT (OKX)** conserve ses points dans son propre propriétaire. Avant la correction proposée 40.6.636, le lecteur du tableau complémentaire n'acceptait que le courtier CoinGecko natif, ce qui rendait CT invisible malgré son graphique.
+- Le panneau proposé affiche les points du **graphique externe consulté** en séparant visiblement son identité de Q. Si les points ont été convertis en USD, la conversion **USDT/USD CoinGecko doit être attestée dans la provenance** ; sinon seules les clôtures natives cotées USDT d'un propriétaire Bougies vérifié par paire sont admissibles.
+- Le lecteur n'importe aucun chiffre du dossier documentaire comme cours live, ne crée aucune archive manquante, ne remplace pas l'actif Q par CT et ne touche ni au compte OKX ni aux bougies originales. Sans données chargées et identifiables, l'état reste indisponible.
+
+**Contrôle terrain après déploiement** : ouvrir CT dans le graphique, sélectionner Q dans Market, ouvrir l'historique vérifié et relever séparément « Q · archive indisponible » et « graphique externe CT » avec provenance, nombre de points et prix. Vérifier également le cas de la sélection CT : aucune donnée BTC/Q ne doit être injectée.
