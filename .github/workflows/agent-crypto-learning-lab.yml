@@ -47,7 +47,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/learning-lab.js
           node --check public/agent_crypto_erith_ia/trader/ai-source-inventory.js
           node --test public/agent_crypto_erith_ia/tools/learning-lab.test.mjs public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs
-      - name: Validate 40.6.637 manifests and BTC panel restoration
+      - name: Validate 40.6.638 manifests and BTC panel restoration
         shell: bash
         run: |
           set -euo pipefail
@@ -94,32 +94,32 @@ jobs:
             assert actual==expected, f"Unexpected fields changed in {path}"
             return actual
           admin=jsondiff(prefix+"administrator/build.json",{
-            "build":"40.6.637","parent_build":"40.6.636",
-            "administrator_build":"40.6.637",
-            "build_label":"Build 40.6.637 · Administrator",
-            "release":"COFFRE · INVENTAIRE 250 · SOURCE MINUTE ET JOUR",
-            "status":"INVENTAIRE_SOURCE_CI_PENDING_FIREFOX",
+            "build":"40.6.638","parent_build":"40.6.637",
+            "administrator_build":"40.6.638",
+            "build_label":"Build 40.6.638 · Administrator",
+            "release":"COFFRE · CATALOGUE DE SOURCES ET GRANULARITÉS",
+            "status":"SOURCE_RESOLVER_CI_PENDING_FIREFOX",
             "new_observer":True,"new_storage_owner":True,
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
           trader=jsondiff(prefix+"trader/build.json",{
-            "build":"40.6.637","parent_trader_build":"40.6.636",
-            "administrator_base":"40.6.637",
-            "release":"COFFRE · INVENTAIRE 250 · SOURCE MINUTE ET JOUR",
-            "status":"INVENTAIRE_SOURCE_CI_PENDING_FIREFOX",
+            "build":"40.6.638","parent_trader_build":"40.6.637",
+            "administrator_base":"40.6.638",
+            "release":"COFFRE · CATALOGUE DE SOURCES ET GRANULARITÉS",
+            "status":"SOURCE_RESOLVER_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
           for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html"}:
-            assert current(f)==previous(f).replace("40.6.636","40.6.637"),f"Non-version Trader change: {f}"
+            assert current(f)==previous(f).replace("40.6.637","40.6.638"),f"Non-version Trader change: {f}"
           index=current(prefix+"administrator/index.html")
           assert admin["engine"]==trader["market_core"]=="38.15.11"
-          assert admin["build"]==trader["build"]=="40.6.637"
-          assert 'name="agent-crypto-loaded-build" content="40.6.637"' in index
-          assert 'js/learning-lab.js?v=40.6.637' in index
-          assert 'css/learning-lab.css?v=40.6.637' in index
+          assert admin["build"]==trader["build"]=="40.6.638"
+          assert 'name="agent-crypto-loaded-build" content="40.6.638"' in index
+          assert 'js/learning-lab.js?v=40.6.638' in index
+          assert 'css/learning-lab.css?v=40.6.638' in index
           assert trader["real_orders"] is False and admin["real_order"] is False
           assert trader["terrain_verified"] is False
-          print("Lab 40.6.637: manifests and protected fields OK")
+          print("Lab 40.6.638: manifests and protected fields OK")
           PY
       - name: Prepare stable-name GitHub source ZIP
         run: |
