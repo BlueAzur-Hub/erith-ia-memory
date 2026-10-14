@@ -1,0 +1,38 @@
+# Candidate only: does not replace the existing GitHub Pages deployment.
+name: Agent Crypto - selective Pages candidate
+on:
+  pull_request:
+    paths:
+      - 'tools/build-selective-pages.py'
+      - 'tools/test-build-selective-pages.py'
+      - '.github/workflows/agent-crypto-selective-pages.yml'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/assets/visual/**'
+      - 'assets/images/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests
+        run: python tools/test-build-selective-pages.py
+      - name: Build candidate site
+        run: python tools/build-selective-pages.py --source . --destination _site
+      - name: Inspect candidate
+        run: |
+          du -sh _site
+          cat _site/publication-manifest.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: selective-pages-manifest
+          path: _site/publication-manifest.json
+          retention-days: 7
