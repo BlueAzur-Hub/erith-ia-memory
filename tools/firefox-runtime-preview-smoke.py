@@ -94,12 +94,22 @@ def main():
                 assert p.locator("#rows tr").count() == 12
                 assert p.evaluate("""() => AgentCryptoVaultDataRouter.stats().routed""") >= 3
             def vault(p):
-                p.locator("#r9-read").wait_for()
-                assert p.locator("#r9-read").inner_text()
+                # R9 is intentionally nested in a closed <details> panel.
+                button = p.locator("#r9-read")
+                button.wait_for(state="attached")
+                button.locator("xpath=ancestor::details[1]").evaluate("(node) => node.open = true")
                 assert p.locator("#top250-coverage").count() == 1
                 assert p.evaluate("""() => AgentCryptoVaultDataRouter.route(
                   new URL('../data/historical_archive_prototype/compact_v1/index.json', location.href).href
                 )""").startswith("https://raw.githubusercontent.com/BlueAzur-Hub/")
+                button.click()
+                p.wait_for_function("""() => {
+                  const node = document.querySelector('#r9-status');
+                  return node && (node.classList.contains('good') || node.classList.contains('bad'));
+                }""", timeout=65000)
+                status = p.locator("#r9-status")
+                assert status.get_attribute("class") == "good", status.inner_text()
+                assert "SHA-256 et OHLCV" in status.inner_text()
             check("trader", "trader/trading-desk.html", trader, "trader.png")
             check("inventory", "trader/historical-inventory.html", inventory, "inventory.png")
             check("catalogue", "trader/source-catalogue.html", catalogue)
