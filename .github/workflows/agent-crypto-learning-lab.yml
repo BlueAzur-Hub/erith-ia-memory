@@ -80,6 +80,8 @@ jobs:
             prefix+"trader/trader-historical-panel.js",
             prefix+"trader/ai-source-inventory.js",
             prefix+"trader/historical-inventory.html",
+            prefix+"trader/ai-history-source-catalog.js",
+            prefix+"trader/source-catalogue.html",
           }
           changed=set(subprocess.check_output(
             ["git","diff","--name-only",base,"HEAD","--",prefix+"trader/"],
@@ -116,7 +118,7 @@ jobs:
             "status":"SOURCE_RESOLVER_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
-          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html"}:
+          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html"}:
             assert current(f)==previous(f).replace("40.6.637","40.6.638"),f"Non-version Trader change: {f}"
           index=current(prefix+"administrator/index.html")
           assert admin["engine"]==trader["market_core"]=="38.15.11"
