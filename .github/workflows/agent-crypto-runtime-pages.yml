@@ -1,0 +1,174 @@
+# Market data on main MUST NOT redeploy this static frontend.
+# Pages Source is configured as GitHub Actions by the site owner.
+# Publish only frontend-code changes on main. Data-only commits never trigger Pages.
+name: Agent Crypto - lightweight multisite Pages
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-runtime-pages.yml'
+      - 'tools/build-runtime-pages.py'
+      - 'tools/test-runtime-pages.py'
+      - 'tools/test-vault-data-router.mjs'
+      - 'tools/check-vault-raw-access.py'
+      - 'public/agent_crypto_erith_ia/**'
+      - 'index.html'
+      - 'app.js'
+      - 'style.css'
+      - 'assets/**'
+      - 'public/index.html'
+      - 'public/app.js'
+      - 'public/style.css'
+      - 'public/*.md'
+      - 'public/lego/**'
+      - 'public/liora-jardin-reves-doux/**'
+      - 'public/charlene_salon/**'
+      - 'public/memory_cards/**'
+      - '!public/agent_crypto_erith_ia/data/**'
+      - '!public/agent_crypto_erith_ia/administrator/index-[0-9]*.html'
+      - '!public/agent_crypto_erith_ia/**/*.zip'
+      - '!assets/images/technical-reading/**'
+      - '!assets/images/visual/**'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-runtime-pages.yml'
+      - 'tools/build-runtime-pages.py'
+      - 'tools/test-runtime-pages.py'
+      - 'tools/test-vault-data-router.mjs'
+      - 'tools/check-vault-raw-access.py'
+      - 'public/agent_crypto_erith_ia/**'
+      - 'index.html'
+      - 'app.js'
+      - 'style.css'
+      - 'assets/**'
+      - 'public/index.html'
+      - 'public/app.js'
+      - 'public/style.css'
+      - 'public/*.md'
+      - 'public/lego/**'
+      - 'public/liora-jardin-reves-doux/**'
+      - 'public/charlene_salon/**'
+      - 'public/memory_cards/**'
+      - '!public/agent_crypto_erith_ia/data/**'
+      - '!public/agent_crypto_erith_ia/administrator/index-[0-9]*.html'
+      - '!public/agent_crypto_erith_ia/**/*.zip'
+      - '!assets/images/technical-reading/**'
+      - '!assets/images/visual/**'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Manual publish after Pages Source is set to GitHub Actions'
+        required: true
+        type: boolean
+        default: false
+concurrency:
+  group: agent-crypto-runtime-pages
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  build-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      # Only small code locations are required by PR/disabled-run tests.
+      # Never hydrate large frontend/media directories for a routine test.
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/
+            /public/agent_crypto_erith_ia/web/vault-data-router.js
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit tests
+        run: |
+          python tools/test-runtime-pages.py
+          node --test tools/test-vault-data-router.mjs
+          node --check public/agent_crypto_erith_ia/web/vault-data-router.js
+      - name: Check full multisite source manifest from Git trees (no image/blob checkout)
+        run: python tools/build-runtime-pages.py --source . --plan-only
+      - name: Verify real Raw GitHub URLs and browser CORS headers
+        env:
+          IMAGE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python tools/check-vault-raw-access.py --image-ref "$IMAGE_REF"
+      - name: Checkout full frontend only for authorised publication
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          (github.event_name == 'push' || inputs.publish == true)
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/
+            /index.html
+            /app.js
+            /style.css
+            /assets/
+            !/assets/images/technical-reading/
+            !/assets/images/visual/
+            /public/index.html
+            /public/app.js
+            /public/style.css
+            /public/*.md
+            /public/lego/
+            /public/liora-jardin-reves-doux/
+            /public/charlene_salon/
+            /public/memory_cards/
+            /public/agent_crypto_erith_ia/
+            !/public/agent_crypto_erith_ia/data/
+            !/public/agent_crypto_erith_ia/administrator/index-[0-9]*.html
+            !/public/agent_crypto_erith_ia/**/*.zip
+            !/public/agent_crypto_erith_ia/**/*.jsonl
+            !/public/agent_crypto_erith_ia/**/*.gz
+      # PRs and data-only commits do not rebuild the Agent-Crypto site.
+      # Build the frontend only for an explicitly authorised main deployment.
+      - name: Build lightweight multisite only for authorised publication
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          (github.event_name == 'push' || inputs.publish == true)
+        env:
+          IMAGE_REF: main
+        run: python tools/build-runtime-pages.py --source . --destination _runtime_pages --image-ref "$IMAGE_REF"
+      - name: Check frontend budget and exclude cold archives
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          (github.event_name == 'push' || inputs.publish == true)
+        run: |
+          du -sh _runtime_pages
+          cat _runtime_pages/public/agent_crypto_erith_ia/runtime-publication.json
+          if find _runtime_pages -type f \( -name '*.jsonl' -o -name '*.json.gz' \) | grep -q .; then exit 1; fi
+      - name: Configure Pages after explicit opt-in
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          (github.event_name == 'push' || inputs.publish == true)
+        uses: actions/configure-pages@v5
+      - name: Upload bounded Pages artifact after explicit opt-in
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          (github.event_name == 'push' || inputs.publish == true)
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _runtime_pages
+  deploy-runtime:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || inputs.publish == true)
+    needs: build-runtime
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy runtime only
+        id: deployment
+        uses: actions/deploy-pages@v4

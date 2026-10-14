@@ -1,0 +1,61 @@
+# Incremental patch != complete site != cold vault. Do not deploy.
+name: Agent Crypto - incremental patch and manual Pages inspection
+on:
+  pull_request:
+    paths:
+      - 'tools/build-code-patch.py'
+      - 'tools/test-build-code-patch.py'
+      - 'tools/build-selective-pages.py'
+      - 'tools/test-build-selective-pages.py'
+      - '.github/workflows/agent-crypto-selective-pages.yml'
+      - 'public/agent_crypto_erith_ia/administrator/**'
+      - 'public/agent_crypto_erith_ia/trader/**'
+      - 'assets/images/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  code-patch-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test patch and Pages policy
+        run: |
+          python tools/test-build-code-patch.py
+          python tools/test-build-selective-pages.py
+      - name: Produce tiny code patch, never the complete Pages site
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python tools/build-code-patch.py --base "$BASE_SHA" --head "$HEAD_SHA" --output out/AGENT_CRYPTO_CLEAN_UPLOAD.zip
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'pull_request'
+        with:
+          name: agent-crypto-small-code-patch
+          path: |
+            out/AGENT_CRYPTO_CLEAN_UPLOAD.zip
+            out/AGENT_CRYPTO_CLEAN_UPLOAD.zip.sha256
+          retention-days: 7
+  full-site-inspection-only:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tools/build-selective-pages.py --source . --destination _site
+      - run: du -sh _site && cat _site/publication-manifest.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: selective-pages-inspection-manifest
+          path: _site/publication-manifest.json
+          retention-days: 7
