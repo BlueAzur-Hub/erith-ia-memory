@@ -17,6 +17,11 @@ class Elem {
     this.className="";this.value="";this._text="";this._id="";this.registry=registry;
     this.classList={toggle:()=>{},add:()=>{},remove:()=>{}};
   }
+  get nextSibling(){
+    if(!this.parentNode)return null;
+    const children=this.parentNode.children;
+    return children[children.indexOf(this)+1]||null;
+  }
   set id(v){this._id=v;this.registry.set(v,this);}
   get id(){return this._id;}
   set textContent(v){this._text=String(v);this.children=[];}
@@ -47,7 +52,8 @@ class Elem {
 }
 function boot(query="?surface=trader"){
   const registry=new Map(),legacy=new Elem("details",registry),parent=new Elem("section",registry);
-  legacy.id="traderOkbCaseStudy";parent.append(legacy);
+  const following=new Elem("details",registry);following.id="traderVerifiedHistory";
+  legacy.id="traderOkbCaseStudy";parent.append(legacy,following);
   const graphTitle=new Elem("strong",registry);graphTitle.id="atlasChartInsightOverlayTitle";
   const top5Button=new Elem("button",registry);top5Button.id="btnChartTop5";
   top5Button.active=false;top5Button.classList.contains=name=>name==="active"&&top5Button.active;
@@ -65,7 +71,7 @@ function boot(query="?surface=trader"){
     window:{},MutationObserver:class{observe(){}},console
   };
   vm.runInNewContext(source,sandbox,{timeout:1000});
-  return {registry,legacy,parent,sandbox,storage,graphTitle,top5Button,
+  return {registry,legacy,following,parent,sandbox,storage,graphTitle,top5Button,
           get:id=>registry.get(id)};
 }
 test("Trader HTML mounts only the isolated lab, with no new account capability",()=>{
@@ -83,18 +89,39 @@ test("Trader mounts a single report and changes educational dossier without plac
   const t=boot();
   const lab=t.get("agentCryptoLearningLab"),api=t.sandbox.window.AgentCryptoLearningLab;
   assert.ok(lab);
-  assert.equal(t.legacy.parentNode.className,"lab-btc-report");
+  assert.equal(t.legacy.parentNode,t.parent);
+  assert.equal(lab.parentNode,t.parent);
+  assert.deepEqual(t.parent.children,[t.legacy,lab,t.following]);
+  assert.equal(lab.open,false);
+  assert.equal(t.legacy.style.display,undefined);
   assert.equal(api.read().asset,"BTC");
   assert.equal(api.read().real_order,false);
   api.select("CT");
   assert.equal(api.read().asset,"CT");
   assert.match(t.get("lab-content").textContent,/CT\/USDT/);
   assert.match(t.get("lab-content").textContent,/CT\/USDC/);
-  assert.equal(t.legacy.style.display,"none");
+  assert.equal(t.legacy.parentNode,t.parent);
+  assert.equal(t.legacy.style.display,undefined);
   api.select("Q");
   assert.equal(api.read().asset,"Q");
   api.select("BTC");
-  assert.equal(t.legacy.style.display,"");
+  assert.equal(t.legacy.parentNode,t.parent);
+  assert.equal(t.legacy.style.display,undefined);
+  assert.deepEqual(t.parent.children,[t.legacy,lab,t.following]);
+});
+test("legacy BTC content is outside a collapsed laboratory and always survives CT or Q",()=>{
+  const t=boot(),lab=t.get("agentCryptoLearningLab"),api=t.sandbox.window.AgentCryptoLearningLab;
+  assert.equal(t.parent.children[0],t.legacy);
+  assert.equal(t.parent.children[1],lab);
+  assert.equal(t.parent.children[2],t.following);
+  assert.equal(lab.open,false);
+  for(const symbol of ["CT","Q","BTC"]){
+    api.select(symbol);
+    assert.equal(t.legacy.parentNode,t.parent);
+    assert.equal(t.legacy.style.display,undefined);
+    assert.deepEqual(t.parent.children,[t.legacy,lab,t.following]);
+  }
+  assert.doesNotMatch(source,/legacySlot|legacy\.style\.display|legacySlot\.append/);
 });
 test("Follow mode does not interpret a Top 5 comparison as a single crypto",()=>{
   const t=boot(),lab=t.get("agentCryptoLearningLab");
