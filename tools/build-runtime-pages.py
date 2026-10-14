@@ -3,14 +3,16 @@
 import argparse,json,os,re,shutil,subprocess
 from html.parser import HTMLParser
 from pathlib import Path
-ROOT={"index.html","app.js","style.css",".nojekyll"}
+# Canonical published project: never include any sibling project or repository root app.
+SCOPE="public/agent_crypto_erith_ia/"
+MANIFEST=SCOPE+"runtime-publication.json"
 EXT={".html",".htm",".css",".js",".mjs",".json",".svg",".ico",".webmanifest",".woff",".woff2",".ttf",".png",".jpg",".jpeg",".gif",".webp",".avif",".md",".txt",".xml"}
 OLD=re.compile(r"^public/agent_crypto_erith_ia/administrator/index-\d+(?:\.\d+)+\.html$",re.I)
 RAW="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/"
 IMAGE_RAW_ROOT="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/"
-BUDGET=180000000
+BUDGET=100000000
 ROUTER="public/agent_crypto_erith_ia/web/vault-data-router.js"
-REQUIRED=("index.html","public/agent_crypto_erith_ia/administrator/index.html",
+REQUIRED=("public/agent_crypto_erith_ia/administrator/index.html",
 "public/agent_crypto_erith_ia/trader/trading-desk.html",
 "public/agent_crypto_erith_ia/administrator/historical-vault.html",
 "public/agent_crypto_erith_ia/trader/historical-inventory.html",
@@ -18,8 +20,7 @@ REQUIRED=("index.html","public/agent_crypto_erith_ia/administrator/index.html",
 "public/agent_crypto_erith_ia/trader/verified-reader.html",
 "public/agent_crypto_erith_ia/laboratoire/cas-ecole-concrete.md",ROUTER)
 def include(n):
- if n in ROOT:return True
- if not n.startswith("public/") or "/data/" in n or "/downloads/" in n or "/releases/" in n or OLD.fullmatch(n):return False
+ if not n.startswith(SCOPE) or "/data/" in n or "/downloads/" in n or "/releases/" in n or OLD.fullmatch(n):return False
  return Path(n).suffix.lower() in EXT
 def image_raw_base(image_ref):
  if image_ref!="main" and not re.fullmatch(r"[0-9a-f]{40}",image_ref):raise ValueError("Invalid image source revision")
@@ -64,7 +65,7 @@ def build(src,dst,image_ref="main"):
   else:shutil.copyfile(f,out)
  (dst/".nojekyll").touch()
  missing=[p for p in REQUIRED if not (dst/p).is_file()]
- for n in ("index.html","public/agent_crypto_erith_ia/administrator/index.html","public/agent_crypto_erith_ia/trader/trading-desk.html"):
+ for n in ("public/agent_crypto_erith_ia/administrator/index.html","public/agent_crypto_erith_ia/trader/trading-desk.html"):
   p=dst/n
   if not p.exists():continue
   h=Refs();h.feed(p.read_text(encoding="utf-8"))
@@ -75,11 +76,17 @@ def build(src,dst,image_ref="main"):
    if dst not in target.parents or not target.is_file():missing.append(n+" -> "+u)
  if missing:raise ValueError("Missing references: "+repr(missing[:25]))
  if list(dst.rglob("*.json.gz")) or list(dst.rglob("*.jsonl")):raise ValueError("Cold archive leaked into Pages")
- report={"schema":"aerith.crypto.pages.runtime-only.v1","runtime_files":len(selected),
+ # Publication includes precisely the chosen project; only .nojekyll is a Pages root control.
+ invalid=[p.relative_to(dst).as_posix() for p in dst.rglob("*") if p.is_file()
+          and p.relative_to(dst).as_posix()!=".nojekyll"
+          and not p.relative_to(dst).as_posix().startswith(SCOPE)]
+ if invalid:raise ValueError("Out-of-scope files in Pages: "+repr(invalid[:10]))
+ report={"schema":"aerith.crypto.pages.runtime-only.v1","publication_scope":SCOPE,
+ "scope_strict":True,"runtime_files":len(selected),
  "runtime_source_bytes":size,"vault_excluded_files":excluded,"vault_excluded_bytes":excluded_bytes,
  "historical_data_in_pages":False,"images_externalized_to_raw":True,"image_source_revision":image_ref,
  "router":ROUTER,"source":RAW,"real_orders":False,"firefox_verified":False}
- (dst/"runtime-publication.json").write_text(json.dumps(report,indent=2)+"\n")
+ (dst/MANIFEST).write_text(json.dumps(report,indent=2)+"\n")
  return report
 if __name__=="__main__":
  a=argparse.ArgumentParser();a.add_argument("--source",default=".");a.add_argument("--destination",default="_runtime_pages")
