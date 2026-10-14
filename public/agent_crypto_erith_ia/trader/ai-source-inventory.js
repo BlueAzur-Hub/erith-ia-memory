@@ -9,7 +9,7 @@ function assemble(minute,daily){
  ensure(daily?.schema==="aerith.public.crypto.multiresolution-sources.v1","schéma journalier");
  ensure(minute.ranked===250&&Array.isArray(minute.assets)&&minute.assets.length===250,"univers 250");
  ensure(Array.isArray(daily.assets)&&daily.asset_count===daily.assets.length,"nombre journalier");
- const byId=new Map(), dailySeen=new Set();
+ const byId=new Map(), dailySeen=new Set(), outOfUniverse=[];
  for(const a of minute.assets){
   ensure(/^[a-z0-9-]+$/.test(a.id||"")&&!byId.has(a.id),"identité minute unique");
   ensure(Number.isInteger(a.rank)&&a.rank>=1&&a.rank<=250,"rang minute");
@@ -21,8 +21,11 @@ function assemble(minute,daily){
  }
  ensure(new Set([...byId.values()].map(x=>x.rank)).size===250,"rangs uniques");
  for(const a of daily.assets){
-  ensure(byId.has(a.id)&&!dailySeen.has(a.id),"identité journalière inconnue ou double");
+  ensure(/^[a-z0-9-]+$/.test(a.id||"")&&!dailySeen.has(a.id),"identité journalière invalide ou double");
   dailySeen.add(a.id);
+  // Daily indexes may keep assets from a PREVIOUS top250 ranking.
+  // Preserve them as out-of-universe evidence, never count them as current Top250.
+  if(!byId.has(a.id)){outOfUniverse.push({id:a.id,rank:a.rank,symbol:a.symbol,venue:a.venue,points:a.native_candles});continue;}
   const base=byId.get(a.id);
   ensure(base.symbol===a.symbol,"symboles contradictoires "+a.id);
   ensure(Number.isInteger(a.native_candles)&&a.native_candles>0,"bougies journalières");
@@ -37,14 +40,15 @@ function assemble(minute,daily){
  const minuteCount=assets.filter(a=>a.minute).length;
  const dailyCount=assets.filter(a=>a.daily.length).length;
  const either=assets.filter(a=>a.minute||a.daily.length).length;
- ensure(minuteCount===minute.archived_assets&&dailyCount===daily.asset_count,
+ ensure(minuteCount===minute.archived_assets&&dailyCount+outOfUniverse.length===daily.asset_count,
   "comptes discordants, actualiser catalogues");
  const totals={ranked:250,minute:minuteCount,daily:dailyCount,either,
   both:minuteCount+dailyCount-either,missing:250-either,
+  dailyCatalog:daily.asset_count,outOfUniverse:outOfUniverse.length,
   minuteBars:minute.native_1m_candles,dailyBars:daily.native_daily_candles};
  return {schema:"seven.crypto.source-inventory.readonly",snapshot:true,verifiedCompleteness:false,
   warning:"Présence de source ≠ continuité, absence de trou ou fraîcheur; jamais de conversion implicite.",
-  totals,assets};
+  totals,assets,outOfUniverse};
 }
 async function request(url){
  const r=await fetch(url,{credentials:"omit",cache:"no-store"});
@@ -59,7 +63,8 @@ function render(view,node){
  node.replaceChildren();
  const summary=document.getElementById("summary");
  if(summary)summary.textContent="Minute : "+view.totals.minute+" · Journalier : "+view.totals.daily+
-  " · Union : "+view.totals.either+"/250 · Sans source : "+view.totals.missing;
+  " · Dans le Top250 (union) : "+view.totals.either+"/250 · Sans source : "+view.totals.missing+
+  " · Archives 1D hors univers actuel : "+view.totals.outOfUniverse;
  for(const a of view.assets){
   const tr=document.createElement("tr");
   const fields=[String(a.rank),a.symbol,a.minute?"1m · "+a.minute.months+" mois":"—",
