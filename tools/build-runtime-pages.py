@@ -30,7 +30,7 @@ def transform(n,b):
   tag='<script src="'+rel+'" data-erith-vault-data-router="true"></script>'
   if re.search(r"<head\b[^>]*>",t,re.I):
    t=re.sub(r"(<head\b[^>]*>)",lambda m:m.group(1)+"\n"+tag,t,count=1,flags=re.I)
-  else:raise ValueError("Missing HTML head: "+n)
+  elif re.search(r"<html\b|<!doctype",t,re.I):raise ValueError("Full HTML page missing head: "+n)
  return t.encode("utf-8")
 class Refs(HTMLParser):
  def __init__(self):super().__init__();self.urls=[]
