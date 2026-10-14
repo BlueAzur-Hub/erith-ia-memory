@@ -45,7 +45,7 @@
   const fmt = (n,unit) => Number.isFinite(n)
     ? new Intl.NumberFormat("fr-FR",{maximumFractionDigits:6}).format(n)+(unit||"") : "—";
   const decimal = value => Number(String(value||"").trim().replace(",","."));
-  let asset="BTC", tab="synthese", follow=false, root, legacy, legacySlot, pane, tabsNode, status, report, simulationOutput, journalList, observer;
+  let asset="BTC", tab="synthese", follow=false, root, legacy, pane, tabsNode, observer;
   function journalRead(){
     try {
       const parsed=JSON.parse(localStorage.getItem(KEY)||"[]");
@@ -131,11 +131,9 @@
         pane.append(dossier);
       }
       if(asset==="BTC"){
-        const explanation=elt("p","lab-hint","Le rapport BTC canonique est repris ci-dessous, sans copie ni deuxième moteur.");
-        pane.append(explanation,legacySlot);
-        legacySlot.append(legacy);
-        legacy.style.display="";
-      }else if(legacy){legacy.style.display="none";}
+        pane.append(elt("p","lab-hint",
+          "Le rapport BTC original reste disponible à sa place, au-dessus du Laboratoire. Aucun panneau du Trader n'est déplacé."));
+      }
       pane.append(sourceLinks(data));
     } else if (tab==="marche"){
       pane.append(card("Marché public",data.market),card("Interprétation prudente",data.risks));
@@ -235,12 +233,15 @@
     tabsNode=elt("div","lab-tabs");tabsNode.setAttribute("role","tablist");tabsNode.setAttribute("aria-label","Rubriques du Laboratoire");
     pane=elt("div","lab-pane");
     pane.id="lab-content";pane.setAttribute("role","tabpanel");
-    legacySlot=elt("section","lab-btc-report");
     body.append(header,assetLabel,modeLabel,tabsNode,pane);
     root.append(summary,body);
-    legacy.parentNode.insertBefore(root,legacy);
-    // Move, do not clone the previously validated BTC case. Other surfaces are unchanged.
-    legacySlot.append(legacy);
+    // The canonical BTC report is a separate ownership boundary: never move,
+    // nest or hide it. Place the collapsed Lab AFTER its unchanged sibling.
+    const host=legacy.parentNode;
+    const next=legacy.nextSibling;
+    if(next)host.insertBefore(root,next);
+    else host.append(root);
+    root.open=false;
     root.addEventListener("toggle",()=>{if(root.open)syncMarket();});
     const graphTitle=byId("atlasChartInsightOverlayTitle");
     if(graphTitle && typeof MutationObserver==="function"){
