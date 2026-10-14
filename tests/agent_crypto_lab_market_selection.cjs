@@ -9,7 +9,7 @@ const source=fs.readFileSync(path.join(__dirname,
   "../public/agent_crypto_erith_ia/administrator/js/learning-lab.js"),"utf8");
 
 const calls=[],btc={id:"bitcoin",symbol:"BTC"},q={id:"quack-ai",symbol:"Q"};
-let allowQ=true,selected=btc,external=null,selectionId=null,commitOK=true;
+let allowQ=true,selected=btc,external=null,selectionId=null,commitOK=true,categoryEnabled=false;
 let resolveCT=null,delayCT=false;
 const owner={
   async selectById(id){
@@ -20,14 +20,17 @@ const owner={
     selectionId="concrete";
     return true;
   },
-  snapshot:()=>({selectedId:selectionId}),
+  snapshot:()=>({selectedId:selectionId,enabled:categoryEnabled}),
   deactivate(){
     calls.push("deactivate");
     selectionId=null;external=null;
   }
 };
 const document={readyState:"loading",addEventListener(){},
-  getElementById:()=>null};
+  getElementById:id=>id==="atlasNewListingsButton406528"
+    ?{click(){calls.push("filter:new");categoryEnabled=true;}}:null,
+  querySelector:selector=>selector==='.filter-btn[data-filter="all"]'
+    ?{click(){calls.push("filter:all");categoryEnabled=false;}}:null};
 const context={document,location:{search:"?surface=trader"},URLSearchParams,console,
   AgentCryptoNewListingsNativeCategory:owner,
   AgentCryptoNewListingLiveAsset:{snapshot:()=>external},
@@ -48,10 +51,10 @@ assert.equal(api.real_order,false);
 (async()=>{
   assert.equal(await api.request("CT"),true);
   assert.equal(calls[0],"new-listing:concrete");
-  assert.equal(calls[1],"commit:CT-USDT");
+  assert.deepEqual(calls.slice(0,3),["new-listing:concrete","filter:new","commit:CT-USDT"]);
   assert.match(api.snapshot().truth,/CT\/USDT/);
   assert.equal(await api.request("BTC"),true);
-  assert.deepEqual(calls.slice(2,5),["clear-memory","deactivate","select:bitcoin"]);
+  assert.deepEqual(calls.slice(3,7),["clear-memory","deactivate","filter:all","select:bitcoin"]);
   assert.equal(selected.id,"bitcoin");
   assert.equal(external,null);
   assert.equal(await api.request("Q"),true);
