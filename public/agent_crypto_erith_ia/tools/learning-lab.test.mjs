@@ -195,3 +195,10 @@ test("Simulation inputs survive tab switches and stay separated by asset",()=>{
   inputs=descendants(t.get("lab-content"),n=>n.tagName==="INPUT");
   assert.equal(inputs[0].value,"12,50");
 });
+
+test("USD price card does not forge a CoinGecko origin or zero variation",()=>{
+  const graph=fs.readFileSync(new URL("../administrator/js/graph-native-usd-406520.js",import.meta.url),"utf8");
+  assert.doesNotMatch(graph,/replace\\("PRIX LIVE BINANCE","PRIX SNAPSHOT COINGECKO"\\)/);
+  assert.match(graph,/SOURCE NON CONFIRMÉE/);
+  assert.match(graph,/c\\.change24h==null/);
+});
