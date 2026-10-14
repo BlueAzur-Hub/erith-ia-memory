@@ -71,6 +71,8 @@ def source_candidates(catalog,exact,official,federated=None,bitget_index=None):
          and bitget_index.get("quote")=="USDT"
          and bitget_index.get("archived_assets")==len(bitget_index.get("assets",[])),
          "Untrusted original Bitget source-specific index")
+    federated_rows={row["id"]:row for row in federated["assets"]}
+    need(len(federated_rows)==250,"Duplicate federated source identity")
     original={}
     for row in federated["assets"]:
         if row.get("source")=="Bitget Spot native 1m HTTPS" and row.get("native_1m_count",0)>0:
@@ -85,6 +87,9 @@ def source_candidates(catalog,exact,official,federated=None,bitget_index=None):
              and TAG.fullmatch(row["release"]).group(2)==cid
              and re.fullmatch(r"[0-9a-f]{64}",str(row.get("source_zip_sha256",""))) is not None,
              "Untrusted original Bitget source proof")
+        if cid in federated_rows:
+            need(federated_rows[cid].get("symbol")==row["symbol"],
+                 "Previously verified Bitget owner identity drift")
         if cid in original:
             need(original[cid].get("symbol")==row["symbol"],
                  "Bitget source-index identity conflicts with federated view")
