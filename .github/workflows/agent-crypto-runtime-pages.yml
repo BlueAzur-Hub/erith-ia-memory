@@ -8,10 +8,6 @@ on:
       - '.github/workflows/agent-crypto-runtime-pages.yml'
       - 'tools/build-runtime-pages.py'
       - 'tools/test-runtime-pages.py'
-      - 'tools/firefox-runtime-preview-smoke.py'
-      - 'tools/START_FIREFOX_PREVIEW.cmd'
-      - 'tools/START_PREVIEW_WINDOWS.ps1'
-      - 'tools/PREVIEW_LISEZ_MOI.txt'
       - 'tools/test-vault-data-router.mjs'
       - 'tools/check-vault-raw-access.py'
       - 'public/agent_crypto_erith_ia/**'
@@ -85,56 +81,25 @@ jobs:
         env:
           IMAGE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python tools/check-vault-raw-access.py --image-ref "$IMAGE_REF"
-      - name: Build runtime site without cold archives
+      # PRs and data-only commits do not rebuild a 142 MB candidate.
+      # Build the frontend only for an explicitly authorised main deployment.
+      - name: Build lightweight runtime only for authorised publication
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
+          (github.event_name == 'push' || inputs.publish == true)
         env:
-          IMAGE_REF: ${{ github.event.pull_request.head.sha || 'main' }}
+          IMAGE_REF: main
         run: python tools/build-runtime-pages.py --source . --destination _runtime_pages --image-ref "$IMAGE_REF"
-      - name: Validate budget
+      - name: Check frontend budget and exclude cold archives
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
+          (github.event_name == 'push' || inputs.publish == true)
         run: |
           du -sh _runtime_pages
           cat _runtime_pages/runtime-publication.json
           if find _runtime_pages -type f \( -name '*.jsonl' -o -name '*.json.gz' \) | grep -q .; then exit 1; fi
-      - name: Prepare isolated local preview (PR only)
-        if: github.event_name == 'pull_request'
-        run: |
-          cp tools/START_FIREFOX_PREVIEW.cmd _runtime_pages/START_FIREFOX_PREVIEW.cmd
-          cp tools/START_PREVIEW_WINDOWS.ps1 _runtime_pages/START_PREVIEW_WINDOWS.ps1
-          cp tools/PREVIEW_LISEZ_MOI.txt _runtime_pages/PREVIEW_LISEZ_MOI.txt
-          test -f _runtime_pages/public/agent_crypto_erith_ia/trader/trading-desk.html
-          test -f _runtime_pages/public/agent_crypto_erith_ia/web/vault-data-router.js
-      - name: Install automated Firefox for isolated smoke
-        if: github.event_name == 'pull_request'
-        run: |
-          python -m pip install playwright==1.56.0
-          python -m playwright install --with-deps firefox
-      - name: Firefox headless smoke - Trader, inventory, catalogue, SHA-256
-        if: github.event_name == 'pull_request'
-        run: python tools/firefox-runtime-preview-smoke.py --site _runtime_pages --evidence _firefox_evidence
-      - name: Export Firefox evidence (success or failure, PR only)
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
-        with:
-          name: crypto-runtime-firefox-evidence
-          path: _firefox_evidence/
-          if-no-files-found: warn
-          retention-days: 7
-      - name: PR full Firefox preview, never deploy
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
-        with:
-          name: crypto-runtime-firefox-preview
-          path: _runtime_pages/
-          if-no-files-found: error
-          retention-days: 7
-          compression-level: 1
-      - name: PR audit manifest
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
-        with:
-          name: crypto-runtime-audit
-          path: _runtime_pages/runtime-publication.json
-          if-no-files-found: warn
-          retention-days: 7
       - name: Configure Pages after explicit opt-in
         if: >-
           github.ref == 'refs/heads/main' &&
