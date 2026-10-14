@@ -48,6 +48,22 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/assets/
+            !/coordination/
+            !/private/
+            !/Phoenix/
+            !/release_package_404222/
+            !/.github/
+            !/public/agent_crypto_erith_ia/data/
+            !/public/agent_crypto_erith_ia/administrator/index-[0-9]*.html
+            !/**/*.zip
+            !/**/*.jsonl
+            !/**/*.gz
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
