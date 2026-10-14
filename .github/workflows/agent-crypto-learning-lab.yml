@@ -3,8 +3,24 @@ on:
   pull_request:
     paths:
       - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
       - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
       - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
+      - "public/agent_crypto_erith_ia/trader/build.json"
+      - "public/agent_crypto_erith_ia/trader/trading-desk.html"
+      - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
+      - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
+      - ".github/workflows/agent-crypto-learning-lab.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/build.json"
+      - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
+      - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
+      - "public/agent_crypto_erith_ia/trader/build.json"
+      - "public/agent_crypto_erith_ia/trader/trading-desk.html"
+      - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - ".github/workflows/agent-crypto-learning-lab.yml"
   workflow_dispatch:
@@ -12,7 +28,6 @@ permissions:
   contents: read
 jobs:
   read-only-laboratory:
-    if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,12 +36,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Verify syntax and dossier behavior
+      - name: Check syntax and educational behavior
         run: |
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/administrator/js/learning-lab.js
           node --test public/agent_crypto_erith_ia/tools/learning-lab.test.mjs
-      - name: Protect all historical vault, Trader wrapper and Market Core changes in the PR
+      - name: Validate 40.6.633 manifest and presentation-only upgrade
         shell: bash
         run: |
           set -euo pipefail
@@ -36,8 +51,79 @@ jobs:
           else
             baseline="HEAD^"
           fi
+          export BASELINE="$baseline"
           git diff --exit-code "$baseline" HEAD -- \
             public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
-            public/agent_crypto_erith_ia/trader/ \
             public/agent_crypto_erith_ia/core/ \
             public/agent_crypto_erith_ia/administrator/app.js
+          python - <<'PY'
+          import copy, json, os, pathlib, subprocess
+          base=os.environ["BASELINE"]
+          prefix="public/agent_crypto_erith_ia/"
+          allowed={
+            prefix+"trader/build.json",
+            prefix+"trader/trading-desk.html",
+            prefix+"trader/trader-runtime-mirror.js",
+          }
+          changed=set(subprocess.check_output(
+            ["git","diff","--name-only",base,"HEAD","--",prefix+"trader/"],
+            text=True).splitlines())
+          assert changed <= allowed, f"Unauthorised Trader changes: {changed-allowed}"
+          def previous(path):
+            return subprocess.check_output(["git","show",base+":"+path],text=True)
+          def current(path):
+            return pathlib.Path(path).read_text(encoding="utf-8")
+          def jsondiff(path,updates):
+            original=json.loads(previous(path))
+            actual=json.loads(current(path))
+            expected=copy.deepcopy(original)
+            for key,value in updates.items():
+              if key=="delivery.zip":
+                expected["delivery"]["zip"]=value
+              else:
+                expected[key]=value
+            assert actual==expected, f"Unexpected fields changed in {path}"
+            return actual
+          admin=jsondiff(prefix+"administrator/build.json",{
+            "build":"40.6.633","parent_build":"40.6.632",
+            "administrator_build":"40.6.633",
+            "build_label":"Build 40.6.633 · Administrator",
+            "release":"LABORATOIRE IA · BTC / CT / Q · VUES PÉDAGOGIQUES",
+            "status":"LABORATOIRE_IA_READ_ONLY_CI_PENDING_FIREFOX",
+            "new_observer":True,"new_storage_owner":True,
+            "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
+          })
+          trader=jsondiff(prefix+"trader/build.json",{
+            "build":"40.6.633","parent_trader_build":"40.6.632",
+            "administrator_base":"40.6.633",
+            "release":"LABORATOIRE IA · BTC / CT / Q · VUES PÉDAGOGIQUES",
+            "status":"LABORATOIRE_IA_READ_ONLY_CI_PENDING_FIREFOX",
+            "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
+          })
+          for f in allowed-{prefix+"trader/build.json"}:
+            assert current(f)==previous(f).replace("40.6.632","40.6.633"),f"Non-version Trader change: {f}"
+          index=current(prefix+"administrator/index.html")
+          assert admin["engine"]==trader["market_core"]=="38.15.11"
+          assert admin["build"]==trader["build"]=="40.6.633"
+          assert 'name="agent-crypto-loaded-build" content="40.6.633"' in index
+          assert 'js/learning-lab.js?v=40.6.633' in index
+          assert 'css/learning-lab.css?v=40.6.633' in index
+          assert trader["real_orders"] is False and admin["real_order"] is False
+          assert trader["terrain_verified"] is False
+          print("Lab 40.6.633: manifests and protected fields OK")
+          PY
+      - name: Prepare stable-name GitHub source ZIP
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/laboratoire-artifact"
+          git archive --format=zip --output="$RUNNER_TEMP/laboratoire-artifact/AGENT_CRYPTO_LABORATOIRE.zip" HEAD \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/laboratoire/
+          unzip -t "$RUNNER_TEMP/laboratoire-artifact/AGENT_CRYPTO_LABORATOIRE.zip" | tail -n 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_LABORATOIRE
+          path: ${{ runner.temp }}/laboratoire-artifact/AGENT_CRYPTO_LABORATOIRE.zip
+          if-no-files-found: error
+          retention-days: 30
