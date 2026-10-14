@@ -7,7 +7,7 @@ const iv=fs.readFileSync(root+"trader/ai-source-inventory.js","utf8");
 const cat=fs.readFileSync(root+"trader/ai-history-source-catalog.js","utf8");
 const reader=fs.readFileSync(root+"trader/ai-verified-history-reader.js","utf8");
 const files=[];
-const ctx=vm.createContext({crypto:webcrypto,Blob,Response,DecompressionStream,TextDecoder,
+const ctx=vm.createContext({crypto:webcrypto,URL,Blob,Response,DecompressionStream,TextDecoder,
  location:{href:"https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/trader/verified-reader.html"},
  async fetch(url){const name=new URL(url).pathname.split("/").at(-1);files.push(name);
   const raw=fs.readFileSync(base+"verified_periods/"+name);
@@ -15,7 +15,7 @@ const ctx=vm.createContext({crypto:webcrypto,Blob,Response,DecompressionStream,T
 vm.runInContext(iv,ctx);vm.runInContext(cat,ctx);vm.runInContext(reader,ctx);
 const inventory=ctx.AgentCryptoHistoryInventory.assemble(mm,dd);
 const book=ctx.AgentCryptoHistorySourceCatalog.compile(inventory,vv);
-ctx.AgentCryptoHistorySourceCatalog.snapshot=()=>book;
+ctx.AgentCryptoHistorySourceCatalog={query:ctx.AgentCryptoHistorySourceCatalog.query,snapshot:()=>book};
 test("read source materialization contains authenticated BTC 24h 1m OHLCV",async()=>{
  const p=await ctx.AgentCryptoVerifiedHistoryReader.read({assetId:"bitcoin",period:"24h"});
  assert.equal(p.quote,"USDT");assert.equal(p.points,1440);
