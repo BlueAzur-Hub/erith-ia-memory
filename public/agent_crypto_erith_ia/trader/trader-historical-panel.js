@@ -17,13 +17,25 @@ function selected(){
  const choice=panel()?.querySelector("[data-history-asset]")?.value||"auto";
  if(choice!=="auto"&&Object.hasOwn(MANUAL,choice))
    return {id:choice,symbol:MANUAL[choice],origin:"manual"};
+ // An explicitly displayed external asset wins over the retained Market
+ // subprofile, which can still be BTC. During a CT request, show CT waiting,
+ // never silently substitute BTC until the external data is confirmed.
+ let ext=null;
+ try{ext=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();}catch(_){}
+ const base=String(ext?.base||"").toUpperCase(),quote=String(ext?.quote||"").toUpperCase();
+ if(ext?.active&&typeof ext.id==="string"&&ext.id&&
+   /^[A-Z0-9]+$/.test(base)&&/^(USDT|USDC|USD|EUR)$/.test(quote)&&
+   String(ext.instrument||"").toUpperCase()===base+"-"+quote){
+   const observed=inspectedChart(displayCurrency());
+   return observed&&observed.id===ext.id&&observed.symbol===base&&observed.quote===quote
+     ?{id:ext.id,symbol:base,origin:"external",quote}:null;
+ }
  try{
   const c=globalThis.getSelectedCoin?.();
   if(c&&typeof c.id==="string"&&c.id&&typeof c.symbol==="string"&&c.id)
    return {id:c.id,symbol:c.symbol.toUpperCase(),origin:"market"};
  }catch(_){}
- const external=inspectedChart(displayCurrency());
- return external?{id:external.id,symbol:external.symbol,origin:"external",quote:external.quote}:null;
+ return null;
 }
 function utc(x){const d=new Date(x);return Number.isFinite(d.getTime())?d.toLocaleString("fr-FR",{timeZone:"UTC",dateStyle:"short",timeStyle:"short"})+" UTC":"date inconnue";}
 function write(p,name,value){const e=p.querySelector("[data-history-"+name+"]");if(e)e.textContent=value;}
@@ -162,13 +174,22 @@ function inspectedChart(currency="USD"){
    currency:unit,rows:rows.slice(-12),count:rows.length,days,
    source,first:rows[0][0],last:rows[rows.length-1][0],asOf};
 }
+/* The fallback belongs to the *selected* identity, never to whichever
+   unrelated external chart happens to be resident (e.g. BTC selected, CT loaded). */
+function matchingChart(coin,currency){
+ const native=nativeChart(coin,currency);
+ if(native)return native;
+ const external=inspectedChart(currency);
+ return external&&external.id===coin.id&&external.symbol===coin.symbol&&
+   (!coin.quote||coin.quote===external.quote)?external:null;
+}
 function paintNative(p,coin,currency="USD"){
  const host=p.querySelector("[data-history-native]");if(!host)return false;
  host.hidden=false;
  const label=host.querySelector("[data-native-status]"),body=host.querySelector("[data-native-rows]");
  body?.replaceChildren();
  const heading=host.querySelector("[data-native-title]"),priceHeading=host.querySelector("[data-native-price-heading]");
- const view=nativeChart(coin,currency)||inspectedChart(currency);
+ const view=matchingChart(coin,currency);
  if(heading)heading.textContent=(view?.external?"GRAPHIQUE EXTERNE CONSULTÉ · ":"HISTORIQUE DU GRAPHIQUE · ")+(view?.currency||currency)+" · HORS R9";
  if(priceHeading)priceHeading.textContent="Prix "+(view?.currency||currency);
  if(!view){host.hidden=true;return false;}
@@ -209,25 +230,39 @@ async function refresh({reload=false}={}){
  const seq=++sequence,c=selected(),period=p.querySelector("[data-history-period]")?.value||"24h",currency=displayCurrency();
  empty(p);layout(p,currency);
  if(!c){
-  write(p,"status","Aucun actif historique identifié");
-  write(p,"detail","Choisir un actif ci-dessus ou charger son graphique : aucune archive ni donnée ne sera inventée.");
+  let external=null;
+  try{external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();}catch(_){}
+  const pending=external?.active&&external.id&&external.base;
+  write(p,"status",pending?String(external.base).toUpperCase()+" · historique externe en attente":"Aucun actif historique identifié");
+  write(p,"detail",pending
+    ?"Graphique externe non confirmé : aucune donnée du Market BTC ne remplace cet actif."
+    :"Choisir un actif ci-dessus ou charger son graphique : aucune archive ni donnée ne sera inventée.");
   return;
  }
  if(c.origin==="external"){
   const found=paintNative(p,c,currency);
   write(p,"status",c.symbol+" · graphique externe consulté · "+(found?"POINTS DISPONIBLES":"EN ATTENTE"));
   write(p,"detail","Source du graphique "+c.symbol+" · cotation native "+c.quote+
-    " · hors Top 250 et hors Coffre R9. Aucun autre actif ni ordre réel.");
+    " · hors Top 250 et hors Coffre R9. Le choix d'archive « "+(LABEL[period]||period)+
+    " » ne découpe pas les bougies externes : le tableau montre la résolution et les dates réellement chargées par le graphique. Aucun autre actif ni ordre réel.");
   return;
  }
  if(currency==="EUR"){
    const found=paintNative(p,c,"EUR");
-   write(p,"status",c.symbol+" · EUR · "+(found?"HISTORIQUE NATIF":"EN ATTENTE DU GRAPHIQUE"));
-   write(p,"detail","Affichage EUR du graphique existant, distinct des archives Binance R9 en USDT. Aucune conversion cachée.");
+   // A CT-USDT external graph stays USDT even if the operator selected EUR.
+   const shown=found?p.querySelector("[data-native-price-heading]")?.textContent?.replace(/^Prix\s+/,"")||"EUR":"EUR";
+   write(p,"status",c.symbol+" · "+shown+" · "+(found?"HISTORIQUE NATIF":"EN ATTENTE DU GRAPHIQUE"));
+   write(p,"detail",shown==="EUR"
+     ?"Affichage EUR du graphique existant, distinct des archives Binance R9 en USDT. Aucune conversion cachée."
+     :"Affichage EUR demandé ; le graphique consulté fournit des prix natifs "+shown+
+      ", affichés sans conversion ni assimilation à un cours EUR.");
    if(!found&&typeof globalThis.setTimeout==="function"){
      for(const delay of [1200,4500])globalThis.setTimeout(()=>{
        if(seq!==sequence||!p.open||selected()?.id!==c.id||displayCurrency()!=="EUR")return;
-       if(paintNative(p,c,"EUR"))write(p,"status",c.symbol+" · EUR · HISTORIQUE NATIF");
+       if(paintNative(p,c,"EUR")){
+         const unit=p.querySelector("[data-native-price-heading]")?.textContent?.replace(/^Prix\s+/,"")||"EUR";
+         write(p,"status",c.symbol+" · "+unit+" · HISTORIQUE NATIF");
+       }
      },delay);
    }
    return;
