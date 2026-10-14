@@ -38,6 +38,8 @@ def pack(base, head, destination):
             else:
                 excluded.append(name)
             continue
+        if path.is_symlink():
+            raise ValueError("Symbolic link is not a deliverable Trader file: " + name)
         if path.is_file():
             selected.append((name, path.read_bytes()))
         else:
