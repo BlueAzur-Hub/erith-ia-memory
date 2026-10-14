@@ -1,6 +1,6 @@
 # Market data on main MUST NOT redeploy this static frontend.
-# Disabled until Settings > Pages > Source=GitHub Actions and variable
-# AGENT_CRYPTO_RUNTIME_PAGES_ENABLED is set to 'true'.
+# Merging this PR is permitted only after Settings > Pages > Source=GitHub Actions.
+# The Pages Source setting is the sole activation switch; no repository variable.
 name: Agent Crypto - runtime only Pages
 on:
   pull_request:
@@ -76,7 +76,6 @@ jobs:
       - name: Checkout full frontend only for authorised publication
         if: >-
           github.ref == 'refs/heads/main' &&
-          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         uses: actions/checkout@v4
         with:
@@ -100,7 +99,6 @@ jobs:
       - name: Build lightweight runtime only for authorised publication
         if: >-
           github.ref == 'refs/heads/main' &&
-          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         env:
           IMAGE_REF: main
@@ -108,7 +106,6 @@ jobs:
       - name: Check frontend budget and exclude cold archives
         if: >-
           github.ref == 'refs/heads/main' &&
-          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         run: |
           du -sh _runtime_pages
@@ -117,13 +114,11 @@ jobs:
       - name: Configure Pages after explicit opt-in
         if: >-
           github.ref == 'refs/heads/main' &&
-          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         uses: actions/configure-pages@v5
       - name: Upload bounded Pages artifact after explicit opt-in
         if: >-
           github.ref == 'refs/heads/main' &&
-          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
           (github.event_name == 'push' || inputs.publish == true)
         uses: actions/upload-pages-artifact@v4
         with:
