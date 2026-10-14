@@ -82,7 +82,9 @@ jobs:
           IMAGE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python tools/check-vault-raw-access.py --image-ref "$IMAGE_REF"
       - name: Build runtime site without cold archives
-        run: python tools/build-runtime-pages.py --source . --destination _runtime_pages
+        env:
+          IMAGE_REF: ${{ github.event.pull_request.head.sha || 'main' }}
+        run: python tools/build-runtime-pages.py --source . --destination _runtime_pages --image-ref "$IMAGE_REF"
       - name: Validate budget
         run: |
           du -sh _runtime_pages
