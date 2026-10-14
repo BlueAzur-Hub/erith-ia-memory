@@ -110,31 +110,27 @@ def build(src,dst,image_ref="main"):
  (dst/MANIFEST).write_text(json.dumps(report,indent=2)+"\n")
  return report
 def plan(src):
- """Inspect only Git tree metadata: does not download or reconstruct the vault."""
+ """Read Git tree names only; never hydrate data or binary images for a PR."""
  src=Path(src).resolve()
- rows=subprocess.check_output(["git","-C",str(src),"ls-tree","-r","-l","HEAD"]).decode("utf-8").splitlines()
- selected={};excluded_count=0;excluded_bytes=0;groups={"crypto":0,"shared":0}
+ rows=subprocess.check_output(["git","-C",str(src),"ls-tree","-r","HEAD"]).decode("utf-8").splitlines()
+ selected=set();excluded_count=0;groups={"crypto":0,"shared":0}
  for row in rows:
   if "\t" not in row:continue
   header,n=row.split("\t",1)
   fields=header.split()
-  if len(fields)!=4 or fields[1]!="blob" or fields[0]=="120000" or fields[3]=="-":continue
-  size=int(fields[3])
+  if len(fields)!=3 or fields[1]!="blob" or fields[0]=="120000":continue
   if include(n):
-   selected[n]=size
-   groups["crypto" if n.startswith(SCOPE) else "shared"]+=size
-  else:
-   excluded_count+=1
-   excluded_bytes+=size
+   selected.add(n)
+   groups["crypto" if n.startswith(SCOPE) else "shared"]+=1
+  else:excluded_count+=1
  missing=[n for n in REQUIRED+SHARED_REQUIRED if n not in selected]
  if missing:raise ValueError("Required Pages routes missing: "+repr(missing))
- total=sum(selected.values())
- if total>BUDGET:raise ValueError("Pages source budget exceeded: "+str(total))
  return {"schema":"aerith.crypto.pages.multisite.plan.v1",
-         "source_bytes":total,"file_count":len(selected),"group_source_bytes":groups,
-         "excluded_file_count":excluded_count,"excluded_bytes":excluded_bytes,
+         "source_bytes":None,"budget_verified":False,
+         "file_count":len(selected),"group_file_count":groups,
+         "excluded_file_count":excluded_count,
          "required_routes":list(REQUIRED+SHARED_REQUIRED),
-         "cold_vault_included":False,"eligible_for_publication":True}
+         "cold_vault_included":False,"selection_complete":True}
 
 if __name__=="__main__":
  a=argparse.ArgumentParser();a.add_argument("--source",default=".");a.add_argument("--destination",default="_runtime_pages")
