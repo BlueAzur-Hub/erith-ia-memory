@@ -8,7 +8,23 @@ function layout(p,currency){
  const isEur=currency==="EUR",r9=p.querySelector("[data-history-r9]"),controls=p.querySelector("[data-history-controls]");
  if(r9)r9.hidden=isEur;if(controls)controls.hidden=isEur;
 }
-const selected=()=>{try{const c=globalThis.getSelectedCoin?.();return c&&typeof c.id==="string"&&c.id&&typeof c.symbol==="string"?{id:c.id,symbol:c.symbol.toUpperCase()}:null;}catch(_){return null;}};
+/* Explicit historical consultation never mutates the live Market selection.
+   When Market has no selection, use an identity VERIFIED from the observed
+   external chart. The pinned pedagogical lab is deliberately not an owner. */
+const MANUAL=Object.freeze({bitcoin:"BTC",ethereum:"ETH",binancecoin:"BNB",
+ ripple:"XRP",solana:"SOL","quack-ai":"Q",concrete:"CT"});
+function selected(){
+ const choice=panel()?.querySelector("[data-history-asset]")?.value||"auto";
+ if(choice!=="auto"&&Object.hasOwn(MANUAL,choice))
+   return {id:choice,symbol:MANUAL[choice],origin:"manual"};
+ try{
+  const c=globalThis.getSelectedCoin?.();
+  if(c&&typeof c.id==="string"&&c.id&&typeof c.symbol==="string"&&c.id)
+   return {id:c.id,symbol:c.symbol.toUpperCase(),origin:"market"};
+ }catch(_){}
+ const external=inspectedChart(displayCurrency());
+ return external?{id:external.id,symbol:external.symbol,origin:"external",quote:external.quote}:null;
+}
 function utc(x){const d=new Date(x);return Number.isFinite(d.getTime())?d.toLocaleString("fr-FR",{timeZone:"UTC",dateStyle:"short",timeStyle:"short"})+" UTC":"date inconnue";}
 function write(p,name,value){const e=p.querySelector("[data-history-"+name+"]");if(e)e.textContent=value;}
 function empty(p){p.querySelector("[data-history-rows]")?.replaceChildren();write(p,"meta","—");const t=p.querySelector("[data-history-r9] .history-scroll");if(t)t.hidden=true;const native=p.querySelector("[data-history-native]");if(native){native.hidden=true;native.querySelector("[data-native-rows]")?.replaceChildren();}}
@@ -192,7 +208,18 @@ async function refresh({reload=false}={}){
  const p=panel();if(!p?.open)return;
  const seq=++sequence,c=selected(),period=p.querySelector("[data-history-period]")?.value||"24h",currency=displayCurrency();
  empty(p);layout(p,currency);
- if(!c){write(p,"status","Aucun actif sélectionné");return;}
+ if(!c){
+  write(p,"status","Aucun actif historique identifié");
+  write(p,"detail","Choisir un actif ci-dessus ou charger son graphique : aucune archive ni donnée ne sera inventée.");
+  return;
+ }
+ if(c.origin==="external"){
+  const found=paintNative(p,c,currency);
+  write(p,"status",c.symbol+" · graphique externe consulté · "+(found?"POINTS DISPONIBLES":"EN ATTENTE"));
+  write(p,"detail","Source du graphique "+c.symbol+" · cotation native "+c.quote+
+    " · hors Top 250 et hors Coffre R9. Aucun autre actif ni ordre réel.");
+  return;
+ }
  if(currency==="EUR"){
    const found=paintNative(p,c,"EUR");
    write(p,"status",c.symbol+" · EUR · "+(found?"HISTORIQUE NATIF":"EN ATTENTE DU GRAPHIQUE"));
@@ -315,6 +342,8 @@ function mount(){
    "#traderVerifiedHistory select,#traderVerifiedHistory button{color:#fff;background:#123743;",
    "border:1px solid #436d7a;border-radius:8px;padding:7px 10px;cursor:pointer}",
    "#traderVerifiedHistory .history-note{color:#a9c3cf}",
+   "#traderVerifiedHistory .history-links{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}",
+   "#traderVerifiedHistory .history-links a{color:#8cdbdf;text-decoration:underline}",
    "#traderVerifiedHistory [data-history-meta]{color:#ffe0a0;line-height:1.5}",
    "#traderVerifiedHistory .history-scroll{overflow-x:auto}",
    "#traderVerifiedHistory [data-history-native]{margin-top:12px;padding:11px;border:1px solid #2d6370;border-radius:10px;background:#0a2b31}",
@@ -332,11 +361,22 @@ function mount(){
  '<summary><strong>HISTORIQUE VÉRIFIÉ · R9 + UNIVERS + TOP50 + LONG</strong>',
  '<span data-history-status>Fermé · aucune lecture</span></summary>',
  '<div class="history-body"><div class="history-controls" data-history-controls>',
+ '<label for="traderHistoryAsset">Actif historique</label><select id="traderHistoryAsset" data-history-asset aria-label="Actif du Coffre">',
+ '<option value="auto">Graphique / Market · automatique</option>',
+ '<option value="bitcoin">BTC · Bitcoin</option><option value="ethereum">ETH · Ethereum</option>',
+ '<option value="binancecoin">BNB · Binance Coin</option><option value="ripple">XRP</option>',
+ '<option value="solana">SOL · Solana</option><option value="quack-ai">Q · Quack AI</option>',
+ '<option value="concrete">CT · Concrete</option></select>',
  '<label for="traderHistoryPeriod">Période</label><select id="traderHistoryPeriod" data-history-period>',
  '<option value="24h">24 h · 5 min</option><option value="7d">7 j · 1 h</option>',
  '<option value="30d">30 j · 4 h</option><option value="60d">60 j · 4 h</option><option value="90d">90 j · 4 h</option><option value="1y">1 an · 1 jour</option></select>',
  '<button type="button" data-history-reload>Actualiser le catalogue</button></div>',
  '<p class="history-note" data-history-detail>Lecture à la demande, sans impact sur OKX.</p>',
+ '<nav class="history-links" aria-label="Outils autonomes du Coffre">',
+ '<a href="../trader/historical-inventory.html" target="_blank" rel="noopener noreferrer">Inventaire Top 250 ↗</a>',
+ '<a href="../trader/source-catalogue.html" target="_blank" rel="noopener noreferrer">Catalogue des sources ↗</a>',
+ '<a href="../trader/verified-reader.html" target="_blank" rel="noopener noreferrer">Lire les bougies vérifiées ↗</a>',
+ '</nav>',
  '<section data-history-r9><p data-history-meta>—</p><div class="history-scroll"><table>',
  '<thead><tr><th>Ouverture UTC</th><th>Ouverture USDT</th><th>Haut</th><th>Bas</th>',
  '<th>Clôture</th><th>Volume actif</th></tr></thead><tbody data-history-rows></tbody>',
@@ -352,14 +392,23 @@ function mount(){
   else{sequence++;empty(p);write(p,"status","Fermé · aucune lecture");}
  });
  p.querySelector("[data-history-period]")?.addEventListener("change",()=>{if(p.open)void refresh();});
+ p.querySelector("[data-history-asset]")?.addEventListener("change",()=>{sequence++;if(p.open)void refresh();});
  p.querySelector("[data-history-reload]")?.addEventListener("click",()=>{if(p.open)void refresh({reload:true});});
  globalThis.addEventListener("agent-crypto:selected-market-changed",()=>{sequence++;if(p.open)void refresh();},{passive:true});
  globalThis.addEventListener("agent-crypto:quote-architecture-changed",()=>{sequence++;if(p.open)void refresh();},{passive:true});
  for(const name of ["agent-crypto:new-listing-line-ready","agent-crypto:external-asset-changed","agent-crypto:trader-line-loaded"]){
-  globalThis.addEventListener(name,()=>{if(p.open){const coin=selected();if(coin)paintNative(p,coin,displayCurrency());}},{passive:true});
+  globalThis.addEventListener(name,()=>{
+   if(!p.open)return;
+   const coin=selected();
+   if(!coin)return;
+   if(coin.origin==="external"){
+    const found=paintNative(p,coin,displayCurrency());
+    write(p,"status",coin.symbol+" · graphique externe consulté · "+(found?"POINTS DISPONIBLES":"EN ATTENTE"));
+   }else paintNative(p,coin,displayCurrency());
+  },{passive:true});
  }
  return true;
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
-globalThis.AgentCryptoTraderHistoricalPanel=Object.freeze({mount,refresh,inspectChart:inspectedChart,read_only:true,is_live:false,quote:"USDT",real_orders:false});
+globalThis.AgentCryptoTraderHistoricalPanel=Object.freeze({mount,refresh,inspectChart:inspectedChart,selected,read_only:true,is_live:false,quote:"USDT",real_orders:false});
 })();
