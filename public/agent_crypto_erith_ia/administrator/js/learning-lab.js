@@ -33,7 +33,7 @@
   });
   const TABS = [
     ["synthese","Synthèse"],["marche","Marché"],
-    ["coffre","Coffre"],["simulation","Simulation"],["journal","Journal IA"]
+    ["coffre","Coffre"],["preuves","Preuves IA"],["simulation","Simulation"],["journal","Journal IA"]
   ];
   const byId = id => document.getElementById(id);
   const elt = (tag, className, textValue) => {
@@ -144,11 +144,60 @@
       pane.append(card("Disponibilité des preuves",data.vault));
       const link=elt("a","lab-link","Ouvrir le Coffre historique vérifié ↗");
       link.href="../administrator/historical-vault.html";link.target="_blank";link.rel="noopener noreferrer";pane.append(link);
+    } else if(tab==="preuves"){
+      renderEvidence();
     } else if(tab==="simulation"){
       renderSimulation();
     } else if(tab==="journal"){
       renderJournal();
     }
+  }
+  const CATALOG_PATH="../laboratoire/catalogue-preuves.json";
+  const ID_MAP=Object.freeze({BTC:"bitcoin",CT:"concrete",Q:"quack-ai"});
+  function renderEvidence(){
+    const selected=asset;
+    const note=elt("p","lab-hint","Fiche documentaire datée : les liens ne sont pas des prix actuels. Les données manquantes restent inconnues ; aucune donnée privée n'est consultée.");
+    const state=elt("p","lab-hint","Chargement du registre des sources...");
+    pane.append(note,state);
+    // JSON statique hébergé sur le même GitHub Pages : aucun proxy, aucune API
+    // privée, aucun token. La vue reste informative même hors connexion.
+    if(typeof fetch!=="function"){
+      state.textContent="Registre inaccessible hors ligne ; aucune source ne peut être déclarée vérifiée.";
+      return;
+    }
+    fetch(CATALOG_PATH,{credentials:"omit",cache:"no-cache"})
+      .then(res=>{if(!res.ok)throw Error("document absent");return res.json();})
+      .then(book=>{
+        if(asset!==selected || tab!=="preuves" || state.isConnected===false)return;
+        const record=book?.assets?.find(x=>x.id===ID_MAP[selected]);
+        if(book?.schema!=="aerith.lab.evidence-catalog.v1" ||
+           !record || !Array.isArray(record.primary_sources) ||
+           !Array.isArray(record.missing) || !record.vault)throw Error("format invalide");
+        state.textContent="Registre public daté du "+book.updated_utc+" · "+record.primary_sources.length+" sources documentaires · aucune cotation directe.";
+        pane.append(card("Pourquoi ce cas d'école ?",record.study));
+        pane.append(card("État des archives",record.vault.status+" — "+record.vault.reason));
+        const list=elt("div","lab-grid");
+        for(const src of record.primary_sources){
+          const block=elt("article","lab-card");
+          block.append(elt("h4",null,src.kind+" · "+src.title),elt("p",null,src.evidence));
+          if(typeof src.url==="string" && /^https:\/\//.test(src.url)){
+            const a=elt("a","lab-link","Consulter la source ↗");
+            a.href=src.url;a.target="_blank";a.rel="noopener noreferrer";block.append(a);
+          }
+          list.append(block);
+        }
+        pane.append(list);
+        const missing=elt("section","lab-note");
+        missing.append(elt("h4",null,"Données à obtenir et vérifier"));
+        for(const item of record.missing)missing.append(elt("p",null,"• "+item));
+        pane.append(missing);
+        const link=elt("a","lab-link","Ouvrir le registre structuré pour les IA ↗");
+        link.href=CATALOG_PATH;link.target="_blank";link.rel="noopener noreferrer";pane.append(link);
+      })
+      .catch(()=>{
+        if(asset!==selected || tab!=="preuves" || state.isConnected===false)return;
+        state.textContent="Sources indisponibles : aucune donnée inventée. Vérifier le registre GitHub ou réessayer en ligne.";
+      });
   }
   function labeledNumber(label,placeholder){
     const wrap=elt("label","lab-field"),name=elt("span",null,label),input=elt("input");

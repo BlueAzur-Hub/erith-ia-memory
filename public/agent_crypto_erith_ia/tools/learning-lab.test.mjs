@@ -72,7 +72,8 @@ test("Trader HTML mounts only the isolated lab, with no new account capability",
   assert.match(html,/css\/learning-lab\.css/);
   assert.match(html,/js\/learning-lab\.js/);
   assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
-  assert.doesNotMatch(source,/fetch\s*\(|XMLHttpRequest|sendOrder|placeOrder|privateKey|API_SECRET/i);
+  assert.doesNotMatch(source,/XMLHttpRequest|sendOrder|placeOrder|privateKey|API_SECRET/i);
+  assert.match(source,/fetch\(CATALOG_PATH,\{credentials:"omit",cache:"no-cache"\}\)/);
 });
 test("Administrator never mounts or displaces the BTC report",()=>{
   const t=boot("?surface=administrator");

@@ -1,0 +1,36 @@
+{
+  "schema": "aerith.lab.market-observation.v1",
+  "asset_id": "concrete",
+  "symbol": "CT",
+  "exchange": "OKX",
+  "instrument": "CT-USDT",
+  "market_type": "spot",
+  "base": "CT",
+  "quote": "USDT",
+  "observed_at": "2026-10-13T22:54:40+02:00",
+  "received_at": null,
+  "source": {
+    "kind": "user_screenshot",
+    "name": "Capture du carnet OKX dans le Trader le 13/10/2026",
+    "url": null,
+    "sha256": null
+  },
+  "data_kind": "orderbook_snapshot",
+  "quality": "user_screenshot",
+  "measurements": {
+    "best_bid": 0.362,
+    "best_ask": 0.36219,
+    "spread": 0.00019
+  },
+  "unit": "USDT/CT",
+  "candle_finalized": null,
+  "coverage": null,
+  "conversion": null,
+  "warnings": [
+    "Instantané daté ; aucune cotation temps réel.",
+    "Heure exacte de réception de la capture non authentifiée ; received_at=null.",
+    "Marché CT-USDT distinct du compte privé CT-USDC.",
+    "Une cote du carnet n'est pas une transaction effectivement réalisée."
+  ],
+  "execution_allowed": false
+}

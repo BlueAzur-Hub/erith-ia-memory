@@ -1,0 +1,293 @@
+{
+  "schema": "aerith.lab.evidence-catalog.v1",
+  "updated_utc": "2026-10-14",
+  "policy": {
+    "public_only": true,
+    "account_data": false,
+    "live_quote": false,
+    "automatic_orders": false,
+    "statement": "Dossiers documentaires : ne pas traiter les références ou captures datées comme des cotations actuelles.",
+    "source_priority": [
+      "source primaire datée",
+      "fournisseur de données identifié",
+      "capture terrain horodatée",
+      "hypothèse explicitement indiquée"
+    ],
+    "minimum_research": [
+      "identifiant stable",
+      "instrument exact base/quote",
+      "provenance",
+      "observed_at et received_at",
+      "intégrité et couverture",
+      "devise et conversion explicites",
+      "liquidité et spread",
+      "frais et glissement",
+      "incertitude et statut",
+      "décision humaine"
+    ]
+  },
+  "assets": [
+    {
+      "id": "bitcoin",
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "study": "référence liquide et historique long",
+      "instruments": [
+        {
+          "exchange": "OKX",
+          "instrument": "BTC-USDC",
+          "kind": "spot",
+          "use": "étude de cotation et carnet séparé"
+        },
+        {
+          "exchange": "Binance",
+          "instrument": "BTCUSDT",
+          "kind": "spot",
+          "use": "source d'archives OHLCV native"
+        }
+      ],
+      "primary_sources": [
+        {
+          "kind": "projet",
+          "title": "Bitcoin.org",
+          "url": "https://bitcoin.org/en/",
+          "evidence": "présentation fondamentale",
+          "recency": "evergreen"
+        },
+        {
+          "kind": "plateforme",
+          "title": "Documentation technique OKX Market Data",
+          "url": "https://www.okx.com/docs-v5/en/",
+          "evidence": "règles de bougies, carnet et timestamp",
+          "recency": "documentation"
+        },
+        {
+          "kind": "archives",
+          "title": "Binance Public Data",
+          "url": "https://github.com/binance/binance-public-data/blob/master/README.md",
+          "evidence": "ZIP mensuels/daily et CHECKSUM SHA-256",
+          "recency": "documentation"
+        },
+        {
+          "kind": "identité",
+          "title": "CoinGecko Bitcoin",
+          "url": "https://www.coingecko.com/en/coins/bitcoin",
+          "evidence": "identité et cotations agrégées, distinctes du spot",
+          "recency": "dynamique"
+        }
+      ],
+      "public_observations": [],
+      "vault": {
+        "status": "catalogue_existant_a_qualifier",
+        "reason": "Manifeste BTC disponible, Max et interruptions à analyser : aucune preuve de continuité totale fournie par ce catalogue."
+      },
+      "missing": [
+        "contrôle automatique des trous par période",
+        "source de frais et dimensions de carnet au même instant",
+        "benchmark hors-échantillon"
+      ]
+    },
+    {
+      "id": "concrete",
+      "symbol": "CT",
+      "name": "Concrete",
+      "study": "listing récent, liquidité et exécution",
+      "instruments": [
+        {
+          "exchange": "OKX",
+          "instrument": "CT-USDT",
+          "kind": "spot",
+          "use": "bougies et carnet publics"
+        },
+        {
+          "exchange": "OKX",
+          "instrument": "CT-USDC",
+          "kind": "spot",
+          "use": "marché du compte privé : aucune donnée personnelle publique"
+        }
+      ],
+      "primary_sources": [
+        {
+          "kind": "projet",
+          "title": "Concrete — infrastructure on-chain",
+          "url": "https://concrete.xyz/",
+          "evidence": "nature et offre de produits du projet",
+          "recency": "dynamique"
+        },
+        {
+          "kind": "plateforme",
+          "title": "Annonce OKX de cotation CT/USDT — 30/09/2026",
+          "url": "https://www.okx.com/en-us/help/okx-to-list-ct-usdt-concrete-for-spot-trading",
+          "evidence": "ouverture Spot 2026-09-30T10:00:00Z et règles de listing",
+          "recency": "dated"
+        },
+        {
+          "kind": "identité",
+          "title": "CoinGecko Concrete",
+          "url": "https://www.coingecko.com/en/coins/concrete",
+          "evidence": "ID concrete ; offre totale 1 milliard ; offre circulante non renseignée",
+          "recency": "dynamique"
+        },
+        {
+          "kind": "analyse_defi",
+          "title": "DefiLlama Concrete",
+          "url": "https://defillama.com/protocol/concrete",
+          "evidence": "activité du protocole/TVL distincte de prix ou capitalisation du jeton",
+          "recency": "dynamique"
+        }
+      ],
+      "public_observations": [
+        {
+          "observed_at": "2026-10-13T23:35:00+02:00",
+          "source": "capture_utilisateur",
+          "market": "CT-USDT",
+          "kind": "ligne_24h",
+          "price_usd_display": 0.360092,
+          "change_pct_24h": 0.43,
+          "points": 300,
+          "warning": "USD affiché issu de USDT/USD CoinGecko, pas CT-USD spot"
+        },
+        {
+          "observed_at": "2026-10-13T23:45:00+02:00",
+          "source": "capture_utilisateur",
+          "market": "CT-USDT",
+          "kind": "ligne_7j",
+          "price_usd_display": 0.36247,
+          "change_pct_7d": 16.71,
+          "points": 300,
+          "warning": "historique externe non certifié au coffre"
+        },
+        {
+          "observed_at": "2026-10-13T22:54:00+02:00",
+          "source": "capture_utilisateur",
+          "market": "CT-USDT",
+          "kind": "carnet",
+          "best_bid_usdt": 0.362,
+          "best_ask_usdt": 0.36219,
+          "warning": "carnet éphémère, aucun taux garanti"
+        }
+      ],
+      "vault": {
+        "status": "historique_externe_non_certifie_top250",
+        "reason": "CT hors Top 250 dans les captures ; 300 points OKX ne constituent pas une archive mensuelle native certifiée."
+      },
+      "missing": [
+        "données CT-USDC horodatées publiques indépendantes du compte",
+        "historique OHLCV contrôlé couvrant plusieurs semaines",
+        "historique de profondeur exploitable et minimums Spot actuels",
+        "contrats et tokenomics vérifiés, calendrier de déblocage"
+      ]
+    },
+    {
+      "id": "quack-ai",
+      "symbol": "Q",
+      "name": "Quack AI",
+      "study": "forte hausse et tokenomics",
+      "instruments": [],
+      "primary_sources": [
+        {
+          "kind": "projet",
+          "title": "Quack AI — présentation officielle",
+          "url": "https://quackai.ai/",
+          "evidence": "gouvernance Web3 et agents IA ; pas une preuve de trading profitable",
+          "recency": "dynamique"
+        },
+        {
+          "kind": "tokenomics",
+          "title": "Annonce officielle Quack AI $Q — 31/08/2025",
+          "url": "https://quackai.ai/blog/introducing-q-powering-the-future-of-ai-governance",
+          "evidence": "offre max 10 milliards de Q et distribution 79% écosystème/communauté",
+          "recency": "dated"
+        },
+        {
+          "kind": "docs",
+          "title": "Quack AI Developer Docs",
+          "url": "https://quackai.gitbook.io/docs",
+          "evidence": "architecture de la gouvernance, APIs, état des fonctions",
+          "recency": "dynamique"
+        },
+        {
+          "kind": "identité",
+          "title": "CoinGecko Quack AI",
+          "url": "https://www.coingecko.com/en/coins/quack-ai",
+          "evidence": "identité de référence, instrument à résoudre séparément",
+          "recency": "dynamique"
+        }
+      ],
+      "public_observations": [
+        {
+          "observed_at": "2026-10-14T00:10:00+02:00",
+          "source": "capture_utilisateur",
+          "market": null,
+          "kind": "market_24h",
+          "approx_change_pct_24h": 39,
+          "approx_change_pct_7d": 93,
+          "warning": "valeurs approximatives d'une capture ancienne ; aucune paire de marché n'est certifiée"
+        }
+      ],
+      "vault": {
+        "status": "couverture_a_verifier",
+        "reason": "Instrument Spot et historique certifié non résolus ; ne pas substituer un graphique CoinGecko à des bougies natives."
+      },
+      "missing": [
+        "pair exchange exacte avec preuves de cotation",
+        "calendrier futur des jetons et offre réellement circulante",
+        "carnet, spread et volume exécutable à instant donné",
+        "historique daté suffisant pour l'évaluation hors échantillon"
+      ]
+    }
+  ],
+  "ai_requirements": {
+    "canonical_record_fields": [
+      "asset_id",
+      "symbol",
+      "instrument",
+      "exchange",
+      "market_type",
+      "base",
+      "quote",
+      "observed_at",
+      "received_at",
+      "source_url",
+      "source_kind",
+      "value",
+      "unit",
+      "timeframe",
+      "bar_finalized",
+      "quality",
+      "archive_sha256",
+      "data_gaps",
+      "conversion_method",
+      "latency_ms"
+    ],
+    "evaluation_fields": [
+      "hypothesis_at",
+      "horizon",
+      "expected_direction",
+      "confidence_calibrated",
+      "test_protocol",
+      "benchmark",
+      "fees",
+      "slippage",
+      "actual_outcome",
+      "result_after_costs",
+      "reason_for_failure"
+    ],
+    "hard_guards": [
+      "missing_is_not_zero",
+      "history_is_not_live",
+      "usdt_is_not_usdc",
+      "quote_is_not_display_currency",
+      "only_pre_registered_hypotheses_are_scored",
+      "no_private_fields_in_public_files",
+      "no_order_execution"
+    ]
+  },
+  "next_actions": [
+    "vérifier les coin-id et instruments par APIs publiques",
+    "lier chaque actif à l'inventaire de séries du Coffre",
+    "qualifier les lacunes de données sans interpolation",
+    "conserver les hypothèses avant résultat dans le journal local",
+    "étendre Hausse/Volume 5/10 sans doublon de modules"
+  ]
+}

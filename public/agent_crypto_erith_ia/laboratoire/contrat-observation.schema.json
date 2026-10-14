@@ -1,0 +1,276 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/laboratoire/contrat-observation.schema.json",
+  "title": "ERITH.IA Laboratoire — Contrat d'une observation publique",
+  "description": "Contrat proposé, non connecté au marché en version 40.6.633. Null=inconnu, jamais zéro. Aucun compte privé ni exécution.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "asset_id",
+    "symbol",
+    "exchange",
+    "instrument",
+    "market_type",
+    "base",
+    "quote",
+    "observed_at",
+    "received_at",
+    "source",
+    "data_kind",
+    "quality",
+    "measurements",
+    "execution_allowed"
+  ],
+  "properties": {
+    "schema": {
+      "const": "aerith.lab.market-observation.v1"
+    },
+    "asset_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Coin-id stable"
+    },
+    "symbol": {
+      "type": "string",
+      "pattern": "^[A-Z0-9]{1,16}$"
+    },
+    "exchange": {
+      "type": "string",
+      "minLength": 1
+    },
+    "instrument": {
+      "type": "string",
+      "minLength": 2
+    },
+    "market_type": {
+      "enum": [
+        "spot",
+        "index",
+        "aggregated",
+        "unknown"
+      ]
+    },
+    "base": {
+      "type": "string",
+      "minLength": 1
+    },
+    "quote": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "received_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "kind",
+        "name",
+        "url"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "official_api",
+            "official_documentation",
+            "certified_archive",
+            "user_screenshot",
+            "data_aggregator",
+            "research"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uri"
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "data_kind": {
+      "enum": [
+        "candles",
+        "orderbook_snapshot",
+        "market_quote",
+        "research_document",
+        "external_chart",
+        "other"
+      ]
+    },
+    "quality": {
+      "enum": [
+        "verified_archive",
+        "public_snapshot",
+        "documented_only",
+        "user_screenshot",
+        "not_verified"
+      ]
+    },
+    "measurements": {
+      "type": "object",
+      "description": "Champs numériques natifs explicitement nommés (prix/quantité) ; aucune donnée artificielle.",
+      "additionalProperties": {
+        "type": [
+          "number",
+          "null"
+        ]
+      }
+    },
+    "unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "candle_finalized": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "coverage": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "from": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "to": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "holes": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "conversion": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "target": {
+          "type": "string"
+        },
+        "rate": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "provider": {
+          "type": "string"
+        },
+        "observed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "target",
+        "rate",
+        "provider",
+        "observed_at"
+      ],
+      "additionalProperties": false
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "execution_allowed": {
+      "const": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "quality": {
+            "const": "verified_archive"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "source": {
+            "properties": {
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "sha256"
+            ]
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "data_kind": {
+            "const": "orderbook_snapshot"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "candle_finalized": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}
