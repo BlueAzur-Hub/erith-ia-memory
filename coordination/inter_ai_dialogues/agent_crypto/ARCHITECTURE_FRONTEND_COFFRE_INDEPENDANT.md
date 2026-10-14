@@ -1,18 +1,34 @@
-# Seven Heaven — Publication Frontend légère et Coffre indépendant
-Les mises à jour du Trader étaient de petits CLEAN_UPLOAD (<1 Mo). GitHub Pages republiait simultanément les énormes archives du Coffre. Ce sont trois objets distincts : patch, frontend, données.
+# Seven Heaven — Agent-Crypto uniquement, Coffre indépendant
 
-## Candidat PR #388
-- Le constructeur tools/build-runtime-pages.py crée le frontend HTML/CSS/JS sans le dossier data, les JSONL, archives gz/ZIP, anciennes pages HTML ou grandes images racine assets/images.
-- Le module public/agent_crypto_erith_ia/web/vault-data-router.js est chargé avant les scripts actifs par chaque page Crypto publiée. Uniquement les fetch GET/HEAD sur le chemin DATA public de Pages sont envoyés vers les mêmes fichiers du dépôt public sur raw.githubusercontent.com. Bridge OKX et ordres non affectés. Les contrôles SHA et OHLCV des lecteurs demeurent.
-- Les images de luxe dans assets/images restent inchangées sur le dépôt Git; leurs URLs racine sont remplacées dans le build, avec téléchargement à la demande depuis Raw.
-- Le workflow GitHub Actions filtre les pushes main. Si un commit modifie seulement public/agent_crypto_erith_ia/data/**, ce workflow ne tourne pas.
-- La publication est verrouillée jusqu'au réglage de Source Pages sur GitHub Actions ET variable dépôt AGENT_CRYPTO_RUNTIME_PAGES_ENABLED=true.
+**Périmètre canonique imposé par le propriétaire :**
+`public/agent_crypto_erith_ia/`
 
-## Prudence et recette
-- La PR ne modifie pas main. Rien dans le Coffre Oracle n'est supprimé. Market Core 38.15.11 et compte privé OKX conservés.
-- Vérifier CORS et lecture effective sur Firefox pour R9, Univers, BTC, CT et Q ; conserver SHA-256 et prix non inventés.
-- Un routeur fetch ne capture pas les téléchargements directs via balise lien, XMLHttpRequest ou WebSockets ; examiner les usages avant bascule.
-- Tester LT AUTO/AUBE/JOUR/SOIR/NUIT/LUNE/RND, F11, fonds de graphique, compte OKX privé CT/USDC et graphique public CT/USDT.
-- Ensuite fusionner après recette, changer Pages Source=Actions et autoriser le workflow; rollback possible vers ancienne source.
+Aucun autre projet du dépôt `erith-ia-memory` n'entre dans le nouvel artefact Pages.
+Cela exclut notamment `public/lego/`, `public/liora-jardin-reves-doux/`, les fichiers HTML/CSS/JS de la racine et tout autre répertoire `public/` frère.
 
-Le pipeline actuel reste en vigueur jusqu'au changement explicite de la source Pages. Le nouveau workflow, seul, ne désactive pas l'ancien.
+## Mesure de correction du 14 octobre 2026
+- Ancien candidat trop large : **1 393 fichiers / 142 424 617 octets** comptés dans l'arbre Git (avant les transformations HTML).
+- **66 218 153 octets** concernaient **117 fichiers hors du répertoire Agent-Crypto**. Cette erreur de périmètre est corrigée.
+- Sélection Agent-Crypto seule, hors archives : **1 276 fichiers / 76 206 464 octets** comptés dans l'arbre Git de la branche ; ce n'est pas encore une mesure d'artefact Pages final construit.
+- Source canonique inchangée ; aucune donnée ni image supprimée de Git.
+
+## Constructeur
+- `tools/build-runtime-pages.py` sélectionne exclusivement `public/agent_crypto_erith_ia/`, par garde stricte.
+- Il **exclut** le dossier `data/`, les ZIP/GZIP/JSONL, les copies historiques `administrator/index-*.html`, `downloads/` et `releases/`.
+- Le constructeur rejette toute sortie extérieure au répertoire cible, sauf le contrôle GitHub Pages nécessaire `.nojekyll`.
+- Le rapport est interne : `public/agent_crypto_erith_ia/runtime-publication.json`.
+- Les images originales de `assets/images` (hors périmètre Pages) restent dans le dépôt Git et sont lues à la demande depuis GitHub Raw.
+- Le routeur `public/agent_crypto_erith_ia/web/vault-data-router.js` envoie exclusivement les `fetch GET/HEAD` de données publiques `data/**` vers GitHub Raw. Les ordres privés OKX ne sont pas concernés.
+
+## Routine légère et activation
+- Les PR exécutent des tests unitaires et des accès Raw/CORS sans construire le site complet ; un test dans un mini-dépôt Git prouve qu'aucune ressource d'un autre projet n'est empaquetée.
+- Les collectes qui modifient seulement `public/agent_crypto_erith_ia/data/**` ne déclenchent pas le futur pipeline Pages.
+- Avant toute publication : `Settings > Pages > Source = GitHub Actions` **et** variable de dépôt `AGENT_CRYPTO_RUNTIME_PAGES_ENABLED=true`. Le second verrou est maintenu volontairement afin de ne pas construire/déployer le site avant autorisation.
+- Une mise à jour réelle de l'Interface impliquera encore un artefact Pages complet du seul périmètre Agent-Crypto, **pas** un patch Pages incrémental de 160 Ko.
+
+## Avertissement essentiel sur le partage du domaine Pages
+GitHub Pages pour ce dépôt est **un site unique**. Publier uniquement Agent-Crypto via GitHub Actions rendra les autres pages de `erith-ia-memory` non disponibles via ce même site Pages, même si leurs fichiers demeurent dans Git.
+Ne changer ni la source Pages ni fusionner la PR sans accord sur ce résultat ou plan indépendant pour les autres projets. Le site actif reste en l'état.
+
+## Recette avant fusion
+Vérifier la publication cible et les dépendances par Firefox (LT AUTO/AUBE/JOUR/SOIR/NUIT/LUNE/RND, F11, BTC/CT/Q, carnet/profondeur, historicité et SHA, éventuels XHR ou liens directs). Conserver Market Core 38.15.11 et Trader 40.6.640. Aucune exécution réelle d'ordre ni transfert de secret. Prévoir retour arrière.
