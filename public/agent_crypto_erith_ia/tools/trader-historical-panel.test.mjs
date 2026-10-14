@@ -167,3 +167,31 @@ test("The view uses no second account owner, fetch or archive mutation",()=>{
  assert.match(panel,/sélection Market/);
  assert.doesNotMatch(panel,/AgentCryptoNewListingLiveAsset\s*=|AgentCryptoMarketMicroscope\s*=/);
 });
+
+test("External CT is a valid inspected selection when main Market is empty",()=>{
+ const ctx={document:{readyState:"loading",addEventListener(){},getElementById:()=>null},
+   getSelectedCoin:()=>null,state:{dataBroker:{chart:{status:"ready",coinId:"concrete",period:1,
+    result:{sourceMode:"new-listing-exchange-native",provider:"okx",currency:"USD",quoteCurrency:"USD",
+     source:"OKX CT/USDT candles · USDT/USD CoinGecko",series:[[1791940000000,.35],[1791940300000,.36]]}}}},
+   AgentCryptoNewListingLiveAsset:{snapshot:()=>({active:true,id:"concrete",base:"CT",quote:"USDT",instrument:"CT-USDT",provider:"okx"})},
+   AgentCryptoQuoteCurrencyArchitecture:{snapshot:()=>({displayCurrency:"USD"})}};
+ vm.runInNewContext(panel,vm.createContext(ctx),{timeout:3000});
+ assert.equal(ctx.AgentCryptoTraderHistoricalPanel.selected().id,"concrete");
+ assert.equal(ctx.AgentCryptoTraderHistoricalPanel.selected().origin,"external");
+});
+test("Manual Q consultation remains independent from external CT and the Lab",()=>{
+ let selection="quack-ai";
+ const ctx={document:{readyState:"loading",addEventListener(){},
+   getElementById:()=>({querySelector:q=>q==="[data-history-asset]"?{value:selection}:null})},
+   getSelectedCoin:()=>null,
+   AgentCryptoNewListingLiveAsset:{snapshot:()=>({active:true,id:"concrete",base:"CT",quote:"USDT",instrument:"CT-USDT",provider:"okx"})},
+   AgentCryptoQuoteCurrencyArchitecture:{snapshot:()=>({displayCurrency:"USD"})}};
+ vm.runInNewContext(panel,vm.createContext(ctx),{timeout:3000});
+ assert.equal(ctx.AgentCryptoTraderHistoricalPanel.selected().id,"quack-ai");
+ assert.equal(ctx.AgentCryptoTraderHistoricalPanel.selected().origin,"manual");
+ selection="auto";
+ assert.equal(ctx.AgentCryptoTraderHistoricalPanel.selected(),null);
+ assert.match(panel,/historical-inventory\.html/);
+ assert.match(panel,/source-catalogue\.html/);
+ assert.match(panel,/verified-reader\.html/);
+});
