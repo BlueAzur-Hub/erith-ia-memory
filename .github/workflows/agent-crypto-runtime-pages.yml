@@ -49,7 +49,36 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
+      # Only three small code locations are required by PR/disabled-run tests.
+      # Never hydrate large frontend/media directories for a routine test.
       - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/
+            /public/agent_crypto_erith_ia/web/vault-data-router.js
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit tests
+        run: |
+          python tools/test-runtime-pages.py
+          node --test tools/test-vault-data-router.mjs
+          node --check public/agent_crypto_erith_ia/web/vault-data-router.js
+      - name: Verify real Raw GitHub URLs and browser CORS headers
+        env:
+          IMAGE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python tools/check-vault-raw-access.py --image-ref "$IMAGE_REF"
+      - name: Checkout full frontend only for authorised publication
+        if: >-
+          github.ref == 'refs/heads/main' &&
+          vars.AGENT_CRYPTO_RUNTIME_PAGES_ENABLED == 'true' &&
+          (github.event_name == 'push' || inputs.publish == true)
+        uses: actions/checkout@v4
         with:
           filter: blob:none
           sparse-checkout-cone-mode: false
@@ -66,21 +95,6 @@ jobs:
             !/**/*.zip
             !/**/*.jsonl
             !/**/*.gz
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Unit tests
-        run: |
-          python tools/test-runtime-pages.py
-          node --test tools/test-vault-data-router.mjs
-          node --check public/agent_crypto_erith_ia/web/vault-data-router.js
-      - name: Verify real Raw GitHub URLs and browser CORS headers
-        env:
-          IMAGE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: python tools/check-vault-raw-access.py --image-ref "$IMAGE_REF"
       # PRs and data-only commits do not rebuild a 142 MB candidate.
       # Build the frontend only for an explicitly authorised main deployment.
       - name: Build lightweight runtime only for authorised publication
