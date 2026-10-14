@@ -69,6 +69,7 @@
   async function requestTraderAsset(next){
     if(!ASSETS[next])return false;
     const revision=++selectionRevision;
+    const retainCandles=globalThis.AgentCryptoMarketMicroscope?.snapshot?.()?.mode==="candles";
     selectionPending=true;
     showSelectionTruth(next+" · synchronisation du Trader en cours…");
     try{
@@ -84,6 +85,7 @@
           throw Error("Contexte CT/USDT public non confirmé");
         const filter=byId("atlasNewListingsButton406528");
         if(filter && owner.snapshot?.()?.enabled!==true)filter.click();
+        if(retainCandles)globalThis.AgentCryptoMarketMicroscope?.setMode?.("candles");
         const saved=globalThis.atlasTraderExternalSelectionCommit?.({
           id:"concrete",provider:"okx",providerSymbol:"CT-USDT"
         })===true;
@@ -104,6 +106,7 @@
         const all=document.querySelector?.('.filter-btn[data-filter="all"]');
         if(all)all.click();
         globalThis.atlasSelectMarketCoin(coin);
+        if(retainCandles)globalThis.AgentCryptoMarketMicroscope?.setMode?.("candles");
         if(globalThis.getSelectedCoin?.()?.id!==coin.id)
           throw Error("Le Market n'a pas confirmé "+next);
         showSelectionTruth(next+" · Market sélectionné · chargement des panneaux par les propriétaires existants");
