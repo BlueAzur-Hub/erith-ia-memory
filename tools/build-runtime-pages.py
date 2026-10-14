@@ -7,6 +7,7 @@ ROOT={"index.html","app.js","style.css",".nojekyll"}
 EXT={".html",".htm",".css",".js",".mjs",".json",".svg",".ico",".webmanifest",".woff",".woff2",".ttf",".png",".jpg",".jpeg",".gif",".webp",".avif",".md",".txt",".xml"}
 OLD=re.compile(r"^public/agent_crypto_erith_ia/administrator/index-\d+(?:\.\d+)+\.html$",re.I)
 RAW="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/"
+IMAGE_RAW_ROOT="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/"
 BUDGET=180000000
 ROUTER="public/agent_crypto_erith_ia/web/vault-data-router.js"
 REQUIRED=("index.html","public/agent_crypto_erith_ia/administrator/index.html",
@@ -20,11 +21,15 @@ def include(n):
  if n in ROOT:return True
  if not n.startswith("public/") or "/data/" in n or "/downloads/" in n or "/releases/" in n or OLD.fullmatch(n):return False
  return Path(n).suffix.lower() in EXT
-def transform(n,b):
+def image_raw_base(image_ref):
+ if image_ref!="main" and not re.fullmatch(r"[0-9a-f]{40}",image_ref):raise ValueError("Invalid image source revision")
+ return IMAGE_RAW_ROOT+image_ref+"/"
+def transform(n,b,image_ref="main"):
  if Path(n).suffix.lower() not in {".html",".htm",".css",".js",".mjs"}:return b
  t=b.decode("utf-8")
+ image_base=image_raw_base(image_ref)
  for prefix in ("../../../../assets/images/","../../../assets/images/","../../assets/images/"):
-  t=t.replace(prefix,RAW+"assets/images/")
+  t=t.replace(prefix,image_base+"assets/images/")
  if n.startswith("public/agent_crypto_erith_ia/") and n.endswith(".html"):
   rel=os.path.relpath(ROUTER,start=str(Path(n).parent)).replace(os.sep,"/")
   tag='<script src="'+rel+'" data-erith-vault-data-router="true"></script>'
@@ -39,7 +44,8 @@ class Refs(HTMLParser):
   if k:
    u=dict(attrs).get(k)
    if u:self.urls.append(u)
-def build(src,dst):
+def build(src,dst,image_ref="main"):
+ image_raw_base(image_ref)
  src,dst=Path(src).resolve(),Path(dst).resolve()
  if src==dst or not src.is_dir() or (dst.exists() and any(dst.iterdir())):raise ValueError("Unsafe build destination")
  paths=subprocess.check_output(["git","-C",str(src),"ls-files","-z"]).split(b"\0")
@@ -54,7 +60,7 @@ def build(src,dst):
  if size>BUDGET:raise ValueError("Runtime too large: "+str(size))
  for n,f in selected:
   out=dst/n;out.parent.mkdir(parents=True,exist_ok=True)
-  if f.suffix.lower() in {".html",".htm",".css",".js",".mjs"}:out.write_bytes(transform(n,f.read_bytes()))
+  if f.suffix.lower() in {".html",".htm",".css",".js",".mjs"}:out.write_bytes(transform(n,f.read_bytes(),image_ref=image_ref))
   else:shutil.copyfile(f,out)
  (dst/".nojekyll").touch()
  missing=[p for p in REQUIRED if not (dst/p).is_file()]
@@ -71,10 +77,11 @@ def build(src,dst):
  if list(dst.rglob("*.json.gz")) or list(dst.rglob("*.jsonl")):raise ValueError("Cold archive leaked into Pages")
  report={"schema":"aerith.crypto.pages.runtime-only.v1","runtime_files":len(selected),
  "runtime_source_bytes":size,"vault_excluded_files":excluded,"vault_excluded_bytes":excluded_bytes,
- "historical_data_in_pages":False,"images_externalized_to_raw":True,
+ "historical_data_in_pages":False,"images_externalized_to_raw":True,"image_source_revision":image_ref,
  "router":ROUTER,"source":RAW,"real_orders":False,"firefox_verified":False}
  (dst/"runtime-publication.json").write_text(json.dumps(report,indent=2)+"\n")
  return report
 if __name__=="__main__":
  a=argparse.ArgumentParser();a.add_argument("--source",default=".");a.add_argument("--destination",default="_runtime_pages")
- v=a.parse_args();print(json.dumps(build(v.source,v.destination),indent=2))
+ a.add_argument("--image-ref",default="main",help="main in production, PR commit SHA for pre-merge preview")
+ v=a.parse_args();print(json.dumps(build(v.source,v.destination,image_ref=v.image_ref),indent=2))
