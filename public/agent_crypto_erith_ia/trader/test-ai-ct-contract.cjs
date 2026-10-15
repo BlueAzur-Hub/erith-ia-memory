@@ -79,3 +79,50 @@ test('BTC non valide reste inconnu, CT vérifié reste exploitable',()=>{
  assert.equal(r.portfolio.assets.BTC.qty,null);
 });
 test('un faux relevé privé est refusé',()=>assert.throws(()=>api.portfolio({ok:true,read_only:false}),/non vérifié/));
+
+test('Seven relie solde CT, frais, revente et fenêtre publique sans ordre',()=>{
+ const doc=api.compose({account:acct,fills,fees,book},now);
+ assert.equal(doc.exit_metrics.best_bid_usdc_ct,.355);
+ assert.ok(Math.abs(doc.exit_metrics.weighted_exit_usdc_ct-.355)<1e-10);
+ assert.equal(doc.exit_metrics.book_impact_pct,0);
+ const candles=api.publicCandles({mode:'candles',loadedInstrument:'CT-USDT',loadedBar:'5m',rows:[
+   {t:now-300000,c:.32,v:10},{t:now-60000,c:.34,v:20}],source:'OKX CT-USDT'},now);
+ assert.equal(candles.status,'observed');
+ const report=api.explain(doc,candles);
+ assert.equal(report.read_only,true);
+ assert.match(report.lines.join(' '),/Revente FICTIVE/);
+ assert.match(report.lines.join(' '),/Contexte marché public/);
+ assert.match(report.lines.join(' '),/aucune exécution garantie/i);
+});
+test('deux niveaux du carnet impliquent un impact et un spread mesurés',()=>{
+ const b={...book,bids:[['0.355','4'],['0.350','12']],asks:[['0.360','20']]};
+ const doc=api.compose({account:acct,fills,fees,book:b},now);
+ assert.ok(doc.exit_metrics.book_impact_pct>0);
+ assert.ok(doc.exit_metrics.spread_pct>0);
+ assert.ok(doc.exit_metrics.weighted_exit_usdc_ct<doc.exit_metrics.best_bid_usdc_ct);
+});
+test('carnet expiré ou acquisition non prouvée : refus de faux gains',()=>{
+ const stale=api.compose({account:acct,fills,fees,book:{...book,observed_at_utc:new Date(now-45000).toISOString()}},now);
+ assert.equal(stale.exit_metrics,null);
+ assert.match(api.explain(stale).lines.join(' '),/Revente fictive NON CALCULABLE/);
+ const missing=api.compose({account:acct,fills:null,fees,book},now);
+ assert.match(api.explain(missing).lines.join(' '),/Coût d’acquisition NON PROUVÉ/);
+ assert.match(api.explain(missing).lines.join(' '),/Gain \/ perte NON CALCULABLE/);
+});
+test('aucune bougie BTC ou en mode Ligne sous le titre CT/USDT',()=>{
+ const snap={mode:'candles',loadedInstrument:'BTC-USDT',loadedBar:'5m',rows:[
+   {t:now-100000,c:100,v:12},{t:now-1000,c:101,v:5}]};
+ assert.equal(api.publicCandles(snap,now).status,'unavailable');
+ assert.equal(api.publicCandles({...snap,loadedInstrument:'CT-USDT',mode:'native'},now).status,'unavailable');
+});
+test('courbe publique ancienne ou horodatage incohérent non validés',()=>{
+ const old={mode:'candles',loadedInstrument:'CT-USDT',loadedBar:'5m',rows:[
+   {t:now-3600000,c:.31,v:10},{t:now-3300000,c:.32,v:15}]};
+ assert.equal(api.publicCandles(old,now).status,'stale');
+ assert.equal(api.publicCandles({...old,rows:[old.rows[1],old.rows[0]]},now).status,'unavailable');
+ const doc=api.compose({account:acct,fills,fees,book},now);
+ assert.match(api.explain(doc,api.publicCandles(old,now)).lines.join(' '),/trop ancien/);
+});
+test('un faux contrat privé ne produit pas de rapport Seven',()=>{
+ assert.throws(()=>api.explain({schema:'public',read_only:false}),/non validé/);
+});
