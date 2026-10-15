@@ -104,6 +104,9 @@ jobs:
       - name: Cross-market candle identity and quote truth
         run: node tests/agent_crypto_market_context_identity.cjs
 
+      - name: Trader external Math Core cannot relabel BTC as CT
+        run: node tests/agent_crypto_trader_external_math_guard.cjs
+
       - name: Trader historical selection identity and native quote
         run: node tests/agent_crypto_trader_historical_identity.cjs
 

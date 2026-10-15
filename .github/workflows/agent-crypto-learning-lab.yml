@@ -118,6 +118,7 @@ jobs:
             prefix+"trader/source-catalogue.html",
             prefix+"trader/ai-verified-history-reader.js",
             prefix+"trader/verified-reader.html",
+            prefix+"trader/math-core-external-guard.js",
           }
           changed=set(subprocess.check_output(
             ["git","diff","--name-only",base,"HEAD","--",prefix+"trader/"],
@@ -154,13 +155,18 @@ jobs:
             "status":"TRADER_COFFRE_VISIBLE_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
-          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html"}:
+          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js"}:
             if f==prefix+"trader/trader-runtime-mirror.js":
               expected=previous(f).replace("40.6.639","40.6.640").replace("trader-historical-panel.js?reader=top50-cohorts","trader-historical-panel.js?reader=visible-coffre")
             else:
               expected=previous(f).replace("40.6.639","40.6.640")
             assert current(f)==expected,f"Non-version Trader change: {f}"
+          guard=current(prefix+"trader/math-core-external-guard.js")
+          assert "AgentCryptoTraderExternalMathGuard" in guard
+          assert 'real_orders:false' in guard
+          assert "setInterval(" not in guard and "MutationObserver" not in guard
           index=current(prefix+"administrator/index.html")
+          assert 'src="../trader/math-core-external-guard.js"' in index
           assert admin["engine"]==trader["market_core"]=="38.15.11"
           assert admin["build"]==trader["build"]=="40.6.640"
           assert 'name="agent-crypto-loaded-build" content="40.6.640"' in index
