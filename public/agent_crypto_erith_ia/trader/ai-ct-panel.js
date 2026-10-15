@@ -59,6 +59,89 @@ function el(tag,className='',content=''){
  if(content!==null)node.textContent=content;
  return node;
 }
+
+function showNetBuyPlanner(parent,doc){
+ // Planificateur local : aucune API privée, aucun transfert ni commande.
+ const area=el('details','ai-ct-buy-planner');
+ area.append(el('summary','','Prévoir un achat CT net après frais · sans ordre'));
+ const intro=el('p','ai-ct-buy-intro',
+  'Objectif : conserver au minimum une quantité CT revendable au pas Spot. Les frais d’un futur achat sont une HYPOTHÈSE, jamais ceux garantis par une ancienne transaction.');
+ area.append(intro);
+ const fields=el('div','ai-ct-buy-fields');
+ const labelInput=(caption,placeholder,value)=>{
+  const label=el('label','ai-ct-buy-label');
+  label.append(el('span','',caption));
+  const input=el('input','');
+  input.type='text';input.inputMode='decimal';
+  input.setAttribute('autocomplete','off');input.setAttribute('spellcheck','false');
+  input.placeholder=placeholder;input.value=value||'';
+  label.append(input);fields.append(label);
+  return input;
+ };
+ const official=doc.instrument_rules?.status==='verified';
+ const min=labelInput('Minimum CT (Spot)', 'ex. 10',official?doc.instrument_rules.min_sz:'');
+ const lot=labelInput('Pas de quantité CT','ex. 0,01',official?doc.instrument_rules.lot_sz:'');
+ if(official){min.readOnly=true;lot.readOnly=true;}
+ const rate=labelInput('Frais supposés de l’achat (%)','ex. 0,1','');
+ const ccyLabel=el('label','ai-ct-buy-label');
+ ccyLabel.append(el('span','','Frais prélevés en'));
+ const feeCcy=el('select','');
+ for(const ccy of ['CT','USDC']){
+  const opt=el('option','',ccy);opt.value=ccy;feeCcy.append(opt);
+ }
+ ccyLabel.append(feeCcy);fields.append(ccyLabel);
+ area.append(fields);
+ const provenance=el('p','ai-ct-buy-source',official
+  ?'Règles CT/USDC officielles observées à '+doc.instrument_rules.checked_at+'.'
+  :'Règles OKX NON VÉRIFIÉES : si tu saisis un minimum et un pas, le résultat restera une illustration manuelle, pas un ordre admissible.');
+ area.append(provenance);
+ const historical=doc.acquisition?.observed_buy_ct_fee_pct;
+ if(Number.isFinite(historical)&&historical>=0&&historical<=5){
+  const note=el('p','ai-ct-buy-historic',
+   'Ancien achat rapproché : frais en CT observés ≈ '+number(historical,6)+' %. Ce taux passé ne garantit pas les frais du prochain achat.');
+  const use=el('button','ai-ct-buy-suggest','Utiliser ce taux comme hypothèse');
+  use.type='button';
+  use.addEventListener('click',()=>{rate.value=String(historical);feeCcy.value='CT';});
+  note.append(document.createTextNode(' '),use);
+  area.append(note);
+ }
+ const run=el('button','ai-ct-buy-compute','Calculer la quantité brute');
+ run.type='button';area.append(run);
+ const out=el('div','ai-ct-buy-result','Renseigne une hypothèse de frais et calcule la quantité. Aucun ordre ne sera envoyé.');
+ out.setAttribute('aria-live','polite');area.append(out);
+ run.addEventListener('click',()=>{
+  out.replaceChildren();
+  const rule=official?doc.instrument_rules:{
+    status:'manual',market:'CT-USDC',min_sz:min.value.trim().replace(',','.'),
+    lot_sz:lot.value.trim().replace(',','.'),state:'unknown'
+  };
+  const estimate=model.planGrossBuyForNetSpot(rule,rate.value.trim().replace(',','.'),feeCcy.value);
+  if(estimate.status!=='hypothetical'){
+   out.textContent='Calcul indisponible : '+estimate.reason+'.';
+   return;
+  }
+  const heading=el('strong','',estimate.rules_verified
+   ?'Simulation avec règles Spot publiées par OKX'
+   :'Simulation MANUELLE · règles Spot non vérifiées');
+  out.append(heading);
+  const table=el('dl','ai-ct-buy-result-grid');
+  const add=(name,value)=>{
+   const slot=el('div','');
+   slot.append(el('dt','',name),el('dd','',value));table.append(slot);
+  };
+  add('Minimum revendable visé',estimate.sale_quantity_target_ct+' CT');
+  add('CT bruts à acheter',estimate.gross_purchase_ct+' CT');
+  add('Frais CT supposés',estimate.assumed_fee_ct===null
+    ?'Non calculés : frais supposés en USDC':estimate.assumed_fee_ct+' CT');
+  add('CT nets hypothétiques',estimate.net_received_ct+' CT');
+  add('CT revendables au pas',estimate.quantity_saleable_ct+' CT');
+  add('Reste sous le pas',estimate.residual_ct+' CT');
+  out.append(table);
+  out.append(el('p','ai-ct-buy-source',
+   'Simulation uniquement. Commission future, prix d’achat USDC, minimum notionnel, disponibilité et acceptation d’ordre NON vérifiés. Aucune transaction.'));
+ });
+ parent.append(area);
+}
 function showEvidence(target,doc){
  const wrapper=el('section','ai-ct-execution');
  const top=el('div','ai-ct-execution-top');
@@ -135,6 +218,7 @@ function showEvidence(target,doc){
   }
   wrapper.append(band);
  }
+ showNetBuyPlanner(wrapper,doc);
  const warning=el('p','ai-ct-execution-warning',
  'Le carnet décrit des offres momentanées ; une quantité conforme à minSz/lotSz ne garantit ni acceptation, ni exécution. Autres contrôles OKX et frais éventuels non certifiés.');
  wrapper.append(warning);
