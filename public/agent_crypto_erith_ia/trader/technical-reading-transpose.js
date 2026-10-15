@@ -6,8 +6,8 @@
      Adaptation unique : chemins assets depuis /trader/. */
 
   const BUILD = "40.6.586";
-  const BASE = "../administrator/assets/visual/technical-reading/";
-  const DEFAULT_IMAGE = "../administrator/assets/visual/admin-technical-reading-default.png";
+  const BASE = "../../../assets/images/technical-reading/";
+  const DEFAULT_IMAGE = "../../../assets/images/technical-reading/admin-technical-reading-default.png";
   const DB_NAME = "agent_crypto_private_visuals";
   const DB_VERSION = 1;
   const STORE = "visual_slots";
@@ -42,7 +42,8 @@
     {file:"technical-random-18.png",label:"Synthèse absolue",x:50,y:50},
     {file:"technical-random-19.png",label:"Synthèse fidèle",x:50,y:50},
     {file:"technical-random-20.png",label:"Masculin solaire fidèle",x:50,y:50},
-    {file:"technical-random-21.png",label:"Origines d’Aerith",x:50,y:50}
+    {file:"technical-random-21.png",label:"Origines d’Aerith",x:50,y:50},
+    {file:"technical-random-22.png",label:"Vers la Cité d’Émeraude",x:50,y:50}
   ].map(Object.freeze));
 
   const FRAMING = Object.freeze({
@@ -189,6 +190,15 @@
     const img = ensureImage();
     if (!img) return false;
     revokeObjectUrl();
+    // Between the code commit and the owner's manual upload of the original
+    // binary asset, keep RND usable instead of displaying a broken image.
+    img.onerror = src === BASE + "technical-random-22.png"
+      ? () => {
+          img.onerror = null;
+          img.src = BASE + "technical-random-21.png";
+          status("RND 22 en attente d’image · repli sur Origines d’Aerith");
+        }
+      : null;
     img.src = src;
     setFraming(framing);
     status(label);
