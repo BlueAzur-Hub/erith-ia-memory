@@ -20,7 +20,8 @@ test('existing CT gateway is called once for inline account brief, no technical 
  assert.ok(inline.length>100);
  assert.match(inline,/const doc=await loadCtEvidence\(\)/);
  assert.match(inline,/model\.explain\(doc,chart\)/);
- assert.match(inline,/target\.append\(p\)/);
+ assert.match(inline,/showEvidence\(target,doc\)/);
+ assert.match(inline,/showFullReport\(target,report\)/);
  assert.doesNotMatch(inline,/paint\(doc\)|scrollIntoView|detailPanelToggle|\.open\s*=\s*true/);
  assert.equal((ai.match(/BACKEND\+'\/market-book\?provider=okx&instrument=CT-USDC&limit=100'/g)||[]).length,1);
 });
