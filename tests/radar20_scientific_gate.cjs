@@ -20,7 +20,13 @@ function evaluate(frozen,forwardIndex,forward,executionIndex,history,stress,obse
   insist(forwardIndex.config_sha256===forward.protocol_sha256&&forward.protocol_sha256===executionIndex.protocol_sha256,"consistent protocol fingerprints");
   insist(forward.schema==="erith.radar20.forward.summary.v1"&&forward.no_live_orders===true&&forward.strategy_certified===false,"forward is uncertified and read-only");
   insist(Array.isArray(forwardIndex.days)&&forward.days_collected===forwardIndex.days.length,"forward collection counters match");
-  insist(finite(forward.days_collected)&&forward.days_collected>=0&&forward.days_collected<=frozen.test_days,"forward days bounded by protocol");
+  insist(Number.isInteger(frozen.test_days)&&frozen.test_days===90&&frozen.holding_hours===48,"immutable forward and settlement durations");
+  const settlementDays=Math.ceil(frozen.holding_hours/24),sourceDays=frozen.test_days+settlementDays;
+  insist(Number.isInteger(forward.days_collected)&&forward.days_collected>=0&&forward.days_collected<=sourceDays,"forward source days include bounded 48h settlement");
+  const expectedStatus=forward.days_collected===0?"WAITING_FOR_FIRST_DAY":forward.days_collected===sourceDays?"COMPLETE":"RUNNING";
+  insist(forward.status===expectedStatus,"forward status matches collection and settlement");
+  const signalDays=Math.min(forward.days_collected,frozen.test_days);
+  insist(forwardIndex.days.every((day,i)=>day.day===new Date(Date.parse(frozen.start_day_utc+"T00:00:00Z")+i*86400000).toISOString().slice(0,10)),"forward days contiguous from frozen start");
   insist(history.orders_enabled===false&&history.primary&&history.primary.capital_usdt===frozen.capital_usdt,"historical portfolio isolation");
   insist(stress.orders_enabled===false&&stress.primary&&stress.primary.capital_usdt===frozen.capital_usdt,"retrospective portfolio isolation");
   insist(history.strategy_certified!==true&&stress.strategy_certified===false,"historical models uncertified");
@@ -53,10 +59,11 @@ function evaluate(frozen,forwardIndex,forward,executionIndex,history,stress,obse
     integrity:"PASS", profitability_certified:false,real_orders:false,
     distinct_retrospective_quarters:quarters,
     interpretation:"Quarterly simulations reset capital independently; they are not one six-month equity curve or a prospective validation.",
-    forward:{start_day_utc:frozen.start_day_utc,protocol_days:frozen.test_days,days_collected:forward.days_collected,days_remaining:frozen.test_days-forward.days_collected,status:forward.status,simulation_only:true},
+    forward:{start_day_utc:frozen.start_day_utc,protocol_days:frozen.test_days,signal_days_collected:signalDays,signal_days_remaining:frozen.test_days-signalDays,settlement_days_required:settlementDays,source_days_required:sourceDays,source_days_collected:forward.days_collected,settlement_days_collected:Math.max(0,forward.days_collected-frozen.test_days),status:forward.status,simulation_only:true},
     execution_witness:{observations:observations.length,signal_candidates:candidates,public_okx_book_snapshots:publicBooks,delayed_after_signal_hour:delayed,authenticated_account_fees:false,future_entry_fill_proven:false,scope:"Public OKX depth observed after signal-hour open, not contemporaneous fills"},
     blockers:[
-      ...(forward.days_collected<frozen.test_days?["PROSPECTIVE_90_DAYS_INCOMPLETE"]:[]),
+      ...(signalDays<frozen.test_days?["PROSPECTIVE_90_DAYS_INCOMPLETE"]:[]),
+      ...(forward.days_collected<sourceDays?["SETTLEMENT_WINDOW_INCOMPLETE"]:[]),
       "EXECUTION_COSTS_NOT_AUTHENTICATED",
       "NO_REAL_FILL_EVIDENCE",
       "RETROSPECTIVE_MODEL_SELECTION_BIAS",
@@ -69,7 +76,12 @@ function run(root){
   const frozen=data(root,forwardRoot+"experiment.json");
   const idx=data(root,forwardRoot+"index.json");
   insist(digest(read(root,forwardRoot+"experiment.json"))===idx.config_sha256,"frozen protocol SHA-256");
-  for(const o of idx.outputs||[])insist(digest(read(root,forwardRoot+o.file))===o.sha256,"forward output SHA-256 "+o.file);
+  const indexed=[...(idx.days||[]),...(idx.okx||[]),...(idx.outputs||[])];
+  for(const o of indexed){
+    insist(typeof o.file==="string"&&/^[\w./-]+$/.test(o.file)&&!o.file.startsWith("/")&&!o.file.split("/").includes(".."),"safe forward indexed path");
+    insist(typeof o.sha256==="string"&&/^[a-f0-9]{64}$/.test(o.sha256),"valid forward indexed digest");
+    insist(digest(read(root,forwardRoot+o.file))===o.sha256,"forward indexed SHA-256 "+o.file);
+  }
   const forward=data(root,forwardRoot+"summary.json");
   const ex=data(root,executionRoot+"index.json");
   const obs=ex.observations.map(o=>{
@@ -90,7 +102,7 @@ function markdown(r){
   "**"+r.state+"** · intégrité documentaire "+r.integrity+" · ordres réels désactivés.\n\n"+
   "| Simulation indépendante | Transactions | Résultat (USDT fictifs) | Recul maximal | Coût AR supposé |\n|---|---:|---:|---:|---:|\n"+
   qs.map(q=>"| "+q.label+" | "+q.trades+" | "+q.net_usdt+" | "+q.max_drawdown_pct+" % | "+q.assumed_roundtrip_cost_pct+" % |").join("\n")+
-  "\n\n**Prospectif :** "+r.forward.days_collected+"/"+r.forward.protocol_days+" journées, "+r.forward.days_remaining+" à collecter selon le protocole figé.\n"+
+  "\n\n**Prospectif :** "+r.forward.signal_days_collected+"/"+r.forward.protocol_days+" journées de signaux, "+r.forward.signal_days_remaining+" restantes. Archives sources "+r.forward.source_days_collected+"/"+r.forward.source_days_required+" (dont "+r.forward.settlement_days_required+" journées de clôture, non des signaux supplémentaires).\n"+
   "**Carnet public :** "+r.execution_witness.observations+" observations, "+r.execution_witness.signal_candidates+" candidats, "+r.execution_witness.public_okx_book_snapshots+" relevés OKX. Frais de compte et exécutions futures non prouvés.\n"+
   "**Blocages :** "+r.blockers.join(" ; ")+".\n\n"+
   "Les deux trimestres ont des capitaux fictifs réinitialisés. Un PASS d'intégrité n'est jamais une certification de gain, ni une autorisation d'ordre.\n";
