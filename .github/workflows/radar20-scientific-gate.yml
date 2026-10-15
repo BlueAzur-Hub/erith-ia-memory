@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "tests/radar20_scientific_gate*.cjs"
+      - "tests/radar20_veille.test.cjs"
+      - "public/agent_crypto_erith_ia/laboratoire/radar20-veille.*"
       - "public/agent_crypto_erith_ia/laboratoire/RADAR20_ETAT_DE_PREUVE.md"
       - ".github/workflows/radar20-scientific-gate.yml"
       - "public/agent_crypto_erith_ia/data/trader_flux/radar20_forward/**"
@@ -12,6 +14,8 @@ on:
     branches: [main]
     paths:
       - "tests/radar20_scientific_gate*.cjs"
+      - "tests/radar20_veille.test.cjs"
+      - "public/agent_crypto_erith_ia/laboratoire/radar20-veille.*"
       - ".github/workflows/radar20-scientific-gate.yml"
       - "public/agent_crypto_erith_ia/data/trader_flux/radar20_forward/**"
       - "public/agent_crypto_erith_ia/data/trader_flux/radar20_execution/**"
@@ -26,7 +30,9 @@ jobs:
         with:
           node-version: "22"
       - name: Test scientific guard and repository data
-        run: node --test tests/radar20_scientific_gate.test.cjs
+        run: |
+          node --test tests/radar20_scientific_gate.test.cjs
+          node --test tests/radar20_veille.test.cjs
       - name: Produce machine-readable evidence
         run: node tests/radar20_scientific_gate.cjs > radar20-scientific-status.json
       - name: Human verdict
