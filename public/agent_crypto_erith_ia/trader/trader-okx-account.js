@@ -218,6 +218,38 @@ function updateCostBreakdown(position,quote){
 
 /* Lecture BTC explicative à partir des données déjà consultées par le panneau OKX.
    Jamais de nouveaux endpoints privés, jamais de nouveau calcul de frais supposés. */
+
+/* Only balance arithmetic from existing private ledger; never a trade receipt. */
+function btcQuantityChain({movements,acquisition,held,complete,usdcEntries=[]}={}){
+  const missing=reason=>Object.freeze({status:"unknown",reason,read_only:true});
+  if(complete!==true||!Array.isArray(movements)||!acquisition||
+    !Number.isFinite(acquisition.btc)||acquisition.btc<=0||
+    !Number.isFinite(acquisition.timestamp)||!Number.isFinite(held)||held<0)
+    return missing("Relevé BTC incomplet ou incohérent");
+  const btc=movements.filter(x=>x?.currency==="BTC");
+  if(btc.length!==2||btc.some(x=>x.source!=="Compte de trading"||
+    !Number.isFinite(x.balanceChange)||!Number.isFinite(x.timestamp)))
+    return missing("Il existe d'autres mouvements BTC non réconciliés");
+  const credit=btc.find(x=>x.balanceChange>0&&x.type==="30"&&x.subType==="320"&&
+    Math.abs(x.timestamp-acquisition.timestamp)<=120000&&
+    Math.abs(x.balanceChange-acquisition.btc)<=Math.max(1e-12,acquisition.btc*1e-8));
+  const exits=btc.filter(x=>x.balanceChange<0&&x.timestamp>=acquisition.timestamp);
+  if(!credit||exits.length!==1)return missing("Crédit d'origine ou sortie BTC non appariables");
+  const debit=-exits[0].balanceChange;
+  if(debit<=0||debit>acquisition.btc)return missing("Débit BTC non vérifiable");
+  const remainder=acquisition.btc-debit;
+  if(Math.abs(remainder-held)>Math.max(1e-12,acquisition.btc*1e-8))
+    return Object.freeze({status:"mismatch",read_only:true,expected_btc:remainder,held_btc:held});
+  const matches=Array.isArray(usdcEntries)?usdcEntries.filter(x=>
+    x?.currency==="USDC"&&x.source==="Compte de trading"&&
+    Number.isFinite(x.timestamp)&&Math.abs(x.timestamp-exits[0].timestamp)<=120000&&
+    Number.isFinite(x.balanceChange)&&x.balanceChange>0):[];
+  const counter=matches.length===1?matches[0]:null;
+  return Object.freeze({status:"balanced",read_only:true,credit_btc:acquisition.btc,
+    debit_btc:debit,remaining_btc:remainder,
+    debit_at:new Date(exits[0].timestamp).toISOString(),
+    paired_usdc:counter!==null,credit_usdc:counter?.balanceChange??null});
+}
 function btcPositionReport(evidence={},now=Date.now()){
   const lines=[];
   const account=evidence.account||null;
@@ -262,7 +294,17 @@ function btcPositionReport(evidence={},now=Date.now()){
       lines.push("Différence INDICATIVE à cet instant : "+signedMoney(delta)
         +" entre la cotation publique et les écritures rapprochées, avant frais de revente, spread et éventuels coûts PayPal. Ce n'est ni un bénéfice réalisé ni un P&L net certifié.");
     }else if(!sameHolding){
-      lines.push("La quantité BTC détenue diffère du mouvement rapproché : celui-ci ne permet pas de déduire le coût de la position actuelle.");
+      const chain=ledger?.btcChain;
+      if(chain?.status==="balanced"&&chain.credit_btc===matched.btc&&
+        Math.abs(chain.remaining_btc-qty)<=Math.max(1e-12,matched.btc*1e-8)){
+        lines.push("Quantités BTC rapprochées : "+fmt(chain.credit_btc)+" BTC reçus − "
+          +fmt(chain.debit_btc)+" BTC sortis le "+chain.debit_at+" = "
+          +fmt(chain.remaining_btc)+" BTC restants.");
+        if(chain.paired_usdc&&Number.isFinite(chain.credit_usdc))
+          lines.push(fmt(chain.credit_usdc)+" USDC crédités au compte de trading au même moment : flux compatibles avec une conversion BTC/USDC. La nature exacte de l'opération reste à vérifier dans l'historique OKX.");
+        else lines.push("La contrepartie USDC n'est pas attestée par le Bridge : le débit BTC n'est pas à lui seul une preuve de conversion.");
+        lines.push("Le coût d'acquisition PayPal, le coût résiduel du BTC et le gain net restent NON PROUVÉS. Aucune imputation automatique du coût initial.");
+      }else lines.push("La quantité BTC détenue diffère du mouvement rapproché : celui-ci ne permet pas de déduire le coût de la position actuelle.");
     }else{
       lines.push("Différence indicative non calculable sans cotation BTC/EUR récente.");
     }
@@ -467,10 +509,21 @@ function ledgerPaint(results){
   const matches=credits.flatMap(btc=>debits.filter(eur=>Math.abs(btc.timestamp-eur.timestamp)<=120000).map(eur=>({btc,eur})));
   const summary=q("ledgersummary");
   if(summary)summary.hidden=matches.length!==1||credits.length!==1||debits.length!==1;
-  ledgerPosition={recordsCount,matched:null};
+  ledgerPosition={recordsCount,matched:null,btcChain:null};
   if(matches.length===1&&credits.length===1&&debits.length===1&&!issues.length&&!hasMore){
     ledgerPosition.matched={btc:matches[0].btc.balanceChange,eur:Math.abs(matches[0].eur.balanceChange),timestamp:matches[0].btc.timestamp};
     if(entryQuote?.timestamp!==matches[0].btc.timestamp)entryQuote=null;
+  }
+  if(ledgerPosition.matched){
+    const source=results.USDC?.payload;
+    const journal=source?.sources?.trading_account;
+    const usdcComplete=results.USDC?.ok===true&&source.ccy==="USDC"&&
+      source.read_only===true&&journal?.state==="ok"&&journal.has_more!==true&&
+      Array.isArray(journal.records);
+    const usdc=usdcComplete?journal.records.filter(Boolean).map(x=>ledgerMovement(x,"USDC","Trading")):[];
+    ledgerPosition.btcChain=btcQuantityChain({movements:recent,
+      acquisition:ledgerPosition.matched,held:currentBtcHeld,
+      complete:issues.length===0&&!hasMore,usdcEntries:usdc});
   }
   if(summary&&!summary.hidden){
     const {btc,eur}=matches[0];
@@ -529,7 +582,7 @@ async function refreshLedger(force=false){
   text("ledgerstatus","Lecture des journaux financiers BTC puis EUR…");
   ledgerInFlight=(async()=>{
     const result={};
-    for(const ccy of ["BTC","EUR"]){
+    for(const ccy of ["BTC","EUR","USDC"]){
       try{
         const payload=await bridge("/okx/ledger?ccy="+ccy+"&pages=1");
         result[ccy]={ok:true,payload};
@@ -540,7 +593,8 @@ async function refreshLedger(force=false){
     }
     if(token())ledgerPaint(result);
     else ledgerClear("Session Aether Trust terminée.");
-    ledgerCheckedAt=Date.now();
+    if(token())ledgerCheckedAt=Date.now();
+    updateBtcReading();
     return true;
   })().catch(()=>{
     text("ledgerstatus","Lecture financière impossible ; les soldes précédents restent disponibles.");
@@ -746,7 +800,7 @@ function mount(){
   return true;
 }
 
-if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport});
+if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain});
 if(typeof document==="undefined")return;
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
 globalThis.AgentCryptoTraderOkxAccount=Object.freeze({mount,refresh,login,logout:logoutBridge,read_only:true,bridge:BRIDGE,token_storage:"sessionStorage",okx_credentials_in_browser:false,real_orders:false});
