@@ -46911,6 +46911,35 @@ function atlasGraphContextV7ApplyRuntime(context,{controls=true}={}) {
   return true;
 }
 
+// Administrator: "Vider" is an immediate clear, not a permanent blank startup.
+ // V7 stays the single restart authority; Trader CT history is never rewritten.
+function atlasGraphContextV7RecoverRestartMarket(persisted) {
+  if (atlasTraderIsRuntime()) return null;
+  const market = persisted?.market;
+  const ids = Array.isArray(market?.comparisonIds) ? market.comparisonIds.filter(Boolean) : [];
+  if (ids.length || market?.selectionCleared !== true || market?.selectionIntent !== "explicit-empty") return null;
+  const lastValid = atlasWorkspaceReadJson(ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY);
+  const restoredMarket = atlasWorkspaceSnapshotHasSelection(lastValid)
+    ? atlasWorkspaceRecoverGraphSnapshot(market, lastValid, "restart-after-clear")
+    : {
+        ...market,
+        selectedCoinId: ATLAS_CURATED_TOP5_IDS[0],
+        comparisonIds: [...ATLAS_CURATED_TOP5_IDS],
+        comparisonPreset: "rank-5",
+        selectionCleared: false,
+        selectionIntent: "selected"
+      };
+  const savedAtMs = Date.now();
+  return atlasGraphContextV7Normalize({
+    ...persisted,
+    market: restoredMarket,
+    savedAt: new Date(savedAtMs).toISOString(),
+    savedAtMs,
+    sequence: Number(persisted.sequence || 0) + 1,
+    lastAction: "system-recover-restart-after-clear"
+  });
+}
+
 function atlasGraphContextV7Bootstrap() {
   atlasGraphContextV7ProbeLocalStorage();
   atlasGraphContextV7BootPhase = "reading";
@@ -46933,6 +46962,7 @@ async function atlasGraphContextV7Initialize() {
     let persisted = null;
     let readFailed = false;
     let migratedLegacyEmptySeed = false;
+    let restartRecoveredEmpty = false;
     atlasGraphContextV7BootPhase = "reading";
     try {
       persisted = await atlasGraphContextV7DbRead();
@@ -46962,7 +46992,9 @@ async function atlasGraphContextV7Initialize() {
           lastAction:"system-default-top5-404257"
         });
       } else {
-        atlasGraphContextV7Memory = atlasGraphContextV7Normalize(persisted);
+        const recovered = atlasGraphContextV7RecoverRestartMarket(persisted);
+        restartRecoveredEmpty = !!recovered;
+        atlasGraphContextV7Memory = recovered || atlasGraphContextV7Normalize(persisted);
       }
     } else if (!readFailed) {
       // Confirmed first use only: Top 5 is the canonical non-empty graph default.
@@ -46978,9 +47010,10 @@ async function atlasGraphContextV7Initialize() {
     atlasGraphContextV7Ready = !readFailed;
 
     if (!readFailed && persisted) {
-      if (migratedLegacyEmptySeed) {
-        // One-time system migration of the old accidental empty seed.
-        await atlasGraphContextV7QueuePersist(atlasGraphContextV7Read(),"system-default-top5-404257");
+      if (migratedLegacyEmptySeed || restartRecoveredEmpty) {
+        // A one-time restart recovery is verified in the existing V7 IndexedDB row.
+        const action = migratedLegacyEmptySeed ? "system-default-top5-404257" : "system-recover-restart-after-clear";
+        await atlasGraphContextV7QueuePersist(atlasGraphContextV7Read(),action);
       } else {
         atlasGraphContextV7Persistence.state = "ok";
         atlasGraphContextV7Persistence.verifiedSequence = Number(persisted.sequence || 0);
