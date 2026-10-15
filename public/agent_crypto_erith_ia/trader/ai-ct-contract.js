@@ -310,6 +310,54 @@
       rows:Object.freeze(targets),order_accepted:false,
       caveat:'Seuls état, minimum et pas de quantité sont contrôlés. Pas de validation des limites notionnelles, du profil OKX ni de la liquidité future.'});
   }
+
+  // Comparateur de choix CT : devis Convert recopié manuellement, jamais LIVE.
+  // Ne qualifier un Spot de possible que pour les filtres de TAILLE prouvés,
+  // et uniquement si son carnet est encore frais. Aucun ordre ni recommandation.
+  function compareCtExitDecisions(doc,manualUsdc,now=Date.now()){
+    const unavailable=reason=>Object.freeze({status:'unavailable',read_only:true,
+      order_enabled:false,reason});
+    if(doc?.schema!==SCHEMA||doc?.read_only!==true||doc?.orders_enabled!==false||
+       doc?.market!==PAIR||doc?.position?.verified!==true||
+       !Number.isFinite(doc.position.qty_ct)||doc.position.qty_ct<=0)
+      return unavailable('Position CT/USDC du compte non vérifiée');
+    const observed=Date.parse(doc.observed_at||'');
+    if(!Number.isFinite(observed)||observed>now||now-observed>120000)
+      return unavailable('Lecture du compte trop ancienne, rafraîchir Seven CT');
+    const input=typeof manualUsdc==='string'?manualUsdc.trim().replace(',','.'):null;
+    if(!input||!/^\d{1,12}(?:\.\d{1,8})?$/.test(input)||Number(input)<=0)
+      return unavailable('Saisir le montant USDC positif du nouveau devis Convert');
+    const convert=Number(input);
+    if(!Number.isFinite(convert)||convert<=0)return unavailable('Devis manuel invalide');
+    const costs=doc.acquisition?.status==='reconciled_fills_only'&&
+      Number.isFinite(doc.acquisition.spent_usdc)&&doc.acquisition.spent_usdc>0
+       ?doc.acquisition.spent_usdc:null;
+    const convertDifference=costs===null?null:convert-costs;
+    const convertReturn=costs===null?null:100*convertDifference/costs;
+    const size=doc.order_assessment?.rows?.find(x=>x.share_pct===100);
+    const simulated=doc.partial_exit_grid?.rows?.find(x=>x.share_pct===100);
+    const officialRules=doc.instrument_rules?.status==='verified'&&
+      Date.parse(doc.instrument_rules.checked_at)>=now-120000;
+    const spotSize=officialRules&&size?.quantity_status==='size_matches';
+    const spotBook=simulated?.status==='indicative'&&Number.isFinite(simulated.net_usdc)&&
+      Date.parse(doc.partial_exit_grid?.observed_at)>=now-20000;
+    // Compare only if both order-size filters AND the book are verified;
+    // other exchange conditions are NOT covered by this exercise.
+    const spotIllustration=spotSize&&spotBook?simulated.net_usdc:null;
+    return Object.freeze({
+      status:'manual_comparison',read_only:true,order_enabled:false,
+      market:PAIR,held_ct:doc.position.qty_ct,
+      manual_convert_usdc:convert,manual_convert_unverified:true,
+      acquisition_cost_usdc:costs,
+      convert_difference_usdc:convertDifference,convert_return_pct:convertReturn,
+      spot_size_status:size?.quantity_status||'unverified',
+      spot_net_illustration_usdc:spotIllustration,
+      hypothetical_spot_difference_usdc:spotIllustration===null||costs===null?null:spotIllustration-costs,
+      choice_hold_realized_usdc:null,
+      verdict:'Aucun choix automatique : comparer le devis Convert confirmé par OKX aux coûts et à son propre risque.',
+      caveat:'Montant Convert saisi à la main, non authentifié et périssable. Le Spot est un carnet théorique ; aucune opération acceptée ni profit réalisé.'
+    });
+  }
   // Contexte public : seules les bougies CT/USDT réellement chargées sont recevables.
   function publicCandles(chart,now=Date.now()){
     const empty=reason=>Object.freeze({status:'unavailable',reason});
@@ -427,5 +475,5 @@
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
         'Le prix futur de revente et le bénéfice réalisé ne sont pas connus.']});
   }
-  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,assessSpotQuantity,planGrossBuyForNetSpot,assessPartialRules,publicCandles,explain,compose});
+  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,assessSpotQuantity,planGrossBuyForNetSpot,assessPartialRules,compareCtExitDecisions,publicCandles,explain,compose});
 });
