@@ -142,6 +142,60 @@ function showNetBuyPlanner(parent,doc){
  });
  parent.append(area);
 }
+
+function showCtChoiceComparison(parent,doc){
+ // Devis recopié par l'opérateur : JAMAIS tiré d'une ancienne capture,
+ // JAMAIS assimilé à un devis authentifié et JAMAIS enregistré.
+ const pane=el('details','ai-ct-choice-compare');
+ pane.append(el('summary','','Décision CT · comparer Convert, Spot et conserver'));
+ pane.append(el('p','',
+  'Saisis le nouveau montant USDC affiché pour tes CT par OKX Convert. Ce devis expire rapidement : ce calcul ne le réserve pas et ne passe aucun ordre.'));
+ const label=el('label','ai-ct-choice-label');
+ label.append(el('span','','USDC proposés sur OKX Convert pour toute ma position'));
+ const input=el('input','');
+ input.type='text';input.inputMode='decimal';input.placeholder='Montant du nouveau devis, ex. 3,76';
+ input.autocomplete='off';input.spellcheck=false;
+ label.append(input);pane.append(label);
+ const btn=el('button','ai-ct-choice-button','Comparer les trois choix');
+ btn.type='button';pane.append(btn);
+ const results=el('div','ai-ct-choice-results',
+  'Aucun devis saisi. Les anciennes cotations ne sont pas réutilisées.');
+ results.setAttribute('aria-live','polite');pane.append(results);
+ btn.addEventListener('click',()=>{
+  results.replaceChildren();
+  const report=model.compareCtExitDecisions(doc,input.value,Date.now());
+  if(report.status!=='manual_comparison'){
+   results.textContent='Calcul indisponible : '+report.reason+'. Recharge la lecture CT si nécessaire.';
+   return;
+  }
+  const rows=el('div','ai-ct-choice-grid');
+  function add(heading,value,detail){
+   const cell=el('section','ai-ct-choice-cell');
+   cell.append(el('span','',heading),el('strong','',value),el('small','',detail));
+   rows.append(cell);
+  }
+  const sign=n=>n>0?'+':'';
+  add('Convert · devis manuel',number(report.manual_convert_usdc,8)+' USDC',
+    report.convert_difference_usdc===null
+     ?'Coût d’achat non prouvé · gain non calculable'
+     :'Écart aux achats retrouvés : '+sign(report.convert_difference_usdc)+
+      number(report.convert_difference_usdc,8)+' USDC ('+
+      sign(report.convert_return_pct)+number(report.convert_return_pct,2)+' %).');
+  add('Spot · carnet actuel',
+    report.spot_net_illustration_usdc===null?'Non négociable ou non vérifié':
+     number(report.spot_net_illustration_usdc,8)+' USDC',
+    report.spot_net_illustration_usdc===null
+     ?'Filtres Spot non concordants, inconnus ou carnet périmé.'
+     :'Taille conforme aux filtres observés ; autres contrôles d’ordre et exécution NON garantis.');
+  add('Conserver · CT',
+    number(report.held_ct,8)+' CT',
+    'Aucun gain réalisé ; exposition à la hausse ET à la baisse maintenue.');
+  results.append(rows);
+  results.append(el('p','ai-ct-choice-warning',
+    'Devis Convert SAISI MANUELLEMENT : non vérifié et périssable. Comparaison d’une seule opération CT, pas du rendement de tout le capital investi en euros. Aucune action sur le compte.'));
+ });
+ parent.append(pane);
+}
 function showEvidence(target,doc){
  const wrapper=el('section','ai-ct-execution');
  const top=el('div','ai-ct-execution-top');
@@ -219,6 +273,7 @@ function showEvidence(target,doc){
   wrapper.append(band);
  }
  showNetBuyPlanner(wrapper,doc);
+ showCtChoiceComparison(wrapper,doc);
  const warning=el('p','ai-ct-execution-warning',
  'Le carnet décrit des offres momentanées ; une quantité conforme à minSz/lotSz ne garantit ni acceptation, ni exécution. Autres contrôles OKX et frais éventuels non certifiés.');
  wrapper.append(warning);
