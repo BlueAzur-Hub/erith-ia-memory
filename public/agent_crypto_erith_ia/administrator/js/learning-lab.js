@@ -225,6 +225,8 @@
       pane.append(card("Disponibilité des preuves",data.vault));
       const link=elt("a","lab-link","Ouvrir le Coffre historique vérifié ↗");
       link.href="../administrator/historical-vault.html";link.target="_blank";link.rel="noopener noreferrer";pane.append(link);
+      const radar=elt("a","lab-link","Radar 20 · suivi scientifique prospectif ↗");
+      radar.href="../laboratoire/radar20-veille.html";radar.target="_blank";radar.rel="noopener noreferrer";pane.append(radar);
     } else if(tab==="simulation"){
       renderSimulation();
     } else if(tab==="journal"){
