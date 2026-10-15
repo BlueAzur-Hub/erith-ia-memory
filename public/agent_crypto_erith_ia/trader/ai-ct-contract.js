@@ -53,7 +53,7 @@
     if (!validSource(fills) || !Array.isArray(fills.fills_3m) || qty === null) return {status:'unknown',reason:'Transactions OKX incomplètes'};
     const pairFills=fills.fills_3m.filter(f=>f.instId===PAIR);
     if (!pairFills.length) return {status:'unknown',reason:'Aucune transaction CT/USDC retrouvée'};
-    let acquired=0,spent=0,number=0;
+    let acquired=0,spent=0,number=0,grossCt=0,ctFee=0,ctFeeOnly=true;
     const seen=new Set();
     for (const f of pairFills) {
       // Do not infer the cost of holdings after a transfer, a sell or a non-CT fee.
@@ -66,6 +66,9 @@
         return {status:'unknown',reason:'Prix, quantité ou frais non prouvés'};
       const feeCcy=String(f.feeCcy??'');
       if (fee!==0 && !['CT','USDC'].includes(feeCcy))return {status:'unknown',reason:'Frais prélevés dans une autre devise'};
+      grossCt+=size;
+      if(feeCcy==='CT'&&fee<=0)ctFee+=-fee;
+      else if(fee!==0)ctFeeOnly=false;
       acquired+=size+(feeCcy==='CT'?fee:0);
       spent+=size*price-(feeCcy==='USDC'?fee:0);
       number++;
@@ -74,6 +77,9 @@
       return {status:'unknown',reason:'Le solde et les achats retrouvés ne concordent pas'};
     return {status:'reconciled_fills_only',net_acquired_ct:acquired,spent_usdc:spent,
       cost_per_ct_usdc:spent/acquired,fill_count:number,
+      observed_buy_ct_fee_pct:ctFeeOnly&&grossCt>0?100*ctFee/grossCt:null,
+      observed_buy_ct_fee_qty:ctFeeOnly&&grossCt>0?ctFee:null,
+      historical_gross_ct:grossCt,
       caveat:'Transactions retrouvées et solde concordants ; historique externe/transferts non certifiés'};
   }
   function takerRate(fees) {
@@ -235,6 +241,59 @@
     if(n%lot!==0n)return Object.freeze({status:'invalid_step',message:'Non multiple du pas ('+rules.lot_sz+' CT)'});
     return Object.freeze({status:'size_matches',message:'Quantité conforme aux filtres vérifiés ; exécution NON garantie'});
   }
+
+  // Préparation D'UN FUTUR achat au plus juste pour pouvoir revendre le
+  // minimum SPOT en CT après les frais. Ce ne sont PAS des frais futurs
+  // vérifiés, ni une commande d'ordre. Quantités décimales exactes à 12 places.
+  function planGrossBuyForNetSpot(rules,feePercent,feeCurrency){
+    const unverified=reason=>Object.freeze({status:'unavailable',read_only:true,
+      market:PAIR,reason,order_enabled:false});
+    if(rules?.status!=='verified'||rules.market!==PAIR||rules.state!=='live')
+      return unverified('Règles SPOT CT/USDC non vérifiées ou paire non active');
+    if(feeCurrency!=='CT'&&feeCurrency!=='USDC')
+      return unverified('La devise des frais de ce futur achat doit être choisie');
+    if(typeof feePercent!=='string'||!/^\d+(?:\.\d{1,8})?$/.test(feePercent))
+      return unverified('Taux de frais hypothétique non renseigné ou invalide');
+    const percentage=scaledRule(feePercent);
+    if(percentage===null||percentage>scaledRule('5'))
+      return unverified('Hypothèse de frais hors plage 0–5 %');
+    const scale=1000000000000n;
+    const min=scaledRule(rules.min_sz),lot=scaledRule(rules.lot_sz);
+    if(min===null||lot===null||min<=0n||lot<=0n)
+      return unverified('Minimum ou pas SPOT invalides');
+    const ceil=(a,b)=>(a+b-1n)/b;
+    const wantedLots=ceil(min,lot);
+    const sellableTarget=wantedLots*lot;
+    const feeFraction=percentage/100n; // % -> fraction exact, max 8 décimales
+    const feeInCt=feeCurrency==='CT'?feeFraction:0n;
+    if(feeInCt>=scale)return unverified('Frais d’achat incohérents');
+    let lots=ceil(ceil(sellableTarget*scale,scale-feeInCt),lot);
+    // Arrondi conservateur au quantum de 10^-12 CT pour les frais en CT.
+    let gross=lots*lot;
+    let feeCt=ceil(gross*feeInCt,scale);
+    let net=gross-feeCt;
+    if(net<sellableTarget){
+      lots++;gross=lots*lot;feeCt=ceil(gross*feeInCt,scale);net=gross-feeCt;
+    }
+    const sellable=(net/lot)*lot;
+    if(gross>=1000000000000000000000000n||net<sellableTarget||sellable<min)
+      return unverified('Quantité théorique non représentable de façon sûre');
+    const format=(v)=>{
+      const whole=v/scale,tail=(v%scale).toString().padStart(12,'0').replace(/0+$/,'');
+      return whole.toString()+(tail?'.'+tail:'');
+    };
+    return Object.freeze({status:'hypothetical',read_only:true,order_enabled:false,
+      market:PAIR,fee_currency:feeCurrency,fee_pct_assumption:feePercent,
+      official_filters_checked_at:rules.checked_at,
+      minimum_ct:format(min),lot_ct:format(lot),
+      sale_quantity_target_ct:format(sellableTarget),
+      gross_purchase_ct:format(gross),assumed_fee_ct:feeCurrency==='CT'?format(feeCt):null,
+      net_received_ct:format(net),quantity_saleable_ct:format(sellable),
+      residual_ct:format(net-sellable),
+      cost_usdc:null,capital_committed_proven:false,
+      caveat:'Règles publiques actuelles et frais d’achat FUTURS hypothétiques ; pas de prix d’achat garanti, pas de coûts USDC chiffrés, pas de vente ni d’ordre.'
+    });
+  }
   function assessPartialRules(grid,qty,rules){
     const targets=[25,50,100].map(pct=>{
       const simulated=grid?.rows?.find(r=>r.share_pct===pct)||null;
@@ -365,5 +424,5 @@
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
         'Le prix futur de revente et le bénéfice réalisé ne sont pas connus.']});
   }
-  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,assessSpotQuantity,assessPartialRules,publicCandles,explain,compose});
+  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,assessSpotQuantity,planGrossBuyForNetSpot,assessPartialRules,publicCandles,explain,compose});
 });
