@@ -878,6 +878,9 @@
       try{globalThis.AtlasExternalChart?.clear?.("new-listing-native-exit");}catch(_){}
     }
     hideLegacyUx();
+    // A return to canonical BTC/Q must also remove the old ACTIF badge
+    // from the New Listing table, even if the table stays visible.
+    renderCategory();
     return hadSelection;
   }
 
