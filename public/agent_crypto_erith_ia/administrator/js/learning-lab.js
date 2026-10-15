@@ -50,7 +50,7 @@
   };
   // Keep educational inputs in this session, per dossier. Never persist financial examples.
   const simulationDrafts=Object.create(null);
-  let asset="BTC", tab="synthese", follow=false, root, legacy, pane, tabsNode, observer;
+  let asset="BTC", tab="synthese", follow=true, root, legacy, pane, tabsNode, observer;
   // The Lab is only an operator control: the existing Market and New Listing
   // owners do the actual selection, loads, technical reading and depth.
   let selectionRevision=0,selectionPending=false,selectionTruth="Dossier pédagogique · aucune sélection Trader demandée";
