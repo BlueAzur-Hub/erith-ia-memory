@@ -88,6 +88,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/trader/ai-ct-contract.js
           node --check public/agent_crypto_erith_ia/trader/ai-ct-panel.js
           node --test public/agent_crypto_erith_ia/trader/test-ai-ct-contract.cjs
+          node --test public/agent_crypto_erith_ia/trader/test-ai-ct-account-routing.cjs
           node --test public/agent_crypto_erith_ia/trader/test-btc-position-reading.cjs
 
       - name: Refuse late external order books and candles after selection change
