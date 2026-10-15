@@ -162,3 +162,21 @@ html[data-agent-crypto-surface="trader"] #accueil .atlas-v2-nav-essential #aiCtT
 .ai-ct-buy-result-grid dt{color:#aac8cc;font:11px/1.4 system-ui,sans-serif}
 .ai-ct-buy-result-grid dd{margin:4px 0 0;color:#f2fff9;font:800 13px/1.4 system-ui,sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 @media(max-width:520px){.ai-ct-buy-fields,.ai-ct-buy-result-grid{grid-template-columns:1fr}}
+
+
+/* Comparaison décisionnelle locale : prix Convert MANUEL, jamais ordre. */
+.ai-ct-choice-compare{margin:12px 0;padding:11px 12px;border:1px solid rgba(133,206,194,.43);border-radius:9px;background:rgba(7,40,47,.5)}
+.ai-ct-choice-compare>summary{cursor:pointer;color:#c4f4dc;font:800 12px/1.6 system-ui,sans-serif}
+.ai-ct-choice-compare>p{margin:9px 0!important;color:#c1dbda!important;font:11px/1.6 system-ui,sans-serif!important}
+.ai-ct-choice-label{display:flex;flex-direction:column;gap:6px;max-width:350px;color:#daedeb;font:700 11px/1.5 system-ui,sans-serif}
+.ai-ct-choice-label input{padding:9px 10px;color:#effff9;background:#061d29;border:1px solid #589298;border-radius:7px;font:12px/1.4 system-ui,sans-serif}
+.ai-ct-choice-button{display:inline-block;margin:9px 0;border:1px solid #6bbeb3;border-radius:7px;background:#12515a;color:#f5fffa;padding:8px 12px;cursor:pointer;font:800 11px/1.4 system-ui,sans-serif}
+.ai-ct-choice-button:focus-visible{outline:2px solid #fce4b2;outline-offset:2px}
+.ai-ct-choice-results{margin:8px 0;padding:10px;border:1px solid rgba(114,186,182,.25);border-radius:8px;background:rgba(3,22,30,.6);color:#deeeee;font:11px/1.6 system-ui,sans-serif}
+.ai-ct-choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ai-ct-choice-cell{padding:10px;display:flex;flex-direction:column;gap:7px;min-width:0;border:1px solid rgba(136,193,186,.27);border-radius:8px;background:rgba(20,58,63,.5)}
+.ai-ct-choice-cell span{font:700 11px/1.35 system-ui,sans-serif;color:#a1e3d5}
+.ai-ct-choice-cell strong{color:#fff2d0;font:800 15px/1.35 system-ui,sans-serif;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.ai-ct-choice-cell small{color:#c5d9dc;font:11px/1.55 system-ui,sans-serif;overflow-wrap:anywhere}
+.ai-ct-choice-warning{color:#f2ca9d!important;margin:10px 0 0!important;font:11px/1.55 system-ui,sans-serif!important}
+@media(max-width:760px){.ai-ct-choice-grid{grid-template-columns:1fr}}
