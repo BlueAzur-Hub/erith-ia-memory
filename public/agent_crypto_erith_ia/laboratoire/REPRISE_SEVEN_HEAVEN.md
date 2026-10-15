@@ -1,5 +1,7 @@
 # NOTE DE REPRISE CANONIQUE — 15 octobre 2026 · clôture Radar 20
 
+> **Passation Trader/Constellation du 16 octobre :** [REPRISE_CONSTELLATION_TRADER.md](REPRISE_CONSTELLATION_TRADER.md) · compétences Aerith-10, Atlas et Flower Girls, cycle CT réellement converti, prochain chantier de réconciliation OKX en lecture seule. Les preuves courantes de marché et de code prévalent sur les instantanés de ces notes.
+
 > **Cette note met à jour l'état technique du 14 octobre conservé ci-dessous, sans le remplacer.** Toujours relire `main` et les index réels : le compteur de journées évolue quotidiennement.
 
 ## Résultat du fil clôturé
