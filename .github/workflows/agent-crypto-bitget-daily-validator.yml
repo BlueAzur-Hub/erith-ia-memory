@@ -1,0 +1,28 @@
+name: Agent Crypto Bitget Daily Validator
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/trader/ai-bitget-daily-validator.js"
+      - "public/agent_crypto_erith_ia/tools/ai-bitget-daily-validator.test.mjs"
+      - ".github/workflows/agent-crypto-bitget-daily-validator.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/trader/ai-bitget-daily-validator.js"
+      - "public/agent_crypto_erith_ia/tools/ai-bitget-daily-validator.test.mjs"
+      - ".github/workflows/agent-crypto-bitget-daily-validator.yml"
+permissions:
+  contents: read
+jobs:
+  validate-native-bitget:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Parse source and test native data fixtures
+        run: |
+          node --check public/agent_crypto_erith_ia/trader/ai-bitget-daily-validator.js
+          node --test public/agent_crypto_erith_ia/tools/ai-bitget-daily-validator.test.mjs
