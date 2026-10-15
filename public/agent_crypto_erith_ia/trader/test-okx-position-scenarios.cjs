@@ -110,3 +110,73 @@ test('BTC unproven fees never produce hypothetical net proceeds',()=>{
  assert.ok(r.rows.every(x=>!Object.hasOwn(x,'profit_eur')));
  assert.match(r.caveat,/sans carnet BTC exécutable/);
 });
+
+test('CT 25 50 100 pct partial exits walk the same observed orderbook and known taker fee',()=>{
+ const r=ct.ctPartialExitGrid(book,8,.002,now);
+ assert.equal(r.status,'hypothetical');assert.equal(r.read_only,true);
+ assert.equal(r.cost_basis_assigned,false);
+ assert.deepEqual(r.rows.map(x=>x.share_pct),[25,50,100]);
+ assert.deepEqual(r.rows.map(x=>x.requested_ct),[2,4,8]);
+ assert.deepEqual(r.rows.map(x=>x.remaining_ct),[6,4,0]);
+ const gross=[2*.4,3*.4+1*.39,3*.4+5*.39];
+ for(let i=0;i<3;i++){
+  assert.equal(r.rows[i].status,'indicative');
+  assert.ok(Math.abs(r.rows[i].net_usdc-gross[i]*.998)<1e-10);
+  assert.ok(Math.abs(r.rows[i].estimated_fee_usdc-gross[i]*.002)<1e-10);
+ }
+});
+test('CT limited depth may support 25 and 50 pct but refuse total sale',()=>{
+ const shallow={...book,bids:[['0.4','2'],['0.39','2']]};
+ const r=ct.ctPartialExitGrid(shallow,8,.002,now);
+ assert.equal(r.status,'hypothetical');
+ assert.equal(r.rows[0].status,'indicative');
+ assert.equal(r.rows[1].status,'indicative');
+ assert.equal(r.rows[2].status,'unavailable');
+ assert.equal(r.rows[2].net_usdc,null);
+ assert.equal(r.rows[2].remaining_ct,null);
+});
+test('CT stale, wrong-pair, unpriced fees or absent balance never give an exit figure',()=>{
+ const rows=[
+  [book,null,.002],
+  [book,0,.002],
+  [book,8,null],
+  [{...book,pair:'CT-USDT'},8,.002],
+  [{...book,observed_at_utc:new Date(now-70000).toISOString()},8,.002]
+ ];
+ for(const [candidate,qty,rate] of rows){
+  const result=ct.ctPartialExitGrid(candidate,qty,rate,now);
+  assert.equal(result.status,'unavailable');
+  assert.equal(result.rows.length,0);
+ }
+});
+test('CT partial liquidation cannot mutate orderbook and cannot assign partial cost basis',()=>{
+ const original=JSON.stringify(book);
+ const doc=ct.compose({account,fills,fees,book},now);
+ assert.equal(JSON.stringify(book),original);
+ assert.equal(doc.partial_exit_grid.status,'hypothetical');
+ assert.equal(doc.partial_exit_grid.cost_basis_assigned,false);
+ assert.equal(doc.profit_proven,false);
+ assert.ok(doc.partial_exit_grid.rows.every(x=>!Object.hasOwn(x,'pnl_usdc')));
+});
+test('CT report in both existing panels explains 25 50 100 percent without ordering',()=>{
+ const doc=ct.compose({account,fills,fees,book},now);
+ const t=ct.explain(doc).lines.join(' ');
+ assert.match(t,/Revente partielle FICTIVE CT\/USDC/);
+ assert.match(t,/25 % du CT/);
+ assert.match(t,/50 % du CT/);
+ assert.match(t,/100 % du CT/);
+ assert.match(t,/Aucune exécution ni affectation arbitraire du coût/);
+});
+test('CT actual balance unavailable cannot manufacture a partial payout',()=>{
+ const missing={...account,trading:[]};
+ const doc=ct.compose({account:missing,fills,fees,book},now);
+ assert.equal(doc.partial_exit_grid.status,'unavailable');
+ assert.equal(doc.partial_exit_grid.rows.length,0);
+});
+test('manual private summary copy includes all currently requested CT scenarios',()=>{
+ const fs=require('node:fs'),path=require('node:path');
+ const code=fs.readFileSync(path.join(__dirname,'ai-ct-panel.js'),'utf8');
+ assert.match(code,/scenario_grid:latest\.scenario_grid,partial_exit_grid:latest\.partial_exit_grid/);
+ assert.match(code,/navigator\.clipboard\.writeText/);
+ assert.doesNotMatch(code,/upload.*summary|fetch\(.+summary.*POST/);
+});
