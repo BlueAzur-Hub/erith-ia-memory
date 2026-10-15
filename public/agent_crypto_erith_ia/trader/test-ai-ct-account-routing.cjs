@@ -35,3 +35,18 @@ test('CT inline view exists in the current OKX panel, before position table',()=
  assert.match(account,/data-okx-ctreading hidden role="status" aria-live="polite"/);
  assert.match(account,/#traderOkxAccountPanel \.okx-ct-reading\[hidden\]\{display:none!important\}/);
 });
+
+test('under-minimum CT may open official OKX Convert manually without sending any order',()=>{
+ const links=account.match(/<a class="okx-convert-link"[^>]+>Convertir mes CT sur OKX ↗<\/a>/g)||[];
+ assert.equal(links.length,1);
+ const link=links[0];
+ assert.match(link,/href="https:\/\/www\.okx\.com\/fr-fr\/trade-convert"/);
+ assert.match(link,/target="_blank"/);
+ assert.match(link,/rel="noopener noreferrer"/);
+ assert.doesNotMatch(link,/\b(onclick|authorization|token|amount|sz|qty|instId)=/i);
+});
+test('Convert warns about manual confirmation and potential spread, not zero guaranteed costs',()=>{
+ assert.match(account,/À sélectionner manuellement sur OKX \(CT → USDC\)/);
+ assert.match(account,/Vérifie le devis, son délai et le spread possible/);
+ assert.doesNotMatch(account,/function\s+convertCtOrder\s*\(/);
+});
