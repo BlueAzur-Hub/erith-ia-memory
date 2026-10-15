@@ -87,7 +87,7 @@ test('the existing CT explanatory contract separates carnet from order size filt
  assert.equal(composed.orders_enabled,false);
  const explanation=ct.explain(composed).lines.join(' ');
  assert.match(explanation,/Sous le minimum OKX/);
- assert.match(explanation,/Règles publiques OKX/);
+ assert.match(explanation,/Filtres SPOT OKX/);
  assert.match(explanation,/Aucune recommandation/);
 });
 test('both existing CT screens render same structured HTML without changing charts',()=>{
