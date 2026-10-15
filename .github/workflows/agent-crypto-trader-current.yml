@@ -83,6 +83,12 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js
           node --check public/agent_crypto_erith_ia/administrator/js/aether.js
 
+      - name: Private OKX portfolio and Seven Concrete existing integration
+        run: |
+          node --check public/agent_crypto_erith_ia/trader/ai-ct-contract.js
+          node --check public/agent_crypto_erith_ia/trader/ai-ct-panel.js
+          node --test public/agent_crypto_erith_ia/trader/test-ai-ct-contract.cjs
+
       - name: Refuse late external order books and candles after selection change
         run: node tests/agent_crypto_external_market_race.cjs
 
