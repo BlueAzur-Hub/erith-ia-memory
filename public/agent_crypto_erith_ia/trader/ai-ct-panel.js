@@ -79,20 +79,64 @@ function paint(doc){body.replaceChildren();
  doc.liquidation_illustrative.status!=='indicative'?doc.liquidation_illustrative.reason:
  'Estimation du carnet à un instant donné, pas un bénéfice réalisé ni une recommandation d’achat/vente.';
  body.append(warn);}
-async function refresh(){latest=null;copy.disabled=true;read.disabled=true;body.replaceChildren();state('Lecture locale en cours…');
+// Une seule lecture métier, deux présentations ; la consultation depuis OKX
+// ne doit ni ouvrir la Lecture Technique ni reconstruire son contenu.
+async function loadCtEvidence(){
+ const session=sessionStorage.getItem(TOKEN_KEY)||'';
+ if(sessionStorage.getItem(ROLE_KEY)!=='owner'||!session)
+  throw new Error('Active d’abord ta session propriétaire Aether Trust dans le Trader.');
+ const endpoints=[BRIDGE+'/okx/account',BRIDGE+'/okx/fills',BRIDGE+'/okx/fees?instId=CT-USDC',
+  BACKEND+'/market-book?provider=okx&instrument=CT-USDC&limit=100'];
+ const results=await Promise.allSettled(endpoints.map((url,i)=>get(url,i<3?session:null)));
+ if(sessionStorage.getItem(ROLE_KEY)!=='owner'||sessionStorage.getItem(TOKEN_KEY)!==session)
+  throw new Error('La session Aether Trust a changé pendant la lecture.');
+ if(results[0].status!=='fulfilled')throw new Error('Solde privé OKX non accessible.');
+ const data=results.map(x=>x.status==='fulfilled'?x.value:null);
+ return model.compose({account:data[0],fills:data[1],fees:data[2],book:data[3]});
+}
+async function refresh(){
+ latest=null;copy.disabled=true;read.disabled=true;body.replaceChildren();
+ state('Lecture locale en cours…');
  try{
-  const token=sessionStorage.getItem(TOKEN_KEY)||'';
-  if(sessionStorage.getItem(ROLE_KEY)!=='owner'||!token)throw new Error('Active d’abord ta session propriétaire Aether Trust dans le Trader.');
-  const endpoints=[BRIDGE+'/okx/account',BRIDGE+'/okx/fills',BRIDGE+'/okx/fees?instId=CT-USDC',
-   BACKEND+'/market-book?provider=okx&instrument=CT-USDC&limit=100'];
-  const results=await Promise.allSettled(endpoints.map((url,i)=>get(url,i<3?token:null)));
-  if(results[0].status!=='fulfilled')throw new Error('Solde privé OKX non accessible.');
-  const data=results.map(x=>x.status==='fulfilled'?x.value:null);
-  latest=model.compose({account:data[0],fills:data[1],fees:data[2],book:data[3]});
-  paint(latest);state('Lecture seule · provenance OKX · '+new Date().toLocaleTimeString('fr-FR'));
+  const doc=await loadCtEvidence();
+  latest=doc;paint(doc);
+  state('Lecture seule · provenance OKX · '+new Date().toLocaleTimeString('fr-FR'));
   copy.disabled=false;
  }catch(e){state('Non disponible : '+String(e.message||e).slice(0,140));}
- finally{read.disabled=false;}}
+ finally{read.disabled=false;}
+}
+async function readForAccount(target){
+ // Réutilise le calcul de Seven, mais affiche le résultat à l'endroit du clic.
+ // Aucun scroll, aucune modification de l'actif, aucun mouvement du graphique.
+ if(!target?.isConnected||!target.closest?.('#traderOkxAccountPanel'))return false;
+ target.replaceChildren();
+ const waiting=document.createElement('p');
+ waiting.textContent='Lecture privée CT/USDC en cours…';
+ target.append(waiting);
+ try{
+  const doc=await loadCtEvidence();
+  if(!target.isConnected||target.hidden||sessionStorage.getItem(ROLE_KEY)!=='owner')
+   return false;
+  const chart=model.publicCandles(globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||null);
+  const report=model.explain(doc,chart);
+  target.replaceChildren();
+  const title=document.createElement('strong');
+  title.textContent='SEVEN · Analyse de ma position CT';
+  target.append(title);
+  for(const line of report.lines){
+   const p=document.createElement('p');p.textContent=line;target.append(p);
+  }
+  return true;
+ }catch(e){
+  if(target.isConnected&&!target.hidden){
+   target.replaceChildren();
+   const p=document.createElement('p');
+   p.textContent='Analyse CT indisponible : '+String(e.message||e).slice(0,140);
+   target.append(p);
+  }
+  return false;
+ }
+}
 const lesson=panel.querySelector('#aiCtLesson');
 const learnButton=panel.querySelector('#aiCtModeLearn');
 const analyzeButton=panel.querySelector('#aiCtModeAnalyze');
@@ -167,6 +211,13 @@ document.getElementById('atlasMarketMicroscope')?.addEventListener('click',event
 window.addEventListener('agent-crypto:candles-technical-levels',()=>{if(panel.open)paintLesson();},{passive:true});
 setHelpMode('learn');
 read.addEventListener('click',refresh);
+// Point d'entrée interne pour le bouton du Compte OKX, sans navigation forcée.
+globalThis.AgentCryptoAiCtPanel=Object.freeze({readForAccount,read_only:true});
+window.addEventListener('aether-trust:logout-requested',()=>{
+ latest=null;copy.disabled=true;body.replaceChildren();
+ const local=document.querySelector('#traderOkxAccountPanel [data-okx-ctreading]');
+ if(local){local.hidden=true;local.replaceChildren();}
+},{passive:true});
 copy.addEventListener('click',async()=>{
  if(!latest)return;
  // Explicit user action: private overview copied locally, never uploaded automatically.
