@@ -624,7 +624,7 @@ async function refresh({force=false}={}){
       void refreshLedger(force);
       return true;
     }catch(error){
-      if(error?.status===401){saveToken("");ledgerClear("Session Aether Trust expirée.");setState("locked","SESSION BRIDGE À RÉAUTHENTIFIER");showAuth(true,"La session Bridge n'est plus valide. Entre le mot de passe Aether Trust.");}
+      if(error?.status===401){saveToken("");const inline=q("ctreading");if(inline){inline.hidden=true;inline.replaceChildren();}ledgerClear("Session Aether Trust expirée.");setState("locked","SESSION BRIDGE À RÉAUTHENTIFIER");showAuth(true,"La session Bridge n'est plus valide. Entre le mot de passe Aether Trust.");}
       else{setState("error","OKX / BRIDGE INDISPONIBLE");text("updated",shortError(error));}
       return false;
     }finally{inflight=null;}
@@ -656,6 +656,8 @@ function bindCanonicalTrust(){
 }
 
 function logoutBridge(){
+  const inline=q("ctreading");
+  if(inline){inline.hidden=true;inline.replaceChildren();}
   const t=token();
   if(!t){saveToken("");lastBtcAccount=null;currentBtcHeld=NaN;updateBtcReading();return;}
   fetch(BRIDGE+"/auth/logout",{method:"POST",headers:{Accept:"application/json","Content-Type":"application/json",Authorization:`Bearer ${t}`},body:"{}",cache:"no-store",keepalive:true}).catch(()=>{});
@@ -725,6 +727,10 @@ function mount(){
       "#traderOkxAccountPanel .okx-ledger-technical p,#traderOkxAccountPanel .okx-ledger-technical li{font-size:12px;line-height:1.6;overflow-wrap:anywhere}",
       "@media(max-width:1050px){#traderOkxAccountPanel .okx-ledger-item{grid-template-columns:minmax(150px,1fr) minmax(150px,1fr)}#traderOkxAccountPanel .okx-ledger-amount{grid-column:1/-1;text-align:left}}",
       "@media(max-width:640px){#traderOkxAccountPanel .okx-ledger-item{grid-template-columns:1fr;gap:7px}#traderOkxAccountPanel .okx-ledger-amount{grid-column:1}#traderOkxAccountPanel .okx-ledger-head strong{font-size:16px}}",
+      "#traderOkxAccountPanel .okx-ct-reading{padding:10px 12px;margin:10px 0;border:1px solid rgba(121,217,224,.3);border-radius:10px;background:rgba(6,28,39,.97);color:#deeff2}",
+      "#traderOkxAccountPanel .okx-ct-reading[hidden]{display:none!important}",
+      "#traderOkxAccountPanel .okx-ct-reading>strong{display:block;color:#a7eee8;font-size:13px;margin:0 0 8px}",
+      "#traderOkxAccountPanel .okx-ct-reading p{margin:7px 0;line-height:1.6;font-size:12px;overflow-wrap:anywhere}",
       "#traderOkxAccountPanel .okx-btc-reading{margin:10px 0;border:1px solid rgba(121,217,224,.28);border-radius:10px;background:rgba(9,36,47,.5);padding:10px 12px}",
       "#traderOkxAccountPanel .okx-btc-reading>summary{cursor:pointer;color:#b2f4f2;font-size:13px;font-weight:750}",
       "#traderOkxAccountPanel .okx-btc-report p{margin:7px 0;color:#d8e8ed;font-size:12px;line-height:1.6;overflow-wrap:anywhere}",
@@ -749,7 +755,7 @@ function mount(){
     '<article class="okx-card primary"><span>CT détenu</span><b data-okx-ct>—</b><small data-okx-ctdetail>Trading / Funding</small><button type="button" data-okx-analyze-ct>Analyser avec Seven · CT</button></article>',
     '<article class="okx-card primary"><span>USDC disponible</span><b data-okx-usdc>—</b><small data-okx-usdcdetail>Trading / Funding</small></article>',
     '<article class="okx-card primary"><span>EUR disponible</span><b data-okx-eur>—</b><small data-okx-eurdetail>Trading / Funding</small></article>',
-    '</div><div class="okx-position">',
+    '</div><section class="okx-ct-reading" data-okx-ctreading hidden role="status" aria-live="polite"></section><div class="okx-position">',
     '<article class="okx-card"><span>Valeur BTC actuelle</span><b data-okx-positionvalue>—</b><small>Équivalent USD retourné par OKX</small><small data-okx-eurestimate>Estimation en EUR : cotation en attente</small></article>',
     '<article class="okx-card"><span>Prix moyen d’achat</span><b data-okx-avgcost>—</b><small data-okx-avgcosthint>Calculé seulement avec un historique prouvé</small></article>',
     '<article class="okx-card"><span>Montant total investi</span><b data-okx-committed>—</b><small data-okx-committedhint>Achats + frais prouvés</small></article>',
@@ -774,18 +780,24 @@ function mount(){
     updateBtcReading();
     if(token()&&owner())void refresh({force:true});
   });
-  p.querySelector("[data-okx-analyze-ct]")?.addEventListener("click",()=>{
-    // Navigation par clic uniquement vers l'analyse existante. Aucune lecture automatique supplémentaire.
-    const ai=document.getElementById("aiCtPanel");
-    if(!ai){text("state","Lecture IA Concrete en cours de chargement");return;}
-    const detail=document.getElementById("detailPanel");
-    if(detail?.hidden||document.getElementById("analyste")?.classList.contains("detail-collapsed"))
-      document.getElementById("detailPanelToggle")?.click();
-    ai.open=true;
-    ai.querySelector("#aiCtModeAnalyze")?.click();
-    ai.scrollIntoView({behavior:"auto",block:"nearest"});
-    const button=ai.querySelector("#aiCtRead");
-    if(button&&!button.disabled)button.click();
+  p.querySelector("[data-okx-analyze-ct]")?.addEventListener("click",async()=>{
+    // Analyse ici, sous le compte OKX. Ni ouverture du panneau graphique,
+    // ni scroll forcé, ni modification de l'actif mémorisé V7.
+    const target=p.querySelector("[data-okx-ctreading]");
+    const button=p.querySelector("[data-okx-analyze-ct]");
+    if(!target||button?.disabled)return;
+    target.hidden=false;
+    if(button)button.disabled=true;
+    try{
+      const ai=globalThis.AgentCryptoAiCtPanel;
+      if(!ai?.readForAccount){
+        target.textContent="Analyse Seven CT en cours de chargement. Recharge le Trader.";
+        return;
+      }
+      await ai.readForAccount(target);
+    }finally{
+      if(button)button.disabled=false;
+    }
   });
   p.querySelector("[data-okx-auth]")?.addEventListener("submit",submitInlineAuth);
   p.querySelector("[data-okx-refresh]")?.addEventListener("click",()=>void refresh({force:true}));
