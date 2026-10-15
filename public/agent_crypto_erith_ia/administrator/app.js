@@ -5146,14 +5146,34 @@ function atlasBestComparisonCoin(coins, field) {
   return coins.filter(coin => atlasFiniteMetric(coin?.[field]) !== null).sort((a, b) => atlasFiniteMetric(b[field]) - atlasFiniteMetric(a[field]))[0] || null;
 }
 
+// Monetary comparisons are valid only within the chart's own quote currency.
+// Prefer the result's explicit native quote; otherwise use a verified display mode.
+function atlasChartQuoteBasis(result = null) {
+  const explicit = String(result?.quoteCurrency || result?.currency || "").toUpperCase();
+  if (explicit === "USD" || explicit === "EUR") return explicit;
+  const display = String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "").toUpperCase();
+  return display === "USD" || display === "EUR" ? display : null;
+}
+
+function atlasDetailReferenceSpot(coin, currency, spot = null) {
+  const raw = currency === "USD" ? (spot?.usd ?? coin?.priceUsd)
+    : currency === "EUR" ? (spot?.eur ?? coin?.priceEur ?? coin?.price) : null;
+  const value = raw == null ? NaN : Number(raw);
+  return Number.isFinite(value) && value > 0 ? value : null;
+}
+
+function atlasChartReferenceGap(result, coin, spot = null) {
+  const currency = atlasChartQuoteBasis(result);
+  const reference = atlasDetailReferenceSpot(coin, currency, spot);
+  const lastRaw = result?.integrity?.metrics?.lastPrice;
+  const last = lastRaw == null ? NaN : Number(lastRaw);
+  return currency && reference !== null && Number.isFinite(last) && last > 0
+    ? Math.abs(last - reference) / reference * 100 : null;
+}
+
 function atlasCurrentChartGap() {
-  const coin = getSelectedCoin();
   if (!atlasChartContextMatches(state.dataBroker.chart)) return null;
-  const result = state.dataBroker.chart?.result;
-  const metrics = result?.integrity?.metrics || {};
-  const spot = Number(coin?.priceEur ?? coin?.price);
-  const last = Number(metrics.lastPrice);
-  return Number.isFinite(spot) && spot > 0 && Number.isFinite(last) ? Math.abs(last - spot) / spot * 100 : null;
+  return atlasChartReferenceGap(state.dataBroker.chart?.result, getSelectedCoin());
 }
 
 function atlasHorizonMetricForCoin(coin, period) {
@@ -19042,16 +19062,19 @@ function atlasRenderAssetDetail(c, period, result = null, mode = "loading") {
   const metrics = integrity?.metrics || {};
   const freshness = metrics.freshness || {};
   const spot = atlasSelectedSpotFor(c);
-  const spotEur = Number.isFinite(Number(spot?.eur)) ? Number(spot.eur) : Number(c?.priceEur ?? c?.price);
-  const spotUsd = Number.isFinite(Number(spot?.usd)) ? Number(spot.usd) : null;
+  const spotEur = atlasDetailReferenceSpot(c, "EUR", spot);
+  // USD reference may be a dated CoinGecko snapshot, never an EUR spot relabelled USD.
+  const spotUsd = atlasDetailReferenceSpot(c, "USD", spot);
+  const chartCurrency = atlasChartQuoteBasis(result);
   const spotMode = atlasDetailSpotSourceLabel(spot);
   const spotTime = spot?.timestamp || c?.lastUpdated || c?.timestamp || state.timestamp || null;
   const chartSourceMode = atlasDetailChartSourceLabel(result, period);
-  const lastPoint = Number.isFinite(metrics.lastPrice) ? atlasFormatEUR(metrics.lastPrice) : "—";
+  const lastPoint = chartCurrency && Number.isFinite(metrics.lastPrice)
+    ? atlasFormatCurrency(metrics.lastPrice, chartCurrency) : "—";
   const lastTime = Number.isFinite(metrics.lastTimestamp) ? atlasChartLabelFull(metrics.lastTimestamp) : "—";
   const coverage = Number.isFinite(metrics.coverageHours) ? (metrics.coverageHours < 48 ? `${metrics.coverageHours.toFixed(1)} h` : `${(metrics.coverageHours / 24).toFixed(1)} j`) : "—";
-  const spotGapPct = Number.isFinite(spotEur) && spotEur > 0 && Number.isFinite(metrics.lastPrice) ? Math.abs(Number(metrics.lastPrice) - spotEur) / spotEur * 100 : null;
-  const gap = Number.isFinite(spotGapPct) ? `${spotGapPct.toFixed(2)} %` : Number.isFinite(metrics.priceGapPct) ? `${metrics.priceGapPct.toFixed(2)} %` : "non calculé";
+  const spotGapPct = atlasChartReferenceGap(result, c, spot);
+  const gap = spotGapPct !== null ? `${spotGapPct.toFixed(2)} %` : "non calculable · référence ou devise manquante";
   const integrityLabel = mode === "valid" ? (freshness.level === "archive" ? "Validée · données historiques anciennes" : freshness.level === "delayed" ? "Validée · données différées" : "Validée") : mode === "blocked" ? "Indisponible" : "Vérification en cours";
   if (els.assetDetailGrid) {
     els.assetDetailGrid.innerHTML = `
@@ -19059,8 +19082,8 @@ function atlasRenderAssetDetail(c, period, result = null, mode = "loading") {
       <div><b>Type</b><span>${escapeHtml(classifyAsset(c))}</span></div>
       <div><b>Décision</b><span>${escapeHtml(beginnerDecision(c))}</span></div>
       <div><b>Ratio vol/cap</b><span>${ratio}</span></div>
-      <div><b>Prix spot EUR</b><span>${atlasFormatEUR(spotEur)}</span></div>
-      <div><b>Prix spot USD</b><span>${spotUsd ? atlasFormatUSD(spotUsd) : "Non fourni · aucune estimation"}</span></div>
+      <div><b>Prix spot EUR</b><span>${spotEur !== null ? atlasFormatEUR(spotEur) : "—"}</span></div>
+      <div><b>Référence USD · snapshot</b><span>${spotUsd !== null ? atlasFormatUSD(spotUsd) : "Non fournie · aucune estimation"}</span></div>
       <div><b>Source prix spot</b><span>${escapeHtml(spotMode)}</span></div>
       <div><b>Heure prix spot</b><span>${spotTime ? new Date(spotTime).toLocaleString("fr-FR") : "—"}</span></div>
       <div><b>Snapshot marché</b><span>${escapeHtml(atlasBrokerModeLabel(state.dataBroker.market?.mode))}</span></div>
@@ -19070,9 +19093,9 @@ function atlasRenderAssetDetail(c, period, result = null, mode = "loading") {
       <div><b>Variation marché 24 h</b><span>${Number.isFinite(Number(c?.change24h)) ? fmtPct(Number(c.change24h)) : "—"}</span></div>
       <div><b>Source graphique</b><span>${escapeHtml(chartSourceMode)}</span></div>
       <div><b>Points / couverture</b><span>${Number.isFinite(metrics.pointCount) ? metrics.pointCount : "—"} · ${coverage}</span></div>
-      <div><b>Dernier point</b><span>${lastPoint} · ${lastTime}</span></div>
+      <div><b>Dernier point (${escapeHtml(chartCurrency || "devise inconnue")})</b><span>${lastPoint} · ${lastTime}</span></div>
       <div><b>Actualisation graphique</b><span>${freshness.label || "—"}</span></div>
-      <div><b>Écart spot/courbe</b><span>${gap}</span></div>
+      <div><b>Écart référence ${escapeHtml(chartCurrency || "?")}/courbe</b><span>${gap}</span></div>
       <div><b>Intégrité graphique</b><span>${integrityLabel}</span></div>`;
   }
   atlasSetCompactReading(atlasCompactAssetReading(c));
