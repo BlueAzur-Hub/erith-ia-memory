@@ -46914,29 +46914,34 @@ function atlasGraphContextV7ApplyRuntime(context,{controls=true}={}) {
 // Administrator: "Vider" is an immediate clear, not a permanent blank startup.
  // V7 stays the single restart authority; Trader CT history is never rewritten.
 function atlasGraphContextV7RecoverRestartMarket(persisted) {
+  // Vider affects the current view only. A restart with no selected asset
+  // restores the Administrator to BTC, regardless of stale empty intent flags.
+  // Nonempty V7 choices remain authoritative; Trader CT stays isolated.
   if (atlasTraderIsRuntime()) return null;
-  const market = persisted?.market;
-  const ids = Array.isArray(market?.comparisonIds) ? market.comparisonIds.filter(Boolean) : [];
-  if (ids.length || market?.selectionCleared !== true || market?.selectionIntent !== "explicit-empty") return null;
-  const lastValid = atlasWorkspaceReadJson(ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY);
-  const restoredMarket = atlasWorkspaceSnapshotHasSelection(lastValid)
-    ? atlasWorkspaceRecoverGraphSnapshot(market, lastValid, "restart-after-clear")
-    : {
-        ...market,
-        selectedCoinId: ATLAS_CURATED_TOP5_IDS[0],
-        comparisonIds: [...ATLAS_CURATED_TOP5_IDS],
-        comparisonPreset: "rank-5",
-        selectionCleared: false,
-        selectionIntent: "selected"
-      };
+  const market = persisted?.market && typeof persisted.market === "object" ? persisted.market : {};
+  const ids = Array.isArray(market.comparisonIds) ? market.comparisonIds.filter(Boolean) : [];
+  if (ids.length) return null;
+
+  const restoredMarket = {
+    ...market,
+    period: 1,
+    selectedCoinId: "bitcoin",
+    comparisonIds: ["bitcoin"],
+    comparisonPreset: "solo",
+    selectionCleared: false,
+    selectionIntent: "selected",
+    graphMode: "normal",
+    chartView: { ...market.chartView, view: "price", scale: "linear", volume: true }
+  };
   const savedAtMs = Date.now();
   return atlasGraphContextV7Normalize({
     ...persisted,
+    activeSurface: "market",
     market: restoredMarket,
     savedAt: new Date(savedAtMs).toISOString(),
     savedAtMs,
     sequence: Number(persisted.sequence || 0) + 1,
-    lastAction: "system-recover-restart-after-clear"
+    lastAction: "system-recover-empty-btc"
   });
 }
 
@@ -46961,7 +46966,6 @@ async function atlasGraphContextV7Initialize() {
   atlasGraphContextV7InitPromise = (async () => {
     let persisted = null;
     let readFailed = false;
-    let migratedLegacyEmptySeed = false;
     let restartRecoveredEmpty = false;
     atlasGraphContextV7BootPhase = "reading";
     try {
@@ -46979,23 +46983,12 @@ async function atlasGraphContextV7Initialize() {
       // Persisted IndexedDB remains the restart authority. 40.4.257 migrates only
       // the legacy sequence-0 system seed that represented “Vide”; an operator
       // Clear has sequence/action evidence and is therefore preserved exactly.
-      migratedLegacyEmptySeed = atlasGraphContextV7IsLegacyEmptySeed(persisted);
-      if (migratedLegacyEmptySeed) {
-        const migratedAt = Date.now();
-        atlasGraphContextV7Memory = atlasGraphContextV7Normalize({
-          ...persisted,
-          activeSurface:"market",
-          market:atlasGraphContextV7NeutralMarket(),
-          savedAt:new Date(migratedAt).toISOString(),
-          savedAtMs:migratedAt,
-          sequence:1,
-          lastAction:"system-default-top5-404257"
-        });
-      } else {
-        const recovered = atlasGraphContextV7RecoverRestartMarket(persisted);
-        restartRecoveredEmpty = !!recovered;
-        atlasGraphContextV7Memory = recovered || atlasGraphContextV7Normalize(persisted);
-      }
+      // Recover every persisted empty Administrator view before applying V7.
+      // This also covers the old sequence-0 empty seed. Do not replace Top 5,
+      // manually selected assets, Oracle on a nonempty profile, or Trader CT.
+      const recovered = atlasGraphContextV7RecoverRestartMarket(persisted);
+      restartRecoveredEmpty = !!recovered;
+      atlasGraphContextV7Memory = recovered || atlasGraphContextV7Normalize(persisted);
     } else if (!readFailed) {
       // Confirmed first use only: Top 5 is the canonical non-empty graph default.
       atlasGraphContextV7Memory = atlasGraphContextV7Normalize({
@@ -47010,10 +47003,9 @@ async function atlasGraphContextV7Initialize() {
     atlasGraphContextV7Ready = !readFailed;
 
     if (!readFailed && persisted) {
-      if (migratedLegacyEmptySeed || restartRecoveredEmpty) {
-        // A one-time restart recovery is verified in the existing V7 IndexedDB row.
-        const action = migratedLegacyEmptySeed ? "system-default-top5-404257" : "system-recover-restart-after-clear";
-        await atlasGraphContextV7QueuePersist(atlasGraphContextV7Read(),action);
+      if (restartRecoveredEmpty) {
+        // Persist the recovered BTC profile once, verified by the V7 DB readback.
+        await atlasGraphContextV7QueuePersist(atlasGraphContextV7Read(),"system-recover-empty-btc");
       } else {
         atlasGraphContextV7Persistence.state = "ok";
         atlasGraphContextV7Persistence.verifiedSequence = Number(persisted.sequence || 0);
