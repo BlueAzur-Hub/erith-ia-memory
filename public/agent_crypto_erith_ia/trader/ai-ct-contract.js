@@ -82,6 +82,103 @@
       historical_gross_ct:grossCt,
       caveat:'Transactions retrouvées et solde concordants ; historique externe/transferts non certifiés'};
   }
+
+  // Fermeture CT/USDC : rapprochement de PIECES comptables, pas d'ordre ni
+  // preuve automatique d'une transaction Convert classique.
+  function ctClosedCycleReport({account,fills,ctLedger,usdcLedger}={},now=Date.now()){
+    const unknown=(reason,status='unavailable')=>Object.freeze({
+      status,read_only:true,orders_enabled:false,conversion_proven:false,
+      profit_proven:false,reason,market:PAIR
+    });
+    if(!validSource(account))return unknown('Compte OKX READ indisponible');
+    const observed=Date.parse(String(account.fetched_at||''));
+    if(!Number.isFinite(observed)||observed>now||now-observed>120000)
+      return unknown('Solde OKX absent ou trop ancien');
+    let held;
+    try{held=balanceFor(account,'CT');}
+    catch(_){return unknown('Solde CT non vérifiable');}
+    // Une devise absente des deux listes OKX signifie zéro sur cet instant
+    // seulement si les listes Trading + Funding sont toutes deux présentes.
+    if(!Array.isArray(account.trading)||!Array.isArray(account.funding))
+      return unknown('Relevé Trading/Funding incomplet');
+    if(held.verified&&held.qty>1e-10)
+      return unknown('Position CT encore ouverte : pas de liquidation totale','position_open');
+    const parse=(payload,ccy)=>{
+      if(!validSource(payload)||payload.ccy!==ccy||!payload.sources)return null;
+      const all=[];
+      for(const [key,source] of [['trading_account','Trading'],['funding_account','Funding']]){
+        const stream=payload.sources[key];
+        if(stream?.state!=='ok'||stream.has_more!==false||!Array.isArray(stream.records))return null;
+        const ids=new Set();
+        for(const r of stream.records){
+          const id=String(r?.billId??'').trim();
+          const raw=String(r?.balChg??'').trim();
+          const ts=Number(r?.ts);
+          if(!id||ids.has(id)||!/^[+-]?\d+(?:\.\d+)?$/.test(raw)||
+             !Number.isFinite(Number(raw))||!Number.isFinite(ts)||ts<=0)return null;
+          ids.add(id);
+          all.push({id,ccy,source:key,ts:ts<1e11?ts*1000:ts,
+            amount:Number(raw),raw,row:r});
+        }
+      }
+      return all;
+    };
+    const ct=parse(ctLedger,'CT'),usdc=parse(usdcLedger,'USDC');
+    if(!ct||!usdc)return unknown('Journaux CT/USDC incomplets, paginés ou indisponibles');
+    const outgoing=ct.filter(x=>x.amount<0);
+    const incoming=usdc.filter(x=>x.amount>0);
+    const pairs=outgoing.flatMap(debit=>incoming
+      .filter(credit=>credit.source===debit.source&&Math.abs(credit.ts-debit.ts)<=120000)
+      .map(credit=>({debit,credit})));
+    if(pairs.length!==1)
+      return unknown(pairs.length?'Mouvements CT/USDC ambigus : aucune conversion attribuée'
+        :'Aucun débit CT et crédit USDC appariables','not_reconciled');
+    const {debit,credit}=pairs[0];
+    if(outgoing.some(x=>x!==debit&&x.ts>=debit.ts))
+      return unknown('Autres sorties CT détectées : clôture complète non démontrée');
+    const qty=-debit.amount,received=credit.amount;
+    if(qty<=0||received<=0)
+      return unknown('Montants de sortie ou de crédit incohérents');
+    // Le même identifiant métier, lorsqu'il existe, renforce le lien mais
+    // ne certifie pas à lui seul la catégorie "Convert".
+    const refs=r=>['refId','bizId','ordId','tradeId']
+      .map(k=>String(r[k]??'').trim()).filter(Boolean);
+    const shared=refs(debit.row).some(id=>refs(credit.row).includes(id));
+    const classified=[debit.row,credit.row].every(row=>
+      /convert/i.test([row.category,row.businessType,row.bizType,row.description]
+        .filter(Boolean).join(' ')));
+    const related=shared&&classified;
+    let cost=null,acquisitionStatus='unknown';
+    if(validSource(fills)&&Array.isArray(fills.fills_3m)){
+      const buys=fills.fills_3m.filter(x=>x?.instId===PAIR);
+      const datesOkay=buys.length>0&&buys.every(x=>{
+        const t=Number(x.fillTime??x.ts);
+        return Number.isFinite(t)&&t>0&&(t<1e11?t*1000:t)<debit.ts;
+      });
+      if(datesOkay){
+        const bought=acquisition(fills,qty);
+        acquisitionStatus=bought.status;
+        if(bought.status==='reconciled_fills_only')cost=bought.spent_usdc;
+      }
+    }
+    const difference=cost===null?null:received-cost;
+    return Object.freeze({
+      status:related?'classified_ledger_pair':'compatible_movements',
+      read_only:true,orders_enabled:false,market:PAIR,
+      conversion_proven:related,profit_proven:false,
+      outgoing_ct:qty,incoming_usdc:received,
+      source_account:debit.source,paired_at:new Date(debit.ts).toISOString(),
+      debit_bill_id:debit.id,credit_bill_id:credit.id,
+      shared_reference:shared,acquisition_status:acquisitionStatus,
+      acquisition_cost_usdc:cost,indicative_difference_usdc:difference,
+      indicative_return_pct:cost===null?null:100*difference/cost,
+      reason:related
+        ?'Catégorie Convert commune et référence croisée ; contrôler le reçu OKX pour certifier le résultat.'
+        :'Mouvements comptables compatibles mais la catégorie Convert n’est pas prouvée. Vérifier le reçu OKX.',
+      caveat:'Le journal prouve des variations de solde, pas forcément la nature juridique de la conversion, le spread, les frais externes ou le rendement global.'
+    });
+  }
+
   function takerRate(fees) {
     if (!validSource(fees) || fees.instId !== PAIR || !Array.isArray(fees.fees)||!fees.fees.length)return null;
     const rate=numeric(fees.fees[0].taker??fees.fees[0].takerU??fees.fees[0].takerUSDC);
@@ -475,5 +572,5 @@
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
         'Le prix futur de revente et le bénéfice réalisé ne sont pas connus.']});
   }
-  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,assessSpotQuantity,planGrossBuyForNetSpot,assessPartialRules,compareCtExitDecisions,publicCandles,explain,compose});
+  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,assessSpotQuantity,planGrossBuyForNetSpot,assessPartialRules,compareCtExitDecisions,ctClosedCycleReport,publicCandles,explain,compose});
 });
