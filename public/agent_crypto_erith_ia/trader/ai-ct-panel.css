@@ -142,3 +142,23 @@ html[data-agent-crypto-surface="trader"] #accueil .atlas-v2-nav-essential #aiCtT
 .ai-ct-analysis-details p{font:12px/1.6 system-ui,sans-serif;color:#d4e7ea;margin:8px 0;overflow-wrap:anywhere}
 @media(max-width:900px){.ai-ct-execution-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){.ai-ct-price-scenarios{grid-template-columns:1fr}.ai-ct-execution-metrics{grid-template-columns:1fr 1fr}}
+
+
+/* Plan de quantité BRUTE/NETTE après frais, intégré aux panneaux Seven CT. */
+.ai-ct-buy-planner{margin-top:13px;padding:11px 12px;border:1px solid rgba(231,191,118,.38);background:rgba(46,38,21,.24);border-radius:9px;min-width:0}
+.ai-ct-buy-planner>summary{cursor:pointer;color:#f7d99f;font-weight:800;font:800 12px/1.55 system-ui,sans-serif}
+.ai-ct-buy-intro,.ai-ct-buy-source,.ai-ct-buy-historic{margin:9px 0!important;color:#d0e1df!important;font:11px/1.55 system-ui,sans-serif!important}
+.ai-ct-buy-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0 9px}
+.ai-ct-buy-label{display:flex;flex-direction:column;gap:5px;min-width:0;color:#e2ece7;font:700 11px/1.4 system-ui,sans-serif}
+.ai-ct-buy-label input,.ai-ct-buy-label select{box-sizing:border-box;width:100%;min-width:0;background:#08202d;border:1px solid #497784;color:#e8faf5;padding:8px 9px;border-radius:7px;font:12px/1.4 system-ui,sans-serif}
+.ai-ct-buy-label input[readonly]{background:rgba(83,121,119,.15);color:#b9d3d2}
+.ai-ct-buy-compute,.ai-ct-buy-suggest{border:1px solid rgba(195,214,203,.5);border-radius:7px;padding:7px 10px;background:#164750;color:#f2fffa;font:700 11px/1.5 system-ui,sans-serif;cursor:pointer}
+.ai-ct-buy-suggest{background:transparent;margin-top:4px}
+.ai-ct-buy-compute:focus-visible,.ai-ct-buy-suggest:focus-visible{outline:2px solid #fee0aa;outline-offset:2px}
+.ai-ct-buy-result{margin-top:10px;padding:10px;background:rgba(2,17,27,.66);border:1px solid rgba(137,181,180,.27);border-radius:8px;color:#cce7e2;font-size:11px;line-height:1.55;overflow-wrap:anywhere}
+.ai-ct-buy-result>strong{color:#bdf4e9;display:block;margin-bottom:9px}
+.ai-ct-buy-result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:0}
+.ai-ct-buy-result-grid>div{padding:8px;border:1px solid rgba(137,181,180,.18);border-radius:6px;background:rgba(18,49,58,.65)}
+.ai-ct-buy-result-grid dt{color:#aac8cc;font:11px/1.4 system-ui,sans-serif}
+.ai-ct-buy-result-grid dd{margin:4px 0 0;color:#f2fff9;font:800 13px/1.4 system-ui,sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+@media(max-width:520px){.ai-ct-buy-fields,.ai-ct-buy-result-grid{grid-template-columns:1fr}}
