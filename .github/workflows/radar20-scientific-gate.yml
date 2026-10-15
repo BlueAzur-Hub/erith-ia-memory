@@ -1,0 +1,38 @@
+name: Radar20 scientific evidence gate
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tests/radar20_scientific_gate*.cjs"
+      - "public/agent_crypto_erith_ia/laboratoire/RADAR20_ETAT_DE_PREUVE.md"
+      - ".github/workflows/radar20-scientific-gate.yml"
+      - "public/agent_crypto_erith_ia/data/trader_flux/radar20_forward/**"
+      - "public/agent_crypto_erith_ia/data/trader_flux/radar20_execution/**"
+  push:
+    branches: [main]
+    paths:
+      - "tests/radar20_scientific_gate*.cjs"
+      - ".github/workflows/radar20-scientific-gate.yml"
+      - "public/agent_crypto_erith_ia/data/trader_flux/radar20_forward/**"
+      - "public/agent_crypto_erith_ia/data/trader_flux/radar20_execution/**"
+permissions:
+  contents: read
+jobs:
+  evidence-read-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test scientific guard and repository data
+        run: node --test tests/radar20_scientific_gate.test.cjs
+      - name: Produce machine-readable evidence
+        run: node tests/radar20_scientific_gate.cjs > radar20-scientific-status.json
+      - name: Human verdict
+        run: node tests/radar20_scientific_gate.cjs --markdown >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: radar20-scientific-evidence
+          path: radar20-scientific-status.json
+          retention-days: 30
