@@ -57,3 +57,25 @@ test('frais manquants sur execution refusés',()=>{
  const r=api.compose({account:acct,fills:missing,fees,book},now);
  assert.equal(r.acquisition.status,'unknown');
 });
+
+test('un relevé privé commun expose BTC, CT, USDC, EUR sans conversion',()=>{
+ const mixed={...acct,trading:[{details:[{ccy:'CT',cashBal:'9.99'},{ccy:'BTC',cashBal:'0.0001'},{ccy:'USDC',cashBal:'0.6'}]}],funding:[{ccy:'EUR',bal:'10'},{ccy:'BTC',bal:'0.00002'}]};
+ const r=api.compose({account:mixed,fills,fees,book},now);
+ assert.equal(r.portfolio.assets.CT.qty,9.99);
+ assert.ok(Math.abs(r.portfolio.assets.BTC.qty-0.00012)<1e-12);
+ assert.equal(r.portfolio.assets.USDC.qty,.6);
+ assert.equal(r.portfolio.assets.EUR.qty,10);
+ assert.equal(r.portfolio.read_only,true);assert.equal(r.orders_enabled,false);
+});
+test('devise absente non convertie en solde fictif zéro',()=>{
+ const r=api.compose({account:acct,fills,fees,book},now);
+ assert.equal(r.portfolio.assets.BTC.qty,null);
+ assert.equal(r.portfolio.assets.BTC.verified,false);
+});
+test('BTC non valide reste inconnu, CT vérifié reste exploitable',()=>{
+ const invalid={...acct,trading:[{details:[{ccy:'CT',cashBal:'9.99'},{ccy:'BTC',cashBal:'unknown'}]}]};
+ const r=api.compose({account:invalid,fills,fees,book},now);
+ assert.equal(r.portfolio.assets.CT.qty,9.99);
+ assert.equal(r.portfolio.assets.BTC.qty,null);
+});
+test('un faux relevé privé est refusé',()=>assert.throws(()=>api.portfolio({ok:true,read_only:false}),/non vérifié/));

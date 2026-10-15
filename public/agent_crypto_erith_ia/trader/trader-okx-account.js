@@ -262,9 +262,10 @@ function updatePositionView(){
 }
 
 function paintData(account,orders,fills,fees){
-  const btc=asset(account,"BTC"),usdc=asset(account,"USDC"),eur=asset(account,"EUR");
+  const btc=asset(account,"BTC"),ct=asset(account,"CT"),usdc=asset(account,"USDC"),eur=asset(account,"EUR");
   const fillRows=Array.isArray(fills?.fills_3m)?fills.fills_3m:[];
   paintAsset("BTC",btc);
+  paintAsset("CT",ct);
   paintAsset("USDC",usdc);
   paintAsset("EUR",eur);
   currentBtcHeld=btc.present?btc.total:NaN;
@@ -535,7 +536,7 @@ function mount(){
       "#traderOkxAccountPanel [data-okx-state]{color:#85e9df;font-size:11px;font-weight:700}",
       "#traderOkxAccountPanel .okx-ro{margin-left:auto;padding:4px 8px;border:1px solid rgba(88,239,156,.26);border-radius:999px;color:#8cf2b5;font-size:10px;letter-spacing:.08em}",
       "#traderOkxAccountPanel .okx-body{border-top:1px solid rgba(83,222,222,.14);padding:10px 14px 12px}",
-      "#traderOkxAccountPanel .okx-primary{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:8px}",
+      "#traderOkxAccountPanel .okx-primary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}",
       "#traderOkxAccountPanel .okx-position{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:7px}",
       "#traderOkxAccountPanel .okx-position .okx-card{border-color:rgba(255,209,117,.16)}",
       "#traderOkxAccountPanel .okx-position [data-okx-positionvalue]{color:#fff1c7}",
@@ -585,7 +586,7 @@ function mount(){
       "#traderOkxAccountPanel .okx-auth input{min-width:0;width:100%;height:34px;box-sizing:border-box}",
       "#traderOkxAccountPanel .okx-auth button{height:34px;white-space:nowrap}",
       "#traderOkxAccountPanel .okx-auth small{color:#d9c08d;white-space:nowrap}",
-      "@media(max-width:1200px){#traderOkxAccountPanel .okx-primary{grid-template-columns:1fr 1fr 1fr}#traderOkxAccountPanel .okx-position,#traderOkxAccountPanel .okx-activity{grid-template-columns:repeat(2,minmax(0,1fr))}}",
+      "@media(max-width:1200px){#traderOkxAccountPanel .okx-primary{grid-template-columns:repeat(2,minmax(0,1fr))}#traderOkxAccountPanel .okx-position,#traderOkxAccountPanel .okx-activity{grid-template-columns:repeat(2,minmax(0,1fr))}}",
       "@media(max-width:760px){#traderOkxAccountPanel .okx-primary,#traderOkxAccountPanel .okx-position,#traderOkxAccountPanel .okx-activity{grid-template-columns:1fr}#traderOkxAccountPanel .okx-auth{grid-template-columns:1fr}#traderOkxAccountPanel .okx-auth small{white-space:normal}.okx-ro{margin-left:0!important}}"
     ].join("");document.head.appendChild(style);
   }
@@ -595,6 +596,7 @@ function mount(){
     '<summary><i class="okx-live-dot" aria-hidden="true"></i><strong>COMPTE OKX · RÉEL</strong><span data-okx-state>INITIALISATION…</span><span class="okx-ro">LECTURE SEULE · AUCUN ORDRE</span></summary>',
     '<div class="okx-body"><div class="okx-primary">',
     '<article class="okx-card primary"><span>BTC détenu</span><b data-okx-btc>—</b><small data-okx-btcdetail>Trading / Funding</small></article>',
+    '<article class="okx-card primary"><span>CT détenu</span><b data-okx-ct>—</b><small data-okx-ctdetail>Trading / Funding</small><button type="button" data-okx-analyze-ct>Analyser avec Seven · CT</button></article>',
     '<article class="okx-card primary"><span>USDC disponible</span><b data-okx-usdc>—</b><small data-okx-usdcdetail>Trading / Funding</small></article>',
     '<article class="okx-card primary"><span>EUR disponible</span><b data-okx-eur>—</b><small data-okx-eurdetail>Trading / Funding</small></article>',
     '</div><div class="okx-position">',
@@ -617,6 +619,18 @@ function mount(){
     if(analyst?.parentElement===zone)analyst.insertAdjacentElement("afterend",p);
     else zone.appendChild(p);
   }
+  p.querySelector("[data-okx-analyze-ct]")?.addEventListener("click",()=>{
+    // Navigation par clic uniquement vers l'analyse existante. Aucune lecture automatique supplémentaire.
+    const ai=document.getElementById("aiCtPanel");
+    if(!ai){text("state","Lecture IA Concrete en cours de chargement");return;}
+    const detail=document.getElementById("detailPanel");
+    if(detail?.hidden||document.getElementById("analyste")?.classList.contains("detail-collapsed"))
+      document.getElementById("detailPanelToggle")?.click();
+    ai.open=true;
+    ai.scrollIntoView({behavior:"auto",block:"nearest"});
+    const button=ai.querySelector("#aiCtRead");
+    if(button&&!button.disabled)button.click();
+  });
   p.querySelector("[data-okx-auth]")?.addEventListener("submit",submitInlineAuth);
   p.querySelector("[data-okx-refresh]")?.addEventListener("click",()=>void refresh({force:true}));
   p.querySelector("[data-okx-ledgerrefresh]")?.addEventListener("click",()=>void refreshLedger(true));

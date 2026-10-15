@@ -15,24 +15,39 @@
   };
   function fail(message) { throw new Error(message); }
   function validSource(v) { return Boolean(v && v.ok === true && v.read_only === true); }
-  function position(account) {
-    if (!validSource(account)) fail('Solde privé OKX non vérifié');
-    let total = 0, present = false;
-    for (const trade of Array.isArray(account.trading) ? account.trading : []) {
-      for (const asset of Array.isArray(trade?.details) ? trade.details : []) {
-        if (asset.ccy !== 'CT') continue;
-        const n = numeric(asset.cashBal ?? asset.eq);
-        if (n === null || n < 0) fail('Solde CT incohérent');
-        total += n; present = true;
+  function balanceFor(account,code) {
+    if(!validSource(account)) fail('Compte OKX non vérifié');
+    let total=0,present=false;
+    for(const trade of Array.isArray(account.trading)?account.trading:[]){
+      for(const item of Array.isArray(trade?.details)?trade.details:[]){
+        if(item.ccy!==code)continue;
+        const value=numeric(item.cashBal ?? item.eq);
+        if(value===null||value<0)fail('Solde '+code+' incohérent');
+        total+=value;present=true;
       }
     }
-    for (const asset of Array.isArray(account.funding) ? account.funding : []) {
-      if (asset.ccy !== 'CT') continue;
-      const n = numeric(asset.bal);
-      if (n === null || n < 0) fail('Solde CT incohérent');
-      total += n; present = true;
+    for(const item of Array.isArray(account.funding)?account.funding:[]){
+      if(item.ccy!==code)continue;
+      const value=numeric(item.bal);
+      if(value===null||value<0)fail('Solde '+code+' incohérent');
+      total+=value;present=true;
     }
-    return {qty_ct:present?total:null, observed_at:account.fetched_at??null, verified:present};
+    return {qty:present?total:null,verified:present};
+  }
+  // Le même /okx/account privé nourrit le Trader et son panneau IA.
+  // BTC/CT/USDC/EUR restent des devises séparées, sans taux inventé.
+  function portfolio(account){
+    if(!validSource(account))fail('Compte OKX non vérifié');
+    const assets={};
+    for(const code of ['BTC','CT','USDC','EUR']){
+      try{assets[code]=Object.freeze(balanceFor(account,code));}
+      catch(_){assets[code]=Object.freeze({qty:null,verified:false});}
+    }
+    return Object.freeze({read_only:true,observed_at:account.fetched_at??null,assets:Object.freeze(assets)});
+  }
+  function position(account) {
+    const ct=balanceFor(account,'CT');
+    return {qty_ct:ct.qty,observed_at:account.fetched_at??null,verified:ct.verified};
   }
   function acquisition(fills,qty) {
     if (!validSource(fills) || !Array.isArray(fills.fills_3m) || qty === null) return {status:'unknown',reason:'Transactions OKX incomplètes'};
@@ -102,12 +117,12 @@
       ? sale.net_usdc-bought.spent_usdc:null;
     return Object.freeze({schema:SCHEMA,market:PAIR,venue:'OKX Europe',quote:'USDC',
       read_only:true,orders_enabled:false,private_data:true,export_to_public_github:false,
-      observed_at:new Date(now).toISOString(),position:held,acquisition:bought,
+      observed_at:new Date(now).toISOString(),portfolio:portfolio(account),position:held,acquisition:bought,
       fee_taker_fraction:rate,liquidation_illustrative:sale,
       pnl_illustrative_usdc:pnl,profit_proven:false,
       notes:['Les valeurs sont privées et restent localement dans le navigateur.',
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
         'Le prix futur de revente et le bénéfice réalisé ne sont pas connus.']});
   }
-  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,position,acquisition,takerRate,sellEstimate,compose});
+  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,compose});
 });
