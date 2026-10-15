@@ -1,3 +1,26 @@
+# NOTE DE REPRISE CANONIQUE — 15 octobre 2026 · clôture Radar 20
+
+> **Cette note met à jour l'état technique du 14 octobre conservé ci-dessous, sans le remplacer.** Toujours relire `main` et les index réels : le compteur de journées évolue quotidiennement.
+
+## Résultat du fil clôturé
+
+1. **Interface / Trader 40.6.640, Market Core 38.15.11 protégés.** Le comportement `Vider → Ctrl+F5 → BTC Solo 24h` a été confirmé dans Firefox. USD et suivi du Laboratoire BTC/CT corroborés ; pas de certificat global sur Q, ni de rentabilité prouvée.
+2. **Vérité des devises et cache :** correctifs existants sur `main`, dont PR #398 ([commit](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/1da8d1bf9e172c9bec287f958d5f9f0af0555f08)). Aucun nettoyage de Firefox : diagnostic `localStorage` écrivable (5,01 Mio, 218 clés), IndexedDB V7 lisible. Les historiques locaux et le Coffre restent distincts.
+3. **Radar 20 scientifique livré :** [PR #399](https://github.com/BlueAzur-Hub/erith-ia-memory/pull/399), [commit 0116359](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/01163590763a7cf5b27287071715290bb0a4b5ef). Scripts `tests/radar20_scientific_gate.cjs` et `tests/radar20_scientific_gate.test.cjs`, CI `radar20-scientific-gate.yml`, rapport `laboratoire/RADAR20_ETAT_DE_PREUVE.md`. Intégrité documentaire = PASS ; rentabilité = NON VALIDÉE.
+4. **Durée clarifiée :** [commit f5c270a](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/f5c270a24431837a7df19641e99bd57c850b1fad) distingue **90 journées de signaux** et **2 journées additionnelles de cotations pour clore les positions ouvertes à 48 h** : 92 archives de 24 heures à terme, et non 92 journées d'entrée. Tests nouveaux et workflow de collecte renforcé. Ne pas modifier les paramètres gelés.
+5. **Première journée réellement collectée :** [commit 3fdf7e0](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/3fdf7e060a667e1eb6d6093c4736845bd9ec0675) publie `radar20_forward/observations/2026-10-14.json`, 20 marchés × 24 bougies horaires, manifestes SHA-256. Au contrôle : `days_collected=1`, `status=RUNNING`, `hours_per_market=24`, six variantes A/B toutes à zéro transaction clôturée. Index `radar20_forward/index.json` et résumé `summary.json` sont **les sources d'état**, pas ce texte figé.
+6. **Publication vérifiée :** [workflow Radar20 Forward A-B #38685267211](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38685267211) **SUCCESS**, y compris preflight du contrôle scientifique, validation SHA après collecte, second contrôle, publication des seules archives. Historique protégé et absence d'ordre réel confirmés par la recette GitHub ; aucun test d'achat privé ou résultat positif attesté.
+
+## Vérité économique et prochaine destination
+
+- Simulation **avril–juin 2026 : −222,36 USDT fictifs** sur 400 initialisés, drawdown environ 57,17 %, 109 transactions ; **juillet–septembre 2026 : +97,75 USDT fictifs** sur un autre portefeuille initialisé à 400, drawdown environ 32,24 %, 149 transactions. Ne pas additionner ces capitaux réinitialisés ; frais 0,8 % aller-retour supposés, pas de remplissages OKX certifiés.
+- Observations publiques de carnet OKX `radar20_execution` : preuves de profondeur à un instant **postérieur** au signal, ni exécution à l'ouverture ni frais du compte authentifiés. Le protocole prospectif `experiment.json` reste immuable.
+- **Action naturelle de la prochaine IA :** consulter quotidiennement `radar20_forward/index.json`, `summary.json` et le résultat `Radar20 scientific evidence gate`. En cas d'échec de collecte : lire `waiting_source`, vérifier les ZIP et `.CHECKSUM` natifs Binance, ne pas inventer les 20×24 heures ni sauter une journée ; reprendre le même protocole. Examiner les rapports après une durée d'observation suffisante, comparer A/B, coûts, exposition, drawdown, référence et carnet horodaté. **Aucun ordre réel, aucune annonce de gains certifiés.**
+- **Arrêt :** ne pas repartir sur des bugs mineurs du graphique sans régression prouvée. Ne pas modifier le Trader, les mémoires V7, Market Core, le Bridge privé, le Coffre ou les images dans ce travail Radar 20.
+- **Notion canonique :** [Bureaux AETHER AGENT-CRYPTO](https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099). Le point de contrôle scientifique et les preuves GitHub priment sur les résumés anciens de ce fichier.
+
+---
+
 # PASSATION DE CLÔTURE — AERITH-7 → SŒUR IA
 **14 octobre 2026 · référence terrain utilisateur : 40.6.639 · HEAD canonique GitHub : 40.6.640.**
 
