@@ -141,8 +141,8 @@ test("an old BTC headline cannot override CT while Top 5 remains active",()=>{
   h.get("agentCryptoLearningLab").open=true;
   h.graphTitle.textContent="BTC · Bitcoin · 24h prix USD historique conservé";
   h.top5Button.active=true;
-  h.get("lab-mode-toggle").fire("click");
-  assert.equal(api.read().mode,"follow");
+  assert.equal(api.read().mode,"follow",
+    "The Lab remains in follow mode without an explicit toggle");
   assert.equal(api.read().asset,"CT");
   h.top5Button.active=false;
   h.get("lab-mode-toggle").fire("click");
