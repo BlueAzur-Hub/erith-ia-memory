@@ -102,3 +102,38 @@ assert.match(app,/if \(!atlasGraphContextV7Ready\) return false;/,
 console.log("PASS Administrator: Vider is transient, empty V7 restarts BTC, Top5 stays saved, Trader CT isolated.");
 
 console.log("PASS CT V7 identity preempts stale BTC chart/detail; no listing viewport jump; single memory owner.");
+
+/* Chart currency comparison contract: no USD point vs EUR quote subtraction.
+   Isolated execution of the actual app.js helpers; no network or stored prices. */
+const quoteBegin=app.indexOf("function atlasChartQuoteBasis(");
+const quoteEnd=app.indexOf("function atlasHorizonMetricForCoin(",quoteBegin);
+assert.ok(quoteBegin>0&&quoteEnd>quoteBegin,"Chart quote truth helper in active Administrator");
+const quoteSource=app.slice(quoteBegin,quoteEnd)
+  +"\\nthis.chartQuote=atlasChartQuoteBasis;this.chartGap=atlasChartReferenceGap;this.currentGap=atlasCurrentChartGap;";
+function checkQuote({currency="USD",resultCurrency=null,spotUsd=null,spotEur=null,lastPrice=81501.61}){
+  const coin={id:"bitcoin",symbol:"BTC",priceUsd:spotUsd,priceEur:spotEur};
+  const result={currency:resultCurrency,integrity:{metrics:{lastPrice}}};
+  const sandbox={
+    AgentCryptoQuoteCurrencyArchitecture:{snapshot:()=>({displayCurrency:currency})},
+    atlasChartContextMatches:()=>true,
+    getSelectedCoin:()=>coin,
+    state:{dataBroker:{chart:{result}}},
+  };
+  vm.runInNewContext(quoteSource,sandbox,{timeout:2000});
+  return {quote:sandbox.chartQuote(result),gap:sandbox.chartGap(result,coin),
+    currentGap:sandbox.currentGap()};
+}
+const usdCompare=checkQuote({currency:"USD",resultCurrency:"USD",spotUsd:81485.77,spotEur:72515.50});
+assert.equal(usdCompare.quote,"USD");
+assert.ok(usdCompare.gap>0&&usdCompare.gap<0.1,"USD plot compares USD reference, not EUR spot");
+assert.equal(usdCompare.currentGap,usdCompare.gap);
+assert.equal(checkQuote({currency:"USD",spotEur:72515.50}).gap,null,
+  "No USD reference means no fabricated USD/EUR comparison");
+const eurCompare=checkQuote({currency:"USD",resultCurrency:"EUR",spotEur:72515.50,lastPrice:72515.50});
+assert.equal(eurCompare.quote,"EUR","Native quote overrides visual preference");
+assert.equal(eurCompare.gap,0);
+assert.equal(checkQuote({currency:"GBP",spotEur:72515.50}).gap,null,
+  "Unknown display quote fails closed");
+assert.match(app,/non calculable · référence ou devise manquante/);
+assert.match(app,/Écart référence \$\{escapeHtml\(chartCurrency/);
+console.log("PASS chart currency truth: USD/EUR independent, missing reference fails closed.");
