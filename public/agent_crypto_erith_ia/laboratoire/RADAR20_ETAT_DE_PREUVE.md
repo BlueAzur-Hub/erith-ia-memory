@@ -24,6 +24,8 @@ Sources : data/trader_flux/radar20_forward/experiment.json, index.json et summar
 - Modèle A : signal original ; modèle B : filtre de tendance sur les 72 heures connues avant le signal (seuil 3 %).
 - Sensibilités de coûts hypothétiques aller-retour : 0,8 %, 1,2 % et 1,6 %.
 - **État du résumé audité : 0/90 jour effectivement collecté.** Cela signifie *absence de résultat prospectif*, pas 0 % de rentabilité.
+- **Fenêtre de clôture : 48 heures supplémentaires** après les 90 journées de signaux. Le collecteur conserve donc jusqu'à **92 journées sources (90 + 2)** pour permettre la sortie des dernières positions fictives. Ces deux journées ne constituent ni de nouveaux jours de signaux ni une prolongation opportuniste du protocole.
+- Collecteur existant : `tools/trader_radar20_forward.py` ; programme GitHub `agent-crypto-radar20-forward.yml` avec déclenchement quotidien planifié **14:19 UTC** et déclenchement manuel, sans nécessité de redéfinir l'expérience. La première collecte effective dépend de la disponibilité des **20 archives horaires Binance et de leurs fichiers CHECKSUM** pour une même journée UTC close.
 
 Les observations ponctuelles publiées dans data/trader_flux/radar20_execution sont distinctes. Lors de cette revue, l'index comprenait **5 observations, 16 candidats et 16 relevés de carnets OKX publics**. Ces carnets ont été observés après le début des heures de signal : ils ne démontrent ni les prix effectivement exécutables à l'ouverture, ni le slippage historique, ni les frais authentifiés du compte.
 
