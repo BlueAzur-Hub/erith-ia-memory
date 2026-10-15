@@ -89,3 +89,9 @@ html[data-agent-crypto-surface="trader"] #accueil .atlas-v2-nav-essential #aiCtT
   overflow:visible!important;
   text-align:center!important;
 }
+
+/* Compte rendu de position privé dans le panneau déjà existant, sans modification du layout central. */
+#detailPanel #aiCtPanel .ai-ct-seven-brief{padding:10px 12px;margin:7px 0 13px;background:rgba(13,48,59,.6);border:1px solid rgba(135,223,230,.28);border-radius:9px}
+#detailPanel #aiCtPanel .ai-ct-seven-brief>strong{display:block;color:#aff2ef;letter-spacing:.06em;font:800 12px/1.4 system-ui,sans-serif;margin-bottom:7px}
+#detailPanel #aiCtPanel .ai-ct-seven-brief p{color:#d7ebed;font:12px/1.6 system-ui,sans-serif;margin:6px 0;overflow-wrap:anywhere}
+#detailPanel #aiCtPanel .ai-ct-seven-brief p:last-child{color:#dfd1b0}
