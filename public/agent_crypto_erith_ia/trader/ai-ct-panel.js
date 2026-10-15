@@ -224,6 +224,7 @@ copy.addEventListener('click',async()=>{
  const sanitized={schema:latest.schema,market:latest.market,quote:latest.quote,read_only:true,
  portfolio:latest.portfolio,position:latest.position,acquisition:latest.acquisition,fee_taker_fraction:latest.fee_taker_fraction,
  exit_metrics:latest.exit_metrics,
+ scenario_grid:latest.scenario_grid,partial_exit_grid:latest.partial_exit_grid,
  liquidation_illustrative:latest.liquidation_illustrative,
  pnl_illustrative_usdc:latest.pnl_illustrative_usdc,profit_proven:false};
  try{await navigator.clipboard.writeText(JSON.stringify(sanitized,null,2));state('Résumé privé copié. Partage uniquement si tu le souhaites.');}

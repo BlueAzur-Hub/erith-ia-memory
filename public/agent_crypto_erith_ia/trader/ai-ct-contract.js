@@ -153,6 +153,35 @@
       cost_basis_proven:false,rows:Object.freeze(rows),
       caveat:'Prix acheteurs fictivement décalés ±5 %, quantités inchangées ; carnet futur, frais et exécution non garantis.'});
   }
+
+  // Revente PARTIELLE fictive de 25/50/100 % du CT détenu,
+  // toujours sur le carnet natif OKX CT/USDC, frais déjà connus.
+  // La part du coût historique et un P&L net partiel ne sont pas déduits.
+  function ctPartialExitGrid(book,qty,rate,now=Date.now()){
+    const unavailable=reason=>Object.freeze({status:'unavailable',read_only:true,
+      market:PAIR,quote:'USDC',reason,rows:Object.freeze([])});
+    if(!Number.isFinite(qty)||qty<=0)return unavailable('Position CT inconnue ou nulle');
+    const rows=[];
+    for(const share of [25,50,100]){
+      const target=qty*share/100;
+      const sale=sellEstimate(book,target,rate,now);
+      const valid=sale.status==='indicative';
+      rows.push(Object.freeze({
+        share_pct:share,requested_ct:target,remaining_ct:valid?Math.max(0,qty-target):null,
+        status:valid?'indicative':'unavailable',
+        gross_usdc:valid?sale.gross_usdc:null,
+        net_usdc:valid?sale.net_usdc:null,
+        estimated_fee_usdc:valid?sale.gross_usdc-sale.net_usdc:null,
+        reason:valid?null:sale.reason
+      }));
+    }
+    const any=rows.some(x=>x.status==='indicative');
+    if(!any)return unavailable(rows[0]?.reason||'Profondeur ou frais non disponibles');
+    return Object.freeze({status:'hypothetical',read_only:true,market:PAIR,
+      quote:'USDC',observed_at:book.observed_at_utc,fee_rate_fraction:rate,
+      cost_basis_assigned:false,rows:Object.freeze(rows),
+      caveat:'Vente partielle sur offres acheteuses observées, sans ordre ni frais inconnus supplémentaires ; coût historique restant et gain non prouvés.'});
+  }
   // Contexte public : seules les bougies CT/USDT réellement chargées sont recevables.
   function publicCandles(chart,now=Date.now()){
     const empty=reason=>Object.freeze({status:'unavailable',reason});
@@ -214,6 +243,17 @@
       }
       lines.push('Ces niveaux futurs et les volumes ne sont pas garantis : ce tableau n’est pas une prévision ni un ordre.');
     }else lines.push('Scénarios CT indisponibles : '+String(scenarios?.reason||'liquidité ou frais absents')+'.');
+    const partial=doc.partial_exit_grid;
+    if(partial?.status==='hypothetical'){
+      lines.push('Revente partielle FICTIVE CT/USDC : parcours des acheteurs du carnet actuel, frais de sortie estimés inclus.');
+      for(const row of partial.rows){
+        if(row.status==='indicative')lines.push(row.share_pct+' % du CT ('+
+          row.requested_ct.toFixed(8)+' CT) → '+row.net_usdc.toFixed(6)+
+          ' USDC nets théoriques ; '+row.remaining_ct.toFixed(8)+' CT resteraient détenus.');
+        else lines.push(row.share_pct+' % du CT : estimation refusée ('+String(row.reason||'profondeur non vérifiée')+').');
+      }
+      lines.push('Aucune exécution ni affectation arbitraire du coût des CT restants ; liquidité non garantie.');
+    }else lines.push('Revente partielle CT non calculable : '+String(partial?.reason||'source absente')+'.');
     if(chart?.status==='observed')
       lines.push('Contexte marché public : '+chart.instrument+' '+chart.bar+', '+chart.points+' bougies ; variation '+chart.change_pct.toFixed(2)+' % sur la fenêtre '+chart.first_at+' → '+chart.last_at+'. Cette variation en USDT ne valorise pas la position CT/USDC.');
     else if(chart?.status==='stale')lines.push('Contexte public CT/USDT trop ancien : ne pas présenter cette courbe comme un signal actuel.');
@@ -232,14 +272,15 @@
       ? sale.net_usdc-bought.spent_usdc:null;
     const metrics=exitMetrics(sale,book,held.qty_ct);
     const scenario=ctScenarioGrid(book,held.qty_ct,rate,bought,now);
+    const partial=ctPartialExitGrid(book,held.qty_ct,rate,now);
     return Object.freeze({schema:SCHEMA,market:PAIR,venue:'OKX Europe',quote:'USDC',
       read_only:true,orders_enabled:false,private_data:true,export_to_public_github:false,
       observed_at:new Date(now).toISOString(),portfolio:portfolio(account),position:held,acquisition:bought,
       fee_taker_fraction:rate,liquidation_illustrative:sale,exit_metrics:metrics,
-      scenario_grid:scenario,pnl_illustrative_usdc:pnl,profit_proven:false,
+      scenario_grid:scenario,partial_exit_grid:partial,pnl_illustrative_usdc:pnl,profit_proven:false,
       notes:['Les valeurs sont privées et restent localement dans le navigateur.',
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
         'Le prix futur de revente et le bénéfice réalisé ne sont pas connus.']});
   }
-  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,publicCandles,explain,compose});
+  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,publicCandles,explain,compose});
 });
