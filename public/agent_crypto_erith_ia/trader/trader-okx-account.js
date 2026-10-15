@@ -251,6 +251,37 @@ function btcQuantityChain({movements,acquisition,held,complete,usdcEntries=[]}={
     debit_at:new Date(exits[0].timestamp).toISOString(),
     paired_usdc:counter!==null,credit_usdc:counter?.balanceChange??null});
 }
+
+/* BTC : hypothèses sur une cotation PUBLIQUE BTC/EUR seulement.
+   Pas de carnet BTC/USDC comparable, donc aucun net après frais revendiqué. */
+function btcScenarioGrid(evidence={},now=Date.now()){
+ const unavailable=reason=>Object.freeze({status:"unavailable",read_only:true,
+   currency:"EUR",reason,rows:Object.freeze([])});
+ const a=evidence.account||null, t=Date.parse(String(a?.fetched_at||""));
+ const quantity=evidence.quantity,quote=evidence.quote||null;
+ const received=quote?.receivedAt;
+ if(a?.ok!==true||a?.read_only!==true||!Number.isFinite(t)||
+    now-t<0||now-t>120000||typeof quantity!=="number"||
+    !Number.isFinite(quantity)||quantity<=0)
+  return unavailable("Position BTC privée absente, nulle ou ancienne");
+ if(typeof quote.price!=="number"||!Number.isFinite(quote.price)||
+    quote.price<=0||typeof received!=="number"||
+    !Number.isFinite(received)||now-received<0||now-received>EUR_MAX_AGE_MS)
+  return unavailable("Cotation publique BTC/EUR indisponible ou ancienne");
+ const current=quantity*quote.price;
+ if(!Number.isFinite(current)||current<=0)
+  return unavailable("Valeur BTC/EUR incohérente");
+ const rows=[-5,0,5].map(shock=>Object.freeze({
+   shock_pct:shock,
+   hypothetical_value_eur:current*(1+shock/100),
+   movement_vs_spot_eur:current*shock/100
+ }));
+ return Object.freeze({status:"hypothetical",read_only:true,
+   currency:"EUR",source:String(quote.source||"BTC/EUR public"),
+   quote_received_at:new Date(received).toISOString(),
+   btc_held:quantity,fee_included:false,rows:Object.freeze(rows),
+   caveat:"±5 % de la cotation BTC/EUR, sans carnet BTC exécutable, commission, spread, coût PayPal ni bénéfice net."});
+}
 function btcPositionReport(evidence={},now=Date.now()){
   const lines=[];
   const account=evidence.account||null;
@@ -279,6 +310,18 @@ function btcPositionReport(evidence={},now=Date.now()){
   }else{
     lines.push("Valorisation BTC/EUR indisponible : aucune somme en euros ne peut être déduite de ce seul relevé.");
   }
+  const grid=btcScenarioGrid(evidence,now);
+  if(grid.status==="hypothetical"){
+    lines.push("Scénarios BTC/EUR sur le BTC détenu : choc fictif sur le prix public, ±5 % ; montants AVANT frais et spread, sans carnet exécutable.");
+    for(const row of grid.rows){
+      const label=row.shock_pct>0?"+":"";
+      lines.push(label+row.shock_pct+" % de prix → valorisation théorique "
+        +moneyEUR(row.hypothetical_value_eur)+
+        " ; mouvement théorique de valeur "+signedMoney(row.movement_vs_spot_eur)+
+        " par rapport au cours actuel (pas un gain réalisé).");
+    }
+    lines.push("Ce n'est pas une prévision, un prix de revente OKX garanti ni un calcul du rendement après PayPal.");
+  }else lines.push("Scénarios BTC indisponibles : "+grid.reason+".");
   const ledger=evidence.ledger||null;
   const ledgerAt=Number(evidence.ledgerCheckedAt);
   const ledgerRecent=Number.isFinite(ledgerAt)&&ledgerAt>0&&now-ledgerAt>=0&&now-ledgerAt<=1800000;
@@ -920,7 +963,7 @@ function mount(){
   return true;
 }
 
-if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain,capitalJourneyReport});
+if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain,capitalJourneyReport,btcScenarioGrid});
 if(typeof document==="undefined")return;
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
 globalThis.AgentCryptoTraderOkxAccount=Object.freeze({mount,refresh,login,logout:logoutBridge,read_only:true,bridge:BRIDGE,token_storage:"sessionStorage",okx_credentials_in_browser:false,real_orders:false});

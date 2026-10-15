@@ -91,6 +91,7 @@ jobs:
           node --test public/agent_crypto_erith_ia/trader/test-ai-ct-account-routing.cjs
           node --test public/agent_crypto_erith_ia/trader/test-btc-position-reading.cjs
           node --test public/agent_crypto_erith_ia/trader/test-okx-capital-journey.cjs
+          node --test public/agent_crypto_erith_ia/trader/test-okx-position-scenarios.cjs
 
       - name: Refuse late external order books and candles after selection change
         run: node tests/agent_crypto_external_market_race.cjs
