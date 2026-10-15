@@ -39,7 +39,7 @@ test('zero fee does not add unnecessary CT units',()=>{
 });
 test('no future fee hypothesis refuses to invent a purchase quantity',()=>{
  for(const value of [undefined,null,'','0,1','-1','6','0.000000001','NaN']){
-  const r=plan(value,'CT');
+  const r=ct.planGrossBuyForNetSpot(rules,value,'CT');
   assert.equal(r.status,'unavailable');
   assert.equal(r.order_enabled,false);
  }
@@ -57,7 +57,7 @@ test('no official rules requires explicit manual values, never a fixed minimum 1
 });
 test('future fee in an unknown currency is not silently treated as CT or USDC',()=>{
  assert.equal(plan('0.1','BTC').status,'unavailable');
- assert.equal(plan('0.1',undefined).status,'unavailable');
+ assert.equal(ct.planGrossBuyForNetSpot(rules,'0.1',undefined).status,'unavailable');
 });
 test('when minimum is not a multiple of lot, target next legal sellable lot',()=>{
  const r={...rules,min_sz:'10.005',lot_sz:'0.01'};
