@@ -106,6 +106,78 @@
       observed_at:book.observed_at_utc,age_ms:now-observed,
       caveat:'Simulation de revente immédiate sur carnet observé : aucune exécution garantie'};
   }
+
+  // Lecture de la liquidité pour une revente fictive CT/USDC, jamais un ordre.
+  function exitMetrics(sale,book,qty){
+    if(sale?.status!=='indicative'||!Number.isFinite(qty)||qty<=0)return null;
+    const bid=numeric(book?.bids?.[0]?.[0]);
+    if(bid===null||bid<=0)return null;
+    const average=sale.gross_usdc/qty;
+    if(!Number.isFinite(average)||average<=0||average>bid+1e-9)return null;
+    const ask=numeric(book?.asks?.[0]?.[0]);
+    const spread=ask!==null&&ask>=bid&&ask>0?(ask-bid)/ask*100:null;
+    return Object.freeze({
+      best_bid_usdc_ct:bid,best_ask_usdc_ct:spread===null?null:ask,spread_pct:spread,
+      weighted_exit_usdc_ct:average,book_impact_pct:Math.max(0,(bid-average)/bid*100),
+      estimated_exit_fee_usdc:sale.gross_usdc-sale.net_usdc,observed_at:sale.observed_at
+    });
+  }
+  // Contexte public : seules les bougies CT/USDT réellement chargées sont recevables.
+  function publicCandles(chart,now=Date.now()){
+    const empty=reason=>Object.freeze({status:'unavailable',reason});
+    const instrument=String(chart?.loadedInstrument||'').toUpperCase();
+    const bar=String(chart?.loadedBar||'');
+    const intervals={'1m':60000,'5m':300000,'15m':900000,'1h':3600000,'4h':14400000,'1d':86400000,'1j':86400000};
+    if(chart?.mode!=='candles'||chart?.loading||chart?.error||instrument!=='CT-USDT'||!intervals[bar])
+      return empty('Bougies CT/USDT non chargées ou autre actif sélectionné');
+    const rows=chart.rows;
+    if(!Array.isArray(rows)||rows.length<2)return empty('Série CT/USDT insuffisante');
+    let first=null,last=null,previous=0,volume=0;
+    for(const row of rows){
+      const t=numeric(row?.t),close=numeric(row?.c),v=numeric(row?.v);
+      if(t===null||t<=previous||t<=0||close===null||close<=0||v===null||v<0)
+        return empty('Bougies CT/USDT non vérifiables');
+      if(!first)first={t,close};
+      last={t,close};previous=t;volume+=v;
+    }
+    const age=now-last.t;
+    if(!Number.isFinite(age)||age<0)return empty('Horodatage des bougies non vérifiable');
+    return Object.freeze({
+      status:age>intervals[bar]*2?'stale':'observed',instrument,bar,points:rows.length,
+      change_pct:(last.close/first.close-1)*100,volume_ct:volume,
+      first_at:new Date(first.t).toISOString(),last_at:new Date(last.t).toISOString(),
+      source:String(chart.source||'Bougies CT/USDT'),age_ms:age
+    });
+  }
+  function explain(doc,chart=null){
+    if(doc?.schema!==SCHEMA||doc.read_only!==true||doc.orders_enabled!==false)
+      fail('Compte rendu privé non validé');
+    const lines=[],qty=doc.position?.qty_ct;
+    if(doc.position?.verified===true&&Number.isFinite(qty))
+      lines.push('Position OKX : '+qty.toLocaleString('fr-FR',{maximumFractionDigits:12})+' CT détenus, relevé du '+String(doc.position.observed_at||'date inconnue')+'.');
+    else lines.push('Position CT non confirmée : aucune valorisation calculée.');
+    if(doc.acquisition?.status==='reconciled_fills_only')
+      lines.push('Acquisition rapprochée : '+doc.acquisition.spent_usdc.toFixed(6)+' USDC sur les transactions CT/USDC retrouvées ; paiements externes et transferts non certifiés.');
+    else lines.push('Coût d’acquisition NON PROUVÉ : '+String(doc.acquisition?.reason||'historique incomplet')+'.');
+    if(doc.liquidation_illustrative?.status==='indicative'){
+      const sale=doc.liquidation_illustrative;
+      lines.push('Revente FICTIVE : '+sale.net_usdc.toFixed(6)+' USDC nets estimés sur les offres acheteuses du carnet OKX CT/USDC du '+sale.observed_at+' ; frais estimés inclus, aucune exécution garantie.');
+      if(doc.exit_metrics){
+        const m=doc.exit_metrics;
+        lines.push('Liquidité : meilleure offre acheteuse '+m.best_bid_usdc_ct.toFixed(8)+' USDC/CT, prix de revente moyen pondéré fictif '+m.weighted_exit_usdc_ct.toFixed(8)+' USDC/CT ; impact du parcours du carnet '+m.book_impact_pct.toFixed(3)+' %.');
+        if(m.spread_pct!==null)lines.push('Écart acheteur/vendeur : '+m.spread_pct.toFixed(3)+' % sur le carnet observé ; indicatif uniquement.');
+      }
+    }else lines.push('Revente fictive NON CALCULABLE : '+String(doc.liquidation_illustrative?.reason||'données absentes')+'.');
+    if(Number.isFinite(doc.pnl_illustrative_usdc))
+      lines.push('Différence indicative : '+doc.pnl_illustrative_usdc.toFixed(6)+' USDC après les frais de revente estimés ; ni gain réalisé ni rentabilité certifiée.');
+    else lines.push('Gain / perte NON CALCULABLE avec les seules preuves disponibles.');
+    if(chart?.status==='observed')
+      lines.push('Contexte marché public : '+chart.instrument+' '+chart.bar+', '+chart.points+' bougies ; variation '+chart.change_pct.toFixed(2)+' % sur la fenêtre '+chart.first_at+' → '+chart.last_at+'. Cette variation en USDT ne valorise pas la position CT/USDC.');
+    else if(chart?.status==='stale')lines.push('Contexte public CT/USDT trop ancien : ne pas présenter cette courbe comme un signal actuel.');
+    else lines.push('Contexte public CT/USDT indisponible pour cette lecture ; aucune substitution de cours.');
+    lines.push('Aucune recommandation d’achat ou de vente ; la décision et toute opération restent humaines.');
+    return Object.freeze({read_only:true,market:PAIR,lines:Object.freeze(lines)});
+  }
   function compose({account,fills,fees,book},now=Date.now()) {
     const held=position(account);
     const accountAt=Date.parse(account.fetched_at||'');
@@ -115,14 +187,15 @@
     const sale=sellEstimate(book,held.qty_ct,rate,now);
     const pnl=bought.status==='reconciled_fills_only' && sale.status==='indicative'
       ? sale.net_usdc-bought.spent_usdc:null;
+    const metrics=exitMetrics(sale,book,held.qty_ct);
     return Object.freeze({schema:SCHEMA,market:PAIR,venue:'OKX Europe',quote:'USDC',
       read_only:true,orders_enabled:false,private_data:true,export_to_public_github:false,
       observed_at:new Date(now).toISOString(),portfolio:portfolio(account),position:held,acquisition:bought,
-      fee_taker_fraction:rate,liquidation_illustrative:sale,
+      fee_taker_fraction:rate,liquidation_illustrative:sale,exit_metrics:metrics,
       pnl_illustrative_usdc:pnl,profit_proven:false,
       notes:['Les valeurs sont privées et restent localement dans le navigateur.',
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
         'Le prix futur de revente et le bénéfice réalisé ne sont pas connus.']});
   }
-  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,compose});
+  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,publicCandles,explain,compose});
 });

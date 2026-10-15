@@ -627,6 +627,7 @@ function mount(){
     if(detail?.hidden||document.getElementById("analyste")?.classList.contains("detail-collapsed"))
       document.getElementById("detailPanelToggle")?.click();
     ai.open=true;
+    ai.querySelector("#aiCtModeAnalyze")?.click();
     ai.scrollIntoView({behavior:"auto",block:"nearest"});
     const button=ai.querySelector("#aiCtRead");
     if(button&&!button.disabled)button.click();

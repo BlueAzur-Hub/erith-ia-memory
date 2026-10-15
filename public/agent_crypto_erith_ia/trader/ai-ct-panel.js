@@ -53,6 +53,15 @@ async function get(url,token){const controller=new AbortController();const timeo
  if(!response.ok)throw new Error('Lecture indisponible ('+response.status+')');return await response.json();}
  finally{clearTimeout(timeout);}}
 function paint(doc){body.replaceChildren();
+ // Le compte rendu réunit les calculs déjà prouvés et la courbe publique chargée.
+ const chart=model.publicCandles(globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||null);
+ const report=model.explain(doc,chart);
+ const brief=document.createElement('section');brief.className='ai-ct-seven-brief';
+ brief.setAttribute('aria-label','Synthèse Seven de la position Concrete');
+ const heading=document.createElement('strong');heading.textContent='SEVEN · Analyse de ma position CT';
+ brief.append(heading);
+ for(const line of report.lines){const p=document.createElement('p');p.textContent=line;brief.append(p);}
+ body.append(brief);
  const balances=doc.portfolio?.assets||{};
  for(const code of ['BTC','CT','USDC','EUR']){
   const entry=balances[code];
@@ -163,6 +172,7 @@ copy.addEventListener('click',async()=>{
  // Explicit user action: private overview copied locally, never uploaded automatically.
  const sanitized={schema:latest.schema,market:latest.market,quote:latest.quote,read_only:true,
  portfolio:latest.portfolio,position:latest.position,acquisition:latest.acquisition,fee_taker_fraction:latest.fee_taker_fraction,
+ exit_metrics:latest.exit_metrics,
  liquidation_illustrative:latest.liquidation_illustrative,
  pnl_illustrative_usdc:latest.pnl_illustrative_usdc,profit_proven:false};
  try{await navigator.clipboard.writeText(JSON.stringify(sanitized,null,2));state('Résumé privé copié. Partage uniquement si tu le souhaites.');}
