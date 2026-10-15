@@ -36,9 +36,11 @@
   function ensureStyle(){
     if(document.getElementById(STYLE_ID))return;
     const node=document.createElement("style");node.id=STYLE_ID;
-    node.textContent='html[data-agent-crypto-surface="trader"] #math.trader-math-external > :not(.atlas-math-dock-head):not(#traderMathExternalGuard){display:none!important}' +
+    node.textContent='html[data-agent-crypto-surface="trader"] #math.trader-math-external > :not(.atlas-math-dock-head):not(.atlas-math-rail-trigger):not(#traderMathExternalGuard){display:none!important}' +
       '#traderMathExternalGuard{padding:16px;border:1px solid rgba(118,216,236,.35);border-radius:12px;background:rgba(3,20,32,.8);color:#e9f7ff;line-height:1.65}' +
-      '#traderMathExternalGuard strong{color:#8be9f6}';
+      '#traderMathExternalGuard strong{color:#8be9f6}' +
+      '#math.trader-math-external #atlasMathRailScore{font-size:0!important}' +
+      '#math.trader-math-external #atlasMathRailScore:after{content:attr(data-external-symbol);font-size:16px}';
     document.head.appendChild(node);
   }
   function ensureGuard(root){
@@ -58,6 +60,7 @@
       root.classList.remove("trader-math-external");
       delete root.dataset.mathExternalInstrument;
       const old=document.getElementById(GUARD_ID);if(old)old.hidden=true;
+      const rail=document.getElementById("atlasMathRailScore");if(rail)delete rail.dataset.externalSymbol;
       return true;
     }
     ensureStyle();
@@ -65,6 +68,7 @@
     node.hidden=false;
     root.classList.add("trader-math-external");
     root.dataset.mathExternalInstrument=ctx.instrument;
+    const rail=document.getElementById("atlasMathRailScore");if(rail)rail.dataset.externalSymbol=String(ctx.base).toUpperCase();
     const title=document.createElement("strong");
     title.textContent="Math Core · "+String(ctx.base).toUpperCase()+"/"+String(ctx.quote).toUpperCase();
     const detail=document.createElement("div");
