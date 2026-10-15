@@ -38,7 +38,7 @@ test('if the USDC credit is not proven, never assert source of capital for CT',(
 test('if acquisitions do not match CT holdings, refuse the USDC subtraction',()=>{
  const x=capitalJourneyReport({...info,ct:7.75},now);
  assert.equal(x.coherent_usdc,false);
- assert.match(x.lines.join(' '),/acquisitions CT\/USDC/);
+ assert.match(x.lines.join(' '),/achats et solde Concrete insuffisamment rapprochés/);
 });
 test('if USDC balance differs from accounting remainder, do not certify coherence',()=>{
  const x=capitalJourneyReport({...info,usdc:11},now);
