@@ -248,8 +248,9 @@
   function planGrossBuyForNetSpot(rules,feePercent,feeCurrency){
     const unverified=reason=>Object.freeze({status:'unavailable',read_only:true,
       market:PAIR,reason,order_enabled:false});
-    if(rules?.status!=='verified'||rules.market!==PAIR||rules.state!=='live')
-      return unverified('Règles SPOT CT/USDC non vérifiées ou paire non active');
+    if(!['verified','manual'].includes(rules?.status)||rules.market!==PAIR||
+       (rules.status==='verified'&&rules.state!=='live'))
+      return unverified('Règles SPOT CT/USDC absentes ou paire non active');
     if(feeCurrency!=='CT'&&feeCurrency!=='USDC')
       return unverified('La devise des frais de ce futur achat doit être choisie');
     if(typeof feePercent!=='string'||!/^\d+(?:\.\d{1,8})?$/.test(feePercent))
@@ -284,7 +285,9 @@
     };
     return Object.freeze({status:'hypothetical',read_only:true,order_enabled:false,
       market:PAIR,fee_currency:feeCurrency,fee_pct_assumption:feePercent,
-      official_filters_checked_at:rules.checked_at,
+      rules_verified:rules.status==='verified',
+      rule_source:rules.status==='verified'?'OKX public SPOT':'saisie manuelle, NON VERIFIEE',
+      official_filters_checked_at:rules.status==='verified'?rules.checked_at:null,
       minimum_ct:format(min),lot_ct:format(lot),
       sale_quantity_target_ct:format(sellableTarget),
       gross_purchase_ct:format(gross),assumed_fee_ct:feeCurrency==='CT'?format(feeCt):null,
