@@ -126,8 +126,8 @@ test("legacy BTC content is outside a collapsed laboratory and always survives C
 test("Follow mode does not interpret a Top 5 comparison as a single crypto",()=>{
   const t=boot(),lab=t.get("agentCryptoLearningLab");
   lab.open=true;t.graphTitle.textContent="TOP 5 · 24h · BTC/ETH/BNB";
-  t.get("lab-mode-toggle").fire("click");
-  assert.equal(t.sandbox.window.AgentCryptoLearningLab.read().mode,"follow");
+  assert.equal(t.sandbox.window.AgentCryptoLearningLab.read().mode,"follow",
+    "New Lab sessions follow the chart by default");
   assert.equal(t.sandbox.window.AgentCryptoLearningLab.read().asset,"BTC");
   t.graphTitle.textContent="CT · Concrete · 7j · prix USD";
   // Retoggle mode twice to exercise the read-only market sync.
@@ -141,8 +141,8 @@ test("an old BTC headline cannot override CT while Top 5 remains active",()=>{
   h.get("agentCryptoLearningLab").open=true;
   h.graphTitle.textContent="BTC · Bitcoin · 24h prix USD historique conservé";
   h.top5Button.active=true;
-  h.get("lab-mode-toggle").fire("click");
-  assert.equal(api.read().mode,"follow");
+  assert.equal(api.read().mode,"follow",
+    "The Lab remains in follow mode without an explicit toggle");
   assert.equal(api.read().asset,"CT");
   h.top5Button.active=false;
   h.get("lab-mode-toggle").fire("click");
