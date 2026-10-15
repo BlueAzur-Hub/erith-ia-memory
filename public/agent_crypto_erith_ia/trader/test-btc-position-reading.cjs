@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
-const {btcPositionReport}=require('./trader-okx-account.js');
+const {btcPositionReport,btcQuantityChain}=require('./trader-okx-account.js');
 const now=Date.UTC(2026,9,15,8,30,0);
 const account={ok:true,read_only:true,fetched_at:new Date(now-18000).toISOString()};
 const holding=0.0001280278957421;
@@ -50,4 +50,55 @@ test('no BTC position never invents performance',()=>{
 test('missing BTC cannot be turned into zero',()=>{
  const v=btcPositionReport({...ok,quantity:null},now);
  assert.equal(v.status,'unavailable');
+});
+
+const btcCredit={currency:'BTC',source:'Compte de trading',type:'30',subType:'320',
+ timestamp:now-864000000,balanceChange:.003};
+const btcDebit={currency:'BTC',source:'Compte de trading',type:'',subType:'',
+ timestamp:now-86400000,balanceChange:-.001};
+const chain={movements:[btcCredit,btcDebit],
+ acquisition:{btc:.003,eur:200,timestamp:btcCredit.timestamp},held:.002,complete:true};
+test('BTC initial minus unique debit equals held BTC; no invented conversion',()=>{
+ const r=btcQuantityChain(chain);
+ assert.equal(r.status,'balanced');assert.equal(r.paired_usdc,false);
+ assert.equal(r.credit_usdc,null);assert.ok(Math.abs(r.remaining_btc-.002)<1e-12);
+});
+test('pair of BTC debit and USDC credit is compatible with conversion, not certified',()=>{
+ const counterpart={currency:'USDC',source:'Compte de trading',
+  timestamp:btcDebit.timestamp,balanceChange:89};
+ const matched=btcQuantityChain({...chain,usdcEntries:[counterpart]});
+ assert.equal(matched.status,'balanced');assert.equal(matched.paired_usdc,true);
+ assert.equal(matched.credit_usdc,89);
+ const report=btcPositionReport({...ok,quantity:.002,
+   ledger:{matched:chain.acquisition,btcChain:matched},ledgerCheckedAt:now-5000},now);
+ assert.match(report.lines.join(' '),/compatibles avec une conversion/);
+ assert.match(report.lines.join(' '),/gain net restent NON PROUVÉS/);
+ assert.equal(report.indicative_delta_eur,null);
+});
+test('if no USDC leg is available, never claim it was a conversion',()=>{
+ const matched=btcQuantityChain(chain);
+ const report=btcPositionReport({...ok,quantity:.002,
+  ledger:{matched:chain.acquisition,btcChain:matched},ledgerCheckedAt:now-5000},now);
+ assert.match(report.lines.join(' '),/n'est pas à lui seul une preuve de conversion/);
+ assert.equal(report.indicative_delta_eur,null);
+});
+test('partial journals or third BTC movement cannot create balance claim',()=>{
+ assert.equal(btcQuantityChain({...chain,complete:false}).status,'unknown');
+ const third={...btcDebit,timestamp:btcDebit.timestamp+1000,balanceChange:-.0001};
+ assert.equal(btcQuantityChain({...chain,movements:[btcCredit,btcDebit,third]}).status,'unknown');
+});
+test('funding BTC movement and mismatching balance are not silently reconciled',()=>{
+ assert.equal(btcQuantityChain({...chain,movements:[btcCredit,{...btcDebit,source:'Compte de financement'}]}).status,'unknown');
+ assert.equal(btcQuantityChain({...chain,held:.0019}).status,'mismatch');
+});
+test('late USDC credit does not count as conversion counterpart',()=>{
+ const late={currency:'USDC',source:'Compte de trading',timestamp:btcDebit.timestamp+900000,
+  balanceChange:90};
+ const result=btcQuantityChain({...chain,usdcEntries:[late]});
+ assert.equal(result.status,'balanced');assert.equal(result.paired_usdc,false);
+});
+test('two simultaneous USDC credits are ambiguous and cannot be paired',()=>{
+ const usdc={currency:'USDC',source:'Compte de trading',timestamp:btcDebit.timestamp,
+  balanceChange:44.5};
+ assert.equal(btcQuantityChain({...chain,usdcEntries:[usdc,{...usdc,balanceChange:44.5}]}).paired_usdc,false);
 });
