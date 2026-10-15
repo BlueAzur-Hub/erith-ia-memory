@@ -16,7 +16,7 @@ assert.match(source,/let asset="BTC", tab="synthese", follow=true/,
 assert.match(source,/modeButton.addEventListener\("click",\(\)=>\{follow=!follow;render\(\);syncMarket\(\);\}\)/,
   "Operator can still pin a learning dossier independently");
 const deactivate=categorySource.slice(categorySource.indexOf("function deactivate({clearChart=true}={})"),
-  categorySource.indexOf("function sourceInfo(",categorySource.indexOf("function deactivate({clearChart=true}={})"));
+  categorySource.indexOf("function sourceInfo(",categorySource.indexOf("function deactivate({clearChart=true}={})")));
 assert.match(deactivate,/state.selected=null;/);
 assert.match(deactivate,/renderCategory\(\);/,
   "Clearing CT state redraws ACTIF marker, even with New Listings filter still visible");
