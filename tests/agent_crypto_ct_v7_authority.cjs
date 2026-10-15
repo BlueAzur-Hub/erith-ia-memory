@@ -109,7 +109,7 @@ const quoteBegin=app.indexOf("function atlasChartQuoteBasis(");
 const quoteEnd=app.indexOf("function atlasHorizonMetricForCoin(",quoteBegin);
 assert.ok(quoteBegin>0&&quoteEnd>quoteBegin,"Chart quote truth helper in active Administrator");
 const quoteSource=app.slice(quoteBegin,quoteEnd)
-  +"\\nthis.chartQuote=atlasChartQuoteBasis;this.chartGap=atlasChartReferenceGap;this.currentGap=atlasCurrentChartGap;";
+  +"\nthis.chartQuote=atlasChartQuoteBasis;this.chartGap=atlasChartReferenceGap;this.currentGap=atlasCurrentChartGap;";
 function checkQuote({currency="USD",resultCurrency=null,spotUsd=null,spotEur=null,lastPrice=81501.61}){
   const coin={id:"bitcoin",symbol:"BTC",priceUsd:spotUsd,priceEur:spotEur};
   const result={currency:resultCurrency,integrity:{metrics:{lastPrice}}};
