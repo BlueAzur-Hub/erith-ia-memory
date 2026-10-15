@@ -52,16 +52,127 @@ async function get(url,token){const controller=new AbortController();const timeo
  try{const response=await fetch(url,{method:'GET',headers:{Accept:'application/json',...(token?{Authorization:'Bearer '+token}:{})},cache:'no-store',signal:controller.signal});
  if(!response.ok)throw new Error('Lecture indisponible ('+response.status+')');return await response.json();}
  finally{clearTimeout(timeout);}}
+
+function el(tag,className='',content=''){
+ const node=document.createElement(tag);
+ if(className)node.className=className;
+ if(content!==null)node.textContent=content;
+ return node;
+}
+function showEvidence(target,doc){
+ const wrapper=el('section','ai-ct-execution');
+ const top=el('div','ai-ct-execution-top');
+ top.append(el('div','ai-ct-execution-title','CONCRETE · CT/USDC · OKX'),
+   el('p','ai-ct-execution-sub','Simulations en lecture seule · aucune transaction'));
+ wrapper.append(top);
+ const rules=doc.instrument_rules||{};
+ const full=doc.partial_exit_grid?.rows?.find(x=>x.share_pct===100);
+ const metrics=el('div','ai-ct-execution-metrics');
+ const addMetric=(title,value,description)=>{
+  const card=el('div','ai-ct-execution-metric');
+  card.append(el('span','',title),el('strong','',value),el('small','',description));
+  metrics.append(card);
+ };
+ addMetric('Position',number(doc.position?.qty_ct,8)+' CT','Solde OKX Trading + Funding');
+ addMetric('Revente totale simulée',
+  full?.status==='indicative'?number(full.net_usdc,6)+' USDC':'Non calculable',
+  'Carnet acheteur · frais estimés inclus');
+ addMetric('Frais de vente',
+  doc.fee_taker_fraction===null?'Non vérifiés':number(doc.fee_taker_fraction*100,3)+' %',
+  'Taker CT/USDC du compte');
+ addMetric('Minimum d’ordre',
+  rules.status==='verified'?number(Number(rules.min_sz),8)+' CT':'Non vérifié',
+  rules.status==='verified'
+   ?'Pas quantité '+rules.lot_sz+' CT · état '+rules.state
+   :'API publique OKX inaccessible ou données absentes');
+ wrapper.append(metrics);
+ const note=el('div','ai-ct-execution-status',
+  rules.status==='verified'
+    ?'Règles publiques OKX consultées le '+new Date(rules.checked_at).toLocaleString('fr-FR')+
+      ' · min '+rules.min_sz+' CT · lot '+rules.lot_sz+' CT · tick '+rules.tick_sz+' USDC'
+    :'Règles OKX non vérifiées : les simulations NE prouvent pas la possibilité de passer un ordre.');
+ note.dataset.source=rules.status==='verified'?'verified':'unverified';
+ wrapper.append(note);
+ const title=el('h4','','Revente hypothétique selon le carnet acheteur');
+ wrapper.append(title);
+ const scroller=el('div','ai-ct-table-scroll');
+ const table=el('table','ai-ct-scenario-table');
+ const head=el('thead'),hrow=el('tr');
+ for(const name of ['Fraction','CT simulés','Nets estimés','CT restants','Contrôle OKX']){
+  hrow.append(el('th','',name));
+ }
+ head.append(hrow);table.append(head);
+ const tbody=el('tbody');
+ for(const entry of (doc.order_assessment?.rows||[])){
+  const part=doc.partial_exit_grid?.rows?.find(x=>x.share_pct===entry.share_pct);
+  const tr=el('tr');
+  const vals=[
+   entry.share_pct+' %',
+   Number.isFinite(entry.requested_ct)?number(entry.requested_ct,8)+' CT':'—',
+   part?.status==='indicative'?number(part.net_usdc,6)+' USDC':'Indisponible',
+   part?.status==='indicative'?number(part.remaining_ct,8)+' CT':'—',
+   entry.quantity_message
+  ];
+  vals.forEach((value,i)=>{
+    const cell=el('td',i===4?'ai-ct-rule-state':'',value);
+    if(i===4)cell.dataset.state=entry.quantity_status;
+    tr.append(cell);
+  });
+  tbody.append(tr);
+ }
+ table.append(tbody);scroller.append(table);wrapper.append(scroller);
+ const shock=doc.scenario_grid;
+ if(shock?.status==='hypothetical'){
+  wrapper.append(el('h4','','Hypothèses de prix · carnet à volumes constants'));
+  const band=el('div','ai-ct-price-scenarios');
+  for(const row of shock.rows){
+   const card=el('div','ai-ct-price-scenario');
+   card.dataset.shock=String(row.shock_pct);
+   card.append(el('span','', (row.shock_pct>0?'+':'')+row.shock_pct+' %'),
+     el('strong','',number(row.net_exit_usdc,6)+' USDC'),
+     el('small','','Revente nette fictive'));
+   band.append(card);
+  }
+  wrapper.append(band);
+ }
+ const warning=el('p','ai-ct-execution-warning',
+ 'Le carnet décrit des offres momentanées ; une quantité conforme à minSz/lotSz ne garantit ni acceptation, ni exécution. Autres contrôles OKX et frais éventuels non certifiés.');
+ wrapper.append(warning);
+ target.append(wrapper);
+}
+function showFullReport(target,report){
+ const details=el('details','ai-ct-analysis-details');
+ const summary=el('summary','','Explications complètes de Seven · sources et limites');
+ details.append(summary);
+ for(const line of report.lines)details.append(el('p','',line));
+ target.append(details);
+}
+async function publicCtSpotInstrument(){
+ // OKX Public Data : une lecture anonyme sans token ni envoi au Bridge.
+ // Certains navigateurs / territoires bloquent CORS : état NON VÉRIFIÉ.
+ const ctrl=new AbortController();
+ const timeout=setTimeout(()=>ctrl.abort(),4500);
+ try{
+  const url='https://www.okx.com/api/v5/public/instruments?instType=SPOT&instId=CT-USDC';
+  const res=await fetch(url,{method:'GET',mode:'cors',credentials:'omit',
+    cache:'no-store',headers:{Accept:'application/json'},signal:ctrl.signal});
+  if(!res.ok)throw new Error('Règles OKX indisponibles');
+  const payload=await res.json();
+  return {observed_at_utc:new Date().toISOString(),payload};
+ }finally{clearTimeout(timeout);}
+}
 function paint(doc){body.replaceChildren();
  // Le compte rendu réunit les calculs déjà prouvés et la courbe publique chargée.
  const chart=model.publicCandles(globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||null);
  const report=model.explain(doc,chart);
+ showEvidence(body,doc);
  const brief=document.createElement('section');brief.className='ai-ct-seven-brief';
  brief.setAttribute('aria-label','Synthèse Seven de la position Concrete');
  const heading=document.createElement('strong');heading.textContent='SEVEN · Analyse de ma position CT';
  brief.append(heading);
- for(const line of report.lines){const p=document.createElement('p');p.textContent=line;brief.append(p);}
+ brief.append(el('p','', 'Analyse vérifiée et limites · voir les détails pour les sources de chaque calcul.'));
  body.append(brief);
+ showFullReport(body,report);
  const balances=doc.portfolio?.assets||{};
  for(const code of ['BTC','CT','USDC','EUR']){
   const entry=balances[code];
@@ -87,12 +198,15 @@ async function loadCtEvidence(){
   throw new Error('Active d’abord ta session propriétaire Aether Trust dans le Trader.');
  const endpoints=[BRIDGE+'/okx/account',BRIDGE+'/okx/fills',BRIDGE+'/okx/fees?instId=CT-USDC',
   BACKEND+'/market-book?provider=okx&instrument=CT-USDC&limit=100'];
- const results=await Promise.allSettled(endpoints.map((url,i)=>get(url,i<3?session:null)));
+ const results=await Promise.allSettled([
+  ...endpoints.map((url,i)=>get(url,i<3?session:null)),
+  publicCtSpotInstrument()
+ ]);
  if(sessionStorage.getItem(ROLE_KEY)!=='owner'||sessionStorage.getItem(TOKEN_KEY)!==session)
   throw new Error('La session Aether Trust a changé pendant la lecture.');
  if(results[0].status!=='fulfilled')throw new Error('Solde privé OKX non accessible.');
  const data=results.map(x=>x.status==='fulfilled'?x.value:null);
- return model.compose({account:data[0],fills:data[1],fees:data[2],book:data[3]});
+ return model.compose({account:data[0],fills:data[1],fees:data[2],book:data[3],instruments:data[4]});
 }
 async function refresh(){
  latest=null;copy.disabled=true;read.disabled=true;body.replaceChildren();
@@ -120,12 +234,8 @@ async function readForAccount(target){
   const chart=model.publicCandles(globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||null);
   const report=model.explain(doc,chart);
   target.replaceChildren();
-  const title=document.createElement('strong');
-  title.textContent='SEVEN · Analyse de ma position CT';
-  target.append(title);
-  for(const line of report.lines){
-   const p=document.createElement('p');p.textContent=line;target.append(p);
-  }
+  showEvidence(target,doc);
+  showFullReport(target,report);
   return true;
  }catch(e){
   if(target.isConnected&&!target.hidden){
@@ -224,6 +334,7 @@ copy.addEventListener('click',async()=>{
  const sanitized={schema:latest.schema,market:latest.market,quote:latest.quote,read_only:true,
  portfolio:latest.portfolio,position:latest.position,acquisition:latest.acquisition,fee_taker_fraction:latest.fee_taker_fraction,
  exit_metrics:latest.exit_metrics,
+ instrument_rules:latest.instrument_rules,order_assessment:latest.order_assessment,
  scenario_grid:latest.scenario_grid,partial_exit_grid:latest.partial_exit_grid,
  liquidation_illustrative:latest.liquidation_illustrative,
  pnl_illustrative_usdc:latest.pnl_illustrative_usdc,profit_proven:false};

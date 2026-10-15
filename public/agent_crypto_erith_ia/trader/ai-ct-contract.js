@@ -182,6 +182,72 @@
       cost_basis_assigned:false,rows:Object.freeze(rows),
       caveat:'Vente partielle sur offres acheteuses observées, sans ordre ni frais inconnus supplémentaires ; coût historique restant et gain non prouvés.'});
   }
+
+  // Règles publiques OKX CT/USDC, distinctes du carnet et des autorisations du compte.
+  // Échec de la source => NON VÉRIFIÉ, jamais minimum supposé à 10 CT.
+  function spotTradingRules(source,now=Date.now()){
+    const unknown=reason=>Object.freeze({status:'unverified',market:PAIR,reason});
+    const time=Date.parse(source?.observed_at_utc||'');
+    if(!Number.isFinite(time)||time>now||now-time>120000)
+      return unknown('Règles OKX absentes ou trop anciennes');
+    const payload=source?.payload;
+    if(payload?.code!=='0'||!Array.isArray(payload.data))
+      return unknown('API publique OKX non vérifiée');
+    const exact=payload.data.filter(r=>r?.instId===PAIR&&r?.instType==='SPOT');
+    if(exact.length!==1)return unknown('Instrument SPOT CT/USDC absent ou ambigu');
+    const r=exact[0];
+    const requireDecimal=v=>typeof v==='string'&&/^\d+(?:\.\d+)?$/.test(v)&&
+      Number.isFinite(Number(v))&&Number(v)>0&&
+      (v.split('.')[1]||'').length<=12;
+    if(!['live','suspend','preopen','post_only','rebase'].includes(r.state))
+      return unknown('État de négociation inconnu');
+    if(!requireDecimal(r.minSz)||!requireDecimal(r.lotSz)||!requireDecimal(r.tickSz))
+      return unknown('Minimum, pas de quantité ou pas de prix invalide');
+    return Object.freeze({status:'verified',market:PAIR,source:'OKX Public Data · /api/v5/public/instruments',
+      checked_at:source.observed_at_utc,state:r.state,min_sz:r.minSz,
+      lot_sz:r.lotSz,tick_sz:r.tickSz,quote:'USDC',base:'CT'});
+  }
+  // Comparaison décimale exacte jusqu'à 12 chiffres, sans corriger silencieusement
+  // les quantités de la simulation. Les règles de montant notionnel et du compte
+  // ne sont pas attestées par ce contrôle.
+  function scaledDecimal(value){
+    if(typeof value!=='number'||!Number.isFinite(value)||value<0||value>=1e12)
+      return null;
+    const digits=value.toFixed(12);
+    if(Math.abs(Number(digits)-value)>1e-12)return null;
+    const [whole,fraction='']=digits.split('.');
+    return BigInt(whole)*1000000000000n+BigInt(fraction.padEnd(12,'0'));
+  }
+  function scaledRule(value){
+    if(typeof value!=='string'||!/^\d+(?:\.\d+)?$/.test(value)||
+       (value.split('.')[1]||'').length>12)return null;
+    const [whole,fraction='']=value.split('.');
+    return BigInt(whole)*1000000000000n+BigInt(fraction.padEnd(12,'0'));
+  }
+  function assessSpotQuantity(qty,rules){
+    const unknown=message=>Object.freeze({status:'unverified',message});
+    if(rules?.status!=='verified')return unknown('Règles OKX non vérifiées');
+    if(rules.state!=='live')
+      return Object.freeze({status:'not_live',message:'Paire '+rules.state+' : négociation normale non confirmée'});
+    const n=scaledDecimal(qty),min=scaledRule(rules.min_sz),lot=scaledRule(rules.lot_sz);
+    if(n===null||min===null||lot===null||lot===0n)return unknown('Quantité ou précision non vérifiable');
+    if(n<min)return Object.freeze({status:'below_minimum',message:'Sous le minimum OKX ('+rules.min_sz+' CT)'});
+    if(n%lot!==0n)return Object.freeze({status:'invalid_step',message:'Non multiple du pas ('+rules.lot_sz+' CT)'});
+    return Object.freeze({status:'size_matches',message:'Quantité conforme aux filtres vérifiés ; exécution NON garantie'});
+  }
+  function assessPartialRules(grid,qty,rules){
+    const targets=[25,50,100].map(pct=>{
+      const simulated=grid?.rows?.find(r=>r.share_pct===pct)||null;
+      const amount=Number.isFinite(qty)&&qty>0?qty*pct/100:null;
+      const check=assessSpotQuantity(amount,rules);
+      return Object.freeze({share_pct:pct,requested_ct:amount,
+        quantity_status:check.status,quantity_message:check.message,
+        simulated_status:simulated?.status||'unavailable'});
+    });
+    return Object.freeze({read_only:true,market:PAIR,rules,
+      rows:Object.freeze(targets),order_accepted:false,
+      caveat:'Seuls état, minimum et pas de quantité sont contrôlés. Pas de validation des limites notionnelles, du profil OKX ni de la liquidité future.'});
+  }
   // Contexte public : seules les bougies CT/USDT réellement chargées sont recevables.
   function publicCandles(chart,now=Date.now()){
     const empty=reason=>Object.freeze({status:'unavailable',reason});
@@ -243,6 +309,19 @@
       }
       lines.push('Ces niveaux futurs et les volumes ne sont pas garantis : ce tableau n’est pas une prévision ni un ordre.');
     }else lines.push('Scénarios CT indisponibles : '+String(scenarios?.reason||'liquidité ou frais absents')+'.');
+    const compliance=doc.order_assessment;
+    if(compliance?.rules?.status==='verified'){
+      const r=compliance.rules;
+      lines.push('Filtres SPOT OKX '+PAIR+' à '+r.checked_at+
+        ' : état '+r.state+', minimum '+r.min_sz+' CT, pas quantité '+r.lot_sz+
+        ' CT, pas prix '+r.tick_sz+' USDC.');
+    }else lines.push('Règles de négociation OKX non vérifiées : aucun scénario ne peut être qualifié de compatible avec les tailles d’ordre.');
+    if(compliance?.rows?.length===3){
+      for(const row of compliance.rows){
+        lines.push('Filtre '+row.share_pct+' % : '+row.quantity_message+
+          (row.simulated_status==='indicative'?' ; carnet estimé, ordre NON validé.':' ; carnet non estimable.'));
+      }
+    }
     const partial=doc.partial_exit_grid;
     if(partial?.status==='hypothetical'){
       lines.push('Revente partielle FICTIVE CT/USDC : parcours des acheteurs du carnet actuel, frais de sortie estimés inclus.');
@@ -261,7 +340,7 @@
     lines.push('Aucune recommandation d’achat ou de vente ; la décision et toute opération restent humaines.');
     return Object.freeze({read_only:true,market:PAIR,lines:Object.freeze(lines)});
   }
-  function compose({account,fills,fees,book},now=Date.now()) {
+  function compose({account,fills,fees,book,instruments},now=Date.now()) {
     const held=position(account);
     const accountAt=Date.parse(account.fetched_at||'');
     if(!Number.isFinite(accountAt)|| now-accountAt<0 || now-accountAt>120000)fail('Solde OKX trop ancien');
@@ -273,14 +352,18 @@
     const metrics=exitMetrics(sale,book,held.qty_ct);
     const scenario=ctScenarioGrid(book,held.qty_ct,rate,bought,now);
     const partial=ctPartialExitGrid(book,held.qty_ct,rate,now);
+    const rules=spotTradingRules(instruments,now);
+    const assessment=assessPartialRules(partial,held.qty_ct,rules);
     return Object.freeze({schema:SCHEMA,market:PAIR,venue:'OKX Europe',quote:'USDC',
       read_only:true,orders_enabled:false,private_data:true,export_to_public_github:false,
       observed_at:new Date(now).toISOString(),portfolio:portfolio(account),position:held,acquisition:bought,
       fee_taker_fraction:rate,liquidation_illustrative:sale,exit_metrics:metrics,
-      scenario_grid:scenario,partial_exit_grid:partial,pnl_illustrative_usdc:pnl,profit_proven:false,
+      scenario_grid:scenario,partial_exit_grid:partial,
+      instrument_rules:rules,order_assessment:assessment,
+      pnl_illustrative_usdc:pnl,profit_proven:false,
       notes:['Les valeurs sont privées et restent localement dans le navigateur.',
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
         'Le prix futur de revente et le bénéfice réalisé ne sont pas connus.']});
   }
-  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,publicCandles,explain,compose});
+  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,assessSpotQuantity,assessPartialRules,publicCandles,explain,compose});
 });

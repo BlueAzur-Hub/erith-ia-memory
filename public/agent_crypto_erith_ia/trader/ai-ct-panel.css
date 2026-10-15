@@ -95,3 +95,50 @@ html[data-agent-crypto-surface="trader"] #accueil .atlas-v2-nav-essential #aiCtT
 #detailPanel #aiCtPanel .ai-ct-seven-brief>strong{display:block;color:#aff2ef;letter-spacing:.06em;font:800 12px/1.4 system-ui,sans-serif;margin-bottom:7px}
 #detailPanel #aiCtPanel .ai-ct-seven-brief p{color:#d7ebed;font:12px/1.6 system-ui,sans-serif;margin:6px 0;overflow-wrap:anywhere}
 #detailPanel #aiCtPanel .ai-ct-seven-brief p:last-child{color:#dfd1b0}
+
+
+/* Seven · lecture marché CT dans les panneaux EXISTANTS du Trader.
+   Grille compacte, résultats de simulation séparés des filtres OKX. */
+#traderOkxAccountPanel .ai-ct-execution,
+#detailPanel #aiCtPanel .ai-ct-execution{
+ margin:6px 0 13px;padding:12px;min-width:0;border-radius:11px;
+ background:linear-gradient(135deg,rgba(7,32,44,.96),rgba(9,47,55,.87));
+ border:1px solid rgba(111,205,205,.4);color:#e5f6f5;
+ box-shadow:0 6px 19px rgba(0,0,0,.16);
+}
+.ai-ct-execution-top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.ai-ct-execution-title{font:800 13px/1.35 system-ui,sans-serif;letter-spacing:.055em;color:#adf1ea}
+.ai-ct-execution-sub{margin:0!important;color:#9fc9d2!important;font:11px/1.4 system-ui,sans-serif!important}
+.ai-ct-execution-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.ai-ct-execution-metric{display:flex;flex-direction:column;gap:5px;min-width:0;padding:10px;
+ border:1px solid rgba(142,205,212,.21);border-radius:9px;background:rgba(3,20,29,.6)}
+.ai-ct-execution-metric span{color:#acc5d0;font-size:11px}
+.ai-ct-execution-metric strong{color:#e5fcf8;font-size:clamp(13px,1.4vw,17px);font-weight:800;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.ai-ct-execution-metric small{color:#98b7c3;font-size:10px;line-height:1.45}
+.ai-ct-execution-status{margin-top:10px;padding:9px 10px;border-left:3px solid #dbb778;
+ border-radius:6px;background:rgba(86,62,17,.19);color:#ffe1a5;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.ai-ct-execution-status[data-source="verified"]{border-left-color:#79cfc8;background:rgba(42,124,116,.13);color:#a8ece8}
+.ai-ct-execution h4{margin:15px 0 8px;font-size:12px;font-weight:780;color:#c7f4ef}
+.ai-ct-table-scroll{overflow-x:auto;max-width:100%;border:1px solid rgba(110,189,198,.24);border-radius:8px}
+.ai-ct-scenario-table{border-collapse:collapse;width:100%;min-width:620px;table-layout:auto;font:12px/1.5 system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.ai-ct-scenario-table th{text-align:left;color:#b4d8dc;background:rgba(33,78,89,.6);white-space:nowrap;font-size:11px;font-weight:750;padding:9px 10px}
+.ai-ct-scenario-table td{padding:10px 10px;border-top:1px solid rgba(137,191,202,.13);vertical-align:middle;color:#e7f2f3}
+.ai-ct-scenario-table tbody tr:nth-child(even){background:rgba(133,187,191,.065)}
+.ai-ct-scenario-table td:nth-child(1){font-weight:800;color:#a3e6e5}
+.ai-ct-rule-state{max-width:235px;font-size:11px;line-height:1.45;color:#d3e8e9!important}
+.ai-ct-rule-state[data-state="below_minimum"],
+.ai-ct-rule-state[data-state="invalid_step"],
+.ai-ct-rule-state[data-state="not_live"]{color:#ffc199!important;font-weight:700}
+.ai-ct-rule-state[data-state="unverified"]{color:#f6dba1!important}
+.ai-ct-rule-state[data-state="size_matches"]{color:#a0e6cd!important}
+.ai-ct-price-scenarios{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ai-ct-price-scenario{display:flex;flex-direction:column;gap:4px;padding:10px;border:1px solid rgba(136,194,192,.23);border-radius:8px;background:rgba(13,39,52,.58)}
+.ai-ct-price-scenario span{font-size:11px;color:#aed4db;font-weight:750}
+.ai-ct-price-scenario strong{font-size:14px;color:#e3f6f5;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.ai-ct-price-scenario small{font-size:10px;color:#a1bbc9}
+.ai-ct-execution-warning{margin:12px 0 0!important;color:#d6bea2!important;font:11px/1.55 system-ui,sans-serif!important}
+.ai-ct-analysis-details{margin-top:8px;padding:9px 10px;border:1px solid rgba(120,197,196,.25);border-radius:8px;background:rgba(5,29,39,.55)}
+.ai-ct-analysis-details>summary{cursor:pointer;color:#b4e9ea;font-size:12px;font-weight:700}
+.ai-ct-analysis-details p{font:12px/1.6 system-ui,sans-serif;color:#d4e7ea;margin:8px 0;overflow-wrap:anywhere}
+@media(max-width:900px){.ai-ct-execution-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.ai-ct-price-scenarios{grid-template-columns:1fr}.ai-ct-execution-metrics{grid-template-columns:1fr 1fr}}
