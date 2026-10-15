@@ -126,8 +126,8 @@ test("legacy BTC content is outside a collapsed laboratory and always survives C
 test("Follow mode does not interpret a Top 5 comparison as a single crypto",()=>{
   const t=boot(),lab=t.get("agentCryptoLearningLab");
   lab.open=true;t.graphTitle.textContent="TOP 5 · 24h · BTC/ETH/BNB";
-  t.get("lab-mode-toggle").fire("click");
-  assert.equal(t.sandbox.window.AgentCryptoLearningLab.read().mode,"follow");
+  assert.equal(t.sandbox.window.AgentCryptoLearningLab.read().mode,"follow",
+    "New Lab sessions follow the chart by default");
   assert.equal(t.sandbox.window.AgentCryptoLearningLab.read().asset,"BTC");
   t.graphTitle.textContent="CT · Concrete · 7j · prix USD";
   // Retoggle mode twice to exercise the read-only market sync.
