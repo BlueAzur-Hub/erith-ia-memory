@@ -134,7 +134,7 @@ jobs:
           out.write_text('\n'.join(lines),encoding='utf-8')
           print(f'DNA MORNING PAPER status={status} observations={len(o)} fresh={fresh} output={out}')
           PY
-      - name: Preserve morning PAPER review as private workflow artifact
+      - name: Preserve public morning PAPER review (no account data)
         if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
         uses: actions/upload-artifact@v4
         with:
