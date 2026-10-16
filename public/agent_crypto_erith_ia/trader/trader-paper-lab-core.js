@@ -19,8 +19,9 @@ function qualify(input,now=Date.now()){
   if(input.asset==="BTC" &&
      !(input.instrument==="BTC-USD"&&input.provider==="coingecko"&&/coingecko/i.test(source)))
     return reject("Provenance BTC/USD CoinGecko absente");
+  const canonicalInstrument=String(input.instrument||"").toUpperCase().replace("/","-");
   if(input.asset==="CT" &&
-     !(input.instrument==="CT-USDT"&&input.provider==="okx"&&
+     !(canonicalInstrument==="CT-USDT"&&input.provider==="okx"&&
        /OKX.*CT[/\-]USDT/i.test(source)&&/USDT[/\-]USD.*CoinGecko/i.test(source)))
     return reject("CT/USDT et conversion USDT/USD CoinGecko non démontrés");
   let prev=0;
@@ -32,10 +33,10 @@ function qualify(input,now=Date.now()){
   const age=now-prev;
   if(!finite(now)||age<0||age>15*60000)return reject("Cours différé ou horodatage non cohérent (15 min max)");
   const price=input.series[input.series.length-1][1];
-  return Object.freeze({ok:true,asset:input.asset,instrument:input.instrument,
+  return Object.freeze({ok:true,asset:input.asset,instrument:canonicalInstrument,
     currency:"USD",provider:input.provider,source,points:input.series.length,
     lastAt:new Date(prev).toISOString(),capturedAt:new Date(now).toISOString(),
-    price,ageMs:age,sourceIdentity:input.provider+"|"+input.instrument+"|USD"});
+    price,ageMs:age,sourceIdentity:input.provider+"|"+canonicalInstrument+"|USD"});
 }
 function assess(config){
   const c=config||{};

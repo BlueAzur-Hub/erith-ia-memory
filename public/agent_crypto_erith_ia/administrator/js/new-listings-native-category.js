@@ -673,7 +673,7 @@
     const freshness={level:"fresh",ageMs:last?Math.max(0,Date.now()-last[0]):null,label:last?new Date(last[0]).toLocaleString("fr-FR"):"—"};
     return {
       coin,series,volumeSeries,
-      source:`${spec.providerLabel} ${spec.pair} candles${rate!==1?` · ${spec.quote}/${currency} CoinGecko`:""}`,
+      source:`${spec.providerLabel} ${spec.pair} candles${upper(spec.quote)!==upper(currency)?` · ${spec.quote}/${currency} CoinGecko`:""}`,
       sourceFamily:spec.provider,
       sourceMode:"new-listing-exchange-native",
       provider:spec.provider,
