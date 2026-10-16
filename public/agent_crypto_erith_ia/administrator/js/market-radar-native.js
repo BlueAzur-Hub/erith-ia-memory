@@ -190,33 +190,65 @@ function printWatch(root,model){
     · "+(paper.BTC.closed+paper.CT.closed)+" positions PAPER terminées · source BTC "+safeDate(paper.BTC.sourceTime)+" / CT "+safeDate(paper.CT.sourceTime):
    "Journal PAPER inaccessible · aucun signal supposé";
 }
+async function identityRegistry(){
+ const local="./data/new-listings-identities.json";
+ try{return await get(local);}
+ catch(_){
+  // Data folder may be excluded from the lightweight Pages artifact. The
+  // canonical PUBLIC file is GitHub RAW; no identity is inferred on failure.
+  return get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json");
+ }
+}
 async function refresh(root,model){
  if(model.loading)return;
- model.loading=true;lookup(root,"refresh").disabled=true;lookup(root,"status").textContent="Lecture publique en cours…";
+ model.loading=true;
+ lookup(root,"refresh").disabled=true;
+ lookup(root,"status").textContent="Radar · lecture du classement et du journal…";
+ const api=global.AgentCryptoRadarReader;
+ // Start Bitget early, but never make the Top 250 wait for its two endpoints.
+ const marketPromise=get("../data/crypto/latest.json");
+ const paperPromise=get("../data/trader_flux/btc_ct_auto_paper/state.json");
+ const registryPromise=identityRegistry();
+ const instrumentsPromise=get("https://api.bitget.com/api/v3/market/instruments?category=SPOT");
+ const tickersPromise=get("https://api.bitget.com/api/v3/market/tickers?category=SPOT");
+ const issues=[];
  try{
-  const all=await Promise.allSettled([
-    get("../data/crypto/latest.json"),
-    get("../data/trader_flux/btc_ct_auto_paper/state.json"),
-    get("./data/new-listings-identities.json"),
-    get("https://api.bitget.com/api/v3/market/instruments?category=SPOT"),
-    get("https://api.bitget.com/api/v3/market/tickers?category=SPOT")
-  ]);
-  const api=global.AgentCryptoRadarReader,issues=[];
-  try{if(all[0].status!=="fulfilled")throw Error("archive absente");model.market=api.validMarket(all[0].value);}catch(e){model.market=null;issues.push("Top250 : "+e.message);}
-  try{if(all[1].status!=="fulfilled")throw Error("journal absent");model.paper=api.verifyPaper(all[1].value);}catch(e){model.paper=null;issues.push("PAPER : "+e.message);}
+  const first=await Promise.allSettled([marketPromise,paperPromise,registryPromise]);
+  try{
+   if(first[0].status!=="fulfilled")throw Error("archive indisponible");
+   model.market=api.validMarket(first[0].value);
+  }catch(e){model.market=null;issues.push("Top 250 : "+e.message);}
+  try{
+   if(first[1].status!=="fulfilled")throw Error("journal indisponible");
+   model.paper=api.verifyPaper(first[1].value);
+  }catch(e){model.paper=null;issues.push("PAPER : "+e.message);}
   let registry=new Map();
-  try{if(all[2].status!=="fulfilled")throw Error("publication indisponible");registry=api.verifyRegistry(all[2].value);}
-  catch(e){issues.push("Registre : "+e.message);}
+  try{
+   if(first[2].status!=="fulfilled")throw Error("publication locale et GitHub RAW indisponibles");
+   registry=api.verifyRegistry(first[2].value);
+  }catch(e){issues.push("Registre identités : "+e.message);}
   model.listings=[];model.listingError="";
-  try{if(all[3].status!=="fulfilled"||all[4].status!=="fulfilled")throw Error("Bitget indisponible");
-   model.listings=api.verifyBitget(all[3].value,all[4].value,registry,Date.now());
+  printMarket(root,model);
+  printWatch(root,model);
+  printListings(root,model);
+  lookup(root,"status").textContent="Radar · classement et PAPER chargés · découverte Spot Bitget en cours…"+
+   (issues.length?" · "+issues.join(" · "):"");
+  const live=await Promise.allSettled([instrumentsPromise,tickersPromise]);
+  try{
+   if(live[0].status!=="fulfilled"||live[1].status!=="fulfilled")
+     throw Error("API Spot Bitget indisponible");
+   model.listings=api.verifyBitget(live[0].value,live[1].value,registry,Date.now());
   }catch(e){model.listingError="Nouveaux listings : "+e.message;issues.push(model.listingError);}
-  printMarket(root,model);printListings(root,model);printWatch(root,model);
+  printListings(root,model);
+  printWatch(root,model);
   lookup(root,"status").textContent=issues.length?"Radar partiel · "+issues.join(" · "):
-   "Radar · Top 250 / Nouveaux listings / PAPER BTC et CT · toutes les données disponibles";
+   "Radar · Top 250 / nouveaux listings Spot / PAPER BTC et CT · sélection Solo disponible";
  }catch(e){
   lookup(root,"status").textContent="Radar indisponible : "+String(e?.message||e);
- }finally{model.loading=false;lookup(root,"refresh").disabled=false;}
+ }finally{
+  model.loading=false;
+  lookup(root,"refresh").disabled=false;
+ }
 }
 function mount(root){
  if(!root)return false;
