@@ -121,7 +121,8 @@ async function refresh(){
   ]);
   try{market=validMarket(sources[0].value)}catch(e){market=null;errors.push("Top 250 : "+e.message)}
   try{paper=verifyPaper(sources[1].value)}catch(e){paper=null;errors.push("PAPER : "+e.message)}
-  try{registry=verifyRegistry(sources[2].value)}catch(e){registry=new Map();errors.push("Identités : "+e.message)}
+  try{if(sources[2].status!=="fulfilled")throw Error("registre inaccessible (chargement réseau ou publication)");
+   registry=verifyRegistry(sources[2].value)}catch(e){registry=new Map();errors.push("Identités : "+e.message)}
   const live=await Promise.allSettled([
    get("https://api.bitget.com/api/v3/market/instruments?category=SPOT"),
    get("https://api.bitget.com/api/v3/market/tickers?category=SPOT")
