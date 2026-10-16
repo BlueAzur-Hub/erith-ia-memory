@@ -1,0 +1,50 @@
+name: Windows smoke test Operator Client preview
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/test-operator-client-windows.yml
+permissions:
+  contents: read
+jobs:
+  windows-smoke:
+    runs-on: windows-2022
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify Windows package, run built-in Python selftests and GUI process
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $dir = 'coordination/inter_ai_dialogues/agent_crypto'
+          $zip = Join-Path $dir 'ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_COMPLETE_SOURCES.zip'
+          $exe = Join-Path $dir 'ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_GUI_NO_CONSOLE.exe'
+          $sha = Join-Path $dir 'ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_SHA256.txt'
+          $base = Join-Path $env:RUNNER_TEMP 'operator-client-windows'
+          New-Item -ItemType Directory -Force -Path $base | Out-Null
+          foreach ($line in (Get-Content $sha)) {
+            $words = $line -split '  ', 2
+            if ($words.Count -ne 2) { throw 'Invalid SHA file format' }
+            $file = Join-Path $dir $words[1]
+            $actual = (Get-FileHash -Algorithm SHA256 $file).Hash.ToLowerInvariant()
+            if ($actual -ne $words[0]) { throw "SHA mismatch on $file" }
+          }
+          Expand-Archive -Path $zip -DestinationPath $base -Force
+          if ((Get-Item $exe).Length -lt 1000000) { throw 'GUI executable is too small' }
+          $embedded = Join-Path $base 'ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_GUI_NO_CONSOLE.exe'
+          if ((Get-FileHash $exe).Hash -ne (Get-FileHash $embedded).Hash) { throw 'ZIP embedded executable differs from standalone release' }
+          $bridge = Join-Path $base 'bridge/bridge.py'
+          $backend = Join-Path $base 'backend/private_backend.py'
+          & python $bridge --self-test
+          if ($LASTEXITCODE -ne 0) { throw 'Windows Bridge self-test failed' }
+          & python $backend --self-test
+          if ($LASTEXITCODE -ne 0) { throw 'Windows Backend self-test failed' }
+          $process = Start-Process -FilePath $exe -WorkingDirectory $base -PassThru
+          Start-Sleep -Seconds 6
+          $live = Get-Process -Id $process.Id -ErrorAction SilentlyContinue
+          if (-not $live) { throw 'GUI Control Center exited unexpectedly before smoke test ended' }
+          Write-Host "PASS Windows x64: EXE started; Bridge and Backend self-tests pass; files and SHA match."
+          Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
