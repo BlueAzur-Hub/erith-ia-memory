@@ -73,7 +73,47 @@ function observeMarket(asset){
  if(day<0&&week>0)return {label:"Repli 24 h",tone:"mixed",detail:"24 h négatif, 7 j positif ; ce contraste n'est pas un signal de vente."};
  return {label:"Variation neutre",tone:"flat",detail:"Au moins un des deux horizons est à zéro ; aucune tendance confirmée."};
 }
-const API=Object.freeze({TIERS,validMarket,selectMarket,verifyPaper,verifyRegistry,verifyBitget,observeMarket});
+// A research watchlist, never an execution or exchange-liquidity signal.
+const EXCLUDED_SYMBOLS=new Set(("USDT USDC DAI FDUSD USDE USDS PYUSD TUSD EURC RLUSD USDD FRAX USD1 USDF USDG USDB AVUSD USD0 CUSD USDX GHO SUSD XAUT PAXG WBTC WETH WEETH STETH WSTETH CBETH WBETH JITOSOL MSOL RETH LSETH").split(" "));
+function selectOpportunities(core,extended){
+ if(core?.schema!=="agent_crypto_public_market_snapshot_v1"||core?.source?.provider_id!=="coingecko"||
+    extended?.schema!=="agent_crypto_public_extended_market_snapshot_v1"||extended?.source?.provider_id!=="coingecko"||
+    !Array.isArray(core.coins)||core.coins.length!==250||!Array.isArray(extended.coins)||extended.coins.length!==750)
+    throw Error("Univers public Top 1000 incomplet, veille suspendue");
+ const a=Date.parse(core.generated_at||""),b=Date.parse(extended.generated_at||"");
+ if(!Number.isFinite(a)||!Number.isFinite(b)||Math.abs(a-b)>6*3600000)
+    throw Error("Snapshots Top 250 et Extended non contemporains, veille suspendue");
+ const ids=new Set(),ranks=new Set(),candidates=[];
+ for(const [source,arr] of [["core",core.coins],["extended",extended.coins]]){
+  for(const x of arr){
+   const rank=Number(x.rank),id=String(x.id||""),symbol=String(x.symbol||"").toUpperCase(),
+    price=positive(x.priceUsd),cap=positive(x.marketCapUsd),vol=positive(x.volume24hUsd),
+    day=finite(x.change24h),week=finite(x.change7d),month=finite(x.change30d);
+   if(!id||!symbol||!Number.isInteger(rank)||rank<1||rank>1000||
+      (source==="core"&&rank>250)||(source==="extended"&&rank<251)||ids.has(id)||ranks.has(rank))
+      throw Error("Identités de rang Top 1000 incohérentes");
+   ids.add(id);ranks.add(rank);
+   if(EXCLUDED_SYMBOLS.has(symbol)||price===null||cap===null||vol===null||day===null||week===null||
+      cap<25000000||vol<1000000||vol/cap<0.015||vol/cap>2)continue;
+   candidates.push({id,name:String(x.name||symbol),symbol,rank,priceUsd:price,
+    change24h:day,change7d:week,change30d:month,marketCapUsd:cap,volume24hUsd:vol,
+    turnoverPct:Math.round(vol/cap*10000)/100,
+    sourceSnapshot:source==="core"?core.generated_at:extended.generated_at,
+    riskNote:Math.abs(day)>=25?"Variation 24 h extrême · risque de retournement":"Spread et carnet non vérifiés",
+    graphEligible:false});
+  }
+ }
+ if(ids.size!==1000||ranks.size!==1000)throw Error("Rangs Top 1000 discontinus");
+ const sort=(a,b)=>b.change24h-a.change24h||a.rank-b.rank;
+ const trend=candidates.filter(c=>c.change24h>=4&&c.change7d>0).sort(sort).slice(0,12);
+ const rebound=candidates.filter(c=>c.change24h>=4&&c.change7d<0).sort(sort).slice(0,12);
+ return {sourceTimes:{core:core.generated_at,extended:extended.generated_at},
+  filters:{market_cap_min_usd:25000000,volume_24h_min_usd:1000000,turnover_min_pct:1.5,turnover_max_pct:200,
+   excludes_symbols:[...EXCLUDED_SYMBOLS].sort(),exchange_spread_orderbook_checked:false},
+  universe:1000,eligible:candidates.length,trend,rebound,
+  disclaimer:"Observations transversales de snapshots, non opportunités négociables ni conseils d'achat. Aucune paire d'exécution vérifiée."};
+}
+const API=Object.freeze({TIERS,validMarket,selectMarket,verifyPaper,verifyRegistry,verifyBitget,observeMarket,selectOpportunities});
 if(typeof module!=="undefined"&&module.exports)module.exports=API;
 // Shared pure parser between standalone Radar and Trader-native view; never start
 // the standalone UI in a page without its own #tiers control.

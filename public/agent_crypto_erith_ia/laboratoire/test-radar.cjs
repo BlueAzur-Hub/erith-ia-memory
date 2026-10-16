@@ -14,6 +14,21 @@ const validated=reader.validMarket(example);
 assert.equal(validated.rows.length,250);
 assert.equal(validated.rows[0].marketCapUsd,5000);
 assert.equal(validated.rows[0].image,coins[0].image);
+const extendedExample={schema:'agent_crypto_public_extended_market_snapshot_v1',
+ source:{provider_id:'coingecko'},generated_at:'2026-10-16T07:35:00Z',
+ coins:Array.from({length:750},(_,i)=>({id:'extended-'+i,rank:251+i,symbol:'T'+i,
+ name:'Research '+i,priceUsd:1,marketCapUsd:50000000,volume24hUsd:4000000,
+ change24h:i===2?15:8,change7d:i===2?-4:12,change30d:2}))};
+const watch=reader.selectOpportunities({...example,generated_at:'2026-10-16T07:51:00Z'},extendedExample);
+assert.equal(watch.universe,1000);
+assert.equal(watch.eligible,750);
+assert.equal(watch.trend.length,12);
+assert.equal(watch.rebound.length,1);
+assert.equal(watch.rebound[0].rank,253);
+assert.equal(watch.rebound[0].graphEligible,false);
+assert.equal(watch.filters.exchange_spread_orderbook_checked,false);
+assert.throws(()=>reader.selectOpportunities(example,{...extendedExample,generated_at:'2026-10-12T07:35:00Z'}),/non contemporains/);
+assert.throws(()=>reader.selectOpportunities(example,{...extendedExample,coins:[]}),/incomplet/);
 assert.equal(reader.observeMarket({change24h:1,change7d:2}).tone,'up');
 assert.equal(reader.observeMarket({change24h:-1,change7d:-2}).tone,'down');
 assert.equal(reader.observeMarket({change24h:1,change7d:-2}).tone,'mixed');
@@ -136,7 +151,24 @@ assert.deepEqual(router.graphSelection(),{kind:'listing',id:'concrete',symbol:'C
 globalThis.AgentCryptoNewListingsNativeCategory={snapshot:()=>({selectedId:null})};
 globalThis.AtlasExternalChart={state:()=>({active:true})};
 assert.equal(router.graphSelection(),null,"External chart without matching listing must not be called BTC");
+const facade={querySelectorAll:()=>[],radarModel:{market:validated,listings:[{
+ id:'magic-hash',symbol:'MHA',name:'MAGNE.AI',price:.0037,quote:'USDT',
+ image:'./assets/crypto/new-listings/magic-hash.png',venue:'Bitget Spot',pair:'MHA/USDT'}],
+ registry:new Map(),paper:null}};
+const coin=router.ficheCoin(facade,{kind:'listing',id:'MHA',symbol:'MHA'});
+assert.equal(coin.symbol,'MHA');
+assert.equal(coin.radarQuote,'USDT');
+assert.match(coin.renderedPrice,/USDT/);
+assert.match(nativeView,/showAsset\?\.\(fiche,fiche\.radarCoin\)/,
+ "Fiche button must open Market native popup anchored to visible control");
+assert(!nativeView.includes('fiche.radarTarget'),"Fiche must not seek an off-screen list row");
+assert(nativeView.includes('extendedPromise=get("../data/crypto/extended.json")'),"Shared extended archive, no extra network API");
+assert(nativeView.includes('printOpportunities(root,model)'),"Opportunity research section present");
 delete globalThis.AtlasExternalChart;
+const opportunityScript=fs.readFileSync(path.resolve(__dirname,'../tools/radar_opportunity_history.cjs'),'utf8');
+assert(opportunityScript.includes('followup_status')&&opportunityScript.includes('record_kind'),"Traceable separate history kinds");
+assert(opportunityScript.includes('Math.abs(now.getTime()-newest)>8*3600000'),"Stale sources must be refused");
+assert(opportunityScript.includes('observed_followup_price_usd:valid?futurePrice:null'),"Missing history stays null");
 
 (async()=>{
  const status={textContent:""};
