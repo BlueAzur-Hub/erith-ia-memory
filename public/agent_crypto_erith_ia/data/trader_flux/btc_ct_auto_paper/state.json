@@ -1,0 +1,70 @@
+{
+  "account_access": false,
+  "config": {
+    "breakout_above_high_pct": 0.1,
+    "buy_fee_pct": 0.2,
+    "max_age_hours": 2.5,
+    "max_holding_hours": 24,
+    "min_bounce_below_ma24_pct": 1.5,
+    "min_volume_multiple": 1.2,
+    "paper_notional_usdt": 5.0,
+    "sell_fee_pct": 0.2,
+    "slippage_per_side_pct": 0.1,
+    "spread_total_pct": 0.1
+  },
+  "events": [
+    {
+      "asset": "BTC",
+      "at": "2026-10-16T01:00:00Z",
+      "executed_order": false,
+      "instrument": "BTCUSDT",
+      "paper": true,
+      "quote": "USDT",
+      "reason": "No confirmed rebound or trend breakout",
+      "type": "WAIT",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset": "CT",
+      "at": "2026-10-16T01:00:00Z",
+      "executed_order": false,
+      "instrument": "CT-USDT",
+      "paper": true,
+      "quote": "USDT",
+      "reason": "No confirmed rebound or trend breakout",
+      "type": "WAIT",
+      "venue": "OKX Spot"
+    }
+  ],
+  "markets": {
+    "BTC": {
+      "closed": 0,
+      "decision": "WAIT",
+      "error": null,
+      "last_hour": 1792112400000,
+      "last_price_usdt": 82344.0,
+      "open": null,
+      "pending": null,
+      "pnl_usdt": 0.0,
+      "reason": "No confirmed rebound or trend breakout",
+      "source_time": "2026-10-16T01:00:00Z",
+      "wins": 0
+    },
+    "CT": {
+      "closed": 0,
+      "decision": "WAIT",
+      "error": null,
+      "last_hour": 1792112400000,
+      "last_price_usdt": 0.38427,
+      "open": null,
+      "pending": null,
+      "pnl_usdt": 0.0,
+      "reason": "No confirmed rebound or trend breakout",
+      "source_time": "2026-10-16T01:00:00Z",
+      "wins": 0
+    }
+  },
+  "orders_enabled": false,
+  "schema": "erith.btc-ct.hourly-paper.v1",
+  "simulation_only": true
+}
