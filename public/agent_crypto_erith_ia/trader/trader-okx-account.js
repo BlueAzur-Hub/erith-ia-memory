@@ -55,6 +55,7 @@ async function login(secret,{silent=false}={}){
   if(clean.length<6)throw new Error("Mot de passe Aether Trust requis");
   const response=await bridge("/auth/login",{method:"POST",body:{secret:clean},auth:false});
   if(!response?.token)throw new Error("Le Bridge n'a pas retourné de session Aether Trust");
+  ctCycleAccount=null;ctCycleFills=null;ctCycleLedgers=null;ledgerCheckedAt=0;
   saveToken(String(response.token));
   try{sessionStorage.setItem(ROLE_KEY,"owner");}catch(_){}
   window.dispatchEvent(new CustomEvent("agent-crypto:bridge-owner-session",{detail:{source:"trader-okx-account",bridge_version:response.bridge_version||null}}));
@@ -823,7 +824,7 @@ async function refresh({force=false}={}){
       void refreshLedger(force);
       return true;
     }catch(error){
-      if(error?.status===401){saveToken("");lastCapitalEvidence=null;updateCapitalJourney();const inline=q("ctreading");if(inline){inline.hidden=true;inline.replaceChildren();}ledgerClear("Session Aether Trust expirée.");setState("locked","SESSION BRIDGE À RÉAUTHENTIFIER");showAuth(true,"La session Bridge n'est plus valide. Entre le mot de passe Aether Trust.");}
+      if(error?.status===401){saveToken("");ctCycleAccount=null;ctCycleFills=null;ctCycleLedgers=null;lastCapitalEvidence=null;updateCapitalJourney();const inline=q("ctreading");if(inline){inline.hidden=true;inline.replaceChildren();}ledgerClear("Session Aether Trust expirée.");setState("locked","SESSION BRIDGE À RÉAUTHENTIFIER");showAuth(true,"La session Bridge n'est plus valide. Entre le mot de passe Aether Trust.");}
       else{setState("error","OKX / BRIDGE INDISPONIBLE");text("updated",shortError(error));}
       return false;
     }finally{inflight=null;}
@@ -855,12 +856,13 @@ function bindCanonicalTrust(){
 }
 
 function logoutBridge(){
+  ctCycleAccount=null;ctCycleFills=null;ctCycleLedgers=null;
   lastCapitalEvidence=null;
   const capital=q("capitalpathbody");if(capital){capital.replaceChildren();capital.textContent="Session terminée : informations privées masquées.";}
   const inline=q("ctreading");
   if(inline){inline.hidden=true;inline.replaceChildren();}
   const t=token();
-  if(!t){saveToken("");lastBtcAccount=null;currentBtcHeld=NaN;updateBtcReading();return;}
+  if(!t){saveToken("");ledgerClear("Session terminée : journaux financiers masqués.");lastBtcAccount=null;currentBtcHeld=NaN;updateBtcReading();return;}
   fetch(BRIDGE+"/auth/logout",{method:"POST",headers:{Accept:"application/json","Content-Type":"application/json",Authorization:`Bearer ${t}`},body:"{}",cache:"no-store",keepalive:true}).catch(()=>{});
   saveToken("");
   lastBtcAccount=null;
