@@ -1,6 +1,6 @@
 # ERITH.IA — Contrat canonique du Snapshot Analyse
 
-Statut : **spécification de conception, non déployée en production**.  
+Statut : **contrat conservé ; accès en lecture seule à la série publiée implémenté. Calculateur et affichage Snapshot Analyse encore à développer.**  
 Périmètre : **Radar → Graphique Solo → Analyse**, lecture seule, sans ordre.  
 Propriétaire : **Interface / Administrator** ; le **Trader hérite** du même contrat et ajoute ses expériences PAPER.  
 Nom stable prévu pour le calculateur pur : `snapshot-analyse.js` ; pour ses tests : `test-snapshot-analyse.cjs`. Aucun numéro de version dans les noms.
@@ -28,7 +28,7 @@ Pipeline obligatoire :
 - `math-core-external-guard.js` protège déjà la cohérence d'identité des séries externes et suspend ses calculs quand la série est trop courte/périmée.
 - Le Math Core canonique `scoreCoin()` est un **autre calcul**. Un Snapshot Analyse ne s'en approprie pas le score.
 
-**Dépendance d'implémentation à réaliser ensuite :** un accès public **en lecture seule à la série validée** dans le moteur graphique canonique pour les actifs Market, ou un adaptateur équivalent explicitement garanti par celui-ci. Pas de lecture de `__atlasExternalChartContext` privée par un autre module.
+**Accès en lecture seule implémenté :** `AgentCryptoPublishedSeries.read()` est exposé par le propriétaire canonique `administrator/app.js`. Il renvoie une copie immuable des points correspondant aux données réellement rendues (contrôle d’identité, de période et de prix brut). Aucun autre module ne lit `__atlasExternalChartContext`. Les séries converties USDT → USD exposent `conversion.verified=false` tant qu'une preuve indépendante du taux horodaté n'est pas publiée. Le calculateur devra alors refuser de certifier une analyse USD complète.
 
 Références source : 
 - [Radar natif](../administrator/js/market-radar-native.js)
@@ -75,18 +75,18 @@ Cet exemple décrit **la forme des données** ; les prix, révisions et dates so
 - `selectionRevision === chartRevision` et `activeChartAssetId === assetId`. En cas de sélection tardive ou de changement de période, **rejeter** le calcul précédent.
 - `published === true`, `integrityOk === true`, propriétaire confirmé ; aucun état `loading`, `blocked` ou `error`.
 - Série : tableau de paires `[timestamp_ms, prix]` ; timestamps UTC millisecondes **strictement croissants**, uniques et plausibles ; prix **finis et strictement positifs** ; aucune interpolation ou point live synthétique injecté.
-- Au moins **21 observations exploitables** pour évaluer la tendance ; ce minimum est un seuil V1 de cohérence avec la protection Math externe, **pas une garantie de couverture temporelle**.
+- Au moins **21 observations exploitables** pour évaluer la tendance ; ce minimum est un seuil de cohérence avec la protection Math externe, **pas une garantie de couverture temporelle**.
 - Devise explicite ; si une cotation USDT/USDC est convertie pour affichage USD, enregistrer une **preuve de conversion séparée** avec sa source et son horodatage. Sans elle, bloquer les calculs en USD. USDT, USDC, USD et EUR ne sont pas interchangeables.
 - Si la série est normalisée base 100, la ramener au **prix réellement validé** uniquement via son propriétaire ; un prix base 100 n'est jamais un prix USD.
 
 ## 4. Horizons prioritaires
 
-| Horizon | But | Complétude temporelle V1 | Fraîcheur maximale envisagée |
+| Horizon | But | Complétude temporelle | Fraîcheur maximale envisagée |
 | --- | --- | --- | --- |
 | **24 h** | Tactique : impulsion, repli, amplitude | ≥ 90 % des 24 h observées | dernière donnée ≤ 30 min |
 | **7 j** | Contexte court : confirmation ou divergence du 24 h | ≥ 90 % des 7 j observés | dernière donnée ≤ 8 h |
 | **30 j** | Structure : tendance prolongée, retour dans la plage | ≥ 90 % des 30 j observés | dernière donnée ≤ 48 h |
-| 60 j / 90 j / 1 an / Max | Hors V1 ; étude ultérieure | non défini | non défini |
+| 60 j / 90 j / 1 an / Max | Hors ; étude ultérieure | non défini | non défini |
 
 Seuils **proposés à tester**, repris en partie de la politique de fraîcheur déjà utilisée pour les lignes externes ; ils ne décrivent **pas** une couverture historique actuellement prouvée. La fraction de couverture est `(dernierTimestamp - premierTimestamp) / duréeDemandée`, plafonnée à 1, avec contrôle de la plus grande lacune (max. **20 %** de la durée demandée). La série doit recouvrir la fenêtre voulue sans la prolonger artificiellement.
 
@@ -112,7 +112,7 @@ Opérer uniquement sur les prix d'une fenêtre validée : `P0` (premier), `Pn` (
 | `observedHours` | `(tDernier − tPremier) / 3 600 000` |
 | `points` | `n` après validation, jamais le nombre annoncé par une légende seule |
 
-**Direction descriptive :** comparer `changePeriodPct` à une zone neutre fixe, choisie pour V1 et à recalibrer ensuite : ±1,5 % (24 h), ±3 % (7 j), ±5 % (30 j). Au-dessus : `hausse` ; au-dessous : `baisse` ; dans l'intervalle : `latéral`. Sur `partial`, le libellé porte obligatoirement **« sur fenêtre observée »**.
+**Direction descriptive :** comparer `changePeriodPct` à une zone neutre fixe, choisie pour et à recalibrer ensuite : ±1,5 % (24 h), ±3 % (7 j), ±5 % (30 j). Au-dessus : `hausse` ; au-dessous : `baisse` ; dans l'intervalle : `latéral`. Sur `partial`, le libellé porte obligatoirement **« sur fenêtre observée »**.
 
 **Position dans la plage :** `rangePositionPct < 25` : `proche du bas échantillonné` ; de 25 à 75 : `zone médiane` ; au-dessus de 75 : `proche du haut échantillonné`. Si plage constante : `plage plate`.
 
@@ -123,7 +123,7 @@ Opérer uniquement sur les prix d'une fenêtre validée : `P0` (premier), `Pn` (
 - segments de même signe et amplitude absolue du second inférieure de > 1 point : `ralentissement observé` ;
 - sinon : `stable / non significatif`.
 
-**Amplitude et volatilité :** ne pas faire passer l'amplitude `(high−low)/low` pour une volatilité statistique annualisée. En V1, utiliser `rangeIntensityLabel` : `faible / modérée / forte`, avec seuils exploratoires par période 24 h (< 2 %, 2–8 %, > 8 %), 7 j (< 5 %, 5–20 %, > 20 %), 30 j (< 10 %, 10–35 %, > 35 %). `volatilityLabel` est donc **« non mesurée statistiquement »** en V1 ; un futur calcul sur retours réguliers devra être défini et testé séparément.
+**Amplitude et volatilité :** ne pas faire passer l'amplitude `(high−low)/low` pour une volatilité statistique annualisée. En, utiliser `rangeIntensityLabel` : `faible / modérée / forte`, avec seuils exploratoires par période 24 h (< 2 %, 2–8 %, > 8 %), 7 j (< 5 %, 5–20 %, > 20 %), 30 j (< 10 %, 10–35 %, > 35 %). `volatilityLabel` est donc **« non mesurée statistiquement »** en ; un futur calcul sur retours réguliers devra être défini et testé séparément.
 
 **Décision descriptive, jamais ordre :**
 1. `blocked` ou `not_available` → `Données insuffisantes`.
@@ -203,7 +203,7 @@ Ne rien déplacer dans Radar, Market, Math Core ni modifier l'Administrator au s
 
 ## 9. Ordre d'implémentation (prochaines tâches, non réalisées ici)
 
-**A.** Exposer chez le propriétaire du graphique une **lecture publique, en mémoire, immuable** de la série réellement publiée. Pour les listings, réutiliser `mathSeriesSnapshot()`. Pour le Market canonique, **inspecter et équiper le propriétaire actuel**, sans lui adjoindre un second fetch. Vérifier l'identité et la révision *après* résolution asynchrone.
+**A. Livré.** Le propriétaire du graphique publie `AgentCryptoPublishedSeries.read()` : lecture immuable et sans deuxième collecte. Vérifier la révision une nouvelle fois *après* toute résolution asynchrone reste une obligation pour les consommateurs.
 
 **B.** Développer `laboratoire/snapshot-analyse.js` comme fonction pure + `test-snapshot-analyse.cjs`. Première intégration : 24 h, puis 7 j, puis 30 j si couverture prouvée.
 
