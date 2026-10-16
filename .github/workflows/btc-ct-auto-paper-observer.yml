@@ -1,5 +1,11 @@
 name: Seven BTC CT Hourly Public PAPER Research
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/btc-ct-auto-paper-observer.yml"
+      - "public/agent_crypto_erith_ia/tools/btc_ct_auto_observer.py"
+      - "public/agent_crypto_erith_ia/tools/test_btc_ct_auto_observer.py"
   push:
     branches: [main]
     paths:
@@ -51,6 +57,7 @@ jobs:
           print("PASS: BTC and CT PAPER-only state, no order or private account data")
           PY
       - name: Publish tiny public PAPER journal only
+        if: github.event_name != 'pull_request'
         run: |
           set -euo pipefail
           target=public/agent_crypto_erith_ia/data/trader_flux/btc_ct_auto_paper
