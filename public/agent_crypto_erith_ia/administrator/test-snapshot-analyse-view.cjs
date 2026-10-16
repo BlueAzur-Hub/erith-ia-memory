@@ -6,124 +6,168 @@ const path=require('node:path');
 const vm=require('node:vm');
 const {analyse}=require('../laboratoire/snapshot-analyse.js');
 const NOW=Date.UTC(2026,9,16,21);
+
 class El{
   constructor(tag='div'){
     this.tagName=tag.toUpperCase();this.children=[];this.parentElement=null;
-    this.className='';this.id='';this.textContent='';this.dataset={};
-    this.listeners={};this.hidden=false;
-    this.classList={contains:c=>this.className.split(/\s+/).includes(c)};
+    this.id='';this.className='';this.dataset={};this.textContent='';
+    this.listeners={};this.open=false;this.attributes={};
+    this.classList={contains:cls=>this.className.split(/\s+/).includes(cls)};
   }
-  append(...elements){elements.forEach(x=>this.appendChild(x));}
+  append(...children){for(const child of children)this.appendChild(child);}
   appendChild(el){el.parentElement=this;this.children.push(el);return el;}
-  insertAdjacentElement(where,el){
-    assert.equal(where,'afterend');
-    if(!this.parentElement)throw Error('detached anchor');
+  insertAdjacentElement(place,element){
+    assert.equal(place,'beforebegin');
     const parent=this.parentElement;
-    parent.children.splice(parent.children.indexOf(this)+1,0,el);el.parentElement=parent;
+    assert.ok(parent,"Cannot anchor outside the real panel");
+    parent.children.splice(parent.children.indexOf(this),0,element);
+    element.parentElement=parent;
   }
-  setAttribute(name,value){this[name]=value;}
-  addEventListener(name,fn){(this.listeners[name]??=[]).push(fn);}
+  setAttribute(k,v){this.attributes[k]=String(v);}
+  addEventListener(name,cb){(this.listeners[name]??=[]).push(cb);}
+  fire(name){for(const cb of this.listeners[name]||[])cb({target:this});}
   querySelectorAll(query){
-    const items=[];
-    const walk=(el,ancestors)=>{
-      for(const c of el.children){
-        const parentClasses=ancestors.concat([el.className]);
-        const parts=query.trim().split(/\s+/);
-        const direct=parts[parts.length-1];
-        const matches=direct.startsWith('.')?c.className.split(/\s+/).includes(direct.slice(1)):
-          direct.toUpperCase()===c.tagName;
-        const ancestor=parts.length===1||parentClasses.some(x=>x.split(/\s+/).includes(parts[0].slice(1)));
-        if(matches&&ancestor)items.push(c);
-        walk(c,parentClasses);
+    const tokens=query.split(/\s+/);
+    function matches(el,token){
+      if(token.startsWith('.'))return el.className.split(/\s+/).includes(token.slice(1));
+      if(token.startsWith('[data-snapshot-metric="')){
+        const key=token.slice('[data-snapshot-metric="'.length,-2);
+        return el.dataset.snapshotMetric===key;
       }
-    };
-    walk(this,[]);return items;
+      return el.tagName===token.toUpperCase();
+    }
+    const found=[];
+    function walk(node,ancestors){
+      for(const el of node.children){
+        if(matches(el,tokens[tokens.length-1]) &&
+          (tokens.length===1||ancestors.concat([node]).some(a=>matches(a,tokens[0]))))
+          found.push(el);
+        walk(el,ancestors.concat([node]));
+      }
+    }
+    walk(this,[]);
+    return found;
   }
-  querySelector(q){return this.querySelectorAll(q)[0]||null;}
-  closest(selector){if(selector==='.chart-shell')return this._chartShell||null;return null;}
+  querySelector(query){return this.querySelectorAll(query)[0]||null;}
+  closest(query){return query==='.chart-shell'?this._chartShell||null:null;}
 }
 function fixture(days=1,extra={}){
-  const series=Array.from({length:days*24+1},(_,i)=>[NOW-days*86400000+i*3600000,100+.1*i]);
-  return {assetId:'bitcoin',symbol:'BTC',instrument:null,provider:'coingecko',source:'Historique vérifié',
-    origin:'market',currency:'USD',quoteCurrency:'USD',periodDays:days,
-    published:true,integrityOk:true,selectionRevision:21,chartRevision:21,series,...extra};
+  const series=Array.from({length:days*24+1},(_,i)=>
+    [NOW-days*86400000+i*3600000,100+.1*i]);
+  return {assetId:'bitcoin',symbol:'BTC',provider:'coingecko',
+    source:'Historique USD réel',origin:'market',currency:'USD',
+    quoteCurrency:'USD',periodDays:days,published:true,integrityOk:true,
+    selectionRevision:21,chartRevision:21,series,...extra};
 }
 function setup(){
-  const chartPanel=new El('article');chartPanel.className='panel chart-panel';
-  const caption=new El('div');caption.id='chartCaption';chartPanel.append(caption);
-  const chart=new El('canvas');chart.id='mainChart';
-  const chartShell=new El('div');chartShell.className='chart-shell';chart._chartShell=chartShell;
+  const panel=new El('article');panel.className='panel chart-panel';
+  const shell=new El('div');shell.className='chart-shell';
+  shell.dataset.chartState='valid';
+  const chart=new El('canvas');chart.id='mainChart';chart._chartShell=shell;
   const legend=new El();legend.id='chartV2Legend';
   const refresh=new El();refresh.id='atlasChartRefresh';
-  const market=new El();market.id='market-zone';
-  const roots=[chartPanel,chart,chartShell,legend,refresh,market];
-  function find(id){
+  shell.append(chart,legend,refresh);panel.append(shell);
+  const caption=new El();caption.id='chartCaption';panel.append(caption);
+  const workspace=new El();workspace.id='market-zone';
+  const roots=[panel,workspace];
+  const find=id=>{
     let hit=null;
-    const walk=e=>{if(e.id===id)hit=e;e.children.forEach(walk);};
-    roots.forEach(walk);return hit;
-  }
-  const listeners={},observers=[];
-  class Observer{constructor(fn){this.fn=fn;observers.push(this);}observe(el,opts){this.element=el;this.opts=opts;}}
-  let published=null;
-  class Clock extends Date{static now(){return NOW;}}
-  const env={
-    Date:Clock,Intl,console,
-    MutationObserver:Observer,
-    document:{readyState:'complete',createElement:tag=>new El(tag),getElementById:find},
-    window:{addEventListener:(name,fn)=>{(listeners[name]??=[]).push(fn);}}
+    const traverse=e=>{if(e.id===id)hit=e;e.children.forEach(traverse);};
+    roots.forEach(traverse);return hit;
   };
-  env.globalThis=env;
-  env.AgentCryptoPublishedSeries={read:()=>published};
-  env.AgentCryptoSnapshotAnalyse={analyse};
-  const script=fs.readFileSync(path.join(__dirname,'js/snapshot-analyse-view.js'),'utf8');
-  vm.runInNewContext(script,env,{timeout:2000});
-  return {env,chartPanel,caption,observers,listeners,
+  const listeners={},observers=[];
+  class Observer{constructor(cb){this.cb=cb;observers.push(this);}
+    observe(el,opts){this.el=el;this.opts=opts;}}
+  let publication=null;
+  class Clock extends Date{static now(){return NOW;}}
+  const ctx={
+    Date:Clock,Intl,MutationObserver:Observer,
+    document:{readyState:'complete',getElementById:find,createElement:tag=>new El(tag)},
+    window:{addEventListener:(name,cb)=>{(listeners[name]??=[]).push(cb);}}
+  };
+  ctx.globalThis=ctx;
+  ctx.AgentCryptoPublishedSeries={read:()=>publication};
+  ctx.AgentCryptoSnapshotAnalyse={analyse};
+  const js=fs.readFileSync(path.join(__dirname,'js/snapshot-analyse-view.js'),'utf8');
+  vm.runInNewContext(js,ctx,{timeout:1000});
+  return {ctx,panel,shell,chart,caption,listeners,observers,
     section:()=>find('agentCryptoSnapshotAnalysis'),
-    publish:value=>{published=value;},
-    emit:name=>(listeners[name]||[]).forEach(fn=>fn({}))};
+    publish:row=>{publication=row;},
+    emit:name=>(listeners[name]||[]).forEach(cb=>cb({}))};
 }
-test('shared view mounts once under chart, wide, not in Technical Reading',()=>{
+const get=(el,key)=>el.querySelector('[data-snapshot-metric="'+key+'"] b').textContent;
+test('one collapsed strip just ABOVE existing chart, not below it',()=>{
   const x=setup(),section=x.section();
-  assert.ok(section);assert.equal(section.parentElement,x.chartPanel);
-  assert.equal(x.chartPanel.children.indexOf(section),1);
-  assert.equal(section.querySelectorAll('.atlas-snapshot-horizon').length,3);
-  x.env.AgentCryptoSharedSnapshotView.mount();
-  assert.equal(x.chartPanel.children.length,2);
-  assert.equal(section.querySelector('.atlas-snapshot-update').tagName,'BUTTON');
+  assert.ok(section);assert.equal(section.tagName,'DETAILS');
+  assert.equal(section.open,false);
+  assert.equal(section.parentElement,x.panel);
+  assert.equal(x.panel.children[0],section);
+  assert.equal(x.panel.children[1],x.shell);
+  assert.equal(x.shell.children[0],x.chart);
+  assert.equal(x.panel.children[2],x.caption);
+  assert.equal(section.querySelectorAll('.atlas-snapshot-horizon').length,0);
+  assert.equal(section.querySelectorAll('.atlas-snapshot-measure').length,3);
+  x.ctx.AgentCryptoSharedSnapshotView.mount();
+  assert.equal(x.panel.children.length,3,"no duplicate at second mount");
 });
-test('24h verified with useful explanation, 7j and 30j unavailable',()=>{
-  const x=setup();x.publish(fixture());
-  x.env.AgentCryptoSharedSnapshotView.render('test');
-  const section=x.section(),cards=section.querySelectorAll('.atlas-snapshot-horizon');
-  assert.equal(cards[0].dataset.snapshotStatus,'ready');
-  assert.equal(cards[1].dataset.snapshotStatus,'not_available');
-  assert.equal(cards[2].dataset.snapshotStatus,'not_available');
-  assert.match(cards[0].querySelector('.atlas-snapshot-meaning').textContent,/prix final/i);
-  assert.match(cards[0].querySelector('.atlas-snapshot-number strong').textContent,/2,4/);
-  assert.match(cards[1].querySelector('.atlas-snapshot-meaning').textContent,/pas assez d’historique/i);
+test('BTC 24h: single active horizon and only new metrics',()=>{
+  const x=setup();
+  x.publish(fixture());
+  x.ctx.AgentCryptoSharedSnapshotView.render('test');
+  const section=x.section();
+  assert.equal(section.dataset.snapshotStatus,'ready');
+  assert.match(section.querySelector('.atlas-snapshot-period').textContent,/BTC · 24h/);
+  assert.equal(get(section,'drawdown'),'0 %');
+  assert.equal(get(section,'coverage'),'100 %');
+  assert.equal(get(section,'momentum'),'stable');
+  assert.equal(section.querySelectorAll('.atlas-snapshot-measure').length,3);
+  assert.doesNotMatch(section.querySelector('.atlas-snapshot-summary').textContent,
+    /amplitude|évolution|prix USD/i,"already present in graph legend");
 });
-test('supports 7j and 30j only when drawn archive covers real period',()=>{
-  const x=setup();x.publish(fixture(30));
-  x.env.AgentCryptoSharedSnapshotView.render('30 days');
-  const cards=x.section().querySelectorAll('.atlas-snapshot-horizon');
-  assert.equal(cards[2].dataset.snapshotStatus,'ready');
-  assert.equal(cards[1].dataset.snapshotStatus,'ready');
+test('BTC 7j uses current period only; 30j has no separate card',()=>{
+  const x=setup();x.publish(fixture(7));
+  x.ctx.AgentCryptoSharedSnapshotView.render();
+  assert.equal(x.section().dataset.snapshotStatus,'ready');
+  assert.match(x.section().querySelector('.atlas-snapshot-period').textContent,/BTC · 7j/);
+  assert.equal(x.section().querySelectorAll('.atlas-snapshot-measure').length,3);
+  x.publish(fixture(30));
+  x.ctx.AgentCryptoSharedSnapshotView.render();
+  assert.match(x.section().querySelector('.atlas-snapshot-period').textContent,/BTC · 30j/);
 });
-test('switch to pending publication immediately clears BTC values',()=>{
-  const x=setup();x.publish(fixture());x.env.AgentCryptoSharedSnapshotView.render();
+test('unsupported 60j is not falsely analyzed as 24h',()=>{
+  const x=setup();x.publish(fixture(60));
+  x.ctx.AgentCryptoSharedSnapshotView.render();
+  assert.equal(x.section().dataset.snapshotStatus,'not_available');
+  assert.equal(get(x.section(),'coverage'),'—');
+  assert.match(x.section().querySelector('.atlas-snapshot-explanation').textContent,
+    /uniquement.*24 h, 7 j et 30 j/);
+});
+test('unverified CT/USDT into USD blocked with no stale BTC metrics',()=>{
+  const x=setup();x.publish(fixture());x.ctx.AgentCryptoSharedSnapshotView.render();
+  assert.equal(get(x.section(),'coverage'),'100 %');
+  x.publish(fixture(1,{assetId:'concrete',symbol:'CT',instrument:'CT-USDT',
+    provider:'okx',quoteCurrency:'USDT',conversion:{required:true,verified:false}}));
+  x.ctx.AgentCryptoSharedSnapshotView.render();
+  assert.equal(x.section().dataset.snapshotStatus,'blocked');
+  assert.equal(get(x.section(),'coverage'),'—');
+  assert.equal(get(x.section(),'drawdown'),'—');
+  assert.match(x.section().querySelector('.atlas-snapshot-state').textContent,/Intégrité/);
+});
+test('missing graph after selection clears metrics immediately',()=>{
+  const x=setup();x.publish(fixture());x.ctx.AgentCryptoSharedSnapshotView.render();
   x.publish(null);x.emit('agent-crypto:selected-market-changed');
   assert.equal(x.section().dataset.snapshotStatus,'waiting');
-  assert.equal(x.section().querySelector('.atlas-snapshot-number strong').textContent,'—');
+  assert.equal(get(x.section(),'coverage'),'—');
 });
-test('CT quote USD/USDT unproven is blocked without amounts',()=>{
-  const x=setup();x.publish(fixture(1,{assetId:'concrete',symbol:'CT',instrument:'CT-USDT',
-    provider:'okx',quoteCurrency:'USDT',conversion:{required:true,verified:false}}));
-  x.env.AgentCryptoSharedSnapshotView.render();
-  const a=x.section().querySelectorAll('.atlas-snapshot-horizon')[0];
-  assert.equal(a.dataset.snapshotStatus,'blocked');
-  assert.equal(a.querySelector('.atlas-snapshot-number strong').textContent,'—');
+test('opening disclosure refreshes from only the canonical owner',()=>{
+  const x=setup();x.publish(fixture());
+  const section=x.section();
+  section.open=true;section.fire('toggle');
+  assert.equal(section.dataset.snapshotStatus,'ready');
+  assert.match(section.querySelector('.atlas-snapshot-origin').textContent,/coingecko/);
+  assert.match(section.querySelector('.atlas-snapshot-glossary').textContent,/Repli maximal/);
 });
-test('Interface and Trader inherit one shared loader and no obsolete side pane',()=>{
+test('Interface/Trader shared loader only; no polling, storage, second plot or window',()=>{
   const html=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
   const mirror=fs.readFileSync(path.join(__dirname,'../trader/trader-runtime-mirror.js'),'utf8');
   const js=fs.readFileSync(path.join(__dirname,'js/snapshot-analyse-view.js'),'utf8');
@@ -132,7 +176,8 @@ test('Interface and Trader inherit one shared loader and no obsolete side pane',
   assert.match(html,/\.\/js\/snapshot-analyse-view\.js\?feature=shared/);
   assert.match(html,/\.\/css\/snapshot-analyse-view\.css\?feature=shared/);
   assert.doesNotMatch(mirror,/traderSnapshotAnalyseCalculator|snapshot-analyse-native/);
-  assert.ok(js.includes('anchor.insertAdjacentElement("afterend",section)'));
+  assert.ok(js.includes('shell.insertAdjacentElement("beforebegin",el)'));
   assert.doesNotMatch(js,/fetch\s*\(|XMLHttpRequest|localStorage|sessionStorage|setInterval\s*\(|trade\/order|innerHTML\s*=/);
-  assert.doesNotMatch(css,/position\s*:\s*fixed|position\s*:\s*absolute/);
+  assert.doesNotMatch(css,/position\s*:\s*(fixed|absolute)/);
+  assert.doesNotMatch(js,/anchor\.insertAdjacentElement|chartCaption/);
 });
