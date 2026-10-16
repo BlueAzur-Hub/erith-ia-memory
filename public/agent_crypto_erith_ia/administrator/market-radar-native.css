@@ -85,3 +85,16 @@
 #marketSnapshotPanel .radar-native .radar-native-selectable.is-radar-active{box-shadow:inset 3px 0 var(--radar-accent,var(--cyan))}
 #marketSnapshotPanel .radar-native .radar-native-card.is-radar-active{border-color:var(--radar-accent,var(--cyan))}
 @media(max-width:850px){#marketSnapshotPanel .radar-native-focus{align-items:flex-start}}
+
+/* Research cards use the existing fiche owner only: no second graph or order affordance. */
+#marketSnapshotPanel .radar-native-opportunities{margin-top:10px}
+#marketSnapshotPanel .radar-native-opportunity-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#marketSnapshotPanel .radar-native-opportunity-group{min-width:0}
+#marketSnapshotPanel .radar-native-opportunity-group h4{font-size:11px;font-weight:850;color:var(--text);margin:0 0 7px}
+#marketSnapshotPanel .radar-native-opportunity-list{display:grid;gap:5px}
+#marketSnapshotPanel .radar-native-opportunity{display:grid;grid-template-columns:minmax(80px,1fr) minmax(80px,1fr) 1.6fr auto;gap:6px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:7px}
+#marketSnapshotPanel .radar-native-opportunity strong,#marketSnapshotPanel .radar-native-opportunity span{font-size:10px;overflow-wrap:anywhere}
+#marketSnapshotPanel .radar-native-opportunity small{font-size:9px;color:var(--muted);overflow-wrap:anywhere}
+#marketSnapshotPanel .radar-native-opportunity button{font-size:10px}
+@media(max-width:1100px){#marketSnapshotPanel .radar-native-opportunity-grid{grid-template-columns:1fr}}
+@media(max-width:620px){#marketSnapshotPanel .radar-native-opportunity{grid-template-columns:1fr 1fr}#marketSnapshotPanel .radar-native-opportunity small{grid-column:1/3}}
