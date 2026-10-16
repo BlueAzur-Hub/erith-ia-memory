@@ -67,7 +67,7 @@
     return{available:rect.width>=required,gridWidth:rect.width,requiredWidth:required,reason:rect.width>=required?"Ancrer la fiche à droite sans recouvrir le tableau":"La fiche reste flottante tant que la zone Marché n’a pas assez de place pour conserver le tableau lisible."};
   };
   const effectiveMode=()=>preferredMode()==="dock"&&dockAvailability().available?"dock":"floating";
-  let enabled=true,activeTarget=null,hideTimer=0;
+  let enabled=true,activeTarget=null,activeCoin=null,hideTimer=0;
 
   function toolbar(){
     const mode=effectiveMode(),d=dockAvailability();
@@ -78,7 +78,7 @@
   function markup(c){
     const selected=globalThis.AgentCryptoTraderMarket?.selected?.()||null;
     const isSelected=selected?.id===c?.id;
-    const cur=displayCurrency();
+    const cur=displayCurrency(),quote=String(c?.radarQuote||'').toUpperCase(),unit=quote&&quote!=='USD'?quote:cur;
     const cap=finite(cur==="USD"?c?.marketCapUsd:c?.marketCap);
     const vol=finite(cur==="USD"?c?.volume24hUsd:c?.volume24h);
     const ratio=cap!==null&&cap>0&&vol!==null?vol/cap*100:null;
@@ -88,8 +88,8 @@
     return toolbar()+
       '<div class="atlas-help-market-head">'+image+'<span><strong>'+esc(c?.name||"Actif")+'</strong><b>'+esc(String(c?.symbol||"").toUpperCase())+'</b><small>Rang '+esc(c?.rank??"—")+' · Repère marché</small></span></div>'+
       '<div class="atlas-help-market-grid">'+
-      '<span><small>Prix affichage '+cur+'</small><strong>'+esc(priceOf(c))+'</strong></span>'+
-      '<span><small>Source '+cur+'</small><strong>'+(c?.partial?"Market visible":"CoinGecko public")+'</strong></span>'+
+      '<span><small>Prix '+(quote&&quote!=='USD'?'coté ':'affichage ')+esc(unit)+'</small><strong>'+esc(priceOf(c))+'</strong></span>'+
+      '<span><small>Source '+esc(unit)+'</small><strong>'+esc(c?.radarSource||(c?.partial?"Market visible":"CoinGecko public"))+'</strong></span>'+
       '<span><small>24 h direct</small><strong class="'+(c?.partial?"neutral":cls(c?.change24h))+'">'+esc(ch24)+'</strong></span>'+
       '<span><small>7 j marché</small><strong class="'+(c?.partial?"neutral":cls(c?.change7d))+'">'+esc(ch7)+'</strong></span>'+
       '<span><small>30 j marché</small><strong class="'+(c?.partial?"neutral":cls(c?.change30d??c?.change30D??c?.change30))+'">'+esc(ch30)+'</strong></span>'+
@@ -99,7 +99,7 @@
       '<span><small>Score Atlas</small><strong>'+(score===null?"—":Math.round(score))+'</strong></span>'+
       '<span><small>Décision</small><strong>Observer / comparer</strong></span></div>'+
       '<div class="atlas-help-market-sources"><span><b>Cotation et 24 h observés</b><em>'+esc(c?.partial?"Lecture de la ligne Market visible":"Snapshot public CoinGecko")+'</em></span><span><b>Référence marché 24 h</b><em>'+esc(ch24)+'</em></span></div>'+
-      '<div class="atlas-help-market-action '+(isSelected?"is-remove":"is-add")+'">'+(isSelected?"Actif central Trader · clique une autre ligne pour changer la PAIR":"Clique la ligne pour sélectionner cet actif comme PAIR centrale")+'</div>';
+      '<div class="atlas-help-market-action '+(isSelected?"is-remove":"is-add")+'">'+(c?.radarSource?"Clique la ligne pour afficher le graphique Solo existant":isSelected?"Actif central Trader · clique une autre ligne pour changer la PAIR":"Clique la ligne pour sélectionner cet actif comme PAIR centrale")+'</div>';
   }
   function host(){
     const grid=$("marketWorkspaceGrid");if(!grid)return null;
@@ -124,10 +124,10 @@
     top=Math.max(margin,Math.min(innerHeight-measured.height-margin,top));
     layer.style.left=Math.round(left)+"px";layer.style.top=Math.round(top)+"px";layer.style.visibility="visible";
   }
-  function show(target,pointer=null){
+  function show(target,pointer=null,providedCoin=null){
     if(!enabled||!target)return;
-    clearTimeout(hideTimer);activeTarget=target;
-    const c=resolveCoin(target.dataset.marketHelpId||target.dataset.marketId);if(!c)return;
+    const c=providedCoin||resolveCoin(target.dataset.marketHelpId||target.dataset.marketId);if(!c)return;
+    clearTimeout(hideTimer);activeTarget=target;activeCoin=providedCoin;
     const layer=$("atlasHelpLayer");
     if(effectiveMode()==="dock"){
       if(layer){layer.hidden=true;layer.setAttribute("aria-hidden","true");delete layer.dataset.marketHelpCoinId;}
@@ -143,15 +143,16 @@
   function hide(immediate=false){
     const run=()=>{
       const layer=$("atlasHelpLayer");if(layer){layer.hidden=true;layer.setAttribute("aria-hidden","true");delete layer.dataset.marketHelpCoinId;}
-      if(effectiveMode()!=="dock")activeTarget=null;
+      if(effectiveMode()!=="dock"){activeTarget=null;activeCoin=null;}
     };
     clearTimeout(hideTimer);if(immediate)run();else hideTimer=setTimeout(run,110);
   }
   function setMode(mode){
     try{localStorage.setItem(MODE_KEY,mode==="dock"?"dock":"floating");}catch(_){}
     const target=activeTarget||document.querySelector("#marketRows tr.is-selected[data-market-help-id]");
-    hideDock();hide(true);if(target)show(target);
+    const coin=activeCoin;hideDock();hide(true);if(target)show(target,null,coin);
   }
+  function showAsset(target,coin,pointer=null){if(!coin?.id||!coin?.symbol)return false;show(target,pointer,coin);return true;}
   function setEnabled(value){
     enabled=!!value;
     const btn=$("traderFicheToggle");if(btn){btn.classList.toggle("is-active",enabled);btn.setAttribute("aria-pressed",String(enabled));}
@@ -172,9 +173,9 @@
     document.addEventListener("keydown",e=>{if(e.key==="Escape"&&effectiveMode()!=="dock")hide(true);});
     $("traderFicheToggle")?.addEventListener("click",()=>setEnabled(!enabled));
     window.addEventListener("agent-crypto:trader-selection-changed",()=>{if(effectiveMode()==="dock"){const row=document.querySelector("#marketRows tr.is-selected[data-market-help-id]");if(row)show(row);}else{hide(true);}},{passive:true});
-    window.addEventListener("resize",()=>{if(effectiveMode()!=="dock")hide(true);else if(activeTarget)show(activeTarget);},{passive:true});
+    window.addEventListener("resize",()=>{if(effectiveMode()!=="dock")hide(true);else if(activeTarget)show(activeTarget,null,activeCoin);},{passive:true});
     setEnabled(true);
   }
-  globalThis.AgentCryptoTraderNativeFiche=Object.freeze({build:BUILD,setEnabled,setMode,show,hide,preferredMode,effectiveMode,dockAvailability,read_only:true,native_contract:"28.3.46+28.3.47+28.3.48+40.1.2"});
+  globalThis.AgentCryptoTraderNativeFiche=Object.freeze({build:BUILD,setEnabled,setMode,show,showAsset,hide,preferredMode,effectiveMode,dockAvailability,read_only:true,native_contract:"28.3.46+28.3.47+28.3.48+40.1.2"});
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind,{once:true});else bind();
 })();
