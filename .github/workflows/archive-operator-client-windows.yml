@@ -1,0 +1,88 @@
+name: Archive Operator Client Windows preview
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/archive-operator-client-windows.yml
+permissions:
+  contents: write
+concurrency:
+  group: operator-client-windows-archive
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.2'
+      - name: Generate complete Windows GUI preview and SHA manifests
+        run: python3 coordination/inter_ai_dialogues/agent_crypto/tools/build_operator_client_windows.py
+      - name: Check Windows PE, payload consistency and deny-by-default
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import ast, hashlib, json, os, pathlib, tempfile, zipfile, importlib.util
+          root=pathlib.Path('coordination/inter_ai_dialogues/agent_crypto')
+          exe=root/'ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_GUI_NO_CONSOLE.exe'
+          bundle=root/'ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_COMPLETE_SOURCES.zip'
+          checks=root/'ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_SHA256.txt'
+          assert exe.read_bytes().startswith(b'MZ')
+          assert exe.stat().st_size>1000000
+          for line in checks.read_text().splitlines():
+              h,name=line.split('  ',1)
+              assert hashlib.sha256((root/name).read_bytes()).hexdigest()==h
+          with zipfile.ZipFile(bundle) as z:
+              assert z.testzip() is None
+              source=z.read('bridge/bridge.py')
+              assert z.read('source/payload.zip') and z.read(exe.name)==exe.read_bytes()
+              assert 'yohan.html' not in z.read('source/main.go').decode()
+              assert '/administrator/index.html' in z.read('source/main.go').decode()
+              assert 'OperatorClientBridge' in z.read('source/main.go').decode()
+              assert b'"/okx/account"' not in source
+              ast.parse(source.decode())
+              with tempfile.TemporaryDirectory() as td:
+                  bridge=pathlib.Path(td)/'bridge.py'
+                  bridge.write_bytes(source)
+                  os.environ['LOCALAPPDATA']=td
+                  spec=importlib.util.spec_from_file_location('operator_bundle_bridge',bridge)
+                  module=importlib.util.module_from_spec(spec)
+                  spec.loader.exec_module(module)
+                  assert module.auth_state_read() is None
+                  state=module.auth_register('offline-disposable-integration-passphrase')
+                  assert state['role']=='operator' and len(state['principal_id'])==32
+                  assert 'owner' not in module.CAPABILITY_POLICY
+                  try: module.auth_session_create('owner')
+                  except ValueError: pass
+                  else: raise AssertionError('Owner elevation accepted')
+                  session=module.auth_session_create('operator')
+                  assert 'security.read' in session['capabilities']
+                  assert 'okx.account.read' not in session['capabilities']
+          print('PASS: Windows GUI, ZIP integrity, embedded source, Operator auth, no financial routes')
+          PY
+      - name: Keep build artifacts even if protected main rejects archive commit
+        uses: actions/upload-artifact@v4
+        with:
+          name: operator-client-auth-preview-windows
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_COMPLETE_SOURCES.zip
+            coordination/inter_ai_dialogues/agent_crypto/ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_GUI_NO_CONSOLE.exe
+            coordination/inter_ai_dialogues/agent_crypto/ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_SHA256.txt
+          retention-days: 7
+      - name: Commit archives to the canonical coordination directory
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add coordination/inter_ai_dialogues/agent_crypto/ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_COMPLETE_SOURCES.zip
+          git add coordination/inter_ai_dialogues/agent_crypto/ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_GUI_NO_CONSOLE.exe
+          git add coordination/inter_ai_dialogues/agent_crypto/ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_SHA256.txt
+          if git diff --cached --quiet; then
+            echo 'No binary archive delta.'
+          else
+            git commit -m "Archive tested Operator Client Windows GUI auth preview and complete sources"
+            git push origin HEAD:main
+          fi
