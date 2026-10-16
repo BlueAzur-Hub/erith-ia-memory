@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
+<script>if(new URLSearchParams(location.search).get("embed")==="1")document.documentElement.classList.add("radar-embedded");</script>
 <title>ERITH.IA · Radar · Marché et nouveaux listings</title>
 <style>
 :root{color-scheme:dark;--bg:#06131f;--panel:#0a2230;--line:#275060;--txt:#e7f4f3;--muted:#9cbcc5;--cyan:#8ee8ee;--gold:#f5ca80}
@@ -21,6 +22,18 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 .grid .panel{margin:0}footer{font-size:12px;color:var(--muted);padding-top:12px}
 @media(max-width:860px){.grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:450px){.stat-grid{grid-template-columns:1fr 1fr}.stat b{font-size:17px}main{padding:14px 10px}}
+
+.radar-embedded main{max-width:none;padding:12px 12px 24px}
+.radar-embedded header{padding:0 0 8px;border-bottom:0;justify-content:flex-end}
+.radar-embedded header>div:first-child{display:none}
+.radar-embedded header a[href="../trader/trading-desk.html"]{display:none}
+.radar-embedded .panel{margin:12px 0}
+.radar-embedded .grid .panel{margin:0}
+.radar-embedded .stat-grid{gap:8px}
+.radar-embedded .stat{padding:10px}
+.radar-embedded h2{font-size:16px}
+.radar-embedded .controls{gap:6px}
+@media(max-width:780px){.radar-embedded .grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body><main>
