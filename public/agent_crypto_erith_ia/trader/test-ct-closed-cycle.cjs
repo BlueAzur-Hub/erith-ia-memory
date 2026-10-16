@@ -4,21 +4,21 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const {ctClosedCycleReport}=require('./ai-ct-contract.js');
-const now=Date.UTC(2026,9,16,1,5,30),when=Date.UTC(2026,9,16,1,4,39);
+const now=Date.UTC(2025,1,19,12,31,0),when=Date.UTC(2025,1,19,12,30,0);
 const account=()=>({ok:true,read_only:true,fetched_at:new Date(now-500).toISOString(),
- trading:[{details:[{ccy:'BTC',cashBal:'0.000078'},{ccy:'USDC',cashBal:'4.38'}]}],
+ trading:[{details:[{ccy:'BTC',cashBal:'0.027'},{ccy:'USDC',cashBal:'12.25'}]}],
  funding:[]});
 const fills=()=>({ok:true,read_only:true,fills_3m:[{
- instId:'CT-USDC',side:'buy',tradeId:'spot-buy-11',fillSz:'10',
- fillPx:'0.3522',fee:'-0.01',feeCcy:'CT',ts:String(when-86400000)
+ instId:'CT-USDC',side:'buy',tradeId:'spot-buy-11',fillSz:'8',
+ fillPx:'0.2',fee:'-0.5',feeCcy:'CT',ts:String(when-86400000)
 }]});
 const ledger=(ccy,items=[])=>({ok:true,read_only:true,ccy,sources:{
  trading_account:{state:'ok',has_more:false,records:items},
  funding_account:{state:'ok',has_more:false,records:[]}
 }});
-const ct=()=>ledger('CT',[{billId:'debit-ct-1',ccy:'CT',ts:String(when),balChg:'-9.99'}]);
+const ct=()=>ledger('CT',[{billId:'debit-ct-1',ccy:'CT',ts:String(when),balChg:'-7.5'}]);
 const usdc=()=>ledger('USDC',[{billId:'credit-usdc-1',ccy:'USDC',
- ts:String(when+500),balChg:'3.78572049'}]);
+ ts:String(when+500),balChg:'1.8765'}]);
 const evidence=()=>({account:account(),fills:fills(),ctLedger:ct(),usdcLedger:usdc()});
 const get=(custom={})=>ctClosedCycleReport({...evidence(),...custom},now);
 
@@ -29,11 +29,11 @@ test('CT absent from complete account is treated as zero and matches ONE account
  assert.equal(r.orders_enabled,false);
  assert.equal(r.conversion_proven,false);
  assert.equal(r.profit_proven,false);
- assert.equal(r.outgoing_ct,9.99);
- assert.equal(r.incoming_usdc,3.78572049);
- assert.ok(Math.abs(r.acquisition_cost_usdc-3.522)<1e-10);
- assert.ok(Math.abs(r.indicative_difference_usdc-0.26372049)<1e-10);
- assert.ok(Math.abs(r.indicative_return_pct-100*.26372049/3.522)<1e-8);
+ assert.equal(r.outgoing_ct,7.5);
+ assert.equal(r.incoming_usdc,1.8765);
+ assert.ok(Math.abs(r.acquisition_cost_usdc-1.6)<1e-10);
+ assert.ok(Math.abs(r.indicative_difference_usdc-0.2765)<1e-10);
+ assert.ok(Math.abs(r.indicative_return_pct-100*.2765/1.6)<1e-8);
  assert.match(r.reason,/non|vérifier/i);
 });
 test('explicit cross-reference alone still does not certify a Convert',()=>{
@@ -102,7 +102,7 @@ test('repeated billId blocks duplicated ledger proof',()=>{
  assert.equal(get({ctLedger:a}).status,'unavailable');
 });
 test('invalid or missing bill amount rejects ledger proof',()=>{
- const a=ct();a.sources.trading_account.records[0].balChg='-9.99foo';
+ const a=ct();a.sources.trading_account.records[0].balChg='-7.5foo';
  assert.equal(get({ctLedger:a}).status,'unavailable');
 });
 test('missing CT purchase fill keeps USD cost and result unknown',()=>{
