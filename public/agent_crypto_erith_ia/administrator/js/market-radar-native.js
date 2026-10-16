@@ -18,6 +18,30 @@ const compactMoney=v=>typeof v==="number"&&Number.isFinite(v)&&v>=0?
 const lookup=(root,id)=>root.querySelector('[data-radar-native="'+id+'"]');
 const node=(tag,className,text)=>{const el=document.createElement(tag);if(className)el.className=className;if(text!==undefined)el.textContent=text;return el;};
 function cell(row,txt,cls){const td=node("td",cls||"",txt);row.appendChild(td);return td;}
+
+const stableSymbols=new Set(['USDT','USDC','DAI','FDUSD','USDE','USDS','PYUSD','TUSD','EURC']);
+function radarCategory(asset){
+ const symbol=String(asset.symbol||'').toUpperCase();
+ return ['BTC','ETH'].includes(symbol)?'pillar':stableSymbols.has(symbol)?'stablecoin':asset.rank<=50?'major':'speculative';
+}
+function radarLogo(asset){
+ const raw=String(asset.image||'');
+ if(/^\.\/assets\/crypto\/new-listings\/[a-z0-9-]+\.png$/.test(raw))return new URL(raw,document.baseURI).href;
+ return /^https:\/\//i.test(raw)?raw:'';
+}
+function identityCell(target,asset){
+ const cellNode=target.tagName==='TR'?cell(target):target;
+ const content=node('span','coin-cell radar-native-identity');
+ const rail=node('i','market-identity-rail');rail.setAttribute('aria-hidden','true');content.append(rail);
+ const src=radarLogo(asset);
+ const fallback=()=>node('span','radar-native-icon-fallback',String(asset.symbol||'?').slice(0,1));
+ if(src){const icon=node('img');icon.src=src;icon.alt='';icon.loading='lazy';icon.addEventListener('error',()=>icon.replaceWith(fallback()),{once:true});content.append(icon);}
+ else content.append(fallback());
+ const title=node('span','radar-native-identity-label');
+ title.append(node('strong','',asset.name||asset.symbol),node('small','',String(asset.symbol||'').toUpperCase()));
+ content.append(title);cellNode.append(content);return cellNode;
+}
+
 async function get(url){
  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),11000);
  try{const r=await fetch(new URL(url,document.baseURI),{credentials:"omit",cache:"no-store",signal:ctrl.signal});
@@ -75,7 +99,7 @@ async function selectGraph(root,model,identity){
   return false;
  }
 }
-function clickable(row,identity,root,model){
+function clickable(row,identity,root,model,coin){
  row.classList.add("radar-native-selectable");
  row.tabIndex=0;row.setAttribute("role","button");
  row.setAttribute("aria-label","Afficher le graphique Solo de "+identity.symbol);
@@ -87,6 +111,10 @@ function clickable(row,identity,root,model){
  };
  row.addEventListener("click",activate);
  row.addEventListener("keydown",activate);
+ if(coin){const show=e=>global.AgentCryptoTraderNativeFiche?.showAsset?.(row,coin,e?.type==='pointerenter'?e:null);
+ row.addEventListener('pointerenter',show);row.addEventListener('focus',show);
+ row.addEventListener('pointerleave',()=>global.AgentCryptoTraderNativeFiche?.hide?.());
+ row.addEventListener('blur',()=>global.AgentCryptoTraderNativeFiche?.hide?.());}
 }
 function build(root){
  root.replaceChildren();
@@ -142,12 +170,12 @@ function printMarket(root,model){
  if(!model.market){const r=node("tr");cell(r,"Top 250 indisponible · aucune cotation inventée");body.append(r);return;}
  const rows=api.selectMarket(model.market.rows,model.tier,lookup(root,"filter").value,lookup(root,"sort").value);
  for(const asset of rows){
-  const r=node("tr","asset-row");
-  cell(r,String(asset.rank));cell(r,asset.name+" · "+asset.symbol);
+  const r=node("tr","asset-row radar-native-market-row");r.dataset.radarSymbol=asset.symbol;r.dataset.radarCategory=radarCategory(asset);
+  cell(r,String(asset.rank));identityCell(r,asset);
   cell(r,displayPrice(asset.priceUsd)+" $US");
   const a=cell(r,pct(asset.change24h));a.className=asset.change24h>0?"pos":asset.change24h<0?"neg":"";
   const b=cell(r,pct(asset.change7d));b.className=asset.change7d>0?"pos":asset.change7d<0?"neg":"";
-  cell(r,compactMoney(asset.volume24hUsd));clickable(r,{kind:"market",id:asset.id,symbol:asset.symbol},root,model);body.append(r);
+  cell(r,compactMoney(asset.volume24hUsd));clickable(r,{kind:"market",id:asset.id,symbol:asset.symbol},root,model,{...asset,radarSource:"CoinGecko · snapshot public USD"});body.append(r);
  }
  if(!rows.length){const r=node("tr");cell(r,"Aucun résultat pour ce filtre");body.append(r);}
  lookup(root,"marketNote").textContent=rows.length+" actifs · Top "+model.tier+" par capitalisation · CoinGecko "+safeDate(model.market.at)+" · lecture seule";
@@ -158,15 +186,20 @@ function printListings(root,model){
  const candidates=model.listings.filter(x=>x.symbol!=="CT");
  const listedCt=model.listings.find(x=>x.symbol==="CT");
  if(model.paper?.CT?.price)candidates.unshift({name:"Concrete",symbol:"CT",pair:"CT/USDT",venue:"OKX Spot",
-  ageDays:listedCt?.ageDays??null,price:model.paper.CT.price,quote:"USDT",change24h:listedCt?.change24h??null,status:listedCt?"OKX PAPER + Bitget Spot · date Bitget":"OKX PAPER · date non prouvée"});
+  ageDays:listedCt?.ageDays??null,price:model.paper.CT.price,quote:"USDT",image:listedCt?.image||model.registry?.get("CT")?.image||"",change24h:listedCt?.change24h??null,status:listedCt?"OKX PAPER + Bitget Spot · date Bitget":"OKX PAPER · date non prouvée"});
  else if(listedCt)candidates.unshift(listedCt);
  if(!candidates.length){const r=node("tr");cell(r,model.listingError||"Aucun listing public vérifié");body.append(r);}
  for(const item of candidates){
-  const r=node("tr","asset-row");cell(r,item.name+" · "+item.symbol);
+  const r=node("tr","asset-row radar-native-listing-row");r.dataset.radarSymbol=item.symbol;r.dataset.radarCategory="listing";identityCell(r,item);
   cell(r,item.pair+" · "+item.venue);cell(r,item.ageDays===null?"—":number(item.ageDays,1)+" j");
   cell(r,displayPrice(item.price)+" "+item.quote);
   const move=cell(r,pct(item.change24h));move.className=item.change24h>0?"pos":item.change24h<0?"neg":"";
-  cell(r,item.status);clickable(r,{kind:"listing",id:item.symbol==="CT"?"concrete":item.symbol,symbol:item.symbol},root,model);body.append(r);
+  cell(r,item.status);
+  clickable(r,{kind:"listing",id:item.symbol==="CT"?"concrete":item.symbol,symbol:item.symbol},root,model,{
+   id:item.symbol==="CT"?"concrete":item.symbol,name:item.name,symbol:item.symbol,rank:"—",image:item.image,
+   partial:true,renderedPrice:displayPrice(item.price)+" "+item.quote,rendered24:pct(item.change24h),
+   rendered7:"—",radarQuote:item.quote,radarSource:item.venue+" · "+item.pair
+  });body.append(r);
  }
  lookup(root,"listingProof").textContent=model.listingError||model.listings.length+
   " paires Spot Bitget récentes · "+model.listings.filter(v=>v.identityProved).length+" identités prouvées · CT via journal OKX";
@@ -180,9 +213,17 @@ function printWatch(root,model){
   {name:"MHA · MAGNE.AI",market:"Bitget Spot",data:{price:mha?.price,decision:mha?"OBSERVATION":"SOURCE ABSENTE"},quote:mha?.quote||"USDT"}
  ]){
   const card=node("div","radar-native-card");
-  card.append(node("small","",v.name),node("strong","",displayPrice(v.data?.price)+" "+v.quote),
+  const symbol=v.name.split(" · ")[0],id=symbol==="BTC"?"bitcoin":symbol==="CT"?"concrete":"MHA";
+  const known=symbol==="BTC"?model.market?.rows.find(c=>c.id==="bitcoin"):symbol==="CT"?model.registry?.get("CT"):mha;
+  card.dataset.radarSymbol=symbol;card.dataset.radarCategory=symbol==="BTC"?"pillar":"listing";
+  identityCell(card,{name:v.name.split(" · ")[1],symbol,image:known?.image||""});
+  card.append(node("strong","",displayPrice(v.data?.price)+" "+v.quote),
     node("span","",v.market+" · "+(v.data?.decision||"INDISPONIBLE")));
-  clickable(card,{kind:v.name.startsWith("BTC")?"market":"listing",id:v.name.startsWith("BTC")?"bitcoin":v.name.startsWith("CT")?"concrete":"MHA",symbol:v.name.split(" · ")[0]},root,model);
+  clickable(card,{kind:symbol==="BTC"?"market":"listing",id,symbol},root,model,{
+   id,name:v.name.split(" · ")[1],symbol,rank:known?.rank||"—",image:known?.image||"",
+   partial:true,renderedPrice:displayPrice(v.data?.price)+" "+v.quote,rendered24:"—",
+   rendered7:"—",radarQuote:v.quote,radarSource:v.market+" · veille PAPER"
+  });
   dest.append(card);
  }
  lookup(root,"journal").textContent=paper?
@@ -227,7 +268,7 @@ async function refresh(root,model){
    if(first[2].status!=="fulfilled")throw Error("publication locale et GitHub RAW indisponibles");
    registry=api.verifyRegistry(first[2].value);
   }catch(e){issues.push("Registre identités : "+e.message);}
-  model.listings=[];model.listingError="";
+  model.registry=registry;model.listings=[];model.listingError="";
   printMarket(root,model);
   printWatch(root,model);
   printListings(root,model);
@@ -256,7 +297,7 @@ function mount(root){
  if(!global.AgentCryptoRadarReader)throw Error("Le lecteur public Radar est indisponible");
  root.dataset.radarNativeMounted="1";
  const controls=build(root);
- const model={tier:10,market:null,paper:null,listings:[],listingError:null,group:controls.group,loading:false,selectionRevision:0};
+ const model={tier:10,market:null,paper:null,listings:[],registry:new Map(),listingError:null,group:controls.group,loading:false,selectionRevision:0};
  controls.group.addEventListener("click",e=>{
   const b=e.target.closest("[data-tier]");if(!b)return;
   model.tier=Number(b.dataset.tier);printMarket(root,model);
