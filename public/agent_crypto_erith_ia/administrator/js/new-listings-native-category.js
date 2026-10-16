@@ -1034,6 +1034,7 @@
     button.classList.toggle("active",visible);
     button.classList.toggle("is-active",visible);
     button.setAttribute("aria-pressed",String(visible));
+    button.setAttribute("aria-expanded",String(visible));
     if(visible){
       // No duplicate Radar fetches while the tab is closed; src is set once.
       const frame=view.querySelector("iframe");
@@ -1051,13 +1052,16 @@
     if(!document.getElementById("atlasRadarTabStyle")){
       const css=document.createElement("style");
       css.id="atlasRadarTabStyle";
-      css.textContent=[
+      const hiddenSelectors=[
         "#marketSnapshotPanel.atlas-radar-open #marketUniverseMode",
         "#marketSnapshotPanel.atlas-radar-open .market-column-mode",
         "#marketSnapshotPanel.atlas-radar-open .sort-box",
         "#marketSnapshotPanel.atlas-radar-open .section-head .search-box",
         "#marketSnapshotPanel.atlas-radar-open #marketTableWindowBody",
-        "#marketSnapshotPanel.atlas-radar-open #tableNote{display:none!important}",
+        "#marketSnapshotPanel.atlas-radar-open #tableNote"
+      ];
+      css.textContent=[
+        hiddenSelectors.join(",")+"{display:none!important}",
         "#marketSnapshotPanel.atlas-radar-open .filter-chips .filter-btn:not(#atlasPublicRadarLink).active{opacity:.65;box-shadow:none}",
         "#atlasRadarMarketView[hidden]{display:none!important}",
         "#atlasRadarMarketView{margin:12px 0 8px;border:1px solid #2d6472;border-radius:12px;overflow:hidden;background:#071b28}",
@@ -1066,11 +1070,7 @@
         "#atlasRadarMarketView .atlas-radar-tab-head a{color:#8ee9e7;font-weight:650}",
         "#atlasRadarMarketView iframe{display:block;width:100%;height:min(82vh,920px);min-height:600px;border:0;background:#06131f}",
         "@media(max-width:700px){#atlasRadarMarketView iframe{height:78vh;min-height:540px}}"
-      ].join(",");
-      // Each rule is built separately to avoid comma prefix leakage.
-      css.textContent=css.textContent.replace(
-        "#marketSnapshotPanel.atlas-radar-open #tableNote{display:none!important}",
-        "#marketSnapshotPanel.atlas-radar-open #tableNote{display:none!important}");
+      ].join("\n");
       document.head.appendChild(css);
     }
     const tab=document.createElement("button");
@@ -1108,7 +1108,6 @@
       event.preventDefault();
       event.stopImmediatePropagation();
       radarView(!state.radarOpen);
-      tab.setAttribute("aria-expanded",String(!!state.radarOpen));
     });
     return true;
   }
