@@ -374,6 +374,7 @@ async function readForAccount(target){
   const report=model.explain(doc,chart);
   target.replaceChildren();
   showEvidence(target,doc);
+  globalThis.AgentCryptoCtOrderTicket?.mount?.(target,doc);
   showFullReport(target,report);
   return true;
  }catch(e){
