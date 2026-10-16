@@ -1,0 +1,43 @@
+name: Seven Trader CT Order Draft
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/trader/ct-order-draft.js"
+      - "public/agent_crypto_erith_ia/trader/ct-order-ticket.js"
+      - "public/agent_crypto_erith_ia/trader/ct-order-ticket.css"
+      - "public/agent_crypto_erith_ia/trader/test-ct-order-draft.cjs"
+      - "public/agent_crypto_erith_ia/trader/ai-ct-panel.js"
+      - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
+      - ".github/workflows/seven-trader-order-draft.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/trader/ct-order-draft.js"
+      - "public/agent_crypto_erith_ia/trader/ct-order-ticket.js"
+      - "public/agent_crypto_erith_ia/trader/ct-order-ticket.css"
+      - "public/agent_crypto_erith_ia/trader/test-ct-order-draft.cjs"
+      - "public/agent_crypto_erith_ia/trader/ai-ct-panel.js"
+      - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/trader/
+            !/**/*.zip
+      - name: Exact CT-USDC, readonly ticket and existing rule regression
+        run: |
+          node --check public/agent_crypto_erith_ia/trader/ct-order-draft.js
+          node --check public/agent_crypto_erith_ia/trader/ct-order-ticket.js
+          node --check public/agent_crypto_erith_ia/trader/ai-ct-panel.js
+          node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
+          node --test public/agent_crypto_erith_ia/trader/test-ct-order-draft.cjs
+          node --test public/agent_crypto_erith_ia/trader/test-ct-spot-rules.cjs
+          node --test public/agent_crypto_erith_ia/trader/test-ct-closed-cycle.cjs
