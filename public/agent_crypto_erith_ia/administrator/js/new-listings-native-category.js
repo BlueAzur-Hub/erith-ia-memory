@@ -927,7 +927,16 @@
     const button=document.getElementById(BUTTON_ID);if(!button||button.dataset.newListingsNativeCategory==="1")return;
     button.dataset.newListingsNativeCategory="1";
     button.addEventListener("click",event=>{
-      if(state.radarOpen)radarView(false);
+      if(state.radarOpen){
+        radarView(false);
+        // Returning to the already-active native New Listings category must not
+        // accidentally toggle it OFF or reset its selected CT context.
+        if(state.enabled){
+          event.preventDefault();event.stopImmediatePropagation();
+          renderCategory();
+          return;
+        }
+      }
       event.preventDefault();event.stopImmediatePropagation();
       const next=!state.enabled;
       if(!next&&(state.selected||state.pending)){
