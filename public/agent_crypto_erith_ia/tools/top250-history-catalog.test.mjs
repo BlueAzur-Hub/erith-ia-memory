@@ -120,13 +120,25 @@ test("a changed frozen Top250 exact coin identity is rejected",async()=>{
  assert.match(h.element("top250-status").textContent,/Identité ou comptage Binance incorrect/);
 });
 test("historic rank drift cannot transplant candles across owners",async()=>{
- const h=harness();await ready(h);
- const b=fixtures.get("top250_history_catalog/index.json");
- const f=fixtures.get("top250_multisource_coverage/index.json");
- assert.notEqual(f.assets.find(a=>a.id==="cosmos").rank,
-   b.assets.find(a=>a.id==="cosmos").rank);
- assert.equal(h.window.SevenTop250Catalog.read().assets[0].id,"bitcoin");
- assert.equal(b.assets.find(a=>a.id==="bitcoin").months[0].pair,"BTCUSDT");
+ // Construct rank drift explicitly: the real dated indexes can happen
+ // to assign the same rank, which is not an identity-safety test.
+ const h=harness((file,data)=>{
+  if(file!=="top250_history_catalog/index.json")return;
+  const btc=data.assets.findIndex(a=>a.id==="bitcoin");
+  const atom=data.assets.findIndex(a=>a.id==="cosmos");
+  assert.ok(btc>=0&&atom>=0&&btc!==atom);
+  [data.assets[btc],data.assets[atom]]=[data.assets[atom],data.assets[btc]];
+  data.assets[btc].rank=btc+1;
+  data.assets[atom].rank=atom+1;
+ });
+ await ready(h);
+ const current=h.window.SevenTop250Catalog.read();
+ const frozen=fixtures.get("top250_multisource_coverage/index.json");
+ assert.ok(current, "A rank-only reshuffle must preserve exact-ID validation");
+ assert.notEqual(frozen.assets.find(a=>a.id==="cosmos").rank,
+   current.assets.find(a=>a.id==="cosmos").rank);
+ assert.equal(current.assets[0].id,"cosmos");
+ assert.equal(current.assets.find(a=>a.id==="bitcoin").months[0].pair,"BTCUSDT");
  assert.match(h.element("top250-status").textContent,/Sources indépendantes validées/);
 });
 test("Bitget source with falsified owner ticker is refused",async()=>{
