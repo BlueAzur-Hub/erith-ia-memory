@@ -36,6 +36,7 @@
 
   const FRIENDLY=Object.freeze({
     CT:Object.freeze({name:"Concrete",canonicalId:"concrete",coingeckoId:"concrete",provider:"okx",providerLabel:"OKX",providerSymbol:"CT-USDT",pair:"CT/USDT"}),
+    DNA:Object.freeze({name:"NeoSoul",coingeckoId:"neosoul"}),
     MHA:Object.freeze({name:"MAGNE.AI",coingeckoId:"magic-hash"}),
     MCAT:Object.freeze({name:"MarsCat",coingeckoId:"marscat-token"}),
     PONS:Object.freeze({name:"Pons",coingeckoId:"pons"}),

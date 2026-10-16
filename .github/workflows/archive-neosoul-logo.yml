@@ -1,0 +1,57 @@
+name: Archive verified NeoSoul DNA logo
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/archive_neosoul_identity.cjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js'
+      - '.github/workflows/archive-neosoul-logo.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/archive_neosoul_identity.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_archive_neosoul_identity.cjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js'
+      - '.github/workflows/archive-neosoul-logo.yml'
+permissions:
+  contents: write
+concurrency:
+  group: archive-neosoul-logo
+  cancel-in-progress: false
+jobs:
+  dna-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate token identity handling offline
+        run: |
+          node --test public/agent_crypto_erith_ia/tools/test_archive_neosoul_identity.cjs
+      - name: Retrieve original CoinGecko logo only after ID/symbol/contract verification
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        run: node public/agent_crypto_erith_ia/tools/archive_neosoul_identity.cjs
+      - name: Publish verified image and identity record together, never partial
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          logo=public/agent_crypto_erith_ia/administrator/assets/crypto/new-listings/neosoul.png
+          index=public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json
+          test -s "$logo"
+          git add "$logo" "$index"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'Logo and verified identity already archived'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Archive verified NeoSoul DNA CoinGecko logo and canonical identity'
+          git pull --rebase origin main
+          git push origin HEAD:main
