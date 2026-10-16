@@ -95,6 +95,7 @@ jobs:
           node --test public/agent_crypto_erith_ia/trader/test-ct-spot-rules.cjs
           node --test public/agent_crypto_erith_ia/trader/test-ct-gross-net-buy-planner.cjs
           node --test public/agent_crypto_erith_ia/trader/test-ct-exit-choice.cjs
+          node --test public/agent_crypto_erith_ia/trader/test-ct-closed-cycle.cjs
 
       - name: Refuse late external order books and candles after selection change
         run: node tests/agent_crypto_external_market_race.cjs

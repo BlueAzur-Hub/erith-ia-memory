@@ -19,6 +19,9 @@ let ledgerPosition=null;
 let currentBtcHeld=NaN;
 let lastBtcAccount=null;
 let lastCapitalEvidence=null;
+let ctCycleAccount=null;
+let ctCycleFills=null;
+let ctCycleLedgers=null;
 let lastSpotExecutions=0;
 let eurQuote=null;
 let eurCheckedAt=0;
@@ -52,6 +55,7 @@ async function login(secret,{silent=false}={}){
   if(clean.length<6)throw new Error("Mot de passe Aether Trust requis");
   const response=await bridge("/auth/login",{method:"POST",body:{secret:clean},auth:false});
   if(!response?.token)throw new Error("Le Bridge n'a pas retourné de session Aether Trust");
+  ctCycleAccount=null;ctCycleFills=null;ctCycleLedgers=null;ledgerCheckedAt=0;
   saveToken(String(response.token));
   try{sessionStorage.setItem(ROLE_KEY,"owner");}catch(_){}
   window.dispatchEvent(new CustomEvent("agent-crypto:bridge-owner-session",{detail:{source:"trader-okx-account",bridge_version:response.bridge_version||null}}));
@@ -421,6 +425,54 @@ function capitalJourneyReport(info={},now=Date.now()){
  return Object.freeze({status:coherent?'coherent':'partial',coherent_usdc:coherent,
    read_only:true,lines:Object.freeze(msg)});
 }
+
+/* Résultat CT après sortie totale, dans le même panneau privé, jamais dans
+   GitHub, un cache, une commande d'ordre ou le propriétaire du Graphique. */
+function updateCtClosedCycle(){
+  const container=q('ctcyclebody');
+  const status=q('ctcyclestatus');
+  if(!container||!status)return;
+  if(!token()||!owner()){
+    status.textContent='Aether Trust requis';
+    container.textContent='Connecte le Bridge pour lire ce rapprochement privé.';
+    return;
+  }
+  const core=globalThis.AgentCryptoAiCtContract;
+  const recent=ledgerCheckedAt>0&&Date.now()-ledgerCheckedAt<=1800000;
+  const result=core?.ctClosedCycleReport&&recent
+    ?core.ctClosedCycleReport({account:ctCycleAccount,fills:ctCycleFills,
+       ctLedger:ctCycleLedgers?.CT?.payload,usdcLedger:ctCycleLedgers?.USDC?.payload})
+    :{status:'unavailable',reason:'Journaux CT/USDC non chargés ou trop anciens'};
+  const label=result.status==='classified_ledger_pair'
+    ?'Mouvements rapprochés · catégorie Convert à confirmer'
+    :result.status==='compatible_movements'
+      ?'Mouvements compatibles · Convert non confirmé'
+      :result.status==='position_open'
+        ?'Position CT encore détenue'
+        :'Preuve CT indisponible';
+  status.textContent=label;
+  container.replaceChildren();
+  const add=message=>{const p=document.createElement('p');p.textContent=message;container.append(p);};
+  if(!['classified_ledger_pair','compatible_movements'].includes(result.status)){
+    add(String(result.reason||'Preuves insuffisantes'));
+    add('Aucun bénéfice ni ordre inféré à partir des seuls soldes.');
+    return;
+  }
+  add('Débit CT : '+fmt(result.outgoing_ct)+' CT ; crédit USDC : '+fmt(result.incoming_usdc)+' USDC.');
+  add('Compte : '+(result.source_account==='trading_account'?'Trading':'Funding')+
+    ' ; mouvements rapprochés à '+new Date(result.paired_at).toLocaleString('fr-FR')+'.');
+  if(Number.isFinite(result.acquisition_cost_usdc)){
+    add('Achats Spot CT/USDC rapprochés : '+fmt(result.acquisition_cost_usdc)+' USDC.');
+    add('Écart ARITHMÉTIQUE INDICATIF : '+
+      (result.indicative_difference_usdc>0?'+':'')+fmt(result.indicative_difference_usdc)+
+      ' USDC ('+(result.indicative_return_pct>0?'+':'')+
+      result.indicative_return_pct.toLocaleString('fr-FR',{maximumFractionDigits:2})+
+      ' %). Non certifié comme bénéfice réalisé par le journal.');
+  }else add('Coût d’acquisition non démontré après liquidation : aucun résultat calculé.');
+  add(result.reason);
+  add(result.caveat);
+}
+
 function updateCapitalJourney(){
  const container=q('capitalpathbody');
  if(!q('capitalpath')?.open||!container)return;
@@ -527,6 +579,9 @@ function paintData(account,orders,fills,fees){
     ctAcquisition
   };
   updateCapitalJourney();
+  ctCycleAccount=account;
+  ctCycleFills=fills;
+  updateCtClosedCycle();
   text("positionvalue",Number.isFinite(btc.eqUsd)?btc.eqUsd.toLocaleString("fr-FR",{style:"currency",currency:"USD",maximumFractionDigits:2}):"—");
   updatePositionView();
   void refreshEuroPrice();
@@ -545,9 +600,11 @@ function paintData(account,orders,fills,fees){
 /* Les journaux OKX sont lus à la demande et restent en mémoire vive uniquement.
    Ils prouvent des mouvements, jamais automatiquement le coût d'un achat PayPal. */
 function ledgerClear(message){
+  ctCycleLedgers=null;
   ledgerCheckedAt=0;
   ledgerPosition=null;
   updateCapitalJourney();
+  updateCtClosedCycle();
   eurQuote=null;
   eurCheckedAt=0;
   entryQuote=null;
@@ -602,7 +659,7 @@ function ledgerPaint(results){
   const totals=[];
   const recent=[];
   let success=0,recordsCount=0,hasMore=false;
-  for(const ccy of ["BTC","EUR"]){
+  for(const ccy of ["BTC","EUR","CT","USDC"]){
     const item=results[ccy];
     if(!item?.ok){
       issues.push(ccy+" : "+(item?.status===404?"Bridge ancien : route financière absente":item?.status===403?"accès Aether Trust requis":item?.status===401?"session expirée":"lecture indisponible"));
@@ -711,6 +768,8 @@ function ledgerPaint(results){
   text("ledgerwarning",issues.length?"Attention : certaines sources ne sont pas disponibles ; les résultats peuvent être incomplets.":hasMore?"Attention : d'autres mouvements peuvent exister dans l'historique.":"Ces écritures incluent éventuellement des transferts entre comptes : elles ne représentent pas nécessairement des achats distincts.");
   updatePositionView();
   updateCapitalJourney();
+  ctCycleLedgers=results;
+  updateCtClosedCycle();
   void refreshEuroPrice();
   void refreshEntryQuote();
 }
@@ -722,7 +781,7 @@ async function refreshLedger(force=false){
   text("ledgerstatus","Lecture des journaux financiers BTC puis EUR…");
   ledgerInFlight=(async()=>{
     const result={};
-    for(const ccy of ["BTC","EUR","USDC"]){
+    for(const ccy of ["BTC","EUR","USDC","CT"]){
       try{
         const payload=await bridge("/okx/ledger?ccy="+ccy+"&pages=1");
         result[ccy]={ok:true,payload};
@@ -765,7 +824,7 @@ async function refresh({force=false}={}){
       void refreshLedger(force);
       return true;
     }catch(error){
-      if(error?.status===401){saveToken("");lastCapitalEvidence=null;updateCapitalJourney();const inline=q("ctreading");if(inline){inline.hidden=true;inline.replaceChildren();}ledgerClear("Session Aether Trust expirée.");setState("locked","SESSION BRIDGE À RÉAUTHENTIFIER");showAuth(true,"La session Bridge n'est plus valide. Entre le mot de passe Aether Trust.");}
+      if(error?.status===401){saveToken("");ctCycleAccount=null;ctCycleFills=null;ctCycleLedgers=null;lastCapitalEvidence=null;updateCapitalJourney();const inline=q("ctreading");if(inline){inline.hidden=true;inline.replaceChildren();}ledgerClear("Session Aether Trust expirée.");setState("locked","SESSION BRIDGE À RÉAUTHENTIFIER");showAuth(true,"La session Bridge n'est plus valide. Entre le mot de passe Aether Trust.");}
       else{setState("error","OKX / BRIDGE INDISPONIBLE");text("updated",shortError(error));}
       return false;
     }finally{inflight=null;}
@@ -797,12 +856,13 @@ function bindCanonicalTrust(){
 }
 
 function logoutBridge(){
+  ctCycleAccount=null;ctCycleFills=null;ctCycleLedgers=null;
   lastCapitalEvidence=null;
   const capital=q("capitalpathbody");if(capital){capital.replaceChildren();capital.textContent="Session terminée : informations privées masquées.";}
   const inline=q("ctreading");
   if(inline){inline.hidden=true;inline.replaceChildren();}
   const t=token();
-  if(!t){saveToken("");lastBtcAccount=null;currentBtcHeld=NaN;updateBtcReading();return;}
+  if(!t){saveToken("");ledgerClear("Session terminée : journaux financiers masqués.");lastBtcAccount=null;currentBtcHeld=NaN;updateBtcReading();return;}
   fetch(BRIDGE+"/auth/logout",{method:"POST",headers:{Accept:"application/json","Content-Type":"application/json",Authorization:`Bearer ${t}`},body:"{}",cache:"no-store",keepalive:true}).catch(()=>{});
   saveToken("");
   lastBtcAccount=null;
@@ -904,7 +964,7 @@ function mount(){
     '<article class="okx-card primary"><span>CT détenu</span><b data-okx-ct>—</b><small data-okx-ctdetail>Trading / Funding</small><button type="button" data-okx-analyze-ct>Analyser avec Seven · CT</button><a class="okx-convert-link" href="https://www.okx.com/fr-fr/trade-convert" target="_blank" rel="noopener noreferrer" title="Ouvrir OKX Convert dans un nouvel onglet ; aucun ordre depuis ERITH.IA">Convertir mes CT sur OKX ↗</a><small class="okx-convert-notice">À sélectionner manuellement sur OKX (CT → USDC). Vérifie le devis, son délai et le spread possible avant de confirmer.</small></article>',
     '<article class="okx-card primary"><span>USDC disponible</span><b data-okx-usdc>—</b><small data-okx-usdcdetail>Trading / Funding</small></article>',
     '<article class="okx-card primary"><span>EUR disponible</span><b data-okx-eur>—</b><small data-okx-eurdetail>Trading / Funding</small></article>',
-    '</div><section class="okx-ct-reading" data-okx-ctreading hidden role="status" aria-live="polite"></section><details class="okx-capital-path" data-okx-capitalpath><summary>Seven · Parcours du capital · BTC → USDC → CT</summary><div data-okx-capitalpathbody role="status" aria-live="polite">Ouvre ce rapport pour rapprocher les opérations déjà consultées sur OKX.</div></details><div class="okx-position">',
+    '</div><section class="okx-ct-reading" data-okx-ctreading hidden role="status" aria-live="polite"></section><details class="okx-capital-path" data-okx-ctcycle><summary>Seven · CT liquidé · réconciliation lecture seule</summary><p data-okx-ctcyclestatus>Journaux CT/USDC en attente</p><div data-okx-ctcyclebody>Ouvre ce rapport après actualisation OKX.</div></details><details class="okx-capital-path" data-okx-capitalpath><summary>Seven · Parcours du capital · BTC → USDC → CT</summary><div data-okx-capitalpathbody role="status" aria-live="polite">Ouvre ce rapport pour rapprocher les opérations déjà consultées sur OKX.</div></details><div class="okx-position">',
     '<article class="okx-card"><span>Valeur BTC actuelle</span><b data-okx-positionvalue>—</b><small>Équivalent USD retourné par OKX</small><small data-okx-eurestimate>Estimation en EUR : cotation en attente</small></article>',
     '<article class="okx-card"><span>Prix moyen d’achat</span><b data-okx-avgcost>—</b><small data-okx-avgcosthint>Calculé seulement avec un historique prouvé</small></article>',
     '<article class="okx-card"><span>Montant total investi</span><b data-okx-committed>—</b><small data-okx-committedhint>Achats + frais prouvés</small></article>',
@@ -924,6 +984,11 @@ function mount(){
     if(analyst?.parentElement===zone)analyst.insertAdjacentElement("afterend",p);
     else zone.appendChild(p);
   }
+  p.querySelector("[data-okx-ctcycle]")?.addEventListener("toggle",event=>{
+    if(!event.currentTarget.open)return;
+    updateCtClosedCycle();
+    if(token()&&owner())void refreshLedger(false);
+  });
   p.querySelector("[data-okx-capitalpath]")?.addEventListener("toggle",event=>{
     if(!event.currentTarget.open)return;
     updateCapitalJourney();
