@@ -464,7 +464,8 @@ function updateCtClosedCycle(){
   if(Number.isFinite(result.acquisition_cost_usdc)){
     add('Achats Spot CT/USDC rapprochés : '+fmt(result.acquisition_cost_usdc)+' USDC.');
     add('Écart ARITHMÉTIQUE INDICATIF : '+
-      (result.indicative_difference_usdc>0?'+':'')+fmt(result.indicative_difference_usdc)+
+      (result.indicative_difference_usdc>0?'+':'')+
+      result.indicative_difference_usdc.toLocaleString('fr-FR',{maximumFractionDigits:8})+
       ' USDC ('+(result.indicative_return_pct>0?'+':'')+
       result.indicative_return_pct.toLocaleString('fr-FR',{maximumFractionDigits:2})+
       ' %). Non certifié comme bénéfice réalisé par le journal.');
