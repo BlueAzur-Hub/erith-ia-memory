@@ -556,7 +556,7 @@
     const root=document.getElementById(ROOT);
     renderState();
     if(root)root.querySelector("[data-amm-state]").textContent=`CHARGEMENT · ${primary} · ${requestedBar} · résolution marché`;
-    let inst=primary,rows=null,source=null,warning=null;
+    let inst=primary,rows=null,source=null,warning=null,accepted=false;
     try{
       const resolver=marketResolver();
       if(!ext.active&&resolver?.resolve&&resolver?.fetchCandles){
@@ -615,7 +615,7 @@
       if(ext.active?!sameExternalContext(ext,externalContext()):externalContext().active)
         throw codedError("MARKET_CANDLES_CONTEXT_CHANGED","Sélection de marché modifiée pendant le chargement");
       state.instrument=inst;state.loadedInstrument=inst;state.loadedBar=requestedBar;state.source=source||"Market public candles";state.rows=requireUsableRows(rows,inst);state.error=warning;state.errorCode=warning?"PAIR_FALLBACK":null;state.lastLoadedAt=new Date().toISOString();
-      resetView(false);renderState();draw();return true;
+      resetView(false);renderState();draw();accepted=true;return true;
     }catch(error){
       if(token!==requestToken)return false;
       if(controller.signal.aborted&&!timedOut)return false;
@@ -628,6 +628,11 @@
         state.loading=false;
         if(activeController===controller)activeController=null;
         renderState();
+        // Publish acceptance even with Support/Resistance disabled. Math and
+        // other read-only observers consume the canonical snapshot, not this event data.
+        if(accepted&&globalThis.CustomEvent)try{window.dispatchEvent(new CustomEvent(
+          "agent-crypto:market-candles-loaded",{detail:{instrument:state.loadedInstrument,bar:state.loadedBar}}
+        ));}catch(_){}
       }
     }
   }
