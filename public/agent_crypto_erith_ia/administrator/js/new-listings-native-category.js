@@ -1028,9 +1028,33 @@
     },true);
   }
 
-  // Radar is a native VIEW of Market, not another Market engine. The iframe
-  // reuses the exact public Radar reader shown by its standalone large view.
-  // Neither the market selection nor the graph owner is touched on entry/exit.
+  // Radar owns a VIEW, not the Market, chart or navigation state.
+  // Its native cells inherit the Administrator/Trader theme. Both presentations
+  // share the exact same public parser defined by laboratoire/radar.js.
+  let radarNativePromise=null;
+  function loadRadarScript(url){
+    return new Promise((resolve,reject)=>{
+      const el=document.createElement("script");
+      el.src=new URL(url,document.baseURI).href;
+      el.async=true;
+      el.onload=resolve;
+      el.onerror=()=>reject(new Error("Module Radar indisponible : "+url));
+      document.head.appendChild(el);
+    });
+  }
+  function ensureNativeRadar(){
+    if(radarNativePromise)return radarNativePromise;
+    radarNativePromise=(async()=>{
+      if(!globalThis.AgentCryptoRadarReader)
+        await loadRadarScript("../laboratoire/radar.js");
+      if(!globalThis.AgentCryptoRadarReader)throw new Error("Lecteur Radar non disponible");
+      if(!globalThis.AgentCryptoRadarNative)
+        await loadRadarScript("./js/market-radar-native.js");
+      if(!globalThis.AgentCryptoRadarNative?.mount)throw new Error("Présentation native Radar non disponible");
+      return true;
+    })().catch(error=>{radarNativePromise=null;throw error;});
+    return radarNativePromise;
+  }
   function radarView(open){
     const panel=document.getElementById("marketSnapshotPanel");
     const button=document.getElementById("atlasPublicRadarLink");
@@ -1045,10 +1069,13 @@
     button.setAttribute("aria-pressed",String(visible));
     button.setAttribute("aria-expanded",String(visible));
     if(visible){
-      // No duplicate Radar fetches while the tab is closed; src is set once.
-      const frame=view.querySelector("iframe");
-      if(frame&&!frame.getAttribute("src"))
-        frame.src=new URL("../laboratoire/radar.html?embed=1",document.baseURI).href;
+      void ensureNativeRadar().then(()=>{
+        if(!state.radarOpen||!view.isConnected)return;
+        globalThis.AgentCryptoRadarNative.mount(view);
+      }).catch(error=>{
+        if(!state.radarOpen)return;
+        view.textContent="Radar indisponible : "+String(error?.message||error);
+      });
     }
     return true;
   }
@@ -1058,30 +1085,24 @@
     const tools=document.getElementById("marketTools");
     if(!button||!button.parentElement||!market||!tools)return false;
     if(document.getElementById("atlasPublicRadarLink"))return true;
-    if(!document.getElementById("atlasRadarTabStyle")){
-      const css=document.createElement("style");
-      css.id="atlasRadarTabStyle";
-      const hiddenSelectors=[
-        "#marketSnapshotPanel.atlas-radar-open #marketUniverseMode",
-        "#marketSnapshotPanel.atlas-radar-open .market-column-mode",
-        "#marketSnapshotPanel.atlas-radar-open .sort-box",
-        "#marketSnapshotPanel.atlas-radar-open .section-head .search-box",
-        "#marketSnapshotPanel.atlas-radar-open #marketTableWindowBody",
-        "#marketSnapshotPanel.atlas-radar-open #tableNote"
-      ];
-      css.textContent=[
-        hiddenSelectors.join(",")+"{display:none!important}",
-        "#marketSnapshotPanel.atlas-radar-open .filter-chips .filter-btn:not(#atlasPublicRadarLink).active{opacity:.65;box-shadow:none}",
-        "#atlasRadarMarketView[hidden]{display:none!important}",
-        "#atlasRadarMarketView{margin:12px 0 8px;border:1px solid #2d6472;border-radius:12px;overflow:hidden;background:#071b28}",
-        "#atlasRadarMarketView .atlas-radar-tab-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:11px 15px;border-bottom:1px solid #2d6472}",
-        "#atlasRadarMarketView .atlas-radar-tab-head strong{color:#e0d3a2}",
-        "#atlasRadarMarketView .atlas-radar-tab-head a{color:#8ee9e7;font-weight:650}",
-        "#atlasRadarMarketView iframe{display:block;width:100%;height:min(82vh,920px);min-height:600px;border:0;background:#06131f}",
-        "@media(max-width:700px){#atlasRadarMarketView iframe{height:78vh;min-height:540px}}"
-      ].join("\n");
-      document.head.appendChild(css);
-    }
+    const css=document.createElement("style");
+    css.id="atlasRadarTabStyle";
+    const hiddenSelectors=[
+      "#marketSnapshotPanel.atlas-radar-open #marketUniverseMode",
+      "#marketSnapshotPanel.atlas-radar-open .market-column-mode",
+      "#marketSnapshotPanel.atlas-radar-open .sort-box",
+      "#marketSnapshotPanel.atlas-radar-open .section-head .search-box",
+      "#marketSnapshotPanel.atlas-radar-open #marketTableWindowBody",
+      "#marketSnapshotPanel.atlas-radar-open #tableNote"
+    ];
+    css.textContent=hiddenSelectors.join(",")+"{display:none!important}"+
+      "#atlasRadarMarketView[hidden]{display:none!important}";
+    document.head.appendChild(css);
+    const theme=document.createElement("link");
+    theme.rel="stylesheet";
+    theme.href=new URL("./market-radar-native.css",document.baseURI).href;
+    theme.dataset.agentCryptoRadarTheme="native";
+    document.head.appendChild(theme);
     const tab=document.createElement("button");
     tab.id="atlasPublicRadarLink";
     tab.type="button";
@@ -1097,21 +1118,6 @@
     view.id="atlasRadarMarketView";
     view.hidden=true;
     view.setAttribute("aria-label","Radar Marché et nouveaux listings en lecture seule");
-    const head=document.createElement("div");
-    head.className="atlas-radar-tab-head";
-    const title=document.createElement("strong");
-    title.textContent="Radar · Marché et surveillance PAPER";
-    const large=document.createElement("a");
-    large.href=new URL("../laboratoire/radar.html",document.baseURI).href;
-    large.target="_blank";
-    large.rel="noopener noreferrer";
-    large.textContent="Agrandir Radar ↗";
-    head.append(title,large);
-    const frame=document.createElement("iframe");
-    frame.title="Radar · Top 10, 20, 50, 250 et nouveaux listings";
-    frame.loading="lazy";
-    frame.referrerPolicy="strict-origin-when-cross-origin";
-    view.append(head,frame);
     tools.insertAdjacentElement("afterend",view);
     tab.addEventListener("click",event=>{
       event.preventDefault();

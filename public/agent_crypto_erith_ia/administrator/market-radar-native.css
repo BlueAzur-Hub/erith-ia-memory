@@ -1,0 +1,45 @@
+/* Radar in Market Snapshot — presentation only.
+ * All colors / typography inherit the Trader/Administrator theme; no iframe
+ * palette, no duplicate shell, no broad global selector overrides.
+ */
+#marketSnapshotPanel .radar-native{color:var(--text);background:transparent;min-width:0;padding:1px 0 8px;font:inherit}
+#marketSnapshotPanel .radar-native[hidden]{display:none!important}
+#marketSnapshotPanel .radar-native-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 2px 10px;border-bottom:1px solid var(--line)}
+#marketSnapshotPanel .radar-native-head .eyebrow{margin:0 0 3px}
+#marketSnapshotPanel .radar-native h3{font:inherit;font-size:clamp(12px,1.15vw,15px);font-weight:900;letter-spacing:.015em;color:var(--text);margin:0 0 7px}
+#marketSnapshotPanel .radar-native-head h3{margin:0;color:var(--text)}
+#marketSnapshotPanel .radar-native-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#marketSnapshotPanel .radar-native-actions a{color:var(--cyan);text-decoration:none;font-weight:750;font-size:11px}
+#marketSnapshotPanel .radar-native-actions button{border-radius:9px;font-size:10px}
+#marketSnapshotPanel .radar-native-dock{display:flex;gap:9px;align-items:center;flex-wrap:wrap;padding:8px 0}
+#marketSnapshotPanel .radar-native-dock .market-universe-mode{margin:0}
+#marketSnapshotPanel .radar-native-dock input,#marketSnapshotPanel .radar-native-dock select{
+ min-width:125px;min-height:30px;padding:5px 9px;border:1px solid var(--line);border-radius:8px;
+ color:var(--text);background:transparent;font:inherit;font-size:11px
+}
+#marketSnapshotPanel .radar-native-dock input{flex:1 1 155px;max-width:260px}
+#marketSnapshotPanel .radar-native-dock select{max-width:150px}
+#marketSnapshotPanel .radar-native>.table-note{margin:5px 2px 9px;color:var(--muted);font-size:10px}
+#marketSnapshotPanel .radar-native .table-wrap{max-height:340px;min-height:0;border-radius:10px;overflow:auto}
+#marketSnapshotPanel .radar-native table{min-width:550px!important}
+#marketSnapshotPanel .radar-native th,#marketSnapshotPanel .radar-native td{padding:7px 9px;white-space:nowrap}
+#marketSnapshotPanel .radar-native th{font-size:9px}
+#marketSnapshotPanel .radar-native td{font-size:11px}
+#marketSnapshotPanel .radar-native td:nth-child(n+3),#marketSnapshotPanel .radar-native th:nth-child(n+3){text-align:right;font-variant-numeric:tabular-nums}
+#marketSnapshotPanel .radar-native td.pos{color:var(--green,#75ebb2)}
+#marketSnapshotPanel .radar-native td.neg{color:var(--red,#ff8394)}
+#marketSnapshotPanel .radar-native-bottom{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:12px;margin:13px 0}
+#marketSnapshotPanel .radar-native-block{min-width:0;border:1px solid var(--line);border-radius:12px;padding:12px;background:rgba(2,8,16,.18)}
+#marketSnapshotPanel .radar-native-block .table-wrap{max-height:265px}
+#marketSnapshotPanel .radar-native-block table{min-width:500px!important}
+#marketSnapshotPanel .radar-native-block td{white-space:normal;font-size:10px}
+#marketSnapshotPanel .radar-native-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+#marketSnapshotPanel .radar-native-card{min-width:0;display:flex;flex-direction:column;gap:5px;border:1px solid var(--line);border-radius:9px;padding:9px;background:rgba(2,8,16,.16)}
+#marketSnapshotPanel .radar-native-card small{color:var(--muted);font-size:10px;font-weight:750}
+#marketSnapshotPanel .radar-native-card strong{font-size:11px;color:var(--text);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+#marketSnapshotPanel .radar-native-card span{font-size:10px;color:var(--muted);overflow-wrap:anywhere}
+#marketSnapshotPanel .radar-native-block .table-note{font-size:10px;line-height:1.5;margin:6px 0 9px}
+@media(max-width:1200px){#marketSnapshotPanel .radar-native-bottom{grid-template-columns:1fr}}
+@media(max-width:720px){#marketSnapshotPanel .radar-native-cards{grid-template-columns:1fr 1fr}
+ #marketSnapshotPanel .radar-native-head{align-items:flex-start}
+ #marketSnapshotPanel .radar-native td{font-size:10px}}

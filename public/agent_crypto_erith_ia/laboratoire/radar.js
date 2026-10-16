@@ -66,7 +66,10 @@ function verifyBitget(inst,tickers,registry,now){
 }
 const API=Object.freeze({TIERS,validMarket,selectMarket,verifyPaper,verifyRegistry,verifyBitget});
 if(typeof module!=="undefined"&&module.exports)module.exports=API;
-if(typeof document==="undefined")return;
+// Shared pure parser between standalone Radar and Trader-native view; never start
+// the standalone UI in a page without its own #tiers control.
+global.AgentCryptoRadarReader=API;
+if(typeof document==="undefined"||!document.getElementById("tiers"))return;
 const $=s=>document.getElementById(s);
 const display=(s,value)=>{const el=$(s);if(el)el.textContent=String(value)};
 const emptyRow=(s,cols,msg)=>{const body=$(s);body.replaceChildren();const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=cols;td.textContent=msg;tr.append(td);body.append(tr)};
