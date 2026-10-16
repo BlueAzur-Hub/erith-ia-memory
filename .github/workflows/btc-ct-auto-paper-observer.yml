@@ -1,0 +1,75 @@
+name: Seven BTC CT Hourly Public PAPER Research
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/btc-ct-auto-paper-observer.yml"
+      - "public/agent_crypto_erith_ia/tools/btc_ct_auto_observer.py"
+      - "public/agent_crypto_erith_ia/tools/test_btc_ct_auto_observer.py"
+  schedule:
+    - cron: "41 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: btc-ct-auto-paper-observer
+  cancel-in-progress: false
+jobs:
+  paper-public-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify public-only strategy tests without network
+        run: |
+          set -euo pipefail
+          python -m py_compile public/agent_crypto_erith_ia/tools/btc_ct_auto_observer.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p "test_btc_ct_auto_observer.py" -v
+          python public/agent_crypto_erith_ia/tools/btc_ct_auto_observer.py --check
+      - name: Observe two closed public hourly markets and update PAPER journal
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/btc_ct_auto_observer.py
+      - name: Validate public state and no authenticated trading
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          p=pathlib.Path("public/agent_crypto_erith_ia/data/trader_flux/btc_ct_auto_paper/state.json")
+          s=json.loads(p.read_text())
+          assert s["schema"]=="erith.btc-ct.hourly-paper.v1"
+          assert s["orders_enabled"] is False and s["simulation_only"] is True and s["account_access"] is False
+          assert set(s["markets"])=={"BTC","CT"} and s["config"]["paper_notional_usdt"]==5
+          assert all(e["paper"] is True and e["executed_order"] is False for e in s["events"])
+          assert all(e["quote"]=="USDT" for e in s["events"])
+          assert len(s["events"])<=150
+          print("PASS: BTC and CT PAPER-only state, no order or private account data")
+          PY
+      - name: Publish tiny public PAPER journal only
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/trader_flux/btc_ct_auto_paper
+          git add -- "$target"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "NOOP: no new verified closed candles"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Archive BTC CT independent hourly PAPER observations"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Assert Trader, Administrator and Bridge were not modified by collection
+        if: always()
+        run: |
+          git diff --exit-code -- \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/administrator/ \
+            public/agent_crypto_erith_ia/core/ \
+            public/agent_crypto_erith_ia/data/historical_archive_prototype/
