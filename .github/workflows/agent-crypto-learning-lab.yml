@@ -176,8 +176,21 @@ jobs:
               first="  // Visible PAPER laboratory."
               snapshot="  // Snapshot Analyse is a read-only child of the existing Technical Reading."
               last="  // Trader-only continuity, deliberately not loaded in the public Interface."
-              # Permit ONLY the bounded Snapshot insert, comparing all other
-              # runtime bytes to the previous protected commit.
+              # A confirmed shared view replaces (not duplicates) the old
+              # Trader-only injected block. Remove only that exact old range
+              # from the immutable baseline before comparing every other byte.
+              if snapshot in expected and snapshot not in actual:
+                assert expected.count(snapshot)==1 and expected.count(last)==1
+                head,tail=expected.split(snapshot,1)
+                removed,rest=tail.split(last,1)
+                for required in ("traderSnapshotAnalyseStyle",
+                                 "traderSnapshotAnalyseCalculator",
+                                 "../laboratoire/snapshot-analyse.js",
+                                 "../trader/snapshot-analyse-native.js"):
+                  assert required in removed, f"Unexpected previous Snapshot block: {required}"
+                assert "fetch(" not in removed and "/trade/order" not in removed
+                expected=head+last+rest
+              # Preserve strict checking if another additive Snapshot is proposed.
               if snapshot in actual:
                 assert actual.count(snapshot)==1 and actual.count(last)==1
                 head,tail=actual.split(snapshot,1)

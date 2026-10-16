@@ -2,18 +2,21 @@ name: Seven Snapshot Analyse
 on:
   pull_request:
     paths:
-      - 'public/agent_crypto_erith_ia/trader/snapshot-analyse-native.js'
-      - 'public/agent_crypto_erith_ia/trader/snapshot-analyse-native.css'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/js/snapshot-analyse-view.js'
+      - 'public/agent_crypto_erith_ia/administrator/css/snapshot-analyse-view.css'
+      - 'public/agent_crypto_erith_ia/administrator/test-snapshot-analyse-view.cjs'
       - 'public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js'
-      - 'public/agent_crypto_erith_ia/trader/test-snapshot-analyse-native.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/snapshot-analyse.js'
       - 'public/agent_crypto_erith_ia/laboratoire/test-snapshot-analyse.cjs'
       - '.github/workflows/seven-snapshot-analyse.yml'
   push:
     branches: [main]
     paths:
-      - 'public/agent_crypto_erith_ia/trader/snapshot-analyse-native.js'
-      - 'public/agent_crypto_erith_ia/trader/test-snapshot-analyse-native.cjs'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/js/snapshot-analyse-view.js'
+      - 'public/agent_crypto_erith_ia/administrator/css/snapshot-analyse-view.css'
+      - 'public/agent_crypto_erith_ia/administrator/test-snapshot-analyse-view.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/snapshot-analyse.js'
       - 'public/agent_crypto_erith_ia/laboratoire/test-snapshot-analyse.cjs'
       - '.github/workflows/seven-snapshot-analyse.yml'
@@ -29,7 +32,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify pure calculator and native technical reading
+      - name: Verify pure calculator and shared Interface/Trader presentation
         run: |
           node --test public/agent_crypto_erith_ia/laboratoire/test-snapshot-analyse.cjs
-          node --test public/agent_crypto_erith_ia/trader/test-snapshot-analyse-native.cjs
+          node --test public/agent_crypto_erith_ia/administrator/test-snapshot-analyse-view.cjs
