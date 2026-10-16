@@ -66,10 +66,13 @@ test('ticket is mounted only in native OKX Seven analysis, not in Radar or Chart
  assert.match(inAccount,/showEvidence\(target,doc\);\s*globalThis\.AgentCryptoCtOrderTicket\?\.mount\?\.\(target,doc\)/);
  const other=script.slice(script.indexOf('function paint(doc)'),script.indexOf('async function loadCtEvidence'));
  assert.ok(!other.includes('AgentCryptoCtOrderTicket'));
+ assert.match(inAccount,/await ensureCtOrderTicket\(\)/);
+ assert.match(script,/function ensureCtOrderTicket\(\)/);
+ assert.match(script,/traderCtOrderDraftScript/);
+ assert.match(script,/traderCtOrderTicketScript/);
  const mirror=fs.readFileSync(require.resolve('./trader-runtime-mirror.js'),'utf8');
- assert.match(mirror,/traderCtOrderDraftScript/);
- assert.match(mirror,/traderCtOrderTicketScript/);
- assert.match(mirror,/ticket\.onerror=loadPanel/);
+ assert.ok(!mirror.includes('traderCtOrderDraftScript'));
+ assert.ok(!mirror.includes('traderCtOrderTicketScript'));
  const css=fs.readFileSync(require.resolve('./ct-order-ticket.css'),'utf8');
  assert.ok(css.includes('#traderOkxAccountPanel .ct-order-ticket'));
  assert.ok(!css.includes('#marketRadar'));
