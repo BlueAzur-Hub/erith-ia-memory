@@ -448,6 +448,6 @@ function mount(root){
  return true;
 }
 if(typeof module!=="undefined"&&module.exports)
- module.exports=Object.freeze({selectGraph,compactMoney,graphSelection});
+ module.exports=Object.freeze({selectGraph,compactMoney,graphSelection,ficheCoin});
 global.AgentCryptoRadarNative=Object.freeze({mount});
 })(typeof globalThis!=="undefined"?globalThis:this);
