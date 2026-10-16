@@ -49,62 +49,6 @@ async function get(url){
  }finally{clearTimeout(timer);}
 }
 
-/* Read the existing chart owners; never infer an active symbol from a stale Radar row. */
-function graphSelection(){
- const listing=global.AgentCryptoNewListingsNativeCategory?.snapshot?.();
- if(listing?.selectedId&&listing?.selectedSymbol)
-  return {kind:"listing",id:String(listing.selectedId),symbol:String(listing.selectedSymbol).toUpperCase()};
- if(global.AtlasExternalChart?.state?.()?.active)return null;
- const selected=global.AgentCryptoTraderMarket?.selected?.();
- return selected?.id&&selected?.symbol?{kind:"market",id:String(selected.id),symbol:String(selected.symbol).toUpperCase()}:null;
-}
-function ficheCoin(root,active){
- if(!active)return null;
- const model=root.radarModel;
- const present=Array.from(root.querySelectorAll(".radar-native-selectable")).find(
-  el=>el.dataset.radarKind===active.kind&&el.dataset.radarId===active.id&&el.radarCoin);
- if(present)return present.radarCoin;
- if(active.kind==="market"){
-  const selected=global.AgentCryptoTraderMarket?.selected?.();
-  if(selected?.id===active.id&&selected?.symbol===active.symbol)
-   return {...selected,radarSource:"Market public · actif sélectionné"};
-  const row=model?.market?.rows?.find(a=>a.id===active.id);
-  if(!row)return null;
-  const reading=global.AgentCryptoRadarReader?.observeMarket?.(row);
-  return {...row,radarSource:"CoinGecko · snapshot public USD",radarObservedAt:model.market.at,
-    radarObservation:reading?.label,radarReason:reading?.detail,
-    radarEvidence:"Variation de snapshot ; les bougies appartiennent au contrôleur Graphique"};
- }
- if(active.kind!=="listing")return null;
- const row=model?.listings?.find(a=>a.symbol===active.symbol);
- const registry=model?.registry?.get(active.symbol);
- const paper=active.symbol==="CT"?model?.paper?.CT:null;
- const price=row?.price??paper?.price??null,quote=row?.quote||paper?.quote||"USDT";
- return {id:active.id,name:row?.name||registry?.displayName||active.symbol,symbol:active.symbol,
-  rank:"—",image:row?.image||registry?.image||"",partial:true,
-  renderedPrice:price!==null?displayPrice(price)+" "+quote:"—",
-  rendered24:pct(row?.change24h),rendered7:"—",radarQuote:quote,
-  radarSource:row?row.venue+" · "+row.pair:paper?"Journal OKX PAPER · CT/USDT":"Identité du graphique · cours indisponible",
-  radarObservation:"Listing externe · observation",radarReason:"Le graphique n'est pas propriétaire d'un prix Market Core.",
-  radarEvidence:"Cotation uniquement lorsque la source exacte est disponible"};
-}
-function syncGraphSelection(root){
- const active=graphSelection(),items=Array.from(root.querySelectorAll(".radar-native-selectable"));
- for(const item of items){
-  const isActive=!!active&&item.dataset.radarKind===active.kind&&item.dataset.radarId===active.id;
-  item.classList.toggle("is-radar-active",isActive);
-  if(isActive)item.setAttribute("aria-current","true");else item.removeAttribute("aria-current");
- }
- const label=lookup(root,"focusName"),button=lookup(root,"focusFiche");
- if(label)label.textContent=active?"Graphique : "+active.symbol+" · sélection confirmée":"Graphique : sélection non confirmée";
- if(button){
-  const coin=ficheCoin(root,active);
-  button.disabled=!coin||typeof global.AgentCryptoTraderNativeFiche?.showAsset!=="function";
-  button.radarCoin=coin||null;
-  button.title=coin?"Ouvrir la fiche Crypto Market Snapshot · "+coin.symbol:"Fiche indisponible : identité non confirmée";
- }
- return active;
-}
 // Selection is delegated to the existing owners. A click NEVER clears an
 // existing chart pre-emptively; a supported destination is checked first.
 async function selectGraph(root,model,identity){
@@ -150,7 +94,7 @@ async function selectGraph(root,model,identity){
   }else throw Error("source non reconnue : graphique inchangé");
   if(revision!==model.selectionRevision)return false;
   setStatus(identity.symbol+" · sélection transmise au graphique Solo existant · aucun ordre");
-  if(model?.group)syncGraphSelection(root);
+  
   return true;
  }catch(error){
   setStatus(identity.symbol+" · "+String(error?.message||error));
@@ -161,8 +105,9 @@ function clickable(row,identity,root,model,coin){
  row.classList.add("radar-native-selectable");
  row.tabIndex=0;row.setAttribute("role","button");
  row.setAttribute("aria-label","Afficher le graphique Solo de "+identity.symbol);
- row.title="Afficher "+identity.symbol+" dans le Graphique (sans vider la mémoire)";
- row.dataset.radarKind=identity.kind;row.dataset.radarId=identity.id;row.radarCoin=coin||null;
+ // Native Market fiche on hover/focus; Solo selection remains on click.
+ row.setAttribute("aria-description","Survol ou focus : fiche Crypto Market Snapshot native");
+ row.dataset.radarKind=identity.kind;row.dataset.radarId=identity.id;
  const activate=event=>{
    if(event.type==="keydown"&&!["Enter"," "].includes(event.key))return;
    if(event.type==="keydown")event.preventDefault();
@@ -201,17 +146,6 @@ function build(root){
   const option=node("option","",label);option.value=value;sort.append(option);
  }
  dock.append(group,filter,sort);root.append(dock);
- const focus=node("div","radar-native-focus");
- const label=node("strong","","Graphique : état à vérifier");label.dataset.radarNative="focusName";
- const note=node("small","","Observations publiques · pas de signal d'achat ni d'ordre");
- const fiche=node("button","btn small","Voir la fiche");fiche.type="button";fiche.dataset.radarNative="focusFiche";fiche.disabled=true;
- fiche.addEventListener("click",()=>{
-  if(fiche.disabled||!fiche.radarCoin)return;
-  // Anchor the EXISTING Market fiche to this visible button, not an off-screen row.
-  const opened=global.AgentCryptoTraderNativeFiche?.showAsset?.(fiche,fiche.radarCoin);
-  if(opened===false)lookup(root,"status").textContent="Fiche Market indisponible · ouverture refusée";
- });
- focus.append(label,note,fiche);root.append(focus);
  const subtitle=node("p","table-note","Top 10 · CoinGecko · pas de recommandation d'achat");subtitle.dataset.radarNative="marketNote";root.append(subtitle);
  const wrap=node("div","table-wrap radar-native-table");const table=node("table");
  const thead=node("thead"),tr=node("tr");
@@ -263,7 +197,7 @@ function printMarket(root,model){
  if(!rows.length){const r=node("tr");cell(r,"Aucun résultat pour ce filtre");body.append(r);}
  lookup(root,"marketNote").textContent=rows.length+" actifs · Top "+model.tier+" par capitalisation · CoinGecko "+safeDate(model.market.at)+" · lecture seule";
  for(const b of model.group.querySelectorAll("[data-tier]")){const active=Number(b.dataset.tier)===model.tier;b.classList.toggle("is-active",active);b.setAttribute("aria-pressed",String(active));}
- syncGraphSelection(root);
+ 
 }
 function printListings(root,model){
  const body=lookup(root,"listings");body.replaceChildren();
@@ -290,7 +224,7 @@ function printListings(root,model){
  }
  lookup(root,"listingProof").textContent=model.listingError||model.listings.length+
   " paires Spot Bitget récentes · "+model.listings.filter(v=>v.identityProved).length+" identités prouvées · CT via journal OKX";
- syncGraphSelection(root);
+ 
 }
 function printWatch(root,model){
  const dest=lookup(root,"watch");dest.replaceChildren();
@@ -321,7 +255,7 @@ function printWatch(root,model){
    "PAPER · BTC : "+paper.BTC.decision+" · CT : "+paper.CT.decision+
    " · "+(paper.BTC.closed+paper.CT.closed)+" positions PAPER terminées · source BTC "+safeDate(paper.BTC.sourceTime)+" / CT "+safeDate(paper.CT.sourceTime):
    "Journal PAPER inaccessible · aucun signal supposé";
- syncGraphSelection(root);
+ 
 }
 function printOpportunities(root,model){
  const area=lookup(root,"opportunities"),note=lookup(root,"opportunityNote");
@@ -441,13 +375,13 @@ function mount(root){
  controls.filter.addEventListener("input",()=>printMarket(root,model));
  controls.sort.addEventListener("change",()=>printMarket(root,model));
  controls.refresh.addEventListener("click",()=>void refresh(root,model));
- window.addEventListener("agent-crypto:trader-selection-changed",()=>syncGraphSelection(root),{passive:true});
- window.addEventListener("agent-crypto:new-listing-line-ready",()=>syncGraphSelection(root),{passive:true});
- syncGraphSelection(root);
+ 
+ 
+ 
  void refresh(root,model);
  return true;
 }
 if(typeof module!=="undefined"&&module.exports)
- module.exports=Object.freeze({selectGraph,compactMoney,graphSelection,ficheCoin});
+ module.exports=Object.freeze({selectGraph,compactMoney});
 global.AgentCryptoRadarNative=Object.freeze({mount});
 })(typeof globalThis!=="undefined"?globalThis:this);
