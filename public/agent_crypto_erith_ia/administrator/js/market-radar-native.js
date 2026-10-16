@@ -125,8 +125,15 @@ function clickable(row,identity,root,model,coin){
  row.classList.add("radar-native-selectable");
  row.tabIndex=0;row.setAttribute("role","button");
  row.setAttribute("aria-label","Afficher le graphique Solo de "+identity.symbol);
- // Native Market fiche on hover/focus; Solo selection remains on click.
- row.setAttribute("aria-description","Survol ou focus : fiche Crypto Market Snapshot native");
+ // Market rows share the Administrator's delegated Fiche and Math owner.
+ // Outside the canonical Market, no unproven Fiche/score is claimed.
+ const marketFiche=identity.kind==="market"&&coin?.id===identity.id;
+ if(marketFiche){
+  row.dataset.marketHelpId=identity.id;
+  row.setAttribute("aria-description","Fiche Market native au survol · Solo au clic");
+ }else{
+  row.setAttribute("aria-description","Solo au clic · fiche et score uniquement si données vérifiées");
+ }
  row.dataset.radarKind=identity.kind;row.dataset.radarId=identity.id;
  const isActive=model.activeIdentity?.kind===identity.kind&&model.activeIdentity?.id===identity.id;
  if(isActive)row.classList.add("is-selected");
@@ -138,10 +145,14 @@ function clickable(row,identity,root,model,coin){
  };
  row.addEventListener("click",activate);
  row.addEventListener("keydown",activate);
- if(coin){const show=e=>global.AgentCryptoTraderNativeFiche?.showAsset?.(row,coin,e?.type==='pointerenter'?e:null);
- row.addEventListener('pointerenter',show);row.addEventListener('focus',show);
- row.addEventListener('pointerleave',()=>global.AgentCryptoTraderNativeFiche?.hide?.());
- row.addEventListener('blur',()=>global.AgentCryptoTraderNativeFiche?.hide?.());}
+ // Admin's atlasHelpTargetFromNode delegates all canonical [data-market-help-id]
+ // rows to the one existing Fiche (Flottante/Latérale with native scoreCoin).
+ if(!marketFiche&&coin){
+  const show=e=>global.AgentCryptoTraderNativeFiche?.showAsset?.(row,coin,e?.type==='pointerenter'?e:null);
+  row.addEventListener('pointerenter',show);row.addEventListener('focus',show);
+  row.addEventListener('pointerleave',()=>global.AgentCryptoTraderNativeFiche?.hide?.());
+  row.addEventListener('blur',()=>global.AgentCryptoTraderNativeFiche?.hide?.());
+ }
 }
 function build(root){
  root.replaceChildren();

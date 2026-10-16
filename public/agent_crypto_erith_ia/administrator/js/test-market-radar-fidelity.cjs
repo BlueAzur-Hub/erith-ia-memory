@@ -28,8 +28,8 @@ test("Radar uses 7 native Market columns with verified identity, USD source, cap
    selectMarket:(rows,tier)=>{assert.equal(tier,10);return rows;},
    observeMarket:()=>({label:"Hausse 24 h",tone:"up",detail:"Variation constatée ; aucun ordre"})
   };
-  let ficha=null;
-  globalThis.AgentCryptoTraderNativeFiche={showAsset:(target,coin)=>{ficha={target,coin};return true;},hide:()=>{}};
+  let legacyFicheCalls=0;
+  globalThis.AgentCryptoTraderNativeFiche={showAsset:()=>{legacyFicheCalls++;return true;},hide:()=>{}};
   const body=new Element("tbody"),note=new Element("p");
   const root={querySelector:selector=>{
     if(selector==='[data-radar-native="rows"]')return body;
@@ -64,12 +64,10 @@ test("Radar uses 7 native Market columns with verified identity, USD source, cap
   assert.match(reading[1].textContent,/Fiche au survol · Solo au clic/);
   assert.equal(note.textContent.includes("CoinGecko"),true);
   assert.equal(row.attributes.role,"button");
-  assert.equal(row.events.pointerenter.length,1);
-  row.events.pointerenter[0]({type:"pointerenter"});
-  assert.equal(ficha.target,row);
-  assert.equal(ficha.coin.id,"bitcoin");
-  assert.equal(ficha.coin.radarSource,"CoinGecko · snapshot public USD");
-  assert.equal(ficha.coin.radarObservation,"Hausse 24 h");
+  assert.equal(row.dataset.marketHelpId,"bitcoin");
+  assert.equal(row.events.pointerenter,undefined);
+  assert.equal(row.events.focus,undefined);
+  assert.equal(legacyFicheCalls,0);
  }finally{
   globalThis.document=oldDoc;globalThis.AgentCryptoRadarReader=oldReader;
   globalThis.AgentCryptoTraderNativeFiche=oldFiche;
@@ -80,6 +78,13 @@ test("Radar Market fidelity does not introduce a second graph, iframe, OKX or tr
  const js=fs.readFileSync(path.join(__dirname,"market-radar-native.js"),"utf8");
  const css=fs.readFileSync(path.join(__dirname,"../market-radar-native.css"),"utf8");
  assert.match(js,/AgentCryptoTraderNativeFiche\?\.showAsset/);
+ assert.match(js,/row\.dataset\.marketHelpId=identity\.id/);
+ assert.match(js,/marketFiche=identity\.kind==="market"/);
+ const marketCore=fs.readFileSync(path.join(__dirname,"../app.js"),"utf8");
+ assert.match(marketCore,/function atlasHelpTargetFromNode/);
+ assert.match(marketCore,/function atlasMarketHelpDefinition/);
+ assert.match(marketCore,/function atlasShowHelpLayer/);
+ assert.match(marketCore,/function scoreCoin\(/);
  assert.match(js,/AgentCryptoCommands/);
  assert.match(js,/new URL\("..\/laboratoire\/radar.html"/);
  for(const forbidden of ["createElement(\"iframe\")","api/v5/trade/order","localStorage.setItem","submitOrder(","withdrawal"])
