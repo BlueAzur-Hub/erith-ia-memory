@@ -105,6 +105,10 @@ test('invalid or missing bill amount rejects ledger proof',()=>{
  const a=ct();a.sources.trading_account.records[0].balChg='-7.5foo';
  assert.equal(get({ctLedger:a}).status,'unavailable');
 });
+test('ledger record whose currency contradicts its requested asset is rejected',()=>{
+ const a=ct();a.sources.trading_account.records[0].ccy='BTC';
+ assert.equal(get({ctLedger:a}).status,'unavailable');
+});
 test('missing CT purchase fill keeps USD cost and result unknown',()=>{
  const r=get({fills:{ok:true,read_only:true,fills_3m:[]}});
  assert.equal(r.status,'compatible_movements');
