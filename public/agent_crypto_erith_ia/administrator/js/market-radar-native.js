@@ -58,6 +58,36 @@ function graphSelection(){
  const selected=global.AgentCryptoTraderMarket?.selected?.();
  return selected?.id&&selected?.symbol?{kind:"market",id:String(selected.id),symbol:String(selected.symbol).toUpperCase()}:null;
 }
+function ficheCoin(root,active){
+ if(!active)return null;
+ const model=root.radarModel;
+ const present=Array.from(root.querySelectorAll(".radar-native-selectable")).find(
+  el=>el.dataset.radarKind===active.kind&&el.dataset.radarId===active.id&&el.radarCoin);
+ if(present)return present.radarCoin;
+ if(active.kind==="market"){
+  const selected=global.AgentCryptoTraderMarket?.selected?.();
+  if(selected?.id===active.id&&selected?.symbol===active.symbol)
+   return {...selected,radarSource:"Market public · actif sélectionné"};
+  const row=model?.market?.rows?.find(a=>a.id===active.id);
+  if(!row)return null;
+  const reading=global.AgentCryptoRadarReader?.observeMarket?.(row);
+  return {...row,radarSource:"CoinGecko · snapshot public USD",radarObservedAt:model.market.at,
+    radarObservation:reading?.label,radarReason:reading?.detail,
+    radarEvidence:"Variation de snapshot ; les bougies appartiennent au contrôleur Graphique"};
+ }
+ if(active.kind!=="listing")return null;
+ const row=model?.listings?.find(a=>a.symbol===active.symbol);
+ const registry=model?.registry?.get(active.symbol);
+ const paper=active.symbol==="CT"?model?.paper?.CT:null;
+ const price=row?.price??paper?.price??null,quote=row?.quote||paper?.quote||"USDT";
+ return {id:active.id,name:row?.name||registry?.displayName||active.symbol,symbol:active.symbol,
+  rank:"—",image:row?.image||registry?.image||"",partial:true,
+  renderedPrice:price!==null?displayPrice(price)+" "+quote:"—",
+  rendered24:pct(row?.change24h),rendered7:"—",radarQuote:quote,
+  radarSource:row?row.venue+" · "+row.pair:paper?"Journal OKX PAPER · CT/USDT":"Identité du graphique · cours indisponible",
+  radarObservation:"Listing externe · observation",radarReason:"Le graphique n'est pas propriétaire d'un prix Market Core.",
+  radarEvidence:"Cotation uniquement lorsque la source exacte est disponible"};
+}
 function syncGraphSelection(root){
  const active=graphSelection(),items=Array.from(root.querySelectorAll(".radar-native-selectable"));
  for(const item of items){
@@ -68,8 +98,10 @@ function syncGraphSelection(root){
  const label=lookup(root,"focusName"),button=lookup(root,"focusFiche");
  if(label)label.textContent=active?"Graphique : "+active.symbol+" · sélection confirmée":"Graphique : sélection non confirmée";
  if(button){
-  const found=items.find(el=>active&&el.dataset.radarKind===active.kind&&el.dataset.radarId===active.id&&el.radarCoin);
-  button.disabled=!found;button.radarTarget=found||null;
+  const coin=ficheCoin(root,active);
+  button.disabled=!coin||typeof global.AgentCryptoTraderNativeFiche?.showAsset!=="function";
+  button.radarCoin=coin||null;
+  button.title=coin?"Ouvrir la fiche Crypto Market Snapshot · "+coin.symbol:"Fiche indisponible : identité non confirmée";
  }
  return active;
 }
@@ -173,7 +205,12 @@ function build(root){
  const label=node("strong","","Graphique : état à vérifier");label.dataset.radarNative="focusName";
  const note=node("small","","Observations publiques · pas de signal d'achat ni d'ordre");
  const fiche=node("button","btn small","Voir la fiche");fiche.type="button";fiche.dataset.radarNative="focusFiche";fiche.disabled=true;
- fiche.addEventListener("click",()=>{const target=fiche.radarTarget;if(target?.radarCoin)global.AgentCryptoTraderNativeFiche?.showAsset?.(target,target.radarCoin);});
+ fiche.addEventListener("click",()=>{
+  if(fiche.disabled||!fiche.radarCoin)return;
+  // Anchor the EXISTING Market fiche to this visible button, not an off-screen row.
+  const opened=global.AgentCryptoTraderNativeFiche?.showAsset?.(fiche,fiche.radarCoin);
+  if(opened===false)lookup(root,"status").textContent="Fiche Market indisponible · ouverture refusée";
+ });
  focus.append(label,note,fiche);root.append(focus);
  const subtitle=node("p","table-note","Top 10 · CoinGecko · pas de recommandation d'achat");subtitle.dataset.radarNative="marketNote";root.append(subtitle);
  const wrap=node("div","table-wrap radar-native-table");const table=node("table");
@@ -347,6 +384,7 @@ function mount(root){
  root.dataset.radarNativeMounted="1";
  const controls=build(root);
  const model={tier:10,market:null,paper:null,listings:[],registry:new Map(),listingError:null,group:controls.group,loading:false,selectionRevision:0};
+ root.radarModel=model;
  controls.group.addEventListener("click",e=>{
   const b=e.target.closest("[data-tier]");if(!b)return;
   model.tier=Number(b.dataset.tier);printMarket(root,model);
