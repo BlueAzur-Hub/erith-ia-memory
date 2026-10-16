@@ -44,7 +44,7 @@
   };
   const priceOf=c=>{
     if(c?.partial)return c.renderedPrice||"—";
-    const cur=displayCurrency();
+    const cur=c?.radarSource?"USD":displayCurrency();
     const n=finite(cur==="USD"?c?.priceUsd:(c?.priceEur??c?.price));
     if(n===null)return "—";
     try{return new Intl.NumberFormat("fr-FR",{style:"currency",currency:cur,maximumFractionDigits:Math.abs(n)<1?6:2}).format(n);}
@@ -78,7 +78,7 @@
   function markup(c){
     const selected=globalThis.AgentCryptoTraderMarket?.selected?.()||null;
     const isSelected=selected?.id===c?.id;
-    const cur=displayCurrency(),quote=String(c?.radarQuote||'').toUpperCase(),unit=quote&&quote!=='USD'?quote:cur;
+    const cur=c?.radarSource?'USD':displayCurrency(),quote=String(c?.radarQuote||'').toUpperCase(),unit=quote&&quote!=='USD'?quote:cur;
     const cap=finite(cur==="USD"?c?.marketCapUsd:c?.marketCap);
     const vol=finite(cur==="USD"?c?.volume24hUsd:c?.volume24h);
     const ratio=cap!==null&&cap>0&&vol!==null?vol/cap*100:null;
