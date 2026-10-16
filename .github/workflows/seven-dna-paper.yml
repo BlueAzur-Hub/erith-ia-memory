@@ -1,0 +1,79 @@
+name: Seven NeoSoul DNA 48h Paper
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '11 */4 * * *'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/neosoul_dna_paper.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_neosoul_dna_paper.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/dna-paper.html'
+      - 'public/agent_crypto_erith_ia/laboratoire/cas-ecole-neosoul-dna.md'
+      - '.github/workflows/seven-dna-paper.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/neosoul_dna_paper.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_neosoul_dna_paper.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/dna-paper.html'
+      - 'public/agent_crypto_erith_ia/laboratoire/cas-ecole-neosoul-dna.md'
+      - '.github/workflows/seven-dna-paper.yml'
+
+permissions:
+  contents: write
+concurrency:
+  group: seven-dna-paper-collector
+  cancel-in-progress: false
+
+jobs:
+  dna-paper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Offline regression tests — no credentials, no order routes
+        run: |
+          node --check public/agent_crypto_erith_ia/tools/neosoul_dna_paper.cjs
+          node --test public/agent_crypto_erith_ia/tools/test_neosoul_dna_paper.cjs
+      - name: Observe real public Bitget spot books (main only)
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        id: collect
+        shell: bash
+        run: |
+          set -uo pipefail
+          if node public/agent_crypto_erith_ia/tools/neosoul_dna_paper.cjs --observe; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Bitget snapshot unavailable. No fake PAPER prices or entries published."
+          fi
+      - name: Archive verified observations (no private account data)
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.collect.outputs.available == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          target=public/agent_crypto_erith_ia/data/trader_flux/dna_paper/state.json
+          if git diff --quiet -- "$target"; then
+            echo "No new observation; 48h complete or duplicate."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "$target"
+          git diff --cached --check
+          git commit -m "Record verified DNAUSDT Spot PAPER observation (no order)"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Preserve diagnostics as short-lived artifact
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: dna-paper-public-snapshot
+          path: public/agent_crypto_erith_ia/data/trader_flux/dna_paper/state.json
+          retention-days: 7
