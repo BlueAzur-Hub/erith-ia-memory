@@ -136,7 +136,8 @@ assert(nativeView.includes('printMarket(root,model);')&&nativeView.includes('con
 assert(nativeCss.includes('.radar-native-selectable:focus-visible'),"Keyboard click affordance");
 assert(nativeView.includes('identityCell(r,asset)')&&nativeView.includes('identityCell(r,item)'),"Shared identity rendering");
 assert(nativeView.includes('global.AgentCryptoTraderNativeFiche?.showAsset?.'),"Existing fiche owner");
-assert(marketFiche.includes('showAsset,hide,preferredMode'),"Fiche API exposed");
+assert(marketFiche.includes('showAsset,renderInto,hide,preferredMode'),"Native Market fiche owns both floating and inline markup");
+assert(marketFiche.includes("target.innerHTML=markup(coin,true)"),"Radar reuses exact fiche renderer");
 assert(nativeCss.includes('.market-identity-rail')&&nativeCss.includes('[data-radar-symbol="BTC"]'),"Market color accents");
 assert(nativeView.includes('syncGraphSelection(root)')&&nativeView.includes('graphSelection()'),"Graph owner context is reused");
 assert(nativeView.includes('radarObservation:movement.label'),"Factual movement is forwarded to the existing fiche");
@@ -144,6 +145,29 @@ assert(nativeView.includes('data-radar-native="focusFiche"')===false,"Fiche butt
 assert(nativeView.includes('fiche.dataset.radarNative="focusFiche"'),"Visible native fiche access");
 assert(nativeCss.includes('.radar-native-focus')&&nativeCss.includes('.is-radar-active'),"Selected graph marker and native style");
 assert(marketFiche.includes('Lecture Radar · descriptive')&&marketFiche.includes('Preuve et limites'),"Fiche includes source limitations");
+assert(nativeView.includes('AgentCryptoMarketMicroscope'),"Radar reads existing microscope");
+assert(nativeView.includes('agent-crypto:market-candles-loaded'),"Microscope candle updates refresh Radar observation");
+assert(nativeView.includes('renderInto(cardHost,asset)'),"Fiche is embedded in Radar, not a second popup");
+assert(nativeCss.includes('.radar-native-intelligence'),"Native Radar inline fiche and technical panel share workspace");
+const duration=15*60000,closed=Array.from({length:80},(_,i)=>({
+ t:now-(80-i)*duration,o:100,h:100.5,l:99.5,c:100,v:100}));
+const snapshot={mode:'candles',loadedInstrument:'CT-USDT',loadedBar:'15m',
+ lastLoadedAt:new Date(now-10000).toISOString(),source:'OKX public candles',
+ rows:closed,loading:false,errorCode:null};
+const levels={method:'PIVOTS_VISIBLES_W2',instrument:'CT-USDT',bar:'15m',
+ support:{price:98,touches:2},resistance:{price:104,touches:2}};
+const plan=reader.studyExistingCandles({symbol:'CT'},snapshot,levels,now);
+assert.equal(plan.status,'WAIT');
+assert.equal(plan.unit,'USDT');
+assert.equal(plan.ordersEnabled,false);
+assert.equal(plan.spreadKnown,false);
+assert.match(plan.entry,/support|cassure/i);
+assert.equal(reader.studyExistingCandles({symbol:'MHA'},snapshot,levels,now).status,'UNAVAILABLE',
+ "Mismatched series cannot create a false MHA opportunity");
+assert.equal(reader.studyExistingCandles({symbol:'CT'}, {...snapshot,mode:'native'},levels,now).status,'UNAVAILABLE');
+assert.equal(reader.studyExistingCandles({symbol:'CT'}, {...snapshot,lastLoadedAt:new Date(now-3600000).toISOString()},levels,now).status,'UNAVAILABLE');
+assert.equal(reader.studyExistingCandles({symbol:'CT'}, snapshot,{...levels,instrument:'BTC-USDT'},now).status,'UNAVAILABLE');
+assert.equal(reader.studyExistingCandles({symbol:'CT'},snapshot,{...levels,support:{price:98,fallback:true}},now).status,'UNAVAILABLE');
 globalThis.AgentCryptoTraderMarket={selected:()=>({id:'bitcoin',symbol:'BTC'})};
 assert.deepEqual(router.graphSelection(),{kind:'market',id:'bitcoin',symbol:'BTC'});
 globalThis.AgentCryptoNewListingsNativeCategory={snapshot:()=>({selectedId:'concrete',selectedSymbol:'CT'})};
@@ -159,8 +183,7 @@ const coin=router.ficheCoin(facade,{kind:'listing',id:'MHA',symbol:'MHA'});
 assert.equal(coin.symbol,'MHA');
 assert.equal(coin.radarQuote,'USDT');
 assert.match(coin.renderedPrice,/USDT/);
-assert.match(nativeView,/showAsset\?\.\(fiche,fiche\.radarCoin\)/,
- "Fiche button must open Market native popup anchored to visible control");
+assert(nativeView.includes('section.open=true;syncGraphSelection(root)'),"Fiche button reveals native inline Radar component");
 assert(!nativeView.includes('fiche.radarTarget'),"Fiche must not seek an off-screen list row");
 assert(nativeView.includes('extendedPromise=get("../data/crypto/extended.json")'),"Shared extended archive, no extra network API");
 assert(nativeView.includes('printOpportunities(root,model)'),"Opportunity research section present");
