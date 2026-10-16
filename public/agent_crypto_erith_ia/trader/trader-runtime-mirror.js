@@ -104,6 +104,31 @@ function mount(){
     };
     doc.head.appendChild(contract);
   }
+  // Visible PAPER laboratory. Its arithmetic is isolated and it only consumes
+  // canonical publicly loaded BTC/CT series. Never inherits Bridge credentials.
+  if(!doc.getElementById("traderPaperLabCoreScript")){
+    const script=doc.createElement("script");
+    script.id="traderPaperLabCoreScript";
+    script.src=new URL("../trader/trader-paper-lab-core.js",doc.baseURI).href;
+    script.onload=()=>{
+      if(!win.AgentCryptoPaperLabCore){
+        if(status){status.textContent="Laboratoire PAPER non chargé";status.dataset.state="error";}
+        return;
+      }
+      if(doc.getElementById("traderPaperLabViewScript"))return;
+      const view=doc.createElement("script");
+      view.id="traderPaperLabViewScript";
+      view.src=new URL("../trader/trader-paper-lab-view.js",doc.baseURI).href;
+      view.onerror=()=>{
+        if(status){status.textContent="Vue laboratoire PAPER indisponible";status.dataset.state="error";}
+      };
+      doc.head.appendChild(view);
+    };
+    script.onerror=()=>{
+      if(status){status.textContent="Moteur de simulation PAPER indisponible";status.dataset.state="error";}
+    };
+    doc.head.appendChild(script);
+  }
   // Trader-only continuity, deliberately not loaded in the public Interface.
   if(!doc.getElementById("traderCtSelectionMemoryScript")){
     const script=doc.createElement("script");
