@@ -10,6 +10,15 @@
 4. Pour un suivi prospectif, cliquer sur **Ouvrir scénario prospectif** au moment de la première observation. Lors d'une consultation ultérieure, sélectionner **le même actif avec une nouvelle série horodatée**, puis **Évaluer sur un nouveau relevé**. Une même cotation ou une paire/fournisseur différent déclenche un refus.
 5. Copier volontairement le journal si une conservation est souhaitée. Aucun export n'est automatique ; le journal est uniquement en mémoire et disparaît lors de la fermeture.
 
+## Correction terrain et automatisme facultatif (16 octobre)
+
+- **Problème observé dans Firefox** : le laboratoire refusait une série CT réelle pourtant affichée, avec « CT/USDT et conversion USDT/USD CoinGecko non démontrés ». Cause établie : le propriétaire externe publie la paire sous la forme `CT/USDT` alors que le laboratoire exigeait `CT-USDT`. Ces deux formes sont maintenant normalisées de façon restrictive ; `CT/USDC` ne passe toujours pas.
+- Le propriétaire de la ligne précise désormais la conversion `USDT/USD CoinGecko` chaque fois que la devise affichée diffère de la devise du marché, **y compris si le coefficient vaut exactement 1**. La provenance reste requise.
+- **Démarrer Auto PAPER** : consentement explicite dans le panneau ; écoute seulement les événements des graphiques déjà chargés (BTC 24h CoinGecko USD et CT ligne native OKX/USD). Aucune interrogation réseau supplémentaire ni capture de solde OKX.
+- Première observation valide : simulation des trois mouvements et ouverture d'un T0 fictif pour l'actif sélectionné ; observation ultérieure de la même paire/source **après au moins 5 minutes de temps de marché** : résultat fictif et écriture au journal ; le cycle peut repartir avec un nouveau T0, dans la limite de **20 observations par session**.
+- **Arrêter Auto PAPER** : arrêt immédiat des captures, sans effacer le journal de la session. F5 et fermeture arrêtent également l'automatisme ; il ne fonctionne pas en arrière-plan quand le Trader est fermé.
+- Ce n'est **pas** un robot autonome de surveillance simultanée BTC/CT : sans nouvelle série publique déjà publiée pour l'actif sélectionné, l'observateur attend. Aucun score d'ordre, aucune stratégie exécutée, aucun clic OKX.
+
 ## Modèle de calcul
 
 - Capital par défaut **5 USD fictifs** ; ne lit **aucun** solde réel du Bridge.
