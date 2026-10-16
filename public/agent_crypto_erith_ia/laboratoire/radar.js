@@ -113,7 +113,59 @@ function selectOpportunities(core,extended){
   universe:1000,eligible:candidates.length,trend,rebound,
   disclaimer:"Observations transversales de snapshots, non opportunités négociables ni conseils d'achat. Aucune paire d'exécution vérifiée."};
 }
-const API=Object.freeze({TIERS,validMarket,selectMarket,verifyPaper,verifyRegistry,verifyBitget,observeMarket,selectOpportunities});
+// Analyse PAPER des seules bougies DÉJÀ PUBLIÉES par le microscope graphique natif.
+// Never use a CoinGecko 24h snapshot as if it were exchange OHLCV candles.
+const BAR_MS=Object.freeze({"1m":60000,"5m":300000,"15m":900000,"1h":3600000,"4h":14400000,"1j":86400000});
+function studyExistingCandles(selection,snapshot,levels,now=Date.now()){
+ const no=(reason)=>({status:"UNAVAILABLE",reason,observation:null,entry:null,exit:null,unit:null,source:null});
+ if(!selection?.symbol)return no("Sélection graphique non confirmée");
+ if(!snapshot||snapshot.mode!=="candles")return no("Activer les Bougies du graphique existant pour analyser ce marché");
+ if(snapshot.loading||snapshot.errorCode&&snapshot.errorCode!=="PAIR_FALLBACK")
+  return no("Bougies en chargement ou erreur du propriétaire graphique");
+ const pair=String(snapshot.loadedInstrument||"").toUpperCase(),bar=String(snapshot.loadedBar||"");
+ const chunks=pair.split(/[-/]/).filter(Boolean);
+ if(chunks.length!==2||chunks[0]!==String(selection.symbol).toUpperCase()||!BAR_MS[bar])
+  return no("Paire/période du graphique différente de l'actif demandé ; aucun calcul");
+ const duration=BAR_MS[bar],when=Date.parse(snapshot.lastLoadedAt||"");
+ if(!Number.isFinite(when)||when>now+60000||now-when>Math.max(duration*3,180000))
+  return no("Série trop ancienne ou horodatage invalide : actualiser les Bougies existantes");
+ if(!Array.isArray(snapshot.rows)||snapshot.rows.length<60)return no("Au moins 60 bougies documentées nécessaires");
+ const rows=snapshot.rows;
+ if(rows.some((r,i)=>![r.t,r.o,r.h,r.l,r.c,r.v].every(x=>typeof x==="number"&&Number.isFinite(x))||
+    r.t<0||r.o<=0||r.h<r.l||r.l<=0||r.c<r.l||r.c>r.h||r.o<r.l||r.o>r.h||r.v<0||
+    (i>0&&r.t<=rows[i-1].t)))
+  return no("Bougies OHLCV incohérentes ou mal triées ; étude suspendue");
+ // Exclude open candles; exchange timestamps denote candle opening.
+ const closed=rows.filter(r=>r.t+duration<=now);
+ if(closed.length<50||now-(closed.at(-1).t+duration)>duration*2)
+  return no("Pas assez de bougies clôturées récentes");
+ if(levels?.instrument!==pair||levels?.bar!==bar||levels?.method!=="PIVOTS_VISIBLES_W2")
+  return no("Repères S/R du microscope indisponibles pour cette même paire/période");
+ const support=levels.support?.price,resistance=levels.resistance?.price;
+ const last=closed.at(-1),previous=closed.at(-2),volumeAverage=closed.slice(-21,-1).reduce((a,r)=>a+r.v,0)/20;
+ if(![support,resistance].every(x=>typeof x==="number"&&Number.isFinite(x)&&x>0)||
+    !(support<resistance)||!(volumeAverage>0)||
+    levels.support?.fallback||levels.resistance?.fallback)
+  return no("Supports/résistances non confirmés ou volumes insuffisants");
+ const nearSupport=Math.abs(Math.min(...closed.slice(-3).map(x=>x.l))-support)/support<=0.0075;
+ const twoRising=last.c>last.o&&previous.c>previous.o&&last.c>previous.c;
+ const volumeConfirmed=last.v>=1.2*volumeAverage;
+ const rebound=nearSupport&&twoRising&&volumeConfirmed&&last.c>support&&last.c<resistance;
+ const format=v=>new Intl.NumberFormat("fr-FR",{maximumFractionDigits:v<.01?8:v<1?6:4}).format(v);
+ const unit=chunks[1],source=String(snapshot.source||"Source bougies publique");
+ return {status:rebound?"PAPER_REVIEW":"WAIT",reason:rebound?
+  "Rebond à étudier : deux bougies clôturées haussières après contact support ; volume confirmé. Vérifier carnet, spread et frais avant toute décision.":
+  "Attendre : rebond confirmé sur support OU cassure clôturée de la résistance avec volume ; ces conditions ne sont pas encore réunies.",
+  observation:{pair,bar,closedAt:new Date(last.t+duration).toISOString(),closedPrice:last.c,
+   candles:closed.length,volumeRatio:Math.round(last.v/volumeAverage*100)/100},
+  entry:"Étudier un rebond confirmé près de "+format(support)+" "+unit+
+    " ou une cassure confirmée au-dessus de "+format(resistance)+" "+unit,
+  exit:"En cas de scénario PAPER validé : zone de prise de bénéfice à réévaluer vers "+
+    format(resistance)+" "+unit+" ; invalidation si clôture sous "+format(support)+" "+unit,
+  support,resistance,unit,source,ordersEnabled:false,spreadKnown:false,feesKnown:false,
+  type:"SPOT_PAPER_CONDITIONAL",inferenceOnly:true};
+}
+const API=Object.freeze({TIERS,validMarket,selectMarket,verifyPaper,verifyRegistry,verifyBitget,observeMarket,selectOpportunities,studyExistingCandles});
 if(typeof module!=="undefined"&&module.exports)module.exports=API;
 // Shared pure parser between standalone Radar and Trader-native view; never start
 // the standalone UI in a page without its own #tiers control.

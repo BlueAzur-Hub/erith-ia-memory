@@ -75,7 +75,7 @@
       '<button type="button" data-market-card-mode="floating" class="'+(mode==="floating"?"is-active":"")+'" aria-pressed="'+(mode==="floating")+'">Flottante</button>'+
       '<button type="button" data-market-card-mode="dock" class="'+(mode==="dock"?"is-active":"")+'" aria-pressed="'+(mode==="dock")+'" '+(d.available?"":"disabled")+' title="'+esc(d.reason)+'">Latérale</button></div></div>';
   }
-  function markup(c){
+  function markup(c,inline=false){
     const selected=globalThis.AgentCryptoTraderMarket?.selected?.()||null;
     const isSelected=selected?.id===c?.id;
     const cur=c?.radarSource?'USD':displayCurrency(),quote=String(c?.radarQuote||'').toUpperCase(),unit=quote&&quote!=='USD'?quote:cur;
@@ -85,7 +85,7 @@
     const score=isSelected&&!c?.radarSource?finite(globalThis.AgentCryptoTraderMathCore?.score?.()?.score):null;
     const image=c?.image?'<img class="atlas-help-market-icon" src="'+esc(c.image)+'" alt="" loading="eager">':'<span class="atlas-help-market-fallback" aria-hidden="true">'+esc(String(c?.symbol||"?").slice(0,1))+'</span>';
     const ch24=c?.partial?c.rendered24:pct(c?.change24h),ch7=c?.partial?c.rendered7:pct(c?.change7d),ch30=c?.partial?"—":pct(c?.change30d??c?.change30D??c?.change30);
-    return toolbar()+
+    return (inline?'':toolbar())+
       '<div class="atlas-help-market-head">'+image+'<span><strong>'+esc(c?.name||"Actif")+'</strong><b>'+esc(String(c?.symbol||"").toUpperCase())+'</b><small>Rang '+esc(c?.rank??"—")+' · Repère marché</small></span></div>'+
       '<div class="atlas-help-market-grid">'+
       '<span><small>Prix '+(quote&&quote!=='USD'?'coté ':'affichage ')+esc(unit)+'</small><strong>'+esc(priceOf(c))+'</strong></span>'+
@@ -159,6 +159,14 @@
     const coin=activeCoin;hideDock();hide(true);if(target)show(target,null,coin);
   }
   function showAsset(target,coin,pointer=null){if(!coin?.id||!coin?.symbol)return false;return show(target,pointer,coin)===true;}
+  // The native card can also be displayed INSIDE Radar; markup and data owner remain identical.
+  // This method never changes the floating/dock mode nor chart / Market selection.
+  function renderInto(target,coin){
+    if(!target||!coin?.id||!coin?.symbol)return false;
+    target.innerHTML=markup(coin,true);
+    target.dataset.marketHelpCoinId=String(coin.id);
+    return true;
+  }
   function setEnabled(value){
     enabled=!!value;
     const btn=$("traderFicheToggle");if(btn){btn.classList.toggle("is-active",enabled);btn.setAttribute("aria-pressed",String(enabled));}
@@ -182,6 +190,6 @@
     window.addEventListener("resize",()=>{if(effectiveMode()!=="dock")hide(true);else if(activeTarget)show(activeTarget,null,activeCoin);},{passive:true});
     setEnabled(true);
   }
-  globalThis.AgentCryptoTraderNativeFiche=Object.freeze({build:BUILD,setEnabled,setMode,show,showAsset,hide,preferredMode,effectiveMode,dockAvailability,read_only:true,native_contract:"28.3.46+28.3.47+28.3.48+40.1.2"});
+  globalThis.AgentCryptoTraderNativeFiche=Object.freeze({build:BUILD,setEnabled,setMode,show,showAsset,renderInto,hide,preferredMode,effectiveMode,dockAvailability,read_only:true,native_contract:"28.3.46+28.3.47+28.3.48+40.1.2"});
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind,{once:true});else bind();
 })();
