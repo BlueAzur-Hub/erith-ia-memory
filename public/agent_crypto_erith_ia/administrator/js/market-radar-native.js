@@ -319,49 +319,82 @@ function printWatch(root,model){
 async function openOpportunityFiche(root,button,item){
  const status=lookup(root,"status");
  const tell=message=>{if(status)status.textContent=message;};
- if(!item?.id||!item?.symbol||!Number.isInteger(Number(item.rank))){
+ const label=(text,description)=>{
+  button.textContent=text;
+  button.title=description;
+  button.setAttribute("aria-label",description);
+ };
+ if(!item?.id||!item?.symbol||!Number.isInteger(Number(item.rank))||
+    Number(item.rank)<1||Number(item.rank)>1000){
+  label("Fiche !","Fiche indisponible : identité incomplète");
   tell("Fiche Top 1 000 indisponible : identité incomplète");
   return false;
  }
  const native=global.AtlasExtendedNativeFiche;
  const universe=global.AtlasMarketUniverse1000;
  if(typeof native?.resolver!=="function"&&typeof universe?.find!=="function"){
+  label("Fiche !","Fiche native momentanément indisponible");
   tell("Fiche Market native indisponible · aucune fiche fictive créée");
   return false;
  }
+ // Keep the control focusable. A disabled button cannot reliably receive
+ // real focus events, which are the Administrator native Fiche entry point.
+ // aria-busy prevents duplicate async clicks without changing graph focus.
+ if(button.dataset.radarFicheBusy==="1")return false;
+ button.dataset.radarFicheBusy="1";
+ button.setAttribute("aria-busy","true");
  const resolve=()=>typeof native?.resolver==="function"?native.resolver(item.id):universe?.find?.(item.id);
- button.disabled=true;
  try{
   let coin=resolve();
   if(!coin){
-   // Explicit action only: ask the canonical Market to load its own
-   // Extended index, not the Radar's separate snapshot or another renderer.
+   // The native Market index alone resolves the fiche. Never invent a card.
    if(typeof universe?.ensure!=="function")throw Error("index Market Extended indisponible");
    await universe.ensure(1000);
    coin=resolve();
   }
+  if(button.isConnected===false)throw Error("liste actualisée pendant le chargement");
+  // Identity is ID + symbol, not an identical rank across two non-atomic
+  // CoinGecko snapshots. Rank can legitimately move between observations.
+  const rank=Number(coin?.rank);
   if(!coin||String(coin.id)!==String(item.id)||
    String(coin.symbol||"").toUpperCase()!==String(item.symbol).toUpperCase()||
-   Number(coin.rank)!==Number(item.rank))
+   !Number.isInteger(rank)||rank<1||rank>1000)
    throw Error("identité non confirmée dans le Market étendu");
   button.dataset.marketHelpId=String(item.id);
-  button.setAttribute("aria-label","Fiche Market native de "+coin.name+" · aucune sélection de graphique");
-  // Administrator's existing delegated focusin handler owns Flottante,
-  // Latérale and Atlas score. This dispatch never selects a graph or places
-  // an order, and does not create a second Fiche component.
-  button.dispatchEvent(new Event("focusin",{bubbles:true}));
   const layer=document.getElementById("atlasHelpLayer");
   const dock=document.getElementById("atlasMarketCardDockHost");
-  const opened=String(layer?.dataset?.marketHelpCoinId||"")===String(item.id)&&!layer.hidden||
-   String(dock?.dataset?.marketHelpCoinId||"")===String(item.id)&&!dock.hidden;
-  if(!opened)throw Error("ouverture non confirmée par la fiche Market");
-  tell(item.symbol+" · fiche Market native ouverte · aucune sélection du graphique");
+  const openedMode=()=>(
+   String(layer?.dataset?.marketHelpCoinId||"")===String(item.id)&&!layer.hidden?"floating":
+   String(dock?.dataset?.marketHelpCoinId||"")===String(item.id)&&!dock.hidden?"dock":null
+  );
+  // Firefox: a click may already have focused this button BEFORE the
+  // canonical identity was attached. Focusing an already-focused node
+  // does not retrigger focusin, so use the existing delegated handler
+  // after a real focus attempt, without disabling the button.
+  if(typeof button.focus==="function")button.focus({preventScroll:true});
+  if(!openedMode())button.dispatchEvent(new Event("focusin",{bubbles:true}));
+  const mode=openedMode();
+  if(!mode)throw Error("ouverture non confirmée par la fiche Market");
+  if(mode==="dock"){
+   // The native lateral fiche lives in Market, above the Radar study.
+   // Do not silently scroll the page or change the user's Fiche mode.
+   label("Market ↑","Fiche de "+coin.symbol+" ouverte dans le Market, plus haut sur la page");
+  }else{
+   label("Fiche ✓","Fiche Crypto de "+coin.name+" ouverte (flottante)");
+  }
+  tell(item.symbol+" · fiche Market native ouverte"+
+    (rank!==Number(item.rank)?" · rang actualisé "+rank:"")+
+    (mode==="dock"?" · fiche latérale dans Market":"")+" · graphique inchangé");
   return true;
  }catch(error){
   delete button.dataset.marketHelpId;
+  label("Fiche !","Fiche indisponible : "+String(error?.message||error));
   tell("Fiche Top 1 000 suspendue · "+String(error?.message||error));
   return false;
- }finally{button.disabled=false;}
+ }finally{
+  delete button.dataset.radarFicheBusy;
+  button.removeAttribute?.("aria-busy");
+ }
 }
 function printOpportunities(root,model){
  const area=lookup(root,"opportunities"),note=lookup(root,"opportunityNote");
