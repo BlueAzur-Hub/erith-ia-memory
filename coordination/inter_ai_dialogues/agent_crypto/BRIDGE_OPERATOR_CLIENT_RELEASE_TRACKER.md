@@ -1,6 +1,6 @@
 # ERITH.IA — Bridge Operator Client · suivi des livraisons Windows
 
-**État du 16 octobre 2026 : prototype d'authentification en développement, pas de nouvel EXE installable livré.**
+**État du 16 octobre 2026 : préversion Operator Client d'authentification compilée et archivée (EXE Windows + ZIP source + SHA), NON qualifiée pour une exploitation ou un compte OKX privé.**
 
 ## Convention de livraison confirmée dans le fil Crypto
 
@@ -55,7 +55,24 @@ Travaux sur le dépôt privé [malabaryo/tradus](https://github.com/malabaryo/tr
 - [Détail de l'étape auth-only](https://github.com/malabaryo/tradus/blob/main/docs/OPERATOR_CLIENT_AUTH_STAGE.md).
 - [Preuve CI réussie](https://github.com/malabaryo/tradus/actions/runs/38915685248).
 
-La CI vérifie le SHA-256 exact de l'archive R19Y1, transforme le code en un profil Operator générique, compile syntaxiquement Python et exécute les tests de sécurité. Elle ne publie **ni EXE Windows ni archive complète installable**. Elle ne pilote pas les ordres OKX et ne donne pas accès au compte OKX privé. Le Bridge R22 personnel et le Trader 40.6.640 ne sont pas modifiés par cette étape.
+La CI du dépôt privé vérifie le SHA-256 exact de l'archive R19Y1, transforme le code en un profil Operator générique, compile syntaxiquement Python et exécute les tests de sécurité. La CI **du dépôt maître** a ensuite compilé un EXE Windows GUI à partir du Go historique, construit un ZIP complet et vérifié les permissions locales. Cette édition est une **préversion d'authentification uniquement** : elle ne pilote pas les ordres OKX et ne donne pas accès au compte OKX privé. Le Bridge R22 personnel et le Trader 40.6.640 ne sont pas modifiés par cette étape.
+
+## Jalon 16 octobre — préversion Windows archivée sur main (preuves vérifiées)
+
+[GitHub Actions — compilation, vérification PE/ZIP, identité Operator et refus d'élévation](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/38918914363) : **SUCCESS**.
+
+[Commit effectif sur main — 950c4347421e6621c07413a9d9fdf63f36646e2c](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/950c4347421e6621c07413a9d9fdf63f36646e2c), contenant exactement :
+- [ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_COMPLETE_SOURCES.zip](ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_COMPLETE_SOURCES.zip) — dossier source complet, projet Win32 Go, Backend et Bridge public, EXE embarqué et manifeste interne ;
+- [ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_GUI_NO_CONSOLE.exe](ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_GUI_NO_CONSOLE.exe) — Control Center Windows GUI 64 bits compilé ;
+- [ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_SHA256.txt](ERITH_IA_OPERATOR_CLIENT_AUTH_PREVIEW_SHA256.txt) — empreintes SHA-256 ci-dessous.
+
+SHA-256 EXE : `d2a622b1417162dfa7ac8981ed52efda3491e5d4448873b43928a5161edb69b3`.
+
+SHA-256 ZIP : `9865e24bcd71e8d6395e08715d12e1eeff800f171eb6080cda9cd4d335c8055c`.
+
+La compilation est une **cross-compilation Go vers Windows**, vérifiée comme PE Windows GUI x86-64 et contrôlée avec le contenu du ZIP embarqué. Le code d'authentification Operator possède un trust autonome, refuse Owner et ne comporte aucune route de lecture de compte OKX privé ni d'ordre financier. Les scripts et le Control Center redirigent vers l'Interface Operator publique 40.6.640. **Aucune preuve d'utilisation sous Windows natif / Firefox sur le PC de Yoann, aucune signature de code Windows, pas d'Ollama embarqué.**
+
+Statut exact : **preview exécutable, non production**. La paire finale `ERITH_IA_OPERATOR_CLIENT_COMPLETE_SOURCES.zip` / `ERITH_IA_OPERATOR_CLIENT_CONTROL_CENTER_GUI_NO_CONSOLE.exe` ne devra être produite que lorsque les capacités Operator voulues et la validation terrain seront effectivement prouvées.
 
 ## Étapes bloquantes avant publication des deux fichiers définitifs
 
@@ -66,4 +83,4 @@ La CI vérifie le SHA-256 exact de l'archive R19Y1, transforme le code en un pro
 5. Obtenir tests automatiques puis recette Firefox/Windows sur un PC client avant de qualifier la version de production.
 6. Déposer **ensemble** le ZIP source, l'EXE et le fichier SHA-256 ici avec commit GitHub et preuve de build.
 
-**STOP** : la présence du présent suivi dans ce dossier **n'est pas une livraison de Bridge**. Elle fixe l'emplacement de livraison demandé et empêche de confondre le prototype avec un EXE utilisable.
+**STOP** : le ZIP et l'EXE de préversion sont désormais archivés, mais **pas validés sur un PC Windows réel**. Leur présence ne valide pas une édition Operator complète ni le trading OKX. Ne pas remplacer un Bridge de production par cette préversion.
