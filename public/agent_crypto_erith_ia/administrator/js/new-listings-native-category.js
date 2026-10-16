@@ -1046,15 +1046,30 @@
   function ensureNativeRadar(){
     if(radarNativePromise)return radarNativePromise;
     radarNativePromise=(async()=>{
+      // Reader and renderer are independent until mount: fetch both together.
+      // Neither boot nor the first click should serialize these downloads.
+      const loads=[];
       if(!globalThis.AgentCryptoRadarReader)
-        await loadRadarScript("../laboratoire/radar.js");
-      if(!globalThis.AgentCryptoRadarReader)throw new Error("Lecteur Radar non disponible");
+        loads.push(loadRadarScript("../laboratoire/radar.js"));
       if(!globalThis.AgentCryptoRadarNative)
-        await loadRadarScript("./js/market-radar-native.js");
+        loads.push(loadRadarScript("./js/market-radar-native.js"));
+      await Promise.all(loads);
+      if(!globalThis.AgentCryptoRadarReader)throw new Error("Lecteur Radar non disponible");
       if(!globalThis.AgentCryptoRadarNative?.mount)throw new Error("Présentation native Radar non disponible");
       return true;
     })().catch(error=>{radarNativePromise=null;throw error;});
     return radarNativePromise;
+  }
+  function warmNativeRadar(view){
+    // Trader only: initialize the shared Radar IN THE HIDDEN VIEW at boot.
+    // Its public snapshot/Bitget/PAPER requests complete before the operator
+    // first opens it. The first click only changes visibility; no new owner.
+    void ensureNativeRadar().then(()=>{
+      if(view.isConnected)globalThis.AgentCryptoRadarNative.mount(view);
+    }).catch(error=>{
+      if(state.radarOpen&&view.isConnected)
+        view.textContent="Radar indisponible : "+String(error?.message||error);
+    });
   }
   function radarView(open){
     const panel=document.getElementById("marketSnapshotPanel");
@@ -1120,6 +1135,10 @@
     view.hidden=true;
     view.setAttribute("aria-label","Radar Marché et nouveaux listings en lecture seule");
     tools.insertAdjacentElement("afterend",view);
+    // Prewarm only the Trader. Administrator keeps its existing on-demand
+    // behavior so consultation and public Market are not slowed unnecessarily.
+    if(new URLSearchParams(location.search).get("surface")==="trader")
+      queueMicrotask(()=>warmNativeRadar(view));
     tab.addEventListener("click",event=>{
       event.preventDefault();
       event.stopImmediatePropagation();

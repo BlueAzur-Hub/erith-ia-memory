@@ -107,6 +107,11 @@ assert(tab.includes('atlasRadarMarketView')&&tab.includes('view.hidden=!visible'
 assert(tab.includes('aria-pressed')&&tab.includes('aria-expanded'),"Native Radar supports accessible toggling");
 assert(native.includes('loadRadarScript("../laboratoire/radar.js")'),"Native Radar reuses exact standalone public parser");
 assert(native.includes('loadRadarScript("./js/market-radar-native.js")'),"Native Radar loads a dedicated themed renderer");
+assert(native.includes('await Promise.all(loads)'),"Radar reader and renderer load concurrently");
+assert(native.includes('queueMicrotask(()=>warmNativeRadar(view))'),"Trader warms the Radar before the first click");
+assert(native.includes('if(new URLSearchParams(location.search).get("surface")==="trader")'),"Prewarm isolated to Trader");
+assert(native.includes('if(view.isConnected)globalThis.AgentCryptoRadarNative.mount(view)'),"Radar pre-renders inside its hidden native view");
+assert(native.includes('if(radarNativePromise)return radarNativePromise'),"Multiple callers reuse a single preload");
 assert(tab.includes('theme.href=new URL("./market-radar-native.css"'),"Native Radar includes its scoped theme");
 assert(!tab.includes('iframe')&&!tab.includes('frame.src'),"Nested standalone iframe removed");
 assert(native.includes('if(state.radarOpen)radarView(false)'),"Canonical Market buttons return to native table");
