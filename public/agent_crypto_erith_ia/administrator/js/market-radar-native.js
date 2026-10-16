@@ -316,6 +316,53 @@ function printWatch(root,model){
    "Journal PAPER inaccessible · aucun signal supposé";
  
 }
+async function openOpportunityFiche(root,button,item){
+ const status=lookup(root,"status");
+ const tell=message=>{if(status)status.textContent=message;};
+ if(!item?.id||!item?.symbol||!Number.isInteger(Number(item.rank))){
+  tell("Fiche Top 1 000 indisponible : identité incomplète");
+  return false;
+ }
+ const native=global.AtlasExtendedNativeFiche;
+ const universe=global.AtlasMarketUniverse1000;
+ if(typeof native?.resolver!=="function"&&typeof universe?.find!=="function"){
+  tell("Fiche Market native indisponible · aucune fiche fictive créée");
+  return false;
+ }
+ const resolve=()=>typeof native?.resolver==="function"?native.resolver(item.id):universe?.find?.(item.id);
+ button.disabled=true;
+ try{
+  let coin=resolve();
+  if(!coin){
+   // Explicit action only: ask the canonical Market to load its own
+   // Extended index, not the Radar's separate snapshot or another renderer.
+   if(typeof universe?.ensure!=="function")throw Error("index Market Extended indisponible");
+   await universe.ensure(1000);
+   coin=resolve();
+  }
+  if(!coin||String(coin.id)!==String(item.id)||
+   String(coin.symbol||"").toUpperCase()!==String(item.symbol).toUpperCase()||
+   Number(coin.rank)!==Number(item.rank))
+   throw Error("identité non confirmée dans le Market étendu");
+  button.dataset.marketHelpId=String(item.id);
+  button.setAttribute("aria-label","Fiche Market native de "+coin.name+" · aucune sélection de graphique");
+  // Administrator's existing delegated focusin handler owns Flottante,
+  // Latérale and Atlas score. This dispatch never selects a graph or places
+  // an order, and does not create a second Fiche component.
+  button.dispatchEvent(new Event("focusin",{bubbles:true}));
+  const layer=document.getElementById("atlasHelpLayer");
+  const dock=document.getElementById("atlasMarketCardDockHost");
+  const opened=String(layer?.dataset?.marketHelpCoinId||"")===String(item.id)&&!layer.hidden||
+   String(dock?.dataset?.marketHelpCoinId||"")===String(item.id)&&!dock.hidden;
+  if(!opened)throw Error("ouverture non confirmée par la fiche Market");
+  tell(item.symbol+" · fiche Market native ouverte · aucune sélection du graphique");
+  return true;
+ }catch(error){
+  delete button.dataset.marketHelpId;
+  tell("Fiche Top 1 000 suspendue · "+String(error?.message||error));
+  return false;
+ }finally{button.disabled=false;}
+}
 function printOpportunities(root,model){
  const area=lookup(root,"opportunities"),note=lookup(root,"opportunityNote");
  if(!area||!note)return;area.replaceChildren();
@@ -337,15 +384,7 @@ function printOpportunities(root,model){
      " · "+item.riskNote));
    const button=node("button","btn small","Fiche");button.type="button";
    button.setAttribute("aria-label","Fiche Crypto de "+item.name+" · aucune sélection de graphique");
-   button.addEventListener("click",()=>{
-    const observation=global.AgentCryptoRadarReader.observeMarket(item);
-    const asset={...item,radarSource:"CoinGecko · snapshot public USD · veille Top1000",
-     radarObservedAt:item.sourceSnapshot,radarObservation:observation.label,
-     radarReason:observation.detail,
-     radarEvidence:"Cotation agrégée · ni carnet, ni spread, ni historique de bougies qualifié · "+item.riskNote};
-    const ok=global.AgentCryptoTraderNativeFiche?.showAsset?.(button,asset);
-    if(ok===false)lookup(root,"status").textContent="Fiche Market indisponible ; aucune fenêtre secondaire créée";
-   });
+   button.addEventListener("click",()=>void openOpportunityFiche(root,button,item));
    row.append(button);list.append(row);
   }
   if(!result[key].length)list.append(node("p","table-note","Aucun actif ne satisfait les critères"));
@@ -441,6 +480,6 @@ function mount(root){
  return true;
 }
 if(typeof module!=="undefined"&&module.exports)
- module.exports=Object.freeze({selectGraph,compactMoney,printMarket});
+ module.exports=Object.freeze({selectGraph,compactMoney,printMarket,openOpportunityFiche});
 global.AgentCryptoRadarNative=Object.freeze({mount});
 })(typeof globalThis!=="undefined"?globalThis:this);
