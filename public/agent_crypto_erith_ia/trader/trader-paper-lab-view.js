@@ -4,6 +4,9 @@
 const core=globalThis.AgentCryptoPaperLabCore;
 if(!core||typeof document==="undefined")return;
 const ID="traderPaperLab",captures=new Map(),positions=new Map(),journal=[];
+const automaticPositions=new Map(),automaticLastAt=new Map();
+const AUTO_GAP_MS=5*60*1000,AUTO_LIMIT=20;
+let automatic=false,automaticCount=0;
 const qs=key=>document.getElementById(ID)?.querySelector("[data-lab-"+key+"]");
 const show=(key,value)=>{const node=qs(key);if(node)node.textContent=String(value??"—")};
 const safe=fn=>{try{return fn()}catch(_){return null}};
@@ -43,8 +46,11 @@ function refresh(){
       c.points+" points · "+c.source+" · "+new Date(c.lastAt).toLocaleString("fr-FR")
       :"aucune observation");
   }).join("\n"));
-  show("open",positions.size?[...positions.values()].map(p=>p.entry.asset+
-    " · "+fmt(p.entry.price,8)+" USD · "+p.entry.lastAt).join("\n"):"Aucune");
+  const manual=positions.size?[...positions.values()].map(p=>p.entry.asset+
+    " · "+fmt(p.entry.price,8)+" USD · "+p.entry.lastAt):[];
+  const auto=[...automaticPositions.values()].map(p=>p.entry.asset+
+    " · AUTO · "+fmt(p.entry.price,8)+" USD · "+p.entry.lastAt);
+  show("open",manual.concat(auto).join("\n")||"Aucune");
   show("journal",journal.length?journal.map(j=>j.at+" · "+j.kind+" · "+j.asset+
     (j.result?" · "+fmt(j.result.paperProfit,6)+" USD papier":"")).join("\n"):"Journal vide (session volatile)");
 }
@@ -100,6 +106,58 @@ function finish(){
   show("status","Comparaison prospective réalisée sur deux relevés publics datés.");
   refresh();
 }
+// Opt-in automatic observation: triggered only by canonical already-loaded
+// chart events; no timer, HTTP, strategy gate, balance or exchange action.
+function automaticTick(){
+  if(!automatic||automaticCount>=AUTO_LIMIT)return null;
+  const v=source();
+  if(!v.input)return null;
+  const c=core.qualify(v.input);
+  if(!c.ok)return null;
+  const at=Date.parse(c.lastAt),old=automaticLastAt.get(c.asset)||0;
+  if(at<=old||!Number.isFinite(at))return null;
+  const plan=core.assess({...assumptions(),price:c.price});
+  if(!plan.ok){show("status",plan.reason);return null;}
+  const running=automaticPositions.get(c.asset);
+  if(running){
+    if(at-Date.parse(running.entry.lastAt)<AUTO_GAP_MS)return null;
+    const value=core.prospective(running.entry,c,running.config);
+    if(!value.ok){show("status","Auto PAPER : "+value.reason);return null;}
+    automaticPositions.delete(c.asset);
+    automaticLastAt.set(c.asset,at);
+    automaticCount++;
+    add("AUTO_EVALUATION_PAPER",c.asset,{result:value});
+    show("result","AUTO PAPER "+c.asset+" · variation "+fmt(value.movePct,3)+
+      " % · "+(value.paperProfit>0?"+":"")+fmt(value.paperProfit,6)+
+      " USD fictifs sur "+fmt(value.capital,2)+" USD. Pas d'ordre réel.");
+  }else{
+    automaticLastAt.set(c.asset,at);
+    automaticCount++;
+    automaticPositions.set(c.asset,{entry:c,config:assumptions()});
+    add("AUTO_DEPART_PAPER",c.asset,{entryAt:c.lastAt,source:c.source});
+    show("result","AUTO PAPER "+c.asset+" · source qualifiée "+c.source+
+      "\nCours "+fmt(c.price,8)+" USD · coût simulé ; point mort +"+
+      fmt(plan.breakEvenMovePct,3)+" % · scénarios −5/0/+5 % : "+
+      plan.scenarios.map(r=>fmt(r.profit,5)+" USD").join(" / ")+
+      "\nNouvelle observation nécessaire pour mesurer le résultat.");
+  }
+  captures.set(c.asset,c);
+  show("status","Auto PAPER actif · "+automaticCount+"/"+AUTO_LIMIT+
+    " observations · "+c.asset+" · "+new Date(at).toLocaleString("fr-FR")+
+    " · uniquement lors des mises à jour réelles du graphique.");
+  if(automaticCount>=AUTO_LIMIT){automatic=false;show("status","Auto PAPER arrêté : limite de 20 observations atteinte.");}
+  refresh();return c;
+}
+function setAutomatic(enabled){
+  automatic=Boolean(enabled)&&automaticCount<AUTO_LIMIT;
+  const btn=qs("auto");
+  if(btn){btn.textContent=automatic?"Arrêter Auto PAPER":"Démarrer Auto PAPER";
+    btn.setAttribute("aria-pressed",String(automatic));}
+  show("status",automatic?
+    "Auto PAPER actif uniquement dans cet onglet : attend les nouveaux cours BTC/CT déjà chargés.":
+    "Auto PAPER arrêté, journal conservé seulement dans cet onglet.");
+  if(automatic)automaticTick();
+}
 function mount(){
   if(document.getElementById(ID))return true;
   const zone=document.getElementById("market-zone");if(!zone)return false;
@@ -127,17 +185,24 @@ function mount(){
     '<button type="button" data-lab-simulate>Simuler −5 / 0 / +5 %</button>',
     '<button type="button" data-lab-begin>Ouvrir scénario prospectif</button>',
     '<button type="button" data-lab-finish>Évaluer sur un nouveau relevé</button>',
+    '<button type="button" data-lab-auto aria-pressed="false">Démarrer Auto PAPER</button>',
     '<button type="button" data-lab-copy>Copier le journal</button>',
     '<p role="status" data-lab-status>En attente d’une capture volontaire.</p>',
     '<h4>Observations BTC / CT</h4><pre data-lab-observations></pre>',
     '<h4>Résultat</h4><pre data-lab-result>Pas de valeur inventée.</pre>',
     '<h4>Observations PAPER ouvertes</h4><pre data-lab-open></pre>',
     '<h4>Journal prospectif · session seulement</h4><pre data-lab-journal></pre>',
-    '<p>Une évaluation exige une cotation ultérieure de la même paire/source. Aucun fetch nouveau, aucun ordre OKX, aucune sauvegarde automatique, aucune promotion des gates Strategy A. Le journal non exporté disparaît à la fermeture de la page.</p></div>'
+    '<p>Auto PAPER (facultatif) : écoute uniquement les nouveaux événements du graphique BTC ou CT déjà sélectionné, sans relancer les marchés. Mesure prospective après ≥5 min de nouvelle donnée, avec un maximum de 20 observations ; s’arrête lors du rechargement ou de la fermeture. Les deux actifs ne sont pas suivis simultanément sans séries réellement publiées. Aucun fetch nouveau, aucun ordre OKX, aucune sauvegarde automatique, aucune promotion des gates Strategy A.</p></div>'
   ].join("");
   zone.appendChild(node);
   for(const [key,fn] of [["capture",take],["simulate",simulate],["begin",begin],["finish",finish]])
     qs(key)?.addEventListener("click",fn);
+  qs("auto")?.addEventListener("click",()=>setAutomatic(!automatic));
+  for(const event of ["agent-crypto:new-listing-line-ready",
+    "agent-crypto:graph-context-ready","agent-crypto:workspace-restored",
+    "agent-crypto:selected-market-changed"]){
+    globalThis.addEventListener(event,automaticTick,{passive:true});
+  }
   qs("copy")?.addEventListener("click",async()=>{
     try{await navigator.clipboard.writeText(JSON.stringify({paper:true,realOrders:false,events:journal},null,2));
       show("status","Journal PAPER copié localement. Aucun envoi.");}
@@ -148,6 +213,8 @@ function mount(){
 }
 globalThis.AgentCryptoTraderPaperLab=Object.freeze({mount,take,simulate,begin,finish,source,
   snapshot:()=>({captured:[...captures.keys()],open:[...positions.keys()],
+    autoOpen:[...automaticPositions.keys()],autoActive:automatic,
+    autoCount:automaticCount,autoLimit:AUTO_LIMIT,
     journalCount:journal.length,realOrders:false,network:false,storage:false}),
   realOrders:false,network:false,storage:false,bridge:false,readOnly:true});
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});
