@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>ERITH.IA · Cas d'école NeoSoul DNA · PAPER 48h</title>
+<style>
+:root{color-scheme:dark;--bg:#061520;--panel:#0b2735;--border:#244f60;--txt:#e5f5f6;--dim:#aac8d0;--cyan:#91e8ee;--gold:#f2d191;--green:#80e6bf}
+*{box-sizing:border-box}body{background:radial-gradient(ellipse at 82% -10%,#194558,transparent 50%),var(--bg);color:var(--txt);font:14px/1.6 system-ui,sans-serif;margin:0}
+main{max-width:1140px;margin:auto;padding:28px 18px 60px}
+a{color:var(--cyan)}a:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+header{display:flex;gap:15px;justify-content:space-between;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--border);padding-bottom:16px}
+h1{font:normal clamp(27px,4vw,41px)/1.18 Georgia,serif;color:#ffedc3;margin:5px 0}
+h2{font-size:18px;color:var(--gold);margin:0 0 10px}h3{color:#c6f7f5;font-size:14px}
+.kicker{font-weight:800;letter-spacing:.12em;color:var(--cyan);font-size:11px}
+.dna-logo{display:grid;place-items:center;width:55px;height:55px;border:2px solid var(--cyan);border-radius:15px;background:#134153;color:#c9fbef;font-weight:850;font-size:21px}
+.hero{display:flex;gap:16px;align-items:center}p{color:var(--dim);margin:8px 0 14px}
+.badge{display:inline-block;border:1px solid #527e88;border-radius:99px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--cyan)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0}
+.stat,.panel{border:1px solid var(--border);background:linear-gradient(128deg,#0b2a39,#081d2c);border-radius:13px;padding:16px}
+.stat small{display:block;color:var(--dim)}.stat strong{font-size:19px;overflow-wrap:anywhere}
+.panel{margin:16px 0}ul{padding-left:21px;color:#cce1e5}li{margin-bottom:6px}.warn{border-left:3px solid #d5ae68;padding:10px 12px;background:#262616;color:#f1dfaa;border-radius:6px}
+.panel p{margin:7px 0 12px}fieldset{border:1px solid var(--border);border-radius:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:13px}
+legend{padding:0 6px;color:var(--gold);font-weight:700}
+label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--dim)}
+input{color:white;background:#071a26;border:1px solid #4b7483;border-radius:8px;min-width:0;padding:9px 10px;font:inherit}
+button{margin:14px 0 8px;background:#155369;border:1px solid #64b3b9;border-radius:8px;color:#e7fdff;padding:9px 14px;font-weight:750;cursor:pointer;font:inherit}
+.table-scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:450px;margin-top:8px}th,td{padding:9px;border-bottom:1px solid #285164;text-align:right;font-variant-numeric:tabular-nums}th:first-child,td:first-child{text-align:left}th{color:var(--dim);font-size:11px}
+.result{background:#051a26;border:1px solid var(--border);border-radius:9px;padding:12px;margin:10px 0}
+small,footer{color:var(--dim)}code{white-space:normal;overflow-wrap:anywhere}
+@media(max-width:840px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}fieldset{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:470px){main{padding:15px 10px}.stats,fieldset{grid-template-columns:1fr}.hero{align-items:flex-start}}
+</style>
+<script defer src="../trader/trader-paper-lab-core.js"></script>
+<script defer src="./cas-ecole-neosoul.js"></script>
+</head>
+<body><main>
+<header>
+ <div class="hero"><div class="dna-logo" aria-hidden="true">DNA</div><div>
+  <div class="kicker">ERITH.IA · LABORATOIRE · PREMIÈRE COTATION</div>
+  <h1>NeoSoul · DNA</h1>
+  <span class="badge">Cas d'école PAPER · 48 heures</span>
+ </div></div>
+ <nav aria-label="Navigation"><a href="../trader/trading-desk.html">← Trader</a> · <a href="radar.html">Radar</a> · <a href="cas-ecole-concrete.md">Étude CT</a></nav>
+</header>
+<p>Étudier les 48 premières heures d'un actif IA récemment coté, sans confondre identité, prix affiché, marché Spot et contrats perpétuels. Ce dossier ne passe aucun ordre et ne consulte aucun compte privé.</p>
+<div class="stats">
+ <div class="stat"><small>Actif étudié</small><strong>NeoSoul / DNA</strong><div>BNB Chain</div></div>
+ <div class="stat"><small>Spot annoncé</small><strong>Bitget DNA/USDT</strong><div>16/10/2026 · 11 h UTC</div></div>
+ <div class="stat"><small>OKX</small><strong>Perpétuel annoncé</strong><div>Spot non confirmé pour l'EEE</div></div>
+ <div class="stat"><small>Durée</small><strong>48 heures</strong><div>16 → 18 octobre · suivi prospectif</div></div>
+</div>
+<section class="panel" aria-labelledby="identity">
+<h2 id="identity">1 · Identité et provenance</h2>
+<p>Contrat officiel publié pour NeoSoul DNA sur BNB Chain : <code>0xA991F61940095AEA0724ef54077223B048c5CF7b</code>.</p>
+<ul>
+<li><a href="https://www.bitget.com/support/articles/12560603897627" rel="noopener noreferrer" target="_blank">Bitget · annonce Spot DNA/USDT</a> : lancement à 11 h UTC le 16 octobre.</li>
+<li><a href="https://www.okx.com/fr/help/okx-to-list-perpetual-futures-for-dna-crypto" rel="noopener noreferrer" target="_blank">OKX · annonce DNA/USDT perpétuel</a> : ce n'est pas une preuve de Spot.</li>
+<li><a href="https://bscscan.com/token/0xA991F61940095AEA0724ef54077223B048c5CF7b" rel="noopener noreferrer" target="_blank">Contrat BNB Chain</a> : éviter les homonymes DNA.</li>
+</ul>
+<p class="warn">La variation de +2 868,60 % montrée dans la fiche de lancement n'est pas une performance achetable prouvée. Le graphique montre une autre fenêtre, environ +34,03 %. Les bases temporelles et les sources ne sont pas identiques.</p>
+</section>
+<section class="panel" aria-labelledby="sim">
+<h2 id="sim">2 · Expérience DNA · capital fictif, 48 heures</h2>
+<p>Le cours initial <strong>0,296674 $US</strong> provient d'une capture du Trader du 16 octobre vers 17 h 37. Il s'agit d'un <strong>prix d'affichage USD</strong> dérivé du marché Bitget DNA/USDT : ce n'est pas un cours d'exécution Spot certifié. Le résultat à 48 heures est encore inconnu.</p>
+<p class="warn">Le budget souhaité est de <strong>2 USDC fictifs</strong>. Le calcul ci-dessous est réalisé en <strong>2 USD PAPER notionnels</strong> pour comparer les scénarios ; il ne prétend pas convertir réellement USDC → USDT. Les taux de change, minimums d'ordre et la profondeur du carnet ne sont pas vérifiés.</p>
+<fieldset><legend>Hypothèses modifiables — aucune donnée privée</legend>
+<label>Capital (USD PAPER)<input id="dna-capital" inputmode="decimal" value="2" aria-label="Capital PAPER USD"></label>
+<label>Prix de référence (USD affiché)<input id="dna-price" inputmode="decimal" value="0,296674" aria-label="Prix de référence fictif"></label>
+<label>Frais entrée (%)<input id="dna-in-fee" inputmode="decimal" value="0,2"></label>
+<label>Frais sortie (%)<input id="dna-out-fee" inputmode="decimal" value="0,2"></label>
+<label>Spread total (%)<input id="dna-spread" inputmode="decimal" value="0,1"></label>
+<label>Glissement par côté (%)<input id="dna-slip" inputmode="decimal" value="0,1"></label>
+</fieldset>
+<button type="button" id="dna-calc">Recalculer les cinq scénarios</button>
+<div id="dna-result" class="result table-scroll" role="status" aria-live="polite">Calcul en attente...</div>
+<p id="dna-threshold"></p>
+<small>Le modèle reprend la fonction <code>AgentCryptoPaperLabCore.assess</code> du Trader. Les variations −20 %, −5 %, 0 %, +5 % et +20 % sont <strong>des hypothèses</strong>, pas des prédictions. Le coût d'entrée est soumis à une hypothèse de frais ; une conversion monétaire et un éventuel minimum d'ordre changeraient le résultat.</small>
+</section>
+<section class="panel" aria-labelledby="btc">
+<h2 id="btc">3 · Référence BTC réel · observation 14 jours</h2>
+<p>Photo du compte OKX fournie le 16 octobre : BTC valorisé autour de <strong>6,35 $US</strong>, réserve <strong>4,38 USDC</strong>. Le coût de revient de la position BTC totale n'est pas prouvé ; on ne calcule donc pas de P&amp;L réalisé. Aucun achat ni vente envisagé dans ce comparatif.</p>
+<div id="btc-result" class="result table-scroll">Calcul en attente...</div>
+<p id="btc-note"></p>
+<small>Réévaluer le 30 octobre avec les cours et soldes réellement constatés ; ne pas confondre BTC actuel, variation future hypothétique et rendement depuis l'achat.</small>
+</section>
+<section class="panel" aria-labelledby="outcomes">
+<h2 id="outcomes">4 · Ce qu'il faudra constater après 48 heures</h2>
+<ul>
+<li>Deux snapshots DNA/USDT Spot Bitget <strong>horodatés</strong>, séparés de 48 heures environ, avec la même paire et la même source.</li>
+<li>Cotations bid/ask, spread, quantité négociable, minNotional/minSize, frais et disponibilité régionale réellement vérifiés.</li>
+<li>Si la conversion est nécessaire, USDC/USDT explicitement observé ; ne jamais supposer l'égalité automatique.</li>
+<li>Ne pas appeler « gain » la hausse en pourcentage d'une fiche de cotation ; calculer le net hypothétique après coûts et les refus d'exécution.</li>
+</ul>
+<p><strong>Statut au départ :</strong> données d'annonce vérifiées ; cours initial capturé sous forme d'affichage USD ; <strong>aucune entrée PAPER exécutable certifiée</strong> et aucune position réelle DNA ouverte.</p>
+</section>
+<footer>ERITH.IA · Cas d'école NeoSoul DNA · Démonstration locale, déterministe et sans fetch. Ne modifie pas le Trader, le Radar, le Bridge R22 ni les bots OKX.</footer>
+</main></body></html>
