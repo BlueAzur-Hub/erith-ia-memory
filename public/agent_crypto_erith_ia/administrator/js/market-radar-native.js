@@ -15,7 +15,9 @@ const pct=v=>typeof v!=="number"||!Number.isFinite(v)?"—":(v>0?"+":"")+v.toFix
 const safeDate=v=>{if(!v)return"—";const d=new Date(v);return Number.isNaN(d.getTime())?"—":d.toLocaleString("fr-FR");};
 const compactMoney=v=>typeof v==="number"&&Number.isFinite(v)&&v>=0?
   new Intl.NumberFormat("fr-FR",{style:"currency",currency:"USD",notation:"compact",maximumFractionDigits:2}).format(v):"—";
-const lookup=(root,id)=>root.querySelector('[data-radar-native="'+id+'"]');
+// One Radar model: Market ranking stays beside Math; studies live below both.
+const lookup=(root,id)=>root.querySelector('[data-radar-native="'+id+'"]')||
+ root.radarBelowMarket?.querySelector('[data-radar-native="'+id+'"]')||null;
 const node=(tag,className,text)=>{const el=document.createElement(tag);if(className)el.className=className;if(text!==undefined)el.textContent=text;return el;};
 function cell(row,txt,cls){const td=node("td",cls||"",txt);row.appendChild(td);return td;}
 // Reuse the canonical Market facts and source; never claim a live trading quote.
@@ -154,9 +156,30 @@ function clickable(row,identity,root,model,coin){
   row.addEventListener('blur',()=>global.AgentCryptoTraderNativeFiche?.hide?.());
  }
 }
+function mountBelowMarket(root){
+ const workspace=document.getElementById("marketWorkspaceGrid");
+ if(!workspace?.contains?.(root)||!workspace.parentElement)return null;
+ let shelf=document.getElementById("atlasRadarBelowMarket");
+ if(!shelf){
+  shelf=node("section","radar-native-below");
+  shelf.id="atlasRadarBelowMarket";
+  shelf.hidden=true;
+  shelf.setAttribute("aria-label","Radar · Nouveaux listings Spot et veille PAPER");
+  shelf.append(node("div","radar-native"));
+  // Outside the Market/Math grid; never creates a second Math or Radar owner.
+  workspace.insertAdjacentElement("afterend",shelf);
+ }
+ const content=shelf.querySelector(".radar-native");
+ if(!content)return null;
+ content.replaceChildren();
+ shelf.hidden=!document.getElementById("marketSnapshotPanel")?.classList?.contains("atlas-radar-open");
+ root.radarBelowMarket=shelf;
+ return content;
+}
 function build(root){
  root.replaceChildren();
  root.classList.add("radar-native");
+ const supplementary=mountBelowMarket(root)||root;
  const header=node("div","radar-native-head");
  const intro=node("div","");
  intro.append(node("p","eyebrow","RADAR · SURVEILLANCE PUBLIQUE"),node("h3","","Marchés et opportunités PAPER"));
@@ -197,15 +220,15 @@ function build(root){
  const watching=node("section","radar-native-block");watching.append(node("h3","","Veille PAPER · BTC / CT / MHA"));
  const cards=node("div","radar-native-cards");cards.dataset.radarNative="watch";watching.append(cards);
  const journal=node("p","table-note","Observateur GitHub indépendant · données non encore chargées");journal.dataset.radarNative="journal";watching.append(journal);
- bottom.append(listings,watching);root.append(bottom);
+ bottom.append(listings,watching);supplementary.append(bottom);
  const opportunities=node("section","radar-native-block radar-native-opportunities");
  opportunities.append(node("h3","","Veille élargie · Top 1 000 (étude)"));
  const oNote=node("p","table-note","Chargement de l'archive étendue · aucune paire Spot validée ici");
  oNote.dataset.radarNative="opportunityNote";opportunities.append(oNote);
  const oRows=node("div","radar-native-opportunity-grid");oRows.dataset.radarNative="opportunities";
- opportunities.append(oRows);root.append(opportunities);
+ opportunities.append(oRows);supplementary.append(opportunities);
  const foot=node("p","table-note","Lecture seule · aucun ordre OKX · USDT n'est pas automatiquement USDC · Radar20 de recherche inchangé");
- root.append(foot);
+ supplementary.append(foot);
  return {filter,sort,tbody,lb,refresh,group};
 }
 function printMarket(root,model){

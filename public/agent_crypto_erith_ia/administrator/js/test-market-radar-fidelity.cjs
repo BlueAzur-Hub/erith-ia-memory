@@ -89,7 +89,7 @@ test("Radar Market fidelity does not introduce a second graph, iframe, OKX or tr
  assert.match(js,/new URL\("..\/laboratoire\/radar.html"/);
  for(const forbidden of ["createElement(\"iframe\")","api/v5/trade/order","localStorage.setItem","submitOrder(","withdrawal"])
   assert.equal(js.includes(forbidden),false,forbidden);
- assert.match(css,/#marketSnapshotPanel \.radar-native-market-row/);
+ assert.match(css,/:is\(#marketSnapshotPanel, #atlasRadarBelowMarket\) \.radar-native-market-row/);
  assert.equal(css.includes("#marketRows tr"),false);
 });
 
@@ -134,4 +134,20 @@ test("Radar requires the matching canonical chart before announcing Solo success
   globalThis.AtlasExternalChart=previous.chart;
   globalThis.atlasTraderExternalSelectionClear=previous.clear;
  }
+});
+
+test("Radar studies follow Market/Math grid; the original native Market stays in place",()=>{
+ const native=fs.readFileSync(path.join(__dirname,"market-radar-native.js"),"utf8");
+ const category=fs.readFileSync(path.join(__dirname,"new-listings-native-category.js"),"utf8");
+ const stylesheet=fs.readFileSync(path.join(__dirname,"../market-radar-native.css"),"utf8");
+ const html=fs.readFileSync(path.join(__dirname,"../index.html"),"utf8");
+ assert.match(html,/id="marketWorkspaceGrid"/);
+ assert.match(html,/id="math"/);
+ assert.match(native,/workspace\.insertAdjacentElement\("afterend",shelf\)/);
+ for(const element of ["bottom","opportunities","foot"])
+  assert.ok(native.includes("supplementary.append("+element+")"));
+ assert.match(native,/root\.radarBelowMarket\?\.querySelector/);
+ assert.match(category,/supplementary\.hidden=!visible/);
+ assert.match(stylesheet,/#atlasRadarBelowMarket\[hidden\]\{display:none!important\}/);
+ assert.match(stylesheet,/#atlasRadarBelowMarket \.radar-native-bottom/);
 });
