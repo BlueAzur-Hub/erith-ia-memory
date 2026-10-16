@@ -1017,9 +1017,23 @@
     },true);
   }
 
+  function mountRadarLink(){
+    // Separate public research desk, never a second Market or graph owner.
+    const button=document.getElementById(BUTTON_ID);
+    if(!button||!button.parentElement||document.getElementById("atlasPublicRadarLink"))return;
+    const a=document.createElement("a");
+    a.id="atlasPublicRadarLink";
+    a.href=new URL("../laboratoire/radar.html",document.baseURI).href;
+    a.target="_blank";a.rel="noopener noreferrer";
+    a.textContent="Radar ↗";
+    a.title="Radar · Top 10/20/50/250, nouveaux listings Spot, BTC/CT PAPER";
+    a.setAttribute("aria-label","Ouvrir Radar Marché et nouveaux listings en lecture seule");
+    a.style.cssText="display:inline-flex;align-items:center;white-space:nowrap;padding:7px 11px;border:1px solid #49858a;border-radius:24px;color:#9cebf0;text-decoration:none;font-size:12px;font-weight:700;background:#102e3c";
+    button.insertAdjacentElement("afterend",a);
+  }
   function mount(){
     if(typeof document==="undefined")return false;
-    hideLegacyUx();patchUniverseResolver();wrapMarketRender();bindRows();bindCategoryButton();bindSearch();
+    hideLegacyUx();patchUniverseResolver();wrapMarketRender();bindRows();bindCategoryButton();bindSearch();mountRadarLink();
     if(!state.mounted){bindOtherFilters();bindPeriod();bindPresentationRefresh();bindCanonicalExit();state.mounted=true;}
     renderCategory();
     return true;
