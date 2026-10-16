@@ -151,3 +151,50 @@ test("Radar studies follow Market/Math grid; the original native Market stays in
  assert.match(stylesheet,/#atlasRadarBelowMarket\[hidden\]\{display:none!important\}/);
  assert.match(stylesheet,/#atlasRadarBelowMarket \.radar-native-bottom/);
 });
+
+test("Top1000 fiche uses existing Administrator native Market after exact identity warmup",async()=>{
+ const native=require("./market-radar-native.js");
+ const old={universe:globalThis.AtlasMarketUniverse1000,fiche:globalThis.AtlasExtendedNativeFiche,document:globalThis.document};
+ try{
+  let warmed=false,loads=0,events=0;
+  const item={id:"siren",name:"Siren",symbol:"SIREN",rank:619};
+  const universe={ensure:async limit=>{assert.equal(limit,1000);loads++;warmed=true;},
+   find:id=>warmed&&id===item.id?item:null};
+  globalThis.AtlasMarketUniverse1000=universe;
+  globalThis.AtlasExtendedNativeFiche={resolver:id=>universe.find(id)};
+  const layer={dataset:{},hidden:false};
+  globalThis.document={getElementById:id=>id==="atlasHelpLayer"?layer:null};
+  const button={dataset:{},disabled:false,setAttribute:()=>{},
+   dispatchEvent:event=>{assert.equal(event.type,"focusin");events++;
+    layer.dataset.marketHelpCoinId=button.dataset.marketHelpId;return true;}};
+  const status={textContent:""},root={querySelector:()=>status};
+  assert.equal(await native.openOpportunityFiche(root,button,item),true);
+  assert.equal(loads,1);assert.equal(events,1);assert.equal(button.dataset.marketHelpId,item.id);
+  assert.match(status.textContent,/fiche Market native ouverte/);
+  assert.equal(await native.openOpportunityFiche(root,button,item),true);
+  assert.equal(loads,1);
+ }finally{
+  globalThis.AtlasMarketUniverse1000=old.universe;
+  globalThis.AtlasExtendedNativeFiche=old.fiche;
+  globalThis.document=old.document;
+ }
+});
+test("Top1000 Fiche refuses an inaccurate or missing identity",async()=>{
+ const native=require("./market-radar-native.js");
+ const old={universe:globalThis.AtlasMarketUniverse1000,fiche:globalThis.AtlasExtendedNativeFiche,document:globalThis.document};
+ try{
+  globalThis.AtlasMarketUniverse1000={ensure:async()=>{},find:()=>({id:"bitcoin",name:"Bitcoin",symbol:"BTC",rank:1})};
+  globalThis.AtlasExtendedNativeFiche={resolver:id=>globalThis.AtlasMarketUniverse1000.find(id)};
+  let opened=0;
+  const button={dataset:{},disabled:false,setAttribute:()=>{},dispatchEvent:()=>{opened++;}};
+  const status={textContent:""},root={querySelector:()=>status};
+  assert.equal(await native.openOpportunityFiche(root,button,{id:"siren",symbol:"SIREN",rank:619}),false);
+  assert.equal(opened,0);assert.equal(button.disabled,false);
+  assert.equal(button.dataset.marketHelpId,undefined);
+  assert.match(status.textContent,/identité non confirmée/);
+ }finally{
+  globalThis.AtlasMarketUniverse1000=old.universe;
+  globalThis.AtlasExtendedNativeFiche=old.fiche;
+  globalThis.document=old.document;
+ }
+});
