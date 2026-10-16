@@ -67,6 +67,14 @@ test('incomplete Trading/Funding account blocked',()=>{
  const a=account();delete a.funding;
  assert.equal(get({account:a}).status,'unavailable');
 });
+test('empty account payload cannot masquerade as a zero CT balance',()=>{
+ const a=account();a.trading=[];
+ assert.equal(get({account:a}).status,'unavailable');
+});
+test('journals posted after account snapshot demand a new balance read',()=>{
+ const a=account();a.fetched_at=new Date(when-2000).toISOString();
+ assert.equal(get({account:a}).status,'unavailable');
+});
 test('partial or paginated CT ledger does not qualify as complete proof',()=>{
  const a=ct();a.sources.trading_account.has_more=true;
  assert.equal(get({ctLedger:a}).status,'unavailable');
