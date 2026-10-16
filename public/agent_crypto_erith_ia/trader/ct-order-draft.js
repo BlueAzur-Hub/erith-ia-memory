@@ -65,6 +65,8 @@
       reasons.push('Solde '+(side==='sell'?'CT':'USDC')+' non vérifié.');
     const notional=quantity!==null&&price!==null?quantity*price/SCALE:null;
     const held=decimal(side==='sell'?doc?.position?.qty_ct:portfolio?.USDC?.qty);
+    if(side==='sell'&&quantity!==null&&balance?.verified===true&&balance.qty===0)
+      reasons.push('Aucun CT observé : vente impossible après liquidation.');
     if(side==='sell'&&quantity!==null&&held!==null&&quantity>held)
       reasons.push('Quantité demandée supérieure au total CT observé.');
     if(side==='buy'&&notional!==null&&held!==null&&notional>held)
