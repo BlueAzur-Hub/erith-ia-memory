@@ -18,6 +18,13 @@ const compactMoney=v=>typeof v==="number"&&Number.isFinite(v)&&v>=0?
 const lookup=(root,id)=>root.querySelector('[data-radar-native="'+id+'"]');
 const node=(tag,className,text)=>{const el=document.createElement(tag);if(className)el.className=className;if(text!==undefined)el.textContent=text;return el;};
 function cell(row,txt,cls){const td=node("td",cls||"",txt);row.appendChild(td);return td;}
+// Reuse the canonical Market facts and source; never claim a live trading quote.
+function factCell(row,primary,secondary,cls){
+ const td=cell(row,"",cls||"");
+ td.append(node("b","radar-native-fact",primary),node("small","radar-native-provenance",secondary));
+ return td;
+}
+const categoryName=Object.freeze({pillar:"Repère marché",stablecoin:"Stablecoin",major:"Grande capitalisation",speculative:"Actif à observer"});
 
 const stableSymbols=new Set(['USDT','USDC','DAI','FDUSD','USDE','USDS','PYUSD','TUSD','EURC']);
 function radarCategory(asset){
@@ -39,6 +46,8 @@ function identityCell(target,asset){
  else content.append(fallback());
  const title=node('span','radar-native-identity-label');
  title.append(node('strong','',asset.name||asset.symbol),node('small','',String(asset.symbol||'').toUpperCase()));
+ if(Number.isFinite(Number(asset.rank))&&Number(asset.rank)>0)
+  title.append(node('em','radar-native-category',categoryName[radarCategory(asset)]||'Repère marché'));
  content.append(title);cellNode.append(content);return cellNode;
 }
 
@@ -181,12 +190,14 @@ function printMarket(root,model){
  const rows=api.selectMarket(model.market.rows,model.tier,lookup(root,"filter").value,lookup(root,"sort").value);
  for(const asset of rows){
   const r=node("tr","asset-row radar-native-market-row");r.dataset.radarSymbol=asset.symbol;r.dataset.radarCategory=radarCategory(asset);
-  cell(r,String(asset.rank));identityCell(r,asset);
-  cell(r,displayPrice(asset.priceUsd)+" $US");
+  const rank=cell(r,"","radar-native-rank");rank.append(node('b','',String(asset.rank)));
+  identityCell(r,asset);
+  factCell(r,displayPrice(asset.priceUsd)+" $US","USD · CoinGecko · "+safeDate(model.market.at),"radar-native-quote");
   const a=cell(r,pct(asset.change24h));a.className=asset.change24h>0?"pos":asset.change24h<0?"neg":"";
   const b=cell(r,pct(asset.change7d));b.className=asset.change7d>0?"pos":asset.change7d<0?"neg":"";
-  cell(r,compactMoney(asset.volume24hUsd));
-  const movement=api.observeMarket(asset),reading=cell(r,movement.label,"radar-native-reading "+movement.tone);
+  factCell(r,compactMoney(asset.volume24hUsd),"Cap. "+compactMoney(asset.marketCapUsd),"radar-native-volume");
+  const movement=api.observeMarket(asset),reading=cell(r,"","radar-native-reading "+movement.tone);
+  reading.append(node('strong','',movement.label),node('small','radar-native-solo-hint',"Fiche au survol · Solo au clic"));
   reading.title=movement.detail;
   clickable(r,{kind:"market",id:asset.id,symbol:asset.symbol},root,model,{
     ...asset,radarSource:"CoinGecko · snapshot public USD",radarObservedAt:model.market.at,
