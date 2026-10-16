@@ -138,30 +138,19 @@ assert(nativeView.includes('identityCell(r,asset)')&&nativeView.includes('identi
 assert(nativeView.includes('global.AgentCryptoTraderNativeFiche?.showAsset?.'),"Existing fiche owner");
 assert(marketFiche.includes('showAsset,hide,preferredMode'),"Fiche API exposed");
 assert(nativeCss.includes('.market-identity-rail')&&nativeCss.includes('[data-radar-symbol="BTC"]'),"Market color accents");
-assert(nativeView.includes('syncGraphSelection(root)')&&nativeView.includes('graphSelection()'),"Graph owner context is reused");
+assert(!nativeView.includes('syncGraphSelection(')&&!nativeView.includes('graphSelection()'),"Rejected graph-state strip removed");
 assert(nativeView.includes('radarObservation:movement.label'),"Factual movement is forwarded to the existing fiche");
-assert(nativeView.includes('data-radar-native="focusFiche"')===false,"Fiche button is a DOM control, not a shadow popup");
-assert(nativeView.includes('fiche.dataset.radarNative="focusFiche"'),"Visible native fiche access");
-assert(nativeCss.includes('.radar-native-focus')&&nativeCss.includes('.is-radar-active'),"Selected graph marker and native style");
+assert(!nativeView.includes('Voir la fiche')&&!nativeView.includes('focusFiche')&&!nativeView.includes('focusName'),
+ "Rejected fiche button and selection banner absent");
+assert(nativeView.includes('global.AgentCryptoTraderNativeFiche?.showAsset?.(row,coin'),
+ "Radar uses the one native Market fiche on hover");
+assert(nativeView.includes("row.addEventListener('pointerenter',show)")&&nativeView.includes("row.addEventListener('focus',show)"),
+ "Native fiche shown on hover and keyboard focus");
+assert(nativeView.includes("row.addEventListener('pointerleave'")&&nativeView.includes("row.addEventListener('blur'"),
+ "Native fiche hide lifecycle retained");
+assert(!nativeView.includes('row.title="Afficher "'),"No browser tooltip competing with native fiche");
+assert(!nativeCss.includes('.radar-native-focus')&&!nativeCss.includes('.is-radar-active'),"Rejected focus styling removed");
 assert(marketFiche.includes('Lecture Radar · descriptive')&&marketFiche.includes('Preuve et limites'),"Fiche includes source limitations");
-globalThis.AgentCryptoTraderMarket={selected:()=>({id:'bitcoin',symbol:'BTC'})};
-assert.deepEqual(router.graphSelection(),{kind:'market',id:'bitcoin',symbol:'BTC'});
-globalThis.AgentCryptoNewListingsNativeCategory={snapshot:()=>({selectedId:'concrete',selectedSymbol:'CT'})};
-assert.deepEqual(router.graphSelection(),{kind:'listing',id:'concrete',symbol:'CT'});
-globalThis.AgentCryptoNewListingsNativeCategory={snapshot:()=>({selectedId:null})};
-globalThis.AtlasExternalChart={state:()=>({active:true})};
-assert.equal(router.graphSelection(),null,"External chart without matching listing must not be called BTC");
-const facade={querySelectorAll:()=>[],radarModel:{market:validated,listings:[{
- id:'magic-hash',symbol:'MHA',name:'MAGNE.AI',price:.0037,quote:'USDT',
- image:'./assets/crypto/new-listings/magic-hash.png',venue:'Bitget Spot',pair:'MHA/USDT'}],
- registry:new Map(),paper:null}};
-const coin=router.ficheCoin(facade,{kind:'listing',id:'MHA',symbol:'MHA'});
-assert.equal(coin.symbol,'MHA');
-assert.equal(coin.radarQuote,'USDT');
-assert.match(coin.renderedPrice,/USDT/);
-assert.match(nativeView,/showAsset\?\.\(fiche,fiche\.radarCoin\)/,
- "Fiche button must open Market native popup anchored to visible control");
-assert(!nativeView.includes('fiche.radarTarget'),"Fiche must not seek an off-screen list row");
 assert(nativeView.includes('extendedPromise=get("../data/crypto/extended.json")'),"Shared extended archive, no extra network API");
 assert(nativeView.includes('printOpportunities(root,model)'),"Opportunity research section present");
 delete globalThis.AtlasExternalChart;
