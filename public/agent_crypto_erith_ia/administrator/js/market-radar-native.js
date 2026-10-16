@@ -267,5 +267,7 @@ function mount(root){
  void refresh(root,model);
  return true;
 }
+if(typeof module!=="undefined"&&module.exports)
+ module.exports=Object.freeze({selectGraph,compactMoney});
 global.AgentCryptoRadarNative=Object.freeze({mount});
 })(typeof globalThis!=="undefined"?globalThis:this);
