@@ -1,0 +1,43 @@
+name: Seven Radar Market and New Listings Reader
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-radar-market.yml'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-radar.cjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-radar-market.yml'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-radar.cjs'
+      - 'public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js'
+permissions:
+  contents: read
+jobs:
+  radar-public-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check Radar and native Market syntax
+        run: |
+          node --check public/agent_crypto_erith_ia/laboratoire/radar.js
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
+          node --test public/agent_crypto_erith_ia/laboratoire/test-radar.cjs
+      - name: Confirm Radar does not embed private execution and frozen Radar20 unchanged
+        run: |
+          set -euo pipefail
+          ! grep -E -i 'placeOrder|api/v5/trade/order|withdrawal|secretKey' \
+            public/agent_crypto_erith_ia/laboratoire/radar.js
+          git diff --exit-code -- public/agent_crypto_erith_ia/data/trader_flux/radar20_forward/ \
+            public/agent_crypto_erith_ia/tools/trader_radar20_forward.py \
+            public/agent_crypto_erith_ia/trader/ \
+            public/agent_crypto_erith_ia/core/
