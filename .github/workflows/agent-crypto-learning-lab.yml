@@ -188,7 +188,7 @@ jobs:
               actual=current(f)
               first="  // Visible PAPER laboratory."
               last="  // Trader-only continuity, deliberately not loaded in the public Interface."
-              if first in actual:
+              if first in actual and first not in expected:
                 assert actual.count(first)==1 and actual.count(last)==1
                 head,tail=actual.split(first,1)
                 paper,rest=tail.split(last,1)
