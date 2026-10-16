@@ -119,6 +119,67 @@ jobs:
           git commit -m "Refresh actual Top250 monthly OHLCV archive coverage"
           git pull --rebase origin main
           git push origin HEAD:main
+      - name: Read-only snapshot-aligned archive gap report (no collection)
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          
+          root = Path("public/agent_crypto_erith_ia/data")
+          historical = root / "historical_archive_prototype"
+          market = json.loads((root / "crypto/latest.json").read_text(encoding="utf-8"))
+          minute = json.loads((historical / "top250_multisource_coverage/index.json").read_text(encoding="utf-8"))
+          daily = json.loads((historical / "top250_multiresolution_sources/index.json").read_text(encoding="utf-8"))
+          coins = market.get("coins", [])
+          assert len(coins) == 250 and len({x["id"] for x in coins}) == 250, "Latest Core250 market snapshot incomplete"
+          assert minute["ranked"] == 250 and len(minute["assets"]) == 250
+          assert daily["asset_count"] == len(daily["assets"])
+          one_minute = {a["id"] for a in minute["assets"] if a.get("native_1m_count", 0) > 0}
+          one_day = {a["id"] for a in daily["assets"] if a.get("native_candles", 0) > 0}
+          market_ids = {c["id"] for c in coins}
+          missing = [{"rank": c["rank"], "id": c["id"], "symbol": c["symbol"]}
+                     for c in coins if c["id"] not in one_minute and c["id"] not in one_day]
+          missing.sort(key=lambda a: a["rank"])
+          report = {
+              "schema": "seven.crypto.current-market-vault-gap.readonly",
+              "market_snapshot": market.get("generated_at"),
+              "status": "INDEX_PRESENCE_ONLY_NOT_A_REAUDIT_OF_SOURCE_RELEASE_BYTES",
+              "ranked_assets": len(coins),
+              "archive_source_counts": {
+                  "native_minute_ids": len(one_minute),
+                  "native_daily_ids": len(one_day),
+                  "dual_resolution_ids": len(one_minute & one_day),
+                  "historical_union_ids": len(one_minute | one_day)
+              },
+              "current_market": {
+                  "with_at_least_one_indexed_source": len(market_ids & (one_minute | one_day)),
+                  "without_either_indexed_source": len(missing),
+                  "absent_from_historical_source_roster": sorted(
+                      market_ids - {a["id"] for a in minute["assets"]}),
+                  "historically_indexed_but_not_in_current_market": sorted(
+                      (one_minute | one_day) - market_ids)
+              },
+              "missing_in_current_market": missing,
+              "limitations": [
+                  "Current CoinGecko ranks and historical source ranks are from different snapshots.",
+                  "Matching uses exact CoinGecko asset IDs; no symbol or rank substitution.",
+                  "An indexed native month or daily bar does not prove current price, complete coverage or source ZIP re-verification.",
+                  "USD CoinGecko spot prices are not USDT/USDC exchange candles.",
+                  "No source archives, market application, order routes or trader code changed."
+              ]
+          }
+          destination = Path(os.environ["RUNNER_TEMP"]) / "current-market-vault-gap.json"
+          destination.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          print("TOP250 CURRENT MARKET GAP", json.dumps({
+              "market_time": report["market_snapshot"],
+              "minute_index_ids": len(one_minute), "daily_index_ids": len(one_day),
+              "archive_union_not_a_live_rank_count": len(one_minute | one_day),
+              "current_market_covered": report["current_market"]["with_at_least_one_indexed_source"],
+              "current_market_missing": len(missing),
+              "first_missing": missing[:10]
+          }, ensure_ascii=False))
+          PY
       - name: Publish readable coverage report as artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -127,6 +188,7 @@ jobs:
           path: |
             ${{ runner.temp }}/top250-catalog.json
             ${{ runner.temp }}/btc-gap-audit.json
+            ${{ runner.temp }}/current-market-vault-gap.json
           if-no-files-found: error
           retention-days: 30
       - name: Protect Trader, charts and local caches
