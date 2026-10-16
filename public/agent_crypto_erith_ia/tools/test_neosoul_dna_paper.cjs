@@ -37,7 +37,8 @@ test("three independent entry sizes, costs and nonzero spread generate negative 
 test("observation before 48h never finalizes or invents profit",()=>{
  const s=validate(payload(),T0),state=evolve(initial(),s,T0);
  const advance=evolve(state,validate(payload({
-  dnaBook:orderbook([[0.320,10000]],[[0.322,10000]],T0+HORIZON-30000)
+  dnaBook:orderbook([[0.320,10000]],[[0.322,10000]],T0+HORIZON-30000),
+  fxBook:orderbook([[0.9995,10000]],[[1.0005,10000]],T0+HORIZON-30000)
  }),T0+HORIZON-29000),T0+HORIZON-29000);
  assert.equal(advance.status,"open");assert.equal(advance.observations.length,2);
  assert.ok(advance.observations[1].scenarios[0].pnl_usdc>0);
