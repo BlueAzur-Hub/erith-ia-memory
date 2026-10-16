@@ -129,6 +129,39 @@ function mount(){
     };
     doc.head.appendChild(script);
   }
+  // Snapshot Analyse is a read-only child of the existing Technical Reading.
+  // The graph owner remains Administrator. The Trader adds only a disclosure.
+  if(!doc.getElementById("traderSnapshotAnalyseStyle")){
+    const sheet=doc.createElement("link");
+    sheet.id="traderSnapshotAnalyseStyle";
+    sheet.rel="stylesheet";
+    sheet.href=new URL("../trader/snapshot-analyse-native.css",doc.baseURI).href;
+    doc.head.appendChild(sheet);
+  }
+  if(!doc.getElementById("traderSnapshotAnalyseCalculator")){
+    const calc=doc.createElement("script");
+    calc.id="traderSnapshotAnalyseCalculator";
+    calc.src=new URL("../laboratoire/snapshot-analyse.js",doc.baseURI).href;
+    calc.onload=()=>{
+      if(!win.AgentCryptoSnapshotAnalyse?.analyse){
+        if(status){status.textContent="Snapshot Analyse indisponible";status.dataset.state="error";}
+        return;
+      }
+      if(doc.getElementById("traderSnapshotAnalyseReading"))return;
+      const read=doc.createElement("script");
+      read.id="traderSnapshotAnalyseReading";
+      read.src=new URL("../trader/snapshot-analyse-native.js",doc.baseURI).href;
+      read.onerror=()=>{
+        if(status){status.textContent="Lecture Snapshot indisponible";status.dataset.state="error";}
+      };
+      doc.head.appendChild(read);
+    };
+    calc.onerror=()=>{
+      if(status){status.textContent="Calculateur Snapshot indisponible";status.dataset.state="error";}
+    };
+    doc.head.appendChild(calc);
+  }
+
   // Trader-only continuity, deliberately not loaded in the public Interface.
   if(!doc.getElementById("traderCtSelectionMemoryScript")){
     const script=doc.createElement("script");
