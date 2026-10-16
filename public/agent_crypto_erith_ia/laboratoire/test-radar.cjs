@@ -63,7 +63,7 @@ const native=fs.readFileSync(path.resolve(__dirname,'../administrator/js/new-lis
 const html=fs.readFileSync(path.resolve(__dirname,'radar.html'),'utf8');
 const js=fs.readFileSync(path.resolve(__dirname,'radar.js'),'utf8');
 assert(native.includes('mountRadarLink()')&&native.includes('atlasPublicRadarLink'));
-assert(native.includes('../laboratoire/radar.html'));
+assert(native.includes('atlasRadarMarketView')); // standalone path lives in native renderer
 assert(html.includes('Top 10')&&html.includes('Top 20')&&html.includes('Top 50')&&html.includes('Top 250'));
 assert(html.includes('new listings')||html.includes('nouveaux listings'));
 assert(!js.includes('api/v5/trade/order'));
