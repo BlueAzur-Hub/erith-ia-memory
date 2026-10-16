@@ -127,6 +127,12 @@ jobs:
       - name: Trader external Math Core cannot relabel BTC as CT
         run: node tests/agent_crypto_trader_external_math_guard.cjs
 
+      - name: BTC CT human-controlled PAPER simulations
+        run: |
+          node --check public/agent_crypto_erith_ia/trader/trader-paper-lab-core.js
+          node --check public/agent_crypto_erith_ia/trader/trader-paper-lab-view.js
+          node --test public/agent_crypto_erith_ia/trader/test-paper-lab.cjs
+
       - name: Trader historical selection identity and native quote
         run: node tests/agent_crypto_trader_historical_identity.cjs
 
