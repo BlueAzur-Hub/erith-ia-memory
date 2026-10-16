@@ -96,11 +96,30 @@ function mount(){
     contract.onload=()=>{
       if(!win.AgentCryptoAiCtContract){reportFailure();return;}
       if(doc.getElementById("traderAiCtPanelScript"))return;
-      const panel=doc.createElement("script");
-      panel.id="traderAiCtPanelScript";
-      panel.src=new URL("../trader/ai-ct-panel.js?scope=native",doc.baseURI).href;
-      panel.onerror=reportFailure;
-      doc.head.appendChild(panel);
+      const loadPanel=()=>{
+        if(doc.getElementById("traderAiCtPanelScript"))return;
+        const panel=doc.createElement("script");
+        panel.id="traderAiCtPanelScript";
+        panel.src=new URL("../trader/ai-ct-panel.js?scope=native",doc.baseURI).href;
+        panel.onerror=reportFailure;
+        doc.head.appendChild(panel);
+      };
+      // Optional draft modules fail open to the PREEXISTING analysis; no
+      // extra chart, trading transport or protected Administrator change.
+      const orderCore=doc.createElement("script");
+      orderCore.id="traderCtOrderDraftScript";
+      orderCore.src=new URL("../trader/ct-order-draft.js",doc.baseURI).href;
+      orderCore.onerror=loadPanel;
+      orderCore.onload=()=>{
+        if(!win.AgentCryptoCtOrderDraft){loadPanel();return;}
+        const ticket=doc.createElement("script");
+        ticket.id="traderCtOrderTicketScript";
+        ticket.src=new URL("../trader/ct-order-ticket.js",doc.baseURI).href;
+        ticket.onerror=loadPanel;
+        ticket.onload=loadPanel;
+        doc.head.appendChild(ticket);
+      };
+      doc.head.appendChild(orderCore);
     };
     doc.head.appendChild(contract);
   }
