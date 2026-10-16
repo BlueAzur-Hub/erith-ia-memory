@@ -230,6 +230,12 @@ function build(root){
  const cards=node("div","radar-native-cards");cards.dataset.radarNative="watch";watching.append(cards);
  const journal=node("p","table-note","Observateur GitHub indépendant · données non encore chargées");journal.dataset.radarNative="journal";watching.append(journal);
  bottom.append(listings,watching);root.append(bottom);
+ const opportunities=node("section","radar-native-block radar-native-opportunities");
+ opportunities.append(node("h3","","Veille élargie · Top 1 000 (étude)"));
+ const oNote=node("p","table-note","Chargement de l'archive étendue · aucune paire Spot validée ici");
+ oNote.dataset.radarNative="opportunityNote";opportunities.append(oNote);
+ const oRows=node("div","radar-native-opportunity-grid");oRows.dataset.radarNative="opportunities";
+ opportunities.append(oRows);root.append(opportunities);
  const foot=node("p","table-note","Lecture seule · aucun ordre OKX · USDT n'est pas automatiquement USDC · Radar20 de recherche inchangé");
  root.append(foot);
  return {filter,sort,tbody,lb,refresh,group};
@@ -317,6 +323,42 @@ function printWatch(root,model){
    "Journal PAPER inaccessible · aucun signal supposé";
  syncGraphSelection(root);
 }
+function printOpportunities(root,model){
+ const area=lookup(root,"opportunities"),note=lookup(root,"opportunityNote");
+ if(!area||!note)return;area.replaceChildren();
+ const result=model.opportunities;
+ if(!result){note.textContent=model.opportunityError||"Archives Top 1 000 à qualifier · aucune opportunité supposée";return;}
+ note.textContent=result.universe+" rangs contrôlés · "+result.eligible+
+ " actifs après filtres capitalisation / volume / rotation · sources "+
+ safeDate(result.sourceTimes.core)+" / "+safeDate(result.sourceTimes.extended)+
+ " · pas de validation carnet, spread ou exécution";
+ for(const [key,title] of [["trend","Hausses 24 h et 7 j"],["rebound","Rebonds 24 h / 7 j négatif"]]){
+  const group=node("div","radar-native-opportunity-group");
+  group.append(node("h4","",title));
+  const list=node("div","radar-native-opportunity-list");
+  for(const item of result[key]){
+   const row=node("div","radar-native-opportunity");
+   row.append(node("strong","",item.symbol+" · "+item.name),
+    node("span","",item.change24h.toFixed(2)+" % / 24 h · "+item.change7d.toFixed(2)+" % / 7 j"),
+    node("small","",compactMoney(item.volume24hUsd)+" vol. · rang "+item.rank+
+     " · "+item.riskNote));
+   const button=node("button","btn small","Fiche");button.type="button";
+   button.setAttribute("aria-label","Fiche Crypto de "+item.name+" · aucune sélection de graphique");
+   button.addEventListener("click",()=>{
+    const observation=global.AgentCryptoRadarReader.observeMarket(item);
+    const asset={...item,radarSource:"CoinGecko · snapshot public USD · veille Top1000",
+     radarObservedAt:item.sourceSnapshot,radarObservation:observation.label,
+     radarReason:observation.detail,
+     radarEvidence:"Cotation agrégée · ni carnet, ni spread, ni historique de bougies qualifié · "+item.riskNote};
+    const ok=global.AgentCryptoTraderNativeFiche?.showAsset?.(button,asset);
+    if(ok===false)lookup(root,"status").textContent="Fiche Market indisponible ; aucune fenêtre secondaire créée";
+   });
+   row.append(button);list.append(row);
+  }
+  if(!result[key].length)list.append(node("p","table-note","Aucun actif ne satisfait les critères"));
+  group.append(list);area.append(group);
+ }
+}
 async function identityRegistry(){
  const local="./data/new-listings-identities.json";
  try{return await get(local);}
@@ -336,6 +378,7 @@ async function refresh(root,model){
  const marketPromise=get("../data/crypto/latest.json");
  const paperPromise=get("../data/trader_flux/btc_ct_auto_paper/state.json");
  const registryPromise=identityRegistry();
+ const extendedPromise=get("../data/crypto/extended.json");
  const instrumentsPromise=get("https://api.bitget.com/api/v3/market/instruments?category=SPOT");
  const tickersPromise=get("https://api.bitget.com/api/v3/market/tickers?category=SPOT");
  const issues=[];
@@ -343,8 +386,8 @@ async function refresh(root,model){
   const first=await Promise.allSettled([marketPromise,paperPromise,registryPromise]);
   try{
    if(first[0].status!=="fulfilled")throw Error("archive indisponible");
-   model.market=api.validMarket(first[0].value);
-  }catch(e){model.market=null;issues.push("Top 250 : "+e.message);}
+   model.market=api.validMarket(first[0].value);model.rawMarket=first[0].value;
+  }catch(e){model.market=null;model.rawMarket=null;issues.push("Top 250 : "+e.message);}
   try{
    if(first[1].status!=="fulfilled")throw Error("journal indisponible");
    model.paper=api.verifyPaper(first[1].value);
@@ -354,13 +397,13 @@ async function refresh(root,model){
    if(first[2].status!=="fulfilled")throw Error("publication locale et GitHub RAW indisponibles");
    registry=api.verifyRegistry(first[2].value);
   }catch(e){issues.push("Registre identités : "+e.message);}
-  model.registry=registry;model.listings=[];model.listingError="";
+  model.registry=registry;model.listings=[];model.listingError="";model.opportunities=null;model.opportunityError="Top 1 000 · collecte publique en cours";
   printMarket(root,model);
   printWatch(root,model);
-  printListings(root,model);
+  printListings(root,model);printOpportunities(root,model);
   lookup(root,"status").textContent="Radar · classement et PAPER chargés · découverte Spot Bitget en cours…"+
    (issues.length?" · "+issues.join(" · "):"");
-  const live=await Promise.allSettled([instrumentsPromise,tickersPromise]);
+  const live=await Promise.allSettled([instrumentsPromise,tickersPromise,extendedPromise]);
   try{
    if(live[0].status!=="fulfilled"||live[1].status!=="fulfilled")
      throw Error("API Spot Bitget indisponible");
@@ -368,6 +411,12 @@ async function refresh(root,model){
   }catch(e){model.listingError="Nouveaux listings : "+e.message;issues.push(model.listingError);}
   printListings(root,model);
   printWatch(root,model);
+  try{
+   if(live[2].status!=="fulfilled")throw Error("archive étendue indisponible");
+   model.opportunities=api.selectOpportunities(model.rawMarket,live[2].value);
+   model.opportunityError="";
+  }catch(e){model.opportunities=null;model.opportunityError="Top 1 000 : "+e.message;issues.push(model.opportunityError);}
+  printOpportunities(root,model);
   lookup(root,"status").textContent=issues.length?"Radar partiel · "+issues.join(" · "):
    "Radar · Top 250 / nouveaux listings Spot / PAPER BTC et CT · sélection Solo disponible";
  }catch(e){
