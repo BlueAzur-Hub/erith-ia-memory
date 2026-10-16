@@ -9,6 +9,9 @@ on:
       - "public/agent_crypto_erith_ia/trader/build.json"
       - "public/agent_crypto_erith_ia/trader/trading-desk.html"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
+      - "public/agent_crypto_erith_ia/trader/snapshot-analyse-native.js"
+      - "public/agent_crypto_erith_ia/trader/snapshot-analyse-native.css"
+      - "public/agent_crypto_erith_ia/trader/test-snapshot-analyse-native.cjs"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-history-source-catalog.test.mjs"
@@ -32,6 +35,9 @@ on:
       - "public/agent_crypto_erith_ia/trader/build.json"
       - "public/agent_crypto_erith_ia/trader/trading-desk.html"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
+      - "public/agent_crypto_erith_ia/trader/snapshot-analyse-native.js"
+      - "public/agent_crypto_erith_ia/trader/snapshot-analyse-native.css"
+      - "public/agent_crypto_erith_ia/trader/test-snapshot-analyse-native.cjs"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-history-source-catalog.test.mjs"
@@ -111,6 +117,10 @@ jobs:
             prefix+"trader/build.json",
             prefix+"trader/trading-desk.html",
             prefix+"trader/trader-runtime-mirror.js",
+            # Approved add-on: no changes to canonical chart or accounts.
+            prefix+"trader/snapshot-analyse-native.js",
+            prefix+"trader/snapshot-analyse-native.css",
+            prefix+"trader/test-snapshot-analyse-native.cjs",
             prefix+"trader/trader-historical-panel.js",
             prefix+"trader/ai-source-inventory.js",
             prefix+"trader/historical-inventory.html",
@@ -164,15 +174,33 @@ jobs:
               expected=previous(f).replace("40.6.639","40.6.640").replace("trader-historical-panel.js?reader=top50-cohorts","trader-historical-panel.js?reader=visible-coffre")
               actual=current(f)
               first="  // Visible PAPER laboratory."
+              snapshot="  // Snapshot Analyse is a read-only child of the existing Technical Reading."
               last="  // Trader-only continuity, deliberately not loaded in the public Interface."
-              if first in actual:
+              # Permit ONLY the bounded Snapshot insert, comparing all other
+              # runtime bytes to the previous protected commit.
+              if snapshot in actual:
+                assert actual.count(snapshot)==1 and actual.count(last)==1
+                head,tail=actual.split(snapshot,1)
+                added,rest=tail.split(last,1)
+                for required in ("traderSnapshotAnalyseStyle",
+                                 "traderSnapshotAnalyseCalculator",
+                                 "../laboratoire/snapshot-analyse.js",
+                                 "../trader/snapshot-analyse-native.js",
+                                 "calc.onload=()=>"):
+                  assert required in added, f"Missing Snapshot read-only gate: {required}"
+                assert "/trade/order" not in added and "/withdraw" not in added
+                assert "fetch(" not in added and "setInterval(" not in added
+                actual=head+last+rest
+              # Legacy PAPER migration check applies only to an older baseline
+              # lacking that extension; the frozen current baseline has it.
+              if first in actual and first not in expected:
                 assert actual.count(first)==1 and actual.count(last)==1
                 head,tail=actual.split(first,1)
                 paper,rest=tail.split(last,1)
                 assert 'trader-paper-lab-core.js' in paper and 'trader-paper-lab-view.js' in paper
                 assert '/trade/order' not in paper and '/withdraw' not in paper
                 actual=head+last+rest
-              assert actual==expected,f"Non-version Trader change beyond PAPER extension: {f}"
+              assert actual==expected,f"Non-version Trader change beyond read-only extensions: {f}"
               continue
             else:
               expected=previous(f).replace("40.6.639","40.6.640")
