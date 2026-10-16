@@ -13,7 +13,6 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js'
       - 'public/agent_crypto_erith_ia/administrator/js/market-radar-native.js'
       - 'public/agent_crypto_erith_ia/administrator/market-radar-native.css'
-      - 'public/agent_crypto_erith_ia/trader/market-fiche-native.js'
   push:
     branches: [main]
     paths:
@@ -27,7 +26,6 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js'
       - 'public/agent_crypto_erith_ia/administrator/js/market-radar-native.js'
       - 'public/agent_crypto_erith_ia/administrator/market-radar-native.css'
-      - 'public/agent_crypto_erith_ia/trader/market-fiche-native.js'
 permissions:
   contents: read
 jobs:
@@ -44,7 +42,6 @@ jobs:
           node --check public/agent_crypto_erith_ia/laboratoire/radar.js
           node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
           node --check public/agent_crypto_erith_ia/administrator/js/market-radar-native.js
-          node --check public/agent_crypto_erith_ia/trader/market-fiche-native.js
           node --check public/agent_crypto_erith_ia/tools/radar_opportunity_history.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar.cjs
       - name: Confirm Radar does not embed private execution and frozen Radar20 unchanged
