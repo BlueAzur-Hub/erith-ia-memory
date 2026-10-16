@@ -90,3 +90,36 @@
 #marketSnapshotPanel .radar-native-opportunity button{font-size:10px}
 @media(max-width:1100px){#marketSnapshotPanel .radar-native-opportunity-grid{grid-template-columns:1fr}}
 @media(max-width:620px){#marketSnapshotPanel .radar-native-opportunity{grid-template-columns:1fr 1fr}#marketSnapshotPanel .radar-native-opportunity small{grid-column:1/3}}
+
+/* Market-fidelity Radar row: source, symbol, category and observable action.
+ * Scoped to Radar only; no change to Graph, Math Core, OKX or the Market owner.
+ */
+#marketSnapshotPanel .radar-native-market-row td{vertical-align:middle}
+#marketSnapshotPanel .radar-native-market-row td.radar-native-rank b{color:var(--text);font-size:12px}
+#marketSnapshotPanel .radar-native-market-row .radar-native-identity-label{gap:3px}
+#marketSnapshotPanel .radar-native-market-row .radar-native-category{
+ display:inline-block;max-width:100%;width:max-content;font-style:normal;font-size:9px;font-weight:700;
+ padding:1px 6px;border:1px solid var(--line);border-radius:999px;color:var(--radar-accent,var(--cyan));
+ white-space:normal;text-wrap:balance
+}
+#marketSnapshotPanel .radar-native-market-row .radar-native-fact{display:block;font-weight:800;font-size:11px;color:var(--text)}
+#marketSnapshotPanel .radar-native-market-row .radar-native-provenance{
+ display:block;font-size:9px;line-height:1.35;color:var(--muted);
+ white-space:normal;max-width:172px;margin-top:3px;overflow-wrap:anywhere
+}
+#marketSnapshotPanel .radar-native-market-row td.radar-native-quote,
+#marketSnapshotPanel .radar-native-market-row td.radar-native-volume{min-width:110px}
+#marketSnapshotPanel .radar-native-market-row td.radar-native-reading{text-align:left;white-space:normal;min-width:122px}
+#marketSnapshotPanel .radar-native-market-row td.radar-native-reading strong{
+ display:block;color:inherit;font-size:10px;line-height:1.3
+}
+#marketSnapshotPanel .radar-native-market-row .radar-native-solo-hint{
+ display:block;margin-top:4px;padding:2px 5px;width:max-content;max-width:100%;
+ border:1px solid var(--line);border-radius:6px;font-size:9px;line-height:1.4;
+ font-weight:700;color:var(--cyan,#78d9e5);background:rgba(21,75,89,.18);
+ white-space:normal
+}
+@media(max-width:760px){
+ #marketSnapshotPanel .radar-native-market-row .radar-native-provenance{max-width:116px}
+ #marketSnapshotPanel .radar-native-market-row .radar-native-identity-label strong{max-width:125px}
+}

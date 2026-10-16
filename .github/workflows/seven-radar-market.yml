@@ -12,6 +12,7 @@ on:
       - '.github/workflows/seven-radar-opportunity-history.yml'
       - 'public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js'
       - 'public/agent_crypto_erith_ia/administrator/js/market-radar-native.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/test-market-radar-fidelity.cjs'
       - 'public/agent_crypto_erith_ia/administrator/market-radar-native.css'
   push:
     branches: [main]
@@ -25,6 +26,7 @@ on:
       - '.github/workflows/seven-radar-opportunity-history.yml'
       - 'public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js'
       - 'public/agent_crypto_erith_ia/administrator/js/market-radar-native.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/test-market-radar-fidelity.cjs'
       - 'public/agent_crypto_erith_ia/administrator/market-radar-native.css'
 permissions:
   contents: read
@@ -44,6 +46,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/market-radar-native.js
           node --check public/agent_crypto_erith_ia/tools/radar_opportunity_history.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar.cjs
+          node --test public/agent_crypto_erith_ia/administrator/js/test-market-radar-fidelity.cjs
       - name: Confirm Radar does not embed private execution and frozen Radar20 unchanged
         run: |
           set -euo pipefail
