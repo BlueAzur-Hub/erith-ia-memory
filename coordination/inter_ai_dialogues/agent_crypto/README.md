@@ -1,3 +1,7 @@
+> **Mise à jour du 16/10/2026 · Installation de Yoann.** Le README ci-dessous décrit l'état du 12/09/2026 et non le runtime actuel. L'Interface et le Trader publics destinés à Yoann sont en **40.6.640**, avec Market Core **38.15.11**, publiés sur `BlueAzur-Hub/agent-crypto-operator`. La copie de développement est dans le dépôt privé `malabaryo/tradus`. Le Bridge Operator archivé R19Y1 est un logiciel **local à installer et qualifier sur le PC de Yoann**, distinct du Bridge de Christophe. Voir le [guide d'installation public](https://github.com/BlueAzur-Hub/agent-crypto-operator/blob/main/public/agent_crypto_erith_ia/operator/INSTALLER_BRIDGE_YOANN.md). Les noms de fichiers hérités `YOHAN` sont conservés pour leurs empreintes et leur traçabilité ; **le prénom s'écrit Yoann**. Aucune preuve d'installation terrain sur le PC de Yoann n'est encore disponible.
+
+---
+
 # Agent-Crypto · Coordination / Inter-AI Dialogues
 
 Ce répertoire est une **zone d’archives, de handoff et de dialogue de chantier**. Il conserve volontairement les fils, audits, bundles et états intermédiaires historiques.
