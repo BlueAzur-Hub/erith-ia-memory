@@ -70,6 +70,78 @@ jobs:
           git commit -m "Record verified DNAUSDT Spot PAPER observation (no order)"
           git pull --rebase origin main
           git push origin HEAD:main
+      - name: DNA morning PAPER scenario review (read-only, no wallet or order)
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import datetime as dt, json, math, os
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/data/trader_flux/dna_paper/state.json')
+          s=json.loads(p.read_text(encoding='utf-8'))
+          assert s.get('schema')=='erith.dna.paper.48h.v1' and s.get('mode')=='PAPER'
+          assert s.get('executed_order') is False and s.get('order_permissions') is False
+          assert s.get('private_account_access') is False
+          assert (s.get('venue'),s.get('market'),s.get('type'),s.get('quote'))==('Bitget','DNAUSDT','SPOT','USDT')
+          o=s.get('observations')
+          assert isinstance(o,list)
+          previous=None
+          for row in o:
+              stamp=dt.datetime.fromisoformat(row['observed_at'].replace('Z','+00:00'))
+              assert previous is None or stamp>previous
+              previous=stamp
+              bid,ask,spread=row['dna_bid'],row['dna_ask'],row['dna_spread_pct']
+              assert all(isinstance(v,(float,int)) and math.isfinite(v) for v in (bid,ask,spread))
+              assert bid>0 and ask>bid and spread>=0
+          now=dt.datetime.now(dt.timezone.utc)
+          last=o[-1] if o else None
+          old=o[-2] if len(o)>1 else None
+          age=(now-previous).total_seconds()/3600 if previous else None
+          fresh=age is not None and 0<=age<=6
+          spread=last['dna_spread_pct'] if last else None
+          change=(last['dna_bid']/old['dna_bid']-1)*100 if last and old else None
+          status=('ATTENDRE_DONNEES' if not fresh else 'HISTORIQUE_COURT' if len(o)<3
+                  else 'SPREAD_ELEVE' if spread>0.5 else 'OBSERVATION_PAPER')
+          f=lambda x: 'indisponible' if x is None else f'{x:.5f}'
+          lines=['# ERITH.IA — Revue DNA au réveil (PAPER uniquement)', '',
+                 f'Rapport UTC : {now.isoformat()}  |  statut : **{status}**', '',
+                 '**Données :** carnet public Bitget DNA/USDT Spot, PAS le contrat OKX DNAUSD UM X-Perp.',
+                 f'Dernier relevé : {last["observed_at"] if last else "aucun"}; ancienneté {f(age)} heures; frais et ordres privés non consultés.',
+                 f'Bid : {f(last["dna_bid"] if last else None)} USDT | Ask : {f(last["dna_ask"] if last else None)} USDT',
+                 f'Spread : {f(spread)} % | Variation bid entre deux relevés : {f(change)} %',
+                 f'Nombre de relevés : {len(o)}. Une hausse passée ne garantit pas la suivante.', '',
+                 '## Scénarios Spot fictifs déjà archivés', '',
+                 '| Capital PAPER (USDC) | Valorisation P&L fictive |', '| ---: | ---: |']
+          for i, sc in enumerate(s['scenarios']):
+              value=last['scenarios'][i] if last and i<len(last.get('scenarios',[])) else None
+              if value and value.get('status')=='valued':
+                  lines.append(f'| {sc["capital_usdc"]} | {value["pnl_usdc"]:+.4f} USDC ({value["pnl_pct"]:+.2f} %) |')
+              else:
+                  lines.append(f'| {sc["capital_usdc"]} | indisponible |')
+          lines += ['', '## Exposition levier : calcul de sensibilité, PAS une décision', '',
+           'Exemple générique fictif : marge 5 USD × 3 = exposition 15 USD. '
+           'Hausse 5 % = +0,75 USD brut ; baisse 5 % = −0,75 USD brut, '
+           'hors frais, spread, financement, glissement, marge de maintenance et liquidation.',
+           '', '## Conditions à vérifier AVANT de discuter des Futures', '',
+           '- Marché OKX exact DNAUSD UM X-Perp, taille minimale et marge requise ;',
+           '- carnet Futures horodaté, mark price, spread et profondeur disponibles ;',
+           '- taux de financement actuel, frais, seuil de liquidation et stop possible ;',
+           '- cohérence des tendances sans confondre Spot Bitget et Futures OKX.', '',
+           '**Aucun ordre proposé ou transmis. Aucun solde de compte publié.**',
+           'Rapport indicatif fondé sur un nombre limité de relevés, sans prévision ni garantie.', '']
+          out=Path(os.environ.get('RUNNER_TEMP','/tmp'))/'dna-paper-morning-review.md'
+          out.write_text('\n'.join(lines),encoding='utf-8')
+          print(f'DNA MORNING PAPER status={status} observations={len(o)} fresh={fresh} output={out}')
+          PY
+      - name: Preserve morning PAPER review as private workflow artifact
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: dna-paper-morning-review
+          path: ${{ runner.temp }}/dna-paper-morning-review.md
+          if-no-files-found: error
+          retention-days: 7
       - name: Preserve diagnostics as short-lived artifact
         if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
         uses: actions/upload-artifact@v4
