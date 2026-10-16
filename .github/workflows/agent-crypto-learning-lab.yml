@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/build.json"
       - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
       - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
@@ -26,6 +27,7 @@ on:
     branches: [main]
     paths:
       - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/build.json"
       - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
       - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
@@ -101,8 +103,29 @@ jobs:
           export BASELINE="$baseline"
           git diff --exit-code "$baseline" HEAD -- \
             public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
-            public/agent_crypto_erith_ia/core/ \
-            public/agent_crypto_erith_ia/administrator/app.js
+            public/agent_crypto_erith_ia/core/
+          # Strict one-time subtraction of the abandoned Snapshot-only accessor.
+          # All other app.js bytes must remain identical to the protected baseline.
+          python - <<'PY'
+          import os,pathlib,subprocess
+          path="public/agent_crypto_erith_ia/administrator/app.js"
+          before=subprocess.check_output(["git","show",os.environ["BASELINE"]+":"+path],text=True)
+          after=pathlib.Path(path).read_text(encoding="utf-8")
+          marker="/* Snapshot Analyse — canonical graph series in read-only memory."
+          boundary="function atlasMarketExternalRowMarkup(rawQuery) {"
+          if marker in before:
+              assert before.count(marker)==1, "Unexpected duplicate Snapshot accessor"
+              start=before.index(marker)
+              end=before.index(boundary,start)
+              removed=before[start:end]
+              assert "function atlasPublishedChartSeriesRead()" in removed
+              assert "globalThis.AgentCryptoPublishedSeries=Object.freeze({" in removed
+              assert "read_only:true,fetches:0,storage_writes:0,real_orders:false" in removed
+              expected=before[:start]+before[end:]
+          else:
+              expected=before
+          assert after==expected, "Administrator core changed beyond exact Snapshot removal"
+          PY
           python - <<'PY'
           import copy, json, os, pathlib, subprocess
           base=os.environ["BASELINE"]
