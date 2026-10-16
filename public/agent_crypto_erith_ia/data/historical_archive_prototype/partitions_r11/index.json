@@ -4,18 +4,18 @@
   "source": "Binance Spot",
   "quote_asset": "USDT",
   "basket_reference": "github-action-main_2026-10-07T22-00-44-550Z",
-  "source_index_sha256": "b7338f35053c9ff1cc1f9bebc9386b3cf6be24654cee0131eeb41f616b841866",
-  "source_index_updated_at": "2026-10-15T23:51:12.428028Z",
-  "source_delta_count": 56,
+  "source_index_sha256": "c2a809244bc85c89dc4dc960c7fb52e2e4c024b443b0dae1157164b69aa47fde",
+  "source_index_updated_at": "2026-10-16T01:21:50.837782Z",
+  "source_delta_count": 57,
   "source_seed": {
     "file": "ohlcv_top10_2026-10-08.json.gz",
     "bytes": 130593,
     "sha256": "14d4abe6d2af78b948ad3c8bc9bbc664c2929a46a8192331c15e6d20cef7ec65"
   },
   "series_count": 21,
-  "candles_total": 22085,
-  "sealed_blocks_total": 77,
-  "pending_candles_total": 3290,
+  "candles_total": 22232,
+  "sealed_blocks_total": 84,
+  "pending_candles_total": 1421,
   "bucket_policy": {
     "24h": "UTC day",
     "7d": "UTC Monday week",
@@ -29,8 +29,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792107900000,
-      "candles": 2570,
+      "last_open_ms": 1792113300000,
+      "candles": 2588,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -127,18 +127,30 @@
           "file": "series/binancecoin_24h_day-20261014_6756368c5674cae8.json.gz",
           "bytes": 7826,
           "sha256": "6756368c5674cae846f61ca385774c1eef94b0d97c1a12e3a7a8c884d19c024f"
-        }
-      ],
-      "pending": [
+        },
         {
           "bucket": "day-20261015",
           "bucket_start_ms": 1792022400000,
           "bucket_end_ms": 1792108800000,
           "first_open_ms": 1792022400000,
-          "last_open_ms": 1792107900000,
-          "candles": 286,
+          "last_open_ms": 1792108500000,
+          "candles": 288,
           "boundary_kind": "full_period",
-          "rows_sha256": "47c8a42042d7df4b15170c1852ce9c67031307de5acfcefb3f2a67431c2ec4ea"
+          "file": "series/binancecoin_24h_day-20261015_de5729fcd9f8a860.json.gz",
+          "bytes": 8129,
+          "sha256": "de5729fcd9f8a8601b67505346d1903cfc331b5ec83c9c564046e3bb7c4ed39c"
+        }
+      ],
+      "pending": [
+        {
+          "bucket": "day-20261016",
+          "bucket_start_ms": 1792108800000,
+          "bucket_end_ms": 1792195200000,
+          "first_open_ms": 1792108800000,
+          "last_open_ms": 1792113300000,
+          "candles": 16,
+          "boundary_kind": "full_period",
+          "rows_sha256": "b69a51aa2fe8df8bce8b8f3aa64a3ee11aa45903bc690f0c4873f55c48cccd17"
         }
       ]
     },
@@ -148,8 +160,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792101600000,
-      "candles": 358,
+      "last_open_ms": 1792108800000,
+      "candles": 360,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -182,10 +194,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1792101600000,
-          "candles": 95,
+          "last_open_ms": 1792108800000,
+          "candles": 97,
           "boundary_kind": "full_period",
-          "rows_sha256": "0fdbdd798bed8ca3ae97dd6371d3af0c81c8fda719ed4dcaec9e93b2d3d62f09"
+          "rows_sha256": "17974390ae6c76ff2d473949d0be70fa327d1481b1e1ca2182fdc53c0d5de34f"
         }
       ]
     },
@@ -195,8 +207,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792080000000,
-      "candles": 227,
+      "last_open_ms": 1792094400000,
+      "candles": 228,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -217,10 +229,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792080000000,
-          "candles": 89,
+          "last_open_ms": 1792094400000,
+          "candles": 90,
           "boundary_kind": "full_period",
-          "rows_sha256": "e76448f399cf47f43cb4ec7f8b248699754f8ac1916ce334dff2ff6c4a4f1b50"
+          "rows_sha256": "31a1c8b89702ff7ddf00578e60f2b678359222d9c32d03aafc9106d7f3d74f83"
         }
       ]
     },
@@ -230,8 +242,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792107900000,
-      "candles": 2570,
+      "last_open_ms": 1792113300000,
+      "candles": 2588,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -328,18 +340,30 @@
           "file": "series/bitcoin_24h_day-20261014_fe3a85968c7b5948.json.gz",
           "bytes": 9963,
           "sha256": "fe3a85968c7b5948b7acde0525aaa958e2c3979e51869fddf5d72464bfbd6165"
-        }
-      ],
-      "pending": [
+        },
         {
           "bucket": "day-20261015",
           "bucket_start_ms": 1792022400000,
           "bucket_end_ms": 1792108800000,
           "first_open_ms": 1792022400000,
-          "last_open_ms": 1792107900000,
-          "candles": 286,
+          "last_open_ms": 1792108500000,
+          "candles": 288,
           "boundary_kind": "full_period",
-          "rows_sha256": "c76469ba9d7a32260b68498dc72931d27015c93efdf660f5f733879ef833fad1"
+          "file": "series/bitcoin_24h_day-20261015_5bc671862e5291e0.json.gz",
+          "bytes": 10128,
+          "sha256": "5bc671862e5291e03438e5035362055e75dad9d9c02d840ab4ec1939d7577ea4"
+        }
+      ],
+      "pending": [
+        {
+          "bucket": "day-20261016",
+          "bucket_start_ms": 1792108800000,
+          "bucket_end_ms": 1792195200000,
+          "first_open_ms": 1792108800000,
+          "last_open_ms": 1792113300000,
+          "candles": 16,
+          "boundary_kind": "full_period",
+          "rows_sha256": "8fd212185db8fc7fe0cab2d7e7cae3dd7158c520ef4988660fa9d3170738ec71"
         }
       ]
     },
@@ -349,8 +373,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792101600000,
-      "candles": 358,
+      "last_open_ms": 1792108800000,
+      "candles": 360,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -383,10 +407,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1792101600000,
-          "candles": 95,
+          "last_open_ms": 1792108800000,
+          "candles": 97,
           "boundary_kind": "full_period",
-          "rows_sha256": "52c851c7e853939f07404869cdc49a6f600f845cf2f47b081155555022d8716e"
+          "rows_sha256": "e9c0eb24f833475ef65e4ad3d06a5054097fbe775f205932fb1ffe8d5f0f5c57"
         }
       ]
     },
@@ -396,8 +420,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792080000000,
-      "candles": 227,
+      "last_open_ms": 1792094400000,
+      "candles": 228,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -418,10 +442,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792080000000,
-          "candles": 89,
+          "last_open_ms": 1792094400000,
+          "candles": 90,
           "boundary_kind": "full_period",
-          "rows_sha256": "00c7cc6402871fa828a837aac0cf0c0daf7011ef574aabfc127044151c7b25da"
+          "rows_sha256": "532830e86e709f6286d2d57f9a0ca7768093f5685ae238681463144065d332de"
         }
       ]
     },
@@ -431,8 +455,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792107900000,
-      "candles": 2570,
+      "last_open_ms": 1792113300000,
+      "candles": 2588,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -529,18 +553,30 @@
           "file": "series/ethereum_24h_day-20261014_0f894606d9e15f6c.json.gz",
           "bytes": 9253,
           "sha256": "0f894606d9e15f6c49ad0386b246d4be2eaba3d44e6023c2a5afe91f37626dd5"
-        }
-      ],
-      "pending": [
+        },
         {
           "bucket": "day-20261015",
           "bucket_start_ms": 1792022400000,
           "bucket_end_ms": 1792108800000,
           "first_open_ms": 1792022400000,
-          "last_open_ms": 1792107900000,
-          "candles": 286,
+          "last_open_ms": 1792108500000,
+          "candles": 288,
           "boundary_kind": "full_period",
-          "rows_sha256": "231d7823aa65d519d76a26b71c59c947218cfbad2db819d6fd49a5d58443d008"
+          "file": "series/ethereum_24h_day-20261015_b3fbf8a7177a0bbf.json.gz",
+          "bytes": 9451,
+          "sha256": "b3fbf8a7177a0bbf94ffdeab9d953a5c0d6af67742c8f182ae66021220645b13"
+        }
+      ],
+      "pending": [
+        {
+          "bucket": "day-20261016",
+          "bucket_start_ms": 1792108800000,
+          "bucket_end_ms": 1792195200000,
+          "first_open_ms": 1792108800000,
+          "last_open_ms": 1792113300000,
+          "candles": 16,
+          "boundary_kind": "full_period",
+          "rows_sha256": "690244ca47980d86d3fa947f74502438117baba17d843aa21cd5696d1409e77d"
         }
       ]
     },
@@ -550,8 +586,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792101600000,
-      "candles": 358,
+      "last_open_ms": 1792108800000,
+      "candles": 360,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -584,10 +620,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1792101600000,
-          "candles": 95,
+          "last_open_ms": 1792108800000,
+          "candles": 97,
           "boundary_kind": "full_period",
-          "rows_sha256": "deadb5e49d1770b8717b631d9e6a7d6a40b7a41e942e2d4ef062b53a6cd1daa8"
+          "rows_sha256": "c95305ab5094628a1041ed0eb05fa6d069528150560c09d40a6730b6a0d9d849"
         }
       ]
     },
@@ -597,8 +633,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792080000000,
-      "candles": 227,
+      "last_open_ms": 1792094400000,
+      "candles": 228,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -619,10 +655,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792080000000,
-          "candles": 89,
+          "last_open_ms": 1792094400000,
+          "candles": 90,
           "boundary_kind": "full_period",
-          "rows_sha256": "84407b8fb8c9d1d0566b41d9f8b9582500e18a4675897d4c4621ac84f7239e0b"
+          "rows_sha256": "bb34901ef68e9201167e1def754bc32bb9425d4bdee96521a72c59f4bce6a356"
         }
       ]
     },
@@ -632,8 +668,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792107900000,
-      "candles": 2570,
+      "last_open_ms": 1792113300000,
+      "candles": 2588,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -730,18 +766,30 @@
           "file": "series/ripple_24h_day-20261014_ca02d19c56f8745e.json.gz",
           "bytes": 7852,
           "sha256": "ca02d19c56f8745e242368681b39bc591d64d4b06e6fb2f8c80a47134b604f0e"
-        }
-      ],
-      "pending": [
+        },
         {
           "bucket": "day-20261015",
           "bucket_start_ms": 1792022400000,
           "bucket_end_ms": 1792108800000,
           "first_open_ms": 1792022400000,
-          "last_open_ms": 1792107900000,
-          "candles": 286,
+          "last_open_ms": 1792108500000,
+          "candles": 288,
           "boundary_kind": "full_period",
-          "rows_sha256": "88424aa37cc04d616d96fe8cd183fa779203f5a9b0d4de2b9018bbc1f35e41e5"
+          "file": "series/ripple_24h_day-20261015_71bb1de17cf897d8.json.gz",
+          "bytes": 7954,
+          "sha256": "71bb1de17cf897d83d17af4177c8eb015a1da3e52a5750e4578e7ffffa20cafd"
+        }
+      ],
+      "pending": [
+        {
+          "bucket": "day-20261016",
+          "bucket_start_ms": 1792108800000,
+          "bucket_end_ms": 1792195200000,
+          "first_open_ms": 1792108800000,
+          "last_open_ms": 1792113300000,
+          "candles": 16,
+          "boundary_kind": "full_period",
+          "rows_sha256": "894bf5be58cbeacdec0fdc301287a32d2c0ad82f273f0f0436b4677d559abcd9"
         }
       ]
     },
@@ -751,8 +799,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792101600000,
-      "candles": 358,
+      "last_open_ms": 1792108800000,
+      "candles": 360,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -785,10 +833,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1792101600000,
-          "candles": 95,
+          "last_open_ms": 1792108800000,
+          "candles": 97,
           "boundary_kind": "full_period",
-          "rows_sha256": "4292783ab853c4a484c4c0c4846198ae5e8ccf4c7ba30679686f73aafebe3609"
+          "rows_sha256": "8818b53b01631ff8b38483c9ce213dba8bf4a0425c60bc5b5c2bffbd53708e92"
         }
       ]
     },
@@ -798,8 +846,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792080000000,
-      "candles": 227,
+      "last_open_ms": 1792094400000,
+      "candles": 228,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -820,10 +868,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792080000000,
-          "candles": 89,
+          "last_open_ms": 1792094400000,
+          "candles": 90,
           "boundary_kind": "full_period",
-          "rows_sha256": "abacfbf8b0ce03766cbe1e7a672dba566f8e57038cacccfa7c6aa509564297bf"
+          "rows_sha256": "f2911daca749e33f6ceff4e73e01d066ea735f16cf4b383ec50f41e0e02ffb94"
         }
       ]
     },
@@ -833,8 +881,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792107900000,
-      "candles": 2570,
+      "last_open_ms": 1792113300000,
+      "candles": 2588,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -931,18 +979,30 @@
           "file": "series/solana_24h_day-20261014_aaf0cad911d4bf4e.json.gz",
           "bytes": 7871,
           "sha256": "aaf0cad911d4bf4e505d0b35dba68c45639546f7faf7d8e182433ea5087f6d95"
-        }
-      ],
-      "pending": [
+        },
         {
           "bucket": "day-20261015",
           "bucket_start_ms": 1792022400000,
           "bucket_end_ms": 1792108800000,
           "first_open_ms": 1792022400000,
-          "last_open_ms": 1792107900000,
-          "candles": 286,
+          "last_open_ms": 1792108500000,
+          "candles": 288,
           "boundary_kind": "full_period",
-          "rows_sha256": "006fe29bfdca6952faeae2b1279b37b676b2ca8482c2f759a5117601f51e8aac"
+          "file": "series/solana_24h_day-20261015_64fc89e6a48b3446.json.gz",
+          "bytes": 7940,
+          "sha256": "64fc89e6a48b3446d19ac4a3ced2d761abf1128bf85fc3932bf5de0724e439ab"
+        }
+      ],
+      "pending": [
+        {
+          "bucket": "day-20261016",
+          "bucket_start_ms": 1792108800000,
+          "bucket_end_ms": 1792195200000,
+          "first_open_ms": 1792108800000,
+          "last_open_ms": 1792113300000,
+          "candles": 16,
+          "boundary_kind": "full_period",
+          "rows_sha256": "3066cf39f9485b0bd74f06ee6c047148a5f5a643e03828f56a84790833ceb49c"
         }
       ]
     },
@@ -952,8 +1012,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792101600000,
-      "candles": 358,
+      "last_open_ms": 1792108800000,
+      "candles": 360,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -986,10 +1046,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1792101600000,
-          "candles": 95,
+          "last_open_ms": 1792108800000,
+          "candles": 97,
           "boundary_kind": "full_period",
-          "rows_sha256": "da8b50d97c430940a074bb9902c5ce80bd2ab179d21f2550674f364f2554dc4b"
+          "rows_sha256": "3b4281b87dfe6bb446ff4df7dc9788275a112d4e3b2297cb9fffc85eaa2f697c"
         }
       ]
     },
@@ -999,8 +1059,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792080000000,
-      "candles": 227,
+      "last_open_ms": 1792094400000,
+      "candles": 228,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -1021,10 +1081,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792080000000,
-          "candles": 89,
+          "last_open_ms": 1792094400000,
+          "candles": 90,
           "boundary_kind": "full_period",
-          "rows_sha256": "8c1f934161b3a7cb13190c361bf6f223905d6f8faf2d500d6225995dbafb68e0"
+          "rows_sha256": "7156c3ed5038e086f15193df7e3a9a0d3e58574a6fdf07437a3b8cd8a1c5e2aa"
         }
       ]
     },
@@ -1034,8 +1094,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792107900000,
-      "candles": 2570,
+      "last_open_ms": 1792113300000,
+      "candles": 2588,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -1132,18 +1192,30 @@
           "file": "series/tron_24h_day-20261014_712629024e6159c1.json.gz",
           "bytes": 6628,
           "sha256": "712629024e6159c14afbebf048d14acfe28dc446766d80595bfb24d278a8b097"
-        }
-      ],
-      "pending": [
+        },
         {
           "bucket": "day-20261015",
           "bucket_start_ms": 1792022400000,
           "bucket_end_ms": 1792108800000,
           "first_open_ms": 1792022400000,
-          "last_open_ms": 1792107900000,
-          "candles": 286,
+          "last_open_ms": 1792108500000,
+          "candles": 288,
           "boundary_kind": "full_period",
-          "rows_sha256": "df8b5c86cb8a023473b45a5e6127d204806f9b9ad93214ef4aea6bba2c96877a"
+          "file": "series/tron_24h_day-20261015_4d703eec021e984a.json.gz",
+          "bytes": 6479,
+          "sha256": "4d703eec021e984ae1798fdc4ba971fe037c28b89d978220af199d40be507d6f"
+        }
+      ],
+      "pending": [
+        {
+          "bucket": "day-20261016",
+          "bucket_start_ms": 1792108800000,
+          "bucket_end_ms": 1792195200000,
+          "first_open_ms": 1792108800000,
+          "last_open_ms": 1792113300000,
+          "candles": 16,
+          "boundary_kind": "full_period",
+          "rows_sha256": "86082aac122da3cd0a2939572197d102b4fe60cf6868b1aa98697611631cc00e"
         }
       ]
     },
@@ -1153,8 +1225,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792101600000,
-      "candles": 358,
+      "last_open_ms": 1792108800000,
+      "candles": 360,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -1187,10 +1259,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1792101600000,
-          "candles": 95,
+          "last_open_ms": 1792108800000,
+          "candles": 97,
           "boundary_kind": "full_period",
-          "rows_sha256": "4cdcb21ce8d3cebba73b298059fa09e7cafbfc118ca81bfa0dcb077a9533ceef"
+          "rows_sha256": "ff5c3c26ea18b6c231e2d8587a14d3a20d12b260e8faaf6bbc3406c25c92008c"
         }
       ]
     },
@@ -1200,8 +1272,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792080000000,
-      "candles": 227,
+      "last_open_ms": 1792094400000,
+      "candles": 228,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -1222,10 +1294,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792080000000,
-          "candles": 89,
+          "last_open_ms": 1792094400000,
+          "candles": 90,
           "boundary_kind": "full_period",
-          "rows_sha256": "74735c0d1b8471c11abc4f5cf91c793aeb09dc071851df05e6191728846c1e70"
+          "rows_sha256": "880e838034613dfa6b9bbd9cdbade80e4a09e210f8a6b9b34845212f64bd835a"
         }
       ]
     },
@@ -1235,8 +1307,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792107900000,
-      "candles": 2570,
+      "last_open_ms": 1792113300000,
+      "candles": 2588,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -1333,18 +1405,30 @@
           "file": "series/zcash_24h_day-20261014_c7c219403685ac67.json.gz",
           "bytes": 8743,
           "sha256": "c7c219403685ac67fabb95b150f54b06e68246404bedb8989665272343160062"
-        }
-      ],
-      "pending": [
+        },
         {
           "bucket": "day-20261015",
           "bucket_start_ms": 1792022400000,
           "bucket_end_ms": 1792108800000,
           "first_open_ms": 1792022400000,
-          "last_open_ms": 1792107900000,
-          "candles": 286,
+          "last_open_ms": 1792108500000,
+          "candles": 288,
           "boundary_kind": "full_period",
-          "rows_sha256": "fc77f23231e676e5d0c397a844b056634e94f52737860d94491b4445498b63d5"
+          "file": "series/zcash_24h_day-20261015_fdb2a889d51fa4af.json.gz",
+          "bytes": 8821,
+          "sha256": "fdb2a889d51fa4afa5da1464caffde2d6b4db0cb36f79b36a1d314fefaca4a2f"
+        }
+      ],
+      "pending": [
+        {
+          "bucket": "day-20261016",
+          "bucket_start_ms": 1792108800000,
+          "bucket_end_ms": 1792195200000,
+          "first_open_ms": 1792108800000,
+          "last_open_ms": 1792113300000,
+          "candles": 16,
+          "boundary_kind": "full_period",
+          "rows_sha256": "384ecb38897a2939fff0efab41073c3b2cbd6219ef71531dccb2f3550621c15f"
         }
       ]
     },
@@ -1354,8 +1438,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792101600000,
-      "candles": 358,
+      "last_open_ms": 1792108800000,
+      "candles": 360,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -1388,10 +1472,10 @@
           "bucket_start_ms": 1791763200000,
           "bucket_end_ms": 1792368000000,
           "first_open_ms": 1791763200000,
-          "last_open_ms": 1792101600000,
-          "candles": 95,
+          "last_open_ms": 1792108800000,
+          "candles": 97,
           "boundary_kind": "full_period",
-          "rows_sha256": "8ea73634045d53bb6fc745786c9cb235884f38d970ed8a28170a8526aba9fb14"
+          "rows_sha256": "ceb801f0898c6f98faf410125c9fea61ff5ac854bbcc9a5987696cd2269b1c14"
         }
       ]
     },
@@ -1401,8 +1485,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792080000000,
-      "candles": 227,
+      "last_open_ms": 1792094400000,
+      "candles": 228,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -1423,10 +1507,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792080000000,
-          "candles": 89,
+          "last_open_ms": 1792094400000,
+          "candles": 90,
           "boundary_kind": "full_period",
-          "rows_sha256": "c179f712274308461689edf63b7c004865631228285fa15c6f0ccd93131cb258"
+          "rows_sha256": "d7907aef9934108443e18d9e8de96e89c3654cfa7aee0651d0dcd3de1d8de77e"
         }
       ]
     }
