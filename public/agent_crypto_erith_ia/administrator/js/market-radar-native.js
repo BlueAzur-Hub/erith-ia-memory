@@ -187,7 +187,7 @@ function printWatch(root,model){
  }
  lookup(root,"journal").textContent=paper?
    "PAPER · BTC : "+paper.BTC.decision+" · CT : "+paper.CT.decision+
-    · "+(paper.BTC.closed+paper.CT.closed)+" positions PAPER terminées · source BTC "+safeDate(paper.BTC.sourceTime)+" / CT "+safeDate(paper.CT.sourceTime):
+   " · "+(paper.BTC.closed+paper.CT.closed)+" positions PAPER terminées · source BTC "+safeDate(paper.BTC.sourceTime)+" / CT "+safeDate(paper.CT.sourceTime):
    "Journal PAPER inaccessible · aucun signal supposé";
 }
 async function identityRegistry(){
