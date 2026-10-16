@@ -1079,6 +1079,8 @@
     const visible=!!open;
     panel.classList.toggle("atlas-radar-open",visible);
     view.hidden=!visible;
+    const supplementary=document.getElementById("atlasRadarBelowMarket");
+    if(supplementary)supplementary.hidden=!visible;
     state.radarOpen=visible;
     button.classList.toggle("active",visible);
     button.classList.toggle("is-active",visible);

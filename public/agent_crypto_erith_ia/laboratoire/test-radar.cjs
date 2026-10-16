@@ -104,6 +104,7 @@ const nativeCss=fs.readFileSync(path.resolve(__dirname,'../administrator/market-
 const marketFiche=fs.readFileSync(path.resolve(__dirname,'../trader/market-fiche-native.js'),'utf8');
 assert(tab.includes('marketSnapshotPanel')&&tab.includes('marketTools'),"Native Radar stays in existing Market Snapshot");
 assert(tab.includes('atlasRadarMarketView')&&tab.includes('view.hidden=!visible'),"Native Radar hides and shows without replacing Market");
+assert(tab.includes('supplementary.hidden=!visible'),"Closing Radar hides the supplementary Spot/PAPER sections");
 assert(tab.includes('aria-pressed')&&tab.includes('aria-expanded'),"Native Radar supports accessible toggling");
 assert(native.includes('loadRadarScript("../laboratoire/radar.js")'),"Native Radar reuses exact standalone public parser");
 assert(native.includes('loadRadarScript("./js/market-radar-native.js")'),"Native Radar loads a dedicated themed renderer");
@@ -121,7 +122,7 @@ assert(nativeView.includes('radar-native-head')&&nativeView.includes('market-uni
 assert(nativeView.includes('Agrandir ↗')&&nativeView.includes('../laboratoire/radar.html'),"Standalone view remains available");
 assert(nativeView.includes('global.AgentCryptoRadarReader'),"Renderer shares public parser with standalone");
 assert(!nativeView.includes('createElement("iframe")')&&!nativeView.includes('placeOrder')&&!nativeView.includes('api/v5/trade/order'),"No iframe or private trading routes");
-assert(nativeCss.includes('#marketSnapshotPanel .radar-native')&&nativeCss.includes('var(--text)')&&nativeCss.includes('var(--line)'),"Scoped CSS uses existing Trader palette");
+assert(nativeCss.includes(':is(#marketSnapshotPanel, #atlasRadarBelowMarket) .radar-native')&&nativeCss.includes('var(--text)')&&nativeCss.includes('var(--line)'),"Shared Market/Radar CSS is scoped correctly");
 assert(!nativeCss.includes('color:#fff1c7')&&!nativeCss.includes('background:#06131f'),"Standalone palette not duplicated");
 assert(js.includes('global.AgentCryptoRadarReader=API'),"Standalone and Market-native views share same validators");
 assert(js.includes('!document.getElementById("tiers")'),"Standalone renderer does not auto-mount in Trader");
