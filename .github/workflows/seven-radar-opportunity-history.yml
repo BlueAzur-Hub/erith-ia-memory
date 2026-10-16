@@ -1,0 +1,46 @@
+name: Seven Radar Opportunity History
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "31 7 * * *"
+permissions:
+  contents: write
+concurrency:
+  group: seven-radar-opportunity-history
+  cancel-in-progress: false
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Archive existing public snapshots only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            node public/agent_crypto_erith_ia/tools/radar_opportunity_history.cjs
+            git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/
+            if git diff --cached --quiet; then
+              echo "No new observation; archived dates remain immutable."
+              exit 0
+            fi
+            git commit -m "Archive public Radar opportunity observations (no orders)"
+            if git push origin HEAD:main; then
+              echo "Radar observation history published."
+              exit 0
+            fi
+            echo "Remote changed during archive; retrying using current sources."
+            sleep "$((attempt * 3))"
+          done
+          echo "Could not publish after retries; no fabricated observation." >&2
+          exit 1
