@@ -49,6 +49,31 @@ test('a 10 CT sell cannot borrow CT that is not present',()=>{
  assert.equal(result.input_verified,false);
  assert.match(result.reasons.join(' '),/supérieure au total CT/);
 });
+test('selling after a proven full liquidation of CT is refused',()=>{
+ const before=doc();
+ const zero={...before,position:{...before.position,qty_ct:0},
+  portfolio:{...before.portfolio,assets:{...before.portfolio.assets,
+   CT:{verified:true,qty:0}}}};
+ const result=draft.prepare(zero,propose('sell','10'),model,now);
+ assert.equal(result.executable,false);
+ assert.equal(result.input_verified,false);
+ assert.match(result.reasons.join(' '),/Aucun CT observé/);
+});
+test('ticket is mounted only in native OKX Seven analysis, not in Radar or Chart',()=>{
+ const script=fs.readFileSync(require.resolve('./ai-ct-panel.js'),'utf8');
+ const inAccount=script.slice(script.indexOf('async function readForAccount('),
+  script.indexOf('const lesson='));
+ assert.match(inAccount,/showEvidence\(target,doc\);\s*globalThis\.AgentCryptoCtOrderTicket\?\.mount\?\.\(target,doc\)/);
+ const other=script.slice(script.indexOf('function paint(doc)'),script.indexOf('async function loadCtEvidence'));
+ assert.ok(!other.includes('AgentCryptoCtOrderTicket'));
+ const mirror=fs.readFileSync(require.resolve('./trader-runtime-mirror.js'),'utf8');
+ assert.match(mirror,/traderCtOrderDraftScript/);
+ assert.match(mirror,/traderCtOrderTicketScript/);
+ assert.match(mirror,/ticket\.onerror=loadPanel/);
+ const css=fs.readFileSync(require.resolve('./ct-order-ticket.css'),'utf8');
+ assert.ok(css.includes('#traderOkxAccountPanel .ct-order-ticket'));
+ assert.ok(!css.includes('#marketRadar'));
+});
 test('invalid price tick is refused without silent rounding',()=>{
  const result=draft.prepare(doc(),propose('buy','10','0.35225'),model,now);
  assert.equal(result.input_verified,false);
