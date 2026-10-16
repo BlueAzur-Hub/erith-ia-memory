@@ -179,6 +179,133 @@ test("Top1000 fiche uses existing Administrator native Market after exact identi
   globalThis.document=old.document;
  }
 });
+test("Top1000 Fiche accepts a changed rank when ID and symbol match",async()=>{
+ const native=require("./market-radar-native.js");
+ const old={universe:globalThis.AtlasMarketUniverse1000,
+  fiche:globalThis.AtlasExtendedNativeFiche,document:globalThis.document};
+ try{
+  const item={id:"siren",name:"Siren",symbol:"SIREN",rank:619};
+  const latest={...item,rank:624};
+  globalThis.AtlasMarketUniverse1000={find:()=>latest};
+  globalThis.AtlasExtendedNativeFiche={resolver:()=>latest};
+  const layer={dataset:{},hidden:false},status={textContent:""};
+  globalThis.document={getElementById:id=>id==="atlasHelpLayer"?layer:null};
+  let focuses=0,manualEvents=0;
+  const button={dataset:{},disabled:false,textContent:"Fiche",
+   setAttribute:()=>{},removeAttribute:()=>{},
+   focus(options){focuses++;assert.equal(options.preventScroll,true);
+    assert.equal(button.disabled,false);
+    assert.equal(button.dataset.marketHelpId,item.id);
+    layer.dataset.marketHelpCoinId=item.id;},
+   dispatchEvent(){manualEvents++;return true;}};
+  assert.equal(await native.openOpportunityFiche({querySelector:()=>status},button,item),true);
+  assert.equal(focuses,1);
+  assert.equal(manualEvents,0,"native focusin works without duplicate synthetic event");
+  assert.match(status.textContent,/rang actualisé 624/);
+  assert.equal(button.textContent,"Fiche ✓");
+  assert.equal(button.dataset.radarFicheBusy,undefined);
+ }finally{
+  globalThis.AtlasMarketUniverse1000=old.universe;
+  globalThis.AtlasExtendedNativeFiche=old.fiche;
+  globalThis.document=old.document;
+ }
+});
+test("Top1000 Fiche remains focusable during async loading and ignores double clicks",async()=>{
+ const native=require("./market-radar-native.js");
+ const old={universe:globalThis.AtlasMarketUniverse1000,
+  fiche:globalThis.AtlasExtendedNativeFiche,document:globalThis.document};
+ try{
+  const item={id:"siren",name:"Siren",symbol:"SIREN",rank:619};
+  let finish,loads=0;
+  const pending=new Promise(resolve=>finish=resolve);
+  let ready=false;
+  globalThis.AtlasMarketUniverse1000={
+   ensure:async()=>{loads++;await pending;ready=true;},
+   find:()=>ready?item:null};
+  globalThis.AtlasExtendedNativeFiche={resolver:id=>ready&&id===item.id?item:null};
+  const layer={dataset:{},hidden:false};
+  globalThis.document={getElementById:id=>id==="atlasHelpLayer"?layer:null};
+  let events=0;
+  const button={dataset:{},disabled:false,attributes:{},
+   setAttribute(k,v){this.attributes[k]=v;},
+   removeAttribute(k){delete this.attributes[k];},
+   dispatchEvent(event){
+    assert.equal(event.type,"focusin");
+    assert.equal(button.disabled,false);
+    layer.dataset.marketHelpCoinId=button.dataset.marketHelpId;
+    events++;return true;
+   }};
+  const root={querySelector:()=>({textContent:""})};
+  const first=native.openOpportunityFiche(root,button,item);
+  assert.equal(button.disabled,false,"focus must be possible even while loading");
+  assert.equal(button.attributes["aria-busy"],"true");
+  assert.equal(await native.openOpportunityFiche(root,button,item),false);
+  assert.equal(loads,1);
+  finish();
+  assert.equal(await first,true);
+  assert.equal(events,1);
+  assert.equal(button.attributes["aria-busy"],undefined);
+  assert.equal(button.dataset.radarFicheBusy,undefined);
+ }finally{
+  globalThis.AtlasMarketUniverse1000=old.universe;
+  globalThis.AtlasExtendedNativeFiche=old.fiche;
+  globalThis.document=old.document;
+ }
+});
+test("Top1000 Fiche dock gives a visible button-location hint without scrolling",async()=>{
+ const native=require("./market-radar-native.js");
+ const old={universe:globalThis.AtlasMarketUniverse1000,
+  fiche:globalThis.AtlasExtendedNativeFiche,document:globalThis.document};
+ try{
+  const item={id:"siren",name:"Siren",symbol:"SIREN",rank:619};
+  globalThis.AtlasMarketUniverse1000={find:()=>item};
+  globalThis.AtlasExtendedNativeFiche={resolver:()=>item};
+  const layer={dataset:{},hidden:true};
+  const dock={dataset:{},hidden:false};
+  globalThis.document={getElementById:id=>id==="atlasHelpLayer"?layer:
+   id==="atlasMarketCardDockHost"?dock:null};
+  let clickFocus=0;
+  const button={dataset:{},disabled:false,
+   setAttribute:()=>{},removeAttribute:()=>{},
+   dispatchEvent(){clickFocus++;dock.dataset.marketHelpCoinId=item.id;return true;}};
+  const status={textContent:""};
+  const result=await native.openOpportunityFiche({querySelector:()=>status},button,item);
+  assert.equal(result,true);
+  assert.equal(clickFocus,1);
+  assert.equal(button.textContent,"Market ↑");
+  assert.match(button.title,/plus haut sur la page/);
+  assert.match(status.textContent,/fiche latérale dans Market/);
+ }finally{
+  globalThis.AtlasMarketUniverse1000=old.universe;
+  globalThis.AtlasExtendedNativeFiche=old.fiche;
+  globalThis.document=old.document;
+ }
+});
+test("Top1000 Fiche refuses a stale item after Radar re-render while loading",async()=>{
+ const native=require("./market-radar-native.js");
+ const old={universe:globalThis.AtlasMarketUniverse1000,
+  fiche:globalThis.AtlasExtendedNativeFiche,document:globalThis.document};
+ try{
+  const item={id:"siren",symbol:"SIREN",rank:619};
+  let finish;
+  const pending=new Promise(resolve=>finish=resolve);
+  globalThis.AtlasMarketUniverse1000={ensure:async()=>pending,find:()=>null};
+  globalThis.AtlasExtendedNativeFiche={resolver:()=>null};
+  globalThis.document={getElementById:()=>null};
+  const button={dataset:{},isConnected:true,disabled:false,
+   setAttribute:()=>{},removeAttribute:()=>{},dispatchEvent:()=>{throw Error("Must not open");}};
+  const status={textContent:""};
+  const promise=native.openOpportunityFiche({querySelector:()=>status},button,item);
+  button.isConnected=false;
+  finish();
+  assert.equal(await promise,false);
+  assert.match(status.textContent,/liste actualisée/);
+ }finally{
+  globalThis.AtlasMarketUniverse1000=old.universe;
+  globalThis.AtlasExtendedNativeFiche=old.fiche;
+  globalThis.document=old.document;
+ }
+});
 test("Top1000 Fiche refuses an inaccurate or missing identity",async()=>{
  const native=require("./market-radar-native.js");
  const old={universe:globalThis.AtlasMarketUniverse1000,fiche:globalThis.AtlasExtendedNativeFiche,document:globalThis.document};
