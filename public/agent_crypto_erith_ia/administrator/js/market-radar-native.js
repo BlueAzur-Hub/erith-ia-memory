@@ -88,40 +88,6 @@ function ficheCoin(root,active){
   radarObservation:"Listing externe · observation",radarReason:"Le graphique n'est pas propriétaire d'un prix Market Core.",
   radarEvidence:"Cotation uniquement lorsque la source exacte est disponible"};
 }
-function syncRadarNativePanels(root,active){
- const card=lookup(root,"inlineFiche"),tech=lookup(root,"technical");
- const cardHost=lookup(root,"inlineFicheBody");
- if(card&&cardHost&&card.open){
-   const asset=ficheCoin(root,active);
-   const owner=global.AgentCryptoTraderNativeFiche;
-   if(!asset||typeof owner?.renderInto!=="function"||!owner.renderInto(cardHost,asset)){
-     cardHost.replaceChildren(node("p","table-note","Fiche native indisponible : identité ou module manquant"));
-   }
- }
- if(!tech)return;
- tech.replaceChildren();
- const microscope=global.AgentCryptoMarketMicroscope;
- const study=global.AgentCryptoRadarReader?.studyExistingCandles;
- if(typeof study!=="function"||typeof microscope?.snapshot!=="function"){
-   tech.append(node("p","table-note","Microscope natif non chargé · aucune analyse supposée"));
-   return;
- }
- let result;
- try{result=study(active,microscope.snapshot(),microscope.technicalLevels?.());}
- catch(_){result={status:"UNAVAILABLE",reason:"Série graphique illisible · aucune conclusion"};}
- const heading=result.status==="PAPER_REVIEW"?"Rebond à vérifier en PAPER":
-    result.status==="WAIT"?"Observation : attendre confirmation":"Graphique : données non qualifiées";
- tech.append(node("strong","",heading),node("p","table-note",result.reason));
- if(result.observation){
-   tech.append(node("p","table-note",result.observation.pair+" · "+result.observation.bar+
-     " · "+result.observation.candles+" bougies clôturées · dernière clôture "+
-     safeDate(result.observation.closedAt)+" · prix coté "+result.observation.closedPrice+" "+result.unit+
-     " · volume / moyenne "+result.observation.volumeRatio+"×"));
-   tech.append(node("p","",result.entry),node("p","",result.exit));
-   tech.append(node("small","","SOURCE : "+result.source+
-     " · scénarios Spot PAPER sans ordre · frais et spread NON vérifiés"));
- }
-}
 function syncGraphSelection(root){
  const active=graphSelection(),items=Array.from(root.querySelectorAll(".radar-native-selectable"));
  for(const item of items){
@@ -133,11 +99,10 @@ function syncGraphSelection(root){
  if(label)label.textContent=active?"Graphique : "+active.symbol+" · sélection confirmée":"Graphique : sélection non confirmée";
  if(button){
   const coin=ficheCoin(root,active);
-  button.disabled=!coin||typeof global.AgentCryptoTraderNativeFiche?.renderInto!=="function";
+  button.disabled=!coin||typeof global.AgentCryptoTraderNativeFiche?.showAsset!=="function";
   button.radarCoin=coin||null;
-  button.title=coin?"Afficher la fiche Crypto DANS le Radar · "+coin.symbol:"Fiche indisponible : identité non confirmée";
+  button.title=coin?"Ouvrir la fiche Crypto Market Snapshot · "+coin.symbol:"Fiche indisponible : identité non confirmée";
  }
- syncRadarNativePanels(root,active);
  return active;
 }
 // Selection is delegated to the existing owners. A click NEVER clears an
@@ -242,21 +207,11 @@ function build(root){
  const fiche=node("button","btn small","Voir la fiche");fiche.type="button";fiche.dataset.radarNative="focusFiche";fiche.disabled=true;
  fiche.addEventListener("click",()=>{
   if(fiche.disabled||!fiche.radarCoin)return;
-  const section=lookup(root,"inlineFiche");
-  section.open=true;syncGraphSelection(root);
+  // Anchor the EXISTING Market fiche to this visible button, not an off-screen row.
+  const opened=global.AgentCryptoTraderNativeFiche?.showAsset?.(fiche,fiche.radarCoin);
+  if(opened===false)lookup(root,"status").textContent="Fiche Market indisponible · ouverture refusée";
  });
  focus.append(label,note,fiche);root.append(focus);
- const intelligence=node("div","radar-native-intelligence");
- const card=node("details","radar-native-fiche-panel");card.dataset.radarNative="inlineFiche";
- const cardSummary=node("summary","","FICHE CRYPTO · MARKET SNAPSHOT (native)");
- const body=node("div","radar-native-fiche-body");body.dataset.radarNative="inlineFicheBody";
- card.append(cardSummary,body);
- card.addEventListener("toggle",()=>{if(card.open)syncRadarNativePanels(root,graphSelection());});
- const plan=node("section","radar-native-technical");
- plan.append(node("h4","","Lecture des bougies du Graphique · scénarios Spot PAPER"));
- const technical=node("div","radar-native-technical-body");technical.dataset.radarNative="technical";
- plan.append(technical);intelligence.append(card,plan);root.append(intelligence);
- card.open=false;
  const subtitle=node("p","table-note","Top 10 · CoinGecko · pas de recommandation d'achat");subtitle.dataset.radarNative="marketNote";root.append(subtitle);
  const wrap=node("div","table-wrap radar-native-table");const table=node("table");
  const thead=node("thead"),tr=node("tr");
@@ -488,7 +443,6 @@ function mount(root){
  controls.refresh.addEventListener("click",()=>void refresh(root,model));
  window.addEventListener("agent-crypto:trader-selection-changed",()=>syncGraphSelection(root),{passive:true});
  window.addEventListener("agent-crypto:new-listing-line-ready",()=>syncGraphSelection(root),{passive:true});
- window.addEventListener("agent-crypto:market-candles-loaded",()=>syncGraphSelection(root),{passive:true});
  syncGraphSelection(root);
  void refresh(root,model);
  return true;
