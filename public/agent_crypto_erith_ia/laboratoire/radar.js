@@ -14,8 +14,8 @@ function validMarket(src){
   if(!Number.isInteger(c?.rank)||c.rank<1||c.rank>250||!c.id||!c.symbol||ids.has(c.id)||ranks.has(c.rank))throw Error("Top 250 : rang ou identité invalide");
   ids.add(c.id);ranks.add(c.rank);
   return {id:String(c.id),symbol:String(c.symbol).toUpperCase(),name:String(c.name||c.symbol),rank:c.rank,
-    priceUsd:positive(c.priceUsd),change24h:finite(c.change24h),change7d:finite(c.change7d),
-    volume24hUsd:finite(c.volume24hUsd)};
+    priceUsd:positive(c.priceUsd),change24h:finite(c.change24h),change7d:finite(c.change7d),change30d:finite(c.change30d),
+    volume24hUsd:finite(c.volume24hUsd),marketCapUsd:finite(c.marketCapUsd),image:typeof c.image==='string'?c.image:''};
  }).sort((a,b)=>a.rank-b.rank);
  if(rows.length!==250||rows[0].rank!==1||rows[249].rank!==250)throw Error("Top 250 discontinu");
  return {rows,at:String(src.generated_at),source:"CoinGecko"};
@@ -59,7 +59,7 @@ function verifyBitget(inst,tickers,registry,now){
   const identity=registry.get(base),value={symbol:base,name:identity?.displayName||base,
    venue:"Bitget Spot",pair:base+"/"+quote,quote,price:last,volume:turnover,
    ageDays:(now-start)/DAY,change24h:Number.isFinite(change)?change*100:null,
-   identityProved:!!identity,status:identity?"IDENTITÉ VÉRIFIÉE":"IDENTITÉ À VÉRIFIER",source:"Bitget Spot launchTime+ticker"};
+   image:identity?.image||'',identityProved:!!identity,status:identity?"IDENTITÉ VÉRIFIÉE":"IDENTITÉ À VÉRIFIER",source:"Bitget Spot launchTime+ticker"};
   if(!found.has(base)||value.volume>found.get(base).volume)found.set(base,value);
  }
  return [...found.values()].sort((a,b)=>a.ageDays-b.ageDays).slice(0,50);

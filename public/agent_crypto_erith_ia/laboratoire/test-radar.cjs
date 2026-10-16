@@ -7,11 +7,13 @@ const now=Date.UTC(2026,9,16,8,0,0);
 const coins=Array.from({length:250},(_,i)=>({id:'asset-'+i,rank:i+1,
   name:i===0?'Bitcoin':'Asset '+i,symbol:i===0?'BTC':'X'+i,
   priceUsd:i+1,change24h:i/10-4,change7d:i/20,volume24hUsd:1000+i,
-  lastUpdated:'2026-10-16T07:50:00Z'}));
+  image:i===0?'https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png':'',marketCapUsd:5000+i,lastUpdated:'2026-10-16T07:50:00Z'}));
 const example={schema:'agent_crypto_public_market_snapshot_v1',source:{provider_id:'coingecko'},
   generated_at:'2026-10-16T07:51:00Z',coins};
 const validated=reader.validMarket(example);
 assert.equal(validated.rows.length,250);
+assert.equal(validated.rows[0].marketCapUsd,5000);
+assert.equal(validated.rows[0].image,coins[0].image);
 for(const tier of reader.TIERS){
   const rows=reader.selectMarket(validated.rows,tier);
   assert.equal(rows.length,tier);
@@ -26,7 +28,7 @@ assert.throws(()=>reader.validMarket({...example,source:{provider_id:'unknown'}}
 const clash=coins.map(v=>({...v}));clash[3].rank=1;
 assert.throws(()=>reader.validMarket({...example,coins:clash}),/invalide/i);
 const registries={schema:'agent_crypto_new_listings_identity_registry_v1',identities:{
- 'magic-hash':{symbol:'MHA',displayName:'MAGNE.AI',coingeckoId:'magic-hash',verified:true},
+ 'magic-hash':{symbol:'MHA',displayName:'MAGNE.AI',coingeckoId:'magic-hash',image:'./assets/crypto/new-listings/magic-hash.png',verified:true},
  bogus:{symbol:'X',coingeckoId:'made-up',verified:false}
 }};
 const registry=reader.verifyRegistry(registries);
@@ -51,6 +53,8 @@ assert.deepEqual(listings.map(x=>x.symbol).sort(),['MHA','XYZ']);
 assert.equal(listings.find(x=>x.symbol==='MHA').identityProved,true);
 assert.equal(listings.find(x=>x.symbol==='XYZ').identityProved,false);
 assert.equal(listings.find(x=>x.symbol==='MHA').pair,'MHA/USDT');
+assert.equal(listings.find(x=>x.symbol==='MHA').image,'./assets/crypto/new-listings/magic-hash.png');
+assert.equal(listings.find(x=>x.symbol==='XYZ').image,'');
 assert.throws(()=>reader.verifyBitget({},tickers,registry,now),/invalides/i);
 const paper=reader.verifyPaper({schema:'erith.btc-ct.hourly-paper.v1',
  simulation_only:true,orders_enabled:false,account_access:false,
@@ -76,6 +80,7 @@ assert(tabStart>0&&tabEnd>tabStart);
 const tab=native.slice(tabStart,tabEnd);
 const nativeView=fs.readFileSync(path.resolve(__dirname,'../administrator/js/market-radar-native.js'),'utf8');
 const nativeCss=fs.readFileSync(path.resolve(__dirname,'../administrator/market-radar-native.css'),'utf8');
+const marketFiche=fs.readFileSync(path.resolve(__dirname,'../trader/market-fiche-native.js'),'utf8');
 assert(tab.includes('marketSnapshotPanel')&&tab.includes('marketTools'),"Native Radar stays in existing Market Snapshot");
 assert(tab.includes('atlasRadarMarketView')&&tab.includes('view.hidden=!visible'),"Native Radar hides and shows without replacing Market");
 assert(tab.includes('aria-pressed')&&tab.includes('aria-expanded'),"Native Radar supports accessible toggling");
@@ -108,6 +113,10 @@ assert(nativeView.includes('model.listings.filter(x=>x.symbol!=="CT")'),"No dupl
 assert(nativeView.includes('identityRegistry()'),"Canonical public identity registry failover");
 assert(nativeView.includes('printMarket(root,model);')&&nativeView.includes('const live=await Promise.allSettled'),"Render market before Bitget finishes");
 assert(nativeCss.includes('.radar-native-selectable:focus-visible'),"Keyboard click affordance");
+assert(nativeView.includes('identityCell(r,asset)')&&nativeView.includes('identityCell(r,item)'),"Shared identity rendering");
+assert(nativeView.includes('global.AgentCryptoTraderNativeFiche?.showAsset?.'),"Existing fiche owner");
+assert(marketFiche.includes('showAsset,hide,preferredMode'),"Fiche API exposed");
+assert(nativeCss.includes('.market-identity-rail')&&nativeCss.includes('[data-radar-symbol="BTC"]'),"Market color accents");
 
 (async()=>{
  const status={textContent:""};

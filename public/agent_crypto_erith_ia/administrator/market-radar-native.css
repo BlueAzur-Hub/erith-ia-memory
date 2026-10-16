@@ -49,3 +49,25 @@
 #marketSnapshotPanel .radar-native-selectable:hover{background:rgba(65,198,208,.10)}
 #marketSnapshotPanel .radar-native-selectable:focus-visible{outline:2px solid var(--cyan,#78d9e5);outline-offset:-2px}
 #marketSnapshotPanel .radar-native-cards .radar-native-selectable:hover{border-color:var(--cyan,#78d9e5)}
+
+/* Market identity reused by the Radar: logos, category accents and accessible fallback. */
+#marketSnapshotPanel .radar-native .radar-native-identity{display:flex;align-items:center;gap:9px;min-width:0}
+#marketSnapshotPanel .radar-native .radar-native-identity img,
+#marketSnapshotPanel .radar-native .radar-native-icon-fallback{width:23px;height:23px;border-radius:50%;object-fit:cover;flex:0 0 23px}
+#marketSnapshotPanel .radar-native .radar-native-icon-fallback{display:grid;place-items:center;background:var(--line);color:var(--text);font-size:11px;font-weight:850}
+#marketSnapshotPanel .radar-native .radar-native-identity-label{display:grid;gap:2px;text-align:left;min-width:0}
+#marketSnapshotPanel .radar-native .radar-native-identity-label strong{font-size:11px;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+#marketSnapshotPanel .radar-native .radar-native-identity-label small{font-size:10px;color:var(--muted)}
+#marketSnapshotPanel .radar-native [data-radar-category]{--radar-accent:var(--cyan,#78d9e5)}
+#marketSnapshotPanel .radar-native [data-radar-category="stablecoin"]{--radar-accent:#37d1be}
+#marketSnapshotPanel .radar-native [data-radar-category="major"]{--radar-accent:#7eafff}
+#marketSnapshotPanel .radar-native [data-radar-category="speculative"]{--radar-accent:#aa89e9}
+#marketSnapshotPanel .radar-native [data-radar-category="listing"]{--radar-accent:#5dd5c6}
+#marketSnapshotPanel .radar-native [data-radar-symbol="BTC"]{--radar-accent:#f9a23c}
+#marketSnapshotPanel .radar-native [data-radar-symbol="ETH"]{--radar-accent:#8c95b2}
+#marketSnapshotPanel .radar-native [data-radar-symbol="BNB"]{--radar-accent:#f6c94e}
+#marketSnapshotPanel .radar-native [data-radar-symbol="XRP"]{--radar-accent:#e1e7f0}
+#marketSnapshotPanel .radar-native [data-radar-symbol="SOL"]{--radar-accent:#9f81ef}
+#marketSnapshotPanel .radar-native [data-radar-symbol="CT"]{--radar-accent:#5be0c9}
+#marketSnapshotPanel .radar-native .market-identity-rail{display:inline-block;width:3px;height:22px;flex:0 0 3px;border-radius:3px;background:var(--radar-accent)}
+#marketSnapshotPanel .radar-native-card>.radar-native-identity{margin-bottom:3px}
