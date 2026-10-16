@@ -927,6 +927,7 @@
     const button=document.getElementById(BUTTON_ID);if(!button||button.dataset.newListingsNativeCategory==="1")return;
     button.dataset.newListingsNativeCategory="1";
     button.addEventListener("click",event=>{
+      if(state.radarOpen)radarView(false);
       event.preventDefault();event.stopImmediatePropagation();
       const next=!state.enabled;
       if(!next&&(state.selected||state.pending)){
@@ -950,6 +951,7 @@
     document.addEventListener("click",event=>{
       const button=event.target?.closest?.(".filter-btn[data-filter]");
       if(!button||button.id===BUTTON_ID)return;
+      if(state.radarOpen)radarView(false);
       if(state.enabled||state.selected||state.pending){
         state.enabled=false;
         const category=document.getElementById(BUTTON_ID);
@@ -1017,19 +1019,98 @@
     },true);
   }
 
+  // Radar is a native VIEW of Market, not another Market engine. The iframe
+  // reuses the exact public Radar reader shown by its standalone large view.
+  // Neither the market selection nor the graph owner is touched on entry/exit.
+  function radarView(open){
+    const panel=document.getElementById("marketSnapshotPanel");
+    const button=document.getElementById("atlasPublicRadarLink");
+    const view=document.getElementById("atlasRadarMarketView");
+    if(!panel||!button||!view)return false;
+    const visible=!!open;
+    panel.classList.toggle("atlas-radar-open",visible);
+    view.hidden=!visible;
+    state.radarOpen=visible;
+    button.classList.toggle("active",visible);
+    button.classList.toggle("is-active",visible);
+    button.setAttribute("aria-pressed",String(visible));
+    if(visible){
+      // No duplicate Radar fetches while the tab is closed; src is set once.
+      const frame=view.querySelector("iframe");
+      if(frame&&!frame.getAttribute("src"))
+        frame.src=new URL("../laboratoire/radar.html?embed=1",document.baseURI).href;
+    }
+    return true;
+  }
   function mountRadarLink(){
-    // Separate public research desk, never a second Market or graph owner.
     const button=document.getElementById(BUTTON_ID);
-    if(!button||!button.parentElement||document.getElementById("atlasPublicRadarLink"))return;
-    const a=document.createElement("a");
-    a.id="atlasPublicRadarLink";
-    a.href=new URL("../laboratoire/radar.html",document.baseURI).href;
-    a.target="_blank";a.rel="noopener noreferrer";
-    a.textContent="Radar ↗";
-    a.title="Radar · Top 10/20/50/250, nouveaux listings Spot, BTC/CT PAPER";
-    a.setAttribute("aria-label","Ouvrir Radar Marché et nouveaux listings en lecture seule");
-    a.style.cssText="display:inline-flex;align-items:center;white-space:nowrap;padding:7px 11px;border:1px solid #49858a;border-radius:24px;color:#9cebf0;text-decoration:none;font-size:12px;font-weight:700;background:#102e3c";
-    button.insertAdjacentElement("afterend",a);
+    const market=document.getElementById("marketSnapshotPanel");
+    const tools=document.getElementById("marketTools");
+    if(!button||!button.parentElement||!market||!tools)return false;
+    if(document.getElementById("atlasPublicRadarLink"))return true;
+    if(!document.getElementById("atlasRadarTabStyle")){
+      const css=document.createElement("style");
+      css.id="atlasRadarTabStyle";
+      css.textContent=[
+        "#marketSnapshotPanel.atlas-radar-open #marketUniverseMode",
+        "#marketSnapshotPanel.atlas-radar-open .market-column-mode",
+        "#marketSnapshotPanel.atlas-radar-open .sort-box",
+        "#marketSnapshotPanel.atlas-radar-open .section-head .search-box",
+        "#marketSnapshotPanel.atlas-radar-open #marketTableWindowBody",
+        "#marketSnapshotPanel.atlas-radar-open #tableNote{display:none!important}",
+        "#marketSnapshotPanel.atlas-radar-open .filter-chips .filter-btn:not(#atlasPublicRadarLink).active{opacity:.65;box-shadow:none}",
+        "#atlasRadarMarketView[hidden]{display:none!important}",
+        "#atlasRadarMarketView{margin:12px 0 8px;border:1px solid #2d6472;border-radius:12px;overflow:hidden;background:#071b28}",
+        "#atlasRadarMarketView .atlas-radar-tab-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:11px 15px;border-bottom:1px solid #2d6472}",
+        "#atlasRadarMarketView .atlas-radar-tab-head strong{color:#e0d3a2}",
+        "#atlasRadarMarketView .atlas-radar-tab-head a{color:#8ee9e7;font-weight:650}",
+        "#atlasRadarMarketView iframe{display:block;width:100%;height:min(82vh,920px);min-height:600px;border:0;background:#06131f}",
+        "@media(max-width:700px){#atlasRadarMarketView iframe{height:78vh;min-height:540px}}"
+      ].join(",");
+      // Each rule is built separately to avoid comma prefix leakage.
+      css.textContent=css.textContent.replace(
+        "#marketSnapshotPanel.atlas-radar-open #tableNote{display:none!important}",
+        "#marketSnapshotPanel.atlas-radar-open #tableNote{display:none!important}");
+      document.head.appendChild(css);
+    }
+    const tab=document.createElement("button");
+    tab.id="atlasPublicRadarLink";
+    tab.type="button";
+    tab.className="filter-btn";
+    tab.textContent="Radar";
+    tab.title="Radar · Top 10/20/50/250, nouveaux listings Spot, BTC/CT PAPER";
+    tab.setAttribute("aria-label","Afficher Radar dans Market Snapshot");
+    tab.setAttribute("aria-expanded","false");
+    tab.setAttribute("aria-controls","atlasRadarMarketView");
+    tab.setAttribute("aria-pressed","false");
+    button.insertAdjacentElement("afterend",tab);
+    const view=document.createElement("section");
+    view.id="atlasRadarMarketView";
+    view.hidden=true;
+    view.setAttribute("aria-label","Radar Marché et nouveaux listings en lecture seule");
+    const head=document.createElement("div");
+    head.className="atlas-radar-tab-head";
+    const title=document.createElement("strong");
+    title.textContent="Radar · Marché et surveillance PAPER";
+    const large=document.createElement("a");
+    large.href=new URL("../laboratoire/radar.html",document.baseURI).href;
+    large.target="_blank";
+    large.rel="noopener noreferrer";
+    large.textContent="Agrandir Radar ↗";
+    head.append(title,large);
+    const frame=document.createElement("iframe");
+    frame.title="Radar · Top 10, 20, 50, 250 et nouveaux listings";
+    frame.loading="lazy";
+    frame.referrerPolicy="strict-origin-when-cross-origin";
+    view.append(head,frame);
+    tools.insertAdjacentElement("afterend",view);
+    tab.addEventListener("click",event=>{
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      radarView(!state.radarOpen);
+      tab.setAttribute("aria-expanded",String(!!state.radarOpen));
+    });
+    return true;
   }
   function mount(){
     if(typeof document==="undefined")return false;
