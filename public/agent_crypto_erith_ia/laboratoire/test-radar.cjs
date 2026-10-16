@@ -96,3 +96,54 @@ assert(js.includes('global.AgentCryptoRadarReader=API'),"Standalone and Market-n
 assert(js.includes('!document.getElementById("tiers")'),"Standalone renderer does not auto-mount in Trader");
 assert(js.includes('registre inaccessible (chargement réseau ou publication)'),"Unreachable registry identified accurately");
 console.log('PASS Radar 10/20/50/250, real listing eligibility, PAPER, public-only integration');
+
+const router=require('../administrator/js/market-radar-native.js');
+assert.equal(router.compactMoney(40313967652).includes('40'),true);
+assert(!router.compactMoney(40313967652).includes('40313967652'));
+assert(nativeView.includes('selectGraph(root,model,identity)'));
+assert(nativeView.includes('commands.chart(identity.id,"24h")'));
+assert(nativeView.includes('category.selectById(identity.id)'));
+assert(nativeView.includes('clickable(r,{kind:"market"')&&nativeView.includes('clickable(r,{kind:"listing"'));
+assert(nativeView.includes('model.listings.filter(x=>x.symbol!=="CT")'),"No duplicate CT row");
+assert(nativeView.includes('identityRegistry()'),"Canonical public identity registry failover");
+assert(nativeView.includes('printMarket(root,model);')&&nativeView.includes('const live=await Promise.allSettled'),"Render market before Bitget finishes");
+assert(nativeCss.includes('.radar-native-selectable:focus-visible'),"Keyboard click affordance");
+
+(async()=>{
+ const status={textContent:""};
+ const root={querySelector(selector){assert.equal(selector,'[data-radar-native="status"]');return status;}};
+ const model={selectionRevision:0};
+ const trace=[];
+ globalThis.AgentCryptoCommands={
+  asset(id){trace.push("asset:"+id);return {ok:true,payload:{id}};},
+  chart(id,period){trace.push("chart:"+id+":"+period);return {ok:true,payload:{selected_asset:{id}}};}
+ };
+ globalThis.atlasTraderExternalSelectionClear=()=>trace.push("clear-ct");
+ globalThis.AgentCryptoNewListingsNativeCategory={
+  deactivate(){trace.push("deactivate-native");},
+  async selectById(id){trace.push("listing:"+id);return id==="concrete"||id==="MHA";},
+  async discover(){trace.push("discover");}
+ };
+ globalThis.atlasTraderExternalSelectionCommit=spec=>{trace.push("commit:"+spec.providerSymbol);return true;};
+ assert.equal(await router.selectGraph(root,model,{kind:"market",id:"bitcoin",symbol:"BTC"}),true);
+ assert.deepEqual(trace.slice(0,4),["asset:bitcoin","clear-ct","deactivate-native","chart:bitcoin:24h"]);
+ assert.match(status.textContent,/BTC.*Solo/);
+ trace.length=0;
+ assert.equal(await router.selectGraph(root,model,{kind:"listing",id:"concrete",symbol:"CT"}),true);
+ assert.deepEqual(trace,["listing:concrete","commit:CT-USDT"]);
+ assert.match(status.textContent,/CT.*Solo/);
+ trace.length=0;
+ assert.equal(await router.selectGraph(root,model,{kind:"listing",id:"MHA",symbol:"MHA"}),true);
+ assert.deepEqual(trace,["listing:MHA","clear-ct"]);
+ trace.length=0;
+ assert.equal(await router.selectGraph(root,model,{kind:"listing",id:"NOT",symbol:"NOT"}),false);
+ assert.deepEqual(trace,["listing:NOT","discover","listing:NOT"]);
+ assert.match(status.textContent,/graphique précédent conservé/);
+ trace.length=0;
+ globalThis.AgentCryptoCommands.asset=id=>({ok:false,payload:null});
+ assert.equal(await router.selectGraph(root,model,{kind:"market",id:"nonexistent",symbol:"BAD"}),false);
+ assert.equal(trace.some(x=>x==="clear-ct"||x.startsWith("chart:")),false,
+   "Unknown market identity must not clear existing graph");
+ console.log("PASS Radar graph routing BTC CT MHA, trusted Solo owner, fail-closed chart on missing data");
+})().catch(e=>{console.error(e);process.exitCode=1});
+
