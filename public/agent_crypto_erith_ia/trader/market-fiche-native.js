@@ -131,20 +131,20 @@
     layer.style.left=Math.round(left)+"px";layer.style.top=Math.round(top)+"px";layer.style.visibility="visible";
   }
   function show(target,pointer=null,providedCoin=null){
-    if(!enabled||!target)return;
-    const c=providedCoin||resolveCoin(target.dataset.marketHelpId||target.dataset.marketId);if(!c)return;
+    if(!enabled||!target)return false;
+    const c=providedCoin||resolveCoin(target.dataset.marketHelpId||target.dataset.marketId);if(!c)return false;
     clearTimeout(hideTimer);activeTarget=target;activeCoin=providedCoin;
     const layer=$("atlasHelpLayer");
     if(effectiveMode()==="dock"){
       if(layer){layer.hidden=true;layer.setAttribute("aria-hidden","true");delete layer.dataset.marketHelpCoinId;}
-      const h=host(),g=$("marketWorkspaceGrid");if(!h||!g)return;
+      const h=host(),g=$("marketWorkspaceGrid");if(!h||!g)return false;
       h.innerHTML=markup(c);h.dataset.marketHelpCoinId=c.id;h.hidden=false;g.classList.add("market-card-dock-active");
-      return;
+      return true;
     }
     hideDock();
-    if(!layer)return;
+    if(!layer)return false;
     layer.innerHTML=markup(c);layer.dataset.marketHelpCoinId=c.id;layer.setAttribute("aria-hidden","false");
-    position(layer,target,pointer);
+    position(layer,target,pointer);return !layer.hidden;
   }
   function hide(immediate=false){
     const run=()=>{
@@ -158,7 +158,7 @@
     const target=activeTarget||document.querySelector("#marketRows tr.is-selected[data-market-help-id]");
     const coin=activeCoin;hideDock();hide(true);if(target)show(target,null,coin);
   }
-  function showAsset(target,coin,pointer=null){if(!coin?.id||!coin?.symbol)return false;show(target,pointer,coin);return true;}
+  function showAsset(target,coin,pointer=null){if(!coin?.id||!coin?.symbol)return false;return show(target,pointer,coin)===true;}
   function setEnabled(value){
     enabled=!!value;
     const btn=$("traderFicheToggle");if(btn){btn.classList.toggle("is-active",enabled);btn.setAttribute("aria-pressed",String(enabled));}
