@@ -169,9 +169,17 @@ assert(opportunityScript.includes('observed_followup_price_usd:valid?futurePrice
   chart(id,period){trace.push("chart:"+id+":"+period);return {ok:true,payload:{selected_asset:{id}}};}
  };
  globalThis.atlasTraderExternalSelectionClear=()=>trace.push("clear-ct");
+ let selectedListing=null;
+ globalThis.AtlasExternalChart={state:()=>({coin_id:selectedListing})};
  globalThis.AgentCryptoNewListingsNativeCategory={
   deactivate(){trace.push("deactivate-native");},
-  async selectById(id){trace.push("listing:"+id);return id==="concrete"||id==="MHA";},
+  async selectById(id){
+   trace.push("listing:"+id);
+   if(id==="concrete"){selectedListing="concrete";return true;}
+   if(id==="MHA"){selectedListing="new-listing:bitget:mhausdt";return true;}
+   return false;
+  },
+  snapshot(){return {selectedId:selectedListing};},
   async discover(){trace.push("discover");}
  };
  globalThis.atlasTraderExternalSelectionCommit=spec=>{trace.push("commit:"+spec.providerSymbol);return true;};

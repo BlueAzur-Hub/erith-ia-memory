@@ -87,3 +87,46 @@ test("Radar Market fidelity does not introduce a second graph, iframe, OKX or tr
  assert.match(css,/#marketSnapshotPanel \.radar-native-market-row/);
  assert.equal(css.includes("#marketRows tr"),false);
 });
+
+test("Radar preserves the exact Bitget instrument for DNA Spot",()=>{
+ const {verifyBitget}=require("../../laboratoire/radar.js");
+ const now=Date.parse("2026-10-16T18:00:00Z");
+ const instruments={code:"00000",data:[{symbol:"DNAUSDT",baseCoin:"DNA",quoteCoin:"USDT",
+   launchTime:String(now-3600000),status:"online",symbolType:"crypto",isRwa:"NO"}]};
+ const tickers={code:"00000",data:[{symbol:"DNAUSDT",lastPrice:"0.2879",turnover24h:"150000",price24hPcnt:"0.03"}]};
+ const [dna]=verifyBitget(instruments,tickers,new Map(),now);
+ assert.equal(dna.symbol,"DNA");
+ assert.equal(dna.providerSymbol,"DNAUSDT");
+ assert.equal(dna.pair,"DNA/USDT");
+ assert.equal(dna.provider,"bitget");
+});
+test("Radar requires the matching canonical chart before announcing Solo success",async()=>{
+ const native=require("./market-radar-native.js");
+ const previous={
+  category:globalThis.AgentCryptoNewListingsNativeCategory,
+  chart:globalThis.AtlasExternalChart,
+  clear:globalThis.atlasTraderExternalSelectionClear
+ };
+ try{
+  let selectedInput=null,graphId="bitcoin";
+  globalThis.AgentCryptoNewListingsNativeCategory={
+   selectById:async id=>{selectedInput=id;return true;},
+   snapshot:()=>({selectedId:"neosoul"})
+  };
+  globalThis.AtlasExternalChart={state:()=>({coin_id:graphId})};
+  globalThis.atlasTraderExternalSelectionClear=()=>false;
+  const status={textContent:""},root={querySelector:()=>status,querySelectorAll:()=>[]};
+  const model={selectionRevision:0,activeIdentity:{kind:"market",id:"bitcoin"}};
+  assert.equal(await native.selectGraph(root,model,{kind:"listing",id:"DNAUSDT",symbol:"DNA"}),false);
+  assert.equal(selectedInput,"DNAUSDT");
+  assert.match(status.textContent,/non confirmé/);
+  assert.deepEqual(model.activeIdentity,{kind:"market",id:"bitcoin"});
+  graphId="neosoul";
+  assert.equal(await native.selectGraph(root,model,{kind:"listing",id:"DNAUSDT",symbol:"DNA"}),true);
+  assert.deepEqual(model.activeIdentity,{kind:"listing",id:"DNAUSDT"});
+ }finally{
+  globalThis.AgentCryptoNewListingsNativeCategory=previous.category;
+  globalThis.AtlasExternalChart=previous.chart;
+  globalThis.atlasTraderExternalSelectionClear=previous.clear;
+ }
+});

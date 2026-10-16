@@ -20,7 +20,7 @@
 #marketSnapshotPanel .radar-native-dock input{flex:1 1 155px;max-width:260px}
 #marketSnapshotPanel .radar-native-dock select{max-width:150px}
 #marketSnapshotPanel .radar-native>.table-note{margin:5px 2px 9px;color:var(--muted);font-size:10px}
-#marketSnapshotPanel .radar-native .table-wrap{max-height:340px;min-height:0;border-radius:10px;overflow:auto}
+#marketSnapshotPanel .radar-native .table-wrap{max-height:min(64vh,620px);min-height:0;border-radius:10px;overflow:auto}
 #marketSnapshotPanel .radar-native table{min-width:550px!important}
 #marketSnapshotPanel .radar-native th,#marketSnapshotPanel .radar-native td{padding:7px 9px;white-space:nowrap}
 #marketSnapshotPanel .radar-native th{font-size:9px}
@@ -122,4 +122,14 @@
 @media(max-width:760px){
  #marketSnapshotPanel .radar-native-market-row .radar-native-provenance{max-width:116px}
  #marketSnapshotPanel .radar-native-market-row .radar-native-identity-label strong{max-width:125px}
+}
+
+/* Same selected-asset state as Market; no duplicate graph controller. */
+#marketSnapshotPanel .radar-native-selectable.is-selected{
+ background:rgba(65,198,208,.12);
+ box-shadow:inset 3px 0 var(--radar-accent,var(--cyan,#78d9e5));
+}
+#marketSnapshotPanel .radar-native-selectable.is-selected .market-coin-name{color:var(--text)}
+#marketSnapshotPanel .radar-native-selectable[aria-selected="true"]:focus-visible{
+ outline:2px solid var(--cyan,#78d9e5);outline-offset:-2px;
 }

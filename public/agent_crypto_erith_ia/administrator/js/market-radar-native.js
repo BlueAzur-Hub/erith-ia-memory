@@ -45,9 +45,9 @@ function identityCell(target,asset){
  if(src){const icon=node('img');icon.src=src;icon.alt='';icon.loading='lazy';icon.addEventListener('error',()=>icon.replaceWith(fallback()),{once:true});content.append(icon);}
  else content.append(fallback());
  const title=node('span','radar-native-identity-label');
- title.append(node('strong','',asset.name||asset.symbol),node('small','',String(asset.symbol||'').toUpperCase()));
+ title.append(node('strong','market-coin-name',asset.name||asset.symbol),node('small','',String(asset.symbol||'').toUpperCase()));
  if(Number.isFinite(Number(asset.rank))&&Number(asset.rank)>0)
-  title.append(node('em','radar-native-category',categoryName[radarCategory(asset)]||'Repère marché'));
+  title.append(node('em','asset-badge radar-native-category',categoryName[radarCategory(asset)]||'Repère marché'));
  content.append(title);cellNode.append(content);return cellNode;
 }
 
@@ -100,9 +100,20 @@ async function selectGraph(root,model,identity){
    }else{
      global.atlasTraderExternalSelectionClear?.();
    }
+   // Trust the existing chart owner, not the listing label or the last click.
+   const selected=category.snapshot?.();
+   const chart=global.AtlasExternalChart?.state?.();
+   if(!selected?.selectedId||String(chart?.coin_id||"")!==String(selected.selectedId))
+     throw Error("graphique Solo non confirmé pour cette identité ; vérifier les sources");
   }else throw Error("source non reconnue : graphique inchangé");
   if(revision!==model.selectionRevision)return false;
-  setStatus(identity.symbol+" · sélection transmise au graphique Solo existant · aucun ordre");
+  model.activeIdentity={kind:identity.kind,id:identity.id};
+  for(const row of root.querySelectorAll?.(".radar-native-selectable")||[]){
+   const active=row.dataset.radarKind===identity.kind&&row.dataset.radarId===identity.id;
+   row.classList.toggle("is-selected",active);
+   row.setAttribute("aria-selected",String(active));
+  }
+  setStatus(identity.symbol+" · identité confirmée dans le graphique Solo · aucun ordre");
   
   return true;
  }catch(error){
@@ -117,6 +128,9 @@ function clickable(row,identity,root,model,coin){
  // Native Market fiche on hover/focus; Solo selection remains on click.
  row.setAttribute("aria-description","Survol ou focus : fiche Crypto Market Snapshot native");
  row.dataset.radarKind=identity.kind;row.dataset.radarId=identity.id;
+ const isActive=model.activeIdentity?.kind===identity.kind&&model.activeIdentity?.id===identity.id;
+ if(isActive)row.classList.add("is-selected");
+ row.setAttribute("aria-selected",String(Boolean(isActive)));
  const activate=event=>{
    if(event.type==="keydown"&&!["Enter"," "].includes(event.key))return;
    if(event.type==="keydown")event.preventDefault();
@@ -224,7 +238,7 @@ function printListings(root,model){
   cell(r,displayPrice(item.price)+" "+item.quote);
   const move=cell(r,pct(item.change24h));move.className=item.change24h>0?"pos":item.change24h<0?"neg":"";
   cell(r,item.status);
-  clickable(r,{kind:"listing",id:item.symbol==="CT"?"concrete":item.symbol,symbol:item.symbol},root,model,{
+  clickable(r,{kind:"listing",id:item.symbol==="CT"?"concrete":item.providerSymbol,symbol:item.symbol},root,model,{
    id:item.symbol==="CT"?"concrete":item.symbol,name:item.name,symbol:item.symbol,rank:"—",image:item.image,
    partial:true,renderedPrice:displayPrice(item.price)+" "+item.quote,rendered24:pct(item.change24h),
    rendered7:"—",radarQuote:item.quote,radarSource:item.venue+" · "+item.pair,
@@ -246,7 +260,7 @@ function printWatch(root,model){
   {name:"MHA · MAGNE.AI",market:"Bitget Spot",data:{price:mha?.price,decision:mha?"OBSERVATION":"SOURCE ABSENTE"},quote:mha?.quote||"USDT"}
  ]){
   const card=node("div","radar-native-card");
-  const symbol=v.name.split(" · ")[0],id=symbol==="BTC"?"bitcoin":symbol==="CT"?"concrete":"MHA";
+  const symbol=v.name.split(" · ")[0],id=symbol==="BTC"?"bitcoin":symbol==="CT"?"concrete":mha?.providerSymbol||"MHA";
   const known=symbol==="BTC"?model.market?.rows.find(c=>c.id==="bitcoin"):symbol==="CT"?model.registry?.get("CT"):mha;
   card.dataset.radarSymbol=symbol;card.dataset.radarCategory=symbol==="BTC"?"pillar":"listing";
   identityCell(card,{name:v.name.split(" · ")[1],symbol,image:known?.image||""});
