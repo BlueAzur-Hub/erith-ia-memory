@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-10-15T22:26:22.088342+00:00",
+  "generated_at": "2026-10-16T01:27:59.324998+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,8 +11,8 @@
   "causal_claim": false,
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 22,
-    "operator_eligible_24h": 22,
+    "events_24h": 23,
+    "operator_eligible_24h": 23,
     "context_only_24h": 0,
     "critical_24h": 14,
     "strong_24h": 3,
@@ -31,8 +31,8 @@
         "distinct_sources": 2
       },
       "regulation": {
-        "events_72h": 10,
-        "distinct_sources": 5
+        "events_72h": 9,
+        "distinct_sources": 4
       },
       "leverage": {
         "events_72h": 1,
@@ -57,9 +57,9 @@
       "group": "finance",
       "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
       "status": "ok",
-      "fetched_count": 45,
+      "fetched_count": 47,
       "qualified_count": 4,
-      "latency_ms": 436,
+      "latency_ms": 264,
       "error": null
     },
     {
@@ -68,9 +68,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 30,
+      "fetched_count": 32,
       "qualified_count": 2,
-      "latency_ms": 347,
+      "latency_ms": 106,
       "error": null
     },
     {
@@ -81,7 +81,7 @@
       "status": "error",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 1428,
+      "latency_ms": 1459,
       "error": "HTTPError: HTTP Error 403: Forbidden"
     },
     {
@@ -92,7 +92,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 1848,
+      "latency_ms": 289,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 23,
-      "latency_ms": 565,
+      "latency_ms": 293,
       "error": null
     },
     {
@@ -113,8 +113,8 @@
       "url": "https://cointelegraph.com/rss",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 28,
-      "latency_ms": 284,
+      "qualified_count": 27,
+      "latency_ms": 178,
       "error": null
     },
     {
@@ -123,9 +123,9 @@
       "group": "crypto",
       "url": "https://decrypt.co/feed",
       "status": "ok",
-      "fetched_count": 36,
-      "qualified_count": 26,
-      "latency_ms": 172,
+      "fetched_count": 50,
+      "qualified_count": 39,
+      "latency_ms": 332,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 4,
-      "latency_ms": 876,
+      "latency_ms": 875,
       "error": null
     },
     {
@@ -147,7 +147,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 200,
+      "latency_ms": 190,
       "error": null
     },
     {
@@ -158,7 +158,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 2,
-      "latency_ms": 199,
+      "latency_ms": 425,
       "error": null
     },
     {
@@ -169,7 +169,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 187,
+      "latency_ms": 249,
       "error": null
     },
     {
@@ -178,9 +178,9 @@
       "group": "finance",
       "url": "https://news.google.com/rss/search?q=bitcoin+ethereum+ETF+flux+entrants+sorties+institutionnels+when%3A7d&hl=fr&gl=FR&ceid=FR:fr",
       "status": "ok",
-      "fetched_count": 10,
-      "qualified_count": 10,
-      "latency_ms": 303,
+      "fetched_count": 9,
+      "qualified_count": 9,
+      "latency_ms": 300,
       "error": null
     },
     {
@@ -191,7 +191,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 208,
+      "latency_ms": 235,
       "error": null
     },
     {
@@ -202,7 +202,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 147,
+      "latency_ms": 94,
       "error": null
     },
     {
@@ -213,7 +213,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 10269,
+      "latency_ms": 9310,
       "error": null
     }
   ],
@@ -661,11 +661,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-10-15T10:16:15+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.649614+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.649614+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.695024+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.695024+00:00",
       "freshness": {
         "iso": "2026-10-15T10:16:15+00:00",
-        "hours": 12.17,
+        "hours": 15.19,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1069,11 +1069,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-15T07:23:43+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.389867+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.389867+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.590433+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.590433+00:00",
       "freshness": {
         "iso": "2026-10-15T07:23:43+00:00",
-        "hours": 15.04,
+        "hours": 18.07,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1205,11 +1205,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-15T09:36:20+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.385605+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.385605+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.587439+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.587439+00:00",
       "freshness": {
         "iso": "2026-10-15T09:36:20+00:00",
-        "hours": 12.83,
+        "hours": 15.86,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1610,11 +1610,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-14T14:51:44+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.292390+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.292390+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.759482+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.759482+00:00",
       "freshness": {
         "iso": "2026-10-14T14:51:44+00:00",
-        "hours": 31.57,
+        "hours": 34.6,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1982,7 +1982,8 @@
       "headline_fr_engine": "native-fr-source",
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "native",
-      "headline_fr_quality_reasons": []
+      "headline_fr_quality_reasons": [],
+      "semantic_refresh_build": "40.6.418"
     },
     {
       "id": "feed_332a6814dcfaebb3",
@@ -2383,7 +2384,8 @@
       "headline_fr_engine": "native-fr-source",
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "native",
-      "headline_fr_quality_reasons": []
+      "headline_fr_quality_reasons": [],
+      "semantic_refresh_build": "40.6.418"
     },
     {
       "id": "feed_1cccfe60301413bd",
@@ -2410,11 +2412,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-12T04:25:08+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.811553+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.811553+00:00",
+      "first_seen_at": "2026-10-16T01:27:50.047555+00:00",
+      "last_seen_at": "2026-10-16T01:27:50.047555+00:00",
       "freshness": {
         "iso": "2026-10-12T04:25:08+00:00",
-        "hours": 90.02,
+        "hours": 93.05,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2542,11 +2544,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-11T12:31:40+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.809955+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.809955+00:00",
+      "first_seen_at": "2026-10-16T01:27:50.046455+00:00",
+      "last_seen_at": "2026-10-16T01:27:50.046455+00:00",
       "freshness": {
         "iso": "2026-10-11T12:31:40+00:00",
-        "hours": 105.91,
+        "hours": 108.94,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2803,11 +2805,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-09T17:37:53+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.824086+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.824086+00:00",
+      "first_seen_at": "2026-10-16T01:27:50.057105+00:00",
+      "last_seen_at": "2026-10-16T01:27:50.057105+00:00",
       "freshness": {
         "iso": "2026-10-09T17:37:53+00:00",
-        "hours": 148.81,
+        "hours": 151.83,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2933,11 +2935,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-09T13:50:00+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.818185+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.818185+00:00",
+      "first_seen_at": "2026-10-16T01:27:50.052137+00:00",
+      "last_seen_at": "2026-10-16T01:27:50.052137+00:00",
       "freshness": {
         "iso": "2026-10-09T13:50:00+00:00",
-        "hours": 152.6,
+        "hours": 155.63,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3065,11 +3067,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-15T03:57:45+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.665441+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.665441+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.711163+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.711163+00:00",
       "freshness": {
         "iso": "2026-10-15T03:57:45+00:00",
-        "hours": 18.47,
+        "hours": 21.5,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3199,11 +3201,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-14T12:33:56+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.680864+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.680864+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.724012+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.724012+00:00",
       "freshness": {
         "iso": "2026-10-14T12:33:56+00:00",
-        "hours": 33.87,
+        "hours": 36.9,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3600,11 +3602,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-15T15:20:41+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.258306+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.258306+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.735543+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.735543+00:00",
       "freshness": {
         "iso": "2026-10-15T15:20:41+00:00",
-        "hours": 7.09,
+        "hours": 10.12,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3730,12 +3732,12 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-15T11:48:42+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.273197+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.273197+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.744444+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.744444+00:00",
       "freshness": {
         "iso": "2026-10-15T11:48:42+00:00",
-        "hours": 10.62,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.65,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -4645,11 +4647,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-14T17:46:05+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.288460+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.288460+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.756176+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.756176+00:00",
       "freshness": {
         "iso": "2026-10-14T17:46:05+00:00",
-        "hours": 28.67,
+        "hours": 31.7,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5044,11 +5046,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-14T14:30:47+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.418717+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.418717+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.606637+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.606637+00:00",
       "freshness": {
         "iso": "2026-10-14T14:30:47+00:00",
-        "hours": 31.92,
+        "hours": 34.95,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5174,11 +5176,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-09T14:59:00+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.420419+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.420419+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.608049+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.608049+00:00",
       "freshness": {
         "iso": "2026-10-09T14:59:00+00:00",
-        "hours": 151.45,
+        "hours": 154.48,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5434,11 +5436,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-14T11:15:00+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.682278+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.682278+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.725166+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.725166+00:00",
       "freshness": {
         "iso": "2026-10-14T11:15:00+00:00",
-        "hours": 35.19,
+        "hours": 38.21,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6345,11 +6347,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-15T15:10:44+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.361714+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.361714+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.569042+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.569042+00:00",
       "freshness": {
         "iso": "2026-10-15T15:10:44+00:00",
-        "hours": 7.26,
+        "hours": 10.28,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -6476,12 +6478,12 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-15T13:11:43+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.814517+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.814517+00:00",
+      "first_seen_at": "2026-10-16T01:27:50.048981+00:00",
+      "last_seen_at": "2026-10-16T01:27:50.048981+00:00",
       "freshness": {
         "iso": "2026-10-15T13:11:43+00:00",
-        "hours": 9.24,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.27,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -6602,11 +6604,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-15T03:29:22+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.396581+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.396581+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.596302+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.596302+00:00",
       "freshness": {
         "iso": "2026-10-15T03:29:22+00:00",
-        "hours": 18.95,
+        "hours": 21.97,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6866,11 +6868,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-15T10:00:56+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.651898+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.651898+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.696731+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.696731+00:00",
       "freshness": {
         "iso": "2026-10-15T10:00:56+00:00",
-        "hours": 12.42,
+        "hours": 15.45,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6994,11 +6996,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-14T11:12:36+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.683656+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.683656+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.726315+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.726315+00:00",
       "freshness": {
         "iso": "2026-10-14T11:12:36+00:00",
-        "hours": 35.23,
+        "hours": 38.25,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7391,11 +7393,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-15T13:30:00+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.366077+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.366077+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.572660+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.572660+00:00",
       "freshness": {
         "iso": "2026-10-15T13:30:00+00:00",
-        "hours": 8.94,
+        "hours": 11.96,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -8048,11 +8050,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-14T14:08:43+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.676144+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.676144+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.719957+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.719957+00:00",
       "freshness": {
         "iso": "2026-10-14T14:08:43+00:00",
-        "hours": 32.29,
+        "hours": 35.32,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8956,16 +8958,16 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-14T19:46:03+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.283448+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.283448+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.752042+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.752042+00:00",
       "freshness": {
         "iso": "2026-10-14T19:46:03+00:00",
-        "hours": 26.67,
+        "hours": 29.7,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
-        "score": 96,
+        "score": 100,
         "level": "Élevé"
       },
       "impact": {
@@ -9092,11 +9094,11 @@
       "event_type": "energy",
       "event_label": "Énergie / pétrole / matières premières",
       "event_time": "2026-10-14T17:03:20+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.408209+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.408209+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.605207+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.605207+00:00",
       "freshness": {
         "iso": "2026-10-14T17:03:20+00:00",
-        "hours": 29.38,
+        "hours": 32.41,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9877,12 +9879,12 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-10-15T20:31:04+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.243252+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.243252+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.729016+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.729016+00:00",
       "freshness": {
         "iso": "2026-10-15T20:31:04+00:00",
-        "hours": 1.92,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 4.95,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -9935,7 +9937,7 @@
         "feed_81fb1ada27ef8658"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -9956,6 +9958,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_81fb1ada27ef8658"
+      ],
       "headline_original": "Russia Will Soon Ban Peer-to-Peer Bitcoin Trading, Central Bank Confirms",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
@@ -10397,11 +10402,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-10-14T19:03:52+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.403295+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.403295+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.601510+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.601510+00:00",
       "freshness": {
         "iso": "2026-10-14T19:03:52+00:00",
-        "hours": 27.37,
+        "hours": 30.4,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10526,11 +10531,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-13T18:15:05+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.312422+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.312422+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.776795+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.776795+00:00",
       "freshness": {
         "iso": "2026-10-13T18:15:05+00:00",
-        "hours": 52.19,
+        "hours": 55.21,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -10918,11 +10923,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-10-12T17:08:32+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.567569+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.567569+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.681062+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.681062+00:00",
       "freshness": {
         "iso": "2026-10-12T17:08:32+00:00",
-        "hours": 77.29,
+        "hours": 80.32,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11150,6 +11155,131 @@
         "source_not_native_french"
       ],
       "semantic_refresh_build": "40.6.418"
+    },
+    {
+      "id": "feed_3175756e1c4aa663",
+      "event_id": "feed_3175756e1c4aa663",
+      "fingerprint": "3175756e1c4aa663",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Scammer loses $4.8M stored on tampered Ledgers: Asia Express",
+      "body": "A scammer reportedly lost $4.8M of stolen money after storing the funds on tampered Ledgers. Bitcoin and Ether ETFs launch trading in Thailand and South Korea blocks 27 exchanges.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/magazine/scammer-loses-48m-stored-on-tampered-ledgers-asia-express",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/magazine/scammer-loses-48m-stored-on-tampered-ledgers-asia-express"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-10-15T22:42:58+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.556966+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.556966+00:00",
+      "freshness": {
+        "iso": "2026-10-15T22:42:58+00:00",
+        "hours": 2.75,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 95,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "Hack / exploit / sécurité",
+      "article_ids": [
+        "feed_3175756e1c4aa663"
+      ],
+      "article_count": 1,
+      "cluster_reason": "single_article",
+      "source_tier": 4,
+      "source_tier_label": "Média crypto spécialisé",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 62,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 45,
+        "reasons": [
+          "asset_anchor"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Scammer loses $4.8M stored on tampered Ledgers: Asia Express",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Scammer loses $4.8M stored on tampered Ledgers: Asia Express",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
     },
     {
       "id": "feed_f76f4831a0d55a8d",
@@ -11538,137 +11668,6 @@
       "semantic_refresh_build": "40.6.418"
     },
     {
-      "id": "feed_138f2e35107a5a94",
-      "event_id": "feed_138f2e35107a5a94",
-      "fingerprint": "138f2e35107a5a94",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Cantor Fitzgerald faces Senate Democrat’s questions over Tether ties",
-      "body": "The letter follows a report by the Democratic investigators last month alleging Tether’s USDT has become a key tool for Iran’s shadow banking network.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/cantor-fitzgerald-faces-senate-democrats-probe-over-tether-ties",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/cantor-fitzgerald-faces-senate-democrats-probe-over-tether-ties"
-      ],
-      "declared_status": "reported",
-      "event_type": "geopolitics",
-      "event_label": "Géopolitique / guerre / sanctions",
-      "event_time": "2026-10-09T00:46:27+00:00",
-      "first_seen_at": "2026-10-12T01:24:23.995582+00:00",
-      "last_seen_at": "2026-10-12T01:24:23.995582+00:00",
-      "freshness": {
-        "iso": "2026-10-09T00:46:27+00:00",
-        "hours": 72.63,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 85,
-        "level": "Critique"
-      },
-      "direction": "impact global potentiel, sens à confirmer",
-      "assets": [
-        "USDT"
-      ],
-      "sectors": [
-        "Stablecoins",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 12,
-      "matched_topics": [
-        "crypto",
-        "geopolitics"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "Géopolitique / guerre / sanctions",
-      "article_ids": [
-        "feed_138f2e35107a5a94"
-      ],
-      "article_count": 1,
-      "cluster_reason": "same_url",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 61,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 45,
-        "reasons": [
-          "asset_anchor"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "merged_event_ids": [
-        "feed_138f2e35107a5a94"
-      ],
-      "headline_original": "Cantor Fitzgerald faces Senate Democrat’s questions over Tether ties",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Cantor Fitzgerald faces Senate Democrat’s questions over Tether ties",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "semantic_refresh_build": "40.6.418"
-    },
-    {
       "id": "feed_b38dd984b9dcad21",
       "event_id": "feed_b38dd984b9dcad21",
       "fingerprint": "b38dd984b9dcad21",
@@ -11951,11 +11950,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-14T14:31:14+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.674478+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.674478+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.718582+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.718582+00:00",
       "freshness": {
         "iso": "2026-10-14T14:31:14+00:00",
-        "hours": 31.92,
+        "hours": 34.94,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12333,11 +12332,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-10-15T10:01:21+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.275404+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.275404+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.746221+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.746221+00:00",
       "freshness": {
         "iso": "2026-10-15T10:01:21+00:00",
-        "hours": 12.41,
+        "hours": 15.44,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12842,11 +12841,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-10-15T01:21:52+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.398138+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.398138+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.597593+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.597593+00:00",
       "freshness": {
         "iso": "2026-10-15T01:21:52+00:00",
-        "hours": 21.07,
+        "hours": 24.1,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -13095,11 +13094,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-15T18:48:02+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.632116+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.632116+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.683493+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.683493+00:00",
       "freshness": {
         "iso": "2026-10-15T18:48:02+00:00",
-        "hours": 3.64,
+        "hours": 6.66,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -13147,7 +13146,7 @@
         "feed_4b965f3bf2a15f68"
       ],
       "article_count": 1,
-      "cluster_reason": "single_article",
+      "cluster_reason": "same_url",
       "source_tier": 4,
       "source_tier_label": "Média crypto spécialisé",
       "market_reaction": {
@@ -13168,6 +13167,9 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "merged_event_ids": [
+        "feed_4b965f3bf2a15f68"
+      ],
       "headline_original": "At the White House, crypto policy vacancy looms large",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
@@ -13219,11 +13221,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-14T15:35:36+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.668462+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.668462+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.713695+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.713695+00:00",
       "freshness": {
         "iso": "2026-10-14T15:35:36+00:00",
-        "hours": 30.84,
+        "hours": 33.87,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -13478,11 +13480,11 @@
       "event_type": "onchain_movement",
       "event_label": "Mouvement on-chain / transferts",
       "event_time": "2026-10-13T19:38:12+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.310221+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.310221+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.774945+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.774945+00:00",
       "freshness": {
         "iso": "2026-10-13T19:38:12+00:00",
-        "hours": 50.8,
+        "hours": 53.83,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -13733,11 +13735,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-15T17:14:45+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.355271+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.355271+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.561889+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.561889+00:00",
       "freshness": {
         "iso": "2026-10-15T17:14:45+00:00",
-        "hours": 5.19,
+        "hours": 8.22,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -13861,11 +13863,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-10-15T14:22:43+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.363307+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.363307+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.570638+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.570638+00:00",
       "freshness": {
         "iso": "2026-10-15T14:22:43+00:00",
-        "hours": 8.06,
+        "hours": 11.09,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -14092,132 +14094,6 @@
       "semantic_refresh_build": "40.6.418"
     },
     {
-      "id": "feed_a9d11a00226597f1",
-      "event_id": "feed_a9d11a00226597f1",
-      "fingerprint": "a9d11a00226597f1",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "China’s P2P stablecoin wallets surge 43x, Korea’s $450B crypto economy: Asia Express",
-      "body": "Despite ongoing bans, China has seen a big surge in peer-to-peer stablecoin use. New figures show South Korea’s $450B crypto economy is the largest in East Asia.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/magazine/chinas-p2p-stablecoin-wallets-surge-43x-koreas-450b-crypto-economy-asia-express",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/magazine/chinas-p2p-stablecoin-wallets-surge-43x-koreas-450b-crypto-economy-asia-express"
-      ],
-      "declared_status": "reported",
-      "event_type": "geopolitics",
-      "event_label": "Géopolitique / guerre / sanctions",
-      "event_time": "2026-10-08T22:35:00+00:00",
-      "first_seen_at": "2026-10-12T01:24:23.997536+00:00",
-      "last_seen_at": "2026-10-12T01:24:23.997536+00:00",
-      "freshness": {
-        "iso": "2026-10-08T22:35:00+00:00",
-        "hours": 74.82,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 84,
-        "level": "Fort"
-      },
-      "direction": "impact global potentiel, sens à confirmer",
-      "assets": [],
-      "sectors": [
-        "Stablecoins",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 12,
-      "matched_topics": [
-        "crypto",
-        "geopolitics"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "event_core_build": "40.6.418",
-      "event_core_schema": "atlas_news_event_core_v1",
-      "taxonomy_build": "40.6.421",
-      "canonical_topic": "Géopolitique / guerre / sanctions",
-      "article_ids": [
-        "feed_a9d11a00226597f1"
-      ],
-      "article_count": 1,
-      "cluster_reason": "single_article",
-      "source_tier": 4,
-      "source_tier_label": "Média crypto spécialisé",
-      "market_reaction": {
-        "score": null,
-        "status": "not_measured",
-        "causal_claim": false
-      },
-      "operator_relevance": {
-        "score": 56,
-        "status": "eligible",
-        "eligible": true,
-        "market_anchor_score": 35,
-        "reasons": [
-          "crypto_market_anchor"
-        ]
-      },
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "China’s P2P stablecoin wallets surge 43x, Korea’s $450B crypto economy: Asia Express",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] China’s P2P stablecoin wallets surge 43x, Korea’s $450B crypto economy: Asia Express",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "semantic_refresh_build": "40.6.418"
-    },
-    {
       "id": "feed_43a77be60480b350",
       "event_id": "feed_43a77be60480b350",
       "fingerprint": "43a77be60480b350",
@@ -14368,11 +14244,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-14T19:16:04+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.285795+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.285795+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.754374+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.754374+00:00",
       "freshness": {
         "iso": "2026-10-14T19:16:04+00:00",
-        "hours": 27.17,
+        "hours": 30.2,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -15021,11 +14897,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-15T19:37:27+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.353595+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.353595+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.560535+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.560535+00:00",
       "freshness": {
         "iso": "2026-10-15T19:37:27+00:00",
-        "hours": 2.81,
+        "hours": 5.84,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -15150,11 +15026,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-15T10:22:00+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.376234+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.376234+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.582097+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.582097+00:00",
       "freshness": {
         "iso": "2026-10-15T10:22:00+00:00",
-        "hours": 12.07,
+        "hours": 15.1,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -15410,11 +15286,11 @@
       "event_type": "listing",
       "event_label": "Listing / delisting",
       "event_time": "2026-10-14T14:49:32+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.672853+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.672853+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.716972+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.716972+00:00",
       "freshness": {
         "iso": "2026-10-14T14:49:32+00:00",
-        "hours": 31.61,
+        "hours": 34.64,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -15538,11 +15414,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-15T14:27:18+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.263534+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.263534+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.737590+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.737590+00:00",
       "freshness": {
         "iso": "2026-10-15T14:27:18+00:00",
-        "hours": 7.98,
+        "hours": 11.01,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -15668,11 +15544,11 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-15T04:25:15+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.660729+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.660729+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.707974+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.707974+00:00",
       "freshness": {
         "iso": "2026-10-15T04:25:15+00:00",
-        "hours": 18.02,
+        "hours": 21.04,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -15797,12 +15673,12 @@
       "event_type": "general",
       "event_label": "Information de marché à qualifier",
       "event_time": "2026-10-15T11:15:00+00:00",
-      "first_seen_at": "2026-10-15T22:26:11.645235+00:00",
-      "last_seen_at": "2026-10-15T22:26:11.645235+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.691241+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.691241+00:00",
       "freshness": {
         "iso": "2026-10-15T11:15:00+00:00",
-        "hours": 11.19,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.21,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -15890,6 +15766,131 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] Bitcoin, copper, stocks, yields all fall; gold rises",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_06550b2826df885b",
+      "event_id": "feed_06550b2826df885b",
+      "fingerprint": "06550b2826df885b",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Altcoins lead crypto declines as Asian stocks drop; bitcoin little changed since midnight",
+      "body": "Bitcoin fell to just above $80,000 as South Korea’s Kospi plunged 8%, while the CoinDesk 80 fell 2.2% and all but six CoinDesk 100 members declined.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/10/15/bitcoin-holds-above-usd80-000-as-an-asian-stock-rout-drags-altcoins-lower",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/markets/2026/10/15/bitcoin-holds-above-usd80-000-as-an-asian-stock-rout-drags-altcoins-lower"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-10-15T10:52:11+00:00",
+      "first_seen_at": "2026-10-16T01:27:49.693372+00:00",
+      "last_seen_at": "2026-10-16T01:27:49.693372+00:00",
+      "freshness": {
+        "iso": "2026-10-15T10:52:11+00:00",
+        "hours": 14.59,
+        "label": "Récente · moins de 48 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 55,
+        "level": "Modéré"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "event_core_build": "40.6.418",
+      "event_core_schema": "atlas_news_event_core_v1",
+      "taxonomy_build": "40.6.421",
+      "canonical_topic": "Information de marché à qualifier",
+      "article_ids": [
+        "feed_06550b2826df885b"
+      ],
+      "article_count": 1,
+      "cluster_reason": "single_article",
+      "source_tier": 4,
+      "source_tier_label": "Média crypto spécialisé",
+      "market_reaction": {
+        "score": null,
+        "status": "not_measured",
+        "causal_claim": false
+      },
+      "operator_relevance": {
+        "score": 53,
+        "status": "eligible",
+        "eligible": true,
+        "market_anchor_score": 45,
+        "reasons": [
+          "asset_anchor"
+        ]
+      },
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Altcoins lead crypto declines as Asian stocks drop; bitcoin little changed since midnight",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Altcoins lead crypto declines as Asian stocks drop; bitcoin little changed since midnight",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
