@@ -103,6 +103,9 @@ jobs:
       - name: CT orderbook and native USD Top 5 source safeguards
         run: node tests/agent_crypto_market_integrity.cjs
 
+      - name: BTC USD snapshot tooltip provenance and CT rounding
+        run: node tests/agent_crypto_btc_usd_tooltip_source.cjs
+
       - name: External graph and Technical Reading identity
         run: |
           node --check public/agent_crypto_erith_ia/administrator/js/market-fiche-display-406518.js
