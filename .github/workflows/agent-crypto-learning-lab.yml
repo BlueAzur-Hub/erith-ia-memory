@@ -3,15 +3,13 @@ on:
   pull_request:
     paths:
       - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/build.json"
       - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
       - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
       - "public/agent_crypto_erith_ia/trader/build.json"
       - "public/agent_crypto_erith_ia/trader/trading-desk.html"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
-      - "public/agent_crypto_erith_ia/trader/snapshot-analyse-native.js"
-      - "public/agent_crypto_erith_ia/trader/snapshot-analyse-native.css"
-      - "public/agent_crypto_erith_ia/trader/test-snapshot-analyse-native.cjs"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-history-source-catalog.test.mjs"
@@ -29,15 +27,13 @@ on:
     branches: [main]
     paths:
       - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/administrator/app.js"
       - "public/agent_crypto_erith_ia/administrator/build.json"
       - "public/agent_crypto_erith_ia/administrator/js/learning-lab.js"
       - "public/agent_crypto_erith_ia/administrator/css/learning-lab.css"
       - "public/agent_crypto_erith_ia/trader/build.json"
       - "public/agent_crypto_erith_ia/trader/trading-desk.html"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
-      - "public/agent_crypto_erith_ia/trader/snapshot-analyse-native.js"
-      - "public/agent_crypto_erith_ia/trader/snapshot-analyse-native.css"
-      - "public/agent_crypto_erith_ia/trader/test-snapshot-analyse-native.cjs"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-history-source-catalog.test.mjs"
@@ -107,8 +103,29 @@ jobs:
           export BASELINE="$baseline"
           git diff --exit-code "$baseline" HEAD -- \
             public/agent_crypto_erith_ia/data/historical_archive_prototype/ \
-            public/agent_crypto_erith_ia/core/ \
-            public/agent_crypto_erith_ia/administrator/app.js
+            public/agent_crypto_erith_ia/core/
+          # Strict one-time subtraction of the abandoned Snapshot-only accessor.
+          # All other app.js bytes must remain identical to the protected baseline.
+          python - <<'PY'
+          import os,pathlib,subprocess
+          path="public/agent_crypto_erith_ia/administrator/app.js"
+          before=subprocess.check_output(["git","show",os.environ["BASELINE"]+":"+path],text=True)
+          after=pathlib.Path(path).read_text(encoding="utf-8")
+          marker="/* Snapshot Analyse — canonical graph series in read-only memory."
+          boundary="function atlasMarketExternalRowMarkup(rawQuery) {"
+          if marker in before:
+              assert before.count(marker)==1, "Unexpected duplicate Snapshot accessor"
+              start=before.index(marker)
+              end=before.index(boundary,start)
+              removed=before[start:end]
+              assert "function atlasPublishedChartSeriesRead()" in removed
+              assert "globalThis.AgentCryptoPublishedSeries=Object.freeze({" in removed
+              assert "read_only:true,fetches:0,storage_writes:0,real_orders:false" in removed
+              expected=before[:start]+before[end:]
+          else:
+              expected=before
+          assert after==expected, "Administrator core changed beyond exact Snapshot removal"
+          PY
           python - <<'PY'
           import copy, json, os, pathlib, subprocess
           base=os.environ["BASELINE"]
@@ -117,10 +134,6 @@ jobs:
             prefix+"trader/build.json",
             prefix+"trader/trading-desk.html",
             prefix+"trader/trader-runtime-mirror.js",
-            # Approved add-on: no changes to canonical chart or accounts.
-            prefix+"trader/snapshot-analyse-native.js",
-            prefix+"trader/snapshot-analyse-native.css",
-            prefix+"trader/test-snapshot-analyse-native.cjs",
             prefix+"trader/trader-historical-panel.js",
             prefix+"trader/ai-source-inventory.js",
             prefix+"trader/historical-inventory.html",
@@ -169,43 +182,12 @@ jobs:
             "status":"TRADER_COFFRE_VISIBLE_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
-          for f in allowed-{prefix+"trader/build.json",prefix+"trader/snapshot-analyse-native.js",prefix+"trader/snapshot-analyse-native.css",prefix+"trader/test-snapshot-analyse-native.cjs",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs"}:
+          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs"}:
             if f==prefix+"trader/trader-runtime-mirror.js":
               expected=previous(f).replace("40.6.639","40.6.640").replace("trader-historical-panel.js?reader=top50-cohorts","trader-historical-panel.js?reader=visible-coffre")
               actual=current(f)
               first="  // Visible PAPER laboratory."
-              snapshot="  // Snapshot Analyse is a read-only child of the existing Technical Reading."
               last="  // Trader-only continuity, deliberately not loaded in the public Interface."
-              # A confirmed shared view replaces (not duplicates) the old
-              # Trader-only injected block. Remove only that exact old range
-              # from the immutable baseline before comparing every other byte.
-              if snapshot in expected and snapshot not in actual:
-                assert expected.count(snapshot)==1 and expected.count(last)==1
-                head,tail=expected.split(snapshot,1)
-                removed,rest=tail.split(last,1)
-                for required in ("traderSnapshotAnalyseStyle",
-                                 "traderSnapshotAnalyseCalculator",
-                                 "../laboratoire/snapshot-analyse.js",
-                                 "../trader/snapshot-analyse-native.js"):
-                  assert required in removed, f"Unexpected previous Snapshot block: {required}"
-                assert "fetch(" not in removed and "/trade/order" not in removed
-                expected=head+last+rest
-              # Preserve strict checking if another additive Snapshot is proposed.
-              if snapshot in actual:
-                assert actual.count(snapshot)==1 and actual.count(last)==1
-                head,tail=actual.split(snapshot,1)
-                added,rest=tail.split(last,1)
-                for required in ("traderSnapshotAnalyseStyle",
-                                 "traderSnapshotAnalyseCalculator",
-                                 "../laboratoire/snapshot-analyse.js",
-                                 "../trader/snapshot-analyse-native.js",
-                                 "calc.onload=()=>"):
-                  assert required in added, f"Missing Snapshot read-only gate: {required}"
-                assert "/trade/order" not in added and "/withdraw" not in added
-                assert "fetch(" not in added and "setInterval(" not in added
-                actual=head+last+rest
-              # Legacy PAPER migration check applies only to an older baseline
-              # lacking that extension; the frozen current baseline has it.
               if first in actual and first not in expected:
                 assert actual.count(first)==1 and actual.count(last)==1
                 head,tail=actual.split(first,1)
@@ -213,7 +195,7 @@ jobs:
                 assert 'trader-paper-lab-core.js' in paper and 'trader-paper-lab-view.js' in paper
                 assert '/trade/order' not in paper and '/withdraw' not in paper
                 actual=head+last+rest
-              assert actual==expected,f"Non-version Trader change beyond read-only extensions: {f}"
+              assert actual==expected,f"Non-version Trader change beyond PAPER extension: {f}"
               continue
             else:
               expected=previous(f).replace("40.6.639","40.6.640")
