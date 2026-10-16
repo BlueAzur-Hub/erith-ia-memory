@@ -98,3 +98,21 @@
 #marketSnapshotPanel .radar-native-opportunity button{font-size:10px}
 @media(max-width:1100px){#marketSnapshotPanel .radar-native-opportunity-grid{grid-template-columns:1fr}}
 @media(max-width:620px){#marketSnapshotPanel .radar-native-opportunity{grid-template-columns:1fr 1fr}#marketSnapshotPanel .radar-native-opportunity small{grid-column:1/3}}
+
+/* One Radar workspace: exact native Market fiche markup and existing Microscope data. */
+#marketSnapshotPanel .radar-native-intelligence{display:grid;grid-template-columns:minmax(285px,410px) minmax(0,1fr);gap:9px;margin:8px 0 10px;align-items:start}
+#marketSnapshotPanel .radar-native-fiche-panel,
+#marketSnapshotPanel .radar-native-technical{min-width:0;border:1px solid var(--line);border-radius:10px;background:rgba(3,12,22,.42);padding:11px}
+#marketSnapshotPanel .radar-native-fiche-panel summary{cursor:pointer;color:var(--text);font-size:11px;font-weight:850}
+#marketSnapshotPanel .radar-native-fiche-body{margin-top:10px;max-height:550px;overflow:auto;overscroll-behavior:contain}
+#marketSnapshotPanel .radar-native-fiche-body .atlas-help-market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#marketSnapshotPanel .radar-native-fiche-body .atlas-help-market-grid>span{min-width:0}
+#marketSnapshotPanel .radar-native-fiche-body .atlas-help-market-head{min-width:0}
+#marketSnapshotPanel .radar-native-fiche-body .atlas-help-market-sources{margin-top:9px}
+#marketSnapshotPanel .radar-native-technical h4{margin:0 0 8px;color:var(--text);font-size:11px}
+#marketSnapshotPanel .radar-native-technical-body{display:grid;gap:6px}
+#marketSnapshotPanel .radar-native-technical-body strong{font-size:12px;color:var(--cyan)}
+#marketSnapshotPanel .radar-native-technical-body p{font-size:11px;line-height:1.5;margin:0;color:var(--text)}
+#marketSnapshotPanel .radar-native-technical-body .table-note{color:var(--muted);font-size:10px}
+#marketSnapshotPanel .radar-native-technical-body small{font-size:10px;line-height:1.5;color:var(--muted)}
+@media(max-width:1000px){#marketSnapshotPanel .radar-native-intelligence{grid-template-columns:1fr}}
