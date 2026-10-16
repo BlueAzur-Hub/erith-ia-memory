@@ -99,7 +99,8 @@
     catch(_){return unknown('Solde CT non vérifiable');}
     // Une devise absente des deux listes OKX signifie zéro sur cet instant
     // seulement si les listes Trading + Funding sont toutes deux présentes.
-    if(!Array.isArray(account.trading)||!Array.isArray(account.funding))
+    if(!Array.isArray(account.trading)||!Array.isArray(account.funding)||
+       !account.trading.some(row=>Array.isArray(row?.details)))
       return unknown('Relevé Trading/Funding incomplet');
     if(held.verified&&held.qty>1e-10)
       return unknown('Position CT encore ouverte : pas de liquidation totale','position_open');
@@ -134,6 +135,8 @@
       return unknown(pairs.length?'Mouvements CT/USDC ambigus : aucune conversion attribuée'
         :'Aucun débit CT et crédit USDC appariables','not_reconciled');
     const {debit,credit}=pairs[0];
+    if(debit.ts>observed||credit.ts>observed)
+      return unknown('Écritures postérieures au relevé de solde : actualisation nécessaire');
     if(outgoing.some(x=>x!==debit&&x.ts>=debit.ts))
       return unknown('Autres sorties CT détectées : clôture complète non démontrée');
     const qty=-debit.amount,received=credit.amount;
