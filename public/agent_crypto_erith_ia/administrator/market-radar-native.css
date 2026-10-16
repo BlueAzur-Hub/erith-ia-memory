@@ -43,3 +43,9 @@
 @media(max-width:720px){#marketSnapshotPanel .radar-native-cards{grid-template-columns:1fr 1fr}
  #marketSnapshotPanel .radar-native-head{align-items:flex-start}
  #marketSnapshotPanel .radar-native td{font-size:10px}}
+
+/* A Radar row is a graph selection, not a passive quote. */
+#marketSnapshotPanel .radar-native-selectable{cursor:pointer;transition:background .14s ease,box-shadow .14s ease}
+#marketSnapshotPanel .radar-native-selectable:hover{background:rgba(65,198,208,.10)}
+#marketSnapshotPanel .radar-native-selectable:focus-visible{outline:2px solid var(--cyan,#78d9e5);outline-offset:-2px}
+#marketSnapshotPanel .radar-native-cards .radar-native-selectable:hover{border-color:var(--cyan,#78d9e5)}
