@@ -10,7 +10,7 @@ SPEC = importlib.util.spec_from_file_location("btc_ct_auto", TARGET)
 m = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(m)
 H = m.HOUR
-NOW = 1792142400000  # 2026-10-16 12:00 UTC
+NOW = 1792141200000  # exact completed-hour boundary in UTC
 
 
 def rows(n=55, first=NOW - 55 * H, price=100):
@@ -68,7 +68,7 @@ class AutoPaperTests(unittest.TestCase):
         trending=rows()
         for i in range(35,54):
             price=100+(i-35)*.2
-            trending[i].update(o=price,h=price*.1+price,l=price*.998,c=price,v=10)
+            trending[i].update(o=price,h=price*1.002,l=price*.998,c=price,v=10)
         trending[-1].update(o=104,h=111,l=103.9,c=110,v=100)
         self.assertEqual(m.choose_signal(trending)["kind"],"BREAKOUT")
         self.assertEqual(m.choose_signal(rows())["kind"],"WAIT")
