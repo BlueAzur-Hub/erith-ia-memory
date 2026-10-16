@@ -1,0 +1,47 @@
+/* Snapshot Analyse — one subordinate disclosure inside native Lecture Technique.
+   No positioning, geometry or visual theme authority; Trader only. */
+#detailPanel #agentCryptoSnapshotAnalysis{margin-top:6px}
+#detailPanel #agentCryptoSnapshotAnalysis > summary{
+  display:flex;gap:8px;align-items:center;justify-content:space-between;
+  cursor:pointer;min-width:0
+}
+#detailPanel #agentCryptoSnapshotAnalysis > summary .agent-snapshot-state{
+  font-size:9px;color:#8cdbe5;min-width:0;text-align:right
+}
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-body{
+  padding:8px 7px 10px;background:rgba(4,16,27,.55)
+}
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-source,
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-disclaimer{
+  margin:0 0 7px;font:500 10px/1.45 system-ui,sans-serif;color:#a6bac7;
+  overflow-wrap:anywhere
+}
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-disclaimer{
+  margin:8px 0 0;font-size:9px;color:#a4afbe
+}
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-grid{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:6px
+}
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-card{
+  min-width:0;padding:7px 8px;border:1px solid rgba(100,177,198,.22);
+  border-radius:9px;background:rgba(7,25,37,.72);
+  display:grid;gap:3px
+}
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-card b{
+  font:800 10px/1.3 system-ui,sans-serif;color:#dceefa
+}
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-card-status{
+  font:700 9px/1.3 system-ui,sans-serif;color:#8dd4e3
+}
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-card-metrics{
+  margin:0;font:750 11px/1.4 system-ui,sans-serif;color:#f4f4ee;overflow-wrap:anywhere
+}
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-card-note{
+  color:#b4c2cd;font:500 9px/1.4 system-ui,sans-serif;overflow-wrap:anywhere
+}
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-card[data-snapshot-status="partial"]{
+  border-color:rgba(231,184,94,.36)
+}
+#detailPanel #agentCryptoSnapshotAnalysis .agent-snapshot-card[data-snapshot-status="blocked"]{
+  border-color:rgba(222,121,124,.32)
+}
