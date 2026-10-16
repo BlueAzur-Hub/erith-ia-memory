@@ -198,3 +198,58 @@ test("Top1000 Fiche refuses an inaccurate or missing identity",async()=>{
   globalThis.document=old.document;
  }
 });
+
+test("Snapshot Analyse reads only the actually rendered Market or external series",()=>{
+ const vm=require("node:vm");
+ const app=fs.readFileSync(path.join(__dirname,"../app.js"),"utf8");
+ const begin=app.indexOf("/* Snapshot Analyse — canonical graph series in read-only memory.");
+ const end=app.indexOf("function atlasMarketExternalRowMarkup(rawQuery) {",begin);
+ assert.ok(begin>0&&end>begin,"Accessor belongs to the canonical owner");
+ const script=app.slice(begin,end);
+ const timestamp=Date.parse("2026-10-16T12:00:00Z");
+ const make=(external=false)=>{
+  const coin={id:external?"concrete":"tron",symbol:external?"CT":"TRX",
+   rawQuoteCurrency:external?"USDT":null,
+   providerContext:external?{providerSymbol:"CT-USDT"}:null};
+  const series=[[timestamp,0.34],[timestamp+300000,0.35],[timestamp+600000,0.36]];
+  const result={series,source:"test source",sourceFamily:external?"okx":"coingecko",
+   currency:"USD",integrity:{ok:true},generatedAt:"2026-10-16T12:10:00Z"};
+  const chart={data:{datasets:[{type:"line",atlasCoin:coin,
+   data:series.map(row=>({x:row[0],rawPrice:row[1],y:row[1]/series[0][1]*100}))}]}};
+  const engine={realChart:chart,loading:false,
+   lastRenderedKey:external?"external:concrete:1":"chart-key"};
+  const broker={status:"ready",coinId:"tron",period:1,contextKey:"single:tron:1",result};
+  const ctx={active:external,coin,period:1,result,resultPeriod:1,loading:false,error:"",token:7};
+  const env={state:{chartEngineV2:engine,dataBroker:{chart:broker},
+   chartPeriodDays:1,chartRenderToken:8,graphSelectionCleared:false},
+   els:{mainChart:{closest:()=>({dataset:{chartState:"valid"}})}},
+   atlasExternalChartContext:ctx,getSelectedCoin:()=>coin,
+   atlasComparisonActive:()=>false,atlasChartContextMatches:()=>true,
+   atlasChartKey:()=>"chart-key",atlasSanitizeChartRows:rows=>rows.map(p=>[Number(p[0]),Number(p[1])])};
+  vm.runInNewContext(script,env,{timeout:1000});
+  return {env,read:()=>env.AgentCryptoPublishedSeries.read(),series,engine,broker,ctx};
+ };
+ const market=make();
+ let snapshot=market.read();
+ assert.ok(snapshot);assert.equal(snapshot.assetId,"tron");
+ assert.equal(snapshot.symbol,"TRX");assert.equal(snapshot.origin,"market");
+ assert.equal(snapshot.series[1][1],0.35,"returns prices, never base100 values");
+ assert.ok(Object.isFrozen(snapshot)&&Object.isFrozen(snapshot.series)&&Object.isFrozen(snapshot.series[1]));
+ market.series[1][1]=100;
+ assert.equal(snapshot.series[1][1],0.35,"immutable detached data");
+ assert.equal(market.read(),null,"changed data no longer equals the rendered chart");
+ const invalid=make();invalid.broker.coinId="bitcoin";
+ assert.equal(invalid.read(),null,"wrong broker identity rejected");
+ const changed=make();changed.env.state.chartPeriodDays=7;
+ assert.equal(changed.read(),null,"period mismatch rejected");
+ const compared=make();compared.env.atlasComparisonActive=()=>true;
+ assert.equal(compared.read(),null,"comparison is not a single asset");
+ const external=make(true);snapshot=external.read();
+ assert.ok(snapshot);assert.equal(snapshot.assetId,"concrete");
+ assert.equal(snapshot.instrument,"CT-USDT");assert.equal(snapshot.origin,"external");
+ assert.equal(snapshot.conversion.required,true);assert.equal(snapshot.conversion.verified,false);
+ external.ctx.loading=true;assert.equal(external.read(),null,"loading rejects the old result");
+ external.ctx.loading=false;external.ctx.resultPeriod=7;
+ assert.equal(external.read(),null,"outdated external period rejected");
+ assert.doesNotMatch(script,/fetch\s*\(|localStorage|trade\/order|setInterval/);
+});
