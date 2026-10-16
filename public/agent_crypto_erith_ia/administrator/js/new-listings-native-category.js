@@ -62,6 +62,7 @@
     lastDiscoveryAt:null,
     lastError:null,
     lastResult:null,
+    lastPublishedSpecKey:null,
     originalRenderMarketTable:null,
     renderWrapped:false,
     mounted:false
@@ -772,6 +773,7 @@
     );
     if(!presented)throw new Error("API publique Graphique externe indisponible");
     state.lastResult=result;
+    state.lastPublishedSpecKey=[spec.id,spec.pair,spec.provider].join('|');
     patchNativeFiche(spec,coin,result);
     const caption=document.getElementById("chartCaption");
     if(caption){const t=caption.querySelector(".chart-caption-text");if(t)t.textContent=`${spec.symbol} · Nouveau listing · ${spec.providerLabel} ${spec.pair} · données réelles · ${result.series.length} points`;}
@@ -1023,6 +1025,22 @@
     return true;
   }
 
+  // Public-only source for Trader Math: read the SAME chart result already
+  // accepted by AtlasExternalChart, never fetch or recreate any graph owner.
+  function mathSeriesSnapshot(){
+    const spec=state.selected,result=state.lastResult;
+    if(!spec||!result||state.lastPublishedSpecKey!==[spec.id,spec.pair,spec.provider].join('|')||
+       result.blocked||result.integrity?.ok!==true||
+       result.sourceMode!=="new-listing-exchange-native"||result.provider!==spec.provider||
+       typeof result.source!=="string"||!result.source.includes(spec.pair)||
+       !Array.isArray(result.series)||result.series.length<21)return null;
+    return Object.freeze({
+      instrument:spec.pair,provider:spec.provider,
+      source:result.source,currency:result.currency,periodDays:result.periodDays,
+      series:Object.freeze(result.series.map(row=>Object.freeze([row[0],row[1]])))
+    });
+  }
+
   function snapshot(){
     return Object.freeze({
       build:MODULE_VERSION,enabled:state.enabled,discovered:state.specs.length,
@@ -1082,7 +1100,7 @@
   }
 
   globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
-    build:MODULE_VERSION,mount,discover,select,selectById,deactivate,snapshot,self_test:selfTest,
+    build:MODULE_VERSION,mount,discover,select,selectById,deactivate,snapshot,mathSeriesSnapshot,self_test:selfTest,
     identity_enrichment:"GitHub static identity memory first with real PNG assets; CoinGecko batch only for unresolved known ids; exact id+symbol proof; fail-open",
     identity_logos:true,
     safe_radar:true,
