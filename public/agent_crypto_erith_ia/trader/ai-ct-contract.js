@@ -115,7 +115,7 @@
           const id=String(r?.billId??'').trim();
           const raw=String(r?.balChg??'').trim();
           const ts=Number(r?.ts);
-          if(!id||ids.has(id)||!/^[+-]?\d+(?:\.\d+)?$/.test(raw)||
+          if(!id||ids.has(id)||(r.ccy&&r.ccy!==ccy)||!/^[+-]?\d+(?:\.\d+)?$/.test(raw)||
              !Number.isFinite(Number(raw))||!Number.isFinite(ts)||ts<=0)return null;
           ids.add(id);
           all.push({id,ccy,source:key,ts:ts<1e11?ts*1000:ts,
