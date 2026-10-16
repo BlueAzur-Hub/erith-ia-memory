@@ -126,7 +126,7 @@ async function refresh(){
    get("https://api.bitget.com/api/v3/market/instruments?category=SPOT"),
    get("https://api.bitget.com/api/v3/market/tickers?category=SPOT")
   ]);
-  try{listing=verifyBitget(live[0].value.value,live[1].value.value,registry,Date.now())}
+  try{listing=verifyBitget(live[0].value,live[1].value,registry,Date.now())}
   catch(e){listing=[];errors.push("Nouveaux listings Bitget : données non vérifiées")}
   display("new-count",String(listing.length));
   display("new-source","Bitget Spot · lancements ≤30 j · prix et volume valides");
