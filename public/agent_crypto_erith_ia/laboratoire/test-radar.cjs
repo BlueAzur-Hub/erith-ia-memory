@@ -79,8 +79,8 @@ const nativeCss=fs.readFileSync(path.resolve(__dirname,'../administrator/market-
 assert(tab.includes('marketSnapshotPanel')&&tab.includes('marketTools'),"Native Radar stays in existing Market Snapshot");
 assert(tab.includes('atlasRadarMarketView')&&tab.includes('view.hidden=!visible'),"Native Radar hides and shows without replacing Market");
 assert(tab.includes('aria-pressed')&&tab.includes('aria-expanded'),"Native Radar supports accessible toggling");
-assert(tab.includes('loadRadarScript("../laboratoire/radar.js")'),"Native Radar reuses exact standalone public parser");
-assert(tab.includes('loadRadarScript("./js/market-radar-native.js")'),"Native Radar loads a dedicated themed renderer");
+assert(native.includes('loadRadarScript("../laboratoire/radar.js")'),"Native Radar reuses exact standalone public parser");
+assert(native.includes('loadRadarScript("./js/market-radar-native.js")'),"Native Radar loads a dedicated themed renderer");
 assert(tab.includes('theme.href=new URL("./market-radar-native.css"'),"Native Radar includes its scoped theme");
 assert(!tab.includes('iframe')&&!tab.includes('frame.src'),"Nested standalone iframe removed");
 assert(native.includes('if(state.radarOpen)radarView(false)'),"Canonical Market buttons return to native table");
