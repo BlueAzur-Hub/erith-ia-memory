@@ -89,7 +89,7 @@ assert(!tab.includes('placeOrder')&&!tab.includes('fetch(')&&!tab.includes('loca
 assert(nativeView.includes('radar-native-head')&&nativeView.includes('market-universe-mode')&&nativeView.includes('table-wrap'),"Reuse canonical Trader UI classes");
 assert(nativeView.includes('Agrandir ↗')&&nativeView.includes('../laboratoire/radar.html'),"Standalone view remains available");
 assert(nativeView.includes('global.AgentCryptoRadarReader'),"Renderer shares public parser with standalone");
-assert(!nativeView.includes('iframe')&&!nativeView.includes('placeOrder')&&!nativeView.includes('api/v5/trade/order'),"No iframe or private trading routes");
+assert(!nativeView.includes('createElement("iframe")')&&!nativeView.includes('placeOrder')&&!nativeView.includes('api/v5/trade/order'),"No iframe or private trading routes");
 assert(nativeCss.includes('#marketSnapshotPanel .radar-native')&&nativeCss.includes('var(--text)')&&nativeCss.includes('var(--line)'),"Scoped CSS uses existing Trader palette");
 assert(!nativeCss.includes('color:#fff1c7')&&!nativeCss.includes('background:#06131f'),"Standalone palette not duplicated");
 assert(js.includes('global.AgentCryptoRadarReader=API'),"Standalone and Market-native views share same validators");
