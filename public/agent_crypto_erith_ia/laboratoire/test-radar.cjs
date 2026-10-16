@@ -14,6 +14,12 @@ const validated=reader.validMarket(example);
 assert.equal(validated.rows.length,250);
 assert.equal(validated.rows[0].marketCapUsd,5000);
 assert.equal(validated.rows[0].image,coins[0].image);
+assert.equal(reader.observeMarket({change24h:1,change7d:2}).tone,'up');
+assert.equal(reader.observeMarket({change24h:-1,change7d:-2}).tone,'down');
+assert.equal(reader.observeMarket({change24h:1,change7d:-2}).tone,'mixed');
+assert.equal(reader.observeMarket({change24h:-1,change7d:2}).tone,'mixed');
+assert.equal(reader.observeMarket({change24h:null,change7d:2}).tone,'unknown');
+assert.match(reader.observeMarket({change24h:0,change7d:0}).detail,/aucune tendance/i);
 for(const tier of reader.TIERS){
   const rows=reader.selectMarket(validated.rows,tier);
   assert.equal(rows.length,tier);
@@ -117,6 +123,20 @@ assert(nativeView.includes('identityCell(r,asset)')&&nativeView.includes('identi
 assert(nativeView.includes('global.AgentCryptoTraderNativeFiche?.showAsset?.'),"Existing fiche owner");
 assert(marketFiche.includes('showAsset,hide,preferredMode'),"Fiche API exposed");
 assert(nativeCss.includes('.market-identity-rail')&&nativeCss.includes('[data-radar-symbol="BTC"]'),"Market color accents");
+assert(nativeView.includes('syncGraphSelection(root)')&&nativeView.includes('graphSelection()'),"Graph owner context is reused");
+assert(nativeView.includes('radarObservation:movement.label'),"Factual movement is forwarded to the existing fiche");
+assert(nativeView.includes('data-radar-native="focusFiche"')===false,"Fiche button is a DOM control, not a shadow popup");
+assert(nativeView.includes('fiche.dataset.radarNative="focusFiche"'),"Visible native fiche access");
+assert(nativeCss.includes('.radar-native-focus')&&nativeCss.includes('.is-radar-active'),"Selected graph marker and native style");
+assert(marketFiche.includes('Lecture Radar · descriptive')&&marketFiche.includes('Preuve et limites'),"Fiche includes source limitations");
+globalThis.AgentCryptoTraderMarket={selected:()=>({id:'bitcoin',symbol:'BTC'})};
+assert.deepEqual(router.graphSelection(),{kind:'market',id:'bitcoin',symbol:'BTC'});
+globalThis.AgentCryptoNewListingsNativeCategory={snapshot:()=>({selectedId:'concrete',selectedSymbol:'CT'})};
+assert.deepEqual(router.graphSelection(),{kind:'listing',id:'concrete',symbol:'CT'});
+globalThis.AgentCryptoNewListingsNativeCategory={snapshot:()=>({selectedId:null})};
+globalThis.AtlasExternalChart={state:()=>({active:true})};
+assert.equal(router.graphSelection(),null,"External chart without matching listing must not be called BTC");
+delete globalThis.AtlasExternalChart;
 
 (async()=>{
  const status={textContent:""};

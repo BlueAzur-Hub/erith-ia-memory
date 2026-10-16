@@ -64,7 +64,16 @@ function verifyBitget(inst,tickers,registry,now){
  }
  return [...found.values()].sort((a,b)=>a.ageDays-b.ageDays).slice(0,50);
 }
-const API=Object.freeze({TIERS,validMarket,selectMarket,verifyPaper,verifyRegistry,verifyBitget});
+function observeMarket(asset){
+ const day=finite(asset?.change24h),week=finite(asset?.change7d);
+ if(day===null||week===null)return {label:"Données à compléter",tone:"unknown",detail:"Variations 24 h et 7 j nécessaires ; aucune interprétation possible."};
+ if(day>0&&week>0)return {label:"Hausse 24 h / 7 j",tone:"up",detail:"Deux variations positives observées ; aucune prévision de poursuite."};
+ if(day<0&&week<0)return {label:"Repli 24 h / 7 j",tone:"down",detail:"Deux variations négatives observées ; aucune prévision."};
+ if(day>0&&week<0)return {label:"Rebond 24 h",tone:"mixed",detail:"24 h positif, 7 j négatif ; ce contraste ne confirme pas un retournement."};
+ if(day<0&&week>0)return {label:"Repli 24 h",tone:"mixed",detail:"24 h négatif, 7 j positif ; ce contraste n'est pas un signal de vente."};
+ return {label:"Variation neutre",tone:"flat",detail:"Au moins un des deux horizons est à zéro ; aucune tendance confirmée."};
+}
+const API=Object.freeze({TIERS,validMarket,selectMarket,verifyPaper,verifyRegistry,verifyBitget,observeMarket});
 if(typeof module!=="undefined"&&module.exports)module.exports=API;
 // Shared pure parser between standalone Radar and Trader-native view; never start
 // the standalone UI in a page without its own #tiers control.

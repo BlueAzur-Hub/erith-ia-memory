@@ -82,7 +82,7 @@
     const cap=finite(cur==="USD"?c?.marketCapUsd:c?.marketCap);
     const vol=finite(cur==="USD"?c?.volume24hUsd:c?.volume24h);
     const ratio=cap!==null&&cap>0&&vol!==null?vol/cap*100:null;
-    const score=isSelected?finite(globalThis.AgentCryptoTraderMathCore?.score?.()?.score):null;
+    const score=isSelected&&!c?.radarSource?finite(globalThis.AgentCryptoTraderMathCore?.score?.()?.score):null;
     const image=c?.image?'<img class="atlas-help-market-icon" src="'+esc(c.image)+'" alt="" loading="eager">':'<span class="atlas-help-market-fallback" aria-hidden="true">'+esc(String(c?.symbol||"?").slice(0,1))+'</span>';
     const ch24=c?.partial?c.rendered24:pct(c?.change24h),ch7=c?.partial?c.rendered7:pct(c?.change7d),ch30=c?.partial?"—":pct(c?.change30d??c?.change30D??c?.change30);
     return toolbar()+
@@ -90,15 +90,21 @@
       '<div class="atlas-help-market-grid">'+
       '<span><small>Prix '+(quote&&quote!=='USD'?'coté ':'affichage ')+esc(unit)+'</small><strong>'+esc(priceOf(c))+'</strong></span>'+
       '<span><small>Source '+esc(unit)+'</small><strong>'+esc(c?.radarSource||(c?.partial?"Market visible":"CoinGecko public"))+'</strong></span>'+
-      '<span><small>24 h direct</small><strong class="'+(c?.partial?"neutral":cls(c?.change24h))+'">'+esc(ch24)+'</strong></span>'+
+      '<span><small>'+(c?.radarSource?'24 h source':'24 h direct')+'</small><strong class="'+(c?.partial?"neutral":cls(c?.change24h))+'">'+esc(ch24)+'</strong></span>'+
       '<span><small>7 j marché</small><strong class="'+(c?.partial?"neutral":cls(c?.change7d))+'">'+esc(ch7)+'</strong></span>'+
       '<span><small>30 j marché</small><strong class="'+(c?.partial?"neutral":cls(c?.change30d??c?.change30D??c?.change30))+'">'+esc(ch30)+'</strong></span>'+
       '<span><small>Vol./cap.</small><strong>'+(ratio===null?"—":ratio.toFixed(2)+" %")+'</strong></span>'+
       '<span><small>Capitalisation</small><strong>'+esc(compact(cap,cur))+'</strong></span>'+
       '<span><small>Volume 24 h</small><strong>'+esc(compact(vol,cur))+'</strong></span>'+
       '<span><small>Score Atlas</small><strong>'+(score===null?"—":Math.round(score))+'</strong></span>'+
-      '<span><small>Décision</small><strong>Observer / comparer</strong></span></div>'+
+      '<span><small>Décision</small><strong>'+(c?.radarSource?'Observer · aucun ordre':'Observer / comparer')+'</strong></span></div>'+
       '<div class="atlas-help-market-sources"><span><b>Cotation et 24 h observés</b><em>'+esc(c?.partial?"Lecture de la ligne Market visible":"Snapshot public CoinGecko")+'</em></span><span><b>Référence marché 24 h</b><em>'+esc(ch24)+'</em></span></div>'+
+      (c?.radarObservation?'<div class="atlas-help-market-sources">'+
+        '<span><b>Lecture Radar · descriptive</b><em>'+esc(c.radarObservation)+'</em></span>'+
+        '<span><b>Justification</b><em>'+esc(c.radarReason||"Mesures insuffisantes")+'</em></span>'+
+        '<span><b>Preuve et limites</b><em>'+esc(c.radarEvidence||"Aucune bougie vérifiée par la fiche")+'</em></span>'+
+        '<span><b>Date source</b><em>'+esc(c.radarObservedAt||"Horodatage non fourni")+'</em></span>'+
+        '</div>':'')+
       '<div class="atlas-help-market-action '+(isSelected?"is-remove":"is-add")+'">'+(c?.radarSource?"Clique la ligne pour afficher le graphique Solo existant":isSelected?"Actif central Trader · clique une autre ligne pour changer la PAIR":"Clique la ligne pour sélectionner cet actif comme PAIR centrale")+'</div>';
   }
   function host(){
