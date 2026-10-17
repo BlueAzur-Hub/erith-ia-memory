@@ -1,0 +1,36 @@
+name: Seven Crypto Knowledge Validation
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/data/crypto/research/**'
+      - 'public/agent_crypto_erith_ia/laboratoire/crypto-knowledge.html'
+      - 'public/agent_crypto_erith_ia/laboratoire/CARTOGRAPHIE_CRYPTO_USAGES_ET_CIBLES.md'
+      - 'public/agent_crypto_erith_ia/administrator/js/market-radar-native.js'
+      - 'public/agent_crypto_erith_ia/trader/quack-ai-case-study.html'
+      - 'public/agent_crypto_erith_ia/tools/test-crypto-knowledge.cjs'
+      - '.github/workflows/seven-crypto-knowledge.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/data/crypto/research/**'
+      - 'public/agent_crypto_erith_ia/laboratoire/crypto-knowledge.html'
+      - 'public/agent_crypto_erith_ia/administrator/js/market-radar-native.js'
+      - 'public/agent_crypto_erith_ia/trader/quack-ai-case-study.html'
+      - 'public/agent_crypto_erith_ia/tools/test-crypto-knowledge.cjs'
+      - '.github/workflows/seven-crypto-knowledge.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate knowledge base and HTML wiring (offline)
+        run: node public/agent_crypto_erith_ia/tools/test-crypto-knowledge.cjs
+      - name: Regression legacy Radar
+        run: node public/agent_crypto_erith_ia/laboratoire/test-radar.cjs
