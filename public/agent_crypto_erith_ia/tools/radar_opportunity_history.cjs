@@ -16,8 +16,12 @@ function dailyArchive(now=new Date()){
  if(date!==now.toISOString().slice(0,10))throw Error("Archive non datée d'aujourd'hui, publication refusée");
  const file=path.join(outDir,date+".json");
  if(fs.existsSync(file))return {file,created:false}; // one immutable prospective observation per day
+ const files=fs.readdirSync(outDir).filter(f=>/^20\d{2}-\d{2}-\d{2}\.json$/.test(f));
+ const past=files.map(f=>read(path.join(outDir,f)));
+ const tracked=trackPreviousCandidates(core,extended,scan,past,date);
  const archive={
   schema:"erith.radar.opportunity-observation.v1",record_kind:"prospective_snapshot",
+  tracked_candidates:tracked,
   observed_date_utc:date,source_times_utc:scan.sourceTimes,
   source_files:["data/crypto/latest.json","data/crypto/extended.json"],
   universe:scan.universe,eligible:scan.eligible,filters:scan.filters,
@@ -30,6 +34,95 @@ function dailyArchive(now=new Date()){
  fs.writeFileSync(file,JSON.stringify(archive,null,2)+"\n");
  return {file,created:true,momentum:scan.trend.length,rebound:scan.rebound.length};
 }
+
+function selectedCandidates(day){
+ const groups=day?.groups||{};
+ return [...(groups.momentum_24h_7d||[]),...(groups.rebound_24h_only||[])].filter(x=>x&&typeof x.id==="string"&&x.id);
+}
+function dayOffset(date,days){
+ const ms=Date.parse(date+"T00:00:00Z");
+ ensureDate(ms);
+ return new Date(ms+days*86400000).toISOString().slice(0,10);
+}
+function ensureDate(ms){if(!Number.isFinite(ms))throw Error("Date Radar invalide");}
+function trackPreviousCandidates(core,extended,scan,past,date){
+ const wanted=new Map();
+ const add=(x,firstSeen)=>{if(x&&typeof x.id==="string"&&x.id&&!wanted.has(x.id))
+    wanted.set(x.id,{symbol:x.symbol||null,first_seen_date_utc:firstSeen});};
+ for(const day of past){
+  const gap=Math.round((Date.parse(date+"T00:00:00Z")-Date.parse(day.observed_date_utc+"T00:00:00Z"))/86400000);
+  if(gap>=1&&gap<=7)for(const x of selectedCandidates(day))add(x,day.observed_date_utc);
+ }
+ for(const x of selectedCandidates({groups:{momentum_24h_7d:scan.trend,rebound_24h_only:scan.rebound}}))add(x,date);
+ const prices=new Map();
+ for(const [snapshot,when] of [[core,scan.sourceTimes.core],[extended,scan.sourceTimes.extended]]){
+  for(const x of snapshot.coins||[]){
+   if(typeof x.id!=="string"||!x.id)continue;
+   if(prices.has(x.id))throw Error("Collision d'identité entre Top250 et Extended : "+x.id);
+   prices.set(x.id,{coin:x,at:when});
+  }
+ }
+ return [...wanted.entries()].sort(([a],[b])=>a.localeCompare(b)).map(([id,prior])=>{
+  const found=prices.get(id),coin=found?.coin,price=finite(coin?.priceUsd);
+  const valid=price!==null&&price>0&&Number.isFinite(Date.parse(found?.at||""));
+  return {id,symbol:coin?.symbol||prior.symbol,first_seen_date_utc:prior.first_seen_date_utc,
+    observed_at_utc:valid?found.at:null,price_usd:valid?price:null,
+    rank:Number.isInteger(coin?.rank)?coin.rank:null,
+    status:valid?"OBSERVED_TOP1000":"NO_VALID_TOP1000_PRICE"};
+ });
+}
+function buildDynamicFollowups(archives){
+ const days=[...archives].filter(x=>x?.schema==="erith.radar.opportunity-observation.v1"&&
+    /^\d{4}-\d{2}-\d{2}$/.test(x.observed_date_utc||""))
+   .sort((a,b)=>a.observed_date_utc.localeCompare(b.observed_date_utc));
+ const byDay=new Map(days.map(x=>[x.observed_date_utc,x])),latest=days.at(-1)?.observed_date_utc||null;
+ const follow=(id,firstAt,date,horizon)=>{
+  const target=dayOffset(date,horizon),future=byDay.get(target);
+  if(!future)return {target_date_utc:target,at_utc:null,price_usd:null,change_pct:null,
+    status:latest&&target<=latest?"MISSING_DATED_SNAPSHOT":"AWAITING_FUTURE_DAY"};
+  const record=(future.tracked_candidates||[]).find(x=>x.id===id)
+   ||selectedCandidates(future).find(x=>x.id===id);
+  const value=finite(record?.price_usd??record?.priceUsd),at=record?.observed_at_utc||record?.sourceSnapshot||null;
+  const start=Date.parse(firstAt||""),finish=Date.parse(at||"");
+  if(value===null||value<=0||!Number.isFinite(finish)||!Number.isFinite(start)||finish<=start)
+   return {target_date_utc:target,at_utc:null,price_usd:null,change_pct:null,status:"NO_MATCHING_VERIFIED_PRICE"};
+  return {target_date_utc:target,at_utc:at,price_usd:value,elapsed_hours:Math.round((finish-start)/3600000*100)/100,
+    status:"OBSERVED_DAILY_SNAPSHOT",change_pct:null};
+ };
+ const observations=[];
+ for(const day of days){
+  const selected=new Set();
+  for(const c of selectedCandidates(day)){
+   if(selected.has(c.id))continue;selected.add(c.id);
+   const price=finite(c.priceUsd),at=c.sourceSnapshot||null;
+   if(price===null||price<=0||!Number.isFinite(Date.parse(at||"")))continue;
+   const d1=follow(c.id,at,day.observed_date_utc,1);
+   const d7=follow(c.id,at,day.observed_date_utc,7);
+   for(const v of [d1,d7])if(v.status==="OBSERVED_DAILY_SNAPSHOT")
+    v.change_pct=Math.round((v.price_usd/price-1)*1e4)/100;
+   observations.push({id:c.id,symbol:c.symbol,group:(day.groups.momentum_24h_7d||[]).some(x=>x.id===c.id)?"momentum_24h_7d":"rebound_24h_only",
+     first_seen_date_utc:day.observed_date_utc,observed_at_utc:at,initial_price_usd:price,
+     followup_1d:d1,followup_7d:d7});
+  }
+ }
+ return {schema:"erith.radar.dynamic-forward-observations.v1",record_kind:"descriptive_daily_followup_not_paper_trades",
+  quote:"USD",source:"Existing immutable prospective Radar Top1000 daily archives",
+  source_archive_dates:days.map(d=>d.observed_date_utc),
+  horizons_calendar_days:[1,7],orders_enabled:false,trade_executions_recorded:false,
+  fees_included:false,positions_created:false,identity_market_pair_certified:false,
+  note:"Suivi descriptif au même identifiant CoinGecko ; horodatages réels affichés, pas de prix intrajournalier supposé. Absence de suivi = null. USD n'est pas USDT.",
+  observations};
+}
+function archiveDynamicFollowups(){
+ const files=fs.readdirSync(outDir).filter(f=>/^20\d{2}-\d{2}-\d{2}\.json$/.test(f)).sort().slice(-90);
+ const history=buildDynamicFollowups(files.map(f=>read(path.join(outDir,f))));
+ const dest=path.join(outDir,"dynamic-followups.json"),body=JSON.stringify(history,null,2)+"\n";
+ if(!fs.existsSync(dest)||fs.readFileSync(dest,"utf8")!==body)fs.writeFileSync(dest,body);
+ return {file:dest,days:files.length,observations:history.observations.length,
+  completed_1d:history.observations.filter(x=>x.followup_1d.status==="OBSERVED_DAILY_SNAPSHOT").length,
+  completed_7d:history.observations.filter(x=>x.followup_7d.status==="OBSERVED_DAILY_SNAPSHOT").length};
+}
+
 function archiveHistory(){
  const dir=path.join(root,"data/history");
  const daily=new Map(),files=fs.readdirSync(dir).filter(f=>/^20\d{2}-\d{2}-\d{2}\.jsonl$/.test(f)).sort();
@@ -89,7 +182,7 @@ function archiveHistory(){
  return {file,days:days.length,observations:output.length,followups:output.filter(x=>x.followup_status==="OBSERVED_MARKET_SNAPSHOT").length};
 }
 if(require.main===module){
- const result={prospective:dailyArchive(),retrospective:archiveHistory()};
+ const result={prospective:dailyArchive(),retrospective:archiveHistory(),dynamic:archiveDynamicFollowups()};
  console.log(JSON.stringify(result,null,2));
 }
-module.exports={dailyArchive,archiveHistory};
+module.exports={dailyArchive,archiveHistory,selectedCandidates,trackPreviousCandidates,buildDynamicFollowups,archiveDynamicFollowups};
