@@ -83,6 +83,11 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js
           node --check public/agent_crypto_erith_ia/administrator/js/aether.js
 
+      - name: DNA Trader case-study — semantic source and no order regression
+        run: |
+          node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
+          node --test public/agent_crypto_erith_ia/trader/test-dna-case-study.cjs
+
       - name: Private OKX portfolio and Seven Concrete existing integration
         run: |
           node --check public/agent_crypto_erith_ia/trader/ai-ct-contract.js
