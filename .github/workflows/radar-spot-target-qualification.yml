@@ -1,0 +1,54 @@
+name: Radar Spot Target Qualification
+on:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/qualify_radar_targets.py'
+      - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_targets.py'
+      - '.github/workflows/radar-spot-target-qualification.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '31 14 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: radar-spot-target-qualification
+  cancel-in-progress: false
+jobs:
+  qualification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test pure Radar qualification; no external connection
+        run: python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_targets.py' -v
+      - name: Collect public evidence only (main push/schedule, not PR)
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_targets.py' -q
+            python public/agent_crypto_erith_ia/tools/qualify_radar_targets.py
+            git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json
+            if git diff --cached --quiet; then
+              echo 'No fresh qualification to publish'
+              exit 0
+            fi
+            git commit -m 'Archive Radar Spot research qualification (paper only)'
+            if git push origin HEAD:main; then
+              echo 'Research qualifications published'
+              exit 0
+            fi
+            sleep "$((attempt*3))"
+          done
+          echo 'Publication failed, no unverified summary substituted' >&2
+          exit 1
