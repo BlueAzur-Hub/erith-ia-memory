@@ -89,8 +89,19 @@
     !!(external?.active&&graph?.active&&
       String(graph.coin_id||"")!==String(external.id||""));
   const visibleGraphConflict=()=>{
-    try{return externalGraphConflict(globalThis.AtlasExternalChart?.state?.(),externalContext());}
-    catch(_){return false;}
+    try{
+      const graph=globalThis.AtlasExternalChart?.state?.(),ext=externalContext();
+      if(externalGraphConflict(graph,ext))return true;
+      const graphId=String(graph?.coin_id||"");
+      // A visible external chart must never inherit a stale BTC orderbook.
+      if(graph?.active&&(graphId.startsWith("new-listing:")||graphId==="concrete")){
+        const listing=globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.();
+        return !(ext.active&&graphId===String(ext.id||"")&&
+          graphId===String(listing?.selectedId||"")&&
+          normalizeSelectedAsset(ext.base)===normalizeSelectedAsset(listing?.selectedSymbol));
+      }
+      return false;
+    }catch(_){return true;}
   };
   const bookMismatch=(requestedAsset,requestedQuote,expectedAsset,expectedQuote)=>
     !!expectedAsset&&(
@@ -605,7 +616,10 @@
     // Wait for the matching public exchange context, then the existing open-only
     // 2-second refresh/event path will retry normally.
     if(!externalReady(visible,ext)||visibleGraphConflict()){
-      clearBookForAsset(visible||normalizeSelectedAsset(ext.base)||"BTC",ext.active?ext.quote:"USDT");
+      try{state.activeController?.abort();}catch(_){}
+      const listing=globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.();
+      clearBookForAsset(visible||normalizeSelectedAsset(listing?.selectedSymbol)||
+        normalizeSelectedAsset(ext.base)||"INCONNU",ext.active?ext.quote:"USDT");
       state.error="Contexte public du graphique externe non synchronisé · carnet indisponible";
       state.errorCode="EXTERNAL_CONTEXT_MISSING";
       render();
@@ -756,7 +770,8 @@
     const visible=visibleExternalAsset();
     const expected=visible||normalizeSelectedAsset(ext.active?ext.base:null)||selectedAsset();
     const inconsistent=bookMismatch(state.loadedAsset,state.loadedQuote,expected,ext.active?ext.quote:null)||
-      (visible&&!externalReady(visible,ext))||visibleGraphConflict();
+      (visible&&!externalReady(visible,ext))||visibleGraphConflict()||
+      (visible&&state.provider&&state.provider!==String(ext.provider||"").toLowerCase());
     if(inconsistent){
       if(title)title.textContent="CARNET D’ORDRES · SYNCHRONISATION";
       if(live){live.dataset.state="UNKNOWN";live.textContent="UNKNOWN";}
@@ -949,7 +964,10 @@
     window.addEventListener("agent-crypto:new-listing-line-ready",()=>{
       if(!state.open)return;
       const next=visibleExternalAsset();
-      if(!next)return;
+      if(!next||visibleGraphConflict()){
+        void refresh({automatic:true});
+        return;
+      }
       const nextQuote=desiredQuote();
       if(state.loadedAsset!==next||state.loadedQuote!==nextQuote)
         clearBookForAsset(next,nextQuote);
