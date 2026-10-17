@@ -355,3 +355,36 @@ test("Trader refuses fake outcomes and malformed future dates without corrupting
  collision.observations.push(collision.observations[0]);
  assert.throws(()=>native.verifiedDynamicFollowups(collision),/dupliquée/);
 });
+
+test("Trader Q / ICNT / FLUID trajectory synthesis does not invent PAPER eligibility",()=>{
+ const native=require("./market-radar-native.js"),archive=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../../data/crypto/radar-opportunities/dynamic-followups.json"),"utf8"));
+ const history=native.verifiedDynamicFollowups(archive);
+ const q=native.trajectoryEvidence(history,"quack-ai");
+ const icnt=native.trajectoryEvidence(history,"impossible-cloud-network-token");
+ const fluid=native.trajectoryEvidence(history,"instadapp");
+ assert.equal(q.status,"SUIVI EN ATTENTE");
+ assert.equal(fluid.status,"SUIVI EN ATTENTE");
+ assert.equal(icnt.status,"J+1 MESURÉ");
+ assert.equal(icnt.count1,1);assert.equal(icnt.count7,0);
+ assert.equal(icnt.lastMeasured.point.change_pct,34.33);
+ assert.equal(icnt.lastMeasured.point.elapsed_hours,33.75);
+ assert.match(native.trajectoryVolumeReadout(icnt.lastMeasured.initial,icnt.lastMeasured.point),/rang 572 → 460/);
+ for(const item of [q,icnt,fluid])assert.equal(item.paperCertified,false);
+});
+test("Trader trajectory rendering stays in the existing Radar with exactly three read-only rows",()=>{
+ const native=require("./market-radar-native.js"),data=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../../data/crypto/radar-opportunities/dynamic-followups.json"),"utf8"));
+ const oldDoc=globalThis.document;globalThis.document={createElement:tag=>new Element(tag)};
+ try{
+  const rows=new Element("div"),note=new Element("p");
+  const root={querySelector(sel){if(sel==='[data-radar-native="trajectoryRows"]')return rows;
+    if(sel==='[data-radar-native="trajectoryNote"]')return note;return null;}};
+  native.printTrajectories(root,{dynamicFollowups:native.verifiedDynamicFollowups(data)});
+  assert.equal(rows.children.length,3);
+  assert.equal(rows.children[0].dataset.radarTrajectoryId,"quack-ai");
+  assert.match(rows.children[1].children[1].textContent,/34\.33|34,33/);
+  assert.match(rows.children[1].children[2].textContent,/rang 572 → 460/);
+  assert.match(rows.children[2].children[1].textContent,/Pas de J/);
+  assert.match(note.textContent,/2026-10-17/);
+  assert.equal(rows.children.every(r=>r.children.every(c=>c.tagName!=="BUTTON")),true);
+ }finally{globalThis.document=oldDoc;}
+});
