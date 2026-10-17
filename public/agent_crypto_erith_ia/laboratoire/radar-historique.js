@@ -89,7 +89,7 @@ const fmt=(v,d=2)=>new Intl.NumberFormat("fr-FR",{maximumFractionDigits:d,minimu
 const pct=v=>(v>0?"+":"")+fmt(v,2)+" %";
 const cash=v=>fmt(v,2)+" USDT";
 const date=ts=>new Date(ts).toLocaleString("fr-FR",{timeZone:"UTC",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})+" UTC";
-const state={index:null,cache:new Map(),busy:false,latestToken:0};
+const state={index:null,cache:new Map(),busy:false,latestToken:0,comparison:null,comparisonToken:0};
 function status(message,err=false){$("status").textContent=message;$("status").style.color=err?"#ffa1ac":"";}
 async function source(url){
  const r=await fetch(url,{cache:"no-store",credentials:"omit",mode:"cors"});
@@ -146,7 +146,7 @@ async function analyze(){
  if(!numeric(capital)||capital<1||capital>100000||!numeric(cost)||cost<0||cost>=100){status("Hypothèses invalides : capital entre 1 et 100 000 USDT.",true);return;}
  const targets=state.index.entries.filter(e=>e.pair===pair).sort((a,b)=>a.month.localeCompare(b.month));
  if(targets.length!==3){status("Identité de paire ou trois mois manquants : aucun calcul.",true);return;}
- const token=++state.latestToken;state.busy=true;$("analyze").disabled=true;
+ const token=++state.latestToken;state.busy=true;$("analyze").disabled=true;$("compare20").disabled=true;
  status("Chargement et vérification SHA-256 des 3 archives de "+pair+"…");
  try{
   const data=await Promise.all(targets.map(verifiedFile));
@@ -174,7 +174,7 @@ async function analyze(){
   $("source-proof").textContent="Vérification incomplète : aucun résultat historique certifié pour cette sélection.";
   $("history-chart").replaceChildren();
   status("Analyse non disponible : "+String(e.message||e),true);
- }finally{state.busy=false;$("analyze").disabled=false;}
+ }finally{state.busy=false;$("analyze").disabled=false;$("compare20").disabled=!state.index;}
 }
 async function report(){
  try{
@@ -202,6 +202,109 @@ async function report(){
   const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=5;td.textContent="Rapports indisponibles ou incompatibles : "+String(e.message||e);tr.append(td);$("regimes").append(tr);
  }
 }
+
+/* Reuse the individual study's SHA-256 checks, validation and mathematics.
+   The group ranks independent PAPER observations, never an executable portfolio. */
+function comparisonStatus(message,err=false){
+ const node=$("comparison-status");node.textContent=message;node.style.color=err?"#ffa1ac":"";
+}
+function clearComparison(){
+ ++state.comparisonToken;state.comparison=null;
+ $("comparison-rows").replaceChildren();
+ const tr=document.createElement("tr"),td=document.createElement("td");
+ td.colSpan=7;td.textContent="Paramètres modifiés : relancez la comparaison pour éviter les chiffres périmés.";
+ tr.append(td);$("comparison-rows").append(tr);
+ $("comparison-proof").textContent="Aucun résultat conservé après changement des hypothèses.";
+ comparisonStatus("Comparaison à recalculer avec les nouveaux paramètres.");
+}
+function renderComparison(){
+ if(!state.comparison)return;
+ const {studies,days,capital,cost}=state.comparison;
+ const valid=studies.filter(x=>!x.error),invalid=studies.filter(x=>x.error);
+ const mode=$("comparison-sort").value;
+ const sorting={
+  net:(a,b)=>b.hold.net-a.hold.net,
+  repli:(a,b)=>a.hold.maxDrawdownPct-b.hold.maxDrawdownPct,
+  windows:(a,b)=>(b.windows.wins/b.windows.count)-(a.windows.wins/a.windows.count),
+  volume:(a,b)=>b.hold.volume-a.hold.volume,
+  pair:(a,b)=>a.pair.localeCompare(b.pair)
+ };
+ valid.sort((a,b)=>(sorting[mode]||sorting.net)(a,b)||a.pair.localeCompare(b.pair));
+ const tbody=$("comparison-rows");tbody.replaceChildren();
+ const appendCell=(tr,value,score)=>{
+  const td=document.createElement("td");td.textContent=value;
+  if(numeric(score))td.classList.add(score<0?"negative":"positive");
+  tr.append(td);
+ };
+ for(const x of valid){
+  const tr=document.createElement("tr");
+  const v=x.hold,w=x.windows;
+  appendCell(tr,x.pair.replace("USDT"," / USDT"));
+  appendCell(tr,(v.net>0?"+":"")+cash(v.net),v.net);
+  appendCell(tr,pct(v.netPct),v.netPct);
+  appendCell(tr,fmt(v.maxDrawdownPct,2)+" %");
+  appendCell(tr,w.wins+" / "+w.count+" ("+fmt(100*w.wins/w.count,1)+" %)");
+  appendCell(tr,(w.avg>0?"+":"")+cash(w.avg),w.avg);
+  appendCell(tr,fmt(v.volume/1e6,2));
+  tbody.append(tr);
+ }
+ for(const x of invalid){
+  const tr=document.createElement("tr"),td=document.createElement("td");
+  td.colSpan=7;td.className="negative";
+  td.textContent=x.pair+" · non classé : "+x.error;
+  tr.append(td);tbody.append(tr);
+ }
+ const success=valid.length,failed=invalid.length,winCount=valid.reduce((n,x)=>n+x.windows.wins,0);
+ const totalWindows=valid.reduce((n,x)=>n+x.windows.count,0);
+ comparisonStatus(success+"/20 marchés vérifiés · "+failed+" archive(s) écartée(s) · "+winCount+"/"+totalWindows+" fenêtres de 48 h positives."+(failed?" Comparatif partiel : voir les refus en bas.":""));
+ $("comparison-proof").textContent=days+" jours · "+cash(capital)+" indépendants par actif · coût aller-retour supposé "+fmt(cost,1)+" % · "+
+  (success*3)+" archives mensuelles contrôlées en taille et SHA-256 · données Binance Spot USDT, juillet–septembre 2026. "+
+  "Repli maximal sur clôtures horaires seulement. Fenêtres 48 h indépendantes, non composées. Aucun ordre ni rendement futur garanti.";
+}
+async function compareAll(){
+ if(state.busy||!state.index)return;
+ const days=Number($("days").value),capital=Number($("capital").value),cost=Number($("cost").value);
+ if(!Number.isInteger(days)||![7,30,60,90].includes(days)||!numeric(capital)||capital<1||capital>100000||
+    !numeric(cost)||cost<0||cost>=100){comparisonStatus("Hypothèses invalides : durée, capital ou frais.",true);return;}
+ let pairs;
+ try{pairs=validateIndex(state.index);}catch(e){comparisonStatus("Catalogue incompatible : "+e.message,true);return;}
+ const token=++state.comparisonToken;
+ state.comparison=null;state.busy=true;
+ $("analyze").disabled=true;$("compare20").disabled=true;
+ $("comparison-rows").replaceChildren();
+ comparisonStatus("Comparaison en cours : 0/20 actifs étudiés…");
+ let cursor=0,done=0;
+ const studies=new Array(pairs.length);
+ async function worker(){
+  while(cursor<pairs.length){
+   const at=cursor++,pair=pairs[at];
+   const targets=state.index.entries.filter(e=>e.pair===pair).sort((a,b)=>a.month.localeCompare(b.month));
+   try{
+    if(targets.length!==3)throw Error("Trois archives mensuelles absentes.");
+    const months=await Promise.all(targets.map(verifiedFile));
+    const joined=months.flat();
+    for(let i=1;i<joined.length;i++){
+     if(joined[i][0]!==joined[i-1][0]+HOUR)throw Error("Discontinuité horaire entre archives.");
+    }
+    const period=slicePeriod(joined,days);
+    studies[at]={pair,hold:estimateHold(period,capital,cost),windows:analyzeWindows(period,capital,cost)};
+   }catch(e){
+    studies[at]={pair,error:String(e.message||e)};
+   }
+   done++;
+   if(token===state.comparisonToken)comparisonStatus("Comparaison en cours : "+done+"/20 actifs étudiés…");
+  }
+ }
+ try{
+  await Promise.all([worker(),worker(),worker()]);
+  if(token!==state.comparisonToken)return;
+  state.comparison={studies,days,capital,cost};
+  renderComparison();
+ }finally{
+  state.busy=false;$("analyze").disabled=false;$("compare20").disabled=!state.index;
+ }
+}
+
 async function init(){
  try{
   const text=await source(ARCHIVE+"index.json");
@@ -210,7 +313,7 @@ async function init(){
   $("pair").replaceChildren();
   for(const p of pairs){const o=document.createElement("option");o.value=p;o.textContent=p.replace("USDT"," / USDT");$("pair").append(o);}
   $("pair").value=pairs.includes("ETHUSDT")?"ETHUSDT":pairs[0];
-  $("pair").disabled=false;$("analyze").disabled=false;
+  $("pair").disabled=false;$("analyze").disabled=false;$("compare20").disabled=false;
   status("20 marchés · 60 archives mensuelles · juillet–septembre 2026 · sélectionnez une durée puis étudiez.");
  }catch(e){status("Catalogue indisponible : "+String(e.message||e),true);}
 }
@@ -223,8 +326,10 @@ function clearOutdatedResults(){
  status("Sélection modifiée · étudiez l'historique pour obtenir de nouveaux calculs.");
 }
 $("analyze").addEventListener("click",analyze);
+$("compare20").addEventListener("click",compareAll);
+$("comparison-sort").addEventListener("change",renderComparison);
 for(const control of ["days","cost","pair","capital"]){
- $(control).addEventListener("change",clearOutdatedResults);
+ $(control).addEventListener("change",()=>{clearOutdatedResults();if(control!=="pair")clearComparison();});
 }
 init();report();
 })(typeof window!=="undefined"?window:globalThis);
