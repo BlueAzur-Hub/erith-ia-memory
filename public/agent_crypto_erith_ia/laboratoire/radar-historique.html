@@ -59,6 +59,23 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 </div>
 <p class="status" id="status" role="status" aria-live="polite">Recherche des archives publiques…</p>
 </section>
+<section id="comparison-section" aria-labelledby="comparison-title">
+<h2 id="comparison-title">Comparaison groupée · Radar 20 fixe</h2>
+<p>Une seule série de paramètres pour les 20 actifs. Les 60 fichiers horaires publics sont vérifiés avant calcul ; un actif dont la preuve manque reste exclu du classement. La détention de chaque crypto est indépendante, sans portefeuille composé.</p>
+<div class="controls">
+<label>Classer le comparatif
+<select id="comparison-sort" aria-label="Trier les résultats des 20 actifs">
+<option value="net">Gain net décroissant</option><option value="repli">Repli maximal croissant</option>
+<option value="windows">Fenêtres 48 h positives</option><option value="volume">Volume échangé décroissant</option>
+<option value="pair">Ordre alphabétique</option>
+</select></label>
+</div>
+<p id="comparison-status" class="status" role="status" aria-live="polite">Sélectionnez une durée et cliquez sur « Comparer les 20 ».</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Crypto</th><th>Net PAPER (USDT)</th><th>Net %</th><th>Repli max.</th><th>48 h positives</th><th>Moyenne 48 h (USDT)</th><th>Volume (M USDT)</th></tr></thead>
+<tbody id="comparison-rows"><tr><td colspan="7">Aucune comparaison calculée.</td></tr></tbody></table></div>
+<p class="muted" id="comparison-proof">Périodes 7 / 30 / 60 / 90 jours · calculs historiques rétrospectifs · aucun signal de trading.</p>
+</section>
 <section aria-labelledby="results-title">
 <h2 id="results-title">2 · Ce que montrent les relevés</h2>
 <div class="metrics" id="metrics" aria-live="polite">
@@ -89,23 +106,7 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <p class="muted" id="window-info">Les clôtures et ouvertures sont historiques ; coûts fixes hypothétiques.</p></article></div>
 <p class="muted">Les frais représentent une hypothèse forfaitaire de coût aller-retour. Spread variable, slippage, taille minimale, taxes, funding et exécution effective ne sont pas établis. L'observation rétrospective comporte un biais de sélection et ne prédit pas la prochaine hausse.</p>
 </section>
-<section id="comparison-section" aria-labelledby="comparison-title">
-<h2 id="comparison-title">3 bis · Comparer les 20 cryptos du Radar fixe</h2>
-<p>Une seule série de paramètres pour les 20 actifs. Les 60 fichiers horaires publics sont vérifiés avant calcul ; un actif dont la preuve manque reste exclu du classement. La détention de chaque crypto est indépendante, sans portefeuille composé.</p>
-<div class="controls">
-<label>Classer le comparatif
-<select id="comparison-sort" aria-label="Trier les résultats des 20 actifs">
-<option value="net">Gain net décroissant</option><option value="repli">Repli maximal croissant</option>
-<option value="windows">Fenêtres 48 h positives</option><option value="volume">Volume échangé décroissant</option>
-<option value="pair">Ordre alphabétique</option>
-</select></label>
-</div>
-<p id="comparison-status" class="status" role="status" aria-live="polite">Sélectionnez une durée et cliquez sur « Comparer les 20 ».</p>
-<div class="table-wrap"><table>
-<thead><tr><th>Crypto</th><th>Net PAPER (USDT)</th><th>Net %</th><th>Repli max.</th><th>48 h positives</th><th>Moyenne 48 h (USDT)</th><th>Volume (M USDT)</th></tr></thead>
-<tbody id="comparison-rows"><tr><td colspan="7">Aucune comparaison calculée.</td></tr></tbody></table></div>
-<p class="muted" id="comparison-proof">Périodes 7 / 30 / 60 / 90 jours · calculs historiques rétrospectifs · aucun signal de trading.</p>
-</section>
+
 <section aria-labelledby="study-title">
 <h2 id="study-title">4 · Expérience historique multi-crypto déjà archivée</h2>
 <p>Ces chiffres proviennent des rapports PAPER enregistrés, et <strong>non</strong> du calcul de détention ci-dessus. Paramètres du protocole étudié : capital partagé de 400 USDT, jusqu'à quatre positions de 100 USDT, détention 48 h, coût hypothétique aller-retour 0,8 %. Résultats datés ; pas de réoptimisation des paramètres.</p>
