@@ -99,10 +99,10 @@ function render(s){
  ]),"Aucun portefeuille validé");
  rows("case-observations",obs.slice(-24).reverse().map(o=>[when(o.observed_at),fmt(o.dna_bid,8),fmt(o.dna_ask,8),fmt(o.dna_spread_pct,3)+" %",o.scenarios?.[0]?.status==="valued"?fmt(o.scenarios[0].pnl_pct,2)+" %":"non valorisé"]),"Aucune observation");
  $("case-decision").textContent=r.candidate_spot_timestamps.length?"Tendance Spot à étudier sur certains relevés ; volume et continuité insuffisants. Aucun ordre.":"Aucune entrée suffisamment documentée par ces relevés espacés. Maintenir la lecture seule.";
- const safe={schema:r.schema,source:r.source,asset:"NeoSoul (DNA)",contract:s.token.contract,market:s.market,venue:s.venue,study_status:s.status,first_at:s.started_at,last_at:r.last_at,observations:r.count,portfolios:r.portfolios,spot_candidates:r.candidate_spot_timestamps,order_decision:r.order_decision,futures_decision:r.futures_decision,limitations:r.disclaimer,canonical_json:"../data/trader_flux/dna_paper/state.json"};
+ const safe={schema:r.schema,source:r.source,asset:"NeoSoul (DNA)",contract:s.token.contract,market:s.market,venue:s.venue,study_status:s.status,first_at:s.started_at,last_at:r.last_at,observations:r.count,portfolios:r.portfolios,spot_candidates:r.candidate_spot_timestamps,order_decision:r.order_decision,futures_decision:r.futures_decision,limitations:r.disclaimer,canonical_json:"https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/trader_flux/dna_paper/state.json"};
  $("case-machine").textContent=JSON.stringify(safe,null,2);
 }
-fetch("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/trader_flux/dna_paper/state.json?source=dna-case-study",{cache:"no-store"})
+fetch("../data/trader_flux/dna_paper/state.json?source=dna-case-study",{cache:"no-store"})
  .then(x=>{if(!x.ok)throw Error("HTTP "+x.status);return x.json();})
  .then(render)
  .catch(e=>{$("case-status").textContent="Source inaccessible / non validée";$("case-age").textContent=String(e.message||e);$("case-machine").textContent="Aucune étude chiffrée en l'absence de source vérifiée.";});
