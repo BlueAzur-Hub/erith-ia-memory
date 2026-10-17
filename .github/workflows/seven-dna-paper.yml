@@ -47,7 +47,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/laboratoire/dna-decision-review.js
           node --test public/agent_crypto_erith_ia/tools/test_neosoul_dna_paper.cjs public/agent_crypto_erith_ia/tools/test_dna_decision_review.cjs
       - name: Observe real public Bitget spot books (main only)
-        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         id: collect
         shell: bash
         run: |
@@ -59,7 +59,7 @@ jobs:
             echo "::warning::Bitget snapshot unavailable. No fake PAPER prices or entries published."
           fi
       - name: Archive verified observations (no private account data)
-        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.collect.outputs.available == 'true' }}
+        if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && steps.collect.outputs.available == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -76,7 +76,7 @@ jobs:
           git pull --rebase origin main
           git push origin HEAD:main
       - name: DNA morning PAPER scenario review (read-only, no wallet or order)
-        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         shell: bash
         run: |
           set -euo pipefail
@@ -140,7 +140,7 @@ jobs:
           print(f'DNA MORNING PAPER status={status} observations={len(o)} fresh={fresh} output={out}')
           PY
       - name: Preserve public morning PAPER review (no account data)
-        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         uses: actions/upload-artifact@v4
         with:
           name: dna-paper-morning-review
@@ -148,7 +148,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
       - name: Preserve diagnostics as short-lived artifact
-        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+        if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         uses: actions/upload-artifact@v4
         with:
           name: dna-paper-public-snapshot
