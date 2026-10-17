@@ -78,7 +78,7 @@ footer{margin:20px 0;color:var(--muted);font-size:12px}
 <script>
 (()=>{"use strict";
 const $=id=>document.getElementById(id);
-const fmt=(v,d=5)=>typeof v==="number"&&Number.isFinite(v)?v.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:d}):"indisponible";
+const fmt=(v,d=5)=>typeof v==="number"&&Number.isFinite(v)?v.toLocaleString("fr-FR",{minimumFractionDigits:Math.min(2,d),maximumFractionDigits:d}):"indisponible";
 const when=s=>s?new Date(s).toLocaleString("fr-FR",{timeZone:"Europe/Paris",dateStyle:"short",timeStyle:"short"}):"—";
 const el=(t,value)=>{const n=document.createElement(t);n.textContent=String(value);return n;};
 function rows(id,all,empty){const target=$(id);target.replaceChildren();if(!all.length){const tr=el("tr",""),td=el("td",empty);td.colSpan=id==="case-portfolios"?4:5;tr.append(td);target.append(tr);return;}for(const values of all){const tr=document.createElement("tr");for(const value of values)tr.append(el("td",value));target.append(tr);}}

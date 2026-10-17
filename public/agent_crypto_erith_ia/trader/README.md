@@ -61,19 +61,13 @@ Si un défaut apparaît :
 3. si Administrator fonctionne et Trader échoue : bug du filtre `trader-runtime-mirror.js` ;
 4. ne jamais recréer un owner Trader parallèle.
 
-## Dossier DNA — lecture IA et humaine
+## Dossier DNA — lecture IA et humaine (Cas d'école natif)
 
-Le Trader réutilise toujours exactement le runtime `administrator/index.html?surface=trader`, sans nouveau propriétaire du Market, des bougies, du graphique ni du carnet. Le script déjà chargé `trader-runtime-mirror.js` installe uniquement le déclencheur de présentation **« DNA · Cas d'école »**, replié par défaut, accessible au clavier et refermable avec `Échap`.
+Le Trader garde son unique runtime Administrator et son emplacement historique `#traderOkbCaseStudy` sous le graphique. **Aucun bouton flottant, aucune fenêtre doublon et aucune nouvelle section**. Le script Trader `trader-runtime-mirror.js` utilise le Cas d'école natif : il affiche DNA uniquement lorsque le propriétaire « Nouveaux listings » et la courbe publiée identifient ensemble `neosoul` / `DNA`. BTC et CT conservent leur Cas d'école antérieur. La section reste repliable par défaut et se charge uniquement à l'ouverture.
 
-La page autonome `trader/dna-case-study.html` affiche une étude de cas sur NeoSoul / DNA, sans images et sans ordres. Elle réutilise exclusivement les sources canoniques :
+`trader/dna-case-study.html` fournit la lecture humaine (données, provenance, résultats PAPER 10/25/100 USDC, alertes rétrospectives et limites) et la synthèse JSON lisible par IA. Il ne produit pas de second graphe ni de source dupliquée et interroge uniquement `data/trader_flux/dna_paper/state.json` avec le routeur public du Coffre. Son lien Raw GitHub donne accès au fichier canonique. Le bug de formatage numérique `minimumFractionDigits:2 > maximumFractionDigits:1` est corrigé. Si le journal n'est pas accessible, aucune donnée n'est inventée.
 
-- `../data/trader_flux/dna_paper/state.json` via le routeur du Coffre Pages (lien direct Raw GitHub pour IA et consultation hors Pages) ;
-- `../laboratoire/dna-decision-review.js` pour les seuils rétrospectifs PAPER et le contrôle d'identité ;
-- `../laboratoire/dna-paper.html` et `cas-ecole-neosoul-dna.md` pour le protocole scientifique.
-
-La page présente séparément **faits, dates, dernier carnet, résultats fictifs, observations, interprétations, limites et résumé JSON de lecture IA**. Les relevés sont Spot **Bitget DNAUSDT**, pas des exécutions ; le Futures **OKX DNAUSD UM X-Perp** n'est pas substitué à ces données. Aucun nouvel accès Bridge, aucun suivi de compte privé, aucune simulation de liquidation Futures.
-
-Les tests du contrat documentaire sont dans `trader/test-dna-case-study.cjs`, invoqués par `Agent-Crypto Trader Current`. Ils vérifient la conservation de l'unique script d'entrée, l'accessibilité et la mise en échec en cas de source invalide.
+Les données sont Bitget `DNAUSDT` **Spot**, pas OKX `DNAUSD UM X-Perp`. Aucun ordre, aucune clé, aucun Bridge modifié. `trader/test-dna-case-study.cjs` vérifie l'unicité de la section, son ancrage, l'intégrité de la source, le rendu numérique et la lecture seule.
 
 ## Sécurité
 

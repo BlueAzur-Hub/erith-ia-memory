@@ -139,6 +139,7 @@ function mount(){
     };
     doc.head.appendChild(script);
   }
+  mountNativeDnaCase(win,doc);
   doc.title="ERITH.IA · Trading Desk — "+BUILD;
   try{
     win.dispatchEvent(new CustomEvent("agent-crypto:trader-runtime-mirror",{detail:{
@@ -176,60 +177,73 @@ frame.addEventListener("load",()=>{
   }
 },{once:false});
 
-/* Trader-only documentary drawer: no new chart/Market owner, and no orders. */
-function mountDnaCaseStudyDock(){
-  if(document.getElementById("traderDnaCaseToggle"))return;
-  const css=document.createElement("style");
-  css.id="traderDnaCaseDockStyle";
-  css.textContent=[
-    "#traderDnaCaseToggle{position:fixed;right:14px;top:155px;z-index:100001;font:750 12px system-ui,sans-serif;letter-spacing:.02em;color:#eafcff;background:#0d2c36;border:1px solid #69d9d8;border-radius:11px;padding:10px 12px;box-shadow:0 4px 20px #0008;cursor:pointer}",
-    "#traderDnaCaseToggle:focus-visible,#traderDnaCaseClose:focus-visible,#traderDnaCaseDock a:focus-visible{outline:3px solid #ffdc89;outline-offset:3px}",
-    "#traderDnaCaseDock{position:fixed;z-index:100002;inset:55px 12px 16px auto;width:min(650px,calc(100vw - 24px));display:flex;flex-direction:column;background:#071925;color:#ecf9fb;border:1px solid #4caab4;border-radius:13px;box-shadow:0 10px 42px #000d;font:13px system-ui,sans-serif}",
-    "#traderDnaCaseDock[hidden]{display:none!important}",
-    "#traderDnaCaseDock header{display:flex;align-items:center;gap:10px;padding:12px;background:#11303b;border-radius:13px 13px 0 0;border-bottom:1px solid #3d6d75}",
-    "#traderDnaCaseDock header strong{flex:1;min-width:0;line-height:1.4}",
-    "#traderDnaCaseDock header a{color:#8ae7e8;white-space:nowrap}",
-    "#traderDnaCaseClose{color:#f6ffff;background:#23404b;border:1px solid #69939a;border-radius:9px;padding:7px 11px;cursor:pointer}",
-    "#traderDnaCaseFrame{width:100%;min-height:0;flex:1;display:block;border:0;background:#07121d;border-radius:0 0 13px 13px}",
-    "@media(max-width:640px){#traderDnaCaseToggle{top:auto;bottom:13px;right:13px}#traderDnaCaseDock{inset:9px 8px 9px 8px;width:auto}#traderDnaCaseDock header{flex-wrap:wrap}}"
-  ].join("\n");
-  document.head.appendChild(css);
-  const button=document.createElement("button");
-  button.id="traderDnaCaseToggle";button.type="button";
-  button.textContent="DNA · Cas d’école";
-  button.setAttribute("aria-controls","traderDnaCaseDock");
-  button.setAttribute("aria-expanded","false");
-  button.title="Ouvrir le dossier PAPER DNA ; aucune sélection du marché ni ordre";
-  const panel=document.createElement("aside");
-  panel.id="traderDnaCaseDock";panel.hidden=true;
-  panel.setAttribute("aria-label","Dossier DNA, lecture PAPER");
-  const header=document.createElement("header");
-  const title=document.createElement("strong");
-  title.textContent="ERITH.IA · Dossier DNA · IA et humain · PAPER";
-  const open=document.createElement("a");
-  const caseUrl=new URL("./dna-case-study.html",document.baseURI).href;
-  open.href=caseUrl;open.target="_blank";open.rel="noopener";
-  open.textContent="Page dédiée ↗";
-  const close=document.createElement("button");close.id="traderDnaCaseClose";close.type="button";close.textContent="Fermer";
-  header.append(title,open,close);
-  const content=document.createElement("iframe");content.id="traderDnaCaseFrame";
-  content.title="Étude de cas DNA, observations Bitget Spot et laboratoire PAPER";
-  content.loading="lazy";content.referrerPolicy="same-origin";
-  panel.append(header,content);
-  document.body.append(button,panel);
+
+
+/* Trader-only Cas d'école: reuse the ONE existing Administrator report slot.
+   No floating buttons, no second report, no new Market/chart owner. */
+function mountNativeDnaCase(win,doc){
+  const host=doc.getElementById("traderOkbCaseStudy");
+  if(!host||host.dataset.dnaCaseMounted==="1")return;
+  const summary=host.querySelector("summary");
+  const title=summary?.querySelector(".okb-case-title");
+  const metrics=summary?.querySelector(".okb-case-summary-metrics");
+  const originalBody=host.querySelector(".okb-case-body");
+  if(!summary||!title||!metrics||!originalBody)return;
+  host.dataset.dnaCaseMounted="1";
+  const initialTitle=title.textContent,initialLabel=host.getAttribute("aria-label");
+  const dnaMetrics=doc.createElement("span");
+  dnaMetrics.className="okb-case-summary-metrics";
+  dnaMetrics.textContent="DNA · Bitget Spot · PAPER · sources vérifiées";
+  dnaMetrics.hidden=true;
+  summary.insertBefore(dnaMetrics,summary.querySelector(".okb-case-chevron"));
+  const dnaBody=doc.createElement("div");
+  dnaBody.className="okb-case-body";
+  dnaBody.hidden=true;
+  const frame=doc.createElement("iframe");
+  frame.title="Cas d'école DNA : observation, carnet Bitget Spot et résultats PAPER";
+  frame.loading="lazy";
+  frame.referrerPolicy="same-origin";
+  frame.style.cssText="display:block;width:100%;min-height:850px;border:0;background:#07121d;border-radius:9px";
+  dnaBody.appendChild(frame);
+  host.appendChild(dnaBody);
   let loaded=false;
-  function setOpen(opened){
-    panel.hidden=!opened;button.setAttribute("aria-expanded",String(opened));
-    if(opened){if(!loaded){content.src=caseUrl;loaded=true;}close.focus();}
-    else button.focus();
-  }
-  button.addEventListener("click",()=>setOpen(panel.hidden));
-  close.addEventListener("click",()=>setOpen(false));
-  document.addEventListener("keydown",event=>{
-    if(event.key==="Escape"&&!panel.hidden){event.preventDefault();setOpen(false);}
-  });
+  const showFrame=()=>{
+    if(host.open&&!loaded&&host.dataset.dnaCaseActive==="1"){
+      frame.src=new URL("../trader/dna-case-study.html",doc.baseURI).href;
+      loaded=true;
+    }
+  };
+  const update=()=>{
+    // The public New Listings selection AND canonical active line chart must
+    // both identify NeoSoul, or BTC/CT keeps the original Cas d'école.
+    const selection=win.AgentCryptoNewListingsNativeCategory?.snapshot?.();
+    const chart=win.AtlasExternalChart?.state?.();
+    const dna=selection?.selectedId==="neosoul"&&selection?.selectedSymbol==="DNA"
+      &&chart?.active===true&&chart?.coin_id==="neosoul"
+      &&chart?.loading!==true&&!chart?.error;
+    if(dna===(host.dataset.dnaCaseActive==="1")){showFrame();return;}
+    host.dataset.dnaCaseActive=dna?"1":"0";
+    originalBody.hidden=dna;
+    dnaBody.hidden=!dna;
+    title.textContent=dna?"DNA · NeoSoul · étude Spot PAPER, vérité terrain":initialTitle;
+    metrics.hidden=dna;dnaMetrics.hidden=!dna;
+    if(dna)host.setAttribute("aria-label","Cas d'école DNA · étude PAPER, sources Bitget Spot");
+    else if(initialLabel!==null)host.setAttribute("aria-label",initialLabel);
+    showFrame();
+  };
+  const deferred=()=>{
+    win.setTimeout(update,0);
+    win.setTimeout(update,350);
+  };
+  win.addEventListener("agent-crypto:new-listing-line-ready",deferred,{passive:true});
+  win.addEventListener("agent-crypto:external-asset-changed",deferred,{passive:true});
+  win.addEventListener("agent-crypto:graph-context-ready",deferred,{passive:true});
+  win.addEventListener("agent-crypto:workspace-restored",deferred,{passive:true});
+  win.addEventListener("pageshow",deferred,{passive:true});
+  doc.addEventListener("click",deferred,{capture:true,passive:true});
+  host.addEventListener("toggle",showFrame);
+  update();
 }
-mountDnaCaseStudyDock();
 
 globalThis.AgentCryptoTraderRuntimeMirror=Object.freeze({
   build:BUILD,
