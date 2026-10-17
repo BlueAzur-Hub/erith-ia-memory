@@ -543,7 +543,7 @@ function printQualification(root,model){
    p.append(node("strong","",label+" : "),node("span","",value));
    more.append(p);
   };
-  add("Rang / volume au relevé",Number.isFinite(item.rank)?String(item.rank):"—"+" · volume "+compactMoney(item.aggregated_volume24h_usd));
+  add("Rang / volume au relevé",(Number.isFinite(item.rank)?String(item.rank):"—")+" · volume "+compactMoney(item.aggregated_volume24h_usd));
   // Do not confuse a source's description of a service with independent adoption.
   add("Projet déclaré",doc?.claimed_function||"Description documentée non chargée ; voir les dossiers IA");
   add("Preuve d'usage réel",doc?.independent_usage_metrics===null?"Aucune métrique d'adoption indépendante établie dans ce dossier":"À vérifier dans les dossiers IA");
