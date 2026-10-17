@@ -235,6 +235,11 @@ function build(root){
  researchLists.dataset.radarNative="researchLists";research.append(researchLists);supplementary.append(research);
  const qualifying=node("section","radar-native-block radar-native-qualification");
  qualifying.append(node("h3","","Radar 20 · qualification Spot et coûts PAPER"));
+ const dossier=node("a","","Dossiers IA · projets, usages et historiques ↗");
+ dossier.href=new URL("../laboratoire/crypto-knowledge.html",document.baseURI).href;
+ dossier.target="_blank";dossier.rel="noopener noreferrer";
+ dossier.setAttribute("aria-label","Consulter le référentiel scientifique Crypto sans changer le graphique");
+ qualifying.append(dossier);
  const qualNote=node("p","table-note","Dernier rapport de qualification non encore chargé");
  qualNote.dataset.radarNative="qualificationNote";qualifying.append(qualNote);
  const qualRows=node("div","radar-native-opportunity-list");
