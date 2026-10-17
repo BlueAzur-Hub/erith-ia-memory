@@ -227,6 +227,13 @@ function build(root){
  oNote.dataset.radarNative="opportunityNote";opportunities.append(oNote);
  const oRows=node("div","radar-native-opportunity-grid");oRows.dataset.radarNative="opportunities";
  opportunities.append(oRows);supplementary.append(opportunities);
+ const qualifying=node("section","radar-native-block radar-native-qualification");
+ qualifying.append(node("h3","","Radar 20 · qualification Spot et coûts PAPER"));
+ const qualNote=node("p","table-note","Dernier rapport de qualification non encore chargé");
+ qualNote.dataset.radarNative="qualificationNote";qualifying.append(qualNote);
+ const qualRows=node("div","radar-native-opportunity-list");
+ qualRows.dataset.radarNative="qualificationRows";qualifying.append(qualRows);
+ supplementary.append(qualifying);
  const foot=node("p","table-note","Lecture seule · aucun ordre OKX · USDT n'est pas automatiquement USDC · Radar20 de recherche inchangé");
  supplementary.append(foot);
  return {filter,sort,tbody,lb,refresh,group};
@@ -424,6 +431,43 @@ function printOpportunities(root,model){
   group.append(list);area.append(group);
  }
 }
+function printQualification(root,model){
+ const note=lookup(root,"qualificationNote"),list=lookup(root,"qualificationRows");
+ if(!note||!list)return;list.replaceChildren();
+ const q=model.qualification;
+ if(!q){note.textContent=model.qualificationError||"Aucun rapport de qualification publié · aucune cible supposée";return;}
+ if(q.schema!=="erith.radar.spot-qualification.v1"||q.quote!=="USDT"||
+     !Array.isArray(q.candidates)||q.candidates.length!==20||
+     !Array.isArray(q.priority_research_ids)||q.real_orders_enabled!==false||
+     q.coin_id_matches_exchange_symbol_verified!==false){
+  note.textContent="Contrat qualification invalide : aucune priorité affichée";return;
+ }
+ const ms=Date.parse(q.qualified_at_utc);
+ const stale=!Number.isFinite(ms)||Date.now()-ms>36*3600000||Date.now()<ms-5*60000;
+ const chosen=new Set(q.priority_research_ids);
+ note.textContent=(stale?"ARCHIVE PÉRIMÉE · aucune priorité actuelle":"Observation PAPER · aucune paire certifiée par identité de token")+
+   " · relevé "+safeDate(q.qualified_at_utc)+" · "+q.markets_with_public_evidence+
+   "/20 marchés documentés · frais hypothétiques 0,10 % par côté · panier fictif 100 USDT";
+ const ranked=[...q.candidates].sort((a,b)=>{
+  const ap=chosen.has(a.id)?0:1,bp=chosen.has(b.id)?0:1;
+  return ap-bp||(a.symbol||"").localeCompare(b.symbol||"");
+ });
+ for(const item of ranked){
+  const row=node("div","radar-native-opportunity");
+  const qualified=item.status==="RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW"&&item.market;
+  const priority=!stale&&qualified&&chosen.has(item.id);
+  const m=qualified?item.market:null;
+  row.append(
+    node("strong","",item.symbol+" · "+item.name),
+    node("span","",priority?"DOSSIER PRIORITAIRE · étude":qualified?"Marché documenté · identité à vérifier":"Non qualifié · "+(item.status||"source absente")),
+    node("small","",m?m.provider+" Spot "+m.pair+" · 20h closes · spread "+number(m.book?.spread_bps,2)+
+      " pb · aller-retour théorique "+number(m.estimated_roundtrip_cost_pct,3)+" % · USDT":
+      (item.errors||[]).slice(0,2).join(" · ")||"Aucune paire et aucun carnet vérifiés")
+  );
+  const state=node("small","",m?"Symbole seul : identité CoinGecko non certifiée · ni ordre ni garantie":"En attente de preuves");
+  row.append(state);list.append(row);
+ }
+}
 async function identityRegistry(){
  const local="./data/new-listings-identities.json";
  try{return await get(local);}
@@ -444,6 +488,7 @@ async function refresh(root,model){
  const paperPromise=get("../data/trader_flux/btc_ct_auto_paper/state.json");
  const registryPromise=identityRegistry();
  const extendedPromise=get("../data/crypto/extended.json");
+ const qualificationPromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json");
  const instrumentsPromise=get("https://api.bitget.com/api/v3/market/instruments?category=SPOT");
  const tickersPromise=get("https://api.bitget.com/api/v3/market/tickers?category=SPOT");
  const issues=[];
@@ -463,6 +508,7 @@ async function refresh(root,model){
    registry=api.verifyRegistry(first[2].value);
   }catch(e){issues.push("Registre identités : "+e.message);}
   model.registry=registry;model.listings=[];model.listingError="";model.opportunities=null;model.opportunityError="Top 1 000 · collecte publique en cours";
+  model.qualification=null;model.qualificationError="Qualification Spot · chargement…";printQualification(root,model);
   printMarket(root,model);
   printWatch(root,model);
   printListings(root,model);printOpportunities(root,model);
@@ -482,6 +528,13 @@ async function refresh(root,model){
    model.opportunityError="";
   }catch(e){model.opportunities=null;model.opportunityError="Top 1 000 : "+e.message;issues.push(model.opportunityError);}
   printOpportunities(root,model);
+  try{
+   const evidence=await qualificationPromise;
+   model.qualification=evidence;model.qualificationError="";
+  }catch(error){
+   model.qualification=null;model.qualificationError="Qualification Spot non publiée : "+String(error?.message||error);
+  }
+  printQualification(root,model);
   lookup(root,"status").textContent=issues.length?"Radar partiel · "+issues.join(" · "):
    "Radar · Top 250 / nouveaux listings Spot / PAPER BTC et CT · sélection Solo disponible";
  }catch(e){
