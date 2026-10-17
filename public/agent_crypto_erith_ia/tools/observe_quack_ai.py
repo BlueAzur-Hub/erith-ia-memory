@@ -55,7 +55,7 @@ def validate_candles(raw, now):
         "change_close_20h_pct": round((rows[-1][4]/rows[0][4] - 1)*100, 5),
         "last_hour_volume_q": rows[-1][5],
         "last_hour_quote_volume_usdt": rows[-1][6],
-        "median_prior_20h_volume_q": sorted(c[5] for c in rows[:-1])[9:11],
+        "median_prior_20h_volume_q": round(sum(sorted(c[5] for c in rows[:-1])[9:11]) / 2, 5),
         "last_21_bars_contiguous": True,
     }
 
