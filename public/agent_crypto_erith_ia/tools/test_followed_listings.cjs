@@ -15,6 +15,8 @@ test("public Bitget API preserves a verified MHA after 30 days but not as NEW",a
   {baseCoin:"OLDA",quoteCoin:"USDT",symbol:"OLDAUSDT",launchTime:ms(31),status:"online",symbolType:"crypto",isRwa:"NO"}
  ];
  const ctx={URL,Date,AbortController,setTimeout,clearTimeout,console,
+  document:{getElementById:()=>null,readyState:"loading",addEventListener:()=>{}},
+  window:{addEventListener:()=>{}},
   fetch:async()=>({ok:true,status:200,json:async()=>({code:"00000",data})})};
  vm.runInNewContext(live,ctx,{filename:"new-listings-live-asset.js"});
  const recent=await ctx.AgentCryptoNewListingLiveAsset.discoverBitget({days:30});
