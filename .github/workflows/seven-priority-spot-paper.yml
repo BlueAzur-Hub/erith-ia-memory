@@ -1,0 +1,59 @@
+name: Seven Priority Radar Spot PAPER
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */4 * * *'
+  pull_request:
+    paths:
+      - '.github/workflows/seven-priority-spot-paper.yml'
+      - 'public/agent_crypto_erith_ia/tools/observe_radar_priority_spot.py'
+      - 'public/agent_crypto_erith_ia/tools/test_observe_radar_priority_spot.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-priority-spot-paper.yml'
+      - 'public/agent_crypto_erith_ia/tools/observe_radar_priority_spot.py'
+      - 'public/agent_crypto_erith_ia/tools/test_observe_radar_priority_spot.py'
+permissions:
+  contents: write
+concurrency:
+  group: seven-priority-radar-spot-paper
+  cancel-in-progress: false
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate public Spot observation contracts offline
+        run: python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_observe_radar_priority_spot.py -v
+      - name: Observe ICNT and FLUID, preserving only verified real observations
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_observe_radar_priority_spot.py -q
+            python public/agent_crypto_erith_ia/tools/observe_radar_priority_spot.py
+            git add -- public/agent_crypto_erith_ia/data/trader_flux/radar_priority_spot/
+            if git diff --cached --quiet; then
+              echo 'No new verified Spot data'
+              exit 0
+            fi
+            git commit -m 'Archive prospective ICNT FLUID public Spot PAPER evidence'
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep "$((attempt * 3))"
+          done
+          echo 'Priority Spot publication failed: no invented data' >&2
+          exit 1
