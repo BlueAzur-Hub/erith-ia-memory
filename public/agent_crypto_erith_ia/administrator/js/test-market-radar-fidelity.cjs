@@ -325,3 +325,33 @@ test("Top1000 Fiche refuses an inaccurate or missing identity",async()=>{
   globalThis.document=old.document;
  }
 });
+
+
+test("Radar Trader integrates the real immutable dynamic journal by exact CoinGecko ID",()=>{
+ const native=require("./market-radar-native.js");
+ const report=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../../data/crypto/radar-opportunities/dynamic-followups.json"),"utf8"));
+ const h=native.verifiedDynamicFollowups(report);
+ assert.equal(h.count,46);
+ assert.equal(h.measured_1d,1);
+ assert.equal(h.measured_7d,0);
+ const icnt=native.dynamicCandidateHistory(h,"impossible-cloud-network-token");
+ assert.equal(icnt.length,2);
+ assert.equal(icnt[1].followup_1d.change_pct,34.33);
+ assert.match(native.describeDynamicPoint(icnt[1].followup_1d),/34\.33|34,33/);
+ const q=native.dynamicCandidateHistory(h,"quack-ai");
+ assert.equal(q[0].followup_1d.status,"AWAITING_FUTURE_DAY");
+ assert.deepEqual(native.dynamicCandidateHistory(h,"other-quack-ai"),[]);
+});
+test("Trader refuses fake outcomes and malformed future dates without corrupting Radar",()=>{
+ const native=require("./market-radar-native.js");
+ const archive=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../../data/crypto/radar-opportunities/dynamic-followups.json"),"utf8"));
+ const bogus=structuredClone(archive);
+ bogus.observations[0].followup_7d.change_pct=400;
+ assert.throws(()=>native.verifiedDynamicFollowups(bogus),/fictive/);
+ const wrong=structuredClone(archive);
+ wrong.observations[0].followup_1d.target_date_utc="2020-01-01";
+ assert.throws(()=>native.verifiedDynamicFollowups(wrong),/incohérent/);
+ const collision=structuredClone(archive);
+ collision.observations.push(collision.observations[0]);
+ assert.throws(()=>native.verifiedDynamicFollowups(collision),/dupliquée/);
+});
