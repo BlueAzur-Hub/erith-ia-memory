@@ -46,6 +46,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/market-radar-native.js
           node --check public/agent_crypto_erith_ia/tools/radar_opportunity_history.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar.cjs
+          node --test public/agent_crypto_erith_ia/tools/test-radar-opportunity-history.cjs
           node --test public/agent_crypto_erith_ia/administrator/js/test-market-radar-fidelity.cjs
       - name: Confirm Radar does not embed private execution and frozen Radar20 unchanged
         run: |
