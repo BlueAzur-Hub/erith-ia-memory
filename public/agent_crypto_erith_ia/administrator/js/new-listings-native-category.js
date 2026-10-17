@@ -48,6 +48,7 @@
     discovering:false,
     discovered:[],
     specs:[],
+    followedSpecs:[],
     selected:null,
     requestRevision:0,
     requestController:null,
@@ -459,7 +460,7 @@
 
   function cacheCoins(){
     state.coinCache.clear();
-    for(const spec of state.specs){
+    for(const spec of [...state.specs,...state.followedSpecs]){
       const coin=coinFromSpec(spec);
       if(coin)state.coinCache.set(spec.id,coin);
     }
@@ -503,7 +504,9 @@
       ]);
       state.discovered=Array.isArray(rows)?rows.slice():[];
       state.specs=state.discovered.map(providerSpec).filter(Boolean).sort((a,b)=>(b.launchTime||0)-(a.launchTime||0));
-      await enrichKnownIdentities(state.specs);
+      state.followedSpecs=(globalThis.AgentCryptoNewListingLiveAsset?.trackedInstruments?.()||[])
+        .map(providerSpec).filter(spec=>spec&&spec.symbol!=="CT"&&ageDays(spec.listedAt)>30);
+      await enrichKnownIdentities([...state.specs,...state.followedSpecs]);
       cacheCoins();
       recomputeRadarStatus();
       state.lastDiscoveryAt=new Date().toISOString();
@@ -526,9 +529,24 @@
     };
   }
 
+  // Historical identity is durable even if today's listing feed omits it.
+  // Never claim a historical seed is currently trading or has a live quote.
+  function fallbackMhaSpec(){
+    return {
+      id:"new-listing:bitget:mhausdt",name:"MAGNE.AI",symbol:"MHA",
+      base:"MHA",quote:"USDT",pair:"MHA/USDT",provider:"bitget",
+      providerLabel:"Bitget",providerSymbol:"MHAUSDT",discoveryProvider:"Bitget",
+      discoverySymbol:"MHAUSDT",coingeckoId:"magic-hash",
+      listedAt:"2026-09-17T12:00:00.000Z",
+      launchTime:Date.parse("2026-09-17T12:00:00.000Z"),
+      historicalOnly:true,ticker:null,image:null,identityVerified:false
+    };
+  }
   function allSpecs(){
-    const rows=state.specs.slice();
+    const rows=[...state.specs,...state.followedSpecs];
     if(!rows.some(x=>x.symbol==="CT"))rows.unshift(fallbackCtSpec());
+    if(!rows.some(x=>x.symbol==="MHA")&&Date.now()-Date.parse("2026-09-17T12:00:00Z")>30*86400000)
+      rows.push(fallbackMhaSpec());
     return rows;
   }
 
@@ -566,6 +584,10 @@
     const currency=displayCurrency();
     const volume=currency==="USD"?finite(coin?.volume24hUsd):finite(coin?.volume24h);
     const proof=radarProof(spec,coin);
+    const mature=age!==null&&age>30;
+    const historicOnly=spec.historicalOnly===true;
+    const statusTag=mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
+    const identityTag=mature?(historicOnly?"Historique · cotation non vérifiée":"Ancien listing · source Bitget vérifiée"):(proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat");
     const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="eager" fetchpriority="high" width="32" height="32">`:"";
     return `<tr class="asset-row atlas-market-external-row ${selected?"is-selected is-compared":""}"
       ${ROOT_ATTR}="${esc(spec.id)}"
@@ -574,9 +596,9 @@
       data-crypto-id="${esc(spec.id)}"
       tabindex="0" role="button"
       aria-selected="${selected?"true":"false"}"
-      aria-label="${esc(`${spec.name} ${spec.symbol}. Nouveau listing ${spec.providerLabel} ${spec.pair}.`)}">
-      <td>${proof.status==="CONFIRMÉ"?"NEW":"?"}</td>
-      <td><div class="coin-cell"><i class="market-identity-rail"></i>${logo}<div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">${proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat"} · ${esc(proof.ageBand)}${age!==null?` · ${age.toFixed(1)} j`:""}</span></div></div></td>
+      aria-label="${esc(`${spec.name} ${spec.symbol}. ${mature?"Listing suivi":"Nouveau listing"} ${spec.providerLabel} ${spec.pair}.`)}">
+      <td>${statusTag}</td>
+      <td><div class="coin-cell"><i class="market-identity-rail"></i>${logo}<div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">${esc(identityTag)} · ${esc(proof.ageBand)}${age!==null?` · ${age.toFixed(1)} j`:""}</span></div></div></td>
       <td><div class="price-dual"><strong>${esc(price.primary)}</strong><small>${esc(price.small)}</small></div></td>
       <td class="${change===null?"":change>=0?"pos":"neg"}"><span class="market-move-pill">${esc(pct(change))}</span></td>
       <td>—</td>
@@ -585,7 +607,7 @@
       <td class="spark-cell"><small>${esc(proof.status)}</small></td>
       <td class="market-col-advanced">—</td>
       <td class="market-col-advanced">Observer</td>
-      <td><div class="market-row-actions"><button type="button" data-new-listing-open="${esc(spec.id)}">Solo</button><button type="button" data-new-listing-sources="${esc(spec.id)}">Sources</button></div></td>
+      <td><div class="market-row-actions">${historicOnly?"":`<button type="button" data-new-listing-open="${esc(spec.id)}">Solo</button>`}<button type="button" data-new-listing-sources="${esc(spec.id)}">Sources</button></div></td>
     </tr>`;
   }
 
@@ -608,11 +630,12 @@
     const note=document.getElementById(NOTE_ID);
     if(note&&state.enabled){
       const total=state.specs.length;
+      const followed=allSpecs().filter(x=>ageDays(x.listedAt)>30).length;
       note.textContent=state.discovering
         ?"Nouveaux listings · actualisation Bitget en cours…"
         :state.lastError
           ?`Nouveaux listings · ${state.lastError}`
-          :`Radar Bitget · ${state.radarStatus.confirmed} confirmé(s) · ${state.radarStatus.candidates} candidat(s) · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · ${identityDiagnosticsLabel()} · relance ≥15 s · Market Core inchangé`;
+          :`Nouveaux ≤30 j · ${total} · Suivis >30 j · ${followed} · Radar Bitget · ${state.radarStatus.confirmed} confirmé(s) · ${state.radarStatus.candidates} candidat(s) · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · ${identityDiagnosticsLabel()} · relance ≥15 s · Market Core inchangé`;
     }
     return specs.length;
   }
@@ -891,7 +914,8 @@
     const note=document.getElementById(NOTE_ID);if(!note||!spec)return;
     const identity=spec.identityVerified?`${spec.canonicalName||spec.name} · identité ${spec.identitySource||"vérifiée"}`:"nom projet non enrichi";
     const proof=radarProof(spec,state.coinCache.get(spec.id)||coinFromSpec(spec));
-    note.textContent=`${spec.symbol} · ${proof.status} ${proof.proofCount}/3 (date+prix+volume) · ${identity} · listing ${spec.discoveryProvider} ${spec.discoverySymbol} · analyse ${spec.providerLabel} ${spec.pair} · ticker seul ≠ identité canonique`;
+    if(spec.historicalOnly===true){note.textContent=`${spec.symbol} · ARCHIVE HISTORIQUE · source actuelle non vérifiée · ${spec.providerLabel} ${spec.pair} · aucun prix inventé`;return;}
+    note.textContent=`${spec.symbol} · ${ageDays(spec.listedAt)>30?"LISTING SUIVI":proof.status} ${proof.proofCount}/3 (date+prix+volume) · ${identity} · listing ${spec.discoveryProvider} ${spec.discoverySymbol} · analyse ${spec.providerLabel} ${spec.pair} · ticker seul ≠ identité canonique`;
   }
 
   function bindRows(){
@@ -905,6 +929,7 @@
       if(!button&&!row)return;
       event.preventDefault();event.stopPropagation();
       const spec=resolveSpec(button?.dataset?.newListingOpen||row?.getAttribute(ROOT_ATTR));
+      if(spec?.historicalOnly){sourceInfo(spec);return;}
       if(event.isTrusted===true){
         if(spec?.id==="concrete")globalThis.atlasTraderExternalSelectionCommit?.(spec);
         else globalThis.atlasTraderExternalSelectionClear?.();
@@ -916,6 +941,7 @@
       if(!row||!["Enter"," "].includes(event.key))return;
       event.preventDefault();event.stopPropagation();
       const spec=resolveSpec(row.getAttribute(ROOT_ATTR));
+      if(spec?.historicalOnly){sourceInfo(spec);return;}
       if(event.isTrusted===true){
         if(spec?.id==="concrete")globalThis.atlasTraderExternalSelectionCommit?.(spec);
         else globalThis.atlasTraderExternalSelectionClear?.();
@@ -1174,7 +1200,7 @@
 
   function snapshot(){
     return Object.freeze({
-      build:MODULE_VERSION,enabled:state.enabled,discovered:state.specs.length,
+      build:MODULE_VERSION,enabled:state.enabled,discovered:state.specs.length,followed:state.followedSpecs.length,
       selectedId:state.selected?.id||null,selectedSymbol:state.selected?.symbol||null,
       // Separate CoinGecko canonical identity from the stable exchange-scoped chart ID.
       selectedCanonicalId:state.selected?.coingeckoId||null,
