@@ -306,6 +306,45 @@
           "reverse_fx_usdt_per_usdc": 1.00114
         }
       ]
+    },
+    {
+      "observed_at": "2026-10-17T15:37:38.076Z",
+      "dna_book_at": "2026-10-17T15:37:38.319Z",
+      "fx_book_at": "2026-10-17T15:37:38.312Z",
+      "dna_bid": 0.26908,
+      "dna_ask": 0.26953,
+      "dna_spread_pct": 0.16709678617181484,
+      "fx_bid": 1.00113,
+      "fx_ask": 1.00114,
+      "scenarios": [
+        {
+          "capital_usdc": 10,
+          "status": "valued",
+          "exit_usdc": 9.267564844790938,
+          "pnl_usdc": -0.7324351552090622,
+          "pnl_pct": -7.324351552090621,
+          "dna_exit_avg_usdt": 0.26908,
+          "reverse_fx_usdt_per_usdc": 1.00114
+        },
+        {
+          "capital_usdc": 25,
+          "status": "valued",
+          "exit_usdc": 23.170253293575723,
+          "pnl_usdc": -1.8297467064242774,
+          "pnl_pct": -7.3189868256971105,
+          "dna_exit_avg_usdt": 0.26908,
+          "reverse_fx_usdt_per_usdc": 1.00114
+        },
+        {
+          "capital_usdc": 100,
+          "status": "valued",
+          "exit_usdc": 92.66870259461447,
+          "pnl_usdc": -7.331297405385527,
+          "pnl_pct": -7.331297405385527,
+          "dna_exit_avg_usdt": 0.2690286864038896,
+          "reverse_fx_usdt_per_usdc": 1.00114
+        }
+      ]
     }
   ],
   "note": "En attente du premier carnet et des règles Spot réellement vérifiés. Aucune entrée rétroactive ni transaction.",
@@ -319,5 +358,5 @@
     "fx_best_ask": 1.00105,
     "fx_spread_pct": 0.0009989560908915695
   },
-  "last_observed_at": "2026-10-17T15:29:29.361Z"
+  "last_observed_at": "2026-10-17T15:37:38.076Z"
 }
