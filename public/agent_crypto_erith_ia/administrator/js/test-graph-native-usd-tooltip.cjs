@@ -78,7 +78,8 @@ test("Missing exchange quote conversion, identity mismatch or normalized Base100
   s=>{globalThis.atlasChartV2EffectiveView=()=>"base100";}
  ]){
   const s=setup();try{
-   tamper(s);s.run(s.point());
+   const hovered=s.point(); // Capture the chart sample before changing its verified source.
+   tamper(s);s.run(hovered);
    assert.equal(s.price.textContent,"—");
    assert.match(s.heading.textContent,/PRIX HISTORIQUE USD NON DISPONIBLE/);
   }finally{cleanup()}
