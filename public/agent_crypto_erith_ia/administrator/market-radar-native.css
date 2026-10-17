@@ -140,3 +140,31 @@
 #atlasRadarBelowMarket > .radar-native{min-width:0}
 #atlasRadarBelowMarket .radar-native-bottom{margin-top:0}
 #atlasRadarBelowMarket .radar-native-opportunities{margin-top:12px}
+
+/* Seven Heaven: presentation-only folding, valid on both Administrator and Trader.
+   No fetch, cache or graph owner depends on the details open attribute. */
+:is(#marketSnapshotPanel, #atlasRadarBelowMarket) details.radar-native-fold>summary.radar-native-fold-summary{
+ display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+ gap:6px 16px;margin:0;padding:2px 1px;cursor:pointer;list-style:none;
+ color:var(--text);font-size:13px;font-weight:800;line-height:1.6;
+}
+:is(#marketSnapshotPanel, #atlasRadarBelowMarket) details.radar-native-fold>summary.radar-native-fold-summary::-webkit-details-marker{display:none}
+:is(#marketSnapshotPanel, #atlasRadarBelowMarket) details.radar-native-fold>summary.radar-native-fold-summary>strong{display:flex;align-items:center;gap:8px;min-width:0}
+:is(#marketSnapshotPanel, #atlasRadarBelowMarket) details.radar-native-fold>summary.radar-native-fold-summary>strong::before{content:"▸";color:var(--cyan);font-size:13px}
+:is(#marketSnapshotPanel, #atlasRadarBelowMarket) details.radar-native-fold[open]>summary.radar-native-fold-summary>strong::before{content:"▾"}
+:is(#marketSnapshotPanel, #atlasRadarBelowMarket) details.radar-native-fold[open]>summary.radar-native-fold-summary{padding-bottom:9px;border-bottom:1px solid var(--line);margin-bottom:10px}
+:is(#marketSnapshotPanel, #atlasRadarBelowMarket) .radar-native-fold-indicator{
+ font-size:10px;font-weight:650;color:var(--muted);overflow-wrap:anywhere;
+}
+:is(#marketSnapshotPanel, #atlasRadarBelowMarket) details.radar-native-fold>summary.radar-native-fold-summary:focus-visible,
+:is(#marketSnapshotPanel, #atlasRadarBelowMarket) details.radar-native-opportunity-group>summary:focus-visible{
+ outline:2px solid var(--cyan);outline-offset:3px;border-radius:5px;
+}
+:is(#marketSnapshotPanel, #atlasRadarBelowMarket) details.radar-native-opportunity-group>summary{
+ cursor:pointer;list-style:revert;font-size:11px;font-weight:850;color:var(--text);
+ padding:6px 0;margin:0;line-height:1.5;
+}
+:is(#marketSnapshotPanel, #atlasRadarBelowMarket) details.radar-native-opportunity-group[open]>summary{margin-bottom:8px}
+@media(max-width:620px){
+ :is(#marketSnapshotPanel, #atlasRadarBelowMarket) details.radar-native-fold>summary.radar-native-fold-summary{align-items:flex-start}
+}

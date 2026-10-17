@@ -36,6 +36,20 @@ new vm.Script(scripts[0],{filename:'crypto-knowledge-inline.js'});
 const radar=read('administrator/js/market-radar-native.js');
 new vm.Script(radar,{filename:'market-radar-native.js'});
 assert.match(radar,/crypto-knowledge\.html/);
+const radarCss=read('administrator/market-radar-native.css');
+for(const id of ['foldListings','foldWatch','foldOpportunities','foldResearch','foldQualification']){
+ assert(radar.includes('"'+id+'"'),'All secondary summaries must retain a short source indicator: '+id);
+}
+assert.equal((radar.match(/=foldSection\(/g)||[]).length,5,'Exactly five secondary Radar sections are collapsible');
+assert.match(radar,/const box=node\("details","radar-native-block radar-native-fold "/);
+assert.match(radar,/function setFoldNote\(root,id,message\)/);
+assert.match(radar,/group\.open=openGroups\.has\(key\)/);
+assert.match(radar,/group\.open=expanded\.has\(key\)/);
+assert.match(radarCss,/details\.radar-native-fold>summary\.radar-native-fold-summary:focus-visible/);
+assert.match(html,/const c=el\("details","item collapsible"\)/);
+assert.match(html,/for\(const x of entries\)\{const c=el\("details","item collapsible"\)/);
+assert.match(html,/networks\(data\);cards\(\)/,'Fetch and rendering do not depend on opening a dossier');
+
 const qpage=read('trader/quack-ai-case-study.html');
 assert.match(qpage,/const rawRoot="https:\/\/raw\.githubusercontent\.com\//);
 assert.doesNotMatch(qpage,/const rawRoot="\.\.\/data\//);

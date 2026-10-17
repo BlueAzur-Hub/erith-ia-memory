@@ -11,6 +11,16 @@
 .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{background:#0b1d2b;border:1px solid #24475a;border-radius:9px;padding:12px}.stat strong{display:block;font-size:20px}.stat small{display:block}
 .controls{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}input,select{background:#0b1c2a;color:var(--ink);border:1px solid #3a5a70;border-radius:8px;padding:10px;min-height:40px}input{flex:2;min-width:180px}select{flex:1;min-width:155px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.item{border:1px solid var(--border);border-radius:11px;padding:13px;background:#0b1d2a;min-width:0}.head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.collapsible>summary{list-style:none;cursor:pointer;min-height:38px}
+.collapsible>summary::-webkit-details-marker{display:none}
+.collapsible>summary::before{content:"▸";color:var(--cyan);font-size:14px}
+.collapsible[open]>summary::before{content:"▾"}
+.collapsible[open]>summary{padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:10px}
+.collapsible>summary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:5px}
+.collapsible>summary strong{font-size:14px}
+.collapsible>summary small{font-size:11px}
+.collapsible p{margin:8px 0}
+.collapsible[open] .muted{line-height:1.5}
 code{color:var(--gold)}dl{display:grid;grid-template-columns:125px 1fr;gap:4px 12px;margin:10px 0}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}
 .warn{color:var(--gold)}.error{color:var(--red)}.pill{border:1px solid #3f7285;color:var(--cyan);border-radius:30px;padding:3px 7px;font-size:11px}
 footer{color:var(--muted);padding:20px 0;font-size:12px}
@@ -27,12 +37,13 @@ footer{color:var(--muted);padding:20px 0;font-size:12px}
 <p id="status" role="status" aria-live="polite" class="muted">Lecture des sources canoniques en cours…</p>
 <p class="muted">Archives quotidiennes Top 50 : <a href="https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/public/agent_crypto_erith_ia/data/history">GitHub /data/history</a>. Revue rétrospective sur 60 jours : <a href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/historical-top50-forward.json">Top 50 historique</a>. Le stockage exhaustif reste externe à GitHub Pages.</p></section>
 <section class="panel"><h2>Les grands réseaux et actifs d'usage</h2>
-<p class="muted">Ce ne sont pas des « meilleurs investissements » ; nous les étudions pour comprendre paiements, contrats intelligents, transactions et frais. Il n'existe pas encore ici de classement vérifié par utilisateurs actifs.</p>
+<p class="muted">Ces réseaux ne sont pas un classement d'investissement. Les dossiers se déplient au clic ; les données publiques sont téléchargées indépendamment de l'affichage. Aucun classement vérifié par personnes actives n'est encore établi.</p>
 <div class="grid" id="networks"></div></section>
 <section class="panel"><div class="head"><h2>Candidats Radar · identités, catégorie et sources</h2><span class="pill" id="count">—</span></div>
 <div class="controls"><input type="search" id="query" placeholder="Rechercher Q, IA, DeFi, une crypto…" aria-label="Rechercher un dossier">
 <select id="filter" aria-label="Filtre de preuve"><option value="all">Tous les dossiers</option><option value="market">Spot documenté</option><option value="missing">Paire Spot absente</option><option value="official">Source projet connue</option></select>
 <select id="sort" aria-label="Trier les dossiers"><option value="priority">Ordre de recherche actuel</option><option value="symbol">Symbole</option><option value="roundtrip">Coût PAPER observé</option></select></div>
+<p class="muted">Recherche et filtres restent actifs même quand les 20 fiches sont repliées. Sélectionne une fiche pour lire sa fonction annoncée, sa paire et ce qui reste à prouver.</p>
 <div id="candidates" class="grid"></div>
 <p class="muted">Les priorités proviennent du rapport historique de qualification. La fiche montre la dernière preuve dont nous disposons, pas une certification définitive. Pour réévaluer une paire ou un score d'usage, un nouveau relevé daté est indispensable.</p></section>
 <section class="panel"><h2>Prochaine couche de preuves à ajouter</h2>
@@ -49,7 +60,7 @@ const fmt=v=>typeof v==="number"&&Number.isFinite(v)?new Intl.NumberFormat("fr-F
 const dl=(parent,pairs)=>{let d=el("dl");for(const [k,v] of pairs){d.append(el("dt","",k),el("dd","",v??"Inconnu / à documenter"));}parent.append(d);};
 const link=(parent,url,title)=>{if(!url)return;const a=el("a","",title);a.href=url;a.target="_blank";a.rel="noopener noreferrer";parent.append(a);};
 function networks(data){const box=$("networks");box.replaceChildren();for(const n of data.network_usage_benchmarks){
-const c=el("article","item"),head=el("div","head");head.append(el("strong","",n.symbol+" · "+n.category));c.append(head,el("p","",n.role));
+const c=el("details","item collapsible"),head=el("summary","head");head.append(el("strong","",n.symbol+" · "+n.category));c.append(head,el("p","",n.role));
 c.append(el("p","muted","À vérifier : "+n.usage_proof_to_collect.join(" · ")));
 link(c,n.primary_source,"Documentation source ↗");box.append(c);}
 }
@@ -64,7 +75,7 @@ if(sort==="symbol")entries.sort((a,b)=>a.symbol.localeCompare(b.symbol));
 if(sort==="roundtrip")entries.sort((a,b)=>(a.research_spot_market?.hypothetical_roundtrip_pct_100usdt??Infinity)-(b.research_spot_market?.hypothetical_roundtrip_pct_100usdt??Infinity));
 if(sort==="priority")entries.sort((a,b)=>(priority.get(a.coin_id)??999)-(priority.get(b.coin_id)??999)||a.symbol.localeCompare(b.symbol));
 $("count").textContent=entries.length+" / "+data.candidates.length;
-for(const x of entries){const c=el("article","item");const head=el("div","head");head.append(el("strong","",x.symbol+" · "+x.name),el("small","pill",priority.has(x.coin_id)?"Dossier recherche prioritaire":"Qualification à compléter"));c.append(head);
+for(const x of entries){const c=el("details","item collapsible");const head=el("summary","head");head.append(el("strong","",x.symbol+" · "+x.name),el("small","pill",priority.has(x.coin_id)?"Dossier recherche prioritaire":"Qualification à compléter"));c.append(head);
 c.append(el("p","muted",x.category_research));
 dl(c,[["Objet déclaré",x.claimed_function],["Preuve d'usage indépendant",x.real_world_adoption_proof_status==="unknown"?"non recherchée / inconnue":"non certifiée ici"],
 ["Carnet Spot au relevé",x.research_spot_market?x.research_spot_market.provider+" "+x.research_spot_market.pair:"paire non observée"],
