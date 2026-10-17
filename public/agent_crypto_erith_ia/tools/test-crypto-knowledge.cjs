@@ -56,7 +56,9 @@ assert.equal(nativeRadar.matchedCandidateKnowledge(duplicated,qualification),nul
 const impersonation={...data,candidates:data.candidates.map(x=>x.coin_id==='quack-ai'?{...x,symbol:'Q-OTHER'}:x)};
 assert.equal(nativeRadar.matchedCandidateKnowledge(impersonation,qualification),null,'Ticker mismatch must never silently join');
 assert.match(radar,/const knowledgePromise=get\("https:\/\/raw\.githubusercontent\.com\//,'Research is public only');
-assert.match(radar,/Promise\.allSettled\(\[qualificationPromise,knowledgePromise\]\)/,'Knowledge failure must not hide the Spot qualification');
+assert.match(radar,/Promise\.allSettled\(\[qualificationPromise,knowledgePromise,dynamicPromise\]\)/,'Knowledge and historical enrichment failures must not hide the Spot qualification');
+assert.match(radar,/if\(enrichment\[0\]\.status==="fulfilled"\)/,'Spot qualification remains independently recoverable');
+assert.match(radar,/try\{[\s\S]*?verifiedDynamicFollowups\(enrichment\[2\]\.value\)/,'Dynamic history is separately verified before rendering');
 assert.match(radar,/row=node\("details","radar-native-candidate"\)/,'Each candidate is independently foldable');
 assert.match(radar,/doc\?\.independent_usage_metrics===null/,'Unknown adoption is not a measured zero');
 assert.match(radar,/non synchronisés/,'Cross-source timestamps are disclosed');

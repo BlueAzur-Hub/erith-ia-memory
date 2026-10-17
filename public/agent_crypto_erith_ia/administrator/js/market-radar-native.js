@@ -255,6 +255,12 @@ function build(root){
  qualifying.append(historicalLink);
  const qualNote=node("p","table-note","Dernier rapport de qualification non encore chargé");
  qualNote.dataset.radarNative="qualificationNote";qualifying.append(qualNote);
+ const followNote=node("p","table-note","Suivi historique J+1/J+7 · archives en lecture…");
+ followNote.dataset.radarNative="followupNote";qualifying.append(followNote);
+ const followLink=node("a","","Journal dynamique daté ↗");
+ followLink.href=new URL("../laboratoire/crypto-knowledge.html",document.baseURI).href;
+ followLink.target="_blank";followLink.rel="noopener noreferrer";
+ qualifying.append(followLink);
  const qualRows=node("div","radar-native-opportunity-list");
  qualRows.dataset.radarNative="qualificationRows";qualifying.append(qualRows);
  supplementary.append(qualifying);
@@ -498,8 +504,64 @@ function matchedCandidateKnowledge(knowledge,qualification){
  }
  return known.size===qualification.candidates.length?known:null;
 }
+
+const historyStatuses=new Set(["OBSERVED_DAILY_SNAPSHOT","AWAITING_FUTURE_DAY","MISSING_DATED_SNAPSHOT","NO_MATCHING_VERIFIED_PRICE"]);
+function verifiedDynamicFollowups(data){
+ if(!data||data.schema!=="erith.radar.dynamic-forward-observations.v1"||data.quote!=="USD"||
+    data.orders_enabled!==false||data.trade_executions_recorded!==false||
+    !Array.isArray(data.source_archive_dates)||!Array.isArray(data.observations)||
+    data.source_archive_dates.length>90||data.observations.length>10000)
+    throw Error("contrat du journal dynamique invalide");
+ const dates=new Set(data.source_archive_dates);
+ if(dates.size!==data.source_archive_dates.length||
+    [...dates].some(d=>!/^20\d{2}-\d{2}-\d{2}$/.test(d)||!Number.isFinite(Date.parse(d+"T00:00:00Z"))))
+   throw Error("dates de source invalides");
+ const byId=new Map(),uniques=new Set();
+ for(const record of data.observations){
+  if(typeof record?.id!=="string"||!record.id||typeof record.symbol!=="string"||
+     !dates.has(record.first_seen_date_utc)||!Number.isFinite(Date.parse(record.observed_at_utc))||
+     !Number.isFinite(record.initial_price_usd)||record.initial_price_usd<=0)
+     throw Error("identité ou prix initial non vérifiable");
+  const key=record.id+"@"+record.first_seen_date_utc;
+  if(uniques.has(key))throw Error("observation Radar dupliquée");uniques.add(key);
+  for(const [horizon,field] of [[1,"followup_1d"],[7,"followup_7d"]]){
+   const point=record[field],target=new Date(Date.parse(record.first_seen_date_utc+"T00:00:00Z")+horizon*DAY).toISOString().slice(0,10);
+   if(!point||!historyStatuses.has(point.status)||point.target_date_utc!==target)throw Error("horizon Radar incohérent");
+   if(point.status==="OBSERVED_DAILY_SNAPSHOT"){
+    if(!Number.isFinite(point.price_usd)||point.price_usd<=0||!Number.isFinite(point.change_pct)||
+       !Number.isFinite(point.elapsed_hours)||point.elapsed_hours<=0||
+       !Number.isFinite(Date.parse(point.at_utc))||Date.parse(point.at_utc)<=Date.parse(record.observed_at_utc))
+      throw Error("résultat futur Radar non vérifiable");
+   }else if(point.change_pct!==null||point.price_usd!==null)
+     throw Error("valeur fictive dans un horizon sans observation");
+  }
+  if(!byId.has(record.id))byId.set(record.id,[]);
+  byId.get(record.id).push(record);
+ }
+ for(const records of byId.values())records.sort((a,b)=>b.first_seen_date_utc.localeCompare(a.first_seen_date_utc));
+ return {dates:data.source_archive_dates,byId,count:data.observations.length,
+  measured_1d:data.observations.filter(x=>x.followup_1d.status==="OBSERVED_DAILY_SNAPSHOT").length,
+  measured_7d:data.observations.filter(x=>x.followup_7d.status==="OBSERVED_DAILY_SNAPSHOT").length};
+}
+function dynamicCandidateHistory(history,id){return history?.byId?.get(id)||[];}
+function describeDynamicPoint(point){
+ if(point.status==="OBSERVED_DAILY_SNAPSHOT")
+   return pct(point.change_pct)+" après "+number(point.elapsed_hours,2)+" h (relevé "+safeDate(point.at_utc)+")";
+ if(point.status==="AWAITING_FUTURE_DAY")return "en attente du "+point.target_date_utc;
+ if(point.status==="MISSING_DATED_SNAPSHOT")return "relevé du "+point.target_date_utc+" absent";
+ return "prix à date cible non confirmé";
+}
+
 function printQualification(root,model){
  const note=lookup(root,"qualificationNote"),list=lookup(root,"qualificationRows");
+ const followNote=lookup(root,"followupNote");
+ if(followNote){
+  const h=model.dynamicFollowups;
+  followNote.textContent=h?
+   "Mémoire des candidats · "+h.count+" détections · "+h.measured_1d+" J+1 · "+h.measured_7d+
+   " J+7 observés · dernières archives "+(h.dates.at(-1)||"—")+" UTC · prix agrégés USD, sans ordre":
+   (model.dynamicFollowupsError||"Journal historique non encore chargé");
+ }
  if(!note||!list)return;
  const expanded=new Set([...list.querySelectorAll("details[data-radar-candidate][open]")].map(x=>x.dataset.radarCandidate));
  list.replaceChildren();
@@ -550,6 +612,16 @@ function printQualification(root,model){
    more.append(p);
   };
   add("Rang / volume au relevé",(Number.isFinite(item.rank)?String(item.rank):"—")+" · volume "+compactMoney(item.aggregated_volume24h_usd));
+  // Only the exact CoinGecko identifier joins the independent historical archive.
+  const history=dynamicCandidateHistory(model.dynamicFollowups,item.id);
+  if(history.length){
+   for(const observation of history.slice(0,3)){
+    add("Mémoire "+observation.first_seen_date_utc,
+      "Détection "+displayPrice(observation.initial_price_usd)+" USD · J+1 : "+
+       describeDynamicPoint(observation.followup_1d)+" · J+7 : "+
+       describeDynamicPoint(observation.followup_7d));
+   }
+  }else add("Mémoire historique","Aucune détection datée conservée pour cette identité CoinGecko ; résultat inconnu");
   // Do not confuse a source's description of a service with independent adoption.
   add("Projet déclaré",doc?.claimed_function||"Description documentée non chargée ; voir les dossiers IA");
   add("Preuve d'usage réel",doc?.independent_usage_metrics===null?"Aucune métrique d'adoption indépendante établie dans ce dossier":"À vérifier dans les dossiers IA");
@@ -596,6 +668,7 @@ async function refresh(root,model){
  const extendedPromise=get("../data/crypto/extended.json");
  const qualificationPromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json");
  const knowledgePromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/research/asset-knowledge.json");
+ const dynamicPromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/dynamic-followups.json");
  const instrumentsPromise=get("https://api.bitget.com/api/v3/market/instruments?category=SPOT");
  const tickersPromise=get("https://api.bitget.com/api/v3/market/tickers?category=SPOT");
  const issues=[];
@@ -615,7 +688,9 @@ async function refresh(root,model){
    registry=api.verifyRegistry(first[2].value);
   }catch(e){issues.push("Registre identités : "+e.message);}
   model.registry=registry;model.listings=[];model.listingError="";model.opportunities=null;model.opportunityError="Top 1 000 · collecte publique en cours";
-  model.qualification=null;model.knowledge=null;model.qualificationError="Qualification Spot · chargement…";printQualification(root,model);
+  model.qualification=null;model.knowledge=null;model.qualificationError="Qualification Spot · chargement…";
+  model.dynamicFollowups=null;model.dynamicFollowupsError="Suivi historique · chargement…";
+  printQualification(root,model);
   printMarket(root,model);
   printWatch(root,model);
   printListings(root,model);printOpportunities(root,model);printResearchLists(root,model);
@@ -636,13 +711,21 @@ async function refresh(root,model){
   }catch(e){model.opportunities=null;model.opportunityError="Top 1 000 : "+e.message;issues.push(model.opportunityError);}
   printOpportunities(root,model);printResearchLists(root,model);
   // Both public reads run in parallel; failing research enrichment cannot hide Spot results.
-  const enrichment=await Promise.allSettled([qualificationPromise,knowledgePromise]);
+  const enrichment=await Promise.allSettled([qualificationPromise,knowledgePromise,dynamicPromise]);
   if(enrichment[0].status==="fulfilled"){
    model.qualification=enrichment[0].value;model.qualificationError="";
   }else{
    model.qualification=null;model.qualificationError="Qualification Spot non publiée : "+String(enrichment[0].reason);
   }
   model.knowledge=enrichment[1].status==="fulfilled"?enrichment[1].value:null;
+  try{
+   if(enrichment[2].status!=="fulfilled")throw Error("source GitHub RAW indisponible");
+   model.dynamicFollowups=verifiedDynamicFollowups(enrichment[2].value);
+   model.dynamicFollowupsError="";
+  }catch(e){
+   model.dynamicFollowups=null;
+   model.dynamicFollowupsError="Historique non certifié : "+String(e?.message||e);
+  }
   printQualification(root,model);
   lookup(root,"status").textContent=issues.length?"Radar partiel · "+issues.join(" · "):
    "Radar · Top 250 / nouveaux listings Spot / PAPER BTC et CT · sélection Solo disponible";
@@ -675,6 +758,6 @@ function mount(root){
  return true;
 }
 if(typeof module!=="undefined"&&module.exports)
- module.exports=Object.freeze({selectGraph,compactMoney,printMarket,openOpportunityFiche,matchedCandidateKnowledge});
+ module.exports=Object.freeze({selectGraph,compactMoney,printMarket,openOpportunityFiche,matchedCandidateKnowledge,verifiedDynamicFollowups,dynamicCandidateHistory,describeDynamicPoint,printQualification});
 global.AgentCryptoRadarNative=Object.freeze({mount});
 })(typeof globalThis!=="undefined"?globalThis:this);
