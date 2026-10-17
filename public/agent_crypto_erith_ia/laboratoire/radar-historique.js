@@ -214,9 +214,17 @@ async function init(){
   status("20 marchés · 60 archives mensuelles · juillet–septembre 2026 · sélectionnez une durée puis étudiez.");
  }catch(e){status("Catalogue indisponible : "+String(e.message||e),true);}
 }
+function clearOutdatedResults(){
+ for(const id of ["dates","bars","gross","volume","drawdown","hold-final","hold-net","windows","winrate","average"])setNumber(id,"—");
+ $("history-chart").replaceChildren();
+ $("hold-info").textContent="Hypothèses modifiées : aucun ancien résultat conservé.";
+ $("window-info").textContent="Veuillez lancer une nouvelle simulation sur les archives.";
+ $("source-proof").textContent="Sélection modifiée : l'ancienne preuve ne correspond plus aux hypothèses actuelles.";
+ status("Sélection modifiée · étudiez l'historique pour obtenir de nouveaux calculs.");
+}
 $("analyze").addEventListener("click",analyze);
-$("days").addEventListener("change",()=>{status("Choix modifié : cliquez sur « Étudier l'historique » pour recalculer.");});
-$("cost").addEventListener("change",()=>{status("Hypothèse modifiée : relancez le calcul pour voir les résultats.");});
-$("pair").addEventListener("change",()=>{status("Actif changé : relancez le calcul. Les chiffres précédents ne sont plus valables.");for(const id of ["dates","bars","gross","volume","drawdown","hold-final","hold-net","windows","winrate","average"])setNumber(id,"—");$("history-chart").replaceChildren();});
+for(const control of ["days","cost","pair","capital"]){
+ $(control).addEventListener("change",clearOutdatedResults);
+}
 init();report();
 })(typeof window!=="undefined"?window:globalThis);
