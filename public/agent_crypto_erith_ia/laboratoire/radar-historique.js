@@ -174,7 +174,8 @@ async function analyze(){
   $("source-proof").textContent="Vérification incomplète : aucun résultat historique certifié pour cette sélection.";
   $("history-chart").replaceChildren();
   status("Analyse non disponible : "+String(e.message||e),true);
- }finally{state.busy=false;$("analyze").disabled=false;$("compare20").disabled=!state.index;}
+ }finally{state.busy=false;$("analyze").disabled=false;$("compare20").disabled=!state.index;
+  if(state.autoPending&&!state.autoRunning)void refreshAutomatically();}
 }
 async function report(){
  try{
@@ -304,6 +305,7 @@ async function compareAll(){
   renderComparison();
  }finally{
   state.busy=false;$("analyze").disabled=false;$("compare20").disabled=!state.index;
+  if(state.autoPending&&!state.autoRunning)void refreshAutomatically();
  }
 }
 
