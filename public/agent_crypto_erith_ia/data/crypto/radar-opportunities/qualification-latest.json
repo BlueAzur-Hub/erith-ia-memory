@@ -1,0 +1,711 @@
+{
+  "schema": "erith.radar.spot-qualification.v1",
+  "source_observation_date_utc": "2026-10-17",
+  "source_times_utc": {
+    "core": "2026-10-17T10:35:04.218Z",
+    "extended": "2026-10-17T10:34:59.840Z"
+  },
+  "qualified_at_utc": "2026-10-17T19:11:08Z",
+  "universe_preselected": 20,
+  "venues": {
+    "Binance": {
+      "available": false,
+      "error": "Réponse API absente ou trop volumineuse"
+    },
+    "OKX": {
+      "available": true,
+      "error": null
+    },
+    "Bitget": {
+      "available": true,
+      "error": null
+    }
+  },
+  "markets_with_public_evidence": 14,
+  "priority_eligible_count": 14,
+  "priority_research_ids": [
+    "lighter",
+    "quack-ai",
+    "the-sandbox",
+    "impossible-cloud-network-token",
+    "mina-protocol",
+    "reserve-rights-token",
+    "kamino",
+    "numeraire",
+    "vaulta",
+    "metis-token"
+  ],
+  "limits": {
+    "max_spread_bps": 150.0,
+    "max_modeled_roundtrip_cost_pct": 2.0
+  },
+  "priority_target_count": 10,
+  "priority_not_force_filled": true,
+  "priority_order": "lower illustrative roundtrip cost, then higher historical aggregate volume",
+  "quote": "USDT",
+  "budget_usdt": 100.0,
+  "fee_per_side_pct_hypothesis": 0.1,
+  "coin_id_matches_exchange_symbol_verified": false,
+  "actual_execution_permissions": false,
+  "real_orders_enabled": false,
+  "portfolio_access": false,
+  "notes": [
+    "Binance/OKX/Bitget publics Spot uniquement; aucun Future ni API privée.",
+    "Symbole Spot seul ne prouve pas l'identité CoinGecko; examen manuel des contrats ou listings indispensable.",
+    "Les frais sont des hypothèses, la profondeur un instantané; aucun achat n'est conseillé.",
+    "Ne comparer ni USDT, ni USDC, ni USD comme devises identiques.",
+    "Absence de données = dossier incomplet, jamais score artificiel."
+  ],
+  "candidates": [
+    {
+      "id": "lighter",
+      "name": "Lighter",
+      "symbol": "LIT",
+      "group": "rebound_24h_only",
+      "rank": 89,
+      "change24h_pct": 6.2575,
+      "change7d_pct": -9.6647,
+      "aggregated_volume24h_usd": 76728305,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "OKX",
+        "pair": "LIT-USDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 3.1232
+        },
+        "book": {
+          "best_bid_usdt": 3.1314,
+          "best_ask_usdt": 3.133,
+          "spread_bps": 5.10823,
+          "book_age_seconds": -0.34,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:11Z",
+          "public_book_roundtrip_loss_pct": 0.051096
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.25089,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "the-sandbox",
+      "name": "The Sandbox",
+      "symbol": "SAND",
+      "group": "rebound_24h_only",
+      "rank": 202,
+      "change24h_pct": 5.74064,
+      "change7d_pct": -10.8207,
+      "aggregated_volume24h_usd": 59271854,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "OKX",
+        "pair": "SAND-USDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 0.06193
+        },
+        "book": {
+          "best_bid_usdt": 0.06198,
+          "best_ask_usdt": 0.06202,
+          "spread_bps": 6.45161,
+          "book_age_seconds": -0.32,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:12Z",
+          "public_book_roundtrip_loss_pct": 0.068228
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.26799,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "quack-ai",
+      "name": "Quack AI",
+      "symbol": "Q",
+      "group": "momentum_24h_7d",
+      "rank": 134,
+      "change24h_pct": 32.11454,
+      "change7d_pct": 132.1782,
+      "aggregated_volume24h_usd": 58952182,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "Bitget",
+        "pair": "QUSDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 0.12579
+        },
+        "book": {
+          "best_bid_usdt": 0.1231134,
+          "best_ask_usdt": 0.123186,
+          "spread_bps": 5.89526,
+          "book_age_seconds": -0.34,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:12Z",
+          "public_book_roundtrip_loss_pct": 0.059023
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.2588,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "impossible-cloud-network-token",
+      "name": "Impossible Cloud Network Token",
+      "symbol": "ICNT",
+      "group": "momentum_24h_7d",
+      "rank": 460,
+      "change24h_pct": 37.57168,
+      "change7d_pct": 105.0117,
+      "aggregated_volume24h_usd": 48171327,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "Bitget",
+        "pair": "ICNTUSDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 0.226
+        },
+        "book": {
+          "best_bid_usdt": 0.2252,
+          "best_ask_usdt": 0.2253,
+          "spread_bps": 4.43951,
+          "book_age_seconds": -0.43,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:12Z",
+          "public_book_roundtrip_loss_pct": 0.073616
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.27337,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "vaulta",
+      "name": "Vaulta",
+      "symbol": "A",
+      "group": "momentum_24h_7d",
+      "rank": 193,
+      "change24h_pct": 11.53688,
+      "change7d_pct": 4.592,
+      "aggregated_volume24h_usd": 34377812,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "OKX",
+        "pair": "A-USDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 0.11434
+        },
+        "book": {
+          "best_bid_usdt": 0.11317,
+          "best_ask_usdt": 0.11336,
+          "spread_bps": 16.77482,
+          "book_age_seconds": -0.32,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:13Z",
+          "public_book_roundtrip_loss_pct": 0.172688
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.37224,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "kamino",
+      "name": "Kamino",
+      "symbol": "KMNO",
+      "group": "momentum_24h_7d",
+      "rank": 164,
+      "change24h_pct": 7.41277,
+      "change7d_pct": 23.0155,
+      "aggregated_volume24h_usd": 23704143,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "OKX",
+        "pair": "KMNO-USDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 0.0399
+        },
+        "book": {
+          "best_bid_usdt": 0.03993,
+          "best_ask_usdt": 0.03995,
+          "spread_bps": 5.00751,
+          "book_age_seconds": -0.37,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:13Z",
+          "public_book_roundtrip_loss_pct": 0.104595
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.30429,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "reserve-rights-token",
+      "name": "Reserve Rights",
+      "symbol": "RSR",
+      "group": "momentum_24h_7d",
+      "rank": 240,
+      "change24h_pct": 5.44675,
+      "change7d_pct": 27.8559,
+      "aggregated_volume24h_usd": 22789832,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "OKX",
+        "pair": "RSR-USDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 0.001985
+        },
+        "book": {
+          "best_bid_usdt": 0.001986,
+          "best_ask_usdt": 0.001988,
+          "spread_bps": 10.06543,
+          "book_age_seconds": -0.38,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:14Z",
+          "public_book_roundtrip_loss_pct": 0.100604
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.3003,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "numeraire",
+      "name": "Numeraire",
+      "symbol": "NMR",
+      "group": "rebound_24h_only",
+      "rank": 305,
+      "change24h_pct": 4.26345,
+      "change7d_pct": -4.9203,
+      "aggregated_volume24h_usd": 21681125,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "OKX",
+        "pair": "NMR-USDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 12.671
+        },
+        "book": {
+          "best_bid_usdt": 12.562,
+          "best_ask_usdt": 12.574,
+          "spread_bps": 9.54806,
+          "book_age_seconds": -0.32,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:14Z",
+          "public_book_roundtrip_loss_pct": 0.125329
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.32498,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "bedrock-token",
+      "name": "Bedrock",
+      "symbol": "BR",
+      "group": "rebound_24h_only",
+      "rank": 253,
+      "change24h_pct": 16.40528,
+      "change7d_pct": -17.2434,
+      "aggregated_volume24h_usd": 18255622,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "Bitget",
+        "pair": "BRUSDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 0.3995
+        },
+        "book": {
+          "best_bid_usdt": 0.4168,
+          "best_ask_usdt": 0.4184,
+          "spread_bps": 38.31418,
+          "book_age_seconds": -0.34,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:15Z",
+          "public_book_roundtrip_loss_pct": 0.617232
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.8159,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "axelar",
+      "name": "Axelar",
+      "symbol": "AXL",
+      "group": "momentum_24h_7d",
+      "rank": 346,
+      "change24h_pct": 6.31785,
+      "change7d_pct": 5.7915,
+      "aggregated_volume24h_usd": 15204989,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "Bitget",
+        "pair": "AXLUSDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 0.05769
+        },
+        "book": {
+          "best_bid_usdt": 0.05745,
+          "best_ask_usdt": 0.05756,
+          "spread_bps": 19.12877,
+          "book_age_seconds": -0.31,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:15Z",
+          "public_book_roundtrip_loss_pct": 0.191105
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.39062,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "mina-protocol",
+      "name": "Mina Protocol",
+      "symbol": "MINA",
+      "group": "rebound_24h_only",
+      "rank": 275,
+      "change24h_pct": 8.9357,
+      "change7d_pct": -10.0214,
+      "aggregated_volume24h_usd": 15112034,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "OKX",
+        "pair": "MINA-USDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 0.07512
+        },
+        "book": {
+          "best_bid_usdt": 0.07529,
+          "best_ask_usdt": 0.07534,
+          "spread_bps": 6.63878,
+          "book_age_seconds": -0.35,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:15Z",
+          "public_book_roundtrip_loss_pct": 0.082376
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.28211,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "metis-token",
+      "name": "Metis",
+      "symbol": "METIS",
+      "group": "momentum_24h_7d",
+      "rank": 609,
+      "change24h_pct": 7.62679,
+      "change7d_pct": 25.8204,
+      "aggregated_volume24h_usd": 7873255,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "OKX",
+        "pair": "METIS-USDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 3.856
+        },
+        "book": {
+          "best_bid_usdt": 3.877,
+          "best_ask_usdt": 3.882,
+          "spread_bps": 12.88826,
+          "book_age_seconds": -0.41,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:16Z",
+          "public_book_roundtrip_loss_pct": 0.180059
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.3796,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "meta-2-2",
+      "name": "MetaDAO",
+      "symbol": "META",
+      "group": "rebound_24h_only",
+      "rank": 242,
+      "change24h_pct": 6.61385,
+      "change7d_pct": -7.4077,
+      "aggregated_volume24h_usd": 4687519,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "NOT_VERIFIED",
+      "status": "NO_OBSERVED_SPOT_PAIR",
+      "errors": [],
+      "market": null
+    },
+    {
+      "id": "instadapp",
+      "name": "Fluid",
+      "symbol": "FLUID",
+      "group": "momentum_24h_7d",
+      "rank": 189,
+      "change24h_pct": 5.86425,
+      "change7d_pct": 14.887,
+      "aggregated_volume24h_usd": 4237196,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "OKX",
+        "pair": "FLUID-USDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 2.3306
+        },
+        "book": {
+          "best_bid_usdt": 2.3298,
+          "best_ask_usdt": 2.3323,
+          "spread_bps": 10.72478,
+          "book_age_seconds": -0.38,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:16Z",
+          "public_book_roundtrip_loss_pct": 0.195896
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.3954,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "orbio-so",
+      "name": "Orbio.so",
+      "symbol": "ORBIO",
+      "group": "rebound_24h_only",
+      "rank": 618,
+      "change24h_pct": 8.3577,
+      "change7d_pct": -38.7238,
+      "aggregated_volume24h_usd": 4190390,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "NOT_VERIFIED",
+      "status": "NO_OBSERVED_SPOT_PAIR",
+      "errors": [],
+      "market": null
+    },
+    {
+      "id": "folks",
+      "name": "FOLKS",
+      "symbol": "FOLKS",
+      "group": "rebound_24h_only",
+      "rank": 529,
+      "change24h_pct": 17.28725,
+      "change7d_pct": -2.5603,
+      "aggregated_volume24h_usd": 3766692,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "NOT_VERIFIED",
+      "status": "NO_OBSERVED_SPOT_PAIR",
+      "errors": [],
+      "market": null
+    },
+    {
+      "id": "hive_dollar",
+      "name": "Hive Dollar",
+      "symbol": "HBD",
+      "group": "momentum_24h_7d",
+      "rank": 249,
+      "change24h_pct": 19.91654,
+      "change7d_pct": 253.5609,
+      "aggregated_volume24h_usd": 2590526,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "NOT_VERIFIED",
+      "status": "NO_OBSERVED_SPOT_PAIR",
+      "errors": [],
+      "market": null
+    },
+    {
+      "id": "swarm-network",
+      "name": "Swarm Network",
+      "symbol": "TRUTH",
+      "group": "momentum_24h_7d",
+      "rank": 554,
+      "change24h_pct": 14.55415,
+      "change7d_pct": 38.6723,
+      "aggregated_volume24h_usd": 2376653,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "NOT_VERIFIED",
+      "status": "NO_OBSERVED_SPOT_PAIR",
+      "errors": [],
+      "market": null
+    },
+    {
+      "id": "clearpool",
+      "name": "Clearpool",
+      "symbol": "CPOOL",
+      "group": "rebound_24h_only",
+      "rank": 667,
+      "change24h_pct": 4.11781,
+      "change7d_pct": -11.9054,
+      "aggregated_volume24h_usd": 2137554,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "SPOT_SYMBOL_PAIR_OBSERVED",
+      "status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "errors": [],
+      "market": {
+        "provider": "Bitget",
+        "pair": "CPOOLUSDT",
+        "quote": "USDT",
+        "candles": {
+          "closed_bars": 20,
+          "first_hour_utc": "2026-10-16T23:00:00Z",
+          "last_closed_hour_utc": "2026-10-17T18:00:00Z",
+          "last_close_usdt": 0.02935
+        },
+        "book": {
+          "best_bid_usdt": 0.02924,
+          "best_ask_usdt": 0.02934,
+          "spread_bps": 34.14135,
+          "book_age_seconds": -0.54,
+          "exchange_timestamp_verified": true,
+          "observed_at_utc": "2026-10-17T19:11:17Z",
+          "public_book_roundtrip_loss_pct": 0.601497
+        },
+        "illustrative_ticket_usdt": 100.0,
+        "assumed_fee_pct_each_side": 0.1,
+        "estimated_roundtrip_cost_pct": 0.80019,
+        "real_fees_known": false,
+        "minimum_order_verified": false,
+        "slippage_future_guaranteed": false
+      }
+    },
+    {
+      "id": "apex-token-2",
+      "name": "APEX",
+      "symbol": "APEX",
+      "group": "momentum_24h_7d",
+      "rank": 542,
+      "change24h_pct": 8.29706,
+      "change7d_pct": 6.3033,
+      "aggregated_volume24h_usd": 1784625,
+      "identity_status": "SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
+      "pair_status": "NOT_VERIFIED",
+      "status": "NO_OBSERVED_SPOT_PAIR",
+      "errors": [],
+      "market": null
+    }
+  ]
+}
