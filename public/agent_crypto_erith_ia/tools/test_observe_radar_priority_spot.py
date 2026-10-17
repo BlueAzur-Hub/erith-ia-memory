@@ -55,7 +55,7 @@ class PrioritySpotTests(unittest.TestCase):
                 self.assertEqual(row["quote"],"USDT")
                 self.assertFalse(row["executed_order"])
                 self.assertFalse(row["orders_enabled"])
-                self.assertFalse(row["identity_status"].endswith("VERIFIED"))
+                self.assertIn("CONTRACT_NOT_VERIFIED", row["identity_status"])
                 self.assertTrue(row["candles"]["last_21_bars_contiguous"])
                 self.assertTrue(save(row,pathlib.Path(folder)))
                 self.assertFalse(save(row,pathlib.Path(folder)))
