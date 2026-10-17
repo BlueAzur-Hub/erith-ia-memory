@@ -23,7 +23,7 @@
 .collapsible[open] .muted{line-height:1.5}
 code{color:var(--gold)}dl{display:grid;grid-template-columns:125px 1fr;gap:4px 12px;margin:10px 0}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}
 .warn{color:var(--gold)}.error{color:var(--red)}.pill{border:1px solid #3f7285;color:var(--cyan);border-radius:30px;padding:3px 7px;font-size:11px}
-footer{color:var(--muted);padding:20px 0;font-size:12px}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:770px}th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}th{color:var(--muted);font-size:12px}td small{display:block}details.archive>summary{cursor:pointer;font-weight:700;color:var(--gold)}.status-note{color:var(--muted)}.measured{color:#9ceec5}.waiting{color:var(--gold)}footer{color:var(--muted);padding:20px 0;font-size:12px}
 @media(max-width:720px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}dl{grid-template-columns:1fr}}
 </style></head><body><main>
 <header><div class="kicker">SEVEN HEAVEN · RADAR → SOURCES → LABORATOIRE</div><h1>Dossiers Crypto · mémoire et qualification</h1>
@@ -46,6 +46,13 @@ footer{color:var(--muted);padding:20px 0;font-size:12px}
 <p class="muted">Recherche et filtres restent actifs même quand les 20 fiches sont repliées. Sélectionne une fiche pour lire sa fonction annoncée, sa paire et ce qui reste à prouver.</p>
 <div id="candidates" class="grid"></div>
 <p class="muted">Les priorités proviennent du rapport historique de qualification. La fiche montre la dernière preuve dont nous disposons, pas une certification définitive. Pour réévaluer une paire ou un score d'usage, un nouveau relevé daté est indispensable.</p></section>
+<section class="panel"><details class="archive"><summary>Journal historique des candidats · J+1 / J+7</summary>
+<p>Observation automatique des candidatures Radar Top 1 000, en lecture seule. Les mêmes identifiants CoinGecko sont rapprochés sur les journées archivées, y compris après disparition du classement. Les périodes 1 et 7 jours sont des dates civiles : les heures réellement écoulées restent visibles. Pas de signaux, pas d'ordres ni de rendements exécutable.</p>
+<p id="dynamic-status" role="status" aria-live="polite" class="status-note">Consultation du journal daté en cours…</p>
+<div class="table-wrap"><table><thead><tr><th>Crypto / identité</th><th>Détection UTC</th><th>Prix initial USD</th><th>J+1</th><th>J+7</th><th>Volume 24 h (initial → J+1)</th><th>Rang (initial → J+1)</th></tr></thead><tbody id="dynamic-rows"><tr><td colspan="7">Aucune observation chargée.</td></tr></tbody></table></div>
+<p class="muted" id="dynamic-proof">Un relevé manquant reste inconnu ; prix CoinGecko USD ≠ paire Spot USDT. Les volumes 24 h ne mesurent pas les échanges entre deux captures.</p>
+<p><a href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/dynamic-followups.json" target="_blank" rel="noopener noreferrer">Rapport original horodaté ↗</a></p>
+</details></section>
 <section class="panel"><h2>Prochaine couche de preuves à ajouter</h2>
 <p><strong>Réseaux :</strong> adresses réellement actives, transactions non techniques, frais, flux de stablecoins corrigés et revenus. <strong>Applications :</strong> utilisateurs et emprunts actifs, usage réel, rétention, revenus et sécurité. <strong>Tokens :</strong> contrats, offre/déblocages, usages du jeton distincts de ceux du protocole.</p>
 <p>Références méthodologiques : <a href="https://www.visaonchainanalytics.com/transactions">Visa stablecoins ajustés</a> · <a href="https://app.artemis.xyz/docs/artemis-sheets/usage/supported-metrics">Artemis métriques</a> · <a href="https://support.coingecko.com/articles/4724540263-categories-tags-methodology">CoinGecko catégories</a>.</p></section>
@@ -53,7 +60,7 @@ footer{color:var(--muted);padding:20px 0;font-size:12px}
 </main><script>
 (()=>{"use strict";const $=id=>document.getElementById(id);
 const RAW="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/research/asset-knowledge.json";
-const state={data:null};
+const state={data:null,followups:null};
 const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;};
 const term=v=>String(v??"").toLocaleLowerCase("fr");
 const fmt=v=>typeof v==="number"&&Number.isFinite(v)?new Intl.NumberFormat("fr-FR",{maximumFractionDigits:3}).format(v):"non mesuré";
@@ -85,6 +92,47 @@ link(c,x.primary_project_source,"Document du projet ↗");
 if(x.coin_id==="quack-ai"){c.append(el("span",""," · "));link(c,"../trader/quack-ai-case-study.html","Cas d'école Q ↗");}
 box.append(c);
 }}
+function priceValue(v){return typeof v==="number"&&Number.isFinite(v)?new Intl.NumberFormat("fr-FR",{maximumSignificantDigits:7}).format(v):"non observé";}
+function volumeValue(v){return typeof v==="number"&&Number.isFinite(v)?new Intl.NumberFormat("fr-FR",{maximumFractionDigits:0}).format(v)+" USD":"—";}
+function percent(v){return typeof v==="number"&&Number.isFinite(v)?(v>0?"+":"")+new Intl.NumberFormat("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2}).format(v)+" %":"non observé";}
+function displayFollowup(f){
+ if(!f||f.status!=="OBSERVED_DAILY_SNAPSHOT")return "en attente ou absent";
+ const duration=typeof f.elapsed_hours==="number"?" · "+fmt(f.elapsed_hours)+" h réelles":"";
+ return percent(f.change_pct)+duration;
+}
+function showDynamic(report){
+ const body=$("dynamic-rows");body.replaceChildren();
+ const rows=[...report.observations].sort((a,b)=>b.first_seen_date_utc.localeCompare(a.first_seen_date_utc)||a.id.localeCompare(b.id));
+ for(const x of rows){
+  const tr=el("tr");
+  const c1=el("td");c1.append(el("strong","",x.symbol||x.id),el("small","muted",x.id));
+  tr.append(c1);
+  for(const value of [x.first_seen_date_utc,x.initial_price_usd===null?"inconnu":priceValue(x.initial_price_usd),
+       displayFollowup(x.followup_1d),displayFollowup(x.followup_7d),
+       volumeValue(x.initial_volume_24h_usd)+" → "+volumeValue(x.followup_1d?.volume_24h_usd),
+       (x.initial_rank??"—")+" → "+(x.followup_1d?.rank??"—")])
+    tr.append(el("td","",value));
+  body.append(tr);
+ }
+ const d1=rows.filter(x=>x.followup_1d?.status==="OBSERVED_DAILY_SNAPSHOT").length;
+ const d7=rows.filter(x=>x.followup_7d?.status==="OBSERVED_DAILY_SNAPSHOT").length;
+ $("dynamic-status").textContent=rows.length+" sélections documentées · "+d1+" suivi(s) J+1 · "+d7+" suivi(s) J+7 · archives "+report.source_archive_dates.join(", ")+" · aucune exécution.";
+}
+async function loadDynamic(){
+ try{
+  const url="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/dynamic-followups.json";
+  const response=await fetch(url,{cache:"no-store"});
+  if(!response.ok)throw Error("HTTP "+response.status);
+  const data=await response.json();
+  if(data.schema!=="erith.radar.dynamic-forward-observations.v1"||data.quote!=="USD"||
+     data.orders_enabled!==false||!Array.isArray(data.observations)||!Array.isArray(data.source_archive_dates)||
+     data.observations.length>10000)throw Error("Contrat de provenance du journal inconnu");
+  state.followups=data;
+  showDynamic(data);
+ }catch(e){
+  $("dynamic-status").textContent="Journal non encore publié ou invalide : "+e.message+". Aucun résultat substitué.";
+ }
+}
 async function load(){
 try{const c=new AbortController(),tm=setTimeout(()=>c.abort(),12000),r=await fetch(RAW,{cache:"no-store",signal:c.signal});clearTimeout(tm);
 if(!r.ok)throw Error("HTTP "+r.status);const data=await r.json();
@@ -93,6 +141,6 @@ state.data=data;$("status").textContent="20 dossiers · qualification du "+new D
 networks(data);cards();
 }catch(e){$("status").className="error";$("status").textContent="Catalogue inaccessible : "+e.message+" · aucune preuve substituée."}
 }
-for(const id of ["query","filter","sort"])$(id).addEventListener(id==="query"?"input":"change",cards);load();
+for(const id of ["query","filter","sort"])$(id).addEventListener(id==="query"?"input":"change",cards);load();void loadDynamic();
 })();
 </script></body></html>

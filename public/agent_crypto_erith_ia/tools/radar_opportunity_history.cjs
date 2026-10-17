@@ -68,6 +68,8 @@ function trackPreviousCandidates(core,extended,scan,past,date){
   return {id,symbol:coin?.symbol||prior.symbol,first_seen_date_utc:prior.first_seen_date_utc,
     observed_at_utc:valid?found.at:null,price_usd:valid?price:null,
     rank:Number.isInteger(coin?.rank)?coin.rank:null,
+    volume_24h_usd:valid?finite(coin?.volume24hUsd):null,
+    market_cap_usd:valid?finite(coin?.marketCapUsd):null,
     status:valid?"OBSERVED_TOP1000":"NO_VALID_TOP1000_PRICE"};
  });
 }
@@ -83,10 +85,15 @@ function buildDynamicFollowups(archives){
   const record=(future.tracked_candidates||[]).find(x=>x.id===id)
    ||selectedCandidates(future).find(x=>x.id===id);
   const value=finite(record?.price_usd??record?.priceUsd),at=record?.observed_at_utc||record?.sourceSnapshot||null;
+  const volume=finite(record?.volume_24h_usd??record?.volume24hUsd);
+  const cap=finite(record?.market_cap_usd??record?.marketCapUsd);
   const start=Date.parse(firstAt||""),finish=Date.parse(at||"");
   if(value===null||value<=0||!Number.isFinite(finish)||!Number.isFinite(start)||finish<=start)
    return {target_date_utc:target,at_utc:null,price_usd:null,change_pct:null,status:"NO_MATCHING_VERIFIED_PRICE"};
   return {target_date_utc:target,at_utc:at,price_usd:value,elapsed_hours:Math.round((finish-start)/3600000*100)/100,
+    volume_24h_usd:volume!==null&&volume>=0?volume:null,
+    market_cap_usd:cap!==null&&cap>=0?cap:null,
+    rank:Number.isInteger(record?.rank)?record.rank:null,
     status:"OBSERVED_DAILY_SNAPSHOT",change_pct:null};
  };
  const observations=[];
@@ -102,6 +109,8 @@ function buildDynamicFollowups(archives){
     v.change_pct=Math.round((v.price_usd/price-1)*1e4)/100;
    observations.push({id:c.id,symbol:c.symbol,group:(day.groups.momentum_24h_7d||[]).some(x=>x.id===c.id)?"momentum_24h_7d":"rebound_24h_only",
      first_seen_date_utc:day.observed_date_utc,observed_at_utc:at,initial_price_usd:price,
+     initial_volume_24h_usd:finite(c.volume24hUsd),
+     initial_market_cap_usd:finite(c.marketCapUsd),initial_rank:Number.isInteger(c.rank)?c.rank:null,
      followup_1d:d1,followup_7d:d7});
   }
  }
@@ -110,7 +119,7 @@ function buildDynamicFollowups(archives){
   source_archive_dates:days.map(d=>d.observed_date_utc),
   horizons_calendar_days:[1,7],orders_enabled:false,trade_executions_recorded:false,
   fees_included:false,positions_created:false,identity_market_pair_certified:false,
-  note:"Suivi descriptif au même identifiant CoinGecko ; horodatages réels affichés, pas de prix intrajournalier supposé. Absence de suivi = null. USD n'est pas USDT.",
+  note:"Suivi descriptif au même identifiant CoinGecko ; horodatages réels affichés, pas de prix intrajournalier supposé. Les volumes 24 h sont des mesures de snapshots, non une quantité échangée entre deux relevés. Absence de suivi = null. USD n'est pas USDT.",
   observations};
 }
 function archiveDynamicFollowups(){
@@ -182,7 +191,18 @@ function archiveHistory(){
  return {file,days:days.length,observations:output.length,followups:output.filter(x=>x.followup_status==="OBSERVED_MARKET_SNAPSHOT").length};
 }
 if(require.main===module){
- const result={prospective:dailyArchive(),retrospective:archiveHistory(),dynamic:archiveDynamicFollowups()};
+ const onlyFollowups=process.argv.includes("--followups-only");
+ let prospective=null;
+ if(!onlyFollowups){
+  try{prospective=dailyArchive();}
+  catch(e){
+   const reason=String(e.message||e);
+   if(!/^(Archives Top1000 périmées \(> 8 h\)|Archive non datée d'aujourd'hui, publication refusée)$/.test(reason))throw e;
+   prospective={created:false,reason:"STALE_SOURCE_SNAPSHOT",details:reason};
+   console.warn("Radar : sources du jour non publiables ; dérivation des archives existantes uniquement.");
+  }
+ }
+ const result={prospective,retrospective:onlyFollowups?null:archiveHistory(),dynamic:archiveDynamicFollowups()};
  console.log(JSON.stringify(result,null,2));
 }
 module.exports={dailyArchive,archiveHistory,selectedCandidates,trackPreviousCandidates,buildDynamicFollowups,archiveDynamicFollowups};

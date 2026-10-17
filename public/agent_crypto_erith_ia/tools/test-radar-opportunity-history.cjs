@@ -36,3 +36,20 @@ test("one-day gap after latest archive is marked pending or missing, never zero"
  const result=buildDynamicFollowups([a,b]).observations.find(x=>x.id==="icnt");
  assert.equal(result.followup_1d.status,"MISSING_DATED_SNAPSHOT");assert.equal(result.followup_1d.change_pct,null);
 });
+test("daily tracked metrics include measured 24h volume and market capitalization",()=>{
+ const prior=snap("2026-10-17",[candidate("icnt",.10,"2026-10-17")]);
+ const core={coins:[{id:"icnt",symbol:"ICNT",rank:470,priceUsd:.125,volume24hUsd:1700000,marketCapUsd:25000000}]};
+ const r=trackPreviousCandidates(core,{coins:[]},{trend:[],rebound:[],sourceTimes:{core:ts("2026-10-18"),extended:ts("2026-10-18")}},[prior],"2026-10-18");
+ assert.equal(r[0].volume_24h_usd,1700000);
+ assert.equal(r[0].market_cap_usd,25000000);
+});
+test("market-volume comparison reports observations, not extrapolated trading volume",()=>{
+ const base=snap("2026-10-17",[{...candidate("icnt",.10,"2026-10-17"),volume24hUsd:1000000,marketCapUsd:12000000,rank:450}]);
+ const next=snap("2026-10-18",[]);
+ next.tracked_candidates=[{id:"icnt",price_usd:.11,volume_24h_usd:1500000,market_cap_usd:12500000,rank:440,observed_at_utc:ts("2026-10-18")}];
+ const f=buildDynamicFollowups([base,next]).observations[0];
+ assert.equal(f.initial_volume_24h_usd,1000000);
+ assert.equal(f.followup_1d.volume_24h_usd,1500000);
+ assert.equal(f.followup_1d.change_pct,10);
+ assert.equal(f.followup_7d.change_pct,null);
+});
