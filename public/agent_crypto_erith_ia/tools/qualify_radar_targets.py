@@ -179,7 +179,7 @@ def qualify(snapshot,fetch=public_json,now=None,universe=None):
    anypair=True
    entry["pair_status"]="SPOT_SYMBOL_PAIR_OBSERVED"
    try:
-    market=market_detail(venue,pair,fetch,now)
+    market=market_detail(venue,pair,fetch,utcnow() if fetch is public_json else now)
     entry["market"]=market
     entry["status"]="RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW"
     break
