@@ -6,11 +6,13 @@ Les dix priorités sont des DOSSIERS DE RECHERCHE, jamais des signaux d'achat.
 """
 from __future__ import annotations
 import datetime as dt
+from concurrent.futures import ThreadPoolExecutor
 import json
 import math
 import pathlib
 import time
 import urllib.parse
+import urllib.error
 import urllib.request
 
 from observe_radar20_execution import estimate_book
@@ -67,7 +69,7 @@ def candidate_list(snapshot,now):
  ensure(len({r["id"] for r in rows})==len(rows),"Actif Radar dupliqué")
  return sorted(rows,key=lambda r:(-r["volume24hUsd"],r["id"]))[:20]
 
-def venue_instruments(fetch):
+def venue_instruments(fetch,candidates):
  """Aucune substitution Futures/Margin; toute panne laisse une source indisponible."""
  result={}
  endpoints={
@@ -76,14 +78,32 @@ def venue_instruments(fetch):
   "Bitget":("/api/v3/market/instruments",{"category":"SPOT"}),
  }
  for venue,(path,args) in endpoints.items():
+  if venue=="Binance":
+   # Binance full exchangeInfo can exceed several megabytes. Request ONLY the
+   # 20 exact spot symbols; do not download or process the entire exchange index.
+   def inspect(asset):
+    sym=asset["symbol"]
+    try:
+     raw=get("Binance",path,{"symbol":sym+"USDT"},fetch)
+     ensure(isinstance(raw.get("symbols"),list),"Métadonnées Binance invalides")
+     for x in raw["symbols"]:
+      if x.get("baseAsset")==sym and x.get("quoteAsset")=="USDT" and x.get("status")=="TRADING" and x.get("isSpotTradingAllowed",True):
+       return sym,x["symbol"],None
+     return sym,None,None
+    except urllib.error.HTTPError as err:
+     if err.code in (400,404): return sym,None,None  # symbole non coté
+     return sym,None,str(err)
+    except (ValueError,KeyError,TypeError,OSError,TimeoutError) as err:
+     return sym,None,str(err)
+   with ThreadPoolExecutor(max_workers=4) as pool:
+    inspected=list(pool.map(inspect,candidates))
+   pairs={sym:pair for sym,pair,_ in inspected if pair}
+   failures=[err for _,_,err in inspected if err]
+   result[venue]={"pairs":pairs,"error":"API Binance indisponible ("+str(len(failures))+"/20)" if len(failures)==len(candidates) else None}
+   continue
   try:
    raw=get(venue,path,args,fetch)
-   if venue=="Binance":
-    ensure(isinstance(raw.get("symbols"),list),"Métadonnées Binance invalides")
-    pairs={r["baseAsset"].upper():r["symbol"] for r in raw["symbols"]
-     if r.get("quoteAsset")=="USDT" and r.get("status")=="TRADING" and
-        r.get("isSpotTradingAllowed",True) and r.get("baseAsset","").isascii()}
-   elif venue=="OKX":
+   if venue=="OKX":
     ensure(raw.get("code")=="0" and isinstance(raw.get("data"),list),"Métadonnées OKX invalides")
     pairs={r["baseCcy"].upper():r["instId"] for r in raw["data"] if
      r.get("quoteCcy")=="USDT" and r.get("state")=="live" and r.get("instType")=="SPOT"}
@@ -159,7 +179,7 @@ def market_detail(venue,pair,fetch,now):
 def qualify(snapshot,fetch=public_json,now=None,universe=None):
  now=now or utcnow()
  chosen=candidate_list(snapshot,now)
- venues=venue_instruments(fetch)
+ venues=venue_instruments(fetch,chosen)
  # Symbols can collide even inside CoinGecko Top1000: never alias them silently.
  collisions={}
  for asset in universe or []:
