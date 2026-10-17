@@ -27,7 +27,7 @@ jobs:
       - name: Test pure Radar qualification; no external connection
         run: python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_targets.py' -v
       - name: Collect public evidence only (main push/schedule, not PR)
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
           set -euo pipefail
