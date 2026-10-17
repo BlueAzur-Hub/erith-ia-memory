@@ -21,6 +21,8 @@ SCHEMA="erith.radar.spot-qualification.v1"
 BUDGET=100.0
 FEE_PCT_SIDE=0.1  # Hypothèse pédagogique, PAS le tarif du compte
 HOUR=3600000
+MAX_SPREAD_BPS=150.0  # Plafond exploratoire 1,5 %, à valider sur données futures
+MAX_COST_PCT=2.0    # Frais et traversée du carnet pour 100 USDT fictifs
 VENUES=("Binance","OKX","Bitget")
 HOSTS={
  "Binance":"https://data-api.binance.vision",
@@ -41,8 +43,8 @@ def public_json(url):
  """Only explicitly constructed public market endpoints, never orders/accounts."""
  req=urllib.request.Request(url,headers={"Accept":"application/json","User-Agent":"Erith-Radar-Research/1.0"})
  with urllib.request.urlopen(req,timeout=12) as response:
-  raw=response.read(1_000_001)
-  ensure(response.status==200 and 0<len(raw)<=1_000_000,"Réponse API absente ou trop volumineuse")
+  raw=response.read(6_000_001)
+  ensure(response.status==200 and 0<len(raw)<=6_000_000,"Réponse API absente ou trop volumineuse")
   return json.loads(raw)
 
 def get(provider,path,params,fetch):
@@ -142,6 +144,8 @@ def market_detail(venue,pair,fetch,now):
  # Binance depth REST has NO market-generated timestamp: mark it explicitly.
  measured=estimate_book(normalized,now_ms=now_ms,budget=BUDGET)
  resale=float(measured["public_book_immediate_resale_usdt"])
+ mid=(measured["best_bid_usdt"]+measured["best_ask_usdt"])/2
+ ensure(abs(mid/bars["last_close_usdt"]-1)<=0.15,"Cours carnet/bougies divergent (>15 %)")
  modeled=round(100*(1-(resale/BUDGET)*(1-FEE_PCT_SIDE/100)**2),5)
  return {"provider":venue,"pair":pair,"quote":"USDT","candles":bars,
    "book":{"best_bid_usdt":measured["best_bid_usdt"],"best_ask_usdt":measured["best_ask_usdt"],
@@ -181,21 +185,26 @@ def qualify(snapshot,fetch=public_json,now=None,universe=None):
    try:
     market=market_detail(venue,pair,fetch,utcnow() if fetch is public_json else now)
     entry["market"]=market
-    entry["status"]="RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW"
+    if market["book"]["spread_bps"]>MAX_SPREAD_BPS or market["estimated_roundtrip_cost_pct"]>MAX_COST_PCT:
+     entry["status"]="EXCESSIVE_OBSERVED_COST"
+    else:
+     entry["status"]="RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW"
     break
    except (ValueError,KeyError,TypeError,OSError,TimeoutError) as exc:
     entry["errors"].append(venue+": "+str(exc)[:130])
   if not anypair:
    entry["status"]="NO_OBSERVED_SPOT_PAIR" if any(not v["error"] for v in venues.values()) else "VENUES_UNAVAILABLE"
   rows.append(entry)
- good=[r for r in rows if r["market"] is not None]
+ measured=[r for r in rows if r["market"] is not None]
+ good=[r for r in measured if r["status"]=="RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW"]
  good.sort(key=lambda r:(r["market"]["estimated_roundtrip_cost_pct"],
                           -r["aggregated_volume24h_usd"],r["id"]))
  priority=[r["id"] for r in good[:10]]
  return {"schema":SCHEMA,"source_observation_date_utc":snapshot["observed_date_utc"],
    "source_times_utc":snapshot["source_times_utc"],"qualified_at_utc":iso(now),
    "universe_preselected":len(chosen),"venues":{v:{"available":not info["error"],"error":info["error"]} for v,info in venues.items()},
-   "markets_with_public_evidence":len(good),"priority_research_ids":priority,
+   "markets_with_public_evidence":len(measured),"priority_eligible_count":len(good),"priority_research_ids":priority,
+   "limits":{"max_spread_bps":MAX_SPREAD_BPS,"max_modeled_roundtrip_cost_pct":MAX_COST_PCT},
    "priority_target_count":10,"priority_not_force_filled":True,
    "priority_order":"lower illustrative roundtrip cost, then higher historical aggregate volume",
    "quote":"USDT","budget_usdt":BUDGET,"fee_per_side_pct_hypothesis":FEE_PCT_SIDE,
