@@ -199,7 +199,7 @@ function build(root){
  }
  const filter=node("input","","");filter.type="search";filter.placeholder="Chercher une crypto";filter.dataset.radarNative="filter";filter.setAttribute("aria-label","Filtrer les cryptomonnaies du Radar");
  const sort=node("select","","");sort.dataset.radarNative="sort";sort.setAttribute("aria-label","Trier le Radar");
- for(const [value,label] of [["rank","Rang"],["change24h","Hausses 24h"],["drop24h","Baisses 24h"],["volume24hUsd","Volume 24h"]]){
+ for(const [value,label] of [["rank","Rang"],["change24h","Hausses 24h"],["change7d","Hausses 7j"],["drop24h","Baisses 24h"],["volume24hUsd","Volume 24h"]]){
   const option=node("option","",label);option.value=value;sort.append(option);
  }
  dock.append(group,filter,sort);root.append(dock);
@@ -227,6 +227,12 @@ function build(root){
  oNote.dataset.radarNative="opportunityNote";opportunities.append(oNote);
  const oRows=node("div","radar-native-opportunity-grid");oRows.dataset.radarNative="opportunities";
  opportunities.append(oRows);supplementary.append(opportunities);
+ const research=node("section","radar-native-block radar-native-opportunities");
+ research.append(node("h3","","Top 1 000 · hausses 24 h / 7 j, volumes et replis"));
+ const researchNote=node("p","table-note","Classements de recherche · aucun carnet validé par cette liste");
+ researchNote.dataset.radarNative="researchNote";research.append(researchNote);
+ const researchLists=node("div","radar-native-opportunity-grid");
+ researchLists.dataset.radarNative="researchLists";research.append(researchLists);supplementary.append(research);
  const qualifying=node("section","radar-native-block radar-native-qualification");
  qualifying.append(node("h3","","Radar 20 · qualification Spot et coûts PAPER"));
  const qualNote=node("p","table-note","Dernier rapport de qualification non encore chargé");
@@ -431,6 +437,26 @@ function printOpportunities(root,model){
   group.append(list);area.append(group);
  }
 }
+function printResearchLists(root,model){
+ const area=lookup(root,"researchLists"),note=lookup(root,"researchNote");if(!area||!note)return;
+ area.replaceChildren();const q=model.opportunities;
+ if(!q?.rankings){note.textContent="Top 1 000 indisponible · aucun classement inventé";return;}
+ note.textContent=q.eligible+" actifs filtrés sur 1 000 · USD CoinGecko · "+safeDate(q.sourceTimes.core)+
+  " / "+safeDate(q.sourceTimes.extended)+" · carnets non vérifiés dans ces classements";
+ for(const [key,title,metric] of [["rise24","Hausses 24 h","change24h"],["rise7","Hausses 7 jours","change7d"],["volume","Volumes 24 h","volume24hUsd"],["fall24","Baisses 24 h","change24h"]]){
+  const group=document.createElement("details");group.className="radar-native-opportunity-group";group.open=(key==="rise24");
+  group.append(node("summary","",title+" · Top 10"));const list=node("div","radar-native-opportunity-list");
+  for(const item of q.rankings[key]||[]){
+   const row=node("div","radar-native-opportunity");
+   row.append(node("strong","",item.symbol+" · "+item.name),node("span","",metric==="volume24hUsd"?compactMoney(item.volume24hUsd)+" USD":pct(item[metric])),
+    node("small","",pct(item.change24h)+" / 24 h · "+pct(item.change7d)+" / 7 j · volume "+compactMoney(item.volume24hUsd)+" USD · rang "+item.rank+" · "+item.riskNote));
+   const button=node("button","btn small","Fiche");button.type="button";
+   button.addEventListener("click",()=>void openOpportunityFiche(root,button,item));
+   row.append(button);list.append(row);
+  }
+  group.append(list);area.append(group);
+ }
+}
 function printQualification(root,model){
  const note=lookup(root,"qualificationNote"),list=lookup(root,"qualificationRows");
  if(!note||!list)return;list.replaceChildren();
@@ -465,7 +491,14 @@ function printQualification(root,model){
       (item.errors||[]).slice(0,2).join(" · ")||"Aucune paire et aucun carnet vérifiés")
   );
   const state=node("small","",m?"Symbole seul : identité CoinGecko non certifiée · ni ordre ni garantie":"En attente de preuves");
-  row.append(state);list.append(row);
+  row.append(state);
+  if(item.id==="quack-ai"){
+   const link=node("a","","Étude de cas Q · laboratoire ↗");
+   link.href=new URL("../trader/quack-ai-case-study.html",document.baseURI).href;
+   link.target="_blank";link.rel="noopener noreferrer";
+   row.append(link);
+  }
+  list.append(row);
  }
 }
 async function identityRegistry(){
@@ -511,7 +544,7 @@ async function refresh(root,model){
   model.qualification=null;model.qualificationError="Qualification Spot · chargement…";printQualification(root,model);
   printMarket(root,model);
   printWatch(root,model);
-  printListings(root,model);printOpportunities(root,model);
+  printListings(root,model);printOpportunities(root,model);printResearchLists(root,model);
   lookup(root,"status").textContent="Radar · classement et PAPER chargés · découverte Spot Bitget en cours…"+
    (issues.length?" · "+issues.join(" · "):"");
   const live=await Promise.allSettled([instrumentsPromise,tickersPromise,extendedPromise]);
@@ -527,7 +560,7 @@ async function refresh(root,model){
    model.opportunities=api.selectOpportunities(model.rawMarket,live[2].value);
    model.opportunityError="";
   }catch(e){model.opportunities=null;model.opportunityError="Top 1 000 : "+e.message;issues.push(model.opportunityError);}
-  printOpportunities(root,model);
+  printOpportunities(root,model);printResearchLists(root,model);
   try{
    const evidence=await qualificationPromise;
    model.qualification=evidence;model.qualificationError="";

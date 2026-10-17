@@ -1,0 +1,59 @@
+name: Seven Quack AI Spot PAPER
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/seven-quack-ai-paper.yml'
+      - 'public/agent_crypto_erith_ia/tools/observe_quack_ai.py'
+      - 'public/agent_crypto_erith_ia/tools/test_observe_quack_ai.py'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-quack-ai-paper.yml'
+      - 'public/agent_crypto_erith_ia/tools/observe_quack_ai.py'
+      - 'public/agent_crypto_erith_ia/tools/test_observe_quack_ai.py'
+  schedule:
+    - cron: '47 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: seven-quack-ai-paper-main
+  cancel-in-progress: false
+jobs:
+  observer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test read-only market observer offline
+        run: python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_observe_quack_ai.py -v
+      - name: Observe Q Spot and preserve daily immutable history
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_observe_quack_ai.py -q
+            python public/agent_crypto_erith_ia/tools/observe_quack_ai.py
+            git add -- public/agent_crypto_erith_ia/data/trader_flux/q_paper/state.json public/agent_crypto_erith_ia/data/trader_flux/q_paper/observations/
+            if git diff --cached --quiet; then
+              echo 'No new verified Q observation'
+              exit 0
+            fi
+            git commit -m 'Archive verified Q Spot PAPER observation'
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep "$((attempt * 3))"
+          done
+          echo 'Q journal publication failed: no observations invented' >&2
+          exit 1

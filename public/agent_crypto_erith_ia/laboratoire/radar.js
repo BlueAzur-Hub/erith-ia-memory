@@ -26,6 +26,7 @@ function selectMarket(rows,tier=10,query="",sort="rank"){
  const sorts={
   rank:(a,b)=>a.rank-b.rank,
   change24h:(a,b)=>(b.change24h??-Infinity)-(a.change24h??-Infinity)||a.rank-b.rank,
+  change7d:(a,b)=>(b.change7d??-Infinity)-(a.change7d??-Infinity)||a.rank-b.rank,
   drop24h:(a,b)=>(a.change24h??Infinity)-(b.change24h??Infinity)||a.rank-b.rank,
   volume24hUsd:(a,b)=>(b.volume24hUsd??-Infinity)-(a.volume24hUsd??-Infinity)||a.rank-b.rank
  };
@@ -108,10 +109,14 @@ function selectOpportunities(core,extended){
  const sort=(a,b)=>b.change24h-a.change24h||a.rank-b.rank;
  const trend=candidates.filter(c=>c.change24h>=4&&c.change7d>0).sort(sort).slice(0,12);
  const rebound=candidates.filter(c=>c.change24h>=4&&c.change7d<0).sort(sort).slice(0,12);
+ // Ranked from the same qualified-for-research universe; never a Spot execution list.
+ const take=(key)=>[...candidates].sort((a,b)=>b[key]-a[key]||a.rank-b.rank).slice(0,10);
+ const rankings={rise24:take("change24h"),rise7:take("change7d"),
+   volume:take("volume24hUsd"),fall24:[...candidates].sort((a,b)=>a.change24h-b.change24h||a.rank-b.rank).slice(0,10)};
  return {sourceTimes:{core:core.generated_at,extended:extended.generated_at},
   filters:{market_cap_min_usd:25000000,volume_24h_min_usd:1000000,turnover_min_pct:1.5,turnover_max_pct:200,
    excludes_symbols:[...EXCLUDED_SYMBOLS].sort(),exchange_spread_orderbook_checked:false},
-  universe:1000,eligible:candidates.length,trend,rebound,
+  universe:1000,eligible:candidates.length,trend,rebound,rankings,
   disclaimer:"Observations transversales de snapshots, non opportunités négociables ni conseils d'achat. Aucune paire d'exécution vérifiée."};
 }
 const API=Object.freeze({TIERS,validMarket,selectMarket,verifyPaper,verifyRegistry,verifyBitget,observeMarket,selectOpportunities});

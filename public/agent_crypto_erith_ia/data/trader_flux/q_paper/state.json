@@ -1,0 +1,36 @@
+{
+  "schema": "erith.quack-ai.spot-paper.observations.v1",
+  "coin_id": "quack-ai",
+  "market": "QUSDT",
+  "venue": "Bitget Spot",
+  "quote": "USDT",
+  "status": "waiting_first_verified_observation",
+  "paper_only": true,
+  "orders_enabled": false,
+  "executed_order": false,
+  "first_observed_at": null,
+  "last_observed_at": null,
+  "last": null,
+  "recent_observations": [],
+  "daily_archive_example": "observations/YYYY-MM-DD.json",
+  "historical_daily_release_separate": true,
+  "historical_reference": {
+    "source": "CoinGecko public and verified Radar snapshots",
+    "reference_not_forward_observation": true,
+    "radar_detected_at_utc": "2026-10-17T10:35:04.218Z",
+    "radar_price_usd": 0.07115097250008727,
+    "radar_change24h_pct": 32.11454,
+    "radar_change7d_pct": 132.1782,
+    "spot_qualification_at_utc": "2026-10-17T19:16:07Z",
+    "spot_qualification_venue": "Bitget",
+    "spot_market": "QUSDT",
+    "spot_modeled_roundtrip_pct": 0.2883,
+    "spot_modeled_budget_usdt": 100
+  },
+  "limitations": [
+    "Aucun relevé PAPER Q daté par ce nouveau collecteur pour l'instant.",
+    "Le relevé Radar initial est antérieur à cette étude ; aucune entrée PAPER rétrospective.",
+    "Le symbole et la paire ne prouvent pas l'identité du contrat à chaque instant.",
+    "Pas d'USD = USDT implicite, pas de compte ou d'ordres réels."
+  ]
+}
