@@ -247,6 +247,12 @@ function build(root){
  dossier.target="_blank";dossier.rel="noopener noreferrer";
  dossier.setAttribute("aria-label","Consulter le référentiel scientifique Crypto sans changer le graphique");
  qualifying.append(dossier);
+ // Historical PAPER is a distinct fixed 20-market experiment, not the 20 dynamic Radar candidates.
+ const historicalLink=node("a",""," · Historiques et simulations PAPER (Radar 20 fixe) ↗");
+ historicalLink.href=new URL("../laboratoire/radar-historique.html",document.baseURI).href;
+ historicalLink.target="_blank";historicalLink.rel="noopener noreferrer";
+ historicalLink.setAttribute("aria-label","Ouvrir le laboratoire historique Radar 20 fixe en lecture seule, sans modifier le Trader");
+ qualifying.append(historicalLink);
  const qualNote=node("p","table-note","Dernier rapport de qualification non encore chargé");
  qualNote.dataset.radarNative="qualificationNote";qualifying.append(qualNote);
  const qualRows=node("div","radar-native-opportunity-list");

@@ -62,6 +62,43 @@ assert.match(radar,/doc\?\.independent_usage_metrics===null/,'Unknown adoption i
 assert.match(radar,/non synchronisés/,'Cross-source timestamps are disclosed');
 assert.match(radarCss,/details\.radar-native-candidate>summary:focus-visible/,'Candidate cards are keyboard accessible');
 
+const historyPage=read('laboratoire/radar-historique.html');
+const historyJs=read('laboratoire/radar-historique.js');
+new vm.Script(historyJs,{filename:'radar-historique.js'});
+assert.match(historyPage,/src="radar-historique\.js"/,'Archive study loads its independent browser controller');
+assert.match(historyPage,/7 jours/);
+assert.match(historyPage,/90 jours/);
+assert.match(historyPage,/Aucun prix inventé|Aucun prix inventé|aucun ordre/ig);
+assert.match(radar,/radar-historique\.html/,'Historic study is linked within folded Radar20 section');
+const research=require('../laboratoire/radar-historique.js');
+const monthIndex=JSON.parse(read('data/trader_flux/radar20/index.json'));
+const pairs=research.validateIndex(monthIndex);
+assert.equal(pairs.length,20,'Only frozen Radar20 universe is used');
+assert(pairs.includes('ETHUSDT')&&pairs.includes('SOLUSDT'));
+const monthly=monthIndex.entries.filter(x=>x.pair==='ETHUSDT').sort((a,b)=>a.month.localeCompare(b.month));
+assert.deepEqual(monthly.map(x=>x.month),['2026-07','2026-08','2026-09']);
+const allRows=monthly.flatMap(e=>research.validateMonth(e,JSON.parse(read('data/trader_flux/radar20/'+e.path))));
+assert.equal(allRows.length,2208,'Real ETH Jul-Sep hourly continuity');
+const period=research.slicePeriod(allRows,90);
+assert.equal(period.length,2160);
+const hold=research.estimateHold(period,100,0.8);
+const dearer=research.estimateHold(period,100,1.6);
+assert(Number.isFinite(hold.net)&&Number.isFinite(hold.maxDrawdownPct)&&hold.volume>0);
+assert(dearer.final<hold.final,'Greater assumed fees cannot improve the fixed holding result');
+assert.equal(research.analyzeWindows(period,100,.8).count,45,'90 days contain 45 independent 48-hour windows');
+assert.throws(()=>research.slicePeriod(period.slice(0,100),90),/insuffisant/);
+const broken=period.map(x=>[...x]);broken[2][0]+=3600000;
+assert.throws(()=>research.slicePeriod(broken,90),/Trou/,'Gapped history must reject a simulation');
+assert.throws(()=>research.validateMonth(monthly[0],{...JSON.parse(read('data/trader_flux/radar20/'+monthly[0].path)),quote:'USD'}),/conforme/,'No silent USDT to USD conversion');
+const retrospective=JSON.parse(read('data/trader_flux/radar20_retro_stress/summary.json'));
+const portfolio=JSON.parse(read('data/trader_flux/radar20_portfolio/summary.json'));
+assert.equal(retrospective.primary.completed_trades,109);
+assert.equal(portfolio.primary.completed_trades,149);
+assert.equal(retrospective.primary.capital_usdt,400);
+assert.equal(portfolio.primary.capital_usdt,400);
+assert.match(historyJs,/SHA-256/,'Browser SHA verification required');
+
+
 assert.match(html,/const c=el\("details","item collapsible"\)/);
 assert.match(html,/for\(const x of entries\)\{const c=el\("details","item collapsible"\)/);
 assert.match(html,/networks\(data\);cards\(\)/,'Fetch and rendering do not depend on opening a dossier');

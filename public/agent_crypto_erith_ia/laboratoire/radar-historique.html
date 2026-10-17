@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
+<title>ERITH.IA · Radar · Historiques et simulations PAPER</title>
+<meta name="description" content="Archives horaires Binance Spot USDT, comparaison de périodes et simulations PAPER datées. Aucun ordre.">
+<style>
+:root{color-scheme:dark;--bg:#06111e;--panel:#102636;--line:#315265;--ink:#ecf6ff;--muted:#a7c0cd;--cyan:#86ecfa;--gold:#ffe0a1;--red:#ffa1ac;--green:#9de7bd}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 88% 0%,#113249,transparent 36%),var(--bg);color:var(--ink);font:14px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1360px;margin:auto;padding:20px clamp(12px,2.3vw,32px) 45px}
+a{color:var(--cyan)}a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.kicker{font-size:11px;color:var(--cyan);font-weight:800;letter-spacing:.15em}
+h1{font:700 clamp(25px,3.3vw,39px)/1.17 Georgia,serif;margin:8px 0}h2{font-size:17px;margin:0 0 12px;color:var(--gold)}
+p{margin:8px 0}small,.muted{color:var(--muted)}
+header{display:flex;gap:20px;justify-content:space-between;align-items:start;flex-wrap:wrap;margin-bottom:18px}
+header p{max-width:900px}.links{display:flex;flex-wrap:wrap;gap:14px}
+section,.notice{padding:17px;border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-bottom:14px}
+.notice{border-left:3px solid var(--gold);background:#20251f}
+.controls{display:flex;gap:12px;align-items:end;flex-wrap:wrap}
+.controls label{display:grid;gap:5px;min-width:150px;flex:1}.controls label.asset{min-width:190px;flex:2}
+button,select,input{font:inherit;background:#091b2b;border:1px solid #40687c;border-radius:9px;color:var(--ink);padding:10px;min-height:42px}
+button{cursor:pointer;background:#184c60;font-weight:750}button:disabled{opacity:.55;cursor:wait}
+.status{min-height:24px;color:var(--muted);margin:10px 0 0}
+.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin:10px 0}
+.metric{padding:13px;background:#091d2b;border:1px solid #294b61;border-radius:9px;min-width:0}
+.metric small{display:block;font-size:11px}.metric strong{display:block;font-size:clamp(15px,1.7vw,22px);margin-top:6px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.positive{color:var(--green)}.negative{color:var(--red)}
+#history-chart{display:block;width:100%;height:auto;background:#061726;border:1px solid #294759;border-radius:10px}
+.chart-caption{font-size:12px;color:var(--muted);margin:9px 0 0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+article{background:#091f2e;padding:14px;border-radius:10px;border:1px solid #2c5263}
+article h3{font-size:14px;color:var(--cyan);margin:0 0 8px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid #25465a}
+th{color:var(--muted);font-size:11px}td:nth-child(n+2),th:nth-child(n+2){text-align:right}
+.table-wrap{overflow-x:auto}.table-wrap table{min-width:500px}
+details summary{cursor:pointer;font-weight:750;color:var(--cyan)}
+li{margin:5px 0}
+footer{color:var(--muted);font-size:12px;margin-top:25px}
+@media(max-width:900px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.grid{grid-template-columns:1fr}}
+@media(max-width:600px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head>
+<body><main>
+<header><div>
+<div class="kicker">SEVEN HEAVEN · RADAR → ARCHIVES → EXPÉRIENCES</div>
+<h1>Radar · Historique & simulations PAPER</h1>
+<p>Explorer les données horaires réellement conservées sur les 20 actifs du <strong>Radar 20 fixe</strong>. Comparer 7, 30, 60 ou 90 jours et simuler une détention avec coûts hypothétiques. Aucun prix inventé, aucun ordre privé, aucune modification du graphique du Trader.</p>
+<div class="links"><a href="../trader/trading-desk.html">← Retour Trader</a><a href="crypto-knowledge.html">Dossiers des candidats dynamiques</a><a href="PROTOCOLE_RADAR_CIBLAGE.md">Méthode Radar</a><a href="../trader/verified-reader.html">Coffre · archives vérifiées</a></div></div>
+</header>
+<div class="notice"><strong>Deux ensembles distincts.</strong> Ici : 20 actifs <em>fixes</em>, archives Binance Spot <strong>cotées USDT</strong> de juillet à septembre 2026. Les candidats Q, ICNT, FLUID, SAND du Radar dynamique sont une autre liste, qui exige des preuves historiques séparées. Cette page n'est ni un outil d'exécution ni un générateur de signaux.</div>
+<section aria-labelledby="select-title">
+<h2 id="select-title">1 · Choisir un actif, une période et les hypothèses</h2>
+<div class="controls">
+<label class="asset">Crypto du Radar 20 fixe<select id="pair" aria-label="Choisir le marché archivé" disabled><option value="">Chargement du catalogue…</option></select></label>
+<label>Historique<select id="days"><option value="7">7 jours</option><option value="30">30 jours</option><option value="60">60 jours</option><option value="90" selected>90 jours</option></select></label>
+<label>Capital fictif (USDT)<input id="capital" type="number" min="1" max="100000" value="100" step="1"></label>
+<label>Coût aller-retour supposé<select id="cost"><option value="0.8" selected>0,8 %</option><option value="1.2">1,2 %</option><option value="1.6">1,6 %</option></select></label>
+<button id="analyze" type="button" disabled>Étudier l'historique</button>
+</div>
+<p class="status" id="status" role="status" aria-live="polite">Recherche des archives publiques…</p>
+</section>
+<section aria-labelledby="results-title">
+<h2 id="results-title">2 · Ce que montrent les relevés</h2>
+<div class="metrics" id="metrics" aria-live="polite">
+<div class="metric"><small>Première / dernière observation UTC</small><strong id="dates">—</strong></div>
+<div class="metric"><small>Bougies horaires vérifiées</small><strong id="bars">—</strong></div>
+<div class="metric"><small>Évolution prix brut</small><strong id="gross">—</strong></div>
+<div class="metric"><small>Volume échangé sur la période</small><strong id="volume">—</strong></div>
+<div class="metric"><small>Repli maximum historique*</small><strong id="drawdown">—</strong></div>
+</div>
+<svg id="history-chart" role="img" aria-label="Courbe historique de clôture en USDT" viewBox="0 0 980 310" preserveAspectRatio="xMidYMid meet"><text x="22" y="36" fill="#a7c0cd">Choisissez un actif pour afficher des données vérifiées.</text></svg>
+<p class="chart-caption">*Repli maximal calculé sur les clôtures horaires de la période, pas sur les extrêmes intrahoraires. Axe vertical : USDT, sans conversion USD.</p>
+</section>
+<section aria-labelledby="sim-title">
+<h2 id="sim-title">3 · Deux simulations mécaniques sur les cours passés</h2>
+<div class="grid">
+<article><h3>Détention fictive intégrale (achat initial → vente finale)</h3><p>Un achat au cours d'ouverture de la première bougie puis une vente au cours de clôture de la dernière. Aucun signal de trading, aucun effet de levier.</p>
+<div class="metrics" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+<div class="metric"><small>Capital final théorique</small><strong id="hold-final">—</strong></div>
+<div class="metric"><small>Gain/perte net hypothétique</small><strong id="hold-net">—</strong></div>
+</div>
+<p class="muted" id="hold-info">En attente d'un historique complet.</p></article>
+<article><h3>Fenêtres successives de 48 h (diagnostic, non stratégie)</h3><p>Découpage en fenêtres de 48 heures non chevauchantes. Chaque fenêtre part du même capital fictif ; les résultats ne sont <strong>pas composés</strong> et ne forment pas un portefeuille exécutable.</p>
+<div class="metrics" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+<div class="metric"><small>Fenêtres complètes</small><strong id="windows">—</strong></div>
+<div class="metric"><small>Fenêtres positives</small><strong id="winrate">—</strong></div>
+<div class="metric"><small>Résultat net moyen</small><strong id="average">—</strong></div>
+</div>
+<p class="muted" id="window-info">Les clôtures et ouvertures sont historiques ; coûts fixes hypothétiques.</p></article></div>
+<p class="muted">Les frais représentent une hypothèse forfaitaire de coût aller-retour. Spread variable, slippage, taille minimale, taxes, funding et exécution effective ne sont pas établis. L'observation rétrospective comporte un biais de sélection et ne prédit pas la prochaine hausse.</p>
+</section>
+<section aria-labelledby="study-title">
+<h2 id="study-title">4 · Expérience historique multi-crypto déjà archivée</h2>
+<p>Ces chiffres proviennent des rapports PAPER enregistrés, et <strong>non</strong> du calcul de détention ci-dessus. Paramètres du protocole étudié : capital partagé de 400 USDT, jusqu'à quatre positions de 100 USDT, détention 48 h, coût hypothétique aller-retour 0,8 %. Résultats datés ; pas de réoptimisation des paramètres.</p>
+<div class="table-wrap"><table><thead><tr><th>Période</th><th>Positions clôturées</th><th>Résultat net PAPER</th><th>Repli maximum</th><th>Nature</th></tr></thead><tbody id="regimes"><tr><td colspan="5">Chargement des rapports historiques…</td></tr></tbody></table></div>
+<p class="muted" id="regimes-info"></p>
+<details><summary>Pourquoi un bon trimestre ne prouve pas une stratégie rentable</summary><p>L'univers de 20 cryptos a été sélectionné avec des connaissances ultérieures. Avril–juin précède la formalisation du protocole, tandis que juillet–septembre a servi à son étude : aucun trimestre n'est un test prospectif indépendant. Le capital exposé, les minima d'ordre et les frais réels OKX ne sont pas certifiés ; un rendement théorique en USDT ne vaut pas un solde réel en USDC.</p></details>
+</section>
+<section aria-labelledby="sources-title">
+<h2 id="sources-title">5 · Provenance et limites</h2>
+<p id="source-proof">Le résultat de la vérification SHA-256 apparaîtra ici après lecture d'un actif.</p>
+<details><summary>Archives consultées et garanties</summary>
+<ul><li>Index canonique : <a href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/trader_flux/radar20/index.json">Radar 20 · archive horaire Binance Spot</a> (20 paires, juillet–septembre 2026).</li>
+<li><a href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/trader_flux/radar20_portfolio/summary.json">Expérience portefeuille, juillet–septembre</a> et <a href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/trader_flux/radar20_retro_stress/summary.json">test rétrospectif de stress, avril–juin</a>.</li>
+<li>Chaque fichier horaire est validé par son identifiant de paire, son mois, le nombre d'heures attendu, la séquence UTC sans trou, la devise USDT et son SHA-256. Lecture publique seulement.</li></ul>
+</details>
+</section>
+<footer>ERITH.IA · laboratoire d'analyse scientifique · les années antérieures et les candidats dynamiques demandent des archives propres, non extrapolées. Aucune exécution de trading.</footer>
+<script src="radar-historique.js" defer></script>
+</main></body></html>
