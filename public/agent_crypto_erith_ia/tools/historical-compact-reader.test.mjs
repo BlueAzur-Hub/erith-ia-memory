@@ -6,7 +6,8 @@ import vm from "node:vm";
 import {webcrypto} from "node:crypto";
 
 const origin = "https://blueazur-hub.github.io";
-const root = "/erith-ia-memory/public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1/";
+const archiveOrigin = "https://raw.githubusercontent.com";
+const root = "/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1/";
 const directory = path.resolve("public/agent_crypto_erith_ia/data/historical_archive_prototype/compact_v1");
 const program = fs.readFileSync("public/agent_crypto_erith_ia/administrator/js/historical-compact-reader.js", "utf8");
 
@@ -15,7 +16,7 @@ function setup({tamper = false} = {}) {
   const window = {};
   async function fetchMock(uri) {
     const u = new URL(uri);
-    assert.equal(u.origin, origin);
+    assert.equal(u.origin, archiveOrigin);
     assert.ok(u.pathname.startsWith(root));
     const relative = u.pathname.slice(root.length);
     assert.ok(!relative.includes(".."), "Path traversal");
