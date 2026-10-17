@@ -4,33 +4,81 @@
   "market": "QUSDT",
   "venue": "Bitget Spot",
   "quote": "USDT",
-  "status": "waiting_first_verified_observation",
+  "status": "observing_public_spot",
   "paper_only": true,
   "orders_enabled": false,
   "executed_order": false,
-  "first_observed_at": null,
-  "last_observed_at": null,
-  "last": null,
-  "recent_observations": [],
+  "first_observed_at": "2026-10-17T20:00:41Z",
+  "last_observed_at": "2026-10-17T20:00:41Z",
+  "last": {
+    "at_utc": "2026-10-17T20:00:41Z",
+    "coin_id": "quack-ai",
+    "symbol": "Q",
+    "venue": "Bitget",
+    "market": "QUSDT",
+    "instrument_type": "SPOT",
+    "quote": "USDT",
+    "identity_status": "SYMBOL_SPOT_CONFIRMED_CONTRACT_EXTERNAL",
+    "candles": {
+      "last_closed_hour_utc": "2026-10-17T19:00:00Z",
+      "close_usdt": 0.1253939,
+      "change_close_20h_pct": 115.90379,
+      "last_hour_volume_q": 36241125.6,
+      "last_hour_quote_volume_usdt": 4473373.03712499,
+      "median_prior_20h_volume_q": 4070592.85,
+      "last_21_bars_contiguous": true
+    },
+    "book": {
+      "best_bid_usdt": 0.125327,
+      "best_ask_usdt": 0.1255458,
+      "spread_bps": 17.4431,
+      "book_timestamp_utc": "2026-10-17T20:00:42Z",
+      "book_age_seconds": 0,
+      "bid_top20_notional_usdt": 4433.6337,
+      "ask_top20_notional_usdt": 13772.135
+    },
+    "source": "Bitget v3 public Spot",
+    "paper_only": true,
+    "executed_order": false
+  },
+  "recent_observations": [
+    {
+      "at_utc": "2026-10-17T20:00:41Z",
+      "coin_id": "quack-ai",
+      "symbol": "Q",
+      "venue": "Bitget",
+      "market": "QUSDT",
+      "instrument_type": "SPOT",
+      "quote": "USDT",
+      "identity_status": "SYMBOL_SPOT_CONFIRMED_CONTRACT_EXTERNAL",
+      "candles": {
+        "last_closed_hour_utc": "2026-10-17T19:00:00Z",
+        "close_usdt": 0.1253939,
+        "change_close_20h_pct": 115.90379,
+        "last_hour_volume_q": 36241125.6,
+        "last_hour_quote_volume_usdt": 4473373.03712499,
+        "median_prior_20h_volume_q": 4070592.85,
+        "last_21_bars_contiguous": true
+      },
+      "book": {
+        "best_bid_usdt": 0.125327,
+        "best_ask_usdt": 0.1255458,
+        "spread_bps": 17.4431,
+        "book_timestamp_utc": "2026-10-17T20:00:42Z",
+        "book_age_seconds": 0,
+        "bid_top20_notional_usdt": 4433.6337,
+        "ask_top20_notional_usdt": 13772.135
+      },
+      "source": "Bitget v3 public Spot",
+      "paper_only": true,
+      "executed_order": false
+    }
+  ],
   "daily_archive_example": "observations/YYYY-MM-DD.json",
   "historical_daily_release_separate": true,
-  "historical_reference": {
-    "source": "CoinGecko public and verified Radar snapshots",
-    "reference_not_forward_observation": true,
-    "radar_detected_at_utc": "2026-10-17T10:35:04.218Z",
-    "radar_price_usd": 0.07115097250008727,
-    "radar_change24h_pct": 32.11454,
-    "radar_change7d_pct": 132.1782,
-    "spot_qualification_at_utc": "2026-10-17T19:16:07Z",
-    "spot_qualification_venue": "Bitget",
-    "spot_market": "QUSDT",
-    "spot_modeled_roundtrip_pct": 0.2883,
-    "spot_modeled_budget_usdt": 100
-  },
   "limitations": [
-    "Aucun relevé PAPER Q daté par ce nouveau collecteur pour l'instant.",
-    "Le relevé Radar initial est antérieur à cette étude ; aucune entrée PAPER rétrospective.",
-    "Le symbole et la paire ne prouvent pas l'identité du contrat à chaque instant.",
-    "Pas d'USD = USDT implicite, pas de compte ou d'ordres réels."
+    "Ce journal commence à la première collecte réelle, pas au début de la hausse.",
+    "Pas de conversion supposée USD=USDT; aucune exécution, aucun frais de compte garanti.",
+    "Le symbole spot ne certifie pas seul le contrat du jeton."
   ]
 }
