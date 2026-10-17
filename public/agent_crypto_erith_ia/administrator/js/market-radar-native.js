@@ -477,9 +477,26 @@ function printResearchLists(root,model){
   group.append(list);area.append(group);
  }
 }
+// Never join fundamental project descriptions to trading symbols alone:
+// CoinGecko ID, ticker and qualification snapshot must all agree.
+function matchedCandidateKnowledge(knowledge,qualification){
+ if(!knowledge||knowledge.schema!=="erith.crypto.asset-research-knowledge.v1"||
+  knowledge.candidate_count!==20||!Array.isArray(knowledge.candidates)||
+  knowledge.candidates.length!==20||
+  knowledge.qualification_snapshot_at!==qualification.qualified_at_utc)return null;
+ const known=new Map(),market=new Map(qualification.candidates.map(x=>[x.id,x]));
+ for(const asset of knowledge.candidates){
+  if(!asset.coin_id||known.has(asset.coin_id)||!market.has(asset.coin_id)||
+     market.get(asset.coin_id).symbol!==asset.symbol)return null;
+  known.set(asset.coin_id,asset);
+ }
+ return known.size===qualification.candidates.length?known:null;
+}
 function printQualification(root,model){
  const note=lookup(root,"qualificationNote"),list=lookup(root,"qualificationRows");
- if(!note||!list)return;list.replaceChildren();
+ if(!note||!list)return;
+ const expanded=new Set([...list.querySelectorAll("details[data-radar-candidate][open]")].map(x=>x.dataset.radarCandidate));
+ list.replaceChildren();
  const q=model.qualification;
  if(!q){note.textContent=model.qualificationError||"Aucun rapport de qualification publié · aucune cible supposée";setFoldNote(root,"foldQualification","Source indisponible · aucune priorité");return;}
  if(q.schema!=="erith.radar.spot-qualification.v1"||q.quote!=="USDT"||
@@ -491,35 +508,64 @@ function printQualification(root,model){
  const ms=Date.parse(q.qualified_at_utc);
  const stale=!Number.isFinite(ms)||Date.now()-ms>36*3600000||Date.now()<ms-5*60000;
  const chosen=new Set(q.priority_research_ids);
+ const knowledge=matchedCandidateKnowledge(model.knowledge,q);
  note.textContent=(stale?"ARCHIVE PÉRIMÉE · aucune priorité actuelle":"Observation PAPER · aucune paire certifiée par identité de token")+
    " · relevé "+safeDate(q.qualified_at_utc)+" · "+q.markets_with_public_evidence+
-   "/20 marchés documentés · frais hypothétiques 0,10 % par côté · panier fictif 100 USDT";
- setFoldNote(root,"foldQualification",(stale?"Archive périmée · ":"")+q.markets_with_public_evidence+"/20 Spot documentés · identité non certifiée");
+   "/20 marchés documentés · frais hypothétiques 0,10 % par côté · panier fictif 100 USDT"+
+   (knowledge?" · catégories documentaires consultables": " · fiches projet détaillées non chargées");
+ setFoldNote(root,"foldQualification",(stale?"Archive périmée · ":"")+q.markets_with_public_evidence+
+  "/20 Spot documentés · "+q.priority_research_ids.length+" études proposées · identité non certifiée");
  const ranked=[...q.candidates].sort((a,b)=>{
   const ap=chosen.has(a.id)?0:1,bp=chosen.has(b.id)?0:1;
   return ap-bp||(a.symbol||"").localeCompare(b.symbol||"");
  });
  for(const item of ranked){
-  const row=node("div","radar-native-opportunity");
   const qualified=item.status==="RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW"&&item.market;
   const priority=!stale&&qualified&&chosen.has(item.id);
-  const m=qualified?item.market:null;
-  row.append(
-    node("strong","",item.symbol+" · "+item.name),
-    node("span","",priority?"DOSSIER PRIORITAIRE · étude":qualified?"Marché documenté · identité à vérifier":"Non qualifié · "+(item.status||"source absente")),
-    node("small","",m?m.provider+" Spot "+m.pair+" · 20h closes · spread "+number(m.book?.spread_bps,2)+
-      " pb · aller-retour théorique "+number(m.estimated_roundtrip_cost_pct,3)+" % · USDT":
-      (item.errors||[]).slice(0,2).join(" · ")||"Aucune paire et aucun carnet vérifiés")
-  );
-  const state=node("small","",m?"Symbole seul : identité CoinGecko non certifiée · ni ordre ni garantie":"En attente de preuves");
-  row.append(state);
-  if(item.id==="quack-ai"){
-   const link=node("a","","Étude de cas Q · laboratoire ↗");
-   link.href=new URL("../trader/quack-ai-case-study.html",document.baseURI).href;
-   link.target="_blank";link.rel="noopener noreferrer";
-   row.append(link);
+  const m=qualified?item.market:null,doc=knowledge?.get(item.id);
+  const row=node("details","radar-native-candidate");
+  row.dataset.radarCandidate=item.id;
+  row.open=expanded.has(item.id);
+  const head=node("summary","radar-native-opportunity radar-native-candidate-summary");
+  const identity=node("span","radar-native-candidate-identity");
+  identity.append(node("strong","",item.symbol+" · "+item.name));
+  if(doc)identity.append(node("small","",doc.category_research));
+  head.append(identity,
+    node("span","",priority?"RECHERCHE PRIORITAIRE · datée":qualified?"Marché documenté · identité à vérifier":"Paire Spot non qualifiée"),
+    node("small","",m?m.provider+" · "+m.pair+" · "+number(m.book?.spread_bps,2)+" pb":"Aucun carnet Spot identifié"),
+    node("small","",pct(item.change24h_pct)+" / 24 h · "+pct(item.change7d_pct)+" / 7 j"));
+  row.append(head);
+  const more=node("div","radar-native-candidate-more");
+  const source=node("p","radar-native-candidate-source","Relevé "+safeDate(q.qualified_at_utc)+" · classement transversal et marché Spot non synchronisés · lecture seule");
+  more.append(source);
+  const add=(label,value)=>{
+   const p=node("p","");
+   p.append(node("strong","",label+" : "),node("span","",value));
+   more.append(p);
+  };
+  add("Rang / volume au relevé",(Number.isFinite(item.rank)?String(item.rank):"—")+" · volume "+compactMoney(item.aggregated_volume24h_usd));
+  // Do not confuse a source's description of a service with independent adoption.
+  add("Projet déclaré",doc?.claimed_function||"Description documentée non chargée ; voir les dossiers IA");
+  add("Preuve d'usage réel",doc?.independent_usage_metrics===null?"Aucune métrique d'adoption indépendante établie dans ce dossier":"À vérifier dans les dossiers IA");
+  add("Marché observé",m?m.provider+" Spot "+m.pair+" · "+(m.candles?.closed_bars??"—")+" bougies horaires closes · spread "+number(m.book?.spread_bps,2)+" pb":
+      (item.errors||[]).slice(0,2).join(" · ")||"Aucune paire et aucun carnet vérifiés");
+  add("Coût PAPER",m?number(m.estimated_roundtrip_cost_pct,3)+" % aller-retour théorique pour 100 USDT ; frais hypothétiques":"Impossible sans paire Spot documentée");
+  add("Vérification suivante",doc?.required_next_verification||"Identité du token, carnet et preuve d'usage indépendants à recueillir");
+  const links=node("p","radar-native-candidate-links");
+  const dossier=node("a","","Fiche projet détaillée ↗");dossier.href=new URL("../laboratoire/crypto-knowledge.html",document.baseURI).href;
+  dossier.target="_blank";dossier.rel="noopener noreferrer";links.append(dossier);
+  if(doc?.primary_project_source&&/^https:\/\//i.test(doc.primary_project_source)){
+   const official=node("a",""," · Source primaire ↗");official.href=doc.primary_project_source;
+   official.target="_blank";official.rel="noopener noreferrer";links.append(official);
   }
-  list.append(row);
+  if(item.id==="quack-ai"){
+   const link=node("a",""," · Étude PAPER Q ↗");
+   link.href=new URL("../trader/quack-ai-case-study.html",document.baseURI).href;
+   link.target="_blank";link.rel="noopener noreferrer";links.append(link);
+  }
+  more.append(links,node("p","radar-native-candidate-warning",
+   "Identité token ↔ paire CEX NON CERTIFIÉE · USDT ≠ USDC ≠ USD · aucun ordre ni rendement garanti"));
+  row.append(more);list.append(row);
  }
 }
 async function identityRegistry(){
@@ -543,6 +589,7 @@ async function refresh(root,model){
  const registryPromise=identityRegistry();
  const extendedPromise=get("../data/crypto/extended.json");
  const qualificationPromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json");
+ const knowledgePromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/research/asset-knowledge.json");
  const instrumentsPromise=get("https://api.bitget.com/api/v3/market/instruments?category=SPOT");
  const tickersPromise=get("https://api.bitget.com/api/v3/market/tickers?category=SPOT");
  const issues=[];
@@ -562,7 +609,7 @@ async function refresh(root,model){
    registry=api.verifyRegistry(first[2].value);
   }catch(e){issues.push("Registre identités : "+e.message);}
   model.registry=registry;model.listings=[];model.listingError="";model.opportunities=null;model.opportunityError="Top 1 000 · collecte publique en cours";
-  model.qualification=null;model.qualificationError="Qualification Spot · chargement…";printQualification(root,model);
+  model.qualification=null;model.knowledge=null;model.qualificationError="Qualification Spot · chargement…";printQualification(root,model);
   printMarket(root,model);
   printWatch(root,model);
   printListings(root,model);printOpportunities(root,model);printResearchLists(root,model);
@@ -582,12 +629,14 @@ async function refresh(root,model){
    model.opportunityError="";
   }catch(e){model.opportunities=null;model.opportunityError="Top 1 000 : "+e.message;issues.push(model.opportunityError);}
   printOpportunities(root,model);printResearchLists(root,model);
-  try{
-   const evidence=await qualificationPromise;
-   model.qualification=evidence;model.qualificationError="";
-  }catch(error){
-   model.qualification=null;model.qualificationError="Qualification Spot non publiée : "+String(error?.message||error);
+  // Both public reads run in parallel; failing research enrichment cannot hide Spot results.
+  const enrichment=await Promise.allSettled([qualificationPromise,knowledgePromise]);
+  if(enrichment[0].status==="fulfilled"){
+   model.qualification=enrichment[0].value;model.qualificationError="";
+  }else{
+   model.qualification=null;model.qualificationError="Qualification Spot non publiée : "+String(enrichment[0].reason);
   }
+  model.knowledge=enrichment[1].status==="fulfilled"?enrichment[1].value:null;
   printQualification(root,model);
   lookup(root,"status").textContent=issues.length?"Radar partiel · "+issues.join(" · "):
    "Radar · Top 250 / nouveaux listings Spot / PAPER BTC et CT · sélection Solo disponible";
@@ -620,6 +669,6 @@ function mount(root){
  return true;
 }
 if(typeof module!=="undefined"&&module.exports)
- module.exports=Object.freeze({selectGraph,compactMoney,printMarket,openOpportunityFiche});
+ module.exports=Object.freeze({selectGraph,compactMoney,printMarket,openOpportunityFiche,matchedCandidateKnowledge});
 global.AgentCryptoRadarNative=Object.freeze({mount});
 })(typeof globalThis!=="undefined"?globalThis:this);
