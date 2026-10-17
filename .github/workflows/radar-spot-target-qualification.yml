@@ -5,6 +5,12 @@ on:
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_targets.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_targets.py'
       - '.github/workflows/radar-spot-target-qualification.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/qualify_radar_targets.py'
+      - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_targets.py'
+      - '.github/workflows/radar-spot-target-qualification.yml'
   workflow_dispatch:
   schedule:
     - cron: '31 14 * * *'
