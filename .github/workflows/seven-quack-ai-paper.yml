@@ -1,5 +1,10 @@
 name: Seven Quack AI Spot PAPER
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/seven-quack-ai-paper.yml'
+      - 'public/agent_crypto_erith_ia/tools/observe_quack_ai.py'
+      - 'public/agent_crypto_erith_ia/tools/test_observe_quack_ai.py'
   workflow_dispatch:
   push:
     branches: [main]
