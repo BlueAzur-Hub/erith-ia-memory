@@ -199,19 +199,89 @@ function mountNativeDnaCase(win,doc){
   const dnaBody=doc.createElement("div");
   dnaBody.className="okb-case-body";
   dnaBody.hidden=true;
-  const frame=doc.createElement("iframe");
-  frame.title="Cas d'école DNA : observation, carnet Bitget Spot et résultats PAPER";
-  frame.loading="lazy";
-  frame.referrerPolicy="same-origin";
-  frame.style.cssText="display:block;width:100%;min-height:850px;border:0;background:#07121d;border-radius:9px";
-  dnaBody.appendChild(frame);
+  // Real native content INSIDE the canonical Cas d'école.
+  // No embedded website, second frame, floating control or independent owner.
+  const grid=doc.createElement("div");
+  grid.className="okb-case-grid";
+  const makeCard=(heading)=>{
+    const article=doc.createElement("article");
+    article.className="okb-case-card";
+    const h=doc.createElement("h3");h.textContent=heading;
+    const p=doc.createElement("p");p.textContent="Lecture des preuves en attente…";
+    article.append(h,p);grid.appendChild(article);
+    return p;
+  };
+  const provenance=makeCard("1 · Provenance et identité");
+  const carnet=makeCard("2 · Dernier carnet Spot Bitget");
+  const paper=makeCard("3 · Portefeuilles PAPER · 10 / 25 / 100 USDC");
+  const decisions=makeCard("4 · Décision et limites");
+  const links=doc.createElement("nav");
+  links.className="okb-case-sources";
+  links.setAttribute("aria-label","Sources du Cas d'école DNA");
+  const addLink=(label,relative)=>{
+    const a=doc.createElement("a");a.textContent=label;
+    a.href=new URL(relative,doc.baseURI).href;
+    a.target="_blank";a.rel="noopener";links.appendChild(a);
+  };
+  addLink("Dossier complet · IA et humain","../trader/dna-case-study.html");
+  addLink("Laboratoire DNA PAPER","../laboratoire/dna-paper.html");
+  addLink("JSON source canonique","https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/trader_flux/dna_paper/state.json");
+  const foot=doc.createElement("p");foot.className="okb-case-foot";
+  foot.textContent="Dossier en lecture seule : Bitget DNA/USDT Spot ≠ OKX DNAUSD UM X-Perp Futures. Aucune transaction, aucun prix de sortie garanti.";
+  dnaBody.append(grid,links,foot);
   host.appendChild(dnaBody);
-  let loaded=false;
-  const showFrame=()=>{
-    if(host.open&&!loaded&&host.dataset.dnaCaseActive==="1"){
-      frame.src=new URL("../trader/dna-case-study.html",doc.baseURI).href;
-      loaded=true;
-    }
+  let loadedAt=0,busy=false;
+  const fmt=(value,precision=5)=>Number.isFinite(value)?
+    Number(value).toLocaleString("fr-FR",{minimumFractionDigits:0,maximumFractionDigits:precision}):"indisponible";
+  const showData=async()=>{
+    if(!host.open||host.dataset.dnaCaseActive!=="1"||busy)return;
+    if(loadedAt && Date.now()-loadedAt<240000)return;
+    busy=true;
+    provenance.textContent="Vérification des relevés GitHub…";
+    try{
+      const url=new URL("../data/trader_flux/dna_paper/state.json?reader=trader-native-case",doc.baseURI);
+      const response=await win.fetch(url.href,{cache:"no-store"});
+      if(!response.ok)throw Error("Archive HTTP "+response.status);
+      const state=await response.json();
+      if(state.schema!=="erith.dna.paper.48h.v1"||state.mode!=="PAPER"||
+         state.market!=="DNAUSDT"||state.venue!=="Bitget"||state.type!=="SPOT"||
+         state.quote!=="USDT"||state.executed_order!==false||
+         state.private_account_access!==false||state.order_permissions!==false||
+         state.token?.contract!=="0xA991F61940095AEA0724ef54077223B048c5CF7b"||
+         !Array.isArray(state.observations)||!Array.isArray(state.scenarios)||
+         state.scenarios.length!==3)throw Error("Identité ou politique PAPER non vérifiée");
+      const last=state.observations.at(-1);
+      if(last&&(!Number.isFinite(last.dna_bid)||!Number.isFinite(last.dna_ask)||
+         last.dna_bid<=0||last.dna_ask<=last.dna_bid||
+         !Number.isFinite(Date.parse(last.observed_at))))throw Error("Carnet invalidé");
+      const when=t=>t?new Date(t).toLocaleString("fr-FR",{
+        timeZone:"Europe/Paris",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"
+      }):"—";
+      if(host.dataset.dnaCaseActive!=="1")return;
+      provenance.textContent="NeoSoul DNA · Bitget DNAUSDT Spot · BNB Chain. T0 : "+
+        when(state.started_at)+" · "+state.observations.length+" relevés archivés.";
+      carnet.textContent=last?
+        "Relevé : "+when(last.observed_at)+" · Bid "+fmt(last.dna_bid,8)+
+        " USDT · Ask "+fmt(last.dna_ask,8)+" USDT · Spread "+fmt(last.dna_spread_pct,3)+" %.":
+        "Aucun carnet confirmé dans l'archive.";
+      paper.textContent=last?state.scenarios.map((sc,i)=>{
+        const p=last.scenarios?.[i];
+        return sc.capital_usdc+" USDC : "+(p?.status==="valued"?
+          fmt(p.pnl_usdc,4)+" USDC ("+fmt(p.pnl_pct,2)+" %)":
+          "valorisation indisponible");
+      }).join(" · "):"Pas encore de valorisation.";
+      decisions.textContent="Seuils observés a posteriori : alerte perte −3 %, alerte gain +1 %. "+
+        "Impossible de garantir leur exécution entre deux relevés. "+
+        "Carnet Futures, liquidation et financement OKX non évalués. Aucun ordre.";
+      loadedAt=Date.now();
+    }catch(error){
+      if(host.dataset.dnaCaseActive!=="1")return;
+      provenance.textContent="Source indisponible ou non validée : "+String(error.message||error);
+      carnet.textContent="Aucun prix présenté sans archive valide.";
+      paper.textContent="Résultats suspendus.";
+      decisions.textContent="Aucune décision de marché ; consulter la source canonique.";
+      loadedAt=0;
+    }finally{busy=false;}
   };
   const update=()=>{
     // The public New Listings selection AND canonical active line chart must
@@ -221,7 +291,7 @@ function mountNativeDnaCase(win,doc){
     const dna=selection?.selectedId==="neosoul"&&selection?.selectedSymbol==="DNA"
       &&chart?.active===true&&chart?.coin_id==="neosoul"
       &&chart?.loading!==true&&!chart?.error;
-    if(dna===(host.dataset.dnaCaseActive==="1")){showFrame();return;}
+    if(dna===(host.dataset.dnaCaseActive==="1")){void showData();return;}
     host.dataset.dnaCaseActive=dna?"1":"0";
     originalBody.hidden=dna;
     dnaBody.hidden=!dna;
@@ -229,7 +299,7 @@ function mountNativeDnaCase(win,doc){
     metrics.hidden=dna;dnaMetrics.hidden=!dna;
     if(dna)host.setAttribute("aria-label","Cas d'école DNA · étude PAPER, sources Bitget Spot");
     else if(initialLabel!==null)host.setAttribute("aria-label",initialLabel);
-    showFrame();
+    void showData();
   };
   const deferred=()=>{
     win.setTimeout(update,0);
@@ -241,7 +311,7 @@ function mountNativeDnaCase(win,doc){
   win.addEventListener("agent-crypto:workspace-restored",deferred,{passive:true});
   win.addEventListener("pageshow",deferred,{passive:true});
   doc.addEventListener("click",deferred,{capture:true,passive:true});
-  host.addEventListener("toggle",showFrame);
+  host.addEventListener("toggle",()=>{void showData();});
   update();
 }
 

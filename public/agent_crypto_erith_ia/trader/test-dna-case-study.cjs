@@ -22,7 +22,11 @@ test("DNA replaces the ONE pre-existing Cas d'école, without a floating button"
  assert.match(mirror,/dnaBody\.hidden=!dna/);
  assert.match(mirror,/selectedId==="neosoul"/);
  assert.match(mirror,/chart\?\.coin_id==="neosoul"/);
- assert.match(mirror,/if\(host\.open&&!loaded/);
+ assert.match(mirror,/function mountNativeDnaCase/);
+ assert.match(mirror,/const showData=async/);
+ assert.match(mirror,/url=new URL\("../data\/trader_flux\/dna_paper\/state\.json/);
+ assert.match(mirror,/state\.executed_order!==false/);
+ assert.doesNotMatch(mirror,/createElement\("iframe"\)|position:fixed|mountDnaCaseStudyDock/);
  assert.doesNotMatch(mirror,/traderDnaCaseToggle|traderDnaCaseDock|mountDnaCaseStudyDock/);
  assert.doesNotMatch(mirror,/position:fixed;right:14px;top:155px/);
 });
