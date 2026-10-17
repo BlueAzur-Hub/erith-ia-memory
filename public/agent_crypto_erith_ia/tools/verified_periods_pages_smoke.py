@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Read-only smoke test of every publicly served five-market historical period.
+"""Read-only smoke test of all 35 canonical Raw GitHub historical periods.
 
-Use this only after the GitHub Pages deployment has completed.
-Never trust a GitHub Actions SUCCESS as proof that the public CDN bytes agree.
+GitHub Pages excludes cold archives by design; verify the canonical Raw source.
+Never trust a GitHub Actions SUCCESS as proof that the Raw archive bytes agree.
 No exchange requests, orders, trader/Interface writes or token storage.
 """
 from __future__ import annotations
@@ -19,36 +19,36 @@ from urllib.request import Request, urlopen
 import build_verified_periods as vault
 
 BASE_URL = (
-    "https://blueazur-hub.github.io/erith-ia-memory/public/"
-    "agent_crypto_erith_ia/data/historical_archive_prototype/verified_periods/"
+    "https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/"
+    "historical_archive_prototype/verified_periods/"
 )
 EXPECTED = {name: (interval, size) for name, interval, size in vault.WINDOWS}
 
 
 def fetch(url, cap=500_000, retries=3):
-    vault.need(url.startswith(BASE_URL), "Unexpected public Pages URL")
+    vault.need(url.startswith(BASE_URL), "Unexpected canonical archive URL")
     for attempt in range(retries):
         try:
             with urlopen(Request(url, headers={
                 "User-Agent": "Seven-Heaven-Verified-Pages-Smoke",
                 "Accept": "application/octet-stream"}), timeout=30) as reply:
-                vault.need(reply.status == 200, "Public Pages returned non-200")
+                vault.need(reply.status == 200, "Raw archive returned non-200")
                 data = reply.read(cap + 1)
             vault.need(0 < len(data) <= cap,
-                       "Unexpected Pages response size: " + url)
+                       "Unexpected Raw archive response size: " + url)
             return data
         except (HTTPError, URLError, TimeoutError):
             if attempt + 1 == retries:
                 raise
             time.sleep(2 * (attempt + 1))
-    raise RuntimeError("Pages unavailable")
+    raise RuntimeError("Raw archive unavailable")
 
 
 def audit(folder=vault.DEST):
     local = (Path(folder) / "index.json").read_bytes()
     public = fetch(BASE_URL + "index.json", 250_000)
     vault.need(local == public,
-               "Public GitHub Pages index differs from version committed on main")
+               "Raw GitHub archive index differs from version committed on main")
     index = json.loads(public)
     vault.need(index["schema"] == vault.INDEX_SCHEMA and
                index["quote"] == "USDT" and
@@ -56,7 +56,7 @@ def audit(folder=vault.DEST):
                index["is_all_time"] is False and
                index["core_assets"] == 5 and
                index["periods_per_asset"] == 7,
-               "Unexpected public Coffre catalog")
+               "Unexpected canonical Coffre catalog")
     found, intervals, sums = set(), 0, {}
     for asset in index["assets"]:
         aid = asset["id"]
@@ -81,7 +81,7 @@ def audit(folder=vault.DEST):
             raw = fetch(BASE_URL + filename, 200_000)
             vault.need(len(raw) == item["bytes"] and
                        hashlib.sha256(raw).hexdigest() == item["sha256"],
-                       "Public data differs from certified SHA-256: " + filename)
+                       "Raw archive differs from certified SHA-256: " + filename)
             plain = gzip.decompress(raw)
             vault.need(len(plain) < 8_000_000,
                        "Unbounded historical payload " + filename)
@@ -115,11 +115,11 @@ def audit(folder=vault.DEST):
                   "rows", len(gaps), "gaps", item["sha256"][:16], flush=True)
         vault.need(periods == set(EXPECTED), "Missing public historical period")
     vault.need(found == set(vault.PAIRS) and intervals == 35,
-               "Public Coffre is missing a market or period")
-    print("PAGES HISTORICAL SMOKE PASS", json.dumps({
+               "Canonical Coffre is missing a market or period")
+    print("GITHUB RAW HISTORICAL SMOKE PASS", json.dumps({
         "assets": len(found), "files": intervals,
         "bars_by_period": sums, "source": BASE_URL,
-        "pages_index_sha256": hashlib.sha256(public).hexdigest()},
+        "raw_index_sha256": hashlib.sha256(public).hexdigest()},
         sort_keys=True), flush=True)
 
 
