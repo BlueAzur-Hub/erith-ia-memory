@@ -79,6 +79,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
           node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node --test public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs
           node - <<'NODE'
           require("./public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js");
           const result=globalThis.AgentCryptoGraphNativeUsd406520?.self_test?.();
