@@ -8,6 +8,8 @@ on:
     paths:
       - 'public/agent_crypto_erith_ia/tools/neosoul_dna_paper.cjs'
       - 'public/agent_crypto_erith_ia/tools/test_neosoul_dna_paper.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_dna_decision_review.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/dna-decision-review.js'
       - 'public/agent_crypto_erith_ia/laboratoire/dna-paper.html'
       - 'public/agent_crypto_erith_ia/laboratoire/cas-ecole-neosoul-dna.md'
       - '.github/workflows/seven-dna-paper.yml'
@@ -16,6 +18,8 @@ on:
     paths:
       - 'public/agent_crypto_erith_ia/tools/neosoul_dna_paper.cjs'
       - 'public/agent_crypto_erith_ia/tools/test_neosoul_dna_paper.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_dna_decision_review.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/dna-decision-review.js'
       - 'public/agent_crypto_erith_ia/laboratoire/dna-paper.html'
       - 'public/agent_crypto_erith_ia/laboratoire/cas-ecole-neosoul-dna.md'
       - '.github/workflows/seven-dna-paper.yml'
@@ -40,7 +44,8 @@ jobs:
       - name: Offline regression tests — no credentials, no order routes
         run: |
           node --check public/agent_crypto_erith_ia/tools/neosoul_dna_paper.cjs
-          node --test public/agent_crypto_erith_ia/tools/test_neosoul_dna_paper.cjs
+          node --check public/agent_crypto_erith_ia/laboratoire/dna-decision-review.js
+          node --test public/agent_crypto_erith_ia/tools/test_neosoul_dna_paper.cjs public/agent_crypto_erith_ia/tools/test_dna_decision_review.cjs
       - name: Observe real public Bitget spot books (main only)
         if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
         id: collect
