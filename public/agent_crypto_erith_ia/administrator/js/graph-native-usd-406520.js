@@ -30,6 +30,38 @@ function top5NativeUsd(coin,book,now=Date.now()){
   return {quote:{status:"snapshot",kind:"coingecko-usd-native",coinId:coin.id,price,change24h,
     bid:null,ask:null,timestamp,source:"CoinGecko native USD snapshot"},price,change24h};
 }
+
+/* A native new-listing chart can remain visible while the saved Market preset
+   is rank-5. That preset must NOT censor verified USD-converted exchange
+   candles in CT / DNA tooltips. Fail closed if chart and source disagree. */
+function nativeExternalHistoricalUsd(context){
+ try{
+  if(!usd())return null;
+  const owner=globalThis.AtlasExternalChart?.state?.();
+  const current=globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.();
+  const historical=globalThis.AgentCryptoNewListingsNativeCategory?.mathSeriesSnapshot?.();
+  const point=context?.tooltip?.dataPoints?.[0];
+  if(!owner?.active||!owner.coin_id||owner.coin_id!==current?.selectedId||
+     historical?.currency!=="USD"||historical?.instrument!==current?.selectedPair||
+     historical?.provider!==current?.selectedProvider||
+     !String(historical?.source||"").includes(current.selectedPair)||
+     !Array.isArray(historical?.series)||historical.series.length<21||
+     !point||globalThis.atlasChartV2EffectiveView?.()==="base100")return null;
+  const coinId=String(point.dataset?.atlasCoin?.id||"");
+  if(coinId&&coinId!==current.selectedId)return null;
+  const value=Number(point.parsed?.y??point.raw?.y??(Array.isArray(point.raw)?point.raw[1]:NaN));
+  if(!(Number.isFinite(value)&&value>0))return null;
+  // A plotted price is trusted only when it occurs in the exchange series
+  // already converted using the explicit USDT/USD reference.
+  const matching=historical.series.some(row=>Array.isArray(row)&&
+    Number.isFinite(Number(row[1]))&&
+    Math.abs(Number(row[1])-value)<=Math.max(1e-9,Math.abs(value)*1e-6));
+  if(!matching)return null;
+  return {price:value,source:historical.source,coinId:owner.coin_id,
+    quoteCurrency:historical.currency};
+ }catch(_){return null}
+}
+
 function top5Tooltip(original,args){
   const context=args[0]||{},chart=context.chart,tooltip=context.tooltip;
   const point=tooltip?.dataPoints?.[0],data=point?.dataset?.data;
@@ -97,7 +129,34 @@ wrap("atlasChartStorageKey",o=>function(c,d,f){return usd()&&!canonicalTop5Histo
 wrap("atlasExpectedChartContextKey",o=>function(ids,p){const d=p===undefined?(typeof state!=="undefined"?Number(state.chartPeriodDays||1):1):p;if(!usd()||canonicalTop5History(d))return o.apply(this,arguments);const x=ids===undefined?(typeof atlasComparisonIds==="function"?atlasComparisonIds():[]):ids;return context(x,d)});
 wrap("fetchCoinGeckoChartDirect",o=>async function(c,d,opt={}){return usd()&&!canonicalTop5History(d)?fetchUsd(c,d,opt):o.apply(this,arguments)});wrap("atlasFetchComparisonSeriesResilient",o=>async function(c,p,opt={}){return usd()&&!canonicalTop5History(p)?cmp(c,p,opt):o.apply(this,arguments)});wrap("atlasScannerFetchDirect",o=>async function(tx,c){return usd()&&!canonicalTop5History(tx?.period)?scan(tx,c):o.apply(this,arguments)});
 wrap("atlasChartAxisPriceLabel",o=>function(v,view="price"){return usd()&&view!=="base100"?money(v):o.apply(this,arguments)});wrap("atlasSetChartShellState",o=>function(canvas,mode,summary,...rest){const r=o.call(this,canvas,mode,canonicalTop5History()?summary:text(summary),...rest),shell=canvas?.closest?.(".chart-shell");if(shell)shell.dataset.displayCurrency=canonicalTop5History()?"CANONICAL":cur();return r});
-wrap("atlasRenderSingleCaption",o=>function(...a){const r=o.apply(this,a);if(usd()&&!canonicalTop5History()&&typeof document!=="undefined"){const n=document.getElementById("chartCaption"),t=n?.querySelector?.(".chart-caption-text");if(t)t.textContent=text(t.textContent);if(n)n.dataset.displayCurrency="USD"}return r});wrap("atlasChartOverlaySolo",o=>function(chart,p,opt={}){if(!usd())return o.apply(this,arguments);const view=typeof atlasChartV2EffectiveView==="function"&&atlasChartV2EffectiveView()==="base100"?"BASE 100":"PRIX USD";const r=withFmt(()=>o.call(this,chart,p,{...opt,viewLabel:opt?.viewLabel||view}));patchUsdOverlay("solo",chart);return r});wrap("atlasChartOverlayComparison",o=>function(chart,p,opt={}){const r=o.apply(this,arguments);if(usd()&&!canonicalTop5History(p))patchUsdOverlay("comparison",chart);return r});wrap("atlasChartV2RenderLegend",o=>function(...a){const r=o.apply(this,a);if(usd())patchUsdLegend();return r});wrap("atlasExternalChartTooltip",o=>function(...a){const parity=canonicalTop5History();if(usd()&&parity)return top5Tooltip.call(this,o,a);const r=parity?o.apply(this,a):withFmt(()=>o.apply(this,a));if(usd()&&!parity&&typeof document!=="undefined"){const n=document.querySelector("#atlasChartTooltip .atlas-chart-tooltip-date");const quoteSource=usdTooltipSource(a?.[0]?.tooltip?.dataPoints?.[0]);if(n)n.textContent=String(n.textContent||"").replace("PRIX LIVE BINANCE",quoteSource.label);const root=document.getElementById("atlasChartTooltip");if(root){root.dataset.displayCurrency="USD";root.dataset.priceSource=quoteSource.source}}return r});wrap("atlasChartLivePresentation",o=>function(c,p){return usd()&&!canonicalTop5History(p)?live(c,p):o.apply(this,arguments)});wrap("atlasCurrentChartObservation",o=>function(c,ch){return usd()&&!canonicalTop5History()?(live(c,1)?.quote||null):o.apply(this,arguments)});
+wrap("atlasRenderSingleCaption",o=>function(...a){const r=o.apply(this,a);if(usd()&&!canonicalTop5History()&&typeof document!=="undefined"){const n=document.getElementById("chartCaption"),t=n?.querySelector?.(".chart-caption-text");if(t)t.textContent=text(t.textContent);if(n)n.dataset.displayCurrency="USD"}return r});wrap("atlasChartOverlaySolo",o=>function(chart,p,opt={}){if(!usd())return o.apply(this,arguments);const view=typeof atlasChartV2EffectiveView==="function"&&atlasChartV2EffectiveView()==="base100"?"BASE 100":"PRIX USD";const r=withFmt(()=>o.call(this,chart,p,{...opt,viewLabel:opt?.viewLabel||view}));patchUsdOverlay("solo",chart);return r});wrap("atlasChartOverlayComparison",o=>function(chart,p,opt={}){const r=o.apply(this,arguments);if(usd()&&!canonicalTop5History(p))patchUsdOverlay("comparison",chart);return r});wrap("atlasChartV2RenderLegend",o=>function(...a){const r=o.apply(this,a);if(usd())patchUsdLegend();return r});wrap("atlasExternalChartTooltip",o=>function(...a){
+ const verified=usd()?nativeExternalHistoricalUsd(a?.[0]):null;
+ const parity=canonicalTop5History()&&!verified;
+ if(usd()&&parity)return top5Tooltip.call(this,o,a);
+ const r=parity?o.apply(this,a):withFmt(()=>o.apply(this,a));
+ if(usd()&&typeof document!=="undefined"){
+  const root=document.getElementById("atlasChartTooltip");
+  if(verified&&root&&!root.hidden){
+   // A single-asset, USD-converted exchange series: restore the historical
+   // dollar value that the unrelated Top-5/EUR safeguard used to suppress.
+   const fields=root.querySelectorAll(".atlas-chart-tooltip-row .atlas-chart-tooltip-values strong");
+   if(fields.length===1){
+    fields[0].textContent=money(verified.price);
+    fields[0].title=verified.source+" · prix historique converti en USD";
+   }
+   const heading=root.querySelector(".atlas-chart-tooltip-date");
+   if(heading)heading.textContent="PRIX HISTORIQUE USD · "+verified.source;
+   root.dataset.displayCurrency="USD";
+   root.dataset.priceSource="exchange-candles-usd-reference";
+  }else if(!parity){
+   const n=document.querySelector("#atlasChartTooltip .atlas-chart-tooltip-date");
+   const quoteSource=usdTooltipSource(a?.[0]?.tooltip?.dataPoints?.[0]);
+   if(n)n.textContent=String(n.textContent||"").replace("PRIX LIVE BINANCE",quoteSource.label);
+   if(root){root.dataset.displayCurrency="USD";root.dataset.priceSource=quoteSource.source}
+  }
+ }
+ return r;
+});wrap("atlasChartLivePresentation",o=>function(c,p){return usd()&&!canonicalTop5History(p)?live(c,p):o.apply(this,arguments)});wrap("atlasCurrentChartObservation",o=>function(c,ch){return usd()&&!canonicalTop5History()?(live(c,1)?.quote||null):o.apply(this,arguments)});
 if(typeof window!=="undefined"&&!bound){window.addEventListener("agent-crypto:quote-architecture-changed",()=>{try{document.documentElement.dataset.graphDisplayCurrency=cur();if(typeof state!=="undefined"){state.chartRenderToken=Number(state.chartRenderToken||0)+1;state.comparisonRenderToken=Number(state.comparisonRenderToken||0)+1;try{state.chartEngineV2?.controller?.abort?.()}catch(_){}try{state.dataBroker?.comparison?.controller?.abort?.()}catch(_){}try{if(typeof atlasClearComparisonCompletionTimer==="function")atlasClearComparisonCompletionTimer()}catch(_){}if(state.chartEngineV2){state.chartEngineV2.lastRenderedKey="";state.chartEngineV2.lastFingerprint="";state.chartEngineV2.activeRequestKey="";state.chartEngineV2.loading=false}if(state.dataBroker?.comparison){state.dataBroker.comparison.results={};state.dataBroker.comparison.renderedIds=[];state.dataBroker.comparison.pendingIds=[];state.dataBroker.comparison.unavailableIds=[];state.dataBroker.comparison.status="idle"}}requestAnimationFrame(()=>{try{void renderAnalystPanel({currencyChange:true,recovery:true})}catch(_){}})}catch(_){}},{passive:true});bound=true}
 installed=true;try{if(typeof document!=="undefined")document.documentElement.dataset.graphDisplayCurrency=cur()}catch(_){}return snapshot()}
 function snapshot(){return Object.freeze({build:BUILD,installed,displayCurrency:cur(),usdSource:"CoinGecko market_chart?vs_currency=usd",eurPathPreserved:true,cacheCurrencyAware:true,contextCurrencyAware:true,browserEurToUsdConversion:false,stablecoinsRelabelledAsUsd:false,top5_24h_canonical_history_owner:true,stale_usd_cache_refused:true})}
