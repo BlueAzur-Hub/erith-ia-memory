@@ -88,6 +88,13 @@ jobs:
           node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
           node --test public/agent_crypto_erith_ia/trader/test-dna-case-study.cjs
 
+      - name: Interface listing rollover and DNA CT carnet identity
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-live-asset-406529.js
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
+          node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
+          node --test public/agent_crypto_erith_ia/tools/test_followed_listings.cjs
+
       - name: Private OKX portfolio and Seven Concrete existing integration
         run: |
           node --check public/agent_crypto_erith_ia/trader/ai-ct-contract.js
