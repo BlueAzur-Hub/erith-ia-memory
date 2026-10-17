@@ -249,10 +249,13 @@ function mountNativeDnaCase(win,doc){
          state.private_account_access!==false||state.order_permissions!==false||
          state.token?.contract!=="0xA991F61940095AEA0724ef54077223B048c5CF7b"||
          !Array.isArray(state.observations)||!Array.isArray(state.scenarios)||
-         state.scenarios.length!==3)throw Error("Identité ou politique PAPER non vérifiée");
+         state.scenarios.length!==3||
+         state.scenarios.map(sc=>sc.capital_usdc).join(",")!=="10,25,100")
+        throw Error("Identité ou politique PAPER non vérifiée");
       const last=state.observations.at(-1);
       if(last&&(!Number.isFinite(last.dna_bid)||!Number.isFinite(last.dna_ask)||
          last.dna_bid<=0||last.dna_ask<=last.dna_bid||
+         !Number.isFinite(last.dna_spread_pct)||last.dna_spread_pct<0||
          !Number.isFinite(Date.parse(last.observed_at))))throw Error("Carnet invalidé");
       const when=t=>t?new Date(t).toLocaleString("fr-FR",{
         timeZone:"Europe/Paris",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"
