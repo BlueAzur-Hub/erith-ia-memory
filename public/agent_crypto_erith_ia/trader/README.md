@@ -1,3 +1,13 @@
+## Contrat partagé Interface → Trader · Coffre, listings, carnet (17 octobre 2026)
+
+L'Interface est la source commune : la page `historical-vault.html` et ses lecteurs vérifiés lisent les fichiers historiques directement depuis GitHub Raw, car les grosses archives sont exclues de GitHub Pages. Le smoke-test recalcule les empreintes SHA-256 des 35 vues vérifiées ; le Market Core n'est pas réécrit.
+
+Le listing suivi MHA / MAGNE.AI ne disparaît plus silencieusement après 30 jours. Le scanner public Bitget préserve les symboles connus parmi les instruments Spot en ligne jusqu'à 365 jours ; le registre récent reste <=30 jours. Si seul le repère historique MHA subsiste, la fiche affiche « ARCHIVE · cotation non vérifiée », sans prix ni commande Solo ; si la source actuelle confirme la paire, « SUIVI » autorise la consultation. L'interface Trader réutilise exactement ce module, sans duplication.
+
+La profondeur commune `okx-microstructure-406499.js` refuse désormais le carnet antérieur lorsque le graphe externe CT ou DNA n'a pas de sélection et de contexte de fournisseur concordants. Une requête déjà lancée est annulée ; les BID/ASK existants sont retirés et un état de synchronisation est montré. Les nouveaux relevés gardent leur contrôle de source, paire, quote, fraîcheur et absence d'ordre. Règle de validation Firefox : BTC/USDC → DNA/USDT Bitget → CT/USDT OKX → BTC/USDC, aller-retour rapide et rafraîchissement F5, aucune profondeur d'un actif sous un autre.
+
+**Jalon de validation humaine :** ne pas développer le chantier 4 (nouveaux Cas d'école) tant que les points 1–3 ne sont pas confirmés dans Firefox et les workflows GitHub.
+
 # ERITH.IA Trading Desk — 40.6.601
 
 ## INTERFACE RUNTIME MIRROR
