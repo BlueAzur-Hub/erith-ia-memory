@@ -89,7 +89,7 @@ const fmt=(v,d=2)=>new Intl.NumberFormat("fr-FR",{maximumFractionDigits:d,minimu
 const pct=v=>(v>0?"+":"")+fmt(v,2)+" %";
 const cash=v=>fmt(v,2)+" USDT";
 const date=ts=>new Date(ts).toLocaleString("fr-FR",{timeZone:"UTC",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})+" UTC";
-const state={index:null,cache:new Map(),busy:false,latestToken:0,comparison:null,comparisonToken:0};
+const state={index:null,cache:new Map(),busy:false,latestToken:0,comparison:null,comparisonToken:0,autoRunning:false,autoPending:false};
 function status(message,err=false){$("status").textContent=message;$("status").style.color=err?"#ffa1ac":"";}
 async function source(url){
  const r=await fetch(url,{cache:"no-store",credentials:"omit",mode:"cors"});
@@ -174,7 +174,8 @@ async function analyze(){
   $("source-proof").textContent="Vérification incomplète : aucun résultat historique certifié pour cette sélection.";
   $("history-chart").replaceChildren();
   status("Analyse non disponible : "+String(e.message||e),true);
- }finally{state.busy=false;$("analyze").disabled=false;$("compare20").disabled=!state.index;}
+ }finally{state.busy=false;$("analyze").disabled=false;$("compare20").disabled=!state.index;
+  if(state.autoPending&&!state.autoRunning)void refreshAutomatically();}
 }
 async function report(){
  try{
@@ -304,9 +305,30 @@ async function compareAll(){
   renderComparison();
  }finally{
   state.busy=false;$("analyze").disabled=false;$("compare20").disabled=!state.index;
+  if(state.autoPending&&!state.autoRunning)void refreshAutomatically();
  }
 }
 
+// Automatic presentation: a page visit computes the group and the selected
+// asset; changing hypotheses queues a fresh calculation after any current run.
+// No timers, no hidden browser storage and no orders.
+async function refreshAutomatically(){
+ if(!state.index)return;
+ if(state.autoRunning){state.autoPending=true;return;}
+ state.autoRunning=true;
+ try{
+  do{
+   state.autoPending=false;
+   if(state.busy){state.autoPending=true;break;}
+   await compareAll();
+   if(!state.autoPending)await analyze();
+  }while(state.autoPending);
+ }catch(e){
+  comparisonStatus("Actualisation automatique incomplète : "+String(e.message||e),true);
+ }finally{
+  state.autoRunning=false;
+ }
+}
 async function init(){
  try{
   const text=await source(ARCHIVE+"index.json");
@@ -316,7 +338,8 @@ async function init(){
   for(const p of pairs){const o=document.createElement("option");o.value=p;o.textContent=p.replace("USDT"," / USDT");$("pair").append(o);}
   $("pair").value=pairs.includes("ETHUSDT")?"ETHUSDT":pairs[0];
   $("pair").disabled=false;$("analyze").disabled=false;$("compare20").disabled=false;
-  status("20 marchés · 60 archives mensuelles · juillet–septembre 2026 · sélectionnez une durée puis étudiez.");
+  status("Catalogue historique vérifié · comparaison et étude automatique en cours.");
+  void refreshAutomatically();
  }catch(e){status("Catalogue indisponible : "+String(e.message||e),true);}
 }
 function clearOutdatedResults(){
@@ -331,7 +354,12 @@ $("analyze").addEventListener("click",analyze);
 $("compare20").addEventListener("click",compareAll);
 $("comparison-sort").addEventListener("change",renderComparison);
 for(const control of ["days","cost","pair","capital"]){
- $(control).addEventListener("change",()=>{clearOutdatedResults();if(control!=="pair")clearComparison();});
+ $(control).addEventListener("change",()=>{
+  ++state.latestToken;
+  clearOutdatedResults();
+  if(control!=="pair")clearComparison();
+  void refreshAutomatically();
+ });
 }
 init();report();
 })(typeof window!=="undefined"?window:globalThis);
