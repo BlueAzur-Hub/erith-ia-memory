@@ -20,8 +20,14 @@ test("DNA replaces the ONE pre-existing Cas d'école, without a floating button"
  assert.match(mirror,/mountNativeDnaCase\(win,doc\)/);
  assert.match(mirror,/originalBody\.hidden=dna/);
  assert.match(mirror,/dnaBody\.hidden=!dna/);
- assert.match(mirror,/selectedId==="neosoul"/);
- assert.match(mirror,/chart\?\.coin_id==="neosoul"/);
+ assert.match(mirror,/selectedCanonicalId==="neosoul"/);
+ assert.match(mirror,/selectedProvider==="bitget"/);
+ assert.match(mirror,/selectedProviderSymbol==="DNAUSDT"/);
+ assert.match(mirror,/chart\?\.coin_id===selection\.selectedId/);
+ const listing=read("administrator/js/new-listings-native-category.js");
+ assert.match(listing,/selectedCanonicalId:state\.selected\?\.coingeckoId\|\|null/);
+ assert.match(listing,/selectedProviderSymbol:state\.selected\?\.providerSymbol\|\|null/);
+ assert.match(listing,/DNA:Object\.freeze\(\{name:"NeoSoul",coingeckoId:"neosoul"\}\)/);
  assert.match(mirror,/function mountNativeDnaCase/);
  assert.match(mirror,/const showData=async/);
  assert.ok(mirror.includes('new URL("../data/trader_flux/dna_paper/state.json?reader=trader-native-case"'));

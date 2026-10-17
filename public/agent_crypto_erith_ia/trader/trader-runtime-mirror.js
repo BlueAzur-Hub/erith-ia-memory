@@ -291,8 +291,10 @@ function mountNativeDnaCase(win,doc){
     // both identify NeoSoul, or BTC/CT keeps the original Cas d'école.
     const selection=win.AgentCryptoNewListingsNativeCategory?.snapshot?.();
     const chart=win.AtlasExternalChart?.state?.();
-    const dna=selection?.selectedId==="neosoul"&&selection?.selectedSymbol==="DNA"
-      &&chart?.active===true&&chart?.coin_id==="neosoul"
+    const dna=selection?.selectedCanonicalId==="neosoul"&&selection?.selectedSymbol==="DNA"
+      &&selection?.selectedProvider==="bitget"&&selection?.selectedProviderSymbol==="DNAUSDT"
+      &&selection?.selectedPair==="DNA/USDT"
+      &&!!selection.selectedId&&chart?.active===true&&chart?.coin_id===selection.selectedId
       &&chart?.loading!==true&&!chart?.error;
     if(dna===(host.dataset.dnaCaseActive==="1")){void showData();return;}
     host.dataset.dnaCaseActive=dna?"1":"0";

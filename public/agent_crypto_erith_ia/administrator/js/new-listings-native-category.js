@@ -1176,6 +1176,11 @@
     return Object.freeze({
       build:MODULE_VERSION,enabled:state.enabled,discovered:state.specs.length,
       selectedId:state.selected?.id||null,selectedSymbol:state.selected?.symbol||null,
+      // Separate CoinGecko canonical identity from the stable exchange-scoped chart ID.
+      selectedCanonicalId:state.selected?.coingeckoId||null,
+      selectedProvider:state.selected?.provider||null,
+      selectedProviderSymbol:state.selected?.providerSymbol||null,
+      selectedPair:state.selected?.pair||null,
       pendingId:state.pending?.id||null,
       lastDiscoveryAt:state.lastDiscoveryAt,lastError:state.lastError,
       identityStatus:{...state.identityStatus},
