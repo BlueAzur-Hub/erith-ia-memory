@@ -23,6 +23,14 @@ const watch=reader.selectOpportunities({...example,generated_at:'2026-10-16T07:5
 assert.equal(watch.universe,1000);
 assert.equal(watch.eligible,750);
 assert.equal(watch.trend.length,12);
+assert.equal(watch.rankings.rise24.length,10);
+assert.equal(watch.rankings.rise7.length,10);
+assert.equal(watch.rankings.volume.length,10);
+assert.equal(watch.rankings.fall24.length,10);
+assert.ok(watch.rankings.rise24[0].change24h>=watch.rankings.rise24[1].change24h);
+assert.ok(watch.rankings.rise7[0].change7d>=watch.rankings.rise7[1].change7d);
+assert.ok(watch.rankings.volume[0].volume24hUsd>=watch.rankings.volume[1].volume24hUsd);
+assert.ok(watch.rankings.fall24[0].change24h<=watch.rankings.fall24[1].change24h);
 assert.equal(watch.rebound.length,1);
 assert.equal(watch.rebound[0].rank,253);
 assert.equal(watch.rebound[0].graphEligible,false);
@@ -43,6 +51,7 @@ for(const tier of reader.TIERS){
 assert.equal(reader.selectMarket(validated.rows,20,'Bitcoin').length,1);
 assert.equal(reader.selectMarket(validated.rows,10,'BTC')[0].rank,1);
 assert.equal(reader.selectMarket(validated.rows,20,'','change24h')[0].rank,20);
+assert.equal(reader.selectMarket(validated.rows,20,'','change7d')[0].rank,20);
 assert.equal(reader.selectMarket(validated.rows,20,'','drop24h')[0].rank,1);
 assert.throws(()=>reader.selectMarket(validated.rows,500),/invalide/i);
 assert.throws(()=>reader.validMarket({...example,source:{provider_id:'unknown'}}),/canonique/i);
