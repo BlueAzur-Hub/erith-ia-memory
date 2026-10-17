@@ -207,6 +207,8 @@ async function report(){
    The group ranks independent PAPER observations, never an executable portfolio. */
 function comparisonStatus(message,err=false){
  const node=$("comparison-status");node.textContent=message;node.style.color=err?"#ffa1ac":"";
+ // Also report progress beside the command; the user must not hunt for the table.
+ status(message,err);
 }
 function clearComparison(){
  ++state.comparisonToken;state.comparison=null;
