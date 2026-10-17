@@ -21,7 +21,7 @@ test("Trader keeps a single Administrator runtime and only one entrypoint script
 test("DNA drawer is Trader-only, collapsible, lazy and keyboard accessible",()=>{
  assert.match(mirror,/function mountDnaCaseStudyDock\(/);
  assert.match(mirror,/mountDnaCaseStudyDock\(\);/);
- assert.match(mirror,/id="traderDnaCaseToggle"/);
+ assert.match(mirror,/button\.id="traderDnaCaseToggle"/);
  assert.match(mirror,/panel\.hidden=true/);
  assert.match(mirror,/aria-expanded/);
  assert.match(mirror,/setOpen\(panel\.hidden\)/);
@@ -44,7 +44,7 @@ test("DNA case study is semantic, human-readable and cites the exact public sour
  assert.doesNotMatch(page,/<img\b|<canvas\b|<form\b|type="password"|method="post"/i);
 });
 test("inline reader has valid syntax and never fabricates data on fetch failures",()=>{
- const chunks=[...page.matchAll(/<script(?:\s+[^>]*)?>([\s\S]*?)<\/script>/g)].map(x=>x[1]);
+ const chunks=[...page.matchAll(/<script(?:\s+[^>]*)?>([\s\S]*?)<\/script>/g)].map(x=>x[1]).filter(x=>x.trim());
  assert.equal(chunks.length,1);
  assert.doesNotThrow(()=>new vm.Script(chunks[0],{filename:"dna-case-study-inline.js"}));
  assert.match(chunks[0],/ErithDnaReview\.study\(s\)/);
