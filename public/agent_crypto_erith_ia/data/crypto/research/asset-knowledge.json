@@ -1,0 +1,562 @@
+{
+  "schema": "erith.crypto.asset-research-knowledge.v1",
+  "declared_at_utc": "2026-10-17",
+  "record_kind": "curated_research_not_live_quotes",
+  "sources": {
+    "spot_qualification": "../radar-opportunities/qualification-latest.json",
+    "price_core": "../latest.json",
+    "price_extended": "../extended.json",
+    "historical_daily_top50": "../../history/YYYY-MM-DD.jsonl",
+    "historical_top50_forward": "../radar-opportunities/historical-top50-forward.json",
+    "historical_top250_coverage": "../../historical_archive_prototype/top250_multisource_coverage/index.json"
+  },
+  "reading_policy": {
+    "market_price": "CoinGecko USD, timestamped, never execution",
+    "spot_book": "provider-native USDT, instant only",
+    "usage": "on-chain and off-chain independently measurable adoption, not price volume",
+    "marketing": "unverified until sourced independently",
+    "missing": "null or unknown, never zero",
+    "orders_enabled": false
+  },
+  "qualification_snapshot_at": "2026-10-17T19:16:07Z",
+  "candidate_count": 20,
+  "documented_spot_markets": 14,
+  "prioritized_research_ids": [
+    "lighter",
+    "the-sandbox",
+    "impossible-cloud-network-token",
+    "quack-ai",
+    "vaulta",
+    "kamino",
+    "reserve-rights-token",
+    "mina-protocol",
+    "instadapp",
+    "numeraire"
+  ],
+  "prioritization_is_investment_advice": false,
+  "rankings_are_cross_sectional_not_historical_growth": true,
+  "official_method_sources": [
+    "https://support.coingecko.com/articles/4724540263-categories-tags-methodology",
+    "https://www.visaonchainanalytics.com/transactions",
+    "https://app.artemis.xyz/docs/artemis-sheets/usage/supported-metrics",
+    "https://www.coingecko.com/en/categories"
+  ],
+  "network_usage_benchmarks": [
+    {
+      "id": "bitcoin",
+      "symbol": "BTC",
+      "category": "Monnaie numérique / règlement",
+      "role": "Transfert et conservation BTC, sécurité PoW",
+      "usage_proof_to_collect": [
+        "transactions quotidiennes",
+        "adresses actives",
+        "frais",
+        "transferts économiques corrigés"
+      ],
+      "primary_source": "https://bitcoin.org/en/"
+    },
+    {
+      "id": "ethereum",
+      "symbol": "ETH",
+      "category": "Infrastructure L1 / smart contracts",
+      "role": "ETH paie le gaz et sécurise Ethereum; applications DeFi, stablecoins et L2",
+      "usage_proof_to_collect": [
+        "frais L1",
+        "transactions L1",
+        "TVL",
+        "stablecoin flows",
+        "L2 activity"
+      ],
+      "primary_source": "https://ethereum.org/fr/what-is-ethereum/"
+    },
+    {
+      "id": "solana",
+      "symbol": "SOL",
+      "category": "Infrastructure L1 / applications et paiements",
+      "role": "Applications, règlement et stablecoins, frais réseau en SOL",
+      "usage_proof_to_collect": [
+        "transactions hors vote",
+        "adresses actives",
+        "stablecoin settlements",
+        "frais"
+      ],
+      "primary_source": "https://solana.com/news/solana-ecosystem-roundup-september-2026"
+    },
+    {
+      "id": "tron",
+      "symbol": "TRX",
+      "category": "Infrastructure L1 / transferts USDT",
+      "role": "Transferts de stablecoins, transactions et frais TRX",
+      "usage_proof_to_collect": [
+        "USDT transfers adjusted",
+        "adresses actives",
+        "frais",
+        "volumes stablecoins"
+      ],
+      "primary_source": "https://www.coindesk.com/research/tron-network-q2-2026"
+    },
+    {
+      "id": "binancecoin",
+      "symbol": "BNB",
+      "category": "L1 / écosystème BNB Chain",
+      "role": "Frais du réseau et applications",
+      "usage_proof_to_collect": [
+        "transactions",
+        "adresses actives",
+        "DEX volume",
+        "TVL"
+      ],
+      "primary_source": null
+    },
+    {
+      "id": "usd-coin",
+      "symbol": "USDC",
+      "category": "Stablecoin / paiement",
+      "role": "Transferts, règlements, liquidité",
+      "usage_proof_to_collect": [
+        "volume ajusté stablecoin",
+        "comptes émetteurs",
+        "distribution par réseaux"
+      ],
+      "primary_source": "https://www.visaonchainanalytics.com/transactions"
+    },
+    {
+      "id": "tether",
+      "symbol": "USDT",
+      "category": "Stablecoin / paiement",
+      "role": "Transferts, liquidité et paiements",
+      "usage_proof_to_collect": [
+        "volume ajusté stablecoin",
+        "supply par réseau",
+        "transactions"
+      ],
+      "primary_source": "https://www.visaonchainanalytics.com/transactions"
+    }
+  ],
+  "candidates": [
+    {
+      "coin_id": "lighter",
+      "symbol": "LIT",
+      "name": "Lighter",
+      "category_research": "DEX / produits dérivés",
+      "claimed_function": "Lighter est traité comme candidat d'infrastructure de trading ; la nature précise des droits liés à LIT doit être vérifiée sur documents primaires avant description.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Confirmer contrat LIT et correspondance CEX Spot, distinguer volumes perpétuels, revenus et wash trading.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "OKX",
+        "pair": "LIT-USDT",
+        "quote": "USDT",
+        "archived_spread_bps": 2.23489,
+        "hypothetical_roundtrip_pct_100usdt": 0.2222
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "the-sandbox",
+      "symbol": "SAND",
+      "name": "The Sandbox",
+      "category_research": "Jeux / metaverse / économie des créateurs",
+      "claimed_function": "Le projet présente SAND comme jeton de transaction et d'écosystème pour une plateforme de mondes et d'expériences créées par des utilisateurs.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": "https://www.sandbox.game/en/blog/An-Update-on-Our-Vision-and-the-Road-Ahead/3499/",
+      "real_world_adoption_proof_status": "project_claim_unverified",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Comparer créateurs et joueurs actifs indépendants, achats/ventes, volume du jeton et nombre d'expériences.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Binance",
+        "pair": "SANDUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 3.22373,
+        "hypothetical_roundtrip_pct_100usdt": 0.23207
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "quack-ai",
+      "symbol": "Q",
+      "name": "Quack AI",
+      "category_research": "IA / infrastructure de paiements pour agents",
+      "claimed_function": "Q402 : paiements en stablecoins et relais de transactions pour applications et agents ; documentation émise par le projet, pas preuve d'adoption.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": "https://q402.quackai.ai/docs",
+      "real_world_adoption_proof_status": "not_independently_measured",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Étudier accélération 24 h, identité du contrat et valeur économique des API.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Bitget",
+        "pair": "QUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 0.00817,
+        "hypothetical_roundtrip_pct_100usdt": 0.2883
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "impossible-cloud-network-token",
+      "symbol": "ICNT",
+      "name": "Impossible Cloud Network Token",
+      "category_research": "DePIN / cloud décentralisé",
+      "claimed_function": "Le projet déclare fournir stockage et calcul distribués ; ICNT servirait à accéder aux ressources, récompenser le matériel et fournir du collatéral.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": "https://docs.icn.global/icn-economics/tokenomics/token-utility",
+      "real_world_adoption_proof_status": "not_independently_measured",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Exiger capacité effectivement louée, revenus, prestataires indépendants et demande non subventionnée.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Bitget",
+        "pair": "ICNTUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 8.76808,
+        "hypothetical_roundtrip_pct_100usdt": 0.28737
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "vaulta",
+      "symbol": "A",
+      "name": "Vaulta",
+      "category_research": "Infrastructure blockchain / réseau rebrandé",
+      "claimed_function": "Le rôle actuel du réseau Vaulta et du jeton A ainsi que sa continuité avec EOS exigent une vérification documentaire.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Distinguer reprise d'identité du token, transactions et applications actives.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Binance",
+        "pair": "AUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 8.86918,
+        "hypothetical_roundtrip_pct_100usdt": 0.28838
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "kamino",
+      "symbol": "KMNO",
+      "name": "Kamino",
+      "category_research": "DeFi / prêt et liquidité sur Solana",
+      "claimed_function": "Plateforme de prêt, emprunt, gestion de liquidité et levier sur Solana ; ne pas confondre activité du protocole avec prix KMNO.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": "https://kamino.com/",
+      "real_world_adoption_proof_status": "project_dashboard_unverified",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Comparer emprunts actifs, revenus, liquidations, TVL et usage net des récompenses.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Binance",
+        "pair": "KMNOUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 5.0025,
+        "hypothetical_roundtrip_pct_100usdt": 0.2918
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "reserve-rights-token",
+      "symbol": "RSR",
+      "name": "Reserve Rights",
+      "category_research": "DeFi / DTF, gouvernance et collatéral",
+      "claimed_function": "RSR est présenté comme gouvernance et première tranche de risque des paniers tokenisés Reserve ; les stakers supportent des pertes en cas de défaut.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": "https://docs.reserve.org/core-components",
+      "real_world_adoption_proof_status": "not_independently_measured",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Mesurer nombre de DTF actifs, actifs sous gestion, frais, RSR staké et slashing.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Binance",
+        "pair": "RSRUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 10.03512,
+        "hypothetical_roundtrip_pct_100usdt": 0.3
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "numeraire",
+      "symbol": "NMR",
+      "name": "Numeraire",
+      "category_research": "IA quantitative / concours de modèles",
+      "claimed_function": "Numerai exploite des modèles statistiques et utilise NMR comme mise exposée à récompense ou destruction ; NMR ne confère pas de parts du fonds.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": "https://docs.numer.ai/nmr",
+      "real_world_adoption_proof_status": "project_metrics_available",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Examiner modèles actifs, tokens stakés, récompenses nettes et utilité des prévisions hors-échantillon.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Binance",
+        "pair": "NMRUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 15.97444,
+        "hypothetical_roundtrip_pct_100usdt": 0.3592
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "bedrock-token",
+      "symbol": "BR",
+      "name": "Bedrock",
+      "category_research": "Non qualifiée fondamentalement",
+      "claimed_function": null,
+      "claim_status": "undocumented",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Rechercher sources primaires et métriques réellement publiées.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Bitget",
+        "pair": "BRUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 41.71495,
+        "hypothetical_roundtrip_pct_100usdt": 0.77197
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "axelar",
+      "symbol": "AXL",
+      "name": "Axelar",
+      "category_research": "Interopérabilité blockchain / messages interchaînes",
+      "claimed_function": "Axelar fournit une communication interchaînes avec validateurs ; AXL sert notamment au staking de la sécurité réseau.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": "https://docs.axelar.dev/learn/",
+      "real_world_adoption_proof_status": "not_independently_measured",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Mesurer nombre de messages effectivement relayés, intégrations et incidents de sécurité.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Binance",
+        "pair": "AXLUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 34.84321,
+        "hypothetical_roundtrip_pct_100usdt": 0.54703
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "mina-protocol",
+      "symbol": "MINA",
+      "name": "Mina Protocol",
+      "category_research": "Blockchain L1 / preuves à divulgation nulle de connaissance",
+      "claimed_function": "Mina revendique une vérification légère grâce aux preuves cryptographiques récursives et des applications de vérification privées.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": "https://minaprotocol.com/lightweight-blockchain",
+      "real_world_adoption_proof_status": "project_metrics_available",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Contrôler comptes actifs, transactions, applications et vérification indépendante de la légèreté.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Binance",
+        "pair": "MINAUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 13.32445,
+        "hypothetical_roundtrip_pct_100usdt": 0.33279
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "metis-token",
+      "symbol": "METIS",
+      "name": "Metis",
+      "category_research": "L2 / infrastructure Ethereum",
+      "claimed_function": "Métis propose un réseau de seconde couche ; vérifier la gouvernance et les fonctionnalités en service avant qualification d'usage.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "TVL, adresses, transactions, revenus et sécurité de l'architecture L2.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Binance",
+        "pair": "METISUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 25.87322,
+        "hypothetical_roundtrip_pct_100usdt": 0.45778
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "meta-2-2",
+      "symbol": "META",
+      "name": "MetaDAO",
+      "category_research": "Non qualifiée fondamentalement",
+      "claimed_function": null,
+      "claim_status": "undocumented",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Rechercher sources primaires et métriques réellement publiées.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "NO_OBSERVED_SPOT_PAIR",
+      "research_spot_market": null,
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "instadapp",
+      "symbol": "FLUID",
+      "name": "Fluid",
+      "category_research": "DeFi / gestion de positions",
+      "claimed_function": "Rôle précis du jeton BR vis-à-vis de l'identifiant CoinGecko instadapp à vérifier ; aucune attribution d'utilité certaine à ce stade.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Lever la collision d'identité avant toute conclusion ; comparer usages effectifs du protocole.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "OKX",
+        "pair": "FLUID-USDT",
+        "quote": "USDT",
+        "archived_spread_bps": 9.87146,
+        "hypothetical_roundtrip_pct_100usdt": 0.35499
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "orbio-so",
+      "symbol": "ORBIO",
+      "name": "Orbio.so",
+      "category_research": "Non établie / à documenter",
+      "claimed_function": null,
+      "claim_status": "undocumented",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Pas de paire Spot confirmée ; retrouver documentation et équipe.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "NO_OBSERVED_SPOT_PAIR",
+      "research_spot_market": null,
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "folks",
+      "symbol": "FOLKS",
+      "name": "FOLKS",
+      "category_research": "Non qualifiée fondamentalement",
+      "claimed_function": null,
+      "claim_status": "undocumented",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Rechercher sources primaires et métriques réellement publiées.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "NO_OBSERVED_SPOT_PAIR",
+      "research_spot_market": null,
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "hive_dollar",
+      "symbol": "HBD",
+      "name": "Hive Dollar",
+      "category_research": "Non qualifiée fondamentalement",
+      "claimed_function": null,
+      "claim_status": "undocumented",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Rechercher sources primaires et métriques réellement publiées.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "NO_OBSERVED_SPOT_PAIR",
+      "research_spot_market": null,
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "swarm-network",
+      "symbol": "TRUTH",
+      "name": "Swarm Network",
+      "category_research": "Inconnue / identification requise",
+      "claimed_function": null,
+      "claim_status": "undocumented",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Paire Spot non observée; ne pas confondre le symbole TRUTH avec un token homonyme.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "NO_OBSERVED_SPOT_PAIR",
+      "research_spot_market": null,
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "clearpool",
+      "symbol": "CPOOL",
+      "name": "Clearpool",
+      "category_research": "DeFi / crédit",
+      "claimed_function": "Projet de crédit numérique ; mesurer l'encours réel et les défauts plutôt que de déduire l'adoption des volumes CPOOL.",
+      "claim_status": "project_description_not_independent_proof",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Emprunteurs, encours, retards, collatéral et retours de crédit.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW",
+      "research_spot_market": {
+        "provider": "Bitget",
+        "pair": "CPOOLUSDT",
+        "quote": "USDT",
+        "archived_spread_bps": 17.07942,
+        "hypothetical_roundtrip_pct_100usdt": 0.83293
+      },
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    },
+    {
+      "coin_id": "apex-token-2",
+      "symbol": "APEX",
+      "name": "APEX",
+      "category_research": "Non qualifiée fondamentalement",
+      "claimed_function": null,
+      "claim_status": "undocumented",
+      "primary_project_source": null,
+      "real_world_adoption_proof_status": "unknown",
+      "independent_usage_metrics": null,
+      "required_next_verification": "Rechercher sources primaires et métriques réellement publiées.",
+      "qualification_at_utc": "2026-10-17T19:16:07Z",
+      "spot_evidence_status": "NO_OBSERVED_SPOT_PAIR",
+      "research_spot_market": null,
+      "identity_coin_gecko_exchange_token_verified": false,
+      "investment_action": "OBSERVE_ONLY"
+    }
+  ]
+}
