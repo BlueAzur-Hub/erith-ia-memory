@@ -32,7 +32,9 @@ function validateMonth(entry,document){
     document.resolution!=="1h"||!Array.isArray(document.columns)||
     document.columns.join("|")!==EXPECTED.join("|")||
     !Array.isArray(document.rows)||document.rows.length!==entry.hours||
-    document.row_count!==entry.hours)throw Error("Structure historique ou propriétaire de données non conforme : "+entry.path);
+    document.row_count!==entry.hours||
+    document.source?.sha256!==entry.source_zip_sha256||
+    document.source?.native_minutes_verified!==entry.hours*60)throw Error("Structure historique ou propriétaire de données non conforme : "+entry.path);
  const start=Date.parse(entry.month+"-01T00:00:00Z");
  for(let i=0;i<document.rows.length;i++){
   const x=document.rows[i];
@@ -182,7 +184,7 @@ async function report(){
   ]);
   const past=JSON.parse(pastText),recent=JSON.parse(recentText);
   if(past.schema!=="erith.trader.radar20.retrospective-stress.v1"||
-    recent.schema!=="erith.trader.radar20.portfolio.v1"||
+    recent.schema!=="erith.trader.radar20.shared-capital-paper.v1"||
     past.orders_enabled!==false||recent.orders_enabled!==false||
     past.strategy_certified!==false)throw Error("Schémas de simulations incompatibles.");
   const tbody=$("regimes");tbody.replaceChildren();
