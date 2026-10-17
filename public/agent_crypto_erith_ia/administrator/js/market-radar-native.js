@@ -261,6 +261,11 @@ function build(root){
  followLink.href=new URL("../laboratoire/crypto-knowledge.html",document.baseURI).href;
  followLink.target="_blank";followLink.rel="noopener noreferrer";
  qualifying.append(followLink);
+ // Compact evidence comparison lives inside the existing foldable Radar.
+ const focusTitle=node("p","table-note","Trajectoires · Q / ICNT / FLUID · mémoire datée, pas de signal PAPER");
+ focusTitle.dataset.radarNative="trajectoryNote";qualifying.append(focusTitle);
+ const focusRows=node("div","radar-native-opportunity-list");
+ focusRows.dataset.radarNative="trajectoryRows";qualifying.append(focusRows);
  const qualRows=node("div","radar-native-opportunity-list");
  qualRows.dataset.radarNative="qualificationRows";qualifying.append(qualRows);
  supplementary.append(qualifying);
@@ -552,7 +557,70 @@ function describeDynamicPoint(point){
  return "prix à date cible non confirmé";
 }
 
+
+// Named study cases use the exact CoinGecko ID, never an exchange ticker alone.
+// Read-only triage does not decide whether an asset can be traded.
+const trajectoryFocus=Object.freeze([
+ Object.freeze({id:"quack-ai",symbol:"Q"}),
+ Object.freeze({id:"impossible-cloud-network-token",symbol:"ICNT"}),
+ Object.freeze({id:"instadapp",symbol:"FLUID"})
+]);
+function trajectoryEvidence(history,id){
+ const observations=dynamicCandidateHistory(history,id);
+ const measured1=observations.filter(x=>x.followup_1d.status==="OBSERVED_DAILY_SNAPSHOT");
+ const measured7=observations.filter(x=>x.followup_7d.status==="OBSERVED_DAILY_SNAPSHOT");
+ const measured=[...observations].flatMap(x=>[["J+1",x.followup_1d],["J+7",x.followup_7d]]
+   .filter(([,p])=>p.status==="OBSERVED_DAILY_SNAPSHOT")
+   .map(([label,p])=>({label,initial:x,point:p})));
+ measured.sort((a,b)=>Date.parse(b.point.at_utc)-Date.parse(a.point.at_utc)||
+   b.initial.first_seen_date_utc.localeCompare(a.initial.first_seen_date_utc));
+ const latest=observations[0]||null;
+ return {id,selectionCount:observations.length,latestDate:latest?.first_seen_date_utc||null,
+  count1:measured1.length,count7:measured7.length,lastMeasured:measured[0]||null,
+  status:measured7.length?"SUIVI J+7 MESURÉ":measured1.length?"J+1 MESURÉ":"SUIVI EN ATTENTE",
+  paperCertified:false}; // A dated aggregate price is not validated Spot candles, spread or token identity.
+}
+function trajectoryVolumeReadout(observation,point){
+ const first=observation.initial_volume_24h_usd,last=point.volume_24h_usd;
+ if(!Number.isFinite(first)||first<=0||!Number.isFinite(last)||last<0)return "volume 24 h non comparable";
+ const move=(last/first-1)*100;
+ const from=Number.isInteger(observation.initial_rank)?observation.initial_rank:null;
+ const to=Number.isInteger(point.rank)?point.rank:null;
+ return "volume 24 h "+pct(move)+" (deux relevés)"+(from!==null&&to!==null?
+  " · rang "+from+" → "+to:" · rang non comparable");
+}
+function printTrajectories(root,model){
+ const list=lookup(root,"trajectoryRows"),note=lookup(root,"trajectoryNote");
+ if(!list||!note)return;
+ list.replaceChildren();
+ const h=model.dynamicFollowups;
+ if(!h){
+  note.textContent=model.dynamicFollowupsError||"Trajectoires · chargement des preuves…";
+  return;
+ }
+ const collected=h.dates.at(-1)||"—";
+ note.textContent="Trajectoires Q / ICNT / FLUID · dernier jour archivé "+collected+
+  " UTC · USD agrégé CoinGecko ≠ USDT Spot · aucun ordre";
+ for(const focus of trajectoryFocus){
+  const e=trajectoryEvidence(h,focus.id),row=node("div","radar-native-opportunity");
+  row.dataset.radarTrajectoryId=focus.id;
+  const measured=e.lastMeasured;
+  const measure=measured?
+    measured.label+" "+pct(measured.point.change_pct)+" / "+number(measured.point.elapsed_hours,2)+" h":
+    "Pas de J+1/J+7 mesuré";
+  const context=measured?
+    "Détection "+measured.initial.first_seen_date_utc+" · "+trajectoryVolumeReadout(measured.initial,measured.point):
+    (e.latestDate?"Dernière détection "+e.latestDate+" · relevés futurs attendus":"Identité non détectée dans ces archives");
+  row.append(node("strong","",focus.symbol+" · "+e.status),
+   node("span","",measure),
+   node("small","",context),
+   node("small","",e.selectionCount+" détection(s) · PAPER non certifié"));
+  list.append(row);
+ }
+}
+
 function printQualification(root,model){
+ printTrajectories(root,model);
  const note=lookup(root,"qualificationNote"),list=lookup(root,"qualificationRows");
  const followNote=lookup(root,"followupNote");
  if(followNote){
@@ -758,6 +826,6 @@ function mount(root){
  return true;
 }
 if(typeof module!=="undefined"&&module.exports)
- module.exports=Object.freeze({selectGraph,compactMoney,printMarket,openOpportunityFiche,matchedCandidateKnowledge,verifiedDynamicFollowups,dynamicCandidateHistory,describeDynamicPoint,printQualification});
+ module.exports=Object.freeze({selectGraph,compactMoney,printMarket,openOpportunityFiche,matchedCandidateKnowledge,verifiedDynamicFollowups,dynamicCandidateHistory,describeDynamicPoint,trajectoryEvidence,trajectoryVolumeReadout,printTrajectories,printQualification});
 global.AgentCryptoRadarNative=Object.freeze({mount});
 })(typeof globalThis!=="undefined"?globalThis:this);
