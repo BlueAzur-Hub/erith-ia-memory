@@ -73,6 +73,20 @@ class Tests(unittest.TestCase):
   r[20][0]+=1000
   with self.assertRaisesRegex(ValueError,"Trous"):
    candle_rows("Binance",r,int(NOW.timestamp()*1000))
+ def test_binance_requests_only_targeted_symbols(self):
+  from urllib.parse import urlsplit,parse_qs
+  seen=[]
+  def bounded(url):
+   if "/exchangeInfo" in url:
+    query=parse_qs(urlsplit(url).query)
+    self.assertEqual(len(query),1)
+    self.assertIn("symbol",query)
+    seen.append(query["symbol"][0])
+   return responder(url)
+  result=qualify(sample(),bounded,NOW)
+  self.assertEqual(len(set(seen)),20)
+  self.assertEqual(result["markets_with_public_evidence"],20)
+
  def test_no_market_metadata_no_fabricated_pair(self):
   def broken(url):
    if "exchangeInfo" in url:raise OSError("réseau indisponible")
