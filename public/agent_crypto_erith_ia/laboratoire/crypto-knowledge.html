@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
+<title>ERITH.IA · Dossiers Crypto · Seven Heaven</title>
+<meta name="description" content="Référentiel de recherche vérifiable, actifs du Radar, usage réel et catégories, à partir de données GitHub RAW publiques et de sources primaires.">
+<style>
+:root{color-scheme:dark;--bg:#07121e;--panel:#102638;--border:#365367;--ink:#eef8ff;--muted:#a9c0d0;--cyan:#88edff;--gold:#ffe5a5;--red:#ff9ba8}
+*{box-sizing:border-box}body{background:#07121e;color:var(--ink);font:14px/1.55 system-ui,'Segoe UI',sans-serif;margin:0}main{max-width:1320px;margin:auto;padding:clamp(12px,2.8vw,32px)}a{color:var(--cyan)}a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}h1{font-size:clamp(24px,4vw,37px);margin:5px 0}h2{font-size:18px;margin:0 0 8px}
+.kicker{color:var(--cyan);letter-spacing:.14em;text-transform:uppercase;font-size:11px;font-weight:800}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:15px;margin:15px 0;padding:17px}.muted,small{color:var(--muted)}
+.warning{border-left:3px solid var(--gold);padding:10px 12px;background:#252518}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{background:#0b1d2b;border:1px solid #24475a;border-radius:9px;padding:12px}.stat strong{display:block;font-size:20px}.stat small{display:block}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}input,select{background:#0b1c2a;color:var(--ink);border:1px solid #3a5a70;border-radius:8px;padding:10px;min-height:40px}input{flex:2;min-width:180px}select{flex:1;min-width:155px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.item{border:1px solid var(--border);border-radius:11px;padding:13px;background:#0b1d2a;min-width:0}.head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+code{color:var(--gold)}dl{display:grid;grid-template-columns:125px 1fr;gap:4px 12px;margin:10px 0}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}
+.warn{color:var(--gold)}.error{color:var(--red)}.pill{border:1px solid #3f7285;color:var(--cyan);border-radius:30px;padding:3px 7px;font-size:11px}
+footer{color:var(--muted);padding:20px 0;font-size:12px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}dl{grid-template-columns:1fr}}
+</style></head><body><main>
+<header><div class="kicker">SEVEN HEAVEN · RADAR → SOURCES → LABORATOIRE</div><h1>Dossiers Crypto · mémoire et qualification</h1>
+<p>Top 5 / 10 / 50 / 250 / 1 000 · candidats Radar · projets et objectifs · preuves manquantes. <a href="../trader/trading-desk.html">Retour Trader</a> · <a href="../administrator/historical-vault.html">Coffre</a></p>
+<p class="warning"><strong>Distinction obligatoire :</strong> un volume de trading ne prouve pas une utilisation réelle. La présentation d'un objectif par un projet ne prouve ni son exécution, ni son adoption. Les carnets sont datés, pas des garanties d'exécution. Aucun ordre réel.</p></header>
+<section class="panel"><h2>Couverture du référentiel</h2><div class="stats">
+<div class="stat"><strong>250 + 750</strong><small>Classement marché Core + Extended</small></div>
+<div class="stat"><strong>20</strong><small>Candidats Radar documentés</small></div>
+<div class="stat"><strong>14 / 20</strong><small>Marchés Spot observés au snapshot</small></div>
+<div class="stat"><strong>144 / 250</strong><small>Archives minute publiées (catalogue)</small></div></div>
+<p id="status" role="status" aria-live="polite" class="muted">Lecture des sources canoniques en cours…</p>
+<p class="muted">Archives quotidiennes Top 50 : <a href="https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/public/agent_crypto_erith_ia/data/history">GitHub /data/history</a>. Revue rétrospective sur 60 jours : <a href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/historical-top50-forward.json">Top 50 historique</a>. Le stockage exhaustif reste externe à GitHub Pages.</p></section>
+<section class="panel"><h2>Les grands réseaux et actifs d'usage</h2>
+<p class="muted">Ce ne sont pas des « meilleurs investissements » ; nous les étudions pour comprendre paiements, contrats intelligents, transactions et frais. Il n'existe pas encore ici de classement vérifié par utilisateurs actifs.</p>
+<div class="grid" id="networks"></div></section>
+<section class="panel"><div class="head"><h2>Candidats Radar · identités, catégorie et sources</h2><span class="pill" id="count">—</span></div>
+<div class="controls"><input type="search" id="query" placeholder="Rechercher Q, IA, DeFi, une crypto…" aria-label="Rechercher un dossier">
+<select id="filter" aria-label="Filtre de preuve"><option value="all">Tous les dossiers</option><option value="market">Spot documenté</option><option value="missing">Paire Spot absente</option><option value="official">Source projet connue</option></select>
+<select id="sort" aria-label="Trier les dossiers"><option value="priority">Ordre de recherche actuel</option><option value="symbol">Symbole</option><option value="roundtrip">Coût PAPER observé</option></select></div>
+<div id="candidates" class="grid"></div>
+<p class="muted">Les priorités proviennent du rapport historique de qualification. La fiche montre la dernière preuve dont nous disposons, pas une certification définitive. Pour réévaluer une paire ou un score d'usage, un nouveau relevé daté est indispensable.</p></section>
+<section class="panel"><h2>Prochaine couche de preuves à ajouter</h2>
+<p><strong>Réseaux :</strong> adresses réellement actives, transactions non techniques, frais, flux de stablecoins corrigés et revenus. <strong>Applications :</strong> utilisateurs et emprunts actifs, usage réel, rétention, revenus et sécurité. <strong>Tokens :</strong> contrats, offre/déblocages, usages du jeton distincts de ceux du protocole.</p>
+<p>Références méthodologiques : <a href="https://www.visaonchainanalytics.com/transactions">Visa stablecoins ajustés</a> · <a href="https://app.artemis.xyz/docs/artemis-sheets/usage/supported-metrics">Artemis métriques</a> · <a href="https://support.coingecko.com/articles/4724540263-categories-tags-methodology">CoinGecko catégories</a>.</p></section>
+<footer>ERITH.IA · Lecture seule · Sources datées · information insuffisante ≠ zéro · aucun portefeuille ni ordre automatiquement créé.</footer>
+</main><script>
+(()=>{"use strict";const $=id=>document.getElementById(id);
+const RAW="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/research/asset-knowledge.json";
+const state={data:null};
+const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;};
+const term=v=>String(v??"").toLocaleLowerCase("fr");
+const fmt=v=>typeof v==="number"&&Number.isFinite(v)?new Intl.NumberFormat("fr-FR",{maximumFractionDigits:3}).format(v):"non mesuré";
+const dl=(parent,pairs)=>{let d=el("dl");for(const [k,v] of pairs){d.append(el("dt","",k),el("dd","",v??"Inconnu / à documenter"));}parent.append(d);};
+const link=(parent,url,title)=>{if(!url)return;const a=el("a","",title);a.href=url;a.target="_blank";a.rel="noopener noreferrer";parent.append(a);};
+function networks(data){const box=$("networks");box.replaceChildren();for(const n of data.network_usage_benchmarks){
+const c=el("article","item"),head=el("div","head");head.append(el("strong","",n.symbol+" · "+n.category));c.append(head,el("p","",n.role));
+c.append(el("p","muted","À vérifier : "+n.usage_proof_to_collect.join(" · ")));
+link(c,n.primary_source,"Documentation source ↗");box.append(c);}
+}
+function cards(){
+const data=state.data;if(!data)return;
+const box=$("candidates");box.replaceChildren();const search=term($("query").value),filter=$("filter").value,sort=$("sort").value;
+const priority=new Map(data.prioritized_research_ids.map((id,i)=>[id,i]));
+let entries=data.candidates.filter(x=>(x.symbol+" "+x.name+" "+x.category_research+" "+(x.claimed_function??"")).toLowerCase().includes(search));
+if(filter==="market")entries=entries.filter(x=>x.research_spot_market);if(filter==="missing")entries=entries.filter(x=>!x.research_spot_market);
+if(filter==="official")entries=entries.filter(x=>x.primary_project_source);
+if(sort==="symbol")entries.sort((a,b)=>a.symbol.localeCompare(b.symbol));
+if(sort==="roundtrip")entries.sort((a,b)=>(a.research_spot_market?.hypothetical_roundtrip_pct_100usdt??Infinity)-(b.research_spot_market?.hypothetical_roundtrip_pct_100usdt??Infinity));
+if(sort==="priority")entries.sort((a,b)=>(priority.get(a.coin_id)??999)-(priority.get(b.coin_id)??999)||a.symbol.localeCompare(b.symbol));
+$("count").textContent=entries.length+" / "+data.candidates.length;
+for(const x of entries){const c=el("article","item");const head=el("div","head");head.append(el("strong","",x.symbol+" · "+x.name),el("small","pill",priority.has(x.coin_id)?"Dossier recherche prioritaire":"Qualification à compléter"));c.append(head);
+c.append(el("p","muted",x.category_research));
+dl(c,[["Objet déclaré",x.claimed_function],["Preuve d'usage indépendant",x.real_world_adoption_proof_status==="unknown"?"non recherchée / inconnue":"non certifiée ici"],
+["Carnet Spot au relevé",x.research_spot_market?x.research_spot_market.provider+" "+x.research_spot_market.pair:"paire non observée"],
+["Coût fictif ancien (100 USDT)",x.research_spot_market?fmt(x.research_spot_market.hypothetical_roundtrip_pct_100usdt)+" %":"non calculable"]]);
+c.append(el("p","warn","À vérifier : "+x.required_next_verification));
+link(c,x.primary_project_source,"Document du projet ↗");
+if(x.coin_id==="quack-ai"){c.append(el("span",""," · "));link(c,"../trader/quack-ai-case-study.html","Cas d'école Q ↗");}
+box.append(c);
+}}
+async function load(){
+try{const c=new AbortController(),tm=setTimeout(()=>c.abort(),12000),r=await fetch(RAW,{cache:"no-store",signal:c.signal});clearTimeout(tm);
+if(!r.ok)throw Error("HTTP "+r.status);const data=await r.json();
+if(data.schema!=="erith.crypto.asset-research-knowledge.v1"||data.candidate_count!==20||!Array.isArray(data.network_usage_benchmarks))throw Error("Contrat de données inconnu");
+state.data=data;$("status").textContent="20 dossiers · qualification du "+new Date(data.qualification_snapshot_at).toLocaleString("fr-FR")+" · source GitHub RAW · catalogue documentaire, non temps réel";
+networks(data);cards();
+}catch(e){$("status").className="error";$("status").textContent="Catalogue inaccessible : "+e.message+" · aucune preuve substituée."}
+}
+for(const id of ["query","filter","sort"])$(id).addEventListener(id==="query"?"input":"change",cards);load();
+})();
+</script></body></html>
