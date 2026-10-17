@@ -61,6 +61,20 @@ Si un défaut apparaît :
 3. si Administrator fonctionne et Trader échoue : bug du filtre `trader-runtime-mirror.js` ;
 4. ne jamais recréer un owner Trader parallèle.
 
+## Dossier DNA — lecture IA et humaine
+
+Le Trader réutilise toujours exactement le runtime `administrator/index.html?surface=trader`, sans nouveau propriétaire du Market, des bougies, du graphique ni du carnet. Le script déjà chargé `trader-runtime-mirror.js` installe uniquement le déclencheur de présentation **« DNA · Cas d'école »**, replié par défaut, accessible au clavier et refermable avec `Échap`.
+
+La page autonome `trader/dna-case-study.html` affiche une étude de cas sur NeoSoul / DNA, sans images et sans ordres. Elle réutilise exclusivement les sources canoniques :
+
+- `../data/trader_flux/dna_paper/state.json` via le routeur du Coffre Pages (lien direct Raw GitHub pour IA et consultation hors Pages) ;
+- `../laboratoire/dna-decision-review.js` pour les seuils rétrospectifs PAPER et le contrôle d'identité ;
+- `../laboratoire/dna-paper.html` et `cas-ecole-neosoul-dna.md` pour le protocole scientifique.
+
+La page présente séparément **faits, dates, dernier carnet, résultats fictifs, observations, interprétations, limites et résumé JSON de lecture IA**. Les relevés sont Spot **Bitget DNAUSDT**, pas des exécutions ; le Futures **OKX DNAUSD UM X-Perp** n'est pas substitué à ces données. Aucun nouvel accès Bridge, aucun suivi de compte privé, aucune simulation de liquidation Futures.
+
+Les tests du contrat documentaire sont dans `trader/test-dna-case-study.cjs`, invoqués par `Agent-Crypto Trader Current`. Ils vérifient la conservation de l'unique script d'entrée, l'accessibilité et la mise en échec en cas de source invalide.
+
 ## Sécurité
 
 READ ONLY. Aucun ordre réel. Aucune clé privée. Aucun nouveau transport.
