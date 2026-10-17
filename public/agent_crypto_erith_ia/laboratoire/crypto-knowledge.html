@@ -49,7 +49,7 @@ code{color:var(--gold)}dl{display:grid;grid-template-columns:125px 1fr;gap:4px 1
 <section class="panel"><details class="archive"><summary>Journal historique des candidats · J+1 / J+7</summary>
 <p>Observation automatique des candidatures Radar Top 1 000, en lecture seule. Les mêmes identifiants CoinGecko sont rapprochés sur les journées archivées, y compris après disparition du classement. Les périodes 1 et 7 jours sont des dates civiles : les heures réellement écoulées restent visibles. Pas de signaux, pas d'ordres ni de rendements exécutable.</p>
 <p id="dynamic-status" role="status" aria-live="polite" class="status-note">Consultation du journal daté en cours…</p>
-<div class="table-wrap"><table><thead><tr><th>Crypto / identité</th><th>Détection UTC</th><th>Prix initial USD</th><th>J+1</th><th>J+7</th><th>Volume 24 h initial</th></tr></thead><tbody id="dynamic-rows"><tr><td colspan="6">Aucune observation chargée.</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Crypto / identité</th><th>Détection UTC</th><th>Prix initial USD</th><th>J+1</th><th>J+7</th><th>Volume 24 h (initial → J+1)</th><th>Rang (initial → J+1)</th></tr></thead><tbody id="dynamic-rows"><tr><td colspan="7">Aucune observation chargée.</td></tr></tbody></table></div>
 <p class="muted" id="dynamic-proof">Un relevé manquant reste inconnu ; prix CoinGecko USD ≠ paire Spot USDT. Les volumes 24 h ne mesurent pas les échanges entre deux captures.</p>
 <p><a href="https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/dynamic-followups.json" target="_blank" rel="noopener noreferrer">Rapport original horodaté ↗</a></p>
 </details></section>
@@ -92,6 +92,8 @@ link(c,x.primary_project_source,"Document du projet ↗");
 if(x.coin_id==="quack-ai"){c.append(el("span",""," · "));link(c,"../trader/quack-ai-case-study.html","Cas d'école Q ↗");}
 box.append(c);
 }}
+function priceValue(v){return typeof v==="number"&&Number.isFinite(v)?new Intl.NumberFormat("fr-FR",{maximumSignificantDigits:7}).format(v):"non observé";}
+function volumeValue(v){return typeof v==="number"&&Number.isFinite(v)?new Intl.NumberFormat("fr-FR",{maximumFractionDigits:0}).format(v)+" USD":"—";}
 function percent(v){return typeof v==="number"&&Number.isFinite(v)?(v>0?"+":"")+new Intl.NumberFormat("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2}).format(v)+" %":"non observé";}
 function displayFollowup(f){
  if(!f||f.status!=="OBSERVED_DAILY_SNAPSHOT")return "en attente ou absent";
@@ -105,9 +107,10 @@ function showDynamic(report){
   const tr=el("tr");
   const c1=el("td");c1.append(el("strong","",x.symbol||x.id),el("small","muted",x.id));
   tr.append(c1);
-  for(const value of [x.first_seen_date_utc,x.initial_price_usd===null?"inconnu":fmt(x.initial_price_usd),
+  for(const value of [x.first_seen_date_utc,x.initial_price_usd===null?"inconnu":priceValue(x.initial_price_usd),
        displayFollowup(x.followup_1d),displayFollowup(x.followup_7d),
-       x.initial_volume_24h_usd===null?"non archivé":fmt(x.initial_volume_24h_usd)+" USD"])
+       volumeValue(x.initial_volume_24h_usd)+" → "+volumeValue(x.followup_1d?.volume_24h_usd),
+       (x.initial_rank??"—")+" → "+(x.followup_1d?.rank??"—")])
     tr.append(el("td","",value));
   body.append(tr);
  }
