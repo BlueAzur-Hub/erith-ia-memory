@@ -5,9 +5,9 @@
   "is_live": false,
   "ranked": 250,
   "source_catalog_archived": 126,
-  "materialized_assets": 89,
-  "remaining_archived_assets": 37,
-  "year_shards": 603,
+  "materialized_assets": 93,
+  "remaining_archived_assets": 33,
+  "year_shards": 626,
   "max_is_all_time": false,
   "first_exchange_trade_date_not_proven": true,
   "assets": [
@@ -32879,6 +32879,1311 @@
           ],
           "sha256": "130db942707d52493a8d1593a0ab0d3e1104f4d3e82f8b9f18579ab92705180a",
           "bytes": 173553
+        }
+      ]
+    },
+    {
+      "id": "decred",
+      "rank": 156,
+      "name": "Decred",
+      "symbol": "DCR",
+      "pair": "DCRUSDT",
+      "quote": "USDT",
+      "source_signature": "e696d18d655503b1bf35c8e5325c0e5f6bed3ccde00a5e984bbccc8a74c64d6b",
+      "verified_months": 66,
+      "shards": [
+        {
+          "file": "decred-2020-span0-9a0e97a944d18b361f194055213152512d85682edbf2181f13ad5fb98ddebba7.json.gz",
+          "year": 2020,
+          "span": 0,
+          "first_open_ms": 1596240000000,
+          "last_open_ms": 1604185200000,
+          "first_month": "2020-08",
+          "last_month": "2020-10",
+          "hourly_count": 2208,
+          "native_1m_count": 132480,
+          "source_months": [
+            {
+              "month": "2020-08",
+              "release": "crypto-spot-bulk-2020-08-1m",
+              "source_zip_sha256": "172cc869f27d6c3ebaafce52c3231674d9926b7d3b0f64d38063b3ac8a644191",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2020-09",
+              "release": "crypto-spot-bulk-2020-09-1m",
+              "source_zip_sha256": "dfe6087c96ebfe8942d5e3e0c1c024372cdf0fbdd65c8b14414e902118d81bdb",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2020-10",
+              "release": "crypto-spot-bulk-2020-10-1m",
+              "source_zip_sha256": "2dc1e53eeaa2bf76e296e73007f3c3a310b22f0e01a74c351151d8d1de2fcaf5",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "9a0e97a944d18b361f194055213152512d85682edbf2181f13ad5fb98ddebba7",
+          "bytes": 53602
+        },
+        {
+          "file": "decred-2021-span1-1aba62ca82ba3cc4033763c7b5b01a7237a00c900582d2c47242d477a0837730.json.gz",
+          "year": 2021,
+          "span": 1,
+          "first_open_ms": 1609459200000,
+          "last_open_ms": 1612134000000,
+          "first_month": "2021-01",
+          "last_month": "2021-01",
+          "hourly_count": 744,
+          "native_1m_count": 44640,
+          "source_months": [
+            {
+              "month": "2021-01",
+              "release": "crypto-spot-bulk-2021-01-1m",
+              "source_zip_sha256": "37ceab7b346abd7186cbff1e6c38e2c52d8004bad260f65625badfe1450a55b4",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "1aba62ca82ba3cc4033763c7b5b01a7237a00c900582d2c47242d477a0837730",
+          "bytes": 21730
+        },
+        {
+          "file": "decred-2021-span2-f2e60b18eed27864cb7173391e17204ff4209c5d28692e6c00e449c81e4ccb57.json.gz",
+          "year": 2021,
+          "span": 2,
+          "first_open_ms": 1619827200000,
+          "last_open_ms": 1627772400000,
+          "first_month": "2021-05",
+          "last_month": "2021-07",
+          "hourly_count": 2208,
+          "native_1m_count": 132480,
+          "source_months": [
+            {
+              "month": "2021-05",
+              "release": "crypto-spot-bulk-2021-05-1m",
+              "source_zip_sha256": "1e8eba17af21bb079138c1c0ff0d3b984d7230cbca832aabe7703df87507f85b",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2021-06",
+              "release": "crypto-spot-bulk-2021-06-1m",
+              "source_zip_sha256": "7770b4c94460d09ef25f5bd7f895a10527fc92c24e8670f2698a1c4af91c95d0",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2021-07",
+              "release": "crypto-spot-bulk-2021-07-1m",
+              "source_zip_sha256": "3cdccfaede390557d5ed18a3c6ad9d2679248a1d00b7ed12641bf82038e90ed8",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "f2e60b18eed27864cb7173391e17204ff4209c5d28692e6c00e449c81e4ccb57",
+          "bytes": 61538
+        },
+        {
+          "file": "decred-2021-span3-344af1b88b695f51c6196fc87c0b2df93bfbd9824c06963494638145ec652453.json.gz",
+          "year": 2021,
+          "span": 3,
+          "first_open_ms": 1633046400000,
+          "last_open_ms": 1640991600000,
+          "first_month": "2021-10",
+          "last_month": "2021-12",
+          "hourly_count": 2208,
+          "native_1m_count": 132480,
+          "source_months": [
+            {
+              "month": "2021-10",
+              "release": "crypto-spot-bulk-2021-10-1m",
+              "source_zip_sha256": "13ad28c85b5c44e55f28b6204eb3e2e1185100f06c91545c9f9118b4e956a286",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2021-11",
+              "release": "crypto-spot-bulk-2021-11-1m",
+              "source_zip_sha256": "6971fb5702e11a73d78008595a90cca95317f832ee8ca85eb8440e3a8ebf0b76",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2021-12",
+              "release": "crypto-spot-bulk-2021-12-1m",
+              "source_zip_sha256": "8c606cd0aba8798143d092322824c5c2af8509bc70690b3f890800c80b7b7fc3",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "344af1b88b695f51c6196fc87c0b2df93bfbd9824c06963494638145ec652453",
+          "bytes": 50035
+        },
+        {
+          "file": "decred-2022-span3-11b0910487474404df12f4039e97e74f6c9383dd27dc6f9eaa1a993bfc69e91e.json.gz",
+          "year": 2022,
+          "span": 3,
+          "first_open_ms": 1640995200000,
+          "last_open_ms": 1672527600000,
+          "first_month": "2022-01",
+          "last_month": "2022-12",
+          "hourly_count": 8760,
+          "native_1m_count": 525600,
+          "source_months": [
+            {
+              "month": "2022-01",
+              "release": "crypto-spot-bulk-2022-01-1m",
+              "source_zip_sha256": "0de3b303d447d1252df2e13d1e6c7c67ffb68434a77382ad6ce338903223a365",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-02",
+              "release": "crypto-spot-bulk-2022-02-1m",
+              "source_zip_sha256": "1b9ca965b5d01acf9a06cf72bce85f2dd3e471aafb2d816ccc5403a6cece67fa",
+              "native_1m_count": 40320
+            },
+            {
+              "month": "2022-03",
+              "release": "crypto-spot-bulk-2022-03-1m",
+              "source_zip_sha256": "a91b847df7889e6ddd9245fd48279dc8fc1d44544864bbae6f204447c81af29c",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-04",
+              "release": "crypto-spot-bulk-2022-04-1m",
+              "source_zip_sha256": "ad2acffb8c3d12201cca2163c267632004ad8e63a6f4dda4c758af835d8045e8",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2022-05",
+              "release": "crypto-spot-bulk-2022-05-1m",
+              "source_zip_sha256": "86896633cb3ce12e6d58ac97ca364693cd932b7dd00b32919f222f7f13c5884f",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-06",
+              "release": "crypto-spot-bulk-2022-06-1m",
+              "source_zip_sha256": "5484725e448fa613f17cef0b254e6fe02a26f9bf65cdc1944abe97d11bbc59b2",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2022-07",
+              "release": "crypto-spot-bulk-2022-07-1m",
+              "source_zip_sha256": "cfba1153b4e7b0e81d690ac50db80e669897cd4adb48a21e682e9a22e6403e20",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-08",
+              "release": "crypto-spot-bulk-2022-08-1m",
+              "source_zip_sha256": "768fa047ad53572d1ae1d8aa5ea3c7137d42f9c6e3fed4038e552649cf325a20",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-09",
+              "release": "crypto-spot-bulk-2022-09-1m",
+              "source_zip_sha256": "335c475a2b8bb9d54fc1f80ee4b575b9554e95348abc4584e8aaf14b0000c05c",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2022-10",
+              "release": "crypto-spot-bulk-2022-10-1m",
+              "source_zip_sha256": "9afccbcfd42fb55d728e8a5e6e517d2ea9ac13462f66b7eec8040f7e08edee45",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-11",
+              "release": "crypto-spot-bulk-2022-11-1m",
+              "source_zip_sha256": "39533f08392376fb192e92d56c780ca2061806ba48c1e246438d3badf37304b0",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2022-12",
+              "release": "crypto-spot-bulk-2022-12-1m",
+              "source_zip_sha256": "fd1c31568ca3030e07124b66082e3f3583660ecbde77cabb4cb0baa02e78f50f",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "11b0910487474404df12f4039e97e74f6c9383dd27dc6f9eaa1a993bfc69e91e",
+          "bytes": 175881
+        },
+        {
+          "file": "decred-2023-span3-5607000d8fc681ac54762897696638e5127e6bf9cae9ec1189dc4264a106ade6.json.gz",
+          "year": 2023,
+          "span": 3,
+          "first_open_ms": 1672531200000,
+          "last_open_ms": 1677625200000,
+          "first_month": "2023-01",
+          "last_month": "2023-02",
+          "hourly_count": 1416,
+          "native_1m_count": 84960,
+          "source_months": [
+            {
+              "month": "2023-01",
+              "release": "crypto-spot-bulk-2023-01-1m",
+              "source_zip_sha256": "770cd2208615fd756886a06b388492d3d0668db9c19c648aa56240ed647893db",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2023-02",
+              "release": "crypto-spot-bulk-2023-02-1m",
+              "source_zip_sha256": "f914bf9215dee8ec08e2a27c7f2d9c7c9dea68af06b604492d5057c54fd89163",
+              "native_1m_count": 40320
+            }
+          ],
+          "sha256": "5607000d8fc681ac54762897696638e5127e6bf9cae9ec1189dc4264a106ade6",
+          "bytes": 29074
+        },
+        {
+          "file": "decred-2023-span4-ce959eab079f8e7abdd60cd46252a7fa5f13c3aff730ff74ba0830fb32511e13.json.gz",
+          "year": 2023,
+          "span": 4,
+          "first_open_ms": 1680307200000,
+          "last_open_ms": 1704063600000,
+          "first_month": "2023-04",
+          "last_month": "2023-12",
+          "hourly_count": 6600,
+          "native_1m_count": 396000,
+          "source_months": [
+            {
+              "month": "2023-04",
+              "release": "crypto-spot-bulk-2023-04-1m",
+              "source_zip_sha256": "c6fa1cd9776615bfcac9c259d1052c9d8cecef523bf783d40f951826524fb48c",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2023-05",
+              "release": "crypto-spot-bulk-2023-05-1m",
+              "source_zip_sha256": "a49f235b83d71cbefbd4623c7201c3f6c4dc5b44811db083dd683b41a1d1b79c",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2023-06",
+              "release": "crypto-spot-bulk-2023-06-1m",
+              "source_zip_sha256": "6d07d02aa93687c073f8616730c3ba48815654714f9b91721e0e8fde866ad0d9",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2023-07",
+              "release": "crypto-spot-bulk-2023-07-1m",
+              "source_zip_sha256": "6d1422cfd2699dd0d23c8caadd860bae357233b88dc16b3cd5fcef7de7136c62",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2023-08",
+              "release": "crypto-spot-bulk-2023-08-1m",
+              "source_zip_sha256": "41172577d72e269aa3f70b3bb0c7daf35b5c59059c00c66a8505b58724261cc7",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2023-09",
+              "release": "crypto-spot-bulk-2023-09-1m",
+              "source_zip_sha256": "4b04af569528e54e2661f076a15b05bfceccad0a11a8d807ee6b29b3023d3a57",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2023-10",
+              "release": "crypto-spot-bulk-2023-10-1m",
+              "source_zip_sha256": "e82877bbe5da0978b4646180161348177f4908757f91bf1ef64c73a1ce3682c6",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2023-11",
+              "release": "crypto-spot-bulk-2023-11-1m",
+              "source_zip_sha256": "b95a6c6dbad34ab14be56a0522e3435c14ee5de67c0b7a45f329fd8d7e2616a6",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2023-12",
+              "release": "crypto-spot-bulk-2023-12-1m",
+              "source_zip_sha256": "9dc3e678fe34aecc63b7d56022eddf6e1b2b6e0d385440d0c16987bc0fab8524",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "ce959eab079f8e7abdd60cd46252a7fa5f13c3aff730ff74ba0830fb32511e13",
+          "bytes": 147110
+        },
+        {
+          "file": "decred-2024-span4-958eb8934ce7513209ab7e2bf893894b5b42daa96c26b4a77c2f016dac2956d0.json.gz",
+          "year": 2024,
+          "span": 4,
+          "first_open_ms": 1704067200000,
+          "last_open_ms": 1735686000000,
+          "first_month": "2024-01",
+          "last_month": "2024-12",
+          "hourly_count": 8784,
+          "native_1m_count": 527040,
+          "source_months": [
+            {
+              "month": "2024-01",
+              "release": "crypto-spot-bulk-2024-01-1m",
+              "source_zip_sha256": "3ec75da883055688f096e7340ee58656ba767408f9571f510a4b4067dc28be1b",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-02",
+              "release": "crypto-spot-bulk-2024-02-1m",
+              "source_zip_sha256": "beb00bc9249c09fb4c146434ec1615cb5c8fb7b097d0b4ed844eee0a641a409b",
+              "native_1m_count": 41760
+            },
+            {
+              "month": "2024-03",
+              "release": "crypto-spot-bulk-2024-03-1m",
+              "source_zip_sha256": "152cf004ba6482b79c44c3b0f0b3e42ea1d9dbf5bba32c57da0024ff0d8e74e1",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-04",
+              "release": "crypto-spot-bulk-2024-04-1m",
+              "source_zip_sha256": "cb9d98e5e7b0ed843dbb17e7cdbce9e6b440bba0fdea2587b4cf4f85c81648a4",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2024-05",
+              "release": "crypto-spot-bulk-2024-05-1m",
+              "source_zip_sha256": "6ac9bd413357d5a0a6bdac5594fd5b11ebbf211fca8db755fcbe8e1e726d1c47",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-06",
+              "release": "crypto-spot-bulk-2024-06-1m",
+              "source_zip_sha256": "1624ff9f4816af3b471670e56e72d03fbc61e2213acb273c8d6626fa7389755c",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2024-07",
+              "release": "crypto-spot-bulk-2024-07-1m",
+              "source_zip_sha256": "67b2f73879fa5221d6e7856857c247f769c7da21acb16e8fd3c46356410b4fcc",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-08",
+              "release": "crypto-spot-bulk-2024-08-1m",
+              "source_zip_sha256": "af403c69e07315530b1edc9e850f0eb2efe908e807147a8aa5d6aab5cfe5225f",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-09",
+              "release": "crypto-spot-bulk-2024-09-1m",
+              "source_zip_sha256": "08ae77fba4cdad697f56d726acc1097851fc44b2096f2ed7687c9110ee15717a",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2024-10",
+              "release": "crypto-spot-bulk-2024-10-1m",
+              "source_zip_sha256": "82636c2325ec6630973d1ffc2441d3e3b7d65a9f185f086004ccdecaae013cf9",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-11",
+              "release": "crypto-spot-bulk-2024-11-1m",
+              "source_zip_sha256": "74bf5aeecdf9b375b352b265dfd73d66514f27c99c384124adb73154c2c8bf43",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2024-12",
+              "release": "crypto-spot-bulk-2024-12-1m",
+              "source_zip_sha256": "2d0300635aba0ff49871646aebf94c8e494d0544bf70bcb219447aea310a398b",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "958eb8934ce7513209ab7e2bf893894b5b42daa96c26b4a77c2f016dac2956d0",
+          "bytes": 210992
+        },
+        {
+          "file": "decred-2025-span4-1544242363e36594e27572fc60ca7573e28399d8564a92c5f670f3808c18a516.json.gz",
+          "year": 2025,
+          "span": 4,
+          "first_open_ms": 1735689600000,
+          "last_open_ms": 1767222000000,
+          "first_month": "2025-01",
+          "last_month": "2025-12",
+          "hourly_count": 8760,
+          "native_1m_count": 525600,
+          "source_months": [
+            {
+              "month": "2025-01",
+              "release": "crypto-spot-bulk-2025-01-1m",
+              "source_zip_sha256": "e693ca5ec92632363b7265b1461c056a6696fd49a2f983c188cfaaec09c56169",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-02",
+              "release": "crypto-spot-bulk-2025-02-1m",
+              "source_zip_sha256": "51af27d62724a8948c2e121d9aec12e4f1cbdfe3c2c297235309bc34e467dee1",
+              "native_1m_count": 40320
+            },
+            {
+              "month": "2025-03",
+              "release": "crypto-spot-bulk-2025-03-1m",
+              "source_zip_sha256": "aac86a5c05b3c18f3eebc102da40944b788f4f8cf38335e67ee326f406a0cf75",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-04",
+              "release": "crypto-spot-bulk-2025-04-1m",
+              "source_zip_sha256": "6cf3667302151883057d28712338d1329172ae9fdd9212b389aae686930f6a2c",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2025-05",
+              "release": "crypto-spot-bulk-2025-05-1m",
+              "source_zip_sha256": "2025495e790212536c6164acf979aa8c5538709af9dccd3ed9efaad6169992e2",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-06",
+              "release": "crypto-spot-bulk-2025-06-1m",
+              "source_zip_sha256": "fcb9aff42e36ccd2b0ae72f360b0b13d2a99ea3d899fc13daea2c31521a9cf48",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2025-07",
+              "release": "crypto-spot-bulk-2025-07-1m",
+              "source_zip_sha256": "155e53fc9d2ed74541185b611ee55a04a811ee0baad55e0d0fbd75fd5c2fba65",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-08",
+              "release": "crypto-spot-bulk-2025-08-1m",
+              "source_zip_sha256": "8f60feab8a62f2c7ec356f1236cff621b2df95da1ab6b75827bbed7bd4efc218",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-09",
+              "release": "crypto-spot-bulk-2025-09-1m",
+              "source_zip_sha256": "c15b05007e9cc47367a9f811cf697b4c30cd2b7ce708197d3e4b9dfe5e166b02",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2025-10",
+              "release": "crypto-spot-bulk-add-2025-10-1m-84808e63eaf8",
+              "source_zip_sha256": "eb2abf7652e402e738e61a70559aba8d9ec319d8765e7255108c182be9bc106f",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-11",
+              "release": "crypto-spot-bulk-add-2025-11-1m-15b17b2e3122",
+              "source_zip_sha256": "59abf79068349681c2673f1f2eeb6ac937e9a797450276fea6be642b63312faa",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2025-12",
+              "release": "crypto-spot-bulk-add-2025-12-1m-15b17b2e3122",
+              "source_zip_sha256": "eb6e6a860425998ddb331677f55eba77a3a8185446db28219d433da001e56e41",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "1544242363e36594e27572fc60ca7573e28399d8564a92c5f670f3808c18a516",
+          "bytes": 204559
+        },
+        {
+          "file": "decred-2026-span4-8dca407450cf77660d542b4b9f0bbf59c06ec4aa8982e968d709bea199abad16.json.gz",
+          "year": 2026,
+          "span": 4,
+          "first_open_ms": 1767225600000,
+          "last_open_ms": 1790809200000,
+          "first_month": "2026-01",
+          "last_month": "2026-09",
+          "hourly_count": 6552,
+          "native_1m_count": 393120,
+          "source_months": [
+            {
+              "month": "2026-01",
+              "release": "crypto-spot-bulk-add-2026-01-1m-15b17b2e3122",
+              "source_zip_sha256": "3490629df3b2d97045fdb4a5ea81b0431bbaf3a70e3b3d19b5190ce969ceea62",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-02",
+              "release": "crypto-spot-bulk-add-2026-02-1m-15b17b2e3122",
+              "source_zip_sha256": "734a6197b3542f29e28a01f8a492f4584041af1cf2054bbbdf8b09e393158be4",
+              "native_1m_count": 40320
+            },
+            {
+              "month": "2026-03",
+              "release": "crypto-spot-bulk-add-2026-03-1m-15b17b2e3122",
+              "source_zip_sha256": "fecdb860c6353c700f8116ef487613a92b66599c154c9d901de23201f4023742",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-04",
+              "release": "crypto-spot-bulk-add-2026-04-1m-97cac46d038a",
+              "source_zip_sha256": "b69b4c76288acff687cae3a9c871d50b83e22f7fdb244a4da8b587c22d92364f",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2026-05",
+              "release": "crypto-spot-bulk-add-2026-05-1m-97cac46d038a",
+              "source_zip_sha256": "77a87ddcd7ac930fcd7d107ca2f3f7b1fe79f6b9fa5e4375e8f5794d5f6a6de1",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-06",
+              "release": "crypto-spot-bulk-add-2026-06-1m-97cac46d038a",
+              "source_zip_sha256": "83cf76961b89633011a3443f0cc3d436dc15af07a65f29d9de7e365cf2c09959",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2026-07",
+              "release": "crypto-spot-bulk-add-2026-07-1m-9641358aee99",
+              "source_zip_sha256": "fbe1c4614c79303b1cdbcecd02dd18c946d48521dd5037ae4438b8f9528ceaa8",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-08",
+              "release": "crypto-spot-bulk-add-2026-08-1m-9641358aee99",
+              "source_zip_sha256": "0e3af2bd677f0e7643fdf0527488d97a9910f25ce63ada06d65c10cf829160b2",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-09",
+              "release": "crypto-spot-bulk-add-2026-09-1m-9641358aee99",
+              "source_zip_sha256": "a06be2460745b41765c44ec631b4225d3844fafb17c9637c1dee766e199bc190",
+              "native_1m_count": 43200
+            }
+          ],
+          "sha256": "8dca407450cf77660d542b4b9f0bbf59c06ec4aa8982e968d709bea199abad16",
+          "bytes": 152185
+        }
+      ]
+    },
+    {
+      "id": "syrup",
+      "rank": 158,
+      "name": "Maple Finance",
+      "symbol": "SYRUP",
+      "pair": "SYRUPUSDT",
+      "quote": "USDT",
+      "source_signature": "2c50160742266c6cbeaa1658213423a92a5f1ae02e50bf87d6be86a9232261fe",
+      "verified_months": 12,
+      "shards": [
+        {
+          "file": "syrup-2025-span0-b220f84a59608e3cdfd4fbdb8d22af41130a04d25815715537da78d60b291893.json.gz",
+          "year": 2025,
+          "span": 0,
+          "first_open_ms": 1759276800000,
+          "last_open_ms": 1767222000000,
+          "first_month": "2025-10",
+          "last_month": "2025-12",
+          "hourly_count": 2208,
+          "native_1m_count": 132480,
+          "source_months": [
+            {
+              "month": "2025-10",
+              "release": "crypto-spot-bulk-add-2025-10-1m-84808e63eaf8",
+              "source_zip_sha256": "2ad8cea43e81369ffbed672a9ae1ad9a3283297022df0248d7cb1807d66079d4",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-11",
+              "release": "crypto-spot-bulk-add-2025-11-1m-15b17b2e3122",
+              "source_zip_sha256": "f1390b9ee506c859dd85ac985ddccca16d76486a12cb577dc133ec3bd6f24965",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2025-12",
+              "release": "crypto-spot-bulk-add-2025-12-1m-15b17b2e3122",
+              "source_zip_sha256": "7c9d15a2107556d362206bf9ae01b0f3d25b013cd00ec508add87c467f0c834a",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "b220f84a59608e3cdfd4fbdb8d22af41130a04d25815715537da78d60b291893",
+          "bytes": 62676
+        },
+        {
+          "file": "syrup-2026-span0-e65e99a4da9c9b242bd7c39bd50be23289cf80ce10f9b1bedba1ec02ff517588.json.gz",
+          "year": 2026,
+          "span": 0,
+          "first_open_ms": 1767225600000,
+          "last_open_ms": 1790809200000,
+          "first_month": "2026-01",
+          "last_month": "2026-09",
+          "hourly_count": 6552,
+          "native_1m_count": 393120,
+          "source_months": [
+            {
+              "month": "2026-01",
+              "release": "crypto-spot-bulk-add-2026-01-1m-15b17b2e3122",
+              "source_zip_sha256": "557ded7165a5afede781a566b46cf3e266b068b7977312a49b03b1f25349d06a",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-02",
+              "release": "crypto-spot-bulk-add-2026-02-1m-15b17b2e3122",
+              "source_zip_sha256": "0b5ae6936b2431db6f8474fab32234cfa88ab26d4e9aee1e323660629c76af5e",
+              "native_1m_count": 40320
+            },
+            {
+              "month": "2026-03",
+              "release": "crypto-spot-bulk-add-2026-03-1m-15b17b2e3122",
+              "source_zip_sha256": "fc185322eabd5f5f7812086d9db3489881954e9f4a5df6ad7caa7582ef3007ca",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-04",
+              "release": "crypto-spot-bulk-add-2026-04-1m-74185fbaa780",
+              "source_zip_sha256": "6930e36a386789298e2cf6329be5339e6b59f32239b8e301b13e7d60bad70f7b",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2026-05",
+              "release": "crypto-spot-bulk-add-2026-05-1m-74185fbaa780",
+              "source_zip_sha256": "a0169f02869ce82de7bdf49258c08db8dcf9e78096dabfa3835606098926aaff",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-06",
+              "release": "crypto-spot-bulk-add-2026-06-1m-74185fbaa780",
+              "source_zip_sha256": "fb18d4c6afc51b5a62882535627868124a3fb380d1c80313f4b67287f66cdbff",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2026-07",
+              "release": "crypto-spot-bulk-add-2026-07-1m-c4209f16c030",
+              "source_zip_sha256": "111a4a6a2e96d642088b2241a7e8f0dbec5e022469ce9d09dd4b59a3965a9465",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-08",
+              "release": "crypto-spot-bulk-add-2026-08-1m-c4209f16c030",
+              "source_zip_sha256": "e39a62acf09fe7344f2367a6eaf7ed885568d928ea89af2eaf2b3d049a98b547",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-09",
+              "release": "crypto-spot-bulk-add-2026-09-1m-c4209f16c030",
+              "source_zip_sha256": "f6b50fc6ed783789aab365a5c3c2540421b6e9be8c8b25f8c53763d9f0263f7c",
+              "native_1m_count": 43200
+            }
+          ],
+          "sha256": "e65e99a4da9c9b242bd7c39bd50be23289cf80ce10f9b1bedba1ec02ff517588",
+          "bytes": 166338
+        }
+      ]
+    },
+    {
+      "id": "terra-luna",
+      "rank": 159,
+      "name": "Terra",
+      "symbol": "LUNC",
+      "pair": "LUNCUSDT",
+      "quote": "USDT",
+      "source_signature": "bee4bc9823b5e373434a14e3a3bab669d10050f1cd006277abcbb6c977612ea3",
+      "verified_months": 13,
+      "shards": [
+        {
+          "file": "terra-luna-2022-span0-00e50801736a91ba15335f4f0b355c2b49a329e0d7d0f43e0b91660a3cfd610a.json.gz",
+          "year": 2022,
+          "span": 0,
+          "first_open_ms": 1664582400000,
+          "last_open_ms": 1667257200000,
+          "first_month": "2022-10",
+          "last_month": "2022-10",
+          "hourly_count": 744,
+          "native_1m_count": 44640,
+          "source_months": [
+            {
+              "month": "2022-10",
+              "release": "crypto-spot-bulk-2022-10-1m",
+              "source_zip_sha256": "105d96345a6ca036cc92a55a50d65c6032859fc648980081fa93b793744a0c43",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "00e50801736a91ba15335f4f0b355c2b49a329e0d7d0f43e0b91660a3cfd610a",
+          "bytes": 27858
+        },
+        {
+          "file": "terra-luna-2025-span1-567033f4887394d20c686e1fa06114a446cfaf178231a9325c3bde8bbf53823f.json.gz",
+          "year": 2025,
+          "span": 1,
+          "first_open_ms": 1759276800000,
+          "last_open_ms": 1767222000000,
+          "first_month": "2025-10",
+          "last_month": "2025-12",
+          "hourly_count": 2208,
+          "native_1m_count": 132480,
+          "source_months": [
+            {
+              "month": "2025-10",
+              "release": "crypto-spot-bulk-add-2025-10-1m-84808e63eaf8",
+              "source_zip_sha256": "a415c522574fa6fed60df7aeb02904245fc0e92ef2beaace544cf4b5abc591c0",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-11",
+              "release": "crypto-spot-bulk-add-2025-11-1m-15b17b2e3122",
+              "source_zip_sha256": "e86e9f5a989f0a0a90acb4a5e983a750d3ce88b9edccb0d7e084a483838f48be",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2025-12",
+              "release": "crypto-spot-bulk-add-2025-12-1m-15b17b2e3122",
+              "source_zip_sha256": "a92e88b6640a6e4e18662dad4af91f84399694200feb5b294a883f0037aaa0ca",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "567033f4887394d20c686e1fa06114a446cfaf178231a9325c3bde8bbf53823f",
+          "bytes": 73777
+        },
+        {
+          "file": "terra-luna-2026-span1-e32d578fc25df64180761d364de73883918376ae2fac1bff147dfce63d174f87.json.gz",
+          "year": 2026,
+          "span": 1,
+          "first_open_ms": 1767225600000,
+          "last_open_ms": 1790809200000,
+          "first_month": "2026-01",
+          "last_month": "2026-09",
+          "hourly_count": 6552,
+          "native_1m_count": 393120,
+          "source_months": [
+            {
+              "month": "2026-01",
+              "release": "crypto-spot-bulk-add-2026-01-1m-15b17b2e3122",
+              "source_zip_sha256": "1be8fea648a0b8ee7641503583c628f80c0cf2bc48def539e3cf64d3d1afc11a",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-02",
+              "release": "crypto-spot-bulk-add-2026-02-1m-15b17b2e3122",
+              "source_zip_sha256": "8ec3ccf88bd9e04baefe3232b1c15a9603386cd23c217525132c2a4da03920ad",
+              "native_1m_count": 40320
+            },
+            {
+              "month": "2026-03",
+              "release": "crypto-spot-bulk-add-2026-03-1m-15b17b2e3122",
+              "source_zip_sha256": "a52d8fd0eca0a0dd71cf7b628113bfcbd914af6866de6abc69076f4eba91373c",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-04",
+              "release": "crypto-spot-bulk-add-2026-04-1m-74185fbaa780",
+              "source_zip_sha256": "34cabb80aedd38c93d8737929cc6e0ce646f4dfbd815521ba7624458b3be2524",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2026-05",
+              "release": "crypto-spot-bulk-add-2026-05-1m-74185fbaa780",
+              "source_zip_sha256": "624f79b686f1ae26e2f59083ccd1ab231511e3803e5223a0f568926eebebdf7a",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-06",
+              "release": "crypto-spot-bulk-add-2026-06-1m-74185fbaa780",
+              "source_zip_sha256": "20ac04d4f14fa4d0e9c13c421fea322f0654ef20dc77f02b517c769a82395cc2",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2026-07",
+              "release": "crypto-spot-bulk-add-2026-07-1m-eb4521bdf70a",
+              "source_zip_sha256": "9d20147e243e2b3395cb3c1e63c47ce2b3aa92bddbd99ce458b554ab4c1323a1",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-08",
+              "release": "crypto-spot-bulk-add-2026-08-1m-eb4521bdf70a",
+              "source_zip_sha256": "fa0fc5aafb1223ed987b5b34b1cfb7f4a16b87b41e398b8852dca30db42ed771",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-09",
+              "release": "crypto-spot-bulk-add-2026-09-1m-eb4521bdf70a",
+              "source_zip_sha256": "687c50d0603341559c3036dc3876e9b172f383d01f17c403079cbffb38f80050",
+              "native_1m_count": 43200
+            }
+          ],
+          "sha256": "e32d578fc25df64180761d364de73883918376ae2fac1bff147dfce63d174f87",
+          "bytes": 212613
+        }
+      ]
+    },
+    {
+      "id": "arweave",
+      "rank": 160,
+      "name": "Arweave",
+      "symbol": "AR",
+      "pair": "ARUSDT",
+      "quote": "USDT",
+      "source_signature": "44de4a2e3188b5a40cbfe1e473c2729f8582f9c47e3208af4fc4c330d331a1b7",
+      "verified_months": 61,
+      "shards": [
+        {
+          "file": "arweave-2021-span0-8133ab24c2b1778b9328602940c0364bb20fb5ddf64821209c1193fd25479ddd.json.gz",
+          "year": 2021,
+          "span": 0,
+          "first_open_ms": 1622505600000,
+          "last_open_ms": 1627772400000,
+          "first_month": "2021-06",
+          "last_month": "2021-07",
+          "hourly_count": 1464,
+          "native_1m_count": 87840,
+          "source_months": [
+            {
+              "month": "2021-06",
+              "release": "crypto-spot-bulk-2021-06-1m",
+              "source_zip_sha256": "e0e4691e8df377cb053e785bffb5c74c8eed6ec5749c64e7ba688469a7d62a0f",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2021-07",
+              "release": "crypto-spot-bulk-2021-07-1m",
+              "source_zip_sha256": "0bf3f2d45cc22444eb085a43a89c201fa3eb3789b2d11135e09c8acec8d36fe6",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "8133ab24c2b1778b9328602940c0364bb20fb5ddf64821209c1193fd25479ddd",
+          "bytes": 40503
+        },
+        {
+          "file": "arweave-2021-span1-c10464be3bada0ebfb893819b766460d393cc5c0b648be076dd173d2dbe4d825.json.gz",
+          "year": 2021,
+          "span": 1,
+          "first_open_ms": 1633046400000,
+          "last_open_ms": 1640991600000,
+          "first_month": "2021-10",
+          "last_month": "2021-12",
+          "hourly_count": 2208,
+          "native_1m_count": 132480,
+          "source_months": [
+            {
+              "month": "2021-10",
+              "release": "crypto-spot-bulk-2021-10-1m",
+              "source_zip_sha256": "8ee3032550709635466d6b8493e5ec61b555d4f933726a8f6fdd7488eef5f0bf",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2021-11",
+              "release": "crypto-spot-bulk-2021-11-1m",
+              "source_zip_sha256": "109fc24d2e48894fcd980fe26b9a76b34a6f476cb9d5751aa1127d885eef144d",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2021-12",
+              "release": "crypto-spot-bulk-2021-12-1m",
+              "source_zip_sha256": "54fb5c92bc794c5bacf0c6fc2769ea156b0aaaccad5f53b5db228f1a3b76523b",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "c10464be3bada0ebfb893819b766460d393cc5c0b648be076dd173d2dbe4d825",
+          "bytes": 61307
+        },
+        {
+          "file": "arweave-2022-span1-90253c3ad762ebe4ffb1fa34ffcc599bcc110473b623c8f7611c6c5e32359fdc.json.gz",
+          "year": 2022,
+          "span": 1,
+          "first_open_ms": 1640995200000,
+          "last_open_ms": 1672527600000,
+          "first_month": "2022-01",
+          "last_month": "2022-12",
+          "hourly_count": 8760,
+          "native_1m_count": 525600,
+          "source_months": [
+            {
+              "month": "2022-01",
+              "release": "crypto-spot-bulk-2022-01-1m",
+              "source_zip_sha256": "eaab63250e90df0bc7e4900936102b04fef16f9202efed30e6c38c72bd3c031d",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-02",
+              "release": "crypto-spot-bulk-2022-02-1m",
+              "source_zip_sha256": "0c55745e3db1b627507faa4962b7340c73c4177d58e76eda5f302fad8ac997de",
+              "native_1m_count": 40320
+            },
+            {
+              "month": "2022-03",
+              "release": "crypto-spot-bulk-2022-03-1m",
+              "source_zip_sha256": "691403efbb41fa1917c9ad41c209e9fdc1bf4a796c0ca9fee9e8b683a63b7e4a",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-04",
+              "release": "crypto-spot-bulk-2022-04-1m",
+              "source_zip_sha256": "2e521f2f1059632a8a6d0f677059418764d52c4d5fbdf9deb6c91fcbac699664",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2022-05",
+              "release": "crypto-spot-bulk-2022-05-1m",
+              "source_zip_sha256": "6ef9a7a5635f2d9afe66dad72108dcec82b9d7dc372f49220f14cc334a3ce748",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-06",
+              "release": "crypto-spot-bulk-2022-06-1m",
+              "source_zip_sha256": "816481feb0ad3e839629949a4d7b9783215437b85e67b8ba2361b5abea396339",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2022-07",
+              "release": "crypto-spot-bulk-2022-07-1m",
+              "source_zip_sha256": "f06536785f69da0a0486d140a49d3fcdea7983019f70dd23742cc25c206fe184",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-08",
+              "release": "crypto-spot-bulk-2022-08-1m",
+              "source_zip_sha256": "23e44b29377374bc75eaf959155fdc9a31aa7d9502bec40a2170164c04afb296",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-09",
+              "release": "crypto-spot-bulk-2022-09-1m",
+              "source_zip_sha256": "9f637574d12cbfcff6ecb4976ff44ee20958bc1be581e8d9c5e6a56b5e681adb",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2022-10",
+              "release": "crypto-spot-bulk-2022-10-1m",
+              "source_zip_sha256": "7955a565f0ccfab40a3cc78b609df36d123db0d49956548c21cffcf23855100d",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2022-11",
+              "release": "crypto-spot-bulk-2022-11-1m",
+              "source_zip_sha256": "86efc04d40c46d9e652d8b70153600800982ad702ca559475834b86ace0d775d",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2022-12",
+              "release": "crypto-spot-bulk-2022-12-1m",
+              "source_zip_sha256": "eeaa5fa353be81ded9faf0b4e6b8a3abcbd6ca3ee9f915e27666e5c680fd5fe8",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "90253c3ad762ebe4ffb1fa34ffcc599bcc110473b623c8f7611c6c5e32359fdc",
+          "bytes": 217460
+        },
+        {
+          "file": "arweave-2023-span1-ac075ad54ffbd886a7688229ca78966e6dd919f030a3db162ade7def7adabfd6.json.gz",
+          "year": 2023,
+          "span": 1,
+          "first_open_ms": 1672531200000,
+          "last_open_ms": 1677625200000,
+          "first_month": "2023-01",
+          "last_month": "2023-02",
+          "hourly_count": 1416,
+          "native_1m_count": 84960,
+          "source_months": [
+            {
+              "month": "2023-01",
+              "release": "crypto-spot-bulk-2023-01-1m",
+              "source_zip_sha256": "075b296fdb188070ee9a3e535bd4b77d45c2c7604c266d388613ea737957a478",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2023-02",
+              "release": "crypto-spot-bulk-2023-02-1m",
+              "source_zip_sha256": "09ae80fafb95e3e0a82988563ad066ad5fd80e646aa1199d39f6d72f8e8eb7dd",
+              "native_1m_count": 40320
+            }
+          ],
+          "sha256": "ac075ad54ffbd886a7688229ca78966e6dd919f030a3db162ade7def7adabfd6",
+          "bytes": 35737
+        },
+        {
+          "file": "arweave-2023-span2-3c37fcf3bcdf87ca7d027e958c363e78a856abfbd3491ea09b2b2d6203cc36fb.json.gz",
+          "year": 2023,
+          "span": 2,
+          "first_open_ms": 1680307200000,
+          "last_open_ms": 1704063600000,
+          "first_month": "2023-04",
+          "last_month": "2023-12",
+          "hourly_count": 6600,
+          "native_1m_count": 396000,
+          "source_months": [
+            {
+              "month": "2023-04",
+              "release": "crypto-spot-bulk-2023-04-1m",
+              "source_zip_sha256": "4e6923bf83b224a76b9caafb5385fd229ff5ec7b0616ae79fae4109a82be27f1",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2023-05",
+              "release": "crypto-spot-bulk-2023-05-1m",
+              "source_zip_sha256": "c9d9c8ccbcd283a60aa2c59bc7ac4c7491aa90020d16ad898db307ab7b290941",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2023-06",
+              "release": "crypto-spot-bulk-2023-06-1m",
+              "source_zip_sha256": "0c1de7daabe1dc65bf62567fdf0f9b7ce2b7be989ace6ab84f2aac3621ffa893",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2023-07",
+              "release": "crypto-spot-bulk-2023-07-1m",
+              "source_zip_sha256": "117308c55ec8e2f6ed96c47b9e0cbf1bcf74ba565aed47e58396397c0fb545a9",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2023-08",
+              "release": "crypto-spot-bulk-2023-08-1m",
+              "source_zip_sha256": "eb609cd496577af73cffebbb5f1202eeb503aa36af7a4e3ae5793f4487c2d4f9",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2023-09",
+              "release": "crypto-spot-bulk-2023-09-1m",
+              "source_zip_sha256": "ced1ea526f50a6ed4cfcbb0d9835de52bf98318404de97c8f303bdde189fe4b0",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2023-10",
+              "release": "crypto-spot-bulk-2023-10-1m",
+              "source_zip_sha256": "fe039bc6f8f2fa8073c07448f921f0e2cea0005919d037cfea1f496b491769f1",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2023-11",
+              "release": "crypto-spot-bulk-2023-11-1m",
+              "source_zip_sha256": "93e858916ded05aff26eaeab9af9ccaa8193f680b721fd811b3f86436713d092",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2023-12",
+              "release": "crypto-spot-bulk-2023-12-1m",
+              "source_zip_sha256": "5af306f65d0526ac069f11c546eb7878f6283a82f4c2d888d37a1d4d40845531",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "3c37fcf3bcdf87ca7d027e958c363e78a856abfbd3491ea09b2b2d6203cc36fb",
+          "bytes": 152528
+        },
+        {
+          "file": "arweave-2024-span2-0c3ed4e244641442044a6d7870c5da91f343903259b2670fe8f3ee5886722317.json.gz",
+          "year": 2024,
+          "span": 2,
+          "first_open_ms": 1704067200000,
+          "last_open_ms": 1735686000000,
+          "first_month": "2024-01",
+          "last_month": "2024-12",
+          "hourly_count": 8784,
+          "native_1m_count": 527040,
+          "source_months": [
+            {
+              "month": "2024-01",
+              "release": "crypto-spot-bulk-2024-01-1m",
+              "source_zip_sha256": "1257a0aab443b71083146c46eebf313a0ea125b77bc36aed4cba0bdc35f3fe65",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-02",
+              "release": "crypto-spot-bulk-2024-02-1m",
+              "source_zip_sha256": "34f3f48e9293b6fda08c62dbeabf739ca2b955f9db1876af016631594c89058e",
+              "native_1m_count": 41760
+            },
+            {
+              "month": "2024-03",
+              "release": "crypto-spot-bulk-2024-03-1m",
+              "source_zip_sha256": "bb7ad80172989176fae6f875adadf9d2951df58f12a706a8b6de727297728374",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-04",
+              "release": "crypto-spot-bulk-2024-04-1m",
+              "source_zip_sha256": "0d197ea9a09d34f29c46f05f3b5e5f58967712dbb41c01f6f8391b310efdffd0",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2024-05",
+              "release": "crypto-spot-bulk-2024-05-1m",
+              "source_zip_sha256": "fb6850c83f176289aa63e13aebfb4b73746278bb85245dd096441a5e50a01420",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-06",
+              "release": "crypto-spot-bulk-2024-06-1m",
+              "source_zip_sha256": "042fe17ee937cbc7105dc8fc7250cdd0bf95d7bac1900c51f9cfae6f8d79552a",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2024-07",
+              "release": "crypto-spot-bulk-2024-07-1m",
+              "source_zip_sha256": "cea451032b0fe6a29a75df7b55b5fedff48662718140b0c81f35b97587abf56d",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-08",
+              "release": "crypto-spot-bulk-2024-08-1m",
+              "source_zip_sha256": "eac5b64bd9955ef18d47934dd5d4dd24637101dfa0abaaa83270c11f7881ebea",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-09",
+              "release": "crypto-spot-bulk-2024-09-1m",
+              "source_zip_sha256": "f7058c285265ae27cfbe79df2816da9546c94f6841b80d66b7fb9c6daa6df9bf",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2024-10",
+              "release": "crypto-spot-bulk-2024-10-1m",
+              "source_zip_sha256": "f1c1e31e4c10cb3e1b02cd6c19989a337ed733a69b0abf47803a8d585ee835d9",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2024-11",
+              "release": "crypto-spot-bulk-2024-11-1m",
+              "source_zip_sha256": "a142eabdab19105cb3fc09ba7f2eac80897157143dfd80495272480aecbc0f29",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2024-12",
+              "release": "crypto-spot-bulk-2024-12-1m",
+              "source_zip_sha256": "339f8ee2564bf94d011e8fa7339597fc5817f2727dce2f9553ff686b54c5e21f",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "0c3ed4e244641442044a6d7870c5da91f343903259b2670fe8f3ee5886722317",
+          "bytes": 245282
+        },
+        {
+          "file": "arweave-2025-span2-60e7700625b70037bc5d4a4a625ca548056dfcc438dba6610441c511de69f6d8.json.gz",
+          "year": 2025,
+          "span": 2,
+          "first_open_ms": 1735689600000,
+          "last_open_ms": 1767222000000,
+          "first_month": "2025-01",
+          "last_month": "2025-12",
+          "hourly_count": 8760,
+          "native_1m_count": 525600,
+          "source_months": [
+            {
+              "month": "2025-01",
+              "release": "crypto-spot-bulk-2025-01-1m",
+              "source_zip_sha256": "4fe3b8d1c925719d7796389b6e52689947010586bbf8d6b9a268d408b950d0bb",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-02",
+              "release": "crypto-spot-bulk-2025-02-1m",
+              "source_zip_sha256": "eb2b2db7a5343ef0b7ae2a99769bbd090647626ad1e9ff6340973d82d75cb2a6",
+              "native_1m_count": 40320
+            },
+            {
+              "month": "2025-03",
+              "release": "crypto-spot-bulk-2025-03-1m",
+              "source_zip_sha256": "64260ba653390ceaeadccb7e8f3563fcaf186b3af67bc84c6e0471a936b34114",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-04",
+              "release": "crypto-spot-bulk-2025-04-1m",
+              "source_zip_sha256": "65488ce37fa6c2f7761a70e099039d38e66aa43eddd1ee230de836c11cdd809d",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2025-05",
+              "release": "crypto-spot-bulk-2025-05-1m",
+              "source_zip_sha256": "ea10ee6e045dc27908bf1b4408d1a26b9a8bd3f3a09abe6ffc3114bdf90c5f3f",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-06",
+              "release": "crypto-spot-bulk-2025-06-1m",
+              "source_zip_sha256": "8a3c2a064f622e12dbdd9ee58c865d5cec49cec4bc017472d0e0a2f132346696",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2025-07",
+              "release": "crypto-spot-bulk-2025-07-1m",
+              "source_zip_sha256": "3e2a1d6cfa0ed3215ecd87fb5e1718b46c6a2a592086475b959efdb51876f0d5",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-08",
+              "release": "crypto-spot-bulk-2025-08-1m",
+              "source_zip_sha256": "85cc5c2faa59bd0b26b6c282ce133661ce1c52d6bf8690590f50b799d9708c7b",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-09",
+              "release": "crypto-spot-bulk-2025-09-1m",
+              "source_zip_sha256": "b785de91bb10e8049c842dab6f880ec8e12ff85b6bf741b7eab8a1d6cfc3c495",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2025-10",
+              "release": "crypto-spot-bulk-add-2025-10-1m-84808e63eaf8",
+              "source_zip_sha256": "d8b987ccb79d5f5af244539eb8c14c1f9606686ef39a95b1fa6870b39e7517f0",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-11",
+              "release": "crypto-spot-bulk-add-2025-11-1m-15b17b2e3122",
+              "source_zip_sha256": "dcd193a9153a2f32ecfff0337aabf784f0bd8f61eb882388b3e12cab8cecd7c2",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2025-12",
+              "release": "crypto-spot-bulk-add-2025-12-1m-15b17b2e3122",
+              "source_zip_sha256": "f91f587d87f4208ccf412c8da48d17144833da434119c88d64cd2d44cb1c6d07",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "60e7700625b70037bc5d4a4a625ca548056dfcc438dba6610441c511de69f6d8",
+          "bytes": 206653
+        },
+        {
+          "file": "arweave-2026-span2-8e914e6d4c6daf2ed1aa1da47ffc1411571fb6d5819837e58065c67657f64219.json.gz",
+          "year": 2026,
+          "span": 2,
+          "first_open_ms": 1767225600000,
+          "last_open_ms": 1790809200000,
+          "first_month": "2026-01",
+          "last_month": "2026-09",
+          "hourly_count": 6552,
+          "native_1m_count": 393120,
+          "source_months": [
+            {
+              "month": "2026-01",
+              "release": "crypto-spot-bulk-add-2026-01-1m-15b17b2e3122",
+              "source_zip_sha256": "855b703b478162f88039d93f5718531a5982ba6eb7f17f3454a1ef2d8374ba49",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-02",
+              "release": "crypto-spot-bulk-add-2026-02-1m-15b17b2e3122",
+              "source_zip_sha256": "ffa6ae37b8b68f38da1505258ae935a2ac7288473a073da5509c647e8739fff7",
+              "native_1m_count": 40320
+            },
+            {
+              "month": "2026-03",
+              "release": "crypto-spot-bulk-add-2026-03-1m-15b17b2e3122",
+              "source_zip_sha256": "918c7856295d4c8e6b51471f457475223d30ac097dfd6ab712711df5a8849e6b",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-04",
+              "release": "crypto-spot-bulk-add-2026-04-1m-97cac46d038a",
+              "source_zip_sha256": "6fd9a7fdb7fa46c527f6eac264921c7026985bec8e7a0bcf3c71d6bfaaae87cd",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2026-05",
+              "release": "crypto-spot-bulk-add-2026-05-1m-97cac46d038a",
+              "source_zip_sha256": "aae4c7c48cf151e6f47676ea91abf35e439db8cefe7d9f48b37df947edee8518",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-06",
+              "release": "crypto-spot-bulk-add-2026-06-1m-97cac46d038a",
+              "source_zip_sha256": "da0c608e1ecb9633e52520fc055840e9953a46d4762f087d8cdd8b56288f5f27",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2026-07",
+              "release": "crypto-spot-bulk-add-2026-07-1m-9641358aee99",
+              "source_zip_sha256": "9b3a6083848699f2b464cb8c3c1f32214f133dc5add0762b755b81e55aa385b1",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-08",
+              "release": "crypto-spot-bulk-add-2026-08-1m-9641358aee99",
+              "source_zip_sha256": "3cbc1805f8a53b6ab9e7d369d13c61c798cf656c9a824885a29f3e8cb6b88087",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2026-09",
+              "release": "crypto-spot-bulk-add-2026-09-1m-9641358aee99",
+              "source_zip_sha256": "98f6a63a57561ecfb2cea1780d9fd4c4586f93d273da080ba6bf3da8ff372a64",
+              "native_1m_count": 43200
+            }
+          ],
+          "sha256": "8e914e6d4c6daf2ed1aa1da47ffc1411571fb6d5819837e58065c67657f64219",
+          "bytes": 149533
         }
       ]
     }
