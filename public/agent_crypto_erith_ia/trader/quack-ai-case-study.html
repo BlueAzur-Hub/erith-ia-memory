@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
 <title>ERITH.IA · Étude PAPER Q / Quack AI · Trader</title>
 <meta name="description" content="Cas d'école Q/USDT Spot Bitget — provenance, bougies horaires, carnet daté, observations PAPER et limites. Lecture seule.">
-<link rel="alternate" type="application/json" href="../data/trader_flux/q_paper/state.json" title="Journal public Q PAPER">
+<link rel="alternate" type="application/json" href="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/trader_flux/q_paper/state.json" title="Journal public Q PAPER">
 <style>
 :root{color-scheme:dark;--bg:#07121e;--panel:#102638;--border:#32546a;--ink:#edf7ff;--muted:#a4bfd2;--cyan:#8aeaff;--gold:#ffe5a0;--red:#ff9da9;--green:#8cecc5}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#10263e,var(--bg) 46%);color:var(--ink);font:14px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif}
@@ -70,13 +70,13 @@ footer{margin:18px 0;color:var(--muted);font-size:12px}
 <p><strong>Continuation :</strong> confirmer une cassure par bougie horaire close, volume de confirmation, carnet cohérent et risque de poursuite tardive.</p>
 <p><strong>Essoufflement :</strong> documenter un repli des clôtures, des volumes, des supports et les anomalies de spread. Une absence de preuve conduit à « incomplet », pas à une recommandation.</p>
 <p><strong>Mesurer :</strong> confronter les observations à +1 h, +4 h, +24 h et +7 j, sans réécrire les hypothèses après les résultats. Atlas contrôle les calculs ; Aerith explique et contextualise ; Seven conserve les preuves.</p>
-<p><a href="../data/trader_flux/q_paper/state.json">État machine Q (JSON)</a> · <a href="../data/crypto/radar-opportunities/qualification-latest.json">Qualification des 20 candidats</a> · <a href="../laboratoire/PROTOCOLE_RADAR_CIBLAGE.md">Protocole Radar</a></p></section>
+<p><a href="../data/trader_flux/q_paper/state.json">État machine Q (JSON)</a> · <a href="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json">Qualification des 20 candidats</a> · <a href="../laboratoire/PROTOCOLE_RADAR_CIBLAGE.md">Protocole Radar</a></p></section>
 <footer>ERITH.IA · Lecture seule / PAPER · Aucune transaction réelle, aucun compte lié, aucune prédiction garantie.</footer>
 </main>
 <script>
 (()=>{"use strict";
 const $=id=>document.getElementById(id);
-const rawRoot="../data/";
+const rawRoot="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/";
 const fmt=(v,n=3)=>typeof v==="number"&&Number.isFinite(v)?new Intl.NumberFormat("fr-FR",{maximumFractionDigits:n}).format(v):"—";
 const date=s=>{const x=new Date(s);return Number.isFinite(x.getTime())?x.toLocaleString("fr-FR",{timeZone:"UTC"})+" UTC":"date inconnue"};
 const errorText=x=>String(x?.message||x);
