@@ -1,0 +1,1176 @@
+{
+  "schema": "erith.radar.dynamic-forward-observations.v1",
+  "record_kind": "descriptive_daily_followup_not_paper_trades",
+  "quote": "USD",
+  "source": "Existing immutable prospective Radar Top1000 daily archives",
+  "source_archive_dates": [
+    "2026-10-16",
+    "2026-10-17"
+  ],
+  "horizons_calendar_days": [
+    1,
+    7
+  ],
+  "orders_enabled": false,
+  "trade_executions_recorded": false,
+  "fees_included": false,
+  "positions_created": false,
+  "identity_market_pair_certified": false,
+  "note": "Suivi descriptif au même identifiant CoinGecko ; horodatages réels affichés, pas de prix intrajournalier supposé. Les volumes 24 h sont des mesures de snapshots, non une quantité échangée entre deux relevés. Absence de suivi = null. USD n'est pas USDT.",
+  "observations": [
+    {
+      "id": "siren-2",
+      "symbol": "SIREN",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.037301190346523766,
+      "initial_volume_24h_usd": 6787620,
+      "initial_market_cap_usd": 26797428,
+      "initial_rank": 719,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "impossible-cloud-network-token",
+      "symbol": "ICNT",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.14503564739437733,
+      "initial_volume_24h_usd": 8911558,
+      "initial_market_cap_usd": 36801653,
+      "initial_rank": 572,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": "2026-10-17T10:34:59.840Z",
+        "price_usd": 0.1948220192622297,
+        "elapsed_hours": 33.75,
+        "volume_24h_usd": 48171327,
+        "market_cap_usd": 49299595,
+        "rank": 460,
+        "status": "OBSERVED_DAILY_SNAPSHOT",
+        "change_pct": 34.33
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "anonymous-cat",
+      "symbol": "ZCAT",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.059732457697092387,
+      "initial_volume_24h_usd": 4942500,
+      "initial_market_cap_usd": 57737777,
+      "initial_rank": 425,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "basic-attention-token",
+      "symbol": "BAT",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 0.208908984342008,
+      "initial_volume_24h_usd": 86048712,
+      "initial_market_cap_usd": 312676995,
+      "initial_rank": 143,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "zerebro",
+      "symbol": "ZEREBRO",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.05080711130003472,
+      "initial_volume_24h_usd": 48197672,
+      "initial_market_cap_usd": 50819116,
+      "initial_rank": 458,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "akedo",
+      "symbol": "AKE",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 0.03210752485788166,
+      "initial_volume_24h_usd": 38787856,
+      "initial_market_cap_usd": 731407429,
+      "initial_rank": 95,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "aleo",
+      "symbol": "ALEO",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.04518583657165477,
+      "initial_volume_24h_usd": 3470133,
+      "initial_market_cap_usd": 67540407,
+      "initial_rank": 370,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "hookr-fun",
+      "symbol": "HOOKR",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.028161064440828443,
+      "initial_volume_24h_usd": 3940941,
+      "initial_market_cap_usd": 28159716,
+      "initial_rank": 700,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "injective-protocol",
+      "symbol": "INJ",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 8.73285551023848,
+      "initial_volume_24h_usd": 243506105,
+      "initial_market_cap_usd": 873916766,
+      "initial_rank": 85,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "starknet",
+      "symbol": "STRK",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 0.08725932079333934,
+      "initial_volume_24h_usd": 465515517,
+      "initial_market_cap_usd": 662757686,
+      "initial_rank": 100,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "layerzero",
+      "symbol": "ZRO",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 2.1722791629330946,
+      "initial_volume_24h_usd": 182545080,
+      "initial_market_cap_usd": 870369497,
+      "initial_rank": 86,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "zama",
+      "symbol": "ZAMA",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 0.07592153043329979,
+      "initial_volume_24h_usd": 23849109,
+      "initial_market_cap_usd": 192577867,
+      "initial_rank": 190,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "lcx",
+      "symbol": "LCX",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.061862787198623446,
+      "initial_volume_24h_usd": 2681920,
+      "initial_market_cap_usd": 59078561,
+      "initial_rank": 413,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "aurora-near",
+      "symbol": "AURORA",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.0602013455422609,
+      "initial_volume_24h_usd": 1662960,
+      "initial_market_cap_usd": 44751452,
+      "initial_rank": 499,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "milk-alliance",
+      "symbol": "MLK",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.04451379173433739,
+      "initial_volume_24h_usd": 5843906,
+      "initial_market_cap_usd": 25917582,
+      "initial_rank": 736,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "b3",
+      "symbol": "B3",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.0006946525561692027,
+      "initial_volume_24h_usd": 5202386,
+      "initial_market_cap_usd": 32228331,
+      "initial_rank": 632,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "stonk-3",
+      "symbol": "STONK",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.12338643326787858,
+      "initial_volume_24h_usd": 14123003,
+      "initial_market_cap_usd": 97701624,
+      "initial_rank": 286,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "pons",
+      "symbol": "PONS",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 0.34128651373681,
+      "initial_volume_24h_usd": 58918429,
+      "initial_market_cap_usd": 230416776,
+      "initial_rank": 171,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "sentient",
+      "symbol": "SENT",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 0.021007888324761536,
+      "initial_volume_24h_usd": 14453094,
+      "initial_market_cap_usd": 152138340,
+      "initial_rank": 218,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "the-black-bull",
+      "symbol": "ANSEM",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T00:49:53.839Z",
+      "initial_price_usd": 0.1198541577135132,
+      "initial_volume_24h_usd": 3509371,
+      "initial_market_cap_usd": 49971047,
+      "initial_rank": 465,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "convex-finance",
+      "symbol": "CVX",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 2.0081984375116604,
+      "initial_volume_24h_usd": 12524772,
+      "initial_market_cap_usd": 187203670,
+      "initial_rank": 192,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "ethena",
+      "symbol": "ENA",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 0.2056926020784545,
+      "initial_volume_24h_usd": 522248244,
+      "initial_market_cap_usd": 2760298010,
+      "initial_rank": 40,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "non-playable-coin",
+      "symbol": "NPC",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 0.019783768127644822,
+      "initial_volume_24h_usd": 5934335,
+      "initial_market_cap_usd": 159261446,
+      "initial_rank": 212,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "ether-fi",
+      "symbol": "ETHFI",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-16",
+      "observed_at_utc": "2026-10-16T01:24:47.904Z",
+      "initial_price_usd": 0.6699863080996102,
+      "initial_volume_24h_usd": 59191642,
+      "initial_market_cap_usd": 646877068,
+      "initial_rank": 102,
+      "followup_1d": {
+        "target_date_utc": "2026-10-17",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "NO_MATCHING_VERIFIED_PRICE"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-23",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "impossible-cloud-network-token",
+      "symbol": "ICNT",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 0.1948220192622297,
+      "initial_volume_24h_usd": 48171327,
+      "initial_market_cap_usd": 49299595,
+      "initial_rank": 460,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "quack-ai",
+      "symbol": "Q",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:35:04.218Z",
+      "initial_price_usd": 0.07115097250008727,
+      "initial_volume_24h_usd": 58952182,
+      "initial_market_cap_usd": 334907932,
+      "initial_rank": 134,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "hive_dollar",
+      "symbol": "HBD",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:35:04.218Z",
+      "initial_price_usd": 3.572522316792891,
+      "initial_volume_24h_usd": 2590526,
+      "initial_market_cap_usd": 121518435,
+      "initial_rank": 249,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "manadia",
+      "symbol": "UMXM",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 0.06901456089354253,
+      "initial_volume_24h_usd": 1126081,
+      "initial_market_cap_usd": 48611398,
+      "initial_rank": 464,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "swarm-network",
+      "symbol": "TRUTH",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 0.01826133511059931,
+      "initial_volume_24h_usd": 2376653,
+      "initial_market_cap_usd": 38080760,
+      "initial_rank": 554,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "vaulta",
+      "symbol": "A",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:35:04.218Z",
+      "initial_price_usd": 0.11239084028399747,
+      "initial_volume_24h_usd": 34377812,
+      "initial_market_cap_usd": 188151651,
+      "initial_rank": 193,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "apex-token-2",
+      "symbol": "APEX",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 0.2510304516443454,
+      "initial_volume_24h_usd": 1784625,
+      "initial_market_cap_usd": 38938991,
+      "initial_rank": 542,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "metis-token",
+      "symbol": "METIS",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 4.120942855014975,
+      "initial_volume_24h_usd": 7873255,
+      "initial_market_cap_usd": 33491740,
+      "initial_rank": 609,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "kamino",
+      "symbol": "KMNO",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:35:04.218Z",
+      "initial_price_usd": 0.042186532306188,
+      "initial_volume_24h_usd": 23704143,
+      "initial_market_cap_usd": 243595805,
+      "initial_rank": 164,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "axelar",
+      "symbol": "AXL",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 0.05855855998793126,
+      "initial_volume_24h_usd": 15204989,
+      "initial_market_cap_usd": 73022828,
+      "initial_rank": 346,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "instadapp",
+      "symbol": "FLUID",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:35:04.218Z",
+      "initial_price_usd": 2.387907822404309,
+      "initial_volume_24h_usd": 4237196,
+      "initial_market_cap_usd": 199695440,
+      "initial_rank": 189,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "reserve-rights-token",
+      "symbol": "RSR",
+      "group": "momentum_24h_7d",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:35:04.218Z",
+      "initial_price_usd": 0.0020167182109382745,
+      "initial_volume_24h_usd": 22789832,
+      "initial_market_cap_usd": 126188624,
+      "initial_rank": 240,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "folks",
+      "symbol": "FOLKS",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 2.2765521788751397,
+      "initial_volume_24h_usd": 3766692,
+      "initial_market_cap_usd": 40936357,
+      "initial_rank": 529,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "bedrock-token",
+      "symbol": "BR",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 0.3982617508261051,
+      "initial_volume_24h_usd": 18255622,
+      "initial_market_cap_usd": 118146196,
+      "initial_rank": 253,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "ecomi",
+      "symbol": "OMI",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 0.0002837931306056416,
+      "initial_volume_24h_usd": 1285366,
+      "initial_market_cap_usd": 76852119,
+      "initial_rank": 336,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "mina-protocol",
+      "symbol": "MINA",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 0.08017221768606034,
+      "initial_volume_24h_usd": 15112034,
+      "initial_market_cap_usd": 103693735,
+      "initial_rank": 275,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "orbio-so",
+      "symbol": "ORBIO",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 0.0346814609672856,
+      "initial_volume_24h_usd": 4190390,
+      "initial_market_cap_usd": 32946597,
+      "initial_rank": 618,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "meta-2-2",
+      "symbol": "META",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:35:04.218Z",
+      "initial_price_usd": 5.554723408268769,
+      "initial_volume_24h_usd": 4687519,
+      "initial_market_cap_usd": 125859685,
+      "initial_rank": 242,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "lighter",
+      "symbol": "LIT",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:35:04.218Z",
+      "initial_price_usd": 3.2227103573770606,
+      "initial_volume_24h_usd": 76728305,
+      "initial_market_cap_usd": 805626944,
+      "initial_rank": 89,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "the-sandbox",
+      "symbol": "SAND",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:35:04.218Z",
+      "initial_price_usd": 0.058244163887989094,
+      "initial_volume_24h_usd": 59271854,
+      "initial_market_cap_usd": 171062394,
+      "initial_rank": 202,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "numeraire",
+      "symbol": "NMR",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 12.275110979826687,
+      "initial_volume_24h_usd": 21681125,
+      "initial_market_cap_usd": 87982436,
+      "initial_rank": 305,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    },
+    {
+      "id": "clearpool",
+      "symbol": "CPOOL",
+      "group": "rebound_24h_only",
+      "first_seen_date_utc": "2026-10-17",
+      "observed_at_utc": "2026-10-17T10:34:59.840Z",
+      "initial_price_usd": 0.029537030964728657,
+      "initial_volume_24h_usd": 2137554,
+      "initial_market_cap_usd": 29583175,
+      "initial_rank": 667,
+      "followup_1d": {
+        "target_date_utc": "2026-10-18",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      },
+      "followup_7d": {
+        "target_date_utc": "2026-10-24",
+        "at_utc": null,
+        "price_usd": null,
+        "change_pct": null,
+        "status": "AWAITING_FUTURE_DAY"
+      }
+    }
+  ]
+}
