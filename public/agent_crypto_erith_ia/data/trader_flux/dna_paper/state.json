@@ -1,6 +1,6 @@
 {
   "schema": "erith.dna.paper.48h.v1",
-  "status": "open",
+  "status": "complete",
   "mode": "PAPER",
   "executed_order": false,
   "order_permissions": false,
@@ -21,7 +21,7 @@
   "official_spot_start_utc": "2026-10-16T11:00:00.000Z",
   "started_at": "2026-10-16T16:17:48.812Z",
   "ends_not_before": "2026-10-18T16:17:48.812Z",
-  "completed_at": null,
+  "completed_at": "2026-10-18T18:37:34.453Z",
   "scenarios": [
     {
       "capital_usdc": 10,
@@ -501,6 +501,45 @@
           "reverse_fx_usdt_per_usdc": 1.00121
         }
       ]
+    },
+    {
+      "observed_at": "2026-10-18T18:37:34.453Z",
+      "dna_book_at": "2026-10-18T18:37:34.713Z",
+      "fx_book_at": "2026-10-18T18:37:34.712Z",
+      "dna_bid": 0.25699,
+      "dna_ask": 0.25783,
+      "dna_spread_pct": 0.32632764849850715,
+      "fx_bid": 1.0011,
+      "fx_ask": 1.00111,
+      "scenarios": [
+        {
+          "capital_usdc": 10,
+          "status": "valued",
+          "exit_usdc": 8.851430282391044,
+          "pnl_usdc": -1.1485697176089555,
+          "pnl_pct": -11.485697176089555,
+          "dna_exit_avg_usdt": 0.25699,
+          "reverse_fx_usdt_per_usdc": 1.00111
+        },
+        {
+          "capital_usdc": 25,
+          "status": "valued",
+          "exit_usdc": 22.129856665497492,
+          "pnl_usdc": -2.870143334502508,
+          "pnl_pct": -11.480573338010032,
+          "dna_exit_avg_usdt": 0.25699,
+          "reverse_fx_usdt_per_usdc": 1.00111
+        },
+        {
+          "capital_usdc": 100,
+          "status": "valued",
+          "exit_usdc": 88.52455050006954,
+          "pnl_usdc": -11.475449499930463,
+          "pnl_pct": -11.475449499930463,
+          "dna_exit_avg_usdt": 0.25699,
+          "reverse_fx_usdt_per_usdc": 1.00111
+        }
+      ]
     }
   ],
   "note": "En attente du premier carnet et des règles Spot réellement vérifiés. Aucune entrée rétroactive ni transaction.",
@@ -514,5 +553,34 @@
     "fx_best_ask": 1.00105,
     "fx_spread_pct": 0.0009989560908915695
   },
-  "last_observed_at": "2026-10-18T12:36:26.519Z"
+  "last_observed_at": "2026-10-18T18:37:34.453Z",
+  "final": [
+    {
+      "capital_usdc": 10,
+      "status": "valued",
+      "exit_usdc": 8.851430282391044,
+      "pnl_usdc": -1.1485697176089555,
+      "pnl_pct": -11.485697176089555,
+      "dna_exit_avg_usdt": 0.25699,
+      "reverse_fx_usdt_per_usdc": 1.00111
+    },
+    {
+      "capital_usdc": 25,
+      "status": "valued",
+      "exit_usdc": 22.129856665497492,
+      "pnl_usdc": -2.870143334502508,
+      "pnl_pct": -11.480573338010032,
+      "dna_exit_avg_usdt": 0.25699,
+      "reverse_fx_usdt_per_usdc": 1.00111
+    },
+    {
+      "capital_usdc": 100,
+      "status": "valued",
+      "exit_usdc": 88.52455050006954,
+      "pnl_usdc": -11.475449499930463,
+      "pnl_pct": -11.475449499930463,
+      "dna_exit_avg_usdt": 0.25699,
+      "reverse_fx_usdt_per_usdc": 1.00111
+    }
+  ]
 }
