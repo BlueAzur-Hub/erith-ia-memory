@@ -16,7 +16,7 @@ concurrency:
   group: ${{ github.event_name == 'pull_request' && format('hype-source-probe-pr-{0}', github.event.pull_request.number) || 'agent-crypto-bitget-immutable-native-month' }}
   cancel-in-progress: false
 jobs:
-  genuine-august-source:
+  genuine-june-source:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
@@ -31,7 +31,7 @@ jobs:
           set -euo pipefail
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_native_bitget_month.py
           python public/agent_crypto_erith_ia/tools/native_bitget_month_test.py
-      - name: Prove historical Bitget Spot August source exists, do not generate bars
+      - name: Prove historical Bitget Spot June source exists, do not generate bars
         if: github.event_name == 'pull_request'
         run: |
           set -euo pipefail
@@ -42,7 +42,7 @@ jobs:
           base=root/"data/historical_archive_prototype"
           sys.path.insert(0,str(root/"tools"))
           import collect_native_bitget_month as native
-          month="2026-08"
+          month="2026-06"
           fed=json.loads((base/"top250_multisource_coverage/index.json").read_text())
           bit=json.loads((base/"bitget_verified_views/index.json").read_text())
           a=next(x for x in fed["assets"] if x["id"]=="hyperliquid")
@@ -50,19 +50,19 @@ jobs:
           assert a["symbol"]==b["symbol"]=="HYPE" and a["rank"]==11
           assert a["quote"]==b["quote"]=="USDT" and b["pair"]=="HYPEUSDT"
           assert a["source"]=="Bitget Spot native 1m HTTPS"
-          assert month not in b["months"] and month not in {"2025-01","2026-02","2026-07","2026-09"}
+          assert month not in b["months"] and month not in {"2025-01","2026-02","2026-07","2026-08","2026-09"}
           start,end,expected=native.bounds(month)
-          assert expected==44640
+          assert expected==43200
           # At most 300 genuine minute candles inspected, strictly source-read-only.
           for point in (start,start+14*86400000,end-100*native.STEP):
               rows,sha=native.fetch_history_page("HYPEUSDT",point,point+100*native.STEP,100)
               native.verify_page(rows,point,100)
               assert len(sha)==64
-              print("HYPE AUGUST NATIVE SPOT SAMPLE",point,"rows",len(rows),
+              print("HYPE JUNE NATIVE SPOT SAMPLE",point,"rows",len(rows),
                     "response_sha256",sha,flush=True)
-          print("HYPE AUGUST 2026 SOURCE SAMPLE VERIFIED; NO RELEASE PUBLISHED",flush=True)
+          print("HYPE JUNE 2026 SOURCE SAMPLE VERIFIED; NO RELEASE PUBLISHED",flush=True)
           PY
-      - name: Publish original complete HYPE August 2026 1m native month only
+      - name: Publish original complete HYPE June 2026 1m native month only
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
         run: |
           set -euo pipefail
@@ -82,7 +82,7 @@ jobs:
           assert b["id"]==a["id"] and b["symbol"]==a["symbol"] and b["pair"]=="HYPEUSDT"
           asset={"id":"hyperliquid","rank":a["rank"],"name":a["name"],
                  "symbol":"HYPE","pair":"HYPEUSDT","venue":"bitget","quote":"USDT"}
-          month="2026-08"
+          month="2026-06"
           tag=native.release_tag(asset,month)
           present=subprocess.run(["gh","release","view",tag,"--json","tagName"],
                                  capture_output=True,text=True,timeout=45)
@@ -91,10 +91,10 @@ jobs:
               sys.exit(0)
           assert ("not found" in present.stderr.lower() or "http 404" in present.stderr.lower()),(
               "Refuse release inventory transport error: "+present.stderr[:120])
-          with tempfile.TemporaryDirectory(prefix="seven-hype-real-august-") as td:
+          with tempfile.TemporaryDirectory(prefix="seven-hype-real-june-") as td:
               folder=Path(td)
               manifest=native.execute_one(asset,month,folder,delay=0.08)
-              assert manifest["verified"]==1 and manifest["candles"]==44640
+              assert manifest["verified"]==1 and manifest["candles"]==43200
               assert manifest["no_synthetic_candles"] is True
               assert manifest["assets"][0]["asset_id"]=="hyperliquid"
               assert manifest["assets"][0]["pair"]=="HYPEUSDT"
