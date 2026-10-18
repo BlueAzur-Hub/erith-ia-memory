@@ -17,7 +17,7 @@ const start=Date.now()-24*3600000;
 const times=Array.from({length:289},(_,i)=>start+i*300000);
 const rows=times.map(t=>({t,o:99.8,h:100.8,l:99.1,c:100.1,v:100}));
 const snapshot={mode:"hybrid",loading:false,rows,loadedInstrument:"BTC-USDC",source:"OKX public candles",loadedBar:"5m"};
-const points=times.map((t,i)=>({x:60+i*30}));
+const points=times.map((t,i)=>({x:60+i*2.6}));
 const meta={type:"line",hidden:false,data:points,yScale:{getPixelForValue:v=>200+(100-v)*10}};
 const canvasCalls=[];
 const ctx={save(){},beginPath(){},rect(){},clip(){},stroke(){canvasCalls.push({kind:'stroke',color:this.strokeStyle});},fillRect(x,y,w,h){canvasCalls.push({kind:'fill',x,y,w,h,color:this.fillStyle});},fillText(text,x,y){canvasCalls.push({kind:'text',text,x,y});},restore(){},moveTo(){},lineTo(){}};
