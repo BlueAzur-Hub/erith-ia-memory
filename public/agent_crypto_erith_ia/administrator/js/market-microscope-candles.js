@@ -106,8 +106,11 @@
     return /^[A-Z0-9]{1,16}$/.test(symbol)?symbol:null;
   };
   const selectedSymbol=()=>{
+    // An explicitly selected public external market owns the current chart.
+    // Do not inherit the hidden Market/BTC selection from the pair resolver.
+    const ext=externalContext(),external=normalizeSelectedAsset(ext.active?ext.base:null);
+    if(ext.active)return external;
     const resolved=normalizeSelectedAsset(pairResolver()?.selectedAsset?.());if(resolved)return resolved;
-    const ext=externalContext(),external=normalizeSelectedAsset(ext.active?ext.base:null);if(external)return external;
     try{const coin=typeof globalThis.getSelectedCoin==="function"?globalThis.getSelectedCoin():null;const canonical=normalizeSelectedAsset(coin?.symbol);if(canonical)return canonical;}catch(_){}
     return "BTC";
   };

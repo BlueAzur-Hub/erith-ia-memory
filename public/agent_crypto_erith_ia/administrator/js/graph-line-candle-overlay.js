@@ -69,6 +69,41 @@
    });
    return a.length===1?a[0]:null;
  }
+
+ // Unlike Market Solo, public New Listing DNA/CT can keep a hidden BTC
+ // getSelectedCoin(). Verify the exact EXTERNAL chart + historic series owner.
+ function externalLineTruth(ref,loadedInstrument){
+   const ext=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
+   if(!ext?.active)return null;
+   const n=globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.();
+   const h=globalThis.AgentCryptoNewListingsNativeCategory?.mathSeriesSnapshot?.();
+   const chart=globalThis.AtlasExternalChart?.state?.();
+   const id=String(n?.selectedId||''),sym=String(n?.selectedSymbol||'').toUpperCase();
+   const requested=String(loadedInstrument||'').toUpperCase();
+   const selectedPair=String(n?.selectedPair||'').toUpperCase().replace(/\//g,'-');
+   const chartId=String(ref?.ds?.atlasCoin?.id||'');
+   if(!id||!sym||!n?.selectedProvider||!selectedPair||
+     id!==String(ext.id||'')||String(ext.base||'').toUpperCase()!==sym||
+     selectedPair!==String(ext.instrument||'').toUpperCase()||
+     requested!==selectedPair||!chart?.active||String(chart.coin_id||'')!==id||
+     chartId!==id||String(ref?.ds?.atlasCoin?.symbol||'').toUpperCase()!==sym||
+     !h||h.instrument!==n.selectedPair||h.provider!==n.selectedProvider||
+     Number(h.periodDays)!==1||h.currency!=='USD'||!String(h.source||'').includes(n.selectedPair))
+     return {reason:'Ligne conservée · contexte externe non confirmé'};
+   if(!Array.isArray(h.series)||h.series.length!==ref.ds.data.length||
+      h.series.length!==ref.meta.data.length||h.series.length<21)
+     return {reason:'Ligne conservée · historique externe non aligné'};
+   const times=h.series.map(pair=>Array.isArray(pair)?T(pair[0]):null);
+   if(!times.every(Number.isFinite)||times.some((t,i)=>i>0&&t<=times[i-1]))
+     return {reason:'Ligne conservée · heures externes invalides'};
+   const price=v=>N(Array.isArray(v)?v[1]:v&&typeof v==='object'?(v.y??v.price??v.value):v);
+   for(const i of [...new Set([0,Math.floor(times.length/2),times.length-1])]){
+     const chartP=price(ref.ds.data[i]),historyP=N(h.series[i]?.[1]);
+     if(!(chartP>0&&historyP>0)||Math.abs(chartP/historyP-1)>0.001)
+       return {reason:'Ligne conservée · série externe incohérente'};
+   }
+   return {times,coinId:id,symbol:sym,source:h.source};
+ }
  function matching(chart,s){
    const ref=owner(chart),rows=barsFrom(s);
    if(!ref)return {reason:'Hybride : disponible en Solo · prix normal'};
@@ -77,18 +112,26 @@
    if(s?.loading)return {reason:'Chargement des bougies OHLC 1h…'};
    if(!rows.length)return {reason:s?.errorCode?'OHLC indisponibles · '+String(s.errorCode).slice(0,45):'Bougies OHLC 1h non chargées'};
    if(s?.loadedBar!=='1h')return {reason:'Bougies 1h attendues · série '+String(s?.loadedBar||'absente')};
-   const symbol=String(ref.ds.atlasCoin.symbol||'').toUpperCase(),instrument=String(s.loadedInstrument||'').toUpperCase(),selected=globalThis.getSelectedCoin?.();
-   if(!symbol||!instrument.startsWith(symbol+'-')||(selected?.id&&selected.id!==ref.ds.atlasCoin.id))
+   const symbol=String(ref.ds.atlasCoin.symbol||'').toUpperCase(),instrument=String(s.loadedInstrument||'').toUpperCase();
+   const external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
+   const extTruth=external?.active?externalLineTruth(ref,instrument):null;
+   if(extTruth?.reason)return extTruth;
+   if(!symbol||!instrument.startsWith(symbol+'-'))
      return {reason:'Ligne conservée · actifs différents'};
+   if(!external?.active){
+     const selected=globalThis.getSelectedCoin?.();
+     if(selected?.id&&selected.id!==ref.ds.atlasCoin.id)
+       return {reason:'Ligne conservée · actifs différents'};
+   }
    const quote=instrument.slice(symbol.length+1),currency=String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||'USD').toUpperCase();
    if(!(quote===currency||(currency==='USD'&&(quote==='USDC'||quote==='USDT'))))
      return {reason:'Ligne conservée · cotation incompatible'};
-   const times=nativeTimeline(chart,ref.i,rows.at(-1).t),points=ref.meta.data;
+   const times=extTruth?.times||nativeTimeline(chart,ref.i,rows.at(-1).t),points=ref.meta.data;
    if(!times||times.length!==points.length)return {reason:'Ligne conservée · dates non vérifiables'};
    const first=times[0],last=times.at(-1),duration=last-first;
    if(!(duration>=16*3600000&&duration<=36*3600000)||Math.abs(last-rows.at(-1).t)>4*3600000)
      return {reason:'Ligne conservée · historique décalé'};
-   const tail=ref.ds.data.at(-1),endLine=Number(Array.isArray(tail)?tail[1]:tail?.y??tail);
+   const tail=ref.ds.data.at(-1),endLine=N(Array.isArray(tail)?tail[1]:tail&&typeof tail==='object'?(tail.y??tail.price??tail.value):tail);
    // USDC/USDT remains a distinct quote. Never relabel it USD or make FX;
    // only permit a visually close overlay with explicit provenance.
    if(!(endLine>0)||Math.abs(rows.at(-1).c/endLine-1)>.035)
@@ -123,9 +166,11 @@
    if(!(Number.isFinite(maxRange)&&maxRange>0))return null;
    // Each candle gets the same pixels per unit of intrabar range. This
    // preserves relative magnitudes while translating lows to the shared bottom.
-   const height=(lane.bodyBottom-lane.bodyTop)*.89;
-   const y=(row,value)=>lane.bodyBottom-((value-row.l)/maxRange)*height;
-   return {...lane,maxRange,scale:'per-candle-amplitude',y};
+   const height=(lane.bodyBottom-lane.bodyTop)*.92;
+   // Display-only square-root boost keeps smaller bars visible despite
+   // a single large wick; original OHLC prices and candle direction remain exact.
+   const y=(row,value)=>lane.bodyBottom-Math.sqrt(Math.max(0,Math.min(1,(value-row.l)/maxRange)))*height;
+   return {...lane,maxRange,scale:'sqrt-amplitude-display',y};
  }
  function drawBars(chart,g){
    const {ref,rows,times,first,last}=g,ctx=chart.ctx,area=chart.chartArea;
@@ -149,11 +194,10 @@
      const up=r.c>=r.o;
      ctx.strokeStyle=up?'rgba(97,235,184,.97)':'rgba(255,119,152,.97)';
      ctx.fillStyle=up?'rgba(83,224,169,.96)':'rgba(250,101,142,.96)';
-     ctx.lineWidth=1.35;ctx.beginPath();ctx.moveTo(x,yh);ctx.lineTo(x,yl);ctx.stroke();
-     // A minimum 6px makes tiny but real bodies visible: direction is never
-     // invented, and the wick still follows the measured intrabar range.
+     ctx.lineWidth=1.35;ctx.beginPath();ctx.moveTo(x,Math.min(yh,lane.bodyBottom-22));ctx.lineTo(x,yl);ctx.stroke();
+     // Visual minimums: 14px bodies, 22px wicks. No additional panel.
      const actual=Math.abs(yc-yo);
-     const bodyHeight=Math.max(6,actual);
+     const bodyHeight=Math.max(14,actual);
      const center=(yo+yc)/2;
      const bodyTop=Math.max(lane.bodyTop,Math.min(lane.bodyBottom-bodyHeight,center-bodyHeight/2));
      ctx.fillRect(x-width/2,bodyTop,width,Math.min(bodyHeight,lane.bodyBottom-bodyTop));
@@ -178,7 +222,7 @@
    if(!result.ref){hint(result.reason);return;}
    const count=drawBars(chart,result);
    hint(count?'Ligne + bougies basses · '+count+' × 1h · '+result.instrument+(result.approximate?' · position estimée':'')+(result.warning?' · OHLC conservées':''):'Ligne conservée · bougies hors période',
-     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. Bande basse = amplitude de chaque bougie translatée au même pied ; n’est pas une échelle du prix USD. Corps visuels minimum 6px. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
+     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. Bande basse = amplitude de chaque bougie translatée au même pied ; n’est pas une échelle du prix USD. Amplitudes visuelles racine carrée, corps min 14px, mèches min 22px ; pas un axe de prix. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
  }};
  function refresh(){
    if(typeof document==='undefined')return;
@@ -189,5 +233,5 @@
  if(globalThis.Chart?.register)globalThis.Chart.register(plugin);
  if(typeof window!=='undefined')for(const event of ['agent-crypto:market-candles-loaded','agent-crypto:quote-architecture-changed','agent-crypto:selected-market-changed','agent-crypto:external-asset-changed'])
    window.addEventListener(event,refresh,{passive:true});
- globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,nativeTimeline,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
+ globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,nativeTimeline,externalLineTruth,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
 })();

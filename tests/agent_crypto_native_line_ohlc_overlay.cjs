@@ -34,7 +34,7 @@ const lane=api.miniLane(chart.chartArea),geometry=api.miniGeometry(chart.chartAr
 assert.equal(api.strip_ratio,.24,"OHLC occupies the volume-bar summary zone (24%)");
 assert.ok(lane.top>=chart.chartArea.top+(.73*(chart.chartArea.bottom-chart.chartArea.top)),"Summary stays in chart bottom quarter");
 assert.ok(lane.height/(chart.chartArea.bottom-chart.chartArea.top)<=.27,"OHLC occupies no more than 27% of plotted height");
-assert.equal(geometry.scale,"per-candle-amplitude","A common per-candle amplitude scale prevents tiny distant-price bodies");
+assert.equal(geometry.scale,"sqrt-amplitude-display","Square root reduces the effect of a single oversized hour");
 assert.ok(geometry.y(rows[0],rows[0].h)<geometry.y(rows[0],rows[0].l));
 const bodies=canvasCalls.filter(v=>v.kind==='fill'&&/rgba\(83,224,169/.test(v.color));
 assert.ok(bodies.every(v=>v.y>=lane.bodyTop-.1&&v.y+v.h<=lane.bodyBottom+2.1),"All bodies stay inside the lower lane");
@@ -96,4 +96,45 @@ assert.equal(api.matching(chart,snapshot).ref,undefined,
 global.document.getElementById=id=>id==="atlasChartInsightOverlayTitle"?{textContent:"BTC · Bitcoin · 24h"}:
  id==="atlasChartInsightOverlaySummary"?{textContent:"288 points · série 01/01/2025 00:00:00 · CoinGecko"}:null;
 assert.equal(api.matching(chart,snapshot).ref,undefined,"Distant source timestamp must fail closed");
-console.log("PASS native line remains owner; visible bottom-histogram OHLC, date/asset guards, no synthetic data or orders");
+// Exact external owner: the Market may STILL be on BTC while DNA is active.
+const extId="bitget:dnausdt", extSymbol="DNA",extPair="DNA/USDT";
+const base=Date.now()-26*3600000,step=5*60000;
+const extTimes=Array.from({length:320},(_,i)=>base+i*step);
+const extPrices=extTimes.map((t,i)=>[t,.288453]);
+const extHistory={instrument:extPair,provider:"bitget",currency:"USD",periodDays:1,
+ source:"Bitget DNA/USDT candles · USDT/USD CoinGecko",series:extPrices};
+const ext={active:true,id:extId,base:extSymbol,instrument:"DNA-USDT",provider:"bitget"};
+let native={selectedId:extId,selectedSymbol:extSymbol,selectedProvider:"bitget",selectedPair:extPair};
+let extOwner={active:true,coin_id:extId};
+global.AgentCryptoNewListingLiveAsset={snapshot:()=>ext};
+global.AgentCryptoNewListingsNativeCategory={snapshot:()=>native,mathSeriesSnapshot:()=>extHistory};
+global.AtlasExternalChart={state:()=>extOwner};
+global.getSelectedCoin=()=>({id:"bitcoin",symbol:"BTC"}); // Hidden regular Market profile.
+const externalMeta={type:"line",hidden:false,data:extTimes.map((t,i)=>({x:52+2.4*i})),yScale:meta.yScale};
+const externalChart={canvas:{id:"mainChart"},ctx,chartArea:{left:50,right:850,top:40,bottom:300},
+ data:{labels:extTimes.map(t=>new Date(t).toISOString()),datasets:[{atlasCoin:{id:extId,symbol:"DNA"},data:extPrices.map(x=>x[1])}]},
+ getDatasetMeta:()=>externalMeta};
+const extRows=Array.from({length:29},(_,i)=>({t:base+i*3600000,o:.2884,h:.291,l:.286,c:.288453}));
+const extSnap={...snapshot,rows:extRows,loadedInstrument:"DNA-USDT",loadedBar:"1h",source:"Bitget public candles"};
+let truth=api.externalLineTruth({ds:externalChart.data.datasets[0],meta:externalMeta},extSnap.loadedInstrument);
+assert.equal(truth.symbol,"DNA","External chart ID and selected symbol verified");
+let hybrid=api.matching(externalChart,extSnap);
+assert.equal(hybrid.ref.ds.atlasCoin.symbol,"DNA","DNA 24h accepted despite hidden BTC Market selection");
+assert.equal(hybrid.times.length,320,"External 320 points use exact timestamps, never CoinGecko 288 interpolation");
+const dnaCount=api.drawBars(externalChart,hybrid);
+assert.ok(dnaCount>=22,"DNA draws hourly candles with exchange OHLC");
+native={...native,selectedId:"another-asset"};
+assert.equal(api.matching(externalChart,extSnap).ref,undefined,"Mismatch selection rejected");
+native={...native,selectedId:extId};
+extOwner={active:true,coin_id:"bitcoin"};
+assert.equal(api.matching(externalChart,extSnap).ref,undefined,"Old BTC external chart cannot inherit DNA labels");
+extOwner={active:true,coin_id:extId};
+assert.equal(api.matching(externalChart,{...extSnap,loadedInstrument:"BTC-USDC"}).ref,undefined,"Late BTC candle response refused");
+extHistory.periodDays=7;
+assert.equal(api.matching(externalChart,extSnap).ref,undefined,"Wrong external period refused");
+extHistory.periodDays=1;
+extHistory.source="No verified pair";
+assert.equal(api.matching(externalChart,extSnap).ref,undefined,"Wrong provenance refused");
+const microscope=fs.readFileSync(path.join(root,"administrator/js/market-microscope-candles.js"),"utf8");
+assert.match(microscope,/if\(ext.active\)return external/, "Active DNA/CT must be chosen before the hidden pair resolver");
+console.log("PASS BTC and DNA native/external contexts, exact historical timestamps, no Market BTC leakage and readable OHLC");
