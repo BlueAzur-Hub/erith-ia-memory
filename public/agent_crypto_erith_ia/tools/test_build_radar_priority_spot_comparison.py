@@ -11,7 +11,7 @@ def record(symbol, id_, venue, pair, at, close_at, price, spread):
             "market":pair, "instrument_type":"SPOT", "quote":"USDT",
             "paper_only":True, "executed_order":False,
             "candles":{"last_closed_hour_utc":close_at, "close_usdt":price,
-                       "last_21_bars_contiguous":True},
+                       "last_21_bars_contiguous":True,"change_close_20h_pct":1.25},
             "book":{"spread_bps":spread, "bid_top20_notional_usdt":1100.,
                     "ask_top20_notional_usdt":1200.}}
 
