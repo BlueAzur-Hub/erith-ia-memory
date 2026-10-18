@@ -15,6 +15,8 @@ on:
       - "public/agent_crypto_erith_ia/laboratoire/**"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
+      - "public/agent_crypto_erith_ia/administrator/js/graph-line-candle-overlay.js"
+      - "tests/agent_crypto_native_line_ohlc_overlay.cjs"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
       - "public/agent_crypto_erith_ia/administrator/js/aether.js"
@@ -34,6 +36,8 @@ on:
       - "public/agent_crypto_erith_ia/laboratoire/**"
       - "public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js"
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
+      - "public/agent_crypto_erith_ia/administrator/js/graph-line-candle-overlay.js"
+      - "tests/agent_crypto_native_line_ohlc_overlay.cjs"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
       - "public/agent_crypto_erith_ia/administrator/js/aether.js"
@@ -77,6 +81,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/trader/ct-selection-memory.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-market-pair-resolver.js
           node --check public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-line-candle-overlay.js
           node --check public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js
           node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
           node --test public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs
