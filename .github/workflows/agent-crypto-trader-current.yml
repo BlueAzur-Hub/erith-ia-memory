@@ -155,6 +155,9 @@ jobs:
       - name: Native price-variation summary in Hybrid across periods
         run: node tests/agent_crypto_hybrid_period_summary.cjs
 
+      - name: BTC annual certified OHLCV in native Hybrid
+        run: node tests/agent_crypto_btc_annual_hybrid.test.cjs
+
       - name: Cross-market candle identity and quote truth
         run: node tests/agent_crypto_market_context_identity.cjs
 
