@@ -1,0 +1,22 @@
+name: Agent Crypto Vault - Coverage checkpoint verification
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-vault-coverage-checkpoint.yml'
+      - 'tests/agent_crypto_vault_coverage_checkpoint.cjs'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_coverage_reconciliation_2026-10-18.json'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/TOP250_COVERAGE_AUDIT_2026-10-18.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source index identity, overlaps and pinned provenance
+        run: node tests/agent_crypto_vault_coverage_checkpoint.cjs
