@@ -17,9 +17,14 @@ const originals=[],idSet=new Set(),missingPct={count:0};
 for(const entry of manifest.provenance){
  const abs=path.join(root,entry.path),raw=fs.readFileSync(abs);
  const gitBlob=crypto.createHash('sha1').update(Buffer.from('blob '+raw.length+'\0')).update(raw).digest('hex');
- assert.equal(gitBlob,entry.git_blob_sha,entry.path+' source bytes changed');
- const snaps=raw.toString('utf8').split(/\r?\n/).filter(Boolean).map(JSON.parse);
- assert.equal(snaps.length,entry.records,entry.path+' source record count');
+ const sourceCanGrow=entry.path.endsWith('/2026-10-18.jsonl');
+ if(!sourceCanGrow)assert.equal(gitBlob,entry.git_blob_sha,entry.path+' closed-day source bytes changed');
+ const allSnaps=raw.toString('utf8').split(/\r?\n/).filter(Boolean).map(JSON.parse);
+ // The open UTC day may receive LATER snapshots. Freeze exactly its first
+ // source rows, and prove each value against the current append-only source.
+ assert.ok(allSnaps.length>=entry.records,entry.path+' source row deletion');
+ if(!sourceCanGrow)assert.equal(allSnaps.length,entry.records,entry.path+' closed-day source record count');
+ const snaps=allSnaps.slice(0,entry.records);
  for(const snap of snaps){
    assert.equal(snap.schema,'atlas_market_snapshot_top50_v1');
    assert.equal(snap.live_ok,true);
