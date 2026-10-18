@@ -102,20 +102,62 @@
    const x=ref.meta.data[a]?.x,y=ref.meta.data[b]?.x;
    return Number.isFinite(x)&&Number.isFinite(y)&&times[b]>times[a]?x+(y-x)*(t-times[a])/(times[b]-times[a]):null;
  }
+ // The native line chart remains the primary surface. In Hybrid, the true
+ // exchange OHLC bars live in a separate MINIATURE lane at the chart bottom.
+ // Its Y axis is local to the lane; it is NEVER the price axis of mainChart.
+ function miniLane(area){
+   if(!area||![area.left,area.right,area.top,area.bottom].every(Number.isFinite))return null;
+   const plotH=area.bottom-area.top,plotW=area.right-area.left;
+   if(plotH<230||plotW<220)return null;
+   const height=Math.max(40,Math.min(106,plotH*.16));
+   const bottom=area.bottom-4,top=bottom-height;
+   return {left:area.left+1,right:area.right-1,top,bottom,height,
+     bodyTop:top+17,bodyBottom:bottom-8};
+ }
+ // Kept pure for tests and so the strips cannot silently use Chart.js price
+ // coordinates. On a bigger screen the band grows only up to 106 pixels.
+ function miniGeometry(area,ohlcRows){
+   const lane=miniLane(area);
+   if(!lane||!Array.isArray(ohlcRows)||ohlcRows.length<2)return null;
+   const low=Math.min(...ohlcRows.map(r=>r.l)),high=Math.max(...ohlcRows.map(r=>r.h));
+   if(!(Number.isFinite(low)&&Number.isFinite(high)&&low>0&&high>=low))return null;
+   const span=Math.max(high-low,Math.abs(high)*.000001,1e-10),lo=low-span*.055,hi=high+span*.055;
+   return {...lane,lo,hi,scale:'local-ohlc',y:value=>lane.bodyBottom-(value-lo)/(hi-lo)*(lane.bodyBottom-lane.bodyTop)};
+ }
  function drawBars(chart,g){
    const {ref,rows,times,first,last}=g,ctx=chart.ctx,area=chart.chartArea;
    if(!ctx||!area||typeof ctx.save!=='function')return 0;
-   const inside=rows.filter(r=>r.t>=first&&r.t<=last),width=Math.max(2,Math.min(7,(area.right-area.left)/Math.max(24,inside.length)*.32));
-   let count=0;ctx.save();ctx.beginPath();ctx.rect(area.left,area.top,area.right-area.left,area.bottom-area.top);ctx.clip();
-   inside.forEach(r=>{const x=px(r.t,ref,times);if(x===null)return;
-     const h=ref.meta.yScale.getPixelForValue(r.h),l=ref.meta.yScale.getPixelForValue(r.l),o=ref.meta.yScale.getPixelForValue(r.o),c=ref.meta.yScale.getPixelForValue(r.c);
-     if(![h,l,o,c].every(Number.isFinite))return;
+   const inside=rows.filter(r=>r.t>=first&&r.t<=last),lane=miniGeometry(area,inside);
+   if(!lane)return 0;
+   const width=Math.max(3,Math.min(12,(lane.right-lane.left)/Math.max(12,inside.length)*.30));
+   let count=0;
+   ctx.save();
+   // Lightly reduce the bars of Volume ONLY inside this small lower area.
+   // No modification of their existing dataset or the Volume toggle.
+   ctx.beginPath();ctx.rect(lane.left,lane.top,lane.right-lane.left,lane.height);ctx.clip();
+   ctx.fillStyle='rgba(3,12,24,.42)';
+   ctx.fillRect(lane.left,lane.top,lane.right-lane.left,lane.height);
+   ctx.beginPath();ctx.moveTo(lane.left,lane.top+.5);ctx.lineTo(lane.right,lane.top+.5);
+   ctx.strokeStyle='rgba(114,220,227,.46)';ctx.lineWidth=1;ctx.stroke();
+   if(typeof ctx.fillText==='function'){
+     ctx.font='750 9px system-ui,sans-serif';ctx.textAlign='left';ctx.textBaseline='top';
+     ctx.fillStyle='rgba(185,227,231,.91)';
+     ctx.fillText('MINI-BOUGIES · 1H · ÉCHELLE LOCALE',lane.left+8,lane.top+4);
+   }
+   // Horizontal positioning follows the native line timeline; vertical OHLC
+   // proportions follow ONLY this local mini-lane, not the main USD axis.
+   inside.forEach(r=>{
+     const x=px(r.t,ref,times);if(x===null||x<lane.left||x>lane.right)return;
+     const yh=lane.y(r.h),yl=lane.y(r.l),yo=lane.y(r.o),yc=lane.y(r.c);
+     if(![yh,yl,yo,yc].every(Number.isFinite))return;
      const up=r.c>=r.o;
-     ctx.strokeStyle=up?'rgba(91,232,188,.50)':'rgba(246,120,143,.50)';
-     ctx.fillStyle=up?'rgba(91,232,188,.23)':'rgba(246,120,143,.23)';
-     ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,h);ctx.lineTo(x,l);ctx.stroke();
-     ctx.fillRect(x-width/2,Math.min(o,c),width,Math.max(1,Math.abs(c-o)));count++;
-   });ctx.restore();return count;
+     ctx.strokeStyle=up?'rgba(100,241,194,.90)':'rgba(255,128,156,.90)';
+     ctx.fillStyle=up?'rgba(93,228,185,.91)':'rgba(250,117,147,.91)';
+     ctx.lineWidth=1.15;ctx.beginPath();ctx.moveTo(x,yh);ctx.lineTo(x,yl);ctx.stroke();
+     const top=Math.min(yo,yc),h=Math.max(2,Math.abs(yc-yo));
+     ctx.fillRect(x-width/2,Math.min(top,lane.bodyBottom-2),width,h);count++;
+   });
+   ctx.restore();return count;
  }
  function hint(message,title=''){
    if(typeof document==='undefined')return;
@@ -128,13 +170,13 @@
    }
    el.hidden=false;el.textContent=message;el.title=title;
  }
- const plugin={id:'agentCryptoNativeLineCandles',beforeDatasetsDraw(chart){
+ const plugin={id:'agentCryptoNativeLineCandles',afterDatasetsDraw(chart){
    if(chart?.canvas?.id!=='mainChart'||!mode())return;
    const result=matching(chart,globalThis.AgentCryptoMarketMicroscope?.snapshot?.());
    if(!result.ref){hint(result.reason);return;}
    const count=drawBars(chart,result);
-   hint(count?'Ligne + '+count+' bougies 1h · '+result.instrument+(result.approximate?' · position estimée':'')+(result.warning?' · OHLC conservées':''):'Ligne conservée · bougies hors période',
-     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
+   hint(count?'Ligne + mini-bougies basses · '+count+' × 1h · '+result.instrument+(result.approximate?' · position estimée':'')+(result.warning?' · OHLC conservées':''):'Ligne conservée · bougies hors période',
+     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. Bande basse à échelle OHLC locale, non comparable à l’axe USD du graphique. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
  }};
  function refresh(){
    if(typeof document==='undefined')return;
@@ -145,5 +187,5 @@
  if(globalThis.Chart?.register)globalThis.Chart.register(plugin);
  if(typeof window!=='undefined')for(const event of ['agent-crypto:market-candles-loaded','agent-crypto:quote-architecture-changed','agent-crypto:selected-market-changed','agent-crypto:external-asset-changed'])
    window.addEventListener(event,refresh,{passive:true});
- globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,nativeTimeline,matching,drawBars,plugin,read_only:true,real_order:false,market_core_changed:false});
+ globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,nativeTimeline,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.16,read_only:true,real_order:false,market_core_changed:false});
 })();
