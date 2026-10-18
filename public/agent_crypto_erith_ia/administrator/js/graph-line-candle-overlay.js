@@ -246,6 +246,18 @@
      Object.assign(el.style,{position:'absolute',right:'12px',top:'48px',zIndex:'8',font:'750 9px system-ui,sans-serif',padding:'3px 6px',background:'rgba(2,12,20,.72)',color:'#afd5e0',borderRadius:'5px',pointerEvents:'none',maxWidth:'55%',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'});
      el.setAttribute('aria-live','polite');shell.appendChild(el);
    }
+   // Hover content stays small and multi-line; never stretch across the chart.
+   const activeHover=!!(globalThis.AgentCryptoMarketMicroscope?.snapshot?.()?.mode==='hybrid'&&hoveredIndex>=0);
+   Object.assign(el.style,activeHover?{
+     maxWidth:'256px',width:'max-content',whiteSpace:'pre-line',
+     lineHeight:'1.45',font:'700 10px system-ui,sans-serif',padding:'6px 9px',
+     background:'rgba(2,12,20,.89)',border:'1px solid rgba(108,202,219,.35)',
+     textAlign:'left',right:'12px',top:'48px'
+   }:{
+     maxWidth:'55%',width:'auto',whiteSpace:'nowrap',lineHeight:'normal',
+     font:'750 9px system-ui,sans-serif',padding:'3px 6px',
+     background:'rgba(2,12,20,.72)',border:'none',textAlign:'left',right:'12px',top:'48px'
+   });
    el.hidden=false;el.textContent=message;el.title=title;
  }
 
@@ -462,7 +474,9 @@
    const volText=Number.isFinite(vol)&&vol>=0?
      frNumber(vol,5)+' '+summary.symbol+' (volume exchange)':'volume non vérifié';
    return {
-     short:fmtTime(bar.start)+'–'+fmtTime(bar.stop)+' · '+fmtPrice(bar.open,currency)+' → '+fmtPrice(bar.close,currency)+' · '+(bar.change>=0?'+':'')+frNumber(bar.change,2)+'% · '+volText,
+     short:summary.symbol+' · '+fmtTime(bar.start)+'–'+fmtTime(bar.stop)+'\n'+
+       fmtPrice(bar.open,currency)+' → '+fmtPrice(bar.close,currency)+'\n'+
+       (bar.change>=0?'+':'')+frNumber(bar.change,2)+' % · '+volText,
      detail:summary.symbol+' · '+fmtTime(bar.start)+' → '+fmtTime(bar.stop)+'\n'+
        'Prix début : '+fmtPrice(bar.open,currency)+' · Prix fin : '+fmtPrice(bar.close,currency)+'\n'+
        'Variation : '+(bar.delta>=0?'+':'')+fmtPrice(bar.delta,currency)+' / '+
@@ -472,6 +486,15 @@
    };
  }
  let lastSummary=null,lastVolumes=[],lastGeometry=null,hoveredIndex=-1;
+ // Only hide the *drawn* curve-following shadow in Hybrid. Keep the underlying
+ // Volume preference and its original chart state untouched in all other modes.
+ const savedShadowVisibility=new WeakMap();
+ function hideNativeFloatboard(){
+   const el=typeof document!=='undefined'?document.getElementById('atlasChartTooltip'):null;
+   if(!el)return;
+   el.hidden=true;el.setAttribute('aria-hidden','true');
+ }
+
  function paintHint(){
    if(!lastSummary?.bars)return;
    if(hoveredIndex>=0){
@@ -486,6 +509,16 @@
        'Couleur : hausse/baisse. Les volumes non couverts gardent une largeur standard.');
  }
  const plugin={id:'agentCryptoNativeLineCandles',
+   beforeDraw(chart){
+     if(chart?.canvas?.id!=='mainChart'||!mode()||savedShadowVisibility.has(chart))return;
+     savedShadowVisibility.set(chart,chart.$atlasVolumeVisible);
+     chart.$atlasVolumeVisible=false;
+   },
+   afterDraw(chart){
+     if(!chart||!savedShadowVisibility.has(chart))return;
+     chart.$atlasVolumeVisible=savedShadowVisibility.get(chart);
+     savedShadowVisibility.delete(chart);
+   },
    beforeDatasetDraw(chart,args){
      if(chart?.canvas?.id!=='mainChart'||!mode())return;
      // Keep original Volume when summary is unavailable, so no blank chart.
@@ -504,6 +537,7 @@
      lastGeometry=summaryGeometry(chart,summary,lastVolumes);
      drawVariationSummary(chart,summary,lastVolumes);
      if(hoveredIndex>=summary.bars.length)hoveredIndex=-1;
+     if(hoveredIndex>=0)hideNativeFloatboard();
      paintHint();
    },
    afterEvent(chart,args){
@@ -528,6 +562,7 @@
        }
      }
      if(selected!==hoveredIndex){hoveredIndex=selected;paintHint();}
+     if(selected>=0)hideNativeFloatboard();
    }
  };
  function refresh(){
