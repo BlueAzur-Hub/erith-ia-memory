@@ -102,60 +102,69 @@
    const x=ref.meta.data[a]?.x,y=ref.meta.data[b]?.x;
    return Number.isFinite(x)&&Number.isFinite(y)&&times[b]>times[a]?x+(y-x)*(t-times[a])/(times[b]-times[a]):null;
  }
- // The native line chart remains the primary surface. In Hybrid, the true
- // exchange OHLC bars live in a separate MINIATURE lane at the chart bottom.
- // Its Y axis is local to the lane; it is NEVER the price axis of mainChart.
+ // Hybrid is a DIRECTION / AMPLITUDE summary in the EXISTING bottom bar zone,
+ // not a second price plot. True exchange OHLC values remain untouched.
+ // All lows are placed on one visual baseline (like the native volume bars);
+ // height compares each candle's intrabar high-low amplitude, NOT absolute price.
  function miniLane(area){
    if(!area||![area.left,area.right,area.top,area.bottom].every(Number.isFinite))return null;
    const plotH=area.bottom-area.top,plotW=area.right-area.left;
    if(plotH<230||plotW<220)return null;
-   const height=Math.max(40,Math.min(106,plotH*.16));
-   const bottom=area.bottom-4,top=bottom-height;
+   const height=Math.max(60,Math.min(170,plotH*.24));
+   const bottom=area.bottom-5,top=bottom-height;
    return {left:area.left+1,right:area.right-1,top,bottom,height,
-     bodyTop:top+17,bodyBottom:bottom-8};
+     bodyTop:top+19,bodyBottom:bottom-7};
  }
- // Kept pure for tests and so the strips cannot silently use Chart.js price
- // coordinates. On a bigger screen the band grows only up to 106 pixels.
  function miniGeometry(area,ohlcRows){
    const lane=miniLane(area);
    if(!lane||!Array.isArray(ohlcRows)||ohlcRows.length<2)return null;
-   const low=Math.min(...ohlcRows.map(r=>r.l)),high=Math.max(...ohlcRows.map(r=>r.h));
-   if(!(Number.isFinite(low)&&Number.isFinite(high)&&low>0&&high>=low))return null;
-   const span=Math.max(high-low,Math.abs(high)*.000001,1e-10),lo=low-span*.055,hi=high+span*.055;
-   return {...lane,lo,hi,scale:'local-ohlc',y:value=>lane.bodyBottom-(value-lo)/(hi-lo)*(lane.bodyBottom-lane.bodyTop)};
+   if(!ohlcRows.every(r=>Number.isFinite(r.h)&&Number.isFinite(r.l)&&r.h>=r.l&&r.l>0))return null;
+   const maxRange=Math.max(...ohlcRows.map(r=>r.h-r.l));
+   if(!(Number.isFinite(maxRange)&&maxRange>0))return null;
+   // Each candle gets the same pixels per unit of intrabar range. This
+   // preserves relative magnitudes while translating lows to the shared bottom.
+   const height=(lane.bodyBottom-lane.bodyTop)*.89;
+   const y=(row,value)=>lane.bodyBottom-((value-row.l)/maxRange)*height;
+   return {...lane,maxRange,scale:'per-candle-amplitude',y};
  }
  function drawBars(chart,g){
    const {ref,rows,times,first,last}=g,ctx=chart.ctx,area=chart.chartArea;
    if(!ctx||!area||typeof ctx.save!=='function')return 0;
    const inside=rows.filter(r=>r.t>=first&&r.t<=last),lane=miniGeometry(area,inside);
    if(!lane)return 0;
-   const width=Math.max(3,Math.min(12,(lane.right-lane.left)/Math.max(12,inside.length)*.30));
+   // Mimic the native lower histogram's visual width: readable 1h bodies,
+   // clamped to avoid collisions if the available chart becomes narrower.
+   const spacing=(lane.right-lane.left)/Math.max(inside.length,1);
+   const width=Math.max(3,Math.min(22,spacing*.60));
    let count=0;
-   ctx.save();
-   // Lightly reduce the bars of Volume ONLY inside this small lower area.
-   // No modification of their existing dataset or the Volume toggle.
-   ctx.beginPath();ctx.rect(lane.left,lane.top,lane.right-lane.left,lane.height);ctx.clip();
-   ctx.fillStyle='rgba(3,12,24,.42)';
+   ctx.save();ctx.beginPath();ctx.rect(lane.left,lane.top,lane.right-lane.left,lane.height);ctx.clip();
+   // Exchange bars take visual precedence over the native lower histogram,
+   // without mutating the Volume dataset or its user toggle.
+   ctx.fillStyle='rgba(3,12,24,.82)';
    ctx.fillRect(lane.left,lane.top,lane.right-lane.left,lane.height);
-   ctx.beginPath();ctx.moveTo(lane.left,lane.top+.5);ctx.lineTo(lane.right,lane.top+.5);
-   ctx.strokeStyle='rgba(114,220,227,.46)';ctx.lineWidth=1;ctx.stroke();
+   ctx.strokeStyle='rgba(114,220,227,.25)';ctx.lineWidth=1;
+   ctx.beginPath();ctx.moveTo(lane.left,lane.top+.5);ctx.lineTo(lane.right,lane.top+.5);ctx.stroke();
    if(typeof ctx.fillText==='function'){
-     ctx.font='750 9px system-ui,sans-serif';ctx.textAlign='left';ctx.textBaseline='top';
-     ctx.fillStyle='rgba(185,227,231,.91)';
-     ctx.fillText('MINI-BOUGIES · 1H · ÉCHELLE LOCALE',lane.left+8,lane.top+4);
+     ctx.font='700 9px system-ui,sans-serif';ctx.textAlign='left';ctx.textBaseline='top';
+     ctx.fillStyle='rgba(185,227,231,.76)';
+     ctx.fillText('BOUGIES 1H · AMPLITUDE RELATIVE',lane.left+7,lane.top+4);
    }
-   // Horizontal positioning follows the native line timeline; vertical OHLC
-   // proportions follow ONLY this local mini-lane, not the main USD axis.
    inside.forEach(r=>{
      const x=px(r.t,ref,times);if(x===null||x<lane.left||x>lane.right)return;
-     const yh=lane.y(r.h),yl=lane.y(r.l),yo=lane.y(r.o),yc=lane.y(r.c);
+     const yh=lane.y(r,r.h),yl=lane.y(r,r.l),yo=lane.y(r,r.o),yc=lane.y(r,r.c);
      if(![yh,yl,yo,yc].every(Number.isFinite))return;
      const up=r.c>=r.o;
-     ctx.strokeStyle=up?'rgba(100,241,194,.90)':'rgba(255,128,156,.90)';
-     ctx.fillStyle=up?'rgba(93,228,185,.91)':'rgba(250,117,147,.91)';
-     ctx.lineWidth=1.15;ctx.beginPath();ctx.moveTo(x,yh);ctx.lineTo(x,yl);ctx.stroke();
-     const top=Math.min(yo,yc),h=Math.max(2,Math.abs(yc-yo));
-     ctx.fillRect(x-width/2,Math.min(top,lane.bodyBottom-2),width,h);count++;
+     ctx.strokeStyle=up?'rgba(97,235,184,.97)':'rgba(255,119,152,.97)';
+     ctx.fillStyle=up?'rgba(83,224,169,.96)':'rgba(250,101,142,.96)';
+     ctx.lineWidth=1.35;ctx.beginPath();ctx.moveTo(x,yh);ctx.lineTo(x,yl);ctx.stroke();
+     // A minimum 6px makes tiny but real bodies visible: direction is never
+     // invented, and the wick still follows the measured intrabar range.
+     const actual=Math.abs(yc-yo);
+     const bodyHeight=Math.max(6,actual);
+     const center=(yo+yc)/2;
+     const bodyTop=Math.max(lane.bodyTop,Math.min(lane.bodyBottom-bodyHeight,center-bodyHeight/2));
+     ctx.fillRect(x-width/2,bodyTop,width,Math.min(bodyHeight,lane.bodyBottom-bodyTop));
+     count++;
    });
    ctx.restore();return count;
  }
@@ -175,8 +184,8 @@
    const result=matching(chart,globalThis.AgentCryptoMarketMicroscope?.snapshot?.());
    if(!result.ref){hint(result.reason);return;}
    const count=drawBars(chart,result);
-   hint(count?'Ligne + mini-bougies basses · '+count+' × 1h · '+result.instrument+(result.approximate?' · position estimée':'')+(result.warning?' · OHLC conservées':''):'Ligne conservée · bougies hors période',
-     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. Bande basse à échelle OHLC locale, non comparable à l’axe USD du graphique. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
+   hint(count?'Ligne + bougies basses · '+count+' × 1h · '+result.instrument+(result.approximate?' · position estimée':'')+(result.warning?' · OHLC conservées':''):'Ligne conservée · bougies hors période',
+     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. Bande basse = amplitude de chaque bougie translatée au même pied ; n’est pas une échelle du prix USD. Corps visuels minimum 6px. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
  }};
  function refresh(){
    if(typeof document==='undefined')return;
@@ -187,5 +196,5 @@
  if(globalThis.Chart?.register)globalThis.Chart.register(plugin);
  if(typeof window!=='undefined')for(const event of ['agent-crypto:market-candles-loaded','agent-crypto:quote-architecture-changed','agent-crypto:selected-market-changed','agent-crypto:external-asset-changed'])
    window.addEventListener(event,refresh,{passive:true});
- globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,nativeTimeline,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.16,read_only:true,real_order:false,market_core_changed:false});
+ globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,nativeTimeline,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
 })();

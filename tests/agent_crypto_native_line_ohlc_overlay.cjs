@@ -6,7 +6,7 @@ const code=fs.readFileSync(path.join(root,"administrator/js/graph-line-candle-ov
 new vm.Script(code);
 assert.match(code,/afterDatasetsDraw/);
 assert.doesNotMatch(code,/beforeDatasetsDraw/,'Mini candles are on top of volume only in the bottom lane');
-assert.match(code,/ÉCHELLE LOCALE/);
+assert.match(code,/AMPLITUDE RELATIVE/);
 assert.match(code,/mainChart/);
 assert.match(code,/agent-crypto:market-candles-loaded/);
 require(path.join(root,"administrator/js/graph-line-candle-overlay.js"));
@@ -28,17 +28,28 @@ global.AgentCryptoMarketMicroscope={snapshot:()=>snapshot};
 const matched=api.matching(chart,snapshot);
 assert.equal(matched.ref.ds.atlasCoin.id,"bitcoin");
 assert.equal(api.drawBars(chart,matched),25);
-assert.equal(canvasCalls.filter(v=>v.kind==='fill'&&/rgba\(93,228,185/.test(v.color)).length,25);
+assert.equal(canvasCalls.filter(v=>v.kind==='fill'&&/rgba\(83,224,169/.test(v.color)).length,25);
 const lane=api.miniLane(chart.chartArea),geometry=api.miniGeometry(chart.chartArea,rows);
-assert.equal(api.strip_ratio,.16,"Strip occupies 16% of chart plot");
-assert.ok(lane.top>=chart.chartArea.top+(.80*(chart.chartArea.bottom-chart.chartArea.top)),"Mini OHLC stays close to chart bottom");
-assert.ok(lane.height/(chart.chartArea.bottom-chart.chartArea.top)<=.18,"Mini OHLC uses no more than 18% of visible height");
-assert.equal(geometry.scale,"local-ohlc","Price axis must be completely separate from OHLC lane");
-assert.ok(geometry.y(rows[0].h)<geometry.y(rows[0].l));
-const bodies=canvasCalls.filter(v=>v.kind==='fill'&&/rgba\(93,228,185/.test(v.color));
+assert.equal(api.strip_ratio,.24,"OHLC occupies the volume-bar summary zone (24%)");
+assert.ok(lane.top>=chart.chartArea.top+(.73*(chart.chartArea.bottom-chart.chartArea.top)),"Summary stays in chart bottom quarter");
+assert.ok(lane.height/(chart.chartArea.bottom-chart.chartArea.top)<=.27,"OHLC occupies no more than 27% of plotted height");
+assert.equal(geometry.scale,"per-candle-amplitude","A common per-candle amplitude scale prevents tiny distant-price bodies");
+assert.ok(geometry.y(rows[0],rows[0].h)<geometry.y(rows[0],rows[0].l));
+const bodies=canvasCalls.filter(v=>v.kind==='fill'&&/rgba\(83,224,169/.test(v.color));
 assert.ok(bodies.every(v=>v.y>=lane.bodyTop-.1&&v.y+v.h<=lane.bodyBottom+2.1),"All bodies stay inside the lower lane");
-assert.ok(canvasCalls.some(v=>v.kind==='text'&&v.text.includes('ÉCHELLE LOCALE')),"Local OHLC price scale must be visibly labeled");
-assert.ok(canvasCalls.some(v=>v.kind==='fill'&&v.color==='rgba(3,12,24,.42)'),"Native volume is shaded, not deleted");
+assert.ok(canvasCalls.some(v=>v.kind==='text'&&v.text.includes('AMPLITUDE RELATIVE')),"Local OHLC price scale must be visibly labeled");
+assert.ok(canvasCalls.some(v=>v.kind==='fill'&&v.color==='rgba(3,12,24,.82)'),"Native volume is shaded, not deleted");
+
+// Real 1h ranges of different magnitudes must differ like lower histogram bars,
+// even if their absolute BTC prices differ. Both lows share the visual baseline.
+const large={t:times[0],o:100,h:120,l:99,c:116};
+const small={t:times[1],o:100,h:104,l:99,c:102};
+const compare=api.miniGeometry({left:0,right:800,top:0,bottom:520},[large,small]);
+assert.ok(compare.y(large,large.h)<compare.y(small,small.h),"Larger intrabar move has taller bar");
+assert.equal(compare.y(large,large.l),compare.y(small,small.l),"All lows align at bottom, unlike previous price-level strip");
+const red={t:times[2],o:109,h:111,l:96,c:99};
+assert.ok(api.miniGeometry({left:0,right:800,top:0,bottom:520},[large,red]).y(red,red.o)<api.miniGeometry({left:0,right:800,top:0,bottom:520},[large,red]).y(red,red.c),"Red body points downward");
+
 const beforeOther=canvasCalls.length;
 const nativeScale=meta.yScale.getPixelForValue;
 meta.yScale.getPixelForValue=()=>-1000000;
@@ -83,4 +94,4 @@ assert.equal(api.matching(chart,snapshot).ref,undefined,
 global.document.getElementById=id=>id==="atlasChartInsightOverlayTitle"?{textContent:"BTC · Bitcoin · 24h"}:
  id==="atlasChartInsightOverlaySummary"?{textContent:"288 points · série 01/01/2025 00:00:00 · CoinGecko"}:null;
 assert.equal(api.matching(chart,snapshot).ref,undefined,"Distant source timestamp must fail closed");
-console.log("PASS native line owns chart; real OHLC candles behind line; 288-point CoinGecko no-label timeline, explicit approximate alignment, stale/different periods refused");
+console.log("PASS native line remains owner; visible bottom-histogram OHLC, date/asset guards, no synthetic data or orders");
