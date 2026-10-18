@@ -77,4 +77,72 @@ assert.equal(api.variationSummary(chart).coinId,"external-dna","DNA chart uses i
 global.AgentCryptoNewListingLiveAsset=originalExternal;
 title="BTC · Bitcoin · 30j · PRIX USD · NORMALE";
 assert.equal(api.variationSummary(chart).bars,undefined,"24h series cannot masquerade as 30j");
+
+// Native calendar boundaries: 7 days start at midnight; 90 days at Monday;
+// 1 year on the first of each month. No rolling equal-length fake "months".
+global.getSelectedCoin=()=>({id:"bitcoin",symbol:"BTC"});
+chart.data.datasets[0].atlasCoin={id:"bitcoin",symbol:"BTC"};
+fixture("7j",7,169,7);
+const seven=api.variationSummary(chart),bounds7=api.summaryBoundaries(seven.period,seven.first,seven.last);
+assert.equal(new Date(bounds7[0]).getHours(),0,"7j uses calendar midnight");
+assert.equal(new Date(bounds7[0]).getMinutes(),0,"7j bins start on calendar days");
+fixture("90j",90,361,13);
+const ninety=api.variationSummary(chart),bounds90=api.summaryBoundaries(ninety.period,ninety.first,ninety.last);
+assert.equal(new Date(bounds90[0]).getDay(),1,"Weekly groups start Monday");
+fixture("1a",365,366,12);
+const annual=api.variationSummary(chart),boundsYear=api.summaryBoundaries(annual.period,annual.first,annual.last);
+assert.equal(new Date(boundsYear[0]).getDate(),1,"Annual history uses real calendar months");
+
+// Verified exchange base volumes: optional, read only from already loaded data.
+// CoinGecko rolling 'total_volumes' must never be summed as if traded buckets.
+fixture("24h",1,289,24);
+const current=api.variationSummary(chart);
+const realOHLC=current.bars.map((b,i)=>({t:b.start,o:100,h:101,l:99,c:100.5,v:100+i*45}));
+const snap={loadedInstrument:"BTC-USDC",loadedBar:"1h",source:"OKX candles",rows:realOHLC,loading:false};
+const verified=api.observedVolumes(current,snap);
+assert.equal(verified.length,24);
+assert.equal(verified.filter(x=>x!==null).length,24,"Complete 24h exchange series is eligible");
+assert.ok(verified[23]>verified[0],"Distinct real volumes contribute to relative width");
+const geometry=api.summaryGeometry(chart,current,verified);
+assert.ok(geometry.rects[23].w>geometry.rects[0].w,"Volume widens the observed heavy-trading bar");
+assert.ok(geometry.rects.every(x=>x.w>0&&x.w<=60),"Volume cannot cause bar collisions");
+const hover=api.summaryHover(current,verified,23);
+assert.match(hover.short,/volume exchange/);
+assert.match(hover.detail,/Prix début/);
+assert.match(hover.detail,/Prix fin/);
+assert.match(hover.detail,/Variation/);
+assert.match(hover.detail,/Volume observé/);
+const unknown=api.observedVolumes(current,{...snap,loadedInstrument:"ETH-USDC"});
+assert.ok(unknown.every(x=>x===null),"Cross-asset volume blocked");
+assert.equal(api.summaryGeometry(chart,current,unknown).rects[0].w,
+  api.summaryGeometry(chart,current,unknown).rects[23].w,"Unknown volume preserves original equal widths");
+assert.match(api.summaryHover(current,unknown,0).detail,/volume non vérifié/,"Missing volume is explicitly disclosed");
+assert.ok(api.observedVolumes(current,{...snap,loading:true}).every(x=>x===null),"Loading candles ignored");
+assert.ok(api.observedVolumes(current,{...snap,loadedBar:"bogus"}).every(x=>x===null),"Cadence unknown is not guessed");
+assert.ok(api.observedVolumes(current,{...snap,rows:realOHLC.map(r=>({...r,v:null}))}).every(x=>x===null),
+  "Missing volume cannot be interpreted as zero");
+assert.ok(api.observedVolumes(current,{...snap,rows:realOHLC.slice(0,3)}).every(x=>x===null),
+  "Sparse volume cannot imply comparable market activity");
+const savedRef=global.AgentCryptoMarketMicroscope;
+global.AgentCryptoMarketMicroscope={snapshot:()=>({mode:"hybrid",...snap})};
+const output=api.plugin.beforeDatasetDraw(chart,{index:1});
+assert.equal(output,false,"Native volume visually hidden only while summary is valid");
+api.plugin.afterDatasetsDraw(chart);
+const statusEvent={event:{type:"mousemove",x:geometry.rects[23].x,y:geometry.lane.bodyBottom-3}};
+api.plugin.afterEvent(chart,statusEvent); // Tooltip via existing chart status, never a new canvas/panel
+api.plugin.afterEvent(chart,{event:{type:"mouseout"}});
+global.AgentCryptoMarketMicroscope=savedRef;
+// No coin-specific BTC/DNA/CT special case: a different canonical coin renders
+// the same price/variation engine and rejects old BTC exchange volume.
+for(const [id,symbol] of [["ethereum","ETH"],["cardano","ADA"],["solana","SOL"]]){
+ chart.data.datasets[0].atlasCoin={id,symbol};
+ global.getSelectedCoin=()=>({id,symbol});
+ fixture("24h",1,289,24);
+ assert.equal(api.variationSummary(chart).symbol,symbol,"Generic Market asset "+symbol);
+ assert.ok(api.observedVolumes(api.variationSummary(chart),snap).every(x=>x===null),
+   "Never display BTC volume under "+symbol);
+}
+global.getSelectedCoin=()=>({id:"bitcoin",symbol:"BTC"});
+chart.data.datasets[0].atlasCoin={id:"bitcoin",symbol:"BTC"};
+console.log("PASS generic all-asset Hybrid: calendar boundaries, hover, genuine optional volume and safe fallback");
 console.log("PASS simple native variation bars 24h/7j/30j/60j/90j/1a/Max; no OHLC, no panel, skip volume, asset and period guards");
