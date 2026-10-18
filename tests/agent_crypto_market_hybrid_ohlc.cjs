@@ -1,5 +1,5 @@
 "use strict";
-/* Same-canvas OHLC + close line; no interpolated history or trading. */
+/* Native line with OHLC mini-lane; no synthetic history or trading. */
 const fs=require("node:fs"),path=require("node:path"),assert=require("node:assert/strict"),vm=require("node:vm");
 const root=path.resolve(__dirname,"../public/agent_crypto_erith_ia");
 const candles=fs.readFileSync(path.join(root,"administrator/js/market-microscope-candles.js"),"utf8");
@@ -16,7 +16,8 @@ assert.match(candles,/function setMode\(mode\)\{state\.mode=mode==="hybrid"\?"hy
 assert.match(candles,/classList\.toggle\("is-open",state\.mode==="candles"\)/,"Hybrid shows the original line chart instead of candle canvas");
 assert.match(candles,/if\(state\.mode==="hybrid"\)void load\(\{bar:"1h",reason:"native-line-overlay"\}\)/,"Hybrid requests actual 1h OHLC for native overlay");
 assert.doesNotMatch(candles,/drawIndicator\(rows\.map\(row=>row\.c\),/,"No reverse close line on candlestick canvas");
-assert.match(overlay,/beforeDatasetsDraw\(chart\)/,"OHLC overlay is behind the original line");
+assert.match(overlay,/afterDatasetsDraw\(chart\)/,"Mini OHLC lower lane renders over native volume without modifying its dataset");
+assert.match(overlay,/function miniGeometry\(area,ohlcRows\)/,"Mini lane has its own OHLC scale");
 assert.match(overlay,/chart\?\.canvas\?\.id!==\x27mainChart\x27/,"Only the original native chart is enhanced");
 assert.match(candles,/rows\.forEach\(\(r,i\)=>\{const xx=x\(i\),up=r\.c>=r\.o;/,"True candlesticks still render");
 assert.match(overlay,/Ligne \+ /,"Hybrid retains the native line as principal surface");
@@ -35,4 +36,4 @@ assert.equal(result.checks.strict_null_ohlc_rejected,true);
 assert.equal(result.checks.strict_incoherent_ohlc_rejected,true);
 assert.equal(result.checks.candle_context_guard,true);
 assert.equal(result.checks.native_default,true);
-console.log("PASS same-canvas hybrid overlays genuine OHLC closes; line defaults, CT identity and read-only");
+console.log("PASS native line with genuine OHLC mini-lane; line defaults, CT identity and read-only");
