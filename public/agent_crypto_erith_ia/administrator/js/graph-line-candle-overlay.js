@@ -134,7 +134,7 @@
    const gaps=rows.slice(1).map((row,i)=>row.t-rows[i].t);
    const validGaps=gaps.filter(ms=>ms>=period.step*.8&&ms<=period.step*1.2).length;
    const expected=Math.ceil(period.days*86400000/period.step);
-   if(rows.length<Math.ceil(expected*.8)||!gaps.length||validGaps<gaps.length*.83)
+   if(rows.length<Math.ceil(expected*(period.days>=365?.95:.8))||!gaps.length||validGaps<gaps.length*.83)
      return {reason:'Ligne conservée · couverture OHLC '+period.label+' insuffisante'};
    const symbol=String(ref.ds.atlasCoin.symbol||'').toUpperCase(),instrument=String(s.loadedInstrument||'').toUpperCase();
    const external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
@@ -156,7 +156,7 @@
    if(!(duration>=target*.78&&duration<=target*1.16))
      return {reason:'Ligne conservée · période historique différente'};
    const overlapStart=Math.max(first,rows[0].t),overlapEnd=Math.min(last,rows.at(-1).t);
-   if(Math.max(0,overlapEnd-overlapStart)<target*.78)
+   if(Math.max(0,overlapEnd-overlapStart)<target*(period.days>=365?.95:.78))
      return {reason:'Ligne conservée · OHLC historiques insuffisants pour '+period.label};
    // Compare price with the candle at the HISTORICAL graph end, never today's
    // last candle when displaying a cached 7j or 30j chart.
