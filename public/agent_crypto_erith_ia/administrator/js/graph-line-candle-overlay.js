@@ -109,9 +109,15 @@
    if(!ref)return {reason:'Hybride : disponible en Solo · prix normal'};
    if(typeof document==='undefined'||document.querySelector('[data-chart-view="base100"].is-active')||document.querySelector('[data-chart-scale="logarithmic"].is-active'))
      return {reason:'Hybride : sélectionner Prix · Normale'};
-   if(s?.loading)return {reason:'Chargement des bougies OHLC 1h…'};
-   if(!rows.length)return {reason:s?.errorCode?'OHLC indisponibles · '+String(s.errorCode).slice(0,45):'Bougies OHLC 1h non chargées'};
-   if(s?.loadedBar!=='1h')return {reason:'Bougies 1h attendues · série '+String(s?.loadedBar||'absente')};
+   if(s?.loading)return {reason:'Chargement des bougies OHLC 5 min…'};
+   if(!rows.length)return {reason:s?.errorCode?'OHLC indisponibles · '+String(s.errorCode).slice(0,45):'Bougies OHLC 5 min non chargées'};
+   if(s?.loadedBar!=='5m')return {reason:'Bougies 5 min attendues · série '+String(s?.loadedBar||'absente')};
+   // Native 24h density requires genuine 5-minute OHLC, not 24 inflated 1h blocks.
+   // At least 200 valid bars, with real chronological 5m spacing and no 1h substitution.
+   const recent=rows.slice(-300),gaps=recent.slice(1).map((row,i)=>row.t-recent[i].t);
+   const fiveMinuteGaps=gaps.filter(ms=>ms>=240000&&ms<=360000).length;
+   if(recent.length<200||fiveMinuteGaps<gaps.length*.88)
+     return {reason:'Ligne conservée · série OHLC 5 min insuffisante'};
    const symbol=String(ref.ds.atlasCoin.symbol||'').toUpperCase(),instrument=String(s.loadedInstrument||'').toUpperCase();
    const external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
    const extTruth=external?.active?externalLineTruth(ref,instrument):null;
@@ -177,10 +183,10 @@
    if(!ctx||!area||typeof ctx.save!=='function')return 0;
    const inside=rows.filter(r=>r.t>=first&&r.t<=last),lane=miniGeometry(area,inside);
    if(!lane)return 0;
-   // Mimic the native lower histogram's visual width: readable 1h bodies,
-   // clamped to avoid collisions if the available chart becomes narrower.
+   // Native 24h has about 289 price samples. Render ~288 real 5-minute bars
+   // with the same horizontal density as the original lower histogram.
    const spacing=(lane.right-lane.left)/Math.max(inside.length,1);
-   const width=Math.max(3,Math.min(22,spacing*.60));
+   const width=Math.max(1,Math.min(5,spacing*.78));
    let count=0;
    // No panel, no background, no header and no separator: transparent OHLC
    // candles share the native plot and align their lows to its bottom baseline.
@@ -194,10 +200,11 @@
      const up=r.c>=r.o;
      ctx.strokeStyle=up?'rgba(97,235,184,.97)':'rgba(255,119,152,.97)';
      ctx.fillStyle=up?'rgba(83,224,169,.96)':'rgba(250,101,142,.96)';
-     ctx.lineWidth=1.35;ctx.beginPath();ctx.moveTo(x,Math.min(yh,lane.bodyBottom-22));ctx.lineTo(x,yl);ctx.stroke();
-     // Visual minimums: 14px bodies, 22px wicks. No additional panel.
+     ctx.lineWidth=Math.min(1.2,Math.max(.65,width*.30));ctx.beginPath();ctx.moveTo(x,yh);ctx.lineTo(x,yl);ctx.stroke();
+     // 5m bodies are deliberately narrow: no inflated 1h blocks.
+     // Direction comes exclusively from exchange O/C, not CoinGecko samples.
      const actual=Math.abs(yc-yo);
-     const bodyHeight=Math.max(14,actual);
+     const bodyHeight=Math.max(1.5,actual);
      const center=(yo+yc)/2;
      const bodyTop=Math.max(lane.bodyTop,Math.min(lane.bodyBottom-bodyHeight,center-bodyHeight/2));
      ctx.fillRect(x-width/2,bodyTop,width,Math.min(bodyHeight,lane.bodyBottom-bodyTop));
@@ -221,8 +228,8 @@
    const result=matching(chart,globalThis.AgentCryptoMarketMicroscope?.snapshot?.());
    if(!result.ref){hint(result.reason);return;}
    const count=drawBars(chart,result);
-   hint(count?'Ligne + bougies basses · '+count+' × 1h · '+result.instrument+(result.approximate?' · position estimée':'')+(result.warning?' · OHLC conservées':''):'Ligne conservée · bougies hors période',
-     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. Bande basse = amplitude de chaque bougie translatée au même pied ; n’est pas une échelle du prix USD. Amplitudes visuelles racine carrée, corps min 14px, mèches min 22px ; pas un axe de prix. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
+   hint(count?'Ligne + bougies basses · '+count+' × 5 min · '+result.instrument+(result.approximate?' · position estimée':'')+(result.warning?' · OHLC conservées':''):'Ligne conservée · bougies hors période',
+     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. Bougies 5 min réelles ; hauteur relative non linéaire par bougie, pas un axe du prix USD ; aucune interpolation des OHLC. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
  }};
  function refresh(){
    if(typeof document==='undefined')return;
