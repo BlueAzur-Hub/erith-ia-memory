@@ -426,7 +426,8 @@
      if(!summary.bars){hint(verified?.reason||summary.reason);return;}
      const count=drawVariationSummary(chart,summary);
      hint(count?'Ligne + '+count+' barres · '+summary.period.label+' · '+summary.period.unit+
-       (summary.approximate?' · temps estimé':''):'Ligne conservée · barres indisponibles',
+       (summary.approximate?' · temps estimé':'')+
+       (annual?.reason?' · synthèse de prix, OHLCV : '+annual.reason:''):'Ligne conservée · barres indisponibles',
        'Variations en pourcentage du prix historique affiché. Vert : hausse ; rouge : baisse. '+
        'Hauteur visuelle compressée pour rester lisible ; aucune bougie OHLC reconstituée.');
    }
