@@ -388,3 +388,38 @@ test("Trader trajectory rendering stays in the existing Radar with exactly three
   assert.equal(rows.children.every(r=>r.children.every(c=>c.tagName!=="BUTTON")),true);
  }finally{globalThis.document=oldDoc;}
 });
+
+test("Trader native Radar validates the public Spot USDT report without inventing a gain",()=>{
+ const native=require("./market-radar-native.js");
+ const mk=(id,pair,n)=>({
+   coin_id:id,pair,quote:"USDT",venue:"Bitget",orders_enabled:false,
+   paper_strategy_validated:false,identity_market_pair_certified:false,
+   status:n?"OBSERVATIONS_INSUFFICIENT":"NO_PROSPECTIVE_OBSERVATIONS",
+   observation_count:n,market_price_usdt:n?0.17:null,
+   last_20h_closed_candle_change_pct:n?-17.05882:null,
+   last_spread_bps:n?5.89:null,
+   last_observed_at_utc:n?"2026-10-17T23:53:55Z":null,
+   source_sha256:n?"a".repeat(64):null,
+   distinct_closed_hours:n?1:0,
+   span_between_closed_hours:n?0:null,
+   change_between_observed_closes_pct:null,
+   ready_for_window_research:false
+ });
+ const template={schema:"erith.radar.priority-spot-comparison.v1",quote:"USDT",
+  orders_enabled:false,paper_trades_executed:false,strategy_validated:false,
+  identity_market_pair_certified:false,source_as_of_utc:"2026-10-17T23:53:55Z",
+  markets:[mk("quack-ai","QUSDT",1),mk("impossible-cloud-network-token","ICNTUSDT",1),mk("instadapp","FLUID-USDT",0)]};
+ const result=native.verifyProspectiveSpotComparison(template);
+ assert.equal(result.byId.size,3);
+ const icnt=native.spotComparisonLine(result.byId.get("impossible-cloud-network-token"));
+ assert.match(icnt,/USDT/);
+ assert.match(icnt,/20 bougies horaires/);
+ assert.match(icnt,/variation entre relevés encore inconnue/);
+ assert.match(native.spotComparisonLine(result.byId.get("instadapp")),/collecte future en attente/);
+ const bad=JSON.parse(JSON.stringify(template));bad.markets[0].quote="USD";
+ assert.throws(()=>native.verifyProspectiveSpotComparison(bad),/marché/);
+ const fake=JSON.parse(JSON.stringify(template));fake.markets[1].change_between_observed_closes_pct=125;
+ assert.throws(()=>native.verifyProspectiveSpotComparison(fake),/rendement inventé/);
+ const duplicate=JSON.parse(JSON.stringify(template));duplicate.markets[2].coin_id="quack-ai";
+ assert.throws(()=>native.verifyProspectiveSpotComparison(duplicate),/marché/);
+});
