@@ -7,7 +7,7 @@ const book=(opt={})=>({pair:"ICNTUSDT",venue:"Bitget",quote:"USDT",instrumentTyp
  atUTC:later,bestBidUSDT:"0.1599",bestAskUSDT:"0.16",bestBidQty:"100",bestAskQty:"100",...opt});
 test("PAPER lifecycle only fills with future matching Spot quote",()=>{
  const s=e.place(e.create({capitalUSDT:"100"}),order(),at);
- a.equal(e.tick(s,book({bestAskUSDT:"0.18"}),later),s);
+ a.equal(e.tick(s,book({bestAskUSDT:"0.18",bestBidUSDT:"0.1799"}),later),s);
  a.throws(()=>e.tick(s,book({atUTC:at}),later),/prospectif/);
  const filled=e.tick(s,book(),later);
  a.equal(filled.holdings.ICNT,"10.0");a.equal(filled.pending,null);
