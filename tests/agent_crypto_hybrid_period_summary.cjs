@@ -144,5 +144,33 @@ for(const [id,symbol] of [["ethereum","ETH"],["cardano","ADA"],["solana","SOL"]]
 }
 global.getSelectedCoin=()=>({id:"bitcoin",symbol:"BTC"});
 chart.data.datasets[0].atlasCoin={id:"bitcoin",symbol:"BTC"};
+
+// Firefox screenshot regression: hybrid must not show the native historical
+// floatboard over the bar hover, and it must not leave orange "shadow bars"
+// bleeding through the simple green/pink baseline summary.
+fixture("24h",1,289,24);
+const suppressedFloatboard={hidden:false,ariaHidden:null,setAttribute(k,v){if(k==='aria-hidden')this.ariaHidden=v;}};
+const getNode=global.document.getElementById;
+global.document.getElementById=id=>id==='atlasChartTooltip'?suppressedFloatboard:getNode(id);
+chart.$atlasVolumeVisible=true;
+api.plugin.beforeDraw(chart);
+assert.equal(chart.$atlasVolumeVisible,false,"Hybrid hides the separate curve-following volume shadow");
+api.plugin.afterDraw(chart);
+assert.equal(chart.$atlasVolumeVisible,true,"Original volume choice is immediately restored after draw");
+api.plugin.afterDatasetsDraw(chart);
+const g=api.summaryGeometry(chart,api.variationSummary(chart));
+const hoveredBar=g.rects[10];
+suppressedFloatboard.hidden=false;
+api.plugin.afterEvent(chart,{event:{type:"mousemove",x:hoveredBar.x,y:g.lane.bodyBottom-2}});
+assert.equal(suppressedFloatboard.hidden,true,"Native historical popup must not cover hovered hybrid bar");
+assert.equal(suppressedFloatboard.ariaHidden,"true");
+api.plugin.afterEvent(chart,{event:{type:"mouseout"}});
+global.AgentCryptoMarketMicroscope={snapshot:()=>({mode:"candles"})};
+api.plugin.beforeDraw(chart);
+assert.equal(chart.$atlasVolumeVisible,true,"Microscope candle view keeps ordinary volume visibility");
+api.plugin.afterDraw(chart);
+global.AgentCryptoMarketMicroscope=savedRef;
+global.document.getElementById=getNode;
+
 console.log("PASS generic all-asset Hybrid: calendar boundaries, hover, genuine optional volume and safe fallback");
 console.log("PASS simple native variation bars 24h/7j/30j/60j/90j/1a/Max; no OHLC, no panel, skip volume, asset and period guards");
