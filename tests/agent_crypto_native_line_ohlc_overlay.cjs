@@ -22,7 +22,7 @@ const meta={type:"line",hidden:false,data:points,yScale:{getPixelForValue:v=>200
 const canvasCalls=[];
 const ctx={save(){},beginPath(){},rect(){},clip(){},stroke(){canvasCalls.push({kind:'stroke',color:this.strokeStyle});},fillRect(x,y,w,h){canvasCalls.push({kind:'fill',x,y,w,h,color:this.fillStyle});},fillText(text,x,y){canvasCalls.push({kind:'text',text,x,y});},restore(){},moveTo(){},lineTo(){}};
 const chart={canvas:{id:"mainChart"},data:{labels:times.map(t=>new Date(t).toISOString()),datasets:[{atlasCoin:{id:"bitcoin",symbol:"BTC"},data:times.map(()=>100)}]},getDatasetMeta:()=>meta,chartArea:{left:50,right:850,top:40,bottom:300},ctx};
-global.document={querySelector:()=>null};
+global.document={querySelector:()=>null,getElementById:id=>id==='atlasChartInsightOverlayTitle'?{textContent:'BTC · Bitcoin · 24h · PRIX USD'}:null};
 global.getSelectedCoin=()=>({id:"bitcoin"});
 global.AgentCryptoQuoteCurrencyArchitecture={snapshot:()=>({displayCurrency:"USD"})};
 global.AgentCryptoMarketMicroscope={snapshot:()=>snapshot};
@@ -116,7 +116,7 @@ const externalMeta={type:"line",hidden:false,data:extTimes.map((t,i)=>({x:52+2.4
 const externalChart={canvas:{id:"mainChart"},ctx,chartArea:{left:50,right:850,top:40,bottom:300},
  data:{labels:extTimes.map(t=>new Date(t).toISOString()),datasets:[{atlasCoin:{id:extId,symbol:"DNA"},data:extPrices.map(x=>x[1])}]},
  getDatasetMeta:()=>externalMeta};
-const extRows=Array.from({length:300},(_,i)=>({t:base+i*300000,o:.2884,h:.291,l:.286,c:.288453}));
+const extRows=Array.from({length:300},(_,i)=>({t:base+(i+20)*300000,o:.2884,h:.291,l:.286,c:.288453}));
 const extSnap={...snapshot,rows:extRows,loadedInstrument:"DNA-USDT",loadedBar:"5m",source:"Bitget public candles"};
 let truth=api.externalLineTruth({ds:externalChart.data.datasets[0],meta:externalMeta},extSnap.loadedInstrument);
 assert.equal(truth.symbol,"DNA","External chart ID and selected symbol verified");
@@ -139,4 +139,70 @@ extHistory.source="No verified pair";
 assert.equal(api.matching(externalChart,extSnap).ref,undefined,"Wrong provenance refused");
 const microscope=fs.readFileSync(path.join(root,"administrator/js/market-microscope-candles.js"),"utf8");
 assert.match(microscope,/if\(ext.active\)return external/, "Active DNA/CT must be chosen before the hidden pair resolver");
-console.log("PASS BTC and DNA native/external 5m OHLC density, exact timestamps, provenance and no Market BTC leakage");
+// Regression: previously hardcoded 24h/5m blocked the actual 7j and 30j charts.
+const HOUR=3600000,DAY=24*HOUR;
+const mkExchange=(end,barMs,length,price)=>Array.from({length},(_,i)=>({
+ t:end-(length-1-i)*barMs,o:price*.9998,h:price*1.003,l:price*.997,c:price
+}));
+const setPeriodTitle=(period,summary)=>{
+ global.document={querySelector:()=>null,getElementById:id=>
+  id==='atlasChartInsightOverlayTitle'?{textContent:'BTC · Bitcoin · '+period+' · PRIX USD · NORMALE'}:
+  id==='atlasChartInsightOverlaySummary'?{textContent:summary}:null};
+};
+const activeEnd=Date.now(),mkClock=t=>{
+ const d=new Date(t),pad=v=>String(v).padStart(2,'0');
+ return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+};
+const makeExternal=(days,interval)=>{
+ const sampleCount=Math.round(days*DAY/interval)+1;
+ const histTimes=Array.from({length:sampleCount},(_,i)=>activeEnd-(sampleCount-1-i)*interval);
+ extHistory.source="Bitget DNA/USDT candles · USDT/USD CoinGecko";
+ extHistory.periodDays=days;
+ extHistory.series=histTimes.map(t=>[t,.288453]);
+ externalChart.data.datasets[0].data=histTimes.map(()=>.288453);
+ externalChart.data.labels=histTimes.map(t=>new Date(t).toISOString());
+ externalMeta.data=histTimes.map((_,i)=>({x:52+760*i/(histTimes.length-1)}));
+ return mkExchange(activeEnd,interval,300,.288453);
+};
+setPeriodTitle('7j','DNA · série '+mkClock(activeEnd)+' · CoinGecko');
+assert.equal(api.periodConfig().bar,'1h','7-day chart needs hourly OHLC');
+const rows7=makeExternal(7,HOUR),seven={...extSnap,loadedBar:'1h',rows:rows7};
+assert.equal(api.matching(externalChart,seven).period.days,7,"7-day DNA chart accepts verified 1h candles");
+assert.ok(api.drawBars(externalChart,api.matching(externalChart,seven))>=150,"7-day OHLC bar density");
+assert.equal(api.matching(externalChart,{...seven,loadedBar:'5m'}).ref,undefined,"7-day chart rejects 24h candle cadence");
+setPeriodTitle('30j','DNA · série '+mkClock(activeEnd)+' · CoinGecko');
+assert.equal(api.periodConfig().bar,'4h','30-day chart needs 4-hour OHLC');
+const rows30=makeExternal(30,4*HOUR),thirty={...extSnap,loadedBar:'4h',rows:rows30};
+assert.equal(api.matching(externalChart,thirty).period.days,30,"30-day DNA chart accepts verified 4h candles");
+assert.ok(api.drawBars(externalChart,api.matching(externalChart,thirty))>=170,"30-day OHLC bar density");
+assert.equal(api.matching(externalChart,{...thirty,loadedBar:'1h'}).ref,undefined,"30-day cannot borrow 7-day candles");
+// Native CoinGecko 7j cached 14 hours behind live exchange: align to its real last date.
+global.AgentCryptoNewListingLiveAsset={snapshot:()=>({active:false})};
+global.getSelectedCoin=()=>({id:'bitcoin',symbol:'BTC'});
+const makeNativeCached=(days,samples,lag,interval)=>{
+ const last=activeEnd-lag;
+ chart.data.datasets[0].data=Array(samples).fill(100);
+ chart.data.labels=['axis ticks only'];
+ meta.data=Array.from({length:samples},(_,i)=>({x:60+740*i/(samples-1)}));
+ setPeriodTitle(days===7?'7j':'30j',
+  'BTC · 168 points · série '+mkClock(last)+' · CoinGecko');
+ const exchange=mkExchange(activeEnd,interval,300,100);
+ return {last,snap:{...snapshot,rows:exchange,loadedBar:interval===HOUR?'1h':'4h',loadedInstrument:'BTC-USDC',source:'OKX public candles'}};
+};
+const cachedSeven=makeNativeCached(7,168,14*HOUR,HOUR);
+const cachedSevenMatch=api.matching(chart,cachedSeven.snap);
+assert.equal(cachedSevenMatch.period?.days,7,"Cached 7j series ending yesterday must use the actual cache timestamp");
+assert.ok(cachedSevenMatch.approximate,"Timestamp projection is clearly labelled approximate");
+assert.ok(api.drawBars(chart,cachedSevenMatch)>=130,"Cached 7d displays only historical-overlapping candles");
+const cachedThirty=makeNativeCached(30,180,3*DAY,4*HOUR);
+const cachedThirtyMatch=api.matching(chart,cachedThirty.snap);
+assert.equal(cachedThirtyMatch.period?.days,30,"30j cached CoinGecko chart accepts 4h actual OHLC");
+assert.ok(api.drawBars(chart,cachedThirtyMatch)>=130,"30d chart covers real cached OHLC portion");
+setPeriodTitle('1a','BTC · 365 points · série '+mkClock(activeEnd)+' · CoinGecko');
+assert.equal(api.periodConfig().bar,'1j',"Year uses daily candles");
+assert.equal(api.matching(chart,{...snapshot,rows:mkExchange(activeEnd,DAY,300,100),loadedBar:'1j'}).ref,undefined,
+ "A 300-day daily candle limit MUST NOT be mislabelled as a full year");
+setPeriodTitle('Max','BTC · série '+mkClock(activeEnd)+' · CoinGecko');
+assert.equal(api.periodConfig(),null,"Max has no proven finite coverage; don't invent OHLC");
+
+console.log("PASS BTC/DNA: 24h=5m, 7j=1h, 30j=4h, cache end-date, refuse fake year/Max");

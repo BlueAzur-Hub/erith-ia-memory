@@ -11,6 +11,21 @@
    return rows.length>1?rows:[];
  }
  const mode=()=>globalThis.AgentCryptoMarketMicroscope?.snapshot?.()?.mode==='hybrid';
+ // The chart period owns candle cadence. This is a read-only, bounded mapping.
+ const PERIODS=Object.freeze({
+  '24h':Object.freeze({label:'24h',days:1,bar:'5m',step:300000}),
+  '7j':Object.freeze({label:'7j',days:7,bar:'1h',step:3600000}),
+  '30j':Object.freeze({label:'30j',days:30,bar:'4h',step:14400000}),
+  '60j':Object.freeze({label:'60j',days:60,bar:'1j',step:86400000}),
+  '90j':Object.freeze({label:'90j',days:90,bar:'1j',step:86400000}),
+  '1a':Object.freeze({label:'1a',days:365,bar:'1j',step:86400000})
+ });
+ function periodConfig(){
+   if(typeof document==='undefined'||typeof document.getElementById!=='function')return null;
+   const title=String(document.getElementById('atlasChartInsightOverlayTitle')?.textContent||'');
+   const m=title.match(/(?:^|[\s·])(24h|7j|30j|60j|90j|1a|max)(?=[\s·]|$)/i);
+   return m?(PERIODS[m[1].toLowerCase()]||null):null;
+ }
  function nativeDate(v,base){
    const t=T(v);if(t!==null)return t;
    if(typeof v!=='string')return null;
@@ -27,7 +42,7 @@
    if(times.every(Number.isFinite)&&times.every((t,j)=>!j||t>times[j-1]))return times;
    // Only for the real French 24h time axis; resolve midnight BACKWARDS.
    const clock=labels.length===values.length?labels.map(v=>typeof v==='string'?v.trim().match(/^(\d{1,2}):(\d{2})$/):null):[];
-   if(!clock.length||!clock.every(Boolean))return historical24hTimeline(chart,i,anchor);
+   if(!clock.length||!clock.every(Boolean))return historicalPeriodTimeline(chart,i,anchor);
    const b=new Date(anchor),result=new Array(clock.length);
    let day=new Date(b.getFullYear(),b.getMonth(),b.getDate()).getTime();
    for(let j=clock.length-1;j>=0;j--){
@@ -42,22 +57,25 @@
    }
    return result;
  }
- // The native 24h CoinGecko line may contain plain price values without
- // per-point timestamp labels. Its original on-screen summary supplies the
- // real last sample time; interpolate PIXEL POSITIONS only. Never derive OHLC.
- function historical24hTimeline(chart,i,anchor){
+ // CoinGecko can omit per-point labels on any historical period.
+ // Only X positions are estimated from its verified last sample timestamp.
+ // Prices and OHLC are never reconstructed.
+ function historicalPeriodTimeline(chart,i,anchor){
    if(typeof document==='undefined'||typeof document.getElementById!=='function')return null;
    const price=chart?.data?.datasets?.[i]?.data||[];
-   if(price.length<240||price.length>400)return null;
-   const title=String(document.getElementById('atlasChartInsightOverlayTitle')?.textContent||'');
+   const period=periodConfig();
+   if(price.length<12||!period)return null;
    const summary=String(document.getElementById('atlasChartInsightOverlaySummary')?.textContent||'');
-   if(!/24h/i.test(title)||!/CoinGecko/i.test(summary))return null;
+   if(!/CoinGecko/i.test(summary))return null;
    const stamp=summary.match(/série\s+(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/i);
    if(!stamp)return null;
    const [_,dd,mm,yyyy,hh,mi,ss]=stamp;
    const last=new Date(Number(yyyy),Number(mm)-1,Number(dd),Number(hh),Number(mi),Number(ss||0)).getTime();
-   if(!Number.isFinite(last)||new Date(last).getDate()!==Number(dd)||Math.abs(last-anchor)>4*3600000)return null;
-   const duration=24*3600000;
+   if(!Number.isFinite(last)||new Date(last).getDate()!==Number(dd))return null;
+   const duration=period.days*86400000;
+   // Cached 7j/30j end points need not be live, but must still overlap the
+   // real exchange series (enforced independently by matching).
+   if(last>anchor+period.step*2||anchor-last>duration)return null;
    const result=price.map((v,j)=>last-duration+duration*j/(price.length-1));
    result.approximate=true; // Source sample time exact; intermediate native cadence estimated.
    return result;
@@ -72,7 +90,8 @@
 
  // Unlike Market Solo, public New Listing DNA/CT can keep a hidden BTC
  // getSelectedCoin(). Verify the exact EXTERNAL chart + historic series owner.
- function externalLineTruth(ref,loadedInstrument){
+ function externalLineTruth(ref,loadedInstrument,period=periodConfig()){
+   if(!period)return {reason:'Ligne conservée · période externe sans OHLC vérifiées'};
    const ext=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
    if(!ext?.active)return null;
    const n=globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.();
@@ -88,7 +107,7 @@
      requested!==selectedPair||!chart?.active||String(chart.coin_id||'')!==id||
      chartId!==id||String(ref?.ds?.atlasCoin?.symbol||'').toUpperCase()!==sym||
      !h||h.instrument!==n.selectedPair||h.provider!==n.selectedProvider||
-     Number(h.periodDays)!==1||h.currency!=='USD'||!String(h.source||'').includes(n.selectedPair))
+     Number(h.periodDays)!==period.days||h.currency!=='USD'||!String(h.source||'').includes(n.selectedPair))
      return {reason:'Ligne conservée · contexte externe non confirmé'};
    if(!Array.isArray(h.series)||h.series.length!==ref.ds.data.length||
       h.series.length!==ref.meta.data.length||h.series.length<21)
@@ -105,22 +124,22 @@
    return {times,coinId:id,symbol:sym,source:h.source};
  }
  function matching(chart,s){
-   const ref=owner(chart),rows=barsFrom(s);
+   const ref=owner(chart),period=periodConfig(),rows=barsFrom(s);
    if(!ref)return {reason:'Hybride : disponible en Solo · prix normal'};
+   if(!period)return {reason:'Ligne conservée · période sans couverture OHLC confirmée'};
    if(typeof document==='undefined'||document.querySelector('[data-chart-view="base100"].is-active')||document.querySelector('[data-chart-scale="logarithmic"].is-active'))
      return {reason:'Hybride : sélectionner Prix · Normale'};
-   if(s?.loading)return {reason:'Chargement des bougies OHLC 5 min…'};
-   if(!rows.length)return {reason:s?.errorCode?'OHLC indisponibles · '+String(s.errorCode).slice(0,45):'Bougies OHLC 5 min non chargées'};
-   if(s?.loadedBar!=='5m')return {reason:'Bougies 5 min attendues · série '+String(s?.loadedBar||'absente')};
-   // Native 24h density requires genuine 5-minute OHLC, not 24 inflated 1h blocks.
-   // At least 200 valid bars, with real chronological 5m spacing and no 1h substitution.
-   const recent=rows.slice(-300),gaps=recent.slice(1).map((row,i)=>row.t-recent[i].t);
-   const fiveMinuteGaps=gaps.filter(ms=>ms>=240000&&ms<=360000).length;
-   if(recent.length<200||fiveMinuteGaps<gaps.length*.88)
-     return {reason:'Ligne conservée · série OHLC 5 min insuffisante'};
+   if(s?.loading)return {reason:'Chargement des bougies '+period.bar+'…'};
+   if(!rows.length)return {reason:s?.errorCode?'OHLC indisponibles · '+String(s.errorCode).slice(0,45):'Bougies '+period.bar+' non chargées'};
+   if(s.loadedBar!==period.bar)return {reason:'Bougies '+period.bar+' attendues · série '+String(s.loadedBar||'absente')};
+   const gaps=rows.slice(1).map((row,i)=>row.t-rows[i].t);
+   const validGaps=gaps.filter(ms=>ms>=period.step*.8&&ms<=period.step*1.2).length;
+   const expected=Math.ceil(period.days*86400000/period.step);
+   if(rows.length<Math.ceil(expected*(period.days>=365?.95:.8))||!gaps.length||validGaps<gaps.length*.83)
+     return {reason:'Ligne conservée · couverture OHLC '+period.label+' insuffisante'};
    const symbol=String(ref.ds.atlasCoin.symbol||'').toUpperCase(),instrument=String(s.loadedInstrument||'').toUpperCase();
    const external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
-   const extTruth=external?.active?externalLineTruth(ref,instrument):null;
+   const extTruth=external?.active?externalLineTruth(ref,instrument,period):null;
    if(extTruth?.reason)return extTruth;
    if(!symbol||!instrument.startsWith(symbol+'-'))
      return {reason:'Ligne conservée · actifs différents'};
@@ -134,15 +153,21 @@
      return {reason:'Ligne conservée · cotation incompatible'};
    const times=extTruth?.times||nativeTimeline(chart,ref.i,rows.at(-1).t),points=ref.meta.data;
    if(!times||times.length!==points.length)return {reason:'Ligne conservée · dates non vérifiables'};
-   const first=times[0],last=times.at(-1),duration=last-first;
-   if(!(duration>=16*3600000&&duration<=36*3600000)||Math.abs(last-rows.at(-1).t)>4*3600000)
-     return {reason:'Ligne conservée · historique décalé'};
+   const first=times[0],last=times.at(-1),duration=last-first,target=period.days*86400000;
+   if(!(duration>=target*.78&&duration<=target*1.16))
+     return {reason:'Ligne conservée · période historique différente'};
+   const overlapStart=Math.max(first,rows[0].t),overlapEnd=Math.min(last,rows.at(-1).t);
+   if(Math.max(0,overlapEnd-overlapStart)<target*(period.days>=365?.95:.78))
+     return {reason:'Ligne conservée · OHLC historiques insuffisants pour '+period.label};
+   // Compare price with the candle at the HISTORICAL graph end, never today's
+   // last candle when displaying a cached 7j or 30j chart.
+   const atEnd=rows.reduce((closest,row)=>Math.abs(row.t-last)<Math.abs(closest.t-last)?row:closest,rows[0]);
+   if(Math.abs(atEnd.t-last)>period.step*2)
+     return {reason:'Ligne conservée · fin des bougies non alignée'};
    const tail=ref.ds.data.at(-1),endLine=N(Array.isArray(tail)?tail[1]:tail&&typeof tail==='object'?(tail.y??tail.price??tail.value):tail);
-   // USDC/USDT remains a distinct quote. Never relabel it USD or make FX;
-   // only permit a visually close overlay with explicit provenance.
-   if(!(endLine>0)||Math.abs(rows.at(-1).c/endLine-1)>.035)
+   if(!(endLine>0)||Math.abs(atEnd.c/endLine-1)>.035)
      return {reason:'Ligne conservée · prix/quote divergents'};
-   return {ref,rows,times,first,last,quote,currency,instrument,source:s.source,approximate:!!times.approximate,warning:s.errorCode||null};
+   return {ref,rows,times,first,last,quote,currency,instrument,source:s.source,period,approximate:!!times.approximate,warning:s.errorCode||null};
  }
  function px(t,ref,times){
    if(t<times[0]||t>times.at(-1))return null;
@@ -183,8 +208,8 @@
    if(!ctx||!area||typeof ctx.save!=='function')return 0;
    const inside=rows.filter(r=>r.t>=first&&r.t<=last),lane=miniGeometry(area,inside);
    if(!lane)return 0;
-   // Native 24h has about 289 price samples. Render ~288 real 5-minute bars
-   // with the same horizontal density as the original lower histogram.
+   // The cadence follows the real chart period (5m, 1h, 4h or 1j).
+   // No synthetic candles or forced 24h display in a 7j/30j chart.
    const spacing=(lane.right-lane.left)/Math.max(inside.length,1);
    const width=Math.max(1,Math.min(5,spacing*.78));
    let count=0;
@@ -223,13 +248,27 @@
    }
    el.hidden=false;el.textContent=message;el.title=title;
  }
+ let requestedPeriodKey=null;
  const plugin={id:'agentCryptoNativeLineCandles',afterDatasetsDraw(chart){
    if(chart?.canvas?.id!=='mainChart'||!mode())return;
-   const result=matching(chart,globalThis.AgentCryptoMarketMicroscope?.snapshot?.());
+   const snap=globalThis.AgentCryptoMarketMicroscope?.snapshot?.(),period=periodConfig();
+   if(period&&snap?.mode==='hybrid'&&snap.requestedBar!==period.bar&&!snap.loading){
+     const ext=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
+     const key=[period.label,owner(chart)?.ds?.atlasCoin?.id,ext?.id||'',period.bar].join('|');
+     if(key!==requestedPeriodKey){
+       requestedPeriodKey=key;
+       queueMicrotask(()=>{
+         if(mode()&&periodConfig()?.label===period.label&&globalThis.AgentCryptoMarketMicroscope?.snapshot?.()?.requestedBar!==period.bar)
+           void globalThis.AgentCryptoMarketMicroscope?.load?.({bar:period.bar,reason:'hybrid-period-changed'});
+       });
+     }
+     hint('Chargement des bougies '+period.bar+' · '+period.label);return;
+   }
+   const result=matching(chart,snap);
    if(!result.ref){hint(result.reason);return;}
    const count=drawBars(chart,result);
-   hint(count?'Ligne + bougies basses · '+count+' × 5 min · '+result.instrument+(result.approximate?' · position estimée':'')+(result.warning?' · OHLC conservées':''):'Ligne conservée · bougies hors période',
-     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. Bougies 5 min réelles ; hauteur relative non linéaire par bougie, pas un axe du prix USD ; aucune interpolation des OHLC. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
+   hint(count?'Ligne + bougies basses · '+result.period.label+' · '+count+' × '+result.period.bar+' · '+result.instrument+(result.approximate?' · position estimée':'')+(result.warning?' · OHLC conservées':''):'Ligne conservée · bougies hors période',
+     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. Bougies '+result.period.bar+' authentiques sur '+result.period.label+' ; hauteur relative non linéaire sans axe prix, aucune OHLC reconstruite. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
  }};
  function refresh(){
    if(typeof document==='undefined')return;
@@ -240,5 +279,5 @@
  if(globalThis.Chart?.register)globalThis.Chart.register(plugin);
  if(typeof window!=='undefined')for(const event of ['agent-crypto:market-candles-loaded','agent-crypto:quote-architecture-changed','agent-crypto:selected-market-changed','agent-crypto:external-asset-changed'])
    window.addEventListener(event,refresh,{passive:true});
- globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,nativeTimeline,externalLineTruth,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
+ globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,periodConfig,nativeTimeline,externalLineTruth,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
 })();
