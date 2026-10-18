@@ -698,7 +698,7 @@
     }
   }
   function renderState(){const root=document.getElementById(ROOT);if(!root)return;
-    if(state.archivePeriod==="1an"&&!state.loading){
+    if(state.archivePeriod==="1an"&&!state.loading&&!state.error){
       const meta=root.querySelector("[data-amm-meta]"),status=root.querySelector("[data-amm-state]");
       if(meta)meta.textContent="BTC/USDT · 1j · 365 véritables bougies · Binance Spot · archive terminée septembre 2026";
       if(status)status.textContent="COFFRE VÉRIFIÉ · BTCUSDT Spot · 365 OHLCV · USDT, pas USD · historique clôturé au 30/09/2026 UTC · pas de données live · aucun ordre";
@@ -1020,7 +1020,7 @@
   let lastAttempt=0,busy=false,timer=null,lastResult=null;
   const owner=()=>globalThis.AgentCryptoMarketMicroscope;
   const snapshot=()=>{try{return owner()?.snapshot?.()||null;}catch(_){return null;}};
-  const active=s=>(s?.mode==="candles"||s?.mode==="hybrid")&&s?.bar==="1m"&&!!s.loadedInstrument&&Array.isArray(s.rows)&&s.rows.length>0;
+  const active=s=>(s?.mode==="candles"||s?.mode==="hybrid")&&s?.bar==="1m"&&s?.loadedBar==="1m"&&!s?.archivePeriod&&!!s.loadedInstrument&&Array.isArray(s.rows)&&s.rows.length>0;
   function ageMs(s){const rows=s?.rows||[],t=Number(rows[rows.length-1]?.t);return Number.isFinite(t)&&t>0?Math.max(0,Date.now()-t):null;}
   function badge(){
     const title=document.querySelector("#atlasMarketMicroscope .amm-title");
