@@ -108,8 +108,8 @@
  function miniLane(area){
    if(!area||![area.left,area.right,area.top,area.bottom].every(Number.isFinite))return null;
    const plotH=area.bottom-area.top,plotW=area.right-area.left;
-   if(plotH<180||plotW<220)return null;
-   const height=Math.max(54,Math.min(106,plotH*.16));
+   if(plotH<230||plotW<220)return null;
+   const height=Math.max(40,Math.min(106,plotH*.16));
    const bottom=area.bottom-4,top=bottom-height;
    return {left:area.left+1,right:area.right-1,top,bottom,height,
      bodyTop:top+17,bodyBottom:bottom-8};
@@ -135,7 +135,7 @@
    // Lightly reduce the bars of Volume ONLY inside this small lower area.
    // No modification of their existing dataset or the Volume toggle.
    ctx.beginPath();ctx.rect(lane.left,lane.top,lane.right-lane.left,lane.height);ctx.clip();
-   ctx.fillStyle='rgba(3,12,24,.54)';
+   ctx.fillStyle='rgba(3,12,24,.42)';
    ctx.fillRect(lane.left,lane.top,lane.right-lane.left,lane.height);
    ctx.beginPath();ctx.moveTo(lane.left,lane.top+.5);ctx.lineTo(lane.right,lane.top+.5);
    ctx.strokeStyle='rgba(114,220,227,.46)';ctx.lineWidth=1;ctx.stroke();
