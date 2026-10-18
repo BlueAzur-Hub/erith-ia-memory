@@ -1,0 +1,126 @@
+{
+  "schema": "aerith.market.top10.archive_manifest.v1",
+  "status": "prototype_read_only",
+  "snapshot_window": {
+    "start": "2026-10-08",
+    "end": "2026-10-18",
+    "first": "2026-10-08T01:58:35.041Z",
+    "last": "2026-10-18T05:57:46.137Z"
+  },
+  "anchor": {
+    "snapshot_id": "github-action-main_2026-10-07T22-00-44-550Z",
+    "at": "2026-10-07T22:00:44.550Z",
+    "cohort": "same fixed 10 identities as 2026-10-01_2026-10-07"
+  },
+  "assets": [
+    {
+      "id": "bitcoin",
+      "rank_at_reference": 1
+    },
+    {
+      "id": "ethereum",
+      "rank_at_reference": 2
+    },
+    {
+      "id": "tether",
+      "rank_at_reference": 3
+    },
+    {
+      "id": "binancecoin",
+      "rank_at_reference": 4
+    },
+    {
+      "id": "ripple",
+      "rank_at_reference": 5
+    },
+    {
+      "id": "usd-coin",
+      "rank_at_reference": 6
+    },
+    {
+      "id": "solana",
+      "rank_at_reference": 7
+    },
+    {
+      "id": "tron",
+      "rank_at_reference": 8
+    },
+    {
+      "id": "figure-heloc",
+      "rank_at_reference": 9
+    },
+    {
+      "id": "zcash",
+      "rank_at_reference": 10
+    }
+  ],
+  "asset_count": 10,
+  "observation_count": 48,
+  "price_records": 480,
+  "missing_price_records": 0,
+  "missing_24h_change_records": 7,
+  "provenance": [
+    {
+      "path": "data/history/2026-10-08.jsonl",
+      "git_blob_sha": "105c45cc576582131e12c387d9a1fa4f6a6d5a16",
+      "records": 4
+    },
+    {
+      "path": "data/history/2026-10-09.jsonl",
+      "git_blob_sha": "adaa77fe280fc2f10b6d74255a70c45f02e40f7c",
+      "records": 4
+    },
+    {
+      "path": "data/history/2026-10-10.jsonl",
+      "git_blob_sha": "bc9b89548cf580599f6fca5573b538c4bbc8aa2b",
+      "records": 5
+    },
+    {
+      "path": "data/history/2026-10-11.jsonl",
+      "git_blob_sha": "9cd7a5454e5bb15020fffd299ba9008a8b9f760f",
+      "records": 4
+    },
+    {
+      "path": "data/history/2026-10-12.jsonl",
+      "git_blob_sha": "eb9602e56c1d5254bab9f74e6ee412ced5938ff3",
+      "records": 3
+    },
+    {
+      "path": "data/history/2026-10-13.jsonl",
+      "git_blob_sha": "5aa7a81686a99e1fa569e58b33e35eb337c4af93",
+      "records": 4
+    },
+    {
+      "path": "data/history/2026-10-14.jsonl",
+      "git_blob_sha": "c0923cdcbed9009d8092ee024f71dddf90536c69",
+      "records": 6
+    },
+    {
+      "path": "data/history/2026-10-15.jsonl",
+      "git_blob_sha": "8125d654e5b42fa9b143842b71712b1428e01a75",
+      "records": 5
+    },
+    {
+      "path": "data/history/2026-10-16.jsonl",
+      "git_blob_sha": "ab9fd6bf73e19b47214ab83bf8fcf3a09e4be7a8",
+      "records": 5
+    },
+    {
+      "path": "data/history/2026-10-17.jsonl",
+      "git_blob_sha": "c827ffa8edef2f6b19aa369a94fde2243b4c74e4",
+      "records": 6
+    },
+    {
+      "path": "data/history/2026-10-18.jsonl",
+      "git_blob_sha": "e254784c1dd9cd8fbbdea71d95e8f8a7ffef0e51",
+      "records": 2
+    }
+  ],
+  "notes": [
+    "New immutable tranche of actually saved CoinGecko Top50 snapshots, projected on the 7 October fixed Top10 cohort.",
+    "Observation timestamps are irregular. The original 2026-10-18 source is partial as of its recorded Git blob; do not infer missing hours.",
+    "No OHLCV candles created; volume_24h_eur is rolling 24-hour market activity, not an interval-traded volume.",
+    "Missing 24-hour percentage changes are preserved as null, never filled or interpolated.",
+    "No price corrections, no USD/USDT conversion, no public trading permissions involved."
+  ]
+}
