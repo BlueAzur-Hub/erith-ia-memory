@@ -142,6 +142,9 @@ jobs:
       - name: Genuine-OHLC hybrid mode and minute-refresh guard
         run: node tests/agent_crypto_market_hybrid_ohlc.cjs
 
+      - name: True OHLC overlay on original native line chart
+        run: node tests/agent_crypto_native_line_ohlc_overlay.cjs
+
       - name: Cross-market candle identity and quote truth
         run: node tests/agent_crypto_market_context_identity.cjs
 
