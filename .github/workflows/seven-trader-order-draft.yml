@@ -6,6 +6,8 @@ on:
       - "public/agent_crypto_erith_ia/trader/ct-order-ticket.js"
       - "public/agent_crypto_erith_ia/trader/ct-order-ticket.css"
       - "public/agent_crypto_erith_ia/trader/test-ct-order-draft.cjs"
+      - "public/agent_crypto_erith_ia/trader/spot-paper-order-engine.js"
+      - "public/agent_crypto_erith_ia/trader/test-spot-paper-order-engine.cjs"
       - "public/agent_crypto_erith_ia/trader/ai-ct-panel.js"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
       - ".github/workflows/seven-trader-order-draft.yml"
@@ -16,6 +18,8 @@ on:
       - "public/agent_crypto_erith_ia/trader/ct-order-ticket.js"
       - "public/agent_crypto_erith_ia/trader/ct-order-ticket.css"
       - "public/agent_crypto_erith_ia/trader/test-ct-order-draft.cjs"
+      - "public/agent_crypto_erith_ia/trader/spot-paper-order-engine.js"
+      - "public/agent_crypto_erith_ia/trader/test-spot-paper-order-engine.cjs"
       - "public/agent_crypto_erith_ia/trader/ai-ct-panel.js"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
 permissions:
@@ -39,5 +43,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/trader/ai-ct-panel.js
           node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
           node --test public/agent_crypto_erith_ia/trader/test-ct-order-draft.cjs
+          node --check public/agent_crypto_erith_ia/trader/spot-paper-order-engine.js
+          node --test public/agent_crypto_erith_ia/trader/test-spot-paper-order-engine.cjs
           node --test public/agent_crypto_erith_ia/trader/test-ct-spot-rules.cjs
           node --test public/agent_crypto_erith_ia/trader/test-ct-closed-cycle.cjs
