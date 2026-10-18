@@ -117,6 +117,7 @@ def summarize(symbol, coin_id, venue, pair, relpath, schema, source):
         "last_closed_hour_utc": last[1].isoformat().replace("+00:00", "Z"),
         "span_between_closed_hours": span,
         "market_price_usdt": last[2],
+        "last_20h_closed_candle_change_pct": number(items[-1]["candles"].get("change_close_20h_pct"), "variation 20h"),
         "change_between_observed_closes_pct": change,
         "last_spread_bps": cleaned[-1][3],
         "first_spread_bps": cleaned[0][3],
