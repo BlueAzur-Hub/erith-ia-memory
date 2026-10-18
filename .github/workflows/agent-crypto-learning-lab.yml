@@ -124,9 +124,9 @@ jobs:
               expected=before[:start]+before[end:]
           else:
               expected=before
-          # This PR only adds a Trader producer-reader gate to the Administrator
-          # runtime. Strip precisely those audited lines for this historical
-          # Snapshot-only baseline check; ANY other app.js change still fails.
+          # Historical baseline can already contain the merged Trader reader gate.
+          # Strip it ONLY when absent from the baseline being compared.
+          # Any unrelated app.js change must still fail this strict check.
           producer_policy = (
               "function atlasTraderPassiveReportSurface() {\n"
               "  // The Trader embeds the shared Administrator runtime but never owns CURRENT.\n"
@@ -135,7 +135,7 @@ jobs:
               "  catch (_) { return false; }\n"
               "}\n\n"
           )
-          if producer_policy in after:
+          if producer_policy in after and producer_policy not in before:
               assert after.count(producer_policy)==1
               after=after.replace(producer_policy,"",1)
               statement="\n  if (atlasTraderPassiveReportSurface()) return false;"
