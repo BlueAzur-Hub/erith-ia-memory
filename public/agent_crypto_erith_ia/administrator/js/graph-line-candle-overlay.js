@@ -11,6 +11,67 @@
    return rows.length>1?rows:[];
  }
  const mode=()=>globalThis.AgentCryptoMarketMicroscope?.snapshot?.()?.mode==='hybrid';
+ // Read only the certified BTC/USDT 365-day projection. The native USD line
+ // and its original Chart.js tooltip retain sole ownership of the graph.
+ const YEAR_READER_URL=typeof document==='undefined'?null:
+   new URL('./verified-periods-reader.js',document.currentScript?.src||location.href).href;
+ const year={status:'idle',rows:null,last:0,error:''};
+ function requestYear(){
+   if(year.status!=='idle'||!YEAR_READER_URL)return;
+   year.status='loading';
+   (async()=>{
+     if(typeof globalThis.SevenVerifiedPeriods?.load!=='function'){
+       await new Promise((resolve,reject)=>{
+         let s=document.getElementById('atlasVerifiedBtcYearScript');
+         if(!s){s=document.createElement('script');s.id='atlasVerifiedBtcYearScript';
+           s.src=YEAR_READER_URL;
+           s.addEventListener('load',resolve,{once:true});
+           s.addEventListener('error',()=>reject(Error('Lecteur annuel indisponible')),{once:true});
+           document.head.appendChild(s);
+         }else if(typeof globalThis.SevenVerifiedPeriods?.load==='function')resolve();
+         else{ s.addEventListener('load',resolve,{once:true});
+           s.addEventListener('error',()=>reject(Error('Lecteur annuel indisponible')),{once:true}); }
+       });
+     }
+     if(typeof globalThis.SevenVerifiedPeriods?.load!=='function')
+       throw Error('API du Coffre indisponible');
+     const proof=await globalThis.SevenVerifiedPeriods.load('bitcoin','1an');
+     if(proof?.data?.asset_id!=='bitcoin'||proof.data.pair!=='BTCUSDT'||
+       proof.data.quote!=='USDT'||proof.data.period!=='1an'||
+       proof.data.resolution!=='1d'||proof.rows?.length!==365)
+       throw Error('Identité/période de l’archive BTC invalide');
+     const rows=proof.rows.map(r=>({t:r[0],o:r[1],h:r[2],l:r[3],c:r[4],v:r[5]}));
+     if(rows.some((r,i)=>![r.t,r.o,r.h,r.l,r.c,r.v].every(Number.isFinite)||
+       r.t%86400000!==0||r.l<=0||r.l>Math.min(r.o,r.c)||r.h<Math.max(r.o,r.c)||
+       r.v<0||(i>0&&r.t-rows[i-1].t!==86400000)))
+       throw Error('OHLCV ou chronologie annuelle incohérente');
+     year.rows=rows;year.last=rows.at(-1).t;year.status='ready';
+   })().catch(e=>{year.error=String(e?.message||e).slice(0,100);year.status='error';})
+     .finally(()=>globalThis.Chart?.getChart?.(document.getElementById('mainChart'))?.draw?.());
+ }
+ function verifiedYearHybrid(chart){
+   const ref=owner(chart),period=summaryPeriodConfig();
+   if(period?.label!=='1a'||String(ref?.ds?.atlasCoin?.id)!=='bitcoin'||
+     !summaryOwnership(ref))return null;
+   if(document.querySelector('[data-chart-view="base100"].is-active')||
+     document.querySelector('[data-chart-scale="logarithmic"].is-active'))
+     return {reason:'Bougies annuelles uniquement en Prix · Normale'};
+   requestYear();
+   if(year.status!=='ready')
+     return {reason:year.status==='error'?'Archive OHLCV BTC indisponible : '+year.error:
+       'Chargement des vraies bougies annuelles depuis le Coffre…'};
+   const times=nativeTimeline(chart,ref.i,Date.now());
+   if(!times||times.length!==ref.meta.data.length||
+     times.some((t,i)=>!Number.isFinite(t)||(i>0&&t<=times[i-1])))
+     return {reason:'Datation du graphique non vérifiable'};
+   const first=times[0],last=times.at(-1);
+   if(last-first<300*86400000||last-first>400*86400000)
+     return {reason:'Période historique incohérente'};
+   const covered=year.rows.filter(r=>r.t>=first&&r.t<=last);
+   if(covered.length<250)return {reason:'Couverture de la période insuffisante'};
+   const count=drawBars(chart,{ref,rows:year.rows,times,first,last});
+   return count>=250?{count,last:year.last}:{reason:'Alignement des bougies incomplet'};
+ }
  // The chart period owns candle cadence. This is a read-only, bounded mapping.
  const PERIODS=Object.freeze({
   '24h':Object.freeze({label:'24h',days:1,bar:'5m',step:300000}),
@@ -23,8 +84,9 @@
  function periodConfig(){
    if(typeof document==='undefined'||typeof document.getElementById!=='function')return null;
    const title=String(document.getElementById('atlasChartInsightOverlayTitle')?.textContent||'');
-   const m=title.match(/(?:^|[\s·])(24h|7j|30j|60j|90j|1a|max)(?=[\s·]|$)/i);
-   return m?(PERIODS[m[1].toLowerCase()]||null):null;
+   const m=title.match(/(?:^|[\s·])(24h|7j|30j|60j|90j|1a|1\s+an|max)(?=[\s·]|$)/i);
+   const key=m?.[1]?.toLowerCase().replace(/\s+/g,'')==='1an'?'1a':m?.[1]?.toLowerCase();
+   return key?(PERIODS[key]||null):null;
  }
  function nativeDate(v,base){
    const t=T(v);if(t!==null)return t;
@@ -265,8 +327,9 @@
  function summaryPeriodConfig(){
    if(typeof document==='undefined'||typeof document.getElementById!=='function')return null;
    const title=String(document.getElementById('atlasChartInsightOverlayTitle')?.textContent||'');
-   const m=title.match(/(?:^|[\s·])(24h|7j|30j|60j|90j|1a|max)(?=[\s·]|$)/i);
-   return m?SUMMARY_RULES[m[1].toLowerCase()]||null:null;
+   const m=title.match(/(?:^|[\s·])(24h|7j|30j|60j|90j|1a|1\s+an|max)(?=[\s·]|$)/i);
+   const key=m?.[1]?.toLowerCase().replace(/\s+/g,'')==='1an'?'1a':m?.[1]?.toLowerCase();
+   return key?SUMMARY_RULES[key]||null:null;
  }
  const priceValue=v=>N(Array.isArray(v)?v[1]:v&&typeof v==='object'?(v.y??v.price??v.value):v);
  function summaryOwnership(ref){
@@ -350,8 +413,17 @@
    },
    afterDatasetsDraw(chart){
      if(chart?.canvas?.id!=='mainChart'||!mode())return;
+     const verified=verifiedYearHybrid(chart);
+     if(verified?.count){
+       hint('BTC 1 an · Ligne CoinGecko USD + '+verified.count+
+         ' bougies 1j · Binance BTC/USDT · archive',
+         '365 OHLCV natives certifiées dans le Coffre; seules les journées dans la fenêtre sont dessinées. Dernière bougie '+
+         new Date(verified.last).toISOString().slice(0,10)+' UTC. Ligne USD et bougies USDT de sources distinctes. '+
+         'Les bougies en bas indiquent leurs amplitudes relatives, pas une deuxième échelle de prix.');
+       return;
+     }
      const summary=variationSummary(chart);
-     if(!summary.bars){hint(summary.reason);return;}
+     if(!summary.bars){hint(verified?.reason||summary.reason);return;}
      const count=drawVariationSummary(chart,summary);
      hint(count?'Ligne + '+count+' barres · '+summary.period.label+' · '+summary.period.unit+
        (summary.approximate?' · temps estimé':''):'Ligne conservée · barres indisponibles',
