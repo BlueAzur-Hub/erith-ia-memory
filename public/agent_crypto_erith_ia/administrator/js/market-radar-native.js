@@ -630,6 +630,7 @@ function spotComparisonLine(row){
  if(!row||!row.observation_count)return "Spot USDT : collecte future en attente";
  const view="Spot "+row.venue+" "+row.pair+" · "+number(row.market_price_usdt,6)+" USDT"+
   " · "+row.observation_count+" relevé(s), "+row.distinct_closed_hours+" clôture(s) distincte(s)"+
+  " · 20 bougies horaires : "+(Number.isFinite(row.last_20h_closed_candle_change_pct)?pct(row.last_20h_closed_candle_change_pct):"inconnu")+
   " · spread "+number(row.last_spread_bps,2)+" pb";
  const actual=row.change_between_observed_closes_pct;
  const change=Number.isFinite(actual)?
