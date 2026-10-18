@@ -329,7 +329,7 @@
    const max=abs.length?abs[Math.min(abs.length-1,Math.floor(abs.length*.9))]:0;
    const usable=lane.bodyBottom-lane.bodyTop;
    const step=(lane.right-lane.left)/bars.length;
-   const width=Math.max(1.5,Math.min(32,step*.55));
+   const width=Math.max(1.5,Math.min(60,step*.62));
    const toHeight=pct=>pct===0?2:Math.min(usable,Math.max(5,usable*Math.sqrt(Math.abs(pct)/Math.max(max,1e-10))*.87));
    ctx.save();ctx.beginPath();ctx.rect(lane.left,lane.top,lane.right-lane.left,lane.height);ctx.clip();
    bars.forEach((b,i)=>{
