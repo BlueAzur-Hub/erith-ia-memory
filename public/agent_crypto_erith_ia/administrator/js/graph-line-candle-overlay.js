@@ -377,6 +377,8 @@
      .filter(r=>r.t!==null&&r.v!==null&&r.v>=0)
      .sort((a,b)=>a.t-b.t);
    if(candles.length<2)return bars.map(()=>null);
+   // The candle stream contains actual base-asset volumes from one exchange,
+   // not CoinGecko's rolling market volume. Different sources aren't mixed.
    const out=bars.map(b=>{
      const group=candles.filter(c=>c.t>=b.start&&c.t<b.stop),duration=b.stop-b.start;
      if(!group.length||!(duration>0))return null;
@@ -440,7 +442,7 @@
    const volText=Number.isFinite(vol)&&vol>=0?
      frNumber(vol,5)+' '+summary.symbol+' (volume exchange)':'volume non vérifié';
    return {
-     short:fmtTime(bar.start)+' → '+fmtTime(bar.stop)+' · '+(bar.change>=0?'+':'')+frNumber(bar.change,2)+' % · '+volText,
+     short:fmtTime(bar.start)+'–'+fmtTime(bar.stop)+' · '+fmtPrice(bar.open,currency)+' → '+fmtPrice(bar.close,currency)+' · '+(bar.change>=0?'+':'')+frNumber(bar.change,2)+'% · '+volText,
      detail:summary.symbol+' · '+fmtTime(bar.start)+' → '+fmtTime(bar.stop)+'\n'+
        'Prix début : '+fmtPrice(bar.open,currency)+' · Prix fin : '+fmtPrice(bar.close,currency)+'\n'+
        'Variation : '+(bar.delta>=0?'+':'')+fmtPrice(bar.delta,currency)+' / '+
