@@ -102,8 +102,8 @@
    const x=ref.meta.data[a]?.x,y=ref.meta.data[b]?.x;
    return Number.isFinite(x)&&Number.isFinite(y)&&times[b]>times[a]?x+(y-x)*(t-times[a])/(times[b]-times[a]):null;
  }
- // Hybrid is a DIRECTION / AMPLITUDE summary in the EXISTING bottom bar zone,
- // not a second price plot. True exchange OHLC values remain untouched.
+ // Hybrid draws only individual colored candle shapes in the native bottom area,
+ // never a shaded band, frame, extra panel or secondary price plot. True exchange OHLC values remain untouched.
  // All lows are placed on one visual baseline (like the native volume bars);
  // height compares each candle's intrabar high-low amplitude, NOT absolute price.
  function miniLane(area){
@@ -137,18 +137,11 @@
    const spacing=(lane.right-lane.left)/Math.max(inside.length,1);
    const width=Math.max(3,Math.min(22,spacing*.60));
    let count=0;
+   // No panel, no background, no header and no separator: transparent OHLC
+   // candles share the native plot and align their lows to its bottom baseline.
+   // Chart.js clips the candle paint to the existing chart area; the original
+   // artwork, line data, controls and volume dataset are never modified.
    ctx.save();ctx.beginPath();ctx.rect(lane.left,lane.top,lane.right-lane.left,lane.height);ctx.clip();
-   // Exchange bars take visual precedence over the native lower histogram,
-   // without mutating the Volume dataset or its user toggle.
-   ctx.fillStyle='rgba(3,12,24,.82)';
-   ctx.fillRect(lane.left,lane.top,lane.right-lane.left,lane.height);
-   ctx.strokeStyle='rgba(114,220,227,.25)';ctx.lineWidth=1;
-   ctx.beginPath();ctx.moveTo(lane.left,lane.top+.5);ctx.lineTo(lane.right,lane.top+.5);ctx.stroke();
-   if(typeof ctx.fillText==='function'){
-     ctx.font='700 9px system-ui,sans-serif';ctx.textAlign='left';ctx.textBaseline='top';
-     ctx.fillStyle='rgba(185,227,231,.76)';
-     ctx.fillText('BOUGIES 1H · AMPLITUDE RELATIVE',lane.left+7,lane.top+4);
-   }
    inside.forEach(r=>{
      const x=px(r.t,ref,times);if(x===null||x<lane.left||x>lane.right)return;
      const yh=lane.y(r,r.h),yl=lane.y(r,r.l),yo=lane.y(r,r.o),yc=lane.y(r,r.c);

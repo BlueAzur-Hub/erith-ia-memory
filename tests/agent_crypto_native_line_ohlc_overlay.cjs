@@ -6,7 +6,8 @@ const code=fs.readFileSync(path.join(root,"administrator/js/graph-line-candle-ov
 new vm.Script(code);
 assert.match(code,/afterDatasetsDraw/);
 assert.doesNotMatch(code,/beforeDatasetsDraw/,'Mini candles are on top of volume only in the bottom lane');
-assert.match(code,/AMPLITUDE RELATIVE/);
+assert.doesNotMatch(code,/fillText\(/,'No painted title inside the plot');
+assert.doesNotMatch(code,/ctx\.fillRect\(lane\.left,lane\.top/,'No shaded background panel');
 assert.match(code,/mainChart/);
 assert.match(code,/agent-crypto:market-candles-loaded/);
 require(path.join(root,"administrator/js/graph-line-candle-overlay.js"));
@@ -37,8 +38,8 @@ assert.equal(geometry.scale,"per-candle-amplitude","A common per-candle amplitud
 assert.ok(geometry.y(rows[0],rows[0].h)<geometry.y(rows[0],rows[0].l));
 const bodies=canvasCalls.filter(v=>v.kind==='fill'&&/rgba\(83,224,169/.test(v.color));
 assert.ok(bodies.every(v=>v.y>=lane.bodyTop-.1&&v.y+v.h<=lane.bodyBottom+2.1),"All bodies stay inside the lower lane");
-assert.ok(canvasCalls.some(v=>v.kind==='text'&&v.text.includes('AMPLITUDE RELATIVE')),"Local OHLC price scale must be visibly labeled");
-assert.ok(canvasCalls.some(v=>v.kind==='fill'&&v.color==='rgba(3,12,24,.82)'),"Native volume is shaded, not deleted");
+assert.ok(!canvasCalls.some(v=>v.kind==='text'),"No title or mini-panel label in the chart");
+assert.equal(canvasCalls.filter(v=>v.kind==='fill').length,25,"Only candle bodies paint rectangles: no band, no filled panel, no volume shade");
 
 // Real 1h ranges of different magnitudes must differ like lower histogram bars,
 // even if their absolute BTC prices differ. Both lows share the visual baseline.
@@ -50,6 +51,7 @@ assert.equal(compare.y(large,large.l),compare.y(small,small.l),"All lows align a
 const red={t:times[2],o:109,h:111,l:96,c:99};
 assert.ok(api.miniGeometry({left:0,right:800,top:0,bottom:520},[large,red]).y(red,red.o)<api.miniGeometry({left:0,right:800,top:0,bottom:520},[large,red]).y(red,red.c),"Red body points downward");
 
+assert.equal(canvasCalls.filter(v=>v.kind==='stroke').length,25,"Only candle wicks paint strokes: no horizontal divider");
 const beforeOther=canvasCalls.length;
 const nativeScale=meta.yScale.getPixelForValue;
 meta.yScale.getPixelForValue=()=>-1000000;
