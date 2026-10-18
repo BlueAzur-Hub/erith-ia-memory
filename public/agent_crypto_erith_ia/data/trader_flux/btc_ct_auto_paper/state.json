@@ -408,33 +408,59 @@
       "reason": "Data gap: no reconstructed order or entry",
       "type": "GAP_PAUSE",
       "venue": "OKX Spot"
+    },
+    {
+      "asset": "BTC",
+      "at": "2026-10-18T19:00:00Z",
+      "executed_order": false,
+      "instrument": "BTCUSDT",
+      "paper": true,
+      "quote": "USDT",
+      "reason": "No confirmed rebound or trend breakout",
+      "type": "WAIT",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset": "CT",
+      "at": "2026-10-18T19:00:00Z",
+      "executed_order": false,
+      "instrument": "CT-USDT",
+      "paper": true,
+      "quote": "USDT",
+      "reason": "dip below MA24, first higher close, volume-confirmed",
+      "strategy": "REBOUND",
+      "type": "PAPER_SIGNAL",
+      "venue": "OKX Spot"
     }
   ],
   "markets": {
     "BTC": {
       "closed": 0,
-      "decision": "PAUSE",
+      "decision": "WAIT",
       "error": null,
-      "last_hour": 1792342800000,
-      "last_price_usdt": 81080.26,
+      "last_hour": 1792350000000,
+      "last_price_usdt": 81194.07,
       "open": null,
       "pending": null,
       "pnl_usdt": 0.0,
-      "reason": "Data gap: no reconstructed order or entry",
-      "source_time": "2026-10-18T17:00:00Z",
+      "reason": "No confirmed rebound or trend breakout",
+      "source_time": "2026-10-18T19:00:00Z",
       "wins": 0
     },
     "CT": {
       "closed": 0,
-      "decision": "PAUSE",
+      "decision": "PAPER_SIGNAL",
       "error": null,
-      "last_hour": 1792342800000,
-      "last_price_usdt": 0.32907,
+      "last_hour": 1792350000000,
+      "last_price_usdt": 0.29865,
       "open": null,
-      "pending": null,
+      "pending": {
+        "model": "REBOUND",
+        "signal_hour": 1792350000000
+      },
       "pnl_usdt": 0.0,
-      "reason": "Data gap: no reconstructed order or entry",
-      "source_time": "2026-10-18T17:00:00Z",
+      "reason": "dip below MA24, first higher close, volume-confirmed (await later bar)",
+      "source_time": "2026-10-18T19:00:00Z",
       "wins": 0
     }
   },
