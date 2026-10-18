@@ -23,7 +23,7 @@
  function nativeTimeline(chart,i,anchor){
    const values=chart?.data?.datasets?.[i]?.data||[],labels=chart?.data?.labels||[];
    if(values.length<12||labels.length!==values.length)return null;
-   const times=values.map((p,j)=>nativeDate(p&&typeof p==='object'?(p.t??p.timestamp??p.time??p.x??labels[j]):labels[j],anchor));
+   const times=values.map((p,j)=>p&&typeof p==='object'?(nativeDate(p.t??p.timestamp??p.time??p.x,anchor)??nativeDate(labels[j],anchor)):nativeDate(labels[j],anchor));
    if(times.every(Number.isFinite))return times.every((t,j)=>!j||t>times[j-1])?times:null;
    // Only for the real French 24h time axis; resolve midnight BACKWARDS.
    const clock=labels.map(v=>typeof v==='string'?v.trim().match(/^(\d{1,2}):(\d{2})$/):null);
@@ -51,7 +51,7 @@
  }
  function matching(chart,s){
    const ref=owner(chart),rows=barsFrom(s);
-   if(!ref||!rows.length||typeof document==='undefined'||document.querySelector('[data-chart-view="base100"].is-active')||document.querySelector('[data-chart-scale="logarithmic"].is-active'))
+   if(!ref||!rows.length||s?.loadedBar!=='1h'||typeof document==='undefined'||document.querySelector('[data-chart-view="base100"].is-active')||document.querySelector('[data-chart-scale="logarithmic"].is-active'))
      return {reason:'Ligne conservée · bougies incompatibles'};
    const symbol=String(ref.ds.atlasCoin.symbol||'').toUpperCase(),instrument=String(s.loadedInstrument||'').toUpperCase(),selected=globalThis.getSelectedCoin?.();
    if(!symbol||!instrument.startsWith(symbol+'-')||(selected?.id&&selected.id!==ref.ds.atlasCoin.id))
@@ -64,7 +64,7 @@
    const first=times[0],last=times.at(-1),duration=last-first;
    if(!(duration>=16*3600000&&duration<=36*3600000)||Math.abs(last-rows.at(-1).t)>4*3600000)
      return {reason:'Ligne conservée · historique décalé'};
-   const tail=ref.ds.data.at(-1),endLine=Number(tail?.y??tail);
+   const tail=ref.ds.data.at(-1),endLine=Number(Array.isArray(tail)?tail[1]:tail?.y??tail);
    // USDC/USDT remains a distinct quote. Never relabel it USD or make FX;
    // only permit a visually close overlay with explicit provenance.
    if(!(endLine>0)||Math.abs(rows.at(-1).c/endLine-1)>.035)
