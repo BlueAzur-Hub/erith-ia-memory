@@ -4,12 +4,16 @@ on:
     paths:
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_targets.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_targets.py'
+      - 'public/agent_crypto_erith_ia/tools/build_radar_research_cohort.py'
+      - 'public/agent_crypto_erith_ia/tools/test_build_radar_research_cohort.py'
       - '.github/workflows/radar-spot-target-qualification.yml'
   push:
     branches: [main]
     paths:
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_targets.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_targets.py'
+      - 'public/agent_crypto_erith_ia/tools/build_radar_research_cohort.py'
+      - 'public/agent_crypto_erith_ia/tools/test_build_radar_research_cohort.py'
       - '.github/workflows/radar-spot-target-qualification.yml'
   workflow_dispatch:
   schedule:
@@ -31,7 +35,9 @@ jobs:
         with:
           python-version: '3.12'
       - name: Test pure Radar qualification; no external connection
-        run: python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_targets.py' -v
+        run: |
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_targets.py' -v
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_radar_research_cohort.py' -v
       - name: Collect public evidence only (main push/schedule, not PR)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         shell: bash
@@ -43,8 +49,20 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_targets.py' -q
-            python public/agent_crypto_erith_ia/tools/qualify_radar_targets.py
-            git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json
+            # A missing Radar snapshot today must not masquerade as fresh qualification.
+            if python public/agent_crypto_erith_ia/tools/qualify_radar_targets.py > /tmp/qualification-output.log 2>&1; then
+              cat /tmp/qualification-output.log
+            else
+              cat /tmp/qualification-output.log
+              if grep -q 'Aucun snapshot Radar du jour' /tmp/qualification-output.log; then
+                echo 'No fresh candidate selection today; only refresh the explicitly dated research report.'
+              else
+                echo 'Real qualification failure, refusing silent fallback' >&2
+                exit 1
+              fi
+            fi
+            python public/agent_crypto_erith_ia/tools/build_radar_research_cohort.py
+            git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json public/agent_crypto_erith_ia/data/crypto/radar-opportunities/research-cohort.json
             if git diff --cached --quiet; then
               echo 'No fresh qualification to publish'
               exit 0
