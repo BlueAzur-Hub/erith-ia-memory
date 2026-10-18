@@ -23,7 +23,7 @@ class Tests(unittest.TestCase):
   self.assertEqual((v["count"],v["spot_documented"],v["additional_spot"],v["unpaired"]),(20,14,4,6))
   self.assertFalse(v["orders_enabled"])
   self.assertEqual(v["candidates"][0]["group"],"primary_research")
-  self.assertEqual(v["candidates"][0]["detections_archived"],1)
+  self.assertEqual(next(x for x in v["candidates"] if x["coin_id"]=="quack-ai")["detections_archived"],1)
   self.assertEqual(v["candidates"][0]["j1_observed"],0)
  def test_wrong_currency_duplicate_coin_and_fake_authorization_rejected(self):
   for corrupt in [
@@ -35,7 +35,7 @@ class Tests(unittest.TestCase):
  def test_unknown_spot_and_overheat_stay_visible(self):
   q,h=make();q["candidates"][0]["change24h_pct"]=140
   q["candidates"][0]["market"]["estimated_roundtrip_cost_pct"]=0.9
-  v=build(q,h);f=v["candidates"][0]["risks_and_missing_evidence"]
+  v=build(q,h);f=next(x for x in v["candidates"] if x["coin_id"]=="quack-ai")["risks_and_missing_evidence"]
   self.assertIn("extreme_24h_move",f);self.assertIn("high_hypothetical_cost",f)
   absent=next(x for x in v["candidates"] if x["coin_id"]=="meta-2-2")
   self.assertIsNone(absent["spot"]);self.assertFalse(absent["trade_authorized"])
