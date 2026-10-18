@@ -38,4 +38,31 @@ chart.data.labels=times.map(t=>new Date(t).toLocaleTimeString("fr-FR",{hour:"2-d
 const labels=api.nativeTimeline(chart,0,times.at(-1));
 assert.equal(labels.length,25,"Clock-only labels resolved from real OHLC timestamp");
 assert.ok(Math.abs(labels.at(-1)-labels[0]-24*3600000)<3600000,"Midnight preserved");
-console.log("PASS native line owns chart; passive OHLC behind line; timestamps, identity, quote, invalid data and no orders");
+// Actual native 24h mode: 288 sampled prices, axis may expose only a few tick labels.
+// The native overlay's caption provides the genuine last CoinGecko timestamp.
+chart.data.datasets[0].data=Array.from({length:288},()=>100);
+chart.data.labels=["axis tick 1","axis tick 2"];
+meta.data=Array.from({length:288},(_,i)=>({x:60+i*2.4}));
+const stamp=times.at(-1),d=new Date(stamp),two=v=>String(v).padStart(2,"0");
+const summary="BTC · départ 99 · dernière 100 · 288 points · série "+
+  two(d.getDate())+"/"+two(d.getMonth()+1)+"/"+d.getFullYear()+" "+
+  two(d.getHours())+":"+two(d.getMinutes())+":"+two(d.getSeconds())+" · CoinGecko";
+global.document={
+ querySelector:()=>null,
+ getElementById:id=>id==="atlasChartInsightOverlayTitle"?{textContent:"BTC · Bitcoin · 24h · PRIX USD"}:
+ id==="atlasChartInsightOverlaySummary"?{textContent:summary}:null
+};
+const approximate=api.nativeTimeline(chart,0,stamp);
+assert.equal(approximate.length,288,"Dense line's timestamps are projected from its real last sample");
+assert.equal(approximate.approximate,true,"Approximation must be identified visibly");
+assert.ok(Math.abs(approximate.at(-1)-stamp)<1000,"Use real on-screen CoinGecko timestamp");
+assert.equal(api.matching(chart,snapshot).ref?.ds?.atlasCoin?.id,"bitcoin",
+ "BTC 288-point CoinGecko line accepts genuine 1h candles");
+global.document.getElementById=id=>id==="atlasChartInsightOverlayTitle"?{textContent:"BTC · Bitcoin · 7j"}:
+ id==="atlasChartInsightOverlaySummary"?{textContent:summary}:null;
+assert.equal(api.matching(chart,snapshot).ref,undefined,
+ "Never project a 24h candle axis onto a 7-day graph");
+global.document.getElementById=id=>id==="atlasChartInsightOverlayTitle"?{textContent:"BTC · Bitcoin · 24h"}:
+ id==="atlasChartInsightOverlaySummary"?{textContent:"288 points · série 01/01/2025 00:00:00 · CoinGecko"}:null;
+assert.equal(api.matching(chart,snapshot).ref,undefined,"Distant source timestamp must fail closed");
+console.log("PASS native line owns chart; real OHLC candles behind line; 288-point CoinGecko no-label timeline, explicit approximate alignment, stale/different periods refused");
