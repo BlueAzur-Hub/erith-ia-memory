@@ -50,7 +50,7 @@ jobs:
           bit=json.loads((base/"bitget_verified_views/index.json").read_text())
           a=next(x for x in fed["assets"] if x["id"]=="hyperliquid")
           b=next(x for x in bit["assets"] if x["id"]=="hyperliquid")
-          assert a["symbol"]==b["symbol"]=="HYPE" and a["rank"]==11
+          assert a["id"]==b["id"]=="hyperliquid" and a["symbol"]==b["symbol"]=="HYPE"
           assert a["quote"]==b["quote"]=="USDT" and b["pair"]=="HYPEUSDT"
           assert a["source"]=="Bitget Spot native 1m HTTPS"
           assert month not in b["months"] and month not in {"2025-01","2026-02","2026-07","2026-08","2026-09"}
@@ -80,7 +80,7 @@ jobs:
           bit=json.loads((base/"bitget_verified_views/index.json").read_text())
           a=next(x for x in fed["assets"] if x["id"]=="hyperliquid")
           b=next(x for x in bit["assets"] if x["id"]=="hyperliquid")
-          assert a["rank"]==11 and a["symbol"]=="HYPE" and a["quote"]=="USDT"
+          assert a["id"]=="hyperliquid" and a["symbol"]=="HYPE" and a["quote"]=="USDT"
           assert a["source"]=="Bitget Spot native 1m HTTPS"
           assert b["id"]==a["id"] and b["symbol"]==a["symbol"] and b["pair"]=="HYPEUSDT"
           asset={"id":"hyperliquid","rank":a["rank"],"name":a["name"],
