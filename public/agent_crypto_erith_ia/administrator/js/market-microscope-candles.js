@@ -589,7 +589,11 @@
     if(!isBtcAnnual)state.bar=requestedBar;
     state.requestedBar=requestedBar;
     state.requestedArchivePeriod=isBtcAnnual?"1an":null;
-    if(state.archivePeriod&&!isBtcAnnual){state.rows=[];state.loadedInstrument=null;state.archivePeriod=null;draw();}
+    if(!!state.archivePeriod!==isBtcAnnual&&state.rows.length){
+      // Never display previous-period candles under the new period's header.
+      state.rows=[];state.loadedInstrument=null;state.loadedBar=null;
+      state.archivePeriod=null;state.lastLevels=null;renderTechnicalLevels(null);draw();
+    }
     syncControls();
     const ext=externalContext();
     const candidates=instrumentCandidates();
@@ -708,7 +712,7 @@
     return state.rows.slice(view.start,view.start+count);
   }
   function resetView(redraw=true){
-    view.count=Math.min(72,Math.max(20,state.rows.length||72));
+    view.count=state.archivePeriod==="1an"?state.rows.length:Math.min(72,Math.max(20,state.rows.length||72));
     view.start=Math.max(0,state.rows.length-view.count);
     view.dragging=false;
     const canvas=document.querySelector(`#${ROOT} canvas`);
@@ -875,7 +879,7 @@
     ctx.font="12px ui-monospace,monospace";ctx.textAlign="left";
     for(let k=0;k<5;k++){const value=high-(range*k/4),yy=pad.t+k*plotH/4;ctx.fillStyle="#7f98a5";ctx.fillText(fmtPrice(value),w-pad.r+7,yy+3);}
     const ticks=[0,Math.floor((rows.length-1)/2),rows.length-1];ctx.textAlign="center";ctx.fillStyle="#6f8793";
-    ticks.forEach(i=>{if(rows[i])ctx.fillText(new Date(rows[i].t).toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}),x(i),h-5);});
+    ticks.forEach(i=>{if(rows[i])ctx.fillText(new Date(rows[i].t).toLocaleString("fr-FR",state.archivePeriod==="1an"?{month:"short",year:"numeric",timeZone:"UTC"}:{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}),x(i),h-5);});
 
     // Visible-range truth markers: high / low only, no inferred support/resistance.
     const highIndex=rows.reduce((best,r,i)=>r.h>rows[best].h?i:best,0);
