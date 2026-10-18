@@ -14,10 +14,10 @@ require(path.join(root,"administrator/js/graph-line-candle-overlay.js"));
 const api=globalThis.AgentCryptoLineCandleOverlay;
 assert.equal(api.read_only,true);assert.equal(api.real_order,false);assert.equal(api.market_core_changed,false);
 const start=Date.now()-24*3600000;
-const times=Array.from({length:25},(_,i)=>start+i*3600000);
+const times=Array.from({length:289},(_,i)=>start+i*300000);
 const rows=times.map(t=>({t,o:99.8,h:100.8,l:99.1,c:100.1,v:100}));
-const snapshot={mode:"hybrid",loading:false,rows,loadedInstrument:"BTC-USDC",source:"OKX public candles",loadedBar:"1h"};
-const points=times.map((t,i)=>({x:60+i*30}));
+const snapshot={mode:"hybrid",loading:false,rows,loadedInstrument:"BTC-USDC",source:"OKX public candles",loadedBar:"5m"};
+const points=times.map((t,i)=>({x:60+i*2.6}));
 const meta={type:"line",hidden:false,data:points,yScale:{getPixelForValue:v=>200+(100-v)*10}};
 const canvasCalls=[];
 const ctx={save(){},beginPath(){},rect(){},clip(){},stroke(){canvasCalls.push({kind:'stroke',color:this.strokeStyle});},fillRect(x,y,w,h){canvasCalls.push({kind:'fill',x,y,w,h,color:this.fillStyle});},fillText(text,x,y){canvasCalls.push({kind:'text',text,x,y});},restore(){},moveTo(){},lineTo(){}};
@@ -28,18 +28,18 @@ global.AgentCryptoQuoteCurrencyArchitecture={snapshot:()=>({displayCurrency:"USD
 global.AgentCryptoMarketMicroscope={snapshot:()=>snapshot};
 const matched=api.matching(chart,snapshot);
 assert.equal(matched.ref.ds.atlasCoin.id,"bitcoin");
-assert.equal(api.drawBars(chart,matched),25);
-assert.equal(canvasCalls.filter(v=>v.kind==='fill'&&/rgba\(83,224,169/.test(v.color)).length,25);
+assert.equal(api.drawBars(chart,matched),289);
+assert.equal(canvasCalls.filter(v=>v.kind==='fill'&&/rgba\(83,224,169/.test(v.color)).length,289);
 const lane=api.miniLane(chart.chartArea),geometry=api.miniGeometry(chart.chartArea,rows);
 assert.equal(api.strip_ratio,.24,"OHLC occupies the volume-bar summary zone (24%)");
 assert.ok(lane.top>=chart.chartArea.top+(.73*(chart.chartArea.bottom-chart.chartArea.top)),"Summary stays in chart bottom quarter");
 assert.ok(lane.height/(chart.chartArea.bottom-chart.chartArea.top)<=.27,"OHLC occupies no more than 27% of plotted height");
-assert.equal(geometry.scale,"sqrt-amplitude-display","Square root reduces the effect of a single oversized hour");
+assert.equal(geometry.scale,"sqrt-amplitude-display","Display-only transformation compresses extreme 5-minute range");
 assert.ok(geometry.y(rows[0],rows[0].h)<geometry.y(rows[0],rows[0].l));
 const bodies=canvasCalls.filter(v=>v.kind==='fill'&&/rgba\(83,224,169/.test(v.color));
 assert.ok(bodies.every(v=>v.y>=lane.bodyTop-.1&&v.y+v.h<=lane.bodyBottom+2.1),"All bodies stay inside the lower lane");
 assert.ok(!canvasCalls.some(v=>v.kind==='text'),"No title or mini-panel label in the chart");
-assert.equal(canvasCalls.filter(v=>v.kind==='fill').length,25,"Only candle bodies paint rectangles: no band, no filled panel, no volume shade");
+assert.equal(canvasCalls.filter(v=>v.kind==='fill').length,289,"Only candle bodies paint rectangles: no band, no filled panel, no volume shade");
 
 // Real 1h ranges of different magnitudes must differ like lower histogram bars,
 // even if their absolute BTC prices differ. Both lows share the visual baseline.
@@ -51,23 +51,25 @@ assert.equal(compare.y(large,large.l),compare.y(small,small.l),"All lows align a
 const red={t:times[2],o:109,h:111,l:96,c:99};
 assert.ok(api.miniGeometry({left:0,right:800,top:0,bottom:520},[large,red]).y(red,red.o)<api.miniGeometry({left:0,right:800,top:0,bottom:520},[large,red]).y(red,red.c),"Red body points downward");
 
-assert.equal(canvasCalls.filter(v=>v.kind==='stroke').length,25,"Only candle wicks paint strokes: no horizontal divider");
+assert.equal(canvasCalls.filter(v=>v.kind==='stroke').length,289,"Only candle wicks paint strokes: no horizontal divider");
 const beforeOther=canvasCalls.length;
 const nativeScale=meta.yScale.getPixelForValue;
 meta.yScale.getPixelForValue=()=>-1000000;
-assert.equal(api.drawBars(chart,matched),25,"Mini OHLC is independent from Chart.js Y axis and unaffected by price zoom");
+assert.equal(api.drawBars(chart,matched),289,"OHLC 5m is independent from Chart.js Y axis and unaffected by price zoom");
 meta.yScale.getPixelForValue=nativeScale;
 assert.equal(api.miniLane({left:0,right:500,top:0,bottom:100}),null,"Do not compress an unreadable tiny viewport");
 assert.equal(api.barsFrom({...snapshot,rows:[{t:times[0],o:1,h:0,l:1,c:1}]}).length,0,"Bad OHLC rejected");
 assert.equal(api.matching(chart,{...snapshot,loadedInstrument:"ETH-USDC"}).ref,undefined,"Other asset refused");
 assert.equal(api.matching(chart,{...snapshot,loadedInstrument:"BTC-EUR"}).ref,undefined,"Other quote refused");
 assert.equal(api.matching(chart,{...snapshot,rows:[]}).ref,undefined,"Empty candles refused");
+assert.equal(api.matching(chart,{...snapshot,loadedBar:"1h"}).ref,undefined,"Hour candles cannot pretend to be dense 5m OHLC");
+assert.equal(api.matching(chart,{...snapshot,rows:rows.filter((_,i)=>i%12===0)}).ref,undefined,"24 sparse hourly bodies explicitly refused");
 chart.data.datasets[0].data=times.map(()=>120);
 assert.equal(api.matching(chart,snapshot).ref,undefined,"3.5% quote divergence guard");
 chart.data.datasets[0].data=times.map(()=>100);
 chart.data.labels=times.map(t=>new Date(t).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}));
 const labels=api.nativeTimeline(chart,0,times.at(-1));
-assert.equal(labels.length,25,"Clock-only labels resolved from real OHLC timestamp");
+assert.equal(labels.length,289,"Clock-only labels resolved from real OHLC timestamp");
 assert.ok(Math.abs(labels.at(-1)-labels[0]-24*3600000)<3600000,"Midnight preserved");
 // Actual native 24h mode: 288 sampled prices, axis may expose only a few tick labels.
 // The native overlay's caption provides the genuine last CoinGecko timestamp.
@@ -88,7 +90,7 @@ assert.equal(approximate.length,288,"Dense line's timestamps are projected from 
 assert.equal(approximate.approximate,true,"Approximation must be identified visibly");
 assert.ok(Math.abs(approximate.at(-1)-stamp)<1000,"Use real on-screen CoinGecko timestamp");
 assert.equal(api.matching(chart,snapshot).ref?.ds?.atlasCoin?.id,"bitcoin",
- "BTC 288-point CoinGecko line accepts genuine 1h candles");
+ "BTC 288-point CoinGecko line accepts genuine 5m candles");
 global.document.getElementById=id=>id==="atlasChartInsightOverlayTitle"?{textContent:"BTC · Bitcoin · 7j"}:
  id==="atlasChartInsightOverlaySummary"?{textContent:summary}:null;
 assert.equal(api.matching(chart,snapshot).ref,undefined,
@@ -114,15 +116,15 @@ const externalMeta={type:"line",hidden:false,data:extTimes.map((t,i)=>({x:52+2.4
 const externalChart={canvas:{id:"mainChart"},ctx,chartArea:{left:50,right:850,top:40,bottom:300},
  data:{labels:extTimes.map(t=>new Date(t).toISOString()),datasets:[{atlasCoin:{id:extId,symbol:"DNA"},data:extPrices.map(x=>x[1])}]},
  getDatasetMeta:()=>externalMeta};
-const extRows=Array.from({length:29},(_,i)=>({t:base+i*3600000,o:.2884,h:.291,l:.286,c:.288453}));
-const extSnap={...snapshot,rows:extRows,loadedInstrument:"DNA-USDT",loadedBar:"1h",source:"Bitget public candles"};
+const extRows=Array.from({length:300},(_,i)=>({t:base+i*300000,o:.2884,h:.291,l:.286,c:.288453}));
+const extSnap={...snapshot,rows:extRows,loadedInstrument:"DNA-USDT",loadedBar:"5m",source:"Bitget public candles"};
 let truth=api.externalLineTruth({ds:externalChart.data.datasets[0],meta:externalMeta},extSnap.loadedInstrument);
 assert.equal(truth.symbol,"DNA","External chart ID and selected symbol verified");
 let hybrid=api.matching(externalChart,extSnap);
 assert.equal(hybrid.ref.ds.atlasCoin.symbol,"DNA","DNA 24h accepted despite hidden BTC Market selection");
 assert.equal(hybrid.times.length,320,"External 320 points use exact timestamps, never CoinGecko 288 interpolation");
 const dnaCount=api.drawBars(externalChart,hybrid);
-assert.ok(dnaCount>=22,"DNA draws hourly candles with exchange OHLC");
+assert.ok(dnaCount>=275,"DNA draws dense 5-minute candles with exchange OHLC");
 native={...native,selectedId:"another-asset"};
 assert.equal(api.matching(externalChart,extSnap).ref,undefined,"Mismatch selection rejected");
 native={...native,selectedId:extId};
@@ -137,4 +139,4 @@ extHistory.source="No verified pair";
 assert.equal(api.matching(externalChart,extSnap).ref,undefined,"Wrong provenance refused");
 const microscope=fs.readFileSync(path.join(root,"administrator/js/market-microscope-candles.js"),"utf8");
 assert.match(microscope,/if\(ext.active\)return external/, "Active DNA/CT must be chosen before the hidden pair resolver");
-console.log("PASS BTC and DNA native/external contexts, exact historical timestamps, no Market BTC leakage and readable OHLC");
+console.log("PASS BTC and DNA native/external 5m OHLC density, exact timestamps, provenance and no Market BTC leakage");
