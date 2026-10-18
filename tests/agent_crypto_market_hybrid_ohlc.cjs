@@ -14,7 +14,10 @@ assert.match(candles,/const state=\{mode:"native"/,"No unwanted automatic hybrid
 assert.match(candles,/function candleModeActive\(\)\{return state\.mode==="candles"\|\|state\.mode==="hybrid";\}/);
 assert.match(candles,/function setMode\(mode\)\{state\.mode=mode==="hybrid"\?"hybrid":mode==="candles"\?"candles":"native";/);
 assert.match(candles,/classList\.toggle\("is-open",state\.mode==="candles"\)/,"Hybrid shows the original line chart instead of candle canvas");
-assert.match(candles,/if\(state\.mode==="hybrid"\)void load\(\{bar:"5m",reason:"native-line-overlay"\}\)/,"Hybrid requests real 5m OHLC, matching native 24h density");
+assert.match(candles,/AgentCryptoLineCandleOverlay\?\.periodConfig\?\.\(\)/,"Hybrid selects exchange cadence from the active graph period");
+assert.match(overlay,/'7j':Object\.freeze\(\{label:'7j',days:7,bar:'1h'/,"7d uses hourly exchange OHLC");
+assert.match(overlay,/'30j':Object\.freeze\(\{label:'30j',days:30,bar:'4h'/,"30d uses four-hour exchange OHLC");
+assert.match(overlay,/reason:'hybrid-period-changed'/,"Changes in chart period refresh only the OHLC layer");
 assert.doesNotMatch(candles,/drawIndicator\(rows\.map\(row=>row\.c\),/,"No reverse close line on candlestick canvas");
 assert.match(overlay,/afterDatasetsDraw\(chart\)/,"Mini OHLC lower lane renders over native volume without modifying its dataset");
 assert.match(overlay,/function miniGeometry\(area,ohlcRows\)/,"Mini lane has its own OHLC scale");
