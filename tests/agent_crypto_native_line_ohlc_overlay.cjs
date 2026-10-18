@@ -116,7 +116,7 @@ const externalMeta={type:"line",hidden:false,data:extTimes.map((t,i)=>({x:52+2.4
 const externalChart={canvas:{id:"mainChart"},ctx,chartArea:{left:50,right:850,top:40,bottom:300},
  data:{labels:extTimes.map(t=>new Date(t).toISOString()),datasets:[{atlasCoin:{id:extId,symbol:"DNA"},data:extPrices.map(x=>x[1])}]},
  getDatasetMeta:()=>externalMeta};
-const extRows=Array.from({length:300},(_,i)=>({t:base+i*300000,o:.2884,h:.291,l:.286,c:.288453}));
+const extRows=Array.from({length:300},(_,i)=>({t:base+(i+20)*300000,o:.2884,h:.291,l:.286,c:.288453}));
 const extSnap={...snapshot,rows:extRows,loadedInstrument:"DNA-USDT",loadedBar:"5m",source:"Bitget public candles"};
 let truth=api.externalLineTruth({ds:externalChart.data.datasets[0],meta:externalMeta},extSnap.loadedInstrument);
 assert.equal(truth.symbol,"DNA","External chart ID and selected symbol verified");
