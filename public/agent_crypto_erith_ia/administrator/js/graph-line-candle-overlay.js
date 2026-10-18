@@ -342,12 +342,31 @@
      if(t>=bounds[bin+1]&&bin===period.segments-1)continue;
      buckets[bin].push({price,t});
    }
+   const interval=span/Math.max(1,values.length-1);
    const bars=buckets.map((bucket,i)=>{
-     if(bucket.length<2)return null;
-     const p0=bucket[0].price,p1=bucket.at(-1).price,change=(p1/p0-1)*100;
+     if(!bucket.length)return null;
+     // A calendar period may only have one native sample so far (e.g. today
+     // at 03:00 on a 60d chart sampled every 4h). Reuse the LAST OBSERVED
+     // price just before its boundary, never fabricate an opening quote.
+     let reference=null;
+     if(bucket.length===1){
+       for(let j=times.length-1;j>=0;j--){
+         if(times[j]>=bounds[i])continue;
+         const p=priceValue(values[j]);
+         if(p>0&&bounds[i]-times[j]<=Math.max(120000,interval*1.6)){
+           reference={price:p,t:times[j]};break;
+         }
+       }
+       if(!reference)return null;
+     }
+     const first=reference||bucket[0],lastPoint=bucket.at(-1);
+     const p0=first.price,p1=lastPoint.price,change=(p1/p0-1)*100;
      if(!Number.isFinite(change))return null;
-     return {index:i,t:bucket[0].t,end:bucket.at(-1).t,
-       start:bounds[i],stop:bounds[i+1],partial:bucket[0].t>bounds[i]+3600000||bucket.at(-1).t<bounds[i+1]-3600000,
+     return {index:i,t:first.t,end:lastPoint.t,
+       start:bounds[i],stop:bounds[i+1],
+       partial:!!reference||bucket[0].t>bounds[i]+Math.max(60000,interval*1.6)||
+         lastPoint.t<bounds[i+1]-Math.max(60000,interval*1.6),
+       referenceFromPrevious:!!reference,
        open:p0,close:p1,change,delta:p1-p0,
        direction:change>0?'up':change<0?'down':'flat',samples:bucket.length};
    });
@@ -447,7 +466,7 @@
        'Prix début : '+fmtPrice(bar.open,currency)+' · Prix fin : '+fmtPrice(bar.close,currency)+'\n'+
        'Variation : '+(bar.delta>=0?'+':'')+fmtPrice(bar.delta,currency)+' / '+
           (bar.change>=0?'+':'')+frNumber(bar.change,3)+' %\n'+
-       'Volume observé : '+volText+(bar.partial?'\nIntervalle partiel':'')+
+       'Volume observé : '+volText+(bar.partial?'\nIntervalle partiel'+(bar.referenceFromPrevious?' · référence précédente observée':''):'')+
        (summary.approximate?'\nTemps estimé depuis la série native':'')
    };
  }
