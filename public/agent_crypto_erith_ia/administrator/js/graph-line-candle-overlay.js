@@ -449,22 +449,63 @@
        (summary.approximate?'\nTemps estimé depuis la série native':'')
    };
  }
+ let lastSummary=null,lastVolumes=[],lastGeometry=null,hoveredIndex=-1;
+ function paintHint(){
+   if(!lastSummary?.bars)return;
+   if(hoveredIndex>=0){
+     const h=summaryHover(lastSummary,lastVolumes,hoveredIndex);
+     if(h){hint(h.short,h.detail);return;}
+   }
+   const summary=lastSummary;
+   const verified=lastVolumes.filter(v=>v!==null).length;
+   hint('Ligne + '+summary.bars.length+' barres · '+summary.period.label+
+     (summary.approximate?' · temps estimé':'')+(verified?' · volume exchange vérifié':''),
+     'Hauteur : variation du prix, largeur : volume réel seulement lorsqu’il est vérifié. '+
+       'Couleur : hausse/baisse. Les volumes non couverts gardent une largeur standard.');
+ }
  const plugin={id:'agentCryptoNativeLineCandles',
-   // Suppress the native lower-volume BAR dataset only in Hybrid. Preserve its
-   // data, tooltip source and the user's Volume toggle for the other modes.
    beforeDatasetDraw(chart,args){
      if(chart?.canvas?.id!=='mainChart'||!mode())return;
-     if(chart.getDatasetMeta?.(args.index)?.type==='bar')return false;
+     // Keep original Volume when summary is unavailable, so no blank chart.
+     if(chart.getDatasetMeta?.(args.index)?.type==='bar'&&variationSummary(chart).bars)
+       return false;
    },
    afterDatasetsDraw(chart){
      if(chart?.canvas?.id!=='mainChart'||!mode())return;
      const summary=variationSummary(chart);
-     if(!summary.bars){hint(summary.reason);return;}
-     const count=drawVariationSummary(chart,summary);
-     hint(count?'Ligne + '+count+' barres · '+summary.period.label+' · '+summary.period.unit+
-       (summary.approximate?' · temps estimé':''):'Ligne conservée · barres indisponibles',
-       'Variations en pourcentage du prix historique affiché. Vert : hausse ; rouge : baisse. '+
-       'Hauteur visuelle compressée pour rester lisible ; aucune bougie OHLC reconstituée.');
+     if(!summary.bars){
+       lastSummary=null;lastVolumes=[];lastGeometry=null;hoveredIndex=-1;
+       hint(summary.reason);return;
+     }
+     lastSummary=summary;
+     lastVolumes=observedVolumes(summary);
+     lastGeometry=summaryGeometry(chart,summary,lastVolumes);
+     drawVariationSummary(chart,summary,lastVolumes);
+     if(hoveredIndex>=summary.bars.length)hoveredIndex=-1;
+     paintHint();
+   },
+   afterEvent(chart,args){
+     if(chart?.canvas?.id!=='mainChart'||!mode()||!lastGeometry?.rects){
+       if(hoveredIndex!==-1){hoveredIndex=-1;if(mode())paintHint();}
+       return;
+     }
+     const event=args?.event,mouse=event?.type;
+     if(!event||!['mousemove','mouseout','mouseleave','touchmove','touchend'].includes(mouse))return;
+     let selected=-1;
+     const x=event.x,y=event.y;
+     if(mouse==='mousemove'||mouse==='touchmove'){
+       const lane=lastGeometry.lane;
+       if(Number.isFinite(x)&&Number.isFinite(y)&&
+         x>=lane.left&&x<=lane.right&&y>=lane.top&&y<=lane.bottom){
+         const rs=lastGeometry.rects;
+         for(let i=0;i<rs.length;i++){
+           if(Math.abs(x-rs[i].x)<=Math.max(rs[i].w/2,7)&&y>=rs[i].y-7&&y<=lane.bottom){
+             selected=i;break;
+           }
+         }
+       }
+     }
+     if(selected!==hoveredIndex){hoveredIndex=selected;paintHint();}
    }
  };
  function refresh(){
@@ -476,5 +517,5 @@
  if(globalThis.Chart?.register)globalThis.Chart.register(plugin);
  if(typeof window!=='undefined')for(const event of ['agent-crypto:market-candles-loaded','agent-crypto:quote-architecture-changed','agent-crypto:selected-market-changed','agent-crypto:external-asset-changed'])
    window.addEventListener(event,refresh,{passive:true});
- globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,periodConfig,summaryPeriodConfig,summaryOwnership,variationSummary,drawVariationSummary,nativeTimeline,externalLineTruth,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
+ globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,periodConfig,summaryPeriodConfig,summaryOwnership,summaryBoundaries,variationSummary,observedVolumes,summaryGeometry,summaryHover,drawVariationSummary,nativeTimeline,externalLineTruth,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
 })();
