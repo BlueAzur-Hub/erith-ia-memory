@@ -431,6 +431,28 @@
       "strategy": "REBOUND",
       "type": "PAPER_SIGNAL",
       "venue": "OKX Spot"
+    },
+    {
+      "asset": "BTC",
+      "at": "2026-10-18T21:00:00Z",
+      "executed_order": false,
+      "instrument": "BTCUSDT",
+      "paper": true,
+      "quote": "USDT",
+      "reason": "No confirmed rebound or trend breakout",
+      "type": "WAIT",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset": "CT",
+      "at": "2026-10-18T21:00:00Z",
+      "executed_order": false,
+      "instrument": "CT-USDT",
+      "paper": true,
+      "quote": "USDT",
+      "reason": "Missed next bar; no retrospective assumed entry",
+      "type": "SIGNAL_EXPIRED",
+      "venue": "OKX Spot"
     }
   ],
   "markets": {
@@ -438,29 +460,26 @@
       "closed": 0,
       "decision": "WAIT",
       "error": null,
-      "last_hour": 1792350000000,
-      "last_price_usdt": 81194.07,
+      "last_hour": 1792357200000,
+      "last_price_usdt": 80963.11,
       "open": null,
       "pending": null,
       "pnl_usdt": 0.0,
       "reason": "No confirmed rebound or trend breakout",
-      "source_time": "2026-10-18T19:00:00Z",
+      "source_time": "2026-10-18T21:00:00Z",
       "wins": 0
     },
     "CT": {
       "closed": 0,
-      "decision": "PAPER_SIGNAL",
+      "decision": "WAIT",
       "error": null,
-      "last_hour": 1792350000000,
-      "last_price_usdt": 0.29865,
+      "last_hour": 1792357200000,
+      "last_price_usdt": 0.29731,
       "open": null,
-      "pending": {
-        "model": "REBOUND",
-        "signal_hour": 1792350000000
-      },
+      "pending": null,
       "pnl_usdt": 0.0,
-      "reason": "dip below MA24, first higher close, volume-confirmed (await later bar)",
-      "source_time": "2026-10-18T19:00:00Z",
+      "reason": "Missed next bar; no retrospective assumed entry",
+      "source_time": "2026-10-18T21:00:00Z",
       "wins": 0
     }
   },

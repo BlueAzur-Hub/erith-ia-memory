@@ -131,5 +131,27 @@
     "strategy": "REBOUND",
     "type": "PAPER_SIGNAL",
     "venue": "OKX Spot"
+  },
+  {
+    "asset": "BTC",
+    "at": "2026-10-18T21:00:00Z",
+    "executed_order": false,
+    "instrument": "BTCUSDT",
+    "paper": true,
+    "quote": "USDT",
+    "reason": "No confirmed rebound or trend breakout",
+    "type": "WAIT",
+    "venue": "Binance Spot"
+  },
+  {
+    "asset": "CT",
+    "at": "2026-10-18T21:00:00Z",
+    "executed_order": false,
+    "instrument": "CT-USDT",
+    "paper": true,
+    "quote": "USDT",
+    "reason": "Missed next bar; no retrospective assumed entry",
+    "type": "SIGNAL_EXPIRED",
+    "venue": "OKX Spot"
   }
 ]
