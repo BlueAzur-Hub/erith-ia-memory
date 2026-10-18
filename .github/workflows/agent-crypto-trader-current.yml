@@ -136,6 +136,12 @@ jobs:
       - name: Trader CT single-flight and A/B/C rollback
         run: node tests/agent_crypto_trader_ct_recall.cjs
 
+      - name: Trader reader-only Atlas producer guard
+        run: node tests/agent_crypto_trader_atlas_readonly.cjs
+
+      - name: Genuine-OHLC hybrid mode and minute-refresh guard
+        run: node tests/agent_crypto_market_hybrid_ohlc.cjs
+
       - name: Cross-market candle identity and quote truth
         run: node tests/agent_crypto_market_context_identity.cjs
 
