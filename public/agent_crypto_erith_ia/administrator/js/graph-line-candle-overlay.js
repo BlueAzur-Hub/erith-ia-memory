@@ -150,7 +150,7 @@
      ctx.fillText('BOUGIES 1H · AMPLITUDE RELATIVE',lane.left+7,lane.top+4);
    }
    inside.forEach(r=>{
-     const x=px(r.t,ref,times);if(x===null||x<lane.left+width/2||x>lane.right-width/2)return;
+     const x=px(r.t,ref,times);if(x===null||x<lane.left||x>lane.right)return;
      const yh=lane.y(r,r.h),yl=lane.y(r,r.l),yo=lane.y(r,r.o),yc=lane.y(r,r.c);
      if(![yh,yl,yo,yc].every(Number.isFinite))return;
      const up=r.c>=r.o;
