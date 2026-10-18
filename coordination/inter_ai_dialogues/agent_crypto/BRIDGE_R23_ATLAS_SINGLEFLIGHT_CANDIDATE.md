@@ -7,7 +7,7 @@
 - ZIP utilisateur de départ : `AGENT_CRYPTO_AETHER_CONTROL_R22_BRIDGE_V1_9_16_BACKEND_V1_4_6_OKX_LEDGER_READ(2).zip` ; EXE R22 correspondant vérifié lors de l'audit précédent.
 - Correctif dérivé : Control Center `2.3.2R23`, Bridge `1.9.17`, backend OKX READ `1.4.6` inchangé, configuration et source Go incluses.
 - **EXE candidat local** `ATLAS_10_CRYPTO_BRIDGE_CONTROL_CENTER_R23_BRIDGE_V1_9_17_BACKEND_V1_4_6_ATLAS_SINGLEFLIGHT.exe`, **SHA-256 `0f3ab0e8d2f75a599fb4989a0d21a5feffaa9063450af74eeec41869c72e9936`** ; PE32+ x64 Windows GUI cross-compilé Go.
-- **ZIP candidat local** `AGENT_CRYPTO_AETHER_CONTROL_R23_BRIDGE_V1_9_17_BACKEND_V1_4_6_ATLAS_SINGLEFLIGHT.zip`, **SHA-256 `8d27c279bc992c398f227632c998b4ff35d6ffad97b133ae9f6a3a4f3d090548`** ; 33 entrées, contient mêmes bytes EXE/source et `source/payload.zip` reconstruit, manifest `SHA256SUMS.txt`, tests et README.
+- **ZIP candidat local** `AGENT_CRYPTO_AETHER_CONTROL_R23_BRIDGE_V1_9_17_BACKEND_V1_4_6_ATLAS_SINGLEFLIGHT.zip`, **SHA-256 `a8cb2b7c31bf8b675cf85a5e676ad4d7b26cd2e4ca4e1ea002426176c41d3e6a`** ; 33 entrées, contient mêmes bytes EXE/source et `source/payload.zip` reconstruit, manifest `SHA256SUMS.txt`, tests et README.
 - Ne contient aucun secret API OKX, session Aether Trust, portefeuille ou fichier utilisateur ; maintenir sur disque les secrets DPAPI locaux séparés.
 
 ## Correctif R23 (côté Bridge seulement)
@@ -26,5 +26,7 @@
 ## Cause du double lancement, limites et prochaine étape
 
 Le programme de l'Administrator `administrator/app.js` demande jusqu'à **deux tentatives automatiques** et peut réarmer un cycle au changement d'identifiant de snapshot de marché. Il utilise plusieurs événements readiness (market-refresh, graph-ready, bridge-ready, post-auth). Les temporisations Bridge et Atlas ne correspondent pas nécessairement aux trente minutes observées. Le correctif Bridge stoppe les générations **identiques concomitantes dans un même processus**, mais pas les nouveaux cycles consécutifs associés à des snapshots **différents** ou à plusieurs instances Bridge.
+
+**ATTENTION migration Windows :** cliquer sur la croix pour fermer l'ancien Control Center **laisse le processus Bridge ancien en cours d'exécution**. Le bouton Démarrer de R23 voit le port déjà actif et peut répondre « Bridge externe déjà actif · aucune action effectuée » ; il ne remplace alors pas automatiquement les scripts R22. Lorsque tout calcul est terminé, arrêter explicitement le Bridge depuis l'ancien Control Center, puis quitter cet ancien Control Center, lancer R23 et vérifier la version renvoyée par /health (1.9.17). Ne jamais forcer l'arrêt d'un processus externe inconnu. Si un `portable.flag` est présent à côté de R23, éviter qu'il pointe vers un dossier `bridge/bridge.py` resté à R22.
 
 **Étape suivante :** valider R23 sous Windows avec **un seul Control Center**, préserver R22 pour rollback ; analyser `atlas_runtime.jsonl` et l'ID de chaque snapshot, puis corriger le vrai propriétaire de relance côté Administrator si les snapshots différents déclenchent des cycles excessifs. Avant cela, privilégier temporairement Atlas en mode MANUEL en cas de surcharge. Aucune permission Trade/Withdraw, aucun bot réel et aucune modification du compte privé.
