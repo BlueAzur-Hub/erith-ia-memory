@@ -489,10 +489,29 @@
  // Only hide the *drawn* curve-following shadow in Hybrid. Keep the underlying
  // Volume preference and its original chart state untouched in all other modes.
  const savedShadowVisibility=new WeakMap();
- function hideNativeFloatboard(){
+ // Chart.js native tooltip's async external callback can set hidden=false
+ // AFTER our afterEvent/afterDatasetsDraw hooks. A hidden attribute alone
+ // therefore cannot prevent the large popup from reappearing over CT/DNA.
+ // An inline display:none !important remains effective until Hybrid ends.
+ const nativeTooltipDisplay=new WeakMap();
+ function syncNativeFloatboard(){
    const el=typeof document!=='undefined'?document.getElementById('atlasChartTooltip'):null;
-   if(!el)return;
-   el.hidden=true;el.setAttribute('aria-hidden','true');
+   if(!el?.style)return;
+   if(mode()){
+     if(!nativeTooltipDisplay.has(el))
+       nativeTooltipDisplay.set(el,{
+         value:el.style.getPropertyValue('display'),
+         priority:el.style.getPropertyPriority('display')
+       });
+     el.style.setProperty('display','none','important');
+     el.hidden=true;el.setAttribute('aria-hidden','true');
+   }else if(nativeTooltipDisplay.has(el)){
+     const original=nativeTooltipDisplay.get(el);
+     if(original.value)el.style.setProperty('display',original.value,original.priority);
+     else el.style.removeProperty('display');
+     nativeTooltipDisplay.delete(el);
+     el.hidden=true;el.setAttribute('aria-hidden','true');
+   }
  }
 
  function paintHint(){
@@ -510,7 +529,9 @@
  }
  const plugin={id:'agentCryptoNativeLineCandles',
    beforeDraw(chart){
-     if(chart?.canvas?.id!=='mainChart'||!mode()||savedShadowVisibility.has(chart))return;
+     if(chart?.canvas?.id!=='mainChart')return;
+     syncNativeFloatboard();
+     if(!mode()||savedShadowVisibility.has(chart))return;
      savedShadowVisibility.set(chart,chart.$atlasVolumeVisible);
      chart.$atlasVolumeVisible=false;
    },
@@ -537,7 +558,7 @@
      lastGeometry=summaryGeometry(chart,summary,lastVolumes);
      drawVariationSummary(chart,summary,lastVolumes);
      if(hoveredIndex>=summary.bars.length)hoveredIndex=-1;
-     if(hoveredIndex>=0)hideNativeFloatboard();
+     syncNativeFloatboard();
      paintHint();
    },
    afterEvent(chart,args){
@@ -562,11 +583,12 @@
        }
      }
      if(selected!==hoveredIndex){hoveredIndex=selected;paintHint();}
-     if(selected>=0)hideNativeFloatboard();
+     syncNativeFloatboard();
    }
  };
  function refresh(){
    if(typeof document==='undefined')return;
+   syncNativeFloatboard();
    const chart=globalThis.Chart?.getChart?.(document.getElementById('mainChart'));
    if(chart?.draw)try{chart.draw();}catch(_){}
    if(!mode())hint('');

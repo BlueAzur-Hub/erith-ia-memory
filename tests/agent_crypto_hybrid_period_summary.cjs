@@ -149,11 +149,25 @@ chart.data.datasets[0].atlasCoin={id:"bitcoin",symbol:"BTC"};
 // floatboard over the bar hover, and it must not leave orange "shadow bars"
 // bleeding through the simple green/pink baseline summary.
 fixture("24h",1,289,24);
-const suppressedFloatboard={hidden:false,ariaHidden:null,setAttribute(k,v){if(k==='aria-hidden')this.ariaHidden=v;}};
+const cssProps=new Map();
+const suppressedFloatboard={
+  hidden:false,ariaHidden:null,
+  setAttribute(k,v){if(k==='aria-hidden')this.ariaHidden=v;},
+  style:{
+    setProperty(k,v,priority=''){cssProps.set(k,{v,priority});},
+    getPropertyValue:k=>cssProps.get(k)?.v||'',
+    getPropertyPriority:k=>cssProps.get(k)?.priority||'',
+    removeProperty:k=>{cssProps.delete(k);}
+  }
+};
 const getNode=global.document.getElementById;
 global.document.getElementById=id=>id==='atlasChartTooltip'?suppressedFloatboard:getNode(id);
 chart.$atlasVolumeVisible=true;
 api.plugin.beforeDraw(chart);
+assert.equal(cssProps.get('display')?.v,'none',"Hybrid suppresses asynchronous native tooltip with CSS");
+assert.equal(cssProps.get('display')?.priority,'important',"Native tooltip cannot override suppression with hidden=false");
+suppressedFloatboard.hidden=false; // Emulate later Chart.js atlasExternalChartTooltip callback.
+assert.equal(cssProps.get('display')?.v,'none',"Late historical popup still has display:none");
 assert.equal(chart.$atlasVolumeVisible,false,"Hybrid hides the separate curve-following volume shadow");
 api.plugin.afterDraw(chart);
 assert.equal(chart.$atlasVolumeVisible,true,"Original volume choice is immediately restored after draw");
@@ -167,6 +181,7 @@ assert.equal(suppressedFloatboard.ariaHidden,"true");
 api.plugin.afterEvent(chart,{event:{type:"mouseout"}});
 global.AgentCryptoMarketMicroscope={snapshot:()=>({mode:"candles"})};
 api.plugin.beforeDraw(chart);
+assert.equal(cssProps.has('display'),false,"Changing to Bougies restores native historical tooltip");
 assert.equal(chart.$atlasVolumeVisible,true,"Microscope candle view keeps ordinary volume visibility");
 api.plugin.afterDraw(chart);
 global.AgentCryptoMarketMicroscope=savedRef;
