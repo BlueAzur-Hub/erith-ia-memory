@@ -248,28 +248,117 @@
    }
    el.hidden=false;el.textContent=message;el.title=title;
  }
- let requestedPeriodKey=null;
- const plugin={id:'agentCryptoNativeLineCandles',afterDatasetsDraw(chart){
-   if(chart?.canvas?.id!=='mainChart'||!mode())return;
-   const snap=globalThis.AgentCryptoMarketMicroscope?.snapshot?.(),period=periodConfig();
-   if(period&&snap?.mode==='hybrid'&&snap.requestedBar!==period.bar&&!snap.loading){
-     const ext=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
-     const key=[period.label,owner(chart)?.ds?.atlasCoin?.id,ext?.id||'',period.bar].join('|');
-     if(key!==requestedPeriodKey){
-       requestedPeriodKey=key;
-       queueMicrotask(()=>{
-         if(mode()&&periodConfig()?.label===period.label&&globalThis.AgentCryptoMarketMicroscope?.snapshot?.()?.requestedBar!==period.bar)
-           void globalThis.AgentCryptoMarketMicroscope?.load?.({bar:period.bar,reason:'hybrid-period-changed'});
-       });
-     }
-     hint('Chargement des bougies '+period.bar+' · '+period.label);return;
+
+ // The requested hybrid is a SIMPLE PERIOD SUMMARY, not a candlestick panel.
+ // Each vertical bar represents the price movement over a larger time bucket.
+ // Derived from the ALREADY plotted native price series: no OHLC invented,
+ // no exchange fetch, no second chart and no duplicate market selection.
+ const SUMMARY_RULES=Object.freeze({
+  '24h':Object.freeze({label:'24h',segments:24,unit:'heure',days:1}),
+  '7j':Object.freeze({label:'7j',segments:7,unit:'jour',days:7}),
+  '30j':Object.freeze({label:'30j',segments:30,unit:'jour',days:30}),
+  '60j':Object.freeze({label:'60j',segments:60,unit:'jour',days:60}),
+  '90j':Object.freeze({label:'90j',segments:13,unit:'semaine environ',days:90}),
+  '1a':Object.freeze({label:'1a',segments:12,unit:'mois environ',days:365}),
+  'max':Object.freeze({label:'Max',segments:12,unit:'segment historique',days:null})
+ });
+ function summaryPeriodConfig(){
+   if(typeof document==='undefined'||typeof document.getElementById!=='function')return null;
+   const title=String(document.getElementById('atlasChartInsightOverlayTitle')?.textContent||'');
+   const m=title.match(/(?:^|[\s·])(24h|7j|30j|60j|90j|1a|max)(?=[\s·]|$)/i);
+   return m?SUMMARY_RULES[m[1].toLowerCase()]||null:null;
+ }
+ const priceValue=v=>N(Array.isArray(v)?v[1]:v&&typeof v==='object'?(v.y??v.price??v.value):v);
+ function summaryOwnership(ref){
+   if(!ref?.ds?.atlasCoin?.id||!ref?.ds?.atlasCoin?.symbol)return false;
+   const external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
+   if(external?.active){
+     const owner=globalThis.AtlasExternalChart?.state?.();
+     const n=globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.();
+     return String(external.id||'')===String(ref.ds.atlasCoin.id)&&
+       String(external.base||'').toUpperCase()===String(ref.ds.atlasCoin.symbol).toUpperCase()&&
+       String(owner?.coin_id||'')===String(external.id)&&owner?.active===true&&
+       String(n?.selectedId||'')===String(external.id);
    }
-   const result=matching(chart,snap);
-   if(!result.ref){hint(result.reason);return;}
-   const count=drawBars(chart,result);
-   hint(count?'Ligne + bougies basses · '+result.period.label+' · '+count+' × '+result.period.bar+' · '+result.instrument+(result.approximate?' · position estimée':'')+(result.warning?' · OHLC conservées':''):'Ligne conservée · bougies hors période',
-     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. Bougies '+result.period.bar+' authentiques sur '+result.period.label+' ; hauteur relative non linéaire sans axe prix, aucune OHLC reconstruite. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
- }};
+   const selected=globalThis.getSelectedCoin?.();
+   return !selected?.id||String(selected.id)===String(ref.ds.atlasCoin.id);
+ }
+ function variationSummary(chart){
+   const ref=owner(chart),period=summaryPeriodConfig();
+   if(!period)return {reason:'Période de synthèse non reconnue'};
+   if(!ref||!summaryOwnership(ref))return {reason:'Synthèse indisponible · actif non confirmé'};
+   if(typeof document==='undefined'||document.querySelector('[data-chart-view="base100"].is-active')||
+     document.querySelector('[data-chart-scale="logarithmic"].is-active'))
+     return {reason:'Synthèse disponible en Solo · Prix · Normale'};
+   const values=ref.ds.data,points=ref.meta.data;
+   if(!Array.isArray(values)||values.length<period.segments*2||points?.length!==values.length)
+     return {reason:'Synthèse indisponible · échantillons insuffisants'};
+   const times=nativeTimeline(chart,ref.i,Date.now());
+   if(!times||times.length!==values.length||times.some((t,i)=>!Number.isFinite(t)||(i>0&&t<=times[i-1])))
+     return {reason:'Synthèse indisponible · dates non vérifiables'};
+   const first=times[0],last=times.at(-1),span=last-first;
+   if(!(span>0))return {reason:'Synthèse indisponible · durée inconnue'};
+   if(period.days){
+     const expected=period.days*86400000;
+     if(span<expected*.73||span>expected*1.18)
+       return {reason:'Synthèse indisponible · couverture '+period.label+' incohérente'};
+   }else if(span<7*86400000){
+     return {reason:'Synthèse Max · durée réelle trop courte'};
+   }
+   const buckets=Array.from({length:period.segments},()=>[]);
+   for(let i=0;i<values.length;i++){
+     const price=priceValue(values[i]);if(!(price>0))continue;
+     const bin=Math.min(period.segments-1,Math.max(0,Math.floor((times[i]-first)/span*period.segments)));
+     buckets[bin].push({price,t:times[i]});
+   }
+   const bars=buckets.map((bucket,i)=>{
+     if(bucket.length<2)return null;
+     const p0=bucket[0].price,p1=bucket.at(-1).price;
+     const change=(p1/p0-1)*100;
+     return Number.isFinite(change)?{index:i,t:bucket[0].t,end:bucket.at(-1).t,open:p0,close:p1,change,direction:change>0?'up':change<0?'down':'flat',samples:bucket.length}:null;
+   });
+   // Refuse partial archives rather than silently presenting nonexistent days.
+   if(bars.some(x=>!x))return {reason:'Synthèse indisponible · intervalles historiques incomplets'};
+   return {period,ref,times,first,last,bars,approximate:!!times.approximate,
+     coinId:String(ref.ds.atlasCoin.id),symbol:String(ref.ds.atlasCoin.symbol)};
+ }
+ function drawVariationSummary(chart,summary){
+   const lane=miniLane(chart.chartArea),ctx=chart.ctx,bars=summary?.bars;
+   if(!lane||!ctx||!Array.isArray(bars)||bars.length<2)return 0;
+   const abs=bars.map(b=>Math.abs(b.change)).filter(v=>v>0).sort((a,b)=>a-b);
+   const max=abs.length?abs[Math.min(abs.length-1,Math.floor(abs.length*.9))]:0;
+   const usable=lane.bodyBottom-lane.bodyTop;
+   const step=(lane.right-lane.left)/bars.length;
+   const width=Math.max(1.5,Math.min(32,step*.55));
+   const toHeight=pct=>pct===0?2:Math.min(usable,Math.max(5,usable*Math.sqrt(Math.abs(pct)/Math.max(max,1e-10))*.87));
+   ctx.save();ctx.beginPath();ctx.rect(lane.left,lane.top,lane.right-lane.left,lane.height);ctx.clip();
+   bars.forEach((b,i)=>{
+     const x=lane.left+step*(i+.5);
+     const height=toHeight(b.change);
+     ctx.fillStyle=b.direction==='up'?'rgba(76,224,170,.90)':
+       b.direction==='down'?'rgba(250,105,143,.90)':'rgba(170,185,195,.75)';
+     ctx.fillRect(x-width/2,lane.bodyBottom-height,width,height);
+   });
+   ctx.restore();return bars.length;
+ }
+ const plugin={id:'agentCryptoNativeLineCandles',
+   // Suppress the native lower-volume BAR dataset only in Hybrid. Preserve its
+   // data, tooltip source and the user's Volume toggle for the other modes.
+   beforeDatasetDraw(chart,args){
+     if(chart?.canvas?.id!=='mainChart'||!mode())return;
+     if(chart.getDatasetMeta?.(args.index)?.type==='bar')return false;
+   },
+   afterDatasetsDraw(chart){
+     if(chart?.canvas?.id!=='mainChart'||!mode())return;
+     const summary=variationSummary(chart);
+     if(!summary.bars){hint(summary.reason);return;}
+     const count=drawVariationSummary(chart,summary);
+     hint(count?'Ligne + '+count+' barres · '+summary.period.label+' · '+summary.period.unit+
+       (summary.approximate?' · temps estimé':''):'Ligne conservée · barres indisponibles',
+       'Variations en pourcentage du prix historique affiché. Vert : hausse ; rouge : baisse. '+
+       'Hauteur visuelle compressée pour rester lisible ; aucune bougie OHLC reconstituée.');
+   }
+ };
  function refresh(){
    if(typeof document==='undefined')return;
    const chart=globalThis.Chart?.getChart?.(document.getElementById('mainChart'));
@@ -279,5 +368,5 @@
  if(globalThis.Chart?.register)globalThis.Chart.register(plugin);
  if(typeof window!=='undefined')for(const event of ['agent-crypto:market-candles-loaded','agent-crypto:quote-architecture-changed','agent-crypto:selected-market-changed','agent-crypto:external-asset-changed'])
    window.addEventListener(event,refresh,{passive:true});
- globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,periodConfig,nativeTimeline,externalLineTruth,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
+ globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,periodConfig,summaryPeriodConfig,summaryOwnership,variationSummary,drawVariationSummary,nativeTimeline,externalLineTruth,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
 })();
