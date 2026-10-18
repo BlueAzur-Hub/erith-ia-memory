@@ -10,6 +10,9 @@ on:
     paths:
       - '.github/workflows/agent-crypto-hype-missing-spot-month.yml'
   workflow_dispatch:
+# A reviewed update to this exact workflow triggers a one-time main-only
+# acquisition of the verified, previously absent June 2026 HYPE Spot month.
+# Pull-request runs validate up to 300 native rows and never publish.
 permissions:
   contents: write
 concurrency:
