@@ -589,6 +589,55 @@ function trajectoryVolumeReadout(observation,point){
  return "volume 24 h "+pct(move)+" (deux relevés)"+(from!==null&&to!==null?
   " · rang "+from+" → "+to:" · rang non comparable");
 }
+
+function verifyProspectiveSpotComparison(data){
+ if(!data||data.schema!=="erith.radar.priority-spot-comparison.v1"||
+   data.quote!=="USDT"||data.orders_enabled!==false||
+   data.paper_trades_executed!==false||data.strategy_validated!==false||
+   data.identity_market_pair_certified!==false||
+   !Array.isArray(data.markets)||data.markets.length!==3)
+   throw Error("bilan prospectif Spot incompatible");
+ const pairs=new Map([["quack-ai","QUSDT"],["impossible-cloud-network-token","ICNTUSDT"],["instadapp","FLUID-USDT"]]);
+ const seen=new Set(),byId=new Map();
+ for(const item of data.markets){
+  if(!item||!pairs.has(item.coin_id)||seen.has(item.coin_id)||
+     item.pair!==pairs.get(item.coin_id)||item.quote!=="USDT"||
+     item.orders_enabled!==false||item.paper_strategy_validated!==false||
+     item.identity_market_pair_certified!==false||
+     !Number.isInteger(item.observation_count)||item.observation_count<0||
+     !["NO_PROSPECTIVE_OBSERVATIONS","OBSERVATIONS_INSUFFICIENT","WINDOW_RESEARCH_POSSIBLE"].includes(item.status))
+   throw Error("marché ou identité Spot non certifiable");
+  const has=item.observation_count>0;
+  if(has&&(!Number.isFinite(item.market_price_usdt)||item.market_price_usdt<=0||
+     !Number.isFinite(item.last_spread_bps)||item.last_spread_bps<0||
+     !Number.isFinite(Date.parse(item.last_observed_at_utc))||
+     !/^[a-f0-9]{64}$/.test(item.source_sha256||"")||
+     !Number.isInteger(item.distinct_closed_hours)||item.distinct_closed_hours<1||
+     item.distinct_closed_hours>item.observation_count))
+   throw Error("données Spot non mesurées");
+  if(item.distinct_closed_hours<=1&&item.change_between_observed_closes_pct!==null)
+   throw Error("rendement inventé avec un seul point");
+  if(item.change_between_observed_closes_pct!==null&&!Number.isFinite(item.change_between_observed_closes_pct))
+   throw Error("rendement Spot invalide");
+  if(item.ready_for_window_research===true&&
+    !(item.distinct_closed_hours>=4&&item.span_between_closed_hours>=24))
+   throw Error("fenêtre insuffisante");
+  seen.add(item.coin_id);byId.set(item.coin_id,item);
+ }
+ return {byId,asOf:data.source_as_of_utc||null};
+}
+function spotComparisonLine(row){
+ if(!row||!row.observation_count)return "Spot USDT : collecte future en attente";
+ const view="Spot "+row.venue+" "+row.pair+" · "+number(row.market_price_usdt,6)+" USDT"+
+  " · "+row.observation_count+" relevé(s), "+row.distinct_closed_hours+" clôture(s) distincte(s)"+
+  " · spread "+number(row.last_spread_bps,2)+" pb";
+ const actual=row.change_between_observed_closes_pct;
+ const change=Number.isFinite(actual)?
+   " · entre clôtures archivées : "+pct(actual)+" / "+number(row.span_between_closed_hours,2)+" h":
+   " · variation entre relevés encore inconnue";
+ return view+change+" · identité du contrat non certifiée · aucune exécution";
+}
+
 function printTrajectories(root,model){
  const list=lookup(root,"trajectoryRows"),note=lookup(root,"trajectoryNote");
  if(!list||!note)return;
@@ -615,6 +664,9 @@ function printTrajectories(root,model){
    node("span","",measure),
    node("small","",context),
    node("small","",e.selectionCount+" détection(s) · PAPER non certifié"));
+  const spot=model.spotComparison?.byId?.get(focus.id);
+  row.append(node("small","",spot?spotComparisonLine(spot):
+    (model.spotComparisonError||"Spot USDT : aucun relevé certifié")));
   list.append(row);
  }
 }
@@ -737,6 +789,7 @@ async function refresh(root,model){
  const qualificationPromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json");
  const knowledgePromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/research/asset-knowledge.json");
  const dynamicPromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/dynamic-followups.json");
+ const spotComparisonPromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/trader_flux/radar_priority_spot/comparison.json");
  const instrumentsPromise=get("https://api.bitget.com/api/v3/market/instruments?category=SPOT");
  const tickersPromise=get("https://api.bitget.com/api/v3/market/tickers?category=SPOT");
  const issues=[];
@@ -758,6 +811,7 @@ async function refresh(root,model){
   model.registry=registry;model.listings=[];model.listingError="";model.opportunities=null;model.opportunityError="Top 1 000 · collecte publique en cours";
   model.qualification=null;model.knowledge=null;model.qualificationError="Qualification Spot · chargement…";
   model.dynamicFollowups=null;model.dynamicFollowupsError="Suivi historique · chargement…";
+  model.spotComparison=null;model.spotComparisonError="Spot USDT · rapport en attente";
   printQualification(root,model);
   printMarket(root,model);
   printWatch(root,model);
@@ -779,7 +833,7 @@ async function refresh(root,model){
   }catch(e){model.opportunities=null;model.opportunityError="Top 1 000 : "+e.message;issues.push(model.opportunityError);}
   printOpportunities(root,model);printResearchLists(root,model);
   // Both public reads run in parallel; failing research enrichment cannot hide Spot results.
-  const enrichment=await Promise.allSettled([qualificationPromise,knowledgePromise,dynamicPromise]);
+  const enrichment=await Promise.allSettled([qualificationPromise,knowledgePromise,dynamicPromise,spotComparisonPromise]);
   if(enrichment[0].status==="fulfilled"){
    model.qualification=enrichment[0].value;model.qualificationError="";
   }else{
@@ -793,6 +847,14 @@ async function refresh(root,model){
   }catch(e){
    model.dynamicFollowups=null;
    model.dynamicFollowupsError="Historique non certifié : "+String(e?.message||e);
+  }
+  try{
+   if(enrichment[3].status!=="fulfilled")throw Error("rapport Spot absent");
+   model.spotComparison=verifyProspectiveSpotComparison(enrichment[3].value);
+   model.spotComparisonError="";
+  }catch(e){
+   model.spotComparison=null;
+   model.spotComparisonError="Spot USDT : "+String(e?.message||e);
   }
   printQualification(root,model);
   lookup(root,"status").textContent=issues.length?"Radar partiel · "+issues.join(" · "):
@@ -826,6 +888,6 @@ function mount(root){
  return true;
 }
 if(typeof module!=="undefined"&&module.exports)
- module.exports=Object.freeze({selectGraph,compactMoney,printMarket,openOpportunityFiche,matchedCandidateKnowledge,verifiedDynamicFollowups,dynamicCandidateHistory,describeDynamicPoint,trajectoryEvidence,trajectoryVolumeReadout,printTrajectories,printQualification});
+ module.exports=Object.freeze({selectGraph,compactMoney,printMarket,openOpportunityFiche,matchedCandidateKnowledge,verifiedDynamicFollowups,dynamicCandidateHistory,describeDynamicPoint,trajectoryEvidence,trajectoryVolumeReadout,verifyProspectiveSpotComparison,spotComparisonLine,printTrajectories,printQualification});
 global.AgentCryptoRadarNative=Object.freeze({mount});
 })(typeof globalThis!=="undefined"?globalThis:this);
