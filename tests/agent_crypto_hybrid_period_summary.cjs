@@ -77,4 +77,12 @@ assert.equal(api.variationSummary(chart).coinId,"external-dna","DNA chart uses i
 global.AgentCryptoNewListingLiveAsset=originalExternal;
 title="BTC · Bitcoin · 30j · PRIX USD · NORMALE";
 assert.equal(api.variationSummary(chart).bars,undefined,"24h series cannot masquerade as 30j");
-console.log("PASS simple native variation bars 24h/7j/30j/60j/90j/1a/Max; no OHLC, no panel, skip volume, asset and period guards");
+// Restore the original native price-history information table/tooltip.
+// A supplemental summary must never hide it, move it or replace its DOM state.
+assert.doesNotMatch(code,/atlasChartTooltip|nativeTooltipDisplay|syncNativeFloatboard|hideNativeFloatboard/,
+  "Native historical chart tooltip is owned only by the original chart runtime");
+assert.doesNotMatch(code,/\$atlasVolumeVisible\s*=|savedShadowVisibility/,
+  "Never override native volume preference or shadow-volume pipeline");
+assert.doesNotMatch(code,/function summaryHover\(|afterEvent\(chart,args\)/,
+  "Reverted duplicate custom hover, preserving historic tooltip");
+console.log("PASS restored native chart/history tooltip + simple variation bars 24h/7j/30j/60j/90j/1a/Max; no artificial OHLC");
