@@ -14,7 +14,7 @@ assert.match(candles,/const state=\{mode:"native"/,"No unwanted automatic hybrid
 assert.match(candles,/function candleModeActive\(\)\{return state\.mode==="candles"\|\|state\.mode==="hybrid";\}/);
 assert.match(candles,/function setMode\(mode\)\{state\.mode=mode==="hybrid"\?"hybrid":mode==="candles"\?"candles":"native";/);
 assert.match(candles,/classList\.toggle\("is-open",state\.mode==="candles"\)/,"Hybrid shows the original line chart instead of candle canvas");
-assert.match(candles,/if\(state\.mode==="hybrid"\)void load\(\{bar:"1h",reason:"native-line-overlay"\}\)/,"Hybrid requests actual 1h OHLC for native overlay");
+assert.match(candles,/if\(state\.mode==="hybrid"\)void load\(\{bar:"5m",reason:"native-line-overlay"\}\)/,"Hybrid requests real 5m OHLC, matching native 24h density");
 assert.doesNotMatch(candles,/drawIndicator\(rows\.map\(row=>row\.c\),/,"No reverse close line on candlestick canvas");
 assert.match(overlay,/afterDatasetsDraw\(chart\)/,"Mini OHLC lower lane renders over native volume without modifying its dataset");
 assert.match(overlay,/function miniGeometry\(area,ohlcRows\)/,"Mini lane has its own OHLC scale");
