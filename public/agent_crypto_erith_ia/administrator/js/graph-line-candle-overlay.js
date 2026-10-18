@@ -411,6 +411,7 @@
    // Avoid a misleading volume scale assembled from sparse fragments.
    if(out.filter(v=>v!==null).length<Math.max(3,Math.ceil(bars.length*.7)))
      return bars.map(()=>null);
+   out.source=String(snapshot.source||'exchange OHLC').slice(0,100);
    return out;
  }
  function summaryGeometry(chart,summary,volumes=[]){
@@ -466,7 +467,7 @@
        'Prix début : '+fmtPrice(bar.open,currency)+' · Prix fin : '+fmtPrice(bar.close,currency)+'\n'+
        'Variation : '+(bar.delta>=0?'+':'')+fmtPrice(bar.delta,currency)+' / '+
           (bar.change>=0?'+':'')+frNumber(bar.change,3)+' %\n'+
-       'Volume observé : '+volText+(bar.partial?'\nIntervalle partiel'+(bar.referenceFromPrevious?' · référence précédente observée':''):'')+
+       'Volume observé : '+volText+(Number.isFinite(vol)&&vol>=0?' · source '+String(volumes.source||'exchange'):'' )+(bar.partial?'\nIntervalle partiel'+(bar.referenceFromPrevious?' · référence précédente observée':''):'')+
        (summary.approximate?'\nTemps estimé depuis la série native':'')
    };
  }
