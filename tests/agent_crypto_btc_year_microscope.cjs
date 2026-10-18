@@ -10,6 +10,7 @@ assert.match(source,/reader\.load\("bitcoin","1an"\)/);
 assert.match(source,/pack\.data\?\.pair!=="BTCUSDT"/);
 assert.match(source,/r\.t%86400000!==0/);
 assert.match(source,/verifiedBtcAnnual\(\)/);
+assert.match(source,/s\?\.loadedBar==="1m"&&!s\?\.archivePeriod/,"Annual archive must not trigger minute refresh");
 assert.match(source,/state\.archivePeriod==="1an"\?state\.rows\.length/);
 const day=86400000,t0=Date.UTC(2025,9,1);
 const valid=Array.from({length:365},(_,i)=>{const p=80000+i*8;return[t0+day*i,p,p+300,p-400,p+80,100+i,5000,9]});
