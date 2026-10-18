@@ -515,7 +515,7 @@
   }
   function candleModeActive(){return state.mode==="candles"||state.mode==="hybrid";}
   function syncControls(){document.querySelectorAll(`#${ROOT}Controls [data-amm-mode]`).forEach(b=>b.classList.toggle("is-active",b.dataset.ammMode===state.mode));document.querySelectorAll(`#${ROOT} [data-amm-indicator]`).forEach(b=>b.classList.toggle("is-active",!!state.indicators[b.dataset.ammIndicator]));document.getElementById(ROOT)?.classList.toggle("is-open",state.mode==="candles");renderSeriesLegend();}
-  function setMode(mode){state.mode=mode==="hybrid"?"hybrid":mode==="candles"?"candles":"native";mount();syncControls();if(state.mode==="hybrid"){const period=globalThis.AgentCryptoLineCandleOverlay?.periodConfig?.();if(period)void load({bar:period.bar,reason:"native-line-overlay-"+period.label});}else if(state.mode==="candles")void load();else renderTechnicalLevels(null);globalThis.AgentCryptoLineCandleOverlay?.refresh?.();return state.mode;}
+  function setMode(mode){state.mode=mode==="hybrid"?"hybrid":mode==="candles"?"candles":"native";mount();syncControls();if(state.mode==="candles")void load();else renderTechnicalLevels(null);globalThis.AgentCryptoLineCandleOverlay?.refresh?.();return state.mode;}
   async function fetchInstrument(inst,{bar=state.requestedBar||state.bar,signal=null}={}){
     const ext=externalContext();
     if(ext.active){
