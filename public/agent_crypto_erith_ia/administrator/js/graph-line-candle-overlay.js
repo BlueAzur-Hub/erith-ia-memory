@@ -246,18 +246,6 @@
      Object.assign(el.style,{position:'absolute',right:'12px',top:'48px',zIndex:'8',font:'750 9px system-ui,sans-serif',padding:'3px 6px',background:'rgba(2,12,20,.72)',color:'#afd5e0',borderRadius:'5px',pointerEvents:'none',maxWidth:'55%',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'});
      el.setAttribute('aria-live','polite');shell.appendChild(el);
    }
-   // Hover content stays small and multi-line; never stretch across the chart.
-   const activeHover=!!(globalThis.AgentCryptoMarketMicroscope?.snapshot?.()?.mode==='hybrid'&&hoveredIndex>=0);
-   Object.assign(el.style,activeHover?{
-     maxWidth:'256px',width:'max-content',whiteSpace:'pre-line',
-     lineHeight:'1.45',font:'700 10px system-ui,sans-serif',padding:'6px 9px',
-     background:'rgba(2,12,20,.89)',border:'1px solid rgba(108,202,219,.35)',
-     textAlign:'left',right:'12px',top:'48px'
-   }:{
-     maxWidth:'55%',width:'auto',whiteSpace:'nowrap',lineHeight:'normal',
-     font:'750 9px system-ui,sans-serif',padding:'3px 6px',
-     background:'rgba(2,12,20,.72)',border:'none',textAlign:'left',right:'12px',top:'48px'
-   });
    el.hidden=false;el.textContent=message;el.title=title;
  }
 
@@ -295,33 +283,6 @@
    const selected=globalThis.getSelectedCoin?.();
    return !selected?.id||String(selected.id)===String(ref.ds.atlasCoin.id);
  }
- // Use actual local-hour/day/week/month boundaries, not arbitrary equal chunks.
- // Rolling Max intentionally uses measured equal spans (there is no known calendar window).
- function summaryBoundaries(period,first,last){
-   if(!(Number.isFinite(first)&&Number.isFinite(last)&&first<last))return null;
-   const n=period?.segments;if(!(n>0))return null;
-   if(period.label==='Max')
-     return Array.from({length:n+1},(_,i)=>first+(last-first)*i/n);
-   const anchor=new Date(last),start=new Date(anchor);
-   if(period.label==='24h'){start.setMinutes(0,0,0);start.setHours(start.getHours()+1-n);}
-   else if(['7j','30j','60j'].includes(period.label)){
-     start.setHours(0,0,0);start.setDate(start.getDate()+1-n);
-   }else if(period.label==='90j'){
-     start.setHours(0,0,0);start.setDate(start.getDate()-((start.getDay()+6)%7)-7*(n-1));
-   }else if(period.label==='1a'){
-     start.setDate(1);start.setHours(0,0,0);start.setMonth(start.getMonth()+1-n);
-   }else return null;
-   const boundaries=[start.getTime()];
-   for(let i=1;i<=n;i++){
-     const d=new Date(start);
-     if(period.label==='24h')d.setHours(d.getHours()+i);
-     else if(['7j','30j','60j'].includes(period.label))d.setDate(d.getDate()+i);
-     else if(period.label==='90j')d.setDate(d.getDate()+7*i);
-     else d.setMonth(d.getMonth()+i);
-     boundaries.push(d.getTime());
-   }
-   return boundaries.every((t,i)=>Number.isFinite(t)&&(!i||t>boundaries[i-1]))?boundaries:null;
- }
  function variationSummary(chart){
    const ref=owner(chart),period=summaryPeriodConfig();
    if(!period)return {reason:'Période de synthèse non reconnue'};
@@ -341,254 +302,65 @@
      const expected=period.days*86400000;
      if(span<expected*.73||span>expected*1.18)
        return {reason:'Synthèse indisponible · couverture '+period.label+' incohérente'};
-   }else if(span<7*86400000)return {reason:'Synthèse Max · durée réelle trop courte'};
-   const bounds=summaryBoundaries(period,first,last);
-   if(!bounds)return {reason:'Synthèse indisponible · limites calendaires inconnues'};
-   const buckets=Array.from({length:period.segments},()=>[]);
-   // Calendar-aligned bins intentionally exclude data older than the first
-   // displayed segment (rolling 7d can straddle eight calendar dates).
-   let bin=0;
-   for(let i=0;i<values.length;i++){
-     const t=times[i],price=priceValue(values[i]);if(!(price>0)||t<bounds[0])continue;
-     while(bin<period.segments-1&&t>=bounds[bin+1])bin++;
-     if(t>=bounds[bin+1]&&bin===period.segments-1)continue;
-     buckets[bin].push({price,t});
+   }else if(span<7*86400000){
+     return {reason:'Synthèse Max · durée réelle trop courte'};
    }
-   const interval=span/Math.max(1,values.length-1);
+   const buckets=Array.from({length:period.segments},()=>[]);
+   for(let i=0;i<values.length;i++){
+     const price=priceValue(values[i]);if(!(price>0))continue;
+     const bin=Math.min(period.segments-1,Math.max(0,Math.floor((times[i]-first)/span*period.segments)));
+     buckets[bin].push({price,t:times[i]});
+   }
    const bars=buckets.map((bucket,i)=>{
-     if(!bucket.length)return null;
-     // A calendar period may only have one native sample so far (e.g. today
-     // at 03:00 on a 60d chart sampled every 4h). Reuse the LAST OBSERVED
-     // price just before its boundary, never fabricate an opening quote.
-     let reference=null;
-     if(bucket.length===1){
-       for(let j=times.length-1;j>=0;j--){
-         if(times[j]>=bounds[i])continue;
-         const p=priceValue(values[j]);
-         if(p>0&&bounds[i]-times[j]<=Math.max(120000,interval*1.6)){
-           reference={price:p,t:times[j]};break;
-         }
-       }
-       if(!reference)return null;
-     }
-     const first=reference||bucket[0],lastPoint=bucket.at(-1);
-     const p0=first.price,p1=lastPoint.price,change=(p1/p0-1)*100;
-     if(!Number.isFinite(change))return null;
-     return {index:i,t:first.t,end:lastPoint.t,
-       start:bounds[i],stop:bounds[i+1],
-       partial:!!reference||bucket[0].t>bounds[i]+Math.max(60000,interval*1.6)||
-         lastPoint.t<bounds[i+1]-Math.max(60000,interval*1.6),
-       referenceFromPrevious:!!reference,
-       open:p0,close:p1,change,delta:p1-p0,
-       direction:change>0?'up':change<0?'down':'flat',samples:bucket.length};
+     if(bucket.length<2)return null;
+     const p0=bucket[0].price,p1=bucket.at(-1).price;
+     const change=(p1/p0-1)*100;
+     return Number.isFinite(change)?{index:i,t:bucket[0].t,end:bucket.at(-1).t,open:p0,close:p1,change,direction:change>0?'up':change<0?'down':'flat',samples:bucket.length}:null;
    });
+   // Refuse partial archives rather than silently presenting nonexistent days.
    if(bars.some(x=>!x))return {reason:'Synthèse indisponible · intervalles historiques incomplets'};
    return {period,ref,times,first,last,bars,approximate:!!times.approximate,
-     coinId:String(ref.ds.atlasCoin.id),symbol:String(ref.ds.atlasCoin.symbol),bounds};
+     coinId:String(ref.ds.atlasCoin.id),symbol:String(ref.ds.atlasCoin.symbol)};
  }
- const VOLUME_STEP=Object.freeze({'1m':60000,'5m':300000,'15m':900000,'30m':1800000,
-   '1h':3600000,'4h':14400000,'1j':86400000,'1d':86400000});
- function observedVolumes(summary,snapshot=globalThis.AgentCryptoMarketMicroscope?.snapshot?.()){
-   const bars=summary?.bars,sym=String(summary?.symbol||'').toUpperCase();
-   // The standard CoinGecko total_volumes series is a ROLLING 24-hour value,
-   // not per-candle trades. NEVER sum it and label it traded interval volume.
-   // Only real exchange candle base-asset volume is supported in this opt-in
-   // read of an ALREADY LOADED microscope snapshot. No fetch triggered.
-   const inst=String(snapshot?.loadedInstrument||'').toUpperCase();
-   const step=VOLUME_STEP[String(snapshot?.loadedBar||'').toLowerCase()];
-   const rows=snapshot?.rows;
-   if(!bars?.length||!sym||!inst.startsWith(sym+'-')||!step||
-      snapshot?.loading||!Array.isArray(rows)||rows.length<2)
-     return bars?.map(()=>null)||[];
-   if(globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()?.active){
-     const ex=globalThis.AgentCryptoNewListingLiveAsset.snapshot();
-     if(inst!==String(ex.instrument||'').toUpperCase())return bars.map(()=>null);
-   }
-   const candles=rows.map(r=>({t:T(r?.t),v:N(r?.v)}))
-     .filter(r=>r.t!==null&&r.v!==null&&r.v>=0)
-     .sort((a,b)=>a.t-b.t);
-   if(candles.length<2)return bars.map(()=>null);
-   // The candle stream contains actual base-asset volumes from one exchange,
-   // not CoinGecko's rolling market volume. Different sources aren't mixed.
-   const out=bars.map(b=>{
-     const group=candles.filter(c=>c.t>=b.start&&c.t<b.stop),duration=b.stop-b.start;
-     if(!group.length||!(duration>0))return null;
-     const first=group[0].t,last=group.at(-1).t;
-     const missingStart=Math.max(0,first-b.start),missingEnd=Math.max(0,b.stop-(last+step));
-     const coverage=1-(missingStart+missingEnd)/duration;
-     const gaps=group.slice(1).map((r,i)=>r.t-group[i].t);
-     if(coverage<.78||gaps.some(g=>g>step*2.1)||group.every(x=>x.v===0))return null;
-     return group.reduce((sum,x)=>sum+x.v,0);
-   });
-   // Avoid a misleading volume scale assembled from sparse fragments.
-   if(out.filter(v=>v!==null).length<Math.max(3,Math.ceil(bars.length*.7)))
-     return bars.map(()=>null);
-   out.source=String(snapshot.source||'exchange OHLC').slice(0,100);
-   return out;
- }
- function summaryGeometry(chart,summary,volumes=[]){
-   const lane=miniLane(chart?.chartArea),bars=summary?.bars;
-   if(!lane||!Array.isArray(bars)||bars.length<2)return null;
+ function drawVariationSummary(chart,summary){
+   const lane=miniLane(chart.chartArea),ctx=chart.ctx,bars=summary?.bars;
+   if(!lane||!ctx||!Array.isArray(bars)||bars.length<2)return 0;
    const abs=bars.map(b=>Math.abs(b.change)).filter(v=>v>0).sort((a,b)=>a-b);
-   const p90=abs.length?abs[Math.min(abs.length-1,Math.floor(abs.length*.9))]:0;
+   const max=abs.length?abs[Math.min(abs.length-1,Math.floor(abs.length*.9))]:0;
    const usable=lane.bodyBottom-lane.bodyTop;
    const step=(lane.right-lane.left)/bars.length;
-   const baseWidth=Math.max(1.5,Math.min(60,step*.51)); // 18% thinner than checkpoint #486
-   const present=volumes.filter(v=>Number.isFinite(v)&&v>=0).sort((a,b)=>a-b);
-   const volumeP90=present.length>=3?present[Math.min(present.length-1,Math.floor(present.length*.9))]:null;
-   const toHeight=pct=>{
-     if(pct===0)return 2;
-     const ratio=Math.min(1.5,Math.abs(pct)/Math.max(p90,1e-10));
-     return Math.min(usable,Math.max(5,usable*(.48*Math.sqrt(ratio)+.52*ratio)*.87));
-   };
-   const rects=bars.map((b,i)=>{
-     const v=volumes[i];
-     const widthFactor=volumeP90>0&&Number.isFinite(v)&&v>=0?
-       .76+.42*Math.sqrt(Math.min(1.25,v/volumeP90)):1;
-     const w=Math.min(step*.74,baseWidth*widthFactor);
-     const h=toHeight(b.change);
-     return {x:lane.left+step*(i+.5),y:lane.bodyBottom-h,w,h,
-       color:b.direction==='up'?'rgba(76,224,170,.90)':
-         b.direction==='down'?'rgba(250,105,143,.90)':'rgba(170,185,195,.75)',
-       volume:Number.isFinite(v)&&v>=0?v:null};
-   });
-   return {lane,rects};
- }
- function drawVariationSummary(chart,summary,volumes=[]){
-   const geometry=summaryGeometry(chart,summary,volumes),ctx=chart?.ctx;
-   if(!geometry||!ctx)return 0;
-   const {lane,rects}=geometry;
+   const width=Math.max(1.5,Math.min(60,step*.62));
+   const toHeight=pct=>pct===0?2:Math.min(usable,Math.max(5,usable*Math.sqrt(Math.abs(pct)/Math.max(max,1e-10))*.87));
    ctx.save();ctx.beginPath();ctx.rect(lane.left,lane.top,lane.right-lane.left,lane.height);ctx.clip();
-   rects.forEach(r=>{ctx.fillStyle=r.color;ctx.fillRect(r.x-r.w/2,r.y,r.w,r.h);});
-   ctx.restore();return rects.length;
- }
- const frNumber=(value,digits=2)=>Number(value).toLocaleString('fr-FR',{maximumFractionDigits:digits});
- const fmtPrice=(value,currency)=>currency==='USD'?
-   new Intl.NumberFormat('fr-FR',{style:'currency',currency:'USD',maximumFractionDigits:Math.abs(value)<.01?8:Math.abs(value)<1?6:2}).format(value):
-   new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:Math.abs(value)<.01?8:Math.abs(value)<1?6:2}).format(value);
- const fmtTime=t=>new Date(t).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
- function summaryHover(summary,volumes,index){
-   const bar=summary?.bars?.[index];if(!bar)return null;
-   const currency=String(document?.getElementById?.('atlasChartInsightOverlayTitle')?.textContent||'').includes('EUR')?'EUR':'USD';
-   const vol=volumes?.[index];
-   const volText=Number.isFinite(vol)&&vol>=0?
-     frNumber(vol,5)+' '+summary.symbol+' (volume exchange)':'volume non vérifié';
-   return {
-     short:summary.symbol+' · '+fmtTime(bar.start)+'–'+fmtTime(bar.stop)+'\n'+
-       fmtPrice(bar.open,currency)+' → '+fmtPrice(bar.close,currency)+'\n'+
-       (bar.change>=0?'+':'')+frNumber(bar.change,2)+' % · '+volText,
-     detail:summary.symbol+' · '+fmtTime(bar.start)+' → '+fmtTime(bar.stop)+'\n'+
-       'Prix début : '+fmtPrice(bar.open,currency)+' · Prix fin : '+fmtPrice(bar.close,currency)+'\n'+
-       'Variation : '+(bar.delta>=0?'+':'')+fmtPrice(bar.delta,currency)+' / '+
-          (bar.change>=0?'+':'')+frNumber(bar.change,3)+' %\n'+
-       'Volume observé : '+volText+(Number.isFinite(vol)&&vol>=0?' · source '+String(volumes.source||'exchange'):'' )+(bar.partial?'\nIntervalle partiel'+(bar.referenceFromPrevious?' · référence précédente observée':''):'')+
-       (summary.approximate?'\nTemps estimé depuis la série native':'')
-   };
- }
- let lastSummary=null,lastVolumes=[],lastGeometry=null,hoveredIndex=-1;
- // Only hide the *drawn* curve-following shadow in Hybrid. Keep the underlying
- // Volume preference and its original chart state untouched in all other modes.
- const savedShadowVisibility=new WeakMap();
- // Chart.js native tooltip's async external callback can set hidden=false
- // AFTER our afterEvent/afterDatasetsDraw hooks. A hidden attribute alone
- // therefore cannot prevent the large popup from reappearing over CT/DNA.
- // An inline display:none !important remains effective until Hybrid ends.
- const nativeTooltipDisplay=new WeakMap();
- function syncNativeFloatboard(){
-   const el=typeof document!=='undefined'?document.getElementById('atlasChartTooltip'):null;
-   if(!el?.style)return;
-   if(mode()){
-     if(!nativeTooltipDisplay.has(el))
-       nativeTooltipDisplay.set(el,{
-         value:el.style.getPropertyValue('display'),
-         priority:el.style.getPropertyPriority('display')
-       });
-     el.style.setProperty('display','none','important');
-     el.hidden=true;el.setAttribute('aria-hidden','true');
-   }else if(nativeTooltipDisplay.has(el)){
-     const original=nativeTooltipDisplay.get(el);
-     if(original.value)el.style.setProperty('display',original.value,original.priority);
-     else el.style.removeProperty('display');
-     nativeTooltipDisplay.delete(el);
-     el.hidden=true;el.setAttribute('aria-hidden','true');
-   }
- }
-
- function paintHint(){
-   if(!lastSummary?.bars)return;
-   if(hoveredIndex>=0){
-     const h=summaryHover(lastSummary,lastVolumes,hoveredIndex);
-     if(h){hint(h.short,h.detail);return;}
-   }
-   const summary=lastSummary;
-   const verified=lastVolumes.filter(v=>v!==null).length;
-   hint('Ligne + '+summary.bars.length+' barres · '+summary.period.label+
-     (summary.approximate?' · temps estimé':'')+(verified?' · volume exchange vérifié':''),
-     'Hauteur : variation du prix, largeur : volume réel seulement lorsqu’il est vérifié. '+
-       'Couleur : hausse/baisse. Les volumes non couverts gardent une largeur standard.');
+   bars.forEach((b,i)=>{
+     const x=lane.left+step*(i+.5);
+     const height=toHeight(b.change);
+     ctx.fillStyle=b.direction==='up'?'rgba(76,224,170,.90)':
+       b.direction==='down'?'rgba(250,105,143,.90)':'rgba(170,185,195,.75)';
+     ctx.fillRect(x-width/2,lane.bodyBottom-height,width,height);
+   });
+   ctx.restore();return bars.length;
  }
  const plugin={id:'agentCryptoNativeLineCandles',
-   beforeDraw(chart){
-     if(chart?.canvas?.id!=='mainChart')return;
-     syncNativeFloatboard();
-     if(!mode()||savedShadowVisibility.has(chart))return;
-     savedShadowVisibility.set(chart,chart.$atlasVolumeVisible);
-     chart.$atlasVolumeVisible=false;
-   },
-   afterDraw(chart){
-     if(!chart||!savedShadowVisibility.has(chart))return;
-     chart.$atlasVolumeVisible=savedShadowVisibility.get(chart);
-     savedShadowVisibility.delete(chart);
-   },
+   // Suppress the native lower-volume BAR dataset only in Hybrid. Preserve its
+   // data, tooltip source and the user's Volume toggle for the other modes.
    beforeDatasetDraw(chart,args){
      if(chart?.canvas?.id!=='mainChart'||!mode())return;
-     // Keep original Volume when summary is unavailable, so no blank chart.
-     if(chart.getDatasetMeta?.(args.index)?.type==='bar'&&variationSummary(chart).bars)
-       return false;
+     if(chart.getDatasetMeta?.(args.index)?.type==='bar')return false;
    },
    afterDatasetsDraw(chart){
      if(chart?.canvas?.id!=='mainChart'||!mode())return;
      const summary=variationSummary(chart);
-     if(!summary.bars){
-       lastSummary=null;lastVolumes=[];lastGeometry=null;hoveredIndex=-1;
-       hint(summary.reason);return;
-     }
-     lastSummary=summary;
-     lastVolumes=observedVolumes(summary);
-     lastGeometry=summaryGeometry(chart,summary,lastVolumes);
-     drawVariationSummary(chart,summary,lastVolumes);
-     if(hoveredIndex>=summary.bars.length)hoveredIndex=-1;
-     syncNativeFloatboard();
-     paintHint();
-   },
-   afterEvent(chart,args){
-     if(chart?.canvas?.id!=='mainChart'||!mode()||!lastGeometry?.rects){
-       if(hoveredIndex!==-1){hoveredIndex=-1;if(mode())paintHint();}
-       return;
-     }
-     const event=args?.event,mouse=event?.type;
-     if(!event||!['mousemove','mouseout','mouseleave','touchmove','touchend'].includes(mouse))return;
-     let selected=-1;
-     const x=event.x,y=event.y;
-     if(mouse==='mousemove'||mouse==='touchmove'){
-       const lane=lastGeometry.lane;
-       if(Number.isFinite(x)&&Number.isFinite(y)&&
-         x>=lane.left&&x<=lane.right&&y>=lane.top&&y<=lane.bottom){
-         const rs=lastGeometry.rects;
-         for(let i=0;i<rs.length;i++){
-           if(Math.abs(x-rs[i].x)<=Math.max(rs[i].w/2,7)&&y>=rs[i].y-7&&y<=lane.bottom){
-             selected=i;break;
-           }
-         }
-       }
-     }
-     if(selected!==hoveredIndex){hoveredIndex=selected;paintHint();}
-     syncNativeFloatboard();
+     if(!summary.bars){hint(summary.reason);return;}
+     const count=drawVariationSummary(chart,summary);
+     hint(count?'Ligne + '+count+' barres · '+summary.period.label+' · '+summary.period.unit+
+       (summary.approximate?' · temps estimé':''):'Ligne conservée · barres indisponibles',
+       'Variations en pourcentage du prix historique affiché. Vert : hausse ; rouge : baisse. '+
+       'Hauteur visuelle compressée pour rester lisible ; aucune bougie OHLC reconstituée.');
    }
  };
  function refresh(){
    if(typeof document==='undefined')return;
-   syncNativeFloatboard();
    const chart=globalThis.Chart?.getChart?.(document.getElementById('mainChart'));
    if(chart?.draw)try{chart.draw();}catch(_){}
    if(!mode())hint('');
@@ -596,5 +368,5 @@
  if(globalThis.Chart?.register)globalThis.Chart.register(plugin);
  if(typeof window!=='undefined')for(const event of ['agent-crypto:market-candles-loaded','agent-crypto:quote-architecture-changed','agent-crypto:selected-market-changed','agent-crypto:external-asset-changed'])
    window.addEventListener(event,refresh,{passive:true});
- globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,periodConfig,summaryPeriodConfig,summaryOwnership,summaryBoundaries,variationSummary,observedVolumes,summaryGeometry,summaryHover,drawVariationSummary,nativeTimeline,externalLineTruth,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
+ globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,periodConfig,summaryPeriodConfig,summaryOwnership,variationSummary,drawVariationSummary,nativeTimeline,externalLineTruth,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
 })();
