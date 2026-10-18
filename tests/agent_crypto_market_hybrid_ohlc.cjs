@@ -20,7 +20,7 @@ assert.match(overlay,/'30j':Object\.freeze\(\{label:'30j',segments:30,unit:'jour
 assert.match(overlay,/function variationSummary\(chart\)/,"Summary recalculates directly from native chart data");
 assert.doesNotMatch(candles,/drawIndicator\(rows\.map\(row=>row\.c\),/,"No reverse close line on candlestick canvas");
 assert.match(overlay,/afterDatasetsDraw\(chart\)/,"Mini OHLC lower lane renders over native volume without modifying its dataset");
-assert.match(overlay,/function drawVariationSummary\(chart,summary,volumes=/,"Variations keep simple bars with optional verified exchange volume");
+assert.match(overlay,/function drawVariationSummary\(chart,summary\)/,"Variations replace candle mini lane");
 assert.match(overlay,/chart\?\.canvas\?\.id!==\x27mainChart\x27/,"Only the original native chart is enhanced");
 assert.match(candles,/rows\.forEach\(\(r,i\)=>\{const xx=x\(i\),up=r\.c>=r\.o;/,"True candlesticks still render");
 assert.match(overlay,/Ligne \+ /,"Hybrid retains the native line as principal surface");
