@@ -26120,6 +26120,13 @@ function atlasDeviceComputeRoleRead() {
   return atlasDeviceComputeSuggestedRole();
 }
 
+function atlasTraderPassiveReportSurface() {
+  // The Trader embeds the shared Administrator runtime but never owns CURRENT.
+  // Read URL only: do not mutate the Ryzen producer's shared localStorage role.
+  try { return new URLSearchParams(location.search).get("surface") === "trader"; }
+  catch (_) { return false; }
+}
+
 function atlasDeviceComputeAllowed() {
   return atlasDeviceComputeRoleRead() === ATLAS_DEVICE_COMPUTE_ROLES.PRODUCTION;
 }
@@ -27927,6 +27934,7 @@ async function atlasLocalReportRequestReliable(mode, snapshot, token) {
 }
 
 async function atlasLocalReportsRunAll(options = {}) {
+  if (atlasTraderPassiveReportSurface()) return false;
   if (!atlasDeviceComputeAllowed()) {
     atlasDeviceComputeApply({ restart: false });
     return false;
@@ -28256,6 +28264,7 @@ function atlasLocalReportsAutomaticStop(snapshotOrMarketId = null) {
 }
 
 function atlasLocalReportsOpenAutomaticCycle(reason = "", snapshotOrMarketId = null) {
+  if (atlasTraderPassiveReportSurface()) return false;
   const explicit = atlasLocalReportsManualCycleReason(reason)
     || reason === "operator-auto-mode" || reason === "device-production-enabled";
   const marketId = atlasLocalReportsMarketId(snapshotOrMarketId);
@@ -28338,6 +28347,7 @@ function atlasLocalReportsAutoRetry(reason, message = "", options = {}) {
 }
 
 function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
+  if (atlasTraderPassiveReportSurface()) return false;
   if (atlasLocalReportsState.authBlocked404273) return false;
   if (!atlasDeviceComputeAllowed()) {
     atlasLocalReportsClearAutoTimer();
@@ -28788,6 +28798,7 @@ function atlasLocalConclusionSetBusy(busy) {
 }
 
 async function atlasLocalConclusionRun(options = {}) {
+  if (atlasTraderPassiveReportSurface()) return false;
   if (!atlasDeviceComputeAllowed()) {
     atlasDeviceComputeApply({ restart: false });
     return false;
@@ -29103,6 +29114,7 @@ function atlasLocalDialogueRender(result, label, options = {}) {
 }
 
 async function atlasLocalDialogueRunSummary(mode = "market") {
+  if (atlasTraderPassiveReportSurface()) return false;
   if (!atlasDeviceComputeAllowed()) {
     atlasDeviceComputeApply({ restart: false });
     return false;
@@ -29147,6 +29159,7 @@ async function atlasLocalDialogueRunSummary(mode = "market") {
 }
 
 async function atlasLocalDialogueAsk() {
+  if (atlasTraderPassiveReportSurface()) return false;
   if (!atlasDeviceComputeAllowed()) {
     atlasDeviceComputeApply({ restart: false });
     return false;
@@ -58806,6 +58819,7 @@ atlasLocalReportsCloseAutomaticCycle = function atlasLocalReportsCloseAutomaticC
 // Manual operator reasons intentionally bypass this gate.
 const atlasLocalReportsScheduleAutomatic341Base = atlasLocalReportsScheduleAutomatic;
 atlasLocalReportsScheduleAutomatic = function atlasLocalReportsScheduleAutomatic341(reason = "snapshot", options = {}) {
+  if (atlasTraderPassiveReportSurface()) return false;
   const nextReason = String(reason || "snapshot");
   if (!atlasDeviceComputeAllowed()) {
     atlasLocalReportsClearAutoTimer();
@@ -59542,6 +59556,7 @@ globalThis.AgentCryptoDecisionBoardGate406412=Object.freeze({
 });
 
 function atlasAutonomousOperatorTick35(reason = "watchdog") {
+  if (atlasTraderPassiveReportSurface()) return false;
   try {
     if (!atlasDeviceComputeAllowed() || !atlasPulseVisible()) return false;
     if (atlasAutomation341IsBusy()) return false;
@@ -60171,6 +60186,7 @@ function atlasQuestionFreeContext37(profile, question) {
 }
 
 async function atlasQuestionAsk37(profile="atlas") {
+  if (atlasTraderPassiveReportSurface()) return false;
   if (!atlasDeviceComputeAllowed()) {
     try { atlasBook343UiTruth(); } catch (_) {}
     setText(document.getElementById("atlasLocalDialogueStatus"),"Transformer Book : consultation uniquement. La question libre avec moteur local se fait sur le Ryzen.");
@@ -60206,6 +60222,7 @@ async function atlasQuestionAsk37(profile="atlas") {
 }
 
 async function atlasQuestionChain37() {
+  if (atlasTraderPassiveReportSurface()) return false;
   if (!atlasDeviceComputeAllowed()) {
     try { atlasBook343UiTruth(); } catch (_) {}
     setText(document.getElementById("atlasLocalDialogueStatus"),"Transformer Book : aucune génération locale. Atlas → Aerith se fait sur le Ryzen.");
@@ -61574,6 +61591,7 @@ atlasCurrentSyncFromLiveGate = function atlasCurrentSyncFromLiveGate388(reason =
 // 34.1 already blocks this; 38.8 also restores the visible CURRENT state first.
 const atlasLocalReportsScheduleAutomatic387Base388 = atlasLocalReportsScheduleAutomatic;
 atlasLocalReportsScheduleAutomatic = function atlasLocalReportsScheduleAutomatic388(reason = "snapshot", options = {}) {
+  if (atlasTraderPassiveReportSurface()) return false;
   const marketId = typeof atlasAutomation341SnapshotId === "function" ? atlasAutomation341SnapshotId() : "";
   const lastDone = typeof atlasAutomation341ReadLastCurrentMarketId === "function" ? atlasAutomation341ReadLastCurrentMarketId() : "";
   const manual = typeof atlasAutomation341ManualReason === "function" && atlasAutomation341ManualReason(reason);
@@ -63987,6 +64005,7 @@ function atlasClassicAnalysisModeSet38155(mode, options = {}) {
 // passes through this guard, including snapshot, Bridge, Binance and refresh paths.
 const atlasLocalReportsScheduleAutomatic38152Base38155 = atlasLocalReportsScheduleAutomatic;
 atlasLocalReportsScheduleAutomatic = function atlasLocalReportsScheduleAutomatic38155(reason = "snapshot", options = {}) {
+  if (atlasTraderPassiveReportSurface()) return false;
   if (!atlasClassicAnalysisIsAuto38155()) {
     try { atlasLocalReportsClearAutoTimer(); } catch (_) {}
     return false;
@@ -66521,6 +66540,7 @@ try {
    single atlasLocalReportsScheduleAutomatic() timer.
    ============================================================ */
 function atlasCurrentPendingAutoKick(reason="bridge-ready") {
+  if (atlasTraderPassiveReportSurface()) return false;
   try {
     if (typeof atlasAccessIsAuthorized === "function" && !atlasAccessIsAuthorized()) return false;
     if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return false;
@@ -67204,6 +67224,7 @@ try {
    ============================================================ */
 
 function atlasCurrentPendingMarket137(reason = "readiness-event") {
+  if (atlasTraderPassiveReportSurface()) return false;
   try {
     if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return false;
 
@@ -67329,6 +67350,7 @@ function atlasCurrentPendingMarket137(reason = "readiness-event") {
 // scheduler. A readiness miss can no longer erase the wake intent.
 const atlasLocalReportsScheduleAutomatic404137Base = atlasLocalReportsScheduleAutomatic;
 atlasLocalReportsScheduleAutomatic = function atlasLocalReportsScheduleAutomatic404137(reason = "snapshot", options = {}) {
+  if (atlasTraderPassiveReportSurface()) return false;
   const nextReason = String(reason || "snapshot");
   try {
     const manual = typeof atlasAutomation341ManualReason === "function"
@@ -67369,6 +67391,7 @@ atlasRuntimeDemandWakeAtlas = function atlasRuntimeDemandWakeAtlas4090404137(rea
 // those events can actually prove the full readiness set.
 const atlasCurrentPendingAutoKick4051Base = atlasCurrentPendingAutoKick;
 atlasCurrentPendingAutoKick = function atlasCurrentPendingAutoKick4051404137(reason = "bridge-ready") {
+  if (atlasTraderPassiveReportSurface()) return false;
   const result = atlasCurrentPendingAutoKick4051Base(reason);
   try { queueMicrotask(() => atlasCurrentPendingMarket137(String(reason || "bridge-ready"))); } catch (_) {}
   return result;

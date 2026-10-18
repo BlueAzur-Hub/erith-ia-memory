@@ -124,7 +124,24 @@ jobs:
               expected=before[:start]+before[end:]
           else:
               expected=before
-          assert after==expected, "Administrator core changed beyond exact Snapshot removal"
+          # This PR only adds a Trader producer-reader gate to the Administrator
+          # runtime. Strip precisely those audited lines for this historical
+          # Snapshot-only baseline check; ANY other app.js change still fails.
+          producer_policy = (
+              "function atlasTraderPassiveReportSurface() {\n"
+              "  // The Trader embeds the shared Administrator runtime but never owns CURRENT.\n"
+              "  // Read URL only: do not mutate the Ryzen producer's shared localStorage role.\n"
+              '  try { return new URLSearchParams(location.search).get("surface") === "trader"; }\n'
+              "  catch (_) { return false; }\n"
+              "}\n\n"
+          )
+          if producer_policy in after:
+              assert after.count(producer_policy)==1
+              after=after.replace(producer_policy,"",1)
+              statement="\n  if (atlasTraderPassiveReportSurface()) return false;"
+              assert after.count(statement)==16, "Trader gate count changed"
+              after=after.replace(statement,"")
+          assert after==expected, "Administrator core changed beyond exact Snapshot removal or audited Trader guard"
           PY
           python - <<'PY'
           import copy, json, os, pathlib, subprocess
@@ -146,6 +163,7 @@ jobs:
             prefix+"trader/trader-paper-lab-core.js",
             prefix+"trader/trader-paper-lab-view.js",
             prefix+"trader/test-paper-lab.cjs",
+            prefix+"trader/trader-candles-minute-watch.js",
           }
           changed=set(subprocess.check_output(
             ["git","diff","--name-only",base,"HEAD","--",prefix+"trader/"],
@@ -182,7 +200,7 @@ jobs:
             "status":"TRADER_COFFRE_VISIBLE_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
-          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs"}:
+          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/trader-candles-minute-watch.js"}:
             if f==prefix+"trader/trader-runtime-mirror.js":
               expected=previous(f).replace("40.6.639","40.6.640").replace("trader-historical-panel.js?reader=top50-cohorts","trader-historical-panel.js?reader=visible-coffre")
               actual=current(f)
