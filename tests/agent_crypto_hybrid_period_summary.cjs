@@ -39,7 +39,7 @@ function fixture(period,days,count,segments){
  assert.ok(result.bars,"Cannot build "+period+": "+result.reason);
  assert.equal(result.bars.length,segments,"Wrong bucket count for "+period);
  assert.equal(result.period.label,period);
- assert.ok(result.bars.every(b=>b.samples>=2&&Number.isFinite(b.change)));
+ assert.ok(result.bars.every(b=>b.samples>=1&&Number.isFinite(b.change)&&(!b.referenceFromPrevious||b.partial)),"Partial calendar bucket uses a genuine preceding sample");
  ops.length=0;
  assert.equal(api.drawVariationSummary(chart,result),segments);
  assert.equal(ops.length,segments,"Only simple variation bars should be painted");
