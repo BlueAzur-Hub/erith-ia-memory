@@ -1,0 +1,33 @@
+name: Agent Crypto Vault - Original Top10 Observation Tranches
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/agent-crypto-vault-observation-check.yml'
+      - 'tests/agent_crypto_vault_top10_append.cjs'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top10/**'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-vault-observation-check.yml'
+      - 'tests/agent_crypto_vault_top10_append.cjs'
+      - 'public/agent_crypto_erith_ia/data/historical_archive_prototype/top10/**'
+      - 'public/agent_crypto_erith_ia/administrator/historical-vault.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-vault-original-observations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Byte-level source comparison and no invented price changes
+        run: node tests/agent_crypto_vault_top10_append.cjs
+      - name: Scope and no changes to trading modules
+        run: |
+          test -f public/agent_crypto_erith_ia/data/historical_archive_prototype/top10/2026-10-08_2026-10-18/manifest.json
+          test -f public/agent_crypto_erith_ia/data/historical_archive_prototype/top10/2026-10-08_2026-10-18/observations.json
