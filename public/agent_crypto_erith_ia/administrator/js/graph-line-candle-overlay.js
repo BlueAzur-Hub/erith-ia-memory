@@ -4,7 +4,7 @@
  const N=v=>v===null||v===undefined||v===''?null:(Number.isFinite(Number(v))?Number(v):null);
  const T=v=>{const n=N(v);if(n!==null)return n>1e12?n:n>1e9?n*1000:null;const d=typeof v==='string'?Date.parse(v):NaN;return Number.isFinite(d)?d:null;};
  function barsFrom(s){
-   if(!Array.isArray(s?.rows)||s.rows.length<2||s.loading||(s.errorCode&&s.errorCode!=='PAIR_FALLBACK'))return [];
+   if(!Array.isArray(s?.rows)||s.rows.length<2||s.loading||!s.loadedInstrument||!s.loadedBar)return [];
    const rows=s.rows.map(r=>{const t=T(r?.t),o=N(r?.o),h=N(r?.h),l=N(r?.l),c=N(r?.c);
      return t!==null&&o>0&&c>0&&l>0&&h>=Math.max(o,c,l)&&l<=Math.min(o,c,h)?{t,o,h,l,c}:null;
    }).filter(Boolean).sort((a,b)=>a.t-b.t);
@@ -22,12 +22,12 @@
  }
  function nativeTimeline(chart,i,anchor){
    const values=chart?.data?.datasets?.[i]?.data||[],labels=chart?.data?.labels||[];
-   if(values.length<12||labels.length!==values.length)return null;
+   if(values.length<12)return null;
    const times=values.map((p,j)=>p&&typeof p==='object'?(nativeDate(p.t??p.timestamp??p.time??p.x,anchor)??nativeDate(labels[j],anchor)):nativeDate(labels[j],anchor));
-   if(times.every(Number.isFinite))return times.every((t,j)=>!j||t>times[j-1])?times:null;
+   if(times.every(Number.isFinite)&&times.every((t,j)=>!j||t>times[j-1]))return times;
    // Only for the real French 24h time axis; resolve midnight BACKWARDS.
-   const clock=labels.map(v=>typeof v==='string'?v.trim().match(/^(\d{1,2}):(\d{2})$/):null);
-   if(!clock.every(Boolean))return null;
+   const clock=labels.length===values.length?labels.map(v=>typeof v==='string'?v.trim().match(/^(\d{1,2}):(\d{2})$/):null):[];
+   if(!clock.length||!clock.every(Boolean))return historical24hTimeline(chart,i,anchor);
    const b=new Date(anchor),result=new Array(clock.length);
    let day=new Date(b.getFullYear(),b.getMonth(),b.getDate()).getTime();
    for(let j=clock.length-1;j>=0;j--){
@@ -42,6 +42,26 @@
    }
    return result;
  }
+ // The native 24h CoinGecko line may contain plain price values without
+ // per-point timestamp labels. Its original on-screen summary supplies the
+ // real last sample time; interpolate PIXEL POSITIONS only. Never derive OHLC.
+ function historical24hTimeline(chart,i,anchor){
+   if(typeof document==='undefined'||typeof document.getElementById!=='function')return null;
+   const price=chart?.data?.datasets?.[i]?.data||[];
+   if(price.length<240||price.length>400)return null;
+   const title=String(document.getElementById('atlasChartInsightOverlayTitle')?.textContent||'');
+   const summary=String(document.getElementById('atlasChartInsightOverlaySummary')?.textContent||'');
+   if(!/24h/i.test(title)||!/CoinGecko/i.test(summary))return null;
+   const stamp=summary.match(/série\s+(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?/i);
+   if(!stamp)return null;
+   const [_,dd,mm,yyyy,hh,mi,ss]=stamp;
+   const last=new Date(Number(yyyy),Number(mm)-1,Number(dd),Number(hh),Number(mi),Number(ss||0)).getTime();
+   if(!Number.isFinite(last)||new Date(last).getDate()!==Number(dd)||Math.abs(last-anchor)>4*3600000)return null;
+   const duration=24*3600000;
+   const result=price.map((v,j)=>last-duration+duration*j/(price.length-1));
+   result.approximate=true; // Source sample time exact; intermediate native cadence estimated.
+   return result;
+ }
  function owner(chart){
    if(!chart?.data?.datasets||!chart.getDatasetMeta)return null;
    const a=[];chart.data.datasets.forEach((ds,i)=>{const meta=chart.getDatasetMeta(i);
@@ -51,8 +71,12 @@
  }
  function matching(chart,s){
    const ref=owner(chart),rows=barsFrom(s);
-   if(!ref||!rows.length||s?.loadedBar!=='1h'||typeof document==='undefined'||document.querySelector('[data-chart-view="base100"].is-active')||document.querySelector('[data-chart-scale="logarithmic"].is-active'))
-     return {reason:'Ligne conservée · bougies incompatibles'};
+   if(!ref)return {reason:'Hybride : disponible en Solo · prix normal'};
+   if(typeof document==='undefined'||document.querySelector('[data-chart-view="base100"].is-active')||document.querySelector('[data-chart-scale="logarithmic"].is-active'))
+     return {reason:'Hybride : sélectionner Prix · Normale'};
+   if(s?.loading)return {reason:'Chargement des bougies OHLC 1h…'};
+   if(!rows.length)return {reason:s?.errorCode?'OHLC indisponibles · '+String(s.errorCode).slice(0,45):'Bougies OHLC 1h non chargées'};
+   if(s?.loadedBar!=='1h')return {reason:'Bougies 1h attendues · série '+String(s?.loadedBar||'absente')};
    const symbol=String(ref.ds.atlasCoin.symbol||'').toUpperCase(),instrument=String(s.loadedInstrument||'').toUpperCase(),selected=globalThis.getSelectedCoin?.();
    if(!symbol||!instrument.startsWith(symbol+'-')||(selected?.id&&selected.id!==ref.ds.atlasCoin.id))
      return {reason:'Ligne conservée · actifs différents'};
@@ -69,7 +93,7 @@
    // only permit a visually close overlay with explicit provenance.
    if(!(endLine>0)||Math.abs(rows.at(-1).c/endLine-1)>.035)
      return {reason:'Ligne conservée · prix/quote divergents'};
-   return {ref,rows,times,first,last,quote,currency,instrument,source:s.source};
+   return {ref,rows,times,first,last,quote,currency,instrument,source:s.source,approximate:!!times.approximate,warning:s.errorCode||null};
  }
  function px(t,ref,times){
    if(t<times[0]||t>times.at(-1))return null;
@@ -109,8 +133,8 @@
    const result=matching(chart,globalThis.AgentCryptoMarketMicroscope?.snapshot?.());
    if(!result.ref){hint(result.reason);return;}
    const count=drawBars(chart,result);
-   hint(count?'Ligne + '+count+' bougies 1h · '+result.instrument+' · '+result.source:'Ligne conservée · bougies hors période',
-     'Courbe '+result.currency+' ; OHLC '+result.quote+' (distinct, non converti). '+result.source);
+   hint(count?'Ligne + '+count+' bougies 1h · '+result.instrument+(result.approximate?' · position estimée':'')+(result.warning?' · OHLC conservées':''):'Ligne conservée · bougies hors période',
+     'Courbe '+result.currency+' ; OHLC '+result.quote+' distincte et non convertie. '+result.source+(result.approximate?' · Alignement horizontal estimé depuis le dernier horodatage CoinGecko vérifié.':'') );
  }};
  function refresh(){
    if(typeof document==='undefined')return;
