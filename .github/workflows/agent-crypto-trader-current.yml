@@ -17,6 +17,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/js/graph-line-candle-overlay.js"
       - "tests/agent_crypto_native_line_ohlc_overlay.cjs"
+      - "tests/agent_crypto_hybrid_period_summary.cjs"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
       - "public/agent_crypto_erith_ia/administrator/js/aether.js"
@@ -38,6 +39,7 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/market-microscope-candles.js"
       - "public/agent_crypto_erith_ia/administrator/js/graph-line-candle-overlay.js"
       - "tests/agent_crypto_native_line_ohlc_overlay.cjs"
+      - "tests/agent_crypto_hybrid_period_summary.cjs"
       - "public/agent_crypto_erith_ia/administrator/js/okx-microstructure-406499.js"
       - "public/agent_crypto_erith_ia/administrator/js/trader-cockpit-fit.js"
       - "public/agent_crypto_erith_ia/administrator/js/aether.js"
@@ -149,6 +151,9 @@ jobs:
 
       - name: True OHLC overlay on original native line chart
         run: node tests/agent_crypto_native_line_ohlc_overlay.cjs
+
+      - name: Native price-variation summary in Hybrid across periods
+        run: node tests/agent_crypto_hybrid_period_summary.cjs
 
       - name: Cross-market candle identity and quote truth
         run: node tests/agent_crypto_market_context_identity.cjs
