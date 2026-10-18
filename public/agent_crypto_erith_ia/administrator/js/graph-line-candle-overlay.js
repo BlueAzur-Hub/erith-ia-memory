@@ -90,7 +90,8 @@
 
  // Unlike Market Solo, public New Listing DNA/CT can keep a hidden BTC
  // getSelectedCoin(). Verify the exact EXTERNAL chart + historic series owner.
- function externalLineTruth(ref,loadedInstrument,period){
+ function externalLineTruth(ref,loadedInstrument,period=periodConfig()){
+   if(!period)return {reason:'Ligne conservée · période externe sans OHLC vérifiées'};
    const ext=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
    if(!ext?.active)return null;
    const n=globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.();
