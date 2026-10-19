@@ -22,7 +22,7 @@ td,th{padding:10px 9px;border-bottom:1px solid #254050;white-space:nowrap}th{fon
 .detail-title select:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
 .detail-table{min-width:950px;text-align:right}.detail-table th:first-child,.detail-table td:first-child{text-align:left}
 .detail-table td{font-size:12px}.detail-table th{white-space:nowrap}
-.detail-note{font-size:12px;margin-top:7px}.analysis-table{min-width:880px;text-align:right}.analysis-table th:first-child,.analysis-table td:first-child{text-align:left}
+.detail-note{font-size:12px;margin-top:7px}.analysis-table{min-width:880px;text-align:right}.analysis-table th:first-child,.analysis-table td:first-child{text-align:left}.comparison{background:linear-gradient(145deg,#102537,#0a1927);border:1px solid var(--line);border-radius:13px;margin-top:13px;padding:0}.comparison summary{cursor:pointer;padding:17px 18px;color:var(--amber);font-weight:700;font-size:16px;list-style-position:inside}.comparison summary:focus-visible{outline:2px solid var(--amber);outline-offset:-3px}.comparison[open] summary{border-bottom:1px solid var(--line)}.comparison-body{padding:14px 18px 18px}.comparison-table{min-width:900px}.comparison-table td{font-size:12px}
 .proof{border-left:3px solid var(--accent);padding:10px 13px;background:#102e39;border-radius:0 8px 8px 0}.links{display:flex;flex-wrap:wrap;gap:16px}.note{color:var(--amber)}footer{padding-top:18px;font-size:12px}
 @media(max-width:840px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics>div{min-height:95px}}@media(max-width:430px){main{padding:14px 12px 30px}}
 </style>
@@ -77,6 +77,18 @@ td,th{padding:10px 9px;border-bottom:1px solid #254050;white-space:nowrap}th{fon
 « Impact des frais » compare la valeur théorique sans frais à la valeur PAPER avec frais, au même cours archivé.
 Les heures de sortie sont des règles de simulation, pas des ordres OKX. Seules les 12 clôtures les plus récentes de la variante sont détaillées ici.</p>
 </section>
+<details class="comparison" id="comparison" aria-label="Bilan comparatif PAPER">
+<summary>Bilan comparatif A/B · clôtures et sensibilité aux frais</summary>
+<div class="comparison-body">
+<p class="proof" role="status" aria-live="polite" id="comparison-status">En attente des preuves vérifiées.</p>
+<div class="scroll"><table class="comparison-table"><thead><tr>
+<th>Modèle</th><th>Frais A/R</th><th>Clôtures</th><th>Gagnantes</th><th>Taux gagnant</th>
+<th>Réalisé PAPER</th><th>Latent</th><th>Capital estimé</th><th>Recul maximum</th>
+</tr></thead><tbody id="comparison-rows"></tbody></table></div>
+<p id="comparison-costs" class="detail-note">—</p>
+<p id="comparison-refusals" class="detail-note">—</p>
+<p class="detail-note">Chaque ligne est une expérience distincte avec 400 USDT fictifs initialement. Les transactions sont simulées, avec des frais hypothétiques. « Réalisé PAPER » correspond aux opérations fictives clôturées ; « latent » aux positions fictives encore ouvertes. Le capital estimé n'est pas un solde de compte OKX. Le taux gagnant reste indéterminé sans clôture, et un résultat provisoire n'est pas une preuve de rentabilité. Les clôtures détaillées au-dessus sont limitées aux 12 dernières ; les totaux proviennent du résumé complet contrôlé.</p>
+</div></details>
 <section aria-labelledby="proof-title"><h2 id="proof-title">Provenance et limites</h2>
 <p>Une cohérence documentaire n'est pas une preuve de rentabilité. Les frais 0,8 %, 1,2 %, 1,6 % sont hypothétiques. Les archives Binance Spot USDT ne prouvent pas les prix d'exécution OKX Europe.</p>
 <p class="proof" role="status" aria-live="polite" id="verification">En attente des sources.</p>
