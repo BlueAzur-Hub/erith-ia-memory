@@ -46,3 +46,51 @@ test("expiry, immutability and no private I/O remain invariant",()=>{
  a.equal(s.pending,null);a.equal(s.events.at(-1).type,"PAPER_EXPIRED");
  a.equal(e.storage,false);a.equal(e.realOrders,false);
 });
+
+test("every base-fee PAPER buy must leave an exchange-lot sellable net position",()=>{
+ const s=e.create({capitalUSDT:"100",takerFeeBps:10,buyFeeCurrency:"BASE"});
+ const setup={quantity:"10",priceUSDT:"0.3",minQuantity:"10",lotStep:"0.01",
+  tickSize:"0.0001",minNotionalUSDT:"1"};
+ a.throws(()=>e.place(s,order(setup),at),/quantité nette sous minimum de revente/);
+ const g=e.exitCheck({grossQuantity:"10",priceUSDT:"0.3",
+   minQuantity:"10",lotStep:"0.01",minNotionalUSDT:"1",
+   feeBps:10,feeCurrency:"BASE"});
+ a.equal(g.ok,false);
+ a.equal(g.netQuantity,"9.99");
+ a.equal(g.lotSellableQuantity,"9.99");
+ a.equal(g.orders_enabled,false);
+ // Just meeting the gross minimum does not prove the net is sellable.
+ a.throws(()=>e.place(s,order({...setup,quantity:"10.01"}),at),/quantité nette/);
+ const accepted=e.place(s,order({...setup,quantity:"10.02"}),at);
+ a.equal(accepted.pending.projectedExit.ok,true);
+ a.equal(accepted.pending.projectedExit.lotSellableQuantity,"10.0");
+ a.equal(accepted.pending.projectedExit.marketRulesVerified,false);
+});
+test("base fee and partial fill remain visible as non-sellable size risk",()=>{
+ let s=e.create({capitalUSDT:"100",takerFeeBps:10,buyFeeCurrency:"BASE"});
+ s=e.place(s,order({quantity:"10.02",priceUSDT:"0.3",
+    minQuantity:"10",lotStep:"0.01",minNotionalUSDT:"1"}),at);
+ s=e.tick(s,book({bestAskUSDT:"0.29",bestBidUSDT:"0.2899",bestAskQty:"3"}),later);
+ a.equal(s.holdings.ICNT,"2.997");
+ a.equal(s.events.at(-1).buyFeeBase,"0.003");
+ a.equal(s.events.at(-1).feeUSDT,"0.0");
+ a.equal(s.events.at(-1).exitRuleStatus,"BLOCKED_NET_SIZE_OR_NOTIONAL");
+ a.equal(s.events.at(-1).lotSellableQuantity,"2.99");
+ a.equal(s.pending.remaining,"7.02");
+ a.throws(()=>e.place(e.cancel(s,"2026-10-18T10:01:10Z"),
+   order({side:"SELL",quantity:"2.99",priceUSDT:"0.29",
+    minQuantity:"10",lotStep:"0.01",minNotionalUSDT:"1"}),later),/Contraintes/);
+});
+test("fee currency and exit notional are explicit; quote-fee model stays unchanged",()=>{
+ const input={grossQuantity:"10.02",priceUSDT:"0.1",minQuantity:"10",
+    lotStep:"0.01",minNotionalUSDT:"2",feeBps:10,feeCurrency:"BASE"};
+ a.equal(e.exitCheck(input).ok,false,"sellable units alone do not satisfy min notional");
+ a.equal(e.exitCheck({...input,minNotionalUSDT:"1"}).ok,true);
+ a.equal(e.exitCheck({...input,minNotionalUSDT:"1",feeCurrency:"QUOTE"}).buyFeeBase,"0.0");
+ a.throws(()=>e.exitCheck({...input,feeCurrency:"UNKNOWN"}),/devise/);
+ a.throws(()=>e.create({capitalUSDT:"100",buyFeeCurrency:"UNKNOWN"}),/devise/);
+ const s=e.place(e.create({capitalUSDT:"100",takerFeeBps:10,buyFeeCurrency:"QUOTE"}),
+     order({quantity:"10",priceUSDT:"0.3",minQuantity:"10",minNotionalUSDT:"1"}),at);
+ a.equal(s.pending.projectedExit.ok,true);
+ a.equal(s.pending.projectedExit.buyFeeBase,"0.0");
+});
