@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_targets.py'
+      - 'public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py'
+      - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_spot_identity.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_targets.py'
       - 'public/agent_crypto_erith_ia/tools/build_radar_research_cohort.py'
       - 'public/agent_crypto_erith_ia/tools/test_build_radar_research_cohort.py'
@@ -11,11 +13,17 @@ on:
     branches: [main]
     paths:
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_targets.py'
+      - 'public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py'
+      - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_spot_identity.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_targets.py'
       - 'public/agent_crypto_erith_ia/tools/build_radar_research_cohort.py'
       - 'public/agent_crypto_erith_ia/tools/test_build_radar_research_cohort.py'
       - '.github/workflows/radar-spot-target-qualification.yml'
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Seven Radar Opportunity History"]
+    types: [completed]
+    branches: [main]
   schedule:
     - cron: '31 14 * * *'
 permissions:
@@ -25,6 +33,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   qualification:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -37,6 +46,7 @@ jobs:
       - name: Test pure Radar qualification; no external connection
         run: |
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_targets.py' -v
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_spot_identity.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_radar_research_cohort.py' -v
       - name: Collect public evidence only (main push/schedule, not PR)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -49,9 +59,12 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_targets.py' -q
-            # A missing Radar snapshot today must not masquerade as fresh qualification.
+            # Qualification follows successful Radar archival as soon as workflow_run
+            # starts; it is separate from the 14:31 UTC fallback schedule.
+            new_qualification=0
             if python public/agent_crypto_erith_ia/tools/qualify_radar_targets.py > /tmp/qualification-output.log 2>&1; then
               cat /tmp/qualification-output.log
+              new_qualification=1
             else
               cat /tmp/qualification-output.log
               if grep -q 'Aucun snapshot Radar du jour' /tmp/qualification-output.log; then
@@ -62,7 +75,18 @@ jobs:
               fi
             fi
             python public/agent_crypto_erith_ia/tools/build_radar_research_cohort.py
+            if [ "$new_qualification" -eq 1 ]; then
+              # A source outage must never become fabricated contract proof.
+              if python public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py; then
+                python public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py --check
+              else
+                echo 'Identity source missing: current candidates stay unproven; no older proof promoted.'
+              fi
+            fi
             git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json public/agent_crypto_erith_ia/data/crypto/radar-opportunities/research-cohort.json
+            if [ -f public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-identity-latest.json ]; then
+              git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-identity-latest.json
+            fi
             if git diff --cached --quiet; then
               echo 'No fresh qualification to publish'
               exit 0
