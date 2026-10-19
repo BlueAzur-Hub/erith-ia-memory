@@ -50,7 +50,7 @@ def fresh_book(qualification, identity, item, now):
     at = instant(b.get("observed_at_utc"))
     if not dt.timedelta(0) <= now - at <= dt.timedelta(minutes=8):
         return None
-    if not dt.timedelta(0) <= at - instant(qualification["qualified_at_utc"]) <= dt.timedelta(minutes=8):
+    if abs(at - instant(qualification["qualified_at_utc"])) > dt.timedelta(minutes=8):
         return None
     bid, ask = decimal(b.get("best_bid_usdt")), decimal(b.get("best_ask_usdt"))
     spread = decimal(b.get("spread_bps"))
@@ -79,7 +79,12 @@ def validate(state):
            state.get("max_shadow_positions") == CAP and
            isinstance(state.get("positions"), list) and isinstance(state.get("closures"), list) and
            isinstance(state.get("seen_candidate_ids"), list), "ledger PAPER invalide")
-    ensure(len(state["positions"]) <= CAP, "plafond PAPER dépassé")
+    ensure(len(state["positions"]) <= CAP and
+           len(set(state["seen_candidate_ids"])) == len(state["seen_candidate_ids"]) and
+           all(x.get("status") == "HYPOTHETICAL_CLOSED_NO_FILL" and
+               x.get("executed_order") is False and x.get("realized_profit_usdt") is None
+               for x in state["closures"]),
+           "archive PAPER incohérente")
     ensure(all(p.get("status") == "HYPOTHETICAL_NO_FILL" and
                p.get("coin_id") in state["seen_candidate_ids"] and
                p.get("quote") == "USDT" for p in state["positions"]), "position papier falsifiée")
