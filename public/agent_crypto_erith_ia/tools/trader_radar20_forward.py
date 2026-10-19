@@ -95,7 +95,8 @@ def simulate(data,p,filter_enabled,fee_pct):
             proceeds=item['units']*data[sym][h][1]*(1-half);cash+=proceeds
             deals.append({'pair':sym+'USDT','entry_ms':item['at'],'exit_ms':ts,
                 'pnl_net_usdt':round(proceeds-TICKET,8),'buy_share_pct':item['share'],
-                'market_trend_72h_pct':item['trend']})
+                'market_trend_72h_pct':item['trend'],
+                'volume_vs_median_24h':item['volume_ratio']})
             del positions[sym]
         if 73<=h<min(n,DAYS*24):
             trend=markettrend(data,h);choices=[]
@@ -112,7 +113,8 @@ def simulate(data,p,filter_enabled,fee_pct):
                 if cash+1e-9<TICKET:rejected['cash']+=1;continue
                 entry=data[sym][h][1];cash-=TICKET
                 positions[sym]={'units':TICKET/(1+half)/entry,'at':ts,'exit_h':h+hold,
-                                'entry_price':entry,'share':share,'trend':round(trend,7)}
+                                'entry_price':entry,'share':share,'trend':round(trend,7),
+                                'volume_ratio':ratio}
         value=cash+sum(item['units']*data[sym][h][4]*(1-half) for sym,item in positions.items())
         peak=max(peak,value);maxdd=max(maxdd,peak-value)
         equity.append([ts,round(value,7),round(cash,7),len(positions)])
@@ -132,7 +134,10 @@ def simulate(data,p,filter_enabled,fee_pct):
             'entry_price_usdt':item['entry_price'],'last_close_usdt':mark,
             'paper_ticket_usdt':TICKET,'paper_value_usdt':round(estimated,6),
             'paper_unrealized_usdt':round(estimated-TICKET,6),
-            'estimated_fee_impact_usdt':round(no_fee-estimated,6)})
+            'estimated_fee_impact_usdt':round(no_fee-estimated,6),
+            'buy_share_pct':round(item['share'],6),
+            'volume_vs_median_24h':item['volume_ratio'],
+            'market_trend_72h_pct':item['trend']})
     chk(abs(sum(p['paper_unrealized_usdt'] for p in open_detail)-unrealized)<.005,
         'Detail does not reconcile with PAPER unrealized balance')
     return {'model':'B_trend_3pct' if filter_enabled else 'A_original','cost_pct':fee_pct,
