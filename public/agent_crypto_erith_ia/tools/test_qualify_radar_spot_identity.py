@@ -60,14 +60,19 @@ class Tests(unittest.TestCase):
         self.assertEqual(q["platform"],"ethereum")
         self.assertEqual(q["contract_address"],CONTRACT)
         self.assertEqual(q["min_order_usdt"],"5")
-        self.assertEqual(q["spot_exit_rules"]["min_quantity"],"0.01")
-        self.assertEqual(q["spot_exit_rules"]["lot_step"],"0.01")
-        self.assertEqual(q["spot_exit_rules"]["tick_size"],"0.0001")
+        # Bitget minOrderQty belongs to FUTURES; a Spot minimum is not evidenced.
+        self.assertIsNone(q["spot_exit_rules"])
         self.assertEqual(q["paper_entry_decision"],"AWAIT_NEXT_DATED_BOOK_AND_COST_CHECK")
         self.assertIsNone(q["paper_entry_price_usdt"])
         self.assertIsNone(q["paper_pnl_usdt"])
         self.assertEqual(o["paper_orders"],0)
         self.assertEqual(o["real_orders"],0)
+
+    def test_future_only_min_order_qty_never_certifies_spot_size(self):
+        v=inst()
+        v["data"][0]["minOrderQty"]="10"
+        v["data"][0]["quantityPrecision"]="8"
+        self.assertIsNone(self.qualify(metadata=v)["candidates"][0]["spot_exit_rules"])
 
     def test_instrument_filters_missing_or_invalid_do_not_invent_trade_rules(self):
         for field, value in (("minOrderQty", None), ("minOrderQty", "0"),
