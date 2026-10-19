@@ -72,6 +72,7 @@ chart.data.labels=fullSpan.map((s,i)=>new Date(Date.parse(s)+(i>=145?2*3600000:0
 assert.match(api.variationSummary(chart).reason,/lacunes temporelles/,
  "Large timestamp gaps must be rejected rather than silently combined");
 chart.data.labels=fullSpan;
+fixture("Max",1000,601,12);
 assert.equal(api.plugin.beforeDatasetDraw(chart,{index:1}),false,"Volume histogram skipped in Hybrid");
 assert.equal(api.plugin.beforeDatasetDraw(chart,{index:0}),undefined,"Primary line kept");
 assert.equal(api.variationSummary(chart).bars.length,12,
