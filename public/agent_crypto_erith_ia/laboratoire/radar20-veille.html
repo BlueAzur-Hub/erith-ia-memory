@@ -16,6 +16,13 @@ button:disabled{opacity:.5;cursor:wait}button:focus-visible,a:focus-visible{outl
 .metrics>div{padding:12px;min-height:112px}.metrics dt{font-size:11px;font-weight:700}.metrics dd{margin:8px 0 1px;font-size:clamp(17px,2vw,24px);font-weight:650;font-variant-numeric:tabular-nums}
 section{padding:18px;margin-top:13px}p{margin:7px 0}.scroll{overflow-x:auto}table{border-collapse:collapse;min-width:790px;width:100%;font-variant-numeric:tabular-nums;text-align:right}
 td,th{padding:10px 9px;border-bottom:1px solid #254050;white-space:nowrap}th{font-size:11px;color:var(--sub);font-weight:650}td:first-child,th:first-child{text-align:left}.pos{color:#9ae4b0}.neg{color:#ffa2ab}
+.detail-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.detail-title label{font-weight:650;color:var(--sub);font-size:12px}
+.detail-title select{margin-left:9px;padding:8px 12px;background:#0b2231;color:var(--text);border:1px solid #447d87;border-radius:8px;font:inherit}
+.detail-title select:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.detail-table{min-width:950px;text-align:right}.detail-table th:first-child,.detail-table td:first-child{text-align:left}
+.detail-table td{font-size:12px}.detail-table th{white-space:nowrap}
+.detail-note{font-size:12px;margin-top:7px}
 .proof{border-left:3px solid var(--accent);padding:10px 13px;background:#102e39;border-radius:0 8px 8px 0}.links{display:flex;flex-wrap:wrap;gap:16px}.note{color:var(--amber)}footer{padding-top:18px;font-size:12px}
 @media(max-width:840px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics>div{min-height:95px}}@media(max-width:430px){main{padding:14px 12px 30px}}
 </style>
@@ -35,6 +42,34 @@ td,th{padding:10px 9px;border-bottom:1px solid #254050;white-space:nowrap}th{fon
 <section aria-labelledby="variants-title"><h2 id="variants-title">Résultats A/B · capital fictif 400 USDT par variante</h2>
 <div class="scroll"><table><thead><tr><th>Modèle</th><th>Frais A/R</th><th>Signaux</th><th>Ouvertes</th><th>Clôturées</th><th>Capital estimé</th><th>Réalisé</th><th>Recul maximum</th></tr></thead><tbody id="variants"></tbody></table></div>
 <p class="note" id="observation" aria-live="polite">En attente des données.</p></section>
+
+<section aria-labelledby="positions-title">
+<div class="detail-title"><h2 id="positions-title">Décisions PAPER · positions et clôtures vérifiables</h2>
+<label for="position-variant">Expérience affichée
+<select id="position-variant">
+<option value="A_0.8">A · frais 0,8 %</option>
+<option value="A_1.2">A · frais 1,2 %</option>
+<option value="A_1.6">A · frais 1,6 %</option>
+<option value="B_0.8">B · frais 0,8 %</option>
+<option value="B_1.2">B · frais 1,2 %</option>
+<option value="B_1.6">B · frais 1,6 %</option>
+</select></label></div>
+<p id="positions-status" class="proof" role="status" aria-live="polite">Lecture des décisions archivées en cours…</p>
+<h3>Positions fictives ouvertes</h3>
+<div class="scroll"><table class="detail-table">
+<thead><tr><th>Crypto</th><th>Entrée (UTC)</th><th>Sortie prévue (UTC)</th>
+<th>Prix entrée</th><th>Dernière clôture</th><th>Valeur PAPER</th><th>Impact des frais*</th><th>Résultat latent</th></tr></thead>
+<tbody id="position-open"></tbody></table></div>
+<p id="open-note" class="detail-note">—</p>
+<h3>Dernières clôtures fictives</h3>
+<div class="scroll"><table class="detail-table"><thead><tr>
+<th>Crypto</th><th>Entrée (UTC)</th><th>Sortie simulée (UTC)</th><th>Résultat réalisé PAPER</th>
+</tr></thead><tbody id="position-closed"></tbody></table></div>
+<p id="closed-note" class="detail-note">—</p>
+<p class="detail-note">* Frais hypothétiques aller-retour inclus dans la valeur et le résultat.
+« Impact des frais » compare la valeur théorique sans frais à la valeur PAPER avec frais, au même cours archivé.
+Les heures de sortie sont des règles de simulation, pas des ordres OKX. Seules les 12 clôtures les plus récentes de la variante sont détaillées ici.</p>
+</section>
 <section aria-labelledby="proof-title"><h2 id="proof-title">Provenance et limites</h2>
 <p>Une cohérence documentaire n'est pas une preuve de rentabilité. Les frais 0,8 %, 1,2 %, 1,6 % sont hypothétiques. Les archives Binance Spot USDT ne prouvent pas les prix d'exécution OKX Europe.</p>
 <p class="proof" role="status" aria-live="polite" id="verification">En attente des sources.</p>

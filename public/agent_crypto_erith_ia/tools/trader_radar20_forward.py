@@ -112,7 +112,7 @@ def simulate(data,p,filter_enabled,fee_pct):
                 if cash+1e-9<TICKET:rejected['cash']+=1;continue
                 entry=data[sym][h][1];cash-=TICKET
                 positions[sym]={'units':TICKET/(1+half)/entry,'at':ts,'exit_h':h+hold,
-                                'share':share,'trend':round(trend,7)}
+                                'entry_price':entry,'share':share,'trend':round(trend,7)}
         value=cash+sum(item['units']*data[sym][h][4]*(1-half) for sym,item in positions.items())
         peak=max(peak,value);maxdd=max(maxdd,peak-value)
         equity.append([ts,round(value,7),round(cash,7),len(positions)])
@@ -120,12 +120,27 @@ def simulate(data,p,filter_enabled,fee_pct):
     unrealized=sum(item['units']*data[sym][-1][4]*(1-half)-TICKET for sym,item in positions.items()) if n else 0
     final=equity[-1][1] if n else CAPITAL
     chk(abs(final-CAPITAL-realized-unrealized)<.005,'Ledger out of balance')
+    # These are derived PAPER observations from the same portfolio calculation,
+    # not executable instructions or a second independent strategy.
+    open_detail=[]
+    for sym,item in sorted(positions.items(),key=lambda entry:(entry[1]['at'],entry[0])):
+        mark=data[sym][-1][4]
+        estimated=item['units']*mark*(1-half)
+        no_fee=TICKET*mark/item['entry_price']
+        open_detail.append({'pair':sym+'USDT','entry_ms':item['at'],
+            'planned_exit_ms':data['ETH'][0][0]+item['exit_h']*HOUR,
+            'entry_price_usdt':item['entry_price'],'last_close_usdt':mark,
+            'paper_ticket_usdt':TICKET,'paper_value_usdt':round(estimated,6),
+            'paper_unrealized_usdt':round(estimated-TICKET,6),
+            'estimated_fee_impact_usdt':round(no_fee-estimated,6)})
+    chk(abs(sum(p['paper_unrealized_usdt'] for p in open_detail)-unrealized)<.005,
+        'Detail does not reconcile with PAPER unrealized balance')
     return {'model':'B_trend_3pct' if filter_enabled else 'A_original','cost_pct':fee_pct,
         'closed_trades':len(deals),'wins':sum(x['pnl_net_usdt']>0 for x in deals),
         'open_positions':len(positions),'realized_usdt':round(realized,6),
         'unrealized_usdt':round(unrealized,6),'equity_usdt':round(final,6),
         'worst_drawdown_usdt':round(maxdd,6),'signals':signals,'rejected':rejected,
-        'trades':deals,'equity_history':equity}
+        'trades':deals,'equity_history':equity,'open_detail':open_detail}
 def passive(data,fee_pct):
     if not data['ETH']:return None
     per=CAPITAL/20;half=fee_pct/200
@@ -155,17 +170,26 @@ def execute():
         except (OSError,ValueError,zipfile.BadZipFile) as ex:
             waiting={'day':nextday,'type':type(ex).__name__};break
         save(ROOT/'observations'/(nextday+'.json'),doc);nextday=dateplus(nextday,1);added+=1
-    readings,days=read_days();outputs=[];variants={}
+    readings,days=read_days();outputs=[];variants={};details={}
     for fee in COSTS:
         for filter_enabled in (False,True):
             label=('B' if filter_enabled else 'A')+f'_{fee:.1f}'
             result=simulate(readings,protocol,filter_enabled,fee)
-            variants[label]={k:v for k,v in result.items() if k not in ('trades','equity_history')}
+            variants[label]={k:v for k,v in result.items() if k not in ('trades','equity_history','open_detail')}
+            details[label]={'cost_pct':fee,'open':result['open_detail'],
+                            'recent_closed':result['trades'][-12:],
+                            'closed_count':result['closed_trades']}
             if fee==.8:
                 name='B' if filter_enabled else 'A'
                 save(ROOT/f'trades_{name}.json',{'simulation_only':True,'trades':result['trades']})
                 save(ROOT/f'equity_{name}.json',{'columns':['timestamp_ms','equity_usdt','cash_usdt','positions'],'rows':result['equity_history']})
                 outputs.extend([f'trades_{name}.json',f'equity_{name}.json'])
+    save(ROOT/'positions.json',{'schema':'erith.radar20.forward.positions.v1',
+        'simulation_only':True,'orders_enabled':False,'protocol_sha256':CFG_SHA,
+        'days_collected':len(days),
+        'last_archived_hour_ms':readings['ETH'][-1][0] if days else None,
+        'variants':details})
+    outputs.append('positions.json')
     save(ROOT/'summary.json',{'schema':'erith.radar20.forward.summary.v1','protocol_sha256':CFG_SHA,
          'status':'WAITING_FOR_FIRST_DAY' if not days else 'COMPLETE' if len(days)==DAYS+2 else 'RUNNING',
          'days_collected':len(days),'hours_per_market':len(readings['ETH']),
