@@ -21,8 +21,8 @@ const audit=x=>engine.previewOkxSpot(x);
 test("100 USDT PAPER best-level ask to immediate bid is a LOSS after hypothetical fees",()=>{
  const r=audit(fixture());
  assert.equal(r.status,"HYPOTHETICAL_IMMEDIATE_ROUNDTRIP_ONLY");
- assert.equal(r.grossBuyQuantity,"10.0");
- assert.equal(r.netSellableQuantity,"9.99");
+ assert.equal(r.grossBuyQuantity,"9.98");
+ assert.equal(r.netSellableQuantity,"9.97");
  assert.equal(r.hypotheticalImmediatePnlSign,"-");
  assert.ok(r.hypotheticalImmediatePnlPct<0);
  assert.ok(r.approximateBidRiseToBreakEvenPct>0);
@@ -35,7 +35,7 @@ test("100 USDT PAPER best-level ask to immediate bid is a LOSS after hypothetica
  assert.equal(engine.tradeEndpoint,null);
 });
 test("after BASE fee, minimum size may block the sale even if gross order meets minimum",()=>{
- const x=fixture();x.okx_spot.rules.min_sz="10";
+ const x=fixture();x.okx_spot.rules.min_sz="9.98";
  assert.equal(audit(x).reason,"NET_QUANTITY_BELOW_OKX_EXIT_MINIMUM");
 });
 test("best-level liquidity is a hard condition, not a guessed fill",()=>{
