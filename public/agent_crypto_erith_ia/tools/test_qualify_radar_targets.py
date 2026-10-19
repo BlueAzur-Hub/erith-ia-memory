@@ -7,7 +7,7 @@ import sys
 import unittest
 
 sys.path.insert(0,str(pathlib.Path(__file__).resolve().parent))
-from qualify_radar_targets import candidate_list, qualify, market_detail, candle_rows, SCHEMA, HOUR
+from qualify_radar_targets import candidate_list, qualify, market_detail, candle_rows, native_okx_spot_rules, SCHEMA, HOUR
 
 NOW=dt.datetime(2026,10,17,12,40,tzinfo=dt.timezone.utc)
 def sample():
@@ -50,6 +50,52 @@ class Tests(unittest.TestCase):
    self.assertFalse(row["market"]["real_fees_known"])
    self.assertFalse(row["market"]["book"]["exchange_timestamp_verified"])
    self.assertGreater(row["market"]["estimated_roundtrip_cost_pct"],0)
+ def test_okx_spot_rules_survive_binance_first_selection(self):
+  def okx_and_binance(url):
+   if "public/instruments" in url:
+    return {"code":"0","data":[{"instType":"SPOT","instId":"TOK0-USDT",
+      "baseCcy":"TOK0","quoteCcy":"USDT","state":"live",
+      "minSz":"10","lotSz":"0.01","tickSz":"0.00001"},
+      {"instType":"SWAP","instId":"TOK1-USDT-SWAP","baseCcy":"TOK1",
+       "quoteCcy":"USDT","state":"live","minSz":"1","lotSz":"1","tickSz":"0.1"}]}
+   return responder(url)
+  out=qualify(sample(),okx_and_binance,NOW)
+  first=next(c for c in out["candidates"] if c["symbol"]=="TOK0")
+  self.assertEqual(first["market"]["provider"],"Binance")
+  self.assertEqual(first["okx_spot"]["pair"],"TOK0-USDT")
+  self.assertTrue(first["okx_spot"]["native_rules_verified"])
+  self.assertEqual(first["okx_spot"]["rules"]["min_sz"],"10")
+  self.assertEqual(first["okx_spot"]["rules"]["lot_sz"],"0.01")
+  self.assertEqual(first["okx_spot"]["rules"]["tick_sz"],"0.00001")
+  self.assertFalse(first["okx_spot"]["contract_identity_proven"])
+  self.assertFalse(first["okx_spot"]["real_orders_enabled"])
+  second=next(c for c in out["candidates"] if c["symbol"]=="TOK1")
+  self.assertFalse(second["okx_spot"]["pair_observed"])
+  self.assertIsNone(second["okx_spot"]["rules"])
+
+ def test_okx_spot_rules_require_real_positive_public_fields(self):
+  original={"instType":"SPOT","instId":"TOK-USDT","baseCcy":"TOK",
+      "quoteCcy":"USDT","state":"live","minSz":"10","lotSz":"0.01","tickSz":"0.0001"}
+  self.assertEqual(native_okx_spot_rules(original,"TOK")["min_sz"],"10")
+  for edit in ({"instType":"SWAP"},{"state":"suspend"},{"quoteCcy":"USDC"},
+               {"instId":"TOK-USD"},{"minSz":None},{"minSz":"0"},
+               {"lotSz":"NaN"},{"tickSz":"1e-8"},{"lotSz":"-1"},
+               {"tickSz":"0.0000000000000000001"}):
+   self.assertIsNone(native_okx_spot_rules({**original,**edit},"TOK"))
+  self.assertIsNone(native_okx_spot_rules(original,"WRONG"))
+
+ def test_duplicate_okx_spot_rows_never_certify_any_rules(self):
+  good={"instType":"SPOT","instId":"TOK0-USDT","baseCcy":"TOK0",
+        "quoteCcy":"USDT","state":"live","minSz":"10",
+        "lotSz":"0.01","tickSz":"0.00001"}
+  def duplicate(url):
+   if "public/instruments" in url:return {"code":"0","data":[good,good]}
+   return responder(url)
+  out=qualify(sample(),duplicate,NOW)
+  first=next(c for c in out["candidates"] if c["symbol"]=="TOK0")
+  self.assertFalse(first["okx_spot"]["native_rules_verified"])
+  self.assertIsNone(first["okx_spot"]["pair"])
+
  def test_missing_depth_not_priority(self):
   def bad(u):
    if "/depth" in u:return {"bids":[],"asks":[]}
