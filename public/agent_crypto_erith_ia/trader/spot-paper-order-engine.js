@@ -112,6 +112,84 @@ function tick(s,book,nowRaw){check(s);if(!s.pending||s.halted)return s;
 }
 function cancel(s,at){check(s);if(!s.pending)return s;return update(s,{pending:null},{type:"PAPER_CANCEL",id:s.pending.id,at:new Date(stamp(at)).toISOString()})}
 function kill(s,at){check(s);const a=cancel(s,at);return update(a,{pending:null,halted:true},{type:"PAPER_KILL_SWITCH",at:new Date(stamp(at)).toISOString()})}
-return Object.freeze({SCHEMA,pairs,create,exitCheck,place,tick,cancel,kill,
+
+/* Read-only bridge: independently audit Radar shadow entries against the
+   SAME net-exit-size check used by place(BUY). Never convert this to a fill. */
+function auditRadarShadow(ledger,identity,qualification){
+ const failAudit=reason=>frozen({status:"NOT_CERTIFIED",reason,orders_enabled:false,executable:false});
+ if(ledger?.schema!=="erith.radar.spot-paper-forward-shadow.v1"||
+    ledger.orders_enabled!==false||ledger.real_orders!==0||
+    ledger.paper_fills!==0||ledger.execution_proven!==false||
+    !Array.isArray(ledger.positions)||
+    identity?.schema!=="erith.radar.spot-identity-prospective.v1"||
+    identity.orders_enabled!==false||identity.real_orders!==0||
+    !Array.isArray(identity.candidates)||
+    qualification?.schema!=="erith.radar.spot-qualification.v1"||
+    qualification.real_orders_enabled!==false||
+    !Array.isArray(qualification.candidates))
+   return frozen({status:"SOURCE_REJECTED",orders_enabled:false,executable:false,results:[]});
+ function assess(p){
+  if(p?.status!=="HYPOTHETICAL_NO_FILL"||p.executed_order!==false||
+     p.quote!=="USDT"||p.notional_usdt!=="100")
+   return failAudit("SHADOW_RECORD_NOT_PROVEN");
+  const ids=identity.candidates.filter(x=>x.coin_id===p.coin_id);
+  const markets=qualification.candidates.filter(x=>x.id===p.coin_id);
+  if(ids.length!==1||markets.length!==1)return failAudit("IDENTITY_OR_MARKET_MISSING");
+  const id=ids[0],m=markets[0].market;
+  if(id.identity_proven!==true||id.coin_id!==p.coin_id||
+     id.venue!==p.venue||id.pair!==p.pair||
+     id.quote!==p.quote||id.platform!==p.platform||
+     id.contract_address!==p.contract_address||
+     id.paper_entry_decision!=="AWAIT_NEXT_DATED_BOOK_AND_COST_CHECK"||
+     m?.provider!==p.venue||m.pair!==p.pair||m.quote!=="USDT")
+   return failAudit("CONTRACT_VENUE_OR_PAIR_MISMATCH");
+  let book=m.book;
+  try{
+   const entry=stamp(p.entry_quote_at_utc),observed=stamp(book?.observed_at_utc);
+   const qualified=stamp(qualification.qualified_at_utc);
+   const acquired=stamp(identity.collected_at_utc);
+   if(id.spot_exit_rules===null||!id.spot_exit_rules||
+      !id.min_order_usdt)return failAudit("NATIVE_EXIT_FILTERS_MISSING");
+   if(qualification.qualified_at_utc!==identity.qualification_at_utc||
+      identity.source_radar_day_utc!==qualification.source_observation_date_utc||
+      observed!==entry||qualified>entry||entry>acquired||
+      acquired-qualified>20*60*1000||
+      book.exchange_timestamp_verified!==true)
+      return failAudit("DATED_BOOK_PROOF_MISMATCH");
+   const rules=id.spot_exit_rules;
+   if(rules.rules_source!=="Bitget public SPOT instrument"||
+      p.venue!=="Bitget")return failAudit("VENUE_RULES_UNSUPPORTED");
+   const ask=d(book.best_ask_usdt),bid=d(book.best_bid_usdt),tick=d(rules.tick_size);
+   if(!bid||ask<=bid||d(p.entry_ask_usdt)!==ask||!tick||
+      bid%tick!==0n||ask%tick!==0n)
+      return failAudit("QUOTE_OR_TICK_MISMATCH");
+   const quantity=String(p.hypothetical_quantity);
+   if(!/^\\d{1,15}(?:\\.\\d{1,18})?$/.test(quantity))
+     return failAudit("PAPER_QUANTITY_INVALID");
+   const parts=quantity.split("."),gross=d(parts[0]+"."+(parts[1]||"").padEnd(8,"0").slice(0,8));
+   const lot=d(rules.lot_step),lotGross=gross/lot*lot;
+   if(!lotGross)return failAudit("PAPER_QUANTITY_UNDER_LOT");
+   // Extra BASE fee is conservative: the shadow quantity may already include
+   // assumed costs. This checks SIZE only, not P&L or an exchange fill.
+   const checked=exitCheck({grossQuantity:fmt(lotGross),
+      priceUSDT:fmt(bid),minQuantity:rules.min_quantity,
+      lotStep:rules.lot_step,minNotionalUSDT:id.min_order_usdt,
+      feeBps:10,feeCurrency:"BASE"});
+   return frozen({status:checked.ok?"HYPOTHETICAL_SIZE_OK":"NET_EXIT_SIZE_BLOCKED",
+     reason:checked.reason,coin_id:p.coin_id,pair:p.pair,venue:p.venue,
+     quantityChecked:checked.grossQuantity,netQuantity:checked.netQuantity,
+     lotSellableQuantity:checked.lotSellableQuantity,
+     minQuantity:checked.minQuantity,minNotionalUSDT:checked.minNotionalUSDT,
+     sourceBookAt:p.entry_quote_at_utc,feeAssumption:"BASE 0.1% extra (conservative)",
+     marketRulesVerified:false,liquidityVerified:false,
+     orders_enabled:false,executable:false});
+  }catch(_){return failAudit("PRECISION_OR_PUBLIC_EVIDENCE_INVALID")}
+ }
+ const results=ledger.positions.map(assess);
+ return frozen({status:"READ_ONLY_AUDIT",orders_enabled:false,executable:false,
+   results,checked:results.filter(x=>x.status==="HYPOTHETICAL_SIZE_OK").length,
+   notCertified:results.filter(x=>x.status!=="HYPOTHETICAL_SIZE_OK").length});
+}
+return Object.freeze({SCHEMA,pairs,create,exitCheck,auditRadarShadow,place,tick,cancel,kill,
  realOrders:false,tradeEndpoint:null,network:false,bridge:false,storage:false});
 });
