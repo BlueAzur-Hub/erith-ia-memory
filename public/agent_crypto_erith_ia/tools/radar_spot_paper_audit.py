@@ -104,7 +104,7 @@ def spot_evidence(coin_id, symbol, first_at, last_day_end, qualification, states
         for o in state.get("recent_observations", []):
             if (o.get("coin_id") != coin_id or o.get("symbol") != symbol
                 or o.get("market") != state.get("market")
-                or o.get("venue") != state.get("venue")
+                or state.get("venue") not in (o.get("venue"), o.get("venue") + " Spot")
                 or o.get("instrument_type") != "SPOT" or o.get("quote") != "USDT"
                 or o.get("paper_only") is not True or o.get("executed_order") is not False):
                 raise ValueError("observation Spot d'identité incohérente")
