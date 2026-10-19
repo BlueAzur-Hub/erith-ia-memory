@@ -1,11 +1,11 @@
 const test=require("node:test"),assert=require("node:assert/strict");
 const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
-const {evaluate,evaluatePositions,evaluateDecisionAnalysis}=require("../public/agent_crypto_erith_ia/laboratoire/radar20-veille.js");
+const {evaluate,evaluatePositions,evaluateDecisionAnalysis,evaluateComparison}=require("../public/agent_crypto_erith_ia/laboratoire/radar20-veille.js");
 const digest="a".repeat(64);
-function fake(){const p={schema:"erith.trader.radar20.forward-protocol.v1",symbols:["ETH","SOL","XRP","ADA","LINK","AVAX","SUI","NEAR","UNI","AAVE","LTC","BCH","DOT","HBAR","XLM","DOGE","PEPE","SHIB","APT","ARB"],test_days:90,holding_hours:48,ticket_usdt:100,taker_buy_threshold_pct:50,market_trend_threshold_pct:3,trend_lookback_hours:72,volume_median_lookback_hours:24,trading_orders_enabled:false,simulation_only:true,strategy_certified:false};
+function fake(){const p={schema:"erith.trader.radar20.forward-protocol.v1",symbols:["ETH","SOL","XRP","ADA","LINK","AVAX","SUI","NEAR","UNI","AAVE","LTC","BCH","DOT","HBAR","XLM","DOGE","PEPE","SHIB","APT","ARB"],test_days:90,holding_hours:48,capital_usdt:400,ticket_usdt:100,taker_buy_threshold_pct:50,market_trend_threshold_pct:3,trend_lookback_hours:72,volume_median_lookback_hours:24,trading_orders_enabled:false,simulation_only:true,strategy_certified:false};
 const i={schema:"erith.radar20.forward.index.v1",config_sha256:digest,orders_enabled:false,days:[{day:"2026-10-14",file:"observations/2026-10-14.json",sha256:digest}],outputs:[{file:"summary.json",sha256:digest}]};
-const s={schema:"erith.radar20.forward.summary.v1",protocol_sha256:digest,no_live_orders:true,strategy_certified:false,days_collected:1,hours_per_market:24,status:"RUNNING",variants:{}};
-for(const m of ["A","B"])for(const c of [0.8,1.2,1.6])s.variants[m+"_"+c]={cost_pct:c,signals:0,open_positions:0,closed_trades:0,equity_usdt:400,realized_usdt:0,unrealized_usdt:0,worst_drawdown_usdt:0};return {p,i,s};}
+const s={schema:"erith.radar20.forward.summary.v1",protocol_sha256:digest,no_live_orders:true,strategy_certified:false,fee_costs_hypothetical:true,okx_account_fee_not_available:true,days_collected:1,hours_per_market:24,status:"RUNNING",variants:{}};
+for(const m of ["A","B"])for(const c of [0.8,1.2,1.6])s.variants[m+"_"+c]={model:m==="A"?"A_original":"B_trend_3pct",cost_pct:c,signals:0,open_positions:0,closed_trades:0,wins:0,equity_usdt:400,realized_usdt:0,unrealized_usdt:0,worst_drawdown_usdt:0};return {p,i,s};}
 test("one day, six independent simulations, no profit claim",()=>{const {p,i,s}=fake(),r=evaluate(p,i,s);assert.equal(r.days,1);assert.equal(r.closed,0);assert.equal(r.rows.length,6);});
 test("no real orders",()=>{const {p,i,s}=fake();p.trading_orders_enabled=true;assert.throws(()=>evaluate(p,i,s),/recherche seule/);});
 test("no false certification",()=>{const {p,i,s}=fake();s.strategy_certified=true;assert.throws(()=>evaluate(p,i,s),/recherche seule/);});
@@ -103,4 +103,52 @@ test("historical PAPER details remain readable while richer trace awaits collect
  v.signals=3;v.rejected={filter:3,existing:0,capacity:0,cash:0};
  const a=evaluateDecisionAnalysis(p,s,key,d.variants[key]);
  assert.equal(a.traces.length,0);assert.equal(a.rejected.filter,3);
+});
+
+test("collapsible comparative section exists in the original Journal only",()=>{
+ const html=fs.readFileSync(path.join(__dirname,"../public/agent_crypto_erith_ia/laboratoire/radar20-veille.html"),"utf8");
+ assert.match(html,/<details class="comparison"/);
+ assert.match(html,/id="comparison-rows"/);
+ assert.match(html,/id="comparison-status"/);
+ assert.doesNotMatch(html,/<details class="comparison"[^>]*open(?:\s|>)/);
+});
+test("A/B comparison with zero closed trades never invents a win rate",()=>{
+ const {p,i,s,d}=fakePositions(),r=evaluateComparison(p,i,s,d);
+ assert.equal(r.allClosed,0);
+ assert.equal(r.rows.length,6);
+ assert.equal(r.rows[0].rate,null);
+ assert.equal(r.rows[0].equity,400);
+ assert.equal(r.aCostRange,0);
+});
+test("A/B comparison reconciles one actual simulated close across three days",()=>{
+ const {p,i,s,d}=fakePositions();
+ for(const day of ["2026-10-15","2026-10-16"])i.days.push({day,file:"observations/"+day+".json",sha256:digest});
+ s.days_collected=3;s.hours_per_market=72;d.days_collected=3;
+ d.last_archived_hour_ms=Date.parse("2026-10-16T23:00:00Z");
+ const v=s.variants["A_0.8"],row=d.variants["A_0.8"];
+ v.closed_trades=1;v.wins=1;v.realized_usdt=2.5;v.equity_usdt=402.5;
+ row.closed_count=1;
+ const entry=Date.parse("2026-10-14T05:00:00Z");
+ row.recent_closed=[{pair:"ETHUSDT",entry_ms:entry,exit_ms:entry+48*3600000,pnl_net_usdt:2.5}];
+ const r=evaluateComparison(p,i,s,d);
+ assert.equal(r.rows[0].closed,1);assert.equal(r.rows[0].rate,100);
+ assert.equal(r.aClosed,1);assert.equal(r.bClosed,0);
+ v.realized_usdt=3.5;
+ assert.throws(()=>evaluateComparison(p,i,s,d),/incohérent|rapprochées/);
+});
+test("A/B comparison rejects fabricated winners and impossible accounting",()=>{
+ const {p,i,s,d}=fakePositions();
+ s.variants["B_0.8"].wins=1;
+ assert.throws(()=>evaluateComparison(p,i,s,d),/incohérent/);
+ s.variants["B_0.8"].wins=0;
+ s.variants["A_0.8"].equity_usdt=500;
+ assert.throws(()=>evaluateComparison(p,i,s,d),/incohérent/);
+});
+test("A/B comparison cross-checks the complete current published PAPER evidence",()=>{
+ const root=path.join(__dirname,"../public/agent_crypto_erith_ia/data/trader_flux/radar20_forward");
+ const read=x=>JSON.parse(fs.readFileSync(path.join(root,x),"utf8"));
+ const p=read("experiment.json"),i=read("index.json"),s=read("summary.json"),d=read("positions.json");
+ const comparison=evaluateComparison(p,i,s,d);
+ assert.equal(comparison.rows.length,6);
+ assert.equal(comparison.days,i.days.length);
 });
