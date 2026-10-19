@@ -113,35 +113,9 @@ def instrument_metadata(response, pair, symbol):
 
 
 
-def instrument_exit_filters(response, pair, symbol):
-    """Optional native Spot exit filters; never certify a trade from identity alone."""
-    from decimal import Decimal, InvalidOperation
-    rows = [x for x in response.get("data", []) if
-            isinstance(x, dict) and x.get("category") == "SPOT" and
-            x.get("symbol") == pair and x.get("baseCoin") == symbol and
-            x.get("quoteCoin") == "USDT" and x.get("status") == "online" and
-            x.get("symbolType", "crypto") == "crypto" and x.get("isRwa", "NO") != "YES"]
-    if len(rows) != 1:
-        return None
-    row = rows[0]
-    try:
-        min_qty = Decimal(str(row.get("minOrderQty")))
-        quantity_precision = int(row["quantityPrecision"])
-        price_precision = int(row["pricePrecision"])
-        if (isinstance(row["quantityPrecision"], bool) or
-            isinstance(row["pricePrecision"], bool) or
-            str(row["quantityPrecision"]) != str(quantity_precision) or
-            str(row["pricePrecision"]) != str(price_precision) or
-            not 0 <= quantity_precision <= 8 or not 0 <= price_precision <= 8 or
-            not min_qty.is_finite() or min_qty <= 0 or min_qty.as_tuple().exponent < -8):
-            return None
-    except (ValueError, TypeError, KeyError, InvalidOperation):
-        return None
-    lot_step = Decimal(1).scaleb(-quantity_precision)
-    tick_size = Decimal(1).scaleb(-price_precision)
-    # Tick/lot here come from public precision, not private account permissions.
-    return {"min_quantity": str(min_qty), "lot_step": str(lot_step),
-            "tick_size": str(tick_size), "rules_source": "Bitget public SPOT instrument"}
+# Bitget v3 market/instruments exposes minOrderQty for FUTURES only.
+# Never infer a Spot minimum BASE quantity from that field or precision.
+# A verified Spot trading-rule feed is required before net exit can be certified.
 
 
 def build(qualification, coins, coin_lookup, instrument_lookup, now, strict_catalog=True):
@@ -194,7 +168,7 @@ def build(qualification, coins, coin_lookup, instrument_lookup, now, strict_cata
             require(len(matches) >= 1, "aucun contrat EVM identique et unique")
             instrument = instrument_lookup(m["pair"])
             min_order = instrument_metadata(instrument, m["pair"], sym)
-            exit_filters = instrument_exit_filters(instrument, m["pair"], sym)
+            exit_filters = None  # Spot BASE minimum not evidenced by public instruments.
         except (ValueError, KeyError, TypeError, OSError, TimeoutError) as error:
             row["status"] = "PUBLIC_IDENTITY_EVIDENCE_MISSING"
             row["reason"] = str(error)[:150]
