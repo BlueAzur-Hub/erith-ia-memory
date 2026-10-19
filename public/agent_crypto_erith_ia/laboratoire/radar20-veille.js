@@ -86,7 +86,43 @@ function evaluatePositions(protocol,index,summary,details){
  return result;
 }
 
-if(typeof module!=="undefined"&&module.exports)module.exports=Object.freeze({evaluate,evaluatePositions});
+
+/* Evidence-oriented interpretation, not a strategy or order recommendation. */
+function evaluateDecisionAnalysis(protocol,summary,key,ledger){
+ if(protocol?.schema!=="erith.trader.radar20.forward-protocol.v1"||
+    protocol.simulation_only!==true||protocol.trading_orders_enabled!==false||
+    protocol.taker_buy_threshold_pct!==50||protocol.market_trend_threshold_pct!==3||
+    protocol.trend_lookback_hours!==72||protocol.volume_median_lookback_hours!==24)
+    throw Error("Critères scientifiques du protocole non confirmés");
+ const v=summary?.variants?.[key];
+ if(!VARIANTS.includes(key)||!v||!ledger||!Array.isArray(ledger.open)||
+    !Array.isArray(ledger.recent_closed))throw Error("Variante d'analyse absente");
+ const r=v.rejected;
+ if(!r||!["filter","existing","capacity","cash"].every(k=>Number.isInteger(r[k])&&r[k]>=0)||
+    !Number.isInteger(v.signals)||!Number.isInteger(v.open_positions)||
+    !Number.isInteger(v.closed_trades))
+    throw Error("Motifs de refus incomplets");
+ const accepted=v.open_positions+v.closed_trades;
+ if(accepted+Object.values(r).reduce((s,n)=>s+n,0)!==v.signals)
+    throw Error("Signaux et motifs non rapprochés");
+ const positions=[
+   ...ledger.open.map(p=>({state:"Ouverte",item:p})),
+   ...ledger.recent_closed.slice().reverse().map(p=>({state:"Clôturée",item:p}))
+ ];
+ const traces=positions.map(({state,item})=>{
+   const vals=[item.buy_share_pct,item.volume_vs_median_24h,item.market_trend_72h_pct];
+   const available=vals.every(x=>x!==undefined);
+   if(available&&(!vals.every(Number.isFinite)||vals[0]<50||vals[0]>100||
+      vals[1]<=1||vals[2]<-100))
+      throw Error("Preuves d'entrée PAPER incohérentes");
+   return {state,pair:item.pair,available,share:available?vals[0]:null,
+     volumeRatio:available?vals[1]:null,trend:available?vals[2]:null,
+     passesB:available?vals[2]>=3:null};
+ });
+ return {signals:v.signals,accepted,rejected:r,traces};
+}
+
+if(typeof module!=="undefined"&&module.exports)module.exports=Object.freeze({evaluate,evaluatePositions,evaluateDecisionAnalysis});
 if(typeof document==="undefined")return;
 const id=x=>document.getElementById(x);
 const show=(name,v)=>{id(name).textContent=v;};
@@ -116,7 +152,7 @@ function fillTable(rows){
   }
 }
 
-let verifiedPositions=null;
+let verifiedPositions=null,verifiedProtocol=null,verifiedSummary=null;
 function dateUTC(ms){return new Intl.DateTimeFormat("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false,timeZone:"UTC"}).format(new Date(ms))+" UTC";}
 function fillCells(tbody,rows){
  tbody.replaceChildren();
@@ -154,6 +190,43 @@ function renderPositions(){
    "Valorisation à la dernière bougie archivée, non aux cours live.");
  show("open-note",open.length?"Positions encore ouvertes · sorties futures seulement théoriques.":"Aucune position ouverte pour cette variante.");
  show("closed-note",recent.length?"Dernières clôtures fictives, calculées sur bougies archivées.":"Aucune transaction fictive clôturée pour cette variante.");
+ renderDecisionAnalysis();
+}
+
+
+function renderDecisionAnalysis(){
+ const key=id("position-variant").value;
+ const row=verifiedPositions?.[key];
+ if(!row||!verifiedProtocol||!verifiedSummary){
+   fillCells(id("analysis-entries"),[]);
+   show("analysis-status","Analyse indisponible sans preuve PAPER validée.");
+   show("analysis-note","—");
+   return;
+ }
+ try{
+   const a=evaluateDecisionAnalysis(verifiedProtocol,verifiedSummary,key,row);
+   show("analysis-status",a.signals+" signaux admissibles · "+a.accepted+
+     " entrées PAPER · refus : "+a.rejected.filter+" tendance, "+
+     a.rejected.existing+" position existante, "+
+     a.rejected.capacity+" plafond de 4, "+a.rejected.cash+" trésorerie.");
+   fillCells(id("analysis-entries"),a.traces.map(t=>[
+     [t.pair.replace(/USDT$/,""),""],[t.state,""],
+     [t.available?number(t.share,2)+" %":"Non archivé",""],
+     [t.available?number(t.volumeRatio,2)+" ×":"Non archivé",""],
+     [t.available?number(t.trend,2)+" %":"Non archivé",""],
+     [t.available?(t.passesB?"Seuil B franchi*":"Refus du filtre B"):"Non vérifiable",""]
+   ]));
+   const missing=a.traces.filter(x=>!x.available).length;
+   show("analysis-note",a.traces.length?
+     (missing?"La trace détaillée de "+missing+" entrée(s) attend la prochaine collecte ; aucun motif individuel n'est inventé. ":
+      "Les critères proviennent du moteur PAPER et de la bougie précédant chaque entrée. ")+
+     "* Franchir le seuil B ne garantit pas qu'une place ou de la trésorerie soit disponible.":
+     "Aucune entrée pour cette variante. Les motifs de refus agrégés restent vérifiables.");
+ }catch(e){
+   fillCells(id("analysis-entries"),[]);
+   show("analysis-status","Analyse refusée : "+String(e?.message||e).slice(0,150));
+   show("analysis-note","Aucun diagnostic sans compteurs cohérents.");
+ }
 }
 
 let loading=false;
@@ -168,12 +241,12 @@ async function refresh(){
   show("days",data.signalsDays+" / 90");show("archives",data.days+" / 92 max.");
   show("closed",String(data.closed));show("last-day",data.lastDay||"Aucune");
   show("state",data.status);fillTable(data.rows);
-  verifiedPositions=null;
+  verifiedPositions=null;verifiedProtocol=protocol;verifiedSummary=summary;
   const detailMeta=index.outputs?.find(item=>item.file==="positions.json");
   if(!detailMeta){
     show("positions-status","Détails des décisions non publiés dans cette génération d'archives ; en attente de la prochaine collecte.");
     fillCells(id("position-open"),[]);fillCells(id("position-closed"),[]);
-    show("open-note","—");show("closed-note","—");
+    show("open-note","—");show("closed-note","—");renderDecisionAnalysis();
   }else{
     try{
       const raw=await source("positions.json");
@@ -184,7 +257,7 @@ async function refresh(){
     }catch(err){
       show("positions-status","Détails PAPER non validés : "+String(err?.message||err).slice(0,160));
       fillCells(id("position-open"),[]);fillCells(id("position-closed"),[]);
-      show("open-note","Aucune position affichée sans preuve validée.");show("closed-note","—");
+      show("open-note","Aucune position affichée sans preuve validée.");show("closed-note","—");renderDecisionAnalysis();
     }
   }
   show("observation",data.closed===0?"Aucune transaction simulée clôturée : cela ne prouve ni gain ni perte.":"Transactions fictives seulement : frais estimés, aucune exécution OKX prouvée.");
@@ -192,7 +265,7 @@ async function refresh(){
     ". Les fichiers quotidiens ne sont pas retéléchargés ici ; leur intégrité relève du contrôle scientifique GitHub Actions.");
  }catch(e){
    ["days","archives","closed","last-day","state"].forEach(n=>show(n,"—"));
-   id("variants").replaceChildren();verifiedPositions=null;fillCells(id("position-open"),[]);fillCells(id("position-closed"),[]);
+   id("variants").replaceChildren();verifiedPositions=null;verifiedProtocol=null;verifiedSummary=null;fillCells(id("position-open"),[]);fillCells(id("position-closed"),[]);renderDecisionAnalysis();
    show("positions-status","Sources du Journal non validées.");show("open-note","—");show("closed-note","—");
    show("observation","Aucune conclusion sans preuve cohérente.");
    show("verification","Lecture non validée : "+String(e?.message||e).slice(0,190));
