@@ -69,10 +69,29 @@ async function shadowStatus(){
       data.closures.some(x=>x.status!=="HYPOTHETICAL_CLOSED_NO_FILL"||
                            x.realized_profit_usdt!==null||x.executed_order!==false))
      throw Error("journal PAPER non conforme");
+   let note=" · Revente nette : non certifiée (règles Spot en attente).";
+   try{
+     const base="../data/crypto/radar-opportunities/";
+     const [identityRes,qualificationRes]=await Promise.all([
+       fetch(base+"spot-identity-latest.json",{cache:"no-store"}),
+       fetch(base+"qualification-latest.json",{cache:"no-store"})]);
+     if(!identityRes.ok||!qualificationRes.ok)throw Error("Sources de marché absentes");
+     const [identity,qualification]=await Promise.all([identityRes.json(),qualificationRes.json()]);
+     const audit=global.AgentCryptoSpotPaperOrders?.auditRadarShadow?.(data,identity,qualification);
+     if(audit?.status==="READ_ONLY_AUDIT"){
+       const reasons=audit.results.filter(x=>x.status!=="HYPOTHETICAL_SIZE_OK");
+       note=" · Filtre PAPER de revente nette : "+audit.checked+"/"+audit.results.length+
+         " tailles théoriques admissibles sous frais BASE supplémentaires 0,1 %"+
+         (reasons.length?" · "+reasons.length+" non certifiées (règles, prix ou identité à vérifier)":"")+
+         " · aucun ordre ou fill certifié.";
+     }else{
+       note=" · Filtre de revente indisponible : source non conforme.";
+     }
+   }catch(_){note=" · Filtre de revente indisponible : aucune taille certifiée.";}
    text(target,"PAPER prospectif (citations de carnet uniquement) : "+
      data.positions.length+" études théoriques ouvertes · "+
      data.closures.length+" sorties théoriques après ≥48 h. "+
-     "Aucun ordre ni remplissage réel ou simulé. Frais et glissement supposés.");
+     "Aucun ordre ni remplissage réel ou simulé. Frais et glissement supposés."+note);
  }catch(e){text(target,"PAPER prospectif : "+String(e.message||e)+
    " · aucune position ni aucun gain affirmé.");}
 }
