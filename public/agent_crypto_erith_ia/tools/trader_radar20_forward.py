@@ -114,7 +114,7 @@ def simulate(data,p,filter_enabled,fee_pct):
                 entry=data[sym][h][1];cash-=TICKET
                 positions[sym]={'units':TICKET/(1+half)/entry,'at':ts,'exit_h':h+hold,
                                 'entry_price':entry,'share':share,'trend':round(trend,7),
-                                'volume_ratio':round(ratio,6)}
+                                'volume_ratio':ratio}
         value=cash+sum(item['units']*data[sym][h][4]*(1-half) for sym,item in positions.items())
         peak=max(peak,value);maxdd=max(maxdd,peak-value)
         equity.append([ts,round(value,7),round(cash,7),len(positions)])
