@@ -50,6 +50,17 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 <div class="stat"><small>Radar nouveaux listings</small><b id="new-count">—</b><span id="new-source">Bitget Spot · moins de 30 jours</span></div>
 <div class="stat"><small>Observateur PAPER indépendant</small><b id="paper-count">—</b><span id="paper-time">GitHub Actions · BTC/CT</span></div>
 </div>
+<section class="panel" aria-labelledby="spot-proof-title">
+<h2 id="spot-proof-title">Radar → qualification Spot → décision PAPER</h2>
+<p>Contrôle <strong>rétrospectif</strong> sur trois journées archivées : tous les candidats signalés sont comptés, y compris les baisses et les dossiers incomplets. Un carnet observé après le signal ne prouve pas qu'on pouvait acheter au moment du signal.</p>
+<div class="note" id="radar-spot-status" role="status" aria-live="polite">Lecture du rapprochement Radar/Spot/PAPER archivé…</div>
+<details style="margin-top:12px" id="radar-spot-details">
+<summary>Voir tous les candidats et les motifs de blocage</summary>
+<div class="scroll"><table style="min-width:850px"><thead><tr><th>Détecté le premier jour</th><th>Variation USD observée</th><th>Preuve Spot USDT</th><th>Décision PAPER</th></tr></thead>
+<tbody id="radar-spot-body"><tr><td colspan="4">Chargement du registre…</td></tr></tbody></table></div>
+</details>
+<p class="muted">PAPER bloqué tant que l'identité du contrat, la disponibilité de la paire au bon instant, les coûts et la liquidité ne sont pas établis. Aucun ordre ni prix d'exécution n'est reconstruit. <a href="../data/crypto/radar-opportunities/spot-paper-audit.json">Consulter les preuves JSON ↗</a></p>
+</section>
 <section class="panel">
 <h2>Marché · Univers par rang de capitalisation</h2>
 <div class="controls" id="tiers" aria-label="Choisir le périmètre Radar">
@@ -86,5 +97,6 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 <p><span class="chip">Recherche</span> « Radar 20 » reste une expérience distincte à univers fixe de 20 actifs, <strong>pas</strong> un Top 20 par capitalisation. Son protocole prospectif ne doit pas être réécrit.</p>
 </section>
 <footer>Données publiques, ponctuelles et éventuellement différées. Ni conseil d'achat personnalisé, ni exécution, ni contrôle du solde, ni promesse de gains. Aucune donnée privée OKX dans cette page.</footer>
+<script src="./radar-spot-paper.js" defer></script>
 <script src="./radar.js"></script>
 </main></body></html>

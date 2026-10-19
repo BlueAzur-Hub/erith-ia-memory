@@ -30,6 +30,8 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             node public/agent_crypto_erith_ia/tools/radar_opportunity_history.cjs
+            python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_radar_spot_paper_audit.py
+            python public/agent_crypto_erith_ia/tools/radar_spot_paper_audit.py
             git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/
             if git diff --cached --quiet; then
               echo "No new observation; archived dates remain immutable."

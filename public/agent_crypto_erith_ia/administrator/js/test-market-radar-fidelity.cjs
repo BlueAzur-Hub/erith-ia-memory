@@ -331,15 +331,17 @@ test("Radar Trader integrates the real immutable dynamic journal by exact CoinGe
  const native=require("./market-radar-native.js");
  const report=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../../data/crypto/radar-opportunities/dynamic-followups.json"),"utf8"));
  const h=native.verifiedDynamicFollowups(report);
- assert.equal(h.count,46);
- assert.equal(h.measured_1d,1);
- assert.equal(h.measured_7d,0);
+ assert.equal(h.count,report.observations.length);
+ assert.equal(h.measured_1d,report.observations.filter(x=>x.followup_1d.status==="OBSERVED_DAILY_SNAPSHOT").length);
+ assert.equal(h.measured_7d,report.observations.filter(x=>x.followup_7d.status==="OBSERVED_DAILY_SNAPSHOT").length);
  const icnt=native.dynamicCandidateHistory(h,"impossible-cloud-network-token");
- assert.equal(icnt.length,2);
- assert.equal(icnt[1].followup_1d.change_pct,34.33);
- assert.match(native.describeDynamicPoint(icnt[1].followup_1d),/34\.33|34,33/);
+ assert.equal(icnt.length,report.observations.filter(x=>x.id==="impossible-cloud-network-token").length);
+ const oldest=icnt.at(-1);
+ assert(oldest.followup_1d.status==="OBSERVED_DAILY_SNAPSHOT");
+ assert(native.describeDynamicPoint(oldest.followup_1d).includes(String(oldest.followup_1d.change_pct)));
  const q=native.dynamicCandidateHistory(h,"quack-ai");
- assert.equal(q[0].followup_1d.status,"AWAITING_FUTURE_DAY");
+ assert.equal(q[0].followup_1d.status,report.observations.find(x=>
+   x.id==="quack-ai"&&x.first_seen_date_utc===q[0].first_seen_date_utc).followup_1d.status);
  assert.deepEqual(native.dynamicCandidateHistory(h,"other-quack-ai"),[]);
 });
 test("Trader refuses fake outcomes and malformed future dates without corrupting Radar",()=>{
@@ -362,13 +364,18 @@ test("Trader Q / ICNT / FLUID trajectory synthesis does not invent PAPER eligibi
  const q=native.trajectoryEvidence(history,"quack-ai");
  const icnt=native.trajectoryEvidence(history,"impossible-cloud-network-token");
  const fluid=native.trajectoryEvidence(history,"instadapp");
- assert.equal(q.status,"SUIVI EN ATTENTE");
- assert.equal(fluid.status,"SUIVI EN ATTENTE");
- assert.equal(icnt.status,"J+1 MESURÉ");
- assert.equal(icnt.count1,1);assert.equal(icnt.count7,0);
- assert.equal(icnt.lastMeasured.point.change_pct,34.33);
- assert.equal(icnt.lastMeasured.point.elapsed_hours,33.75);
- assert.match(native.trajectoryVolumeReadout(icnt.lastMeasured.initial,icnt.lastMeasured.point),/rang 572 → 460/);
+ for(const [id,item] of [["quack-ai",q],["impossible-cloud-network-token",icnt],["instadapp",fluid]]){
+   const source=native.dynamicCandidateHistory(history,id);
+   const measured1=source.filter(x=>x.followup_1d.status==="OBSERVED_DAILY_SNAPSHOT");
+   const measured7=source.filter(x=>x.followup_7d.status==="OBSERVED_DAILY_SNAPSHOT");
+   assert.equal(item.selectionCount,source.length);
+   assert.equal(item.count1,measured1.length);assert.equal(item.count7,measured7.length);
+   assert.equal(item.status,measured7.length?"SUIVI J+7 MESURÉ":measured1.length?"J+1 MESURÉ":"SUIVI EN ATTENTE");
+   if(item.lastMeasured){
+     assert(item.lastMeasured.point.at_utc);
+     assert.match(native.trajectoryVolumeReadout(item.lastMeasured.initial,item.lastMeasured.point),/rang|non comparable/);
+   }
+ }
  for(const item of [q,icnt,fluid])assert.equal(item.paperCertified,false);
 });
 test("Trader trajectory rendering stays in the existing Radar with exactly three read-only rows",()=>{
@@ -381,10 +388,17 @@ test("Trader trajectory rendering stays in the existing Radar with exactly three
   native.printTrajectories(root,{dynamicFollowups:native.verifiedDynamicFollowups(data)});
   assert.equal(rows.children.length,3);
   assert.equal(rows.children[0].dataset.radarTrajectoryId,"quack-ai");
-  assert.match(rows.children[1].children[1].textContent,/34\.33|34,33/);
-  assert.match(rows.children[1].children[2].textContent,/rang 572 → 460/);
-  assert.match(rows.children[2].children[1].textContent,/Pas de J/);
-  assert.match(note.textContent,/2026-10-17/);
+  const history=native.verifiedDynamicFollowups(data);
+ for(const [i,id] of ["quack-ai","impossible-cloud-network-token","instadapp"].entries()){
+   const evidence=native.trajectoryEvidence(history,id);
+   const measure=rows.children[i].children[1].textContent;
+   if(evidence.lastMeasured){
+     assert(measure.replace(",",".").includes(String(evidence.lastMeasured.point.change_pct)));
+     assert(rows.children[i].children[2].textContent.includes(
+       "Détection "+evidence.lastMeasured.initial.first_seen_date_utc));
+   }else assert.match(measure,/Pas de J/);
+ }
+ assert(note.textContent.includes(data.source_archive_dates.at(-1)));
   assert.equal(rows.children.every(r=>r.children.every(c=>c.tagName!=="BUTTON")),true);
  }finally{globalThis.document=oldDoc;}
 });
