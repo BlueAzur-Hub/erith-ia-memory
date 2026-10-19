@@ -5,6 +5,10 @@ on:
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_targets.py'
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_spot_identity.py'
+      - 'public/agent_crypto_erith_ia/trader/spot-paper-order-engine.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
+      - 'tests/radar_spot_paper_feasibility.test.cjs'
       - 'public/agent_crypto_erith_ia/tools/radar_spot_paper_forward.py'
       - 'public/agent_crypto_erith_ia/tools/test_radar_spot_paper_forward.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_targets.py'
@@ -17,6 +21,10 @@ on:
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_targets.py'
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_spot_identity.py'
+      - 'public/agent_crypto_erith_ia/trader/spot-paper-order-engine.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
+      - 'tests/radar_spot_paper_feasibility.test.cjs'
       - 'public/agent_crypto_erith_ia/tools/radar_spot_paper_forward.py'
       - 'public/agent_crypto_erith_ia/tools/test_radar_spot_paper_forward.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_targets.py'
@@ -47,12 +55,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Test pure Radar qualification; no external connection
         run: |
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_targets.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_spot_identity.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_radar_spot_paper_forward.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_radar_research_cohort.py' -v
+          node --test public/agent_crypto_erith_ia/trader/test-spot-paper-order-engine.cjs tests/radar_spot_paper_feasibility.test.cjs
       - name: Collect public evidence only (main push/schedule, not PR)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         shell: bash
