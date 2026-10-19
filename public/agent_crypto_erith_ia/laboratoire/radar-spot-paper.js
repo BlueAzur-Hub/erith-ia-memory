@@ -79,11 +79,17 @@ async function shadowStatus(){
      const [identity,qualification]=await Promise.all([identityRes.json(),qualificationRes.json()]);
      const audit=global.AgentCryptoSpotPaperOrders?.auditRadarShadow?.(data,identity,qualification);
      if(audit?.status==="READ_ONLY_AUDIT"){
-       const reasons=audit.results.filter(x=>x.status!=="HYPOTHETICAL_SIZE_OK");
-       note=" · Filtre PAPER de revente nette : "+audit.checked+"/"+audit.results.length+
-         " tailles théoriques admissibles sous frais BASE supplémentaires 0,1 %"+
-         (reasons.length?" · "+reasons.length+" non certifiées (règles, prix ou identité à vérifier)":"")+
-         " · aucun ordre ou fill certifié.";
+       const unavailable=audit.results.filter(x=>x.status!=="HYPOTHETICAL_SIZE_OK");
+       const missing=unavailable.filter(x=>x.reason==="NATIVE_EXIT_FILTERS_MISSING");
+       if(missing.length===audit.results.length&&missing.length){
+         note=" · Revente nette non évaluable : "+missing.length+
+           " études sans minimum de quantité Spot attesté. "+
+           "Une cotation ultérieure ne certifie pas une entrée passée. Aucun ordre autorisé.";
+       }else{
+         note=" · Revente nette PAPER : "+audit.checked+
+           " filtre(s) théorique(s) satisfaits · "+unavailable.length+
+           " sans preuve complète. Ce contrôle n'atteste ni l'exécution ni un gain.";
+       }
      }else{
        note=" · Filtre de revente indisponible : source non conforme.";
      }
