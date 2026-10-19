@@ -200,6 +200,9 @@ assert.equal(cachedThirtyMatch.period?.days,30,"30j cached CoinGecko chart accep
 assert.ok(api.drawBars(chart,cachedThirtyMatch)>=130,"30d chart covers real cached OHLC portion");
 setPeriodTitle('1a','BTC · 365 points · série '+mkClock(activeEnd)+' · CoinGecko');
 assert.equal(api.periodConfig().bar,'1j',"Year uses daily candles");
+setPeriodTitle('1 an','BTC · 365 points · série '+mkClock(activeEnd)+' · CoinGecko');
+assert.equal(api.periodConfig().bar,'1j',"Visible 1 an label uses the same daily cadence");
+assert.equal(api.summaryPeriodConfig().segments,12,"Visible 1 an label must map to twelve summary bars");
 assert.equal(api.matching(chart,{...snapshot,rows:mkExchange(activeEnd,DAY,300,100),loadedBar:'1j'}).ref,undefined,
  "A 300-day daily candle limit MUST NOT be mislabelled as a full year");
 setPeriodTitle('Max','BTC · série '+mkClock(activeEnd)+' · CoinGecko');
