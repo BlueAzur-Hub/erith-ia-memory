@@ -2,7 +2,7 @@ const test=require("node:test"),assert=require("node:assert/strict");
 const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
 const {evaluate,evaluatePositions,evaluateDecisionAnalysis}=require("../public/agent_crypto_erith_ia/laboratoire/radar20-veille.js");
 const digest="a".repeat(64);
-function fake(){const p={schema:"erith.trader.radar20.forward-protocol.v1",symbols:["ETH","SOL","XRP","ADA","LINK","AVAX","SUI","NEAR","UNI","AAVE","LTC","BCH","DOT","HBAR","XLM","DOGE","PEPE","SHIB","APT","ARB"],test_days:90,holding_hours:48,ticket_usdt:100,trading_orders_enabled:false,simulation_only:true,strategy_certified:false};
+function fake(){const p={schema:"erith.trader.radar20.forward-protocol.v1",symbols:["ETH","SOL","XRP","ADA","LINK","AVAX","SUI","NEAR","UNI","AAVE","LTC","BCH","DOT","HBAR","XLM","DOGE","PEPE","SHIB","APT","ARB"],test_days:90,holding_hours:48,ticket_usdt:100,taker_buy_threshold_pct:50,market_trend_threshold_pct:3,trend_lookback_hours:72,volume_median_lookback_hours:24,trading_orders_enabled:false,simulation_only:true,strategy_certified:false};
 const i={schema:"erith.radar20.forward.index.v1",config_sha256:digest,orders_enabled:false,days:[{day:"2026-10-14",file:"observations/2026-10-14.json",sha256:digest}],outputs:[{file:"summary.json",sha256:digest}]};
 const s={schema:"erith.radar20.forward.summary.v1",protocol_sha256:digest,no_live_orders:true,strategy_certified:false,days_collected:1,hours_per_market:24,status:"RUNNING",variants:{}};
 for(const m of ["A","B"])for(const c of [0.8,1.2,1.6])s.variants[m+"_"+c]={cost_pct:c,signals:0,open_positions:0,closed_trades:0,equity_usdt:400,realized_usdt:0,unrealized_usdt:0,worst_drawdown_usdt:0};return {p,i,s};}
