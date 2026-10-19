@@ -39,7 +39,9 @@ def native():
 def inst():
     return {"code":"00000","data":[{"category":"SPOT","baseCoin":"Q",
             "quoteCoin":"USDT","symbol":"QUSDT","status":"online",
-            "minOrderAmount":"5","symbolType":"crypto","isRwa":"NO"}]}
+            "minOrderAmount":"5","minOrderQty":"0.01",
+            "quantityPrecision":"2","pricePrecision":"4",
+            "symbolType":"crypto","isRwa":"NO"}]}
 
 
 class Tests(unittest.TestCase):
@@ -58,11 +60,27 @@ class Tests(unittest.TestCase):
         self.assertEqual(q["platform"],"ethereum")
         self.assertEqual(q["contract_address"],CONTRACT)
         self.assertEqual(q["min_order_usdt"],"5")
+        self.assertEqual(q["spot_exit_rules"]["min_quantity"],"0.01")
+        self.assertEqual(q["spot_exit_rules"]["lot_step"],"0.01")
+        self.assertEqual(q["spot_exit_rules"]["tick_size"],"0.0001")
         self.assertEqual(q["paper_entry_decision"],"AWAIT_NEXT_DATED_BOOK_AND_COST_CHECK")
         self.assertIsNone(q["paper_entry_price_usdt"])
         self.assertIsNone(q["paper_pnl_usdt"])
         self.assertEqual(o["paper_orders"],0)
         self.assertEqual(o["real_orders"],0)
+
+    def test_instrument_filters_missing_or_invalid_do_not_invent_trade_rules(self):
+        for field, value in (("minOrderQty", None), ("minOrderQty", "0"),
+                             ("quantityPrecision", "20"), ("pricePrecision", "-1")):
+            v = inst()
+            if value is None:
+                v["data"][0].pop(field)
+            else:
+                v["data"][0][field] = value
+            row = self.qualify(metadata=v)["candidates"][0]
+            self.assertTrue(row["identity_proven"])
+            self.assertIsNone(row["spot_exit_rules"])
+            self.assertEqual(row["paper_entry_decision"], "AWAIT_NEXT_DATED_BOOK_AND_COST_CHECK")
 
     def test_name_or_symbol_only_never_establishes_identity(self):
         source=native()
