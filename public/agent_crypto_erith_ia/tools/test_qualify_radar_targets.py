@@ -7,7 +7,7 @@ import sys
 import unittest
 
 sys.path.insert(0,str(pathlib.Path(__file__).resolve().parent))
-from qualify_radar_targets import candidate_list, qualify, market_detail, candle_rows, native_okx_spot_rules, SCHEMA, HOUR
+from qualify_radar_targets import candidate_list, qualify, market_detail, candle_rows, native_okx_spot_rules, okx_public_best_book, SCHEMA, HOUR
 
 NOW=dt.datetime(2026,10,17,12,40,tzinfo=dt.timezone.utc)
 def sample():
@@ -50,8 +50,53 @@ class Tests(unittest.TestCase):
    self.assertFalse(row["market"]["real_fees_known"])
    self.assertFalse(row["market"]["book"]["exchange_timestamp_verified"])
    self.assertGreater(row["market"]["estimated_roundtrip_cost_pct"],0)
+ def test_okx_dated_top_quote_retained_even_if_binance_candles_chosen(self):
+  instrument={"instType":"SPOT","instId":"TOK0-USDT","baseCcy":"TOK0",
+    "quoteCcy":"USDT","state":"live","minSz":"1","lotSz":"0.01","tickSz":"0.01"}
+  def source(url):
+   if "public/instruments" in url:return {"code":"0","data":[instrument]}
+   if "/v5/market/books" in url:
+    self.assertIn("instId=TOK0-USDT",url)
+    return {"code":"0","data":[{"ts":str(int(NOW.timestamp()*1000)-3000),
+      "bids":[["9.9","100","0","1"]],"asks":[["10","100","0","1"]]}]}
+   return responder(url)
+  report=qualify(sample(),source,NOW)
+  row=next(x for x in report["candidates"] if x["symbol"]=="TOK0")
+  self.assertEqual(row["market"]["provider"],"Binance")
+  self.assertEqual(row["okx_spot"]["best_book_status"],"DATED_PUBLIC_BOOK")
+  book=row["okx_spot"]["best_book"]
+  self.assertEqual(book["pair"],"TOK0-USDT")
+  self.assertEqual(book["best_bid_usdt"],"9.9")
+  self.assertEqual(book["best_ask_usdt"],"10")
+  self.assertEqual(book["best_bid_qty"],"100")
+  self.assertFalse(book["market_execution_proven"])
+  self.assertFalse(book["orders_enabled"])
+  self.assertFalse(row["okx_spot"]["contract_identity_proven"])
+
+ def test_stale_future_wrong_tick_and_crossed_okx_books_fail_closed(self):
+  rules={"source":"OKX_PUBLIC_SPOT_INSTRUMENT","tick_sz":"0.01"}
+  valid={"code":"0","data":[{"ts":str(int(NOW.timestamp()*1000)-3000),
+    "bids":[["9.9","100"]],"asks":[["10","100"]]}]}
+  for change in ("stale","future","wrong_tick","crossed","empty"):
+   import copy
+   data=copy.deepcopy(valid)
+   b=data["data"][0]
+   if change=="stale":b["ts"]=str(int(NOW.timestamp()*1000)-150_000)
+   if change=="future":b["ts"]=str(int(NOW.timestamp()*1000)+15_000)
+   if change=="wrong_tick":b["bids"][0][0]="9.991"
+   if change=="crossed":b["bids"][0][0]="10"
+   if change=="empty":b["asks"]=[]
+   with self.subTest(change=change):
+    with self.assertRaises((ValueError,KeyError,TypeError)):
+     okx_public_best_book("TOK0-USDT",rules,lambda url:data,NOW)
+  self.assertRaises(ValueError,okx_public_best_book,
+    "TOK0-USDC",rules,lambda url:valid,NOW)
+
  def test_okx_spot_rules_survive_binance_first_selection(self):
   def okx_and_binance(url):
+   if "/v5/market/books" in url:
+    return {"code":"0","data":[{"ts":str(int(NOW.timestamp()*1000)-1500),
+      "bids":[["9.9","100"]],"asks":[["10","100"]]}]}
    if "public/instruments" in url:
     return {"code":"0","data":[{"instType":"SPOT","instId":"TOK0-USDT",
       "baseCcy":"TOK0","quoteCcy":"USDT","state":"live",
@@ -67,6 +112,8 @@ class Tests(unittest.TestCase):
   self.assertEqual(first["okx_spot"]["rules"]["min_sz"],"10")
   self.assertEqual(first["okx_spot"]["rules"]["lot_sz"],"0.01")
   self.assertEqual(first["okx_spot"]["rules"]["tick_sz"],"0.00001")
+  self.assertEqual(first["okx_spot"]["best_book_status"],"DATED_PUBLIC_BOOK")
+  self.assertFalse(first["okx_spot"]["best_book"]["market_execution_proven"])
   self.assertFalse(first["okx_spot"]["contract_identity_proven"])
   self.assertFalse(first["okx_spot"]["real_orders_enabled"])
   second=next(c for c in out["candidates"] if c["symbol"]=="TOK1")
