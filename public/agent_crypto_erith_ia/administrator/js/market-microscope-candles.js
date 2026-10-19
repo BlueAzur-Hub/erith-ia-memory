@@ -63,6 +63,45 @@
   const initialBar=readBarPreference();
   const state={mode:"native",bar:initialBar,requestedBar:initialBar,loadedBar:null,instrument:"BTC-EUR",requestedInstrument:"BTC-EUR",loadedInstrument:null,rows:[],loading:false,error:null,errorCode:null,lastLoadedAt:null,source:"Market resolver",indicators:readIndicatorState(),lastLevels:null};
   const view={start:0,count:72,dragging:false,dragX:0,dragStart:0};
+  // Period buttons delimit the VIEW; candle interval buttons delimit the bar.
+  // Keep fetched candles for indicators. Never pretend 300 short bars span 90d.
+  const DAY_MS=86400000;
+  let appliedPeriodDays=null;
+  function selectedPeriodDays(){
+    const raw=document.querySelector("#analyste .period-tabs .period-btn.active")?.dataset?.period;
+    const days=Number(raw);
+    return [1,7,30,60,90,365].includes(days)?days:null;
+  }
+  const periodName=days=>({1:"24h",7:"7j",30:"30j",60:"60j",90:"90j",365:"1a"})[days]||"Max";
+  function periodCoverage(){
+    const days=selectedPeriodDays(),rows=state.rows;
+    if(state.mode!=="candles"||!rows?.length||!days||state.archivePeriod==="1an")return "";
+    const step=barDurationMs(state.loadedBar||state.bar),last=rows.at(-1).t;
+    const cutoff=last+step-days*DAY_MS;
+    const eligible=rows.filter(r=>r.t>=cutoff&&r.t<=last);
+    const expected=Math.ceil(days*DAY_MS/step),start=eligible[0]?.t;
+    const span=Number.isFinite(start)?last+step-start:0;
+    const regular=eligible.every((r,i)=>i===0||r.t-eligible[i-1].t===step);
+    const complete=eligible.length>=expected&&span>=days*DAY_MS-step*.01&&regular;
+    const head="PÉRIODE "+periodName(days)+" · "+view.count+" visibles / "+rows.length+" chargées";
+    return complete?head+" · couverture temporelle disponible":
+      head+" · COUVERTURE PARTIELLE "+(span/DAY_MS).toFixed(1)+"j / "+days+"j"+(regular?"":" · lacunes");
+  }
+  function applyPeriodViewport(){
+    const days=selectedPeriodDays(),rows=state.rows;
+    appliedPeriodDays=days;
+    if(!rows.length)return;
+    if(state.archivePeriod==="1an"){view.count=rows.length;view.start=0;}
+    else if(!days){view.count=Math.min(72,rows.length);view.start=rows.length-view.count;}
+    else{
+      const step=barDurationMs(state.loadedBar||state.bar);
+      const cutoff=rows.at(-1).t+step-days*DAY_MS;
+      const first=rows.findIndex(r=>r.t>=cutoff);
+      view.start=first<0?rows.length-1:first;
+      view.count=Math.max(1,rows.length-view.start);
+    }
+    view.dragging=false;
+  }
   // Certified 1-year candles belong ONLY to BTC's explicit "1a" period in Bougies.
   // The original Ligne and Hybride owners are never modified.
   const verifiedReaderUrl=typeof document!=="undefined"
@@ -703,18 +742,18 @@
       if(meta)meta.textContent="BTC/USDT · 1j · 365 véritables bougies · Binance Spot · archive terminée septembre 2026";
       if(status)status.textContent="COFFRE VÉRIFIÉ · BTCUSDT Spot · 365 OHLCV · USDT, pas USD · historique clôturé au 30/09/2026 UTC · pas de données live · aucun ordre";
       return;
-    }const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=state.mode==="hybrid"?(ext.active?"NEW LISTING · LIGNE + BOUGIES":"MARKET · LIGNE + BOUGIES"):ext.active?(candleModeActive()?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const shownInstrument=activeInstrument(),shownBar=activeBar(),metaProvider=ext.active?String(ext.providerLabel||ext.provider||"EXTERNAL"):String(state.source||"Market public candles").replace(/ public candles$/i,""),hasValidSeries=state.rows.length>0&&!!state.loadedInstrument,isUnavailable=state.errorCode==="MARKET_INSTRUMENT_UNAVAILABLE";if(meta){meta.textContent=isUnavailable?`${selectedSymbol()} · ${shownBar} · 0 bougie · NON DISPONIBLE SUR SOURCES BOUGIES`:state.error&&!hasValidSeries?`${shownInstrument} · ${shownBar} · 0 bougie · ${state.errorCode||"ERREUR"}`:`${shownInstrument} · ${shownBar} · ${state.rows.length} bougies · ${metaProvider}`;meta.title=state.error||"";}const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"Market public candles").replace(/ public candles$/i,""),transport=ext.active?"EXTERNAL PROVIDER":transportTruth().label,retention=hasValidSeries?`dernière série valide conservée ${shownInstrument} · ${shownBar}`:"aucune série valide chargée";st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · ${transport}`:state.error?`ATTENTION · ${state.error} · ${retention}`:`${provider} · ${transport} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;st.title=state.error||"";}}
+    }const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=state.mode==="hybrid"?(ext.active?"NEW LISTING · LIGNE + BOUGIES":"MARKET · LIGNE + BOUGIES"):ext.active?(candleModeActive()?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const shownInstrument=activeInstrument(),shownBar=activeBar(),metaProvider=ext.active?String(ext.providerLabel||ext.provider||"EXTERNAL"):String(state.source||"Market public candles").replace(/ public candles$/i,""),hasValidSeries=state.rows.length>0&&!!state.loadedInstrument,isUnavailable=state.errorCode==="MARKET_INSTRUMENT_UNAVAILABLE";if(meta){meta.textContent=isUnavailable?`${selectedSymbol()} · ${shownBar} · 0 bougie · NON DISPONIBLE SUR SOURCES BOUGIES`:state.error&&!hasValidSeries?`${shownInstrument} · ${shownBar} · 0 bougie · ${state.errorCode||"ERREUR"}`:`${shownInstrument} · ${shownBar} · ${view.count} visibles / ${state.rows.length} chargées · ${metaProvider}`;meta.title=state.error||"";}const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"Market public candles").replace(/ public candles$/i,""),transport=ext.active?"EXTERNAL PROVIDER":transportTruth().label,retention=hasValidSeries?`dernière série valide conservée ${shownInstrument} · ${shownBar}`:"aucune série valide chargée";st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · ${transport}`:state.error?`ATTENTION · ${state.error} · ${retention}`:`${provider} · ${transport} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;
+    if(state.mode==="candles"&&!state.loading&&!state.error){const coverage=periodCoverage();if(coverage)st.textContent+=" · "+coverage;}
+    st.title=state.error||"";}}
   function visibleRows(){
     if(!state.rows.length)return [];
-    const count=Math.max(20,Math.min(view.count||72,state.rows.length));
+    const count=Math.max(1,Math.min(view.count||72,state.rows.length));
     const maxStart=Math.max(0,state.rows.length-count);
     view.start=Math.max(0,Math.min(view.start,maxStart));
     return state.rows.slice(view.start,view.start+count);
   }
   function resetView(redraw=true){
-    view.count=state.archivePeriod==="1an"?state.rows.length:Math.min(72,Math.max(20,state.rows.length||72));
-    view.start=Math.max(0,state.rows.length-view.count);
-    view.dragging=false;
+    applyPeriodViewport();
     const canvas=document.querySelector(`#${ROOT} canvas`);
     if(canvas)canvas.style.cursor="crosshair";
     if(redraw)draw();
@@ -726,9 +765,9 @@
     const rect=canvas.getBoundingClientRect();
     const px=e.clientX-rect.left;
     const ratio=g?Math.max(0,Math.min(1,(px-g.pad.l)/Math.max(1,g.plotW))):.5;
-    const oldCount=Math.max(20,Math.min(view.count,state.rows.length));
+    const oldCount=Math.max(1,Math.min(view.count,state.rows.length));
     const step=Math.max(4,Math.round(oldCount*.12));
-    const newCount=Math.max(20,Math.min(state.rows.length,oldCount+(e.deltaY>0?step:-step)));
+    const newCount=Math.max(1,Math.min(state.rows.length,oldCount+(e.deltaY>0?step:-step)));
     const anchor=view.start+Math.round(ratio*(oldCount-1));
     view.count=newCount;
     view.start=Math.round(anchor-ratio*(newCount-1));
@@ -919,7 +958,9 @@
     if(state.mode!=="candles")return;
     const requested=btcAnnualRequested();
     if(requested!==!!state.requestedArchivePeriod)void load({reason:"period-changed"});
-    else syncControls();
+    else if(appliedPeriodDays!==selectedPeriodDays()){
+      resetView(false);renderState();draw();
+    }else syncControls();
   }
   function handleCanonicalSelectionChanged(event){
     const nextSymbol=normalizeSelectedAsset(event?.detail?.symbol||selectedSymbol());
