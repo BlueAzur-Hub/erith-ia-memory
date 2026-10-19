@@ -94,3 +94,25 @@ test("Radar does not mislabel missing public Spot rules as rejected trades",()=>
  assert.match(view,/NATIVE_EXIT_FILTERS_MISSING/);
  assert.doesNotMatch(view,/tailles théoriques admissibles sous frais BASE/);
 });
+
+test("existing Radar panel summarizes independent OKX public Spot rules without promising trades",()=>{
+ const view=require("../public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js");
+ const rows=Array.from({length:20},(_,i)=>({symbol:"TOK"+i,okx_spot:{
+   venue:"OKX",quote:"USDT",pair:null,pair_observed:false,native_rules_verified:false,
+   rules:null,contract_identity_proven:false,real_orders_enabled:false}}));
+ rows[0].okx_spot={...rows[0].okx_spot,pair:"TOK0-USDT",pair_observed:true,
+   native_rules_verified:true,rules:{source:"OKX_PUBLIC_SPOT_INSTRUMENT",
+     min_sz:"10",lot_sz:"0.01",tick_sz:"0.00001"}};
+ rows[1].okx_spot={...rows[1].okx_spot,pair:"TOK1-USDT",pair_observed:true,
+   native_rules_verified:false};
+ const report={schema:"erith.radar.spot-qualification.v1",
+   venues:{OKX:{available:true}},candidates:rows};
+ const summary=view.okxSpotSummary(report);
+ assert.match(summary,/2 paires candidates/);
+ assert.match(summary,/1 règles publiques/);
+ assert.match(summary,/Identité CoinGecko, accès au compte, frais réels et ordre non certifiés/);
+ assert.match(view.okxSpotSummary({...report,venues:{OKX:{available:false}}}),/en attente/);
+ assert.match(view.okxSpotSummary({...report,candidates:rows.map(x=>({symbol:x.symbol}))}),/en attente/);
+ rows[0].okx_spot.rules.tick_sz="NaN";
+ assert.match(view.okxSpotSummary(report),/0 règles publiques/);
+});
