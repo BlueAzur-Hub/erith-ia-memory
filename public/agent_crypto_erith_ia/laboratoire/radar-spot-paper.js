@@ -55,6 +55,27 @@ function validatedIdentity(data){
    throw Error("preuve contractuelle non vérifiable");
  return data;
 }
+async function shadowStatus(){
+ const target=document.getElementById("radar-shadow-status");if(!target)return;
+ try{
+   const res=await fetch("../data/crypto/radar-opportunities/spot-paper-forward.json",{cache:"no-store"});
+   if(!res.ok)throw Error("journal non encore publié");
+   const data=await res.json();
+   if(data?.schema!=="erith.radar.spot-paper-forward-shadow.v1"||
+      data.orders_enabled!==false||data.real_orders!==0||data.paper_fills!==0||
+      data.execution_proven!==false||!Array.isArray(data.positions)||
+      !Array.isArray(data.closures)||data.positions.length>4||
+      data.positions.some(x=>x.status!=="HYPOTHETICAL_NO_FILL"||x.executed_order!==false)||
+      data.closures.some(x=>x.status!=="HYPOTHETICAL_CLOSED_NO_FILL"||
+                           x.realized_profit_usdt!==null||x.executed_order!==false))
+     throw Error("journal PAPER non conforme");
+   text(target,"PAPER prospectif (citations de carnet uniquement) : "+
+     data.positions.length+" études théoriques ouvertes · "+
+     data.closures.length+" sorties théoriques après ≥48 h. "+
+     "Aucun ordre ni remplissage réel ou simulé. Frais et glissement supposés.");
+ }catch(e){text(target,"PAPER prospectif : "+String(e.message||e)+
+   " · aucune position ni aucun gain affirmé.");}
+}
 async function identityStatus(){
  const target=document.getElementById("radar-contract-status");
  if(!target)return;
@@ -81,8 +102,9 @@ async function load(){
    if(!response.ok)throw Error("Archive indisponible (HTTP "+response.status+")");
    paint(await response.json(),document);
    await identityStatus();
+   await shadowStatus();
  }catch(e){text(s,"Rapprochement indisponible : "+String(e.message||e)+
-   ". Aucun résultat PAPER n'est supposé.");await identityStatus();}
+   ". Aucun résultat PAPER n'est supposé.");await identityStatus();await shadowStatus();}
 }
 if(typeof module==="object"&&module.exports)module.exports={valid,paint};
 if(typeof document!=="undefined"){
