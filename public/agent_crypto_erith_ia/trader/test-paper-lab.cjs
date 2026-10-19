@@ -107,3 +107,73 @@ assert(view.includes('captures.set(c.sourceIdentity,c)'));
 assert(view.includes('positions.set(c.sourceIdentity'));
 assert(view.includes('automaticPositions.set(c.sourceIdentity'));
 assert(!view.includes('fetch(')&&!view.includes('setInterval(')&&!view.includes('localStorage.'));
+
+const histNow=Date.UTC(2025,2,12,12,0);
+const historicRows=Array.from({length:288},(_,i)=>[
+  histNow-287*300000+i*300000,100*(1+i*0.001)]);
+const historyInput={asset:'SOL',coinId:'solana',instrument:'SOL-USD',provider:'coingecko',
+  currency:'USD',source:'CoinGecko market_chart USD · direct',series:historicRows};
+const historic=core.historicalStudy(historyInput,costs,histNow);
+assert.equal(historic.ok,true,"historical price windows can be evaluated immediately");
+assert(historic.windows>200);
+assert.equal(historic.retrospective,true);
+assert.equal(historic.predictive,false);
+assert.equal(historic.overlapping,true);
+assert.equal(historic.independentTrades,true);
+assert.equal(historic.realOrders,false);
+assert(historic.bestProfit>=historic.medianProfit);
+assert(historic.medianProfit>=historic.worstProfit);
+assert.equal(core.historicalStudy({...historyInput,series:historicRows.map(([t])=>[t,100])},
+  costs,histNow).profitable,0,"flat market always loses to positive assumed fees");
+assert.equal(core.historicalStudy(historyInput,costs,histNow+20*60000).ok,false,
+  "stale market data cannot be studied as current");
+assert.equal(core.historicalStudy({...historyInput,series:historicRows.slice(0,10)},
+  costs,histNow).ok,false,"insufficient historical source refused");
+assert(view.includes('Tester maintenant (historique 1 h)'));
+assert(view.includes('Suivre une opération PAPER'));
+assert(view.includes('data-lab-follow'));
+assert(view.includes('watchTick()'));
+assert(view.includes('globalThis.addEventListener(event,onChartUpdate'));
+assert(view.includes('["study",studyNow]'));
+assert(!view.includes('setTimeout(')&&!view.includes('setInterval(')&&
+  !view.includes('localStorage.')&&!view.includes('fetch('),
+  "PAPER follows the existing chart owner only, without timers, storage or fetch");
+
+// Exercise the real watch code with a synthetic, validated two-snapshot market.
+const vm=require('node:vm');
+const mockFields=new Map();
+for(const [k,v] of Object.entries({capital:"5",entryFeePct:"0,2",exitFeePct:"0,2",
+   spreadPct:"0,1",slippagePct:"0,1"}))mockFields.set(k,{value:v});
+for(const k of ['status','follow','observations','result','open','journal'])
+  mockFields.set(k,{textContent:''});
+const fakePanel={querySelector:selector=>mockFields.get(selector.replace(
+  /^\[data-lab-(.+)\]$/,'$1'))||null};
+const mockDoc={readyState:'loading',getElementById:id=>id==='traderPaperLab'?fakePanel:null,
+  addEventListener:()=>{}};
+let latest=Date.now()-13*60000;
+const freshSeries=end=>Array.from({length:50},(_,i)=>[
+  end-(49-i)*60000,100*(1+(i-49)*.0004)
+]);
+const mockState={dataBroker:{chart:{status:'ready',coinId:'solana',period:1,
+  contextKey:'single:solana:1:USD',result:{currency:'USD',
+    source:'CoinGecko market_chart USD · direct',series:freshSeries(latest)}}}};
+const environment={document:mockDoc,state:mockState,
+ getSelectedCoin:()=>({id:'solana',symbol:'SOL'}),
+ AgentCryptoPaperLabCore:core,Date,Number,Map,Set,Object,String,Array,Math};
+environment.globalThis=environment;
+vm.runInNewContext(view,environment,{filename:'trader-paper-lab-view.js'});
+const lab=environment.AgentCryptoTraderPaperLab;
+assert(lab,"PAPER lab exposed for tests");
+lab.begin();
+assert.equal(lab.snapshot().followed.join(','),'SOL');
+assert.equal(lab.watchTick(),null,"no newer source: must not invent a result");
+latest+=10*60000;
+mockState.dataBroker.chart.result.series=freshSeries(latest);
+const forward=lab.watchTick();
+assert.equal(forward.ok,true,"newer qualified source auto-evaluates");
+assert.equal(forward.asset,'SOL');
+assert.equal(forward.actualExecution,false);
+assert.equal(lab.snapshot().followed.length,0,"watch closes exactly once");
+assert.equal(lab.watchTick(),null,"same quote cannot close twice");
+assert.match(mockFields.get('follow').textContent,/TERMINÉ/);
+console.log('PAPER immediate history and one-click prospective watch PASS');
