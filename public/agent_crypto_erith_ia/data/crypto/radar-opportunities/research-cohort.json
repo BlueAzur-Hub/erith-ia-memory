@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-10-19T20:05:29Z",
+  "source_qualification_at_utc": "2026-10-19T21:31:07Z",
   "source_observation_date_utc": "2026-10-19",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -22,33 +22,6 @@
   "note": "Recherche, pas classement d'achat. Prix/volume agrégés en USD, Spot en USDT; données datées. Identité de contrat non certifiée. Pas de rendement inventé.",
   "candidates": [
     {
-      "coin_id": "amp-token",
-      "symbol": "AMP",
-      "name": "Amp",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 309,
-      "change24h_pct_at_snapshot": 20.38147,
-      "change7d_pct_at_snapshot": 42.1098,
-      "volume24h_aggregate_usd": 56297512,
-      "spot": {
-        "venue": "Binance",
-        "pair": "AMPUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 12.41465,
-        "roundtrip_cost_pct_assumed": 0.32372
-      },
-      "detections_archived": 2,
-      "j1_observed": 1,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
       "coin_id": "arbitrum",
       "symbol": "ARB",
       "name": "Arbitrum",
@@ -62,8 +35,8 @@
         "venue": "Binance",
         "pair": "ARBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.18807,
-        "roundtrip_cost_pct_assumed": 0.30078
+        "spread_bps_at_snapshot": 5.06714,
+        "roundtrip_cost_pct_assumed": 0.25046
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -89,8 +62,8 @@
         "venue": "Bitget",
         "pair": "DGAIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.0107,
-        "roundtrip_cost_pct_assumed": 0.22349
+        "spread_bps_at_snapshot": 1.12392,
+        "roundtrip_cost_pct_assumed": 0.21596
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -115,8 +88,8 @@
         "venue": "Binance",
         "pair": "GTCUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.02015,
-        "roundtrip_cost_pct_assumed": 0.29508
+        "spread_bps_at_snapshot": 11.18256,
+        "roundtrip_cost_pct_assumed": 0.35823
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -142,8 +115,8 @@
         "venue": "Binance",
         "pair": "INTCBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 1.08525,
-        "roundtrip_cost_pct_assumed": 0.21073
+        "spread_bps_at_snapshot": 1.08149,
+        "roundtrip_cost_pct_assumed": 0.22049
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -169,8 +142,8 @@
         "venue": "Binance",
         "pair": "MARSCOINUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.96176,
-        "roundtrip_cost_pct_assumed": 0.32917
+        "spread_bps_at_snapshot": 12.84522,
+        "roundtrip_cost_pct_assumed": 0.32801
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -178,6 +151,33 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "quack-ai",
+      "symbol": "Q",
+      "name": "Quack AI",
+      "group": "primary_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 101,
+      "change24h_pct_at_snapshot": 26.42471,
+      "change7d_pct_at_snapshot": 288.2984,
+      "volume24h_aggregate_usd": 92557546,
+      "spot": {
+        "venue": "Bitget",
+        "pair": "QUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 9.56494,
+        "roundtrip_cost_pct_assumed": 0.30862
+      },
+      "detections_archived": 3,
+      "j1_observed": 2,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "extreme_24h_move"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -196,8 +196,8 @@
         "venue": "Binance",
         "pair": "RAYUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 2.66631,
-        "roundtrip_cost_pct_assumed": 0.2298
+        "spread_bps_at_snapshot": 3.73323,
+        "roundtrip_cost_pct_assumed": 0.23715
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -223,8 +223,8 @@
         "venue": "Binance",
         "pair": "SNDKBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.21898,
-        "roundtrip_cost_pct_assumed": 0.20336
+        "spread_bps_at_snapshot": 0.07253,
+        "roundtrip_cost_pct_assumed": 0.20062
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -250,8 +250,8 @@
         "venue": "Binance",
         "pair": "SOXLBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 2.02306,
-        "roundtrip_cost_pct_assumed": 0.22009
+        "spread_bps_at_snapshot": 1.00346,
+        "roundtrip_cost_pct_assumed": 0.20991
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -277,14 +277,41 @@
         "venue": "OKX",
         "pair": "VVV-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 4.10762,
-        "roundtrip_cost_pct_assumed": 0.2871
+        "spread_bps_at_snapshot": 8.21693,
+        "roundtrip_cost_pct_assumed": 0.30749
       },
       "detections_archived": 1,
       "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "amp-token",
+      "symbol": "AMP",
+      "name": "Amp",
+      "group": "additional_spot_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 309,
+      "change24h_pct_at_snapshot": 20.38147,
+      "change7d_pct_at_snapshot": 42.1098,
+      "volume24h_aggregate_usd": 56297512,
+      "spot": {
+        "venue": "Binance",
+        "pair": "AMPUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 12.6183,
+        "roundtrip_cost_pct_assumed": 0.4787
+      },
+      "detections_archived": 2,
+      "j1_observed": 1,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -303,8 +330,8 @@
         "venue": "Bitget",
         "pair": "BRUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 25.36367,
-        "roundtrip_cost_pct_assumed": 0.54828
+        "spread_bps_at_snapshot": 27.339,
+        "roundtrip_cost_pct_assumed": 0.4893
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -329,8 +356,8 @@
         "venue": "Bitget",
         "pair": "NYMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 32.38342,
-        "roundtrip_cost_pct_assumed": 0.61309
+        "spread_bps_at_snapshot": 48.25479,
+        "roundtrip_cost_pct_assumed": 1.70682
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -356,8 +383,8 @@
         "venue": "Binance",
         "pair": "OSMOUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 18.74414,
-        "roundtrip_cost_pct_assumed": 0.52378
+        "spread_bps_at_snapshot": 19.66568,
+        "roundtrip_cost_pct_assumed": 0.49819
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -398,33 +425,6 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "quack-ai",
-      "symbol": "Q",
-      "name": "Quack AI",
-      "group": "additional_spot_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 101,
-      "change24h_pct_at_snapshot": 26.42471,
-      "change7d_pct_at_snapshot": 288.2984,
-      "volume24h_aggregate_usd": 92557546,
-      "spot": {
-        "venue": "Bitget",
-        "pair": "QUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 13.92708,
-        "roundtrip_cost_pct_assumed": 0.34002
-      },
-      "detections_archived": 3,
-      "j1_observed": 2,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "extreme_24h_move"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
       "coin_id": "solv-protocol",
       "symbol": "SOLV",
       "name": "Solv Protocol",
@@ -438,8 +438,8 @@
         "venue": "Binance",
         "pair": "SOLVUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 22.85714,
-        "roundtrip_cost_pct_assumed": 0.42775
+        "spread_bps_at_snapshot": 23.44666,
+        "roundtrip_cost_pct_assumed": 0.43362
       },
       "detections_archived": 1,
       "j1_observed": 0,
