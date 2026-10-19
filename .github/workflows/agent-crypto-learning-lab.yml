@@ -141,6 +141,17 @@ jobs:
               statement="\n  if (atlasTraderPassiveReportSurface()) return false;"
               assert after.count(statement)==16, "Trader gate count changed"
               after=after.replace(statement,"")
+          # Allow only the audited Market queue/HTTP timeout ordering change.
+          # This is NOT a blanket exemption from Administrator byte-for-byte protection.
+          queue_timer_before = "  const timer = setTimeout(() => controller.abort(), timeout);\n  const requestOptions = { ...options };\n"
+          queue_timer_after = "  let timer = null;\n  const requestOptions = { ...options };\n"
+          queue_fetch_before = "    if (networkKind) networkToken = await atlasAcquireNetwork(networkKind, externalSignal, networkWaitMs);\n    const response = await fetch(url, {\n"
+          queue_fetch_after = "    if (networkKind) networkToken = await atlasAcquireNetwork(networkKind, externalSignal, networkWaitMs);\n    // A queued source must receive its full HTTP timeout after acquiring the network permit.\n    timer = setTimeout(() => controller.abort(), timeout);\n    const response = await fetch(url, {\n"
+          if queue_timer_after in after and queue_fetch_after in after:
+              if queue_timer_before in expected and queue_fetch_before in expected:
+                  assert expected.count(queue_timer_before)==1 and expected.count(queue_fetch_before)==1
+                  expected=expected.replace(queue_timer_before,queue_timer_after,1)
+                  expected=expected.replace(queue_fetch_before,queue_fetch_after,1)
           assert after==expected, "Administrator core changed beyond exact Snapshot removal or audited Trader guard"
           PY
           python - <<'PY'
