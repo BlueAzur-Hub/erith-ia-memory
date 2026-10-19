@@ -85,3 +85,12 @@ test("prior Radar shadow records without new native filters stay historical, not
  assert.equal(audit(x).results[0].status,"NOT_CERTIFIED");
  assert.equal(audit(x).results[0].executable,false);
 });
+
+test("Radar does not mislabel missing public Spot rules as rejected trades",()=>{
+ const fs=require("node:fs"),path=require("node:path");
+ const file=path.join(__dirname,"../public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js");
+ const view=fs.readFileSync(file,"utf8");
+ assert.match(view,/Revente nette non évaluable/);
+ assert.match(view,/NATIVE_EXIT_FILTERS_MISSING/);
+ assert.doesNotMatch(view,/tailles théoriques admissibles sous frais BASE/);
+});
