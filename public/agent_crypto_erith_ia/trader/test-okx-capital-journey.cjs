@@ -84,3 +84,30 @@ test('USDC source not required to validate independent BTC and EUR ledger truth'
  assert.match(source,/matches\.length===1&&credits\.length===1&&debits\.length===1&&coreComplete/);
  assert.match(source,/complete:coreComplete,usdcEntries:usdc/);
 });
+
+test('closed CT can reconcile the USDC remainder without claiming global profit',()=>{
+ const input={...info,ct:null,usdc:14,ctAcquisition:{status:'unknown'},
+  ledger:{...info.ledger,btcChain:{...info.ledger.btcChain,
+    internal_transfer:{amount_btc:.0012,debit_at:new Date(now-10000).toISOString(),credit_at:new Date(now-9000).toISOString()}}},
+  ctClosed:{status:'compatible_movements',read_only:true,orders_enabled:false,
+    profit_proven:false,source_account:'trading_account',
+    outgoing_ct:9.75,acquisition_cost_usdc:55,incoming_usdc:4}};
+ const report=capitalJourneyReport(input,now);
+ assert.equal(report.status,'coherent');assert.equal(report.coherent_usdc,true);
+ const t=report.lines.join(' ');
+ assert.match(t,/Transfert interne Trading → Funding/);assert.match(t,/USDC → CT → USDC/);
+ assert.match(t,/65.*55.*4.*14/);assert.match(t,/NON PROUVÉS/);
+ assert.doesNotMatch(t,/profit global certifié|gain net certifié : oui/);
+});
+test('closed CT provenance remains partial when balance, classification or amount disagrees',()=>{
+ const base={...info,ct:null,usdc:14,ctAcquisition:{status:'unknown'},
+  ctClosed:{status:'compatible_movements',read_only:true,orders_enabled:false,
+    profit_proven:false,source_account:'trading_account',
+    outgoing_ct:9.75,acquisition_cost_usdc:55,incoming_usdc:4}};
+ const invalid=[{...base,usdc:18},
+  {...base,ctClosed:{...base.ctClosed,incoming_usdc:3}},
+  {...base,ctClosed:{...base.ctClosed,source_account:'funding_account'}},
+  {...base,ctClosed:{...base.ctClosed,profit_proven:true}},
+  {...base,ct:1},{...base,ctClosed:{...base.ctClosed,status:'unavailable'}}];
+ for(const item of invalid)assert.equal(capitalJourneyReport(item,now).coherent_usdc,false);
+});
