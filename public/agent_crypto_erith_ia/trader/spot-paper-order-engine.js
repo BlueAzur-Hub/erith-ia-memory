@@ -164,7 +164,7 @@ function auditRadarShadow(ledger,identity,qualification){
       bid%tick!==0n||ask%tick!==0n)
       return failAudit("QUOTE_OR_TICK_MISMATCH");
    const quantity=String(p.hypothetical_quantity);
-   if(!/^\\d{1,15}(?:\\.\\d{1,18})?$/.test(quantity))
+   if(!/^\d{1,15}(?:\.\d{1,18})?$/.test(quantity))
      return failAudit("PAPER_QUANTITY_INVALID");
    const parts=quantity.split("."),gross=d(parts[0]+"."+(parts[1]||"").padEnd(8,"0").slice(0,8));
    const lot=d(rules.lot_step),lotGross=gross/lot*lot;
