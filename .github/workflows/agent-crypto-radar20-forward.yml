@@ -6,8 +6,12 @@ on:
       - '.github/workflows/agent-crypto-radar20-forward.yml'
       - 'public/agent_crypto_erith_ia/tools/trader_radar20_forward.py'
       - 'public/agent_crypto_erith_ia/data/trader_flux/radar20_forward/experiment.json'
+  # Main UTC collection; a second daily attempt protects against a dropped
+  # GitHub Actions scheduled event. The collector resumes only verified
+  # closed days and publishes no duplicate observation when already current.
   schedule:
     - cron: '19 14 * * *'
+    - cron: '43 20 * * *'
   workflow_dispatch:
 permissions:
   contents: write
