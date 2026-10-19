@@ -398,7 +398,7 @@ test("Trader trajectory rendering stays in the existing Radar with exactly three
        "Détection "+evidence.lastMeasured.initial.first_seen_date_utc));
    }else assert.match(measure,/Pas de J/);
  }
- assert.match(note.textContent,/2026-10-17/);
+ assert(note.textContent.includes(data.source_archive_dates.at(-1)));
   assert.equal(rows.children.every(r=>r.children.every(c=>c.tagName!=="BUTTON")),true);
  }finally{globalThis.document=oldDoc;}
 });
