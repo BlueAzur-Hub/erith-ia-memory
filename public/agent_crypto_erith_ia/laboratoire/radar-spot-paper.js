@@ -55,6 +55,31 @@ function validatedIdentity(data){
    throw Error("preuve contractuelle non vérifiable");
  return data;
 }
+function okxSpotSummary(qualification){
+ const missing="OKX Spot/USDT : inventaire des règles natives en attente de collecte.";
+ if(qualification?.schema!=="erith.radar.spot-qualification.v1"||
+    qualification.venues?.OKX?.available!==true||
+    !Array.isArray(qualification.candidates)||
+    qualification.candidates.length!==20||
+    qualification.candidates.some(x=>!x||!x.okx_spot||
+       x.okx_spot.venue!=="OKX"||x.okx_spot.quote!=="USDT"||
+       x.okx_spot.contract_identity_proven!==false||
+       x.okx_spot.real_orders_enabled!==false))return missing;
+ const candidates=qualification.candidates.filter(x=>
+   x.okx_spot.pair_observed===true&&
+   x.okx_spot.pair===x.symbol+"-USDT");
+ const rules=candidates.filter(x=>{
+  const r=x.okx_spot.rules;
+  return x.okx_spot.native_rules_verified===true&&
+    r?.source==="OKX_PUBLIC_SPOT_INSTRUMENT"&&
+    ["min_sz","lot_sz","tick_sz"].every(k=>
+      typeof r[k]==="string"&&/^\d+(?:\.\d+)?$/.test(r[k])&&
+      Number.isFinite(Number(r[k]))&&Number(r[k])>0);
+ });
+ return "OKX Spot/USDT : "+candidates.length+" paires candidates observées · "+
+   rules.length+" règles publiques minSz/lotSz/tickSz vérifiées. "+
+   "Identité CoinGecko, accès au compte, frais réels et ordre non certifiés.";
+}
 async function shadowStatus(){
  const target=document.getElementById("radar-shadow-status");if(!target)return;
  try{
@@ -70,6 +95,7 @@ async function shadowStatus(){
                            x.realized_profit_usdt!==null||x.executed_order!==false))
      throw Error("journal PAPER non conforme");
    let note=" · Revente nette : non certifiée (règles Spot en attente).";
+   let okxInfo="OKX Spot/USDT : collecte indisponible.";
    try{
      const base="../data/crypto/radar-opportunities/";
      const [identityRes,qualificationRes]=await Promise.all([
@@ -77,6 +103,7 @@ async function shadowStatus(){
        fetch(base+"qualification-latest.json",{cache:"no-store"})]);
      if(!identityRes.ok||!qualificationRes.ok)throw Error("Sources de marché absentes");
      const [identity,qualification]=await Promise.all([identityRes.json(),qualificationRes.json()]);
+     okxInfo=okxSpotSummary(qualification);
      const audit=global.AgentCryptoSpotPaperOrders?.auditRadarShadow?.(data,identity,qualification);
      if(audit?.status==="READ_ONLY_AUDIT"){
        const unavailable=audit.results.filter(x=>x.status!=="HYPOTHETICAL_SIZE_OK");
@@ -97,7 +124,7 @@ async function shadowStatus(){
    text(target,"PAPER prospectif (citations de carnet uniquement) : "+
      data.positions.length+" études théoriques ouvertes · "+
      data.closures.length+" sorties théoriques après ≥48 h. "+
-     "Aucun ordre ni remplissage réel ou simulé. Frais et glissement supposés."+note);
+     "Aucun ordre ni remplissage réel ou simulé. Frais et glissement supposés."+note+"\n"+okxInfo);
  }catch(e){text(target,"PAPER prospectif : "+String(e.message||e)+
    " · aucune position ni aucun gain affirmé.");}
 }
@@ -131,7 +158,7 @@ async function load(){
  }catch(e){text(s,"Rapprochement indisponible : "+String(e.message||e)+
    ". Aucun résultat PAPER n'est supposé.");await identityStatus();await shadowStatus();}
 }
-if(typeof module==="object"&&module.exports)module.exports={valid,paint};
+if(typeof module==="object"&&module.exports)module.exports={valid,paint,okxSpotSummary};
 if(typeof document!=="undefined"){
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",load,{once:true});
  else void load();
