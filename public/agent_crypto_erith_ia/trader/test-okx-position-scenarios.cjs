@@ -104,6 +104,23 @@ test('BTC no stale account, stale price, future quote, missing holdings or zero 
    assert.equal(r.rows.length,0);
  }
 });
+test('BTC absent EUR quote is unavailable, never a JavaScript failure or a Bridge failure',()=>{
+  for(const missing of [null,undefined]){
+    const input={...btcInput,quote:missing};
+    const result=btcScenarioGrid(input,now);
+    assert.equal(result.status,'unavailable');
+    assert.equal(result.read_only,true);
+    assert.equal(result.currency,'EUR');
+    assert.deepEqual(result.rows,[]);
+    assert.match(result.reason,/Cotation publique BTC\/EUR indisponible/);
+    const report=btcPositionReport({...input,ledger:null},now);
+    assert.equal(report.status,'partial');
+    assert.equal(report.indicative_delta_eur,null);
+    assert.match(report.lines.join(' '),/Valorisation BTC\/EUR indisponible/);
+    assert.match(report.lines.join(' '),/Scénarios BTC indisponibles/);
+  }
+});
+
 test('BTC unproven fees never produce hypothetical net proceeds',()=>{
  const r=btcScenarioGrid(btcInput,now);
  assert.ok(r.rows.every(x=>!Object.hasOwn(x,'net_exit_eur')));
