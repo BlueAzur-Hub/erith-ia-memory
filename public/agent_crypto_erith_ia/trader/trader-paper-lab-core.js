@@ -7,11 +7,16 @@
 })(typeof globalThis!=="undefined"?globalThis:null,()=>{
 "use strict";
 const assets=Object.freeze(["BTC","CT"]);
+const spotSymbol=/^[A-Z0-9]{1,20}$/;
+const coingeckoId=/^[a-z0-9][a-z0-9-]{1,99}$/;
 const finite=n=>typeof n==="number"&&Number.isFinite(n);
 const range=(n,min,max)=>finite(n)&&n>=min&&n<=max;
 const reject=reason=>Object.freeze({ok:false,reason});
 function qualify(input,now=Date.now()){
-  if(!input||!assets.includes(input.asset))return reject("BTC ou CT uniquement");
+  const symbol=String(input?.asset||"");
+  const isMarketCoin=symbol!=="BTC"&&symbol!=="CT"&&spotSymbol.test(symbol);
+  if(!input||(symbol!=="BTC"&&symbol!=="CT"&&!isMarketCoin))
+    return reject("Symbole crypto absent ou invalide");
   if(input.currency!=="USD")return reject("Prix et devise USD non attestés");
   if(!Array.isArray(input.series)||input.series.length<21||input.series.length>2000)
     return reject("21 à 2000 points de source réelle nécessaires");
@@ -22,8 +27,13 @@ function qualify(input,now=Date.now()){
   const canonicalInstrument=String(input.instrument||"").toUpperCase().replace("/","-");
   if(input.asset==="CT" &&
      !(canonicalInstrument==="CT-USDT"&&input.provider==="okx"&&
-       /OKX.*CT[/\-]USDT/i.test(source)&&/USDT[/\-]USD.*CoinGecko/i.test(source)))
+       /OKX.*CT[/-]USDT/i.test(source)&&/USDT[/-]USD.*CoinGecko/i.test(source)))
     return reject("CT/USDT et conversion USDT/USD CoinGecko non démontrés");
+  const id=isMarketCoin?String(input.coinId||""):null;
+  if(isMarketCoin&&!(coingeckoId.test(id)&&input.provider==="coingecko"&&
+     canonicalInstrument===symbol+"-USD"&&/coingecko/i.test(source)&&
+     !/USDT|USDC|conversion|converti|proxy/i.test(source)))
+    return reject("Identité CoinGecko, paire directe USD ou fournisseur non vérifiés");
   let prev=0;
   for(const p of input.series){
     if(!Array.isArray(p)||p.length<2||!finite(p[0])||!finite(p[1])||p[0]<=prev||p[1]<=0)
@@ -33,10 +43,11 @@ function qualify(input,now=Date.now()){
   const age=now-prev;
   if(!finite(now)||age<0||age>15*60000)return reject("Cours différé ou horodatage non cohérent (15 min max)");
   const price=input.series[input.series.length-1][1];
-  return Object.freeze({ok:true,asset:input.asset,instrument:canonicalInstrument,
+  return Object.freeze({ok:true,asset:input.asset,coinId:id,instrument:canonicalInstrument,
     currency:"USD",provider:input.provider,source,points:input.series.length,
     lastAt:new Date(prev).toISOString(),capturedAt:new Date(now).toISOString(),
-    price,ageMs:age,sourceIdentity:input.provider+"|"+canonicalInstrument+"|USD"});
+    price,ageMs:age,sourceIdentity:input.provider+"|"+canonicalInstrument+"|USD"+
+      (isMarketCoin?"|"+id:"")});
 }
 function assess(config){
   const c=config||{};

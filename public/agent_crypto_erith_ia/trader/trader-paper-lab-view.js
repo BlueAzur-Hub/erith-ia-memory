@@ -21,16 +21,20 @@ function source(){
       currency:row.currency,source:row.source,series:row.series}};
   }
   const coin=safe(()=>globalThis.getSelectedCoin?.());
-  if(coin?.id!=="bitcoin"||String(coin.symbol||"").toUpperCase()!=="BTC")
-    return {reason:"Sélectionne BTC Solo 24h USD, ou CT dans Nouveaux listings."};
+  const coinId=String(coin?.id||"");
+  const symbol=String(coin?.symbol||"").toUpperCase();
+  if(!/^[a-z0-9][a-z0-9-]{1,99}$/.test(coinId)||!/^[A-Z0-9]{1,20}$/.test(symbol)||
+     symbol==="CT"||(symbol==="BTC"&&coinId!=="bitcoin"))
+    return {reason:"Sélectionne un actif Market Core en Solo 24h USD, ou CT dans Nouveaux listings."};
   const ch=safe(()=>typeof state!=="undefined"?state?.dataBroker?.chart:null);
-  if(ch?.status!=="ready"||ch.coinId!=="bitcoin"||ch.period!==1||
-     ch.contextKey!=="single:bitcoin:1:USD"||ch.result?.blocked)
-    return {reason:"BTC : série 24h USD du graphique non prête."};
+  if(ch?.status!=="ready"||ch.coinId!==coinId||ch.period!==1||
+     ch.contextKey!=="single:"+coinId+":1:USD"||ch.result?.blocked)
+    return {reason:symbol+" : graphique Solo 24h USD non prêt ou sélection différente."};
   const r=ch.result;
-  if(r.currency!=="USD"||!/coingecko/i.test(String(r.source||"")+" "+String(r.sourceFamily||"")))
-    return {reason:"BTC : série USD CoinGecko sans provenance suffisante."};
-  return {input:{asset:"BTC",instrument:"BTC-USD",provider:"coingecko",
+  if(r.currency!=="USD"||!/coingecko/i.test(String(r.source||"")+" "+String(r.sourceFamily||""))||
+     (r.coinId!==undefined&&r.coinId!==coinId))
+    return {reason:symbol+" : série USD CoinGecko directe sans provenance suffisante."};
+  return {input:{asset:symbol,coinId,instrument:symbol+"-USD",provider:"coingecko",
     currency:"USD",source:r.source,series:r.series}};
 }
 function assumptions(){
@@ -40,12 +44,10 @@ function assumptions(){
   return out;
 }
 function refresh(){
-  show("observations",["BTC","CT"].map(a=>{
-    const c=captures.get(a);
-    return a+": "+(c?fmt(c.price,a==="BTC"?2:8)+" USD · "+
-      c.points+" points · "+c.source+" · "+new Date(c.lastAt).toLocaleString("fr-FR")
-      :"aucune observation");
-  }).join("\n"));
+  show("observations",[...captures.values()].map(c=>
+    c.asset+(c.coinId?" ("+c.coinId+")":"")+": "+fmt(c.price,c.asset==="BTC"?2:8)+
+    " USD · "+c.points+" points · "+c.source+" · "+new Date(c.lastAt).toLocaleString("fr-FR")
+  ).join("\n")||"Aucune observation qualifiée");
   const manual=positions.size?[...positions.values()].map(p=>p.entry.asset+
     " · "+fmt(p.entry.price,8)+" USD · "+p.entry.lastAt):[];
   const auto=[...automaticPositions.values()].map(p=>p.entry.asset+
@@ -59,7 +61,7 @@ function take(){
   if(!s.input){show("status",s.reason);return null;}
   const c=core.qualify(s.input);
   if(!c.ok){show("status",c.reason);return null;}
-  captures.set(c.asset,c);
+  captures.set(c.sourceIdentity,c);
   show("status","Observation "+c.asset+" qualifiée · "+c.points+
     " points · "+c.source+" · "+Math.round(c.ageMs/1000)+" s de décalage.");
   refresh();return c;
@@ -86,19 +88,20 @@ function begin(){
   const c=take();if(!c)return;
   const p=core.assess({...assumptions(),price:c.price});
   if(!p.ok){show("status",p.reason);return;}
-  if(positions.has(c.asset)){show("status","Expérience PAPER "+c.asset+" déjà ouverte.");return;}
-  positions.set(c.asset,{entry:c,config:assumptions()});
+  if(positions.has(c.sourceIdentity)){show("status","Expérience PAPER "+c.asset+" déjà ouverte.");return;}
+  if(positions.size>=12){show("status","12 expériences manuelles simultanées maximum ; termine une position avant d’en ouvrir une autre.");return;}
+  positions.set(c.sourceIdentity,{entry:c,config:assumptions()});
   add("OUVERTURE_PAPER",c.asset,{entryAt:c.lastAt,source:c.source});
   show("status","Départ PAPER "+c.asset+" enregistré. Comparer après une nouvelle cotation.");
   refresh();
 }
 function finish(){
   const c=take();if(!c)return;
-  const p=positions.get(c.asset);
+  const p=positions.get(c.sourceIdentity);
   if(!p){show("status","Aucune entrée PAPER ouverte pour "+c.asset);return;}
   const r=core.prospective(p.entry,c,p.config);
   if(!r.ok){show("status",r.reason);return;}
-  positions.delete(c.asset);
+  positions.delete(c.sourceIdentity);
   add("EVALUATION_PAPER",c.asset,{result:r});
   show("result","Évaluation PAPER "+c.asset+" · cours "+fmt(r.movePct,3)+" %"+
     " · résultat "+(r.paperProfit>0?"+":"")+fmt(r.paperProfit,6)+
@@ -114,26 +117,26 @@ function automaticTick(){
   if(!v.input)return null;
   const c=core.qualify(v.input);
   if(!c.ok)return null;
-  const at=Date.parse(c.lastAt),old=automaticLastAt.get(c.asset)||0;
+  const at=Date.parse(c.lastAt),old=automaticLastAt.get(c.sourceIdentity)||0;
   if(at<=old||!Number.isFinite(at))return null;
   const plan=core.assess({...assumptions(),price:c.price});
   if(!plan.ok){show("status",plan.reason);return null;}
-  const running=automaticPositions.get(c.asset);
+  const running=automaticPositions.get(c.sourceIdentity);
   if(running){
     if(at-Date.parse(running.entry.lastAt)<AUTO_GAP_MS)return null;
     const value=core.prospective(running.entry,c,running.config);
     if(!value.ok){show("status","Auto PAPER : "+value.reason);return null;}
-    automaticPositions.delete(c.asset);
-    automaticLastAt.set(c.asset,at);
+    automaticPositions.delete(c.sourceIdentity);
+    automaticLastAt.set(c.sourceIdentity,at);
     automaticCount++;
     add("AUTO_EVALUATION_PAPER",c.asset,{result:value});
     show("result","AUTO PAPER "+c.asset+" · variation "+fmt(value.movePct,3)+
       " % · "+(value.paperProfit>0?"+":"")+fmt(value.paperProfit,6)+
       " USD fictifs sur "+fmt(value.capital,2)+" USD. Pas d'ordre réel.");
   }else{
-    automaticLastAt.set(c.asset,at);
+    automaticLastAt.set(c.sourceIdentity,at);
     automaticCount++;
-    automaticPositions.set(c.asset,{entry:c,config:assumptions()});
+    automaticPositions.set(c.sourceIdentity,{entry:c,config:assumptions()});
     add("AUTO_DEPART_PAPER",c.asset,{entryAt:c.lastAt,source:c.source});
     show("result","AUTO PAPER "+c.asset+" · source qualifiée "+c.source+
       "\nCours "+fmt(c.price,8)+" USD · coût simulé ; point mort +"+
@@ -141,7 +144,7 @@ function automaticTick(){
       plan.scenarios.map(r=>fmt(r.profit,5)+" USD").join(" / ")+
       "\nNouvelle observation nécessaire pour mesurer le résultat.");
   }
-  captures.set(c.asset,c);
+  captures.set(c.sourceIdentity,c);
   show("status","Auto PAPER actif · "+automaticCount+"/"+AUTO_LIMIT+
     " observations · "+c.asset+" · "+new Date(at).toLocaleString("fr-FR")+
     " · uniquement lors des mises à jour réelles du graphique.");
@@ -154,7 +157,7 @@ function setAutomatic(enabled){
   if(btn){btn.textContent=automatic?"Arrêter Auto PAPER":"Démarrer Auto PAPER";
     btn.setAttribute("aria-pressed",String(automatic));}
   show("status",automatic?
-    "Auto PAPER actif uniquement dans cet onglet : attend les nouveaux cours BTC/CT déjà chargés.":
+    "Auto PAPER actif dans cet onglet : attend les nouvelles bougies qualifiées de l’actif sélectionné.":
     "Auto PAPER arrêté, journal conservé seulement dans cet onglet.");
   if(automatic)automaticTick();
 }
@@ -172,8 +175,8 @@ function mount(){
   document.head.appendChild(style);
   const node=document.createElement("details");node.id=ID;
   node.innerHTML=[
-    '<summary>LABORATOIRE PAPER · BTC / CT · calculs après coûts · aucun ordre</summary>',
-    '<div class="pl-body"><p>Choisir BTC Solo 24h USD ou CT dans Nouveaux listings. Les deux cas sont capturés séparément depuis les propriétaires graphiques existants.</p>',
+    '<summary>LABORATOIRE PAPER · Marché USD / CT · calculs après coûts · aucun ordre</summary>',
+    '<div class="pl-body"><p>Choisir un actif du Market Core en Solo 24h USD (BTC, ETH, SOL et autres dont la série directe CoinGecko est vérifiée), ou CT dans Nouveaux listings. Une seule sélection active à la fois. Captures et positions fictives restent séparées par fournisseur, paire et identité CoinGecko.</p>',
     '<div class="pl-fields">',
     '<label>Capital USD fictif<input data-lab-capital value="5" inputmode="decimal"></label>',
     '<label>Frais achat (%)<input data-lab-entryFeePct value="0,2" inputmode="decimal"></label>',
@@ -188,11 +191,11 @@ function mount(){
     '<button type="button" data-lab-auto aria-pressed="false">Démarrer Auto PAPER</button>',
     '<button type="button" data-lab-copy>Copier le journal</button>',
     '<p role="status" data-lab-status>En attente d’une capture volontaire.</p>',
-    '<h4>Observations BTC / CT</h4><pre data-lab-observations></pre>',
+    '<h4>Observations qualifiées</h4><pre data-lab-observations></pre>',
     '<h4>Résultat</h4><pre data-lab-result>Pas de valeur inventée.</pre>',
     '<h4>Observations PAPER ouvertes</h4><pre data-lab-open></pre>',
     '<h4>Journal prospectif · session seulement</h4><pre data-lab-journal></pre>',
-    '<p>Auto PAPER (facultatif) : écoute uniquement les nouveaux événements du graphique BTC ou CT déjà sélectionné, sans relancer les marchés. Mesure prospective après ≥5 min de nouvelle donnée, avec un maximum de 20 observations ; s’arrête lors du rechargement ou de la fermeture. Les deux actifs ne sont pas suivis simultanément sans séries réellement publiées. Aucun fetch nouveau, aucun ordre OKX, aucune sauvegarde automatique, aucune promotion des gates Strategy A.</p></div>'
+    '<p>Auto PAPER (facultatif) : écoute uniquement les nouveaux événements du graphique déjà sélectionné, sans relancer les marchés. Mesure prospective après ≥5 min de nouvelle donnée, maximum 20 observations ; s’arrête au rechargement ou à la fermeture. Chaque identité conserve sa propre expérience ; pas de suivi parallèle sans nouvelles bougies publiées. Aucun fetch nouveau, aucun ordre OKX, aucune sauvegarde automatique, aucune promotion des gates Strategy A.</p></div>'
   ].join("");
   zone.appendChild(node);
   for(const [key,fn] of [["capture",take],["simulate",simulate],["begin",begin],["finish",finish]])
@@ -212,8 +215,8 @@ function mount(){
   refresh();return true;
 }
 globalThis.AgentCryptoTraderPaperLab=Object.freeze({mount,take,simulate,begin,finish,source,
-  snapshot:()=>({captured:[...captures.keys()],open:[...positions.keys()],
-    autoOpen:[...automaticPositions.keys()],autoActive:automatic,
+  snapshot:()=>({captured:[...captures.values()].map(x=>x.asset),open:[...positions.values()].map(x=>x.entry.asset),
+    autoOpen:[...automaticPositions.values()].map(x=>x.entry.asset),autoActive:automatic,
     autoCount:automaticCount,autoLimit:AUTO_LIMIT,
     journalCount:journal.length,realOrders:false,network:false,storage:false}),
   realOrders:false,network:false,storage:false,bridge:false,readOnly:true});

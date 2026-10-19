@@ -79,3 +79,31 @@ assert(!view.includes('/okx/order'));
 assert(!view.includes('/trade/order'));
 assert.equal(core.storage,false);assert.equal(core.fetch,false);
 console.log('BTC/CT PAPER core: source, fees, breakeven, prospective validation, isolated Trader PASS');
+
+const ethRaw={asset:'ETH',coinId:'ethereum',instrument:'ETH-USD',provider:'coingecko',
+  currency:'USD',source:'CoinGecko market_chart USD · direct',series:rows(2400)};
+const eth=core.qualify(ethRaw,now);
+assert.equal(eth.ok,true,"ETH direct USD qualified");
+assert.equal(eth.coinId,'ethereum');
+assert.equal(eth.sourceIdentity,'coingecko|ETH-USD|USD|ethereum');
+const sol=core.qualify({...ethRaw,asset:'SOL',coinId:'solana',instrument:'SOL-USD'},now);
+assert.equal(sol.ok,true,"SOL direct USD qualified");
+for(const modified of [
+  {asset:'ETH',coinId:''},{coinId:'new-listing:okx:eth'},{coinId:'ethereum',instrument:'BTC-USD'},
+  {provider:'okx'},{source:'OKX ETH-USDT · CoinGecko conversion USDT/USD'},
+  {currency:'USDT'},{asset:'CT',coinId:'concrete',instrument:'CT-USD'},
+  {asset:'BTC',coinId:'ethereum',instrument:'ETH-USD'}
+])assert.equal(core.qualify({...ethRaw,...modified},now).ok,false,
+  "ambiguous market identity or conversion rejected: "+JSON.stringify(modified));
+const ethSameSymbolOtherId=core.qualify({...ethRaw,coinId:'ethereum-other'},now);
+assert.equal(ethSameSymbolOtherId.ok,true);
+assert.equal(core.prospective(eth,ethSameSymbolOtherId,costs).ok,false,
+  "different CoinGecko identity cannot close another asset position");
+assert.equal(core.prospective(eth,sol,costs).ok,false);
+assert.equal(core.qualify({...ethRaw,series:rows(2400,now-16*60000)},now).ok,false);
+assert(view.includes('ch.coinId!==coinId'));
+assert(view.includes('ch.contextKey!=="single:"+coinId+":1:USD"'));
+assert(view.includes('captures.set(c.sourceIdentity,c)'));
+assert(view.includes('positions.set(c.sourceIdentity'));
+assert(view.includes('automaticPositions.set(c.sourceIdentity'));
+assert(!view.includes('fetch(')&&!view.includes('setInterval(')&&!view.includes('localStorage.'));
