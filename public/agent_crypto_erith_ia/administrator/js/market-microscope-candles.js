@@ -63,6 +63,46 @@
   const initialBar=readBarPreference();
   const state={mode:"native",bar:initialBar,requestedBar:initialBar,loadedBar:null,instrument:"BTC-EUR",requestedInstrument:"BTC-EUR",loadedInstrument:null,rows:[],loading:false,error:null,errorCode:null,lastLoadedAt:null,source:"Market resolver",indicators:readIndicatorState(),lastLevels:null};
   const view={start:0,count:72,dragging:false,dragX:0,dragStart:0};
+  // Certified 1-year candles belong ONLY to BTC's explicit "1a" period in Bougies.
+  // The original Ligne and Hybride owners are never modified.
+  const verifiedReaderUrl=typeof document!=="undefined"
+    ?new URL("./verified-periods-reader.js",document.currentScript?.src||location.href).href:null;
+  let verifiedReaderPending=null;
+  function btcAnnualRequested(){
+    if(state.mode!=="candles"||externalContext().active||selectedSymbol()!=="BTC")return false;
+    const active=document.querySelector("#analyste .period-tabs .period-btn.active");
+    return active?.dataset?.period==="365";
+  }
+  async function verifiedReader(){
+    if(globalThis.SevenVerifiedPeriods?.load)return globalThis.SevenVerifiedPeriods;
+    if(!verifiedReaderPending){
+      verifiedReaderPending=new Promise((resolve,reject)=>{
+        const script=document.createElement("script");
+        script.src=verifiedReaderUrl;script.async=true;
+        script.addEventListener("load",()=>resolve(globalThis.SevenVerifiedPeriods),{once:true});
+        script.addEventListener("error",()=>reject(codedError("BTC_YEAR_READER_UNAVAILABLE","Lecteur annuel du Coffre indisponible")),{once:true});
+        document.head.appendChild(script);
+      });
+    }
+    const reader=await verifiedReaderPending;
+    if(typeof reader?.load!=="function")throw codedError("BTC_YEAR_READER_INVALID","Lecteur certifié du Coffre absent");
+    return reader;
+  }
+  async function verifiedBtcAnnual(){
+    const reader=await verifiedReader();
+    const pack=await reader.load("bitcoin","1an"); // Reader checks SHA-256, UTC, OHLCV and provenance.
+    if(pack?.data?.asset_id!=="bitcoin"||pack.data?.pair!=="BTCUSDT"||
+       pack.data?.quote!=="USDT"||pack.data?.period!=="1an"||
+       pack.data?.resolution!=="1d"||!Array.isArray(pack.rows)||pack.rows.length!==365)
+      throw codedError("BTC_YEAR_CONTEXT_INVALID","Archive annuelle BTCUSDT non certifiée");
+    const candles=pack.rows.map(r=>normalizeCandle({
+      t:r?.[0],o:r?.[1],h:r?.[2],l:r?.[3],c:r?.[4],v:r?.[5],confirm:"archive"
+    }));
+    if(candles.some((r,i)=>!r||r.l<=0||r.v===null||
+      r.t%86400000!==0||(i>0&&r.t!==candles[i-1].t+86400000)))
+      throw codedError("BTC_YEAR_DATA_INVALID","Chronologie annuelle ou OHLCV incohérente");
+    return candles;
+  }
   let requestToken=0,activeController=null;
   const REQUEST_TIMEOUT_MS=12000;
   const num=v=>{
@@ -478,7 +518,7 @@
   function mount(){
     if(typeof document==="undefined")return false;style();const sh=shell(),host=controlsHost();if(!sh||!host)return false;sh.style.position="relative";
     let c=document.getElementById(ROOT+"Controls");if(!c){c=document.createElement("span");c.id=ROOT+"Controls";c.innerHTML=`<small>MICROSCOPE</small><button type="button" data-amm-mode="native" class="is-active">Ligne</button><button type="button" data-amm-mode="candles">Bougies</button><button type="button" data-amm-mode="hybrid" title="Bougies OHLC discrètes sur le graphique linéaire d’origine">Hybride</button>`;host.appendChild(c);c.querySelectorAll("[data-amm-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.ammMode)));}else if(c.parentElement!==host)host.appendChild(c);
-    let root=document.getElementById(ROOT);if(!root){root=document.createElement("section");root.id=ROOT;root.setAttribute("aria-label","Market Microscope Bougies multi-source");root.innerHTML=`<div class="amm-head"><div class="amm-title"><b>MARKET MICROSCOPE · BOUGIES</b><small data-amm-meta>En attente</small></div><div class="amm-tools"><div class="amm-indicators"><small>INDICATEURS</small><button type="button" data-amm-indicator="ma" class="is-active">MA</button><button type="button" data-amm-indicator="ema">EMA</button><button type="button" data-amm-indicator="sr" class="is-active">S/R</button><button type="button" data-amm-indicator="supertrend">SUPER</button><button type="button" data-amm-indicator="boll">BOLL</button><button type="button" data-amm-indicator="sar">SAR</button><button type="button" data-amm-indicator="vwap">VWAP</button><button type="button" data-amm-indicator="vp">VP</button></div><div class="amm-intervals"><div class="amm-bar">${Object.keys(BARS).map(k=>`<button type="button" data-amm-bar="${k}" class="${k===state.bar?"is-active":""}">${k}</button>`).join("")}<button type="button" class="amm-refresh" data-amm-reset title="Réinitialiser zoom">⟲</button><button type="button" class="amm-refresh" data-amm-refresh>↻</button></div></div></div></div><canvas data-amm-canvas></canvas><div class="amm-tip" data-amm-tip aria-live="polite">${inspectorMarkup(null)}</div><div class="amm-series-legend" data-amm-series-legend></div><div class="amm-state" data-amm-state>READ ONLY · résolution marché</div>`;sh.appendChild(root);root.querySelectorAll("[data-amm-bar]").forEach(b=>b.addEventListener("click",()=>{state.bar=normalizeBar(b.dataset.ammBar);state.requestedBar=state.bar;persistBarPreference(state.bar);root.querySelectorAll("[data-amm-bar]").forEach(x=>x.classList.toggle("is-active",x.dataset.ammBar===state.bar));if(candleModeActive())void load({bar:state.bar,reason:"operator-bar"});}));root.querySelectorAll("[data-amm-indicator]").forEach(b=>b.addEventListener("click",()=>{const key=b.dataset.ammIndicator;if(!["ma","ema","sr","supertrend","boll","sar","vwap","vp"].includes(key))return;state.indicators[key]=!state.indicators[key];persistIndicatorState();root.querySelectorAll("[data-amm-indicator]").forEach(x=>x.classList.toggle("is-active",!!state.indicators[x.dataset.ammIndicator]));renderSeriesLegend();if(key==="sr"&&!state.indicators.sr)renderTechnicalLevels(null);renderState();draw();}));root.querySelector("[data-amm-reset]").addEventListener("click",()=>resetView());root.querySelector("[data-amm-refresh]").addEventListener("click",()=>void load());const canvas=root.querySelector("canvas");canvas.addEventListener("wheel",onWheel,{passive:false});canvas.addEventListener("pointerdown",onPointerDown);canvas.addEventListener("pointermove",onPointer,{passive:false});canvas.addEventListener("pointerup",onPointerUp);canvas.addEventListener("pointercancel",onPointerUp);canvas.addEventListener("dblclick",()=>resetView());canvas.addEventListener("pointerleave",()=>{if(!view.dragging)draw();},{passive:true});}
+    let root=document.getElementById(ROOT);if(!root){root=document.createElement("section");root.id=ROOT;root.setAttribute("aria-label","Market Microscope Bougies multi-source");root.innerHTML=`<div class="amm-head"><div class="amm-title"><b>MARKET MICROSCOPE · BOUGIES</b><small data-amm-meta>En attente</small></div><div class="amm-tools"><div class="amm-indicators"><small>INDICATEURS</small><button type="button" data-amm-indicator="ma" class="is-active">MA</button><button type="button" data-amm-indicator="ema">EMA</button><button type="button" data-amm-indicator="sr" class="is-active">S/R</button><button type="button" data-amm-indicator="supertrend">SUPER</button><button type="button" data-amm-indicator="boll">BOLL</button><button type="button" data-amm-indicator="sar">SAR</button><button type="button" data-amm-indicator="vwap">VWAP</button><button type="button" data-amm-indicator="vp">VP</button></div><div class="amm-intervals"><div class="amm-bar">${Object.keys(BARS).map(k=>`<button type="button" data-amm-bar="${k}" class="${k===state.bar?"is-active":""}">${k}</button>`).join("")}<button type="button" class="amm-refresh" data-amm-reset title="Réinitialiser zoom">⟲</button><button type="button" class="amm-refresh" data-amm-refresh>↻</button></div></div></div></div><canvas data-amm-canvas></canvas><div class="amm-tip" data-amm-tip aria-live="polite">${inspectorMarkup(null)}</div><div class="amm-series-legend" data-amm-series-legend></div><div class="amm-state" data-amm-state>READ ONLY · résolution marché</div>`;sh.appendChild(root);root.querySelectorAll("[data-amm-bar]").forEach(b=>b.addEventListener("click",()=>{if(btcAnnualRequested()&&b.dataset.ammBar!=="1j")return;if(!btcAnnualRequested()){state.bar=normalizeBar(b.dataset.ammBar);persistBarPreference(state.bar);}state.requestedBar=btcAnnualRequested()?"1j":state.bar;syncControls();if(candleModeActive())void load({bar:state.requestedBar,reason:"operator-bar"});}));root.querySelectorAll("[data-amm-indicator]").forEach(b=>b.addEventListener("click",()=>{const key=b.dataset.ammIndicator;if(!["ma","ema","sr","supertrend","boll","sar","vwap","vp"].includes(key))return;state.indicators[key]=!state.indicators[key];persistIndicatorState();root.querySelectorAll("[data-amm-indicator]").forEach(x=>x.classList.toggle("is-active",!!state.indicators[x.dataset.ammIndicator]));renderSeriesLegend();if(key==="sr"&&!state.indicators.sr)renderTechnicalLevels(null);renderState();draw();}));root.querySelector("[data-amm-reset]").addEventListener("click",()=>resetView());root.querySelector("[data-amm-refresh]").addEventListener("click",()=>void load());const canvas=root.querySelector("canvas");canvas.addEventListener("wheel",onWheel,{passive:false});canvas.addEventListener("pointerdown",onPointerDown);canvas.addEventListener("pointermove",onPointer,{passive:false});canvas.addEventListener("pointerup",onPointerUp);canvas.addEventListener("pointercancel",onPointerUp);canvas.addEventListener("dblclick",()=>resetView());canvas.addEventListener("pointerleave",()=>{if(!view.dragging)draw();},{passive:true});}
     if(root.parentElement!==sh)sh.appendChild(root);
     syncControls();syncToolbarLayout();return true;
   }
@@ -514,7 +554,7 @@
     host.hidden=!items.length;
   }
   function candleModeActive(){return state.mode==="candles"||state.mode==="hybrid";}
-  function syncControls(){document.querySelectorAll(`#${ROOT}Controls [data-amm-mode]`).forEach(b=>b.classList.toggle("is-active",b.dataset.ammMode===state.mode));document.querySelectorAll(`#${ROOT} [data-amm-indicator]`).forEach(b=>b.classList.toggle("is-active",!!state.indicators[b.dataset.ammIndicator]));document.getElementById(ROOT)?.classList.toggle("is-open",state.mode==="candles");renderSeriesLegend();}
+  function syncControls(){document.querySelectorAll(`#${ROOT}Controls [data-amm-mode]`).forEach(b=>b.classList.toggle("is-active",b.dataset.ammMode===state.mode));document.querySelectorAll(`#${ROOT} [data-amm-indicator]`).forEach(b=>b.classList.toggle("is-active",!!state.indicators[b.dataset.ammIndicator]));document.querySelectorAll(`#${ROOT} [data-amm-bar]`).forEach(b=>{const year=btcAnnualRequested();b.disabled=year&&b.dataset.ammBar!=="1j";b.title=year&&b.disabled?"BTC 1 an : seules les bougies journalières certifiées sont disponibles":"";b.classList.toggle("is-active",b.dataset.ammBar===(year?"1j":state.bar));});document.getElementById(ROOT)?.classList.toggle("is-open",state.mode==="candles");renderSeriesLegend();}
   function setMode(mode){state.mode=mode==="hybrid"?"hybrid":mode==="candles"?"candles":"native";mount();syncControls();if(state.mode==="candles")void load();else renderTechnicalLevels(null);globalThis.AgentCryptoLineCandleOverlay?.refresh?.();return state.mode;}
   async function fetchInstrument(inst,{bar=state.requestedBar||state.bar,signal=null}={}){
     const ext=externalContext();
@@ -544,8 +584,17 @@
   }
   async function load(options={}){
     mount();
-    const requestedBar=BARS[options.bar]?options.bar:state.bar;
-    state.bar=requestedBar;state.requestedBar=requestedBar;
+    const isBtcAnnual=btcAnnualRequested();
+    const requestedBar=isBtcAnnual?"1j":BARS[options.bar]?options.bar:state.bar;
+    if(!isBtcAnnual)state.bar=requestedBar;
+    state.requestedBar=requestedBar;
+    state.requestedArchivePeriod=isBtcAnnual?"1an":null;
+    if(!!state.archivePeriod!==isBtcAnnual&&state.rows.length){
+      // Never display previous-period candles under the new period's header.
+      state.rows=[];state.loadedInstrument=null;state.loadedBar=null;
+      state.archivePeriod=null;state.lastLevels=null;renderTechnicalLevels(null);draw();
+    }
+    syncControls();
     const ext=externalContext();
     const candidates=instrumentCandidates();
     let primary=candidates[0]||desiredInstrument();
@@ -563,7 +612,12 @@
     let inst=primary,rows=null,source=null,warning=null,accepted=false;
     try{
       const resolver=marketResolver();
-      if(!ext.active&&resolver?.resolve&&resolver?.fetchCandles){
+      if(isBtcAnnual){
+        rows=await verifiedBtcAnnual();
+        inst="BTC-USDT";
+        primary=inst;
+        source="Coffre vérifié · Binance Spot BTC/USDT · 1 an clôturé (USDT, non USD)";
+      }else if(!ext.active&&resolver?.resolve&&resolver?.fetchCandles){
         const resolution=await resolver.resolve({asset:selectedSymbol(),currency:displayCurrency(),capability:"candles",signal:controller.signal,publish:true,latestOnly:true});
         if(token!==requestToken)return false;
         if(controller.signal.aborted){
@@ -618,7 +672,10 @@
       // A response for a previous selection must never replace the current view.
       if(ext.active?!sameExternalContext(ext,externalContext()):externalContext().active)
         throw codedError("MARKET_CANDLES_CONTEXT_CHANGED","Sélection de marché modifiée pendant le chargement");
-      state.instrument=inst;state.loadedInstrument=inst;state.loadedBar=requestedBar;state.source=source||"Market public candles";state.rows=requireUsableRows(rows,inst);state.error=warning;state.errorCode=warning?"PAIR_FALLBACK":null;state.lastLoadedAt=new Date().toISOString();
+      if(isBtcAnnual!==btcAnnualRequested()||
+        (isBtcAnnual&&selectedSymbol()!=="BTC"))
+        throw codedError("MARKET_CANDLES_PERIOD_CHANGED","Période ou actif changé pendant la lecture du Coffre");
+      state.instrument=inst;state.loadedInstrument=inst;state.loadedBar=requestedBar;state.archivePeriod=isBtcAnnual?"1an":null;state.source=source||"Market public candles";state.rows=requireUsableRows(rows,inst);state.error=warning;state.errorCode=warning?"PAIR_FALLBACK":null;state.lastLoadedAt=new Date().toISOString();
       resetView(false);renderState();if(state.mode==="candles")draw();accepted=true;return true;
     }catch(error){
       if(token!==requestToken)return false;
@@ -640,7 +697,13 @@
       }
     }
   }
-  function renderState(){const root=document.getElementById(ROOT);if(!root)return;const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=state.mode==="hybrid"?(ext.active?"NEW LISTING · LIGNE + BOUGIES":"MARKET · LIGNE + BOUGIES"):ext.active?(candleModeActive()?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const shownInstrument=activeInstrument(),shownBar=activeBar(),metaProvider=ext.active?String(ext.providerLabel||ext.provider||"EXTERNAL"):String(state.source||"Market public candles").replace(/ public candles$/i,""),hasValidSeries=state.rows.length>0&&!!state.loadedInstrument,isUnavailable=state.errorCode==="MARKET_INSTRUMENT_UNAVAILABLE";if(meta){meta.textContent=isUnavailable?`${selectedSymbol()} · ${shownBar} · 0 bougie · NON DISPONIBLE SUR SOURCES BOUGIES`:state.error&&!hasValidSeries?`${shownInstrument} · ${shownBar} · 0 bougie · ${state.errorCode||"ERREUR"}`:`${shownInstrument} · ${shownBar} · ${state.rows.length} bougies · ${metaProvider}`;meta.title=state.error||"";}const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"Market public candles").replace(/ public candles$/i,""),transport=ext.active?"EXTERNAL PROVIDER":transportTruth().label,retention=hasValidSeries?`dernière série valide conservée ${shownInstrument} · ${shownBar}`:"aucune série valide chargée";st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · ${transport}`:state.error?`ATTENTION · ${state.error} · ${retention}`:`${provider} · ${transport} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;st.title=state.error||"";}}
+  function renderState(){const root=document.getElementById(ROOT);if(!root)return;
+    if(state.archivePeriod==="1an"&&!state.loading&&!state.error){
+      const meta=root.querySelector("[data-amm-meta]"),status=root.querySelector("[data-amm-state]");
+      if(meta)meta.textContent="BTC/USDT · 1j · 365 véritables bougies · Binance Spot · archive terminée septembre 2026";
+      if(status)status.textContent="COFFRE VÉRIFIÉ · BTCUSDT Spot · 365 OHLCV · USDT, pas USD · historique clôturé au 30/09/2026 UTC · pas de données live · aucun ordre";
+      return;
+    }const ext=externalContext(),meta=root.querySelector("[data-amm-meta]"),st=root.querySelector("[data-amm-state]"),title=root.querySelector(".amm-title b");if(title)title.textContent=state.mode==="hybrid"?(ext.active?"NEW LISTING · LIGNE + BOUGIES":"MARKET · LIGNE + BOUGIES"):ext.active?(candleModeActive()?"NEW LISTING · BOUGIES":"NEW LISTING · LIGNE"):"MARKET MICROSCOPE · BOUGIES";const shownInstrument=activeInstrument(),shownBar=activeBar(),metaProvider=ext.active?String(ext.providerLabel||ext.provider||"EXTERNAL"):String(state.source||"Market public candles").replace(/ public candles$/i,""),hasValidSeries=state.rows.length>0&&!!state.loadedInstrument,isUnavailable=state.errorCode==="MARKET_INSTRUMENT_UNAVAILABLE";if(meta){meta.textContent=isUnavailable?`${selectedSymbol()} · ${shownBar} · 0 bougie · NON DISPONIBLE SUR SOURCES BOUGIES`:state.error&&!hasValidSeries?`${shownInstrument} · ${shownBar} · 0 bougie · ${state.errorCode||"ERREUR"}`:`${shownInstrument} · ${shownBar} · ${state.rows.length} bougies · ${metaProvider}`;meta.title=state.error||"";}const freshness=marketFreshness();if(st){st.dataset.freshness=state.loading?"LOADING":freshness.status;const provider=String(state.source||"Market public candles").replace(/ public candles$/i,""),transport=ext.active?"EXTERNAL PROVIDER":transportTruth().label,retention=hasValidSeries?`dernière série valide conservée ${shownInstrument} · ${shownBar}`:"aucune série valide chargée";st.textContent=state.loading?`CHARGEMENT · ${state.requestedInstrument} · ${state.requestedBar} · ${transport}`:state.error?`ATTENTION · ${state.error} · ${retention}`:`${provider} · ${transport} · ${freshness.status} · bougie ${shownBar} · dernière ${freshness.label} · reçu ${state.lastLoadedAt?new Date(state.lastLoadedAt).toLocaleTimeString("fr-FR"):"—"} · lecture seule`;st.title=state.error||"";}}
   function visibleRows(){
     if(!state.rows.length)return [];
     const count=Math.max(20,Math.min(view.count||72,state.rows.length));
@@ -649,7 +712,7 @@
     return state.rows.slice(view.start,view.start+count);
   }
   function resetView(redraw=true){
-    view.count=Math.min(72,Math.max(20,state.rows.length||72));
+    view.count=state.archivePeriod==="1an"?state.rows.length:Math.min(72,Math.max(20,state.rows.length||72));
     view.start=Math.max(0,state.rows.length-view.count);
     view.dragging=false;
     const canvas=document.querySelector(`#${ROOT} canvas`);
@@ -816,7 +879,7 @@
     ctx.font="12px ui-monospace,monospace";ctx.textAlign="left";
     for(let k=0;k<5;k++){const value=high-(range*k/4),yy=pad.t+k*plotH/4;ctx.fillStyle="#7f98a5";ctx.fillText(fmtPrice(value),w-pad.r+7,yy+3);}
     const ticks=[0,Math.floor((rows.length-1)/2),rows.length-1];ctx.textAlign="center";ctx.fillStyle="#6f8793";
-    ticks.forEach(i=>{if(rows[i])ctx.fillText(new Date(rows[i].t).toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}),x(i),h-5);});
+    ticks.forEach(i=>{if(rows[i])ctx.fillText(new Date(rows[i].t).toLocaleString("fr-FR",state.archivePeriod==="1an"?{month:"short",year:"numeric",timeZone:"UTC"}:{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}),x(i),h-5);});
 
     // Visible-range truth markers: high / low only, no inferred support/resistance.
     const highIndex=rows.reduce((best,r,i)=>r.h>rows[best].h?i:best,0);
@@ -851,6 +914,12 @@
     draw(i,price);
     const r=g.rows[i],tip=document.querySelector(`#${ROOT} [data-amm-tip]`);if(!tip)return;
     tip.innerHTML=inspectorMarkup(r);
+  }
+  function syncAnnualPeriod(){
+    if(state.mode!=="candles")return;
+    const requested=btcAnnualRequested();
+    if(requested!==!!state.requestedArchivePeriod)void load({reason:"period-changed"});
+    else syncControls();
   }
   function handleCanonicalSelectionChanged(event){
     const nextSymbol=normalizeSelectedAsset(event?.detail?.symbol||selectedSymbol());
@@ -940,7 +1009,7 @@
     return Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,pass,checks:{parse_sort:sample[0].t===1,moving_average:Math.abs(ma[1]-2)<1e-9,exponential_average:ema.some(Number.isFinite),ma_ema_full_history_projection:maEmaFullHistory,candle_change_pct:Math.abs(delta-10)<1e-9,support_resistance_method:sr.method==="PIVOTS_VISIBLES_W2",support_resistance_last_levels_clear_when_disabled:true,support_resistance_distance_signature:true,support_resistance_historical_reference_label:true,support_resistance_current_edge_support:currentEdgeSupport,support_resistance_current_edge_resistance:currentEdgeResistance,supertrend_method:st.method==="SUPERTREND_ATR_WILDER",supertrend_reference_10x3:stReference,supertrend_default_off:INDICATOR_DEFAULTS.supertrend===false,bar_duration:barDurationMs("15m")===900000,native_default:state.mode==="native",ma_default:INDICATOR_DEFAULTS.ma===true,ema_opt_in:INDICATOR_DEFAULTS.ema===false,ohlcv_tooltip:true,crosshair_xy:true,visible_high_low:true,human_readable_inspector:true,full_french_labels:true,series_legend_dom:true,adaptive_price_precision:true,plot_overlay_clearance:true,support_resistance_pivots:true,technical_reading_bridge:true,sr_read_only:true,technical_sr_native_window:true,technical_sr_collapsible:true,technical_sr_compact_summary:true,technical_sr_price_priority:true,technical_sr_price_visibility:true,technical_sr_context_separate:true,technical_sr_no_confidence_label:true,supertrend_opt_in:true,supertrend_period_10_multiplier_3:true,bollinger_method:boll.method==="BOLLINGER_SMA_STDDEV",bollinger_reference_20x2:bollReference,bollinger_default_off:INDICATOR_DEFAULTS.boll===false,bollinger_opt_in:true,bollinger_period_20_multiplier_2:true,sar_method:sar.method==="PARABOLIC_SAR_CLASSIC",sar_reference_002_020:sarReference,sar_default_off:INDICATOR_DEFAULTS.sar===false,sar_opt_in:true,sar_step_002_max_020:true,vwap_method:vwapReference.method==="VWAP_CUMULATIVE_TYPICAL_PRICE_VOLUME",vwap_reference_window:vwapReferenceOk,vwap_label_window:true,vwap_default_off:INDICATOR_DEFAULTS.vwap===false,vwap_opt_in:true,volume_profile_method:vpReference.method==="VOLUME_PROFILE_OHLCV_TYPICAL_PRICE_APPROX",volume_profile_reference_24_bins:vpReferenceOk,volume_profile_default_off:INDICATOR_DEFAULTS.vp===false,volume_profile_opt_in:true,volume_profile_bins_24:true,request_identity_key:requestIdentityOk,candle_context_guard:candleContextOk&&wrongAssetBlocked&&wrongQuoteBlocked&&wrongVenueBlocked&&externalRaceBlocked,strict_null_ohlc_rejected:nullOhlcRejected,strict_incoherent_ohlc_rejected:incoherentOhlcRejected,empty_parsed_series_rejected:emptySeriesRejected,timeout_has_explicit_error:timeoutTruth,local_transport_truth_label:transportLabelTruth,pair_http_400_fallback:pairHttp400Fallback,response_invalid_no_pair_fallback:responseInvalidNoPairFallback,backend_http_detail_truth:backendDetailTruth,market_instrument_resolver:resolverTruth,canonical_market_selection_owner:typeof globalThis.getSelectedCoin==="function"||typeof document==="undefined",canonical_market_selection_event:true,stale_asset_canvas_cleared:true,external_asset_selection_not_ignored:true,empty_series_inspector_cleared:true,external_asset_mode_preserved:true,context_identity_guard:true,latest_request_wins:true,abort_previous_request:true,request_timeout_ms:REQUEST_TIMEOUT_MS,loaded_context_separate_from_requested_context:true,indicator_state_summary_refresh:true,indicator_state_roundtrip:indicatorRoundTrip,indicator_state_storage_key:INDICATOR_STORAGE_KEY==="agentCrypto.marketMicroscope.indicators.v1",bar_preference_default:normalizeBar("bad")==="15m",bar_preference_valid:normalizeBar("5m")==="5m",bar_preference_storage_key:BAR_STORAGE_KEY==="agentCrypto.marketMicroscope.bar.v1",default_visible_rows:view.count<=72,freshness_truth:true,wheel_zoom:true,drag_pan:true,no_recurring_timer:true,no_order:true}});
   }
   globalThis.AgentCryptoMarketMicroscope=Object.freeze({build:BUILD,historical_core_build:HISTORICAL_CORE_BUILD,extension_build:EXTENSION_BUILD,mount,setMode,load,snapshot:()=>Object.freeze({...state,rows:state.rows.slice(),indicators:Object.freeze({...state.indicators}),external:externalContext().active,lastLevels:state.lastLevels,request_key:requestKey()}),instrument:()=>activeInstrument(),technicalLevels:()=>state.lastLevels,indicatorState:()=>Object.freeze({...state.indicators}),resetView,viewport:()=>Object.freeze({...view}),installCanonicalSelectionHook,self_test:selfTest,read_only:true,http_status_checked_before_json:true,pair_fallback_http_400_404:true,response_invalid_does_not_mask_http_status:true,response_error_detail:true,zero_series_truth:true,network:"MARKET_RESOLVER_VIA_LOCAL_BACKEND_OR_NEW_LISTING_PROVIDER",external_asset_supported:true,canonical_market_selection_event:true,stale_asset_canvas_cleared:true,external_asset_selection_not_ignored:true,empty_series_inspector_cleared:true,external_asset_mode_preserved:true,latest_request_wins:true,request_timeout_ms:REQUEST_TIMEOUT_MS,indicator_state_persistence:true,indicator_storage_key:INDICATOR_STORAGE_KEY,interval_persistence:true,interval_storage_key:BAR_STORAGE_KEY,compact_meta:true,verbose_indicator_meta_removed:true,responsive_single_line_toolbar:true,interval_label_removed:true,narrow_wrap_two_rows:true,canvas_vertical_reclaim:true,stable_control_rows:true,view_layout_refresh_no_fetch:true,idempotent_mount_reparent:true,recurring_timer:false,mutation_observer:false,storage_write:true,storage_scope:"INDICATOR_STATE_PLUS_INTERVAL_PREFERENCE",real_order:false,market_core_changed:false,strategy_changed:false});
-  if(typeof document!=="undefined"){const boot=()=>{mount();installCanonicalSelectionHook();};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:v2mode",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:admin-graph",scheduleLayoutRefresh,{passive:true});window.addEventListener("agent-crypto:selected-market-changed",handleCanonicalSelectionChanged,{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",event=>{if(String(event?.detail?.reason||"").startsWith("market-instrument-resolver"))return;if(candleModeActive()&&!externalContext().active)void load({bar:state.bar,reason:"quote-architecture"});},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{const primary=instrumentCandidates()[0]||desiredInstrument();requestToken+=1;try{activeController?.abort();}catch(_){}activeController=null;state.loading=false;mount();state.rows=[];state.error=null;state.errorCode=null;state.lastLoadedAt=null;state.lastLevels=null;state.loadedBar=null;state.loadedInstrument=null;state.instrument=primary;state.requestedInstrument=primary;renderTechnicalLevels(null);resetView(false);renderState();syncControls();draw();if(candleModeActive())queueMicrotask(()=>{try{void load({bar:state.bar,reason:"external-asset-changed"});}catch(_){}});},{passive:true});}
+  if(typeof document!=="undefined"){const boot=()=>{mount();installCanonicalSelectionHook();};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("pageshow",boot,{passive:true});window.addEventListener("resize",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:v2mode",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:admin-graph",scheduleLayoutRefresh,{passive:true});window.addEventListener("atlas:v2mode",syncAnnualPeriod,{passive:true});window.addEventListener("atlas:admin-graph",syncAnnualPeriod,{passive:true});document.addEventListener("click",event=>{if(event.target?.closest?.("#analyste .period-tabs .period-btn"))setTimeout(syncAnnualPeriod,0);},{passive:true});window.addEventListener("agent-crypto:selected-market-changed",handleCanonicalSelectionChanged,{passive:true});window.addEventListener("agent-crypto:quote-architecture-changed",event=>{if(String(event?.detail?.reason||"").startsWith("market-instrument-resolver"))return;if(candleModeActive()&&!externalContext().active)void load({bar:state.bar,reason:"quote-architecture"});},{passive:true});window.addEventListener("agent-crypto:external-asset-changed",()=>{const primary=instrumentCandidates()[0]||desiredInstrument();requestToken+=1;try{activeController?.abort();}catch(_){}activeController=null;state.loading=false;mount();state.rows=[];state.error=null;state.errorCode=null;state.lastLoadedAt=null;state.lastLevels=null;state.loadedBar=null;state.loadedInstrument=null;state.instrument=primary;state.requestedInstrument=primary;renderTechnicalLevels(null);resetView(false);renderState();syncControls();draw();if(candleModeActive())queueMicrotask(()=>{try{void load({bar:state.bar,reason:"external-asset-changed"});}catch(_){}});},{passive:true});}
 })();
 
 /* Shared Trader / Interface 1m candle refresh. READ ONLY, no order routes. */
@@ -951,7 +1020,7 @@
   let lastAttempt=0,busy=false,timer=null,lastResult=null;
   const owner=()=>globalThis.AgentCryptoMarketMicroscope;
   const snapshot=()=>{try{return owner()?.snapshot?.()||null;}catch(_){return null;}};
-  const active=s=>(s?.mode==="candles"||s?.mode==="hybrid")&&s?.bar==="1m"&&!!s.loadedInstrument&&Array.isArray(s.rows)&&s.rows.length>0;
+  const active=s=>(s?.mode==="candles"||s?.mode==="hybrid")&&s?.bar==="1m"&&s?.loadedBar==="1m"&&!s?.archivePeriod&&!!s.loadedInstrument&&Array.isArray(s.rows)&&s.rows.length>0;
   function ageMs(s){const rows=s?.rows||[],t=Number(rows[rows.length-1]?.t);return Number.isFinite(t)&&t>0?Math.max(0,Date.now()-t):null;}
   function badge(){
     const title=document.querySelector("#atlasMarketMicroscope .amm-title");
