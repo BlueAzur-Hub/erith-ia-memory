@@ -86,13 +86,13 @@ function studyNow(){
   const result=core.historicalStudy(v.input,assumptions());
   if(!result.ok){show("status",result.reason);return;}
   const p=result;
-  show("result","ÉTUDE RÉTROSPECTIVE · "+p.asset+" · 24 h observées\\n"+
+  show("result","ÉTUDE RÉTROSPECTIVE · "+p.asset+" · 24 h observées\n"+
     p.windows+" fenêtres de 60 min (chevauchantes) · "+
-    fmt(p.profitablePct,1)+" % positives après coûts fictifs.\\n"+
+    fmt(p.profitablePct,1)+" % positives après coûts fictifs.\n"+
     "Résultat médian : "+(p.medianProfit>=0?"+":"")+fmt(p.medianProfit,5)+
-    " USD fictifs par fenêtre de "+fmt(p.capital,2)+" USD.\\n"+
+    " USD fictifs par fenêtre de "+fmt(p.capital,2)+" USD.\n"+
     "Meilleure : "+(p.bestProfit>=0?"+":"")+fmt(p.bestProfit,5)+
-    " USD ; pire : "+fmt(p.worstProfit,5)+" USD.\\n"+
+    " USD ; pire : "+fmt(p.worstProfit,5)+" USD.\n"+
     "Données du "+new Date(p.firstAt).toLocaleString("fr-FR")+" au "+
       new Date(p.lastAt).toLocaleString("fr-FR")+
     ". Chaque fenêtre est indépendante et chevauche les autres ; "+
@@ -160,14 +160,14 @@ function watchTick(){
   positions.delete(c.sourceIdentity);
   captures.set(c.sourceIdentity,c);
   add("SUIVI_EVALUE_PAPER",c.asset,{result});
-  show("result","SUIVI PROSPECTIF · "+c.asset+"\\n"+
+  show("result","SUIVI PROSPECTIF · "+c.asset+"\n"+
     "Entrée : "+new Date(result.entryAt).toLocaleString("fr-FR")+
     " à "+fmt(result.entryPrice,8)+" USD ; sortie théorique : "+
     new Date(result.exitAt).toLocaleString("fr-FR")+" à "+
-    fmt(result.exitPrice,8)+" USD.\\n"+
+    fmt(result.exitPrice,8)+" USD.\n"+
     "Évolution du cours : "+(result.movePct>=0?"+":"")+fmt(result.movePct,3)+
     " % ; résultat après coûts fictifs : "+
-    (result.paperProfit>=0?"+":"")+fmt(result.paperProfit,5)+" USD.\\n"+
+    (result.paperProfit>=0?"+":"")+fmt(result.paperProfit,5)+" USD.\n"+
     "Aucun achat ou vente réel ; relevés historiques publics, carnet et minimum non évalués.");
   show("follow","TERMINÉ · "+c.asset+" · "+(result.paperProfit>=0?"+":"")+
     fmt(result.paperProfit,5)+" USD PAPER après hypothèses de coûts.");
