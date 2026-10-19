@@ -96,6 +96,42 @@ function prospective(entry,current,config){
     paper:true,actualExecution:false,marketDepthChecked:false,
     minimumOrderChecked:false,realOrders:false});
 }
-return Object.freeze({qualify,assess,prospective,realOrders:false,storage:false,
+// Retrospective rolling example, NOT a signal, a backtested portfolio, or a live result.
+// All windows overlap. Each one is an independent hypothetical buy then sale.
+function historicalStudy(input,config,now=Date.now()){
+  const q=qualify(input,now);
+  if(!q.ok)return q;
+  const priceRows=input.series,holdMs=60*60000,maxGap=10*60000;
+  let j=1,win=0,loss=0;
+  const results=[];
+  for(let i=0;i<priceRows.length-1;i++){
+    const start=priceRows[i][0],target=start+holdMs;
+    if(j<=i)j=i+1;
+    while(j<priceRows.length&&priceRows[j][0]<target)j++;
+    if(j>=priceRows.length)break;
+    const elapsed=priceRows[j][0]-start;
+    if(elapsed>holdMs+maxGap)continue;
+    const plan=assess({...config,price:priceRows[i][1]});
+    if(!plan.ok)return plan;
+    const movePct=100*(priceRows[j][1]/priceRows[i][1]-1);
+    const r=plan.simulate(movePct);
+    results.push(r.profit);
+    if(r.profit>0)win++;
+    else if(r.profit<0)loss++;
+  }
+  if(results.length<10)return reject("Historique insuffisant pour une étude 1 h (au moins 10 fenêtres).");
+  const sorted=results.slice().sort((a,b)=>a-b);
+  const n=sorted.length,mid=Math.floor(n/2);
+  return Object.freeze({ok:true,asset:q.asset,sourceIdentity:q.sourceIdentity,
+    firstAt:new Date(priceRows[0][0]).toISOString(),lastAt:q.lastAt,
+    windows:n,profitable:win,losing:loss,profitablePct:100*win/n,
+    medianProfit:n%2?sorted[mid]:(sorted[mid-1]+sorted[mid])/2,
+    bestProfit:sorted[n-1],worstProfit:sorted[0],
+    avgProfit:results.reduce((a,b)=>a+b,0)/n,
+    capital:Number(config?.capital),holdMinutes:60,
+    overlapping:true,independentTrades:true,retrospective:true,
+    predictive:false,realOrders:false,feesProven:false});
+}
+return Object.freeze({qualify,assess,prospective,historicalStudy,realOrders:false,storage:false,
   fetch:false,readOnly:true,versionlessFiles:true});
 });
