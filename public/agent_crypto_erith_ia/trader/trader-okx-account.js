@@ -232,13 +232,33 @@ function btcQuantityChain({movements,acquisition,held,complete,usdcEntries=[]}={
     !Number.isFinite(acquisition.timestamp)||!Number.isFinite(held)||held<0)
     return missing("Relevé BTC incomplet ou incohérent");
   const btc=movements.filter(x=>x?.currency==="BTC");
-  if(btc.length!==2||btc.some(x=>x.source!=="Compte de trading"||
-    !Number.isFinite(x.balanceChange)||!Number.isFinite(x.timestamp)))
+  if(![2,4].includes(btc.length)||btc.some(x=>!["Compte de trading","Compte de financement"].includes(x.source)||
+    !Number.isFinite(x.balanceChange)||!Number.isFinite(x.timestamp)||x.timestamp<=0||x.balanceChange===0))
     return missing("Il existe d'autres mouvements BTC non réconciliés");
-  const credit=btc.find(x=>x.balanceChange>0&&x.type==="30"&&x.subType==="320"&&
+  // Transfers must have one debit, one funding credit, matching type, size and time.
+  // Do not count an internal transfer as an economic BTC disposal.
+  let economic=btc,internalTransfer=null;
+  if(btc.length===4){
+    const outgoing=btc.filter(x=>x.source==="Compte de trading"&&x.type==="1"&&x.subType==="12"&&x.balanceChange<0);
+    const incoming=btc.filter(x=>x.source==="Compte de financement"&&x.type==="130"&&x.balanceChange>0);
+    if(outgoing.length!==1||incoming.length!==1)
+      return missing("Transfert BTC Trading/Funding non appariable");
+    const debit=outgoing[0],credit=incoming[0],amount=-debit.balanceChange;
+    if(debit.timestamp<acquisition.timestamp||credit.timestamp<debit.timestamp||
+      credit.timestamp-debit.timestamp>120000||
+      Math.abs(amount-credit.balanceChange)>Math.max(1e-12,amount*1e-8))
+      return missing("Transfert interne BTC non confirmé par les deux écritures");
+    economic=btc.filter(x=>x!==debit&&x!==credit);
+    internalTransfer=Object.freeze({amount_btc:amount,
+      debit_at:new Date(debit.timestamp).toISOString(),
+      credit_at:new Date(credit.timestamp).toISOString()});
+  }
+  if(economic.length!==2||economic.some(x=>x.source!=="Compte de trading"))
+    return missing("Crédit initial ou sortie BTC non classifiables");
+  const credit=economic.find(x=>x.balanceChange>0&&x.type==="30"&&x.subType==="320"&&
     Math.abs(x.timestamp-acquisition.timestamp)<=120000&&
     Math.abs(x.balanceChange-acquisition.btc)<=Math.max(1e-12,acquisition.btc*1e-8));
-  const exits=btc.filter(x=>x.balanceChange<0&&x.timestamp>=acquisition.timestamp);
+  const exits=economic.filter(x=>x.balanceChange<0&&x.timestamp>=acquisition.timestamp);
   if(!credit||exits.length!==1)return missing("Crédit d'origine ou sortie BTC non appariables");
   const debit=-exits[0].balanceChange;
   if(debit<=0||debit>acquisition.btc)return missing("Débit BTC non vérifiable");
@@ -253,6 +273,7 @@ function btcQuantityChain({movements,acquisition,held,complete,usdcEntries=[]}={
   return Object.freeze({status:"balanced",read_only:true,credit_btc:acquisition.btc,
     debit_btc:debit,remaining_btc:remainder,
     debit_at:new Date(exits[0].timestamp).toISOString(),
+    internal_transfer:internalTransfer,
     paired_usdc:counter!==null,credit_usdc:counter?.balanceChange??null});
 }
 
@@ -393,10 +414,13 @@ function capitalJourneyReport(info={},now=Date.now()){
  else msg.push('EUR → BTC : source historique absente, partielle ou ancienne ; coût initial non établi.');
  const btcOkay=start&&chain?.status==='balanced'&&Number.isFinite(info.btc)&&
    Math.abs(chain.remaining_btc-info.btc)<=Math.max(1e-12,origin.btc*1e-8);
- if(btcOkay)
+ if(btcOkay){
   msg.push('BTC conservés : '+show(chain.credit_btc)+' reçus − '+show(chain.debit_btc)+
    ' sortis = '+show(chain.remaining_btc)+' BTC. Égalité des quantités, non preuve du type d’opération.');
- else msg.push('BTC : débit et quantité restante non rapprochés avec suffisamment de preuves.');
+  if(chain.internal_transfer)msg.push('Transfert interne Trading → Funding : '+
+   show(chain.internal_transfer.amount_btc)+' BTC débités et recrédités. '+
+   'Ce n’est ni une vente ni une dépense supplémentaire de BTC.');
+ }else msg.push('BTC : débit et quantité restante non rapprochés avec suffisamment de preuves.');
  const usdcLeg=btcOkay&&chain.paired_usdc===true&&
    Number.isFinite(chain.credit_usdc)&&chain.credit_usdc>0;
  if(usdcLeg)
@@ -407,18 +431,32 @@ function capitalJourneyReport(info={},now=Date.now()){
  const ctOkay=buy?.status==='reconciled_fills_only'&&Number.isFinite(buy.spent_usdc)&&buy.spent_usdc>0&&
    Number.isFinite(buy.net_acquired_ct)&&buy.net_acquired_ct>0&&Number.isFinite(info.ct)&&
    Math.abs(info.ct-buy.net_acquired_ct)<=Math.max(1e-6,info.ct*1e-4);
- if(ctOkay)
+ const exit=info.ctClosed;
+ const ctClosedOkay=current&&['compatible_movements','classified_ledger_pair'].includes(exit?.status)&&
+   exit.read_only===true&&exit.orders_enabled===false&&exit.profit_proven===false&&
+   exit.source_account==='trading_account'&&
+   (info.ct===null||(Number.isFinite(info.ct)&&info.ct>=0&&info.ct<=1e-10))&&
+   Number.isFinite(exit.outgoing_ct)&&exit.outgoing_ct>0&&
+   Number.isFinite(exit.acquisition_cost_usdc)&&exit.acquisition_cost_usdc>0&&
+   Number.isFinite(exit.incoming_usdc)&&exit.incoming_usdc>0;
+ if(ctClosedOkay)
+  msg.push('USDC → CT → USDC : '+show(exit.acquisition_cost_usdc)+
+   ' USDC engagés pour '+show(exit.outgoing_ct)+' CT ensuite débités, puis '+
+   show(exit.incoming_usdc)+' USDC recrédités. Flux compatibles avec une clôture ; reçu Convert, frais externes et résultat global non certifiés.');
+ else if(ctOkay)
   msg.push('USDC → CT : '+show(buy.spent_usdc)+' USDC pour '+show(buy.net_acquired_ct)+
    ' CT nets, selon '+buy.fill_count+' exécution(s) CT/USDC retrouvée(s), frais constatés inclus. Autres opérations non certifiées.');
  else msg.push('USDC → CT : achats et solde Concrete insuffisamment rapprochés.');
  let coherent=false;
- if(usdcLeg&&ctOkay&&Number.isFinite(info.usdc)&&info.usdc>=0){
-  const leftover=chain.credit_usdc-buy.spent_usdc;
+ if(usdcLeg&&(ctClosedOkay||ctOkay)&&Number.isFinite(info.usdc)&&info.usdc>=0){
+  const invested=ctClosedOkay?exit.acquisition_cost_usdc:buy.spent_usdc;
+  const returned=ctClosedOkay?exit.incoming_usdc:0;
+  const leftover=chain.credit_usdc-invested+returned;
   if(leftover>=0&&Math.abs(leftover-info.usdc)<=Math.max(1e-7,chain.credit_usdc*1e-7)){
    coherent=true;
    msg.push('Concordance arithmétique USDC : '+show(chain.credit_usdc)+' reçus − '+
-     show(buy.spent_usdc)+' engagés = '+show(info.usdc)+
-     ' restants. Elle ne démontre pas une traçabilité exhaustive des fonds.');
+     show(invested)+' engagés'+(ctClosedOkay?' + '+show(returned)+' récupérés':'')+
+     ' = '+show(info.usdc)+' restants. Elle ne démontre ni provenance exhaustive des fonds, ni résultat net certifié.');
   }else msg.push('Les montants USDC ne se réconcilient pas exactement : d’autres mouvements peuvent intervenir.');
  }else msg.push('Chaîne USDC incomplète : aucun financement direct de CT par ce BTC n’est affirmé.');
  msg.push('Coût PayPal, coût résiduel BTC, frais de conversion et profit global NON PROUVÉS. Lecture seule ; aucun ordre.');
@@ -482,7 +520,13 @@ function updateCapitalJourney(){
   container.textContent='Aether Trust requis : aucune donnée privée affichée.';
   return;
  }
- const report=capitalJourneyReport({...lastCapitalEvidence,ledger:ledgerPosition,ledgerCheckedAt});
+ const recent=ledgerCheckedAt>0&&Date.now()-ledgerCheckedAt<=1800000;
+ const core=globalThis.AgentCryptoAiCtContract;
+ const ctClosed=recent&&core?.ctClosedCycleReport&&ctCycleLedgers
+   ?core.ctClosedCycleReport({account:ctCycleAccount,fills:ctCycleFills,
+      ctLedger:ctCycleLedgers.CT?.payload,usdcLedger:ctCycleLedgers.USDC?.payload})
+   :null;
+ const report=capitalJourneyReport({...lastCapitalEvidence,ledger:ledgerPosition,ledgerCheckedAt,ctClosed});
  for(const line of report.lines){
   const p=document.createElement('p');p.textContent=line;container.append(p);
  }
@@ -541,7 +585,14 @@ function updatePositionView(){
       text("pnlhint",quote?"Gain / perte estimé en EUR, hors frais de revente":"En attente d’un cours BTC/EUR vérifiable");
       return;
     }
-    text("positionproof","Mouvement EUR/BTC retrouvé, mais quantité BTC détenue différente. Coût de la position totale non établi.");
+    const chain=position.btcChain;
+    if(chain?.status==="balanced"&&chain.credit_btc===position.matched.btc&&
+       Number.isFinite(currentBtcHeld)&&
+       Math.abs(chain.remaining_btc-currentBtcHeld)<=Math.max(1e-12,position.matched.btc*1e-8))
+      text("positionproof","Parcours BTC rapproché : acquisition, sortie et solde actuel cohérents"+
+        (chain.internal_transfer?", transfert interne Trading → Funding confirmé":"")+
+        ". Coût résiduel de la position NON PROUVÉ : aucun gain global calculé.");
+    else text("positionproof","Mouvement EUR/BTC retrouvé, mais quantité BTC détenue différente. Coût de la position totale non établi.");
   }else if(position?.recordsCount>0){
     text("positionproof",position.recordsCount+" mouvements financiers retrouvés, mais acquisition complète non démontrée.");
   }else{
@@ -767,9 +818,9 @@ function ledgerPaint(results){
   const technicalStatus=totals.concat(issues.length?["À vérifier : "+issues.join(" ; ")]:[],hasMore?["D'autres pages d'historique peuvent exister."]:[]);
   text("ledgercoverage",technicalStatus.join(" · ")||"Aucune source disponible.");
   text("ledgerwarning",issues.length?"Attention : certaines sources ne sont pas disponibles ; les résultats peuvent être incomplets.":hasMore?"Attention : d'autres mouvements peuvent exister dans l'historique.":"Ces écritures incluent éventuellement des transferts entre comptes : elles ne représentent pas nécessairement des achats distincts.");
+  ctCycleLedgers=results;
   updatePositionView();
   updateCapitalJourney();
-  ctCycleLedgers=results;
   updateCtClosedCycle();
   void refreshEuroPrice();
   void refreshEntryQuote();
