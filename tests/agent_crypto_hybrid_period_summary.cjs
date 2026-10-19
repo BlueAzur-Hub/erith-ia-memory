@@ -57,6 +57,21 @@ fixture("1a",365,366,12);
 fixture("1 an",365,366,12,"1a");
 assert.equal(api.periodConfig().bar,"1j","Visible 1 an title must map to daily cadence");
 fixture("Max",1000,601,12);
+// A 10% move exactly between adjacent buckets must never disappear.
+fixture("24h",1,289,24);
+chart.data.datasets[0].data=chart.data.datasets[0].data.map((_,i)=>i<12?100:110);
+const crossed=api.variationSummary(chart);
+assert.ok(crossed.bars,"Boundary jump must remain readable");
+assert.ok(Math.abs(crossed.bars[1].change-10)<1e-9,
+ "The 10% boundary move belongs to the following bar");
+const product=crossed.bars.reduce((total,b)=>total*(1+b.change/100),1);
+assert.ok(Math.abs(product-1.1)<1e-9,
+ "Chaining bucket variations must reproduce overall price movement");
+const fullSpan=chart.data.labels.slice();
+chart.data.labels=fullSpan.map((s,i)=>new Date(Date.parse(s)+(i>=145?2*3600000:0)).toISOString());
+assert.match(api.variationSummary(chart).reason,/lacunes temporelles/,
+ "Large timestamp gaps must be rejected rather than silently combined");
+chart.data.labels=fullSpan;
 assert.equal(api.plugin.beforeDatasetDraw(chart,{index:1}),false,"Volume histogram skipped in Hybrid");
 assert.equal(api.plugin.beforeDatasetDraw(chart,{index:0}),undefined,"Primary line kept");
 assert.equal(api.variationSummary(chart).bars.length,12,
