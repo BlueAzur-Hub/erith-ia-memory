@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-10-19T23:05:37Z",
+  "source_qualification_at_utc": "2026-10-19T23:15:04Z",
   "source_observation_date_utc": "2026-10-19",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -35,8 +35,8 @@
         "venue": "Binance",
         "pair": "AMPUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.36858,
-        "roundtrip_cost_pct_assumed": 0.32326
+        "spread_bps_at_snapshot": 12.23242,
+        "roundtrip_cost_pct_assumed": 0.34141
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -62,8 +62,8 @@
         "venue": "Binance",
         "pair": "ARBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.05433,
-        "roundtrip_cost_pct_assumed": 0.25033
+        "spread_bps_at_snapshot": 5.06201,
+        "roundtrip_cost_pct_assumed": 0.25041
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -89,41 +89,14 @@
         "venue": "Bitget",
         "pair": "DGAIUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 1.0143,
-        "roundtrip_cost_pct_assumed": 0.2202
+        "spread_bps_at_snapshot": 0.59745,
+        "roundtrip_cost_pct_assumed": 0.20726
       },
       "detections_archived": 1,
       "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "gitcoin",
-      "symbol": "GTC",
-      "name": "Gitcoin",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 725,
-      "change24h_pct_at_snapshot": 12.62989,
-      "change7d_pct_at_snapshot": 71.9252,
-      "volume24h_aggregate_usd": 41804790,
-      "spot": {
-        "venue": "Binance",
-        "pair": "GTCUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 6.74878,
-        "roundtrip_cost_pct_assumed": 0.30045
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -142,8 +115,35 @@
         "venue": "Binance",
         "pair": "INTCBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 1.07846,
-        "roundtrip_cost_pct_assumed": 0.21066
+        "spread_bps_at_snapshot": 1.07997,
+        "roundtrip_cost_pct_assumed": 0.21068
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "marscoin-4",
+      "symbol": "MARSCOIN",
+      "name": "MarsCoin",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 318,
+      "change24h_pct_at_snapshot": 6.16021,
+      "change7d_pct_at_snapshot": -12.6062,
+      "volume24h_aggregate_usd": 15696231,
+      "spot": {
+        "venue": "Binance",
+        "pair": "MARSCOINUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 12.82874,
+        "roundtrip_cost_pct_assumed": 0.32785
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -169,8 +169,8 @@
         "venue": "Bitget",
         "pair": "QUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 7.6531,
-        "roundtrip_cost_pct_assumed": 0.3163
+        "spread_bps_at_snapshot": 7.54702,
+        "roundtrip_cost_pct_assumed": 0.30157
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -196,8 +196,8 @@
         "venue": "Binance",
         "pair": "RAYUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 3.1815,
-        "roundtrip_cost_pct_assumed": 0.23403
+        "spread_bps_at_snapshot": 2.65993,
+        "roundtrip_cost_pct_assumed": 0.22644
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -223,8 +223,8 @@
         "venue": "Binance",
         "pair": "SNDKBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.07208,
-        "roundtrip_cost_pct_assumed": 0.20062
+        "spread_bps_at_snapshot": 0.07223,
+        "roundtrip_cost_pct_assumed": 0.20729
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -250,8 +250,8 @@
         "venue": "Binance",
         "pair": "SOXLBUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.99666,
-        "roundtrip_cost_pct_assumed": 0.20985
+        "spread_bps_at_snapshot": 0.99995,
+        "roundtrip_cost_pct_assumed": 0.20988
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -277,8 +277,8 @@
         "venue": "OKX",
         "pair": "VVV-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 8.20681,
-        "roundtrip_cost_pct_assumed": 0.28177
+        "spread_bps_at_snapshot": 8.22707,
+        "roundtrip_cost_pct_assumed": 0.28197
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -303,8 +303,8 @@
         "venue": "Bitget",
         "pair": "BRUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 18.77121,
-        "roundtrip_cost_pct_assumed": 0.4113
+        "spread_bps_at_snapshot": 15.77626,
+        "roundtrip_cost_pct_assumed": 0.35722
       },
       "detections_archived": 3,
       "j1_observed": 2,
@@ -316,21 +316,21 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "marscoin-4",
-      "symbol": "MARSCOIN",
-      "name": "MarsCoin",
+      "coin_id": "gitcoin",
+      "symbol": "GTC",
+      "name": "Gitcoin",
       "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 318,
-      "change24h_pct_at_snapshot": 6.16021,
-      "change7d_pct_at_snapshot": -12.6062,
-      "volume24h_aggregate_usd": 15696231,
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 725,
+      "change24h_pct_at_snapshot": 12.62989,
+      "change7d_pct_at_snapshot": 71.9252,
+      "volume24h_aggregate_usd": 41804790,
       "spot": {
         "venue": "Binance",
-        "pair": "MARSCOINUSDT",
+        "pair": "GTCUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.76324,
-        "roundtrip_cost_pct_assumed": 0.3272
+        "spread_bps_at_snapshot": 7.66229,
+        "roundtrip_cost_pct_assumed": 0.36476
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -356,8 +356,8 @@
         "venue": "Bitget",
         "pair": "NYMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.91156,
-        "roundtrip_cost_pct_assumed": 0.96658
+        "spread_bps_at_snapshot": 6.45369,
+        "roundtrip_cost_pct_assumed": 0.94856
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -383,8 +383,8 @@
         "venue": "Binance",
         "pair": "OSMOUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 38.61004,
-        "roundtrip_cost_pct_assumed": 0.58449
+        "spread_bps_at_snapshot": 19.36108,
+        "roundtrip_cost_pct_assumed": 0.39294
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -438,8 +438,8 @@
         "venue": "Binance",
         "pair": "SOLVUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 23.12139,
-        "roundtrip_cost_pct_assumed": 0.43039
+        "spread_bps_at_snapshot": 23.17497,
+        "roundtrip_cost_pct_assumed": 0.43092
       },
       "detections_archived": 1,
       "j1_observed": 0,
