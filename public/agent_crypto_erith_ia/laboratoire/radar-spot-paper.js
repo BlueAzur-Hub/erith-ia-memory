@@ -76,9 +76,22 @@ function okxSpotSummary(qualification){
       typeof r[k]==="string"&&/^\d+(?:\.\d+)?$/.test(r[k])&&
       Number.isFinite(Number(r[k]))&&Number(r[k])>0);
  });
+ const preview=global.AgentCryptoSpotPaperOrders?.previewOkxSpot;
+ const measured=typeof preview==="function"?rules.map(row=>({
+   symbol:row.symbol,study:preview(row)})).filter(row=>
+     row.study.status==="HYPOTHETICAL_IMMEDIATE_ROUNDTRIP_ONLY"):[];
+ const formatted=measured.slice(0,4).map(({symbol,study})=>
+   symbol+" : "+study.hypotheticalImmediatePnlSign+
+   Number(study.hypotheticalImmediatePnlUSDT).toFixed(2)+
+   " USDT sur achat PAPER ~100 USDT ; seuil d'équilibre ≈+"+
+   study.approximateBidRiseToBreakEvenPct.toFixed(2)+" %").join(" · ");
  return "OKX Spot/USDT : "+candidates.length+" paires candidates observées · "+
    rules.length+" règles publiques minSz/lotSz/tickSz vérifiées. "+
-   "Identité CoinGecko, accès au compte, frais réels et ordre non certifiés.";
+   "Identité CoinGecko, accès au compte, frais réels et ordre non certifiés.\n"+
+   "Carnet OKX daté · "+measured.length+"/"+rules.length+
+   " scénarios instantanés PAPER évaluables (frais hypothétiques 0,1 % achat BASE / 0,1 % vente USDT, glissement stress 0,2 % par côté)."+
+   (formatted?"\n"+formatted:"\nAucun aller-retour évaluable : carnet absent, profondeur ou tailles insuffisantes.")+
+   "\nCes valeurs sont des coûts à l'instant du relevé, pas des gains ou prévisions ; aucun ordre exécuté.";
 }
 async function shadowStatus(){
  const target=document.getElementById("radar-shadow-status");if(!target)return;
