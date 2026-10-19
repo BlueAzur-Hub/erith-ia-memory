@@ -1,0 +1,60 @@
+{
+  "closures": [],
+  "execution_proven": false,
+  "fee_side_fraction_assumed": "0.001",
+  "last_observation_at_utc": "2026-10-19T21:38:58Z",
+  "max_shadow_positions": 4,
+  "minimum_holding_hours": 48,
+  "orders_enabled": false,
+  "paper_fills": 0,
+  "positions": [
+    {
+      "coin_id": "quack-ai",
+      "contract_address": "0xc07e1300dc138601fa6b0b59f8d0fa477e690589",
+      "entry_ask_usdt": "0.1313299",
+      "entry_quote_at_utc": "2026-10-19T21:38:48Z",
+      "entry_spread_bps": "11.61872",
+      "executed_order": false,
+      "fee_and_slippage_assumed": true,
+      "hypothetical_quantity": "759.918343042978",
+      "maximum_book_level_size_unverified": true,
+      "notional_usdt": "100",
+      "pair": "QUSDT",
+      "platform": "binance-smart-chain",
+      "quote": "USDT",
+      "realized_profit_usdt": null,
+      "status": "HYPOTHETICAL_NO_FILL",
+      "symbol": "Q",
+      "tick_lot_verified": false,
+      "venue": "Bitget"
+    },
+    {
+      "coin_id": "dgrid-ai",
+      "contract_address": "0x10d4183389e99233db3cc981c43443ebd28ebd5e",
+      "entry_ask_usdt": "0.924213",
+      "entry_quote_at_utc": "2026-10-19T21:38:54Z",
+      "entry_spread_bps": "1.16863",
+      "executed_order": false,
+      "fee_and_slippage_assumed": true,
+      "hypothetical_quantity": "107.983765647097",
+      "maximum_book_level_size_unverified": true,
+      "notional_usdt": "100",
+      "pair": "DGAIUSDT",
+      "platform": "binance-smart-chain",
+      "quote": "USDT",
+      "realized_profit_usdt": null,
+      "status": "HYPOTHETICAL_NO_FILL",
+      "symbol": "DGAI",
+      "tick_lot_verified": false,
+      "venue": "Bitget"
+    }
+  ],
+  "real_orders": 0,
+  "schema": "erith.radar.spot-paper-forward-shadow.v1",
+  "seen_candidate_ids": [
+    "dgrid-ai",
+    "quack-ai"
+  ],
+  "slippage_side_fraction_assumed": "0.001",
+  "ticket_usdt": "100"
+}
