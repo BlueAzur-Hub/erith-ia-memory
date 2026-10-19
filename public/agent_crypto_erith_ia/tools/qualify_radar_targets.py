@@ -10,6 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 import json
 import math
 import pathlib
+from decimal import Decimal, InvalidOperation
 import time
 import urllib.parse
 import urllib.error
@@ -69,6 +70,36 @@ def candidate_list(snapshot,now):
  ensure(len({r["id"] for r in rows})==len(rows),"Actif Radar dupliqué")
  return sorted(rows,key=lambda r:(-r["volume24hUsd"],r["id"]))[:20]
 
+
+def native_okx_spot_rules(row, symbol):
+ """Exact public OKX SPOT/USDT quantity, lot and price steps (NOT coin identity)."""
+ if not isinstance(row, dict) or not isinstance(symbol, str):
+  return None
+ if (row.get("instType")!="SPOT" or row.get("state")!="live"
+     or row.get("baseCcy")!=symbol or row.get("quoteCcy")!="USDT"
+     or row.get("instId")!=symbol+"-USDT"):
+  return None
+ values={}
+ for name in ("minSz","lotSz","tickSz"):
+  raw=row.get(name)
+  if not isinstance(raw,str) or len(raw)>45 or not raw or (
+       not raw.replace(".","",1).isdigit() or raw.count(".")>1
+       or raw.startswith(".") or raw.endswith(".")):
+   return None
+  try:
+   number=Decimal(raw)
+  except InvalidOperation:
+   return None
+  if (not number.is_finite() or number<=0
+      or number.as_tuple().exponent < -18 or number>=Decimal("1000000000000")):
+   return None
+  values[name]=raw
+ return {"min_sz":values["minSz"],"lot_sz":values["lotSz"],
+         "tick_sz":values["tickSz"],"source":"OKX_PUBLIC_SPOT_INSTRUMENT",
+         "contract_identity_proven":False,"fees_proven":False,
+         "account_access_proven":False,"orders_enabled":False}
+
+
 def venue_instruments(fetch,candidates):
  """Aucune substitution Futures/Margin; toute panne laisse une source indisponible."""
  result={}
@@ -105,15 +136,24 @@ def venue_instruments(fetch,candidates):
    raw=get(venue,path,args,fetch)
    if venue=="OKX":
     ensure(raw.get("code")=="0" and isinstance(raw.get("data"),list),"Métadonnées OKX invalides")
-    pairs={r["baseCcy"].upper():r["instId"] for r in raw["data"] if
-     r.get("quoteCcy")=="USDT" and r.get("state")=="live" and r.get("instType")=="SPOT"}
+    live=[r for r in raw["data"] if isinstance(r,dict) and
+          isinstance(r.get("baseCcy"),str) and r.get("baseCcy") and
+          r.get("quoteCcy")=="USDT" and r.get("state")=="live" and
+          r.get("instType")=="SPOT" and
+          r.get("instId")==r["baseCcy"]+"-USDT"]
+    grouped={}
+    for item in live:grouped.setdefault(item["baseCcy"],[]).append(item)
+    # Duplicate native instruments are ambiguous; never overwrite silently.
+    pairs={sym:rows[0]["instId"] for sym,rows in grouped.items() if len(rows)==1}
+    native_rules={sym:rules for sym,rows in grouped.items() if len(rows)==1
+                  for rules in [native_okx_spot_rules(rows[0],sym)] if rules}
    else:
     ensure(raw.get("code")=="00000" and isinstance(raw.get("data"),list),"Métadonnées Bitget invalides")
     pairs={r["baseCoin"].upper():r["symbol"] for r in raw["data"] if
      r.get("quoteCoin")=="USDT" and r.get("status")=="online" and
      r.get("category")=="SPOT" and r.get("symbolType","crypto")=="crypto" and
      r.get("isRwa","NO")!="YES"}
-   result[venue]={"pairs":pairs,"error":None}
+   result[venue]={"pairs":pairs,"rules":native_rules if venue=="OKX" else {},"error":None}
   except (ValueError,KeyError,TypeError,OSError,TimeoutError) as exc:
    result[venue]={"pairs":{},"error":str(exc)[:180]}
  return result
@@ -187,11 +227,21 @@ def qualify(snapshot,fetch=public_json,now=None,universe=None):
   collisions[sym]=collisions.get(sym,0)+1
  rows=[]
  for asset in chosen:
+  native_pair=venues["OKX"]["pairs"].get(asset["symbol"])
+  native_rules=venues["OKX"].get("rules",{}).get(asset["symbol"])
+  # Keep native OKX market evidence independently of Binance-first chart selection.
+  # Matching an exchange base symbol does NOT prove a CoinGecko contract identity.
+  okx_candidate={"venue":"OKX","quote":"USDT","pair":native_pair,
+    "pair_observed":bool(native_pair),"native_rules_verified":bool(native_pair and native_rules),
+    "rules":native_rules if native_pair else None,
+    "observation_utc":iso(now) if native_pair else None,
+    "contract_identity_proven":False,"account_access_proven":False,
+    "real_fees_proven":False,"real_orders_enabled":False}
   entry={"id":asset["id"],"name":asset["name"],"symbol":asset["symbol"],
          "group":asset["group"],"rank":asset["rank"],"change24h_pct":asset["change24h"],
          "change7d_pct":asset["change7d"],"aggregated_volume24h_usd":asset["volume24hUsd"],
          "identity_status":"SYMBOL_ONLY_NOT_COIN_ID_PROVEN","pair_status":"NOT_VERIFIED",
-         "status":"SOURCE_INCOMPLETE","errors":[],"market":None}
+         "status":"SOURCE_INCOMPLETE","errors":[],"market":None,"okx_spot":okx_candidate}
   if collisions.get(asset["symbol"],1)>1:
    entry["status"]="AMBIGUOUS_SYMBOL"
    entry["errors"].append("Symbole partagé par plusieurs identifiants CoinGecko")
