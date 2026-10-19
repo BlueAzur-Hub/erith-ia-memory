@@ -307,6 +307,13 @@
    }else if(span<7*86400000){
      return {reason:'Synthèse Max · durée réelle trop courte'};
    }
+   // Do not assign a price jump at a bucket boundary to neither bucket.
+   // Every bucket after the first starts at the previous bucket's close.
+   // A large gap in actual timestamps must not be misreported as a continuous move.
+   const intervals=times.slice(1).map((t,i)=>t-times[i]).sort((x,y)=>x-y);
+   const typical=intervals[Math.floor(intervals.length/2)];
+   if(!(typical>0)||intervals.at(-1)>Math.max(typical*4,span/period.segments*1.5))
+     return {reason:'Synthèse indisponible · lacunes temporelles'};
    const buckets=Array.from({length:period.segments},()=>[]);
    for(let i=0;i<values.length;i++){
      const price=priceValue(values[i]);if(!(price>0))continue;
@@ -315,9 +322,11 @@
    }
    const bars=buckets.map((bucket,i)=>{
      if(bucket.length<2)return null;
-     const p0=bucket[0].price,p1=bucket.at(-1).price;
+     const previous=i?buckets[i-1].at(-1):bucket[0];
+     const p0=previous?.price,p1=bucket.at(-1).price;
+     if(!(p0>0&&p1>0))return null;
      const change=(p1/p0-1)*100;
-     return Number.isFinite(change)?{index:i,t:bucket[0].t,end:bucket.at(-1).t,open:p0,close:p1,change,direction:change>0?'up':change<0?'down':'flat',samples:bucket.length}:null;
+     return Number.isFinite(change)?{index:i,t:previous.t,end:bucket.at(-1).t,open:p0,close:p1,change,direction:change>0?'up':change<0?'down':'flat',samples:bucket.length}:null;
    });
    // Refuse partial archives rather than silently presenting nonexistent days.
    if(bars.some(x=>!x))return {reason:'Synthèse indisponible · intervalles historiques incomplets'};
