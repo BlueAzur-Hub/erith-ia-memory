@@ -5,6 +5,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_targets.py'
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_spot_identity.py'
+      - 'public/agent_crypto_erith_ia/tools/radar_spot_paper_forward.py'
+      - 'public/agent_crypto_erith_ia/tools/test_radar_spot_paper_forward.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_targets.py'
       - 'public/agent_crypto_erith_ia/tools/build_radar_research_cohort.py'
       - 'public/agent_crypto_erith_ia/tools/test_build_radar_research_cohort.py'
@@ -15,6 +17,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_targets.py'
       - 'public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_spot_identity.py'
+      - 'public/agent_crypto_erith_ia/tools/radar_spot_paper_forward.py'
+      - 'public/agent_crypto_erith_ia/tools/test_radar_spot_paper_forward.py'
       - 'public/agent_crypto_erith_ia/tools/test_qualify_radar_targets.py'
       - 'public/agent_crypto_erith_ia/tools/build_radar_research_cohort.py'
       - 'public/agent_crypto_erith_ia/tools/test_build_radar_research_cohort.py'
@@ -47,6 +51,7 @@ jobs:
         run: |
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_targets.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_spot_identity.py' -v
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_radar_spot_paper_forward.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_radar_research_cohort.py' -v
       - name: Collect public evidence only (main push/schedule, not PR)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -79,6 +84,7 @@ jobs:
               # A source outage must never become fabricated contract proof.
               if python public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py; then
                 python public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py --check
+                python public/agent_crypto_erith_ia/tools/radar_spot_paper_forward.py
               else
                 echo 'Identity source missing: current candidates stay unproven; no older proof promoted.'
               fi
@@ -86,6 +92,9 @@ jobs:
             git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json public/agent_crypto_erith_ia/data/crypto/radar-opportunities/research-cohort.json
             if [ -f public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-identity-latest.json ]; then
               git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-identity-latest.json
+            fi
+            if [ -f public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-paper-forward.json ]; then
+              git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-paper-forward.json
             fi
             if git diff --cached --quiet; then
               echo 'No fresh qualification to publish'
