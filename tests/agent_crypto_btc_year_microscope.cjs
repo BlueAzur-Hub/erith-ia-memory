@@ -11,7 +11,7 @@ assert.match(source,/pack\.data\?\.pair!=="BTCUSDT"/);
 assert.match(source,/r\.t%86400000!==0/);
 assert.match(source,/verifiedBtcAnnual\(\)/);
 assert.match(source,/s\?\.loadedBar==="1m"&&!s\?\.archivePeriod/,"Annual archive must not trigger minute refresh");
-assert.match(source,/state\.archivePeriod==="1an"\?state\.rows\.length/);
+assert.match(source,/if\(state\.archivePeriod==="1an"\)\{view\.count=rows\.length;view\.start=0;\}/,"Annual overview must show all 365 candles");
 const day=86400000,t0=Date.UTC(2025,9,1);
 const valid=Array.from({length:365},(_,i)=>{const p=80000+i*8;return[t0+day*i,p,p+300,p-400,p+80,100+i,5000,9]});
 const live=Array.from({length:40},(_,i)=>{const p=82000+i;return{t:Date.UTC(2026,9,19,1)+i*60000,o:p,h:p+5,l:p-5,c:p+1,v:20}});
