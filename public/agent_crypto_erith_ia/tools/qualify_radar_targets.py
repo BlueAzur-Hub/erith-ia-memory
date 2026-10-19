@@ -158,6 +158,40 @@ def venue_instruments(fetch,candidates):
    result[venue]={"pairs":{},"error":str(exc)[:180]}
  return result
 
+
+def okx_public_best_book(pair, rules, fetch, now):
+ """One dated top-of-book quote only; strictly no fill, position or account proof."""
+ ensure(isinstance(pair,str) and pair.endswith("-USDT") and
+        isinstance(rules,dict) and rules.get("source")=="OKX_PUBLIC_SPOT_INSTRUMENT",
+        "Paire/règles OKX non vérifiées")
+ raw=get("OKX","/api/v5/market/books",{"instId":pair,"sz":5},fetch)
+ ensure(raw.get("code")=="0" and isinstance(raw.get("data"),list) and
+        len(raw["data"])==1, "Carnet public OKX indisponible")
+ book=raw["data"][0]
+ ensure(isinstance(book,dict), "Carnet public incohérent")
+ stamp=int(book["ts"])
+ age=(int(now.timestamp()*1000)-stamp)/1000
+ ensure(-5<=age<=120, "Carnet OKX périmé ou futur")
+ tick=Decimal(rules["tick_sz"])
+ def best(name):
+  levels=book.get(name)
+  ensure(isinstance(levels,list) and levels and isinstance(levels[0],list) and
+         len(levels[0])>=2,"Niveau de carnet absent")
+  price,qty=(Decimal(str(levels[0][0])),Decimal(str(levels[0][1])))
+  ensure(price.is_finite() and qty.is_finite() and price>0 and qty>0 and
+         price%tick==0, "Prix/quantité Spot non conformes au tick")
+  return str(price),str(qty)
+ bid,bidqty=best("bids")
+ ask,askqty=best("asks")
+ ensure(Decimal(bid)<Decimal(ask),"Carnet Spot croisé")
+ return {"schema":"erith.radar.okx.spot-best-book.v1","source":"OKX_PUBLIC_SPOT_BOOK",
+         "pair":pair,"quote":"USDT","exchange_time_utc":iso(dt.datetime.fromtimestamp(stamp/1000,dt.timezone.utc)),
+         "collected_at_utc":iso(now),"book_age_seconds":round(max(0,age),3),
+         "best_bid_usdt":bid,"best_ask_usdt":ask,
+         "best_bid_qty":bidqty,"best_ask_qty":askqty,
+         "market_execution_proven":False,"fees_verified":False,"orders_enabled":False}
+
+
 def candle_rows(venue,raw,now_ms):
  if venue=="Binance":
   ensure(isinstance(raw,list),"Bougies Binance absentes")
@@ -236,7 +270,8 @@ def qualify(snapshot,fetch=public_json,now=None,universe=None):
     "rules":native_rules if native_pair else None,
     "observation_utc":iso(now) if native_pair else None,
     "contract_identity_proven":False,"account_access_proven":False,
-    "real_fees_proven":False,"real_orders_enabled":False}
+    "real_fees_proven":False,"real_orders_enabled":False,
+    "best_book":None,"best_book_status":"NOT_COLLECTED"}
   entry={"id":asset["id"],"name":asset["name"],"symbol":asset["symbol"],
          "group":asset["group"],"rank":asset["rank"],"change24h_pct":asset["change24h"],
          "change7d_pct":asset["change7d"],"aggregated_volume24h_usd":asset["volume24hUsd"],
@@ -265,6 +300,26 @@ def qualify(snapshot,fetch=public_json,now=None,universe=None):
   if not anypair:
    entry["status"]="NO_OBSERVED_SPOT_PAIR" if any(not v["error"] for v in venues.values()) else "VENUES_UNAVAILABLE"
   rows.append(entry)
+ # Collect public OKX top-of-book independently from chart-venue priority.
+ # Strictly after collision check; an instrument's existence is not token identity.
+ eligible=[r for r in rows if r["status"]!="AMBIGUOUS_SYMBOL" and
+           r["okx_spot"]["native_rules_verified"]]
+ def observe_okx(row):
+  spot=row["okx_spot"]
+  try:
+   evidence=okx_public_best_book(spot["pair"],spot["rules"],fetch,
+                                 utcnow() if fetch is public_json else now)
+   return row["id"],evidence,None
+  except (ValueError,KeyError,TypeError,OSError,TimeoutError,InvalidOperation) as exc:
+   return row["id"],None,type(exc).__name__
+ with ThreadPoolExecutor(max_workers=4) as pool:
+  observations=list(pool.map(observe_okx,eligible))
+ indexed={cid:(book,error) for cid,book,error in observations}
+ for row in eligible:
+  book,error=indexed[row["id"]]
+  row["okx_spot"]["best_book"]=book
+  row["okx_spot"]["best_book_status"]="DATED_PUBLIC_BOOK" if book else "BOOK_UNAVAILABLE"
+  if error:row["okx_spot"]["book_error_type"]=error
  measured=[r for r in rows if r["market"] is not None]
  good=[r for r in measured if r["status"]=="RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW"]
  good.sort(key=lambda r:(r["market"]["estimated_roundtrip_cost_pct"],
