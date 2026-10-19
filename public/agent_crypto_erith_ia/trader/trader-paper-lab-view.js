@@ -80,6 +80,30 @@ function simulate(){
     "\nPas de contrôle de carnet ou minimum d'ordre ; pas de prédiction.");
   return p;
 }
+function studyNow(){
+  const v=source();
+  if(!v.input){show("status",v.reason);return;}
+  const result=core.historicalStudy(v.input,assumptions());
+  if(!result.ok){show("status",result.reason);return;}
+  const p=result;
+  show("result","ÉTUDE RÉTROSPECTIVE · "+p.asset+" · 24 h observées\\n"+
+    p.windows+" fenêtres de 60 min (chevauchantes) · "+
+    fmt(p.profitablePct,1)+" % positives après coûts fictifs.\\n"+
+    "Résultat médian : "+(p.medianProfit>=0?"+":"")+fmt(p.medianProfit,5)+
+    " USD fictifs par fenêtre de "+fmt(p.capital,2)+" USD.\\n"+
+    "Meilleure : "+(p.bestProfit>=0?"+":"")+fmt(p.bestProfit,5)+
+    " USD ; pire : "+fmt(p.worstProfit,5)+" USD.\\n"+
+    "Données du "+new Date(p.firstAt).toLocaleString("fr-FR")+" au "+
+      new Date(p.lastAt).toLocaleString("fr-FR")+
+    ". Chaque fenêtre est indépendante et chevauche les autres ; "+
+    "ce N'EST ni un bénéfice total, ni une stratégie validée, ni une prévision.");
+  show("status","Étude historique immédiate terminée sur "+p.asset+
+    ". Aucun ordre, aucun suivi réel ; le cours futur reste inconnu.");
+  add("ETUDE_RETROSPECTIVE",p.asset,{windows:p.windows,medianProfit:p.medianProfit,
+     profitablePct:p.profitablePct,retrospective:true});
+  refresh();
+  return result;
+}
 function add(kind,asset,more={}){
   journal.push({at:new Date().toISOString(),kind,asset,...more});
   if(journal.length>30)journal.shift();
@@ -90,9 +114,13 @@ function begin(){
   if(!p.ok){show("status",p.reason);return;}
   if(positions.has(c.sourceIdentity)){show("status","Expérience PAPER "+c.asset+" déjà ouverte.");return;}
   if(positions.size>=12){show("status","12 expériences manuelles simultanées maximum ; termine une position avant d’en ouvrir une autre.");return;}
-  positions.set(c.sourceIdentity,{entry:c,config:assumptions()});
+  positions.set(c.sourceIdentity,{entry:c,config:assumptions(),follow:true});
   add("OUVERTURE_PAPER",c.asset,{entryAt:c.lastAt,source:c.source});
-  show("status","Départ PAPER "+c.asset+" enregistré. Comparer après une nouvelle cotation.");
+  show("status","Suivi PAPER "+c.asset+" ouvert. Aucun clic de clôture nécessaire : "+
+    "évaluation automatique si le graphique fournit une nouvelle observation datée après au moins 5 min.");
+  show("follow","SUIVI ACTIF · "+c.asset+" · entrée "+new Date(c.lastAt).toLocaleString("fr-FR")+
+    " · attente d’un nouvel historique vérifié (≥ 5 min après l’entrée). "+
+    "Si le graphique ne s’actualise pas, le suivi reste en attente. Aucun ordre réel.");
   refresh();
 }
 function finish(){
@@ -107,7 +135,60 @@ function finish(){
     " · résultat "+(r.paperProfit>0?"+":"")+fmt(r.paperProfit,6)+
     " USD fictifs ; ni ordre, ni gain réel.");
   show("status","Comparaison prospective réalisée sur deux relevés publics datés.");
+  show("follow","TERMINÉ · "+c.asset+" · variation "+fmt(r.movePct,2)+" %"+
+    " · P&L PAPER "+(r.paperProfit>=0?"+":"")+fmt(r.paperProfit,5)+" USD fictifs.");
   refresh();
+}
+// A manual one-click PAPER watch is evaluated only when its owning chart
+// delivers a newer qualified observation. Never fetch data or place an order.
+function watchTick(){
+  if(!positions.size)return null;
+  const v=source();
+  if(!v.input)return null;
+  const c=core.qualify(v.input);
+  if(!c.ok)return null;
+  const item=positions.get(c.sourceIdentity);
+  if(!item?.follow)return null;
+  const start=Date.parse(item.entry.lastAt),end=Date.parse(c.lastAt);
+  if(!Number.isFinite(end)||end<=start||end-start<AUTO_GAP_MS)return null;
+  const result=core.prospective(item.entry,c,item.config);
+  if(!result.ok){
+    show("follow","SUIVI PAPER · "+c.asset+" : "+result.reason+
+      " · aucune évaluation effectuée.");
+    return null;
+  }
+  positions.delete(c.sourceIdentity);
+  captures.set(c.sourceIdentity,c);
+  add("SUIVI_EVALUE_PAPER",c.asset,{result});
+  show("result","SUIVI PROSPECTIF · "+c.asset+"\\n"+
+    "Entrée : "+new Date(result.entryAt).toLocaleString("fr-FR")+
+    " à "+fmt(result.entryPrice,8)+" USD ; sortie théorique : "+
+    new Date(result.exitAt).toLocaleString("fr-FR")+" à "+
+    fmt(result.exitPrice,8)+" USD.\\n"+
+    "Évolution du cours : "+(result.movePct>=0?"+":"")+fmt(result.movePct,3)+
+    " % ; résultat après coûts fictifs : "+
+    (result.paperProfit>=0?"+":"")+fmt(result.paperProfit,5)+" USD.\\n"+
+    "Aucun achat ou vente réel ; relevés historiques publics, carnet et minimum non évalués.");
+  show("follow","TERMINÉ · "+c.asset+" · "+(result.paperProfit>=0?"+":"")+
+    fmt(result.paperProfit,5)+" USD PAPER après hypothèses de coûts.");
+  show("status","Le nouveau relevé "+c.asset+" a été évalué automatiquement. "+
+    "Tu peux consulter une autre crypto ou démarrer un nouveau suivi.");
+  refresh();
+  return result;
+}
+function stopWatch(){
+  const v=source(),id=v.input?.asset,found=[...positions].find(([,p])=>
+    p.follow&&p.entry.asset===id);
+  if(!found){show("status","Aucun suivi PAPER actif pour l’actif sélectionné.");return;}
+  positions.delete(found[0]);
+  add("SUIVI_ANNULE_PAPER",found[1].entry.asset,{reason:"human_cancel"});
+  show("follow","ANNULÉ · "+id+" · aucune opération exécutée.");
+  show("status","Suivi "+id+" annulé, journal conservé dans cet onglet.");
+  refresh();
+}
+function onChartUpdate(){
+  watchTick();
+  automaticTick();
 }
 // Opt-in automatic observation: triggered only by canonical already-loaded
 // chart events; no timer, HTTP, strategy gate, balance or exchange action.
