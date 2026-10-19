@@ -22,7 +22,7 @@ td,th{padding:10px 9px;border-bottom:1px solid #254050;white-space:nowrap}th{fon
 .detail-title select:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
 .detail-table{min-width:950px;text-align:right}.detail-table th:first-child,.detail-table td:first-child{text-align:left}
 .detail-table td{font-size:12px}.detail-table th{white-space:nowrap}
-.detail-note{font-size:12px;margin-top:7px}
+.detail-note{font-size:12px;margin-top:7px}.analysis-table{min-width:880px;text-align:right}.analysis-table th:first-child,.analysis-table td:first-child{text-align:left}
 .proof{border-left:3px solid var(--accent);padding:10px 13px;background:#102e39;border-radius:0 8px 8px 0}.links{display:flex;flex-wrap:wrap;gap:16px}.note{color:var(--amber)}footer{padding-top:18px;font-size:12px}
 @media(max-width:840px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics>div{min-height:95px}}@media(max-width:430px){main{padding:14px 12px 30px}}
 </style>
@@ -66,6 +66,13 @@ td,th{padding:10px 9px;border-bottom:1px solid #254050;white-space:nowrap}th{fon
 <th>Crypto</th><th>Entrée (UTC)</th><th>Sortie simulée (UTC)</th><th>Résultat réalisé PAPER</th>
 </tr></thead><tbody id="position-closed"></tbody></table></div>
 <p id="closed-note" class="detail-note">—</p>
+<h3>Analyse des décisions · critères et refus</h3>
+<p id="analysis-status" class="proof" role="status" aria-live="polite">En attente de preuves validées.</p>
+<div class="scroll"><table class="analysis-table">
+<thead><tr><th>Crypto</th><th>Position</th><th>Pression acheteuse</th><th>Volume / médiane</th><th>Tendance marché 72 h</th><th>Filtre B</th></tr></thead>
+<tbody id="analysis-entries"></tbody></table></div>
+<p id="analysis-note" class="detail-note">—</p>
+<p class="detail-note">Règles gelées : pression acheteuse ≥ 50 % et volume supérieur à la médiane des 24 heures antérieures sur bougie achevée ; entrée à l'ouverture de l'heure suivante ; filtre B : tendance médiane des 20 marchés sur 72 heures ≥ 3 %. Le plafond est de quatre positions PAPER à 100 USDT. Cette analyse explique les critères observés, sans proposer d'achat ni prouver une exécution OKX.</p>
 <p class="detail-note">* Frais hypothétiques aller-retour inclus dans la valeur et le résultat.
 « Impact des frais » compare la valeur théorique sans frais à la valeur PAPER avec frais, au même cours archivé.
 Les heures de sortie sont des règles de simulation, pas des ordres OKX. Seules les 12 clôtures les plus récentes de la variante sont détaillées ici.</p>
