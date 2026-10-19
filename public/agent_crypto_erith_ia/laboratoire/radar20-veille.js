@@ -205,7 +205,7 @@ function renderDecisionAnalysis(){
  }
  try{
    const a=evaluateDecisionAnalysis(verifiedProtocol,verifiedSummary,key,row);
-   show("analysis-status",a.signals+" signaux admissibles · "+a.accepted+
+   show("analysis-status",a.signals+" signaux candidats · "+a.accepted+
      " entrées PAPER · refus : "+a.rejected.filter+" tendance, "+
      a.rejected.existing+" position existante, "+
      a.rejected.capacity+" plafond de 4, "+a.rejected.cash+" trésorerie.");
