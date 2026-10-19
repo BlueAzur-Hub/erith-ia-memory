@@ -28,7 +28,7 @@ const volumeMeta={type:"bar",hidden:false};
 const chart={canvas:{id:"mainChart"},ctx,chartArea:{left:50,right:1050,top:30,bottom:530},
  data:{datasets:[{atlasCoin:{id:"bitcoin",symbol:"BTC"},data:[]},{label:"Volume",data:[1,2,3],type:"bar"}],labels:[]},
  getDatasetMeta:i=>i===0?meta:volumeMeta};
-function fixture(period,days,count,segments){
+function fixture(period,days,count,segments,expectedLabel=period){
  title="BTC · Bitcoin · "+period+" · PRIX USD · NORMALE";
  const span=days*DAY;
  labels=Array.from({length:count},(_,i)=>new Date(END-span+span*i/(count-1)).toISOString());
@@ -38,7 +38,7 @@ function fixture(period,days,count,segments){
  const result=api.variationSummary(chart);
  assert.ok(result.bars,"Cannot build "+period+": "+result.reason);
  assert.equal(result.bars.length,segments,"Wrong bucket count for "+period);
- assert.equal(result.period.label,period);
+ assert.equal(result.period.label,expectedLabel);
  assert.ok(result.bars.every(b=>b.samples>=2&&Number.isFinite(b.change)));
  ops.length=0;
  assert.equal(api.drawVariationSummary(chart,result),segments);
@@ -54,6 +54,8 @@ fixture("30j",30,721,30);
 fixture("60j",60,361,60);
 fixture("90j",90,361,13);
 fixture("1a",365,366,12);
+fixture("1 an",365,366,12,"1a");
+assert.equal(api.periodConfig().bar,"1j","Visible 1 an title must map to daily cadence");
 fixture("Max",1000,601,12);
 assert.equal(api.plugin.beforeDatasetDraw(chart,{index:1}),false,"Volume histogram skipped in Hybrid");
 assert.equal(api.plugin.beforeDatasetDraw(chart,{index:0}),undefined,"Primary line kept");

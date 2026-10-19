@@ -23,8 +23,9 @@
  function periodConfig(){
    if(typeof document==='undefined'||typeof document.getElementById!=='function')return null;
    const title=String(document.getElementById('atlasChartInsightOverlayTitle')?.textContent||'');
-   const m=title.match(/(?:^|[\s·])(24h|7j|30j|60j|90j|1a|max)(?=[\s·]|$)/i);
-   return m?(PERIODS[m[1].toLowerCase()]||null):null;
+   const m=title.match(/(?:^|[\s·])(24h|7j|30j|60j|90j|1a|1\s+an|max)(?=[\s·]|$)/i);
+   const periodKey=m?.[1]?.toLowerCase().replace(/\s+/g,'')==='1an'?'1a':m?.[1]?.toLowerCase();
+   return periodKey?(PERIODS[periodKey]||null):null;
  }
  function nativeDate(v,base){
    const t=T(v);if(t!==null)return t;
@@ -265,8 +266,9 @@
  function summaryPeriodConfig(){
    if(typeof document==='undefined'||typeof document.getElementById!=='function')return null;
    const title=String(document.getElementById('atlasChartInsightOverlayTitle')?.textContent||'');
-   const m=title.match(/(?:^|[\s·])(24h|7j|30j|60j|90j|1a|max)(?=[\s·]|$)/i);
-   return m?SUMMARY_RULES[m[1].toLowerCase()]||null:null;
+   const m=title.match(/(?:^|[\s·])(24h|7j|30j|60j|90j|1a|1\s+an|max)(?=[\s·]|$)/i);
+   const periodKey=m?.[1]?.toLowerCase().replace(/\s+/g,'')==='1an'?'1a':m?.[1]?.toLowerCase();
+   return periodKey?SUMMARY_RULES[periodKey]||null:null;
  }
  const priceValue=v=>N(Array.isArray(v)?v[1]:v&&typeof v==='object'?(v.y??v.price??v.value):v);
  function summaryOwnership(ref){
