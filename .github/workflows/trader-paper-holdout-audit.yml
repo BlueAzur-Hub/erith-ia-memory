@@ -1,0 +1,58 @@
+name: Trader PAPER - retrospective holdout audit
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/tools/trader_paper_holdout_audit.py"
+      - "public/agent_crypto_erith_ia/laboratoire/ETUDE_PAPER_RETROSPECTIVE.md"
+      - "public/agent_crypto_erith_ia/data/trader_flux/radar20/**"
+      - "public/agent_crypto_erith_ia/data/trader_flux/radar20_retro_stress/**"
+      - ".github/workflows/trader-paper-holdout-audit.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/tools/trader_paper_holdout_audit.py"
+      - "public/agent_crypto_erith_ia/laboratoire/ETUDE_PAPER_RETROSPECTIVE.md"
+      - "public/agent_crypto_erith_ia/data/trader_flux/radar20/**"
+      - "public/agent_crypto_erith_ia/data/trader_flux/radar20_retro_stress/**"
+      - ".github/workflows/trader-paper-holdout-audit.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/tools/trader_paper_holdout_audit.py
+            /public/agent_crypto_erith_ia/data/trader_flux/radar20/
+            /public/agent_crypto_erith_ia/data/trader_flux/radar20_retro_stress/
+      - name: Recalculate archive-based holdout without trading
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/trader_paper_holdout_audit.py
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          p = Path('public/agent_crypto_erith_ia/tools/trader_paper_holdout_audit.py')
+          spec = importlib.util.spec_from_file_location('paper_audit', p)
+          m = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(m)
+          r = m.audit()
+          assert r['orders_enabled'] is False
+          assert r['source_files'] == 24
+          assert len(r['all_rules']) == 8
+          chosen = r['best_by_selection']
+          assert chosen['model'] == 'pressure_65_hold_48h_cost_0.8pct'
+          assert abs(chosen['selection']['sum_independent_trials_usdt'] - (-40.531)) < 0.03
+          assert abs(chosen['holdout']['sum_independent_trials_usdt'] - (-23.288)) < 0.03
+          assert chosen['selection']['trades'] == 23
+          assert chosen['holdout']['trades'] == 18
+          assert chosen['selection']['sum_independent_trials_usdt'] < 0
+          assert chosen['holdout']['sum_independent_trials_usdt'] < 0
+          print('Archive selection locked; chronological holdout LOSS confirmed, not profitable.')
+          PY
