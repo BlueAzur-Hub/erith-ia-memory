@@ -147,7 +147,7 @@ for(const [k,v] of Object.entries({capital:"5",entryFeePct:"0,2",exitFeePct:"0,2
 for(const k of ['status','follow','observations','result','open','journal'])
   mockFields.set(k,{textContent:''});
 const fakePanel={querySelector:selector=>mockFields.get(selector.replace(
-  /^\\[data-lab-(.+)\\]$/,'$1'))||null};
+  /^\[data-lab-(.+)\]$/,'$1'))||null};
 const mockDoc={readyState:'loading',getElementById:id=>id==='traderPaperLab'?fakePanel:null,
   addEventListener:()=>{}};
 let latest=Date.now()-13*60000;
