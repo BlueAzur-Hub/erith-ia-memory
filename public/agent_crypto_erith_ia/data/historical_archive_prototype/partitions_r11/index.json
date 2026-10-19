@@ -4,18 +4,18 @@
   "source": "Binance Spot",
   "quote_asset": "USDT",
   "basket_reference": "github-action-main_2026-10-07T22-00-44-550Z",
-  "source_index_sha256": "e57c70ca5b705d292bd653ddfb4ae3bf3b6a58a092f3578dd7b82a3829ae2818",
-  "source_index_updated_at": "2026-10-19T00:29:14.788846Z",
-  "source_delta_count": 83,
+  "source_index_sha256": "43b3f4fbbce928440a78a3a198d291f028caccbec4b1fec6f8e0f8fb7c918bc5",
+  "source_index_updated_at": "2026-10-19T05:18:21.340412Z",
+  "source_delta_count": 84,
   "source_seed": {
     "file": "ohlcv_top10_2026-10-08.json.gz",
     "bytes": 130593,
     "sha256": "14d4abe6d2af78b948ad3c8bc9bbc664c2929a46a8192331c15e6d20cef7ec65"
   },
   "series_count": 21,
-  "candles_total": 28826,
+  "candles_total": 29274,
   "sealed_blocks_total": 112,
-  "pending_candles_total": 791,
+  "pending_candles_total": 1239,
   "bucket_policy": {
     "24h": "UTC day",
     "7d": "UTC Monday week",
@@ -29,8 +29,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792369200000,
-      "candles": 3441,
+      "last_open_ms": 1792386600000,
+      "candles": 3499,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -183,10 +183,10 @@
           "bucket_start_ms": 1792368000000,
           "bucket_end_ms": 1792454400000,
           "first_open_ms": 1792368000000,
-          "last_open_ms": 1792369200000,
-          "candles": 5,
+          "last_open_ms": 1792386600000,
+          "candles": 63,
           "boundary_kind": "full_period",
-          "rows_sha256": "3d5b6557aafc5e57849d9a90ad360787912a63c3786a976070870a00cb2fc129"
+          "rows_sha256": "3782561761f6855a323e946fdf68b61f0eb444e7e80205dc2c455352ca72851d"
         }
       ]
     },
@@ -196,8 +196,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792364400000,
-      "candles": 431,
+      "last_open_ms": 1792382400000,
+      "candles": 436,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -236,7 +236,18 @@
           "sha256": "5b61176bb0129bf4c322c67f82c5773fc61ab992b4b010dc8a98a19b0534f0ba"
         }
       ],
-      "pending": []
+      "pending": [
+        {
+          "bucket": "week-20261019",
+          "bucket_start_ms": 1792368000000,
+          "bucket_end_ms": 1792972800000,
+          "first_open_ms": 1792368000000,
+          "last_open_ms": 1792382400000,
+          "candles": 5,
+          "boundary_kind": "full_period",
+          "rows_sha256": "56c6e97ee07af8fd41b8311227773820ee8632371aa369396c5dbdff9f229437"
+        }
+      ]
     },
     {
       "id": "binancecoin",
@@ -244,8 +255,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792353600000,
-      "candles": 246,
+      "last_open_ms": 1792368000000,
+      "candles": 247,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -266,10 +277,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792353600000,
-          "candles": 108,
+          "last_open_ms": 1792368000000,
+          "candles": 109,
           "boundary_kind": "full_period",
-          "rows_sha256": "8c32f6612071c4b368094939faecdced2a7be5deee1573486b5634d97caaae98"
+          "rows_sha256": "0dce916debc0547c85be10e46e64ae55bc51c43340f5981868b9fb392fa026b1"
         }
       ]
     },
@@ -279,8 +290,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792369200000,
-      "candles": 3441,
+      "last_open_ms": 1792386600000,
+      "candles": 3499,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -433,10 +444,10 @@
           "bucket_start_ms": 1792368000000,
           "bucket_end_ms": 1792454400000,
           "first_open_ms": 1792368000000,
-          "last_open_ms": 1792369200000,
-          "candles": 5,
+          "last_open_ms": 1792386600000,
+          "candles": 63,
           "boundary_kind": "full_period",
-          "rows_sha256": "09c4f3ef64a04d3958ad984b0c87bedbe28ff226e8a81d8da951ef80ed831ba0"
+          "rows_sha256": "d3efbf311a3dbdd33a95a3f994a774ddea58fc7a5a05b30f882a9df790ec9625"
         }
       ]
     },
@@ -446,8 +457,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792364400000,
-      "candles": 431,
+      "last_open_ms": 1792382400000,
+      "candles": 436,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -486,7 +497,18 @@
           "sha256": "8b8e5174c696cc40bd3c403600e8554f68adaec9e1faac7331c7b1215a21a11e"
         }
       ],
-      "pending": []
+      "pending": [
+        {
+          "bucket": "week-20261019",
+          "bucket_start_ms": 1792368000000,
+          "bucket_end_ms": 1792972800000,
+          "first_open_ms": 1792368000000,
+          "last_open_ms": 1792382400000,
+          "candles": 5,
+          "boundary_kind": "full_period",
+          "rows_sha256": "03bb3dbf63939d5159c464602fe2595474d5440420c18caf5b445eb9195706b7"
+        }
+      ]
     },
     {
       "id": "bitcoin",
@@ -494,8 +516,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792353600000,
-      "candles": 246,
+      "last_open_ms": 1792368000000,
+      "candles": 247,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -516,10 +538,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792353600000,
-          "candles": 108,
+          "last_open_ms": 1792368000000,
+          "candles": 109,
           "boundary_kind": "full_period",
-          "rows_sha256": "9d1d15cfa57ce3a78cb1ee71067f0205c290a3855ca6af9b0e1134e661ed9e4d"
+          "rows_sha256": "dbf5142111bb445fe59f798f6d6287b068dffbd23c032c6009155d8968587b3e"
         }
       ]
     },
@@ -529,8 +551,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792369200000,
-      "candles": 3441,
+      "last_open_ms": 1792386600000,
+      "candles": 3499,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -683,10 +705,10 @@
           "bucket_start_ms": 1792368000000,
           "bucket_end_ms": 1792454400000,
           "first_open_ms": 1792368000000,
-          "last_open_ms": 1792369200000,
-          "candles": 5,
+          "last_open_ms": 1792386600000,
+          "candles": 63,
           "boundary_kind": "full_period",
-          "rows_sha256": "5b767733f77309e5305ef3ef3ac808e1268a2acc7dc24f07d319e0cfb90c9abc"
+          "rows_sha256": "6494a70a8a97da0eb32dc25ade982b5b60a4ca6039297915306738b03d03a6a3"
         }
       ]
     },
@@ -696,8 +718,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792364400000,
-      "candles": 431,
+      "last_open_ms": 1792382400000,
+      "candles": 436,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -736,7 +758,18 @@
           "sha256": "3fef73df4bb75662c5713a285b484cc6e5b9d791b7453acdf8496e5500091731"
         }
       ],
-      "pending": []
+      "pending": [
+        {
+          "bucket": "week-20261019",
+          "bucket_start_ms": 1792368000000,
+          "bucket_end_ms": 1792972800000,
+          "first_open_ms": 1792368000000,
+          "last_open_ms": 1792382400000,
+          "candles": 5,
+          "boundary_kind": "full_period",
+          "rows_sha256": "6e40fa823b86343658249a39ffae3f0e2a9e7ac95e0bec5b3eace2c56b1edff2"
+        }
+      ]
     },
     {
       "id": "ethereum",
@@ -744,8 +777,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792353600000,
-      "candles": 246,
+      "last_open_ms": 1792368000000,
+      "candles": 247,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -766,10 +799,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792353600000,
-          "candles": 108,
+          "last_open_ms": 1792368000000,
+          "candles": 109,
           "boundary_kind": "full_period",
-          "rows_sha256": "d7d5aaafd2c51098ce6a47478983ae9c247041aeffc880631f7ec7c31342db4c"
+          "rows_sha256": "fa35d208fae3b8a7e285c0cea1d1ac2c31b4a1caf78e342d1ff9d858107633c3"
         }
       ]
     },
@@ -779,8 +812,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792369200000,
-      "candles": 3441,
+      "last_open_ms": 1792386600000,
+      "candles": 3499,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -933,10 +966,10 @@
           "bucket_start_ms": 1792368000000,
           "bucket_end_ms": 1792454400000,
           "first_open_ms": 1792368000000,
-          "last_open_ms": 1792369200000,
-          "candles": 5,
+          "last_open_ms": 1792386600000,
+          "candles": 63,
           "boundary_kind": "full_period",
-          "rows_sha256": "aa7e59593b0121c59b333715d01b5f838c021732f356fc58df5914a31b3b605a"
+          "rows_sha256": "5db61df972f961fa7310a1486621008224e129b0b34c420815617d5217e1bcdb"
         }
       ]
     },
@@ -946,8 +979,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792364400000,
-      "candles": 431,
+      "last_open_ms": 1792382400000,
+      "candles": 436,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -986,7 +1019,18 @@
           "sha256": "a1ab7511700070bf94794df5daea36142e9c8ee52cb820fcead4b58c673a7b14"
         }
       ],
-      "pending": []
+      "pending": [
+        {
+          "bucket": "week-20261019",
+          "bucket_start_ms": 1792368000000,
+          "bucket_end_ms": 1792972800000,
+          "first_open_ms": 1792368000000,
+          "last_open_ms": 1792382400000,
+          "candles": 5,
+          "boundary_kind": "full_period",
+          "rows_sha256": "d4b8fd0eef30907d9af13f9a26b0e829f5b689d720667c0feac37373c8dbb293"
+        }
+      ]
     },
     {
       "id": "ripple",
@@ -994,8 +1038,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792353600000,
-      "candles": 246,
+      "last_open_ms": 1792368000000,
+      "candles": 247,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -1016,10 +1060,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792353600000,
-          "candles": 108,
+          "last_open_ms": 1792368000000,
+          "candles": 109,
           "boundary_kind": "full_period",
-          "rows_sha256": "674555aa2f56ccdf9b833802ae87d446c2a57d144d95517d9d227b1ad7468e46"
+          "rows_sha256": "ae384a2ae0c9903058899b1de16e5d2d9cbe8e339ffe451c13a9e69fe214a8d4"
         }
       ]
     },
@@ -1029,8 +1073,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792369200000,
-      "candles": 3441,
+      "last_open_ms": 1792386600000,
+      "candles": 3499,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -1183,10 +1227,10 @@
           "bucket_start_ms": 1792368000000,
           "bucket_end_ms": 1792454400000,
           "first_open_ms": 1792368000000,
-          "last_open_ms": 1792369200000,
-          "candles": 5,
+          "last_open_ms": 1792386600000,
+          "candles": 63,
           "boundary_kind": "full_period",
-          "rows_sha256": "48ff9bdfdb23c90196ef3a22dd9d5bf38371fdc737d96064613059e4b3005ba0"
+          "rows_sha256": "632a22631f876a18aeb7a6ac2288266bbc9fce9c443f69068d6f4055c5f20701"
         }
       ]
     },
@@ -1196,8 +1240,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792364400000,
-      "candles": 431,
+      "last_open_ms": 1792382400000,
+      "candles": 436,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -1236,7 +1280,18 @@
           "sha256": "f4ace25479c9df0bbc482ea8f9f9d5576845f40a5b6ce012fafb2a2431bd4022"
         }
       ],
-      "pending": []
+      "pending": [
+        {
+          "bucket": "week-20261019",
+          "bucket_start_ms": 1792368000000,
+          "bucket_end_ms": 1792972800000,
+          "first_open_ms": 1792368000000,
+          "last_open_ms": 1792382400000,
+          "candles": 5,
+          "boundary_kind": "full_period",
+          "rows_sha256": "718a88aff22d977a40ee295f5247f59a8fb294c383d07a71cd9474050369cf2e"
+        }
+      ]
     },
     {
       "id": "solana",
@@ -1244,8 +1299,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792353600000,
-      "candles": 246,
+      "last_open_ms": 1792368000000,
+      "candles": 247,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -1266,10 +1321,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792353600000,
-          "candles": 108,
+          "last_open_ms": 1792368000000,
+          "candles": 109,
           "boundary_kind": "full_period",
-          "rows_sha256": "5c67f327e01eb9800cdd71308b7ca1492757e5f25f1667747c8e4c41eb80efba"
+          "rows_sha256": "b3237702ec096c81d1e4c8d09acedd6e3634e268806392d4f0b28962474368a2"
         }
       ]
     },
@@ -1279,8 +1334,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792369200000,
-      "candles": 3441,
+      "last_open_ms": 1792386600000,
+      "candles": 3499,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -1433,10 +1488,10 @@
           "bucket_start_ms": 1792368000000,
           "bucket_end_ms": 1792454400000,
           "first_open_ms": 1792368000000,
-          "last_open_ms": 1792369200000,
-          "candles": 5,
+          "last_open_ms": 1792386600000,
+          "candles": 63,
           "boundary_kind": "full_period",
-          "rows_sha256": "407f293f867cca8770e23ae723ae733ea7ebe88eea97214a8d163a2c9cf6cbc1"
+          "rows_sha256": "98d9beed1b7c4d8af929db5b20a6b9b2906ab4baa351bd72a17d25f3944ba1dc"
         }
       ]
     },
@@ -1446,8 +1501,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792364400000,
-      "candles": 431,
+      "last_open_ms": 1792382400000,
+      "candles": 436,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -1486,7 +1541,18 @@
           "sha256": "b438c345011465c91d97fa3deccd6fd7c3f89d981945ef402bb9c3713d7f0c00"
         }
       ],
-      "pending": []
+      "pending": [
+        {
+          "bucket": "week-20261019",
+          "bucket_start_ms": 1792368000000,
+          "bucket_end_ms": 1792972800000,
+          "first_open_ms": 1792368000000,
+          "last_open_ms": 1792382400000,
+          "candles": 5,
+          "boundary_kind": "full_period",
+          "rows_sha256": "d4f12f3e8bf3e8e7b7fefbfa820ac147bfb2d2feddf5c036ffaba9d8533d411d"
+        }
+      ]
     },
     {
       "id": "tron",
@@ -1494,8 +1560,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792353600000,
-      "candles": 246,
+      "last_open_ms": 1792368000000,
+      "candles": 247,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -1516,10 +1582,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792353600000,
-          "candles": 108,
+          "last_open_ms": 1792368000000,
+          "candles": 109,
           "boundary_kind": "full_period",
-          "rows_sha256": "e8243caabec4a89ecbc5eb44ccda16dc9cd893b8146f46190aa29074c15127c5"
+          "rows_sha256": "4d81ea6051d70054c959124dfeb84cfc6cd34b6cd670146bdf5f23623656d942"
         }
       ]
     },
@@ -1529,8 +1595,8 @@
       "period": "24h",
       "interval": "5m",
       "first_open_ms": 1791337200000,
-      "last_open_ms": 1792369200000,
-      "candles": 3441,
+      "last_open_ms": 1792386600000,
+      "candles": 3499,
       "sealed": [
         {
           "bucket": "day-20261007",
@@ -1683,10 +1749,10 @@
           "bucket_start_ms": 1792368000000,
           "bucket_end_ms": 1792454400000,
           "first_open_ms": 1792368000000,
-          "last_open_ms": 1792369200000,
-          "candles": 5,
+          "last_open_ms": 1792386600000,
+          "candles": 63,
           "boundary_kind": "full_period",
-          "rows_sha256": "60933e61e9925b64c74f0d01b87478a85e8b5e50139b07e9bf38dfa14c6d1929"
+          "rows_sha256": "199c9063d7514835e0fb06d96e59973991d8c832b853d0f7c2ecfec2795061fa"
         }
       ]
     },
@@ -1696,8 +1762,8 @@
       "period": "7d",
       "interval": "1h",
       "first_open_ms": 1790816400000,
-      "last_open_ms": 1792364400000,
-      "candles": 431,
+      "last_open_ms": 1792382400000,
+      "candles": 436,
       "sealed": [
         {
           "bucket": "week-20260928",
@@ -1736,7 +1802,18 @@
           "sha256": "5cb362112dada3522b0f9eb531b43996718c3bcab2d9b965097afdce25a29541"
         }
       ],
-      "pending": []
+      "pending": [
+        {
+          "bucket": "week-20261019",
+          "bucket_start_ms": 1792368000000,
+          "bucket_end_ms": 1792972800000,
+          "first_open_ms": 1792368000000,
+          "last_open_ms": 1792382400000,
+          "candles": 5,
+          "boundary_kind": "full_period",
+          "rows_sha256": "ed35293e718685dd0607d8e452eaa425e029957eb4a7e62084e2a1f7a5e1be36"
+        }
+      ]
     },
     {
       "id": "zcash",
@@ -1744,8 +1821,8 @@
       "period": "30d",
       "interval": "4h",
       "first_open_ms": 1788825600000,
-      "last_open_ms": 1792353600000,
-      "candles": 246,
+      "last_open_ms": 1792368000000,
+      "candles": 247,
       "sealed": [
         {
           "bucket": "month-202609",
@@ -1766,10 +1843,10 @@
           "bucket_start_ms": 1790812800000,
           "bucket_end_ms": 1793491200000,
           "first_open_ms": 1790812800000,
-          "last_open_ms": 1792353600000,
-          "candles": 108,
+          "last_open_ms": 1792368000000,
+          "candles": 109,
           "boundary_kind": "full_period",
-          "rows_sha256": "54a989fcb77d4a7511cd360ad4f1cc432750591e8f89920b655f86e321451ae8"
+          "rows_sha256": "0693ab3669503b878f9f917672b20484796cda2a1167d4d0a3316e8d90fd1e30"
         }
       ]
     }
