@@ -252,12 +252,22 @@ function mount(){
     "#traderPaperLab label{display:grid;gap:4px;font-size:12px}#traderPaperLab input{width:135px;background:#031622;color:white;border:1px solid #416d76;padding:7px;border-radius:6px}"+
     "#traderPaperLab button{margin:8px 5px 5px 0;padding:8px 11px;background:#155266;color:#eaffff;border:1px solid #3b9bab;border-radius:8px;cursor:pointer}"+
     "#traderPaperLab pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:10px;background:#041723;border:1px solid #284c59;border-radius:7px;color:#d3f9eb}"+
-    "#traderPaperLab [data-lab-status]{color:#e3cf91}";
+    "#traderPaperLab [data-lab-status]{color:#e3cf91}"+
+    "#traderPaperLab .pl-primary{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}"+
+    "#traderPaperLab .pl-primary button{font-size:14px;font-weight:750;padding:11px 14px}"+
+    "#traderPaperLab .pl-primary [data-lab-begin]{background:#116655;border-color:#39c7aa}"+
+    "#traderPaperLab .pl-primary [data-lab-study]{background:#254e73;border-color:#82bad7}"+
+    "#traderPaperLab .pl-primary [data-lab-stop]{background:#34363f;border-color:#6b7487}"+
+    "#traderPaperLab [data-lab-follow]{padding:12px;border:1px solid #397987;border-radius:8px;background:#102e39;color:#b4ede2}"+
+    "#traderPaperLab .pl-more{border:1px solid #285667;border-radius:8px;margin:10px 0}"+
+    "#traderPaperLab .pl-more>summary{padding:10px;background:#102b38;color:#afcfde;font-size:12px}"+
+    "#traderPaperLab .pl-more[open]>div{padding:8px}"+
+    "#traderPaperLab [data-lab-result]{font:14px/1.8 system-ui,sans-serif;background:#071f2b;border-color:#3e8696}";
   document.head.appendChild(style);
   const node=document.createElement("details");node.id=ID;
   node.innerHTML=[
-    '<summary>LABORATOIRE PAPER · Marché USD / CT · calculs après coûts · aucun ordre</summary>',
-    '<div class="pl-body"><p>Choisir un actif du Market Core en Solo 24h USD (BTC, ETH, SOL et autres dont la série directe CoinGecko est vérifiée), ou CT dans Nouveaux listings. Une seule sélection active à la fois. Captures et positions fictives restent séparées par fournisseur, paire et identité CoinGecko.</p>',
+    '<summary>LABORATOIRE PAPER · Tester maintenant ou suivre une crypto · aucun ordre</summary>',
+    '<div class="pl-body"><p>Choisis une crypto sur le graphique Solo 24 h USD. Deux possibilités : une étude rétrospective immédiate sur ses données existantes, ou le suivi d’une opération fictive à partir de maintenant. Aucune transaction réelle.</p>',
     '<div class="pl-fields">',
     '<label>Capital USD fictif<input data-lab-capital value="5" inputmode="decimal"></label>',
     '<label>Frais achat (%)<input data-lab-entryFeePct value="0,2" inputmode="decimal"></label>',
@@ -265,39 +275,46 @@ function mount(){
     '<label>Spread total (%)<input data-lab-spreadPct value="0,1" inputmode="decimal"></label>',
     '<label>Glissement par côté (%)<input data-lab-slippagePct value="0,1" inputmode="decimal"></label>',
     '</div><p>Hypothèses ajustables, PAS les coûts OKX certifiés. USD notionnels : ni USD ni USDT ne sont traités automatiquement comme des USDC. Minimums et profondeur non évalués.</p>',
+    '<div class="pl-primary"><button type="button" data-lab-study>1 · Tester maintenant (historique 1 h)</button>',
+    '<button type="button" data-lab-begin>2 · Suivre une opération PAPER</button>',
+    '<button type="button" data-lab-stop>Annuler le suivi</button></div>',
+    '<p role="status" aria-live="polite" data-lab-follow>Pas de suivi actif. Une étude historique donne des résultats immédiatement, mais ne prédit pas les cours futurs.</p>',
+    '<p role="status" data-lab-status>Sélectionne une crypto puis teste son historique ou démarre un suivi.</p>',
+    '<details class="pl-more"><summary>Contrôles avancés · simulations et journal</summary><div>',
     '<button type="button" data-lab-capture>Capturer la source</button>',
     '<button type="button" data-lab-simulate>Simuler −5 / 0 / +5 %</button>',
-    '<button type="button" data-lab-begin>Ouvrir scénario prospectif</button>',
-    '<button type="button" data-lab-finish>Évaluer sur un nouveau relevé</button>',
+    '<button type="button" data-lab-finish>Évaluer manuellement un nouveau relevé</button>',
     '<button type="button" data-lab-auto aria-pressed="false">Démarrer Auto PAPER</button>',
-    '<button type="button" data-lab-copy>Copier le journal</button>',
-    '<p role="status" data-lab-status>En attente d’une capture volontaire.</p>',
+    '<button type="button" data-lab-copy>Copier le journal</button></div></details>',
     '<h4>Observations qualifiées</h4><pre data-lab-observations></pre>',
     '<h4>Résultat</h4><pre data-lab-result>Pas de valeur inventée.</pre>',
     '<h4>Observations PAPER ouvertes</h4><pre data-lab-open></pre>',
     '<h4>Journal prospectif · session seulement</h4><pre data-lab-journal></pre>',
-    '<p>Auto PAPER (facultatif) : écoute uniquement les nouveaux événements du graphique déjà sélectionné, sans relancer les marchés. Mesure prospective après ≥5 min de nouvelle donnée, maximum 20 observations ; s’arrête au rechargement ou à la fermeture. Chaque identité conserve sa propre expérience ; pas de suivi parallèle sans nouvelles bougies publiées. Aucun fetch nouveau, aucun ordre OKX, aucune sauvegarde automatique, aucune promotion des gates Strategy A.</p></div>'
+    '<p>Étude historique : fenêtres de 60 minutes qui se chevauchent, seulement pour illustrer l’effet des coûts ; aucune prédiction ni capital cumulé. Suivi PAPER : il se termine automatiquement après réception d’une nouvelle observation admissible datée au moins 5 minutes après l’entrée. La page n’interroge pas les marchés elle-même : si le propriétaire du graphique ne publie pas de nouveau point, elle reste en attente. Le suivi et son journal disparaissent au rechargement ou à la fermeture. Aucun ordre OKX, aucun envoi, aucune sauvegarde automatique.</p></div>'
   ].join("");
   zone.appendChild(node);
-  for(const [key,fn] of [["capture",take],["simulate",simulate],["begin",begin],["finish",finish]])
+  for(const [key,fn] of [["capture",take],["simulate",simulate],
+    ["study",studyNow],["begin",begin],["stop",stopWatch],["finish",finish]])
     qs(key)?.addEventListener("click",fn);
   qs("auto")?.addEventListener("click",()=>setAutomatic(!automatic));
   for(const event of ["agent-crypto:new-listing-line-ready",
     "agent-crypto:graph-context-ready","agent-crypto:workspace-restored",
     "agent-crypto:selected-market-changed"]){
-    globalThis.addEventListener(event,automaticTick,{passive:true});
+    globalThis.addEventListener(event,onChartUpdate,{passive:true});
   }
   qs("copy")?.addEventListener("click",async()=>{
     try{await navigator.clipboard.writeText(JSON.stringify({paper:true,realOrders:false,events:journal},null,2));
       show("status","Journal PAPER copié localement. Aucun envoi.");}
     catch(_){show("status","Copie refusée par Firefox ; aucune donnée transmise.");}
   });
-  node.addEventListener("toggle",()=>{if(node.open)refresh()});
+  node.addEventListener("toggle",()=>{if(node.open){refresh();onChartUpdate();}});
   refresh();return true;
 }
-globalThis.AgentCryptoTraderPaperLab=Object.freeze({mount,take,simulate,begin,finish,source,
+globalThis.AgentCryptoTraderPaperLab=Object.freeze({mount,take,simulate,studyNow,begin,finish,stopWatch,watchTick,source,
   snapshot:()=>({captured:[...captures.values()].map(x=>x.asset),open:[...positions.values()].map(x=>x.entry.asset),
-    autoOpen:[...automaticPositions.values()].map(x=>x.entry.asset),autoActive:automatic,
+    autoOpen:[...automaticPositions.values()].map(x=>x.entry.asset),
+    followed:[...positions.values()].filter(x=>x.follow).map(x=>x.entry.asset),
+    autoActive:automatic,
     autoCount:automaticCount,autoLimit:AUTO_LIMIT,
     journalCount:journal.length,realOrders:false,network:false,storage:false}),
   realOrders:false,network:false,storage:false,bridge:false,readOnly:true});
