@@ -1,0 +1,55 @@
+name: Radar Spot PAPER Decision Audit
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/tools/radar_spot_paper_audit.py"
+      - "public/agent_crypto_erith_ia/tools/test_radar_spot_paper_audit.py"
+      - "public/agent_crypto_erith_ia/tools/test_radar_spot_paper_view.cjs"
+      - "public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js"
+      - "public/agent_crypto_erith_ia/laboratoire/radar.html"
+      - "public/agent_crypto_erith_ia/data/crypto/radar-opportunities/**"
+      - ".github/workflows/radar-spot-paper-audit.yml"
+      - ".github/workflows/seven-radar-opportunity-history.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/tools/radar_spot_paper_audit.py"
+      - "public/agent_crypto_erith_ia/tools/test_radar_spot_paper_audit.py"
+      - "public/agent_crypto_erith_ia/tools/test_radar_spot_paper_view.cjs"
+      - "public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js"
+      - "public/agent_crypto_erith_ia/laboratoire/radar.html"
+      - "public/agent_crypto_erith_ia/data/crypto/radar-opportunities/**"
+      - ".github/workflows/radar-spot-paper-audit.yml"
+      - ".github/workflows/seven-radar-opportunity-history.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/tools/radar_spot_paper_audit.py
+            /public/agent_crypto_erith_ia/tools/test_radar_spot_paper_audit.py
+            /public/agent_crypto_erith_ia/tools/test_radar_spot_paper_view.cjs
+            /public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js
+            /public/agent_crypto_erith_ia/laboratoire/radar.html
+            /public/agent_crypto_erith_ia/data/crypto/radar-opportunities/
+            /public/agent_crypto_erith_ia/data/trader_flux/q_paper/state.json
+            /public/agent_crypto_erith_ia/data/trader_flux/radar_priority_spot/icnt/state.json
+            /public/agent_crypto_erith_ia/data/trader_flux/radar_priority_spot/fluid/state.json
+      - name: Python syntax and negative-case tests
+        run: |
+          python -m py_compile public/agent_crypto_erith_ia/tools/radar_spot_paper_audit.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_radar_spot_paper_audit.py -v
+      - name: All candidates reconcile with immutable recorded sources
+        run: python public/agent_crypto_erith_ia/tools/radar_spot_paper_audit.py --check
+      - name: Browser read-only presentation and no trading
+        run: |
+          node --check public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js
+          node --test public/agent_crypto_erith_ia/tools/test_radar_spot_paper_view.cjs
