@@ -40,6 +40,10 @@ def utc(value):
     return out
 
 
+def zulu(value):
+    return value.isoformat(timespec="milliseconds").replace("+00:00", "Z")
+
+
 def positive(value):
     return isinstance(value, (float, int)) and not isinstance(value, bool) and math.isfinite(value) and value > 0
 
@@ -85,7 +89,7 @@ def last_value(doc, coin_id, expected_day):
     return None
 
 
-def spot_evidence(coin_id, symbol, first_at, qualification, states):
+def spot_evidence(coin_id, symbol, first_at, last_day_end, qualification, states):
     # The qualification was taken on the LAST day: never call it an entry-day proof.
     matches = [x for x in qualification.get("candidates", []) if x.get("id") == coin_id]
     require(len(matches) <= 1, "qualification à identités dupliquées")
@@ -107,7 +111,7 @@ def spot_evidence(coin_id, symbol, first_at, qualification, states):
             when = utc(o["at_utc"])
             book = o.get("book", {})
             # Ignore old or malformed books; NEVER look up future quote for past entry.
-            if (when >= first_at and positive(book.get("best_ask_usdt"))
+            if (first_at <= when <= last_day_end and positive(book.get("best_ask_usdt"))
                 and positive(book.get("best_bid_usdt"))
                 and book["best_ask_usdt"] > book["best_bid_usdt"]
                 and book.get("book_age_seconds", 999) <= 120
@@ -117,7 +121,7 @@ def spot_evidence(coin_id, symbol, first_at, qualification, states):
             valid.sort(key=lambda v: v[0])
             when, sample = valid[0]
             book_sample = {"venue": sample["venue"], "pair": sample["market"],
-                           "quote": "USDT", "observed_at_utc": when.isoformat().replace("+00:00", "Z"),
+                           "quote": "USDT", "observed_at_utc": zulu(when),
                            "best_ask_usdt": sample["book"]["best_ask_usdt"],
                            "best_bid_usdt": sample["book"]["best_bid_usdt"],
                            "observation_later_than_signal": when > first_at,
@@ -129,7 +133,7 @@ def spot_evidence(coin_id, symbol, first_at, qualification, states):
         m = q["market"]
         require(q.get("symbol") == symbol, "qualification de symbole contradictoire")
         qual_at = utc(qualification["qualified_at_utc"])
-        require(qual_at >= first_at, "qualification future utilisée comme preuve antérieure")
+        require(first_at <= qual_at <= last_day_end, "qualification hors fenêtre du dossier")
         qual_snapshot = {"venue": m.get("provider"), "pair": m.get("pair"),
                          "quote": m.get("quote"),
                          "recorded_at_utc": qualification["qualified_at_utc"],
@@ -158,14 +162,19 @@ def build(folder=RADAR, states_override=None):
     initial = selected(old)
     qualification = read(folder / "qualification-latest.json")
     require(qualification.get("schema") == "erith.radar.spot-qualification.v1"
-            and qualification.get("source_observation_date_utc") == last
             and qualification.get("real_orders_enabled") is False
             and qualification.get("actual_execution_permissions") is False
             and qualification.get("coin_id_matches_exchange_symbol_verified") is False,
-            "qualification Spot datée non compatible")
+            "qualification Spot non compatible")
     qual_at = utc(qualification["qualified_at_utc"])
-    require(qual_at.date().isoformat() == last,
-            "qualification non réalisée lors du dernier jour")
+    last_day_end = utc(last + "T23:59:59Z")
+    # The pipeline may publish a new Radar day before its qualification.
+    # Never borrow a qualification from before the detection day or the future.
+    if not (dt.date.fromisoformat(first) <= qual_at.date() <= dt.date.fromisoformat(last)):
+        qualification = {**qualification, "candidates": []}
+        qual_stamp = None
+    else:
+        qual_stamp = qualification["qualified_at_utc"]
     states = states_override
     if states is None:
         states = {coin: read(p) for coin, p in STATES if p.exists()}
@@ -176,16 +185,16 @@ def build(folder=RADAR, states_override=None):
         later = last_value(end, id_, last)
         price = float(entry["priceUsd"])
         change = round(100 * (later[0] / price - 1), 5) if later and later[1] > detected else None
-        spot = spot_evidence(id_, symbol, detected, qualification, states)
+        spot = spot_evidence(id_, symbol, detected, last_day_end, qualification, states)
         observed = (spot["early_public_spot_book"] is not None
                     or spot["later_spot_qualification"] is not None)
         blocked = ("CONTRACT_IDENTITY_UNVERIFIED" if observed
                    else "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE")
         records.append({
             "coin_id": id_, "symbol": symbol, "name": entry.get("name", symbol),
-            "detected_group": group, "detected_at_utc": detected.isoformat().replace("+00:00", "Z"),
+            "detected_group": group, "detected_at_utc": zulu(detected),
             "entry_day_aggregate_price_usd": price,
-            "last_day_aggregate_at_utc": later[1].isoformat().replace("+00:00", "Z") if later else None,
+            "last_day_aggregate_at_utc": zulu(later[1]) if later else None,
             "last_day_aggregate_price_usd": later[0] if later else None,
             "aggregate_change_pct_observed": change,
             "outcome_state": "OBSERVED_LATER" if change is not None else "NO_COMPARABLE_LATER_PRICE",
@@ -207,7 +216,7 @@ def build(folder=RADAR, states_override=None):
         "analysis_is_retroactive": True, "strategy_certified": False,
         "source_first_day_utc": first, "source_last_day_utc": last,
         "source_intermediate_day_utc": mid,
-        "qualification_observed_at_utc": qualification["qualified_at_utc"],
+        "qualification_observed_at_utc": qual_stamp,
         "source_basis": "Archived Radar CoinGecko USD groups plus later Spot USDT evidence",
         "qualification_time_is_not_entry_time": True,
         "total_detected": len(records),
