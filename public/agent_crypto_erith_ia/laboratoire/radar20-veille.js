@@ -20,7 +20,7 @@ function evaluate(protocol,index,summary){
     protocol.holding_hours!==48)throw Error("Paramètres de recherche modifiés");
   if(!Array.isArray(index.days)||index.days.length>92||
     num(summary.days_collected,"days_collected")!==index.days.length||
-    summary.hours_per_market!==24)throw Error("Compteurs de journées incohérents");
+    summary.hours_per_market!==index.days.length*24)throw Error("Compteurs de journées incohérents");
   if(index.days.some((d,i)=>!(/^\d{4}-\d{2}-\d{2}$/.test(d.day||""))||
     !SHA.test(d.sha256||"")||d.file!=="observations/"+d.day+".json"||
     (i>0&&d.day<=index.days[i-1].day)))throw Error("Index journées non conforme");
