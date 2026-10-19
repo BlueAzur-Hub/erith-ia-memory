@@ -1,6 +1,6 @@
 const test=require("node:test"),assert=require("node:assert/strict");
 const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
-const {evaluate,evaluatePositions}=require("../public/agent_crypto_erith_ia/laboratoire/radar20-veille.js");
+const {evaluate,evaluatePositions,evaluateDecisionAnalysis}=require("../public/agent_crypto_erith_ia/laboratoire/radar20-veille.js");
 const digest="a".repeat(64);
 function fake(){const p={schema:"erith.trader.radar20.forward-protocol.v1",symbols:["ETH","SOL","XRP","ADA","LINK","AVAX","SUI","NEAR","UNI","AAVE","LTC","BCH","DOT","HBAR","XLM","DOGE","PEPE","SHIB","APT","ARB"],test_days:90,holding_hours:48,ticket_usdt:100,trading_orders_enabled:false,simulation_only:true,strategy_certified:false};
 const i={schema:"erith.radar20.forward.index.v1",config_sha256:digest,orders_enabled:false,days:[{day:"2026-10-14",file:"observations/2026-10-14.json",sha256:digest}],outputs:[{file:"summary.json",sha256:digest}]};
@@ -81,4 +81,26 @@ test("if published, all six detail variants reconcile to the indexed source and 
  const detail=evaluatePositions(p,i,s,d);
  assert.equal(Object.keys(detail).length,6);
  for(const key of Object.keys(detail))assert.equal(detail[key].open.length,s.variants[key].open_positions);
+});
+
+test("decision analysis reconciles evidence and refuses invented trade reasons",()=>{
+ const {p,i,s,d}=fakePositions(),key="A_0.8",v=s.variants[key];
+ v.signals=2;v.open_positions=1;v.closed_trades=0;v.rejected={filter:0,existing:0,capacity:1,cash:0};
+ d.variants[key].open.push({pair:"ETHUSDT",buy_share_pct:57,
+   volume_vs_median_24h:1.7,market_trend_72h_pct:1.2});
+ const a=evaluateDecisionAnalysis(p,s,key,d.variants[key]);
+ assert.equal(a.accepted,1);assert.equal(a.rejected.capacity,1);
+ assert.equal(a.traces[0].passesB,false);
+ assert.equal(a.traces[0].volumeRatio,1.7);
+ v.rejected.capacity=0;
+ assert.throws(()=>evaluateDecisionAnalysis(p,s,key,d.variants[key]),/rapprochés/);
+ v.rejected.capacity=1;
+ d.variants[key].open[0].buy_share_pct=20;
+ assert.throws(()=>evaluateDecisionAnalysis(p,s,key,d.variants[key]),/incohérentes/);
+});
+test("historical PAPER details remain readable while richer trace awaits collection",()=>{
+ const {p,s,d}=fakePositions(),key="B_0.8",v=s.variants[key];
+ v.signals=3;v.rejected={filter:3,existing:0,capacity:0,cash:0};
+ const a=evaluateDecisionAnalysis(p,s,key,d.variants[key]);
+ assert.equal(a.traces.length,0);assert.equal(a.rejected.filter,3);
 });
