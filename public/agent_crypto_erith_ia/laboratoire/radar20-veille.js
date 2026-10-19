@@ -122,7 +122,44 @@ function evaluateDecisionAnalysis(protocol,summary,key,ledger){
  return {signals:v.signals,accepted,rejected:r,traces};
 }
 
-if(typeof module!=="undefined"&&module.exports)module.exports=Object.freeze({evaluate,evaluatePositions,evaluateDecisionAnalysis});
+
+/* Comparative PAPER reporting; uses the already verified indexed summary and ledger. */
+function evaluateComparison(protocol,index,summary,positions){
+ const state=evaluate(protocol,index,summary);
+ const ledger=evaluatePositions(protocol,index,summary,positions);
+ const initial=num(protocol.capital_usdt,"capital initial");
+ if(initial!==400||summary.fee_costs_hypothetical!==true||
+    summary.okx_account_fee_not_available!==true)
+    throw Error("Hypothèses du bilan PAPER non confirmées");
+ const rows=VARIANTS.map(key=>{
+   const v=summary.variants[key],proof=ledger[key],model=key[0];
+   const assumed=Number(key.slice(2));
+   if(v.model!==(model==="A"?"A_original":"B_trend_3pct")||
+      v.cost_pct!==assumed||proof.closed_count!==v.closed_trades||
+      !Number.isInteger(v.wins)||v.wins<0||v.wins>v.closed_trades||
+      !Number.isInteger(v.closed_trades)||v.closed_trades<0||
+      !Number.isInteger(v.open_positions)||v.open_positions<0||v.open_positions>4||
+      ![v.realized_usdt,v.unrealized_usdt,v.equity_usdt,v.worst_drawdown_usdt].every(Number.isFinite)||
+      v.worst_drawdown_usdt<0||
+      Math.abs(v.equity_usdt-initial-v.realized_usdt-v.unrealized_usdt)>.01)
+      throw Error("Bilan financier incohérent : "+key);
+   // Complete trade history is in trades_A/B.json; last twelve only here.
+   if(v.closed_trades<=12&&Math.abs(proof.recent_closed.reduce((s,t)=>s+t.pnl_net_usdt,0)-v.realized_usdt)>.005)
+      throw Error("Clôtures PAPER non rapprochées : "+key);
+   return {key,model,cost:v.cost_pct,closed:v.closed_trades,wins:v.wins,
+     rate:v.closed_trades?100*v.wins/v.closed_trades:null,
+     realized:v.realized_usdt,unrealized:v.unrealized_usdt,
+     equity:v.equity_usdt,drawdown:v.worst_drawdown_usdt,
+     rejected:v.rejected};
+ });
+ const a=rows.find(x=>x.key==="A_0.8"),b=rows.find(x=>x.key==="B_0.8");
+ const aCostRange=a.equity-rows.find(x=>x.key==="A_1.6").equity;
+ const bCostRange=b.equity-rows.find(x=>x.key==="B_1.6").equity;
+ return {days:state.days,rows,allClosed:rows.reduce((s,r)=>s+r.closed,0),
+   aClosed:a.closed,bClosed:b.closed,aCostRange,bCostRange};
+}
+
+if(typeof module!=="undefined"&&module.exports)module.exports=Object.freeze({evaluate,evaluatePositions,evaluateDecisionAnalysis,evaluateComparison});
 if(typeof document==="undefined")return;
 const id=x=>document.getElementById(x);
 const show=(name,v)=>{id(name).textContent=v;};
@@ -152,7 +189,7 @@ function fillTable(rows){
   }
 }
 
-let verifiedPositions=null,verifiedProtocol=null,verifiedSummary=null;
+let verifiedPositions=null,verifiedProtocol=null,verifiedSummary=null,verifiedIndex=null,verifiedPositionDocument=null;
 function dateUTC(ms){return new Intl.DateTimeFormat("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false,timeZone:"UTC"}).format(new Date(ms))+" UTC";}
 function fillCells(tbody,rows){
  tbody.replaceChildren();
@@ -229,6 +266,46 @@ function renderDecisionAnalysis(){
  }
 }
 
+
+function renderComparison(){
+ if(!verifiedProtocol||!verifiedIndex||!verifiedSummary||!verifiedPositionDocument){
+   fillCells(id("comparison-rows"),[]);
+   show("comparison-status","En attente de positions PAPER cohérentes et contrôlées par SHA-256.");
+   show("comparison-costs","—");show("comparison-refusals","—");
+   return;
+ }
+ try{
+   const result=evaluateComparison(verifiedProtocol,verifiedIndex,verifiedSummary,verifiedPositionDocument);
+   fillCells(id("comparison-rows"),result.rows.map(r=>[
+     [r.model==="A"?"A · initial":"B · filtre tendance",""],
+     [number(r.cost,1)+" %",""],[String(r.closed),""],[r.closed?String(r.wins):"—",""],
+     [r.rate===null?"—":number(r.rate,1)+" %",""],
+     [number(r.realized)+" USDT",r.realized<0?"neg":r.realized>0?"pos":""],
+     [number(r.unrealized)+" USDT",r.unrealized<0?"neg":r.unrealized>0?"pos":""],
+     [number(r.equity)+" USDT",""],[number(r.drawdown)+" USDT",""]
+   ]));
+   const enough=result.allClosed>0&&result.aClosed>0&&result.bClosed>0;
+   show("comparison-status",result.allClosed===0?
+     result.days+" journée(s) archivée(s) · aucune transaction fictive clôturée : bilan en attente, aucun modèle gagnant.":
+     result.days+" journée(s) archivée(s) · "+result.aClosed+
+     " clôture(s) modèle A et "+result.bClosed+" modèle B (par scénario de frais). "+
+     (enough?"Comparaison exploratoire, sans verdict de rentabilité.":"Comparaison des performances non concluante : les deux modèles n'ont pas encore de clôtures."));
+   show("comparison-costs","Sensibilité des capitaux estimés aux scénarios de coûts A/R 0,8 % et 1,6 % : "+
+     "A : "+number(result.aCostRange)+" USDT ; B : "+number(result.bCostRange)+
+     " USDT. Ces écarts intègrent les effets possibles sur les trajectoires de portefeuille, pas uniquement les commissions.");
+   const a=result.rows.find(r=>r.key==="A_0.8"),b=result.rows.find(r=>r.key==="B_0.8");
+   const rej=r=>r.rejected||{};
+   show("comparison-refusals","Motifs de refus (scénario 0,8 %, comptés par signal candidat) : "+
+     "A · plafond "+(rej(a).capacity??"—")+", position existante "+(rej(a).existing??"—")+
+     " ; B · filtre tendance "+(rej(b).filter??"—")+
+     ". Ces refus ne sont ni des transactions perdues ni des occasions de gain prouvées.");
+ }catch(e){
+   fillCells(id("comparison-rows"),[]);
+   show("comparison-status","Bilan refusé : "+String(e?.message||e).slice(0,160));
+   show("comparison-costs","—");show("comparison-refusals","—");
+ }
+}
+
 let loading=false;
 async function refresh(){
  if(loading)return;loading=true;id("refresh").disabled=true;show("verification","Contrôle des sources et SHA-256…");
@@ -241,23 +318,25 @@ async function refresh(){
   show("days",data.signalsDays+" / 90");show("archives",data.days+" / 92 max.");
   show("closed",String(data.closed));show("last-day",data.lastDay||"Aucune");
   show("state",data.status);fillTable(data.rows);
-  verifiedPositions=null;verifiedProtocol=protocol;verifiedSummary=summary;
+  verifiedPositions=null;verifiedProtocol=protocol;verifiedSummary=summary;verifiedIndex=index;verifiedPositionDocument=null;renderComparison();
   const detailMeta=index.outputs?.find(item=>item.file==="positions.json");
   if(!detailMeta){
     show("positions-status","Détails des décisions non publiés dans cette génération d'archives ; en attente de la prochaine collecte.");
     fillCells(id("position-open"),[]);fillCells(id("position-closed"),[]);
-    show("open-note","—");show("closed-note","—");renderDecisionAnalysis();
+    show("open-note","—");show("closed-note","—");renderDecisionAnalysis();renderComparison();
   }else{
     try{
       const raw=await source("positions.json");
       if(!SHA.test(detailMeta.sha256||"")||await checksum(raw)!==detailMeta.sha256)
         throw Error("SHA-256 des positions différent de l'index");
-      verifiedPositions=evaluatePositions(protocol,index,summary,JSON.parse(raw));
-      renderPositions();
+      const positionDocument=JSON.parse(raw);
+      verifiedPositions=evaluatePositions(protocol,index,summary,positionDocument);
+      verifiedPositionDocument=positionDocument;
+      renderPositions();renderComparison();
     }catch(err){
       show("positions-status","Détails PAPER non validés : "+String(err?.message||err).slice(0,160));
       fillCells(id("position-open"),[]);fillCells(id("position-closed"),[]);
-      show("open-note","Aucune position affichée sans preuve validée.");show("closed-note","—");renderDecisionAnalysis();
+      show("open-note","Aucune position affichée sans preuve validée.");show("closed-note","—");renderDecisionAnalysis();renderComparison();
     }
   }
   show("observation",data.closed===0?"Aucune transaction simulée clôturée : cela ne prouve ni gain ni perte.":"Transactions fictives seulement : frais estimés, aucune exécution OKX prouvée.");
@@ -265,7 +344,7 @@ async function refresh(){
     ". Les fichiers quotidiens ne sont pas retéléchargés ici ; leur intégrité relève du contrôle scientifique GitHub Actions.");
  }catch(e){
    ["days","archives","closed","last-day","state"].forEach(n=>show(n,"—"));
-   id("variants").replaceChildren();verifiedPositions=null;verifiedProtocol=null;verifiedSummary=null;fillCells(id("position-open"),[]);fillCells(id("position-closed"),[]);renderDecisionAnalysis();
+   id("variants").replaceChildren();verifiedPositions=null;verifiedProtocol=null;verifiedSummary=null;verifiedIndex=null;verifiedPositionDocument=null;fillCells(id("position-open"),[]);fillCells(id("position-closed"),[]);renderDecisionAnalysis();renderComparison();
    show("positions-status","Sources du Journal non validées.");show("open-note","—");show("closed-note","—");
    show("observation","Aucune conclusion sans preuve cohérente.");
    show("verification","Lecture non validée : "+String(e?.message||e).slice(0,190));
