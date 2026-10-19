@@ -94,6 +94,9 @@ class Tests(unittest.TestCase):
 
  def test_okx_spot_rules_survive_binance_first_selection(self):
   def okx_and_binance(url):
+   if "/v5/market/books" in url:
+    return {"code":"0","data":[{"ts":str(int(NOW.timestamp()*1000)-1500),
+      "bids":[["9.9","100"]],"asks":[["10","100"]]}]}
    if "public/instruments" in url:
     return {"code":"0","data":[{"instType":"SPOT","instId":"TOK0-USDT",
       "baseCcy":"TOK0","quoteCcy":"USDT","state":"live",
@@ -109,6 +112,8 @@ class Tests(unittest.TestCase):
   self.assertEqual(first["okx_spot"]["rules"]["min_sz"],"10")
   self.assertEqual(first["okx_spot"]["rules"]["lot_sz"],"0.01")
   self.assertEqual(first["okx_spot"]["rules"]["tick_sz"],"0.00001")
+  self.assertEqual(first["okx_spot"]["best_book_status"],"DATED_PUBLIC_BOOK")
+  self.assertFalse(first["okx_spot"]["best_book"]["market_execution_proven"])
   self.assertFalse(first["okx_spot"]["contract_identity_proven"])
   self.assertFalse(first["okx_spot"]["real_orders_enabled"])
   second=next(c for c in out["candidates"] if c["symbol"]=="TOK1")
