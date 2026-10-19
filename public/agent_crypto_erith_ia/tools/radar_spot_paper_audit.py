@@ -233,16 +233,74 @@ def build(folder=RADAR, states_override=None):
     }
 
 
+
+def check_published(folder=RADAR, path=DEST):
+    """Verify immutable first/last day claims without rereading MOVING qualification."""
+    report = read(path)
+    require(report.get("schema") == SCHEMA and report.get("read_only") is True and
+            report.get("orders_enabled") is False and report.get("trades_executed") == 0 and
+            report.get("paper_trades_opened") == 0 and
+            report.get("analysis_is_retroactive") is True and
+            report.get("strategy_certified") is False,
+            "registre historique PAPER invalide")
+    first, last = report["source_first_day_utc"], report["source_last_day_utc"]
+    require(dt.date.fromisoformat(last) - dt.date.fromisoformat(first) == DAY * 2,
+            "jours sources du bilan incohérents")
+    selected_first = selected(read(folder / (first + ".json")))
+    end = read(folder / (last + ".json"))
+    records = report.get("candidates")
+    require(isinstance(records, list) and len(records) == len(selected_first) ==
+            report.get("total_detected") == report.get("blocked_paper_candidates"),
+            "liste d'origine modifiée")
+    risen = comparable = spot_evidence_count = 0
+    for (group, item, detected), stored in zip(selected_first, records):
+        require(stored.get("coin_id") == item["id"] and stored.get("symbol") == item["symbol"] and
+                stored.get("detected_group") == group and
+                utc(stored["detected_at_utc"]) == detected and
+                stored.get("entry_day_aggregate_price_usd") == item["priceUsd"],
+                "historique Radar ou identité falsifiée")
+        later = last_value(end, item["id"], last)
+        change = round(100 * (later[0]/float(item["priceUsd"])-1), 5) if later and later[1] > detected else None
+        require(stored.get("aggregate_change_pct_observed") == change and
+                stored.get("last_day_aggregate_price_usd") == (later[0] if later else None),
+                "variation non prouvée")
+        comparable += change is not None
+        risen += change is not None and change > 0
+        paper = stored.get("paper") or {}
+        spot = stored.get("spot") or {}
+        require(paper.get("decision") == "BLOCKED" and paper.get("executed_order") is False and
+                paper.get("trade_count") == 0 and paper.get("entry_price_usdt") is None and
+                paper.get("net_profit_usdt") is None,
+                "trade inventé dans un registre rétrospectif")
+        has_spot = bool(spot.get("early_public_spot_book") or spot.get("later_spot_qualification"))
+        spot_evidence_count += has_spot
+        require(spot.get("contract_identity_proven") is False and
+                spot.get("quote_conversion_usd_to_usdt_proven") is False and
+                paper.get("reason") == ("CONTRACT_IDENTITY_UNVERIFIED" if has_spot else
+                                        "NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE"),
+                "qualification rétroactive inventée")
+        for entry in (spot.get("early_public_spot_book"), spot.get("later_spot_qualification")):
+            if entry:
+                at = utc(entry.get("observed_at_utc") or entry.get("recorded_at_utc"))
+                require(detected <= at <= utc(last + "T23:59:59Z") and
+                        entry.get("identity_certified") is False and entry.get("quote") == "USDT",
+                        "preuve Spot hors fenêtre ou devise non autorisée")
+    require(report.get("later_prices_comparable") == comparable and
+            report.get("later_price_rises") == risen and
+            report.get("public_spot_evidence_candidates") == spot_evidence_count,
+            "compteurs du registre falsifiés")
+    return report
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--check", action="store_true", help="vérifier l'archive sans écriture")
+    parser.add_argument("--check", action="store_true", help="vérifier le bilan figé, sans relire la qualification mouvante")
     args = parser.parse_args()
-    report = build()
-    serialized = json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
     if args.check:
-        require(DEST.exists() and DEST.read_text(encoding="utf-8") == serialized,
-                "le dossier publié n'est pas synchronisé")
+        report = check_published()
     else:
+        report = build()
+        serialized = json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
         DEST.write_text(serialized, encoding="utf-8")
     print("Radar→Spot→PAPER:", report["source_first_day_utc"], "→",
           report["source_last_day_utc"], "| detected:", report["total_detected"],
