@@ -48599,13 +48599,15 @@ async function fetchWithTimeout(url, options = {}, timeout = 12000) {
   const onExternalAbort = () => controller.abort();
   if (externalSignal?.aborted) controller.abort();
   else externalSignal?.addEventListener?.("abort", onExternalAbort, { once: true });
-  const timer = setTimeout(() => controller.abort(), timeout);
+  let timer = null;
   const requestOptions = { ...options };
   delete requestOptions.signal;
   delete requestOptions.networkKind;
   delete requestOptions.networkWaitMs;
   try {
     if (networkKind) networkToken = await atlasAcquireNetwork(networkKind, externalSignal, networkWaitMs);
+    // A queued source must receive its full HTTP timeout after acquiring the network permit.
+    timer = setTimeout(() => controller.abort(), timeout);
     const response = await fetch(url, {
       credentials: "omit",
       mode: "cors",
