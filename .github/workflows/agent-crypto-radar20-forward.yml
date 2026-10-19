@@ -67,12 +67,23 @@ jobs:
           report=json.loads((root/'summary.json').read_text())
           assert report['no_live_orders'] and not report['strategy_certified']
           assert len(report['variants'])==6
-          print('PASS immutable-source indexes and six fee-stress variants')
+          details=json.loads((root/'positions.json').read_text())
+          assert details['simulation_only'] and details['orders_enabled'] is False
+          assert details['days_collected']==report['days_collected']
+          assert details['protocol_sha256']==report['protocol_sha256']
+          assert set(details['variants'])==set(report['variants'])
+          for key,variant in details['variants'].items():
+              expected=report['variants'][key]
+              assert len(variant['open'])==expected['open_positions']
+              assert variant['closed_count']==expected['closed_trades']
+              assert abs(sum(p['paper_unrealized_usdt'] for p in variant['open'])-expected['unrealized_usdt'])<.005
+          print('PASS indexed PAPER position proof and six fee-stress variants')
           PY
       - name: Recheck Radar 20 evidence after daily collection
         run: |
           set -euo pipefail
           node tests/radar20_scientific_gate.cjs --markdown >> "$GITHUB_STEP_SUMMARY"
+          node --test tests/radar20_veille.test.cjs
       - name: Publish only independently checked derived observations
         run: |
           set -euo pipefail
