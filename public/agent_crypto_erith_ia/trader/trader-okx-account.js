@@ -456,7 +456,7 @@ function capitalJourneyReport(info={},now=Date.now()){
    coherent=true;
    msg.push('Concordance arithmétique USDC : '+show(chain.credit_usdc)+' reçus − '+
      show(invested)+' engagés'+(ctClosedOkay?' + '+show(returned)+' récupérés':'')+
-     ' = '+show(info.usdc)+' restants. Elle ne démontre ni provenance exhaustive des fonds, ni résultat net certifié.');
+     ' = '+show(info.usdc)+' restants. Elle ne démontre pas une traçabilité exhaustive des fonds ni un résultat net certifié.');
   }else msg.push('Les montants USDC ne se réconcilient pas exactement : d’autres mouvements peuvent intervenir.');
  }else msg.push('Chaîne USDC incomplète : aucun financement direct de CT par ce BTC n’est affirmé.');
  msg.push('Coût PayPal, coût résiduel BTC, frais de conversion et profit global NON PROUVÉS. Lecture seule ; aucun ordre.');
