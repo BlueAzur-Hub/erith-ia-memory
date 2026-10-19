@@ -152,7 +152,8 @@ function previewOkxSpot(evidence){
   if(!tick||!lot||!min||!bid||!ask||!bidQty||!askQty||
      bid>=ask||bid%tick||ask%tick)return blocked("INVALID_SPOT_BOOK_OR_RULES");
   const ticket=100n*U, buyFeeBps=10n,sellFeeBps=10n,slippageBps=20n;
-  const qty=(ticket*U/ask)/lot*lot;
+  // Reserve buy-side slippage within the fixed 100 USDT fictive budget.
+  const qty=((ticket*U*10000n)/(ask*(10000n+slippageBps)))/lot*lot;
   if(qty<min||!qty)return blocked("GROSS_QUANTITY_BELOW_OKX_MINIMUM");
   if(qty>askQty)return blocked("ASK_BEST_LEVEL_DEPTH_INSUFFICIENT");
   const buyCost=qty*ask/U;
@@ -168,6 +169,7 @@ function previewOkxSpot(evidence){
   if(grossSale<=feeSell+reserveSell)return blocked("COSTS_EXCEED_EXIT_NOTIONAL");
   const netSale=grossSale-feeSell-reserveSell;
   const investment=buyCost+reserveBuy;
+  if(investment>ticket)return blocked("PAPER_BUDGET_EXCEEDED");
   const pnl=netSale-investment;
   const pct=(Number(pnl)/Number(investment))*100;
   const hurdle=(Number(investment)/Number(netSale)-1)*100;
