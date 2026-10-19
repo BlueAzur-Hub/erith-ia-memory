@@ -113,6 +113,84 @@ function tick(s,book,nowRaw){check(s);if(!s.pending||s.halted)return s;
 function cancel(s,at){check(s);if(!s.pending)return s;return update(s,{pending:null},{type:"PAPER_CANCEL",id:s.pending.id,at:new Date(stamp(at)).toISOString()})}
 function kill(s,at){check(s);const a=cancel(s,at);return update(a,{pending:null,halted:true},{type:"PAPER_KILL_SWITCH",at:new Date(stamp(at)).toISOString()})}
 
+/* Pure, historical public OKX best-level stress estimate.
+   Only a same-snapshot exit-cost hurdle; no prediction, fill, account or order. */
+function previewOkxSpot(evidence){
+ const blocked=reason=>frozen({status:"NOT_EVALUABLE",reason,orders_enabled:false,executable:false});
+ try{
+  const info=evidence?.okx_spot,book=info?.best_book,rules=info?.rules;
+  if(evidence?.identity_status!=="SYMBOL_ONLY_NOT_COIN_ID_PROVEN"||
+     info?.venue!=="OKX"||info?.quote!=="USDT"||
+     info.pair!==evidence.symbol+"-USDT"||
+     info.pair_observed!==true||info.native_rules_verified!==true||
+     info.contract_identity_proven!==false||info.real_orders_enabled!==false||
+     rules?.source!=="OKX_PUBLIC_SPOT_INSTRUMENT"||
+     rules.contract_identity_proven!==false||rules.fees_proven!==false||
+     book?.schema!=="erith.radar.okx.spot-best-book.v1"||
+     book.source!=="OKX_PUBLIC_SPOT_BOOK"||book.pair!==info.pair||
+     book.quote!=="USDT"||book.market_execution_proven!==false||
+     book.orders_enabled!==false||book.fees_verified!==false)
+    return blocked("PUBLIC_SPOT_EVIDENCE_MISSING");
+  const captured=stamp(book.collected_at_utc),market=stamp(book.exchange_time_utc);
+  if(market>captured+5000||captured-market>120000||
+     captured> Date.now()+300000) return blocked("BOOK_TIMESTAMP_NOT_TRUSTED");
+  // This calculation is tied to the archived book time, never "live" now.
+  const U=1000000000000000000n;
+  function dec(raw){
+   const str=String(raw??"");
+   if(!/^\d{1,20}(?:\.\d{1,18})?$/.test(str))throw Error("PRECISION_UNSUPPORTED");
+   const [a,b=""]=str.split(".");
+   return BigInt(a)*U+BigInt(b.padEnd(18,"0"));
+  }
+  function fmt18(n){
+   if(n<0n)throw Error("NEGATIVE");
+   return String(n/U)+"."+String(n%U).padStart(18,"0").replace(/0+$/,"").padEnd(1,"0");
+  }
+  const tick=dec(rules.tick_sz),lot=dec(rules.lot_sz),min=dec(rules.min_sz),
+     bid=dec(book.best_bid_usdt),ask=dec(book.best_ask_usdt),
+     bidQty=dec(book.best_bid_qty),askQty=dec(book.best_ask_qty);
+  if(!tick||!lot||!min||!bid||!ask||!bidQty||!askQty||
+     bid>=ask||bid%tick||ask%tick)return blocked("INVALID_SPOT_BOOK_OR_RULES");
+  const ticket=100n*U, buyFeeBps=10n,sellFeeBps=10n,slippageBps=20n;
+  const qty=(ticket*U/ask)/lot*lot;
+  if(qty<min||!qty)return blocked("GROSS_QUANTITY_BELOW_OKX_MINIMUM");
+  if(qty>askQty)return blocked("ASK_BEST_LEVEL_DEPTH_INSUFFICIENT");
+  const buyCost=qty*ask/U;
+  // Conservative BASE-denominated hypothetical buy fee (rounded up).
+  const feeBase=(qty*buyFeeBps+9999n)/10000n;
+  const sellQty=((qty-feeBase)/lot)*lot;
+  if(sellQty<min||!sellQty)return blocked("NET_QUANTITY_BELOW_OKX_EXIT_MINIMUM");
+  if(sellQty>bidQty)return blocked("BID_BEST_LEVEL_DEPTH_INSUFFICIENT");
+  const grossSale=sellQty*bid/U;
+  const reserveBuy=(buyCost*slippageBps+9999n)/10000n;
+  const feeSell=(grossSale*sellFeeBps+9999n)/10000n;
+  const reserveSell=(grossSale*slippageBps+9999n)/10000n;
+  if(grossSale<=feeSell+reserveSell)return blocked("COSTS_EXCEED_EXIT_NOTIONAL");
+  const netSale=grossSale-feeSell-reserveSell;
+  const investment=buyCost+reserveBuy;
+  const pnl=netSale-investment;
+  const pct=(Number(pnl)/Number(investment))*100;
+  const hurdle=(Number(investment)/Number(netSale)-1)*100;
+  return frozen({
+   status:"HYPOTHETICAL_IMMEDIATE_ROUNDTRIP_ONLY",
+   pair:info.pair,observed_at_utc:book.exchange_time_utc,quote:"USDT",
+   ticketBudgetUSDT:"100",feeBuyBaseAssumedBps:Number(buyFeeBps),
+   feeSellQuoteAssumedBps:Number(sellFeeBps),
+   stressSlippageAssumedBpsPerSide:Number(slippageBps),
+   grossBuyQuantity:fmt18(qty),netSellableQuantity:fmt18(sellQty),
+   buyCostUSDT:fmt18(buyCost),immediateExitAfterCostsUSDT:fmt18(netSale),
+   hypotheticalImmediatePnlUSDT:fmt18(pnl<0n?-pnl:pnl),
+   hypotheticalImmediatePnlSign:pnl<0n?"-":pnl>0n?"+":"0",
+   hypotheticalImmediatePnlPct:Number(pct.toFixed(4)),
+   approximateBidRiseToBreakEvenPct:Number(Math.max(0,hurdle).toFixed(4)),
+   futureExitPriceProven:false,bestLevelOnly:true,
+   actualFeesVerified:false,contractIdentityProven:false,
+   accountAccessVerified:false,marketExecutionProven:false,
+   orders_enabled:false,executable:false
+  });
+ }catch(_){return blocked("PRECISION_OR_PUBLIC_EVIDENCE_INVALID");}
+}
+
 /* Read-only bridge: independently audit Radar shadow entries against the
    SAME net-exit-size check used by place(BUY). Never convert this to a fill. */
 function auditRadarShadow(ledger,identity,qualification){
@@ -190,6 +268,6 @@ function auditRadarShadow(ledger,identity,qualification){
    results,checked:results.filter(x=>x.status==="HYPOTHETICAL_SIZE_OK").length,
    notCertified:results.filter(x=>x.status!=="HYPOTHETICAL_SIZE_OK").length});
 }
-return Object.freeze({SCHEMA,pairs,create,exitCheck,auditRadarShadow,place,tick,cancel,kill,
+return Object.freeze({SCHEMA,pairs,create,exitCheck,auditRadarShadow,previewOkxSpot,place,tick,cancel,kill,
  realOrders:false,tradeEndpoint:null,network:false,bridge:false,storage:false});
 });
