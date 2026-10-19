@@ -102,3 +102,29 @@ test('two simultaneous USDC credits are ambiguous and cannot be paired',()=>{
   balanceChange:44.5};
  assert.equal(btcQuantityChain({...chain,usdcEntries:[usdc,{...usdc,balanceChange:44.5}]}).paired_usdc,false);
 });
+
+const fundingTransfer=(amount,at=btcDebit.timestamp+90000)=>[
+ {currency:'BTC',source:'Compte de trading',type:'1',subType:'12',
+  timestamp:at,balanceChange:-amount},
+ {currency:'BTC',source:'Compte de financement',type:'130',subType:'',
+  timestamp:at+1000,balanceChange:amount}
+];
+test('balanced Trading to Funding transfer does not count as BTC sale',()=>{
+ const t=fundingTransfer(.002);
+ const report=btcQuantityChain({...chain,movements:[...chain.movements,...t],
+  usdcEntries:[{currency:'USDC',source:'Compte de trading',timestamp:btcDebit.timestamp,balanceChange:65}]});
+ assert.equal(report.status,'balanced');assert.equal(report.debit_btc,.001);
+ assert.equal(report.remaining_btc,.002);assert.equal(report.internal_transfer.amount_btc,.002);
+ assert.equal(report.paired_usdc,true);
+});
+test('unpaired, reversed, mistyped or mismatched funding BTC entries never reconcile',()=>{
+ const [debit,credit]=fundingTransfer(.002);
+ for(const extra of [
+  [debit],[credit],[debit,{...credit,balanceChange:.0018}],
+  [debit,{...credit,type:'999'}],[debit,{...credit,timestamp:debit.timestamp+300000}],
+  [{...debit,subType:'2'},credit],
+  [{...debit,timestamp:credit.timestamp+1000},credit]
+ ]){
+  assert.notEqual(btcQuantityChain({...chain,movements:[...chain.movements,...extra]}).status,'balanced');
+ }
+});
