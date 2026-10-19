@@ -143,6 +143,9 @@ jobs:
       - name: Trader CT single-flight and A/B/C rollback
         run: node tests/agent_crypto_trader_ct_recall.cjs
 
+      - name: Queued Market source keeps its HTTP time budget
+        run: node --test tests/agent_crypto_market_network_queue.cjs
+
       - name: Trader reader-only Atlas producer guard
         run: node tests/agent_crypto_trader_atlas_readonly.cjs
 
