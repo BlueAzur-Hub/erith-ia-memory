@@ -268,7 +268,7 @@ function btcScenarioGrid(evidence={},now=Date.now()){
     now-t<0||now-t>120000||typeof quantity!=="number"||
     !Number.isFinite(quantity)||quantity<=0)
   return unavailable("Position BTC privée absente, nulle ou ancienne");
- if(typeof quote.price!=="number"||!Number.isFinite(quote.price)||
+ if(typeof quote?.price!=="number"||!Number.isFinite(quote.price)||
     quote.price<=0||typeof received!=="number"||
     !Number.isFinite(received)||now-received<0||now-received>EUR_MAX_AGE_MS)
   return unavailable("Cotation publique BTC/EUR indisponible ou ancienne");
