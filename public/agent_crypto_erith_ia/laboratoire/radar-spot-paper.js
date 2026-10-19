@@ -45,6 +45,34 @@ function paint(report,document){
    body.appendChild(tr);
  }
 }
+function validatedIdentity(data){
+ if(data?.schema!=="erith.radar.spot-identity-prospective.v1"||
+   data.orders_enabled!==false||data.real_orders!==0||data.paper_orders!==0||
+   data.decisions_not_executions!==true||!Array.isArray(data.candidates)||
+   data.candidates.length!==20||data.candidate_count!==20||
+   data.identity_proven_count!==data.candidates.filter(x=>x.identity_proven===true).length||
+   data.candidates.some(x=>x.paper_entry_price_usdt!==null||x.paper_pnl_usdt!==null))
+   throw Error("preuve contractuelle non vérifiable");
+ return data;
+}
+async function identityStatus(){
+ const target=document.getElementById("radar-contract-status");
+ if(!target)return;
+ try{
+   const response=await fetch("../data/crypto/radar-opportunities/spot-identity-latest.json",{cache:"no-store"});
+   if(!response.ok)throw Error("pas encore publiée");
+   const data=validatedIdentity(await response.json());
+   const t=Date.parse(data.collected_at_utc);
+   if(!Number.isFinite(t)||Date.now()-t>36*3600000||t>Date.now()+60000)
+     throw Error("preuve datée périmée ou future");
+   text(target,"Identités publiques Spot : "+data.identity_proven_count+"/"+data.candidate_count+
+     " contrats rapprochés au "+new Date(t).toLocaleString("fr-FR")+
+     " · aucune entrée PAPER exécutée. Contrôle de carnet et des coûts encore nécessaire.");
+ }catch(e){
+   text(target,"Contrats Spot : "+String(e.message||e)+
+     " · aucune identité nouvelle certifiée, aucune entrée PAPER autorisée.");
+ }
+}
 async function load(){
  const s=document.getElementById("radar-spot-status");
  if(!s)return;
@@ -52,8 +80,9 @@ async function load(){
    const response=await fetch(FILE,{cache:"no-store"});
    if(!response.ok)throw Error("Archive indisponible (HTTP "+response.status+")");
    paint(await response.json(),document);
+   await identityStatus();
  }catch(e){text(s,"Rapprochement indisponible : "+String(e.message||e)+
-   ". Aucun résultat PAPER n'est supposé.");}
+   ". Aucun résultat PAPER n'est supposé.");await identityStatus();}
 }
 if(typeof module==="object"&&module.exports)module.exports={valid,paint};
 if(typeof document!=="undefined"){
