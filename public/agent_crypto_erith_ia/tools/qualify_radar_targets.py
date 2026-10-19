@@ -165,8 +165,9 @@ def okx_public_best_book(pair, rules, fetch, now):
         isinstance(rules,dict) and rules.get("source")=="OKX_PUBLIC_SPOT_INSTRUMENT",
         "Paire/règles OKX non vérifiées")
  raw=get("OKX","/api/v5/market/books",{"instId":pair,"sz":5},fetch)
- ensure(raw.get("code")=="0" and isinstance(raw.get("data"),list) and
-        len(raw["data"])==1, "Carnet public OKX indisponible")
+ ensure(isinstance(raw,dict) and raw.get("code")=="0" and
+        isinstance(raw.get("data"),list) and len(raw["data"])==1,
+        "Carnet public OKX indisponible")
  book=raw["data"][0]
  ensure(isinstance(book,dict), "Carnet public incohérent")
  stamp=int(book["ts"])
