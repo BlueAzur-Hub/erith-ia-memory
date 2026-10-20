@@ -269,6 +269,22 @@ function build(root){
  const qualRows=node("div","radar-native-opportunity-list");
  qualRows.dataset.radarNative="qualificationRows";qualifying.append(qualRows);
  supplementary.append(qualifying);
+ // Same canonical Trader Radar, following PAPER; no separate page or new owner.
+ const okxHourly=foldSection("radar-native-okx-hourly",
+   "OKX Spot · relevés horaires (USDC / USDT / EUR)",
+   "foldOkxHourly","Premières observations · lecture seule");
+ const okxNote=node("p","table-note","Chargement du Coffre OKX EEE daté…");
+ okxNote.dataset.radarNative="okxHourlyNote";okxHourly.append(okxNote);
+ const okxWrap=node("div","table-wrap"),okxTable=node("table");
+ const okxHead=node("thead"),okxHeadRow=node("tr");
+ for(const title of ["Paire","Relevés","Milieu du carnet","Spread","Valeur bid niveau 1","Valeur ask niveau 1","Évolution observée"])
+   okxHeadRow.append(node("th","",title));
+ okxHead.append(okxHeadRow);okxTable.append(okxHead);
+ const okxRows=node("tbody");okxRows.dataset.radarNative="okxHourlyRows";
+ okxTable.append(okxRows);okxWrap.append(okxTable);okxHourly.append(okxWrap);
+ okxHourly.append(node("p","table-note","Carnets publics datés, pas une cotation live ou un fill. "+
+   "Les devises EUR, USDT et USDC restent séparées ; une heure ne prouve pas une tendance."));
+ supplementary.append(okxHourly);
  const foot=node("p","table-note","Lecture seule · aucun ordre OKX · USDT n'est pas automatiquement USDC · Radar20 de recherche inchangé");
  supplementary.append(foot);
  return {filter,sort,tbody,lb,refresh,group};
@@ -767,6 +783,39 @@ function printQualification(root,model){
   row.append(more);list.append(row);
  }
 }
+// Use the exact same public archive validator as standalone Radar.
+// Never create a second market owner, chart, order or live data transport.
+function describeOkxHourly(report){
+ if(!report)return "Bilan OKX horaire indisponible · rien à reconstituer.";
+ return report.pairs.length+" paires Spot · "+report.observedHours+" heure(s) vérifiée(s) · "+
+   report.withTrend+" évolution(s) décrite(s) · "+
+   (report.stale?"ARCHIVE DIFFÉRÉE":"Archive publique datée")+
+   " · "+safeDate(report.asOf)+" · pas de signal d'achat.";
+}
+function printOkxHourly(root,model){
+ const note=lookup(root,"okxHourlyNote");
+ const rows=lookup(root,"okxHourlyRows");
+ if(!note||!rows)return;
+ const report=model.okxHourly;
+ note.textContent=report?describeOkxHourly(report):
+   model.okxHourlyError||"Bilan OKX non encore publié.";
+ setFoldNote(root,"foldOkxHourly",report?
+   report.pairs.length+" paires · "+report.observedHours+" heure(s) · "+
+   (report.stale?"archive différée":"aucun ordre"):
+   "Source indisponible · aucune preuve inventée");
+ rows.replaceChildren();
+ if(!report)return;
+ for(const p of report.pairs){
+   const tr=node("tr");
+   for(const v of [
+     p.pair,String(p.observations),
+     number(p.mid,8)+" "+p.quote,number(p.spreadBps)+" pb",
+     number(p.bidDepth)+" "+p.quote,number(p.askDepth)+" "+p.quote,
+     p.change===null?"— (1 heure)":pct(p.change)
+   ])cell(tr,v);
+   rows.appendChild(tr);
+ }
+}
 async function identityRegistry(){
  const local="./data/new-listings-identities.json";
  try{return await get(local);}
@@ -791,6 +840,8 @@ async function refresh(root,model){
  const knowledgePromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/research/asset-knowledge.json");
  const dynamicPromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/radar-opportunities/dynamic-followups.json");
  const spotComparisonPromise=get("https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/trader_flux/radar_priority_spot/comparison.json");
+ // Read GitHub public archive once per normal Radar refresh, without OKX API.
+ const okxHourlyPromise=get("../data/crypto/okx-hourly/research-latest.json");
  const instrumentsPromise=get("https://api.bitget.com/api/v3/market/instruments?category=SPOT");
  const tickersPromise=get("https://api.bitget.com/api/v3/market/tickers?category=SPOT");
  const issues=[];
@@ -813,6 +864,19 @@ async function refresh(root,model){
   model.qualification=null;model.knowledge=null;model.qualificationError="Qualification Spot · chargement…";
   model.dynamicFollowups=null;model.dynamicFollowupsError="Suivi historique · chargement…";
   model.spotComparison=null;model.spotComparisonError="Spot USDT · rapport en attente";
+  model.okxHourly=null;model.okxHourlyError="Coffre OKX · relevé daté en cours de lecture…";
+  printOkxHourly(root,model);
+  void okxHourlyPromise.then(data=>{
+    const reader=global.AgentCryptoRadarOkxHourly;
+    if(typeof reader?.valid!=="function")throw Error("Validateur public OKX indisponible");
+    model.okxHourly=reader.valid(data,Date.now());
+    model.okxHourlyError="";
+    printOkxHourly(root,model);
+  }).catch(error=>{
+    model.okxHourly=null;
+    model.okxHourlyError="Archives OKX non vérifiées : "+String(error?.message||error);
+    printOkxHourly(root,model);
+  });
   printQualification(root,model);
   printMarket(root,model);
   printWatch(root,model);
@@ -889,6 +953,6 @@ function mount(root){
  return true;
 }
 if(typeof module!=="undefined"&&module.exports)
- module.exports=Object.freeze({selectGraph,compactMoney,printMarket,openOpportunityFiche,matchedCandidateKnowledge,verifiedDynamicFollowups,dynamicCandidateHistory,describeDynamicPoint,trajectoryEvidence,trajectoryVolumeReadout,verifyProspectiveSpotComparison,spotComparisonLine,printTrajectories,printQualification});
+ module.exports=Object.freeze({selectGraph,compactMoney,printMarket,openOpportunityFiche,matchedCandidateKnowledge,verifiedDynamicFollowups,dynamicCandidateHistory,describeDynamicPoint,trajectoryEvidence,trajectoryVolumeReadout,verifyProspectiveSpotComparison,spotComparisonLine,printTrajectories,printQualification,describeOkxHourly,printOkxHourly});
 global.AgentCryptoRadarNative=Object.freeze({mount});
 })(typeof globalThis!=="undefined"?globalThis:this);
