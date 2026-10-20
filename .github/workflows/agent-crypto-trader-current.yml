@@ -175,6 +175,9 @@ jobs:
           node --check public/agent_crypto_erith_ia/trader/trader-paper-lab-core.js
           node --check public/agent_crypto_erith_ia/trader/trader-paper-lab-view.js
           node --test public/agent_crypto_erith_ia/trader/test-paper-lab.cjs
+          node --check public/agent_crypto_erith_ia/trader/trader-paper-decision-core.js
+          node --check public/agent_crypto_erith_ia/trader/trader-paper-decision-view.js
+          node --test public/agent_crypto_erith_ia/trader/test-paper-decision.cjs
 
       - name: Trader historical selection identity and native quote
         run: node tests/agent_crypto_trader_historical_identity.cjs

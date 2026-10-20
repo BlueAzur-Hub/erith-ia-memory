@@ -71,6 +71,7 @@ jobs:
             /public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
             /public/agent_crypto_erith_ia/administrator/css/learning-lab.css
             /public/agent_crypto_erith_ia/trader/*.js
+            /public/agent_crypto_erith_ia/trader/test-paper-decision.cjs
             /public/agent_crypto_erith_ia/trader/*.html
             /public/agent_crypto_erith_ia/trader/*.json
             /public/agent_crypto_erith_ia/laboratoire/*.md
@@ -175,6 +176,10 @@ jobs:
             prefix+"trader/trader-paper-lab-view.js",
             prefix+"trader/test-paper-lab.cjs",
             prefix+"trader/trader-candles-minute-watch.js",
+            # Explicitly reviewed, Trader-only, no order interfaces.
+            prefix+"trader/trader-paper-decision-core.js",
+            prefix+"trader/trader-paper-decision-view.js",
+            prefix+"trader/test-paper-decision.cjs",
           }
           changed=set(subprocess.check_output(
             ["git","diff","--name-only",base,"HEAD","--",prefix+"trader/"],
@@ -211,10 +216,25 @@ jobs:
             "status":"TRADER_COFFRE_VISIBLE_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
-          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/trader-candles-minute-watch.js"}:
+          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/trader-candles-minute-watch.js",prefix+"trader/trader-paper-decision-core.js",prefix+"trader/trader-paper-decision-view.js",prefix+"trader/test-paper-decision.cjs"}:
             if f==prefix+"trader/trader-runtime-mirror.js":
               expected=previous(f).replace("40.6.639","40.6.640").replace("trader-historical-panel.js?reader=top50-cohorts","trader-historical-panel.js?reader=visible-coffre")
               actual=current(f)
+              # Subtract ONLY the new, separately tested read-only PAPER
+              # diagnostic loader when it is absent from the protected base.
+              addon="      // Add the optional public evidence reader to the EXISTING PAPER lab.\n"
+              addon_end="      doc.head.appendChild(view);"
+              if addon in actual and addon not in expected:
+                assert actual.count(addon)==1
+                front, tail=actual.split(addon,1)
+                assert tail.count(addon_end)>=1
+                removed, following=tail.split(addon_end,1)
+                assert 'view.onload=()=>{' in removed
+                assert 'trader-paper-decision-core.js' in removed
+                assert 'trader-paper-decision-view.js' in removed
+                assert 'spot-paper-order-engine.js' in removed
+                assert '/trade/order' not in removed and '/withdraw' not in removed
+                actual=front+addon_end+following
               first="  // Visible PAPER laboratory."
               last="  // Trader-only continuity, deliberately not loaded in the public Interface."
               if first in actual and first not in expected:
@@ -229,6 +249,20 @@ jobs:
             else:
               expected=previous(f).replace("40.6.639","40.6.640")
             assert current(f)==expected,f"Non-version Trader change: {f}"
+          # The new addon has a narrow invariant, not a blanket Trader exemption.
+          decision_core=current(prefix+"trader/trader-paper-decision-core.js")
+          decision_view=current(prefix+"trader/trader-paper-decision-view.js")
+          decision_test=current(prefix+"trader/test-paper-decision.cjs")
+          assert 'realOrders:false,network:false,storage:false' in decision_core
+          assert 'strategy_certified:false' in decision_core
+          assert 'getElementById("traderPaperLab")' in decision_view
+          assert 'AgentCryptoTraderPaperLab?.source' in decision_view
+          assert 'no-store' in decision_view
+          assert 'node:test' in decision_test
+          for source in (decision_core,decision_view):
+            assert '/trade/order' not in source and '/withdraw' not in source
+            assert 'setInterval(' not in source and 'localStorage.' not in source
+          assert 'fetch(' not in decision_core
           guard=current(prefix+"trader/math-core-external-guard.js")
           assert "AgentCryptoTraderExternalMathGuard" in guard
           assert 'real_orders:false' in guard
