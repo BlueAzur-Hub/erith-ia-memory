@@ -176,8 +176,8 @@ def trades(fetch, pair, now):
     raw = api(fetch, "/api/v5/market/trades", instId=pair, limit=5)
     result = []
     for row in raw:
-        if not isinstance(row, dict) or row.get("instId") != pair or
-                row.get("side") not in ("buy", "sell"):
+        if (not isinstance(row, dict) or row.get("instId") != pair or
+                row.get("side") not in ("buy", "sell")):
             continue
         try:
             result.append({"time_utc": millis(row["ts"], now, 24 * 3600000),
