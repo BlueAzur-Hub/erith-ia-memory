@@ -1079,6 +1079,9 @@
         loads.push(loadRadarScript("../laboratoire/radar.js"));
       if(!globalThis.AgentCryptoRadarNative)
         loads.push(loadRadarScript("./js/market-radar-native.js"));
+      // Same read-only OKX archive validator in Trader and standalone Radar.
+      if(!globalThis.AgentCryptoRadarOkxHourly)
+        loads.push(loadRadarScript("../laboratoire/radar-okx-hourly.js"));
       await Promise.all(loads);
       if(!globalThis.AgentCryptoRadarReader)throw new Error("Lecteur Radar non disponible");
       if(!globalThis.AgentCryptoRadarNative?.mount)throw new Error("Présentation native Radar non disponible");
