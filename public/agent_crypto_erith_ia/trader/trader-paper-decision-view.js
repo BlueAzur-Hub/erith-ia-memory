@@ -211,7 +211,7 @@ function invalidate(){
  const s=selection();
  const nextSourceKey=ticketSourceKey(s.input);
  const ticket=document.getElementById("traderOkxTicket");
- if(ticket?.open&&ticket.dataset.ticketSourceKey&&nextSourceKey&&
+ if(ticket?.open&&ticket.dataset.ticketSourceKey&&
     nextSourceKey!==ticket.dataset.ticketSourceKey){
    ticketRequest++;
    ticket.dataset.ticketSourceKey=nextSourceKey;
