@@ -101,6 +101,8 @@ function set(key,value,group="odField"){
 function reset(){
  if(!node)return;
  node.dataset.ready="false";
+ const label=node.querySelector(".erith-od-pair");
+ if(label)label.textContent="CT/USDC · LIMIT · à vérifier";
  for(const entry of node.querySelectorAll("[data-od-field],[data-od-proof]"))entry.textContent=EMPTY;
  set("orders","Non activée","odProof");
  set("pair","CT/USDC · LIMIT","odProof");
@@ -116,6 +118,8 @@ function update({ticket,context,review,preview,bookDiagnostic,checkedAt}={}){
  }
  const validBook=ticket.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"&&bookDiagnostic?.accepted===true;
  node.dataset.ready=String(validBook);
+ const header=node.querySelector(".erith-od-pair");
+ if(header)header.textContent="CT/USDC · LIMIT";
  const hasPreview=preview?.maximum_sellable_base!==undefined&&preview?.orders_enabled===false;
  set("buyPrice",str(ticket.best_ask_quote)+" USDC");
  set("buyQty",hasPreview?str(preview.buy_quantity)+" CT":str(ticket.gross_buy_quantity)+" CT · provisoire");
