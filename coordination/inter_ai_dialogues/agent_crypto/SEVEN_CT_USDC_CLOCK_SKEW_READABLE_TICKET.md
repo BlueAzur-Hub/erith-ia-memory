@@ -28,3 +28,19 @@ Dans le relevé transmis à 00 h 16, le ticket CT-USDC indique : `DIAGNOSTIC CAR
 5. Si `BOOK_STALE` ou `LOCAL_REQUEST_FAILED`, suivre le diagnostic et corriger le maillon concerné. Toute archive reste une étude historique.
 
 **Point d'arrêt :** correction de vérification et affichage simplifié livrés ; fonctionnement chez l'utilisateur en attente de validation Firefox.
+
+
+## Recette terrain validée · 21 octobre 2026 à 00 h 28 (capture Firefox)
+
+La capture et le relevé fournis par le propriétaire après Ctrl+F5 confirment :
+- **CARNET CT/USDC · RÉCENT OKX ACCEPTÉ** ; source : **Backend public local OKX**, et non archive horaire GitHub.
+- **DIAGNOSTIC CARNET LOCAL · LOCAL_OK** ; avance d'horloge mesurée **0,060 seconde**, tolérée par la limite **2 secondes**. Le carnet validé est daté `2026-10-20T22:28:11.151Z`.
+- Les règles publiques Spot CT/USDC et les contrôles privés de disponibilité/éligibilité du compte sont lus. Le scénario **PAPER** respecte son plafond de quantité dans ce relevé et les frais sont estimés avec `feeType=0` (frais d'achat en CT).
+- Le nouveau résumé à quatre lignes fonctionne ; le rapport technique reste consultable sous une section dépliable.
+- **Aucun ordre envoyé** ; pas de permission Trade. Cette recette ne certifie ni une exécution de marché, ni un minimum notionnel additionnel, ni des fills partiels.
+
+### Prochaine étape (chantier distinct)
+
+Construire et tester en simulation un cycle d'ordre LIMIT Spot CT/USDC : état proposé → confirmation humaine → envoi fictif → accepté/refusé/partiellement exécuté/annulé, rapprochement d'un état incertain, contrôle des résidus inférieurs à `minSz`, et interdiction des réessais automatiques. Préserver le mode READ jusqu'à validation de cette machine à états, de l'autorisation Trade distincte et d'une seconde confirmation humaine.
+
+**Point de contrôle actualisé : la PR #553 est validée dans Firefox. Aucun nouveau Bridge à installer pour ce constat.**
