@@ -1,0 +1,100 @@
+--- a/bridge/bridge.py
++++ b/bridge/bridge.py
+@@ -221,7 +221,7 @@
+ AUTH_SESSIONS_LOCK = threading.Lock()
+ AUTH_FAILURES: dict[str, list[float]] = {}
+ AUTH_FAILURES_LOCK = threading.Lock()
+-AUTH_PRIVILEGED_GET = {"/profiles", "/history", "/scanner-latest", "/scanner-status", "/scanner-history", "/capabilities", "/security/status", "/book-mirror/status", "/oracle-evidence/status", "/okx/status", "/okx/account", "/okx/orders", "/okx/fills", "/okx/fees", "/okx/ledger"}
++AUTH_PRIVILEGED_GET = {"/profiles", "/history", "/scanner-latest", "/scanner-status", "/scanner-history", "/capabilities", "/security/status", "/book-mirror/status", "/oracle-evidence/status", "/okx/status", "/okx/account", "/okx/orders", "/okx/fills", "/okx/fees", "/okx/ledger", "/okx/fee-type"}
+ AUTH_PRIVILEGED_POST = {"/chat", "/summary", "/conclusion", "/scanner-snapshot", "/book-mirror/publish", "/oracle-evidence/ingest"}
+ 
+ OKX_SECRETS_ROOT = TRUST_ROOT.parent / "secrets"
+@@ -240,6 +240,7 @@
+     "/api/v5/trade/orders-history-archive",
+     "/api/v5/trade/fills-history",
+     "/api/v5/account/trade-fee",
++    "/api/v5/account/config",
+     "/api/v5/account/bills-archive",
+     "/api/v5/asset/bills-history",
+ })
+@@ -352,7 +353,7 @@
+ 
+ 
+ CAPABILITY_POLICY = {
+-    "owner": frozenset({"history.read", "scanner.read", "scanner.write", "atlas.run", "aerith.run", "chat.run", "security.read", "book_mirror.publish", "book_mirror.read", "oracle_evidence.publish", "oracle_evidence.read", "okx.account.read", "okx.orders.read", "okx.fills.read", "okx.fees.read", "okx.ledger.read"}),
++    "owner": frozenset({"history.read", "scanner.read", "scanner.write", "atlas.run", "aerith.run", "chat.run", "security.read", "book_mirror.publish", "book_mirror.read", "oracle_evidence.publish", "oracle_evidence.read", "okx.account.read", "okx.orders.read", "okx.fills.read", "okx.fees.read", "okx.ledger.read", "okx.fee_type.read"}),
+     "operator": frozenset({"history.read", "scanner.read", "atlas.run", "aerith.run", "chat.run"}),
+     "reader": frozenset({"history.read", "scanner.read"}),
+ }
+@@ -377,6 +378,7 @@
+     "/okx/orders": "okx.orders.read",
+     "/okx/fills": "okx.fills.read",
+     "/okx/fees": "okx.fees.read",
++    "/okx/fee-type": "okx.fee_type.read",
+     "/okx/ledger": "okx.ledger.read",
+ }
+ 
+@@ -653,7 +655,7 @@
+         "site": status.get("site"),
+         "write_routes": False,
+         "withdraw_routes": False,
+-        "capabilities": ["okx.account.read", "okx.orders.read", "okx.fills.read", "okx.fees.read", "okx.ledger.read"],
++        "capabilities": ["okx.account.read", "okx.orders.read", "okx.fills.read", "okx.fees.read", "okx.ledger.read", "okx.fee_type.read"],
+     }
+ 
+ 
+@@ -711,6 +713,27 @@
+         "instId": clean_inst,
+         "fetched_at": datetime.now(timezone.utc).isoformat(),
+         "fees": fees.get("data") or [],
++    }
++
++
++
++def okx_fee_type_payload() -> dict[str, Any]:
++    """Read only the account Spot fee-currency selector; never echo config."""
++    config = okx_private_get("/api/v5/account/config")
++    rows = config.get("data")
++    if not isinstance(rows, list) or len(rows) != 1 or not isinstance(rows[0], dict):
++        raise ValueError("Configuration OKX non vérifiable.")
++    value = rows[0].get("feeType")
++    if value not in ("0", "1"):
++        raise ValueError("Devise des frais non certifiée.")
++    return {
++        "ok": True, "bridge_version": "1.9.17", "read_only": True,
++        "source": "OKX Private REST /api/v5/account/config",
++        "fetched_at": datetime.now(timezone.utc).isoformat(),
++        "fee_type": value,
++        "fee_currency_for_spot_buy_ct_usdc": "CT" if value == "0" else "USDC",
++        "scope": "spot_fee_currency_mode_for_account",
++        "orders_enabled": False, "fee_amount_and_rounding_verified": False,
+     }
+ 
+ 
+@@ -3918,6 +3941,17 @@
+             except Exception as exc:
+                 security_audit("okx_fills_read", ok=False, detail=str(exc)[:220], remote=self.client_address[0])
+                 self.send_json(503, {"ok": False, "error": str(exc), "read_only": True, "bridge_version": "1.9.17"})
++            return
++
++        if route == "/okx/fee-type":
++            try:
++                if parsed_url.query:
++                    self.send_json(400, {"ok": False, "error": "Paramètres non autorisés.", "read_only": True})
++                    return
++                self.send_json(200, okx_fee_type_payload())
++            except Exception:
++                security_audit("okx_fee_type_read", ok=False, detail="Configuration indisponible", remote=self.client_address[0])
++                self.send_json(503, {"ok": False, "error": "Lecture du mode des frais indisponible", "read_only": True})
+             return
+ 
+         if route == "/okx/ledger":
+@@ -4494,7 +4528,7 @@
+ 
+     owner_caps = set(capabilities_for_role("owner"))
+     assert {"okx.account.read", "okx.orders.read", "okx.fills.read", "okx.fees.read"}.issubset(owner_caps)
+-    assert not {"okx.account.read", "okx.orders.read", "okx.fills.read", "okx.fees.read", "okx.ledger.read"}.intersection(capabilities_for_role("operator"))
++    assert not {"okx.account.read", "okx.orders.read", "okx.fills.read", "okx.fees.read", "okx.ledger.read", "okx.fee_type.read"}.intersection(capabilities_for_role("operator"))
+     assert ROUTE_CAPABILITY["/okx/account"] == "okx.account.read"
+     assert ROUTE_CAPABILITY["/okx/orders"] == "okx.orders.read"
+     assert ROUTE_CAPABILITY["/okx/fills"] == "okx.fills.read"
