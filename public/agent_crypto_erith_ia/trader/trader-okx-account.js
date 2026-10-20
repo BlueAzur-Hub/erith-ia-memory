@@ -78,6 +78,72 @@ function asset(account,ccy){
   const sum=(a,b)=>Number.isFinite(a)&&Number.isFinite(b)?a+b:Number.isFinite(a)?a:Number.isFinite(b)?b:NaN;
   return {present,total:sum(trTotal,fuTotal),available:sum(trAvail,fuAvail),frozen:sum(trFrozen,fuFrozen),trading:Number.isFinite(trTotal)?trTotal:NaN,funding:Number.isFinite(fuTotal)?fuTotal:NaN,eqUsd:Number.isFinite(trEqUsd)?trEqUsd:NaN};
 }
+/* Narrow, non-persisted read-only context for the existing Trader ticket.
+   Never return the Bridge token or the complete private account payload. */
+const TICKET_PAIR=/^(BTC|ETH|SOL|XRP|OKB)-(USDC|USDT|EUR)$/;
+function ticketDecimal(value){
+ if(typeof value!=="string"||!/^\d{1,14}(?:\.\d{1,18})?$/.test(value))return null;
+ return value;
+}
+function ticketFeeRate(value){
+ if(typeof value!=="string"||!/^-[01](?:\.\d{1,12})?$/.test(value))return null;
+ const n=Number(value);
+ return Number.isFinite(n)&&n<=0&&n>=-0.02?String(-n):null;
+}
+function summarizeTicketAccount(account,fees,instId,now=Date.now()){
+ const no=reason=>Object.freeze({read_only:true,verified:false,reason,instId,
+  account_at_utc:null,fee_pair_verified:false,fee_maker_rate:null,fee_taker_rate:null,
+  trading_available_quote:null,funding_available_quote:null,account_fresh:false,
+  real_orders:0,orders_enabled:false});
+ if(!TICKET_PAIR.test(instId)||!Number.isFinite(now))
+   return no("Paire ou horloge non conforme.");
+ if(account?.ok!==true||account?.read_only!==true)
+   return no("Lecture privée OKX non authentifiée.");
+ const at=Date.parse(account.fetched_at);
+ if(!Number.isFinite(at)||at>now+30000||now-at>120000)
+   return no("Solde du compte Trading périmé ou non daté.");
+ const quote=instId.split("-")[1];
+ const tr=tradingRows(account).filter(row=>row?.ccy===quote);
+ const fu=fundingRows(account).filter(row=>row?.ccy===quote);
+ if(tr.length>1||fu.length>1)return no("Plusieurs soldes contradictoires pour cette devise.");
+ const trading=tr.length?ticketDecimal(tr[0]?.availBal):null;
+ const funding=fu.length?ticketDecimal(fu[0]?.availBal??fu[0]?.bal):null;
+ const row=Array.isArray(fees?.fees)?fees.fees[0]:null;
+ const feePair=String(row?.instId||"");
+ const matching=feePair===instId||(instId==="BTC-USDC"&&!feePair&&fees?.fees?.length===1);
+ const maker=matching?ticketFeeRate(row?.maker??row?.makerU??row?.makerUSDC):null;
+ const taker=matching?ticketFeeRate(row?.taker??row?.takerU??row?.takerUSDC):null;
+ return Object.freeze({read_only:true,verified:trading!==null,
+   reason:trading===null?"Solde Trading disponible absent ou non prouvé.":null,
+   instId,account_at_utc:new Date(at).toISOString(),
+   fee_pair_verified:maker!==null&&taker!==null,
+   fee_maker_rate:maker,fee_taker_rate:taker,
+   trading_available_quote:trading,funding_available_quote:funding,
+   account_fresh:true,real_orders:0,orders_enabled:false});
+}
+let ticketBtcFees=null,ticketBtcFeesAt=0;
+async function ticketReadOnly(instId){
+ if(typeof instId!=="string"||!TICKET_PAIR.test(instId))
+   return Object.freeze({read_only:true,verified:false,
+     reason:"Paire Spot non autorisée au contrôle du compte.",real_orders:0,orders_enabled:false});
+ if(!token()||!owner()||panel()?.dataset.state!=="ready")
+   return Object.freeze({read_only:true,verified:false,
+     reason:"Session Aether Trust ou compte Trading indisponible.",real_orders:0,orders_enabled:false});
+ const now=Date.now();
+ if(!ctCycleAccount||!Number.isFinite(Date.parse(ctCycleAccount.fetched_at))||
+    now-Date.parse(ctCycleAccount.fetched_at)>120000)
+   await refresh({force:false});
+ if(!token()||panel()?.dataset.state!=="ready")
+   return Object.freeze({read_only:true,verified:false,
+     reason:"Lecture du compte non disponible.",real_orders:0,orders_enabled:false});
+ let fees=null;
+ try{
+   if(instId==="BTC-USDC"&&ticketBtcFees&&
+      now-ticketBtcFeesAt<120000)fees=ticketBtcFees;
+   else fees=await bridge("/okx/fees?instId="+encodeURIComponent(instId));
+ }catch(_){/* Never invent fees if exact-pair read is unavailable. */}
+ return summarizeTicketAccount(ctCycleAccount,fees,instId,Date.now());
+}
 function feeLabel(payload){
   const row=Array.isArray(payload?.fees)?payload.fees[0]:null;
   if(!row)return"—";
@@ -632,6 +698,7 @@ function paintData(account,orders,fills,fees){
   };
   updateCapitalJourney();
   ctCycleAccount=account;
+  ticketBtcFees=fees;ticketBtcFeesAt=Date.now();
   ctCycleFills=fills;
   updateCtClosedCycle();
   text("positionvalue",Number.isFinite(btc.eqUsd)?btc.eqUsd.toLocaleString("fr-FR",{style:"currency",currency:"USD",maximumFractionDigits:2}):"—");
@@ -876,7 +943,7 @@ async function refresh({force=false}={}){
       void refreshLedger(force);
       return true;
     }catch(error){
-      if(error?.status===401){saveToken("");ctCycleAccount=null;ctCycleFills=null;ctCycleLedgers=null;lastCapitalEvidence=null;updateCapitalJourney();const inline=q("ctreading");if(inline){inline.hidden=true;inline.replaceChildren();}ledgerClear("Session Aether Trust expirée.");setState("locked","SESSION BRIDGE À RÉAUTHENTIFIER");showAuth(true,"La session Bridge n'est plus valide. Entre le mot de passe Aether Trust.");}
+      if(error?.status===401){saveToken("");ctCycleAccount=null;ctCycleFills=null;ctCycleLedgers=null;ticketBtcFees=null;ticketBtcFeesAt=0;lastCapitalEvidence=null;updateCapitalJourney();const inline=q("ctreading");if(inline){inline.hidden=true;inline.replaceChildren();}ledgerClear("Session Aether Trust expirée.");setState("locked","SESSION BRIDGE À RÉAUTHENTIFIER");showAuth(true,"La session Bridge n'est plus valide. Entre le mot de passe Aether Trust.");}
       else{setState("error","OKX / BRIDGE INDISPONIBLE");text("updated",shortError(error));}
       return false;
     }finally{inflight=null;}
@@ -909,6 +976,7 @@ function bindCanonicalTrust(){
 
 function logoutBridge(){
   ctCycleAccount=null;ctCycleFills=null;ctCycleLedgers=null;
+  ticketBtcFees=null;ticketBtcFeesAt=0;
   lastCapitalEvidence=null;
   const capital=q("capitalpathbody");if(capital){capital.replaceChildren();capital.textContent="Session terminée : informations privées masquées.";}
   const inline=q("ctreading");
@@ -1083,8 +1151,8 @@ function mount(){
   return true;
 }
 
-if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain,capitalJourneyReport,btcScenarioGrid});
+if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain,capitalJourneyReport,btcScenarioGrid,summarizeTicketAccount});
 if(typeof document==="undefined")return;
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
-globalThis.AgentCryptoTraderOkxAccount=Object.freeze({mount,refresh,login,logout:logoutBridge,read_only:true,bridge:BRIDGE,token_storage:"sessionStorage",okx_credentials_in_browser:false,real_orders:false});
+globalThis.AgentCryptoTraderOkxAccount=Object.freeze({mount,refresh,login,logout:logoutBridge,read_only:true,bridge:BRIDGE,token_storage:"sessionStorage",okx_credentials_in_browser:false,real_orders:false,ticketReadOnly});
 })();
