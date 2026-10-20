@@ -111,9 +111,13 @@ async function reports(){
    if(!qResp.ok||!sResp.ok)throw Error("Rapports publics non disponibles");
    const [qualification,signal]=await Promise.all([qResp.json(),sResp.json()]);
    // A missing new prospective journal is NOT zero studies or an outage of history.
-   const journal=await fetch(BASE+"okx-hurdle-followups.json",{cache:"no-store"})
-     .then(r=>r.ok?r.json():null).catch(()=>null);
-   return{qualification,signal,journal};
+   const [journal,health]=await Promise.all([
+     fetch(BASE+"okx-hurdle-followups.json",{cache:"no-store"})
+       .then(r=>r.ok?r.json():null).catch(()=>null),
+     fetch(BASE+"radar-automation-health.json",{cache:"no-store"})
+       .then(r=>r.ok?r.json():null).catch(()=>null)
+   ]);
+   return{qualification,signal,journal,health};
  })();
  try{
    const x=await reportInFlight;
@@ -141,7 +145,7 @@ async function evaluate(force=false){
       "Diagnostic OKX : vérification du dernier rapport public…";
  }
  try{
-   const {qualification,signal,journal}=await reports();
+   const {qualification,signal,journal,health}=await reports();
    if(currentId!==requestId||!container.open)return;
    const collector=collectorTarget();
    if(collector){
@@ -151,12 +155,29 @@ async function evaluate(force=false){
      const count=valid?journal.studies.length:0;
      const follow=valid?journal.studies.reduce((n,s)=>n+(
        Array.isArray(s.followups)?s.followups.length:0),0):0;
-     collector.textContent="Radar GitHub · dernière qualification : "+
-       (qualification?.qualified_at_utc||"inconnue")+"\n"+
-       (valid?("Journal OKX publié : "+count+" études PAPER datées · "+follow+
-         " observations futures. Aucun fill certifié."):
-         "Journal OKX encore absent : la publication automatique de sa première collecte reste à confirmer.")+
-       "\nLes programmes GitHub sont planifiés ; leur présence ne prouve pas une collecte réussie.";
+     const states={
+       WAITING_DAILY_ARCHIVE:"Archive Radar du jour en attente de collecte.",
+       DAILY_ARCHIVE_MISSING:"Archive Radar du jour ABSENTE après la collecte de secours.",
+       WAITING_TODAY_QUALIFICATION:"Archive reçue, qualification Spot du jour en attente.",
+       QUALIFICATION_MISSING:"Qualification Spot du jour ABSENTE après la collecte de secours.",
+       JOURNAL_NOT_PUBLISHED_FOR_TODAY:"Qualification reçue, journal PAPER du jour MANQUANT.",
+       PROSPECTIVE_JOURNAL_PUBLISHED:"Qualification et journal PAPER du jour publiés."
+     };
+     const lastHealth=health?.schema==="erith.radar.automation-health.v1"&&
+       health.orders_enabled===false&&health.real_orders===0&&
+       typeof health.checked_at_utc==="string"&&
+       Number.isFinite(Date.parse(health.checked_at_utc))?health:null;
+     const healthAge=lastHealth?Date.now()-Date.parse(lastHealth.checked_at_utc):Infinity;
+     const status=lastHealth&&healthAge>=0&&healthAge<=18*3600000?
+       (states[lastHealth.status]||"État de collecte non reconnu.") :
+       "Contrôle de santé GitHub absent ou trop ancien : exécution à confirmer.";
+     collector.textContent="Radar automatique : "+status+
+       "\nDernier contrôle : "+(lastHealth?.checked_at_utc||"non publié")+
+       " · dernière qualification : "+(qualification?.qualified_at_utc||"inconnue")+
+       "\n"+(valid?("Journal OKX publié : "+count+" études PAPER datées · "+follow+
+         " observations futures. Aucun fill certifié.") :
+         "Journal OKX non publié : aucune observation future ne peut être affirmée.")+
+       "\nLes horaires programmés ne constituent pas une preuve d'exécution.";
    }
    // Report status is independent of the ability to trade on a live graph.
    if(s.qualified){
