@@ -419,9 +419,22 @@ function reviewSpotTicketAccount(ticket,context,now=Date.now()){
      if(maker>2n*UNIT/100n||taker>2n*UNIT/100n)throw Error("Fee invalid");}
  }catch(_){return blocked("Frais OKX de cette paire non vérifiables.");}
  const accountVerified=context.verified===true&&available!==null;
+ const modeAt=Date.parse(context.fee_type_at_utc||"");
+ const modeVerified=ticket.pair==="CT-USDC"&&
+   context.fee_type_verified===true&&
+   (context.fee_type==="0"||context.fee_type==="1")&&
+   context.fee_currency_for_spot_buy_ct_usdc===(context.fee_type==="0"?"CT":"USDC")&&
+   Number.isFinite(modeAt)&&modeAt<=now+30000&&now-modeAt<=120000;
+ const mode=modeVerified?context.fee_type:null;
  const hypotCost=ticket.hypothetical_buy_cost_quote?
    exact(ticket.hypothetical_buy_cost_quote):null;
- const enough=accountVerified&&hypotCost!==null&&available>=hypotCost;
+ // In quote-fee mode, the public BASE-fee calculation is NOT an all-in
+ // budget. Quote fee is additional, and must be counted before claiming
+ // the original gross-buy quantity is affordable.
+ const conservativeRate=feeGood?(maker>taker?maker:taker):exact("0.001");
+ const costWithFee=mode==="1"&&hypotCost!==null?
+   hypotCost+(hypotCost*conservativeRate+UNIT-1n)/UNIT:hypotCost;
+ const enough=accountVerified&&costWithFee!==null&&available>=costWithFee;
  const reasons=[
   ...(!accountVerified?["Solde disponible dans Trading non prouvé."]:[]),
   ...(accountVerified&&!enough?["Solde Trading insuffisant pour le scénario public."]:[]),
@@ -442,16 +455,18 @@ function reviewSpotTicketAccount(ticket,context,now=Date.now()){
    fee_taker_pct:feeGood?exactFmt(taker*100n):null,
    funds_cover_public_scenario:Boolean(enough),
    account_verified:accountVerified,fees_verified:Boolean(feeGood),
+   fee_mode_verified:modeVerified,fee_type:mode,
+   fee_buy_currency:mode==="1"?"USDC":mode==="0"?"CT":null,
+   original_gross_cost_including_quote_fee:costWithFee===null?null:exactFmt(costWithFee),
    orders_enabled:false,real_orders:0,can_place_limit_order:false,
    has_submit_action:false});
 }
 
 
-/* Pure, non-executable whole-position exit PREVIEW. The largest sellable
-   quantity is determined by native lot AFTER a BASE-side buy fee.
-   The residue is reported openly: a 100% slider is NOT zero dust.
-   maker or taker is not guaranteed by a LIMIT order, so use the higher
-   of both verified rates for a conservative preview only. */
+/* Pure, non-executable exit PREVIEW. The real feeType affects whether
+   the buy fee reduces CT or increases USDC consumed. A verified quote-fee
+   mode first RE-SIZES the hypothetical buy to fit the same PAPER budget.
+   Fee amounts and exchange rounding remain estimates, never real fills. */
 function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
  const no=reason=>Object.freeze({status:"SORTIE_NON_EVALUABLE",reason,
    orders_enabled:false,real_orders:0,can_place_limit_order:false});
@@ -461,26 +476,53 @@ function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
  try{
   const target=exact(targetPriceQuote),tick=exact(ticket.native_tick),
         lot=exact(ticket.native_lot),minimum=exact(ticket.native_min_quantity),
-        gross=exact(ticket.gross_buy_quantity),
-        cost=exact(ticket.hypothetical_buy_cost_quote);
-  if(!target||!tick||target%tick||!lot||!minimum||!gross||!cost)
+        initialGross=exact(ticket.gross_buy_quantity),
+        ask=exact(ticket.best_ask_quote),budget=exact(ticket.study_budget_quote);
+  if(!target||!tick||target%tick||!lot||!minimum||!initialGross||!ask||!budget)
     return no("Prix de revente incompatible avec le pas autorisé par OKX.");
   const account=reviewSpotTicketAccount(ticket,context,now);
   const feesVerified=account.fees_verified===true&&account.account_verified===true;
   const maker=feesVerified?exact(context.fee_maker_rate):exact("0.001");
   const taker=feesVerified?exact(context.fee_taker_rate):exact("0.001");
-  const feeRate=maker>taker?maker:taker; // worst of the two, maker is not certain
-  const feeBase=(gross*feeRate+UNIT-1n)/UNIT;
+  const feeRate=maker>taker?maker:taker;
+  const mode=account.fee_mode_verified===true?account.fee_type:null;
+  let gross=initialGross,feeBase=0n,feeQuoteBuy=0n,cost=0n;
+  if(mode==="1"){
+    // floor(budget / (ask * (1 + feeRate))) to the instrument lot.
+    // Integer arithmetic only; verify after rounding fees upward.
+    const possible=(budget*UNIT*UNIT)/(ask*(UNIT+feeRate));
+    gross=(possible/lot)*lot;
+    if(gross>initialGross)gross=initialGross;
+    const calc=()=>{const notion=gross*ask/UNIT;
+      feeQuoteBuy=(notion*feeRate+UNIT-1n)/UNIT;cost=notion+feeQuoteBuy;};
+    calc();
+    while(gross>0n&&cost>budget){gross-=lot;calc();}
+  }else{
+    feeBase=(gross*feeRate+UNIT-1n)/UNIT;
+    cost=gross*ask/UNIT;
+  }
+  if(!gross)return no("Budget PAPER insuffisant avec frais d'achat.");
   if(feeBase>=gross)return no("Frais supérieurs à la quantité achetée.");
   const net=gross-feeBase,sellable=net/lot*lot,dust=net-sellable;
   const saleGross=sellable*target/UNIT;
   const saleFee=(saleGross*feeRate+UNIT-1n)/UNIT;
   const proceeds=saleGross>saleFee?saleGross-saleFee:0n;
   const profit=proceeds-cost;
+  let fundsCover=false;
+  if(account.account_verified&&account.available_trading_quote!==null){
+    fundsCover=exact(account.available_trading_quote)>=cost;
+  }
   return Object.freeze({status:sellable>=minimum?"ETUDE_SORTIE":"REVENTE_MINIMUM_IMPOSSIBLE",
    pair:ticket.pair,quote:ticket.quote,base:ticket.base,
    target_sell_price_quote:exactFmt(target),
    buy_quantity:exactFmt(gross),estimated_buy_fee_base:exactFmt(feeBase),
+   estimated_buy_fee_quote:exactFmt(feeQuoteBuy),
+   buy_fee_currency:mode==="1"?"USDC":"CT",
+   buy_fee_currency_verified:mode!==null,
+   quote_fee_budget_adjusted:mode==="1",
+   paper_budget_quote:exactFmt(budget),
+   total_buy_cost_quote:exactFmt(cost),
+   paper_budget_covers_total_cost:cost<=budget,
    estimated_net_base:exactFmt(net),
    maximum_sellable_base:exactFmt(sellable),residual_dust_base:exactFmt(dust),
    full_exit_without_dust:dust===0n,
@@ -492,7 +534,7 @@ function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
    assumed_fee_pct:exactFmt(feeRate*100n),fees_verified:feesVerified,
    fee_status:feesVerified?"MAKER_TAKER_EXACT_PAIR_READ_ONLY":"HYPOTHESE_0_10_PCT",
    trading_balance_verified:account.account_verified,
-   funds_cover_public_scenario:account.funds_cover_public_scenario,
+   funds_cover_public_scenario:fundsCover,
    book_age_minutes:ticket.book_age_minutes,
    no_guaranteed_fill:true,lot_rounding_may_differ:true,
    other_order_filters_unverified:true,

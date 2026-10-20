@@ -145,6 +145,30 @@ function summarizeTicketAccount(account,fees,instId,now=Date.now()){
    trading_available_quote:trading,funding_available_quote:funding,
    account_fresh:true,real_orders:0,orders_enabled:false});
 }
+/* Fee mode is a separate private Read-only observation, never the raw
+   /account/config payload and never a claim about actual exchange rounding. */
+function summarizeSpotFeeMode(payload,now=Date.now()){
+ const no=reason=>Object.freeze({fee_type_verified:false,fee_type:null,
+  fee_currency_for_spot_buy_ct_usdc:null,fee_type_at_utc:null,
+  fee_type_reason:reason});
+ if(!Number.isFinite(now)||payload?.ok!==true||payload?.read_only!==true||
+    payload?.orders_enabled!==false||
+    payload?.scope!=="spot_fee_currency_mode_for_account"||
+    payload?.source!=="OKX Private REST /api/v5/account/config"||
+    payload?.fee_amount_and_rounding_verified!==false)
+   return no("Mode des frais : provenance privée non qualifiée.");
+ const at=Date.parse(payload.fetched_at);
+ if(!Number.isFinite(at)||at>now+30000||now-at>120000)
+   return no("Mode des frais : lecture absente, future ou périmée.");
+ if(payload.fee_type!=="0"&&payload.fee_type!=="1")
+   return no("Mode des frais OKX non reconnu.");
+ const currency=payload.fee_type==="0"?"CT":"USDC";
+ if(payload.fee_currency_for_spot_buy_ct_usdc!==currency)
+   return no("Mode des frais : devise contradictoire.");
+ return Object.freeze({fee_type_verified:true,fee_type:payload.fee_type,
+  fee_currency_for_spot_buy_ct_usdc:currency,
+  fee_type_at_utc:new Date(at).toISOString(),fee_type_reason:null});
+}
 let ticketBtcFees=null,ticketBtcFeesAt=0;
 async function ticketReadOnly(instId){
  if(typeof instId!=="string"||!TICKET_PAIR.test(instId))
@@ -172,12 +196,24 @@ async function ticketReadOnly(instId){
      status===429?"Bridge : limite de fréquence sur les frais.":
      "Bridge : lecture des frais de cette paire indisponible.";
  }
- if(!feeFailure)
+ // Other pairs retain their previous behavior and make no fee-mode read.
+ if(instId!=="CT-USDC"&&!feeFailure)
    return summarizeTicketAccount(ctCycleAccount,fees,instId,Date.now());
- // Keep the existing success path unchanged; a failed fee read is diagnostic
- // only and must never be treated as an exact-pair rate confirmation.
- const context=summarizeTicketAccount(ctCycleAccount,null,instId,Date.now());
- return Object.freeze({...context,fee_reason:feeFailure});
+ const context=summarizeTicketAccount(ctCycleAccount,feeFailure?null:fees,instId,Date.now());
+ if(instId!=="CT-USDC")
+   return Object.freeze({...context,fee_reason:feeFailure});
+ let mode=null;
+ try{mode=summarizeSpotFeeMode(await bridge("/okx/fee-type"),Date.now());}
+ catch(error){
+  const status=Number(error?.status);
+  const reason=status===404?"Bridge trop ancien : route de lecture feeType absente.":
+   status===401||status===403?"Aether Trust : accès à la lecture feeType refusé.":
+   "Lecture privée du mode des frais indisponible.";
+  mode=summarizeSpotFeeMode(null);
+  mode=Object.freeze({...mode,fee_type_reason:reason});
+ }
+ return Object.freeze({...context,...mode,
+  ...(feeFailure?{fee_reason:feeFailure}:{})});
 }
 function feeLabel(payload){
   const row=Array.isArray(payload?.fees)?payload.fees[0]:null;
@@ -1186,7 +1222,7 @@ function mount(){
   return true;
 }
 
-if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain,capitalJourneyReport,btcScenarioGrid,summarizeTicketAccount});
+if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain,capitalJourneyReport,btcScenarioGrid,summarizeTicketAccount,summarizeSpotFeeMode});
 if(typeof document==="undefined")return;
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
 globalThis.AgentCryptoTraderOkxAccount=Object.freeze({mount,refresh,login,logout:logoutBridge,read_only:true,bridge:BRIDGE,token_storage:"sessionStorage",okx_credentials_in_browser:false,real_orders:false,ticketReadOnly});

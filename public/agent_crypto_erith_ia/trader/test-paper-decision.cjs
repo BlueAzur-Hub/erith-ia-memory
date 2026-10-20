@@ -879,3 +879,77 @@ test("CT public rules and fee-buffer UI never claim notionnel or fee debit certa
  assert.doesNotMatch(source,/\/api\/v5\/trade\/order|\/trade\/order|Bearer|Authorization:/);
  assert.equal(core.realOrders,false);
 });
+
+
+test("CT feeType is accepted only from a fresh minimal private READ envelope",()=>{
+ const owner=require("./trader-okx-account.js");
+ const base={ok:true,read_only:true,orders_enabled:false,
+  scope:"spot_fee_currency_mode_for_account",
+  source:"OKX Private REST /api/v5/account/config",
+  fetched_at:"2026-10-20T03:18:55Z",fee_amount_and_rounding_verified:false};
+ const accepted=(v)=>owner.summarizeSpotFeeMode({...base,...v},T);
+ assert.equal(accepted({fee_type:"0",fee_currency_for_spot_buy_ct_usdc:"CT"}).fee_type_verified,true);
+ assert.equal(accepted({fee_type:"1",fee_currency_for_spot_buy_ct_usdc:"USDC"}).fee_type_verified,true);
+ for(const bad of [
+  {fee_type:"1",fee_currency_for_spot_buy_ct_usdc:"CT"},
+  {fee_type:"2",fee_currency_for_spot_buy_ct_usdc:"USDC"},
+  {fetched_at:"2026-10-20T03:15:00Z",fee_type:"1",fee_currency_for_spot_buy_ct_usdc:"USDC"},
+  {orders_enabled:true,fee_type:"1",fee_currency_for_spot_buy_ct_usdc:"USDC"},
+  {source:"Untrusted",fee_type:"1",fee_currency_for_spot_buy_ct_usdc:"USDC"},
+  {fee_amount_and_rounding_verified:true,fee_type:"1",fee_currency_for_spot_buy_ct_usdc:"USDC"},
+  {read_only:false,fee_type:"1",fee_currency_for_spot_buy_ct_usdc:"USDC"},
+ ])assert.equal(accepted(bad).fee_type_verified,false);
+});
+
+test("CT PAPER quote-fee mode reduces gross quantity to respect same budget",()=>{
+ const owner=require("./trader-okx-account.js");
+ const privateAccount={ok:true,read_only:true,fetched_at:"2026-10-20T03:18:50Z",
+  trading:[{details:[{ccy:"USDC",availBal:"3.20"}]}],funding:[]};
+ const fees={fees:[{instId:"CT-USDC",maker:"-0.0008",taker:"-0.001"}]};
+ const summarized=owner.summarizeTicketAccount(privateAccount,fees,"CT-USDC",T);
+ const modeAt="2026-10-20T03:18:55.000Z";
+ const ctx=(mode)=>({...summarized,fee_type_verified:true,fee_type:mode,
+  fee_currency_for_spot_buy_ct_usdc:mode==="1"?"USDC":"CT",
+  fee_type_at_utc:modeAt});
+ const ticket=ctTicket();
+ const base=core.previewSpotExit({ticket,context:ctx("0"),targetPriceQuote:"0.39",now:T});
+ assert.equal(base.buy_fee_currency,"CT");
+ assert.equal(base.buy_fee_currency_verified,true);
+ assert.equal(base.quote_fee_budget_adjusted,false);
+ assert.ok(Number(base.estimated_buy_fee_base)>0);
+ assert.equal(base.orders_enabled,false);
+ const quote=core.previewSpotExit({ticket,context:ctx("1"),targetPriceQuote:"0.39",now:T});
+ assert.equal(quote.status,"ETUDE_SORTIE");
+ assert.equal(quote.buy_fee_currency,"USDC");
+ assert.equal(quote.buy_fee_currency_verified,true);
+ assert.equal(quote.quote_fee_budget_adjusted,true);
+ assert.ok(Number(quote.estimated_buy_fee_quote)>0);
+ assert.equal(quote.estimated_buy_fee_base,"0.0");
+ assert.ok(Number(quote.buy_quantity)<Number(ticket.gross_buy_quantity));
+ assert.ok(Number(quote.total_buy_cost_quote)<=3.2);
+ assert.ok(Number(quote.maximum_sellable_base)>=10);
+ assert.equal(quote.residual_dust_base,"0.0");
+ assert.equal(quote.paper_budget_covers_total_cost,true);
+ assert.equal(quote.funds_cover_public_scenario,true);
+ assert.equal(quote.orders_enabled,false);
+ assert.equal(quote.real_orders,0);
+ const stale=core.previewSpotExit({ticket,context:{...ctx("1"),
+  fee_type_at_utc:"2026-10-20T03:15:00.000Z"},targetPriceQuote:"0.39",now:T});
+ assert.equal(stale.buy_fee_currency_verified,false);
+ assert.equal(stale.quote_fee_budget_adjusted,false);
+ assert.equal(stale.buy_fee_currency,"CT");
+});
+
+test("feeType stays solely in existing authenticated owner and visible ticket",()=>{
+ const fs=require("node:fs"),path=require("node:path");
+ const account=fs.readFileSync(path.join(__dirname,"trader-okx-account.js"),"utf8");
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ const coreCode=fs.readFileSync(path.join(__dirname,"trader-paper-decision-core.js"),"utf8");
+ assert.match(account,/await bridge\("\/okx\/fee-type"\)/);
+ assert.match(account,/summarizeSpotFeeMode/);
+ assert.match(view,/Mode des frais d'achat OKX vérifié/);
+ assert.match(view,/quote_fee_budget_adjusted/);
+ assert.match(coreCode,/buy_fee_currency_verified/);
+ assert.doesNotMatch(view,/\/okx\/fee-type|\/api\/v5\/account\/config|Authorization:|Bearer /);
+ assert.doesNotMatch(account,/\/api\/v5\/trade\/order|set-fee-type/);
+});
