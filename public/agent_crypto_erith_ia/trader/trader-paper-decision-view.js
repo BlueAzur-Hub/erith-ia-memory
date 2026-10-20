@@ -11,6 +11,74 @@ const fmt=(value,digits=3)=>Number.isFinite(value)?
  Number(value).toLocaleString("fr-FR",{maximumFractionDigits:digits}):"indisponible";
 let requestId=0,lastStudyKey="",reportCache=null,reportAt=0,reportInFlight=null;
 let ticketRequest=0;
+let cyclePlan=null,cycleState=null,cycleNumber=0,cycleError="";
+/* Entirely local PAPER lifecycle; this UI never talks to an order endpoint. */
+function cycleStatus(){
+ const section=document.getElementById("traderOkxTicket");
+ const out=section?.querySelector("[data-cycle-status]");
+ if(!out)return;
+ const state=cycleState;
+ const lines=state?[
+  "SIMULATION UNIQUEMENT · aucun ordre envoyé vers OKX",
+  "ÉTAT : "+state.phase+" · "+state.pair+" · achat LIMIT fictif",
+  "Prix fictif "+state.price+" USDC · quantité "+state.quantity+" CT",
+  "Remplis fictivement "+state.filled+" CT · restant "+state.remaining+" CT",
+  "Après frais estimés : revendables "+state.sellable+" CT · poussière "+state.dust+" CT",
+  state.below_min_sell&&state.filled!=="0.0"?
+    "ATTENTION : exécution partielle sous le minimum revendable de "+state.min_size+" CT.":
+    "Vente éventuelle : règles et liquidité à vérifier, même si la taille est suffisante.",
+  state.unknown?"ÉTAT INCERTAIN : bloqué, aucun nouvel envoi ; rapprocher le statut fictif.":
+    "Chaque changement d'état vient d'un clic humain, jamais d'OKX.",
+  "Aucun droit Trade, aucun transport, aucune réservation de fonds."
+ ]:[
+  "Cycle LIMIT FICTIF · sans permission Trade",
+  "Commence par vérifier le ticket CT/USDC récent ci-dessus.",
+  "Puis clique sur Préparer le scénario PAPER. Aucune transaction."
+ ];
+ if(cycleError)lines.push("DIAGNOSTIC : "+cycleError);
+ out.textContent=lines.join("\n");
+ const phase=state?.phase||"";
+ const allowed={
+  create:!state||["PAPER_FILLED","PAPER_REJECTED","PAPER_CANCELLED"].includes(phase),
+  confirm:phase==="PAPER_DRAFT",accept:phase==="PAPER_SUBMITTED",
+  reject:phase==="PAPER_SUBMITTED",unknown:["PAPER_SUBMITTED","PAPER_ACCEPTED","PAPER_PARTIAL"].includes(phase),
+  partial:["PAPER_ACCEPTED","PAPER_PARTIAL"].includes(phase),
+  full:["PAPER_ACCEPTED","PAPER_PARTIAL"].includes(phase),
+  cancel:["PAPER_ACCEPTED","PAPER_PARTIAL"].includes(phase),
+  reconcile_open:phase==="PAPER_UNKNOWN",
+  reconcile_reject:phase==="PAPER_UNKNOWN",
+  reconcile_cancel:phase==="PAPER_UNKNOWN"};
+ for(const btn of section.querySelectorAll("[data-cycle-command]")){
+  const cmd=btn.getAttribute("data-cycle-command");
+  btn.disabled=!allowed[cmd]||(cmd==="create"&&!cyclePlan);
+ }
+}
+function cycleAction(command){
+ const section=document.getElementById("traderOkxTicket");
+ if(!section)return;
+ cycleError="";
+ try{
+  if(command==="create"){
+   if(cycleState&&!["PAPER_FILLED","PAPER_REJECTED","PAPER_CANCELLED"].includes(cycleState.phase))
+     throw Error("Terminer la simulation en cours avant d'en créer une autre.");
+   cycleState=core.startPaperLimitCycle({...cyclePlan,now:Date.now(),nonce:++cycleNumber});
+   if(cycleState.ok!==true){cycleError=cycleState.reason;cycleState=null;}
+  }else{
+   if(!cycleState)throw Error("Créer d'abord un brouillon fictif.");
+   const types={confirm:"PAPER_CONFIRM",accept:"PAPER_ACCEPT",reject:"PAPER_REJECT",
+     unknown:"PAPER_UNKNOWN",partial:"PAPER_FILL_PART",full:"PAPER_FILL_REST",
+     cancel:"PAPER_CANCEL",reconcile_open:"PAPER_RECONCILE_OPEN",
+     reconcile_reject:"PAPER_RECONCILE_REJECT",
+     reconcile_cancel:"PAPER_RECONCILE_CANCEL"};
+   const confirmation=section.querySelector("[data-cycle-confirm]")?.value||"";
+   const quantity_ct=String(section.querySelector("[data-cycle-qty]")?.value||"").replace(",",".");
+   cycleState=core.advancePaperLimitCycle(cycleState,{type:types[command],
+     confirmation,quantity_ct},Date.now());
+  }
+ }catch(error){cycleError=String(error?.message||error).slice(0,220);}
+ cycleStatus();
+}
+
 function selection(){
  const from=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.());
  if(!from?.input)return{reason:from?.reason||
@@ -284,6 +352,7 @@ async function readCtSpotPublicInstrument(){
  }finally{clearTimeout(timeout);}
 }
 async function prepareTicket(){
+ cyclePlan=null;cycleStatus();
  const box=document.getElementById("traderOkxTicket");
  if(!box?.open)return;
  const current=++ticketRequest;
@@ -492,6 +561,8 @@ async function prepareTicket(){
    if(desired){
     const exit=core.previewSpotExit({ticket:answer,context,
       targetPriceQuote:desired,now:Date.now()});
+    if(pair==="CT-USDC"&&exit?.status==="ETUDE_SORTIE")
+      cyclePlan={ticket:answer,context,preview:exit};
     const exitLines=[
       "REVENTE À TON PRIX · "+desired+" "+quote+" · SIMULATION, AUCUN ORDRE",
       exit.status==="SORTIE_NON_EVALUABLE"?
@@ -568,6 +639,7 @@ async function prepareTicket(){
     "Le rapport technique complet est replié ci-dessous."
   ].join("\n");
   ticketStatus(finalLines.join("\n")+"\n\n"+accountLines.join("\n"),brief);
+  cycleStatus();
  }catch(error){
    if(current===ticketRequest)ticketStatus("Ticket indisponible : "+
      String(error?.message||error)+
@@ -649,7 +721,55 @@ function mount(){
  output.setAttribute("role","status");output.setAttribute("aria-live","off");
  output.textContent="Ouvre ce panneau et lance la vérification des contraintes OKX. Aucun ordre.";
  technical.append(technicalHeading,output);
- ticketBox.append(warning,quoteLabel,budgetLabel,exitLabel,compute,brief,technical);
+ const cycle=document.createElement("details");
+ cycle.setAttribute("data-cycle-paper","");
+ cycle.className="pl-more";
+ const cycleHeading=document.createElement("summary");
+ cycleHeading.textContent="Cycle d'ordre LIMIT fictif · confirmation, fill partiel, annulation";
+ const cycleContents=document.createElement("div");
+ const cycleWarning=document.createElement("p");
+ cycleWarning.textContent="Tous les statuts et les exécutions sont INVENTÉS par le simulateur. "+
+   "Aucune requête d'ordre OKX, aucune permission Trade, aucune sauvegarde.";
+ const cycleReadout=document.createElement("pre");
+ cycleReadout.setAttribute("data-cycle-status","");
+ cycleReadout.setAttribute("role","status");
+ cycleReadout.setAttribute("aria-live","polite");
+ const cycleConfirm=document.createElement("input");
+ cycleConfirm.setAttribute("data-cycle-confirm","");
+ cycleConfirm.setAttribute("aria-label","Écrire SIMULER pour confirmer le scénario fictif");
+ cycleConfirm.setAttribute("placeholder","Écrire SIMULER pour confirmer");
+ cycleConfirm.setAttribute("autocomplete","off");
+ const cycleQty=document.createElement("input");
+ cycleQty.setAttribute("data-cycle-qty","");
+ cycleQty.setAttribute("aria-label","Quantité fictive partiellement exécutée en CT");
+ cycleQty.setAttribute("inputmode","decimal");cycleQty.value="3.00";
+ const controls=document.createElement("div");
+ controls.style.cssText="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0";
+ const commands=[
+  ["create","Préparer scénario PAPER"],["confirm","Confirmer simulation"],
+  ["accept","Accepter fictivement"],["reject","Refuser fictivement"],
+  ["unknown","État inconnu"],["partial","Exécution partielle fictive"],
+  ["full","Exécuter le solde fictif"],["cancel","Annuler fictivement"],
+  ["reconcile_open","Réconcilier : ouvert"],["reconcile_reject","Réconcilier : rejeté"],
+  ["reconcile_cancel","Réconcilier : annulé"]
+ ];
+ for(const [command,label] of commands){
+  const control=document.createElement("button");
+  control.type="button";control.textContent=label;
+  control.setAttribute("data-cycle-command",command);
+  control.addEventListener("click",()=>cycleAction(command));
+  controls.append(control);
+ }
+ const confirmLabel=document.createElement("label");
+ confirmLabel.textContent="Confirmation humaine fictive ";
+ confirmLabel.append(cycleConfirm);
+ const qtyLabel=document.createElement("label");
+ qtyLabel.textContent="Remplissage partiel simulé (CT) ";
+ qtyLabel.append(cycleQty);
+ cycleContents.append(cycleWarning,cycleReadout,confirmLabel,qtyLabel,controls);
+ cycle.append(cycleHeading,cycleContents);
+ ticketBox.append(warning,quoteLabel,budgetLabel,exitLabel,compute,brief,cycle,technical);
+ cycleStatus();
  ticket.append(ticketHeading,ticketBox);
  content.append(explanation,history,label,button,collector,evidence,ticket);
  compute.addEventListener("click",()=>void prepareTicket());
@@ -666,7 +786,9 @@ function mount(){
   }
  });
  for(const input of [quoteSelect,budget,exitInput])input.addEventListener("change",()=>{
-   ticketRequest++;ticketStatus("Paramètres modifiés : relancer l'étude. Aucun ordre.");
+   ticketRequest++;cyclePlan=null;
+   ticketStatus("Paramètres modifiés : relancer l'étude. Aucun ordre.");
+   cycleStatus();
  });
  section.append(summary,content);
  const more=parent.querySelector(".pl-more");
