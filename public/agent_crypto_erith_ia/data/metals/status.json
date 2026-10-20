@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_metals_collector_status_v1",
   "version": "2.3.0",
-  "status": "partial",
+  "status": "ready",
   "provider_id": "public_metals_multi_source",
   "provider_name": "Gold API + Yahoo Finance Futures + BCE",
   "bridge_required": false,
   "public_page_mode": "github_actions_archive_reader",
-  "last_attempt_at": "2026-10-20T04:45:31.913Z",
-  "last_success_at": "2026-10-20T04:45:31.913Z",
-  "last_error": "Yahoo intraday PA=F: Yahoo intraday PA=F: série absente",
+  "last_attempt_at": "2026-10-20T19:59:41.313Z",
+  "last_success_at": "2026-10-20T19:59:41.313Z",
+  "last_error": null,
   "assets_expected": 5,
   "assets_received": 5,
   "current": {
@@ -36,7 +36,7 @@
       "role": "daily_and_intraday_futures",
       "transport": "browser_session_query2_query1",
       "authentication": "none",
-      "state": "preserved"
+      "state": "ready"
     },
     {
       "id": "ecb",
@@ -55,26 +55,26 @@
     "series_points": {
       "gold": 262,
       "silver": 262,
-      "platinum": 262,
-      "palladium": 261,
+      "platinum": 261,
+      "palladium": 262,
       "copper": 262
     },
     "source_id": "yahoo_finance"
   },
   "intraday_24h": {
     "available": true,
-    "preserved": true,
+    "preserved": false,
     "file": "history/intraday_24h.json",
     "assets": 5,
     "series_points": {
-      "gold": 274,
-      "silver": 274,
-      "platinum": 274,
-      "palladium": 236,
-      "copper": 273
+      "gold": 349,
+      "silver": 349,
+      "platinum": 347,
+      "palladium": 314,
+      "copper": 347
     },
-    "oldest_at": "2026-10-18T22:10:00.000Z",
-    "newest_at": "2026-10-19T20:52:35.000Z",
+    "oldest_at": "2026-10-19T13:50:00.000Z",
+    "newest_at": "2026-10-20T19:49:40.000Z",
     "interval": "5m",
     "window_hours": 24,
     "source_id": "yahoo_finance"
@@ -84,22 +84,22 @@
     "complete_24h": true,
     "file": "history/spot_48h.json",
     "snapshots": 6,
-    "oldest_at": "2026-10-18T12:36:01.757Z",
-    "newest_at": "2026-10-20T04:45:31.913Z",
-    "span_hours": 40.158377,
+    "oldest_at": "2026-10-18T22:24:51.012Z",
+    "newest_at": "2026-10-20T19:59:41.313Z",
+    "span_hours": 45.580639,
     "retention_hours": 48,
     "minimum_complete_hours": 20,
     "source_id": "gold_api"
   },
   "fx": {
     "pair": "USD/EUR",
-    "source_date": "2026-10-19",
-    "eur_per_usd": 0.8908685968819599
+    "source_date": "2026-10-20",
+    "eur_per_usd": 0.8916629514043692
   },
   "fallback": {
     "last_valid_snapshot_preserved": false,
     "last_valid_history_preserved": false,
-    "last_valid_intraday_preserved": true,
+    "last_valid_intraday_preserved": false,
     "invented_replacement_values": false
   },
   "security": {
@@ -116,6 +116,6 @@
     "history_never_fabricated": true,
     "intraday_futures_and_current_spot_separated": true
   },
-  "updated_at": "2026-10-20T04:45:31.913Z",
+  "updated_at": "2026-10-20T19:59:41.313Z",
   "collector": "tools/collect_public_metals.py"
 }
