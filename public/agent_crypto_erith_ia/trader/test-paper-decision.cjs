@@ -246,3 +246,110 @@ test("Trader distinguishes missing journal, stale heartbeat and published daily 
  assert.match(view,/Dernier contrôle/);
  assert.match(view,/Les horaires programmés ne constituent pas une preuve/);
 });
+
+/* Exactly the publicly observed OKX BTC/USDC Spot lot rules and best book.
+   All values dated, NOT current account/quote data or investment advice. */
+function btcSource(){return{asset:"BTC",coinId:"bitcoin",instrument:"BTC-USD",
+ provider:"coingecko",currency:"USD"}}
+function ticketArchive(){
+ const pair="BTC-USDC",time="2026-10-20T03:18:44Z";
+ return{schema:"erith.radar.okx-hourly-spot.v1",date_utc:"2026-10-20",
+  orders_enabled:false,real_orders:0,paper_fills:0,
+  hours:[{schema:"erith.radar.okx-hourly-spot.v1",hour_utc:"2026-10-20T03Z",
+   observed_at_utc:time,instrument_type:"SPOT",no_quote_conversion:true,
+   orders_enabled:false,real_orders:0,paper_fills:0,
+   markets:[{pair,base:"BTC",quote:"USDC",status:"VERIFIED_PUBLIC_BOOK",
+    rules:{minSz:"0.0001",lotSz:"0.00000001",tickSz:"0.1"},
+    book5:{source_at_utc:time,market_fill_proven:false,
+      bids:[["81780.5","0.02471696"]],asks:[["81780.6","0.04512476"]]}}]}]};
+}
+const T=Date.parse("2026-10-20T03:19:00Z");
+function ticket(budget="10",override={}){
+ return core.prepareSpotTicket({selected:btcSource(),archive:ticketArchive(),
+  pair:"BTC-USDC",budgetQuote:budget,now:T,...override});
+}
+test("5 USDC is below the observed native BTC-USDC buy minimum",()=>{
+ const r=ticket("5");
+ assert.equal(r.status,"PREPARATION_NON_EXECUTABLE");
+ assert.equal(r.native_min_quantity,"0.0001");
+ assert.equal(r.minimum_buy_at_recorded_ask_quote,"8.17806");
+ assert.equal(r.buy_quantity_minimum_met,false);
+ assert.equal(r.net_exit_quantity_minimum_met,false);
+ assert.match(r.blockers.join("|"),/minimum natif/i);
+ assert.equal(r.account_verified,false);
+ assert.equal(r.can_place_limit_order,false);
+ assert.equal(r.trade_endpoint,null);
+ assert.equal(r.orders_enabled,false);
+});
+test("10 USDC can meet public gross rule yet STILL fail net BASE-fee exit",()=>{
+ const r=ticket("10");
+ assert.equal(r.buy_quantity_minimum_met,true);
+ assert.equal(r.net_exit_quantity_minimum_met,true);
+ assert.ok(Number(r.sellable_lot_quantity)<Number(r.gross_buy_quantity));
+ assert.ok(Number(r.estimated_base_fee)>0);
+ assert.ok(Number(r.unsellable_dust)>=0);
+ assert.ok(Number(r.hypothetical_immediate_exit_quote)<
+   Number(r.hypothetical_buy_cost_quote));
+ assert.ok(Number(r.hypothetical_break_even_bid_quote)>81780.5);
+ assert.equal(r.fees_verified,false);
+ assert.equal(r.trading_balance_verified,false);
+ assert.equal(r.notional_filter_verified,false);
+ assert.equal(r.executable,false);
+ assert.equal(r.has_submit_action,false);
+});
+test("base fee makes an exactly-minimum native purchase NOT resellable",()=>{
+ const r=ticket("8.17806");
+ assert.equal(r.buy_quantity_minimum_met,true);
+ assert.equal(r.net_exit_quantity_minimum_met,false);
+ assert.match(r.blockers.join("|"),/revente au minimum natif/i);
+ assert.equal(r.orders_enabled,false);
+});
+test("coin identity and exact quote pair never borrowed from another crypto",()=>{
+ for(const selected of [
+   {...btcSource(),coinId:"ethereum"},
+   {...btcSource(),asset:"CT",coinId:"concrete"},
+   {...btcSource(),provider:"okx"},
+   {...btcSource(),instrument:"BTC-USDT"}
+ ])assert.equal(ticket("10",{selected}).status,"BLOQUE");
+ assert.equal(ticket("10",{pair:"ETH-USDC"}).status,"BLOQUE");
+ assert.equal(ticket("10",{pair:"BTC-EUR"}).status,"BLOQUE");
+});
+test("stale books remain descriptive only, never live orders",()=>{
+ const r=ticket("10",{now:T+3600*1000*2});
+ assert.ok(r.book_age_minutes>=120);
+ assert.match(r.blockers.join("|"),/différé/i);
+ assert.equal(r.account_verified,false);
+ assert.equal(r.can_place_limit_order,false);
+ const future=ticket("10",{now:T-200000});
+ assert.equal(future.status,"BLOQUE");
+});
+test("tampered book, duplicate exact pair and forced real orders fail closed",()=>{
+ const original=ticketArchive();
+ const clone=()=>JSON.parse(JSON.stringify(original));
+ let a=clone();a.hours[0].markets[0].book5.asks[0][0]="81770.0";
+ assert.equal(ticket("10",{archive:a}).status,"BLOQUE");
+ a=clone();a.hours[0].markets.push({...a.hours[0].markets[0]});
+ assert.equal(ticket("10",{archive:a}).status,"BLOQUE");
+ a=clone();a.real_orders=1;
+ assert.equal(ticket("10",{archive:a}).status,"BLOQUE");
+ a=clone();a.hours[0].markets[0].rules.minSz="0.00000000000000000001";
+ assert.equal(ticket("10",{archive:a}).status,"BLOQUE");
+});
+test("read-only ticket appears in existing Trader PAPER lab and never sends an order",()=>{
+ const src=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ const coreSrc=fs.readFileSync(path.join(__dirname,"trader-paper-decision-core.js"),"utf8");
+ assert.match(src,/traderOkxTicket/);
+ assert.match(src,/Préparer un ticket OKX LIMIT/);
+ assert.match(src,/budget\.value="5"/);
+ assert.match(src,/data-ticket-budget/);
+ assert.match(src,/data-ticket-quote/);
+ assert.match(src,/data-ticket-report/);
+ assert.match(src,/core\.prepareSpotTicket/);
+ assert.match(src,/okx-hourly\/latest\.json/);
+ assert.match(src,/credentials:"omit"/);
+ assert.match(src,/ticketRequest\+\+/);
+ assert.doesNotMatch(src,/\/api\/v5\/trade|\/trade\/order|Authorization:|sessionStorage|localStorage/);
+ assert.doesNotMatch(coreSrc,/\/api\/v5\/trade|\/trade\/order|fetch\(/);
+ assert.equal(core.realOrders,false);
+ assert.equal(core.network,false);
+});

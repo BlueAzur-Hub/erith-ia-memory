@@ -10,6 +10,7 @@ const safe=fn=>{try{return fn()}catch(_){return null}};
 const fmt=(value,digits=3)=>Number.isFinite(value)?
  Number(value).toLocaleString("fr-FR",{maximumFractionDigits:digits}):"indisponible";
 let requestId=0,lastStudyKey="",reportCache=null,reportAt=0,reportInFlight=null;
+let ticketRequest=0;
 function selection(){
  const from=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.());
  if(!from?.input)return{reason:from?.reason||
@@ -204,9 +205,88 @@ function invalidate(){
    s.historical.qualified.lastAt:
    "unavailable|"+(s.historicalReason||s.reason);
  if(next===box.dataset.lastSelection)return;
+ ticketRequest++;
+ ticketStatus("Actif du graphique modifié. Refaire le ticket ; aucun ancien prix n'est réutilisé.");
  requestId++;
  lastStudyKey="";
  void evaluate(false);
+}
+/* Order planning never reads account secrets or creates an exchange order.
+   Only the owner's separate read-only Bridge panel can verify Trading funds. */
+function ticketTarget(){return document.getElementById("traderOkxTicket")?.querySelector("[data-ticket-report]")}
+function ticketStatus(text){
+ const target=ticketTarget();
+ if(target)target.textContent=text;
+}
+async function prepareTicket(){
+ const box=document.getElementById("traderOkxTicket");
+ if(!box?.open)return;
+ const current=++ticketRequest;
+ const from=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.());
+ const source=from?.input;
+ if(!source){
+   ticketStatus("Aucun graphique Solo 24 h identifié. "+(from?.reason||"Aucune source.")+
+     "\nAucun ordre ni réservation de fonds.");return;
+ }
+ const coinKey=String(source.asset||"")+"|"+String(source.coinId||"");
+ const quote=box.querySelector("[data-ticket-quote]")?.value;
+ const money=String(box.querySelector("[data-ticket-budget]")?.value||"").trim().replace(",",".");
+ const pair=String(source.asset||"")+"-"+quote;
+ ticketStatus("Lecture du dernier carnet public archivé · aucun accès au compte réel…");
+ try{
+   const stateResponse=await fetch("../data/crypto/okx-hourly/latest.json",
+     {cache:"no-store",credentials:"omit"});
+   if(!stateResponse.ok)throw Error("État de collecte non publié : HTTP "+stateResponse.status);
+   const state=await stateResponse.json();
+   if(state?.schema!=="erith.radar.okx-hourly-health.v1"||
+      state.orders_enabled!==false||state.real_orders!==0||
+      !/^\d{4}-\d\d-\d\d$/.test(String(state.date_utc||"")))
+     throw Error("Index public de collecte incompatible.");
+   const archiveResponse=await fetch("../data/crypto/okx-hourly/"+
+     state.date_utc+".json",{cache:"no-store",credentials:"omit"});
+   if(!archiveResponse.ok)throw Error("Carnet daté absent : HTTP "+archiveResponse.status);
+   const archive=await archiveResponse.json();
+   const fresh=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
+   if(current!==ticketRequest||!box.open||
+      String(fresh?.asset||"")+"|"+String(fresh?.coinId||"")!==coinKey)return;
+   const answer=core.prepareSpotTicket({selected:source,archive,pair,
+     budgetQuote:money,now:Date.now()});
+   const lines=[
+     "TICKET D'ÉTUDE SPOT · LECTURE SEULE",
+     "Paire recherchée : "+pair+" · budget d'étude : "+money+" "+quote+
+       " (PAS le solde de ton compte)",
+     answer.source_book_at_utc?
+       "Carnet OKX public : "+answer.source_book_at_utc+
+       " · décalage "+answer.book_age_minutes+" min.":"Source non qualifiée.",
+     answer.reason,
+   ];
+   if(answer.native_min_quantity){
+     lines.push("Minimum natif : "+answer.native_min_quantity+" "+answer.base+
+       " · valeur indicative "+answer.minimum_buy_at_recorded_ask_quote+" "+quote);
+     lines.push("Achat LIMIT étudié au ask archivé : "+answer.best_ask_quote+" "+quote+
+       " · quantité brute "+answer.gross_buy_quantity+" "+answer.base);
+     lines.push("Après frais BASE fictifs et arrondi au lot : "+
+       answer.sellable_lot_quantity+" "+answer.base+
+       " revendables en taille (pas un fill).");
+     lines.push("Coût fictif : "+answer.hypothetical_buy_cost_quote+" "+quote+
+       " · sortie immédiate au bid archivé après frais : "+
+       answer.hypothetical_immediate_exit_quote+" "+quote);
+     if(answer.hypothetical_break_even_bid_quote)
+       lines.push("Bid théorique d'équilibre après frais fictifs : "+
+         answer.hypothetical_break_even_bid_quote+" "+quote+
+         " · ni cible de cours ni signal d'achat.");
+     lines.push(answer.assumptions);
+   }
+   if(answer.blockers?.length)lines.push("BLOCAGES :\n• "+answer.blockers.join("\n• "));
+   lines.push("STATUT : IMPOSSIBLE D'ENVOYER UN ORDRE. "+
+     "Compte Trading, frais réels et minimums complets non certifiés.");
+   ticketStatus(lines.join("\n"));
+   box.dataset.ticketResult=answer.status;
+ }catch(error){
+   if(current===ticketRequest)ticketStatus("Ticket indisponible : "+
+     String(error?.message||error)+
+     "\nAucun ordre ni montant engagé.");
+ }
 }
 function mount(){
  const lab=document.getElementById("traderPaperLab");
@@ -237,7 +317,47 @@ function mount(){
  evidence.setAttribute("data-decision-result","");
  evidence.setAttribute("role","status");evidence.setAttribute("aria-live","polite");
  evidence.textContent="Preuves Spot OKX en attente. Aucun ordre.";
- content.append(explanation,history,label,button,collector,evidence);
+ const ticket=document.createElement("details");
+ ticket.id="traderOkxTicket";ticket.className="pl-more";
+ const ticketHeading=document.createElement("summary");
+ ticketHeading.textContent="Préparer un ticket OKX LIMIT · sans ordre ni fonds engagés";
+ const ticketBox=document.createElement("div");
+ const warning=document.createElement("p");
+ warning.textContent="Étude d'ordre Spot depuis le dernier carnet public archivé. "+
+   "Montant hypothétique, pas ton solde OKX. Le prix n'est pas live. "+
+   "Aucun bouton d'achat et aucun appel privé.";
+ const quoteLabel=document.createElement("label");
+ quoteLabel.textContent="Devise de cotation (paire OKX vérifiée) ";
+ const quoteSelect=document.createElement("select");
+ quoteSelect.setAttribute("data-ticket-quote","");
+ for(const q of ["USDC","USDT","EUR"]){
+   const option=document.createElement("option");
+   option.value=q;option.textContent=q;quoteSelect.appendChild(option);
+ }
+ quoteLabel.appendChild(quoteSelect);
+ const budgetLabel=document.createElement("label");
+ budgetLabel.textContent="Budget fictif, pas un solde du compte ";
+ const budget=document.createElement("input");
+ budget.setAttribute("data-ticket-budget","");
+ budget.setAttribute("inputmode","decimal");budget.value="5";
+ budgetLabel.appendChild(budget);
+ const compute=document.createElement("button");
+ compute.type="button";compute.textContent="Vérifier ce scénario (aucun ordre)";
+ const output=document.createElement("pre");
+ output.setAttribute("data-ticket-report","");
+ output.setAttribute("role","status");output.setAttribute("aria-live","polite");
+ output.textContent="Ouvre ce panneau et lance la vérification des contraintes OKX. Aucun ordre.";
+ ticketBox.append(warning,quoteLabel,budgetLabel,compute,output);
+ ticket.append(ticketHeading,ticketBox);
+ content.append(explanation,history,label,button,collector,evidence,ticket);
+ compute.addEventListener("click",()=>void prepareTicket());
+ ticket.addEventListener("toggle",()=>{
+   ticketRequest++;
+   if(ticket.open)void prepareTicket();
+ });
+ for(const input of [quoteSelect,budget])input.addEventListener("change",()=>{
+   ticketRequest++;ticketStatus("Paramètres modifiés : relancer l'étude. Aucun ordre.");
+ });
  section.append(summary,content);
  const more=parent.querySelector(".pl-more");
  if(more)parent.insertBefore(section,more);else parent.appendChild(section);
@@ -254,7 +374,7 @@ function mount(){
  return true;
 }
 globalThis.AgentCryptoTraderPaperDecisionView=Object.freeze({
- mount,evaluate,realOrders:false,accountAccess:false,readOnly:true,
+ mount,evaluate,prepareTicket,realOrders:false,accountAccess:false,readOnly:true,
  snapshot:()=>({mounted:!!panel(),active:!!panel()?.open,
    historical:historyTarget()?.dataset.study||null,
    result:result()?.dataset.decision||null})

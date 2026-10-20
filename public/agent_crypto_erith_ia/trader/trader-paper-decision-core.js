@@ -166,5 +166,137 @@ function summarizeHistorical(study,selected){
    "frais supposés. Aucun signal d'achat ni gain de portefeuille démontré.",
    orders_enabled:false,strategy_certified:false});
 }
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,realOrders:false,network:false,storage:false});
+
+/* Read-only OKX LIMIT ticket preflight from an exact PUBLIC Spot hourly snapshot.
+   Funds are hypothetical; actual Trading balance/fees/order permissions are
+   NEVER inferred from a screenshot, WebSocket, market maker quote or Funding. */
+const TICKET="erith.trader.okx-spot-limit-preflight.v1",UNIT=10n**18n;
+const CANONICAL_COINS=Object.freeze({BTC:"bitcoin",ETH:"ethereum",SOL:"solana",
+ XRP:"ripple",OKB:"okb"});
+function exact(raw){
+ if(typeof raw!=="string"||!/^\d{1,14}(?:\.\d{1,18})?$/.test(raw))
+   throw Error("Décimal natif non vérifié");
+ const [whole,frac=""]=raw.split(".");
+ return BigInt(whole)*UNIT+BigInt(frac.padEnd(18,"0"));
+}
+function exactFmt(n){
+ if(n<0n)throw Error("Montant négatif");
+ return String(n/UNIT)+"."+String(n%UNIT).padStart(18,"0").replace(/0+$/,"").padEnd(1,"0");
+}
+function ceiling(n,step){return (n+step-1n)/step*step}
+function ticketBlocked(reason,extras={}){
+ return Object.freeze({schema:TICKET,status:"BLOQUE",reason,
+  ...extras,account_verified:false,fees_verified:false,
+  trading_balance_verified:false,market_execution_proven:false,
+  orders_enabled:false,real_orders:0,trade_endpoint:null,
+  executable:false,has_submit_action:false});
+}
+function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now()}={}){
+ try{
+  if(!Number.isFinite(now))return ticketBlocked("Horloge non vérifiable.");
+  const asset=String(selected?.asset||"");
+  if(!CANONICAL_COINS[asset]||
+     selected?.coinId!==CANONICAL_COINS[asset]||
+     selected?.currency!=="USD"||selected?.provider!=="coingecko"||
+     selected?.instrument!==asset+"-USD")
+    return ticketBlocked("Le graphique n'établit pas l'identité canonique de cet actif. "+
+     "Aucun mélange de cryptomonnaies ou de listings externes.");
+  if(typeof pair!=="string"||!["USDC","USDT","EUR"].some(q=>pair===asset+"-"+q))
+    return ticketBlocked("Paire Spot incohérente avec l'actif sélectionné.");
+  if(archive?.schema!=="erith.radar.okx-hourly-spot.v1"||
+     archive?.orders_enabled!==false||archive?.real_orders!==0||
+     archive?.paper_fills!==0||!Array.isArray(archive.hours)||
+     archive.hours.length===0||archive.hours.length>24)
+    return ticketBlocked("Archives OKX publiques absentes ou incompatibles.");
+  const sorted=[...archive.hours].sort((a,b)=>
+    String(a?.hour_utc).localeCompare(String(b?.hour_utc)));
+  const last=sorted.at(-1);
+  if(last?.schema!==archive.schema||last?.orders_enabled!==false||
+     last?.real_orders!==0||last?.paper_fills!==0||
+     last?.instrument_type!=="SPOT"||last?.no_quote_conversion!==true||
+     !Array.isArray(last.markets)||last.hour_utc.slice(0,10)!==archive.date_utc)
+    return ticketBlocked("Dernier relevé Spot non qualifié.");
+  const matches=last.markets.filter(m=>m?.pair===pair);
+  if(matches.length!==1||matches[0].base!==asset||
+     !["USDC","USDT","EUR"].includes(matches[0].quote)||
+     matches[0].pair!==asset+"-"+matches[0].quote)
+    return ticketBlocked("Paire absente ou identité du carnet ambiguë.");
+  const m=matches[0],book=m.book5;
+  if(m.status!=="VERIFIED_PUBLIC_BOOK"||!book||
+     book.market_fill_proven!==false||!Array.isArray(book.bids)||
+     !Array.isArray(book.asks)||!Array.isArray(book.bids[0])||
+     !Array.isArray(book.asks[0]))
+    return ticketBlocked("Carnet public absent ou non qualifié.");
+  const quote=m.quote,ts=Date.parse(book.source_at_utc),
+        observed=Date.parse(last.observed_at_utc);
+  if(!Number.isFinite(ts)||!Number.isFinite(observed)||
+     ts>now+30000||Math.abs(ts-observed)>180000||
+     observed>now+30000)
+    return ticketBlocked("Heure du carnet ou observation incohérente.");
+  const age=Math.max(0,Math.round((now-ts)/60000));
+  const tick=exact(m.rules?.tickSz),lot=exact(m.rules?.lotSz),
+        minimum=exact(m.rules?.minSz);
+  const ask=exact(book.asks[0][0]),bid=exact(book.bids[0][0]),
+        askQty=exact(book.asks[0][1]),bidQty=exact(book.bids[0][1]),
+        budget=exact(budgetQuote);
+  if(!tick||!lot||!minimum||!ask||!bid||bid>=ask||
+     ask%tick||bid%tick||!askQty||!bidQty||!budget||
+     budget>10000n*UNIT)
+    return ticketBlocked("Prix, lot, frais ou budget d'étude invalides.");
+  // QUOTE used for cost; 0.1% BASE buy fee is a conservative HYPOTHESIS.
+  const gross=((budget*UNIT)/ask)/lot*lot;
+  const feeBase=(gross*10n+9999n)/10000n;
+  const net=gross>feeBase?gross-feeBase:0n;
+  const sellable=net/lot*lot;
+  const notional=gross*ask/UNIT;
+  const minBuyQuote=minimum*ask/UNIT;
+  const exitQuote=sellable*bid/UNIT;
+  const saleFee=(exitQuote*10n+9999n)/10000n;
+  const proceeds=exitQuote>saleFee?exitQuote-saleFee:0n;
+  const possibleAtBook=proceeds>=notional?"0":exactFmt(notional-proceeds);
+  const budgetCoversMinimum=gross>=minimum;
+  const canResellAtSize=sellable>=minimum;
+  // Price to cover exact hypothetically BASE buy fee + QUOTE sell fee.
+  const theoreticalBreakEven=sellable>0n?
+    ceiling(((notional*10000n*UNIT)/(sellable*9990n)),tick):null;
+  const limits=[
+    ...(budgetCoversMinimum?[]:["Budget d'étude sous le minimum natif de quantité : "+
+      exactFmt(minimum)+" "+asset+" (environ "+exactFmt(minBuyQuote)+" "+quote+
+      " au carnet archivé)."]),
+    ...(canResellAtSize?[]:["Quantité nette après frais BASE et arrondi au lot "+
+      "insuffisante pour une revente au minimum natif."]),
+    ...(gross<=askQty&&sellable<=bidQty?[]:["Profondeur au meilleur niveau insuffisante "+
+      "pour le scénario complet (aucune exécution présumée)."]),
+    "Solde du compte Trading et devise réellement disponibles non vérifiés.",
+    "Frais réels de ce compte et de cette paire non vérifiés.",
+    "Minimum de valeur/notionnel et autres filtres d'ordre à confirmer par OKX.",
+    ...(age>2?["Carnet public différé de "+age+" min : aucun prix actuel certifié."]:
+       ["Même récent, un carnet public n'est pas une garantie d'exécution."])
+  ];
+  return ticketBlocked("PRÉPARATION UNIQUEMENT · validation nécessaire avant tout ordre.",{
+   status:"PREPARATION_NON_EXECUTABLE",pair,quote,base:asset,
+   source_book_at_utc:book.source_at_utc,book_age_minutes:age,
+   study_budget_quote:exactFmt(budget),best_ask_quote:exactFmt(ask),
+   best_bid_quote:exactFmt(bid),native_min_quantity:exactFmt(minimum),
+   native_lot:exactFmt(lot),native_tick:exactFmt(tick),
+   minimum_buy_at_recorded_ask_quote:exactFmt(minBuyQuote),
+   gross_buy_quantity:exactFmt(gross),estimated_base_fee:exactFmt(feeBase),
+   net_base_quantity:exactFmt(net),sellable_lot_quantity:exactFmt(sellable),
+   unsellable_dust:exactFmt(net-sellable),
+   hypothetical_buy_cost_quote:exactFmt(notional),
+   hypothetical_immediate_exit_quote:exactFmt(proceeds),
+   hypothetical_immediate_loss_quote:possibleAtBook,
+   hypothetical_break_even_bid_quote:theoreticalBreakEven===null?null:exactFmt(theoreticalBreakEven),
+   buy_quantity_minimum_met:budgetCoversMinimum,
+   net_exit_quantity_minimum_met:canResellAtSize,
+   assumptions:"Frais achat BASE 0,1 % ; frais vente QUOTE 0,1 % · hypothétiques.",
+   blockers:limits,notional_filter_verified:false,
+   can_place_limit_order:false,can_sell_net_quantity_certified:false
+  });
+ }catch(_){
+  return ticketBlocked("Précision de l'instrument, horodatage ou montant non exploitable.");
+ }
+}
+
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,realOrders:false,network:false,storage:false});
 });
