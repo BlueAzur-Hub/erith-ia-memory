@@ -232,7 +232,7 @@ async function prepareTicket(){
  const quote=box.querySelector("[data-ticket-quote]")?.value;
  const money=String(box.querySelector("[data-ticket-budget]")?.value||"").trim().replace(",",".");
  const pair=String(source.asset||"")+"-"+quote;
- ticketStatus("Lecture du dernier carnet public archivé · aucun accès au compte réel…");
+ ticketStatus("Vérification du carnet archivé et du compte OKX existant, en lecture seule…");
  try{
    const stateResponse=await fetch("../data/crypto/okx-hourly/latest.json",
      {cache:"no-store",credentials:"omit"});
@@ -278,10 +278,43 @@ async function prepareTicket(){
      lines.push(answer.assumptions);
    }
    if(answer.blockers?.length)lines.push("BLOCAGES :\n• "+answer.blockers.join("\n• "));
-   lines.push("STATUT : IMPOSSIBLE D'ENVOYER UN ORDRE. "+
-     "Compte Trading, frais réels et minimums complets non certifiés.");
-   ticketStatus(lines.join("\n"));
+   lines.push("STATUT : AUCUN ORDRE POSSIBLE DEPUIS CE TICKET.");
+   ticketStatus(lines.join("\n")+"\nCOMPTE OKX : vérification lecture seule en cours…");
    box.dataset.ticketResult=answer.status;
+   // Reuse the only Aether Trust account owner, not a second private fetch.
+   let context=null;
+   try{
+     const owner=globalThis.AgentCryptoTraderOkxAccount;
+     context=typeof owner?.ticketReadOnly==="function"?
+       await owner.ticketReadOnly(pair):null;
+   }catch(_){context=null;}
+   const currentSource=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
+   if(current!==ticketRequest||!box.open||
+      String(currentSource?.asset||"")+"|"+String(currentSource?.coinId||"")!==coinKey||
+      box.querySelector("[data-ticket-quote]")?.value!==quote||
+      String(box.querySelector("[data-ticket-budget]")?.value||"").trim().replace(",",".")!==money)
+     return;
+   const review=core.reviewSpotTicketAccount(answer,context,Date.now());
+   const accountLines=[
+     "COMPTE OKX · "+(review.account_at_utc||"lecture non validée"),
+     review.available_trading_quote===null?
+       "Solde disponible Trading "+quote+" : INCONNU.":
+       "Solde disponible Trading "+quote+" : "+review.available_trading_quote+" "+quote+".",
+     review.available_funding_quote===null?
+       "Solde Financement "+quote+" : inconnu.":
+       "Solde Financement "+quote+" : "+review.available_funding_quote+" "+quote+
+         " (NON utilisable comme solde Trading).",
+     review.fees_verified?
+       "Frais du compte "+pair+" · maker "+review.fee_maker_pct+
+         " % · taker "+review.fee_taker_pct+" %.":
+       "Frais de cette paire : non certifiés ; les frais fictifs restent séparés.",
+     review.funds_cover_public_scenario?
+       "Solde Trading suffisant pour le coût FICTIF archivé uniquement.":
+       "Solde Trading insuffisant ou non vérifié pour ce scénario.",
+     review.reason,
+     "AUCUN achat, vente, transfert ni réservation de fonds."
+   ];
+   ticketStatus(lines.join("\n")+"\n\n"+accountLines.join("\n"));
  }catch(error){
    if(current===ticketRequest)ticketStatus("Ticket indisponible : "+
      String(error?.message||error)+
