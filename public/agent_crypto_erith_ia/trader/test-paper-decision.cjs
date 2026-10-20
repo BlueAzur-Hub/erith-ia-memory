@@ -3,7 +3,7 @@ const test=require("node:test"),assert=require("node:assert/strict");
 const fs=require("node:fs"),path=require("node:path");
 const core=require("./trader-paper-decision-core.js");
 const engine=require("./spot-paper-order-engine.js");
-const NOW=Date.parse("2026-10-20T03:00:00Z");
+const NOW=Date.parse("2026-10-20T00:00:00Z");
 function selected(id="test-market"){
  return {ok:true,asset:"TOK",coinId:id,provider:"coingecko",currency:"USD",
   sourceIdentity:"coingecko|TOK-USD|USD|"+id,ageMs:30000};
@@ -29,8 +29,8 @@ function candidate(){
     contract_identity_proven:false,fees_proven:false,orders_enabled:false},
    best_book:{schema:"erith.radar.okx.spot-best-book.v1",source:"OKX_PUBLIC_SPOT_BOOK",
     pair:"TOK-USDT",quote:"USDT",
-    exchange_time_utc:"2026-10-20T02:59:30Z",
-    collected_at_utc:"2026-10-20T02:59:31Z",
+    exchange_time_utc:"2026-10-19T23:59:30Z",
+    collected_at_utc:"2026-10-19T23:59:31Z",
     best_bid_usdt:"9.90",best_ask_usdt:"10.00",
     best_bid_qty:"100",best_ask_qty:"100",
     market_execution_proven:false,fees_verified:false,orders_enabled:false}}};
@@ -71,8 +71,8 @@ test("invalid or ambiguous CoinGecko asset never borrows a symbol's OKX book",()
  assert.equal(assess({qualification:q}).decision,"PREUVES_INSUFFISANTES");
 });
 test("stale public books are useful context, NOT a decision today",()=>{
- const old=candidate();old.okx_spot.best_book.exchange_time_utc="2026-10-19T23:59:54Z";
- old.okx_spot.best_book.collected_at_utc="2026-10-19T23:59:54Z";
+ const old=candidate();old.okx_spot.best_book.exchange_time_utc="2026-10-19T20:59:54Z";
+ old.okx_spot.best_book.collected_at_utc="2026-10-19T20:59:54Z";
  const r=assess({qualification:qualification(old)});
  assert.equal(r.decision,"PREUVES_INSUFFISANTES");
  assert.match(r.reason,/trop ancien/);
@@ -92,7 +92,7 @@ test("wrong Spot source and invalid price evidence fail closed",()=>{
  assert.equal(assess({qualification:qualification(swap)}).decision,"PREUVES_INSUFFISANTES");
  const bad=candidate();bad.okx_spot.best_book.best_bid_usdt="10.05";
  assert.equal(assess({qualification:qualification(bad)}).decision,"PREUVES_INSUFFISANTES");
- const book=candidate();book.okx_spot.best_book.exchange_time_utc="2026-10-20T02:00:00Z";
+ const book=candidate();book.okx_spot.best_book.exchange_time_utc="2026-10-19T23:00:00Z";
  assert.equal(assess({qualification:qualification(book)}).decision,"PREUVES_INSUFFISANTES");
  const q=qualification();q.candidates.pop();
  assert.equal(assess({qualification:q}).decision,"PREUVES_INSUFFISANTES");
