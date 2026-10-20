@@ -271,16 +271,42 @@
    return periodKey?SUMMARY_RULES[periodKey]||null:null;
  }
  const priceValue=v=>N(Array.isArray(v)?v[1]:v&&typeof v==='object'?(v.y??v.price??v.value):v);
- function summaryOwnership(ref){
+ function summaryOwnership(ref,period=summaryPeriodConfig()){
    if(!ref?.ds?.atlasCoin?.id||!ref?.ds?.atlasCoin?.symbol)return false;
    const external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
    if(external?.active){
-     const owner=globalThis.AtlasExternalChart?.state?.();
-     const n=globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.();
-     return String(external.id||'')===String(ref.ds.atlasCoin.id)&&
-       String(external.base||'').toUpperCase()===String(ref.ds.atlasCoin.symbol).toUpperCase()&&
-       String(owner?.coin_id||'')===String(external.id)&&owner?.active===true&&
-       String(n?.selectedId||'')===String(external.id);
+     // CT V7 can restore the canonical plotted series after the transient
+     // AtlasExternalChart controller has become inactive. Prove the chart
+     // line with the same validated native series instead of a controller
+     // boolean. NEVER borrow the retained Market BTC identity or quote.
+     const native=globalThis.AgentCryptoNewListingsNativeCategory;
+     const n=native?.snapshot?.(),h=native?.mathSeriesSnapshot?.();
+     const chartOwner=globalThis.AtlasExternalChart?.state?.();
+     const id=String(external.id||''),symbol=String(external.base||'').toUpperCase();
+     const pair=v=>String(v||'').toUpperCase().replace(/\//g,'-');
+     const wantedPair=pair(external.instrument),selectedPair=pair(n?.selectedPair);
+     if(!period||!id||!symbol||!wantedPair||
+       id!==String(ref.ds.atlasCoin.id||'')||
+       symbol!==String(ref.ds.atlasCoin.symbol||'').toUpperCase()||
+       id!==String(n?.selectedId||'')||
+       symbol!==String(n?.selectedSymbol||'').toUpperCase()||
+       external.provider!==n?.selectedProvider||
+       wantedPair!==selectedPair||
+       !h||pair(h.instrument)!==wantedPair||
+       h.provider!==external.provider||h.currency!=='USD'||
+       Number(h.periodDays)!==period.days||
+       !String(h.source||'').includes(String(n.selectedPair||''))||
+       !Array.isArray(h.series)||h.series.length<21||
+       h.series.length!==ref.ds.data?.length||h.series.length!==ref.meta.data?.length)
+       return false;
+     // Never override a different *active* market chart owner.
+     if(chartOwner?.active&&String(chartOwner.coin_id||'')!==id)return false;
+     for(const i of [...new Set([0,Math.floor(h.series.length/2),h.series.length-1])]){
+       const plotted=priceValue(ref.ds.data[i]),verified=N(h.series[i]?.[1]);
+       if(!(plotted>0&&verified>0)||Math.abs(plotted/verified-1)>0.001)
+         return false;
+     }
+     return true;
    }
    const selected=globalThis.getSelectedCoin?.();
    return !selected?.id||String(selected.id)===String(ref.ds.atlasCoin.id);
