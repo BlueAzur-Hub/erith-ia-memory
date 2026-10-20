@@ -353,3 +353,90 @@ test("read-only ticket appears in existing Trader PAPER lab and never sends an o
  assert.equal(core.realOrders,false);
  assert.equal(core.network,false);
 });
+
+test("existing OKX module yields narrow Trading-only quote and BTC-USDC account fees",()=>{
+ const owner=require("./trader-okx-account.js");
+ const at="2026-10-20T04:00:00Z",now=Date.parse(at)+30000;
+ const acct={ok:true,read_only:true,fetched_at:at,
+  trading:[{details:[{ccy:"USDC",availBal:"0",cashBal:"0"}]}],
+  funding:[{ccy:"USDC",bal:"4.38668749",availBal:"4.38668749"}]};
+ const fees={fees:[{instId:"BTC-USDC",maker:"-0.0008",taker:"-0.001"}]};
+ const data=owner.summarizeTicketAccount(acct,fees,"BTC-USDC",now);
+ assert.equal(data.verified,true);
+ assert.equal(data.trading_available_quote,"0");
+ assert.equal(data.funding_available_quote,"4.38668749");
+ assert.equal(data.fee_maker_rate,"0.0008");
+ assert.equal(data.fee_taker_rate,"0.001");
+ assert.equal(data.fee_pair_verified,true);
+ assert.equal(data.read_only,true);
+ assert.equal(data.orders_enabled,false);
+ assert.equal(data.real_orders,0);
+ assert.equal(Object.hasOwn(data,"trading"),false);
+ assert.equal(Object.hasOwn(data,"token"),false);
+ const review=core.reviewSpotTicketAccount(ticket("10"),data,T);
+ assert.equal(review.status,"COMPTE_NON_VERIFIE"); // private snapshot is later than T
+ const dated=core.reviewSpotTicketAccount(ticket("10"),data,now);
+ assert.equal(dated.status,"TRADING_INSUFFISANT");
+ assert.equal(dated.funds_cover_public_scenario,false);
+ assert.equal(dated.fee_maker_pct,"0.08");
+ assert.equal(dated.fee_taker_pct,"0.1");
+ assert.equal(dated.can_place_limit_order,false);
+ assert.equal(dated.orders_enabled,false);
+});
+test("Funding is never counted as immediately available Trading capital",()=>{
+ const owner=require("./trader-okx-account.js"),at="2026-10-20T03:18:50Z";
+ const a={ok:true,read_only:true,fetched_at:at,trading:[],
+  funding:[{ccy:"USDC",bal:"10",availBal:"10"}]};
+ const summary=owner.summarizeTicketAccount(a,{fees:[]},"BTC-USDC",T);
+ assert.equal(summary.verified,false);
+ assert.equal(summary.trading_available_quote,null);
+ assert.equal(summary.funding_available_quote,"10");
+ const check=core.reviewSpotTicketAccount(ticket("10"),summary,T);
+ assert.equal(check.status,"COMPTE_NON_VERIFIE");
+ assert.equal(check.funds_cover_public_scenario,false);
+ assert.equal(check.fees_verified,false);
+});
+test("A fresh larger Trading balance still cannot authorize any execution",()=>{
+ const owner=require("./trader-okx-account.js"),at="2026-10-20T03:18:50Z";
+ const a={ok:true,read_only:true,fetched_at:at,
+  trading:[{details:[{ccy:"USDC",availBal:"12"}]}],funding:[]};
+ const fees={fees:[{instId:"BTC-USDC",maker:"-0.0008",taker:"-0.001"}]};
+ const ctx=owner.summarizeTicketAccount(a,fees,"BTC-USDC",T);
+ const report=core.reviewSpotTicketAccount(ticket("10"),ctx,T);
+ assert.equal(report.status,"SOLDE_SUFFISANT_POUR_ETUDE");
+ assert.equal(report.funds_cover_public_scenario,true);
+ assert.equal(report.fees_verified,true);
+ assert.equal(report.can_place_limit_order,false);
+ assert.equal(report.orders_enabled,false);
+ assert.equal(report.real_orders,0);
+});
+test("Reject wrong-pair fees, expired Bridge results, duplicate or fake availBal",()=>{
+ const owner=require("./trader-okx-account.js"),at="2026-10-20T03:18:50Z";
+ const a={ok:true,read_only:true,fetched_at:at,
+  trading:[{details:[{ccy:"USDC",availBal:"12"}]}],funding:[]};
+ const wrong={fees:[{instId:"ETH-USDC",maker:"-0.0008",taker:"-0.001"}]};
+ const ctx=owner.summarizeTicketAccount(a,wrong,"BTC-USDC",T);
+ assert.equal(ctx.fee_pair_verified,false);
+ assert.equal(core.reviewSpotTicketAccount(ticket("10"),ctx,T).fees_verified,false);
+ assert.equal(owner.summarizeTicketAccount(a,wrong,"BTC-USDT",T).verified,false);
+ assert.equal(owner.summarizeTicketAccount(a,wrong,"BTC-USDC",T+300000).verified,false);
+ assert.equal(owner.summarizeTicketAccount({...a,trading:[{details:[
+  {ccy:"USDC",availBal:"12"},{ccy:"USDC",availBal:"12"}]}]},wrong,"BTC-USDC",T).verified,false);
+ assert.equal(owner.summarizeTicketAccount({...a,trading:[{details:[
+  {ccy:"USDC",availBal:"Infinity"}]}]},wrong,"BTC-USDC",T).verified,false);
+ assert.equal(owner.summarizeTicketAccount({...a,read_only:false},wrong,"BTC-USDC",T).verified,false);
+});
+test("Ticket requests no private endpoint: only the existing account owner talks to Bridge",()=>{
+ const fs=require("node:fs"),path=require("node:path");
+ const ticketView=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ const accountModule=fs.readFileSync(path.join(__dirname,"trader-okx-account.js"),"utf8");
+ assert.match(ticketView,/AgentCryptoTraderOkxAccount/);
+ assert.match(ticketView,/owner\.ticketReadOnly\(pair\)/);
+ assert.match(ticketView,/reviewSpotTicketAccount\(answer,context,Date\.now\(\)\)/);
+ assert.doesNotMatch(ticketView,/\/okx\/account|\/okx\/fees|Bearer|secretKey|auth\/login/);
+ assert.match(accountModule,/async function ticketReadOnly/);
+ assert.match(accountModule,/ticketBtcFees=null/);
+ assert.match(accountModule,/return summarizeTicketAccount/);
+ assert.match(accountModule,/TICKET_PAIR=/);
+ assert.doesNotMatch(accountModule,/\/api\/v5\/trade\/order/);
+});

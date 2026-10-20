@@ -298,5 +298,68 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
  }
 }
 
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,realOrders:false,network:false,storage:false});
+/* Combine an already-blocked PUBLIC ticket with a tiny private READ-ONLY
+   snapshot from the existing OKX account owner. Even a verified balance never
+   authorizes a trade, converts Funding to Trading or asserts maker execution. */
+function reviewSpotTicketAccount(ticket,context,now=Date.now()){
+ const blocked=(reason,extra={})=>Object.freeze({status:"COMPTE_NON_VERIFIE",
+   reason,account_at_utc:null,account_quote:null,available_trading_quote:null,
+   available_funding_quote:null,fee_maker_pct:null,fee_taker_pct:null,
+   funds_cover_public_scenario:false,account_verified:false,fees_verified:false,
+   orders_enabled:false,real_orders:0,can_place_limit_order:false,...extra});
+ if(ticket?.schema!==TICKET||ticket.orders_enabled!==false||
+    ticket.real_orders!==0||ticket.executable!==false||
+    !Number.isFinite(now)||typeof ticket.pair!=="string")
+   return blocked("Ticket public invalide.");
+ if(context?.read_only!==true||context.orders_enabled!==false||
+    context.real_orders!==0||context.instId!==ticket.pair)
+   return blocked("Compte privé absent ou autre paire : aucune donnée empruntée.");
+ const at=Date.parse(context.account_at_utc);
+ if(!context.account_fresh||!Number.isFinite(at)||at>now+30000||
+    now-at>120000)
+   return blocked("Lecture OKX du compte Trading trop ancienne.");
+ const quote=ticket.quote;
+ if(ticket.pair!==ticket.base+"-"+quote||!["USDC","USDT","EUR"].includes(quote))
+   return blocked("Devise ou paire incohérente.");
+ const raw=context.trading_available_quote;
+ let available=null,funding=null;
+ try{if(raw!==null&&raw!==undefined)available=exact(raw);
+     if(context.funding_available_quote!==null&&context.funding_available_quote!==undefined)
+       funding=exact(context.funding_available_quote);}
+ catch(_){return blocked("Solde privé numérique invalide.");}
+ const feeGood=context.fee_pair_verified===true&&
+   context.fee_maker_rate!==null&&context.fee_taker_rate!==null;
+ let maker=null,taker=null;
+ try{
+   if(feeGood){maker=exact(context.fee_maker_rate);
+     taker=exact(context.fee_taker_rate);
+     if(maker>2n*UNIT/100n||taker>2n*UNIT/100n)throw Error("Fee invalid");}
+ }catch(_){return blocked("Frais OKX de cette paire non vérifiables.");}
+ const accountVerified=context.verified===true&&available!==null;
+ const hypotCost=ticket.hypothetical_buy_cost_quote?
+   exact(ticket.hypothetical_buy_cost_quote):null;
+ const enough=accountVerified&&hypotCost!==null&&available>=hypotCost;
+ const reasons=[
+  ...(!accountVerified?["Solde disponible dans Trading non prouvé."]:[]),
+  ...(accountVerified&&!enough?["Solde Trading insuffisant pour le scénario public."]:[]),
+  ...(!feeGood?["Frais maker/taker propres à la paire non certifiés."]:[]),
+  "Les frais réels de l'actif de débit et les frais nets de revente restent à appliquer.",
+  "Prix du carnet archivé : aucune cotation négociable actuelle garantie.",
+  "Minimum notionnel OKX, solde après réservations et confirmation humaine restent à vérifier.",
+ ];
+ return Object.freeze({status:!accountVerified?"COMPTE_NON_VERIFIE":
+      !enough?"TRADING_INSUFFISANT":"SOLDE_SUFFISANT_POUR_ETUDE",
+   reason:reasons.join(" "),
+   account_at_utc:context.account_at_utc,account_quote:quote,
+   available_trading_quote:available===null?null:exactFmt(available),
+   available_funding_quote:funding===null?null:exactFmt(funding),
+   fee_maker_pct:feeGood?exactFmt(maker*100n):null,
+   fee_taker_pct:feeGood?exactFmt(taker*100n):null,
+   funds_cover_public_scenario:Boolean(enough),
+   account_verified:accountVerified,fees_verified:Boolean(feeGood),
+   orders_enabled:false,real_orders:0,can_place_limit_order:false,
+   has_submit_action:false});
+}
+
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,reviewSpotTicketAccount,realOrders:false,network:false,storage:false});
 });
