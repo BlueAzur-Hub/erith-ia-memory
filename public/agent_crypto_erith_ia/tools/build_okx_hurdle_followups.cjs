@@ -93,6 +93,7 @@ function checkedFuture(study,row){
 function advance(previous,qualification){
  const prior=validated(previous||empty()),q=qualifiedSource(qualification);
  const studies=prior.studies.map(x=>({...x,followups:[...x.followups]}));
+ const snapshots=[...prior.snapshots];
  const newest=new Map(q.candidates.map(x=>[x.id,x]));
  // Strictly future observations: a current book can never score itself.
  for(const s of studies){
@@ -113,11 +114,11 @@ function advance(previous,qualification){
  const qualifiedTime=stamp(q.qualified_at_utc);
  // A qualification can take some seconds while public books are fetched.
  const batchId=q.source_observation_date_utc+"|"+q.qualified_at_utc;
- if(!prior.snapshots.some(x=>x.id===batchId)){
-  requireProof(!prior.snapshots.length||
-     qualifiedTime>stamp(prior.snapshots[prior.snapshots.length-1].qualified_at_utc),
+ if(!snapshots.some(x=>x.id===batchId)){
+  requireProof(!snapshots.length||
+     qualifiedTime>stamp(snapshots[snapshots.length-1].qualified_at_utc),
      "Qualification rejouée dans le désordre");
-  prior.snapshots.push({id:batchId,qualified_at_utc:q.qualified_at_utc,
+  snapshots.push({id:batchId,qualified_at_utc:q.qualified_at_utc,
     candidates:20,okx_pairs:observed,cost_evaluable:evaluable.length,
     orders_enabled:false,selection:"ALL_20_RADAR_CANDIDATES_NO_BACKFILL"});
  }
@@ -139,7 +140,7 @@ function advance(previous,qualification){
    status:"HYPOTHETICAL_COST_STUDY_NO_FILL",contract_identity_proven:false,
    orders_enabled:false,executed_order:false,followups:[]});
  }
- return validated({...prior,studies});
+ return validated({...prior,snapshots,studies});
 }
 function main(){
  const source=JSON.parse(fs.readFileSync(SOURCE,"utf8"));
