@@ -738,3 +738,34 @@ test("CT Hybrid variation summary accepts restored V7 line only when its canonic
  assert.equal(graph.summaryOwnership({ds:dataset,meta}),true);
  assert.equal(graph.read_only,true);
 });
+
+test("CT ticket shows remaining blockers after verified OKX snapshot",()=>{
+ const fs=require("node:fs"),path=require("node:path"),vm=require("node:vm");
+ const source=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ const start=source.indexOf("function ticketRemainingBlockers(");
+ const end=source.indexOf("async function prepareTicket(",start);
+ assert.ok(start>=0&&end>start);
+ const reconcile=vm.runInNewContext(source.slice(start,end)+"\nticketRemainingBlockers",Object.create(null));
+ const balance="Solde du compte Trading et devise réellement disponibles non vérifiés.";
+ const fees="Frais réels de ce compte et de cette paire non vérifiés.";
+ const book="Carnet public différé de 190 min : aucun prix actuel certifié.";
+ const notional="Minimum de valeur/notionnel et autres filtres d'ordre à confirmer par OKX.";
+ const ticket={blockers:[balance,fees,book,notional]};
+ const before=JSON.stringify(ticket.blockers);
+ const proven={account_verified:true,available_trading_quote:"3.2",
+  fees_verified:true,funds_cover_public_scenario:true};
+ assert.deepEqual(Array.from(reconcile(ticket,proven)),[book,notional]);
+ assert.deepEqual(Array.from(reconcile(ticket,{...proven,fees_verified:false})),[fees,book,notional]);
+ assert.deepEqual(Array.from(reconcile(ticket,{...proven,account_verified:false})),[balance,book,notional]);
+ assert.deepEqual(Array.from(reconcile(ticket,{...proven,available_trading_quote:null})),[balance,book,notional]);
+ assert.deepEqual(Array.from(reconcile(ticket,null)),[balance,fees,book,notional]);
+ const uncovered=Array.from(reconcile(ticket,{...proven,funds_cover_public_scenario:false}));
+ assert.equal(uncovered.includes(balance),false);
+ assert.match(uncovered.at(-1),/Couverture du coût fictif/);
+ assert.ok(uncovered.includes(book));
+ assert.equal(JSON.stringify(ticket.blockers),before);
+ assert.match(source,/BLOCAGES RESTANTS :/);
+ assert.match(source,/Compte OKX lu via le Bridge existant, en lecture seule/);
+ assert.doesNotMatch(source,/Aucun bouton d'achat et aucun appel privé/);
+ assert.match(source,/STATUT : AUCUN ORDRE POSSIBLE DEPUIS CE TICKET/);
+});
