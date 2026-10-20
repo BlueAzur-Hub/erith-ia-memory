@@ -2,7 +2,7 @@
   "closures": [],
   "execution_proven": false,
   "fee_side_fraction_assumed": "0.001",
-  "last_observation_at_utc": "2026-10-19T23:59:55Z",
+  "last_observation_at_utc": "2026-10-20T12:55:09Z",
   "max_shadow_positions": 4,
   "minimum_holding_hours": 48,
   "orders_enabled": false,
@@ -47,12 +47,33 @@
       "symbol": "DGAI",
       "tick_lot_verified": false,
       "venue": "Bitget"
+    },
+    {
+      "coin_id": "janction",
+      "contract_address": "0xea37a8de1de2d9d10772eeb569e28bfa5cb17707",
+      "entry_ask_usdt": "0.004265",
+      "entry_quote_at_utc": "2026-10-20T12:55:00Z",
+      "entry_spread_bps": "9.38306",
+      "executed_order": false,
+      "fee_and_slippage_assumed": true,
+      "hypothetical_quantity": "23399.765533411489",
+      "maximum_book_level_size_unverified": true,
+      "notional_usdt": "100",
+      "pair": "JCTUSDT",
+      "platform": "binance-smart-chain",
+      "quote": "USDT",
+      "realized_profit_usdt": null,
+      "status": "HYPOTHETICAL_NO_FILL",
+      "symbol": "JCT",
+      "tick_lot_verified": false,
+      "venue": "Bitget"
     }
   ],
   "real_orders": 0,
   "schema": "erith.radar.spot-paper-forward-shadow.v1",
   "seen_candidate_ids": [
     "dgrid-ai",
+    "janction",
     "quack-ai"
   ],
   "slippage_side_fraction_assumed": "0.001",

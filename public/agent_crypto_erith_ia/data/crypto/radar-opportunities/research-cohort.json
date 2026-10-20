@@ -1,17 +1,18 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-10-19T23:59:33Z",
-  "source_observation_date_utc": "2026-10-19",
+  "source_qualification_at_utc": "2026-10-20T12:54:52Z",
+  "source_observation_date_utc": "2026-10-20",
   "forward_archive_dates_utc": [
     "2026-10-16",
     "2026-10-17",
     "2026-10-18",
-    "2026-10-19"
+    "2026-10-19",
+    "2026-10-20"
   ],
   "count": 20,
-  "spot_documented": 16,
-  "additional_spot": 6,
-  "unpaired": 4,
+  "spot_documented": 18,
+  "additional_spot": 8,
+  "unpaired": 2,
   "reference": {
     "coin_id": "bitcoin",
     "role": "benchmark",
@@ -22,21 +23,21 @@
   "note": "Recherche, pas classement d'achat. Prix/volume agrégés en USD, Spot en USDT; données datées. Identité de contrat non certifiée. Pas de rendement inventé.",
   "candidates": [
     {
-      "coin_id": "arbitrum",
-      "symbol": "ARB",
-      "name": "Arbitrum",
+      "coin_id": "altlayer",
+      "symbol": "ALT",
+      "name": "AltLayer",
       "group": "primary_research",
       "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 66,
-      "change24h_pct_at_snapshot": 6.85547,
-      "change7d_pct_at_snapshot": 0.7419,
-      "volume24h_aggregate_usd": 182877880,
+      "rank_at_snapshot": 327,
+      "change24h_pct_at_snapshot": 21.63107,
+      "change7d_pct_at_snapshot": 37.0671,
+      "volume24h_aggregate_usd": 45240266,
       "spot": {
         "venue": "Binance",
-        "pair": "ARBUSDT",
+        "pair": "ALTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.06971,
-        "roundtrip_cost_pct_assumed": 0.25048
+        "spread_bps_at_snapshot": 9.49217,
+        "roundtrip_cost_pct_assumed": 0.29459
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -49,21 +50,102 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "dgrid-ai",
-      "symbol": "DGAI",
-      "name": "DGrid AI",
+      "coin_id": "auction",
+      "symbol": "AUCTION",
+      "name": "Bounce",
       "group": "primary_research",
       "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 229,
-      "change24h_pct_at_snapshot": 8.92248,
-      "change7d_pct_at_snapshot": -4.8971,
-      "volume24h_aggregate_usd": 29746190,
+      "rank_at_snapshot": 722,
+      "change24h_pct_at_snapshot": 5.46459,
+      "change7d_pct_at_snapshot": -4.0987,
+      "volume24h_aggregate_usd": 5648766,
       "spot": {
-        "venue": "Bitget",
-        "pair": "DGAIUSDT",
+        "venue": "Binance",
+        "pair": "AUCTIONUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.63041,
-        "roundtrip_cost_pct_assumed": 0.23217
+        "spread_bps_at_snapshot": 5.85652,
+        "roundtrip_cost_pct_assumed": 0.28437
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "basic-attention-token",
+      "symbol": "BAT",
+      "name": "Basic Attention",
+      "group": "primary_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 143,
+      "change24h_pct_at_snapshot": 11.69555,
+      "change7d_pct_at_snapshot": 15.7668,
+      "volume24h_aggregate_usd": 50374785,
+      "spot": {
+        "venue": "Binance",
+        "pair": "BATUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 9.96512,
+        "roundtrip_cost_pct_assumed": 0.2993
+      },
+      "detections_archived": 2,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "compound-governance-token",
+      "symbol": "COMP",
+      "name": "Compound",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 169,
+      "change24h_pct_at_snapshot": 5.83785,
+      "change7d_pct_at_snapshot": -1.3272,
+      "volume24h_aggregate_usd": 24379882,
+      "spot": {
+        "venue": "Binance",
+        "pair": "COMPUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 4.42576,
+        "roundtrip_cost_pct_assumed": 0.27509
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "grvt",
+      "symbol": "GRVT",
+      "name": "GRVT Token",
+      "group": "primary_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 648,
+      "change24h_pct_at_snapshot": 21.14254,
+      "change7d_pct_at_snapshot": 23.443,
+      "volume24h_aggregate_usd": 24820677,
+      "spot": {
+        "venue": "OKX",
+        "pair": "GRVT-USDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 12.13985,
+        "roundtrip_cost_pct_assumed": 0.32098
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -75,48 +157,21 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "gitcoin",
-      "symbol": "GTC",
-      "name": "Gitcoin",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 725,
-      "change24h_pct_at_snapshot": 12.62989,
-      "change7d_pct_at_snapshot": 71.9252,
-      "volume24h_aggregate_usd": 41804790,
-      "spot": {
-        "venue": "Binance",
-        "pair": "GTCUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 8.19336,
-        "roundtrip_cost_pct_assumed": 0.33638
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "intel-tokenized-bstocks",
-      "symbol": "INTCB",
-      "name": "Intel (bStocks Tokenized Stock)",
+      "coin_id": "io",
+      "symbol": "IO",
+      "name": "io.net",
       "group": "primary_research",
       "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 428,
-      "change24h_pct_at_snapshot": 5.25222,
-      "change7d_pct_at_snapshot": -9.2862,
-      "volume24h_aggregate_usd": 25531213,
+      "rank_at_snapshot": 363,
+      "change24h_pct_at_snapshot": 8.34448,
+      "change7d_pct_at_snapshot": -1.9549,
+      "volume24h_aggregate_usd": 16714751,
       "spot": {
         "venue": "Binance",
-        "pair": "INTCBUSDT",
+        "pair": "IOUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 1.08584,
-        "roundtrip_cost_pct_assumed": 0.21074
+        "spread_bps_at_snapshot": 6.14439,
+        "roundtrip_cost_pct_assumed": 0.3163
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -129,24 +184,51 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "quack-ai",
-      "symbol": "Q",
-      "name": "Quack AI",
+      "coin_id": "iostoken",
+      "symbol": "IOST",
+      "name": "IOST",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 656,
+      "change24h_pct_at_snapshot": 10.31164,
+      "change7d_pct_at_snapshot": -5.5851,
+      "volume24h_aggregate_usd": 4453174,
+      "spot": {
+        "venue": "Binance",
+        "pair": "IOSTUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 12.14329,
+        "roundtrip_cost_pct_assumed": 0.32102
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "janction",
+      "symbol": "JCT",
+      "name": "Janction",
       "group": "primary_research",
       "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 101,
-      "change24h_pct_at_snapshot": 26.42471,
-      "change7d_pct_at_snapshot": 288.2984,
-      "volume24h_aggregate_usd": 92557546,
+      "rank_at_snapshot": 465,
+      "change24h_pct_at_snapshot": 121.27834,
+      "change7d_pct_at_snapshot": 107.2958,
+      "volume24h_aggregate_usd": 20291508,
       "spot": {
         "venue": "Bitget",
-        "pair": "QUSDT",
+        "pair": "JCTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.29128,
-        "roundtrip_cost_pct_assumed": 0.30493
+        "spread_bps_at_snapshot": 9.38306,
+        "roundtrip_cost_pct_assumed": 0.2935
       },
-      "detections_archived": 3,
-      "j1_observed": 2,
+      "detections_archived": 1,
+      "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
@@ -156,21 +238,21 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "raydium",
-      "symbol": "RAY",
-      "name": "Raydium",
+      "coin_id": "theta-token",
+      "symbol": "THETA",
+      "name": "Theta Network",
       "group": "primary_research",
       "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 111,
-      "change24h_pct_at_snapshot": 7.16927,
-      "change7d_pct_at_snapshot": -17.9794,
-      "volume24h_aggregate_usd": 38529437,
+      "rank_at_snapshot": 187,
+      "change24h_pct_at_snapshot": 5.92964,
+      "change7d_pct_at_snapshot": -3.0774,
+      "volume24h_aggregate_usd": 5431446,
       "spot": {
         "venue": "Binance",
-        "pair": "RAYUSDT",
+        "pair": "THETAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.53032,
-        "roundtrip_cost_pct_assumed": 0.21947
+        "spread_bps_at_snapshot": 5.06457,
+        "roundtrip_cost_pct_assumed": 0.25043
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -183,128 +265,21 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "sandisk-bstocks-tokenized-stock",
-      "symbol": "SNDKB",
-      "name": "SanDisk (bStocks Tokenized Stock)",
+      "coin_id": "vaulta",
+      "symbol": "A",
+      "name": "Vaulta",
       "group": "primary_research",
       "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 359,
-      "change24h_pct_at_snapshot": 5.94711,
-      "change7d_pct_at_snapshot": -12.6816,
-      "volume24h_aggregate_usd": 54145272,
+      "rank_at_snapshot": 210,
+      "change24h_pct_at_snapshot": 7.45682,
+      "change7d_pct_at_snapshot": -6.8307,
+      "volume24h_aggregate_usd": 25951953,
       "spot": {
         "venue": "Binance",
-        "pair": "SNDKBUSDT",
+        "pair": "AUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 0.07283,
-        "roundtrip_cost_pct_assumed": 0.20063
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "semicon-bull-3x-etf-bstocks-tokenized-stock",
-      "symbol": "SOXLB",
-      "name": "Semicon Bull 3X ETF (bStocks Tokenized Stock)",
-      "group": "primary_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 495,
-      "change24h_pct_at_snapshot": 10.85295,
-      "change7d_pct_at_snapshot": -24.4875,
-      "volume24h_aggregate_usd": 50138214,
-      "spot": {
-        "venue": "Binance",
-        "pair": "SOXLBUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 1.00883,
-        "roundtrip_cost_pct_assumed": 0.20997
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "solv-protocol",
-      "symbol": "SOLV",
-      "name": "Solv Protocol",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 696,
-      "change24h_pct_at_snapshot": 9.0025,
-      "change7d_pct_at_snapshot": 13.6553,
-      "volume24h_aggregate_usd": 12789470,
-      "spot": {
-        "venue": "Binance",
-        "pair": "SOLVUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 23.2288,
-        "roundtrip_cost_pct_assumed": 0.43145
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "venice-token",
-      "symbol": "VVV",
-      "name": "Venice Token",
-      "group": "primary_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 71,
-      "change24h_pct_at_snapshot": 4.90539,
-      "change7d_pct_at_snapshot": -4.0325,
-      "volume24h_aggregate_usd": 37538214,
-      "spot": {
-        "venue": "OKX",
-        "pair": "VVV-USDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 8.26788,
-        "roundtrip_cost_pct_assumed": 0.28238
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "amp-token",
-      "symbol": "AMP",
-      "name": "Amp",
-      "group": "additional_spot_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 309,
-      "change24h_pct_at_snapshot": 20.38147,
-      "change7d_pct_at_snapshot": 42.1098,
-      "volume24h_aggregate_usd": 56297512,
-      "spot": {
-        "venue": "Binance",
-        "pair": "AMPUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 24.5098,
-        "roundtrip_cost_pct_assumed": 0.44457
+        "spread_bps_at_snapshot": 10.56524,
+        "roundtrip_cost_pct_assumed": 0.30529
       },
       "detections_archived": 2,
       "j1_observed": 1,
@@ -312,6 +287,59 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "arkham",
+      "symbol": "ARKM",
+      "name": "Arkham",
+      "group": "additional_spot_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 305,
+      "change24h_pct_at_snapshot": 5.97382,
+      "change7d_pct_at_snapshot": -8.9751,
+      "volume24h_aggregate_usd": 6687139,
+      "spot": {
+        "venue": "Binance",
+        "pair": "ARKMUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 16.70844,
+        "roundtrip_cost_pct_assumed": 0.36651
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "beam-2",
+      "symbol": "BEAM",
+      "name": "Beam",
+      "group": "additional_spot_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 203,
+      "change24h_pct_at_snapshot": 12.32467,
+      "change7d_pct_at_snapshot": 16.5889,
+      "volume24h_aggregate_usd": 15456122,
+      "spot": {
+        "venue": "Bitget",
+        "pair": "BEAMUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 9.41176,
+        "roundtrip_cost_pct_assumed": 0.40283
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -322,19 +350,46 @@
       "name": "Bedrock",
       "group": "additional_spot_research",
       "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 218,
-      "change24h_pct_at_snapshot": 24.05644,
-      "change7d_pct_at_snapshot": 14.3294,
-      "volume24h_aggregate_usd": 23678790,
+      "rank_at_snapshot": 184,
+      "change24h_pct_at_snapshot": 30.55409,
+      "change7d_pct_at_snapshot": 52.6252,
+      "volume24h_aggregate_usd": 52822036,
       "spot": {
         "venue": "Bitget",
         "pair": "BRUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 22.54156,
-        "roundtrip_cost_pct_assumed": 0.45763
+        "spread_bps_at_snapshot": 13.23043,
+        "roundtrip_cost_pct_assumed": 0.49676
       },
-      "detections_archived": 3,
-      "j1_observed": 2,
+      "detections_archived": 4,
+      "j1_observed": 3,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "extreme_24h_move"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "collector-crypt",
+      "symbol": "CARDS",
+      "name": "Collector Crypt",
+      "group": "additional_spot_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 147,
+      "change24h_pct_at_snapshot": 15.71613,
+      "change7d_pct_at_snapshot": 13.3834,
+      "volume24h_aggregate_usd": 31546642,
+      "spot": {
+        "venue": "OKX",
+        "pair": "CARDS-USDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 22.26817,
+        "roundtrip_cost_pct_assumed": 0.42971
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
         "token_contract_not_verified"
@@ -343,82 +398,53 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "marscoin-4",
-      "symbol": "MARSCOIN",
-      "name": "MarsCoin",
+      "coin_id": "dappos",
+      "symbol": "DOS",
+      "name": "DAPPOS",
       "group": "additional_spot_research",
       "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 318,
-      "change24h_pct_at_snapshot": 6.16021,
-      "change7d_pct_at_snapshot": -12.6062,
-      "volume24h_aggregate_usd": 15696231,
+      "rank_at_snapshot": 543,
+      "change24h_pct_at_snapshot": 4.81647,
+      "change7d_pct_at_snapshot": -16.4366,
+      "volume24h_aggregate_usd": 4929535,
       "spot": {
-        "venue": "Binance",
-        "pair": "MARSCOINUSDT",
+        "venue": "OKX",
+        "pair": "DOS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.82874,
-        "roundtrip_cost_pct_assumed": 0.43937
+        "spread_bps_at_snapshot": 15.32567,
+        "roundtrip_cost_pct_assumed": 0.35273
       },
       "detections_archived": 1,
       "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
     },
     {
-      "coin_id": "nym",
-      "symbol": "NYM",
-      "name": "Nym",
+      "coin_id": "metis-token",
+      "symbol": "METIS",
+      "name": "Metis",
       "group": "additional_spot_research",
       "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 719,
-      "change24h_pct_at_snapshot": 7.42322,
-      "change7d_pct_at_snapshot": 14.4608,
-      "volume24h_aggregate_usd": 2722741,
-      "spot": {
-        "venue": "Bitget",
-        "pair": "NYMUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 65.16781,
-        "roundtrip_cost_pct_assumed": 1.34033
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "high_hypothetical_cost"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "osmosis",
-      "symbol": "OSMO",
-      "name": "Osmosis",
-      "group": "additional_spot_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 486,
-      "change24h_pct_at_snapshot": 35.49476,
-      "change7d_pct_at_snapshot": 62.2981,
-      "volume24h_aggregate_usd": 30051973,
+      "rank_at_snapshot": 605,
+      "change24h_pct_at_snapshot": 10.94165,
+      "change7d_pct_at_snapshot": 10.2411,
+      "volume24h_aggregate_usd": 6821075,
       "spot": {
         "venue": "Binance",
-        "pair": "OSMOUSDT",
+        "pair": "METISUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 36.69725,
-        "roundtrip_cost_pct_assumed": 0.71538
+        "spread_bps_at_snapshot": 49.01961,
+        "roundtrip_cost_pct_assumed": 0.68792
       },
       "detections_archived": 2,
       "j1_observed": 1,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
-        "extreme_24h_move",
         "high_hypothetical_cost",
         "book_time_unverified"
       ],
@@ -426,21 +452,21 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "pepe",
-      "symbol": "PEPE",
-      "name": "Pepe",
+      "coin_id": "renzo",
+      "symbol": "REZ",
+      "name": "Renzo",
       "group": "additional_spot_research",
       "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 59,
-      "change24h_pct_at_snapshot": 4.84585,
-      "change7d_pct_at_snapshot": -3.6931,
-      "volume24h_aggregate_usd": 246518259,
+      "rank_at_snapshot": 612,
+      "change24h_pct_at_snapshot": 8.44612,
+      "change7d_pct_at_snapshot": -5.5547,
+      "volume24h_aggregate_usd": 7962105,
       "spot": {
         "venue": "Binance",
-        "pair": "PEPEUSDT",
+        "pair": "REZUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 24.06739,
-        "roundtrip_cost_pct_assumed": 0.4398
+        "spread_bps_at_snapshot": 11.01322,
+        "roundtrip_cost_pct_assumed": 0.33269
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -453,55 +479,41 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "anonymous-cat",
-      "symbol": "ZCAT",
-      "name": "Anonymous Cat",
-      "group": "no_observed_spot",
+      "coin_id": "stable-2",
+      "symbol": "STABLE",
+      "name": "​​Stable",
+      "group": "additional_spot_research",
       "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 475,
-      "change24h_pct_at_snapshot": 8.1191,
-      "change7d_pct_at_snapshot": -9.7829,
-      "volume24h_aggregate_usd": 2182555,
-      "spot": null,
-      "detections_archived": 2,
+      "rank_at_snapshot": 120,
+      "change24h_pct_at_snapshot": 5.28854,
+      "change7d_pct_at_snapshot": -3.7411,
+      "volume24h_aggregate_usd": 10852910,
+      "spot": {
+        "venue": "Bitget",
+        "pair": "STABLEUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 11.66181,
+        "roundtrip_cost_pct_assumed": 0.33967
+      },
+      "detections_archived": 1,
       "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
-        "no_spot_pair"
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
     },
     {
-      "coin_id": "bankercoin-2",
-      "symbol": "BNKR",
-      "name": "BankrCoin",
-      "group": "no_observed_spot",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 575,
-      "change24h_pct_at_snapshot": 17.86974,
-      "change7d_pct_at_snapshot": 7.0715,
-      "volume24h_aggregate_usd": 3093888,
-      "spot": null,
-      "detections_archived": 2,
-      "j1_observed": 1,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "no_spot_pair"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "cap-4",
-      "symbol": "CAP",
-      "name": "Cap",
+      "coin_id": "dolphin-2",
+      "symbol": "POD",
+      "name": "Dolphin",
       "group": "no_observed_spot",
       "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 262,
-      "change24h_pct_at_snapshot": 4.99741,
-      "change7d_pct_at_snapshot": -23.6574,
-      "volume24h_aggregate_usd": 8463934,
+      "rank_at_snapshot": 405,
+      "change24h_pct_at_snapshot": 24.93135,
+      "change7d_pct_at_snapshot": -1.2885,
+      "volume24h_aggregate_usd": 30511123,
       "spot": null,
       "detections_archived": 1,
       "j1_observed": 0,
@@ -513,21 +525,22 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "stonk-3",
-      "symbol": "STONK",
-      "name": "STONK",
+      "coin_id": "metaplex",
+      "symbol": "MPLX",
+      "name": "Metaplex",
       "group": "no_observed_spot",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 308,
-      "change24h_pct_at_snapshot": 6.21784,
-      "change7d_pct_at_snapshot": -33.0135,
-      "volume24h_aggregate_usd": 7331505,
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 536,
+      "change24h_pct_at_snapshot": 70.26279,
+      "change7d_pct_at_snapshot": 74.1384,
+      "volume24h_aggregate_usd": 22590153,
       "spot": null,
-      "detections_archived": 2,
+      "detections_archived": 1,
       "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
-        "no_spot_pair"
+        "no_spot_pair",
+        "extreme_24h_move"
       ],
       "identity_certified": false,
       "trade_authorized": false
