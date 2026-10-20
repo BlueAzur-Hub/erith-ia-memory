@@ -232,3 +232,17 @@ test("Radar status fetch stays reachable even when live selection is stale",()=>
  assert.match(view,/Cotation actuelle indisponible/);
  assert.match(view,/ÉTUDE HISTORIQUE DIFFÉRÉE/);
 });
+
+test("Trader distinguishes missing journal, stale heartbeat and published daily archive",()=>{
+ const fs=require("node:fs"),path=require("node:path");
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ assert.match(view,/radar-automation-health\.json/);
+ assert.match(view,/WAITING_DAILY_ARCHIVE/);
+ assert.match(view,/DAILY_ARCHIVE_MISSING/);
+ assert.match(view,/QUALIFICATION_MISSING/);
+ assert.match(view,/JOURNAL_NOT_PUBLISHED_FOR_TODAY/);
+ assert.match(view,/PROSPECTIVE_JOURNAL_PUBLISHED/);
+ assert.match(view,/healthAge<=18\*3600000/);
+ assert.match(view,/Dernier contrôle/);
+ assert.match(view,/Les horaires programmés ne constituent pas une preuve/);
+});
