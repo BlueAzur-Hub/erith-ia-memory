@@ -872,7 +872,7 @@ test("CT public rules and fee-buffer UI never claim notionnel or fee debit certa
  assert.match(source,/Règles Spot issues du relevé daté/);
  assert.match(source,/NON CERTIFIÉS par cette lecture publique/);
  assert.match(source,/Frais débités en CT : HYPOTHÈSE/);
- assert.match(source,/coût FICTIF du carnet choisi uniquement/);
+ assert.match(source,/Solde Trading couvrant uniquement le coût FICTIF/);
  assert.match(coreCode,/minimumGrossWithBaseFee/);
  assert.match(coreCode,/notional_filter_verified:false/);
  assert.match(coreCode,/fee_debit_currency_verified:false/);
