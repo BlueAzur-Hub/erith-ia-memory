@@ -1,6 +1,6 @@
 {
   "schema": "erith.radar.research-cohort.v1",
-  "source_qualification_at_utc": "2026-10-20T12:54:52Z",
+  "source_qualification_at_utc": "2026-10-20T13:32:21Z",
   "source_observation_date_utc": "2026-10-20",
   "forward_archive_dates_utc": [
     "2026-10-16",
@@ -23,33 +23,6 @@
   "note": "Recherche, pas classement d'achat. Prix/volume agrégés en USD, Spot en USDT; données datées. Identité de contrat non certifiée. Pas de rendement inventé.",
   "candidates": [
     {
-      "coin_id": "altlayer",
-      "symbol": "ALT",
-      "name": "AltLayer",
-      "group": "primary_research",
-      "movement_class": "momentum_24h_7d",
-      "rank_at_snapshot": 327,
-      "change24h_pct_at_snapshot": 21.63107,
-      "change7d_pct_at_snapshot": 37.0671,
-      "volume24h_aggregate_usd": 45240266,
-      "spot": {
-        "venue": "Binance",
-        "pair": "ALTUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 9.49217,
-        "roundtrip_cost_pct_assumed": 0.29459
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
       "coin_id": "auction",
       "symbol": "AUCTION",
       "name": "Bounce",
@@ -63,8 +36,8 @@
         "venue": "Binance",
         "pair": "AUCTIONUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.85652,
-        "roundtrip_cost_pct_assumed": 0.28437
+        "spread_bps_at_snapshot": 5.84966,
+        "roundtrip_cost_pct_assumed": 0.28423
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -90,8 +63,8 @@
         "venue": "Binance",
         "pair": "BATUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.96512,
-        "roundtrip_cost_pct_assumed": 0.2993
+        "spread_bps_at_snapshot": 5.08518,
+        "roundtrip_cost_pct_assumed": 0.25064
       },
       "detections_archived": 2,
       "j1_observed": 0,
@@ -117,8 +90,8 @@
         "venue": "Binance",
         "pair": "COMPUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 4.42576,
-        "roundtrip_cost_pct_assumed": 0.27509
+        "spread_bps_at_snapshot": 8.55432,
+        "roundtrip_cost_pct_assumed": 0.28524
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -126,6 +99,32 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "dappos",
+      "symbol": "DOS",
+      "name": "DAPPOS",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 543,
+      "change24h_pct_at_snapshot": 4.81647,
+      "change7d_pct_at_snapshot": -16.4366,
+      "volume24h_aggregate_usd": 4929535,
+      "spot": {
+        "venue": "OKX",
+        "pair": "DOS-USDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 10.32525,
+        "roundtrip_cost_pct_assumed": 0.30289
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -144,8 +143,8 @@
         "venue": "OKX",
         "pair": "GRVT-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 12.13985,
-        "roundtrip_cost_pct_assumed": 0.32098
+        "spread_bps_at_snapshot": 10.15703,
+        "roundtrip_cost_pct_assumed": 0.30726
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -170,35 +169,8 @@
         "venue": "Binance",
         "pair": "IOUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 6.14439,
-        "roundtrip_cost_pct_assumed": 0.3163
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "iostoken",
-      "symbol": "IOST",
-      "name": "IOST",
-      "group": "primary_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 656,
-      "change24h_pct_at_snapshot": 10.31164,
-      "change7d_pct_at_snapshot": -5.5851,
-      "volume24h_aggregate_usd": 4453174,
-      "spot": {
-        "venue": "Binance",
-        "pair": "IOSTUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 12.14329,
-        "roundtrip_cost_pct_assumed": 0.32102
+        "spread_bps_at_snapshot": 6.1106,
+        "roundtrip_cost_pct_assumed": 0.26087
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -224,8 +196,8 @@
         "venue": "Bitget",
         "pair": "JCTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.38306,
-        "roundtrip_cost_pct_assumed": 0.2935
+        "spread_bps_at_snapshot": 11.76056,
+        "roundtrip_cost_pct_assumed": 0.34002
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -233,6 +205,33 @@
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
         "extreme_24h_move"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "renzo",
+      "symbol": "REZ",
+      "name": "Renzo",
+      "group": "primary_research",
+      "movement_class": "rebound_24h_only",
+      "rank_at_snapshot": 612,
+      "change24h_pct_at_snapshot": 8.44612,
+      "change7d_pct_at_snapshot": -5.5547,
+      "volume24h_aggregate_usd": 7962105,
+      "spot": {
+        "venue": "Binance",
+        "pair": "REZUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 8.14443,
+        "roundtrip_cost_pct_assumed": 0.29247
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -251,8 +250,8 @@
         "venue": "Binance",
         "pair": "THETAUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 5.06457,
-        "roundtrip_cost_pct_assumed": 0.25043
+        "spread_bps_at_snapshot": 9.82318,
+        "roundtrip_cost_pct_assumed": 0.29789
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -278,11 +277,38 @@
         "venue": "Binance",
         "pair": "AUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 10.56524,
-        "roundtrip_cost_pct_assumed": 0.30529
+        "spread_bps_at_snapshot": 10.62135,
+        "roundtrip_cost_pct_assumed": 0.30584
       },
       "detections_archived": 2,
       "j1_observed": 1,
+      "j7_observed": 0,
+      "risks_and_missing_evidence": [
+        "token_contract_not_verified",
+        "book_time_unverified"
+      ],
+      "identity_certified": false,
+      "trade_authorized": false
+    },
+    {
+      "coin_id": "altlayer",
+      "symbol": "ALT",
+      "name": "AltLayer",
+      "group": "additional_spot_research",
+      "movement_class": "momentum_24h_7d",
+      "rank_at_snapshot": 327,
+      "change24h_pct_at_snapshot": 21.63107,
+      "change7d_pct_at_snapshot": 37.0671,
+      "volume24h_aggregate_usd": 45240266,
+      "spot": {
+        "venue": "Binance",
+        "pair": "ALTUSDT",
+        "quote": "USDT",
+        "spread_bps_at_snapshot": 9.47418,
+        "roundtrip_cost_pct_assumed": 0.37
+      },
+      "detections_archived": 1,
+      "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
@@ -305,8 +331,8 @@
         "venue": "Binance",
         "pair": "ARKMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 16.70844,
-        "roundtrip_cost_pct_assumed": 0.36651
+        "spread_bps_at_snapshot": 16.75042,
+        "roundtrip_cost_pct_assumed": 0.36693
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -332,8 +358,8 @@
         "venue": "Bitget",
         "pair": "BEAMUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 9.41176,
-        "roundtrip_cost_pct_assumed": 0.40283
+        "spread_bps_at_snapshot": 6.22471,
+        "roundtrip_cost_pct_assumed": 0.36334
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -358,8 +384,8 @@
         "venue": "Bitget",
         "pair": "BRUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 13.23043,
-        "roundtrip_cost_pct_assumed": 0.49676
+        "spread_bps_at_snapshot": 16.1184,
+        "roundtrip_cost_pct_assumed": 0.45731
       },
       "detections_archived": 4,
       "j1_observed": 3,
@@ -385,8 +411,8 @@
         "venue": "OKX",
         "pair": "CARDS-USDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 22.26817,
-        "roundtrip_cost_pct_assumed": 0.42971
+        "spread_bps_at_snapshot": 18.92148,
+        "roundtrip_cost_pct_assumed": 0.39885
       },
       "detections_archived": 1,
       "j1_observed": 0,
@@ -398,27 +424,28 @@
       "trade_authorized": false
     },
     {
-      "coin_id": "dappos",
-      "symbol": "DOS",
-      "name": "DAPPOS",
+      "coin_id": "iostoken",
+      "symbol": "IOST",
+      "name": "IOST",
       "group": "additional_spot_research",
       "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 543,
-      "change24h_pct_at_snapshot": 4.81647,
-      "change7d_pct_at_snapshot": -16.4366,
-      "volume24h_aggregate_usd": 4929535,
+      "rank_at_snapshot": 656,
+      "change24h_pct_at_snapshot": 10.31164,
+      "change7d_pct_at_snapshot": -5.5851,
+      "volume24h_aggregate_usd": 4453174,
       "spot": {
-        "venue": "OKX",
-        "pair": "DOS-USDT",
+        "venue": "Binance",
+        "pair": "IOSTUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 15.32567,
-        "roundtrip_cost_pct_assumed": 0.35273
+        "spread_bps_at_snapshot": 24.12545,
+        "roundtrip_cost_pct_assumed": 0.44038
       },
       "detections_archived": 1,
       "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
-        "token_contract_not_verified"
+        "token_contract_not_verified",
+        "book_time_unverified"
       ],
       "identity_certified": false,
       "trade_authorized": false
@@ -437,39 +464,11 @@
         "venue": "Binance",
         "pair": "METISUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 49.01961,
-        "roundtrip_cost_pct_assumed": 0.68792
+        "spread_bps_at_snapshot": 24.60025,
+        "roundtrip_cost_pct_assumed": 0.44511
       },
       "detections_archived": 2,
       "j1_observed": 1,
-      "j7_observed": 0,
-      "risks_and_missing_evidence": [
-        "token_contract_not_verified",
-        "high_hypothetical_cost",
-        "book_time_unverified"
-      ],
-      "identity_certified": false,
-      "trade_authorized": false
-    },
-    {
-      "coin_id": "renzo",
-      "symbol": "REZ",
-      "name": "Renzo",
-      "group": "additional_spot_research",
-      "movement_class": "rebound_24h_only",
-      "rank_at_snapshot": 612,
-      "change24h_pct_at_snapshot": 8.44612,
-      "change7d_pct_at_snapshot": -5.5547,
-      "volume24h_aggregate_usd": 7962105,
-      "spot": {
-        "venue": "Binance",
-        "pair": "REZUSDT",
-        "quote": "USDT",
-        "spread_bps_at_snapshot": 11.01322,
-        "roundtrip_cost_pct_assumed": 0.33269
-      },
-      "detections_archived": 1,
-      "j1_observed": 0,
       "j7_observed": 0,
       "risks_and_missing_evidence": [
         "token_contract_not_verified",
@@ -492,8 +491,8 @@
         "venue": "Bitget",
         "pair": "STABLEUSDT",
         "quote": "USDT",
-        "spread_bps_at_snapshot": 11.66181,
-        "roundtrip_cost_pct_assumed": 0.33967
+        "spread_bps_at_snapshot": 7.85546,
+        "roundtrip_cost_pct_assumed": 0.34941
       },
       "detections_archived": 1,
       "j1_observed": 0,
