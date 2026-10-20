@@ -10,6 +10,8 @@ on:
       - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
       - 'tests/radar_spot_paper_feasibility.test.cjs'
       - 'public/agent_crypto_erith_ia/tools/build_okx_hurdle_followups.cjs'
+      - 'public/agent_crypto_erith_ia/tools/build_radar_signal_evidence.py'
+      - 'public/agent_crypto_erith_ia/tools/test_build_radar_signal_evidence.py'
       - 'tests/okx_hurdle_followups.test.cjs'
       - 'tests/okx_paper_immediate_cost.test.cjs'
       - 'public/agent_crypto_erith_ia/tools/radar_spot_paper_forward.py'
@@ -29,6 +31,8 @@ on:
       - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
       - 'tests/radar_spot_paper_feasibility.test.cjs'
       - 'public/agent_crypto_erith_ia/tools/build_okx_hurdle_followups.cjs'
+      - 'public/agent_crypto_erith_ia/tools/build_radar_signal_evidence.py'
+      - 'public/agent_crypto_erith_ia/tools/test_build_radar_signal_evidence.py'
       - 'tests/okx_hurdle_followups.test.cjs'
       - 'tests/okx_paper_immediate_cost.test.cjs'
       - 'public/agent_crypto_erith_ia/tools/radar_spot_paper_forward.py'
@@ -70,6 +74,7 @@ jobs:
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_spot_identity.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_radar_spot_paper_forward.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_radar_research_cohort.py' -v
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_radar_signal_evidence.py' -v
           node --test public/agent_crypto_erith_ia/trader/test-spot-paper-order-engine.cjs tests/radar_spot_paper_feasibility.test.cjs tests/okx_paper_immediate_cost.test.cjs tests/okx_hurdle_followups.test.cjs
       - name: Collect public evidence only (main push/schedule, not PR)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -110,7 +115,10 @@ jobs:
                 echo 'Identity source missing: current candidates stay unproven; no older proof promoted.'
               fi
             fi
+            # Audit the dated public signals; missing forward quotes remain missing.
+            python public/agent_crypto_erith_ia/tools/build_radar_signal_evidence.py
             git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json public/agent_crypto_erith_ia/data/crypto/radar-opportunities/research-cohort.json
+            git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/signal-evidence.json
             if [ -f public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-identity-latest.json ]; then
               git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-identity-latest.json
             fi
