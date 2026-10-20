@@ -22,6 +22,7 @@ function selection(){
 function panel(){return document.getElementById(ID)}
 function result(){return panel()?.querySelector("[data-decision-result]")}
 function historyTarget(){return panel()?.querySelector("[data-decision-history]")}
+function collectorTarget(){return panel()?.querySelector("[data-decision-collector]")}
 function renderSpot(out){
  const element=result();if(!element)return;
  const label={PREUVES_INSUFFISANTES:"PREUVES INSUFFISANTES · marché OKX",
@@ -100,7 +101,10 @@ async function reports(){
    ]);
    if(!qResp.ok||!sResp.ok)throw Error("Rapports publics non disponibles");
    const [qualification,signal]=await Promise.all([qResp.json(),sResp.json()]);
-   return{qualification,signal};
+   // A missing new prospective journal is NOT zero studies or an outage of history.
+   const journal=await fetch(BASE+"okx-hurdle-followups.json",{cache:"no-store"})
+     .then(r=>r.ok?r.json():null).catch(()=>null);
+   return{qualification,signal,journal};
  })();
  try{
    const x=await reportInFlight;
@@ -125,7 +129,22 @@ async function evaluate(force=false){
  const target=result();if(target)target.textContent=
    "Diagnostic OKX : vérification du dernier rapport public…";
  try{
-   const {qualification,signal}=await reports();
+   const {qualification,signal,journal}=await reports();
+   const collector=collectorTarget();
+   if(collector){
+     const valid=journal?.schema==="erith.radar.okx.hurdle-followups.v1"&&
+       journal.orders_enabled===false&&journal.real_orders===0&&
+       Array.isArray(journal.studies)&&Array.isArray(journal.snapshots);
+     const count=valid?journal.studies.length:0;
+     const follow=valid?journal.studies.reduce((n,s)=>n+(
+       Array.isArray(s.followups)?s.followups.length:0),0):0;
+     collector.textContent="Radar GitHub · dernière qualification : "+
+       (qualification?.qualified_at_utc||"inconnue")+"\n"+
+       (valid?("Journal OKX publié : "+count+" études PAPER datées · "+follow+
+         " observations futures. Aucun fill certifié."):
+         "Journal OKX encore absent : la publication automatique de sa première collecte reste à confirmer.")+
+       "\nLes programmes GitHub sont planifiés ; leur présence ne prouve pas une collecte réussie.";
+   }
    if(currentId!==requestId||!container.open)return;
    const latest=selection();
    if(!latest.qualified||latest.qualified.sourceIdentity!==s.qualified.sourceIdentity||
@@ -133,9 +152,11 @@ async function evaluate(force=false){
    renderSpot(core.assess({selected:latest.qualified,qualification,signal,
      engine:globalThis.AgentCryptoSpotPaperOrders,now:Date.now()}));
  }catch(_){
-   if(currentId===requestId)renderSpot({decision:"PREUVES_INSUFFISANTES",
+   if(currentId===requestId){const collector=collectorTarget();
+     if(collector)collector.textContent="État du Radar : sources publiques momentanément inaccessibles.";
+     renderSpot({decision:"PREUVES_INSUFFISANTES",
      reason:"Rapports publics Radar momentanément inaccessibles ; "+
-      "l'étude historique ci-dessus reste disponible."});
+      "l'étude historique ci-dessus reste disponible."});}
  }
 }
 function invalidate(){
@@ -172,11 +193,14 @@ function mount(){
  const button=document.createElement("button");
  button.type="button";button.textContent="Actualiser l'analyse";
  button.setAttribute("data-decision-evaluate","");
+ const collector=document.createElement("pre");
+ collector.setAttribute("data-decision-collector","");
+ collector.textContent="Collectes GitHub : état en attente de vérification publique.";
  const evidence=document.createElement("pre");
  evidence.setAttribute("data-decision-result","");
  evidence.setAttribute("role","status");evidence.setAttribute("aria-live","polite");
  evidence.textContent="Preuves Spot OKX en attente. Aucun ordre.";
- content.append(explanation,history,label,button,evidence);
+ content.append(explanation,history,label,button,collector,evidence);
  section.append(summary,content);
  const other=parent.querySelector(".pl-more");
  if(other)parent.insertBefore(section,other);else parent.appendChild(section);
