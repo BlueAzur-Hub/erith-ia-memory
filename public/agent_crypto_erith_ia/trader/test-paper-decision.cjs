@@ -872,7 +872,7 @@ test("CT public rules and fee-buffer UI never claim notionnel or fee debit certa
  assert.match(source,/Règles Spot issues du relevé daté/);
  assert.match(source,/NON CERTIFIÉS par cette lecture publique/);
  assert.match(source,/Frais débités en CT : HYPOTHÈSE/);
- assert.match(source,/coût FICTIF du carnet choisi uniquement/);
+ assert.match(source,/Solde Trading couvrant uniquement le coût FICTIF/);
  assert.match(coreCode,/minimumGrossWithBaseFee/);
  assert.match(coreCode,/notional_filter_verified:false/);
  assert.match(coreCode,/fee_debit_currency_verified:false/);
@@ -993,4 +993,63 @@ test("CT R25 constraints displayed in same PAPER ticket, never an order",()=>{
  assert.match(view,/aucune autorisation Trade/);
  assert.doesNotMatch(view,/\/okx\/order-gates|Bearer|\/api\/v5\/trade\/order/);
  assert.doesNotMatch(owner,/\/api\/v5\/trade\/order|\/auth\/register/);
+});
+
+test("R25 maxBuy mismatch blocks 10.23-like PAPER quantity and clamps preview",()=>{
+ const owner=require("./trader-okx-account.js");
+ const snapshot={ok:true,read_only:true,fetched_at:"2026-10-20T03:18:50Z",
+  trading:[{details:[{ccy:"USDC",availBal:"3.2"}]}],funding:[]};
+ const f={fees:[{instId:"CT-USDC",maker:"-0.0008",taker:"-0.001"}]};
+ const account=owner.summarizeTicketAccount(snapshot,f,"CT-USDC",T);
+ const evidence={ok:true,read_only:true,orders_enabled:false,real_orders:0,
+  source:"OKX account/public Spot GET proof",instId:"CT-USDC",base:"CT",
+  quote:"USDC",tdMode:"cash",fetched_at:"2026-10-20T03:18:55Z",
+  eligible_for_account:true,eligibility_verified:true,
+  trade_quote_ccy_verified:true,trade_quote_ccy:"USDC",
+  available_verified:true,account_max_verified:true,public_rules_verified:true,
+  price_limits_verified:true,availBuy:"3.2",availSell:"0",
+  maxBuy:"10.1036662452591656",maxSell:"0",minSz:"10",lotSz:"0.01",
+  tickSz:"0.00001",maxLmtSz:"1000",maxLmtAmt:"10000",
+  buyLmt:"0.40",sellLmt:"0.20",blocked_reasons:[]};
+ const gates=owner.summarizeSpotOrderGates(evidence,T);
+ assert.equal(gates.order_gates_verified,true);
+ const context={...account,...gates,fee_type_verified:true,fee_type:"0",
+  fee_currency_for_spot_buy_ct_usdc:"CT",
+  fee_type_at_utc:"2026-10-20T03:18:55Z"};
+ const ticket=ctTicket();
+ assert.ok(Number(ticket.gross_buy_quantity)>10.10);
+ const chk=core.checkSpotOrderGates(ticket,context,T);
+ assert.equal(chk.verified,true);
+ assert.equal(chk.proposed_within_max_buy,false);
+ assert.equal(chk.capped_buy_quantity,"10.1");
+ assert.equal(chk.rules_match,true);
+ assert.equal(chk.book_fresh,false); // archive is not a live order quote
+ const review=core.reviewSpotTicketAccount(ticket,context,T);
+ assert.equal(review.status,"DEPASSE_PLAFOND_ACHAT");
+ assert.equal(review.funds_cover_public_scenario,true);
+ assert.equal(review.scenario_within_account_max_buy,false);
+ assert.match(review.reason,/supérieure au maximum/);
+ const preview=core.previewSpotExit({ticket,context,
+  targetPriceQuote:"0.39",now:T});
+ assert.equal(preview.order_gates_adjusted,true);
+ assert.equal(preview.buy_quantity,"10.1");
+ assert.equal(preview.account_max_buy_base,"10.1036662452591656");
+ assert.equal(preview.orders_enabled,false);
+ assert.equal(preview.real_orders,0);
+ assert.equal(preview.can_place_limit_order,false);
+ assert.ok(Number(preview.maximum_sellable_base)>=10);
+ const bad=core.previewSpotExit({ticket,context:{...context,
+  order_gates_at_utc:"2026-10-20T03:15:00Z"},targetPriceQuote:"0.39",now:T});
+ assert.equal(bad.limit_proof_verified,false);
+ assert.equal(bad.order_gates_adjusted,false);
+ assert.equal(bad.buy_quantity,ticket.gross_buy_quantity);
+});
+
+test("R25 PAPER source shows historic quantity as preliminary and never certifies orders",()=>{
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ assert.match(view,/Étude publique AVANT plafonds du compte/);
+ assert.match(view,/QUANTITÉ PAPER CORRIGÉE/);
+ assert.match(view,/Carnet ancien ou non qualifié/);
+ assert.match(view,/maxBuy OKX/);
+ assert.doesNotMatch(view,/\/api\/v5\/trade\/order|\/okx\/place-order|Bearer /);
 });

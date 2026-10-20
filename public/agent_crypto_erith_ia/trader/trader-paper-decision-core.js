@@ -381,6 +381,53 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
  }
 }
 
+/* Account constraints are distinct from a public quote. This pure check
+   compares the PAPER amount with a fresh CT-USDC read-only proof. It does
+   not turn a market snapshot or historical price into an executable order. */
+function checkSpotOrderGates(ticket,context,now=Date.now()){
+ const unknown=reason=>Object.freeze({verified:false,reason,
+  proposed_within_max_buy:false,account_max_buy_base:null,
+  capped_buy_quantity:null,reference_price_within_buy_limit:false,
+  book_fresh:false,rules_match:false,orders_enabled:false});
+ if(ticket?.pair!=="CT-USDC"||ticket?.orders_enabled!==false||
+    context?.instId!=="CT-USDC"||context?.read_only!==true||
+    context?.orders_enabled!==false||context?.real_orders!==0)
+   return unknown("Preuve Spot privée ou instrument exact absent.");
+ const stamp=Date.parse(context.order_gates_at_utc||"");
+ if(context.order_gates_verified!==true||!Number.isFinite(now)||
+    !Number.isFinite(stamp)||stamp>now+30000||now-stamp>120000)
+   return unknown("Limites du compte non prouvées ou périmées.");
+ const gates=context.order_gates;
+ if(!gates?.account_eligible||gates?.account_max_verified!==true||
+    gates?.public_rules_verified!==true||gates?.price_limits_verified!==true||
+    gates?.orders_enabled!==false)
+   return unknown("Éligibilité ou règles de prix non vérifiées.");
+ try{
+   const gross=exact(ticket.gross_buy_quantity),cap=exact(gates.maxBuy),
+     min=exact(gates.minSz),lot=exact(gates.lotSz),
+     tick=exact(gates.tickSz),buyPriceLimit=exact(gates.buyLmt),
+     ask=exact(ticket.best_ask_quote);
+   if(!gross||!cap||!min||!lot||!tick||!buyPriceLimit||!ask)
+     return unknown("Quantité, prix ou plafond inutilisable.");
+   const rulesMatch=gates.minSz===ticket.native_min_quantity||
+     (exact(ticket.native_min_quantity)===min);
+   const allRulesMatch=rulesMatch&&
+     exact(ticket.native_lot)===lot&&exact(ticket.native_tick)===tick;
+   const capLots=(cap/lot)*lot;
+   const sourceAt=Date.parse(ticket.source_book_at_utc||"");
+   const bookFresh=Number.isFinite(sourceAt)&&sourceAt<=now&&
+      now-sourceAt<=20000&&ticket.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC";
+   const priceInLimit=ask<=buyPriceLimit&&ask%tick===0n;
+   const qtyWithin=gross<=cap&&gross<=capLots;
+   return Object.freeze({verified:true,reason:null,
+      proposed_within_max_buy:qtyWithin,
+      account_max_buy_base:exactFmt(cap),
+      capped_buy_quantity:exactFmt(capLots),
+      reference_price_within_buy_limit:priceInLimit,
+      book_fresh:bookFresh,rules_match:allRulesMatch,
+      orders_enabled:false});
+ }catch(_){return unknown("Comparaison décimale des limites impossible.");}
+}
 /* Combine an already-blocked PUBLIC ticket with a tiny private READ-ONLY
    snapshot from the existing OKX account owner. Even a verified balance never
    authorizes a trade, converts Funding to Trading or asserts maker execution. */
@@ -435,10 +482,18 @@ function reviewSpotTicketAccount(ticket,context,now=Date.now()){
  const costWithFee=mode==="1"&&hypotCost!==null?
    hypotCost+(hypotCost*conservativeRate+UNIT-1n)/UNIT:hypotCost;
  const enough=accountVerified&&costWithFee!==null&&available>=costWithFee;
+ const gatesCheck=checkSpotOrderGates(ticket,context,now);
+ const capExcess=gatesCheck.verified&&
+   !gatesCheck.proposed_within_max_buy;
  const reasons=[
   ...(!accountVerified?["Solde disponible dans Trading non prouvé."]:[]),
   ...(accountVerified&&!enough?["Solde Trading insuffisant pour le scénario public."]:[]),
   ...(!feeGood?["Frais maker/taker propres à la paire non certifiés."]:[]),
+  ...(capExcess?["Quantité PAPER supérieure au maximum d'achat CT renvoyé par OKX."]:[]),
+  ...(gatesCheck.verified&&!gatesCheck.rules_match?
+    ["Règles du carnet daté différentes de la lecture du compte."]:[]),
+  ...(gatesCheck.verified&&!gatesCheck.book_fresh?
+    ["Carnet non récent au moment du contrôle : aucune cotation actuelle."]:[]),
   "Les frais réels de l'actif de débit et les frais nets de revente restent à appliquer.",
   ticket.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
    "Carnet public local récent : aucune garantie de prix ni d'exécution.":
@@ -446,7 +501,8 @@ function reviewSpotTicketAccount(ticket,context,now=Date.now()){
   "Minimum notionnel OKX, solde après réservations et confirmation humaine restent à vérifier.",
  ];
  return Object.freeze({status:!accountVerified?"COMPTE_NON_VERIFIE":
-      !enough?"TRADING_INSUFFISANT":"SOLDE_SUFFISANT_POUR_ETUDE",
+      !enough?"TRADING_INSUFFISANT":
+      capExcess?"DEPASSE_PLAFOND_ACHAT":"SOLDE_SUFFISANT_POUR_ETUDE",
    reason:reasons.join(" "),
    account_at_utc:context.account_at_utc,account_quote:quote,
    available_trading_quote:available===null?null:exactFmt(available),
@@ -454,6 +510,8 @@ function reviewSpotTicketAccount(ticket,context,now=Date.now()){
    fee_maker_pct:feeGood?exactFmt(maker*100n):null,
    fee_taker_pct:feeGood?exactFmt(taker*100n):null,
    funds_cover_public_scenario:Boolean(enough),
+   spot_gates:gatesCheck,scenario_within_account_max_buy:
+     gatesCheck.verified&&gatesCheck.proposed_within_max_buy,
    account_verified:accountVerified,fees_verified:Boolean(feeGood),
    fee_mode_verified:modeVerified,fee_type:mode,
    fee_buy_currency:mode==="1"?"USDC":mode==="0"?"CT":null,
@@ -501,6 +559,30 @@ function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
     feeBase=(gross*feeRate+UNIT-1n)/UNIT;
     cost=gross*ask/UNIT;
   }
+  // R25's maxBuy is a point-in-time base-CT cap. This clamps the
+  // PAPER preview only; it is not a guaranteed maximum at the archived ask.
+  const gateCheck=checkSpotOrderGates(ticket,context,now);
+  const initialProposed=initialGross;
+  if(gateCheck.verified&&gateCheck.rules_match){
+    const availableLots=exact(gateCheck.capped_buy_quantity);
+    if(gross>availableLots){
+      gross=availableLots;
+      if(mode==="1"){
+        const notion=gross*ask/UNIT;
+        feeQuoteBuy=(notion*feeRate+UNIT-1n)/UNIT;
+        cost=notion+feeQuoteBuy;
+        while(gross>0n&&cost>budget){
+          gross-=lot;
+          const nextNotion=gross*ask/UNIT;
+          feeQuoteBuy=(nextNotion*feeRate+UNIT-1n)/UNIT;
+          cost=nextNotion+feeQuoteBuy;
+        }
+      }else{
+        feeBase=(gross*feeRate+UNIT-1n)/UNIT;
+        cost=gross*ask/UNIT;
+      }
+    }
+  }
   if(!gross)return no("Budget PAPER insuffisant avec frais d'achat.");
   if(feeBase>=gross)return no("Frais supérieurs à la quantité achetée.");
   const net=gross-feeBase,sellable=net/lot*lot,dust=net-sellable;
@@ -521,6 +603,11 @@ function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
    buy_fee_currency_verified:mode!==null,
    quote_fee_budget_adjusted:mode==="1",
    paper_budget_quote:exactFmt(budget),
+   limit_proof_verified:gateCheck.verified,
+   order_gates_adjusted:gateCheck.verified&&gateCheck.rules_match&&gross<initialProposed,
+   account_max_buy_base:gateCheck.account_max_buy_base,
+   original_paper_buy_quantity:exactFmt(initialProposed),
+   book_fresh_for_execution:gateCheck.book_fresh,
    total_buy_cost_quote:exactFmt(cost),
    paper_budget_covers_total_cost:cost<=budget,
    estimated_net_base:exactFmt(net),
@@ -541,5 +628,5 @@ function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
    orders_enabled:false,real_orders:0,can_place_limit_order:false});
  }catch(_){return no("Quantité, prix, frais ou règle Spot non exploitable.");}
 }
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,verifiedCtLiveBook,verifiedCtSpotRules,reviewSpotTicketAccount,previewSpotExit,realOrders:false,network:false,storage:false});
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,verifiedCtLiveBook,verifiedCtSpotRules,checkSpotOrderGates,reviewSpotTicketAccount,previewSpotExit,realOrders:false,network:false,storage:false});
 });
