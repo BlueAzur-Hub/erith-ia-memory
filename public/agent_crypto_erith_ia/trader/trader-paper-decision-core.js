@@ -323,10 +323,13 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
   // Base-fee conservative illustration: sufficient whole lots to leave
   // minSz sellable if fees happen to be debited in CT at a 0.10% rate.
   const minSellable=ceiling(minimum,lot);
+  // ceilDivide is NOT the same as ceiling(): the latter rounds to a
+  // quantity multiple. Never multiply a fee by 10 accidentally.
+  const ceilDivide=(a,b)=>(a+b-1n)/b;
   let minimumGrossWithBaseFee=ceiling(
-    ceiling(minSellable*10000n,9990n),lot);
+    ceilDivide(minSellable*10000n,9990n),lot);
   while(minimumGrossWithBaseFee-
-      ceiling(minimumGrossWithBaseFee*10n,10000n)<minSellable)
+      ceilDivide(minimumGrossWithBaseFee*10n,10000n)<minSellable)
     minimumGrossWithBaseFee+=lot;
   const minimumGrossCost=minimumGrossWithBaseFee*ask/UNIT;
   // Price to cover exact hypothetically BASE buy fee + QUOTE sell fee.
