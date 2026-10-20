@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/build_okx_hourly_evidence.py'
+      - 'public/agent_crypto_erith_ia/tools/test_build_okx_hourly_evidence.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_radar_schedule_stagger.py'
       - '.github/workflows/atlas_market_collector.yml'
@@ -14,6 +16,8 @@ on:
     branches: [main]
     paths:
       - 'public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/build_okx_hourly_evidence.py'
+      - 'public/agent_crypto_erith_ia/tools/test_build_okx_hourly_evidence.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_radar_schedule_stagger.py'
       - '.github/workflows/atlas_market_collector.yml'
@@ -45,6 +49,7 @@ jobs:
         run: |
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_okx_public_hourly.py' -v
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_okx_hourly_evidence.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_radar_schedule_stagger.py' -v
       - name: Archive one immutable UTC hourly public snapshot
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -58,6 +63,7 @@ jobs:
             git reset --hard origin/main
             # Never backfill the missed hour with a newly observed current quote.
             python public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py
+            python public/agent_crypto_erith_ia/tools/build_okx_hourly_evidence.py
             git add -A -- public/agent_crypto_erith_ia/data/crypto/okx-hourly/
             if git diff --cached --quiet; then
               echo 'UTC hourly observation already archived; no duplicate or backfill'
