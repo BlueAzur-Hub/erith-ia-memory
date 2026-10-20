@@ -50,4 +50,9 @@ jobs:
                           line='[credential assignment omitted]'
                       print(f'  {j+1}: {line}')
               print('FEE_SOURCE_MATCHES',len(matches))
+              bridge_lines=z.read('bridge/bridge.py').decode('utf-8').splitlines()
+              print('EXACT_CONTRACT_BEGIN')
+              for line_no in range(697, 720):
+                  print(f'{line_no}: {bridge_lines[line_no-1].strip()[:220]}')
+              print('EXACT_CONTRACT_END')
           PY
