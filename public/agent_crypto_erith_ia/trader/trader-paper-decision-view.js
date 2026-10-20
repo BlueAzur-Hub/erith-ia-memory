@@ -44,6 +44,7 @@ function cycleStatus(){
  ];
  if(cycleError)lines.push("DIAGNOSTIC : "+cycleError);
  out.textContent=lines.join("\n");
+ globalThis.AgentCryptoTraderOrderEntryView?.updateCycle?.(state);
  const allowed={
   create:!state||["PAPER_FILLED","PAPER_REJECTED","PAPER_CANCELLED"].includes(phase),
   abandon:phase==="PAPER_DRAFT",
@@ -375,6 +376,7 @@ async function readCtSpotPublicInstrument(){
 }
 async function prepareTicket(){
  cyclePlan=null;cycleStatus();
+ globalThis.AgentCryptoTraderOrderEntryView?.reset?.();
  const box=document.getElementById("traderOkxTicket");
  if(!box?.open)return;
  const current=++ticketRequest;
@@ -580,10 +582,12 @@ async function prepareTicket(){
      review.reason,
      "AUCUN achat, vente, transfert ni réservation de fonds."
    ];
+   let verifiedExit=null;
    if(desired){
     const qualifiedAt=Date.now();
     const exit=core.previewSpotExit({ticket:answer,context,
       targetPriceQuote:desired,now:qualifiedAt});
+    verifiedExit=exit;
     if(pair==="CT-USDC"&&exit?.status==="ETUDE_SORTIE")
       cyclePlan={ticket:answer,context,preview:exit,qualifiedAt};
     const exitLines=[
@@ -662,6 +666,10 @@ async function prepareTicket(){
     "Le rapport technique complet est replié ci-dessous."
   ].join("\n");
   ticketStatus(finalLines.join("\n")+"\n\n"+accountLines.join("\n"),brief);
+  globalThis.AgentCryptoTraderOrderEntryView?.update?.({
+    ticket:answer,context,review,preview:verifiedExit,bookDiagnostic,
+    checkedAt:Date.now()
+  });
   cycleStatus();
  }catch(error){
    if(current===ticketRequest)ticketStatus("Ticket indisponible : "+
@@ -787,7 +795,11 @@ function mount(){
  qtyLabel.append(cycleQty);
  cycleContents.append(cycleWarning,cycleReadout,qtyLabel,cycleControls);
  cycle.append(cycleHeading,cycleContents);
- ticketBox.append(warning,quoteLabel,budgetLabel,exitLabel,compute,brief,cycle,technical);
+ const orderEntry=globalThis.AgentCryptoTraderOrderEntryView?.mount?.({
+   quoteLabel,budgetLabel,exitLabel,compute
+ });
+ if(orderEntry)ticketBox.append(warning,orderEntry,brief,cycle,technical);
+ else ticketBox.append(warning,quoteLabel,budgetLabel,exitLabel,compute,brief,cycle,technical);
  cycleStatus();
  ticket.append(ticketHeading,ticketBox);
  content.append(explanation,history,label,button,collector,evidence,ticket);
@@ -806,6 +818,7 @@ function mount(){
  });
  for(const input of [quoteSelect,budget,exitInput])input.addEventListener("change",()=>{
    ticketRequest++;cyclePlan=null;
+   globalThis.AgentCryptoTraderOrderEntryView?.reset?.();
    ticketStatus("Paramètres modifiés : relancer l'étude. Aucun ordre.");
    cycleStatus();
  });
