@@ -91,6 +91,39 @@ function checkedFuture(study,row){
     hypothetical_pnl_pct:Number((Number(pnl)*100/Number(entryInvestment)).toFixed(4)),
     bid_depth_proven_for_hypothetical_size:true};
 }
+/* Independent 24h/48h quote observer: keep all previously opened studies,
+   including assets no longer selected among the 20 daily Radar candidates. */
+function advanceFutureOnly(previous, observation){
+ const state=validated(previous);
+ requireProof(observation?.schema==="erith.radar.okx.public-followup-observation.v1"&&
+   observation.orders_enabled===false&&observation.real_orders===0&&
+   Array.isArray(observation.candidates)&&observation.candidates.length<=100,
+   "Public followup observation invalid");
+ const rows=new Map();
+ for(const r of observation.candidates){
+   requireProof(r&&typeof r.id==="string"&&!rows.has(r.id)&&
+      typeof r.symbol==="string"&&r.okx_spot?.venue==="OKX"&&
+      r.okx_spot.quote==="USDT"&&r.okx_spot.contract_identity_proven===false&&
+      r.okx_spot.real_orders_enabled===false,
+      "Duplicate/invalid independent OKX pair evidence");
+   rows.set(r.id,r);
+ }
+ const studies=state.studies.map(s=>{
+   const updated={...s,followups:[...s.followups]};
+   if(updated.followups.length>=2)return updated;
+   const r=rows.get(s.coin_id);
+   if(!r)return updated;
+   let evidence=null;
+   try{evidence=checkedFuture(s,r)}catch(_){return updated}
+   if(!evidence)return updated;
+   const delta=(stamp(evidence.observed_at_utc)-stamp(s.entry_book_at_utc))/3600000;
+   const window=delta>=23&&delta<=36?"24h":delta>=47&&delta<=60?"48h":null;
+   if(window&&!updated.followups.some(f=>f.window===window))
+     updated.followups.push({...evidence,window,elapsed_hours:Number(delta.toFixed(2))});
+   return updated;
+ });
+ return validated({...state,studies});
+}
 function advance(previous,qualification){
  const prior=validated(previous||empty()),q=qualifiedSource(qualification);
  const studies=prior.studies.map(x=>({...x,followups:[...x.followups]}));
@@ -144,6 +177,31 @@ function advance(previous,qualification){
  return validated({...prior,snapshots,studies});
 }
 function main(){
+ // Existing daily selection starts new prospective studies; separate public
+ // followups never open a new position, even if a market jumps.
+ if(process.argv[2]==="--future-only"){
+   const input=process.argv[3];
+   requireProof(typeof input==="string"&&input.startsWith("/")&&process.argv.length===4,
+      "Expected one absolute evidence path");
+   if(!fs.existsSync(OUTPUT)){
+     process.stdout.write(JSON.stringify({status:"NO_PROSPECTIVE_JOURNAL",changed:false})+"\\n");
+     return;
+   }
+   const evidence=JSON.parse(fs.readFileSync(input,"utf8"));
+   const previous=JSON.parse(fs.readFileSync(OUTPUT,"utf8"));
+   const next=advanceFutureOnly(previous,evidence);
+   const raw=JSON.stringify(next,null,2)+"\\n";
+   const current=fs.readFileSync(OUTPUT,"utf8");
+   if(raw!==current){
+     const temp=OUTPUT+".write-"+process.pid;
+     fs.writeFileSync(temp,raw,"utf8");
+     fs.renameSync(temp,OUTPUT);
+   }
+   process.stdout.write(JSON.stringify({status:"READ_ONLY_QUOTES",changed:raw!==current,
+     studies:next.studies.length,followups:next.studies.reduce((n,s)=>n+s.followups.length,0)})+"\\n");
+   return;
+ }
+ requireProof(process.argv.length===2,"Unknown argument");
  const source=JSON.parse(fs.readFileSync(SOURCE,"utf8"));
  const previous=fs.existsSync(OUTPUT)?JSON.parse(fs.readFileSync(OUTPUT,"utf8")):null;
  const next=advance(previous,source),out=JSON.stringify(next,null,2)+"\n";
@@ -153,4 +211,4 @@ function main(){
    followups:next.studies.reduce((n,s)=>n+s.followups.length,0),changed:out!==old})+"\n");
 }
 if(require.main===module)main();
-module.exports=Object.freeze({SCHEMA,empty,advance,checkedFuture});
+module.exports=Object.freeze({SCHEMA,empty,advance,advanceFutureOnly,checkedFuture});
