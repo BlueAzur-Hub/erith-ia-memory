@@ -228,9 +228,12 @@ function invalidate(){
 /* Order planning never reads account secrets or creates an exchange order.
    Only the owner's separate read-only Bridge panel can verify Trading funds. */
 function ticketTarget(){return document.getElementById("traderOkxTicket")?.querySelector("[data-ticket-report]")}
-function ticketStatus(text){
+function ticketStatus(text,brief=null){
  const target=ticketTarget();
  if(target)target.textContent=text;
+ const summary=document.getElementById("traderOkxTicket")?.querySelector("[data-ticket-brief]");
+ if(summary)summary.textContent=brief||
+   "Vérification en cours ou à relancer · AUCUN ordre possible.";
 }
 /* Reconcile the public archive's preliminary blockers only after the
    existing read-only account owner provides a qualified private snapshot. */
@@ -549,7 +552,22 @@ async function prepareTicket(){
     line.startsWith("Frais débités en CT : HYPOTHÈSE")&&review.fee_mode_verified?
       "Calcul public initial : hypothèse frais CT ; mode du compte qualifié et simulation recalculée plus bas.":
     line);
-  ticketStatus(finalLines.join("\n")+"\n\n"+accountLines.join("\n"));
+  const actualLive=bookDiagnostic?.accepted&&
+    answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC";
+  const brief=[
+    "CARNET CT/USDC · "+(actualLive?"RÉCENT OKX ACCEPTÉ":
+      "ARCHIVE UNIQUEMENT — "+(bookDiagnostic?.code||"INCONNU")),
+    "COMPTE · "+(review.spot_gates?.verified?
+      (review.scenario_within_account_max_buy?
+        "Contrôles du compte lus · scénario brut dans maxBuy.":
+        "Quantité brute supérieure à maxBuy · simulation plafonnée."):
+      "Limites de compte non entièrement vérifiées."),
+    "PRIX · "+(actualLive?"Carnet daté récent, sans garantie d'exécution.":
+      "Aucune cotation actuelle certifiée."),
+    "ORDRES · AUCUN achat ni vente possible depuis ce ticket.",
+    "Le rapport technique complet est replié ci-dessous."
+  ].join("\n");
+  ticketStatus(finalLines.join("\n")+"\n\n"+accountLines.join("\n"),brief);
  }catch(error){
    if(current===ticketRequest)ticketStatus("Ticket indisponible : "+
      String(error?.message||error)+
@@ -618,11 +636,20 @@ function mount(){
  exitLabel.appendChild(exitInput);
  const compute=document.createElement("button");
  compute.type="button";compute.textContent="Vérifier ce scénario (aucun ordre)";
+ const brief=document.createElement("pre");
+ brief.setAttribute("data-ticket-brief","");
+ brief.setAttribute("role","status");brief.setAttribute("aria-live","polite");
+ brief.textContent="Vérification non lancée · Aucun ordre.";
+ const technical=document.createElement("details");
+ technical.setAttribute("data-ticket-technical","");
+ const technicalHeading=document.createElement("summary");
+ technicalHeading.textContent="Afficher le rapport technique complet";
  const output=document.createElement("pre");
  output.setAttribute("data-ticket-report","");
- output.setAttribute("role","status");output.setAttribute("aria-live","polite");
+ output.setAttribute("role","status");output.setAttribute("aria-live","off");
  output.textContent="Ouvre ce panneau et lance la vérification des contraintes OKX. Aucun ordre.";
- ticketBox.append(warning,quoteLabel,budgetLabel,exitLabel,compute,output);
+ technical.append(technicalHeading,output);
+ ticketBox.append(warning,quoteLabel,budgetLabel,exitLabel,compute,brief,technical);
  ticket.append(ticketHeading,ticketBox);
  content.append(explanation,history,label,button,collector,evidence,ticket);
  compute.addEventListener("click",()=>void prepareTicket());
