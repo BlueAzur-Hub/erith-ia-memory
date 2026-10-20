@@ -2,7 +2,7 @@
   "closures": [],
   "execution_proven": false,
   "fee_side_fraction_assumed": "0.001",
-  "last_observation_at_utc": "2026-10-20T13:32:42Z",
+  "last_observation_at_utc": "2026-10-20T18:37:46Z",
   "max_shadow_positions": 4,
   "minimum_holding_hours": 48,
   "orders_enabled": false,
@@ -67,11 +67,32 @@
       "symbol": "JCT",
       "tick_lot_verified": false,
       "venue": "Bitget"
+    },
+    {
+      "coin_id": "bedrock-token",
+      "contract_address": "0xff7d6a96ae471bbcd7713af9cb1feeb16cf56b41",
+      "entry_ask_usdt": "0.6784",
+      "entry_quote_at_utc": "2026-10-20T18:37:28Z",
+      "entry_spread_bps": "10.32372",
+      "executed_order": false,
+      "fee_and_slippage_assumed": true,
+      "hypothetical_quantity": "147.110849056604",
+      "maximum_book_level_size_unverified": true,
+      "notional_usdt": "100",
+      "pair": "BRUSDT",
+      "platform": "binance-smart-chain",
+      "quote": "USDT",
+      "realized_profit_usdt": null,
+      "status": "HYPOTHETICAL_NO_FILL",
+      "symbol": "BR",
+      "tick_lot_verified": false,
+      "venue": "Bitget"
     }
   ],
   "real_orders": 0,
   "schema": "erith.radar.spot-paper-forward-shadow.v1",
   "seen_candidate_ids": [
+    "bedrock-token",
     "dgrid-ai",
     "janction",
     "quack-ai"
