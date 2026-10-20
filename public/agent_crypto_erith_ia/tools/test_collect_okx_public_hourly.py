@@ -161,5 +161,25 @@ class HourlyCollectorTests(unittest.TestCase):
             m.millis(str(int(MS) + 400000), NOW)
 
 
+    def test_ct_usdc_is_native_public_spot_with_exact_exchange_rules(self):
+        parent = Feeds()
+        def ct_feed(url):
+            packet = parent(url)
+            if "/public/instruments" in url:
+                packet["data"].append({
+                    **inst("CT-USDC"), "minSz": "10", "lotSz": "0.01",
+                    "tickSz": "0.00001"})
+            return packet
+        result = m.collect(ct_feed, NOW)
+        row = next(x for x in result["markets"] if x["pair"] == "CT-USDC")
+        self.assertEqual(row["base"], "CT")
+        self.assertEqual(row["quote"], "USDC")
+        self.assertEqual(row["rules"], {
+            "minSz": "10", "lotSz": "0.01", "tickSz": "0.00001"})
+        self.assertEqual(row["status"], "VERIFIED_PUBLIC_BOOK")
+        self.assertFalse(result["orders_enabled"])
+        self.assertEqual(result["real_orders"], 0)
+
+
 if __name__ == "__main__":
     unittest.main()
