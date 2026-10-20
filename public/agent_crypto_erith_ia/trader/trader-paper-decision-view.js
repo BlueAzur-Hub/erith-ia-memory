@@ -232,6 +232,20 @@ function ticketStatus(text){
  const target=ticketTarget();
  if(target)target.textContent=text;
 }
+/* Reconcile the public archive's preliminary blockers only after the
+   existing read-only account owner provides a qualified private snapshot. */
+function ticketRemainingBlockers(ticket,review){
+ const src=Array.isArray(ticket?.blockers)?ticket.blockers:[];
+ const balance="Solde du compte Trading et devise réellement disponibles non vérifiés.";
+ const fees="Frais réels de ce compte et de cette paire non vérifiés.";
+ const accountOk=review?.account_verified===true&&review.available_trading_quote!==null;
+ const feesOk=review?.fees_verified===true;
+ const remaining=src.filter(message=>
+   !(message===balance&&accountOk)&&!(message===fees&&feesOk));
+ if(accountOk&&!review.funds_cover_public_scenario)
+   remaining.push("Couverture du coût fictif par le solde Trading non démontrée.");
+ return remaining;
+}
 async function prepareTicket(){
  const box=document.getElementById("traderOkxTicket");
  if(!box?.open)return;
@@ -373,7 +387,10 @@ async function prepareTicket(){
       "de l'échange ne sont pas garantis.");
     accountLines.push("\n"+exitLines.join("\n"));
   }
-  ticketStatus(lines.join("\n")+"\n\n"+accountLines.join("\n"));
+  const remaining=ticketRemainingBlockers(answer,review);
+  const finalLines=lines.map(line=>line.startsWith("BLOCAGES :\n")?
+    "BLOCAGES RESTANTS :\n• "+remaining.join("\n• "):line);
+  ticketStatus(finalLines.join("\n")+"\n\n"+accountLines.join("\n"));
  }catch(error){
    if(current===ticketRequest)ticketStatus("Ticket indisponible : "+
      String(error?.message||error)+
@@ -417,7 +434,7 @@ function mount(){
  const warning=document.createElement("p");
  warning.textContent="Étude d'ordre Spot depuis le dernier carnet public archivé. "+
    "Montant hypothétique, pas ton solde OKX. Le prix n'est pas live. "+
-   "Aucun bouton d'achat et aucun appel privé.";
+   "Compte OKX lu via le Bridge existant, en lecture seule ; aucun ordre privé.";
  const quoteLabel=document.createElement("label");
  quoteLabel.textContent="Devise de cotation (paire OKX vérifiée) ";
  const quoteSelect=document.createElement("select");
