@@ -117,6 +117,23 @@ function assess({selected,qualification,signal,engine,now=Date.now()}={}){
  return insufficient("Carnet, quantité ou règles incompatibles : "+String(p.reason||"preuve absente")+
    ". Aucun ordre ni profit retenu.");
 }
+/* Qualification du graphique différé : contrôle strict du contenu avec l'horloge
+   DU DERNIER POINT, pas avec l'horloge actuelle. Réservé à la rétrospective ;
+   la qualification Spot/live garde sa limite existante de 15 minutes. */
+function qualifyHistoricalAsOf(input,lab,now=Date.now()){
+ const series=input?.series,last=Array.isArray(series)?series[series.length-1]:null;
+ const at=Array.isArray(last)?last[0]:NaN;
+ if(!Number.isFinite(now)||!Number.isFinite(at)||at>now||
+    now-at>48*60*60*1000)return Object.freeze({ok:false,
+   reason:"Historique absent, futur ou âgé de plus de 48 h ; collecte graphique à actualiser."});
+ if(typeof lab?.qualify!=="function"||typeof lab?.historicalStudy!=="function")
+   return Object.freeze({ok:false,reason:"Laboratoire historique indisponible."});
+ // This is an observation-time validation, NOT a live current-time quote.
+ const q=lab.qualify(input,at);
+ if(!q?.ok)return Object.freeze({ok:false,reason:q?.reason||"Série historique invalide."});
+ return Object.freeze({ok:true,qualified:q,asOf:at,ageMinutes:(now-at)/60000,
+  historicalOnly:true,realOrders:false,spotExecutionPermitted:false});
+}
 /* Reuse the existing PAPER laboratory study: it is descriptive, immediate,
    overlapping, in notional USD, and never exchange-executable. */
 function summarizeHistorical(study,selected){
@@ -149,5 +166,5 @@ function summarizeHistorical(study,selected){
    "frais supposés. Aucun signal d'achat ni gain de portefeuille démontré.",
    orders_enabled:false,strategy_certified:false});
 }
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,realOrders:false,network:false,storage:false});
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,realOrders:false,network:false,storage:false});
 });

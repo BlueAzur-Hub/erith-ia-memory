@@ -14,10 +14,13 @@ function selection(){
  const from=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.());
  if(!from?.input)return{reason:from?.reason||
    "Graphique Solo 24 h non prêt : aucune série attribuée artificiellement."};
- const qualified=safe(()=>paper.qualify(from.input));
- if(!qualified?.ok)return{reason:qualified?.reason||
-   "Données de prix ou identité non qualifiées."};
- return{input:from.input,qualified};
+ const live=safe(()=>paper.qualify(from.input));
+ const archived=safe(()=>core.qualifyHistoricalAsOf(from.input,paper,Date.now()));
+ return{input:from.input,
+   qualified:live?.ok?live:null,
+   historical:archived?.ok?archived:null,
+   reason:live?.ok?null:(live?.reason||"Cours actuel non qualifié."),
+   historicalReason:archived?.ok?null:(archived?.reason||"Historique non qualifié.")};
 }
 function panel(){return document.getElementById(ID)}
 function result(){return panel()?.querySelector("[data-decision-result]")}
@@ -58,27 +61,33 @@ function assumptions(){
 }
 function renderHistory(s){
  const element=historyTarget();if(!element)return;
- if(!s.input||!s.qualified){
+ if(!s.input||!s.historical){
    element.textContent="ÉTUDE HISTORIQUE NON DISPONIBLE\n"+
-     (s.reason||"Graphique ou actif non qualifié.")+
+     (s.historicalReason||s.reason||"Graphique ou actif non qualifié.")+
      "\nLe marché public reste consultable, sans ordre.";
    element.dataset.study="NOT_AVAILABLE";return;
  }
  const cfg=assumptions();
  if(!cfg){element.textContent="Étude historique : paramètres PAPER absents ou invalides.";
    element.dataset.study="NOT_AVAILABLE";return;}
- const key=s.qualified.sourceIdentity+"|"+s.qualified.lastAt+"|"+JSON.stringify(cfg);
+ const key=s.historical.qualified.sourceIdentity+"|"+
+   s.historical.qualified.lastAt+"|"+JSON.stringify(cfg);
  if(key===lastStudyKey)return;
  lastStudyKey=key;
- const study=safe(()=>paper.historicalStudy(s.input,cfg));
- const info=core.summarizeHistorical(study,s.qualified);
+ // Historical evaluation is explicitly as-of the recorded last point.
+ // Never use this as-of qualification for OKX Spot or current execution.
+ const study=safe(()=>paper.historicalStudy(s.input,cfg,s.historical.asOf));
+ const info=core.summarizeHistorical(study,s.historical.qualified);
  if(info.status!=="HISTORICAL_ONLY"){
    element.textContent="ÉTUDE HISTORIQUE NON DISPONIBLE · "+
      (study?.reason||info.reason)+"\nAucune transaction ni performance inventée.";
    element.dataset.study="NOT_AVAILABLE";return;
  }
  element.textContent=[
-   "ÉTUDE IMMÉDIATE · "+info.asset+" · 24 heures de cours USD",
+   "ÉTUDE HISTORIQUE DIFFÉRÉE · "+info.asset+" · 24 heures de cours USD",
+   "Dernier prix de la série : "+info.source_to_utc+
+     " · décalage ≈ "+fmt(s.historical.ageMinutes,1)+" min. "+
+     "Ce cours n'est PAS une cotation de trading actuelle.",
    info.windows+" fenêtres de 60 min chevauchantes · "+
      fmt(info.positive_windows_pct,1)+" % positives après frais fictifs.",
    "Médiane : "+fmt(info.median_profit_notional_usd,5)+
@@ -115,21 +124,25 @@ async function evaluate(force=false){
  const container=panel();
  if(!container?.open||!document.getElementById("traderPaperLab")?.open)return;
  const s=selection();
- const key=s.qualified?s.qualified.sourceIdentity+"|"+s.qualified.lastAt:
-   "unavailable|"+s.reason;
+ const key=s.historical?s.historical.qualified.sourceIdentity+"|"+
+   s.historical.qualified.lastAt:
+   "unavailable|"+(s.historicalReason||s.reason);
  if(!force&&key===container.dataset.lastSelection)return;
  container.dataset.lastSelection=key;
  const currentId=++requestId;
  renderHistory(s);
  if(!s.qualified){
    renderSpot({decision:"PREUVES_INSUFFISANTES",
-     reason:s.reason||"Aucune sélection qualifiée."});
-   return;
+     reason:"Cotation actuelle indisponible : "+(s.reason||
+       "graphique hors fenêtre live 15 min")+
+       ". Le calcul historique ci-dessus est indépendant."});
+ }else{
+   const target=result();if(target)target.textContent=
+      "Diagnostic OKX : vérification du dernier rapport public…";
  }
- const target=result();if(target)target.textContent=
-   "Diagnostic OKX : vérification du dernier rapport public…";
  try{
    const {qualification,signal,journal}=await reports();
+   if(currentId!==requestId||!container.open)return;
    const collector=collectorTarget();
    if(collector){
      const valid=journal?.schema==="erith.radar.okx.hurdle-followups.v1"&&
@@ -145,18 +158,20 @@ async function evaluate(force=false){
          "Journal OKX encore absent : la publication automatique de sa première collecte reste à confirmer.")+
        "\nLes programmes GitHub sont planifiés ; leur présence ne prouve pas une collecte réussie.";
    }
-   if(currentId!==requestId||!container.open)return;
-   const latest=selection();
-   if(!latest.qualified||latest.qualified.sourceIdentity!==s.qualified.sourceIdentity||
-      latest.qualified.lastAt!==s.qualified.lastAt)return;
-   renderSpot(core.assess({selected:latest.qualified,qualification,signal,
-     engine:globalThis.AgentCryptoSpotPaperOrders,now:Date.now()}));
+   // Report status is independent of the ability to trade on a live graph.
+   if(s.qualified){
+     const latest=selection();
+     if(!latest.qualified||latest.qualified.sourceIdentity!==s.qualified.sourceIdentity||
+        latest.qualified.lastAt!==s.qualified.lastAt)return;
+     renderSpot(core.assess({selected:latest.qualified,qualification,signal,
+       engine:globalThis.AgentCryptoSpotPaperOrders,now:Date.now()}));
+   }
  }catch(_){
    if(currentId===requestId){const collector=collectorTarget();
      if(collector)collector.textContent="État du Radar : sources publiques momentanément inaccessibles.";
-     renderSpot({decision:"PREUVES_INSUFFISANTES",
-     reason:"Rapports publics Radar momentanément inaccessibles ; "+
-      "l'étude historique ci-dessus reste disponible."});}
+     if(s.qualified)renderSpot({decision:"PREUVES_INSUFFISANTES",
+       reason:"Rapports publics Radar momentanément inaccessibles ; "+
+       "l'étude historique ci-dessus reste disponible."});}
  }
 }
 function invalidate(){
@@ -164,8 +179,9 @@ function invalidate(){
  // A graph event is not proof of a changed coin. Compare the real source key
  // before invalidating: this prevents the spurious "Sélection modifiée" state.
  const s=selection();
- const next=s.qualified?s.qualified.sourceIdentity+"|"+s.qualified.lastAt:
-   "unavailable|"+s.reason;
+ const next=s.historical?s.historical.qualified.sourceIdentity+"|"+
+   s.historical.qualified.lastAt:
+   "unavailable|"+(s.historicalReason||s.reason);
  if(next===box.dataset.lastSelection)return;
  requestId++;
  lastStudyKey="";
