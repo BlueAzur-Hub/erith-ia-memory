@@ -93,6 +93,45 @@ function okxSpotSummary(qualification){
    (formatted?"\n"+formatted:"\nAucun aller-retour évaluable : carnet absent, profondeur ou tailles insuffisantes.")+
    "\nCes valeurs sont des coûts à l'instant du relevé, pas des gains ou prévisions ; aucun ordre exécuté.";
 }
+function okxFollowupSummary(watch, qualification, vault, usdHistory){
+ if(watch?.schema!=="erith.radar.okx.hurdle-followups.v1"||
+    watch.orders_enabled!==false||watch.paper_fills!==0||watch.real_orders!==0||
+    watch.backtest!==false||!Array.isArray(watch.studies)||!Array.isArray(watch.snapshots))
+  return "Suivi OKX des seuils 24/48 h : première collecte ou archive conforme en attente.";
+ const studies=watch.studies.filter(x=>
+   x.status==="HYPOTHETICAL_COST_STUDY_NO_FILL"&&x.orders_enabled===false&&
+   x.executed_order===false&&x.contract_identity_proven===false&&
+   x.quote==="USDT"&&Array.isArray(x.followups));
+ const checks=studies.flatMap(x=>x.followups.filter(f=>
+   (f.window==="24h"||f.window==="48h")&&
+   f.execution_proven===false&&f.orders_enabled===false&&f.real_orders===0));
+ const good=checks.filter(f=>f.status==="QUOTE_ABOVE_HYPOTHETICAL_HURDLE").length;
+ const not=checks.filter(f=>f.status==="QUOTE_BELOW_HYPOTHETICAL_HURDLE").length;
+ const incomplete=checks.length-good-not;
+ const selected=(qualification?.candidates||[]).filter(x=>
+   x.okx_spot?.native_rules_verified===true).map(x=>x.id);
+ const assets=new Set(selected);
+ const native=Array.isArray(vault?.assets)&&
+   vault?.schema==="aerith.public.ohlcv.okx.native-utc-daily-source-index.v1"?
+   vault.assets.filter(x=>assets.has(x.id)&&x.quote==="USDT").length:null;
+ const radarRows=usdHistory?.schema==="erith.radar.dynamic-forward-observations.v1"&&
+   usdHistory.quote==="USD"&&Array.isArray(usdHistory.observations)?
+   usdHistory.observations.filter(x=>assets.has(x.id)):[];
+ const observed=radarRows.filter(x=>x.followup_1d?.status==="OBSERVED_DAILY_SNAPSHOT"&&
+   typeof x.followup_1d.change_pct==="number").length;
+ return "Suivi prospectif OKX/USDT : "+studies.length+
+   " études de coût datées · "+checks.length+
+   " observations de sortie à 24/48 h ("+good+
+   " cotations au-dessus du seuil fictif · "+not+" sous le seuil · "+
+   incomplete+" liquidité/autre preuve insuffisante). "+
+   "Aucune cotation n'est un ordre rempli ni un bénéfice acquis."+
+   "\nCoffre OKX natif 1Dutc : "+(native===null?"index indisponible":
+      native+"/"+assets.size+" actifs concernés couverts")+
+   " ; données journalières de contexte, non prix d'exécution."+
+   "\nArchives Radar/CoinGecko USD : "+observed+"/"+radarRows.length+
+   " suivis descriptifs à 1 jour observés ; USD et USDT ne sont pas assimilés, "+
+   "aucune performance PAPER déduite de cette série.";
+}
 async function shadowStatus(){
  const target=document.getElementById("radar-shadow-status");if(!target)return;
  try{
@@ -109,6 +148,7 @@ async function shadowStatus(){
      throw Error("journal PAPER non conforme");
    let note=" · Revente nette : non certifiée (règles Spot en attente).";
    let okxInfo="OKX Spot/USDT : collecte indisponible.";
+   let prospective="Suivi des seuils OKX : relevés prospectifs en attente.";
    try{
      const base="../data/crypto/radar-opportunities/";
      const [identityRes,qualificationRes]=await Promise.all([
@@ -117,6 +157,14 @@ async function shadowStatus(){
      if(!identityRes.ok||!qualificationRes.ok)throw Error("Sources de marché absentes");
      const [identity,qualification]=await Promise.all([identityRes.json(),qualificationRes.json()]);
      okxInfo=okxSpotSummary(qualification);
+     try{
+       const [witness,vault,usdHistory]=await Promise.all([
+         fetch(base+"okx-hurdle-followups.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
+         fetch("../data/historical_archive_prototype/okx_verified_daily/index.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
+         fetch(base+"dynamic-followups.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null)]);
+       prospective=okxFollowupSummary(witness,qualification,vault,usdHistory);
+     }catch(_){prospective="Suivi des seuils OKX : preuve indisponible.";}
+
      const audit=global.AgentCryptoSpotPaperOrders?.auditRadarShadow?.(data,identity,qualification);
      if(audit?.status==="READ_ONLY_AUDIT"){
        const unavailable=audit.results.filter(x=>x.status!=="HYPOTHETICAL_SIZE_OK");
@@ -137,7 +185,7 @@ async function shadowStatus(){
    text(target,"PAPER prospectif (citations de carnet uniquement) : "+
      data.positions.length+" études théoriques ouvertes · "+
      data.closures.length+" sorties théoriques après ≥48 h. "+
-     "Aucun ordre ni remplissage réel ou simulé. Frais et glissement supposés."+note+"\n"+okxInfo);
+     "Aucun ordre ni remplissage réel ou simulé. Frais et glissement supposés."+note+"\n"+okxInfo+"\n"+prospective);
  }catch(e){text(target,"PAPER prospectif : "+String(e.message||e)+
    " · aucune position ni aucun gain affirmé.");}
 }
@@ -171,7 +219,7 @@ async function load(){
  }catch(e){text(s,"Rapprochement indisponible : "+String(e.message||e)+
    ". Aucun résultat PAPER n'est supposé.");await identityStatus();await shadowStatus();}
 }
-if(typeof module==="object"&&module.exports)module.exports={valid,paint,okxSpotSummary};
+if(typeof module==="object"&&module.exports)module.exports={valid,paint,okxSpotSummary,okxFollowupSummary};
 if(typeof document!=="undefined"){
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",load,{once:true});
  else void load();
