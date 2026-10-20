@@ -82,3 +82,13 @@ test("Existing Radar owns the UI; standalone-only public fetch, no private API",
  assert.doesNotMatch(js,/\/api\/v5\/trade|secretKey|localStorage|setInterval/);
  assert.equal(view.valid(data(),NOW).pairs.length,1);
 });
+
+test("Validator reads the REAL published immutable OKX report, not just fixtures",()=>{
+ const archive=path.resolve(__dirname,"../data/crypto/okx-hourly/research-latest.json");
+ const published=JSON.parse(fs.readFileSync(archive,"utf8"));
+ const model=view.valid(published,Date.parse(published.as_of_utc)+60000);
+ assert.equal(model.pairs.length,published.pairs_with_public_books);
+ assert.equal(model.withTrend,published.pairs_with_two_or_more_hours);
+ assert.equal(model.realOrders,false);
+ assert.equal(model.noQuoteConversion,true);
+});
