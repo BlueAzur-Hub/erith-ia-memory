@@ -2,7 +2,7 @@ name: Seven Priority Radar Spot PAPER
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 */4 * * *'
+    - cron: '29 */4 * * *'
   pull_request:
     paths:
       - '.github/workflows/seven-priority-spot-paper.yml'

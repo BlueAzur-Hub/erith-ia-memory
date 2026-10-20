@@ -4,16 +4,26 @@ on:
     paths:
       - 'public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/test_radar_schedule_stagger.py'
+      - '.github/workflows/atlas_market_collector.yml'
+      - '.github/workflows/atlas_news_collector.yml'
+      - '.github/workflows/atlas-public-crypto-market-clock.yml'
+      - '.github/workflows/seven-priority-spot-paper.yml'
       - '.github/workflows/radar-okx-public-hourly.yml'
   push:
     branches: [main]
     paths:
       - 'public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/test_radar_schedule_stagger.py'
+      - '.github/workflows/atlas_market_collector.yml'
+      - '.github/workflows/atlas_news_collector.yml'
+      - '.github/workflows/atlas-public-crypto-market-clock.yml'
+      - '.github/workflows/seven-priority-spot-paper.yml'
       - '.github/workflows/radar-okx-public-hourly.yml'
   workflow_dispatch:
   schedule:
-    - cron: '17 * * * *'
+    - cron: '38 * * * *'
 permissions:
   contents: write
 concurrency:
@@ -35,6 +45,7 @@ jobs:
         run: |
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_okx_public_hourly.py' -v
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_radar_schedule_stagger.py' -v
       - name: Archive one immutable UTC hourly public snapshot
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         shell: bash
