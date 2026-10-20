@@ -94,3 +94,39 @@ test("USDC, bad identity, wrong future venue or invalid source fails closed",()=
 test("existing incompatible storage must not be silently reset",()=>{
  a.throws(()=>watch.advance({schema:"WRONG"},qualification()),/incompatible/);
 });
+
+test("future-only observations continue older assets without changing selected daily snapshots",()=>{
+ const opening=watch.advance(null,qualification());
+ const row=qualification("2026-10-19","10.80").candidates[0];
+ const later={schema:"erith.radar.okx.public-followup-observation.v1",
+  orders_enabled:false,real_orders:0,new_entries_created:0,
+  candidates:[row]};
+ const future=watch.advanceFutureOnly(opening,later);
+ a.equal(future.snapshots.length,opening.snapshots.length);
+ a.equal(future.studies.length,opening.studies.length);
+ a.equal(future.studies[0].followups.length,1);
+ a.equal(future.studies[0].followups[0].window,"24h");
+ a.equal(future.studies[0].followups[0].execution_proven,false);
+ a.equal(opening.studies[0].followups.length,0,"input journal remains immutable");
+ const again=watch.advanceFutureOnly(future,later);
+ a.equal(again.studies[0].followups.length,1,"same followup is not counted twice");
+});
+test("future-only market proof rejects falsified, duplicated or non-USDT rows",()=>{
+ const opening=watch.advance(null,qualification());
+ const row=qualification("2026-10-19","10.80").candidates[0];
+ const observation={schema:"erith.radar.okx.public-followup-observation.v1",
+  orders_enabled:false,real_orders:0,candidates:[row]};
+ for(const corrupt of [
+   {...observation,orders_enabled:true},
+   {...observation,candidates:[row,row]},
+   {...observation,candidates:[{...row,okx_spot:{...row.okx_spot,quote:"USDC"}}]},
+   {...observation,schema:"nonexistent"},
+   {...observation,candidates:[{...row,okx_spot:{...row.okx_spot,contract_identity_proven:true}}]}
+ ]){
+  a.throws(()=>watch.advanceFutureOnly(opening,corrupt));
+ }
+ const wrong={...row,okx_spot:{...row.okx_spot,best_book:{...row.okx_spot.best_book,
+    exchange_time_utc:"2026-10-20T11:00:30Z"}}};
+ const tooLate=watch.advanceFutureOnly(opening,{...observation,candidates:[wrong]});
+ a.equal(tooLate.studies[0].followups.length,0,"out-of-window quotes cannot close a study");
+});
