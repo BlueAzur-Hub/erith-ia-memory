@@ -818,7 +818,7 @@ function mount(){
   }
  });
  for(const input of [quoteSelect,budget,exitInput])input.addEventListener("change",()=>{
-   ticketRequest++;cyclePlan=null;
+   ticketRequest++;cyclePlan=null;cycleState=null;
    globalThis.AgentCryptoTraderOrderEntryView?.reset?.();
    ticketStatus("Paramètres modifiés : relancer l'étude. Aucun ordre.");
    cycleStatus();
