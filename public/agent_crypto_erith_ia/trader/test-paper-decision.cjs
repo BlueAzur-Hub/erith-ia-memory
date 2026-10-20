@@ -535,3 +535,31 @@ test("CT exit stays in existing Trader panel and remains read only",()=>{
  assert.doesNotMatch(view,/\/api\/v5\/trade\/order|Authorization:|Bearer /);
  assert.doesNotMatch(source,/fetch\(|\/api\/v5\/trade\/order/);
 });
+
+test("actual CT graphic uses CT/USDT slash, while the ticket prices CT-USDC natively",()=>{
+ const selected={...ctSource(),instrument:"CT/USDT"};
+ const archive=ctArchive();
+ const ticket=core.prepareSpotTicket({selected,archive,pair:"CT-USDC",
+  budgetQuote:"3.20",now:T});
+ assert.equal(ticket.status,"PREPARATION_NON_EXECUTABLE");
+ assert.equal(ticket.pair,"CT-USDC");
+ assert.equal(ticket.best_ask_quote,"0.31093"); // native CT-USDC fixture
+ assert.equal(ticket.buy_quantity_minimum_met,true);
+ assert.equal(ticket.net_exit_quantity_minimum_met,true);
+ const analysis=core.previewSpotExit({ticket,context:null,
+  targetPriceQuote:"0.39",now:T});
+ assert.equal(analysis.status,"ETUDE_SORTIE");
+ assert.equal(analysis.meets_native_exit_minimum,true);
+ assert.equal(analysis.orders_enabled,false);
+ assert.equal(analysis.can_place_limit_order,false);
+});
+test("CT/USDT chart must not substitute a CT/USDC book or USDC balance",()=>{
+ const bad={...ctSource(),instrument:"CT/USDC"};
+ const output=core.prepareSpotTicket({selected:bad,archive:ctArchive(),
+  pair:"CT-USDC",budgetQuote:"3.20",now:T});
+ assert.equal(output.status,"BLOQUE");
+ const ct=ctArchive();
+ ct.hours[0].markets[0].pair="CT-USDT";
+ assert.equal(core.prepareSpotTicket({selected:{...ctSource(),instrument:"CT/USDT"},
+  archive:ct,pair:"CT-USDC",budgetQuote:"3.20",now:T}).status,"BLOQUE");
+});
