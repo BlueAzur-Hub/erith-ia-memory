@@ -169,6 +169,42 @@ function summarizeSpotFeeMode(payload,now=Date.now()){
   fee_currency_for_spot_buy_ct_usdc:currency,
   fee_type_at_utc:new Date(at).toISOString(),fee_type_reason:null});
 }
+/* R25 owner-only Spot gates; no raw account configuration escapes. */
+function summarizeSpotOrderGates(payload,now=Date.now()){
+ const no=reason=>Object.freeze({order_gates_verified:false,order_gates_at_utc:null,
+   order_gates_reason:reason,order_gates:null});
+ if(payload?.ok!==true||payload?.read_only!==true||
+    payload?.orders_enabled!==false||payload?.real_orders!==0||
+    payload?.source!=="OKX account/public Spot GET proof"||
+    payload?.instId!=="CT-USDC"||payload?.base!=="CT"||
+    payload?.quote!=="USDC"||payload?.tdMode!=="cash"||
+    !Number.isFinite(now))return no("Preuves Spot : origine ou paire invalide.");
+ const at=Date.parse(payload.fetched_at);
+ if(!Number.isFinite(at)||at>now+30000||now-at>120000)
+   return no("Preuves Spot : lecture périmée ou horloge incorrecte.");
+ const decimal=v=>typeof v==="string"&&/^(?:0|[1-9]\d{0,17})(?:\.\d{1,24})?$/.test(v)?v:null;
+ const flags=["eligibility_verified","available_verified","account_max_verified",
+   "public_rules_verified","price_limits_verified"];
+ if(flags.some(k=>typeof payload[k]!=="boolean"))return no("Preuves Spot incomplètes.");
+ const eligible=payload.eligibility_verified===true&&
+   payload.eligible_for_account===true&&payload.trade_quote_ccy_verified===true&&
+   payload.trade_quote_ccy==="USDC";
+ const numbers={};
+ for(const k of ["availBuy","availSell","maxBuy","maxSell","minSz","lotSz",
+                  "tickSz","maxLmtSz","maxLmtAmt","buyLmt","sellLmt"])
+   numbers[k]=decimal(payload[k]);
+ const complete=eligible&&flags.every(k=>payload[k]===true)&&
+   ["availBuy","availSell","maxBuy","maxSell","minSz","lotSz","tickSz",
+    "buyLmt","sellLmt"].every(k=>numbers[k]!==null);
+ return Object.freeze({order_gates_verified:complete,
+  order_gates_at_utc:new Date(at).toISOString(),
+  order_gates_reason:complete?null:"Compte, instrument ou limites non entièrement qualifiés.",
+  order_gates:Object.freeze({account_eligible:eligible,
+    ...Object.fromEntries(flags.map(k=>[k,payload[k]===true])),
+    ...numbers,blocked_reasons:Array.isArray(payload.blocked_reasons)?
+      payload.blocked_reasons.filter(v=>typeof v==="string").slice(0,5).map(v=>v.slice(0,140)):[],
+    orders_enabled:false})});
+}
 let ticketBtcFees=null,ticketBtcFeesAt=0;
 async function ticketReadOnly(instId){
  if(typeof instId!=="string"||!TICKET_PAIR.test(instId))
@@ -212,7 +248,16 @@ async function ticketReadOnly(instId){
   mode=summarizeSpotFeeMode(null);
   mode=Object.freeze({...mode,fee_type_reason:reason});
  }
- return Object.freeze({...context,...mode,
+ let gates=summarizeSpotOrderGates(null);
+ try{gates=summarizeSpotOrderGates(await bridge("/okx/order-gates?instId=CT-USDC"),Date.now());}
+ catch(error){
+  const status=Number(error?.status);
+  gates=Object.freeze({...gates,order_gates_reason:
+   status===404?"Bridge R25 requis pour les limites d'ordre.":
+   status===401||status===403?"Aether Trust : lecture des limites refusée.":
+   "Contrôles d'ordre OKX momentanément indisponibles."});
+ }
+ return Object.freeze({...context,...mode,...gates,
   ...(feeFailure?{fee_reason:feeFailure}:{})});
 }
 function feeLabel(payload){
@@ -1222,7 +1267,7 @@ function mount(){
   return true;
 }
 
-if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain,capitalJourneyReport,btcScenarioGrid,summarizeTicketAccount,summarizeSpotFeeMode});
+if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain,capitalJourneyReport,btcScenarioGrid,summarizeTicketAccount,summarizeSpotFeeMode,summarizeSpotOrderGates});
 if(typeof document==="undefined")return;
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
 globalThis.AgentCryptoTraderOkxAccount=Object.freeze({mount,refresh,login,logout:logoutBridge,read_only:true,bridge:BRIDGE,token_storage:"sessionStorage",okx_credentials_in_browser:false,real_orders:false,ticketReadOnly});

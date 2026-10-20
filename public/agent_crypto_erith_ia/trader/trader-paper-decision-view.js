@@ -414,6 +414,36 @@ async function prepareTicket(){
          " (mode du compte, non preuve d'un fill).":
        "Mode des frais d'achat CT/USDC : NON CONFIRMÉ · "+
          String(context?.fee_type_reason||"Bridge privé ou session Aether Trust à vérifier.")]:[]),
+     ...(pair==="CT-USDC"?(()=>{
+       const gates=context?.order_gates;
+       if(!gates)return ["CONTROLES SPOT COMPTE : NON CONFIRMÉS · "+
+          String(context?.order_gates_reason||"Bridge R25 et Aether Trust requis.")];
+       const result=[
+         "CONTROLES SPOT COMPTE · "+
+           String(context.order_gates_at_utc||"heure inconnue")+
+           " · "+(context.order_gates_verified?"preuves de lecture complètes":"preuves PARTIELLES"),
+         "Identité du compte : "+(gates.account_eligible?"CT-USDC · règlement USDC reconnu":
+           "NON CERTIFIÉ — aucune paire substituée (CT-USD reste distincte)."),
+         "OKX max-avail-size : "+(gates.available_verified?
+            "achat disponible "+gates.availBuy+" USDC · vente disponible "+gates.availSell+" CT":
+            "NON CERTIFIÉ"),
+         "OKX max-size : "+(gates.account_max_verified?
+            "quantité achat "+gates.maxBuy+" CT · quantité vente "+gates.maxSell+
+              " (vérifier unités selon réponse OKX)":"NON CERTIFIÉ"),
+         "Limites publiques : "+(gates.public_rules_verified?
+            "min "+gates.minSz+" CT · lot "+gates.lotSz+
+             " CT · tick "+gates.tickSz+" USDC":"NON CERTIFIÉ"),
+         "Plafonds LIMIT : maxLmtSz "+(gates.maxLmtSz||"NON CONFIRMÉ")+
+            " CT · maxLmtAmt "+(gates.maxLmtAmt||"NON CONFIRMÉ")+" USD (distinct d'USDC).",
+         "Bandes de prix : "+(gates.price_limits_verified?
+            "borne achat "+gates.buyLmt+" · borne vente "+gates.sellLmt+" (cotation native)":
+            "NON CERTIFIÉ"),
+       ];
+       if(Array.isArray(gates.blocked_reasons)&&gates.blocked_reasons.length)
+         result.push("Raisons : "+gates.blocked_reasons.join(" ; "));
+       result.push("PREPARATION SEULEMENT · aucune autorisation Trade ; aucun ordre envoyable.");
+       return result;
+     })():[]),
      review.fee_type==="1"&&review.fee_mode_verified?
        "Frais en USDC : le coût du premier achat brut dépasse éventuellement le budget ; voir scénario réajusté ci-dessous.":
        review.funds_cover_public_scenario?
