@@ -259,6 +259,21 @@ async function readCtSpotPublicBook(){
   return await response.json();
  }finally{clearTimeout(timeout);}
 }
+/* OKX Public Data already used by IA Concrete. One anonymous request per
+   operator-triggered PAPER ticket check; does not grant order access. */
+async function readCtSpotPublicInstrument(){
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),4500);
+ try{
+  const response=await fetch(
+   "https://www.okx.com/api/v5/public/instruments?instType=SPOT&instId=CT-USDC",
+   {method:"GET",mode:"cors",credentials:"omit",cache:"no-store",
+    headers:{Accept:"application/json"},signal:controller.signal});
+  if(!response.ok)throw Error("Règles OKX publiques HTTP "+response.status);
+  const payload=await response.json();
+  return {observed_at_utc:new Date().toISOString(),payload};
+ }finally{clearTimeout(timeout);}
+}
 async function prepareTicket(){
  const box=document.getElementById("traderOkxTicket");
  if(!box?.open)return;
@@ -275,7 +290,7 @@ async function prepareTicket(){
  const money=String(box.querySelector("[data-ticket-budget]")?.value||"").trim().replace(",",".");
  const desired=String(box.querySelector("[data-ticket-exit]")?.value||"").trim().replace(",",".");
  const pair=String(source.asset||"")+"-"+quote;
- ticketStatus("Vérification du carnet archivé et du compte OKX existant, en lecture seule…");
+ ticketStatus("Vérification du carnet CT/USDC, des règles Spot et du compte OKX, en lecture seule…");
  try{
    const stateResponse=await fetch("../data/crypto/okx-hourly/latest.json",
      {cache:"no-store",credentials:"omit"});
@@ -294,15 +309,18 @@ async function prepareTicket(){
       ticketSourceKey(fresh)!==sourceKey)return;
    // A fresh exact CT/USDC public book overrides only the dated market
    // levels, never the Spot rules or the read-only account evidence.
-   let liveBook=null;
+   let liveBook=null,instrumentEvidence=null;
    if(pair==="CT-USDC"){
-    try{liveBook=await readCtSpotPublicBook();}catch(_){liveBook=null;}
+     const [book,rule]=await Promise.allSettled([
+       readCtSpotPublicBook(),readCtSpotPublicInstrument()]);
+     if(book.status==="fulfilled")liveBook=book.value;
+     if(rule.status==="fulfilled")instrumentEvidence=rule.value;
    }
    const afterBook=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
    if(current!==ticketRequest||!box.open||
       ticketSourceKey(afterBook)!==sourceKey)return;
    const answer=core.prepareSpotTicket({selected:source,archive,pair,
-     budgetQuote:money,liveBook,now:Date.now()});
+     budgetQuote:money,liveBook,instrumentEvidence,now:Date.now()});
    const lines=[
      "TICKET D'ÉTUDE SPOT · LECTURE SEULE",
      "Paire recherchée : "+pair+" · budget d'étude : "+money+" "+quote+
@@ -315,8 +333,24 @@ async function prepareTicket(){
      answer.reason,
    ];
    if(answer.native_min_quantity){
-     lines.push("Règles Spot issues du relevé daté "+answer.native_rules_observed_at_utc+
-       " ; validité actuelle à confirmer auprès d'OKX.");
+     lines.push(answer.native_rules_verified?
+       "Règles Spot CT/USDC : OKX Public Data vérifié · état LIVE · lues "+
+         answer.native_rules_observed_at_utc+".":
+       "Règles Spot issues du relevé daté "+answer.native_rules_observed_at_utc+
+         " ; validité actuelle à confirmer auprès d'OKX.");
+     if(pair==="CT-USDC"){
+       lines.push("minSz "+answer.native_min_quantity+" CT · lotSz "+
+         answer.native_lot+" CT · tickSz "+answer.native_tick+" USDC.");
+       lines.push("Minimum brut pour revendre au moins 10 CT après des frais "+
+         "hypothétiques de 0,10 % prélevés en CT : "+
+         answer.minimum_gross_buy_to_resell_with_assumed_base_fee+
+         " CT · coût fictif à l'ask : "+
+         answer.minimum_gross_buy_cost_at_ask_with_assumed_base_fee+" USDC.");
+       lines.push("Frais débités en CT : HYPOTHÈSE. La devise réelle de prélèvement "+
+         "et ses arrondis ne sont pas certifiés.");
+       lines.push("Minimum notionnel, maxima, autres filtres et restrictions du compte : "+
+         "NON CERTIFIÉS par cette lecture publique.");
+     }
      lines.push("Minimum natif : "+answer.native_min_quantity+" "+answer.base+
        " · valeur indicative "+answer.minimum_buy_at_recorded_ask_quote+" "+quote);
      lines.push("Achat LIMIT étudié au ask "+(answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
@@ -375,7 +409,7 @@ async function prepareTicket(){
      ...(!review.fees_verified&&context?.fee_reason?
        ["Diagnostic frais : "+context.fee_reason]:[]),
      review.funds_cover_public_scenario?
-       "Solde Trading suffisant pour le coût FICTIF archivé uniquement.":
+       "Solde Trading suffisant pour le coût FICTIF du carnet choisi uniquement.":
        "Solde Trading insuffisant ou non vérifié pour ce scénario.",
      review.reason,
      "AUCUN achat, vente, transfert ni réservation de fonds."
@@ -461,9 +495,9 @@ function mount(){
  ticketHeading.textContent="Préparer un ticket OKX LIMIT · sans ordre ni fonds engagés";
  const ticketBox=document.createElement("div");
  const warning=document.createElement("p");
- warning.textContent="Étude d'ordre Spot depuis le dernier carnet public archivé. "+
-   "Montant hypothétique, pas ton solde OKX. Le prix n'est pas live. "+
-   "Compte OKX lu via le Bridge existant, en lecture seule ; aucun ordre privé.";
+ warning.textContent="Étude Spot avec carnet CT/USDC local récent s'il est vérifié, sinon archive datée. "+
+   "Montant hypothétique, non garanti par OKX. Compte OKX lu via le Bridge "+
+   "en lecture seule, sans aucun ordre.";
  const quoteLabel=document.createElement("label");
  quoteLabel.textContent="Devise de cotation (paire OKX vérifiée) ";
  const quoteSelect=document.createElement("select");
