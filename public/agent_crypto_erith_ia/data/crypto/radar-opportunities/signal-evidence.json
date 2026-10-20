@@ -1,0 +1,217 @@
+{
+  "schema": "erith.radar.signal-evidence-audit.v1",
+  "kind": "RESEARCH_AUDIT_NOT_STRATEGY_SELECTION",
+  "orders_enabled": false,
+  "strategy_certified": false,
+  "real_orders": 0,
+  "paper_fills": 0,
+  "data_provenance": {
+    "top50": "data/crypto/radar-opportunities/historical-top50-forward.json",
+    "top50_original_snapshots": "data/history/*.jsonl",
+    "radar": "data/crypto/radar-opportunities/dynamic-followups.json",
+    "okx": "data/crypto/radar-opportunities/qualification-latest.json",
+    "okx_public_cost": "data/crypto/radar-opportunities/okx-hurdle-followups.json",
+    "vault": "data/historical_archive_prototype/okx_verified_daily/index.json"
+  },
+  "top50_retro_7d": {
+    "rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
+    "horizon": "7 calendar days (observed market snapshots, not fills)",
+    "selection_dates_inclusive": [
+      "2026-08-21",
+      "2026-09-19"
+    ],
+    "embargo_dates_inclusive": [
+      "2026-09-20",
+      "2026-09-26"
+    ],
+    "validation_starts": "2026-09-27",
+    "fixed_rule_reused_not_fitted_here": true,
+    "true_unseen_holdout": false,
+    "source_quote": "USD",
+    "reference_no_trade_change_pct": 0,
+    "result_is_spot_pnl": false,
+    "periods": {
+      "selection_descriptive": {
+        "signals_total": 87,
+        "followups_observed": 79,
+        "followups_missing": 8,
+        "distinct_signal_days": 28,
+        "distinct_assets": 34,
+        "mean_observed_gross_change_pct": 7.96924,
+        "median_observed_gross_change_pct": 4.47179,
+        "observed_positive": 46,
+        "observed_non_positive": 33,
+        "cost_sensitivity_descriptive_only": {
+          "0.8": {
+            "roundtrip_friction_pct_assumption": 0.8,
+            "above_friction_on_observed": 43,
+            "below_or_equal_friction_on_observed": 36,
+            "mean_observed_gross_minus_assumed_friction_pct": 7.16924,
+            "is_executable_okx_return": false
+          },
+          "1.2": {
+            "roundtrip_friction_pct_assumption": 1.2,
+            "above_friction_on_observed": 43,
+            "below_or_equal_friction_on_observed": 36,
+            "mean_observed_gross_minus_assumed_friction_pct": 6.76924,
+            "is_executable_okx_return": false
+          },
+          "1.6": {
+            "roundtrip_friction_pct_assumption": 1.6,
+            "above_friction_on_observed": 42,
+            "below_or_equal_friction_on_observed": 37,
+            "mean_observed_gross_minus_assumed_friction_pct": 6.36924,
+            "is_executable_okx_return": false
+          }
+        }
+      },
+      "embargo_7_days_excluded": {
+        "signals_total": 28,
+        "followups_observed": 27,
+        "followups_missing": 1,
+        "distinct_signal_days": 7,
+        "distinct_assets": 19,
+        "mean_observed_gross_change_pct": 3.66702,
+        "median_observed_gross_change_pct": -3.83908,
+        "observed_positive": 12,
+        "observed_non_positive": 15,
+        "cost_sensitivity_descriptive_only": {
+          "0.8": {
+            "roundtrip_friction_pct_assumption": 0.8,
+            "above_friction_on_observed": 12,
+            "below_or_equal_friction_on_observed": 15,
+            "mean_observed_gross_minus_assumed_friction_pct": 2.86702,
+            "is_executable_okx_return": false
+          },
+          "1.2": {
+            "roundtrip_friction_pct_assumption": 1.2,
+            "above_friction_on_observed": 12,
+            "below_or_equal_friction_on_observed": 15,
+            "mean_observed_gross_minus_assumed_friction_pct": 2.46702,
+            "is_executable_okx_return": false
+          },
+          "1.6": {
+            "roundtrip_friction_pct_assumption": 1.6,
+            "above_friction_on_observed": 12,
+            "below_or_equal_friction_on_observed": 15,
+            "mean_observed_gross_minus_assumed_friction_pct": 2.06702,
+            "is_executable_okx_return": false
+          }
+        }
+      },
+      "later_descriptive_validation": {
+        "signals_total": 46,
+        "followups_observed": 36,
+        "followups_missing": 10,
+        "distinct_signal_days": 19,
+        "distinct_assets": 21,
+        "mean_observed_gross_change_pct": -5.18728,
+        "median_observed_gross_change_pct": -7.20106,
+        "observed_positive": 7,
+        "observed_non_positive": 29,
+        "cost_sensitivity_descriptive_only": {
+          "0.8": {
+            "roundtrip_friction_pct_assumption": 0.8,
+            "above_friction_on_observed": 7,
+            "below_or_equal_friction_on_observed": 29,
+            "mean_observed_gross_minus_assumed_friction_pct": -5.98728,
+            "is_executable_okx_return": false
+          },
+          "1.2": {
+            "roundtrip_friction_pct_assumption": 1.2,
+            "above_friction_on_observed": 7,
+            "below_or_equal_friction_on_observed": 29,
+            "mean_observed_gross_minus_assumed_friction_pct": -6.38728,
+            "is_executable_okx_return": false
+          },
+          "1.6": {
+            "roundtrip_friction_pct_assumption": 1.6,
+            "above_friction_on_observed": 6,
+            "below_or_equal_friction_on_observed": 30,
+            "mean_observed_gross_minus_assumed_friction_pct": -6.78728,
+            "is_executable_okx_return": false
+          }
+        }
+      }
+    }
+  },
+  "radar_forward_j1": {
+    "source_dates": [
+      "2026-10-16",
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19"
+    ],
+    "horizon": "J+1 dated CoinGecko USD observations",
+    "quote": "USD",
+    "notional": null,
+    "days_available": 4,
+    "historical_holdout": false,
+    "needs_prospective_observations": true,
+    "fixed_existing_groups_not_tuned_here": [
+      "momentum_24h_7d",
+      "rebound_24h_only"
+    ],
+    "reference_no_trade_change_pct": 0,
+    "buckets": {
+      "momentum_24h_7d": {
+        "signals_total": 46,
+        "followups_observed": 22,
+        "followups_missing": 24,
+        "distinct_signal_days": 4,
+        "distinct_assets": 39,
+        "mean_observed_gross_change_pct": 3.41115,
+        "median_observed_gross_change_pct": -3.14447,
+        "observed_positive": 9,
+        "observed_non_positive": 13,
+        "status_counts": {
+          "NO_MATCHING_VERIFIED_PRICE": 12,
+          "OBSERVED_DAILY_SNAPSHOT": 22,
+          "AWAITING_FUTURE_DAY": 12
+        },
+        "trading_costs_applied": false,
+        "okx_spot_identity_proven": false
+      },
+      "rebound_24h_only": {
+        "signals_total": 39,
+        "followups_observed": 15,
+        "followups_missing": 24,
+        "distinct_signal_days": 4,
+        "distinct_assets": 37,
+        "mean_observed_gross_change_pct": -1.42211,
+        "median_observed_gross_change_pct": -2.37744,
+        "observed_positive": 6,
+        "observed_non_positive": 9,
+        "status_counts": {
+          "NO_MATCHING_VERIFIED_PRICE": 12,
+          "OBSERVED_DAILY_SNAPSHOT": 15,
+          "AWAITING_FUTURE_DAY": 12
+        },
+        "trading_costs_applied": false,
+        "okx_spot_identity_proven": false
+      }
+    }
+  },
+  "okx_context": {
+    "qualification_at_utc": "2026-10-19T23:59:33Z",
+    "radar_total": 20,
+    "okx_pairs_observed": 4,
+    "okx_native_spot_rules": 4,
+    "okx_public_books": 4,
+    "okx_native_daily_vault_overlap": 0,
+    "okx_hurdle_journal_published": false,
+    "paper_cost_studies": null,
+    "future_bid_followups": null,
+    "quote": "USDT",
+    "contract_identity_proven": false,
+    "no_executable_returns_derived_from_usd": true
+  },
+  "cautions": [
+    "Chronological Top50 split assembled retrospectively; not a truly unseen holdout.",
+    "Gross snapshots in USD minus assumed generic friction are NOT OKX USDT P&L.",
+    "Missing followups remain missing, not losses or wins; survivor bias possible.",
+    "Signals overlap and repeat assets; independent trials do not constitute a capital portfolio.",
+    "No 24h/48h OKX PAPER strategy certified; account fees/contract identity not proven.",
+    "Zero-trade benchmark 0 is nominal, not risk adjusted."
+  ]
+}
