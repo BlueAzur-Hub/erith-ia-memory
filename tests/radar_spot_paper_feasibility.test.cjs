@@ -139,3 +139,31 @@ test("existing Radar shows 24/48h future bid observations without declaring real
  assert.match(text,/USD et USDT ne sont pas assimilés/);
  assert.match(view.okxFollowupSummary(null,qualified,null,null),/en attente/);
 });
+
+test("historical Radar signal audit is separate from OKX USDT profitability",()=>{
+ const view=require("../public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js");
+ const summary=(seen,missing)=>({
+   signals_total:seen+missing,followups_observed:seen,followups_missing:missing,
+   mean_observed_gross_change_pct:1.25});
+ const before=summary(10,3),later={...summary(5,4),
+   cost_sensitivity_descriptive_only:{"0.8":{mean_observed_gross_minus_assumed_friction_pct:-0.2}}};
+ const data={schema:"erith.radar.signal-evidence-audit.v1",
+   kind:"RESEARCH_AUDIT_NOT_STRATEGY_SELECTION",orders_enabled:false,
+   strategy_certified:false,real_orders:0,paper_fills:0,
+   top50_retro_7d:{true_unseen_holdout:false,source_quote:"USD",
+     periods:{selection_descriptive:before,later_descriptive_validation:later}},
+   radar_forward_j1:{quote:"USD",buckets:{
+     momentum_24h_7d:summary(2,8),rebound_24h_only:summary(1,7)}},
+   okx_context:{quote:"USDT",no_executable_returns_derived_from_usd:true}};
+ const result=view.signalEvidenceSummary(data);
+ assert.match(result,/5\/9 prix suivis/);
+ assert.match(result,/moins 0,8 % de coûts supposés/);
+ assert.match(result,/PAS un vrai hors-échantillon ni un rendement OKX/);
+ assert.match(result,/Aucune conversion USD → USDT/);
+ assert.match(result,/Aucune stratégie certifiée/);
+ assert.match(view.signalEvidenceSummary({...data,strategy_certified:true}),/en attente/);
+ assert.match(view.signalEvidenceSummary({...data,okx_context:{quote:"USD"}}),/en attente/);
+ assert.match(view.signalEvidenceSummary({...data,top50_retro_7d:{
+   ...data.top50_retro_7d,periods:{...data.top50_retro_7d.periods,
+     later_descriptive_validation:{...later,followups_missing:0}}}}),/en attente/);
+});
