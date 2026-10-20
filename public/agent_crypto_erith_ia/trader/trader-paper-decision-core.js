@@ -191,7 +191,34 @@ function ticketBlocked(reason,extras={}){
   orders_enabled:false,real_orders:0,trade_endpoint:null,
   executable:false,has_submit_action:false});
 }
-function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now()}={}){
+/* Public local Backend CT/USDC book; independent of the CT/USDT graphic.
+   The dated archive remains the sole source of Spot size/tick rules. */
+function verifiedCtLiveBook(payload,pair,now){
+ if(pair!=="CT-USDC"||payload?.status!=="ok"||
+    payload?.provider!=="okx"||payload?.pair!==pair||
+    payload?.quote!=="USDC"||!Number.isFinite(now))return null;
+ const when=Date.parse(payload.observed_at_utc);
+ if(!Number.isFinite(when)||when>now||now-when>20000)return null;
+ const bids=payload.bids,asks=payload.asks;
+ if(!Array.isArray(bids)||!Array.isArray(asks)||
+    !bids.length||!asks.length)return null;
+ try{
+  for(const [side,descending] of [[bids,true],[asks,false]]){
+   let previous=null;
+   for(const row of side.slice(0,5)){
+    if(!Array.isArray(row)||row.length<2)return null;
+    const price=exact(row[0]),qty=exact(row[1]);
+    if(price<=0n||qty<=0n)return null;
+    if(previous!==null&&(descending?price>previous:price<previous))return null;
+    previous=price;
+   }
+  }
+  if(exact(bids[0][0])>=exact(asks[0][0]))return null;
+  return Object.freeze({source_at_utc:payload.observed_at_utc,
+    market_fill_proven:false,bids,asks});
+ }catch(_){return null;}
+}
+function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(),liveBook=null}={}){
  try{
   if(!Number.isFinite(now))return ticketBlocked("Horloge non vérifiable.");
   const asset=String(selected?.asset||"");
@@ -235,8 +262,10 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
      !["USDC","USDT","EUR"].includes(matches[0].quote)||
      matches[0].pair!==asset+"-"+matches[0].quote)
     return ticketBlocked("Paire absente ou identité du carnet ambiguë.");
-  const m=matches[0],book=m.book5;
-  if(m.status!=="VERIFIED_PUBLIC_BOOK"||!book||
+  const m=matches[0],archivedBook=m.book5;
+  const localBook=verifiedCtLiveBook(liveBook,pair,now);
+  const book=localBook||archivedBook;
+  if(m.status!=="VERIFIED_PUBLIC_BOOK"||!archivedBook||
      book.market_fill_proven!==false||!Array.isArray(book.bids)||
      !Array.isArray(book.asks)||!Array.isArray(book.bids[0])||
      !Array.isArray(book.asks[0]))
@@ -244,7 +273,8 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
   const quote=m.quote,ts=Date.parse(book.source_at_utc),
         observed=Date.parse(last.observed_at_utc);
   if(!Number.isFinite(ts)||!Number.isFinite(observed)||
-     ts>now+30000||Math.abs(ts-observed)>180000||
+     ts>now+30000||
+     (!localBook&&Math.abs(ts-observed)>180000)||
      observed>now+30000)
     return ticketBlocked("Heure du carnet ou observation incohérente.");
   const age=Math.max(0,Math.round((now-ts)/60000));
@@ -290,6 +320,8 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
   return ticketBlocked("PRÉPARATION UNIQUEMENT · validation nécessaire avant tout ordre.",{
    status:"PREPARATION_NON_EXECUTABLE",pair,quote,base:asset,
    source_book_at_utc:book.source_at_utc,book_age_minutes:age,
+   source_book_kind:localBook?"LOCAL_BACKEND_OKX_CT_USDC":"DATED_PUBLIC_HOURLY_ARCHIVE",
+   native_rules_observed_at_utc:last.observed_at_utc,
    study_budget_quote:exactFmt(budget),best_ask_quote:exactFmt(ask),
    best_bid_quote:exactFmt(bid),native_min_quantity:exactFmt(minimum),
    native_lot:exactFmt(lot),native_tick:exactFmt(tick),
@@ -428,5 +460,5 @@ function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
    orders_enabled:false,real_orders:0,can_place_limit_order:false});
  }catch(_){return no("Quantité, prix, frais ou règle Spot non exploitable.");}
 }
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,reviewSpotTicketAccount,previewSpotExit,realOrders:false,network:false,storage:false});
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,verifiedCtLiveBook,reviewSpotTicketAccount,previewSpotExit,realOrders:false,network:false,storage:false});
 });
