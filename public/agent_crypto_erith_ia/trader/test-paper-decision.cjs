@@ -1295,18 +1295,27 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
   setAttribute(k,v){this.attributes[k]=v;}
   replaceChildren(...nodes){this.children=[...nodes];}
   querySelector(sel){
-   const attr=sel.match(/^\\[data-(od-field|od-proof|od-events)="?([^"\\]]+)"?\\]$/);
+   const attr=sel.match(/^\\[data-(od-field|od-proof|od-events)(?:="([^"]+)")?\\]$/);
    const name=sel.startsWith(".")?sel.slice(1):null;
    const scan=n=>{
     if(name&&n.className.split(" ").includes(name))return n;
     if(attr){
      const key=attr[1].replace(/-([a-z])/g,(_,c)=>c.toUpperCase());
-     if(n.dataset[key]===attr[2])return n;
+     if(Object.hasOwn(n.dataset,key)&&(!attr[2]||n.dataset[key]===attr[2]))return n;
     }
     for(const child of n.children){const found=scan(child);if(found)return found;}
     return null;
    };
    return scan(this);
+  }
+  querySelectorAll(sel){
+   const keys=sel.split(",").map(x=>x.match(/^\\[data-([a-z-]+)\\]$/)?.[1])
+      .filter(Boolean).map(x=>x.replace(/-([a-z])/g,(_,c)=>c.toUpperCase()));
+   const result=[];const scan=n=>{
+    if(keys.some(k=>Object.hasOwn(n.dataset,k)))result.push(n);
+    for(const child of n.children)scan(child);
+   };
+   scan(this);return result;
   }
  }
  const sandbox={document:{createElement:tag=>new N(tag)}};
