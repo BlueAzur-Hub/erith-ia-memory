@@ -249,8 +249,10 @@ def save(record, root=OUT):
         require(content.get("schema") == SCHEMA and content.get("date_utc") == hour[:10]
                 and isinstance(content.get("hours"), list), "Existing archive invalid")
         hours = content["hours"]
-        require(all(x.get("hour_utc") != hour for x in hours),
-                "Hour already published: immutable observation, no silent replacement")
+        if any(x.get("hour_utc") == hour for x in hours):
+            return {"archive": str(dated), "hours": len(hours),
+                    "latest": str(root / "latest.json"),
+                    "changed": False, "reason": "ALREADY_PUBLISHED_IMMUTABLE"}
     else:
         hours = []
     require(len(hours) < 24, "Daily hourly archive already full")
@@ -272,7 +274,7 @@ def save(record, root=OUT):
         temp.write_text(json.dumps(data, ensure_ascii=False, indent=2,
                                    allow_nan=False) + "\n", encoding="utf-8")
         os.replace(temp, p)
-    return {"archive": str(dated), "hours": len(hours), "latest": str(root / "latest.json")}
+    return {"archive": str(dated), "hours": len(hours), "latest": str(root / "latest.json"), "changed": True}
 
 
 def main():
