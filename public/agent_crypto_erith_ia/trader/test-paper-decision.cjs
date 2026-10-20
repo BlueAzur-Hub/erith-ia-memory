@@ -178,6 +178,62 @@ test("the diagnostic refreshes on chart proof changes, without a new timer or re
  assert.doesNotMatch(view,/setInterval\s*\(|localStorage|sessionStorage|\/api\/v5\/trade/);
 });
 
+test("CT ticket identity survives new candles, not a new asset or source",()=>{
+ const fs=require("node:fs"),path=require("node:path"),vm=require("node:vm");
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ const begin=view.indexOf("function ticketSourceKey("),end=view.indexOf("function invalidate(",begin);
+ assert.ok(begin>0&&end>begin);
+ const key=vm.runInNewContext(view.slice(begin,end)+"\nticketSourceKey",Object.create(null));
+ const ct={asset:"CT",coinId:"concrete",provider:"okx",instrument:"CT/USDT",
+   currency:"USD",source:"OKX CT/USDT candles · USDT/USD CoinGecko",
+   series:[[1,0.32],[2,0.31]]};
+ assert.equal(key(ct),key({...ct,series:[[2,0.31],[3,0.30]],lastAt:"later"}));
+ assert.equal(key(ct),key({...ct,instrument:"CT-USDT"}));
+ assert.notEqual(key(ct),key({...ct,asset:"BTC"}));
+ assert.notEqual(key(ct),key({...ct,instrument:"CT-USDC"}));
+ assert.notEqual(key(ct),key({...ct,provider:"binance"}));
+ assert.notEqual(key(ct),key({...ct,source:"wrong provider"}));
+ assert.match(view,/nextSourceKey!==ticket\.dataset\.ticketSourceKey/);
+ assert.match(view,/ticketSourceKey\(fresh\)!==sourceKey/);
+ assert.match(view,/ticketSourceKey\(currentSource\)!==sourceKey/);
+ assert.match(view,/Contrôle privé : /);
+ // Run the actual invalidation code, not just a source-text assertion.
+ const guard=view.slice(begin,view.indexOf("/* Order planning",end));
+ let input=ct,seen="",updated=0;
+ const ticket={open:true,dataset:{ticketSourceKey:key(ct)}};
+ const box={open:true,dataset:{lastSelection:"coin|before"}};
+ const ctx={
+  panel:()=>box,document:{getElementById:()=>ticket},
+  selection:()=>({input,historical:input?{
+    qualified:{sourceIdentity:"coin",lastAt:"after"}
+   }:null,historicalReason:"source non disponible"}),
+  ticketStatus:x=>{seen=x},evaluate:()=>{updated++}
+ };
+ const execute=vm.runInNewContext(
+  'let ticketRequest=0,requestId=0,lastStudyKey="existing";'+
+  guard+';({run:invalidate,count:()=>ticketRequest})',ctx);
+ execute.run();
+ assert.equal(seen,""); // a new candle cannot invalidate the ticket
+ assert.equal(execute.count(),0);
+ assert.ok(updated>0); // but historical analysis may update
+ input=null;execute.run();
+ assert.match(seen,/Actif du graphique modifié/);
+ assert.equal(execute.count(),1);
+ input={...ct,asset:"BTC"};ticket.dataset.ticketSourceKey=key(ct);seen="";
+ execute.run();
+ assert.match(seen,/Actif du graphique modifié/);
+ assert.equal(execute.count(),2);
+});
+test("OKX account snapshot remains usable during ordinary panel refresh",()=>{
+ const fs=require("node:fs"),path=require("node:path");
+ const code=fs.readFileSync(path.join(__dirname,"trader-okx-account.js"),"utf8");
+ const fn=code.slice(code.indexOf("async function ticketReadOnly("),code.indexOf("function feeLabel("));
+ assert.doesNotMatch(fn,/panel\(\)\?\.dataset\.state!=="ready"/);
+ assert.match(fn,/await refresh\(\{force:false\}\)/);
+ assert.match(fn,/return summarizeTicketAccount\(ctCycleAccount,fees,instId,Date\.now\(\)\)/);
+ assert.match(fn,/\["locked","error"\]/);
+});
+
 test("a real BTC cache 20min old remains historical-only, not a current Spot quote",()=>{
  const paper=require("./trader-paper-lab-core.js");
  const now=Date.parse("2026-10-20T02:17:00Z");

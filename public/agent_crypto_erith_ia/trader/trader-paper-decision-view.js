@@ -196,17 +196,31 @@ async function evaluate(force=false){
        "l'étude historique ci-dessus reste disponible."});}
  }
 }
+/* A new candle is not a new market: ticket identity excludes lastAt. */
+function ticketSourceKey(input){
+ if(!input)return "";
+ return [String(input.asset||"").toUpperCase(),
+  String(input.coinId||"").toLowerCase(),
+  String(input.provider||"").toLowerCase(),
+  String(input.instrument||"").toUpperCase().replace("/","-"),
+  String(input.currency||"").toUpperCase(),
+  String(input.source||"")].join("|");
+}
 function invalidate(){
  const box=panel();if(!box?.open)return;
- // A graph event is not proof of a changed coin. Compare the real source key
- // before invalidating: this prevents the spurious "Sélection modifiée" state.
  const s=selection();
+ const nextSourceKey=ticketSourceKey(s.input);
+ const ticket=document.getElementById("traderOkxTicket");
+ if(ticket?.open&&ticket.dataset.ticketSourceKey&&
+    nextSourceKey!==ticket.dataset.ticketSourceKey){
+   ticketRequest++;
+   ticket.dataset.ticketSourceKey=nextSourceKey;
+   ticketStatus("Actif du graphique modifié. Refaire le ticket ; aucun ancien prix n'est réutilisé.");
+ }
  const next=s.historical?s.historical.qualified.sourceIdentity+"|"+
    s.historical.qualified.lastAt:
    "unavailable|"+(s.historicalReason||s.reason);
  if(next===box.dataset.lastSelection)return;
- ticketRequest++;
- ticketStatus("Actif du graphique modifié. Refaire le ticket ; aucun ancien prix n'est réutilisé.");
  requestId++;
  lastStudyKey="";
  void evaluate(false);
@@ -228,7 +242,8 @@ async function prepareTicket(){
    ticketStatus("Aucun graphique Solo 24 h identifié. "+(from?.reason||"Aucune source.")+
      "\nAucun ordre ni réservation de fonds.");return;
  }
- const coinKey=String(source.asset||"")+"|"+String(source.coinId||"");
+ const sourceKey=ticketSourceKey(source);
+ box.dataset.ticketSourceKey=sourceKey;
  const quote=box.querySelector("[data-ticket-quote]")?.value;
  const money=String(box.querySelector("[data-ticket-budget]")?.value||"").trim().replace(",",".");
  const desired=String(box.querySelector("[data-ticket-exit]")?.value||"").trim().replace(",",".");
@@ -249,7 +264,7 @@ async function prepareTicket(){
    const archive=await archiveResponse.json();
    const fresh=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
    if(current!==ticketRequest||!box.open||
-      String(fresh?.asset||"")+"|"+String(fresh?.coinId||"")!==coinKey)return;
+      ticketSourceKey(fresh)!==sourceKey)return;
    const answer=core.prepareSpotTicket({selected:source,archive,pair,
      budgetQuote:money,now:Date.now()});
    const lines=[
@@ -283,15 +298,19 @@ async function prepareTicket(){
    ticketStatus(lines.join("\n")+"\nCOMPTE OKX : vérification lecture seule en cours…");
    box.dataset.ticketResult=answer.status;
    // Reuse the only Aether Trust account owner, not a second private fetch.
-   let context=null;
+   let context=null,privateIssue="";
    try{
      const owner=globalThis.AgentCryptoTraderOkxAccount;
-     context=typeof owner?.ticketReadOnly==="function"?
-       await owner.ticketReadOnly(pair):null;
-   }catch(_){context=null;}
+     if(typeof owner?.ticketReadOnly==="function"){
+       context=await owner.ticketReadOnly(pair);
+       privateIssue=String(context?.reason||"").slice(0,180);
+     }else privateIssue="Module de compte OKX non disponible.";
+   }catch(_){
+     privateIssue="Lecture privée OKX interrompue ; vérifier la session Bridge.";
+   }
    const currentSource=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
    if(current!==ticketRequest||!box.open||
-      String(currentSource?.asset||"")+"|"+String(currentSource?.coinId||"")!==coinKey||
+      ticketSourceKey(currentSource)!==sourceKey||
       box.querySelector("[data-ticket-quote]")?.value!==quote||
       String(box.querySelector("[data-ticket-budget]")?.value||"").trim().replace(",",".")!==money||
       String(box.querySelector("[data-ticket-exit]")?.value||"").trim().replace(",",".")!==desired)
@@ -299,6 +318,7 @@ async function prepareTicket(){
    const review=core.reviewSpotTicketAccount(answer,context,Date.now());
    const accountLines=[
      "COMPTE OKX · "+(review.account_at_utc||"lecture non validée"),
+     ...(privateIssue?["Contrôle privé : "+privateIssue]:[]),
      review.available_trading_quote===null?
        "Solde disponible Trading "+quote+" : INCONNU.":
        "Solde disponible Trading "+quote+" : "+review.available_trading_quote+" "+quote+".",
