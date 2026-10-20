@@ -330,6 +330,8 @@ async function prepareTicket(){
        "Frais du compte "+pair+" · maker "+review.fee_maker_pct+
          " % · taker "+review.fee_taker_pct+" %.":
        "Frais de cette paire : non certifiés ; les frais fictifs restent séparés.",
+     ...(!review.fees_verified&&context?.fee_reason?
+       ["Diagnostic frais : "+context.fee_reason]:[]),
      review.funds_cover_public_scenario?
        "Solde Trading suffisant pour le coût FICTIF archivé uniquement.":
        "Solde Trading insuffisant ou non vérifié pour ce scénario.",
