@@ -64,6 +64,17 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 </details>
 <p class="muted">PAPER bloqué tant que l'identité du contrat, la disponibilité de la paire au bon instant, les coûts et la liquidité ne sont pas établis. Aucun ordre ni prix d'exécution n'est reconstruit. <a href="../data/crypto/radar-opportunities/spot-paper-audit.json">Consulter les preuves JSON ↗</a></p>
 </section>
+<section class="panel" aria-labelledby="radar-okx-hourly-title">
+<h2 id="radar-okx-hourly-title">Observation OKX EEE · Carnet et liquidité native</h2>
+<p>Comparaison descriptive des paires Spot réellement observées. Les devises EUR, USDT et USDC restent séparées. Un spread faible, une hausse ancienne ou un carnet volumineux <strong>ne prouvent pas</strong> une opportunité rentable.</p>
+<p class="note" id="radar-okx-hourly-status" role="status" aria-live="polite">Lecture du dernier bilan horaire public archivé…</p>
+<details id="radar-okx-hourly-details">
+<summary>Afficher les spreads et la profondeur des paires OKX</summary>
+<div class="scroll"><table style="min-width:940px"><thead><tr><th>Paire Spot</th><th>Heures</th><th>Milieu du carnet</th><th>Spread</th><th>Valeur bid visible</th><th>Valeur ask visible</th><th>Variation des milieux observés</th></tr></thead>
+<tbody id="radar-okx-hourly-body"><tr><td colspan="7">Collecte en attente…</td></tr></tbody></table></div>
+<p class="muted">Profondeur du premier niveau seulement. Les variations comparent des relevés effectivement publiés, sans interpolation, frais réels ni preuve d'exécution. <a href="../data/crypto/okx-hourly/research-latest.json">Bilan JSON horodaté ↗</a></p>
+</details>
+</section>
 <section class="panel">
 <h2>Marché · Univers par rang de capitalisation</h2>
 <div class="controls" id="tiers" aria-label="Choisir le périmètre Radar">
@@ -102,5 +113,6 @@ button,select,input{font:inherit;color:var(--txt);background:#092b3b;border:1px 
 <footer>Données publiques, ponctuelles et éventuellement différées. Ni conseil d'achat personnalisé, ni exécution, ni contrôle du solde, ni promesse de gains. Aucune donnée privée OKX dans cette page.</footer>
 <script src="../trader/spot-paper-order-engine.js" defer></script>
 <script src="./radar-spot-paper.js" defer></script>
+<script src="./radar-okx-hourly.js" defer></script>
 <script src="./radar.js"></script>
 </main></body></html>
