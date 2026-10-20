@@ -953,3 +953,44 @@ test("feeType stays solely in existing authenticated owner and visible ticket",(
  assert.doesNotMatch(view,/\/okx\/fee-type|\/api\/v5\/account\/config|Authorization:|Bearer /);
  assert.doesNotMatch(account,/\/api\/v5\/trade\/order|set-fee-type/);
 });
+
+
+test("CT R25 Spot gates accept only fresh exact-pair private read-only proof",()=>{
+ const owner=require("./trader-okx-account.js");
+ const fixture={ok:true,read_only:true,orders_enabled:false,real_orders:0,
+  source:"OKX account/public Spot GET proof",
+  instId:"CT-USDC",base:"CT",quote:"USDC",tdMode:"cash",
+  fetched_at:"2026-10-20T03:18:55Z",
+  eligible_for_account:true,eligibility_verified:true,
+  trade_quote_ccy_verified:true,trade_quote_ccy:"USDC",
+  available_verified:true,account_max_verified:true,
+  public_rules_verified:true,price_limits_verified:true,
+  availBuy:"3.2",availSell:"0",maxBuy:"10.15",maxSell:"0",
+  minSz:"10",lotSz:"0.01",tickSz:"0.0001",
+  maxLmtSz:"1000",maxLmtAmt:"10000",buyLmt:"0.40",sellLmt:"0.20",
+  blocked_reasons:[]};
+ const summarize=change=>owner.summarizeSpotOrderGates({...fixture,...change},T);
+ const yes=summarize({});
+ assert.equal(yes.order_gates_verified,true);
+ assert.equal(yes.order_gates.availBuy,"3.2");
+ assert.equal(yes.order_gates.orders_enabled,false);
+ for(const invalid of [
+   {instId:"CT-USDT"},{base:"BTC"},{quote:"USD"},{tdMode:"cross"},
+   {source:"attacker"},{real_orders:1},{orders_enabled:true},
+   {trade_quote_ccy:"USD"},{eligible_for_account:false},
+   {fetched_at:"2026-10-20T03:14:00Z"},{availBuy:"3.2 USDC"},
+   {price_limits_verified:false},{public_rules_verified:false}
+ ])assert.equal(summarize(invalid).order_gates_verified,false);
+});
+test("CT R25 constraints displayed in same PAPER ticket, never an order",()=>{
+ const fs=require("node:fs"),path=require("node:path");
+ const owner=fs.readFileSync(path.join(__dirname,"trader-okx-account.js"),"utf8");
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ assert.match(owner,/await bridge\("\/okx\/order-gates\?instId=CT-USDC"\)/);
+ assert.match(owner,/summarizeSpotOrderGates/);
+ assert.match(view,/CONTROLES SPOT COMPTE/);
+ assert.match(view,/maxLmtAmt/);
+ assert.match(view,/aucune autorisation Trade/);
+ assert.doesNotMatch(view,/\/okx\/order-gates|Bearer|\/api\/v5\/trade\/order/);
+ assert.doesNotMatch(owner,/\/api\/v5\/trade\/order|\/auth\/register/);
+});
