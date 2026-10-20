@@ -20,7 +20,7 @@ function signal(){
    no_executable_returns_derived_from_usd:true}};
 }
 function candidate(){
- return {id:"test-market",symbol:"TOK",
+ return {id:"test-market",symbol:"TOK",identity_status:"SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
   okx_spot:{venue:"OKX",pair:"TOK-USDT",quote:"USDT",
    pair_observed:true,native_rules_verified:true,
    contract_identity_proven:false,account_access_proven:false,
