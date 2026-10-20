@@ -769,3 +769,48 @@ test("CT ticket shows remaining blockers after verified OKX snapshot",()=>{
  assert.doesNotMatch(source,/Aucun bouton d'achat et aucun appel privé/);
  assert.match(source,/STATUT : AUCUN ORDRE POSSIBLE DEPUIS CE TICKET/);
 });
+
+test("CT public Backend book changes PAPER levels only if exact, ordered and fresh",()=>{
+ const at=Date.parse("2026-10-20T03:18:55Z");
+ const sample={status:"ok",provider:"okx",pair:"CT-USDC",quote:"USDC",
+  observed_at_utc:"2026-10-20T03:18:50Z",
+  bids:[["0.30773","100"],["0.30772","200"]],
+  asks:[["0.30785","100"],["0.30786","200"]]};
+ const args={selected:ctSource(),archive:ctArchive(),pair:"CT-USDC",
+  budgetQuote:"3.2",now:at};
+ const valid=core.prepareSpotTicket({...args,liveBook:sample});
+ assert.equal(valid.status,"PREPARATION_NON_EXECUTABLE");
+ assert.equal(valid.source_book_kind,"LOCAL_BACKEND_OKX_CT_USDC");
+ assert.equal(valid.best_ask_quote,"0.30785");
+ assert.equal(valid.best_bid_quote,"0.30773");
+ assert.equal(valid.source_book_at_utc,sample.observed_at_utc);
+ assert.equal(valid.native_min_quantity,"10.0");
+ assert.equal(valid.orders_enabled,false);
+ for(const input of [
+   {...sample,pair:"CT-USDT"},
+   {...sample,quote:"USDT"},
+   {...sample,provider:"bitget"},
+   {...sample,status:"error"},
+   {...sample,observed_at_utc:"2026-10-20T03:18:25Z"},
+   {...sample,observed_at_utc:"2026-10-20T03:19:10Z"},
+   {...sample,bids:[["0.308","100"]]},
+   {...sample,asks:[]},
+   {...sample,asks:[["0.30785","0"]]},
+   {...sample,bids:[["0.30773","100"],["0.308","100"]]}
+ ]){
+  const fallback=core.prepareSpotTicket({...args,liveBook:input});
+  assert.equal(fallback.source_book_kind,"DATED_PUBLIC_HOURLY_ARCHIVE");
+  assert.equal(fallback.best_ask_quote,"0.31093");
+  assert.equal(fallback.orders_enabled,false);
+ }
+ const original=core.prepareSpotTicket(args);
+ assert.equal(original.best_ask_quote,"0.31093");
+ assert.equal(original.source_book_kind,"DATED_PUBLIC_HOURLY_ARCHIVE");
+ assert.equal(core.network,false);
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ assert.match(view,/market-book\?provider=okx&instrument=CT-USDC&limit=100/);
+ assert.match(view,/credentials:"omit"/);
+ assert.match(view,/readCtSpotPublicBook\(\)/);
+ assert.match(view,/Règles Spot issues du relevé daté/);
+ assert.doesNotMatch(view,/Authorization:|Bearer|\/trade\/order/);
+});
