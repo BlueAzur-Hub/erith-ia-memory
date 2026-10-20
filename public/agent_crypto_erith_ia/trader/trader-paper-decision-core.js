@@ -41,6 +41,15 @@ function cohortContext(doc){
 }
 function assess({selected,qualification,signal,engine,now=Date.now()}={}){
  if(!Number.isFinite(now))return insufficient("Horloge non vérifiable.");
+ if(selected?.ok&&selected.asset==="BTC"&&selected.provider==="coingecko"&&
+    selected.instrument==="BTC-USD")
+   return insufficient("BTC : l'étude historique du graphique est disponible ci-dessus. "+
+     "La qualification Radar Spot des 20 candidats ne certifie pas ici de carnet BTC OKX "+
+     "récent ni de revente pour ce compte ; ne pas confondre USD et USDT.");
+ if(selected?.ok&&selected.asset==="CT"&&selected.provider==="okx")
+   return insufficient("CT : étude historique possible si la source externe est qualifiée ; "+
+     "le diagnostic des candidats Radar ne fournit pas de preuve de lot et carnet CT/USDC "+
+     "pour un ordre. Aucun ordre OKX n'est déclenché.");
  if(!selected?.ok||selected.currency!=="USD"||
     typeof selected.asset!=="string"||!/^[A-Z0-9]{1,20}$/.test(selected.asset)||
     !/^[a-z0-9][a-z0-9-]{1,99}$/.test(String(selected.coinId||""))||
