@@ -440,3 +440,98 @@ test("Ticket requests no private endpoint: only the existing account owner talks
  assert.match(accountModule,/TICKET_PAIR=/);
  assert.doesNotMatch(accountModule,/\/api\/v5\/trade\/order/);
 });
+
+
+/* CT market belongs to an OKX native USDC pair. The separate chart may
+   display CT-USDT converted to USD, but that price must NEVER price a USDC
+   order. All market details below are deliberately offline test fixtures. */
+function ctSource(){return{asset:"CT",instrument:"CT-USDT",provider:"okx",
+ currency:"USD",source:"OKX CT/USDT candles · USDT/USD CoinGecko"};}
+function ctArchive(){
+ const a=JSON.parse(JSON.stringify(ticketArchive()));
+ const m=a.hours[0].markets[0];m.pair="CT-USDC";m.base="CT";
+ m.rules={minSz:"10",lotSz:"0.01",tickSz:"0.00001"};
+ m.book5={source_at_utc:"2026-10-20T03:18:44Z",market_fill_proven:false,
+  bids:[["0.31074","500"]],asks:[["0.31093","500"]]};
+ return a;
+}
+function ctTicket(budget="3.2"){
+ return core.prepareSpotTicket({selected:ctSource(),archive:ctArchive(),
+  pair:"CT-USDC",budgetQuote:budget,now:T});
+}
+test("CT native USDC preflight identifies 10 CT minimum and buy fee trap",()=>{
+ const normal=ctTicket();
+ assert.equal(normal.pair,"CT-USDC");
+ assert.equal(normal.native_min_quantity,"10.0");
+ assert.equal(normal.native_lot,"0.01");
+ assert.equal(normal.net_exit_quantity_minimum_met,true);
+ const minimumOnly=ctTicket("3.1093");
+ assert.equal(minimumOnly.gross_buy_quantity,"10.0");
+ assert.equal(minimumOnly.net_exit_quantity_minimum_met,false,
+   "buying exactly 10 CT fails the 10 CT exit minimum after BASE fee");
+ assert.equal(minimumOnly.can_place_limit_order,false);
+ assert.equal(normal.orders_enabled,false);
+});
+test("CT 100% preview tells full sellable amount and remaining unsellable dust",()=>{
+ const ctx=null; // no Bridge: never guess a real account's exact fees
+ const p=core.previewSpotExit({ticket:ctTicket(),context:ctx,
+  targetPriceQuote:"0.39",now:T});
+ assert.equal(p.status,"ETUDE_SORTIE");
+ assert.equal(p.meets_native_exit_minimum,true);
+ assert.ok(Number(p.maximum_sellable_base)>=10);
+ assert.ok(Number(p.estimated_net_base)>Number(p.maximum_sellable_base));
+ assert.ok(Number(p.residual_dust_base)>0);
+ assert.equal(p.full_exit_without_dust,false);
+ assert.equal(p.fees_verified,false);
+ assert.equal(p.fee_status,"HYPOTHESE_0_10_PCT");
+ assert.ok(Number(p.hypothetical_sale_net_quote)>Number(p.hypothetical_sale_fee_quote));
+ assert.equal(p.orders_enabled,false);
+ assert.equal(p.can_place_limit_order,false);
+ assert.equal(p.real_orders,0);
+});
+test("CT private maker/taker belong to CT-USDC, never BTC or USDT",()=>{
+ const owner=require("./trader-okx-account.js");
+ const account={ok:true,read_only:true,fetched_at:"2026-10-20T03:18:50Z",
+  trading:[{details:[{ccy:"USDC",availBal:"3.20"}]}],funding:[]};
+ const right=owner.summarizeTicketAccount(account,{
+  fees:[{instId:"CT-USDC",maker:"-0.0008",taker:"-0.001"}]},"CT-USDC",T);
+ assert.equal(right.fee_pair_verified,true);
+ assert.equal(right.trading_available_quote,"3.20");
+ const p=core.previewSpotExit({ticket:ctTicket(),context:right,
+  targetPriceQuote:"0.39",now:T});
+ assert.equal(p.fees_verified,true);
+ assert.equal(p.funds_cover_public_scenario,true);
+ assert.equal(p.assumed_fee_pct,"0.1");
+ assert.equal(p.orders_enabled,false);
+ const wrong=owner.summarizeTicketAccount(account,{
+  fees:[{instId:"BTC-USDC",maker:"-0.0008",taker:"-0.001"}]},"CT-USDC",T);
+ assert.equal(wrong.fee_pair_verified,false);
+ assert.equal(core.previewSpotExit({ticket:ctTicket(),context:wrong,
+  targetPriceQuote:"0.39",now:T}).fees_verified,false);
+});
+test("CT native exit preview rejects invalid tick and wrong token identity",()=>{
+ const tk=ctTicket("3.1093");
+ const p=core.previewSpotExit({ticket:tk,targetPriceQuote:"0.39",now:T});
+ assert.equal(p.status,"REVENTE_MINIMUM_IMPOSSIBLE");
+ assert.equal(p.meets_native_exit_minimum,false);
+ assert.equal(core.previewSpotExit({ticket:ctTicket(),targetPriceQuote:"0.390001",now:T}).status,
+  "SORTIE_NON_EVALUABLE");
+ const wrong=core.prepareSpotTicket({selected:{...ctSource(),
+  instrument:"CT-USDC"},archive:ctArchive(),pair:"CT-USDC",
+  budgetQuote:"3.2",now:T});
+ assert.equal(wrong.status,"BLOQUE");
+ const mismatch=core.prepareSpotTicket({selected:ctSource(),
+  archive:ctArchive(),pair:"BTC-USDC",budgetQuote:"3.2",now:T});
+ assert.equal(mismatch.status,"BLOQUE");
+});
+test("CT exit stays in existing Trader panel and remains read only",()=>{
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ const source=fs.readFileSync(path.join(__dirname,"trader-paper-decision-core.js"),"utf8");
+ assert.match(view,/data-ticket-exit/);
+ assert.match(view,/previewSpotExit/);
+ assert.match(view,/poussière restante/);
+ assert.match(view,/quoteSelect.value="USDC"/);
+ assert.match(view,/budget.value="3,20"/);
+ assert.doesNotMatch(view,/\/api\/v5\/trade\/order|Authorization:|Bearer /);
+ assert.doesNotMatch(source,/fetch\(|\/api\/v5\/trade\/order/);
+});

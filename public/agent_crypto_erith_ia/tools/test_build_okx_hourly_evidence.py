@@ -102,5 +102,19 @@ class ResearchEvidenceTests(unittest.TestCase):
         self.assertEqual(report["pairs_with_public_books"],2)
         self.assertFalse(any(p["pair"]=="BTC-USDC" for p in report["pairs"]))
 
+    def test_ct_is_native_usdc_book_not_a_usdt_or_usd_conversion(self):
+        source = copy.deepcopy(FIRST)
+        ct = copy.deepcopy(source["markets"][0])
+        ct["pair"] = "CT-USDC"
+        ct["base"] = "CT"
+        ct["quote"] = "USDC"
+        source["markets"] = [ct]
+        report = evidence.build([source], NOW)
+        self.assertEqual(report["pairs_with_public_books"], 1)
+        self.assertEqual(report["pairs"][0]["pair"], "CT-USDC")
+        self.assertEqual(report["pairs"][0]["quote"], "USDC")
+        self.assertFalse(report["strategy_certified"])
+        self.assertEqual(report["real_orders"], 0)
+
 if __name__=="__main__":
     unittest.main()

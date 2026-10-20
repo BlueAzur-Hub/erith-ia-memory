@@ -80,7 +80,7 @@ function asset(account,ccy){
 }
 /* Narrow, non-persisted read-only context for the existing Trader ticket.
    Never return the Bridge token or the complete private account payload. */
-const TICKET_PAIR=/^(BTC|ETH|SOL|XRP|OKB)-(USDC|USDT|EUR)$/;
+const TICKET_PAIR=/^(BTC|ETH|SOL|XRP|OKB|CT)-(USDC|USDT|EUR)$/;
 function ticketDecimal(value){
  if(typeof value!=="string"||!/^\d{1,14}(?:\.\d{1,18})?$/.test(value))return null;
  return value;

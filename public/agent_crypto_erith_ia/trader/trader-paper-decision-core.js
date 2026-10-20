@@ -195,12 +195,20 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
  try{
   if(!Number.isFinite(now))return ticketBlocked("Horloge non vérifiable.");
   const asset=String(selected?.asset||"");
-  if(!CANONICAL_COINS[asset]||
-     selected?.coinId!==CANONICAL_COINS[asset]||
-     selected?.currency!=="USD"||selected?.provider!=="coingecko"||
-     selected?.instrument!==asset+"-USD")
-    return ticketBlocked("Le graphique n'établit pas l'identité canonique de cet actif. "+
-     "Aucun mélange de cryptomonnaies ou de listings externes.");
+  // CT is an OKX external chart (CT-USDT), not a CoinGecko CT-USD
+  // instrument. Never use its converted chart price for a native USDC ticket.
+  const canonical=CANONICAL_COINS[asset]&&
+    selected?.coinId===CANONICAL_COINS[asset]&&
+    selected?.currency==="USD"&&selected?.provider==="coingecko"&&
+    selected?.instrument===asset+"-USD";
+  const verifiedCt=asset==="CT"&&selected?.provider==="okx"&&
+    selected?.instrument==="CT-USDT"&&selected?.currency==="USD"&&
+    /OKX.*CT[/-]USDT/i.test(String(selected?.source||""))&&
+    /USDT[/-]USD.*CoinGecko/i.test(String(selected?.source||""));
+  if(!canonical&&!verifiedCt)
+    return ticketBlocked("Le graphique n'établit pas l'identité de cet actif. "+
+     "CT exige un graphique OKX CT-USDT explicite et son propre carnet CT-USDC. "+
+     "Aucun cours converti n'est utilisé pour un ordre.");
   if(typeof pair!=="string"||!["USDC","USDT","EUR"].some(q=>pair===asset+"-"+q))
     return ticketBlocked("Paire Spot incohérente avec l'actif sélectionné.");
   if(archive?.schema!=="erith.radar.okx-hourly-spot.v1"||
@@ -361,5 +369,58 @@ function reviewSpotTicketAccount(ticket,context,now=Date.now()){
    has_submit_action:false});
 }
 
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,reviewSpotTicketAccount,realOrders:false,network:false,storage:false});
+
+/* Pure, non-executable whole-position exit PREVIEW. The largest sellable
+   quantity is determined by native lot AFTER a BASE-side buy fee.
+   The residue is reported openly: a 100% slider is NOT zero dust.
+   maker or taker is not guaranteed by a LIMIT order, so use the higher
+   of both verified rates for a conservative preview only. */
+function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
+ const no=reason=>Object.freeze({status:"SORTIE_NON_EVALUABLE",reason,
+   orders_enabled:false,real_orders:0,can_place_limit_order:false});
+ if(ticket?.schema!==TICKET||ticket.status!=="PREPARATION_NON_EXECUTABLE"||
+    ticket.orders_enabled!==false||ticket.real_orders!==0||ticket.executable!==false)
+   return no("Carnet et règles exacts de la paire non vérifiés.");
+ try{
+  const target=exact(targetPriceQuote),tick=exact(ticket.native_tick),
+        lot=exact(ticket.native_lot),minimum=exact(ticket.native_min_quantity),
+        gross=exact(ticket.gross_buy_quantity),
+        cost=exact(ticket.hypothetical_buy_cost_quote);
+  if(!target||!tick||target%tick||!lot||!minimum||!gross||!cost)
+    return no("Prix de revente incompatible avec le pas autorisé par OKX.");
+  const account=reviewSpotTicketAccount(ticket,context,now);
+  const feesVerified=account.fees_verified===true&&account.account_verified===true;
+  const maker=feesVerified?exact(context.fee_maker_rate):exact("0.001");
+  const taker=feesVerified?exact(context.fee_taker_rate):exact("0.001");
+  const feeRate=maker>taker?maker:taker; // worst of the two, maker is not certain
+  const feeBase=(gross*feeRate+UNIT-1n)/UNIT;
+  if(feeBase>=gross)return no("Frais supérieurs à la quantité achetée.");
+  const net=gross-feeBase,sellable=net/lot*lot,dust=net-sellable;
+  const saleGross=sellable*target/UNIT;
+  const saleFee=(saleGross*feeRate+UNIT-1n)/UNIT;
+  const proceeds=saleGross>saleFee?saleGross-saleFee:0n;
+  const profit=proceeds-cost;
+  return Object.freeze({status:sellable>=minimum?"ETUDE_SORTIE":"REVENTE_MINIMUM_IMPOSSIBLE",
+   pair:ticket.pair,quote:ticket.quote,base:ticket.base,
+   target_sell_price_quote:exactFmt(target),
+   buy_quantity:exactFmt(gross),estimated_buy_fee_base:exactFmt(feeBase),
+   estimated_net_base:exactFmt(net),
+   maximum_sellable_base:exactFmt(sellable),residual_dust_base:exactFmt(dust),
+   full_exit_without_dust:dust===0n,
+   meets_native_exit_minimum:sellable>=minimum,
+   hypothetical_sale_gross_quote:exactFmt(saleGross),
+   hypothetical_sale_fee_quote:exactFmt(saleFee),
+   hypothetical_sale_net_quote:exactFmt(proceeds),
+   hypothetical_profit_quote:profit<0n?"-"+exactFmt(-profit):exactFmt(profit),
+   assumed_fee_pct:exactFmt(feeRate*100n),fees_verified:feesVerified,
+   fee_status:feesVerified?"MAKER_TAKER_EXACT_PAIR_READ_ONLY":"HYPOTHESE_0_10_PCT",
+   trading_balance_verified:account.account_verified,
+   funds_cover_public_scenario:account.funds_cover_public_scenario,
+   book_age_minutes:ticket.book_age_minutes,
+   no_guaranteed_fill:true,lot_rounding_may_differ:true,
+   other_order_filters_unverified:true,
+   orders_enabled:false,real_orders:0,can_place_limit_order:false});
+ }catch(_){return no("Quantité, prix, frais ou règle Spot non exploitable.");}
+}
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,reviewSpotTicketAccount,previewSpotExit,realOrders:false,network:false,storage:false});
 });

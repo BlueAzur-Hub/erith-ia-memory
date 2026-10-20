@@ -19,7 +19,7 @@ from decimal import Decimal, InvalidOperation
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / "data/crypto/okx-hourly"
 HOST = "https://eea.okx.com"
-ASSETS = ("BTC", "ETH", "SOL", "XRP", "OKB")
+ASSETS = ("BTC", "ETH", "SOL", "XRP", "OKB", "CT")
 QUOTES = ("USDC", "USDT", "EUR")
 MAX_PAIRS = len(ASSETS) * len(QUOTES)
 ROUTES = {

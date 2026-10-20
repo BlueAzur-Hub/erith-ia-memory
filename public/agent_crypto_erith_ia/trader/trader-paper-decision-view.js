@@ -231,6 +231,7 @@ async function prepareTicket(){
  const coinKey=String(source.asset||"")+"|"+String(source.coinId||"");
  const quote=box.querySelector("[data-ticket-quote]")?.value;
  const money=String(box.querySelector("[data-ticket-budget]")?.value||"").trim().replace(",",".");
+ const desired=String(box.querySelector("[data-ticket-exit]")?.value||"").trim().replace(",",".");
  const pair=String(source.asset||"")+"-"+quote;
  ticketStatus("Vérification du carnet archivé et du compte OKX existant, en lecture seule…");
  try{
@@ -292,7 +293,8 @@ async function prepareTicket(){
    if(current!==ticketRequest||!box.open||
       String(currentSource?.asset||"")+"|"+String(currentSource?.coinId||"")!==coinKey||
       box.querySelector("[data-ticket-quote]")?.value!==quote||
-      String(box.querySelector("[data-ticket-budget]")?.value||"").trim().replace(",",".")!==money)
+      String(box.querySelector("[data-ticket-budget]")?.value||"").trim().replace(",",".")!==money||
+      String(box.querySelector("[data-ticket-exit]")?.value||"").trim().replace(",",".")!==desired)
      return;
    const review=core.reviewSpotTicketAccount(answer,context,Date.now());
    const accountLines=[
@@ -314,7 +316,42 @@ async function prepareTicket(){
      review.reason,
      "AUCUN achat, vente, transfert ni réservation de fonds."
    ];
-   ticketStatus(lines.join("\n")+"\n\n"+accountLines.join("\n"));
+   if(desired){
+    const exit=core.previewSpotExit({ticket:answer,context,
+      targetPriceQuote:desired,now:Date.now()});
+    const exitLines=[
+      "REVENTE À TON PRIX · "+desired+" "+quote+" · SIMULATION, AUCUN ORDRE",
+      exit.status==="SORTIE_NON_EVALUABLE"?
+        "Calcul indisponible : "+exit.reason:
+        "Achat étudié : "+exit.buy_quantity+" "+exit.base+
+          " (prix du carnet archivé, pas un achat actuel)."
+    ];
+    if(exit.maximum_sellable_base!==undefined){
+      exitLines.push("Après frais d'achat estimés : "+exit.estimated_net_base+" "+exit.base+".");
+      exitLines.push("À revendre au maximum : "+exit.maximum_sellable_base+" "+exit.base+
+        " · poussière restante : "+exit.residual_dust_base+" "+exit.base+".");
+      exitLines.push(exit.meets_native_exit_minimum?
+        "Minimum de vente respecté dans la simulation.":
+        "ATTENTION : pas assez de CT après frais pour respecter le minimum de vente !");
+      exitLines.push("Si la vente se réalise entièrement à "+desired+" : "+
+        exit.hypothetical_sale_net_quote+" "+quote+" récupérés après frais estimés.");
+      exitLines.push("Gain/perte théorique sur cet achat : "+
+        exit.hypothetical_profit_quote+" "+quote+" (poussière non valorisée).");
+      exitLines.push(exit.fees_verified?
+        "Frais de la paire exacte lus via le compte OKX, taux le plus défavorable retenu.":
+        "Frais CT/USDC NON certifiés : hypothèse de 0,10 % de chaque côté.");
+      exitLines.push(exit.funds_cover_public_scenario?
+        "Solde Trading suffisant pour cette étude (pas une autorisation d'achat).":
+        "Solde Trading indisponible, inconnu ou insuffisant pour ce scénario.");
+      if(!exit.full_exit_without_dust)
+        exitLines.push("100 % peut laisser cette poussière : sortie exactement à zéro "+
+          exit.base+" non garantie.");
+    }
+    exitLines.push("Aucun ordre. Le prix futur, l'exécution et les arrondis exacts "+
+      "de l'échange ne sont pas garantis.");
+    accountLines.push("\n"+exitLines.join("\n"));
+  }
+  ticketStatus(lines.join("\n")+"\n\n"+accountLines.join("\n"));
  }catch(error){
    if(current===ticketRequest)ticketStatus("Ticket indisponible : "+
      String(error?.message||error)+
@@ -374,21 +411,36 @@ function mount(){
  budget.setAttribute("data-ticket-budget","");
  budget.setAttribute("inputmode","decimal");budget.value="5";
  budgetLabel.appendChild(budget);
+ const exitLabel=document.createElement("label");
+ exitLabel.textContent="Prix de vente souhaité (pour CT, ex. 0,39 USDC) ";
+ const exitInput=document.createElement("input");
+ exitInput.setAttribute("data-ticket-exit","");
+ exitInput.setAttribute("inputmode","decimal");
+ exitInput.placeholder="0,39";
+ exitLabel.appendChild(exitInput);
  const compute=document.createElement("button");
  compute.type="button";compute.textContent="Vérifier ce scénario (aucun ordre)";
  const output=document.createElement("pre");
  output.setAttribute("data-ticket-report","");
  output.setAttribute("role","status");output.setAttribute("aria-live","polite");
  output.textContent="Ouvre ce panneau et lance la vérification des contraintes OKX. Aucun ordre.";
- ticketBox.append(warning,quoteLabel,budgetLabel,compute,output);
+ ticketBox.append(warning,quoteLabel,budgetLabel,exitLabel,compute,output);
  ticket.append(ticketHeading,ticketBox);
  content.append(explanation,history,label,button,collector,evidence,ticket);
  compute.addEventListener("click",()=>void prepareTicket());
  ticket.addEventListener("toggle",()=>{
    ticketRequest++;
-   if(ticket.open)void prepareTicket();
+   if(ticket.open){
+    const input=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
+    if(input?.asset==="CT"&&input?.provider==="okx"){
+      quoteSelect.value="USDC";
+      if(!exitInput.value)exitInput.value="0,39";
+      if(budget.value==="5")budget.value="3,20";
+    }
+    void prepareTicket();
+  }
  });
- for(const input of [quoteSelect,budget])input.addEventListener("change",()=>{
+ for(const input of [quoteSelect,budget,exitInput])input.addEventListener("change",()=>{
    ticketRequest++;ticketStatus("Paramètres modifiés : relancer l'étude. Aucun ordre.");
  });
  section.append(summary,content);
