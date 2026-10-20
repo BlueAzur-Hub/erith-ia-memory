@@ -563,3 +563,62 @@ test("CT/USDT chart must not substitute a CT/USDC book or USDC balance",()=>{
  assert.equal(core.prepareSpotTicket({selected:{...ctSource(),instrument:"CT/USDT"},
   archive:ct,pair:"CT-USDC",budgetQuote:"3.20",now:T}).status,"BLOQUE");
 });
+
+
+test("CT Hybrid variation summary accepts restored V7 line only when its canonical prices match",()=>{
+ const vm=require("node:vm");
+ const source=fs.readFileSync(path.join(__dirname,"../administrator/js/graph-line-candle-overlay.js"),"utf8");
+ const start=Date.parse("2026-10-19T06:00:00Z"),points=300;
+ const series=Array.from({length:points},(_,i)=>[start+i*300000,0.30+i*0.000001]);
+ const n={selectedId:"concrete",selectedSymbol:"CT",
+  selectedProvider:"okx",selectedPair:"CT/USDT"};
+ const h={instrument:"CT/USDT",provider:"okx",currency:"USD",periodDays:1,
+  source:"OKX CT/USDT candles · USDT/USD CoinGecko",series};
+ let ownerActive=false,ownerCoin="concrete";
+ const sandbox={};
+ sandbox.globalThis=sandbox;
+ sandbox.document={
+  getElementById:id=>id==="atlasChartInsightOverlayTitle"?
+    {textContent:"CT · Concrete · 24h · PRIX USD"}:null,
+  querySelector:()=>null
+ };
+ sandbox.AgentCryptoNewListingLiveAsset={snapshot:()=>({
+  active:true,id:"concrete",base:"CT",instrument:"CT-USDT",provider:"okx"
+ })};
+ sandbox.AgentCryptoNewListingsNativeCategory={
+  snapshot:()=>n,mathSeriesSnapshot:()=>h
+ };
+ sandbox.AtlasExternalChart={state:()=>({active:ownerActive,coin_id:ownerCoin})};
+ sandbox.Chart={register:()=>{}};
+ vm.runInNewContext(source,sandbox,{timeout:2500});
+ const graph=sandbox.AgentCryptoLineCandleOverlay;
+ const draw=series.map(([x,y])=>({x,y}));
+ const dataset={atlasCoin:{id:"concrete",symbol:"CT"},data:draw};
+ const meta={type:"line",hidden:false,data:draw.map(()=>({x:1,y:1})),
+  yScale:{getPixelForValue:()=>0}};
+ const chart={data:{datasets:[dataset]},getDatasetMeta:()=>meta};
+ assert.equal(graph.summaryOwnership({ds:dataset,meta}),true);
+ assert.equal(graph.variationSummary(chart).bars.length,24);
+ assert.equal(graph.variationSummary(chart).symbol,"CT");
+ // A stale BTC line must never gain CT labels from the UI selection.
+ const bad={...dataset,atlasCoin:{id:"bitcoin",symbol:"BTC"}};
+ assert.equal(graph.summaryOwnership({ds:bad,meta}),false);
+ // A different active chart owner is authoritative.
+ ownerActive=true;ownerCoin="bitcoin";
+ assert.equal(graph.summaryOwnership({ds:dataset,meta}),false);
+ ownerActive=false;
+ // Identical symbols are not sufficient. Source pair, source provider,
+ // exact selected asset and prices must all agree.
+ assert.equal(graph.summaryOwnership({ds:dataset,meta}),true);
+ const wrongPrice={...dataset,data:draw.map((v,i)=>
+  i===Math.floor(points/2)?{...v,y:v.y*1.15}:v)};
+ assert.equal(graph.summaryOwnership({ds:wrongPrice,meta}),false);
+ const saved=n.selectedPair;n.selectedPair="BTC/USDT";
+ assert.equal(graph.summaryOwnership({ds:dataset,meta}),false);
+ n.selectedPair=saved;
+ const oldProvider=h.provider;h.provider="bitget";
+ assert.equal(graph.summaryOwnership({ds:dataset,meta}),false);
+ h.provider=oldProvider;
+ assert.equal(graph.summaryOwnership({ds:dataset,meta}),true);
+ assert.equal(graph.read_only,true);
+});
