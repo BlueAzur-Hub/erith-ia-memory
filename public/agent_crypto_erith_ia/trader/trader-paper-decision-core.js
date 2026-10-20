@@ -656,5 +656,110 @@ function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
    orders_enabled:false,real_orders:0,can_place_limit_order:false});
  }catch(_){return no("Quantité, prix, frais ou règle Spot non exploitable.");}
 }
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,verifiedCtLiveBook,diagnoseCtLiveBook,verifiedCtSpotRules,checkSpotOrderGates,reviewSpotTicketAccount,previewSpotExit,realOrders:false,network:false,storage:false});
+/* In-memory Spot LIMIT simulation. It consumes only the already checked
+   PAPER snapshot, never an exchange order id or an OKX private credential.
+   Its states resemble an order's life, but every transition is invented by a
+   deliberate user click. There is no network, retry, queue, or persistence. */
+const PAPER_CYCLE="erith.trader.paper-limit-cycle.v1";
+const PAPER_TERMINAL=new Set(["PAPER_FILLED","PAPER_REJECTED","PAPER_CANCELLED"]);
+function startPaperLimitCycle({ticket,context,preview,now=Date.now(),nonce}={}){
+ const fail=reason=>Object.freeze({ok:false,reason,orders_enabled:false});
+ if(ticket?.schema!==TICKET||ticket?.pair!=="CT-USDC"||
+    ticket?.status!=="PREPARATION_NON_EXECUTABLE"||
+    ticket?.source_book_kind!=="LOCAL_BACKEND_OKX_CT_USDC"||
+    ticket?.orders_enabled!==false||ticket?.real_orders!==0||
+    context?.read_only!==true||context?.orders_enabled!==false||
+    context?.real_orders!==0||context?.instId!=="CT-USDC"||
+    context?.fee_type_verified!==true||!["0","1"].includes(context.fee_type)||
+    context?.order_gates_verified!==true||
+    preview?.status!=="ETUDE_SORTIE"||preview?.orders_enabled!==false||
+    preview?.real_orders!==0||preview?.limit_proof_verified!==true||
+    preview?.book_fresh_for_execution!==true||
+    preview?.meets_native_exit_minimum!==true||
+    preview?.paper_budget_covers_total_cost!==true||
+    !Number.isSafeInteger(nonce)||nonce<1||!Number.isFinite(now))
+   return fail("Une étude CT/USDC récente et complète est nécessaire ; aucun ordre.");
+ try{
+  const at=Date.parse(ticket.source_book_at_utc),proof=Date.parse(context.order_gates_at_utc);
+  const price=exact(ticket.best_ask_quote),qty=exact(preview.buy_quantity),
+    lot=exact(ticket.native_lot),min=exact(ticket.native_min_quantity),
+    tick=exact(ticket.native_tick),cap=exact(context.order_gates.maxBuy);
+  const fee=exact(context.fee_taker_rate);
+  if(!Number.isFinite(at)||at>now+CT_BOOK_CLOCK_LEEWAY_MS||now-at>20000||
+     !Number.isFinite(proof)||proof>now+30000||now-proof>120000||
+     !price||!qty||!min||!lot||!tick||!cap||
+     qty<min||qty>cap||qty%lot!==0n||price%tick!==0n||
+     fee<0n||fee>=UNIT)
+    return fail("Prix, quantité, frais ou preuves datées incompatibles.");
+  const snapshot=Object.freeze({
+   schema:PAPER_CYCLE,ok:true,paper:true,
+   phase:"PAPER_DRAFT",id:"PAPER-CT-"+now+"-"+nonce,
+   pair:"CT-USDC",side:"buy",type:"limit",
+   price:exactFmt(price),quantity:exactFmt(qty),
+   min_size:exactFmt(min),lot_size:exactFmt(lot),
+   fee_rate:exactFmt(fee),fee_type:context.fee_type,
+   filled:"0.0",remaining:exactFmt(qty),
+   net_received:"0.0",sellable:"0.0",dust:"0.0",
+   below_min_sell:true,unknown:false,send_attempts:0,
+   created_at:new Date(now).toISOString(),updated_at:new Date(now).toISOString(),
+   events:Object.freeze([{type:"PAPER_PREPARE",at:new Date(now).toISOString()}]),
+   real_orders:0,orders_enabled:false,trade_endpoint:null,
+   network:false,storage:false});
+  return snapshot;
+ }catch(_){return fail("La simulation n'accepte pas ces décimales ou filtres.");}
+}
+function advancePaperLimitCycle(state,action,now=Date.now()){
+ if(state?.schema!==PAPER_CYCLE||state?.paper!==true||
+    state?.orders_enabled!==false||state?.real_orders!==0||
+    state?.network!==false||state?.send_attempts!==0||
+    !Number.isFinite(now)||!action||typeof action.type!=="string")
+   throw Error("Simulation PAPER absente, altérée ou action invalide.");
+ const phase=state.phase,type=action.type;
+ const permitted={
+  PAPER_DRAFT:["PAPER_CONFIRM"],
+  PAPER_SUBMITTED:["PAPER_ACCEPT","PAPER_REJECT","PAPER_UNKNOWN"],
+  PAPER_ACCEPTED:["PAPER_FILL_PART","PAPER_FILL_REST","PAPER_CANCEL","PAPER_UNKNOWN"],
+  PAPER_PARTIAL:["PAPER_FILL_PART","PAPER_FILL_REST","PAPER_CANCEL","PAPER_UNKNOWN"],
+  PAPER_UNKNOWN:["PAPER_RECONCILE_OPEN","PAPER_RECONCILE_REJECT","PAPER_RECONCILE_CANCEL"]
+ };
+ if(!permitted[phase]?.includes(type))
+   throw Error("Transition interdite ; aucun renvoi automatique.");
+ if(type==="PAPER_CONFIRM"&&
+    (action.confirmation!=="SIMULER"||now-Date.parse(state.created_at)>120000||
+     now<Date.parse(state.created_at)))
+   throw Error("Confirmation SIMULER obligatoire dans les deux minutes.");
+ let next=phase,filled=exact(state.filled),quantity=exact(state.quantity);
+ if(type==="PAPER_CONFIRM")next="PAPER_SUBMITTED";
+ if(type==="PAPER_ACCEPT")next="PAPER_ACCEPTED";
+ if(type==="PAPER_REJECT"||type==="PAPER_RECONCILE_REJECT")next="PAPER_REJECTED";
+ if(type==="PAPER_UNKNOWN")next="PAPER_UNKNOWN";
+ if(type==="PAPER_CANCEL"||type==="PAPER_RECONCILE_CANCEL")next="PAPER_CANCELLED";
+ if(type==="PAPER_RECONCILE_OPEN")next=filled>0n?"PAPER_PARTIAL":"PAPER_ACCEPTED";
+ if(type==="PAPER_FILL_PART"||type==="PAPER_FILL_REST"){
+   const remaining=quantity-filled;
+   let add=remaining;
+   if(type==="PAPER_FILL_PART"){
+     add=exact(String(action.quantity_ct||""));
+     if(add<=0n||add>=remaining)throw Error("Partiel : quantité strictement entre zéro et le restant.");
+     if(add%exact(state.lot_size)!==0n)
+       throw Error("Le remplissage PAPER doit respecter le pas de quantité.");
+   }
+   if(remaining<=0n)throw Error("Ordre fictif déjà intégralement rempli.");
+   filled+=add;
+   next=filled===quantity?"PAPER_FILLED":"PAPER_PARTIAL";
+ }
+ const feeBase=state.fee_type==="0"?(filled*exact(state.fee_rate)+UNIT-1n)/UNIT:0n;
+ const net=filled-feeBase,lot=exact(state.lot_size),sellable=net/lot*lot,
+   min=exact(state.min_size);
+ const events=Object.freeze([...state.events,
+   Object.freeze({type,at:new Date(now).toISOString()})].slice(-24));
+ return Object.freeze({...state,phase:next,filled:exactFmt(filled),
+  remaining:exactFmt(quantity-filled),net_received:exactFmt(net),
+  sellable:exactFmt(sellable),dust:exactFmt(net-sellable),
+  below_min_sell:sellable<min,unknown:next==="PAPER_UNKNOWN",
+  updated_at:new Date(now).toISOString(),events,
+  send_attempts:0,orders_enabled:false,real_orders:0,
+  network:false,storage:false});
+}
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,verifiedCtLiveBook,diagnoseCtLiveBook,verifiedCtSpotRules,checkSpotOrderGates,reviewSpotTicketAccount,previewSpotExit,startPaperLimitCycle,advancePaperLimitCycle,PAPER_CYCLE,realOrders:false,network:false,storage:false});
 });
