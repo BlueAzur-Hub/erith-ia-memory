@@ -124,3 +124,56 @@ test("read-only add-on reuses old Trader Lab, no new page, no orders",()=>{
  assert.equal(core.network,false);
  assert.equal(core.storage,false);
 });
+
+test("automatic historical reading accepts BTC with existing PAPER lab proof, not OKX fills",()=>{
+ const proof={ok:true,asset:"BTC",instrument:"BTC-USD",provider:"coingecko",
+  currency:"USD",lastAt:"2026-10-20T03:56:50Z",
+  sourceIdentity:"coingecko|BTC-USD|USD"};
+ const historical={ok:true,asset:"BTC",sourceIdentity:proof.sourceIdentity,
+  firstAt:"2026-10-19T04:00:00Z",lastAt:proof.lastAt,
+  windows:276,profitablePct:0,medianProfit:-0.03482,
+  bestProfit:-0.00653,worstProfit:-0.08947,capital:5,
+  overlapping:true,retrospective:true,predictive:false,
+  realOrders:false,feesProven:false};
+ const summary=core.summarizeHistorical(historical,proof);
+ assert.equal(summary.status,"HISTORICAL_ONLY");
+ assert.equal(summary.windows,276);
+ assert.equal(summary.positive_windows_pct,0);
+ assert.equal(summary.median_profit_notional_usd,-0.03482);
+ assert.equal(summary.orders_enabled,false);
+ assert.equal(summary.strategy_certified,false);
+ assert.equal(summary.okx_costs_verified,false);
+ assert.equal(core.assess({selected:proof,now:NOW}).decision,"PREUVES_INSUFFISANTES");
+ assert.match(core.assess({selected:proof,now:NOW}).reason,/BTC/);
+});
+test("historic summaries fail closed on other coins, forged profits, and absent records",()=>{
+ const selected= {ok:true,asset:"BTC",sourceIdentity:"coingecko|BTC-USD|USD"};
+ const valid={ok:true,asset:"BTC",sourceIdentity:selected.sourceIdentity,
+  windows:22,profitablePct:10,medianProfit:-0.01,bestProfit:0.1,
+  worstProfit:-0.4,capital:5,firstAt:"2026-10-18T02:00:00Z",
+  lastAt:"2026-10-19T02:00:00Z",overlapping:true,retrospective:true,
+  predictive:false,realOrders:false,feesProven:false};
+ for(const bad of [
+  {...valid,asset:"CT"},
+  {...valid,realOrders:true},
+  {...valid,overlapping:false},
+  {...valid,feesProven:true},
+  {...valid,medianProfit:Infinity},
+  {...valid,windows:0},
+  {...valid,profitablePct:101},
+  null
+ ])assert.equal(core.summarizeHistorical(bad,selected).status,"NOT_AVAILABLE");
+});
+test("the diagnostic refreshes on chart proof changes, without a new timer or reset",()=>{
+ const fs=require("node:fs"),path=require("node:path");
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ assert.match(view,/paper\.historicalStudy\(s\.input,cfg\)/);
+ assert.match(view,/core\.summarizeHistorical\(study,s\.qualified\)/);
+ assert.match(view,/agent-crypto:graph-context-ready/);
+ assert.match(view,/void evaluate\(false\)/);
+ assert.match(view,/next===box\.dataset\.lastSelection/);
+ assert.match(view,/data-decision-collector/);
+ assert.match(view,/okx-hurdle-followups\.json/);
+ assert.doesNotMatch(view,/Sélection modifiée : relancer/);
+ assert.doesNotMatch(view,/setInterval\s*\(|localStorage|sessionStorage|\/api\/v5\/trade/);
+});
