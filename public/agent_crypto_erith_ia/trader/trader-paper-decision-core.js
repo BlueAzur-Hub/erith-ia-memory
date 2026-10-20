@@ -41,6 +41,15 @@ function cohortContext(doc){
 }
 function assess({selected,qualification,signal,engine,now=Date.now()}={}){
  if(!Number.isFinite(now))return insufficient("Horloge non vérifiable.");
+ if(selected?.ok&&selected.asset==="BTC"&&selected.provider==="coingecko"&&
+    selected.instrument==="BTC-USD")
+   return insufficient("BTC : l'étude historique du graphique est disponible ci-dessus. "+
+     "La qualification Radar Spot des 20 candidats ne certifie pas ici de carnet BTC OKX "+
+     "récent ni de revente pour ce compte ; ne pas confondre USD et USDT.");
+ if(selected?.ok&&selected.asset==="CT"&&selected.provider==="okx")
+   return insufficient("CT : étude historique possible si la source externe est qualifiée ; "+
+     "le diagnostic des candidats Radar ne fournit pas de preuve de lot et carnet CT/USDC "+
+     "pour un ordre. Aucun ordre OKX n'est déclenché.");
  if(!selected?.ok||selected.currency!=="USD"||
     typeof selected.asset!=="string"||!/^[A-Z0-9]{1,20}$/.test(selected.asset)||
     !/^[a-z0-9][a-z0-9-]{1,99}$/.test(String(selected.coinId||""))||
@@ -108,5 +117,37 @@ function assess({selected,qualification,signal,engine,now=Date.now()}={}){
  return insufficient("Carnet, quantité ou règles incompatibles : "+String(p.reason||"preuve absente")+
    ". Aucun ordre ni profit retenu.");
 }
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,realOrders:false,network:false,storage:false});
+/* Reuse the existing PAPER laboratory study: it is descriptive, immediate,
+   overlapping, in notional USD, and never exchange-executable. */
+function summarizeHistorical(study,selected){
+ if(!selected?.ok)return Object.freeze({status:"NOT_AVAILABLE",
+   reason:"Graphique non qualifié. Le diagnostic n'attribue jamais une série à un autre actif.",
+   orders_enabled:false,strategy_certified:false});
+ if(study?.ok!==true||study.asset!==selected.asset||
+    study.sourceIdentity!==selected.sourceIdentity||
+    study.overlapping!==true||study.retrospective!==true||
+    study.predictive!==false||study.realOrders!==false||
+    study.feesProven!==false||!Number.isInteger(study.windows)||
+    study.windows<10||!Number.isFinite(study.profitablePct)||
+    study.profitablePct<0||study.profitablePct>100||
+    !Number.isFinite(study.medianProfit)||!Number.isFinite(study.bestProfit)||
+    !Number.isFinite(study.worstProfit)||
+    !Number.isFinite(study.capital)||study.capital<=0)
+   return Object.freeze({status:"NOT_AVAILABLE",
+     reason:"Étude historique indisponible ou incohérente. Aucune rentabilité conclue.",
+     orders_enabled:false,strategy_certified:false});
+ return Object.freeze({status:"HISTORICAL_ONLY",asset:study.asset,
+   windows:study.windows,positive_windows_pct:study.profitablePct,
+   median_profit_notional_usd:study.medianProfit,
+   best_profit_notional_usd:study.bestProfit,
+   worst_profit_notional_usd:study.worstProfit,
+   capital_notional_usd:study.capital,
+   source_from_utc:study.firstAt,source_to_utc:study.lastAt,
+   overlapping:true,independent_portfolio_trials:false,
+   okx_costs_verified:false,actual_executions:0,
+   reason:"Observation historique immédiate : fenêtres de 60 minutes chevauchantes, "+
+   "frais supposés. Aucun signal d'achat ni gain de portefeuille démontré.",
+   orders_enabled:false,strategy_certified:false});
+}
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,realOrders:false,network:false,storage:false});
 });
