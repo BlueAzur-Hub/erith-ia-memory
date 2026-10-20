@@ -1126,7 +1126,7 @@ test("LIMIT lifecycle remains paper from draft through partial fills and cancell
   meets_native_exit_minimum:true,paper_budget_covers_total_cost:true,
   buy_quantity:"10.1"};
  const prepare=(mods={})=>core.startPaperLimitCycle({ticket,context,preview,
-  now:T,nonce:1,...mods});
+  qualifiedAt:T,now:T,nonce:1,...mods});
  const draft=prepare();
  assert.equal(draft.phase,"PAPER_DRAFT");
  assert.equal(draft.network,false);
@@ -1174,7 +1174,7 @@ test("Unknown PAPER submission can only be reconciled, never retried",()=>{
  const preview={status:"ETUDE_SORTIE",orders_enabled:false,real_orders:0,
   limit_proof_verified:true,book_fresh_for_execution:true,
   meets_native_exit_minimum:true,paper_budget_covers_total_cost:true,buy_quantity:"10.1"};
- const args={ticket,context,preview,now:T,nonce:2};
+ const args={ticket,context,preview,qualifiedAt:T,now:T,nonce:2};
  const draft=core.startPaperLimitCycle(args);
  const sent=core.advancePaperLimitCycle(draft,
   {type:"PAPER_CONFIRM",confirmation:"SIMULER"},T+1000);
@@ -1191,7 +1191,10 @@ test("Unknown PAPER submission can only be reconciled, never retried",()=>{
  assert.equal(refused.phase,"PAPER_REJECTED");
  assert.equal(refused.send_attempts,0);
  assert.equal(core.startPaperLimitCycle({...args,context:{...context,instId:"CT-USDT"}}).ok,false);
- assert.equal(core.startPaperLimitCycle({...args,now:T+121000}).ok,false);
+ assert.equal(core.startPaperLimitCycle({...args,now:T+121000}).ok,true,
+   "An already-validated PAPER snapshot remains usable after two minutes");
+ assert.equal(core.startPaperLimitCycle({...args,now:T+15*60000+1000}).ok,false,
+   "Expired PAPER study requires a new human validation");
  assert.equal(core.startPaperLimitCycle({...args,ticket:{...ticket,
    source_book_kind:"DATED_PUBLIC_HOURLY_ARCHIVE"}}).ok,false);
 });
@@ -1201,9 +1204,35 @@ test("LIMIT lifecycle is embedded in the existing ticket with no trading API",()
  for(const key of ["data-cycle-paper","data-cycle-confirm","data-cycle-qty",
    "PAPER_RECONCILE_OPEN","Afficher le rapport technique complet"])
    assert.ok(view.includes(key),"missing "+key);
- assert.match(view,/cyclePlan=\{ticket:answer,context,preview:exit\}/);
+ assert.match(view,/cyclePlan=\{ticket:answer,context,preview:exit,qualifiedAt\}/);
  assert.match(view,/cycleStatus\(\)/);
  assert.doesNotMatch(view,/\/api\/v5\/trade\/order|\/okx\/place-order|Bearer /);
  assert.doesNotMatch(coreText,/fetch\(|\/api\/v5\/trade\/order|localStorage/);
  assert.equal(core.realOrders,false);
+});
+
+test("Delayed click after a valid CT-USDC check uses the qualified PAPER snapshot",()=>{
+ const ticket={...ctTicket(),source_book_kind:"LOCAL_BACKEND_OKX_CT_USDC",
+  source_book_at_utc:new Date(T-500).toISOString()};
+ const context={read_only:true,orders_enabled:false,real_orders:0,instId:"CT-USDC",
+   fee_type_verified:true,fee_type:"0",fee_taker_rate:"0.001",
+   order_gates_verified:true,order_gates_at_utc:new Date(T-1000).toISOString(),
+   order_gates:{maxBuy:"10.11"}};
+ const preview={status:"ETUDE_SORTIE",orders_enabled:false,real_orders:0,
+  limit_proof_verified:true,book_fresh_for_execution:true,
+  meets_native_exit_minimum:true,paper_budget_covers_total_cost:true,
+  buy_quantity:"10.10"};
+ const args={ticket,context,preview,qualifiedAt:T,now:T+140000,nonce:21};
+ const started=core.startPaperLimitCycle(args);
+ assert.equal(started.ok,true,started.reason);
+ assert.equal(started.snapshot_only,true);
+ assert.equal(started.not_a_live_quote,true);
+ assert.equal(started.snapshot_age_seconds,140);
+ assert.equal(started.orders_enabled,false);
+ assert.equal(started.send_attempts,0);
+ assert.equal(core.startPaperLimitCycle({...args,now:T+901000}).ok,false);
+ assert.match(core.startPaperLimitCycle({...args,
+  qualifiedAt:T-121000,now:T}).reason,/Carnet non récent/);
+ assert.equal(core.startPaperLimitCycle({...args,
+  qualifiedAt:T,preview:{...preview,book_fresh_for_execution:false}}).ok,false);
 });

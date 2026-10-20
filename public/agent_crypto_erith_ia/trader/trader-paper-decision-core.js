@@ -662,8 +662,12 @@ function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
    deliberate user click. There is no network, retry, queue, or persistence. */
 const PAPER_CYCLE="erith.trader.paper-limit-cycle.v1";
 const PAPER_TERMINAL=new Set(["PAPER_FILLED","PAPER_REJECTED","PAPER_CANCELLED"]);
-function startPaperLimitCycle({ticket,context,preview,now=Date.now(),nonce}={}){
- const fail=reason=>Object.freeze({ok:false,reason,orders_enabled:false});
+/* The snapshot was qualified during the user's preceding PAPER check.
+   A simulation can start later, but must not pretend an old quote is live.
+   No exchange order can ever be sent by this code. */
+function startPaperLimitCycle({ticket,context,preview,qualifiedAt,now=Date.now(),nonce}={}){
+ const fail=reason=>Object.freeze({ok:false,reason,
+  orders_enabled:false,real_orders:0,network:false});
  if(ticket?.schema!==TICKET||ticket?.pair!=="CT-USDC"||
     ticket?.status!=="PREPARATION_NON_EXECUTABLE"||
     ticket?.source_book_kind!=="LOCAL_BACKEND_OKX_CT_USDC"||
@@ -678,19 +682,30 @@ function startPaperLimitCycle({ticket,context,preview,now=Date.now(),nonce}={}){
     preview?.meets_native_exit_minimum!==true||
     preview?.paper_budget_covers_total_cost!==true||
     !Number.isSafeInteger(nonce)||nonce<1||!Number.isFinite(now))
-   return fail("Une étude CT/USDC récente et complète est nécessaire ; aucun ordre.");
+   return fail("Étude PAPER CT/USDC non qualifiée : refaire Vérifier ce scénario.");
+ const qualified=typeof qualifiedAt==="number"?qualifiedAt:Date.parse(qualifiedAt||"");
+ if(!Number.isFinite(qualified)||qualified>now||now-qualified>15*60*1000)
+   return fail("Photographie du ticket trop ancienne (15 minutes) : revérifier avant la simulation.");
  try{
-  const at=Date.parse(ticket.source_book_at_utc),proof=Date.parse(context.order_gates_at_utc);
-  const price=exact(ticket.best_ask_quote),qty=exact(preview.buy_quantity),
-    lot=exact(ticket.native_lot),min=exact(ticket.native_min_quantity),
-    tick=exact(ticket.native_tick),cap=exact(context.order_gates.maxBuy);
+  const at=Date.parse(ticket.source_book_at_utc);
+  const proof=Date.parse(context.order_gates_at_utc);
+  const price=exact(ticket.best_ask_quote),qty=exact(preview.buy_quantity);
+  const lot=exact(ticket.native_lot),min=exact(ticket.native_min_quantity);
+  const tick=exact(ticket.native_tick),cap=exact(context.order_gates?.maxBuy);
   const fee=exact(context.fee_taker_rate);
-  if(!Number.isFinite(at)||at>now+CT_BOOK_CLOCK_LEEWAY_MS||now-at>20000||
-     !Number.isFinite(proof)||proof>now+30000||now-proof>120000||
-     !price||!qty||!min||!lot||!tick||!cap||
-     qty<min||qty>cap||qty%lot!==0n||price%tick!==0n||
-     fee<0n||fee>=UNIT)
-    return fail("Prix, quantité, frais ou preuves datées incompatibles.");
+  if(!Number.isFinite(at)||at>qualified+CT_BOOK_CLOCK_LEEWAY_MS||
+     qualified-at>20000)
+   return fail("Carnet non récent à l'instant de validation du ticket.");
+  if(!Number.isFinite(proof)||proof>qualified+30000||qualified-proof>120000)
+   return fail("Contrôles du compte périmés lors de l'étude : relancer Vérifier.");
+  if(!price||!tick||price%tick!==0n)
+   return fail("Prix fictif non conforme au tickSz de CT/USDC.");
+  if(!qty||!lot||!min||qty<min||qty%lot!==0n)
+   return fail("Quantité fictive inférieure au minimum ou non multiple de lotSz.");
+  if(!cap||qty>cap)
+   return fail("Quantité fictive supérieure à maxBuy du compte lors de l'étude.");
+  if(fee<0n||fee>=UNIT)
+   return fail("Taux de frais de la paire non vérifiable.");
   const snapshot=Object.freeze({
    schema:PAPER_CYCLE,ok:true,paper:true,
    phase:"PAPER_DRAFT",id:"PAPER-CT-"+now+"-"+nonce,
@@ -701,12 +716,15 @@ function startPaperLimitCycle({ticket,context,preview,now=Date.now(),nonce}={}){
    filled:"0.0",remaining:exactFmt(qty),
    net_received:"0.0",sellable:"0.0",dust:"0.0",
    below_min_sell:true,unknown:false,send_attempts:0,
+   studied_at:new Date(qualified).toISOString(),
+   snapshot_age_seconds:Math.floor((now-qualified)/1000),
+   snapshot_only:true,not_a_live_quote:true,
    created_at:new Date(now).toISOString(),updated_at:new Date(now).toISOString(),
    events:Object.freeze([{type:"PAPER_PREPARE",at:new Date(now).toISOString()}]),
    real_orders:0,orders_enabled:false,trade_endpoint:null,
    network:false,storage:false});
   return snapshot;
- }catch(_){return fail("La simulation n'accepte pas ces décimales ou filtres.");}
+ }catch(_){return fail("Décimales ou règles CT/USDC incompatibles avec cette étude.");}
 }
 function advancePaperLimitCycle(state,action,now=Date.now()){
  if(state?.schema!==PAPER_CYCLE||state?.paper!==true||

@@ -22,6 +22,9 @@ function cycleStatus(){
   "SIMULATION UNIQUEMENT · aucun ordre envoyé vers OKX",
   "ÉTAT : "+state.phase+" · "+state.pair+" · achat LIMIT fictif",
   "Prix fictif "+state.price+" USDC · quantité "+state.quantity+" CT",
+  "Photographie PAPER validée à "+state.studied_at+
+    " · "+state.snapshot_age_seconds+" s lors de la préparation.",
+  "Le cours peut avoir changé depuis ; aucun prix négociable actuel n'est certifié.",
   "Remplis fictivement "+state.filled+" CT · restant "+state.remaining+" CT",
   "Après frais estimés : revendables "+state.sellable+" CT · poussière "+state.dust+" CT",
   state.below_min_sell&&state.filled!=="0.0"?
@@ -282,6 +285,8 @@ function invalidate(){
  if(ticket?.open&&ticket.dataset.ticketSourceKey&&
     nextSourceKey!==ticket.dataset.ticketSourceKey){
    ticketRequest++;
+   cyclePlan=null;
+   if(typeof cycleStatus==="function")cycleStatus();
    ticket.dataset.ticketSourceKey=nextSourceKey;
    ticketStatus("Actif du graphique modifié. Refaire le ticket ; aucun ancien prix n'est réutilisé.");
  }
@@ -559,10 +564,11 @@ async function prepareTicket(){
      "AUCUN achat, vente, transfert ni réservation de fonds."
    ];
    if(desired){
+    const qualifiedAt=Date.now();
     const exit=core.previewSpotExit({ticket:answer,context,
-      targetPriceQuote:desired,now:Date.now()});
+      targetPriceQuote:desired,now:qualifiedAt});
     if(pair==="CT-USDC"&&exit?.status==="ETUDE_SORTIE")
-      cyclePlan={ticket:answer,context,preview:exit};
+      cyclePlan={ticket:answer,context,preview:exit,qualifiedAt};
     const exitLines=[
       "REVENTE À TON PRIX · "+desired+" "+quote+" · SIMULATION, AUCUN ORDRE",
       exit.status==="SORTIE_NON_EVALUABLE"?
@@ -729,7 +735,8 @@ function mount(){
  const cycleContents=document.createElement("div");
  const cycleWarning=document.createElement("p");
  cycleWarning.textContent="Tous les statuts et les exécutions sont INVENTÉS par le simulateur. "+
-   "Aucune requête d'ordre OKX, aucune permission Trade, aucune sauvegarde.";
+   "Tu peux prendre le temps de lire : la simulation utilise une photographie validée, "+
+   "sans prétendre que son prix reste actuel. Aucun ordre OKX, aucune permission Trade, aucune sauvegarde.";
  const cycleReadout=document.createElement("pre");
  cycleReadout.setAttribute("data-cycle-status","");
  cycleReadout.setAttribute("role","status");
