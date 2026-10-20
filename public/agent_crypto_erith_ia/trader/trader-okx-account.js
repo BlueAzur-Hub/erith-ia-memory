@@ -108,15 +108,24 @@ function summarizeTicketAccount(account,fees,instId,now=Date.now()){
  if(tr.length>1||fu.length>1)return no("Plusieurs soldes contradictoires pour cette devise.");
  const trading=tr.length?ticketDecimal(tr[0]?.availBal):null;
  const funding=fu.length?ticketDecimal(fu[0]?.availBal??fu[0]?.bal):null;
- const row=Array.isArray(fees?.fees)?fees.fees[0]:null;
+ const feeRows=Array.isArray(fees?.fees)?fees.fees:null;
+ const row=feeRows?.length===1?feeRows[0]:null;
  const feePair=String(row?.instId||"");
- const matching=feePair===instId||(instId==="BTC-USDC"&&!feePair&&fees?.fees?.length===1);
+ const matching=feePair===instId||(instId==="BTC-USDC"&&!feePair&&feeRows?.length===1);
  const maker=matching?ticketFeeRate(row?.maker??row?.makerU??row?.makerUSDC):null;
  const taker=matching?ticketFeeRate(row?.taker??row?.takerU??row?.takerUSDC):null;
+ // An OKX feeGroup without an authenticated instrument mapping cannot certify CT.
+ const feeReason=maker!==null&&taker!==null?null:
+   !fees?"Réponse des frais OKX absente.":
+   !feeRows?"Format des frais Bridge non reconnu.":
+   feeRows.length!==1?"Plusieurs lignes de frais : paire non attribuable.":
+   !feePair?"Bridge : paire non attestée dans la réponse des frais (instId absent).":
+   feePair!==instId?"Bridge : frais renvoyés pour une paire différente de "+instId+".":
+   "Taux maker/taker absents ou non exploitables pour "+instId+".";
  return Object.freeze({read_only:true,verified:trading!==null,
    reason:trading===null?"Solde Trading disponible absent ou non prouvé.":null,
    instId,account_at_utc:new Date(at).toISOString(),
-   fee_pair_verified:maker!==null&&taker!==null,
+   fee_pair_verified:maker!==null&&taker!==null,fee_reason:feeReason,
    fee_maker_rate:maker,fee_taker_rate:taker,
    trading_available_quote:trading,funding_available_quote:funding,
    account_fresh:true,real_orders:0,orders_enabled:false});
@@ -136,13 +145,21 @@ async function ticketReadOnly(instId){
  if(!token()||!owner()||["locked","error"].includes(panel()?.dataset.state))
    return Object.freeze({read_only:true,verified:false,
      reason:"Lecture du compte non disponible.",real_orders:0,orders_enabled:false});
- let fees=null;
+ let fees=null,feeFailure="";
  try{
    if(instId==="BTC-USDC"&&ticketBtcFees&&
       now-ticketBtcFeesAt<120000)fees=ticketBtcFees;
    else fees=await bridge("/okx/fees?instId="+encodeURIComponent(instId));
- }catch(_){/* Never invent fees if exact-pair read is unavailable. */}
- return summarizeTicketAccount(ctCycleAccount,fees,instId,Date.now());
+ }catch(error){
+   const status=Number(error?.status);
+   feeFailure=status===401||status===403?
+     "Bridge : accès à la route des frais refusé.":
+     status===429?"Bridge : limite de fréquence sur les frais.":
+     "Bridge : lecture des frais de cette paire indisponible.";
+ }
+ const context=summarizeTicketAccount(ctCycleAccount,fees,instId,Date.now());
+ return feeFailure&&!context.fee_pair_verified?
+   Object.freeze({...context,fee_reason:feeFailure}):context;
 }
 function feeLabel(payload){
   const row=Array.isArray(payload?.fees)?payload.fees[0]:null;
