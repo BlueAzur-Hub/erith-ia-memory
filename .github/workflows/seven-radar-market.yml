@@ -6,6 +6,8 @@ on:
       - '.github/workflows/seven-radar-market.yml'
       - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
       - 'public/agent_crypto_erith_ia/laboratoire/radar.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-okx-hourly.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-radar-okx-hourly.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar.cjs'
       - 'public/agent_crypto_erith_ia/tools/radar_opportunity_history.cjs'
       - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/**'
@@ -20,6 +22,8 @@ on:
       - '.github/workflows/seven-radar-market.yml'
       - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
       - 'public/agent_crypto_erith_ia/laboratoire/radar.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-okx-hourly.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-radar-okx-hourly.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar.cjs'
       - 'public/agent_crypto_erith_ia/tools/radar_opportunity_history.cjs'
       - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/**'
@@ -42,10 +46,12 @@ jobs:
       - name: Check Radar and native Market syntax
         run: |
           node --check public/agent_crypto_erith_ia/laboratoire/radar.js
+          node --check public/agent_crypto_erith_ia/laboratoire/radar-okx-hourly.js
           node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
           node --check public/agent_crypto_erith_ia/administrator/js/market-radar-native.js
           node --check public/agent_crypto_erith_ia/tools/radar_opportunity_history.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar.cjs
+          node --test public/agent_crypto_erith_ia/laboratoire/test-radar-okx-hourly.cjs
           node --test public/agent_crypto_erith_ia/tools/test-radar-opportunity-history.cjs
           node --test public/agent_crypto_erith_ia/administrator/js/test-market-radar-fidelity.cjs
       - name: Confirm Radar does not embed private execution and frozen Radar20 unchanged
@@ -53,6 +59,8 @@ jobs:
           set -euo pipefail
           ! grep -E -i 'placeOrder|api/v5/trade/order|withdrawal|secretKey' \
             public/agent_crypto_erith_ia/laboratoire/radar.js
+          ! grep -E -i 'placeOrder|api/v5/trade/order|withdrawal|secretKey' \
+            public/agent_crypto_erith_ia/laboratoire/radar-okx-hourly.js
           git diff --exit-code -- public/agent_crypto_erith_ia/data/trader_flux/radar20_forward/ \
             public/agent_crypto_erith_ia/tools/trader_radar20_forward.py \
             public/agent_crypto_erith_ia/trader/ \
