@@ -126,14 +126,14 @@ async function ticketReadOnly(instId){
  if(typeof instId!=="string"||!TICKET_PAIR.test(instId))
    return Object.freeze({read_only:true,verified:false,
      reason:"Paire Spot non autorisée au contrôle du compte.",real_orders:0,orders_enabled:false});
- if(!token()||!owner()||panel()?.dataset.state!=="ready")
+ if(!token()||!owner())
    return Object.freeze({read_only:true,verified:false,
      reason:"Session Aether Trust ou compte Trading indisponible.",real_orders:0,orders_enabled:false});
  const now=Date.now();
  if(!ctCycleAccount||!Number.isFinite(Date.parse(ctCycleAccount.fetched_at))||
     now-Date.parse(ctCycleAccount.fetched_at)>120000)
    await refresh({force:false});
- if(!token()||panel()?.dataset.state!=="ready")
+ if(!token()||!owner()||["locked","error"].includes(panel()?.dataset.state))
    return Object.freeze({read_only:true,verified:false,
      reason:"Lecture du compte non disponible.",real_orders:0,orders_enabled:false});
  let fees=null;
