@@ -1112,3 +1112,98 @@ test("CT PAPER technical details remain available under a readable summary",()=>
  assert.match(src,/Afficher le rapport technique complet/);
  assert.match(src,/CARNET CT\/USDC/);
 });
+
+
+test("LIMIT lifecycle remains paper from draft through partial fills and cancellation",()=>{
+ const ticket={...ctTicket(),source_book_kind:"LOCAL_BACKEND_OKX_CT_USDC",
+  source_book_at_utc:new Date(T-1500).toISOString()};
+ const context={read_only:true,orders_enabled:false,real_orders:0,instId:"CT-USDC",
+  fee_type_verified:true,fee_type:"0",fee_taker_rate:"0.001",
+  order_gates_verified:true,order_gates_at_utc:new Date(T-1000).toISOString(),
+  order_gates:{maxBuy:"10.11"}};
+ const preview={status:"ETUDE_SORTIE",orders_enabled:false,real_orders:0,
+  limit_proof_verified:true,book_fresh_for_execution:true,
+  meets_native_exit_minimum:true,paper_budget_covers_total_cost:true,
+  buy_quantity:"10.1"};
+ const prepare=(mods={})=>core.startPaperLimitCycle({ticket,context,preview,
+  now:T,nonce:1,...mods});
+ const draft=prepare();
+ assert.equal(draft.phase,"PAPER_DRAFT");
+ assert.equal(draft.network,false);
+ assert.equal(draft.storage,false);
+ assert.equal(draft.real_orders,0);
+ assert.equal(draft.send_attempts,0);
+ assert.ok(Object.isFrozen(draft));
+ assert.throws(()=>core.advancePaperLimitCycle(draft,
+  {type:"PAPER_CONFIRM",confirmation:"ACHETER"},T+1000),/SIMULER/);
+ const sent=core.advancePaperLimitCycle(draft,
+  {type:"PAPER_CONFIRM",confirmation:"SIMULER"},T+1000);
+ assert.equal(sent.phase,"PAPER_SUBMITTED");
+ assert.equal(sent.send_attempts,0);
+ assert.throws(()=>core.advancePaperLimitCycle(sent,
+  {type:"PAPER_FILL_PART",quantity_ct:"3.00"},T+1200),/Transition interdite/);
+ const accepted=core.advancePaperLimitCycle(sent,{type:"PAPER_ACCEPT"},T+1300);
+ assert.equal(accepted.phase,"PAPER_ACCEPTED");
+ const partial=core.advancePaperLimitCycle(accepted,
+  {type:"PAPER_FILL_PART",quantity_ct:"3.00"},T+1400);
+ assert.equal(partial.phase,"PAPER_PARTIAL");
+ assert.equal(partial.filled,"3.0");
+ assert.equal(partial.remaining,"7.1");
+ assert.equal(partial.below_min_sell,true);
+ assert.equal(partial.sellable,"2.99");
+ assert.throws(()=>core.advancePaperLimitCycle(partial,
+  {type:"PAPER_FILL_PART",quantity_ct:"7.10"},T+1500),/Partiel/);
+ const canceled=core.advancePaperLimitCycle(partial,{type:"PAPER_CANCEL"},T+1600);
+ assert.equal(canceled.phase,"PAPER_CANCELLED");
+ assert.equal(canceled.filled,"3.0");
+ assert.equal(canceled.real_orders,0);
+ assert.throws(()=>core.advancePaperLimitCycle(canceled,{type:"PAPER_ACCEPT"},T+1800),/interdite/);
+ const full=core.advancePaperLimitCycle(accepted,{type:"PAPER_FILL_REST"},T+1900);
+ assert.equal(full.phase,"PAPER_FILLED");
+ assert.equal(full.remaining,"0.0");
+ assert.equal(full.below_min_sell,false);
+ assert.equal(full.real_orders,0);
+});
+test("Unknown PAPER submission can only be reconciled, never retried",()=>{
+ const ticket={...ctTicket(),source_book_kind:"LOCAL_BACKEND_OKX_CT_USDC",
+  source_book_at_utc:new Date(T-1500).toISOString()};
+ const context={read_only:true,orders_enabled:false,real_orders:0,instId:"CT-USDC",
+  fee_type_verified:true,fee_type:"0",fee_taker_rate:"0.001",
+  order_gates_verified:true,order_gates_at_utc:new Date(T-1000).toISOString(),
+  order_gates:{maxBuy:"10.11"}};
+ const preview={status:"ETUDE_SORTIE",orders_enabled:false,real_orders:0,
+  limit_proof_verified:true,book_fresh_for_execution:true,
+  meets_native_exit_minimum:true,paper_budget_covers_total_cost:true,buy_quantity:"10.1"};
+ const args={ticket,context,preview,now:T,nonce:2};
+ const draft=core.startPaperLimitCycle(args);
+ const sent=core.advancePaperLimitCycle(draft,
+  {type:"PAPER_CONFIRM",confirmation:"SIMULER"},T+1000);
+ const unknown=core.advancePaperLimitCycle(sent,{type:"PAPER_UNKNOWN"},T+2000);
+ assert.equal(unknown.phase,"PAPER_UNKNOWN");
+ assert.equal(unknown.unknown,true);
+ assert.throws(()=>core.advancePaperLimitCycle(unknown,{type:"PAPER_CONFIRM"},T+3000),/interdite/);
+ assert.throws(()=>core.advancePaperLimitCycle(unknown,{type:"PAPER_ACCEPT"},T+3000),/interdite/);
+ const reconciled=core.advancePaperLimitCycle(unknown,
+  {type:"PAPER_RECONCILE_OPEN"},T+3500);
+ assert.equal(reconciled.phase,"PAPER_ACCEPTED");
+ const refused=core.advancePaperLimitCycle(unknown,
+  {type:"PAPER_RECONCILE_REJECT"},T+3500);
+ assert.equal(refused.phase,"PAPER_REJECTED");
+ assert.equal(refused.send_attempts,0);
+ assert.equal(core.startPaperLimitCycle({...args,context:{...context,instId:"CT-USDT"}}).ok,false);
+ assert.equal(core.startPaperLimitCycle({...args,now:T+121000}).ok,false);
+ assert.equal(core.startPaperLimitCycle({...args,ticket:{...ticket,
+   source_book_kind:"DATED_PUBLIC_HOURLY_ARCHIVE"}}).ok,false);
+});
+test("LIMIT lifecycle is embedded in the existing ticket with no trading API",()=>{
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ const coreText=fs.readFileSync(path.join(__dirname,"trader-paper-decision-core.js"),"utf8");
+ for(const key of ["data-cycle-paper","data-cycle-confirm","data-cycle-qty",
+   "PAPER_RECONCILE_OPEN","Afficher le rapport technique complet"])
+   assert.ok(view.includes(key),"missing "+key);
+ assert.match(view,/cyclePlan=\{ticket:answer,context,preview:exit\}/);
+ assert.match(view,/cycleStatus\(\)/);
+ assert.doesNotMatch(view,/\/api\/v5\/trade\/order|\/okx\/place-order|Bearer /);
+ assert.doesNotMatch(coreText,/fetch\(|\/api\/v5\/trade\/order|localStorage/);
+ assert.equal(core.realOrders,false);
+});
