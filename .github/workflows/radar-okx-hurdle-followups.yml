@@ -1,0 +1,77 @@
+name: Radar OKX PAPER - Independent Followups
+on:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/observe_okx_hurdle_followups.py'
+      - 'public/agent_crypto_erith_ia/tools/test_observe_okx_hurdle_followups.py'
+      - 'public/agent_crypto_erith_ia/tools/build_okx_hurdle_followups.cjs'
+      - 'tests/okx_hurdle_followups.test.cjs'
+      - '.github/workflows/radar-okx-hurdle-followups.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/observe_okx_hurdle_followups.py'
+      - 'public/agent_crypto_erith_ia/tools/test_observe_okx_hurdle_followups.py'
+      - 'public/agent_crypto_erith_ia/tools/build_okx_hurdle_followups.cjs'
+      - 'tests/okx_hurdle_followups.test.cjs'
+      - '.github/workflows/radar-okx-hurdle-followups.yml'
+  workflow_dispatch:
+  # Two public quote checks/day capture 23-36h and 47-60h windows.
+  # Does NOT start a Radar Top20 scan or an Atlas run.
+  schedule:
+    - cron: '7 1,13 * * *'
+permissions:
+  contents: write
+concurrency:
+  # Serialize journal pushes with the existing Radar daily qualification.
+  group: radar-spot-target-qualification
+  cancel-in-progress: false
+jobs:
+  followup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test future-only observation and unchanged Spot PAPER engine
+        run: |
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_observe_okx_hurdle_followups.py' -v
+          node --test tests/okx_hurdle_followups.test.cjs tests/okx_paper_immediate_cost.test.cjs
+      - name: Watch existing studies via public OKX Spot quotes only
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            if [ ! -f public/agent_crypto_erith_ia/data/crypto/radar-opportunities/okx-hurdle-followups.json ]; then
+              echo 'NO_PROSPECTIVE_JOURNAL: awaiting first genuine dated daily selection; no backfill'
+              exit 0
+            fi
+            python public/agent_crypto_erith_ia/tools/observe_okx_hurdle_followups.py > /tmp/okx-public-followup.json
+            node public/agent_crypto_erith_ia/tools/build_okx_hurdle_followups.cjs --future-only /tmp/okx-public-followup.json
+            git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/okx-hurdle-followups.json
+            if git diff --cached --quiet; then
+              echo 'No new 24h/48h public OKX quote within the required window'
+              exit 0
+            fi
+            git commit -m 'Archive dated public OKX PAPER hurdle followups (no fills)'
+            if git push origin HEAD:main; then
+              echo 'Public OKX PAPER future quote published'
+              exit 0
+            fi
+            echo 'Repository moved, refreshing immutable journal before retry'
+            sleep "$((attempt*3))"
+          done
+          echo 'Could not publish journal; no retroactive fill invented' >&2
+          exit 1
