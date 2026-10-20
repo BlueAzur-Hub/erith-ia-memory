@@ -3,6 +3,7 @@ const test=require("node:test"),a=require("node:assert/strict");
 const watch=require("../public/agent_crypto_erith_ia/tools/build_okx_hurdle_followups.cjs");
 function qualification(day="2026-10-18",bid="9.90",bidQty="100",quote="USDT"){
  const qualified=day+"T10:00:00Z",bookAt=day+"T10:00:30Z",collected=day+"T10:01:00Z";
+ const ask=(Number(bid)>=10?(Number(bid)+0.10).toFixed(2):"10.50");
  const coin={id:"test-asset",symbol:"TOK",identity_status:"SYMBOL_ONLY_NOT_COIN_ID_PROVEN",
    okx_spot:{venue:"OKX",quote,pair:"TOK-"+quote,pair_observed:true,
       native_rules_verified:true,contract_identity_proven:false,
@@ -12,7 +13,7 @@ function qualification(day="2026-10-18",bid="9.90",bidQty="100",quote="USDT"){
       best_book:{schema:"erith.radar.okx.spot-best-book.v1",
        source:"OKX_PUBLIC_SPOT_BOOK",pair:"TOK-"+quote,quote,
        exchange_time_utc:bookAt,collected_at_utc:collected,
-       best_bid_usdt:bid,best_ask_usdt:"10.50",
+       best_bid_usdt:bid,best_ask_usdt:ask,
        best_bid_qty:bidQty,best_ask_qty:"100",
        market_execution_proven:false,fees_verified:false,orders_enabled:false}}};
  const candidates=[coin,...Array.from({length:19},(_,i)=>({
@@ -35,7 +36,7 @@ test("archives exact first qualifying book with all 20 candidates as denominator
 });
 test("24h later same-venue quote can cross hurdle without being a fill",()=>{
  const prior=watch.advance(null,qualification());
- const next=watch.advance(prior,qualification("2026-10-19","10.40"));
+ const next=watch.advance(prior,qualification("2026-10-19","10.80"));
  a.equal(next.studies.length,2,"new day also enters a prospectively dated study");
  const seen=next.studies[0].followups;
  a.equal(seen.length,1);a.equal(seen[0].window,"24h");
@@ -70,6 +71,15 @@ test("same-day replay, missing market, 48h follow-up and backdated data",()=>{
  const last=watch.advance(state,qualification("2026-10-20","10.50"));
  a.deepEqual(last.studies[0].followups.map(f=>f.window),["24h","48h"]);
  a.throws(()=>watch.advance(last,qualification("2026-10-17")),/désordre/);
+});
+test("crossed future bid or price off native tick does not count as an exit",()=>{
+ const initial=watch.advance(null,qualification());
+ const cross=qualification("2026-10-19","10.40");
+ cross.candidates[0].okx_spot.best_book.best_ask_usdt="10.30";
+ const bad=watch.advance(initial,cross);
+ a.equal(bad.studies[0].followups.length,0);
+ const off=qualification("2026-10-19","10.401");
+ a.equal(watch.advance(initial,off).studies[0].followups.length,0);
 });
 test("USDC, bad identity, wrong future venue or invalid source fails closed",()=>{
  const q=qualification();q.candidates[0].okx_spot.quote="USDC";
