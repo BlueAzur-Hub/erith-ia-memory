@@ -224,7 +224,7 @@ test("Radar status fetch stays reachable even when live selection is stale",()=>
  const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
  const src=view.slice(view.indexOf("async function evaluate("),view.indexOf("function invalidate("));
  assert.match(src,/renderHistory\(s\)/);
- assert.match(src,/const \{qualification,signal,journal\}=await reports\(\)/);
+ assert.match(src,/const \{qualification,signal,journal,health\}=await reports\(\)/);
  assert.match(src,/if\(!s\.qualified\)/);
  assert.doesNotMatch(src,/if\(!s\.qualified\)\s*\{[\s\S]{0,280}return;/);
  assert.match(src,/Report status is independent/);
