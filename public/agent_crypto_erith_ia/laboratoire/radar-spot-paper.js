@@ -132,6 +132,55 @@ function okxFollowupSummary(watch, qualification, vault, usdHistory){
    " suivis descriptifs à 1 jour observés ; USD et USDT ne sont pas assimilés, "+
    "aucune performance PAPER déduite de cette série.";
 }
+function signalEvidenceSummary(doc){
+ const pending="Étude des signaux : journal vérifié en attente de publication.";
+ if(doc?.schema!=="erith.radar.signal-evidence-audit.v1"||
+    doc.kind!=="RESEARCH_AUDIT_NOT_STRATEGY_SELECTION"||
+    doc.orders_enabled!==false||doc.strategy_certified!==false||
+    doc.real_orders!==0||doc.paper_fills!==0||
+    doc.top50_retro_7d?.true_unseen_holdout!==false||
+    doc.top50_retro_7d?.source_quote!=="USD"||
+    doc.radar_forward_j1?.quote!=="USD"||
+    doc.okx_context?.quote!=="USDT"||
+    doc.okx_context?.no_executable_returns_derived_from_usd!==true)
+    return pending;
+ const periods=doc.top50_retro_7d.periods;
+ const before=periods?.selection_descriptive,after=periods?.later_descriptive_validation;
+ function good(x){
+   return x&&Number.isInteger(x.signals_total)&&
+     Number.isInteger(x.followups_observed)&&Number.isInteger(x.followups_missing)&&
+     x.followups_observed>=0&&x.followups_missing>=0&&
+     x.signals_total===x.followups_observed+x.followups_missing;
+ }
+ const groups=doc.radar_forward_j1.buckets;
+ if(!good(before)||!good(after)||
+    !good(groups?.momentum_24h_7d)||!good(groups?.rebound_24h_only))return pending;
+ const pct=n=>typeof n==="number"&&Number.isFinite(n)?
+    (n>0?"+":"")+n.toLocaleString("fr-FR",{maximumFractionDigits:2})+" %":"non mesurable";
+ const scenario=after.cost_sensitivity_descriptive_only?.["0.8"];
+ const net=scenario?.mean_observed_gross_minus_assumed_friction_pct;
+ const ratio=x=>x.followups_observed+"/"+x.signals_total+
+    " prix suivis ("+x.followups_missing+" manquants)";
+ return "Étude des signaux · Top50 historique 7 j : ancienne période "+
+    ratio(before)+" · période temporelle ultérieure "+ratio(after)+
+    " · variation brute moyenne observée "+pct(after.mean_observed_gross_change_pct)+
+    " · moins 0,8 % de coûts supposés : "+pct(net)+
+    " (diagnostic rétrospectif, PAS un vrai hors-échantillon ni un rendement OKX)."+
+    "\nRadar prospectif CoinGecko J+1 : momentum "+
+    ratio(groups.momentum_24h_7d)+" · rebond "+
+    ratio(groups.rebound_24h_only)+
+    ". Aucune conversion USD → USDT, ni simulation d'ordre déduite de ces cours."+
+    "\nRéférence sans opération : 0 % nominal. Aucune stratégie certifiée.";
+}
+async function signalEvidenceStatus(){
+ const target=document.getElementById("radar-signal-evidence-status");
+ if(!target)return;
+ try{
+   const resp=await fetch("../data/crypto/radar-opportunities/signal-evidence.json",{cache:"no-store"});
+   if(!resp.ok)throw Error("archive non publiée");
+   text(target,signalEvidenceSummary(await resp.json()));
+ }catch(_){text(target,"Étude des signaux : prochaine publication archivée attendue, aucun rendement nouveau affirmé.");}
+}
 async function shadowStatus(){
  const target=document.getElementById("radar-shadow-status");if(!target)return;
  try{
@@ -216,10 +265,11 @@ async function load(){
    paint(await response.json(),document);
    await identityStatus();
    await shadowStatus();
+   await signalEvidenceStatus();
  }catch(e){text(s,"Rapprochement indisponible : "+String(e.message||e)+
-   ". Aucun résultat PAPER n'est supposé.");await identityStatus();await shadowStatus();}
+   ". Aucun résultat PAPER n'est supposé.");await identityStatus();await shadowStatus();await signalEvidenceStatus();}
 }
-if(typeof module==="object"&&module.exports)module.exports={valid,paint,okxSpotSummary,okxFollowupSummary};
+if(typeof module==="object"&&module.exports)module.exports={valid,paint,okxSpotSummary,okxFollowupSummary,signalEvidenceSummary};
 if(typeof document!=="undefined"){
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",load,{once:true});
  else void load();
