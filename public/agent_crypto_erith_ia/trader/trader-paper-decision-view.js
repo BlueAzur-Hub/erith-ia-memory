@@ -743,8 +743,8 @@ function mount(){
  cycleQty.setAttribute("data-cycle-qty","");
  cycleQty.setAttribute("aria-label","Quantité fictive partiellement exécutée en CT");
  cycleQty.setAttribute("inputmode","decimal");cycleQty.value="3.00";
- const controls=document.createElement("div");
- controls.style.cssText="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0";
+ const cycleControls=document.createElement("div");
+ cycleControls.style.cssText="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0";
  const commands=[
   ["create","Préparer scénario PAPER"],["confirm","Confirmer simulation"],
   ["accept","Accepter fictivement"],["reject","Refuser fictivement"],
@@ -758,7 +758,7 @@ function mount(){
   control.type="button";control.textContent=label;
   control.setAttribute("data-cycle-command",command);
   control.addEventListener("click",()=>cycleAction(command));
-  controls.append(control);
+  cycleControls.append(control);
  }
  const confirmLabel=document.createElement("label");
  confirmLabel.textContent="Confirmation humaine fictive ";
@@ -766,7 +766,7 @@ function mount(){
  const qtyLabel=document.createElement("label");
  qtyLabel.textContent="Remplissage partiel simulé (CT) ";
  qtyLabel.append(cycleQty);
- cycleContents.append(cycleWarning,cycleReadout,confirmLabel,qtyLabel,controls);
+ cycleContents.append(cycleWarning,cycleReadout,confirmLabel,qtyLabel,cycleControls);
  cycle.append(cycleHeading,cycleContents);
  ticketBox.append(warning,quoteLabel,budgetLabel,exitLabel,compute,brief,cycle,technical);
  cycleStatus();
