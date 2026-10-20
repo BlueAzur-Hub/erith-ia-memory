@@ -201,8 +201,14 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
     selected?.coinId===CANONICAL_COINS[asset]&&
     selected?.currency==="USD"&&selected?.provider==="coingecko"&&
     selected?.instrument===asset+"-USD";
+  // The canonical CT owner publishes CT/USDT with a slash; the PAPER
+  // laboratory already normalizes that notation to CT-USDT. Apply the
+  // identical normalization here, without interpreting CT/USDT chart quotes
+  // as a CT/USDC order price. The price and lot come ONLY from the exact
+  // dated CT-USDC public exchange instrument below.
+  const ctChartInstrument=String(selected?.instrument||"").toUpperCase().replace("/","-");
   const verifiedCt=asset==="CT"&&selected?.provider==="okx"&&
-    selected?.instrument==="CT-USDT"&&selected?.currency==="USD"&&
+    ctChartInstrument==="CT-USDT"&&selected?.currency==="USD"&&
     /OKX.*CT[/-]USDT/i.test(String(selected?.source||""))&&
     /USDT[/-]USD.*CoinGecko/i.test(String(selected?.source||""));
   if(!canonical&&!verifiedCt)
