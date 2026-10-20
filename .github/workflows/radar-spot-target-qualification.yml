@@ -57,7 +57,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: radar-spot-target-qualification
+  group: ${{ github.event_name == 'pull_request' && format('radar-spot-qualification-pr-{0}', github.event.pull_request.number) || 'radar-spot-target-qualification' }}
   cancel-in-progress: false
 jobs:
   qualification:
