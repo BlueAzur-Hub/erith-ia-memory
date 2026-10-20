@@ -218,7 +218,25 @@ function verifiedCtLiveBook(payload,pair,now){
     market_fill_proven:false,bids,asks});
  }catch(_){return null;}
 }
-function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(),liveBook=null}={}){
+/* Live public CT/USDC instrument metadata. This validates quantity and price
+   increments only; it cannot certify account-specific or notional limits. */
+function verifiedCtSpotRules(source,pair,now){
+ if(pair!=="CT-USDC"||!Number.isFinite(now))return null;
+ const at=Date.parse(source?.observed_at_utc||"");
+ if(!Number.isFinite(at)||at>now||now-at>120000||
+    source?.payload?.code!=="0"||!Array.isArray(source.payload.data))return null;
+ const hits=source.payload.data.filter(r=>r?.instId===pair&&r?.instType==="SPOT");
+ if(hits.length!==1)return null;
+ const r=hits[0];
+ if(r.state!=="live"||r.baseCcy!=="CT"||r.quoteCcy!=="USDC")return null;
+ try{
+  const min=exact(r.minSz),lot=exact(r.lotSz),tick=exact(r.tickSz);
+  if(!min||!lot||!tick)return null;
+  return Object.freeze({minSz:r.minSz,lotSz:r.lotSz,
+    tickSz:r.tickSz,at:source.observed_at_utc});
+ }catch(_){return null;}
+}
+function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(),liveBook=null,instrumentEvidence=null}={}){
  try{
   if(!Number.isFinite(now))return ticketBlocked("Horloge non vérifiable.");
   const asset=String(selected?.asset||"");
@@ -278,8 +296,10 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
      observed>now+30000)
     return ticketBlocked("Heure du carnet ou observation incohérente.");
   const age=Math.max(0,Math.round((now-ts)/60000));
-  const tick=exact(m.rules?.tickSz),lot=exact(m.rules?.lotSz),
-        minimum=exact(m.rules?.minSz);
+  const freshRules=verifiedCtSpotRules(instrumentEvidence,pair,now);
+  const rules=freshRules||m.rules;
+  const tick=exact(rules?.tickSz),lot=exact(rules?.lotSz),
+        minimum=exact(rules?.minSz);
   const ask=exact(book.asks[0][0]),bid=exact(book.bids[0][0]),
         askQty=exact(book.asks[0][1]),bidQty=exact(book.bids[0][1]),
         budget=exact(budgetQuote);
@@ -300,13 +320,25 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
   const possibleAtBook=proceeds>=notional?"0":exactFmt(notional-proceeds);
   const budgetCoversMinimum=gross>=minimum;
   const canResellAtSize=sellable>=minimum;
+  // Base-fee conservative illustration: sufficient whole lots to leave
+  // minSz sellable if fees happen to be debited in CT at a 0.10% rate.
+  const minSellable=ceiling(minimum,lot);
+  // ceilDivide is NOT the same as ceiling(): the latter rounds to a
+  // quantity multiple. Never multiply a fee by 10 accidentally.
+  const ceilDivide=(a,b)=>(a+b-1n)/b;
+  let minimumGrossWithBaseFee=ceiling(
+    ceilDivide(minSellable*10000n,9990n),lot);
+  while(minimumGrossWithBaseFee-
+      ceilDivide(minimumGrossWithBaseFee*10n,10000n)<minSellable)
+    minimumGrossWithBaseFee+=lot;
+  const minimumGrossCost=minimumGrossWithBaseFee*ask/UNIT;
   // Price to cover exact hypothetically BASE buy fee + QUOTE sell fee.
   const theoreticalBreakEven=sellable>0n?
     ceiling(((notional*10000n*UNIT)/(sellable*9990n)),tick):null;
   const limits=[
     ...(budgetCoversMinimum?[]:["Budget d'étude sous le minimum natif de quantité : "+
       exactFmt(minimum)+" "+asset+" (environ "+exactFmt(minBuyQuote)+" "+quote+
-      " au carnet archivé)."]),
+      " au carnet "+(localBook?"local récent":"archivé")+")."]),
     ...(canResellAtSize?[]:["Quantité nette après frais BASE et arrondi au lot "+
       "insuffisante pour une revente au minimum natif."]),
     ...(gross<=askQty&&sellable<=bidQty?[]:["Profondeur au meilleur niveau insuffisante "+
@@ -321,7 +353,12 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
    status:"PREPARATION_NON_EXECUTABLE",pair,quote,base:asset,
    source_book_at_utc:book.source_at_utc,book_age_minutes:age,
    source_book_kind:localBook?"LOCAL_BACKEND_OKX_CT_USDC":"DATED_PUBLIC_HOURLY_ARCHIVE",
-   native_rules_observed_at_utc:last.observed_at_utc,
+   native_rules_observed_at_utc:freshRules?freshRules.at:last.observed_at_utc,
+   native_rules_kind:freshRules?"OKX_PUBLIC_INSTRUMENTS_CT_USDC":"DATED_PUBLIC_HOURLY_ARCHIVE",
+   native_rules_verified:!!freshRules,
+   fee_debit_currency_verified:false,
+   minimum_gross_buy_to_resell_with_assumed_base_fee:exactFmt(minimumGrossWithBaseFee),
+   minimum_gross_buy_cost_at_ask_with_assumed_base_fee:exactFmt(minimumGrossCost),
    study_budget_quote:exactFmt(budget),best_ask_quote:exactFmt(ask),
    best_bid_quote:exactFmt(bid),native_min_quantity:exactFmt(minimum),
    native_lot:exactFmt(lot),native_tick:exactFmt(tick),
@@ -390,7 +427,9 @@ function reviewSpotTicketAccount(ticket,context,now=Date.now()){
   ...(accountVerified&&!enough?["Solde Trading insuffisant pour le scénario public."]:[]),
   ...(!feeGood?["Frais maker/taker propres à la paire non certifiés."]:[]),
   "Les frais réels de l'actif de débit et les frais nets de revente restent à appliquer.",
-  "Prix du carnet archivé : aucune cotation négociable actuelle garantie.",
+  ticket.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
+   "Carnet public local récent : aucune garantie de prix ni d'exécution.":
+   "Prix du carnet archivé : aucune cotation négociable actuelle garantie.",
   "Minimum notionnel OKX, solde après réservations et confirmation humaine restent à vérifier.",
  ];
  return Object.freeze({status:!accountVerified?"COMPTE_NON_VERIFIE":
@@ -460,5 +499,5 @@ function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
    orders_enabled:false,real_orders:0,can_place_limit_order:false});
  }catch(_){return no("Quantité, prix, frais ou règle Spot non exploitable.");}
 }
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,verifiedCtLiveBook,reviewSpotTicketAccount,previewSpotExit,realOrders:false,network:false,storage:false});
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,verifiedCtLiveBook,verifiedCtSpotRules,reviewSpotTicketAccount,previewSpotExit,realOrders:false,network:false,storage:false});
 });

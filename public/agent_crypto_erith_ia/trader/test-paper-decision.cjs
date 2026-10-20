@@ -814,3 +814,68 @@ test("CT public Backend book changes PAPER levels only if exact, ordered and fre
  assert.match(view,/Règles Spot issues du relevé daté/);
  assert.doesNotMatch(view,/Authorization:|Bearer|\/trade\/order/);
 });
+
+test("CT fresh OKX public instruments rules override dated min, lot and tick only",()=>{
+ const time=Date.parse("2026-10-20T03:19:00Z");
+ const evidence={observed_at_utc:"2026-10-20T03:18:55Z",
+   payload:{code:"0",data:[{instId:"CT-USDC",instType:"SPOT",baseCcy:"CT",
+     quoteCcy:"USDC",state:"live",minSz:"10",lotSz:"0.01",tickSz:"0.0001"}]}};
+ const live={status:"ok",provider:"okx",pair:"CT-USDC",quote:"USDC",
+   observed_at_utc:"2026-10-20T03:18:55Z",bids:[["0.3112","100"]],
+   asks:[["0.3113","100"]]};
+ const args={selected:ctSource(),archive:ctArchive(),pair:"CT-USDC",
+   budgetQuote:"3.2",now:time,liveBook:live,instrumentEvidence:evidence};
+ const ticket=core.prepareSpotTicket(args);
+ assert.equal(ticket.status,"PREPARATION_NON_EXECUTABLE");
+ assert.equal(ticket.native_rules_verified,true);
+ assert.equal(ticket.native_rules_kind,"OKX_PUBLIC_INSTRUMENTS_CT_USDC");
+ assert.equal(ticket.native_tick,"0.0001");
+ assert.equal(ticket.native_min_quantity,"10.0");
+ assert.equal(ticket.native_lot,"0.01");
+ assert.equal(ticket.minimum_gross_buy_to_resell_with_assumed_base_fee,"10.02");
+ assert.equal(ticket.notional_filter_verified,false);
+ assert.equal(ticket.fee_debit_currency_verified,false);
+ assert.equal(ticket.orders_enabled,false);
+ const changes=[
+  {...evidence,observed_at_utc:"2026-10-20T03:16:00Z"},
+  {...evidence,observed_at_utc:"2026-10-20T03:19:30Z"},
+  {...evidence,payload:{code:"5",data:evidence.payload.data}},
+  {...evidence,payload:{code:"0",data:[]}},
+  {...evidence,payload:{code:"0",data:[...evidence.payload.data,...evidence.payload.data]}},
+  {...evidence,payload:{code:"0",data:[{...evidence.payload.data[0],instId:"CT-USDT"}]}},
+  {...evidence,payload:{code:"0",data:[{...evidence.payload.data[0],baseCcy:"BTC"}]}},
+  {...evidence,payload:{code:"0",data:[{...evidence.payload.data[0],state:"suspend"}]}},
+  {...evidence,payload:{code:"0",data:[{...evidence.payload.data[0],lotSz:"0"}]}},
+ ];
+ for(const invalid of changes){
+  const bad=core.prepareSpotTicket({...args,instrumentEvidence:invalid});
+  assert.equal(bad.native_rules_verified,false);
+  assert.equal(bad.native_rules_kind,"DATED_PUBLIC_HOURLY_ARCHIVE");
+  assert.equal(bad.native_tick,"0.00001");
+  assert.equal(bad.orders_enabled,false);
+ }
+ const updated={...evidence,payload:{code:"0",data:[
+  {...evidence.payload.data[0],minSz:"11"}]}};
+ const constrained=core.prepareSpotTicket({...args,instrumentEvidence:updated});
+ assert.equal(constrained.native_min_quantity,"11.0");
+ assert.equal(constrained.minimum_gross_buy_to_resell_with_assumed_base_fee,"11.02");
+ assert.equal(constrained.buy_quantity_minimum_met,false);
+ assert.match(constrained.blockers.join("|"),/sous le minimum natif/i);
+});
+test("CT public rules and fee-buffer UI never claim notionnel or fee debit certainty",()=>{
+ const fs=require("node:fs"),path=require("node:path");
+ const source=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ const coreCode=fs.readFileSync(path.join(__dirname,"trader-paper-decision-core.js"),"utf8");
+ assert.match(source,/api\/v5\/public\/instruments\?instType=SPOT&instId=CT-USDC/);
+ assert.match(source,/Promise\.allSettled/);
+ assert.match(source,/instrumentEvidence,now:Date\.now\(\)/);
+ assert.match(source,/Règles Spot issues du relevé daté/);
+ assert.match(source,/NON CERTIFIÉS par cette lecture publique/);
+ assert.match(source,/Frais débités en CT : HYPOTHÈSE/);
+ assert.match(source,/coût FICTIF du carnet choisi uniquement/);
+ assert.match(coreCode,/minimumGrossWithBaseFee/);
+ assert.match(coreCode,/notional_filter_verified:false/);
+ assert.match(coreCode,/fee_debit_currency_verified:false/);
+ assert.doesNotMatch(source,/\/api\/v5\/trade\/order|\/trade\/order|Bearer|Authorization:/);
+ assert.equal(core.realOrders,false);
+});
