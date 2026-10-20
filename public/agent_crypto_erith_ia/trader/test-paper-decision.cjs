@@ -1135,7 +1135,7 @@ test("LIMIT lifecycle remains paper from draft through partial fills and cancell
  assert.equal(draft.send_attempts,0);
  assert.ok(Object.isFrozen(draft));
  assert.throws(()=>core.advancePaperLimitCycle(draft,
-  {type:"PAPER_CONFIRM",confirmation:"ACHETER"},T+1000),/SIMULER/);
+  {type:"PAPER_CONFIRM",confirmation:"ACHETER"},T+1000),/confirmation/i);
  const sent=core.advancePaperLimitCycle(draft,
   {type:"PAPER_CONFIRM",confirmation:"SIMULER"},T+1000);
  assert.equal(sent.phase,"PAPER_SUBMITTED");
@@ -1201,7 +1201,7 @@ test("Unknown PAPER submission can only be reconciled, never retried",()=>{
 test("LIMIT lifecycle is embedded in the existing ticket with no trading API",()=>{
  const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
  const coreText=fs.readFileSync(path.join(__dirname,"trader-paper-decision-core.js"),"utf8");
- for(const key of ["data-cycle-paper","data-cycle-confirm","data-cycle-qty",
+ for(const key of ["data-cycle-paper","data-cycle-qty","data-cycle-command",
    "PAPER_RECONCILE_OPEN","Afficher le rapport technique complet"])
    assert.ok(view.includes(key),"missing "+key);
  assert.match(view,/cyclePlan=\{ticket:answer,context,preview:exit,qualifiedAt\}/);
@@ -1235,4 +1235,48 @@ test("Delayed click after a valid CT-USDC check uses the qualified PAPER snapsho
   qualifiedAt:T-121000,now:T}).reason,/Carnet non récent/);
  assert.equal(core.startPaperLimitCycle({...args,
   qualifiedAt:T,preview:{...preview,book_fresh_for_execution:false}}).ok,false);
+});
+
+
+test("PAPER simulator shows only contextual actions; no typed confirmation",()=>{
+ const src=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ assert.doesNotMatch(src,/setAttribute\("data-cycle-confirm"/);
+ assert.match(src,/const confirmation=command==="confirm"\?"SIMULER":null/);
+ assert.match(src,/btn\.hidden=!possible/);
+ assert.match(src,/btn\.style\.display=possible\?"":"none"/);
+ assert.match(src,/data-cycle-qty-label/);
+ assert.match(src,/reject:phase==="PAPER_SUBMITTED"/);
+ assert.match(src,/cancel:\["PAPER_ACCEPTED","PAPER_PARTIAL"\]/);
+ assert.match(src,/Refuser \(avant acceptation\)/);
+ assert.match(src,/Annuler \(après acceptation\)/);
+ assert.doesNotMatch(src,/\/api\/v5\/trade\/order|\/okx\/place-order/);
+});
+test("PAPER-only confirmation never expires during user reading; partial cannot be rejected",()=>{
+ const ticket={...ctTicket(),source_book_kind:"LOCAL_BACKEND_OKX_CT_USDC",
+  source_book_at_utc:new Date(T-1000).toISOString()};
+ const context={read_only:true,orders_enabled:false,real_orders:0,instId:"CT-USDC",
+  fee_type_verified:true,fee_type:"0",fee_taker_rate:"0.001",
+  order_gates_verified:true,order_gates_at_utc:new Date(T-1000).toISOString(),
+  order_gates:{maxBuy:"10.11"}};
+ const preview={status:"ETUDE_SORTIE",orders_enabled:false,real_orders:0,
+  limit_proof_verified:true,book_fresh_for_execution:true,
+  meets_native_exit_minimum:true,paper_budget_covers_total_cost:true,
+  buy_quantity:"10.1"};
+ const draft=core.startPaperLimitCycle({ticket,context,preview,qualifiedAt:T,now:T,nonce:30});
+ assert.equal(draft.phase,"PAPER_DRAFT");
+ const submitted=core.advancePaperLimitCycle(draft,
+  {type:"PAPER_CONFIRM",confirmation:"SIMULER"},T+10*60*1000);
+ assert.equal(submitted.phase,"PAPER_SUBMITTED");
+ const accepted=core.advancePaperLimitCycle(submitted,{type:"PAPER_ACCEPT"},T+10*60*1000+1);
+ const partial=core.advancePaperLimitCycle(accepted,
+  {type:"PAPER_FILL_PART",quantity_ct:"3.00"},T+10*60*1000+2);
+ const uncertain=core.advancePaperLimitCycle(partial,{type:"PAPER_UNKNOWN"},T+10*60*1000+3);
+ assert.throws(()=>core.advancePaperLimitCycle(uncertain,{type:"PAPER_RECONCILE_REJECT"},T+10*60*1000+4),
+   /partiellement rempli/);
+ const cancelled=core.advancePaperLimitCycle(uncertain,
+   {type:"PAPER_RECONCILE_CANCEL"},T+10*60*1000+5);
+ assert.equal(cancelled.phase,"PAPER_CANCELLED");
+ assert.equal(cancelled.filled,"3.0");
+ assert.equal(cancelled.orders_enabled,false);
+ assert.equal(cancelled.real_orders,0);
 });

@@ -17,53 +17,68 @@ function cycleStatus(){
  const section=document.getElementById("traderOkxTicket");
  const out=section?.querySelector("[data-cycle-status]");
  if(!out)return;
- const state=cycleState;
+ const state=cycleState,phase=state?.phase||"";
+ const labels={
+  PAPER_DRAFT:"Brouillon préparé · aucun ordre transmis",
+  PAPER_SUBMITTED:"Demande fictive soumise · choisir Accepté ou Refusé",
+  PAPER_ACCEPTED:"Accepté fictivement · choisir Exécution, Annulation ou État inconnu",
+  PAPER_PARTIAL:"Exécution partielle · le restant peut être exécuté ou annulé",
+  PAPER_FILLED:"Exécution fictive complète",
+  PAPER_REJECTED:"Refus fictif · aucun nouvel achat",
+  PAPER_CANCELLED:"Annulé fictivement · les quantités déjà remplies restent acquises dans l'étude",
+  PAPER_UNKNOWN:"Statut incertain · aucune nouvelle soumission, réconciliation uniquement"
+ };
  const lines=state?[
-  "SIMULATION UNIQUEMENT · aucun ordre envoyé vers OKX",
-  "ÉTAT : "+state.phase+" · "+state.pair+" · achat LIMIT fictif",
-  "Prix fictif "+state.price+" USDC · quantité "+state.quantity+" CT",
-  "Photographie PAPER validée à "+state.studied_at+
-    " · "+state.snapshot_age_seconds+" s lors de la préparation.",
-  "Le cours peut avoir changé depuis ; aucun prix négociable actuel n'est certifié.",
-  "Remplis fictivement "+state.filled+" CT · restant "+state.remaining+" CT",
-  "Après frais estimés : revendables "+state.sellable+" CT · poussière "+state.dust+" CT",
-  state.below_min_sell&&state.filled!=="0.0"?
-    "ATTENTION : exécution partielle sous le minimum revendable de "+state.min_size+" CT.":
-    "Vente éventuelle : règles et liquidité à vérifier, même si la taille est suffisante.",
-  state.unknown?"ÉTAT INCERTAIN : bloqué, aucun nouvel envoi ; rapprocher le statut fictif.":
-    "Chaque changement d'état vient d'un clic humain, jamais d'OKX.",
-  "Aucun droit Trade, aucun transport, aucune réservation de fonds."
+  "SIMULATION LOCALE · aucun ordre OKX, aucun fonds engagé",
+  "ÉTAT : "+(labels[phase]||phase),
+  "CT/USDC · achat LIMIT fictif : "+state.quantity+" CT à "+state.price+" USDC",
+  "Exécutés fictivement : "+state.filled+" CT · restant : "+state.remaining+" CT",
+  "CT revendables estimés : "+state.sellable+" · poussière : "+state.dust,
+  ...(state.below_min_sell&&Number(state.filled)>0?
+    ["ATTENTION : moins de "+state.min_size+" CT revendables après frais estimés."]:[]),
+  "Photographie PAPER du "+state.studied_at+" · prix non garanti, aucun droit Trade."
  ]:[
-  "Cycle LIMIT FICTIF · sans permission Trade",
-  "Commence par vérifier le ticket CT/USDC récent ci-dessus.",
-  "Puis clique sur Préparer le scénario PAPER. Aucune transaction."
+  "Simulation CT/USDC · aucun ordre réel",
+  "Après « Vérifier ce scénario », clique sur « Préparer la simulation ».",
+  "Seules les actions possibles sont proposées à chaque étape."
  ];
  if(cycleError)lines.push("DIAGNOSTIC : "+cycleError);
  out.textContent=lines.join("\n");
- const phase=state?.phase||"";
  const allowed={
   create:!state||["PAPER_FILLED","PAPER_REJECTED","PAPER_CANCELLED"].includes(phase),
+  abandon:phase==="PAPER_DRAFT",
   confirm:phase==="PAPER_DRAFT",accept:phase==="PAPER_SUBMITTED",
-  reject:phase==="PAPER_SUBMITTED",unknown:["PAPER_SUBMITTED","PAPER_ACCEPTED","PAPER_PARTIAL"].includes(phase),
+  reject:phase==="PAPER_SUBMITTED",
+  unknown:["PAPER_SUBMITTED","PAPER_ACCEPTED","PAPER_PARTIAL"].includes(phase),
   partial:["PAPER_ACCEPTED","PAPER_PARTIAL"].includes(phase),
   full:["PAPER_ACCEPTED","PAPER_PARTIAL"].includes(phase),
   cancel:["PAPER_ACCEPTED","PAPER_PARTIAL"].includes(phase),
   reconcile_open:phase==="PAPER_UNKNOWN",
-  reconcile_reject:phase==="PAPER_UNKNOWN",
-  reconcile_cancel:phase==="PAPER_UNKNOWN"};
+  reconcile_reject:phase==="PAPER_UNKNOWN"&&Number(state?.filled)===0,
+  reconcile_cancel:phase==="PAPER_UNKNOWN"
+ };
  for(const btn of section.querySelectorAll("[data-cycle-command]")){
   const cmd=btn.getAttribute("data-cycle-command");
-  btn.disabled=!allowed[cmd]||(cmd==="create"&&!cyclePlan);
+  const possible=Boolean(allowed[cmd]);
+  btn.hidden=!possible;
+  btn.style.display=possible?"":"none";
+  btn.disabled=!possible||(cmd==="create"&&!cyclePlan);
  }
+ const qtyLabel=section.querySelector("[data-cycle-qty-label]");
+ if(qtyLabel)qtyLabel.style.display=allowed.partial?"":"none";
 }
 function cycleAction(command){
  const section=document.getElementById("traderOkxTicket");
  if(!section)return;
  cycleError="";
  try{
-  if(command==="create"){
+  if(command==="abandon"){
+   if(cycleState?.phase!=="PAPER_DRAFT")throw Error("Seul un brouillon peut être abandonné.");
+   cycleState=null; // no trade, no pending order, no network
+  }else if(command==="create"){
    if(cycleState&&!["PAPER_FILLED","PAPER_REJECTED","PAPER_CANCELLED"].includes(cycleState.phase))
      throw Error("Terminer la simulation en cours avant d'en créer une autre.");
+   if(!cyclePlan)throw Error("Vérifie d'abord le ticket CT/USDC.");
    cycleState=core.startPaperLimitCycle({...cyclePlan,now:Date.now(),nonce:++cycleNumber});
    if(cycleState.ok!==true){cycleError=cycleState.reason;cycleState=null;}
   }else{
@@ -73,7 +88,9 @@ function cycleAction(command){
      cancel:"PAPER_CANCEL",reconcile_open:"PAPER_RECONCILE_OPEN",
      reconcile_reject:"PAPER_RECONCILE_REJECT",
      reconcile_cancel:"PAPER_RECONCILE_CANCEL"};
-   const confirmation=section.querySelector("[data-cycle-confirm]")?.value||"";
+   // The click itself is deliberate confirmation: no pointless typed
+   // secret for a zero-network, non-executable PAPER state transition.
+   const confirmation=command==="confirm"?"SIMULER":null;
    const quantity_ct=String(section.querySelector("[data-cycle-qty]")?.value||"").replace(",",".");
    cycleState=core.advancePaperLimitCycle(cycleState,{type:types[command],
      confirmation,quantity_ct},Date.now());
@@ -731,21 +748,16 @@ function mount(){
  cycle.setAttribute("data-cycle-paper","");
  cycle.className="pl-more";
  const cycleHeading=document.createElement("summary");
- cycleHeading.textContent="Cycle d'ordre LIMIT fictif · confirmation, fill partiel, annulation";
+ cycleHeading.textContent="Cycle LIMIT · laboratoire de validation (simulation)";
  const cycleContents=document.createElement("div");
  const cycleWarning=document.createElement("p");
- cycleWarning.textContent="Tous les statuts et les exécutions sont INVENTÉS par le simulateur. "+
-   "Tu peux prendre le temps de lire : la simulation utilise une photographie validée, "+
-   "sans prétendre que son prix reste actuel. Aucun ordre OKX, aucune permission Trade, aucune sauvegarde.";
+ cycleWarning.textContent="Simulation LOCALE : aucune requête OKX et aucun achat. "+
+   "Les boutons apparaissent uniquement lorsqu'ils ont un sens. "+
+   "Refuser se fait avant acceptation ; annuler, après acceptation.";
  const cycleReadout=document.createElement("pre");
  cycleReadout.setAttribute("data-cycle-status","");
  cycleReadout.setAttribute("role","status");
  cycleReadout.setAttribute("aria-live","polite");
- const cycleConfirm=document.createElement("input");
- cycleConfirm.setAttribute("data-cycle-confirm","");
- cycleConfirm.setAttribute("aria-label","Écrire SIMULER pour confirmer le scénario fictif");
- cycleConfirm.setAttribute("placeholder","Écrire SIMULER pour confirmer");
- cycleConfirm.setAttribute("autocomplete","off");
  const cycleQty=document.createElement("input");
  cycleQty.setAttribute("data-cycle-qty","");
  cycleQty.setAttribute("aria-label","Quantité fictive partiellement exécutée en CT");
@@ -753,12 +765,14 @@ function mount(){
  const cycleControls=document.createElement("div");
  cycleControls.style.cssText="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0";
  const commands=[
-  ["create","Préparer scénario PAPER"],["confirm","Confirmer simulation"],
-  ["accept","Accepter fictivement"],["reject","Refuser fictivement"],
-  ["unknown","État inconnu"],["partial","Exécution partielle fictive"],
-  ["full","Exécuter le solde fictif"],["cancel","Annuler fictivement"],
-  ["reconcile_open","Réconcilier : ouvert"],["reconcile_reject","Réconcilier : rejeté"],
-  ["reconcile_cancel","Réconcilier : annulé"]
+  ["create","Préparer la simulation"],["confirm","Soumettre fictivement"],
+  ["abandon","Abandonner le brouillon"],
+  ["accept","Accepter (simulation)"],["reject","Refuser (avant acceptation)"],
+  ["unknown","Statut incertain"],["partial","Exécuter une partie"],
+  ["full","Exécuter le restant"],["cancel","Annuler (après acceptation)"],
+  ["reconcile_open","Réconciliation : ouvert"],
+  ["reconcile_reject","Réconciliation : rejeté"],
+  ["reconcile_cancel","Réconciliation : annulé"]
  ];
  for(const [command,label] of commands){
   const control=document.createElement("button");
@@ -767,13 +781,11 @@ function mount(){
   control.addEventListener("click",()=>cycleAction(command));
   cycleControls.append(control);
  }
- const confirmLabel=document.createElement("label");
- confirmLabel.textContent="Confirmation humaine fictive ";
- confirmLabel.append(cycleConfirm);
  const qtyLabel=document.createElement("label");
- qtyLabel.textContent="Remplissage partiel simulé (CT) ";
+ qtyLabel.setAttribute("data-cycle-qty-label","");
+ qtyLabel.textContent="Quantité exécutée fictivement (CT) ";
  qtyLabel.append(cycleQty);
- cycleContents.append(cycleWarning,cycleReadout,confirmLabel,qtyLabel,cycleControls);
+ cycleContents.append(cycleWarning,cycleReadout,qtyLabel,cycleControls);
  cycle.append(cycleHeading,cycleContents);
  ticketBox.append(warning,quoteLabel,budgetLabel,exitLabel,compute,brief,cycle,technical);
  cycleStatus();
