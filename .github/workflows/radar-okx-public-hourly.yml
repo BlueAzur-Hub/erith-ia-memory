@@ -1,0 +1,64 @@
+name: Radar OKX EEA Public Hourly
+on:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
+      - '.github/workflows/radar-okx-public-hourly.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
+      - '.github/workflows/radar-okx-public-hourly.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+permissions:
+  contents: write
+concurrency:
+  # Same lock as other public Radar writes to main; PR tests never block production.
+  group: ${{ github.event_name == 'pull_request' && format('radar-okx-hourly-pr-{0}', github.event.pull_request.number) || 'radar-spot-target-qualification' }}
+  cancel-in-progress: false
+jobs:
+  hourly_public_spot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify bounded EEA public data and no orders (offline)
+        run: |
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_okx_public_hourly.py' -v
+      - name: Archive one immutable UTC hourly public snapshot
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            # Never backfill the missed hour with a newly observed current quote.
+            python public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py
+            git add -A -- public/agent_crypto_erith_ia/data/crypto/okx-hourly/
+            if git diff --cached --quiet; then
+              echo 'UTC hourly observation already archived; no duplicate or backfill'
+              exit 0
+            fi
+            git commit -m 'Archive dated OKX EEA hourly public Spot snapshot (no orders)'
+            if git push origin HEAD:main; then
+              echo 'Hour archived: public prices and book evidence only'
+              exit 0
+            fi
+            echo 'Repository moved; retrying on the newest main without overwriting snapshots'
+            sleep "$((attempt*3))"
+          done
+          echo 'Could not publish snapshot to main; no fabricated market data' >&2
+          exit 1
