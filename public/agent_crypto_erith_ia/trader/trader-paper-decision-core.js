@@ -171,6 +171,8 @@ function summarizeHistorical(study,selected){
    Funds are hypothetical; actual Trading balance/fees/order permissions are
    NEVER inferred from a screenshot, WebSocket, market maker quote or Funding. */
 const TICKET="erith.trader.okx-spot-limit-preflight.v1",UNIT=10n**18n;
+// Small bounded tolerance for clock/network jitter; never waive book age.
+const CT_BOOK_CLOCK_LEEWAY_MS=2000;
 const CANONICAL_COINS=Object.freeze({BTC:"bitcoin",ETH:"ethereum",SOL:"solana",
  XRP:"ripple",OKB:"okb"});
 function exact(raw){
@@ -198,7 +200,8 @@ function verifiedCtLiveBook(payload,pair,now){
     payload?.provider!=="okx"||payload?.pair!==pair||
     payload?.quote!=="USDC"||!Number.isFinite(now))return null;
  const when=Date.parse(payload.observed_at_utc);
- if(!Number.isFinite(when)||when>now||now-when>20000)return null;
+ if(!Number.isFinite(when)||when>now+CT_BOOK_CLOCK_LEEWAY_MS||
+    now-when>20000)return null;
  const bids=payload.bids,asks=payload.asks;
  if(!Array.isArray(bids)||!Array.isArray(asks)||
     !bids.length||!asks.length)return null;
@@ -230,14 +233,17 @@ function diagnoseCtLiveBook(payload,pair,now=Date.now()){
  const at=Date.parse(payload.observed_at_utc||"");
  if(!Number.isFinite(now)||!Number.isFinite(at))
    return fail("TIMESTAMP_INVALID","Horodatage du carnet OKX absent ou invalide.");
- if(at>now)return fail("TIMESTAMP_FUTURE","Horodatage du carnet dans le futur ; horloges à contrôler.");
+ if(at>now+CT_BOOK_CLOCK_LEEWAY_MS)
+   return fail("TIMESTAMP_FUTURE","Heure du carnet en avance de "+
+      ((at-now)/1000).toFixed(3)+" s sur Firefox (tolérance 2 s dépassée).");
  if(now-at>20000)
    return fail("BOOK_STALE","Carnet local trop ancien ("+
      Math.round((now-at)/1000)+" secondes) ; aucun prix actuel accepté.");
  if(!verifiedCtLiveBook(payload,pair,now))
    return fail("BOOK_INVALID","Niveaux de prix ou quantités invalides, mal triés ou croisés.");
  return Object.freeze({accepted:true,code:"LOCAL_OK",
-   reason:"Carnet OKX CT-USDC récent qualifié (sans garantie d'exécution)."});
+   reason:(at>now?"Petit écart d'horloge de "+((at-now)/1000).toFixed(3)+
+      " s toléré. ":"")+"Carnet OKX CT-USDC récent qualifié (sans garantie d'exécution)."});
 }
 /* Live public CT/USDC instrument metadata. This validates quantity and price
    increments only; it cannot certify account-specific or notional limits. */
@@ -436,7 +442,8 @@ function checkSpotOrderGates(ticket,context,now=Date.now()){
      exact(ticket.native_lot)===lot&&exact(ticket.native_tick)===tick;
    const capLots=(cap/lot)*lot;
    const sourceAt=Date.parse(ticket.source_book_at_utc||"");
-   const bookFresh=Number.isFinite(sourceAt)&&sourceAt<=now&&
+   const bookFresh=Number.isFinite(sourceAt)&&
+      sourceAt<=now+CT_BOOK_CLOCK_LEEWAY_MS&&
       now-sourceAt<=20000&&ticket.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC";
    const priceInLimit=ask<=buyPriceLimit&&ask%tick===0n;
    const qtyWithin=gross<=cap&&gross<=capLots;
