@@ -122,6 +122,25 @@ function mount(){
       view.onerror=()=>{
         if(status){status.textContent="Vue laboratoire PAPER indisponible";status.dataset.state="error";}
       };
+      // Add the optional public evidence reader to the EXISTING PAPER lab.
+      // Load only after the original lab view: chart/PAPER owner stays unchanged.
+      view.onload=()=>{
+        if(!win.AgentCryptoTraderPaperLab)return;
+        const add=(id,file,next)=>{
+          if(doc.getElementById(id)){next?.();return;}
+          const part=doc.createElement("script");
+          part.id=id;part.src=new URL("../trader/"+file,doc.baseURI).href;
+          part.onload=()=>next?.();
+          part.onerror=()=>{
+            if(status){status.textContent="Diagnostic PAPER public indisponible";status.dataset.state="error";}
+          };
+          doc.head.appendChild(part);
+        };
+        const mountDecision=()=>add("traderPaperDecisionViewScript","trader-paper-decision-view.js");
+        const loadDecision=()=>add("traderPaperDecisionCoreScript","trader-paper-decision-core.js",mountDecision);
+        if(win.AgentCryptoSpotPaperOrders)loadDecision();
+        else add("traderSpotPaperOrdersReadScript","spot-paper-order-engine.js",loadDecision);
+      };
       doc.head.appendChild(view);
     };
     script.onerror=()=>{
