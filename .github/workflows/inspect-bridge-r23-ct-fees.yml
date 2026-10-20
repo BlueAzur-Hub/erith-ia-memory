@@ -1,0 +1,53 @@
+name: Inspect R23 public fee contract (read-only)
+on:
+  push:
+    branches:
+      - seven/inspect-bridge-r23-ct-fees
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect archived Python source without executing it
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import re
+          p = Path('coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_AETHER_CONTROL_R23_BRIDGE_V1_9_17_BACKEND_V1_4_6_ATLAS_SINGLEFLIGHT.zip')
+          assert p.is_file(), 'Canonical ZIP missing'
+          with ZipFile(p) as z:
+              names=z.namelist()
+              print('ARCHIVE_ENTRIES',len(names))
+              for name in names:
+                  if name.endswith(('.py','.md')) and ('bridge' in name.lower() or 'backend' in name.lower()):
+                      print('SOURCE_MEMBER',name)
+              matches=[]
+              for name in names:
+                  if not name.endswith('.py'):
+                      continue
+                  try:
+                      txt=z.read(name).decode('utf-8')
+                  except UnicodeDecodeError:
+                      continue
+                  lines=txt.splitlines()
+                  for i,line in enumerate(lines):
+                      low=line.lower()
+                      if any(needle in low for needle in ('/okx/fees','trade-fee','trading/fee','fee_group','feegroup','get_trade_fee','instid') ) and ('fee' in low or 'instid' in low):
+                          if 'instid' in low and 'fee' not in low and 'trade' not in low:
+                              continue
+                          matches.append((name,i,lines))
+              for name,i,lines in matches[:36]:
+                  print('FEE_SOURCE',name,'LINE',i+1)
+                  for j in range(max(0,i-3),min(len(lines),i+7)):
+                      line=lines[j].strip()[:220]
+                      if re.search(r'(api_key|secret|passphrase|bearer|authorization)\s*=\s*["\x27]',line,re.I):
+                          line='[credential assignment omitted]'
+                      print(f'  {j+1}: {line}')
+              print('FEE_SOURCE_MATCHES',len(matches))
+          PY
