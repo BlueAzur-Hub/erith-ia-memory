@@ -52,7 +52,8 @@ on:
     branches: [main]
   schedule:
     # Verify soon after the 07:31 UTC public archive; keep 14:31 UTC backup.
-    - cron: '7 8,14 * * *'
+    - cron: '7 8 * * *'
+    - cron: '31 14 * * *'
 permissions:
   contents: write
 concurrency:
