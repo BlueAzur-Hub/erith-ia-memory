@@ -244,7 +244,13 @@ function ticketRemainingBlockers(ticket,review){
    !(message===balance&&accountOk)&&!(message===fees&&feesOk));
  if(accountOk&&!review.funds_cover_public_scenario)
    remaining.push("Couverture du coût fictif par le solde Trading non démontrée.");
- return remaining;
+ if(review?.spot_gates?.verified&&!review.spot_gates.proposed_within_max_buy)
+   remaining.push("Quantité PAPER supérieure au plafond d'achat du compte : ce scénario brut est incompatible avec maxBuy.");
+ if(review?.spot_gates?.verified&&!review.spot_gates.rules_match)
+   remaining.push("Les règles Spot du carnet et celles du compte ne concordent pas.");
+ if(review?.spot_gates?.verified&&!review.spot_gates.book_fresh)
+   remaining.push("Carnet non actuel : nouvelle cotation indispensable avant tout projet d'ordre.");
+ return [...new Set(remaining)];
 }
 /* Public CT/USDC Backend route, also used by IA Concrete.
    Only when a human verifies the PAPER ticket; never polls or sends keys. */
@@ -353,6 +359,7 @@ async function prepareTicket(){
      }
      lines.push("Minimum natif : "+answer.native_min_quantity+" "+answer.base+
        " · valeur indicative "+answer.minimum_buy_at_recorded_ask_quote+" "+quote);
+     lines.push("Étude publique AVANT plafonds du compte — quantité non définitive.");
      lines.push("Achat LIMIT étudié au ask "+(answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
        "récent du Backend":"archivé")+" : "+answer.best_ask_quote+" "+quote+
        " · quantité brute "+answer.gross_buy_quantity+" "+answer.base);
@@ -444,10 +451,12 @@ async function prepareTicket(){
        result.push("PREPARATION SEULEMENT · aucune autorisation Trade ; aucun ordre envoyable.");
        return result;
      })():[]),
-     review.fee_type==="1"&&review.fee_mode_verified?
+     review.spot_gates?.verified&&!review.scenario_within_account_max_buy?
+       "ALERTE : montant USDC potentiellement suffisant, MAIS quantité PAPER supérieure à maxBuy OKX · vérifier la simulation plafonnée.":
+       review.fee_type==="1"&&review.fee_mode_verified?
        "Frais en USDC : le coût du premier achat brut dépasse éventuellement le budget ; voir scénario réajusté ci-dessous.":
        review.funds_cover_public_scenario?
-       "Solde Trading suffisant pour le coût FICTIF du carnet choisi uniquement.":
+       "Solde Trading couvrant uniquement le coût FICTIF du carnet choisi (pas une preuve de faisabilité).":
        "Solde Trading insuffisant ou non vérifié pour ce scénario.",
      review.reason,
      "AUCUN achat, vente, transfert ni réservation de fonds."
@@ -464,6 +473,17 @@ async function prepareTicket(){
             "récent":"archivé")+", pas un achat actuel)."
     ];
     if(exit.maximum_sellable_base!==undefined){
+      if(exit.limit_proof_verified){
+        exitLines.push("Contrôle R25 : quantité limite du compte "+exit.account_max_buy_base+
+          " CT · comparaison indicative, max-size ne garantit pas le prix du carnet.");
+        if(exit.order_gates_adjusted)
+          exitLines.push("QUANTITÉ PAPER CORRIGÉE : "+exit.original_paper_buy_quantity+
+            " CT → "+exit.buy_quantity+" CT pour ne pas dépasser le maxBuy lu.");
+      }else{
+        exitLines.push("Plafond de quantité R25 non prouvé : calcul indicatif non qualifié.");
+      }
+      if(!exit.book_fresh_for_execution)
+        exitLines.push("Carnet ancien ou non qualifié : prix historique uniquement, aucun ordre possible.");
       if(exit.quote_fee_budget_adjusted){
         exitLines.push("Mode compte USDC : quantité PAPER recalculée pour inclure les frais d'achat dans le budget fictif.");
         exitLines.push("Frais d'achat estimés : "+exit.estimated_buy_fee_quote+
@@ -487,7 +507,7 @@ async function prepareTicket(){
         "Frais de la paire exacte lus via le compte OKX, taux le plus défavorable retenu.":
         "Frais CT/USDC NON certifiés : hypothèse de 0,10 % de chaque côté.");
       exitLines.push(exit.funds_cover_public_scenario?
-        "Solde Trading suffisant pour cette étude (pas une autorisation d'achat).":
+        "Solde Trading couvrant le scénario PAPER plafonné, sans garantie de marché ni permission d'ordre.":
         "Solde Trading indisponible, inconnu ou insuffisant pour ce scénario.");
       if(!exit.full_exit_without_dust)
         exitLines.push("100 % peut laisser cette poussière : sortie exactement à zéro "+
