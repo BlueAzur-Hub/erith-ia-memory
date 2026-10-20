@@ -157,9 +157,12 @@ async function ticketReadOnly(instId){
      status===429?"Bridge : limite de fréquence sur les frais.":
      "Bridge : lecture des frais de cette paire indisponible.";
  }
- const context=summarizeTicketAccount(ctCycleAccount,fees,instId,Date.now());
- return feeFailure&&!context.fee_pair_verified?
-   Object.freeze({...context,fee_reason:feeFailure}):context;
+ if(!feeFailure)
+   return summarizeTicketAccount(ctCycleAccount,fees,instId,Date.now());
+ // Keep the existing success path unchanged; a failed fee read is diagnostic
+ // only and must never be treated as an exact-pair rate confirmation.
+ const context=summarizeTicketAccount(ctCycleAccount,null,instId,Date.now());
+ return Object.freeze({...context,fee_reason:feeFailure});
 }
 function feeLabel(payload){
   const row=Array.isArray(payload?.fees)?payload.fees[0]:null;
