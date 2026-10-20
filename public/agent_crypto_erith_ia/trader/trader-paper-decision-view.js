@@ -341,8 +341,8 @@ async function prepareTicket(){
      if(pair==="CT-USDC"){
        lines.push("minSz "+answer.native_min_quantity+" CT · lotSz "+
          answer.native_lot+" CT · tickSz "+answer.native_tick+" USDC.");
-       lines.push("Minimum brut pour revendre au moins 10 CT après des frais "+
-         "hypothétiques de 0,10 % prélevés en CT : "+
+       lines.push("Minimum brut pour revendre au moins "+answer.native_min_quantity+
+         " CT après des frais hypothétiques de 0,10 % prélevés en CT : "+
          answer.minimum_gross_buy_to_resell_with_assumed_base_fee+
          " CT · coût fictif à l'ask : "+
          answer.minimum_gross_buy_cost_at_ask_with_assumed_base_fee+" USDC.");
