@@ -565,6 +565,31 @@ test("CT private maker/taker belong to CT-USDC, never BTC or USDT",()=>{
  assert.equal(core.previewSpotExit({ticket:ctTicket(),context:wrong,
   targetPriceQuote:"0.39",now:T}).fees_verified,false);
 });
+test("CT fee diagnostic explains missing contract proof without granting order permissions",()=>{
+ const owner=require("./trader-okx-account.js");
+ const account={ok:true,read_only:true,fetched_at:"2026-10-20T03:18:50Z",
+  trading:[{details:[{ccy:"USDC",availBal:"3.20"}]}],funding:[]};
+ const query=fees=>owner.summarizeTicketAccount(account,fees,"CT-USDC",T);
+ const missingId=query({fees:[{instType:"SPOT",maker:"-0.0008",taker:"-0.001",
+   feeGroup:[{groupId:"1",maker:"-0.0008",taker:"-0.001"}]}]});
+ assert.equal(missingId.verified,true);
+ assert.equal(missingId.fee_pair_verified,false);
+ assert.match(missingId.fee_reason,/instId absent/);
+ assert.equal(missingId.orders_enabled,false);
+ const wrong=query({fees:[{instId:"BTC-USDC",maker:"-0.0008",taker:"-0.001"}]});
+ assert.equal(wrong.fee_pair_verified,false);
+ assert.match(wrong.fee_reason,/paire différente/);
+ assert.match(query(null).fee_reason,/Réponse des frais OKX absente/);
+ const ambiguous=query({fees:[{instId:"CT-USDC",maker:"-0.0008",taker:"-0.001"},
+  {instId:"CT-USDT",maker:"-0.0008",taker:"-0.001"}]});
+ assert.equal(ambiguous.fee_pair_verified,false);
+ assert.match(ambiguous.fee_reason,/Plusieurs lignes/);
+ const exact=query({fees:[{instId:"CT-USDC",maker:"-0.0008",taker:"-0.001"}]});
+ assert.equal(exact.fee_pair_verified,true);
+ assert.equal(exact.fee_reason,null);
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ assert.match(view,/Diagnostic frais : /);
+});
 test("CT native exit preview rejects invalid tick and wrong token identity",()=>{
  const tk=ctTicket("3.1093");
  const p=core.previewSpotExit({ticket:tk,targetPriceQuote:"0.39",now:T});
