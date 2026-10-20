@@ -285,10 +285,16 @@
      const id=String(external.id||''),symbol=String(external.base||'').toUpperCase();
      const pair=v=>String(v||'').toUpperCase().replace(/\//g,'-');
      const wantedPair=pair(external.instrument),selectedPair=pair(n?.selectedPair);
-     if(!period||!id||!symbol||!wantedPair||
+     if(!id||!symbol||
        id!==String(ref.ds.atlasCoin.id||'')||
        symbol!==String(ref.ds.atlasCoin.symbol||'').toUpperCase()||
-       id!==String(n?.selectedId||'')||
+       id!==String(n?.selectedId||''))return false;
+     // Preserve the original owner handshake for ordinary active external
+     // charts (DNA, CT, and other listings): do not require extra readers.
+     if(chartOwner?.active)return String(chartOwner.coin_id||'')===id;
+     // Fallback is ONLY for a restored chart without an active controller;
+     // it requires independent exact source and plotted price concordance.
+     if(!period||!wantedPair||
        symbol!==String(n?.selectedSymbol||'').toUpperCase()||
        external.provider!==n?.selectedProvider||
        wantedPair!==selectedPair||
@@ -299,8 +305,6 @@
        !Array.isArray(h.series)||h.series.length<21||
        h.series.length!==ref.ds.data?.length||h.series.length!==ref.meta.data?.length)
        return false;
-     // Never override a different *active* market chart owner.
-     if(chartOwner?.active&&String(chartOwner.coin_id||'')!==id)return false;
      for(const i of [...new Set([0,Math.floor(h.series.length/2),h.series.length-1])]){
        const plotted=priceValue(ref.ds.data[i]),verified=N(h.series[i]?.[1]);
        if(!(plotted>0&&verified>0)||Math.abs(plotted/verified-1)>0.001)
