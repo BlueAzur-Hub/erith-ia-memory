@@ -167,8 +167,8 @@ test("historic summaries fail closed on other coins, forged profits, and absent 
 test("the diagnostic refreshes on chart proof changes, without a new timer or reset",()=>{
  const fs=require("node:fs"),path=require("node:path");
  const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
- assert.match(view,/paper\.historicalStudy\(s\.input,cfg\)/);
- assert.match(view,/core\.summarizeHistorical\(study,s\.qualified\)/);
+ assert.match(view,/paper\.historicalStudy\(s\.input,cfg,s\.historical\.asOf\)/);
+ assert.match(view,/core\.summarizeHistorical\(study,s\.historical\.qualified\)/);
  assert.match(view,/agent-crypto:graph-context-ready/);
  assert.match(view,/void evaluate\(false\)/);
  assert.match(view,/next===box\.dataset\.lastSelection/);
@@ -176,4 +176,59 @@ test("the diagnostic refreshes on chart proof changes, without a new timer or re
  assert.match(view,/okx-hurdle-followups\.json/);
  assert.doesNotMatch(view,/Sélection modifiée : relancer/);
  assert.doesNotMatch(view,/setInterval\s*\(|localStorage|sessionStorage|\/api\/v5\/trade/);
+});
+
+test("a real BTC cache 20min old remains historical-only, not a current Spot quote",()=>{
+ const paper=require("./trader-paper-lab-core.js");
+ const now=Date.parse("2026-10-20T02:17:00Z");
+ const end=now-20*60*1000-10*1000;
+ const points=Array.from({length:289},(_,i)=>[
+  end-(288-i)*5*60000,
+  82000+i*0.25+Math.sin(i/5)*19
+ ]);
+ const input={asset:"BTC",instrument:"BTC-USD",provider:"coingecko",currency:"USD",
+  source:"CoinGecko BTC USD direct",series:points};
+ const live=paper.qualify(input,now);
+ assert.equal(live.ok,false);
+ assert.match(live.reason,/15 min/);
+ const dated=core.qualifyHistoricalAsOf(input,paper,now);
+ assert.equal(dated.ok,true);
+ assert.ok(dated.ageMinutes>20&&dated.ageMinutes<21);
+ assert.equal(dated.spotExecutionPermitted,false);
+ const cfg={capital:5,entryFeePct:0.2,exitFeePct:0.2,
+  spreadPct:0.1,slippagePct:0.1};
+ const study=paper.historicalStudy(input,cfg,dated.asOf);
+ const result=core.summarizeHistorical(study,dated.qualified);
+ assert.equal(result.status,"HISTORICAL_ONLY");
+ assert.equal(result.windows,277);
+ assert.equal(result.realOrders,false);
+ assert.equal(result.actual_executions,0);
+ assert.equal(core.assess({selected:live,now}).decision,"PREUVES_INSUFFISANTES");
+});
+test("historical clock cannot accept future quotes, old archives or invalid identity",()=>{
+ const paper=require("./trader-paper-lab-core.js");
+ const now=Date.parse("2026-10-20T02:17:00Z");
+ const end=now-20*60000;
+ const input={asset:"BTC",instrument:"BTC-USD",provider:"coingecko",currency:"USD",
+  source:"CoinGecko BTC USD direct",
+  series:Array.from({length:26},(_,i)=>[end-(25-i)*60000,82000+i])};
+ assert.equal(core.qualifyHistoricalAsOf(input,paper,now).ok,true);
+ assert.equal(core.qualifyHistoricalAsOf(input,paper,end-1000).ok,false);
+ assert.equal(core.qualifyHistoricalAsOf(input,paper,now+49*3600000).ok,false);
+ assert.equal(core.qualifyHistoricalAsOf({...input,source:"Unknown API"},paper,now).ok,false);
+ const wrong={...input,instrument:"ETH-USD"};
+ assert.equal(core.qualifyHistoricalAsOf(wrong,paper,now).ok,false);
+});
+test("Radar status fetch stays reachable even when live selection is stale",()=>{
+ const fs=require("node:fs"),path=require("node:path");
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ const src=view.slice(view.indexOf("async function evaluate("),view.indexOf("function invalidate("));
+ assert.match(src,/renderHistory\(s\)/);
+ assert.match(src,/const \{qualification,signal,journal\}=await reports\(\)/);
+ assert.match(src,/if\(!s\.qualified\)/);
+ assert.doesNotMatch(src,/if\(!s\.qualified\)\s*\{[\s\S]{0,280}return;/);
+ assert.match(src,/Report status is independent/);
+ assert.match(view,/qualifyHistoricalAsOf/);
+ assert.match(view,/Cotation actuelle indisponible/);
+ assert.match(view,/ÉTUDE HISTORIQUE DIFFÉRÉE/);
 });
