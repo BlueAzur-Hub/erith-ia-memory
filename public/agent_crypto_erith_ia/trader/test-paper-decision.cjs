@@ -201,7 +201,7 @@ test("a real BTC cache 20min old remains historical-only, not a current Spot quo
  const result=core.summarizeHistorical(study,dated.qualified);
  assert.equal(result.status,"HISTORICAL_ONLY");
  assert.equal(result.windows,277);
- assert.equal(result.realOrders,false);
+ assert.equal(result.orders_enabled,false);
  assert.equal(result.actual_executions,0);
  assert.equal(core.assess({selected:live,now}).decision,"PREUVES_INSUFFISANTES");
 });
