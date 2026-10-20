@@ -202,8 +202,8 @@ function mount(){
  evidence.textContent="Preuves Spot OKX en attente. Aucun ordre.";
  content.append(explanation,history,label,button,collector,evidence);
  section.append(summary,content);
- const other=parent.querySelector(".pl-more");
- if(other)parent.insertBefore(section,other);else parent.appendChild(section);
+ const more=parent.querySelector(".pl-more");
+ if(more)parent.insertBefore(section,more);else parent.appendChild(section);
  button.addEventListener("click",()=>{lastStudyKey="";void evaluate(true);});
  section.addEventListener("toggle",()=>{if(section.open){lastStudyKey="";
    void evaluate(true);}else requestId++;});
