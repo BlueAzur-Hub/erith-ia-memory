@@ -742,10 +742,13 @@ function advancePaperLimitCycle(state,action,now=Date.now()){
  };
  if(!permitted[phase]?.includes(type))
    throw Error("Transition interdite ; aucun renvoi automatique.");
+ // A PAPER-only button click is sufficient: no real funds and no API.
+ // Preserve explicit confirmation metadata, but no arbitrary two-minute timer.
  if(type==="PAPER_CONFIRM"&&
-    (action.confirmation!=="SIMULER"||now-Date.parse(state.created_at)>120000||
-     now<Date.parse(state.created_at)))
-   throw Error("Confirmation SIMULER obligatoire dans les deux minutes.");
+    (action.confirmation!=="SIMULER"||now<Date.parse(state.created_at)))
+   throw Error("Confirmation explicite de la simulation requise.");
+ if(type==="PAPER_RECONCILE_REJECT"&&exact(state.filled)>0n)
+   throw Error("Un ordre partiellement rempli ne peut être réconcilié en rejet intégral.");
  let next=phase,filled=exact(state.filled),quantity=exact(state.quantity);
  if(type==="PAPER_CONFIRM")next="PAPER_SUBMITTED";
  if(type==="PAPER_ACCEPT")next="PAPER_ACCEPTED";
