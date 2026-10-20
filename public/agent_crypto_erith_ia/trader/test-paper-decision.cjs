@@ -1090,3 +1090,25 @@ test("CT local transport diagnostic is visible and does not promote archive to l
  assert.match(view,/setTimeout\(\(\)=>controller\.abort\(\),6500\)/);
  assert.doesNotMatch(view,/\/api\/v5\/trade\/order|\bBearer\b|Authorization:/);
 });
+
+test("CT local book clock tolerance rejects long future and stale quotes",()=>{
+ const now=Date.parse("2026-10-20T22:16:00Z");
+ const base={status:"ok",provider:"okx",pair:"CT-USDC",quote:"USDC",
+  observed_at_utc:"2026-10-20T22:16:01.500Z",
+  bids:[["0.3170","150"]],asks:[["0.3172","100"]]};
+ assert.equal(core.diagnoseCtLiveBook(base,"CT-USDC",now).code,"LOCAL_OK");
+ assert.ok(core.verifiedCtLiveBook(base,"CT-USDC",now));
+ const future={...base,observed_at_utc:"2026-10-20T22:16:03Z"};
+ assert.equal(core.diagnoseCtLiveBook(future,"CT-USDC",now).code,"TIMESTAMP_FUTURE");
+ assert.equal(core.verifiedCtLiveBook(future,"CT-USDC",now),null);
+ const old={...base,observed_at_utc:"2026-10-20T22:15:39Z"};
+ assert.equal(core.diagnoseCtLiveBook(old,"CT-USDC",now).code,"BOOK_STALE");
+ assert.equal(core.verifiedCtLiveBook(old,"CT-USDC",now),null);
+});
+test("CT PAPER technical details remain available under a readable summary",()=>{
+ const src=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ assert.match(src,/data-ticket-brief/);
+ assert.match(src,/data-ticket-technical/);
+ assert.match(src,/Afficher le rapport technique complet/);
+ assert.match(src,/CARNET CT\/USDC/);
+});
