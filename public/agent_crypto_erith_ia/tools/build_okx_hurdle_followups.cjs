@@ -65,10 +65,11 @@ function checkedFuture(study,row){
  if(observed<=stamp(study.entry_book_at_utc)||observed>collected+5000||
     collected-observed>120000)return null;
  const price=decimal(book.best_bid_usdt),depth=decimal(book.best_bid_qty),
+   ask=decimal(book.best_ask_usdt),askDepth=decimal(book.best_ask_qty),
    qty=decimal(study.net_sellable_qty),lot=decimal(r.lot_sz),min=decimal(r.min_sz),
    tick=decimal(r.tick_sz);
- if(!price||!depth||!qty||!lot||!min||!tick||price%tick||
-    qty%lot||qty<min)return null;
+ if(!price||!ask||price>=ask||!depth||!askDepth||!qty||!lot||!min||!tick||
+    price%tick||ask%tick||qty%lot||qty<min)return null;
  const baseline=decimal(study.entry_bid_usdt);
  const changePct=Number((price-baseline)*1000000n/baseline)/10000;
  const result={observed_at_utc:book.exchange_time_utc,
