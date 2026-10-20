@@ -218,6 +218,27 @@ function verifiedCtLiveBook(payload,pair,now){
     market_fill_proven:false,bids,asks});
  }catch(_){return null;}
 }
+/* Explain WHY a local book was rejected, never upgrade the archive to live.
+   The diagnostic contains no account data and is safe for the PAPER UI. */
+function diagnoseCtLiveBook(payload,pair,now=Date.now()){
+ const fail=(code,reason)=>Object.freeze({accepted:false,code,reason});
+ if(pair!=="CT-USDC")return fail("PAIR_SELECTION","Le ticket ne concerne pas CT-USDC.");
+ if(!payload)return fail("NO_LOCAL_BOOK","Aucun carnet local reçu.");
+ if(payload.status!=="ok"||payload.provider!=="okx"||
+    payload.pair!=="CT-USDC"||payload.quote!=="USDC")
+   return fail("PAIR_OR_SOURCE","Source ou paire du carnet local non conforme à CT-USDC.");
+ const at=Date.parse(payload.observed_at_utc||"");
+ if(!Number.isFinite(now)||!Number.isFinite(at))
+   return fail("TIMESTAMP_INVALID","Horodatage du carnet OKX absent ou invalide.");
+ if(at>now)return fail("TIMESTAMP_FUTURE","Horodatage du carnet dans le futur ; horloges à contrôler.");
+ if(now-at>20000)
+   return fail("BOOK_STALE","Carnet local trop ancien ("+
+     Math.round((now-at)/1000)+" secondes) ; aucun prix actuel accepté.");
+ if(!verifiedCtLiveBook(payload,pair,now))
+   return fail("BOOK_INVALID","Niveaux de prix ou quantités invalides, mal triés ou croisés.");
+ return Object.freeze({accepted:true,code:"LOCAL_OK",
+   reason:"Carnet OKX CT-USDC récent qualifié (sans garantie d'exécution)."});
+}
 /* Live public CT/USDC instrument metadata. This validates quantity and price
    increments only; it cannot certify account-specific or notional limits. */
 function verifiedCtSpotRules(source,pair,now){
@@ -628,5 +649,5 @@ function previewSpotExit({ticket,context,targetPriceQuote,now=Date.now()}={}){
    orders_enabled:false,real_orders:0,can_place_limit_order:false});
  }catch(_){return no("Quantité, prix, frais ou règle Spot non exploitable.");}
 }
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,verifiedCtLiveBook,verifiedCtSpotRules,checkSpotOrderGates,reviewSpotTicketAccount,previewSpotExit,realOrders:false,network:false,storage:false});
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,verifiedCtLiveBook,diagnoseCtLiveBook,verifiedCtSpotRules,checkSpotOrderGates,reviewSpotTicketAccount,previewSpotExit,realOrders:false,network:false,storage:false});
 });
