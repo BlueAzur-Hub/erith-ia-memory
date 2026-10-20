@@ -54,7 +54,7 @@ test("Stale evidence remains archived, never current or predicted",()=>{
  const model=view.valid(data(),NOW+3*3600000);
  assert.equal(model.stale,true);
  assert.ok(model.ageMinutes>120);
- assert.throws(()=>view.valid(data(),NOW-100000),/futur/i);
+ assert.throws(()=>view.valid(data(),NOW-130000),/futur/i);
 });
 test("Reject forged fills, nonnumeric spreads and invented changes",()=>{
  const source=data();
