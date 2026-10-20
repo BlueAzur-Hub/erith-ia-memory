@@ -408,7 +408,15 @@ async function prepareTicket(){
        "Frais de cette paire : non certifiés ; les frais fictifs restent séparés.",
      ...(!review.fees_verified&&context?.fee_reason?
        ["Diagnostic frais : "+context.fee_reason]:[]),
-     review.funds_cover_public_scenario?
+     ...(pair==="CT-USDC"?[review.fee_mode_verified?
+       "Mode des frais d'achat OKX vérifié à "+context.fee_type_at_utc+
+         " : feeType="+review.fee_type+" · prélèvement en "+review.fee_buy_currency+
+         " (mode du compte, non preuve d'un fill).":
+       "Mode des frais d'achat CT/USDC : NON CONFIRMÉ · "+
+         String(context?.fee_type_reason||"Bridge privé ou session Aether Trust à vérifier.")]:[]),
+     review.fee_type==="1"&&review.fee_mode_verified?
+       "Frais en USDC : le coût du premier achat brut dépasse éventuellement le budget ; voir scénario réajusté ci-dessous.":
+       review.funds_cover_public_scenario?
        "Solde Trading suffisant pour le coût FICTIF du carnet choisi uniquement.":
        "Solde Trading insuffisant ou non vérifié pour ce scénario.",
      review.reason,
@@ -426,6 +434,15 @@ async function prepareTicket(){
             "récent":"archivé")+", pas un achat actuel)."
     ];
     if(exit.maximum_sellable_base!==undefined){
+      if(exit.quote_fee_budget_adjusted){
+        exitLines.push("Mode compte USDC : quantité PAPER recalculée pour inclure les frais d'achat dans le budget fictif.");
+        exitLines.push("Frais d'achat estimés : "+exit.estimated_buy_fee_quote+
+          " USDC · coût total estimé "+exit.total_buy_cost_quote+" USDC (non exécuté).");
+      }else if(exit.buy_fee_currency_verified){
+        exitLines.push("Mode compte CT : frais d'achat prélevés en CT ; arrondis d'exécution non prouvés.");
+      }else{
+        exitLines.push("Devise des frais non certifiée : simulation hypothétique avec frais d'achat en CT.");
+      }
       exitLines.push("Après frais d'achat estimés : "+exit.estimated_net_base+" "+exit.base+".");
       exitLines.push("À revendre au maximum : "+exit.maximum_sellable_base+" "+exit.base+
         " · poussière restante : "+exit.residual_dust_base+" "+exit.base+".");
@@ -451,8 +468,12 @@ async function prepareTicket(){
     accountLines.push("\n"+exitLines.join("\n"));
   }
   const remaining=ticketRemainingBlockers(answer,review);
-  const finalLines=lines.map(line=>line.startsWith("BLOCAGES :\n")?
-    "BLOCAGES RESTANTS :\n• "+remaining.join("\n• "):line);
+  const finalLines=lines.map(line=>
+    line.startsWith("BLOCAGES :\n")?
+      "BLOCAGES RESTANTS :\n• "+remaining.join("\n• "):
+    line.startsWith("Frais débités en CT : HYPOTHÈSE")&&review.fee_mode_verified?
+      "Calcul public initial : hypothèse frais CT ; mode du compte qualifié et simulation recalculée plus bas.":
+    line);
   ticketStatus(finalLines.join("\n")+"\n\n"+accountLines.join("\n"));
  }catch(error){
    if(current===ticketRequest)ticketStatus("Ticket indisponible : "+
