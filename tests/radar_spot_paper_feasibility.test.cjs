@@ -116,3 +116,26 @@ test("existing Radar panel summarizes independent OKX public Spot rules without 
  rows[0].okx_spot.rules.tick_sz="NaN";
  assert.match(view.okxSpotSummary(report),/0 règles publiques/);
 });
+
+test("existing Radar shows 24/48h future bid observations without declaring realized gains",()=>{
+ const view=require("../public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js");
+ const qualified={candidates:[{id:"TOK",okx_spot:{native_rules_verified:true}}]};
+ const vault={schema:"aerith.public.ohlcv.okx.native-utc-daily-source-index.v1",
+  assets:[{id:"OKB",quote:"USDT"}]};
+ const usd={schema:"erith.radar.dynamic-forward-observations.v1",quote:"USD",
+  observations:[{id:"TOK",followup_1d:{status:"AWAITING_FUTURE_DAY",change_pct:null}}]};
+ const study={status:"HYPOTHETICAL_COST_STUDY_NO_FILL",orders_enabled:false,
+  executed_order:false,contract_identity_proven:false,quote:"USDT",
+  followups:[{window:"24h",status:"QUOTE_ABOVE_HYPOTHETICAL_HURDLE",
+   execution_proven:false,orders_enabled:false,real_orders:0}]};
+ const report={schema:"erith.radar.okx.hurdle-followups.v1",
+   orders_enabled:false,paper_fills:0,real_orders:0,backtest:false,
+   studies:[study],snapshots:[{candidates:20}]};
+ const text=view.okxFollowupSummary(report,qualified,vault,usd);
+ assert.match(text,/1 études de coût datées/);
+ assert.match(text,/1 cotations au-dessus du seuil fictif/);
+ assert.match(text,/Aucune cotation n'est un ordre rempli ni un bénéfice acquis/);
+ assert.match(text,/0\/1 actifs concernés couverts/);
+ assert.match(text,/USD et USDT ne sont pas assimilés/);
+ assert.match(view.okxFollowupSummary(null,qualified,null,null),/en attente/);
+});
