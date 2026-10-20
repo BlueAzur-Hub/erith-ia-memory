@@ -197,3 +197,24 @@ test('manual private summary copy includes all currently requested CT scenarios'
  assert.match(code,/navigator\.clipboard\.writeText/);
  assert.doesNotMatch(code,/upload.*summary|fetch\(.+summary.*POST/);
 });
+
+test('CT cards and planners fit the narrow Technical Reading rail without viewport breakpoints',()=>{
+ const fs=require('node:fs'),path=require('node:path');
+ const css=fs.readFileSync(path.join(__dirname,'ai-ct-panel.css'),'utf8');
+ for(const selector of [
+  '.ai-ct-execution-metrics',
+  '.ai-ct-price-scenarios',
+  '.ai-ct-buy-fields',
+  '.ai-ct-buy-result-grid',
+  '.ai-ct-choice-grid'
+ ]){
+  const rule=css.split(selector+'{')[1]?.split('}')[0]||'';
+  assert.match(rule,/grid-template-columns:repeat\(auto-fit,minmax\(min\(100%,\d+px\),1fr\)\)/,
+    selector+' should adapt to its container');
+ }
+ assert.doesNotMatch(css,/\.ai-ct-execution-metrics\{grid-template-columns:repeat\(4,/);
+ assert.match(css,/\.ai-ct-table-scroll\{overflow-x:auto/);
+ const words=css.split('.ai-ct-execution-metric strong{')[1]?.split('}')[0]||'';
+ assert.match(words,/word-break:normal/);
+ assert.doesNotMatch(words,/overflow-wrap:anywhere/);
+});
