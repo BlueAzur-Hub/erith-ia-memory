@@ -256,7 +256,7 @@ function ticketRemainingBlockers(ticket,review){
    Only when a human verifies the PAPER ticket; never polls or sends keys. */
 async function readCtSpotPublicBook(){
  const controller=new AbortController();
- const timeout=setTimeout(()=>controller.abort(),4500);
+ const timeout=setTimeout(()=>controller.abort(),6500);
  try{
   const response=await fetch(
    "http://127.0.0.1:8790/market-book?provider=okx&instrument=CT-USDC&limit=100",
@@ -315,18 +315,32 @@ async function prepareTicket(){
       ticketSourceKey(fresh)!==sourceKey)return;
    // A fresh exact CT/USDC public book overrides only the dated market
    // levels, never the Spot rules or the read-only account evidence.
-   let liveBook=null,instrumentEvidence=null;
+   let liveBook=null,instrumentEvidence=null,bookTransportIssue=null;
    if(pair==="CT-USDC"){
      const [book,rule]=await Promise.allSettled([
        readCtSpotPublicBook(),readCtSpotPublicInstrument()]);
      if(book.status==="fulfilled")liveBook=book.value;
+     else{
+       const failure=book.reason;
+       const http=String(failure?.message||"").match(/HTTP (\d{3})/);
+       bookTransportIssue=failure?.name==="AbortError"?
+         "TIMEOUT : Backend local non répondu en 6,5 s.":
+         http?"HTTP "+http[1]+
+           " : route du carnet inaccessible ou réponse OKX en erreur.":
+         "RESEAU LOCAL : requête impossible (Backend arrêté, accès Firefox ou CORS à vérifier).";
+     }
      if(rule.status==="fulfilled")instrumentEvidence=rule.value;
    }
    const afterBook=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
    if(current!==ticketRequest||!box.open||
       ticketSourceKey(afterBook)!==sourceKey)return;
+   const evaluatedAt=Date.now();
+   const bookDiagnostic=pair==="CT-USDC"?
+     (bookTransportIssue?{accepted:false,code:"LOCAL_REQUEST_FAILED",
+       reason:bookTransportIssue}:
+       core.diagnoseCtLiveBook(liveBook,pair,evaluatedAt)):null;
    const answer=core.prepareSpotTicket({selected:source,archive,pair,
-     budgetQuote:money,liveBook,instrumentEvidence,now:Date.now()});
+     budgetQuote:money,liveBook,instrumentEvidence,now:evaluatedAt});
    const lines=[
      "TICKET D'ÉTUDE SPOT · LECTURE SEULE",
      "Paire recherchée : "+pair+" · budget d'étude : "+money+" "+quote+
@@ -338,6 +352,17 @@ async function prepareTicket(){
        "Source non qualifiée.",
      answer.reason,
    ];
+   if(pair==="CT-USDC"){
+     lines.push("DIAGNOSTIC CARNET LOCAL · "+bookDiagnostic.code+
+       " · "+bookDiagnostic.reason);
+     if(bookDiagnostic.accepted&&
+        answer.source_book_kind!=="LOCAL_BACKEND_OKX_CT_USDC")
+       lines.push("Carnet local reçu mais étude non retenue : vérifier "+
+         "les prix natifs/tick et la concordance avec les règles Spot.");
+     if(!bookDiagnostic.accepted)
+       lines.push("Repli historique GitHub uniquement : "+
+         "aucune cotation CT-USDC actuelle prouvée.");
+   }
    if(answer.native_min_quantity){
      lines.push(answer.native_rules_verified?
        "Règles Spot CT/USDC : OKX Public Data vérifié · état LIVE · lues "+

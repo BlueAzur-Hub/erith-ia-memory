@@ -868,7 +868,7 @@ test("CT public rules and fee-buffer UI never claim notionnel or fee debit certa
  const coreCode=fs.readFileSync(path.join(__dirname,"trader-paper-decision-core.js"),"utf8");
  assert.match(source,/api\/v5\/public\/instruments\?instType=SPOT&instId=CT-USDC/);
  assert.match(source,/Promise\.allSettled/);
- assert.match(source,/instrumentEvidence,now:Date\.now\(\)/);
+ assert.match(source,/instrumentEvidence,now:evaluatedAt/);
  assert.match(source,/Règles Spot issues du relevé daté/);
  assert.match(source,/NON CERTIFIÉS par cette lecture publique/);
  assert.match(source,/Frais débités en CT : HYPOTHÈSE/);
@@ -1052,4 +1052,41 @@ test("R25 PAPER source shows historic quantity as preliminary and never certifie
  assert.match(view,/Carnet ancien ou non qualifié/);
  assert.match(view,/maxBuy OKX/);
  assert.doesNotMatch(view,/\/api\/v5\/trade\/order|\/okx\/place-order|Bearer /);
+});
+
+test("CT live book diagnostic differentiates source, freshness and crossed data",()=>{
+ const at=Date.parse("2026-10-20T03:18:55Z");
+ const payload={status:"ok",provider:"okx",pair:"CT-USDC",quote:"USDC",
+   observed_at_utc:"2026-10-20T03:18:50Z",
+   bids:[["0.3077","100"],["0.3076","200"]],
+   asks:[["0.3079","100"],["0.3080","200"]]};
+ const diagnose=(changes,now=at)=>core.diagnoseCtLiveBook(
+   changes===null?null:{...payload,...changes},"CT-USDC",now);
+ assert.equal(diagnose({}).code,"LOCAL_OK");
+ assert.equal(diagnose({}).accepted,true);
+ assert.equal(diagnose(null).code,"NO_LOCAL_BOOK");
+ assert.equal(diagnose({provider:"bitget"}).code,"PAIR_OR_SOURCE");
+ assert.equal(diagnose({pair:"CT-USDT"}).code,"PAIR_OR_SOURCE");
+ assert.equal(diagnose({observed_at_utc:"malformed"}).code,"TIMESTAMP_INVALID");
+ assert.equal(diagnose({observed_at_utc:"2026-10-20T03:19:00Z"}).code,"TIMESTAMP_FUTURE");
+ assert.equal(diagnose({observed_at_utc:"2026-10-20T03:18:34Z"}).code,"BOOK_STALE");
+ assert.equal(diagnose({bids:[["0.3081","10"]]}).code,"BOOK_INVALID");
+ assert.equal(diagnose({asks:[]}).code,"BOOK_INVALID");
+ const old=core.prepareSpotTicket({selected:ctSource(),archive:ctArchive(),
+    pair:"CT-USDC",budgetQuote:"3.2",now:at,
+    liveBook:{...payload,observed_at_utc:"2026-10-20T03:18:34Z"}});
+ assert.equal(old.source_book_kind,"DATED_PUBLIC_HOURLY_ARCHIVE");
+ assert.equal(old.orders_enabled,false);
+});
+
+test("CT local transport diagnostic is visible and does not promote archive to live",()=>{
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ assert.match(view,/DIAGNOSTIC CARNET LOCAL/);
+ assert.match(view,/BOOK_STALE|diagnoseCtLiveBook/);
+ assert.match(view,/HTTP \(\\d\{3\}\)/);
+ assert.match(view,/TIMEOUT : Backend local/);
+ assert.match(view,/RESEAU LOCAL : requête impossible/);
+ assert.match(view,/Repli historique GitHub uniquement/);
+ assert.match(view,/setTimeout\(\(\)=>controller\.abort\(\),6500\)/);
+ assert.doesNotMatch(view,/\/api\/v5\/trade\/order|\bBearer\b|Authorization:/);
 });
