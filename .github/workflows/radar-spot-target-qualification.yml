@@ -9,6 +9,8 @@ on:
       - 'public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js'
       - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
       - 'tests/radar_spot_paper_feasibility.test.cjs'
+      - 'public/agent_crypto_erith_ia/tools/build_okx_hurdle_followups.cjs'
+      - 'tests/okx_hurdle_followups.test.cjs'
       - 'tests/okx_paper_immediate_cost.test.cjs'
       - 'public/agent_crypto_erith_ia/tools/radar_spot_paper_forward.py'
       - 'public/agent_crypto_erith_ia/tools/test_radar_spot_paper_forward.py'
@@ -26,6 +28,8 @@ on:
       - 'public/agent_crypto_erith_ia/laboratoire/radar-spot-paper.js'
       - 'public/agent_crypto_erith_ia/laboratoire/radar.html'
       - 'tests/radar_spot_paper_feasibility.test.cjs'
+      - 'public/agent_crypto_erith_ia/tools/build_okx_hurdle_followups.cjs'
+      - 'tests/okx_hurdle_followups.test.cjs'
       - 'tests/okx_paper_immediate_cost.test.cjs'
       - 'public/agent_crypto_erith_ia/tools/radar_spot_paper_forward.py'
       - 'public/agent_crypto_erith_ia/tools/test_radar_spot_paper_forward.py'
@@ -66,7 +70,7 @@ jobs:
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_qualify_radar_spot_identity.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_radar_spot_paper_forward.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_radar_research_cohort.py' -v
-          node --test public/agent_crypto_erith_ia/trader/test-spot-paper-order-engine.cjs tests/radar_spot_paper_feasibility.test.cjs tests/okx_paper_immediate_cost.test.cjs
+          node --test public/agent_crypto_erith_ia/trader/test-spot-paper-order-engine.cjs tests/radar_spot_paper_feasibility.test.cjs tests/okx_paper_immediate_cost.test.cjs tests/okx_hurdle_followups.test.cjs
       - name: Collect public evidence only (main push/schedule, not PR)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         shell: bash
@@ -95,6 +99,9 @@ jobs:
             fi
             python public/agent_crypto_erith_ia/tools/build_radar_research_cohort.py
             if [ "$new_qualification" -eq 1 ]; then
+              # Archive only the newly dated OKX PAPER cost basis and future bids;
+              # missing candidates remain missing, never reconstructed as fills.
+              node public/agent_crypto_erith_ia/tools/build_okx_hurdle_followups.cjs
               # A source outage must never become fabricated contract proof.
               if python public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py; then
                 python public/agent_crypto_erith_ia/tools/qualify_radar_spot_identity.py --check
@@ -106,6 +113,9 @@ jobs:
             git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/qualification-latest.json public/agent_crypto_erith_ia/data/crypto/radar-opportunities/research-cohort.json
             if [ -f public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-identity-latest.json ]; then
               git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-identity-latest.json
+            fi
+            if [ -f public/agent_crypto_erith_ia/data/crypto/radar-opportunities/okx-hurdle-followups.json ]; then
+              git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/okx-hurdle-followups.json
             fi
             if [ -f public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-paper-forward.json ]; then
               git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/spot-paper-forward.json
