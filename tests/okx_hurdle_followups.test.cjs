@@ -130,3 +130,39 @@ test("future-only market proof rejects falsified, duplicated or non-USDT rows",(
  const tooLate=watch.advanceFutureOnly(opening,{...observation,candidates:[wrong]});
  a.equal(tooLate.studies[0].followups.length,0,"out-of-window quotes cannot close a study");
 });
+
+test("future-only CLI writes JSON parseable by the NEXT autonomous run",()=>{
+ const fs=require("node:fs"),os=require("node:os"),path=require("node:path");
+ const {spawnSync}=require("node:child_process");
+ const tmp=fs.mkdtempSync(path.join(os.tmpdir(),"radar-json-"));
+ try{
+  const root=path.join(tmp,"public","agent_crypto_erith_ia");
+  const toolsDir=path.join(root,"tools"),trader=path.join(root,"trader");
+  const data=path.join(root,"data","crypto","radar-opportunities");
+  for(const dir of [toolsDir,trader,data])fs.mkdirSync(dir,{recursive:true});
+  fs.copyFileSync(path.join(__dirname,"../public/agent_crypto_erith_ia/tools/build_okx_hurdle_followups.cjs"),
+   path.join(toolsDir,"build_okx_hurdle_followups.cjs"));
+  fs.copyFileSync(path.join(__dirname,"../public/agent_crypto_erith_ia/trader/spot-paper-order-engine.js"),
+   path.join(trader,"spot-paper-order-engine.js"));
+  const first=watch.advance(null,qualification());
+  const ledger=path.join(data,"okx-hurdle-followups.json");
+  fs.writeFileSync(ledger,JSON.stringify(first,null,2)+"\n");
+  const row=qualification("2026-10-19","10.80").candidates[0];
+  const observation=path.join(tmp,"future.json");
+  fs.writeFileSync(observation,JSON.stringify({
+   schema:"erith.radar.okx.public-followup-observation.v1",
+   orders_enabled:false,real_orders:0,new_entries_created:0,candidates:[row]}));
+  const cmd=path.join(toolsDir,"build_okx_hurdle_followups.cjs");
+  const call=spawnSync(process.execPath,[cmd,"--future-only",observation],{encoding:"utf8",timeout:10000});
+  a.equal(call.status,0,call.stderr);
+  const summary=JSON.parse(call.stdout.trim());
+  a.equal(summary.status,"READ_ONLY_QUOTES");
+  a.equal(summary.followups,1);
+  const updated=JSON.parse(fs.readFileSync(ledger,"utf8"));
+  a.equal(updated.studies[0].followups.length,1);
+  const again=spawnSync(process.execPath,[cmd,"--future-only",observation],{encoding:"utf8",timeout:10000});
+  a.equal(again.status,0,again.stderr);
+  a.equal(JSON.parse(again.stdout.trim()).changed,false);
+  a.equal(JSON.parse(fs.readFileSync(ledger,"utf8")).studies[0].followups.length,1);
+ }finally{fs.rmSync(tmp,{recursive:true,force:true})}
+});
