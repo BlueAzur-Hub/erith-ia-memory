@@ -437,3 +437,60 @@ test("Trader native Radar validates the public Spot USDT report without inventin
  const duplicate=JSON.parse(JSON.stringify(template));duplicate.markets[2].coin_id="quack-ai";
  assert.throws(()=>native.verifyProspectiveSpotComparison(duplicate),/marché/);
 });
+
+test("Native Trader Radar reuses the same published OKX validator and no extra source owner",()=>{
+ const native=require("./market-radar-native.js");
+ const reader=require("../../laboratoire/radar-okx-hourly.js");
+ const report=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../../data/crypto/okx-hourly/research-latest.json"),"utf8"));
+ const model=reader.valid(report,Date.parse(report.as_of_utc)+60_000);
+ assert.equal(model.pairs.length,15);
+ assert.equal(model.observedHours,1);
+ assert.equal(model.withTrend,0);
+ assert.match(native.describeOkxHourly(model),/15 paires Spot/);
+ assert.match(native.describeOkxHourly(model),/1 heure/);
+ assert.match(native.describeOkxHourly(null),/indisponible/);
+ const view=fs.readFileSync(path.join(__dirname,"market-radar-native.js"),"utf8");
+ const loader=fs.readFileSync(path.join(__dirname,"new-listings-native-category.js"),"utf8");
+ assert.match(loader,/loadRadarScript\("\.\.\/laboratoire\/radar-okx-hourly\.js"\)/);
+ assert.match(view,/foldSection\("radar-native-okx-hourly"/);
+ assert.match(view,/foldOkxHourly/);
+ assert.match(view,/printOkxHourly\(root,model\)/);
+ assert.match(view,/AgentCryptoRadarOkxHourly/);
+ assert.match(view,/reader\.valid\(data,Date\.now\(\)\)/);
+ assert.match(view,/okxHourlyPromise\.then/);
+ assert.match(view,/get\("\.\.\/data\/crypto\/okx-hourly\/research-latest\.json"\)/);
+ assert.doesNotMatch(view,/\/api\/v5\/trade\/order|withdrawal/);
+ assert.equal(model.realOrders,false);
+ assert.equal(model.noQuoteConversion,true);
+});
+test("Trader OKX native rows retain three exact quotes, never turn one hour into profits",()=>{
+ const native=require("./market-radar-native.js");
+ const reader=require("../../laboratoire/radar-okx-hourly.js");
+ const report=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../../data/crypto/okx-hourly/research-latest.json"),"utf8"));
+ const qualified=reader.valid(report,Date.parse(report.as_of_utc)+1000);
+ const old=globalThis.document;
+ const note=new Element("p"),rows=new Element("tbody"),fold=new Element("small");
+ const root={querySelector:(key)=>({
+  '[data-radar-native="okxHourlyNote"]':note,
+  '[data-radar-native="okxHourlyRows"]':rows,
+  '[data-radar-native="foldOkxHourly"]':fold
+ })[key]||null};
+ try{
+   globalThis.document={createElement:(tag)=>new Element(tag)};
+   native.printOkxHourly(root,{okxHourly:qualified});
+   assert.equal(rows.children.length,15);
+   assert.match(note.textContent,/15 paires Spot/);
+   assert.match(fold.textContent,/15 paires/);
+   const names=rows.children.map(row=>row.children[0].textContent);
+   assert.ok(names.includes("BTC-USDC"));
+   assert.ok(names.includes("BTC-USDT"));
+   assert.ok(names.includes("BTC-EUR"));
+   for(const row of rows.children){
+     assert.match(row.children[6].textContent,/1 heure/);
+     assert.equal(row.events.click,undefined);
+   }
+   native.printOkxHourly(root,{okxHourly:null,okxHourlyError:"Archive absente"});
+   assert.equal(rows.children.length,0);
+   assert.match(note.textContent,/Archive absente/);
+ }finally{globalThis.document=old;}
+});
