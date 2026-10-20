@@ -111,16 +111,31 @@ function summarizeTicketAccount(account,fees,instId,now=Date.now()){
  const feeRows=Array.isArray(fees?.fees)?fees.fees:null;
  const row=feeRows?.length===1?feeRows[0]:null;
  const feePair=String(row?.instId||"");
- const matching=feePair===instId||(instId==="BTC-USDC"&&!feePair&&feeRows?.length===1);
+ const envelopePair=String(fees?.instId||"");
+ // Bridge R23 requests OKX trade-fee with instType=SPOT and the chosen instId,
+ // and authenticates this instrument in its top-level read-only response.
+ // The individual OKX row may omit instId; never infer it from a group alone.
+ const envelopePresent=Boolean(fees&&(
+   Object.hasOwn(fees,"instId")||Object.hasOwn(fees,"source")||
+   Object.hasOwn(fees,"ok")||Object.hasOwn(fees,"read_only")));
+ const feeAt=Date.parse(fees?.fetched_at);
+ const envelopeVerified=fees?.ok===true&&fees?.read_only===true&&
+   fees?.source==="OKX Private REST"&&envelopePair===instId&&
+   Number.isFinite(feeAt)&&feeAt<=now+30000&&now-feeAt<=120000;
+ const envelopeAccepted=!envelopePresent||envelopeVerified;
+ const rowMatches=feePair===instId||(!feePair&&(
+   envelopeVerified||(instId==="BTC-USDC"&&!envelopePresent)));
+ const matching=feeRows?.length===1&&envelopeAccepted&&rowMatches;
  const maker=matching?ticketFeeRate(row?.maker??row?.makerU??row?.makerUSDC):null;
  const taker=matching?ticketFeeRate(row?.taker??row?.takerU??row?.takerUSDC):null;
- // An OKX feeGroup without an authenticated instrument mapping cannot certify CT.
  const feeReason=maker!==null&&taker!==null?null:
    !fees?"Réponse des frais OKX absente.":
    !feeRows?"Format des frais Bridge non reconnu.":
    feeRows.length!==1?"Plusieurs lignes de frais : paire non attribuable.":
+   envelopePair&&envelopePair!==instId?"Enveloppe Bridge : paire différente de "+instId+".":
+   envelopePresent&&!envelopeVerified?"Enveloppe des frais non qualifiée, non datée ou périmée.":
+   feePair&&feePair!==instId?"Bridge : frais renvoyés pour une paire différente de "+instId+".":
    !feePair?"Bridge : paire non attestée dans la réponse des frais (instId absent).":
-   feePair!==instId?"Bridge : frais renvoyés pour une paire différente de "+instId+".":
    "Taux maker/taker absents ou non exploitables pour "+instId+".";
  return Object.freeze({read_only:true,verified:trading!==null,
    reason:trading===null?"Solde Trading disponible absent ou non prouvé.":null,
