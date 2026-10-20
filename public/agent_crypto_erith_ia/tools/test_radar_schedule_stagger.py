@@ -4,7 +4,7 @@ import pathlib
 import re
 import unittest
 
-ROOT=pathlib.Path(__file__).resolve().parents[4]
+ROOT=pathlib.Path(__file__).resolve().parents[3]
 DIR=ROOT / ".github/workflows"
 
 OWNERS={
