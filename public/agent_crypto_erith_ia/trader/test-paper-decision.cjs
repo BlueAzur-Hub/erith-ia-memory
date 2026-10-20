@@ -197,6 +197,32 @@ test("CT ticket identity survives new candles, not a new asset or source",()=>{
  assert.match(view,/ticketSourceKey\(fresh\)!==sourceKey/);
  assert.match(view,/ticketSourceKey\(currentSource\)!==sourceKey/);
  assert.match(view,/Contrôle privé : /);
+ // Run the actual invalidation code, not just a source-text assertion.
+ const guard=view.slice(begin,view.indexOf("/* Order planning",end));
+ let input=ct,seen="",updated=0;
+ const ticket={open:true,dataset:{ticketSourceKey:key(ct)}};
+ const box={open:true,dataset:{lastSelection:"coin|before"}};
+ const ctx={
+  panel:()=>box,document:{getElementById:()=>ticket},
+  selection:()=>({input,historical:input?{
+    qualified:{sourceIdentity:"coin",lastAt:"after"}
+   }:null,historicalReason:"source non disponible"}),
+  ticketStatus:x=>{seen=x},evaluate:()=>{updated++}
+ };
+ const execute=vm.runInNewContext(
+  'let ticketRequest=0,requestId=0,lastStudyKey="existing";'+
+  guard+';({run:invalidate,count:()=>ticketRequest})',ctx);
+ execute.run();
+ assert.equal(seen,""); // a new candle cannot invalidate the ticket
+ assert.equal(execute.count(),0);
+ assert.ok(updated>0); // but historical analysis may update
+ input=null;execute.run();
+ assert.match(seen,/Actif du graphique modifié/);
+ assert.equal(execute.count(),1);
+ input={...ct,asset:"BTC"};ticket.dataset.ticketSourceKey=key(ct);seen="";
+ execute.run();
+ assert.match(seen,/Actif du graphique modifié/);
+ assert.equal(execute.count(),2);
 });
 test("OKX account snapshot remains usable during ordinary panel refresh",()=>{
  const fs=require("node:fs"),path=require("node:path");
