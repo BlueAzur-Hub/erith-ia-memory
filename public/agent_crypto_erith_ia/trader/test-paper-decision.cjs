@@ -868,7 +868,7 @@ test("CT public rules and fee-buffer UI never claim notionnel or fee debit certa
  const coreCode=fs.readFileSync(path.join(__dirname,"trader-paper-decision-core.js"),"utf8");
  assert.match(source,/api\/v5\/public\/instruments\?instType=SPOT&instId=CT-USDC/);
  assert.match(source,/Promise\.allSettled/);
- assert.match(source,/instrumentEvidence,now:Date\.now\(\)/);
+ assert.match(source,/instrumentEvidence,now:evaluatedAt/);
  assert.match(source,/Règles Spot issues du relevé daté/);
  assert.match(source,/NON CERTIFIÉS par cette lecture publique/);
  assert.match(source,/Frais débités en CT : HYPOTHÈSE/);
