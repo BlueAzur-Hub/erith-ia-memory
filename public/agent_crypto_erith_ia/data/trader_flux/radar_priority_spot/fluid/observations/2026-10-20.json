@@ -1,0 +1,39 @@
+{
+  "schema": "erith.radar.priority-spot-paper.observations.v1",
+  "date_utc": "2026-10-20",
+  "coin_id": "instadapp",
+  "observations": [
+    {
+      "at_utc": "2026-10-20T03:31:30Z",
+      "coin_id": "instadapp",
+      "symbol": "FLUID",
+      "venue": "OKX",
+      "market": "FLUID-USDT",
+      "instrument_type": "SPOT",
+      "quote": "USDT",
+      "identity_status": "EXCHANGE_SPOT_SYMBOL_ONLY_CONTRACT_NOT_VERIFIED",
+      "candles": {
+        "last_closed_hour_utc": "2026-10-20T02:00:00Z",
+        "close_usdt": 2.3222,
+        "change_close_20h_pct": -1.33832,
+        "last_hour_volume_base": 104.548,
+        "last_hour_quote_volume_usdt": 241.8241494,
+        "median_prior_20h_volume_base": 946.811,
+        "last_21_bars_contiguous": true
+      },
+      "book": {
+        "best_bid_usdt": 2.3141,
+        "best_ask_usdt": 2.3157,
+        "spread_bps": 6.91175,
+        "book_timestamp_utc": "2026-10-20T03:31:31Z",
+        "book_age_seconds": 0,
+        "bid_top20_notional_usdt": 3563.0645,
+        "ask_top20_notional_usdt": 1263.4064
+      },
+      "source": "OKX public Spot",
+      "paper_only": true,
+      "orders_enabled": false,
+      "executed_order": false
+    }
+  ]
+}
