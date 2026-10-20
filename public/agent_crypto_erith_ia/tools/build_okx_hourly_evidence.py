@@ -51,7 +51,7 @@ def sample(market, observation_time):
     if market.get("status") != "VERIFIED_PUBLIC_BOOK":
         return None
     pair, base, quote = market.get("pair"), market.get("base"), market.get("quote")
-    require(base in ("BTC", "ETH", "SOL", "XRP", "OKB") and
+    require(base in ("BTC", "ETH", "SOL", "XRP", "OKB", "CT") and
             quote in ("USDC", "USDT", "EUR") and pair == base + "-" + quote,
             "Native Spot base/quote identity mismatch")
     book = market.get("book5")
