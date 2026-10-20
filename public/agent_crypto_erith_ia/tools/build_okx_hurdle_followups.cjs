@@ -184,13 +184,13 @@ function main(){
    requireProof(typeof input==="string"&&input.startsWith("/")&&process.argv.length===4,
       "Expected one absolute evidence path");
    if(!fs.existsSync(OUTPUT)){
-     process.stdout.write(JSON.stringify({status:"NO_PROSPECTIVE_JOURNAL",changed:false})+"\\n");
+     process.stdout.write(JSON.stringify({status:"NO_PROSPECTIVE_JOURNAL",changed:false})+"\n");
      return;
    }
    const evidence=JSON.parse(fs.readFileSync(input,"utf8"));
    const previous=JSON.parse(fs.readFileSync(OUTPUT,"utf8"));
    const next=advanceFutureOnly(previous,evidence);
-   const raw=JSON.stringify(next,null,2)+"\\n";
+   const raw=JSON.stringify(next,null,2)+"\n";
    const current=fs.readFileSync(OUTPUT,"utf8");
    if(raw!==current){
      const temp=OUTPUT+".write-"+process.pid;
@@ -198,7 +198,7 @@ function main(){
      fs.renameSync(temp,OUTPUT);
    }
    process.stdout.write(JSON.stringify({status:"READ_ONLY_QUOTES",changed:raw!==current,
-     studies:next.studies.length,followups:next.studies.reduce((n,s)=>n+s.followups.length,0)})+"\\n");
+     studies:next.studies.length,followups:next.studies.reduce((n,s)=>n+s.followups.length,0)})+"\n");
    return;
  }
  requireProof(process.argv.length===2,"Unknown argument");
