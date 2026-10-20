@@ -246,6 +246,19 @@ function ticketRemainingBlockers(ticket,review){
    remaining.push("Couverture du coût fictif par le solde Trading non démontrée.");
  return remaining;
 }
+/* Public CT/USDC Backend route, also used by IA Concrete.
+   Only when a human verifies the PAPER ticket; never polls or sends keys. */
+async function readCtSpotPublicBook(){
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),4500);
+ try{
+  const response=await fetch(
+   "http://127.0.0.1:8790/market-book?provider=okx&instrument=CT-USDC&limit=100",
+   {method:"GET",cache:"no-store",credentials:"omit",signal:controller.signal});
+  if(!response.ok)throw Error("Backend carnet CT/USDC HTTP "+response.status);
+  return await response.json();
+ }finally{clearTimeout(timeout);}
+}
 async function prepareTicket(){
  const box=document.getElementById("traderOkxTicket");
  if(!box?.open)return;
@@ -279,27 +292,42 @@ async function prepareTicket(){
    const fresh=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
    if(current!==ticketRequest||!box.open||
       ticketSourceKey(fresh)!==sourceKey)return;
+   // A fresh exact CT/USDC public book overrides only the dated market
+   // levels, never the Spot rules or the read-only account evidence.
+   let liveBook=null;
+   if(pair==="CT-USDC"){
+    try{liveBook=await readCtSpotPublicBook();}catch(_){liveBook=null;}
+   }
+   const afterBook=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
+   if(current!==ticketRequest||!box.open||
+      ticketSourceKey(afterBook)!==sourceKey)return;
    const answer=core.prepareSpotTicket({selected:source,archive,pair,
-     budgetQuote:money,now:Date.now()});
+     budgetQuote:money,liveBook,now:Date.now()});
    const lines=[
      "TICKET D'ÉTUDE SPOT · LECTURE SEULE",
      "Paire recherchée : "+pair+" · budget d'étude : "+money+" "+quote+
        " (PAS le solde de ton compte)",
      answer.source_book_at_utc?
-       "Carnet OKX public : "+answer.source_book_at_utc+
-       " · décalage "+answer.book_age_minutes+" min.":"Source non qualifiée.",
+       "Carnet CT/USDC : "+(answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
+         "Backend public local OKX":"archive horaire GitHub")+ " · "+
+         answer.source_book_at_utc+" · décalage "+answer.book_age_minutes+" min.":
+       "Source non qualifiée.",
      answer.reason,
    ];
    if(answer.native_min_quantity){
+     lines.push("Règles Spot issues du relevé daté "+answer.native_rules_observed_at_utc+
+       " ; validité actuelle à confirmer auprès d'OKX.");
      lines.push("Minimum natif : "+answer.native_min_quantity+" "+answer.base+
        " · valeur indicative "+answer.minimum_buy_at_recorded_ask_quote+" "+quote);
-     lines.push("Achat LIMIT étudié au ask archivé : "+answer.best_ask_quote+" "+quote+
+     lines.push("Achat LIMIT étudié au ask "+(answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
+       "récent du Backend":"archivé")+" : "+answer.best_ask_quote+" "+quote+
        " · quantité brute "+answer.gross_buy_quantity+" "+answer.base);
      lines.push("Après frais BASE fictifs et arrondi au lot : "+
        answer.sellable_lot_quantity+" "+answer.base+
        " revendables en taille (pas un fill).");
      lines.push("Coût fictif : "+answer.hypothetical_buy_cost_quote+" "+quote+
-       " · sortie immédiate au bid archivé après frais : "+
+       " · sortie fictive au bid "+(answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
+         "récent":"archivé")+" après frais : "+
        answer.hypothetical_immediate_exit_quote+" "+quote);
      if(answer.hypothetical_break_even_bid_quote)
        lines.push("Bid théorique d'équilibre après frais fictifs : "+
@@ -360,7 +388,8 @@ async function prepareTicket(){
       exit.status==="SORTIE_NON_EVALUABLE"?
         "Calcul indisponible : "+exit.reason:
         "Achat étudié : "+exit.buy_quantity+" "+exit.base+
-          " (prix du carnet archivé, pas un achat actuel)."
+          " (prix du carnet "+(answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
+            "récent":"archivé")+", pas un achat actuel)."
     ];
     if(exit.maximum_sellable_base!==undefined){
       exitLines.push("Après frais d'achat estimés : "+exit.estimated_net_base+" "+exit.base+".");
