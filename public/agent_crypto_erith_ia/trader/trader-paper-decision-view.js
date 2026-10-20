@@ -303,7 +303,8 @@ function invalidate(){
  if(ticket?.open&&ticket.dataset.ticketSourceKey&&
     nextSourceKey!==ticket.dataset.ticketSourceKey){
    ticketRequest++;
-   cyclePlan=null;
+   cyclePlan=null;cycleState=null;
+   globalThis.AgentCryptoTraderOrderEntryView?.reset?.();
    if(typeof cycleStatus==="function")cycleStatus();
    ticket.dataset.ticketSourceKey=nextSourceKey;
    ticketStatus("Actif du graphique modifié. Refaire le ticket ; aucun ancien prix n'est réutilisé.");
