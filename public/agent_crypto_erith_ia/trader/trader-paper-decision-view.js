@@ -285,7 +285,8 @@ function invalidate(){
  if(ticket?.open&&ticket.dataset.ticketSourceKey&&
     nextSourceKey!==ticket.dataset.ticketSourceKey){
    ticketRequest++;
-   cyclePlan=null;cycleStatus();
+   cyclePlan=null;
+   if(typeof cycleStatus==="function")cycleStatus();
    ticket.dataset.ticketSourceKey=nextSourceKey;
    ticketStatus("Actif du graphique modifié. Refaire le ticket ; aucun ancien prix n'est réutilisé.");
  }
