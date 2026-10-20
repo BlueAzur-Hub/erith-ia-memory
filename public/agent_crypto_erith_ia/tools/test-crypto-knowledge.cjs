@@ -11,20 +11,25 @@ assert.equal(data.schema,'erith.crypto.asset-research-knowledge.v1');
 assert.equal(data.candidate_count,20);
 assert.equal(data.candidates.length,20);
 assert.equal(data.documented_spot_markets,14);
-assert.equal(data.qualification_snapshot_at,qualification.qualified_at_utc);
+const sameSnapshot=data.qualification_snapshot_at===qualification.qualified_at_utc;
+assert(Number.isFinite(Date.parse(data.qualification_snapshot_at)));
+assert(Number.isFinite(Date.parse(qualification.qualified_at_utc)));
+// Old curated research is valid history, but must not silently join today's Spot proof.
 assert.equal(new Set(data.candidates.map(x=>x.coin_id)).size,20);
 for(const d of data.candidates){
- const q=qualification.candidates.find(x=>x.id===d.coin_id);
- assert(q,'missing candidate '+d.coin_id);
- assert.equal(d.symbol,q.symbol);
  assert.equal(d.identity_coin_gecko_exchange_token_verified,false);
  assert.equal(d.investment_action,'OBSERVE_ONLY');
  assert.equal(d.independent_usage_metrics,null,'do not invent adoption metrics');
- assert.equal(Boolean(d.research_spot_market),Boolean(q.market));
- if(d.research_spot_market){
-  assert.equal(d.research_spot_market.pair,q.market.pair);
-  assert.equal(d.research_spot_market.provider,q.market.provider);
-  assert.equal(d.research_spot_market.hypothetical_roundtrip_pct_100usdt,q.market.estimated_roundtrip_cost_pct);
+ if(sameSnapshot){
+  const q=qualification.candidates.find(x=>x.id===d.coin_id);
+  assert(q,'missing candidate '+d.coin_id);
+  assert.equal(d.symbol,q.symbol);
+  assert.equal(Boolean(d.research_spot_market),Boolean(q.market));
+  if(d.research_spot_market){
+   assert.equal(d.research_spot_market.pair,q.market.pair);
+   assert.equal(d.research_spot_market.provider,q.market.provider);
+   assert.equal(d.research_spot_market.hypothetical_roundtrip_pct_100usdt,q.market.estimated_roundtrip_cost_pct);
+  }
  }
 }
 const html=read('laboratoire/crypto-knowledge.html');
@@ -37,24 +42,31 @@ const radar=read('administrator/js/market-radar-native.js');
 new vm.Script(radar,{filename:'market-radar-native.js'});
 assert.match(radar,/crypto-knowledge\.html/);
 const radarCss=read('administrator/market-radar-native.css');
-for(const id of ['foldListings','foldWatch','foldOpportunities','foldResearch','foldQualification']){
+for(const id of ['foldListings','foldWatch','foldOpportunities','foldResearch','foldQualification','foldOkxHourly']){
  assert(radar.includes('"'+id+'"'),'All secondary summaries must retain a short source indicator: '+id);
 }
-assert.equal((radar.match(/=foldSection\(/g)||[]).length,5,'Exactly five secondary Radar sections are collapsible');
+assert.equal((radar.match(/=foldSection\(/g)||[]).length,6,'Exactly six secondary Radar sections remain collapsible');
 assert.match(radar,/const box=node\("details","radar-native-block radar-native-fold "/);
 assert.match(radar,/function setFoldNote\(root,id,message\)/);
 assert.match(radar,/group\.open=openGroups\.has\(key\)/);
 assert.match(radar,/group\.open=expanded\.has\(key\)/);
 assert.match(radarCss,/details\.radar-native-fold>summary\.radar-native-fold-summary:focus-visible/);
 const nativeRadar=require('../administrator/js/market-radar-native.js');
-const matched=nativeRadar.matchedCandidateKnowledge(data,qualification);
-assert(matched instanceof Map&&matched.size===20,'Knowledge must join all twenty candidates with exact coin IDs');
+const archivalFixture=sameSnapshot?qualification:{
+ ...qualification,qualified_at_utc:data.qualification_snapshot_at,
+ candidates:data.candidates.map(x=>({id:x.coin_id,symbol:x.symbol}))
+};
+if(!sameSnapshot)
+ assert.equal(nativeRadar.matchedCandidateKnowledge(data,qualification),null,
+  'Research archived on a different date must never borrow the current Spot qualification');
+const matched=nativeRadar.matchedCandidateKnowledge(data,archivalFixture);
+assert(matched instanceof Map&&matched.size===20,'Exact-ID join is only valid for equal source timestamps');
 assert.equal(matched.get('quack-ai').symbol,'Q');
 assert.equal(nativeRadar.matchedCandidateKnowledge({...data,qualification_snapshot_at:'2026-01-01T00:00:00Z'},qualification),null,'Never join source snapshots from different times');
 const duplicated={...data,candidates:[data.candidates[0],...data.candidates.slice(1,19),data.candidates[0]]};
-assert.equal(nativeRadar.matchedCandidateKnowledge(duplicated,qualification),null,'Duplicate coin ID must reject document join');
+assert.equal(nativeRadar.matchedCandidateKnowledge(duplicated,archivalFixture),null,'Duplicate coin ID must reject document join');
 const impersonation={...data,candidates:data.candidates.map(x=>x.coin_id==='quack-ai'?{...x,symbol:'Q-OTHER'}:x)};
-assert.equal(nativeRadar.matchedCandidateKnowledge(impersonation,qualification),null,'Ticker mismatch must never silently join');
+assert.equal(nativeRadar.matchedCandidateKnowledge(impersonation,archivalFixture),null,'Ticker mismatch must never silently join');
 assert.match(radar,/const knowledgePromise=get\("https:\/\/raw\.githubusercontent\.com\//,'Research is public only');
 assert.match(radar,/Promise\.allSettled\(\[qualificationPromise,knowledgePromise,dynamicPromise,spotComparisonPromise\]\)/,'Knowledge and historical enrichment failures must not hide the Spot qualification');
 assert.match(radar,/if\(enrichment\[0\]\.status==="fulfilled"\)/,'Spot qualification remains independently recoverable');
