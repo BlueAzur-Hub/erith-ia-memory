@@ -590,6 +590,41 @@ test("CT fee diagnostic explains missing contract proof without granting order p
  const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
  assert.match(view,/Diagnostic frais : /);
 });
+test("CT R23 fee envelope attests the exact pair when OKX rows omit instId",()=>{
+ const owner=require("./trader-okx-account.js");
+ const account={ok:true,read_only:true,fetched_at:"2026-10-20T03:18:50Z",
+  trading:[{details:[{ccy:"USDC",availBal:"3.20"}]}],funding:[]};
+ const response={ok:true,read_only:true,source:"OKX Private REST",
+  bridge_version:"1.9.17",instId:"CT-USDC",fetched_at:"2026-10-20T03:18:55Z",
+  fees:[{maker:"-0.0008",taker:"-0.001"}]};
+ const review=(fees,when=T)=>owner.summarizeTicketAccount(account,fees,"CT-USDC",when);
+ const accepted=review(response);
+ assert.equal(accepted.verified,true);
+ assert.equal(accepted.fee_pair_verified,true);
+ assert.equal(accepted.fee_maker_rate,"0.0008");
+ assert.equal(accepted.fee_taker_rate,"0.001");
+ assert.equal(accepted.fee_reason,null);
+ assert.equal(accepted.orders_enabled,false);
+ const wrongOuter=review({...response,instId:"BTC-USDC"});
+ assert.equal(wrongOuter.fee_pair_verified,false);
+ assert.match(wrongOuter.fee_reason,/Enveloppe Bridge : paire différente/);
+ const wrongInner=review({...response,fees:[{instId:"BTC-USDC",
+  maker:"-0.0008",taker:"-0.001"}]});
+ assert.equal(wrongInner.fee_pair_verified,false);
+ assert.match(wrongInner.fee_reason,/paire différente/);
+ const stale=review({...response,fetched_at:"2026-10-20T03:16:00Z"});
+ assert.equal(stale.fee_pair_verified,false);
+ assert.match(stale.fee_reason,/périmée/);
+ assert.equal(review({...response,source:"autre source"}).fee_pair_verified,false);
+ assert.equal(review({...response,read_only:false}).fee_pair_verified,false);
+ assert.equal(review({...response,ok:false}).fee_pair_verified,false);
+ assert.equal(review({...response,fees:[
+  {maker:"-0.0008",taker:"-0.001"},{maker:"-0.0008",taker:"-0.001"}]}).fee_pair_verified,false);
+ const exit=core.previewSpotExit({ticket:ctTicket(),context:accepted,
+  targetPriceQuote:"0.39",now:T});
+ assert.equal(exit.fees_verified,true);
+ assert.equal(exit.orders_enabled,false);
+});
 test("CT native exit preview rejects invalid tick and wrong token identity",()=>{
  const tk=ctTicket("3.1093");
  const p=core.previewSpotExit({ticket:tk,targetPriceQuote:"0.39",now:T});
