@@ -496,8 +496,8 @@ function mount(){
  const ticketBox=document.createElement("div");
  const warning=document.createElement("p");
  warning.textContent="Étude Spot avec carnet CT/USDC local récent s'il est vérifié, sinon archive datée. "+
-   "Montant hypothétique, non garanti par OKX. Compte OKX lu via le Bridge "+
-   "en lecture seule, sans aucun ordre.";
+   "Montant hypothétique, non garanti par OKX. "+
+   "Compte OKX lu via le Bridge existant, en lecture seule ; aucun ordre privé.";
  const quoteLabel=document.createElement("label");
  quoteLabel.textContent="Devise de cotation (paire OKX vérifiée) ";
  const quoteSelect=document.createElement("select");
