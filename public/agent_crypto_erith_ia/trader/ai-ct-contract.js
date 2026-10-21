@@ -49,38 +49,76 @@
     const ct=balanceFor(account,'CT');
     return {qty_ct:ct.qty,observed_at:account.fetched_at??null,verified:ct.verified};
   }
-  function acquisition(fills,qty) {
-    if (!validSource(fills) || !Array.isArray(fills.fills_3m) || qty === null) return {status:'unknown',reason:'Transactions OKX incomplètes'};
-    const pairFills=fills.fills_3m.filter(f=>f.instId===PAIR);
-    if (!pairFills.length) return {status:'unknown',reason:'Aucune transaction CT/USDC retrouvée'};
-    let acquired=0,spent=0,number=0,grossCt=0,ctFee=0,ctFeeOnly=true;
+  // Reconciliation proven in Concrete, generalized by exact Spot context.
+  // Not a real profit or a complete lifetime accounting record.
+  function acquisitionFor(context,fills,qty){
+    const base=String(context?.base||'').toUpperCase(),
+      quote=String(context?.quote||'').toUpperCase(),
+      venue=String(context?.venue||'').toLowerCase(),
+      pair=base+'-'+quote;
+    const unknown=reason=>Object.freeze({status:'unknown',reason});
+    if(!/^[A-Z][A-Z0-9]{0,19}$/.test(base)||
+      !['USDC','USDT','EUR'].includes(quote)||venue!=='okx')
+      return unknown('Marché Spot ou plateforme non vérifiée');
+    if(!validSource(fills)||!Array.isArray(fills.fills_3m)||
+      typeof qty!=='number'||!Number.isFinite(qty)||qty<0)
+      return unknown('Transactions OKX incomplètes');
+    const rows=fills.fills_3m.filter(f=>f?.instId===pair);
+    if(!rows.length)return unknown('Aucune transaction '+pair+' retrouvée');
+    let acquired=0,spent=0,count=0,grossBase=0,baseFee=0,baseFeeOnly=true;
     const seen=new Set();
-    for (const f of pairFills) {
-      // Do not infer the cost of holdings after a transfer, a sell or a non-CT fee.
-      if (f.side !== 'buy') return {status:'unknown',reason:'Achats et ventes mélangés : coût d’acquisition non établi'};
-      const id=String(f.tradeId??'').trim();
-      if (!id || seen.has(id)) return {status:'unknown',reason:'Identifiants de transaction absents ou répétés'};
+    for(const fill of rows){
+      // Transfers, sells, other fee currencies or duplicate receipts
+      // prevent a claim that the current holdings were acquired at this cost.
+      if(fill.side!=='buy')
+        return unknown('Achats et ventes mélangés : coût d’acquisition non établi');
+      const id=String(fill.tradeId??'').trim();
+      if(!id||seen.has(id))
+        return unknown('Identifiants de transaction absents ou répétés');
       seen.add(id);
-      const size=numeric(f.fillSz), price=numeric(f.fillPx),fee=numeric(f.fee);
-      if (size===null || size<=0 || price===null || price<=0 || fee===null)
-        return {status:'unknown',reason:'Prix, quantité ou frais non prouvés'};
-      const feeCcy=String(f.feeCcy??'');
-      if (fee!==0 && !['CT','USDC'].includes(feeCcy))return {status:'unknown',reason:'Frais prélevés dans une autre devise'};
-      grossCt+=size;
-      if(feeCcy==='CT'&&fee<=0)ctFee+=-fee;
-      else if(fee!==0)ctFeeOnly=false;
-      acquired+=size+(feeCcy==='CT'?fee:0);
-      spent+=size*price-(feeCcy==='USDC'?fee:0);
-      number++;
+      const size=numeric(fill.fillSz),price=numeric(fill.fillPx),
+        fee=numeric(fill.fee);
+      if(size===null||size<=0||price===null||price<=0||fee===null)
+        return unknown('Prix, quantité ou frais non prouvés');
+      const feeCcy=String(fill.feeCcy??'');
+      if(fee!==0&&![base,quote].includes(feeCcy))
+        return unknown('Frais prélevés dans une autre devise');
+      grossBase+=size;
+      if(feeCcy===base&&fee<=0)baseFee+=-fee;
+      else if(fee!==0)baseFeeOnly=false;
+      acquired+=size+(feeCcy===base?fee:0);
+      spent+=size*price-(feeCcy===quote?fee:0);
+      count++;
     }
-    if (acquired<=0 || spent<=0 || Math.abs(acquired-qty)>Math.max(.000001,qty*.0001))
-      return {status:'unknown',reason:'Le solde et les achats retrouvés ne concordent pas'};
-    return {status:'reconciled_fills_only',net_acquired_ct:acquired,spent_usdc:spent,
-      cost_per_ct_usdc:spent/acquired,fill_count:number,
-      observed_buy_ct_fee_pct:ctFeeOnly&&grossCt>0?100*ctFee/grossCt:null,
-      observed_buy_ct_fee_qty:ctFeeOnly&&grossCt>0?ctFee:null,
-      historical_gross_ct:grossCt,
-      caveat:'Transactions retrouvées et solde concordants ; historique externe/transferts non certifiés'};
+    if(acquired<=0||spent<=0||
+      Math.abs(acquired-qty)>Math.max(.000001,qty*.0001))
+      return unknown('Le solde et les achats retrouvés ne concordent pas');
+    return Object.freeze({
+      status:'reconciled_fills_only',market:pair,base,quote,venue:'okx',
+      net_acquired_base:acquired,spent_quote:spent,
+      cost_per_base_quote:spent/acquired,fill_count:count,
+      observed_buy_base_fee_pct:baseFeeOnly&&grossBase>0?
+        100*baseFee/grossBase:null,
+      observed_buy_base_fee_qty:baseFeeOnly&&grossBase>0?baseFee:null,
+      historical_gross_base:grossBase,
+      profit_proven:false,orders_enabled:false,read_only:true,
+      caveat:'Transactions retrouvées et solde concordants ; historique externe/transferts non certifiés'
+    });
+  }
+  function acquisition(fills,qty){
+    const evidence=acquisitionFor({base:'CT',quote:'USDC',venue:'okx'},fills,qty);
+    if(evidence.status!=='reconciled_fills_only')
+      return {status:'unknown',reason:evidence.reason};
+    // Exact compatibility shape for existing CT reports and account views.
+    return {status:'reconciled_fills_only',
+      net_acquired_ct:evidence.net_acquired_base,
+      spent_usdc:evidence.spent_quote,
+      cost_per_ct_usdc:evidence.cost_per_base_quote,
+      fill_count:evidence.fill_count,
+      observed_buy_ct_fee_pct:evidence.observed_buy_base_fee_pct,
+      observed_buy_ct_fee_qty:evidence.observed_buy_base_fee_qty,
+      historical_gross_ct:evidence.historical_gross_base,
+      caveat:evidence.caveat};
   }
 
   // Fermeture CT/USDC : rapprochement de PIECES comptables, pas d'ordre ni
@@ -610,5 +648,5 @@
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
         'Le prix futur de revente et le bénéfice réalisé ne sont pas connus.']});
   }
-  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,spotTradingRulesFor,assessSpotQuantity,assessSpotQuantityFor,planGrossBuyForNetSpot,assessPartialRules,compareCtExitDecisions,ctClosedCycleReport,publicCandles,explain,compose});
+  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,acquisitionFor,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,spotTradingRulesFor,assessSpotQuantity,assessSpotQuantityFor,planGrossBuyForNetSpot,assessPartialRules,compareCtExitDecisions,ctClosedCycleReport,publicCandles,explain,compose});
 });
