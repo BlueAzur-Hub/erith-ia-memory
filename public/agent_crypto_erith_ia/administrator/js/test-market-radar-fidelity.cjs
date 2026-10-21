@@ -480,7 +480,7 @@ test("Trader OKX native rows retain three exact quotes, never turn one hour into
    native.printOkxHourly(root,{okxHourly:qualified});
    assert.equal(rows.children.length,report.pairs.length);
    assert.match(note.textContent,new RegExp(report.pairs.length+' paires Spot'));
-   assert.match(fold.textContent,new RegExp(report.pairs.length+' paires/));
+   assert.match(fold.textContent,new RegExp(report.pairs.length+' paires'));
    const names=rows.children.map(row=>row.children[0].textContent);
    assert.ok(names.includes("BTC-USDC"));
    assert.ok(names.includes("BTC-USDT"));
