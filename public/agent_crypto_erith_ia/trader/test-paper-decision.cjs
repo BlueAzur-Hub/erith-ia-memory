@@ -1330,9 +1330,17 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
  fields.compute.classList={add:()=>{}};
  const node=ui.mount(fields);
  assert.ok(node,"visual surface must be mountable with existing controls");
- assert.equal(node.children[1].children[0].children[1],fields.quoteLabel);
- assert.equal(node.children[1].children[0].children[2],fields.budgetLabel);
- assert.equal(node.children[1].children[1].children[1],fields.exitLabel);
+ const recto=node.querySelector(".erith-gt-recto");
+ const verso=node.querySelector(".erith-gt-verso");
+ const grid=node.querySelector(".erith-od-grid");
+ assert.ok(recto&&verso&&grid,"recto and verso must be one PAPER ticket");
+ assert.equal(grid.children[0].children[1],fields.quoteLabel);
+ assert.equal(grid.children[0].children[2],fields.budgetLabel);
+ assert.equal(grid.children[1].children[1],fields.exitLabel);
+ assert.ok(verso.querySelector("[data-od-evidence]")||
+   verso.querySelector("[data-od-proof=\"pair\"]"),"back must contain OKX proofs");
+ assert.ok(verso.querySelector("[data-od-events]"),"back must contain PAPER journal");
+ assert.ok(node.querySelector(".erith-golden-back-reports"),"back owns the report slot");
  assert.match(fields.compute.textContent,/aucun ordre/);
  const text=key=>node.querySelector('[data-od-field="'+key+'"]')?.textContent;
  const proof=key=>node.querySelector('[data-od-proof="'+key+'"]')?.textContent;
@@ -1375,7 +1383,8 @@ test("Option C stays inside the existing PAPER ticket, not a second trading owne
  const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
  const runtime=fs.readFileSync(path.join(__dirname,"trader-runtime-mirror.js"),"utf8");
  assert.ok(view.includes("const orderEntry=globalThis.AgentCryptoTraderOrderEntryView?.mount"));
- assert.ok(view.includes("ticketBox.append(warning,orderEntry,brief,cycle,technical)"));
+ assert.ok(view.includes("backReports.append(brief,cycle,technical)"));
+ assert.ok(view.includes("ticketBox.append(warning,orderEntry)"));
  assert.ok(view.includes("globalThis.AgentCryptoTraderOrderEntryView?.reset"));
  assert.ok(view.includes("globalThis.AgentCryptoTraderOrderEntryView?.updateCycle"));
  assert.ok(runtime.includes("loadOrderEntry=()=>add"));
