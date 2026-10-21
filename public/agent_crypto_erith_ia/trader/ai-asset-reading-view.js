@@ -36,8 +36,26 @@ sheet.href=new URL('../trader/ai-asset-reading.css',document.baseURI).href;
 document.head.append(sheet);
 let key='',coin=null,selection=null,market=null,chart=null,book=null,rules=null,
  account=null,position=null,mode='learn',epoch=0,busy=false;
-const marketCoin=()=>globalThis.AgentCryptoTraderMarket?.selected?.()||null;
+const marketCoin=()=>globalThis.AgentCryptoTraderMarket?.selected?.()||globalThis.getSelectedCoin?.()||null;
 const microscope=()=>globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||null;
+const listing=()=>globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.()||null;
+const liveListing=()=>globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()||null;
+const externalGraph=()=>globalThis.AtlasExternalChart?.state?.()||null;
+const nav=document.querySelector?.('#accueil .atlas-v2-nav-essential');
+const quick=nav?el('button','atlas-quick-link','IA · Seven'):null;
+if(quick){
+ quick.id='aiSevenToggle';quick.type='button';quick.hidden=true;
+ quick.setAttribute('aria-controls','sevenAssetReading');
+ quick.setAttribute('aria-expanded','false');nav.append(quick);
+ quick.addEventListener('click',()=>{
+   const detail=document.getElementById('detailPanel');
+   if(detail?.hidden||document.getElementById('analyste')?.classList.contains('detail-collapsed'))
+     document.getElementById('detailPanelToggle')?.click();
+   panel.open=true;quick.setAttribute('aria-expanded','true');
+   panel.scrollIntoView?.({behavior:'auto',block:'nearest'});
+ });
+ panel.addEventListener('toggle',()=>quick.setAttribute('aria-expanded',String(panel.open)));
+}
 const available=(v)=>v===null||v===undefined||v===''?'Non certifié':String(v);
 const money=(v,unit)=>available(v)+(v===null||v===undefined?'':' '+unit);
 const row=(label,value)=>{
@@ -52,20 +70,45 @@ const format=(v,dec=8)=>{
   n.toLocaleString('fr-FR',{maximumFractionDigits:dec}):'non qualifié';
 };
 function chosen(){
- const c=marketCoin(),g=microscope();
- const symbol=String(c?.symbol||'').toUpperCase();
+ const c=marketCoin(),g=microscope(),native=listing(),live=liveListing(),chart=externalGraph();
  const graphPair=String(g?.loadedInstrument||'').toUpperCase().replace('/','-');
  const graphBase=graphPair.match(/^([A-Z0-9]{1,20})-([A-Z0-9]{2,12})$/)?.[1]||'';
- // CT's restored module is always the only CT owner, even when the Market
- // lags behind a newly loaded CT/USDT graph.
- if(symbol==='CT'||graphBase==='CT')return {ct:true,c,g};
+ if(graphBase==='CT'||(live?.active===true&&live?.base==='CT'))
+   return {ct:true,c,g};
+ if(live?.active===true){
+   const base=String(live.base||'').toUpperCase(),quote=String(live.quote||'').toUpperCase();
+   const pair=base+'-'+quote,venue=String(live.provider||'').toLowerCase();
+   const exact=live.readOnly===true&&['okx','bitget'].includes(venue)&&
+     /^[A-Z][A-Z0-9]{0,19}$/.test(base)&&['USDC','USDT','EUR'].includes(quote)&&
+     live.instrument===pair&&native?.selectedId===live.id&&
+     native?.selectedSymbol===base&&native?.selectedProvider===venue&&
+     native?.selectedProviderSymbol===live.providerSymbol&&
+     native?.selectedPair===base+'/'+quote&&chart?.active===true&&
+     chart.coin_id===live.id&&chart.loading!==true&&!chart.error;
+   if(!exact||(graphPair&&graphPair!==pair))
+     return {conflict:true,c:{symbol:base||'Listing'},g,graphBase:graphBase||'non chargé'};
+   const ticker=live.marketTicker;
+   const exactQuotePrice=ticker?.quoteCurrency===quote&&
+     Number.isFinite(Number(ticker.lastPrice))&&Number(ticker.lastPrice)>0?
+     ticker.lastPrice:null;
+   return {
+     c:{id:String(live.id),symbol:base,name:String(live.name||base),
+       usdSource:'Prix USD non attesté · '+venue+' '+pair,
+       change24h:ticker?.quoteCurrency===quote&&
+         Number.isFinite(ticker?.change24h)?ticker.change24h:null},
+     g,selection:{id:String(live.id),symbol:base,quote},
+     identity:String(live.id)+'|'+pair+'|'+venue,venue,external:true,
+     exactQuotePrice,quotePriceAt:ticker?.timestamp||null
+   };
+ }
+ const symbol=String(c?.symbol||'').toUpperCase();
+ if(symbol==='CT')return {ct:true,c,g};
  if(!c?.id||!/^[A-Z][A-Z0-9]{0,19}$/.test(symbol))return {pending:true,c,g};
  if(graphBase&&graphBase!==symbol)return {conflict:true,c,g,graphBase};
- const quote=String(c?.rawQuoteCurrency||c?.quote||
-   c?.providerContext?.quote||'USDC').toUpperCase();
+ const quote=String(c?.rawQuoteCurrency||c?.quote||c?.providerContext?.quote||'USDC').toUpperCase();
  if(!['USDC','USDT','EUR'].includes(quote))return {pending:true,c,g};
  return {c,g,selection:{id:String(c.id),symbol,quote},
-  identity:String(c.id)+'|'+symbol+'|'+quote};
+   identity:String(c.id)+'|'+symbol+'|'+quote,venue:'okx',external:false};
 }
 function resetReading(){
  book=null;rules=null;account=null;position=null;busy=false;
@@ -77,17 +120,20 @@ function same(original,seq){
 }
 function change(){
  const choice=chosen();
- if(choice.ct){panel.hidden=true;key='CT';coin=null;epoch++;resetReading();return;}
+ if(choice.ct){
+  panel.hidden=true;if(quick)quick.hidden=true;
+  key='CT';coin=null;selection=null;epoch++;resetReading();return;
+ }
  if(choice.conflict||choice.pending){
-  panel.hidden=!!choice.pending;
-  if(choice.pending)panel.open=false;
+  panel.hidden=false;
+  if(quick){quick.hidden=false;quick.textContent='IA · Seven · Sources';}
   // For a conflict, show ONLY a warning, never another asset's private data.
   if(choice.conflict){
     panel.hidden=false;heading.textContent='IA · Sources en attente';
     caption.textContent='Sélection Market et bougies différentes';
     cards.replaceChildren();help.replaceChildren();
   }
-  key='';coin=null;epoch++;resetReading();
+  key='';coin=null;selection=null;epoch++;resetReading();
   if(choice.conflict)
     state.textContent='Conflit : Market '+choice.c?.symbol+
       ' · graphique '+choice.graphBase+'. Aucune analyse ou position n’est mélangée.';
@@ -96,13 +142,20 @@ function change(){
  }
  if(choice.identity!==key){
    key=choice.identity;coin=choice.c;selection=choice.selection;
-   epoch++;resetReading();
+   epoch++;resetReading();panel.open=true;
  }
- panel.hidden=false;publicButton.disabled=busy;privateButton.disabled=busy;
+ panel.hidden=false;
+ if(quick){quick.hidden=false;quick.textContent='IA · Seven · '+selection.symbol;}
+ publicButton.disabled=busy||(choice.external&&choice.venue!=='okx');
+ privateButton.disabled=busy||(choice.external&&choice.venue!=='okx');
  heading.textContent='IA · Dossier '+selection.symbol+' · Seven';
  caption.textContent=String(coin?.name||selection.symbol)+' · '+selection.symbol+
    '/'+selection.quote+' · Market, position, règles et scénarios PAPER';
- intro.textContent='Même structure que Concrete (CT), données propres à '+
+ intro.textContent=choice.external?
+   'Dossier '+selection.symbol+' · '+choice.venue.toUpperCase()+' Spot '+
+   selection.symbol+'/'+selection.quote+
+   ' · données publiques ; position et règles OKX non certifiées. Concrete CT reste intact.':
+   'Même structure que Concrete (CT), données propres à '+
    selection.symbol+'. Concrete conserve intégralement son panneau et sa lecture privée.';
  paint();
 }
@@ -114,7 +167,7 @@ function safeChart(){
 }
 function paint(){
  if(!selection||panel.hidden)return;
- const ch=safeChart(),now=Date.now();
+ const ch=safeChart(),now=Date.now(),choice=chosen();
  const study=core.createReading({selection,market:coin,chart:ch,
    book,rules,account,position,now});
  if(study.status!=='PAPER_READ_ONLY'){
@@ -169,6 +222,13 @@ function paint(){
      }
    }
    if(index===1){
+     if(choice.external){
+       put('Marché Spot',choice.venue.toUpperCase()+' · '+study.asset.pair);
+       put('Prix exchange natif',choice.exactQuotePrice===null?'Non certifié':
+         money(format(choice.exactQuotePrice),study.asset.quote));
+       put('Horodatage exchange',choice.quotePriceAt||'Non daté');
+       put('Conversion en USD','Non certifiée');
+     }
      put('Prix Market',money(study.public.market_price_usd,'USD'));
      put('Variation 24 h',study.public.change_24h===null?'Non certifiée':
        format(study.public.change_24h,2)+' %');
@@ -197,7 +257,10 @@ function paint(){
      put('P&L personnel','Non calculable sans historique rapproché');
    }
    if(index===3){
-     put('Paire native OKX',study.asset.pair);
+     if(choice.external&&choice.venue!=='okx')
+       put('Limite de preuve','Listing '+choice.venue.toUpperCase()+' · règles OKX non extrapolées');
+     put('Paire native OKX',choice.external&&choice.venue!=='okx'?
+       'Non certifiée pour cet exchange':study.asset.pair);
      put('Minimum minSz',money(study.public.min_size_base,study.asset.base));
      put('Pas lotSz',money(study.public.lot_size_base,study.asset.base));
      put('Pas de prix tickSz',money(study.public.tick_size_quote,study.asset.quote));
@@ -242,6 +305,10 @@ async function getPublic(url,ms=6500){
 }
 async function publicRead(){
  const initial=chosen();if(!initial.selection||busy)return;
+ if(initial.external&&initial.venue!=='okx'){
+   state.textContent='Règles OKX non applicables sans paire native certifiée.';
+   return;
+ }
  const pair=initial.selection.symbol+'-'+initial.selection.quote,token=epoch;
  busy=true;publicButton.disabled=true;privateButton.disabled=true;
  state.textContent='Lecture des preuves publiques exactes de '+pair+'…';
@@ -274,6 +341,10 @@ async function publicRead(){
 }
 async function privateRead(){
  const initial=chosen();if(!initial.selection||busy)return;
+ if(initial.external&&initial.venue!=='okx'){
+   state.textContent='Compte OKX non applicable au listing sur '+initial.venue.toUpperCase()+'.';
+   return;
+ }
  const pair=initial.selection.symbol+'-'+initial.selection.quote,token=epoch;
  const owner=globalThis.AgentCryptoTraderOkxAccount;
  if(typeof owner?.ticketReadOnly!=='function'||typeof owner?.basePositionReadOnly!=='function'){
@@ -308,7 +379,8 @@ publicButton.addEventListener('click',()=>void publicRead());
 privateButton.addEventListener('click',()=>void privateRead());
 function schedule(){queueMicrotask(change);}
 for(const event of ['agent-crypto:trader-selection-changed',
- 'agent-crypto:external-asset-changed','agent-crypto:trader-line-loaded',
+ 'agent-crypto:external-asset-changed','agent-crypto:new-listing-line-ready',
+ 'agent-crypto:selected-market-changed','agent-crypto:trader-line-loaded',
  'agent-crypto:candles-technical-levels','agent-crypto:quote-architecture-changed']){
  window.addEventListener(event,schedule,{passive:true});
 }
