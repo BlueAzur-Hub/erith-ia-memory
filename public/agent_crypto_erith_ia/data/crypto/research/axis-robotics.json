@@ -1,0 +1,80 @@
+{
+  "schema": "erith.crypto.asset-research-dossier.v1",
+  "record_kind": "SOURCE_QUALIFICATION_NOT_TRADING_SIGNAL",
+  "qualified_on_utc": "2026-10-21",
+  "coin_id": "axis-robotics",
+  "name": "Axis Robotics",
+  "symbol": "AXIS",
+  "category": "Physical AI / robotics training-data infrastructure",
+  "chain": "Base",
+  "base_token_contract": "0x5bE75e3b0aFf5D1A042A5363Ae36AcB1d6d755ea",
+  "identity_proof": "Bitget initial listing and CoinGecko axis-robotics page identify the same Base contract; not a smart-contract audit.",
+  "tokenomics": {
+    "total_supply_axis": 1000000000,
+    "circulating_supply_axis_at_source": 165000000,
+    "circulating_supply_source": "CoinGecko October 21, 2026; may change"
+  },
+  "market_evidence": {
+    "bitget_spot": {
+      "pair": "AXIS/USDT",
+      "instrument_type": "SPOT",
+      "listing_opened_utc": "2026-10-21T13:00:00Z",
+      "public_candle_source": "Bitget AXISUSDT",
+      "price_at_now_usdt": null,
+      "market_cap_usd_at_now": null
+    },
+    "okx": {
+      "listed_products": [
+        "AXIS/USDT perpetual",
+        "AXISUSD UM X-Perp (observed in operator screenshot)"
+      ],
+      "axis_usdc_spot_verified": false,
+      "axis_usdt_spot_verified": false,
+      "real_order_enabled": false
+    },
+    "stablecoin_conversion": {
+      "usd_to_usdt_verified_live": false,
+      "usd_to_usdc_verified_live": false
+    }
+  },
+  "evidence_limits": {
+    "new_listing_first_day_change24h_is_comparable_to_regular_24h": false,
+    "spot_bid_ask_book_at_trade_time_verified": false,
+    "okx_spot_min_sz_lot_sz_tick_sz_verified": false,
+    "fees_in_base_or_quote_verified": false,
+    "sellable_after_fee_for_ten_usdc_verified": false,
+    "chart_futures_must_not_be_used_as_spot_fill": true,
+    "unverified_historical_ohlcv_must_not_be_fabricated": true,
+    "operator_24h_price_changes_are_not_realized_profit": true
+  },
+  "status": "RESEARCH_ONLY_NO_10_USDC_OKX_ENTRY",
+  "profit_forecast_usdc": null,
+  "realized_profit_usdc": null,
+  "orders_enabled": false,
+  "account_access": false,
+  "sources": [
+    {
+      "kind": "official_bitget_spot_listing",
+      "url": "https://www.bitget.com/support/articles/12560603898107",
+      "date_utc": "2026-10-20"
+    },
+    {
+      "kind": "official_okx_perpetual_announcement",
+      "url": "https://www.okx.com/en-us/help/okx-to-list-perpetual-futures-for-axis-crypto",
+      "date_utc": "2026-10-20"
+    },
+    {
+      "kind": "coingecko_identity_and_supply",
+      "url": "https://www.coingecko.com/en/coins/axis-robotics"
+    },
+    {
+      "kind": "official_project_site",
+      "url": "https://axisrobotics.ai/"
+    },
+    {
+      "kind": "official_brand_kit",
+      "url": "https://docs.axisrobotics.ai/links/brand-kit"
+    }
+  ],
+  "summary_fr": "AXIS est un nouveau token Base consacré aux données pour la robotique IA. Bitget a ouvert AXIS/USDT Spot le 21/10 à 13 h UTC. Les contrats perpétuels AXIS chez OKX ne prouvent pas un marché Spot AXIS/USDC disponible pour investir les 10 USDC de Seven. Les cours peuvent être observés mais aucun gain ni possibilité de revente n'est certifié."
+}
