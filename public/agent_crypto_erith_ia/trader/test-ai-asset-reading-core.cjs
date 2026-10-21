@@ -90,6 +90,18 @@ test('wrong Market id is blocked; wrong chart never borrows OHLC',()=>{
  assert.match(d.public.chart_warning,/différentes de BTC/);
  assert.equal(d.public.book_verified,true);
 });
+test('chart pairing alone is not a verified data source or timestamp',()=>{
+ const f=fixture();
+ const guess=createReading(f);
+ assert.equal(guess.public.chart_identity_matched,true);
+ assert.equal(guess.public.chart_source_verified,false);
+ f.chart.source_verified=true;
+ f.chart.provider='okx';
+ f.chart.observed_at_utc=ISO;
+ assert.equal(createReading(f).public.chart_source_verified,true);
+ f.chart.observed_at_utc=new Date(NOW-3600000).toISOString();
+ assert.equal(createReading(f).public.chart_source_verified,false);
+});
 test('account and base holding proofs must match the same exact Spot pair',()=>{
  const f=fixture();f.account.instId='CT-USDC';f.position.pair='CT-USDC';
  const d=createReading(f);
