@@ -111,28 +111,6 @@ function mount(){
     };
     doc.head.appendChild(contract);
   }
-  // Separate Seven multi-asset dossier. Never reassign/replace the legacy
-  // CT panel or its data. Loads independently within the original iframe.
-  if(!doc.getElementById("traderSevenAssetCoreScript")){
-    const core=doc.createElement("script");
-    core.id="traderSevenAssetCoreScript";
-    core.src=new URL("../trader/ai-asset-reading-core.js",doc.baseURI).href;
-    core.onload=()=>{
-      if(!win.AgentCryptoAiAssetReading||
-         doc.getElementById("traderSevenAssetViewScript"))return;
-      const view=doc.createElement("script");
-      view.id="traderSevenAssetViewScript";
-      view.src=new URL("../trader/ai-asset-reading-view.js",doc.baseURI).href;
-      view.onerror=()=>{
-        if(status)status.textContent="Dossier Seven multi-actifs indisponible ; Concrete CT reste utilisable.";
-      };
-      doc.head.appendChild(view);
-    };
-    core.onerror=()=>{
-      if(status)status.textContent="Nouveau dossier multi-actifs indisponible ; aucun effet sur Concrete CT.";
-    };
-    doc.head.appendChild(core);
-  }
   // Visible PAPER laboratory. Its arithmetic is isolated and it only consumes
   // canonical publicly loaded BTC/CT series. Never inherits Bridge credentials.
   if(!doc.getElementById("traderPaperLabCoreScript")){
