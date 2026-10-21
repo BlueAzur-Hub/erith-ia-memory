@@ -202,6 +202,9 @@ jobs:
             prefix+"trader/test-strategy-comparator.cjs",
             # Isolated documentary case study; no new Trader runtime owner.
             prefix+"trader/axis-robotics-case-study.html",
+            # Pure non-network paper arithmetic model and regression tests.
+            prefix+"trader/spot-case-scenario-model.js",
+            prefix+"trader/test-spot-case-scenario.cjs",
           }
           changed=set(subprocess.check_output(
             ["git","diff","--name-only",base,"HEAD","--",prefix+"trader/"],
