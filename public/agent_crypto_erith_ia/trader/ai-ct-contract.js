@@ -121,9 +121,12 @@
       return state('FUNDING_ONLY','Aucune quantité disponible en Trading ; Funding distinct',amounts);
     const proof=rules?.status==='verified'?rules:
       spotTradingRulesFor({base,quote,venue},rules,now);
+    const proofAt=Date.parse(proof?.checked_at||'');
     if(proof?.status!=='verified'||proof.market!==pair||proof.base!==base||
-       proof.quote!==quote||proof.state!=='live')
-      return state('RULES_UNVERIFIED','Règles Spot exactes et actives nécessaires',amounts);
+       proof.quote!==quote||proof.state!=='live'||
+       proof.source!=='OKX Public Data · /api/v5/public/instruments'||
+       !Number.isFinite(proofAt)||proofAt>now+30000||now-proofAt>120000)
+      return state('RULES_UNVERIFIED','Règles Spot exactes, récentes et actives nécessaires',amounts);
     const min=positionDecimal(proof.min_sz),lot=positionDecimal(proof.lot_sz);
     if(min===null||lot===null||min<=0n||lot<=0n)
       return state('RULES_UNVERIFIED','Minimum/pas non représentable sans arrondi',amounts);
