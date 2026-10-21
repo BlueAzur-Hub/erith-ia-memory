@@ -1,0 +1,23 @@
+name: Seven New Listing Hybrid Integrity
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/seven-new-listings-hybrid-check.yml"
+      - "public/agent_crypto_erith_ia/administrator/js/graph-line-candle-overlay.js"
+      - "public/agent_crypto_erith_ia/tools/test_new_listing_partial_hybrid.cjs"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+permissions:
+  contents: read
+jobs:
+  partial-period:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify source-bound partial coverage for native Hybrid
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-line-candle-overlay.js
+          node public/agent_crypto_erith_ia/tools/test_new_listing_partial_hybrid.cjs
