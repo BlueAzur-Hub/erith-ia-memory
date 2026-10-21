@@ -85,10 +85,11 @@ function change(){
     panel.hidden=false;heading.textContent='IA · Sources en attente';
     caption.textContent='Sélection Market et bougies différentes';
     cards.replaceChildren();help.replaceChildren();
-    state.textContent='Conflit : Market '+choice.c?.symbol+
-      ' · graphique '+choice.graphBase+'. Aucune analyse ou position n’est mélangée.';
   }
   key='';coin=null;epoch++;resetReading();
+  if(choice.conflict)
+    state.textContent='Conflit : Market '+choice.c?.symbol+
+      ' · graphique '+choice.graphBase+'. Aucune analyse ou position n’est mélangée.';
   publicButton.disabled=true;privateButton.disabled=true;
   return;
  }
@@ -129,11 +130,15 @@ function paint(){
    help.append(block('Analyser',
     'Rapprocher la fraîcheur, les volumes, la profondeur disponible, les frais et les minima Spot avant d’évaluer une hypothèse. Une estimation PAPER n’est pas un ordre ni un gain réalisé.'));
  }
+ const previouslyOpen=new Set([...cards.children]
+   .filter(x=>x.open===true).map(x=>x.dataset?.sectionName).filter(Boolean));
+ const firstPaint=cards.children.length===0;
  cards.replaceChildren();
  const sections=study.sections;
  sections.forEach((entry,index)=>{
    const d=el('details','seven-asset-card');
-   if(index<2)d.open=true;
+   d.dataset.sectionName=entry.label;
+   d.open=firstPaint?index<2:previouslyOpen.has(entry.label);
    const s=el('summary','');
    s.append(el('b','',entry.label),el('small','',entry.status));
    d.append(s,el('p','seven-asset-note',entry.details));
