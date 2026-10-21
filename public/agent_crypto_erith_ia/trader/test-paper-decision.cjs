@@ -1400,6 +1400,58 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
  // Trading balance 3.2 remains the only trading value; no funding transfer.
  assert.equal(text("buyAvailable"),"3.2 USDC");
  assert.equal(src.includes("transfer("),false);
+ // Integrated verdict: no theoretical proceeds may look executable below minSz.
+ const verdictTitle=()=>node.querySelector("[data-od-verdict-title]")?.textContent||"";
+ const verdictDetail=()=>node.querySelector("[data-od-verdict-detail]")?.textContent||"";
+ const required=()=>node.querySelector("[data-od-verdict-budget]")?.textContent||"";
+ assert.match(verdictTitle(),/SCÉNARIO NON ADMISSIBLE/);
+ assert.match(verdictDetail(),/revente sous minSz/);
+ assert.match(required(),/10.02 CT bruts/);
+ assert.match(required(),/3.390768 USDC/);
+ assert.match(required(),/0,190768 USDC/);
+ assert.match(text("sellNet"),/NON RÉALISABLE/);
+ assert.equal(required().includes("1.18668749"),false,
+  "Funding assets must never be used as Trading in the verdict");
+ // OKX maxBuy has 16 fractional digits; comparison must be exact, not discarded.
+ ui.update({ticket:{pair:"CT-USDC",orders_enabled:false,
+   source_book_kind:"LOCAL_BACKEND_OKX_CT_USDC",
+   native_rules_verified:true,best_ask_quote:"0.3434",
+   native_min_quantity:"10",native_lot:"0.01",
+   study_budget_quote:"3.2",gross_buy_quantity:"9.31",
+   minimum_gross_buy_to_resell_with_assumed_base_fee:"10.02",
+   minimum_gross_buy_cost_at_ask_with_assumed_base_fee:"3.440868"},
+   bookDiagnostic:{accepted:true},
+   context:{order_gates_verified:true,order_gates:{
+     maxBuy:"9.3174001748761294",account_max_verified:true}},
+   review:{account_verified:true,available_trading_quote:"3.2",
+     fee_mode_verified:true,fee_buy_currency:"CT",
+     spot_gates:{verified:true}},
+   preview:{orders_enabled:false,buy_quantity:"9.31",
+     maximum_sellable_base:"9.3",meets_native_exit_minimum:false,
+     hypothetical_sale_net_quote:"3.623373"}});
+ assert.match(verdictDetail(),/maxBuy OKX inférieur au seuil requis/);
+ assert.match(required(),/3.440868 USDC/);
+ assert.match(required(),/maxBuy relevé \(9.3174001748761294 CT\)/);
+ assert.match(text("sellNet"),/NON RÉALISABLE/);
+ // A verified USDC debit mode requires the quote fee, not 10.02 CT.
+ ui.update({ticket:{pair:"CT-USDC",orders_enabled:false,
+   source_book_kind:"LOCAL_BACKEND_OKX_CT_USDC",
+   native_rules_verified:true,best_ask_quote:"0.3434",
+   native_min_quantity:"10",study_budget_quote:"4",
+   gross_buy_quantity:"10"},
+   bookDiagnostic:{accepted:true},
+   review:{fee_mode_verified:true,fee_buy_currency:"USDC",
+     fees_verified:true,fee_maker_pct:"0.08",fee_taker_pct:"0.1",
+     account_verified:true,available_trading_quote:"4",
+     spot_gates:{verified:true}},
+   context:{order_gates_verified:true,order_gates:{maxBuy:"11"}},
+   preview:{orders_enabled:false,buy_quantity:"10",
+     meets_native_exit_minimum:true,maximum_sellable_base:"10",
+     assumed_fee_pct:"0.1",hypothetical_sale_net_quote:"3.89"}});
+ assert.match(required(),/10 CT bruts/);
+ assert.match(required(),/3.437434 USDC/);
+ assert.match(required(),/Frais USDC estimés/);
+ assert.equal(required().includes("10.02"),false);
  // Unverified evidence must not be silently presented as verified.
  ui.update({ticket:{pair:"CT-USDC",orders_enabled:false,
    source_book_kind:"DATED_PUBLIC_HOURLY_ARCHIVE",
@@ -1414,12 +1466,14 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
  assert.equal(node.querySelector("[data-od-events]").children.length,2);
  ui.update({ticket:{pair:"CT-USDT",orders_enabled:false}});
  assert.equal(node.dataset.ready,"false");
+ assert.match(node.querySelector("[data-od-verdict-title]")?.textContent||"",/À VÉRIFIER/);
  assert.equal(text("buyQty"),"—");
  assert.match(proof("fresh"),/Vérification nécessaire/);
  assert.ok(css.includes("@media(max-width:880px)"));
  assert.ok(mirror.includes("trader-order-entry.css"));
  assert.ok(mirror.includes("trader-order-entry-view.js"));
  assert.ok(owner.includes("AgentCryptoTraderOrderEntryView?.update"));
+ assert.match(owner,/VENTE NON ADMISSIBLE/);
  for(const forbidden of ["fetch(","XMLHttpRequest","localStorage","sessionStorage",
   "/api/v5/trade/order","Authorization","Bearer"])
   assert.equal(src.includes(forbidden),false,"unexpected trade capability: "+forbidden);
