@@ -1,0 +1,54 @@
+name: Seven Public USDC Spot Gate Check
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/seven-public-spot-gate-check.yml"
+      - ".github/workflows/seven-radar-opportunity-history.yml"
+      - "public/agent_crypto_erith_ia/tools/seven_spot_gate.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_seven_spot_gate.cjs"
+      - "public/agent_crypto_erith_ia/data/trader_flux/seven_capital_scout/spot_gate.json"
+permissions:
+  contents: read
+jobs:
+  read-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate public Spot USDC contracts and dust constraints
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/tools/seven_spot_gate.cjs
+          node public/agent_crypto_erith_ia/tools/test_seven_spot_gate.cjs
+          node public/agent_crypto_erith_ia/tools/seven_spot_gate.cjs
+          node - <<'NODE'
+          const fs=require('node:fs'),path=require('node:path');
+          const root='public/agent_crypto_erith_ia/';
+          const report=JSON.parse(fs.readFileSync(root+'data/trader_flux/seven_capital_scout/spot_gate.json','utf8'));
+          const src=fs.readFileSync(root+'tools/seven_spot_gate.cjs','utf8');
+          const scan=fs.readFileSync(root+'tools/seven_capital_scout.cjs','utf8');
+          const workflow=fs.readFileSync('.github/workflows/seven-radar-opportunity-history.yml','utf8');
+          if(report.schema!=='erith.seven.public-usdc-spot-gate.v1'||
+            report.mode!=='READ_ONLY_PUBLIC_MARKET_PRECHECK'||report.quote!=='USDC'||
+            report.budget_usdc!==10||report.cost_buffer_usdc!==0.94||
+            report.real_orders_enabled!==false||report.real_orders_submitted!==0||
+            report.paper_fills!==0||report.actual_profit_usdc!==null||
+            report.private_account_access!==false||report.api_credentials_used!==false||
+            report.candidates.some(c=>c.trade_approved!==false||c.real_order_sent!==false||
+                c.actual_profit_usdc!==null)||
+            !workflow.includes('node public/agent_crypto_erith_ia/tools/seven_spot_gate.cjs')||
+            !src.includes("require('../trader/trader-paper-decision-core.js')")||
+            !src.includes('verifiedSpotRules')||
+            !src.includes('diagnoseSpotLiveBook')||
+            !scan.includes("real_orders_submitted:0"))
+              throw Error('Public Spot Gate safety invariant failed');
+          for(const forbidden of ['OK-ACCESS-KEY','api/v5/trade/order','/withdrawal','privateBridge',
+              'axios.post','method:\'POST\'','localStorage','sessionStorage']){
+              if(src.includes(forbidden))throw Error('Unsafe Spot Gate token: '+forbidden);
+          }
+          console.log('Seven public Spot Gate · zero orders, exact public USDC book, fees and identity unproven PASS');
+          NODE
