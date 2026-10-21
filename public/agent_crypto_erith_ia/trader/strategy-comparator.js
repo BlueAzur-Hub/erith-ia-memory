@@ -138,6 +138,7 @@ if(!root||typeof document==="undefined")return;
 if(root.AgentCryptoStrategyComparator)return;
 const ID="traderStrategyComparator";
 const CAPITAL_REPORT="../data/trader_flux/seven_capital_scout/status.json";
+const SPOT_GATE_REPORT="../data/trader_flux/seven_capital_scout/spot_gate.json";
 const $=selector=>document.getElementById(ID)?.querySelector(selector);
 const nfmt=(v,d=2)=>numeric(v)?v.toLocaleString("fr-FR",{
   minimumFractionDigits:d,maximumFractionDigits:d}):"non calculé";
@@ -313,10 +314,38 @@ function mountCapitalPulse(host){
        data.milestones_usdc.join(",")!=="12,15,17"||
        !Array.isArray(data.observations))
        throw Error("contrat de sécurité du rapport non conforme");
+    let spot="Spot/USDC : rapport en attente";
+    try{
+      // Second tiny public JSON, no polling or OKX API call from Firefox.
+      const answer=await fetch(new URL(SPOT_GATE_REPORT,document.baseURI),{
+        cache:"no-store",credentials:"omit",redirect:"error",signal:c.signal
+      });
+      if(!answer.ok)throw Error("Rapport Spot indisponible");
+      const rawGate=await answer.text();
+      if(rawGate.length>20000)throw Error("Rapport Spot trop grand");
+      const gate=JSON.parse(rawGate);
+      if(gate.schema!=="erith.seven.public-usdc-spot-gate.v1"||
+         gate.mode!=="READ_ONLY_PUBLIC_MARKET_PRECHECK"||
+         gate.quote!=="USDC"||gate.budget_usdc!==10||
+         gate.cost_buffer_usdc!==0.94||
+         gate.real_orders_enabled!==false||gate.real_orders_submitted!==0||
+         gate.private_account_access!==false||gate.actual_profit_usdc!==null||
+         !Array.isArray(gate.candidates)||
+         gate.candidates.some(x=>x.trade_approved!==false||
+           x.real_order_sent!==false||x.can_trade_10_usdc!==false||
+           x.actual_profit_usdc!==null))
+        throw Error("Contrat Spot non conforme");
+      if(gate.input_last_archive_utc===data.latest_archive_date_utc){
+        const screens=gate.candidates.filter(x=>
+          x.status==="PUBLIC_BOOK_AND_SIZE_PAPER_SCREEN_PASSED").length;
+        spot="Spot/USDC public "+screens+"/"+gate.candidates.length+
+          " présélection(s) · identité/frais/ordres NON certifiés";
+      }
+    }catch(_){ /* Optional public report; retain the proven Radar status. */ }
     pulse.textContent="SEVEN AUTO · 10 USDC à étudier + 0,94 USDC réservés · "+
       "objectifs 12 → 15 → 17 · dernière archive "+(data.latest_archive_date_utc||"absente")+
       " · "+data.observations.length+" observation(s) suivie(s) · "+
-      "0 ordre réel · opportunité Spot USDC non certifiée.";
+      spot+" · 0 ordre réel.";
   }).catch(()=>{
     pulse.textContent="SEVEN AUTO · 10 USDC + réserve 0,94 USDC · "+
       "journal quotidien indisponible ou non encore publié · aucun ordre réel.";
