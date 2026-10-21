@@ -1201,6 +1201,20 @@
     });
   }
 
+  // Read-only projection of the native Market's already cached public quote.
+  // Seven must not create another price fetch or borrow the stale Top 250 coin.
+  function selectedMarketCoin(){
+    const spec=state.selected;
+    if(!spec)return null;
+    const cached=state.coinCache.get(spec.id)||coinFromSpec(spec);
+    if(!cached||cached.id!==spec.id||
+       String(cached.symbol||'').toUpperCase()!==String(spec.symbol||'').toUpperCase()||
+       String(cached.listingPair||'').toUpperCase()!==String(spec.pair||'').toUpperCase()||
+       String(cached.listingProvider||'').toLowerCase()!==String(spec.providerLabel||'').toLowerCase())
+      return null;
+    return Object.freeze({...cached});
+  }
+
   function snapshot(){
     return Object.freeze({
       build:MODULE_VERSION,enabled:state.enabled,discovered:state.specs.length,followed:state.followedSpecs.length,
@@ -1265,7 +1279,7 @@
   }
 
   globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
-    build:MODULE_VERSION,mount,discover,select,selectById,deactivate,snapshot,mathSeriesSnapshot,self_test:selfTest,
+    build:MODULE_VERSION,mount,discover,select,selectById,deactivate,snapshot,selectedMarketCoin,mathSeriesSnapshot,self_test:selfTest,
     identity_enrichment:"GitHub static identity memory first with real PNG assets; CoinGecko batch only for unresolved known ids; exact id+symbol proof; fail-open",
     identity_logos:true,
     safe_radar:true,
