@@ -1,0 +1,27 @@
+name: Seven AXIS identity and Spot boundary
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/seven-axis-identity-check.yml"
+      - "public/agent_crypto_erith_ia/tools/test_axis_native_identity.cjs"
+      - "public/agent_crypto_erith_ia/administrator/data/new-listings-identities.json"
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/administrator/assets/crypto/new-listings/axis-robotics.svg"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+permissions:
+  contents: read
+jobs:
+  identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax, exact identity, stable logo, no order owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
+          node public/agent_crypto_erith_ia/tools/test_axis_native_identity.cjs
