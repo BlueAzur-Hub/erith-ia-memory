@@ -324,6 +324,66 @@ function ticket(budget="10",override={}){
  return core.prepareSpotTicket({selected:btcSource(),archive:ticketArchive(),
   pair:"BTC-USDC",budgetQuote:budget,now:T,...override});
 }
+
+test("Generic Spot selection contract accepts several assets but certifies NO live order",()=>{
+ const cases=[
+  [btcSource(),"BTC-USDC"],
+  [{asset:"ETH",coinId:"ethereum",provider:"coingecko",instrument:"ETH-USD",currency:"USD"},"ETH-USDC"],
+  [{asset:"SOL",coinId:"solana",provider:"coingecko",instrument:"SOL-USD",currency:"USD"},"SOL-USDT"],
+  [{asset:"OKB",coinId:"okb",provider:"coingecko",instrument:"OKB-USD",currency:"USD"},"OKB-USDC"],
+  [{asset:"CT",provider:"okx",currency:"USD",instrument:"CT/USDT",
+     source:"OKX CT/USDT candles · USDT/USD CoinGecko"},"CT-USDC"]
+ ];
+ for(const [selected,pair] of cases){
+  const match=core.qualifyPaperSpotSelection({selected,pair});
+  assert.equal(match.status,"SELECTION_PAPER_COHERENTE");
+  assert.equal(match.pair,pair);
+  assert.equal(match.quote,pair.split("-")[1]);
+  assert.equal(match.native_spot_market_verified,false);
+  assert.equal(match.account_limits_verified,false);
+  assert.equal(match.executable,false);
+  assert.equal(match.orders_enabled,false);
+  assert.equal(match.requires_exact_native_spot_book,true);
+ }
+ for(const [selected,pair] of [
+  [btcSource(),"ETH-USDC"],[btcSource(),"BTC-USD"],
+  [{...btcSource(),coinId:"ethereum"},"BTC-USDC"],
+  [{...btcSource(),instrument:"BTC-USDT"},"BTC-USDC"],
+  [{asset:"CT",provider:"okx",currency:"USD",instrument:"CT/USDT",
+    source:"Bitget CT/USDT candles · USDT/USD CoinGecko"},"CT-USDC"],
+  [{...btcSource(),asset:"XXX",coinId:"bitcoin"},"XXX-USDC"]
+ ]){
+  const bad=core.qualifyPaperSpotSelection({selected,pair});
+  assert.equal(bad.ok,false,"unproven mapping must be rejected");
+  assert.equal(bad.orders_enabled,false);
+ }
+});
+// The existing pure Spot archival ticket already works for more than CT:
+// demonstrate second asset without borrowing BTC's market or quantity rules.
+test("ETH archived Spot PAPER ticket reuses core without CT/BTC substitution",()=>{
+ const archive=ticketArchive(),eth=JSON.parse(JSON.stringify(archive));
+ const market=eth.hours[0].markets[0];
+ Object.assign(market,{pair:"ETH-USDC",base:"ETH",
+  rules:{minSz:"0.001",lotSz:"0.000001",tickSz:"0.01"},
+  book5:{source_at_utc:"2026-10-20T03:18:44Z",market_fill_proven:false,
+   bids:[["2452.50","0.50"]],asks:[["2453.00","0.50"]]}});
+ const selected={asset:"ETH",coinId:"ethereum",
+   instrument:"ETH-USD",provider:"coingecko",currency:"USD"};
+ const result=core.prepareSpotTicket({selected,archive:eth,pair:"ETH-USDC",
+   budgetQuote:"10",now:T});
+ assert.equal(result.status,"PREPARATION_NON_EXECUTABLE");
+ assert.equal(result.pair,"ETH-USDC");
+ assert.equal(result.base,"ETH");
+ assert.equal(result.quote,"USDC");
+ assert.equal(result.best_ask_quote,"2453.0");
+ assert.equal(result.native_min_quantity,"0.001");
+ assert.equal(result.market_execution_proven,false);
+ assert.equal(result.account_verified,false);
+ assert.equal(result.executable,false);
+ assert.equal(result.orders_enabled,false);
+ assert.equal(core.prepareSpotTicket({selected,archive:ticketArchive(),
+   pair:"ETH-USDC",budgetQuote:"10",now:T}).status,"BLOQUE");
+});
 test("5 USDC is below the observed native BTC-USDC buy minimum",()=>{
  const r=ticket("5");
  assert.equal(r.status,"PREPARATION_NON_EXECUTABLE");
