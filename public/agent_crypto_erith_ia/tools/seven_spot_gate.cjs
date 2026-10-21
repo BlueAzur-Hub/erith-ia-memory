@@ -163,7 +163,7 @@ async function prepare(source,query=publicRead,at=Date.now()){
  return {schema:'erith.seven.public-usdc-spot-gate.v1',
    mode:'READ_ONLY_PUBLIC_MARKET_PRECHECK',
    input_last_archive_utc:source.latest_archive_date_utc,
-   inspected_at_utc:nowIso(at),budget_usdc:10,cost_buffer_usdc:0.94,
+   inspected_at_utc:selected.length?nowIso(at):null,budget_usdc:10,cost_buffer_usdc:0.94,
    exact_wallet_balance_verified:false,quote:'USDC',
    market_data_venue:'OKX',candidates,
    source_times_are_not_signal_entry_times:true,
