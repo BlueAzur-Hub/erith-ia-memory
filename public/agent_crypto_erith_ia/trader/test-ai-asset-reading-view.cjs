@@ -25,19 +25,35 @@ class Fake {
  insertAdjacentElement(where,x){if(!this.parent)throw Error('No parent for '+this.id);
    const i=this.parent.children.indexOf(this);
    this.parent.children.splice(i+(where==='afterend'?1:0),0,x);x.parent=this;}
+ querySelector(sel){
+   const match=n=>sel.startsWith('.')?n?.className?.split(/\s+/).includes(sel.slice(1)):
+     n?.tagName===sel.toUpperCase();
+   const walk=n=>(n.children||[]).flatMap(child=>[child,...walk(child)]);
+   return walk(this).find(match)||null;
+ }
 }
 class FakeText{constructor(value){this.textContent=value;this.parent=null;}}
 function setup(){
  const root=new Fake('div'),host=new Fake('div'),ct=new Fake('details'),nav=new Fake('nav');
- ct.id='aiCtPanel';ct.textContent='CT private untouched marker';ct.open=true;
- root.append(host,nav);host.append(ct);
- const elements=[root,host,ct];
+ ct.id='aiCtPanel';ct.open=true;
+ const ctSummary=new Fake('summary'),ctSpan=new Fake('span');
+ const ctTitle=new Fake('b'),ctCaption=new Fake('small'),ctBody=new Fake('div');
+ ctTitle.textContent='IA · Concrete (CT)';
+ ctCaption.textContent='Apprendre · Analyser · position privée CT/USDC';
+ ctBody.className='ai-ct-panel-body';
+ ctBody.textContent='CT private untouched marker';
+ ctSpan.append(ctTitle,ctCaption);ctSummary.append(ctSpan);
+ ct.append(ctSummary,ctBody);
+ const ctQuick=new Fake('button');ctQuick.id='aiCtToggle';
+ ctQuick.textContent='IA · Concrete';ctQuick.setAttribute('aria-controls','aiCtPanel');
+ nav.append(ctQuick);root.append(host,nav);host.append(ct);
  const document={baseURI:'https://example.invalid/public/agent_crypto_erith_ia/trader/trading-desk.html',
   head:new Fake('head'),createElement:tag=>new Fake(tag),
   querySelector:sel=>sel==='#accueil .atlas-v2-nav-essential'?nav:null,
   createTextNode:value=>new FakeText(String(value)),
   getElementById:id=>id==='detailPanelBody'?host:id==='aiCtPanel'?ct:
-     id==='sevenAssetReading'?host.children.find(x=>x.id===id)||null:null};
+     id==='aiCtToggle'?ctQuick:
+     id==='sevenAssetReading'?ct.children.find(x=>x.id===id)||null:null};
  const listeners={};
  const window={addEventListener:(name,fn)=>{(listeners[name]??=[]).push(fn);},
   fire:(name)=>{for(const fn of listeners[name]||[])fn({type:name});}};
@@ -66,10 +82,10 @@ function setup(){
  const panel=document.getElementById('sevenAssetReading');
  const descendants=(node)=>[node,...(node.children||[]).flatMap(descendants)];
  const byText=(x)=>descendants(panel).find(n=>n.tagName==='BUTTON'&&n.textContent.includes(x));
- const heading=()=>descendants(panel).find(x=>x.className==='seven-asset-title')?.textContent||'';
+ const heading=()=>ctTitle.textContent;
  const statuses=()=>descendants(panel).filter(x=>x.className==='seven-asset-card').map(x=>x.textContent);
- return {panel,ct,host,nav,window,owner,globals,byText,heading,statuses,
-  sevenQuick:()=>nav.children.find(x=>x.id==='aiSevenToggle'),
+ return {panel,ct,ctBody,ctTitle,ctCaption,host,nav,window,owner,globals,byText,heading,statuses,
+  singleQuick:()=>ctQuick,
   select:(id,symbol,instr)=>{
    external=null;
    coin={id,symbol,name:symbol,priceUsd:2443,usdSource:'CoinGecko',usdUpdatedAt:now};
@@ -92,37 +108,49 @@ function setup(){
    privateWait.account.resolve(account);privateWait.position.resolve(position);privateWait=null;
   }};
 }
-test('seven-section dossier appears for BTC; restored Concrete CT remains untouched',()=>{
+test('one single native Technical Reading frame hosts BTC and preserves CT private nodes',()=>{
  const v=setup();
+ assert.equal(v.host.children.length,1,'no second accordion row');
+ assert.equal(v.host.children[0],v.ct);
+ assert.equal(v.panel.tagName,'DIV');
+ assert.equal(v.panel.parent,v.ct);
  assert.equal(v.panel.hidden,false);
+ assert.equal(v.ctBody.hidden,true);
  assert.match(v.heading(),/BTC/);
  assert.equal(v.statuses().length,7);
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ctBody.textContent,'CT private untouched marker');
  assert.equal(v.ct.open,true);
+ assert.equal(v.nav.children.length,1,'no second IA shortcut');
+ assert.equal(v.singleQuick().getAttribute('aria-controls'),'aiCtPanel');
  assert.equal(v.byText('Lire mon compte').type,'button');
 });
 test('BTC → CT → ETH → CT does not delete, hide or rewrite any CT private node',()=>{
  const v=setup();
  v.select('concrete','CT','CT-USDT');
  assert.equal(v.panel.hidden,true);
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ctBody.hidden,false);
+ assert.equal(v.heading(),'IA · Concrete (CT)');
+ assert.equal(v.singleQuick().textContent,'IA · Concrete');
+ assert.equal(v.ctBody.textContent,'CT private untouched marker');
  assert.equal(v.ct.hidden,false);
  assert.equal(v.ct.open,true);
  v.select('ethereum','ETH','ETH-USDC');
  assert.equal(v.panel.hidden,false);
+ assert.equal(v.ctBody.hidden,true);
  assert.match(v.heading(),/ETH/);
  assert.doesNotMatch(v.heading(),/BTC|Concrete/);
  assert.equal(v.statuses().length,7);
+ assert.equal(v.host.children.length,1);
  v.select('concrete','CT','CT-USDT');
  assert.equal(v.panel.hidden,true);
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ctBody.textContent,'CT private untouched marker');
  assert.equal(v.ct.hidden,false);
 });
 test('Market BTC with CT chart cannot paint private BTC or CT details incorrectly',()=>{
  const v=setup();
  v.select('bitcoin','BTC','CT-USDT');
  assert.equal(v.panel.hidden,true);
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ctBody.textContent,'CT private untouched marker');
  v.select('bitcoin','BTC','ETH-USDC');
  assert.equal(v.panel.hidden,false);
  assert.match(v.heading(),/Sources en attente/);
@@ -141,7 +169,7 @@ test('late private BTC result cannot paint after an ETH selection',async()=>{
  for(let i=0;i<8;i++)await Promise.resolve();
  assert.match(v.heading(),/ETH/);
  assert.doesNotMatch(v.statuses().join('\n'),/Trading ETH5 ETH|Funding ETH2 ETH|Trading USDC10 USDC/);
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ctBody.textContent,'CT private untouched marker');
 });
 test('DNA Bitget New Listing supersedes stale Market BTC with its own Seven dossier',()=>{
  const v=setup();
@@ -155,7 +183,7 @@ test('DNA Bitget New Listing supersedes stale Market BTC with its own Seven doss
  v.byText('Lire mon compte').fire('click');
  v.byText('Actualiser les sources publiques').fire('click');
  assert.equal(v.owner.calls(),0,'Bitget listing must not request an OKX account');
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ctBody.textContent,'CT private untouched marker');
  assert.equal(v.ct.open,true);
 });
 test('New Listing rejects stale chart identity and cannot borrow BTC proof',()=>{
@@ -176,20 +204,21 @@ test('external CT still belongs exclusively to Concrete and returning to BTC is 
  v.external('concrete','CT','CT-USDT','okx');
  assert.equal(v.panel.hidden,true);
  assert.equal(v.ct.open,true);
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ctBody.textContent,'CT private untouched marker');
  v.external('neosoul','DNA','DNA-USDT');
  assert.match(v.heading(),/Dossier DNA/);
  v.externalClear();
  assert.match(v.heading(),/Dossier BTC/);
  assert.equal(v.statuses().length,7);
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ctBody.textContent,'CT private untouched marker');
 });
 test('unknown New Listing identity never creates a guessed position',()=>{
  const v=setup();
  v.external('other','DNA','DNA-USDT','unknown');
- assert.equal(v.panel.hidden,true);
+ assert.equal(v.panel.hidden,false);
+ assert.equal(v.statuses().length,0);
  assert.equal(v.owner.calls(),0);
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ctBody.textContent,'CT private untouched marker');
 });
 test('Trader iframe actually loads the Technical Reading owner once; Administrator does not',()=>{
  assert.match(entry,/src="\.\/trader-runtime-mirror\.js/);
@@ -207,32 +236,55 @@ test('Trader iframe actually loads the Technical Reading owner once; Administrat
  assert.doesNotMatch(administrator,/technical-reading-data-sync\.js|traderTechnicalReadingSyncScript/);
  assert.doesNotMatch(mirror,/localStorage\.|indexedDB\.|orders_enabled\s*=\s*true/);
 });
-test('Seven shortcut is visible for DNA Bitget, navigates to the native dossier, CT remains untouched',()=>{
+test('one existing IA shortcut follows DNA and restores Concrete on CT',()=>{
  const v=setup();
- assert.match(v.sevenQuick().textContent,/Seven · BTC/);
+ assert.equal(v.nav.children.length,1);
+ assert.match(v.singleQuick().textContent,/BTC/);
  v.external('neosoul','DNA','DNA-USDT');
+ assert.equal(v.host.children.length,1);
  assert.equal(v.panel.hidden,false);
- assert.equal(v.panel.open,true);
- assert.match(v.sevenQuick().textContent,/Seven · DNA/);
- assert.equal(v.sevenQuick().hidden,false);
- assert.equal(v.statuses().length,7);
- v.sevenQuick().fire('click');
- assert.equal(v.panel.open,true);
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ctBody.hidden,true);
  assert.equal(v.ct.open,true);
+ assert.match(v.singleQuick().textContent,/DNA/);
+ assert.equal(v.statuses().length,7);
  v.external('concrete','CT','CT-USDT','okx');
  assert.equal(v.panel.hidden,true);
- assert.equal(v.sevenQuick().hidden,true);
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ctBody.hidden,false);
+ assert.equal(v.singleQuick().textContent,'IA · Concrete');
+ assert.equal(v.ctTitle.textContent,'IA · Concrete (CT)');
+ assert.equal(v.ctCaption.textContent,'Apprendre · Analyser · position privée CT/USDC');
+ assert.equal(v.ctBody.textContent,'CT private untouched marker');
+ assert.equal(v.nav.children.length,1);
 });
-test('Seven removes old rows when selection identity becomes incomplete',()=>{
+test('unknown listing clears old Seven rows without exposing CT private content',()=>{
  const v=setup();
  assert.equal(v.statuses().length,7);
  v.external('unknown','DNA','DNA-USDT','unknown');
- assert.equal(v.panel.hidden,true);
+ assert.equal(v.panel.hidden,false);
+ assert.equal(v.ctBody.hidden,true);
  assert.equal(v.statuses().length,0);
- assert.equal(v.sevenQuick().hidden,true);
- assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.nav.children.length,1);
+ assert.equal(v.ctBody.textContent,'CT private untouched marker');
+});
+test('closing Technical Reading persists across asset changes',()=>{
+ const v=setup();
+ v.ct.open=false;
+ v.select('ethereum','ETH','ETH-USDC');
+ assert.equal(v.ct.open,false,'do not force a user-closed window');
+ assert.equal(v.host.children.length,1);
+ v.select('concrete','CT','CT-USDT');
+ assert.equal(v.ct.open,false);
+ assert.equal(v.ctBody.hidden,false);
+});
+test('single-frame invariants reject duplicate mounts and duplicate controls',()=>{
+ const v=setup();
+ assert.equal(v.panel.tagName,'DIV');
+ assert.equal(v.panel.parent,v.ct);
+ assert.equal(v.host.children.filter(x=>x.tagName==='DETAILS').length,1);
+ assert.equal(v.nav.children.filter(x=>x.id==='aiCtToggle').length,1);
+ assert.equal(v.nav.children.filter(x=>x.id==='aiSevenToggle').length,0);
+ assert.match(code,/ct\.append\(panel\)/);
+ assert.doesNotMatch(code,/insertAdjacentElement\('beforebegin',panel\)|el\('details','seven-asset-reading'\)|nav\.append\(quick\)/);
 });
 test('CT source files unchanged by renderer and account proof is opt-in only',()=>{
  assert.match(runtime,/traderSevenAssetCoreScript/);
