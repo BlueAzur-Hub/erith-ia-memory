@@ -1,0 +1,33 @@
+{
+  "schema": "erith.seven.public-spot-listings-feed.v1",
+  "captured_at_utc": null,
+  "coverage_days": 30,
+  "read_only": true,
+  "trade_permission": false,
+  "real_orders": 0,
+  "watch_sources": {
+    "okx": {
+      "status": "NOT_YET_SCANNED",
+      "at_utc": null,
+      "count": 0,
+      "evidence": "OKX public instruments instType=SPOT"
+    },
+    "bitget": {
+      "status": "NOT_YET_SCANNED",
+      "at_utc": null,
+      "count": 0,
+      "evidence": "Bitget public market/instruments category=SPOT"
+    }
+  },
+  "feed_status": "NOT_YET_SCANNED",
+  "entries": [],
+  "quote_values_are_native_not_usd_converted": true,
+  "no_ticker_to_contract_identity_inference": true,
+  "spot_usdc_access_for_user_verified": false,
+  "image_policy": "Only exact venue+contract+launch registry entries have a local logo; otherwise visible ticker fallback",
+  "announcement_sources": {
+    "okx": "https://www.okx.com/en-eu/help/section/announcements-new-listings",
+    "bitget": "https://www.bitget.com/support/sections/12560603738154"
+  },
+  "note": "Waiting for first public automatic scan; no implied live quotes, eligibility, fees or orders."
+}

@@ -45,6 +45,13 @@ const diagnostics=api.self_test();
 assert.equal(diagnostics.pass,true,'existing native market must remain intact');
 assert.equal(diagnostics.checks.axis_spot_native_identity_safeguard,true);
 assert.equal(diagnostics.checks.axis_local_logo_asset,true);
+assert.equal(diagnostics.checks.public_okx_spot_listing_feed_only,true);
+assert.equal(diagnostics.checks.okx_swap_rejected,true);
+assert.equal(diagnostics.checks.okx_ticker_collision_refused,true);
+assert(code.includes('new-listings-public-feed.json'));
+assert(code.includes('publicListingsWatch()'));
+assert(code.includes('EXCHANGE_INSTRUMENT_ONLY'));
+
 assert.equal(diagnostics.checks.market_cap_usd_separate_coingecko_source,true);
 assert.equal(diagnostics.checks.market_cap_exact_id_symbol_time,true);
 assert.equal(diagnostics.checks.market_cap_no_zero_or_stale,true);

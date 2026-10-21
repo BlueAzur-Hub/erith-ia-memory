@@ -22,6 +22,7 @@
   const COINGECKO="https://api.coingecko.com/api/v3";
   const DISCOVERY_COOLDOWN_MS=15000;
   const IDENTITY_REGISTRY_URL="./data/new-listings-identities.json?v=40.6.546";
+  const WATCH_FEED_URL="./data/new-listings-public-feed.json";
   const IDENTITY_REMOTE_BATCH_TIMEOUT_MS=12000;
   // One existing CoinGecko identity batch also provides market-cap metadata;
   // never another per-token price/identity poller.
@@ -67,6 +68,7 @@
     marketMetrics:new Map(),
     marketMetricsBatchAt:0,
     registryStatus:{loaded:false,entries:0,applied:0,logos:0,error:null,source:"GitHub"},
+    watchStatus:{status:"NOT_LOADED",lastScanUtc:null,okxCount:0,error:null},
     identityStatus:{attempted:0,verified:0,logos:0,failed:0,githubHits:0,batchRequests:0,batchFailures:0,rateLimited:0,mismatched:0,missing:0,lastFailure:null},
     marketMetricsStatus:{source:"CoinGecko coins/markets",verified:0,unavailable:0,requests:0,lastSuccessAt:null,reason:null},
     radarStatus:{confirmed:0,candidates:0},
@@ -426,6 +428,53 @@
     return parts.join(" · ");
   }
 
+  // Published by a light GitHub Actions Spot scanner, not another page timer.
+  // Native OKX SPOT instruments are distinct from Bitget listings and never
+  // inherit a token/logo from ticker coincidence.
+  async function publicListingsWatch(){
+    try{
+      const doc=await json(WATCH_FEED_URL,{timeoutMs:12000});
+      const seen=Date.parse(String(doc?.captured_at_utc||""));
+      if(doc?.schema!=="erith.seven.public-spot-listings-feed.v1"||
+         doc.read_only!==true||doc.trade_permission!==false||doc.real_orders!==0||
+         !Array.isArray(doc.entries)||!Number.isFinite(seen)||
+         seen>Date.now()+120000||Date.now()-seen>12*3600000){
+        state.watchStatus={status:"STALE_OR_UNAVAILABLE",lastScanUtc:null,okxCount:0,error:"Flux Spot en attente ou périmé"};
+        return [];
+      }
+      const rows=doc.entries.filter(x=>x.provider==="okx"&&x.instrument_type==="SPOT"&&
+        x.stale!==true&&x.state==="live");
+      state.watchStatus={status:doc.watch_sources?.okx?.status==="OK"?"OK":"SOURCE_UNAVAILABLE",
+        lastScanUtc:doc.captured_at_utc,okxCount:rows.length,
+        error:doc.watch_sources?.okx?.status==="OK"?null:"Scan OKX non disponible"};
+      return doc.watch_sources?.okx?.status==="OK"?rows:[];
+    }catch(error){
+      state.watchStatus={status:"UNAVAILABLE",lastScanUtc:null,okxCount:0,
+        error:String(error?.message||error).slice(0,150)};
+      return [];
+    }
+  }
+  function specFromWatchOKX(row){
+    const base=upper(row?.base),quote=upper(row?.quote),symbol=upper(row?.providerSymbol);
+    const time=Date.parse(String(row?.listedAt||""));
+    if(!/^[A-Z0-9]{2,15}$/.test(base)||!["USD","USDC","USDT"].includes(quote)||
+       symbol!==base+"-"+quote||row?.pair!==base+"/"+quote||
+       row.instrument_type!=="SPOT"||row.provider!=="okx"||
+       row.state!=="live"||!Number.isFinite(time)||time>Date.now()||
+       Date.now()-time>30*86400000)return null;
+    return {
+      id:"new-listing:okx:"+symbol.toLowerCase(),name:base,symbol:base,base,
+      quote,pair:row.pair,provider:"okx",providerLabel:"OKX",
+      providerSymbol:symbol,discoveryProvider:"OKX public SPOT",
+      discoverySymbol:symbol,listedAt:new Date(time).toISOString(),
+      launchTime:time,identityVerified:false,coingeckoId:null,image:null,
+      // Strictly an exchange market ID until venue+contract is independently
+      // documented, even if a Bitget ticker with the same spelling exists.
+      identitySource:"EXCHANGE_INSTRUMENT_ONLY",ticker:null,
+      watchSource:"GitHub public scan · OKX /api/v5/public/instruments",
+      accountSpotPermissionVerified:false
+    };
+  }
   function providerSpec(row){
     const base=upper(row?.base),quote=upper(row?.quote),providerSymbol=upper(row?.providerSymbol);
     if(!base||!quote||!providerSymbol)return null;
@@ -574,13 +623,17 @@
     }
     state.discovering=true;state.lastError=null;
     try{
-      const [rows]=await Promise.all([
-        globalThis.AgentCryptoNewListingLiveAsset?.discoverBitget?.({days:30})||[],
-        fetchTickers(),
+      const [rows,watch]=await Promise.all([
+        Promise.resolve(globalThis.AgentCryptoNewListingLiveAsset?.discoverBitget?.({days:30})||[])
+          .catch(()=>state.discovered.slice()),
+        publicListingsWatch(),
+        fetchTickers().catch(()=>state.tickerMap),
         fetchQuoteRates().catch(()=>new Map())
       ]);
       state.discovered=Array.isArray(rows)?rows.slice():[];
-      state.specs=state.discovered.map(providerSpec).filter(Boolean).sort((a,b)=>(b.launchTime||0)-(a.launchTime||0));
+      const bitgetSpecs=state.discovered.map(providerSpec).filter(Boolean);
+      const okxSpecs=watch.map(specFromWatchOKX).filter(Boolean);
+      state.specs=[...bitgetSpecs,...okxSpecs].sort((a,b)=>(b.launchTime||0)-(a.launchTime||0));
       state.followedSpecs=(globalThis.AgentCryptoNewListingLiveAsset?.trackedInstruments?.()||[])
         .map(providerSpec).filter(spec=>spec&&spec.symbol!=="CT"&&ageDays(spec.listedAt)>30);
       await enrichKnownIdentities([...state.specs,...state.followedSpecs]);
@@ -663,8 +716,10 @@
     const proof=radarProof(spec,coin);
     const mature=age!==null&&age>30;
     const historicOnly=spec.historicalOnly===true;
-    const statusTag=mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
-    const identityTag=mature?(historicOnly?"Historique · cotation non vérifiée":"Ancien listing · source Bitget vérifiée"):(proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat");
+    const statusTag=spec.provider==="okx"?"OKX":mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
+    const identityTag=spec.provider==="okx"?
+      "OKX Spot public · symbole seulement · accès non vérifié":
+      mature?(historicOnly?"Historique · cotation non vérifiée":"Ancien listing · source Bitget vérifiée"):(proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat");
     const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="eager" fetchpriority="high" width="32" height="32">`:
       `<span class="market-coin-identity-fallback" aria-hidden="true" style="display:inline-grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;border:1px solid #5b8b9c;background:#142e3b;color:#e6f3fd;font:700 11px system-ui">${esc(spec.symbol.slice(0,3))}</span>`;
     return `<tr class="asset-row atlas-market-external-row ${selected?"is-selected is-compared":""}"
@@ -716,7 +771,7 @@
         ?"Nouveaux listings · actualisation Bitget en cours…"
         :state.lastError
           ?`Nouveaux listings · ${state.lastError}`
-          :`Nouveaux ≤30 j · ${total} · Suivis >30 j · ${followed} · Radar Bitget · ${state.radarStatus.confirmed} confirmé(s) · ${state.radarStatus.candidates} candidat(s) · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · ${identityDiagnosticsLabel()} · relance ≥15 s · Market Core inchangé`;
+          :`Nouveaux ≤30 j · ${total} · OKX Spot public ${state.watchStatus.okxCount} · ${esc(state.watchStatus.status)} · Suivis >30 j · ${followed} · Radar Bitget · ${state.radarStatus.confirmed} confirmé(s) · ${state.radarStatus.candidates} candidat(s) · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · ${identityDiagnosticsLabel()} · relance ≥15 s · Market Core inchangé`;
     }
     return specs.length;
   }
@@ -1320,6 +1375,7 @@
       lastDiscoveryAt:state.lastDiscoveryAt,lastError:state.lastError,
       identityStatus:{...state.identityStatus},
       marketMetricsStatus:{...state.marketMetricsStatus},
+      watchStatus:{...state.watchStatus},
       registryStatus:{...state.registryStatus},
       radarStatus:{...state.radarStatus},
       discoveryCooldownMs:DISCOVERY_COOLDOWN_MS,
@@ -1346,8 +1402,18 @@
     const oldCap=marketMetricsFromPayload(axisSpec,{
       ...capPayload,last_updated:new Date(Date.now()-25*60000).toISOString()});
     const noDateCap=marketMetricsFromPayload(axisSpec,{...capPayload,last_updated:null});
+    const sampleOKX=specFromWatchOKX({provider:"okx",instrument_type:"SPOT",
+      state:"live",base:"TEST",quote:"USDC",providerSymbol:"TEST-USDC",pair:"TEST/USDC",
+      listedAt:new Date(Date.now()-3600000).toISOString()});
+    const swapRejected=specFromWatchOKX({provider:"okx",instrument_type:"SWAP",
+      state:"live",base:"TEST",quote:"USDC",providerSymbol:"TEST-USDC",pair:"TEST/USDC",
+      listedAt:new Date(Date.now()-3600000).toISOString()});
+    const tickerCollisionRejected=sampleOKX?.coingeckoId===null&&
+      sampleOKX?.identityVerified===false&&sampleOKX?.image===null;
     const pass=ct.providerSymbol==="CT-USDT"
       &&generic?.provider==="bitget"
+      &&sampleOKX?.providerSymbol==="TEST-USDC"&&swapRejected===null&&
+        tickerCollisionRejected
       &&proof.status==="CONFIRMÉ"
       &&candidate.status==="CANDIDAT"
       &&ageBand(.5).label==="<24 h"
@@ -1376,6 +1442,9 @@
       market_cap_never_inferred_from_bitget_price:true,
       market_cap_missing_is_not_zero:true,
       market_cap_batch_reuses_identity_pipeline:true,
+      public_okx_spot_listing_feed_only:true,
+      okx_swap_rejected:swapRejected===null,
+      okx_ticker_collision_refused:tickerCollisionRejected,
       market_cap_exact_id_symbol_time:!!validCap&&!wrongCoinCap&&!wrongSymbolCap,
       market_cap_no_zero_or_stale:!zeroCap&&!oldCap&&!noDateCap,
       identity_exact_id_symbol:true,
@@ -1403,7 +1472,7 @@
     identity_enrichment:"GitHub registry first for names/logos; one CoinGecko batch for all IDs supplies dated USD capitalization and emergency missing identity only; strict ID+symbol; fail-open",
     identity_logos:true,
     safe_radar:true,
-    discovery_source:"Bitget launchTime only",
+    discovery_source:"Bitget launchTime + bounded GitHub public OKX SPOT listTime scan (separate exchange identities)",
     live_refresh_cooldown_ms:DISCOVERY_COOLDOWN_MS,
     confirmation_rule:"launchTime + live price + positive 24h volume",
     native_only:true,state_coins_injection:false,ranking_mutation:false,
