@@ -41,11 +41,13 @@ function side(heading,sideName,sub){
 function mount({quoteLabel,budgetLabel,exitLabel,compute}={}){
  if(node?.isConnected)return node;
  if(!quoteLabel||!budgetLabel||!exitLabel||!compute)return null;
- node=el("section","erith-order-desk");node.id=ID;node.dataset.ready="false";
+ node=el("section","erith-order-desk erith-golden-ticket");node.id=ID;node.dataset.ready="false";
  node.setAttribute("aria-label","Ordre Spot CT/USDC · aperçu et contrôles");
  const head=el("header","erith-od-head");
  const identity=el("div","");
- identity.append(el("span","erith-od-eyebrow","ERITH.IA · POSTE D'ORDRE SPOT"),
+ identity.append(el("span","erith-gt-side-label","RECTO · FACE DE L'OPÉRATION"),
+   el("span","erith-od-eyebrow","ERITH.IA · POSTE D'ORDRE SPOT"),
+   el("strong","erith-gt-title","TICKET D'OR · CRYPTO"),
    el("strong","erith-od-pair","CT/USDC · LIMIT"));
  const modes=el("div","erith-od-modes");
  modes.append(el("span","erith-od-tag","PAPER · lecture seule"),
@@ -89,7 +91,35 @@ function mount({quoteLabel,budgetLabel,exitLabel,compute}={}){
    "L'interface reprend les repères d'OKX sans reproduire ses autorisations. "+
    "Les projections viennent du ticket CT/USDC daté ; le graphique CT/USDT reste une source distincte. "+
    "Aucun ordre réel n'est envoyé par cette version.");
- node.append(head,sides,band,ev,chron,disclaimer);
+ // Two faces of one PAPER instrument: all existing live fields and controls
+ // are MOVED, not cloned. This is strictly a presentation change.
+ function face(which,label){
+  const shell=el("article","erith-gt-face erith-gt-"+which);
+  shell.setAttribute("aria-label",label);
+  for(const corner of ["tl","tr","bl","br"]){
+   const flourish=el("span","erith-gt-flourish erith-gt-"+corner,"❦");
+   flourish.setAttribute("aria-hidden","true");shell.append(flourish);
+  }
+  const inner=el("div","erith-gt-inner");shell.append(inner);
+  return {shell,inner};
+ }
+ const recto=face("recto","Recto du Ticket d'Or : achat, vente et cotations");
+ const verso=face("verso","Verso du Ticket d'Or : preuves OKX et journal PAPER");
+ recto.inner.append(head,sides,band);
+ const hinge=el("div","erith-gt-hinge","✦");
+ hinge.setAttribute("aria-hidden","true");
+ const backTitle=el("header","erith-gt-back-title");
+ backTitle.append(el("span","erith-gt-back-label","VERSO · CERTIFICAT PAPER"),
+   el("strong","","PREUVES, LIMITES ET CHRONOLOGIE"),
+   el("small","","La face justificative du même ticket"));
+ const backGrid=el("div","erith-gt-back-grid");
+ // Details stay collapsible; initial opening makes both halves of the
+ // physical ticket readable on first visit.
+ ev.open=true;chron.open=true;
+ backGrid.append(ev,chron);
+ const reports=el("div","erith-golden-back-reports");
+ verso.inner.append(backTitle,backGrid,reports,disclaimer);
+ node.append(recto.shell,hinge,verso.shell);
  reset();
  return node;
 }

@@ -799,8 +799,15 @@ function mount(){
  const orderEntry=globalThis.AgentCryptoTraderOrderEntryView?.mount?.({
    quoteLabel,budgetLabel,exitLabel,compute
  });
- if(orderEntry)ticketBox.append(warning,orderEntry,brief,cycle,technical);
- else ticketBox.append(warning,quoteLabel,budgetLabel,exitLabel,compute,brief,cycle,technical);
+ if(orderEntry){
+  // Preserve existing owner, ids, PAPER events and safety gates.
+  // Attach the very same report nodes to the back of the Golden Ticket.
+  const backReports=orderEntry.querySelector(".erith-golden-back-reports");
+  if(backReports){
+   backReports.append(brief,cycle,technical);
+   ticketBox.append(warning,orderEntry);
+  }else ticketBox.append(warning,orderEntry,brief,cycle,technical);
+ }else ticketBox.append(warning,quoteLabel,budgetLabel,exitLabel,compute,brief,cycle,technical);
  cycleStatus();
  ticket.append(ticketHeading,ticketBox);
  content.append(explanation,history,label,button,collector,evidence,ticket);
