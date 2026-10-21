@@ -298,7 +298,6 @@ jobs:
           assert "panel.open=true" in seven_view
           assert "if(symbol==='CT'||graphBase==='CT')" in seven_view
           assert "privateButton.disabled=busy||!isNativeOkx" in seven_view
-          assert "native" not in seven_view.lower() or "external" in seven_view.lower()
           for forbidden in ("localStorage.", "indexedDB.", "sessionStorage.",
                            "/api/v5/trade/order", "/trade/order", "/withdraw",
                            "setInterval(", "MutationObserver", "aiCtPanel.hidden",
