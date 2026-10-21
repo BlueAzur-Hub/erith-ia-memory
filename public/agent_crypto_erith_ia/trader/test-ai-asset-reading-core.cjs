@@ -22,8 +22,8 @@ function fixture(base='BTC',id='bitcoin',quote='USDC'){
    verified:true,account_at_utc:ISO,
    trading_available_quote:'3.2',funding_available_quote:'1.18668749',
    fee_pair_verified:true,fee_maker_rate:'0.0008',fee_taker_rate:'0.001'},
-  position:{pair,read_only:true,verified:true,observed_at_utc:ISO,
-   trading_base:base==='BTC'?'0.002':'0.4',funding_base:'0.001'},
+  position:{pair,read_only:true,verified:true,orders_enabled:false,real_orders:0,
+   observed_at_utc:ISO,trading_base:base==='BTC'?'0.002':'0.4',funding_base:'0.001'},
   now:NOW
  };
 }
@@ -276,5 +276,12 @@ test('different pair, stale rules and missing market never manufacture a sellabl
  assert.equal(createReading(f).private.holding_status,'RULES_UNVERIFIED');
  f.rules.instId='ETH-USDC';
  f.position.pair='BTC-USDC';
+ assert.equal(createReading(f).private.holding_status,'UNKNOWN');
+});
+
+
+test('a position missing the explicit no-order proof remains UNKNOWN',()=>{
+ const f=fixture('BTC','bitcoin');
+ delete f.position.orders_enabled;
  assert.equal(createReading(f).private.holding_status,'UNKNOWN');
 });
