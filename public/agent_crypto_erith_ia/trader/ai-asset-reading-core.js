@@ -141,7 +141,7 @@
   }
   return frozen(rows);
  }
- function createReading({selection,market,chart,book,rules,account,position,now=Date.now()}={}){
+ function createReading({selection,market,chart,book,rules,account,position,fills=null,now=Date.now()}={}){
   const base=String(selection?.symbol||'').toUpperCase(),
     coinId=String(selection?.id||''),quote=String(selection?.quote||'USDC').toUpperCase();
   if(!/^[A-Z][A-Z0-9]{0,19}$/.test(base)||!coinId||!['USDC','USDT','EUR'].includes(quote))
@@ -164,6 +164,14 @@
     validRules=validateRules(rules,pair,base,quote,now),
     validAccount=quoteAccount(account,pair,now),
     validPosition=basePosition(position,pair,now);
+  // Private receipts are opt-in inputs only. Reuse the existing CT
+  // reconciliation, but do not turn partial fills into proven lifetime P&L.
+  const owner=commonSpotRules();
+  const amount=validPosition?Number(print(validPosition.total)):NaN;
+  const receipt=validPosition&&fills&&Number.isFinite(amount)&&
+    (!selection?.provider||String(selection.provider).toLowerCase()==='okx')&&
+    typeof owner?.acquisitionFor==='function'
+      ?owner.acquisitionFor({base,quote,venue:'okx'},fills,amount):null;
   const publicData=frozen({market_price_usd:print(mPrice),
     market_timestamp_verified:marketFresh,
     market_source:market?.usdSource||'non certifiée',
@@ -217,6 +225,7 @@
     asset:frozen({base,quote,coin_id:coinId,pair}),
     public:publicData,private:privateData,sections,
     simulations:fractions({base,quote,position:validPosition,book:validBook,rules:validRules}),
+    acquisition_receipts:receipt?frozen(receipt):null,
     read_only:true,orders_enabled:false,executable:false,transfer_enabled:false,
     caveat:'Étude de marché et compte en lecture seule. Aucun ordre ou gain garanti.'});
  }
