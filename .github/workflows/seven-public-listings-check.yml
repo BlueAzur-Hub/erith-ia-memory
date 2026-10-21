@@ -1,0 +1,47 @@
+name: Seven Public Listing Feed Safety
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/seven-public-listings-check.yml"
+      - ".github/workflows/seven-public-listings-watch.yml"
+      - "public/agent_crypto_erith_ia/tools/seven_public_listings_watch.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_seven_public_listings_watch.cjs"
+      - "public/agent_crypto_erith_ia/administrator/data/new-listings-public-feed.json"
+      - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
+      - "public/agent_crypto_erith_ia/tools/test_axis_native_identity.cjs"
+      - "public/agent_crypto_erith_ia/administrator/index.html"
+permissions:
+  contents: read
+jobs:
+  public-feed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify new listing sources, identity boundaries and native UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/tools/seven_public_listings_watch.cjs
+          node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
+          node public/agent_crypto_erith_ia/tools/test_seven_public_listings_watch.cjs
+          node public/agent_crypto_erith_ia/tools/test_axis_native_identity.cjs
+          node - <<'NODE'
+          const fs=require('node:fs'),p='public/agent_crypto_erith_ia/';
+          const d=JSON.parse(fs.readFileSync(p+'administrator/data/new-listings-public-feed.json','utf8'));
+          const w=fs.readFileSync('.github/workflows/seven-public-listings-watch.yml','utf8');
+          const code=fs.readFileSync(p+'tools/seven_public_listings_watch.cjs','utf8');
+          if(d.schema!=='erith.seven.public-spot-listings-feed.v1'||
+             d.read_only!==true||d.trade_permission!==false||d.real_orders!==0||
+             d.entries.some(x=>x.instrument_type!=='SPOT'||x.stale===true&&x.state==='live')||
+             !w.includes('17 */4 * * *')||
+             !w.includes('administrator/data/new-listings-public-feed.json')||
+             !code.includes('no_ticker_to_contract_identity_inference')||
+             code.includes('/api/v5/trade/order')||code.includes('OK-ACCESS-KEY')||
+             code.includes('axios.post')||code.includes('setInterval('))
+             throw Error('Unsafe listings watch contract');
+          console.log('Public Spot watch: only OKX/Bitget instruments, no account, no orders, no frontend timer PASS');
+          NODE
