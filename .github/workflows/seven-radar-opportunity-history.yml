@@ -25,6 +25,7 @@ jobs:
           set -euo pipefail
           node public/agent_crypto_erith_ia/tools/test-radar-opportunity-history.cjs
           node public/agent_crypto_erith_ia/tools/test_seven_capital_scout.cjs
+          node public/agent_crypto_erith_ia/tools/test_seven_spot_gate.cjs
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for attempt in 1 2 3 4; do
@@ -35,7 +36,10 @@ jobs:
             python public/agent_crypto_erith_ia/tools/radar_spot_paper_audit.py
             # Same daily public archive, NO exchange/order access or separate scheduler.
             node public/agent_crypto_erith_ia/tools/seven_capital_scout.cjs
-            git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/ public/agent_crypto_erith_ia/data/trader_flux/seven_capital_scout/status.json
+            # Public OKX Spot/USDC instrument + five-level bid/ask PRECHECK.
+            # No account, order placement, fills, secrets or private Bridge.
+            node public/agent_crypto_erith_ia/tools/seven_spot_gate.cjs
+            git add -- public/agent_crypto_erith_ia/data/crypto/radar-opportunities/ public/agent_crypto_erith_ia/data/trader_flux/seven_capital_scout/status.json public/agent_crypto_erith_ia/data/trader_flux/seven_capital_scout/spot_gate.json
             if git diff --cached --quiet; then
               echo "No new observation; archived dates remain immutable."
               exit 0
