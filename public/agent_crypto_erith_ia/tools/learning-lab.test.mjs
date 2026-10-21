@@ -230,6 +230,8 @@ test("AXIS reads only the matched existing Bitget Market owner, never another ex
       listingPair:"AXIS/USDT",listingProvider:"Bitget",
       priceUsd:0.255205,volume24hUsd:2120000,marketCapUsd:cap,
       usdUpdatedAt:stamp,marketCapObservedAt:stamp,
+      marketCapSource:"CoinGecko coins/markets",
+      providerContext:{ticker:{ts:Date.parse(stamp)}},
       usdSource:"Bitget AXIS/USDT × USDT/USD CoinGecko"})
   };
   api.select("AXIS");activateTab(t,"marche");
