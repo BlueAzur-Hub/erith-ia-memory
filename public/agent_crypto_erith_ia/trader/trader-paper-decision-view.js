@@ -397,7 +397,7 @@ async function prepareTicket(){
  if(warning)warning.textContent="Étude PAPER de la paire native "+pair+
    " ; carnet OKX public exact et archivé si la lecture actuelle échoue. "+
    "Aucun fonds engagé, aucune permission Trade. "+
-   (pair==="CT-USDC"?"Compte lu via Bridge en lecture seule.":
+   (pair==="CT-USDC"?"Compte OKX lu via le Bridge existant, en lecture seule.":
     "Compte privé "+pair+" non raccordé : aucun solde ou plafond certifié.");
  const choice=core.qualifyPaperSpotSelection({selected:source,pair});
  if(!choice?.ok){
