@@ -1,0 +1,28 @@
+{
+  "schema": "erith.seven.public-usdc-spot-gate.v1",
+  "mode": "READ_ONLY_PUBLIC_MARKET_PRECHECK",
+  "input_last_archive_utc": "2026-10-21",
+  "inspected_at_utc": null,
+  "budget_usdc": 10,
+  "cost_buffer_usdc": 0.94,
+  "exact_wallet_balance_verified": false,
+  "quote": "USDC",
+  "market_data_venue": "OKX",
+  "candidates": [],
+  "source_times_are_not_signal_entry_times": true,
+  "no_trade_without_additional_proofs": true,
+  "real_orders_enabled": false,
+  "real_orders_submitted": 0,
+  "paper_fills": 0,
+  "actual_profit_usdc": null,
+  "profit_certified": false,
+  "api_credentials_used": false,
+  "private_account_access": false,
+  "reserve_spent": false,
+  "market_fills_guaranteed": false,
+  "source_urls": [
+    "https://www.okx.com/api/v5/public/instruments",
+    "https://www.okx.com/api/v5/market/books"
+  ],
+  "note": "Fail-closed. Even a passing size/book screen cannot establish exact token contract, account fee currency, min notional, fillability or a trade. Futures/SWAP are rejected."
+}
