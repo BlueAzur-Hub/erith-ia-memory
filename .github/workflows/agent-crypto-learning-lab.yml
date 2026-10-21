@@ -200,6 +200,8 @@ jobs:
             # Narrow read-only comparator.
             prefix+"trader/strategy-comparator.js",
             prefix+"trader/test-strategy-comparator.cjs",
+            # Isolated documentary case study; no new Trader runtime owner.
+            prefix+"trader/axis-robotics-case-study.html",
           }
           changed=set(subprocess.check_output(
             ["git","diff","--name-only",base,"HEAD","--",prefix+"trader/"],
@@ -209,6 +211,19 @@ jobs:
             return subprocess.check_output(["git","show",base+":"+path],text=True)
           def current(path):
             return pathlib.Path(path).read_text(encoding="utf-8")
+          # Exactly one publicly sourced read-only AXIS dossier (not Trader runtime).
+          report_path=prefix+"trader/axis-robotics-case-study.html"
+          if report_path in changed:
+            report=current(report_path)
+            assert "<title>ERITH.IA · Cas d'école AXIS" in report
+            assert "axis-robotics.json" in report
+            assert "0 USDC" in report and "100 USDC" in report
+            assert "OBSERVE_NO_BUY" in report and 'credentials:"omit"' in report
+            assert report.count("<script>")==1
+            for unsafe in ("localStorage", "sessionStorage", "indexedDB",
+                           "setInterval(", "/api/v5/trade/order", "/withdraw",
+                           'method:"POST"', "<iframe"):
+              assert unsafe not in report, f"AXIS report non-readonly content: {unsafe}"
           def jsondiff(path,updates):
             original=json.loads(previous(path))
             actual=json.loads(current(path))
