@@ -393,6 +393,12 @@ async function prepareTicket(){
  const money=String(box.querySelector("[data-ticket-budget]")?.value||"").trim().replace(",",".");
  const desired=String(box.querySelector("[data-ticket-exit]")?.value||"").trim().replace(",",".");
  const pair=String(source.asset||"")+"-"+quote;
+ const warning=box.querySelector("[data-od-ticket-warning]");
+ if(warning)warning.textContent="Étude PAPER de la paire native "+pair+
+   " ; carnet OKX public exact et archivé si la lecture actuelle échoue. "+
+   "Aucun fonds engagé, aucune permission Trade. "+
+   (pair==="CT-USDC"?"Compte lu via Bridge en lecture seule.":
+    "Compte privé "+pair+" non raccordé : aucun solde ou plafond certifié.");
  const choice=core.qualifyPaperSpotSelection({selected:source,pair});
  if(!choice?.ok){
    ticketStatus("Paire non qualifiée : "+String(choice?.reason||"identité absente")+
@@ -735,9 +741,8 @@ function mount(){
  ticketHeading.textContent="Préparer un ticket OKX LIMIT · sans ordre ni fonds engagés";
  const ticketBox=document.createElement("div");
  const warning=document.createElement("p");
- warning.textContent="Étude Spot avec carnet CT/USDC local récent s'il est vérifié, sinon archive datée. "+
-   "Montant hypothétique, non garanti par OKX. "+
-   "Compte OKX lu via le Bridge existant, en lecture seule ; aucun ordre privé.";
+ warning.textContent="Étude PAPER de la paire Spot sélectionnée, sans ordre ni fonds engagés.";
+ warning.setAttribute("data-od-ticket-warning","");
  const quoteLabel=document.createElement("label");
  quoteLabel.textContent="Devise de cotation (paire OKX vérifiée) ";
  const quoteSelect=document.createElement("select");
@@ -754,7 +759,7 @@ function mount(){
  budget.setAttribute("inputmode","decimal");budget.value="5";
  budgetLabel.appendChild(budget);
  const exitLabel=document.createElement("label");
- exitLabel.textContent="Prix de vente souhaité (pour CT, ex. 0,39 USDC) ";
+ exitLabel.textContent="Prix de vente souhaité par unité de crypto (USDC) ";
  const exitInput=document.createElement("input");
  exitInput.setAttribute("data-ticket-exit","");
  exitInput.setAttribute("inputmode","decimal");
@@ -840,10 +845,12 @@ function mount(){
     const input=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
     if(input?.asset==="CT"&&input?.provider==="okx"){
       quoteSelect.value="USDC";
+      exitInput.placeholder="0,39";
       if(!exitInput.value)exitInput.value="0,39";
       if(budget.value==="5")budget.value="3,20";
     }else if(input?.asset==="BTC"&&input?.provider==="coingecko"){
       quoteSelect.value="USDC";
+      exitInput.placeholder="85000";
       if(!exitInput.value)exitInput.value="85000";
       if(budget.value==="5")budget.value="10";
     }
