@@ -429,8 +429,11 @@ test("Second Golden Ticket asset uses exact-pair public route and never a CT acc
  assert.match(view,/readSpotPublicInstrument\(pair\)/);
  assert.match(view,/encodeURIComponent\(pair\)/);
  assert.match(view,/qualifyPaperSpotSelection\(\{selected:source,pair\}\)/);
- assert.match(view,/if\(pair==="CT-USDC"\)\{\s*try\{/);
- assert.match(view,/privateIssue="Aucun contrôle privé "/);
+ assert.match(view,/owner\.ticketReadOnly\(pair\)/);
+ assert.match(view,/context\?\.instId!==pair/);
+ assert.match(view,/context\?\.orders_enabled!==false/);
+ assert.match(view,/context\?\.real_orders!==0/);
+ assert.match(view,/Mode des frais d'achat "\+pair\+" : NON CERTIFIÉ/);
  assert.match(view,/\["CT-USDC","BTC-USDC"\]/);
  assert.doesNotMatch(view,/readCtSpotPublicBook\(\)/);
  assert.doesNotMatch(view,/readCtSpotPublicInstrument\(\)/);
@@ -1604,13 +1607,62 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
  assert.match(text("buyQty"),/BTC/);
  assert.match(text("sellQty"),/BTC/);
  assert.equal(text("buyAvailable"),"NON CERTIFIÉ");
- assert.equal(text("sellAvailable"),"NON CERTIFIÉ");
- assert.match(proof("maxbuy"),/non raccordé/);
+ assert.match(text("sellAvailable"),/NON CERTIFIÉ/);
+ assert.match(proof("maxbuy"),/Non certifié/);
  assert.match(proof("feeMode"),/Non certifié/);
  assert.match(verdictTitle(),/FAISABILITÉ COMPTE NON CERTIFIÉE/);
  assert.match(required(),/Aucun solde privé/);
  assert.match(node.querySelector('[data-od-side-title="buy"]').textContent,/BTC/);
  assert.match(node.querySelector('[data-od-caption="buyPrice"]').textContent,/BTC\/USDC/);
+ assert.equal(node.querySelector('[data-od-strip-caption="bid"]').textContent,
+   "Meilleur bid BTC/USDC");
+ assert.equal(node.querySelector('[data-od-strip-caption="ask"]').textContent,
+   "Meilleur ask BTC/USDC");
+ assert.equal(node.querySelector('[data-od-strip-caption="sellAvailable"]').textContent,
+   "BTC disponible à la vente");
+ assert.equal(node.querySelector('[data-od-proof-caption="maxbuy"]').textContent,
+   "Plafond achat (BTC)");
+ // A fresh exact BTC-USDC account snapshot can prove quote balance and rates,
+ // but MUST NOT prove R25 max-size, feeType or make a trading order.
+ const btcTicket={schema:"erith.trader.okx-spot-limit-preflight.v1",
+   pair:"BTC-USDC",base:"BTC",quote:"USDC",
+   status:"PREPARATION_NON_EXECUTABLE",executable:false,orders_enabled:false,
+   source_book_kind:"LOCAL_BACKEND_OKX_SPOT",
+   native_rules_verified:true,best_ask_quote:"81780.6",
+   best_bid_quote:"81780.5",native_min_quantity:"0.0001",
+   native_lot:"0.00000001",native_tick:"0.1",study_budget_quote:"10",
+   gross_buy_quantity:"0.00012227",hypothetical_buy_cost_quote:"9.999",
+   minimum_gross_buy_to_resell_with_assumed_base_fee:"0.00010011",
+   minimum_gross_buy_cost_at_ask_with_assumed_base_fee:"8.187"};
+ const btcPreview={orders_enabled:false,buy_quantity:"0.00012227",
+   maximum_sellable_base:"0.00012214",meets_native_exit_minimum:true,
+   estimated_buy_fee_base:"0.00000013",total_buy_cost_quote:"9.999",
+   hypothetical_sale_net_quote:"10.2",hypothetical_sale_fee_quote:"0.01",
+   residual_dust_base:"0.00000000"};
+ const btcReview={account_verified:true,account_quote:"USDC",
+   available_trading_quote:"3.2",fees_verified:true,
+   fee_maker_pct:"0.08",fee_taker_pct:"0.1",
+   account_at_utc:"2026-10-21T03:02:00Z"};
+ const btcContext={instId:"BTC-USDC",read_only:true,orders_enabled:false,
+   real_orders:0,verified:true};
+ ui.update({ticket:btcTicket,context:btcContext,review:btcReview,
+   preview:btcPreview,bookDiagnostic:{accepted:true}});
+ assert.match(text("buyAvailable"),/3.2 USDC/);
+ assert.match(proof("funds"),/budget PAPER 10 USDC distinct/);
+ assert.match(proof("feeMode"),/maker 0.08 %.*taker 0.1 %/);
+ assert.match(proof("feeMode"),/devise du débit NON CERTIFIÉE/);
+ assert.match(verdictTitle(),/SOLDE TRADING INSUFFISANT/);
+ assert.match(required(),/6,799 USDC/);
+ assert.match(proof("maxbuy"),/Non certifié/);
+ assert.match(text("sellAvailable"),/NON CERTIFIÉ/);
+ assert.match(node.querySelector('[data-od-proof-caption="checktime"]').textContent,
+   /solde Trading \(non des plafonds\)/);
+ // Stale/wrong pair context cannot republish any previously verified balance.
+ ui.update({ticket:btcTicket,context:{...btcContext,instId:"CT-USDC"},
+   review:btcReview,preview:btcPreview,bookDiagnostic:{accepted:true}});
+ assert.equal(text("buyAvailable"),"NON CERTIFIÉ");
+ assert.match(proof("feeMode"),/non certifiés/);
+ // CT update must restore CT, not leave BTC captions in the shared ticket.
  // Unverified evidence must not be silently presented as verified.
  ui.update({ticket:{pair:"CT-USDC",orders_enabled:false,
    source_book_kind:"DATED_PUBLIC_HOURLY_ARCHIVE",
@@ -1619,6 +1671,10 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
    minimum_buy_at_recorded_ask_quote:"3.384",gross_buy_quantity:"9.45"},
    bookDiagnostic:{accepted:false},review:null,preview:null,context:null});
  assert.match(guard("buy"),/Règles d'archive datée/);
+ assert.equal(node.querySelector('[data-od-strip-caption="bid"]').textContent,
+   "Meilleur bid CT/USDC");
+ assert.equal(node.querySelector('[data-od-proof-caption="maxbuy"]').textContent,
+   "Plafond achat (CT)");
  assert.equal(guard("buy").includes("solde Trading vérifié"),false);
 
  ui.updateCycle({paper:true,events:[{type:"PAPER_PREPARE",at:"t0"},{type:"PAPER_CANCEL",at:"t1"}]});
