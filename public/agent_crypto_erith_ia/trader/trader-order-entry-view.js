@@ -26,15 +26,15 @@ function proof(name,caption){
  return n;
 }
 function guard(kind){
- const n=el("section","erith-od-guard");n.dataset.odGuard=kind;
- n.dataset.level="pending";
- n.setAttribute("role","status");
- n.setAttribute("aria-live","polite");
+ const n=el("details","erith-od-guard");n.dataset.odGuard=kind;
+ n.dataset.level="pending";n.open=false;
+ const summary=el("summary","erith-od-guard-summary");
  const title=el("strong","","Contrôle de quantité en attente");
  title.dataset.odGuardTitle=kind;
+ summary.append(title);
  const detail=el("p","","Relancer la vérification du ticket PAPER ; aucun ordre.");
  detail.dataset.odGuardDetail=kind;
- n.append(title,detail);return n;
+ n.append(summary,detail);return n;
 }
 // Reading-only decimal comparison: do not round or change the PAPER engine.
 const SCALE=10n**24n;
@@ -90,12 +90,14 @@ function required(ticket,review,preview){
   fee:mode==="CT"?"Hypothèse frais en CT à 0,10 %.":
     "Hypothèse frais en CT à 0,10 % (devise réelle non confirmée)."};
 }
-function verdict(title,message,budget,level){
+function verdict(title,message,budget,level,quick){
  if(!node)return;
  const section=node.querySelector("[data-od-verdict]");
  if(!section)return;
  section.dataset.level=level;
- for(const [field,value] of [["title",title],["detail",message],["budget",budget]]){
+ for(const [field,value] of [["title",title],["quick",quick||
+   "Aucune validation d'ordre · ouvrir pour les explications."],
+   ["detail",message],["budget",budget]]){
   const el=node.querySelector("[data-od-verdict-"+field+"]");
   if(el)el.textContent=value;
  }
@@ -138,10 +140,14 @@ function assessTicket(ticket,review,preview,context,validBook){
       cap===null?"Plafond maxBuy non confirmé pour ce seuil. ":"")+
     "Funding distinct de Trading, aucun transfert.";
  }
+ const mini="Achat "+str(preview?.buy_quantity??ticket.gross_buy_quantity)+
+  " / "+str(ticket.native_min_quantity)+" CT"+(sell!==null?
+   " · Revente "+str(preview.maximum_sellable_base)+" CT":"")+
+  (need?" · Seuil ≈ "+fmtUsd(need.cost)+" USDC (estimé)":"");
  verdict(status,(blockers.length?"Blocages : "+blockers.join(" ; ")+". ":
   "Seuils de quantité à étudier. ")+
   "Prix, frais et restrictions ne sont pas une garantie d'exécution. Aucun ordre réel.",
-  budgetLine,blockers.length?"warning":"pending");
+  budgetLine,blockers.length?"warning":"pending",mini);
 }
 
 function updateGuards(ticket,review,preview,context){
@@ -248,15 +254,22 @@ function mount({quoteLabel,budgetLabel,exitLabel,compute}={}){
    el("div","erith-od-inactive","Envoi d'ordre désactivé · autorisation Trade absente"),
    el("p","erith-od-note","Le prix de vente est une cible saisie, pas un prix garanti ni une instruction d'ordre."));
  sides.append(buy,sell);
- const check=el("section","erith-od-verdict");check.dataset.odVerdict="";
- check.dataset.level="pending";check.setAttribute("role","status");
- check.setAttribute("aria-live","polite");
+ const check=el("details","erith-od-verdict");check.dataset.odVerdict="";
+ check.dataset.level="pending";check.open=false;
+ const verdictSummary=el("summary","erith-od-verdict-summary");
  for(const [tag,field,initial] of [
   ["strong","title","FAISABILITÉ À VÉRIFIER"],
-  ["p","detail","Aucun ordre avant vérification du scénario."],
-  ["p","budget","Budget nécessaire : en attente."]
- ]){const item=el(tag,field==="budget"?"erith-od-budget":"",initial);
-  item.dataset["odVerdict"+field[0].toUpperCase()+field.slice(1)]="";check.append(item);}
+  ["small","quick","Aucun ordre · détails disponibles."]
+ ]){const item=el(tag,"",initial);
+  item.dataset["odVerdict"+field[0].toUpperCase()+field.slice(1)]="";
+  verdictSummary.append(item);}
+ check.append(verdictSummary);
+ for(const [field,initial] of [
+  ["detail","Aucun ordre avant vérification du scénario."],
+  ["budget","Budget nécessaire : en attente."]
+ ]){const item=el("p",field==="budget"?"erith-od-budget":"",initial);
+  item.dataset["odVerdict"+field[0].toUpperCase()+field.slice(1)]="";
+  check.append(item);}
  const band=el("div","erith-od-strip");
  band.append(strip("bid","Meilleur bid CT/USDC"),strip("ask","Meilleur ask CT/USDC"),
    strip("buyAvailable","USDC disponible Trading"),strip("sellAvailable","CT disponible à la vente"));
