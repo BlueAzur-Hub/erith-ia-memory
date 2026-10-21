@@ -1,0 +1,46 @@
+name: Seven Public Spot Listings Watch
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */4 * * *"
+permissions:
+  contents: write
+concurrency:
+  group: seven-public-spot-listings-watch
+  cancel-in-progress: false
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check safety and scan two public Spot venues
+        shell: bash
+        run: |
+          set -euo pipefail
+          node public/agent_crypto_erith_ia/tools/test_seven_public_listings_watch.cjs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            node public/agent_crypto_erith_ia/tools/seven_public_listings_watch.cjs
+            git add -- public/agent_crypto_erith_ia/administrator/data/new-listings-public-feed.json
+            if git diff --cached --quiet; then
+              echo "No change to public Spot feed"
+              exit 0
+            fi
+            git commit -m "Archive read-only OKX and Bitget SPOT listing catalog (no orders)"
+            if git push origin HEAD:main; then
+              echo "Public listing watch published"
+              exit 0
+            fi
+            sleep "$((attempt * 3))"
+          done
+          echo "Public watch scan could not publish" >&2
+          exit 1
