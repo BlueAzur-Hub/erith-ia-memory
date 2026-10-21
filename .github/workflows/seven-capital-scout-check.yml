@@ -32,7 +32,11 @@ jobs:
           const path='public/agent_crypto_erith_ia/data/trader_flux/seven_capital_scout/status.json';
           const r=JSON.parse(fs.readFileSync(path,'utf8'));
           const trader=fs.readFileSync('public/agent_crypto_erith_ia/trader/strategy-comparator.js','utf8');
-          if(!trader.includes('mountCapitalPulse(host)')||
+          if(!trader.includes('mountCapitalPulse(node)')||
+             !trader.includes('comparator.querySelector(".sc-body")')||
+             !trader.includes('body.insertBefore(pulse,body.firstChild)')||
+             !trader.includes('data-capital-compact')||
+             trader.includes('host.insertAdjacentElement("afterend",pulse)')||
              !trader.includes('credentials:"omit"')||
              !trader.includes('real_orders_submitted!==0')||
              trader.includes('/api/v5/trade/order')||
