@@ -258,7 +258,11 @@ function paint(){
    }
    if(index===4){
      study.simulations.forEach(sim=>{
-       const desc=sim.status==='GROSS_ONLY'?
+       const desc=sim.status==='NET_HYPOTHESIS'?
+         sim.quantity_base+' '+study.asset.base+' → '+sim.net_quote+' '+
+         study.asset.quote+' NET PAPER hypothétique (frais estimés '+
+         sim.estimated_fee_quote+' '+study.asset.quote+') · AUCUN ORDRE':
+         sim.status==='GROSS_ONLY'?
          sim.quantity_base+' '+study.asset.base+' → '+sim.gross_quote+
          ' '+study.asset.quote+' BRUT fictif · NET non certifié':
          sim.detail;
