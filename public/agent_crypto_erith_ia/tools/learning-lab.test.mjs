@@ -196,6 +196,83 @@ test("Simulation inputs survive tab switches and stay separated by asset",()=>{
   assert.equal(inputs[0].value,"12,50");
 });
 
+test("AXIS is an existing laboratory dossier, not a new graphic or an external iframe",()=>{
+  const t=boot(),api=t.sandbox.window.AgentCryptoLearningLab;
+  api.select("AXIS");
+  assert.equal(api.read().asset,"AXIS");
+  assert.match(t.get("agentCryptoLearningLab").textContent,/BTC \/ CT \/ Q \/ AXIS/);
+  assert.match(t.get("lab-content").textContent,/0 USDC investis/);
+  assert.match(t.get("lab-content").textContent,/minimum 100 USDC/);
+  assert.ok(descendants(t.get("lab-content"),n=>n.tagName==="A"&&
+    n.href?.includes("axis-robotics-case-study.html")).length);
+  assert.deepEqual(t.parent.children,[t.legacy,t.get("agentCryptoLearningLab"),t.following]);
+  activateTab(t,"simulation");
+  const inputs=descendants(t.get("lab-content"),n=>n.tagName==="INPUT");
+  assert.deepEqual(inputs.map(x=>x.value),["10","0,15","0,40","0,1","0,1"]);
+  assert.match(t.get("lab-content").textContent,/deux budgets fictifs/);
+  assert.ok(descendants(t.get("lab-content"),n=>n.tagName==="A"&&
+    n.href?.includes("axis-robotics-case-study.html")).length);
+  assert.doesNotMatch(source,/createElement\(["']iframe["']\)/);
+});
+test("AXIS reads only the matched existing Bitget Market owner, never another exchange or stale cap",()=>{
+  const t=boot(),api=t.sandbox.window.AgentCryptoLearningLab;
+  const stamp=new Date().toISOString();
+  const selection={selectedId:"new-listing:bitget:axisusdt",
+    selectedCanonicalId:"axis-robotics",selectedSymbol:"AXIS",
+    selectedProvider:"bitget",selectedProviderSymbol:"AXISUSDT",
+    selectedPair:"AXIS/USDT"};
+  const ext={active:true,id:selection.selectedId,provider:"bitget",instrument:"AXIS-USDT"};
+  let cap=42710000;
+  t.sandbox.AgentCryptoNewListingLiveAsset={snapshot:()=>ext};
+  t.sandbox.AgentCryptoNewListingsNativeCategory={
+    snapshot:()=>selection,
+    selectedMarketCoin:()=>({id:selection.selectedId,symbol:"AXIS",
+      listingPair:"AXIS/USDT",listingProvider:"Bitget",
+      priceUsd:0.255205,volume24hUsd:2120000,marketCapUsd:cap,
+      usdUpdatedAt:stamp,marketCapObservedAt:stamp,
+      marketCapSource:"CoinGecko coins/markets",
+      providerContext:{ticker:{ts:Date.parse(stamp)}},
+      usdSource:"Bitget AXIS/USDT × USDT/USD CoinGecko"})
+  };
+  api.select("AXIS");activateTab(t,"marche");
+  assert.match(t.get("lab-content").textContent,/42.710.000.*USD/);
+  assert.match(t.get("lab-content").textContent,/Bitget AXIS\/USDT/);
+  selection.selectedProvider="okx";
+  activateTab(t,"synthese");activateTab(t,"marche");
+  assert.match(t.get("lab-content").textContent,/Marché AXIS non confirmé/);
+  selection.selectedProvider="bitget";
+  cap=0;
+  activateTab(t,"synthese");activateTab(t,"marche");
+  assert.match(t.get("lab-content").textContent,/capitalisation non fourni/);
+  assert.doesNotMatch(t.get("lab-content").textContent,/capitalisation 0 USD/);
+  assert.equal(api.read().real_order,false);
+});
+test("AXIS selection uses exactly the existing Bitget owner and refuses a ticker-only match",async()=>{
+  const t=boot(),lab=t.get("agentCryptoLearningLab");
+  const selection={selectedId:"new-listing:bitget:axisusdt",
+    selectedCanonicalId:"axis-robotics",selectedSymbol:"AXIS",
+    selectedProvider:"bitget",selectedProviderSymbol:"AXISUSDT",
+    selectedPair:"AXIS/USDT"};
+  const ext={active:true,id:selection.selectedId,provider:"bitget",instrument:"AXIS-USDT"};
+  let selectedId=null;
+  t.sandbox.AgentCryptoNewListingLiveAsset={snapshot:()=>ext};
+  t.sandbox.AgentCryptoNewListingsNativeCategory={
+    selectById:async id=>{selectedId=id;return true;},snapshot:()=>selection
+  };
+  t.sandbox.atlasTraderExternalSelectionCommit=({id,provider})=>
+    id==="new-listing:bitget:axisusdt"&&provider==="bitget";
+  const picker=descendants(lab,n=>n.dataset.labAsset==="AXIS")[0];
+  picker.fire("click");
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(selectedId,"new-listing:bitget:axisusdt");
+  assert.match(t.get("lab-market-sync-state").textContent,/AXIS\/USDT Spot BITGET confirmé/);
+  selection.selectedCanonicalId="other-axis";
+  picker.fire("click");
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.match(t.get("lab-market-sync-state").textContent,/sélection non confirmée/);
+  assert.equal(t.legacy.parentNode,t.parent);
+});
+
 test("USD price card does not forge a CoinGecko origin or zero variation",()=>{
   const graph=fs.readFileSync(new URL("../administrator/js/graph-native-usd-406520.js",import.meta.url),"utf8");
   assert.doesNotMatch(graph,/replace\("PRIX LIVE BINANCE","PRIX SNAPSHOT COINGECKO"\)/);
