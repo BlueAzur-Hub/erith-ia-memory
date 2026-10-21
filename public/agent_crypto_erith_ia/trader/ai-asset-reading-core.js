@@ -59,13 +59,27 @@
   return frozen({bids:frozen(bids),asks:frozen(asks),
     observed_at_utc:book.observed_at_utc,provider:'OKX public'});
  }
+ // Consume the same validated OKX rules as Concrete, not a second validator.
+ // The browser contract is mounted by Trader; Node loads it only for tests.
+ function commonSpotRules(){
+  const shared=globalThis.AgentCryptoAiCtContract;
+  if(typeof shared?.spotTradingRulesFor==='function')return shared;
+  if(typeof module==='object'&&module.exports&&typeof require==='function')
+    return require('./ai-ct-contract.js');
+  return null;
+ }
  function validateRules(rules,pair,base,quote,now){
-  if(!rules||rules.instId!==pair||rules.instType!=='SPOT'||rules.state!=='live'||
-    rules.baseCcy!==base||rules.quoteCcy!==quote||
-    !time(rules.observed_at_utc,now))return null;
-  const min=scaled(rules.minSz),lot=scaled(rules.lotSz),tick=scaled(rules.tickSz);
+  const owner=commonSpotRules();
+  if(!rules||rules.instId!==pair||rules.instType!=='SPOT'||
+     rules.baseCcy!==base||rules.quoteCcy!==quote||
+     typeof owner?.spotTradingRulesFor!=='function')return null;
+  const proof=owner.spotTradingRulesFor({base,quote,venue:'okx'},rules,now);
+  if(proof?.status!=='verified'||proof.state!=='live'||
+    proof.market!==pair)return null;
+  const min=scaled(proof.min_sz),lot=scaled(proof.lot_sz),tick=scaled(proof.tick_sz);
   if(min===null||lot===null||tick===null||min<=0n||lot<=0n||tick<=0n)return null;
-  return frozen({minimum:min,lot,tick,observed_at_utc:rules.observed_at_utc});
+  return frozen({minimum:min,lot,tick,observed_at_utc:proof.checked_at,
+   source:'CT Spot validator · OKX public',market:pair});
  }
  function quoteAccount(data,pair,now){
   const quote=pair.split('-')[1];
