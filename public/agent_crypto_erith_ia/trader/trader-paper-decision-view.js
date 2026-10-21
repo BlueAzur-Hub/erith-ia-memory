@@ -398,7 +398,8 @@ async function prepareTicket(){
  if(warning)warning.textContent="Étude PAPER de la paire native "+pair+
    " ; carnet OKX public exact et archivé si la lecture actuelle échoue. "+
    "Aucun fonds engagé, aucune permission Trade. "+
-   "Compte "+pair+" : solde Trading et taux de frais consultables via le Bridge existant si la lecture exacte est vérifiée ; maxBuy reste non certifié pour BTC.";
+   (pair==="CT-USDC"?"Compte OKX lu via le Bridge existant, en lecture seule.":
+    "Compte "+pair+" : solde Trading et frais consultables via le Bridge après vérification de la paire exacte ; maxBuy non certifié.");
  const choice=core.qualifyPaperSpotSelection({selected:source,pair});
  if(!choice?.ok){
    ticketStatus("Paire non qualifiée : "+String(choice?.reason||"identité absente")+
