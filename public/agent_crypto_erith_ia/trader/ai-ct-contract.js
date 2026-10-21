@@ -319,28 +319,80 @@
     // OKX fees: negative = paid, positive = rebate; no assumption on rebates.
     return rate!==null && rate<=0 && rate>=-.05 ? -rate : null;
   }
-  function sellEstimate(book,qty,rate,now) {
-    if (qty===null || qty<=0 || rate===null) return {status:'unknown',reason:'Solde ou frais de vente non vérifiés'};
-    if (book?.status!=='ok' || book?.provider!=='okx' || book?.pair!==PAIR || book?.quote!=='USDC')
-      return {status:'unknown',reason:'Carnet CT/USDC indisponible'};
+  // One shared native OKX Spot orderbook estimator, derived from Concrete.
+  // Numerical result is a PAPER observation, NEVER an executable quotation.
+  // Fee rate is an explicit hypothesis until the debit currency is verified.
+  function spotBookEstimateFor(context,book,qty,feeRate=null,now=Date.now()){
+    const base=String(context?.base||'').toUpperCase(),
+      quote=String(context?.quote||'').toUpperCase(),
+      venue=String(context?.venue||'').toLowerCase(),
+      pair=base+'-'+quote;
+    const unknown=reason=>Object.freeze({status:'unknown',market:pair,
+      reason,read_only:true,orders_enabled:false,
+      gross_quote:null,net_quote:null,fee_quote:null});
+    if(!/^[A-Z][A-Z0-9]{0,19}$/.test(base)||
+       !['USDC','USDT','EUR'].includes(quote)||venue!=='okx')
+      return unknown('Marché Spot ou plateforme non vérifiée');
+    const qtyText=typeof qty==='number'&&Number.isFinite(qty)?
+      (String(qty).includes('e')?qty.toFixed(18):String(qty)):qty;
+    const requested=positionDecimal(qtyText);
+    if(requested===null||requested<=0n)
+      return unknown('Quantité de base non vérifiée ou nulle');
+    if(book?.status!=='ok'||book.provider!=='okx'||
+       book.pair!==pair||book.quote!==quote)
+      return unknown('Carnet '+pair+' indisponible ou d’une autre place');
     const observed=Date.parse(book.observed_at_utc||'');
-    if (!Number.isFinite(observed)|| now-observed<0 || now-observed>MAX_BOOK_AGE_MS)
-      return {status:'unknown',reason:'Carnet trop ancien pour une estimation'};
-    let remaining=qty, gross=0,previous=Infinity;
-    const bids=book.bids;
-    if(!Array.isArray(bids)||!bids.length)return {status:'unknown',reason:'Aucune offre acheteuse'};
-    for(const level of bids){
-      if(!Array.isArray(level))return {status:'unknown',reason:'Format carnet invalide'};
-      const price=numeric(level[0]),size=numeric(level[1]);
-      if(price===null||price<=0||size===null||size<0||price>previous)return {status:'unknown',reason:'Carnet incohérent'};
+    if(!Number.isFinite(now)||!Number.isFinite(observed)||
+       observed>now||now-observed>MAX_BOOK_AGE_MS)
+      return unknown('Carnet trop ancien pour une estimation');
+    if(!Array.isArray(book.bids)||!book.bids.length)
+      return unknown('Aucune offre acheteuse');
+    let rest=requested,gross=0n,previous=null;
+    for(const row of book.bids){
+      if(!Array.isArray(row)||row.length<2)
+        return unknown('Format carnet invalide');
+      const price=positionDecimal(String(row[0])),
+        amount=positionDecimal(String(row[1]));
+      if(price===null||price<=0n||amount===null||amount<0n||
+        (previous!==null&&price>previous))
+        return unknown('Carnet incohérent');
       previous=price;
-      const used=Math.min(remaining,size);
-      remaining-=used;gross+=used*price;
-      if(remaining<=1e-9)break;
+      const used=rest<amount?rest:amount;
+      rest-=used;
+      gross+=used*price/POSITION_SCALE;
+      if(rest===0n)break;
     }
-    if(remaining>1e-9)return {status:'unknown',reason:'Profondeur insuffisante pour revendre le solde'};
-    return {status:'indicative',gross_usdc:gross,net_usdc:gross*(1-rate),taker_fee_fraction:rate,
+    if(rest!==0n)return unknown('Profondeur insuffisante pour revendre le solde');
+    let net=null,fee=null,rate=null;
+    if(typeof feeRate==='number'&&Number.isFinite(feeRate)&&
+       feeRate>=0&&feeRate<=.05){
+      const feeText=String(feeRate).includes('e')?feeRate.toFixed(18):String(feeRate);
+      rate=positionDecimal(feeText);
+      if(rate!==null){
+        fee=gross*rate/POSITION_SCALE;
+        net=gross-fee;
+      }
+    }
+    return Object.freeze({status:'indicative',market:pair,quote,
+      gross_quote:positionPrint(gross),net_quote:net===null?null:positionPrint(net),
+      fee_quote:fee===null?null:positionPrint(fee),
+      fee_rate_assumed:rate===null?null:feeRate,
       observed_at:book.observed_at_utc,age_ms:now-observed,
+      read_only:true,orders_enabled:false,profit_proven:false,
+      caveat:'Hypothèse PAPER sur carnet observé ; frais futurs, autre minimum notionnel et exécution non garantis'});
+  }
+  // Backward-compatible Concrete adapter: keep CT fields and no-fee refusal.
+  function sellEstimate(book,qty,rate,now){
+    if(qty===null||qty<=0||rate===null||!Number.isFinite(Number(qty))||
+       !Number.isFinite(rate))
+      return {status:'unknown',reason:'Solde ou frais de vente non vérifiés'};
+    const observed=spotBookEstimateFor({base:'CT',quote:'USDC',venue:'okx'},
+      book,qty,rate,now);
+    if(observed.status!=='indicative'||observed.net_quote===null)
+      return {status:'unknown',reason:observed.reason||'Frais de vente non vérifiés'};
+    return {status:'indicative',gross_usdc:Number(observed.gross_quote),
+      net_usdc:Number(observed.net_quote),taker_fee_fraction:rate,
+      observed_at:observed.observed_at,age_ms:observed.age_ms,
       caveat:'Simulation de revente immédiate sur carnet observé : aucune exécution garantie'};
   }
 
@@ -743,5 +795,5 @@
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
         'Le prix futur de revente et le bénéfice réalisé ne sont pas connus.']});
   }
-  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,accountPositionFor,remainingFor,acquisition,acquisitionFor,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,spotTradingRulesFor,assessSpotQuantity,assessSpotQuantityFor,planGrossBuyForNetSpot,assessPartialRules,compareCtExitDecisions,ctClosedCycleReport,publicCandles,explain,compose});
+  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,accountPositionFor,remainingFor,acquisition,acquisitionFor,takerRate,sellEstimate,spotBookEstimateFor,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,spotTradingRulesFor,assessSpotQuantity,assessSpotQuantityFor,planGrossBuyForNetSpot,assessPartialRules,compareCtExitDecisions,ctClosedCycleReport,publicCandles,explain,compose});
 });
