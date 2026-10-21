@@ -79,7 +79,7 @@
   const min=scaled(proof.min_sz),lot=scaled(proof.lot_sz),tick=scaled(proof.tick_sz);
   if(min===null||lot===null||tick===null||min<=0n||lot<=0n||tick<=0n)return null;
   return frozen({minimum:min,lot,tick,observed_at_utc:proof.checked_at,
-   source:'CT Spot validator · OKX public',market:pair});
+   source:'OKX Public Data · Spot rules',market:pair});
  }
  function quoteAccount(data,pair,now){
   const quote=pair.split('-')[1];
