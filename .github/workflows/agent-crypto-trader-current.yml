@@ -114,6 +114,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/trader/ai-ct-panel.js
           node --test public/agent_crypto_erith_ia/trader/test-ai-ct-contract.cjs
           node --test public/agent_crypto_erith_ia/trader/test-ai-asset-reading-core.cjs
+          node --test public/agent_crypto_erith_ia/trader/test-ai-asset-reading-view.cjs
           node --test public/agent_crypto_erith_ia/trader/test-ai-ct-account-routing.cjs
           node --test public/agent_crypto_erith_ia/trader/test-btc-position-reading.cjs
           node --test public/agent_crypto_erith_ia/trader/test-okx-capital-journey.cjs
