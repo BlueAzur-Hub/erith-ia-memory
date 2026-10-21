@@ -1609,7 +1609,7 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
  assert.equal(text("buyAvailable"),"NON CERTIFIÉ");
  assert.match(text("sellAvailable"),/NON CERTIFIÉ/);
  assert.match(proof("maxbuy"),/Non certifié/);
- assert.match(proof("feeMode"),/Non certifié/);
+ assert.match(proof("feeMode"),/non certifiés/);
  assert.match(verdictTitle(),/FAISABILITÉ COMPTE NON CERTIFIÉE/);
  assert.match(required(),/Aucun solde privé/);
  assert.match(node.querySelector('[data-od-side-title="buy"]').textContent,/BTC/);
