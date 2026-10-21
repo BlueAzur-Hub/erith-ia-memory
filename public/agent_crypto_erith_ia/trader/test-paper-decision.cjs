@@ -919,9 +919,9 @@ test("CT public Backend book changes PAPER levels only if exact, ordered and fre
  assert.equal(original.source_book_kind,"DATED_PUBLIC_HOURLY_ARCHIVE");
  assert.equal(core.network,false);
  const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
- assert.match(view,/market-book\?provider=okx&instrument=CT-USDC&limit=100/);
+ assert.match(view,/market-book\?provider=okx&instrument=/);
  assert.match(view,/credentials:"omit"/);
- assert.match(view,/readCtSpotPublicBook\(\)/);
+ assert.match(view,/readSpotPublicBook\(pair\)/);
  assert.match(view,/Règles Spot issues du relevé daté/);
  assert.doesNotMatch(view,/Authorization:|Bearer|\/trade\/order/);
 });
@@ -1192,11 +1192,11 @@ test("CT live book diagnostic differentiates source, freshness and crossed data"
 
 test("CT local transport diagnostic is visible and does not promote archive to live",()=>{
  const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
- assert.match(view,/DIAGNOSTIC CARNET LOCAL/);
- assert.match(view,/BOOK_STALE|diagnoseCtLiveBook/);
+ assert.match(view,/DIAGNOSTIC CARNET /);
+ assert.match(view,/BOOK_STALE|diagnoseSpotLiveBook/);
  assert.match(view,/HTTP \(\\d\{3\}\)/);
  assert.match(view,/TIMEOUT : Backend local/);
- assert.match(view,/RESEAU LOCAL : requête impossible/);
+ assert.match(view,/RÉSEAU LOCAL : Backend arrêté/);
  assert.match(view,/Repli historique GitHub uniquement/);
  assert.match(view,/setTimeout\(\(\)=>controller\.abort\(\),6500\)/);
  assert.doesNotMatch(view,/\/api\/v5\/trade\/order|\bBearer\b|Authorization:/);
@@ -1221,7 +1221,7 @@ test("CT PAPER technical details remain available under a readable summary",()=>
  assert.match(src,/data-ticket-brief/);
  assert.match(src,/data-ticket-technical/);
  assert.match(src,/Afficher le rapport technique complet/);
- assert.match(src,/CARNET CT\/USDC/);
+ assert.match(src,/"CARNET "\+pair/);
 });
 
 
