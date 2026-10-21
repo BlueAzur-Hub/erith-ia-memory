@@ -45,9 +45,10 @@ function setup(){
   change24h:1.25,usdSource:'CoinGecko',usdUpdatedAt:now};
  let chart={mode:'candles',loadedInstrument:'BTC-USDC',loadedBar:'5m',
   rows:[{o:82600,h:82700,l:82500,c:82650,v:12}]};
- let privateWait=null;
+ let privateWait=null,privateCalls=0,external=null;
  const owner={
-  ticketReadOnly:(pair)=>new Promise(resolve=>{if(!privateWait)privateWait={};
+  calls:()=>privateCalls,
+  ticketReadOnly:(pair)=>new Promise(resolve=>{privateCalls++;if(!privateWait)privateWait={};
     privateWait.account={pair,resolve};}),
   basePositionReadOnly:(pair)=>new Promise(resolve=>{if(!privateWait)privateWait={};
     privateWait.position={pair,resolve};})
@@ -56,6 +57,7 @@ function setup(){
    console,queueMicrotask:fn=>fn(),
    AgentCryptoAiAssetReading:require('./ai-asset-reading-core.js'),
    AgentCryptoTraderMarket:{selected:()=>coin},
+   AgentCryptoNewListingsNativeCategory:{snapshot:()=>external},
    AgentCryptoMarketMicroscope:{snapshot:()=>chart,technicalLevels:()=>null},
    AgentCryptoTraderOkxAccount:owner};
  globals.globalThis=globals;
@@ -67,9 +69,22 @@ function setup(){
  const statuses=()=>descendants(panel).filter(x=>x.className==='seven-asset-card').map(x=>x.textContent);
  return {panel,ct,host,window,owner,globals,byText,heading,statuses,
   select:(id,symbol,instr)=>{
+   external=null;
    coin={id,symbol,name:symbol,priceUsd:2443,usdSource:'CoinGecko',usdUpdatedAt:now};
-   chart={...chart,loadedInstrument:instr||symbol+'-USDC'};
+   chart={...chart,external:false,loadedInstrument:instr||symbol+'-USDC'};
    window.fire('agent-crypto:trader-selection-changed');
+  },
+  external:(id,symbol,pair,provider='bitget',loadedPair=pair)=>{
+   external={selectedId:id,selectedSymbol:symbol,
+     selectedProvider:provider,selectedPair:pair.replace('-', '/')};
+   chart={...chart,external:true,loadedInstrument:loadedPair};
+   window.fire('agent-crypto:external-asset-changed');
+   window.fire('agent-crypto:new-listing-line-ready');
+  },
+  externalClear:()=>{
+   external=null;
+   chart={...chart,external:false,loadedInstrument:'BTC-USDC'};
+   window.fire('agent-crypto:external-asset-changed');
   },settle:(account,position)=>{
    if(!privateWait)throw Error('No private pending request');
    privateWait.account.resolve(account);privateWait.position.resolve(position);privateWait=null;
@@ -124,6 +139,54 @@ test('late private BTC result cannot paint after an ETH selection',async()=>{
  for(let i=0;i<8;i++)await Promise.resolve();
  assert.match(v.heading(),/ETH/);
  assert.doesNotMatch(v.statuses().join('\n'),/Trading ETH5 ETH|Funding ETH2 ETH|Trading USDC10 USDC/);
+ assert.equal(v.ct.textContent,'CT private untouched marker');
+});
+test('DNA Bitget New Listing supersedes stale Market BTC with its own Seven dossier',()=>{
+ const v=setup();
+ v.external('neosoul','DNA','DNA-USDT');
+ assert.equal(v.panel.hidden,false);
+ assert.match(v.heading(),/Dossier DNA · Seven/);
+ assert.equal(v.statuses().length,7);
+ assert.doesNotMatch(v.statuses().join(' '),/82692|82 692|BTC-USDC/);
+ assert.equal(v.byText('Lire mon compte').disabled,true);
+ assert.equal(v.byText('Actualiser les sources publiques').disabled,true);
+ v.byText('Lire mon compte').fire('click');
+ v.byText('Actualiser les sources publiques').fire('click');
+ assert.equal(v.owner.calls(),0,'Bitget listing must not request an OKX account');
+ assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ct.open,true);
+});
+test('New Listing rejects stale chart identity and cannot borrow BTC proof',()=>{
+ const v=setup();
+ v.external('neosoul','DNA','DNA-USDT','bitget','BTC-USDC');
+ assert.equal(v.panel.hidden,false);
+ assert.match(v.heading(),/Sources en attente/);
+ assert.equal(v.statuses().length,0);
+ assert.equal(v.byText('Lire mon compte').disabled,true);
+ v.external('neosoul','DNA','DNA-USDT');
+ assert.match(v.heading(),/Dossier DNA/);
+ v.external('otherdna','DNA','DNA-USDC','bitget','DNA-USDT');
+ assert.match(v.heading(),/Sources en attente/);
+ assert.equal(v.statuses().length,0);
+});
+test('external CT still belongs exclusively to Concrete and returning to BTC is isolated',()=>{
+ const v=setup();
+ v.external('concrete','CT','CT-USDT','okx');
+ assert.equal(v.panel.hidden,true);
+ assert.equal(v.ct.open,true);
+ assert.equal(v.ct.textContent,'CT private untouched marker');
+ v.external('neosoul','DNA','DNA-USDT');
+ assert.match(v.heading(),/Dossier DNA/);
+ v.externalClear();
+ assert.match(v.heading(),/Dossier BTC/);
+ assert.equal(v.statuses().length,7);
+ assert.equal(v.ct.textContent,'CT private untouched marker');
+});
+test('unknown New Listing identity never creates a guessed position',()=>{
+ const v=setup();
+ v.external('other','DNA','DNA-USDT','unknown');
+ assert.equal(v.panel.hidden,true);
+ assert.equal(v.owner.calls(),0);
  assert.equal(v.ct.textContent,'CT private untouched marker');
 });
 test('Trader iframe actually loads the Technical Reading owner once; Administrator does not',()=>{
