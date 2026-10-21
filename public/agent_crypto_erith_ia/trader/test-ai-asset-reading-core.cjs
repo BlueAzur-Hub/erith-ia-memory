@@ -347,3 +347,72 @@ test('gross cannot be borrowed from another venue, a different book or an expire
   assert.equal(d.orders_enabled,false);
  }
 });
+
+
+test('native Microscope accepted source/date/pair makes Seven trust its public candles without a second fetch',()=>{
+ const f=fixture('ETH','ethereum');
+ f.chart={...f.chart,source:'OKX public candles',
+  request_key:'ETH-USDC|5m',lastLoadedAt:ISO,loading:false,errorCode:null};
+ const d=createReading(f);
+ assert.equal(d.public.chart_source_verified,true);
+ assert.equal(d.public.chart_provider,'okx');
+ assert.equal(d.public.chart_same_spot_pair,true);
+ assert.equal(d.public.chart_warning,null);
+ assert.match(d.sections[0].details,/paire identique au Spot ETH-USDC/);
+ assert.doesNotMatch(d.sections[0].details,/distincte du Spot/);
+ assert.equal(d.orders_enabled,false);
+});
+test('Bitget DNA 5m native candles are dated, but never mistaken for OKX-private balances',()=>{
+ const f=fixture('DNA','new-listing:bitget:dnausdt','USDT');
+ f.selection.provider='bitget';f.position=null;f.account=null;f.rules=null;f.book=null;
+ f.market={id:f.selection.id,symbol:'DNA',priceUsd:0.227363,
+  usdSource:'Bitget DNA/USDT × USDT/USD CoinGecko',usdUpdatedAt:ISO};
+ f.chart={mode:'candles',loadedInstrument:'DNA-USDT',loadedBar:'5m',
+  request_key:'bitget|DNA-USDT|5m',source:'Bitget public candles',
+  lastLoadedAt:ISO,loading:false,errorCode:null,
+  rows:[{o:0.22762,h:0.22765,l:0.2273,c:0.22758,v:19440.14,t:NOW-30000}]};
+ const d=createReading(f);
+ assert.equal(d.status,'PAPER_READ_ONLY');
+ assert.equal(d.public.chart_source_verified,true);
+ assert.equal(d.public.chart_provider,'bitget');
+ assert.equal(d.public.market_price_usd,'0.227363');
+ assert.equal(d.public.market_timestamp_verified,true);
+ assert.match(d.sections[0].details,/paire identique au Spot DNA-USDT/);
+ assert.equal(d.private.base_position_verified,false);
+ assert.equal(d.orders_enabled,false);
+});
+test('real historical quote divergence only when pair differs, not on matching pair',()=>{
+ const f=fixture('ETH','ethereum');
+ f.chart.loadedInstrument='ETH-USDT';
+ const d=createReading(f);
+ assert.equal(d.public.chart_identity_matched,true);
+ assert.equal(d.public.chart_same_spot_pair,false);
+ assert.match(d.public.chart_warning,/Graphique ETH-USDT distinct du Spot ETH-USDC/);
+ assert.match(d.sections[0].details,/paire distincte du Spot ETH-USDC/);
+});
+test('untrusted or stale Microscope source does not receive public proof',()=>{
+ const f=fixture('BTC','bitcoin');
+ f.chart={...f.chart,source:'OKX public candles',request_key:'BTC-USDC|5m',
+  lastLoadedAt:ISO,loading:false,errorCode:null};
+ assert.equal(createReading(f).public.chart_source_verified,true);
+ for(const change of [
+  {source:'Unattributed candles'},
+  {lastLoadedAt:new Date(NOW-900000).toISOString()},
+  {request_key:null},
+  {errorCode:'MARKET_CANDLES_LOAD_FAILED'},
+  {loading:true}
+ ]){
+  const d=createReading({...f,chart:{...f.chart,...change}});
+  assert.equal(d.public.chart_source_verified,false);
+  assert.equal(d.orders_enabled,false);
+ }
+});
+test('stale or unattributed Market quote is not presented as confirmed',()=>{
+ const f=fixture('ETH','ethereum');
+ f.market.usdUpdatedAt=new Date(NOW-300000).toISOString();
+ assert.equal(createReading(f).public.market_price_usd,null);
+ f.market.usdUpdatedAt=ISO;f.market.usdSource=null;
+ assert.equal(createReading(f).public.market_price_usd,null);
+ f.market.usdSource='CoinGecko USD';
+ assert.equal(createReading(f).public.market_price_usd,'2443.1');
+});
