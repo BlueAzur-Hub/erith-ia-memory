@@ -158,6 +158,9 @@ function mount(){
           };
           doc.head.appendChild(part);
         };
+        // Lightweight read-only comparison: mounts next to the existing PAPER lab.
+        // Its two public reports are fetched ONLY if the operator opens it.
+        add("traderStrategyComparatorScript","strategy-comparator.js");
         const mountDecision=()=>add("traderPaperDecisionViewScript","trader-paper-decision-view.js");
         const loadOrderEntry=()=>add("traderOrderEntryViewScript","trader-order-entry-view.js",mountDecision);
         const loadDecision=()=>add("traderPaperDecisionCoreScript","trader-paper-decision-core.js",loadOrderEntry);
