@@ -94,11 +94,17 @@
        c.listingPair!==e.pair||String(c.listingProvider).toLowerCase()!==e.provider)return null;
     const value=k=>typeof c[k]==="number"&&Number.isFinite(c[k])&&c[k]>0?c[k]:null;
     const stamp=Date.parse(String(c.usdUpdatedAt||""));
-    if(!(value("priceUsd"))||!Number.isFinite(stamp)||
+    const nativeStamp=Number(c.providerContext?.ticker?.ts);
+    if(!(value("priceUsd"))||!Number.isSafeInteger(nativeStamp)||
+      !Number.isFinite(stamp)||Math.abs(stamp-nativeStamp)>1000||
       stamp>Date.now()+120000||Date.now()-stamp>15*60*1000)return null;
+    const capStamp=Date.parse(String(c.marketCapObservedAt||""));
+    const verifiedCap=Number.isFinite(capStamp)&&capStamp<=Date.now()+120000&&
+      Date.now()-capStamp<=15*60*1000&&
+      c.marketCapSource==="CoinGecko coins/markets";
     return Object.freeze({
       priceUsd:value("priceUsd"),volume24hUsd:value("volume24hUsd"),
-      marketCapUsd:value("marketCapUsd"),
+      marketCapUsd:verifiedCap?value("marketCapUsd"):null,
       marketCapObservedAt:c.marketCapObservedAt||null,
       observedAt:new Date(stamp).toISOString(),priceSource:c.usdSource||c.source,
       rank:c.marketCapRankSource??null,read_only:true,real_order:false
@@ -209,6 +215,7 @@
     const match=/^(BTC|CT|Q|AXIS)\s*[·:—-]/i.exec(title);
     if (match && ASSETS[match[1].toUpperCase()]) {
       const next=match[1].toUpperCase();
+      if(next==="AXIS"&&!confirmedExternal("AXIS"))return;
       if (next!==asset) select(next);
     }
   }
