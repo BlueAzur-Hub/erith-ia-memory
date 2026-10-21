@@ -25,6 +25,102 @@ function proof(name,caption){
  const val=el("strong","",EMPTY);val.dataset.odProof=name;n.append(val);
  return n;
 }
+function guard(kind){
+ const n=el("section","erith-od-guard");n.dataset.odGuard=kind;
+ n.dataset.level="pending";
+ n.setAttribute("role","status");
+ n.setAttribute("aria-live","polite");
+ const title=el("strong","","Contrôle de quantité en attente");
+ title.dataset.odGuardTitle=kind;
+ const detail=el("p","","Relancer la vérification du ticket PAPER ; aucun ordre.");
+ detail.dataset.odGuardDetail=kind;
+ n.append(title,detail);return n;
+}
+// Reading-only decimal comparison: do not round or change the PAPER engine.
+const SCALE=10n**12n;
+function scaled(v){
+ const s=String(v??"").trim().replace(",",".");
+ if(!/^\d+(?:\.\d{1,12})?$/.test(s))return null;
+ const [whole,frac=""]=s.split(".");
+ return BigInt(whole)*SCALE+BigInt(frac.padEnd(12,"0"));
+}
+function shortfall(required,available){
+ const a=scaled(required),b=scaled(available);
+ if(a===null||b===null||a<=b)return null;
+ const step=10n**6n; // display rounded UP to six USDC decimals
+ const n=(a-b+step-1n)/step;
+ const major=n/1000000n,minor=String(n%1000000n).padStart(6,"0").replace(/0+$/,"");
+ return major+(minor?","+minor:"");
+}
+function setGuard(kind,title,detail,level){
+ if(!node)return;
+ const target=node.querySelector('[data-od-guard="'+kind+'"]');
+ if(!target)return;
+ target.dataset.level=level;
+ const h=target.querySelector('[data-od-guard-title="'+kind+'"]');
+ const p=target.querySelector('[data-od-guard-detail="'+kind+'"]');
+ if(h)h.textContent=title;
+ if(p)p.textContent=detail;
+}
+function updateGuards(ticket,review,preview,context){
+ const min=scaled(ticket?.native_min_quantity);
+ const gross=scaled(preview?.buy_quantity??ticket?.gross_buy_quantity);
+ const netSell=scaled(preview?.maximum_sellable_base);
+ if(min===null||min<=0n||gross===null){
+  setGuard("buy","Règles de quantité à confirmer",
+    "Aucune conclusion possible : paire CT/USDC, minSz ou quantité indisponible. Aucun ordre.","pending");
+  setGuard("sell","Revente non évaluée",
+    "Attendre des règles et une projection PAPER valides.","pending");
+  return;
+ }
+ const minLabel=str(ticket.native_min_quantity);
+ const note=ticket.native_rules_verified===true?
+   "Règles publiques lues ; autres restrictions OKX non certifiées.":
+   "Règles d'archive datée : actualisation OKX nécessaire.";
+ const account=review?.account_verified===true&&review.available_trading_quote!==null;
+ const accountGap=account?shortfall(ticket.minimum_buy_at_recorded_ask_quote,review.available_trading_quote):null;
+ const budgetGap=shortfall(ticket.minimum_buy_at_recorded_ask_quote,ticket.study_budget_quote);
+ const gates=context?.order_gates;
+ const cap= context?.order_gates_verified===true&&gates?.account_max_verified===true?
+   scaled(gates.maxBuy):null;
+ if(gross<min){
+  const reasons=[
+   str(preview?.buy_quantity??ticket.gross_buy_quantity)+" CT projetés, alors que minSz = "+minLabel+" CT.",
+   ticket.minimum_buy_at_recorded_ask_quote?
+    "Coût brut indicatif pour "+minLabel+" CT au ask daté : "+ticket.minimum_buy_at_recorded_ask_quote+" USDC (hors frais en USDC).":null,
+   budgetGap?"Écart avec le budget fictif : au moins "+budgetGap+" USDC.":null,
+   accountGap?"Écart avec le solde Trading vérifié : au moins "+accountGap+" USDC.":null,
+   cap!==null&&cap<min?"Plafond d'achat du compte inférieur à minSz au relevé daté.":null,
+   note,"Aucun achat possible depuis ce ticket."
+  ];
+  setGuard("buy","Minimum d'achat non atteint",reasons.filter(Boolean).join(" "),"warning");
+ }else{
+  setGuard("buy","Minimum de quantité franchi en simulation",
+   "Achat brut "+str(preview?.buy_quantity??ticket.gross_buy_quantity)+
+   " CT ≥ minSz "+minLabel+" CT. "+note+
+   " Cela ne certifie ni le notionnel, ni le solde, ni l'acceptation d'un ordre.","neutral");
+ }
+ if(netSell===null){
+  setGuard("sell","Revente non évaluée",
+   "Aucune projection nette exploitable : renseigner un prix de vente compatible puis vérifier. Aucun ordre.","pending");
+ }else if(netSell<min||preview?.meets_native_exit_minimum===false){
+  const estimate= ticket.minimum_gross_buy_to_resell_with_assumed_base_fee;
+  const feeMode=review?.fee_mode_verified===true?review.fee_buy_currency:null;
+  const illustrative=feeMode!=="USDC"&&estimate?
+   "Sous l'hypothèse de 0,10 % de frais prélevés en CT, il faudrait environ "+
+   estimate+" CT bruts (coût indicatif "+str(ticket.minimum_gross_buy_cost_at_ask_with_assumed_base_fee)+
+   " USDC au ask daté), sans garantie des frais ou arrondis réels.":"";
+  setGuard("sell","Revente en quantité minimale impossible",
+   str(preview.maximum_sellable_base)+" CT revendables en simulation, sous minSz "+
+   minLabel+" CT après frais et arrondi au lot. "+illustrative+
+   " Le solde réellement détenu n'augmente pas : aucun achat ni vente réalisé.","warning");
+ }else{
+  const dust=preview?.residual_dust_base;
+  setGuard("sell","Seuil de revente atteint en simulation",
+   str(preview.maximum_sellable_base)+" CT ≥ "+minLabel+
+   " CT ; résidu estimé : "+str(dust)+" CT. Prix de sortie, frais, notionnel et exécution non garantis.","neutral");
+ }
+}
 function strip(name,caption){
  const n=el("div","");
  n.append(el("small","",caption));
@@ -62,11 +158,11 @@ function mount({quoteLabel,budgetLabel,exitLabel,compute}={}){
  const sellValues=el("div","erith-od-values");
  sellValues.append(field("sellQty","CT revendables estimés"),field("sellNet","Produit net hypothétique"),
    field("sellFee","Frais de vente estimés"),field("sellDust","Résidu CT"));
- buy.append(quoteLabel,budgetLabel,buyValues);
+ buy.append(quoteLabel,budgetLabel,buyValues,guard("buy"));
  compute.classList.add("erith-od-cta");
  compute.textContent="Vérifier et préparer le ticket · aucun ordre";
  buy.append(compute,el("p","erith-od-note","Le contrôle ne transmet aucun achat à OKX."));
- sell.append(exitLabel,sellValues,
+ sell.append(exitLabel,sellValues,guard("sell"),
    el("div","erith-od-inactive","Envoi d'ordre désactivé · autorisation Trade absente"),
    el("p","erith-od-note","Le prix de vente est une cible saisie, pas un prix garanti ni une instruction d'ordre."));
  sides.append(buy,sell);
@@ -138,6 +234,10 @@ function reset(){
  set("pair","CT/USDC · LIMIT","odProof");
  set("fresh","Vérification nécessaire","odProof");
  set("checktime","En attente","odProof");
+ setGuard("buy","Contrôle de quantité en attente",
+   "Vérifier de nouveau : les anciennes projections ne sont plus valides.","pending");
+ setGuard("sell","Contrôle de revente en attente",
+   "Aucun chiffre précédent ne vaut confirmation pour cet actif.","pending");
  const events=node.querySelector("[data-od-events]");
  if(events)events.replaceChildren(el("li","","Aucun état PAPER pour ce ticket."));
 }
@@ -185,6 +285,7 @@ function update({ticket,context,review,preview,bookDiagnostic,checkedAt}={}){
    (review.funds_cover_public_scenario?"Couverture du coût PAPER uniquement":"Couverture PAPER non démontrée"):
    "Compte non confirmé","odProof");
  set("orders","Aucun ordre possible · Trade désactivé","odProof");
+ updateGuards(ticket,review,hasPreview?preview:null,context);
 }
 const descriptions={
  PAPER_PREPARE:"Préparation PAPER",PAPER_CONFIRM:"Soumission simulée",
