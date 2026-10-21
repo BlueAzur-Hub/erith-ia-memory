@@ -126,3 +126,76 @@ test('courbe publique ancienne ou horodatage incohérent non validés',()=>{
 test('un faux contrat privé ne produit pas de rapport Seven',()=>{
  assert.throws(()=>api.explain({schema:'public',read_only:false}),/non validé/);
 });
+
+
+test('generic Spot rules are byte-for-byte compatible with existing CT/USDC',()=>{
+ const row={instId:'CT-USDC',instType:'SPOT',state:'live',
+  baseCcy:'CT',quoteCcy:'USDC',minSz:'10',lotSz:'0.01',tickSz:'0.0001'};
+ const src={observed_at_utc:new Date(now-1000).toISOString(),
+  payload:{code:'0',data:[row]}};
+ const legacy=api.spotTradingRules(src,now);
+ const generic=api.spotTradingRulesFor({base:'CT',quote:'USDC',venue:'okx'},src,now);
+ assert.deepEqual(generic,legacy);
+ assert.deepEqual(api.assessSpotQuantityFor(9.99,generic),api.assessSpotQuantity(9.99,legacy));
+ assert.equal(api.assessSpotQuantityFor(9.99,generic).status,'below_minimum');
+ assert.equal(api.assessSpotQuantityFor(10.01,generic).status,'size_matches');
+ assert.equal(api.assessSpotQuantityFor(10.005,generic).status,'invalid_step');
+ assert.equal(api.assessSpotQuantityFor(10.01,generic).message,
+  'Quantité conforme aux filtres vérifiés ; exécution NON garantie');
+});
+test('same CT validator handles BTC and ETH without modifying their decimals',()=>{
+ for(const [base,quote,minSz,lotSz,tickSz,qty] of [
+  ['BTC','USDC','0.0001','0.00000001','0.1',0.00012],
+  ['ETH','USDC','0.001','0.000001','0.01',0.002],
+  ['SOL','USDT','0.01','0.001','0.0001',1.111]
+ ]){
+  const market=base+'-'+quote;
+  const row={instId:market,instType:'SPOT',state:'live',
+   baseCcy:base,quoteCcy:quote,minSz,lotSz,tickSz,
+   observed_at_utc:new Date(now-1000).toISOString()};
+  const rules=api.spotTradingRulesFor({base,quote,venue:'okx'},row,now);
+  assert.equal(rules.status,'verified',market);
+  assert.equal(rules.market,market);
+  assert.equal(rules.min_sz,minSz);
+  assert.equal(rules.lot_sz,lotSz);
+  assert.equal(rules.tick_sz,tickSz);
+  assert.equal(api.assessSpotQuantityFor(qty,rules).status,'size_matches');
+  assert.equal('orders_enabled' in rules,false);
+ }
+});
+test('source provider and pair identities must match; Bitget gets no invented OKX rules',()=>{
+ const row={instId:'ETH-USDC',instType:'SPOT',state:'live',
+  baseCcy:'ETH',quoteCcy:'USDC',minSz:'0.001',lotSz:'0.0001',tickSz:'0.01',
+  observed_at_utc:new Date(now-1000).toISOString()};
+ for(const context of [
+  {base:'DNA',quote:'USDT',venue:'bitget'},
+  {base:'ETH',quote:'USDC',venue:'bitget'},
+  {base:'BTC',quote:'USDC',venue:'okx'},
+  {base:'ETH',quote:'USDT',venue:'okx'}
+ ]){
+  assert.equal(api.spotTradingRulesFor(context,row,now).status,'unverified');
+ }
+ for(const invalid of [
+  {...row,baseCcy:'BTC'},
+  {...row,quoteCcy:'USDT'},
+  {...row,observed_at_utc:new Date(now-300000).toISOString()},
+  {...row,state:'not_a_real_state'}
+ ]){
+  assert.equal(api.spotTradingRulesFor({base:'ETH',quote:'USDC',venue:'okx'},invalid,now).status,'unverified');
+ }
+ const paused={...row,state:'suspend'};
+ const rules=api.spotTradingRulesFor({base:'ETH',quote:'USDC',venue:'okx'},paused,now);
+ assert.equal(rules.status,'verified');
+ assert.equal(api.assessSpotQuantityFor(1,rules).status,'not_live');
+});
+test('same rules API preserves high precision but never guesses a tradable quantity',()=>{
+ const pair='BTC-USDC';
+ const row={instId:pair,instType:'SPOT',state:'live',
+  baseCcy:'BTC',quoteCcy:'USDC',minSz:'0.000000000000000001',
+  lotSz:'0.000000000000000001',tickSz:'0.000000000000000001',
+  observed_at_utc:new Date(now-1000).toISOString()};
+ const rules=api.spotTradingRulesFor({base:'BTC',quote:'USDC',venue:'okx'},row,now);
+ assert.equal(rules.status,'verified');
+ assert.equal(api.assessSpotQuantityFor(0.00001,rules).status,'unverified',
+  'legacy 12-decimal quantity checker must not pretend to validate a finer lot');
+});
