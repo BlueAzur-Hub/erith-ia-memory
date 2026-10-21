@@ -190,7 +190,7 @@ test('mismatched external graph/pair never borrows account or graph from other c
 test('CT source files unchanged by renderer and account proof is opt-in only',()=>{
  assert.match(runtime,/traderSevenAssetCoreScript/);
  assert.match(runtime,/traderSevenAssetViewScript/);
- assert.match(code,/if\(symbol==='CT'\|\|graphBase==='CT'\)/);
+ assert.match(code,/if\(graphBase==='CT'\|\|\(live\?\.active===true&&live\?\.base==='CT'\)\)/);
  assert.match(code,/!same\(initial.identity,token\)/);
  assert.match(code,/basePositionReadOnly\(pair\)/);
  assert.match(code,/privateButton\.addEventListener\('click'/);
