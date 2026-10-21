@@ -180,6 +180,9 @@ jobs:
             prefix+"trader/trader-paper-decision-core.js",
             prefix+"trader/trader-paper-decision-view.js",
             prefix+"trader/test-paper-decision.cjs",
+            # Option C: exactly two presentation-only, Trader-scoped files.
+            prefix+"trader/trader-order-entry-view.js",
+            prefix+"trader/trader-order-entry.css",
           }
           changed=set(subprocess.check_output(
             ["git","diff","--name-only",base,"HEAD","--",prefix+"trader/"],
@@ -216,7 +219,7 @@ jobs:
             "status":"TRADER_COFFRE_VISIBLE_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
-          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/trader-candles-minute-watch.js",prefix+"trader/trader-paper-decision-core.js",prefix+"trader/trader-paper-decision-view.js",prefix+"trader/test-paper-decision.cjs"}:
+          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/trader-candles-minute-watch.js",prefix+"trader/trader-paper-decision-core.js",prefix+"trader/trader-paper-decision-view.js",prefix+"trader/test-paper-decision.cjs",prefix+"trader/trader-order-entry-view.js",prefix+"trader/trader-order-entry.css"}:
             if f==prefix+"trader/trader-runtime-mirror.js":
               expected=previous(f).replace("40.6.639","40.6.640").replace("trader-historical-panel.js?reader=top50-cohorts","trader-historical-panel.js?reader=visible-coffre")
               actual=current(f)
@@ -244,6 +247,28 @@ jobs:
                 assert 'trader-paper-lab-core.js' in paper and 'trader-paper-lab-view.js' in paper
                 assert '/trade/order' not in paper and '/withdraw' not in paper
                 actual=head+last+rest
+              # Strip only the approved visual order-entry asset loader.
+              # The original PAPER core/Bridge read owner remains unchanged.
+              visual_css=(
+                '  // The order-entry stylesheet is scoped to #traderOkxTicket only.\n'
+                '  if(!doc.getElementById("traderOrderEntryStyle")){\n'
+                '    const sheet=doc.createElement("link");\n'
+                '    sheet.id="traderOrderEntryStyle";sheet.rel="stylesheet";\n'
+                '    sheet.href=new URL("../trader/trader-order-entry.css",doc.baseURI).href;\n'
+                '    doc.head.appendChild(sheet);\n'
+                '  }\n'
+              )
+              visual_chain=(
+                '        const loadOrderEntry=()=>add("traderOrderEntryViewScript","trader-order-entry-view.js",mountDecision);\n'
+                '        const loadDecision=()=>add("traderPaperDecisionCoreScript","trader-paper-decision-core.js",loadOrderEntry);'
+              )
+              original_chain='        const loadDecision=()=>add("traderPaperDecisionCoreScript","trader-paper-decision-core.js",mountDecision);'
+              if visual_css in actual and visual_css not in expected:
+                assert actual.count(visual_css)==1
+                actual=actual.replace(visual_css,"",1)
+              if visual_chain in actual and visual_chain not in expected:
+                assert actual.count(visual_chain)==1
+                actual=actual.replace(visual_chain,original_chain,1)
               assert actual==expected,f"Non-version Trader change beyond PAPER extension: {f}"
               continue
             else:
@@ -253,6 +278,16 @@ jobs:
           decision_core=current(prefix+"trader/trader-paper-decision-core.js")
           decision_view=current(prefix+"trader/trader-paper-decision-view.js")
           decision_test=current(prefix+"trader/test-paper-decision.cjs")
+          order_entry=current(prefix+"trader/trader-order-entry-view.js")
+          order_style=current(prefix+"trader/trader-order-entry.css")
+          assert 'AgentCryptoTraderOrderEntryView' in order_entry
+          assert 'realOrders:false,readOnly:true' in order_entry
+          assert '#traderOkxTicket' in order_style and '@media' in order_style
+          for forbidden in ('fetch(', 'XMLHttpRequest', 'localStorage', 'sessionStorage',
+                            '/api/v5/trade/order', 'Authorization', 'Bearer', 'setInterval('):
+            assert forbidden not in order_entry, f"Visual Trader safety violation: {forbidden}"
+          assert 'trader-order-entry-view.js' in current(prefix+"trader/trader-runtime-mirror.js")
+          assert 'trader-order-entry.css' in current(prefix+"trader/trader-runtime-mirror.js")
           assert 'realOrders:false,network:false,storage:false' in decision_core
           assert 'strategy_certified:false' in decision_core
           assert 'getElementById("traderPaperLab")' in decision_view
