@@ -8,7 +8,7 @@ if(root){root.AgentCryptoRadarOkxHourly=api;if(root.document)api.mount(root.docu
 })(typeof globalThis!=="undefined"?globalThis:null,()=>{
 "use strict";
 const SCHEMA="erith.radar.okx-hourly-evidence.v1";
-const PAIRS=new Set(["BTC","ETH","SOL","XRP","OKB"].flatMap(
+const PAIRS=new Set(["BTC","ETH","SOL","XRP","OKB","CT"].flatMap(
  base=>["USDC","USDT","EUR"].map(quote=>base+"-"+quote)));
 const allowedQuote=new Set(["USDC","USDT","EUR"]);
 function utc(value){
@@ -33,7 +33,7 @@ function valid(input,now=Date.now()){
     !Number.isInteger(input.observed_hours_total)||input.observed_hours_total<1||
     !Number.isInteger(input.pairs_with_public_books)||
     !Number.isInteger(input.pairs_with_two_or_more_hours)||
-    !Array.isArray(input.pairs)||input.pairs.length<1||input.pairs.length>15||
+    !Array.isArray(input.pairs)||input.pairs.length<1||input.pairs.length>PAIRS.size||
     input.pairs_with_public_books!==input.pairs.length||
     input.pairs_with_two_or_more_hours>input.pairs.length)
   throw Error("Bilan public OKX non vérifié ou incompatible");
