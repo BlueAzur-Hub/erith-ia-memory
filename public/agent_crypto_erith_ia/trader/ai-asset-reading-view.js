@@ -68,7 +68,7 @@ function chosen(){
   identity:String(c.id)+'|'+symbol+'|'+quote};
 }
 function resetReading(){
- book=null;rules=null;account=null;position=null;
+ book=null;rules=null;account=null;position=null;busy=false;
  state.textContent='Nouvel actif : seules ses propres preuves seront utilisées.';
 }
 function same(original,seq){
@@ -79,7 +79,8 @@ function change(){
  const choice=chosen();
  if(choice.ct){panel.hidden=true;key='CT';coin=null;epoch++;resetReading();return;}
  if(choice.conflict||choice.pending){
-  panel.hidden=!!choice.pending;panel.open=false;
+  panel.hidden=!!choice.pending;
+  if(choice.pending)panel.open=false;
   // For a conflict, show ONLY a warning, never another asset's private data.
   if(choice.conflict){
     panel.hidden=false;heading.textContent='IA · Sources en attente';
@@ -265,8 +266,11 @@ async function publicRead(){
   if(same(initial.identity,token)){
    book=null;rules=null;state.textContent='Lecture publique indisponible ; aucune valeur de substitution.';
   }
- }finally{busy=false;publicButton.disabled=false;privateButton.disabled=false;
-  if(same(initial.identity,token))paint();}
+ }finally{
+  if(same(initial.identity,token)){
+   busy=false;publicButton.disabled=false;privateButton.disabled=false;paint();
+  }
+ }
 }
 async function privateRead(){
  const initial=chosen();if(!initial.selection||busy)return;
@@ -292,8 +296,11 @@ async function privateRead(){
    account=null;position=null;
    state.textContent='Compte privé non accessible ; aucune valeur précédemment lue n’est reprise.';
   }
- }finally{busy=false;privateButton.disabled=false;publicButton.disabled=false;
-  if(same(initial.identity,token))paint();}
+ }finally{
+  if(same(initial.identity,token)){
+   busy=false;privateButton.disabled=false;publicButton.disabled=false;paint();
+  }
+ }
 }
 learn.addEventListener('click',()=>{mode='learn';paint();});
 analyze.addEventListener('click',()=>{mode='analyze';paint();});
