@@ -6,6 +6,8 @@ on:
       - ".github/workflows/seven-capital-scout-check.yml"
       - "public/agent_crypto_erith_ia/tools/seven_capital_scout.cjs"
       - "public/agent_crypto_erith_ia/tools/test_seven_capital_scout.cjs"
+      - "public/agent_crypto_erith_ia/trader/strategy-comparator.js"
+      - "public/agent_crypto_erith_ia/data/trader_flux/seven_capital_scout/status.json"
 permissions:
   contents: read
 jobs:
@@ -22,12 +24,20 @@ jobs:
         run: |
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/tools/seven_capital_scout.cjs
+          node --check public/agent_crypto_erith_ia/trader/strategy-comparator.js
           node public/agent_crypto_erith_ia/tools/test_seven_capital_scout.cjs
           node public/agent_crypto_erith_ia/tools/seven_capital_scout.cjs
           node - <<'NODE'
           const fs=require('node:fs');
           const path='public/agent_crypto_erith_ia/data/trader_flux/seven_capital_scout/status.json';
           const r=JSON.parse(fs.readFileSync(path,'utf8'));
+          const trader=fs.readFileSync('public/agent_crypto_erith_ia/trader/strategy-comparator.js','utf8');
+          if(!trader.includes('mountCapitalPulse(host)')||
+             !trader.includes('credentials:"omit"')||
+             !trader.includes('real_orders_submitted!==0')||
+             trader.includes('/api/v5/trade/order')||
+             trader.includes('localStorage.setItem'))
+             throw Error('Trader auto-pulse safety contract changed');
           if(r.orders_enabled!==false||r.real_orders_submitted!==0||
              r.paper_orders_submitted!==0||r.private_account_access!==false||
              r.simulation_budget_usdc!==10||r.reserved_cost_buffer_usdc!==0.94||
