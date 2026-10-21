@@ -7,6 +7,7 @@ const paper=globalThis.AgentCryptoPaperLabCore;
 if(!core||!paper||typeof document==="undefined")return;
 const ID="traderPaperDecision",BASE="../data/crypto/radar-opportunities/";
 const safe=fn=>{try{return fn()}catch(_){return null}};
+const strCompact=v=>v===null||v===undefined?"inconnu":String(v);
 const fmt=(value,digits=3)=>Number.isFinite(value)?
  Number(value).toLocaleString("fr-FR",{maximumFractionDigits:digits}):"indisponible";
 let requestId=0,lastStudyKey="",reportCache=null,reportAt=0,reportInFlight=null;
@@ -398,7 +399,7 @@ async function prepareTicket(){
    " ; carnet OKX public exact et archivé si la lecture actuelle échoue. "+
    "Aucun fonds engagé, aucune permission Trade. "+
    (pair==="CT-USDC"?"Compte OKX lu via le Bridge existant, en lecture seule.":
-    "Compte privé "+pair+" non raccordé : aucun solde ou plafond certifié.");
+    "Compte "+pair+" : solde Trading et frais consultables via le Bridge après vérification de la paire exacte ; maxBuy non certifié.");
  const choice=core.qualifyPaperSpotSelection({selected:source,pair});
  if(!choice?.ok){
    ticketStatus("Paire non qualifiée : "+String(choice?.reason||"identité absente")+
@@ -512,19 +513,21 @@ async function prepareTicket(){
    box.dataset.ticketResult=answer.status;
    // Reuse the only Aether Trust account owner, not a second private fetch.
    let context=null,privateIssue="";
-   if(pair==="CT-USDC"){
-     try{
-       const owner=globalThis.AgentCryptoTraderOkxAccount;
-       if(typeof owner?.ticketReadOnly==="function"){
-         context=await owner.ticketReadOnly(pair);
-         privateIssue=String(context?.reason||"").slice(0,180);
-       }else privateIssue="Module de compte OKX non disponible.";
-     }catch(_){
-       privateIssue="Lecture privée OKX interrompue ; vérifier la session Bridge.";
-     }
-   }else{
-     privateIssue="Aucun contrôle privé "+pair+" raccordé : "+
-       "étude du carnet public uniquement, Trading et frais non certifiés.";
+   // Shared account owner already supports exact BTC-USDC account + fee
+   // reads. Only CT/USDC has account-specific R25 max-size/feeType proof;
+   // BTC never receives those CT-only gates from this routine.
+   try{
+     const owner=globalThis.AgentCryptoTraderOkxAccount;
+     if(typeof owner?.ticketReadOnly==="function"){
+       context=await owner.ticketReadOnly(pair);
+       if(context?.instId!==pair||context?.read_only!==true||
+          context?.orders_enabled!==false||context?.real_orders!==0){
+         context=null;
+         privateIssue="Provenance du compte "+pair+" non qualifiée : lecture rejetée.";
+       }else privateIssue=String(context?.reason||"").slice(0,180);
+     }else privateIssue="Module de compte OKX indisponible.";
+   }catch(_){
+     privateIssue="Lecture du compte "+pair+" interrompue ; session Bridge à vérifier.";
    }
    const currentSource=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
    if(current!==ticketRequest||!box.open||
@@ -555,7 +558,8 @@ async function prepareTicket(){
          " : feeType="+review.fee_type+" · prélèvement en "+review.fee_buy_currency+
          " (mode du compte, non preuve d'un fill).":
        "Mode des frais d'achat CT/USDC : NON CONFIRMÉ · "+
-         String(context?.fee_type_reason||"Bridge privé ou session Aether Trust à vérifier.")]:[]),
+         String(context?.fee_type_reason||"Bridge privé ou session Aether Trust à vérifier.")]:
+       ["Mode des frais d'achat "+pair+" : NON CERTIFIÉ malgré la lecture éventuelle des taux maker/taker."]),
      ...(pair==="CT-USDC"?(()=>{
        const gates=context?.order_gates;
        if(!gates)return ["CONTROLES SPOT COMPTE : NON CONFIRMÉS · "+
@@ -683,7 +687,9 @@ async function prepareTicket(){
     "CARNET "+pair+" · "+(actualLive?"RÉCENT OKX ACCEPTÉ":
       "ARCHIVE UNIQUEMENT — "+(bookDiagnostic?.code||"INCONNU")),
     "COMPTE · "+(pair!=="CT-USDC"?
-      "NON CERTIFIÉ POUR "+pair+" (PAPER public uniquement).":
+      (review.account_verified?"Trading "+strCompact(review.available_trading_quote)+
+        " "+quote+" vérifié pour "+pair+" ; maxBuy et feeType NON CERTIFIÉS.":
+        "Solde Trading non certifié pour "+pair+" ; PAPER uniquement."):
      review.spot_gates?.verified?
       (review.scenario_within_account_max_buy?
         "Contrôles du compte lus · scénario brut dans maxBuy.":

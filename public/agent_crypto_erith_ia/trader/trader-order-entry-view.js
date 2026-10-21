@@ -22,7 +22,7 @@ function field(name,caption){
 }
 function proof(name,caption){
  const n=el("div","");
- n.append(el("small","",caption));
+ const captionEl=el("small","",caption);captionEl.dataset.odProofCaption=name;n.append(captionEl);
  const val=el("strong","",EMPTY);val.dataset.odProof=name;n.append(val);
  return n;
 }
@@ -212,7 +212,7 @@ function updateGuards(ticket,review,preview,context){
 }
 function strip(name,caption){
  const n=el("div","");
- n.append(el("small","",caption));
+ const captionEl=el("small","",caption);captionEl.dataset.odStripCaption=name;n.append(captionEl);
  const val=el("strong","",EMPTY);val.dataset.odField=name;n.append(val);
  return n;
 }
@@ -350,10 +350,38 @@ function reset(){
  const events=node.querySelector("[data-od-events]");
  if(events)events.replaceChildren(el("li","","Aucun état PAPER pour ce ticket."));
 }
-function updatePublicAsset(ticket,preview,bookDiagnostic){
+function setIdentityLabels(base,quote){
+ if(!node)return;
+ node.setAttribute("aria-label","Ticket PAPER Spot "+base+"/"+quote+" · aperçu et contrôles");
+ for(const [key,label] of [
+  ["bid","Meilleur bid "+base+"/"+quote],
+  ["ask","Meilleur ask "+base+"/"+quote],
+  ["buyAvailable",quote+" disponible Trading"],
+  ["sellAvailable",base+" disponible à la vente"]
+ ]){
+  const caption=node.querySelector('[data-od-strip-caption="'+key+'"]');
+  if(caption)caption.textContent=label;
+ }
+ for(const [key,label] of [
+  ["maxbuy","Plafond achat ("+base+")"],
+  ["checktime","Heure des limites du compte OKX"]
+ ]){
+  const caption=node.querySelector('[data-od-proof-caption="'+key+'"]');
+  if(caption)caption.textContent=label;
+ }
+}
+function updatePublicAsset(ticket,context,review,preview,bookDiagnostic){
  // BTC/USDC is a public PAPER study only. No account limits, Trading
  // balance, feeType or PAPER cycle from CT may ever be inherited.
  const base=ticket.base,quote=ticket.quote,pair=ticket.pair;
+ setIdentityLabels(base,quote);
+ const checkedCaption=node.querySelector('[data-od-proof-caption="checktime"]');
+ if(checkedCaption)checkedCaption.textContent="Heure de lecture du solde Trading (non des plafonds)";
+ const accountVerified=context?.instId===pair&&context?.read_only===true&&
+   context?.orders_enabled===false&&context?.real_orders===0&&
+   review?.account_verified===true&&review?.account_quote===quote&&
+   review?.available_trading_quote!==null;
+ const feesVerified=accountVerified&&review?.fees_verified===true;
  const hasPreview=preview?.maximum_sellable_base!==undefined&&preview?.orders_enabled===false;
  const current=bookDiagnostic?.accepted===true&&
    ticket.source_book_kind==="LOCAL_BACKEND_OKX_SPOT";
@@ -392,8 +420,10 @@ function updatePublicAsset(ticket,preview,bookDiagnostic){
  set("sellDust",hasPreview?str(preview.residual_dust_base)+" "+base:"Non évalué");
  set("bid",str(ticket.best_bid_quote)+" "+quote);
  set("ask",str(ticket.best_ask_quote)+" "+quote);
- set("buyAvailable","NON CERTIFIÉ");
- set("sellAvailable","NON CERTIFIÉ");
+ set("buyAvailable",accountVerified?
+   str(review.available_trading_quote)+" "+quote+" · compte Trading vérifié":
+   "NON CERTIFIÉ");
+ set("sellAvailable","NON CERTIFIÉ · solde "+base+" non contrôlé pour cette paire");
  set("pair",pair+" · paire Spot de l'archive exacte","odProof");
  set("fresh",current?"OKX local public · récent (non garanti)":
    "Archive datée · pas de cotation actuelle","odProof");
@@ -402,16 +432,27 @@ function updatePublicAsset(ticket,preview,bookDiagnostic){
    " · lot "+str(ticket.native_lot)+" "+base+
    " · tick "+str(ticket.native_tick)+" "+quote:
    "Règles publiques actuelles non certifiées","odProof");
- set("maxbuy","Compte "+pair+" non raccordé","odProof");
- set("feeMode","Non certifié · hypothèse 0,10 % "+base,"odProof");
- set("checktime","Aucun contrôle privé vérifié","odProof");
- set("funds","Trading/Funding non vérifiés pour "+pair,"odProof");
+ set("maxbuy","Non certifié pour "+pair+" · aucune preuve R25","odProof");
+ set("feeMode",feesVerified?
+   "Taux du compte : maker "+str(review.fee_maker_pct)+" % · taker "+
+   str(review.fee_taker_pct)+" % · devise du débit NON CERTIFIÉE":
+   "Taux et devise du débit non certifiés · hypothèse 0,10 % "+base,"odProof");
+ set("checktime",accountVerified?str(review.account_at_utc)+" · solde seulement":
+   "Aucun solde privé vérifié","odProof");
+ set("funds",accountVerified?
+   "Solde Trading "+str(review.available_trading_quote)+" "+quote+
+   " vérifié ; budget PAPER "+str(ticket.study_budget_quote)+" "+quote+
+   " distinct · financement non additionné":
+   "Trading/Funding non vérifiés pour "+pair,"odProof");
  set("orders","PAPER public uniquement · Trade verrouillé","odProof");
  const disclaimer=node.querySelector(".erith-od-disclaimer");
  if(disclaimer)disclaimer.textContent=
-   "Le ticket "+pair+" est une étude du carnet public daté. "+
-   "Les données du graphique et celles de la paire Spot sont distinctes. "+
-   "Aucun ordre envoyé ; aucun solde, frais ou plafond privé certifié pour "+pair+".";
+   "Étude PAPER du carnet Spot public "+pair+
+   ". Prix du graphique distinct ; aucun ordre possible. "+
+   (accountVerified?"Le solde Trading de la devise "+quote+
+     " est lu sur le compte, mais ni feeType ni maxBuy "+pair+
+     " ne sont vérifiés.":"Aucun solde privé certifié pour cette paire.")+
+   " Funding ne finance pas automatiquement Trading.";
  const buy=scaled(ticket.gross_buy_quantity);
  const gross=hasPreview?scaled(preview.buy_quantity):buy;
  const sell=hasPreview?scaled(preview.maximum_sellable_base):null;
@@ -432,20 +473,32 @@ function updatePublicAsset(ticket,preview,bookDiagnostic){
  const gap=shortfall(ticket.minimum_gross_buy_cost_at_ask_with_assumed_base_fee,
    ticket.study_budget_quote);
  const amount=str(ticket.minimum_gross_buy_cost_at_ask_with_assumed_base_fee);
+ const gapTrading=accountVerified?shortfall(ticket.hypothetical_buy_cost_quote,
+   review.available_trading_quote):null;
  const verdictTitle=belowBuy||below?"SCÉNARIO PAPER SOUS MINIMUM":
-   "FAISABILITÉ COMPTE NON CERTIFIÉE · PAPER";
+   gapTrading?"SOLDE TRADING INSUFFISANT · PAPER":
+     "FAISABILITÉ COMPTE NON CERTIFIÉE · PAPER";
  const summary="Achat "+str(hasPreview?preview.buy_quantity:ticket.gross_buy_quantity)+
    " / "+str(ticket.native_min_quantity)+" "+base+
    (hasPreview?" · Revente "+str(preview.maximum_sellable_base)+" "+base:"")+
-   " · Seuil ≈ "+amount+" "+quote+" (estimé)";
+   " · Seuil ≈ "+amount+" "+quote+" (estimé)"+
+   (accountVerified?" · Trading "+str(review.available_trading_quote)+" "+quote:"");
  verdict(verdictTitle,
    "Identité et données publiques de "+pair+" étudiées. "+
-   "Solde Trading, frais réels, maxBuy et filtres du compte non vérifiés. "+
-   "Aucun ordre possible : aucun transfert, aucune exécution.",
+   (accountVerified?"Solde Trading "+quote+" vérifié à "+
+      str(review.account_at_utc)+". ":"Solde Trading non vérifié. ")+
+   (feesVerified?"Taux maker/taker spécifiques "+pair+
+     " lus ; mode de prélèvement toujours non certifié. ":
+     "Frais spécifiques du compte non certifiés. ")+
+   "maxBuy et filtres du compte non vérifiés. Aucun ordre, transfert ou exécution.",
    "Seuil indicatif à l'ask daté : "+str(ticket.minimum_gross_buy_to_resell_with_assumed_base_fee)+
      " "+base+" bruts ≈ "+amount+" "+quote+" (hypothèse 0,10 % en "+base+"). "+
      (gap?"Écart au budget PAPER : "+gap+" "+quote+". ":"")+
-     "Aucun solde privé ne peut être inféré.",
+     (gapTrading?"Écart au coût PAPER hors frais quote éventuels : "+
+       gapTrading+" "+quote+" depuis Trading. ":"")+
+     (accountVerified?"Funding séparé ; aucun transfert. ":
+       "Aucun solde privé ne peut être inféré. ")+
+     "MaxBuy et devise des frais non certifiés.",
    belowBuy||below?"warning":"pending",summary);
 }
 function update({ticket,context,review,preview,bookDiagnostic,checkedAt}={}){
@@ -453,7 +506,7 @@ function update({ticket,context,review,preview,bookDiagnostic,checkedAt}={}){
  if(ticket?.pair==="BTC-USDC"&&ticket?.base==="BTC"&&ticket?.quote==="USDC"&&
     ticket?.orders_enabled===false&&ticket?.executable===false&&
     ticket?.status==="PREPARATION_NON_EXECUTABLE"){
-  updatePublicAsset(ticket,preview,bookDiagnostic);return;
+  updatePublicAsset(ticket,context,review,preview,bookDiagnostic);return;
  }
  if(ticket?.pair!=="CT-USDC"||ticket?.orders_enabled!==false){
   reset();return;
@@ -471,6 +524,7 @@ function update({ticket,context,review,preview,bookDiagnostic,checkedAt}={}){
   const caption=node.querySelector('[data-od-caption="'+key+'"]');
   if(caption)caption.textContent=label;
  }
+ setIdentityLabels("CT","USDC");
  const validBook=ticket.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"&&bookDiagnostic?.accepted===true;
  node.dataset.ready=String(validBook);
  const header=node.querySelector(".erith-od-pair");
