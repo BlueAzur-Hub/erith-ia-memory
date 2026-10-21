@@ -1,0 +1,52 @@
+{
+  "schema": "erith.seven.capital-scout.paper.v1",
+  "mode": "AUTOMATED_PROSPECTIVE_RESEARCH_ONLY",
+  "activation_date_utc": "2026-10-21",
+  "first_valid_candidate_day_utc": "2026-10-22",
+  "latest_archive_date_utc": "2026-10-21",
+  "immutable_source_dates_utc": [
+    "2026-10-16",
+    "2026-10-17",
+    "2026-10-18",
+    "2026-10-19",
+    "2026-10-20",
+    "2026-10-21"
+  ],
+  "sources": "CoinGecko Top1000 public Radar snapshots",
+  "quote": "USD",
+  "simulation_budget_usdc": 10,
+  "reserved_cost_buffer_usdc": 0.94,
+  "cost_buffer_guarantees_fees": false,
+  "last_user_reported_balance_usdc": 10.94,
+  "live_balance_verified": false,
+  "profit_real_usdc": null,
+  "profit_paper_usdc": null,
+  "milestones_usdc": [
+    12,
+    15,
+    17
+  ],
+  "milestones_reached": [],
+  "orders_enabled": false,
+  "private_account_access": false,
+  "real_orders_submitted": 0,
+  "paper_orders_submitted": 0,
+  "contract_identity_proven": false,
+  "usdc_spot_orderbook_verified": false,
+  "fee_currency_verified": false,
+  "sellable_after_base_fee_verified": false,
+  "live_trading_authorized": false,
+  "strategy_certified": false,
+  "filters": {
+    "rank_max": 500,
+    "volume24h_usd_min": 5000000,
+    "cap_usd_min": 50000000,
+    "change24h_pct_min": 2,
+    "change24h_pct_max": 12,
+    "change7d_pct_gt": 0,
+    "change7d_pct_max": 40,
+    "limit_per_day": 3
+  },
+  "observations": [],
+  "note": "No automatic trades. USD price variation is NOT USDC P&L. Do not spend the reserve; fees charged in base may reduce sellable size. No claim of executable OKX Spot orders."
+}
