@@ -190,3 +190,68 @@
 }
 #traderOkxTicket [data-od-field="sellNet"]{overflow-wrap:anywhere;font-size:clamp(12px,1vw,16px);line-height:1.5}
 @media(max-width:540px){#traderOkxTicket .erith-od-verdict{margin:0 10px 10px;padding:10px 12px}}
+
+
+/* Golden Ticket · diagnostics à deux niveaux.
+   Tout le texte PAPER et les preuves restent présents, mais les détails se
+   déplient volontairement. Aucune modification du moteur de décision. */
+#traderOkxTicket .erith-od-guard,
+#traderOkxTicket .erith-od-verdict {transition:border-color .12s ease;}
+#traderOkxTicket .erith-od-guard>summary,
+#traderOkxTicket .erith-od-verdict>summary {
+  cursor:pointer;
+  display:list-item;
+  list-style:disclosure-closed inside;
+  outline-offset:3px;
+}
+#traderOkxTicket .erith-od-guard[open]>summary,
+#traderOkxTicket .erith-od-verdict[open]>summary {
+  list-style:disclosure-open inside;
+}
+#traderOkxTicket .erith-od-guard>summary::marker,
+#traderOkxTicket .erith-od-verdict>summary::marker {color:#ecc886;font-size:11px;}
+#traderOkxTicket .erith-od-guard>summary>strong {
+  color:#e8d7a9;
+  font-size:13px;
+  font-weight:800;
+  line-height:1.5;
+  display:inline;
+}
+#traderOkxTicket .erith-od-guard[data-level="warning"]>summary>strong{color:#ffd08c;}
+#traderOkxTicket .erith-od-guard[data-level="neutral"]>summary>strong{color:#aae5cf;}
+#traderOkxTicket .erith-od-guard>p {
+  border-top:1px solid #d5a66f3b;
+  padding-top:8px;
+  margin:9px 0 0;
+}
+#traderOkxTicket .erith-od-verdict>summary>strong {
+  color:#f4dfb4;
+  font-size:14px;
+  font-weight:850;
+  letter-spacing:.045em;
+  line-height:1.5;
+  display:inline;
+}
+#traderOkxTicket .erith-od-verdict>summary>small {
+  display:block;
+  color:#f0d5a6;
+  font-size:12px;
+  font-weight:650;
+  line-height:1.6;
+  margin:4px 0 0 16px;
+  overflow-wrap:anywhere;
+}
+#traderOkxTicket .erith-od-verdict>p:first-of-type{
+  border-top:1px solid #d6b77a66;
+  margin-top:10px;padding-top:10px;
+}
+#traderOkxTicket .erith-od-guard>summary:focus-visible,
+#traderOkxTicket .erith-od-verdict>summary:focus-visible{
+  outline:2px solid #ffe1a0;
+  outline-offset:3px;
+  border-radius:3px;
+}
+@media(prefers-reduced-motion:reduce){
+ #traderOkxTicket .erith-od-guard,
+ #traderOkxTicket .erith-od-verdict {transition:none}
+}
