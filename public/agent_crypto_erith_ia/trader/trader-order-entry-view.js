@@ -37,17 +37,17 @@ function guard(kind){
  n.append(title,detail);return n;
 }
 // Reading-only decimal comparison: do not round or change the PAPER engine.
-const SCALE=10n**12n;
+const SCALE=10n**24n;
 function scaled(v){
  const s=String(v??"").trim().replace(",",".");
- if(!/^\d+(?:\.\d{1,12})?$/.test(s))return null;
+ if(!/^\d+(?:\.\d{1,24})?$/.test(s))return null;
  const [whole,frac=""]=s.split(".");
- return BigInt(whole)*SCALE+BigInt(frac.padEnd(12,"0"));
+ return BigInt(whole)*SCALE+BigInt(frac.padEnd(24,"0"));
 }
 function shortfall(required,available){
  const a=scaled(required),b=scaled(available);
  if(a===null||b===null||a<=b)return null;
- const step=10n**6n; // display rounded UP to six USDC decimals
+ const step=SCALE/1000000n; // display rounded UP to six USDC decimals
  const n=(a-b+step-1n)/step;
  const major=n/1000000n,minor=String(n%1000000n).padStart(6,"0").replace(/0+$/,"");
  return major+(minor?","+minor:"");
@@ -62,6 +62,88 @@ function setGuard(kind,title,detail,level){
  if(h)h.textContent=title;
  if(p)p.textContent=detail;
 }
+
+// Display-only scenario math. The PAPER core owns exchange rules and prices.
+function fmtUsd(n){
+ if(n===null||n<0n)return null;
+ const step=SCALE/1000000n,q=(n+step-1n)/step;
+ const fraction=String(q%1000000n).padStart(6,"0").replace(/0+$/,"");
+ return String(q/1000000n)+(fraction?"."+fraction:"");
+}
+function required(ticket,review,preview){
+ const mode=review?.fee_mode_verified?review.fee_buy_currency:null;
+ if(mode==="USDC"){
+  const min=scaled(ticket.native_min_quantity),ask=scaled(ticket.best_ask_quote);
+  const percent=scaled(preview?.assumed_fee_pct??(
+   review?.fees_verified===true&&review.fee_taker_pct!==null?
+    String(Math.max(Number(review.fee_taker_pct),Number(review.fee_maker_pct||"0"))):""));
+  if(min===null||ask===null||percent===null||percent>2n*SCALE)return null;
+  const amount=min*ask/SCALE,rate=percent/100n;
+  const fee=(amount*rate+SCALE-1n)/SCALE;
+  return {gross:min,cost:amount+fee,qty:ticket.native_min_quantity,
+   fee:"Frais USDC estimés au taux le plus défavorable (pas un fill)."};
+ }
+ const gross=scaled(ticket.minimum_gross_buy_to_resell_with_assumed_base_fee);
+ const cost=scaled(ticket.minimum_gross_buy_cost_at_ask_with_assumed_base_fee);
+ if(gross===null||cost===null)return null;
+ return {gross,cost,qty:ticket.minimum_gross_buy_to_resell_with_assumed_base_fee,
+  fee:mode==="CT"?"Hypothèse frais en CT à 0,10 %.":
+    "Hypothèse frais en CT à 0,10 % (devise réelle non confirmée)."};
+}
+function verdict(title,message,budget,level){
+ if(!node)return;
+ const section=node.querySelector("[data-od-verdict]");
+ if(!section)return;
+ section.dataset.level=level;
+ for(const [field,value] of [["title",title],["detail",message],["budget",budget]]){
+  const el=node.querySelector("[data-od-verdict-"+field+"]");
+  if(el)el.textContent=value;
+ }
+}
+function assessTicket(ticket,review,preview,context,validBook){
+ const min=scaled(ticket.native_min_quantity),buy=scaled(preview?.buy_quantity??ticket.gross_buy_quantity);
+ if(min===null||min<=0n||buy===null){
+  verdict("FAISABILITÉ NON ÉVALUABLE","Règles ou quantité manquantes. Aucun ordre.",
+    "Budget nécessaire : non évaluable.","pending");return;
+ }
+ const need=required(ticket,review,preview),sell=scaled(preview?.maximum_sellable_base);
+ const account=review?.account_verified===true?scaled(review.available_trading_quote):null;
+ const paper=scaled(ticket.study_budget_quote);
+ const provedCap=review?.spot_gates?.verified===true&&context?.order_gates_verified===true;
+ const cap=provedCap?scaled(context?.order_gates?.maxBuy):null;
+ const blockers=[];
+ if(buy<min)blockers.push("achat sous minSz");
+ if(preview?.meets_native_exit_minimum===false||(sell!==null&&sell<min))
+  blockers.push("revente sous minSz après frais");
+ if(need&&paper!==null&&paper<need.cost)blockers.push("budget fictif insuffisant");
+ if(need&&account!==null&&account<need.cost)blockers.push("solde Trading insuffisant");
+ if(need&&cap!==null&&cap<need.gross)blockers.push("maxBuy OKX inférieur au seuil requis");
+ const uncertain=!validBook||ticket.native_rules_verified!==true||
+  !provedCap||review?.fee_mode_verified!==true||
+  preview?.limit_proof_verified!==true||preview?.meets_native_exit_minimum!==true;
+ const status=blockers.length?"SCÉNARIO NON ADMISSIBLE EN L'ÉTAT":
+  uncertain?"FAISABILITÉ NON CERTIFIÉE":"SEUILS PAPER ATTEINTS · TRADE TOUJOURS VERROUILLÉ";
+ let budgetLine="Budget pour une revente au minimum : impossible à chiffrer avec ces preuves.";
+ if(need){
+  const amount=fmtUsd(need.cost);
+  const gap=paper!==null?shortfall(amount,ticket.study_budget_quote):null;
+  const accountGap=account!==null?shortfall(amount,review.available_trading_quote):null;
+  budgetLine="Seuil indicatif : "+need.qty+" CT bruts, env. "+amount+
+    " USDC au ask daté. "+need.fee+" "+
+    (gap?"Écart budget PAPER : "+gap+" USDC. ":"")+
+    (accountGap?"Écart solde Trading : "+accountGap+" USDC. ":"")+
+    (cap!==null&&cap<need.gross?
+      "Plafond maxBuy relevé ("+context.order_gates.maxBuy+
+      " CT) inférieur au seuil : nouveau relevé nécessaire après toute évolution du compte. ":
+      cap===null?"Plafond maxBuy non confirmé pour ce seuil. ":"")+
+    "Funding distinct de Trading, aucun transfert.";
+ }
+ verdict(status,(blockers.length?"Blocages : "+blockers.join(" ; ")+". ":
+  "Seuils de quantité à étudier. ")+
+  "Prix, frais et restrictions ne sont pas une garantie d'exécution. Aucun ordre réel.",
+  budgetLine,blockers.length?"warning":"pending");
+}
+
 function updateGuards(ticket,review,preview,context){
  const min=scaled(ticket?.native_min_quantity);
  const gross=scaled(preview?.buy_quantity??ticket?.gross_buy_quantity);
@@ -156,7 +238,7 @@ function mount({quoteLabel,budgetLabel,exitLabel,compute}={}){
  buyValues.append(field("buyPrice","Prix ask CT/USDC"),field("buyQty","Quantité projetée CT"),
    field("buyCost","Coût estimé USDC"),field("buyFee","Frais d'achat estimés"));
  const sellValues=el("div","erith-od-values");
- sellValues.append(field("sellQty","CT revendables estimés"),field("sellNet","Produit net hypothétique"),
+ sellValues.append(field("sellQty","CT revendables estimés"),field("sellNet","Valorisation théorique de vente"),
    field("sellFee","Frais de vente estimés"),field("sellDust","Résidu CT"));
  buy.append(quoteLabel,budgetLabel,buyValues,guard("buy"));
  compute.classList.add("erith-od-cta");
@@ -166,6 +248,15 @@ function mount({quoteLabel,budgetLabel,exitLabel,compute}={}){
    el("div","erith-od-inactive","Envoi d'ordre désactivé · autorisation Trade absente"),
    el("p","erith-od-note","Le prix de vente est une cible saisie, pas un prix garanti ni une instruction d'ordre."));
  sides.append(buy,sell);
+ const check=el("section","erith-od-verdict");check.dataset.odVerdict="";
+ check.dataset.level="pending";check.setAttribute("role","status");
+ check.setAttribute("aria-live","polite");
+ for(const [tag,field,initial] of [
+  ["strong","title","FAISABILITÉ À VÉRIFIER"],
+  ["p","detail","Aucun ordre avant vérification du scénario."],
+  ["p","budget","Budget nécessaire : en attente."]
+ ]){const item=el(tag,field==="budget"?"erith-od-budget":"",initial);
+  item.dataset["odVerdict"+field[0].toUpperCase()+field.slice(1)]="";check.append(item);}
  const band=el("div","erith-od-strip");
  band.append(strip("bid","Meilleur bid CT/USDC"),strip("ask","Meilleur ask CT/USDC"),
    strip("buyAvailable","USDC disponible Trading"),strip("sellAvailable","CT disponible à la vente"));
@@ -201,7 +292,7 @@ function mount({quoteLabel,budgetLabel,exitLabel,compute}={}){
  }
  const recto=face("recto","Recto du Ticket d'Or : achat, vente et cotations");
  const verso=face("verso","Verso du Ticket d'Or : preuves OKX et journal PAPER");
- recto.inner.append(head,sides,band);
+ recto.inner.append(head,sides,check,band);
  const hinge=el("div","erith-gt-hinge","✦");
  hinge.setAttribute("aria-hidden","true");
  const backTitle=el("header","erith-gt-back-title");
@@ -234,6 +325,9 @@ function reset(){
  set("pair","CT/USDC · LIMIT","odProof");
  set("fresh","Vérification nécessaire","odProof");
  set("checktime","En attente","odProof");
+ verdict("FAISABILITÉ À VÉRIFIER",
+   "La vérification précédente est invalidée : aucun ordre.",
+   "Budget indicatif : données en attente.","pending");
  setGuard("buy","Contrôle de quantité en attente",
    "Vérifier de nouveau : les anciennes projections ne sont plus valides.","pending");
  setGuard("sell","Contrôle de revente en attente",
@@ -260,7 +354,14 @@ function update({ticket,context,review,preview,bookDiagnostic,checkedAt}={}){
      feeCurrency==="CT"?str(preview.estimated_buy_fee_base)+" CT":
      "Hypothèse · devise inconnue"):"Non évalués");
  set("sellQty",hasPreview?str(preview.maximum_sellable_base)+" CT":"Non évalué");
- set("sellNet",hasPreview?str(preview.hypothetical_sale_net_quote)+" USDC":"Non évalué");
+ const exitBlocked=hasPreview&&(
+   preview.meets_native_exit_minimum===false||
+   (scaled(preview.maximum_sellable_base)!==null&&scaled(ticket.native_min_quantity)!==null&&
+    scaled(preview.maximum_sellable_base)<scaled(ticket.native_min_quantity)));
+ set("sellNet",hasPreview?
+   (exitBlocked?"NON RÉALISABLE · "+str(preview.hypothetical_sale_net_quote)+
+      " USDC mathématiques":str(preview.hypothetical_sale_net_quote)+
+      " USDC conditionnels"):"Non évalué");
  set("sellFee",hasPreview?str(preview.hypothetical_sale_fee_quote)+" USDC":"Non évalués");
  set("sellDust",hasPreview?str(preview.residual_dust_base)+" CT":"Non évalué");
  set("bid",str(ticket.best_bid_quote)+" USDC");
@@ -286,6 +387,7 @@ function update({ticket,context,review,preview,bookDiagnostic,checkedAt}={}){
    "Compte non confirmé","odProof");
  set("orders","Aucun ordre possible · Trade désactivé","odProof");
  updateGuards(ticket,review,hasPreview?preview:null,context);
+ assessTicket(ticket,review,hasPreview?preview:null,context,validBook);
 }
 const descriptions={
  PAPER_PREPARE:"Préparation PAPER",PAPER_CONFIRM:"Soumission simulée",
