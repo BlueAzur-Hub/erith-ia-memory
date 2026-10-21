@@ -58,6 +58,18 @@ const view=fs.readFileSync(path.join(__dirname,'strategy-comparator.js'),'utf8')
 const mirror=fs.readFileSync(path.join(__dirname,'trader-runtime-mirror.js'),'utf8');
 assert(mirror.includes('add("traderStrategyComparatorScript","strategy-comparator.js")'));
 assert(view.includes('host.insertAdjacentElement("afterend",node)'));
+assert(view.includes('mountCapitalPulse(node)'));
+assert(view.includes('comparator.querySelector(".sc-body")'));
+assert(view.includes('body.insertBefore(pulse,body.firstChild)'));
+assert(view.includes('data-capital-compact'));
+assert(view.includes('SEVEN AUTO · archive '));
+assert(!view.includes('host.insertAdjacentElement("afterend",pulse)'),
+  'Seven Auto must never become an orphan after the Paper Laboratory');
+assert(!view.includes('mountCapitalPulse(host)'),
+  'The auto status must belong to the comparator, not its sibling');
+assert.equal((view.match(/id="sevenCapitalPulse"/g)||[]).length,1,
+  'One existing automatic-status owner');
+
 assert(view.includes('if(!node?.open||active)return'));
 assert(view.includes('credentials:"omit"'));
 assert(view.includes('new AbortController()'));

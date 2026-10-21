@@ -288,14 +288,23 @@ async function load(force=false){
     if(active===controller){active=null;loading=false;}
   }
 }
-// A single small public-status fetch; no timer, no extra market engine, no Bridge.
-function mountCapitalPulse(host){
+// The automatic journal belongs INSIDE the existing PAPER comparator. No
+// orphan sibling after #traderPaperLab and no second market/network owner.
+function mountCapitalPulse(comparator){
   if(document.getElementById("sevenCapitalPulse"))return;
+  const body=comparator.querySelector(".sc-body");
+  if(!body)return;
+  const compact=comparator.querySelector("[data-capital-compact]");
   const pulse=document.createElement("aside");pulse.id="sevenCapitalPulse";
   pulse.setAttribute("role","status");
-  pulse.textContent="SEVEN AUTO · Budget 10 USDC · réserve 0,94 USDC · recherche PAPER quotidienne…";
-  pulse.style.cssText="margin:12px 0;padding:12px 14px;border:1px solid #456b80;border-radius:10px;background:#0a2632;color:#d5f1ef;font:13px/1.5 system-ui";
-  host.insertAdjacentElement("afterend",pulse);
+  pulse.style.cssText="margin:0 0 14px;padding:12px 14px;border:1px solid #456b80;border-radius:10px;background:#0a2632;color:#d5f1ef;font:13px/1.5 system-ui";
+  body.insertBefore(pulse,body.firstChild);
+  const write=(detail,short)=>{
+    pulse.textContent=detail;
+    if(compact)compact.textContent=short;
+  };
+  write("SEVEN AUTO · Budget 10 USDC · réserve 0,94 USDC · recherche PAPER quotidienne…",
+    "SEVEN AUTO · recherche PAPER quotidienne · aucun ordre");
   const c=new AbortController();
   const stop=setTimeout(()=>c.abort(),10000);
   fetch(new URL(CAPITAL_REPORT,document.baseURI),{
@@ -342,13 +351,16 @@ function mountCapitalPulse(host){
           " présélection(s) · identité/frais/ordres NON certifiés";
       }
     }catch(_){ /* Optional public report; retain the proven Radar status. */ }
-    pulse.textContent="SEVEN AUTO · 10 USDC à étudier + 0,94 USDC réservés · "+
+    write("SEVEN AUTO · 10 USDC à étudier + 0,94 USDC réservés · "+
       "objectifs 12 → 15 → 17 · dernière archive "+(data.latest_archive_date_utc||"absente")+
       " · "+data.observations.length+" observation(s) suivie(s) · "+
-      spot+" · 0 ordre réel.";
+      spot+" · 0 ordre réel.",
+      "SEVEN AUTO · archive "+(data.latest_archive_date_utc||"absente")+
+      " · "+data.observations.length+" observation(s) · 0 ordre");
   }).catch(()=>{
-    pulse.textContent="SEVEN AUTO · 10 USDC + réserve 0,94 USDC · "+
-      "journal quotidien indisponible ou non encore publié · aucun ordre réel.";
+    write("SEVEN AUTO · 10 USDC + réserve 0,94 USDC · "+
+      "journal quotidien indisponible ou non encore publié · aucun ordre réel.",
+      "SEVEN AUTO · journal indisponible · 0 ordre réel");
   }).finally(()=>clearTimeout(stop));
 }
 function mount(){
@@ -360,6 +372,7 @@ function mount(){
     style.textContent=[
       "#traderStrategyComparator{grid-column:1/-1;display:block;margin:12px 0 28px;background:#0a1e2c;color:#e5f6fa;border:1px solid #456b80;border-radius:12px;font:13px/1.5 system-ui,sans-serif;overflow:hidden}",
       "#traderStrategyComparator>summary{padding:14px;cursor:pointer;font-weight:750;color:#f0d79e;background:#11283b}",
+      "#traderStrategyComparator>summary [data-capital-compact]{display:block;color:#b7deea;font-weight:500;font-size:12px;line-height:1.45;margin:4px 0 0 14px}",
       "#traderStrategyComparator .sc-body{padding:14px}",
       "#traderStrategyComparator .sc-controls{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}",
       "#traderStrategyComparator label{display:grid;gap:5px;font-size:12px}",
@@ -374,7 +387,7 @@ function mount(){
   }
   const node=document.createElement("details");node.id=ID;
   node.innerHTML=[
-    '<summary>SEVEN HEAVEN · Comparateur de stratégies PAPER · archives et réserve USDC</summary>',
+    '<summary>SEVEN HEAVEN · Comparateur de stratégies PAPER · archives et réserve USDC<span data-capital-compact>SEVEN AUTO · recherche PAPER quotidienne · aucun ordre</span></summary>',
     '<div class="sc-body">',
     '<p>Étude documentaire, pas un signal. La réserve fictive est en USDC ; les expériences historiques du Radar 20 sont en USDT Binance. Aucune parité ou rentabilité n’est certifiée entre les deux.</p>',
     '<div class="sc-controls">',
@@ -401,7 +414,7 @@ function mount(){
     '</div>'
   ].join("");
   host.insertAdjacentElement("afterend",node);
-  mountCapitalPulse(host);
+  mountCapitalPulse(node);
   node.addEventListener("toggle",()=>{
     if(!node.open){
       ++benchmarkToken;
