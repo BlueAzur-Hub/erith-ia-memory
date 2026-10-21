@@ -9,6 +9,9 @@ on:
       - "public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"
       - "public/agent_crypto_erith_ia/administrator/assets/crypto/new-listings/axis-robotics.svg"
       - "public/agent_crypto_erith_ia/administrator/index.html"
+      - "public/agent_crypto_erith_ia/trader/axis-robotics-case-study.html"
+      - "public/agent_crypto_erith_ia/laboratoire/crypto-knowledge.html"
+      - "public/agent_crypto_erith_ia/tools/test_axis_case_study.cjs"
 permissions:
   contents: read
 jobs:
@@ -26,3 +29,4 @@ jobs:
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
           node public/agent_crypto_erith_ia/tools/test_axis_native_identity.cjs
+          node public/agent_crypto_erith_ia/tools/test_axis_case_study.cjs
