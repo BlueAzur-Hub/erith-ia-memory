@@ -127,16 +127,15 @@ function change(){
  if(choice.conflict||choice.pending){
   panel.hidden=false;
   if(quick){quick.hidden=false;quick.textContent='IA · Seven · Sources';}
-  // For a conflict, show ONLY a warning, never another asset's private data.
-  if(choice.conflict){
-    panel.hidden=false;heading.textContent='IA · Sources en attente';
-    caption.textContent='Sélection Market et bougies différentes';
-    cards.replaceChildren();help.replaceChildren();
-  }
+  // Missing or contradictory evidence must never leave a previous asset on screen.
+  heading.textContent='IA · Sources en attente';
+  caption.textContent='Identité Market, exchange et bougies à vérifier';
+  cards.replaceChildren();help.replaceChildren();
   key='';coin=null;selection=null;epoch++;resetReading();
-  if(choice.conflict)
-    state.textContent='Conflit : Market '+choice.c?.symbol+
-      ' · graphique '+choice.graphBase+'. Aucune analyse ou position n’est mélangée.';
+  state.textContent=choice.conflict?
+    'Conflit : Market '+choice.c?.symbol+' · graphique '+
+      choice.graphBase+'. Aucune analyse ou position n’est mélangée.':
+    'Actif non qualifié ; aucun dossier ou montant précédent n’est conservé.';
   publicButton.disabled=true;privateButton.disabled=true;
   return;
  }
