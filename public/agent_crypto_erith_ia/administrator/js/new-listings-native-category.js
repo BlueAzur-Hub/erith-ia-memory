@@ -891,7 +891,7 @@
     const decision=document.getElementById("detailCompactDecision");if(decision)decision.textContent="Observer";
     const change=document.getElementById("detailCompactChange");if(change)change.textContent=pct(coin.change24h);
     const why=document.getElementById("assetDetailWhy");if(why)why.innerHTML=axis?
-      '<strong>AXIS · recherche uniquement :</strong> listing Bitget Spot AXIS/USDT du 21 octobre 2026 (13 h UTC). Identité Base documentée. Un dérivé OKX AXISUSD ne démontre aucune paire Spot AXIS/USDC. Frais, liquidité, minimum et revente de 10 USDC non certifiés. Forte volatilité initiale : ne pas interpréter le +24 h comme un rendement réalisable. <a href="../data/crypto/research/axis-robotics.json" target="_blank" rel="noopener noreferrer">Dossier de preuves AXIS (JSON IA) ↗</a>':
+      '<strong>AXIS · recherche uniquement :</strong> listing Bitget Spot AXIS/USDT du 21 octobre 2026 (13 h UTC). Identité Base documentée. Un dérivé OKX AXISUSD ne démontre aucune paire Spot AXIS/USDC. Frais, liquidité, minimum et revente de 10 USDC non certifiés. Forte volatilité initiale : ne pas interpréter le +24 h comme un rendement réalisable. <a href="../trader/axis-robotics-case-study.html" target="_blank" rel="noopener noreferrer">Cas d’école AXIS · rapport Seven ↗</a> · <a href="../data/crypto/research/axis-robotics.json" target="_blank" rel="noopener noreferrer">Dossier machine AXIS (JSON) ↗</a>':
       `<strong>Lecture :</strong> ${esc(spec.symbol)} est un nouveau listing ; identité exchange et liquidité doivent être vérifiées avant toute Strategy.`;
   }
 
