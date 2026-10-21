@@ -1341,6 +1341,14 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
    verso.querySelector("[data-od-proof=\"pair\"]"),"back must contain OKX proofs");
  assert.ok(verso.querySelector("[data-od-events]"),"back must contain PAPER journal");
  assert.ok(node.querySelector(".erith-golden-back-reports"),"back owns the report slot");
+ const compactBuy=node.querySelector('[data-od-guard="buy"]');
+ const compactSell=node.querySelector('[data-od-guard="sell"]');
+ const compactVerdict=node.querySelector("[data-od-verdict]");
+ for(const part of [compactBuy,compactSell,compactVerdict]){
+  assert.equal(part.tag,"details","native details retains accessible controls");
+  assert.equal(part.open,false,"dense diagnostics initially collapsed");
+  assert.equal(part.children[0].tag,"summary","summary is keyboard accessible");
+ }
  assert.match(fields.compute.textContent,/aucun ordre/);
  const text=key=>node.querySelector('[data-od-field="'+key+'"]')?.textContent;
  const proof=key=>node.querySelector('[data-od-proof="'+key+'"]')?.textContent;
@@ -1408,6 +1416,14 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
  assert.match(verdictDetail(),/revente sous minSz/);
  assert.match(required(),/10.02 CT bruts/);
  assert.match(required(),/3.390768 USDC/);
+ const quick=()=>node.querySelector("[data-od-verdict-quick]")?.textContent||"";
+ assert.match(quick(),/Achat 9.45 \/ 10 CT/);
+ assert.match(quick(),/Seuil ≈ 3.390768 USDC \(estimé\)/);
+ assert.equal(compactVerdict.open,false,"key summary must remain visible without expanded text");
+ // Expanded details retain owner-provided values across successive updates.
+ compactBuy.open=true;compactVerdict.open=true;
+ assert.match(guard("buy"),/9.45 CT projetés/);
+ assert.match(required(),/Écart budget PAPER : 0,190768/);
  assert.match(required(),/0,190768 USDC/);
  assert.match(text("sellNet"),/NON RÉALISABLE/);
  assert.equal(required().includes("1.18668749"),false,
@@ -1431,6 +1447,7 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
      hypothetical_sale_net_quote:"3.623373"}});
  assert.match(verdictDetail(),/maxBuy OKX inférieur au seuil requis/);
  assert.match(required(),/3.440868 USDC/);
+ assert.equal(compactVerdict.open,true,"a refreshed estimate must not close user details");
  assert.match(required(),/maxBuy relevé \(9.3174001748761294 CT\)/);
  assert.match(text("sellNet"),/NON RÉALISABLE/);
  // A verified USDC debit mode requires the quote fee, not 10.02 CT.
@@ -1470,6 +1487,7 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
  assert.equal(text("buyQty"),"—");
  assert.match(proof("fresh"),/Vérification nécessaire/);
  assert.ok(css.includes("@media(max-width:880px)"));
+ assert.ok(css.includes(".erith-od-guard>summary:focus-visible"));
  assert.ok(mirror.includes("trader-order-entry.css"));
  assert.ok(mirror.includes("trader-order-entry-view.js"));
  assert.ok(owner.includes("AgentCryptoTraderOrderEntryView?.update"));
