@@ -99,7 +99,11 @@
       "sale_blog": "https://axisrobotics.ai/blogs/blog/introducing-the-axis-community-sale-program",
       "current_public_unlock_terms": "25 % at TGE plus 5–25 % bonus at TGE, 75 % after a 6-month cliff, linear vesting over following 6 months",
       "changed_terms_note_fr": "L'article du 15/09 évoquait 10 % au TGE ; le portail et l'avertissement investisseurs mis à jour le 29/09 indiquent 25 % plus un bonus, puis vesting. Privilégier les conditions datées du portail pour cette vente, sous réserve de l'allocation effective.",
-      "legal": "https://sale.axisrobotics.ai/legal/investor-disclaimer/"
+      "legal": "https://sale.axisrobotics.ai/legal/investor-disclaimer/",
+      "final_public_pro_rata_approx": 0.4203,
+      "final_public_pro_rata_source": "https://sale.axisrobotics.ai/",
+      "final_public_pro_rata_precision_note_fr": "La FAQ mentionne 42,03 % de prorata final ; allocation effective soumise à acceptation ou rejet individuels et à l'identité vérifiée. La vente a fermé le 28 septembre 2026.",
+      "bonus_rate_function": "5% + 20%/(1+(engagement_USDC/2472)^2), basé sur engagement initial ; appliqué à l'allocation finale, bonus intégralement déverrouillé au TGE."
     },
     "observed_market": {
       "operator_screenshot_not_live": true,
@@ -182,6 +186,39 @@
     "onchain_security_audit_independently_verified": false,
     "account_access": false,
     "orders_enabled": false,
-    "profit_usdc": null
+    "profit_usdc": null,
+    "paper_spot_scenarios": {
+      "schema": "erith.case.spot.paper.v1",
+      "status": "PAPER_ONLY",
+      "model": "trader/spot-case-scenario-model.js",
+      "budgets_usdc": [
+        10,
+        100
+      ],
+      "entries_usd": [
+        0.11,
+        0.15
+      ],
+      "exits_usd": [
+        0.25,
+        0.4,
+        0.45
+      ],
+      "hypothetical_buy_fee_percent": 0.1,
+      "hypothetical_sell_fee_percent": 0.1,
+      "illustrative_french_pfu_percent": 31.4,
+      "illustrative_french_pfu_source": "https://www.impots.gouv.fr/particulier/questions/comment-declarer-les-plus-ou-moins-values-sur-cessions-dactifs-numeriques",
+      "tax_note_fr": "Démonstration facultative sur gain net positif, pas un calcul fiscal du compte : échange crypto/crypto sans soulte en principe en sursis, vente fiat déterminée sur portefeuille global, seuil annuel de 305 EUR de cessions totales.",
+      "entries_historically_executable_verified": false,
+      "exits_historically_executable_verified": false,
+      "spot_symbol_contract_identity_for_okx_verified": false,
+      "spread_and_slippage_verified": false,
+      "minimum_order_lot_verified": false,
+      "sufficient_wallet_balance_verified": false,
+      "real_orders_enabled": false,
+      "real_orders_submitted": 0,
+      "actual_tax_due_usdc": null,
+      "real_profit_usdc": null
+    }
   }
 }
