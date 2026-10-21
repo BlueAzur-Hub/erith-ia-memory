@@ -263,32 +263,53 @@ function verifiedCtSpotRules(source,pair,now){
     tickSz:r.tickSz,at:source.observed_at_utc});
  }catch(_){return null;}
 }
-function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(),liveBook=null,instrumentEvidence=null}={}){
- try{
-  if(!Number.isFinite(now))return ticketBlocked("Horloge non vérifiable.");
-  const asset=String(selected?.asset||"");
-  // CT is an OKX external chart (CT-USDT), not a CoinGecko CT-USD
-  // instrument. Never use its converted chart price for a native USDC ticket.
-  const canonical=CANONICAL_COINS[asset]&&
+
+/* Shared PAPER-only instrument selection contract.
+ * The chart is a source of identity, NEVER the price/rules of the Spot order.
+ * Proves symbol/source consistency, not a tradable exchange pair.
+ * Exchange eligibility is checked independently against the exact native
+ * archived Spot market, and later its dated account-level evidence. */
+function qualifyPaperSpotSelection({selected,pair}={}){
+ const reject=(code,reason)=>Object.freeze({ok:false,status:code,reason,
+   executable:false,orders_enabled:false,exchange_pair_verified:false});
+ const asset=String(selected?.asset||"");
+ if(!/^[A-Z][A-Z0-9]{0,19}$/.test(asset))
+  return reject("IDENTITE_ABSENTE","Symbole d'actif absent ou non canonique.");
+ const normalizedChart=String(selected?.instrument||"").toUpperCase().replace("/","-");
+ const canonical=Object.prototype.hasOwnProperty.call(CANONICAL_COINS,asset)&&
     selected?.coinId===CANONICAL_COINS[asset]&&
     selected?.currency==="USD"&&selected?.provider==="coingecko"&&
     selected?.instrument===asset+"-USD";
-  // The canonical CT owner publishes CT/USDT with a slash; the PAPER
-  // laboratory already normalizes that notation to CT-USDT. Apply the
-  // identical normalization here, without interpreting CT/USDT chart quotes
-  // as a CT/USDC order price. The price and lot come ONLY from the exact
-  // dated CT-USDC public exchange instrument below.
-  const ctChartInstrument=String(selected?.instrument||"").toUpperCase().replace("/","-");
-  const verifiedCt=asset==="CT"&&selected?.provider==="okx"&&
-    ctChartInstrument==="CT-USDT"&&selected?.currency==="USD"&&
+ const ctExternal=asset==="CT"&&selected?.provider==="okx"&&
+    normalizedChart==="CT-USDT"&&selected?.currency==="USD"&&
     /OKX.*CT[/-]USDT/i.test(String(selected?.source||""))&&
     /USDT[/-]USD.*CoinGecko/i.test(String(selected?.source||""));
-  if(!canonical&&!verifiedCt)
-    return ticketBlocked("Le graphique n'établit pas l'identité de cet actif. "+
-     "CT exige un graphique OKX CT-USDT explicite et son propre carnet CT-USDC. "+
-     "Aucun cours converti n'est utilisé pour un ordre.");
-  if(typeof pair!=="string"||!["USDC","USDT","EUR"].some(q=>pair===asset+"-"+q))
-    return ticketBlocked("Paire Spot incohérente avec l'actif sélectionné.");
+ if(!canonical&&!ctExternal)
+   return reject("GRAPHIQUE_NON_QUALIFIE",
+     "Le graphique ne certifie pas l'identité de l'actif. "+
+     "CT exige une source explicite OKX CT-USDT distincte de la paire Spot CT-USDC.");
+ const quotes=["USDC","USDT","EUR"];
+ if(typeof pair!=="string"||!quotes.some(q=>pair===asset+"-"+q))
+   return reject("PAIRE_INCOHERENTE",
+     "La paire Spot demandée ne correspond pas à l'actif et à la cotation explicite.");
+ const quote=pair.slice(asset.length+1);
+ return Object.freeze({ok:true,status:"SELECTION_PAPER_COHERENTE",
+   asset,coin_id:selected.coinId||null,pair,base:asset,quote,
+   chart_instrument:selected.instrument,chart_provider:selected.provider,
+   chart_currency:selected.currency,
+   exchange:"okx",native_spot_market_verified:false,
+   account_limits_verified:false,orders_enabled:false,executable:false,
+   requires_exact_native_spot_book:true,requires_exact_native_spot_rules:true,
+   requires_account_pair_specific_preflight:true});
+}
+function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(),liveBook=null,instrumentEvidence=null}={}){
+ try{
+  if(!Number.isFinite(now))return ticketBlocked("Horloge non vérifiable.");
+  const choice=qualifyPaperSpotSelection({selected,pair});
+  if(!choice.ok)return ticketBlocked(choice.reason);
+  const asset=choice.asset;
+  // From here only the exact native Spot archive may establish a pair.
+  // No chart quote (USD/USDT conversion) ever replaces its order book.
   if(archive?.schema!=="erith.radar.okx-hourly-spot.v1"||
      archive?.orders_enabled!==false||archive?.real_orders!==0||
      archive?.paper_fills!==0||!Array.isArray(archive.hours)||
@@ -782,5 +803,5 @@ function advancePaperLimitCycle(state,action,now=Date.now()){
   send_attempts:0,orders_enabled:false,real_orders:0,
   network:false,storage:false});
 }
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,prepareSpotTicket,verifiedCtLiveBook,diagnoseCtLiveBook,verifiedCtSpotRules,checkSpotOrderGates,reviewSpotTicketAccount,previewSpotExit,startPaperLimitCycle,advancePaperLimitCycle,PAPER_CYCLE,realOrders:false,network:false,storage:false});
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,qualifyPaperSpotSelection,prepareSpotTicket,verifiedCtLiveBook,diagnoseCtLiveBook,verifiedCtSpotRules,checkSpotOrderGates,reviewSpotTicketAccount,previewSpotExit,startPaperLimitCycle,advancePaperLimitCycle,PAPER_CYCLE,realOrders:false,network:false,storage:false});
 });
