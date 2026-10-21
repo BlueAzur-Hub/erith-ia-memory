@@ -242,3 +242,39 @@ test('receipt proof remains UNKNOWN if tiny BTC holdings do not reconcile precis
  assert.equal(result.acquisition_receipts.status,'unknown');
  assert.equal(result.private.acquisition_cost_proven,false);
 });
+
+
+test('Seven reading reuses CT remaining classifier for BTC and never assumes an order was sent',()=>{
+ const f=fixture('BTC','bitcoin');
+ f.position.trading_base='0.000230001';f.position.funding_base='0';
+ const d=createReading(f);
+ assert.equal(d.private.base_position_verified,true);
+ assert.equal(d.private.holding_status,'SIZE_FILTER_MATCHES');
+ assert.equal(d.private.sellable_size_base,'0.00023');
+ assert.equal(d.private.residual_base,'0.000000001');
+ assert.equal(d.orders_enabled,false);
+ assert.equal(d.executable,false);
+});
+test('after a verified sale, zero means EMPTY; incomplete proof remains UNKNOWN',()=>{
+ const f=fixture('ETH','ethereum');
+ f.position.trading_base='0';f.position.funding_base='0';
+ const empty=createReading(f);
+ assert.equal(empty.private.holding_status,'EMPTY');
+ assert.equal(empty.private.total_base,'0');
+ assert.equal(empty.private.sellable_size_base,null);
+ f.position.funding_base=null;
+ const unproved=createReading(f);
+ assert.equal(unproved.private.holding_status,'UNKNOWN');
+ assert.equal(unproved.private.base_position_verified,false);
+ assert.equal(unproved.private.total_base,null);
+});
+test('different pair, stale rules and missing market never manufacture a sellable size',()=>{
+ const f=fixture('ETH','ethereum');f.position.trading_base='0.004';f.position.funding_base='0';
+ f.rules.minSz='0.01';
+ assert.equal(createReading(f).private.holding_status,'DUST');
+ f.rules.instId='CT-USDC';
+ assert.equal(createReading(f).private.holding_status,'RULES_UNVERIFIED');
+ f.rules.instId='ETH-USDC';
+ f.position.pair='BTC-USDC';
+ assert.equal(createReading(f).private.holding_status,'UNKNOWN');
+});
