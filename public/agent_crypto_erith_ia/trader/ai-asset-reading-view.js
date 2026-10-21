@@ -134,6 +134,10 @@ function change(){
  if(choice.identity!==key){
    key=choice.identity;coin=choice.c;selection=choice.selection;
    epoch++;resetReading();
+ }else{
+   // A refreshed native Market quote does not change the listing identity.
+   // Its newest verified timestamp/price must still reach Seven.
+   coin=choice.c;
  }
  ctBody.hidden=true;panel.hidden=false;
  if(quick)quick.textContent='IA · '+selection.symbol;
@@ -374,7 +378,7 @@ privateButton.addEventListener('click',()=>void privateRead());
 function schedule(){queueMicrotask(change);}
 for(const event of ['agent-crypto:trader-selection-changed',
  'agent-crypto:external-asset-changed','agent-crypto:new-listing-line-ready',
- 'agent-crypto:trader-line-loaded',
+ 'agent-crypto:trader-line-loaded','agent-crypto:market-candles-loaded',
  'agent-crypto:candles-technical-levels','agent-crypto:quote-architecture-changed']){
  window.addEventListener(event,schedule,{passive:true});
 }
