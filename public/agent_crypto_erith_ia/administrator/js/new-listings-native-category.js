@@ -40,7 +40,9 @@
     MHA:Object.freeze({name:"MAGNE.AI",coingeckoId:"magic-hash"}),
     MCAT:Object.freeze({name:"MarsCat",coingeckoId:"marscat-token"}),
     PONS:Object.freeze({name:"Pons",coingeckoId:"pons"}),
-    CNPY:Object.freeze({name:"Canopy",coingeckoId:"canopy"})
+    CNPY:Object.freeze({name:"Canopy",coingeckoId:"canopy"}),
+    AXIS:Object.freeze({name:"Axis Robotics",coingeckoId:"axis-robotics",provider:"bitget",
+      providerSymbol:"AXISUSDT",pair:"AXIS/USDT",listingUtc:"2026-10-21T13:00:00Z"})
   });
 
   const state={
@@ -198,7 +200,7 @@
       const u=new URL(raw,document.baseURI);
       if(u.protocol!=="https:")return null;
       const sameOrigin=u.origin===location.origin;
-      const localLogo=sameOrigin&&/\/administrator\/assets\/crypto\/new-listings\/[a-z0-9._-]+\.png$/i.test(u.pathname);
+      const localLogo=sameOrigin&&/\/administrator\/assets\/crypto\/new-listings\/[a-z0-9._-]+\.(?:png|svg)$/i.test(u.pathname)&&!u.search&&!u.hash;
       if(localLogo)return u.href;
       const host=u.hostname.toLowerCase();
       if(host==="coingecko.com"||host.endsWith(".coingecko.com"))return u.href;
@@ -368,6 +370,15 @@
     const base=upper(row?.base),quote=upper(row?.quote),providerSymbol=upper(row?.providerSymbol);
     if(!base||!quote||!providerSymbol)return null;
     const friendly=FRIENDLY[base]||null;
+    // AXIS is a new Base token, not an alias for AXISUSD derivatives or old tickers.
+    // Match the native Bitget Spot instrument AND the documented opening day.
+    if(base==="AXIS"){
+      const launch=Date.parse(String(row?.listedAt||""));
+      if(quote!=="USDT"||providerSymbol!=="AXISUSDT"||
+         !Number.isFinite(launch)||
+         launch<Date.parse("2026-10-21T00:00:00Z")||
+         launch>=Date.parse("2026-10-22T00:00:00Z"))return null;
+    }
     const isCt=base==="CT";
     const provider=isCt?"okx":"bitget";
     const symbol=isCt?"CT-USDT":providerSymbol;
@@ -588,7 +599,8 @@
     const historicOnly=spec.historicalOnly===true;
     const statusTag=mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
     const identityTag=mature?(historicOnly?"Historique · cotation non vérifiée":"Ancien listing · source Bitget vérifiée"):(proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat");
-    const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="eager" fetchpriority="high" width="32" height="32">`:"";
+    const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="eager" fetchpriority="high" width="32" height="32">`:
+      `<span class="market-coin-identity-fallback" aria-hidden="true" style="display:inline-grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;border:1px solid #5b8b9c;background:#142e3b;color:#e6f3fd;font:700 11px system-ui">${esc(spec.symbol.slice(0,3))}</span>`;
     return `<tr class="asset-row atlas-market-external-row ${selected?"is-selected is-compared":""}"
       ${ROOT_ATTR}="${esc(spec.id)}"
       data-market-row-id403115="${esc(spec.id)}"
@@ -720,6 +732,7 @@
     const raw=positive(spec.ticker?.lastPrice??globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()?.marketTicker?.lastPrice);
     const age=ageDays(spec.listedAt);
     const metrics=result?.integrity?.metrics||{};
+    const axis=spec.symbol==="AXIS"&&spec.providerSymbol==="AXISUSDT"&&spec.provider==="bitget";
     const title=document.getElementById("selectedAssetTitle");
     if(title)title.textContent=`${spec.name} — ${spec.symbol} · NOUVEAU LISTING`;
     const grid=document.getElementById("assetDetailGrid");
@@ -729,13 +742,17 @@
         <div><b>Type</b><span>Nouveau listing${age!==null?` · ${age.toFixed(1)} j`:""}</span></div>
         <div><b>Prix ${esc(currency)}</b><span>${price!==null?esc(money(price,currency)):"—"}</span></div>
         <div><b>Prix exchange</b><span>${raw!==null?esc(raw.toLocaleString("fr-FR",{maximumFractionDigits:10}))+" "+esc(spec.quote):"—"}</span></div>
-        <div><b>Variation 24 h</b><span>${esc(pct(coin.change24h))}</span></div>
+        <div><b>Variation 24 h${age!==null&&age<1?" (premières cotations)":""}</b><span>${esc(pct(coin.change24h))}${age!==null&&age<1?" · référence de lancement, non annualisée":""}</span></div>
         <div><b>Exchange / paire</b><span>${esc(spec.providerLabel)} · ${esc(spec.pair)}</span></div>
         <div><b>Source prix</b><span>${esc(coin.usdSource||coin.source||spec.providerLabel)}</span></div>
         <div><b>Volume 24 h</b><span>${finite(currency==="USD"?coin.volume24hUsd:coin.volume24h)!==null?esc(compactMoney(currency==="USD"?coin.volume24hUsd:coin.volume24h,currency)):"—"}</span></div>
         <div><b>Market cap</b><span>Non fourni par la source listing</span></div>
         <div><b>Période graphique</b><span>${esc(Number(result?.periodDays||1)===1?"24h":`${Number(result?.periodDays||1)}j`)}</span></div>
         <div><b>Source graphique</b><span>${esc(result?.source||spec.providerLabel+" "+spec.pair)}</span></div>
+        ${axis?`<div><b>Identité vérifiée</b><span>Axis Robotics · Base · CoinGecko axis-robotics</span></div>
+        <div><b>Contrat Base</b><span>0x5bE75e3b0aFf5D1A042A5363Ae36AcB1d6d755ea</span></div>
+        <div><b>Marché distinct</b><span>Bitget AXIS/USDT Spot · ouvert 21 oct. 2026, 13 h UTC</span></div>
+        <div><b>OKX</b><span>Perpétuels / X-Perp ≠ preuve Spot AXIS/USDC</span></div>`:""}
         <div><b>Points / couverture</b><span>${esc(String(metrics.pointCount??"—"))} · ${finite(metrics.coverageHours)!==null?esc(Number(metrics.coverageHours).toFixed(1))+" h":"—"}</span></div>
         <div><b>Intégrité</b><span>${result?.integrity?.ok===true?"Validée · données exchange réelles":"À vérifier"}</span></div>`;
     }
@@ -745,7 +762,9 @@
     const priceNode=document.getElementById("detailCompactPrice");if(priceNode)priceNode.textContent=price!==null?money(price,currency):(raw!==null?`${raw} ${spec.quote}`:"—");
     const decision=document.getElementById("detailCompactDecision");if(decision)decision.textContent="Observer";
     const change=document.getElementById("detailCompactChange");if(change)change.textContent=pct(coin.change24h);
-    const why=document.getElementById("assetDetailWhy");if(why)why.innerHTML=`<strong>Lecture :</strong> ${esc(spec.symbol)} est un nouveau listing ; identité exchange et liquidité doivent être vérifiées avant toute Strategy.`;
+    const why=document.getElementById("assetDetailWhy");if(why)why.innerHTML=axis?
+      '<strong>AXIS · recherche uniquement :</strong> listing Bitget Spot AXIS/USDT du 21 octobre 2026 (13 h UTC). Identité Base documentée. Un dérivé OKX AXISUSD ne démontre aucune paire Spot AXIS/USDC. Frais, liquidité, minimum et revente de 10 USDC non certifiés. Forte volatilité initiale : ne pas interpréter le +24 h comme un rendement réalisable. <a href="../data/crypto/research/axis-robotics.json" target="_blank" rel="noopener noreferrer">Dossier de preuves AXIS (JSON IA) ↗</a>':
+      `<strong>Lecture :</strong> ${esc(spec.symbol)} est un nouveau listing ; identité exchange et liquidité doivent être vérifiées avant toute Strategy.`;
   }
 
   function beginRequest(spec){
@@ -1247,7 +1266,11 @@
       &&proof.status==="CONFIRMÉ"
       &&candidate.status==="CANDIDAT"
       &&ageBand(.5).label==="<24 h"
-      &&ageBand(5).label==="4–7 j";
+      &&ageBand(5).label==="4–7 j"
+      &&FRIENDLY.AXIS.coingeckoId==="axis-robotics"
+      &&providerSpec({base:"AXIS",quote:"USDT",providerSymbol:"AXISUSDT",listedAt:"2026-10-21T13:00:00Z"})?.coingeckoId==="axis-robotics"
+      &&providerSpec({base:"AXIS",quote:"USD",providerSymbol:"AXISUSD",listedAt:"2026-10-21T13:00:00Z"})===null
+      &&(typeof document==="undefined"||safeIdentityImage("./assets/crypto/new-listings/axis-robotics.svg")!==null);
     return Object.freeze({build:MODULE_VERSION,pass,checks:Object.freeze({
       category_not_ct_only:true,
       ct_supported:ct.providerSymbol==="CT-USDT",
@@ -1261,6 +1284,8 @@
       identity_binary_logo_assets:true,
       identity_remote_batch_emergency_only:true,
       identity_exact_id_symbol:true,
+      axis_spot_native_identity_safeguard:true,
+      axis_local_logo_asset:true,
       identity_retry_storm_removed:true,
       identity_failure_non_blocking:true,
       native_market_category:true,
