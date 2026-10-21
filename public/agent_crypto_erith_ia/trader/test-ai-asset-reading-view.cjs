@@ -77,6 +77,10 @@ function setup(){
    chart={...chart,loadedInstrument:instr||symbol+'-USDC'};
    window.fire('agent-crypto:trader-selection-changed');
   },
+  pending:()=>{
+   coin=null;listing=null;live={active:false};external={active:false};
+   window.fire('agent-crypto:trader-selection-changed');
+  },
   externalSelect:(args={})=>{
    const id=args.id||'bitget:dnausdt',symbol=args.symbol||'DNA',quote='USDT';
    coin={id:'concrete',symbol:'CT',name:'Concrete'};
@@ -185,6 +189,16 @@ test('mismatched external graph/pair never borrows account or graph from other c
  v.externalSelect({categoryPair:'CT/USDT'});
  assert.match(v.heading(),/Sources en attente/);
  assert.equal(v.statuses().length,0);
+ assert.equal(v.ct.textContent,'CT private untouched marker');
+});
+test('missing selection clears former Seven asset instead of exposing old chart or account',()=>{
+ const v=setup();
+ assert.equal(v.statuses().length,7);
+ v.pending();
+ assert.equal(v.panel.hidden,false);
+ assert.match(v.heading(),/Sources en attente/);
+ assert.equal(v.statuses().length,0);
+ assert.equal(v.byText('Lire mon compte').disabled,true);
  assert.equal(v.ct.textContent,'CT private untouched marker');
 });
 test('CT source files unchanged by renderer and account proof is opt-in only',()=>{
