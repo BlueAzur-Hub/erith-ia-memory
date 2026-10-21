@@ -28,12 +28,13 @@ class Fake {
 }
 class FakeText{constructor(value){this.textContent=value;this.parent=null;}}
 function setup(){
- const root=new Fake('div'),host=new Fake('div'),ct=new Fake('details');
+ const root=new Fake('div'),host=new Fake('div'),ct=new Fake('details'),nav=new Fake('nav');
  ct.id='aiCtPanel';ct.textContent='CT private untouched marker';ct.open=true;
- root.append(host);host.append(ct);
+ root.append(host,nav);host.append(ct);
  const elements=[root,host,ct];
  const document={baseURI:'https://example.invalid/public/agent_crypto_erith_ia/trader/trading-desk.html',
   head:new Fake('head'),createElement:tag=>new Fake(tag),
+   querySelector:sel=>sel==='#accueil .atlas-v2-nav-essential'?nav:null,
   createTextNode:value=>new FakeText(String(value)),
   getElementById:id=>id==='detailPanelBody'?host:id==='aiCtPanel'?ct:
      id==='sevenAssetReading'?host.children.find(x=>x.id===id)||null:null};
@@ -45,7 +46,7 @@ function setup(){
   change24h:1.25,usdSource:'CoinGecko',usdUpdatedAt:now};
  let chart={mode:'candles',loadedInstrument:'BTC-USDC',loadedBar:'5m',
   rows:[{o:82600,h:82700,l:82500,c:82650,v:12}]};
- let privateWait=null;
+ let privateWait=null,listing=null,live=null,external=null;
  const owner={
   ticketReadOnly:(pair)=>new Promise(resolve=>{if(!privateWait)privateWait={};
     privateWait.account={pair,resolve};}),
@@ -57,6 +58,9 @@ function setup(){
    AgentCryptoAiAssetReading:require('./ai-asset-reading-core.js'),
    AgentCryptoTraderMarket:{selected:()=>coin},
    AgentCryptoMarketMicroscope:{snapshot:()=>chart,technicalLevels:()=>null},
+    AgentCryptoNewListingsNativeCategory:{snapshot:()=>listing},
+    AgentCryptoNewListingLiveAsset:{snapshot:()=>live},
+    AtlasExternalChart:{state:()=>external},
    AgentCryptoTraderOkxAccount:owner};
  globals.globalThis=globals;
  vm.runInNewContext(code,globals,{filename:'ai-asset-reading-view.js'});
@@ -65,11 +69,25 @@ function setup(){
  const byText=(x)=>descendants(panel).find(n=>n.tagName==='BUTTON'&&n.textContent.includes(x));
  const heading=()=>descendants(panel).find(x=>x.className==='seven-asset-title')?.textContent||'';
  const statuses=()=>descendants(panel).filter(x=>x.className==='seven-asset-card').map(x=>x.textContent);
- return {panel,ct,host,window,owner,globals,byText,heading,statuses,
+ return {panel,ct,host,nav,window,owner,globals,byText,heading,statuses,
+  quick:()=>nav.children.find(x=>x.id==='aiSevenToggle'),
   select:(id,symbol,instr)=>{
+   live={active:false};listing={selectedId:null};external={active:false};
    coin={id,symbol,name:symbol,priceUsd:2443,usdSource:'CoinGecko',usdUpdatedAt:now};
    chart={...chart,loadedInstrument:instr||symbol+'-USDC'};
    window.fire('agent-crypto:trader-selection-changed');
+  },
+  externalSelect:(args={})=>{
+   const id=args.id||'bitget:dnausdt',symbol=args.symbol||'DNA',quote='USDT';
+   coin={id:'concrete',symbol:'CT',name:'Concrete'};
+   chart={...chart,loadedInstrument:args.chartPair||'DNA-USDT'};
+   listing={selectedId:id,selectedSymbol:symbol,selectedProvider:'bitget',
+     selectedProviderSymbol:'DNAUSDT',selectedPair:args.categoryPair||'DNA/USDT'};
+   live={active:true,id,base:symbol,symbol,quote,provider:'bitget',readOnly:true,
+     instrument:symbol+'-'+quote,providerSymbol:'DNAUSDT',name:'DNA',
+     marketTicker:{lastPrice:0.237531,quoteCurrency:'USDT',timestamp:now,change24h:4.63}};
+   external={active:true,coin_id:id,loading:false,error:null};
+   window.fire('agent-crypto:new-listing-line-ready');
   },settle:(account,position)=>{
    if(!privateWait)throw Error('No private pending request');
    privateWait.account.resolve(account);privateWait.position.resolve(position);privateWait=null;
@@ -141,6 +159,33 @@ test('Trader iframe actually loads the Technical Reading owner once; Administrat
  assert.match(runtime,/function start\(\)\{bind\(\);mountSevenDossier\(\);\}/);
  assert.doesNotMatch(administrator,/technical-reading-data-sync\.js|traderTechnicalReadingSyncScript/);
  assert.doesNotMatch(mirror,/localStorage\.|indexedDB\.|orders_enabled\s*=\s*true/);
+});
+test('DNA Bitget displays Seven seven-section dossier despite stale CT Market selection',()=>{
+ const v=setup();v.externalSelect();
+ assert.equal(v.panel.hidden,false);
+ assert.equal(v.panel.open,true);
+ assert.match(v.heading(),/Dossier DNA/);
+ assert.equal(v.statuses().length,7);
+ assert.match(v.statuses().join(' '),/0,237531 USDT/);
+ assert.equal(v.byText('Lire mon compte').disabled,true);
+ assert.equal(v.byText('Actualiser les sources publiques').disabled,true);
+ assert.match(v.quick().textContent,/Seven · DNA/);
+ assert.equal(v.quick().hidden,false);
+ assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ct.open,true);
+ v.select('concrete','CT','CT-USDT');
+ assert.equal(v.panel.hidden,true);assert.equal(v.quick().hidden,true);
+ assert.equal(v.ct.textContent,'CT private untouched marker');
+});
+test('mismatched external graph/pair never borrows account or graph from other crypto',()=>{
+ const v=setup();v.externalSelect({chartPair:'ETH-USDC'});
+ assert.match(v.heading(),/Sources en attente/);
+ assert.equal(v.statuses().length,0);
+ assert.equal(v.byText('Lire mon compte').disabled,true);
+ v.externalSelect({categoryPair:'CT/USDT'});
+ assert.match(v.heading(),/Sources en attente/);
+ assert.equal(v.statuses().length,0);
+ assert.equal(v.ct.textContent,'CT private untouched marker');
 });
 test('CT source files unchanged by renderer and account proof is opt-in only',()=>{
  assert.match(runtime,/traderSevenAssetCoreScript/);
