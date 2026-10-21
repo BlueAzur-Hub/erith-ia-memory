@@ -23,6 +23,10 @@
   const DISCOVERY_COOLDOWN_MS=15000;
   const IDENTITY_REGISTRY_URL="./data/new-listings-identities.json?v=40.6.546";
   const IDENTITY_REMOTE_BATCH_TIMEOUT_MS=12000;
+  // One existing CoinGecko identity batch also provides market-cap metadata;
+  // never another per-token price/identity poller.
+  const MARKET_METRICS_TTL_MS=5*60*1000;
+  const MARKET_METRICS_MAX_AGE_MS=15*60*1000;
   const CANONICAL_EXIT_SELECTOR=[
     "#btnChartSolo","#btnChartTop3","#btnChartTop5",
     "#btnChartGainers","#btnChartLosers","#btnChartVolume5",
@@ -60,8 +64,11 @@
     tickerMap:new Map(),
     identityCache:new Map(),
     identityRegistry:new Map(),
+    marketMetrics:new Map(),
+    marketMetricsBatchAt:0,
     registryStatus:{loaded:false,entries:0,applied:0,logos:0,error:null,source:"GitHub"},
     identityStatus:{attempted:0,verified:0,logos:0,failed:0,githubHits:0,batchRequests:0,batchFailures:0,rateLimited:0,mismatched:0,missing:0,lastFailure:null},
+    marketMetricsStatus:{source:"CoinGecko coins/markets",verified:0,unavailable:0,requests:0,lastSuccessAt:null,reason:null},
     radarStatus:{confirmed:0,candidates:0},
     lastDiscoveryAt:null,
     lastError:null,
@@ -247,6 +254,40 @@
     });
   }
 
+  // Market capitalization is a DIFFERENT source from Bitget Spot trade prices.
+  // Accept only an exact CoinGecko ID + symbol + dated USD snapshot, never a
+  // guessed price * supply or a Bitget-derived "market cap = 0".
+  function marketMetricsFromPayload(spec,row,now=Date.now()){
+    const id=String(spec?.coingeckoId||"").trim().toLowerCase();
+    if(!id||String(row?.id||"").trim().toLowerCase()!==id||
+       upper(row?.symbol)!==upper(spec?.symbol)||!Number.isFinite(now))return null;
+    const time=Date.parse(String(row?.last_updated||""));
+    const cap=positive(row?.market_cap);
+    if(!Number.isFinite(time)||time>now+30000||now-time>MARKET_METRICS_MAX_AGE_MS||
+       cap===null)return null;
+    const rank=finite(row?.market_cap_rank);
+    const supply=finite(row?.circulating_supply);
+    const fdv=positive(row?.fully_diluted_valuation);
+    return Object.freeze({
+      coinId:id,symbol:upper(spec.symbol),quote:"USD",
+      marketCapUsd:cap,
+      marketCapRank:Number.isInteger(rank)&&rank>0?rank:null,
+      circulatingSupply:supply!==null&&supply>=0?supply:null,
+      fullyDilutedValueUsd:fdv,
+      source:"CoinGecko coins/markets",observedAt:new Date(time).toISOString(),
+      marketCapSourceVerified:true,spotPriceSourceUnchanged:true,
+      nativeSpotPairNotVerified:true
+    });
+  }
+  function validMarketMetrics(spec){
+    const id=String(spec?.coingeckoId||"").trim();
+    const m=state.marketMetrics.get(id);
+    return m?.marketCapSourceVerified===true&&m.coinId===id.toLowerCase()&&
+      m.symbol===upper(spec?.symbol)&&m.quote==="USD"&&
+      Number.isFinite(Date.parse(m.observedAt))&&
+      Math.abs(Date.now()-Date.parse(m.observedAt))<=MARKET_METRICS_MAX_AGE_MS?
+      m:null;
+  }
   function cacheIdentity(identity){
     if(!identity?.id)return null;
     state.identityCache.set(identity.id,identity);
@@ -304,52 +345,71 @@
   }
 
   async function fetchCoinGeckoIdentitiesBatch(specs,{signal=null}={}){
-    const rows=(Array.isArray(specs)?specs:[]).filter(spec=>spec?.coingeckoId&&!state.identityCache.has(String(spec.coingeckoId)));
-    if(!rows.length)return true;
+    // Reuses the former emergency identity request: now exactly one small public
+    // request for both confirmed identities AND optional CoinGecko cap metrics.
+    const rows=(Array.isArray(specs)?specs:[]).filter(spec=>spec?.coingeckoId&&spec?.symbol);
     const ids=[...new Set(rows.map(spec=>String(spec.coingeckoId).trim()).filter(Boolean))];
     if(!ids.length)return true;
+    if(state.marketMetricsBatchAt&&Date.now()-state.marketMetricsBatchAt<MARKET_METRICS_TTL_MS)
+      return true;
     const u=new URL(COINGECKO+"/coins/markets");
     u.searchParams.set("vs_currency","usd");
-    u.searchParams.set("ids",ids.join(","));
+    u.searchParams.set("ids",ids.slice(0,250).join(","));
     u.searchParams.set("order","market_cap_desc");
     u.searchParams.set("per_page",String(Math.min(250,ids.length)));
     u.searchParams.set("page","1");
     u.searchParams.set("sparkline","false");
     state.identityStatus.batchRequests+=1;
+    state.marketMetricsStatus.requests+=1;
+    // Throttle even on 429, to prevent new listing and chart clicks from
+    // multiplying remote calls. Existing registry logos still work offline.
+    state.marketMetricsBatchAt=Date.now();
     try{
       const payload=await json(u,{signal,timeoutMs:IDENTITY_REMOTE_BATCH_TIMEOUT_MS});
       if(!Array.isArray(payload))throw new Error("Réponse CoinGecko batch invalide");
       const byId=new Map(payload.map(row=>[String(row?.id||"").trim().toLowerCase(),row]).filter(([id])=>id));
+      state.marketMetrics.clear();
+      let verified=0;
       for(const spec of rows){
         if(signal?.aborted)break;
         const cgId=String(spec.coingeckoId).trim();
         const row=byId.get(cgId.toLowerCase());
         if(!row){state.identityStatus.missing+=1;continue;}
+        // Separate metrics from identity: no missing/incorrect token can
+        // overwrite the proven name or local visual asset in GitHub registry.
+        const metrics=marketMetricsFromPayload(spec,row);
+        if(metrics){state.marketMetrics.set(cgId,metrics);verified++;}
+        if(state.identityCache.has(cgId))continue;
         try{cacheIdentity(identityFromPayload(spec,row,"CoinGecko emergency batch"));}
         catch(error){state.identityStatus.mismatched+=1;recordIdentityDiagnostic(error);}
       }
+      state.marketMetricsStatus={...state.marketMetricsStatus,verified,
+        unavailable:rows.length-verified,lastSuccessAt:new Date().toISOString(),reason:null};
       return true;
     }catch(error){
       recordIdentityDiagnostic(error,{batch:true});
+      state.marketMetricsStatus={...state.marketMetricsStatus,reason:identityFailureKind(error)};
       return false;
     }
   }
-
   async function enrichKnownIdentities(specs,{signal=null}={}){
     const rows=Array.isArray(specs)?specs:[];
     const targets=rows.filter(spec=>spec?.coingeckoId);
     state.identityStatus={attempted:targets.length,verified:0,logos:0,failed:0,githubHits:0,batchRequests:0,batchFailures:0,rateLimited:0,mismatched:0,missing:0,lastFailure:null};
     await loadIdentityRegistry();
     state.identityStatus.githubHits=applyRegistryIdentities(targets);
-    const unresolved=targets.filter(spec=>!state.identityCache.has(String(spec.coingeckoId)));
-    if(unresolved.length&&!signal?.aborted)await fetchCoinGeckoIdentitiesBatch(unresolved,{signal});
+    // One batch for cap data of *all* known tokens; missing identities still use
+    // it only as emergency fallback. Missing metrics never block Market.
+    if(targets.length&&!signal?.aborted)await fetchCoinGeckoIdentitiesBatch(targets,{signal});
     for(const spec of targets){
       const identity=state.identityCache.get(String(spec.coingeckoId))||null;
+      spec.marketMetrics=validMarketMetrics(spec);
       if(!identity){state.identityStatus.failed+=1;continue;}
       spec.identityVerified=true;
       spec.identitySource=identity.source;
       spec.canonicalName=identity.name;
       spec.image=identity.image||null;
+      spec.marketMetrics=validMarketMetrics(spec);
       state.identityStatus.verified+=1;
       if(spec.image)state.identityStatus.logos+=1;
     }
@@ -445,7 +505,13 @@
       priceEur,
       priceUsd,
       marketCap:null,
-      marketCapUsd:null,
+      marketCapUsd:spec.marketMetrics?.marketCapSourceVerified===true?
+        positive(spec.marketMetrics.marketCapUsd):null,
+      marketCapSource:spec.marketMetrics?.marketCapSourceVerified===true?
+        spec.marketMetrics.source:null,
+      marketCapObservedAt:spec.marketMetrics?.marketCapSourceVerified===true?
+        spec.marketMetrics.observedAt:null,
+      marketCapRankSource:spec.marketMetrics?.marketCapRank??null,
       volume24h:volumeEur,
       volume24hUsd:volumeUsd,
       change24h:changeRaw===null?null:changeRaw*100,
@@ -614,7 +680,10 @@
       <td><div class="price-dual"><strong>${esc(price.primary)}</strong><small>${esc(price.small)}</small></div></td>
       <td class="${change===null?"":change>=0?"pos":"neg"}"><span class="market-move-pill">${esc(pct(change))}</span></td>
       <td>—</td>
-      <td class="market-col-advanced">—</td>
+      <td class="market-col-advanced" title="${esc(coin?.marketCapObservedAt?
+        "Capitalisation USD · CoinGecko "+coin.marketCapObservedAt:
+        "Capitalisation non fournie par une source vérifiée")}">${positive(coin?.marketCapUsd)!==null?
+        esc(compactMoney(coin.marketCapUsd,"USD")):"—"}</td>
       <td class="market-col-advanced">${volume!==null?esc(compactMoney(volume,currency)):"—"}</td>
       <td class="spark-cell"><small>${esc(proof.status)}</small></td>
       <td class="market-col-advanced">—</td>
@@ -746,7 +815,11 @@
         <div><b>Exchange / paire</b><span>${esc(spec.providerLabel)} · ${esc(spec.pair)}</span></div>
         <div><b>Source prix</b><span>${esc(coin.usdSource||coin.source||spec.providerLabel)}</span></div>
         <div><b>Volume 24 h</b><span>${finite(currency==="USD"?coin.volume24hUsd:coin.volume24h)!==null?esc(compactMoney(currency==="USD"?coin.volume24hUsd:coin.volume24h,currency)):"—"}</span></div>
-        <div><b>Market cap</b><span>Non fourni par la source listing</span></div>
+        <div><b>Capitalisation USD · CoinGecko</b><span>${positive(coin.marketCapUsd)!==null?
+          esc(compactMoney(coin.marketCapUsd,"USD"))+" · "+esc(coin.marketCapObservedAt||"horodatage absent"):
+          "Non disponible · la source Bitget ne fournit pas la capitalisation"}</span></div>
+        <div><b>Rang capitalisation CoinGecko</b><span>${coin.marketCapRankSource!==null?
+          esc(String(coin.marketCapRankSource)):"Non fourni"}</span></div>
         <div><b>Période graphique</b><span>${esc(Number(result?.periodDays||1)===1?"24h":`${Number(result?.periodDays||1)}j`)}</span></div>
         <div><b>Source graphique</b><span>${esc(result?.source||spec.providerLabel+" "+spec.pair)}</span></div>
         ${axis?`<div><b>Identité vérifiée</b><span>Axis Robotics · Base · CoinGecko axis-robotics</span></div>
@@ -1246,6 +1319,7 @@
       pendingId:state.pending?.id||null,
       lastDiscoveryAt:state.lastDiscoveryAt,lastError:state.lastError,
       identityStatus:{...state.identityStatus},
+      marketMetricsStatus:{...state.marketMetricsStatus},
       registryStatus:{...state.registryStatus},
       radarStatus:{...state.radarStatus},
       discoveryCooldownMs:DISCOVERY_COOLDOWN_MS,
@@ -1283,6 +1357,10 @@
       identity_github_registry_primary:true,
       identity_binary_logo_assets:true,
       identity_remote_batch_emergency_only:true,
+      market_cap_usd_separate_coingecko_source:true,
+      market_cap_never_inferred_from_bitget_price:true,
+      market_cap_missing_is_not_zero:true,
+      market_cap_batch_reuses_identity_pipeline:true,
       identity_exact_id_symbol:true,
       axis_spot_native_identity_safeguard:true,
       axis_local_logo_asset:true,
@@ -1305,7 +1383,7 @@
 
   globalThis.AgentCryptoNewListingsNativeCategory=Object.freeze({
     build:MODULE_VERSION,mount,discover,select,selectById,deactivate,snapshot,selectedMarketCoin,mathSeriesSnapshot,self_test:selfTest,
-    identity_enrichment:"GitHub static identity memory first with real PNG assets; CoinGecko batch only for unresolved known ids; exact id+symbol proof; fail-open",
+    identity_enrichment:"GitHub registry first for names/logos; one CoinGecko batch for all IDs supplies dated USD capitalization and emergency missing identity only; strict ID+symbol; fail-open",
     identity_logos:true,
     safe_radar:true,
     discovery_source:"Bitget launchTime only",
