@@ -137,6 +137,7 @@ if(typeof module==="object"&&module.exports)module.exports=api;
 if(!root||typeof document==="undefined")return;
 if(root.AgentCryptoStrategyComparator)return;
 const ID="traderStrategyComparator";
+const CAPITAL_REPORT="../data/trader_flux/seven_capital_scout/status.json";
 const $=selector=>document.getElementById(ID)?.querySelector(selector);
 const nfmt=(v,d=2)=>numeric(v)?v.toLocaleString("fr-FR",{
   minimumFractionDigits:d,maximumFractionDigits:d}):"non calculé";
@@ -286,6 +287,41 @@ async function load(force=false){
     if(active===controller){active=null;loading=false;}
   }
 }
+// A single small public-status fetch; no timer, no extra market engine, no Bridge.
+function mountCapitalPulse(host){
+  if(document.getElementById("sevenCapitalPulse"))return;
+  const pulse=document.createElement("aside");pulse.id="sevenCapitalPulse";
+  pulse.setAttribute("role","status");
+  pulse.textContent="SEVEN AUTO · Budget 10 USDC · réserve 0,94 USDC · recherche PAPER quotidienne…";
+  pulse.style.cssText="margin:12px 0;padding:12px 14px;border:1px solid #456b80;border-radius:10px;background:#0a2632;color:#d5f1ef;font:13px/1.5 system-ui";
+  host.insertAdjacentElement("afterend",pulse);
+  const c=new AbortController();
+  const stop=setTimeout(()=>c.abort(),10000);
+  fetch(new URL(CAPITAL_REPORT,document.baseURI),{
+    cache:"no-store",credentials:"omit",redirect:"error",signal:c.signal
+  }).then(async r=>{
+    if(!r.ok)throw Error("rapport quotidien non publié");
+    const raw=await r.text();
+    if(raw.length>100000)throw Error("rapport public trop volumineux");
+    const data=JSON.parse(raw);
+    if(data.schema!=="erith.seven.capital-scout.paper.v1"||
+       data.mode!=="AUTOMATED_PROSPECTIVE_RESEARCH_ONLY"||
+       data.orders_enabled!==false||data.private_account_access!==false||
+       data.real_orders_submitted!==0||data.profit_real_usdc!==null||
+       data.simulation_budget_usdc!==10||data.reserved_cost_buffer_usdc!==0.94||
+       !Array.isArray(data.milestones_usdc)||
+       data.milestones_usdc.join(",")!=="12,15,17"||
+       !Array.isArray(data.observations))
+       throw Error("contrat de sécurité du rapport non conforme");
+    pulse.textContent="SEVEN AUTO · 10 USDC à étudier + 0,94 USDC réservés · "+
+      "objectifs 12 → 15 → 17 · dernière archive "+(data.latest_archive_date_utc||"absente")+
+      " · "+data.observations.length+" observation(s) suivie(s) · "+
+      "0 ordre réel · opportunité Spot USDC non certifiée.";
+  }).catch(()=>{
+    pulse.textContent="SEVEN AUTO · 10 USDC + réserve 0,94 USDC · "+
+      "journal quotidien indisponible ou non encore publié · aucun ordre réel.";
+  }).finally(()=>clearTimeout(stop));
+}
 function mount(){
   if(document.getElementById(ID))return true;
   const host=document.getElementById("traderPaperLab");
@@ -336,6 +372,7 @@ function mount(){
     '</div>'
   ].join("");
   host.insertAdjacentElement("afterend",node);
+  mountCapitalPulse(host);
   node.addEventListener("toggle",()=>{
     if(!node.open){
       ++benchmarkToken;
