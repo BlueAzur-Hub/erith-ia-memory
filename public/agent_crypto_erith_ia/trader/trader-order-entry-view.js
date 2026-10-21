@@ -77,7 +77,7 @@ function mount({quoteLabel,budgetLabel,exitLabel,compute}={}){
  for(const [k,label] of [
   ["pair","Instrument & règlement"],["fresh","Origine du carnet"],
   ["rules","Règles de quantité/prix"],["maxbuy","Plafond achat (CT)"],
-  ["feeMode","Devise des frais d'achat"],["checktime","Instant du contrôle"],
+  ["feeMode","Devise des frais d'achat"],["checktime","Heure des limites du compte OKX"],
   ["funds","Solde Trading et budget"],["orders","Capacité de trading"]
  ])proofGrid.append(proof(k,label));
  ev.append(proofGrid);
@@ -148,7 +148,9 @@ function update({ticket,context,review,preview,bookDiagnostic,checkedAt}={}){
    str(gates.maxBuy)+" CT · relevé daté":"Non confirmé","odProof");
  set("feeMode",review?.fee_mode_verified?
    str(review.fee_buy_currency)+" · feeType "+str(review.fee_type):"Non confirmé","odProof");
- set("checktime",checkedAt?new Date(checkedAt).toISOString():"Non disponible","odProof");
+ const evidenceTime=Date.parse(checkedAt||"");
+ set("checktime",Number.isFinite(evidenceTime)?
+   new Date(evidenceTime).toISOString():"Non confirmé","odProof");
  set("funds",account?
    (review.funds_cover_public_scenario?"Couverture du coût PAPER uniquement":"Couverture PAPER non démontrée"):
    "Compte non confirmé","odProof");
