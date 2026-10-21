@@ -171,11 +171,25 @@
   const chartParts=chartPair.match(/^([A-Z0-9]{1,20})-([A-Z0-9]{2,12})$/);
   const chartValid=chartParts&&chartParts[1]===base&&chart?.mode==='candles'&&
     Array.isArray(chart.rows)&&chart.rows.length>0;
-  const chartProvenance=Boolean(chartValid&&chart?.source_verified===true&&
+  // The native Microscope publishes lastLoadedAt/source/request_key, not the
+  // older source_verified/observed_at_utc keys. Keep both contracts explicit.
+  const sourceText=String(chart?.source||'').trim();
+  const nativeSource=sourceText.match(/^(OKX|Bitget|Binance|CoinGecko)\b/i);
+  const nativeProvider=nativeSource?.[1]?.toLowerCase()||null;
+  const nativeProof=Boolean(chartValid&&nativeProvider&&
+    typeof chart?.request_key==='string'&&chart.request_key.length>0&&
+    typeof chart?.loadedBar==='string'&&chart.loadedBar.length>0&&
+    chart?.loading===false&&!chart?.errorCode&&
+    time(chart?.lastLoadedAt,now));
+  const explicitProof=Boolean(chartValid&&chart?.source_verified===true&&
     ['okx','binance','bitget','coingecko'].includes(String(chart?.provider||'').toLowerCase())&&
     time(chart?.observed_at_utc,now));
-  const mPrice=scaled(market?.priceUsd);
-  const marketFresh=time(market?.usdUpdatedAt||market?.lastUpdated,now);
+  const chartProvenance=nativeProof||explicitProof;
+  const chartProvider=nativeProof?nativeProvider:
+    explicitProof?String(chart.provider).toLowerCase():null;
+  const marketFresh=Boolean(time(market?.usdUpdatedAt||market?.lastUpdated,now)&&
+    typeof market?.usdSource==='string'&&market.usdSource.trim());
+  const mPrice=marketFresh?scaled(market?.priceUsd):null;
   const validBook=validateBook(book,pair,quote,now),
     validRules=validateRules(rules,pair,base,quote,now),
     validAccount=quoteAccount(account,pair,now),
@@ -200,8 +214,13 @@
     chart_interval:chartValid?String(chart.loadedBar||''):null,
     chart_identity_matched:Boolean(chartValid),
     chart_source_verified:chartProvenance,
+    chart_provider:chartProvider,
+    chart_same_spot_pair:Boolean(chartValid&&chartPair===pair),
     chart_warning:chartPair&&!chartValid?
-      'Bougies '+chartPair+' différentes de '+base+' : refus de substitution.':null,
+      'Bougies '+chartPair+' différentes de '+base+' : refus de substitution.':
+      chartValid&&chartPair!==pair?
+        'Graphique '+chartPair+' distinct du Spot '+pair+
+        ' : aucune conversion de prix implicite.':null,
     native_pair:pair,book_verified:Boolean(validBook),rules_verified:Boolean(validRules),
     best_bid_quote:validBook?print(validBook.bids[0].price):null,
     best_ask_quote:validBook?print(validBook.asks[0].price):null,
@@ -226,11 +245,15 @@
     acquisition_cost:null,pnl:null});
   const sections=frozen([
     entry('Lecture Technique',chartValid?'DATA':'WAITING',
-      chartValid?'Bougies '+chartPair+' ; source '+(chartProvenance?'datée et attestée':'NON CERTIFIÉE')+
-       ', devise du graphique distincte du Spot '+pair+'.':
+      chartValid?'Bougies '+chartPair+' ; source '+
+       (chartProvenance?'identifiée et datée ('+chartProvider+')':'non qualifiée')+
+       (chartPair===pair?' ; paire identique au Spot '+pair+'.':
+        ' ; paire distincte du Spot '+pair+' (conversion interdite).'):
         'Bougies exactes '+base+' non chargées.'),
     entry('Fiche publique',mPrice===null?'WAITING':'DATA',
-      'Market USD indépendant du carnet natif '+pair+'.'),
+      (mPrice===null?'Prix USD frais et sourcé indisponible. ':
+       'Prix USD daté et sourcé. ')+
+      'Market indépendant du carnet natif '+pair+'.'),
     entry('Position personnelle',validPosition?(remaining?.status||'VERIFIED'):'UNKNOWN',
       validPosition?'Trading et Funding '+base+' datés séparément ; état '+
         (remaining?.status||'non qualifié')+'.':
