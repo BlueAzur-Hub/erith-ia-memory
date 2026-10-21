@@ -409,7 +409,6 @@
       spec.identitySource=identity.source;
       spec.canonicalName=identity.name;
       spec.image=identity.image||null;
-      spec.marketMetrics=validMarketMetrics(spec);
       state.identityStatus.verified+=1;
       if(spec.image)state.identityStatus.logos+=1;
     }
@@ -420,7 +419,8 @@
     const s=state.identityStatus,r=state.registryStatus;
     const parts=[`GitHub ${s.githubHits}/${s.attempted}`];
     if(r.error)parts.push("registre indisponible");
-    if(s.batchRequests)parts.push(`CoinGecko secours ${s.batchRequests}`);
+    if(s.batchRequests)parts.push(`CoinGecko cap + identité ${s.batchRequests}`);
+    if(state.marketMetricsStatus.verified)parts.push(`cap. USD datées ${state.marketMetricsStatus.verified}`);
     if(s.rateLimited)parts.push(`429 ${s.rateLimited}`);
     if(s.failed)parts.push(`échec ${s.failed}${s.lastFailure?` (${s.lastFailure})`:""}`);
     return parts.join(" · ");
@@ -1335,12 +1335,27 @@
     const coin=coinFromSpec(generic);
     const proof=radarProof(generic,coin);
     const candidate=radarProof({...generic,ticker:null},null);
+    const axisSpec={symbol:"AXIS",coingeckoId:"axis-robotics"};
+    const capPayload={id:"axis-robotics",symbol:"axis",market_cap:51545269,
+      market_cap_rank:365,circulating_supply:165000000,
+      last_updated:new Date(Date.now()-30000).toISOString()};
+    const validCap=marketMetricsFromPayload(axisSpec,capPayload);
+    const wrongCoinCap=marketMetricsFromPayload(axisSpec,{...capPayload,id:"axis-infinity"});
+    const wrongSymbolCap=marketMetricsFromPayload(axisSpec,{...capPayload,symbol:"axs"});
+    const zeroCap=marketMetricsFromPayload(axisSpec,{...capPayload,market_cap:0});
+    const oldCap=marketMetricsFromPayload(axisSpec,{
+      ...capPayload,last_updated:new Date(Date.now()-25*60000).toISOString()});
+    const noDateCap=marketMetricsFromPayload(axisSpec,{...capPayload,last_updated:null});
     const pass=ct.providerSymbol==="CT-USDT"
       &&generic?.provider==="bitget"
       &&proof.status==="CONFIRMÉ"
       &&candidate.status==="CANDIDAT"
       &&ageBand(.5).label==="<24 h"
       &&ageBand(5).label==="4–7 j"
+      &&validCap?.marketCapUsd===51545269
+      &&validCap?.quote==="USD"&&validCap?.spotPriceSourceUnchanged===true
+      &&wrongCoinCap===null&&wrongSymbolCap===null
+      &&zeroCap===null&&oldCap===null&&noDateCap===null
       &&FRIENDLY.AXIS.coingeckoId==="axis-robotics"
       &&providerSpec({base:"AXIS",quote:"USDT",providerSymbol:"AXISUSDT",listedAt:"2026-10-21T13:00:00Z"})?.coingeckoId==="axis-robotics"
       &&providerSpec({base:"AXIS",quote:"USD",providerSymbol:"AXISUSD",listedAt:"2026-10-21T13:00:00Z"})===null
@@ -1361,6 +1376,8 @@
       market_cap_never_inferred_from_bitget_price:true,
       market_cap_missing_is_not_zero:true,
       market_cap_batch_reuses_identity_pipeline:true,
+      market_cap_exact_id_symbol_time:!!validCap&&!wrongCoinCap&&!wrongSymbolCap,
+      market_cap_no_zero_or_stale:!zeroCap&&!oldCap&&!noDateCap,
       identity_exact_id_symbol:true,
       axis_spot_native_identity_safeguard:true,
       axis_local_logo_asset:true,
