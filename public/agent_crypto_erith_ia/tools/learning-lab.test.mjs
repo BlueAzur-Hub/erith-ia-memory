@@ -214,6 +214,14 @@ test("AXIS is an existing laboratory dossier, not a new graphic or an external i
     n.href?.includes("axis-robotics-case-study.html")).length);
   assert.doesNotMatch(source,/createElement\(["']iframe["']\)/);
 });
+test("The native AXIS snapshot adds zero network or timer owners",()=>{
+  const match=source.match(/function axisSnapshotPanel\(\)\{([\s\S]*?)\n  \}\n  function showSelectionTruth/);
+  assert.ok(match);
+  assert.doesNotMatch(match[1],/fetch\s*\(|XMLHttpRequest|setInterval\s*\(|localStorage|indexedDB|WebSocket|postMessage/);
+  assert.match(match[1],/nativeMarketEvidence\("AXIS"\)/);
+  assert.match(css,/\.lab-market-metrics/);
+  assert.match(css,/grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
+});
 test("AXIS reads only the matched existing Bitget Market owner, never another exchange or stale cap",()=>{
   const t=boot(),api=t.sandbox.window.AgentCryptoLearningLab;
   const stamp=new Date().toISOString();
@@ -222,29 +230,52 @@ test("AXIS reads only the matched existing Bitget Market owner, never another ex
     selectedProvider:"bitget",selectedProviderSymbol:"AXISUSDT",
     selectedPair:"AXIS/USDT"};
   const ext={active:true,id:selection.selectedId,provider:"bitget",instrument:"AXIS-USDT"};
-  let cap=42710000;
+  let cap=42710000,ts=Date.parse(stamp),capStamp=stamp;
   t.sandbox.AgentCryptoNewListingLiveAsset={snapshot:()=>ext};
   t.sandbox.AgentCryptoNewListingsNativeCategory={
     snapshot:()=>selection,
     selectedMarketCoin:()=>({id:selection.selectedId,symbol:"AXIS",
       listingPair:"AXIS/USDT",listingProvider:"Bitget",
       priceUsd:0.255205,volume24hUsd:2120000,marketCapUsd:cap,
-      usdUpdatedAt:stamp,marketCapObservedAt:stamp,
+      change24h:1602.33,
+      usdUpdatedAt:new Date(ts).toISOString(),marketCapObservedAt:capStamp,
       marketCapSource:"CoinGecko coins/markets",
-      providerContext:{ticker:{ts:Date.parse(stamp)}},
+      providerContext:{ticker:{ts}},
       usdSource:"Bitget AXIS/USDT × USDT/USD CoinGecko"})
   };
-  api.select("AXIS");activateTab(t,"marche");
+  api.select("AXIS");
+  // The operator sees the same verified snapshot immediately in Synthèse.
+  assert.match(t.get("lab-content").textContent,/Prix indicatif USD/);
+  assert.match(t.get("lab-content").textContent,/0,255205 USD/);
+  assert.match(t.get("lab-content").textContent,/1.602,33 %/);
+  assert.match(t.get("lab-content").textContent,/42.710.000 USD/);
+  assert.match(t.get("lab-content").textContent,/Listing récent/);
+  activateTab(t,"marche");
   assert.match(t.get("lab-content").textContent,/42.710.000.*USD/);
   assert.match(t.get("lab-content").textContent,/Bitget AXIS\/USDT/);
+  // Reading again updates the visible existing snapshot without polling/fetch.
+  const reread=descendants(t.get("lab-content"),n=>n.tagName==="BUTTON"&&
+    n.textContent==="Relire les données du Market")[0];
+  assert.ok(reread,"The Market read action exists");
+  cap=43200000;reread.fire("click");
+  assert.match(t.get("lab-content").textContent,/43.200.000 USD/);
   selection.selectedProvider="okx";
-  activateTab(t,"synthese");activateTab(t,"marche");
-  assert.match(t.get("lab-content").textContent,/Marché AXIS non confirmé/);
+  reread.fire("click");
+  assert.match(t.get("lab-content").textContent,/Lecture indisponible/);
+  assert.doesNotMatch(t.get("lab-content").textContent,/43.200.000 USD/);
   selection.selectedProvider="bitget";
   cap=0;
-  activateTab(t,"synthese");activateTab(t,"marche");
-  assert.match(t.get("lab-content").textContent,/capitalisation non fourni/);
-  assert.doesNotMatch(t.get("lab-content").textContent,/capitalisation 0 USD/);
+  reread.fire("click");
+  assert.match(t.get("lab-content").textContent,/non vérifiée/);
+  assert.doesNotMatch(t.get("lab-content").textContent,/Capitalisation \(USD\)0 USD/);
+  cap=42710000;capStamp=new Date(Date.now()-3600000).toISOString();
+  reread.fire("click");
+  assert.match(t.get("lab-content").textContent,/Capitalisation \(USD\)non vérifiée/);
+  assert.doesNotMatch(t.get("lab-content").textContent,/42.710.000 USD/);
+  capStamp=stamp;ts=Date.now()-16*60000;
+  reread.fire("click");
+  assert.match(t.get("lab-content").textContent,/Lecture indisponible/);
+  assert.doesNotMatch(t.get("lab-content").textContent,/0,255205 USD/);
   assert.equal(api.read().real_order,false);
 });
 test("AXIS selection uses exactly the existing Bitget owner and refuses a ticker-only match",async()=>{
