@@ -10,6 +10,8 @@ on:
       - "public/agent_crypto_erith_ia/trader/build.json"
       - "public/agent_crypto_erith_ia/trader/trading-desk.html"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
+      - "public/agent_crypto_erith_ia/trader/strategy-comparator.js"
+      - "public/agent_crypto_erith_ia/trader/test-strategy-comparator.cjs"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-history-source-catalog.test.mjs"
@@ -34,6 +36,8 @@ on:
       - "public/agent_crypto_erith_ia/trader/build.json"
       - "public/agent_crypto_erith_ia/trader/trading-desk.html"
       - "public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js"
+      - "public/agent_crypto_erith_ia/trader/strategy-comparator.js"
+      - "public/agent_crypto_erith_ia/trader/test-strategy-comparator.cjs"
       - "public/agent_crypto_erith_ia/tools/learning-lab.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs"
       - "public/agent_crypto_erith_ia/tools/ai-history-source-catalog.test.mjs"
@@ -73,6 +77,9 @@ jobs:
             /public/agent_crypto_erith_ia/trader/*.js
             /public/agent_crypto_erith_ia/trader/trader-order-entry.css
             /public/agent_crypto_erith_ia/trader/test-paper-decision.cjs
+            /public/agent_crypto_erith_ia/trader/test-strategy-comparator.cjs
+            /public/agent_crypto_erith_ia/data/trader_flux/radar20_portfolio/summary.json
+            /public/agent_crypto_erith_ia/data/trader_flux/radar20_retro_stress/summary.json
             /public/agent_crypto_erith_ia/trader/*.html
             /public/agent_crypto_erith_ia/trader/*.json
             /public/agent_crypto_erith_ia/laboratoire/*.md
@@ -91,6 +98,8 @@ jobs:
           node --check public/agent_crypto_erith_ia/trader/ai-history-source-catalog.js
           node --check public/agent_crypto_erith_ia/trader/ai-verified-history-reader.js
           node --check public/agent_crypto_erith_ia/trader/trader-historical-panel.js
+          node --check public/agent_crypto_erith_ia/trader/strategy-comparator.js
+          node public/agent_crypto_erith_ia/trader/test-strategy-comparator.cjs
           node --test public/agent_crypto_erith_ia/tools/learning-lab.test.mjs public/agent_crypto_erith_ia/tools/ai-source-inventory.test.mjs public/agent_crypto_erith_ia/tools/ai-history-source-catalog.test.mjs public/agent_crypto_erith_ia/tools/ai-verified-history-reader.test.mjs public/agent_crypto_erith_ia/tools/trader-historical-panel.test.mjs
       - name: Validate 40.6.640 manifests and BTC panel restoration
         shell: bash
@@ -188,6 +197,9 @@ jobs:
             # Option C: exactly two presentation-only, Trader-scoped files.
             prefix+"trader/trader-order-entry-view.js",
             prefix+"trader/trader-order-entry.css",
+            # Narrow read-only comparator.
+            prefix+"trader/strategy-comparator.js",
+            prefix+"trader/test-strategy-comparator.cjs",
           }
           changed=set(subprocess.check_output(
             ["git","diff","--name-only",base,"HEAD","--",prefix+"trader/"],
@@ -224,7 +236,7 @@ jobs:
             "status":"TRADER_COFFRE_VISIBLE_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
-          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/test-ai-asset-reading-view.cjs",prefix+"trader/ai-asset-reading-view.js",prefix+"trader/trader-candles-minute-watch.js",prefix+"trader/trader-paper-decision-core.js",prefix+"trader/trader-paper-decision-view.js",prefix+"trader/test-paper-decision.cjs",prefix+"trader/trader-order-entry-view.js",prefix+"trader/trader-order-entry.css"}:
+          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/test-ai-asset-reading-view.cjs",prefix+"trader/ai-asset-reading-view.js",prefix+"trader/trader-candles-minute-watch.js",prefix+"trader/trader-paper-decision-core.js",prefix+"trader/trader-paper-decision-view.js",prefix+"trader/test-paper-decision.cjs",prefix+"trader/trader-order-entry-view.js",prefix+"trader/trader-order-entry.css",prefix+"trader/strategy-comparator.js",prefix+"trader/test-strategy-comparator.cjs"}:
             if f==prefix+"trader/trader-runtime-mirror.js":
               expected=previous(f).replace("40.6.639","40.6.640").replace("trader-historical-panel.js?reader=top50-cohorts","trader-historical-panel.js?reader=visible-coffre")
               actual=current(f)
@@ -283,6 +295,17 @@ jobs:
                 assert "/trade/order" not in seven_loader and "localStorage." not in seven_loader
                 assert "indexedDB." not in seven_loader and "setInterval(" not in seven_loader
                 actual=actual.replace(seven_loader,"",1)
+              # Exact public-only loader, no blanket exception.
+              strategy_loader=(
+                '        // Lightweight read-only comparison: mounts next to the existing PAPER lab.\n'
+                '        // Its two public reports are fetched ONLY if the operator opens it.\n'
+                '        add("traderStrategyComparatorScript","strategy-comparator.js");\n'
+              )
+              if strategy_loader in actual and strategy_loader not in expected:
+                assert actual.count(strategy_loader)==1
+                assert actual.index(strategy_loader)<actual.index('        const mountDecision=')
+                assert 'traderPaperLabCoreScript' in actual
+                actual=actual.replace(strategy_loader,"",1)
               assert actual==expected,f"Non-version Trader change beyond PAPER extension: {f}"
               continue
             else:
@@ -303,7 +326,21 @@ jobs:
                            "setInterval(", "MutationObserver", "aiCtPanel.hidden",
                            "aiCtPanel.open"):
             assert forbidden not in seven_view, f"Seven navigation policy violation: {forbidden}"
-          # The new addon has a narrow invariant, not a blanket Trader exemption.
+          # Narrow safety review of the new public reader.
+           strategy=current(prefix+"trader/strategy-comparator.js")
+           strategy_test=current(prefix+"trader/test-strategy-comparator.cjs")
+           assert 'AgentCryptoStrategyComparator' in strategy
+           assert 'if(!node?.open||active)return' in strategy
+           assert 'credentials:"omit"' in strategy
+           assert 'strategy_certified!==false' in strategy
+           assert 'realOrders:false,storage:false,privateAccount:false' in strategy
+           assert 'qualifyReport' in strategy and 'compare' in strategy
+           assert 'strategy-comparator.js' in strategy_test
+           for forbidden in ("localStorage", "sessionStorage", "indexedDB",
+                             "/api/v5/trade/order", "/trade/order", "/withdraw",
+                             "setInterval(", "Authorization", "Bearer "):
+             assert forbidden not in strategy, f"Strategy comparator forbidden behavior: {forbidden}"
+           # The new addon has a narrow invariant, not a blanket Trader exemption.
           decision_core=current(prefix+"trader/trader-paper-decision-core.js")
           decision_view=current(prefix+"trader/trader-paper-decision-view.js")
           decision_test=current(prefix+"trader/test-paper-decision.cjs")
@@ -362,6 +399,7 @@ jobs:
               root/"trader/build.json",
               root/"trader/trading-desk.html",
               root/"trader/trader-runtime-mirror.js",
+              root/"trader/strategy-comparator.js",
               root/"trader/trader-historical-panel.js",
               root/"trader/ai-source-inventory.js",
               root/"trader/historical-inventory.html",
@@ -373,7 +411,7 @@ jobs:
               root/"laboratoire/cas-ecole-concrete.md",
           ]
           denied={"data","assets","downloads","vault","archives","releases","evidence"}
-          assert len(files)==len(set(files))==16
+          assert len(files)==len(set(files))==17
           assert all(not denied.intersection(p.parts) and p.suffix.lower() in (".html",".css",".js",".json",".md") for p in files)
           sources={}
           for path in files:
