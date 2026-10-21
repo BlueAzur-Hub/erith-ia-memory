@@ -327,20 +327,20 @@ jobs:
                            "aiCtPanel.open"):
             assert forbidden not in seven_view, f"Seven navigation policy violation: {forbidden}"
           # Narrow safety review of the new public reader.
-           strategy=current(prefix+"trader/strategy-comparator.js")
-           strategy_test=current(prefix+"trader/test-strategy-comparator.cjs")
-           assert 'AgentCryptoStrategyComparator' in strategy
-           assert 'if(!node?.open||active)return' in strategy
-           assert 'credentials:"omit"' in strategy
-           assert 'strategy_certified!==false' in strategy
-           assert 'realOrders:false,storage:false,privateAccount:false' in strategy
-           assert 'qualifyReport' in strategy and 'compare' in strategy
-           assert 'strategy-comparator.js' in strategy_test
-           for forbidden in ("localStorage", "sessionStorage", "indexedDB",
-                             "/api/v5/trade/order", "/trade/order", "/withdraw",
-                             "setInterval(", "Authorization", "Bearer "):
-             assert forbidden not in strategy, f"Strategy comparator forbidden behavior: {forbidden}"
-           # The new addon has a narrow invariant, not a blanket Trader exemption.
+          strategy=current(prefix+"trader/strategy-comparator.js")
+          strategy_test=current(prefix+"trader/test-strategy-comparator.cjs")
+          assert 'AgentCryptoStrategyComparator' in strategy
+          assert 'if(!node?.open||active)return' in strategy
+          assert 'credentials:"omit"' in strategy
+          assert 'strategy_certified!==false' in strategy
+          assert 'realOrders:false,storage:false,privateAccount:false' in strategy
+          assert 'qualifyReport' in strategy and 'compare' in strategy
+          assert 'strategy-comparator.js' in strategy_test
+          for forbidden in ("localStorage", "sessionStorage", "indexedDB",
+                            "/api/v5/trade/order", "/trade/order", "/withdraw",
+                            "setInterval(", "Authorization", "Bearer "):
+            assert forbidden not in strategy, f"Strategy comparator forbidden behavior: {forbidden}"
+          # Safety controls for existing modules remain unchanged.
           decision_core=current(prefix+"trader/trader-paper-decision-core.js")
           decision_view=current(prefix+"trader/trader-paper-decision-view.js")
           decision_test=current(prefix+"trader/test-paper-decision.cjs")
