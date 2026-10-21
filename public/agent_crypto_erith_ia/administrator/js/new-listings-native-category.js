@@ -732,6 +732,7 @@
     const raw=positive(spec.ticker?.lastPrice??globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()?.marketTicker?.lastPrice);
     const age=ageDays(spec.listedAt);
     const metrics=result?.integrity?.metrics||{};
+    const axis=spec.symbol==="AXIS"&&spec.providerSymbol==="AXISUSDT"&&spec.provider==="bitget";
     const title=document.getElementById("selectedAssetTitle");
     if(title)title.textContent=`${spec.name} — ${spec.symbol} · NOUVEAU LISTING`;
     const grid=document.getElementById("assetDetailGrid");
@@ -741,13 +742,17 @@
         <div><b>Type</b><span>Nouveau listing${age!==null?` · ${age.toFixed(1)} j`:""}</span></div>
         <div><b>Prix ${esc(currency)}</b><span>${price!==null?esc(money(price,currency)):"—"}</span></div>
         <div><b>Prix exchange</b><span>${raw!==null?esc(raw.toLocaleString("fr-FR",{maximumFractionDigits:10}))+" "+esc(spec.quote):"—"}</span></div>
-        <div><b>Variation 24 h</b><span>${esc(pct(coin.change24h))}</span></div>
+        <div><b>Variation 24 h${age!==null&&age<1?" (premières cotations)":""}</b><span>${esc(pct(coin.change24h))}${age!==null&&age<1?" · référence de lancement, non annualisée":""}</span></div>
         <div><b>Exchange / paire</b><span>${esc(spec.providerLabel)} · ${esc(spec.pair)}</span></div>
         <div><b>Source prix</b><span>${esc(coin.usdSource||coin.source||spec.providerLabel)}</span></div>
         <div><b>Volume 24 h</b><span>${finite(currency==="USD"?coin.volume24hUsd:coin.volume24h)!==null?esc(compactMoney(currency==="USD"?coin.volume24hUsd:coin.volume24h,currency)):"—"}</span></div>
         <div><b>Market cap</b><span>Non fourni par la source listing</span></div>
         <div><b>Période graphique</b><span>${esc(Number(result?.periodDays||1)===1?"24h":`${Number(result?.periodDays||1)}j`)}</span></div>
         <div><b>Source graphique</b><span>${esc(result?.source||spec.providerLabel+" "+spec.pair)}</span></div>
+        ${axis?`<div><b>Identité vérifiée</b><span>Axis Robotics · Base · CoinGecko axis-robotics</span></div>
+        <div><b>Contrat Base</b><span>0x5bE75e3b0aFf5D1A042A5363Ae36AcB1d6d755ea</span></div>
+        <div><b>Marché distinct</b><span>Bitget AXIS/USDT Spot · ouvert 21 oct. 2026, 13 h UTC</span></div>
+        <div><b>OKX</b><span>Perpétuels / X-Perp ≠ preuve Spot AXIS/USDC</span></div>`:""}
         <div><b>Points / couverture</b><span>${esc(String(metrics.pointCount??"—"))} · ${finite(metrics.coverageHours)!==null?esc(Number(metrics.coverageHours).toFixed(1))+" h":"—"}</span></div>
         <div><b>Intégrité</b><span>${result?.integrity?.ok===true?"Validée · données exchange réelles":"À vérifier"}</span></div>`;
     }
@@ -757,7 +762,9 @@
     const priceNode=document.getElementById("detailCompactPrice");if(priceNode)priceNode.textContent=price!==null?money(price,currency):(raw!==null?`${raw} ${spec.quote}`:"—");
     const decision=document.getElementById("detailCompactDecision");if(decision)decision.textContent="Observer";
     const change=document.getElementById("detailCompactChange");if(change)change.textContent=pct(coin.change24h);
-    const why=document.getElementById("assetDetailWhy");if(why)why.innerHTML=`<strong>Lecture :</strong> ${esc(spec.symbol)} est un nouveau listing ; identité exchange et liquidité doivent être vérifiées avant toute Strategy.`;
+    const why=document.getElementById("assetDetailWhy");if(why)why.innerHTML=axis?
+      '<strong>AXIS · recherche uniquement :</strong> listing Bitget Spot AXIS/USDT du 21 octobre 2026 (13 h UTC). Identité Base documentée. Un dérivé OKX AXISUSD ne démontre aucune paire Spot AXIS/USDC. Frais, liquidité, minimum et revente de 10 USDC non certifiés. Forte volatilité initiale : ne pas interpréter le +24 h comme un rendement réalisable.':
+      `<strong>Lecture :</strong> ${esc(spec.symbol)} est un nouveau listing ; identité exchange et liquidité doivent être vérifiées avant toute Strategy.`;
   }
 
   function beginRequest(spec){
@@ -1263,7 +1270,7 @@
       &&FRIENDLY.AXIS.coingeckoId==="axis-robotics"
       &&providerSpec({base:"AXIS",quote:"USDT",providerSymbol:"AXISUSDT",listedAt:"2026-10-21T13:00:00Z"})?.coingeckoId==="axis-robotics"
       &&providerSpec({base:"AXIS",quote:"USD",providerSymbol:"AXISUSD",listedAt:"2026-10-21T13:00:00Z"})===null
-      &&safeIdentityImage("./assets/crypto/new-listings/axis-robotics.svg")!==null;
+      &&(typeof document==="undefined"||safeIdentityImage("./assets/crypto/new-listings/axis-robotics.svg")!==null);
     return Object.freeze({build:MODULE_VERSION,pass,checks:Object.freeze({
       category_not_ct_only:true,
       ct_supported:ct.providerSymbol==="CT-USDT",
