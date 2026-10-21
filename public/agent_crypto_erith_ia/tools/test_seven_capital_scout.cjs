@@ -12,6 +12,10 @@ function archive(day,price=2){
   tracked_candidates:[{id:'verified-id',status:'OBSERVED_TOP1000',price_usd:price,observed_at_utc:at}]};
 }
 let first=archive('2026-10-21'),next=archive('2026-10-22'),later=archive('2026-10-23',2.04);
+const legacy=archive('2026-10-16');delete legacy.tracked_candidates;
+assert.equal(evaluate([legacy]).observations.length,0);
+const forbidden=archive('2026-10-22');delete forbidden.tracked_candidates;
+assert.throws(()=>evaluate([forbidden]),/Contrat/);
 const initial=evaluate([first]);
 assert.equal(initial.observations.length,0);
 assert.equal(initial.simulation_budget_usdc,10);
