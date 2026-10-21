@@ -71,7 +71,14 @@ function chosen(){
  if(extId&&extSymbol){
    if(extSymbol==='CT'||graphBase==='CT')return {ct:true,c,g};
    const exact=extPair.match(/^([A-Z0-9]{1,20})-(USDC|USDT|EUR)$/);
-   const externalCoin={id:extId,symbol:extSymbol,name:extSymbol};
+   const publicCoin=globalThis.AgentCryptoNewListingsNativeCategory?.selectedMarketCoin?.();
+   // No stale Top-250/BTC profile can be used as the New Listing's price.
+   const publicMatches=publicCoin?.id===extId&&
+     String(publicCoin?.symbol||'').toUpperCase()===extSymbol&&
+     String(publicCoin?.listingPair||'').toUpperCase().replace('/','-')===extPair&&
+     String(publicCoin?.listingProvider||'').toLowerCase()===provider;
+   const externalCoin=publicMatches?publicCoin:
+     {id:extId,symbol:extSymbol,name:extSymbol};
    if(!exact||exact[1]!==extSymbol||
       !['bitget','okx','binance'].includes(provider))
      return {pending:true,c:externalCoin,g};
@@ -149,8 +156,11 @@ function safeChart(){
  const info=microscope();
  const pair=String(info?.loadedInstrument||'').toUpperCase().replace('/','-');
  if(pair.split('-')[0]!==selection?.symbol)return null;
- if(selection?.provider!=='okx'&&
-    (info?.external!==true||pair!==selection.symbol+'-'+selection.quote))return null;
+ if(selection?.provider!=='okx'){
+   const statedSource=String(info?.source||'').toLowerCase();
+   if(info?.external!==true||pair!==selection.symbol+'-'+selection.quote||
+      !statedSource.startsWith(selection.provider+' '))return null;
+ }
  return info;
 }
 function paint(){
