@@ -431,7 +431,7 @@ async function prepareTicket(){
    if(book.status==="fulfilled")liveBook=book.value;
    else{
      const failure=book.reason;
-     const http=String(failure?.message||"").match(/HTTP (\\d{3})/);
+     const http=String(failure?.message||"").match(/HTTP (\d{3})/);
      bookTransportIssue=failure?.name==="AbortError"?
        "TIMEOUT : Backend local non répondu en 6,5 s.":
        http?"HTTP "+http[1]+" : route du carnet "+pair+" inaccessible.":
