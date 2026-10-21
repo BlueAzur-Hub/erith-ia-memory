@@ -316,9 +316,14 @@
     const exact=payload.data.filter(r=>r?.instId===market&&r?.instType==='SPOT');
     if(exact.length!==1)return unknown('Instrument SPOT '+market+' absent ou ambigu');
     const row=exact[0];
+    // The raw-row Seven adapter MUST prove base and quote explicitly.
+    if(source?.instId&&
+      (row.baseCcy!==base||row.quoteCcy!==quote))
+      return unknown('Devises de base et cotation incohérentes');
+    const maxDigits=base==='CT'?12:18;
     const validDecimal=v=>typeof v==='string'&&/^\d+(?:\.\d+)?$/.test(v)&&
       Number.isFinite(Number(v))&&Number(v)>0&&
-      (v.split('.')[1]||'').length<=12;
+      (v.split('.')[1]||'').length<=maxDigits;
     if(!['live','suspend','preopen','post_only','rebase'].includes(row.state))
       return unknown('État de négociation inconnu');
     if(!validDecimal(row.minSz)||!validDecimal(row.lotSz)||!validDecimal(row.tickSz))
