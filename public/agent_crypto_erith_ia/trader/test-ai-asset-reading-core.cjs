@@ -169,3 +169,34 @@ test('stale account/rules and invalid numeric values fail closed',()=>{
  assert.equal(d.private.base_position_verified,false);
  assert.equal(d.simulations[0].status,'POSITION_UNVERIFIED');
 });
+
+
+test('Seven BTC and ETH use CT-origin shared Spot filter values, not a second rules algorithm',()=>{
+ const contract=require('./ai-ct-contract.js');
+ for(const [base,id] of [['BTC','bitcoin'],['ETH','ethereum']]){
+  const f=fixture(base,id);
+  const validated=contract.spotTradingRulesFor({base,quote:'USDC',venue:'okx'},f.rules,f.now);
+  const study=createReading(f);
+  assert.equal(validated.status,'verified');
+  assert.equal(study.public.rules_verified,true);
+  assert.equal(study.public.min_size_base,validated.min_sz);
+  assert.equal(study.public.lot_size_base,validated.lot_sz);
+  assert.equal(study.public.tick_size_quote,validated.tick_sz);
+  assert.equal(study.asset.pair,validated.market);
+ }
+});
+test('Seven cannot use a different quote, paused venue or missing base/quote evidence',()=>{
+ const f=fixture('ETH','ethereum');
+ for(const altered of [
+  {...f.rules,baseCcy:'BTC'},
+  {...f.rules,quoteCcy:'USDT'},
+  {...f.rules,state:'suspend'},
+  {...f.rules,baseCcy:undefined},
+  {...f.rules,lotSz:'0.0000000000000000001'}
+ ]){
+  const d=createReading({...f,rules:altered});
+  assert.equal(d.public.rules_verified,false);
+  assert.deepEqual(d.simulations.map(x=>x.status),Array(3).fill('PUBLIC_EVIDENCE_MISSING'));
+  assert.equal(d.orders_enabled,false);
+ }
+});
