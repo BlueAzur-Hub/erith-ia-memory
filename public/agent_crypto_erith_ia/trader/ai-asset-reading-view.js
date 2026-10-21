@@ -224,12 +224,20 @@ function paint(){
      put('Meilleur ask',money(study.public.best_ask_quote,study.asset.quote));
    }
    if(index===2){
-     put('Trading '+study.asset.base,position?.trading_base===null||
-       position?.trading_base===undefined?'Non certifié':
-       money(position.trading_base,study.asset.base)+' · daté');
-     put('Funding '+study.asset.base,position?.funding_base===null||
-       position?.funding_base===undefined?'Non certifié':
-       money(position.funding_base,study.asset.base)+' · daté');
+     put('Trading '+study.asset.base,study.private.trading_base===null?
+       'Non certifié':money(study.private.trading_base,study.asset.base)+' · daté');
+     put('Funding '+study.asset.base,study.private.funding_base===null?
+       'Non certifié':money(study.private.funding_base,study.asset.base)+' · daté');
+     const labels={EMPTY:'Vide vérifié',FUNDING_ONLY:'Funding uniquement',
+       DUST:'Poussières · sous minimum Spot',
+       SIZE_FILTER_MATCHES:'Quantité conforme aux filtres minSz/lotSz',
+       RULES_UNVERIFIED:'Minimum Spot non vérifié',UNKNOWN:'Non certifié'};
+     put('État de la position',labels[study.private.holding_status]||'Non certifié');
+     if(study.private.sellable_size_base!==null)
+       put('Quantité conforme aux filtres',money(study.private.sellable_size_base,study.asset.base));
+     if(study.private.residual_base!==null)
+       put('Résidu / poussières',money(study.private.residual_base,study.asset.base));
+     put('Portée du contrôle','Lecture seulement · aucune vente exécutée ni autorisée');
      put('Trading '+study.asset.quote,
        money(study.private.trading_quote,study.asset.quote));
      put('Funding '+study.asset.quote,

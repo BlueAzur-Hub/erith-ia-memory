@@ -49,6 +49,96 @@
     const ct=balanceFor(account,'CT');
     return {qty_ct:ct.qty,observed_at:account.fetched_at??null,verified:ct.verified};
   }
+  // Shared read-only Spot position truth. Absence is NEVER a verified zero.
+  // This owner is also used by Seven; no per-coin balance implementations.
+  const POSITION_SCALE=10n**18n;
+  function positionDecimal(value){
+    if(typeof value!=='string'||!/^(?:0|[1-9]\d{0,17})(?:\.\d{1,18})?$/.test(value))return null;
+    const [whole,tail='']=value.split('.');
+    return BigInt(whole)*POSITION_SCALE+BigInt(tail.padEnd(18,'0'));
+  }
+  function positionPrint(amount){
+    const head=String(amount/POSITION_SCALE),
+      tail=String(amount%POSITION_SCALE).padStart(18,'0').replace(/0+$/,'');
+    return head+(tail?'.'+tail:'');
+  }
+  function accountPositionFor(context,account,now=Date.now()){
+    const base=String(context?.base||'').toUpperCase(),
+      quote=String(context?.quote||'').toUpperCase(),
+      venue=String(context?.venue||'').toLowerCase(),pair=base+'-'+quote;
+    const fail=reason=>Object.freeze({pair,read_only:true,verified:false,
+      trading_base:null,funding_base:null,observed_at_utc:null,
+      reason,real_orders:0,orders_enabled:false});
+    if(!/^[A-Z][A-Z0-9]{0,19}$/.test(base)||!['USDC','USDT','EUR'].includes(quote)||
+       venue!=='okx')return fail('Identité Spot OKX non certifiée');
+    if(!validSource(account))return fail('Relevé privé non certifié');
+    const at=Date.parse(account.fetched_at||'');
+    if(!Number.isFinite(at)||at>now+30000||now-at>120000)
+      return fail('Relevé privé absent, futur ou périmé');
+    const tr=(Array.isArray(account.trading)?account.trading:[])
+      .flatMap(group=>Array.isArray(group?.details)?group.details:[])
+      .filter(row=>row?.ccy===base);
+    const fu=(Array.isArray(account.funding)?account.funding:[])
+      .filter(row=>row?.ccy===base);
+    if(tr.length>1||fu.length>1)return fail('Sous-soldes contradictoires pour '+base);
+    // Available quantity is the only quantity eligible for a hypothetical sale.
+    // cashBal/eq or funding balances cannot silently substitute for availBal.
+    const trading=tr.length?positionDecimal(tr[0].availBal):null;
+    const funding=fu.length?positionDecimal(fu[0].availBal??fu[0].bal):null;
+    if(trading===null||funding===null)
+      return fail('Sous-solde Trading ou Funding absent : zéro NON prouvé');
+    return Object.freeze({pair,read_only:true,verified:true,
+      trading_base:positionPrint(trading),funding_base:positionPrint(funding),
+      observed_at_utc:new Date(at).toISOString(),reason:null,
+      real_orders:0,orders_enabled:false});
+  }
+  function remainingFor(context,position,rules,now=Date.now()){
+    const base=String(context?.base||'').toUpperCase(),
+      quote=String(context?.quote||'').toUpperCase(),
+      venue=String(context?.venue||'').toLowerCase(),pair=base+'-'+quote;
+    const state=(status,reason,more={})=>Object.freeze({status,reason,pair,
+      read_only:true,orders_enabled:false,real_orders:0,
+      sellable_size_base:null,residual_base:null,
+      ...more});
+    if(!/^[A-Z][A-Z0-9]{0,19}$/.test(base)||!['USDC','USDT','EUR'].includes(quote)||
+       venue!=='okx')return state('UNKNOWN','Place de marché ou paire non certifiée');
+    const at=Date.parse(position?.observed_at_utc||'');
+    if(position?.pair!==pair||position?.verified!==true||position?.read_only!==true||
+       position?.orders_enabled!==false||position?.real_orders!==0||
+       !Number.isFinite(at)||at>now+30000||now-at>120000)
+      return state('UNKNOWN','Deux sous-soldes exacts et récents nécessaires');
+    const trading=positionDecimal(position.trading_base),
+      funding=positionDecimal(position.funding_base);
+    if(trading===null||funding===null)
+      return state('UNKNOWN','Quantité Trading/Funding absente ou invalide');
+    const amounts={trading_base:positionPrint(trading),
+      funding_base:positionPrint(funding),
+      total_base:positionPrint(trading+funding),
+      observed_at_utc:position.observed_at_utc};
+    if(trading===0n&&funding===0n)
+      return state('EMPTY','Solde disponible Trading ET Funding nul et vérifié',amounts);
+    if(trading===0n)
+      return state('FUNDING_ONLY','Aucune quantité disponible en Trading ; Funding distinct',amounts);
+    const proof=rules?.status==='verified'?rules:
+      spotTradingRulesFor({base,quote,venue},rules,now);
+    const proofAt=Date.parse(proof?.checked_at||'');
+    if(proof?.status!=='verified'||proof.market!==pair||proof.base!==base||
+       proof.quote!==quote||proof.state!=='live'||
+       proof.source!=='OKX Public Data · /api/v5/public/instruments'||
+       !Number.isFinite(proofAt)||proofAt>now+30000||now-proofAt>120000)
+      return state('RULES_UNVERIFIED','Règles Spot exactes, récentes et actives nécessaires',amounts);
+    const min=positionDecimal(proof.min_sz),lot=positionDecimal(proof.lot_sz);
+    if(min===null||lot===null||min<=0n||lot<=0n)
+      return state('RULES_UNVERIFIED','Minimum/pas non représentable sans arrondi',amounts);
+    const lotQuantity=trading/lot*lot,remainder=trading-lotQuantity;
+    const calc={...amounts,min_sz_base:proof.min_sz,lot_sz_base:proof.lot_sz,
+      residual_base:positionPrint(remainder)};
+    if(lotQuantity<min)
+      return state('DUST','Trading positif, quantité sous minimum ou pas Spot ; aucune vente normale certifiée',
+        {...calc,residual_base:positionPrint(trading)});
+    return state('SIZE_FILTER_MATCHES','Quantité conforme à minSz/lotSz ; acceptation/exécution non garanties',
+      {...calc,sellable_size_base:positionPrint(lotQuantity)});
+  }
   // Reconciliation proven in Concrete, generalized by exact Spot context.
   // Not a real profit or a complete lifetime accounting record.
   function acquisitionFor(context,fills,qty){
@@ -639,17 +729,19 @@
     const scenario=ctScenarioGrid(book,held.qty_ct,rate,bought,now);
     const partial=ctPartialExitGrid(book,held.qty_ct,rate,now);
     const rules=spotTradingRules(instruments,now);
+    const remaining=remainingFor({base:'CT',quote:'USDC',venue:'okx'},
+      accountPositionFor({base:'CT',quote:'USDC',venue:'okx'},account,now),rules,now);
     const assessment=assessPartialRules(partial,held.qty_ct,rules);
     return Object.freeze({schema:SCHEMA,market:PAIR,venue:'OKX Europe',quote:'USDC',
       read_only:true,orders_enabled:false,private_data:true,export_to_public_github:false,
       observed_at:new Date(now).toISOString(),portfolio:portfolio(account),position:held,acquisition:bought,
       fee_taker_fraction:rate,liquidation_illustrative:sale,exit_metrics:metrics,
       scenario_grid:scenario,partial_exit_grid:partial,
-      instrument_rules:rules,order_assessment:assessment,
+      instrument_rules:rules,remaining_status:remaining,order_assessment:assessment,
       pnl_illustrative_usdc:pnl,profit_proven:false,
       notes:['Les valeurs sont privées et restent localement dans le navigateur.',
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
         'Le prix futur de revente et le bénéfice réalisé ne sont pas connus.']});
   }
-  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,acquisitionFor,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,spotTradingRulesFor,assessSpotQuantity,assessSpotQuantityFor,planGrossBuyForNetSpot,assessPartialRules,compareCtExitDecisions,ctClosedCycleReport,publicCandles,explain,compose});
+  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,accountPositionFor,remainingFor,acquisition,acquisitionFor,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,spotTradingRulesFor,assessSpotQuantity,assessSpotQuantityFor,planGrossBuyForNetSpot,assessPartialRules,compareCtExitDecisions,ctClosedCycleReport,publicCandles,explain,compose});
 });

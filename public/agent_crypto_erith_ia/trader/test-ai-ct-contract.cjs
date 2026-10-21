@@ -257,3 +257,77 @@ test('cross-market, Bitget without OKX proof, mixed fills and missing position r
   assert.ok(!Object.hasOwn(result,'spent_quote'));
  }
 });
+
+
+test('shared CT remaining balance says DUST for 9.99 under verified 10 CT minimum, never empty',()=>{
+ const context={base:'CT',quote:'USDC',venue:'okx'},at=new Date(now-1000).toISOString();
+ const account={ok:true,read_only:true,fetched_at:at,
+  trading:[{details:[{ccy:'CT',availBal:'9.99',cashBal:'9.99'}]}],
+  funding:[{ccy:'CT',bal:'0'}]};
+ const row={instId:'CT-USDC',instType:'SPOT',state:'live',
+  minSz:'10',lotSz:'0.01',tickSz:'0.0001'};
+ const rules=api.spotTradingRulesFor(context,{observed_at_utc:at,
+  payload:{code:'0',data:[row]}},now);
+ const position=api.accountPositionFor(context,account,now);
+ assert.equal(position.verified,true);
+ const result=api.remainingFor(context,position,rules,now);
+ assert.equal(result.status,'DUST');
+ assert.equal(result.trading_base,'9.99');
+ assert.equal(result.funding_base,'0');
+ assert.equal(result.total_base,'9.99');
+ assert.equal(result.residual_base,'9.99');
+ assert.equal(result.sellable_size_base,null);
+ assert.equal(result.orders_enabled,false);
+ assert.equal(result.read_only,true);
+});
+test('after an externally completed sale, only two freshly verified zero rows mean EMPTY',()=>{
+ const context={base:'CT',quote:'USDC',venue:'okx'},at=new Date(now-1000).toISOString();
+ const account={ok:true,read_only:true,fetched_at:at,
+  trading:[{details:[{ccy:'CT',availBal:'0'}]}],
+  funding:[{ccy:'CT',bal:'0'}]};
+ const position=api.accountPositionFor(context,account,now);
+ assert.equal(api.remainingFor(context,position,null,now).status,'EMPTY');
+ assert.equal(api.remainingFor(context,position,null,now).total_base,'0');
+ const absent=api.accountPositionFor(context,{...account,funding:[]},now);
+ assert.equal(absent.verified,false);
+ assert.equal(api.remainingFor(context,absent,null,now).status,'UNKNOWN');
+ assert.equal(api.remainingFor(context,{...position,verified:false},null,now).status,'UNKNOWN');
+});
+test('BTC/ETH positions use exact shared quantity filters and preserve residual precision',()=>{
+ for(const [base,quote,avail,min,lot,status,residual] of [
+  ['BTC','USDC','0.000230001','0.0001','0.00000001','SIZE_FILTER_MATCHES','0.000000001'],
+  ['ETH','USDC','0.0009','0.001','0.0001','DUST','0.0009'],
+  ['SOL','USDT','0.005','0.01','0.001','DUST','0.005']
+ ]){
+  const context={base,quote,venue:'okx'},at=new Date(now-1000).toISOString();
+  const raw={ok:true,read_only:true,fetched_at:at,
+   trading:[{details:[{ccy:base,availBal:avail}]}],
+   funding:[{ccy:base,bal:'0'}]};
+  const rules=api.spotTradingRulesFor(context,{instId:base+'-'+quote,instType:'SPOT',state:'live',
+   baseCcy:base,quoteCcy:quote,minSz:min,lotSz:lot,tickSz:'0.0001',observed_at_utc:at},now);
+  const position=api.accountPositionFor(context,raw,now);
+  const result=api.remainingFor(context,position,rules,now);
+  assert.equal(result.status,status,base);
+  assert.equal(result.residual_base,residual);
+  assert.equal(result.orders_enabled,false);
+ }
+});
+test('Funding only, crossed pair, stale rules and absent available balance never imply a sale',()=>{
+ const context={base:'ETH',quote:'USDC',venue:'okx'},at=new Date(now-1000).toISOString();
+ const rules=api.spotTradingRulesFor(context,{instId:'ETH-USDC',instType:'SPOT',state:'live',
+  baseCcy:'ETH',quoteCcy:'USDC',minSz:'0.01',lotSz:'0.001',tickSz:'0.1',
+  observed_at_utc:at},now);
+ const raw={ok:true,read_only:true,fetched_at:at,
+  trading:[{details:[{ccy:'ETH',availBal:'0'}]}],funding:[{ccy:'ETH',bal:'1.2'}]};
+ const position=api.accountPositionFor(context,raw,now);
+ assert.equal(api.remainingFor(context,position,rules,now).status,'FUNDING_ONLY');
+ assert.equal(api.remainingFor(context,{...position,pair:'BTC-USDC'},rules,now).status,'UNKNOWN');
+ assert.equal(api.remainingFor(context,position,{...rules,checked_at:new Date(now-300000).toISOString()},now).status,'FUNDING_ONLY');
+ const trading={...raw,trading:[{details:[{ccy:'ETH',availBal:'0.2'}]}]};
+ const pos=api.accountPositionFor(context,trading,now);
+ assert.equal(api.remainingFor(context,pos,{...rules,checked_at:new Date(now-300000).toISOString()},now).status,'RULES_UNVERIFIED');
+ assert.equal(api.remainingFor({...context,venue:'bitget'},pos,rules,now).status,'UNKNOWN');
+ assert.equal(api.accountPositionFor(context,{...trading,read_only:false},now).verified,false);
+ assert.equal(api.accountPositionFor(context,{...trading,fetched_at:new Date(now-300000).toISOString()},now).verified,false);
+ assert.equal(api.accountPositionFor(context,{...trading,trading:[{details:[{ccy:'ETH',cashBal:'0.2'}]}]},now).verified,false);
+});

@@ -172,6 +172,9 @@
     (!selection?.provider||String(selection.provider).toLowerCase()==='okx')&&
     typeof owner?.acquisitionFor==='function'
       ?owner.acquisitionFor({base,quote,venue:'okx'},fills,amount):null;
+  const remaining=typeof owner?.remainingFor==='function'&&
+    (!selection?.provider||String(selection.provider).toLowerCase()==='okx')?
+    owner.remainingFor({base,quote,venue:'okx'},position,rules,now):null;
   const publicData=frozen({market_price_usd:print(mPrice),
     market_timestamp_verified:marketFresh,
     market_source:market?.usdSource||'non certifiée',
@@ -199,6 +202,10 @@
     maker_rate:validAccount?.maker_rate??null,
     taker_rate:validAccount?.taker_rate??null,
     fee_currency_verified:false,max_buy_verified:false,
+    holding_status:remaining?.status||'UNKNOWN',
+    holding_reason:remaining?.reason||'Non certifié',
+    sellable_size_base:remaining?.sellable_size_base??null,
+    residual_base:remaining?.residual_base??null,
     acquisition_cost_proven:false,pnl_proven:false,
     acquisition_cost:null,pnl:null});
   const sections=frozen([
@@ -208,8 +215,9 @@
         'Bougies exactes '+base+' non chargées.'),
     entry('Fiche publique',mPrice===null?'WAITING':'DATA',
       'Market USD indépendant du carnet natif '+pair+'.'),
-    entry('Position personnelle',validPosition?'VERIFIED':'UNKNOWN',
-      validPosition?'Trading et Funding '+base+' datés séparément.':
+    entry('Position personnelle',validPosition?(remaining?.status||'VERIFIED'):'UNKNOWN',
+      validPosition?'Trading et Funding '+base+' datés séparément ; état '+
+        (remaining?.status||'non qualifié')+'.':
         'Aucune position '+base+' prouvée ; absence ne signifie pas zéro.'),
     entry('Règles OKX',validRules?'VERIFIED':'UNKNOWN',
       validRules?'minSz, lotSz et tickSz de '+pair+' uniquement.':
