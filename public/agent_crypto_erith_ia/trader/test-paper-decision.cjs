@@ -1362,20 +1362,24 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
  assert.equal(node.dataset.ready,"false");
  assert.equal(text("buyQty"),"—");
  assert.match(proof("fresh"),/Vérification nécessaire/);
- assert.match(css,/@media\\(max-width:880px\\)/);
- assert.match(mirror,/trader-order-entry\\.css/);
- assert.match(mirror,/trader-order-entry-view\\.js/);
- assert.match(owner,/AgentCryptoTraderOrderEntryView\\?\\.update/);
- assert.doesNotMatch(src,/fetch\\(|XMLHttpRequest|localStorage|sessionStorage|\/api\/v5\/trade\/order|Authorization|Bearer/);
+ assert.ok(css.includes("@media(max-width:880px)"));
+ assert.ok(mirror.includes("trader-order-entry.css"));
+ assert.ok(mirror.includes("trader-order-entry-view.js"));
+ assert.ok(owner.includes("AgentCryptoTraderOrderEntryView?.update"));
+ for(const forbidden of ["fetch(","XMLHttpRequest","localStorage","sessionStorage",
+  "/api/v5/trade/order","Authorization","Bearer"])
+  assert.equal(src.includes(forbidden),false,"unexpected trade capability: "+forbidden);
 });
 
 test("Option C stays inside the existing PAPER ticket, not a second trading owner",()=>{
  const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
  const runtime=fs.readFileSync(path.join(__dirname,"trader-runtime-mirror.js"),"utf8");
- assert.match(view,/const orderEntry=globalThis\\.AgentCryptoTraderOrderEntryView\\?\\.mount/);
- assert.match(view,/ticketBox\\.append\\(warning,orderEntry,brief,cycle,technical\\)/);
- assert.match(view,/globalThis\\.AgentCryptoTraderOrderEntryView\\?\\.reset/);
- assert.match(view,/globalThis\\.AgentCryptoTraderOrderEntryView\\?\\.updateCycle/);
- assert.match(runtime,/loadOrderEntry.*trader-order-entry-view\\.js/);
- assert.doesNotMatch(view,/\/api\/v5\/trade\/order|\/okx\/place-order/);
+ assert.ok(view.includes("const orderEntry=globalThis.AgentCryptoTraderOrderEntryView?.mount"));
+ assert.ok(view.includes("ticketBox.append(warning,orderEntry,brief,cycle,technical)"));
+ assert.ok(view.includes("globalThis.AgentCryptoTraderOrderEntryView?.reset"));
+ assert.ok(view.includes("globalThis.AgentCryptoTraderOrderEntryView?.updateCycle"));
+ assert.ok(runtime.includes("loadOrderEntry=()=>add"));
+ assert.ok(runtime.includes("trader-order-entry-view.js"));
+ assert.equal(view.includes("/api/v5/trade/order"),false);
+ assert.equal(view.includes("/okx/place-order"),false);
 });
