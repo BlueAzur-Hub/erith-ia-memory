@@ -28,12 +28,13 @@ class Fake {
 }
 class FakeText{constructor(value){this.textContent=value;this.parent=null;}}
 function setup(){
- const root=new Fake('div'),host=new Fake('div'),ct=new Fake('details');
+ const root=new Fake('div'),host=new Fake('div'),ct=new Fake('details'),nav=new Fake('nav');
  ct.id='aiCtPanel';ct.textContent='CT private untouched marker';ct.open=true;
- root.append(host);host.append(ct);
+ root.append(host,nav);host.append(ct);
  const elements=[root,host,ct];
  const document={baseURI:'https://example.invalid/public/agent_crypto_erith_ia/trader/trading-desk.html',
   head:new Fake('head'),createElement:tag=>new Fake(tag),
+  querySelector:sel=>sel==='#accueil .atlas-v2-nav-essential'?nav:null,
   createTextNode:value=>new FakeText(String(value)),
   getElementById:id=>id==='detailPanelBody'?host:id==='aiCtPanel'?ct:
      id==='sevenAssetReading'?host.children.find(x=>x.id===id)||null:null};
@@ -67,7 +68,8 @@ function setup(){
  const byText=(x)=>descendants(panel).find(n=>n.tagName==='BUTTON'&&n.textContent.includes(x));
  const heading=()=>descendants(panel).find(x=>x.className==='seven-asset-title')?.textContent||'';
  const statuses=()=>descendants(panel).filter(x=>x.className==='seven-asset-card').map(x=>x.textContent);
- return {panel,ct,host,window,owner,globals,byText,heading,statuses,
+ return {panel,ct,host,nav,window,owner,globals,byText,heading,statuses,
+  sevenQuick:()=>nav.children.find(x=>x.id==='aiSevenToggle'),
   select:(id,symbol,instr)=>{
    external=null;
    coin={id,symbol,name:symbol,priceUsd:2443,usdSource:'CoinGecko',usdUpdatedAt:now};
@@ -204,6 +206,33 @@ test('Trader iframe actually loads the Technical Reading owner once; Administrat
  assert.match(runtime,/function start\(\)\{bind\(\);mountSevenDossier\(\);\}/);
  assert.doesNotMatch(administrator,/technical-reading-data-sync\.js|traderTechnicalReadingSyncScript/);
  assert.doesNotMatch(mirror,/localStorage\.|indexedDB\.|orders_enabled\s*=\s*true/);
+});
+test('Seven shortcut is visible for DNA Bitget, navigates to the native dossier, CT remains untouched',()=>{
+ const v=setup();
+ assert.match(v.sevenQuick().textContent,/Seven · BTC/);
+ v.external('neosoul','DNA','DNA-USDT');
+ assert.equal(v.panel.hidden,false);
+ assert.equal(v.panel.open,true);
+ assert.match(v.sevenQuick().textContent,/Seven · DNA/);
+ assert.equal(v.sevenQuick().hidden,false);
+ assert.equal(v.statuses().length,7);
+ v.sevenQuick().fire('click');
+ assert.equal(v.panel.open,true);
+ assert.equal(v.ct.textContent,'CT private untouched marker');
+ assert.equal(v.ct.open,true);
+ v.external('concrete','CT','CT-USDT','okx');
+ assert.equal(v.panel.hidden,true);
+ assert.equal(v.sevenQuick().hidden,true);
+ assert.equal(v.ct.textContent,'CT private untouched marker');
+});
+test('Seven removes old rows when selection identity becomes incomplete',()=>{
+ const v=setup();
+ assert.equal(v.statuses().length,7);
+ v.external('unknown','DNA','DNA-USDT','unknown');
+ assert.equal(v.panel.hidden,true);
+ assert.equal(v.statuses().length,0);
+ assert.equal(v.sevenQuick().hidden,true);
+ assert.equal(v.ct.textContent,'CT private untouched marker');
 });
 test('CT source files unchanged by renderer and account proof is opt-in only',()=>{
  assert.match(runtime,/traderSevenAssetCoreScript/);
