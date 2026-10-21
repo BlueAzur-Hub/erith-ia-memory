@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const code=fs.readFileSync(path.join(__dirname,'ai-asset-reading-view.js'),'utf8');
-const runtime=fs.readFileSync(path.join(__dirname,'trader-runtime-mirror.js'),'utf8');
+const runtime=fs.readFileSync(path.join(__dirname,'technical-reading-data-sync.js'),'utf8');
 const account=fs.readFileSync(path.join(__dirname,'trader-okx-account.js'),'utf8');
 const ctBefore=fs.readFileSync(path.join(__dirname,'ai-ct-panel.js'),'utf8');
 class Fake {
