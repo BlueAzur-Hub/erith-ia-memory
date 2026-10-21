@@ -271,6 +271,31 @@
    return periodKey?SUMMARY_RULES[periodKey]||null:null;
  }
  const priceValue=v=>N(Array.isArray(v)?v[1]:v&&typeof v==='object'?(v.y??v.price??v.value):v);
+ // Verified short external series: never pad 7 hours of listings into a fake day.
+ // Must match the ALREADY plotted line and exact Bitget/OKX public source.
+ function verifiedPartialListingTimes(ref,period){
+   if(period?.label!=='24h')return null;
+   const ext=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
+   const view=globalThis.AgentCryptoNewListingsNativeCategory;
+   const selection=view?.snapshot?.(),history=view?.mathSeriesSnapshot?.();
+   if(!ext?.active||!selection||!history||
+     ext.id!==selection.selectedId||ext.base!==selection.selectedSymbol||
+     ext.provider!==selection.selectedProvider||
+     String(ext.pair||'')!==String(selection.selectedPair||'')||
+     history.instrument!==selection.selectedPair||
+     history.provider!==selection.selectedProvider||
+     history.periodDays!==1||history.currency!=='USD'||
+     history.series?.length!==ref?.ds?.data?.length||
+     history.series?.length!==ref?.meta?.data?.length||
+     history.series.length<21)return null;
+   const times=history.series.map(pair=>Array.isArray(pair)?T(pair[0]):null);
+   if(times.some((v,i)=>!Number.isFinite(v)||(i>0&&v<=times[i-1])))return null;
+   for(const i of [...new Set([0,Math.floor(times.length/2),times.length-1])]){
+     const plotted=priceValue(ref.ds.data[i]),source=N(history.series[i]?.[1]);
+     if(!(plotted>0&&source>0)||Math.abs(plotted/source-1)>.001)return null;
+   }
+   return times;
+ }
  function summaryOwnership(ref,period=summaryPeriodConfig()){
    if(!ref?.ds?.atlasCoin?.id||!ref?.ds?.atlasCoin?.symbol)return false;
    const external=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
@@ -325,22 +350,32 @@
    const values=ref.ds.data,points=ref.meta.data;
    if(!Array.isArray(values)||values.length<period.segments*2||points?.length!==values.length)
      return {reason:'Synthèse indisponible · échantillons insuffisants'};
-   const times=nativeTimeline(chart,ref.i,Date.now());
+   const native=nativeTimeline(chart,ref.i,Date.now());
+   const observed=verifiedPartialListingTimes(ref,period);
+   const times=observed||native;
    if(!times||times.length!==values.length||times.some((t,i)=>!Number.isFinite(t)||(i>0&&t<=times[i-1])))
      return {reason:'Synthèse indisponible · dates non vérifiables'};
    const first=times[0],last=times.at(-1),span=last-first;
    if(!(span>0))return {reason:'Synthèse indisponible · durée inconnue'};
+   let partial=false;
    if(period.days){
      const expected=period.days*86400000;
-     if(span<expected*.73||span>expected*1.18)
-       return {reason:'Synthèse indisponible · couverture '+period.label+' incohérente'};
+     if(span<expected*.73||span>expected*1.18){
+       // Only a matching, chronologically VERIFIED 24h new-listing series can
+       // earn a partial badge. The other historical durations stay strict.
+       if(period.label==='24h'&&observed===times&&span>=2*3600000&&
+          span<expected*.73&&last<=Date.now()+300000&&
+          Date.now()-last<=30*60000)partial=true;
+       else return {reason:'Synthèse indisponible · couverture '+period.label+' incohérente'};
+     }
    }else if(span<7*86400000){
      return {reason:'Synthèse Max · durée réelle trop courte'};
    }
-   const buckets=Array.from({length:period.segments},()=>[]);
+   const segments=partial?Math.min(24,Math.max(2,Math.floor(span/3600000))):period.segments;
+   const buckets=Array.from({length:segments},()=>[]);
    for(let i=0;i<values.length;i++){
      const price=priceValue(values[i]);if(!(price>0))continue;
-     const bin=Math.min(period.segments-1,Math.max(0,Math.floor((times[i]-first)/span*period.segments)));
+     const bin=Math.min(period.segments-1,Math.max(0,Math.floor((times[i]-first)/span*segments)));
      buckets[bin].push({price,t:times[i]});
    }
    const bars=buckets.map((bucket,i)=>{
@@ -352,6 +387,7 @@
    // Refuse partial archives rather than silently presenting nonexistent days.
    if(bars.some(x=>!x))return {reason:'Synthèse indisponible · intervalles historiques incomplets'};
    return {period,ref,times,first,last,bars,approximate:!!times.approximate,
+     partial,coverageHours:Number((span/3600000).toFixed(2)),sourceExact:!!observed,
      coinId:String(ref.ds.atlasCoin.id),symbol:String(ref.ds.atlasCoin.symbol)};
  }
  function drawVariationSummary(chart,summary){
@@ -385,7 +421,9 @@
      const summary=variationSummary(chart);
      if(!summary.bars){hint(summary.reason);return;}
      const count=drawVariationSummary(chart,summary);
-     hint(count?'Ligne + '+count+' barres · '+summary.period.label+' · '+summary.period.unit+
+     hint(count?'Ligne + '+count+' barres · '+
+       (summary.partial?'listing partiel '+summary.coverageHours.toLocaleString('fr-FR')+' h sur 24 h':
+         summary.period.label+' · '+summary.period.unit)+
        (summary.approximate?' · temps estimé':''):'Ligne conservée · barres indisponibles',
        'Variations en pourcentage du prix historique affiché. Vert : hausse ; rouge : baisse. '+
        'Hauteur visuelle compressée pour rester lisible ; aucune bougie OHLC reconstituée.');
@@ -400,5 +438,5 @@
  if(globalThis.Chart?.register)globalThis.Chart.register(plugin);
  if(typeof window!=='undefined')for(const event of ['agent-crypto:market-candles-loaded','agent-crypto:quote-architecture-changed','agent-crypto:selected-market-changed','agent-crypto:external-asset-changed'])
    window.addEventListener(event,refresh,{passive:true});
- globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,periodConfig,summaryPeriodConfig,summaryOwnership,variationSummary,drawVariationSummary,nativeTimeline,externalLineTruth,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
+ globalThis.AgentCryptoLineCandleOverlay=Object.freeze({refresh,barsFrom,periodConfig,summaryPeriodConfig,summaryOwnership,variationSummary,drawVariationSummary,nativeTimeline,verifiedPartialListingTimes,externalLineTruth,matching,miniLane,miniGeometry,drawBars,plugin,strip_ratio:.24,read_only:true,real_order:false,market_core_changed:false});
 })();
