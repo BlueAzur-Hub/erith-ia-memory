@@ -624,9 +624,10 @@
     state.discovering=true;state.lastError=null;
     try{
       const [rows,watch]=await Promise.all([
-        globalThis.AgentCryptoNewListingLiveAsset?.discoverBitget?.({days:30})||[],
+        Promise.resolve(globalThis.AgentCryptoNewListingLiveAsset?.discoverBitget?.({days:30})||[])
+          .catch(()=>state.discovered.slice()),
         publicListingsWatch(),
-        fetchTickers(),
+        fetchTickers().catch(()=>state.tickerMap),
         fetchQuoteRates().catch(()=>new Map())
       ]);
       state.discovered=Array.isArray(rows)?rows.slice():[];
