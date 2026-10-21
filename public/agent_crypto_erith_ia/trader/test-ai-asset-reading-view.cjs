@@ -120,7 +120,7 @@ test('late private BTC result cannot paint after an ETH selection',async()=>{
    observed_at_utc:new Date().toISOString()});
  for(let i=0;i<8;i++)await Promise.resolve();
  assert.match(v.heading(),/ETH/);
- assert.doesNotMatch(v.statuses().join('\n'),/5 ETH|2 ETH|10 USDC.*Trading/);
+ assert.doesNotMatch(v.statuses().join('\n'),/Trading ETH5 ETH|Funding ETH2 ETH|Trading USDC10 USDC/);
  assert.equal(v.ct.textContent,'CT private untouched marker');
 });
 test('CT source files unchanged by renderer and account proof is opt-in only',()=>{
