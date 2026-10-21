@@ -36,8 +36,10 @@ sheet.href=new URL('../trader/ai-asset-reading.css',document.baseURI).href;
 document.head.append(sheet);
 let key='',coin=null,selection=null,market=null,chart=null,book=null,rules=null,
  account=null,position=null,mode='learn',epoch=0,busy=false;
-const marketCoin=()=>globalThis.AgentCryptoTraderMarket?.selected?.()||null;
+const marketCoin=()=>globalThis.AgentCryptoTraderMarket?.selected?.()||
+  globalThis.getSelectedCoin?.()||null;
 const microscope=()=>globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||null;
+const externalListing=()=>globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.()||null;
 const available=(v)=>v===null||v===undefined||v===''?'Non certifié':String(v);
 const money=(v,unit)=>available(v)+(v===null||v===undefined?'':' '+unit);
 const row=(label,value)=>{
@@ -52,19 +54,38 @@ const format=(v,dec=8)=>{
   n.toLocaleString('fr-FR',{maximumFractionDigits:dec}):'non qualifié';
 };
 function chosen(){
- const c=marketCoin(),g=microscope();
- const symbol=String(c?.symbol||'').toUpperCase();
+ const c=marketCoin(),g=microscope(),external=externalListing();
  const graphPair=String(g?.loadedInstrument||'').toUpperCase().replace('/','-');
  const graphBase=graphPair.match(/^([A-Z0-9]{1,20})-([A-Z0-9]{2,12})$/)?.[1]||'';
- // CT's restored module is always the only CT owner, even when the Market
- // lags behind a newly loaded CT/USDT graph.
+ const symbol=String(c?.symbol||'').toUpperCase();
+ const extId=String(external?.selectedId||'').trim();
+ const extSymbol=String(external?.selectedSymbol||'').toUpperCase();
+ const extPair=String(external?.selectedPair||'').toUpperCase().replace('/','-');
+ const provider=String(external?.selectedProvider||'').toLowerCase();
+ // A New Listing belongs to its exchange selection, NOT a stale BTC Market.
+ if(extId&&extSymbol){
+   if(extSymbol==='CT'||graphBase==='CT')return {ct:true,c,g};
+   const exact=extPair.match(/^([A-Z0-9]{1,20})-(USDC|USDT|EUR)$/);
+   const externalCoin={id:extId,symbol:extSymbol,name:extSymbol};
+   if(!exact||exact[1]!==extSymbol||
+      !['bitget','okx','binance'].includes(provider))
+     return {pending:true,c:externalCoin,g};
+   if(graphPair&&graphPair!==extPair)
+     return {conflict:true,c:externalCoin,g,graphBase};
+   if(graphPair!==extPair||g?.external!==true)
+     return {pending:true,c:externalCoin,g};
+   return {c:externalCoin,g,
+     selection:{id:extId,symbol:extSymbol,quote:exact[2],provider},
+     identity:'listing|'+provider+'|'+extId+'|'+extPair};
+ }
+ // CT's restored module is always the sole CT owner.
  if(symbol==='CT'||graphBase==='CT')return {ct:true,c,g};
  if(!c?.id||!/^[A-Z][A-Z0-9]{0,19}$/.test(symbol))return {pending:true,c,g};
  if(graphBase&&graphBase!==symbol)return {conflict:true,c,g,graphBase};
  const quote=String(c?.rawQuoteCurrency||c?.quote||
    c?.providerContext?.quote||'USDC').toUpperCase();
  if(!['USDC','USDT','EUR'].includes(quote))return {pending:true,c,g};
- return {c,g,selection:{id:String(c.id),symbol,quote},
+ return {c,g,selection:{id:String(c.id),symbol,quote,provider:'okx'},
   identity:String(c.id)+'|'+symbol+'|'+quote};
 }
 function resetReading(){
@@ -98,7 +119,14 @@ function change(){
    key=choice.identity;coin=choice.c;selection=choice.selection;
    epoch++;resetReading();
  }
- panel.hidden=false;publicButton.disabled=busy;privateButton.disabled=busy;
+ panel.hidden=false;
+ const isNativeOkx=selection.provider==='okx';
+ publicButton.disabled=busy||!isNativeOkx;
+ privateButton.disabled=busy||!isNativeOkx;
+ if(!isNativeOkx)
+   state.textContent='Lecture '+selection.symbol+'/'+selection.quote+
+     ' · '+selection.provider.toUpperCase()+
+     ' public. Carnet, règles et compte OKX non applicables à cette place ; aucune donnée privée supposée.';
  heading.textContent='IA · Dossier '+selection.symbol+' · Seven';
  caption.textContent=String(coin?.name||selection.symbol)+' · '+selection.symbol+
    '/'+selection.quote+' · Market, position, règles et scénarios PAPER';
@@ -108,8 +136,10 @@ function change(){
 }
 function safeChart(){
  const info=microscope();
- const base=String(info?.loadedInstrument||'').toUpperCase().split('-')[0];
- if(base!==selection?.symbol)return null;
+ const pair=String(info?.loadedInstrument||'').toUpperCase().replace('/','-');
+ if(pair.split('-')[0]!==selection?.symbol)return null;
+ if(selection?.provider!=='okx'&&
+    (info?.external!==true||pair!==selection.symbol+'-'+selection.quote))return null;
  return info;
 }
 function paint(){
@@ -241,7 +271,8 @@ async function getPublic(url,ms=6500){
  }finally{clearTimeout(timeout);}
 }
 async function publicRead(){
- const initial=chosen();if(!initial.selection||busy)return;
+ const initial=chosen();
+ if(!initial.selection||busy||initial.selection.provider!=='okx')return;
  const pair=initial.selection.symbol+'-'+initial.selection.quote,token=epoch;
  busy=true;publicButton.disabled=true;privateButton.disabled=true;
  state.textContent='Lecture des preuves publiques exactes de '+pair+'…';
@@ -273,7 +304,8 @@ async function publicRead(){
  }
 }
 async function privateRead(){
- const initial=chosen();if(!initial.selection||busy)return;
+ const initial=chosen();
+ if(!initial.selection||busy||initial.selection.provider!=='okx')return;
  const pair=initial.selection.symbol+'-'+initial.selection.quote,token=epoch;
  const owner=globalThis.AgentCryptoTraderOkxAccount;
  if(typeof owner?.ticketReadOnly!=='function'||typeof owner?.basePositionReadOnly!=='function'){
@@ -308,7 +340,8 @@ publicButton.addEventListener('click',()=>void publicRead());
 privateButton.addEventListener('click',()=>void privateRead());
 function schedule(){queueMicrotask(change);}
 for(const event of ['agent-crypto:trader-selection-changed',
- 'agent-crypto:external-asset-changed','agent-crypto:trader-line-loaded',
+ 'agent-crypto:external-asset-changed','agent-crypto:new-listing-line-ready',
+ 'agent-crypto:trader-line-loaded',
  'agent-crypto:candles-technical-levels','agent-crypto:quote-architecture-changed']){
  window.addEventListener(event,schedule,{passive:true});
 }
