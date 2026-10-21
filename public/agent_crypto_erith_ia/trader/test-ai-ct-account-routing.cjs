@@ -131,3 +131,11 @@ test('CT-specific private account actions are hidden for other assets and never 
  assert.match(ai,/agent-crypto:external-asset-changed/);
  assert.doesNotMatch(ai.slice(ai.indexOf('function preparePublicReading('),ai.indexOf('function setHelpMode(mode)')),/fetch\(|bridge\(|Authorization|sessionStorage/);
 });
+
+test('Technical private CT actions are CSS-hidden and quicklink reflects the selected asset',()=>{
+ const css=require('node:fs').readFileSync(require('node:path').join(__dirname,'ai-ct-panel.css'),'utf8');
+ assert.match(css,/\.ai-ct-actions\[hidden\]/);
+ assert.match(css,/\.ai-ct-case\[hidden\]/);
+ assert.match(ai,/navButton\.textContent=isCt\?'IA · Concrete':'IA · '/);
+ assert.match(ai,/panel\.dataset\.activeMarketSymbol=symbol/);
+});
