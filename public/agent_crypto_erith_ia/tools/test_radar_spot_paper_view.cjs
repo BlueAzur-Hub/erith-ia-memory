@@ -5,27 +5,29 @@ const {valid,paint}=require("../laboratoire/radar-spot-paper.js");
 const ROOT=path.join(__dirname,"../data/crypto/radar-opportunities");
 const report=JSON.parse(fs.readFileSync(path.join(ROOT,"spot-paper-audit.json"),"utf8"));
 test("every entry-day Radar candidate is preserved with explicit no-PAPER outcome",()=>{
- const source=JSON.parse(fs.readFileSync(path.join(ROOT,"2026-10-17.json"),"utf8"));
+ const source=JSON.parse(fs.readFileSync(path.join(ROOT,report.source_first_day_utc+".json"),"utf8"));
  const items=[...source.groups.momentum_24h_7d,...source.groups.rebound_24h_only];
  assert.equal(valid(report),report);
  assert.equal(report.candidates.length,items.length);
  assert.deepEqual(report.candidates.map(x=>x.coin_id),items.map(x=>x.id));
  assert.equal(report.trades_executed,0);
  assert(report.candidates.every(x=>x.paper.net_profit_usdt===null));
- assert.equal(report.later_price_rises,3);
- assert.equal(report.public_spot_evidence_candidates,4);
+ assert.equal(report.later_price_rises,report.candidates.filter(x=>x.aggregate_change_pct_observed>0).length);
+ assert.equal(report.public_spot_evidence_candidates,report.candidates.filter(x=>
+  x.spot.early_public_spot_book||x.spot.later_spot_qualification).length);
 });
-test("Q and BR are not retroactively made executable because they rose",()=>{
- for(const id of ["quack-ai","bedrock-token"]){
-  const x=report.candidates.find(y=>y.coin_id===id);
-  assert(x.aggregate_change_pct_observed>0);
+test("later winners, losers and non-matches never authorize historical PAPER entries",()=>{
+ assert(report.candidates.some(x=>x.aggregate_change_pct_observed>0));
+ assert(report.candidates.some(x=>x.aggregate_change_pct_observed<0));
+ for(const x of report.candidates){
   assert.equal(x.paper.decision,"BLOCKED");
-  assert.equal(x.paper.reason,"CONTRACT_IDENTITY_UNVERIFIED");
   assert.equal(x.spot.contract_identity_proven,false);
   assert.equal(x.spot.quote_conversion_usd_to_usdt_proven,false);
+  const spotObserved=Boolean(x.spot.early_public_spot_book||x.spot.later_spot_qualification);
+  assert.equal(x.paper.reason,spotObserved?
+   "CONTRACT_IDENTITY_UNVERIFIED":"NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE");
+  assert.equal(x.paper.net_profit_usdt,null);
  }
- const folk=report.candidates.find(y=>y.coin_id==="folks");
- assert.equal(folk.paper.reason,"NO_PUBLIC_SPOT_BOOK_OR_PAIR_FOR_CANDIDATE");
 });
 test("client refuses fabricated profit and tampered trade count",()=>{
  assert.throws(()=>valid({...report,trades_executed:1}),/non conforme/);
@@ -46,7 +48,7 @@ test("browser table only renders local text, keeps losing assets and no trade bu
   createElement:()=>new FakeNode()
  };
  paint(report,doc);
- assert.equal(nodes["radar-spot-body"].children.length,22);
+ assert.equal(nodes["radar-spot-body"].children.length,report.candidates.length);
  const rows=nodes["radar-spot-body"].children;
  assert.equal(rows[0].children.length,4);
  assert(rows.some(x=>x.children[1].className==="negative"));

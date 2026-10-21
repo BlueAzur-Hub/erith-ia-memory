@@ -1,0 +1,49 @@
+name: Seven Capital Scout PAPER Check
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/seven-radar-opportunity-history.yml"
+      - ".github/workflows/seven-capital-scout-check.yml"
+      - "public/agent_crypto_erith_ia/tools/seven_capital_scout.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_seven_capital_scout.cjs"
+      - "public/agent_crypto_erith_ia/trader/strategy-comparator.js"
+      - "public/agent_crypto_erith_ia/data/trader_flux/seven_capital_scout/status.json"
+permissions:
+  contents: read
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check pure JS, safety and chronology
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/tools/seven_capital_scout.cjs
+          node --check public/agent_crypto_erith_ia/trader/strategy-comparator.js
+          node public/agent_crypto_erith_ia/tools/test_seven_capital_scout.cjs
+          node public/agent_crypto_erith_ia/tools/seven_capital_scout.cjs
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const path='public/agent_crypto_erith_ia/data/trader_flux/seven_capital_scout/status.json';
+          const r=JSON.parse(fs.readFileSync(path,'utf8'));
+          const trader=fs.readFileSync('public/agent_crypto_erith_ia/trader/strategy-comparator.js','utf8');
+          if(!trader.includes('mountCapitalPulse(host)')||
+             !trader.includes('credentials:"omit"')||
+             !trader.includes('real_orders_submitted!==0')||
+             trader.includes('/api/v5/trade/order')||
+             trader.includes('localStorage.setItem'))
+             throw Error('Trader auto-pulse safety contract changed');
+          if(r.orders_enabled!==false||r.real_orders_submitted!==0||
+             r.paper_orders_submitted!==0||r.private_account_access!==false||
+             r.simulation_budget_usdc!==10||r.reserved_cost_buffer_usdc!==0.94||
+             r.profit_real_usdc!==null||r.profit_paper_usdc!==null||
+             r.quote!=='USD'||r.milestones_usdc.join(',')!=='12,15,17'||
+             r.observations.some(x=>x.decision!=='NO_TRADE'||x.net_profit_usdc!==null))
+             throw Error('Safety contract or currency identity broken');
+          console.log('AUTOMATED SCOUT READ-ONLY PASS',r.latest_archive_date_utc);
+          NODE
