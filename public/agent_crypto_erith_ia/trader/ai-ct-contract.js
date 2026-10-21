@@ -726,13 +726,15 @@
     const scenario=ctScenarioGrid(book,held.qty_ct,rate,bought,now);
     const partial=ctPartialExitGrid(book,held.qty_ct,rate,now);
     const rules=spotTradingRules(instruments,now);
+    const remaining=remainingFor({base:'CT',quote:'USDC',venue:'okx'},
+      accountPositionFor({base:'CT',quote:'USDC',venue:'okx'},account,now),rules,now);
     const assessment=assessPartialRules(partial,held.qty_ct,rules);
     return Object.freeze({schema:SCHEMA,market:PAIR,venue:'OKX Europe',quote:'USDC',
       read_only:true,orders_enabled:false,private_data:true,export_to_public_github:false,
       observed_at:new Date(now).toISOString(),portfolio:portfolio(account),position:held,acquisition:bought,
       fee_taker_fraction:rate,liquidation_illustrative:sale,exit_metrics:metrics,
       scenario_grid:scenario,partial_exit_grid:partial,
-      instrument_rules:rules,order_assessment:assessment,
+      instrument_rules:rules,remaining_status:remaining,order_assessment:assessment,
       pnl_illustrative_usdc:pnl,profit_proven:false,
       notes:['Les valeurs sont privées et restent localement dans le navigateur.',
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
