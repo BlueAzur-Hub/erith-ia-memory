@@ -40,7 +40,8 @@ if(nav&&!document.getElementById('aiCtToggle')){
 const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.id='aiCtNativeStyle';
 sheet.href=new URL('../trader/ai-ct-panel.css?scope=native',document.baseURI).href;
 document.head.appendChild(sheet);
-let latest=null;
+let latest=null,latestSession=null;
+const ctInlineSessions=new WeakMap();
 let ctOrderTicketLoading=null;
 function ensureCtOrderTicket(){
  // Only when the operator explicitly requests Seven's account reading.
@@ -388,43 +389,89 @@ async function loadCtEvidence(){
  const data=results.map(x=>x.status==='fulfilled'?x.value:null);
  return model.compose({account:data[0],fills:data[1],fees:data[2],book:data[3],instruments:data[4]});
 }
+// A CT private report is replaced only after a successful verified reading.
+// A failed refresh must not erase previously verified evidence in the SAME
+// still-authorized browser session. Never persist or restore it from storage.
 async function refresh(){
- latest=null;copy.disabled=true;read.disabled=true;body.replaceChildren();
- state('Lecture locale en cours…');
+ const session=sessionStorage.getItem(TOKEN_KEY)||'';
+ if(latestSession!==session){
+  latest=null;latestSession=null;copy.disabled=true;body.replaceChildren();
+ }
+ const savedNodes=[...body.childNodes],previous=latest;
+ read.disabled=true;
+ state(previous?
+  'Actualisation CT en cours · rapport précédent conservé (ancien, non actualisé)…':
+  'Lecture locale CT en cours…');
  try{
   const doc=await loadCtEvidence();
-  latest=doc;paint(doc);
-  state('Lecture seule · provenance OKX · '+new Date().toLocaleTimeString('fr-FR'));
-  copy.disabled=false;
- }catch(e){state('Non disponible : '+String(e.message||e).slice(0,140));}
- finally{read.disabled=false;}
+  if(!session||sessionStorage.getItem(ROLE_KEY)!=='owner'||
+     sessionStorage.getItem(TOKEN_KEY)!==session)
+    throw new Error('Session propriétaire modifiée pendant la lecture.');
+  // paint() reuses the original CT node, so restore the exact old nodes
+  // if a rendering exception occurs midway through the new report.
+  try{paint(doc);}
+  catch(e){body.replaceChildren(...savedNodes);throw e;}
+  latest=doc;latestSession=session;copy.disabled=false;
+  state('Lecture CT vérifiée · '+new Date().toLocaleTimeString('fr-FR'));
+ }catch(e){
+  const ownerStillValid=Boolean(session)&&
+    sessionStorage.getItem(ROLE_KEY)==='owner'&&
+    sessionStorage.getItem(TOKEN_KEY)===session;
+  if(!ownerStillValid){
+   latest=null;latestSession=null;copy.disabled=true;body.replaceChildren();
+   state('Session Aether Trust non liée · données privées masquées.');
+  }else{
+   body.replaceChildren(...savedNodes);
+   latest=previous;copy.disabled=!previous;
+   state((previous?'Échec actualisation · RAPPORT PRÉCÉDENT, NON ACTUEL · ':
+     'Analyse CT indisponible · ')+String(e.message||e).slice(0,140));
+  }
+ }finally{read.disabled=false;}
 }
 async function readForAccount(target){
- // Réutilise le calcul de Seven, mais affiche le résultat à l'endroit du clic.
- // Aucun scroll, aucune modification de l'actif, aucun mouvement du graphique.
+ // Inline CT remains local to the account panel. Never erase the previously
+ // verified inline report before a replacement has been loaded and rendered.
  if(!target?.isConnected||!target.closest?.('#traderOkxAccountPanel'))return false;
- target.replaceChildren();
+ const session=sessionStorage.getItem(TOKEN_KEY)||'';
+ if(ctInlineSessions.get(target)!==session)target.replaceChildren();
+ const oldNodes=[...target.childNodes];
  const waiting=document.createElement('p');
- waiting.textContent='Lecture privée CT/USDC en cours…';
- target.append(waiting);
+ waiting.setAttribute('role','status');
+ waiting.textContent=oldNodes.length?
+  'Actualisation CT en cours · ancien rapport conservé, non actualisé…':
+  'Lecture privée CT/USDC en cours…';
+ target.prepend(waiting);
+ const validSession=()=>Boolean(session)&&
+   sessionStorage.getItem(ROLE_KEY)==='owner'&&
+   sessionStorage.getItem(TOKEN_KEY)===session;
  try{
   const doc=await loadCtEvidence();
   await ensureCtOrderTicket();
-  if(!target.isConnected||target.hidden||sessionStorage.getItem(ROLE_KEY)!=='owner')
-   return false;
+  if(!target.isConnected||target.hidden||!validSession())return false;
   const chart=model.publicCandles(globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||null);
   const report=model.explain(doc,chart);
   target.replaceChildren();
-  showEvidence(target,doc);
-  globalThis.AgentCryptoCtOrderTicket?.mount?.(target,doc);
-  showFullReport(target,report);
+  try{
+   showEvidence(target,doc);
+   globalThis.AgentCryptoCtOrderTicket?.mount?.(target,doc);
+   showFullReport(target,report);
+  }catch(e){target.replaceChildren(...oldNodes);throw e;}
+  ctInlineSessions.set(target,session);
   return true;
  }catch(e){
   if(target.isConnected&&!target.hidden){
-   target.replaceChildren();
-   const p=document.createElement('p');
-   p.textContent='Analyse CT indisponible : '+String(e.message||e).slice(0,140);
-   target.append(p);
+   if(!validSession()){
+    target.replaceChildren();
+    ctInlineSessions.delete(target);
+  }else{
+    target.replaceChildren(...oldNodes);
+    const p=document.createElement('p');
+    p.setAttribute('role','status');
+    p.textContent=(oldNodes.length?
+      'Lecture CT précédente (NON ACTUELLE) · nouvelle lecture indisponible : ':
+      'Analyse CT indisponible : ')+String(e.message||e).slice(0,140);
+    target.prepend(p);
+   }
   }
   return false;
  }
@@ -506,7 +553,7 @@ read.addEventListener('click',refresh);
 // Point d'entrée interne pour le bouton du Compte OKX, sans navigation forcée.
 globalThis.AgentCryptoAiCtPanel=Object.freeze({readForAccount,read_only:true});
 window.addEventListener('aether-trust:logout-requested',()=>{
- latest=null;copy.disabled=true;body.replaceChildren();
+ latest=null;latestSession=null;copy.disabled=true;body.replaceChildren();
  const local=document.querySelector('#traderOkxAccountPanel [data-okx-ctreading]');
  if(local){local.hidden=true;local.replaceChildren();}
 },{passive:true});

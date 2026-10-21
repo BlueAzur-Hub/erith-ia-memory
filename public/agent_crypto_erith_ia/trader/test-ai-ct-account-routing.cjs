@@ -50,3 +50,93 @@ test('Convert warns about manual confirmation and potential spread, not zero gua
  assert.match(account,/Vérifie le devis, son délai et le spread possible/);
  assert.doesNotMatch(account,/function\s+convertCtOrder\s*\(/);
 });
+
+const vm=require('node:vm');
+function ctReadHarness(){
+ const start=ai.indexOf('async function refresh(){');
+ const end=ai.indexOf("const lesson=panel.querySelector('#aiCtLesson');",start);
+ assert.ok(start>0&&end>start);
+ const handlers=ai.slice(start,end);
+ const body={childNodes:[],replaceChildren(...nodes){this.childNodes=nodes;}};
+ let currentToken='OWNER_A',currentRole='owner',fault=null;
+ const states=[],reads=[];
+ const makeTarget=()=>({
+  childNodes:[],isConnected:true,hidden:false,
+  closest:()=>({}),
+  replaceChildren(...nodes){this.childNodes=nodes;},
+  prepend(node){this.childNodes.unshift(node);},
+  append(node){this.childNodes.push(node);}
+ });
+ const target=makeTarget();
+ const ctx={
+  latest:null,latestSession:null,ctInlineSessions:new WeakMap(),
+  copy:{disabled:true},read:{disabled:false},body,
+  sessionStorage:{getItem:key=>key.includes('token')?currentToken:currentRole},
+  TOKEN_KEY:'agent_crypto_bridge_owner_token_v1',
+  ROLE_KEY:'agent_crypto_local_access_session_v1',
+  state:message=>states.push(message),
+  getDoc:()=>{},
+  async loadCtEvidence(){
+   if(fault)throw new Error(fault);
+   return {id:reads.push('read')};
+  },
+  paint(doc){body.replaceChildren({value:'CT report '+doc.id});},
+  ensureCtOrderTicket:async()=>true,
+  document:{createElement:()=>({
+   textContent:'',setAttribute(){},className:''
+  })},
+  model:{publicCandles:()=>null,explain:()=>({lines:[]})},
+  globalThis:{AgentCryptoMarketMicroscope:{snapshot:()=>null},AgentCryptoCtOrderTicket:{mount(){}}},
+  showEvidence:(dest,doc)=>dest.append({value:'CT inline '+doc.id}),
+  showFullReport:(dest)=>dest.append({value:'CT report details'}),
+  WeakMap,Date,Boolean,String,Error
+ };
+ const out=vm.runInNewContext(handlers+';({refresh,readForAccount})',ctx);
+ return {...out,ctx,body,target,states,
+  setFault:e=>{fault=e;},
+  setSession:(role,token)=>{currentRole=role;currentToken=token;}};
+}
+test('CT technical last verified DOM survives a failed refresh in one owner session',async()=>{
+ const h=ctReadHarness();
+ await h.refresh();
+ const previous=h.body.childNodes[0];
+ h.setFault('Bridge unavailable');
+ await h.refresh();
+ assert.equal(h.body.childNodes[0],previous,'exact same report nodes are retained');
+ assert.match(h.states.at(-1),/RAPPORT PRÉCÉDENT, NON ACTUEL/);
+ assert.equal(h.ctx.copy.disabled,false);
+ assert.equal(h.ctx.read.disabled,false);
+});
+test('CT technical prior report is cleared on owner-session loss, not carried to new owner',async()=>{
+ const h=ctReadHarness();
+ await h.refresh();
+ h.setSession('guest',null);
+ h.setFault('Bridge unavailable');
+ await h.refresh();
+ assert.equal(h.body.childNodes.length,0);
+ assert.equal(h.ctx.copy.disabled,true);
+ assert.match(h.states.at(-1),/Session Aether Trust non liée/);
+});
+test('CT inline report is only replaced after successful reading and remains labeled stale on failure',async()=>{
+ const h=ctReadHarness();
+ assert.equal(await h.readForAccount(h.target),true);
+ const prior=h.target.childNodes.filter(n=>n.value);
+ assert.equal(prior.length,2);
+ h.setFault('Timed out');
+ assert.equal(await h.readForAccount(h.target),false);
+ assert.equal(h.target.childNodes[1],prior[0]);
+ assert.equal(h.target.childNodes[2],prior[1]);
+ assert.match(h.target.childNodes[0].textContent,/NON ACTUELLE/);
+});
+test('CT inline private DOM is never retained across session revocation',async()=>{
+ const h=ctReadHarness();
+ assert.equal(await h.readForAccount(h.target),true);
+ h.setSession('guest',null);
+ h.setFault('No authorized session');
+ assert.equal(await h.readForAccount(h.target),false);
+ assert.equal(h.target.childNodes.length,0);
+});
+test('CT owner logout listener still explicitly erases all private CT views',()=>{
+ assert.match(ai,/aether-trust:logout-requested[\s\S]{0,200}latest=null;latestSession=null;copy.disabled=true;body.replaceChildren\(\)/);
+ assert.match(ai,/local.hidden=true;local.replaceChildren\(\)/);
+});
