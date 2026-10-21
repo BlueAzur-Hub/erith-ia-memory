@@ -291,27 +291,51 @@
 
   // Règles publiques OKX CT/USDC, distinctes du carnet et des autorisations du compte.
   // Échec de la source => NON VÉRIFIÉ, jamais minimum supposé à 10 CT.
-  function spotTradingRules(source,now=Date.now()){
-    const unknown=reason=>Object.freeze({status:'unverified',market:PAIR,reason});
+  // Canonical public OKX Spot-rule reader: no asset hard-coding.
+  // Both legacy Concrete and Seven call this exact validation algorithm.
+  function spotTradingRulesFor(context,source,now=Date.now()){
+    const base=String(context?.base||'').toUpperCase(),
+      quote=String(context?.quote||'').toUpperCase(),
+      venue=String(context?.venue||'').toLowerCase(),
+      market=base+'-'+quote;
+    const unknown=reason=>Object.freeze({status:'unverified',market,reason});
+    if(!/^[A-Z][A-Z0-9]{0,19}$/.test(base)||
+       !['USDC','USDT','EUR'].includes(quote)||
+       venue!=='okx')
+      return unknown('Identité Spot ou source OKX non vérifiée');
     const time=Date.parse(source?.observed_at_utc||'');
     if(!Number.isFinite(time)||time>now||now-time>120000)
       return unknown('Règles OKX absentes ou trop anciennes');
-    const payload=source?.payload;
+    // Seven's existing public adapter supplies one normalized native row.
+    // Legacy CT supplies the complete OKX code/data envelope. Both require
+    // an exact pair, never a guessed rule or cross-market substitution.
+    const payload=source?.payload||
+      (source?.instId?{code:'0',data:[source]}:null);
     if(payload?.code!=='0'||!Array.isArray(payload.data))
       return unknown('API publique OKX non vérifiée');
-    const exact=payload.data.filter(r=>r?.instId===PAIR&&r?.instType==='SPOT');
-    if(exact.length!==1)return unknown('Instrument SPOT CT/USDC absent ou ambigu');
-    const r=exact[0];
-    const requireDecimal=v=>typeof v==='string'&&/^\d+(?:\.\d+)?$/.test(v)&&
+    const exact=payload.data.filter(r=>r?.instId===market&&r?.instType==='SPOT');
+    if(exact.length!==1)return unknown('Instrument SPOT '+market+' absent ou ambigu');
+    const row=exact[0];
+    // The raw-row Seven adapter MUST prove base and quote explicitly.
+    if(source?.instId&&
+      (row.baseCcy!==base||row.quoteCcy!==quote))
+      return unknown('Devises de base et cotation incohérentes');
+    const maxDigits=base==='CT'?12:18;
+    const validDecimal=v=>typeof v==='string'&&/^\d+(?:\.\d+)?$/.test(v)&&
       Number.isFinite(Number(v))&&Number(v)>0&&
-      (v.split('.')[1]||'').length<=12;
-    if(!['live','suspend','preopen','post_only','rebase'].includes(r.state))
+      (v.split('.')[1]||'').length<=maxDigits;
+    if(!['live','suspend','preopen','post_only','rebase'].includes(row.state))
       return unknown('État de négociation inconnu');
-    if(!requireDecimal(r.minSz)||!requireDecimal(r.lotSz)||!requireDecimal(r.tickSz))
+    if(!validDecimal(row.minSz)||!validDecimal(row.lotSz)||!validDecimal(row.tickSz))
       return unknown('Minimum, pas de quantité ou pas de prix invalide');
-    return Object.freeze({status:'verified',market:PAIR,source:'OKX Public Data · /api/v5/public/instruments',
-      checked_at:source.observed_at_utc,state:r.state,min_sz:r.minSz,
-      lot_sz:r.lotSz,tick_sz:r.tickSz,quote:'USDC',base:'CT'});
+    // State must be checked separately: "verified" does NOT mean tradable.
+    return Object.freeze({status:'verified',market,
+      source:'OKX Public Data · /api/v5/public/instruments',
+      checked_at:source.observed_at_utc,state:row.state,min_sz:row.minSz,
+      lot_sz:row.lotSz,tick_sz:row.tickSz,quote,base});
+  }
+  function spotTradingRules(source,now=Date.now()){
+    return spotTradingRulesFor({base:'CT',quote:'USDC',venue:'okx'},source,now);
   }
   // Comparaison décimale exacte jusqu'à 12 chiffres, sans corriger silencieusement
   // les quantités de la simulation. Les règles de montant notionnel et du compte
@@ -330,18 +354,29 @@
     const [whole,fraction='']=value.split('.');
     return BigInt(whole)*1000000000000n+BigInt(fraction.padEnd(12,'0'));
   }
-  function assessSpotQuantity(qty,rules){
+  function assessSpotQuantityFor(qty,rules){
     const unknown=message=>Object.freeze({status:'unverified',message});
     if(rules?.status!=='verified')return unknown('Règles OKX non vérifiées');
+    if(!/^[A-Z][A-Z0-9]{0,19}$/.test(rules.base||'')||
+       !['USDC','USDT','EUR'].includes(rules.quote)||
+       rules.market!==rules.base+'-'+rules.quote)
+      return unknown('Paire Spot ambiguë');
     if(rules.state!=='live')
-      return Object.freeze({status:'not_live',message:'Paire '+rules.state+' : négociation normale non confirmée'});
+      return Object.freeze({status:'not_live',
+        message:'Paire '+rules.state+' : négociation normale non confirmée'});
     const n=scaledDecimal(qty),min=scaledRule(rules.min_sz),lot=scaledRule(rules.lot_sz);
-    if(n===null||min===null||lot===null||lot===0n)return unknown('Quantité ou précision non vérifiable');
-    if(n<min)return Object.freeze({status:'below_minimum',message:'Sous le minimum OKX ('+rules.min_sz+' CT)'});
-    if(n%lot!==0n)return Object.freeze({status:'invalid_step',message:'Non multiple du pas ('+rules.lot_sz+' CT)'});
-    return Object.freeze({status:'size_matches',message:'Quantité conforme aux filtres vérifiés ; exécution NON garantie'});
+    if(n===null||min===null||lot===null||lot===0n)
+      return unknown('Quantité ou précision non vérifiable');
+    if(n<min)return Object.freeze({status:'below_minimum',
+      message:'Sous le minimum OKX ('+rules.min_sz+' '+rules.base+')'});
+    if(n%lot!==0n)return Object.freeze({status:'invalid_step',
+      message:'Non multiple du pas ('+rules.lot_sz+' '+rules.base+')'});
+    return Object.freeze({status:'size_matches',
+      message:'Quantité conforme aux filtres vérifiés ; exécution NON garantie'});
   }
-
+  function assessSpotQuantity(qty,rules){
+    return assessSpotQuantityFor(qty,rules);
+  }
   // Préparation D'UN FUTUR achat au plus juste pour pouvoir revendre le
   // minimum SPOT en CT après les frais. Ce ne sont PAS des frais futurs
   // vérifiés, ni une commande d'ordre. Quantités décimales exactes à 12 places.
@@ -575,5 +610,5 @@
         'USDC, USDT et USD ne sont pas interchangeables sans conversion vérifiée.',
         'Le prix futur de revente et le bénéfice réalisé ne sont pas connus.']});
   }
-  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,assessSpotQuantity,planGrossBuyForNetSpot,assessPartialRules,compareCtExitDecisions,ctClosedCycleReport,publicCandles,explain,compose});
+  return Object.freeze({SCHEMA,PAIR,MAX_BOOK_AGE_MS,balanceFor,portfolio,position,acquisition,takerRate,sellEstimate,exitMetrics,ctScenarioGrid,ctPartialExitGrid,spotTradingRules,spotTradingRulesFor,assessSpotQuantity,assessSpotQuantityFor,planGrossBuyForNetSpot,assessPartialRules,compareCtExitDecisions,ctClosedCycleReport,publicCandles,explain,compose});
 });
