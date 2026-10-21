@@ -1,7 +1,9 @@
-/* Seven Reading · Trader-only, isolated from restored Concrete CT and artwork. */
-#detailPanel #sevenAssetReading{width:100%;min-width:0;box-sizing:border-box;margin:8px 0;
- border:1px solid rgba(113,202,219,.5);border-radius:10px;
- background:rgba(3,20,30,.74);color:#e6f5f6;font:12px/1.45 system-ui,sans-serif}
+/* Seven Reading · alternate content inside the existing native CT details.
+   Never create a second panel border, accordion row or navigation entry. */
+#detailPanel #aiCtPanel .ai-ct-panel-body[hidden]{display:none!important}
+#detailPanel #aiCtPanel #sevenAssetReading{width:100%;min-width:0;box-sizing:border-box;margin:0;
+ border:0;border-radius:0;background:transparent;color:#e6f5f6;
+ font:12px/1.45 system-ui,sans-serif}
 #detailPanel #sevenAssetReading[hidden]{display:none!important}
 #detailPanel #sevenAssetReading>summary{cursor:pointer;padding:9px 11px;
  display:flex;flex-wrap:wrap;gap:3px;align-items:baseline;justify-content:space-between;
