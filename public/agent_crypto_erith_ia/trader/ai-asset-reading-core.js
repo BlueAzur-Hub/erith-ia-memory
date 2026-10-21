@@ -141,6 +141,9 @@
   const chartParts=chartPair.match(/^([A-Z0-9]{1,20})-([A-Z0-9]{2,12})$/);
   const chartValid=chartParts&&chartParts[1]===base&&chart?.mode==='candles'&&
     Array.isArray(chart.rows)&&chart.rows.length>0;
+  const chartProvenance=Boolean(chartValid&&chart?.source_verified===true&&
+    ['okx','binance','bitget','coingecko'].includes(String(chart?.provider||'').toLowerCase())&&
+    time(chart?.observed_at_utc,now));
   const mPrice=scaled(market?.priceUsd);
   const marketFresh=time(market?.usdUpdatedAt||market?.lastUpdated,now);
   const validBook=validateBook(book,pair,quote,now),
@@ -154,7 +157,8 @@
       market.change24h:null,
     chart_instrument:chartValid?chartPair:null,
     chart_interval:chartValid?String(chart.loadedBar||''):null,
-    chart_source_verified:Boolean(chartValid),
+    chart_identity_matched:Boolean(chartValid),
+    chart_source_verified:chartProvenance,
     chart_warning:chartPair&&!chartValid?
       'Bougies '+chartPair+' différentes de '+base+' : refus de substitution.':null,
     native_pair:pair,book_verified:Boolean(validBook),rules_verified:Boolean(validRules),
@@ -177,7 +181,8 @@
     acquisition_cost:null,pnl:null});
   const sections=frozen([
     entry('Lecture Technique',chartValid?'DATA':'WAITING',
-      chartValid?'Bougies '+chartPair+' ; devise du graphique distincte du Spot '+pair+'.':
+      chartValid?'Bougies '+chartPair+' ; source '+(chartProvenance?'datée et attestée':'NON CERTIFIÉE')+
+       ', devise du graphique distincte du Spot '+pair+'.':
         'Bougies exactes '+base+' non chargées.'),
     entry('Fiche publique',mPrice===null?'WAITING':'DATA',
       'Market USD indépendant du carnet natif '+pair+'.'),
