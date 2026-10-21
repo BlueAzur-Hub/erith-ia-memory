@@ -3,6 +3,9 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const code=fs.readFileSync(path.join(__dirname,'ai-asset-reading-view.js'),'utf8');
 const runtime=fs.readFileSync(path.join(__dirname,'technical-reading-data-sync.js'),'utf8');
+const mirror=fs.readFileSync(path.join(__dirname,'trader-runtime-mirror.js'),'utf8');
+const entry=fs.readFileSync(path.join(__dirname,'trading-desk.html'),'utf8');
+const administrator=fs.readFileSync(path.join(__dirname,'../administrator/index.html'),'utf8');
 const account=fs.readFileSync(path.join(__dirname,'trader-okx-account.js'),'utf8');
 const ctBefore=fs.readFileSync(path.join(__dirname,'ai-ct-panel.js'),'utf8');
 class Fake {
@@ -122,6 +125,22 @@ test('late private BTC result cannot paint after an ETH selection',async()=>{
  assert.match(v.heading(),/ETH/);
  assert.doesNotMatch(v.statuses().join('\n'),/Trading ETH5 ETH|Funding ETH2 ETH|Trading USDC10 USDC/);
  assert.equal(v.ct.textContent,'CT private untouched marker');
+});
+test('Trader iframe actually loads the Technical Reading owner once; Administrator does not',()=>{
+ assert.match(entry,/src="\.\/trader-runtime-mirror\.js/);
+ assert.match(entry,/src="\.\.\/administrator\/index\.html\?surface=trader"/);
+ assert.match(mirror,/if\(!doc\.getElementById\("traderTechnicalReadingSyncScript"\)\)/);
+ assert.equal((mirror.match(/script\.id="traderTechnicalReadingSyncScript"/g)||[]).length,1);
+ assert.match(mirror,/script\.src=new URL\("\.\.\/trader\/technical-reading-data-sync\.js",doc\.baseURI\)\.href/);
+ assert.ok(mirror.indexOf('traderAiCtContractScript')<
+           mirror.indexOf('traderTechnicalReadingSyncScript'),
+           'Seven loader must not replace the original CT owner');
+ assert.match(runtime,/function mountSevenDossier\(\)/);
+ assert.match(runtime,/new URL\("\.\.\/trader\/ai-asset-reading-core\.js",document\.baseURI\)/);
+ assert.match(runtime,/new URL\("\.\.\/trader\/ai-asset-reading-view\.js",document\.baseURI\)/);
+ assert.match(runtime,/function start\(\)\{bind\(\);mountSevenDossier\(\);\}/);
+ assert.doesNotMatch(administrator,/technical-reading-data-sync\.js|traderTechnicalReadingSyncScript/);
+ assert.doesNotMatch(mirror,/localStorage\.|indexedDB\.|orders_enabled\s*=\s*true/);
 });
 test('CT source files unchanged by renderer and account proof is opt-in only',()=>{
  assert.match(runtime,/traderSevenAssetCoreScript/);
