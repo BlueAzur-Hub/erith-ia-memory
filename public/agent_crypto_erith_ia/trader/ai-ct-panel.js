@@ -558,6 +558,9 @@ function syncActiveReading(){
    " · sélection Market/Graphique, données sans exécution ni position privée implicite.";
  if(privateActions)privateActions.hidden=!isCt;
  if(caseStudy)caseStudy.hidden=!isCt;
+ panel.dataset.activeMarketSymbol=symbol;
+ const navButton=document.getElementById('aiCtToggle');
+ if(navButton)navButton.textContent=isCt?'IA · Concrete':'IA · '+(symbol||'Marché');
  if(!isCt)state(symbol?
    "Analyse publique de "+symbol+" · aucun accès au compte privé, aucun ordre.":
    "Aucune crypto sélectionnée.");
