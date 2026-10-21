@@ -669,7 +669,7 @@ async function prepareTicket(){
   ticketStatus(finalLines.join("\n")+"\n\n"+accountLines.join("\n"),brief);
   globalThis.AgentCryptoTraderOrderEntryView?.update?.({
     ticket:answer,context,review,preview:verifiedExit,bookDiagnostic,
-    checkedAt:Date.now()
+    checkedAt:context?.order_gates_at_utc||null
   });
   cycleStatus();
  }catch(error){
