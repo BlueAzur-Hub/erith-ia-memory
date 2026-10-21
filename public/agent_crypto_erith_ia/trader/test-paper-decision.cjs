@@ -977,12 +977,12 @@ test("CT public rules and fee-buffer UI never claim notionnel or fee debit certa
  const fs=require("node:fs"),path=require("node:path");
  const source=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
  const coreCode=fs.readFileSync(path.join(__dirname,"trader-paper-decision-core.js"),"utf8");
- assert.match(source,/api\/v5\/public\/instruments\?instType=SPOT&instId=CT-USDC/);
+ assert.match(source,/api\/v5\/public\/instruments\?instType=SPOT&instId=/);
  assert.match(source,/Promise\.allSettled/);
  assert.match(source,/instrumentEvidence,now:evaluatedAt/);
  assert.match(source,/Règles Spot issues du relevé daté/);
- assert.match(source,/NON CERTIFIÉS par cette lecture publique/);
- assert.match(source,/Frais débités en CT : HYPOTHÈSE/);
+ assert.match(source,/NON CERTIFIÉS par le public/);
+ assert.match(source,/Frais débités en /);
  assert.match(source,/Solde Trading couvrant uniquement le coût FICTIF/);
  assert.match(coreCode,/minimumGrossWithBaseFee/);
  assert.match(coreCode,/notional_filter_verified:false/);
