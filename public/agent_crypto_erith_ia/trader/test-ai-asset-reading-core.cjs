@@ -200,3 +200,45 @@ test('Seven cannot use a different quote, paused venue or missing base/quote evi
   assert.equal(d.orders_enabled,false);
  }
 });
+
+
+test('Seven can reuse CT purchase receipts for ETH without claiming a realized profit',()=>{
+ const f=fixture('ETH','ethereum');
+ f.position.trading_base='2';f.position.funding_base='0';
+ f.fills={ok:true,read_only:true,fills_3m:[{instId:'ETH-USDC',
+   side:'buy',tradeId:'eth-1',fillPx:'2400',fillSz:'2',
+   fee:'0',feeCcy:'USDC'}]};
+ const result=createReading(f);
+ assert.equal(result.acquisition_receipts?.status,'reconciled_fills_only');
+ assert.equal(result.acquisition_receipts?.market,'ETH-USDC');
+ assert.equal(result.acquisition_receipts?.spent_quote,4800);
+ assert.equal(result.acquisition_receipts?.profit_proven,false);
+ assert.equal(result.private.acquisition_cost_proven,false);
+ assert.equal(result.private.pnl,null);
+ assert.equal(result.orders_enabled,false);
+});
+test('Seven never borrows receipts from another pair, venue, or unverified position',()=>{
+ const f=fixture('BTC','bitcoin');
+ f.position.trading_base='0.002';f.position.funding_base='0';
+ f.fills={ok:true,read_only:true,fills_3m:[{instId:'CT-USDC',
+   side:'buy',tradeId:'ct-1',fillPx:'0.35',fillSz:'0.002',
+   fee:'0',feeCcy:'CT'}]};
+ assert.equal(createReading(f).acquisition_receipts.status,'unknown');
+ f.fills.fills_3m[0].instId='BTC-USDC';
+ f.fills.fills_3m[0].feeCcy='BTC';
+ f.selection.provider='bitget';
+ assert.equal(createReading(f).acquisition_receipts,null);
+ f.selection.provider='okx';
+ f.position.trading_base=null;
+ assert.equal(createReading(f).acquisition_receipts,null);
+});
+test('receipt proof remains UNKNOWN if tiny BTC holdings do not reconcile precisely',()=>{
+ const f=fixture('BTC','bitcoin');
+ f.position.trading_base='0.0002';f.position.funding_base='0';
+ f.fills={ok:true,read_only:true,fills_3m:[{instId:'BTC-USDC',
+   side:'buy',tradeId:'btc-1',fillPx:'85000',fillSz:'0.0001995',
+   fee:'0',feeCcy:'BTC'}]};
+ const result=createReading(f);
+ assert.equal(result.acquisition_receipts.status,'unknown');
+ assert.equal(result.private.acquisition_cost_proven,false);
+});
