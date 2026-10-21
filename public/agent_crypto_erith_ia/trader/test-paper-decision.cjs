@@ -1280,3 +1280,106 @@ test("PAPER-only confirmation never expires during user reading; partial cannot 
  assert.equal(cancelled.orders_enabled,false);
  assert.equal(cancelled.real_orders,0);
 });
+
+
+test("Option C visual order entry is sourced from verified CT-USDC evidence only",()=>{
+ const vm=require("node:vm");
+ const src=fs.readFileSync(path.join(__dirname,"trader-order-entry-view.js"),"utf8");
+ const css=fs.readFileSync(path.join(__dirname,"trader-order-entry.css"),"utf8");
+ const mirror=fs.readFileSync(path.join(__dirname,"trader-runtime-mirror.js"),"utf8");
+ const owner=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ class N{
+  constructor(tag){this.tag=tag;this.children=[];this.dataset={};
+   this.className="";this.textContent="";this.attributes={};this.isConnected=false;}
+  append(...nodes){this.children.push(...nodes);}
+  setAttribute(k,v){this.attributes[k]=v;}
+  replaceChildren(...nodes){this.children=[...nodes];}
+  querySelector(sel){
+   const keySelector=sel.startsWith("[data-")&&sel.endsWith("]")?
+     sel.slice(6,-1):null;
+   const chunks=keySelector?keySelector.split("="):[];
+   const key=chunks.length?chunks[0].replace(/-([a-z])/g,(_,c)=>c.toUpperCase()):null;
+   const expected=chunks[1]?chunks[1].split('"').join(""):null;
+   const name=sel.startsWith(".")?sel.slice(1):null;
+   const scan=n=>{
+    if(name&&n.className.split(" ").includes(name))return n;
+    if(key&&Object.hasOwn(n.dataset,key)&&(expected===null||n.dataset[key]===expected))
+      return n;
+    for(const child of n.children){const found=scan(child);if(found)return found;}
+    return null;
+   };
+   return scan(this);
+  }
+  querySelectorAll(sel){
+   const keys=sel.split(",").map(x=>x.trim()).filter(x=>
+     x.startsWith("[data-")&&x.endsWith("]")).map(x=>
+     x.slice(6,-1).replace(/-([a-z])/g,(_,c)=>c.toUpperCase()));
+   const result=[];const scan=n=>{
+    if(keys.some(k=>Object.hasOwn(n.dataset,k)))result.push(n);
+    for(const child of n.children)scan(child);
+   };
+   scan(this);return result;
+  }
+ }
+ const sandbox={document:{createElement:tag=>new N(tag)}};
+ vm.runInNewContext(src,sandbox,{timeout:2000});
+ const ui=sandbox.AgentCryptoTraderOrderEntryView;
+ assert.equal(ui.realOrders,false);
+ const fields={quoteLabel:new N("label"),budgetLabel:new N("label"),
+   exitLabel:new N("label"),compute:new N("button")};
+ fields.compute.classList={add:()=>{}};
+ const node=ui.mount(fields);
+ assert.ok(node,"visual surface must be mountable with existing controls");
+ assert.equal(node.children[1].children[0].children[1],fields.quoteLabel);
+ assert.equal(node.children[1].children[0].children[2],fields.budgetLabel);
+ assert.equal(node.children[1].children[1].children[1],fields.exitLabel);
+ assert.match(fields.compute.textContent,/aucun ordre/);
+ const text=key=>node.querySelector('[data-od-field="'+key+'"]')?.textContent;
+ const proof=key=>node.querySelector('[data-od-proof="'+key+'"]')?.textContent;
+ ui.update({ticket:{pair:"CT-USDC",orders_enabled:false,source_book_kind:
+  "LOCAL_BACKEND_OKX_CT_USDC",best_bid_quote:"0.312",best_ask_quote:"0.313",
+  gross_buy_quantity:"10.3",hypothetical_buy_cost_quote:"3.22",
+  native_rules_verified:true,native_min_quantity:"10",native_lot:"0.01",
+  native_tick:"0.0001"},
+  bookDiagnostic:{accepted:true},checkedAt:Date.parse("2026-10-21T00:00:00Z"),
+  review:{account_verified:true,available_trading_quote:"3.2",
+   fee_mode_verified:true,fee_buy_currency:"CT",fee_type:"0",
+   funds_cover_public_scenario:true},
+  context:{order_gates_verified:true,order_gates:{account_eligible:true,
+   maxBuy:"10.20",available_verified:true,availSell:"0"}},
+  preview:{orders_enabled:false,maximum_sellable_base:"10.18",
+   buy_quantity:"10.2",total_buy_cost_quote:"3.1926",
+   estimated_buy_fee_base:"0.0102",hypothetical_sale_net_quote:"3.89",
+   hypothetical_sale_fee_quote:"0.0039",residual_dust_base:"0.0098"}});
+ assert.equal(text("buyQty"),"10.2 CT");
+ assert.equal(text("sellQty"),"10.18 CT");
+ assert.equal(text("buyAvailable"),"3.2 USDC");
+ assert.equal(text("sellAvailable"),"0 CT");
+ assert.match(proof("orders"),/Trade désactivé/);
+ ui.updateCycle({paper:true,events:[{type:"PAPER_PREPARE",at:"t0"},{type:"PAPER_CANCEL",at:"t1"}]});
+ assert.equal(node.querySelector("[data-od-events]").children.length,2);
+ ui.update({ticket:{pair:"CT-USDT",orders_enabled:false}});
+ assert.equal(node.dataset.ready,"false");
+ assert.equal(text("buyQty"),"—");
+ assert.match(proof("fresh"),/Vérification nécessaire/);
+ assert.ok(css.includes("@media(max-width:880px)"));
+ assert.ok(mirror.includes("trader-order-entry.css"));
+ assert.ok(mirror.includes("trader-order-entry-view.js"));
+ assert.ok(owner.includes("AgentCryptoTraderOrderEntryView?.update"));
+ for(const forbidden of ["fetch(","XMLHttpRequest","localStorage","sessionStorage",
+  "/api/v5/trade/order","Authorization","Bearer"])
+  assert.equal(src.includes(forbidden),false,"unexpected trade capability: "+forbidden);
+});
+
+test("Option C stays inside the existing PAPER ticket, not a second trading owner",()=>{
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ const runtime=fs.readFileSync(path.join(__dirname,"trader-runtime-mirror.js"),"utf8");
+ assert.ok(view.includes("const orderEntry=globalThis.AgentCryptoTraderOrderEntryView?.mount"));
+ assert.ok(view.includes("ticketBox.append(warning,orderEntry,brief,cycle,technical)"));
+ assert.ok(view.includes("globalThis.AgentCryptoTraderOrderEntryView?.reset"));
+ assert.ok(view.includes("globalThis.AgentCryptoTraderOrderEntryView?.updateCycle"));
+ assert.ok(runtime.includes("loadOrderEntry=()=>add"));
+ assert.ok(runtime.includes("trader-order-entry-view.js"));
+ assert.equal(view.includes("/api/v5/trade/order"),false);
+ assert.equal(view.includes("/okx/place-order"),false);
+});

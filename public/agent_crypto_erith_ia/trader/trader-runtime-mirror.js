@@ -58,6 +58,13 @@ function mount(){
     marketSwitch.disabled=true;
   }
 
+  // The order-entry stylesheet is scoped to #traderOkxTicket only.
+  if(!doc.getElementById("traderOrderEntryStyle")){
+    const sheet=doc.createElement("link");
+    sheet.id="traderOrderEntryStyle";sheet.rel="stylesheet";
+    sheet.href=new URL("../trader/trader-order-entry.css",doc.baseURI).href;
+    doc.head.appendChild(sheet);
+  }
   // Trader-only read surfaces mounted inside the SAME Administrator runtime.
   // No duplicated market/chart owner and no real order route.
   if(!doc.getElementById("traderOkxAccountScript")){
@@ -137,7 +144,8 @@ function mount(){
           doc.head.appendChild(part);
         };
         const mountDecision=()=>add("traderPaperDecisionViewScript","trader-paper-decision-view.js");
-        const loadDecision=()=>add("traderPaperDecisionCoreScript","trader-paper-decision-core.js",mountDecision);
+        const loadOrderEntry=()=>add("traderOrderEntryViewScript","trader-order-entry-view.js",mountDecision);
+        const loadDecision=()=>add("traderPaperDecisionCoreScript","trader-paper-decision-core.js",loadOrderEntry);
         if(win.AgentCryptoSpotPaperOrders)loadDecision();
         else add("traderSpotPaperOrdersReadScript","spot-paper-order-engine.js",loadDecision);
       };
