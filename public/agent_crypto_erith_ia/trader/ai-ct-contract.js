@@ -90,8 +90,11 @@
       spent+=size*price-(feeCcy===quote?fee:0);
       count++;
     }
-    if(acquired<=0||spent<=0||
-      Math.abs(acquired-qty)>Math.max(.000001,qty*.0001))
+    // Preserve the historical CT tolerance exactly; other assets, especially
+    // small BTC fractions, must not inherit a loose absolute 0.000001 floor.
+    const tolerance=base==='CT'?Math.max(.000001,qty*.0001):
+      Math.max(1e-12,qty*1e-8);
+    if(acquired<=0||spent<=0||Math.abs(acquired-qty)>tolerance)
       return unknown('Le solde et les achats retrouvés ne concordent pas');
     return Object.freeze({
       status:'reconciled_fills_only',market:pair,base,quote,venue:'okx',
