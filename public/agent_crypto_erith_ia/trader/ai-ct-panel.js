@@ -379,30 +379,14 @@ async function loadCtEvidence(){
  return model.compose({account:data[0],fills:data[1],fees:data[2],book:data[3],instruments:data[4]});
 }
 async function refresh(){
- // Private CT read is only available when CT is the active selected market.
- // The independent owner-account panel may still call readForAccount().
- const startCoin=globalThis.AgentCryptoTraderMarket?.selected?.()||globalThis.getSelectedCoin?.();
- if(String(startCoin?.symbol||"").toUpperCase()!=="CT"){
-   state("Lecture privée CT réservée à l'actif CT sélectionné.");return;
- }
- const startId=String(startCoin?.id||"");
- const sessionAtStart=sessionStorage.getItem(TOKEN_KEY);
  latest=null;copy.disabled=true;read.disabled=true;body.replaceChildren();
- state('Lecture locale CT en cours…');
+ state('Lecture locale en cours…');
  try{
   const doc=await loadCtEvidence();
-  const nowCoin=globalThis.AgentCryptoTraderMarket?.selected?.()||globalThis.getSelectedCoin?.();
-  if(String(nowCoin?.symbol||"").toUpperCase()!=="CT"||
-     String(nowCoin?.id||"")!==startId||
-     sessionStorage.getItem(TOKEN_KEY)!==sessionAtStart)return;
   latest=doc;paint(doc);
   state('Lecture seule · provenance OKX · '+new Date().toLocaleTimeString('fr-FR'));
   copy.disabled=false;
- }catch(e){
-  const nowCoin=globalThis.AgentCryptoTraderMarket?.selected?.()||globalThis.getSelectedCoin?.();
-  if(String(nowCoin?.symbol||"").toUpperCase()==="CT"&&String(nowCoin?.id||"")===startId)
-    state('Non disponible : '+String(e.message||e).slice(0,140));
- }
+ }catch(e){state('Non disponible : '+String(e.message||e).slice(0,140));}
  finally{read.disabled=false;}
 }
 async function readForAccount(target){
@@ -452,130 +436,44 @@ const INDICATORS=Object.freeze({
 });
 const periods=Object.freeze({'1m':60000,'5m':300000,'15m':900000,'1h':3600000,'4h':14400000,'1d':86400000});
 const fmt=(n,d=6)=>Number(n).toLocaleString('fr-FR',{maximumFractionDigits:d});
-/* Public multi-asset analytical reading. The Market owns selection, and the
-   microscope owns candles: reject a mismatched/old instrument outright.
-   Never convert market USD into a Spot order price or infer a private position. */
-function preparePublicReading({coin,info,levels,lineContext,mode="learn",topic="",now=Date.now()}={}){
- const symbol=String(coin?.symbol||"").trim().toUpperCase();
- const name=String(coin?.name||symbol||"").trim();
- if(!/^[A-Z0-9]{1,20}$/.test(symbol))return ["Sélectionne une cryptomonnaie dans le Market ou sur le graphique Solo. Aucun actif supposé."];
- const lines=["ACTIF · "+name+" ("+symbol+") · données de marché publiques, sans ordre."];
- const numeric=v=>v!==null&&v!==undefined&&v!==""&&Number.isFinite(Number(v))?Number(v):null;
- const price=numeric(coin?.priceUsd),change=numeric(coin?.change24h);
- const marketSource=String(coin?.usdSource||coin?.priceUsdSource||coin?.source||"source non attestée").slice(0,100);
- const updated=Date.parse(String(coin?.usdUpdatedAt||coin?.snapshotGeneratedAt||coin?.lastUpdated||""));
- const marketFresh=Number.isFinite(updated)&&Number.isFinite(now)&&updated<=now+30000&&now-updated<=120000;
- lines.push("Market · prix USD "+(price===null?"indisponible":fmt(price,Math.abs(price)<1?8:4)+" USD")+
-    " · 24 h "+(change===null?"indisponible":(change>0?"+":"")+fmt(change,2)+" %")+
-    " · source "+marketSource+" · "+(marketFresh?"horodatage récent":"fraîcheur NON CERTIFIÉE")+".");
- const cap=numeric(coin?.marketCapUsd),vol=numeric(coin?.volume24hUsd);
- if(cap!==null||vol!==null)lines.push("Capitalisation "+(cap===null?"—":fmt(cap,0)+" USD")+
-    " · volume 24 h "+(vol===null?"—":fmt(vol,0)+" USD")+" (Market, pas profondeur du carnet).");
- const instrument=String(info?.loadedInstrument||"").toUpperCase().replace("/","-");
- const parts=instrument.match(/^([A-Z0-9]{1,20})-([A-Z0-9]{2,12})$/);
- const interval=String(info?.loadedBar||"");
- const rows=Array.isArray(info?.rows)?info.rows:[];
- const exact=info?.mode==="candles"&&parts&&parts[1]===symbol&&
-   Object.hasOwn(periods,interval)&&rows.length>0;
- if(!exact){
-   if(info?.mode==="candles"&&instrument)
-     lines.push("Bougies NON concordantes avec "+symbol+" : "+instrument+
-       ". Aucun support, volume ou prix de cette autre crypto n'est réutilisé.");
-   else lines.push("Bougies "+symbol+" non chargées : affiche Bougies et choisis une période pour l'étude OHLC.");
-   if(lineContext?.asset_id===coin?.id&&Number(lineContext?.snapshot?.points)>0)
-     lines.push("Courbe historique de "+symbol+" : "+lineContext.snapshot.points+
-       " points · "+String(lineContext.snapshot.period_label||"période inconnue")+
-       " · "+(lineContext.snapshot.truth==="cache"?"cache daté":"origine à vérifier")+
-       ". Cette courbe n'est pas un carnet Spot.");
-   if(mode==="analyze")lines.push("Analyse limitée au Market : bougies exactes, volumes, supports et résistances en attente.");
- }else{
-   const last=rows[rows.length-1],opening=numeric(last?.o),closing=numeric(last?.c),
-     high=numeric(last?.h),low=numeric(last?.l),volume=numeric(last?.v),stamp=numeric(last?.t);
-   const age=stamp===null?null:now-stamp;
-   const fresh=age!==null&&age>=-30000&&age<=periods[interval]*2;
-   lines.push("Bougies · "+instrument+" · "+interval+" · "+rows.length+
-     " observations · "+(fresh?"dernière bougie récente (éventuellement inachevée)":
-       "DONNÉES ANCIENNES ou heure non vérifiée")+
-     ". Paire native distincte du prix Market USD et d'un éventuel ordre Spot.");
-   if([opening,closing,high,low].every(v=>v!==null)&&
-      low<=opening&&low<=closing&&high>=opening&&high>=closing){
-     lines.push("Dernière bougie · O "+fmt(opening)+" · H "+fmt(high)+
-       " · B "+fmt(low)+" · C "+fmt(closing)+" "+parts[2]+
-       " · "+(closing>opening?"progression":closing<opening?"recul":"stable")+
-       " sur cette bougie seulement.");
-   }else lines.push("OHLC absents ou incohérents : aucune direction de bougie déduite.");
-   if(mode==="learn"){
-     lines.push("O/H/B/C décrivent les cours d'une période, pas une prévision. "+
-       "Les volumes mesurent les échanges sur la fenêtre, pas le carnet d'ordres.");
-     lines.push("Volume de la dernière bougie : "+(volume===null?"non vérifié":
-       fmt(volume,Math.abs(volume)<1?8:3)+" "+symbol)+" ; peut évoluer si la bougie est ouverte.");
-   }else{
-     const levValid=levels?.instrument===instrument&&levels?.bar===interval;
-     const sup=levValid?numeric(levels?.support?.price):null,
-       res=levValid?numeric(levels?.resistance?.price):null;
-     if(sup!==null&&res!==null&&sup>0&&res>sup)
-       lines.push("Zones passées "+instrument+" · support "+fmt(sup)+
-         " · résistance "+fmt(res)+" "+parts[2]+
-         ". Repères du graphique, ni ordres ni garanties.");
-     else lines.push("Support/résistance exacts non qualifiés pour cette période.");
-     lines.push("Analyse prudente : une bougie ne suffit pas. Croiser volumes, série complète, "+
-       "liquidité et fraîcheur. Aucun conseil d'achat ou de vente.");
-   }
-   if(!fresh)lines.push("Lecture historique uniquement : aucun signal de marché actuel.");
- }
- if(symbol==="CT")lines.push("Cas CT : graphique public CT/USDT et position privée CT/USDC distincts. "+
-   "Utilise « Lire ma position CT/USDC » uniquement sur demande.");
- else lines.push("Aucune position privée "+symbol+" déduite du graphique. "+
-   "Pour les soldes réels, utiliser le panneau Compte OKX séparé.");
- if(mode==="learn"&&topic&&INDICATORS[topic])
-   lines.push("Indicateur choisi · "+INDICATORS[topic]);
- return lines;
-}
-function activeMarketCoin(){
- return globalThis.AgentCryptoTraderMarket?.selected?.()||globalThis.getSelectedCoin?.()||null;
-}
-let renderedAsset="";
-function syncActiveReading(){
- const coin=activeMarketCoin(),symbol=String(coin?.symbol||"").toUpperCase(),
-   identity=String(coin?.id||"")+"|"+symbol;
- if(identity!==renderedAsset){
-   latest=null;copy.disabled=true;body.replaceChildren();
-   renderedAsset=identity;
- }
- const isCt=symbol==="CT";
- const heading=panel.querySelector("summary > span > b"),
-   hint=panel.querySelector("summary > span > small"),
-   intro=panel.querySelector(".ai-ct-intro"),
-   privateActions=panel.querySelector(".ai-ct-actions"),
-   caseStudy=panel.querySelector(".ai-ct-case");
- if(heading)heading.textContent=isCt?"IA · Concrete (CT)":
-   symbol?"IA · Analyse "+symbol:"IA · Lecture du marché";
- if(hint)hint.textContent=isCt?"Apprendre · Analyser · position privée CT/USDC":
-   "Apprendre · Analyser · fiche publique "+(symbol||"à sélectionner");
- if(intro)intro.textContent=isCt?
-   "Assistance à la lecture de Concrete · graphique CT/USDT et position CT/USDC distincts. Aucun ordre.":
-   "Assistance publique pour "+String(coin?.name||symbol||"l'actif sélectionné")+
-   " · sélection Market/Graphique, données sans exécution ni position privée implicite.";
- if(privateActions)privateActions.hidden=!isCt;
- if(caseStudy)caseStudy.hidden=!isCt;
- panel.dataset.activeMarketSymbol=symbol;
- const navButton=document.getElementById('aiCtToggle');
- if(navButton)navButton.textContent=isCt?'IA · Concrete':'IA · '+(symbol||'Marché');
- if(!isCt)state(symbol?
-   "Analyse publique de "+symbol+" · aucun accès au compte privé, aucun ordre.":
-   "Aucune crypto sélectionnée.");
- paintLesson();
-}
 function paintLesson(){
- const coin=activeMarketCoin(),info=globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||{};
- const technical=globalThis.AgentCryptoMarketMicroscope?.technicalLevels?.()||null;
- const lineSync=globalThis.AgentCryptoTraderTechnicalData?.snapshot?.()||null;
- const lines=preparePublicReading({coin,info,levels:technical,
-   lineContext:lineSync?{asset_id:lineSync.asset,snapshot:lineSync.line}:null,
-   mode:helpMode,topic:helpTopic});
+ const info=globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||{};
+ const instrument=String(info.loadedInstrument||'').toUpperCase();
+ const interval=String(info.loadedBar||'');
+ const rows=Array.isArray(info.rows)?info.rows:[];
+ const valid=info.mode==='candles'&&/^CT-(USDT|USDC)$/.test(instrument)&&rows.length>0;
+ const lines=[];
+ if(!valid){
+   lines.push('Sélectionne Concrete (CT), affiche Bougies et charge sa période. Aucune analyse ne sera inventée pour un autre actif.');
+ }else{
+   const bar=rows[rows.length-1],open=Number(bar.o),close=Number(bar.c);
+   const volume=Number(bar.v),time=Number(bar.t),age=Date.now()-time;
+   const fresh=Number.isFinite(age)&&age>=0&&age<=(periods[interval]||900000)*2;
+   lines.push('Source graphique : '+instrument+' · période '+interval+' · '+rows.length+' bougies. CT/USDT ne représente pas le prix de revente de ta position CT/USDC.');
+   if(!fresh)lines.push('DONNÉES ANCIENNES ou heure non vérifiée : suspendre toute interprétation de mouvement récent et actualiser les bougies.');
+   if(Number.isFinite(open)&&Number.isFinite(close)){
+     const color=close>open?'verte (progression)':close<open?'rouge (recul)':'neutre';
+     lines.push('Bougie affichée : '+color+' · ouverture '+fmt(open)+' · dernier cours '+fmt(close)+' '+instrument.split('-')[1]+'. La bougie en cours peut encore changer.');
+   }
+   if(helpMode==='learn'){
+     lines.push('Une bougie indique quatre prix : ouverture, plus haut, plus bas et dernier cours/clôture pour l’intervalle sélectionné.');
+     lines.push('Le volume mesure la quantité négociée sur la période, pas la quantité des ordres en attente. '+(Number.isFinite(volume)?'Volume de cette bougie : '+fmt(volume,2)+' CT (potentiellement en cours).':'Volume de cette bougie indisponible.'));
+     lines.push('Le carnet montre des intentions d’achat et de vente qui peuvent être retirées. Pour une vente réelle, vérifie le marché CT/USDC.');
+   }else{
+     const levels=globalThis.AgentCryptoMarketMicroscope?.technicalLevels?.();
+     if(levels?.instrument===instrument&&levels?.bar===interval){
+       const support=Number(levels.support?.price),resistance=Number(levels.resistance?.price);
+       if(Number.isFinite(support)&&Number.isFinite(resistance))
+         lines.push('Repères du graphique : support '+fmt(support)+' · résistance '+fmt(resistance)+' '+instrument.split('-')[1]+'. Ce sont des zones d’observation, pas des ordres ni des prévisions.');
+     }
+     lines.push('Analyse prudente : une seule bougie ou un déséquilibre visible du carnet ne confirme pas une tendance. Croiser plusieurs bougies, volumes, fraîcheur et liquidité avant d’interpréter.');
+     lines.push('Ta position est en CT/USDC. Pour son solde, ses frais et une estimation de revente, utilise « Lire ma position CT/USDC » ci-dessous ; cette lecture privée est manuelle.');
+   }
+   if(!fresh)lines.push('Les données anciennes ne doivent jamais être qualifiées de signal actuel.');
+ }
+ if(helpMode==='learn'&&helpTopic&&INDICATORS[helpTopic])lines.push('Indicateur choisi — '+INDICATORS[helpTopic]);
  lesson.replaceChildren();
- lines.forEach((line,i)=>{const p=document.createElement('p');p.textContent=line;
-   if(i===0)p.className='ai-ct-source';lesson.appendChild(p);});
+ lines.forEach((line,i)=>{const p=document.createElement('p');p.textContent=line;if(i===0)p.className='ai-ct-source';lesson.appendChild(p);});
 }
 function setHelpMode(mode){
  helpMode=mode==='analyze'?'analyze':'learn';
@@ -593,17 +491,7 @@ document.getElementById('atlasMarketMicroscope')?.addEventListener('click',event
  if(panel.open&&helpMode==='learn')queueMicrotask(paintLesson);
 });
 window.addEventListener('agent-crypto:candles-technical-levels',()=>{if(panel.open)paintLesson();},{passive:true});
-for(const eventName of [
- 'agent-crypto:trader-selection-changed',
- 'agent-crypto:external-asset-changed',
- 'agent-crypto:trader-line-loaded',
- 'agent-crypto:quote-architecture-changed',
- 'agent-crypto:trader-technical-levels'
-]){
- window.addEventListener(eventName,()=>queueMicrotask(syncActiveReading),{passive:true});
-}
 setHelpMode('learn');
-syncActiveReading();
 read.addEventListener('click',refresh);
 // Point d'entrée interne pour le bouton du Compte OKX, sans navigation forcée.
 globalThis.AgentCryptoAiCtPanel=Object.freeze({readForAccount,read_only:true});
@@ -613,7 +501,7 @@ window.addEventListener('aether-trust:logout-requested',()=>{
  if(local){local.hidden=true;local.replaceChildren();}
 },{passive:true});
 copy.addEventListener('click',async()=>{
- if(!latest||String(activeMarketCoin()?.symbol||"").toUpperCase()!=="CT")return;
+ if(!latest)return;
  // Explicit user action: private overview copied locally, never uploaded automatically.
  const sanitized={schema:latest.schema,market:latest.market,quote:latest.quote,read_only:true,
  portfolio:latest.portfolio,position:latest.position,acquisition:latest.acquisition,fee_taker_fraction:latest.fee_taker_fraction,
