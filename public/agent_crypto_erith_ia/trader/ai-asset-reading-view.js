@@ -1,19 +1,23 @@
-/* ERITH.IA · Seven's multi-asset dossier UI, separate from restored Concrete.
-   No writes, reset, orders, CT module edits or implicit private reads. */
+/* ERITH.IA · One shared Technical Reading shell, CT's native details.
+   Seven renders only alternate asset contents; no second details or shortcut.
+   The original CT subtree and its private data owner remain unchanged. */
 (()=>{'use strict';
+function mount(){
 const core=globalThis.AgentCryptoAiAssetReading;
 const host=document.getElementById('detailPanelBody');
-if(!core?.createReading||!host||document.getElementById('sevenAssetReading'))return;
+const ct=document.getElementById('aiCtPanel');
+const ctBody=ct?.querySelector('.ai-ct-panel-body');
+const ctSummary=ct?.querySelector('summary');
+const heading=ctSummary?.querySelector('b');
+const caption=ctSummary?.querySelector('small');
+if(!core?.createReading||!host||!ct||!ctBody||!heading||!caption||
+  document.getElementById('sevenAssetReading'))return;
 const el=(tag,cls='',value='')=>{
  const x=document.createElement(tag);if(cls)x.className=cls;
  if(value!==null&&value!==undefined)x.textContent=String(value);return x;
 };
-const panel=el('details','seven-asset-reading');
+const panel=el('div','seven-asset-reading');
 panel.id='sevenAssetReading';panel.hidden=true;
-const summary=el('summary','seven-asset-title');
-const heading=el('strong','','IA · Dossier multi-actifs');
-const caption=el('small','','Même profondeur que Concrete, lectures PAPER séparées');
-summary.append(heading,caption);panel.append(summary);
 const content=el('div','seven-asset-body');
 const intro=el('p','seven-asset-intro','Dossier indépendant de Concrete · aucune permission Trade.');
 const modes=el('div','seven-asset-modes');
@@ -28,9 +32,8 @@ const help=el('div','seven-asset-help');
 const actions=el('div','seven-asset-actions');actions.append(publicButton,privateButton);
 const cards=el('div','seven-asset-cards');
 content.append(intro,modes,help,actions,state,cards);panel.append(content);
-const ct=document.getElementById('aiCtPanel');
-if(ct)ct.insertAdjacentElement('beforebegin',panel);
-else host.prepend(panel);
+// Exactly one outer details node: CT's own native panel.
+ct.append(panel);
 const sheet=el('link');sheet.rel='stylesheet';sheet.id='sevenAssetReadingStyle';
 sheet.href=new URL('../trader/ai-asset-reading.css',document.baseURI).href;
 document.head.append(sheet);
@@ -40,23 +43,8 @@ const marketCoin=()=>globalThis.AgentCryptoTraderMarket?.selected?.()||
   globalThis.getSelectedCoin?.()||null;
 const microscope=()=>globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||null;
 const externalListing=()=>globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.()||null;
-// A separate navigable entry makes Seven discoverable without changing
-// the original Concrete CT button or the historical private panel.
-const nav=document.querySelector?.('#accueil .atlas-v2-nav-essential');
-const quick=nav?el('button','atlas-quick-link','IA · Seven'):null;
-if(quick){
- quick.id='aiSevenToggle';quick.type='button';quick.hidden=true;
- quick.setAttribute('aria-controls','sevenAssetReading');
- quick.setAttribute('aria-expanded','false');nav.append(quick);
- quick.addEventListener('click',()=>{
-   const detail=document.getElementById('detailPanel');
-   if(detail?.hidden||document.getElementById('analyste')?.classList.contains('detail-collapsed'))
-     document.getElementById('detailPanelToggle')?.click();
-   panel.open=true;quick.setAttribute('aria-expanded','true');
-   panel.scrollIntoView?.({behavior:'auto',block:'nearest'});
- });
- panel.addEventListener('toggle',()=>quick.setAttribute('aria-expanded',String(panel.open)));
-}
+// Reuse the existing CT navigation button; no additional IA button.
+const quick=document.getElementById('aiCtToggle');
 const available=(v)=>v===null||v===undefined||v===''?'Non certifié':String(v);
 const money=(v,unit)=>available(v)+(v===null||v===undefined?'':' '+unit);
 const row=(label,value)=>{
@@ -116,12 +104,15 @@ function same(original,seq){
 function change(){
  const choice=chosen();
  if(choice.ct){
-  panel.hidden=true;if(quick)quick.hidden=true;
+  panel.hidden=true;ctBody.hidden=false;
+  heading.textContent='IA · Concrete (CT)';
+  caption.textContent='Apprendre · Analyser · position privée CT/USDC';
+  if(quick)quick.textContent='IA · Concrete';
   key='CT';coin=null;selection=null;epoch++;resetReading();return;
  }
  if(choice.conflict||choice.pending){
-  panel.hidden=!!choice.pending;
-  if(quick){quick.hidden=!!choice.pending;quick.textContent='IA · Seven · Sources';}
+  ctBody.hidden=true;panel.hidden=false;
+  if(quick)quick.textContent='IA · Lecture';
   heading.textContent='IA · Sources en attente';
   caption.textContent='Identité Market, exchange et bougies à vérifier';
   cards.replaceChildren();help.replaceChildren();
@@ -135,10 +126,10 @@ function change(){
  }
  if(choice.identity!==key){
    key=choice.identity;coin=choice.c;selection=choice.selection;
-   epoch++;resetReading();panel.open=true;
+   epoch++;resetReading();
  }
- panel.hidden=false;
- if(quick){quick.hidden=false;quick.textContent='IA · Seven · '+selection.symbol;}
+ ctBody.hidden=true;panel.hidden=false;
+ if(quick)quick.textContent='IA · '+selection.symbol;
  const isNativeOkx=selection.provider==='okx';
  publicButton.disabled=busy||!isNativeOkx;
  privateButton.disabled=busy||!isNativeOkx;
@@ -366,9 +357,22 @@ for(const event of ['agent-crypto:trader-selection-changed',
  window.addEventListener(event,schedule,{passive:true});
 }
 window.addEventListener('pageshow',schedule,{passive:true});
-panel.addEventListener('toggle',()=>{if(panel.open)change();});
+ct.addEventListener('toggle',()=>{if(ct.open)change();});
 schedule();
 globalThis.AgentCryptoSevenAssetReadingView=Object.freeze({
  active:()=>selection?.symbol||null,refresh:change,read_only:true,
- ct_modified:false,orders_enabled:false,real_orders:false});
+ ct_modified:false,orders_enabled:false,real_orders:false,
+ shared_shell:'aiCtPanel',secondary_details:false});
+}
+if(document.getElementById('aiCtPanel'))mount();
+else {
+ // CT is injected asynchronously after its contract is loaded. Wait for
+ // its existing node, then disconnect immediately; never construct a rival.
+ const target=document.getElementById('detailPanelBody');
+ if(!target||typeof MutationObserver==='undefined')return;
+ const observer=new MutationObserver(()=>{
+   if(document.getElementById('aiCtPanel')){observer.disconnect();mount();}
+ });
+ observer.observe(target,{childList:true});
+}
 })();
