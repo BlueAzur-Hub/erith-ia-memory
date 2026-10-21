@@ -45,6 +45,17 @@ const diagnostics=api.self_test();
 assert.equal(diagnostics.pass,true,'existing native market must remain intact');
 assert.equal(diagnostics.checks.axis_spot_native_identity_safeguard,true);
 assert.equal(diagnostics.checks.axis_local_logo_asset,true);
+assert.equal(diagnostics.checks.market_cap_usd_separate_coingecko_source,true);
+assert.equal(diagnostics.checks.market_cap_exact_id_symbol_time,true);
+assert.equal(diagnostics.checks.market_cap_no_zero_or_stale,true);
+assert.equal(diagnostics.checks.market_cap_never_inferred_from_bitget_price,true);
+assert(code.includes('marketCapObservedAt'));
+assert(code.includes('marketCapRankSource'));
+assert(code.includes('state.marketMetricsStatus'));
+assert(code.includes('CoinGecko coins/markets'));
+assert(code.includes('Math.abs(Date.now()-Date.parse(m.observedAt))'));
+assert(!code.includes('setInterval('),'new listing market data must not start a polling loop');
+
 assert.equal(api.real_order,false);
 assert.equal(api.storage_write,false);
 console.log('Axis Robotics native listing: Base identity, Bitget native Spot, nonblank SVG and no Futures substitution PASS');
