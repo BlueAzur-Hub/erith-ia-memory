@@ -375,7 +375,7 @@
    const buckets=Array.from({length:segments},()=>[]);
    for(let i=0;i<values.length;i++){
      const price=priceValue(values[i]);if(!(price>0))continue;
-     const bin=Math.min(period.segments-1,Math.max(0,Math.floor((times[i]-first)/span*segments)));
+     const bin=Math.min(segments-1,Math.max(0,Math.floor((times[i]-first)/span*segments)));
      buckets[bin].push({price,t:times[i]});
    }
    const bars=buckets.map((bucket,i)=>{
