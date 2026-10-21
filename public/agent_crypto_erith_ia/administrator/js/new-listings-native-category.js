@@ -40,7 +40,9 @@
     MHA:Object.freeze({name:"MAGNE.AI",coingeckoId:"magic-hash"}),
     MCAT:Object.freeze({name:"MarsCat",coingeckoId:"marscat-token"}),
     PONS:Object.freeze({name:"Pons",coingeckoId:"pons"}),
-    CNPY:Object.freeze({name:"Canopy",coingeckoId:"canopy"})
+    CNPY:Object.freeze({name:"Canopy",coingeckoId:"canopy"}),
+    AXIS:Object.freeze({name:"Axis Robotics",coingeckoId:"axis-robotics",provider:"bitget",
+      providerSymbol:"AXISUSDT",pair:"AXIS/USDT",listingUtc:"2026-10-21T13:00:00Z"})
   });
 
   const state={
@@ -198,7 +200,7 @@
       const u=new URL(raw,document.baseURI);
       if(u.protocol!=="https:")return null;
       const sameOrigin=u.origin===location.origin;
-      const localLogo=sameOrigin&&/\/administrator\/assets\/crypto\/new-listings\/[a-z0-9._-]+\.png$/i.test(u.pathname);
+      const localLogo=sameOrigin&&/\/administrator\/assets\/crypto\/new-listings\/[a-z0-9._-]+\.(?:png|svg)$/i.test(u.pathname)&&!u.search&&!u.hash;
       if(localLogo)return u.href;
       const host=u.hostname.toLowerCase();
       if(host==="coingecko.com"||host.endsWith(".coingecko.com"))return u.href;
@@ -368,6 +370,15 @@
     const base=upper(row?.base),quote=upper(row?.quote),providerSymbol=upper(row?.providerSymbol);
     if(!base||!quote||!providerSymbol)return null;
     const friendly=FRIENDLY[base]||null;
+    // AXIS is a new Base token, not an alias for AXISUSD derivatives or old tickers.
+    // Match the native Bitget Spot instrument AND the documented opening day.
+    if(base==="AXIS"){
+      const launch=Date.parse(String(row?.listedAt||""));
+      if(quote!=="USDT"||providerSymbol!=="AXISUSDT"||
+         !Number.isFinite(launch)||
+         launch<Date.parse("2026-10-21T00:00:00Z")||
+         launch>=Date.parse("2026-10-22T00:00:00Z"))return null;
+    }
     const isCt=base==="CT";
     const provider=isCt?"okx":"bitget";
     const symbol=isCt?"CT-USDT":providerSymbol;
@@ -588,7 +599,8 @@
     const historicOnly=spec.historicalOnly===true;
     const statusTag=mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
     const identityTag=mature?(historicOnly?"Historique · cotation non vérifiée":"Ancien listing · source Bitget vérifiée"):(proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat");
-    const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="eager" fetchpriority="high" width="32" height="32">`:"";
+    const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="eager" fetchpriority="high" width="32" height="32">`:
+      `<span class="market-coin-identity-fallback" aria-hidden="true" style="display:inline-grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;border:1px solid #5b8b9c;background:#142e3b;color:#e6f3fd;font:700 11px system-ui">${esc(spec.symbol.slice(0,3))}</span>`;
     return `<tr class="asset-row atlas-market-external-row ${selected?"is-selected is-compared":""}"
       ${ROOT_ATTR}="${esc(spec.id)}"
       data-market-row-id403115="${esc(spec.id)}"
@@ -1247,7 +1259,11 @@
       &&proof.status==="CONFIRMÉ"
       &&candidate.status==="CANDIDAT"
       &&ageBand(.5).label==="<24 h"
-      &&ageBand(5).label==="4–7 j";
+      &&ageBand(5).label==="4–7 j"
+      &&FRIENDLY.AXIS.coingeckoId==="axis-robotics"
+      &&providerSpec({base:"AXIS",quote:"USDT",providerSymbol:"AXISUSDT",listedAt:"2026-10-21T13:00:00Z"})?.coingeckoId==="axis-robotics"
+      &&providerSpec({base:"AXIS",quote:"USD",providerSymbol:"AXISUSD",listedAt:"2026-10-21T13:00:00Z"})===null
+      &&safeIdentityImage("./assets/crypto/new-listings/axis-robotics.svg")!==null;
     return Object.freeze({build:MODULE_VERSION,pass,checks:Object.freeze({
       category_not_ct_only:true,
       ct_supported:ct.providerSymbol==="CT-USDT",
@@ -1261,6 +1277,8 @@
       identity_binary_logo_assets:true,
       identity_remote_batch_emergency_only:true,
       identity_exact_id_symbol:true,
+      axis_spot_native_identity_safeguard:true,
+      axis_local_logo_asset:true,
       identity_retry_storm_removed:true,
       identity_failure_non_blocking:true,
       native_market_category:true,
