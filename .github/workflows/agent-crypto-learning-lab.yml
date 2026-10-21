@@ -202,6 +202,9 @@ jobs:
             prefix+"trader/test-strategy-comparator.cjs",
             # Isolated documentary case study; no new Trader runtime owner.
             prefix+"trader/axis-robotics-case-study.html",
+            # Pure non-network paper arithmetic model and regression tests.
+            prefix+"trader/spot-case-scenario-model.js",
+            prefix+"trader/test-spot-case-scenario.cjs",
           }
           changed=set(subprocess.check_output(
             ["git","diff","--name-only",base,"HEAD","--",prefix+"trader/"],
@@ -251,7 +254,7 @@ jobs:
             "status":"TRADER_COFFRE_VISIBLE_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
-          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/test-ai-asset-reading-view.cjs",prefix+"trader/ai-asset-reading-view.js",prefix+"trader/trader-candles-minute-watch.js",prefix+"trader/trader-paper-decision-core.js",prefix+"trader/trader-paper-decision-view.js",prefix+"trader/test-paper-decision.cjs",prefix+"trader/trader-order-entry-view.js",prefix+"trader/trader-order-entry.css",prefix+"trader/strategy-comparator.js",prefix+"trader/test-strategy-comparator.cjs",prefix+"trader/axis-robotics-case-study.html"}:
+          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/test-ai-asset-reading-view.cjs",prefix+"trader/ai-asset-reading-view.js",prefix+"trader/trader-candles-minute-watch.js",prefix+"trader/trader-paper-decision-core.js",prefix+"trader/trader-paper-decision-view.js",prefix+"trader/test-paper-decision.cjs",prefix+"trader/trader-order-entry-view.js",prefix+"trader/trader-order-entry.css",prefix+"trader/strategy-comparator.js",prefix+"trader/test-strategy-comparator.cjs",prefix+"trader/axis-robotics-case-study.html",prefix+"trader/spot-case-scenario-model.js",prefix+"trader/test-spot-case-scenario.cjs"}:
             if f==prefix+"trader/trader-runtime-mirror.js":
               expected=previous(f).replace("40.6.639","40.6.640").replace("trader-historical-panel.js?reader=top50-cohorts","trader-historical-panel.js?reader=visible-coffre")
               actual=current(f)

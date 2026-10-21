@@ -12,6 +12,8 @@ on:
       - "public/agent_crypto_erith_ia/trader/axis-robotics-case-study.html"
       - "public/agent_crypto_erith_ia/laboratoire/crypto-knowledge.html"
       - "public/agent_crypto_erith_ia/tools/test_axis_case_study.cjs"
+      - "public/agent_crypto_erith_ia/trader/spot-case-scenario-model.js"
+      - "public/agent_crypto_erith_ia/trader/test-spot-case-scenario.cjs"
 permissions:
   contents: read
 jobs:
@@ -30,3 +32,4 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js
           node public/agent_crypto_erith_ia/tools/test_axis_native_identity.cjs
           node public/agent_crypto_erith_ia/tools/test_axis_case_study.cjs
+          node public/agent_crypto_erith_ia/trader/test-spot-case-scenario.cjs
