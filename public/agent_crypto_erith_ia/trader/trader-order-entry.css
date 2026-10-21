@@ -149,3 +149,26 @@
 @media(prefers-reduced-motion:reduce){
  #traderOkxTicket .erith-golden-ticket *,#traderOkxTicket .erith-golden-ticket *::before,#traderOkxTicket .erith-golden-ticket *::after{animation:none!important;transition:none!important}
 }
+
+/* Golden Ticket · qualification visible, without a trading permission. */
+#traderOkxTicket .erith-od-guard{
+ min-width:0;padding:11px 13px;border:1px solid #56707a;border-left:3px solid #9baeb1;
+ border-radius:5px;background:linear-gradient(110deg,#102b37,#0a2330);
+ color:#e7e2cf;
+}
+#traderOkxTicket .erith-od-guard>strong{
+ display:block;font-size:13px;line-height:1.45;color:#e8d7a9;
+}
+#traderOkxTicket .erith-od-guard>p{
+ font-size:12px;line-height:1.6;margin:5px 0 0;color:#bcd0d4;
+ overflow-wrap:anywhere;
+}
+#traderOkxTicket .erith-od-guard[data-level="warning"]{
+ border-color:#ad783f;border-left-color:#f5c36d;background:linear-gradient(110deg,#49311c,#1e2831);
+}
+#traderOkxTicket .erith-od-guard[data-level="warning"]>strong{color:#ffd08c}
+#traderOkxTicket .erith-od-guard[data-level="warning"]>p{color:#ffe2b3}
+#traderOkxTicket .erith-od-guard[data-level="neutral"]{
+ border-color:#5c847f;border-left-color:#83caba;background:linear-gradient(110deg,#133736,#0b2530);
+}
+#traderOkxTicket .erith-od-guard[data-level="neutral"]>strong{color:#aae5cf}
