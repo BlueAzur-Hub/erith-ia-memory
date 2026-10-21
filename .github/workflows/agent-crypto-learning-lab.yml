@@ -315,10 +315,14 @@ jobs:
           # owner and all protected Trader runtime bytes are still checked.
           seven_view=current(prefix+"trader/ai-asset-reading-view.js")
           assert "AgentCryptoNewListingsNativeCategory?.snapshot?.()" in seven_view
-          assert "aiSevenToggle" in seven_view
-          assert "quick.hidden=true" in seven_view
-          assert "quick.textContent='IA · Seven · '+selection.symbol" in seven_view
-          assert "panel.open=true" in seven_view
+          # Current single-panel contract: CT and Seven share ONE native details,
+          # not the superseded separate aiSevenToggle navigation contract.
+          assert "const quick=document.getElementById('aiCtToggle')" in seven_view
+          assert "ct.append(panel)" in seven_view
+          assert "if(quick)quick.textContent='IA · Concrete'" in seven_view
+          assert "if(quick)quick.textContent='IA · '+selection.symbol" in seven_view
+          assert "ctBody.hidden=false" in seven_view
+          assert "heading.textContent='IA · Dossier '+selection.symbol+' · Seven'" in seven_view
           assert "if(symbol==='CT'||graphBase==='CT')" in seven_view
           assert "privateButton.disabled=busy||!isNativeOkx" in seven_view
           for forbidden in ("localStorage.", "indexedDB.", "sessionStorage.",
