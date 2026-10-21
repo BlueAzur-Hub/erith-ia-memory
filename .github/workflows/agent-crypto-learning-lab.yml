@@ -178,6 +178,8 @@ jobs:
             prefix+"trader/test-paper-lab.cjs",
             # Seven Technical Reading DOM regression checks.
             prefix+"trader/test-ai-asset-reading-view.cjs",
+            # Native exchange selection adapter, confined to Seven read-only view.
+            prefix+"trader/ai-asset-reading-view.js",
             prefix+"trader/trader-candles-minute-watch.js",
             # Explicitly reviewed, Trader-only, no order interfaces.
             prefix+"trader/trader-paper-decision-core.js",
@@ -222,7 +224,7 @@ jobs:
             "status":"TRADER_COFFRE_VISIBLE_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
-          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/test-ai-asset-reading-view.cjs",prefix+"trader/trader-candles-minute-watch.js",prefix+"trader/trader-paper-decision-core.js",prefix+"trader/trader-paper-decision-view.js",prefix+"trader/test-paper-decision.cjs",prefix+"trader/trader-order-entry-view.js",prefix+"trader/trader-order-entry.css"}:
+          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/test-ai-asset-reading-view.cjs",prefix+"trader/ai-asset-reading-view.js",prefix+"trader/trader-candles-minute-watch.js",prefix+"trader/trader-paper-decision-core.js",prefix+"trader/trader-paper-decision-view.js",prefix+"trader/test-paper-decision.cjs",prefix+"trader/trader-order-entry-view.js",prefix+"trader/trader-order-entry.css"}:
             if f==prefix+"trader/trader-runtime-mirror.js":
               expected=previous(f).replace("40.6.639","40.6.640").replace("trader-historical-panel.js?reader=top50-cohorts","trader-historical-panel.js?reader=visible-coffre")
               actual=current(f)
@@ -286,6 +288,24 @@ jobs:
             else:
               expected=previous(f).replace("40.6.639","40.6.640")
             assert current(f)==expected,f"Non-version Trader change: {f}"
+          # Seven adapter may only read already-selected public New Listings
+          # context, never mutate the historical Concrete owner or execute orders.
+          seven_view=current(prefix+"trader/ai-asset-reading-view.js")
+          assert "AgentCryptoNewListingsNativeCategory?.snapshot?.()" in seven_view
+          assert "AgentCryptoNewListingLiveAsset?.snapshot?.()" in seven_view
+          assert "AtlasExternalChart?.state?.()" in seven_view
+          assert "native?.selectedId===live.id" in seven_view
+          assert "native?.selectedPair===base+'/'+quote" in seven_view
+          assert "chart.coin_id===live.id" in seven_view
+          assert "if(graphBase==='CT'" in seven_view
+          assert "choice.external&&choice.venue!=='okx'" in seven_view
+          assert "privateButton.addEventListener('click'" in seven_view
+          assert "aiSevenToggle" in seven_view
+          for forbidden in ("localStorage.", "indexedDB.", "sessionStorage.",
+                           "/api/v5/trade/order", "/trade/order", "/withdraw",
+                           "setInterval(", "MutationObserver", "aiCtPanel.hidden",
+                           "aiCtPanel.open"):
+            assert forbidden not in seven_view, f"Seven view policy violation: {forbidden}"
           # The new addon has a narrow invariant, not a blanket Trader exemption.
           decision_core=current(prefix+"trader/trader-paper-decision-core.js")
           decision_view=current(prefix+"trader/trader-paper-decision-view.js")
