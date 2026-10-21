@@ -176,6 +176,8 @@ jobs:
             prefix+"trader/trader-paper-lab-core.js",
             prefix+"trader/trader-paper-lab-view.js",
             prefix+"trader/test-paper-lab.cjs",
+            # Seven Technical Reading DOM regression checks.
+            prefix+"trader/test-ai-asset-reading-view.cjs",
             prefix+"trader/trader-candles-minute-watch.js",
             # Explicitly reviewed, Trader-only, no order interfaces.
             prefix+"trader/trader-paper-decision-core.js",
@@ -220,7 +222,7 @@ jobs:
             "status":"TRADER_COFFRE_VISIBLE_CI_PENDING_FIREFOX",
             "delivery.zip":"AGENT_CRYPTO_LABORATOIRE.zip (workflow artifact pending build and Firefox validation)",
           })
-          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/trader-candles-minute-watch.js",prefix+"trader/trader-paper-decision-core.js",prefix+"trader/trader-paper-decision-view.js",prefix+"trader/test-paper-decision.cjs",prefix+"trader/trader-order-entry-view.js",prefix+"trader/trader-order-entry.css"}:
+          for f in allowed-{prefix+"trader/build.json",prefix+"trader/trader-historical-panel.js",prefix+"trader/ai-source-inventory.js",prefix+"trader/historical-inventory.html",prefix+"trader/ai-history-source-catalog.js",prefix+"trader/source-catalogue.html",prefix+"trader/ai-verified-history-reader.js",prefix+"trader/verified-reader.html",prefix+"trader/math-core-external-guard.js",prefix+"trader/clear-external-selection-guard.js",prefix+"trader/trader-paper-lab-core.js",prefix+"trader/trader-paper-lab-view.js",prefix+"trader/test-paper-lab.cjs",prefix+"trader/test-ai-asset-reading-view.cjs",prefix+"trader/trader-candles-minute-watch.js",prefix+"trader/trader-paper-decision-core.js",prefix+"trader/trader-paper-decision-view.js",prefix+"trader/test-paper-decision.cjs",prefix+"trader/trader-order-entry-view.js",prefix+"trader/trader-order-entry.css"}:
             if f==prefix+"trader/trader-runtime-mirror.js":
               expected=previous(f).replace("40.6.639","40.6.640").replace("trader-historical-panel.js?reader=top50-cohorts","trader-historical-panel.js?reader=visible-coffre")
               actual=current(f)
@@ -270,6 +272,15 @@ jobs:
               if visual_chain in actual and visual_chain not in expected:
                 assert actual.count(visual_chain)==1
                 actual=actual.replace(visual_chain,original_chain,1)
+              # Exact, audited, Trader-only Seven bridge; no broad exemption.
+              seven_loader="  // Trader-only Technical Reading owner. This script mounts the isolated\n  // Seven dossier itself; Concrete CT remains the independent private owner.\n  // The Administrator entrypoint must never import this Trader-only reader.\n  if(!doc.getElementById(\"traderTechnicalReadingSyncScript\")){\n    const script=doc.createElement(\"script\");\n    script.id=\"traderTechnicalReadingSyncScript\";\n    script.src=new URL(\"../trader/technical-reading-data-sync.js\",doc.baseURI).href;\n    script.onerror=()=>{\n      if(status){\n        status.textContent=\"Lecture Seven indisponible ; Concrete CT reste intact.\";\n        status.dataset.state=\"error\";\n      }\n    };\n    doc.head.appendChild(script);\n  }\n"
+              if seven_loader in actual and seven_loader not in expected:
+                assert actual.count(seven_loader)==1
+                assert actual.index("traderAiCtContractScript") < actual.index(seven_loader)
+                assert actual.index(seven_loader) < actual.index("  // Visible PAPER laboratory.")
+                assert "/trade/order" not in seven_loader and "localStorage." not in seven_loader
+                assert "indexedDB." not in seven_loader and "setInterval(" not in seven_loader
+                actual=actual.replace(seven_loader,"",1)
               assert actual==expected,f"Non-version Trader change beyond PAPER extension: {f}"
               continue
             else:
