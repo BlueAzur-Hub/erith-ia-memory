@@ -172,3 +172,21 @@
  border-color:#5c847f;border-left-color:#83caba;background:linear-gradient(110deg,#133736,#0b2530);
 }
 #traderOkxTicket .erith-od-guard[data-level="neutral"]>strong{color:#aae5cf}
+
+/* Golden Ticket: single reading-only feasibility verdict (recto). */
+#traderOkxTicket .erith-od-verdict{
+ margin:0 17px 12px;padding:12px 15px;border:1px solid #947f55;
+ border-left:4px solid #bca56b;border-radius:5px;min-width:0;
+ background:linear-gradient(115deg,#0b2936,#0a222d)
+}
+#traderOkxTicket .erith-od-verdict[data-level="warning"]{
+ border-color:#b28b57;border-left-color:#ffe0a1;
+ background:linear-gradient(115deg,#402c1d,#192833)
+}
+#traderOkxTicket .erith-od-verdict>strong{color:#f4dfb4;display:block;font-size:14px;letter-spacing:.045em}
+#traderOkxTicket .erith-od-verdict>p{color:#e2dad0;font-size:12px;line-height:1.6;margin:6px 0 0;overflow-wrap:anywhere}
+#traderOkxTicket .erith-od-verdict .erith-od-budget{
+ border-top:1px solid #d6b77a66;padding-top:8px;color:#f2d5a6
+}
+#traderOkxTicket [data-od-field="sellNet"]{overflow-wrap:anywhere;font-size:clamp(12px,1vw,16px);line-height:1.5}
+@media(max-width:540px){#traderOkxTicket .erith-od-verdict{margin:0 10px 10px;padding:10px 12px}}

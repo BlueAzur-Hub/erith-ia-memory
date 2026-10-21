@@ -626,10 +626,23 @@ async function prepareTicket(){
       exitLines.push(exit.meets_native_exit_minimum?
         "Minimum de vente respecté dans la simulation.":
         "ATTENTION : pas assez de CT après frais pour respecter le minimum de vente !");
-      exitLines.push("Si la vente se réalise entièrement à "+desired+" : "+
-        exit.hypothetical_sale_net_quote+" "+quote+" récupérés après frais estimés.");
-      exitLines.push("Gain/perte théorique sur cet achat : "+
-        exit.hypothetical_profit_quote+" "+quote+" (poussière non valorisée).");
+      if(exit.meets_native_exit_minimum===false){
+        exitLines.push("VENTE NON ADMISSIBLE : "+exit.maximum_sellable_base+
+          " CT sous le minimum Spot ; aucune somme encaissable dans ce scénario.");
+        exitLines.push("Valorisation MATHÉMATIQUE seulement à "+desired+" : "+
+          exit.hypothetical_sale_net_quote+" "+quote+
+          " ; ceci N'EST PAS le produit d'une vente réalisable.");
+        exitLines.push("Variation mathématique NON RÉALISABLE : "+
+          exit.hypothetical_profit_quote+" "+quote+
+          " (frais et poussière supposés ; aucun gain).");
+      }else{
+        exitLines.push("Si la vente était admissible et exécutée entièrement à "+
+          desired+" : "+exit.hypothetical_sale_net_quote+
+          " "+quote+" hypothétiques après frais.");
+        exitLines.push("Variation conditionnelle de l'étude : "+
+          exit.hypothetical_profit_quote+" "+quote+
+          " (poussière non valorisée ; aucun ordre exécuté).");
+      }
       exitLines.push(exit.fees_verified?
         "Frais de la paire exacte lus via le compte OKX, taux le plus défavorable retenu.":
         "Frais CT/USDC NON certifiés : hypothèse de 0,10 % de chaque côté.");
