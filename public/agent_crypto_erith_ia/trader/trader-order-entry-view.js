@@ -407,6 +407,11 @@ function updatePublicAsset(ticket,preview,bookDiagnostic){
  set("checktime","Aucun contrôle privé vérifié","odProof");
  set("funds","Trading/Funding non vérifiés pour "+pair,"odProof");
  set("orders","PAPER public uniquement · Trade verrouillé","odProof");
+ const disclaimer=node.querySelector(".erith-od-disclaimer");
+ if(disclaimer)disclaimer.textContent=
+   "Le ticket "+pair+" est une étude du carnet public daté. "+
+   "Les données du graphique et celles de la paire Spot sont distinctes. "+
+   "Aucun ordre envoyé ; aucun solde, frais ou plafond privé certifié pour "+pair+".";
  const buy=scaled(ticket.gross_buy_quantity);
  const gross=hasPreview?scaled(preview.buy_quantity):buy;
  const sell=hasPreview?scaled(preview.maximum_sellable_base):null;
@@ -512,6 +517,11 @@ function update({ticket,context,review,preview,bookDiagnostic,checkedAt}={}){
    (review.funds_cover_public_scenario?"Couverture du coût PAPER uniquement":"Couverture PAPER non démontrée"):
    "Compte non confirmé","odProof");
  set("orders","Aucun ordre possible · Trade désactivé","odProof");
+ const disclaimer=node.querySelector(".erith-od-disclaimer");
+ if(disclaimer)disclaimer.textContent=
+   "L'interface reprend les repères d'OKX sans reproduire ses autorisations. "+
+   "Les projections viennent du ticket CT/USDC daté ; le graphique CT/USDT reste une source distincte. "+
+   "Aucun ordre réel n'est envoyé par cette version.";
  updateGuards(ticket,review,hasPreview?preview:null,context);
  assessTicket(ticket,review,hasPreview?preview:null,context,validBook);
 }
