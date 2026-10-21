@@ -327,9 +327,14 @@ jobs:
           assert "privateButton.disabled=busy||!isNativeOkx" in seven_view
           for forbidden in ("localStorage.", "indexedDB.", "sessionStorage.",
                            "/api/v5/trade/order", "/trade/order", "/withdraw",
-                           "setInterval(", "MutationObserver", "aiCtPanel.hidden",
+                           "setInterval(", "aiCtPanel.hidden",
                            "aiCtPanel.open"):
             assert forbidden not in seven_view, f"Seven navigation policy violation: {forbidden}"
+          # Current Seven view has ONE bounded observer to detect CT mount;
+          # verify it disconnects, has no subtree traversal and cannot poll.
+          assert "observer.disconnect();mount();" in seven_view
+          assert "observer.observe(target,{childList:true});" in seven_view
+          assert "subtree:true" not in seven_view
           # Narrow safety review of the new public reader.
           strategy=current(prefix+"trader/strategy-comparator.js")
           strategy_test=current(prefix+"trader/test-strategy-comparator.cjs")
