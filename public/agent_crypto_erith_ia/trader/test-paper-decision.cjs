@@ -1364,6 +1364,52 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
  assert.equal(text("buyAvailable"),"3.2 USDC");
  assert.equal(text("sellAvailable"),"0 CT");
  assert.match(proof("orders"),/Trade désactivé/);
+ const guard=kind=>node.querySelector('[data-od-guard-detail="'+kind+'"]')?.textContent||"";
+ const guardTitle=kind=>node.querySelector('[data-od-guard-title="'+kind+'"]')?.textContent||"";
+ assert.match(guardTitle("buy"),/minimum de quantité franchi/i);
+ assert.match(guardTitle("sell"),/revente atteint/i);
+ assert.match(guard("sell"),/résidu estimé/i);
+ // Regression observed in Firefox: 3.20 USDC at ask 0.3384 purchases
+ // 9.45 CT gross, below native minSz 10 CT. Funding is not Trading.
+ ui.update({ticket:{pair:"CT-USDC",orders_enabled:false,source_book_kind:
+   "LOCAL_BACKEND_OKX_CT_USDC",best_bid_quote:"0.338",best_ask_quote:"0.3384",
+   native_min_quantity:"10",native_lot:"0.01",native_tick:"0.0001",
+   native_rules_verified:true,study_budget_quote:"3.2",
+   minimum_buy_at_recorded_ask_quote:"3.384",
+   minimum_gross_buy_to_resell_with_assumed_base_fee:"10.02",
+   minimum_gross_buy_cost_at_ask_with_assumed_base_fee:"3.390768",
+   gross_buy_quantity:"9.45",hypothetical_buy_cost_quote:"3.19788"},
+   bookDiagnostic:{accepted:true},
+   review:{account_verified:true,available_trading_quote:"3.2",
+    available_funding_quote:"1.18668749",fee_mode_verified:true,
+    fee_buy_currency:"CT",fee_type:"0"},
+   context:{order_gates_verified:true,order_gates:{
+     account_max_verified:true,maxBuy:"9.452",available_verified:true,availSell:"0"}},
+   preview:{orders_enabled:false,buy_quantity:"9.45",
+    total_buy_cost_quote:"3.19788",maximum_sellable_base:"9.44",
+    meets_native_exit_minimum:false,residual_dust_base:"0.00055",
+    estimated_buy_fee_base:"0.00945"}});
+ assert.match(guardTitle("buy"),/Minimum d'achat non atteint/);
+ assert.match(guard("buy"),/9.45 CT projetés/);
+ assert.match(guard("buy"),/3.384 USDC/);
+ assert.match(guard("buy"),/0,184 USDC/);
+ assert.match(guard("buy"),/plafond d'achat du compte/i);
+ assert.match(guardTitle("sell"),/Revente en quantité minimale impossible/);
+ assert.match(guard("sell"),/10.02 CT bruts/);
+ assert.match(guard("sell"),/3.390768 USDC/);
+ // Trading balance 3.2 remains the only trading value; no funding transfer.
+ assert.equal(text("buyAvailable"),"3.2 USDC");
+ assert.equal(src.includes("transfer("),false);
+ // Unverified evidence must not be silently presented as verified.
+ ui.update({ticket:{pair:"CT-USDC",orders_enabled:false,
+   source_book_kind:"DATED_PUBLIC_HOURLY_ARCHIVE",
+   native_min_quantity:"10",native_lot:"0.01",
+   native_rules_verified:false,study_budget_quote:"3.2",
+   minimum_buy_at_recorded_ask_quote:"3.384",gross_buy_quantity:"9.45"},
+   bookDiagnostic:{accepted:false},review:null,preview:null,context:null});
+ assert.match(guard("buy"),/Règles d'archive datée/);
+ assert.equal(guard("buy").includes("solde Trading vérifié"),false);
+
  ui.updateCycle({paper:true,events:[{type:"PAPER_PREPARE",at:"t0"},{type:"PAPER_CANCEL",at:"t1"}]});
  assert.equal(node.querySelector("[data-od-events]").children.length,2);
  ui.update({ticket:{pair:"CT-USDT",orders_enabled:false}});
