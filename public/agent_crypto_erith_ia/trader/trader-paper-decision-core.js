@@ -193,18 +193,24 @@ function ticketBlocked(reason,extras={}){
   orders_enabled:false,real_orders:0,trade_endpoint:null,
   executable:false,has_submit_action:false});
 }
-/* Public local Backend CT/USDC book; independent of the CT/USDT graphic.
-   The dated archive remains the sole source of Spot size/tick rules. */
-function verifiedCtLiveBook(payload,pair,now){
- if(pair!=="CT-USDC"||payload?.status!=="ok"||
-    payload?.provider!=="okx"||payload?.pair!==pair||
-    payload?.quote!=="USDC"||!Number.isFinite(now))return null;
+/* Multi-instrument public OKX Spot evidence gate. A verified native instrument
+   and native book are pair-specific; the chart never supplies limit prices.
+   Bridge public route and anonymous OKX metadata only. No account/order IO. */
+function nativeSpotPair(pair){
+ if(typeof pair!=="string"||!/^[A-Z][A-Z0-9]{0,19}-(?:USDC|USDT|EUR)$/.test(pair))return null;
+ const index=pair.lastIndexOf("-");
+ return Object.freeze({pair,base:pair.slice(0,index),quote:pair.slice(index+1)});
+}
+function verifiedSpotLiveBook(payload,pair,now){
+ const instrument=nativeSpotPair(pair);
+ if(!instrument||payload?.status!=="ok"||payload?.provider!=="okx"||
+    payload?.pair!==pair||payload?.quote!==instrument.quote||
+    !Number.isFinite(now))return null;
  const when=Date.parse(payload.observed_at_utc);
  if(!Number.isFinite(when)||when>now+CT_BOOK_CLOCK_LEEWAY_MS||
     now-when>20000)return null;
  const bids=payload.bids,asks=payload.asks;
- if(!Array.isArray(bids)||!Array.isArray(asks)||
-    !bids.length||!asks.length)return null;
+ if(!Array.isArray(bids)||!Array.isArray(asks)||!bids.length||!asks.length)return null;
  try{
   for(const [side,descending] of [[bids,true],[asks,false]]){
    let previous=null;
@@ -221,15 +227,14 @@ function verifiedCtLiveBook(payload,pair,now){
     market_fill_proven:false,bids,asks});
  }catch(_){return null;}
 }
-/* Explain WHY a local book was rejected, never upgrade the archive to live.
-   The diagnostic contains no account data and is safe for the PAPER UI. */
-function diagnoseCtLiveBook(payload,pair,now=Date.now()){
+function diagnoseSpotLiveBook(payload,pair,now=Date.now()){
  const fail=(code,reason)=>Object.freeze({accepted:false,code,reason});
- if(pair!=="CT-USDC")return fail("PAIR_SELECTION","Le ticket ne concerne pas CT-USDC.");
+ const instrument=nativeSpotPair(pair);
+ if(!instrument)return fail("PAIR_SELECTION","Paire Spot native non qualifiée.");
  if(!payload)return fail("NO_LOCAL_BOOK","Aucun carnet local reçu.");
  if(payload.status!=="ok"||payload.provider!=="okx"||
-    payload.pair!=="CT-USDC"||payload.quote!=="USDC")
-   return fail("PAIR_OR_SOURCE","Source ou paire du carnet local non conforme à CT-USDC.");
+    payload.pair!==pair||payload.quote!==instrument.quote)
+   return fail("PAIR_OR_SOURCE","Source, actif ou paire du carnet local non conforme à "+pair+".");
  const at=Date.parse(payload.observed_at_utc||"");
  if(!Number.isFinite(now)||!Number.isFinite(at))
    return fail("TIMESTAMP_INVALID","Horodatage du carnet OKX absent ou invalide.");
@@ -239,29 +244,40 @@ function diagnoseCtLiveBook(payload,pair,now=Date.now()){
  if(now-at>20000)
    return fail("BOOK_STALE","Carnet local trop ancien ("+
      Math.round((now-at)/1000)+" secondes) ; aucun prix actuel accepté.");
- if(!verifiedCtLiveBook(payload,pair,now))
+ if(!verifiedSpotLiveBook(payload,pair,now))
    return fail("BOOK_INVALID","Niveaux de prix ou quantités invalides, mal triés ou croisés.");
  return Object.freeze({accepted:true,code:"LOCAL_OK",
    reason:(at>now?"Petit écart d'horloge de "+((at-now)/1000).toFixed(3)+
-      " s toléré. ":"")+"Carnet OKX CT-USDC récent qualifié (sans garantie d'exécution)."});
+      " s toléré. ":"")+"Carnet OKX "+pair+" récent qualifié (sans garantie d'exécution)."});
 }
-/* Live public CT/USDC instrument metadata. This validates quantity and price
-   increments only; it cannot certify account-specific or notional limits. */
-function verifiedCtSpotRules(source,pair,now){
- if(pair!=="CT-USDC"||!Number.isFinite(now))return null;
+function verifiedSpotRules(source,pair,now){
+ const instrument=nativeSpotPair(pair);
+ if(!instrument||!Number.isFinite(now))return null;
  const at=Date.parse(source?.observed_at_utc||"");
  if(!Number.isFinite(at)||at>now||now-at>120000||
     source?.payload?.code!=="0"||!Array.isArray(source.payload.data))return null;
  const hits=source.payload.data.filter(r=>r?.instId===pair&&r?.instType==="SPOT");
  if(hits.length!==1)return null;
  const r=hits[0];
- if(r.state!=="live"||r.baseCcy!=="CT"||r.quoteCcy!=="USDC")return null;
+ if(r.state!=="live"||r.baseCcy!==instrument.base||
+    r.quoteCcy!==instrument.quote)return null;
  try{
   const min=exact(r.minSz),lot=exact(r.lotSz),tick=exact(r.tickSz);
   if(!min||!lot||!tick)return null;
   return Object.freeze({minSz:r.minSz,lotSz:r.lotSz,
     tickSz:r.tickSz,at:source.observed_at_utc});
  }catch(_){return null;}
+}
+/* Legacy CT-only entrypoints intentionally kept for strict regression tests. */
+function verifiedCtLiveBook(payload,pair,now){
+ return pair==="CT-USDC"?verifiedSpotLiveBook(payload,pair,now):null;
+}
+function diagnoseCtLiveBook(payload,pair,now=Date.now()){
+ return pair==="CT-USDC"?diagnoseSpotLiveBook(payload,pair,now):
+   Object.freeze({accepted:false,code:"PAIR_SELECTION",reason:"Le ticket ne concerne pas CT-USDC."});
+}
+function verifiedCtSpotRules(source,pair,now){
+ return pair==="CT-USDC"?verifiedSpotRules(source,pair,now):null;
 }
 
 /* Shared PAPER-only instrument selection contract.
@@ -329,7 +345,7 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
      matches[0].pair!==asset+"-"+matches[0].quote)
     return ticketBlocked("Paire absente ou identité du carnet ambiguë.");
   const m=matches[0],archivedBook=m.book5;
-  const localBook=verifiedCtLiveBook(liveBook,pair,now);
+  const localBook=verifiedSpotLiveBook(liveBook,pair,now);
   const book=localBook||archivedBook;
   if(m.status!=="VERIFIED_PUBLIC_BOOK"||!archivedBook||
      book.market_fill_proven!==false||!Array.isArray(book.bids)||
@@ -344,7 +360,7 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
      observed>now+30000)
     return ticketBlocked("Heure du carnet ou observation incohérente.");
   const age=Math.max(0,Math.round((now-ts)/60000));
-  const freshRules=verifiedCtSpotRules(instrumentEvidence,pair,now);
+  const freshRules=verifiedSpotRules(instrumentEvidence,pair,now);
   const rules=freshRules||m.rules;
   const tick=exact(rules?.tickSz),lot=exact(rules?.lotSz),
         minimum=exact(rules?.minSz);
@@ -400,9 +416,11 @@ function prepareSpotTicket({selected,archive,pair,budgetQuote="10",now=Date.now(
   return ticketBlocked("PRÉPARATION UNIQUEMENT · validation nécessaire avant tout ordre.",{
    status:"PREPARATION_NON_EXECUTABLE",pair,quote,base:asset,
    source_book_at_utc:book.source_at_utc,book_age_minutes:age,
-   source_book_kind:localBook?"LOCAL_BACKEND_OKX_CT_USDC":"DATED_PUBLIC_HOURLY_ARCHIVE",
+   source_book_kind:localBook?(pair==="CT-USDC"?
+    "LOCAL_BACKEND_OKX_CT_USDC":"LOCAL_BACKEND_OKX_SPOT"):"DATED_PUBLIC_HOURLY_ARCHIVE",
    native_rules_observed_at_utc:freshRules?freshRules.at:last.observed_at_utc,
-   native_rules_kind:freshRules?"OKX_PUBLIC_INSTRUMENTS_CT_USDC":"DATED_PUBLIC_HOURLY_ARCHIVE",
+   native_rules_kind:freshRules?(pair==="CT-USDC"?
+    "OKX_PUBLIC_INSTRUMENTS_CT_USDC":"OKX_PUBLIC_SPOT_INSTRUMENT"):"DATED_PUBLIC_HOURLY_ARCHIVE",
    native_rules_verified:!!freshRules,
    fee_debit_currency_verified:false,
    minimum_gross_buy_to_resell_with_assumed_base_fee:exactFmt(minimumGrossWithBaseFee),
@@ -803,5 +821,6 @@ function advancePaperLimitCycle(state,action,now=Date.now()){
   send_attempts:0,orders_enabled:false,real_orders:0,
   network:false,storage:false});
 }
-return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,qualifyPaperSpotSelection,prepareSpotTicket,verifiedCtLiveBook,diagnoseCtLiveBook,verifiedCtSpotRules,checkSpotOrderGates,reviewSpotTicketAccount,previewSpotExit,startPaperLimitCycle,advancePaperLimitCycle,PAPER_CYCLE,realOrders:false,network:false,storage:false});
+return Object.freeze({SCHEMA,assess,cohortContext,validSignal,summarizeHistorical,qualifyHistoricalAsOf,qualifyPaperSpotSelection,prepareSpotTicket,verifiedSpotLiveBook,diagnoseSpotLiveBook,verifiedSpotRules,
+  verifiedCtLiveBook,diagnoseCtLiveBook,verifiedCtSpotRules,checkSpotOrderGates,reviewSpotTicketAccount,previewSpotExit,startPaperLimitCycle,advancePaperLimitCycle,PAPER_CYCLE,realOrders:false,network:false,storage:false});
 });
