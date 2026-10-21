@@ -199,3 +199,61 @@ test('same rules API preserves high precision but never guesses a tradable quant
  assert.equal(api.assessSpotQuantityFor(0.00001,rules).status,'unverified',
   'legacy 12-decimal quantity checker must not pretend to validate a finer lot');
 });
+
+
+test('CT acquisition output is identical through the generalized source-of-truth',()=>{
+ const legacy=api.acquisition(fills,9.99);
+ const shared=api.acquisitionFor({base:'CT',quote:'USDC',venue:'okx'},fills,9.99);
+ assert.equal(shared.status,legacy.status);
+ assert.equal(shared.net_acquired_base,legacy.net_acquired_ct);
+ assert.equal(shared.spent_quote,legacy.spent_usdc);
+ assert.equal(shared.cost_per_base_quote,legacy.cost_per_ct_usdc);
+ assert.equal(shared.observed_buy_base_fee_pct,legacy.observed_buy_ct_fee_pct);
+ assert.equal(shared.observed_buy_base_fee_qty,legacy.observed_buy_ct_fee_qty);
+ assert.equal(shared.historical_gross_base,legacy.historical_gross_ct);
+ assert.equal(shared.fill_count,legacy.fill_count);
+ assert.equal(shared.caveat,legacy.caveat);
+ assert.equal(shared.profit_proven,false);
+});
+test('the exact CT acquisition algorithm is available to BTC ETH and SOL',()=>{
+ for(const [base,quote,size,price,fee,held] of [
+  ['BTC','USDC','0.002','82700','-0.000002',0.001998],
+  ['ETH','USDC','2','2400','-0.002',1.998],
+  ['SOL','USDT','10','150','-0.01',9.99]
+ ]){
+  const pair=base+'-'+quote;
+  const source={ok:true,read_only:true,fills_3m:[
+   {instId:pair,side:'buy',tradeId:'receipt-1',
+    fillPx:price,fillSz:size,fee,feeCcy:base}]};
+  const result=api.acquisitionFor({base,quote,venue:'okx'},source,held);
+  assert.equal(result.status,'reconciled_fills_only',pair);
+  assert.equal(result.market,pair);
+  assert.ok(result.spent_quote>0);
+  assert.equal(result.net_acquired_base,held);
+  assert.equal(result.orders_enabled,false);
+  assert.equal(result.profit_proven,false);
+ }
+});
+test('cross-market, Bitget without OKX proof, mixed fills and missing position refuse acquisition',()=>{
+ const source={ok:true,read_only:true,fills_3m:[
+  {instId:'ETH-USDC',side:'buy',tradeId:'a',fillPx:'2440',
+   fillSz:'1',fee:'0',feeCcy:'ETH'}]};
+ const context={base:'ETH',quote:'USDC',venue:'okx'};
+ for(const bad of [
+  [context,source,null],
+  [{...context,quote:'USDT'},source,1],
+  [{...context,venue:'bitget'},source,1],
+  [context,{...source,read_only:false},1],
+  [context,{...source,fills_3m:[...source.fills_3m,
+    {...source.fills_3m[0],side:'sell',tradeId:'b'}]},1],
+  [context,{...source,fills_3m:[...source.fills_3m,
+    {...source.fills_3m[0]}]},2],
+  [context,{...source,fills_3m:[{...source.fills_3m[0],
+    feeCcy:'USDT',fee:'-0.1'}]},1],
+  [context,source,0]
+ ]){
+  const result=api.acquisitionFor(...bad);
+  assert.equal(result.status,'unknown');
+  assert.ok(!Object.hasOwn(result,'spent_quote'));
+ }
+});
