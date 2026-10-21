@@ -331,3 +331,68 @@ test('Funding only, crossed pair, stale rules and absent available balance never
  assert.equal(api.accountPositionFor(context,{...trading,fetched_at:new Date(now-300000).toISOString()},now).verified,false);
  assert.equal(api.accountPositionFor(context,{...trading,trading:[{details:[{ccy:'ETH',cashBal:'0.2'}]}]},now).verified,false);
 });
+
+
+test('one shared OKX bid-depth estimator preserves Concrete CT exact book and fee arithmetic',()=>{
+ const context={base:'CT',quote:'USDC',venue:'okx'};
+ const original=JSON.stringify(book);
+ const observed=api.spotBookEstimateFor(context,book,9.99,.002,now);
+ const ct=api.sellEstimate(book,9.99,.002,now);
+ assert.equal(observed.status,'indicative');
+ assert.equal(ct.status,'indicative');
+ assert.ok(Math.abs(Number(observed.gross_quote)-ct.gross_usdc)<1e-12);
+ assert.ok(Math.abs(Number(observed.net_quote)-ct.net_usdc)<1e-12);
+ assert.equal(observed.fee_rate_assumed,.002);
+ assert.equal(JSON.stringify(book),original);
+ assert.equal(observed.orders_enabled,false);
+ assert.equal(observed.profit_proven,false);
+});
+test('BTC ETH and SOL call the same CT bid-depth algorithm with exact native pair',()=>{
+ for(const [base,quote,qty,price,expected] of [
+  ['BTC','USDC','0.002','80000',160],
+  ['ETH','USDC','0.5','2400',1200],
+  ['SOL','USDT','10','120',1200]
+ ]){
+  const market=base+'-'+quote;
+  const current={status:'ok',provider:'okx',pair:market,quote,
+   observed_at_utc:new Date(now-500).toISOString(),
+   bids:[[price,'20']],asks:[[String(Number(price)+1),'20']]};
+  const result=api.spotBookEstimateFor({base,quote,venue:'okx'},current,qty,null,now);
+  assert.equal(result.status,'indicative',market);
+  assert.equal(Number(result.gross_quote),expected);
+  assert.equal(result.net_quote,null,'unknown fees cannot become certified net');
+  assert.equal(result.read_only,true);
+  assert.equal(result.orders_enabled,false);
+  assert.equal(result.profit_proven,false);
+ }
+});
+test('gross is refused for wrong venue/pair, stale book, crossed size, or insufficient depth',()=>{
+ const current={...book,asks:[['0.36','10']]};
+ for(const [context,candidate,quantity] of [
+  [{base:'CT',quote:'USDC',venue:'bitget'},current,'1'],
+  [{base:'BTC',quote:'USDC',venue:'okx'},current,'1'],
+  [{base:'CT',quote:'USDT',venue:'okx'},current,'1'],
+  [{base:'CT',quote:'USDC',venue:'okx'},
+   {...current,observed_at_utc:new Date(now-30000).toISOString()},'1'],
+  [{base:'CT',quote:'USDC',venue:'okx'},
+   {...current,bids:[['0.355','0.5']]},'1'],
+  [{base:'CT',quote:'USDC',venue:'okx'},
+   {...current,bids:[['0.355','-10']]},'1']
+ ]){
+  const result=api.spotBookEstimateFor(context,candidate,quantity,null,now);
+  assert.equal(result.status,'unknown');
+  assert.equal(result.gross_quote,null);
+  assert.equal(result.net_quote,null);
+ }
+});
+test('no fee proof means gross only; a rate is always labeled a PAPER assumption',()=>{
+ const r=api.spotBookEstimateFor({base:'CT',quote:'USDC',venue:'okx'},book,'2',null,now);
+ assert.equal(r.status,'indicative');
+ assert.equal(r.gross_quote,'0.71');
+ assert.equal(r.net_quote,null);
+ const hypothetical=api.spotBookEstimateFor({base:'CT',quote:'USDC',venue:'okx'},
+   book,'2',.002,now);
+ assert.equal(hypothetical.net_quote,'0.70858');
+ assert.equal(hypothetical.fee_quote,'0.00142');
+ assert.equal(hypothetical.profit_proven,false);
+});

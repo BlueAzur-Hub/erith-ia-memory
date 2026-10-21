@@ -95,8 +95,9 @@
   return frozen({quote,trading:print(trading),funding:print(funding),
     maker_rate:maker===null?null:print(maker),
     taker_rate:taker===null?null:print(taker),
-    fee_currency_verified:false,max_buy_verified:false,
-    observed_at_utc:data.account_at_utc});
+    fee_currency_verified:data.fee_currency_verified===true&&
+      data.fee_currency===quote&&pairFees,
+    observed_at_utc:data.account_at_utc,max_buy_verified:false});
  }
  function basePosition(position,pair,now){
   if(position?.pair!==pair||position?.read_only!==true||position?.verified!==true||
@@ -107,37 +108,52 @@
   return frozen({trading, funding,total:trading+funding,
     observed_at_utc:position.observed_at_utc});
  }
- function fractions({base,quote,position,book,rules}){
-  const fractions=[25,50,100],rows=[];
-  for(const percent of fractions){
-   const unavailable=(status,detail)=>frozen({percent,status,detail,
-     quantity_base:null,gross_quote:null,net_quote:null,orders_enabled:false});
+ // The CT contract owns both Spot rules and the native bid-depth walk.
+ // Seven supplies validated identity, position, public evidence and fee proof.
+ function fractions({base,quote,position,book,rawBook,rules,account,now}){
+  const percentages=[25,50,100],rows=[];
+  const owner=commonSpotRules();
+  for(const percent of percentages){
+   const unavailable=(status,detail,qty=null)=>frozen({percent,status,detail,
+     quantity_base:qty,gross_quote:null,net_quote:null,
+     estimated_fee_quote:null,remaining_base:null,orders_enabled:false});
    if(!position){rows.push(unavailable('POSITION_UNVERIFIED','Solde '+base+' non prouvé.'));continue;}
    if(position.trading===0n){
     rows.push(unavailable(position.funding>0n?'FUNDING_ONLY':'NO_TRADING_POSITION',
       position.funding>0n?'Fonds '+base+' uniquement en Funding ; aucun transfert automatique.':
       'Aucun '+base+' disponible en Trading.'));continue;
    }
-   if(!rules||!book){
-    rows.push(unavailable('PUBLIC_EVIDENCE_MISSING','Carnet récent et règles Spot exactes nécessaires.'));continue;
+   if(!rules||!book||!rawBook||typeof owner?.spotBookEstimateFor!=='function'){
+    rows.push(unavailable('PUBLIC_EVIDENCE_MISSING',
+      'Carnet récent et règles Spot exactes nécessaires.'));continue;
    }
    const proposed=position.trading*BigInt(percent)/100n;
    const qty=proposed/rules.lot*rules.lot;
    if(qty<rules.minimum){
-    rows.push(frozen({percent,status:'BELOW_MINIMUM',detail:'Sous minSz ; aucune vente admissible.',
-     quantity_base:print(qty),gross_quote:null,net_quote:null,orders_enabled:false}));continue;
+    rows.push(unavailable('BELOW_MINIMUM',
+      'Sous minSz/lotSz ; aucune vente admissible.',print(qty)));continue;
    }
-   let rest=qty,gross=0n;
-   for(const row of book.bids){
-    const matched=rest<row.quantity?rest:row.quantity;
-    gross+=matched*row.price/UNIT;rest-=matched;
-    if(rest===0n)break;
+   const feeRate=account?.fee_currency_verified===true&&
+     account.quote===quote&&account.taker_rate!==null?
+     Number(account.taker_rate):null;
+   // Limit the same raw bids to the 100 levels that were certified above.
+   const source={...rawBook,bids:rawBook.bids.slice(0,book.bids.length)};
+   const estimate=owner.spotBookEstimateFor(
+     {base,quote,venue:'okx'},source,print(qty),feeRate,now);
+   if(estimate?.status!=='indicative'){
+     rows.push(unavailable(estimate?.reason?.includes('Profondeur')?
+       'BOOK_DEPTH_INSUFFICIENT':'PUBLIC_EVIDENCE_MISSING',
+       estimate?.reason||'Carnet insuffisant',print(qty)));continue;
    }
-   rows.push(frozen({percent,status:rest===0n?'GROSS_ONLY':'BOOK_DEPTH_INSUFFICIENT',
-     detail:rest===0n?'Produit brut fictif basé sur un carnet daté ; frais, net et exécution non certifiés.':
-      'Profondeur disponible insuffisante ; vente non simulable.',
-     quantity_base:print(qty),gross_quote:rest===0n?print(gross):null,
-     net_quote:null,orders_enabled:false}));
+   const net=account?.fee_currency_verified===true?estimate.net_quote:null;
+   rows.push(frozen({percent,status:net===null?'GROSS_ONLY':'NET_HYPOTHESIS',
+     detail:net===null?
+       'Produit brut fictif sur carnet daté ; frais de débit, net et exécution non certifiés.':
+       'Net PAPER hypothétique avec frais en devise de cotation attestée ; ordre non garanti.',
+     quantity_base:print(qty),gross_quote:estimate.gross_quote,
+     net_quote:net,estimated_fee_quote:net===null?null:estimate.fee_quote,
+     remaining_base:print(position.trading-qty),
+     orders_enabled:false}));
   }
   return frozen(rows);
  }
@@ -201,8 +217,8 @@
     total_base:validPosition?print(validPosition.total):null,
     maker_rate:validAccount?.maker_rate??null,
     taker_rate:validAccount?.taker_rate??null,
-    fee_currency_verified:false,max_buy_verified:false,
-    holding_status:remaining?.status||'UNKNOWN',
+    fee_currency_verified:validAccount?.fee_currency_verified===true,
+    max_buy_verified:false,holding_status:remaining?.status||'UNKNOWN',
     holding_reason:remaining?.reason||'Non certifié',
     sellable_size_base:remaining?.sellable_size_base??null,
     residual_base:remaining?.residual_base??null,
@@ -222,8 +238,8 @@
     entry('Règles OKX',validRules?'VERIFIED':'UNKNOWN',
       validRules?'minSz, lotSz et tickSz de '+pair+' uniquement.':
         'Règles publiques natives manquantes, aucune substitution.'),
-    entry('Simulations de revente',validBook&&validRules&&validPosition?'GROSS_ONLY':'BLOCKED',
-      '25/50/100 % sur Trading uniquement ; produit brut sans frais nets certifiés.'),
+    entry('Simulations de revente',validBook&&validRules&&validPosition?'PAPER':'BLOCKED',
+      '25/50/100 % sur Trading uniquement ; net éventuel seulement avec frais attestés dans la devise de cotation.'),
     entry('Analyse Seven','INSUFFICIENT_EVIDENCE',
       'Coût d acquisition et P&L non prouvés sans rapprochement complet des transactions.'),
     entry('Cas d école','EDUCATIONAL',
@@ -232,7 +248,8 @@
   return frozen({schema:'erith.seven.asset-reading.v1',status:'PAPER_READ_ONLY',
     asset:frozen({base,quote,coin_id:coinId,pair}),
     public:publicData,private:privateData,sections,
-    simulations:fractions({base,quote,position:validPosition,book:validBook,rules:validRules}),
+    simulations:fractions({base,quote,position:validPosition,book:validBook,
+      rawBook:book,rules:validRules,account:validAccount,now}),
     acquisition_receipts:receipt?frozen(receipt):null,
     read_only:true,orders_enabled:false,executable:false,transfer_enabled:false,
     caveat:'Étude de marché et compte en lecture seule. Aucun ordre ou gain garanti.'});

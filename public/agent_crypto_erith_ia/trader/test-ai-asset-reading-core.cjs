@@ -285,3 +285,65 @@ test('a position missing the explicit no-order proof remains UNKNOWN',()=>{
  delete f.position.orders_enabled;
  assert.equal(createReading(f).private.holding_status,'UNKNOWN');
 });
+
+
+test('Seven BTC and ETH 25/50/100 use the Concrete depth owner, gross only without fee currency proof',()=>{
+ const ct=require('./ai-ct-contract.js');
+ for(const [base,id,qty,bid] of [
+  ['BTC','bitcoin','0.002','80000'],
+  ['ETH','ethereum','0.4','2400']
+ ]){
+  const f=fixture(base,id);
+  f.position.trading_base=qty;f.position.funding_base='0';
+  f.book.bids=[[bid,'1']];f.book.asks=[[String(Number(bid)+1),'1']];
+  const d=createReading(f);
+  assert.deepEqual(d.simulations.map(x=>x.status),['GROSS_ONLY','GROSS_ONLY','GROSS_ONLY']);
+  for(const row of d.simulations){
+   const shared=ct.spotBookEstimateFor({base,quote:'USDC',venue:'okx'},
+     f.book,row.quantity_base,null,f.now);
+   assert.equal(shared.status,'indicative');
+   assert.equal(row.gross_quote,shared.gross_quote);
+   assert.equal(row.net_quote,null);
+   assert.equal(row.estimated_fee_quote,null);
+   assert.equal(row.orders_enabled,false);
+  }
+ }
+});
+test('net PAPER needs both pair-specific rate and certified fee debit currency',()=>{
+ const f=fixture('ETH','ethereum');
+ f.book.bids=[['2400','2']];f.book.asks=[['2401','2']];
+ f.position.trading_base='0.4';f.position.funding_base='0';
+ f.account.fee_currency_verified=true;
+ f.account.fee_currency='USDC';
+ const doc=createReading(f);
+ assert.deepEqual(doc.simulations.map(x=>x.status),Array(3).fill('NET_HYPOTHESIS'));
+ assert.equal(doc.simulations[2].gross_quote,'960');
+ assert.equal(doc.simulations[2].estimated_fee_quote,'0.96');
+ assert.equal(doc.simulations[2].net_quote,'959.04');
+ assert.equal(doc.simulations[2].remaining_base,'0');
+ assert.equal(doc.private.fee_currency_verified,true);
+ assert.equal(doc.private.pnl_proven,false);
+ assert.equal(doc.private.pnl,null);
+ assert.equal(doc.executable,false);
+ f.account.fee_currency='ETH';
+ const otherCurrency=createReading(f);
+ assert.deepEqual(otherCurrency.simulations.map(x=>x.status),Array(3).fill('GROSS_ONLY'));
+ assert.equal(otherCurrency.private.fee_currency_verified,false);
+ f.account.fee_currency='USDC';f.account.fee_pair_verified=false;
+ assert.deepEqual(createReading(f).simulations.map(x=>x.net_quote),[null,null,null]);
+});
+test('gross cannot be borrowed from another venue, a different book or an expired market',()=>{
+ const f=fixture('BTC','bitcoin');
+ f.position.trading_base='0.002';f.position.funding_base='0';
+ for(const changed of [
+  {...f.book,pair:'CT-USDC'},
+  {...f.book,provider:'bitget'},
+  {...f.book,observed_at_utc:new Date(NOW-45000).toISOString()},
+  {...f.book,bids:[['80000','0.0001']]}
+ ]){
+  const d=createReading({...f,book:changed});
+  assert.deepEqual(d.simulations.map(x=>x.net_quote),[null,null,null]);
+  assert.equal(d.simulations[2].gross_quote,null);
+  assert.equal(d.orders_enabled,false);
+ }
+});
