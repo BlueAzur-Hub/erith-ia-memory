@@ -9,7 +9,7 @@ const positive=v=>typeof v==='number'&&Number.isFinite(v)&&v>0;
 function checkDay(x){
  if(x?.schema!=='erith.radar.opportunity-observation.v1'||x.orders_enabled!==false||
  x.account_access!==false||x.simulation_only!==true||x.spread_validated!==false||
- x.orderbook_validated!==false||!Array.isArray(x.tracked_candidates)||
+ x.orderbook_validated!==false||(x.observed_date_utc>=firstDay&&!Array.isArray(x.tracked_candidates))||
  !Array.isArray(x.groups?.momentum_24h_7d)||
  !/^\d{4}-\d{2}-\d{2}$/.test(x.observed_date_utc)||
  new Date(x.observed_date_utc+'T00:00:00Z').toISOString().slice(0,10)!==x.observed_date_utc)
