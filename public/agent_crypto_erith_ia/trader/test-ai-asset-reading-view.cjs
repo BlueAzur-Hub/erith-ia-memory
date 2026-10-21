@@ -62,7 +62,7 @@ function setup(){
   change24h:1.25,usdSource:'CoinGecko',usdUpdatedAt:now};
  let chart={mode:'candles',loadedInstrument:'BTC-USDC',loadedBar:'5m',
   rows:[{o:82600,h:82700,l:82500,c:82650,v:12}]};
- let privateWait=null,privateCalls=0,external=null;
+ let privateWait=null,privateCalls=0,external=null,externalPublic=null;
  const owner={
   calls:()=>privateCalls,
   ticketReadOnly:(pair)=>new Promise(resolve=>{privateCalls++;if(!privateWait)privateWait={};
@@ -74,7 +74,8 @@ function setup(){
    console,queueMicrotask:fn=>fn(),
    AgentCryptoAiAssetReading:require('./ai-asset-reading-core.js'),
    AgentCryptoTraderMarket:{selected:()=>coin},
-   AgentCryptoNewListingsNativeCategory:{snapshot:()=>external},
+   AgentCryptoNewListingsNativeCategory:{
+    snapshot:()=>external,selectedMarketCoin:()=>externalPublic},
    AgentCryptoMarketMicroscope:{snapshot:()=>chart,technicalLevels:()=>null},
    AgentCryptoTraderOkxAccount:owner};
  globals.globalThis=globals;
@@ -87,7 +88,7 @@ function setup(){
  return {panel,ct,ctBody,ctTitle,ctCaption,host,nav,window,owner,globals,byText,heading,statuses,
   singleQuick:()=>ctQuick,
   select:(id,symbol,instr)=>{
-   external=null;
+   external=null;externalPublic=null;
    coin={id,symbol,name:symbol,priceUsd:2443,usdSource:'CoinGecko',usdUpdatedAt:now};
    chart={...chart,external:false,loadedInstrument:instr||symbol+'-USDC'};
    window.fire('agent-crypto:trader-selection-changed');
@@ -95,12 +96,17 @@ function setup(){
   external:(id,symbol,pair,provider='bitget',loadedPair=pair)=>{
    external={selectedId:id,selectedSymbol:symbol,
      selectedProvider:provider,selectedPair:pair.replace('-', '/')};
-   chart={...chart,external:true,loadedInstrument:loadedPair};
+   externalPublic={id,symbol,name:symbol,listingPair:pair.replace('-', '/'),
+     listingProvider:provider,priceUsd:0.227363,change24h:7.27,
+     usdSource:provider+' '+pair+' public USD',usdUpdatedAt:now};
+   chart={...chart,external:true,loadedInstrument:loadedPair,
+     source:provider.toUpperCase()+' public candles',lastLoadedAt:now,
+     request_key:provider+'|'+loadedPair+'|5m',loading:false,errorCode:null};
    window.fire('agent-crypto:external-asset-changed');
    window.fire('agent-crypto:new-listing-line-ready');
   },
   externalClear:()=>{
-   external=null;
+   external=null;externalPublic=null;
    chart={...chart,external:false,loadedInstrument:'BTC-USDC'};
    window.fire('agent-crypto:external-asset-changed');
   },settle:(account,position)=>{
@@ -185,6 +191,30 @@ test('DNA Bitget New Listing supersedes stale Market BTC with its own Seven doss
  assert.equal(v.owner.calls(),0,'Bitget listing must not request an OKX account');
  assert.equal(v.ctBody.textContent,'CT private untouched marker');
  assert.equal(v.ct.open,true);
+});
+test('DNA reuses its native Market price, never the BTC cache or another listing',()=>{
+ const v=setup();
+ v.external('neosoul','DNA','DNA-USDT');
+ assert.match(v.statuses()[1],/0\.227363|0,227363/);
+ assert.doesNotMatch(v.statuses().join(' '),/82692|82 692|BTC-USDC/);
+ assert.match(v.statuses()[0],/source identifiée et datée/);
+ assert.doesNotMatch(v.statuses()[0],/devise du graphique distincte/);
+ assert.match(v.statuses()[0],/paire identique au Spot DNA-USDT/);
+ v.globals.AgentCryptoNewListingsNativeCategory.selectedMarketCoin=()=>({
+  id:'bitcoin',symbol:'BTC',listingPair:'BTC/USDC',priceUsd:82692,
+  usdUpdatedAt:new Date().toISOString(),usdSource:'CoinGecko'});
+ v.window.fire('agent-crypto:new-listing-line-ready');
+ assert.doesNotMatch(v.statuses()[1],/82692|82 692|0\.227363|0,227363/);
+});
+test('external chart provenance must match the listing venue, not just the symbol',()=>{
+ const v=setup();
+ v.external('neosoul','DNA','DNA-USDT','bitget');
+ assert.match(v.statuses()[0],/source identifiée et datée/);
+ const chart=v.globals.AgentCryptoMarketMicroscope.snapshot;
+ v.globals.AgentCryptoMarketMicroscope.snapshot=()=>({
+  ...chart(),source:'OKX public candles'});
+ v.window.fire('agent-crypto:market-candles-loaded');
+ assert.match(v.statuses()[0],/Bougies exactes DNA non chargées/);
 });
 test('New Listing rejects stale chart identity and cannot borrow BTC proof',()=>{
  const v=setup();
