@@ -111,6 +111,21 @@ function mount(){
     };
     doc.head.appendChild(contract);
   }
+  // Trader-only Technical Reading owner. This script mounts the isolated
+  // Seven dossier itself; Concrete CT remains the independent private owner.
+  // The Administrator entrypoint must never import this Trader-only reader.
+  if(!doc.getElementById("traderTechnicalReadingSyncScript")){
+    const script=doc.createElement("script");
+    script.id="traderTechnicalReadingSyncScript";
+    script.src=new URL("../trader/technical-reading-data-sync.js",doc.baseURI).href;
+    script.onerror=()=>{
+      if(status){
+        status.textContent="Lecture Seven indisponible ; Concrete CT reste intact.";
+        status.dataset.state="error";
+      }
+    };
+    doc.head.appendChild(script);
+  }
   // Visible PAPER laboratory. Its arithmetic is isolated and it only consumes
   // canonical publicly loaded BTC/CT series. Never inherits Bridge credentials.
   if(!doc.getElementById("traderPaperLabCoreScript")){
