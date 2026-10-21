@@ -77,6 +77,11 @@
   function confirmedExternal(symbol){
     const expected=externalMarket[symbol],owner=globalThis.AgentCryptoNewListingsNativeCategory;
     const selection=owner?.snapshot?.(),ext=globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.();
+    // CT's legacy owner is intentionally less verbose: preserve its proven
+    // selection contract while requiring stronger contract identity for AXIS.
+    if(symbol==="CT")return selection?.selectedId==="concrete"&&
+      ext?.active===true&&ext.id==="concrete"&&
+      ext.provider==="okx"&&ext.instrument==="CT-USDT";
     return !!expected&&selection?.selectedId===expected.id&&
       selection.selectedCanonicalId===expected.canonical&&
       selection.selectedSymbol===expected.symbol&&
