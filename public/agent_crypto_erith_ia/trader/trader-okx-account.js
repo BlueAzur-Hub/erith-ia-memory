@@ -205,6 +205,41 @@ function summarizeSpotOrderGates(payload,now=Date.now()){
       payload.blocked_reasons.filter(v=>typeof v==="string").slice(0,5).map(v=>v.slice(0,140)):[],
     orders_enabled:false})});
 }
+/* Generic base-asset holdings proof for Seven's separate public dossier.
+   Minimal export: no raw account rows, credentials, session token or inferred zero.
+   No private call is made unless the operator asks for it. */
+async function basePositionReadOnly(instId){
+ const fail=reason=>Object.freeze({pair:instId,read_only:true,verified:false,
+   observed_at_utc:null,trading_base:null,funding_base:null,
+   reason,orders_enabled:false,real_orders:0});
+ if(typeof instId!=="string"||!TICKET_PAIR.test(instId)||instId.startsWith("CT-"))
+   return fail("Paire non prise en charge par cette nouvelle lecture ; CT conserve son moteur.");
+ if(!owner()||!token())return fail("Session propriétaire Aether Trust requise.");
+ const now=Date.now();
+ if(!ctCycleAccount||!Number.isFinite(Date.parse(ctCycleAccount.fetched_at))||
+    now-Date.parse(ctCycleAccount.fetched_at)>120000){
+   try{await refresh({force:false});}catch(_){return fail("Relevé OKX indisponible.");}
+ }
+ if(!owner()||!token()||ctCycleAccount?.ok!==true||
+    ctCycleAccount?.read_only!==true)return fail("Relevé privé non authentifié.");
+ const at=Date.parse(ctCycleAccount.fetched_at);
+ if(!Number.isFinite(at)||at>Date.now()+30000||Date.now()-at>120000)
+   return fail("Relevé OKX absent ou périmé.");
+ const base=instId.split("-")[0];
+ const tr=tradingRows(ctCycleAccount).filter(x=>x?.ccy===base);
+ const fu=fundingRows(ctCycleAccount).filter(x=>x?.ccy===base);
+ if(tr.length>1||fu.length>1)return fail("Soldes "+base+" contradictoires.");
+ const trading=tr.length?ticketDecimal(tr[0]?.availBal):null;
+ const funding=fu.length?ticketDecimal(fu[0]?.availBal??fu[0]?.bal):null;
+ // Absence of a row never certifies a zero amount.
+ return Object.freeze({pair:instId,read_only:true,
+   verified:trading!==null&&funding!==null,
+   observed_at_utc:new Date(at).toISOString(),
+   trading_base:trading,funding_base:funding,
+   reason:trading===null||funding===null?
+     "Une sous-position "+base+" absente ne prouve pas un solde zéro.":null,
+   orders_enabled:false,real_orders:0});
+}
 let ticketBtcFees=null,ticketBtcFeesAt=0;
 async function ticketReadOnly(instId){
  if(typeof instId!=="string"||!TICKET_PAIR.test(instId))
@@ -1270,5 +1305,5 @@ function mount(){
 if(typeof module==="object"&&module.exports)module.exports=Object.freeze({btcPositionReport,btcQuantityChain,capitalJourneyReport,btcScenarioGrid,summarizeTicketAccount,summarizeSpotFeeMode,summarizeSpotOrderGates});
 if(typeof document==="undefined")return;
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
-globalThis.AgentCryptoTraderOkxAccount=Object.freeze({mount,refresh,login,logout:logoutBridge,read_only:true,bridge:BRIDGE,token_storage:"sessionStorage",okx_credentials_in_browser:false,real_orders:false,ticketReadOnly});
+globalThis.AgentCryptoTraderOkxAccount=Object.freeze({mount,refresh,login,logout:logoutBridge,read_only:true,bridge:BRIDGE,token_storage:"sessionStorage",okx_credentials_in_browser:false,real_orders:false,ticketReadOnly,basePositionReadOnly});
 })();
