@@ -110,10 +110,56 @@
     return Object.freeze({
       priceUsd:value("priceUsd"),volume24hUsd:value("volume24hUsd"),
       marketCapUsd:verifiedCap?value("marketCapUsd"):null,
-      marketCapObservedAt:c.marketCapObservedAt||null,
+      marketCapObservedAt:verifiedCap?c.marketCapObservedAt:null,
+      change24h:typeof c.change24h==="number"&&Number.isFinite(c.change24h)?
+        c.change24h:null,
       observedAt:new Date(stamp).toISOString(),priceSource:c.usdSource||c.source,
       rank:c.marketCapRankSource??null,read_only:true,real_order:false
     });
+  }
+  // Reuse the Market's EXACT already loaded record; no new polling, API request,
+  // storage key, synthetic price or UI Market owner. Read again only on click.
+  function axisSnapshotPanel(){
+    const section=elt("section","lab-note lab-market-snapshot");
+    section.setAttribute("aria-label","AXIS · mesures sourcées du Market natif");
+    section.append(elt("h4",null,"AXIS · données du Market déjà chargé"));
+    const content=elt("div","lab-market-snapshot-content");
+    const update=()=>{
+      content.replaceChildren();
+      const m=nativeMarketEvidence("AXIS");
+      if(!m){
+        content.append(elt("p","lab-hint",
+          "Lecture indisponible : identité Bitget AXIS/USDT non confirmée, cours absent ou observation de plus de 15 minutes. La décision historique reste inchangée ; aucune donnée BTC ou Futures n'est substituée."));
+        return;
+      }
+      const grid=elt("div","lab-market-metrics");
+      const metric=(label,val,detail)=>{
+        const box=elt("div","lab-market-metric");
+        box.append(elt("small",null,label),elt("strong",null,val),
+          elt("small",null,detail));
+        grid.append(box);
+      };
+      metric("Prix indicatif USD",fmt(m.priceUsd," USD"),"Bitget AXIS/USDT × USDT/USD");
+      metric("Variation 24 h publiée",m.change24h===null?"non fournie":
+        fmt(m.change24h," %"),"Listing récent · fenêtre potentiellement partielle");
+      metric("Volume 24 h (USD)",m.volume24hUsd===null?"non fourni":
+        fmt(m.volume24hUsd," USD"),"Volume natif converti en USD");
+      metric("Capitalisation (USD)",m.marketCapUsd===null?"non vérifiée":
+        fmt(m.marketCapUsd," USD"),m.marketCapObservedAt?
+          "CoinGecko · "+new Date(m.marketCapObservedAt).toLocaleString("fr-FR"):
+          "Source fraîche indisponible");
+      content.append(grid);
+      content.append(elt("p","lab-hint",
+        "Prix relevé "+new Date(m.observedAt).toLocaleString("fr-FR")+
+        " · source : "+m.priceSource+
+        ". Lecture à cet instant, pas un flux temps réel. Aucun de ces chiffres n'est un prix d'achat ou de revente garanti en USDC."));
+    };
+    const action=elt("button","lab-action","Relire les données du Market");
+    action.type="button";
+    action.addEventListener("click",update);
+    section.append(content,action);
+    update();
+    return section;
   }
   function showSelectionTruth(message){
     selectionTruth=message;
@@ -277,6 +323,7 @@
           "Le rapport BTC original reste disponible à sa place, au-dessus du Laboratoire. Aucun panneau du Trader n'est déplacé."));
       }
       if(asset==="AXIS"){
+        pane.append(axisSnapshotPanel());
         pane.append(card("Décision Seven · 21 octobre 2026",
           "Observer · 0 USDC investis. Prix de vente communautaire 0,10 USD inaccessible avec notre capital 10 USDC (minimum 100 USDC et conditions d'attribution). Ce n'est pas la preuve d'un maximum futur."));
         const study=elt("a","lab-link","Ouvrir le rapport AXIS complet · simulations 10/100 USDC ↗");
@@ -287,20 +334,7 @@
       pane.append(sourceLinks(data));
     } else if (tab==="marche"){
       pane.append(card("Marché public",data.market),card("Interprétation prudente",data.risks));
-      if(asset==="AXIS"){
-        const evidence=nativeMarketEvidence("AXIS");
-        if(evidence){
-          const money=v=>v===null?"non fourni":fmt(v," USD");
-          pane.append(card("Snapshot du Market existant · "+evidence.observedAt,
-            "Prix "+money(evidence.priceUsd)+" · volume 24 h "+money(evidence.volume24hUsd)+
-            " · capitalisation "+money(evidence.marketCapUsd)+
-            (evidence.marketCapObservedAt?" (CoinGecko "+evidence.marketCapObservedAt+")":" (source de cap. non disponible)")+
-            " · "+evidence.priceSource+". Capturé au clic sur l'onglet, pas un cours live automatique."));
-        }else{
-          pane.append(card("Marché AXIS non confirmé dans cette vue",
-            "Sélectionne AXIS en Solo · Nouveaux listings pour lire son Market natif. Aucun prix BTC, aucune capitalisation zéro et aucune substitution par AXIS Futures."));
-        }
-      }
+      if(asset==="AXIS")pane.append(axisSnapshotPanel());
       pane.append(elt("p","lab-hint","Un clic sur BTC, CT, Q ou AXIS demande la sélection au propriétaire Market existant. La synchronisation est confirmée ou refusée explicitement ; le Laboratoire ne produit aucun cours et aucun ordre."));
     } else if(tab==="coffre"){
       pane.append(card("Disponibilité des preuves",data.vault));
