@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
-const {qualifyReport,compare}=require('./strategy-comparator.js');
+const {qualifyReport,compare,qualifyPassiveHistory,passiveEstimate}=require('./strategy-comparator.js');
 const ROOT=path.join(__dirname,'../data/trader_flux');
 const studyRaw=JSON.parse(fs.readFileSync(path.join(ROOT,'radar20_portfolio/summary.json'),'utf8'));
 const stressRaw=JSON.parse(fs.readFileSync(path.join(ROOT,'radar20_retro_stress/summary.json'),'utf8'));
@@ -69,4 +69,46 @@ for(const forbidden of ['localStorage','sessionStorage','indexedDB','/okx/order'
 assert.equal(require('./strategy-comparator.js').realOrders,false);
 assert.equal(require('./strategy-comparator.js').storage,false);
 assert.equal(require('./strategy-comparator.js').privateAccount,false);
+// Passive BTC/ETH benchmark: same archive window, native USDT; never infer USDC fills.
+const barStep=3600000,bars=2160,ending=Date.UTC(2026,9,1),opening=ending-bars*barStep;
+function sample(id,price){
+  const rows=Array.from({length:bars},(_,i)=>{
+    const open=price*(1+i/10000),close=price*(1+(i+1)/10000);
+    return [opening+i*barStep,open,close*1.001,open*0.999,close,100,price*100,10];
+  });
+  return {metadata:{id,pair:id==='bitcoin'?'BTCUSDT':'ETHUSDT',
+    quote:'USDT',source:'Binance Spot vérifié',period:'90j',gaps:0,
+    start_ms:opening,end_exclusive_ms:ending,bars},rows};
+}
+const btcSnapshot=sample('bitcoin',50000),ethSnapshot=sample('ethereum',2000);
+const btcPassive=qualifyPassiveHistory(btcSnapshot,'bitcoin','90j');
+const ethPassive=qualifyPassiveHistory(ethSnapshot,'ethereum','90j');
+assert.equal(btcPassive.pair,'BTCUSDT');
+assert.equal(ethPassive.quote,'USDT');
+assert.equal(btcPassive.startAt,ethPassive.startAt);
+assert.equal(btcPassive.endAt,ending);
+const passive=passiveEstimate(btcPassive,10.94,0.8);
+assert.equal(passive.quote,'USDT');
+assert.equal(passive.capital,10.94);
+assert.equal(passive.realOrders,false);
+assert.equal(passive.notCurrencyConverted,true);
+assert(Math.abs(passive.final-10.94*(btcPassive.close/btcPassive.open)*0.992)<1e-10);
+assert(passive.net>0);
+assert(passive.drawdown>=0);
+assert.throws(()=>qualifyPassiveHistory(btcSnapshot,'ethereum','90j'));
+assert.throws(()=>qualifyPassiveHistory({...btcSnapshot,metadata:{...btcSnapshot.metadata,quote:'USDC'}},'bitcoin','90j'));
+assert.throws(()=>qualifyPassiveHistory({...btcSnapshot,metadata:{...btcSnapshot.metadata,gaps:1}},'bitcoin','90j'));
+assert.throws(()=>qualifyPassiveHistory({...btcSnapshot,rows:btcSnapshot.rows.slice(1)},'bitcoin','90j'));
+const broken=sample('bitcoin',50000);broken.rows[33][0]+=3600000;
+assert.throws(()=>qualifyPassiveHistory(broken,'bitcoin','90j'));
+assert.throws(()=>passiveEstimate({...btcPassive,verified:false},10.94,0.8));
+assert.throws(()=>passiveEstimate(btcPassive,10.94,0.1));
+assert.throws(()=>passiveEstimate(btcPassive,3,0.8));
+assert.equal(compare(reports,10.94,0.8).reserve.amount,10.94);
+assert(view.includes('SevenVerifiedPeriods?.load'));
+assert(view.includes('verified-periods-reader.js'));
+assert(view.includes('data-strategy-study-passive'));
+assert(view.includes('if(!pane?.open||benchmarkBusy'));
+assert(!view.includes('data-strategy-balance-private'));
+
 console.log('Trader strategy comparator · real reports, safety, cash-only benchmark, cost sensitivities PASS');

@@ -12,6 +12,14 @@ const PERIODS=Object.freeze({
   stress:["2026-04-01","2026-06-30"]
 });
 const COSTS=Object.freeze([0.8,1.2,1.6]);
+const PERIOD_SPEC=Object.freeze({
+  "7j":Object.freeze({bars:2016,step:300000}),
+  "30j":Object.freeze({bars:720,step:3600000}),
+  "60j":Object.freeze({bars:1440,step:3600000}),
+  "90j":Object.freeze({bars:2160,step:3600000})
+});
+const PASSIVE_PAIRS=Object.freeze({bitcoin:"BTCUSDT",ethereum:"ETHUSDT"});
+const END_ARCHIVE=Date.UTC(2026,9,1);
 const numeric=v=>typeof v==="number"&&Number.isFinite(v);
 const near=(a,b)=>Math.abs(a-b)<0.02;
 function qualifyReport(raw,kind){
@@ -50,7 +58,7 @@ function qualifyReport(raw,kind){
   });
 }
 function compare(reports,capital,cost){
-  if(!Number.isFinite(capital)||![10,50,100,400].includes(capital)||
+  if(!Number.isFinite(capital)||![10,10.94,50,100,400].includes(capital)||
       !COSTS.includes(cost))throw Error("Choix PAPER hors protocole");
   if(!reports?.study||!reports?.stress)throw Error("Rapports historiques indisponibles");
   const study=reports.study,stress=reports.stress;
@@ -74,7 +82,57 @@ function compare(reports,capital,cost){
     conversionCertified:false,spotExecutable:false,paper:true,realOrders:false
   });
 }
-const api=Object.freeze({qualifyReport,compare,readOnly:true,realOrders:false,storage:false,privateAccount:false});
+/* BTC and ETH share this verified Binance Spot Top5 reader; NO assumption that
+   Binance USDT buying power is the user's OKX USDC balance. */
+function qualifyPassiveHistory(snapshot,id,period){
+  const spec=PERIOD_SPEC[period],pair=PASSIVE_PAIRS[id],m=snapshot?.metadata,r=snapshot?.rows;
+  if(!spec||!pair||!m||m.id!==id||m.pair!==pair||
+      m.quote!=="USDT"||m.period!==period||m.gaps!==0||
+      m.source!=="Binance Spot vérifié"||
+      m.end_exclusive_ms!==END_ARCHIVE||m.bars!==spec.bars||
+      !Number.isInteger(m.start_ms)||m.start_ms!==END_ARCHIVE-spec.step*spec.bars||
+      !Array.isArray(r)||r.length!==spec.bars)
+    throw Error("Provenance BTC/ETH ou période Top 5 non vérifiée");
+  const start=r[0],end=r.at(-1);let maxClose=0,drawdown=0;
+  for(let i=0;i<r.length;i++){
+    const row=r[i];
+    if(!Array.isArray(row)||row.length!==8||!row.every(numeric)||
+        row[0]!==m.start_ms+i*spec.step||
+        row[3]<=0||row[3]>Math.min(row[1],row[4])||
+        Math.max(row[1],row[4])>row[2]||
+        row[5]<0||row[6]<0||!Number.isInteger(row[7])||row[7]<0)
+      throw Error("Bougies passives non continues ou OHLCV invalide");
+    maxClose=Math.max(maxClose,row[4]);
+    drawdown=Math.max(drawdown,(maxClose-row[4])/maxClose*100);
+  }
+  if(!(start[1]>0&&end[4]>0))
+    throw Error("Prix d'ouverture ou de clôture non valide");
+  return Object.freeze({
+    asset:id,pair,period,quote:"USDT",startAt:m.start_ms,endAt:END_ARCHIVE,
+    open:start[1],close:end[4],grossChangePct:(end[4]/start[1]-1)*100,
+    maxDrawdownPct:drawdown,verified:true,live:false,
+    realOrders:false,spotExecutable:false
+  });
+}
+function passiveEstimate(evidence,capital,cost){
+  if(!evidence?.verified||evidence.quote!=="USDT"||
+      !Object.hasOwn(PASSIVE_PAIRS,evidence.asset)||PASSIVE_PAIRS[evidence.asset]!==evidence.pair||
+      !Object.hasOwn(PERIOD_SPEC,evidence.period)||!PERIOD_SPEC[evidence.period]||
+      !Number.isFinite(capital)||![10,10.94,50,100,400].includes(capital)||
+      !COSTS.includes(cost)||!numeric(evidence.open)||evidence.open<=0||
+      !numeric(evidence.close)||evidence.close<=0)
+    throw Error("Comparaison passive non qualifiée");
+  const final=capital*(evidence.close/evidence.open)*(1-cost/100);
+  return Object.freeze({
+    asset:evidence.asset,pair:evidence.pair,capital,quote:"USDT",
+    net:final-capital,final,returnPct:(final/capital-1)*100,
+    drawdown:evidence.maxDrawdownPct,grossChangePct:evidence.grossChangePct,
+    period:evidence.period,startAt:evidence.startAt,endAt:evidence.endAt,
+    noMinOrderCheck:true,notCurrencyConverted:true,realOrders:false
+  });
+}
+const api=Object.freeze({qualifyReport,compare,qualifyPassiveHistory,passiveEstimate,
+  readOnly:true,realOrders:false,storage:false,privateAccount:false});
 if(typeof module==="object"&&module.exports)module.exports=api;
 if(!root||typeof document==="undefined")return;
 if(root.AgentCryptoStrategyComparator)return;
@@ -84,6 +142,7 @@ const nfmt=(v,d=2)=>numeric(v)?v.toLocaleString("fr-FR",{
   minimumFractionDigits:d,maximumFractionDigits:d}):"non calculé";
 const signed=v=>numeric(v)?(v>0?"+":"")+nfmt(v)+" USDT":"non calculé";
 let reports=null,active=null,loading=false;
+let benchmark=null,benchmarkBusy=false,benchmarkToken=0,readerPending=null;
 function status(message){const node=$("[data-strategy-status]");if(node)node.textContent=message;}
 function render(){
   if(!reports)return;
@@ -117,8 +176,84 @@ function render(){
       target.appendChild(row);
     }
   }
+  renderBenchmark();
   status("Deux rapports publics contrôlés · 400 USDT historiques · coûts "+nfmt(v.cost,1)+
-    " % · aucune donnée privée ni exécution. BTC/ETH, CT/DNA à qualifier séparément.");
+    " % · aucune donnée privée ni exécution. BTC/ETH disponibles à la demande ; CT/DNA non qualifiés ici.");
+}
+function renderBenchmark(){
+  const body=$("[data-strategy-bench-rows]"),label=$("[data-strategy-bench-status]");
+  if(!body||!label)return;
+  body.replaceChildren();
+  const period=$("[data-strategy-period]")?.value;
+  if(!benchmark||benchmark.period!==period){
+    label.textContent="Aucun calcul BTC/ETH pour cette période : cliquer sur « Étudier BTC et ETH ».";
+    return;
+  }
+  const capital=Number($("[data-strategy-capital]")?.value);
+  const cost=Number($("[data-strategy-cost]")?.value);
+  const rows=[];
+  try{for(const id of ["bitcoin","ethereum"])
+    rows.push(passiveEstimate(benchmark[id],capital,cost));}
+  catch(error){label.textContent="Étude refusée : "+String(error.message||error);return;}
+  for(const r of rows){
+    const tr=document.createElement("tr");
+    for(const value of [
+      r.asset==="bitcoin"?"BTC · détention passive":"ETH · détention passive",
+      nfmt(r.capital)+" USDT",signed(r.net),
+      nfmt(r.returnPct)+" %",nfmt(r.drawdown)+" %",
+      "Binance Spot "+r.pair+" · prix archives USDT · aucune exécution ni minimum OKX prouvés"
+    ]){
+      const td=document.createElement("td");td.textContent=value;tr.appendChild(td);
+    }
+    body.appendChild(tr);
+  }
+  const a=benchmark.bitcoin;
+  const stamp=t=>new Date(t).toISOString().slice(0,10);
+  label.textContent="BTC/ETH : fenêtre commune "+stamp(a.startAt)+" → "+stamp(a.endAt)+
+    " (borne exclusive), "+period+" · SHA-256, identité et continuité validées par le Coffre. "+
+    "Capital théorique en USDT, pas les "+nfmt(capital)+" USDC du compte. "+
+    "Dates distinctes du portefeuille Radar 20 (01/07 → 30/09) ; pas de comparaison directe de performances.";
+}
+function verifiedReader(){
+  if(root.SevenVerifiedPeriods?.load)return Promise.resolve(root.SevenVerifiedPeriods);
+  if(readerPending)return readerPending;
+  readerPending=new Promise((resolve,reject)=>{
+    const script=document.createElement("script");
+    script.src=new URL("../administrator/js/verified-periods-reader.js",document.baseURI).href;
+    script.onload=()=>{
+      if(root.SevenVerifiedPeriods?.load)resolve(root.SevenVerifiedPeriods);
+      else reject(Error("Contrat du lecteur Coffre indisponible"));
+    };
+    script.onerror=()=>{script.remove();reject(Error("Lecteur du Coffre impossible à charger"));};
+    document.head.appendChild(script);
+  }).catch(error=>{readerPending=null;throw error;});
+  return readerPending;
+}
+async function studyPassive(){
+  const pane=document.getElementById(ID),period=$("[data-strategy-period]")?.value;
+  if(!pane?.open||benchmarkBusy||!PERIOD_SPEC[period])return;
+  const token=++benchmarkToken;benchmarkBusy=true;
+  const btn=$("[data-strategy-study-passive]");
+  if(btn)btn.disabled=true;
+  const label=$("[data-strategy-bench-status]");
+  if(label)label.textContent="Lecture sur demande du Coffre BTC / ETH · "+period+"…";
+  try{
+    const reader=await verifiedReader();
+    const b=qualifyPassiveHistory(await reader.load("bitcoin",period),"bitcoin",period);
+    if(token!==benchmarkToken||!pane.open)return;
+    const e=qualifyPassiveHistory(await reader.load("ethereum",period),"ethereum",period);
+    if(token!==benchmarkToken||!pane.open)return;
+    if(b.startAt!==e.startAt||b.endAt!==e.endAt)
+      throw Error("Fenêtres historiques différentes : comparaison annulée");
+    benchmark=Object.freeze({period,bitcoin:b,ethereum:e});
+    renderBenchmark();
+  }catch(error){
+    if(token!==benchmarkToken||!pane.open)return;
+    if(label)label.textContent="Étude BTC/ETH non disponible : "+String(error.message||error);
+  }finally{
+    benchmarkBusy=false;
+    if(btn)btn.disabled=false;
+  }
 }
 async function readReport(kind,signal){
   const url=BASE+FILES[kind];
@@ -169,7 +304,7 @@ function mount(){
       "#traderStrategyComparator table{width:100%;border-collapse:collapse;min-width:800px}",
       "#traderStrategyComparator th,#traderStrategyComparator td{padding:8px;border-bottom:1px solid #345367;text-align:left;vertical-align:top}",
       "#traderStrategyComparator .sc-note{color:#bdd0df;font-size:12px}",
-      "#traderStrategyComparator [data-strategy-status]{color:#f2d8a4}"
+      "#traderStrategyComparator [data-strategy-status],#traderStrategyComparator [data-strategy-bench-status]{color:#f2d8a4}"
     ].join("\n");document.head.appendChild(style);
   }
   const node=document.createElement("details");node.id=ID;
@@ -178,7 +313,7 @@ function mount(){
     '<div class="sc-body">',
     '<p>Étude documentaire, pas un signal. La réserve fictive est en USDC ; les expériences historiques du Radar 20 sont en USDT Binance. Aucune parité ou rentabilité n’est certifiée entre les deux.</p>',
     '<div class="sc-controls">',
-    '<label>Réserve fictive (USDC)<select data-strategy-capital><option>10</option><option>50</option><option>100</option><option selected>400</option></select></label>',
+    '<label>Réserve fictive (USDC)<select data-strategy-capital><option>10</option><option value="10.94" selected>10,94 · relevé manuel (non live)</option><option>50</option><option>100</option><option>400</option></select></label>',
     '<label>Coût aller-retour du modèle (%)<select data-strategy-cost><option value="0.8" selected>0,8 %</option><option value="1.2">1,2 %</option><option value="1.6">1,6 %</option></select></label>',
     '<button type="button" data-strategy-refresh>Relire les rapports publics</button>',
     '</div><p><strong data-strategy-cash>Réserve : sélectionner pour commencer</strong></p>',
@@ -187,7 +322,14 @@ function mount(){
     '<tbody data-strategy-rows><tr><td colspan="6">Ouvre le comparateur pour lire les preuves.</td></tr></tbody></table></div>',
     '<p role="status" aria-live="polite" data-strategy-status>En attente d’ouverture · aucune requête.</p>',
     '<p class="sc-note">Les sensibilités de juillet–septembre à 1,2 et 1,6 % réévaluent les mêmes opérations, sans refaire la simulation avec contraintes de trésorerie. Avril–juin utilise 0,8 % ici. Les données ne démontrent pas la rentabilité prospective ni l’exécution sur OKX.</p>',
-    '<p class="sc-note">BTC (témoin hors Radar 20), ETH en détention passive, CT et DNA : comparaison sur même période et marché Spot exact à raccorder après qualification des sources et minima. Aucune valeur inventée.</p>',
+    '<h4>BTC / ETH · détention passive · Coffre vérifié</h4>',
+    '<p class="sc-note">Calcul rétroactif : acheter à l’ouverture et vendre à la dernière clôture, coût A/R hypothétique sélectionné. Le capital utilisé pour ce calcul est un ticket fictif USDT de même montant nominal que la réserve USDC, sans transfert, conversion ni garantie d’exécution.</p>',
+    '<div class="sc-controls"><label>Période commune BTC / ETH<select data-strategy-period><option value="7j">7 jours</option><option value="30j">30 jours</option><option value="60j">60 jours</option><option value="90j" selected>90 jours</option></select></label>',
+    '<button type="button" data-strategy-study-passive>Étudier BTC et ETH (Coffre)</button></div>',
+    '<div class="sc-scroll"><table><thead><tr><th>Actif</th><th>Capital fictif</th><th>Résultat</th><th>Variation nette</th><th>Repli max. cours</th><th>Source / limites</th></tr></thead>',
+    '<tbody data-strategy-bench-rows></tbody></table></div>',
+    '<p role="status" aria-live="polite" data-strategy-bench-status>À la demande uniquement · aucune archive BTC/ETH téléchargée.</p>',
+    '<p class="sc-note">La fenêtre BTC/ETH finit au 30 septembre 2026 et diffère du portefeuille Radar qui démarre le 1er juillet. Les frais sont hypothétiques ; aucune équivalence USDT/USDC implicite ni minimum Spot certifié. CT / DNA restent hors classement sans données comparables.</p>',
     '<p><a href="../laboratoire/radar-historique.html" target="_blank" rel="noopener noreferrer">Radar 20 historique ↗</a> · ',
     '<a href="../administrator/historical-vault.html" target="_blank" rel="noopener noreferrer">Coffre vérifié ↗</a> · ',
     '<a href="../laboratoire/crypto-knowledge.html" target="_blank" rel="noopener noreferrer">Dossiers Crypto ↗</a></p>',
@@ -195,16 +337,25 @@ function mount(){
   ].join("");
   host.insertAdjacentElement("afterend",node);
   node.addEventListener("toggle",()=>{
-    if(!node.open){if(active){active.abort();active=null;loading=false;}return;}
+    if(!node.open){
+      ++benchmarkToken;
+      if(active){active.abort();active=null;loading=false;}
+      return;
+    }
     void load();
   });
-  $("[data-strategy-capital]")?.addEventListener("change",render);
-  $("[data-strategy-cost]")?.addEventListener("change",render);
+  $("[data-strategy-capital]")?.addEventListener("change",()=>{render();renderBenchmark();});
+  $("[data-strategy-cost]")?.addEventListener("change",()=>{render();renderBenchmark();});
+  $("[data-strategy-period]")?.addEventListener("change",()=>{
+    ++benchmarkToken;benchmark=null;renderBenchmark();
+  });
+  $("[data-strategy-study-passive]")?.addEventListener("click",()=>{void studyPassive();});
   $("[data-strategy-refresh]")?.addEventListener("click",()=>{void load(true);});
   return true;
 }
 root.AgentCryptoStrategyComparator=Object.freeze({...api,mount,snapshot:()=>({
   mounted:!!document.getElementById(ID),loaded:!!reports,loading,
+  passiveLoaded:!!benchmark,passiveBusy:benchmarkBusy,
   privateAccount:false,realOrders:false,storage:false,archiveQuote:"USDT",reserveQuote:"USDC"
 })});
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});
