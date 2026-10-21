@@ -384,6 +384,57 @@ test("ETH archived Spot PAPER ticket reuses core without CT/BTC substitution",()
  assert.equal(core.prepareSpotTicket({selected,archive:ticketArchive(),
    pair:"ETH-USDC",budgetQuote:"10",now:T}).status,"BLOQUE");
 });
+
+test("BTC-USDC recent public OKX book and rules are exact-pair, no account or Trade",()=>{
+ const now=T,at=new Date(now-1000).toISOString();
+ const book={status:"ok",provider:"okx",pair:"BTC-USDC",quote:"USDC",
+  observed_at_utc:at,bids:[["81780.5","0.02471696"]],
+  asks:[["81780.6","0.04512476"]]};
+ const instrument={observed_at_utc:at,payload:{code:"0",data:[
+  {instId:"BTC-USDC",instType:"SPOT",state:"live",
+    baseCcy:"BTC",quoteCcy:"USDC",minSz:"0.0001",
+    lotSz:"0.00000001",tickSz:"0.1"}
+ ]}};
+ assert.equal(core.diagnoseSpotLiveBook(book,"BTC-USDC",now).accepted,true);
+ assert.equal(core.verifiedSpotLiveBook(book,"CT-USDC",now),null);
+ assert.equal(core.verifiedSpotRules(instrument,"BTC-USDC",now).minSz,"0.0001");
+ assert.equal(core.verifiedSpotRules(instrument,"CT-USDC",now),null);
+ const publicPaper=ticket("10",{liveBook:book,instrumentEvidence:instrument});
+ assert.equal(publicPaper.status,"PREPARATION_NON_EXECUTABLE");
+ assert.equal(publicPaper.source_book_kind,"LOCAL_BACKEND_OKX_SPOT");
+ assert.equal(publicPaper.native_rules_verified,true);
+ assert.equal(publicPaper.best_ask_quote,"81780.6");
+ assert.equal(publicPaper.quote,"USDC");
+ assert.equal(publicPaper.base,"BTC");
+ assert.equal(publicPaper.account_verified,false);
+ assert.equal(publicPaper.orders_enabled,false);
+ assert.equal(publicPaper.executable,false);
+ const other={...book,pair:"ETH-USDC"};
+ assert.equal(core.diagnoseSpotLiveBook(other,"BTC-USDC",now).accepted,false);
+ const wrongQuote={...book,quote:"USDT"};
+ assert.equal(core.diagnoseSpotLiveBook(wrongQuote,"BTC-USDC",now).accepted,false);
+ const old={...book,observed_at_utc:new Date(now-60000).toISOString()};
+ assert.equal(core.diagnoseSpotLiveBook(old,"BTC-USDC",now).code,"BOOK_STALE");
+ assert.equal(core.prepareSpotTicket({selected:btcSource(),archive:ticketArchive(),
+   pair:"BTC-USDC",budgetQuote:"10",now,liveBook:other,
+   instrumentEvidence:instrument}).source_book_kind,"DATED_PUBLIC_HOURLY_ARCHIVE");
+ const swapped={...instrument,payload:{code:"0",data:[
+  {...instrument.payload.data[0],baseCcy:"ETH"}]}};
+ assert.equal(core.verifiedSpotRules(swapped,"BTC-USDC",now),null);
+ assert.equal(core.verifiedCtLiveBook(book,"BTC-USDC",now),null);
+});
+test("Second Golden Ticket asset uses exact-pair public route and never a CT account snapshot",()=>{
+ const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
+ assert.match(view,/readSpotPublicBook\(pair\)/);
+ assert.match(view,/readSpotPublicInstrument\(pair\)/);
+ assert.match(view,/encodeURIComponent\(pair\)/);
+ assert.match(view,/qualifyPaperSpotSelection\(\{selected:source,pair\}\)/);
+ assert.match(view,/if\(pair==="CT-USDC"\)\{\s*try\{/);
+ assert.match(view,/privateIssue="Aucun contrôle privé "/);
+ assert.match(view,/\["CT-USDC","BTC-USDC"\]/);
+ assert.doesNotMatch(view,/readCtSpotPublicBook\(\)/);
+ assert.doesNotMatch(view,/readCtSpotPublicInstrument\(\)/);
+});
 test("5 USDC is below the observed native BTC-USDC buy minimum",()=>{
  const r=ticket("5");
  assert.equal(r.status,"PREPARATION_NON_EXECUTABLE");
@@ -868,9 +919,9 @@ test("CT public Backend book changes PAPER levels only if exact, ordered and fre
  assert.equal(original.source_book_kind,"DATED_PUBLIC_HOURLY_ARCHIVE");
  assert.equal(core.network,false);
  const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
- assert.match(view,/market-book\?provider=okx&instrument=CT-USDC&limit=100/);
+ assert.match(view,/market-book\?provider=okx&instrument=/);
  assert.match(view,/credentials:"omit"/);
- assert.match(view,/readCtSpotPublicBook\(\)/);
+ assert.match(view,/readSpotPublicBook\(pair\)/);
  assert.match(view,/Règles Spot issues du relevé daté/);
  assert.doesNotMatch(view,/Authorization:|Bearer|\/trade\/order/);
 });
@@ -926,12 +977,12 @@ test("CT public rules and fee-buffer UI never claim notionnel or fee debit certa
  const fs=require("node:fs"),path=require("node:path");
  const source=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
  const coreCode=fs.readFileSync(path.join(__dirname,"trader-paper-decision-core.js"),"utf8");
- assert.match(source,/api\/v5\/public\/instruments\?instType=SPOT&instId=CT-USDC/);
+ assert.match(source,/api\/v5\/public\/instruments\?instType=SPOT&instId=/);
  assert.match(source,/Promise\.allSettled/);
  assert.match(source,/instrumentEvidence,now:evaluatedAt/);
  assert.match(source,/Règles Spot issues du relevé daté/);
- assert.match(source,/NON CERTIFIÉS par cette lecture publique/);
- assert.match(source,/Frais débités en CT : HYPOTHÈSE/);
+ assert.match(source,/NON CERTIFIÉS par le public/);
+ assert.match(source,/Frais débités en /);
  assert.match(source,/Solde Trading couvrant uniquement le coût FICTIF/);
  assert.match(coreCode,/minimumGrossWithBaseFee/);
  assert.match(coreCode,/notional_filter_verified:false/);
@@ -1141,11 +1192,11 @@ test("CT live book diagnostic differentiates source, freshness and crossed data"
 
 test("CT local transport diagnostic is visible and does not promote archive to live",()=>{
  const view=fs.readFileSync(path.join(__dirname,"trader-paper-decision-view.js"),"utf8");
- assert.match(view,/DIAGNOSTIC CARNET LOCAL/);
- assert.match(view,/BOOK_STALE|diagnoseCtLiveBook/);
+ assert.match(view,/DIAGNOSTIC CARNET /);
+ assert.match(view,/BOOK_STALE|diagnoseSpotLiveBook/);
  assert.match(view,/HTTP \(\\d\{3\}\)/);
  assert.match(view,/TIMEOUT : Backend local/);
- assert.match(view,/RESEAU LOCAL : requête impossible/);
+ assert.match(view,/RÉSEAU LOCAL : Backend arrêté/);
  assert.match(view,/Repli historique GitHub uniquement/);
  assert.match(view,/setTimeout\(\(\)=>controller\.abort\(\),6500\)/);
  assert.doesNotMatch(view,/\/api\/v5\/trade\/order|\bBearer\b|Authorization:/);
@@ -1170,7 +1221,7 @@ test("CT PAPER technical details remain available under a readable summary",()=>
  assert.match(src,/data-ticket-brief/);
  assert.match(src,/data-ticket-technical/);
  assert.match(src,/Afficher le rapport technique complet/);
- assert.match(src,/CARNET CT\/USDC/);
+ assert.match(src,/"CARNET "\+pair/);
 });
 
 
@@ -1529,6 +1580,37 @@ test("Option C visual order entry is sourced from verified CT-USDC evidence only
  assert.match(required(),/3.437434 USDC/);
  assert.match(required(),/Frais USDC estimés/);
  assert.equal(required().includes("10.02"),false);
+ // Switching from CT to BTC must not borrow Trading balance/feeType/maxBuy.
+ ui.update({ticket:{schema:"erith.trader.okx-spot-limit-preflight.v1",
+   pair:"BTC-USDC",base:"BTC",quote:"USDC",
+   status:"PREPARATION_NON_EXECUTABLE",executable:false,
+   orders_enabled:false,source_book_kind:"LOCAL_BACKEND_OKX_SPOT",
+   native_rules_verified:true,best_ask_quote:"81780.6",
+   best_bid_quote:"81780.5",native_min_quantity:"0.0001",
+   native_lot:"0.00000001",native_tick:"0.1",study_budget_quote:"10",
+   gross_buy_quantity:"0.00012227",hypothetical_buy_cost_quote:"9.999",
+   minimum_gross_buy_to_resell_with_assumed_base_fee:"0.00010011",
+   minimum_gross_buy_cost_at_ask_with_assumed_base_fee:"8.187"},
+   bookDiagnostic:{accepted:true},context:{instId:"CT-USDC",
+     order_gates_verified:true,order_gates:{maxBuy:"3000"}},
+   review:{account_verified:true,available_trading_quote:"3000",
+     fee_mode_verified:true,fee_buy_currency:"CT"},
+   preview:{orders_enabled:false,buy_quantity:"0.00012227",
+     maximum_sellable_base:"0.00012214",meets_native_exit_minimum:true,
+     estimated_buy_fee_base:"0.00000013",total_buy_cost_quote:"9.999",
+     hypothetical_sale_net_quote:"10.2",hypothetical_sale_fee_quote:"0.01",
+     residual_dust_base:"0.00000000"}});
+ assert.equal(text("buyPrice"),"81780.6 USDC");
+ assert.match(text("buyQty"),/BTC/);
+ assert.match(text("sellQty"),/BTC/);
+ assert.equal(text("buyAvailable"),"NON CERTIFIÉ");
+ assert.equal(text("sellAvailable"),"NON CERTIFIÉ");
+ assert.match(proof("maxbuy"),/non raccordé/);
+ assert.match(proof("feeMode"),/Non certifié/);
+ assert.match(verdictTitle(),/FAISABILITÉ COMPTE NON CERTIFIÉE/);
+ assert.match(required(),/Aucun solde privé/);
+ assert.match(node.querySelector('[data-od-side-title="buy"]').textContent,/BTC/);
+ assert.match(node.querySelector('[data-od-caption="buyPrice"]').textContent,/BTC\/USDC/);
  // Unverified evidence must not be silently presented as verified.
  ui.update({ticket:{pair:"CT-USDC",orders_enabled:false,
    source_book_kind:"DATED_PUBLIC_HOURLY_ARCHIVE",

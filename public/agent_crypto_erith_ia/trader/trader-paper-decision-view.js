@@ -349,25 +349,25 @@ function ticketRemainingBlockers(ticket,review){
 }
 /* Public CT/USDC Backend route, also used by IA Concrete.
    Only when a human verifies the PAPER ticket; never polls or sends keys. */
-async function readCtSpotPublicBook(){
+async function readSpotPublicBook(pair){
  const controller=new AbortController();
  const timeout=setTimeout(()=>controller.abort(),6500);
  try{
   const response=await fetch(
-   "http://127.0.0.1:8790/market-book?provider=okx&instrument=CT-USDC&limit=100",
+   "http://127.0.0.1:8790/market-book?provider=okx&instrument="+encodeURIComponent(pair)+"&limit=100",
    {method:"GET",cache:"no-store",credentials:"omit",signal:controller.signal});
-  if(!response.ok)throw Error("Backend carnet CT/USDC HTTP "+response.status);
+  if(!response.ok)throw Error("Backend carnet "+pair+" HTTP "+response.status);
   return await response.json();
  }finally{clearTimeout(timeout);}
 }
 /* OKX Public Data already used by IA Concrete. One anonymous request per
    operator-triggered PAPER ticket check; does not grant order access. */
-async function readCtSpotPublicInstrument(){
+async function readSpotPublicInstrument(pair){
  const controller=new AbortController();
  const timeout=setTimeout(()=>controller.abort(),4500);
  try{
   const response=await fetch(
-   "https://www.okx.com/api/v5/public/instruments?instType=SPOT&instId=CT-USDC",
+   "https://www.okx.com/api/v5/public/instruments?instType=SPOT&instId="+encodeURIComponent(pair),
    {method:"GET",mode:"cors",credentials:"omit",cache:"no-store",
     headers:{Accept:"application/json"},signal:controller.signal});
   if(!response.ok)throw Error("Règles OKX publiques HTTP "+response.status);
@@ -393,7 +393,26 @@ async function prepareTicket(){
  const money=String(box.querySelector("[data-ticket-budget]")?.value||"").trim().replace(",",".");
  const desired=String(box.querySelector("[data-ticket-exit]")?.value||"").trim().replace(",",".");
  const pair=String(source.asset||"")+"-"+quote;
- ticketStatus("Vérification du carnet CT/USDC, des règles Spot et du compte OKX, en lecture seule…");
+ const warning=box.querySelector("[data-od-ticket-warning]");
+ if(warning)warning.textContent="Étude PAPER de la paire native "+pair+
+   " ; carnet OKX public exact et archivé si la lecture actuelle échoue. "+
+   "Aucun fonds engagé, aucune permission Trade. "+
+   (pair==="CT-USDC"?"Compte OKX lu via le Bridge existant, en lecture seule.":
+    "Compte privé "+pair+" non raccordé : aucun solde ou plafond certifié.");
+ const choice=core.qualifyPaperSpotSelection({selected:source,pair});
+ if(!choice?.ok){
+   ticketStatus("Paire non qualifiée : "+String(choice?.reason||"identité absente")+
+     " Aucun carnet ni règle d'un autre actif n'a été utilisé.");
+   return;
+ }
+ // First checked UI cohort; no silent public pair substitution or exchange fill.
+ if(!["CT-USDC","BTC-USDC"].includes(pair)){
+   ticketStatus("Golden Ticket en extension : "+pair+
+     ". Aucune preuve privée ni aucun ordre sur cette paire.");
+   return;
+ }
+ ticketStatus("Vérification des preuves publiques du carnet "+pair+
+   " et des contrôles du compte disponibles (PAPER uniquement)…");
  try{
    const stateResponse=await fetch("../data/crypto/okx-hourly/latest.json",
      {cache:"no-store",credentials:"omit"});
@@ -410,32 +429,28 @@ async function prepareTicket(){
    const fresh=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
    if(current!==ticketRequest||!box.open||
       ticketSourceKey(fresh)!==sourceKey)return;
-   // A fresh exact CT/USDC public book overrides only the dated market
-   // levels, never the Spot rules or the read-only account evidence.
+   // Read ONLY exact public pairs. Native book/rules remain independent
+   // from chart prices and from private CT-specific account capabilities.
    let liveBook=null,instrumentEvidence=null,bookTransportIssue=null;
-   if(pair==="CT-USDC"){
-     const [book,rule]=await Promise.allSettled([
-       readCtSpotPublicBook(),readCtSpotPublicInstrument()]);
-     if(book.status==="fulfilled")liveBook=book.value;
-     else{
-       const failure=book.reason;
-       const http=String(failure?.message||"").match(/HTTP (\d{3})/);
-       bookTransportIssue=failure?.name==="AbortError"?
-         "TIMEOUT : Backend local non répondu en 6,5 s.":
-         http?"HTTP "+http[1]+
-           " : route du carnet inaccessible ou réponse OKX en erreur.":
-         "RESEAU LOCAL : requête impossible (Backend arrêté, accès Firefox ou CORS à vérifier).";
-     }
-     if(rule.status==="fulfilled")instrumentEvidence=rule.value;
+   const [book,rule]=await Promise.allSettled([
+     readSpotPublicBook(pair),readSpotPublicInstrument(pair)]);
+   if(book.status==="fulfilled")liveBook=book.value;
+   else{
+     const failure=book.reason;
+     const http=String(failure?.message||"").match(/HTTP (\d{3})/);
+     bookTransportIssue=failure?.name==="AbortError"?
+       "TIMEOUT : Backend local non répondu en 6,5 s.":
+       http?"HTTP "+http[1]+" : route du carnet "+pair+" inaccessible.":
+       "RÉSEAU LOCAL : Backend arrêté ou accès refusé par Firefox/CORS.";
    }
+   if(rule.status==="fulfilled")instrumentEvidence=rule.value;
    const afterBook=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
    if(current!==ticketRequest||!box.open||
       ticketSourceKey(afterBook)!==sourceKey)return;
    const evaluatedAt=Date.now();
-   const bookDiagnostic=pair==="CT-USDC"?
-     (bookTransportIssue?{accepted:false,code:"LOCAL_REQUEST_FAILED",
-       reason:bookTransportIssue}:
-       core.diagnoseCtLiveBook(liveBook,pair,evaluatedAt)):null;
+   const bookDiagnostic=bookTransportIssue?
+     {accepted:false,code:"LOCAL_REQUEST_FAILED",reason:bookTransportIssue}:
+     core.diagnoseSpotLiveBook(liveBook,pair,evaluatedAt);
    const answer=core.prepareSpotTicket({selected:source,archive,pair,
      budgetQuote:money,liveBook,instrumentEvidence,now:evaluatedAt});
    const lines=[
@@ -443,53 +458,46 @@ async function prepareTicket(){
      "Paire recherchée : "+pair+" · budget d'étude : "+money+" "+quote+
        " (PAS le solde de ton compte)",
      answer.source_book_at_utc?
-       "Carnet CT/USDC : "+(answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
+       "Carnet "+pair+" : "+(["LOCAL_BACKEND_OKX_CT_USDC","LOCAL_BACKEND_OKX_SPOT"].includes(answer.source_book_kind)?
          "Backend public local OKX":"archive horaire GitHub")+ " · "+
          answer.source_book_at_utc+" · décalage "+answer.book_age_minutes+" min.":
        "Source non qualifiée.",
      answer.reason,
    ];
-   if(pair==="CT-USDC"){
-     lines.push("DIAGNOSTIC CARNET LOCAL · "+bookDiagnostic.code+
-       " · "+bookDiagnostic.reason);
-     if(bookDiagnostic.accepted&&
-        answer.source_book_kind!=="LOCAL_BACKEND_OKX_CT_USDC")
-       lines.push("Carnet local reçu mais étude non retenue : vérifier "+
-         "les prix natifs/tick et la concordance avec les règles Spot.");
-     if(!bookDiagnostic.accepted)
-       lines.push("Repli historique GitHub uniquement : "+
-         "aucune cotation CT-USDC actuelle prouvée.");
-   }
+   lines.push("DIAGNOSTIC CARNET "+pair+" · "+bookDiagnostic.code+
+     " · "+bookDiagnostic.reason);
+   if(bookDiagnostic.accepted&&
+      !["LOCAL_BACKEND_OKX_CT_USDC","LOCAL_BACKEND_OKX_SPOT"].includes(answer.source_book_kind))
+     lines.push("Carnet reçu mais étude non retenue : prix/tick/règles à comparer.");
+   if(!bookDiagnostic.accepted)
+     lines.push("Repli historique GitHub uniquement : aucune cotation "+pair+" actuelle prouvée.");
    if(answer.native_min_quantity){
      lines.push(answer.native_rules_verified?
-       "Règles Spot CT/USDC : OKX Public Data vérifié · état LIVE · lues "+
+       "Règles Spot "+pair+" : OKX Public Data vérifié · état LIVE · lues "+
          answer.native_rules_observed_at_utc+".":
        "Règles Spot issues du relevé daté "+answer.native_rules_observed_at_utc+
          " ; validité actuelle à confirmer auprès d'OKX.");
-     if(pair==="CT-USDC"){
-       lines.push("minSz "+answer.native_min_quantity+" CT · lotSz "+
-         answer.native_lot+" CT · tickSz "+answer.native_tick+" USDC.");
-       lines.push("Minimum brut pour revendre au moins "+answer.native_min_quantity+
-         " CT après des frais hypothétiques de 0,10 % prélevés en CT : "+
-         answer.minimum_gross_buy_to_resell_with_assumed_base_fee+
-         " CT · coût fictif à l'ask : "+
-         answer.minimum_gross_buy_cost_at_ask_with_assumed_base_fee+" USDC.");
-       lines.push("Frais débités en CT : HYPOTHÈSE. La devise réelle de prélèvement "+
-         "et ses arrondis ne sont pas certifiés.");
-       lines.push("Minimum notionnel, maxima, autres filtres et restrictions du compte : "+
-         "NON CERTIFIÉS par cette lecture publique.");
-     }
+     lines.push("minSz "+answer.native_min_quantity+" "+answer.base+" · lotSz "+
+       answer.native_lot+" "+answer.base+" · tickSz "+answer.native_tick+" "+quote+".");
+     lines.push("Minimum brut pour revendre au moins "+answer.native_min_quantity+
+       " "+answer.base+" après des frais hypothétiques de 0,10 % prélevés en "+
+       answer.base+" : "+answer.minimum_gross_buy_to_resell_with_assumed_base_fee+
+       " "+answer.base+" · coût fictif à l'ask : "+
+       answer.minimum_gross_buy_cost_at_ask_with_assumed_base_fee+" "+quote+".");
+     lines.push("Frais débités en "+answer.base+
+       " : HYPOTHÈSE, devise réelle et arrondis non prouvés.");
+     lines.push("Notionnel minimal, maxima et filtres du compte : NON CERTIFIÉS par le public.");
      lines.push("Minimum natif : "+answer.native_min_quantity+" "+answer.base+
        " · valeur indicative "+answer.minimum_buy_at_recorded_ask_quote+" "+quote);
      lines.push("Étude publique AVANT plafonds du compte — quantité non définitive.");
-     lines.push("Achat LIMIT étudié au ask "+(answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
+     lines.push("Achat LIMIT étudié au ask "+(["LOCAL_BACKEND_OKX_CT_USDC","LOCAL_BACKEND_OKX_SPOT"].includes(answer.source_book_kind)?
        "récent du Backend":"archivé")+" : "+answer.best_ask_quote+" "+quote+
        " · quantité brute "+answer.gross_buy_quantity+" "+answer.base);
      lines.push("Après frais BASE fictifs et arrondi au lot : "+
        answer.sellable_lot_quantity+" "+answer.base+
        " revendables en taille (pas un fill).");
      lines.push("Coût fictif : "+answer.hypothetical_buy_cost_quote+" "+quote+
-       " · sortie fictive au bid "+(answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
+       " · sortie fictive au bid "+(["LOCAL_BACKEND_OKX_CT_USDC","LOCAL_BACKEND_OKX_SPOT"].includes(answer.source_book_kind)?
          "récent":"archivé")+" après frais : "+
        answer.hypothetical_immediate_exit_quote+" "+quote);
      if(answer.hypothetical_break_even_bid_quote)
@@ -504,14 +512,19 @@ async function prepareTicket(){
    box.dataset.ticketResult=answer.status;
    // Reuse the only Aether Trust account owner, not a second private fetch.
    let context=null,privateIssue="";
-   try{
-     const owner=globalThis.AgentCryptoTraderOkxAccount;
-     if(typeof owner?.ticketReadOnly==="function"){
-       context=await owner.ticketReadOnly(pair);
-       privateIssue=String(context?.reason||"").slice(0,180);
-     }else privateIssue="Module de compte OKX non disponible.";
-   }catch(_){
-     privateIssue="Lecture privée OKX interrompue ; vérifier la session Bridge.";
+   if(pair==="CT-USDC"){
+     try{
+       const owner=globalThis.AgentCryptoTraderOkxAccount;
+       if(typeof owner?.ticketReadOnly==="function"){
+         context=await owner.ticketReadOnly(pair);
+         privateIssue=String(context?.reason||"").slice(0,180);
+       }else privateIssue="Module de compte OKX non disponible.";
+     }catch(_){
+       privateIssue="Lecture privée OKX interrompue ; vérifier la session Bridge.";
+     }
+   }else{
+     privateIssue="Aucun contrôle privé "+pair+" raccordé : "+
+       "étude du carnet public uniquement, Trading et frais non certifiés.";
    }
    const currentSource=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
    if(current!==ticketRequest||!box.open||
@@ -596,7 +609,7 @@ async function prepareTicket(){
       exit.status==="SORTIE_NON_EVALUABLE"?
         "Calcul indisponible : "+exit.reason:
         "Achat étudié : "+exit.buy_quantity+" "+exit.base+
-          " (prix du carnet "+(answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC"?
+          " (prix du carnet "+(["LOCAL_BACKEND_OKX_CT_USDC","LOCAL_BACKEND_OKX_SPOT"].includes(answer.source_book_kind)?
             "récent":"archivé")+", pas un achat actuel)."
     ];
     if(exit.maximum_sellable_base!==undefined){
@@ -625,10 +638,10 @@ async function prepareTicket(){
         " · poussière restante : "+exit.residual_dust_base+" "+exit.base+".");
       exitLines.push(exit.meets_native_exit_minimum?
         "Minimum de vente respecté dans la simulation.":
-        "ATTENTION : pas assez de CT après frais pour respecter le minimum de vente !");
+        "ATTENTION : pas assez de "+exit.base+" après frais pour respecter le minimum de vente !");
       if(exit.meets_native_exit_minimum===false){
         exitLines.push("VENTE NON ADMISSIBLE : "+exit.maximum_sellable_base+
-          " CT sous le minimum Spot ; aucune somme encaissable dans ce scénario.");
+          " "+exit.base+" sous le minimum Spot ; aucune somme encaissable dans ce scénario.");
         exitLines.push("Valorisation MATHÉMATIQUE seulement à "+desired+" : "+
           exit.hypothetical_sale_net_quote+" "+quote+
           " ; ceci N'EST PAS le produit d'une vente réalisable.");
@@ -645,7 +658,7 @@ async function prepareTicket(){
       }
       exitLines.push(exit.fees_verified?
         "Frais de la paire exacte lus via le compte OKX, taux le plus défavorable retenu.":
-        "Frais CT/USDC NON certifiés : hypothèse de 0,10 % de chaque côté.");
+        "Frais "+pair+" NON certifiés : hypothèse de 0,10 % de chaque côté.");
       exitLines.push(exit.funds_cover_public_scenario?
         "Solde Trading couvrant le scénario PAPER plafonné, sans garantie de marché ni permission d'ordre.":
         "Solde Trading indisponible, inconnu ou insuffisant pour ce scénario.");
@@ -665,11 +678,13 @@ async function prepareTicket(){
       "Calcul public initial : hypothèse frais CT ; mode du compte qualifié et simulation recalculée plus bas.":
     line);
   const actualLive=bookDiagnostic?.accepted&&
-    answer.source_book_kind==="LOCAL_BACKEND_OKX_CT_USDC";
+    ["LOCAL_BACKEND_OKX_CT_USDC","LOCAL_BACKEND_OKX_SPOT"].includes(answer.source_book_kind);
   const brief=[
-    "CARNET CT/USDC · "+(actualLive?"RÉCENT OKX ACCEPTÉ":
+    "CARNET "+pair+" · "+(actualLive?"RÉCENT OKX ACCEPTÉ":
       "ARCHIVE UNIQUEMENT — "+(bookDiagnostic?.code||"INCONNU")),
-    "COMPTE · "+(review.spot_gates?.verified?
+    "COMPTE · "+(pair!=="CT-USDC"?
+      "NON CERTIFIÉ POUR "+pair+" (PAPER public uniquement).":
+     review.spot_gates?.verified?
       (review.scenario_within_account_max_buy?
         "Contrôles du compte lus · scénario brut dans maxBuy.":
         "Quantité brute supérieure à maxBuy · simulation plafonnée."):
@@ -726,9 +741,8 @@ function mount(){
  ticketHeading.textContent="Préparer un ticket OKX LIMIT · sans ordre ni fonds engagés";
  const ticketBox=document.createElement("div");
  const warning=document.createElement("p");
- warning.textContent="Étude Spot avec carnet CT/USDC local récent s'il est vérifié, sinon archive datée. "+
-   "Montant hypothétique, non garanti par OKX. "+
-   "Compte OKX lu via le Bridge existant, en lecture seule ; aucun ordre privé.";
+ warning.textContent="Étude PAPER de la paire Spot sélectionnée, sans ordre ni fonds engagés.";
+ warning.setAttribute("data-od-ticket-warning","");
  const quoteLabel=document.createElement("label");
  quoteLabel.textContent="Devise de cotation (paire OKX vérifiée) ";
  const quoteSelect=document.createElement("select");
@@ -745,7 +759,7 @@ function mount(){
  budget.setAttribute("inputmode","decimal");budget.value="5";
  budgetLabel.appendChild(budget);
  const exitLabel=document.createElement("label");
- exitLabel.textContent="Prix de vente souhaité (pour CT, ex. 0,39 USDC) ";
+ exitLabel.textContent="Prix de vente souhaité par unité de crypto (USDC) ";
  const exitInput=document.createElement("input");
  exitInput.setAttribute("data-ticket-exit","");
  exitInput.setAttribute("inputmode","decimal");
@@ -831,8 +845,14 @@ function mount(){
     const input=safe(()=>globalThis.AgentCryptoTraderPaperLab?.source?.()?.input);
     if(input?.asset==="CT"&&input?.provider==="okx"){
       quoteSelect.value="USDC";
+      exitInput.placeholder="0,39";
       if(!exitInput.value)exitInput.value="0,39";
       if(budget.value==="5")budget.value="3,20";
+    }else if(input?.asset==="BTC"&&input?.provider==="coingecko"){
+      quoteSelect.value="USDC";
+      exitInput.placeholder="85000";
+      if(!exitInput.value)exitInput.value="85000";
+      if(budget.value==="5")budget.value="10";
     }
     void prepareTicket();
   }
