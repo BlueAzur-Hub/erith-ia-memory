@@ -43,6 +43,18 @@ test("Two real observations compare only within the same exact spot pair",()=>{
  assert.equal(model.pairs[0].quote,"USDC");
  assert.throws(()=>view.valid({...doc,pairs_with_two_or_more_hours:0},NOW),/couverture/i);
 });
+test("CT now belongs to the immutable six-asset native-quote archive, not a trading signal",()=>{
+ const cases=["BTC","ETH","SOL","XRP","OKB","CT"].flatMap(base=>
+  ["USDC","USDT","EUR"].map(quote=>pair(base+"-"+quote)));
+ const report=data(cases);
+ const model=view.valid(report,NOW);
+ assert.equal(model.pairs.length,18);
+ assert.equal(model.realOrders,false);
+ assert.equal(model.strategyCertified,false);
+ assert.equal(model.noQuoteConversion,true);
+ assert.throws(()=>view.valid(data([...cases,pair("DOGE-USDT")]),NOW),
+  /Paire|incompatible/i);
+});
 test("Never mix stablecoin quotes or duplicate a symbol",()=>{
  const m=view.valid(data([pair("BTC-USDC"),pair("BTC-USDT"),pair("BTC-EUR")]),NOW);
  assert.deepEqual(new Set(m.pairs.map(x=>x.quote)),new Set(["USDC","USDT","EUR"]));

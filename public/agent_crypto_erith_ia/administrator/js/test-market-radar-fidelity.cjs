@@ -443,11 +443,11 @@ test("Native Trader Radar reuses the same published OKX validator and no extra s
  const reader=require("../../laboratoire/radar-okx-hourly.js");
  const report=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../../data/crypto/okx-hourly/research-latest.json"),"utf8"));
  const model=reader.valid(report,Date.parse(report.as_of_utc)+60_000);
- assert.equal(model.pairs.length,15);
- assert.equal(model.observedHours,1);
- assert.equal(model.withTrend,0);
- assert.match(native.describeOkxHourly(model),/15 paires Spot/);
- assert.match(native.describeOkxHourly(model),/1 heure/);
+ assert.equal(model.pairs.length,report.pairs.length);
+ assert.equal(model.observedHours,report.observed_hours_total);
+ assert.equal(model.withTrend,report.pairs_with_two_or_more_hours);
+ assert.match(native.describeOkxHourly(model),new RegExp(report.pairs.length+' paires Spot'));
+ assert.match(native.describeOkxHourly(model),new RegExp(report.observed_hours_total+' heure'));
  assert.match(native.describeOkxHourly(null),/indisponible/);
  const view=fs.readFileSync(path.join(__dirname,"market-radar-native.js"),"utf8");
  const loader=fs.readFileSync(path.join(__dirname,"new-listings-native-category.js"),"utf8");
@@ -478,15 +478,17 @@ test("Trader OKX native rows retain three exact quotes, never turn one hour into
  try{
    globalThis.document={createElement:(tag)=>new Element(tag)};
    native.printOkxHourly(root,{okxHourly:qualified});
-   assert.equal(rows.children.length,15);
-   assert.match(note.textContent,/15 paires Spot/);
-   assert.match(fold.textContent,/15 paires/);
+   assert.equal(rows.children.length,report.pairs.length);
+   assert.match(note.textContent,new RegExp(report.pairs.length+' paires Spot'));
+   assert.match(fold.textContent,new RegExp(report.pairs.length+' paires'));
    const names=rows.children.map(row=>row.children[0].textContent);
    assert.ok(names.includes("BTC-USDC"));
    assert.ok(names.includes("BTC-USDT"));
    assert.ok(names.includes("BTC-EUR"));
    for(const row of rows.children){
-     assert.match(row.children[6].textContent,/1 heure/);
+     const count=Number(row.children[1].textContent);
+     if(count===1)assert.match(row.children[6].textContent,/1 heure/);
+     else assert.doesNotMatch(row.children[6].textContent,/gain garanti|signal d.achat/i);
      assert.equal(row.events.click,undefined);
    }
    native.printOkxHourly(root,{okxHourly:null,okxHourlyError:"Archive absente"});
