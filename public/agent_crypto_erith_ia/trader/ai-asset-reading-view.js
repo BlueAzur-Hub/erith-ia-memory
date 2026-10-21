@@ -40,6 +40,23 @@ const marketCoin=()=>globalThis.AgentCryptoTraderMarket?.selected?.()||
   globalThis.getSelectedCoin?.()||null;
 const microscope=()=>globalThis.AgentCryptoMarketMicroscope?.snapshot?.()||null;
 const externalListing=()=>globalThis.AgentCryptoNewListingsNativeCategory?.snapshot?.()||null;
+// A separate navigable entry makes Seven discoverable without changing
+// the original Concrete CT button or the historical private panel.
+const nav=document.querySelector?.('#accueil .atlas-v2-nav-essential');
+const quick=nav?el('button','atlas-quick-link','IA · Seven'):null;
+if(quick){
+ quick.id='aiSevenToggle';quick.type='button';quick.hidden=true;
+ quick.setAttribute('aria-controls','sevenAssetReading');
+ quick.setAttribute('aria-expanded','false');nav.append(quick);
+ quick.addEventListener('click',()=>{
+   const detail=document.getElementById('detailPanel');
+   if(detail?.hidden||document.getElementById('analyste')?.classList.contains('detail-collapsed'))
+     document.getElementById('detailPanelToggle')?.click();
+   panel.open=true;quick.setAttribute('aria-expanded','true');
+   panel.scrollIntoView?.({behavior:'auto',block:'nearest'});
+ });
+ panel.addEventListener('toggle',()=>quick.setAttribute('aria-expanded',String(panel.open)));
+}
 const available=(v)=>v===null||v===undefined||v===''?'Non certifié':String(v);
 const money=(v,unit)=>available(v)+(v===null||v===undefined?'':' '+unit);
 const row=(label,value)=>{
@@ -98,28 +115,30 @@ function same(original,seq){
 }
 function change(){
  const choice=chosen();
- if(choice.ct){panel.hidden=true;key='CT';coin=null;epoch++;resetReading();return;}
+ if(choice.ct){
+  panel.hidden=true;if(quick)quick.hidden=true;
+  key='CT';coin=null;selection=null;epoch++;resetReading();return;
+ }
  if(choice.conflict||choice.pending){
   panel.hidden=!!choice.pending;
-  if(choice.pending)panel.open=false;
-  // For a conflict, show ONLY a warning, never another asset's private data.
-  if(choice.conflict){
-    panel.hidden=false;heading.textContent='IA · Sources en attente';
-    caption.textContent='Sélection Market et bougies différentes';
-    cards.replaceChildren();help.replaceChildren();
-  }
-  key='';coin=null;epoch++;resetReading();
-  if(choice.conflict)
-    state.textContent='Conflit : Market '+choice.c?.symbol+
-      ' · graphique '+choice.graphBase+'. Aucune analyse ou position n’est mélangée.';
+  if(quick){quick.hidden=!!choice.pending;quick.textContent='IA · Seven · Sources';}
+  heading.textContent='IA · Sources en attente';
+  caption.textContent='Identité Market, exchange et bougies à vérifier';
+  cards.replaceChildren();help.replaceChildren();
+  key='';coin=null;selection=null;epoch++;resetReading();
+  state.textContent=choice.conflict?
+    'Conflit : Market '+choice.c?.symbol+' · graphique '+
+      choice.graphBase+'. Aucune analyse ou position n’est mélangée.':
+    'Sélection non qualifiée : aucune ancienne position ou analyse conservée.';
   publicButton.disabled=true;privateButton.disabled=true;
   return;
  }
  if(choice.identity!==key){
    key=choice.identity;coin=choice.c;selection=choice.selection;
-   epoch++;resetReading();
+   epoch++;resetReading();panel.open=true;
  }
  panel.hidden=false;
+ if(quick){quick.hidden=false;quick.textContent='IA · Seven · '+selection.symbol;}
  const isNativeOkx=selection.provider==='okx';
  publicButton.disabled=busy||!isNativeOkx;
  privateButton.disabled=busy||!isNativeOkx;
@@ -129,7 +148,8 @@ function change(){
      ' public. Carnet, règles et compte OKX non applicables à cette place ; aucune donnée privée supposée.';
  heading.textContent='IA · Dossier '+selection.symbol+' · Seven';
  caption.textContent=String(coin?.name||selection.symbol)+' · '+selection.symbol+
-   '/'+selection.quote+' · Market, position, règles et scénarios PAPER';
+   '/'+selection.quote+' · '+selection.provider.toUpperCase()+
+   ' · Market, position, règles et scénarios PAPER';
  intro.textContent='Même structure que Concrete (CT), données propres à '+
    selection.symbol+'. Concrete conserve intégralement son panneau et sa lecture privée.';
  paint();
