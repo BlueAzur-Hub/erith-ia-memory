@@ -132,3 +132,33 @@ test('first observation without second only marks research waiting',()=>{
   assert.equal(a.hypothetical_pnl_usdc,null);
  }finally{fs.rmSync(root,{recursive:true,force:true})}
 });
+
+test('fixed 4/24/48h horizon starts from first observation, with waiting and rejection',()=>{
+ const {root}=fixture([future()]);
+ try{
+  const report=paper.evaluate(root),cohort=report.cohorts[0];
+  assert.deepEqual(report.horizon_hours,[4,24,48]);
+  assert.equal(cohort.horizons.length,3);
+  const four=cohort.horizons[0];
+  assert.equal(four.hours,4);
+  assert.equal(four.no_hindsight_selection,true);
+  assert.equal(four.selection,'FIRST_ARCHIVED_RECORD_AT_OR_AFTER_TARGET');
+  assert.equal(four.candidates[0].status,'LATEST_BID_EVALUABLE');
+  assert.equal(four.candidates[0].hypothetical_pnl_usdc,'0.978011');
+  assert.equal(four.candidates[1].status,'ENTRY_REJECTED');
+  for(const h of cohort.horizons.slice(1)){
+   assert.equal(h.candidates[0].status,'AWAITING_HORIZON');
+   assert.equal(h.candidates[0].hypothetical_pnl_usdc,null);
+   assert.equal(h.candidates[1].status,'ENTRY_REJECTED');
+  }
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
+test('horizons never report a future price from the initial snapshot',()=>{
+ const {root}=fixture();
+ try{
+  const h=paper.evaluate(root).cohorts[0].horizons;
+  assert.deepEqual(h.map(x=>x.candidates[0].status),
+   ['AWAITING_HORIZON','AWAITING_HORIZON','AWAITING_HORIZON']);
+  assert(h.every(x=>x.candidates[0].hypothetical_pnl_usdc===null));
+ }finally{fs.rmSync(root,{recursive:true,force:true})}
+});
