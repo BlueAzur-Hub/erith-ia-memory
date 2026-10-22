@@ -67,6 +67,20 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 </details>
 </section>
 
+<section aria-labelledby="target-market-heading" id="target-market-public-study">
+<h2 id="target-market-heading">Radar ciblé · contrats BR / JCT / BEAM · preuves publiques Spot</h2>
+<p>Extension progressive des <a href="../data/crypto/radar-opportunities/qualification-latest.json">20 dossiers du Radar dynamique</a> (10 priorités datées) : seules les identités BR, JCT et BEAM possèdent à ce stade une concordance de contrat enregistrée au 20 octobre. Leur adresse et réseau doivent être <strong>reconfirmés à chaque relevé</strong> auprès de Bitget. Pas d'assimilation par symbole, pas de cotation de remplacement.</p>
+<details id="radar-verified-targets">
+<summary>Lire le Coffre ciblé · BR / JCT / BEAM · prix et carnet Spot archivés</summary>
+<p class="muted">Les trois marchés restent distincts du Radar 20 fixe et des études ZEC / AXIS. La cadence existante GitHub est réutilisée, au plus quinze requêtes Bitget publiques pour ce lot ; si l'archive n'existe pas encore, aucune cotation n'est produite. L'identité actuelle n'est certifiée que pour la concordance de contrat observée, pas pour l'admissibilité d'un ordre sur un compte.</p>
+<p><button type="button" data-target-refresh>Relire les preuves archivées</button></p>
+<p role="status" aria-live="polite" class="status" data-target-status>Ouvrir ce volet pour lire le dernier relevé disponible.</p>
+<div class="table-wrap"><table aria-label="Marchés Spot Radar dont le contrat a été vérifié"><thead><tr><th>Pair Bitget Spot</th><th>État</th><th>Dernier prix</th><th>Bid / Ask</th><th>Spread</th><th>Top 5 bid / ask</th></tr></thead><tbody data-target-rows><tr><td colspan="6">Archives cibles non chargées.</td></tr></tbody></table></div>
+<p class="chart-caption">Uniquement USDT, pas de conversion USD / USDC. Un spread et une profondeur sont des mesures, pas une preuve de remplissage. Les autres candidats (AUCTION, REZ, BAT, THETA, ALT, DOS, A, IOST, COMP, etc.) restent en qualification tant que leur identité exacte ou les données obligatoires ne sont pas disponibles.</p>
+<p><a href="../data/crypto/radar-verified-target-hourly/latest.json" target="_blank" rel="noopener noreferrer">État et datation du journal ciblé ↗</a> · <a href="../data/crypto/radar-opportunities/spot-identity-latest.json">Identités CoinGecko / Bitget archivées</a></p>
+</details>
+</section>
+
 <section aria-labelledby="radar-forward-attribution-title" id="radar-forward-attribution-study">
 <h2 id="radar-forward-attribution-title">Radar 20 · Journal des signaux acceptés et refusés</h2>
 <p>Premier lot prospectif archivé du <strong>14 au 20 octobre 2026</strong> · vingt marchés Binance Spot USDT. Rejeu <strong>des règles gelées A/B</strong> : choix triés par pression acheteuse et volume, budget fictif de 400 USDT, quatre positions maximum, ticket de 100 USDT, détention de 48 h et coût aller-retour hypothétique de 0,8 %. Aucun paramètre n'est réoptimisé.</p>
@@ -194,4 +208,5 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <script src="radar-native-activity-view.js" defer></script>
 <script src="radar-forward-decisions.js" defer></script>
 <script src="case-market-hourly-reader.js" defer></script>
+<script src="radar-verified-targets.js" defer></script>
 </main></body></html>

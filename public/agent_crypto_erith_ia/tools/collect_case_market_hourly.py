@@ -25,6 +25,7 @@ ROUTES = {
         "/api/v5/market/candles": {"instId", "bar", "limit"},
     },
     "api.bitget.com": {
+        "/api/v3/market/coins": {"coin"},
         "/api/v3/market/instruments": {"category", "symbol"},
         "/api/v3/market/tickers": {"category", "symbol"},
         "/api/v3/market/orderbook": {"category", "symbol", "limit"},
