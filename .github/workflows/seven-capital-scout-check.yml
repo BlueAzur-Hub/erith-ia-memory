@@ -6,6 +6,8 @@ on:
       - ".github/workflows/seven-capital-scout-check.yml"
       - "public/agent_crypto_erith_ia/tools/seven_capital_scout.cjs"
       - "public/agent_crypto_erith_ia/tools/test_seven_capital_scout.cjs"
+      - "public/agent_crypto_erith_ia/tools/seven_capital_now.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_seven_capital_now.cjs"
       - "public/agent_crypto_erith_ia/trader/strategy-comparator.js"
       - "public/agent_crypto_erith_ia/data/trader_flux/seven_capital_scout/status.json"
 permissions:
@@ -26,6 +28,8 @@ jobs:
           node --check public/agent_crypto_erith_ia/tools/seven_capital_scout.cjs
           node --check public/agent_crypto_erith_ia/trader/strategy-comparator.js
           node public/agent_crypto_erith_ia/tools/test_seven_capital_scout.cjs
+          node --check public/agent_crypto_erith_ia/tools/seven_capital_now.cjs
+          node public/agent_crypto_erith_ia/tools/test_seven_capital_now.cjs
           node public/agent_crypto_erith_ia/tools/seven_capital_scout.cjs
           node - <<'NODE'
           const fs=require('node:fs');
@@ -51,3 +55,8 @@ jobs:
              throw Error('Safety contract or currency identity broken');
           console.log('AUTOMATED SCOUT READ-ONLY PASS',r.latest_archive_date_utc);
           NODE
+      - name: Immediate public OKX Spot USDC preflight, read only
+        shell: bash
+        run: |
+          set -euo pipefail
+          node public/agent_crypto_erith_ia/tools/seven_capital_now.cjs
