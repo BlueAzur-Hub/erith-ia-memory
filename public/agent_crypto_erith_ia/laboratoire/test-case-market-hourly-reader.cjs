@@ -156,3 +156,20 @@ test("only public dated GitHub archives are requested, no account or automated o
  assert.match(reader,/previous=await read\(/);
  assert.doesNotMatch(reader,/placeOrder|sendOrder|Authorization|Bearer |localStorage|indexedDB|setInterval\(/);
 });
+
+
+test("latest exchange outage never re-labels an older consecutive step as current",()=>{
+ const d=copy(day);
+ d.hours.push(shifted(1,"1275",".3"));
+ const last=shifted(2,"1280",".31");
+ last.markets[0]={symbol:"ZEC",venue:"OKX_EEA",pair:"ZEC-USDC",quote:"USDC",
+   type:"SPOT",status:"UNAVAILABLE",proof:null};
+ last.observed_markets=1;d.hours.push(last);
+ const evolution=analyze(headed(d),d,null,Date.parse("2026-10-22T09:30:00Z"));
+ assert.equal(evolution.rows[0].observations,2);
+ assert.equal(evolution.rows[0].notCurrentWithLatestArchive,true);
+ assert.equal(evolution.rows[0].lastOneHourPct,null);
+ assert.equal(evolution.rows[1].lastOneHourPct!==null,true);
+ assert.equal(evolution.rows[1].notCurrentWithLatestArchive,false);
+ assert.equal(evolution.reversalCertified,false);
+});
