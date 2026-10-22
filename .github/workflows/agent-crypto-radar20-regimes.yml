@@ -22,6 +22,9 @@ on:
       - 'public/agent_crypto_erith_ia/tools/build_radar_focus_identity_review.py'
       - 'public/agent_crypto_erith_ia/tools/test_build_radar_focus_identity_review.py'
       - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/focus-identity-review.json'
+      - 'public/agent_crypto_erith_ia/laboratoire/vaulta-case-study.html'
+      - 'public/agent_crypto_erith_ia/data/crypto/research/vaulta-radar-display-audit.json'
+      - 'public/agent_crypto_erith_ia/tools/test_vaulta_radar_display_audit.py'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-priority-dossiers.html'
       - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/priority-casebook.json'
       - 'public/agent_crypto_erith_ia/tools/test_radar_priority_casebook.py'
@@ -55,6 +58,9 @@ on:
       - 'public/agent_crypto_erith_ia/tools/build_radar_focus_identity_review.py'
       - 'public/agent_crypto_erith_ia/tools/test_build_radar_focus_identity_review.py'
       - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/focus-identity-review.json'
+      - 'public/agent_crypto_erith_ia/laboratoire/vaulta-case-study.html'
+      - 'public/agent_crypto_erith_ia/data/crypto/research/vaulta-radar-display-audit.json'
+      - 'public/agent_crypto_erith_ia/tools/test_vaulta_radar_display_audit.py'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-priority-dossiers.html'
       - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/priority-casebook.json'
       - 'public/agent_crypto_erith_ia/tools/test_radar_priority_casebook.py'
@@ -83,6 +89,7 @@ jobs:
           python -m py_compile public/agent_crypto_erith_ia/tools/build_radar_focus_identity_review.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_radar_focus_identity_review.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_radar_priority_casebook.py' -v
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_vaulta_radar_display_audit.py' -v
           python public/agent_crypto_erith_ia/tools/build_radar_focus_identity_review.py --check
       - uses: actions/setup-node@v4
         with:
