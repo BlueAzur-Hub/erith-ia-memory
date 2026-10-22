@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict');
-const {shortlist,study,markdown}=require('./seven_capital_now.cjs');
+const {shortlist,study,studySourceSnapshots,markdown}=require('./seven_capital_now.cjs');
 const day='2026-10-22';
 const at=day+'T10:00:00.000Z',now=Date.parse(day+'T10:05:00.000Z');
 function row(i,change){
@@ -33,6 +33,26 @@ assert.throws(()=>shortlist({...sample,scoutUniverse:[mod[0],mod[0]]},now),/inva
  assert.equal(outage.market_results.length,3);
  assert.equal(outage.market_results.every(x=>x.status==='SOURCE_UNAVAILABLE'),true);
  assert.equal(outage.real_orders,0);
+ const good={
+  schema:'agent_crypto_public_market_snapshot_v1',
+  source:{provider_id:'coingecko'},generated_at:at,
+  coins:Array.from({length:250},(_,i)=>({id:'coin-'+(i+1),symbol:'R'+(i+1),rank:i+1}))
+ };
+ const duplicate={
+  schema:'agent_crypto_public_extended_market_snapshot_v1',
+  source:{provider_id:'coingecko'},generated_at:at,
+  coins:Array.from({length:750},(_,i)=>({id:'coin-'+(i+251),symbol:'R'+(i+251),rank:i+251}))
+ };
+ duplicate.coins[233].rank=488;
+ const blocked=await studySourceSnapshots(good,duplicate,
+   async()=>{throw Error('bad catalog must not call OKX');},now);
+ assert.equal(blocked.status,'BLOCKED_INVALID_PUBLIC_UNIVERSE');
+ assert.equal(blocked.selected.length,0);
+ assert.equal(blocked.market_results.length,0);
+ assert.equal(blocked.real_orders,0);
+ assert.equal(blocked.paper_fills,0);
+ assert.equal(blocked.net_profit_usdc,null);
+ assert.match(markdown(blocked),/BLOCKED_INVALID_PUBLIC_UNIVERSE/);
  const stale=await study(sample,async()=>{throw Error('should not fetch');},now+9*3600000);
  assert.equal(stale.market_results.length,0);
  assert.equal(stale.net_profit_usdc,null);
