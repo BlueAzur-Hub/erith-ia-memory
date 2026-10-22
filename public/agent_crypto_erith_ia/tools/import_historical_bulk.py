@@ -20,6 +20,7 @@ import json
 import math
 from pathlib import Path
 import re
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -94,14 +95,27 @@ def confirmed_additions(venue_path=VENUE_AUDIT, ledger_path=IDENTITY_LEDGER):
         if evidence["status"]!="approved_coingecko_binance_spot":
             continue
         aid=evidence["id"]
-        need(aid in indexed and aid not in seen,"Unknown/repeated approved CoinGecko ID")
+        need(aid not in seen,"Repeated approved CoinGecko ID")
         seen.add(aid)
+        if aid not in indexed:
+            # An approved candidate from an older ranked universe cannot be
+            # joined to a different current coin by ticker or market rank.
+            # Exclude just this candidate, with a visible diagnostic; other
+            # exact-ID proofs remain eligible for their immutable source ZIPs.
+            print("SKIP unanchored CoinGecko ID in dated venue snapshot: "+aid,
+                  file=sys.stderr)
+            continue
         original=indexed[aid]
         pair=evidence["pair"]
         symbol=evidence["symbol"]
         proof=evidence.get("evidence")
+        # Market-cap rank belongs to each dated snapshot, not to the coin identity.
+        # Preserve independent CoinGecko ID, symbol, exact Spot pair and venue
+        # proof instead of rejecting a legitimate rank movement (GRAM 31 vs 32).
         need(original.get("status")=="spot_candidate_identity_unverified"
-             and original.get("rank")==evidence.get("rank")
+             and isinstance(original.get("rank"),int)
+             and isinstance(evidence.get("rank"),int)
+             and 1<=original["rank"]<=250 and 1<=evidence["rank"]<=250
              and original.get("symbol")==symbol
              and original.get("proposed_pair")==pair
              and pair==symbol+"USDT" and PAIR.fullmatch(pair)

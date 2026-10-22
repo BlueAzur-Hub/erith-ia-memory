@@ -9,6 +9,8 @@ on:
       - '.github/workflows/agent-crypto-bulk-backfill.yml'
       - 'public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
+      - 'public/agent_crypto_erith_ia/tools/import_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/test_historical_bulk_identity_rank_drift.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py'
       - 'public/agent_crypto_erith_ia/tools/probe_missing_binance_spot_months.py'
@@ -21,6 +23,8 @@ on:
       - '.github/workflows/agent-crypto-bulk-backfill.yml'
       - 'public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
+      - 'public/agent_crypto_erith_ia/tools/import_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/test_historical_bulk_identity_rank_drift.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py'
       - 'public/agent_crypto_erith_ia/tools/probe_missing_binance_spot_months.py'
@@ -50,6 +54,7 @@ jobs:
           set -euo pipefail
           python -m py_compile public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py
           python public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_historical_bulk_identity_rank_drift.py' -v
           python public/agent_crypto_erith_ia/tools/historical_bulk_test.py
           python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
           python public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py
@@ -67,7 +72,14 @@ jobs:
           x=json.loads(p.read_text())
           assert x['releases_published']==0 and x['catalog_updated'] is False
           assert x['coin_id_attribution_certified'] is False
-          assert x['candidate_months_verified']>=1, 'No genuinely available archived Spot source'
+          # Source discovery is allowed to prove absence. Zero genuine ZIPs
+          # must not become a fictitious approval or a broken code regression.
+          assert x['candidate_months_verified']>=0
+          if x['candidate_months_verified']==0:
+              assert x['candidate_owners']==[] and x['source_proofs']==[], 'Fake source ownership'
+              print('NO VERIFIED NATIVE SOURCE: archived facts unchanged')
+          else:
+              assert len(x['candidate_owners'])>0, 'Verified sources lack provenance'
           print('SOURCE MONTHS VERIFIED',x['candidate_months_verified'])
           print('SOURCE OWNER CANDIDATES',x['candidate_owners'])
           PY

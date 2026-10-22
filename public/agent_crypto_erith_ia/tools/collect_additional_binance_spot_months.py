@@ -45,7 +45,8 @@ def owners(catalog):
     for cid,name,symbol,rank,url in SPECS:
         row=byid.get(cid)
         need(row is not None and row.get("name")==name and
-             row.get("symbol")==symbol and row.get("rank")==rank and
+             row.get("symbol")==symbol and
+             isinstance(row.get("rank"),int) and 1<=row["rank"]<=250 and
              row.get("quote")=="USDT" and
              (row.get("months")==0 and row.get("source") is None or
               row.get("months",0)>0 and
@@ -53,7 +54,8 @@ def owners(catalog):
              bulk.PAIR.fullmatch(symbol+"USDT") is not None and
              url=="https://www.binance.com/en/trade/"+symbol+"_USDT",
              "Exchange named Spot owner or exact ID changed: "+cid)
-        assets.append({"id":cid,"rank":rank,"symbol":symbol,
+        # The pin identifies the project, NOT an immutable capitalization rank.
+        assets.append({"id":cid,"rank":row["rank"],"symbol":symbol,
                        "pair":symbol+"USDT","archive_owner":
                        "official-binance-named-spot-pair",
                        "first_full_month":FIRST_FULL,"official_listing":url})

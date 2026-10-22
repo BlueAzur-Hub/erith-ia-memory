@@ -39,6 +39,20 @@ class QualifiedSourceTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 app.owners(j)
 
+    def test_capitalization_rank_drift_preserves_exact_id_and_pair(self):
+        j=catalog()
+        # Historical Jupiter market-cap rank 70 can become rank 72.
+        former=j["assets"][69]
+        other=j["assets"][71]
+        j["assets"][69],j["assets"][71]=other,former
+        j["assets"][69]["rank"]=70
+        j["assets"][71]["rank"]=72
+        jup=next(x for x in app.owners(j)
+                 if x["id"]=="jupiter-exchange-solana")
+        self.assertEqual(jup["rank"],72)
+        self.assertEqual(jup["pair"],"JUPUSDT")
+        self.assertEqual(jup["archive_owner"],"official-binance-spot-project-attestation")
+
     def test_preexisting_bitget_owner_cannot_be_double_counted(self):
         j=catalog()
         j["assets"][69].update({"months":1,"source":"Bitget Spot native 1m HTTPS"})

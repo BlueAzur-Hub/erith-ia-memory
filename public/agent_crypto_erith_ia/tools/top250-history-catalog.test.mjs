@@ -16,7 +16,11 @@ const fixtures=new Map([
 // Use real, independently verified source indexes. Their snapshots do not
 // have to share the same collection time or count. No mock candles added.
 
-const base="https://blueazur-hub.github.io",path="/erith-ia-memory/public/agent_crypto_erith_ia/data/historical_archive_prototype/";
+// The reader intentionally fetches public immutable indexes from GitHub RAW.
+// The test must mock that exact read origin, while simulating GitHub Pages as the UI origin.
+const base="https://raw.githubusercontent.com";
+const path="/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/historical_archive_prototype/";
+const pageOrigin="https://blueazur-hub.github.io";
 function harness(mutate=()=>{}){
  const nodes=new Map(),requests=[],events=[];
  function element(id){
@@ -32,7 +36,7 @@ function harness(mutate=()=>{}){
   nodes.set(id,el);return el;
  }
  const document={
-  currentScript:{src:base+"/erith-ia-memory/public/agent_crypto_erith_ia/administrator/js/top250-history-catalog.js"},
+  currentScript:{src:pageOrigin+"/erith-ia-memory/public/agent_crypto_erith_ia/administrator/js/top250-history-catalog.js"},
   getElementById:element,
   createDocumentFragment:()=>element("fragment"+nodes.size),
   createElement:tag=>element("created-"+tag+"-"+nodes.size),
@@ -50,7 +54,7 @@ function harness(mutate=()=>{}){
  };
  const window={};
  vm.runInNewContext(js,{window,document,fetch:fetchMock,
-   location:{origin:base},URL,Response,CustomEvent:class{constructor(type,options){this.type=type;this.detail=options?.detail;}}},
+   location:{origin:pageOrigin},URL,Response,CustomEvent:class{constructor(type,options){this.type=type;this.detail=options?.detail;}}},
    {timeout:5000});
  return {window,nodes,element,requests,events};
 }

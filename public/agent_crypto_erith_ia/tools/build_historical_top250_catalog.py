@@ -73,25 +73,38 @@ def build(venue,monthly):
     need({v["rank"] for v in rows.values()}==set(range(1,251)),
          "Top250 ranking incomplete")
     summaries=[]
+    # Releases preserve their original dated historical universe. Extra owners
+    # may no longer appear in this particular frozen Top250 snapshot.
+    excluded_owners=set()
     for _,(release,manifest) in monthly.items():
         month=manifest["month"]
         present=set()
         for item in manifest["assets"]:
             aid=item["asset_id"]
-            need(aid in rows and aid not in present,"Unknown/duplicate asset")
+            need(isinstance(aid,str) and aid and aid not in present,
+                 "Repeated/invalid asset within immutable Release")
             present.add(aid)
             need(item["quote"]=="USDT" and
                  item["source"]=="Binance Spot public monthly CSV",
                  "Source, currency or ID mismatched")
-            if rows[aid]["months"]:
-                need(rows[aid]["months"][0]["pair"]==item["pair"],
-                     "Pair changed for exact CoinGecko ID")
+            # Verify every claimed ZIP digest, including older owners outside
+            # this snapshot. Never attach the ZIP to a different ranked ID.
             if item["status"]=="verified":
                 filename=item["file"]
                 asset=[x for x in release["assets"] if x["name"]==filename]
                 need(len(asset)==1 and asset[0].get("digest")=="sha256:"+item["sha256"]
                      and item["candles"]==bulk.bounds(month,"1m")[1],
                      "Unverified ZIP reference")
+            else:
+                need(item["status"]=="unavailable","Unknown evidence status")
+            if aid not in rows:
+                excluded_owners.add(aid)
+                continue
+            if rows[aid]["months"]:
+                need(rows[aid]["months"][0]["pair"]==item["pair"],
+                     "Pair changed for exact CoinGecko ID")
+            if item["status"]=="verified":
+                filename=item["file"]
                 existing=next((x for x in rows[aid]["months"]
                                if x["month"]==month),None)
                 if existing is not None:
@@ -112,7 +125,6 @@ def build(venue,monthly):
                      "candles":item["candles"],"release":release["tag_name"]})
                 rows[aid]["candles"]+=item["candles"]
             else:
-                need(item["status"]=="unavailable","Unknown evidence status")
                 if (month not in rows[aid]["missing_months"] and
                     not any(x["month"]==month for x in rows[aid]["months"])):
                     rows[aid]["missing_months"].append(month)
@@ -130,6 +142,8 @@ def build(venue,monthly):
             "rank_snapshot":venue.get("market_snapshot_at"),
             "release_months":len({r["month"] for r in summaries}),
             "release_count":len(summaries),
+            "excluded_historical_owners_outside_frozen_top250":len(excluded_owners),
+            "excluded_historical_ids_sample":sorted(excluded_owners)[:30],
             "archived_assets":groups[-1]["with_history"],
             "native_1m_candles":sum(a["candles"] for a in assets),
             "groups":groups,"months":summaries,"assets":assets,

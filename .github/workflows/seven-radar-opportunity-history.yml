@@ -2,7 +2,11 @@ name: Seven Radar Opportunity History
 on:
   workflow_dispatch:
   schedule:
+    # Morning canonical archive; later same-day retry is idempotent when present.
+    # If the 07:31 sources are inconsistent, a later valid snapshot can still
+    # produce exactly one dated observation; no backdated or guessed prices.
     - cron: "31 7 * * *"
+    - cron: "31 20 * * *"
 permissions:
   contents: write
 concurrency:
