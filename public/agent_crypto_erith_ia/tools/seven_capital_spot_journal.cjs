@@ -129,7 +129,7 @@ function makeDocument(c,report,at,first,entryBookTimes){
  for(const m of markets){
   if(m.public_book_at_utc){
    const book=Date.parse(m.public_book_at_utc);
-   if(!Number.isFinite(book)||book>Date.now()+120000)
+   if(!Number.isFinite(book)||book>at+120000)
     throw Error('Horodatage carnet invalide');
   }
   m.future_bid_observed=first?false:!!(m.public_book_at_utc&&m.bid_usdc&&
@@ -152,10 +152,12 @@ function firstBookTimes(index,root,cohortId){
   .map(m=>[m.coin_id,m.public_book_at_utc]));
 }
 function saveObservation(index,root,c,doc,at){
- if(index.records.some(x=>x.cohort_id===c.id&&
-    Date.parse(doc.recorded_at_utc)-Date.parse(x.recorded_at_utc)<30*60000))
+ const previous=index.records.filter(x=>x.cohort_id===c.id).at(-1);
+ if(previous && Date.parse(doc.recorded_at_utc)<=Date.parse(previous.recorded_at_utc))
+  throw Error('Nouvelle archive antérieure au journal');
+ if(previous && Date.parse(doc.recorded_at_utc)-Date.parse(previous.recorded_at_utc)<30*60000)
   return false; // a retry never creates a fake second market observation
- const when=new Date(at).toISOString().replace(/[-:.]/g,'').replace('T','T');
+ const when=new Date(at).toISOString().replace(/[:.]/g,'');
  const file='observations/'+when+'--'+c.id+'.json';
  if(!FILE.test(file)||fs.existsSync(path.join(root,file)))throw Error('Archive existante ou nom invalide');
  const body=JSON.stringify(doc,null,2)+'\n';
