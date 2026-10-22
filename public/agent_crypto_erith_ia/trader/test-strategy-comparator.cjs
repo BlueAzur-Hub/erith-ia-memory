@@ -71,6 +71,42 @@ assert(view.includes('h.no_hindsight_selection!==true'));
 
 assert(view.includes('mountPaperQuoteEvidence(node)'));
 assert(view.includes('mountRadarSelectionViewer(node)'));
+
+assert(view.includes('mountRadarMarketPressure(node)'));
+assert(view.includes('data-pressure-refresh'));
+assert(view.includes('studyNativeUsdcPressure(h,d)'));
+assert(view.includes('not_a_trade_signal:true'));
+assert(view.includes('trade_count_measured:false'));
+assert(!view.includes('setInterval('));
+const {studyNativeUsdcPressure}=require('./strategy-comparator.js');
+function hourly(at,moves){
+ return {observed_at_utc:at,status:"READY",orders_enabled:false,real_orders:0,
+  markets:Object.entries(moves).map(([symbol,last])=>({pair:symbol+"-USDC",base:symbol,quote:"USDC",
+   status:"VERIFIED_PUBLIC_BOOK",ticker:{last:String(last)},
+   book5:{spread_bps:symbol==="SOL"?"2.8":"0.5",
+    bids:[[String(last),String(50/last)]],asks:[[String(last),String(60/last)]]}}))};
+}
+const day="2026-10-22";
+const at0=day+"T00:10:15Z",at1=day+"T01:08:23Z";
+const hrs=[hourly(at0,{BTC:84245.3,ETH:2479.19,SOL:107.19,XRP:1.3686,OKB:116.21,CT:0.2771}),
+ hourly(at1,{BTC:84170.3,ETH:2472.44,SOL:107.22,XRP:1.3639,OKB:116.16,CT:0.273})];
+const health={schema:"erith.radar.okx-hourly-health.v1",date_utc:day,
+ last_observed_at_utc:at1,orders_enabled:false,real_orders:0};
+const historical={schema:"erith.radar.okx-hourly-spot.v1",date_utc:day,orders_enabled:false,
+ real_orders:0,hours:hrs};
+const risk=studyNativeUsdcPressure(health,historical,Date.parse(day+"T01:15:00Z"));
+assert.equal(risk.breadth.falling,5);
+assert.equal(risk.breadth.rising,1);
+assert.equal(risk.assets[0].symbol,"SOL");
+assert.equal(risk.assets[0].change_pct>0,true);
+assert.equal(risk.assets[0].paper_trade_approved,false);
+assert.equal(risk.trade_count_measured,false);
+assert.equal(risk.not_a_trade_signal,true);
+assert.equal(risk.is_stale,false);
+assert.equal(studyNativeUsdcPressure(health,historical,Date.parse(day+"T05:00:00Z")).is_stale,true);
+assert.throws(()=>studyNativeUsdcPressure({...health,last_observed_at_utc:at0},historical),/Horodatage/);
+assert.throws(()=>studyNativeUsdcPressure(health,{...historical,hours:[hrs[1]]}),/contrat|manquants/i);
+
 assert(view.includes('sevenRadarSelectionViewer'));
 assert(view.includes('data-radar-selection-filter'));
 assert(view.includes('data-radar-selection-refresh'));
