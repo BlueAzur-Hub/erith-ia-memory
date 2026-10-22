@@ -1,6 +1,6 @@
 "use strict";
 const test=require("node:test"),assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path");
-const {verify}=require("./case-market-hourly-reader.js");
+const {verify,analyze}=require("./case-market-hourly-reader.js");
 const BASE=path.resolve(__dirname,"..");
 const read=p=>fs.readFileSync(path.join(BASE,p),"utf8");
 const HOUR="2026-10-22T07Z",AT="2026-10-22T07:22:00Z";
@@ -58,4 +58,101 @@ test("reader only loads dated GitHub static JSON and mounts in Radar",()=>{
  assert.match(reader,/\.\.\/data\/crypto\/case-market-hourly\/latest\.json/);
  assert.doesNotMatch(reader,/\/api\/v5\/trade|placeOrder|order\/place|Authorization|Bearer /);
  assert.doesNotMatch(reader,/localStorage|indexedDB|setInterval\(/);
+});
+
+
+function shiftUTC(text,h){
+ return new Date(Date.parse(text)+h*3600000).toISOString().replace(".000Z","Z");
+}
+function shifted(hourDelta,zecLast="1280",axisLast=".31"){
+ const record=copy(original);
+ record.hour_utc=shiftUTC(original.at_utc,hourDelta).slice(0,13)+"Z";
+ record.at_utc=shiftUTC(original.at_utc,hourDelta);
+ record.markets[0].proof.ticker.last=zecLast;
+ record.markets[1].proof.ticker.last=axisLast;
+ for(const m of record.markets){
+  m.proof.ticker.source_at_utc=shiftUTC(m.proof.ticker.source_at_utc,hourDelta);
+  m.proof.book.source_at_utc=shiftUTC(m.proof.book.source_at_utc,hourDelta);
+  for(const bar of m.proof.closed_15m){
+   bar.open_at_utc=shiftUTC(bar.open_at_utc,hourDelta);
+  }
+ }
+ return record;
+}
+function headed(doc){
+ const last=doc.hours.at(-1);
+ return {...HEAD,last_hour_utc:last.hour_utc,source_day:doc.date_utc,
+  markets_observed:last.observed_markets};
+}
+test("first real archive: evidence is enough for a snapshot, not for a trend",()=>{
+ const r=analyze(HEAD,day,null,Date.parse("2026-10-22T07:30:00Z"));
+ assert.equal(r.archiveHours,1);
+ assert.equal(r.expectedHours,1);
+ assert.equal(r.hoursWithoutArchive,0);
+ assert.equal(r.rows[0].observations,1);
+ assert.equal(r.rows[0].firstToLastPct,null);
+ assert.equal(r.rows[0].lastOneHourPct,null);
+ assert.equal(r.rows[1].medianSpreadBps,2);
+ assert.equal(r.reversalCertified,false);
+ assert.equal(r.realOrders,0);
+});
+test("two consecutive observed hours permit only descriptive changes, not a reversal",()=>{
+ const d=copy(day);d.hours.push(shifted(1,"1270",".29"));
+ const r=analyze(headed(d),d,null,Date.parse("2026-10-22T08:30:00Z"));
+ assert.equal(r.archiveHours,2);
+ assert.equal(r.expectedHours,2);
+ assert.equal(r.rows[0].observations,2);
+ assert.equal(r.rows[1].observations,2);
+ assert.equal(r.rows[0].consecutive,true);
+ assert.ok(Math.abs(r.rows[0].lastOneHourPct - (1270/1286.7-1)*100)<1e-10);
+ assert.ok(r.rows[1].lastOneHourPct<0);
+ assert.equal(r.rows[0].decision,"DESCRIPTIVE_ONLY");
+ assert.equal(r.rows[0].reversalCertified,false);
+});
+test("missing hour never interpolates a one-hour change or missing candle",()=>{
+ const d=copy(day);d.hours.push(shifted(2,"1280",".32"));
+ const r=analyze(headed(d),d,null,Date.parse("2026-10-22T09:30:00Z"));
+ assert.equal(r.archiveHours,2);
+ assert.equal(r.expectedHours,3);
+ assert.equal(r.hoursWithoutArchive,1);
+ assert.equal(r.rows[0].observations,2);
+ assert.equal(r.rows[0].lastOneHourPct,null);
+ assert.ok(r.rows[0].firstToLastPct<0);
+});
+test("unavailable exchange remains absent, no fictional replacement price",()=>{
+ const d=copy(day);const r2=shifted(1);
+ r2.markets[1]={symbol:"AXIS",venue:"BITGET",pair:"AXISUSDT",quote:"USDT",
+  type:"SPOT",status:"UNAVAILABLE",proof:null};
+ r2.observed_markets=1;d.hours.push(r2);
+ const r=analyze(headed(d),d,null,Date.parse("2026-10-22T08:30:00Z"));
+ assert.equal(r.rows[1].observations,1);
+ assert.equal(r.rows[1].hoursUnavailable,1);
+ assert.equal(r.rows[1].lastOneHourPct,null);
+ assert.equal(r.rows[1].lastSpreadBps,2);
+ assert.equal(r.rows[0].observations,2);
+});
+test("prior UTC day is validated and gaps remain gaps, no future observations",()=>{
+ const p=copy(day);
+ const old=shifted(-24);
+ p.date_utc="2026-10-21";
+ p.hours=[old];
+ const result=analyze(HEAD,day,p,Date.parse("2026-10-22T07:30:00Z"));
+ assert.equal(result.archiveHours,2);
+ assert.equal(result.expectedHours,25);
+ assert.equal(result.hoursWithoutArchive,23);
+ assert.equal(result.rows[0].lastOneHourPct,null);
+ const duplicated=copy(day);duplicated.hours.push(copy(duplicated.hours[0]));
+ assert.throws(()=>analyze(HEAD,duplicated,null,Date.parse("2026-10-22T07:30:00Z")),/répétée/);
+ const future=copy(day);future.hours.push(shifted(1));
+ assert.throws(()=>analyze(HEAD,future,null,Date.parse("2026-10-22T08:30:00Z")),/fenêtre/);
+});
+test("only public dated GitHub archives are requested, no account or automated order",()=>{
+ const reader=read("laboratoire/case-market-hourly-reader.js");
+ const page=read("laboratoire/radar-historique.html");
+ assert.match(page,/data-case-market-evolution/);
+ assert.match(page,/data-case-market-evolution-rows/);
+ assert.match(reader,/priorDayAvailable/);
+ assert.match(reader,/renderEvolution\(doc,analyze\(head,day,previous\)\)/);
+ assert.match(reader,/previous=await read\(/);
+ assert.doesNotMatch(reader,/placeOrder|sendOrder|Authorization|Bearer |localStorage|indexedDB|setInterval\(/);
 });
