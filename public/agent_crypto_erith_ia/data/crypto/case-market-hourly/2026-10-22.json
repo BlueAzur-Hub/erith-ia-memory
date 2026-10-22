@@ -736,6 +736,251 @@
       "account_access": false,
       "trade_signal": false,
       "note": "Dated public quotes and closed bars; not synchronized exchange fills or guaranteed liquidity."
+    },
+    {
+      "schema": "erith.case-market-public-hourly.v1",
+      "record_kind": "public_non_executable_market_observation",
+      "at_utc": "2026-10-22T15:38:12Z",
+      "hour_utc": "2026-10-22T15Z",
+      "sources": [
+        "OKX_EEA_PUBLIC_REST",
+        "BITGET_PUBLIC_REST"
+      ],
+      "markets": [
+        {
+          "symbol": "ZEC",
+          "venue": "OKX_EEA",
+          "pair": "ZEC-USDC",
+          "quote": "USDC",
+          "type": "SPOT",
+          "status": "OBSERVED",
+          "proof": {
+            "ticker": {
+              "source_at_utc": "2026-10-22T15:38:12Z",
+              "last": "1234.17",
+              "volume24h_base": "102066.29088",
+              "volume24h_quote": "131877684.5971506"
+            },
+            "book": {
+              "source_at_utc": "2026-10-22T15:38:12Z",
+              "bid5": [
+                [
+                  "1233.79",
+                  "0.24236"
+                ],
+                [
+                  "1233.59",
+                  "0.09781"
+                ],
+                [
+                  "1233.52",
+                  "0.09781"
+                ],
+                [
+                  "1233.51",
+                  "0.39258"
+                ],
+                [
+                  "1233.41",
+                  "0.0141"
+                ]
+              ],
+              "ask5": [
+                [
+                  "1233.8",
+                  "0.09781"
+                ],
+                [
+                  "1233.85",
+                  "0.04286"
+                ],
+                [
+                  "1233.9",
+                  "0.07335"
+                ],
+                [
+                  "1233.95",
+                  "0.02423"
+                ],
+                [
+                  "1233.97",
+                  "0.0298"
+                ]
+              ],
+              "best_bid": "1233.79",
+              "best_ask": "1233.8",
+              "spread_bps": "0.08",
+              "top5_bid_quote_depth": "1041.9718",
+              "top5_ask_quote_depth": "330.7383",
+              "fill_proven": false
+            },
+            "closed_15m": [
+              {
+                "open_at_utc": "2026-10-22T14:30:00Z",
+                "open": "1243.41",
+                "high": "1253.47",
+                "low": "1238.62",
+                "close": "1252.03",
+                "volume_base": "223.60175",
+                "volume_quote": "278392.576869"
+              },
+              {
+                "open_at_utc": "2026-10-22T14:45:00Z",
+                "open": "1252.18",
+                "high": "1252.18",
+                "low": "1237.63",
+                "close": "1240.36",
+                "volume_base": "230.26317",
+                "volume_quote": "286234.2842582"
+              },
+              {
+                "open_at_utc": "2026-10-22T15:00:00Z",
+                "open": "1240.12",
+                "high": "1244.23",
+                "low": "1216",
+                "close": "1219.55",
+                "volume_base": "352.95484",
+                "volume_quote": "433981.4807287"
+              },
+              {
+                "open_at_utc": "2026-10-22T15:15:00Z",
+                "open": "1221.14",
+                "high": "1236.5",
+                "low": "1219.2",
+                "close": "1226.45",
+                "volume_base": "240.56309",
+                "volume_quote": "295714.7213436"
+              }
+            ],
+            "instrument_public_rules": {
+              "minSz": "0.001",
+              "lotSz": "0.00001",
+              "tickSz": "0.01"
+            }
+          },
+          "unavailable_reason": null
+        },
+        {
+          "symbol": "AXIS",
+          "venue": "BITGET",
+          "pair": "AXISUSDT",
+          "quote": "USDT",
+          "type": "SPOT",
+          "status": "OBSERVED",
+          "proof": {
+            "ticker": {
+              "source_at_utc": "2026-10-22T15:38:11Z",
+              "response_at_utc": "2026-10-22T15:38:13Z",
+              "last": "0.28599",
+              "volume24h_base": "27586858.99",
+              "volume24h_quote": "7810337.12"
+            },
+            "book": {
+              "source_at_utc": "2026-10-22T15:38:13Z",
+              "bid5": [
+                [
+                  "0.28605",
+                  "13.69"
+                ],
+                [
+                  "0.28602",
+                  "13.69"
+                ],
+                [
+                  "0.28599",
+                  "13.69"
+                ],
+                [
+                  "0.28596",
+                  "13.69"
+                ],
+                [
+                  "0.28593",
+                  "13.69"
+                ]
+              ],
+              "ask5": [
+                [
+                  "0.28636",
+                  "13.69"
+                ],
+                [
+                  "0.28639",
+                  "13.69"
+                ],
+                [
+                  "0.28642",
+                  "13.69"
+                ],
+                [
+                  "0.28645",
+                  "13.69"
+                ],
+                [
+                  "0.28648",
+                  "13.69"
+                ]
+              ],
+              "best_bid": "0.28605",
+              "best_ask": "0.28636",
+              "spread_bps": "10.83",
+              "top5_bid_quote_depth": "19.5760",
+              "top5_ask_quote_depth": "19.6054",
+              "fill_proven": false
+            },
+            "closed_15m": [
+              {
+                "open_at_utc": "2026-10-22T14:30:00Z",
+                "open": "0.29666",
+                "high": "0.29698",
+                "low": "0.28621",
+                "close": "0.28836",
+                "volume_base": "322256.62",
+                "volume_quote": "93569.403593"
+              },
+              {
+                "open_at_utc": "2026-10-22T14:45:00Z",
+                "open": "0.28836",
+                "high": "0.28883",
+                "low": "0.28347",
+                "close": "0.28458",
+                "volume_base": "161189.69",
+                "volume_quote": "46170.0494474"
+              },
+              {
+                "open_at_utc": "2026-10-22T15:00:00Z",
+                "open": "0.28458",
+                "high": "0.28985",
+                "low": "0.28368",
+                "close": "0.28579",
+                "volume_base": "29208.47",
+                "volume_quote": "8394.4279123"
+              },
+              {
+                "open_at_utc": "2026-10-22T15:15:00Z",
+                "open": "0.28579",
+                "high": "0.2903",
+                "low": "0.28456",
+                "close": "0.28848",
+                "volume_base": "31610.97",
+                "volume_quote": "9116.8255496"
+              }
+            ],
+            "instrument_public_rules": null
+          },
+          "unavailable_reason": null
+        }
+      ],
+      "observed_markets": 2,
+      "spot_only": true,
+      "separate_native_quotes": true,
+      "no_backfill": true,
+      "orders_enabled": false,
+      "real_orders": 0,
+      "paper_fills": 0,
+      "account_access": false,
+      "trade_signal": false,
+      "note": "Dated public quotes and closed bars; not synchronized exchange fills or guaranteed liquidity."
     }
   ],
   "orders_enabled": false,
