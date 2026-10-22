@@ -63,12 +63,15 @@ def owners(fed):
              link.startswith("https://www.binance.com/en/support/announcement/detail/"),
              "Unverified exact-ID proof")
         a=indexed[cid]
-        need(a["rank"]==rank and a["symbol"]==symbol
+        need(isinstance(a.get("rank"),int) and 1<=a["rank"]<=250
+             and a["symbol"]==symbol
              and (a["months"]==0 and a["source"] is None or
                   a["months"]>0 and a["source"]=="Binance Spot official native 1m ZIPs")
              and a["quote"]=="USDT" and bulk.PAIR.fullmatch(symbol+"USDT") is not None,
              "Rank, pair, owner or quote has changed: "+cid)
-        chosen.append({"id":cid,"rank":rank,"symbol":symbol,"pair":symbol+"USDT",
+        # Source ownership is tied to exact CoinGecko ID + native Spot pair,
+        # never to the rank on an unrelated dated market-cap snapshot.
+        chosen.append({"id":cid,"rank":a["rank"],"symbol":symbol,"pair":symbol+"USDT",
                        "archive_owner":"official-binance-spot-project-attestation",
                        "first_full_month":first,"official_listing":link})
     need(len(chosen)==len(SPECS)==len({a["pair"] for a in chosen}),
