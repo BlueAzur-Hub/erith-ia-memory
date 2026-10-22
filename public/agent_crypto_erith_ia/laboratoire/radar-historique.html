@@ -47,6 +47,15 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <div class="links"><a href="../trader/trading-desk.html">← Retour Trader</a><a href="crypto-knowledge.html">Dossiers des candidats dynamiques</a><a href="PROTOCOLE_RADAR_CIBLAGE.md">Méthode Radar</a><a href="../trader/verified-reader.html">Coffre · archives vérifiées</a></div></div>
 </header>
 <div class="notice"><strong>Deux ensembles distincts.</strong> Ici : 20 actifs <em>fixes</em>, archives Binance Spot <strong>cotées USDT</strong> de juillet à septembre 2026. Les candidats Q, ICNT, FLUID, SAND du Radar dynamique sont une autre liste, qui exige des preuves historiques séparées. Cette page n'est ni un outil d'exécution ni un générateur de signaux.</div>
+<section aria-labelledby="activity-title" id="radar-activity-audit">
+<h2 id="activity-title">Analyse des heures et des volumes · 258 opérations PAPER historiques</h2>
+<p>Étude descriptive de deux simulations <strong>avril–juin et juillet–septembre 2026</strong>, à règles figées : 20 actifs Binance Spot USDT, 400 USDT fictifs réinitialisés chaque trimestre, positions de 48 h. <strong>Ce tableau dénombre uniquement les entrées fictives acceptées par le portefeuille</strong>, pas les signaux refusés ni les transactions individuelles exécutées sur Binance.</p>
+<div class="table-wrap"><table aria-describedby="radar-activity-summary"><thead><tr><th>Créneau d'entrée UTC</th><th>Entrées PAPER</th><th>Gagnantes</th><th>P&amp;L cumulé*</th><th>Volume relatif moyen</th><th>Achats agressifs moyens</th><th>Par période : entrées / P&amp;L*</th></tr></thead>
+<tbody id="radar-activity-hourly-rows"><tr><td colspan="7">Lecture des 258 archives horodatées…</td></tr></tbody></table></div>
+<p id="radar-activity-summary" class="status" role="status" aria-live="polite">Audit descriptif en cours.</p>
+<p class="chart-caption">*Sommes en USDT fictifs, <strong>non comparables à un portefeuille unique sur six mois</strong>. L'absence d'entrée à une heure peut résulter des positions déjà ouvertes, du budget limité ou des règles de classement : elle ne prouve pas l'absence de signaux. La pression d'achat n'identifie pas des traders uniques ; ce tableau ne mesure pas encore le nombre de transactions natives par bougie ni une heure rentable. Aucun achat réel.</p>
+<p><a href="../data/trader_flux/radar20_regimes/annotated_trades.json" target="_blank" rel="noopener noreferrer">Consulter les 258 transactions PAPER annotées ↗</a> · <a href="../data/trader_flux/radar20_regimes/RAPPORT.md" target="_blank" rel="noopener noreferrer">Contexte et limites de l'étude ↗</a></p>
+</section>
 <section aria-labelledby="select-title">
 <h2 id="select-title">1 · Choisir un actif, une période et les hypothèses</h2>
 <div class="controls">
@@ -125,4 +134,5 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 </section>
 <footer>ERITH.IA · laboratoire d'analyse scientifique · les années antérieures et les candidats dynamiques demandent des archives propres, non extrapolées. Aucune exécution de trading.</footer>
 <script src="radar-historique.js" defer></script>
+<script src="radar-activity-audit.js" defer></script>
 </main></body></html>
