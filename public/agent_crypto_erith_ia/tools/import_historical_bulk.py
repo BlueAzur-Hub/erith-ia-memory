@@ -100,8 +100,13 @@ def confirmed_additions(venue_path=VENUE_AUDIT, ledger_path=IDENTITY_LEDGER):
         pair=evidence["pair"]
         symbol=evidence["symbol"]
         proof=evidence.get("evidence")
+        # Market-cap rank belongs to each dated snapshot, not to the coin identity.
+        # Preserve independent CoinGecko ID, symbol, exact Spot pair and venue
+        # proof instead of rejecting a legitimate rank movement (GRAM 31 vs 32).
         need(original.get("status")=="spot_candidate_identity_unverified"
-             and original.get("rank")==evidence.get("rank")
+             and isinstance(original.get("rank"),int)
+             and isinstance(evidence.get("rank"),int)
+             and 1<=original["rank"]<=250 and 1<=evidence["rank"]<=250
              and original.get("symbol")==symbol
              and original.get("proposed_pair")==pair
              and pair==symbol+"USDT" and PAIR.fullmatch(pair)
