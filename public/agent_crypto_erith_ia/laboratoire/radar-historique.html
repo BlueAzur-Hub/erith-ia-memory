@@ -47,6 +47,26 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <div class="links"><a href="../trader/trading-desk.html">← Retour Trader</a><a href="crypto-knowledge.html">Dossiers des candidats dynamiques</a><a href="PROTOCOLE_RADAR_CIBLAGE.md">Méthode Radar</a><a href="../trader/verified-reader.html">Coffre · archives vérifiées</a></div></div>
 </header>
 <div class="notice"><strong>Deux ensembles distincts.</strong> Ici : 20 actifs <em>fixes</em>, archives Binance Spot <strong>cotées USDT</strong> de juillet à septembre 2026. Les candidats Q, ICNT, FLUID, SAND du Radar dynamique sont une autre liste, qui exige des preuves historiques séparées. Cette page n'est ni un outil d'exécution ni un générateur de signaux.</div>
+<section aria-labelledby="radar-forward-attribution-title" id="radar-forward-attribution-study">
+<h2 id="radar-forward-attribution-title">Radar 20 · Journal des signaux acceptés et refusés</h2>
+<p>Premier lot prospectif archivé du <strong>14 au 20 octobre 2026</strong> · vingt marchés Binance Spot USDT. Rejeu <strong>des règles gelées A/B</strong> : choix triés par pression acheteuse et volume, budget fictif de 400 USDT, quatre positions maximum, ticket de 100 USDT, détention de 48 h et coût aller-retour hypothétique de 0,8 %. Aucun paramètre n'est réoptimisé.</p>
+<details id="radar-forward-attribution">
+<summary>Comparer les détections, décisions et motifs de refus · première semaine</summary>
+<p class="muted">Une détection n'est pas un ordre et un refus ne prouve pas un gain perdu. Les prix après 4, 24 et 48 heures sont de simples trajectoires historiques fictives après frais supposés ; aucun carnet, spread, slippage, lot minimum ou remplissage n'est certifié. Les résultats hors archives restent « Non mesuré ».</p>
+<div class="controls">
+<label>Modèle PAPER<select data-attribution-model><option value="A">A · original</option><option value="B">B · filtre tendance 72 h ≥ 3 %</option></select></label>
+<label>Décision<select data-attribution-reason><option value="all">Toutes</option><option value="accepted">Accepté PAPER</option><option value="filter">Refus · filtre régime</option><option value="existing">Refus · déjà en position</option><option value="capacity">Refus · quatre places prises</option><option value="cash">Refus · capital insuffisant</option></select></label>
+<label>Plage UTC<select data-attribution-hours><option value="all">Toute la journée</option><option value="after16">16 h – 24 h</option></select></label>
+<button type="button" data-attribution-refresh>Relire les archives vérifiées</button>
+</div>
+<p class="status" role="status" aria-live="polite" data-attribution-status>Ouvrir ce volet pour vérifier les sept journées.</p>
+<p class="muted" data-attribution-summary></p>
+<div class="table-wrap"><table><thead><tr><th>Date UTC</th><th>Paire</th><th>Modèle</th><th>Décision</th><th>Taker buy</th><th>Volume / médiane 24 h</th><th>+4 h*</th><th>+24 h*</th><th>+48 h*</th></tr></thead><tbody data-attribution-rows><tr><td colspan="9">Aucun audit chargé.</td></tr></tbody></table></div>
+<p class="chart-caption">* Évolution du prix d'ouverture suivant le signal, après coûts hypothétiques de 0,8 % aller-retour. <strong>Ce n'est pas le P&amp;L du portefeuille.</strong> Affichage limité aux 80 événements filtrés les plus récents ; aucun effacement des archives. Les fichiers journaliers et leurs SHA-256 sont contrôlés avant calcul ; les données manquantes arrêtent l'analyse.</p>
+<p><a href="../data/trader_flux/radar20_forward/index.json" target="_blank" rel="noopener noreferrer">Index des sources prospectives et empreintes SHA-256 ↗</a></p>
+</details>
+</section>
+
 <section aria-labelledby="native-sequences-title" id="radar-native-activity-study">
 <h2 id="native-sequences-title">Activité des échanges · fréquence native et répétitions</h2>
 <p>Les <strong>120 archives horaires Binance Spot USDT</strong> des 20 cryptos (avril à septembre 2026) contiennent le nombre d'échanges exécutés, leur volume en USDT et la part de volume initiée par les acheteurs. Analyse rétrospective, indépendante de la stratégie Radar 20, sans achat ni exécution.</p>
@@ -152,4 +172,5 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <script src="radar-historique.js" defer></script>
 <script src="radar-activity-audit.js" defer></script>
 <script src="radar-native-activity-view.js" defer></script>
+<script src="radar-forward-decisions.js" defer></script>
 </main></body></html>
