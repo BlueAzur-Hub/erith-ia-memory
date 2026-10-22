@@ -261,8 +261,8 @@ async function evaluate(force=false){
      const healthAge=lastHealth?Date.now()-Date.parse(lastHealth.checked_at_utc):Infinity;
      const status=lastHealth&&healthAge>=0&&healthAge<=18*3600000?
        (states[lastHealth.status]||"État de collecte non reconnu.") :
-       "Contrôle de santé GitHub absent ou trop ancien : exécution à confirmer.";
-     collector.textContent="Radar automatique : "+status+
+       "Qualification Radar Spot/USDT : contrôle GitHub du collecteur historique absent ou périmé ; état du journal Seven Spot/USDC indépendant.";
+     collector.textContent="Radar automatique · ancien collecteur de qualification Spot/USDT : "+status+
        "\nDernier contrôle : "+(lastHealth?.checked_at_utc||"non publié")+
        " · dernière qualification : "+(qualification?.qualified_at_utc||"inconnue")+
        "\n"+(valid?("Journal OKX publié : "+count+" études PAPER datées · "+follow+
@@ -280,7 +280,7 @@ async function evaluate(force=false){
    }
  }catch(_){
    if(currentId===requestId){const collector=collectorTarget();
-     if(collector)collector.textContent="État du Radar : sources publiques momentanément inaccessibles.";
+     if(collector)collector.textContent="Qualification Radar Spot/USDT : rapports momentanément inaccessibles. Le journal Spot/USDC Seven Capital est indépendant.";
      if(s.qualified)renderSpot({decision:"PREUVES_INSUFFISANTES",
        reason:"Rapports publics Radar momentanément inaccessibles ; "+
        "l'étude historique ci-dessus reste disponible."});}

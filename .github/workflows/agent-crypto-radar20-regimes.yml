@@ -1,5 +1,11 @@
 name: Agent Crypto Radar20 Historical Regime Diagnostic
 on:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-activity-audit.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
+      - '.github/workflows/agent-crypto-radar20-regimes.yml'
   push:
     branches: [main]
     paths:
@@ -7,6 +13,9 @@ on:
       - 'public/agent_crypto_erith_ia/tools/analyze_radar20_regimes.py'
       - 'public/agent_crypto_erith_ia/tools/test_analyze_radar20_regimes.py'
       - 'public/agent_crypto_erith_ia/data/trader_flux/radar20_regimes/**'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-activity-audit.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
   workflow_dispatch:
 permissions:
   contents: read
@@ -26,6 +35,15 @@ jobs:
           set -euo pipefail
           python -m py_compile public/agent_crypto_erith_ia/tools/analyze_radar20_regimes.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_analyze_radar20_regimes.py -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify honest UTC hour groupings of accepted historical PAPER trades
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/laboratoire/radar-activity-audit.js
+          node --test public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs
+
       - name: Rebuild exactly from canonical 120 monthly JSONs and two published cash ledgers
         run: |
           set -euo pipefail

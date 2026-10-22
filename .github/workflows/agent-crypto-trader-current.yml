@@ -172,6 +172,13 @@ jobs:
       - name: Trader external Math Core cannot relabel BTC as CT
         run: node tests/agent_crypto_trader_external_math_guard.cjs
 
+      - name: Market fiche zero-versus-unknown and historical Radar interface syntax
+        run: |
+          node --check public/agent_crypto_erith_ia/trader/market-fiche-native.js
+          node --check public/agent_crypto_erith_ia/trader/trader-paper-decision-view.js
+          node --check public/agent_crypto_erith_ia/laboratoire/radar-activity-audit.js
+          node --test public/agent_crypto_erith_ia/trader/test-market-fiche-facts.cjs
+
       - name: BTC CT human-controlled PAPER simulations
         run: |
           node --check public/agent_crypto_erith_ia/trader/trader-paper-lab-core.js
