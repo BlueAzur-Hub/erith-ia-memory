@@ -2,7 +2,7 @@
 "use strict";
 // Compact observational archive. Reads existing snapshots; never fetches or places orders.
 const fs=require("node:fs"),path=require("node:path");
-const root=path.resolve(__dirname,".."),reader=require("../laboratoire/radar.js");
+const root=path.resolve(__dirname,".."),reader=require("../laboratoire/radar.js"),scout=require("./seven_capital_scout.cjs");
 const cryptoDir=path.join(root,"data/crypto"),outDir=path.join(cryptoDir,"radar-opportunities");
 const read=p=>JSON.parse(fs.readFileSync(p,"utf8"));
 const finite=v=>typeof v==="number"&&Number.isFinite(v)?v:null;
@@ -16,12 +16,18 @@ function dailyArchive(now=new Date()){
  if(date!==now.toISOString().slice(0,10))throw Error("Archive non datée d'aujourd'hui, publication refusée");
  const file=path.join(outDir,date+".json");
  if(fs.existsSync(file))return {file,created:false}; // one immutable prospective observation per day
+ const scoutPool=scout.preselect(scan.scoutUniverse,date);
  const files=fs.readdirSync(outDir).filter(f=>/^20\d{2}-\d{2}-\d{2}\.json$/.test(f));
  const past=files.map(f=>read(path.join(outDir,f)));
  const tracked=trackPreviousCandidates(core,extended,scan,past,date);
  const archive={
   schema:"erith.radar.opportunity-observation.v1",record_kind:"prospective_snapshot",
   tracked_candidates:tracked,
+  // Frozen on the day of observation; no reconstruction of earlier signals.
+  scout_candidates:scoutPool.slice(0,3),
+  scout_screen:{universe_eligible:scan.scoutUniverse.length,
+    passed_policy:scoutPool.length,selected:Math.min(scoutPool.length,3),
+    source:"RADAR_FULL_UNIVERSE_BEFORE_TOP12"},
   observed_date_utc:date,source_times_utc:scan.sourceTimes,
   source_files:["data/crypto/latest.json","data/crypto/extended.json"],
   universe:scan.universe,eligible:scan.eligible,filters:scan.filters,
@@ -32,12 +38,13 @@ function dailyArchive(now=new Date()){
  };
  fs.mkdirSync(outDir,{recursive:true});
  fs.writeFileSync(file,JSON.stringify(archive,null,2)+"\n");
- return {file,created:true,momentum:scan.trend.length,rebound:scan.rebound.length};
+ return {file,created:true,momentum:scan.trend.length,rebound:scan.rebound.length,
+    seven_scout_candidates:Math.min(scoutPool.length,3),seven_scout_eligible:scoutPool.length};
 }
 
 function selectedCandidates(day){
  const groups=day?.groups||{};
- return [...(groups.momentum_24h_7d||[]),...(groups.rebound_24h_only||[])].filter(x=>x&&typeof x.id==="string"&&x.id);
+ return [...(groups.momentum_24h_7d||[]),...(groups.rebound_24h_only||[]),...(day?.scout_candidates||[])].filter(x=>x&&typeof x.id==="string"&&x.id);
 }
 function dayOffset(date,days){
  const ms=Date.parse(date+"T00:00:00Z");
@@ -107,7 +114,8 @@ function buildDynamicFollowups(archives){
    const d7=follow(c.id,at,day.observed_date_utc,7);
    for(const v of [d1,d7])if(v.status==="OBSERVED_DAILY_SNAPSHOT")
     v.change_pct=Math.round((v.price_usd/price-1)*1e4)/100;
-   observations.push({id:c.id,symbol:c.symbol,group:(day.groups.momentum_24h_7d||[]).some(x=>x.id===c.id)?"momentum_24h_7d":"rebound_24h_only",
+   observations.push({id:c.id,symbol:c.symbol,group:(day.groups.momentum_24h_7d||[]).some(x=>x.id===c.id)?"momentum_24h_7d":
+     (day.groups.rebound_24h_only||[]).some(x=>x.id===c.id)?"rebound_24h_only":"seven_capital_scout",
      first_seen_date_utc:day.observed_date_utc,observed_at_utc:at,initial_price_usd:price,
      initial_volume_24h_usd:finite(c.volume24hUsd),
      initial_market_cap_usd:finite(c.marketCapUsd),initial_rank:Number.isInteger(c.rank)?c.rank:null,
