@@ -76,7 +76,7 @@ jobs:
           # must not become a fictitious approval or a broken code regression.
           assert x['candidate_months_verified']>=0
           if x['candidate_months_verified']==0:
-              assert x['candidate_owners']==[] and x['candidate_ids']==[], 'Fake source ownership'
+              assert x['candidate_owners']==[] and x['source_proofs']==[], 'Fake source ownership'
               print('NO VERIFIED NATIVE SOURCE: archived facts unchanged')
           else:
               assert len(x['candidate_owners'])>0, 'Verified sources lack provenance'
