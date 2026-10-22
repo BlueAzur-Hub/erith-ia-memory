@@ -42,7 +42,7 @@ def require(condition, reason):
 
 def instant(value):
     require(isinstance(value,str) and
-            re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d(?:\.\d+)?Z",value),
+            re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z",value),
             "Date de collecte non UTC")
     stamp = dt.datetime.fromisoformat(value.replace("Z","+00:00"))
     require(stamp.utcoffset() == dt.timedelta(0), "Horodatage non UTC")
