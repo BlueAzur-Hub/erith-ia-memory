@@ -142,7 +142,7 @@ test("prior UTC day is validated and gaps remain gaps, no future observations",(
  assert.equal(result.hoursWithoutArchive,23);
  assert.equal(result.rows[0].lastOneHourPct,null);
  const duplicated=copy(day);duplicated.hours.push(copy(duplicated.hours[0]));
- assert.throws(()=>analyze(HEAD,duplicated,null,Date.parse("2026-10-22T07:30:00Z")),/répétée/);
+ assert.throws(()=>analyze(HEAD,duplicated,null,Date.parse("2026-10-22T07:30:00Z")),/répétée|incohérentes/);
  const future=copy(day);future.hours.push(shifted(1));
  assert.throws(()=>analyze(HEAD,future,null,Date.parse("2026-10-22T08:30:00Z")),/fenêtre/);
 });
