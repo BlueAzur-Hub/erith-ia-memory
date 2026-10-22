@@ -144,11 +144,30 @@ class Top250CoverageTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Unverified ZIP"):
             cat.build(venue,monthly)
 
-    def test_repeated_id_and_unknown_source_block_catalog(self):
+    def test_out_of_universe_release_remains_unlinked_and_audited(self):
         venue,monthly=self.setup_rows()
         bad=monthly["2026-09"][1]["assets"][0]
-        bad["asset_id"]="wrong-id"
-        with self.assertRaisesRegex(ValueError,"Unknown"):
+        bad["asset_id"]="historical-coin-outside-250"
+        result=cat.build(venue,monthly)
+        self.assertEqual(result["archived_assets"],0)
+        self.assertEqual(result["native_1m_candles"],0)
+        self.assertEqual(result["excluded_historical_owners_outside_frozen_top250"],1)
+        self.assertEqual(result["excluded_historical_ids_sample"],["historical-coin-outside-250"])
+        self.assertEqual(len(result["assets"]),250)
+
+    def test_out_of_universe_release_still_needs_native_zip_proof(self):
+        venue,monthly=self.setup_rows()
+        bad=monthly["2026-09"][1]["assets"][0]
+        bad["asset_id"]="historical-coin-outside-250"
+        bad["sha256"]="b"*64
+        with self.assertRaisesRegex(ValueError,"Unverified ZIP"):
+            cat.build(venue,monthly)
+
+    def test_duplicate_id_and_unknown_source_still_block_catalog(self):
+        venue,monthly=self.setup_rows()
+        manifest=monthly["2026-09"][1]
+        manifest["assets"].append(dict(manifest["assets"][0]))
+        with self.assertRaisesRegex(ValueError,"Repeated/invalid asset"):
             cat.build(venue,monthly)
         venue,monthly=self.setup_rows()
         monthly["2026-09"][1]["assets"][0]["quote"]="USD"
