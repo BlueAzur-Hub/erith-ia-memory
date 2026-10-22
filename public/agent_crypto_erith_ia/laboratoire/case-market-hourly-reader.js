@@ -9,7 +9,7 @@ if(root&&root.document)api.mount(root.document);
 "use strict";
 const SCHEMA="erith.case-market-public-hourly.v1";
 const EXPECTED=[["ZEC","OKX_EEA","ZEC-USDC","USDC"],["AXIS","BITGET","AXISUSDT","USDT"]];
-const decimal=s=>typeof s==="string"&&/^\d+(\.\d+)?$/.test(s)&&
+const decimal=s=>typeof s==="string"&&/^(?:\d+(?:\.\d+)?|\.\d+)$/.test(s)&&
  Number.isFinite(Number(s))?Number(s):null;
 function dt(s){return typeof s==="string"&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(s)
  ?Date.parse(s):NaN;}
