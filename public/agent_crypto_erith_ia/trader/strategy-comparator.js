@@ -409,6 +409,142 @@ function mountPaperQuoteEvidence(comparator){
   });
 }
 
+
+/* Inspect already published Radar selections without launching Atlas, altering
+ * Market selection or invoking any exchange endpoint. Both source dates remain
+ * independently visible, and no historical candidate is labelled actionable. */
+function mountRadarSelectionViewer(comparator){
+  if(document.getElementById("sevenRadarSelectionViewer"))return;
+  const body=comparator.querySelector(".sc-body");if(!body)return;
+  const pane=document.createElement("details");pane.id="sevenRadarSelectionViewer";
+  pane.style.cssText="margin:10px 0 16px;padding:10px;border:1px solid #365e72;border-radius:10px;background:#0b2333";
+  pane.innerHTML=[
+    '<summary style="font-weight:700;cursor:pointer">RADAR · Cryptos déjà retenues · sélection et provenance</summary>',
+    '<p class="sc-note">Deux journaux publics distincts : Seven Capital Spot/USDC et ancien Radar dynamique Spot/USDT. Ici, « retenue » signifie étudiée, pas achetée ni recommandée.</p>',
+    '<div class="sc-controls"><label>Afficher<select data-radar-selection-filter>',
+    '<option value="all">Les deux listes</option><option value="capital">Seven Capital · récent</option>',
+    '<option value="legacy">Radar dynamique · historique</option></select></label>',
+    '<button type="button" data-radar-selection-refresh>Actualiser depuis GitHub</button></div>',
+    '<p data-radar-selection-status role="status" aria-live="polite">Ouvrir pour lire les sélections datées.</p>',
+    '<div class="sc-scroll"><table><thead><tr><th>Journal</th><th>Crypto</th><th>État de l’étude</th><th>Source et date</th></tr></thead>',
+    '<tbody data-radar-selection-rows><tr><td colspan="4">Aucune archive chargée.</td></tr></tbody></table></div>',
+    '<p class="sc-note">Le bouton relit les fichiers publics déjà publiés. Il ne lance pas une collecte, ne recalcule aucun signal et ne transmet aucun ordre. Une archive ancienne reste historique.</p>'
+  ].join("");
+  const quote=document.getElementById("sevenCapitalPaperEvidence");
+  if(quote?.parentElement===body)quote.insertAdjacentElement("afterend",pane);
+  else body.insertBefore(pane,body.firstChild);
+  const status=pane.querySelector("[data-radar-selection-status]");
+  const rows=pane.querySelector("[data-radar-selection-rows]");
+  const filter=pane.querySelector("[data-radar-selection-filter]");
+  let current=[],busy=false;
+  function render(){
+    rows.replaceChildren();
+    const chosen=filter.value;
+    let count=0;
+    for(const item of current){
+      if(chosen!=="all"&&item.group!==chosen)continue;
+      const tr=document.createElement("tr");
+      for(const value of [item.journal,item.symbol,item.status,item.provenance]){
+        const td=document.createElement("td");td.textContent=value;tr.appendChild(td);
+      }
+      rows.appendChild(tr);count++;
+    }
+    if(!count){
+      const tr=document.createElement("tr"),td=document.createElement("td");
+      td.colSpan=4;td.textContent="Aucune sélection publique admissible pour ce filtre.";
+      tr.appendChild(td);rows.appendChild(tr);
+    }
+  }
+  async function jsonFile(url,signal){
+    const response=await fetch(new URL(url,document.baseURI),{
+      cache:"no-store",credentials:"omit",redirect:"error",signal});
+    if(!response.ok)throw Error("HTTP "+response.status);
+    const data=await response.text();
+    if(data.length>350000)throw Error("Archive volumineuse");
+    return JSON.parse(data);
+  }
+  async function refresh(){
+    if(busy||!pane.open)return;busy=true;
+    const button=pane.querySelector("[data-radar-selection-refresh]");
+    if(button)button.disabled=true;
+    const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),10000);
+    try{
+      status.textContent="Lecture des deux archives indépendantes…";
+      const settled=await Promise.allSettled([
+        jsonFile(PAPER_QUOTE_REPORT,controller.signal),
+        jsonFile("../data/crypto/radar-opportunities/qualification-latest.json",controller.signal)
+      ]);
+      const found=[];let errors=0;const dates=[];
+      const a=settled[0];
+      if(a.status==="fulfilled"){
+        const d=a.value;
+        if(d?.schema!=="erith.seven.capital.spot-paper-quote-evaluation.v1"||
+          d.orders_enabled!==false||d.real_orders!==0||d.paper_fills!==0||
+          d.quote!=="USDC"||!Array.isArray(d.cohorts)||d.cohorts.length>100)
+          errors++;
+        else{
+          const cohort=d.cohorts.at(-1);
+          if(cohort&&Array.isArray(cohort.candidates)&&cohort.candidates.length<=3){
+            const date=cohort.cohort_id;
+            dates.push("Seven Capital "+date);
+            const statuses={
+              LATEST_BID_EVALUABLE:"Dernier bid PAPER évalué (sans ordre)",
+              AWAITING_FUTURE_BOOK:"En attente de nouvelle cotation",
+              ENTRY_REJECTED:"Entrée refusée au contrôle",
+              ENTRY_INVALID:"Entrée non qualifiée",
+              EXIT_NOT_EVALUABLE:"Sortie non évaluable"};
+            for(const item of cohort.candidates){
+              if(!/^[A-Z0-9]{2,15}$/.test(item.symbol||"")||
+                !Object.hasOwn(statuses,item.status)||
+                item.orders_enabled!==false||item.paper_fills!==0){
+                errors++;continue;
+              }
+              found.push({group:"capital",journal:"Seven Capital · Spot/USDC",
+                symbol:item.symbol,status:statuses[item.status],
+                provenance:"Cohorte "+date+" · "+cohort.observations+" relevé(s)"});
+            }
+          }else errors++;
+        }
+      }else errors++;
+      const b=settled[1];
+      if(b.status==="fulfilled"){
+        const d=b.value;
+        if(d?.schema!=="erith.radar.spot-qualification.v1"||
+          d.real_orders_enabled!==false||d.actual_execution_permissions!==false||
+          d.coin_id_matches_exchange_symbol_verified!==false||
+          !Array.isArray(d.priority_research_ids)||
+          !Array.isArray(d.candidates)||d.priority_research_ids.length>20)
+          errors++;
+        else{
+          const date=d.source_observation_date_utc||"date inconnue";
+          dates.push("Radar dynamique "+date);
+          for(const id of d.priority_research_ids){
+            const item=d.candidates.find(c=>c.id===id);
+            if(!item||!/^[A-Z0-9]{1,15}$/.test(item.symbol||"")||
+              !["RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW","NO_OBSERVED_SPOT_PAIR"].includes(item.status)){
+              errors++;continue;
+            }
+            found.push({group:"legacy",journal:"Radar historique · Spot/USDT",
+              symbol:item.symbol,status:item.status==="NO_OBSERVED_SPOT_PAIR"?
+               "Paire Spot non observée":"Identité et conditions Spot à vérifier",
+              provenance:"Qualification du "+date+" · données anciennes"});
+          }
+        }
+      }else errors++;
+      current=found;render();
+      status.textContent=found.length+" candidats consultables · "+dates.join(" · ")+
+        (errors?" · "+errors+" source(s) ou ligne(s) non conformes":"")+
+        " · zéro ordre. Les dates indiquent les données, pas l’heure du clic.";
+    }catch(_){
+      current=[];render();
+      status.textContent="Archives indisponibles · aucune sélection ne peut être certifiée.";
+    }finally{clearTimeout(timeout);if(button)button.disabled=false;busy=false;}
+  }
+  pane.addEventListener("toggle",()=>{if(pane.open)void refresh();});
+  filter.addEventListener("change",render);
+  pane.querySelector("[data-radar-selection-refresh]")?.addEventListener("click",()=>{void refresh();});
+}
+
 function mountCapitalPulse(comparator){
   if(document.getElementById("sevenCapitalPulse"))return;
   const body=comparator.querySelector(".sc-body");
@@ -535,6 +671,7 @@ function mount(){
   host.insertAdjacentElement("afterend",node);
   mountCapitalPulse(node);
   mountPaperQuoteEvidence(node);
+  mountRadarSelectionViewer(node);
   node.addEventListener("toggle",()=>{
     if(!node.open){
       ++benchmarkToken;
