@@ -47,6 +47,21 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <div class="links"><a href="../trader/trading-desk.html">← Retour Trader</a><a href="crypto-knowledge.html">Dossiers des candidats dynamiques</a><a href="PROTOCOLE_RADAR_CIBLAGE.md">Méthode Radar</a><a href="zcash-case-study.html">ZEC · Cas d’école Spot PAPER</a><a href="../trader/verified-reader.html">Coffre · archives vérifiées</a></div></div>
 </header>
 <div class="notice"><strong>Deux ensembles distincts.</strong> Ici : 20 actifs <em>fixes</em>, archives Binance Spot <strong>cotées USDT</strong> de juillet à septembre 2026. Les candidats Q, ICNT, FLUID, SAND du Radar dynamique sont une autre liste, qui exige des preuves historiques séparées. Cette page n'est ni un outil d'exécution ni un générateur de signaux.</div>
+<section aria-labelledby="case-market-heading" id="case-market-public-study">
+<h2 id="case-market-heading">Preuves réelles · ZEC Spot OKX et AXIS Spot Bitget</h2>
+<p>Le collecteur <strong>public existant, une fois par heure</strong>, archive désormais deux marchés distincts : <strong>ZEC-USDC sur OKX EEE</strong> et <strong>AXISUSDT sur Bitget</strong>. Les observations contiennent les carnets à cinq niveaux, les spreads, le ticker et jusqu'à quatre bougies 15 minutes closes. Aucune donnée privée ni ordre réel.</p>
+<details id="case-market-history">
+<summary>Consulter la dernière observation publique archivée · heure UTC et liquidité</summary>
+<p class="muted">Une archive n'est <strong>pas</strong> le cours actuel : elle indique l'heure UTC de la capture et marque les absences de source explicitement. Les 5 niveaux de carnet ne certifient ni le remplissage ni les quantités accessibles à un compte. Les bougies 15 min sont uniquement celles réellement revenues closes au dernier contrôle, sans interpolation ni couverture continue garantie.</p>
+<p><button type="button" data-case-market-refresh>Relire le dernier relevé du Coffre</button></p>
+<p role="status" aria-live="polite" class="status" data-case-market-status>Ouvrir ce volet pour lire une archive réelle.</p>
+<div class="table-wrap"><table><thead><tr><th>Marché Spot</th><th>État</th><th>Dernier</th><th>Meilleur bid / ask</th><th>Spread</th><th>Profondeur 5 niveaux bid / ask</th><th>Clôture 15 min</th><th>Début bougie UTC</th></tr></thead>
+<tbody data-case-market-rows><tr><td colspan="8">Aucun relevé chargé.</td></tr></tbody></table></div>
+<p class="chart-caption">Unités natives uniquement, sans conversion USDC↔USDT↔USD. Lorsqu'aucune cotation valide ne peut être obtenue, « Indisponible » remplace le prix. Ce volet n'émet aucun signal d'achat ni de vente.</p>
+<p><a href="../data/crypto/case-market-hourly/latest.json" target="_blank" rel="noopener noreferrer">État horaire ZEC + AXIS et date de la source ↗</a> · <a href="zcash-case-study.html">Cas d'école ZEC PAPER</a></p>
+</details>
+</section>
+
 <section aria-labelledby="radar-forward-attribution-title" id="radar-forward-attribution-study">
 <h2 id="radar-forward-attribution-title">Radar 20 · Journal des signaux acceptés et refusés</h2>
 <p>Premier lot prospectif archivé du <strong>14 au 20 octobre 2026</strong> · vingt marchés Binance Spot USDT. Rejeu <strong>des règles gelées A/B</strong> : choix triés par pression acheteuse et volume, budget fictif de 400 USDT, quatre positions maximum, ticket de 100 USDT, détention de 48 h et coût aller-retour hypothétique de 0,8 %. Aucun paramètre n'est réoptimisé.</p>
@@ -173,4 +188,5 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <script src="radar-activity-audit.js" defer></script>
 <script src="radar-native-activity-view.js" defer></script>
 <script src="radar-forward-decisions.js" defer></script>
+<script src="case-market-hourly-reader.js" defer></script>
 </main></body></html>
