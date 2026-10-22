@@ -62,6 +62,13 @@ assert(view.includes('mountCapitalPulse(node)'));
 assert(view.includes('comparator.querySelector(".sc-body")'));
 assert(view.includes('body.insertBefore(pulse,body.firstChild)'));
 assert(view.includes('data-capital-compact'));
+assert(view.includes('data-spot-compact'));
+assert(view.includes('SEVEN AUTO · Radar quotidien'));
+assert(view.includes('SEVEN SPOT/USDC · cohorte '));
+assert(view.includes('data-paper-horizon-rows'));
+assert(view.includes('horizons.map(x=>x.hours).join(",")'));
+assert(view.includes('h.no_hindsight_selection!==true'));
+
 assert(view.includes('mountPaperQuoteEvidence(node)'));
 assert(view.includes('sevenCapitalPaperEvidence'));
 assert(view.includes('PAPER_QUOTE_REPORT'));
