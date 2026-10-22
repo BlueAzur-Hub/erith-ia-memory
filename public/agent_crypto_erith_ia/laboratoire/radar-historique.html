@@ -76,6 +76,14 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <p><button type="button" data-target-refresh>Relire les preuves archivées</button></p>
 <p role="status" aria-live="polite" class="status" data-target-status>Ouvrir ce volet pour lire le dernier relevé disponible.</p>
 <div class="table-wrap"><table aria-label="Marchés Spot Radar dont le contrat a été vérifié"><thead><tr><th>Pair Bitget Spot</th><th>État</th><th>Dernier prix</th><th>Bid / Ask</th><th>Spread</th><th>Top 5 bid / ask</th></tr></thead><tbody data-target-rows><tr><td colspan="6">Archives cibles non chargées.</td></tr></tbody></table></div>
+<h3>Contrôle de couverture · heures réellement observées</h3>
+<p class="muted">Les informations suivantes proviennent d'un audit public produit par le même workflow horaire. Elles portent uniquement sur les relevés publiés (maximum 48 heures). Une heure manquante n'est jamais estimée, et deux points isolés ne certifient aucun retournement. La file des dix priorités est issue d'une <strong>qualification datée</strong>, pas d'une sélection live.</p>
+<p><button type="button" data-target-coverage-refresh>Vérifier couverture et file de recherche</button></p>
+<p role="status" aria-live="polite" class="status" data-target-coverage-status>Aucun bilan n'est encore chargé ; il faut une archive réelle et un audit correspondant.</p>
+<div class="table-wrap"><table aria-label="Couverture horaire réelle des trois marchés Bitget"><thead><tr><th>Cible</th><th>Heures observées</th><th>Indisponibles</th><th>Non archivées</th><th>Dernière heure</th><th>Variation 1 h consécutive</th><th>Dernier spread</th></tr></thead><tbody data-target-coverage-rows><tr><td colspan="7">Lecture sur demande.</td></tr></tbody></table></div>
+<h3>File prioritaire · identité à qualifier avant surveillance détaillée</h3>
+<div class="table-wrap"><table aria-label="Dix dossiers prioritaires du Radar dynamique, source datée"><thead><tr><th>Rang</th><th>Crypto</th><th>Exchange étudié</th><th>Paire étudiée</th><th>Preuve d'identité</th><th>Suite autorisée</th></tr></thead><tbody data-target-priority-rows><tr><td colspan="6">Pas de priorité supposée tant que le catalogue n'a pas été lu.</td></tr></tbody></table></div>
+<p><a href="../data/crypto/radar-verified-target-hourly/coverage-latest.json" target="_blank" rel="noopener noreferrer">Lire le bilan d'audit et ses preuves datées ↗</a>. Aucun rang ou coût hypothétique ne donne une autorisation d'exécution.</p>
 <p class="chart-caption">Uniquement USDT, pas de conversion USD / USDC. Un spread et une profondeur sont des mesures, pas une preuve de remplissage. Les autres candidats (AUCTION, REZ, BAT, THETA, ALT, DOS, A, IOST, COMP, etc.) restent en qualification tant que leur identité exacte ou les données obligatoires ne sont pas disponibles.</p>
 <p><a href="../data/crypto/radar-verified-target-hourly/latest.json" target="_blank" rel="noopener noreferrer">État et datation du journal ciblé ↗</a> · <a href="../data/crypto/radar-opportunities/spot-identity-latest.json">Identités CoinGecko / Bitget archivées</a></p>
 </details>
@@ -209,4 +217,5 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <script src="radar-forward-decisions.js" defer></script>
 <script src="case-market-hourly-reader.js" defer></script>
 <script src="radar-verified-targets.js" defer></script>
+<script src="radar-target-coverage.js" defer></script>
 </main></body></html>

@@ -16,6 +16,8 @@ on:
       - 'public/agent_crypto_erith_ia/laboratoire/case-market-hourly-reader.js'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-verified-targets.js'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-verified-targets.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-target-coverage.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-radar-target-coverage.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/test-case-market-hourly-reader.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
       - '.github/workflows/agent-crypto-radar20-regimes.yml'
@@ -41,6 +43,8 @@ on:
       - 'public/agent_crypto_erith_ia/laboratoire/case-market-hourly-reader.js'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-verified-targets.js'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-verified-targets.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-target-coverage.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-radar-target-coverage.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/test-case-market-hourly-reader.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
   workflow_dispatch:
@@ -79,6 +83,8 @@ jobs:
           node --test public/agent_crypto_erith_ia/laboratoire/test-case-market-hourly-reader.cjs
           node --check public/agent_crypto_erith_ia/laboratoire/radar-verified-targets.js
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar-verified-targets.cjs
+          node --check public/agent_crypto_erith_ia/laboratoire/radar-target-coverage.js
+          node --test public/agent_crypto_erith_ia/laboratoire/test-radar-target-coverage.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar-forward-decisions.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs
 
