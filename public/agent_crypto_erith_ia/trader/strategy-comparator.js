@@ -139,6 +139,7 @@ if(root.AgentCryptoStrategyComparator)return;
 const ID="traderStrategyComparator";
 const CAPITAL_REPORT="../data/trader_flux/seven_capital_scout/status.json";
 const SPOT_GATE_REPORT="../data/trader_flux/seven_capital_scout/spot_gate.json";
+const PAPER_QUOTE_REPORT="../data/trader_flux/seven_capital_spot/paper_evaluation.json";
 const $=selector=>document.getElementById(ID)?.querySelector(selector);
 const nfmt=(v,d=2)=>numeric(v)?v.toLocaleString("fr-FR",{
   minimumFractionDigits:d,maximumFractionDigits:d}):"non calculé";
@@ -290,6 +291,84 @@ async function load(force=false){
 }
 // The automatic journal belongs INSIDE the existing PAPER comparator. No
 // orphan sibling after #traderPaperLab and no second market/network owner.
+
+/* One read-only view inside the existing comparator; the archive is computed by
+ * GitHub from SHA-verified public candles/books, never re-priced in Firefox. */
+function mountPaperQuoteEvidence(comparator){
+  if(document.getElementById("sevenCapitalPaperEvidence"))return;
+  const body=comparator.querySelector(".sc-body");if(!body)return;
+  const pane=document.createElement("details");pane.id="sevenCapitalPaperEvidence";
+  pane.style.cssText="margin:10px 0 16px;padding:10px;border:1px solid #44677a;border-radius:10px;background:#102638";
+  pane.innerHTML=[
+    '<summary style="cursor:pointer;font-weight:700">SEVEN CAPITAL · Suivi PAPER 10 USDC · cotations datées</summary>',
+    '<p class="sc-note">Trois études alternatives indépendantes, jamais 30 USDC engagés. 0 ordre, 0 position. Frais 0,1 % hypothétiques par côté ; réserve 0,94 USDC à part.</p>',
+    '<p data-paper-quote-status role="status" aria-live="polite">Ouvrir pour lire le journal public horodaté.</p>',
+    '<div class="sc-scroll"><table><thead><tr><th>Actif</th><th>Contrôle</th><th>Dernier bid</th><th>Résultat conditionnel 10 USDC</th></tr></thead>',
+    '<tbody data-paper-quote-rows></tbody></table></div>',
+    '<p class="sc-note">Un bid futur est une cotation, non un fill. Disponibilité réelle et frais du compte non certifiés. Aucune transaction lancée.</p>',
+    '<p><a href="../data/trader_flux/seven_capital_spot/index.json" target="_blank" rel="noopener noreferrer">Journal et empreintes SHA-256 ↗</a></p>'
+  ].join("");
+  const first=body.firstChild;
+  body.insertBefore(pane,first?first.nextSibling:null);
+  const status=pane.querySelector("[data-paper-quote-status]");
+  const rows=pane.querySelector("[data-paper-quote-rows]");
+  let busy=false;
+  pane.addEventListener("toggle",async()=>{
+    if(!pane.open||busy)return;busy=true;
+    const ctl=new AbortController(),stop=setTimeout(()=>ctl.abort(),10000);
+    try{
+      status.textContent="Lecture du rapport GitHub archivé…";
+      const response=await fetch(new URL(PAPER_QUOTE_REPORT,document.baseURI),{
+        cache:"no-store",credentials:"omit",redirect:"error",signal:ctl.signal
+      });
+      if(!response.ok)throw Error("aucun rapport publié");
+      const source=await response.text();
+      if(source.length>350000)throw Error("rapport trop volumineux");
+      const d=JSON.parse(source);
+      if(d.schema!=="erith.seven.capital.spot-paper-quote-evaluation.v1"||
+         d.mode!=="PROSPECTIVE_PUBLIC_QUOTE_ONLY"||d.quote!=="USDC"||
+         d.budget_per_alternative_usdc!==10||
+         d.reserve_separate_usdc!==0.94||
+         d.orders_enabled!==false||d.real_orders!==0||
+         d.paper_fills!==0||d.positions_opened!==0||d.positions_closed!==0||
+         d.real_profit_usdc!==null||d.paper_realized_profit_usdc!==null||
+         !Array.isArray(d.cohorts)||d.cohorts.length>100)
+        throw Error("contrat PAPER non conforme");
+      const cohort=d.cohorts.at(-1);
+      if(!cohort||!Array.isArray(cohort.candidates)||
+         cohort.candidates.length>3)throw Error("cohorte non disponible");
+      rows.replaceChildren();
+      const labels={AWAITING_FUTURE_BOOK:"En attente d’un bid futur",
+        ENTRY_REJECTED:"Entrée refusée",
+        ENTRY_INVALID:"Entrée non évaluable",
+        EXIT_NOT_EVALUABLE:"Sortie non évaluable",
+        LATEST_BID_EVALUABLE:"Dernier bid PAPER évalué"};
+      for(const x of cohort.candidates){
+        if(!/^[A-Z0-9]{2,15}$/.test(x.symbol||"")||
+          x.pair!==x.symbol+"-USDC"||!Object.hasOwn(labels,x.status)||
+          x.orders_enabled!==false||x.paper_fills!==0||
+          x.position_closed!==false||x.real_profit_usdc!==null)
+          throw Error("Ligne de cotation incompatible");
+        const tr=document.createElement("tr");
+        const cells=[
+          x.symbol+" / USDC",
+          labels[x.status],
+          x.latest_bid_usdc?x.latest_bid_usdc+" USDC":"—",
+          x.status==="LATEST_BID_EVALUABLE"&&
+          /^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(x.hypothetical_pnl_usdc||"")?
+            x.hypothetical_pnl_usdc+" USDC hypothétiques":"Non établi"];
+        for(const value of cells){const td=document.createElement("td");td.textContent=value;tr.appendChild(td);}
+        rows.appendChild(tr);
+      }
+      status.textContent="Cohorte "+cohort.cohort_id+" · "+
+        cohort.observations+" relevé(s) · 0 ordre · aucune position ouverte.";
+    }catch(_){
+      rows.replaceChildren();
+      status.textContent="Journal PAPER public indisponible ou non conforme · résultat non établi.";
+    }finally{clearTimeout(stop);busy=false;}
+  });
+}
+
 function mountCapitalPulse(comparator){
   if(document.getElementById("sevenCapitalPulse"))return;
   const body=comparator.querySelector(".sc-body");
@@ -415,6 +494,7 @@ function mount(){
   ].join("");
   host.insertAdjacentElement("afterend",node);
   mountCapitalPulse(node);
+  mountPaperQuoteEvidence(node);
   node.addEventListener("toggle",()=>{
     if(!node.open){
       ++benchmarkToken;
