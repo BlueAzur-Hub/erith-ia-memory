@@ -20,6 +20,7 @@ import json
 import math
 from pathlib import Path
 import re
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -94,8 +95,16 @@ def confirmed_additions(venue_path=VENUE_AUDIT, ledger_path=IDENTITY_LEDGER):
         if evidence["status"]!="approved_coingecko_binance_spot":
             continue
         aid=evidence["id"]
-        need(aid in indexed and aid not in seen,"Unknown/repeated approved CoinGecko ID")
+        need(aid not in seen,"Repeated approved CoinGecko ID")
         seen.add(aid)
+        if aid not in indexed:
+            # An approved candidate from an older ranked universe cannot be
+            # joined to a different current coin by ticker or market rank.
+            # Exclude just this candidate, with a visible diagnostic; other
+            # exact-ID proofs remain eligible for their immutable source ZIPs.
+            print("SKIP unanchored CoinGecko ID in dated venue snapshot: "+aid,
+                  file=sys.stderr)
+            continue
         original=indexed[aid]
         pair=evidence["pair"]
         symbol=evidence["symbol"]
