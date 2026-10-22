@@ -32,6 +32,24 @@ class VerifiedHistoricalIdentity(unittest.TestCase):
         self.assertEqual(gram["symbol"], "GRAM")
         self.assertEqual(gram["pair"], "GRAMUSDT")
 
+    def test_stale_ranked_universe_approval_is_excluded_not_reassigned(self):
+        venue=json.loads(VENUE.read_text())
+        out=self.study()
+        ids={x["id"] for x in out}
+        self.assertNotIn("superfarm", ids)
+        self.assertNotIn("orca", ids)
+        self.assertNotIn("golem", ids)
+        self.assertTrue(ids.issubset({x["id"] for x in venue["assets"]}))
+
+    def test_repeated_approved_id_is_blocked(self):
+        def tamper(venue,ledger):
+            evidence=next(x for x in ledger["results"]
+                          if x["id"]=="the-open-network")
+            ledger["results"].append(copy.deepcopy(evidence))
+            ledger["checked_count"]+=1
+        with self.assertRaisesRegex(ValueError,"Repeated approved CoinGecko ID"):
+            self.study(tamper)
+
     def test_foreign_symbol_cannot_claim_gram_approved_source(self):
         def tamper(venue,ledger):
             row=next(x for x in ledger["results"] if x["id"]=="the-open-network")
