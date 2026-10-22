@@ -1,6 +1,12 @@
 name: Atlas Public Crypto Extended
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/atlas-public-crypto-extended.yml'
+      - 'public/agent_crypto_erith_ia/tools/collect_public_crypto_extended.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_public_crypto_extended_rank_complete.py'
+      - 'public/agent_crypto_erith_ia/tools/test_extended_rank_integrity.py'
   workflow_dispatch:
   schedule:
     - cron: "22,52 * * * *"
@@ -20,7 +26,20 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  test_rank_integrity:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check requests==2.32.5
+      - name: Reject incomplete or repeated market-cap ranks without filling gaps
+        run: python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_extended_rank_integrity.py' -v
+
   collect:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 12
 
