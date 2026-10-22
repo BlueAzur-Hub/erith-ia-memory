@@ -42,7 +42,7 @@ assert.throws(()=>audit(copied),/Bougie horaire/);
 const swapped=structuredClone(docs);
 swapped[0].markets[0].pair=swapped[0].markets[1].pair;
 assert.throws(()=>audit(swapped),/Identité/);
-const old=structuredClone(docs);old[6].markets[0].rows[20][1]*=1.1;
+const old=structuredClone(docs);old[6].markets[0].rows[20][7]=55.1234;
 const changed=audit(old);
 const firstA=r.events[0],firstB=changed.events[0];
 assert.equal(firstA.id,firstB.id);
