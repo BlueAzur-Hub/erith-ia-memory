@@ -134,7 +134,8 @@ function analyze(latest,current,previous=null,now=Date.now()){
   const last=observed.at(-1);
   const first=observed[0];
   const immediatelyPrevious=observed.length>=2?observed.at(-2):null;
-  const consecutive=!!immediatelyPrevious&&last.when-immediatelyPrevious.when===3600000;
+  const consecutive=!!immediatelyPrevious&&last.hour===newest.hour&&
+   last.when-immediatelyPrevious.when===3600000;
   const firstToLastPct=observed.length>=2?
    (last.market.last/first.market.last-1)*100:null;
   const lastOneHourPct=consecutive?
@@ -166,7 +167,8 @@ function renderEvolution(doc,evolution){
  table.replaceChildren();
  for(const row of evolution.rows){
   const tr=doc.createElement("tr");
-  const status=row.observations<2?"Une seule mesure ou aucune : tendance inconnue":
+  const status=row.notCurrentWithLatestArchive?"Dernière archive de ce marché indisponible ; variation 1 h suspendue":
+  row.observations<2?"Une seule mesure ou aucune : tendance inconnue":
    row.lastOneHourPct===null?"Dernière variation horaire non mesurée (trou ou donnée absente)":
    "Variation entre deux relevés horaires consécutifs, pas un retournement certifié";
   const values=[row.pair,row.observations+"/"+evolution.archiveHours,
