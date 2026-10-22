@@ -40,6 +40,11 @@ class ScheduleTests(unittest.TestCase):
         self.assertIn("if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'",code)
         self.assertIn("'radar-spot-target-qualification'",code)
         self.assertIn("python -m unittest discover",code)
+        self.assertIn('workflows: ["Agent Crypto Historical OHLCV R10 Synchronized Hourly Pilot"]',code)
+        self.assertIn("github.event.workflow_run.conclusion == 'success'",code)
+        self.assertIn("github.event.workflow_run.head_branch == 'main'",code)
+        self.assertIn("actual UTC: $(date -u +%Y-%m-%dT%H:%M:%SZ)",code)
+        self.assertIn("skipped hours are never backfilled",code)
         self.assertNotIn("trade/order",code)
 
 if __name__=="__main__":
