@@ -62,7 +62,7 @@ async function study(scan,query=gate.publicRead,now=Date.now()){
 function markdown(result){
  const lines=['### Seven Capital · immédiat, lecture seule',
   '',`- Observation UTC : ${result.date}`,
-  `- Univers qualifié Radar : ${result.eligible}`,
+  `- Univers qualifié Radar : ${result.eligible===null?'non évaluable':result.eligible}`,
   `- Candidats passant les seuils Seven : ${result.policy_matches===null?'non évaluable':result.policy_matches}`,
   `- Présélections : ${result.selected.length} · ordres 0 · fills 0 · résultat net NON ÉTABLI`,
   `- Statut : ${result.status}`,''];
@@ -78,13 +78,34 @@ function markdown(result){
 function loadRepositorySnapshots(dir=root){
  return ['latest.json','extended.json'].map(n=>JSON.parse(fs.readFileSync(path.join(dir,n),'utf8')));
 }
+// An invalid public market snapshot is a documented BLOCK, not a code-crash,
+// approved candidate or a reason to reuse an earlier price as today's quote.
+const knownMarketIntegrityFailures=new Set([
+ 'Univers public Top 1000 incomplet, veille suspendue',
+ 'Snapshots Top 250 et Extended non contemporains, veille suspendue',
+ 'Identités de rang Top 1000 incohérentes',
+ 'Rangs Top 1000 discontinus'
+]);
+async function studySourceSnapshots(core,extended,query=gate.publicRead,now=Date.now()){
+ let scan;
+ try{scan=radar.selectOpportunities(core,extended);}
+ catch(err){
+  if(!knownMarketIntegrityFailures.has(err?.message))throw err;
+  return {status:'BLOCKED_INVALID_PUBLIC_UNIVERSE',reason:err.message,
+   date:'non vérifiée',eligible:null,policy_matches:null,selected:[],
+   source_at_utc:{core:core?.generated_at||null,extended:extended?.generated_at||null},
+   market_results:[],real_orders:0,paper_fills:0,net_profit_usdc:null,
+   operations_authorized:false,market_data_as_of_check_only:false};
+ }
+ return study(scan,query,now);
+}
 async function main(){
  const [core,extended]=loadRepositorySnapshots();
- const report=await study(radar.selectOpportunities(core,extended));
+ const report=await studySourceSnapshots(core,extended);
  const out=markdown(report);
  process.stdout.write(out+'\n');
  if(process.env.GITHUB_STEP_SUMMARY)
   fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,out+'\n');
 }
 if(require.main===module)main().catch(err=>{console.error('PUBLIC_PREFLIGHT_FAILED:',err.message);process.exitCode=1});
-module.exports={shortlist,study,markdown,loadRepositorySnapshots};
+module.exports={shortlist,study,studySourceSnapshots,markdown,loadRepositorySnapshots};
