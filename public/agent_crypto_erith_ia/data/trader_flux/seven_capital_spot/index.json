@@ -1,0 +1,58 @@
+{
+  "schema": "erith.seven.capital.spot-public-journal.v1",
+  "mode": "PUBLIC_SPOT_RESEARCH_ONLY",
+  "quote": "USDC",
+  "budget_usdc": 10,
+  "reserve_usdc": 0.94,
+  "orders_enabled": false,
+  "real_orders": 0,
+  "paper_fills": 0,
+  "profit_real_usdc": null,
+  "profit_paper_usdc": null,
+  "cohorts": [
+    {
+      "id": "2026-10-22",
+      "date_utc": "2026-10-22",
+      "first_seen_at_utc": "2026-10-22T01:07:49.671Z",
+      "source_times_utc": [
+        "2026-10-22T00:39:45.009Z",
+        "2026-10-22T00:40:43.689Z"
+      ],
+      "universe_eligible": 434,
+      "policy_matches": 42,
+      "selected": [
+        {
+          "coin_id": "aethir",
+          "symbol": "ATH",
+          "source_at_utc": "2026-10-22T00:39:45.009Z",
+          "rank": 249,
+          "price_usd": 0.006267020006492299
+        },
+        {
+          "coin_id": "grass",
+          "symbol": "GRASS",
+          "source_at_utc": "2026-10-22T00:39:45.009Z",
+          "rank": 119,
+          "price_usd": 0.6929116055534215
+        },
+        {
+          "coin_id": "collector-crypt",
+          "symbol": "CARDS",
+          "source_at_utc": "2026-10-22T00:39:45.009Z",
+          "rank": 136,
+          "price_usd": 0.37699436127415187
+        }
+      ],
+      "selection_frozen": true
+    }
+  ],
+  "records": [
+    {
+      "cohort_id": "2026-10-22",
+      "file": "observations/2026-10-22T010749671Z--2026-10-22.json",
+      "sha256": "a1326a1c92a4ce43a817eebb7c50855b4e692908f1bc4bf8a01fba68e38b5a70",
+      "recorded_at_utc": "2026-10-22T01:07:49.671Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
+    }
+  ]
+}
