@@ -275,24 +275,6 @@ function mountNativeDnaCase(win,doc){
   foot.textContent="Dossier en lecture seule : Bitget DNA/USDT Spot ≠ OKX DNAUSD UM X-Perp Futures. Aucune transaction, aucun prix de sortie garanti.";
   dnaBody.append(grid,links,foot);
   host.appendChild(dnaBody);
-  // Research links live in the ONE existing Cas d'école. No floating control,
-  // second report, Market owner or implicit trading permission.
-  if(!originalBody.querySelector('[data-seven-case-library="1"]')){
-    const library=doc.createElement("nav");
-    library.className="okb-case-sources";
-    library.dataset.sevenCaseLibrary="1";
-    library.setAttribute("aria-label","Cas d'école complémentaires · documents PAPER");
-    for(const [label,href] of [
-      ["ZEC · Retournement Spot PAPER","../trader/zcash-case-study.html"],
-      ["AXIS · Nouveau listing","../trader/axis-robotics-case-study.html"]
-    ]){
-      const link=doc.createElement("a");
-      link.textContent=label;link.href=new URL(href,doc.baseURI).href;
-      link.target="_blank";link.rel="noopener noreferrer";
-      library.appendChild(link);
-    }
-    originalBody.appendChild(library);
-  }
   let loadedAt=0,busy=false;
   const fmt=(value,precision=5)=>Number.isFinite(value)?
     Number(value).toLocaleString("fr-FR",{minimumFractionDigits:0,maximumFractionDigits:precision}):"indisponible";
