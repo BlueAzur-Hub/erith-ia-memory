@@ -107,7 +107,7 @@ function analyze(latest,current,previous=null,now=Date.now()){
    if(record?.hour_utc?.slice(0,10)!==day||known.has(record.hour_utc))
     throw Error("Heure UTC répétée ou mauvais jour");
    const hour=record.hour_utc;
-   if(typeof hour!=="string"||!/^\\d{4}-\\d\\d-\\d\\dT\\d\\dZ$/.test(hour))
+   if(typeof hour!=="string"||!/^\d{4}-\d\d-\d\dT\d\dZ$/.test(hour))
     throw Error("Heure UTC invalide");
    const when=Date.parse(hour.slice(0,10)+"T"+hour.slice(11,13)+":00:00Z");
    if(!Number.isFinite(when)||when>lastHourMs||when<lastHourMs-47*3600000)
