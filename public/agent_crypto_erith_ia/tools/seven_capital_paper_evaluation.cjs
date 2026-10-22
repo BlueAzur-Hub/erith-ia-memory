@@ -121,6 +121,11 @@ function fixedHorizons(cohort,records,read){
   const within=next&&stamp(next.recorded_at_utc)<=windowEnd;
   const doc=within?read(next):null;
   const candidates=cohort.selected.map(asset=>{
+   const initial=assess(asset,first,firstRecord.sha256,null,null);
+   if(initial.status==='ENTRY_REJECTED'||initial.status==='ENTRY_INVALID')
+    return {...initial,horizon_hours:hours,
+     horizon_target_at_utc:new Date(target).toISOString(),
+     grace_hours:HORIZON_GRACE_HOURS};
    if(!within){
     const status=next?'HORIZON_MISSED_WINDOW':'AWAITING_HORIZON';
     return none(asset,status,next?'Aucun relevé dans la fenêtre fixée':'Aucun relevé postérieur à l’horizon',
