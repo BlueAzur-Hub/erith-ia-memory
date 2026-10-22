@@ -47,6 +47,22 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <div class="links"><a href="../trader/trading-desk.html">← Retour Trader</a><a href="crypto-knowledge.html">Dossiers des candidats dynamiques</a><a href="PROTOCOLE_RADAR_CIBLAGE.md">Méthode Radar</a><a href="../trader/verified-reader.html">Coffre · archives vérifiées</a></div></div>
 </header>
 <div class="notice"><strong>Deux ensembles distincts.</strong> Ici : 20 actifs <em>fixes</em>, archives Binance Spot <strong>cotées USDT</strong> de juillet à septembre 2026. Les candidats Q, ICNT, FLUID, SAND du Radar dynamique sont une autre liste, qui exige des preuves historiques séparées. Cette page n'est ni un outil d'exécution ni un générateur de signaux.</div>
+<section aria-labelledby="native-sequences-title" id="radar-native-activity-study">
+<h2 id="native-sequences-title">Activité des échanges · fréquence native et répétitions</h2>
+<p>Les <strong>120 archives horaires Binance Spot USDT</strong> des 20 cryptos (avril à septembre 2026) contiennent le nombre d'échanges exécutés, leur volume en USDT et la part de volume initiée par les acheteurs. Analyse rétrospective, indépendante de la stratégie Radar 20, sans achat ni exécution.</p>
+<details id="radar-native-activity">
+<summary>Examiner les séquences de trois heures · volumes et transactions</summary>
+<p>Une heure est considérée comme <em>fortement active</em> seulement si son volume <strong>et</strong> son nombre de transactions dépassent chacun 1,5 fois la médiane des <strong>24 heures précédentes</strong>. On recherche ensuite trois heures consécutives d'activité acheteuse (taker buy ≥ 55 %) ou vendeuse (≤ 45 %). Chaque longue séquence n'est comptée qu'une fois.</p>
+<p><button type="button" data-native-refresh>Relire le rapport publié</button></p>
+<p data-native-status role="status" aria-live="polite">Ouvrir pour charger le diagnostic.</p>
+<div class="table-wrap"><table><thead><tr><th>Trimestre</th><th>Heures UTC</th><th>Actif-heures</th><th>Échanges natifs</th><th>Taille moyenne d'échange</th><th>Heures actives</th><th>Séquences acheteuses 3 h</th><th>Séquences vendeuses 3 h</th></tr></thead>
+<tbody data-native-rows><tr><td colspan="8">Aucun rapport chargé.</td></tr></tbody></table></div>
+<p data-native-summary class="muted"></p>
+<p class="muted"><strong>Limites essentielles :</strong> ce sont des <strong>comptages d'échanges en bougies 1 h</strong>, non le nombre de traders uniques ni la répétition d'un même portefeuille. Les archives dérivées ne donnent pas le détail de chaque minute : <strong>aucun taux 1 min / 5 min n'est reconstruit sans preuve native.</strong> Les comparaisons de prix à 4/24/48 h sont descriptives et incluent seulement des frais hypothétiques de 0,8 % aller-retour. Aucun carnet, minimum d'ordre, spread réel ou remplissage n'est certifié. Les deux périodes ont été sélectionnées rétrospectivement, et leurs résultats ne constituent pas des prévisions.</p>
+<p><a href="../data/trader_flux/radar20_regimes/native_activity.json" target="_blank" rel="noopener noreferrer">Rapport native_activity.json et provenance ↗</a></p>
+</details>
+</section>
+
 <section aria-labelledby="activity-title" id="radar-activity-audit">
 <h2 id="activity-title">Analyse des heures et des volumes · 258 opérations PAPER historiques</h2>
 <p>Étude descriptive de deux simulations <strong>avril–juin et juillet–septembre 2026</strong>, à règles figées : 20 actifs Binance Spot USDT, 400 USDT fictifs réinitialisés chaque trimestre, positions de 48 h. <strong>Ce tableau dénombre uniquement les entrées fictives acceptées par le portefeuille</strong>, pas les signaux refusés ni les transactions individuelles exécutées sur Binance.</p>
@@ -135,4 +151,5 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <footer>ERITH.IA · laboratoire d'analyse scientifique · les années antérieures et les candidats dynamiques demandent des archives propres, non extrapolées. Aucune exécution de trading.</footer>
 <script src="radar-historique.js" defer></script>
 <script src="radar-activity-audit.js" defer></script>
+<script src="radar-native-activity-view.js" defer></script>
 </main></body></html>
