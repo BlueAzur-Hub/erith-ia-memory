@@ -131,7 +131,70 @@ function passiveEstimate(evidence,capital,cost){
     noMinOrderCheck:true,notCurrencyConverted:true,realOrders:false
   });
 }
-const api=Object.freeze({qualifyReport,compare,qualifyPassiveHistory,passiveEstimate,
+/* Descriptive only: compare exactly two independently dated public OKX-USDC
+ * hourly observations. This is NOT the five Binance Top5 charts, and does
+ * not turn five recent trades / a rolling 24h volume into hourly turnover. */
+function studyNativeUsdcPressure(health,archive,clockMs=Date.now()){
+  if(health?.schema!=="erith.radar.okx-hourly-health.v1"||
+     archive?.schema!=="erith.radar.okx-hourly-spot.v1"||
+     health.orders_enabled!==false||archive.orders_enabled!==false||
+     health.real_orders!==0||archive.real_orders!==0||
+     archive.date_utc!==health.date_utc||
+     !/^\d{4}-\d{2}-\d{2}$/.test(archive.date_utc||"")||
+     !Array.isArray(archive.hours)||archive.hours.length<2||
+     archive.hours.length>26||!numeric(clockMs))
+    throw Error("Journaux OKX publics manquants ou incohérents");
+  const ordered=[...archive.hours].sort((a,b)=>Date.parse(a.observed_at_utc)-Date.parse(b.observed_at_utc));
+  const prev=ordered.at(-2),last=ordered.at(-1);
+  const prevAt=Date.parse(prev?.observed_at_utc),lastAt=Date.parse(last?.observed_at_utc);
+  if(![prevAt,lastAt].every(Number.isFinite)||lastAt<=prevAt||
+     lastAt-prevAt>3*3600000||
+     archive.date_utc!==new Date(lastAt).toISOString().slice(0,10)||
+     health.last_observed_at_utc!==last.observed_at_utc||
+     ![prev,last].every(h=>h?.orders_enabled===false&&h?.real_orders===0&&
+       Array.isArray(h.markets)&&h.status==="READY"))
+    throw Error("Horodatage du marché non comparable");
+  const symbols=["BTC","ETH","SOL","XRP","OKB","CT"];
+  const sample=[];
+  for(const symbol of symbols){
+    const pair=symbol+"-USDC",a=prev.markets.find(x=>x.pair===pair),
+      z=last.markets.find(x=>x.pair===pair);
+    if(!a||!z||a.quote!=="USDC"||z.quote!=="USDC"||
+       a.status!=="VERIFIED_PUBLIC_BOOK"||z.status!=="VERIFIED_PUBLIC_BOOK")
+      continue;
+    const oldPrice=Number(a.ticker?.last),price=Number(z.ticker?.last),
+      spread=Number(z.book5?.spread_bps),oldSpread=Number(a.book5?.spread_bps);
+    const bb=z.book5?.bids?.[0],ab=z.book5?.asks?.[0],
+      bidValue=Number(bb?.[0])*Number(bb?.[1]),
+      askValue=Number(ab?.[0])*Number(ab?.[1]);
+    if(![oldPrice,price,spread,oldSpread,bidValue,askValue].every(n=>Number.isFinite(n))||
+       oldPrice<=0||price<=0||spread<0||oldSpread<0||
+       bidValue<=0||askValue<=0)continue;
+    sample.push(Object.freeze({
+      symbol,pair,change_pct:(price/oldPrice-1)*100,
+      spread_bps:spread,spread_change_bps:spread-oldSpread,
+      best_bid_value_usdc:bidValue,best_ask_value_usdc:askValue,
+      observed_quote:"USDC",status:"OBSERVE_ONLY",paper_trade_approved:false
+    }));
+  }
+  if(sample.length<3)throw Error("Pas assez de paires OKX USDC observées");
+  const breadth={falling:sample.filter(x=>x.change_pct<0).length,
+    rising:sample.filter(x=>x.change_pct>0).length,
+    flat:sample.filter(x=>x.change_pct===0).length,total:sample.length};
+  const orderedStrength=[...sample].sort((a,b)=>b.change_pct-a.change_pct);
+  return Object.freeze({
+    schema:"erith.seven.radar.native-usdc-pressure.v1",mode:"HISTORICAL_PUBLIC_OBSERVATION",
+    start_at_utc:prev.observed_at_utc,end_at_utc:last.observed_at_utc,
+    age_minutes:Math.round((clockMs-lastAt)/60000),
+    is_stale:clockMs-lastAt>120*60000||clockMs<lastAt,
+    breadth,assets:orderedStrength,quote:"USDC",
+    historical:true,not_a_live_24h_chart:true,not_a_trade_signal:true,
+    fills:0,real_orders:0,trade_count_measured:false,
+    note:"Two dated hourly market observations, 24h volume is rolling, not interval turnover; BNB is not covered."
+  });
+}
+
+const api=Object.freeze({qualifyReport,compare,qualifyPassiveHistory,passiveEstimate,studyNativeUsdcPressure,
   readOnly:true,realOrders:false,storage:false,privateAccount:false});
 if(typeof module==="object"&&module.exports)module.exports=api;
 if(!root||typeof document==="undefined")return;
@@ -545,6 +608,78 @@ function mountRadarSelectionViewer(comparator){
   pane.querySelector("[data-radar-selection-refresh]")?.addEventListener("click",()=>{void refresh();});
 }
 
+
+function mountRadarMarketPressure(comparator){
+  if(document.getElementById("sevenRadarMarketPressure"))return;
+  const body=comparator.querySelector(".sc-body");if(!body)return;
+  const pane=document.createElement("details");pane.id="sevenRadarMarketPressure";
+  pane.style.cssText="margin:10px 0 16px;padding:10px;border:1px solid #3b6871;border-radius:10px;background:#0b2631";
+  pane.innerHTML=[
+   '<summary style="cursor:pointer;font-weight:700">RADAR · Pression collective et résistance relative · OKX USDC</summary>',
+   '<p class="sc-note">Observation sur deux relevés horaires publics de six paires natives USDC. Ce n’est pas le Top 5 Binance, et BNB n’est pas couvert. Les variations à 24 h du Market ne sont pas des résultats PAPER.</p>',
+   '<div class="sc-controls"><button type="button" data-pressure-refresh>Relire les archives OKX publiques</button></div>',
+   '<p data-pressure-status role="status" aria-live="polite">Ouvrir pour comparer les derniers relevés archivés.</p>',
+   '<div class="sc-scroll"><table><thead><tr><th>Paire Spot</th><th>Entre deux relevés</th><th>Spread actuel</th><th>Meilleur bid / ask visible</th><th>Lecture Seven</th></tr></thead>',
+   '<tbody data-pressure-rows></tbody></table></div>',
+   '<p class="sc-note">Comparer des mouvements ne prouve pas leur cause. La profondeur au meilleur niveau est un instantané, non un fill. Le volume 24 h est glissant, les cinq transactions récentes ne permettent pas de mesurer une fréquence horaire. Aucune recommandation d’achat.</p>'
+  ].join("");
+  const ref=document.getElementById("sevenRadarSelectionViewer");
+  if(ref?.parentElement===body)ref.insertAdjacentElement("afterend",pane);
+  else body.insertBefore(pane,body.firstChild);
+  const status=pane.querySelector("[data-pressure-status]");
+  const rows=pane.querySelector("[data-pressure-rows]");
+  let busy=false;
+  async function refresh(){
+    if(!pane.open||busy)return;busy=true;
+    const button=pane.querySelector("[data-pressure-refresh]");
+    if(button)button.disabled=true;
+    const ctl=new AbortController(),stop=setTimeout(()=>ctl.abort(),10000);
+    try{
+      status.textContent="Lecture des heures OKX/USDC archivées…";
+      const load=async url=>{
+        const r=await fetch(new URL(url,document.baseURI),{
+          cache:"no-store",credentials:"omit",redirect:"error",signal:ctl.signal});
+        if(!r.ok)throw Error("Archive indisponible");
+        const raw=await r.text();
+        if(raw.length>450000)throw Error("Archive trop volumineuse");
+        return JSON.parse(raw);
+      };
+      const h=await load("../data/crypto/okx-hourly/latest.json");
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(h.date_utc||""))
+        throw Error("Index UTC invalide");
+      const d=await load("../data/crypto/okx-hourly/"+h.date_utc+".json");
+      const result=studyNativeUsdcPressure(h,d);
+      rows.replaceChildren();
+      for(const m of result.assets){
+        const tr=document.createElement("tr");
+        // A resilience label describes the last two data points, not an order.
+        const label=m.change_pct>0?
+          "Résilience relative, à confirmer":m.change_pct<0?
+          "Recul constaté, surveiller l'évolution":"Stable sur les deux relevés";
+        const items=[m.pair,
+          (m.change_pct>=0?"+":"")+m.change_pct.toFixed(3)+" %",
+          m.spread_bps.toFixed(2)+" pb"+(m.spread_change_bps>0?" · élargi":""),
+          m.best_bid_value_usdc.toFixed(2)+" / "+m.best_ask_value_usdc.toFixed(2)+" USDC",
+          label];
+        for(const value of items){const td=document.createElement("td");td.textContent=value;tr.appendChild(td);}
+        rows.appendChild(tr);
+      }
+      const breadth=result.breadth;
+      status.textContent="OKX "+result.start_at_utc+" → "+result.end_at_utc+
+        " · "+breadth.falling+"/"+breadth.total+" en recul ; "+
+        breadth.rising+" en progression · "+
+        (result.is_stale?"archive périmée, pas du temps réel":
+        "dernier relevé : "+result.age_minutes+" min")+
+        " · 0 ordre. Comparaison descriptive, aucune opportunité qualifiée.";
+    }catch(_){
+      rows.replaceChildren();
+      status.textContent="Archives OKX incohérentes ou absentes : aucun signal établi.";
+    }finally{clearTimeout(stop);if(button)button.disabled=false;busy=false;}
+  }
+  pane.addEventListener("toggle",()=>{if(pane.open)void refresh();});
+  pane.querySelector("[data-pressure-refresh]")?.addEventListener("click",()=>{void refresh();});
+}
+
 function mountCapitalPulse(comparator){
   if(document.getElementById("sevenCapitalPulse"))return;
   const body=comparator.querySelector(".sc-body");
@@ -672,6 +807,7 @@ function mount(){
   mountCapitalPulse(node);
   mountPaperQuoteEvidence(node);
   mountRadarSelectionViewer(node);
+  mountRadarMarketPressure(node);
   node.addEventListener("toggle",()=>{
     if(!node.open){
       ++benchmarkToken;
