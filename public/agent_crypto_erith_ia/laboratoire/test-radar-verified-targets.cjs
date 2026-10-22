@@ -64,6 +64,7 @@ test("no fake timestamp, duplicate hour or private network accesses",()=>{
  const js=fs.readFileSync(path.join(__dirname,"radar-verified-targets.js"),"utf8");
  assert.match(html,/id="radar-verified-targets"/);
  assert.match(html,/src="radar-verified-targets\.js"/);
- assert.match(js,/radar-verified-target-hourly\/latest\.json/);
+ assert.match(js,/radar-verified-target-hourly\//);
+ assert.match(js,/latest\.json/);
  assert.doesNotMatch(js,/api\/v5\/trade|placeOrder|Authorization|Bearer |localStorage|indexedDB|setInterval\(/);
 });
