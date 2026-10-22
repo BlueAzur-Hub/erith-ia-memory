@@ -117,6 +117,8 @@ function selectOpportunities(core,extended){
   filters:{market_cap_min_usd:25000000,volume_24h_min_usd:1000000,turnover_min_pct:1.5,turnover_max_pct:200,
    excludes_symbols:[...EXCLUDED_SYMBOLS].sort(),exchange_spread_orderbook_checked:false},
   universe:1000,eligible:candidates.length,trend,rebound,rankings,
+   // Expose complete pre-ranked validated research pool, without changing top-12.
+   scoutUniverse:candidates,
   disclaimer:"Observations transversales de snapshots, non opportunités négociables ni conseils d'achat. Aucune paire d'exécution vérifiée."};
 }
 const API=Object.freeze({TIERS,validMarket,selectMarket,verifyPaper,verifyRegistry,verifyBitget,observeMarket,selectOpportunities});

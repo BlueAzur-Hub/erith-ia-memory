@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 const test=require("node:test"),assert=require("node:assert/strict");
-const {trackPreviousCandidates,buildDynamicFollowups}=require("./radar_opportunity_history.cjs");
+const {trackPreviousCandidates,buildDynamicFollowups,selectedCandidates}=require("./radar_opportunity_history.cjs");
 const ts=d=>d+"T10:00:00Z";
 const candidate=(id,p,date)=>({id,symbol:id.toUpperCase(),priceUsd:p,sourceSnapshot:ts(date)});
 const snap=(date,coins)=>({schema:"erith.radar.opportunity-observation.v1",observed_date_utc:date,
@@ -52,4 +52,20 @@ test("market-volume comparison reports observations, not extrapolated trading vo
  assert.equal(f.followup_1d.volume_24h_usd,1500000);
  assert.equal(f.followup_1d.change_pct,10);
  assert.equal(f.followup_7d.change_pct,null);
+});
+
+test("Capital scout beyond the top-12 gets future dated tracking",()=>{
+ const previous=snap("2026-10-22",Array.from({length:12},(_,i)=>candidate("hot"+i,1,"2026-10-22")));
+ previous.scout_candidates=[candidate("moderate",2,"2026-10-22")];
+ assert.equal(selectedCandidates(previous).length,13);
+ const current={coins:[{id:"moderate",symbol:"MOD",rank:190,priceUsd:2.1,
+   marketCapUsd:80000000,volume24hUsd:8000000}]};
+ const tracked=trackPreviousCandidates(current,{coins:[]},
+  {trend:[],rebound:[],sourceTimes:{core:ts("2026-10-23"),extended:ts("2026-10-23")}},
+  [previous],"2026-10-23");
+ assert.equal(tracked.find(x=>x.id==="moderate").price_usd,2.1);
+ const r=buildDynamicFollowups([previous,{...snap("2026-10-23",[]),tracked_candidates:tracked}]);
+ const observed=r.observations.find(x=>x.id==="moderate");
+ assert.equal(observed.group,"seven_capital_scout");
+ assert.equal(observed.followup_1d.change_pct,5);
 });
