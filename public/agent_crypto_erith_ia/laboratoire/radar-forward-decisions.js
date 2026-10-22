@@ -67,7 +67,7 @@ function audit(docs){
     A:null,B:null,after_4h_pct:null,after_24h_pct:null,after_48h_pct:null};
    for(const window of [4,24,48]){
     if(h+window<7*24){
-     const v=(series[sym][h+window][1]/price*(1-.004)**2-1)*100;
+     const v=(series[sym][h+window][1]/price*(1-.004)/(1+.004)-1)*100;
      e["after_"+window+"h_pct"]=Number(v.toFixed(4));
     }
    }
