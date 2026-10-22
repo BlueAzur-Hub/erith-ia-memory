@@ -12,6 +12,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/test_build_radar_priority_spot_comparison.py'
       - 'public/agent_crypto_erith_ia/tools/seven_capital_spot_journal.cjs'
       - 'public/agent_crypto_erith_ia/tools/test_seven_capital_spot_journal.cjs'
+      - 'public/agent_crypto_erith_ia/tools/seven_capital_paper_evaluation.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_seven_capital_paper_evaluation.cjs'
       - 'public/agent_crypto_erith_ia/tools/seven_spot_gate.cjs'
       - 'public/agent_crypto_erith_ia/tools/test_seven_spot_gate.cjs'
   push:
@@ -24,6 +26,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/test_build_radar_priority_spot_comparison.py'
       - 'public/agent_crypto_erith_ia/tools/seven_capital_spot_journal.cjs'
       - 'public/agent_crypto_erith_ia/tools/test_seven_capital_spot_journal.cjs'
+      - 'public/agent_crypto_erith_ia/tools/seven_capital_paper_evaluation.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_seven_capital_paper_evaluation.cjs'
       - 'public/agent_crypto_erith_ia/tools/seven_spot_gate.cjs'
       - 'public/agent_crypto_erith_ia/tools/test_seven_spot_gate.cjs'
 permissions:
@@ -52,6 +56,8 @@ jobs:
           node --check public/agent_crypto_erith_ia/tools/seven_capital_spot_journal.cjs
           node public/agent_crypto_erith_ia/tools/test_seven_spot_gate.cjs
           node --test public/agent_crypto_erith_ia/tools/test_seven_capital_spot_journal.cjs
+          node --check public/agent_crypto_erith_ia/tools/seven_capital_paper_evaluation.cjs
+          node --test public/agent_crypto_erith_ia/tools/test_seven_capital_paper_evaluation.cjs
       - name: Validate public Spot observation contracts offline
         run: |
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_observe_radar_priority_spot.py -v
@@ -94,7 +100,10 @@ jobs:
             git reset --hard origin/main
             node public/agent_crypto_erith_ia/tools/test_seven_spot_gate.cjs
             node --test public/agent_crypto_erith_ia/tools/test_seven_capital_spot_journal.cjs
+          node --check public/agent_crypto_erith_ia/tools/seven_capital_paper_evaluation.cjs
+          node --test public/agent_crypto_erith_ia/tools/test_seven_capital_paper_evaluation.cjs
             node public/agent_crypto_erith_ia/tools/seven_capital_spot_journal.cjs
+            node public/agent_crypto_erith_ia/tools/seven_capital_paper_evaluation.cjs
             if [ -d public/agent_crypto_erith_ia/data/trader_flux/seven_capital_spot ]; then
               git add -- public/agent_crypto_erith_ia/data/trader_flux/seven_capital_spot/
             fi
