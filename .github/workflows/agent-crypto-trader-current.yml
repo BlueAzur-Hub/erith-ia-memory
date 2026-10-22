@@ -62,6 +62,7 @@ jobs:
             /tests/
             /tools/
             /public/agent_crypto_erith_ia/trader/
+            /public/agent_crypto_erith_ia/data/crypto/research/zcash.json
             /public/agent_crypto_erith_ia/administrator/
             /public/agent_crypto_erith_ia/laboratoire/
             /public/agent_crypto_erith_ia/tools/test_followed_listings.cjs
@@ -100,6 +101,11 @@ jobs:
         run: |
           node --check public/agent_crypto_erith_ia/trader/trader-runtime-mirror.js
           node --test public/agent_crypto_erith_ia/trader/test-dna-case-study.cjs
+
+      - name: ZEC documentary PAPER case study — strict source and no order
+        run: |
+          node --check public/agent_crypto_erith_ia/trader/zcash-paper-model.js
+          node --test public/agent_crypto_erith_ia/trader/test-zcash-case-study.cjs
 
       - name: Interface listing rollover and DNA CT carnet identity
         run: |
