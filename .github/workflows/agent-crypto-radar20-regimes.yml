@@ -7,6 +7,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/analyze_radar20_native_activity.py'
       - 'public/agent_crypto_erith_ia/tools/test_analyze_radar20_native_activity.py'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-forward-decisions.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-radar-forward-decisions.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
       - '.github/workflows/agent-crypto-radar20-regimes.yml'
   push:
@@ -22,6 +24,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/analyze_radar20_native_activity.py'
       - 'public/agent_crypto_erith_ia/tools/test_analyze_radar20_native_activity.py'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-forward-decisions.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-radar-forward-decisions.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
   workflow_dispatch:
 permissions:
@@ -52,6 +56,8 @@ jobs:
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/laboratoire/radar-activity-audit.js
           node --check public/agent_crypto_erith_ia/laboratoire/radar-native-activity-view.js
+          node --check public/agent_crypto_erith_ia/laboratoire/radar-forward-decisions.js
+          node --test public/agent_crypto_erith_ia/laboratoire/test-radar-forward-decisions.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs
 
       - name: Rebuild exactly from canonical 120 monthly JSONs and two published cash ledgers
