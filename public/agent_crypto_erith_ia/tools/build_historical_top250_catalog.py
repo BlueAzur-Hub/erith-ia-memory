@@ -23,16 +23,43 @@ def need(ok,message):
     if not ok:raise ValueError(message)
 
 def listed_releases():
-    result=[]
-    for page in range(1,MAX_RELEASE_PAGES+1):
-        x=subprocess.run(["gh","api",f"repos/{REPO}/releases?per_page=100&page={page}"],
-                         check=True,capture_output=True,text=True,timeout=90)
-        rows=json.loads(x.stdout)
-        need(isinstance(rows,list),"Invalid release list")
-        result.extend(rows)
-        if len(rows)<100:break
-    else:raise ValueError("Too many pages")
-    return result
+    """Read a stable Release registry, or fail closed without publishing.
+
+    GitHub's page-number pagination is not snapshot isolated. Insertion of a
+    new immutable monthly Release while scanning may shift the page boundary
+    and repeat the same tag on adjacent pages. Retry the entire inventory;
+    never silently deduplicate or skip an old Release.
+    """
+    last_duplicate=None
+    for attempt in range(3):
+        result=[]
+        seen=set()
+        duplicate=None
+        for page in range(1,MAX_RELEASE_PAGES+1):
+            x=subprocess.run(["gh","api",f"repos/{REPO}/releases?per_page=100&page={page}"],
+                             check=True,capture_output=True,text=True,timeout=90)
+            rows=json.loads(x.stdout)
+            need(isinstance(rows,list) and len(rows)<=100,"Invalid release list")
+            for release in rows:
+                need(isinstance(release,dict),"Invalid Release record")
+                tag=release.get("tag_name")
+                if isinstance(tag,str) and tag:
+                    if tag in seen:
+                        duplicate=tag
+                        break
+                    seen.add(tag)
+            if duplicate is not None:
+                break
+            result.extend(rows)
+            if len(rows)<100:
+                return result
+        else:
+            raise ValueError("Too many pages")
+        last_duplicate=duplicate
+        if attempt<2:
+            print(f"RETRY Release pagination shifted; duplicate tag: {duplicate}",flush=True)
+    raise ValueError("Unstable Release pagination after 3 bounded scans: "+
+                     str(last_duplicate))
 
 def gather(releases,download):
     months={}
