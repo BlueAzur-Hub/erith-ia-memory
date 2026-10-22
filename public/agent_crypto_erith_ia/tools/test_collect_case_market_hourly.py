@@ -44,13 +44,14 @@ def mock(url):
             return {"code":"0","data":ohlc(False,100)}
     if h=="api.bitget.com":
         if u.path.endswith("/instruments"):
-            return {"code":"00000","data":[{"symbol":"AXISUSDT","category":"SPOT"}]}
+            return {"code":"00000","data":[{"symbol":"AXISUSDT","category":"SPOT","status":"online"}]}
         if u.path.endswith("/tickers"):
             return {"code":"00000","requestTime":MS-30000,"data":[{"symbol":"AXISUSDT",
-                    "category":"SPOT","lastPrice":"0.3","volume24h":"500","turnover24h":"150"}]}
+                    "category":"SPOT","lastPrice":"0.3","volume24h":"500","turnover24h":"150","ts":nowms()}]}
         if u.path.endswith("/orderbook"):
             bid,ask=ladder(.3)
-            return {"code":"00000","data":{"b":bid,"a":ask,"ts":nowms()}}
+            return {"code":"00000","data":{"b":[[float(p),float(q)] for p,q in bid],
+                    "a":[[float(p),float(q)] for p,q in ask],"ts":nowms()}}
         if u.path.endswith("/candles"):
             return {"code":"00000","data":ohlc(True,.3)}
     raise AssertionError("Unexpected API "+url)
