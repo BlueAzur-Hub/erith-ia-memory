@@ -14,7 +14,7 @@ def bars(n=85):
     result = []
     for i in range(n):
         v, trades, pct = 100.0, 10, 50.0
-        if 25 <= i <= 27 or 77 <= i <= 79:
+        if 25 <= i <= 27 or 80 <= i <= 82:
             v, trades, pct = 400.0, 40, 60.0
         if 40 <= i <= 42:
             v, trades, pct = 400.0, 40, 40.0
