@@ -9,7 +9,7 @@ const positive=v=>typeof v==='number'&&Number.isFinite(v)&&v>0;
 function checkDay(x){
  if(x?.schema!=='erith.radar.opportunity-observation.v1'||x.orders_enabled!==false||
  x.account_access!==false||x.simulation_only!==true||x.spread_validated!==false||
- x.orderbook_validated!==false||(x.observed_date_utc>=firstDay&&!Array.isArray(x.tracked_candidates))||
+ x.orderbook_validated!==false||(x.observed_date_utc>=firstDay&&(!Array.isArray(x.tracked_candidates)||!Array.isArray(x.scout_candidates)))||
  !Array.isArray(x.groups?.momentum_24h_7d)||
  !/^\d{4}-\d{2}-\d{2}$/.test(x.observed_date_utc)||
  new Date(x.observed_date_utc+'T00:00:00Z').toISOString().slice(0,10)!==x.observed_date_utc)
@@ -17,23 +17,40 @@ function checkDay(x){
  return x;
 }
 function dateOf(when){if(typeof when!=='string'||!when.endsWith('Z')||!Number.isFinite(Date.parse(when)))throw Error('Date source invalide');return when.slice(0,10);}
-function select(x){
- checkDay(x);const seen=new Set(),out=[];
- for(const r of x.groups.momentum_24h_7d){
+// Capital eligibility is applied BEFORE the visual top-12 momentum cutoff.
+function eligible(r){
+ return Number.isInteger(r.rank)&&r.rank>=1&&r.rank<=500&&
+  positive(r.volume24hUsd)&&r.volume24hUsd>=5000000&&
+  positive(r.marketCapUsd)&&r.marketCapUsd>=50000000&&
+  positive(r.change24h)&&r.change24h>=2&&r.change24h<=12&&
+  positive(r.change7d)&&r.change7d<=40;
+}
+function preselect(universe,day){
+ if(!Array.isArray(universe)||typeof day!=='string'||
+   !Number.isFinite(Date.parse(day+'T00:00:00Z')))
+  throw Error('Univers Seven ou date invalides');
+ const seen=new Set(),chosen=[];
+ for(const r of universe){
   if(!r||typeof r.id!=='string'||!r.id||seen.has(r.id)||
-   !positive(r.priceUsd)||dateOf(r.sourceSnapshot)!==x.observed_date_utc)
-   throw Error('Identité ou prix Radar non datés');
+    typeof r.symbol!=='string'||!/^[A-Z0-9]{2,15}$/.test(r.symbol)||
+    !positive(r.priceUsd)||dateOf(r.sourceSnapshot)!==day)
+    throw Error('Identité, prix ou date Seven invalides');
   seen.add(r.id);
-  // Preregistered conservative research filter; no hindsight-based fill.
-  if(!Number.isInteger(r.rank)||r.rank>500||r.rank<1||
-    !positive(r.volume24hUsd)||r.volume24hUsd<5000000||
-    !positive(r.marketCapUsd)||r.marketCapUsd<50000000||
-    !positive(r.change24h)||r.change24h<2||r.change24h>12||
-    !positive(r.change7d)||r.change7d>40)continue;
-  out.push({coin_id:r.id,symbol:r.symbol,rank:r.rank,
-    source_at_utc:r.sourceSnapshot,price_usd:r.priceUsd});
+  if(eligible(r))chosen.push(r);
  }
- return out.slice(0,3);
+ return chosen.sort((a,b)=>b.change24h-a.change24h||a.rank-b.rank||a.id.localeCompare(b.id));
+}
+function select(x){
+ checkDay(x);
+ if(x.observed_date_utc<firstDay)return [];
+ if(x.scout_candidates.length>3)throw Error('Trop de candidats prospectifs');
+ const rows=preselect(x.scout_candidates,x.observed_date_utc);
+ if(rows.length!==x.scout_candidates.length)
+  throw Error('Candidat hors politique Seven: archive refusée');
+ return rows.map(r=>({coin_id:r.id,symbol:r.symbol,rank:r.rank,
+  source_at_utc:r.sourceSnapshot,price_usd:r.priceUsd,
+  change_24h_pct:r.change24h,change_7d_pct:r.change7d,
+  volume_24h_usd:r.volume24hUsd,market_cap_usd:r.marketCapUsd}));
 }
 function nextDay(date){return new Date(Date.parse(date+'T00:00:00Z')+86400000).toISOString().slice(0,10);}
 function evaluate(dates){
@@ -100,4 +117,4 @@ function main(){
  console.log('Seven Capital 10 USDC: '+report.observations.length+' études; ORDRES=0');
 }
 if(require.main===module)main();
-module.exports={checkDay,select,evaluate,load};
+module.exports={checkDay,eligible,preselect,select,evaluate,load};
