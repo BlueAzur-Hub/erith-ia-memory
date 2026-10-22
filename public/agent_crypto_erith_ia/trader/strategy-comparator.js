@@ -382,8 +382,8 @@ function mountCapitalPulse(comparator){
     pulse.textContent=detail;
     if(compact)compact.textContent=short;
   };
-  write("SEVEN AUTO · Budget 10 USDC · réserve 0,94 USDC · recherche PAPER quotidienne…",
-    "SEVEN AUTO · recherche PAPER quotidienne · aucun ordre");
+  write("SEVEN AUTO · Radar quotidien · budget 10 USDC · réserve 0,94 USDC…",
+    "SEVEN AUTO · Radar quotidien · 0 ordre");
   const c=new AbortController();
   const stop=setTimeout(()=>c.abort(),10000);
   fetch(new URL(CAPITAL_REPORT,document.baseURI),{
@@ -402,7 +402,7 @@ function mountCapitalPulse(comparator){
        data.milestones_usdc.join(",")!=="12,15,17"||
        !Array.isArray(data.observations))
        throw Error("contrat de sécurité du rapport non conforme");
-    let spot="Spot/USDC : rapport en attente";
+    let spot="Spot Gate Radar quotidien en attente (journal séparé du Spot daté)";
     try{
       // Second tiny public JSON, no polling or OKX API call from Firefox.
       const answer=await fetch(new URL(SPOT_GATE_REPORT,document.baseURI),{
@@ -426,20 +426,20 @@ function mountCapitalPulse(comparator){
       if(gate.input_last_archive_utc===data.latest_archive_date_utc){
         const screens=gate.candidates.filter(x=>
           x.status==="PUBLIC_BOOK_AND_SIZE_PAPER_SCREEN_PASSED").length;
-        spot="Spot/USDC public "+screens+"/"+gate.candidates.length+
+        spot="Spot Gate Radar quotidien "+screens+"/"+gate.candidates.length+
           " présélection(s) · identité/frais/ordres NON certifiés";
       }
     }catch(_){ /* Optional public report; retain the proven Radar status. */ }
-    write("SEVEN AUTO · 10 USDC à étudier + 0,94 USDC réservés · "+
-      "objectifs 12 → 15 → 17 · dernière archive "+(data.latest_archive_date_utc||"absente")+
-      " · "+data.observations.length+" observation(s) suivie(s) · "+
+    write("SEVEN AUTO · Radar quotidien · 10 USDC à étudier + 0,94 USDC réservés · "+
+      "objectifs 12 → 15 → 17 · archive Radar "+(data.latest_archive_date_utc||"absente")+
+      " · "+data.observations.length+" observation(s) Radar · "+
       spot+" · 0 ordre réel.",
       "SEVEN AUTO · archive "+(data.latest_archive_date_utc||"absente")+
-      " · "+data.observations.length+" observation(s) · 0 ordre");
+      " · Radar quotidien "+data.observations.length+" observation(s) · 0 ordre");
   }).catch(()=>{
-    write("SEVEN AUTO · 10 USDC + réserve 0,94 USDC · "+
-      "journal quotidien indisponible ou non encore publié · aucun ordre réel.",
-      "SEVEN AUTO · journal indisponible · 0 ordre réel");
+    write("SEVEN AUTO · Radar quotidien · 10 USDC + réserve 0,94 USDC · "+
+      "journal Radar indisponible ; suivi Spot/USDC ci-dessous indépendant · aucun ordre réel.",
+      "SEVEN AUTO · Radar quotidien indisponible · 0 ordre réel");
   }).finally(()=>clearTimeout(stop));
 }
 function mount(){
@@ -451,7 +451,7 @@ function mount(){
     style.textContent=[
       "#traderStrategyComparator{grid-column:1/-1;display:block;margin:12px 0 28px;background:#0a1e2c;color:#e5f6fa;border:1px solid #456b80;border-radius:12px;font:13px/1.5 system-ui,sans-serif;overflow:hidden}",
       "#traderStrategyComparator>summary{padding:14px;cursor:pointer;font-weight:750;color:#f0d79e;background:#11283b}",
-      "#traderStrategyComparator>summary [data-capital-compact]{display:block;color:#b7deea;font-weight:500;font-size:12px;line-height:1.45;margin:4px 0 0 14px}",
+      "#traderStrategyComparator>summary [data-capital-compact],#traderStrategyComparator>summary [data-spot-compact]{display:block;color:#b7deea;font-weight:500;font-size:12px;line-height:1.45;margin:4px 0 0 14px}",
       "#traderStrategyComparator .sc-body{padding:14px}",
       "#traderStrategyComparator .sc-controls{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}",
       "#traderStrategyComparator label{display:grid;gap:5px;font-size:12px}",
@@ -466,7 +466,7 @@ function mount(){
   }
   const node=document.createElement("details");node.id=ID;
   node.innerHTML=[
-    '<summary>SEVEN HEAVEN · Comparateur de stratégies PAPER · archives et réserve USDC<span data-capital-compact>SEVEN AUTO · recherche PAPER quotidienne · aucun ordre</span></summary>',
+    '<summary>SEVEN HEAVEN · Comparateur de stratégies PAPER · archives et réserve USDC<span data-capital-compact>SEVEN AUTO · Radar quotidien · 0 ordre</span><span data-spot-compact>SEVEN SPOT/USDC · ouvrir le suivi daté pour actualiser · 0 ordre</span></summary>',
     '<div class="sc-body">',
     '<p>Étude documentaire, pas un signal. La réserve fictive est en USDC ; les expériences historiques du Radar 20 sont en USDT Binance. Aucune parité ou rentabilité n’est certifiée entre les deux.</p>',
     '<div class="sc-controls">',
