@@ -1,0 +1,159 @@
+{
+  "schema": "erith.crypto.asset-research-dossier.v1",
+  "asset_id": "zcash",
+  "symbol": "ZEC",
+  "name": "Zcash",
+  "qualified_on_utc": "2026-10-22",
+  "record_kind": "DOCUMENTARY_PAPER_NOT_ORDER_SIGNAL",
+  "sector": "Privacy-preserving Layer 1 / zero-knowledge transactions",
+  "trading_policy": {
+    "decision": "OBSERVE_AND_PAPER_ONLY",
+    "orders_enabled": false,
+    "real_orders": 0,
+    "private_account_access": false,
+    "leverage_enabled": false,
+    "short_enabled": false,
+    "portfolio_spent_usdc": 0,
+    "estimated_profit_usdc": null,
+    "strategy_certified": false
+  },
+  "market_identity": {
+    "canonical_spot_pair": "ZEC-USDC",
+    "venue": "OKX",
+    "quote": "USDC",
+    "instrument_type": "SPOT",
+    "pair_seen_in_user_trader": true,
+    "exchange_pair_public_evidence": "https://www.okx.com/en-us/help/important-notice-token-pairs-adjustment",
+    "individual_account_access_verified": false,
+    "instrument_rules_min_sz": null,
+    "instrument_rules_lot_sz": null,
+    "instrument_rules_tick_sz": null,
+    "account_fees_verified": false,
+    "orderbook_snapshot_historically_executable_verified": false,
+    "estimated_spread_slippage_verified": false
+  },
+  "screenshot_observations": [
+    {
+      "at_local": "2026-10-22T06:42:00+02:00",
+      "market": "OKX ZEC/USDC spot book",
+      "best_bid_usdc": 1285.85,
+      "best_ask_usdc": 1285.86,
+      "source": "user screenshot (market on left, order book on right)",
+      "staleness": "historical screenshot; not live"
+    },
+    {
+      "at_local": "2026-10-22T06:52:00+02:00",
+      "market": "OKX ZEC/USDC 15m",
+      "candle_label_local": "2026-10-22T06:30:00+02:00",
+      "candle_ohlc_usdc": {
+        "open": 1290.81,
+        "high": 1291.22,
+        "low": 1282.35,
+        "close": 1287.26
+      },
+      "last_spot_usd_coingecko": 1286.69,
+      "snapshot_24h_change_pct": 2.16,
+      "resistance_display_usdc": 1297.85,
+      "low_display_usdc": 1282.35,
+      "source": "user screenshot; USD summary is CoinGecko, candle prices are OKX USDC",
+      "staleness": "historical screenshot; not live"
+    }
+  ],
+  "comparison_derivatives": {
+    "product": "ZECUSD UM X-Perp",
+    "venue": "OKX",
+    "source": "Yoann screenshot; position unclear",
+    "displayed_pnl_number": 23.82,
+    "pnl_currency_unverified": true,
+    "open_or_closed_unverified": true,
+    "leverage_unverified": true,
+    "funding_unverified": true,
+    "realized_gain_certified": false,
+    "never_use_derivative_chart_as_spot_orderbook": true
+  },
+  "paper_model": {
+    "mode": "HYPOTHETICAL_FIXED_INPUTS",
+    "quote": "USDC",
+    "budget_usdc": 10,
+    "entry_ask_usdc": 1285.86,
+    "buy_fee_percent_hypothesis": 0.1,
+    "sell_fee_percent_hypothesis": 0.1,
+    "exit_bid_scenarios_usdc": [
+      1282.35,
+      1297.85,
+      1336.17
+    ],
+    "prices_from_different_screenshot_times": true,
+    "not_historical_fill": true,
+    "not_pnl_from_actual_trades": true,
+    "minimum_and_lot_check": "UNKNOWN",
+    "forward_rules": "Require future TWO CLOSED 15min candles plus fresh corresponding spot book, time-stamped; do not report detection prior to evidence",
+    "event_watch": {
+      "zone_low_usdc": 1282.35,
+      "zone_near_usdc": 1297.85,
+      "zone_high_usdc": 1336.17,
+      "meaning": "historical visual levels, not statistical predictions"
+    }
+  },
+  "protocol": {
+    "spot_only": true,
+    "study_steps": [
+      "Read consecutive closed 15m candles and timestamps",
+      "Check actual same-pair order book ZEC-USDC; bid ask and top depth",
+      "Validate pair instrument rules minSz lotSz tickSz and minimum notional for the user jurisdiction and account",
+      "Calculate sellable ZEC after buy fee; check lot rounding and full net sale",
+      "Freeze PAPER criteria before looking at any subsequent results",
+      "Record event UTC and future +1h +4h +24h +48h outcomes if measured"
+    ],
+    "refusal_conditions": [
+      "missing price/source identity",
+      "pair mismatch / futures mistaken for spot",
+      "stale or nonconsecutive candles",
+      "bid/ask missing or crossed",
+      "estimated sellable ZEC under instrument limits",
+      "insufficient observations for confirmation",
+      "real-orders disabled"
+    ],
+    "source_checks": "No account, no auto-pull, no mutable client-side recommendation"
+  },
+  "official_research": [
+    {
+      "claim": "Zcash supports transparent and shielded transactions",
+      "url": "https://z.cash/learn/how-to-use-zcash/",
+      "accessed_utc": "2026-10-22"
+    },
+    {
+      "claim": "Zcash NU6.3/Ironwood activated July 28 2026 after Orchard soundness issue",
+      "url": "https://z.cash/upgrade/nu6-3/",
+      "accessed_utc": "2026-10-22"
+    },
+    {
+      "claim": "NU7 mainnet Nov 5 2026 is target, page still says activation height not set; confirm in later official deployments",
+      "url": "https://z.cash/upgrade/nu7/",
+      "accessed_utc": "2026-10-22"
+    },
+    {
+      "claim": "ZF NU7 technical plan and projected 25s blocks",
+      "url": "https://forum.zcashcommunity.com/t/nu7-timeline/57655",
+      "accessed_utc": "2026-10-22"
+    },
+    {
+      "claim": "ZEC-USDC appears as spot group2 in OKX public notice, region/account permission unverified",
+      "url": "https://www.okx.com/en-us/help/important-notice-token-pairs-adjustment",
+      "accessed_utc": "2026-10-22"
+    },
+    {
+      "claim": "OKX European fee rules: buy fee deducted from base, sell fee in proceeds; futures margin/funding separate",
+      "url": "https://www.okx.com/fr-fr/help/trading-fee-rules-faq",
+      "accessed_utc": "2026-10-22"
+    }
+  ],
+  "linked_case_studies": [
+    {
+      "asset": "AXIS",
+      "url": "../trader/axis-robotics-case-study.html",
+      "note": "new listing is separate from established ZEC spot study"
+    }
+  ],
+  "audit_note": "No live data or account-specific execution claim; screenshot timestamps approximate at minute granularity. PnL+23.82 in Yoann photo cannot be treated as realized result."
+}

@@ -9,6 +9,10 @@ on:
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-forward-decisions.js'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-forward-decisions.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/zcash-case-study.html'
+      - 'public/agent_crypto_erith_ia/laboratoire/zcash-paper-model.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-zcash-case-study.cjs'
+      - 'public/agent_crypto_erith_ia/data/crypto/research/zcash.json'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
       - '.github/workflows/agent-crypto-radar20-regimes.yml'
   push:
@@ -26,6 +30,10 @@ on:
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-forward-decisions.js'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-forward-decisions.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/zcash-case-study.html'
+      - 'public/agent_crypto_erith_ia/laboratoire/zcash-paper-model.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-zcash-case-study.cjs'
+      - 'public/agent_crypto_erith_ia/data/crypto/research/zcash.json'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
   workflow_dispatch:
 permissions:
@@ -56,6 +64,8 @@ jobs:
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/laboratoire/radar-activity-audit.js
           node --check public/agent_crypto_erith_ia/laboratoire/radar-native-activity-view.js
+          node --check public/agent_crypto_erith_ia/laboratoire/zcash-paper-model.js
+          node --test public/agent_crypto_erith_ia/laboratoire/test-zcash-case-study.cjs
           node --check public/agent_crypto_erith_ia/laboratoire/radar-forward-decisions.js
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar-forward-decisions.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs
