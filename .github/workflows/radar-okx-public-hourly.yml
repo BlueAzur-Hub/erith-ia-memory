@@ -8,6 +8,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_case_market_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py'
+      - 'public/agent_crypto_erith_ia/tools/test_collect_radar_verified_targets.py'
       - 'public/agent_crypto_erith_ia/tools/test_radar_schedule_stagger.py'
       - '.github/workflows/atlas_market_collector.yml'
       - '.github/workflows/atlas_news_collector.yml'
@@ -23,6 +25,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_case_market_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py'
+      - 'public/agent_crypto_erith_ia/tools/test_collect_radar_verified_targets.py'
       - 'public/agent_crypto_erith_ia/tools/test_radar_schedule_stagger.py'
       - '.github/workflows/atlas_market_collector.yml'
       - '.github/workflows/atlas_news_collector.yml'
@@ -55,6 +59,8 @@ jobs:
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_okx_public_hourly.py' -v
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_case_market_hourly.py' -v
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_radar_verified_targets.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_okx_hourly_evidence.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_radar_schedule_stagger.py' -v
       - name: Archive one immutable UTC hourly public snapshot
@@ -75,9 +81,17 @@ jobs:
             if ! python public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py; then
               echo 'WARN: additional ZEC/AXIS public observation unavailable; core OKX archive retained'
             fi
+            # Maximum 15 public Bitget calls for 3 contract-matched candidates.
+            # Catalog or native mismatch = no invented target quote.
+            if ! python public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py; then
+              echo 'WARN: verified Radar target capture absent; no stale replacement'
+            fi
             git add -A -- public/agent_crypto_erith_ia/data/crypto/okx-hourly/
             if [ -d public/agent_crypto_erith_ia/data/crypto/case-market-hourly ]; then
               git add -A -- public/agent_crypto_erith_ia/data/crypto/case-market-hourly/
+            fi
+            if [ -d public/agent_crypto_erith_ia/data/crypto/radar-verified-target-hourly ]; then
+              git add -A -- public/agent_crypto_erith_ia/data/crypto/radar-verified-target-hourly/
             fi
             if git diff --cached --quiet; then
               echo 'UTC hourly observation already archived; no duplicate or backfill'
