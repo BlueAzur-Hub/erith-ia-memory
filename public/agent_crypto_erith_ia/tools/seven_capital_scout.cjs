@@ -19,7 +19,8 @@ function checkDay(x){
 function dateOf(when){if(typeof when!=='string'||!when.endsWith('Z')||!Number.isFinite(Date.parse(when)))throw Error('Date source invalide');return when.slice(0,10);}
 // Capital eligibility is applied BEFORE the visual top-12 momentum cutoff.
 function eligible(r){
- return Number.isInteger(r.rank)&&r.rank>=1&&r.rank<=500&&
+ return typeof r.symbol==='string'&&/^[A-Z0-9]{2,15}$/.test(r.symbol)&&
+  Number.isInteger(r.rank)&&r.rank>=1&&r.rank<=500&&
   positive(r.volume24hUsd)&&r.volume24hUsd>=5000000&&
   positive(r.marketCapUsd)&&r.marketCapUsd>=50000000&&
   positive(r.change24h)&&r.change24h>=2&&r.change24h<=12&&
@@ -32,7 +33,7 @@ function preselect(universe,day){
  const seen=new Set(),chosen=[];
  for(const r of universe){
   if(!r||typeof r.id!=='string'||!r.id||seen.has(r.id)||
-    typeof r.symbol!=='string'||!/^[A-Z0-9]{2,15}$/.test(r.symbol)||
+    typeof r.symbol!=='string'||
     !positive(r.priceUsd)||dateOf(r.sourceSnapshot)!==day)
     throw Error('Identité, prix ou date Seven invalides');
   seen.add(r.id);
