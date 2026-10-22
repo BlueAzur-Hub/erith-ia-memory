@@ -13,6 +13,8 @@ on:
       - 'public/agent_crypto_erith_ia/laboratoire/zcash-paper-model.js'
       - 'public/agent_crypto_erith_ia/laboratoire/test-zcash-case-study.cjs'
       - 'public/agent_crypto_erith_ia/data/crypto/research/zcash.json'
+      - 'public/agent_crypto_erith_ia/laboratoire/case-market-hourly-reader.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-case-market-hourly-reader.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
       - '.github/workflows/agent-crypto-radar20-regimes.yml'
   push:
@@ -34,6 +36,8 @@ on:
       - 'public/agent_crypto_erith_ia/laboratoire/zcash-paper-model.js'
       - 'public/agent_crypto_erith_ia/laboratoire/test-zcash-case-study.cjs'
       - 'public/agent_crypto_erith_ia/data/crypto/research/zcash.json'
+      - 'public/agent_crypto_erith_ia/laboratoire/case-market-hourly-reader.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-case-market-hourly-reader.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
   workflow_dispatch:
 permissions:
@@ -67,6 +71,8 @@ jobs:
           node --check public/agent_crypto_erith_ia/laboratoire/zcash-paper-model.js
           node --test public/agent_crypto_erith_ia/laboratoire/test-zcash-case-study.cjs
           node --check public/agent_crypto_erith_ia/laboratoire/radar-forward-decisions.js
+          node --check public/agent_crypto_erith_ia/laboratoire/case-market-hourly-reader.js
+          node --test public/agent_crypto_erith_ia/laboratoire/test-case-market-hourly-reader.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar-forward-decisions.cjs
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs
 
