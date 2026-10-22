@@ -62,6 +62,13 @@ assert(view.includes('mountCapitalPulse(node)'));
 assert(view.includes('comparator.querySelector(".sc-body")'));
 assert(view.includes('body.insertBefore(pulse,body.firstChild)'));
 assert(view.includes('data-capital-compact'));
+assert(view.includes('mountPaperQuoteEvidence(node)'));
+assert(view.includes('sevenCapitalPaperEvidence'));
+assert(view.includes('PAPER_QUOTE_REPORT'));
+assert(view.includes('budget_per_alternative_usdc!==10'));
+assert(view.includes('positions_closed!==0'));
+assert(!view.includes('/api/v5/market/books'),'Comparator only reads GitHub publication');
+
 assert(view.includes('SEVEN AUTO · archive '));
 assert(!view.includes('host.insertAdjacentElement("afterend",pulse)'),
   'Seven Auto must never become an orphan after the Paper Laboratory');
