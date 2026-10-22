@@ -680,6 +680,28 @@ function mountRadarMarketPressure(comparator){
   pane.querySelector("[data-pressure-refresh]")?.addEventListener("click",()=>{void refresh();});
 }
 
+/* Reserved integration slot in the EXISTING Trader. No second Operator runtime,
+ * no iframe, no API credentials and no automatic synchronization. */
+function mountYoannOperatorSection(comparator){
+  if(document.getElementById("traderYoannOperatorSection"))return;
+  const section=document.createElement("details");
+  section.id="traderYoannOperatorSection";
+  section.className="sc operator-yoann-section";
+  section.style.cssText="margin:16px 0;padding:12px 16px;border:1px solid #336476;border-radius:12px;background:#0b2232;color:#dfedf3";
+  section.innerHTML=[
+    '<summary style="cursor:pointer;font-weight:750;color:#efcf88">OPERATOR · YOANN — Développements indépendants et passerelle future</summary>',
+    '<div style="padding:12px 4px 4px">',
+    '<p>Emplacement de liaison dans le Trader Administrator, <strong>pas</strong> un nouveau Trader Operator et pas un atelier Docker. Yoann développe dans son dépôt privé. Toute reprise ici exige revue, tests et autorisation.</p>',
+    '<p><strong>Développement source :</strong> <a href="https://github.com/malabaryo/tradus/tree/main/public/agent_crypto_erith_ia" target="_blank" rel="noopener noreferrer">malabaryo/tradus · privé ↗</a></p>',
+    '<p><strong>Code Trader Yoann :</strong> <a href="https://github.com/malabaryo/tradus/blob/main/public/agent_crypto_erith_ia/trader/trading-desk.html" target="_blank" rel="noopener noreferrer">Trader dans le privé ↗</a></p>',
+    '<p><strong>Rendu public Operator :</strong> <a href="https://blueazur-hub.github.io/agent-crypto-operator/public/agent_crypto_erith_ia/trader/trading-desk.html" target="_blank" rel="noopener noreferrer">Ouvrir son Trader ↗</a></p>',
+    '<p><strong>Règles :</strong> pas de copie de comptes, clés, Bridge, données personnelles ou privilèges Administrator ; pas de fusion automatique. Sur le dépôt public, conserver seulement les dépendances web effectivement nécessaires, après inventaire et tests des liens. Ne jamais supprimer du privé de Yoann.</p>',
+    '<p>Les futures évolutions compatibles pourront être présentées ici en lecture seule, puis intégrées par PR contrôlée dans le MASTER. Aucun ordre, aucune communication automatique avec le PC de Yoann.</p>',
+    '</div>'
+  ].join("");
+  comparator.insertAdjacentElement("afterend",section);
+}
+
 function mountCapitalPulse(comparator){
   if(document.getElementById("sevenCapitalPulse"))return;
   const body=comparator.querySelector(".sc-body");
@@ -808,6 +830,7 @@ function mount(){
   mountPaperQuoteEvidence(node);
   mountRadarSelectionViewer(node);
   mountRadarMarketPressure(node);
+  mountYoannOperatorSection(node);
   node.addEventListener("toggle",()=>{
     if(!node.open){
       ++benchmarkToken;
