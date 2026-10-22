@@ -40,7 +40,7 @@ test("spot math accounts for fee in ZEC at entry and USDC at exit",()=>{
 test("a flat price loses the assumed roundtrip costs",()=>{
  const m=model.simulate({budget_usdc:10,entry_ask_usdc:100,exit_bid_usdc:100,buy_fee_percent:.1,sell_fee_percent:.1});
  assert.ok(m.pnl_usdc<0);
- assert.equal(m.pnl_pct,-0.19990000000000285);
+ assert.ok(Math.abs(m.pnl_pct-(-0.1999))<1e-9);
 });
 test("invalid assumptions fail closed",()=>{
  const base={budget_usdc:10,entry_ask_usdc:1285.86,exit_bid_usdc:1297.85,buy_fee_percent:.1,sell_fee_percent:.1};
