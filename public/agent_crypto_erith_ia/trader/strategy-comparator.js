@@ -305,6 +305,10 @@ function mountPaperQuoteEvidence(comparator){
     '<p data-paper-quote-status role="status" aria-live="polite">Ouvrir pour lire le journal public horodaté.</p>',
     '<div class="sc-scroll"><table><thead><tr><th>Actif</th><th>Contrôle</th><th>Dernier bid</th><th>Résultat conditionnel 10 USDC</th></tr></thead>',
     '<tbody data-paper-quote-rows></tbody></table></div>',
+    '<h4>Bilans prospectifs · 4 h / 24 h / 48 h</h4>',
+    '<p class="sc-note">Premier relevé daté disponible après chaque échéance (tolérance 4 h) ; aucun prix choisi a posteriori.</p>',
+    '<div class="sc-scroll"><table><thead><tr><th>Horizon</th><th>Actif</th><th>Statut</th><th>Résultat conditionnel</th></tr></thead>',
+    '<tbody data-paper-horizon-rows><tr><td colspan="4">En attente de lecture.</td></tr></tbody></table></div>',
     '<p class="sc-note">Un bid futur est une cotation, non un fill. Disponibilité réelle et frais du compte non certifiés. Aucune transaction lancée.</p>',
     '<p><a href="../data/trader_flux/seven_capital_spot/index.json" target="_blank" rel="noopener noreferrer">Journal et empreintes SHA-256 ↗</a></p>'
   ].join("");
@@ -312,6 +316,8 @@ function mountPaperQuoteEvidence(comparator){
   body.insertBefore(pane,first?first.nextSibling:null);
   const status=pane.querySelector("[data-paper-quote-status]");
   const rows=pane.querySelector("[data-paper-quote-rows]");
+  const horizonRows=pane.querySelector("[data-paper-horizon-rows]");
+  const spotCompact=comparator.querySelector("[data-spot-compact]");
   let busy=false;
   pane.addEventListener("toggle",async()=>{
     if(!pane.open||busy)return;busy=true;
@@ -360,10 +366,44 @@ function mountPaperQuoteEvidence(comparator){
         for(const value of cells){const td=document.createElement("td");td.textContent=value;tr.appendChild(td);}
         rows.appendChild(tr);
       }
+      if(spotCompact)spotCompact.textContent="SEVEN SPOT/USDC · cohorte "+
+        cohort.cohort_id+" · "+cohort.observations+" relevé(s) · 0 ordre";
+      horizonRows.replaceChildren();
+      const horizonLabels={AWAITING_HORIZON:"En attente",HORIZON_MISSED_WINDOW:"Fenêtre sans relevé",
+        ENTRY_REJECTED:"Entrée refusée",ENTRY_INVALID:"Entrée non évaluable",
+        EXIT_NOT_EVALUABLE:"Carnet non évaluable",LATEST_BID_EVALUABLE:"Cot. sortie théorique"};
+      const horizons=Array.isArray(cohort.horizons)?cohort.horizons:[];
+      if(horizons.length && (horizons.length!==3||
+          horizons.map(x=>x.hours).join(",")!=="4,24,48"))
+        throw Error("Horizons PAPER non conformes");
+      for(const h of horizons){
+        if(!Array.isArray(h.candidates)||h.candidates.length>3||
+          h.no_hindsight_selection!==true)throw Error("Horodatage horizon invalide");
+        for(const x of h.candidates){
+          if(!Object.hasOwn(horizonLabels,x.status)||x.orders_enabled!==false||
+             x.paper_fills!==0||x.position_closed!==false||x.real_profit_usdc!==null)
+            throw Error("Evaluation horizon invalide");
+          const tr=document.createElement("tr");
+          const pnl=x.status==="LATEST_BID_EVALUABLE"&&
+             typeof x.hypothetical_pnl_usdc==="string"?
+              x.hypothetical_pnl_usdc+" USDC · hypothétique":"Non établi";
+          for(const value of [h.hours+" h",x.symbol,horizonLabels[x.status],pnl]){
+            const td=document.createElement("td");td.textContent=value;tr.appendChild(td);
+          }
+          horizonRows.appendChild(tr);
+        }
+      }
+      if(!horizons.length){
+        const tr=document.createElement("tr"),td=document.createElement("td");
+        td.colSpan=4;td.textContent="Bilans 4 h / 24 h / 48 h non publiés.";
+        tr.appendChild(td);horizonRows.appendChild(tr);
+      }
       status.textContent="Cohorte "+cohort.cohort_id+" · "+
         cohort.observations+" relevé(s) · 0 ordre · aucune position ouverte.";
     }catch(_){
       rows.replaceChildren();
+      horizonRows.replaceChildren();
+      if(spotCompact)spotCompact.textContent="SEVEN SPOT/USDC · journal indisponible · 0 ordre";
       status.textContent="Journal PAPER public indisponible ou non conforme · résultat non établi.";
     }finally{clearTimeout(stop);busy=false;}
   });
