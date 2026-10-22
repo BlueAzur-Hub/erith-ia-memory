@@ -61,6 +61,43 @@ class Top250CoverageTests(unittest.TestCase):
         self.assertEqual(len(result),801)
         self.assertEqual(seen,list(range(1,10)))
 
+    def test_release_pagination_shift_restarts_whole_inventory(self):
+        """An inserted Release shifts a page boundary; neither tag is lost."""
+        seen=[]
+        first_page=[{"tag_name":f"release-{i}"} for i in range(100)]
+        second_page=[{"tag_name":f"release-{i}"} for i in range(100,151)]
+        def fluctuating(args,**_):
+            page=int(args[-1].split("page=")[-1])
+            seen.append(page)
+            if page==1:
+                return type("Reply",(),{"stdout":json.dumps(first_page)})()
+            if len(seen)==2:
+                # Boundary release 99 is duplicated by concurrent insertion.
+                rows=[first_page[-1],*second_page[:-1]]
+            else:
+                rows=second_page
+            return type("Reply",(),{"stdout":json.dumps(rows)})()
+        with mock.patch.object(cat.subprocess,"run",side_effect=fluctuating):
+            values=cat.listed_releases()
+        self.assertEqual(seen,[1,2,1,2])
+        self.assertEqual(len(values),151)
+        self.assertEqual(len({x["tag_name"] for x in values}),151)
+
+    def test_persistent_duplicate_release_tag_blocks_publication(self):
+        seen=[]
+        def repeated(args,**_):
+            page=int(args[-1].split("page=")[-1])
+            seen.append(page)
+            if page==1:
+                rows=[{"tag_name":f"release-{i}"} for i in range(100)]
+            else:
+                rows=[{"tag_name":"release-99"},{"tag_name":"release-100"}]
+            return type("Reply",(),{"stdout":json.dumps(rows)})()
+        with mock.patch.object(cat.subprocess,"run",side_effect=repeated):
+            with self.assertRaisesRegex(ValueError,"Unstable Release pagination"):
+                cat.listed_releases()
+        self.assertEqual(seen,[1,2,1,2,1,2])
+
     def test_full_250_with_only_one_real_verified_month(self):
         venue,monthly=self.setup_rows()
         result=cat.build(venue,monthly)
