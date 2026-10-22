@@ -57,6 +57,11 @@ footer{color:var(--muted);font-size:12px;margin-top:25px}
 <p role="status" aria-live="polite" class="status" data-case-market-status>Ouvrir ce volet pour lire une archive réelle.</p>
 <div class="table-wrap"><table><thead><tr><th>Marché Spot</th><th>État</th><th>Dernier</th><th>Meilleur bid / ask</th><th>Spread</th><th>Profondeur 5 niveaux bid / ask</th><th>Clôture 15 min</th><th>Début bougie UTC</th></tr></thead>
 <tbody data-case-market-rows><tr><td colspan="8">Aucun relevé chargé.</td></tr></tbody></table></div>
+<h3>Évolution vérifiée · relevés horaires, 48 h maximum</h3>
+<p class="muted">Comparer exclusivement des prix de <strong>la même paire Spot</strong>, réellement archivés aux heures UTC correspondantes. Les heures non capturées et les marchés indisponibles ne reçoivent jamais de prix. La variation « 1 heure » exige deux heures archivées consécutives et deux marchés observés à ces heures.</p>
+<p role="status" aria-live="polite" class="status" data-case-market-evolution>Avant le deuxième relevé, aucune tendance horaire ne peut être mesurée.</p>
+<div class="table-wrap"><table aria-label="Comparaison descriptive des observations Spot archivées"><thead><tr><th>Paire</th><th>Marchés observés / heures archivées</th><th>Heures indisponibles</th><th>Évolution entre 1re et dernière observation</th><th>Variation 1 h consécutive</th><th>Spread médian observé</th><th>Dernier spread</th><th>Interprétation</th></tr></thead><tbody data-case-market-evolution-rows><tr><td colspan="8">Aucun résultat encore calculé.</td></tr></tbody></table></div>
+<p class="chart-caption">Une évolution positive après une baisse n'est pas un retournement confirmé. La fenêtre de 48 h est bornée aux jours UTC actuels/précédents disponibles ; « sans archive » signifie une heure sans preuve publiée, pas une absence de transactions sur l'exchange.</p>
 <p class="chart-caption">Unités natives uniquement, sans conversion USDC↔USDT↔USD. Lorsqu'aucune cotation valide ne peut être obtenue, « Indisponible » remplace le prix. Ce volet n'émet aucun signal d'achat ni de vente.</p>
 <p><a href="../data/crypto/case-market-hourly/latest.json" target="_blank" rel="noopener noreferrer">État horaire ZEC + AXIS et date de la source ↗</a> · <a href="zcash-case-study.html">Cas d'école ZEC PAPER</a></p>
 </details>
