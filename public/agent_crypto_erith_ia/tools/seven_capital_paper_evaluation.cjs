@@ -104,6 +104,47 @@ function assess(asset,first,firstRef,later,laterRef){
    no_trade_fill_claim:true});
  }catch(error){return none(asset,'ENTRY_INVALID','Reconstitution de l’entrée invalide : '+error.message,base)}
 }
+
+// Frozen research horizons: first archived snapshot after the target.
+// Grace=4h accommodates the existing ~4h collection rhythm.
+// Missing or rejected quotes remain non-evaluable; NO retroactive best-price pick.
+const HORIZON_HOURS=Object.freeze([4,24,48]);
+const HORIZON_GRACE_HOURS=4;
+function fixedHorizons(cohort,records,read){
+ const firstRecord=records[0],first=read(firstRecord);
+ const anchor=stamp(first.recorded_at_utc);
+ if(!Number.isFinite(anchor))throw Error('Horodatage initial invalide');
+ return HORIZON_HOURS.map(hours=>{
+  const target=anchor+hours*3600000,windowEnd=target+HORIZON_GRACE_HOURS*3600000;
+  // Strict chronological index was SHA-verified by journal.readIndex.
+  const next=records.slice(1).find(r=>stamp(r.recorded_at_utc)>=target);
+  const within=next&&stamp(next.recorded_at_utc)<=windowEnd;
+  const doc=within?read(next):null;
+  const candidates=cohort.selected.map(asset=>{
+   const initial=assess(asset,first,firstRecord.sha256,null,null);
+   if(initial.status==='ENTRY_REJECTED'||initial.status==='ENTRY_INVALID')
+    return {...initial,horizon_hours:hours,
+     horizon_target_at_utc:new Date(target).toISOString(),
+     grace_hours:HORIZON_GRACE_HOURS};
+   if(!within){
+    const status=next?'HORIZON_MISSED_WINDOW':'AWAITING_HORIZON';
+    return none(asset,status,next?'Aucun relevé dans la fenêtre fixée':'Aucun relevé postérieur à l’horizon',
+     {horizon_hours:hours,horizon_target_at_utc:new Date(target).toISOString(),
+      grace_hours:HORIZON_GRACE_HOURS});
+   }
+   const outcome=assess(asset,first,firstRecord.sha256,doc,next.sha256);
+   return {...outcome,horizon_hours:hours,
+     horizon_target_at_utc:new Date(target).toISOString(),
+     observation_delay_minutes:Math.round((stamp(next.recorded_at_utc)-target)/60000),
+     observed_at_utc:next.recorded_at_utc};
+  });
+  return {hours,target_at_utc:new Date(target).toISOString(),
+   grace_hours:HORIZON_GRACE_HOURS,recorded_at_utc:within?next.recorded_at_utc:null,
+   selection:'FIRST_ARCHIVED_RECORD_AT_OR_AFTER_TARGET',
+   no_hindsight_selection:true,candidates};
+ });
+}
+
 function evaluate(root=ROOT){
  const index=journal.readIndex(root); // SHA-256 validation of every source file
  const cohorts=[];
@@ -121,7 +162,7 @@ function evaluate(root=ROOT){
    observations:records.length,
    independent_alternative_scenarios:true,
    not_a_combined_30_usdc_portfolio:true,
-   candidates:entries});
+   candidates:entries,horizons:fixedHorizons(c,records,read)});
  }
  const counts={awaiting:0,entry_rejected:0,exit_evaluable:0,insufficient:0};
  for(const c of cohorts)for(const x of c.candidates){
@@ -139,7 +180,8 @@ function evaluate(root=ROOT){
   positions_opened:0,positions_closed:0,real_profit_usdc:null,
   paper_realized_profit_usdc:null,
   last_source_recorded_at_utc:index.records.at(-1)?.recorded_at_utc||null,
-  counts,cohorts,note:'One 10 USDC alternative per asset. Latest observed bid only, no favorable hindsight selection. Quotes and fees are hypothetical. NO position, fill or certified P&L.'};
+  counts,horizon_hours:HORIZON_HOURS,horizon_grace_hours:HORIZON_GRACE_HOURS,
+  cohorts,note:'One 10 USDC alternative per asset. Latest observed bid only, no favorable hindsight selection. Quotes and fees are hypothetical. NO position, fill or certified P&L.'};
 }
 function run(root=ROOT){
  const r=evaluate(root),file=path.join(root,'paper_evaluation.json');
@@ -151,4 +193,4 @@ function run(root=ROOT){
  return r;
 }
 if(require.main===module)try{run()}catch(e){console.error('SEVEN PAPER EVALUATION STOP:',e.message);process.exitCode=1}
-module.exports={SCHEMA,assess,evaluate,run};
+module.exports={SCHEMA,assess,fixedHorizons,evaluate,run};

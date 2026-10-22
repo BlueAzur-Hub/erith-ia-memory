@@ -305,6 +305,10 @@ function mountPaperQuoteEvidence(comparator){
     '<p data-paper-quote-status role="status" aria-live="polite">Ouvrir pour lire le journal public horodaté.</p>',
     '<div class="sc-scroll"><table><thead><tr><th>Actif</th><th>Contrôle</th><th>Dernier bid</th><th>Résultat conditionnel 10 USDC</th></tr></thead>',
     '<tbody data-paper-quote-rows></tbody></table></div>',
+    '<h4>Bilans prospectifs · 4 h / 24 h / 48 h</h4>',
+    '<p class="sc-note">Premier relevé daté disponible après chaque échéance (tolérance 4 h) ; aucun prix choisi a posteriori.</p>',
+    '<div class="sc-scroll"><table><thead><tr><th>Horizon</th><th>Actif</th><th>Statut</th><th>Résultat conditionnel</th></tr></thead>',
+    '<tbody data-paper-horizon-rows><tr><td colspan="4">En attente de lecture.</td></tr></tbody></table></div>',
     '<p class="sc-note">Un bid futur est une cotation, non un fill. Disponibilité réelle et frais du compte non certifiés. Aucune transaction lancée.</p>',
     '<p><a href="../data/trader_flux/seven_capital_spot/index.json" target="_blank" rel="noopener noreferrer">Journal et empreintes SHA-256 ↗</a></p>'
   ].join("");
@@ -312,6 +316,8 @@ function mountPaperQuoteEvidence(comparator){
   body.insertBefore(pane,first?first.nextSibling:null);
   const status=pane.querySelector("[data-paper-quote-status]");
   const rows=pane.querySelector("[data-paper-quote-rows]");
+  const horizonRows=pane.querySelector("[data-paper-horizon-rows]");
+  const spotCompact=comparator.querySelector("[data-spot-compact]");
   let busy=false;
   pane.addEventListener("toggle",async()=>{
     if(!pane.open||busy)return;busy=true;
@@ -360,10 +366,44 @@ function mountPaperQuoteEvidence(comparator){
         for(const value of cells){const td=document.createElement("td");td.textContent=value;tr.appendChild(td);}
         rows.appendChild(tr);
       }
+      if(spotCompact)spotCompact.textContent="SEVEN SPOT/USDC · cohorte "+
+        cohort.cohort_id+" · "+cohort.observations+" relevé(s) · 0 ordre";
+      horizonRows.replaceChildren();
+      const horizonLabels={AWAITING_HORIZON:"En attente",HORIZON_MISSED_WINDOW:"Fenêtre sans relevé",
+        ENTRY_REJECTED:"Entrée refusée",ENTRY_INVALID:"Entrée non évaluable",
+        EXIT_NOT_EVALUABLE:"Carnet non évaluable",LATEST_BID_EVALUABLE:"Cot. sortie théorique"};
+      const horizons=Array.isArray(cohort.horizons)?cohort.horizons:[];
+      if(horizons.length && (horizons.length!==3||
+          horizons.map(x=>x.hours).join(",")!=="4,24,48"))
+        throw Error("Horizons PAPER non conformes");
+      for(const h of horizons){
+        if(!Array.isArray(h.candidates)||h.candidates.length>3||
+          h.no_hindsight_selection!==true)throw Error("Horodatage horizon invalide");
+        for(const x of h.candidates){
+          if(!Object.hasOwn(horizonLabels,x.status)||x.orders_enabled!==false||
+             x.paper_fills!==0||x.position_closed!==false||x.real_profit_usdc!==null)
+            throw Error("Evaluation horizon invalide");
+          const tr=document.createElement("tr");
+          const pnl=x.status==="LATEST_BID_EVALUABLE"&&
+             typeof x.hypothetical_pnl_usdc==="string"?
+              x.hypothetical_pnl_usdc+" USDC · hypothétique":"Non établi";
+          for(const value of [h.hours+" h",x.symbol,horizonLabels[x.status],pnl]){
+            const td=document.createElement("td");td.textContent=value;tr.appendChild(td);
+          }
+          horizonRows.appendChild(tr);
+        }
+      }
+      if(!horizons.length){
+        const tr=document.createElement("tr"),td=document.createElement("td");
+        td.colSpan=4;td.textContent="Bilans 4 h / 24 h / 48 h non publiés.";
+        tr.appendChild(td);horizonRows.appendChild(tr);
+      }
       status.textContent="Cohorte "+cohort.cohort_id+" · "+
         cohort.observations+" relevé(s) · 0 ordre · aucune position ouverte.";
     }catch(_){
       rows.replaceChildren();
+      horizonRows.replaceChildren();
+      if(spotCompact)spotCompact.textContent="SEVEN SPOT/USDC · journal indisponible · 0 ordre";
       status.textContent="Journal PAPER public indisponible ou non conforme · résultat non établi.";
     }finally{clearTimeout(stop);busy=false;}
   });
@@ -382,8 +422,8 @@ function mountCapitalPulse(comparator){
     pulse.textContent=detail;
     if(compact)compact.textContent=short;
   };
-  write("SEVEN AUTO · Budget 10 USDC · réserve 0,94 USDC · recherche PAPER quotidienne…",
-    "SEVEN AUTO · recherche PAPER quotidienne · aucun ordre");
+  write("SEVEN AUTO · Radar quotidien · budget 10 USDC · réserve 0,94 USDC…",
+    "SEVEN AUTO · Radar quotidien · 0 ordre");
   const c=new AbortController();
   const stop=setTimeout(()=>c.abort(),10000);
   fetch(new URL(CAPITAL_REPORT,document.baseURI),{
@@ -402,7 +442,7 @@ function mountCapitalPulse(comparator){
        data.milestones_usdc.join(",")!=="12,15,17"||
        !Array.isArray(data.observations))
        throw Error("contrat de sécurité du rapport non conforme");
-    let spot="Spot/USDC : rapport en attente";
+    let spot="Spot Gate Radar quotidien en attente (journal séparé du Spot daté)";
     try{
       // Second tiny public JSON, no polling or OKX API call from Firefox.
       const answer=await fetch(new URL(SPOT_GATE_REPORT,document.baseURI),{
@@ -426,20 +466,20 @@ function mountCapitalPulse(comparator){
       if(gate.input_last_archive_utc===data.latest_archive_date_utc){
         const screens=gate.candidates.filter(x=>
           x.status==="PUBLIC_BOOK_AND_SIZE_PAPER_SCREEN_PASSED").length;
-        spot="Spot/USDC public "+screens+"/"+gate.candidates.length+
+        spot="Spot Gate Radar quotidien "+screens+"/"+gate.candidates.length+
           " présélection(s) · identité/frais/ordres NON certifiés";
       }
     }catch(_){ /* Optional public report; retain the proven Radar status. */ }
-    write("SEVEN AUTO · 10 USDC à étudier + 0,94 USDC réservés · "+
-      "objectifs 12 → 15 → 17 · dernière archive "+(data.latest_archive_date_utc||"absente")+
-      " · "+data.observations.length+" observation(s) suivie(s) · "+
+    write("SEVEN AUTO · Radar quotidien · 10 USDC à étudier + 0,94 USDC réservés · "+
+      "objectifs 12 → 15 → 17 · archive Radar "+(data.latest_archive_date_utc||"absente")+
+      " · "+data.observations.length+" observation(s) Radar · "+
       spot+" · 0 ordre réel.",
       "SEVEN AUTO · archive "+(data.latest_archive_date_utc||"absente")+
-      " · "+data.observations.length+" observation(s) · 0 ordre");
+      " · Radar quotidien "+data.observations.length+" observation(s) · 0 ordre");
   }).catch(()=>{
-    write("SEVEN AUTO · 10 USDC + réserve 0,94 USDC · "+
-      "journal quotidien indisponible ou non encore publié · aucun ordre réel.",
-      "SEVEN AUTO · journal indisponible · 0 ordre réel");
+    write("SEVEN AUTO · Radar quotidien · 10 USDC + réserve 0,94 USDC · "+
+      "journal Radar indisponible ; suivi Spot/USDC ci-dessous indépendant · aucun ordre réel.",
+      "SEVEN AUTO · Radar quotidien indisponible · 0 ordre réel");
   }).finally(()=>clearTimeout(stop));
 }
 function mount(){
@@ -451,7 +491,7 @@ function mount(){
     style.textContent=[
       "#traderStrategyComparator{grid-column:1/-1;display:block;margin:12px 0 28px;background:#0a1e2c;color:#e5f6fa;border:1px solid #456b80;border-radius:12px;font:13px/1.5 system-ui,sans-serif;overflow:hidden}",
       "#traderStrategyComparator>summary{padding:14px;cursor:pointer;font-weight:750;color:#f0d79e;background:#11283b}",
-      "#traderStrategyComparator>summary [data-capital-compact]{display:block;color:#b7deea;font-weight:500;font-size:12px;line-height:1.45;margin:4px 0 0 14px}",
+      "#traderStrategyComparator>summary [data-capital-compact],#traderStrategyComparator>summary [data-spot-compact]{display:block;color:#b7deea;font-weight:500;font-size:12px;line-height:1.45;margin:4px 0 0 14px}",
       "#traderStrategyComparator .sc-body{padding:14px}",
       "#traderStrategyComparator .sc-controls{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}",
       "#traderStrategyComparator label{display:grid;gap:5px;font-size:12px}",
@@ -466,7 +506,7 @@ function mount(){
   }
   const node=document.createElement("details");node.id=ID;
   node.innerHTML=[
-    '<summary>SEVEN HEAVEN · Comparateur de stratégies PAPER · archives et réserve USDC<span data-capital-compact>SEVEN AUTO · recherche PAPER quotidienne · aucun ordre</span></summary>',
+    '<summary>SEVEN HEAVEN · Comparateur de stratégies PAPER · archives et réserve USDC<span data-capital-compact>SEVEN AUTO · Radar quotidien · 0 ordre</span><span data-spot-compact>SEVEN SPOT/USDC · ouvrir le suivi daté pour actualiser · 0 ordre</span></summary>',
     '<div class="sc-body">',
     '<p>Étude documentaire, pas un signal. La réserve fictive est en USDC ; les expériences historiques du Radar 20 sont en USDT Binance. Aucune parité ou rentabilité n’est certifiée entre les deux.</p>',
     '<div class="sc-controls">',
