@@ -9,9 +9,9 @@
   "orders_enabled": false,
   "executed_order": false,
   "first_observed_at": "2026-10-17T23:53:55Z",
-  "last_observed_at": "2026-10-22T01:07:46Z",
+  "last_observed_at": "2026-10-22T01:24:31Z",
   "last": {
-    "at_utc": "2026-10-22T01:07:46Z",
+    "at_utc": "2026-10-22T01:24:31Z",
     "coin_id": "impossible-cloud-network-token",
     "symbol": "ICNT",
     "venue": "Bitget",
@@ -29,13 +29,13 @@
       "last_21_bars_contiguous": true
     },
     "book": {
-      "best_bid_usdt": 0.1892,
-      "best_ask_usdt": 0.1894,
-      "spread_bps": 10.56524,
-      "book_timestamp_utc": "2026-10-22T01:07:46Z",
+      "best_bid_usdt": 0.1903,
+      "best_ask_usdt": 0.1904,
+      "spread_bps": 5.25348,
+      "book_timestamp_utc": "2026-10-22T01:24:32Z",
       "book_age_seconds": 0,
-      "bid_top20_notional_usdt": 29966.3859,
-      "ask_top20_notional_usdt": 33869.0462
+      "bid_top20_notional_usdt": 33474.0735,
+      "ask_top20_notional_usdt": 41179.8426
     },
     "source": "Bitget public Spot",
     "paper_only": true,
@@ -613,6 +613,38 @@
         "book_age_seconds": 0,
         "bid_top20_notional_usdt": 29966.3859,
         "ask_top20_notional_usdt": 33869.0462
+      },
+      "source": "Bitget public Spot",
+      "paper_only": true,
+      "orders_enabled": false,
+      "executed_order": false
+    },
+    {
+      "at_utc": "2026-10-22T01:24:31Z",
+      "coin_id": "impossible-cloud-network-token",
+      "symbol": "ICNT",
+      "venue": "Bitget",
+      "market": "ICNTUSDT",
+      "instrument_type": "SPOT",
+      "quote": "USDT",
+      "identity_status": "EXCHANGE_SPOT_SYMBOL_ONLY_CONTRACT_NOT_VERIFIED",
+      "candles": {
+        "last_closed_hour_utc": "2026-10-22T00:00:00Z",
+        "close_usdt": 0.191,
+        "change_close_20h_pct": -12.42549,
+        "last_hour_volume_base": 100104.67,
+        "last_hour_quote_volume_usdt": 19108.687744,
+        "median_prior_20h_volume_base": 197967.165,
+        "last_21_bars_contiguous": true
+      },
+      "book": {
+        "best_bid_usdt": 0.1903,
+        "best_ask_usdt": 0.1904,
+        "spread_bps": 5.25348,
+        "book_timestamp_utc": "2026-10-22T01:24:32Z",
+        "book_age_seconds": 0,
+        "bid_top20_notional_usdt": 33474.0735,
+        "ask_top20_notional_usdt": 41179.8426
       },
       "source": "Bitget public Spot",
       "paper_only": true,
