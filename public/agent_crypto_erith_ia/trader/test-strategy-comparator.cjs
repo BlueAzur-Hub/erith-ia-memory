@@ -73,6 +73,14 @@ assert(view.includes('mountPaperQuoteEvidence(node)'));
 assert(view.includes('mountRadarSelectionViewer(node)'));
 
 assert(view.includes('mountRadarMarketPressure(node)'));
+assert(view.includes('mountYoannOperatorSection(node)'));
+assert(view.includes('traderYoannOperatorSection'));
+assert(view.includes('comparator.insertAdjacentElement("afterend",section)'));
+assert(view.includes('OPERATOR · YOANN — Développements indépendants'));
+assert(view.includes('https://github.com/malabaryo/tradus/blob/main/public/agent_crypto_erith_ia/trader/trading-desk.html'));
+assert(view.includes('https://blueazur-hub.github.io/agent-crypto-operator/public/agent_crypto_erith_ia/trader/trading-desk.html'));
+assert(!view.includes('src="../operator/yoann-workspace.html"'));
+
 assert(view.includes('data-pressure-refresh'));
 assert(view.includes('studyNativeUsdcPressure(h,d)'));
 assert(view.includes('not_a_trade_signal:true'));
