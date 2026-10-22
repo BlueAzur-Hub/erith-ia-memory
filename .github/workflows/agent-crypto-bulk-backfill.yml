@@ -9,6 +9,8 @@ on:
       - '.github/workflows/agent-crypto-bulk-backfill.yml'
       - 'public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
+      - 'public/agent_crypto_erith_ia/tools/import_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/test_historical_bulk_identity_rank_drift.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py'
       - 'public/agent_crypto_erith_ia/tools/probe_missing_binance_spot_months.py'
@@ -21,6 +23,8 @@ on:
       - '.github/workflows/agent-crypto-bulk-backfill.yml'
       - 'public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py'
       - 'public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py'
+      - 'public/agent_crypto_erith_ia/tools/import_historical_bulk.py'
+      - 'public/agent_crypto_erith_ia/tools/test_historical_bulk_identity_rank_drift.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt.py'
       - 'public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py'
       - 'public/agent_crypto_erith_ia/tools/probe_missing_binance_spot_months.py'
@@ -50,6 +54,7 @@ jobs:
           set -euo pipefail
           python -m py_compile public/agent_crypto_erith_ia/tools/orchestrate_historical_bulk.py
           python public/agent_crypto_erith_ia/tools/historical_bulk_orchestrator_test.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_historical_bulk_identity_rank_drift.py' -v
           python public/agent_crypto_erith_ia/tools/historical_bulk_test.py
           python public/agent_crypto_erith_ia/tools/historical_coverage_test.py
           python public/agent_crypto_erith_ia/tools/verify_kraken_ohlcvt_test.py
