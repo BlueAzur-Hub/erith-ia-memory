@@ -70,6 +70,19 @@ assert(view.includes('horizons.map(x=>x.hours).join(",")'));
 assert(view.includes('h.no_hindsight_selection!==true'));
 
 assert(view.includes('mountPaperQuoteEvidence(node)'));
+assert(view.includes('mountRadarSelectionViewer(node)'));
+assert(view.includes('sevenRadarSelectionViewer'));
+assert(view.includes('data-radar-selection-filter'));
+assert(view.includes('data-radar-selection-refresh'));
+assert(view.includes('priority_research_ids'));
+assert(view.includes('source_observation_date_utc'));
+assert(view.includes('qualifi')===false || view.includes('qualification-latest.json'));
+assert(view.includes('journal:"Seven Capital · Spot/USDC"'));
+assert(view.includes('journal:"Radar historique · Spot/USDT"'));
+assert(view.includes('pane.querySelector("[data-radar-selection-refresh]")?.addEventListener("click"'));
+assert(view.includes('filter.addEventListener("change",render)'));
+assert(!view.includes('fetch("https://www.okx.com"'));
+
 assert(view.includes('sevenCapitalPaperEvidence'));
 assert(view.includes('PAPER_QUOTE_REPORT'));
 assert(view.includes('budget_per_alternative_usdc!==10'));
