@@ -1,0 +1,96 @@
+{
+  "schema": "erith.research.vaulta-radar-display-audit.v1",
+  "audit_date_utc": "2026-10-22",
+  "read_only": true,
+  "real_orders": 0,
+  "core_trader_modified": false,
+  "sources": {
+    "core_market_snapshot": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/latest.json",
+      "generated_at_utc": "2026-10-22T06:03:41.891Z",
+      "total": 250
+    },
+    "extended_market_snapshot": {
+      "path": "public/agent_crypto_erith_ia/data/crypto/extended.json",
+      "generated_at_utc": "2026-10-22T05:31:54.741Z",
+      "total": 750
+    },
+    "historical_catalogue": {
+      "path": "public/agent_crypto_erith_ia/data/historical_archive_prototype/top250_coverage_reconciliation.json",
+      "checkpoint_date_utc": "2026-10-12",
+      "source_type": "INDEX_RECONCILIATION_ONLY_NOT_A_SOURCE_FILE_REAUDIT_OR_ALL_TIME_COMPLETENESS_CERTIFICATE"
+    }
+  },
+  "vaulta": {
+    "coin_id": "vaulta",
+    "symbol": "A",
+    "name": "Vaulta",
+    "rank_at_core_snapshot": 206,
+    "market_snapshot_usd": 0.09457357186398882,
+    "market_snapshot_updated_at_utc": "2026-10-22T06:02:59.000Z",
+    "native_network_token": "Vaulta (EOS-renamed blockchain), native symbol A, contract core.vaulta",
+    "official_reference": "https://docs.eosnetwork.com/docs/latest/advanced-topics/upgrading-to-vaulta/",
+    "chart_24h": {
+      "observed_status": "LOADED_IN_FIREFOX_AFTER_DELAY",
+      "observed_coin_id": "vaulta",
+      "observed_symbol": "A",
+      "observed_source": "CoinGecko USD market_chart",
+      "observed_series_points": 288,
+      "observed_series_as_shown_local_paris": "2026-10-22 09:14:40",
+      "observed_price_usd_approx": "0.094092",
+      "verified_by": "human_supplied_screenshot_not_automated_runtime_test"
+    },
+    "transition_issue": {
+      "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/issues/618",
+      "observed_at_local_paris": "2026-10-22 09:15",
+      "selected_title": "A · Vaulta",
+      "previous_line_coin": "ZEC",
+      "previous_line_price_usd_approx": 1264,
+      "old_source_label": "HISTORIQUE CONSERVÉ",
+      "resolution_observed_at_local_paris": "2026-10-22 09:17",
+      "status": "REPRODUCED_SCREENSHOTS_UNFIXED",
+      "needed": "On switching asset, old-series price plot must be hidden until chart asset ID and selected asset match; preserve cache but not visible misattribution"
+    },
+    "native_daily_candles": {
+      "catalogue_checkpoint_utc": "2026-10-12",
+      "venue": "OKX Spot",
+      "instrument": "A-USDT",
+      "quote": "USDT",
+      "interval": "1Dutc",
+      "count": 490,
+      "start_date_utc": "2025-05-29",
+      "last_date_utc": "2026-09-30",
+      "gaps_within_observed_span": 0,
+      "first_trade_verified": false,
+      "complete_since_first_trade_certified": false,
+      "chart_browser_use_verified": false
+    }
+  },
+  "radar_top1000": {
+    "core_count": 250,
+    "extended_count": 750,
+    "combined_rows": 1000,
+    "combined_unique_coin_ids": 999,
+    "duplicates": [
+      {
+        "coin_id": "avant-usd",
+        "core_rank": 250,
+        "extended_rank": 251
+      }
+    ],
+    "core_time_utc": "2026-10-22T06:03:41.891Z",
+    "extended_time_utc": "2026-10-22T05:31:54.741Z",
+    "status": "PARTIAL_MIXED_SNAPSHOTS",
+    "issue": "https://github.com/BlueAzur-Hub/erith-ia-memory/issues/619",
+    "last_valid_snapshots_preserved": true,
+    "no_synthetic_rank_fill": true,
+    "archive_files_unchanged": true
+  },
+  "next_evidence": [
+    "Firefox runtime regression: on switching ZEC -> A hide previous ZEC line immediately and restore only after vaulta/USD/period series ownership verified",
+    "Check whether 490 A-USDT 1D OKX native candles are already accessible in long-period chart; catalogue availability is not UI integration proof",
+    "Top 1000: reconcile snapshots from same observation cycle or expose 999 unique IDs without inventing a missing asset",
+    "Validate A-USDT Spot instrument/current order constraints separately from CoinGecko historical A/USD chart",
+    "Follow 5 existing hourly markets ZEC AXIS BR JCT BEAM, expand 10 priority casebook only after native identity checks"
+  ]
+}
