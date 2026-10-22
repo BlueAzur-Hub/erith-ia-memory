@@ -90,27 +90,31 @@ function assess(candidate,instruments,books,at=Date.now()){
   if(!(ask>bid&&bid>0n&&lot>0n&&minimum>0n&&tick>0n&&
        ask%tick===0n&&bid%tick===0n))
    return {...publicOnly,status:'PRICE_TICK_OR_RULES_INVALID'};
+  // Dated, publicly validated top-of-book evidence, no execution claim.
+  const level={...publicOnly,
+    public_bid_usdc:fmt(bid),public_ask_usdc:fmt(ask),
+    public_bid_qty_base:fmt(bidQty),public_ask_qty_base:fmt(askQty)};
   const buyGross=(((budget*UNIT)/ask)/lot)*lot;
   if(buyGross===0n||buyGross<minimum)
-   return {...publicOnly,status:'BUY_BELOW_NATIVE_MINIMUM'};
+   return {...level,status:'BUY_BELOW_NATIVE_MINIMUM'};
   if(askQty<buyGross)
-   return {...publicOnly,status:'TOP_ASK_DEPTH_INSUFFICIENT'};
+   return {...level,status:'TOP_ASK_DEPTH_INSUFFICIENT'};
   // Hypothetical base-fee 0.10%. Real fees could be larger or charged in quote;
   // this is a stress check, not a fee verification.
   const assumedBaseFee=ceil(buyGross,1000n);
   const received=buyGross>assumedBaseFee?buyGross-assumedBaseFee:0n;
   const netSellable=(received/lot)*lot;
   if(netSellable<minimum)
-   return {...publicOnly,status:'SELL_BELOW_NATIVE_MINIMUM_AFTER_ASSUMED_BASE_FEE',
+   return {...level,status:'SELL_BELOW_NATIVE_MINIMUM_AFTER_ASSUMED_BASE_FEE',
      hypothetical_gross_base:fmt(buyGross),
      hypothetical_net_sellable_base:fmt(netSellable)};
   if(bidQty<netSellable)
-   return {...publicOnly,status:'TOP_BID_DEPTH_INSUFFICIENT'};
+   return {...level,status:'TOP_BID_DEPTH_INSUFFICIENT'};
   const hypotheticalSellGross=(netSellable*bid)/UNIT;
   const hypotheticalFeeQuote=ceil(hypotheticalSellGross,1000n);
   const hypotheticalNet=hypotheticalSellGross-hypotheticalFeeQuote;
   const hypotheticalSpent=(buyGross*ask)/UNIT;
-  return {...publicOnly,status:'PUBLIC_BOOK_AND_SIZE_PAPER_SCREEN_PASSED',
+  return {...level,status:'PUBLIC_BOOK_AND_SIZE_PAPER_SCREEN_PASSED',
     scenario_only:true,hypothetical_buy_fee_pct:0.1,
     hypothetical_sell_fee_pct:0.1,
     hypothetical_buy_qty_base:fmt(buyGross),
