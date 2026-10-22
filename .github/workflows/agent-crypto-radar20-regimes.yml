@@ -1,5 +1,11 @@
 name: Agent Crypto Radar20 Historical Regime Diagnostic
 on:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-activity-audit.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
+      - '.github/workflows/agent-crypto-radar20-regimes.yml'
   push:
     branches: [main]
     paths:
