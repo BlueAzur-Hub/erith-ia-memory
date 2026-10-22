@@ -3,6 +3,9 @@ on:
   pull_request:
     paths:
       - 'public/agent_crypto_erith_ia/laboratoire/radar-activity-audit.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-native-activity-view.js'
+      - 'public/agent_crypto_erith_ia/tools/analyze_radar20_native_activity.py'
+      - 'public/agent_crypto_erith_ia/tools/test_analyze_radar20_native_activity.py'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
       - '.github/workflows/agent-crypto-radar20-regimes.yml'
@@ -13,7 +16,11 @@ on:
       - 'public/agent_crypto_erith_ia/tools/analyze_radar20_regimes.py'
       - 'public/agent_crypto_erith_ia/tools/test_analyze_radar20_regimes.py'
       - 'public/agent_crypto_erith_ia/data/trader_flux/radar20_regimes/**'
+      - '!public/agent_crypto_erith_ia/data/trader_flux/radar20_regimes/native_activity.json'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-activity-audit.js'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-native-activity-view.js'
+      - 'public/agent_crypto_erith_ia/tools/analyze_radar20_native_activity.py'
+      - 'public/agent_crypto_erith_ia/tools/test_analyze_radar20_native_activity.py'
       - 'public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
   workflow_dispatch:
@@ -34,6 +41,8 @@ jobs:
         run: |
           set -euo pipefail
           python -m py_compile public/agent_crypto_erith_ia/tools/analyze_radar20_regimes.py
+          python -m py_compile public/agent_crypto_erith_ia/tools/analyze_radar20_native_activity.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_analyze_radar20_native_activity.py -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_analyze_radar20_regimes.py -v
       - uses: actions/setup-node@v4
         with:
@@ -42,6 +51,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/laboratoire/radar-activity-audit.js
+          node --check public/agent_crypto_erith_ia/laboratoire/radar-native-activity-view.js
           node --test public/agent_crypto_erith_ia/laboratoire/test-radar-activity-audit.cjs
 
       - name: Rebuild exactly from canonical 120 monthly JSONs and two published cash ledgers
@@ -55,9 +65,66 @@ jobs:
             cmp "$RUNNER_TEMP/regimes/$file" "$target/$file"
           done
           echo 'PASS: all 258 annotated trades match immutable published inputs byte-for-byte'
+      - name: Rebuild native hourly trade counts and repeated 3h patterns from the same immutable inputs
+        run: |
+          set -euo pipefail
+          python public/agent_crypto_erith_ia/tools/analyze_radar20_native_activity.py \
+            --data-root public/agent_crypto_erith_ia/data/trader_flux \
+            --out-file "$RUNNER_TEMP/native_activity.json"
+          python - "$RUNNER_TEMP/native_activity.json" <<'PY'
+          import json,sys
+          x=json.load(open(sys.argv[1]))
+          assert x['orders_enabled'] is False and x['real_orders']==0
+          assert x['paper_fills']==0 and x['prediction'] is False
+          assert x['periods'][0]['assets']==x['periods'][1]['assets']==20
+          assert len(x['periods'])==2 and x['market_hours']>80000
+          print('PASS: ',x['market_hours'],'hourly market observations')
+          PY
       - name: Guard against live order or portfolio runtime mutation
         run: |
           set -euo pipefail
           git diff --exit-code -- public/agent_crypto_erith_ia/trader \
             public/agent_crypto_erith_ia/administrator \
             public/agent_crypto_erith_ia/data/historical_archive_prototype
+
+  publish-descriptive-activity:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [audit-readonly]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Commit only the deterministically derived native hourly activity report
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python public/agent_crypto_erith_ia/tools/analyze_radar20_native_activity.py \
+              --data-root public/agent_crypto_erith_ia/data/trader_flux \
+              --out-file public/agent_crypto_erith_ia/data/trader_flux/radar20_regimes/native_activity.json
+            git add -- public/agent_crypto_erith_ia/data/trader_flux/radar20_regimes/native_activity.json
+            git diff --cached --check
+            if git diff --cached --quiet; then
+              echo 'NOOP: descriptive native hourly report unchanged'
+              exit 0
+            fi
+            git commit -m 'Archive deterministic Radar20 native hourly volume and trade frequency research'
+            if git push origin HEAD:main; then
+              echo 'PUBLISHED: Radar20 native hourly activity'
+              exit 0
+            fi
+            sleep "$((attempt * 3))"
+          done
+          echo 'Derived activity report not published; fail closed' >&2
+          exit 1
