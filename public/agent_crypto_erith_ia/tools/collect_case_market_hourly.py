@@ -99,7 +99,11 @@ def levels(raw, descending):
     result = []
     for level in raw:
         require(isinstance(level, list) and len(level) >= 2, "Invalid book level")
-        result.append([num(level[0]), num(level[1])])
+        # Bitget v3 emits JSON numbers; OKX v5 emits decimal strings.
+        # Preserve decimal strings, accept finite numeric JSON levels only.
+        values = [str(x) if isinstance(x, (int, float)) and not isinstance(x, bool)
+                  else x for x in level[:2]]
+        result.append([num(values[0]), num(values[1])])
     prices = [Decimal(x[0]) for x in result]
     require(all((a>b if descending else a<b) for a,b in zip(prices, prices[1:])),
             "Book not sorted")
@@ -174,7 +178,8 @@ def bitget(fetch, now):
     host="api.bitget.com";pair="AXISUSDT"
     inst=api(fetch,host,"/api/v3/market/instruments",category="SPOT",symbol=pair)["data"]
     require(isinstance(inst,list) and len(inst)==1 and
-            inst[0].get("symbol")==pair and inst[0].get("category")=="SPOT",
+            inst[0].get("symbol")==pair and inst[0].get("category")=="SPOT" and
+            inst[0].get("status")=="online",
             "AXIS Spot identity not verifiable")
     ticker=api(fetch,host,"/api/v3/market/tickers",category="SPOT",symbol=pair)
     rows=ticker.get("data")
@@ -182,7 +187,8 @@ def bitget(fetch, now):
             rows[0].get("symbol")==pair and rows[0].get("category")=="SPOT",
             "AXIS Spot ticker identity invalid")
     t=rows[0]
-    tick={"source_at_utc":stamp(ticker.get("requestTime"),now),
+    tick={"source_at_utc":stamp(t.get("ts"),now),
+          "response_at_utc":stamp(ticker.get("requestTime"),now),
           "last":num(t.get("lastPrice")),
           "volume24h_base":num(t.get("volume24h"),True) if isinstance(t.get("volume24h"),str) else None,
           "volume24h_quote":num(t.get("turnover24h"),True) if isinstance(t.get("turnover24h"),str) else None}
