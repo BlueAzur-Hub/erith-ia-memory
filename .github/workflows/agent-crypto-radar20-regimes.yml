@@ -22,6 +22,9 @@ on:
       - 'public/agent_crypto_erith_ia/tools/build_radar_focus_identity_review.py'
       - 'public/agent_crypto_erith_ia/tools/test_build_radar_focus_identity_review.py'
       - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/focus-identity-review.json'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-priority-dossiers.html'
+      - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/priority-casebook.json'
+      - 'public/agent_crypto_erith_ia/tools/test_radar_priority_casebook.py'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
       - '.github/workflows/agent-crypto-radar20-regimes.yml'
   push:
@@ -52,6 +55,9 @@ on:
       - 'public/agent_crypto_erith_ia/tools/build_radar_focus_identity_review.py'
       - 'public/agent_crypto_erith_ia/tools/test_build_radar_focus_identity_review.py'
       - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/focus-identity-review.json'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar-priority-dossiers.html'
+      - 'public/agent_crypto_erith_ia/data/crypto/radar-opportunities/priority-casebook.json'
+      - 'public/agent_crypto_erith_ia/tools/test_radar_priority_casebook.py'
       - 'public/agent_crypto_erith_ia/laboratoire/radar-historique.html'
   workflow_dispatch:
 permissions:
@@ -76,6 +82,7 @@ jobs:
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_analyze_radar20_regimes.py -v
           python -m py_compile public/agent_crypto_erith_ia/tools/build_radar_focus_identity_review.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_radar_focus_identity_review.py' -v
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_radar_priority_casebook.py' -v
           python public/agent_crypto_erith_ia/tools/build_radar_focus_identity_review.py --check
       - uses: actions/setup-node@v4
         with:

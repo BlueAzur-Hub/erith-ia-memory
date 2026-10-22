@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark"><title>ERITH.IA · Atlas des priorités Radar · Six dossiers humains</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#061723;color:#f3f9fc;font-size:15px;line-height:1.58}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 85% 0%,#16445b 0%,#071824 45%,#06121c 100%);min-height:100vh}a{color:#82e7f4;text-underline-offset:3px}a:focus-visible,summary:focus-visible{outline:2px solid #f4c779;outline-offset:4px}main{max-width:1220px;margin:auto;padding:28px 22px 76px}
+nav{display:flex;gap:18px;flex-wrap:wrap;font-size:.9rem;margin-bottom:24px}.eyebrow{font-size:.73rem;letter-spacing:.16em;text-transform:uppercase;color:#8af0f1;font-weight:750}
+.hero{padding:28px 0 36px;border-bottom:1px solid #2e5567}.hero h1{font-family:Georgia,serif;font-size:clamp(2.15rem,5vw,4rem);font-weight:550;line-height:1.15;letter-spacing:-.03em;margin:12px 0}.hero p{max-width:850px;color:#bfd4de;font-size:1.06rem}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:25px 0 12px}.stat{border:1px solid #3e6070;border-radius:14px;padding:16px;background:#092332}.stat small{display:block;color:#9cc1d0}.stat strong{font:600 1.55rem Georgia,serif;color:#f5d493;display:block;margin:5px 0}.notice{margin:16px 0 32px;background:rgba(150,110,42,.17);border:1px solid #8f734b;border-left:4px solid #efc57a;border-radius:10px;padding:17px;color:#f6dfb7}
+h2{font-size:1.45rem;color:#f3d28b;margin:36px 0 15px}.index{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.index-item{display:grid;position:relative;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;padding:13px 12px;border:1px solid #31566a;border-radius:10px;text-decoration:none;background:#0a2736;color:#f2f7fa;min-height:74px}.index-item:hover{border-color:#8be4e8;background:#13364a}.index-item .number{color:#e7be6b;font-size:.74rem;font-weight:800}.index-item strong{font-size:1.05rem}.index-item small{grid-column:2;color:#9bb7c6;font-size:.66rem;line-height:1.2}.index-item .arrow{position:absolute;right:9px;top:5px;color:#5da7b9}
+.case-card{border:1px solid #315d70;border-radius:16px;margin:14px 0;background:linear-gradient(150deg,#0b293a,#071c29);overflow:hidden}.case-card[open]{border-color:#75a4a9}.case-card summary{display:flex;gap:14px;align-items:center;cursor:pointer;padding:19px 20px;list-style:none}.case-card summary::-webkit-details-marker{display:none}.case-rank{color:#eac787;font-family:Georgia,serif;font-size:1.45rem}.case-head{display:flex;flex:1;flex-direction:column}.case-head strong{font-size:1.25rem}.case-head small{color:#a5bdc9}.tag{font-size:.62rem;font-weight:800;letter-spacing:.06em;padding:6px 8px;border-radius:100px;border:1px solid #94784c;color:#f5cb81;white-space:nowrap}.expand{color:#a4d8e5;font-size:1.4rem}.case-card[open] .expand{transform:rotate(180deg)}.case-content{padding:0 20px 22px}.case-summary{font-size:1rem;color:#c8dee8;max-width:1000px}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0}.metrics>div{background:#071925;border:1px solid #32546a;border-radius:10px;padding:14px}.metrics small,.metrics span{display:block;color:#9ab2c0;font-size:.75rem}.metrics strong{display:block;font-size:1.03rem;color:#f7f9fb;margin:4px 0;font-variant-numeric:tabular-nums}.case-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px}.inner{border:1px solid #365467;border-radius:10px;padding:16px;background:#0c2432}.inner h3,.next strong{color:#f2ca80;font-size:1rem;margin:0 0 12px}.inner p{margin:8px 0;color:#d1e2e9}.contract{overflow-wrap:anywhere}.contract code{font-size:.8rem;color:#8ef0db}.fineprint,.footnote{font-size:.8rem;color:#aabdc8}.next{margin-top:12px;padding:14px 18px;border-left:3px solid #50c9d0;background:#103341;border-radius:7px}.next p{margin:7px 0 0}.footnote{margin-bottom:0}
+.links{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.links a{border:1px solid #366579;border-radius:10px;padding:10px 15px;text-decoration:none;background:#0b2938}
+footer{border-top:1px solid #244e60;margin-top:32px;padding-top:24px;color:#9db3bf;font-size:.83rem}
+@media(max-width:920px){.index{grid-template-columns:repeat(3,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:610px){main{padding:18px 13px 55px}.index{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics,.case-columns{grid-template-columns:1fr}.case-card summary{flex-wrap:wrap}.tag{order:4}.case-head strong{font-size:1.05rem}.stat strong{font-size:1.25rem}}
+</style></head>
+<body><main>
+<nav><a href="../trader/trading-desk.html">← Trader</a><a href="radar-historique.html">Radar historique</a><a href="zcash-case-study.html">Dossier ZEC</a><a href="../trader/axis-robotics-case-study.html">Dossier AXIS</a><a href="cas-ecole-concrete.md">CT · dossier technique</a></nav>
+<header class="hero"><div class="eyebrow">ERITH.IA · SEVEN HEAVEN · LABORATOIRE IA · LECTURE SEULE</div>
+<h1>Atlas des priorités<br>Six nouveaux dossiers humains</h1>
+<p>Nos marchés ciblés sont étudiés à partir des archives réelles du Radar du <strong>20 octobre 2026</strong> et de références de projets ou d'exchanges. Chaque fiche distingue les faits, les limites de l'identité, les risques de confusion et les preuves à obtenir avant toute nouvelle collecte.</p>
+<div class="stats"><div class="stat"><small>Univers Radar</small><strong>1 000</strong><small>Découverte, pas qualification</small></div><div class="stat"><small>Candidats</small><strong>20</strong><small>Sélection archivée</small></div><div class="stat"><small>Priorités de recherche</small><strong>10</strong><small>Liste datée du 20 octobre</small></div><div class="stat"><small>Nouvelles études</small><strong>6</strong><small>Aucune paire promue</small></div></div>
+<div class="notice"><strong>Décision Seven · OBSERVER → QUALIFIER → CONSERVER.</strong> Les prix du carnet reproduits ci-dessous sont des photographies du 20 octobre, pas des cotations du 22 octobre. Aucun achat, aucune promesse de gain, aucun ordre PAPER revendiqué. L'identité d'un contrat de projet ne certifie pas à elle seule une paire sur Binance ou OKX.</div>
+</header>
+<section aria-labelledby="index-title"><h2 id="index-title">Les dix priorités · état des dossiers</h2><div class="index"><a class="index-item" href="#auction"><span class="number">01</span><strong>AUCTION</strong><small>À qualifier</small><span class="arrow">↗</span></a>
+<a class="index-item" href="radar-historique.html#radar-focus-identity-details"><span class="number">02</span><strong>REZ</strong><small>Dossier existant</small><span class="arrow">↗</span></a>
+<a class="index-item" href="radar-historique.html#radar-focus-identity-details"><span class="number">03</span><strong>BAT</strong><small>Dossier existant</small><span class="arrow">↗</span></a>
+<a class="index-item" href="#theta-token"><span class="number">04</span><strong>THETA</strong><small>À qualifier</small><span class="arrow">↗</span></a>
+<a class="index-item" href="radar-historique.html#radar-focus-identity-details"><span class="number">05</span><strong>ALT</strong><small>Dossier existant</small><span class="arrow">↗</span></a>
+<a class="index-item" href="#dappos"><span class="number">06</span><strong>DOS</strong><small>Annonce OKX TR</small><span class="arrow">↗</span></a>
+<a class="index-item" href="#vaulta"><span class="number">07</span><strong>A</strong><small>À qualifier</small><span class="arrow">↗</span></a>
+<a class="index-item" href="#iostoken"><span class="number">08</span><strong>IOST</strong><small>À qualifier</small><span class="arrow">↗</span></a>
+<a class="index-item" href="radar-historique.html#radar-verified-targets"><span class="number">09</span><strong>BR</strong><small>Carnet horaire vérifié</small><span class="arrow">↗</span></a>
+<a class="index-item" href="#compound-governance-token"><span class="number">10</span><strong>COMP</strong><small>À qualifier</small><span class="arrow">↗</span></a></div><p class="fineprint">Les dossiers REZ, BAT et ALT ont déjà leur volet de recherche dans le Radar historique. BR est dans la collecte horaire à contrat vérifié. Les six autres sont développés ci-dessous.</p></section>
+<section aria-labelledby="cases-title"><h2 id="cases-title">Six études individuelles · preuves et limites</h2><details class="case-card" id="auction" open>
+ <summary><span class="case-rank">01</span><span class="case-head"><strong>Bounce · AUCTION</strong><small>Jeton de l&#39;écosystème Bounce</small></span><span class="tag">IDENTITÉ CEX À CONFIRMER</span><span class="expand">⌄</span></summary>
+ <div class="case-content">
+ <p class="case-summary">Référence Ethereum publiée par CoinGecko pour AUCTION, sans validation native du contrat attaché aux paires Binance ou OKX.</p>
+ <div class="metrics">
+   <div><small>Paire Spot observée</small><strong>Binance · AUCTIONUSDT</strong><span>Archive du 2026-10-20 18:37:41 UTC</span></div>
+   <div><small>Bid / Ask historiques</small><strong>3,461 / 3,463</strong><span>USDT · non live</span></div>
+   <div><small>Spread à l'instant archivé</small><strong>5,78 pb</strong><span>20 bougies closes archivées</span></div>
+ </div>
+ <div class="case-columns">
+  <section class="inner"><h3>01 · Identité du projet</h3><p><strong>Ethereum · ERC-20 référencé</strong></p><p class="contract"><code>0xa9b1eb5908cfc3cdf91f9b8b3a74108598009096</code></p><p><a target="_blank" rel="noopener noreferrer" href="https://www.coingecko.com/en/coins/bounce">Consulter la source · Agrégateur : référence externe ↗</a></p><p class="fineprint">Cette référence n'identifie pas automatiquement la paire AUCTIONUSDT sur Binance.</p></section>
+  <section class="inner"><h3>02 · Pourquoi ne pas acheter ?</h3><p>Même symbole sur plusieurs chaînes ou variations de listing ; contrôles d&#39;identité et carnet daté à refaire.</p><p><strong>Preuve manquante :</strong> identité exchange ↔ projet, règles Spot et disponibilité actuelle pour le compte.</p></section>
+ </div>
+ <div class="next"><strong>03 · Prochaine preuve à obtenir</strong><p>Obtenir une référence officielle de listing ou de dépôt reliant AUCTION à la paire native de l&#39;exchange.</p></div>
+ <p class="footnote">Statut : recherche uniquement · Aucune nouvelle collecte horaire · Aucun ordre · Aucune simulation de rendement · Aucune donnée privée.</p>
+ </div>
+ </details>
+<details class="case-card" id="theta-token" >
+ <summary><span class="case-rank">04</span><span class="case-head"><strong>Theta Network · THETA</strong><small>Réseau autonome, jeton de gouvernance et de sécurité</small></span><span class="tag">IDENTITÉ CEX À CONFIRMER</span><span class="expand">⌄</span></summary>
+ <div class="case-content">
+ <p class="case-summary">La documentation de Theta présente THETA comme son jeton natif de gouvernance et de sécurité ; ne pas traiter un éventuel équivalent emballé sur une autre chaîne comme le même instrument.</p>
+ <div class="metrics">
+   <div><small>Paire Spot observée</small><strong>Binance · THETAUSDT</strong><span>Archive du 2026-10-20 18:37:42 UTC</span></div>
+   <div><small>Bid / Ask historiques</small><strong>0,2057 / 0,2059</strong><span>USDT · non live</span></div>
+   <div><small>Spread à l'instant archivé</small><strong>9,72 pb</strong><span>20 bougies closes archivées</span></div>
+ </div>
+ <div class="case-columns">
+  <section class="inner"><h3>01 · Identité du projet</h3><p><strong>Theta blockchain · jeton natif</strong></p><p class="contract"><em>Jeton natif · pas de contrat ERC-20 imposé</em></p><p><a target="_blank" rel="noopener noreferrer" href="https://blog.thetatoken.org/what-is-theta/">Consulter la source · Projet : référence officielle ↗</a></p><p class="fineprint">Cette référence n'identifie pas automatiquement la paire THETAUSDT sur Binance.</p></section>
+  <section class="inner"><h3>02 · Pourquoi ne pas acheter ?</h3><p>Réseau natif et éventuelles représentations sur d&#39;autres réseaux : attention aux dépôts et à l&#39;identité exacte de la paire.</p><p><strong>Preuve manquante :</strong> identité exchange ↔ projet, règles Spot et disponibilité actuelle pour le compte.</p></section>
+ </div>
+ <div class="next"><strong>03 · Prochaine preuve à obtenir</strong><p>Relier une annonce officielle Binance/OKX actualisée au marché THETA Spot et confirmer le réseau utilisé.</p></div>
+ <p class="footnote">Statut : recherche uniquement · Aucune nouvelle collecte horaire · Aucun ordre · Aucune simulation de rendement · Aucune donnée privée.</p>
+ </div>
+ </details>
+<details class="case-card" id="dappos" >
+ <summary><span class="case-rank">06</span><span class="case-head"><strong>DAPPOS · DOS</strong><small>Annonce de référencement OKX TR distincte de l&#39;accès OKX EEE</small></span><span class="tag">IDENTITÉ CEX À CONFIRMER</span><span class="expand">⌄</span></summary>
+ <div class="case-content">
+ <p class="case-summary">OKX TR associe explicitement DOS/USDT à DAPPOS et donne l&#39;adresse du contrat dans son annonce du 13 août 2026. Cette preuve est régionale et datée.</p>
+ <div class="metrics">
+   <div><small>Paire Spot observée</small><strong>OKX · DOS-USDT</strong><span>Archive du 2026-10-20 18:37:43 UTC</span></div>
+   <div><small>Bid / Ask historiques</small><strong>0,2036 / 0,2038</strong><span>USDT · non live</span></div>
+   <div><small>Spread à l'instant archivé</small><strong>9,82 pb</strong><span>20 bougies closes archivées</span></div>
+ </div>
+ <div class="case-columns">
+  <section class="inner"><h3>01 · Identité du projet</h3><p><strong>Contrat publié dans une annonce OKX TR · chaîne à confirmer</strong></p><p class="contract"><code>0x951f086a127e280724fd93ccc543f65065afeb5e</code></p><p><a target="_blank" rel="noopener noreferrer" href="https://tr.okx.com/en/help/okx-tr-to-list-dos-usdt-dappos-for-spot-trading">Consulter la source · Annonce officielle régionale ↗</a></p><p class="fineprint">Cette référence n'identifie pas automatiquement la paire DOS-USDT sur OKX.</p></section>
+  <section class="inner"><h3>02 · Pourquoi ne pas acheter ?</h3><p>L&#39;annonce OKX TR ne prouve pas que la paire, le dépôt et l&#39;ordre sont disponibles pour le compte OKX EEE ; la chaîne du contrat doit être confirmée.</p><p><strong>Preuve manquante :</strong> identité exchange ↔ projet, règles Spot et disponibilité actuelle pour le compte.</p></section>
+ </div>
+ <div class="next"><strong>03 · Prochaine preuve à obtenir</strong><p>Comparer l&#39;identité annoncée à l&#39;instrument OKX EEE et aux réseaux officiels disponibles dans le contexte exact du compte, sans accès privé.</p></div>
+ <p class="footnote">Statut : recherche uniquement · Aucune nouvelle collecte horaire · Aucun ordre · Aucune simulation de rendement · Aucune donnée privée.</p>
+ </div>
+ </details>
+<details class="case-card" id="vaulta" >
+ <summary><span class="case-rank">07</span><span class="case-head"><strong>Vaulta · A</strong><small>Évolution de la chaîne EOS et migration du jeton natif</small></span><span class="tag">IDENTITÉ CEX À CONFIRMER</span><span class="expand">⌄</span></summary>
+ <div class="case-content">
+ <p class="case-summary">Vaulta précise que A remplace EOS comme jeton natif sur le même réseau, avec le compte de contrat core.vaulta : ce n&#39;est pas une adresse ERC-20 hexadécimale.</p>
+ <div class="metrics">
+   <div><small>Paire Spot observée</small><strong>Binance · AUSDT</strong><span>Archive du 2026-10-20 18:37:31 UTC</span></div>
+   <div><small>Bid / Ask historiques</small><strong>0,0964 / 0,0965</strong><span>USDT · non live</span></div>
+   <div><small>Spread à l'instant archivé</small><strong>10,37 pb</strong><span>20 bougies closes archivées</span></div>
+ </div>
+ <div class="case-columns">
+  <section class="inner"><h3>01 · Identité du projet</h3><p><strong>Vaulta (ancien réseau EOS/Antelope)</strong></p><p class="contract"><code>core.vaulta</code></p><p><a target="_blank" rel="noopener noreferrer" href="https://www.vaulta.com/resources/vaulta-token-swap-a-begins-may-14">Consulter la source · Projet : référence officielle ↗</a></p><p class="fineprint">Cette référence n'identifie pas automatiquement la paire AUSDT sur Binance.</p></section>
+  <section class="inner"><h3>02 · Pourquoi ne pas acheter ?</h3><p>Un symbole « A » très court et les représentations multi-réseaux exigent une confirmation expresse des dépôts et de la paire.</p><p><strong>Preuve manquante :</strong> identité exchange ↔ projet, règles Spot et disponibilité actuelle pour le compte.</p></section>
+ </div>
+ <div class="next"><strong>03 · Prochaine preuve à obtenir</strong><p>Prouver que AUSDT sur Binance ou A-USDT sur OKX correspond au jeton Vaulta pertinent et vérifier la prise en charge du réseau.</p></div>
+ <p class="footnote">Statut : recherche uniquement · Aucune nouvelle collecte horaire · Aucun ordre · Aucune simulation de rendement · Aucune donnée privée.</p>
+ </div>
+ </details>
+<details class="case-card" id="iostoken" >
+ <summary><span class="case-rank">08</span><span class="case-head"><strong>IOST · IOST</strong><small>Historique de réseau natif et représentation BNB Smart Chain</small></span><span class="tag">IDENTITÉ CEX À CONFIRMER</span><span class="expand">⌄</span></summary>
+ <div class="case-content">
+ <p class="case-summary">La documentation officielle d&#39;IOST 3.0 identifie un contrat IOST sur BNB Smart Chain. Cela ne démontre pas à lui seul quel réseau est supporté par Binance pour l&#39;instrument historique.</p>
+ <div class="metrics">
+   <div><small>Paire Spot observée</small><strong>Binance · IOSTUSDT</strong><span>Archive du 2026-10-20 18:37:44 UTC</span></div>
+   <div><small>Bid / Ask historiques</small><strong>0,000947 / 0,000948</strong><span>USDT · non live</span></div>
+   <div><small>Spread à l'instant archivé</small><strong>10,55 pb</strong><span>20 bougies closes archivées</span></div>
+ </div>
+ <div class="case-columns">
+  <section class="inner"><h3>01 · Identité du projet</h3><p><strong>BNB Smart Chain · BEP-20 documenté (IOST 3.0)</strong></p><p class="contract"><code>0xaf48b7e315a52518cfbf7d96c455d9dfad94cb48</code></p><p><a target="_blank" rel="noopener noreferrer" href="https://docs.iost.io/layer2-solutions/developer/connect">Consulter la source · Projet : référence officielle ↗</a></p><p class="fineprint">Cette référence n'identifie pas automatiquement la paire IOSTUSDT sur Binance.</p></section>
+  <section class="inner"><h3>02 · Pourquoi ne pas acheter ?</h3><p>L1, L2 et représentation BEP-20 ne sont pas automatiquement interchangeables ; ne pas confondre bridge, cotation Spot et dépôt.</p><p><strong>Preuve manquante :</strong> identité exchange ↔ projet, règles Spot et disponibilité actuelle pour le compte.</p></section>
+ </div>
+ <div class="next"><strong>03 · Prochaine preuve à obtenir</strong><p>Établir le lien formel Binance IOSTUSDT ↔ projet IOST et relever les réseaux déposables, sans présumer des règles de compte.</p></div>
+ <p class="footnote">Statut : recherche uniquement · Aucune nouvelle collecte horaire · Aucun ordre · Aucune simulation de rendement · Aucune donnée privée.</p>
+ </div>
+ </details>
+<details class="case-card" id="compound-governance-token" >
+ <summary><span class="case-rank">10</span><span class="case-head"><strong>Compound · COMP</strong><small>Jeton de gouvernance du protocole Compound</small></span><span class="tag">IDENTITÉ CEX À CONFIRMER</span><span class="expand">⌄</span></summary>
+ <div class="case-content">
+ <p class="case-summary">Le site officiel Compound affiche le contrat de son jeton de gouvernance COMP sur Ethereum.</p>
+ <div class="metrics">
+   <div><small>Paire Spot observée</small><strong>Binance · COMPUSDT</strong><span>Archive du 2026-10-20 18:37:33 UTC</span></div>
+   <div><small>Bid / Ask historiques</small><strong>26,13 / 26,16</strong><span>USDT · non live</span></div>
+   <div><small>Spread à l'instant archivé</small><strong>11,47 pb</strong><span>20 bougies closes archivées</span></div>
+ </div>
+ <div class="case-columns">
+  <section class="inner"><h3>01 · Identité du projet</h3><p><strong>Ethereum · ERC-20</strong></p><p class="contract"><code>0xc00e94cb662c3520282e6f5717214004a7f26888</code></p><p><a target="_blank" rel="noopener noreferrer" href="https://compound.finance/governance/comp">Consulter la source · Projet : référence officielle ↗</a></p><p class="fineprint">Cette référence n'identifie pas automatiquement la paire COMPUSDT sur Binance.</p></section>
+  <section class="inner"><h3>02 · Pourquoi ne pas acheter ?</h3><p>Les dérivés, wrappers et jetons de protocole tels que cCOMP ne sont pas le même actif ; les règles de sortie Spot sont à vérifier.</p><p><strong>Preuve manquante :</strong> identité exchange ↔ projet, règles Spot et disponibilité actuelle pour le compte.</p></section>
+ </div>
+ <div class="next"><strong>03 · Prochaine preuve à obtenir</strong><p>Relier le contrat COMP au listing Binance/OKX applicable et aux spécifications Spot récentes.</p></div>
+ <p class="footnote">Statut : recherche uniquement · Aucune nouvelle collecte horaire · Aucun ordre · Aucune simulation de rendement · Aucune donnée privée.</p>
+ </div>
+ </details></section>
+<section><h2>Les cas d'école déjà existants</h2><p>Ce dossier complète, sans les remplacer, nos études <a href="../trader/axis-robotics-case-study.html">AXIS · nouvelle cotation et contraintes d'entrée</a>, <a href="zcash-case-study.html">ZEC · hypothèse de retournement</a>, et <a href="cas-ecole-concrete.md">CT · règles et limites Spot</a>. Les mesures de marché horodatées demeurent accessibles via le <a href="radar-historique.html#radar-verified-targets">Radar ciblé BR / JCT / BEAM</a> et <a href="radar-historique.html#case-market-history">ZEC / AXIS</a>.</p>
+<div class="links"><a href="../data/crypto/radar-opportunities/priority-casebook.json">Coffre structuré · six dossiers JSON ↗</a><a href="../data/crypto/radar-opportunities/focus-identity-review.json">BAT · ALT · REZ ↗</a><a href="../data/crypto/radar-opportunities/spot-identity-latest.json">Identités canoniques ↗</a></div></section>
+<footer>ERITH.IA · SEVEN HEAVEN · étude PAPER descriptive · Données sources datées du 20/10/2026 · Aucun accès au compte ni ordre réel. Les références externes sont des sources de recherche, pas une certification commerciale ou réglementaire.</footer>
+</main></body></html>
