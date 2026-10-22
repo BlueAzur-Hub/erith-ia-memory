@@ -22,6 +22,18 @@ class ThreeMoreBinanceTests(unittest.TestCase):
         self.assertTrue(all(x['official_listing'].endswith(
                             '/'+x['symbol']+'_USDT') for x in own))
 
+    def test_dated_rank_move_does_not_change_coin_identity(self):
+        c=index()
+        old=c['assets'][90]
+        other=c['assets'][95]
+        c['assets'][90],c['assets'][95]=other,old
+        c['assets'][90]['rank']=91
+        c['assets'][95]['rank']=96
+        owners=a.owners(c)
+        stx=next(x for x in owners if x['id']=='blockstack')
+        self.assertEqual(stx['rank'],96)
+        self.assertEqual(stx['pair'],'STXUSDT')
+
     def test_refuse_symbol_collision_and_existing_other_exchange(self):
         for field,value in (('name','Wrong'),('symbol','STX2'),
                             ('source','Bitget Spot native 1m HTTPS')):
