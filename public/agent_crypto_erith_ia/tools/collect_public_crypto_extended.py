@@ -217,8 +217,18 @@ def normalize_extended(rows: list[dict[str, Any]], fx: dict[str, Any]) -> list[d
         })
 
     coins.sort(key=lambda coin: coin["rank"])
-    if len(coins) < 400:
-        raise RuntimeError(f"Extended universe insufficient: {len(coins)} valid rows")
+    # CoinGecko pagination can mix two moving market-cap snapshots. Do not
+    # publish duplicate/missing ranks as a canonical 251..1000 universe.
+    # Never invent a rank to make the daily Radar pass: keep the last valid JSON.
+    expected = set(range(RANK_MIN, RANK_MAX + 1))
+    ranks = [coin["rank"] for coin in coins]
+    if len(coins) != len(expected) or set(ranks) != expected or len(ranks) != len(set(ranks)):
+        missing = sorted(expected.difference(ranks))
+        repeated = sorted({rank for rank in ranks if ranks.count(rank) > 1})
+        raise RuntimeError(
+            f"Extended rank integrity: {len(coins)}/750 rows, "
+            f"missing ranks {missing[:12]}, duplicate ranks {repeated[:12]}"
+        )
     return coins
 
 
