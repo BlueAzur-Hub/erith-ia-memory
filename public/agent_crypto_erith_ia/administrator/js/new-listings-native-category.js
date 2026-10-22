@@ -47,7 +47,13 @@
     PONS:Object.freeze({name:"Pons",coingeckoId:"pons"}),
     CNPY:Object.freeze({name:"Canopy",coingeckoId:"canopy"}),
     AXIS:Object.freeze({name:"Axis Robotics",coingeckoId:"axis-robotics",provider:"bitget",
-      providerSymbol:"AXISUSDT",pair:"AXIS/USDT",listingUtc:"2026-10-21T13:00:00Z"})
+      providerSymbol:"AXISUSDT",pair:"AXIS/USDT",listingUtc:"2026-10-21T13:00:00Z"}),
+    // RealGo/RT1 · Bitget Spot only. Branding is NOT CoinGecko identity or OKX access.
+    // Match exact exchange instrument and initial listing day, never ticker alone.
+    RT1:Object.freeze({name:"RealGo",provider:"bitget",
+      providerSymbol:"RT1USDT",pair:"RT1/USDT",listingUtc:"2026-10-22T00:00:00Z",
+      brandImage:"https://app.tokenomics.com/cdn/uploads/coins/realgo-2e968df6.png",
+      chain:"BNB Smart Chain",contract:"0xd24b79c0844f53866C34275a83b2313a4a90a562"})
   });
 
   const state={
@@ -213,6 +219,8 @@
       if(localLogo)return u.href;
       const host=u.hostname.toLowerCase();
       if(host==="coingecko.com"||host.endsWith(".coingecko.com"))return u.href;
+      // Exact externally hosted RealGo branding, not a generic third-party allowlist.
+      if(u.href===FRIENDLY.RT1.brandImage)return u.href;
       return null;
     }catch(_){return null;}
   }
@@ -488,6 +496,11 @@
          launch<Date.parse("2026-10-21T00:00:00Z")||
          launch>=Date.parse("2026-10-22T00:00:00Z"))return null;
     }
+    if(base==="RT1"){
+      const launch=Date.parse(String(row?.listedAt||""));
+      if(quote!=="USDT"||providerSymbol!=="RT1USDT"||
+         !Number.isFinite(launch)||launch<Date.parse(FRIENDLY.RT1.listingUtc))return null;
+    }
     const isCt=base==="CT";
     const provider=isCt?"okx":"bitget";
     const symbol=isCt?"CT-USDT":providerSymbol;
@@ -502,7 +515,8 @@
       identitySource:null,
       canonicalName:null,
       coingeckoId:friendly?.coingeckoId||null,
-      image:null,
+      // A project mascot for the verified RT1USDT Bitget listing; not an exchange logo.
+      image:base==="RT1"?safeIdentityImage(friendly?.brandImage):null,
       symbol:base,
       base,
       quote:quoteFinal,
@@ -1410,6 +1424,16 @@
       listedAt:new Date(Date.now()-3600000).toISOString()});
     const tickerCollisionRejected=sampleOKX?.coingeckoId===null&&
       sampleOKX?.identityVerified===false&&sampleOKX?.image===null;
+    const realGo=providerSpec({base:"RT1",quote:"USDT",providerSymbol:"RT1USDT",
+      listedAt:"2026-10-22T12:00:00Z"});
+    const rtAliasRejected=providerSpec({base:"RT1",quote:"USDT",providerSymbol:"RTUSDT",
+      listedAt:"2026-10-22T12:00:00Z"})===null;
+    const rtSwapRejected=providerSpec({base:"RT1",quote:"USD",providerSymbol:"RT1USD",
+      listedAt:"2026-10-22T12:00:00Z"})===null;
+    const rtOldRejected=providerSpec({base:"RT1",quote:"USDT",providerSymbol:"RT1USDT",
+      listedAt:"2026-10-20T00:00:00Z"})===null;
+    const realGoVisual=realGo?.image===safeIdentityImage(FRIENDLY.RT1.brandImage)&&
+      realGo?.name==="RealGo"&&realGo?.coingeckoId===null&&realGo?.identityVerified===false;
     const pass=ct.providerSymbol==="CT-USDT"
       &&generic?.provider==="bitget"
       &&sampleOKX?.providerSymbol==="TEST-USDC"&&swapRejected===null&&
@@ -1422,6 +1446,7 @@
       &&validCap?.quote==="USD"&&validCap?.spotPriceSourceUnchanged===true
       &&wrongCoinCap===null&&wrongSymbolCap===null
       &&zeroCap===null&&oldCap===null&&noDateCap===null
+      &&realGoVisual&&rtAliasRejected&&rtSwapRejected&&rtOldRejected
       &&FRIENDLY.AXIS.coingeckoId==="axis-robotics"
       &&providerSpec({base:"AXIS",quote:"USDT",providerSymbol:"AXISUSDT",listedAt:"2026-10-21T13:00:00Z"})?.coingeckoId==="axis-robotics"
       &&providerSpec({base:"AXIS",quote:"USD",providerSymbol:"AXISUSD",listedAt:"2026-10-21T13:00:00Z"})===null
@@ -1450,6 +1475,11 @@
       identity_exact_id_symbol:true,
       axis_spot_native_identity_safeguard:true,
       axis_local_logo_asset:true,
+      realgo_rt1_bitget_visual_scoped:true,
+      realgo_no_coin_id_fabrication:realGo?.coingeckoId===null,
+      realgo_rt_alias_rejected:rtAliasRejected,
+      realgo_other_quote_rejected:rtSwapRejected,
+      realgo_older_listing_rejected:rtOldRejected,
       identity_retry_storm_removed:true,
       identity_failure_non_blocking:true,
       native_market_category:true,
