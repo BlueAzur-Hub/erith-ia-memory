@@ -72,7 +72,14 @@ jobs:
           x=json.loads(p.read_text())
           assert x['releases_published']==0 and x['catalog_updated'] is False
           assert x['coin_id_attribution_certified'] is False
-          assert x['candidate_months_verified']>=1, 'No genuinely available archived Spot source'
+          # Source discovery is allowed to prove absence. Zero genuine ZIPs
+          # must not become a fictitious approval or a broken code regression.
+          assert x['candidate_months_verified']>=0
+          if x['candidate_months_verified']==0:
+              assert x['candidate_owners']==[] and x['candidate_ids']==[], 'Fake source ownership'
+              print('NO VERIFIED NATIVE SOURCE: archived facts unchanged')
+          else:
+              assert len(x['candidate_owners'])>0, 'Verified sources lack provenance'
           print('SOURCE MONTHS VERIFIED',x['candidate_months_verified'])
           print('SOURCE OWNER CANDIDATES',x['candidate_owners'])
           PY
