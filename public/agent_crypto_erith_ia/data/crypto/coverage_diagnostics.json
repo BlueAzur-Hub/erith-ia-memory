@@ -2,7 +2,7 @@
   "schema": "agent_crypto_public_coverage_diagnostics_v1",
   "version": "1.0.0",
   "build_context": "40.6.98",
-  "generated_at": "2026-09-30T18:39:32.034Z",
+  "generated_at": "2026-10-22T23:41:45.782Z",
   "source": {
     "provider": "CoinGecko",
     "endpoint_family": "coins/markets",
@@ -29,17 +29,33 @@
       "rank_max": 250
     },
     "raw_rows_received": 250,
-    "accepted_rows": 250,
-    "rejected_rows": 0,
-    "rejected_by_reason": {},
-    "rejected_samples": [],
-    "accepted_unique_ids": 250,
-    "distinct_ranks": 250,
-    "unrepresented_ranks": [],
+    "accepted_rows": 249,
+    "rejected_rows": 1,
+    "rejected_by_reason": {
+      "missing_or_invalid_rank": 1
+    },
+    "rejected_samples": [
+      {
+        "source_index": 167,
+        "id": "tradable-na-rent-financing-platform-sstn",
+        "symbol": "PC0000031",
+        "name": "Tradable NA Rent Financing Platform SSTN",
+        "rank": null,
+        "current_price": 1.0,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      }
+    ],
+    "accepted_unique_ids": 249,
+    "distinct_ranks": 249,
+    "unrepresented_ranks": [
+      250
+    ],
     "tied_ranks": {},
     "duplicate_rank_rows": 0,
     "min_rank_observed": 1,
-    "max_rank_observed": 250,
+    "max_rank_observed": 249,
     "note": "unrepresented_ranks are rank labels absent from accepted rows, not proof that CoinGecko failed to return an asset; market_cap_rank can be tied or non-contiguous."
   },
   "extended_251_1000": {
@@ -48,14 +64,26 @@
       "rank_max": 1000
     },
     "raw_rows_received": 750,
-    "accepted_rows": 720,
-    "rejected_rows": 30,
+    "accepted_rows": 709,
+    "rejected_rows": 41,
     "rejected_by_reason": {
-      "missing_or_invalid_rank": 30
+      "missing_or_invalid_rank": 40,
+      "rank_outside_contract": 1
     },
     "rejected_samples": [
       {
-        "source_index": 16,
+        "source_index": 1,
+        "id": "meta-2-2",
+        "symbol": "META",
+        "name": "MetaDAO",
+        "rank": 250,
+        "current_price": 5.201147571120875,
+        "reasons": [
+          "rank_outside_contract"
+        ]
+      },
+      {
+        "source_index": 5,
         "id": "tradable-singapore-fintech-ssl-2",
         "symbol": "PC0000023",
         "name": "Tradable Singapore Fintech SSL",
@@ -66,7 +94,18 @@
         ]
       },
       {
-        "source_index": 55,
+        "source_index": 9,
+        "id": "tradable-latam-middle-market-lender-sstl",
+        "symbol": "PC0000085",
+        "name": "Tradable LatAm Middle-Market Lender SSTL",
+        "rank": null,
+        "current_price": 1.0,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 46,
         "id": "usda-2",
         "symbol": "USDA",
         "name": "USDa",
@@ -77,7 +116,7 @@
         ]
       },
       {
-        "source_index": 63,
+        "source_index": 51,
         "id": "baby-claw",
         "symbol": "BABYCLAW",
         "name": "Baby Claw",
@@ -88,18 +127,40 @@
         ]
       },
       {
-        "source_index": 116,
-        "id": "apes-2-2",
-        "symbol": "APES",
-        "name": "APES",
+        "source_index": 71,
+        "id": "tradable-north-america-pos-lender-sstn",
+        "symbol": "PC0000019",
+        "name": "Tradable North America PoS Lender SSTN",
         "rank": null,
-        "current_price": 0.08276887533618965,
+        "current_price": 1.0,
         "reasons": [
           "missing_or_invalid_rank"
         ]
       },
       {
-        "source_index": 171,
+        "source_index": 79,
+        "id": "wrappedm-by-m0",
+        "symbol": "WM",
+        "name": "WrappedM by M0",
+        "rank": null,
+        "current_price": 0.9992880270361155,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 99,
+        "id": "apes-2-2",
+        "symbol": "APES",
+        "name": "APES",
+        "rank": null,
+        "current_price": 0.08219196918841852,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 143,
         "id": "royal-euro",
         "symbol": "REUR",
         "name": "Royal Euro",
@@ -110,7 +171,18 @@
         ]
       },
       {
-        "source_index": 217,
+        "source_index": 158,
+        "id": "tradable-na-legal-receivables-ssl",
+        "symbol": "PC0000081",
+        "name": "Tradable NA Legal Receivables SSL",
+        "rank": null,
+        "current_price": 1.0,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 179,
         "id": "nusd-2",
         "symbol": "NUSD",
         "name": "Neutrl USD",
@@ -121,7 +193,7 @@
         ]
       },
       {
-        "source_index": 225,
+        "source_index": 198,
         "id": "memetoon",
         "symbol": "MEME",
         "name": "MEMETOON",
@@ -132,7 +204,7 @@
         ]
       },
       {
-        "source_index": 239,
+        "source_index": 209,
         "id": "alloy-tether",
         "symbol": "AUSDT",
         "name": "Alloy Tether",
@@ -143,7 +215,18 @@
         ]
       },
       {
-        "source_index": 260,
+        "source_index": 210,
+        "id": "usdkg",
+        "symbol": "USDKG",
+        "name": "USDKG",
+        "rank": null,
+        "current_price": 1.0011035460662399,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 234,
         "id": "mantis",
         "symbol": "M",
         "name": "Mantis",
@@ -154,7 +237,7 @@
         ]
       },
       {
-        "source_index": 299,
+        "source_index": 259,
         "id": "ebtc-2",
         "symbol": "EBTC",
         "name": "eBTC",
@@ -165,7 +248,7 @@
         ]
       },
       {
-        "source_index": 377,
+        "source_index": 329,
         "id": "latam-residential-sstl",
         "symbol": "PC0000089",
         "name": "Tradable LatAm Residential SSTL",
@@ -176,18 +259,18 @@
         ]
       },
       {
-        "source_index": 380,
+        "source_index": 342,
         "id": "opcode",
         "symbol": "OPCODE",
         "name": "Opcode",
         "rank": null,
-        "current_price": 0.03659509436017463,
+        "current_price": 0.03577180773688851,
         "reasons": [
           "missing_or_invalid_rank"
         ]
       },
       {
-        "source_index": 403,
+        "source_index": 354,
         "id": "emerald-security-token",
         "symbol": "EMRL.D",
         "name": "Emerald Security Token",
@@ -198,7 +281,7 @@
         ]
       },
       {
-        "source_index": 406,
+        "source_index": 358,
         "id": "elexium",
         "symbol": "EX",
         "name": "Elexium",
@@ -209,7 +292,18 @@
         ]
       },
       {
-        "source_index": 415,
+        "source_index": 364,
+        "id": "main-street-yield",
+        "symbol": "MSY",
+        "name": "Main Street Yield",
+        "rank": null,
+        "current_price": 0.532068234179618,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 365,
         "id": "basedhype",
         "symbol": "BASEDHYPE",
         "name": "BasedHype",
@@ -220,40 +314,40 @@
         ]
       },
       {
-        "source_index": 430,
-        "id": "hive_dollar",
-        "symbol": "HBD",
-        "name": "Hive Dollar",
-        "rank": null,
-        "current_price": 0.9900625505220747,
-        "reasons": [
-          "missing_or_invalid_rank"
-        ]
-      },
-      {
-        "source_index": 465,
+        "source_index": 405,
         "id": "nirvana-ana-2",
         "symbol": "ANA",
         "name": "Nirvana ANA",
         "rank": null,
-        "current_price": 3.7932540391836245,
+        "current_price": 3.792490595969785,
         "reasons": [
           "missing_or_invalid_rank"
         ]
       },
       {
-        "source_index": 468,
-        "id": "universal-usd",
-        "symbol": "USDU",
-        "name": "Universal USD",
+        "source_index": 423,
+        "id": "gold-park",
+        "symbol": "GPT",
+        "name": "Gold Park",
         "rank": null,
-        "current_price": 1.00027935856201,
+        "current_price": 0.008018388525522393,
         "reasons": [
           "missing_or_invalid_rank"
         ]
       },
       {
-        "source_index": 505,
+        "source_index": 447,
+        "id": "sideshift-token",
+        "symbol": "XAI",
+        "name": "SideShift",
+        "rank": null,
+        "current_price": 0.19880778532085258,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 457,
         "id": "geode-chain",
         "symbol": "GEODE",
         "name": "Geode Chain",
@@ -264,18 +358,18 @@
         ]
       },
       {
-        "source_index": 545,
+        "source_index": 505,
         "id": "nyc-token",
         "symbol": "NYC",
         "name": "NYC",
         "rank": null,
-        "current_price": 0.08463207435451718,
+        "current_price": 0.08458147095471345,
         "reasons": [
           "missing_or_invalid_rank"
         ]
       },
       {
-        "source_index": 577,
+        "source_index": 532,
         "id": "whiteheart",
         "symbol": "WHITE",
         "name": "Whiteheart",
@@ -286,18 +380,18 @@
         ]
       },
       {
-        "source_index": 597,
+        "source_index": 547,
         "id": "hex-trust-usdx",
         "symbol": "USDX",
         "name": "Hex Trust USD",
         "rank": null,
-        "current_price": 0.9934315067568327,
+        "current_price": 0.985951721943718,
         "reasons": [
           "missing_or_invalid_rank"
         ]
       },
       {
-        "source_index": 613,
+        "source_index": 555,
         "id": "myonion-fun",
         "symbol": "$ONION",
         "name": "MyOnion.fun",
@@ -308,7 +402,29 @@
         ]
       },
       {
-        "source_index": 655,
+        "source_index": 591,
+        "id": "oho-blockchain",
+        "symbol": "OHO",
+        "name": "OHO Blockchain",
+        "rank": null,
+        "current_price": 0.0009043069621201816,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 593,
+        "id": "ferrum-network",
+        "symbol": "FRM",
+        "name": "Ferrum Network",
+        "rank": null,
+        "current_price": 0.07179002316365603,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 600,
         "id": "ubs_umint_eth",
         "symbol": "UMINT",
         "name": "UBS USD Money Market Investment Fund Token",
@@ -319,18 +435,7 @@
         ]
       },
       {
-        "source_index": 665,
-        "id": "pinksale",
-        "symbol": "PINKSALE",
-        "name": "PinkSale",
-        "rank": null,
-        "current_price": 201.95541753693826,
-        "reasons": [
-          "missing_or_invalid_rank"
-        ]
-      },
-      {
-        "source_index": 669,
+        "source_index": 611,
         "id": "bitmart-token",
         "symbol": "BMX",
         "name": "BitMart",
@@ -341,7 +446,7 @@
         ]
       },
       {
-        "source_index": 696,
+        "source_index": 638,
         "id": "ryze",
         "symbol": "RYZE",
         "name": "Ryze",
@@ -352,7 +457,7 @@
         ]
       },
       {
-        "source_index": 698,
+        "source_index": 643,
         "id": "backed-ib01-treasury-bond-0-1yr",
         "symbol": "BIB01",
         "name": "Backed IB01 $ Treasury Bond 0-1yr",
@@ -363,7 +468,7 @@
         ]
       },
       {
-        "source_index": 721,
+        "source_index": 672,
         "id": "my-paqman-coin",
         "symbol": "MPC",
         "name": "My Paqman Coin",
@@ -374,7 +479,7 @@
         ]
       },
       {
-        "source_index": 749,
+        "source_index": 704,
         "id": "little-john",
         "symbol": "JOHN",
         "name": "Little John",
@@ -383,12 +488,56 @@
         "reasons": [
           "missing_or_invalid_rank"
         ]
+      },
+      {
+        "source_index": 714,
+        "id": "gaib-aid",
+        "symbol": "AID",
+        "name": "GAIB AID",
+        "rank": null,
+        "current_price": 0.9963475408068786,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 720,
+        "id": "delta-exchange-token",
+        "symbol": "DETO",
+        "name": "Delta Exchange",
+        "rank": null,
+        "current_price": 0.05995405361875709,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 745,
+        "id": "striker",
+        "symbol": "STKRI",
+        "name": "Striker",
+        "rank": null,
+        "current_price": 0.3029030354184035,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
       }
     ],
-    "accepted_unique_ids": 720,
-    "distinct_ranks": 720,
+    "accepted_unique_ids": 709,
+    "distinct_ranks": 709,
     "unrepresented_ranks": [
+      960,
+      961,
+      962,
+      963,
+      964,
+      965,
+      966,
+      967,
+      968,
+      969,
       970,
+      971,
       972,
       973,
       974,
@@ -422,18 +571,30 @@
     "tied_ranks": {},
     "duplicate_rank_rows": 0,
     "min_rank_observed": 251,
-    "max_rank_observed": 971,
+    "max_rank_observed": 959,
     "note": "unrepresented_ranks are rank labels absent from accepted rows, not proof that CoinGecko failed to return an asset; market_cap_rank can be tied or non-contiguous."
   },
   "combined_1_1000": {
-    "accepted_rows": 970,
-    "unique_ids": 970,
+    "accepted_rows": 958,
+    "unique_ids": 958,
     "duplicate_ids_across_scopes": [],
-    "distinct_ranks": 970,
+    "distinct_ranks": 958,
     "tied_rank_labels": 0,
     "duplicate_rank_rows": 0,
     "unrepresented_ranks_1_1000": [
+      250,
+      960,
+      961,
+      962,
+      963,
+      964,
+      965,
+      966,
+      967,
+      968,
+      969,
       970,
+      971,
       972,
       973,
       974,
@@ -464,20 +625,20 @@
       999,
       1000
     ],
-    "max_rank_observed": 971
+    "max_rank_observed": 959
   },
   "persisted_snapshots": {
     "core": {
       "schema": "agent_crypto_public_market_snapshot_v1",
-      "generated_at": "2026-09-29T05:38:03.339Z",
-      "snapshot_id": "coingecko-top250-usd-ecb-eur-github_2026-09-29T05:38:03.339Z",
+      "generated_at": "2026-10-22T23:27:32.732Z",
+      "snapshot_id": "coingecko-top250-usd-ecb-eur-github_2026-10-22T23:27:32.732Z",
       "assets_count": 250,
       "requested_assets": 250
     },
     "extended": {
       "schema": "agent_crypto_public_extended_market_snapshot_v1",
-      "generated_at": "2026-09-30T18:29:50.988Z",
-      "snapshot_id": "coingecko-ranks-251-1000_2026-09-30T18:29:50.988Z",
+      "generated_at": "2026-10-22T23:35:53.840Z",
+      "snapshot_id": "coingecko-ranks-251-1000_2026-10-22T23:35:53.840Z",
       "assets_count": 750,
       "rank_min": 251,
       "rank_max": 1000
