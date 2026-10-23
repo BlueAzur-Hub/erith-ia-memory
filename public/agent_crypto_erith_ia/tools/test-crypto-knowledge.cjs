@@ -45,7 +45,11 @@ const radarCss=read('administrator/market-radar-native.css');
 for(const id of ['foldListings','foldWatch','foldOpportunities','foldResearch','foldQualification','foldOkxHourly']){
  assert(radar.includes('"'+id+'"'),'All secondary summaries must retain a short source indicator: '+id);
 }
-assert.equal((radar.match(/=foldSection\(/g)||[]).length,6,'Exactly six secondary Radar sections remain collapsible');
+assert.equal((radar.match(/=foldSection\(/g)||[]).length,7,'Six secondary Radar sections plus one optional dated ranking fold');
+assert(radar.includes('"foldRanking"'),'Radar detailed ranking must remain available on demand');
+const listingCategory=read('administrator/js/new-listings-native-category.js');
+assert(!listingCategory.includes('"#marketSnapshotPanel.atlas-radar-open #marketTableWindowBody"'),'Radar must not hide the canonical Market table');
+assert(listingCategory.includes('state.originalRenderMarketTable?.();'),'Radar must restore the canonical Market rows');
 assert.match(radar,/const box=node\("details","radar-native-block radar-native-fold "/);
 assert.match(radar,/function setFoldNote\(root,id,message\)/);
 assert.match(radar,/group\.open=openGroups\.has\(key\)/);
