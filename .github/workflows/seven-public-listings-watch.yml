@@ -1,6 +1,14 @@
 name: Seven Public Spot Listings Watch
 on:
   workflow_dispatch:
+  # Bootstrap the collector when its own workflow or scanner changes on main.
+  # The generated JSON is deliberately excluded: publishing a snapshot
+  # must never trigger an infinite collection loop.
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/seven-public-listings-watch.yml"
+      - "public/agent_crypto_erith_ia/tools/seven_public_listings_watch.cjs"
   pull_request:
     paths:
       - "public/agent_crypto_erith_ia/tools/seven_public_listings_watch.cjs"
