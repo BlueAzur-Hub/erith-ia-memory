@@ -597,8 +597,8 @@
       lastUpdated:ts?new Date(ts).toISOString():new Date().toISOString(),
       usdUpdatedAt:ts?new Date(ts).toISOString():new Date().toISOString(),
       snapshotGeneratedAt:new Date().toISOString(),
-      source:`${spec.providerLabel} ${spec.pair} · marché public`,
-      usdSource:usdRate?`${spec.providerLabel} ${spec.pair} × ${spec.quote}/USD CoinGecko`:null,
+      source:`${quotedVenueLabel(spec)} ${spec.pair} · marché public`,
+      usdSource:usdRate?`${quotedVenueLabel(spec)} ${spec.pair} × ${spec.quote}/USD CoinGecko`:null,
       sourceMode:"new-listing-native-category",
       externalLookup403100:true,
       externalLookup403102:true,
@@ -708,26 +708,65 @@
     return rows;
   }
 
+  // Display provenance only. Do not change CT's working chart/Bridge route.
+  function quotedVenue(spec){
+    return spec?.discoveryProvider==="Bitget"&&spec?.symbol==="CT"&&
+      upper(spec?.discoverySymbol)==="CTUSDT"?"bitget":spec?.provider;
+  }
+  function quotedVenueLabel(spec){
+    return quotedVenue(spec)==="bitget"?"Bitget":spec?.providerLabel||"Source inconnue";
+  }
+  // Cross-venue merge requires documented identity; CT is explicit.
+  // For other unknown tickers, only collapse pairs on the same exchange.
+  function listingIdentityKey(spec){
+    const base=upper(spec?.base||spec?.symbol),inst=upper(spec?.providerSymbol);
+    if(base==="CT"&&(
+      (quotedVenue(spec)==="okx"&&["CT-USDC","CT-USDT"].includes(inst))||
+      (quotedVenue(spec)==="bitget"&&inst==="CT-USDT")))
+      return "canonical:concrete";
+    if(spec?.identityVerified===true&&spec?.coingeckoId)
+      return "canonical:"+String(spec.coingeckoId).toLowerCase();
+    return "venue:"+String(quotedVenue(spec)||"unknown")+":"+base;
+  }
+  function groupListingSpecs(specs){
+    const buckets=new Map();
+    for(const spec of specs){
+      const key=listingIdentityKey(spec);
+      if(!buckets.has(key))buckets.set(key,[]);
+      buckets.get(key).push(spec);
+    }
+    return [...buckets.values()].map(markets=>{
+      const selected=markets.find(x=>x.id===state.selected?.id)||null;
+      const priced=markets.find(x=>positive(x?.ticker?.lastPrice)!==null)||null;
+      return {...(selected||priced||markets[0]),presentationMarkets:markets};
+    });
+  }
+  function listingMarketsLabel(specs){
+    return specs.map(x=>quotedVenueLabel(x)+" "+x.pair+
+      (positive(x?.ticker?.lastPrice)!==null?" · prix public":" · prix indisponible")).join(" ; ");
+  }
   function isDocumentedTokenized(spec){
     return spec?.provider==="okx"&&
       DOCUMENTED_TOKENIZED_OKX_SPOT.has(upper(spec.providerSymbol));
   }
   function inSegment(spec,segment){
     if(segment==="all")return true;
-    if(segment==="okx")return spec?.provider==="okx";
-    if(segment==="other")return spec?.provider!=="okx";
+    if(segment==="okx")return quotedVenue(spec)==="okx";
+    if(segment==="other")return quotedVenue(spec)!=="okx";
     if(segment==="tokenized")return isDocumentedTokenized(spec);
     return false;
   }
   function visibleSpecs(){
     if(!state.enabled)return [];
     const q=upper(rawQuery());
-    return allSpecs().filter(spec=>{
-      if(!inSegment(spec,state.activeSegment))return false;
-      if(!q)return true;
-      const hay=[spec.id,spec.name,spec.symbol,spec.pair,spec.providerLabel,spec.providerSymbol,spec.discoveryProvider,spec.discoverySymbol].join(" ").toUpperCase();
-      return hay.includes(q);
-    });
+    return groupListingSpecs(allSpecs().filter(spec=>inSegment(spec,state.activeSegment)))
+      .filter(group=>{
+        if(!q)return true;
+        return group.presentationMarkets.some(spec=>{
+          const hay=[spec.id,spec.name,spec.symbol,spec.pair,quotedVenueLabel(spec),spec.providerSymbol,spec.discoveryProvider,spec.discoverySymbol].join(" ").toUpperCase();
+          return hay.includes(q);
+        });
+      });
   }
   function mountSegmentToolbar(){
     let bar=document.getElementById(SEGMENT_TOOLBAR_ID);
@@ -785,7 +824,7 @@
     for(const button of bar.querySelectorAll("button[data-new-listing-segment]")){
       const key=button.dataset.newListingSegment;
       const option=SEGMENT_OPTIONS.find(row=>row[0]===key);
-      button.textContent=(option?.[1]||key)+" ("+specs.filter(spec=>inSegment(spec,key)).length+")";
+      button.textContent=(option?.[1]||key)+" ("+groupListingSpecs(specs.filter(spec=>inSegment(spec,key))).length+")";
       button.setAttribute("aria-pressed",String(key===state.activeSegment));
     }
   }
@@ -795,13 +834,13 @@
     if(derived!==null){
       return {
         primary:money(derived,currency),
-        small:`${currency} dérivé · ${spec.providerLabel} ${spec.pair} × ${spec.quote}/${currency}`
+        small:`${currency} dérivé · ${quotedVenueLabel(spec)} ${spec.pair} × ${spec.quote}/${currency}`
       };
     }
     const raw=positive(spec?.ticker?.lastPrice);
     return {
       primary:raw!==null?`${raw.toLocaleString("fr-FR",{maximumFractionDigits:10})} ${spec.quote}`:"Prix live indisponible",
-      small:`${spec.providerLabel} ${spec.pair}`
+      small:`${quotedVenueLabel(spec)} ${spec.pair}`
     };
   }
 
@@ -817,9 +856,10 @@
     const tokenized=isDocumentedTokenized(spec);
     const mature=age!==null&&age>30;
     const historicOnly=spec.historicalOnly===true;
-    const statusTag=tokenized?"TOKEN":spec.provider==="okx"?"OKX":mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
+    const statusTag=tokenized?"TOKEN":quotedVenue(spec)==="okx"?"OKX":mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
     const identityTag=tokenized?"Action tokenisée · OKX Spot public · accès non vérifié":
-      spec.provider==="okx"?"OKX Spot public · symbole seulement · accès non vérifié":
+      quotedVenue(spec)==="okx"?"OKX Spot public · symbole seulement · accès non vérifié":
+      spec.symbol==="CT"?"Bitget Spot · prix public Bitget, non confirmé OKX":
       mature?(historicOnly?"Historique · cotation non vérifiée":"Ancien listing · source Bitget vérifiée"):(proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat");
     const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="eager" fetchpriority="high" width="32" height="32">`:
       `<span class="market-coin-identity-fallback" aria-hidden="true" style="display:inline-grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;border:1px solid #5b8b9c;background:#142e3b;color:#e6f3fd;font:700 11px system-ui">${esc(spec.symbol.slice(0,3))}</span>`;
