@@ -72,11 +72,26 @@ class NativeHistoryTests(unittest.TestCase):
             original=json.loads((pathlib.Path(folder)/"2026-10-22.json").read_text())
             self.assertFalse(original["order_book_spread_available"])
 
-    def test_one_missing_candle_cannot_certify_full_day(self):
-        with self.assertRaisesRegex(ValueError,"95/96"):
-            r.recover_day(DAY,fetch_live=native,
+    def test_partial_day_is_true_evidence_and_can_be_completed_later(self):
+        partial=r.recover_day(DAY,fetch_live=native,
               fetch_history=lambda url:historical(url,broken_pair="BRUSDT",short=True),
               identity=RAW_ID,now=NOW)
+        self.assertEqual(partial["assets"][0]["count"],95)
+        self.assertEqual(partial["assets"][0]["status"],"PARTIAL_NATIVE_15M")
+        self.assertEqual(partial["assets"][0]["missing_count"],1)
+        self.assertEqual(partial["assets"][1]["count"],96)
+        with tempfile.TemporaryDirectory() as folder:
+            folder=pathlib.Path(folder)
+            first=r.save(partial,folder)
+            self.assertEqual(first["bars"],287)
+            self.assertEqual(first["missing_bars"],1)
+            complete=r.recover_day(DAY,fetch_live=native,
+                          fetch_history=historical,identity=RAW_ID,now=NOW)
+            second=r.save(complete,folder)
+            self.assertEqual(second["bars"],288)
+            final=json.loads((folder/"2026-10-22.json").read_text())
+            self.assertEqual(final["assets"][0]["missing_count"],0)
+            self.assertEqual(r.save(complete,folder)["status"],"ALREADY_VERIFIED_NO_NEW_BARS")
 
     def test_duplicate_or_out_of_range_timestamps_not_invented(self):
         bars=rows()
@@ -84,8 +99,9 @@ class NativeHistoryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Duplicate"):
             r.normalize_candles(bars,DAY)
         bars=rows()[:-1]
-        with self.assertRaisesRegex(ValueError,"95/96"):
-            r.normalize_candles(bars,DAY)
+        partial=r.normalize_candles(bars,DAY)
+        self.assertEqual(len(partial),95)
+        self.assertEqual(len(r.missing_slots(DAY,partial)),1)
         extra=rows()
         # Endpoint can include an adjacent prior interval at a boundary.
         extra.append([str(int(extra[-1][0])-r.STEP_MS),
