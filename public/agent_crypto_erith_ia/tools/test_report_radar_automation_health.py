@@ -42,6 +42,21 @@ class HealthTests(unittest.TestCase):
   self.assertEqual(x["status"],"WAITING_TODAY_QUALIFICATION")
   self.assertFalse(x["journal_contains_today_qualification"])
 
+ def test_actual_17_candidacies_cannot_be_promoted_to_20(self):
+  archive={**ARCHIVE,"groups":{
+   "momentum_24h_7d":[{"id":"momentum-"+str(i)} for i in range(12)],
+   "rebound_24h_only":[{"id":"rebound-"+str(i)} for i in range(5)]},
+   "scout_candidates":[{"id":"momentum-0"},{"id":"momentum-1"},{"id":"extra"}]}
+  stale={**Q,"source_observation_date_utc":"2026-10-19",
+         "qualified_at_utc":"2026-10-19T08:07:00Z"}
+  x=observe(DAY,archive,stale,J)
+  self.assertEqual(x["status"],"INSUFFICIENT_RADAR_CANDIDATES")
+  self.assertEqual(x["radar_momentum_rebound_candidates_today"],17)
+  self.assertEqual(x["radar_candidate_shortfall"],3)
+  self.assertEqual(x["radar_target_candidates"],20)
+  self.assertFalse(x["healthy_current_qualification"])
+  self.assertFalse(x["qualification_today_published"])
+
  def test_today_qualification_without_journal_is_a_failure_not_0_opportunities(self):
   x=observe(DAY,ARCHIVE,Q,None)
   self.assertEqual(x["status"],"JOURNAL_NOT_PUBLISHED_FOR_TODAY")

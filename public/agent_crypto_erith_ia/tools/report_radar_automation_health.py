@@ -40,6 +40,19 @@ def observe(at,archive,qualification,journal):
     assert at.tzinfo is not None and at.utcoffset()==dt.timedelta(0)
     day=at.date().isoformat()
     archive_present=isinstance(archive,dict) and archive.get("observed_date_utc")==day
+    # Only actual contemporaneous Radar rows are eligible for the canonical
+    # 20-name qualification. Scout candidates are a separate experiment and
+    # never secretly padded into the stricter Momentum/Rebound cohort.
+    groups=archive.get("groups") if archive_present else None
+    selection_count=None
+    if isinstance(groups,dict):
+        trend=groups.get("momentum_24h_7d")
+        rebound=groups.get("rebound_24h_only")
+        if isinstance(trend,list) and isinstance(rebound,list):
+            rows=trend+rebound
+            ids=[x.get("id") for x in rows if isinstance(x,dict)]
+            if len(ids)==len(rows) and all(isinstance(x,str) and x for x in ids):
+                selection_count=len(set(ids))
     q=qualification if isinstance(qualification,dict) else {}
     qualified_time=parse_time(q.get("qualified_at_utc"))
     qualification_today=(
@@ -65,7 +78,10 @@ def observe(at,archive,qualification,journal):
     if not archive_present:
         status="WAITING_DAILY_ARCHIVE" if at.hour<15 or (at.hour==15 and at.minute<30) else "DAILY_ARCHIVE_MISSING"
     elif not qualification_today:
-        status="WAITING_TODAY_QUALIFICATION" if at.hour<15 or (at.hour==15 and at.minute<30) else "QUALIFICATION_MISSING"
+        if selection_count is not None and selection_count<20:
+            status="INSUFFICIENT_RADAR_CANDIDATES"
+        else:
+            status="WAITING_TODAY_QUALIFICATION" if at.hour<15 or (at.hour==15 and at.minute<30) else "QUALIFICATION_MISSING"
     elif not matching:
         status="JOURNAL_NOT_PUBLISHED_FOR_TODAY"
     else:
@@ -77,6 +93,9 @@ def observe(at,archive,qualification,journal):
         "expected_observation_date_utc":day,
         "status":status,"healthy_current_qualification":bool(matching),
         "archive_today_published":archive_present,
+        "radar_momentum_rebound_candidates_today":selection_count,
+        "radar_target_candidates":20,
+        "radar_candidate_shortfall":max(0,20-selection_count) if selection_count is not None else None,
         "qualification_today_published":qualification_today,
         "last_qualification_at_utc":q.get("qualified_at_utc") if qualified_time else None,
         "journal_published":journal_ok,
