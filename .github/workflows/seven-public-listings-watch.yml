@@ -2,7 +2,7 @@ name: Seven Public Spot Listings Watch
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 */4 * * *"
+    - cron: "17 * * * *"
 permissions:
   contents: write
 concurrency:
@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Check safety and scan two public Spot venues
+      - name: Check safety and scan public Spot instruments and dated OKX quotes
         shell: bash
         run: |
           set -euo pipefail
