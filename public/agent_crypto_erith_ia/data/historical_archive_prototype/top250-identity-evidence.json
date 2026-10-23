@@ -1,7 +1,7 @@
 {
-  "approved_count": 90,
+  "approved_count": 91,
   "candidate_count": 96,
-  "checked_count": 95,
+  "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
   "quote": "USDT",
   "results": [
@@ -1918,9 +1918,29 @@
       "rank": 242,
       "status": "approved_coingecko_binance_spot",
       "symbol": "GLM"
+    },
+    {
+      "checked_at": "2026-10-23T11:30:46.689777+00:00",
+      "evidence": [
+        {
+          "base": "AWE",
+          "coin_id": "stp-network",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "stp-network",
+          "trade_url": "https://www.binance.com/en/trade/AWE_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "stp-network",
+      "pages": 2,
+      "pair": "AWEUSDT",
+      "rank": 245,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "AWE"
     }
   ],
-  "review_required_count": 6,
+  "review_required_count": 5,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
