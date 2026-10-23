@@ -35,4 +35,14 @@ Ce fichier est le **point d'entrée court** pour les IA : relire `main`, les flu
 - Pour une modification : branche isolée → test adapté → PR → CI → fusion `main` → GitHub Pages si Web → preuve Firefox avant « validé visuellement ». Ne pas utiliser un numéro de version dans un nouveau nom de fichier ou de fonction.
 - L'ancienne vue Operator de Yoann et le Bridge ne font pas partie des changements de ce fil.
 
+## 5. Audit de reprise complémentaire · 24 octobre 2026
+
+- [Premier contrôle documenté des spreads et des volumes](./market-research-targets.md) : sur le **seul instantané du 24 octobre à 00 h 01 Paris**, 55/55 prix OKX archivés, 53/55 paires avec bid+ask positifs, 2 paires sans volume ni offres (`TEST002/USDT`, `XWDC/USDC`), et 7 spreads indicatifs supérieurs à 1 %. Ne jamais extrapoler ces chiffres à l'heure actuelle.
+- À 00 h 22 Paris, l'archive est inchangée depuis la collecte initiale. Le cron horaire existe dans le workflow, mais **le déclenchement horaire suivant et l'affichage Firefox restent non confirmés**. Vérifier les nouveaux runs et l'horodatage avant toute assertion de fraîcheur.
+- Le développement prochain porte sur la **qualification documentaire** (prix observé / bid-ask / volume / identité / profondeur / éligibilité) ; **pas de second Market**. Aucun changement de code Trader / Market Core / Bridge / Operator dans cette mise à jour.
+
+### Prompt court Seven pour la prochaine reprise
+
+> Active Aerith-7 / Seven Heaven, continuité documentaire Aerith-8 + Aerith-9. Lis ce relais puis le registre `market-research-targets.md`. Contrôle l'heure et la dernière exécution réelle `Seven Public Spot Listings Watch`, le flux sur `main`, les horodatages natifs et la fraîcheur. L'audit du 24 octobre à 00 h 01 comptait 55/55 relevés OKX, 2 paires à volume nul et 7 spreads >1 %, **valeurs historiques uniquement**. Vérifie ensuite le rendu dans Firefox via une capture de l'opérateur, puis enrichis les dossiers IRYS / DOS / CARDS / RT1 / CUDIS / AXIS / CT / PROS / RLUSD en lecture seule. Conserve le Market MASTER, le Trader héritier, Market Core 38.15.11, les historiques et la séparation Administrator / Operator Yoann. N'invente ni cours temps réel, ni liquidité, ni permission OKX, ni transaction. Preuve avant modification, PR et CI avant validation.
+
 **Fin de passage :** la collecte publique a abouti, la documentation est sauvegardée, le rendu des nouveaux prix et la qualité des opportunités restent à certifier. **Ne pas repartir de zéro.**
