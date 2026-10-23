@@ -151,3 +151,8 @@ test("dated OKX SPOT prices: exact-pair only, stale and mismatched quotes blocke
  assert.equal(snap.documentedTokenizedSpotCount,1);
  assert.equal(snap.watchStatus.okxCount,3);
 });
+
+
+test("public OKX scanner offline safety suite is included in Trader CI",()=>{
+ require("./test_seven_public_listings_watch.cjs");
+});
