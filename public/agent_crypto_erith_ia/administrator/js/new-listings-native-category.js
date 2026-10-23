@@ -20,12 +20,22 @@
   const ROOT_ATTR="data-new-listing-native";
   const SEGMENT_TOOLBAR_ID="newListingsSegmentToolbar";
   const SEGMENT_OPTIONS=Object.freeze([
-    ["all","Tous"],["okx","OKX Spot"],["other","Autres exchanges"],["tokenized","Actifs tokenisés"]
+    ["quoted","Avec prix"],["other","Autres plateformes"],["tokenized","Actions / ETF"],["review","À qualifier"],["all","Tout le registre"]
   ]);
-  // Exact instruments backed by dated OKX tokenized-stock notices.
-  // Prefix X is NOT sufficient evidence: XDP is a different crypto project.
-  // https://www.okx.com/en-eu/help/section/announcements-new-listings
-  const DOCUMENTED_TOKENIZED_OKX_SPOT=new Set(["XWDC-USDC","XNFLX-USDC"]);
+  // Exact instrument allowlist: published OKX tokenized-stock notices (9–23 Oct 2026).
+  // Do NOT use symbol prefix alone (XDP is unrelated). Dated official sources:
+  // https://www.okx.com/en-gb/help/okx-to-list-unified-tokenized-stocks-xbrkb-xwen-and-more-for-spot-trading
+  // https://www.okx.com/fr-fr/help/okx-to-list-unified-tokenized-stocks-xlunr-xoscr-and-more-for-spot-trading
+  // https://www.okx.com/en-us/help/okx-to-list-unified-tokenized-stocks-xshld-xsqqq-and-more-for-spot-trading
+  // https://www.okx.com/help/okx-to-list-usdc-trading-pairs-for-tokenized-stocks-xwdc
+  // https://www.okx.com/en-br/help/okx-to-list-unified-tokenized-stocks-xacn-xaxti-and-more-for-spot-trading
+  const DOCUMENTED_TOKENIZED_OKX_SPOT=new Set([
+    "XBRKB-USDT","XWEN-USDT","XAEHR-USDT","XCRDO-USDT","XFLNC-USDT","XOUST-USDT","XGPRO-USDT","XPOET-USDT","XQNT-USDT","XAMC-USDT","XBB-USDT","XIONQ-USDT","XCGNX-USDT","XFLY-USDT","XFWDI-USDT","XINFQ-USDT",
+    "XLUNR-USDT","XOSCR-USDT","XPENG-USDT","XPURR-USDT","XRDW-USDT","XSHOP-USDT","XSIMO-USDT","XSONY-USDT","XTSEM-USDT","XTTMI-USDT","XEWJ-USDT","XEWT-USDT","XEWZ-USDT","XLYTE-USDT","XSPCH-USDT","XRAM-USDT",
+    "XSHLD-USDT","XSQQQ-USDT","XTMF-USDT","XTSLL-USDT","XURNM-USDT","XUSO-USDT","XUVXY-USDT","XXBI-USDT",
+    "XNFLX-USDC","XWDC-USDC",
+    "XACN-USDT","XAXTI-USDT","XCOST-USDT","XDDOG-USDT","XGS-USDT","XGTLB-USDT","XHUT-USDT","XJPM-USDT",
+  ]);
   const BITGET="https://api.bitget.com";
   const COINGECKO="https://api.coingecko.com/api/v3";
   const DISCOVERY_COOLDOWN_MS=15000;
@@ -69,7 +79,7 @@
 
   const state={
     enabled:false,
-    activeSegment:"all",
+    activeSegment:"quoted",
     discovering:false,
     discovered:[],
     specs:[],
@@ -749,18 +759,24 @@
     return spec?.provider==="okx"&&
       DOCUMENTED_TOKENIZED_OKX_SPOT.has(upper(spec.providerSymbol));
   }
+  function listingClass(spec){
+    if(isDocumentedTokenized(spec))return "tokenized";
+    const observation=state.coinCache.get(spec.id)||coinFromSpec(spec);
+    return positive(observation?.priceUsd)!==null?"quoted":"review";
+  }
   function inSegment(spec,segment){
     if(segment==="all")return true;
-    if(segment==="okx")return quotedVenue(spec)==="okx";
+    if(segment==="okx")return quotedVenue(spec)==="okx"; // legacy test compatibility
     if(segment==="other")return quotedVenue(spec)!=="okx";
-    if(segment==="tokenized")return isDocumentedTokenized(spec);
+    if(["quoted","tokenized","review"].includes(segment))return listingClass(spec)===segment;
     return false;
   }
   function visibleSpecs(){
     if(!state.enabled)return [];
     const q=upper(rawQuery());
-    return groupListingSpecs(allSpecs().filter(spec=>inSegment(spec,state.activeSegment)))
+    return groupListingSpecs(allSpecs())
       .filter(group=>{
+        if(!group.presentationMarkets.some(spec=>inSegment(spec,state.activeSegment)))return false;
         if(!q)return true;
         return group.presentationMarkets.some(spec=>{
           const hay=[spec.id,spec.name,spec.symbol,spec.pair,quotedVenueLabel(spec),spec.providerSymbol,spec.discoveryProvider,spec.discoverySymbol].join(" ").toUpperCase();
@@ -810,7 +826,7 @@
     }
     const note=document.createElement("span");
     note.className="new-listing-segment-note";
-    note.textContent="Spot public ≠ accès au compte · tokenisés documentés";
+    note.textContent="Prix affiché ≠ accès personnel confirmé sur OKX";
     bar.append(note);
     chips.insertAdjacentElement("afterend",bar);
     return bar;
@@ -824,7 +840,7 @@
     for(const button of bar.querySelectorAll("button[data-new-listing-segment]")){
       const key=button.dataset.newListingSegment;
       const option=SEGMENT_OPTIONS.find(row=>row[0]===key);
-      button.textContent=(option?.[1]||key)+" ("+groupListingSpecs(specs.filter(spec=>inSegment(spec,key))).length+")";
+      button.textContent=(option?.[1]||key)+" ("+groupListingSpecs(specs).filter(group=>group.presentationMarkets.some(spec=>inSegment(spec,key))).length+")";
       button.setAttribute("aria-pressed",String(key===state.activeSegment));
     }
   }
@@ -839,8 +855,8 @@
     }
     const raw=positive(spec?.ticker?.lastPrice);
     return {
-      primary:raw!==null?`${raw.toLocaleString("fr-FR",{maximumFractionDigits:10})} ${spec.quote}`:"Prix live indisponible",
-      small:`${quotedVenueLabel(spec)} ${spec.pair}`
+      primary:raw!==null?`${raw.toLocaleString("fr-FR",{maximumFractionDigits:10})} ${spec.quote}`:"Prix non relevé",
+      small:raw!==null?`${quotedVenueLabel(spec)} ${spec.pair}`:"Cours absent de notre flux · "+quotedVenueLabel(spec)
     };
   }
 
@@ -856,9 +872,9 @@
     const tokenized=isDocumentedTokenized(spec);
     const mature=age!==null&&age>30;
     const historicOnly=spec.historicalOnly===true;
-    const statusTag=tokenized?"TOKEN":quotedVenue(spec)==="okx"?"OKX":mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
-    const identityTag=tokenized?"Action tokenisée · OKX Spot public · accès non vérifié":
-      quotedVenue(spec)==="okx"?"OKX Spot public · symbole seulement · accès non vérifié":
+    const statusTag=tokenized?"ACTION":listingClass(spec)==="review"?"À VÉRIF.":quotedVenue(spec)==="okx"?"OKX":mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
+    const identityTag=tokenized?"Action / ETF tokenisé · source OKX officielle · accès personnel non vérifié":
+      quotedVenue(spec)==="okx"?"Instrument OKX repéré · cotation non relevée · accès personnel non vérifié":
       spec.symbol==="CT"?"Bitget Spot · provenance du prix, accès OKX non vérifié":
       mature?(historicOnly?"Historique · cotation non vérifiée":"Ancien listing · source Bitget vérifiée"):(proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat");
     const group=spec.presentationMarkets||[spec];
@@ -918,7 +934,7 @@
         ?"Nouveaux listings · actualisation Bitget en cours…"
         :state.lastError
           ?`Nouveaux listings · ${state.lastError}`
-          :`Nouveaux listings · ${segmentName} : ${specs.length} actifs / ${sourceLines} marchés · Nouveaux ≤30 j · ${total} · OKX Spot public ${state.watchStatus.okxCount} · ${esc(state.watchStatus.status)} · Suivis >30 j · ${followed} · Radar Bitget · ${state.radarStatus.confirmed} confirmé(s) · ${state.radarStatus.candidates} candidat(s) · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · ${identityDiagnosticsLabel()} · relance ≥15 s · Market Core inchangé`;
+          :`Nouveaux listings · ${segmentName} : ${specs.length} fiches · Registre : ${groupListingSpecs(allSpecs()).length} actifs / ${allSpecs().length} marchés · La cotation publique ne garantit pas la négociation sur ton compte. Prix absents conservés dans « À qualifier ». Market Core inchangé`;
     }
     return specs.length;
   }
