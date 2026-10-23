@@ -21,6 +21,39 @@ const extendedExample={schema:'agent_crypto_public_extended_market_snapshot_v1',
  change24h:i===2?15:8,change7d:i===2?-4:12,change30d:2}))};
 const watch=reader.selectOpportunities({...example,generated_at:'2026-10-16T07:51:00Z'},extendedExample);
 assert.equal(watch.universe,1000);
+assert.equal(watch.status,"DISTINCT_IDENTITIES");
+assert.equal(watch.observedRows,1000);
+assert.deepEqual(watch.boundaryOverlaps,[]);
+// Exact CoinGecko ID avant-usd moves across 250/251 while the two valid
+// collectors publish at different times. No rank/price is fabricated.
+const boundaryCore={...example,generated_at:"2026-10-22T06:03:41Z",
+  coins:example.coins.map((x,i)=>i===249?{...x,id:"avant-usd",symbol:"AVUSD",priceUsd:10}:x)};
+const boundaryExt={...extendedExample,generated_at:"2026-10-22T05:31:54Z",
+  coins:extendedExample.coins.map((x,i)=>i===0?{...x,id:"avant-usd",symbol:"AVUSD",priceUsd:12}:x)};
+const partial=reader.selectOpportunities(boundaryCore,boundaryExt);
+assert.equal(partial.status,"MIXED_SNAPSHOT_BOUNDARY");
+assert.equal(partial.universe,999);
+assert.equal(partial.observedRows,1000);
+assert.equal(partial.boundaryOverlaps.length,1);
+assert.equal(partial.boundaryOverlaps[0].id,"avant-usd");
+assert.deepEqual([partial.boundaryOverlaps[0].core.rank,partial.boundaryOverlaps[0].extended.rank],[250,251]);
+assert.equal(partial.snapshotSkewSeconds,1907);
+assert.deepEqual(partial.ambiguousIdsExcludedFromResearch,["avant-usd"]);
+assert.ok(!partial.scoutUniverse.some(x=>x.id==="avant-usd"));
+assert.ok(!Object.values(partial.rankings).some(rows=>rows.some(x=>x.id==="avant-usd")));
+assert.equal(partial.sourceTimes.core,"2026-10-22T06:03:41Z");
+assert.equal(partial.sourceTimes.extended,"2026-10-22T05:31:54Z");
+// Same-timestamp collision is not a defensible asynchronous boundary.
+assert.throws(()=>reader.selectOpportunities(boundaryCore,
+  {...boundaryExt,generated_at:boundaryCore.generated_at}),/incohérentes/);
+// Duplicate ID elsewhere or a contradictory ticker must fail closed.
+assert.throws(()=>reader.selectOpportunities(boundaryCore,
+  {...boundaryExt,coins:boundaryExt.coins.map((x,i)=>i===0?{...x,symbol:"OTHER"}:x)}),/incohérentes/);
+assert.throws(()=>reader.selectOpportunities(boundaryCore,
+  {...boundaryExt,coins:boundaryExt.coins.map((x,i)=>i===4?{...x,id:"asset-12"}:x)}),/incohérentes/);
+// No missing rank or repeated rank may ever become a supposedly full 1000.
+assert.throws(()=>reader.selectOpportunities(example,
+  {...extendedExample,coins:extendedExample.coins.map((x,i)=>i===0?{...x,rank:252}:x)}),/incohérentes/);
 assert.equal(watch.eligible,750);
 assert.equal(watch.trend.length,12);
 assert.equal(watch.rankings.rise24.length,10);
