@@ -686,6 +686,7 @@
       state.discovered=Array.isArray(rows)?rows.slice():[];
       const bitgetSpecs=state.discovered.map(providerSpec).filter(Boolean);
       const okxSpecs=watch.map(specFromWatchOKX).filter(Boolean);
+      state.watchStatus.pricedCount=okxSpecs.filter(spec=>spec.ticker!==null).length;
       state.specs=[...bitgetSpecs,...okxSpecs].sort((a,b)=>(b.launchTime||0)-(a.launchTime||0));
       state.followedSpecs=(globalThis.AgentCryptoNewListingLiveAsset?.trackedInstruments?.()||[])
         .map(providerSpec).filter(spec=>spec&&spec.symbol!=="CT"&&ageDays(spec.listedAt)>30);
@@ -1554,7 +1555,7 @@
 
   function snapshot(){
     return Object.freeze({
-      build:MODULE_VERSION,enabled:state.enabled,activeSegment:state.activeSegment,groupedMarketCount:groupListingSpecs(allSpecs()).length,marketInstrumentCount:allSpecs().length,documentedTokenizedSpotCount:state.specs.filter(isDocumentedTokenized).length,discovered:state.specs.length,followed:state.followedSpecs.length,
+      build:MODULE_VERSION,enabled:state.enabled,activeSegment:state.activeSegment,groupedMarketCount:groupListingSpecs(allSpecs()).length,marketInstrumentCount:allSpecs().length,documentedTokenizedSpotCount:state.specs.filter(isDocumentedTokenized).length,datedOkxQuotesCount:state.specs.filter(spec=>spec.provider==="okx"&&spec.ticker).length,discovered:state.specs.length,followed:state.followedSpecs.length,
       selectedId:state.selected?.id||null,selectedSymbol:state.selected?.symbol||null,
       // Separate CoinGecko canonical identity from the stable exchange-scoped chart ID.
       selectedCanonicalId:state.selected?.coingeckoId||null,
