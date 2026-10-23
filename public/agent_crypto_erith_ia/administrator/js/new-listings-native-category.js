@@ -859,7 +859,7 @@
     const statusTag=tokenized?"TOKEN":quotedVenue(spec)==="okx"?"OKX":mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
     const identityTag=tokenized?"Action tokenisée · OKX Spot public · accès non vérifié":
       quotedVenue(spec)==="okx"?"OKX Spot public · symbole seulement · accès non vérifié":
-      spec.symbol==="CT"?"Bitget Spot · prix public Bitget, non confirmé OKX":
+      spec.symbol==="CT"?"Bitget Spot · provenance du prix, accès OKX non vérifié":
       mature?(historicOnly?"Historique · cotation non vérifiée":"Ancien listing · source Bitget vérifiée"):(proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat");
     const group=spec.presentationMarkets||[spec];
     const marketSummary=group.length>1?
@@ -1568,6 +1568,24 @@
       inSegment(documentedTokenized,"okx")&&inSegment(documentedTokenized,"tokenized")&&
       inSegment(external,"other")&&!inSegment(external,"okx")&&
       inSegment(unverifiedPrefix,"okx")&&!inSegment(unverifiedPrefix,"tokenized");
+    const ctFromBitget=providerSpec({base:"CT",quote:"USDT",providerSymbol:"CTUSDT",
+      listedAt:new Date(Date.now()-86400000).toISOString()});
+    if(ctFromBitget)ctFromBitget.ticker={lastPrice:"0.25",turnover24h:"6000"};
+    const ctOnOkx=specFromWatchOKX({provider:"okx",instrument_type:"SPOT",state:"live",
+      base:"CT",quote:"USDC",providerSymbol:"CT-USDC",pair:"CT/USDC",
+      listedAt:new Date(Date.now()-86400000).toISOString()});
+    const ctOnOkxUsdt=specFromWatchOKX({provider:"okx",instrument_type:"SPOT",state:"live",
+      base:"CT",quote:"USDT",providerSymbol:"CT-USDT",pair:"CT/USDT",
+      listedAt:new Date(Date.now()-86400000).toISOString()});
+    const maybeCollision={provider:"bitget",base:"XDP",symbol:"XDP",id:"bitget:xdp",providerSymbol:"XDPUSDT"};
+    const okxXdp={provider:"okx",base:"XDP",symbol:"XDP",id:"okx:xdp",providerSymbol:"XDP-USDT"};
+    const groupedExample=groupListingSpecs([ctOnOkx,ctOnOkxUsdt,ctFromBitget,maybeCollision,okxXdp]);
+    const groupingChecks=quotedVenue(ctFromBitget)==="bitget"&&
+      quotedVenueLabel(ctFromBitget)==="Bitget"&&
+      inSegment(ctFromBitget,"other")&&!inSegment(ctFromBitget,"okx")&&
+      groupedExample.length===3&&
+      groupedExample.some(x=>x.id==="concrete"&&x.presentationMarkets.length===3)&&
+      groupedExample.filter(x=>x.symbol==="XDP").length===2;
     const sampleOKX=specFromWatchOKX({provider:"okx",instrument_type:"SPOT",
       state:"live",base:"TEST",quote:"USDC",providerSymbol:"TEST-USDC",pair:"TEST/USDC",
       listedAt:new Date(Date.now()-3600000).toISOString()});
@@ -1591,7 +1609,7 @@
       &&sampleOKX?.providerSymbol==="TEST-USDC"&&swapRejected===null&&
         tickerCollisionRejected
       &&proof.status==="CONFIRMÉ"
-      &&segmentTests
+      &&segmentTests&&groupingChecks
       &&candidate.status==="CANDIDAT"
       &&ageBand(.5).label==="<24 h"
       &&ageBand(5).label==="4–7 j"
@@ -1623,6 +1641,7 @@
       public_okx_spot_listing_feed_only:true,
       market_segment_filters:segmentTests,
       tokenized_requires_documented_instrument:segmentTests,
+      provenance_grouping_verified:groupingChecks,
       okx_swap_rejected:swapRejected===null,
       okx_ticker_collision_refused:tickerCollisionRejected,
       market_cap_exact_id_symbol_time:!!validCap&&!wrongCoinCap&&!wrongSymbolCap,
