@@ -16308,7 +16308,8 @@ const ATLAS_MARKET_REGISTRY_PATHS = Object.freeze({
 const ATLAS_PUBLIC_CRYPTO_MARKET_PATHS = Object.freeze({
   latest: "../data/crypto/latest.json",
   status: "../data/crypto/status.json",
-  extended: "../data/crypto/extended.json",
+  // The lightweight Pages deployment excludes /data/; public market archives live in GitHub RAW.
+  extended: "https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/extended.json",
   extendedStatus: "../data/crypto/extended_status.json"
 });
 
@@ -17234,7 +17235,7 @@ async function atlasExtendedMarketSnapshot(signal){
   const payload=await fetchJsonWithRetry(
     `${ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.extended}?${cacheBust}`,
     {signal,networkKind:"source"},
-    10000,
+    18000,
     1
   );
 
