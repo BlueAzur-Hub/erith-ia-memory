@@ -1,6 +1,15 @@
 name: Seven Radar Opportunity History
 on:
   workflow_dispatch:
+  # One-shot source refresh when this archive collector or its guards change.
+  # Commits of generated JSON are excluded, preventing dispatch loops.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seven-radar-opportunity-history.yml'
+      - 'public/agent_crypto_erith_ia/tools/radar_opportunity_history.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test-radar-opportunity-history.cjs'
+      - 'public/agent_crypto_erith_ia/laboratoire/radar.js'
   schedule:
     # Morning canonical archive; later same-day retry is idempotent when present.
     # If the 07:31 sources are inconsistent, a later valid snapshot can still
