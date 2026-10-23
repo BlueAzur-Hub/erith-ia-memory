@@ -1,6 +1,11 @@
 name: Seven Public Spot Listings Watch
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/tools/seven_public_listings_watch.cjs"
+      - "public/agent_crypto_erith_ia/tools/test_seven_public_listings_watch.cjs"
+      - ".github/workflows/seven-public-listings-watch.yml"
   schedule:
     - cron: "17 * * * *"
 permissions:
@@ -9,7 +14,21 @@ concurrency:
   group: seven-public-spot-listings-watch
   cancel-in-progress: false
 jobs:
+  offline_validation:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate public Spot scanner offline (no exchange requests)
+        run: |
+          node --check public/agent_crypto_erith_ia/tools/seven_public_listings_watch.cjs
+          node public/agent_crypto_erith_ia/tools/test_seven_public_listings_watch.cjs
   catalog:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
