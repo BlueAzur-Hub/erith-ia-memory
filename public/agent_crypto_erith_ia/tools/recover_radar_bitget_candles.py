@@ -122,6 +122,29 @@ def normalize_candles(raw, day):
     return [candles[k] for k in sorted(candles)]
 
 
+def missing_slots(day, bars):
+    start=int(dt.datetime.combine(day,dt.time.min,tzinfo=UTC).timestamp()*1000)
+    existing={x["open_at_utc"] for x in bars}
+    return [market.iso(dt.datetime.fromtimestamp(ms/1000,UTC))
+            for ms in range(start,start+24*60*60*1000,STEP_MS)
+            if market.iso(dt.datetime.fromtimestamp(ms/1000,UTC)) not in existing]
+
+
+def recovery_asset(target, day, bars, native_status):
+    cid,symbol,pair,network,contract=target
+    missing=missing_slots(day,bars)
+    return {
+        "coin_id":cid,"symbol":symbol,"pair":pair,"venue":"Bitget",
+        "type":"SPOT","quote":"USDT","chain":network,"contract":contract,
+        "status":("COMPLETE_NATIVE_15M" if not missing else
+                  "PARTIAL_NATIVE_15M" if bars else "NATIVE_HISTORY_UNAVAILABLE"),
+        "native_current_status":native_status,
+        "candles_15m":bars,"count":len(bars),"sha256":sha(bars),
+        "missing_slots_utc":missing,"missing_count":len(missing),
+        "source_endpoint":ENDPOINT
+    }
+
+
 def recover_day(day, fetch_live=market.public_json,
                 fetch_history=historical_json, identity=None, now=None):
     now=now or dt.datetime.now(UTC)
@@ -137,20 +160,23 @@ def recover_day(day, fetch_live=market.public_json,
         native_status=current_native_identity(fetch_live,target)
         params=urllib.parse.urlencode({
             "category":"SPOT","symbol":pair,"interval":"15m",
-            # The API may treat a requested end bound as exclusive/rounded.
-            # Request neighbouring closed intervals; filter by exact UTC day.
-            "startTime":str(start-2*STEP_MS),"endTime":str(stop+STEP_MS),"limit":"100"})
-        payload=fetch_history("https://"+HOST+ENDPOINT+"?"+params)
-        require(isinstance(payload,dict) and payload.get("code")=="00000",
-                "History endpoint rejected pair "+pair)
-        bars=normalize_candles(payload.get("data"),day)
-        records.append({
-            "coin_id":cid,"symbol":symbol,"pair":pair,"venue":"Bitget",
-            "type":"SPOT","quote":"USDT","chain":network,"contract":contract,
-            "status":"COMPLETE_NATIVE_15M","native_current_status":native_status,
-            "candles_15m":bars,"count":len(bars),"sha256":sha(bars),
-            "source_endpoint":ENDPOINT,
-        })
+            # Endpoints can round range edges. Filter source by exact UTC day.
+            "startTime":str(start-2*STEP_MS),
+            "endTime":str(stop+STEP_MS),"limit":"100"})
+        try:
+            payload=fetch_history("https://"+HOST+ENDPOINT+"?"+params)
+        except (OSError,TimeoutError):
+            bars=[]
+        else:
+            require(isinstance(payload,dict) and payload.get("code")=="00000",
+                    "History endpoint rejected pair "+pair)
+            try:
+                bars=normalize_candles(payload.get("data"),day)
+            except ValueError as exc:
+                if str(exc)!="No native historical 15m candle returned":
+                    raise
+                bars=[]
+        records.append(recovery_asset(target,day,bars,native_status))
     return {
         "schema":SCHEMA,"date_utc":day.isoformat(),
         "recovered_at_utc":market.iso(now),
@@ -161,9 +187,8 @@ def recover_day(day, fetch_live=market.public_json,
         "orders_enabled":False,"real_orders":0,"paper_fills":0,
         "account_access":False,"order_book_spread_available":False,
         "source_identity_catalogue_date":identity.get("source_radar_day_utc"),
-        "note":"Native historical OHLCV; NOT the missing live hourly orderbook or an executable result."
+        "note":"Native historical OHLCV; missing intervals explicit; NOT missing live hourly orderbooks."
     }
-
 
 def save(doc, root=DEST):
     require(doc.get("schema")==SCHEMA and doc.get("real_orders")==0 and
