@@ -29,6 +29,10 @@ function dailyArchive(now=new Date()){
     passed_policy:scoutPool.length,selected:Math.min(scoutPool.length,3),
     source:"RADAR_FULL_UNIVERSE_BEFORE_TOP12"},
   observed_date_utc:date,source_times_utc:scan.sourceTimes,
+  snapshot_boundary_status:scan.status,
+  snapshot_observed_rows:scan.observedRows,
+  snapshot_unique_ids:scan.universe,
+  snapshot_boundary_overlaps:scan.boundaryOverlaps,
   source_files:["data/crypto/latest.json","data/crypto/extended.json"],
   universe:scan.universe,eligible:scan.eligible,filters:scan.filters,
   groups:{momentum_24h_7d:scan.trend,rebound_24h_only:scan.rebound},
@@ -61,11 +65,15 @@ function trackPreviousCandidates(core,extended,scan,past,date){
   if(gap>=1&&gap<=7)for(const x of selectedCandidates(day))add(x,day.observed_date_utc);
  }
  for(const x of selectedCandidates({groups:{momentum_24h_7d:scan.trend,rebound_24h_only:scan.rebound}}))add(x,date);
+ // A dated 250/251 crossover is preserved as an ambiguous source pair by
+ // the pure Radar reader. Do not turn either quote into a 1d/7d return.
+ const blocked=new Set((scan.boundaryOverlaps||[]).map(x=>x.id));
  const prices=new Map();
  for(const [snapshot,when] of [[core,scan.sourceTimes.core],[extended,scan.sourceTimes.extended]]){
   for(const x of snapshot.coins||[]){
    if(typeof x.id!=="string"||!x.id)continue;
-   if(prices.has(x.id))throw Error("Collision d'identité entre Top250 et Extended : "+x.id);
+   if(blocked.has(x.id))continue;
+   if(prices.has(x.id))throw Error("Collision d'identité non qualifiée entre Top250 et Extended : "+x.id);
    prices.set(x.id,{coin:x,at:when});
   }
  }
