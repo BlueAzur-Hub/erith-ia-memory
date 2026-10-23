@@ -1,5 +1,5 @@
 {
-  "approved_count": 91,
+  "approved_count": 93,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -346,14 +346,23 @@
       "symbol": "ATOM"
     },
     {
-      "checked_at": "2026-10-10T01:48:01.257419+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-23T15:54:24.067169+00:00",
+      "evidence": [
+        {
+          "base": "POL",
+          "coin_id": "polygon-ecosystem-token",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "polygon-ecosystem-token",
+          "trade_url": "https://www.binance.com/en/trade/POL_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "polygon-ecosystem-token",
-      "pages": 0,
+      "pages": 2,
       "pair": "POLUSDT",
-      "rank": 76,
-      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
-      "status": "source_unavailable",
+      "rank": 78,
+      "status": "approved_coingecko_binance_spot",
       "symbol": "POL"
     },
     {
@@ -377,14 +386,23 @@
       "symbol": "ALGO"
     },
     {
-      "checked_at": "2026-10-10T01:48:16.274773+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-23T15:54:39.420637+00:00",
+      "evidence": [
+        {
+          "base": "RENDER",
+          "coin_id": "render-token",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "render-token",
+          "trade_url": "https://www.binance.com/en/trade/RENDER_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "render-token",
-      "pages": 0,
+      "pages": 2,
       "pair": "RENDERUSDT",
       "rank": 81,
-      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
-      "status": "source_unavailable",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "RENDER"
     },
     {
@@ -1940,7 +1958,7 @@
       "symbol": "AWE"
     }
   ],
-  "review_required_count": 5,
+  "review_required_count": 3,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
