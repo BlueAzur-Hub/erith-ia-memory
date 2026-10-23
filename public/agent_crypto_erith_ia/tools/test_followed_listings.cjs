@@ -57,6 +57,7 @@ test("native Market listing filters classify exact documented tokenized instrume
  assert.equal(result.checks.provenance_grouping_verified,true);
  assert.equal(result.checks.readable_market_categories,true);
  assert.equal(result.checks.okx_spot_quote_freshness_and_exact_id,true);
+ assert.equal(result.checks.public_spot_liquidity_classification,true,"TEST002 and XWDC must not be presented as liquid opportunities");
  assert.match(native,/activeSegment:"quoted"/);
  assert.match(native,/function groupListingSpecs\(/);
  assert.match(native,/function quotedVenueLabel\(/);
