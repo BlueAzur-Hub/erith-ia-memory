@@ -150,5 +150,30 @@ class IdentityTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"incomplete"):
                 m.load_audit(path)
 
+
+    def test_historical_rank_drift_and_retired_owner_are_not_promoted(self):
+        snapshot=audit()
+        first,_=m.process(snapshot,batch_size=3,
+                 fetcher=lambda cid,page:[ticker()] if cid=="hyperliquid" else [],
+                 delay=0,now="2026-10-21T00:00:00+00:00")
+        # Move ranks while preserving the owners, then retire one exact ID
+        # and replace it with an unrelated current candidate.
+        changed=audit()
+        changed["assets"][10]["rank"],changed["assets"][31]["rank"]=32,11
+        changed["assets"][50]["status"]="pair_absent"
+        changed["assets"][0]["status"]="spot_candidate_identity_unverified"
+        updated,attempts=m.process(changed,existing=first,batch_size=1,
+                                  fetcher=lambda cid,page:[],delay=0)
+        self.assertEqual([x["id"] for x in attempts],["asset-1"])
+        self.assertEqual(updated["checked_count"],3)
+        self.assertEqual(updated["candidate_count"],3)
+        self.assertEqual(updated["approved_count"],1)
+        self.assertTrue(any(x["id"]=="polkadot" for x in updated["results"]))
+        # An archived row must not become proof for a newly ranked coin.
+        altered=json.loads(json.dumps(first))
+        altered["results"][0]["pair"]="FAKEUSDT"
+        with self.assertRaisesRegex(ValueError,"no longer matches"):
+            m.validate_ledger(altered,changed)
+
 if __name__=="__main__":
     unittest.main(verbosity=2)
