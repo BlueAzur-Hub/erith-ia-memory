@@ -46,6 +46,10 @@
  };
  function afterMarketAction(event){
   if(!inMarket(event.target))return;
+  // Only a native Market table action can change the canonical selection.
+  // Clicks inside the Radar itself must keep their own Spot/graph intent.
+  const control=event.target?.closest?.("tr[data-id], [data-market-action]");
+  if(!control)return;
   // The existing delegated Market handler finishes before this read.
   global.requestAnimationFrame?.(()=>sync(true));
  }
