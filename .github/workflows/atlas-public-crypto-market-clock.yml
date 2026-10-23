@@ -81,6 +81,8 @@ jobs:
 
           canonical_workflow="atlas-public-crypto-market.yml"
           extended_workflow="atlas-public-crypto-extended.yml"
+          radar_workflow="radar-okx-public-hourly.yml"
+          radar_status_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/agent_crypto_erith_ia/data/crypto/radar-verified-target-hourly/latest.json"
           canonical_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/data/agent-crypto-live/public/agent_crypto_erith_ia/data/crypto/latest.json"
           extended_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/data/agent-crypto-live/public/agent_crypto_erith_ia/data/crypto/extended.json"
 
@@ -162,3 +164,33 @@ jobs:
             "${extended_workflow}" \
             "${extended_url}" \
             "${extended_stale_after_seconds}"
+
+          # The GitHub hourly cron can be delayed/dropped; reuse the existing watchdog.
+          # This only observes the CURRENT UTC hour; it cannot recreate past order books.
+          # Give the :38 native schedule ten minutes to complete before recovery.
+          recover_radar_hour() {
+            local now_minute current_hour status_json last_hour active
+            now_minute="$(date -u +%M)"
+            if [ "$((10#$now_minute))" -lt 48 ]; then
+              echo "Radar hourly: before UTC :48 recovery window."
+              return 0
+            fi
+            current_hour="$(date -u +%Y-%m-%dT%HZ)"
+            status_json="$(curl -fsSL --retry 2 --retry-delay 2 "$radar_status_url" || true)"
+            last_hour="$(printf '%s' "$status_json" | jq -r '.hour_utc // empty' 2>/dev/null || true)"
+            echo "Radar hourly: actual current=$current_hour, published=${last_hour:-MISSING}"
+            if [ "$last_hour" = "$current_hour" ]; then
+              echo "Radar hourly: this UTC hour already archived."
+              return 0
+            fi
+            active="$(active_runs "$radar_workflow")"
+            if [ "${active:-0}" -gt 0 ]; then
+              echo "Radar hourly: collection already queued or running."
+              return 0
+            fi
+            gh api --method POST \
+              "repos/${GITHUB_REPOSITORY}/actions/workflows/${radar_workflow}/dispatches" \
+              -f ref=main
+            echo "Radar hourly: recovery dispatch accepted; new observed UTC hour only."
+          }
+          recover_radar_hour
