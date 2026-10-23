@@ -1,7 +1,7 @@
 {
   "schema": "erith.radar.top50-retrospective-review.v1",
   "record_kind": "retrospective_descriptive_check_not_paper_trades",
-  "latest_archive_day_utc": "2026-10-22",
+  "latest_archive_day_utc": "2026-10-23",
   "archive_days_scanned": 60,
   "selection_scope": "Top50 historical daily snapshots only; separate criteria from prospective Top1000",
   "selection_filters": {
@@ -15,40 +15,6 @@
   "trade_executions_recorded": false,
   "note": "Pure retrospective, with possible selection and survivorship bias. Only an exact future dated public snapshot with the same asset id is compared; missing is null, not zero.",
   "observations": [
-    {
-      "id": "rain",
-      "symbol": "RAIN",
-      "rank": 13,
-      "observed_at": "2026-08-24T23:38:49.853Z",
-      "price_usd": 0.01485280952926555,
-      "change24h_pct": 6.07923,
-      "change7d_pct": 13.2,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-08-31",
-      "observed_followup_at": "2026-08-31T23:52:40.991Z",
-      "observed_followup_price_usd": 0.016709105550641853,
-      "followup_change_pct": 12.5,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-08-24.jsonl",
-      "followup_source_path": "data/history/2026-08-31.jsonl"
-    },
-    {
-      "id": "monero",
-      "symbol": "XMR",
-      "rank": 18,
-      "observed_at": "2026-08-24T23:38:49.853Z",
-      "price_usd": 445.51764240665534,
-      "change24h_pct": 5.30601,
-      "change7d_pct": 7,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-08-31",
-      "observed_followup_at": "2026-08-31T23:52:40.991Z",
-      "observed_followup_price_usd": 517.4364015342687,
-      "followup_change_pct": 16.14,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-08-24.jsonl",
-      "followup_source_path": "data/history/2026-08-31.jsonl"
-    },
     {
       "id": "rain",
       "symbol": "RAIN",
@@ -2456,12 +2422,12 @@
       "change7d_pct": 20.0951,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-10-23",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-10-23T10:07:45.547Z",
+      "observed_followup_price_usd": 1.7196843648327884,
+      "followup_change_pct": -10.36,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-16.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-10-23.jsonl"
     },
     {
       "id": "bitway",
@@ -2648,6 +2614,23 @@
       "followup_change_pct": null,
       "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
       "source_path": "data/history/2026-10-21.jsonl",
+      "followup_source_path": null
+    },
+    {
+      "id": "pepe",
+      "symbol": "PEPE",
+      "rank": 50,
+      "observed_at": "2026-10-23T10:07:45.547Z",
+      "price_usd": 0.000004926973235381867,
+      "change24h_pct": 9.69956,
+      "change7d_pct": 19.9187,
+      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
+      "future_7d_date": "2026-10-30",
+      "observed_followup_at": null,
+      "observed_followup_price_usd": null,
+      "followup_change_pct": null,
+      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "source_path": "data/history/2026-10-23.jsonl",
       "followup_source_path": null
     }
   ]
