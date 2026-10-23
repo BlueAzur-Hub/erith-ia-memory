@@ -54,6 +54,9 @@ test("native Market listing filters classify exact documented tokenized instrume
  assert.equal(result?.pass,true,JSON.stringify(result?.checks));
  assert.equal(result.checks.market_segment_filters,true);
  assert.equal(result.checks.tokenized_requires_documented_instrument,true);
+ assert.equal(result.checks.provenance_grouping_verified,true);
+ assert.match(native,/function groupListingSpecs\(/);
+ assert.match(native,/function quotedVenueLabel\(/);
  assert.match(native,/function mountSegmentToolbar\(/);
  assert.match(native,/function refreshSegmentToolbar\(/);
  assert.match(native,/DOCUMENTED_TOKENIZED_OKX_SPOT/);
