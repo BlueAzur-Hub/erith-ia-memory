@@ -18,6 +18,14 @@
   const ROWS_ID="marketRows";
   const NOTE_ID="tableNote";
   const ROOT_ATTR="data-new-listing-native";
+  const SEGMENT_TOOLBAR_ID="newListingsSegmentToolbar";
+  const SEGMENT_OPTIONS=Object.freeze([
+    ["all","Tous"],["okx","OKX Spot"],["other","Autres exchanges"],["tokenized","Actifs tokenisés"]
+  ]);
+  // Exact instruments backed by dated OKX tokenized-stock notices.
+  // Prefix X is NOT sufficient evidence: XDP is a different crypto project.
+  // https://www.okx.com/en-eu/help/section/announcements-new-listings
+  const DOCUMENTED_TOKENIZED_OKX_SPOT=new Set(["XWDC-USDC","XNFLX-USDC"]);
   const BITGET="https://api.bitget.com";
   const COINGECKO="https://api.coingecko.com/api/v3";
   const DISCOVERY_COOLDOWN_MS=15000;
@@ -58,6 +66,7 @@
 
   const state={
     enabled:false,
+    activeSegment:"all",
     discovering:false,
     discovered:[],
     specs:[],
@@ -694,14 +703,86 @@
     return rows;
   }
 
+  function isDocumentedTokenized(spec){
+    return spec?.provider==="okx"&&
+      DOCUMENTED_TOKENIZED_OKX_SPOT.has(upper(spec.providerSymbol));
+  }
+  function inSegment(spec,segment){
+    if(segment==="all")return true;
+    if(segment==="okx")return spec?.provider==="okx";
+    if(segment==="other")return spec?.provider!=="okx";
+    if(segment==="tokenized")return isDocumentedTokenized(spec);
+    return false;
+  }
   function visibleSpecs(){
+    if(!state.enabled)return [];
     const q=upper(rawQuery());
-    const all=allSpecs();
-    if(!q)return state.enabled?all:[];
-    return all.filter(spec=>{
+    return allSpecs().filter(spec=>{
+      if(!inSegment(spec,state.activeSegment))return false;
+      if(!q)return true;
       const hay=[spec.id,spec.name,spec.symbol,spec.pair,spec.providerLabel,spec.providerSymbol,spec.discoveryProvider,spec.discoverySymbol].join(" ").toUpperCase();
       return hay.includes(q);
     });
+  }
+  function mountSegmentToolbar(){
+    let bar=document.getElementById(SEGMENT_TOOLBAR_ID);
+    if(bar)return bar;
+    const chips=document.querySelector("#marketTools .filter-chips");
+    if(!chips)return null;
+    const style=document.createElement("style");
+    style.id="newListingsSegmentStyle";
+    const root="#"+SEGMENT_TOOLBAR_ID;
+    style.textContent=[
+      root+"[hidden]{display:none!important}",
+      root+"{display:flex;flex-wrap:wrap;align-items:center;gap:7px;width:100%;margin:4px 0 8px;padding:7px 9px;border:1px solid rgba(82,164,189,.27);border-radius:12px;background:rgba(4,23,35,.54)}",
+      root+" .new-listing-segment-caption{font:700 10px system-ui;letter-spacing:.07em;text-transform:uppercase;color:#9acfe1;margin-right:5px}",
+      root+" button{border:1px solid #34566c;border-radius:999px;background:#102838;color:#e6f6fb;padding:7px 10px;cursor:pointer;font:700 11px system-ui}",
+      root+" button[aria-pressed='true']{background:#164b5d;border-color:#77d8e6;color:#fff}",
+      root+" button:focus-visible{outline:2px solid #f6d78b;outline-offset:2px}",
+      root+" .new-listing-segment-note{color:#8eb4c7;font:11px system-ui;margin-left:auto}"
+    ].join("");
+    document.head.appendChild(style);
+    bar=document.createElement("div");
+    bar.id=SEGMENT_TOOLBAR_ID;
+    bar.setAttribute("role","group");
+    bar.setAttribute("aria-label","Familles de nouveaux listings");
+    bar.hidden=true;
+    const caption=document.createElement("span");
+    caption.className="new-listing-segment-caption";
+    caption.textContent="Nouveaux listings ·";
+    bar.append(caption);
+    for(const [key,label] of SEGMENT_OPTIONS){
+      const button=document.createElement("button");
+      button.type="button";
+      button.dataset.newListingSegment=key;
+      button.textContent=label;
+      button.setAttribute("aria-pressed",String(key===state.activeSegment));
+      button.addEventListener("click",()=>{
+        if(!state.enabled)return;
+        state.activeSegment=key;
+        renderCategory(); // presentation only; no extra public fetch
+      });
+      bar.append(button);
+    }
+    const note=document.createElement("span");
+    note.className="new-listing-segment-note";
+    note.textContent="Spot public ≠ accès au compte · tokenisés documentés";
+    bar.append(note);
+    chips.insertAdjacentElement("afterend",bar);
+    return bar;
+  }
+  function refreshSegmentToolbar(){
+    const bar=document.getElementById(SEGMENT_TOOLBAR_ID);
+    if(!bar)return;
+    bar.hidden=!state.enabled||!!state.radarOpen;
+    if(bar.hidden)return;
+    const specs=allSpecs();
+    for(const button of bar.querySelectorAll("button[data-new-listing-segment]")){
+      const key=button.dataset.newListingSegment;
+      const option=SEGMENT_OPTIONS.find(row=>row[0]===key);
+      button.textContent=(option?.[1]||key)+" ("+specs.filter(spec=>inSegment(spec,key)).length+")";
+      button.setAttribute("aria-pressed",String(key===state.activeSegment));
+    }
   }
 
   function priceTruth(spec,coin){
@@ -728,11 +809,12 @@
     const currency=displayCurrency();
     const volume=currency==="USD"?finite(coin?.volume24hUsd):finite(coin?.volume24h);
     const proof=radarProof(spec,coin);
+    const tokenized=isDocumentedTokenized(spec);
     const mature=age!==null&&age>30;
     const historicOnly=spec.historicalOnly===true;
-    const statusTag=spec.provider==="okx"?"OKX":mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
-    const identityTag=spec.provider==="okx"?
-      "OKX Spot public · symbole seulement · accès non vérifié":
+    const statusTag=tokenized?"TOKEN":spec.provider==="okx"?"OKX":mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
+    const identityTag=tokenized?"Action tokenisée · OKX Spot public · accès non vérifié":
+      spec.provider==="okx"?"OKX Spot public · symbole seulement · accès non vérifié":
       mature?(historicOnly?"Historique · cotation non vérifiée":"Ancien listing · source Bitget vérifiée"):(proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat");
     const logo=coin?.image?`<img src="${esc(coin.image)}" alt="" loading="eager" fetchpriority="high" width="32" height="32">`:
       `<span class="market-coin-identity-fallback" aria-hidden="true" style="display:inline-grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;border:1px solid #5b8b9c;background:#142e3b;color:#e6f3fd;font:700 11px system-ui">${esc(spec.symbol.slice(0,3))}</span>`;
@@ -766,6 +848,7 @@
     hideLegacyUx();
     const body=document.getElementById(ROWS_ID);if(!body)return 0;
     const specs=visibleSpecs();
+    refreshSegmentToolbar();
 
     body.querySelectorAll(`tr[${ROOT_ATTR}]`).forEach(node=>node.remove());
 
@@ -781,11 +864,12 @@
     if(note&&state.enabled){
       const total=state.specs.length;
       const followed=allSpecs().filter(x=>ageDays(x.listedAt)>30).length;
+      const segmentName=SEGMENT_OPTIONS.find(row=>row[0]===state.activeSegment)?.[1]||"Tous";
       note.textContent=state.discovering
         ?"Nouveaux listings · actualisation Bitget en cours…"
         :state.lastError
           ?`Nouveaux listings · ${state.lastError}`
-          :`Nouveaux ≤30 j · ${total} · OKX Spot public ${state.watchStatus.okxCount} · ${esc(state.watchStatus.status)} · Suivis >30 j · ${followed} · Radar Bitget · ${state.radarStatus.confirmed} confirmé(s) · ${state.radarStatus.candidates} candidat(s) · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · ${identityDiagnosticsLabel()} · relance ≥15 s · Market Core inchangé`;
+          :`Nouveaux listings · ${segmentName} : ${specs.length} affiché(s) · Nouveaux ≤30 j · ${total} · OKX Spot public ${state.watchStatus.okxCount} · ${esc(state.watchStatus.status)} · Suivis >30 j · ${followed} · Radar Bitget · ${state.radarStatus.confirmed} confirmé(s) · ${state.radarStatus.candidates} candidat(s) · identités ${state.identityStatus.verified}/${state.identityStatus.attempted} · logos ${state.identityStatus.logos} · ${identityDiagnosticsLabel()} · relance ≥15 s · Market Core inchangé`;
     }
     return specs.length;
   }
@@ -1076,7 +1160,7 @@
     const identity=spec.identityVerified?`${spec.canonicalName||spec.name} · identité ${spec.identitySource||"vérifiée"}`:"nom projet non enrichi";
     const proof=radarProof(spec,state.coinCache.get(spec.id)||coinFromSpec(spec));
     if(spec.historicalOnly===true){note.textContent=`${spec.symbol} · ARCHIVE HISTORIQUE · source actuelle non vérifiée · ${spec.providerLabel} ${spec.pair} · aucun prix inventé`;return;}
-    note.textContent=`${spec.symbol} · ${ageDays(spec.listedAt)>30?"LISTING SUIVI":proof.status} ${proof.proofCount}/3 (date+prix+volume) · ${identity} · listing ${spec.discoveryProvider} ${spec.discoverySymbol} · analyse ${spec.providerLabel} ${spec.pair} · ticker seul ≠ identité canonique`;
+    note.textContent=`${spec.symbol} · ${isDocumentedTokenized(spec)?"ACTION TOKENISÉE DOCUMENTÉE · ":""}${ageDays(spec.listedAt)>30?"LISTING SUIVI":proof.status} ${proof.proofCount}/3 (date+prix+volume) · ${identity} · listing ${spec.discoveryProvider} ${spec.discoverySymbol} · analyse ${spec.providerLabel} ${spec.pair} · ticker seul ≠ identité canonique`;
   }
 
   function bindRows(){
@@ -1281,6 +1365,7 @@
     const supplementary=document.getElementById("atlasRadarBelowMarket");
     if(supplementary)supplementary.hidden=!visible;
     state.radarOpen=visible;
+    refreshSegmentToolbar();
     button.classList.toggle("active",visible);
     button.classList.toggle("is-active",visible);
     button.setAttribute("aria-pressed",String(visible));
@@ -1345,7 +1430,7 @@
   }
   function mount(){
     if(typeof document==="undefined")return false;
-    hideLegacyUx();patchUniverseResolver();wrapMarketRender();bindRows();bindCategoryButton();bindSearch();mountRadarLink();
+    hideLegacyUx();patchUniverseResolver();wrapMarketRender();bindRows();bindCategoryButton();bindSearch();mountSegmentToolbar();mountRadarLink();
     if(!state.mounted){bindOtherFilters();bindPeriod();bindPresentationRefresh();bindCanonicalExit();state.mounted=true;}
     renderCategory();
     return true;
@@ -1383,7 +1468,7 @@
 
   function snapshot(){
     return Object.freeze({
-      build:MODULE_VERSION,enabled:state.enabled,discovered:state.specs.length,followed:state.followedSpecs.length,
+      build:MODULE_VERSION,enabled:state.enabled,activeSegment:state.activeSegment,documentedTokenizedSpotCount:state.specs.filter(isDocumentedTokenized).length,discovered:state.specs.length,followed:state.followedSpecs.length,
       selectedId:state.selected?.id||null,selectedSymbol:state.selected?.symbol||null,
       // Separate CoinGecko canonical identity from the stable exchange-scoped chart ID.
       selectedCanonicalId:state.selected?.coingeckoId||null,
@@ -1421,6 +1506,15 @@
     const oldCap=marketMetricsFromPayload(axisSpec,{
       ...capPayload,last_updated:new Date(Date.now()-25*60000).toISOString()});
     const noDateCap=marketMetricsFromPayload(axisSpec,{...capPayload,last_updated:null});
+    const documentedTokenized={provider:"okx",providerSymbol:"XWDC-USDC"};
+    const unverifiedPrefix={provider:"okx",providerSymbol:"XDP-USDC"};
+    const external={provider:"bitget",providerSymbol:"RT1USDT"};
+    const segmentTests=isDocumentedTokenized(documentedTokenized)&&
+      isDocumentedTokenized({provider:"okx",providerSymbol:"XNFLX-USDC"})&&
+      !isDocumentedTokenized(unverifiedPrefix)&&!isDocumentedTokenized(external)&&
+      inSegment(documentedTokenized,"okx")&&inSegment(documentedTokenized,"tokenized")&&
+      inSegment(external,"other")&&!inSegment(external,"okx")&&
+      inSegment(unverifiedPrefix,"okx")&&!inSegment(unverifiedPrefix,"tokenized");
     const sampleOKX=specFromWatchOKX({provider:"okx",instrument_type:"SPOT",
       state:"live",base:"TEST",quote:"USDC",providerSymbol:"TEST-USDC",pair:"TEST/USDC",
       listedAt:new Date(Date.now()-3600000).toISOString()});
@@ -1444,6 +1538,7 @@
       &&sampleOKX?.providerSymbol==="TEST-USDC"&&swapRejected===null&&
         tickerCollisionRejected
       &&proof.status==="CONFIRMÉ"
+      &&segmentTests
       &&candidate.status==="CANDIDAT"
       &&ageBand(.5).label==="<24 h"
       &&ageBand(5).label==="4–7 j"
@@ -1473,6 +1568,8 @@
       market_cap_missing_is_not_zero:true,
       market_cap_batch_reuses_identity_pipeline:true,
       public_okx_spot_listing_feed_only:true,
+      market_segment_filters:segmentTests,
+      tokenized_requires_documented_instrument:segmentTests,
       okx_swap_rejected:swapRejected===null,
       okx_ticker_collision_refused:tickerCollisionRejected,
       market_cap_exact_id_symbol_time:!!validCap&&!wrongCoinCap&&!wrongSymbolCap,
