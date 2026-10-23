@@ -587,11 +587,17 @@ def enrich_named_original_spot(queue,archived,doc,official):
     now=dt.datetime.now(dt.timezone.utc).isoformat()
     for aid,rank,symbol,name,venue,quote,notice in NAMED_ORIGINAL_SPOT_LISTINGS:
         owner=ranked.get(aid)
-        require(owner and owner["rank"]==rank and owner["symbol"]==symbol
-                and owner["name"]==name and
+        # This original notice describes an exact historical owner, not a
+        # permanent market-cap rank. If its ID left the live Top250, preserve
+        # the old evidence without blocking everyone else's discovery.
+        if owner is None:
+            continue
+        require(owner["symbol"]==symbol and owner["name"]==name and
                 len([z for z in queue if z["symbol"]==symbol])==1,
                 "Original project-name Spot attestation ambiguous: "+aid)
-        if aid in archived:
+        # An older frozen rank must never authorize a new rank occupant.
+        # Skip this dated attestation until a fresh exact-owner check exists.
+        if owner["rank"]!=rank or aid in archived:
             continue
         row=instrument.get(aid)
         pair=symbol+("_" if venue=="gate" else "-")+quote
@@ -619,9 +625,12 @@ def enrich_named_original_spot(queue,archived,doc,official):
         added.append(aid)
     updated=dict(doc)
     updated["results"]=sorted(records.values(),key=lambda x:x["rank"])
-    updated["checked_count"]=sum(x["id"] not in archived for x in updated["results"])
+    current_ids=set(ranked)
+    updated["checked_count"]=sum(x["id"] in current_ids and
+                                 x["id"] not in archived for x in updated["results"])
     updated["market_candidate_count"]=sum(
-        bool(x["markets"]) and x["id"] not in archived for x in updated["results"])
+        bool(x["markets"]) and x["id"] in current_ids and
+        x["id"] not in archived for x in updated["results"])
     if added:
         updated["source"]=doc["source"]+"; immutable original named Spot listing attestation"
     validate(updated,queue)

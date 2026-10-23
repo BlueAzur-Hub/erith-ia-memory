@@ -687,5 +687,36 @@ class AlternativeMarketTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,"Discovery identity changed"):
                     m.validate(malformed,queue)
 
+
+    def test_named_spot_rank_move_does_not_abort_other_owners(self):
+        owners=[{"id":f"asset-{i}","rank":i,"symbol":f"C{i}","name":"Generic"}
+                for i in range(1,251)]
+        official_rows=[]
+        for cid,rank,symbol,name,venue,quote,notice in m.NAMED_ORIGINAL_SPOT_LISTINGS:
+            owners[rank-1]={"id":cid,"rank":rank,"symbol":symbol,"name":name}
+            pair=symbol+("_" if venue=="gate" else "-")+quote
+            official_rows.append({"id":cid,"rank":rank,"symbol":symbol,
+                "instruments":[{"venue":venue,"instrument":pair,
+                    "base":symbol,"quote":quote,
+                    "exchange_instrument_confirmed":True}]})
+        # The old XDC original notice names rank 92, but the exact owner
+        # now occupies 93. No other coin may inherit the notice at 92.
+        owners[91],owners[92]=owners[92],owners[91]
+        owners[91]["rank"]=92
+        owners[92]["rank"]=93
+        official={"schema":
+             "aerith.public.ohlcv.spot.top250.official-instrument-candidates.v1",
+             "ranked":250,"assets":official_rows}
+        prior={"schema":m.SCHEMA,"ranked":250,"results":[],
+               "checked_count":0,"market_candidate_count":0,"source":"Named"}
+        out,added=m.enrich_named_original_spot(owners,set(),prior,official)
+        self.assertNotIn("xdce-crowd-sale",added)
+        self.assertEqual(len(added),len(m.NAMED_ORIGINAL_SPOT_LISTINGS)-1)
+        self.assertEqual(out["market_candidate_count"],len(added))
+        # An actual symbol/owner contradiction must still fail closed.
+        owners[92]["symbol"]="WRONG"
+        with self.assertRaisesRegex(ValueError,"ambiguous"):
+            m.enrich_named_original_spot(owners,set(),prior,official)
+
 if __name__=="__main__":
     unittest.main(verbosity=2)
