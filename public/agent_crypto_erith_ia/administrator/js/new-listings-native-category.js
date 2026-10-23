@@ -1584,6 +1584,21 @@
       inSegment(documentedTokenized,"okx")&&inSegment(documentedTokenized,"tokenized")&&
       inSegment(external,"other")&&!inSegment(external,"okx")&&
       inSegment(unverifiedPrefix,"okx")&&!inSegment(unverifiedPrefix,"tokenized");
+    const pricedForUi={id:"selftest:usd",provider:"bitget",providerLabel:"Bitget",
+      symbol:"TEST",quote:"USD",pair:"TEST/USD",ticker:{lastPrice:"1.25"}};
+    const unpricedForUi={id:"selftest:pending",provider:"okx",providerLabel:"OKX",
+      symbol:"TEST002",quote:"USDT",pair:"TEST002/USDT",providerSymbol:"TEST002-USDT",ticker:null};
+    const tokenizedForUi={id:"selftest:stock",provider:"okx",providerLabel:"OKX",
+      symbol:"XJPM",quote:"USD",pair:"XJPM/USD",providerSymbol:"XJPM-USDT",ticker:{lastPrice:"330.5"}};
+    const readableTests=state.activeSegment==="quoted"&&
+      DOCUMENTED_TOKENIZED_OKX_SPOT.size===50&&
+      listingClass(pricedForUi)==="quoted"&&
+      inSegment(pricedForUi,"quoted")&&
+      listingClass(unpricedForUi)==="review"&&
+      inSegment(unpricedForUi,"review")&&
+      listingClass(tokenizedForUi)==="tokenized"&&
+      !inSegment(tokenizedForUi,"quoted")&&
+      !isDocumentedTokenized({provider:"okx",providerSymbol:"XDP-USDT"});
     const ctFromBitget=providerSpec({base:"CT",quote:"USDT",providerSymbol:"CTUSDT",
       listedAt:new Date(Date.now()-86400000).toISOString()});
     if(ctFromBitget)ctFromBitget.ticker={lastPrice:"0.25",turnover24h:"6000"};
@@ -1625,7 +1640,7 @@
       &&sampleOKX?.providerSymbol==="TEST-USDC"&&swapRejected===null&&
         tickerCollisionRejected
       &&proof.status==="CONFIRMÉ"
-      &&segmentTests&&groupingChecks
+      &&segmentTests&&groupingChecks&&readableTests
       &&candidate.status==="CANDIDAT"
       &&ageBand(.5).label==="<24 h"
       &&ageBand(5).label==="4–7 j"
@@ -1658,6 +1673,7 @@
       market_segment_filters:segmentTests,
       tokenized_requires_documented_instrument:segmentTests,
       provenance_grouping_verified:groupingChecks,
+      readable_market_categories:readableTests,
       okx_swap_rejected:swapRejected===null,
       okx_ticker_collision_refused:tickerCollisionRejected,
       market_cap_exact_id_symbol_time:!!validCap&&!wrongCoinCap&&!wrongSymbolCap,
