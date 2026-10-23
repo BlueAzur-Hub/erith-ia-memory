@@ -213,13 +213,19 @@ function build(root){
  for(const [value,label] of [["rank","Rang"],["change24h","Hausses 24h"],["change7d","Hausses 7j"],["drop24h","Baisses 24h"],["volume24hUsd","Volume 24h"]]){
   const option=node("option","",label);option.value=value;sort.append(option);
  }
- dock.append(group,filter,sort);root.append(dock);
- const subtitle=node("p","table-note","Top 10 · CoinGecko · pas de recommandation d'achat");subtitle.dataset.radarNative="marketNote";root.append(subtitle);
+ // The canonical Administrator Market table stays visible as the primary
+ // ranking. Preserve this separate dated Radar research ranking on demand,
+ // without showing two competing Market tables at the same time.
+ const detailRanking=foldSection("radar-native-ranking",
+   "Classement Radar détaillé · Top 10 / 20 / 50 / 250",
+   "foldRanking","Source Radar datée · ouvrir pour comparer");
+ dock.append(group,filter,sort);detailRanking.append(dock);
+ const subtitle=node("p","table-note","Top 10 · CoinGecko · pas de recommandation d'achat");subtitle.dataset.radarNative="marketNote";detailRanking.append(subtitle);
  const wrap=node("div","table-wrap radar-native-table");const table=node("table");
  const thead=node("thead"),tr=node("tr");
  for(const t of ["Rang","Crypto","Prix USD","24h","7j","Volume 24h","Lecture"]){tr.append(node("th","",t));}
  thead.append(tr);table.append(thead);
- const tbody=node("tbody");tbody.dataset.radarNative="rows";table.append(tbody);wrap.append(table);root.append(wrap);
+ const tbody=node("tbody");tbody.dataset.radarNative="rows";table.append(tbody);wrap.append(table);detailRanking.append(wrap);root.append(detailRanking);
  const bottom=node("div","radar-native-bottom");
  const listings=foldSection("","Nouveaux listings · Spot","foldListings","Spot Bitget · statut en lecture");
  const proof=node("p","table-note","En attente des sources Bitget");proof.dataset.radarNative="listingProof";listings.append(proof);
