@@ -11,6 +11,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import tempfile
@@ -22,7 +23,7 @@ import supplement_historical_bulk as supplement
 ROOT = bulk.ROOT / "data/historical_archive_prototype"
 CATALOG = ROOT / "top250_history_catalog/index.json"
 NOTICE = "https://www.binance.com/en/support/announcement/detail/f73b083ba6834771b07dbe5319917ae5"
-ASSET_ID, PAIR, RANK = "monero", "XMRUSDT", 14
+ASSET_ID, PAIR, RANK_AT_NOTICE = "monero", "XMRUSDT", 14
 # Full 2023 precedes the officially announced 2024-02-20 delisting.
 MONTHS = tuple(f"2023-{m:02d}" for m in range(12, 0, -1))
 MAX_PER_RUN = 12
@@ -41,19 +42,46 @@ def historical_owner(catalog):
     items = [x for x in catalog["assets"] if x.get("id") == ASSET_ID]
     require(len(items) == 1, "Monero exact ID missing or duplicated")
     x = items[0]
-    require(x.get("rank") == RANK and x.get("symbol") == "XMR"
-            and x.get("name") == "Monero", "Binance notice vs catalog identity mismatch")
-    require(isinstance(x.get("months"), list) and
-            all(isinstance(m, dict) and m.get("pair") == PAIR and
-                m.get("month") in MONTHS for m in x["months"]),
-            "Existing Monero source/month contradicts official archived pair")
+    # The notice confirms an exact asset and trading pair, not an immutable
+    # capitalisation rank. A subsequent movement (14 -> 13, for example)
+    # must not transfer the archival ownership to the new holder of rank 14.
+    ranked = [a.get("rank") for a in catalog["assets"]]
+    ids = [a.get("id") for a in catalog["assets"]]
+    require(len(set(ids)) == 250 and set(ranked) == set(range(1, 251)),
+            "Canonical ranked owner identities incomplete")
+    require(x.get("symbol") == "XMR" and x.get("name") == "Monero",
+            "Binance notice vs catalog identity mismatch")
+    months = x.get("months")
+    require(isinstance(months, list) and len(months) <= len(MONTHS) and
+            len({m.get("month") for m in months if isinstance(m, dict)}) == len(months),
+            "Existing Monero source/month identity mismatch")
+    expected_tag_owner = {"id": ASSET_ID, "pair": PAIR}
+    require(all(
+            isinstance(m, dict) and m.get("pair") == PAIR and
+            m.get("month") in MONTHS and
+            m.get("file") == f"{PAIR}-1m-{m['month']}.zip" and
+            isinstance(m.get("sha256"), str) and
+            re.fullmatch(r"[0-9a-f]{64}", m["sha256"]) and
+            m.get("release") == supplement.add_tag(m["month"], [expected_tag_owner]) and
+            isinstance(m.get("candles"), int) and
+            m["candles"] == bulk.bounds(m["month"], "1m")[1]
+            for m in months),
+            "Existing Monero source/month identity mismatch")
     require(bulk.PAIR.fullmatch(PAIR) is not None, "Invalid official Spot pair")
     return {"id": ASSET_ID, "symbol": "XMR", "pair": PAIR,
-            "rank": RANK, "archive_owner": "official-binance-2024-02-06-delisting"}
+            "rank": x["rank"], "rank_at_notice": RANK_AT_NOTICE,
+            "archive_owner": "official-binance-2024-02-06-delisting"}
 
 
 def already_published(tag):
-    cp = subprocess.run(["gh", "release", "view", tag, "--json", "tagName,isDraft"],
+    # The tag is SHA-bound to the immutable coin ID + pair. Checking only
+    # tagName would silently skip a colliding or damaged existing release.
+    match = re.fullmatch(r"crypto-spot-bulk-add-(2023-(?:0[1-9]|1[0-2]))-1m-[0-9a-f]{12}", tag)
+    require(match is not None and
+            tag == supplement.add_tag(match.group(1), [{"id": ASSET_ID, "pair": PAIR}]),
+            "Unowned historical Monero release tag")
+    cp = subprocess.run(["gh", "release", "view", tag,
+                         "--json", "tagName,isDraft,assets"],
                         capture_output=True, text=True, timeout=45)
     if cp.returncode != 0:
         # A real GitHub transport outage must not be confused with absence:
@@ -65,6 +93,15 @@ def already_published(tag):
     row = json.loads(cp.stdout)
     require(row.get("tagName") == tag and row.get("isDraft") is False,
             "Source release exists but is not confirmed immutable/public")
+    assets = row.get("assets")
+    require(isinstance(assets, list) and
+            all(isinstance(a, dict) and isinstance(a.get("name"), str)
+                for a in assets), "Historical Monero release asset list missing")
+    names = [a["name"] for a in assets]
+    month = match.group(1)
+    require(len(names) == len(set(names)) and
+            set(names) == {"manifest.json", f"{PAIR}-1m-{month}.zip"},
+            "Existing historical Monero release owner or manifest mismatch")
     return True
 
 
