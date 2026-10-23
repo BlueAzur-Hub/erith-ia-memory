@@ -496,7 +496,7 @@
       last===null||open===null||vol===null||vol<0||
       q?.account_spot_access_verified!==false||q?.executable_price_verified!==false)return null;
     return {lastPrice:String(q.last),price24hPcnt:String(last/open-1),
-      turnover24h:String(q.volCcy24h),ts};
+      turnover24h:String(q.volCcy24h),bidPx:positive(q.bidPx),askPx:positive(q.askPx),ts};
   }
   function specFromWatchOKX(row){
     const base=upper(row?.base),quote=upper(row?.quote),symbol=upper(row?.providerSymbol);
@@ -775,16 +775,41 @@
     return spec?.provider==="okx"&&
       DOCUMENTED_TOKENIZED_OKX_SPOT.has(upper(spec.providerSymbol));
   }
+  // Explain public Spot evidence without creating another market or API request.
+  function spotEvidence(spec){
+    const price=positive(spec?.ticker?.lastPrice);
+    if(price===null)return {label:"Prix absent ou périmé",detail:"Cotation publique récente indisponible",needsReview:true};
+    // CT Bitget may be routed through the canonical OKX chart: never misattribute it.
+    const exactOkx=quotedVenue(spec)==="okx"&&spec?.quoteSource==="OKX SPOT public · observation datée";
+    if(!exactOkx)return {label:"Prix public · offres non évaluées",
+      detail:"Prix de plateforme affiché ; profondeur et offres non vérifiées par cette source",needsReview:false};
+    const volume=finite(spec?.ticker?.turnover24h);
+    const bid=positive(spec?.ticker?.bidPx),ask=positive(spec?.ticker?.askPx);
+    if(volume===0)return {label:"Volume nul · liquidité non démontrée",
+      detail:"Volume public 24 h nul ; dernier prix enregistré sans liquidité démontrée",needsReview:true};
+    if(bid===null||ask===null||ask<bid)return {label:"Offres absentes ou incohérentes",
+      detail:"Pas de couple bid/ask public positif et cohérent dans ce relevé",needsReview:true};
+    if(volume===null)return {label:"Volume inconnu · à qualifier",
+      detail:"Offres bid/ask présentes ; volume public non qualifié",needsReview:true};
+    const spread=100*(ask-bid)/((ask+bid)/2);
+    const detail="Bid/ask publics ; écart indicatif "+spread.toFixed(2).replace(".",",")+
+      " % ; profondeur, frais, éligibilité et exécution non vérifiés";
+    return {label:spread>1?"Écart bid/ask > 1 % · à étudier":"Prix + offres publics observés",
+      detail,needsReview:spread>1};
+  }
   function listingClass(spec){
     if(isDocumentedTokenized(spec))return "tokenized";
     const observation=state.coinCache.get(spec.id)||coinFromSpec(spec);
-    return positive(observation?.priceUsd)!==null?"quoted":"review";
+    if(positive(observation?.priceUsd)===null)return "review";
+    return spotEvidence(spec).needsReview?"review":"quoted";
   }
   function inSegment(spec,segment){
     if(segment==="all")return true;
     if(segment==="okx")return quotedVenue(spec)==="okx"; // legacy test compatibility
     if(segment==="other")return quotedVenue(spec)!=="okx";
-    if(["quoted","tokenized","review"].includes(segment))return listingClass(spec)===segment;
+    // "À qualifier" is also a quality filter; tokenized instruments can overlap.
+    if(segment==="review")return listingClass(spec)==="review"||spotEvidence(spec).needsReview;
+    if(["quoted","tokenized"].includes(segment))return listingClass(spec)===segment;
     return false;
   }
   function visibleSpecs(){
@@ -842,7 +867,7 @@
     }
     const note=document.createElement("span");
     note.className="new-listing-segment-note";
-    note.textContent="Prix affiché ≠ accès personnel confirmé sur OKX";
+    note.textContent="Prix ≠ liquidité ni accès OKX · « À qualifier » : cotations fragiles";
     bar.append(note);
     chips.insertAdjacentElement("afterend",bar);
     return bar;
@@ -887,6 +912,7 @@
     const currency=displayCurrency();
     const volume=currency==="USD"?finite(coin?.volume24hUsd):finite(coin?.volume24h);
     const proof=radarProof(spec,coin);
+    const evidence=spotEvidence(spec);
     const tokenized=isDocumentedTokenized(spec);
     const mature=age!==null&&age>30;
     const historicOnly=spec.historicalOnly===true;
@@ -909,7 +935,7 @@
       aria-selected="${selected?"true":"false"}"
       aria-label="${esc(`${spec.name} ${spec.symbol}. ${mature?"Listing suivi":"Nouveau listing"} ${quotedVenueLabel(spec)} ${spec.pair}. ${group.length} marché(s).`)}">
       <td>${statusTag}</td>
-      <td><div class="coin-cell"><i class="market-identity-rail"></i>${logo}<div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">${esc(identityTag)} · ${esc(proof.ageBand)}${age!==null?` · ${age.toFixed(1)} j`:""}</span>${marketSummary}</div></div></td>
+      <td><div class="coin-cell"><i class="market-identity-rail"></i>${logo}<div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">${esc(identityTag)} · ${esc(proof.ageBand)}${age!==null?` · ${age.toFixed(1)} j`:""}</span><br><small style="color:${evidence.needsReview?"#f4cc88":"#8cdbdc"}">${esc(evidence.label)}</small>${marketSummary}</div></div></td>
       <td><div class="price-dual"><strong>${esc(price.primary)}</strong><small>${esc(price.small)}</small></div></td>
       <td class="${change===null?"":change>=0?"pos":"neg"}"><span class="market-move-pill">${esc(pct(change))}</span></td>
       <td>—</td>
@@ -918,7 +944,7 @@
         "Capitalisation non fournie par une source vérifiée")}">${positive(coin?.marketCapUsd)!==null?
         esc(compactMoney(coin.marketCapUsd,"USD")):"—"}</td>
       <td class="market-col-advanced">${volume!==null?esc(compactMoney(volume,currency)):"—"}</td>
-      <td class="spark-cell"><small>${esc(proof.status)}</small></td>
+      <td class="spark-cell"><small title="${esc(evidence.detail)}">${esc(evidence.needsReview?"À QUALIFIER":quotedVenue(spec)==="okx"?"COURS + OFFRES":"PRIX PUBLIC")}</small></td>
       <td class="market-col-advanced">—</td>
       <td class="market-col-advanced">Observer</td>
       <td><div class="market-row-actions">${historicOnly?"":`<button type="button" data-new-listing-open="${esc(spec.id)}">Solo</button>`}<button type="button" data-new-listing-sources="${esc(spec.id)}">Sources</button></div></td>
@@ -952,7 +978,7 @@
         ?"Nouveaux listings · actualisation Bitget en cours…"
         :state.lastError
           ?`Nouveaux listings · ${state.lastError}`
-          :`Nouveaux listings · ${segmentName} : ${specs.length} fiches · Registre : ${groupListingSpecs(allSpecs()).length} actifs / ${allSpecs().length} marchés · La cotation publique ne garantit pas la négociation sur ton compte. Prix absents conservés dans « À qualifier ». Market Core inchangé`;
+          :`Nouveaux listings · ${segmentName} : ${specs.length} fiches · Registre : ${groupListingSpecs(allSpecs()).length} actifs / ${allSpecs().length} marchés · La cotation publique ne garantit pas la négociation sur ton compte. « À qualifier » : prix absents, volume nul, offres absentes ou spread > 1 %. Catégories parfois recoupées. Market Core inchangé`;
     }
     return specs.length;
   }
@@ -1037,6 +1063,7 @@
     const raw=positive(spec.ticker?.lastPrice??globalThis.AgentCryptoNewListingLiveAsset?.snapshot?.()?.marketTicker?.lastPrice);
     const age=ageDays(spec.listedAt);
     const metrics=result?.integrity?.metrics||{};
+    const evidence=spotEvidence(spec);
     const axis=spec.symbol==="AXIS"&&spec.providerSymbol==="AXISUSDT"&&spec.provider==="bitget";
     const title=document.getElementById("selectedAssetTitle");
     if(title)title.textContent=`${spec.name} — ${spec.symbol} · NOUVEAU LISTING`;
@@ -1051,6 +1078,7 @@
         <div><b>Exchange / paire</b><span>${esc(spec.providerLabel)} · ${esc(spec.pair)}</span></div>
         <div><b>Source prix</b><span>${esc(coin.usdSource||coin.source||spec.providerLabel)}</span></div>
         <div><b>Volume 24 h</b><span>${finite(currency==="USD"?coin.volume24hUsd:coin.volume24h)!==null?esc(compactMoney(currency==="USD"?coin.volume24hUsd:coin.volume24h,currency)):"—"}</span></div>
+        <div><b>Liquidité publique</b><span>${esc(evidence.label)} · ${esc(evidence.detail)}</span></div>
         <div><b>Capitalisation USD · CoinGecko</b><span>${positive(coin.marketCapUsd)!==null?
           esc(compactMoney(coin.marketCapUsd,"USD"))+" · "+esc(coin.marketCapObservedAt||"horodatage absent"):
           "Non disponible · la source Bitget ne fournit pas la capitalisation"}</span></div>
@@ -1073,7 +1101,7 @@
     const change=document.getElementById("detailCompactChange");if(change)change.textContent=pct(coin.change24h);
     const why=document.getElementById("assetDetailWhy");if(why)why.innerHTML=axis?
       '<strong>AXIS · recherche uniquement :</strong> listing Bitget Spot AXIS/USDT du 21 octobre 2026 (13 h UTC). Identité Base documentée. Un dérivé OKX AXISUSD ne démontre aucune paire Spot AXIS/USDC. Frais, liquidité, minimum et revente de 10 USDC non certifiés. Forte volatilité initiale : ne pas interpréter le +24 h comme un rendement réalisable. <a href="../trader/axis-robotics-case-study.html" target="_blank" rel="noopener noreferrer">Cas d’école AXIS · rapport Seven ↗</a> · <a href="../data/crypto/research/axis-robotics.json" target="_blank" rel="noopener noreferrer">Dossier machine AXIS (JSON) ↗</a>':
-      `<strong>Lecture :</strong> ${esc(spec.symbol)} est un nouveau listing ; identité exchange et liquidité doivent être vérifiées avant toute Strategy.`;
+      `<strong>Lecture :</strong> ${esc(spec.symbol)} : ${esc(evidence.detail)}. Achat/revente personnels non vérifiés.`;
   }
 
   function beginRequest(spec){
@@ -1242,9 +1270,10 @@
     const note=document.getElementById(NOTE_ID);if(!note||!spec)return;
     const identity=spec.identityVerified?`${spec.canonicalName||spec.name} · identité ${spec.identitySource||"vérifiée"}`:"nom projet non enrichi";
     const proof=radarProof(spec,state.coinCache.get(spec.id)||coinFromSpec(spec));
+    const evidence=spotEvidence(spec);
     if(spec.historicalOnly===true){note.textContent=`${spec.symbol} · ARCHIVE HISTORIQUE · source actuelle non vérifiée · ${spec.providerLabel} ${spec.pair} · aucun prix inventé`;return;}
     const group=allSpecs().filter(row=>listingIdentityKey(row)===listingIdentityKey(spec));
-    note.textContent=`${spec.symbol} · Marchés : ${listingMarketsLabel(group)} · ${isDocumentedTokenized(spec)?"ACTION TOKENISÉE DOCUMENTÉE · ":""}${ageDays(spec.listedAt)>30?"LISTING SUIVI":proof.status} ${proof.proofCount}/3 (date+prix+volume) · ${identity} · listing ${spec.discoveryProvider} ${spec.discoverySymbol} · analyse ${spec.providerLabel} ${spec.pair} · ticker seul ≠ identité canonique`;
+    note.textContent=`${spec.symbol} · Marchés : ${listingMarketsLabel(group)} · ${isDocumentedTokenized(spec)?"ACTION TOKENISÉE DOCUMENTÉE · ":""}${evidence.label} · ${evidence.detail} · date/prix/volume ${proof.proofCount}/3 · ${identity} · listing ${spec.discoveryProvider} ${spec.discoverySymbol} · analyse ${spec.providerLabel} ${spec.pair} · ticker seul ≠ identité canonique`;
   }
 
   function bindRows(){
@@ -1616,13 +1645,25 @@
       listingClass(tokenizedForUi)==="tokenized"&&
       !inSegment(tokenizedForUi,"quoted")&&
       !isDocumentedTokenized({provider:"okx",providerSymbol:"XDP-USDT"});
+    const zeroVolume={id:"selftest:zero",provider:"okx",providerLabel:"OKX",
+      quote:"USD",symbol:"TEST002",pair:"TEST002/USD",
+      quoteSource:"OKX SPOT public · observation datée",
+      ticker:{lastPrice:"7.3",turnover24h:"0",bidPx:null,askPx:null}};
+    const withOffers={...zeroVolume,ticker:{lastPrice:"7.3",turnover24h:"9000",bidPx:7.2,askPx:7.3}};
+    const wideSpread={...withOffers,ticker:{...withOffers.ticker,bidPx:6.5,askPx:7.3}};
+    const tokenizedZero={...zeroVolume,providerSymbol:"XWDC-USDC"};
+    const liquidityChecks=listingClass(zeroVolume)==="review"&&!inSegment(zeroVolume,"quoted")&&
+      inSegment(zeroVolume,"review")&&listingClass(withOffers)==="quoted"&&
+      !spotEvidence(withOffers).needsReview&&spotEvidence(wideSpread).needsReview&&
+      inSegment(wideSpread,"review")&&listingClass(tokenizedZero)==="tokenized"&&
+      inSegment(tokenizedZero,"tokenized")&&inSegment(tokenizedZero,"review");
     const publicQuote={instId:"ABC-USDC",quote:"USDC",last:"1.50",open24h:"1.00",
-      volCcy24h:"4000",observed_at_utc:new Date().toISOString(),
+      volCcy24h:"4000",bidPx:"1.49",askPx:"1.51",observed_at_utc:new Date().toISOString(),
       account_spot_access_verified:false,executable_price_verified:false};
     const quoteSpec={provider:"okx",instrument_type:"SPOT",providerSymbol:"ABC-USDC",
       quote:"USDC",quote_snapshot:publicQuote};
     const observed=observedOKXTicker(quoteSpec);
-    const okxQuoteChecks=observed?.lastPrice==="1.50"&&
+    const okxQuoteChecks=observed?.lastPrice==="1.50"&&observed.bidPx===1.49&&observed.askPx===1.51&&
       Number(observed.price24hPcnt)===.5&&
       observedOKXTicker({...quoteSpec,quote_snapshot:{...publicQuote,
         observed_at_utc:new Date(Date.now()-2*3600000).toISOString()}})===null&&
@@ -1669,7 +1710,7 @@
       &&sampleOKX?.providerSymbol==="TEST-USDC"&&swapRejected===null&&
         tickerCollisionRejected
       &&proof.status==="CONFIRMÉ"
-      &&segmentTests&&groupingChecks&&readableTests&&okxQuoteChecks
+      &&segmentTests&&groupingChecks&&readableTests&&okxQuoteChecks&&liquidityChecks
       &&candidate.status==="CANDIDAT"
       &&ageBand(.5).label==="<24 h"
       &&ageBand(5).label==="4–7 j"
@@ -1704,6 +1745,7 @@
       provenance_grouping_verified:groupingChecks,
       readable_market_categories:readableTests,
       okx_spot_quote_freshness_and_exact_id:okxQuoteChecks,
+      public_spot_liquidity_classification:liquidityChecks,
       okx_swap_rejected:swapRejected===null,
       okx_ticker_collision_refused:tickerCollisionRejected,
       market_cap_exact_id_symbol_time:!!validCap&&!wrongCoinCap&&!wrongSymbolCap,
