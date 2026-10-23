@@ -44,6 +44,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-10-23",
+      "date_utc": "2026-10-23",
+      "first_seen_at_utc": "2026-10-23T05:10:17.992Z",
+      "source_times_utc": [
+        "2026-10-23T04:46:22.390Z",
+        "2026-10-23T05:02:01.826Z"
+      ],
+      "universe_eligible": 425,
+      "policy_matches": 6,
+      "selected": [
+        {
+          "coin_id": "dash",
+          "symbol": "DASH",
+          "source_at_utc": "2026-10-23T04:46:22.390Z",
+          "rank": 91,
+          "price_usd": 54.62540588188194
+        },
+        {
+          "coin_id": "aethir",
+          "symbol": "ATH",
+          "source_at_utc": "2026-10-23T04:46:22.390Z",
+          "rank": 239,
+          "price_usd": 0.006259797183675443
+        },
+        {
+          "coin_id": "polkadot",
+          "symbol": "DOT",
+          "source_at_utc": "2026-10-23T04:46:22.390Z",
+          "rank": 51,
+          "price_usd": 1.1751486001197418
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -81,6 +116,20 @@
       "sha256": "2ffb8d06d5e6149e3008ffc8f3d733016e11b36dfa867b60d738dd81b9dcbe19",
       "recorded_at_utc": "2026-10-22T20:14:53.067Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-10-22",
+      "file": "observations/2026-10-23T051017992Z--2026-10-22.json",
+      "sha256": "df27cf5cc4581e58fda90370943ae7af2d7097747d6cb9ca4ab4c0f1ab06e129",
+      "recorded_at_utc": "2026-10-23T05:10:17.992Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-10-23",
+      "file": "observations/2026-10-23T051017992Z--2026-10-23.json",
+      "sha256": "b94bee3654b5cac927f0360f9c7cc7a788a49d72e313d543b9f122fa658b7e56",
+      "recorded_at_utc": "2026-10-23T05:10:17.992Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
