@@ -38,6 +38,9 @@ jobs:
              d.read_only!==true||d.trade_permission!==false||d.real_orders!==0||
              d.entries.some(x=>x.instrument_type!=='SPOT'||x.stale===true&&x.state==='live')||
              !w.includes('17 * * * *')||
+             !w.includes('  push:\n    branches: [main]')||
+             !w.includes('  workflow_dispatch:')||
+             w.split('  push:')[1]?.split('  pull_request:')[0]?.includes('new-listings-public-feed.json')||
              !w.includes('administrator/data/new-listings-public-feed.json')||
              !code.includes('no_ticker_to_contract_identity_inference')||
              code.includes('/api/v5/trade/order')||code.includes('OK-ACCESS-KEY')||
