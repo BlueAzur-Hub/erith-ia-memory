@@ -1221,9 +1221,11 @@
       hideLegacyUx();
       if(state.enabled){
         document.querySelectorAll(".filter-btn[data-filter]").forEach(b=>{if(b!==button)b.classList.remove("active");});
+        refreshSegmentToolbar();
         void discover({force:false});
       }else{
         state.originalRenderMarketTable?.();
+        refreshSegmentToolbar();
       }
     },true);
   }
@@ -1235,6 +1237,7 @@
       if(state.radarOpen)radarView(false);
       if(state.enabled||state.selected||state.pending){
         state.enabled=false;
+        refreshSegmentToolbar();
         const category=document.getElementById(BUTTON_ID);
         category?.classList.remove("active","is-active");
         category?.setAttribute("aria-pressed","false");
