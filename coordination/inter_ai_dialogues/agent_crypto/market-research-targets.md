@@ -50,6 +50,28 @@ Trois vérités doivent rester indépendantes :
 - Documentation de l'API OKX Spot : https://app.okx.com/docs-v5/en
 - Note OKX Europe sur la **consolidation USD/USDC** en septembre 2026 : https://www.okx.com/en-eu/help/okx-is-consolidating-usd-and-usdc-spot-order-books-effective-september-30-2026 . Garder ensemble les informations de **paire native** et de **devise effectivement utilisée pour régler l'ordre** ; ne pas les fusionner par hypothèse.
 
+## Premier relevé réellement publié · OKX Spot · 24 octobre 2026, 00 h 01 (Paris)
+
+**Preuve canonique (UTC 2026-10-23T22:01:33.647Z)** : [instantané GitHub des nouveaux listings](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/administrator/data/new-listings-public-feed.json) ; [exécution de collecte n°40030785891](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40030785891).
+
+La première exécution de production du collecteur de cours publics a été **réussie** : réponse OKX `market/tickers?instType=SPOT`, 743 tickers au total, 55 paires Spot du registre des listings sur 55 avec un champ `quote_snapshot` daté. Cet instantané est un **document historique**, pas un direct permanent. Le scan périodique pourra remplacer les valeurs et leur fraîcheur doit toujours être contrôlée. Le prix `last` reste dans la **devise native de la paire** (USDC ou USDT) ; il n'est ni un cours USD garanti, ni une offre d'achat/vente.
+
+| Instrument exact | `last` observé, devise native | Bid / ask publics présents ? | `volCcy24h` brut | Qualification |
+|---|---:|---|---:|---|
+| OKX CT/USDC | 0.2012 USDC | 0.2018 / 0.2022 | 499406.644305 | Prix public OKX, différent de la fiche Bitget |
+| OKX CT/USDT | 0.20221 USDT | 0.20217 / 0.2023 | 6574017.016512 | Paire distincte de CT/USDC |
+| OKX XDP/USDC | 0.01791 USDC | 0.01792 / 0.01795 | 53825.076557 | Doppler Finance · identité/accès du compte à qualifier |
+| OKX XDP/USDT | 0.01794 USDT | 0.017932 / 0.017945 | 613761.655982 | Pair distincte · prix et carnet datés |
+| OKX XBRKB/USDT | 543.6 USDT | 542.74 / 543.89 | 24229.707653 | **Action tokenisée**, pas crypto native |
+| OKX XWDC/USDC | 351.81 USDC | **Non / non** | **0** | Dernier prix enregistré, **aucune liquidité démontrée par ce relevé** |
+| OKX TEST002/USDT | 7.3 USDT | **Non / non** | **0** | **Instrument à qualifier**, ne pas promouvoir comme opportunité |
+
+Aucun zéro de volume ne doit être présenté comme un carnet tradable. Il est possible d'observer un dernier cours sur un marché sans offre d'achat/vente visible à cet instant. Un spread n'est calculable que lorsque bid et ask sont tous deux positifs, cohérents et datés ; même alors, cela ne vérifie ni le montant réellement réalisable, ni les restrictions du compte.
+
+**Nouvelle priorité de qualité des opportunités :** associer au prix natif un verdict distinct `marché actif documenté / liquidité inconnue / quote obsolète / instrument non identifié`, basé sur les preuves disponibles (volume, bid, ask, horodatage, identité et publication officielle). Séparer ensuite toute donnée d'éligibilité privée au compte. Ne jamais classer `TEST002` comme opportunité financière en se fondant uniquement sur son nom ou son dernier prix.
+
+---
+ 
 ## Prochaines actions du système (par preuve, non par spéculation)
 
 1. **Prix Spot publics OKX** : capitaliser sur le collecteur GitHub horaire existant, vérifier date, paire et provenance des instantanés. Pas de prix inventés, pas d'actualisation directe des données privées du compte.
