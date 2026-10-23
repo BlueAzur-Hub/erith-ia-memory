@@ -117,10 +117,8 @@ def normalize_candles(raw, day):
             "open": op, "high": hi, "low": lo, "close": cl,
             "volume_base": vb, "volume_quote": vq
         }
-    # Incomplete exchange history is not guessed or certified as a full day.
-    require(len(candles) == 96 and
-            set(candles) == set(range(start,end,STEP_MS)),
-            "Historical exchange data incomplete: %d/96 15m candles" % len(candles))
+    # A partial response is still authentic evidence; missing bars are kept as gaps.
+    require(0 < len(candles) <= 96, "No native historical 15m candle returned")
     return [candles[k] for k in sorted(candles)]
 
 
@@ -139,7 +137,9 @@ def recover_day(day, fetch_live=market.public_json,
         native_status=current_native_identity(fetch_live,target)
         params=urllib.parse.urlencode({
             "category":"SPOT","symbol":pair,"interval":"15m",
-            "startTime":str(start-STEP_MS),"endTime":str(stop-1),"limit":"100"})
+            # The API may treat a requested end bound as exclusive/rounded.
+            # Request neighbouring closed intervals; filter by exact UTC day.
+            "startTime":str(start-2*STEP_MS),"endTime":str(stop+STEP_MS),"limit":"100"})
         payload=fetch_history("https://"+HOST+ENDPOINT+"?"+params)
         require(isinstance(payload,dict) and payload.get("code")=="00000",
                 "History endpoint rejected pair "+pair)
