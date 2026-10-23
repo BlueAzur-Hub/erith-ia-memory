@@ -112,8 +112,10 @@ jobs:
                 exit 1
               fi
             fi
-            python public/agent_crypto_erith_ia/tools/build_radar_research_cohort.py
             if [ "$new_qualification" -eq 1 ]; then
+              # Only fresh complete qualifications may rebuild downstream source
+              # reports. Partial days publish health evidence, never recycled proof.
+              python public/agent_crypto_erith_ia/tools/build_radar_research_cohort.py
               # Archive only the newly dated OKX PAPER cost basis and future bids;
               # missing candidates remain missing, never reconstructed as fills.
               node public/agent_crypto_erith_ia/tools/build_okx_hurdle_followups.cjs
@@ -124,9 +126,11 @@ jobs:
               else
                 echo 'Identity source missing: current candidates stay unproven; no older proof promoted.'
               fi
+              # Audit dated public signals only with a current qualified universe.
+              python public/agent_crypto_erith_ia/tools/build_radar_signal_evidence.py
+            else
+              echo 'PARTIAL_SOURCE_ONLY: no fresh cohort, identity journal or signal evidence recalculated.'
             fi
-            # Audit the dated public signals; missing forward quotes remain missing.
-            python public/agent_crypto_erith_ia/tools/build_radar_signal_evidence.py
             # A successful schedule is NOT proof of an archived daily observation.
             # When a fresh qualification exists, enforce the matching PAPER journal.
             if [ "$new_qualification" -eq 1 ]; then
