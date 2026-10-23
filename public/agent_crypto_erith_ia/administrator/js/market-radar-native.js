@@ -568,6 +568,11 @@ function verifiedDynamicFollowups(data){
        !Number.isFinite(point.elapsed_hours)||point.elapsed_hours<=0||
        !Number.isFinite(Date.parse(point.at_utc))||Date.parse(point.at_utc)<=Date.parse(record.observed_at_utc))
       throw Error("résultat futur Radar non vérifiable");
+    // A dated observation must agree with its two actual archived prices.
+    // Percent changes are rounded to 0.01 points; allow rounding only.
+    const derivedChange=(point.price_usd/record.initial_price_usd-1)*100;
+    if(!Number.isFinite(derivedChange)||Math.abs(point.change_pct-derivedChange)>0.011)
+      throw Error("variation future Radar fictive : prix et rendement incohérents");
    }else if(point.change_pct!==null||point.price_usd!==null)
      throw Error("valeur fictive dans un horizon sans observation");
   }
