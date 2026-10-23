@@ -190,35 +190,89 @@ def recover_day(day, fetch_live=market.public_json,
         "note":"Native historical OHLCV; missing intervals explicit; NOT missing live hourly orderbooks."
     }
 
-def save(doc, root=DEST):
+def validate_document(doc):
     require(doc.get("schema")==SCHEMA and doc.get("real_orders")==0 and
             doc.get("orders_enabled") is False and
             doc.get("order_book_spread_available") is False and
             doc.get("original_hourly_observations_reconstructed") is False and
-            doc.get("asset_count")==3 and
-            len(doc.get("assets",[]))==3,"Invalid historical evidence schema")
-    for asset in doc["assets"]:
-        require(asset.get("count")==96 and len(asset.get("candles_15m",[]))==96 and
-                asset.get("sha256")==sha(asset["candles_15m"]),
+            doc.get("asset_count")==3 and len(doc.get("assets",[]))==3,
+            "Invalid historical evidence schema")
+    day=dt.date.fromisoformat(doc["date_utc"])
+    require([x.get("pair") for x in doc["assets"]]==[x[2] for x in TARGETS],
+            "Historical pair reordering or symbol collision")
+    for row,target in zip(doc["assets"],TARGETS):
+        require((row.get("coin_id"),row.get("symbol"),row.get("pair"),
+                 row.get("chain"),row.get("contract")) ==
+                (target[0],target[1],target[2],target[3],target[4]) and
+                row.get("type")=="SPOT" and row.get("quote")=="USDT" and
+                row.get("source_endpoint")==ENDPOINT,
+                "Unverified historical identity")
+        candles=row.get("candles_15m")
+        require(isinstance(candles,list) and 0<=len(candles)<=96 and
+                row.get("count")==len(candles) and
+                row.get("sha256")==sha(candles),
                 "Native historical digest mismatch")
+        stamps=[x.get("open_at_utc") for x in candles]
+        require(len(stamps)==len(set(stamps)) and stamps==sorted(stamps),
+                "Repeated/disordered historical candle")
+        require(all(isinstance(t,str) and t.endswith("Z") and
+                    t[:10]==doc["date_utc"] and t[11:16][-2:] in
+                    ("00","15","30","45") and t[17:19]=="00" for t in stamps),
+                "Historical candle outside closed UTC interval")
+        gaps=missing_slots(day,candles)
+        require(row.get("missing_slots_utc")==gaps and
+                row.get("missing_count")==len(gaps) and
+                row.get("status")==("COMPLETE_NATIVE_15M" if not gaps else
+                                   "PARTIAL_NATIVE_15M" if candles
+                                   else "NATIVE_HISTORY_UNAVAILABLE"),
+                "False historical coverage label")
+
+
+def save(doc, root=DEST):
+    validate_document(doc)
+    if sum(x["count"] for x in doc["assets"])==0:
+        return {"status":"HISTORICAL_SOURCE_UNAVAILABLE","date_utc":doc["date_utc"]}
     root.mkdir(parents=True,exist_ok=True)
     target=root/(doc["date_utc"]+".json")
     if target.exists():
-        # Never overwrite a different earlier historical claim.
-        original=json.loads(target.read_text(encoding="utf-8"))
-        require(original.get("schema")==SCHEMA and
-                original.get("date_utc")==doc["date_utc"] and
-                [(a.get("pair"),a.get("sha256")) for a in original.get("assets",[])] ==
-                [(a.get("pair"),a.get("sha256")) for a in doc["assets"]],
-                "Conflicting prior verified historical evidence")
-        return {"status":"ALREADY_VERIFIED","date_utc":doc["date_utc"]}
-    tmp=target.with_suffix(".writing")
-    tmp.write_text(json.dumps(doc,ensure_ascii=False,indent=2,allow_nan=False)+"\n",
-                   encoding="utf-8")
-    os.replace(tmp,target)
-    return {"status":"SAVED_HISTORICAL_CANDLES_ONLY","date_utc":doc["date_utc"],
-            "assets":3,"bars":288}
-
+        prior=json.loads(target.read_text(encoding="utf-8"))
+        validate_document(prior)
+        require(prior["date_utc"]==doc["date_utc"],
+                "Mixed historical source days")
+        appended=0
+        for i,target_tuple in enumerate(TARGETS):
+            before=prior["assets"][i]
+            after=doc["assets"][i]
+            stored={bar["open_at_utc"]:bar for bar in before["candles_15m"]}
+            for bar in after["candles_15m"]:
+                ts=bar["open_at_utc"]
+                require(ts not in stored or stored[ts]==bar,
+                        "Conflicting prior verified historical evidence")
+                if ts not in stored:
+                    appended+=1
+                    stored[ts]=bar
+            merged=sorted(stored.values(),key=lambda x:x["open_at_utc"])
+            doc["assets"][i]=recovery_asset(target_tuple,
+                                            dt.date.fromisoformat(doc["date_utc"]),
+                                            merged,after["native_current_status"])
+        if not appended:
+            return {"status":"ALREADY_VERIFIED_NO_NEW_BARS",
+                    "date_utc":doc["date_utc"],
+                    "verified_bars":sum(x["count"] for x in prior["assets"])}
+        doc["first_recovered_at_utc"]=prior.get(
+            "first_recovered_at_utc",prior["recovered_at_utc"])
+    else:
+        doc["first_recovered_at_utc"]=doc["recovered_at_utc"]
+    validate_document(doc)
+    temp=target.with_suffix(".writing")
+    temp.write_text(json.dumps(doc,ensure_ascii=False,indent=2,allow_nan=False)+"\\n",
+                    encoding="utf-8")
+    os.replace(temp,target)
+    bars=sum(x["count"] for x in doc["assets"])
+    return {"status":"SAVED_HISTORICAL_CANDLES_ONLY",
+            "date_utc":doc["date_utc"],
+            "assets":3,"bars":bars,"expected_bars":288,
+            "missing_bars":288-bars}
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
