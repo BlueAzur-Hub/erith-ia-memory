@@ -486,6 +486,18 @@
       return [];
     }
   }
+  // Accept only a dated exact public SPOT instrument. No live/executable price promise.
+  function observedOKXTicker(row,now=Date.now()){
+    const q=row?.quote_snapshot,id=upper(row?.providerSymbol),ts=Date.parse(String(q?.observed_at_utc||""));
+    const last=positive(q?.last),open=positive(q?.open24h),vol=finite(q?.volCcy24h);
+    if(row?.provider!=="okx"||row?.instrument_type!=="SPOT"||
+      upper(q?.instId)!==id||upper(q?.quote)!==upper(row?.quote)||
+      !Number.isFinite(ts)||ts>now+120000||now-ts>90*60000||
+      last===null||open===null||vol===null||vol<0||
+      q?.account_spot_access_verified!==false||q?.executable_price_verified!==false)return null;
+    return {lastPrice:String(q.last),price24hPcnt:String(last/open-1),
+      turnover24h:String(q.volCcy24h),ts};
+  }
   function specFromWatchOKX(row){
     const base=upper(row?.base),quote=upper(row?.quote),symbol=upper(row?.providerSymbol);
     const time=Date.parse(String(row?.listedAt||""));
@@ -494,6 +506,7 @@
        row.instrument_type!=="SPOT"||row.provider!=="okx"||
        row.state!=="live"||!Number.isFinite(time)||time>Date.now()||
        Date.now()-time>30*86400000)return null;
+    const publicTicker=observedOKXTicker(row);
     return {
       id:"new-listing:okx:"+symbol.toLowerCase(),name:base,symbol:base,base,
       quote,pair:row.pair,provider:"okx",providerLabel:"OKX",
@@ -502,7 +515,9 @@
       launchTime:time,identityVerified:false,coingeckoId:null,image:null,
       // Strictly an exchange market ID until venue+contract is independently
       // documented, even if a Bitget ticker with the same spelling exists.
-      identitySource:"EXCHANGE_INSTRUMENT_ONLY",ticker:null,
+      identitySource:"EXCHANGE_INSTRUMENT_ONLY",ticker:publicTicker,
+      quoteSnapshotAt:publicTicker?new Date(publicTicker.ts).toISOString():null,
+      quoteSource:publicTicker?"OKX SPOT public · observation datée":null,
       watchSource:"GitHub public scan · OKX /api/v5/public/instruments",
       accountSpotPermissionVerified:false
     };
@@ -847,16 +862,18 @@
 
   function priceTruth(spec,coin){
     const currency=displayCurrency(),derived=currency==="USD"?finite(coin?.priceUsd):finite(coin?.priceEur);
+    const quoteAge=spec?.quoteSnapshotAt?Date.now()-Date.parse(spec.quoteSnapshotAt):null;
+    const observation=quoteAge!==null&&quoteAge>=0?` · OKX observé il y a ${Math.round(quoteAge/60000)} min · non exécutable`:"";
     if(derived!==null){
       return {
         primary:money(derived,currency),
-        small:`${currency} dérivé · ${quotedVenueLabel(spec)} ${spec.pair} × ${spec.quote}/${currency}`
+        small:`${currency} dérivé · ${quotedVenueLabel(spec)} ${spec.pair} × ${spec.quote}/${currency}${observation}`
       };
     }
     const raw=positive(spec?.ticker?.lastPrice);
     return {
       primary:raw!==null?`${raw.toLocaleString("fr-FR",{maximumFractionDigits:10})} ${spec.quote}`:"Prix non relevé",
-      small:raw!==null?`${quotedVenueLabel(spec)} ${spec.pair}`:"Cours absent de notre flux · "+quotedVenueLabel(spec)
+      small:raw!==null?`${quotedVenueLabel(spec)} ${spec.pair}${observation}`:"Cours absent de notre flux · "+quotedVenueLabel(spec)
     };
   }
 
@@ -1598,6 +1615,18 @@
       listingClass(tokenizedForUi)==="tokenized"&&
       !inSegment(tokenizedForUi,"quoted")&&
       !isDocumentedTokenized({provider:"okx",providerSymbol:"XDP-USDT"});
+    const publicQuote={instId:"ABC-USDC",quote:"USDC",last:"1.50",open24h:"1.00",
+      volCcy24h:"4000",observed_at_utc:new Date().toISOString(),
+      account_spot_access_verified:false,executable_price_verified:false};
+    const quoteSpec={provider:"okx",instrument_type:"SPOT",providerSymbol:"ABC-USDC",
+      quote:"USDC",quote_snapshot:publicQuote};
+    const observed=observedOKXTicker(quoteSpec);
+    const okxQuoteChecks=observed?.lastPrice==="1.50"&&
+      Number(observed.price24hPcnt)===.5&&
+      observedOKXTicker({...quoteSpec,quote_snapshot:{...publicQuote,
+        observed_at_utc:new Date(Date.now()-2*3600000).toISOString()}})===null&&
+      observedOKXTicker({...quoteSpec,providerSymbol:"DIFFERENT-USDC"})===null&&
+      observedOKXTicker({...quoteSpec,provider:"bitget"})===null;
     const ctFromBitget=providerSpec({base:"CT",quote:"USDT",providerSymbol:"CTUSDT",
       listedAt:new Date(Date.now()-86400000).toISOString()});
     if(ctFromBitget)ctFromBitget.ticker={lastPrice:"0.25",turnover24h:"6000"};
@@ -1639,7 +1668,7 @@
       &&sampleOKX?.providerSymbol==="TEST-USDC"&&swapRejected===null&&
         tickerCollisionRejected
       &&proof.status==="CONFIRMÉ"
-      &&segmentTests&&groupingChecks&&readableTests
+      &&segmentTests&&groupingChecks&&readableTests&&okxQuoteChecks
       &&candidate.status==="CANDIDAT"
       &&ageBand(.5).label==="<24 h"
       &&ageBand(5).label==="4–7 j"
@@ -1673,6 +1702,7 @@
       tokenized_requires_documented_instrument:segmentTests,
       provenance_grouping_verified:groupingChecks,
       readable_market_categories:readableTests,
+      okx_spot_quote_freshness_and_exact_id:okxQuoteChecks,
       okx_swap_rejected:swapRejected===null,
       okx_ticker_collision_refused:tickerCollisionRejected,
       market_cap_exact_id_symbol_time:!!validCap&&!wrongCoinCap&&!wrongSymbolCap,
