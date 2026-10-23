@@ -105,7 +105,7 @@ jobs:
               if grep -q 'Aucun snapshot Radar du jour' /tmp/qualification-output.log; then
                 echo 'No dated Radar snapshot today; preserving old qualification.'
               elif grep -q 'Moins de vingt candidats Radar : qualification suspendue' /tmp/qualification-output.log; then
-                echo 'RADAR_CANDIDATE_SHORTFALL: today's archive exists but has fewer than 20 real qualified candidates.'
+                echo 'RADAR_CANDIDATE_SHORTFALL: current archive has fewer than 20 verified Momentum/Rebound candidates.'
                 echo 'Preserve prior full qualification as historical only; publish a fresh incomplete health status.'
               else
                 echo 'Real qualification failure, refusing silent fallback' >&2
