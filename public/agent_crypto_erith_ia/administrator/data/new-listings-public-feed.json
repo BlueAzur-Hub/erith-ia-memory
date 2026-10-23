@@ -1,6 +1,6 @@
 {
   "schema": "erith.seven.public-spot-listings-feed.v1",
-  "captured_at_utc": "2026-10-23T04:54:35.506Z",
+  "captured_at_utc": "2026-10-23T13:29:23.395Z",
   "coverage_days": 30,
   "read_only": true,
   "trade_permission": false,
@@ -8,19 +8,239 @@
   "watch_sources": {
     "okx": {
       "status": "OK",
-      "at_utc": "2026-10-23T04:54:35.506Z",
-      "count": 49,
+      "at_utc": "2026-10-23T13:29:23.395Z",
+      "count": 55,
       "evidence": "OKX public instruments instType=SPOT"
     },
     "bitget": {
       "status": "OK",
-      "at_utc": "2026-10-23T04:54:35.506Z",
-      "count": 4,
+      "at_utc": "2026-10-23T13:29:23.395Z",
+      "count": 6,
       "evidence": "Bitget public market/instruments category=SPOT"
     }
   },
   "feed_status": "OK",
   "entries": [
+    {
+      "provider": "okx",
+      "instrument_type": "SPOT",
+      "base": "XJPM",
+      "quote": "USDT",
+      "providerSymbol": "XJPM-USDT",
+      "pair": "XJPM/USDT",
+      "listedAt": "2026-10-23T10:30:00.000Z",
+      "launchTime": 1792751400000,
+      "state": "live",
+      "country_eligibility_verified": false,
+      "account_spot_access_verified": false,
+      "market_rules_verified_for_user": false,
+      "canonicalId": null,
+      "identity_status": "VENUE_SYMBOL_ONLY",
+      "image": null,
+      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
+      "stale": false
+    },
+    {
+      "provider": "okx",
+      "instrument_type": "SPOT",
+      "base": "TEST002",
+      "quote": "USDT",
+      "providerSymbol": "TEST002-USDT",
+      "pair": "TEST002/USDT",
+      "listedAt": "2026-10-23T10:00:00.000Z",
+      "launchTime": 1792749600000,
+      "state": "live",
+      "country_eligibility_verified": false,
+      "account_spot_access_verified": false,
+      "market_rules_verified_for_user": false,
+      "canonicalId": null,
+      "identity_status": "VENUE_SYMBOL_ONLY",
+      "image": null,
+      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
+      "stale": false
+    },
+    {
+      "provider": "okx",
+      "instrument_type": "SPOT",
+      "base": "XHUT",
+      "quote": "USDT",
+      "providerSymbol": "XHUT-USDT",
+      "pair": "XHUT/USDT",
+      "listedAt": "2026-10-23T10:00:00.000Z",
+      "launchTime": 1792749600000,
+      "state": "live",
+      "country_eligibility_verified": false,
+      "account_spot_access_verified": false,
+      "market_rules_verified_for_user": false,
+      "canonicalId": null,
+      "identity_status": "VENUE_SYMBOL_ONLY",
+      "image": null,
+      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
+      "stale": false
+    },
+    {
+      "provider": "okx",
+      "instrument_type": "SPOT",
+      "base": "XGTLB",
+      "quote": "USDT",
+      "providerSymbol": "XGTLB-USDT",
+      "pair": "XGTLB/USDT",
+      "listedAt": "2026-10-23T09:30:00.000Z",
+      "launchTime": 1792747800000,
+      "state": "live",
+      "country_eligibility_verified": false,
+      "account_spot_access_verified": false,
+      "market_rules_verified_for_user": false,
+      "canonicalId": null,
+      "identity_status": "VENUE_SYMBOL_ONLY",
+      "image": null,
+      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
+      "stale": false
+    },
+    {
+      "provider": "bitget",
+      "instrument_type": "SPOT",
+      "base": "CUDIS",
+      "quote": "USDT",
+      "providerSymbol": "CUDISUSDT",
+      "pair": "CUDIS/USDT",
+      "listedAt": "2026-10-23T09:02:42.490Z",
+      "launchTime": 1792746162490,
+      "state": "live",
+      "country_eligibility_verified": false,
+      "account_spot_access_verified": false,
+      "market_rules_verified_for_user": false,
+      "canonicalId": null,
+      "identity_status": "VENUE_SYMBOL_ONLY",
+      "image": null,
+      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
+      "stale": false
+    },
+    {
+      "provider": "okx",
+      "instrument_type": "SPOT",
+      "base": "XGS",
+      "quote": "USDT",
+      "providerSymbol": "XGS-USDT",
+      "pair": "XGS/USDT",
+      "listedAt": "2026-10-23T09:00:00.000Z",
+      "launchTime": 1792746000000,
+      "state": "live",
+      "country_eligibility_verified": false,
+      "account_spot_access_verified": false,
+      "market_rules_verified_for_user": false,
+      "canonicalId": null,
+      "identity_status": "VENUE_SYMBOL_ONLY",
+      "image": null,
+      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
+      "stale": false
+    },
+    {
+      "provider": "okx",
+      "instrument_type": "SPOT",
+      "base": "XDDOG",
+      "quote": "USDT",
+      "providerSymbol": "XDDOG-USDT",
+      "pair": "XDDOG/USDT",
+      "listedAt": "2026-10-23T08:30:00.000Z",
+      "launchTime": 1792744200000,
+      "state": "live",
+      "country_eligibility_verified": false,
+      "account_spot_access_verified": false,
+      "market_rules_verified_for_user": false,
+      "canonicalId": null,
+      "identity_status": "VENUE_SYMBOL_ONLY",
+      "image": null,
+      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
+      "stale": false
+    },
+    {
+      "provider": "okx",
+      "instrument_type": "SPOT",
+      "base": "XCOST",
+      "quote": "USDT",
+      "providerSymbol": "XCOST-USDT",
+      "pair": "XCOST/USDT",
+      "listedAt": "2026-10-23T08:00:00.000Z",
+      "launchTime": 1792742400000,
+      "state": "live",
+      "country_eligibility_verified": false,
+      "account_spot_access_verified": false,
+      "market_rules_verified_for_user": false,
+      "canonicalId": null,
+      "identity_status": "VENUE_SYMBOL_ONLY",
+      "image": null,
+      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
+      "stale": false
+    },
+    {
+      "provider": "bitget",
+      "instrument_type": "SPOT",
+      "base": "RLUSD",
+      "quote": "USDC",
+      "providerSymbol": "RLUSDUSDC",
+      "pair": "RLUSD/USDC",
+      "listedAt": "2026-10-23T07:37:53.140Z",
+      "launchTime": 1792741073140,
+      "state": "live",
+      "country_eligibility_verified": false,
+      "account_spot_access_verified": false,
+      "market_rules_verified_for_user": false,
+      "canonicalId": null,
+      "identity_status": "VENUE_SYMBOL_ONLY",
+      "image": null,
+      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
+      "stale": false
+    },
+    {
+      "provider": "okx",
+      "instrument_type": "SPOT",
+      "base": "XAXTI",
+      "quote": "USDT",
+      "providerSymbol": "XAXTI-USDT",
+      "pair": "XAXTI/USDT",
+      "listedAt": "2026-10-23T07:30:00.000Z",
+      "launchTime": 1792740600000,
+      "state": "live",
+      "country_eligibility_verified": false,
+      "account_spot_access_verified": false,
+      "market_rules_verified_for_user": false,
+      "canonicalId": null,
+      "identity_status": "VENUE_SYMBOL_ONLY",
+      "image": null,
+      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
+      "stale": false
+    },
+    {
+      "provider": "okx",
+      "instrument_type": "SPOT",
+      "base": "XACN",
+      "quote": "USDT",
+      "providerSymbol": "XACN-USDT",
+      "pair": "XACN/USDT",
+      "listedAt": "2026-10-23T07:00:00.000Z",
+      "launchTime": 1792738800000,
+      "state": "live",
+      "country_eligibility_verified": false,
+      "account_spot_access_verified": false,
+      "market_rules_verified_for_user": false,
+      "canonicalId": null,
+      "identity_status": "VENUE_SYMBOL_ONLY",
+      "image": null,
+      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
+      "stale": false
+    },
     {
       "provider": "bitget",
       "instrument_type": "SPOT",
@@ -38,7 +258,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -58,7 +278,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -78,7 +298,7 @@
       "identity_status": "EXACT_CONTRACT_AND_VENUE_REGISTRY",
       "image": "./assets/crypto/new-listings/axis-robotics.svg",
       "logo_status": "VERIFIED_GITHUB_ASSET",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -98,7 +318,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -118,7 +338,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -138,7 +358,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -158,7 +378,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -178,7 +398,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -198,7 +418,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -218,7 +438,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -238,7 +458,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -258,7 +478,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -278,7 +498,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -298,7 +518,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -318,7 +538,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -338,7 +558,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -358,7 +578,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -378,7 +598,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -398,7 +618,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -418,7 +638,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -438,7 +658,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -458,7 +678,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -478,7 +698,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -498,7 +718,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -518,7 +738,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -538,7 +758,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -558,7 +778,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -578,7 +798,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -598,7 +818,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -618,7 +838,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -638,7 +858,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -658,7 +878,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -678,7 +898,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -698,7 +918,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -718,7 +938,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -738,7 +958,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -758,7 +978,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -778,7 +998,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -798,7 +1018,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -818,7 +1038,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -838,7 +1058,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -858,7 +1078,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -878,7 +1098,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -898,7 +1118,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -918,7 +1138,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -938,7 +1158,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -958,7 +1178,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -978,7 +1198,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -998,7 +1218,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     },
     {
@@ -1018,67 +1238,7 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
-      "stale": false
-    },
-    {
-      "provider": "okx",
-      "instrument_type": "SPOT",
-      "base": "CETUS",
-      "quote": "USDC",
-      "providerSymbol": "CETUS-USDC",
-      "pair": "CETUS/USDC",
-      "listedAt": "2026-09-23T10:00:00.000Z",
-      "launchTime": 1790157600000,
-      "state": "live",
-      "country_eligibility_verified": false,
-      "account_spot_access_verified": false,
-      "market_rules_verified_for_user": false,
-      "canonicalId": null,
-      "identity_status": "VENUE_SYMBOL_ONLY",
-      "image": null,
-      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
-      "stale": false
-    },
-    {
-      "provider": "okx",
-      "instrument_type": "SPOT",
-      "base": "LAT",
-      "quote": "USDC",
-      "providerSymbol": "LAT-USDC",
-      "pair": "LAT/USDC",
-      "listedAt": "2026-09-23T10:00:00.000Z",
-      "launchTime": 1790157600000,
-      "state": "live",
-      "country_eligibility_verified": false,
-      "account_spot_access_verified": false,
-      "market_rules_verified_for_user": false,
-      "canonicalId": null,
-      "identity_status": "VENUE_SYMBOL_ONLY",
-      "image": null,
-      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
-      "stale": false
-    },
-    {
-      "provider": "okx",
-      "instrument_type": "SPOT",
-      "base": "LIT",
-      "quote": "USDC",
-      "providerSymbol": "LIT-USDC",
-      "pair": "LIT/USDC",
-      "listedAt": "2026-09-23T10:00:00.000Z",
-      "launchTime": 1790157600000,
-      "state": "live",
-      "country_eligibility_verified": false,
-      "account_spot_access_verified": false,
-      "market_rules_verified_for_user": false,
-      "canonicalId": null,
-      "identity_status": "VENUE_SYMBOL_ONLY",
-      "image": null,
-      "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T04:54:35.506Z",
+      "scanned_at_utc": "2026-10-23T13:29:23.395Z",
       "stale": false
     }
   ],
