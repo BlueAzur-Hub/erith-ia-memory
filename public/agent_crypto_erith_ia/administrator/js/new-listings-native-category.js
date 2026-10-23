@@ -1649,7 +1649,7 @@
       quote:"USD",symbol:"TEST002",pair:"TEST002/USD",
       quoteSource:"OKX SPOT public · observation datée",
       ticker:{lastPrice:"7.3",turnover24h:"0",bidPx:null,askPx:null}};
-    const withOffers={...zeroVolume,ticker:{lastPrice:"7.3",turnover24h:"9000",bidPx:7.2,askPx:7.3}};
+    const withOffers={...zeroVolume,ticker:{lastPrice:"7.3",turnover24h:"9000",bidPx:7.27,askPx:7.3}};
     const wideSpread={...withOffers,ticker:{...withOffers.ticker,bidPx:6.5,askPx:7.3}};
     const tokenizedZero={...zeroVolume,providerSymbol:"XWDC-USDC"};
     const liquidityChecks=listingClass(zeroVolume)==="review"&&!inSegment(zeroVolume,"quoted")&&
