@@ -1,7 +1,7 @@
 {
-  "approved_count": 91,
+  "approved_count": 90,
   "candidate_count": 96,
-  "checked_count": 96,
+  "checked_count": 95,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
   "quote": "USDT",
   "results": [
@@ -1740,6 +1740,46 @@
       "symbol": "XEC"
     },
     {
+      "checked_at": "2026-10-23T05:58:56.030678+00:00",
+      "evidence": [
+        {
+          "base": "SPCXB",
+          "coin_id": "spacex-bstocks-tokenized-stock",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "spacex-bstocks-tokenized-stock",
+          "trade_url": "https://www.binance.com/en/trade/SPCXB_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "spacex-bstocks-tokenized-stock",
+      "pages": 1,
+      "pair": "SPCXBUSDT",
+      "rank": 226,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "SPCXB"
+    },
+    {
+      "checked_at": "2026-10-23T05:59:11.369297+00:00",
+      "evidence": [
+        {
+          "base": "0G",
+          "coin_id": "zero-gravity",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "zero-gravity",
+          "trade_url": "https://www.binance.com/en/trade/0G_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
+      "id": "zero-gravity",
+      "pages": 2,
+      "pair": "0GUSDT",
+      "rank": 227,
+      "status": "approved_coingecko_binance_spot",
+      "symbol": "0G"
+    },
+    {
       "checked_at": "2026-10-10T00:29:33.990068+00:00",
       "evidence": [
         {
@@ -1880,7 +1920,7 @@
       "symbol": "GLM"
     }
   ],
-  "review_required_count": 5,
+  "review_required_count": 6,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
