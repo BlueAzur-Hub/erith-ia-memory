@@ -661,5 +661,31 @@ class AlternativeMarketTests(unittest.TestCase):
         self.assertEqual(excluded,observed)
         self.assertEqual(len(queue)-len(excluded),250-len(observed))
 
+
+    def test_retired_exact_id_outside_latest_native_snapshot_is_historical_only(self):
+        from unittest.mock import patch
+        old={"id":"superfarm","symbol":"SUPER","rank":230,
+             "status":"market_not_confirmed","markets":[],
+             "checked_at":"2026-10-11T01:58:30+00:00"}
+        doc={"schema":m.SCHEMA,"results":[old]}
+        queue=[{"id":"currently-ranked","symbol":"CUR","rank":1}]
+        with tempfile.TemporaryDirectory() as tmp:
+            native=Path(tmp)/"latest.json"
+            native.write_text(json.dumps({"assets":[]}))
+            with patch.object(m,"LIVE_MINUTE",native):
+                self.assertEqual(m.validate(doc,queue),set())
+                bad=json.loads(json.dumps(doc))
+                bad["results"][0]["status"]="exact_id_market_candidates"
+                bad["results"][0]["markets"]=[{"coin_id":"wrong","base":"SUPER",
+                    "exchange":"bitget","quote":"USDT",
+                    "exchange_instrument_confirmed":False,
+                    "native_1m_month_confirmed":False}]
+                with self.assertRaisesRegex(ValueError,"Unverified market"):
+                    m.validate(bad,queue)
+                malformed=json.loads(json.dumps(doc))
+                malformed["results"][0]["checked_at"]="not-a-timestamp"
+                with self.assertRaisesRegex(ValueError,"Discovery identity changed"):
+                    m.validate(malformed,queue)
+
 if __name__=="__main__":
     unittest.main(verbosity=2)

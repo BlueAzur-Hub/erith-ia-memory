@@ -168,22 +168,38 @@ def inspect_asset(asset,fetcher=get_tickers,exchange_fetcher=None):
                 "reason":(type(exc).__name__+": "+str(exc))[:180]}
 
 def validate_ledger(doc,audit):
+    # A proof belongs to an exact coin ID and Spot pair, not to a floating
+    # market-cap rank. Keep evidence for coins that later leave the Top250,
+    # but never count those rows as qualifications of today's candidates.
     need(doc.get("schema")==SCHEMA and isinstance(doc.get("results"),list)
-         and len(doc["results"])<=96,"Identity ledger malformed")
-    byid={a["id"]:a for a in candidates(audit)}
+         and len(doc["results"])<=250,"Identity ledger malformed")
+    ranked={a["id"]:a for a in audit["assets"]}
+    current={a["id"]:a for a in candidates(audit)}
+    need(len(ranked)==250,"Repeated exact IDs in Top250 source audit")
     seen=set()
     for e in doc["results"]:
         aid=e.get("id")
-        need(aid in byid and aid not in seen and
-             e.get("pair")==byid[aid]["proposed_pair"] and
-             e.get("rank")==byid[aid]["rank"] and
+        asset=ranked.get(aid)
+        symbol=asset["symbol"] if asset else e.get("symbol")
+        pair=asset["proposed_pair"] if asset else (
+            symbol+"USDT" if isinstance(symbol,str) else None)
+        # Orphans are retained solely as dated historical evidence, not
+        # eligible current candidates. Their immutable ID, pair and source
+        # ticker still have to agree; never resurrect by a matching rank.
+        need(isinstance(aid,str) and ID.fullmatch(aid) and aid not in seen and
+             isinstance(symbol,str) and bool(symbol) and
+             e.get("symbol",symbol)==symbol and
+             isinstance(pair,str) and PAIR.fullmatch(pair) and
+             e.get("pair")==pair and
+             isinstance(e.get("rank"),int) and 1<=e["rank"]<=250 and
+             (asset is not None or isinstance(e.get("checked_at"),str)) and
              e.get("status") in ("approved_coingecko_binance_spot",
                                  "identity_not_confirmed","source_unavailable",
                                  "source_pagination_incomplete"),
              "Stored identity evidence no longer matches current Top250")
         if e["status"]=="approved_coingecko_binance_spot":
             need(isinstance(e.get("evidence"),list) and len(e["evidence"])>0 and
-                all(x["coin_id"]==aid and x["base"]==byid[aid]["symbol"] and
+                all(x["coin_id"]==aid and x["base"]==symbol and
                     x["target"]=="USDT" and x["market_identifier"]=="binance"
                     for x in e["evidence"]),"Stored approval without exact identity")
         seen.add(aid)
@@ -219,12 +235,16 @@ def process(audit,existing=None,batch_size=MAX_BATCH,fetcher=get_tickers,
         previous[a["id"]]=out
         results.append(out)
         print("IDENTITY "+json.dumps({"id":out["id"],"rank":out["rank"],"status":out["status"],"pages":out.get("pages")},sort_keys=True),flush=True)
-    merged=sorted(previous.values(),key=lambda x:x["rank"])
+    merged=sorted(previous.values(),key=lambda x:(x["rank"],x["id"]))
+    current_ids={x["id"] for x in queued}
+    checked=sum(x["id"] in current_ids for x in merged)
+    approved=sum(x["id"] in current_ids and
+                 x["status"]=="approved_coingecko_binance_spot" for x in merged)
     new={"schema":SCHEMA,"source":"CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
          "quote":"USDT","total_market_ranked":250,
-         "candidate_count":len(queued),"checked_count":len(merged),
-         "approved_count":sum(x["status"]=="approved_coingecko_binance_spot" for x in merged),
-         "review_required_count":len(queued)-sum(x["status"]=="approved_coingecko_binance_spot" for x in merged),
+         "candidate_count":len(queued),"checked_count":checked,
+         "approved_count":approved,
+         "review_required_count":len(queued)-approved,
          "results":merged,
          "note":"Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV."}
     validate_ledger(new,audit)
