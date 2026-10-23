@@ -117,11 +117,32 @@ def normalize_candles(raw, day):
             "open": op, "high": hi, "low": lo, "close": cl,
             "volume_base": vb, "volume_quote": vq
         }
-    # Incomplete exchange history is not guessed or certified as a full day.
-    require(len(candles) == 96 and
-            set(candles) == set(range(start,end,STEP_MS)),
-            "Historical exchange data incomplete: %d/96 15m candles" % len(candles))
+    # A partial response is still authentic evidence; missing bars are kept as gaps.
+    require(0 < len(candles) <= 96, "No native historical 15m candle returned")
     return [candles[k] for k in sorted(candles)]
+
+
+def missing_slots(day, bars):
+    start=int(dt.datetime.combine(day,dt.time.min,tzinfo=UTC).timestamp()*1000)
+    existing={x["open_at_utc"] for x in bars}
+    return [market.iso(dt.datetime.fromtimestamp(ms/1000,UTC))
+            for ms in range(start,start+24*60*60*1000,STEP_MS)
+            if market.iso(dt.datetime.fromtimestamp(ms/1000,UTC)) not in existing]
+
+
+def recovery_asset(target, day, bars, native_status):
+    cid,symbol,pair,network,contract=target
+    missing=missing_slots(day,bars)
+    return {
+        "coin_id":cid,"symbol":symbol,"pair":pair,"venue":"Bitget",
+        "type":"SPOT","quote":"USDT","chain":network,"contract":contract,
+        "status":("COMPLETE_NATIVE_15M" if not missing else
+                  "PARTIAL_NATIVE_15M" if bars else "NATIVE_HISTORY_UNAVAILABLE"),
+        "native_current_status":native_status,
+        "candles_15m":bars,"count":len(bars),"sha256":sha(bars),
+        "missing_slots_utc":missing,"missing_count":len(missing),
+        "source_endpoint":ENDPOINT
+    }
 
 
 def recover_day(day, fetch_live=market.public_json,
@@ -139,18 +160,23 @@ def recover_day(day, fetch_live=market.public_json,
         native_status=current_native_identity(fetch_live,target)
         params=urllib.parse.urlencode({
             "category":"SPOT","symbol":pair,"interval":"15m",
-            "startTime":str(start-STEP_MS),"endTime":str(stop-1),"limit":"100"})
-        payload=fetch_history("https://"+HOST+ENDPOINT+"?"+params)
-        require(isinstance(payload,dict) and payload.get("code")=="00000",
-                "History endpoint rejected pair "+pair)
-        bars=normalize_candles(payload.get("data"),day)
-        records.append({
-            "coin_id":cid,"symbol":symbol,"pair":pair,"venue":"Bitget",
-            "type":"SPOT","quote":"USDT","chain":network,"contract":contract,
-            "status":"COMPLETE_NATIVE_15M","native_current_status":native_status,
-            "candles_15m":bars,"count":len(bars),"sha256":sha(bars),
-            "source_endpoint":ENDPOINT,
-        })
+            # Endpoints can round range edges. Filter source by exact UTC day.
+            "startTime":str(start-2*STEP_MS),
+            "endTime":str(stop+STEP_MS),"limit":"100"})
+        try:
+            payload=fetch_history("https://"+HOST+ENDPOINT+"?"+params)
+        except (OSError,TimeoutError):
+            bars=[]
+        else:
+            require(isinstance(payload,dict) and payload.get("code")=="00000",
+                    "History endpoint rejected pair "+pair)
+            try:
+                bars=normalize_candles(payload.get("data"),day)
+            except ValueError as exc:
+                if str(exc)!="No native historical 15m candle returned":
+                    raise
+                bars=[]
+        records.append(recovery_asset(target,day,bars,native_status))
     return {
         "schema":SCHEMA,"date_utc":day.isoformat(),
         "recovered_at_utc":market.iso(now),
@@ -161,39 +187,92 @@ def recover_day(day, fetch_live=market.public_json,
         "orders_enabled":False,"real_orders":0,"paper_fills":0,
         "account_access":False,"order_book_spread_available":False,
         "source_identity_catalogue_date":identity.get("source_radar_day_utc"),
-        "note":"Native historical OHLCV; NOT the missing live hourly orderbook or an executable result."
+        "note":"Native historical OHLCV; missing intervals explicit; NOT missing live hourly orderbooks."
     }
 
-
-def save(doc, root=DEST):
+def validate_document(doc):
     require(doc.get("schema")==SCHEMA and doc.get("real_orders")==0 and
             doc.get("orders_enabled") is False and
             doc.get("order_book_spread_available") is False and
             doc.get("original_hourly_observations_reconstructed") is False and
-            doc.get("asset_count")==3 and
-            len(doc.get("assets",[]))==3,"Invalid historical evidence schema")
-    for asset in doc["assets"]:
-        require(asset.get("count")==96 and len(asset.get("candles_15m",[]))==96 and
-                asset.get("sha256")==sha(asset["candles_15m"]),
+            doc.get("asset_count")==3 and len(doc.get("assets",[]))==3,
+            "Invalid historical evidence schema")
+    day=dt.date.fromisoformat(doc["date_utc"])
+    require([x.get("pair") for x in doc["assets"]]==[x[2] for x in TARGETS],
+            "Historical pair reordering or symbol collision")
+    for row,target in zip(doc["assets"],TARGETS):
+        require((row.get("coin_id"),row.get("symbol"),row.get("pair"),
+                 row.get("chain"),row.get("contract")) ==
+                (target[0],target[1],target[2],target[3],target[4]) and
+                row.get("type")=="SPOT" and row.get("quote")=="USDT" and
+                row.get("source_endpoint")==ENDPOINT,
+                "Unverified historical identity")
+        candles=row.get("candles_15m")
+        require(isinstance(candles,list) and 0<=len(candles)<=96 and
+                row.get("count")==len(candles) and
+                row.get("sha256")==sha(candles),
                 "Native historical digest mismatch")
+        stamps=[x.get("open_at_utc") for x in candles]
+        require(len(stamps)==len(set(stamps)) and stamps==sorted(stamps),
+                "Repeated/disordered historical candle")
+        require(all(isinstance(t,str) and t.endswith("Z") and
+                    t[:10]==doc["date_utc"] and t[11:16][-2:] in
+                    ("00","15","30","45") and t[17:19]=="00" for t in stamps),
+                "Historical candle outside closed UTC interval")
+        gaps=missing_slots(day,candles)
+        require(row.get("missing_slots_utc")==gaps and
+                row.get("missing_count")==len(gaps) and
+                row.get("status")==("COMPLETE_NATIVE_15M" if not gaps else
+                                   "PARTIAL_NATIVE_15M" if candles
+                                   else "NATIVE_HISTORY_UNAVAILABLE"),
+                "False historical coverage label")
+
+
+def save(doc, root=DEST):
+    validate_document(doc)
+    if sum(x["count"] for x in doc["assets"])==0:
+        return {"status":"HISTORICAL_SOURCE_UNAVAILABLE","date_utc":doc["date_utc"]}
     root.mkdir(parents=True,exist_ok=True)
     target=root/(doc["date_utc"]+".json")
     if target.exists():
-        # Never overwrite a different earlier historical claim.
-        original=json.loads(target.read_text(encoding="utf-8"))
-        require(original.get("schema")==SCHEMA and
-                original.get("date_utc")==doc["date_utc"] and
-                [(a.get("pair"),a.get("sha256")) for a in original.get("assets",[])] ==
-                [(a.get("pair"),a.get("sha256")) for a in doc["assets"]],
-                "Conflicting prior verified historical evidence")
-        return {"status":"ALREADY_VERIFIED","date_utc":doc["date_utc"]}
-    tmp=target.with_suffix(".writing")
-    tmp.write_text(json.dumps(doc,ensure_ascii=False,indent=2,allow_nan=False)+"\n",
-                   encoding="utf-8")
-    os.replace(tmp,target)
-    return {"status":"SAVED_HISTORICAL_CANDLES_ONLY","date_utc":doc["date_utc"],
-            "assets":3,"bars":288}
-
+        prior=json.loads(target.read_text(encoding="utf-8"))
+        validate_document(prior)
+        require(prior["date_utc"]==doc["date_utc"],
+                "Mixed historical source days")
+        appended=0
+        for i,target_tuple in enumerate(TARGETS):
+            before=prior["assets"][i]
+            after=doc["assets"][i]
+            stored={bar["open_at_utc"]:bar for bar in before["candles_15m"]}
+            for bar in after["candles_15m"]:
+                ts=bar["open_at_utc"]
+                require(ts not in stored or stored[ts]==bar,
+                        "Conflicting prior verified historical evidence")
+                if ts not in stored:
+                    appended+=1
+                    stored[ts]=bar
+            merged=sorted(stored.values(),key=lambda x:x["open_at_utc"])
+            doc["assets"][i]=recovery_asset(target_tuple,
+                                            dt.date.fromisoformat(doc["date_utc"]),
+                                            merged,after["native_current_status"])
+        if not appended:
+            return {"status":"ALREADY_VERIFIED_NO_NEW_BARS",
+                    "date_utc":doc["date_utc"],
+                    "verified_bars":sum(x["count"] for x in prior["assets"])}
+        doc["first_recovered_at_utc"]=prior.get(
+            "first_recovered_at_utc",prior["recovered_at_utc"])
+    else:
+        doc["first_recovered_at_utc"]=doc["recovered_at_utc"]
+    validate_document(doc)
+    temp=target.with_suffix(".writing")
+    temp.write_text(json.dumps(doc,ensure_ascii=False,indent=2,allow_nan=False)+"\n",
+                    encoding="utf-8")
+    os.replace(temp,target)
+    bars=sum(x["count"] for x in doc["assets"])
+    return {"status":"SAVED_HISTORICAL_CANDLES_ONLY",
+            "date_utc":doc["date_utc"],
+            "assets":3,"bars":bars,"expected_bars":288,
+            "missing_bars":288-bars}
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
@@ -213,15 +292,14 @@ def main():
         saved=DEST/(day.isoformat()+".json")
         if saved.exists():
             current=json.loads(saved.read_text(encoding="utf-8"))
-            require(current.get("schema")==SCHEMA and
-                    current.get("date_utc")==day.isoformat() and
-                    len(current.get("assets",[]))==3 and
-                    all(x.get("count")==96 and
-                        x.get("sha256")==sha(x.get("candles_15m",[]))
-                        for x in current["assets"]),
-                    "Existing historical evidence requires review")
-            print(json.dumps({"status":"ALREADY_VERIFIED","date_utc":day.isoformat()}))
-            continue
+            validate_document(current)
+            require(current.get("date_utc")==day.isoformat(),
+                    "Existing historical evidence outside intended day")
+            if all(x.get("count")==96 for x in current["assets"]):
+                print(json.dumps({"status":"ALREADY_VERIFIED",
+                                  "date_utc":day.isoformat(),"bars":288}))
+                continue
+            # Genuine partial series may gain more source bars on later retries.
         try:
             report=save(recover_day(day,now=now))
         except (OSError,ValueError,TimeoutError) as exc:
