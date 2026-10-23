@@ -29,8 +29,11 @@
   const BITGET="https://api.bitget.com";
   const COINGECKO="https://api.coingecko.com/api/v3";
   const DISCOVERY_COOLDOWN_MS=15000;
-  const IDENTITY_REGISTRY_URL="./data/new-listings-identities.json?v=40.6.546";
-  const WATCH_FEED_URL="./data/new-listings-public-feed.json";
+  // GitHub Pages intentionally excludes every /data/ directory: use the public RAW canonical archive.
+  // Read-only JSON: no user account, private key or new feed service.
+  const PUBLIC_DATA_RAW="https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/administrator/data/";
+  const IDENTITY_REGISTRY_URL=PUBLIC_DATA_RAW+"new-listings-identities.json";
+  const WATCH_FEED_URL=PUBLIC_DATA_RAW+"new-listings-public-feed.json";
   const IDENTITY_REMOTE_BATCH_TIMEOUT_MS=12000;
   // One existing CoinGecko identity batch also provides market-cap metadata;
   // never another per-token price/identity poller.
@@ -450,6 +453,8 @@
   // inherit a token/logo from ticker coincidence.
   async function publicListingsWatch(){
     try{
+      // A public RAW document is required because the lightweight Pages build omits /data/.
+      // Keep the original 12-hour freshness, schema and spot-only trust gates.
       const doc=await json(WATCH_FEED_URL,{timeoutMs:12000});
       const seen=Date.parse(String(doc?.captured_at_utc||""));
       if(doc?.schema!=="erith.seven.public-spot-listings-feed.v1"||

@@ -59,3 +59,45 @@ test("native Market listing filters classify exact documented tokenized instrume
  assert.match(native,/DOCUMENTED_TOKENIZED_OKX_SPOT/);
  assert.doesNotMatch(native,/new MutationObserver\(/);
 });
+
+test("published public new listings feed uses RAW GitHub, not excluded Pages /data/",async()=>{
+ assert.match(native,/const PUBLIC_DATA_RAW="https:\/\/raw\.githubusercontent\.com\/BlueAzur-Hub\/erith-ia-memory\/main\/public\/agent_crypto_erith_ia\/administrator\/data\/"/);
+ assert.match(native,/const WATCH_FEED_URL=PUBLIC_DATA_RAW\+"new-listings-public-feed\.json"/);
+ assert.match(native,/const IDENTITY_REGISTRY_URL=PUBLIC_DATA_RAW\+"new-listings-identities\.json"/);
+ const now=Date.now();
+ const fakeRow=(base,quote,minutes)=>({
+   provider:"okx",instrument_type:"SPOT",base,quote,
+   providerSymbol:base+"-"+quote,pair:base+"/"+quote,
+   listedAt:new Date(now-minutes*60000).toISOString(),state:"live",stale:false
+ });
+ const feed={
+   schema:"erith.seven.public-spot-listings-feed.v1",
+   captured_at_utc:new Date(now).toISOString(),read_only:true,trade_permission:false,
+   real_orders:0,watch_sources:{okx:{status:"OK"}},
+   entries:[fakeRow("XWDC","USDC",5),fakeRow("XNFLX","USDC",20),fakeRow("XDP","USDC",30)]
+ };
+ const requested=[];
+ const ctx={Date,URL,AbortController,setTimeout,clearTimeout,console,
+   document:{getElementById:()=>null,readyState:"loading",addEventListener:()=>{}},
+   window:{addEventListener:()=>{}},
+   AgentCryptoNewListingLiveAsset:{discoverBitget:async()=>[],trackedInstruments:()=>[]},
+   fetch:async url=>{
+     const u=String(url);requested.push(u);
+     if(u.includes("new-listings-public-feed.json"))return {ok:true,json:async()=>feed};
+     if(u.includes("new-listings-identities.json"))
+       return {ok:true,json:async()=>({schema:"agent_crypto_new_listings_identity_registry_v1",identities:{}})};
+     if(u.includes("/market/tickers"))return {ok:true,json:async()=>({code:"00000",data:[]})};
+     if(u.includes("/simple/price"))return {ok:true,json:async()=>({tether:{usd:1,eur:1},"usd-coin":{usd:1,eur:1}})};
+     throw new Error("Unexpected URL "+u);
+   }
+ };
+ vm.runInNewContext(native,ctx,{filename:"new-listings-native-category.js"});
+ await ctx.AgentCryptoNewListingsNativeCategory.discover();
+ const snapshot=ctx.AgentCryptoNewListingsNativeCategory.snapshot();
+ assert.equal(snapshot.discovered,3);
+ assert.equal(snapshot.watchStatus.okxCount,3);
+ assert.equal(snapshot.documentedTokenizedSpotCount,2);
+ assert.equal(snapshot.watchStatus.status,"OK");
+ assert.equal(requested.filter(u=>u.includes("raw.githubusercontent.com")).length,2);
+ assert.equal(requested.some(u=>u.startsWith("./data/")),false);
+});
