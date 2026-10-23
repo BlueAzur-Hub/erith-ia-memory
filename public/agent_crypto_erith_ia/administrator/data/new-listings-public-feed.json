@@ -1,6 +1,6 @@
 {
   "schema": "erith.seven.public-spot-listings-feed.v1",
-  "captured_at_utc": "2026-10-23T19:58:08.387Z",
+  "captured_at_utc": "2026-10-23T22:01:33.647Z",
   "coverage_days": 30,
   "read_only": true,
   "trade_permission": false,
@@ -8,15 +8,22 @@
   "watch_sources": {
     "okx": {
       "status": "OK",
-      "at_utc": "2026-10-23T19:58:08.387Z",
+      "at_utc": "2026-10-23T22:01:33.647Z",
       "count": 55,
       "evidence": "OKX public instruments instType=SPOT"
     },
     "bitget": {
       "status": "OK",
-      "at_utc": "2026-10-23T19:58:08.387Z",
+      "at_utc": "2026-10-23T22:01:33.647Z",
       "count": 6,
       "evidence": "Bitget public market/instruments category=SPOT"
+    },
+    "okx_prices": {
+      "status": "OK",
+      "at_utc": "2026-10-23T22:01:33.647Z",
+      "count": 743,
+      "evidence": "OKX market/tickers?instType=SPOT · dated prices in native quote",
+      "error": null
     }
   },
   "feed_status": "OK",
@@ -38,8 +45,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XJPM-USDT",
+        "observed_at_utc": "2026-10-23T22:01:31.940Z",
+        "last": "331.9",
+        "open24h": "336.65",
+        "volCcy24h": "646.4936441",
+        "bidPx": "332.03",
+        "askPx": "332.75",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -58,8 +78,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "TEST002-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.076Z",
+        "last": "7.3",
+        "open24h": "7.3",
+        "volCcy24h": "0",
+        "bidPx": null,
+        "askPx": null,
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -78,8 +111,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XHUT-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.031Z",
+        "last": "61.87",
+        "open24h": "64.69",
+        "volCcy24h": "2421.5354161",
+        "bidPx": "61.82",
+        "askPx": "61.97",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -98,8 +144,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XGTLB-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.030Z",
+        "last": "56.45",
+        "open24h": "53.89",
+        "volCcy24h": "1898.0884502",
+        "bidPx": "56.34",
+        "askPx": "56.61",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "bitget",
@@ -118,8 +177,9 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": null
     },
     {
       "provider": "okx",
@@ -138,8 +198,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XGS-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.066Z",
+        "last": "881.85",
+        "open24h": "893.01",
+        "volCcy24h": "767.99515998",
+        "bidPx": "881.84",
+        "askPx": "881.85",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -158,8 +231,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XDDOG-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.069Z",
+        "last": "270.01",
+        "open24h": "260.48",
+        "volCcy24h": "562.7673574",
+        "bidPx": "270.13",
+        "askPx": "270.87",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -178,8 +264,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XCOST-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.076Z",
+        "last": "1005.73",
+        "open24h": "1012.47",
+        "volCcy24h": "297.81787091",
+        "bidPx": "1003.59",
+        "askPx": "1004.5",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "bitget",
@@ -198,8 +297,9 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": null
     },
     {
       "provider": "okx",
@@ -218,8 +318,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XAXTI-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.077Z",
+        "last": "52.49",
+        "open24h": "53.96",
+        "volCcy24h": "3494.9293357",
+        "bidPx": "52.47",
+        "askPx": "52.57",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -238,8 +351,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XACN-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.066Z",
+        "last": "247.39",
+        "open24h": "256.25",
+        "volCcy24h": "845.6422528",
+        "bidPx": "248.84",
+        "askPx": "249.82",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "bitget",
@@ -258,8 +384,9 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": null
     },
     {
       "provider": "okx",
@@ -278,8 +405,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XWDC-USDC",
+        "observed_at_utc": "2026-10-23T22:01:32.367Z",
+        "last": "351.81",
+        "open24h": "351.81",
+        "volCcy24h": "0",
+        "bidPx": null,
+        "askPx": null,
+        "quote": "USDC",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "bitget",
@@ -298,8 +438,9 @@
       "identity_status": "EXACT_CONTRACT_AND_VENUE_REGISTRY",
       "image": "./assets/crypto/new-listings/axis-robotics.svg",
       "logo_status": "VERIFIED_GITHUB_ASSET",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": null
     },
     {
       "provider": "okx",
@@ -318,8 +459,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XNFLX-USDC",
+        "observed_at_utc": "2026-10-23T22:01:32.050Z",
+        "last": "66",
+        "open24h": "67.03",
+        "volCcy24h": "4695.321878",
+        "bidPx": "65.6",
+        "askPx": "66.37",
+        "quote": "USDC",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "bitget",
@@ -338,8 +492,9 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": null
     },
     {
       "provider": "okx",
@@ -358,8 +513,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XXBI-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.075Z",
+        "last": "149.38",
+        "open24h": "151.62",
+        "volCcy24h": "371.17287",
+        "bidPx": "149.66",
+        "askPx": "150.39",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -378,8 +546,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XUVXY-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.370Z",
+        "last": "18.68",
+        "open24h": "18.32",
+        "volCcy24h": "474196.738103",
+        "bidPx": "18.63",
+        "askPx": "18.67",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -398,8 +579,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XUSO-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.079Z",
+        "last": "168.79",
+        "open24h": "160.96",
+        "volCcy24h": "7113.9868614",
+        "bidPx": "168.07",
+        "askPx": "168.76",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -418,8 +612,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XURNM-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.076Z",
+        "last": "41.2",
+        "open24h": "41.59",
+        "volCcy24h": "215.502747",
+        "bidPx": "41.72",
+        "askPx": "42",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -438,8 +645,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XTSLL-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.268Z",
+        "last": "9.75",
+        "open24h": "9.86",
+        "volCcy24h": "7622.2897462",
+        "bidPx": "9.74",
+        "askPx": "9.763",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -458,8 +678,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XTMF-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.083Z",
+        "last": "29.42",
+        "open24h": "29.81",
+        "volCcy24h": "54305.960577",
+        "bidPx": "28.76",
+        "askPx": "29.53",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -478,8 +711,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XSQQQ-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.069Z",
+        "last": "39.59",
+        "open24h": "39.76",
+        "volCcy24h": "50726.013466",
+        "bidPx": "39.55",
+        "askPx": "39.58",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -498,8 +744,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XSHLD-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.076Z",
+        "last": "61.64",
+        "open24h": "61.77",
+        "volCcy24h": "1164.7663638",
+        "bidPx": "61.72",
+        "askPx": "62.23",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -518,8 +777,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XRAM-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.073Z",
+        "last": "8.067",
+        "open24h": "7.45",
+        "volCcy24h": "4395.5534149",
+        "bidPx": "8.07",
+        "askPx": "8.079",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -538,8 +810,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XSPCH-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.084Z",
+        "last": "9.23",
+        "open24h": "8.98",
+        "volCcy24h": "22791.520004",
+        "bidPx": "9.198",
+        "askPx": "9.224",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -558,8 +843,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XLYTE-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.079Z",
+        "last": "18.37",
+        "open24h": "17.97",
+        "volCcy24h": "2151.941523",
+        "bidPx": "18.22",
+        "askPx": "18.28",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -578,8 +876,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XEWZ-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.070Z",
+        "last": "42.81",
+        "open24h": "41.83",
+        "volCcy24h": "18119.092008",
+        "bidPx": "42.79",
+        "askPx": "42.9",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -598,8 +909,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XEWT-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.074Z",
+        "last": "104.7",
+        "open24h": "104.35",
+        "volCcy24h": "23.4359903",
+        "bidPx": "104.58",
+        "askPx": "104.82",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -618,8 +942,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XEWJ-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.083Z",
+        "last": "94.01",
+        "open24h": "94.36",
+        "volCcy24h": "1016.6819279",
+        "bidPx": "94.21",
+        "askPx": "94.37",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -638,8 +975,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XTTMI-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.083Z",
+        "last": "80.53",
+        "open24h": "74.13",
+        "volCcy24h": "4557.2445219",
+        "bidPx": "80.05",
+        "askPx": "80.39",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -658,8 +1008,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XTSEM-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.075Z",
+        "last": "167.81",
+        "open24h": "168.55",
+        "volCcy24h": "13912.9001903",
+        "bidPx": "167.53",
+        "askPx": "168.55",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -678,8 +1041,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XSONY-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.089Z",
+        "last": "26.08",
+        "open24h": "26.22",
+        "volCcy24h": "1473.833512",
+        "bidPx": "26.08",
+        "askPx": "26.12",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -698,8 +1074,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XSIMO-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.076Z",
+        "last": "189.9",
+        "open24h": "186.68",
+        "volCcy24h": "2790.1759712",
+        "bidPx": "186.57",
+        "askPx": "189.4",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -718,8 +1107,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XSHOP-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.360Z",
+        "last": "168.81",
+        "open24h": "168.54",
+        "volCcy24h": "3140.0867214",
+        "bidPx": "168.71",
+        "askPx": "169.13",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -738,8 +1140,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XRDW-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.080Z",
+        "last": "8.344",
+        "open24h": "8.145",
+        "volCcy24h": "3727.7831384",
+        "bidPx": "8.357",
+        "askPx": "8.394",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -758,8 +1173,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XPURR-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.077Z",
+        "last": "8.943",
+        "open24h": "8.51",
+        "volCcy24h": "30326.5517166",
+        "bidPx": "8.942",
+        "askPx": "8.956",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -778,8 +1206,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XPENG-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.268Z",
+        "last": "53.43",
+        "open24h": "51.68",
+        "volCcy24h": "69940.2929759",
+        "bidPx": "53.04",
+        "askPx": "53.14",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -798,8 +1239,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XOSCR-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.031Z",
+        "last": "30.79",
+        "open24h": "32.85",
+        "volCcy24h": "1909.221509",
+        "bidPx": "30.53",
+        "askPx": "31.34",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -818,8 +1272,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XLUNR-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.077Z",
+        "last": "10.53",
+        "open24h": "10.22",
+        "volCcy24h": "1334.588365",
+        "bidPx": "10.44",
+        "askPx": "10.57",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -838,8 +1305,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XINFQ-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.071Z",
+        "last": "8.816",
+        "open24h": "8.92",
+        "volCcy24h": "4026.9163383",
+        "bidPx": "8.718",
+        "askPx": "8.789",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -858,8 +1338,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XFWDI-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.068Z",
+        "last": "6.853",
+        "open24h": "7.031",
+        "volCcy24h": "5374.3003151",
+        "bidPx": "6.879",
+        "askPx": "6.88",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -878,8 +1371,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XFLY-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.075Z",
+        "last": "18.15",
+        "open24h": "17.38",
+        "volCcy24h": "2004.220886",
+        "bidPx": "18.15",
+        "askPx": "18.27",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -898,8 +1404,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XCGNX-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.066Z",
+        "last": "55.85",
+        "open24h": "54.65",
+        "volCcy24h": "133.2629341",
+        "bidPx": "54.64",
+        "askPx": "56.28",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -918,8 +1437,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XIONQ-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.274Z",
+        "last": "31.48",
+        "open24h": "31.03",
+        "volCcy24h": "768.728745",
+        "bidPx": "31.25",
+        "askPx": "31.33",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -938,8 +1470,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XBB-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.066Z",
+        "last": "8.904",
+        "open24h": "8.666",
+        "volCcy24h": "6212.1296946",
+        "bidPx": "8.891",
+        "askPx": "8.911",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -958,8 +1503,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XAMC-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.081Z",
+        "last": "2.901",
+        "open24h": "2.95",
+        "volCcy24h": "1435.305271",
+        "bidPx": "2.891",
+        "askPx": "2.904",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -978,8 +1536,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XQNT-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.033Z",
+        "last": "36.85",
+        "open24h": "35.98",
+        "volCcy24h": "5479.276811",
+        "bidPx": "36.85",
+        "askPx": "36.86",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -998,8 +1569,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XPOET-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.361Z",
+        "last": "5.419",
+        "open24h": "5.321",
+        "volCcy24h": "8070.3278464",
+        "bidPx": "5.45",
+        "askPx": "5.492",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -1018,8 +1602,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XGPRO-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.068Z",
+        "last": "1.018",
+        "open24h": "1.027",
+        "volCcy24h": "891.086745",
+        "bidPx": "1.017",
+        "askPx": "1.018",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -1038,8 +1635,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XOUST-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.073Z",
+        "last": "28.53",
+        "open24h": "28.06",
+        "volCcy24h": "2330.687891",
+        "bidPx": "29.53",
+        "askPx": "29.94",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -1058,8 +1668,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XFLNC-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.080Z",
+        "last": "5.602",
+        "open24h": "5.834",
+        "volCcy24h": "696.5659073",
+        "bidPx": "5.6",
+        "askPx": "5.609",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -1078,8 +1701,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XCRDO-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.077Z",
+        "last": "153.6",
+        "open24h": "163.06",
+        "volCcy24h": "7840.3798043",
+        "bidPx": "152.68",
+        "askPx": "152.69",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -1098,8 +1734,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XAEHR-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.069Z",
+        "last": "55.93",
+        "open24h": "55.82",
+        "volCcy24h": "9894.1057189",
+        "bidPx": "55.61",
+        "askPx": "55.93",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -1118,8 +1767,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XWEN-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.080Z",
+        "last": "6.177",
+        "open24h": "6.584",
+        "volCcy24h": "2569.7303747",
+        "bidPx": "6.2",
+        "askPx": "6.239",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -1138,8 +1800,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XBRKB-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.080Z",
+        "last": "543.6",
+        "open24h": "547.61",
+        "volCcy24h": "24229.707653",
+        "bidPx": "542.74",
+        "askPx": "543.89",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -1158,8 +1833,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "CT-USDC",
+        "observed_at_utc": "2026-10-23T22:01:32.361Z",
+        "last": "0.2012",
+        "open24h": "0.2253",
+        "volCcy24h": "499406.644305",
+        "bidPx": "0.2018",
+        "askPx": "0.2022",
+        "quote": "USDC",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -1178,8 +1866,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "CT-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.273Z",
+        "last": "0.20221",
+        "open24h": "0.22543",
+        "volCcy24h": "6574017.016512",
+        "bidPx": "0.20217",
+        "askPx": "0.2023",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "bitget",
@@ -1198,8 +1899,9 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": null
     },
     {
       "provider": "okx",
@@ -1218,8 +1920,21 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XDP-USDC",
+        "observed_at_utc": "2026-10-23T22:01:32.274Z",
+        "last": "0.01791",
+        "open24h": "0.01817",
+        "volCcy24h": "53825.076557",
+        "bidPx": "0.01792",
+        "askPx": "0.01795",
+        "quote": "USDC",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     },
     {
       "provider": "okx",
@@ -1238,11 +1953,26 @@
       "identity_status": "VENUE_SYMBOL_ONLY",
       "image": null,
       "logo_status": "UNVERIFIED_SYMBOL_FALLBACK",
-      "scanned_at_utc": "2026-10-23T19:58:08.387Z",
-      "stale": false
+      "scanned_at_utc": "2026-10-23T22:01:33.647Z",
+      "stale": false,
+      "quote_snapshot": {
+        "instId": "XDP-USDT",
+        "observed_at_utc": "2026-10-23T22:01:32.370Z",
+        "last": "0.01794",
+        "open24h": "0.01819",
+        "volCcy24h": "613761.655982",
+        "bidPx": "0.017932",
+        "askPx": "0.017945",
+        "quote": "USDT",
+        "source": "OKX public market/tickers · SPOT",
+        "account_spot_access_verified": false,
+        "executable_price_verified": false
+      }
     }
   ],
   "quote_values_are_native_not_usd_converted": true,
+  "quote_snapshot_is_non_executable_historic_observation": true,
+  "quote_absence_is_not_exchange_unavailability": true,
   "no_ticker_to_contract_identity_inference": true,
   "spot_usdc_access_for_user_verified": false,
   "image_policy": "Only exact venue+contract+launch registry entries have a local logo; otherwise visible ticker fallback",
