@@ -39,6 +39,58 @@ class RetiredSpotRecoveryTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,"Monero|identity|already"):
                 app.historical_owner(catalog)
 
+    def test_rank_13_preserves_exact_xmr_owner_and_stable_release_tag(self):
+        catalog=sample_catalog()
+        old=catalog["assets"][12]
+        x=catalog["assets"][13]
+        catalog["assets"][12]={"id":"monero","rank":13,"symbol":"XMR",
+                                "name":"Monero","months":[]}
+        catalog["assets"][13]={**old,"rank":14}
+        owner=app.historical_owner(catalog)
+        self.assertEqual(owner["rank"],13)
+        self.assertEqual(owner["rank_at_notice"],14)
+        self.assertEqual(app.supplement.add_tag("2023-12",[owner]),
+            app.supplement.add_tag("2023-12",[
+                {"id":"monero","pair":"XMRUSDT","rank":14}]))
+        # Historical proof is never attributed to the new occupant of rank 14.
+        self.assertEqual(catalog["assets"][13]["id"],"other-13")
+
+    def test_archive_rows_must_match_exact_month_file_digest_and_owner_tag(self):
+        for field in ("file","sha256","release","candles"):
+            catalog=sample_catalog()
+            m={"month":"2023-01","pair":"XMRUSDT",
+               "file":"XMRUSDT-1m-2023-01.zip",
+               "sha256":"a"*64,
+               "release":app.supplement.add_tag("2023-01",[
+                   {"id":"monero","pair":"XMRUSDT"}]),
+               "candles":44640}
+            bad={**m,field:{"file":"WRONG.zip","sha256":"0"*63,
+                    "release":"crypto-spot-bulk-add-2023-01-1m-deadbeefdead",
+                    "candles":1}[field]}
+            catalog["assets"][13]["months"]=[bad]
+            with self.assertRaisesRegex(ValueError,"Existing Monero"):
+                app.historical_owner(catalog)
+            catalog["assets"][13]["months"]=[m]
+            self.assertEqual(app.historical_owner(catalog)["id"],"monero")
+
+    def test_preexisting_release_must_prove_monero_zip_and_manifest(self):
+        from unittest.mock import Mock
+        tag=app.supplement.add_tag("2023-12",[{"id":"monero","pair":"XMRUSDT"}])
+        good={"tagName":tag,"isDraft":False,"assets":[
+            {"name":"manifest.json"},
+            {"name":"XMRUSDT-1m-2023-12.zip"}]}
+        with patch.object(app.subprocess,"run",return_value=Mock(
+                returncode=0,stdout=json.dumps(good),stderr="")):
+            self.assertTrue(app.already_published(tag))
+        forged={**good,"assets":[{"name":"manifest.json"},
+                                 {"name":"OTHERUSDT-1m-2023-12.zip"}]}
+        with patch.object(app.subprocess,"run",return_value=Mock(
+                returncode=0,stdout=json.dumps(forged),stderr="")):
+            with self.assertRaisesRegex(ValueError,"release owner"):
+                app.already_published(tag)
+        with self.assertRaisesRegex(ValueError,"Unowned"):
+            app.already_published("crypto-spot-bulk-add-2023-12-1m-deadbeefdead")
+
     def test_negative_download_never_creates_release(self):
         publishes=[]
         def fake_import(month,owner,folder):
