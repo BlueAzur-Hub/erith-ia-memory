@@ -37,7 +37,7 @@ jobs:
           if(d.schema!=='erith.seven.public-spot-listings-feed.v1'||
              d.read_only!==true||d.trade_permission!==false||d.real_orders!==0||
              d.entries.some(x=>x.instrument_type!=='SPOT'||x.stale===true&&x.state==='live')||
-             !w.includes('17 */4 * * *')||
+             !w.includes('17 * * * *')||
              !w.includes('administrator/data/new-listings-public-feed.json')||
              !code.includes('no_ticker_to_contract_identity_inference')||
              code.includes('/api/v5/trade/order')||code.includes('OK-ACCESS-KEY')||
