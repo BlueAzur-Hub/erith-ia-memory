@@ -1295,16 +1295,10 @@
     if(document.getElementById("atlasPublicRadarLink"))return true;
     const css=document.createElement("style");
     css.id="atlasRadarTabStyle";
-    const hiddenSelectors=[
-      "#marketSnapshotPanel.atlas-radar-open #marketUniverseMode",
-      "#marketSnapshotPanel.atlas-radar-open .market-column-mode",
-      "#marketSnapshotPanel.atlas-radar-open .sort-box",
-      "#marketSnapshotPanel.atlas-radar-open .section-head .search-box",
-      "#marketSnapshotPanel.atlas-radar-open #marketTableWindowBody",
-      "#marketSnapshotPanel.atlas-radar-open #tableNote"
-    ];
-    css.textContent=hiddenSelectors.join(",")+"{display:none!important}"+
-      "#atlasRadarMarketView[hidden]{display:none!important}";
+    // Radar reuses the native Market table, its filters, columns, Fiche and
+    // Graphique. Research-only detailed rankings remain in a collapsed fold.
+    // Never hide #marketTableWindowBody or create a parallel Market owner.
+    css.textContent="#atlasRadarMarketView[hidden]{display:none!important}";
     document.head.appendChild(css);
     const theme=document.createElement("link");
     theme.rel="stylesheet";
