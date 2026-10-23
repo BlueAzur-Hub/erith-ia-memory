@@ -46,7 +46,33 @@ jobs:
             git reset --hard origin/main
             node public/agent_crypto_erith_ia/tools/radar_opportunity_history.cjs
             python -m unittest discover -s public/agent_crypto_erith_ia/tools -p test_radar_spot_paper_audit.py
-            python public/agent_crypto_erith_ia/tools/radar_spot_paper_audit.py
+            # The prospective daily observation can be sound even if yesterday's
+            # archive is MISSING. The 48h PAPER audit must NEVER bridge that gap,
+            # but it must not prevent publishing today's genuine observations.
+            if python - <<'PY'
+          import datetime as dt
+          import re
+          import sys
+          from pathlib import Path
+          folder=Path("public/agent_crypto_erith_ia/data/crypto/radar-opportunities")
+          dates=sorted(p.stem for p in folder.glob("20??-??-??.json")
+                       if re.fullmatch(r"20[0-9]{2}-[0-9]{2}-[0-9]{2}",p.stem))
+          parsed=[dt.date.fromisoformat(value) for value in dates]
+          if len(parsed)<3 or (parsed[-1]-parsed[-3]).days!=2:
+              print("PAPER_48H_SKIPPED: true daily gap; no synthetic 48h return; dates="+",".join(dates[-3:]))
+              sys.exit(3)
+          print("PAPER_48H_CONTIGUOUS: "+",".join(dates[-3:]))
+          PY
+            then
+              python public/agent_crypto_erith_ia/tools/radar_spot_paper_audit.py
+            else
+              rc=$?
+              if [ "$rc" -ne 3 ]; then
+                echo "PAPER window preflight failed unexpectedly" >&2
+                exit "$rc"
+              fi
+              echo "PAPER 48h audit remains dated/stale; preserving genuine gap."
+            fi
             # Same daily public archive, NO exchange/order access or separate scheduler.
             node public/agent_crypto_erith_ia/tools/seven_capital_scout.cjs
             # Public OKX Spot/USDC instrument + five-level bid/ask PRECHECK.
