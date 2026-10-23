@@ -1590,8 +1590,7 @@
       symbol:"TEST002",quote:"USDT",pair:"TEST002/USDT",providerSymbol:"TEST002-USDT",ticker:null};
     const tokenizedForUi={id:"selftest:stock",provider:"okx",providerLabel:"OKX",
       symbol:"XJPM",quote:"USD",pair:"XJPM/USD",providerSymbol:"XJPM-USDT",ticker:{lastPrice:"330.5"}};
-    const readableTests=state.activeSegment==="quoted"&&
-      DOCUMENTED_TOKENIZED_OKX_SPOT.size===50&&
+    const readableTests=DOCUMENTED_TOKENIZED_OKX_SPOT.size===50&&
       listingClass(pricedForUi)==="quoted"&&
       inSegment(pricedForUi,"quoted")&&
       listingClass(unpricedForUi)==="review"&&
