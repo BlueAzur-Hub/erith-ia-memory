@@ -73,3 +73,27 @@ test('An operator cancellation during queue wait cancels instead of firing HTTP'
   assert.equal(fetches,0);
   assert.equal(releases,0);
 });
+
+test('Extended 750 uses the canonical public RAW archive, not excluded Pages data',async()=>{
+  const expected='https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-memory/main/public/agent_crypto_erith_ia/data/crypto/extended.json';
+  const route=script.match(/extended:\s*"(https:\/\/raw\.githubusercontent\.com\/[^"]+\/extended\.json)"/);
+  assert.equal(route?.[1],expected,'do not fetch /data from lightweight Pages build');
+  const loader=script.slice(
+    script.indexOf('async function atlasExtendedMarketSnapshot(signal){'),
+    script.indexOf('\nglobalThis.AtlasExtendedMarketWarmIndex=',script.indexOf('async function atlasExtendedMarketSnapshot(signal){'))
+  );
+  assert.match(loader,/ATLAS_PUBLIC_CRYPTO_MARKET_PATHS\.extended/);
+  assert.match(loader,/agent_crypto_public_extended_market_snapshot_v1/);
+  assert.match(loader,/generatedAt>3\*60\*60\*1000/,'stale snapshots must remain rejected');
+  let requested='';
+  const fetchWithTimeout=makeFetch({
+    acquire:async()=> 'source:raw',
+    fetcher:async url=>{
+      requested=String(url);
+      return {ok:true,json:async()=>({schema:'agent_crypto_public_extended_market_snapshot_v1',coins:Array(750)})};
+    }
+  });
+  const payload=await fetchWithTimeout(expected+'?atlas=123',{networkKind:'source'},250);
+  assert.equal(requested,expected+'?atlas=123');
+  assert.equal(payload.coins.length,750);
+});
