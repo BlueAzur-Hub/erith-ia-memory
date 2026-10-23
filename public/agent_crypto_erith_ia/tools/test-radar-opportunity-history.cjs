@@ -13,6 +13,21 @@ test("a previously selected coin is tracked even after exiting today's Momentum 
  assert.equal(tracked.length,1);assert.equal(tracked[0].id,"quack-ai");
  assert.equal(tracked[0].price_usd,.08);assert.equal(tracked[0].status,"OBSERVED_TOP1000");
 });
+test("a verified 250/251 mixed snapshot never gives an ambiguous asset a tracked return",()=>{
+ const prior=snap("2026-10-21",[candidate("avant-usd",1,"2026-10-21")]);
+ const core={coins:[{id:"avant-usd",symbol:"AVUSD",rank:250,priceUsd:1.01}]};
+ const ext={coins:[{id:"avant-usd",symbol:"AVUSD",rank:251,priceUsd:1.02}]};
+ const scan={status:"MIXED_SNAPSHOT_BOUNDARY",boundaryOverlaps:[{id:"avant-usd"}],
+  trend:[],rebound:[],sourceTimes:{core:ts("2026-10-23"),extended:ts("2026-10-23")}};
+ const tracked=trackPreviousCandidates(core,ext,scan,[prior],"2026-10-23");
+ assert.equal(tracked.length,1);
+ assert.equal(tracked[0].id,"avant-usd");
+ assert.equal(tracked[0].status,"NO_VALID_TOP1000_PRICE");
+ assert.equal(tracked[0].price_usd,null);
+ assert.equal(tracked[0].observed_at_utc,null);
+ assert.throws(()=>trackPreviousCandidates(core,ext,{...scan,boundaryOverlaps:[]},
+  [prior],"2026-10-23"),/Collision d'identité non qualifiée/);
+});
 test("future daily price is compared only by exact asset id and calendar day",()=>{
  const d1=snap("2026-10-17",[candidate("quack-ai",.1,"2026-10-17")]);
  const d2=snap("2026-10-18",[]);d2.tracked_candidates=[{id:"quack-ai",price_usd:.08,observed_at_utc:ts("2026-10-18")}];
