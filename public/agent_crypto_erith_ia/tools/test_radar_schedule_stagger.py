@@ -45,6 +45,15 @@ class ScheduleTests(unittest.TestCase):
         self.assertIn("github.event.workflow_run.head_branch == 'main'",code)
         self.assertIn("actual UTC: $(date -u +%Y-%m-%dT%H:%M:%SZ)",code)
         self.assertIn("skipped hours are never backfilled",code)
+        self.assertIn("workflow_run.event == 'workflow_run'",code)
+        self.assertIn("All public Radar archives already present",code)
+        watcher=(DIR/"atlas-public-crypto-market-clock.yml").read_text(encoding="utf8")
+        self.assertIn('radar_workflow="radar-okx-public-hourly.yml"',watcher)
+        self.assertIn("recover_radar_hour()",watcher)
+        self.assertIn("10#$now_minute",watcher)
+        self.assertIn('if [ "$last_hour" = "$current_hour" ]; then',watcher)
+        self.assertIn('active_runs "$radar_workflow"',watcher)
+        self.assertIn("new observed UTC hour only",watcher)
         self.assertNotIn("trade/order",code)
 
 if __name__=="__main__":
