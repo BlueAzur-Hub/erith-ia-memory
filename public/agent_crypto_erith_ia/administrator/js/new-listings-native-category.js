@@ -1267,6 +1267,15 @@
     const view=document.getElementById("atlasRadarMarketView");
     if(!panel||!button||!view)return false;
     const visible=!!open;
+    if(visible){
+      // Radar is another Market category. Return the native table from any
+      // active New Listings filter, but preserve an existing Spot graph.
+      state.enabled=false;
+      const listingsButton=document.getElementById(BUTTON_ID);
+      listingsButton?.classList.remove("active","is-active");
+      listingsButton?.setAttribute("aria-pressed","false");
+      try{state.originalRenderMarketTable?.();}catch(_){}
+    }
     panel.classList.toggle("atlas-radar-open",visible);
     view.hidden=!visible;
     const supplementary=document.getElementById("atlasRadarBelowMarket");
@@ -1298,7 +1307,9 @@
     // Radar reuses the native Market table, its filters, columns, Fiche and
     // Graphique. Research-only detailed rankings remain in a collapsed fold.
     // Never hide #marketTableWindowBody or create a parallel Market owner.
-    css.textContent="#atlasRadarMarketView[hidden]{display:none!important}";
+    css.textContent="#atlasRadarMarketView[hidden]{display:none!important}"+
+      // The public New Listings overlay is not the Radar's canonical ranking.
+      "#marketSnapshotPanel.atlas-radar-open #marketRows tr[data-new-listing-native]{display:none!important}";
     document.head.appendChild(css);
     const theme=document.createElement("link");
     theme.rel="stylesheet";
