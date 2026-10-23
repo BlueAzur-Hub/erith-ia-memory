@@ -72,6 +72,32 @@ Aucun zéro de volume ne doit être présenté comme un carnet tradable. Il est 
 
 ---
  
+## 24 octobre 2026 — Premier audit de liquidité des 55 cotations publiques OKX
+
+**Source exacte :** [archive Spot publique](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/administrator/data/new-listings-public-feed.json), `captured_at_utc=2026-10-23T22:01:33.647Z` (24 octobre à 00 h 01 en France). Ce relevé est **historique** ; les cotations ne sont pas nécessairement fraîches lors de la lecture. Les 55 paires OKX du registre portent un `quote_snapshot` natif et daté ; **aucune offre exécutable ni aucun accès au compte n'est certifié**.
+
+### Audit reproductible, périmètre strictement public
+
+- **55/55** instruments OKX du registre possèdent un `quote_snapshot` ; **53/55** possèdent à la fois `bidPx > 0` et `askPx > 0`.
+- **2/55** affichent `volCcy24h=0` et aucune meilleure offre acheteur/vendeur positive : **TEST002/USDT** et **XWDC/USDC**. Leur dernier prix ne permet **aucune conclusion de marché négociable**.
+- **7/55** ont un spread indicatif **strictement supérieur à 100 points de base (1 %)**, calculé au meilleur acheteur/vendeur sur cet instantané : **XNFLX/USDC 116,69 pb ; XTMF/USDT 264,20 pb ; XSIMO/USDT 150,54 pb ; XOSCR/USDT 261,84 pb ; XLUNR/USDT 123,75 pb ; XCGNX/USDT 295,71 pb ; XOUST/USDT 137,88 pb**. Seuil de recherche choisi pour ce contrôle, **pas règle de trading**.
+- Aucune des 53 paires dotées des deux offres positives ne présente `askPx < bidPx` dans ce relevé ; cela n'établit ni profondeur suffisante ni persistance des offres.
+- Formule de comparaison : `spread_bps = 10000 * (askPx - bidPx) / ((askPx + bidPx) / 2)`, calcul uniquement avec deux prix strictement positifs. L'unité monétaire reste celle de la **paire native** (USDC ou USDT), pas un montant USD exécuté.
+
+| Paire publique OKX | Bid natif | Ask natif | Spread indicatif | Volume 24 h (champ `volCcy24h` brut) |
+|---|---:|---:|---:|---:|
+| CT/USDT | 0.20217 | 0.2023 | 6,43 pb (0,064 %) | 6574017.016512 |
+| CT/USDC | 0.2018 | 0.2022 | 19,80 pb (0,198 %) | 499406.644305 |
+| XDP/USDT | 0.017932 | 0.017945 | 7,25 pb (0,073 %) | 613761.655982 |
+| XNFLX/USDC | 648.05 | 655.66 | 116,69 pb (1,167 %) | 4695.321878 |
+| XCGNX/USDT | 38.84 | 40.006 | 295,71 pb (2,957 %) | 133.2629341 |
+| TEST002/USDT | absent | absent | non calculable | 0 |
+| XWDC/USDC | absent | absent | non calculable | 0 |
+
+**Règle de lecture pour le Radar humain :** distinguer « dernier prix observé », « présence de bid/ask », « volume public 24 h non nul », « identité vérifiée », « carnet/profondeur non analysés », « éligibilité du compte inconnue ». Ne jamais promouvoir un instrument en « opportunité » à partir d'un prix dernier ou d'un pourcentage de hausse isolé. La vraie profondeur, la taille minimale, les frais, la région et la possibilité de revendre restent **à vérifier**.
+
+**Suivi de cadence :** le workflow `Seven Public Spot Listings Watch` comporte `schedule: 17 * * * *`. Lors de la reprise (24 octobre vers 00 h 22 Paris), **aucune exécution horaire ultérieure** n'était encore visible après la réussite du `push` initial ; cela ne prouve pas l'échec du planificateur. Vérifier la prochaine exécution effective et `captured_at_utc` avant toute conclusion sur la fraîcheur. **Aucune recette visuelle des prix OKX dans Firefox n'a été effectuée dans cet audit documentaire.**
+
 ## Prochaines actions du système (par preuve, non par spéculation)
 
 1. **Prix Spot publics OKX** : capitaliser sur le collecteur GitHub horaire existant, vérifier date, paire et provenance des instantanés. Pas de prix inventés, pas d'actualisation directe des données privées du compte.
