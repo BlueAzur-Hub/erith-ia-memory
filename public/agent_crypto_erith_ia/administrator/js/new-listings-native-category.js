@@ -918,7 +918,7 @@
     const historicOnly=spec.historicalOnly===true;
     const statusTag=tokenized?"ACTION":listingClass(spec)==="review"?"À VÉRIF.":quotedVenue(spec)==="okx"?"OKX":mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
     const identityTag=tokenized?"Action / ETF tokenisé · source OKX officielle · accès personnel non vérifié":
-      quotedVenue(spec)==="okx"?"Instrument OKX repéré · cotation non relevée · accès personnel non vérifié":
+      quotedVenue(spec)==="okx"?`Instrument OKX repéré · ${positive(spec?.ticker?.lastPrice)!==null?"cours public observé":"cours non relevé"} · accès personnel non vérifié`:
       spec.symbol==="CT"?"Bitget Spot · provenance du prix, accès OKX non vérifié":
       mature?(historicOnly?"Historique · cotation non vérifiée":"Ancien listing · source Bitget vérifiée"):(proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat");
     const group=spec.presentationMarkets||[spec];
