@@ -341,9 +341,22 @@ def validate(doc,queue):
     for row in doc["results"]:
         aid=row.get("id")
         owner=idx.get(aid) or frozen.get(aid)
-        require(owner is not None and aid not in seen and
-                row.get("symbol")==owner["symbol"] and
-                isinstance(row.get("rank"),int) and 1<=row["rank"]<=250,
+        # A later 250-asset native snapshot may also drop the historical
+        # owner. Retain the dated row as history only; active work is still
+        # exclusively routed by the current exact-ID queue (idx).
+        historical_only=owner is None
+        old_symbol=row.get("symbol")
+        try:
+            recorded_at=dt.datetime.fromisoformat(row["checked_at"])
+            dated=recorded_at.tzinfo is not None
+        except (ValueError,TypeError,KeyError):
+            dated=False
+        require(isinstance(aid,str) and ID.fullmatch(aid) and
+                aid not in seen and
+                isinstance(row.get("rank"),int) and 1<=row["rank"]<=250 and
+                (owner is not None and old_symbol==owner["symbol"] or
+                 historical_only and isinstance(old_symbol,str) and
+                 re.fullmatch(r"[A-Z0-9_]{1,30}",old_symbol) and dated),
                 "Discovery identity changed")
         seen.add(aid)
         if aid in idx:
