@@ -46,3 +46,16 @@ test("graph orderbook owner refuses missing canonical external identity",()=>{
  assert.match(micro,/state\.provider!==String\(ext\.provider\|\|""\)/);
  assert.doesNotMatch(micro,/placeOrder\(|sendOrder\(|private\/trade/);
 });
+
+test("native Market listing filters classify exact documented tokenized instruments only",()=>{
+ const ctx={Date,URL,AbortController,setTimeout,clearTimeout,console};
+ vm.runInNewContext(native,ctx,{filename:"new-listings-native-category.js"});
+ const result=ctx.AgentCryptoNewListingsNativeCategory?.self_test?.();
+ assert.equal(result?.pass,true,JSON.stringify(result?.checks));
+ assert.equal(result.checks.market_segment_filters,true);
+ assert.equal(result.checks.tokenized_requires_documented_instrument,true);
+ assert.match(native,/function mountSegmentToolbar\(/);
+ assert.match(native,/function refreshSegmentToolbar\(/);
+ assert.match(native,/DOCUMENTED_TOKENIZED_OKX_SPOT/);
+ assert.doesNotMatch(native,/new MutationObserver\(/);
+});
