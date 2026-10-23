@@ -463,10 +463,15 @@ function printOpportunities(root,model){
  area.replaceChildren();
  const result=model.opportunities;
  if(!result){note.textContent=model.opportunityError||"Archives Top 1 000 à qualifier · aucune opportunité supposée";setFoldNote(root,"foldOpportunities","Source indisponible · aucun signal");return;}
- note.textContent=result.universe+" rangs contrôlés · "+result.eligible+
- " actifs après filtres capitalisation / volume / rotation · sources "+
- safeDate(result.sourceTimes.core)+" / "+safeDate(result.sourceTimes.extended)+
- " · pas de validation carnet, spread ou exécution";
+ const mixed=result.status==="MIXED_SNAPSHOT_BOUNDARY";
+ const boundary=mixed?" · MIXED_SNAPSHOT_BOUNDARY · "+result.universe+
+  " IDs distincts / "+result.observedRows+" lignes · "+
+  result.boundaryOverlaps.map(x=>x.symbol+" ("+x.core.rank+"/"+x.extended.rank+")").join(", ")+
+  " exclu(s) des classements":"";
+ note.textContent=(mixed?result.universe+" IDs distincts":result.universe+" rangs contrôlés")+
+  " · "+result.eligible+" actifs après filtres capitalisation / volume / rotation"+
+  boundary+" · sources "+safeDate(result.sourceTimes.core)+" / "+
+  safeDate(result.sourceTimes.extended)+" · pas de validation carnet, spread ou exécution";
  setFoldNote(root,"foldOpportunities",result.eligible+" actifs après filtres · aucun ordre");
  for(const [key,title] of [["trend","Hausses 24 h et 7 j"],["rebound","Rebonds 24 h / 7 j négatif"]]){
   const group=node("details","radar-native-opportunity-group");
@@ -493,8 +498,12 @@ function printResearchLists(root,model){
  const expanded=new Set([...area.querySelectorAll("details[data-radar-lane][open]")].map(x=>x.dataset.radarLane));
  area.replaceChildren();const q=model.opportunities;
  if(!q?.rankings){note.textContent="Top 1 000 indisponible · aucun classement inventé";setFoldNote(root,"foldResearch","Classements indisponibles");return;}
- note.textContent=q.eligible+" actifs filtrés sur 1 000 · USD CoinGecko · "+safeDate(q.sourceTimes.core)+
-  " / "+safeDate(q.sourceTimes.extended)+" · carnets non vérifiés dans ces classements";
+ note.textContent=q.eligible+" actifs filtrés sur "+q.universe+
+  " IDs distincts · USD CoinGecko · "+safeDate(q.sourceTimes.core)+
+  " / "+safeDate(q.sourceTimes.extended)+
+  (q.status==="MIXED_SNAPSHOT_BOUNDARY"?" · MIXED_SNAPSHOT_BOUNDARY · "+
+   q.boundaryOverlaps.map(x=>x.symbol+" rangs "+x.core.rank+"/"+x.extended.rank).join(", ")+
+   " hors classements":"")+" · carnets non vérifiés dans ces classements";
  setFoldNote(root,"foldResearch",q.eligible+" actifs filtrés · 4 classements datés");
  for(const [key,title,metric] of [["rise24","Hausses 24 h","change24h"],["rise7","Hausses 7 jours","change7d"],["volume","Volumes 24 h","volume24hUsd"],["fall24","Baisses 24 h","change24h"]]){
   const group=document.createElement("details");group.className="radar-native-opportunity-group";group.dataset.radarLane=key;group.open=expanded.has(key);
@@ -895,6 +904,13 @@ async function refresh(root,model){
    if(live[2].status!=="fulfilled")throw Error("archive étendue indisponible");
    model.opportunities=api.selectOpportunities(model.rawMarket,live[2].value);
    model.opportunityError="";
+   if(model.opportunities.status==="MIXED_SNAPSHOT_BOUNDARY")
+    issues.push("Top 1 000 : MIXED_SNAPSHOT_BOUNDARY · "+
+     model.opportunities.universe+" IDs distincts sur "+
+     model.opportunities.observedRows+" lignes · "+
+     model.opportunities.boundaryOverlaps.map(x=>x.symbol+
+      " aux rangs "+x.core.rank+"/"+x.extended.rank).join(", ")+
+     " · sources horodatées séparément");
   }catch(e){model.opportunities=null;model.opportunityError="Top 1 000 : "+e.message;issues.push(model.opportunityError);}
   printOpportunities(root,model);printResearchLists(root,model);
   // Both public reads run in parallel; failing research enrichment cannot hide Spot results.
