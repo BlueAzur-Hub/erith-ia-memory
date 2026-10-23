@@ -265,7 +265,7 @@ def save(doc, root=DEST):
         doc["first_recovered_at_utc"]=doc["recovered_at_utc"]
     validate_document(doc)
     temp=target.with_suffix(".writing")
-    temp.write_text(json.dumps(doc,ensure_ascii=False,indent=2,allow_nan=False)+"\\n",
+    temp.write_text(json.dumps(doc,ensure_ascii=False,indent=2,allow_nan=False)+"\n",
                     encoding="utf-8")
     os.replace(temp,target)
     bars=sum(x["count"] for x in doc["assets"])
@@ -292,15 +292,14 @@ def main():
         saved=DEST/(day.isoformat()+".json")
         if saved.exists():
             current=json.loads(saved.read_text(encoding="utf-8"))
-            require(current.get("schema")==SCHEMA and
-                    current.get("date_utc")==day.isoformat() and
-                    len(current.get("assets",[]))==3 and
-                    all(x.get("count")==96 and
-                        x.get("sha256")==sha(x.get("candles_15m",[]))
-                        for x in current["assets"]),
-                    "Existing historical evidence requires review")
-            print(json.dumps({"status":"ALREADY_VERIFIED","date_utc":day.isoformat()}))
-            continue
+            validate_document(current)
+            require(current.get("date_utc")==day.isoformat(),
+                    "Existing historical evidence outside intended day")
+            if all(x.get("count")==96 for x in current["assets"]):
+                print(json.dumps({"status":"ALREADY_VERIFIED",
+                                  "date_utc":day.isoformat(),"bars":288}))
+                continue
+            # Genuine partial series may gain more source bars on later retries.
         try:
             report=save(recover_day(day,now=now))
         except (OSError,ValueError,TimeoutError) as exc:
