@@ -56,6 +56,7 @@ test("native Market listing filters classify exact documented tokenized instrume
  assert.equal(result.checks.tokenized_requires_documented_instrument,true);
  assert.equal(result.checks.provenance_grouping_verified,true);
  assert.equal(result.checks.readable_market_categories,true);
+ assert.equal(result.checks.okx_spot_quote_freshness_and_exact_id,true);
  assert.match(native,/activeSegment:"quoted"/);
  assert.match(native,/function groupListingSpecs\(/);
  assert.match(native,/function quotedVenueLabel\(/);
@@ -103,6 +104,51 @@ test("published public new listings feed uses RAW GitHub, not excluded Pages /da
  assert.equal(snapshot.watchStatus.okxCount,3);
  assert.equal(snapshot.documentedTokenizedSpotCount,2);
  assert.equal(snapshot.watchStatus.status,"OK");
+ assert.equal(snapshot.datedOkxQuotesCount,0,"Feed without quotes stays unpriced");
  assert.equal(requested.filter(u=>u.includes("raw.githubusercontent.com")).length,2);
  assert.equal(requested.some(u=>u.startsWith("./data/")),false);
 });
+
+
+test("dated OKX SPOT prices: exact-pair only, stale and mismatched quotes blocked",async()=>{
+ const now=Date.now();
+ const row=(base,quote)=>({
+   provider:"okx",instrument_type:"SPOT",base,quote,providerSymbol:base+"-"+quote,
+   pair:base+"/"+quote,listedAt:new Date(now-3600000).toISOString(),
+   state:"live",stale:false,quote_snapshot:null
+ });
+ const valid=row("XDP","USDC");
+ valid.quote_snapshot={instId:"XDP-USDC",quote:"USDC",last:"0.21",
+   open24h:"0.20",volCcy24h:"90000",observed_at_utc:new Date(now-60000).toISOString(),
+   account_spot_access_verified:false,executable_price_verified:false};
+ const stale=row("TEST002","USDT");
+ stale.quote_snapshot={...valid.quote_snapshot,instId:"TEST002-USDT",quote:"USDT",
+   observed_at_utc:new Date(now-3*3600000).toISOString()};
+ const wrong=row("XWDC","USDC");
+ wrong.quote_snapshot={...valid.quote_snapshot,instId:"WRONG-USDC"};
+ const feed={schema:"erith.seven.public-spot-listings-feed.v1",
+   captured_at_utc:new Date(now).toISOString(),read_only:true,trade_permission:false,
+   real_orders:0,watch_sources:{okx:{status:"OK"},okx_prices:{status:"OK",count:1}},
+   entries:[valid,stale,wrong]};
+ const ctx={Date,URL,AbortController,setTimeout,clearTimeout,console,
+   document:{getElementById:()=>null,readyState:"loading",addEventListener:()=>{}},
+   window:{addEventListener:()=>{}},
+   AgentCryptoNewListingLiveAsset:{discoverBitget:async()=>[],trackedInstruments:()=>[]},
+   fetch:async url=>{
+     const u=String(url);
+     if(u.includes("new-listings-public-feed.json"))return {ok:true,json:async()=>feed};
+     if(u.includes("new-listings-identities.json"))return {ok:true,json:async()=>({identities:{}})};
+     if(u.includes("/market/tickers"))return {ok:true,json:async()=>({code:"00000",data:[]})};
+     if(u.includes("/simple/price"))return {ok:true,json:async()=>({tether:{usd:1,eur:1},"usd-coin":{usd:1,eur:1}})};
+     throw new Error("Unexpected URL "+u);
+   }
+ };
+ vm.runInNewContext(native,ctx,{filename:"new-listings-native-category.js"});
+ await ctx.AgentCryptoNewListingsNativeCategory.discover();
+ const snap=ctx.AgentCryptoNewListingsNativeCategory.snapshot();
+ assert.equal(snap.datedOkxQuotesCount,1);
+ assert.equal(snap.watchStatus.pricedCount,1);
+ assert.equal(snap.documentedTokenizedSpotCount,1);
+ assert.equal(snap.watchStatus.okxCount,3);
+});
+

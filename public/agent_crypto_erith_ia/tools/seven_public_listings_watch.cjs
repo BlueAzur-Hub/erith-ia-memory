@@ -52,6 +52,35 @@ function parseBitget(doc,now=Date.now()){
  }
  return out.sort((a,b)=>b.launchTime-a.launchTime).slice(0,200);
 }
+
+/* OKX quotes are a dated observational snapshot, not a trade invitation.
+   Check exact SPOT instId, source timestamp, positive price and quoted volume.
+   No identity inference, no account permissions, no per-asset requests. */
+function parseOKXTickers(doc,now=Date.now()){
+ if(doc?.code!=='0'||!Array.isArray(doc.data))throw Error('OKX public tickers unavailable');
+ const quotes=new Map();
+ for(const r of doc.data){
+  const id=upper(r?.instId),stamp=ms(r?.ts),price=Number(r?.last),
+    opened=Number(r?.open24h),volume=Number(r?.volCcy24h);
+  if(!/^[A-Z0-9]{2,15}-(?:USDC|USDT|USD)$/.test(id)||
+     (r?.instType&&r.instType!=='SPOT')||
+     !stamp||stamp>now+120000||now-stamp>20*60000||
+     !(Number.isFinite(price)&&price>0)||
+     !(Number.isFinite(opened)&&opened>0)||
+     !(Number.isFinite(volume)&&volume>=0)||
+     quotes.has(id))continue;
+  quotes.set(id,{
+   instId:id,observed_at_utc:iso(stamp),
+   last:String(r.last),open24h:String(r.open24h),
+   volCcy24h:String(r.volCcy24h),
+   bidPx:Number(r.bidPx)>0?String(r.bidPx):null,
+   askPx:Number(r.askPx)>0?String(r.askPx):null,
+   quote:id.split('-')[1],source:'OKX public market/tickers · SPOT',
+   account_spot_access_verified:false,executable_price_verified:false
+  });
+ }
+ return quotes;
+}
 function identity(entry,registry){
   // A ticker alone is NOT an identity. Manual registry must explicitly prove
   // venue, instrument, launch date, and token contract for an exact match.
@@ -69,7 +98,7 @@ function identity(entry,registry){
       /^\.\/assets\/crypto\/new-listings\/[a-z0-9._-]+\.(?:png|svg)$/.test(row.image)?
       row.image:null,logo_status:'VERIFIED_GITHUB_ASSET'};
 }
-function makeReport({okx,bitget,registry={},previous=null,now=Date.now()}){
+function makeReport({okx,bitget,okxTickers=null,registry={},previous=null,now=Date.now()}){
  const scans={};const all=[];
  for(const [name,input] of Object.entries({okx,bitget})){
   try{
@@ -83,11 +112,23 @@ function makeReport({okx,bitget,registry={},previous=null,now=Date.now()}){
      evidence:'Public exchange source missing or rejected; no availability claims'};
   }
  }
+ let quotes=new Map(),priceStatus='UNAVAILABLE',priceError=null;
+ try{
+  if(!okxTickers)throw Error('Ticker source unavailable');
+  quotes=parseOKXTickers(okxTickers,now);
+  priceStatus=quotes.size?'OK':'NO_CURRENT_QUOTES';
+ }catch(error){priceError=String(error?.message||error).slice(0,100);}
+ scans.okx_prices={
+  status:priceStatus,at_utc:iso(now),count:quotes.size,
+  evidence:'OKX market/tickers?instType=SPOT · dated prices in native quote',
+  error:priceError
+ };
  const unique=new Map();
  for(const row of all){
   const key=row.provider+':'+row.providerSymbol;
   unique.set(key,{...row,...identity(row,registry),
-    scanned_at_utc:iso(now),stale:false});
+    scanned_at_utc:iso(now),stale:false,
+    quote_snapshot:row.provider==="okx"?(quotes.get(row.providerSymbol)||null):null});
  }
  // Keep a short previously verified public record when an exchange is down,
  // but explicitly mark it stale and NEVER imply live tradability.
@@ -100,7 +141,7 @@ function makeReport({okx,bitget,registry={},previous=null,now=Date.now()}){
       !allowedQuote.has(row.quote)||
       !['okx','bitget'].includes(row.provider))continue;
    const key=row.provider+':'+row.providerSymbol;
-   if(!unique.has(key))unique.set(key,{...row,stale:true,state:'LAST_KNOWN_NOT_VERIFIED'});
+   if(!unique.has(key))unique.set(key,{...row,quote_snapshot:null,stale:true,state:'LAST_KNOWN_NOT_VERIFIED'});
   }
  }
  return {schema:SCHEMA,captured_at_utc:iso(now),
@@ -109,6 +150,8 @@ function makeReport({okx,bitget,registry={},previous=null,now=Date.now()}){
    feed_status:Object.values(scans).every(x=>x.status==='OK')?'OK':'PARTIAL_OR_UNAVAILABLE',
    entries:[...unique.values()].sort((a,b)=>b.launchTime-a.launchTime).slice(0,250),
    quote_values_are_native_not_usd_converted:true,
+   quote_snapshot_is_non_executable_historic_observation:true,
+   quote_absence_is_not_exchange_unavailability:true,
    no_ticker_to_contract_identity_inference:true,
    spot_usdc_access_for_user_verified:false,
    image_policy:'Only exact venue+contract+launch registry entries have a local logo; otherwise visible ticker fallback',
@@ -133,18 +176,19 @@ async function download(url){
 }
 async function main(){
  const read=async url=>{try{return await download(url)}catch(_){return null}};
- const [okx,bitget]=await Promise.all([
+ const [okx,bitget,okxTickers]=await Promise.all([
   read('https://www.okx.com/api/v5/public/instruments?instType=SPOT'),
-  read('https://api.bitget.com/api/v3/market/instruments?category=SPOT')
+  read('https://api.bitget.com/api/v3/market/instruments?category=SPOT'),
+  read('https://www.okx.com/api/v5/market/tickers?instType=SPOT')
  ]);
  const registry=JSON.parse(fs.readFileSync(REGISTRY,'utf8'));
  const prior=fs.existsSync(FILE)?JSON.parse(fs.readFileSync(FILE,'utf8')):null;
- const result=makeReport({okx,bitget,registry,previous:prior});
+ const result=makeReport({okx,bitget,okxTickers,registry,previous:prior});
  const body=JSON.stringify(result,null,2)+'\n';
  fs.writeFileSync(FILE,body);
  console.log('Seven public listings: '+result.entries.length+' instruments; '+result.feed_status+
   '; OKX='+result.watch_sources.okx.status+' Bitget='+result.watch_sources.bitget.status+
-  '; orders=0.');
+  '; OKX quotes='+result.watch_sources.okx_prices.count+'; orders=0.');
 }
 if(require.main===module)main().catch(e=>{console.error(e);process.exitCode=1});
-module.exports={SCHEMA,parseOKX,parseBitget,identity,makeReport};
+module.exports={SCHEMA,parseOKX,parseBitget,parseOKXTickers,identity,makeReport};
