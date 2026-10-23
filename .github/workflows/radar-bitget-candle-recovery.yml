@@ -1,0 +1,78 @@
+name: Radar Historical Bitget Spot Candle Recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      day:
+        description: 'Closed UTC day YYYY-MM-DD; empty = last three days'
+        required: false
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/radar-bitget-candle-recovery.yml'
+      - 'public/agent_crypto_erith_ia/tools/recover_radar_bitget_candles.py'
+      - 'public/agent_crypto_erith_ia/tools/test_recover_radar_bitget_candles.py'
+  pull_request:
+    paths:
+      - '.github/workflows/radar-bitget-candle-recovery.yml'
+      - 'public/agent_crypto_erith_ia/tools/recover_radar_bitget_candles.py'
+      - 'public/agent_crypto_erith_ia/tools/test_recover_radar_bitget_candles.py'
+  schedule:
+    # Daily native 15m history, with 3-day retries for missed cron days.
+    - cron: '26 3 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-bitget-history-recovery
+  cancel-in-progress: false
+
+jobs:
+  spot_candles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline identity, origin and historical integrity tests
+        run: |
+          python -m py_compile public/agent_crypto_erith_ia/tools/recover_radar_bitget_candles.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_recover_radar_bitget_candles.py' -v
+      - name: Archive separately verified historical Spot candles
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          REQUESTED_DAY: ${{ github.event.inputs.day || '' }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            if [ -n "$REQUESTED_DAY" ]; then
+              python public/agent_crypto_erith_ia/tools/recover_radar_bitget_candles.py --date "$REQUESTED_DAY"
+            else
+              python public/agent_crypto_erith_ia/tools/recover_radar_bitget_candles.py --lookback 3
+            fi
+            git add -A -- public/agent_crypto_erith_ia/data/crypto/radar-verified-target-history/
+            if git diff --cached --quiet; then
+              echo 'No NEW complete native historical candles verified; original orderbook gaps unchanged.'
+              exit 0
+            fi
+            git commit -m 'Archive independently verified Bitget 15m historical Spot candles (not order books)'
+            if git push origin HEAD:main; then
+              echo 'Bitget source 15m candles archived separately with SHA digests.'
+              exit 0
+            fi
+            echo 'Concurrent archival publication; retried on latest main without overwriting evidence'
+            sleep "$((attempt*3))"
+          done
+          echo 'Could not publish native history, no fabricated record' >&2
+          exit 1
