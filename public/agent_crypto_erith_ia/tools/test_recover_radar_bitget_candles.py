@@ -68,7 +68,7 @@ class NativeHistoryTests(unittest.TestCase):
             self.assertEqual(r.save(doc,pathlib.Path(folder))["status"],
                              "SAVED_HISTORICAL_CANDLES_ONLY")
             self.assertEqual(r.save(doc,pathlib.Path(folder))["status"],
-                             "ALREADY_VERIFIED")
+                             "ALREADY_VERIFIED_NO_NEW_BARS")
             original=json.loads((pathlib.Path(folder)/"2026-10-22.json").read_text())
             self.assertFalse(original["order_book_spread_available"])
 
