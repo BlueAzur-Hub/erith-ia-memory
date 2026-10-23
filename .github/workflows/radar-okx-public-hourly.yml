@@ -18,6 +18,7 @@ on:
       - '.github/workflows/atlas-public-crypto-market-clock.yml'
       - '.github/workflows/seven-priority-spot-paper.yml'
       - '.github/workflows/radar-okx-public-hourly.yml'
+      - '.github/workflows/atlas-public-crypto-market-clock.yml'
   push:
     branches: [main]
     paths:
@@ -37,6 +38,7 @@ on:
       - '.github/workflows/atlas-public-crypto-market-clock.yml'
       - '.github/workflows/seven-priority-spot-paper.yml'
       - '.github/workflows/radar-okx-public-hourly.yml'
+      - '.github/workflows/atlas-public-crypto-market-clock.yml'
   workflow_dispatch:
   schedule:
     - cron: '38 * * * *'
@@ -59,7 +61,8 @@ jobs:
       (github.event.workflow_run.conclusion == 'success' &&
        github.event.workflow_run.head_branch == 'main' &&
        (github.event.workflow_run.event == 'schedule' ||
-        github.event.workflow_run.event == 'workflow_dispatch'))
+        github.event.workflow_run.event == 'workflow_dispatch' ||
+        github.event.workflow_run.event == 'workflow_run'))
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -93,6 +96,34 @@ jobs:
           for attempt in 1 2 3; do
             git fetch origin main
             git reset --hard origin/main
+            # Avoid repeating public API calls on multiple recovery triggers in one UTC hour.
+            if python - <<'PY'
+          import datetime, json, pathlib, sys
+          root=pathlib.Path('public/agent_crypto_erith_ia/data/crypto')
+          hour=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%HZ')
+          expected=[('okx-hourly/latest.json','last_hour_utc'),
+                    ('case-market-hourly/latest.json','last_hour_utc'),
+                    ('radar-verified-target-hourly/latest.json','hour_utc')]
+          ready=True
+          for rel,key in expected:
+              p=root/rel
+              if not p.is_file():
+                  ready=False
+                  break
+              try:
+                  obj=json.loads(p.read_text(encoding='utf-8'))
+              except (OSError,ValueError):
+                  ready=False
+                  break
+              if obj.get(key)!=hour or obj.get('real_orders')!=0:
+                  ready=False
+                  break
+          sys.exit(0 if ready else 1)
+          PY
+            then
+              echo "All public Radar archives already present for this actual UTC hour; no second network collection"
+              exit 0
+            fi
             # Never backfill the missed hour with a newly observed current quote.
             python public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py
             python public/agent_crypto_erith_ia/tools/build_okx_hourly_evidence.py
