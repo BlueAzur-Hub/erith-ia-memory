@@ -89,8 +89,8 @@ Aucun zéro de volume ne doit être présenté comme un carnet tradable. Il est 
 | CT/USDT | 0.20217 | 0.2023 | 6,43 pb (0,064 %) | 6574017.016512 |
 | CT/USDC | 0.2018 | 0.2022 | 19,80 pb (0,198 %) | 499406.644305 |
 | XDP/USDT | 0.017932 | 0.017945 | 7,25 pb (0,073 %) | 613761.655982 |
-| XNFLX/USDC | 648.05 | 655.66 | 116,69 pb (1,167 %) | 4695.321878 |
-| XCGNX/USDT | 38.84 | 40.006 | 295,71 pb (2,957 %) | 133.2629341 |
+| XNFLX/USDC | 65.6 | 66.37 | 116,69 pb (1,167 %) | 4695.321878 |
+| XCGNX/USDT | 54.64 | 56.28 | 295,71 pb (2,957 %) | 133.2629341 |
 | TEST002/USDT | absent | absent | non calculable | 0 |
 | XWDC/USDC | absent | absent | non calculable | 0 |
 
