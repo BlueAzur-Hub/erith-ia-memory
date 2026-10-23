@@ -1,5 +1,5 @@
 {
-  "approved_count": 93,
+  "approved_count": 95,
   "candidate_count": 96,
   "checked_count": 96,
   "note": "Only a Binance Spot ticker linked to the exact CoinGecko ID counts. This is an identity qualification ledger, NOT newly archived OHLCV.",
@@ -506,14 +506,23 @@
       "symbol": "NIGHT"
     },
     {
-      "checked_at": "2026-10-10T01:48:31.293328+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-23T19:39:12.625000+00:00",
+      "evidence": [
+        {
+          "base": "STX",
+          "coin_id": "blockstack",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "blockstack",
+          "trade_url": "https://www.binance.com/en/trade/STX_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "blockstack",
-      "pages": 0,
+      "pages": 2,
       "pair": "STXUSDT",
       "rank": 91,
-      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
-      "status": "source_unavailable",
+      "status": "approved_coingecko_binance_spot",
       "symbol": "STX"
     },
     {
@@ -537,14 +546,23 @@
       "symbol": "APT"
     },
     {
-      "checked_at": "2026-10-10T01:48:46.313611+00:00",
-      "evidence": [],
+      "checked_at": "2026-10-23T19:39:27.934979+00:00",
+      "evidence": [
+        {
+          "base": "CAKE",
+          "coin_id": "pancakeswap-token",
+          "market_identifier": "binance",
+          "target": "USDT",
+          "ticker_coin_id": "pancakeswap-token",
+          "trade_url": "https://www.binance.com/en/trade/CAKE_USDT?ref=37754157",
+          "trust_score": null
+        }
+      ],
       "id": "pancakeswap-token",
-      "pages": 0,
+      "pages": 2,
       "pair": "CAKEUSDT",
-      "rank": 95,
-      "reason": "HTTPError: HTTP Error 429: Too Many Requests",
-      "status": "source_unavailable",
+      "rank": 94,
+      "status": "approved_coingecko_binance_spot",
       "symbol": "CAKE"
     },
     {
@@ -1958,7 +1976,7 @@
       "symbol": "AWE"
     }
   ],
-  "review_required_count": 3,
+  "review_required_count": 1,
   "schema": "aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1",
   "source": "CoinGecko exact coin ID /coins/{id}/tickers?exchange_ids=binance",
   "total_market_ranked": 250
