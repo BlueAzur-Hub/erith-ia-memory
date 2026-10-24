@@ -104,19 +104,23 @@ function top5Tooltip(original,args){
   if(!root||root.hidden)return result;
   const title=root.querySelector(".atlas-chart-tooltip-date");
   const rows=Array.from(root.querySelectorAll(".atlas-chart-tooltip-row"));
-  const used=new Set();let valid=0,oldest=Infinity;
-  rows.forEach(row=>{
+  const identities=rows.map(row=>distinct?
+    datasets.map((d,i)=>coinRowMatch(row,d?.atlasCoin)?i:-1).filter(i=>i>=0):[]);
+  const occurrences=new Map();
+  identities.forEach(match=>{if(match.length===1)occurrences.set(match[0],(occurrences.get(match[0])||0)+1);});
+  let valid=0,oldest=Infinity;
+  rows.forEach((row,rowIndex)=>{
     const field=row.querySelector(".atlas-chart-tooltip-values strong");
     if(!field)return;
-    const matches=distinct?datasets.map((d,i)=>coinRowMatch(row,d?.atlasCoin)?i:-1).filter(i=>i>=0):[];
-    // Mapping by unique identity, never by potentially reordered DOM indices.
-    const index=matches.length===1?matches[0]:-1;
-    const q=index>=0&&!used.has(index)?quotes?.[index]:null;
+    const matches=identities[rowIndex];
+    // A duplicate name/coin is ambiguous: neither row can borrow its USD quote.
+    const index=matches.length===1&&occurrences.get(matches[0])===1?matches[0]:-1;
+    const q=index>=0?quotes?.[index]:null;
     if(q&&q.quote.coinId===datasets[index].atlasCoin.id){
       field.textContent=money(q.price);
       field.title="CoinGecko USD natif · "+q.quote.source+" · "+new Date(q.quote.timestamp).toISOString()+
         " · cotation actuelle, indépendante du point historique";
-      used.add(index);valid++;oldest=Math.min(oldest,q.quote.timestamp);
+      valid++;oldest=Math.min(oldest,q.quote.timestamp);
     }else{
       field.textContent="—";
       field.title="Prix historique EUR masqué : aucune cotation USD récente et attribuée avec certitude à cette ligne";
