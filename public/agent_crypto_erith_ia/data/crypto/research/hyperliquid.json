@@ -23,11 +23,13 @@
     "pair_seen_in_user_capture": true,
     "okx_spot_grouping_publicly_documented": true,
     "individual_account_access_verified": false,
-    "live_instrument_rules_verified": false,
+    "live_instrument_rules_verified": true,
     "fee_tier_verified": false,
-    "orderbook_verified": false,
-    "spot_history_in_project_qualified": false,
-    "do_not_substitute_hyperliquid_native_hype_usdc_for_okx": true
+    "orderbook_verified": true,
+    "spot_history_in_project_qualified": true,
+    "do_not_substitute_hyperliquid_native_hype_usdc_for_okx": true,
+    "market_public_book_last_verified_at_utc": "2026-10-24T07:37:27Z",
+    "no_personal_account_permission_implied": true
   },
   "user_capture_observation": {
     "date_utc": "2026-10-24",
@@ -53,16 +55,17 @@
     "cross_venue_aggregation_not_validated": true
   },
   "evidence_gaps": [
-    "Missing archived OKX HYPE-USDC bid/ask and top-five depth",
-    "Missing exact timestamp and original week-long HYPE-USDC candles",
-    "Missing verified per-account spot rules and fee tier",
-    "Need forward PAPER observations with exit bid and no use of derivatives volume as spot volume"
+    "No synchronized executable order or filled-trade evidence; top-five snapshot is historical and may change immediately",
+    "No verified account-specific fees, restrictions, order lot rounding or minimum notional",
+    "No order-book history reconstructed before this first genuine captured book",
+    "Only rolling 299-bar 15m/1H/1Dutc native windows; older HYPE/USDC history beyond these windows not yet collected here",
+    "Prospective PAPER decisions and future real exit bids remain to be measured before any performance claim"
   ],
   "research_questions": [
-    "Collect OKX EEA HYPE-USDC public Spot 15m, 1H and 1Dutc candles with timestamps and closed-bar flags",
-    "Capture dated OKX Spot order-book spread and depth, validate base-asset identity",
-    "Separate HYPE token ecosystem activity from OKX spot turnover",
-    "Audit unlock/vesting schedule and liquidity response without trading futures"
+    "Compare native HYPE-USDC and IRYS-USDC weekly quote turnover using identically closed UTC daily bars",
+    "Track hourly best bid/ask spread and 5-level depth without assuming a current executable book from old snapshots",
+    "Test volatility versus market depth after pre-registering PAPER rules; no retroactive entries",
+    "Separate HYPE token Spot activity from Hyperliquid perpetuals and check future supply unlock claims against primary documents"
   ],
   "official_sources": [
     {
@@ -83,5 +86,48 @@
     }
   ],
   "linked_human_dossier": "laboratoire/hype-case-study.html",
-  "paper_protocol": "RESEARCH_ONLY_MISSING_OKX_NATIVE_SERIES_AND_BOOK"
+  "paper_protocol": "NATIVE_OHLCV_AND_FIRST_PUBLIC_BOOK_OBSERVED_RESEARCH_ONLY_NO_PNL_WITHOUT_FUTURE_EXECUTABLE_EXIT",
+  "native_market_evidence": {
+    "source_candles": "data/crypto/okx-hourly/hype-spot-candles.json",
+    "source_books": "data/crypto/okx-hourly/hype-spot-books/2026-10-24.json",
+    "venue": "OKX_EEA",
+    "instrument_type": "SPOT",
+    "pair": "HYPE-USDC",
+    "quote": "USDC",
+    "source_as_of_utc": "2026-10-24T07:37:26Z",
+    "closed_bars_at_archive": {
+      "15m": 299,
+      "1H": 299,
+      "1Dutc": 299
+    },
+    "bars_are_rolling_windows": true,
+    "seven_closed_utc_days": {
+      "start": "2026-10-17",
+      "end": "2026-10-23",
+      "bars": 7,
+      "sum_native_quote_turnover_usdc": 78275624.325035,
+      "method": "SUM row[7] from seven native OKX UTC daily closed HYPE-USDC bars; neither world-wide volume nor rolling 24h ticker"
+    },
+    "instrument_public_rules": {
+      "minSz": "0.01",
+      "lotSz": "0.0001",
+      "tickSz": "0.001"
+    },
+    "first_book_observation": {
+      "at_utc": "2026-10-24T07:37:27Z",
+      "bid_price_usdc": 76.483,
+      "bid_size_hype": 43.7853,
+      "ask_price_usdc": 76.484,
+      "ask_size_hype": 1.0894,
+      "spread_bps": 0.13,
+      "volume24h_quote_usdc": 47489510.1573229,
+      "top5_bid_levels": 5,
+      "top5_ask_levels": 5,
+      "order_execution_proven": false
+    },
+    "fee_tier_for_account_verified": false,
+    "minimum_notional_verified": false,
+    "retroactive_orderbook_backfilled": false,
+    "paper_strategy_outcome_certified": false
+  }
 }

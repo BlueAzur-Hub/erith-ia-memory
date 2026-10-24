@@ -67,13 +67,29 @@ test("ZEC quote and book figures refer to six actual OKX Spot snapshots, not sum
  assert.equal(saved.fills_proven,false);
 });
 
-test("HYPE's missing price history stays explicitly missing and never copies another venue",()=>{
+test("HYPE immutable source snapshot agrees with the native candles and recorded OKX EEA book",()=>{
  assert.equal(hype.market_identity.canonical_spot_pair,"HYPE-USDC");
- assert.equal(hype.market_identity.orderbook_verified,false);
- assert.equal(hype.market_identity.spot_history_in_project_qualified,false);
+ assert.equal(hype.market_identity.orderbook_verified,true);
+ assert.equal(hype.market_identity.spot_history_in_project_qualified,true);
+ const d=hype.native_market_evidence;
+ const n=get("data/crypto/okx-hourly/hype-spot-candles.json");
+ const books=get("data/crypto/okx-hourly/hype-spot-books/2026-10-24.json");
+ assert.equal(n.pair,"HYPE-USDC");
+ assert.equal(n.quote,"USDC");
+ const rows=n.candles["1Dutc"].filter(x=>Number(x[0])>=Date.parse("2026-10-17T00:00:00Z")&&Number(x[0])<Date.parse("2026-10-24T00:00:00Z"));
+ assert.equal(rows.length,7);
+ assert.ok(Math.abs(rows.reduce((a,b)=>a+Number(b[7]),0)-d.seven_closed_utc_days.sum_native_quote_turnover_usdc)<0.001);
+ assert.equal(reg.assets.find(a=>a.symbol==="HYPE").verified_weekly_quote_turnover_usdc,d.seven_closed_utc_days.sum_native_quote_turnover_usdc);
+ const b=books.observations.find(x=>x.observed_at_utc===d.source_as_of_utc);
+ assert.ok(b&&b.pair==="HYPE-USDC"&&b.quote==="USDC"&&b.status==="VERIFIED_PUBLIC_BOOK");
+ assert.equal(Number(b.book5.bids[0][0]),d.first_book_observation.bid_price_usdc);
+ assert.equal(Number(b.book5.asks[0][0]),d.first_book_observation.ask_price_usdc);
+ assert.equal(Number(b.book5.spread_bps),d.first_book_observation.spread_bps);
+ assert.ok(d.first_book_observation.bid_price_usdc<d.first_book_observation.ask_price_usdc);
+ assert.equal(b.market_fill_proven,false);
+ assert.equal(d.first_book_observation.order_execution_proven,false);
  assert.equal(hype.user_capture_observation.seven_day_turnover_usdc,null);
  assert.equal(hype.user_capture_observation.rolling_turnover_24h_usdc,null);
- assert.equal(reg.assets.find(a=>a.symbol==="HYPE").verified_weekly_quote_turnover_usdc,null);
  assert.ok(hype.evidence_gaps.length>=3);
 });
 

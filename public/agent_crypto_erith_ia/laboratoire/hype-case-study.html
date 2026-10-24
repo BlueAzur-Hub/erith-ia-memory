@@ -15,7 +15,14 @@ nav{display:flex;gap:14px;flex-wrap:wrap}.panel{background:rgba(14,37,52,.95);bo
 <nav><a href="crypto-knowledge.html">← Dossiers crypto</a><a href="../trader/trading-desk.html">Trader</a><a href="../data/crypto/research/hyperliquid.json">Données structurées JSON</a></nav>
 <header><p class="eyebrow">SEVEN HEAVEN · RECHERCHE PUBLIQUE · 24 OCTOBRE 2026</p><h1>HYPE · Hyperliquid</h1>
 <p class="muted">Étude d'un actif lié à l'écosystème Hyperliquid, avec une observation OKX Spot/USDC. Ne pas confondre activité de la plateforme Hyperliquid, marchés dérivés et transactions Spot HYPE chez OKX.</p></header>
-<section class="panel"><h2>Décision : DOSSIER OUVERT · collecte prioritaire</h2><p class="notice">Nous ne disposons pas encore dans ERITH.IA d'une série datée de bougies et de carnets OKX HYPE-USDC suffisante pour tester une entrée et une sortie. Aucun achat réel ou fictif certifié.</p>
+<section class="panel"><h2>Décision : PREUVES NATIVES ACQUISES · poursuite PAPER</h2>
+<p class="notice">Le 24 octobre à 07:37 UTC, ERITH.IA a réellement archivé des bougies closes et un carnet Spot <strong>HYPE-USDC chez OKX EEA</strong>. C'est une observation historique, pas la preuve d'un achat ni d'une vente. Aucune rentabilité certifiée.</p>
+<div class="cards">
+<div class="tile"><small>Meilleur bid · 07:37 UTC</small><strong>76,483 USDC</strong><small>Prix d'achat du carnet (contrepartie de vente)</small></div>
+<div class="tile"><small>Meilleur ask · 07:37 UTC</small><strong>76,484 USDC</strong><small>Prix vendeur · spread 0,13 point de base</small></div>
+<div class="tile"><small>HYPE-USDC · 7 journées UTC closes</small><strong>78,28 M USDC</strong><small>Somme du 17 au 23 octobre ; ni volume global ni 24h</small></div>
+</div>
+<p class="muted">Le ticker 24 h indiquait alors environ <strong>47,49 M USDC</strong>, une mesure glissante distincte des sept jours. Notre première archive comprend 299 bougies de chaque résolution 15 min / 1 h / 1 jour UTC. <a href="../data/crypto/okx-hourly/hype-spot-candles.json">Bougies originales ↗</a> · <a href="../data/crypto/okx-hourly/hype-spot-books/2026-10-24.json">Carnet horodaté ↗</a>.</p>
 <div class="cards">
 <div class="tile"><small>Prix affiché dans la capture OKX du 24/10</small><strong>76,736 USDC</strong><small>Dernier prix présenté · heure UTC exacte inconnue</small></div>
 <div class="tile"><small>Variation 24h, même capture</small><strong>−2,04 %</strong><small>Statistique OKX affichée · pas un rendement réalisable</small></div>
@@ -25,10 +32,10 @@ nav{display:flex;gap:14px;flex-wrap:wrap}.panel{background:rgba(14,37,52,.95);bo
 </section>
 <section class="panel"><h2>Pourquoi l'étudier ?</h2><p>HYPE est le jeton natif de l'écosystème Hyperliquid. La documentation décrit le staking délégué sur HyperCore. C'est une exposition à un écosystème de trading et à ses règles économiques, distincte d'un simple jeton de collection.</p>
 <p>L'activité d'une bourse peut stimuler l'intérêt pour un jeton sans garantir sa hausse. Notre étude doit distinguer les volumes Spot, les volumes de produits dérivés, les déblocages de jetons et la profondeur réelle de chaque carnet.</p></section>
-<section class="panel"><h2>Données à acquérir pour le Radar</h2><ul>
-<li>Historique public <strong>HYPE-USDC Spot OKX</strong> : bougies 15 min / 1 h / 1 jour UTC, uniquement horodatées et closes.</li>
-<li>Carnet OKX Spot : meilleur bid/ask, spread recalculé, profondeur des cinq premiers niveaux, limites de taille et de pas de prix.</li>
-<li>Volume quote en USDC : calculer une somme de bougies sur sept jours UTC ; ne pas utiliser le volume des futures ni une seule valeur glissante 24 h.</li>
+<section class="panel"><h2>Prochaine étude : surveiller, comparer, puis évaluer PAPER</h2><ul>
+<li>Conserver les bougies déjà acquises à 15 min / 1 h / 1 jour UTC, et étendre la profondeur historique sans reconstituer les heures manquantes.</li>
+<li>Répéter le relevé du carnet OKX Spot à intervalles futurs : meilleur bid/ask, spread recalculé, cinq premiers niveaux, taille minimale et pas de prix. Un relevé ancien n'est pas un prix exécutable maintenant.</li>
+<li>Comparer les 78,28 M USDC sur sept bougies journalières closes avec IRYS ; ne pas utiliser les volumes des futures ni additionner des volumes glissants 24 h.</li>
 <li>Risque tokenomics : suivre la distribution, les déblocages vérifiés et leur relation avec le volume Spot. Pas de prévision inventée.</li>
 <li>PAPER : figer une règle avant observation des sorties ; simuler avec frais et spread uniquement lorsque les preuves futures sont disponibles.</li>
 </ul></section>
