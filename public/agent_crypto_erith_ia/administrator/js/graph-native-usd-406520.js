@@ -79,7 +79,9 @@ function top5Tooltip(original,args){
     if(native&&typeof originalLive==="function")
       globalThis.atlasChartLivePresentation=(coin,p)=>Number(p||1)===1
         ?top5NativeUsd(coin,book):null;
-    result=native?withFmt(()=>original.apply(this,args)):original.apply(this,args);
+    // A legacy lexical EUR formatter cannot be redirected globally.
+    // Render first, then replace each verified USD quote in the floatboard.
+    result=original.apply(this,args);
   }finally{
     if(native&&typeof originalLive==="function")globalThis.atlasChartLivePresentation=originalLive;
   }
@@ -87,19 +89,36 @@ function top5Tooltip(original,args){
   const root=document.getElementById("atlasChartTooltip");
   if(!root||root.hidden)return result;
   const title=root.querySelector(".atlas-chart-tooltip-date");
+  let reconciled=false;
   if(native){
-    const oldest=Math.min(...snapshots.map(x=>x.quote.timestamp));
-    if(title)title.textContent="PRIX SNAPSHOT COINGECKO USD · 24h · "+new Date(oldest).toLocaleTimeString("fr-FR");
-    root.dataset.displayCurrency="USD";
-    root.dataset.priceSource="coingecko-native-usd";
-  }else{
-    // The plotted Top 5 historic prices are EUR. Do not relabel or convert.
+    const rows=Array.from(root.querySelectorAll(".atlas-chart-tooltip-row"));
+    const prices=Array.from(root.querySelectorAll(".atlas-chart-tooltip-row .atlas-chart-tooltip-values strong"));
+    // The snapshot belongs to each charted coin. Never map a USD price to
+    // another row if DOM order/identity changed since the asynchronous render.
+    const match=rows.length===5&&prices.length===5&&rows.every((row,i)=>{
+      const symbol=String(datasets[i]?.atlasCoin?.symbol||"").trim().toUpperCase();
+      const label=String(row.textContent||"").toUpperCase();
+      return /^[A-Z0-9]{2,15}$/.test(symbol)&&
+        new RegExp("(^|[^A-Z0-9])"+symbol+"([^A-Z0-9]|$)").test(label);
+    });
+    if(match){
+      snapshots.forEach((item,i)=>{
+        prices[i].textContent=money(item.price);
+        prices[i].title="CoinGecko USD natif · snapshot "+new Date(item.quote.timestamp).toISOString();
+      });
+      const oldest=Math.min(...snapshots.map(x=>x.quote.timestamp));
+      if(title)title.textContent="PRIX SNAPSHOT COINGECKO USD · 24h · "+new Date(oldest).toLocaleTimeString("fr-FR");
+      reconciled=true;
+    }
+  }
+  if(!reconciled){
+    // Historical Top-5 source is EUR, not USD. Preserve Base 100 only.
     if(title)title.textContent="COMPARAISON BASE 100 · PRIX HISTORIQUE USD NON DISPONIBLE";
     root.querySelectorAll(".atlas-chart-tooltip-row .atlas-chart-tooltip-values strong")
-      .forEach(node=>{node.textContent="—";node.title="Série historique EUR : valeur USD non fournie";});
-    root.dataset.displayCurrency="USD";
-    root.dataset.priceSource="usd-history-unavailable";
+      .forEach(node=>{node.textContent="—";node.title="USD absent ou identité du prix non concordante";});
   }
+  root.dataset.displayCurrency="USD";
+  root.dataset.priceSource=reconciled?"coingecko-native-usd":"usd-history-unavailable";
   return result;
 }
 
