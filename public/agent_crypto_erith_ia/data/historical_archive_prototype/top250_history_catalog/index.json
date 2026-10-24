@@ -5,7 +5,7 @@
   "ranked": 250,
   "rank_snapshot": "2026-10-19T11:13:47.957Z",
   "release_months": 103,
-  "release_count": 333,
+  "release_count": 336,
   "excluded_historical_owners_outside_frozen_top250": 3,
   "excluded_historical_ids_sample": [
     "golem",
@@ -13,7 +13,7 @@
     "superfarm"
   ],
   "archived_assets": 126,
-  "native_1m_candles": 240248160,
+  "native_1m_candles": 240507360,
   "groups": [
     {
       "top": 10,
@@ -1736,6 +1736,13 @@
     },
     {
       "month": "2026-01",
+      "release": "crypto-spot-bulk-add-2026-01-1m-ae840b66c616",
+      "verified": 2,
+      "unavailable": 1,
+      "candles": 89280
+    },
+    {
+      "month": "2026-01",
       "release": "crypto-spot-bulk-add-2026-01-1m-c8161b623058",
       "verified": 8,
       "unavailable": 0,
@@ -1771,6 +1778,13 @@
     },
     {
       "month": "2026-02",
+      "release": "crypto-spot-bulk-add-2026-02-1m-ae840b66c616",
+      "verified": 2,
+      "unavailable": 1,
+      "candles": 80640
+    },
+    {
+      "month": "2026-02",
       "release": "crypto-spot-bulk-add-2026-02-1m-c8161b623058",
       "verified": 8,
       "unavailable": 0,
@@ -1803,6 +1817,13 @@
       "verified": 74,
       "unavailable": 4,
       "candles": 3303360
+    },
+    {
+      "month": "2026-03",
+      "release": "crypto-spot-bulk-add-2026-03-1m-ae840b66c616",
+      "verified": 2,
+      "unavailable": 1,
+      "candles": 89280
     },
     {
       "month": "2026-03",
@@ -52135,6 +52156,9 @@
         "2019-02",
         "2019-03",
         "2019-04",
+        "2026-01",
+        "2026-02",
+        "2026-03",
         "2026-04",
         "2026-05",
         "2026-06"
@@ -52148,6 +52172,30 @@
       "name": "0G",
       "market_status": "spot_candidate_identity_unverified",
       "months": [
+        {
+          "month": "2026-01",
+          "pair": "0GUSDT",
+          "file": "0GUSDT-1m-2026-01.zip",
+          "sha256": "6a7cdde8c43e2722050cc3133bc46c444c98565a59b06eabf1ae01e22833977e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-01-1m-ae840b66c616"
+        },
+        {
+          "month": "2026-02",
+          "pair": "0GUSDT",
+          "file": "0GUSDT-1m-2026-02.zip",
+          "sha256": "6523bf75c602011b9237c989f0b6037804f3de6adbc642ce8472629d03bc5f2a",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-add-2026-02-1m-ae840b66c616"
+        },
+        {
+          "month": "2026-03",
+          "pair": "0GUSDT",
+          "file": "0GUSDT-1m-2026-03.zip",
+          "sha256": "20a7913aa08761aaf83753300e9597e6aad66644913ea9ac5aaceb2981d9e8ec",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-03-1m-ae840b66c616"
+        },
         {
           "month": "2026-04",
           "pair": "0GUSDT",
@@ -52206,7 +52254,7 @@
         "2019-03",
         "2019-04"
       ],
-      "candles": 263520
+      "candles": 393120
     },
     {
       "id": "immutable-x",
@@ -54035,6 +54083,30 @@
       "market_status": "spot_candidate_identity_unverified",
       "months": [
         {
+          "month": "2026-01",
+          "pair": "AWEUSDT",
+          "file": "AWEUSDT-1m-2026-01.zip",
+          "sha256": "013f8e0399157e1bc1ab135f5294d90725d66607fa3c5df32cf41768b549d892",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-01-1m-ae840b66c616"
+        },
+        {
+          "month": "2026-02",
+          "pair": "AWEUSDT",
+          "file": "AWEUSDT-1m-2026-02.zip",
+          "sha256": "eb756a368e57cc3ef5d0ee826c796bb0a469092bc74055e4e208ae6021e2be42",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-add-2026-02-1m-ae840b66c616"
+        },
+        {
+          "month": "2026-03",
+          "pair": "AWEUSDT",
+          "file": "AWEUSDT-1m-2026-03.zip",
+          "sha256": "5a4198ab3baf9e5dfc0b6081c8796e5265fe4847cd5392f905d42e0e3e621e2f",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-add-2026-03-1m-ae840b66c616"
+        },
+        {
           "month": "2026-04",
           "pair": "AWEUSDT",
           "file": "AWEUSDT-1m-2026-04.zip",
@@ -54092,7 +54164,7 @@
         "2019-03",
         "2019-04"
       ],
-      "candles": 263520
+      "candles": 393120
     },
     {
       "id": "safepal",
