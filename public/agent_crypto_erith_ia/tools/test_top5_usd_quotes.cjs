@@ -65,6 +65,39 @@ test("A stale USD quote never leaks an old EUR price or erases unrelated USD row
  assert.equal(m.root.dataset.usdQuotesVerified,"4");
  assert.ok(m.rows.every(x=>!x.field.textContent.includes("€")));
 });
+test("Top5 uses fresh USD observation timestamp instead of a stale EUR timestamp",()=>{
+ const m=build({noBook:true,noCoins:true});
+ m.context.state.coins=m.coins.map((c,i)=>({...c,priceUsd:USD[i],
+   usdUpdatedAt:AT,lastUpdated:"2026-10-20T00:00:00Z",
+   spotUpdatedAt:"2026-10-20T00:00:00Z"}));
+ m.run();
+ assert.equal(m.root.dataset.usdQuotesVerified,"5");
+ for(const row of m.rows){
+  const i=IDs.indexOf(row.coin.id);
+  assert.equal(row.field.textContent,moneyExpected(USD[i]));
+  assert.ok(!row.field.textContent.includes("€"));
+ }
+});
+
+test("Top5 rejects stale USD despite a recent update in another currency",()=>{
+ const m=build({noBook:true,noCoins:true});
+ m.context.state.coins=m.coins.map((c,i)=>({...c,priceUsd:USD[i],
+   usdUpdatedAt:"2026-10-20T00:00:00Z",lastUpdated:AT}));
+ m.run();
+ assert.equal(m.root.dataset.usdQuotesVerified,"0");
+ assert.ok(m.rows.every(x=>x.field.textContent==="—"));
+});
+
+test("Top5 can match a coin name with punctuation without reassigning price",()=>{
+ const m=build({rows:[0,1,2,3,4]});
+ m.coins[0].symbol="X";
+ m.coins[0].name="BIT.COIN";
+ m.rows[0].textContent="BIT.COIN / USD";
+ m.run();
+ assert.equal(m.rows[0].field.textContent,moneyExpected(USD[0]));
+ assert.equal(m.root.dataset.usdQuotesVerified,"5");
+});
+
 test("A validated CoinGecko USD price may replace an unavailable spotBook with source timestamp",()=>{
  const m=build({noBook:true});m.run();
  assert.equal(m.rows[0].field.textContent,moneyExpected(USD[0]));

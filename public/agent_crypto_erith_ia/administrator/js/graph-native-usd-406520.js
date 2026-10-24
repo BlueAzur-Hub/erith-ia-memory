@@ -73,7 +73,8 @@ function top5VerifiedUsd(coin,book,now=Date.now()){
  asset=asset||coin;
  if(!coin?.id||String(asset?.id||"")!==String(coin.id))return null;
  const price=asset.priceUsd==null?NaN:Number(asset.priceUsd);
- const timestamp=Date.parse(String(asset.spotUpdatedAt||asset.lastUpdated||asset.timestamp||""));
+ // Priority mirrors Market Fiche: USD observation timestamp, never unrelated EUR timestamp.
+ const timestamp=Date.parse(String(asset.usdUpdatedAt||asset.snapshotGeneratedAt||asset.lastUpdated||asset.timestamp||asset.spotUpdatedAt||""));
  const age=now-timestamp;
  if(!(Number.isFinite(price)&&price>0&&Number.isFinite(timestamp)&&age>=0&&age<=15*60000))return null;
  return {quote:{status:"snapshot",kind:"coingecko-usd-explicit",coinId:coin.id,
@@ -86,7 +87,7 @@ const coinRowMatch=(row,coin)=>{
  const label=String(row?.textContent||"").toUpperCase();
  const tokens=[symbol,name].filter(v=>/^[A-Z0-9][A-Z0-9 .-]{1,35}$/.test(v));
  return tokens.some(v=>new RegExp("(^|[^A-Z0-9])"+
-   v.replace(/[.*+?^${}()|[\]\\]/g,"\\function top5Tooltip(original,args){")+"(?=$|[^A-Z0-9])").test(label));
+   v.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(?=$|[^A-Z0-9])").test(label));
 };
 
 function top5Tooltip(original,args){
