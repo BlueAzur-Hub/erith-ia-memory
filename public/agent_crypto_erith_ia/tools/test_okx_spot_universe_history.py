@@ -40,33 +40,43 @@ class SpotHistoryTests(unittest.TestCase):
             root = pathlib.Path(temp)
             api = FakeExchange()
             report = m.update(fetch=api, now=NOW, root=root)
-            self.assertEqual(report["requested_pairs"], 24)
-            self.assertEqual(report["covered_pairs"], 24)
-            self.assertEqual(len(report["updated_pairs"]), 24)
-            self.assertEqual(len(api.calls), 24*4)
+            self.assertEqual(report["requested_pairs"], 48)
+            self.assertEqual(report["covered_pairs"], 48)
+            self.assertEqual(len(report["updated_pairs"]), 48)
+            self.assertEqual(len(api.calls), 48*4)
+            self.assertEqual(len(m.NEW_OFFERS), 24)
+            self.assertTrue({"XWDC", "XNFLX", "LIT", "CT", "XDP", "CARDS", "EURC"} <= set(m.NEW_OFFERS))
+            self.assertTrue({"XAMZN", "XAAPL", "XGOOGL", "XNVDA", "XTSLA", "XINTC"} <= set(m.NEW_OFFERS))
+            self.assertEqual(set(m.NEW_OFFERS) & set(m.SYMBOLS[:-24]), set())
             self.assertEqual(set(m.SYMBOLS).__len__(), len(m.SYMBOLS))
             self.assertEqual(m.target_path("KAT", root).name, "kat-usdc.json")
             for symbol in m.SYMBOLS:
                 saved = json.loads(m.target_path(symbol, root).read_text())
                 self.assertTrue(m.valid_archive(saved, symbol+"-USDC"))
                 self.assertEqual(saved["quote"], "USDC")
+                self.assertEqual(
+                    saved["instrument_group"],
+                    "x_prefixed_instrument" if symbol.startswith("X")
+                    else "stablecoin_pair" if symbol == "EURC"
+                    else "crypto_spot_pair"
+                )
                 self.assertFalse(saved["orders_enabled"])
                 self.assertFalse(saved["account_access"])
                 self.assertEqual(len(saved["candles"]["1Dutc"]), 5)
             next_run = m.update(fetch=api, now=NOW, root=root)
             self.assertEqual(next_run["updated_pairs"], [])
-            self.assertEqual(len(api.calls), 24*4, "No duplicate requests in same UTC day")
+            self.assertEqual(len(api.calls), 48*4, "No duplicate requests in same UTC day")
 
     def test_absent_instrument_not_fabricated_and_old_history_retained(self):
         with tempfile.TemporaryDirectory() as temp:
             root = pathlib.Path(temp)
             first = m.update(fetch=FakeExchange(), now=NOW, root=root)
-            self.assertEqual(first["covered_pairs"], 24)
+            self.assertEqual(first["covered_pairs"], 48)
             next_day = NOW + dt.timedelta(days=1)
             down = FakeExchange(m.SYMBOLS)
             report = m.update(fetch=down, now=next_day, root=root)
-            self.assertEqual(report["covered_pairs"], 24)
-            self.assertEqual(len(report["failed_this_attempt"]), 24)
+            self.assertEqual(report["covered_pairs"], 48)
+            self.assertEqual(len(report["failed_this_attempt"]), 48)
             self.assertEqual(len(report["updated_pairs"]), 0)
             self.assertEqual(
                 json.loads(m.target_path("DOS", root).read_text())["generated_at_utc"],
@@ -75,7 +85,7 @@ class SpotHistoryTests(unittest.TestCase):
             report = m.update(fetch=FakeExchange(m.SYMBOLS), now=NOW,
                               root=pathlib.Path(temp))
             self.assertEqual(report["covered_pairs"], 0)
-            self.assertEqual(len(report["failed_this_attempt"]), 24)
+            self.assertEqual(len(report["failed_this_attempt"]), 48)
 
     def test_wrong_quote_or_non_spot_refused(self):
         def wrong(route, args):
