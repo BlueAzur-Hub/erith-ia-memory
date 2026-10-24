@@ -11,6 +11,7 @@ const moneyExpected=n=>new Intl.NumberFormat("fr-FR",{style:"currency",currency:
 function build(opts={}){
  const coins=IDs.map((id,i)=>({id,symbol:SYMBOLS[i],name:["Bitcoin","Ethereum","BNB","XRP","Solana"][i],
    priceUsd:USD[i],spotUpdatedAt:AT}));
+ if(opts.noCoins)for(const coin of coins){delete coin.priceUsd;delete coin.spotUpdatedAt;}
  const rows=(opts.rows||[0,1,2,3,4]).map(i=>{
    const field={textContent:"99999,99 €",title:"legacy EUR"};
    return {textContent:SYMBOLS[i]+" "+coins[i].name+" 99999,99 €",
@@ -41,7 +42,7 @@ function build(opts={}){
  }]}});
  return {rows,root,title,context,run,spotBook,coins};
 }
-test("Top5 maps five fresh USD snapshots to the right symbols even when DOM order differs",()=>{
+test("Top5 maps five fresh USD snapshots to the right symbols even when DOM order differs",async()=>{
  const m=build({rows:[4,2,0,3,1]});assert.equal(m.run(),"legacy-rendered");
  for(const row of m.rows){
   const i=IDs.indexOf(row.coin.id);
@@ -52,7 +53,7 @@ test("Top5 maps five fresh USD snapshots to the right symbols even when DOM orde
  assert.equal(m.root.dataset.usdQuotesVerified,"5");
  assert.match(m.title.textContent,/5\/5 vérifiées/);
  assert.match(m.title.textContent,/distinctes des courbes historiques Base 100/);
- assert.equal(m.context.atlasFetchComparisonSeriesResilient({id:"bitcoin"},1),"canonical-broker");
+ assert.equal(await m.context.atlasFetchComparisonSeriesResilient({id:"bitcoin"},1),"canonical-broker");
 });
 test("A stale USD quote never leaks an old EUR price or erases unrelated USD rows",()=>{
  const m=build({rows:[1,0,2,3,4],staleId:"bitcoin",noCoins:true});
