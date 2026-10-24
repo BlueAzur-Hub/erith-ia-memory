@@ -54,10 +54,16 @@ def fresh_book(qualification, identity, item, now):
         return None
     bid, ask = decimal(b.get("best_bid_usdt")), decimal(b.get("best_ask_usdt"))
     spread = decimal(b.get("spread_bps"))
-    if bid >= ask or spread > MAX_SPREAD_BPS:
+    if bid >= ask:
+        return None
+    # Trust original best bid/ask prices, not an inconsistent quoted spread.
+    # The source computes mid-price basis points rounded to five decimals.
+    measured_spread = (ask - bid) * Decimal("20000") / (ask + bid)
+    if (measured_spread > MAX_SPREAD_BPS or spread > MAX_SPREAD_BPS
+            or abs(measured_spread - spread) > Decimal("1")):
         return None
     return {"at_utc": iso(at), "bid_usdt": str(bid), "ask_usdt": str(ask),
-            "spread_bps": str(spread)}
+            "spread_bps": str(round(measured_spread, 5))}
 
 
 def empty():
