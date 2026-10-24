@@ -11,7 +11,7 @@
     "weekly_volume_global_ranking": false,
     "no_usd_usdc_fx_assumed": true
   },
-  "selection_reason": "Three complementary Spot-research cases, not a top-return or investment ranking: IRYS native-volume spike, ZEC dated OKX book, HYPE incomplete market evidence.",
+  "selection_reason": "Three distinct Spot sources: IRYS native turnover spike, ZEC dated books, HYPE now with verified native OHLCV and first genuine OKX EEA book.",
   "assets": [
     {
       "coin_id": "irys",
@@ -51,10 +51,13 @@
       "quote": "USDC",
       "dossier_json": "data/crypto/research/hyperliquid.json",
       "human_page": "laboratoire/hype-case-study.html",
-      "native_daily_candles": null,
-      "verified_weekly_quote_turnover_usdc": null,
+      "native_daily_candles": 299,
+      "verified_weekly_quote_turnover_usdc": 78275624.325035,
       "execution_certified": false,
-      "priority_research": "Collect native OKX Spot candles and five-level books, without derivatives substitution"
+      "priority_research": "Continue hourly book observations, monitor depth and future PAPER exits; no fill certified",
+      "dated_book_snapshots": 1,
+      "first_book_snapshot_at_utc": "2026-10-24T07:37:27Z",
+      "collection_status": "FIRST_EXACT_OKX_USDC_NATIVE_BOOK_AND_CANDLES_CONFIRMED"
     }
   ],
   "next_collection_protocol": [
