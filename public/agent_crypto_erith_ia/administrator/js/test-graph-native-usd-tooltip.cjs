@@ -5,7 +5,7 @@ const originalGlobals={};
 function setup(){
  for(const name of ["document","state","window","atlasExternalChartTooltip","atlasChartV2EffectiveView",
   "AgentCryptoQuoteCurrencyArchitecture","AtlasExternalChart","AgentCryptoNewListingsNativeCategory",
-  "AgentCryptoGraphNativeUsd406520"])originalGlobals[name]=globalThis[name];
+  "AgentCryptoGraphNativeUsd406520","atlasChartPriceDatasets","atlasChartLivePresentation"])originalGlobals[name]=globalThis[name];
  const heading={textContent:"PRIX LIVE BINANCE"};
  const price={textContent:"ancien prix",title:""};
  const tooltip={hidden:false,dataset:{},
@@ -84,4 +84,43 @@ test("Missing exchange quote conversion, identity mismatch or normalized Base100
    assert.match(s.heading.textContent,/PRIX HISTORIQUE USD NON DISPONIBLE/);
   }finally{cleanup()}
  }
+});
+
+test("Top 5 USD snapshot fixes five legacy euro labels, but fails closed on coin mismatch",()=>{
+ const s=setup();try{
+  s.active.active=false;
+  const coins=[
+   {id:"bitcoin",symbol:"BTC",usd:80740.51},
+   {id:"ethereum",symbol:"ETH",usd:2377.41},
+   {id:"binancecoin",symbol:"BNB",usd:737.5195},
+   {id:"ripple",symbol:"XRP",usd:1.2883},
+   {id:"solana",symbol:"SOL",usd:102.0162}
+  ];
+  const at=new Date().toISOString();
+  globalThis.state.dataBroker.spotBook={status:"ready",quotes:Object.fromEntries(
+    coins.map(c=>[c.id,{usd:c.usd,change24hUsd:-1,timestamp:at}]))};
+  const datasets=coins.map(c=>({atlasCoin:{id:c.id,symbol:c.symbol},data:[1,2]}));
+  globalThis.atlasChartPriceDatasets=()=>datasets;
+  globalThis.atlasChartLivePresentation=()=>null;
+  const rows=coins.map(c=>{
+   const price={textContent:"80 000,00 €",title:"legacy EUR"};
+   return{textContent:c.symbol+" "+c.id,price,
+     querySelector(sel){return sel===".atlas-chart-tooltip-values strong"?price:null}};
+  });
+  s.tooltip.querySelectorAll=sel=>sel===".atlas-chart-tooltip-row"?rows:
+    sel===".atlas-chart-tooltip-row .atlas-chart-tooltip-values strong"?rows.map(r=>r.price):[];
+  const point={dataIndex:1,dataset:datasets[0],raw:{y:50}};
+  assert.equal(s.run(point),"original");
+  assert.match(s.heading.textContent,/PRIX SNAPSHOT COINGECKO USD/);
+  assert.equal(s.tooltip.dataset.priceSource,"coingecko-native-usd");
+  for(const row of rows){
+   assert.ok(["$US","USD","US$"].some(mark=>row.price.textContent.includes(mark)),row.price.textContent);
+   assert.equal(row.price.textContent.includes("€"),false);
+   assert.match(row.price.title,/CoinGecko USD natif/);
+  }
+  rows[0].textContent="ETH Ethereum"; // no BTC identity: refuse all values
+  s.run(point);
+  assert.equal(s.tooltip.dataset.priceSource,"usd-history-unavailable");
+  assert.ok(rows.every(r=>r.price.textContent==="—"));
+ }finally{cleanup()}
 });
