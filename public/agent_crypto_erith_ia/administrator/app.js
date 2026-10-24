@@ -19650,7 +19650,7 @@ function atlasMarketExtendedEnsureDelegation(){
       event.preventDefault();
     }
 
-    const id=String(row.dataset.marketExtendedToggle||"");
+    const id=String(row.getAttribute("data-market-extended-toggle403116")||"");
     const coin=atlasMarketUniverseFind(id);
     if(!coin)return;
 
