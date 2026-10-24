@@ -25,14 +25,23 @@ test("IRYS seven closed UTC daily OHLCV bars reconcile to the native exchange ar
  const native=get("data/crypto/okx-hourly/irys-spot-candles.json");
  assert.equal(native.pair,"IRYS-USDC");
  const x=irys.dated_native_evidence;
- assert.equal(x.daily_bars_count,native.candles["1Dutc"].length);
- assert.equal(x.intraday_archive_counts["1H"],native.candles["1H"].length);
- assert.equal(x.zero_volume_candle_counts["1H"],native.candles["1H"].filter(a=>Number(a[5])===0).length);
+ // The live archive may acquire newer candles; audit the frozen observation window.
+ const datedDaily=native.candles["1Dutc"].filter(a=>Number(a[0])>=Date.parse(x.daily_first_open_utc)&&Number(a[0])<=Date.parse(x.daily_last_open_utc));
+ assert.equal(x.daily_bars_count,datedDaily.length);
+ // 1H data are a sliding 299-bar window. A newer archive legitimately
+ // replaces older hourly bars; only compare detailed counts on the SAME snapshot.
+ if(native.generated_at_utc===x.archive_generated_at_utc){
+  assert.equal(x.intraday_archive_counts["1H"],native.candles["1H"].length);
+  assert.equal(x.zero_volume_candle_counts["1H"],native.candles["1H"].filter(a=>Number(a[5])===0).length);
+ }else{
+  assert.ok(Date.parse(native.generated_at_utc)>Date.parse(x.archive_generated_at_utc));
+  assert.ok(x.zero_volume_candle_counts["1H"]<=x.intraday_archive_counts["1H"]);
+ }
  const week=native.candles["1Dutc"].filter(a=>Number(a[0])>=Date.parse("2026-10-17T00:00:00Z")&&Number(a[0])<Date.parse("2026-10-24T00:00:00Z"));
  assert.equal(week.length,7);
  const sum=week.reduce((s,a)=>s+Number(a[7]),0);
  assert.ok(Math.abs(sum-x.last_7_closed_utc_days.quote_turnover_usdc)<0.001);
- const last=[...native.candles["1Dutc"]].sort((a,b)=>Number(a[0])-Number(b[0])).at(-1);
+ const last=datedDaily.sort((a,b)=>Number(a[0])-Number(b[0])).at(-1);
  assert.equal(x.last_daily_bar_usdc.high,Number(last[2]));
  assert.equal(x.last_daily_bar_usdc.quote_turnover_usdc,Number(last[7]));
  assert.equal(irys.market_identity.orderbook_fill_proven,false);
@@ -40,8 +49,12 @@ test("IRYS seven closed UTC daily OHLCV bars reconcile to the native exchange ar
 
 test("ZEC quote and book figures refer to six actual OKX Spot snapshots, not summed rolling volume",()=>{
  const archive=get("data/crypto/case-market-hourly/2026-10-24.json");
- const snapshots=archive.hours.flatMap(h=>h.markets.filter(x=>x.pair==="ZEC-USDC"&&x.status==="OBSERVED"));
  const addon=zec.native_market_addendum;
+ // Hourly collector appends observations during the day; match original as-of cutoff.
+ const snapshots=archive.hours.flatMap(h=>h.markets.filter(x=>
+   x.pair==="ZEC-USDC"&&x.status==="OBSERVED"&&
+   x.proof?.book?.source_at_utc>=addon.observed_at_utc_first&&
+   x.proof?.book?.source_at_utc<=addon.observed_at_utc_last));
  assert.equal(snapshots.length,6);
  assert.equal(addon.snapshots_count,snapshots.length);
  const last=snapshots.at(-1),saved=addon.last_snapshot;
