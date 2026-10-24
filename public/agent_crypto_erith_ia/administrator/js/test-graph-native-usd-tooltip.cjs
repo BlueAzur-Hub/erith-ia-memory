@@ -5,7 +5,8 @@ const originalGlobals={};
 function setup(){
  for(const name of ["document","state","window","atlasExternalChartTooltip","atlasChartV2EffectiveView",
   "AgentCryptoQuoteCurrencyArchitecture","AtlasExternalChart","AgentCryptoNewListingsNativeCategory",
-  "AgentCryptoGraphNativeUsd406520","atlasChartPriceDatasets","atlasChartLivePresentation"])originalGlobals[name]=globalThis[name];
+  "AgentCryptoGraphNativeUsd406520","atlasChartPriceDatasets","atlasChartLivePresentation",
+  "AtlasMarketUniverse1000"])originalGlobals[name]=globalThis[name];
  const heading={textContent:"PRIX LIVE BINANCE"};
  const price={textContent:"ancien prix",title:""};
  const tooltip={hidden:false,dataset:{},
@@ -124,5 +125,55 @@ test("Top 5 USD snapshot fixes five legacy euro labels, but fails closed on coin
   assert.equal(rows[0].price.textContent,"—");
   assert.equal(rows[1].price.textContent,"—");
   assert.ok(rows.slice(2).every(r=>r.price.textContent.includes("$US")));
+ }finally{cleanup()}
+});
+
+
+test("Top 5 reads the fresh Market universe when state.coins is stale",()=>{
+ const s=setup();try{
+  s.active.active=false;
+  const coins=[
+   {id:"bitcoin",symbol:"BTC",usd:80740.51},
+   {id:"ethereum",symbol:"ETH",usd:2377.41},
+   {id:"binancecoin",symbol:"BNB",usd:737.5195},
+   {id:"ripple",symbol:"XRP",usd:1.2883},
+   {id:"solana",symbol:"SOL",usd:102.0162}
+  ];
+  const at=new Date().toISOString(),outdated="2026-10-20T00:00:00Z";
+  // In Firefox the Market has reloaded while the graph still owns old rows.
+  globalThis.state.coins=coins.map(c=>({id:c.id,symbol:c.symbol,
+    priceUsd:c.usd+500,usdUpdatedAt:outdated,lastUpdated:at}));
+  globalThis.state.dataBroker.spotBook={status:"stale",quotes:{}};
+  globalThis.AtlasMarketUniverse1000={find:id=>{
+    const c=coins.find(item=>item.id===id);
+    return c?{id:c.id,symbol:c.symbol,priceUsd:c.usd,usdUpdatedAt:at,
+      lastUpdated:outdated}:null;
+  }};
+  const datasets=coins.map(c=>({atlasCoin:{id:c.id,symbol:c.symbol},data:[1,2]}));
+  globalThis.atlasChartPriceDatasets=()=>datasets;
+  const rows=coins.map(c=>{
+   const price={textContent:"EUR legacy",title:""};
+   return{textContent:c.symbol+" "+c.id,price,
+     querySelector(sel){return sel===".atlas-chart-tooltip-values strong"?price:null}};
+  });
+  s.tooltip.querySelectorAll=sel=>sel===".atlas-chart-tooltip-row"?rows:
+    sel===".atlas-chart-tooltip-row .atlas-chart-tooltip-values strong"?rows.map(r=>r.price):[];
+  const point={dataIndex:1,dataset:datasets[0],raw:{y:50}};
+  assert.equal(s.run(point),"original");
+  assert.equal(s.tooltip.dataset.usdQuotesVerified,"5");
+  for(let i=0;i<rows.length;i++){
+   const expected=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"USD",
+    minimumFractionDigits:2,maximumFractionDigits:Math.abs(coins[i].usd)>=1000?2:
+      Math.abs(coins[i].usd)>=1?4:6}).format(coins[i].usd);
+   assert.equal(rows[i].price.textContent,expected);
+   assert.equal(rows[i].price.textContent.includes("€"),false);
+  }
+  // A different asset cannot lend a USD quote to a BTC chart row.
+  const finder=globalThis.AtlasMarketUniverse1000.find;
+  globalThis.AtlasMarketUniverse1000.find=id=>id==="bitcoin"?
+    {id:"ethereum",priceUsd:9999,usdUpdatedAt:at}:finder(id);
+  s.run(point);
+  assert.equal(rows[0].price.textContent,"—");
+  assert.equal(s.tooltip.dataset.usdQuotesVerified,"4");
  }finally{cleanup()}
 });
