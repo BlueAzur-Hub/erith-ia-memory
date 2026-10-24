@@ -13,7 +13,9 @@ const cat=ctx.AgentCryptoHistorySourceCatalog.compile(one,verified);
 const query=options=>ctx.AgentCryptoHistorySourceCatalog.query(cat,options);
 test("one owner per exact ID, no cross-source conversion",()=>{
  assert.equal(cat.count,250);assert.equal(cat.quoteConversion,false);assert.equal(cat.realOrders,false);
- assert.equal(cat.outOfUniverse.length,2);
+ assert.equal(cat.outOfUniverse.length,one.outOfUniverse.length);
+ assert.deepEqual(Array.from(cat.outOfUniverse,a=>a.id).sort(),
+   Array.from(one.outOfUniverse,a=>a.id).sort());
 });
 test("Q daily Bitget survives missing minute R9 and retains source proof",()=>{
  const q=query({id:"quack-ai",granularity:"1d"});

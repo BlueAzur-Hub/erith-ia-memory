@@ -40,7 +40,12 @@ test("inventory has no exchange orders, account access, or local writes",()=>{
 
 test("Historical catalog keeps obsolete Top250 memberships explicit",()=>{
  const x=api().assemble(native,day);
- assert.equal(x.totals.outOfUniverse,2);
- assert.ok(x.outOfUniverse.some(a=>a.id==="geodnet"));
- assert.ok(x.outOfUniverse.some(a=>a.id==="cash-4"));
+ const currentIds=new Set(native.assets.map(a=>a.id));
+ const outsideIds=day.assets.filter(a=>!currentIds.has(a.id)).map(a=>a.id).sort();
+ assert.equal(x.totals.outOfUniverse,outsideIds.length);
+ assert.deepEqual(Array.from(x.outOfUniverse,a=>a.id).sort(),outsideIds);
+ // Preserve archived membership without misclassifying a currently ranked asset.
+ for(const id of ["geodnet","cash-4"]){
+   assert.equal(x.outOfUniverse.some(a=>a.id===id),!currentIds.has(id));
+ }
 });
