@@ -116,6 +116,9 @@ function top5Tooltip(original,args){
   const result=original.apply(this,args);
   if(typeof document==="undefined")return result;
   const root=document.getElementById("atlasChartTooltip");
+  // The source app.js owns its own USD quote/age presentation.
+  // The legacy decorator must never hide an existing canonical price.
+  if(root?.dataset?.top5UsdOwner==="canonical-app")return result;
   if(!root||root.hidden)return result;
   const title=root.querySelector(".atlas-chart-tooltip-date");
   const rows=Array.from(root.querySelectorAll(".atlas-chart-tooltip-row"));
