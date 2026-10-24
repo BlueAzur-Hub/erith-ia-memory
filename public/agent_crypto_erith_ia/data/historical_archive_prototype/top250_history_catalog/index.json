@@ -4,8 +4,8 @@
   "quote": "USDT",
   "ranked": 250,
   "rank_snapshot": "2026-10-19T11:13:47.957Z",
-  "release_months": 100,
-  "release_count": 326,
+  "release_months": 103,
+  "release_count": 333,
   "excluded_historical_owners_outside_frozen_top250": 3,
   "excluded_historical_ids_sample": [
     "golem",
@@ -13,7 +13,7 @@
     "superfarm"
   ],
   "archived_assets": 126,
-  "native_1m_candles": 237746880,
+  "native_1m_candles": 240248160,
   "groups": [
     {
       "top": 10,
@@ -83,11 +83,39 @@
       "candles": 43200
     },
     {
+      "month": "2018-10",
+      "release": "crypto-spot-bulk-2018-10-1m",
+      "verified": 0,
+      "unavailable": 126,
+      "candles": 0
+    },
+    {
+      "month": "2018-11",
+      "release": "crypto-spot-bulk-2018-11-1m",
+      "verified": 0,
+      "unavailable": 126,
+      "candles": 0
+    },
+    {
+      "month": "2018-12",
+      "release": "crypto-spot-bulk-2018-12-1m",
+      "verified": 13,
+      "unavailable": 113,
+      "candles": 580320
+    },
+    {
       "month": "2018-12",
       "release": "crypto-spot-bulk-add-2018-12-1m-a03466e591fd",
       "verified": 1,
       "unavailable": 0,
       "candles": 44640
+    },
+    {
+      "month": "2019-01",
+      "release": "crypto-spot-bulk-2019-01-1m",
+      "verified": 14,
+      "unavailable": 112,
+      "candles": 624960
     },
     {
       "month": "2019-01",
@@ -98,10 +126,31 @@
     },
     {
       "month": "2019-02",
+      "release": "crypto-spot-bulk-2019-02-1m",
+      "verified": 15,
+      "unavailable": 111,
+      "candles": 604800
+    },
+    {
+      "month": "2019-02",
       "release": "crypto-spot-bulk-add-2019-02-1m-a03466e591fd",
       "verified": 1,
       "unavailable": 0,
       "candles": 40320
+    },
+    {
+      "month": "2019-03",
+      "release": "crypto-spot-bulk-2019-03-1m",
+      "verified": 0,
+      "unavailable": 126,
+      "candles": 0
+    },
+    {
+      "month": "2019-04",
+      "release": "crypto-spot-bulk-2019-04-1m",
+      "verified": 20,
+      "unavailable": 106,
+      "candles": 864000
     },
     {
       "month": "2019-04",
@@ -2386,7 +2435,7 @@
           "file": "BTCUSDT-1m-2018-12.zip",
           "sha256": "9000ed4af64f13ad7c13020fda026154c57006de99f6d4c91ea7fc35b1978903",
           "candles": 44640,
-          "release": "crypto-spot-bulk-add-2018-12-1m-a03466e591fd"
+          "release": "crypto-spot-bulk-2018-12-1m"
         },
         {
           "month": "2019-01",
@@ -2394,7 +2443,7 @@
           "file": "BTCUSDT-1m-2019-01.zip",
           "sha256": "08dd2f7306258d1b9fd0b9fc00ee807c1c96e9803c74c78c00a0072bfc826728",
           "candles": 44640,
-          "release": "crypto-spot-bulk-add-2019-01-1m-a03466e591fd"
+          "release": "crypto-spot-bulk-2019-01-1m"
         },
         {
           "month": "2019-02",
@@ -2402,7 +2451,7 @@
           "file": "BTCUSDT-1m-2019-02.zip",
           "sha256": "5ef0c96cb6f7cadb70cdceeb190ac350bf605dcde3930cdb3cc8942dc0ac98bc",
           "candles": 40320,
-          "release": "crypto-spot-bulk-add-2019-02-1m-a03466e591fd"
+          "release": "crypto-spot-bulk-2019-02-1m"
         },
         {
           "month": "2019-04",
@@ -2410,7 +2459,7 @@
           "file": "BTCUSDT-1m-2019-04.zip",
           "sha256": "617647d93837bc5a9a4866c089b87b21f9780d479dece0f623e8354be36216fe",
           "candles": 43200,
-          "release": "crypto-spot-bulk-add-2019-04-1m-a03466e591fd"
+          "release": "crypto-spot-bulk-2019-04-1m"
         },
         {
           "month": "2019-07",
@@ -2998,6 +3047,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -3024,6 +3076,38 @@
       "name": "Ethereum",
       "market_status": "approved_existing_archive",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2018-12.zip",
+          "sha256": "e3a5735d413f21fe5ac1276a1f841f3cacd6357e224146686e22ecc0c72f317e",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2019-01.zip",
+          "sha256": "86e6770246976d2ab0b21a22084bffd3a4c11c7cab9d4cda1dcaf30e1a772cf4",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2019-02.zip",
+          "sha256": "4b320265d1c632ed6fc174201d20a7fe5112f26c5ddf9aad822d29040c2dc5c4",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "ETHUSDT",
+          "file": "ETHUSDT-1m-2019-04.zip",
+          "sha256": "edc798b17340883d5b0c779d4077a75cb80f1ce4d22155532ba0e024dc56d1b3",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "ETHUSDT",
@@ -3610,6 +3694,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -3627,7 +3714,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3378240
     },
     {
       "id": "tether",
@@ -3646,6 +3733,38 @@
       "name": "BNB",
       "market_status": "approved_existing_archive",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2018-12.zip",
+          "sha256": "6c82be57f21547a60d7a21be1dae7e1ad286790995c54f99a460b5eeb0ab91cc",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2019-01.zip",
+          "sha256": "62ced0b37e879e3916984da5c2d09cac3abfd0c0366fd61d01fd76171c5d65f5",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2019-02.zip",
+          "sha256": "d091ecf06f9a0f5813de882fd8178296d6470b4d350f4cc2fe22792ffe2fcc98",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "BNBUSDT",
+          "file": "BNBUSDT-1m-2019-04.zip",
+          "sha256": "e44c98986d5da2100d15c0aad6b661f9197bcc3fb1dbfad87b13cd855e47c95a",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "BNBUSDT",
@@ -4232,6 +4351,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -4249,7 +4371,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3378240
     },
     {
       "id": "ripple",
@@ -4258,6 +4380,38 @@
       "name": "XRP",
       "market_status": "approved_existing_archive",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2018-12.zip",
+          "sha256": "3e82cff09c04777eda56cb8a41817a7cd8bf9431b7156305f19d99b7bc68778a",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2019-01.zip",
+          "sha256": "42a1dbfc7307378de4d77bd062a73a8da51413adf4299367490ed61984b2a6ee",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2019-02.zip",
+          "sha256": "6f90aa5eb4ce86f05772bef4a30570da511017aa542e04932fe1b3ed6a97113d",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "XRPUSDT",
+          "file": "XRPUSDT-1m-2019-04.zip",
+          "sha256": "449c971bd80ddef61e514d7d16abee43fb29f6dd0f9f74be4b34e19e3fc26687",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "XRPUSDT",
@@ -4844,6 +4998,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -4861,7 +5018,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3378240
     },
     {
       "id": "usd-coin",
@@ -4870,6 +5027,30 @@
       "name": "USDC",
       "market_status": "approved_existing_archive",
       "months": [
+        {
+          "month": "2019-01",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2019-01.zip",
+          "sha256": "759e5ebb843876d6de23d8844fc791f84bbec1085f0200f51672522e6233c5b6",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2019-02.zip",
+          "sha256": "25f946f55a876e5b30a6f3c28e9ecba009da74eeade938a44883330679bc58fc",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "USDCUSDT",
+          "file": "USDCUSDT-1m-2019-04.zip",
+          "sha256": "f45f54586b881c11ee8f0c340f7e37760479743f87cf4b565dd5a985cf9096b4",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "USDCUSDT",
@@ -5408,6 +5589,10 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -5431,7 +5616,7 @@
         "2023-02",
         "2023-03"
       ],
-      "candles": 2944800
+      "candles": 3072960
     },
     {
       "id": "solana",
@@ -5946,6 +6131,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -5982,6 +6174,38 @@
       "name": "TRON",
       "market_status": "approved_existing_archive",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2018-12.zip",
+          "sha256": "d072a30e4140191dc675edfa39cb4a26155c632a8daae4ee2d2714b8d24125dd",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2019-01.zip",
+          "sha256": "3eded40eb2acc2aa38bb4111c3dff1b1fa5a155360fb24c44d4129041075b3cc",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2019-02.zip",
+          "sha256": "c3c5eedded857063f0af1833f1182390f48c455f90cbba629ea50004268c629d",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "TRXUSDT",
+          "file": "TRXUSDT-1m-2019-04.zip",
+          "sha256": "8aafe6f2aaebcaba8c3b032082f5084d4b6493e8bc17908439b25a16c051532c",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "TRXUSDT",
@@ -6560,6 +6784,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -6578,7 +6805,7 @@
         "2021-12",
         "2023-03"
       ],
-      "candles": 3160800
+      "candles": 3333600
     },
     {
       "id": "figure-heloc",
@@ -6597,6 +6824,14 @@
       "name": "Zcash",
       "market_status": "approved_existing_archive",
       "months": [
+        {
+          "month": "2019-04",
+          "pair": "ZECUSDT",
+          "file": "ZECUSDT-1m-2019-04.zip",
+          "sha256": "e075700da3f8130d8b3daca97262ef6a135b8919ed6b8ecc1e4ba69c606b3a16",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "ZECUSDT",
@@ -7175,6 +7410,12 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -7193,7 +7434,7 @@
         "2021-12",
         "2023-03"
       ],
-      "candles": 3160800
+      "candles": 3204000
     },
     {
       "id": "hyperliquid",
@@ -7203,6 +7444,13 @@
       "market_status": "spot_candidate_identity_unverified",
       "months": [],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -7880,6 +8128,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -8007,6 +8262,14 @@
       "market_status": "approved_existing_archive",
       "months": [
         {
+          "month": "2019-04",
+          "pair": "USDSUSDT",
+          "file": "USDSUSDT-1m-2019-04.zip",
+          "sha256": "ecc6c4ecad11cf7bca7d37896b0778bbcc7e5323b558010bc7323cd0091463b5",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
+        {
           "month": "2019-07",
           "pair": "USDSUSDT",
           "file": "USDSUSDT-1m-2019-07.zip",
@@ -8096,6 +8359,12 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -8175,7 +8444,7 @@
         "2026-03",
         "2026-04"
       ],
-      "candles": 486720
+      "candles": 529920
     },
     {
       "id": "whitebit",
@@ -8194,6 +8463,22 @@
       "name": "Chainlink",
       "market_status": "approved_existing_archive",
       "months": [
+        {
+          "month": "2019-02",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2019-02.zip",
+          "sha256": "505d76f7136eecb46df0f686b9332dbec91c7afbe390ab9a1e26b2b4bb636f93",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "LINKUSDT",
+          "file": "LINKUSDT-1m-2019-04.zip",
+          "sha256": "65caea997867c1428c20aaddfea05800d084354033c75c34cd23734055089896",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "LINKUSDT",
@@ -8780,6 +9065,11 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -8797,7 +9087,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3288960
     },
     {
       "id": "leo-token",
@@ -8816,6 +9106,38 @@
       "name": "Cardano",
       "market_status": "approved_existing_archive",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2018-12.zip",
+          "sha256": "2a64006bc6f125e40800249df2e15ac4cead1ae3fcef64e17d133625e465d828",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2019-01.zip",
+          "sha256": "1c3414b10b881ff60f72e5ffb2dff51e4a54731c767a48d0c49e3ba410799bc3",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2019-02.zip",
+          "sha256": "3eef45dcf0db077a2d736e7998dcdc412217c198e19cd56bcaa9ec42eac42760",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "ADAUSDT",
+          "file": "ADAUSDT-1m-2019-04.zip",
+          "sha256": "cf27e1666fb1db3f8610bebf0078984fb22b05bbee93f37c8a91b2c97f871879",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "ADAUSDT",
@@ -9402,6 +9724,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -9419,7 +9744,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3378240
     },
     {
       "id": "rain",
@@ -9944,6 +10269,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -9980,6 +10312,38 @@
       "name": "Stellar",
       "market_status": "approved_existing_archive",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2018-12.zip",
+          "sha256": "d172d78cca040bdb7115fe5a3ad253d8e4967ffc7a8cd34a00bcea97477967de",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2019-01.zip",
+          "sha256": "6749289467a1fcb2fac64bf8b1f4331e5e65bd0a03409cb875196b9031e02a1b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2019-02.zip",
+          "sha256": "391598446381b06703ca05c34ac7b83a86b831278f2d3c4b61196128c885b52f",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "XLMUSDT",
+          "file": "XLMUSDT-1m-2019-04.zip",
+          "sha256": "a5b0fa39049529752e91a1cf5194cda889c21d66d6c52f87c09241ac80bab415",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "XLMUSDT",
@@ -10566,6 +10930,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -10583,7 +10950,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3378240
     },
     {
       "id": "bitcoin-cash",
@@ -11154,6 +11521,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -11281,6 +11655,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -11368,6 +11749,38 @@
       "name": "Litecoin",
       "market_status": "approved_existing_archive",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2018-12.zip",
+          "sha256": "fa4490bf80ade49920eaf521366e85663116832b1596a2a68b33cec8e3c1358c",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2019-01.zip",
+          "sha256": "f9226fdfb532294c883d1e83d3c691e6c4ce76555d338ae8adbadceba3fd9ff2",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2019-02.zip",
+          "sha256": "07239963272177c0cd9b5fa802f09b62940763cb695c4fb9b4cc719798f85b0e",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "LTCUSDT",
+          "file": "LTCUSDT-1m-2019-04.zip",
+          "sha256": "da76a60795689c9dd397248055c91bb5407e92b5f2bbc2b2262995a11fd1a739",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "LTCUSDT",
@@ -11954,6 +12367,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -11971,7 +12387,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3378240
     },
     {
       "id": "uniswap",
@@ -12494,6 +12910,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -13053,6 +13476,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -13410,6 +13840,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -13609,6 +14046,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -13710,6 +14154,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -14377,6 +14828,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -14455,6 +14913,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -14802,6 +15267,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -15354,6 +15826,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -15859,6 +16338,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -16154,6 +16640,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -16290,6 +16783,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -16917,6 +17417,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -17101,6 +17608,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -17281,6 +17795,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -17458,6 +17979,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -17852,6 +18380,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -18435,6 +18970,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -19001,6 +19543,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -19133,6 +19682,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -19330,6 +19886,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -19740,6 +20303,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -19917,6 +20487,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -20494,6 +21071,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -20890,6 +21474,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -21053,6 +21644,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -21159,6 +21757,38 @@
       "name": "Ethereum Classic",
       "market_status": "spot_candidate_identity_unverified",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "ETCUSDT",
+          "file": "ETCUSDT-1m-2018-12.zip",
+          "sha256": "a6a779dc6197d61e7a35e3ade2220c73004e4c010338e211494057dfcce3f993",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "ETCUSDT",
+          "file": "ETCUSDT-1m-2019-01.zip",
+          "sha256": "f637727f020eebafdfa7cd00f9ed34758717ed33dbf2e1ef25a5824869395f72",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "ETCUSDT",
+          "file": "ETCUSDT-1m-2019-02.zip",
+          "sha256": "537bc3aa492c1b18d8bb72d01509484c0c2eb00e14f2d561c14d04c6109bf999",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "ETCUSDT",
+          "file": "ETCUSDT-1m-2019-04.zip",
+          "sha256": "d9843db895e7c0750f99826231cfd467cc985e30d5ed387bbf2c0f9b8960bf45",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "ETCUSDT",
@@ -21745,6 +22375,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -21762,7 +22395,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3378240
     },
     {
       "id": "venice-token",
@@ -22303,6 +22936,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -22943,6 +23583,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -23237,6 +23884,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -23454,7 +24108,15 @@
           "release": "crypto-spot-bulk-add-2026-09-1m-c8161b623058"
         }
       ],
-      "missing_months": [],
+      "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04"
+      ],
       "candles": 1051200
     },
     {
@@ -23596,6 +24258,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -23823,7 +24492,15 @@
           "release": "crypto-spot-bulk-add-2026-09-1m-c8161b623058"
         }
       ],
-      "missing_months": [],
+      "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04"
+      ],
       "candles": 1139040
     },
     {
@@ -24349,6 +25026,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -24891,6 +25575,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -25365,6 +26056,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -25430,6 +26128,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -25755,6 +26460,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -26181,6 +26893,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2023-03"
       ],
       "candles": 1926720
@@ -26710,6 +27429,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2021-01",
         "2021-02",
         "2021-03",
@@ -27089,6 +27815,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -27385,6 +28118,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -27504,6 +28244,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -27617,6 +28364,14 @@
       "name": "Dash",
       "market_status": "spot_candidate_identity_unverified",
       "months": [
+        {
+          "month": "2019-04",
+          "pair": "DASHUSDT",
+          "file": "DASHUSDT-1m-2019-04.zip",
+          "sha256": "41145144f2c0cb9b482027782f99c5ae025fd5993822f7fd8acd85dec0307e20",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "DASHUSDT",
@@ -28203,6 +28958,12 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -28220,7 +28981,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3248640
     },
     {
       "id": "quack-ai",
@@ -28521,6 +29282,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -28845,6 +29613,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -28923,6 +29698,38 @@
       "name": "VeChain",
       "market_status": "spot_candidate_identity_unverified",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "VETUSDT",
+          "file": "VETUSDT-1m-2018-12.zip",
+          "sha256": "4ce221c388fc8faa2126bbd81bf2286da30256c421217f9f1e44c2b6f572890c",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "VETUSDT",
+          "file": "VETUSDT-1m-2019-01.zip",
+          "sha256": "b2ae7c6837a98d0b94200b3247fedd7a45e1ae2ef348edbdc9d59c301e73dc4b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "VETUSDT",
+          "file": "VETUSDT-1m-2019-02.zip",
+          "sha256": "de2f6b9663c3b7a0f9065b10ba3b0ca89daf0286d7fd9d3c1f9aed38abaf6dec",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "VETUSDT",
+          "file": "VETUSDT-1m-2019-04.zip",
+          "sha256": "f9c02af5e3e9d9376420d1d6b12066cd703f48a63fd0ae28c714038e58936c5a",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "VETUSDT",
@@ -29509,6 +30316,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -29526,7 +30336,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3378240
     },
     {
       "id": "flare-networks",
@@ -30067,6 +30877,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -30587,6 +31404,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -30648,6 +31472,38 @@
       "name": "TrueUSD",
       "market_status": "spot_candidate_identity_unverified",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "TUSDUSDT",
+          "file": "TUSDUSDT-1m-2018-12.zip",
+          "sha256": "11b16d6e4891bccef47dbcc2cc9f4af1269b620a8f6bb1dd073f5c7f3d349dfd",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "TUSDUSDT",
+          "file": "TUSDUSDT-1m-2019-01.zip",
+          "sha256": "822f205ec1b5559c672b066893441c854f9fab5075f79eabb3db8b16ab56d65b",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "TUSDUSDT",
+          "file": "TUSDUSDT-1m-2019-02.zip",
+          "sha256": "e8cbde124e6b55b28ae3685a2c692d4054e832fc0a19269724a4225685c40e82",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "TUSDUSDT",
+          "file": "TUSDUSDT-1m-2019-04.zip",
+          "sha256": "fa24504c7918f0eb47fa37e65c38d2fc21ae4de11c81f93255cd8e81ccea8e7a",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "TUSDUSDT",
@@ -31178,6 +32034,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -31202,7 +32061,7 @@
         "2023-02",
         "2023-03"
       ],
-      "candles": 2900160
+      "candles": 3072960
     },
     {
       "id": "euro-coin",
@@ -31393,6 +32252,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -31642,6 +32508,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -31980,6 +32853,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -32058,6 +32938,14 @@
       "name": "Artificial Superintelligence Alliance",
       "market_status": "spot_candidate_identity_unverified",
       "months": [
+        {
+          "month": "2019-04",
+          "pair": "FETUSDT",
+          "file": "FETUSDT-1m-2019-04.zip",
+          "sha256": "dbc9b0b7485497fc9e041d71ef82dd581680bd6222c8e4e76938fe188922810e",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "FETUSDT",
@@ -32644,6 +33532,12 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -32661,7 +33555,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3248640
     },
     {
       "id": "virtual-protocol",
@@ -32800,6 +33694,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -33145,6 +34046,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -33523,6 +34431,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -33702,6 +34617,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -33887,6 +34809,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -34556,6 +35485,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -34903,6 +35839,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -35347,6 +36290,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -35578,6 +36528,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -36115,6 +37072,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -36588,6 +37552,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -36719,6 +37690,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -37292,6 +38270,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -37329,6 +38314,14 @@
       "name": "Basic Attention",
       "market_status": "spot_candidate_identity_unverified",
       "months": [
+        {
+          "month": "2019-04",
+          "pair": "BATUSDT",
+          "file": "BATUSDT-1m-2019-04.zip",
+          "sha256": "0f67be8f3e4d4d75a2db88ef0d718090d454f1da1a51538c48ed28349e2e72bb",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "BATUSDT",
@@ -37915,6 +38908,12 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -37932,7 +38931,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3248640
     },
     {
       "id": "backpack",
@@ -38081,6 +39080,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -38673,6 +39679,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -39239,6 +40252,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -39538,6 +40558,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -39710,6 +40737,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -40261,6 +41295,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -40615,6 +41656,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -41125,6 +42173,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -41625,6 +42680,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -41853,6 +42915,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -42021,6 +43090,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -42426,6 +43502,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -42583,6 +43666,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -43111,6 +44201,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -43667,6 +44764,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -43752,6 +44856,38 @@
       "name": "IOTA",
       "market_status": "spot_candidate_identity_unverified",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "IOTAUSDT",
+          "file": "IOTAUSDT-1m-2018-12.zip",
+          "sha256": "dcc06c0322f1773ec64200c6d77a1c633dc37e94eac2d279f964eca837a26ab7",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "IOTAUSDT",
+          "file": "IOTAUSDT-1m-2019-01.zip",
+          "sha256": "d1e95b84efbcd79d8597c21346eec2b297ed491d737918419e438fcb3f404d08",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "IOTAUSDT",
+          "file": "IOTAUSDT-1m-2019-02.zip",
+          "sha256": "f0b3a2e4dc88494e6e09c4489bf5fb8f0648d4657b6eff5c55c6bdcc9517f4c7",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "IOTAUSDT",
+          "file": "IOTAUSDT-1m-2019-04.zip",
+          "sha256": "7f2c93d4620c4302bbe54e0b77814871bec55e82058edc583ebeb87659a84c26",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "IOTAUSDT",
@@ -44338,6 +45474,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -44355,7 +45494,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3378240
     },
     {
       "id": "tradable-na-rent-financing-platform-sstn",
@@ -44626,6 +45765,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -45117,6 +46263,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -45668,6 +46821,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -45787,6 +46947,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -46390,6 +47557,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -46484,6 +47658,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -47132,6 +48313,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -47682,6 +48870,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -47803,6 +48998,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -48426,6 +49628,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -48698,6 +49907,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -48800,6 +50016,38 @@
       "name": "NEO",
       "market_status": "spot_candidate_identity_unverified",
       "months": [
+        {
+          "month": "2018-12",
+          "pair": "NEOUSDT",
+          "file": "NEOUSDT-1m-2018-12.zip",
+          "sha256": "34e43564c592ada2978fb58b9bcd3071c3039aae0d22b315b1fadc37e92b68db",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2018-12-1m"
+        },
+        {
+          "month": "2019-01",
+          "pair": "NEOUSDT",
+          "file": "NEOUSDT-1m-2019-01.zip",
+          "sha256": "59b8b2ad21a132710852c9b0bf1256549b1ffdaa34e26beb1da540f1a2cccd99",
+          "candles": 44640,
+          "release": "crypto-spot-bulk-2019-01-1m"
+        },
+        {
+          "month": "2019-02",
+          "pair": "NEOUSDT",
+          "file": "NEOUSDT-1m-2019-02.zip",
+          "sha256": "7428013268d52e75e386174ac0ff2665ef86eafdc0b7a25ad4f5a11d0eb25ce9",
+          "candles": 40320,
+          "release": "crypto-spot-bulk-2019-02-1m"
+        },
+        {
+          "month": "2019-04",
+          "pair": "NEOUSDT",
+          "file": "NEOUSDT-1m-2019-04.zip",
+          "sha256": "6421ad878cdb79fcc698c3fc09b68096f14a637f4d8324dff1635dea73f4bdb0",
+          "candles": 43200,
+          "release": "crypto-spot-bulk-2019-04-1m"
+        },
         {
           "month": "2019-07",
           "pair": "NEOUSDT",
@@ -49386,6 +50634,9 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2019-03",
         "2019-05",
         "2019-06",
         "2019-08",
@@ -49403,7 +50654,7 @@
         "2021-09",
         "2023-03"
       ],
-      "candles": 3205440
+      "candles": 3378240
     },
     {
       "id": "coco-2",
@@ -49512,6 +50763,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -49636,6 +50894,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -50303,6 +51568,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -50757,6 +52029,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -50849,6 +52128,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2026-04",
         "2026-05",
         "2026-06"
@@ -50911,7 +52197,15 @@
           "release": "crypto-spot-bulk-add-2026-09-1m-ae840b66c616"
         }
       ],
-      "missing_months": [],
+      "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04"
+      ],
       "candles": 263520
     },
     {
@@ -51363,6 +52657,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -51963,6 +53264,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -52477,6 +53785,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -52665,6 +53980,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
@@ -52761,7 +54083,15 @@
           "release": "crypto-spot-bulk-add-2026-09-1m-ae840b66c616"
         }
       ],
-      "missing_months": [],
+      "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04"
+      ],
       "candles": 263520
     },
     {
@@ -53261,6 +54591,13 @@
         }
       ],
       "missing_months": [
+        "2018-10",
+        "2018-11",
+        "2018-12",
+        "2019-01",
+        "2019-02",
+        "2019-03",
+        "2019-04",
         "2019-05",
         "2019-06",
         "2019-07",
