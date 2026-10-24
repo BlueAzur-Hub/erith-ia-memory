@@ -140,7 +140,6 @@ def update(fetch=verified.fetch_public, now=None, root=OUT):
         "source_date_utc": day,
         "requested_pairs": len(SYMBOLS),
         "covered_pairs": len(archived),
-        "updated_pairs": sorted(new_archives),
         "archives": archived,
         "failed_this_attempt": failures,
         "native_quote": "USDC",
@@ -154,7 +153,7 @@ def update(fetch=verified.fetch_public, now=None, root=OUT):
         prior = None
     if prior != manifest:
         write_atomic(dest, manifest)
-    return manifest
+    return {**manifest, "updated_pairs": sorted(new_archives)}
 
 
 def main():
