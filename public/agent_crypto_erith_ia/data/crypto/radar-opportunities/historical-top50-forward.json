@@ -1,7 +1,7 @@
 {
   "schema": "erith.radar.top50-retrospective-review.v1",
   "record_kind": "retrospective_descriptive_check_not_paper_trades",
-  "latest_archive_day_utc": "2026-10-23",
+  "latest_archive_day_utc": "2026-10-24",
   "archive_days_scanned": 60,
   "selection_scope": "Top50 historical daily snapshots only; separate criteria from prospective Top1000",
   "selection_filters": {
@@ -15,23 +15,6 @@
   "trade_executions_recorded": false,
   "note": "Pure retrospective, with possible selection and survivorship bias. Only an exact future dated public snapshot with the same asset id is compared; missing is null, not zero.",
   "observations": [
-    {
-      "id": "rain",
-      "symbol": "RAIN",
-      "rank": 13,
-      "observed_at": "2026-08-25T23:40:20.620Z",
-      "price_usd": 0.018186595546948583,
-      "change24h_pct": 22.31212,
-      "change7d_pct": 39.6,
-      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
-      "future_7d_date": "2026-09-01",
-      "observed_followup_at": "2026-09-01T21:48:38.943Z",
-      "observed_followup_price_usd": 0.016342314967561142,
-      "followup_change_pct": -10.14,
-      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
-      "source_path": "data/history/2026-08-25.jsonl",
-      "followup_source_path": "data/history/2026-09-01.jsonl"
-    },
     {
       "id": "pump-fun",
       "symbol": "PUMP",
@@ -2439,12 +2422,12 @@
       "change7d_pct": 60.8606,
       "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
       "future_7d_date": "2026-10-24",
-      "observed_followup_at": null,
-      "observed_followup_price_usd": null,
-      "followup_change_pct": null,
-      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "observed_followup_at": "2026-10-24T07:20:20.981Z",
+      "observed_followup_price_usd": 1.724625773887035,
+      "followup_change_pct": -31.56,
+      "followup_status": "OBSERVED_MARKET_SNAPSHOT",
       "source_path": "data/history/2026-10-17.jsonl",
-      "followup_source_path": null
+      "followup_source_path": "data/history/2026-10-24.jsonl"
     },
     {
       "id": "monero",
@@ -2614,6 +2597,23 @@
       "followup_change_pct": null,
       "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
       "source_path": "data/history/2026-10-21.jsonl",
+      "followup_source_path": null
+    },
+    {
+      "id": "memecore",
+      "symbol": "M",
+      "rank": 45,
+      "observed_at": "2026-10-24T07:20:20.981Z",
+      "price_usd": 1.0097904567164293,
+      "change24h_pct": 12.31388,
+      "change7d_pct": 27.9371,
+      "selection_rule": "TOP50_RETROSPECTIVE_MOMENTUM_WITH_EUR_VOLUME_AND_CAP_FILTER",
+      "future_7d_date": "2026-10-31",
+      "observed_followup_at": null,
+      "observed_followup_price_usd": null,
+      "followup_change_pct": null,
+      "followup_status": "FOLLOWUP_SNAPSHOT_MISSING",
+      "source_path": "data/history/2026-10-24.jsonl",
       "followup_source_path": null
     }
   ]
