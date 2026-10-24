@@ -114,7 +114,7 @@ test("Top 5 USD snapshot fixes five legacy euro labels, but fails closed on coin
   assert.match(s.heading.textContent,/PRIX SNAPSHOT COINGECKO USD/);
   assert.equal(s.tooltip.dataset.priceSource,"coingecko-native-usd");
   for(const row of rows){
-   assert.match(row.price.textContent,/\\$US|USD|US\\$/);
+   assert.ok(["$US","USD","US$"].some(mark=>row.price.textContent.includes(mark)),row.price.textContent);
    assert.equal(row.price.textContent.includes("€"),false);
    assert.match(row.price.title,/CoinGecko USD natif/);
   }
