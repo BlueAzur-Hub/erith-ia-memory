@@ -5,6 +5,7 @@ on:
     paths:
       - 'public/agent_crypto_erith_ia/data/crypto/research/**'
       - 'public/agent_crypto_erith_ia/laboratoire/crypto-knowledge.html'
+      - 'public/agent_crypto_erith_ia/laboratoire/spot-comparison-paper*'
       - 'public/agent_crypto_erith_ia/laboratoire/CARTOGRAPHIE_CRYPTO_USAGES_ET_CIBLES.md'
       - 'public/agent_crypto_erith_ia/administrator/js/market-radar-native.js'
       - 'public/agent_crypto_erith_ia/trader/quack-ai-case-study.html'
@@ -15,6 +16,7 @@ on:
     paths:
       - 'public/agent_crypto_erith_ia/data/crypto/research/**'
       - 'public/agent_crypto_erith_ia/laboratoire/crypto-knowledge.html'
+      - 'public/agent_crypto_erith_ia/laboratoire/spot-comparison-paper*'
       - 'public/agent_crypto_erith_ia/administrator/js/market-radar-native.js'
       - 'public/agent_crypto_erith_ia/trader/quack-ai-case-study.html'
       - 'public/agent_crypto_erith_ia/tools/test-crypto-knowledge.cjs'
@@ -34,3 +36,7 @@ jobs:
         run: node public/agent_crypto_erith_ia/tools/test-crypto-knowledge.cjs
       - name: Regression legacy Radar
         run: node public/agent_crypto_erith_ia/laboratoire/test-radar.cjs
+      - name: Verify the 3-market PAPER model offline
+        run: node --test public/agent_crypto_erith_ia/laboratoire/test-spot-comparison-paper.cjs
+      - name: Validate comparator engine syntax
+        run: node --check public/agent_crypto_erith_ia/laboratoire/spot-comparison-paper-core.cjs
