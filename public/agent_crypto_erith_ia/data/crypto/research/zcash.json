@@ -155,5 +155,41 @@
       "note": "new listing is separate from established ZEC spot study"
     }
   ],
-  "audit_note": "No live data or account-specific execution claim; screenshot timestamps approximate at minute granularity. PnL+23.82 in Yoann photo cannot be treated as realized result."
+  "audit_note": "No live data or account-specific execution claim; screenshot timestamps approximate at minute granularity. PnL+23.82 in Yoann photo cannot be treated as realized result.",
+  "native_market_addendum": {
+    "published_observation_date_utc": "2026-10-24",
+    "source": "data/crypto/case-market-hourly/2026-10-24.json",
+    "source_type": "OKX_EEA_PUBLIC_REST_SPOT_SNAPSHOTS",
+    "pair": "ZEC-USDC",
+    "quote": "USDC",
+    "snapshots_count": 6,
+    "observed_at_utc_first": "2026-10-24T00:44:07Z",
+    "observed_at_utc_last": "2026-10-24T06:25:40Z",
+    "last_snapshot": {
+      "at_utc": "2026-10-24T06:25:40Z",
+      "venue": "OKX_EEA",
+      "pair": "ZEC-USDC",
+      "quote": "USDC",
+      "last_ticker_usdc": 1170.05,
+      "rolling_24h_quote_turnover_usdc": 13400473.1206255,
+      "best_bid_usdc": 1170.28,
+      "best_ask_usdc": 1170.56,
+      "source_spread_bps": 2.39,
+      "bid_top5_quote_depth_usdc": 697.6884,
+      "ask_top5_quote_depth_usdc": 16169.7596,
+      "fills_proven": false
+    },
+    "mean_spread_bps_in_sample": 1.9217,
+    "volume_scope": "Each quote turnover is ROLLING_24H ticker at time of capture; DO NOT SUM across samples as though incremental hourly volume",
+    "spot_depth_scope": "Top five visible bids and asks only; not total market depth, future liquidity or executable fill",
+    "no_live_claim": true,
+    "account_access_verified": false,
+    "fees_real_verified": false,
+    "settlement_and_lot_constraints_verified": false,
+    "follow_up": [
+      "Freeze an entry rule and measure later actual dated bids before calculating PAPER PnL",
+      "Check top-of-book depth and spread at every exit; no intraday interpolation",
+      "Keep OKX ZEC-USDC Spot separate from derivatives and USD-based CoinGecko summary"
+    ]
+  }
 }
