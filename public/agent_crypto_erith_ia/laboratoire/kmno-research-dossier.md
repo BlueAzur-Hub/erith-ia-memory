@@ -87,7 +87,7 @@ Le token sert aux mécanismes de **staking, récompenses et participation à l'�
 
 ### 6. Équipe, contrôle et sécurité
 
-Kamino a annoncé un responsable exécutif en septembre 2026. Il demeure important de distinguer la direction du projet, les curateurs de risque, les multisignatures capables de modifier les paramètres et le futur périmètre éventuel de la gouvernance. Selon la revue Blockworks au 6 octobre, des autorités de mise à jour et d'administration sont contrôlées par des multisignatures, avec des délais d'activation (timelocks). Cela réduit certains risques de changement instantané mais représente une **dépendance de gouvernance et d'administration**.
+Kamino a annoncé Michael Weisz comme CEO le 15 septembre 2026. Le 16 octobre 2026, le groupe a présenté deux recrutements pour son expansion institutionnelle américaine : Matthew Klopfer (développement institutionnel) et Blake Messer (Agentic Operations). Ces annonces décrivent une stratégie de développement, mais ne démontrent ni adoption future ni augmentation de la valeur du jeton [S15]. Il demeure important de distinguer la direction du projet, les curateurs de risque, les multisignatures capables de modifier les paramètres et le futur périmètre éventuel de la gouvernance. Selon la revue Blockworks au 6 octobre, des autorités de mise à jour et d'administration sont contrôlées par des multisignatures, avec des délais d'activation (timelocks). Cela réduit certains risques de changement instantané mais représente une **dépendance de gouvernance et d'administration**.
 
 Kamino revendique **18 audits externes** et **4 vérifications formelles**, avec des rapports accessibles, ainsi qu'aucune dette irrécouvrable dans les événements majeurs qu'il documente. Lors de l'épisode des 5–6 février 2026, il indique 19,36 M$ de collatéral liquidé et 0$ de mauvaise dette. Ce sont des informations tirées de la documentation du projet et de la revue documentaire : **aucune auditabilité n'élimine le risque d'un futur incident**. Sources [S3], [S5], [S8].
 
@@ -157,5 +157,6 @@ Référence archive publique : [S12]. La présence d'un historique de prix ne pr
 - **[S12]** ERITH.IA, manifeste de 51 archives natives Spot OKX : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/coverage.json
 - **[S13]** Kamino, audits et vérifications officielles : https://kamino.com/docs/security
 - **[S14]** Solscan, mint KMNO : https://solscan.io/token/KMNo3nJsBXfcpJTVhZcXLW7RmTwTt4GVFE7suUBo9sS
+- **[S15]** Kamino, communiqué d’expansion du 16 octobre 2026 : https://markets.financialcontent.com/stocks/article/bizwire-2026-10-16-kamino-accelerates-us-institutional-expansion-taps-private-markets-and-ai-leaders-to-build-the-future-of-onchain-credit?Language=english
 
 **Mise à jour :** données au 24 octobre 2026 ; toute décision ultérieure doit relire les instantanés récents et les sources officielles.
