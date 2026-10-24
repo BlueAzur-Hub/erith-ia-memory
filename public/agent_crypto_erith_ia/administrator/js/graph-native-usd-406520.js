@@ -114,7 +114,7 @@ function top5Tooltip(original,args){
     const q=index>=0&&!used.has(index)?quotes?.[index]:null;
     if(q&&q.quote.coinId===datasets[index].atlasCoin.id){
       field.textContent=money(q.price);
-      field.title=q.quote.source+" · "+new Date(q.quote.timestamp).toISOString()+
+      field.title="CoinGecko USD natif · "+q.quote.source+" · "+new Date(q.quote.timestamp).toISOString()+
         " · cotation actuelle, indépendante du point historique";
       used.add(index);valid++;oldest=Math.min(oldest,q.quote.timestamp);
     }else{
