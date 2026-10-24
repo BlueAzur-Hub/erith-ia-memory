@@ -1,0 +1,37 @@
+name: Administrator Top5 USD quote identity
+on:
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/tools/test_top5_usd_quotes.cjs'
+      - '.github/workflows/administrator-top5-usd.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js'
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/tools/test_top5_usd_quotes.cjs'
+      - '.github/workflows/administrator-top5-usd.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  top5-native-usd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+            /public/agent_crypto_erith_ia/administrator/index.html
+            /public/agent_crypto_erith_ia/tools/test_top5_usd_quotes.cjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify code syntax and identity-safe USD quotes without live orders
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
+          node --test public/agent_crypto_erith_ia/tools/test_top5_usd_quotes.cjs

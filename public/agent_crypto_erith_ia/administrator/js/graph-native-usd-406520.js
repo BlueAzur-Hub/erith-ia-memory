@@ -62,63 +62,82 @@ function nativeExternalHistoricalUsd(context){
  }catch(_){return null}
 }
 
+
+/* A current USD quote must retain its own identity and collection timestamp.
+   Rank-5 history remains canonical; these snapshots NEVER reprice EUR bars. */
+function top5VerifiedUsd(coin,book,now=Date.now()){
+ const fromBook=top5NativeUsd(coin,book,now);
+ if(fromBook)return fromBook;
+ let asset=null;try{asset=typeof state!=="undefined"?
+   state?.coins?.find?.(row=>String(row?.id||"")===String(coin?.id||"")):null}catch(_){}
+ asset=asset||coin;
+ if(!coin?.id||String(asset?.id||"")!==String(coin.id))return null;
+ const price=asset.priceUsd==null?NaN:Number(asset.priceUsd);
+ const timestamp=Date.parse(String(asset.spotUpdatedAt||asset.lastUpdated||asset.timestamp||""));
+ const age=now-timestamp;
+ if(!(Number.isFinite(price)&&price>0&&Number.isFinite(timestamp)&&age>=0&&age<=15*60000))return null;
+ return {quote:{status:"snapshot",kind:"coingecko-usd-explicit",coinId:coin.id,
+   price,timestamp,source:"CoinGecko USD · cotation observée"},
+   price,change24h:null};
+}
+const coinRowMatch=(row,coin)=>{
+ const symbol=String(coin?.symbol||"").trim().toUpperCase();
+ const name=String(coin?.name||coin?.label||"").trim().toUpperCase();
+ const label=String(row?.textContent||"").toUpperCase();
+ const tokens=[symbol,name].filter(v=>/^[A-Z0-9][A-Z0-9 .-]{1,35}$/.test(v));
+ return tokens.some(v=>new RegExp("(^|[^A-Z0-9])"+
+   v.replace(/[.*+?^${}()|[\]\\]/g,"\\function top5Tooltip(original,args){")+"(?=$|[^A-Z0-9])").test(label));
+};
+
 function top5Tooltip(original,args){
   const context=args[0]||{},chart=context.chart,tooltip=context.tooltip;
-  const point=tooltip?.dataPoints?.[0],data=point?.dataset?.data;
-  const atEnd=Array.isArray(data)&&data.length>0
-    &&Number.isInteger(point?.dataIndex)&&point.dataIndex>=data.length-1;
   const datasets=typeof atlasChartPriceDatasets==="function"?atlasChartPriceDatasets(chart):[];
   const book=typeof state!=="undefined"?state?.dataBroker?.spotBook:null;
   const coinIds=datasets.map(d=>String(d?.atlasCoin?.id||"")).filter(Boolean);
   const distinct=coinIds.length===5&&new Set(coinIds).size===5;
-  const snapshots=atEnd&&distinct?datasets.map(d=>top5NativeUsd(d.atlasCoin,book)):null;
-  const originalLive=globalThis.atlasChartLivePresentation;
-  const native=typeof originalLive==="function"&&!!snapshots&&snapshots.every(Boolean);
-  let result;
-  try{
-    if(native&&typeof originalLive==="function")
-      globalThis.atlasChartLivePresentation=(coin,p)=>Number(p||1)===1
-        ?top5NativeUsd(coin,book):null;
-    // A legacy lexical EUR formatter cannot be redirected globally.
-    // Render first, then replace each verified USD quote in the floatboard.
-    result=original.apply(this,args);
-  }finally{
-    if(native&&typeof originalLive==="function")globalThis.atlasChartLivePresentation=originalLive;
-  }
+  const quotes=distinct?datasets.map(d=>top5VerifiedUsd(d.atlasCoin,book)):null;
+  // Let the canonical historical graph render unchanged. Its old EUR price
+  // strings are replaced or hidden below, never simply relabelled USD.
+  const result=original.apply(this,args);
   if(typeof document==="undefined")return result;
   const root=document.getElementById("atlasChartTooltip");
   if(!root||root.hidden)return result;
   const title=root.querySelector(".atlas-chart-tooltip-date");
-  let reconciled=false;
-  if(native){
-    const rows=Array.from(root.querySelectorAll(".atlas-chart-tooltip-row"));
-    const prices=Array.from(root.querySelectorAll(".atlas-chart-tooltip-row .atlas-chart-tooltip-values strong"));
-    // The snapshot belongs to each charted coin. Never map a USD price to
-    // another row if DOM order/identity changed since the asynchronous render.
-    const match=rows.length===5&&prices.length===5&&rows.every((row,i)=>{
-      const symbol=String(datasets[i]?.atlasCoin?.symbol||"").trim().toUpperCase();
-      const label=String(row.textContent||"").toUpperCase();
-      return /^[A-Z0-9]{2,15}$/.test(symbol)&&
-        new RegExp("(^|[^A-Z0-9])"+symbol+"([^A-Z0-9]|$)").test(label);
-    });
-    if(match){
-      snapshots.forEach((item,i)=>{
-        prices[i].textContent=money(item.price);
-        prices[i].title="CoinGecko USD natif · snapshot "+new Date(item.quote.timestamp).toISOString();
-      });
-      const oldest=Math.min(...snapshots.map(x=>x.quote.timestamp));
-      if(title)title.textContent="PRIX SNAPSHOT COINGECKO USD · 24h · "+new Date(oldest).toLocaleTimeString("fr-FR");
-      reconciled=true;
+  const rows=Array.from(root.querySelectorAll(".atlas-chart-tooltip-row"));
+  const identities=rows.map(row=>distinct?
+    datasets.map((d,i)=>coinRowMatch(row,d?.atlasCoin)?i:-1).filter(i=>i>=0):[]);
+  const occurrences=new Map();
+  identities.forEach(match=>{if(match.length===1)occurrences.set(match[0],(occurrences.get(match[0])||0)+1);});
+  let valid=0,oldest=Infinity;
+  rows.forEach((row,rowIndex)=>{
+    const field=row.querySelector(".atlas-chart-tooltip-values strong");
+    if(!field)return;
+    const matches=identities[rowIndex];
+    // A duplicate name/coin is ambiguous: neither row can borrow its USD quote.
+    const index=matches.length===1&&occurrences.get(matches[0])===1?matches[0]:-1;
+    const q=index>=0?quotes?.[index]:null;
+    if(q&&q.quote.coinId===datasets[index].atlasCoin.id){
+      field.textContent=money(q.price);
+      field.title="CoinGecko USD natif · "+q.quote.source+" · "+new Date(q.quote.timestamp).toISOString()+
+        " · cotation actuelle, indépendante du point historique";
+      valid++;oldest=Math.min(oldest,q.quote.timestamp);
+    }else{
+      field.textContent="—";
+      field.title="Prix historique EUR masqué : aucune cotation USD récente et attribuée avec certitude à cette ligne";
     }
-  }
-  if(!reconciled){
-    // Historical Top-5 source is EUR, not USD. Preserve Base 100 only.
-    if(title)title.textContent="COMPARAISON BASE 100 · PRIX HISTORIQUE USD NON DISPONIBLE";
-    root.querySelectorAll(".atlas-chart-tooltip-row .atlas-chart-tooltip-values strong")
-      .forEach(node=>{node.textContent="—";node.title="USD absent ou identité du prix non concordante";});
-  }
+  });
+  // Even if an old tooltip renderer omits its row wrappers, never leak EUR
+  // through orphan <strong> fields whose identity could not be established.
+  const mapped=new Set(rows.map(row=>row.querySelector?.(".atlas-chart-tooltip-values strong")).filter(Boolean));
+  root.querySelectorAll(".atlas-chart-tooltip-row .atlas-chart-tooltip-values strong")
+    .forEach(field=>{if(!mapped.has(field)){field.textContent="—";field.title="Identité du prix USD non vérifiable";}});
+  if(title)title.textContent=valid?
+    "PRIX SNAPSHOT COINGECKO USD · "+valid+"/5 vérifiées · "+new Date(oldest).toLocaleTimeString("fr-FR")+
+      " · cotations distinctes des courbes historiques Base 100":
+    "COMPARAISON BASE 100 · PRIX HISTORIQUE USD NON DISPONIBLE · COTATIONS USD RÉCENTES NON DISPONIBLES";
   root.dataset.displayCurrency="USD";
-  root.dataset.priceSource=reconciled?"coingecko-native-usd":"usd-history-unavailable";
+  root.dataset.priceSource=valid===5?"coingecko-native-usd":valid?"coingecko-native-usd-partial":"usd-history-unavailable";
+  root.dataset.usdQuotesVerified=String(valid);
   return result;
 }
 

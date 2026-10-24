@@ -118,9 +118,11 @@ test("Top 5 USD snapshot fixes five legacy euro labels, but fails closed on coin
    assert.equal(row.price.textContent.includes("€"),false);
    assert.match(row.price.title,/CoinGecko USD natif/);
   }
-  rows[0].textContent="ETH Ethereum"; // no BTC identity: refuse all values
+  rows[0].textContent="ETH Ethereum"; // two ETH labels: both fail identity guard
   s.run(point);
-  assert.equal(s.tooltip.dataset.priceSource,"usd-history-unavailable");
-  assert.ok(rows.every(r=>r.price.textContent==="—"));
+  assert.equal(s.tooltip.dataset.priceSource,"coingecko-native-usd-partial");
+  assert.equal(rows[0].price.textContent,"—");
+  assert.equal(rows[1].price.textContent,"—");
+  assert.ok(rows.slice(2).every(r=>r.price.textContent.includes("$US")));
  }finally{cleanup()}
 });
