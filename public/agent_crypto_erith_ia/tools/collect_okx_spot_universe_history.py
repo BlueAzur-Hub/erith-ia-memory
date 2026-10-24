@@ -154,6 +154,7 @@ def collect_pair(symbol, fetch=verified.fetch_public, now=None, previous=None,
         "source": "https://eea.okx.com/api/v5/market/history-candles",
         "generated_at_utc": now.isoformat(timespec="seconds").replace("+00:00", "Z"),
         "bar_interval_ms": verified.BARS,
+        "history_collection_mode": "paged_bounded",
         "listing_group": ("okx_new_offers_2026-10-24"
                           if symbol in NEW_OFFERS else "okx_top_gainers_2026-10-24"
                           if symbol in SYMBOLS else "public_listings_feed"),
@@ -199,7 +200,8 @@ def update(fetch=verified.fetch_public, now=None, root=OUT, feed_path=FEED):
         pair = symbol + "-USDC"
         dest = target_path(symbol, root, selected)
         older = read_previous(dest, pair)
-        if older and str(older.get("generated_at_utc", "")).startswith(day):
+        if (older and str(older.get("generated_at_utc", "")).startswith(day)
+                and older.get("history_collection_mode") == "paged_bounded"):
             data = older
         else:
             try:
