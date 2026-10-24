@@ -1,5 +1,19 @@
 # SEVEN HEAVEN — Relais courant Agent-Crypto
 
+## Priorité de passation · 24 octobre 2026 · DONNÉES OKX, pas d'audit supplémentaire
+
+**Problème utilisateur démontré par Firefox :** sélection IRYS, détail IRYS mais ancienne courbe BTC conservée (~80 875 USD). OKX possède les historiques IRYS/USDC : le défaut est l'absence de données historiques correspondantes dans ERITH.IA puis le raccordement du renderer. Le Market Top 1000 / Radar et le collecteur OKX initial (BTC/ETH/SOL/XRP/OKB/CT) ne couvraient pas les nombreuses paires Spot USDC visibles chez OKX.
+
+**Livré et vérifié dans les vraies données :** [PR #661](https://github.com/BlueAzur-Hub/erith-ia-memory/pull/661), main, a ajouté les bougies closes `IRYS-USDC` via le job horaire déjà existant. Le [JSON IRYS](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/okx-hourly/irys-spot-candles.json) vérifié le 24 octobre à 03:22:45 UTC contient 299 bougies 15m (21-24 oct.), 299 bougies 1H (11-24 oct.), 150 bougies 1Dutc (27 mai-23 oct.), toutes natif **USDC**, sans fausses transactions ni accès compte.
+
+**Livré avec tests CI :** [PR #662](https://github.com/BlueAzur-Hub/erith-ia-memory/pull/662) ajoute **24 autres paires exactes USDC** de la capture (KAT, CP, DOS, KMNO, SAFE, PROS, WCT, ZORA, BARD, ARKM, BIGTIME, AI, BABY, AVNT, CVC, AGLD, ANIME, CORE, DATA, SOPH, AUCTION, BREV, BASED, SAHARA). Collecte bornée par jour sur le **même workflow horaire** sans nouveau cron ; refus Spot non live / bougie non close ; anciens fichiers conservés si absence de réponse. Lire le [manifeste de couverture](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/coverage.json) pour connaître les acquisitions **réelles** ; ne pas confondre CI réussi et présence des archives.
+
+**À TERMINER :** une source publique de bougies IRYS et autres actifs a été acquise, mais **le rendu graphique Administrator n'est pas encore raccordé**. `administrator/app.js` → `atlasExternalChartRender` et `fetchChartSeries` utilisent encore CoinGecko EUR ; aucune injection de prix natifs USDC n'est permise si le tooltip, l'axe, les overlays ou la fiche disent EUR/USD. Le clic `data-market-extended-toggle403116` **est déjà corrigé sur main** : ne pas le repatcher à l'aveugle. Garder l'identité paire/quote/horodatage exacte, tester avec IRYS, KAT, DOS et KMNO, empêcher une légende BTC sous une fiche IRYS et conserver les caches Firefox / IndexedDB. Pas de nouvelle page HTML, aucun nouveau collecteur, aucune modification Market Core 38.15.11, Trader, Yoann privé, Radar20 gelé ou ordres OKX.
+
+**La passation Notion a également été actualisée** : [Seven Heaven — Passation courte Trader](https://app.notion.com/p/4007754fe08481298381fb73445a13b6). Ne pas repartir dans un audit général : finir une capacité utilisateur vérifiable.
+
+---
+
 **État vérifié : nuit du 23 au 24 octobre 2026 · Aerith-7 vers Aerith suivante.**
 Ce fichier est le **point d'entrée court** pour les IA : relire `main`, les flux datés, les résultats CI, et non des conclusions historiques dépassées. Il ne remplace ni Core/Persona, ni les archives anciennes. Pour plus de détail, consulter la [passation courte Notion actualisée](https://app.notion.com/p/4007754fe08481298381fb73445a13b6) et le [registre des cibles](./market-research-targets.md).
 
