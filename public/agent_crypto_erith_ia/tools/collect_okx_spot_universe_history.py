@@ -32,10 +32,11 @@ NEW_OFFERS = (
     "XWDC", "XNFLX", "LIT", "CT", "XDP", "CARDS", "EURC", "XAMZN",
     "XAAPL", "XMETA", "XHOOD", "XGOOGL", "XNVDA", "XTSLA",
     "XSPCX", "XSOXL", "XSKHY", "XQQQ", "XNBIS", "XMU",
-    "XMSTR", "XMRVL", "XLITE", "XINTC",
-    "BOME", "OL", "GOAT"
+    "XMSTR", "XMRVL", "XLITE", "XINTC"
 )
-SYMBOLS = SYMBOLS + NEW_OFFERS
+# Latest additional Top hausse members observed, not falsely tagged as new listings.
+TOP_GAINERS_ADDITIONAL = ("BOME", "OL", "GOAT")
+SYMBOLS = SYMBOLS + NEW_OFFERS + TOP_GAINERS_ADDITIONAL
 SCHEMA = "erith.okx-native-spot-candles.v1"
 FEED = ROOT / "administrator/data/new-listings-public-feed.json"
 # Max calls per first backfill: 5*15m + 9*1H + 3*1Dutc, plus
