@@ -1,5 +1,33 @@
 # SEVEN HEAVEN — Relais courant Agent-Crypto
 
+## PASSATION PRIORITAIRE · 24 octobre 2026 · GRAPHIQUE KAT / OKX NATIF RACCORDE — VALIDATION FIREFOX RESTANTE
+
+**NOUVEAU POINT DE REPRISE. Ne pas repartir des anciennes consignes ci-dessous, qui datent d'avant les fusions #664–#668.**
+
+### Réalité vérifiée sur GitHub
+- **PR #664 — collecte historique étendue** : https://github.com/BlueAzur-Hub/erith-ia-memory/pull/664 . Archives Spot OKX EEE USDC, pagination `after`, fusion par horodatage, conservation des précédentes bougies et couverture BOME / OL / GOAT. Le manifeste public annonce **51/51** marchés plus IRYS dans un fichier séparé : https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/coverage.json . Ne pas inventer les bougies absentes.
+- **PR #665 — dossier complet KMNO** : https://github.com/BlueAzur-Hub/erith-ia-memory/pull/665 ; lecture humaine : https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/laboratoire/kmno-research-dossier.html . Déblocage de jetons estimé au **30/10/2026**, aucune rentabilité prouvée.
+- **PR #666 — dossier KAT** : https://github.com/BlueAzur-Hub/erith-ia-memory/pull/666 ; lecture humaine : https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/laboratoire/kat-research-dossier.html .
+- **PR #667 — PAPER comparatif KMNO/KAT/IRYS** : https://github.com/BlueAzur-Hub/erith-ia-memory/pull/667 ; lecture humaine : https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/laboratoire/spot-comparison-paper.html . Résultats sur OHLC publics **fictifs et rétrospectifs**, sans carnet d'ordres historique, sans exécution ni gains démontrés. Conserver Radar 20 prospectif gelé.
+- **PR #668 — raccordement du graphique externe aux archives natives USDC** : https://github.com/BlueAzur-Hub/erith-ia-memory/pull/668 ; fusion vérifiée le 24/10/2026 à 05:16:42 UTC, commit `0e2433986fd88eb532dd45f7b9ef14beadfe3ad1`. Introduit `administrator/js/okx-public-chart-history.js` (réutilise le renderer de l'Administrator, pas un second moteur), connecte `atlasExternalChartRender` à `AtlasOkxPublicChartHistory.load`, étiquette les prix et tooltips **USDC natif**, remet à zéro l'ancien tracé/légende lors du changement d'actif et refuse de mélanger ce cache avec CoinGecko. En 1 an, KAT doit rendre **166 vraies bougies journalières datées du 11 mai au 23 octobre 2026**, avec indication de couverture partielle, non un graphique vide. Le fichier `administrator/index.html` charge le lecteur avant `app.js`. **Aucune série artificielle, aucune conversion USDC→USD/EUR automatique**.
+
+### Preuves CI et réserve explicite
+- **OK** : Seven Crypto Knowledge Validation sur le commit #668, incluant `node --test administrator/js/test-okx-public-chart-history.cjs`, syntaxe `app.js` et cas réel KAT 1 an : https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40065623848 .
+- **OK** : GitHub Pages compilé/déployé : https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40065623869 . Aucun test Firefox exécuté depuis ce relais : **ne pas prétendre que le rendu visuel utilisateur est certifié**.
+- **Attention** : un workflow voisin **Agent Crypto Learning Lab Read Only** a échoué sur `Check syntax and educational behavior` lors du même commit (avant ses étapes de contrôle de baseline) : https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40065623707 . La cause précise n'a pas été récupérée. La prochaine IA doit en rechercher le journal ; ne pas considérer tous les contrôles verts. Éviter les modifications globales d'`app.js` hors correctif ciblé.
+
+### Reprise terrain sans saturation
+1. Ouvrir **la page réelle**, non son code : https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/administrator/ ; dans Firefox faire **Ctrl+F5**.
+2. Marché → sélectionner **KAT** (hors Top 250) → Graphique → **1a**. Attendu après #668 : courbe KAT-USDC sur **~166 jours réels**, affichage « couverture partielle », légende **KAT** uniquement, **Prix USDC** ; ne jamais voir BTC résiduel ni « Prix EUR » sur cette série native. Faire aussi **KMNO 90j**, **IRYS 24h**, puis basculer KAT↔IRYS plusieurs fois pour détecter les réponses réseau tardives. Ne pas prétendre validé avant preuve Firefox.
+3. Si un cas échoue : noter période, symboles, URL et zone de l'écran, inspecter source réseau pour l'archive GitHub et le code `atlasExternalChartRender` ; corriger le propriétaire commun une seule fois. **Ne pas inventer de période complète** et ne pas créer une nouvelle page concurrente.
+4. Revoir l'échec du Learning Lab CI, puis reprendre la **collecte historique incrémentale** et les **carnets horodatés** pour rendre les expériences PAPER plus vérifiables. Les bougies historiques seules ne prouvent aucune liquidité exécutée.
+5. Mettre à jour le Notion maître après validation Firefox : https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099 . Ce relais GitHub est le point de reprise courant.
+
+### Protections
+**Market Core 38.15.11**, Trader/Operator et profils, Bridge et compte OKX, `IndexedDB PRIMARY`, historiques locaux et Radar 20 gelé inchangés. Pas de clés, pas d'ordres réels, pas de fichiers renommés avec numéros de version. Ne pas demander à l'utilisateur de lire du code HTML : **donner les liens GitHub Pages**.
+
+---
+
 ## NOUVELLE PASSATION PRIORITAIRE · 24 octobre 2026 · NOUVELLES OFFRES OKX ACQUISES
 
 **PR #663 fusionnée et contrôlée** : [code et tests](https://github.com/BlueAzur-Hub/erith-ia-memory/pull/663), commit `951f3f3d`. L'extension prend en charge les **24 nouvelles offres USDC** de la seconde capture utilisateur : `XWDC, XNFLX, LIT, CT, XDP, CARDS, EURC, XAMZN, XAAPL, XMETA, XHOOD, XGOOGL, XNVDA, XTSLA, XSPCX, XSOXL, XSKHY, XQQQ, XNBIS, XMU, XMSTR, XMRVL, XLITE, XINTC`. `CP/USDC` était déjà couvert par PR #662. Les symboles `X*` sont étiquetés `x_prefixed_instrument`, et EURC `stablecoin_pair`, sans confusion avec une crypto ordinaire.
