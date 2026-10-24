@@ -21,6 +21,8 @@ const market=[
 function setup({currency="USD",outdated=false,mismatch=false}={}){
  const coins=market.map(([id,symbol,priceUsd])=>({id,symbol,name:symbol,priceUsd,
   usdUpdatedAt:outdated?"2026-10-20T00:00:00Z":observedAt}));
+ // A mismatching universe ID must not be rescued by a second price on the chart dataset.
+ if(mismatch){delete coins[0].priceUsd;delete coins[0].usdUpdatedAt;}
  const state={chartPeriodDays:1,coins:[],dataBroker:{comparison:{preset:"rank-5"},spotBook:{quotes:{}}}};
  const chart={$atlasMode:"comparison",$atlasPeriod:1,$atlasQuoteCurrency:"EUR",
   data:{datasets:coins.map(coin=>({atlasCoin:coin,data:[{x:1,y:100}]}))}};
