@@ -1,0 +1,104 @@
+{
+  "schema": "erith.crypto.asset-research-dossier.v1",
+  "asset_id": "irys",
+  "symbol": "IRYS",
+  "name": "Irys",
+  "qualified_on_utc": "2026-10-24",
+  "record_kind": "DOCUMENTARY_NATIVE_SPOT_RESEARCH_NOT_A_TRADE_SIGNAL",
+  "sector": "Programmable Layer-1 datachain, integrated storage and IrysVM execution",
+  "trading_policy": {
+    "decision": "OBSERVE_AND_PAPER_ONLY",
+    "orders_enabled": false,
+    "real_orders": 0,
+    "private_account_access": false,
+    "leverage_enabled": false,
+    "strategy_certified": false,
+    "profit_realized": null
+  },
+  "market_identity": {
+    "canonical_spot_pair": "IRYS-USDC",
+    "venue": "OKX_EEA",
+    "quote": "USDC",
+    "instrument_type": "SPOT",
+    "market_observed_in_native_archive": true,
+    "individual_account_access_verified": false,
+    "fee_tier_verified": false,
+    "minimum_order_eligibility_verified": false,
+    "orderbook_fill_proven": false,
+    "token_contract": "0x50f41F589aFACa2EF41FDF590FE7b90cD26DEe64",
+    "contract_source": "https://tr.okx.com/en/help/okx-tr-to-list-irys-usdt-irys-for-spot-trading"
+  },
+  "dated_native_evidence": {
+    "archive": "data/crypto/okx-hourly/irys-spot-candles.json",
+    "archive_generated_at_utc": "2026-10-24T06:25:39Z",
+    "archive_source": "https://eea.okx.com/api/v5/market/history-candles",
+    "daily_bars_count": 150,
+    "daily_first_open_utc": "2026-05-27T00:00:00Z",
+    "daily_last_open_utc": "2026-10-23T00:00:00Z",
+    "last_closed_day_utc": "2026-10-23",
+    "last_daily_bar_usdc": {
+      "open": 0.02046,
+      "high": 0.31814,
+      "low": 0.02046,
+      "close": 0.07645,
+      "volume_base": 31451501.7,
+      "quote_turnover_usdc": 2652523.167769
+    },
+    "last_7_closed_utc_days": {
+      "first_day_utc": "2026-10-17",
+      "last_day_utc": "2026-10-23",
+      "daily_bars": 7,
+      "quote_turnover_usdc": 2833533.518261,
+      "calculation": "SUM of index[7] USDC quote turnover over 7 UTC daily bars; NOT a rolling ticker 24h field",
+      "share_of_7_day_turnover_on_oct23_percent": 93.61
+    },
+    "intraday_archive_counts": {
+      "15m": 299,
+      "1H": 299
+    },
+    "zero_volume_candle_counts": {
+      "15m": 22,
+      "1H": 181,
+      "1Dutc": 4
+    },
+    "no_usd_usdc_conversion": true,
+    "same_venue_same_quote_only": true,
+    "execution_evidence": "MISSING_DATED_DEPTH_AND_FILLS_FOR_VOLATILE_SPIKE"
+  },
+  "user_capture_observation": {
+    "date_utc": "2026-10-24",
+    "pair": "IRYS/USDC",
+    "displayed_last_usdc": 0.08228,
+    "displayed_24h_change_percent": 186.69,
+    "executable_at_capture_unverified": true,
+    "source": "user-provided OKX Spot rankings screenshot and pasted page; timestamp within day unverified"
+  },
+  "research_questions": [
+    "Compare pre-move hours with the volume surge without look-ahead",
+    "Verify native OKX order book around 2026-10-23 spike (bid, ask, depth, spread and actual trades)",
+    "Reject zero-volume candles as evidence of a trade or guaranteed execution",
+    "Study subsequent volatility and liquidity deterioration before any PAPER qualification"
+  ],
+  "caution": [
+    "No account permissions, exact lot/min-order or fee certification",
+    "Daily high 0.31814 USDC does not establish any executable sale",
+    "Do not equate USD CoinGecko with USDC OKX",
+    "A 7-day native turnover sum is NOT global cross-exchange volume and not a profit figure"
+  ],
+  "official_sources": [
+    {
+      "url": "https://www.okx.com/fr/help/okx-will-launch-irys-usd-and-irys-eur-for-spot-trading",
+      "scope": "OKX unified USD and EUR listing document, 2026-05-27"
+    },
+    {
+      "url": "https://www.okx.com/en-br/help/upcoming-token-pair-groups-adjustment-eea",
+      "scope": "OKX announced IRYS-USDC in spot group 2, availability subject to jurisdiction"
+    },
+    {
+      "url": "https://irys.xyz/assets/IrysWhitepaper.pdf",
+      "scope": "Project claims, not independently verified adoption"
+    }
+  ],
+  "linked_human_dossier": "trader/irys-market-case-study.html",
+  "paper_protocol": "NO_FILL_NO_PNL_UNTIL_EXACT_TIMED_SPOT_BOOK_PLUS_PREDEFINED_EXIT_RULE"
+}
