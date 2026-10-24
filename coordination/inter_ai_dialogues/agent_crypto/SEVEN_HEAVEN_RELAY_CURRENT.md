@@ -1,5 +1,17 @@
 # SEVEN HEAVEN — Relais courant Agent-Crypto
 
+## NOUVELLE PASSATION PRIORITAIRE · 24 octobre 2026 · NOUVELLES OFFRES OKX ACQUISES
+
+**PR #663 fusionnée et contrôlée** : [code et tests](https://github.com/BlueAzur-Hub/erith-ia-memory/pull/663), commit `951f3f3d`. L'extension prend en charge les **24 nouvelles offres USDC** de la seconde capture utilisateur : `XWDC, XNFLX, LIT, CT, XDP, CARDS, EURC, XAMZN, XAAPL, XMETA, XHOOD, XGOOGL, XNVDA, XTSLA, XSPCX, XSOXL, XSKHY, XQQQ, XNBIS, XMU, XMSTR, XMRVL, XLITE, XINTC`. `CP/USDC` était déjà couvert par PR #662. Les symboles `X*` sont étiquetés `x_prefixed_instrument`, et EURC `stablecoin_pair`, sans confusion avec une crypto ordinaire.
+
+**PREUVE POST-FUSION** : [workflow public OKX #40059425045](https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/40059425045) **réussi**, [manifestation des archives réelles](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/coverage.json) : **48 paires demandées / 48 paires archivées / 0 échec** ; en plus IRYS (PR #661) a son propre fichier. Exemples lus sur `main` : `XWDC-USDC` 166 bougies 15m, 41 1H, 2 1Dutc ; `XNFLX-USDC` 299/88/4 ; `LIT-USDC` 299/299/31 ; `CT-USDC` 299/299/24 ; `CARDS-USDC` 299/299/32. Preuves réelles, native USDC, closes, aucun ordre, ni accès au compte. Le même workflow existant collecte les nouveaux actifs **avant** le retour anticipé du job horaire.
+
+**NE PAS CONFONDRE ACQUISITION ET AFFICHAGE.** Ni Administrator ni Trader ne sont encore certifiés lire correctement ces archives. Prochaine IA : *raccorder le lecteur des données OKX natives au graphique externe déjà présent*, avec source/paire/devise USDC exactes et anti-réponses tardives ; empêcher le retour d'un graphique BTC sous une fiche IRYS. Pas de nouvelle page ou moteur, pas de conversion USDC vers USD/EUR fictive, pas de suppression IndexedDB, Market Core 38.15.11 protégé. Les fichiers journaliers ont une fenêtre historique bornée ; ne pas promettre une accumulation infinie ni la rentabilité.
+
+**Continuité :** le [Notion maître](https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099) est mis à jour avec PR #663 et la preuve 48/48. Éviter l'audit général, reprendre au seul défaut restant visible par l'utilisateur.
+
+---
+
 ## Priorité de passation · 24 octobre 2026 · DONNÉES OKX, pas d'audit supplémentaire
 
 **Problème utilisateur démontré par Firefox :** sélection IRYS, détail IRYS mais ancienne courbe BTC conservée (~80 875 USD). OKX possède les historiques IRYS/USDC : le défaut est l'absence de données historiques correspondantes dans ERITH.IA puis le raccordement du renderer. Le Market Top 1000 / Radar et le collecteur OKX initial (BTC/ETH/SOL/XRP/OKB/CT) ne couvraient pas les nombreuses paires Spot USDC visibles chez OKX.
