@@ -96,6 +96,20 @@ class Tests(unittest.TestCase):
         q["candidates"][0]["market"]["book"]["spread_bps"]=180
         self.assertEqual(advance(i,q,empty(),at)["positions"],[])
 
+    def test_reported_narrow_spread_cannot_hide_wide_real_book(self):
+        i,q,at=snapshot(ask="0.4",bid="0.1")
+        # Source claims 25bps, actual spread is thousands of basis points.
+        self.assertEqual(q["candidates"][0]["market"]["book"]["spread_bps"],25)
+        self.assertEqual(advance(i,q,empty(),at)["positions"],[])
+
+    def test_accepted_spread_is_recomputed_from_original_bid_ask(self):
+        i,q,at=snapshot(ask="0.4",bid="0.399")
+        positions=advance(i,q,empty(),at)["positions"]
+        self.assertEqual(len(positions),1)
+        expected=(0.4-0.399)*20000/(0.4+0.399)
+        self.assertAlmostEqual(float(positions[0]["entry_spread_bps"]),
+                               expected,places=4)
+
     def test_no_retroactive_entry_from_price_or_old_book(self):
         i,q,at=snapshot()
         q["candidates"][0]["market"]["book"]["observed_at_utc"]="2026-10-19T08:15:00Z"
