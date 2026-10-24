@@ -8,6 +8,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/collect_irys_spot_history.py'
       - 'public/agent_crypto_erith_ia/tools/test_irys_spot_history.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_okx_spot_universe_history.py'
+      - 'public/agent_crypto_erith_ia/tools/test_okx_spot_universe_history.py'
       - 'public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py'
@@ -30,6 +32,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/collect_irys_spot_history.py'
       - 'public/agent_crypto_erith_ia/tools/test_irys_spot_history.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_okx_spot_universe_history.py'
+      - 'public/agent_crypto_erith_ia/tools/test_okx_spot_universe_history.py'
       - 'public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py'
@@ -81,6 +85,8 @@ jobs:
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_irys_spot_history.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_irys_spot_history.py' -v
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_okx_spot_universe_history.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_okx_spot_universe_history.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_okx_public_hourly.py' -v
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_case_market_hourly.py' -v
@@ -173,4 +179,35 @@ jobs:
             sleep "$((attempt*3))"
           done
           echo 'Could not publish snapshot to main; no fabricated market data' >&2
+          exit 1
+
+      - name: Collect other verified OKX Spot USDC history (one archive per UTC day)
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            # The script has a STRICT allowlist of pairs seen on the OKX Spot rankings.
+            # It refuses mismatched/non-live instruments and archives no fabricated bars.
+            if ! python public/agent_crypto_erith_ia/tools/collect_okx_spot_universe_history.py; then
+              echo 'WARN: Not all observed Spot markets could be archived; retain verified existing data'
+            fi
+            git add -A -- public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/
+            if git diff --cached --quiet; then
+              echo 'No new verified Spot candles to publish in this UTC day'
+              exit 0
+            fi
+            git commit -m 'Archive bounded OKX native USDC OHLCV for observed Spot markets'
+            if git push origin HEAD:main; then
+              echo 'Published verified Spot candles; unverified markets remain missing'
+              exit 0
+            fi
+            echo 'Concurrent data commit: retry only missing current-date archives'
+            sleep "$((attempt*3))"
+          done
+          echo 'Could not publish verified Spot candles to main' >&2
           exit 1
