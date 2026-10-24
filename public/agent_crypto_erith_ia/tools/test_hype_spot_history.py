@@ -113,8 +113,12 @@ class HypeHistoryTests(unittest.TestCase):
             folder=pathlib.Path(d)
             h.save_book_observation(first,folder)
             self.assertEqual(h.save_book_observation(later,folder)["hours"],2)
-            earlier=h.collect(native,NOW-dt.timedelta(hours=1),market)
-            with self.assertRaises(ValueError):h.save_book_observation(earlier,folder)
+            import copy
+            earlier=copy.deepcopy(first)
+            earlier["generated_at_utc"]="2026-10-24T08:30:00Z"
+            earlier["spot_book_observation"]["at_utc"]=earlier["generated_at_utc"]
+            with self.assertRaisesRegex(ValueError,"out of order"):
+                h.save_book_observation(earlier,folder)
 
 
 if __name__=="__main__":
