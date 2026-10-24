@@ -108,5 +108,5 @@ if(require.main===module){
  const root=path.resolve(__dirname,"../data/crypto/okx-hourly");
  const paths=[path.join(root,"spot-candles/kmno-usdc.json"),path.join(root,"spot-candles/kat-usdc.json"),path.join(root,"irys-spot-candles.json")];
  const docs=paths.map(p=>JSON.parse(fs.readFileSync(p,"utf8")));
- process.stdout.write(JSON.stringify(analyze(docs),null,2)+"\\n");
+ process.stdout.write(JSON.stringify(analyze(docs),null,2)+String.fromCharCode(10));
 }
