@@ -6,6 +6,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/build_okx_hourly_evidence.py'
       - 'public/agent_crypto_erith_ia/tools/test_build_okx_hourly_evidence.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_irys_spot_history.py'
+      - 'public/agent_crypto_erith_ia/tools/test_irys_spot_history.py'
       - 'public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py'
@@ -26,6 +28,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/build_okx_hourly_evidence.py'
       - 'public/agent_crypto_erith_ia/tools/test_build_okx_hourly_evidence.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_irys_spot_history.py'
+      - 'public/agent_crypto_erith_ia/tools/test_irys_spot_history.py'
       - 'public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py'
@@ -75,6 +79,8 @@ jobs:
       - name: Verify bounded EEA public data and no orders (offline)
         run: |
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_irys_spot_history.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_irys_spot_history.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_okx_public_hourly.py' -v
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_case_market_hourly.py' -v
@@ -127,6 +133,10 @@ jobs:
             # Never backfill the missed hour with a newly observed current quote.
             python public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py
             python public/agent_crypto_erith_ia/tools/build_okx_hourly_evidence.py
+            # Same hourly Radar: persist authentic closed IRYS-USDC candles; no backfill of books.
+            if ! python public/agent_crypto_erith_ia/tools/collect_irys_spot_history.py; then
+              echo 'WARN: IRYS-USDC historical OHLCV unavailable; preserve last verified file'
+            fi
             # Use this already-scheduled hourly Radar; no second timer or service.
             # API outage is recorded as unavailable instead of a fictional quote.
             if ! python public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py; then
