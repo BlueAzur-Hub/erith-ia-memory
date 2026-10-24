@@ -1,0 +1,87 @@
+{
+  "schema": "erith.crypto.asset-research-dossier.v1",
+  "asset_id": "hyperliquid",
+  "symbol": "HYPE",
+  "name": "Hyperliquid",
+  "qualified_on_utc": "2026-10-24",
+  "record_kind": "DOCUMENTARY_SPOT_WATCH_NOT_A_TRADE_SIGNAL",
+  "sector": "On-chain trading platform and L1 ecosystem with native staking/governance token",
+  "trading_policy": {
+    "decision": "OBSERVE_AND_PAPER_ONLY",
+    "orders_enabled": false,
+    "real_orders": 0,
+    "private_account_access": false,
+    "leverage_enabled": false,
+    "strategy_certified": false,
+    "profit_realized": null
+  },
+  "market_identity": {
+    "canonical_spot_pair": "HYPE-USDC",
+    "venue": "OKX",
+    "quote": "USDC",
+    "instrument_type": "SPOT",
+    "pair_seen_in_user_capture": true,
+    "okx_spot_grouping_publicly_documented": true,
+    "individual_account_access_verified": false,
+    "live_instrument_rules_verified": false,
+    "fee_tier_verified": false,
+    "orderbook_verified": false,
+    "spot_history_in_project_qualified": false,
+    "do_not_substitute_hyperliquid_native_hype_usdc_for_okx": true
+  },
+  "user_capture_observation": {
+    "date_utc": "2026-10-24",
+    "pair": "HYPE/USDC",
+    "displayed_last_usdc": 76.736,
+    "displayed_24h_change_percent": -2.04,
+    "displayed_market_cap_usd": 17080000000,
+    "source": "user-provided OKX Spot rankings screenshot and pasted page",
+    "exact_capture_time_utc": null,
+    "fill_proven": false,
+    "rolling_turnover_24h_usdc": null,
+    "seven_day_turnover_usdc": null,
+    "badge_turnover_text": "47.90 M USD for HYPE in page header; measurement and pair-specific period not verified"
+  },
+  "project_primary_research": {
+    "hype_staking": "Delegated proof of stake on HyperCore; unstaking process and validator risk",
+    "protocol_tokens_used_for": [
+      "staking",
+      "governance",
+      "protocol incentives and fees"
+    ],
+    "team_vesting_and_unlock_risk": "To verify with current primary disclosures before any event claim",
+    "cross_venue_aggregation_not_validated": true
+  },
+  "evidence_gaps": [
+    "Missing archived OKX HYPE-USDC bid/ask and top-five depth",
+    "Missing exact timestamp and original week-long HYPE-USDC candles",
+    "Missing verified per-account spot rules and fee tier",
+    "Need forward PAPER observations with exit bid and no use of derivatives volume as spot volume"
+  ],
+  "research_questions": [
+    "Collect OKX EEA HYPE-USDC public Spot 15m, 1H and 1Dutc candles with timestamps and closed-bar flags",
+    "Capture dated OKX Spot order-book spread and depth, validate base-asset identity",
+    "Separate HYPE token ecosystem activity from OKX spot turnover",
+    "Audit unlock/vesting schedule and liquidity response without trading futures"
+  ],
+  "official_sources": [
+    {
+      "url": "https://www.okx.com/en-eu/help/okx-to-support-hype-unified-usd-and-eur-spot-trading-pairs-in-eea",
+      "scope": "OKX Europe official HYPE USD/EUR trading notice, not proof of individual HYPE-USDC execution"
+    },
+    {
+      "url": "https://www.okx.com/en-br/help/upcoming-token-pair-groups-adjustment-eea",
+      "scope": "OKX public grouping lists HYPE-USDC as Spot group 2"
+    },
+    {
+      "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/staking",
+      "scope": "Hyperliquid official delegated staking documentation"
+    },
+    {
+      "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees",
+      "scope": "Hyperliquid exchange fees only; NOT OKX account fees"
+    }
+  ],
+  "linked_human_dossier": "laboratoire/hype-case-study.html",
+  "paper_protocol": "RESEARCH_ONLY_MISSING_OKX_NATIVE_SERIES_AND_BOOK"
+}
