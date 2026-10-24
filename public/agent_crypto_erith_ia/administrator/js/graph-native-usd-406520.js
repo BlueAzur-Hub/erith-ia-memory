@@ -122,12 +122,17 @@ function top5Tooltip(original,args){
       field.title="Prix historique EUR masqué : aucune cotation USD récente et attribuée avec certitude à cette ligne";
     }
   });
+  // Even if an old tooltip renderer omits its row wrappers, never leak EUR
+  // through orphan <strong> fields whose identity could not be established.
+  const mapped=new Set(rows.map(row=>row.querySelector?.(".atlas-chart-tooltip-values strong")).filter(Boolean));
+  root.querySelectorAll(".atlas-chart-tooltip-row .atlas-chart-tooltip-values strong")
+    .forEach(field=>{if(!mapped.has(field)){field.textContent="—";field.title="Identité du prix USD non vérifiable";}});
   if(title)title.textContent=valid?
-    "COTATIONS COINGECKO USD · "+valid+"/5 vérifiées · "+new Date(oldest).toLocaleTimeString("fr-FR")+
-      " · distinctes des courbes historiques Base 100":
-    "COMPARAISON BASE 100 · COTATIONS USD RÉCENTES NON DISPONIBLES";
+    "PRIX SNAPSHOT COINGECKO USD · "+valid+"/5 vérifiées · "+new Date(oldest).toLocaleTimeString("fr-FR")+
+      " · cotations distinctes des courbes historiques Base 100":
+    "COMPARAISON BASE 100 · PRIX HISTORIQUE USD NON DISPONIBLE · COTATIONS USD RÉCENTES NON DISPONIBLES";
   root.dataset.displayCurrency="USD";
-  root.dataset.priceSource=valid?"coingecko-usd-snapshot-per-asset":"usd-snapshot-unavailable";
+  root.dataset.priceSource=valid===5?"coingecko-native-usd":valid?"coingecko-native-usd-partial":"usd-history-unavailable";
   root.dataset.usdQuotesVerified=String(valid);
   return result;
 }
