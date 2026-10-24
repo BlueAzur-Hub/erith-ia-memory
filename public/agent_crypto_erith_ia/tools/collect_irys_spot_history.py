@@ -39,7 +39,7 @@ def numeric(value, allow_zero=False):
 def fetch_public(route, params):
     allowed = {
         "/api/v5/public/instruments": {"instType", "instId"},
-        "/api/v5/market/history-candles": {"instId", "bar", "limit"},
+        "/api/v5/market/history-candles": {"instId", "bar", "limit", "after"},
     }
     require(route in allowed and params and set(params).issubset(allowed[route]),
             "Private or unexpected endpoint forbidden")
