@@ -41,6 +41,22 @@ class VerifiedHistoricalIdentity(unittest.TestCase):
         self.assertNotIn("golem", ids)
         self.assertTrue(ids.issubset({x["id"] for x in venue["assets"]}))
 
+    def test_historical_approval_outside_dated_top250_is_preserved_not_counted(self):
+        baseline=self.study()
+        def add_old_proof(venue,ledger):
+            stale=copy.deepcopy(next(x for x in ledger["results"]
+                                    if x["status"]=="approved_coingecko_binance_spot"))
+            stale["id"]="no-longer-ranked-historical-id"
+            ledger["results"].append(stale)
+            # The current-universe counts do not change for an old ID.
+        self.assertEqual(self.study(add_old_proof), baseline)
+
+    def test_active_top250_ledger_counter_is_still_strict(self):
+        def invalidate(venue,ledger):
+            ledger["checked_count"]-=1
+        with self.assertRaisesRegex(ValueError,"Corrupt current Top250 identity provenance"):
+            self.study(invalidate)
+
     def test_repeated_approved_id_is_blocked(self):
         def tamper(venue,ledger):
             evidence=next(x for x in ledger["results"]

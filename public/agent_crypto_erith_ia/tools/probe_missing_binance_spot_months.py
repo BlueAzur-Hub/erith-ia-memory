@@ -8,6 +8,7 @@ or changes the canonical Top250. Exact coin-id attribution is a separate gate.
 from __future__ import annotations
 import argparse
 import json
+import sys
 from pathlib import Path
 import tempfile
 import import_historical_bulk as bulk
@@ -35,10 +36,15 @@ def candidates(catalog):
             "Top250 federated truth invalid")
     indexed={a["id"]:a for a in catalog["assets"]}
     require(len(indexed)==250 and len(set(IDS))==len(IDS) and
-            len(IDS)<=LIMIT and set(IDS)<=set(indexed),
+            len(IDS)<=LIMIT,
             "Missing or repeated coin identity")
     result=[]
     for cid in IDS:
+        if cid not in indexed:
+            # A dated watch candidate can leave Top250; never map by ticker.
+            print("SKIP former Top250 candidate (unranked now): "+cid,
+                  file=sys.stderr)
+            continue
         asset=indexed[cid]
         if asset["months"]>0:
             require(asset["source"] in ("Binance Spot official native 1m ZIPs",

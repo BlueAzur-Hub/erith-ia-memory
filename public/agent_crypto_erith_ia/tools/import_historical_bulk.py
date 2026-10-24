@@ -84,8 +84,9 @@ def confirmed_additions(venue_path=VENUE_AUDIT, ledger_path=IDENTITY_LEDGER):
          and len(venue.get("assets",[]))==250
          and ledger.get("schema")=="aerith.public.ohlcv.spot.coingecko-binance-identity-evidence.v1"
          and ledger.get("total_market_ranked")==250
-         and ledger.get("candidate_count")>=0
-         and ledger.get("checked_count")==len(ledger.get("results",[])),
+         and isinstance(ledger.get("candidate_count"),int)
+         and ledger["candidate_count"]>=0
+         and isinstance(ledger.get("results"),list),
          "Corrupt Top250 venue or identity provenance")
     indexed={a["id"]:a for a in venue["assets"]}
     need(len(indexed)==250,"Repeated CoinGecko ID in venue registry")
@@ -129,6 +130,15 @@ def confirmed_additions(venue_path=VENUE_AUDIT, ledger_path=IDENTITY_LEDGER):
              "Identity approval inconsistent with exact CoinGecko/source pair: "+aid)
         assets.append({"id":aid,"symbol":symbol,"pair":pair,
                        "rank":original["rank"],"archive_owner":"coingecko-binance-exact-id"})
+    # Older, independently approved IDs remain in the archival proof ledger.
+    # The dated Top250 counters describe only IDs anchored to this venue
+    # snapshot; unranked historical proofs must not inflate active counts.
+    current=[row for row in ledger["results"] if row["id"] in indexed]
+    approved=sum(row["status"]=="approved_coingecko_binance_spot"
+                 for row in current)
+    need(ledger.get("checked_count")==len(current)
+         and ledger.get("approved_count")==approved,
+         "Corrupt current Top250 identity provenance counters")
     return sorted(assets,key=lambda a:a["rank"])
 
 
