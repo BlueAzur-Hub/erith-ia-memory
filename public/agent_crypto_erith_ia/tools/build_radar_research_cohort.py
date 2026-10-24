@@ -33,10 +33,25 @@ def build(q,h):
       market.get("provider") in ("Binance","OKX","Bitget") and
       market.get("quote")=="USDT" and isinstance(market.get("pair"),str) and market["pair"],
       "Paire Spot non vérifiée")
-  else:check(c.get("status")=="NO_OBSERVED_SPOT_PAIR","Absence Spot non documentée")
-  group="primary_research" if c["id"] in priority else "additional_spot_research" if market else "no_observed_spot"
+  else:
+   # Distinguish absent pair, failed depth/candles, unavailable venues and
+   # ambiguous symbols. None of these is proof of a tradable Spot market.
+   status,pair_status=c.get("status"),c.get("pair_status")
+   check((status=="NO_OBSERVED_SPOT_PAIR" and pair_status=="NOT_VERIFIED") or
+         (status=="VENUES_UNAVAILABLE" and pair_status=="NOT_VERIFIED") or
+         (status=="AMBIGUOUS_SYMBOL" and pair_status=="NOT_VERIFIED") or
+         (status=="SOURCE_INCOMPLETE" and pair_status=="SPOT_SYMBOL_PAIR_OBSERVED"),
+         "Absence Spot non documentée")
+  group=("primary_research" if c["id"] in priority else
+         "additional_spot_research" if market else
+         "no_observed_spot" if c["status"]=="NO_OBSERVED_SPOT_PAIR" else
+         "spot_evidence_incomplete")
   cost=numeric(market.get("estimated_roundtrip_cost_pct")) if market else None
-  flags=["token_contract_not_verified"] if market else ["no_spot_pair"]
+  missing_flags={"NO_OBSERVED_SPOT_PAIR":"no_spot_pair",
+                 "SOURCE_INCOMPLETE":"spot_pair_observed_market_data_missing",
+                 "VENUES_UNAVAILABLE":"spot_venues_unavailable",
+                 "AMBIGUOUS_SYMBOL":"ambiguous_symbol_no_spot_attribution"}
+  flags=["token_contract_not_verified"] if market else [missing_flags[c["status"]]]
   if numeric(c.get("change24h_pct")) is not None and abs(c["change24h_pct"])>=25:flags.append("extreme_24h_move")
   if cost is not None and cost>=0.6:flags.append("high_hypothetical_cost")
   if market and market.get("book",{}).get("exchange_timestamp_verified") is not True:flags.append("book_time_unverified")
@@ -53,7 +68,7 @@ def build(q,h):
     "j1_observed":sum(x.get("followup_1d",{}).get("status")=="OBSERVED_DAILY_SNAPSHOT" for x in mine),
     "j7_observed":sum(x.get("followup_7d",{}).get("status")=="OBSERVED_DAILY_SNAPSHOT" for x in mine),
     "risks_and_missing_evidence":flags,"identity_certified":False,"trade_authorized":False})
- order={"primary_research":0,"additional_spot_research":1,"no_observed_spot":2}
+ order={"primary_research":0,"additional_spot_research":1,"spot_evidence_incomplete":2,"no_observed_spot":3}
  output.sort(key=lambda x:(order[x["group"]],x["coin_id"]))
  return {"schema":SCHEMA,"source_qualification_at_utc":q.get("qualified_at_utc"),
   "source_observation_date_utc":q.get("source_observation_date_utc"),

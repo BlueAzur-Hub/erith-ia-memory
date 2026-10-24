@@ -25,6 +25,39 @@ class Tests(unittest.TestCase):
   self.assertEqual(v["candidates"][0]["group"],"primary_research")
   self.assertEqual(next(x for x in v["candidates"] if x["coin_id"]=="quack-ai")["detections_archived"],1)
   self.assertEqual(v["candidates"][0]["j1_observed"],0)
+ def test_partial_spot_evidence_is_preserved_without_fabricating_market(self):
+  for status,pair,flag in (
+   ("SOURCE_INCOMPLETE","SPOT_SYMBOL_PAIR_OBSERVED","spot_pair_observed_market_data_missing"),
+   ("VENUES_UNAVAILABLE","NOT_VERIFIED","spot_venues_unavailable"),
+   ("AMBIGUOUS_SYMBOL","NOT_VERIFIED","ambiguous_symbol_no_spot_attribution")
+  ):
+   with self.subTest(status=status):
+    q,h=make()
+    row=q["candidates"][0]
+    row["market"]=None
+    row["status"]=status
+    row["pair_status"]=pair
+    q["priority_research_ids"].remove(row["id"])
+    v=build(q,h)
+    x=next(r for r in v["candidates"] if r["coin_id"]==row["id"])
+    self.assertIsNone(x["spot"])
+    self.assertEqual(x["group"],"spot_evidence_incomplete")
+    self.assertIn(flag,x["risks_and_missing_evidence"])
+    self.assertFalse(x["identity_certified"])
+    self.assertFalse(x["trade_authorized"])
+
+ def test_inconsistent_missing_market_state_still_fails_closed(self):
+  for status,pair in (
+   ("RESEARCH_DATA_QUALIFIED_IDENTITY_REVIEW","NOT_VERIFIED"),
+   ("SOURCE_INCOMPLETE","NOT_VERIFIED"),
+   ("NO_OBSERVED_SPOT_PAIR","SPOT_SYMBOL_PAIR_OBSERVED"),
+  ):
+   with self.subTest(status=status):
+    q,h=make();row=q["candidates"][0]
+    row.update(market=None,status=status,pair_status=pair)
+    with self.assertRaisesRegex(ValueError,"Absence Spot non documentée"):
+     build(q,h)
+
  def test_wrong_currency_duplicate_coin_and_fake_authorization_rejected(self):
   for corrupt in [
     lambda q:q.update(real_orders_enabled=True),
