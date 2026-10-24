@@ -6809,6 +6809,55 @@ function atlasPositionChartTooltip(chart, tooltip, node) {
   node.style.top = `${Math.round(top)}px`;
 }
 
+// The Market owns current USD observations. A Base 100 chart owns its historical
+// relative series, not another copy of market prices. A delayed observation is
+// displayed with its actual age, never silently discarded as "unavailable".
+function atlasChartMarketUsdObservation(coin, now = Date.now()) {
+  const id = String(coin?.id || "").trim();
+  if (!id) return null;
+  const candidates = [];
+  const book = state.dataBroker?.spotBook || {};
+  const spot = book.quotes?.[id];
+  if (spot && atlasHasPositiveQuote(spot.usd)) {
+    candidates.push({
+      id, price: Number(spot.usd), timestamp: spot.timestamp || book.timestamp,
+      source: "CoinGecko · spot USD"
+    });
+  }
+
+  const addCoin = (asset, label) => {
+    // CoinGecko IDs, not symbols or DOM row positions, are the identity key.
+    if (String(asset?.id || "") !== id || !atlasHasPositiveQuote(asset.priceUsd)) return;
+    const usdTimestamp = asset.usdUpdatedAt || asset.snapshotGeneratedAt ||
+      asset.lastUpdated || asset.timestamp || asset.spotUpdatedAt;
+    if (!usdTimestamp) return;
+    candidates.push({id, price: Number(asset.priceUsd),
+      timestamp: usdTimestamp, source: String(asset.usdSource || asset.priceUsdSource || label)});
+  };
+  try { addCoin(globalThis.AtlasMarketUniverse1000?.find?.(id), "CoinGecko · Market USD"); }
+  catch (_) {}
+  addCoin(state.coins?.find?.(asset => String(asset?.id || "") === id), "CoinGecko · Market USD");
+  addCoin(coin, "CoinGecko · snapshot USD");
+
+  let latest = null;
+  for (const candidate of candidates) {
+    const raw = candidate.timestamp;
+    const timestamp = typeof raw === "number" ? raw : Date.parse(String(raw || ""));
+    if (!Number.isFinite(timestamp) || timestamp - now > 120000) continue;
+    if (!latest || timestamp > latest.timestamp) latest = {...candidate, timestamp};
+  }
+  if (!latest) return null;
+  const ageMs = Math.max(0, now - latest.timestamp);
+  const minutes = Math.floor(ageMs / 60000);
+  const freshness = ageMs <= 15 * 60000 ? "récent"
+    : ageMs <= 24 * 3600000 ? "différé" : "ancien";
+  const ageLabel = minutes < 1 ? "moins d’1 min"
+    : minutes < 60 ? `${minutes} min`
+    : minutes < 1440 ? `${Math.floor(minutes / 60)} h ${minutes % 60} min`
+    : `${Math.floor(minutes / 1440)} j`;
+  return {...latest, ageMs, ageLabel, freshness};
+}
+
 function atlasExternalChartTooltip(context) {
   const chart = context?.chart;
   const tooltip = context?.tooltip;
@@ -6823,6 +6872,10 @@ function atlasExternalChartTooltip(context) {
   const point = tooltip.dataPoints?.[0] || null;
   const targetX = Number(point?.parsed?.x);
   const comparison = chart.$atlasMode === "comparison";
+  const top5Usd = comparison
+    && Number(chart.$atlasPeriod || state.chartPeriodDays || 1) === 1
+    && String(state.dataBroker?.comparison?.preset || "") === "rank-5"
+    && String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "USD";
   let rows = comparison
     ? atlasComparisonTooltipRows(chart, targetX, point?.dataIndex)
     : point ? [{
@@ -6849,7 +6902,7 @@ function atlasExternalChartTooltip(context) {
   const atHistoricalEndpoint = hoveredData.length > 0
     && Number.isInteger(hoveredIndex)
     && hoveredIndex >= hoveredData.length - 1;
-  if (atHistoricalEndpoint) {
+  if (atHistoricalEndpoint && !top5Usd) {
     const datasets = atlasChartPriceDatasets(chart);
     const virtual = datasets.map((dataset, index) => {
       const coin = dataset?.atlasCoin || chart.$atlasCoin || null;
@@ -6879,20 +6932,39 @@ function atlasExternalChartTooltip(context) {
     return;
   }
 
+  let availableUsd = 0;
+  let delayedUsd = 0;
   const body = rows.map((row, index) => {
     const palette = atlasCryptoPalette(row.coin, index);
     const gradientCss = row.gradientCss || atlasCryptoGradientCss(row.coin, index);
     const historicalPrice = Number(row.rawPrice);
-    const currentPrice = Number.isFinite(historicalPrice) && historicalPrice > 0
-      ? atlasFormatNativeChartQuote(historicalPrice, chart.$atlasQuoteCurrency || "EUR")
-      : "—";
+    const observation = top5Usd ? atlasChartMarketUsdObservation(row.coin) : null;
+    if (observation) {
+      availableUsd += 1;
+      if (observation.freshness !== "récent") delayedUsd += 1;
+    }
+    // Historical EUR values remain historical and are never relabelled USD.
+    const currentPrice = top5Usd
+      ? (observation ? atlasFormatUSD(observation.price) : "—")
+      : Number.isFinite(historicalPrice) && historicalPrice > 0
+        ? atlasFormatNativeChartQuote(historicalPrice, chart.$atlasQuoteCurrency || "EUR")
+        : "—";
+    const priceTitle = observation
+      ? `${observation.source} · ${new Date(observation.timestamp).toLocaleString("fr-FR")} · ${observation.freshness} (${observation.ageLabel})`
+      : top5Usd ? "Aucune observation USD datée pour cet actif" : "";
+    const ageMarkup = top5Usd
+      ? `<small class="atlas-chart-tooltip-freshness" title="${escapeHtml(priceTitle)}">${observation
+          ? escapeHtml(`${observation.freshness} · ${observation.ageLabel}`)
+          : "Observation USD absente"}</small>`
+      : "";
     const style = `--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(gradientCss)}`;
 
     return `<div class="atlas-chart-tooltip-row" style="${style}">
       ${atlasChartTooltipCoinMarkup(row.coin, palette.primary, gradientCss)}
       <span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span>
       <span class="atlas-chart-tooltip-values">
-        <strong>${escapeHtml(currentPrice)}</strong>
+        <strong title="${escapeHtml(priceTitle)}">${escapeHtml(currentPrice)}</strong>
+        ${ageMarkup}
         ${atlasChartTooltipChangeMarkup(row.baseValue)}
       </span>
     </div>`;
@@ -6905,8 +6977,10 @@ function atlasExternalChartTooltip(context) {
     : [];
   const allKinds = kind => kinds.length > 0 && kinds.every(value => value === kind);
   const tooltipPeriodLabel = atlasChartPeriodLabel(Number(chart.$atlasPeriod || state.chartPeriodDays || 1));
-  const tooltipTitle = !everyRowIsCurrent
-    ? `PRIX HISTORIQUE · VARIATION ${tooltipPeriodLabel}`
+  const tooltipTitle = top5Usd
+    ? `TOP 5 · COTATIONS USD MARKET ${availableUsd}/${rows.length}${delayedUsd ? ` · ${delayedUsd} différée(s)` : ""} · COURBES BASE 100`
+    : !everyRowIsCurrent
+      ? `PRIX HISTORIQUE · VARIATION ${tooltipPeriodLabel}`
     : allKinds("live-binance")
       ? "PRIX LIVE BINANCE · VARIATION 24h"
       : allKinds("collected")
@@ -6921,6 +6995,16 @@ function atlasExternalChartTooltip(context) {
                 ? "DERNIERS PRIX DISPONIBLES"
                 : "PRIX ACTUELS";
   node.innerHTML = `<div class="atlas-chart-tooltip-date">${tooltipTitle}</div>${body}`;
+  // A single canonical owner prevents post-render decorators from erasing
+  // a verified but delayed Market observation.
+  if (top5Usd) {
+    node.dataset.top5UsdOwner = "canonical-app";
+    node.dataset.displayCurrency = "USD";
+    node.dataset.priceSource = "market-usd-observation";
+    node.dataset.usdQuotesVerified = String(availableUsd);
+  } else {
+    delete node.dataset.top5UsdOwner;
+  }
   node.hidden = false;
   node.setAttribute("aria-hidden", "false");
 
