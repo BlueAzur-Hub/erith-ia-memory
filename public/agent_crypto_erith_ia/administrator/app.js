@@ -16116,6 +16116,19 @@ function atlasMarketFlowCoins() {
     .slice(0, 24);
 }
 
+// Presentation only: do not call a fresh public snapshot an old cache.
+function atlasMarketFlowTruthLabel(level) {
+  switch (level) {
+    case "direct": return "CoinGecko direct";
+    case "direct-conserved": return "CoinGecko · dernière lecture directe conservée";
+    case "public-current": return "CoinGecko · snapshot public récent";
+    case "public-delayed": return "CoinGecko · snapshot public retardé";
+    case "recent-cache": return "CoinGecko · cache récent";
+    case "stale-cache": return "CoinGecko · données historiques anciennes";
+    default: return "CoinGecko · source non confirmée";
+  }
+}
+
 function atlasRenderMarketFlowRibbon() {
   atlasSyncMarketFlowCycleLabel();
   if (!els.tickerTrack) return;
@@ -16128,11 +16141,7 @@ function atlasRenderMarketFlowRibbon() {
   }
 
   const truth = atlasMarketTruth();
-  const truthLabel = truth.level === "direct"
-    ? "CoinGecko direct"
-    : truth.level === "direct-conserved"
-      ? "CoinGecko · dernière lecture directe conservée"
-      : "CoinGecko · données historiques anciennes";
+  const truthLabel = atlasMarketFlowTruthLabel(truth.level);
 
   const flow = atlasMarketFlowCoins();
   const items = flow.map((coin, index) => {
@@ -21339,7 +21348,10 @@ function atlasMathCoverageLabel(data) {
 }
 
 function atlasMathHorizonCoherence(coin) {
-  const values = [coin?.change24h, coin?.change7d, coin?.change30d].map(Number).filter(Number.isFinite);
+  // An absent horizon is not a measured 0%; keep genuine zero observations.
+  const values = [coin?.change24h, coin?.change7d, coin?.change30d]
+    .filter(value => value !== null && value !== undefined && value !== "")
+    .map(Number).filter(Number.isFinite);
   if (values.length < 2) return "Données insuffisantes";
   const positive = values.filter(value => value > 0).length;
   const negative = values.filter(value => value < 0).length;
@@ -21349,6 +21361,7 @@ function atlasMathHorizonCoherence(coin) {
 }
 
 function atlasMathAmplitudeLabel(change24h) {
+  if (change24h === null || change24h === undefined || change24h === "") return "Non mesurée";
   const value = Math.abs(Number(change24h));
   if (!Number.isFinite(value)) return "Non mesurée";
   if (value < 2) return "Faible";
@@ -22521,6 +22534,11 @@ function newsFeedAgeLabel(value) {
   return `${(hours / 24).toFixed(1)} j`;
 }
 
+// Age is computed at display time; archived freshness.label is historical.
+function newsFeedEventAgeLabel(event) {
+  return newsFeedAgeLabel(event?.event_time || event?.published_at || event?.updated_at || "");
+}
+
 function newsFeedValidate(payload) {
   if (!payload || payload.schema !== "atlas_news_sentinel_world_to_market_v1") {
     throw new Error("Schéma News Sentinel invalide");
@@ -23111,7 +23129,7 @@ function renderNewsFeedList() {
         <button class="news-live-select" type="button" data-live-news-id="${escapeHtml(event.id)}">
           <span class="news-live-topline">
             <span class="news-live-type">${escapeHtml(event.event_label || "Information à qualifier")}</span>
-            <span class="news-live-freshness">${escapeHtml(event?.freshness?.label || newsFeedAgeLabel(event.event_time))}</span>
+            <span class="news-live-freshness">${escapeHtml(newsFeedEventAgeLabel(event))}</span>
           </span>
           <h4>${escapeHtml(newsFeedCanonicalDisplayHeadline(event))}</h4>
           <span class="news-live-meta">${meta.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</span>
@@ -24273,7 +24291,7 @@ function renderNewsSentinel(event = null) {
   const tone = newsFeedTone();
   if (stateEl) {
     const label = current
-      ? `${current.event_label} · ${current?.freshness?.label || newsFeedAgeLabel(current.event_time)}`
+      ? `${current.event_label} · ${newsFeedEventAgeLabel(current)}`
       : newsFeedStatusText();
     stateEl.textContent = label;
     stateEl.className = `pill ${newsToneClass(current?.decision?.tone || tone)} ${newsFeedState.status}`;
@@ -24310,7 +24328,7 @@ function renderNewsSentinel(event = null) {
   }
 
   setText($("newsSentinelLast"), newsFeedCanonicalDisplayHeadline(current));
-  setText($("newsSentinelFreshness"), current?.freshness?.label || newsFeedAgeLabel(current.event_time));
+  setText($("newsSentinelFreshness"), newsFeedEventAgeLabel(current));
   setText($("newsSentinelEvidence"), `${current.evidence.level} · score secondaire ${current.evidence.score}/100`);
   setText($("newsSentinelSourceClass"), `${current.source_class} · ${current.source_host}`);
   setText($("newsSentinelImpact"), `${current.impact.level} · score secondaire ${current.impact.score}/100`);
@@ -24355,7 +24373,7 @@ function newsOutputText(event, duplicate = false) {
     `Titre source : ${event.headline || "—"}`,
     `Source : ${event.source_name || event.source_host}`,
     `Classe source : ${event.source_class}`,
-    `Ancienneté : ${event.freshness.label}`,
+    `Ancienneté : ${newsFeedEventAgeLabel(event)}`,
     `Niveau de preuve : ${event.evidence.level} (${event.evidence.score}/100)`,
     `Impact potentiel : ${event.impact.level} (${event.impact.score}/100)`,
     `Orientation : ${event.direction}`,
