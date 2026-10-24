@@ -55,4 +55,14 @@ Ce fichier est le **point d'entrée court** pour les IA : relire `main`, les flu
 - **Suite prioritaire** : deux corrections de présentation avec tests (Market Flow et News Sentinel), puis null ≠ 0 dans les labels Math, sans recalibrage de Market Core, puis recette Firefox synchronisée BTC et CT. Aucun ordre, aucun reset IndexedDB, aucun nouveau Market.
 - **État non certifié** : Binance 5/5 uniquement visible via le bandeau, non recontrôlé auprès du runtime de Firefox ; Watchlist/portefeuille inconnus ; REDIVIDER 49 n'est pas le score Math prouvé ; News impact 87 n'est pas un impact marché mesuré.
 
+## 7. Correction de lecture Market Flow / News / Math · 24 octobre 2026
+
+- **PR #658 fusionnée sur `main`** : [correction ciblée](https://github.com/BlueAzur-Hub/erith-ia-memory/pull/658), commit [`576b6f56`](https://github.com/BlueAzur-Hub/erith-ia-memory/commit/576b6f56fc00dfc864f228a88470fb39cea09b03).
+- `administrator/app.js` : `public-current` affiche désormais **« CoinGecko · snapshot public récent »** au lieu de « données historiques anciennes » ; les autres états ont une qualification explicite.
+- **News Sentinel** : l'ancienneté d'un événement est recalculée à l'affichage depuis `event_time` (ou sa date de publication), au lieu de reprendre l'étiquette historique `freshness.label` ; la source et le score d'impact sont conservés.
+- **Math Core** : `null`, `undefined` et valeur vide ne se transforment plus en zéro dans les libellés de cohérence des horizons ni d'amplitude ; un vrai `0 %` reste possible.
+- **Tests** : `tests/agent_crypto_market_readout_truth.cjs` ajouté et exécuté en CI ; **Trader Current**, **Market Microscope Current**, **lightweight Pages (PR)** et **incremental patch** réussis. **Agent Crypto Learning Lab Read Only** a toujours deux anciens tests en échec (`ai-history-source-catalog.test.mjs` et `ai-source-inventory.test.mjs`, attendu 2 vs observé 1), échecs identiques à ceux du 23 octobre avant cette PR : **chantier séparé, pas déclaré résolu**.
+- **Protection** : aucune modification de Market Core 38.15.11, Trader, Graphique, IndexedDB, historique, Oracle, Bridges, Yoann, données, permissions OKX ni ordres. Le déploiement Pages après fusion et la vérification visuelle Firefox doivent être constatés séparément.
+- **Prochain passage** : une fois Pages `main` publiée, capture utilisateur Firefox `Ctrl+F5` pour vérifier « snapshot public récent », ancienneté des News et « Non mesurée / Données insuffisantes » sur un actif réellement dépourvu d'horizons. Ne pas changer la variation du graphe BTC avant comparaison à sources et horodatages identiques.
+
 **Fin de passage :** la collecte publique a abouti, la documentation est sauvegardée, le rendu des nouveaux prix et la qualité des opportunités restent à certifier. **Ne pas repartir de zéro.**
