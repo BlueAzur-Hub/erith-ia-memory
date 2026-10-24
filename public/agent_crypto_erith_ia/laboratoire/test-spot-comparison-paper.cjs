@@ -1,5 +1,6 @@
 "use strict";
 const test=require("node:test"),assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path");
+const vm=require("node:vm");
 const {analyze}=require("./spot-comparison-paper-core.cjs");
 const root=path.resolve(__dirname,"../data/crypto/okx-hourly");
 const sources=[
@@ -93,4 +94,16 @@ test("the same historical signal is not traded repeatedly during a 24h holding p
  const trades=report.instruments[0].scenarios[0].trades;
  for(let i=1;i<trades.length;i++)
    assert(Date.parse(trades[i].entry_hour_utc)>=Date.parse(trades[i-1].exit_hour_utc));
+});
+
+test("human report HTML embeds valid JavaScript and links the real source",()=>{
+ const page=fs.readFileSync(path.join(__dirname,"spot-comparison-paper.html"),"utf8");
+ const m=page.match(/<script>([\s\S]+?)<\/script>/);
+ assert(m,"Human report JavaScript must be available");
+ assert.doesNotThrow(()=>new vm.Script(m[1],{filename:"spot-comparison-paper.html"}));
+ assert(page.includes("spot-comparison-paper-snapshot.json"));
+ assert(page.includes("kmno-research-dossier.html"));
+ assert(page.includes("kat-research-dossier.html"));
+ const library=fs.readFileSync(path.join(__dirname,"crypto-knowledge.html"),"utf8");
+ assert(library.includes('href="spot-comparison-paper.html"'));
 });
