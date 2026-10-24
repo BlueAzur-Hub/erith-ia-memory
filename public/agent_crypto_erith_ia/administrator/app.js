@@ -4335,6 +4335,7 @@ function atlasBinanceChartSupported(coinOrId) {
 
 function atlasChartProviderLabel(result = null) {
   const family = atlasChartResultSourceFamily(result);
+  if (family === "okx") return "OKX Spot";
   if (family === "binance") return "Binance";
   if (family === "mixed") return "Sources mixtes";
   return "CoinGecko";
@@ -5916,7 +5917,7 @@ function atlasChartAxisMetrics() {
   return { xFont: 10, yFont: 10, xHeight: 28, yWidth: 74 };
 }
 
-function atlasChartAxisPriceLabel(value, view = "price") {
+function atlasChartAxisPriceLabel(value, view = "price", quote = "EUR") {
   const number = Number(value);
   if (!Number.isFinite(number)) return "—";
   if (view === "base100") return number.toFixed(1);
@@ -5929,9 +5930,12 @@ function atlasChartAxisPriceLabel(value, view = "price") {
   else if (absolute >= 0.01) maximumFractionDigits = 4;
   else maximumFractionDigits = 6;
 
+  if(quote==="USDC")return new Intl.NumberFormat("fr-FR",{
+    maximumFractionDigits,minimumFractionDigits:0
+  }).format(number)+" USDC";
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",
-    currency: "EUR",
+    currency: quote==="USD"?"USD":"EUR",
     minimumFractionDigits: 0,
     maximumFractionDigits
   }).format(number);
@@ -6880,7 +6884,7 @@ function atlasExternalChartTooltip(context) {
     const gradientCss = row.gradientCss || atlasCryptoGradientCss(row.coin, index);
     const historicalPrice = Number(row.rawPrice);
     const currentPrice = Number.isFinite(historicalPrice) && historicalPrice > 0
-      ? atlasFormatEUR(historicalPrice)
+      ? atlasFormatNativeChartQuote(historicalPrice, chart.$atlasQuoteCurrency || "EUR")
       : "—";
     const style = `--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(gradientCss)}`;
 
@@ -7198,6 +7202,7 @@ const atlasChartMetadataPlugin = {
   beforeInit(chart, _args, options = {}) {
     chart.$atlasMode = options.mode || "single";
     chart.$atlasCoin = options.coin || null;
+    chart.$atlasQuoteCurrency = options.quoteCurrency || "EUR";
     chart.$atlasView = options.view || (
       options.mode === "comparison"
         ? "base100"
@@ -7376,7 +7381,7 @@ const atlasOverlayAxesPlugin = {
     for (const tick of visibleY) {
       const y = yScale.getPixelForValue(tick.value);
       if (y < area.top + 8 || y > area.bottom - 24) continue;
-      const text = atlasChartAxisPriceLabel(tick.value, view);
+      const text = atlasChartAxisPriceLabel(tick.value, view, chart.$atlasQuoteCurrency);
       const textWidth = ctx.measureText(text).width;
       const boxWidth = textWidth + 16;
       const x = area.right - 6;
@@ -7423,7 +7428,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
   const rows = atlasSanitizeChartRows(series)
     .map(point => ({ t: Number(point?.[0]), price: Number(point?.[1]) }));
 
-  if (rows.length < atlasChartRules(period).minPoints) {
+  if (rows.length < (result?.nativeSpotVerified && result?.integrity?.ok === true ? 2 : atlasChartRules(period).minPoints)) {
     drawChartBlocked(canvas);
     atlasChartV2RenderLegend([]);
     return;
@@ -7453,11 +7458,12 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
 
 
   const freshness = result?.integrity?.metrics?.freshness?.level || "fresh";
+  const visibleCurrency = result?.nativeSpotVerified ? "USDC" : (result?.currency === "USD" ? "USD" : "EUR");
   atlasDestroyRealChart();
   atlasSetChartShellState(
     canvas,
     "valid",
-    `${label} · ${view === "base100" ? "Base 100" : "Prix EUR"} · ${scaleType === "logarithmic" ? "log" : "normal"}`,
+    `${label} · ${view === "base100" ? "Base 100" : "Prix "+visibleCurrency} · ${scaleType === "logarithmic" ? "log" : "normal"}${result?.coverageNote ? " · "+result.coverageNote : ""}`,
     freshness,
     atlasChartSourceMode(result),
     atlasChartProviderLabel(result),
@@ -7477,7 +7483,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
 
     const datasets = [{
       type: "line",
-      label: `${label} · ${atlasChartProviderLabel(result)} EUR`,
+      label: `${label} · ${atlasChartProviderLabel(result)} ${visibleCurrency}`,
       atlasCoin: coin,
       atlasPrimaryColor: palette.primary,
       atlasGradientCss: atlasCryptoGradientCss(coin, 0),
@@ -7532,6 +7538,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
             mode: "single",
             coin,
             view,
+            quoteCurrency: visibleCurrency,
             scale: scaleType,
             period,
             priceAxisId: "y",
@@ -13891,7 +13898,7 @@ function atlasChartOverlayExternal() {
   const period = Number(ctx.period || result?.periodDays || 1);
   const periodLabel = atlasChartPeriodLabel(period);
   const currencyRaw = String(result?.quoteCurrency || result?.currency || "EUR").toUpperCase();
-  const currency = currencyRaw === "USD" ? "USD" : "EUR";
+  const currency = currencyRaw === "USDC" ? "USDC" : currencyRaw === "USD" ? "USD" : "EUR";
   const scaleLabel = atlasExternalPresentation().scale === "logarithmic" ? "LOG" : "NORMALE";
   const symbol = String(coin.symbol || coin.name || "ACTIF").toUpperCase();
   const name = String(coin.name || symbol);
@@ -13921,7 +13928,7 @@ function atlasChartOverlayExternal() {
   const amplitude = Number.isFinite(min) && min > 0 && Number.isFinite(max)
     ? (max - min) / min * 100
     : null;
-  const formatPrice = value => atlasFormatCurrency(value, currency);
+  const formatPrice = value => atlasFormatNativeChartQuote(value, currency);
 
   const seriesParts = [];
   if (Number.isFinite(last)) seriesParts.push(formatPrice(last));
@@ -13940,9 +13947,9 @@ function atlasChartOverlayExternal() {
   const color = atlasChartOverlayCoinColor(coin, 0);
   atlasChartOverlaySet(
     atlasChartOverlayTitleHtml(
-      `${symbol} · ${name} · ${periodLabel}`,
+      `${symbol} · ${name} · ${periodLabel}${result?.coverageNote ? " · "+result.coverageNote : ""}`,
       `PRIX ${currency} · ${scaleLabel}`,
-      "EXTERNE"
+      result?.nativeSpotVerified ? "ARCHIVE OKX SPOT" : "EXTERNE"
     ),
     `<span class="atlas-hud-coin" style="--coin-color:${escapeHtml(color)}"><b>${escapeHtml(symbol)}</b><em>${escapeHtml(seriesParts.join(" · ") || "Mesures externes non disponibles")}</em></span>`,
     `<span class="atlas-hud-detail">${escapeHtml(summaryParts.join(" · "))}</span>`,
@@ -16370,6 +16377,15 @@ function atlasFormatCurrency(value, currency = "EUR") {
 }
 
 function atlasFormatUSD(value) { return atlasFormatCurrency(value, "USD"); }
+function atlasFormatNativeChartQuote(value, currency = "EUR") {
+  if(currency!=="USDC")return atlasFormatCurrency(value,currency==="USD"?"USD":"EUR");
+  const n=Number(value);
+  if(!Number.isFinite(n))return "—";
+  const digits=atlasPriceDigits(n);
+  return new Intl.NumberFormat("fr-FR",{
+    minimumFractionDigits:Math.min(2,digits),maximumFractionDigits:digits
+  }).format(n)+" USDC";
+}
 
 function atlasMarketRetryDelay(failureCount = 1) {
   const index = Math.min(
@@ -17569,13 +17585,13 @@ function atlasExternalChartDetail(coin,period,result=null,mode="loading"){
   const lastAt=Number(metrics.lastTimestamp);
   const firstAt=Number(metrics.firstTimestamp);
   const preference=String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency||"EUR").toUpperCase();
-  const currency=["USD","EUR"].includes(String(result?.currency||"").toUpperCase())
+  const currency=["USD","EUR","USDC"].includes(String(result?.currency||"").toUpperCase())
     ?String(result.currency).toUpperCase()
     :(preference==="USD"?"USD":"EUR");
-  const rawPrice=currency==="USD"?coin?.priceUsd:(coin?.priceEur??coin?.price);
+  const rawPrice=currency==="USDC"?NaN:currency==="USD"?coin?.priceUsd:(coin?.priceEur??coin?.price);
   const priceNow=rawPrice==null?NaN:Number(rawPrice);
   const formatExternalPrice=value=>Number.isFinite(value)
-    ?(currency==="USD"?atlasFormatUSD(value):atlasFormatEUR(value)):"—";
+    ?atlasFormatNativeChartQuote(value,currency):"—";
 
   setText(els.selectedAssetTitle,`${coin.name} — ${coin.symbol} · HORS TOP 250`);
   atlasRenderCompactDetailSummary(coin);
@@ -17637,6 +17653,7 @@ function atlasExternalChartDraw(coin,period,result){
   }
 
   atlasExternalChartDetail(coin,period,safeResult,"valid");
+  atlasChartOverlayUpdate();
 
   if(els.chartCaption){
     const points=Number(safeResult?.integrity?.metrics?.pointCount??safeResult?.series?.length??0);
@@ -17755,6 +17772,8 @@ async function atlasExternalChartRender(period=atlasExternalChartPeriod(),option
 
   atlasChartV2SyncControls();
   atlasChartSetPeriodButtons(normalized,true);
+  atlasDestroyRealChart();
+  atlasChartV2RenderLegend([]);
   setText(els.selectedAssetTitle,`${coin.name} — ${coin.symbol} · HORS TOP 250`);
   atlasExternalChartDetail(coin,normalized,null,"loading");
 
@@ -17770,7 +17789,8 @@ async function atlasExternalChartRender(period=atlasExternalChartPeriod(),option
     );
   }
 
-  const stored=atlasGetStoredChartResult(coin,normalized,"coingecko");
+  const nativeEligible=globalThis.AtlasOkxPublicChartHistory?.eligible?.(coin,{peers:state.coins})===true;
+  const stored=nativeEligible?null:atlasGetStoredChartResult(coin,normalized,"coingecko");
   if(stored){
     const storedWithCoin={...stored,coin,externalChart403113:true};
     ctx.result=storedWithCoin;
@@ -17785,10 +17805,24 @@ async function atlasExternalChartRender(period=atlasExternalChartPeriod(),option
   }
 
   try{
-    const result=await fetchChartSeries(coin,normalized,{
-      signal:controller.signal,
-      fallback:stored
-    });
+    let result=null;
+    if(nativeEligible){
+      try{
+        result=await globalThis.AtlasOkxPublicChartHistory.load(coin,normalized,{
+          signal:controller.signal,peers:state.coins
+        });
+      }catch(nativeError){
+        if(nativeError?.name==="AbortError")throw nativeError;
+        // Existing CoinGecko route remains a fallback, never a synthetic series.
+        result=null;
+      }
+    }
+    if(!result){
+      result=await fetchChartSeries(coin,normalized,{
+        signal:controller.signal,
+        fallback:stored
+      });
+    }
 
     if(token!==ctx.token||!ctx.active||ctx.coin?.id!==coin.id||ctx.period!==normalized){
       return false;
@@ -17825,7 +17859,7 @@ async function atlasExternalChartRender(period=atlasExternalChartPeriod(),option
     }
 
     const safe={...result,coin,externalChart403113:true};
-    atlasStoreChartResult(coin,normalized,safe,"coingecko");
+    if(!safe.nativeSpotVerified)atlasStoreChartResult(coin,normalized,safe,"coingecko");
     ctx.result=safe;
     ctx.resultPeriod=normalized;
     atlasExternalChartDraw(coin,normalized,safe);
@@ -48681,7 +48715,7 @@ function atlasChartPreferredSourceFamily(coinOrId) {
 
 function atlasChartResultSourceFamily(result = null) {
   const explicitFamily = String(result?.sourceFamily || "").toLowerCase();
-  if (explicitFamily === "binance" || explicitFamily === "coingecko") return explicitFamily;
+  if (explicitFamily === "binance" || explicitFamily === "coingecko" || explicitFamily === "okx") return explicitFamily;
   if (result?.comparison && Array.isArray(result.entries)) {
     const families = new Set(result.entries.map(entry => atlasChartResultSourceFamily(entry?.result)));
     return families.size === 1 ? [...families][0] : "mixed";
@@ -48724,6 +48758,7 @@ function atlasChartSourceMode(result = null) {
       ? "cache"
       : "direct";
   }
+  if (mode === "okx-github-spot-candles") return "cache";
   if (["browser-cache", "local-cache", "github-cache", "recent-cache"].includes(mode)) return "cache";
   return "unknown";
 }
