@@ -19,8 +19,9 @@ def snapshot(day="2026-10-20", t="08:17:00", ask="0.4", bid="0.399",
             "identity_proven":proven,"paper_entry_decision":"AWAIT_NEXT_DATED_BOOK_AND_COST_CHECK",
             "min_order_usdt":"5"}]
     slots.extend({"coin_id":"other-"+str(i),"identity_proven":False} for i in range(19))
+    source_spread_bps=round((float(ask)-float(bid))*20000/(float(ask)+float(bid)),5)
     cand=[{"id":"quack-ai","market":{"provider":"Bitget","pair":"QUSDT","quote":"USDT",
-                "book":{"best_bid_usdt":bid,"best_ask_usdt":ask,"spread_bps":25,
+                "book":{"best_bid_usdt":bid,"best_ask_usdt":ask,"spread_bps":source_spread_bps,
                         "exchange_timestamp_verified":True,
                         "observed_at_utc":day+"T08:15:00Z"}}}]
     cand.extend({"id":"other-"+str(i),"market":None} for i in range(19))
@@ -44,11 +45,11 @@ class Tests(unittest.TestCase):
         self.assertEqual(s["real_orders"],0)
         self.assertIsNone(s["positions"][0]["realized_profit_usdt"])
         self.assertEqual(s["positions"][0]["entry_ask_usdt"],"0.4")
-        next_day,q2,at2=snapshot(day="2026-10-21",ask="0.51",bid="0.5")
+        next_day,q2,at2=snapshot(day="2026-10-21",ask="0.501",bid="0.5")
         s2=advance(next_day,q2,s,at2)
         self.assertEqual(len(s2["positions"]),1)
         self.assertEqual(len(s2["closures"]),0)
-        last,q3,at3=snapshot(day="2026-10-22",ask="0.51",bid="0.5")
+        last,q3,at3=snapshot(day="2026-10-22",ask="0.501",bid="0.5")
         s3=advance(last,q3,s2,at3)
         self.assertEqual(len(s3["positions"]),0)
         self.assertEqual(len(s3["closures"]),1)
@@ -95,6 +96,21 @@ class Tests(unittest.TestCase):
         i,q,at=snapshot()
         q["candidates"][0]["market"]["book"]["spread_bps"]=180
         self.assertEqual(advance(i,q,empty(),at)["positions"],[])
+
+    def test_reported_narrow_spread_cannot_hide_wide_real_book(self):
+        i,q,at=snapshot(ask="0.4",bid="0.1")
+        # Explicitly forge the claimed spread; a genuine source would reject it.
+        q["candidates"][0]["market"]["book"]["spread_bps"]=25
+        self.assertEqual(q["candidates"][0]["market"]["book"]["spread_bps"],25)
+        self.assertEqual(advance(i,q,empty(),at)["positions"],[])
+
+    def test_accepted_spread_is_recomputed_from_original_bid_ask(self):
+        i,q,at=snapshot(ask="0.4",bid="0.399")
+        positions=advance(i,q,empty(),at)["positions"]
+        self.assertEqual(len(positions),1)
+        expected=(0.4-0.399)*20000/(0.4+0.399)
+        self.assertAlmostEqual(float(positions[0]["entry_spread_bps"]),
+                               expected,places=4)
 
     def test_no_retroactive_entry_from_price_or_old_book(self):
         i,q,at=snapshot()
