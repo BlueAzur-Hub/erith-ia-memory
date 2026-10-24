@@ -78,7 +78,8 @@ test("No dated USD evidence leaves all old EUR amounts hidden",()=>{
 });
 test("Ambiguous duplicate BTC label is never silently attributed to another asset",()=>{
  const m=build({rows:[0,0,2,3,4],noCoins:true});m.run();
- assert.equal(m.rows[0].field.textContent,moneyExpected(USD[0]));
+ assert.equal(m.rows[0].field.textContent,"—");
  assert.equal(m.rows[1].field.textContent,"—");
- assert.equal(m.root.dataset.usdQuotesVerified,"4");
+ assert.equal(m.rows[2].field.textContent,moneyExpected(USD[2]));
+ assert.equal(m.root.dataset.usdQuotesVerified,"3");
 });
