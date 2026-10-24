@@ -68,18 +68,32 @@ function nativeExternalHistoricalUsd(context){
 function top5VerifiedUsd(coin,book,now=Date.now()){
  const fromBook=top5NativeUsd(coin,book,now);
  if(fromBook)return fromBook;
- let asset=null;try{asset=typeof state!=="undefined"?
-   state?.coins?.find?.(row=>String(row?.id||"")===String(coin?.id||"")):null}catch(_){}
- asset=asset||coin;
- if(!coin?.id||String(asset?.id||"")!==String(coin.id))return null;
- const price=asset.priceUsd==null?NaN:Number(asset.priceUsd);
- // Priority mirrors Market Fiche: USD observation timestamp, never unrelated EUR timestamp.
- const timestamp=Date.parse(String(asset.usdUpdatedAt||asset.snapshotGeneratedAt||asset.lastUpdated||asset.timestamp||asset.spotUpdatedAt||""));
- const age=now-timestamp;
- if(!(Number.isFinite(price)&&price>0&&Number.isFinite(timestamp)&&age>=0&&age<=15*60000))return null;
- return {quote:{status:"snapshot",kind:"coingecko-usd-explicit",coinId:coin.id,
-   price,timestamp,source:"CoinGecko USD · cotation observée"},
-   price,change24h:null};
+ if(!coin?.id)return null;
+ // Market Fiche and Market Snapshot read the canonical 1000-asset universe.
+ // The graph's state.coins may be an older copy after a fresh Market refresh.
+ const candidates=[];
+ try{const market=globalThis.AtlasMarketUniverse1000?.find?.(coin.id);if(market)candidates.push(market)}catch(_){}
+ try{const local=typeof state!=="undefined"?
+   state?.coins?.find?.(row=>String(row?.id||"")===String(coin.id)):null;
+   if(local)candidates.push(local)}catch(_){}
+ candidates.push(coin);
+ let latest=null;
+ for(const asset of candidates){
+   // A price must belong to the exact CoinGecko asset in this chart dataset.
+   if(String(asset?.id||"")!==String(coin.id))continue;
+   const price=asset.priceUsd==null?NaN:Number(asset.priceUsd);
+   // A USD-specific timestamp has priority over an unrelated EUR/spot update.
+   const timestamp=Date.parse(String(asset.usdUpdatedAt||asset.snapshotGeneratedAt||
+     asset.lastUpdated||asset.timestamp||asset.spotUpdatedAt||""));
+   const age=now-timestamp;
+   if(!(Number.isFinite(price)&&price>0&&Number.isFinite(timestamp)&&
+     age>=0&&age<=15*60000))continue;
+   if(latest&&latest.quote.timestamp>=timestamp)continue;
+   latest={quote:{status:"snapshot",kind:"coingecko-usd-explicit",coinId:coin.id,
+     price,timestamp,source:"CoinGecko USD · cotation observée"},
+     price,change24h:null};
+ }
+ return latest;
 }
 const coinRowMatch=(row,coin)=>{
  const symbol=String(coin?.symbol||"").trim().toUpperCase();
