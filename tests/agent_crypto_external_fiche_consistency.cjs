@@ -40,6 +40,13 @@ assert.match(app,/function drawComparisonChart\([^]*?atlasExternalChartActive\(\
 assert.match(app,/function atlasRenderComparisonDetail\([^]*?if \(atlasExternalChartActive\(\)\) return;/);
 assert.match(app,/function atlasRenderComparisonCaption\([^]*?if \(atlasExternalChartActive\(\)\) return;/);
 
+// The Extended market row and its click handler must use the same attribute.
+// Otherwise out-of-Top250 assets (such as IRYS) cannot open their existing chart.
+assert.match(app,/data-market-extended-toggle403116="\$\{escapeHtml\(c\.id\)\}"/);
+const delegation=app.slice(app.indexOf("function atlasMarketExtendedEnsureDelegation(){"),
+  app.indexOf("function atlasMarketExtendedUniverseRowMarkup(",app.indexOf("function atlasMarketExtendedEnsureDelegation(){")));
+assert.match(delegation,/row\.getAttribute\("data-market-extended-toggle403116"\)/);
+assert.doesNotMatch(delegation,/row\.dataset\.marketExtendedToggle\b/);
 const start=facade.indexOf("  function activeExternalId(){");
 const finish=facade.indexOf("  function selectedCoin(){",start);
 assert.ok(start>=0&&finish>start,"USD facade external selection helper exists");
