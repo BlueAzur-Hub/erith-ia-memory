@@ -25,6 +25,16 @@ SYMBOLS = (
     "ARKM", "BIGTIME", "AI", "BABY", "AVNT", "CVC", "AGLD", "ANIME",
     "CORE", "DATA", "SOPH", "AUCTION", "BREV", "BASED", "SAHARA"
 )
+# Additional real OKX/USDC Spot listings shown in "Nouvelles offres" on 2026-10-24.
+# CP-USDC already belongs to SYMBOLS above. CT may also be monitored elsewhere,
+# but its dedicated 15m/1H/1Dutc history was not covered here.
+NEW_OFFERS = (
+    "XWDC", "XNFLX", "LIT", "CT", "XDP", "CARDS", "EURC", "XAMZN",
+    "XAAPL", "XMETA", "XHOOD", "XGOOGL", "XNVDA", "XTSLA",
+    "XSPCX", "XSOXL", "XSKHY", "XQQQ", "XNBIS", "XMU",
+    "XMSTR", "XMRVL", "XLITE", "XINTC"
+)
+SYMBOLS = SYMBOLS + NEW_OFFERS
 SCHEMA = "erith.okx-native-spot-candles.v1"
 
 
@@ -78,6 +88,12 @@ def collect_pair(symbol, fetch=verified.fetch_public, now=None):
         "source": "https://eea.okx.com/api/v5/market/history-candles",
         "generated_at_utc": now.isoformat(timespec="seconds").replace("+00:00", "Z"),
         "bar_interval_ms": verified.BARS,
+        # x-prefixed listings are NOT labelled ordinary cryptocurrencies.
+        "listing_group": ("okx_new_offers_2026-10-24"
+                          if symbol in NEW_OFFERS else "okx_top_gainers_2026-10-24"),
+        "instrument_group": ("x_prefixed_instrument" if symbol.startswith("X")
+                             else "stablecoin_pair" if symbol == "EURC"
+                             else "crypto_spot_pair"),
         "candles": candles, "no_quote_conversion": True,
         "orders_enabled": False, "real_orders": 0, "paper_fills": 0,
         "account_access": False
@@ -129,6 +145,7 @@ def update(fetch=verified.fetch_public, now=None, root=OUT):
         if data:
             archived.append({
                 "pair": pair, "quote": "USDC",
+                "instrument_group": data.get("instrument_group", "unclassified_old_archive"),
                 "source_date_utc": data["generated_at_utc"][:10],
                 "bars": {bar: len(data["candles"][bar]) for bar in verified.BARS},
                 "first_day_open_utc": data["candles"]["1Dutc"][0][0],
