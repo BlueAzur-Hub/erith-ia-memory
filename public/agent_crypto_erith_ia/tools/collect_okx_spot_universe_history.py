@@ -32,10 +32,20 @@ NEW_OFFERS = (
     "XWDC", "XNFLX", "LIT", "CT", "XDP", "CARDS", "EURC", "XAMZN",
     "XAAPL", "XMETA", "XHOOD", "XGOOGL", "XNVDA", "XTSLA",
     "XSPCX", "XSOXL", "XSKHY", "XQQQ", "XNBIS", "XMU",
-    "XMSTR", "XMRVL", "XLITE", "XINTC"
+    "XMSTR", "XMRVL", "XLITE", "XINTC",
+    "BOME", "OL", "GOAT"
 )
 SYMBOLS = SYMBOLS + NEW_OFFERS
 SCHEMA = "erith.okx-native-spot-candles.v1"
+FEED = ROOT / "administrator/data/new-listings-public-feed.json"
+# Max calls per first backfill: 5*15m + 9*1H + 3*1Dutc, plus
+# a single public SPOT instrument identity check. Subsequent daily runs
+# normally need only one fresh page per period.
+PAGE_CAPS = {"15m": 5, "1H": 9, "1Dutc": 3}
+TARGET_DAYS = {"15m": 14, "1H": 100, "1Dutc": 730}
+# Bounded physical storage while retaining at least 30d/1y history.
+MAX_SAVED_ROWS = {"15m": 2880, "1H": 8760, "1Dutc": 3650}
+MAX_FEED_EXTRAS = 12
 
 
 def valid_archive(data, pair):
@@ -54,13 +64,43 @@ def valid_archive(data, pair):
                     and len(data["candles"][b]) >= 2 for b in verified.BARS))
 
 
-def target_path(symbol, root=OUT):
-    verified.require(symbol in SYMBOLS, "Non-whitelisted market")
+def observed_symbols(feed_path=FEED):
+    """Discover only exact, already-catalogued OKX Spot USDC pairs (never by ticker guess)."""
+    try:
+        feed = json.loads(pathlib.Path(feed_path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ()
+    if not isinstance(feed, dict) or feed.get("read_only") is not True:
+        return ()
+    rows = feed.get("entries")
+    if not isinstance(rows, list):
+        return ()
+    extras = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        base = str(row.get("base") or "")
+        pair = base + "-USDC"
+        if (row.get("provider") != "okx" or row.get("instrument_type") != "SPOT"
+                or row.get("quote") != "USDC" or row.get("state") != "live"
+                or row.get("providerSymbol") != pair
+                or not (2 <= len(base) <= 15 and base.isascii() and base.isalnum()
+                        and base.upper() == base) or base in SYMBOLS or base in extras):
+            continue
+        extras.append(base)
+        if len(extras) >= MAX_FEED_EXTRAS:
+            break
+    return tuple(extras)
+
+
+def target_path(symbol, root=OUT, allowed_symbols=SYMBOLS):
+    verified.require(symbol in allowed_symbols, "Non-whitelisted market")
     return root / (symbol.lower() + "-usdc.json")
 
 
-def collect_pair(symbol, fetch=verified.fetch_public, now=None):
-    verified.require(symbol in SYMBOLS, "Symbol outside the verified operator universe")
+def collect_pair(symbol, fetch=verified.fetch_public, now=None, previous=None,
+                 allowed_symbols=SYMBOLS):
+    verified.require(symbol in allowed_symbols, "Symbol outside the verified operator universe")
     now = now or dt.datetime.now(UTC)
     verified.require(now.utcoffset() == dt.timedelta(0), "UTC required")
     pair = symbol + "-USDC"
@@ -75,11 +115,37 @@ def collect_pair(symbol, fetch=verified.fetch_public, now=None):
                      and row.get("quoteCcy") == "USDC"
                      and row.get("state") == "live",
                      "Instrument identity or listing not verified")
+    previous = previous if valid_archive(previous, pair) else None
     candles = {}
+    cutoff_now_ms = int(now.timestamp() * 1000)
     for bar, interval_ms in verified.BARS.items():
-        rows = fetch("/api/v5/market/history-candles",
-                     {"instId": pair, "bar": bar, "limit": "300"})
-        candles[bar] = verified.normalize(rows, interval_ms, now)
+        # Retain verified older OHLCV instead of overwriting it each UTC day.
+        by_time = {int(row[0]): list(row) for row in
+                   (previous["candles"][bar] if previous else [])}
+        oldest_cursor = None
+        target_ms = cutoff_now_ms - TARGET_DAYS[bar] * 86400000
+        for _ in range(PAGE_CAPS[bar]):
+            params = {"instId": pair, "bar": bar, "limit": "300"}
+            if oldest_cursor is not None:
+                params["after"] = str(oldest_cursor)
+            raw = fetch("/api/v5/market/history-candles", params)
+            if not raw:
+                break
+            confirmed = verified.normalize(raw, interval_ms, now)
+            # New native observations override any earlier version of the same
+            # confirmed bar. Never insert synthetic timestamps or values.
+            for point in confirmed:
+                by_time[int(point[0])] = point
+            next_cursor = min(int(point[0]) for point in raw)
+            if oldest_cursor is not None:
+                verified.require(next_cursor < oldest_cursor,
+                                 "Historical pagination made no backward progress")
+            if min(by_time) <= target_ms or len(raw) < 300:
+                break
+            oldest_cursor = next_cursor
+        rows = [by_time[k] for k in sorted(by_time)]
+        candles[bar] = rows[-MAX_SAVED_ROWS[bar]:]
+        verified.require(len(candles[bar]) >= 2, "Insufficient authentic OHLCV")
     result = {
         "schema": SCHEMA,
         "record_kind": "confirmed_public_spot_ohlcv_not_fills",
@@ -88,9 +154,9 @@ def collect_pair(symbol, fetch=verified.fetch_public, now=None):
         "source": "https://eea.okx.com/api/v5/market/history-candles",
         "generated_at_utc": now.isoformat(timespec="seconds").replace("+00:00", "Z"),
         "bar_interval_ms": verified.BARS,
-        # x-prefixed listings are NOT labelled ordinary cryptocurrencies.
         "listing_group": ("okx_new_offers_2026-10-24"
-                          if symbol in NEW_OFFERS else "okx_top_gainers_2026-10-24"),
+                          if symbol in NEW_OFFERS else "okx_top_gainers_2026-10-24"
+                          if symbol in SYMBOLS else "public_listings_feed"),
         "instrument_group": ("x_prefixed_instrument" if symbol.startswith("X")
                              else "stablecoin_pair" if symbol == "EURC"
                              else "crypto_spot_pair"),
@@ -123,20 +189,22 @@ def read_previous(path, pair):
     return obj if valid_archive(obj, pair) else None
 
 
-def update(fetch=verified.fetch_public, now=None, root=OUT):
+def update(fetch=verified.fetch_public, now=None, root=OUT, feed_path=FEED):
     now = now or dt.datetime.now(UTC)
     verified.require(now.utcoffset() == dt.timedelta(0), "UTC required")
     day = now.date().isoformat()
+    selected = SYMBOLS + observed_symbols(feed_path)
     archived, failures, new_archives = [], [], []
-    for symbol in SYMBOLS:
+    for symbol in selected:
         pair = symbol + "-USDC"
-        dest = target_path(symbol, root)
+        dest = target_path(symbol, root, selected)
         older = read_previous(dest, pair)
         if older and str(older.get("generated_at_utc", "")).startswith(day):
             data = older
         else:
             try:
-                data = collect_pair(symbol, fetch=fetch, now=now)
+                data = collect_pair(symbol, fetch=fetch, now=now,
+                                    previous=older, allowed_symbols=selected)
                 write_atomic(dest, data)
                 new_archives.append(pair)
             except (ValueError, TypeError, KeyError, OSError, TimeoutError) as err:
@@ -151,18 +219,16 @@ def update(fetch=verified.fetch_public, now=None, root=OUT):
                 "first_day_open_utc": data["candles"]["1Dutc"][0][0],
                 "last_day_open_utc": data["candles"]["1Dutc"][-1][0]
             })
-    # The manifest distinguishes fresh coverage, retained older evidence, and absence.
     manifest = {
         "schema": "erith.okx-spot-universe-coverage.v1",
         "source_date_utc": day,
-        "requested_pairs": len(SYMBOLS),
+        "requested_pairs": len(selected),
         "covered_pairs": len(archived),
         "archives": archived,
         "failed_this_attempt": failures,
         "native_quote": "USDC",
         "orders_enabled": False, "account_access": False
     }
-    # Ignore updated_pairs in comparison: don't churn the manifest every hour.
     dest = root / "coverage.json"
     try:
         prior = json.loads(dest.read_text(encoding="utf-8"))
