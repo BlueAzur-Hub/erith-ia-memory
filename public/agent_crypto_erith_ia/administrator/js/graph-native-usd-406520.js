@@ -73,7 +73,8 @@ function top5VerifiedUsd(coin,book,now=Date.now()){
  asset=asset||coin;
  if(!coin?.id||String(asset?.id||"")!==String(coin.id))return null;
  const price=asset.priceUsd==null?NaN:Number(asset.priceUsd);
- const timestamp=Date.parse(String(asset.spotUpdatedAt||asset.lastUpdated||asset.timestamp||""));
+ // Prefer the USD quote timestamp (the same provenance as Market Fiche USD).
+ const timestamp=Date.parse(String(asset.usdUpdatedAt||asset.snapshotGeneratedAt||asset.lastUpdated||asset.timestamp||asset.spotUpdatedAt||""));
  const age=now-timestamp;
  if(!(Number.isFinite(price)&&price>0&&Number.isFinite(timestamp)&&age>=0&&age<=15*60000))return null;
  return {quote:{status:"snapshot",kind:"coingecko-usd-explicit",coinId:coin.id,
