@@ -177,3 +177,56 @@ test("Top 5 reads the fresh Market universe when state.coins is stale",()=>{
   assert.equal(s.tooltip.dataset.usdQuotesVerified,"4");
  }finally{cleanup()}
 });
+
+test("Original app.js canonical Top5: archived 22-minute USD quotes remain visible",()=>{
+ const fs=require("node:fs"),vm=require("node:vm"),path=require("node:path");
+ const app=fs.readFileSync(path.resolve(__dirname,"../app.js"),"utf8");
+ const begin=app.indexOf("function atlasChartMarketUsdObservation(");
+ const end=app.indexOf("\nfunction atlasSetChartCaptionHtml(",begin);
+ assert.ok(begin>0&&end>begin,"canonical owner exists in original app.js");
+ const observedAt="2026-10-24T22:32:49.000Z";
+ const now=Date.parse("2026-10-24T22:55:00Z");
+ const coins=[
+  {id:"bitcoin",symbol:"BTC",priceUsd:80437.89973802774},
+  {id:"ethereum",symbol:"ETH",priceUsd:2341.0025931601263},
+  {id:"binancecoin",symbol:"BNB",priceUsd:734.1045219010529},
+  {id:"ripple",symbol:"XRP",priceUsd:1.2909162994725298},
+  {id:"solana",symbol:"SOL",priceUsd:101.46876996639266}
+ ].map(c=>({...c,usdUpdatedAt:observedAt}));
+ const state={chartPeriodDays:1,coins:[],dataBroker:{comparison:{preset:"rank-5"},spotBook:{status:"stale",quotes:{}}}};
+ const datasets=coins.map(c=>({atlasCoin:c,data:[{x:1,y:100,rawPrice:70000}]}));
+ const chart={$atlasMode:"comparison",$atlasPeriod:1,$atlasQuoteCurrency:"EUR",data:{datasets}};
+ const copy=JSON.stringify(chart.data);
+ const tooltip={hidden:true,dataset:{},innerHTML:"",setAttribute(){}};
+ const env={state,Intl,Number,Math,Array,JSON,
+  globalThis:null,
+  document:{getElementById(id){return id==="atlasChartTooltip"?tooltip:null}},
+  escapeHtml:x=>String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;"),
+  atlasHasPositiveQuote:x=>x!=null&&x!==""&&Number(x)>0,
+  atlasChartTooltipNode:()=>tooltip,atlasHideChartTooltip:()=>{tooltip.hidden=true;},
+  atlasComparisonTooltipRows:()=>datasets.map(d=>({coin:d.atlasCoin,rawPrice:70000,baseValue:100,color:"red"})),
+  atlasChartPriceDatasets:()=>datasets,atlasChartLivePresentation:()=>null,
+  atlasCryptoPalette:()=>({primary:"#fff"}),atlasCryptoGradientCss:()=>"none",
+  atlasChartTooltipCoinMarkup:c=>"<span>"+c.symbol+"</span>",
+  atlasChartTooltipChangeMarkup:()=>"<small>Base100</small>",
+  atlasFormatUSD:n=>new Intl.NumberFormat("fr-FR",{style:"currency",currency:"USD",
+   minimumFractionDigits:2,maximumFractionDigits:Math.abs(n)>=1000?2:4}).format(n),
+  atlasFormatNativeChartQuote:()=> "70000 €",
+  atlasChartPeriodLabel:()=> "24h",atlasPositionChartTooltip:()=>{},
+  requestAnimationFrame:fn=>fn()
+ };
+ class FrozenDate extends Date {static now(){return now;}static parse(x){return Date.parse(x);}}
+ env.Date=FrozenDate;env.globalThis=env;
+ env.AgentCryptoQuoteCurrencyArchitecture={snapshot:()=>({displayCurrency:"USD"})};
+ env.AtlasMarketUniverse1000={find:id=>coins.find(c=>c.id===id)||null};
+ vm.createContext(env);
+ vm.runInContext(app.slice(begin,end),env,{filename:"administrator/app.js:canonical-tooltip"});
+ env.atlasExternalChartTooltip({chart,tooltip:{opacity:1,dataPoints:[{dataset:datasets[0],dataIndex:0,parsed:{x:1},raw:{x:1}}]}});
+ assert.equal(tooltip.dataset.top5UsdOwner,"canonical-app");
+ assert.equal(tooltip.dataset.usdQuotesVerified,"5");
+ assert.match(tooltip.innerHTML,/5 différée\\(s\\)/);
+ assert.equal((tooltip.innerHTML.match(/différé · 22 min/g)||[]).length,5);
+ for(const c of coins)assert.ok(tooltip.innerHTML.includes(env.atlasFormatUSD(c.priceUsd)),c.id);
+ assert.doesNotMatch(tooltip.innerHTML,/70000 €|PRIX HISTORIQUE USD NON DISPONIBLE/);
+ assert.equal(JSON.stringify(chart.data),copy,"Base100 untouched");
+});
