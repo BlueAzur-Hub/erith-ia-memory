@@ -87,7 +87,7 @@ const coinRowMatch=(row,coin)=>{
  const label=String(row?.textContent||"").toUpperCase();
  const tokens=[symbol,name].filter(v=>/^[A-Z0-9][A-Z0-9 .-]{1,35}$/.test(v));
  return tokens.some(v=>new RegExp("(^|[^A-Z0-9])"+
-   v.replace(/[.*+?^${}()|[\]\\]/g,"\\function top5Tooltip(original,args){")+"(?=$|[^A-Z0-9])").test(label));
+   v.replace(/[.*+?^${}()|[\]\\]/g,"\\   v.replace(/[.*+?^${}()|[\]\\]/g,"\\function top5Tooltip(original,args){")+"(?=$|[^A-Z0-9])").test(label));")+"(?=$|[^A-Z0-9])").test(label));
 };
 
 function top5Tooltip(original,args){
