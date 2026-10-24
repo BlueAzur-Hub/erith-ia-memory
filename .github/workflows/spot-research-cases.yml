@@ -1,0 +1,50 @@
+name: Spot Research Cases — Provenance and Read Only
+on:
+  pull_request:
+    paths:
+      - "public/agent_crypto_erith_ia/data/crypto/research/irys.json"
+      - "public/agent_crypto_erith_ia/data/crypto/research/zcash.json"
+      - "public/agent_crypto_erith_ia/data/crypto/research/hyperliquid.json"
+      - "public/agent_crypto_erith_ia/data/crypto/research/spot-priority-watch.json"
+      - "public/agent_crypto_erith_ia/laboratoire/hype-case-study.html"
+      - "public/agent_crypto_erith_ia/laboratoire/zcash-case-study.html"
+      - "public/agent_crypto_erith_ia/laboratoire/crypto-knowledge.html"
+      - "public/agent_crypto_erith_ia/trader/irys-market-case-study.html"
+      - "public/agent_crypto_erith_ia/tools/test_spot_research_cases.cjs"
+      - ".github/workflows/spot-research-cases.yml"
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/data/crypto/research/**"
+      - "public/agent_crypto_erith_ia/laboratoire/hype-case-study.html"
+      - "public/agent_crypto_erith_ia/laboratoire/zcash-case-study.html"
+      - "public/agent_crypto_erith_ia/laboratoire/crypto-knowledge.html"
+      - "public/agent_crypto_erith_ia/trader/irys-market-case-study.html"
+      - "public/agent_crypto_erith_ia/tools/test_spot_research_cases.cjs"
+      - ".github/workflows/spot-research-cases.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /public/agent_crypto_erith_ia/data/crypto/research/
+            /public/agent_crypto_erith_ia/data/crypto/okx-hourly/irys-spot-candles.json
+            /public/agent_crypto_erith_ia/data/crypto/case-market-hourly/2026-10-24.json
+            /public/agent_crypto_erith_ia/laboratoire/crypto-knowledge.html
+            /public/agent_crypto_erith_ia/laboratoire/hype-case-study.html
+            /public/agent_crypto_erith_ia/laboratoire/zcash-case-study.html
+            /public/agent_crypto_erith_ia/trader/irys-market-case-study.html
+            /public/agent_crypto_erith_ia/tools/test_spot_research_cases.cjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify exact venue provenance, archive arithmetic, no trade claims and readable pages
+        run: node --test public/agent_crypto_erith_ia/tools/test_spot_research_cases.cjs
