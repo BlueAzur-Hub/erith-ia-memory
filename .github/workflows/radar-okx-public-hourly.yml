@@ -8,6 +8,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/collect_irys_spot_history.py'
       - 'public/agent_crypto_erith_ia/tools/test_irys_spot_history.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_hype_spot_history.py'
+      - 'public/agent_crypto_erith_ia/tools/test_hype_spot_history.py'
       - 'public/agent_crypto_erith_ia/tools/collect_okx_spot_universe_history.py'
       - 'public/agent_crypto_erith_ia/tools/test_okx_spot_universe_history.py'
       - 'public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py'
@@ -32,6 +34,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/test_collect_okx_public_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/collect_irys_spot_history.py'
       - 'public/agent_crypto_erith_ia/tools/test_irys_spot_history.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_hype_spot_history.py'
+      - 'public/agent_crypto_erith_ia/tools/test_hype_spot_history.py'
       - 'public/agent_crypto_erith_ia/tools/collect_okx_spot_universe_history.py'
       - 'public/agent_crypto_erith_ia/tools/test_okx_spot_universe_history.py'
       - 'public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py'
@@ -85,6 +89,8 @@ jobs:
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_okx_public_hourly.py
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_irys_spot_history.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_irys_spot_history.py' -v
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_hype_spot_history.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_hype_spot_history.py' -v
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_okx_spot_universe_history.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_okx_spot_universe_history.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_okx_public_hourly.py' -v
@@ -96,6 +102,35 @@ jobs:
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_audit_radar_target_coverage.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_build_okx_hourly_evidence.py' -v
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_radar_schedule_stagger.py' -v
+      - name: Capture genuine HYPE-USDC candles and one immutable hourly Spot book
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            if ! python public/agent_crypto_erith_ia/tools/collect_hype_spot_history.py; then
+              echo 'WARN: OKX EEA HYPE-USDC native source unavailable; do not synthesize any book or OHLCV'
+              exit 0
+            fi
+            git add -A -- public/agent_crypto_erith_ia/data/crypto/okx-hourly/hype-spot-candles.json public/agent_crypto_erith_ia/data/crypto/okx-hourly/hype-spot-books/
+            if git diff --cached --quiet; then
+              echo 'No new native HYPE proof to publish'
+              exit 0
+            fi
+            git commit -m 'Archive authentic HYPE-USDC OKX native candles and dated Spot book'
+            if git push origin HEAD:main; then
+              echo 'New public HYPE evidence published: no private account, trade or fill'
+              exit 0
+            fi
+            sleep "$((attempt*3))"
+          done
+          echo 'HYPE evidence collection finished locally but could not be published' >&2
+          exit 1
+
       - name: Collect other verified OKX Spot USDC history (one archive per UTC day)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         shell: bash
