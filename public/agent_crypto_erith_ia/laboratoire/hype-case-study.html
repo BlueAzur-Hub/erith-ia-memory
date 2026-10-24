@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark"><meta name="description" content="Hyperliquid HYPE : dossier de recherche OKX Spot USDC, sources primaires et preuves manquantes. Lecture seule, aucune opération.">
+<link rel="alternate" type="application/json" title="Dossier IA Hyperliquid" href="../data/crypto/research/hyperliquid.json">
+<title>ERITH.IA · HYPE · Dossier Spot de recherche</title>
+<style>
+:root{color-scheme:dark;--bg:#081725;--panel:#102838;--line:#365d70;--text:#f0f8fd;--muted:#bed1dd;--cyan:#8be8ef;--gold:#ffdda0}
+*{box-sizing:border-box}body{background:radial-gradient(ellipse at 100% 0%,#173b4f,var(--bg) 48%);margin:0;font:15px/1.65 system-ui,"Segoe UI",sans-serif;color:var(--text)}
+main{max-width:1060px;margin:auto;padding:clamp(16px,3vw,36px)}a{color:var(--cyan)}a:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+h1{font-size:clamp(29px,4vw,42px);line-height:1.15;margin:10px 0}h2{font-size:19px;color:var(--gold);margin:0 0 11px}.eyebrow{font-size:12px;color:var(--cyan);font-weight:bold;letter-spacing:.12em}
+nav{display:flex;gap:14px;flex-wrap:wrap}.panel{background:rgba(14,37,52,.95);border:1px solid var(--line);border-radius:15px;padding:clamp(15px,2.5vw,22px);margin:16px 0}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.tile{padding:14px;border:1px solid var(--line);background:#0a202e;border-radius:9px;min-width:0}.tile strong{display:block;font-size:24px}.tile small{color:var(--muted)}ul{padding-left:22px}li{margin:7px 0}.muted{color:var(--muted)}.notice{border-left:4px solid var(--gold);background:#29251a;padding:11px 15px}.sources{display:grid;gap:7px;overflow-wrap:anywhere}
+@media(max-width:720px){.cards{grid-template-columns:1fr}}
+</style></head><body><main>
+<nav><a href="crypto-knowledge.html">← Dossiers crypto</a><a href="../trader/trading-desk.html">Trader</a><a href="../data/crypto/research/hyperliquid.json">Données structurées JSON</a></nav>
+<header><p class="eyebrow">SEVEN HEAVEN · RECHERCHE PUBLIQUE · 24 OCTOBRE 2026</p><h1>HYPE · Hyperliquid</h1>
+<p class="muted">Étude d'un actif lié à l'écosystème Hyperliquid, avec une observation OKX Spot/USDC. Ne pas confondre activité de la plateforme Hyperliquid, marchés dérivés et transactions Spot HYPE chez OKX.</p></header>
+<section class="panel"><h2>Décision : DOSSIER OUVERT · collecte prioritaire</h2><p class="notice">Nous ne disposons pas encore dans ERITH.IA d'une série datée de bougies et de carnets OKX HYPE-USDC suffisante pour tester une entrée et une sortie. Aucun achat réel ou fictif certifié.</p>
+<div class="cards">
+<div class="tile"><small>Prix affiché dans la capture OKX du 24/10</small><strong>76,736 USDC</strong><small>Dernier prix présenté · heure UTC exacte inconnue</small></div>
+<div class="tile"><small>Variation 24h, même capture</small><strong>−2,04 %</strong><small>Statistique OKX affichée · pas un rendement réalisable</small></div>
+<div class="tile"><small>Capitalisation affichée</small><strong>17,08 Md USD</strong><small>Estimation de marché, ni volume ni liquidité</small></div>
+</div>
+<p class="muted">Le badge « Turnover le plus élevé : 47,90 M » apparaît sur la capture, mais sa méthode et l'intervalle précis de calcul ne sont pas établis ici. Il n'est pas utilisé comme volume hebdomadaire certifié.</p>
+</section>
+<section class="panel"><h2>Pourquoi l'étudier ?</h2><p>HYPE est le jeton natif de l'écosystème Hyperliquid. La documentation décrit le staking délégué sur HyperCore. C'est une exposition à un écosystème de trading et à ses règles économiques, distincte d'un simple jeton de collection.</p>
+<p>L'activité d'une bourse peut stimuler l'intérêt pour un jeton sans garantir sa hausse. Notre étude doit distinguer les volumes Spot, les volumes de produits dérivés, les déblocages de jetons et la profondeur réelle de chaque carnet.</p></section>
+<section class="panel"><h2>Données à acquérir pour le Radar</h2><ul>
+<li>Historique public <strong>HYPE-USDC Spot OKX</strong> : bougies 15 min / 1 h / 1 jour UTC, uniquement horodatées et closes.</li>
+<li>Carnet OKX Spot : meilleur bid/ask, spread recalculé, profondeur des cinq premiers niveaux, limites de taille et de pas de prix.</li>
+<li>Volume quote en USDC : calculer une somme de bougies sur sept jours UTC ; ne pas utiliser le volume des futures ni une seule valeur glissante 24 h.</li>
+<li>Risque tokenomics : suivre la distribution, les déblocages vérifiés et leur relation avec le volume Spot. Pas de prévision inventée.</li>
+<li>PAPER : figer une règle avant observation des sorties ; simuler avec frais et spread uniquement lorsque les preuves futures sont disponibles.</li>
+</ul></section>
+<section class="panel"><h2>Sources primaires et limites</h2><div class="sources">
+<a href="https://www.okx.com/en-br/help/upcoming-token-pair-groups-adjustment-eea" target="_blank" rel="noopener noreferrer">OKX · paire HYPE-USDC dans le regroupement Spot</a>
+<a href="https://www.okx.com/en-eu/help/okx-to-support-hype-unified-usd-and-eur-spot-trading-pairs-in-eea" target="_blank" rel="noopener noreferrer">OKX Europe · annonces HYPE/USD et HYPE/EUR</a>
+<a href="https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/staking" target="_blank" rel="noopener noreferrer">Hyperliquid · fonctionnement du staking</a>
+<a href="https://hyperliquid.gitbook.io/hyperliquid-docs/trading/fees" target="_blank" rel="noopener noreferrer">Hyperliquid · frais sur sa propre plateforme (pas OKX)</a>
+<a href="../data/crypto/research/hyperliquid.json">ERITH.IA · dossier IA et champs de preuves manquantes</a></div></section>
+<footer class="muted">Étude documentaire au 24/10/2026. L'annonce d'une paire ne certifie pas sa disponibilité au compte, les frais réels ou une exécution. Lecture seule · aucun ordre réel · aucun signal de trading.</footer>
+</main></body></html>
