@@ -1,0 +1,73 @@
+{
+  "schema": "erith.crypto.spot-priority-watch.v1",
+  "as_of_utc": "2026-10-24T06:25:40Z",
+  "record_kind": "RESEARCH_INVENTORY_WITH_SOURCE_GAPS",
+  "policy": {
+    "read_only": true,
+    "orders_enabled": false,
+    "real_orders": 0,
+    "paper_fills_certified": 0,
+    "buy_signals_issued": 0,
+    "weekly_volume_global_ranking": false,
+    "no_usd_usdc_fx_assumed": true
+  },
+  "selection_reason": "Three complementary Spot-research cases, not a top-return or investment ranking: IRYS native-volume spike, ZEC dated OKX book, HYPE incomplete market evidence.",
+  "assets": [
+    {
+      "coin_id": "irys",
+      "symbol": "IRYS",
+      "case_kind": "EXTREME_MOVE_NATIVE_OHLCV",
+      "venue": "OKX_EEA",
+      "pair": "IRYS-USDC",
+      "quote": "USDC",
+      "dossier_json": "data/crypto/research/irys.json",
+      "human_page": "trader/irys-market-case-study.html",
+      "native_daily_candles": 150,
+      "verified_7_closed_days_quote_turnover_usdc": 2833533.518261,
+      "execution_certified": false,
+      "priority_research": "Confirm peak market transactions and the bid/ask depth at the spike"
+    },
+    {
+      "coin_id": "zcash",
+      "symbol": "ZEC",
+      "case_kind": "REVERSAL_AND_ORDERBOOK",
+      "venue": "OKX_EEA",
+      "pair": "ZEC-USDC",
+      "quote": "USDC",
+      "dossier_json": "data/crypto/research/zcash.json",
+      "human_page": "laboratoire/zcash-case-study.html",
+      "date_utc": "2026-10-24",
+      "dated_book_samples": 6,
+      "rolling_24h_ticker_turnover_at_last_book_usdc": 13400473.1206255,
+      "execution_certified": false,
+      "priority_research": "Predefine entry and exit rules, validate lot/min-notional and observe future real bids"
+    },
+    {
+      "coin_id": "hyperliquid",
+      "symbol": "HYPE",
+      "case_kind": "SPOT_LIQUIDITY_DISCOVERY",
+      "venue": "OKX",
+      "pair": "HYPE-USDC",
+      "quote": "USDC",
+      "dossier_json": "data/crypto/research/hyperliquid.json",
+      "human_page": "laboratoire/hype-case-study.html",
+      "native_daily_candles": null,
+      "verified_weekly_quote_turnover_usdc": null,
+      "execution_certified": false,
+      "priority_research": "Collect native OKX Spot candles and five-level books, without derivatives substitution"
+    }
+  ],
+  "next_collection_protocol": [
+    "Confirm exact instrument identifier, Spot type, region availability and token identity",
+    "Collect real public native OHLCV and bid/ask per exact venue and quote, with UTC timestamps",
+    "Keep seven closed UTC days quote volume distinct from rolling ticker 24h quote volume, USD market cap and platform-wide volume",
+    "Mark zero-volume intervals and missing, stale or crossed books as non-executable",
+    "Freeze forward PAPER decisions before subsequent returns; no backfill of a fictitious trade or account access"
+  ],
+  "provenance": [
+    "data/crypto/okx-hourly/irys-spot-candles.json",
+    "data/crypto/case-market-hourly/2026-10-24.json",
+    "User-supplied OKX Spot screenshot dated 2026-10-24",
+    "https://www.okx.com/en-br/help/upcoming-token-pair-groups-adjustment-eea"
+  ]
+}
