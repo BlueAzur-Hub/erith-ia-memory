@@ -6956,6 +6956,8 @@ function atlasExternalChartTooltip(context) {
 
     return `<div class="atlas-chart-tooltip-row" style="${style}">
       ${atlasChartTooltipCoinMarkup(row.coin, palette.primary, gradientCss)}
+
+      <span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span>
       <span class="atlas-chart-tooltip-values">
         <strong title="${escapeHtml(priceTitle)}">${escapeHtml(currentPrice)}</strong>
         ${atlasChartTooltipChangeMarkup(row.baseValue)}
