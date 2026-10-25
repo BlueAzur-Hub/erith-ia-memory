@@ -1245,33 +1245,55 @@
       "reason": "Data gap: no reconstructed order or entry",
       "type": "GAP_PAUSE",
       "venue": "OKX Spot"
+    },
+    {
+      "asset": "BTC",
+      "at": "2026-10-25T19:00:00Z",
+      "executed_order": false,
+      "instrument": "BTCUSDT",
+      "paper": true,
+      "quote": "USDT",
+      "reason": "No confirmed rebound or trend breakout",
+      "type": "WAIT",
+      "venue": "Binance Spot"
+    },
+    {
+      "asset": "CT",
+      "at": "2026-10-25T19:00:00Z",
+      "executed_order": false,
+      "instrument": "CT-USDT",
+      "paper": true,
+      "quote": "USDT",
+      "reason": "No confirmed rebound or trend breakout",
+      "type": "WAIT",
+      "venue": "OKX Spot"
     }
   ],
   "markets": {
     "BTC": {
       "closed": 0,
-      "decision": "PAUSE",
+      "decision": "WAIT",
       "error": null,
-      "last_hour": 1792947600000,
-      "last_price_usdt": 80806.01,
+      "last_hour": 1792954800000,
+      "last_price_usdt": 80666.69,
       "open": null,
       "pending": null,
       "pnl_usdt": 0.0,
-      "reason": "Data gap: no reconstructed order or entry",
-      "source_time": "2026-10-25T17:00:00Z",
+      "reason": "No confirmed rebound or trend breakout",
+      "source_time": "2026-10-25T19:00:00Z",
       "wins": 0
     },
     "CT": {
       "closed": 0,
-      "decision": "PAUSE",
+      "decision": "WAIT",
       "error": null,
-      "last_hour": 1792947600000,
-      "last_price_usdt": 0.17515,
+      "last_hour": 1792954800000,
+      "last_price_usdt": 0.16846,
       "open": null,
       "pending": null,
       "pnl_usdt": 0.0,
-      "reason": "Data gap: no reconstructed order or entry",
-      "source_time": "2026-10-25T17:00:00Z",
+      "reason": "No confirmed rebound or trend breakout",
+      "source_time": "2026-10-25T19:00:00Z",
       "wins": 0
     }
   },
