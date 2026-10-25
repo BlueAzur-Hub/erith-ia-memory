@@ -160,6 +160,7 @@ test("Scanner keeps exactly the first five Market candidates (runtime function)"
   atlasCurrentMarketFrame:()=>({id:"frame-test",mode:"direct",fingerprint:"f",
     validatedAssets:250,requestedAssets:250,timestamp:"2026-10-25T00:00:00Z"}),
   atlasScannerMarketMetricLabel:()=> "Market 24 h",
+  atlasScannerLabel:preset=>preset,
   atlasScannerSetTransactionFlag:()=>{},atlasScannerSetUiState:()=>{},
   atlasMarketFrameShortId:()=> "Frame test",atlasScannerProgress:()=>{},
   atlasRenderComparisonControls:()=>{},
