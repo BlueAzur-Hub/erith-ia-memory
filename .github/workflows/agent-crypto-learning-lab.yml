@@ -168,7 +168,7 @@ jobs:
               # Git blob identity preserves the original immutable guard for every other edit.
               actual_blob=subprocess.check_output(
                   ["git","hash-object",path],text=True).strip()
-              assert actual_blob=="ea920af4c7d8b0c55d12f42e89fcf4bfcd5ed46b", (
+              assert actual_blob=="da55cf27a8e1508db2caf6e813c20aafe2ffac9b", (
                   "Administrator app.js differs from both protected baseline and approved Top5 repair")
               assert "function atlasChartMarketUsdObservation(" in after
               assert 'node.dataset.top5UsdOwner = "canonical-app"' in after

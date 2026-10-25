@@ -57,6 +57,8 @@ test("Real 22-minute-old five-coin USD archive displays prices instead of blanks
  const {node,run,chart,before}=setup();run();
  assert.equal(node.dataset.top5UsdOwner,"canonical-app");
  assert.equal(node.dataset.usdQuotesVerified,"5");
+ assert.match(node.innerHTML,/PRIX USD · VARIATION 24 h/);
+ assert.doesNotMatch(node.innerHTML,/COTATIONS USD MARKET|COURBES BASE 100/);
  assert.equal((node.innerHTML.match(/différé \(22 min\)/g)||[]).length,5);
  assert.doesNotMatch(node.innerHTML,/atlas-chart-tooltip-freshness/);
  assert.equal((node.innerHTML.match(/atlas-chart-tooltip-color-bridge/g)||[]).length,5);

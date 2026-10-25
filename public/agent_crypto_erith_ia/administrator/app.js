@@ -6933,7 +6933,6 @@ function atlasExternalChartTooltip(context) {
   }
 
   let availableUsd = 0;
-  let delayedUsd = 0;
   const body = rows.map((row, index) => {
     const palette = atlasCryptoPalette(row.coin, index);
     const gradientCss = row.gradientCss || atlasCryptoGradientCss(row.coin, index);
@@ -6941,7 +6940,6 @@ function atlasExternalChartTooltip(context) {
     const observation = top5Usd ? atlasChartMarketUsdObservation(row.coin) : null;
     if (observation) {
       availableUsd += 1;
-      if (observation.freshness !== "récent") delayedUsd += 1;
     }
     // Historical EUR values remain historical and are never relabelled USD.
     const currentPrice = top5Usd
@@ -6973,7 +6971,7 @@ function atlasExternalChartTooltip(context) {
   const allKinds = kind => kinds.length > 0 && kinds.every(value => value === kind);
   const tooltipPeriodLabel = atlasChartPeriodLabel(Number(chart.$atlasPeriod || state.chartPeriodDays || 1));
   const tooltipTitle = top5Usd
-    ? `TOP 5 · COTATIONS USD MARKET ${availableUsd}/${rows.length}${delayedUsd ? ` · ${delayedUsd} différée(s)` : ""} · COURBES BASE 100`
+    ? `PRIX USD · VARIATION ${tooltipPeriodLabel}`
     : !everyRowIsCurrent
       ? `PRIX HISTORIQUE · VARIATION ${tooltipPeriodLabel}`
     : allKinds("live-binance")
