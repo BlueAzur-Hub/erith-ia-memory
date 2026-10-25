@@ -1,0 +1,1407 @@
+{
+  "schema": "erith.crypto.hourly-market-activity.v1",
+  "kind": "HISTORICAL_DESCRIPTIVE_OKX_SPOT_USDC",
+  "created_date_utc": "2026-10-25",
+  "window_start_utc": "2026-09-27T00:00:00Z",
+  "window_end_exclusive_utc": "2026-10-25T00:00:00Z",
+  "hourly_candle_field": "index 7 volCcyQuote (USDC); index 6 matches in all selected bars",
+  "method": "28 full UTC days, 20 weekdays and 8 weekend days; three eight-hour non-overlapping UTC bins that do not establish trader location",
+  "scope": "seven named OKX USDC spot pairs only; not all 457 P2 candidates",
+  "limitations": [
+    "Volume is not spread or book liquidity",
+    "Results are retrospective; a single exceptional day can dominate",
+    "Zero-volume bars need additional venue validation",
+    "Asian European American names are rough analytical time bins, not geolocated trading activity",
+    "No account access, trades, or trading recommendation"
+  ],
+  "orders_enabled": false,
+  "real_orders": 0,
+  "assets": [
+    {
+      "symbol": "SAHARA",
+      "pair": "SAHARA-USDC",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/sahara-usdc.json",
+      "source_blob_sha": "bd64d507a2e9b6348ee07f7160d9e402cf247768",
+      "hourly_bars": 672,
+      "missing_hours": 0,
+      "zero_hours": 490,
+      "total_quote_volume_usdc": 65019.20850619999,
+      "weekday_count": 20,
+      "weekend_count": 8,
+      "mean_weekday_hour_usdc": 102.132991974375,
+      "mean_weekend_hour_usdc": 83.30923103385418,
+      "weekend_vs_weekday_ratio": 0.8156936306610533,
+      "median_weekday_day_usdc": 2096.78079555,
+      "median_weekend_day_usdc": 369.91598395,
+      "median_weekend_weekday_ratio": 0.17642091378129418,
+      "largest_day": "2026-10-02",
+      "largest_day_is_weekend": false,
+      "largest_day_pct": 11.821474236289834,
+      "weekend_ratio_excluding_largest_day": 0.9189939127183636,
+      "bins": [
+        {
+          "key": "asia",
+          "label_utc": "00–07",
+          "hours": 224,
+          "quote_volume_usdc": 14302.169345300004,
+          "share_pct": 21.996837048448846,
+          "active_hours": 53,
+          "median_volume_hour_usdc": 0
+        },
+        {
+          "key": "europe",
+          "label_utc": "08–15",
+          "hours": 224,
+          "quote_volume_usdc": 25196.319977500007,
+          "share_pct": 38.75211734559546,
+          "active_hours": 57,
+          "median_volume_hour_usdc": 0
+        },
+        {
+          "key": "americas",
+          "label_utc": "16–23",
+          "hours": 224,
+          "quote_volume_usdc": 25520.71918339999,
+          "share_pct": 39.2510456059557,
+          "active_hours": 72,
+          "median_volume_hour_usdc": 0
+        }
+      ],
+      "byHour": [
+        {
+          "hour_utc": 0,
+          "mean_quote_volume_usdc": 59.42179746785714,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 6
+        },
+        {
+          "hour_utc": 1,
+          "mean_quote_volume_usdc": 94.45434599642856,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 2,
+          "mean_quote_volume_usdc": 53.43201913571428,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 5
+        },
+        {
+          "hour_utc": 3,
+          "mean_quote_volume_usdc": 63.15189959285715,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 6
+        },
+        {
+          "hour_utc": 4,
+          "mean_quote_volume_usdc": 22.285135778571426,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 5
+        },
+        {
+          "hour_utc": 5,
+          "mean_quote_volume_usdc": 23.154559775,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 6
+        },
+        {
+          "hour_utc": 6,
+          "mean_quote_volume_usdc": 71.00208138928572,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 7,
+          "mean_quote_volume_usdc": 123.88992319642855,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 11
+        },
+        {
+          "hour_utc": 8,
+          "mean_quote_volume_usdc": 44.761952824999995,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 8
+        },
+        {
+          "hour_utc": 9,
+          "mean_quote_volume_usdc": 191.20030918928572,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 10
+        },
+        {
+          "hour_utc": 10,
+          "mean_quote_volume_usdc": 250.92443748214288,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 5
+        },
+        {
+          "hour_utc": 11,
+          "mean_quote_volume_usdc": 11.339074792857144,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 5
+        },
+        {
+          "hour_utc": 12,
+          "mean_quote_volume_usdc": 43.02847095,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 5
+        },
+        {
+          "hour_utc": 13,
+          "mean_quote_volume_usdc": 229.11515218214285,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 14,
+          "mean_quote_volume_usdc": 45.61952,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 15,
+          "mean_quote_volume_usdc": 83.87965320357144,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 10
+        },
+        {
+          "hour_utc": 16,
+          "mean_quote_volume_usdc": 128.89681441071428,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 12
+        },
+        {
+          "hour_utc": 17,
+          "mean_quote_volume_usdc": 47.06749854642857,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 10
+        },
+        {
+          "hour_utc": 18,
+          "mean_quote_volume_usdc": 423.2184808535715,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 9
+        },
+        {
+          "hour_utc": 19,
+          "mean_quote_volume_usdc": 81.63184980714286,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 8
+        },
+        {
+          "hour_utc": 20,
+          "mean_quote_volume_usdc": 109.81792830714286,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 10
+        },
+        {
+          "hour_utc": 21,
+          "mean_quote_volume_usdc": 21.911362764285713,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 22,
+          "mean_quote_volume_usdc": 48.631825392857145,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 23,
+          "mean_quote_volume_usdc": 50.278496467857146,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 9
+        }
+      ]
+    },
+    {
+      "symbol": "KAT",
+      "pair": "KAT-USDC",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/kat-usdc.json",
+      "source_blob_sha": "f8a9b4a3627488d56a00f897b35ac6452b9f8f0a",
+      "hourly_bars": 672,
+      "missing_hours": 0,
+      "zero_hours": 519,
+      "total_quote_volume_usdc": 87842.3411724,
+      "weekday_count": 20,
+      "weekend_count": 8,
+      "mean_weekday_hour_usdc": 48.163692239166664,
+      "mean_weekend_hour_usdc": 337.10296300833335,
+      "weekend_vs_weekday_ratio": 6.999109647457667,
+      "median_weekday_day_usdc": 399.92425645000003,
+      "median_weekend_day_usdc": 296.3767804,
+      "median_weekend_weekday_ratio": 0.7410822815071085,
+      "largest_day": "2026-10-24",
+      "largest_day_is_weekend": true,
+      "largest_day_pct": 69.95373309825584,
+      "weekend_ratio_excluding_largest_day": 0.40471752910223846,
+      "bins": [
+        {
+          "key": "asia",
+          "label_utc": "00–07",
+          "hours": 224,
+          "quote_volume_usdc": 18151.871354600004,
+          "share_pct": 20.664147963651164,
+          "active_hours": 44,
+          "median_volume_hour_usdc": 0
+        },
+        {
+          "key": "europe",
+          "label_utc": "08–15",
+          "hours": 224,
+          "quote_volume_usdc": 64512.059618499996,
+          "share_pct": 73.44073342932444,
+          "active_hours": 59,
+          "median_volume_hour_usdc": 0
+        },
+        {
+          "key": "americas",
+          "label_utc": "16–23",
+          "hours": 224,
+          "quote_volume_usdc": 5178.4101992999995,
+          "share_pct": 5.89511860702439,
+          "active_hours": 50,
+          "median_volume_hour_usdc": 0
+        }
+      ],
+      "byHour": [
+        {
+          "hour_utc": 0,
+          "mean_quote_volume_usdc": 12.329061335714286,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 6
+        },
+        {
+          "hour_utc": 1,
+          "mean_quote_volume_usdc": 9.762874371428572,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 6
+        },
+        {
+          "hour_utc": 2,
+          "mean_quote_volume_usdc": 40.922913921428574,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 3
+        },
+        {
+          "hour_utc": 3,
+          "mean_quote_volume_usdc": 472.7425494428572,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 4,
+          "mean_quote_volume_usdc": 5.488431275000001,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 5
+        },
+        {
+          "hour_utc": 5,
+          "mean_quote_volume_usdc": 10.0059907,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 3
+        },
+        {
+          "hour_utc": 6,
+          "mean_quote_volume_usdc": 19.415493932142855,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 3
+        },
+        {
+          "hour_utc": 7,
+          "mean_quote_volume_usdc": 77.61380482857143,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 11
+        },
+        {
+          "hour_utc": 8,
+          "mean_quote_volume_usdc": 373.80463502142857,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 11
+        },
+        {
+          "hour_utc": 9,
+          "mean_quote_volume_usdc": 180.00313793571428,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 5
+        },
+        {
+          "hour_utc": 10,
+          "mean_quote_volume_usdc": 14.207954721428573,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 5
+        },
+        {
+          "hour_utc": 11,
+          "mean_quote_volume_usdc": 1032.1327346964285,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 6
+        },
+        {
+          "hour_utc": 12,
+          "mean_quote_volume_usdc": 353.25446745357146,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 6
+        },
+        {
+          "hour_utc": 13,
+          "mean_quote_volume_usdc": 4.687465496428572,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 9
+        },
+        {
+          "hour_utc": 14,
+          "mean_quote_volume_usdc": 79.52415716428573,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 9
+        },
+        {
+          "hour_utc": 15,
+          "mean_quote_volume_usdc": 266.38757674285716,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 8
+        },
+        {
+          "hour_utc": 16,
+          "mean_quote_volume_usdc": 37.94999621428571,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 9
+        },
+        {
+          "hour_utc": 17,
+          "mean_quote_volume_usdc": 30.05289247142857,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 18,
+          "mean_quote_volume_usdc": 16.93101845714286,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 6
+        },
+        {
+          "hour_utc": 19,
+          "mean_quote_volume_usdc": 61.827172710714294,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 20,
+          "mean_quote_volume_usdc": 5.121889078571428,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 5
+        },
+        {
+          "hour_utc": 21,
+          "mean_quote_volume_usdc": 8.255009853571428,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 5
+        },
+        {
+          "hour_utc": 22,
+          "mean_quote_volume_usdc": 19.401861099999998,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 4
+        },
+        {
+          "hour_utc": 23,
+          "mean_quote_volume_usdc": 5.4033815178571425,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        }
+      ]
+    },
+    {
+      "symbol": "KMNO",
+      "pair": "KMNO-USDC",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/kmno-usdc.json",
+      "source_blob_sha": "ac0caa6d2faed867993e53c6b8989b4c8b52508e",
+      "hourly_bars": 672,
+      "missing_hours": 0,
+      "zero_hours": 286,
+      "total_quote_volume_usdc": 380111.5067719999,
+      "weekday_count": 20,
+      "weekend_count": 8,
+      "mean_weekday_hour_usdc": 552.0958639708333,
+      "mean_weekend_hour_usdc": 599.5077711770833,
+      "weekend_vs_weekday_ratio": 1.0858762224104521,
+      "median_weekday_day_usdc": 5340.457613,
+      "median_weekend_day_usdc": 7448.763486,
+      "median_weekend_weekday_ratio": 1.3947800030970867,
+      "largest_day": "2026-10-17",
+      "largest_day_is_weekend": true,
+      "largest_day_pct": 17.1711971729786,
+      "weekend_ratio_excluding_largest_day": 0.5373009667215966,
+      "bins": [
+        {
+          "key": "asia",
+          "label_utc": "00–07",
+          "hours": 224,
+          "quote_volume_usdc": 137335.394732,
+          "share_pct": 36.13029131853593,
+          "active_hours": 128,
+          "median_volume_hour_usdc": 26.66547
+        },
+        {
+          "key": "europe",
+          "label_utc": "08–15",
+          "hours": 224,
+          "quote_volume_usdc": 114913.60572500004,
+          "share_pct": 30.23155144680427,
+          "active_hours": 144,
+          "median_volume_hour_usdc": 120.46810400000001
+        },
+        {
+          "key": "americas",
+          "label_utc": "16–23",
+          "hours": 224,
+          "quote_volume_usdc": 127862.50631500005,
+          "share_pct": 33.63815723465986,
+          "active_hours": 114,
+          "median_volume_hour_usdc": 4.1344885
+        }
+      ],
+      "byHour": [
+        {
+          "hour_utc": 0,
+          "mean_quote_volume_usdc": 1352.9434668214287,
+          "median_quote_volume_usdc": 102.972929,
+          "nonzero_days": 15
+        },
+        {
+          "hour_utc": 1,
+          "mean_quote_volume_usdc": 294.8658828928572,
+          "median_quote_volume_usdc": 35.825895,
+          "nonzero_days": 16
+        },
+        {
+          "hour_utc": 2,
+          "mean_quote_volume_usdc": 271.98534275,
+          "median_quote_volume_usdc": 33.8337,
+          "nonzero_days": 16
+        },
+        {
+          "hour_utc": 3,
+          "mean_quote_volume_usdc": 293.2184190714285,
+          "median_quote_volume_usdc": 57.5660595,
+          "nonzero_days": 16
+        },
+        {
+          "hour_utc": 4,
+          "mean_quote_volume_usdc": 1182.618846892857,
+          "median_quote_volume_usdc": 40.9817355,
+          "nonzero_days": 17
+        },
+        {
+          "hour_utc": 5,
+          "mean_quote_volume_usdc": 624.3214314642858,
+          "median_quote_volume_usdc": 34.508660500000005,
+          "nonzero_days": 17
+        },
+        {
+          "hour_utc": 6,
+          "mean_quote_volume_usdc": 87.57709157142857,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 13
+        },
+        {
+          "hour_utc": 7,
+          "mean_quote_volume_usdc": 797.3050446785713,
+          "median_quote_volume_usdc": 58.8518785,
+          "nonzero_days": 18
+        },
+        {
+          "hour_utc": 8,
+          "mean_quote_volume_usdc": 571.8989817142857,
+          "median_quote_volume_usdc": 185.157069,
+          "nonzero_days": 18
+        },
+        {
+          "hour_utc": 9,
+          "mean_quote_volume_usdc": 453.05032067857144,
+          "median_quote_volume_usdc": 84.909009,
+          "nonzero_days": 16
+        },
+        {
+          "hour_utc": 10,
+          "mean_quote_volume_usdc": 296.0052001071429,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 11
+        },
+        {
+          "hour_utc": 11,
+          "mean_quote_volume_usdc": 222.20886114285716,
+          "median_quote_volume_usdc": 142.888304,
+          "nonzero_days": 21
+        },
+        {
+          "hour_utc": 12,
+          "mean_quote_volume_usdc": 913.5963511428572,
+          "median_quote_volume_usdc": 17.461418000000002,
+          "nonzero_days": 17
+        },
+        {
+          "hour_utc": 13,
+          "mean_quote_volume_usdc": 375.643478,
+          "median_quote_volume_usdc": 203.57615900000002,
+          "nonzero_days": 21
+        },
+        {
+          "hour_utc": 14,
+          "mean_quote_volume_usdc": 472.0119254285715,
+          "median_quote_volume_usdc": 245.21624599999998,
+          "nonzero_days": 22
+        },
+        {
+          "hour_utc": 15,
+          "mean_quote_volume_usdc": 799.642229107143,
+          "median_quote_volume_usdc": 199.033355,
+          "nonzero_days": 18
+        },
+        {
+          "hour_utc": 16,
+          "mean_quote_volume_usdc": 869.8283621785714,
+          "median_quote_volume_usdc": 47.006454,
+          "nonzero_days": 16
+        },
+        {
+          "hour_utc": 17,
+          "mean_quote_volume_usdc": 305.46944971428564,
+          "median_quote_volume_usdc": 4.951108,
+          "nonzero_days": 14
+        },
+        {
+          "hour_utc": 18,
+          "mean_quote_volume_usdc": 245.44630657142855,
+          "median_quote_volume_usdc": 11.7865915,
+          "nonzero_days": 15
+        },
+        {
+          "hour_utc": 19,
+          "mean_quote_volume_usdc": 204.72611153571432,
+          "median_quote_volume_usdc": 7.920952,
+          "nonzero_days": 15
+        },
+        {
+          "hour_utc": 20,
+          "mean_quote_volume_usdc": 1369.9223592500002,
+          "median_quote_volume_usdc": 59.867999499999996,
+          "nonzero_days": 17
+        },
+        {
+          "hour_utc": 21,
+          "mean_quote_volume_usdc": 1340.8783833214286,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 10
+        },
+        {
+          "hour_utc": 22,
+          "mean_quote_volume_usdc": 122.98136321428571,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 12
+        },
+        {
+          "hour_utc": 23,
+          "mean_quote_volume_usdc": 107.26574689285714,
+          "median_quote_volume_usdc": 18.148908,
+          "nonzero_days": 15
+        }
+      ]
+    },
+    {
+      "symbol": "LIT",
+      "pair": "LIT-USDC",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/lit-usdc.json",
+      "source_blob_sha": "cbf21a396abb81fd500ed7973d2d2d5a9976e220",
+      "hourly_bars": 672,
+      "missing_hours": 0,
+      "zero_hours": 1,
+      "total_quote_volume_usdc": 152849960.18494526,
+      "weekday_count": 20,
+      "weekend_count": 8,
+      "mean_weekday_hour_usdc": 297537.0381176972,
+      "mean_weekend_hour_usdc": 52250.9473356802,
+      "weekend_vs_weekday_ratio": 0.17561157315483936,
+      "median_weekday_day_usdc": 625912.2644782499,
+      "median_weekend_day_usdc": 343170.78159235,
+      "median_weekend_weekday_ratio": 0.5482729786073316,
+      "largest_day": "2026-10-09",
+      "largest_day_is_weekend": false,
+      "largest_day_pct": 53.767602416469764,
+      "weekend_ratio_excluding_largest_day": 0.39295484971487693,
+      "bins": [
+        {
+          "key": "asia",
+          "label_utc": "00–07",
+          "hours": 224,
+          "quote_volume_usdc": 31363335.704788502,
+          "share_pct": 20.51903426526217,
+          "active_hours": 224,
+          "median_volume_hour_usdc": 9799.8581135
+        },
+        {
+          "key": "europe",
+          "label_utc": "08–15",
+          "hours": 224,
+          "quote_volume_usdc": 81663800.1941705,
+          "share_pct": 53.4274265399605,
+          "active_hours": 223,
+          "median_volume_hour_usdc": 13148.76403925
+        },
+        {
+          "key": "americas",
+          "label_utc": "16–23",
+          "hours": 224,
+          "quote_volume_usdc": 39822824.28598617,
+          "share_pct": 26.053539194777276,
+          "active_hours": 224,
+          "median_volume_hour_usdc": 14977.82330095
+        }
+      ],
+      "byHour": [
+        {
+          "hour_utc": 0,
+          "mean_quote_volume_usdc": 81557.81725547141,
+          "median_quote_volume_usdc": 10018.5604785,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 1,
+          "mean_quote_volume_usdc": 66436.68546580715,
+          "median_quote_volume_usdc": 9233.306075299999,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 2,
+          "mean_quote_volume_usdc": 59146.13001931071,
+          "median_quote_volume_usdc": 7899.6054688,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 3,
+          "mean_quote_volume_usdc": 61596.490222021435,
+          "median_quote_volume_usdc": 12368.9628529,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 4,
+          "mean_quote_volume_usdc": 67360.80783385357,
+          "median_quote_volume_usdc": 9684.29902855,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 5,
+          "mean_quote_volume_usdc": 169061.42958979285,
+          "median_quote_volume_usdc": 8134.62884465,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 6,
+          "mean_quote_volume_usdc": 307702.0947545822,
+          "median_quote_volume_usdc": 11003.3566282,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 7,
+          "mean_quote_volume_usdc": 307257.67717303574,
+          "median_quote_volume_usdc": 9472.505016300001,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 8,
+          "mean_quote_volume_usdc": 387680.2107341429,
+          "median_quote_volume_usdc": 11282.816229,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 9,
+          "mean_quote_volume_usdc": 340046.6455502714,
+          "median_quote_volume_usdc": 11284.75337305,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 10,
+          "mean_quote_volume_usdc": 585729.6454588213,
+          "median_quote_volume_usdc": 10449.19071075,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 11,
+          "mean_quote_volume_usdc": 730929.5475755858,
+          "median_quote_volume_usdc": 10916.04123015,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 12,
+          "mean_quote_volume_usdc": 176441.77601962857,
+          "median_quote_volume_usdc": 12699.1043589,
+          "nonzero_days": 27
+        },
+        {
+          "hour_utc": 13,
+          "mean_quote_volume_usdc": 199328.8568161929,
+          "median_quote_volume_usdc": 25872.92269825,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 14,
+          "mean_quote_volume_usdc": 264462.70908791065,
+          "median_quote_volume_usdc": 34104.6036363,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 15,
+          "mean_quote_volume_usdc": 231944.90140639278,
+          "median_quote_volume_usdc": 26046.9855883,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 16,
+          "mean_quote_volume_usdc": 191639.23563012146,
+          "median_quote_volume_usdc": 21357.15070315,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 17,
+          "mean_quote_volume_usdc": 146241.28404776426,
+          "median_quote_volume_usdc": 20674.03785385,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 18,
+          "mean_quote_volume_usdc": 181274.9140751286,
+          "median_quote_volume_usdc": 13870.31813145,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 19,
+          "mean_quote_volume_usdc": 183763.28777161433,
+          "median_quote_volume_usdc": 18357.89160765,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 20,
+          "mean_quote_volume_usdc": 202309.6595565607,
+          "median_quote_volume_usdc": 11318.95378805,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 21,
+          "mean_quote_volume_usdc": 172046.31831864998,
+          "median_quote_volume_usdc": 10890.65962685,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 22,
+          "mean_quote_volume_usdc": 191089.49002642857,
+          "median_quote_volume_usdc": 14815.32080485,
+          "nonzero_days": 28
+        },
+        {
+          "hour_utc": 23,
+          "mean_quote_volume_usdc": 153879.53507323927,
+          "median_quote_volume_usdc": 9469.285038549999,
+          "nonzero_days": 28
+        }
+      ]
+    },
+    {
+      "symbol": "ZORA",
+      "pair": "ZORA-USDC",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/zora-usdc.json",
+      "source_blob_sha": "4237711d443b50b90ded61b7ddb6cadfc6c3d7f6",
+      "hourly_bars": 672,
+      "missing_hours": 0,
+      "zero_hours": 325,
+      "total_quote_volume_usdc": 32466.58130584,
+      "weekday_count": 20,
+      "weekend_count": 8,
+      "mean_weekday_hour_usdc": 23.745075165395832,
+      "mean_weekend_hour_usdc": 109.73408972109377,
+      "weekend_vs_weekday_ratio": 4.621341013104537,
+      "median_weekday_day_usdc": 347.7655023,
+      "median_weekend_day_usdc": 547.20785634,
+      "median_weekend_weekday_ratio": 1.573496660022221,
+      "largest_day": "2026-10-24",
+      "largest_day_is_weekend": true,
+      "largest_day_pct": 50.819662969356536,
+      "weekend_ratio_excluding_largest_day": 1.1454851558242873,
+      "bins": [
+        {
+          "key": "asia",
+          "label_utc": "00–07",
+          "hours": 224,
+          "quote_volume_usdc": 5245.880552699999,
+          "share_pct": 16.157785457246103,
+          "active_hours": 118,
+          "median_volume_hour_usdc": 2.89156597
+        },
+        {
+          "key": "europe",
+          "label_utc": "08–15",
+          "hours": 224,
+          "quote_volume_usdc": 20702.738640739997,
+          "share_pct": 63.76630309707429,
+          "active_hours": 120,
+          "median_volume_hour_usdc": 8.777304050000001
+        },
+        {
+          "key": "americas",
+          "label_utc": "16–23",
+          "hours": 224,
+          "quote_volume_usdc": 6517.962112399999,
+          "share_pct": 20.075911445679576,
+          "active_hours": 109,
+          "median_volume_hour_usdc": 0
+        }
+      ],
+      "byHour": [
+        {
+          "hour_utc": 0,
+          "mean_quote_volume_usdc": 30.32870797357143,
+          "median_quote_volume_usdc": 4.938589145,
+          "nonzero_days": 15
+        },
+        {
+          "hour_utc": 1,
+          "mean_quote_volume_usdc": 14.68966285464286,
+          "median_quote_volume_usdc": 10.23525853,
+          "nonzero_days": 19
+        },
+        {
+          "hour_utc": 2,
+          "mean_quote_volume_usdc": 13.336805419285716,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 12
+        },
+        {
+          "hour_utc": 3,
+          "mean_quote_volume_usdc": 16.656396750000003,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 12
+        },
+        {
+          "hour_utc": 4,
+          "mean_quote_volume_usdc": 58.05690895214287,
+          "median_quote_volume_usdc": 4.6489585,
+          "nonzero_days": 14
+        },
+        {
+          "hour_utc": 5,
+          "mean_quote_volume_usdc": 25.477022801785715,
+          "median_quote_volume_usdc": 9.714154149999999,
+          "nonzero_days": 18
+        },
+        {
+          "hour_utc": 6,
+          "mean_quote_volume_usdc": 14.75642901892857,
+          "median_quote_volume_usdc": 9.28482584,
+          "nonzero_days": 16
+        },
+        {
+          "hour_utc": 7,
+          "mean_quote_volume_usdc": 14.050943111785713,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 12
+        },
+        {
+          "hour_utc": 8,
+          "mean_quote_volume_usdc": 165.47347474,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 12
+        },
+        {
+          "hour_utc": 9,
+          "mean_quote_volume_usdc": 208.75402614035715,
+          "median_quote_volume_usdc": 0.35070145,
+          "nonzero_days": 14
+        },
+        {
+          "hour_utc": 10,
+          "mean_quote_volume_usdc": 236.72052280964286,
+          "median_quote_volume_usdc": 0.69630865,
+          "nonzero_days": 15
+        },
+        {
+          "hour_utc": 11,
+          "mean_quote_volume_usdc": 31.390957684285713,
+          "median_quote_volume_usdc": 4.65362122,
+          "nonzero_days": 14
+        },
+        {
+          "hour_utc": 12,
+          "mean_quote_volume_usdc": 12.464077512142856,
+          "median_quote_volume_usdc": 0.36363767,
+          "nonzero_days": 14
+        },
+        {
+          "hour_utc": 13,
+          "mean_quote_volume_usdc": 39.406286650000006,
+          "median_quote_volume_usdc": 7.0301408,
+          "nonzero_days": 14
+        },
+        {
+          "hour_utc": 14,
+          "mean_quote_volume_usdc": 15.500391016785715,
+          "median_quote_volume_usdc": 9.76419194,
+          "nonzero_days": 18
+        },
+        {
+          "hour_utc": 15,
+          "mean_quote_volume_usdc": 29.673786330357142,
+          "median_quote_volume_usdc": 9.714154149999999,
+          "nonzero_days": 19
+        },
+        {
+          "hour_utc": 16,
+          "mean_quote_volume_usdc": 24.38530364714286,
+          "median_quote_volume_usdc": 10.31784179,
+          "nonzero_days": 19
+        },
+        {
+          "hour_utc": 17,
+          "mean_quote_volume_usdc": 14.610784907857141,
+          "median_quote_volume_usdc": 10.14085408,
+          "nonzero_days": 16
+        },
+        {
+          "hour_utc": 18,
+          "mean_quote_volume_usdc": 80.52406710035714,
+          "median_quote_volume_usdc": 0.36918675,
+          "nonzero_days": 14
+        },
+        {
+          "hour_utc": 19,
+          "mean_quote_volume_usdc": 82.08897907785715,
+          "median_quote_volume_usdc": 9.945081975,
+          "nonzero_days": 17
+        },
+        {
+          "hour_utc": 20,
+          "mean_quote_volume_usdc": 7.0215350575,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 10
+        },
+        {
+          "hour_utc": 21,
+          "mean_quote_volume_usdc": 8.852990359642858,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 10
+        },
+        {
+          "hour_utc": 22,
+          "mean_quote_volume_usdc": 7.820829891428573,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 11
+        },
+        {
+          "hour_utc": 23,
+          "mean_quote_volume_usdc": 7.479871115357143,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 12
+        }
+      ]
+    },
+    {
+      "symbol": "BOME",
+      "pair": "BOME-USDC",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/bome-usdc.json",
+      "source_blob_sha": "6131cb8608c563bd871f5a820d5af8f31a7034c3",
+      "hourly_bars": 672,
+      "missing_hours": 0,
+      "zero_hours": 124,
+      "total_quote_volume_usdc": 2003854.7897691997,
+      "weekday_count": 20,
+      "weekend_count": 8,
+      "mean_weekday_hour_usdc": 3304.8289211847914,
+      "mean_weekend_hour_usdc": 2174.671393752604,
+      "weekend_vs_weekday_ratio": 0.6580284322169928,
+      "median_weekday_day_usdc": 46949.4098111,
+      "median_weekend_day_usdc": 26876.055996850002,
+      "median_weekend_weekday_ratio": 0.5724471533291956,
+      "largest_day": "2026-10-12",
+      "largest_day_is_weekend": false,
+      "largest_day_pct": 16.51494038263703,
+      "weekend_ratio_excluding_largest_day": 0.789918760619712,
+      "bins": [
+        {
+          "key": "asia",
+          "label_utc": "00–07",
+          "hours": 224,
+          "quote_volume_usdc": 631431.5599313994,
+          "share_pct": 31.51084415673286,
+          "active_hours": 180,
+          "median_volume_hour_usdc": 665.6210033
+        },
+        {
+          "key": "europe",
+          "label_utc": "08–15",
+          "hours": 224,
+          "quote_volume_usdc": 926316.4449274002,
+          "share_pct": 46.22672509289416,
+          "active_hours": 195,
+          "median_volume_hour_usdc": 977.07510985
+        },
+        {
+          "key": "americas",
+          "label_utc": "16–23",
+          "hours": 224,
+          "quote_volume_usdc": 446106.7849103998,
+          "share_pct": 22.262430750372964,
+          "active_hours": 173,
+          "median_volume_hour_usdc": 305.65042695
+        }
+      ],
+      "byHour": [
+        {
+          "hour_utc": 0,
+          "mean_quote_volume_usdc": 2298.7266889714288,
+          "median_quote_volume_usdc": 759.3698587,
+          "nonzero_days": 23
+        },
+        {
+          "hour_utc": 1,
+          "mean_quote_volume_usdc": 1828.5522844142856,
+          "median_quote_volume_usdc": 291.9464273,
+          "nonzero_days": 20
+        },
+        {
+          "hour_utc": 2,
+          "mean_quote_volume_usdc": 2201.6208854035713,
+          "median_quote_volume_usdc": 1085.32103165,
+          "nonzero_days": 25
+        },
+        {
+          "hour_utc": 3,
+          "mean_quote_volume_usdc": 3214.6535279857153,
+          "median_quote_volume_usdc": 674.1493644,
+          "nonzero_days": 21
+        },
+        {
+          "hour_utc": 4,
+          "mean_quote_volume_usdc": 2822.1589855535717,
+          "median_quote_volume_usdc": 630.65956545,
+          "nonzero_days": 21
+        },
+        {
+          "hour_utc": 5,
+          "mean_quote_volume_usdc": 3704.1926820642852,
+          "median_quote_volume_usdc": 2204.7557672000003,
+          "nonzero_days": 25
+        },
+        {
+          "hour_utc": 6,
+          "mean_quote_volume_usdc": 3256.3153016214283,
+          "median_quote_volume_usdc": 520.1978361500001,
+          "nonzero_days": 21
+        },
+        {
+          "hour_utc": 7,
+          "mean_quote_volume_usdc": 3224.9067843928565,
+          "median_quote_volume_usdc": 1319.7703719,
+          "nonzero_days": 24
+        },
+        {
+          "hour_utc": 8,
+          "mean_quote_volume_usdc": 2147.2602152964287,
+          "median_quote_volume_usdc": 1065.37754005,
+          "nonzero_days": 26
+        },
+        {
+          "hour_utc": 9,
+          "mean_quote_volume_usdc": 2990.6117151285725,
+          "median_quote_volume_usdc": 957.67198495,
+          "nonzero_days": 24
+        },
+        {
+          "hour_utc": 10,
+          "mean_quote_volume_usdc": 1532.260317910714,
+          "median_quote_volume_usdc": 377.4763279,
+          "nonzero_days": 23
+        },
+        {
+          "hour_utc": 11,
+          "mean_quote_volume_usdc": 2301.397676992857,
+          "median_quote_volume_usdc": 254.41065450000002,
+          "nonzero_days": 23
+        },
+        {
+          "hour_utc": 12,
+          "mean_quote_volume_usdc": 3841.792119050001,
+          "median_quote_volume_usdc": 1116.1267713500001,
+          "nonzero_days": 24
+        },
+        {
+          "hour_utc": 13,
+          "mean_quote_volume_usdc": 1999.8739222464287,
+          "median_quote_volume_usdc": 663.7860957,
+          "nonzero_days": 24
+        },
+        {
+          "hour_utc": 14,
+          "mean_quote_volume_usdc": 11543.932700260715,
+          "median_quote_volume_usdc": 1585.82519245,
+          "nonzero_days": 26
+        },
+        {
+          "hour_utc": 15,
+          "mean_quote_volume_usdc": 6725.601509092857,
+          "median_quote_volume_usdc": 1767.50517885,
+          "nonzero_days": 25
+        },
+        {
+          "hour_utc": 16,
+          "mean_quote_volume_usdc": 4675.074164239286,
+          "median_quote_volume_usdc": 1487.65481185,
+          "nonzero_days": 22
+        },
+        {
+          "hour_utc": 17,
+          "mean_quote_volume_usdc": 3808.0588332250004,
+          "median_quote_volume_usdc": 968.09419365,
+          "nonzero_days": 27
+        },
+        {
+          "hour_utc": 18,
+          "mean_quote_volume_usdc": 1740.9370486035712,
+          "median_quote_volume_usdc": 438.82029335000004,
+          "nonzero_days": 25
+        },
+        {
+          "hour_utc": 19,
+          "mean_quote_volume_usdc": 1223.432372282143,
+          "median_quote_volume_usdc": 162.82290135,
+          "nonzero_days": 20
+        },
+        {
+          "hour_utc": 20,
+          "mean_quote_volume_usdc": 1213.5453135821426,
+          "median_quote_volume_usdc": 343.61375365000004,
+          "nonzero_days": 25
+        },
+        {
+          "hour_utc": 21,
+          "mean_quote_volume_usdc": 1239.91511345,
+          "median_quote_volume_usdc": 59.113946150000004,
+          "nonzero_days": 19
+        },
+        {
+          "hour_utc": 22,
+          "mean_quote_volume_usdc": 1167.5720843642857,
+          "median_quote_volume_usdc": 29.938437999999998,
+          "nonzero_days": 17
+        },
+        {
+          "hour_utc": 23,
+          "mean_quote_volume_usdc": 863.8502456249998,
+          "median_quote_volume_usdc": 36.8354047,
+          "nonzero_days": 18
+        }
+      ]
+    },
+    {
+      "symbol": "BIGTIME",
+      "pair": "BIGTIME-USDC",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/bigtime-usdc.json",
+      "source_blob_sha": "b1b9f0ec9239e8148eaffaea1ae8be6c1a70b344",
+      "hourly_bars": 672,
+      "missing_hours": 0,
+      "zero_hours": 468,
+      "total_quote_volume_usdc": 100106.80813174999,
+      "weekday_count": 20,
+      "weekend_count": 8,
+      "mean_weekday_hour_usdc": 72.01992226491667,
+      "mean_weekend_hour_usdc": 341.33982002390627,
+      "weekend_vs_weekday_ratio": 4.739519417534617,
+      "median_weekday_day_usdc": 1097.2690749199999,
+      "median_weekend_day_usdc": 4716.239333359999,
+      "median_weekend_weekday_ratio": 4.298161172275682,
+      "largest_day": "2026-09-27",
+      "largest_day_is_weekend": true,
+      "largest_day_pct": 27.74104498616236,
+      "weekend_ratio_excluding_largest_day": 3.1213726618678623,
+      "bins": [
+        {
+          "key": "asia",
+          "label_utc": "00–07",
+          "hours": 224,
+          "quote_volume_usdc": 35190.87601259001,
+          "share_pct": 35.15332939821186,
+          "active_hours": 66,
+          "median_volume_hour_usdc": 0
+        },
+        {
+          "key": "europe",
+          "label_utc": "08–15",
+          "hours": 224,
+          "quote_volume_usdc": 50506.39429626998,
+          "share_pct": 50.45250691621174,
+          "active_hours": 87,
+          "median_volume_hour_usdc": 0
+        },
+        {
+          "key": "americas",
+          "label_utc": "16–23",
+          "hours": 224,
+          "quote_volume_usdc": 14409.537822889999,
+          "share_pct": 14.3941636855764,
+          "active_hours": 51,
+          "median_volume_hour_usdc": 0
+        }
+      ],
+      "byHour": [
+        {
+          "hour_utc": 0,
+          "mean_quote_volume_usdc": 24.297944328214292,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 11
+        },
+        {
+          "hour_utc": 1,
+          "mean_quote_volume_usdc": 59.28900430678571,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 12
+        },
+        {
+          "hour_utc": 2,
+          "mean_quote_volume_usdc": 37.438853661071434,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 3,
+          "mean_quote_volume_usdc": 127.14599041607143,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 4,
+          "mean_quote_volume_usdc": 394.8577980882142,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 6
+        },
+        {
+          "hour_utc": 5,
+          "mean_quote_volume_usdc": 67.34841905464286,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 6,
+          "mean_quote_volume_usdc": 25.883819096785714,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 7,
+          "mean_quote_volume_usdc": 520.5551714978571,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 9
+        },
+        {
+          "hour_utc": 8,
+          "mean_quote_volume_usdc": 478.91561573107145,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 8
+        },
+        {
+          "hour_utc": 9,
+          "mean_quote_volume_usdc": 355.48040084535717,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 11
+        },
+        {
+          "hour_utc": 10,
+          "mean_quote_volume_usdc": 49.180197351071435,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 10
+        },
+        {
+          "hour_utc": 11,
+          "mean_quote_volume_usdc": 96.0373109867857,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 10
+        },
+        {
+          "hour_utc": 12,
+          "mean_quote_volume_usdc": 403.17645465535713,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 9
+        },
+        {
+          "hour_utc": 13,
+          "mean_quote_volume_usdc": 156.64179385000003,
+          "median_quote_volume_usdc": 6.50358072,
+          "nonzero_days": 14
+        },
+        {
+          "hour_utc": 14,
+          "mean_quote_volume_usdc": 154.62450694285712,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 13
+        },
+        {
+          "hour_utc": 15,
+          "mean_quote_volume_usdc": 109.74351593285714,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 12
+        },
+        {
+          "hour_utc": 16,
+          "mean_quote_volume_usdc": 142.34820358857144,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 10
+        },
+        {
+          "hour_utc": 17,
+          "mean_quote_volume_usdc": 25.071169074285713,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 6
+        },
+        {
+          "hour_utc": 18,
+          "mean_quote_volume_usdc": 33.33172623321429,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 4
+        },
+        {
+          "hour_utc": 19,
+          "mean_quote_volume_usdc": 165.75852655642856,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 5
+        },
+        {
+          "hour_utc": 20,
+          "mean_quote_volume_usdc": 71.24291903321429,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 9
+        },
+        {
+          "hour_utc": 21,
+          "mean_quote_volume_usdc": 46.68129816964286,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 7
+        },
+        {
+          "hour_utc": 22,
+          "mean_quote_volume_usdc": 11.864522384999999,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 4
+        },
+        {
+          "hour_utc": 23,
+          "mean_quote_volume_usdc": 18.327985777142857,
+          "median_quote_volume_usdc": 0,
+          "nonzero_days": 6
+        }
+      ]
+    }
+  ]
+}
