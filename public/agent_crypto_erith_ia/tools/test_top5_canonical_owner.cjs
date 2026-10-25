@@ -19,7 +19,7 @@ const market=[
   ["solana","SOL",101.46876996639266]
 ];
 function setup({currency="USD",outdated=false,mismatch=false,preset="rank-5"}={}){
- const coins=market.map(([id,symbol,priceUsd])=>({id,symbol,name:symbol,priceUsd,
+ const coins=(preset==="rank-3"?market.slice(0,3):market).map(([id,symbol,priceUsd])=>({id,symbol,name:symbol,priceUsd,
   usdUpdatedAt:outdated?"2026-10-20T00:00:00Z":observedAt}));
  // A mismatching universe ID must not be rescued by a second price on the chart dataset.
  if(mismatch){delete coins[0].priceUsd;delete coins[0].usdUpdatedAt;}
@@ -103,4 +103,23 @@ test("EUR display keeps original historical price path for scanner presets",()=>
   assert.match(node.innerHTML,/PRIX HISTORIQUE/,preset);
   assert.match(node.innerHTML,/90000 EUR/,preset);
  }
+});
+
+test("Top 3 uses three explicit USD Market quotes, without converting EUR historical points",()=>{
+ const {node,run,chart,before}=setup({preset:"rank-3"});
+ run();
+ assert.equal(node.dataset.top5UsdOwner,"canonical-app");
+ assert.equal(node.dataset.displayCurrency,"USD");
+ assert.equal(node.dataset.usdQuotesVerified,"3");
+ assert.match(node.innerHTML,/PRIX USD · VARIATION 24 h/);
+ assert.equal((node.innerHTML.match(/<strong title=/g)||[]).length,3);
+ assert.doesNotMatch(node.innerHTML,/90000 EUR|PRIX HISTORIQUE/);
+ assert.equal(JSON.stringify(chart.data),before);
+});
+test("Top 3 EUR switch retains historical EUR presentation",()=>{
+ const {node,run}=setup({preset:"rank-3",currency:"EUR"});
+ run();
+ assert.equal(node.dataset.top5UsdOwner,undefined);
+ assert.match(node.innerHTML,/PRIX HISTORIQUE/);
+ assert.equal((node.innerHTML.match(/90000 EUR/g)||[]).length,3);
 });
