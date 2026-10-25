@@ -19256,7 +19256,7 @@ function atlasSelectMarketCoin(coin) {
   requestAnimationFrame(() => { void renderAnalystPanel({ selection: true, forceSingle: true }); });
 }
 
-function matchAssetFilter(c) { const type = classifyAsset(c); if (state.assetFilter === "pillar") return type === "Pilier marché"; if (state.assetFilter === "stablecoin") return type === "Stablecoin"; if (state.assetFilter === "major") return type === "Altcoin majeur"; if (state.assetFilter === "speculative") return type === "Token spéculatif" || type === "Altcoin"; return true;
+function matchAssetFilter(c) { const type = classifyAsset(c); if (state.assetFilter === "pillar") return type === "Repère marché"; if (state.assetFilter === "stablecoin") return type === "Stablecoin"; if (state.assetFilter === "major") return type === "Grande capitalisation"; if (state.assetFilter === "speculative") return type === "Actif spéculatif"; return true;
 }
 
 function volCapRatio(c) { return c?.volume24h && c?.marketCap ? c.volume24h / c.marketCap : 0;
