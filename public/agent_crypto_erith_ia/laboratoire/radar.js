@@ -80,8 +80,8 @@ const EXCLUDED_SYMBOLS=new Set(("USDT USDC DAI FDUSD USDE USDS PYUSD TUSD EURC R
 function eligibleResearchCoin(x){
  if(!x||EXCLUDED_SYMBOLS.has(String(x.symbol||"").toUpperCase()))return false;
  const price=positive(x.priceUsd),cap=positive(x.marketCapUsd),vol=positive(x.volume24hUsd);
- const day=finite(x.change24h),week=finite(x.change7d),month=finite(x.change30d);
- return price!==null&&cap!==null&&vol!==null&&day!==null&&week!==null&&month!==null&&
+ const day=finite(x.change24h),week=finite(x.change7d);
+ return price!==null&&cap!==null&&vol!==null&&day!==null&&week!==null&&
   cap>=25000000&&vol>=1000000&&vol/cap>=0.015&&vol/cap<=2;
 }
 function selectOpportunities(core,extended){
