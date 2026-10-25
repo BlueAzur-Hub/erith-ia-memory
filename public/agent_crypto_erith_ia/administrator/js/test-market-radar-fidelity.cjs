@@ -31,7 +31,7 @@ test("Radar uses the one canonical Market table with verified source/identity ac
  assert.match(native,/printQualification\(root,model\)/);
  assert.match(native,/printOkxHourly\(root,model\)/);
  const market={id:"bitcoin",symbol:"BTC",priceUsd:81000.75,marketCapUsd:1600000000000,
-   volume24hUsd:12000000000,change24h:2.5,change7d:-1.25,change30d:null};
+   volume24hUsd:32000000000,change24h:2.5,change7d:-1.25,change30d:null};
  assert.equal(radar.eligibleResearchCoin(market),true);
  assert.equal(radar.eligibleResearchCoin({...market,symbol:"USDT"}),false);
  assert.equal(radar.eligibleResearchCoin({...market,volume24hUsd:1000}),false);
