@@ -6952,11 +6952,6 @@ function atlasExternalChartTooltip(context) {
     const priceTitle = observation
       ? `${observation.source} · ${new Date(observation.timestamp).toLocaleString("fr-FR")} · ${observation.freshness} (${observation.ageLabel})`
       : top5Usd ? "Aucune observation USD datée pour cet actif" : "";
-    const ageMarkup = top5Usd
-      ? `<small class="atlas-chart-tooltip-freshness" title="${escapeHtml(priceTitle)}">${observation
-          ? escapeHtml(`${observation.freshness} · ${observation.ageLabel}`)
-          : "Observation USD absente"}</small>`
-      : "";
     const style = `--atlas-series-color:${escapeHtml(palette.primary)};--atlas-series-gradient:${escapeHtml(gradientCss)}`;
 
     return `<div class="atlas-chart-tooltip-row" style="${style}">
@@ -6964,7 +6959,6 @@ function atlasExternalChartTooltip(context) {
       <span class="atlas-chart-tooltip-color-bridge" aria-hidden="true"><i></i></span>
       <span class="atlas-chart-tooltip-values">
         <strong title="${escapeHtml(priceTitle)}">${escapeHtml(currentPrice)}</strong>
-        ${ageMarkup}
         ${atlasChartTooltipChangeMarkup(row.baseValue)}
       </span>
     </div>`;

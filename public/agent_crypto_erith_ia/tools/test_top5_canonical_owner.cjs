@@ -58,6 +58,8 @@ test("Real 22-minute-old five-coin USD archive displays prices instead of blanks
  assert.equal(node.dataset.top5UsdOwner,"canonical-app");
  assert.equal(node.dataset.usdQuotesVerified,"5");
  assert.equal((node.innerHTML.match(/différé · 22 min/g)||[]).length,5);
+ assert.doesNotMatch(node.innerHTML,/atlas-chart-tooltip-freshness/);
+ assert.equal((node.innerHTML.match(/<strong title=/g)||[]).length,5);
  assert.match(node.innerHTML,/80.?437/);
  assert.doesNotMatch(node.innerHTML,/PRIX HISTORIQUE USD NON DISPONIBLE|90000 EUR/);
  assert.equal(JSON.stringify(chart.data),before);
@@ -65,7 +67,8 @@ test("Real 22-minute-old five-coin USD archive displays prices instead of blanks
 test("Exact coin identity blocks a wrong-asset price without blanking other rows",()=>{
  const {node,run}=setup({mismatch:true});run();
  assert.equal(node.dataset.usdQuotesVerified,"4");
- assert.equal((node.innerHTML.match(/Observation USD absente/g)||[]).length,1);
+ assert.equal((node.innerHTML.match(/Aucune observation USD datée/g)||[]).length,1);
+ assert.doesNotMatch(node.innerHTML,/atlas-chart-tooltip-freshness/);
 });
 test("Very old quotes stay labelled and EUR setting retains original path",()=>{
  const old=setup({outdated:true});old.run();
