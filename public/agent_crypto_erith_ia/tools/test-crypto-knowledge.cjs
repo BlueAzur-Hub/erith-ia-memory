@@ -45,8 +45,8 @@ const radarCss=read('administrator/market-radar-native.css');
 for(const id of ['foldListings','foldWatch','foldOpportunities','foldResearch','foldQualification','foldOkxHourly']){
  assert(radar.includes('"'+id+'"'),'All secondary summaries must retain a short source indicator: '+id);
 }
-assert.equal((radar.match(/=foldSection\(/g)||[]).length,7,'Six secondary Radar sections plus one optional dated ranking fold');
-assert(radar.includes('"foldRanking"'),'Radar detailed ranking must remain available on demand');
+assert.equal((radar.match(/=foldSection\(/g)||[]).length,6,'Six distinct evidence sections without duplicate quote ranking');
+assert(!radar.includes('"foldRanking"')&&!radar.includes('Classement Radar détaillé'),'Research notes remain but duplicate quote ranking is retired');
 const listingCategory=read('administrator/js/new-listings-native-category.js');
 assert(!listingCategory.includes('"#marketSnapshotPanel.atlas-radar-open #marketTableWindowBody"'),'Radar must not hide the canonical Market table');
 assert(listingCategory.includes('state.originalRenderMarketTable?.();'),'Radar must restore the canonical Market rows');

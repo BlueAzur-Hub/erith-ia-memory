@@ -964,7 +964,7 @@
       body.innerHTML=specs.length
         ?specs.map(nativeRow).join("")
         :`<tr ${ROOT_ATTR}="empty"><td colspan="11" class="empty">${esc(state.discovering?"Chargement des nouveaux listings…":state.lastError?`Nouveaux listings indisponibles · ${state.lastError}`:"Aucun nouveau listing pour ce filtre.")}</td></tr>`;
-    }else if(specs.length){
+    }else if(specs.length&&!state.radarOpen){
       body.insertAdjacentHTML("afterbegin",specs.map(nativeRow).join(""));
     }
 
@@ -1481,6 +1481,7 @@
     const supplementary=document.getElementById("atlasRadarBelowMarket");
     if(supplementary)supplementary.hidden=!visible;
     state.radarOpen=visible;
+    if(!visible)globalThis.AtlasMarketRadarCategory?.set?.(false);
     refreshSegmentToolbar();
     button.classList.toggle("active",visible);
     button.classList.toggle("is-active",visible);
@@ -1490,6 +1491,8 @@
       void ensureNativeRadar().then(()=>{
         if(!state.radarOpen||!view.isConnected)return;
         globalThis.AgentCryptoRadarNative.mount(view);
+        if(globalThis.AtlasMarketRadarCategory?.set?.(true)!==true)
+          throw new Error("Market Radar category owner unavailable");
       }).catch(error=>{
         if(!state.radarOpen)return;
         view.textContent="Radar indisponible : "+String(error?.message||error);
@@ -1506,7 +1509,7 @@
     const css=document.createElement("style");
     css.id="atlasRadarTabStyle";
     // Radar reuses the native Market table, its filters, columns, Fiche and
-    // Graphique. Research-only detailed rankings remain in a collapsed fold.
+    // Graphique. Research evidence remains below the native Market table.
     // Never hide #marketTableWindowBody or create a parallel Market owner.
     css.textContent="#atlasRadarMarketView[hidden]{display:none!important}"+
       // The public New Listings overlay is not the Radar's canonical ranking.

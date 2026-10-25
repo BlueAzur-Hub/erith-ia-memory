@@ -17,7 +17,7 @@ function service(records){
  };
  return {fetchImpl,requests};
 }
-test("a real Katana year request reads the available 166 authentic daily candles instead of refusing 180-point minimum",async()=>{
+test("a real Katana year request reads every eligible authentic daily candle, even as the archive grows",async()=>{
  const mock=service({"coverage.json":manifest,"kat-usdc.json":kat});
  const coin={id:"katana-network",symbol:"KAT",name:"Katana"};
  const result=await api.load(coin,365,{fetchImpl:mock.fetchImpl,peers:[coin]});
@@ -25,11 +25,16 @@ test("a real Katana year request reads the available 166 authentic daily candles
  assert.equal(result.nativeSpotVerified,true);
  assert.equal(result.integrity.ok,true);
  assert.equal(result.sourceFamily,"okx");
- assert.equal(result.series.length,166);
- assert.equal(result.partialCoverage,true);
- assert(result.coverageNote.includes("partielle"));
- assert.equal(result.series[0][0],Number(kat.candles["1Dutc"][0][0]));
- assert.equal(result.series.at(-1)[1],Number(kat.candles["1Dutc"].at(-1)[4]));
+ const archived=kat.candles["1Dutc"];
+ const end=Number(archived.at(-1)[0]),day=86400000;
+ const expected=archived.filter(row=>Number(row[0])>=end-365*day);
+ assert(expected.length>=2);
+ assert.deepEqual(result.series,expected.map(row=>[Number(row[0]),Number(row[4])]));
+ assert.equal(result.pointCount,expected.length);
+ const coveredDays=(Number(expected.at(-1)[0])-Number(expected[0][0]))/day;
+ const partial=coveredDays<365*.92;
+ assert.equal(result.partialCoverage,partial);
+ if(partial)assert(result.coverageNote.includes("partielle"));
  assert(mock.requests[1].url.endsWith("kat-usdc.json"));
  assert(mock.requests.every(x=>x.params.cache==="no-store"));
 });

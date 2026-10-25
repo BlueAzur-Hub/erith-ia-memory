@@ -54,3 +54,23 @@ test("News age uses event time, not a collector-stored freshness badge",()=>{
   assert.doesNotMatch(source,/current\?\.freshness\?\.label \|\| newsFeedAgeLabel\(current\.event_time\)/);
   assert.match(source,/Ancienneté : \$\{newsFeedEventAgeLabel\(event\)\}/);
 });
+
+
+test("Radar research uses native Market and preserves source qualification",()=>{
+  const radar=require("../public/agent_crypto_erith_ia/laboratoire/radar.js");
+  const native=fs.readFileSync(path.join(__dirname,"../public/agent_crypto_erith_ia/administrator/js/market-radar-native.js"),"utf8");
+  const category=fs.readFileSync(path.join(__dirname,"../public/agent_crypto_erith_ia/administrator/js/new-listings-native-category.js"),"utf8");
+  assert.doesNotMatch(native,/function printMarket\(root,model\)/);
+  assert.doesNotMatch(native,/Classement Radar détaillé/);
+  assert.match(source,/state\.assetFilter === "radar"/);
+  assert.match(source,/globalThis\.AtlasMarketRadarCategory=Object\.freeze/);
+  assert.match(category,/AtlasMarketRadarCategory\?\.set\?\.\(true\)/);
+  assert.match(category,/AtlasMarketRadarCategory\?\.set\?\.\(false\)/);
+  assert.match(category,/!state\.radarOpen\)\{/);
+  const coin={symbol:"SOL",priceUsd:100,marketCapUsd:1000000000,volume24hUsd:50000000,
+    change24h:3,change7d:1,change30d:null};
+  assert.equal(radar.eligibleResearchCoin(coin),true,"missing 30d must remain allowed");
+  assert.equal(radar.eligibleResearchCoin({...coin,symbol:"USDT"}),false,"stablecoins excluded");
+  assert.equal(radar.eligibleResearchCoin({...coin,volume24hUsd:1000}),false,"low liquidity excluded");
+  assert.equal(radar.eligibleResearchCoin({...coin,change24h:null}),false,"unmeasured day excluded");
+});
