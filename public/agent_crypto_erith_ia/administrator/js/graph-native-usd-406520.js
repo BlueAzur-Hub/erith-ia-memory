@@ -203,7 +203,7 @@ wrap("atlasRenderSingleCaption",o=>function(...a){const r=o.apply(this,a);if(usd
    if(heading)heading.textContent="PRIX HISTORIQUE USD · "+verified.source;
    root.dataset.displayCurrency="USD";
    root.dataset.priceSource="exchange-candles-usd-reference";
-  }else if(!parity){
+  }else if(!parity && root?.dataset?.top5UsdOwner!=="canonical-app"){
    const n=document.querySelector("#atlasChartTooltip .atlas-chart-tooltip-date");
    const quoteSource=usdTooltipSource(a?.[0]?.tooltip?.dataPoints?.[0]);
    if(n)n.textContent=String(n.textContent||"").replace("PRIX LIVE BINANCE",quoteSource.label);

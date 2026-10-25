@@ -6874,7 +6874,7 @@ function atlasExternalChartTooltip(context) {
   const comparison = chart.$atlasMode === "comparison";
   const top5Usd = comparison
     && Number(chart.$atlasPeriod || state.chartPeriodDays || 1) === 1
-    && String(state.dataBroker?.comparison?.preset || "") === "rank-5"
+    && ["rank-5", "gainers", "losers", "volume"].includes(String(state.dataBroker?.comparison?.preset || ""))
     && String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "USD";
   let rows = comparison
     ? atlasComparisonTooltipRows(chart, targetX, point?.dataIndex)

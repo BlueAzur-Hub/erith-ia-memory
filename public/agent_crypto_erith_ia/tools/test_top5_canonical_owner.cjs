@@ -18,12 +18,12 @@ const market=[
   ["ripple","XRP",1.2909162994725298],
   ["solana","SOL",101.46876996639266]
 ];
-function setup({currency="USD",outdated=false,mismatch=false}={}){
+function setup({currency="USD",outdated=false,mismatch=false,preset="rank-5"}={}){
  const coins=market.map(([id,symbol,priceUsd])=>({id,symbol,name:symbol,priceUsd,
   usdUpdatedAt:outdated?"2026-10-20T00:00:00Z":observedAt}));
  // A mismatching universe ID must not be rescued by a second price on the chart dataset.
  if(mismatch){delete coins[0].priceUsd;delete coins[0].usdUpdatedAt;}
- const state={chartPeriodDays:1,coins:[],dataBroker:{comparison:{preset:"rank-5"},spotBook:{quotes:{}}}};
+ const state={chartPeriodDays:1,coins:[],dataBroker:{comparison:{preset},spotBook:{quotes:{}}}};
  const chart={$atlasMode:"comparison",$atlasPeriod:1,$atlasQuoteCurrency:"EUR",
   data:{datasets:coins.map(coin=>({atlasCoin:coin,data:[{x:1,y:100}]}))}};
  const before=JSON.stringify(chart.data);
@@ -80,4 +80,27 @@ test("Very old quotes stay labelled and EUR setting retains original path",()=>{
  assert.match(old.node.innerHTML,/ancien/);
  const eur=setup({currency:"EUR"});eur.run();
  assert.equal(eur.node.dataset.top5UsdOwner,undefined);
+});
+
+test("USD Market prices for Hausses 5, Baisses 5 and Volumes 5 never inherit EUR historical prices",()=>{
+ for(const preset of ["gainers","losers","volume"]){
+  const {node,run,chart,before}=setup({preset});
+  run();
+  assert.equal(node.dataset.top5UsdOwner,"canonical-app",preset);
+  assert.equal(node.dataset.displayCurrency,"USD",preset);
+  assert.equal(node.dataset.usdQuotesVerified,"5",preset);
+  assert.match(node.innerHTML,/PRIX USD · VARIATION 24 h/,preset);
+  assert.doesNotMatch(node.innerHTML,/90000 EUR|90.?000 €|PRIX HISTORIQUE/,preset);
+  assert.match(node.innerHTML,/80.?437/,preset);
+  assert.equal(JSON.stringify(chart.data),before,"Historical Base100 curves must not be rewritten");
+ }
+});
+test("EUR display keeps original historical price path for scanner presets",()=>{
+ for(const preset of ["gainers","losers","volume"]){
+  const {node,run}=setup({currency:"EUR",preset});
+  run();
+  assert.equal(node.dataset.top5UsdOwner,undefined,preset);
+  assert.match(node.innerHTML,/PRIX HISTORIQUE/,preset);
+  assert.match(node.innerHTML,/90000 EUR/,preset);
+ }
 });
