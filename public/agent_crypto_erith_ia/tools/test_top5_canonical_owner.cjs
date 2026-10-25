@@ -150,7 +150,7 @@ test("Scanner keeps exactly the first five Market candidates (runtime function)"
  const coins=Array.from({length:8},(_,i)=>({id:"coin-"+i,symbol:"C"+i}));
  let captured=null;
  const ctx={
-  console,AbortController,ATLAS_SCANNER_TARGET:5,
+  console,AbortController,ATLAS_SCANNER_TARGET:5,ATLAS_SCANNER_DIRECT_LIMIT:18,
   ATLAS_SCANNER_PRESETS:new Set(["gainers","losers","volume"]),
   atlasScannerSequence:0,atlasScannerTransaction:null,atlasScannerQueuedRequest:null,
   state:{liveOk:true,coins,chartPeriodDays:1,sourceLock:{mode:"direct"},
