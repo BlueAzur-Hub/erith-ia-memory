@@ -899,7 +899,7 @@ async function refresh(root,model){
   }
   printQualification(root,model);
   lookup(root,"status").textContent=issues.length?"Radar partiel · "+issues.join(" · "):
-   "Radar · Top 250 / nouveaux listings Spot / PAPER BTC et CT · sélection Solo disponible";
+   "Radar · Candidats du Market sélectionné / veille Spot / études PAPER BTC et CT · sélection Solo disponible";
  }catch(e){
   lookup(root,"status").textContent="Radar indisponible : "+String(e?.message||e);
  }finally{
