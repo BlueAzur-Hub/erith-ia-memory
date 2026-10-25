@@ -187,7 +187,8 @@ jobs:
           hour=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%HZ')
           expected=[('okx-hourly/latest.json','last_hour_utc'),
                     ('case-market-hourly/latest.json','last_hour_utc'),
-                    ('radar-verified-target-hourly/latest.json','hour_utc')]
+                    ('radar-verified-target-hourly/latest.json','hour_utc'),
+                    ('radar-okx-book-hourly/latest.json','hour_utc')]
           ready=True
           for rel,key in expected:
               p=root/rel
