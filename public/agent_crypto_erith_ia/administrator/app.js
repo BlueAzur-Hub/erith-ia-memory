@@ -15495,7 +15495,8 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
     tx.period,
     tx.candidateIds
   );
-  if (!prevalidated.length) return false;
+  if (prevalidated.length !== ATLAS_SCANNER_TARGET
+      || prevalidated.some((entry, index) => entry.coin?.id !== tx.candidateIds[index])) return false;
 
   const ids = prevalidated.map(entry => entry.coin.id);
   const availableCount = ids.length;
@@ -15737,13 +15738,14 @@ async function atlasScannerRun(tx) {
 
       tx.cacheChecked += 1;
       const stored = atlasScannerStoredHistory(coin, tx.period);
-      if (stored && Array.isArray(stored.series) && stored.series.length) {
+      if (stored && Array.isArray(stored.series) && stored.series.length
+          && !atlasChartNeedsRefresh(stored, tx.period)) {
         accepted.push(
           atlasScannerDecorateEntry(
             tx,
             coin,
             stored,
-            atlasChartNeedsRefresh(stored, tx.period) ? "archive" : "cache"
+            "cache"
           )
         );
         tx.cacheHits += 1;
@@ -15767,6 +15769,15 @@ async function atlasScannerRun(tx) {
         }
       } else {
         networkQueue.push(coin);
+      }
+    }
+
+    // If recent individual caches do not share a usable time window,
+    // refresh only the five requested IDs instead of scanning lower-ranked assets.
+    if (tx.validCount < ATLAS_SCANNER_TARGET) {
+      const queued = new Set(networkQueue.map(coin => coin.id));
+      for (const coin of coins) {
+        if (!queued.has(coin.id)) networkQueue.push(coin);
       }
     }
 
@@ -15799,14 +15810,13 @@ async function atlasScannerRun(tx) {
           && Array.isArray(fetched.result.series)
           && fetched.result.series.length
         ) {
-          accepted.push(
-            atlasScannerDecorateEntry(
-              tx,
-              coin,
-              fetched.result,
-              fetched.source === "cache" ? "cache" : "direct"
-            )
+          const refreshed = atlasScannerDecorateEntry(
+            tx, coin, fetched.result,
+            fetched.source === "cache" ? "cache" : "direct"
           );
+          const existing = accepted.findIndex(entry => entry.coin?.id === coin.id);
+          if (existing >= 0) accepted[existing] = refreshed;
+          else accepted.push(refreshed);
         } else {
           rejected.push({
             id: coin.id,
@@ -15847,20 +15857,26 @@ async function atlasScannerRun(tx) {
       tx.candidateIds
     );
 
-    if (finalEntries.length >= 1) {
+    if (finalEntries.length === ATLAS_SCANNER_TARGET) {
       return atlasScannerCommit(tx, finalEntries, rejected);
     }
 
-    const detail = rejected
-      .slice(0, 5)
-      .map(row => `${String(row.symbol || row.id || "?").toUpperCase()} : ${row.reason}`)
-      .join(" · ");
+    const missingIds = tx.candidateIds.filter(id =>
+      !finalEntries.some(entry => entry.coin?.id === id)
+    );
+    const missingSymbols = missingIds.map(id =>
+      String(state.coins.find(coin => coin.id === id)?.symbol || id).toUpperCase()
+    );
+    const detail = [
+      missingSymbols.length ? `Séries non affichées : ${missingSymbols.join(", ")}` : null,
+      ...rejected.slice(0, 5).map(row => `${String(row.symbol || row.id || "?").toUpperCase()} : ${row.reason}`)
+    ].filter(Boolean).join(" · ");
 
     atlasScannerTransaction = null;
     atlasScannerSetTransactionFlag(false);
     return atlasScannerVisibleFailure(
       tx.preset,
-      `${atlasScannerLabel(tx.preset)} indisponible · 0/5 historique compatible`
+      `${atlasScannerLabel(tx.preset)} incomplet · ${finalEntries.length}/5 historiques compatibles`
       + ` · cache ${tx.cacheHits}/${tx.cacheChecked}`
       + ` · réseau ${tx.directAttempts}/${tx.directLimit}`,
       detail
@@ -15912,7 +15928,7 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     const displayedSnapshot = atlasScannerStateSnapshot();
 
     const period = requestedPeriod;
-    const pool = atlasScannerPool(preset, period);
+    const pool = atlasScannerPool(preset, period).slice(0, ATLAS_SCANNER_TARGET);
 
     if (pool.length < ATLAS_SCANNER_TARGET) {
       return atlasScannerVisibleFailure(
