@@ -164,16 +164,28 @@ jobs:
                   expected=expected.replace(queue_timer_before,queue_timer_after,1)
                   expected=expected.replace(queue_fetch_before,queue_fetch_after,1)
           if after != expected:
-              # Only the reviewed canonical-owner repair may modify app.js here.
-              # Git blob identity preserves the original immutable guard for every other edit.
+              # Exact, reviewed source-hash exceptions; never permit arbitrary app.js edits.
+              # Radar one-table PR #683 is anchored to the pre-existing 25-Oct
+              # Market-category filter repair on main. Any other byte fails closed.
               actual_blob=subprocess.check_output(
                   ["git","hash-object",path],text=True).strip()
-              assert actual_blob=="da55cf27a8e1508db2caf6e813c20aafe2ffac9b", (
-                  "Administrator app.js differs from both protected baseline and approved Top5 repair")
-              assert "function atlasChartMarketUsdObservation(" in after
-              assert 'node.dataset.top5UsdOwner = "canonical-app"' in after
-              assert 'atlas-chart-tooltip-color-bridge' in after
-              assert 'atlas-chart-tooltip-freshness' not in after
+              baseline_blob=subprocess.check_output(
+                  ["git","rev-parse",os.environ["BASELINE"]+":"+path],text=True).strip()
+              reviewed_radar=(
+                  baseline_blob=="ca45e86759d61988d4720ecbd3a97d465b8d509d"
+                  and actual_blob=="b64444ce9ea17b31b6b2a11af3b82f6e00050de8"
+              )
+              if reviewed_radar:
+                  assert 'state.assetFilter === "radar"' in after
+                  assert "globalThis.AtlasMarketRadarCategory=Object.freeze" in after
+                  assert 'function atlasChartMarketUsdObservation(' in after
+              else:
+                  assert actual_blob=="da55cf27a8e1508db2caf6e813c20aafe2ffac9b", (
+                      "Administrator app.js differs from protected baseline and exact reviewed repairs")
+                  assert "function atlasChartMarketUsdObservation(" in after
+                  assert 'node.dataset.top5UsdOwner = "canonical-app"' in after
+                  assert 'atlas-chart-tooltip-color-bridge' in after
+                  assert 'atlas-chart-tooltip-freshness' not in after
           PY
           python - <<'PY'
           import copy, json, os, pathlib, subprocess
