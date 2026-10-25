@@ -179,6 +179,12 @@ jobs:
                   assert 'state.assetFilter === "radar"' in after
                   assert "globalThis.AtlasMarketRadarCategory=Object.freeze" in after
                   assert 'function atlasChartMarketUsdObservation(' in after
+              elif (baseline_blob=="b64444ce9ea17b31b6b2a11af3b82f6e00050de8"
+                    and actual_blob=="6d5b0c69f0121e06147d415a723493e134b162c0"):
+                  # Exact DAI/PulseChain identity repair, one reviewed line + its comment.
+                  assert 'if (id === "dai-on-pulsechain") return "Actif spéculatif";' in after
+                  assert 'function atlasChartMarketUsdObservation(' in after
+                  assert "globalThis.AtlasMarketRadarCategory=Object.freeze" in after
               else:
                   assert actual_blob=="da55cf27a8e1508db2caf6e813c20aafe2ffac9b", (
                       "Administrator app.js differs from protected baseline and exact reviewed repairs")
