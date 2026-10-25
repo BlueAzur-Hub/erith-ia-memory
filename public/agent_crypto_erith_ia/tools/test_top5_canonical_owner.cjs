@@ -142,3 +142,54 @@ test("Top 3 USD comparison stores the SAME canonical key used by the overlay",()
   }
  }
 });
+
+test("Scanner keeps exactly the first five Market candidates (runtime function)",()=>{
+ const start=app.indexOf("function atlasScannerStart(");
+ const end=app.indexOf("\nfunction atlasHandleGainersClickV286(",start);
+ assert.ok(start>0 && end>start,"Real scanner start owner is present");
+ const coins=Array.from({length:8},(_,i)=>({id:"coin-"+i,symbol:"C"+i}));
+ let captured=null;
+ const ctx={
+  console,AbortController,ATLAS_SCANNER_TARGET:5,
+  ATLAS_SCANNER_PRESETS:new Set(["gainers","losers","volume"]),
+  atlasScannerSequence:0,atlasScannerTransaction:null,atlasScannerQueuedRequest:null,
+  state:{liveOk:true,coins,chartPeriodDays:1,sourceLock:{mode:"direct"},
+    dataBroker:{market:{mode:"direct"}}},
+  atlasScannerCancel:()=>{},atlasScannerInvalidateChartWork:()=>{},
+  atlasScannerStateSnapshot:()=>({}),atlasScannerPool:()=>coins,
+  atlasCurrentMarketFrame:()=>({id:"frame-test",mode:"direct",fingerprint:"f",
+    validatedAssets:250,requestedAssets:250,timestamp:"2026-10-25T00:00:00Z"}),
+  atlasScannerMarketMetricLabel:()=> "Market 24 h",
+  atlasScannerSetTransactionFlag:()=>{},atlasScannerSetUiState:()=>{},
+  atlasMarketFrameShortId:()=> "Frame test",atlasScannerProgress:()=>{},
+  atlasRenderComparisonControls:()=>{},
+  atlasScannerVisibleFailure:()=>false,
+  atlasScannerRun:tx=>{captured=tx;return Promise.resolve(true);}
+ };
+ ctx.globalThis=ctx;
+ vm.createContext(ctx);
+ vm.runInContext(app.slice(start,end),ctx);
+ for(const preset of ["gainers","losers","volume"]){
+  assert.equal(ctx.atlasScannerStart(preset,5),true,preset);
+  assert.deepEqual([...captured.candidateIds],coins.slice(0,5).map(c=>c.id),
+    preset+" must never backfill from positions 6-32");
+ }
+});
+test("Scanner refuses incomplete/wrong-order graph and refreshes dated caches",()=>{
+ const begin=app.indexOf("function atlasScannerCommit(");
+ const end=app.indexOf("\nfunction atlasScannerStoredHistory(",begin);
+ assert.ok(begin>0 && end>begin);
+ const commit=app.slice(begin,end);
+ assert.match(commit,/prevalidated\.length !== ATLAS_SCANNER_TARGET/);
+ assert.match(commit,/entry\.coin\?\.id !== tx\.candidateIds\[index\]/);
+ const runStart=app.indexOf("async function atlasScannerRun(");
+ const runEnd=app.indexOf("\nfunction atlasScannerStart(",runStart);
+ assert.ok(runStart>0 && runEnd>runStart);
+ const run=app.slice(runStart,runEnd);
+ assert.match(run,/!atlasChartNeedsRefresh\(stored, tx\.period\)/);
+ assert.match(run,/const queued = new Set\(networkQueue\.map\(coin => coin\.id\)\)/);
+ assert.match(run,/if \(existing >= 0\) accepted\[existing\] = refreshed/);
+ assert.match(run,/if \(finalEntries\.length === ATLAS_SCANNER_TARGET\)/);
+ assert.doesNotMatch(run,/if \(finalEntries\.length >= 1\)/);
+ assert.match(run,/Séries non affichées/);
+});
