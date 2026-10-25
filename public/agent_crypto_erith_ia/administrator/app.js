@@ -15351,70 +15351,20 @@ function atlasScannerSubsetIsCompatible(prepared, period) {
 }
 
 function atlasScannerAligned(entries, period, candidateIds) {
-  const order = new Map((candidateIds || []).map((id, index) => [id, index]));
-  const minimum = atlasChartRules(period).minPoints;
-  const prepared = (Array.isArray(entries) ? entries : [])
+  // Market selection is authoritative; history coverage never changes coin IDs.
+  const selectedIds = (Array.isArray(candidateIds) ? candidateIds : []).slice(0, ATLAS_SCANNER_TARGET);
+  if (selectedIds.length !== ATLAS_SCANNER_TARGET || new Set(selectedIds).size !== ATLAS_SCANNER_TARGET) return [];
+  const byId = new Map((Array.isArray(entries) ? entries : [])
     .filter(entry => entry?.coin?.id && Array.isArray(entry?.result?.series))
-    .map(entry => {
-      const rows = atlasComparisonRows(entry);
-      return {
-        entry,
-        rows,
-        start: Number(rows[0]?.t),
-        end: Number(rows[rows.length - 1]?.t),
-        order: order.has(entry.coin.id) ? order.get(entry.coin.id) : Number.MAX_SAFE_INTEGER
-      };
-    })
-    .filter(item =>
-      item.rows.length >= minimum
-      && Number.isFinite(item.start)
-      && Number.isFinite(item.end)
-      && item.end > item.start
-    )
-    .sort((a, b) => a.order - b.order);
+    .map(entry => [entry.coin.id, entry]));
+  const selectedEntries = selectedIds.map(id => byId.get(id));
+  if (selectedEntries.some(entry => !entry)) return [];
 
-  if (!prepared.length) return [];
-
-  let bestPrepared = [];
-  let exactResult = null;
-
-  /*
-    Recherche lexicographique : le premier groupe compatible de cinq conserve
-    le meilleur rang Market possible. Les historiques incompatibles sont
-    écartés au lieu de rendre tout le panier inutilisable.
-  */
-  const search = (startIndex, chosen) => {
-    if (exactResult) return;
-    if (chosen.length > bestPrepared.length) bestPrepared = [...chosen];
-    if (chosen.length === ATLAS_SCANNER_TARGET) {
-      const aligned = atlasBuildAlignedComparisonEntries(
-        chosen.map(item => item.entry),
-        period
-      );
-      if (aligned.length === ATLAS_SCANNER_TARGET) exactResult = aligned;
-      return;
-    }
-
-    const remainingNeeded = ATLAS_SCANNER_TARGET - chosen.length;
-    for (
-      let index = startIndex;
-      index <= prepared.length - remainingNeeded && !exactResult;
-      index += 1
-    ) {
-      const candidate = prepared[index];
-      const next = [...chosen, candidate];
-      if (!atlasScannerSubsetIsCompatible(next, period)) continue;
-      search(index + 1, next);
-    }
-  };
-
-  search(0, []);
-  if (exactResult) return exactResult;
-
-  return bestPrepared.length
-    ? atlasBuildAlignedComparisonEntries(bestPrepared.map(item => item.entry), period)
-        .slice(0, ATLAS_SCANNER_TARGET)
-    : [];
+  // Align exactly these five histories; never backfill another market coin.
+  const aligned = atlasBuildAlignedComparisonEntries(selectedEntries, period);
+  return aligned.length === ATLAS_SCANNER_TARGET
+    && aligned.every((entry, index) => entry.coin?.id === selectedIds[index])
+      ? aligned : [];
 }
 
 function atlasScannerProgress(tx, symbol = "") {
@@ -15495,7 +15445,9 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
     tx.period,
     tx.candidateIds
   );
-  if (!prevalidated.length) return false;
+  if (prevalidated.length !== ATLAS_SCANNER_TARGET
+      || tx.candidateIds.slice(0, ATLAS_SCANNER_TARGET)
+        .some((id, index) => prevalidated[index]?.coin?.id !== id)) return false;
 
   const ids = prevalidated.map(entry => entry.coin.id);
   const availableCount = ids.length;
@@ -15687,7 +15639,11 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 }
 
 function atlasScannerStoredHistory(coin, period) {
-  const current = state.dataBroker?.comparison?.results?.[coin?.id];
+  // A result left by a previous period cannot be reused as today's period.
+  const previous = state.dataBroker?.comparison?.results?.[coin?.id];
+  const samePeriod = Number(state.dataBroker?.chart?.period || 0) === Number(period)
+    && (!previous?.periodDays || Number(previous.periodDays) === Number(period));
+  const current = samePeriod ? previous : null;
   const candidates = [
     current && Array.isArray(current.series) && current.series.length ? current : null,
     atlasGetStoredChartResult(coin, period, "binance"),
@@ -15710,6 +15666,7 @@ async function atlasScannerYieldToUi(tx) {
 async function atlasScannerRun(tx) {
   const accepted = [];
   const rejected = [];
+  const staleFallback = new Map();
   const coins = tx.candidateIds
     .map(id => state.coins.find(coin => coin.id === id))
     .filter(Boolean);
@@ -15738,32 +15695,19 @@ async function atlasScannerRun(tx) {
       tx.cacheChecked += 1;
       const stored = atlasScannerStoredHistory(coin, tx.period);
       if (stored && Array.isArray(stored.series) && stored.series.length) {
-        accepted.push(
-          atlasScannerDecorateEntry(
-            tx,
-            coin,
-            stored,
-            atlasChartNeedsRefresh(stored, tx.period) ? "archive" : "cache"
-          )
-        );
-        tx.cacheHits += 1;
-        tx.validCount = atlasScannerAligned(
-          accepted,
-          tx.period,
-          tx.candidateIds
-        ).length;
-        atlasScannerProgress(tx, coin.symbol);
-        // Cache-heavy scans used to monopolize the browser event loop. Yield
-        // periodically without changing candidate order or compatibility truth.
-        if (tx.cacheChecked % 3 === 0 && !(await atlasScannerYieldToUi(tx))) return false;
-
-        if (tx.validCount >= ATLAS_SCANNER_TARGET) {
-          const cachedFinal = atlasScannerAligned(
-            accepted,
-            tx.period,
-            tx.candidateIds
-          );
-          return atlasScannerCommit(tx, cachedFinal, rejected);
+        if (atlasChartNeedsRefresh(stored, tx.period)) {
+          // A dated archive is fallback evidence, never a reason to skip the network.
+          staleFallback.set(coin.id, atlasScannerDecorateEntry(tx, coin, stored, "archive"));
+          networkQueue.push(coin);
+        } else {
+          accepted.push(atlasScannerDecorateEntry(tx, coin, stored, "cache"));
+          tx.cacheHits += 1;
+          tx.validCount = atlasScannerAligned(accepted, tx.period, tx.candidateIds).length;
+          atlasScannerProgress(tx, coin.symbol);
+          if (tx.cacheChecked % 3 === 0 && !(await atlasScannerYieldToUi(tx))) return false;
+          if (tx.validCount === ATLAS_SCANNER_TARGET) {
+            return atlasScannerCommit(tx, accepted, rejected);
+          }
         }
       } else {
         networkQueue.push(coin);
@@ -15808,10 +15752,14 @@ async function atlasScannerRun(tx) {
             )
           );
         } else {
+          const archive = staleFallback.get(coin.id);
+          if (archive) accepted.push(archive);
           rejected.push({
             id: coin.id,
             symbol: coin.symbol,
-            reason: String(fetched?.error?.message || "historique indisponible")
+            reason: archive
+              ? "actualisation réseau impossible · archive datée conservée"
+              : String(fetched?.error?.message || "historique indisponible")
           });
         }
 
@@ -15912,7 +15860,8 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
     const displayedSnapshot = atlasScannerStateSnapshot();
 
     const period = requestedPeriod;
-    const pool = atlasScannerPool(preset, period);
+    // Freeze the real Market Top 5; candidates ranked sixth or lower are not replacements.
+    const pool = atlasScannerPool(preset, period).slice(0, ATLAS_SCANNER_TARGET);
 
     if (pool.length < ATLAS_SCANNER_TARGET) {
       return atlasScannerVisibleFailure(
