@@ -14,6 +14,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/test_okx_spot_universe_history.py'
       - 'public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_case_market_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_radar_okx_books.py'
+      - 'public/agent_crypto_erith_ia/tools/test_collect_radar_okx_books.py'
       - 'public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_radar_verified_targets.py'
       - 'public/agent_crypto_erith_ia/tools/audit_radar_target_coverage.py'
@@ -40,6 +42,8 @@ on:
       - 'public/agent_crypto_erith_ia/tools/test_okx_spot_universe_history.py'
       - 'public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_case_market_hourly.py'
+      - 'public/agent_crypto_erith_ia/tools/collect_radar_okx_books.py'
+      - 'public/agent_crypto_erith_ia/tools/test_collect_radar_okx_books.py'
       - 'public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py'
       - 'public/agent_crypto_erith_ia/tools/test_collect_radar_verified_targets.py'
       - 'public/agent_crypto_erith_ia/tools/audit_radar_target_coverage.py'
@@ -96,6 +100,8 @@ jobs:
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_okx_public_hourly.py' -v
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_case_market_hourly.py' -v
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_radar_okx_books.py
+          python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_radar_okx_books.py' -v
           python -m py_compile public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py
           python -m unittest discover -s public/agent_crypto_erith_ia/tools -p 'test_collect_radar_verified_targets.py' -v
           python -m py_compile public/agent_crypto_erith_ia/tools/audit_radar_target_coverage.py
@@ -214,6 +220,10 @@ jobs:
             if ! python public/agent_crypto_erith_ia/tools/collect_case_market_hourly.py; then
               echo 'WARN: additional ZEC/AXIS public observation unavailable; core OKX archive retained'
             fi
+            # Independent fixed pairs SAHARA/T/GRASS; reuse this already-scheduled UTC hour.
+            if ! python public/agent_crypto_erith_ia/tools/collect_radar_okx_books.py; then
+              echo 'WARN: OKX EEA three-pair books unavailable; do not create synthetic quotes'
+            fi
             # Maximum 15 public Bitget calls for 3 contract-matched candidates.
             # Catalog or native mismatch = no invented target quote.
             if ! python public/agent_crypto_erith_ia/tools/collect_radar_verified_targets.py; then
@@ -231,6 +241,9 @@ jobs:
             fi
             if [ -d public/agent_crypto_erith_ia/data/crypto/radar-verified-target-hourly ]; then
               git add -A -- public/agent_crypto_erith_ia/data/crypto/radar-verified-target-hourly/
+            fi
+            if [ -d public/agent_crypto_erith_ia/data/crypto/radar-okx-book-hourly ]; then
+              git add -A -- public/agent_crypto_erith_ia/data/crypto/radar-okx-book-hourly/
             fi
             if git diff --cached --quiet; then
               echo 'UTC hourly observation already archived; no duplicate or backfill'
