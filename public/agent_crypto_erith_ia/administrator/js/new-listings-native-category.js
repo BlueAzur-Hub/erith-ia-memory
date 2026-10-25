@@ -1539,6 +1539,18 @@
     tab.setAttribute("aria-controls","atlasRadarMarketView");
     tab.setAttribute("aria-pressed","false");
     button.insertAdjacentElement("afterend",tab);
+    // Persistent documentary route: research survives moves outside the Market Top 1000.
+    // No extra table, network poll, chart ownership or Market ranking modification.
+    let dossierLink=document.getElementById("atlasCryptoFollowedDossiersLink");
+    if(!dossierLink){
+      dossierLink=document.createElement("a");
+      dossierLink.id="atlasCryptoFollowedDossiersLink";
+      dossierLink.className="filter-btn";
+      dossierLink.textContent="Dossiers suivis ↗";
+      dossierLink.href=new URL("../laboratoire/crypto-knowledge.html#veille-fil-crypto",document.baseURI).href;
+      dossierLink.setAttribute("aria-label","Consulter les dossiers suivis, y compris hors Top 1000");
+      tab.insertAdjacentElement("afterend",dossierLink);
+    }
     const view=document.createElement("section");
     view.id="atlasRadarMarketView";
     view.hidden=true;
