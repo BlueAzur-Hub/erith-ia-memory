@@ -9,7 +9,7 @@ const context=(ids=[],d=1)=>{const x=(Array.isArray(ids)?ids:[]).filter(Boolean)
 const text=v=>!usd()?v:String(v??"").replaceAll("Prix EUR","Prix USD").replaceAll("PRIX EUR","PRIX USD").replaceAll("CoinGecko EUR","CoinGecko USD").replaceAll("Binance EUR DIRECT","CoinGecko USD DIRECT");
 async function fetchUsd(c,d,opt={}){if(!c?.id)throw Error("actif absent");const p=Number(d||1),api=typeof atlasChartApiDays==="function"?atlasChartApiDays(p):(p===36500?"max":String(p)),url=`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(c.id)}/market_chart?vs_currency=usd&days=${encodeURIComponent(api)}&precision=full`,payload=await atlasFetchJson(url,{signal:opt.signal||null,timeoutMs:Number(opt.timeoutMs||ATLAS_CHART_DIRECT_TIMEOUT_MS)}),series=atlasNormalizeChartPayload(payload),volumeSeries=atlasNormalizeVolumePayload(payload),integrity=atlasValidateChartSeries({c,days:p,prices:series,payload,sourceMode:"coingecko-direct"});if(!integrity.ok)throw Error(`série CoinGecko USD refusée · ${integrity.reason}`);return{series,volumeSeries,source:"CoinGecko market_chart USD · direct",sourceFamily:"coingecko",currency:"USD",quoteCurrency:"USD",blocked:false,kind:"coingecko-direct",sourceMode:"coingecko-direct",periodDays:p,apiDays:api,pointCount:series.length,generatedAt:new Date(integrity.metrics.lastTimestamp).toISOString(),integrity}}
 async function cmp(c,p,opt={}){try{if(typeof atlasRespectComparisonRequestSpacing==="function")await atlasRespectComparisonRequestSpacing(opt.signal||null,p);const result=await fetchUsd(c,p,{signal:opt.signal||null,timeoutMs:typeof ATLAS_COMPARISON_DIRECT_TIMEOUT_MS!=="undefined"?ATLAS_COMPARISON_DIRECT_TIMEOUT_MS:12000});atlasStoreChartResult(c,p,result,"coingecko");return{coin:c,result,attempts:1,source:"coingecko-usd-direct"}}catch(e){if(e?.name==="AbortError")throw e;const stored=atlasGetStoredChartResult(c,p,"coingecko"),fresh=stored?.series?.length&&!(typeof atlasChartNeedsRefresh==="function"&&atlasChartNeedsRefresh(stored,p));if(fresh)return{coin:c,result:{...stored,currency:"USD",quoteCurrency:"USD",source:"Cache navigateur · série CoinGecko USD",refreshWarning:"CoinGecko USD direct indisponible · cache USD récent conservé"},attempts:1,source:"coingecko-usd-cache-fresh"};return{coin:c,result:{series:[],blocked:true,currency:"USD",quoteCurrency:"USD",sourceFamily:"coingecko",sourceMode:"coingecko-direct",reason:stored?.series?.length?"Historique CoinGecko USD obsolète refusé.":"Historique CoinGecko USD indisponible.",technicalReason:String(e?.message||e)},attempts:1,source:stored?.series?.length?"coingecko-usd-stale-cache-refused":"coingecko-usd-blocked"}}}
-async function scan(tx,c){try{if(typeof atlasRespectComparisonRequestSpacing==="function")await atlasRespectComparisonRequestSpacing(tx?.controller?.signal||null,tx?.period);const result=await fetchUsd(c,tx?.period,{signal:tx?.controller?.signal||null,timeoutMs:12000});atlasStoreChartResult(c,tx?.period,result,"coingecko");return{result,source:"direct",provider:"coingecko-usd-browser"}}catch(e){if(e?.name==="AbortError"||tx?.controller?.signal?.aborted)throw e;const s=atlasGetStoredChartResult(c,tx?.period,"coingecko");return s?.series?.length?{result:{...s,currency:"USD",quoteCurrency:"USD",source:"Cache navigateur · série CoinGecko USD"},source:"cache",provider:"coingecko-usd-cache"}:{result:null,source:"blocked",error:e}}}
+async function scan(tx,c){try{if(typeof atlasRespectComparisonRequestSpacing==="function")await atlasRespectComparisonRequestSpacing(tx?.controller?.signal||null,tx?.period);const result=await fetchUsd(c,tx?.period,{signal:tx?.controller?.signal||null,timeoutMs:12000});atlasStoreChartResult(c,tx?.period,result,"coingecko");return{result,source:"direct",provider:"coingecko-usd-browser"}}catch(e){if(e?.name==="AbortError"||tx?.controller?.signal?.aborted)throw e;const s=atlasGetStoredChartResult(c,tx?.period,"coingecko");return s?.series?.length&&s.currency==="USD"&&s.quoteCurrency==="USD"?{result:{...s,source:"Cache navigateur · série CoinGecko USD"},source:"cache",provider:"coingecko-usd-cache"}:{result:null,source:"blocked",error:e}}}
 function live(c,p=1){if(!c||Number(p||1)!==1)return null;const price=c.priceUsd==null?NaN:Number(c.priceUsd),change24h=c.change24h==null||String(c.change24h).trim()===""?NaN:Number(c.change24h);if(!(Number.isFinite(price)&&price>0&&Number.isFinite(change24h)))return null;const t=Date.parse(String(c.spotUpdatedAt||c.lastUpdated||c.timestamp||"")),timestamp=Number.isFinite(t)?t:Date.now();return{quote:{status:"snapshot",kind:"coingecko-usd-explicit",coinId:c.id||null,price,change24h,bid:null,ask:null,timestamp,source:"CoinGecko USD snapshot"},price,change24h}}
 function wrap(n,f){const o=globalThis[n];if(typeof o!=="function")return false;if(o[W])return true;O[n]=o;const x=f(o);Object.defineProperty(x,W,{value:true});globalThis[n]=x;return true}
 function withFmt(cb){if(!usd()||typeof globalThis.atlasFormatEUR!=="function")return cb();const s=globalThis.atlasFormatEUR;try{globalThis.atlasFormatEUR=money;return cb()}finally{globalThis.atlasFormatEUR=s}}
@@ -99,11 +99,87 @@ const coinRowMatch=(row,coin)=>{
  const symbol=String(coin?.symbol||"").trim().toUpperCase();
  const name=String(coin?.name||coin?.label||"").trim().toUpperCase();
  const label=String(row?.textContent||"").toUpperCase();
- const tokens=[symbol,name].filter(v=>/^[A-Z0-9][A-Z0-9 .-]{1,35}$/.test(v));
+ const tokens=[symbol,name].filter(v=>/^[A-Z0-9][A-Z0-9 .-]{0,35}$/.test(v));
  return tokens.some(v=>new RegExp("(^|[^A-Z0-9])"+
    v.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(?=$|[^A-Z0-9])").test(label));
 };
 
+// Scanner 5: current USD prices are independent of the historical Base100 source.
+const scannerUsdLive=new Map(),scannerUsdChecked=new Map();
+let scannerUsdVisible=null;
+function scannerMarketPrice(coin,book){
+ if(!coin?.id)return null;
+ const now=Date.now(),id=String(coin.id),quotes=[];
+ const live=scannerUsdLive.get(id);
+ if(live&&now-live.receivedAt<10*60000)quotes.push({...live,source:"CoinGecko API USD"});
+ try{const m=typeof atlasChartMarketUsdObservation==="function"?atlasChartMarketUsdObservation(coin):null;
+   if(m?.price>0)quotes.push({price:Number(m.price),timestamp:Number(m.timestamp),source:String(m.source||"Market USD")});}catch(_){}
+ const bookPrice=book?.quotes?.[id];
+ if(book?.status==="ready"&&bookPrice?.usd>0){const t=Date.parse(String(bookPrice.timestamp||book.timestamp||""));quotes.push({price:Number(bookPrice.usd),timestamp:t,source:"CoinGecko Spot USD"})}
+ const sources=[];
+ try{sources.push(globalThis.AtlasMarketUniverse1000?.find?.(id))}catch(_){}
+ try{sources.push(state?.coins?.find?.(c=>String(c.id)===id))}catch(_){}
+ sources.push(coin);
+ for(const c of sources){if(String(c?.id||"")!==id||c?.priceUsd==null||!(Number(c.priceUsd)>0))continue;
+  const time=c.usdUpdatedAt||c.snapshotGeneratedAt||c.lastUpdated||c.timestamp||c.spotUpdatedAt;
+  const timestamp=typeof time==="number"?time:Date.parse(String(time||""));
+  quotes.push({price:Number(c.priceUsd),timestamp,source:"CoinGecko Market USD"});
+ }
+ quotes.sort((a,b)=>(Number.isFinite(b.timestamp)?b.timestamp:0)-(Number.isFinite(a.timestamp)?a.timestamp:0));
+ return quotes.find(q=>Number.isFinite(q.price)&&q.price>0)||null;
+}
+function scannerRequestLivePrices(datasets,context){
+ if(typeof fetch!=="function"||datasets.length!==5)return;
+ const ids=datasets.map(d=>String(d?.atlasCoin?.id||""));
+ if(ids.some(id=>!/^[a-z0-9-]{1,90}$/i.test(id))||new Set(ids).size!==5)return;
+ const key=ids.slice().sort().join(","),now=Date.now();
+ if(now-(scannerUsdChecked.get(key)||0)<60000)return;
+ scannerUsdChecked.set(key,now);
+ const url="https://api.coingecko.com/api/v3/simple/price?ids="+encodeURIComponent(key)+"&vs_currencies=usd&include_last_updated_at=true";
+ void fetch(url,{method:"GET",cache:"no-store",credentials:"omit",headers:{Accept:"application/json"}})
+ .then(r=>{if(!r.ok)throw Error("CoinGecko HTTP "+r.status);return r.json()})
+ .then(data=>{
+  const time=Date.now();let updated=false;
+  for(const id of ids){const d=data?.[id],p=d?.usd==null?NaN:Number(d.usd),stamp=Number(d?.last_updated_at||0)*1000;
+   if(!(Number.isFinite(p)&&p>0))continue;
+   scannerUsdLive.set(id,{price:p,timestamp:stamp>0&&stamp<=time+120000?stamp:time,receivedAt:time});updated=true;
+  }
+  if(updated&&scannerUsdVisible?.key===key&&scannerUsdVisible?.context===context&&
+     scannerUsdVisible?.preset===String(state?.dataBroker?.comparison?.preset||"")){
+    try{globalThis.atlasExternalChartTooltip?.(context)}catch(_){}
+  }
+ }).catch(()=>{});
+}
+function scannerUsdTooltip(original,args){
+ const context=args[0]||{},chart=context.chart;
+ const result=original.apply(this,args);
+ if(typeof document==="undefined")return result;
+ const root=document.getElementById("atlasChartTooltip");
+ if(!root||root.hidden)return result;
+ const ds=typeof atlasChartPriceDatasets==="function"?atlasChartPriceDatasets(chart):[];
+ if(ds.length!==5||new Set(ds.map(d=>String(d?.atlasCoin?.id||""))).size!==5)return result;
+ const rows=Array.from(root.querySelectorAll(".atlas-chart-tooltip-row"));
+ const matches=rows.map(row=>ds.map((d,i)=>coinRowMatch(row,d.atlasCoin)?i:-1).filter(i=>i>=0));
+ const count=new Map();for(const a of matches)if(a.length===1)count.set(a[0],(count.get(a[0])||0)+1);
+ let found=0,last=0,earliest=Infinity;
+ rows.forEach((row,i)=>{
+  const f=row.querySelector(".atlas-chart-tooltip-values strong");if(!f)return;
+  const a=matches[i],ix=a.length===1&&count.get(a[0])===1?a[0]:-1;
+  const q=ix>=0?scannerMarketPrice(ds[ix].atlasCoin,state?.dataBroker?.spotBook):null;
+  if(q){f.textContent=money(q.price);f.title=q.source+" · "+(Number.isFinite(q.timestamp)?new Date(q.timestamp).toLocaleString("fr-FR"):"date de cotation non précisée")+" · cours USD actuel, distinct de l'historique";
+    found++;if(Number.isFinite(q.timestamp)){last=Math.max(last,q.timestamp);earliest=Math.min(earliest,q.timestamp)}
+  }else{f.textContent="Actualisation USD…";f.title="Acquisition en cours auprès de CoinGecko USD";}
+ });
+ const title=root.querySelector(".atlas-chart-tooltip-date");
+ if(title)title.textContent="PRIX DU MARCHÉ USD · "+found+"/5"+
+   (last?" · relevé "+new Date(last).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):" · actualisation en cours")+
+   (earliest<Date.now()-15*60000?" · cotations différées":"");
+ root.dataset.displayCurrency="USD";root.dataset.priceSource="coingecko-market-usd";root.dataset.usdQuotesVerified=String(found);
+ const key=ds.map(d=>String(d.atlasCoin.id)).sort().join(",");
+ scannerUsdVisible={key,context,preset:String(state?.dataBroker?.comparison?.preset||"")};
+ scannerRequestLivePrices(ds,context);
+ return result;
+}
 function top5Tooltip(original,args){
   const context=args[0]||{},chart=context.chart,tooltip=context.tooltip;
   const datasets=typeof atlasChartPriceDatasets==="function"?atlasChartPriceDatasets(chart):[];
@@ -176,18 +252,18 @@ function usdTooltipSource(point,now=Date.now()){
     return Object.freeze({label:"PRIX COINGECKO USD · SNAPSHOT ANCIEN",source:"coingecko-stale"});
   return Object.freeze({label:"PRIX SNAPSHOT COINGECKO USD · "+new Date(at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}),source:"coingecko-usd-snapshot"});
 }
-function patchUsdLegend(){if(!usd()||typeof document==="undefined")return;let preset="";try{preset=String(state?.dataBroker?.comparison?.preset||"")}catch(_){}if(preset!=="volume")return;const root=document.getElementById("chartV2Legend");if(!root)return;root.querySelectorAll(".chart-v2-legend-item").forEach(item=>{const symbol=String(item.querySelector("b")?.textContent||"").trim().toUpperCase();let coin=null;try{coin=state?.coins?.find?.(row=>String(row?.symbol||"").toUpperCase()===symbol)||null}catch(_){}const value=Number(coin?.volume24hUsd);const small=item.querySelector("small");if(small&&Number.isFinite(value)&&value>=0)small.textContent=compactUsd(value)});root.dataset.displayCurrency="USD"}
-function patchUsdOverlay(layout="solo",chart=null){if(!usd()||typeof document==="undefined")return;const overlay=document.getElementById("atlasChartInsightOverlay"),title=document.getElementById("atlasChartInsightOverlayTitle"),series=document.getElementById("atlasChartInsightOverlaySeries"),summary=document.getElementById("atlasChartInsightOverlaySummary");if(!overlay)return;overlay.dataset.displayCurrency="USD";if(title){const mode=title.querySelector(".atlas-hud-mode");if(mode)mode.textContent=String(mode.textContent||"").replaceAll("PRIX EUR","PRIX USD").replaceAll("Prix EUR","Prix USD")}if(summary)summary.innerHTML=summary.innerHTML.replaceAll("CoinGecko EUR","CoinGecko USD").replaceAll("Binance EUR DIRECT","CoinGecko USD DIRECT").replace(/\bEUR\b/g,"USD");if(layout!=="comparison")return;let preset="";try{preset=String(state?.dataBroker?.comparison?.preset||"")}catch(_){}if(preset!=="volume")return;const rows=[];series?.querySelectorAll?.(".atlas-hud-coin")?.forEach(item=>{const symbol=String(item.querySelector("b")?.textContent||"").trim().toUpperCase();let coin=null;try{coin=state?.coins?.find?.(row=>String(row?.symbol||"").toUpperCase()===symbol)||null}catch(_){}const value=Number(coin?.volume24hUsd);if(Number.isFinite(value)&&value>=0){const em=item.querySelector("em");if(em)em.textContent=compactUsd(value);rows.push({symbol,value})}});rows.sort((a,b)=>b.value-a.value);const leader=summary?.querySelector?.(".atlas-hud-leader"),laggard=summary?.querySelector?.(".atlas-hud-laggard");if(leader&&rows.length)leader.textContent=`Volume supérieur ${rows[0].symbol} ${compactUsd(rows[0].value)}`;if(laggard&&rows.length>1){const row=rows[rows.length-1];laggard.textContent=`inférieur ${row.symbol} ${compactUsd(row.value)}`}patchUsdLegend()}
+function patchUsdLegend(){if(!usd()||typeof document==="undefined")return;let preset="";try{preset=String(state?.dataBroker?.comparison?.preset||"")}catch(_){}if(preset!=="volume")return;const root=document.getElementById("chartV2Legend");if(!root)return;root.querySelectorAll(".chart-v2-legend-item").forEach(item=>{const symbol=String(item.querySelector("b")?.textContent||"").trim().toUpperCase();let coin=null;try{coin=state?.coins?.find?.(row=>String(row?.symbol||"").toUpperCase()===symbol)||null}catch(_){}const value=Number(coin?.volume24hUsd);const small=item.querySelector("small");if(small)small.textContent=Number.isFinite(value)&&value>=0?compactUsd(value):"Volume USD en cours"});root.dataset.displayCurrency="USD"}
+function patchUsdOverlay(layout="solo",chart=null){if(!usd()||typeof document==="undefined")return;const overlay=document.getElementById("atlasChartInsightOverlay"),title=document.getElementById("atlasChartInsightOverlayTitle"),series=document.getElementById("atlasChartInsightOverlaySeries"),summary=document.getElementById("atlasChartInsightOverlaySummary");if(!overlay)return;overlay.dataset.displayCurrency="USD";if(title){const mode=title.querySelector(".atlas-hud-mode");if(mode)mode.textContent=String(mode.textContent||"").replaceAll("PRIX EUR","PRIX USD").replaceAll("Prix EUR","Prix USD")}if(summary)summary.dataset.priceDisplayCurrency="USD";if(layout!=="comparison")return;let preset="";try{preset=String(state?.dataBroker?.comparison?.preset||"")}catch(_){}if(preset!=="volume")return;const rows=[];series?.querySelectorAll?.(".atlas-hud-coin")?.forEach(item=>{const symbol=String(item.querySelector("b")?.textContent||"").trim().toUpperCase();let coin=null;try{coin=state?.coins?.find?.(row=>String(row?.symbol||"").toUpperCase()===symbol)||null}catch(_){}const value=Number(coin?.volume24hUsd);if(Number.isFinite(value)&&value>=0){const em=item.querySelector("em");if(em)em.textContent=compactUsd(value);rows.push({symbol,value})}});rows.sort((a,b)=>b.value-a.value);const leader=summary?.querySelector?.(".atlas-hud-leader"),laggard=summary?.querySelector?.(".atlas-hud-laggard");if(leader&&rows.length)leader.textContent=`Volume supérieur ${rows[0].symbol} ${compactUsd(rows[0].value)}`;if(laggard&&rows.length>1){const row=rows[rows.length-1];laggard.textContent=`inférieur ${row.symbol} ${compactUsd(row.value)}`}patchUsdLegend()}
 function install(){if(installed)return snapshot();
 wrap("atlasChartPreferredSourceFamily",o=>function(...a){return usd()&&!canonicalTop5History()?"coingecko":o.apply(this,a)});wrap("atlasComparisonPreferredSourceFamily",o=>function(...a){return usd()&&!canonicalTop5History()?"coingecko":o.apply(this,a)});
 wrap("atlasChartStorageKey",o=>function(c,d,f){return usd()&&!canonicalTop5History(d)?storage(c,d,f||"coingecko"):o.apply(this,arguments)});
 wrap("atlasExpectedChartContextKey",o=>function(ids,p){const d=p===undefined?(typeof state!=="undefined"?Number(state.chartPeriodDays||1):1):p;if(!usd()||canonicalTop5History(d))return o.apply(this,arguments);const x=ids===undefined?(typeof atlasComparisonIds==="function"?atlasComparisonIds():[]):ids;return context(x,d)});
-wrap("fetchCoinGeckoChartDirect",o=>async function(c,d,opt={}){return usd()&&!canonicalTop5History(d)?fetchUsd(c,d,opt):o.apply(this,arguments)});wrap("atlasFetchComparisonSeriesResilient",o=>async function(c,p,opt={}){return usd()&&!canonicalTop5History(p)?cmp(c,p,opt):o.apply(this,arguments)});wrap("atlasScannerFetchDirect",o=>async function(tx,c){return usd()&&!canonicalTop5History(tx?.period)?scan(tx,c):o.apply(this,arguments)});
+wrap("fetchCoinGeckoChartDirect",o=>async function(c,d,opt={}){return usd()&&!canonicalTop5History(d)?fetchUsd(c,d,opt):o.apply(this,arguments)});wrap("atlasFetchComparisonSeriesResilient",o=>async function(c,p,opt={}){return usd()&&!canonicalTop5History(p)?cmp(c,p,opt):o.apply(this,arguments)});wrap("atlasScannerFetchDirect",o=>async function(tx,c){if(!usd()||canonicalTop5History(tx?.period))return o.apply(this,arguments);const attempt=await scan(tx,c);if(attempt?.result?.series?.length||tx?.controller?.signal?.aborted)return attempt;return o.apply(this,arguments)});
 wrap("atlasChartAxisPriceLabel",o=>function(v,view="price"){return usd()&&view!=="base100"?money(v):o.apply(this,arguments)});wrap("atlasSetChartShellState",o=>function(canvas,mode,summary,...rest){const r=o.call(this,canvas,mode,canonicalTop5History()?summary:text(summary),...rest),shell=canvas?.closest?.(".chart-shell");if(shell)shell.dataset.displayCurrency=canonicalTop5History()?"CANONICAL":cur();return r});
 wrap("atlasRenderSingleCaption",o=>function(...a){const r=o.apply(this,a);if(usd()&&!canonicalTop5History()&&typeof document!=="undefined"){const n=document.getElementById("chartCaption"),t=n?.querySelector?.(".chart-caption-text");if(t)t.textContent=text(t.textContent);if(n)n.dataset.displayCurrency="USD"}return r});wrap("atlasChartOverlaySolo",o=>function(chart,p,opt={}){if(!usd())return o.apply(this,arguments);const view=typeof atlasChartV2EffectiveView==="function"&&atlasChartV2EffectiveView()==="base100"?"BASE 100":"PRIX USD";const r=withFmt(()=>o.call(this,chart,p,{...opt,viewLabel:opt?.viewLabel||view}));patchUsdOverlay("solo",chart);return r});wrap("atlasChartOverlayComparison",o=>function(chart,p,opt={}){const r=o.apply(this,arguments);if(usd()&&!canonicalTop5History(p))patchUsdOverlay("comparison",chart);return r});wrap("atlasChartV2RenderLegend",o=>function(...a){const r=o.apply(this,a);if(usd())patchUsdLegend();return r});wrap("atlasExternalChartTooltip",o=>function(...a){
  const verified=usd()?nativeExternalHistoricalUsd(a?.[0]):null;
  const parity=canonicalTop5History()&&!verified;
- if(usd()&&parity)return top5Tooltip.call(this,o,a);
+ if(usd()&&!verified&&a?.[0]?.chart?.$atlasMode==="comparison"&&Number(a?.[0]?.chart?.$atlasPeriod||state?.chartPeriodDays||1)===1&&["gainers","losers","volume"].includes(String(state?.dataBroker?.comparison?.preset||"")))return scannerUsdTooltip.call(this,o,a);if(usd()&&parity)return top5Tooltip.call(this,o,a);
  const r=parity?o.apply(this,a):withFmt(()=>o.apply(this,a));
  if(usd()&&typeof document!=="undefined"){
   const root=document.getElementById("atlasChartTooltip");
