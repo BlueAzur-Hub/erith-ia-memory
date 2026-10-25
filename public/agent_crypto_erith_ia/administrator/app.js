@@ -18990,6 +18990,8 @@ function classifyAsset(c) {
   const sym = String(c.symbol || "").toUpperCase();
   const rank = Number(c.rank || 999999);
   const meme = ["DOGE","SHIB","PEPE","BONK","WIF","FLOKI"].includes(sym) || /dog|shib|pepe|bonk|floki|meme/i.test(id);
+  // Distinct PulseChain token: do not classify it as the USD-pegged canonical DAI.
+  if (id === "dai-on-pulsechain") return "Actif spéculatif";
   if (id === "bitcoin" || id === "ethereum" || sym === "BTC" || sym === "ETH") return "Repère marché";
   if (["USDT","USDC","DAI","FDUSD","TUSD","USDE","USDS"].includes(sym)) return "Stablecoin";
   if (meme) return "Actif spéculatif";
