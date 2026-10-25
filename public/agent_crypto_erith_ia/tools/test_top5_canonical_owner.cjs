@@ -18,8 +18,8 @@ const market=[
   ["ripple","XRP",1.2909162994725298],
   ["solana","SOL",101.46876996639266]
 ];
-function setup({currency="USD",outdated=false,mismatch=false,preset="rank-5"}={}){
- const coins=market.map(([id,symbol,priceUsd])=>({id,symbol,name:symbol,priceUsd,
+function setup({currency="USD",outdated=false,mismatch=false,preset="rank-5",count=5}={}){
+ const coins=market.slice(0,count).map(([id,symbol,priceUsd])=>({id,symbol,name:symbol,priceUsd,
   usdUpdatedAt:outdated?"2026-10-20T00:00:00Z":observedAt}));
  // A mismatching universe ID must not be rescued by a second price on the chart dataset.
  if(mismatch){delete coins[0].priceUsd;delete coins[0].usdUpdatedAt;}
@@ -103,4 +103,34 @@ test("EUR display keeps original historical price path for scanner presets",()=>
   assert.match(node.innerHTML,/PRIX HISTORIQUE/,preset);
   assert.match(node.innerHTML,/90000 EUR/,preset);
  }
+});
+
+
+test("Top 3 USD uses exactly three Market USD quotes, never historical EUR",()=>{
+ const {node,run,chart,before}=setup({preset:"rank-3",count:3});
+ run();
+ assert.equal(node.dataset.top5UsdOwner,"canonical-app");
+ assert.equal(node.dataset.displayCurrency,"USD");
+ assert.equal(node.dataset.usdQuotesVerified,"3");
+ assert.equal((node.innerHTML.match(/<strong title=/g)||[]).length,3);
+ assert.match(node.innerHTML,/PRIX USD/);
+ assert.match(node.innerHTML,/80.?437/);
+ assert.doesNotMatch(node.innerHTML,/90000 EUR|PRIX HISTORIQUE/);
+ assert.equal(JSON.stringify(chart.data),before);
+});
+
+test("Top 3 EUR keeps the original historical quote path",()=>{
+ const {node,run}=setup({preset:"rank-3",currency:"EUR",count:3});
+ run();
+ assert.equal(node.dataset.top5UsdOwner,undefined);
+ assert.equal((node.innerHTML.match(/90000 EUR/g)||[]).length,3);
+});
+
+test("Top 3 graph is keyed using the same canonical currency-aware owner",()=>{
+ const start=app.indexOf("async function renderComparisonAnalystPanel(");
+ const end=app.indexOf("function atlasNormalizeSparkline(",start);
+ assert.ok(end>start);
+ const implementation=app.slice(start,end);
+ assert.match(implementation,/const chartKey = atlasExpectedChartContextKey\(ids, period\);/);
+ assert.doesNotMatch(implementation,/const chartKey = `comparison:${ids.join(",")}:${period}`;/);
 });

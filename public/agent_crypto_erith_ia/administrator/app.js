@@ -6874,7 +6874,7 @@ function atlasExternalChartTooltip(context) {
   const comparison = chart.$atlasMode === "comparison";
   const top5Usd = comparison
     && Number(chart.$atlasPeriod || state.chartPeriodDays || 1) === 1
-    && ["rank-5", "gainers", "losers", "volume"].includes(String(state.dataBroker?.comparison?.preset || ""))
+    && ["rank-3", "rank-5", "gainers", "losers", "volume"].includes(String(state.dataBroker?.comparison?.preset || ""))
     && String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "USD";
   let rows = comparison
     ? atlasComparisonTooltipRows(chart, targetX, point?.dataIndex)
@@ -12331,7 +12331,7 @@ async function renderComparisonAnalystPanel(options = {}) {
   const period = Number(state.chartPeriodDays || 1);
   const periodLabel = atlasChartPeriodLabel(period);
   const ids = coins.map(coin => coin.id);
-  const chartKey = `comparison:${ids.join(",")}:${period}`;
+  const chartKey = atlasExpectedChartContextKey(ids, period);
   const comparisonPreset = String(state.dataBroker?.comparison?.preset || "manual");
   const visibleComparisonIds = atlasComparisonChartIds(state.chartEngineV2?.realChart);
   const preservingVisibleComparison =
