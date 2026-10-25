@@ -36,6 +36,12 @@
     "XNFLX-USDC","XWDC-USDC",
     "XACN-USDT","XAXTI-USDT","XCOST-USDT","XDDOG-USDT","XGS-USDT","XGTLB-USDT","XHUT-USDT","XJPM-USDT",
   ]);
+  // Exact Bitget spot instruments whose recent start time is a trading RESUMPTION.
+  // Never turn the resumed quote into a new token launch date.
+  const RESUMED_SPOT_PAIRS=Object.freeze({
+    CUDISUSDT:Object.freeze({symbol:"CUDIS",category:"Jeton DePIN",history:"coté sur Bitget depuis juin 2025",date:"23/10/2026"}),
+    RLUSDUSDC:Object.freeze({symbol:"RLUSD",category:"Stablecoin Ripple USD",history:"lancé en décembre 2024",date:"23/10/2026"})
+  });
   const BITGET="https://api.bitget.com";
   const COINGECKO="https://api.coingecko.com/api/v3";
   const DISCOVERY_COOLDOWN_MS=15000;
@@ -916,8 +922,9 @@
     const tokenized=isDocumentedTokenized(spec);
     const mature=age!==null&&age>30;
     const historicOnly=spec.historicalOnly===true;
-    const statusTag=tokenized?"ACTION":listingClass(spec)==="review"?"À VÉRIF.":quotedVenue(spec)==="okx"?"OKX":mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
-    const identityTag=tokenized?"Action / ETF tokenisé · source OKX officielle · accès personnel non vérifié":
+    const resumed=quotedVenue(spec)==="bitget" && RESUMED_SPOT_PAIRS[upper(spec.discoverySymbol||spec.providerSymbol)]?.symbol===spec.symbol ? RESUMED_SPOT_PAIRS[upper(spec.discoverySymbol||spec.providerSymbol)] : null;
+    const statusTag=resumed?"REPRISE":tokenized?"ACTION":listingClass(spec)==="review"?"À VÉRIF.":quotedVenue(spec)==="okx"?"OKX":mature?(historicOnly?"ARCHIVE":"SUIVI"):(proof.status==="CONFIRMÉ"?"NEW":"?");
+    const identityTag=resumed?`${resumed.category} · reprise Spot Bitget ${resumed.date} · ${resumed.history}`:tokenized?"Action / ETF tokenisé · source OKX officielle · accès personnel non vérifié":
       quotedVenue(spec)==="okx"?`Instrument OKX repéré · ${positive(spec?.ticker?.lastPrice)!==null?"cours public observé":"cours non relevé"} · accès personnel non vérifié`:
       spec.symbol==="CT"?"Bitget Spot · provenance du prix, accès OKX non vérifié":
       mature?(historicOnly?"Historique · cotation non vérifiée":"Ancien listing · source Bitget vérifiée"):(proof.status==="CONFIRMÉ"?"Nouveau confirmé":"Candidat");
@@ -933,9 +940,9 @@
       data-crypto-id="${esc(spec.id)}"
       tabindex="0" role="button"
       aria-selected="${selected?"true":"false"}"
-      aria-label="${esc(`${spec.name} ${spec.symbol}. ${mature?"Listing suivi":"Nouveau listing"} ${quotedVenueLabel(spec)} ${spec.pair}. ${group.length} marché(s).`)}">
+      aria-label="${esc(`${spec.name} ${spec.symbol}. ${resumed?"Reprise Spot":mature?"Listing suivi":"Nouveau listing"} ${quotedVenueLabel(spec)} ${spec.pair}. ${group.length} marché(s).`)}">
       <td>${statusTag}</td>
-      <td><div class="coin-cell"><i class="market-identity-rail"></i>${logo}<div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">${esc(identityTag)} · ${esc(proof.ageBand)}${age!==null?` · ${age.toFixed(1)} j`:""}</span><br><small style="color:${evidence.needsReview?"#f4cc88":"#8cdbdc"}">${esc(evidence.label)}</small>${marketSummary}</div></div></td>
+      <td><div class="coin-cell"><i class="market-identity-rail"></i>${logo}<div><strong class="market-coin-name">${esc(spec.name)}</strong>${selected?'<span class="market-active-badge">ACTIF</span>':""}<br><small>${esc(spec.symbol)}</small><br><span class="asset-badge">${esc(identityTag)} · ${esc(resumed?"âge de reprise":proof.ageBand)}${age!==null?` · ${age.toFixed(1)} j`:""}</span><br><small style="color:${evidence.needsReview?"#f4cc88":"#8cdbdc"}">${esc(evidence.label)}</small>${marketSummary}</div></div></td>
       <td><div class="price-dual"><strong>${esc(price.primary)}</strong><small>${esc(price.small)}</small></div></td>
       <td class="${change===null?"":change>=0?"pos":"neg"}"><span class="market-move-pill">${esc(pct(change))}</span></td>
       <td>—</td>
@@ -1273,7 +1280,8 @@
     const evidence=spotEvidence(spec);
     if(spec.historicalOnly===true){note.textContent=`${spec.symbol} · ARCHIVE HISTORIQUE · source actuelle non vérifiée · ${spec.providerLabel} ${spec.pair} · aucun prix inventé`;return;}
     const group=allSpecs().filter(row=>listingIdentityKey(row)===listingIdentityKey(spec));
-    note.textContent=`${spec.symbol} · Marchés : ${listingMarketsLabel(group)} · ${isDocumentedTokenized(spec)?"ACTION TOKENISÉE DOCUMENTÉE · ":""}${evidence.label} · ${evidence.detail} · date/prix/volume ${proof.proofCount}/3 · ${identity} · listing ${spec.discoveryProvider} ${spec.discoverySymbol} · analyse ${spec.providerLabel} ${spec.pair} · ticker seul ≠ identité canonique`;
+    const resumed=quotedVenue(spec)==="bitget" ? RESUMED_SPOT_PAIRS[upper(spec.discoverySymbol||spec.providerSymbol)] : null;
+    note.textContent=`${spec.symbol}${resumed?` · REPRISE BITGET ${resumed.date} · ${resumed.history} (pas lancement de jeton)`:""} · Marchés : ${listingMarketsLabel(group)} · ${isDocumentedTokenized(spec)?"ACTION TOKENISÉE DOCUMENTÉE · ":""}${evidence.label} · ${evidence.detail} · date/prix/volume ${proof.proofCount}/3 · ${identity} · listing ${spec.discoveryProvider} ${spec.discoverySymbol} · analyse ${spec.providerLabel} ${spec.pair} · ticker seul ≠ identité canonique`;
   }
 
   function bindRows(){
@@ -1525,7 +1533,7 @@
     tab.type="button";
     tab.className="filter-btn";
     tab.textContent="Radar";
-    tab.title="Radar · Top 10/20/50/250, nouveaux listings Spot, BTC/CT PAPER";
+    tab.title="Radar · Candidats Market, veille Spot et études PAPER BTC/CT";
     tab.setAttribute("aria-label","Afficher Radar dans Market Snapshot");
     tab.setAttribute("aria-expanded","false");
     tab.setAttribute("aria-controls","atlasRadarMarketView");
