@@ -123,3 +123,22 @@ test("Top 3 EUR switch retains historical EUR presentation",()=>{
  assert.match(node.innerHTML,/PRIX HISTORIQUE/);
  assert.equal((node.innerHTML.match(/90000 EUR/g)||[]).length,3);
 });
+
+test("Top 3 USD comparison stores the SAME canonical key used by the overlay",()=>{
+ const start=app.indexOf("async function renderComparisonAnalystPanel(");
+ const stop=app.indexOf("\nfunction atlasNormalizeSparkline(",start);
+ assert.ok(start>0 && stop>start,"Real comparison owner must be present");
+ const section=app.slice(start,stop);
+ const expression=section.match(/const chartKey = ([^;\n]+);/);
+ assert.ok(expression,"Chart owner must have a context key");
+ assert.equal(expression[1],"atlasExpectedChartContextKey(ids, period)");
+ const actual=new Function("ids","period","atlasExpectedChartContextKey",`return (${expression[1]});`);
+ const ids=["bitcoin","ethereum","binancecoin"];
+ for(const currency of ["USD","EUR"]){
+  for(const preset of ["rank-3","rank-5","gainers","losers","volume"]){
+   const expected=(xs,p)=>`comparison:${xs.join(",")}:${p}`+
+    (currency==="USD"&&preset!=="rank-5"?":USD":"");
+   assert.equal(actual(ids,1,expected),expected(ids,1),preset+" "+currency);
+  }
+ }
+});

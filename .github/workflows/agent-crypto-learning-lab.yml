@@ -197,6 +197,14 @@ jobs:
                   assert '["rank-3", "rank-5", "gainers", "losers", "volume"].includes(' in after
                   assert 'node.dataset.top5UsdOwner = "canonical-app"' in after
                   assert "function atlasChartMarketUsdObservation(" in after
+              elif actual_blob=="764f1f137ee3be98f43941757343e27136995dd0" and baseline_blob in (
+                     "1fa3b0f47789928d8c2372e5b41bc8783f92eb6b",
+                     "0790d76bdd4179c2f2645f9d3a358079fdb936a4",
+                     "6d5b0c69f0121e06147d415a723493e134b162c0"):
+                  # 25-Oct canonical Top3 context: same key written and validated.
+                  assert after.count('const chartKey = atlasExpectedChartContextKey(ids, period);') >= 2
+                  assert 'async function renderComparisonAnalystPanel(' in after
+                  assert 'node.dataset.top5UsdOwner = "canonical-app"' in after
               else:
                   assert actual_blob=="da55cf27a8e1508db2caf6e813c20aafe2ffac9b", (
                       "Administrator app.js differs from protected baseline and exact reviewed repairs")
