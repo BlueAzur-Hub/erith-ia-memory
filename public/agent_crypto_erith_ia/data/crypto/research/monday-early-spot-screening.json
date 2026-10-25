@@ -1,0 +1,372 @@
+{
+  "schema": "erith.crypto.monday-early-market-watch.v1",
+  "record_kind": "RETROSPECTIVE_PUBLIC_OKX_SPOT_VOLUME_AND_IDEALIZED_PAPER_COMPARISON",
+  "analysis_date_utc": "2026-10-25",
+  "target_local_timezone": "Europe/Paris",
+  "next_target_local_date": "2026-10-26",
+  "target_local_intervals": [
+    "04:00–05:00",
+    "05:00–06:00",
+    "06:00–07:00"
+  ],
+  "comparison_local_mondays": [
+    "2026-09-28",
+    "2026-10-05",
+    "2026-10-12",
+    "2026-10-19"
+  ],
+  "comparison_utc_hours": [
+    2,
+    3,
+    4
+  ],
+  "target_monday_utc_hours": [
+    3,
+    4,
+    5
+  ],
+  "dst_warning": "Past Mondays had UTC+2 and Oct 26 Monday UTC+1. Compare same Paris local hour, not blindly same UTC hour.",
+  "source_universe": "30 non-equity-like OKX/USDC listed archives inspected; ten pilot pairs and one negative control documented with source blob SHAs",
+  "candidate_selection": "Descriptive demonstration, not exhaustive rank of globally most traded cryptocurrencies; does not include BTC, ETH, SOL without native corresponding hourly archive in this sample.",
+  "method": "For each Monday sum native 1H candle quote-volume index 7 over local 04–07 Paris. Missing archives are null (not zero). Nonzero slot counts indicate archived activity, not profitability.",
+  "paper_assumptions": {
+    "pairs": [
+      "LIT-USDC",
+      "CT-USDC",
+      "BASED-USDC",
+      "BOME-USDC"
+    ],
+    "entry": "First 1H bar open at 04:00 Europe/Paris",
+    "exit": "Third 1H bar close at 07:00 Europe/Paris",
+    "fee_each_side_fraction": 0.002,
+    "net_return_formula": "(exit_close/entry_open) * (1-0.002)/(1+0.002)-1",
+    "spread": "NOT_INCLUDED",
+    "slippage": "NOT_INCLUDED",
+    "historical_bid_ask": "NOT_AVAILABLE_ON_THOSE_TIMESTAMPS",
+    "account_permissions": "NOT_VERIFIED",
+    "execution": "NO_CONFIRMED_EXECUTION"
+  },
+  "risk": "Only four Mondays (CT three); results cannot reliably predict Oct 26 activity or profitable trades.",
+  "orders_enabled": false,
+  "real_orders": 0,
+  "capital_spent_usdc": 0,
+  "assets": [
+    {
+      "symbol": "LIT",
+      "pair": "LIT-USDC",
+      "exchange": "OKX_EEA_SPOT",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/lit-usdc.json",
+      "source_blob_sha": "cbf21a396abb81fd500ed7973d2d2d5a9976e220",
+      "monday_3h_volume_usdc": [
+        19809.0616251,
+        20728.5530041,
+        85285.8290041,
+        24861.6119293
+      ],
+      "covered_mondays": 4,
+      "positive_mondays": 4,
+      "observed_slots": 12,
+      "nonzero_slots": 12,
+      "per_paris_hour_nonzero": [
+        4,
+        4,
+        4
+      ],
+      "median_monday_3h_usdc": 22795.082466699998,
+      "largest_monday_share_pct": 56.598730833443,
+      "paper_fees_0_2pct_each_side_pct": [
+        0.282,
+        0.294,
+        3.309,
+        -0.669
+      ],
+      "negative_control": false
+    },
+    {
+      "symbol": "CT",
+      "pair": "CT-USDC",
+      "exchange": "OKX_EEA_SPOT",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/ct-usdc.json",
+      "source_blob_sha": "43d17b1a5e60556632998321245969af053642c5",
+      "monday_3h_volume_usdc": [
+        null,
+        466235.177055,
+        88166.848763,
+        75142.619652
+      ],
+      "covered_mondays": 3,
+      "positive_mondays": 3,
+      "observed_slots": 9,
+      "nonzero_slots": 9,
+      "per_paris_hour_nonzero": [
+        3,
+        3,
+        3
+      ],
+      "median_monday_3h_usdc": 88166.848763,
+      "largest_monday_share_pct": 74.05911247278136,
+      "paper_fees_0_2pct_each_side_pct": [
+        null,
+        -10.892,
+        1.326,
+        0.059
+      ],
+      "negative_control": false
+    },
+    {
+      "symbol": "BASED",
+      "pair": "BASED-USDC",
+      "exchange": "OKX_EEA_SPOT",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/based-usdc.json",
+      "source_blob_sha": "8dab77ad847f7c3ff6c688cb536559aefc283c2f",
+      "monday_3h_volume_usdc": [
+        2627.726634,
+        503.613934,
+        10516.716495,
+        6484.682346
+      ],
+      "covered_mondays": 4,
+      "positive_mondays": 4,
+      "observed_slots": 12,
+      "nonzero_slots": 10,
+      "per_paris_hour_nonzero": [
+        4,
+        3,
+        3
+      ],
+      "median_monday_3h_usdc": 4556.20449,
+      "largest_monday_share_pct": 52.236887794309204,
+      "paper_fees_0_2pct_each_side_pct": [
+        -2.041,
+        -0.399,
+        -1.278,
+        0.156
+      ],
+      "negative_control": false
+    },
+    {
+      "symbol": "CP",
+      "pair": "CP-USDC",
+      "exchange": "OKX_EEA_SPOT",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/cp-usdc.json",
+      "source_blob_sha": "1333271d2315981019c986628aed9e1174aade8e",
+      "monday_3h_volume_usdc": [
+        14941.89,
+        3382.85,
+        381.78,
+        1726.56
+      ],
+      "covered_mondays": 4,
+      "positive_mondays": 4,
+      "observed_slots": 12,
+      "nonzero_slots": 10,
+      "per_paris_hour_nonzero": [
+        3,
+        3,
+        4
+      ],
+      "median_monday_3h_usdc": 2554.705,
+      "largest_monday_share_pct": 73.12598002846366,
+      "paper_fees_0_2pct_each_side_pct": null,
+      "negative_control": false
+    },
+    {
+      "symbol": "CARDS",
+      "pair": "CARDS-USDC",
+      "exchange": "OKX_EEA_SPOT",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/cards-usdc.json",
+      "source_blob_sha": "7a2994b774d34fa6d3c7c7f1533aca81a81bfeed",
+      "monday_3h_volume_usdc": [
+        185.31,
+        2004.21,
+        7374.77,
+        70.69
+      ],
+      "covered_mondays": 4,
+      "positive_mondays": 4,
+      "observed_slots": 12,
+      "nonzero_slots": 10,
+      "per_paris_hour_nonzero": [
+        4,
+        2,
+        4
+      ],
+      "median_monday_3h_usdc": 1094.76,
+      "largest_monday_share_pct": 76.54162229708831,
+      "paper_fees_0_2pct_each_side_pct": null,
+      "negative_control": false
+    },
+    {
+      "symbol": "BOME",
+      "pair": "BOME-USDC",
+      "exchange": "OKX_EEA_SPOT",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/bome-usdc.json",
+      "source_blob_sha": "6131cb8608c563bd871f5a820d5af8f31a7034c3",
+      "monday_3h_volume_usdc": [
+        2495.7321469,
+        2627.9327843,
+        27227.6291356,
+        3814.6532698
+      ],
+      "covered_mondays": 4,
+      "positive_mondays": 4,
+      "observed_slots": 12,
+      "nonzero_slots": 9,
+      "per_paris_hour_nonzero": [
+        4,
+        2,
+        3
+      ],
+      "median_monday_3h_usdc": 3221.29302705,
+      "largest_monday_share_pct": 75.28526456721788,
+      "paper_fees_0_2pct_each_side_pct": [
+        -1.575,
+        -1.213,
+        -3.562,
+        -1.307
+      ],
+      "negative_control": false
+    },
+    {
+      "symbol": "DATA",
+      "pair": "DATA-USDC",
+      "exchange": "OKX_EEA_SPOT",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/data-usdc.json",
+      "source_blob_sha": "788394c9c0eaf73726202aebc9857d5c2c5d23de",
+      "monday_3h_volume_usdc": [
+        11795.07,
+        1212.44,
+        2737.92,
+        0
+      ],
+      "covered_mondays": 4,
+      "positive_mondays": 3,
+      "observed_slots": 12,
+      "nonzero_slots": 8,
+      "per_paris_hour_nonzero": [
+        3,
+        2,
+        3
+      ],
+      "median_monday_3h_usdc": 1975.18,
+      "largest_monday_share_pct": 74.91106943411516,
+      "paper_fees_0_2pct_each_side_pct": null,
+      "negative_control": false
+    },
+    {
+      "symbol": "AI",
+      "pair": "AI-USDC",
+      "exchange": "OKX_EEA_SPOT",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/ai-usdc.json",
+      "source_blob_sha": "04d7f83d8bc6f7591c048cbef1980beb79f8437f",
+      "monday_3h_volume_usdc": [
+        544.64,
+        592.82,
+        331.51,
+        11.5
+      ],
+      "covered_mondays": 4,
+      "positive_mondays": 4,
+      "observed_slots": 12,
+      "nonzero_slots": 9,
+      "per_paris_hour_nonzero": [
+        3,
+        3,
+        3
+      ],
+      "median_monday_3h_usdc": 438.075,
+      "largest_monday_share_pct": 40.042689146014446,
+      "paper_fees_0_2pct_each_side_pct": null,
+      "negative_control": false
+    },
+    {
+      "symbol": "KMNO",
+      "pair": "KMNO-USDC",
+      "exchange": "OKX_EEA_SPOT",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/kmno-usdc.json",
+      "source_blob_sha": "ac0caa6d2faed867993e53c6b8989b4c8b52508e",
+      "monday_3h_volume_usdc": [
+        236.98,
+        1015.344,
+        10.076,
+        258.777
+      ],
+      "covered_mondays": 4,
+      "positive_mondays": 4,
+      "observed_slots": 12,
+      "nonzero_slots": 5,
+      "per_paris_hour_nonzero": [
+        2,
+        2,
+        1
+      ],
+      "median_monday_3h_usdc": 247.87849999999997,
+      "largest_monday_share_pct": 66.747262152925,
+      "paper_fees_0_2pct_each_side_pct": null,
+      "negative_control": false
+    },
+    {
+      "symbol": "SAHARA",
+      "pair": "SAHARA-USDC",
+      "exchange": "OKX_EEA_SPOT",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/sahara-usdc.json",
+      "source_blob_sha": "bd64d507a2e9b6348ee07f7160d9e402cf247768",
+      "monday_3h_volume_usdc": [
+        5.974,
+        0,
+        52.941,
+        0
+      ],
+      "covered_mondays": 4,
+      "positive_mondays": 2,
+      "observed_slots": 12,
+      "nonzero_slots": 3,
+      "per_paris_hour_nonzero": [
+        0,
+        1,
+        2
+      ],
+      "median_monday_3h_usdc": 2.987,
+      "largest_monday_share_pct": 89.85996775014851,
+      "paper_fees_0_2pct_each_side_pct": null,
+      "negative_control": false
+    },
+    {
+      "symbol": "KAT",
+      "pair": "KAT-USDC",
+      "exchange": "OKX_EEA_SPOT",
+      "quote": "USDC",
+      "source_path": "public/agent_crypto_erith_ia/data/crypto/okx-hourly/spot-candles/kat-usdc.json",
+      "source_blob_sha": "f8a9b4a3627488d56a00f897b35ac6452b9f8f0a",
+      "monday_3h_volume_usdc": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "covered_mondays": 4,
+      "positive_mondays": 0,
+      "observed_slots": 12,
+      "nonzero_slots": 0,
+      "per_paris_hour_nonzero": [
+        0,
+        0,
+        0
+      ],
+      "median_monday_3h_usdc": 0,
+      "largest_monday_share_pct": null,
+      "paper_fees_0_2pct_each_side_pct": null,
+      "negative_control": true
+    }
+  ]
+}
