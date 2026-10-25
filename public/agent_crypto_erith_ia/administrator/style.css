@@ -16567,9 +16567,8 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
 
 #analyste .atlas-chart-tooltip-row {
   grid-template-columns:
-    96px
-    minmax(72px, 86px)
-    minmax(102px, 1fr) !important;
+    minmax(0, 1fr)
+    max-content !important;
   min-height: 44px !important;
   column-gap: 6px !important;
   row-gap: 0 !important;
@@ -16589,9 +16588,9 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
   flex-basis: 23px !important;
 }
 
-#analyste .atlas-chart-tooltip-color-bridge {
-  width: 100% !important;
-  height: 20px !important;
+#analyste .atlas-chart-tooltip-color-bridge,
+#analyste .atlas-chart-tooltip-freshness {
+  display: none !important;
 }
 
 #analyste .atlas-chart-tooltip-values {
@@ -16616,17 +16615,14 @@ html[data-atlas-mode="advanced"] .atlas-market-zone.atlas-graph-mode-focus
   }
 
   #analyste .atlas-chart-tooltip-row {
-    grid-template-columns:
-      92px
-      minmax(62px, 76px)
-      minmax(94px, 1fr) !important;
+    grid-template-columns: minmax(0, 1fr) max-content !important;
     gap: 5px !important;
   }
 }
 
 @media (max-width: 560px) {
   #analyste .atlas-chart-tooltip-row {
-    grid-template-columns: 88px minmax(60px, 72px) minmax(88px, 1fr) !important;
+    grid-template-columns: minmax(0, 1fr) max-content !important;
   }
 
   #analyste .atlas-chart-tooltip-values {
