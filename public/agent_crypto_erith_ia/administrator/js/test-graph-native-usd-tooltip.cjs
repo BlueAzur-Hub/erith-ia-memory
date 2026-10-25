@@ -177,3 +177,51 @@ test("Top 5 reads the fresh Market universe when state.coins is stale",()=>{
   assert.equal(s.tooltip.dataset.usdQuotesVerified,"4");
  }finally{cleanup()}
 });
+
+
+test("Top 3 USD 24h canonical Base100 matches the comparison engine key",()=>{
+ const fs=require("node:fs"),vm=require("node:vm");
+ const script=fs.readFileSync(require.resolve(source),"utf8");
+ function check(preset,currency,period=1){
+  const ids=["bitcoin","ethereum","binancecoin"];
+  const ctx={
+   state:{chartPeriodDays:period,dataBroker:{comparison:{preset,ids}}},
+   AgentCryptoQuoteCurrencyArchitecture:{snapshot:()=>({displayCurrency:currency})},
+   atlasComparisonIds:()=>ids,
+   atlasExpectedChartContextKey:(assets=ids,days=period)=>"comparison:"+assets.join(",")+":"+days,
+   atlasChartStorageKey:(coin,days,family)=>"EUR:"+coin.id+":"+family+":"+days,
+   atlasComparisonPreferredSourceFamily:()=>"binance",
+   atlasChartPreferredSourceFamily:()=>"binance",
+   atlasFetchComparisonSeriesResilient:async()=>({source:"original-comparison-history"}),
+   atlasGetStoredChartResult:()=>null,
+   atlasStoreChartResult:()=>{},
+   atlasRespectComparisonRequestSpacing:async()=>{},
+   atlasFetchJson:async()=>{throw Error("USD endpoint blocked in test");}
+  };
+  ctx.globalThis=ctx;
+  vm.createContext(ctx);
+  vm.runInContext(script,ctx);
+  ctx.AgentCryptoGraphNativeUsd406520.install();
+  return {
+   context:ctx.atlasExpectedChartContextKey(ids,period),
+   source:ctx.atlasComparisonPreferredSourceFamily(),
+   cache:ctx.atlasChartStorageKey({id:"bitcoin"},period,"binance"),
+   canonical:ctx.AgentCryptoGraphNativeUsd406520.canonicalTop5History(period)
+  };
+ }
+ const raw="comparison:bitcoin,ethereum,binancecoin:1";
+ const top3usd=check("rank-3","USD");
+ assert.equal(top3usd.context,raw);
+ assert.equal(top3usd.canonical,true);
+ assert.equal(top3usd.source,"binance");
+ assert.ok(top3usd.cache.startsWith("EUR:"));
+ const top3eur=check("rank-3","EUR");
+ assert.equal(top3eur.context,raw);
+ assert.equal(top3eur.canonical,false);
+ const top3week=check("rank-3","USD",7);
+ assert.equal(top3week.context,"comparison:bitcoin,ethereum,binancecoin:7:USD");
+ for(const preset of ["rank-5","gainers","losers","volume"]){
+  assert.equal(check(preset,"USD").context,raw,preset);
+  assert.equal(check(preset,"EUR").context,raw,preset);
+ }
+});
