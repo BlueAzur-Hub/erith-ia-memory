@@ -205,14 +205,6 @@ jobs:
                   assert after.count('const chartKey = atlasExpectedChartContextKey(ids, period);') >= 2
                   assert 'async function renderComparisonAnalystPanel(' in after
                   assert 'node.dataset.top5UsdOwner = "canonical-app"' in after
-              elif (baseline_blob=="764f1f137ee3be98f43941757343e27136995dd0"
-                    and actual_blob=="6fc95ce608bedc2db5da967677c8b7bb545d9b0c"):
-                  # Exact reviewed scanner-fidelity change; no general app.js exemption.
-                  assert 'atlasScannerPool(preset, period).slice(0, ATLAS_SCANNER_TARGET)' in after
-                  assert 'prevalidated.length !== ATLAS_SCANNER_TARGET' in after
-                  assert 'if (finalEntries.length === ATLAS_SCANNER_TARGET)' in after
-                  assert '!atlasChartNeedsRefresh(stored, tx.period)' in after
-                  assert 'node.dataset.top5UsdOwner = "canonical-app"' in after
               else:
                   assert actual_blob=="da55cf27a8e1508db2caf6e813c20aafe2ffac9b", (
                       "Administrator app.js differs from protected baseline and exact reviewed repairs")
