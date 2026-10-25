@@ -1,0 +1,81 @@
+{
+  "schema": "erith.okx-hype-public-book-daily.v1",
+  "date_utc": "2026-10-25",
+  "pair": "HYPE-USDC",
+  "quote": "USDC",
+  "source": "OKX_EEA_PUBLIC_REST",
+  "orders_enabled": false,
+  "real_orders": 0,
+  "paper_fills": 0,
+  "observations": [
+    {
+      "hour_utc": "2026-10-25T01Z",
+      "pair": "HYPE-USDC",
+      "base": "HYPE",
+      "quote": "USDC",
+      "instrument_type": "SPOT",
+      "observed_at_utc": "2026-10-25T01:14:28Z",
+      "status": "VERIFIED_PUBLIC_BOOK",
+      "book5": {
+        "source_at_utc": "2026-10-25T01:14:29Z",
+        "bids": [
+          [
+            "76.525",
+            "1.751"
+          ],
+          [
+            "76.519",
+            "7.3"
+          ],
+          [
+            "76.517",
+            "1.5187"
+          ],
+          [
+            "76.51",
+            "1.5768"
+          ],
+          [
+            "76.509",
+            "1.5187"
+          ]
+        ],
+        "asks": [
+          [
+            "76.526",
+            "7.0443"
+          ],
+          [
+            "76.532",
+            "1.5769"
+          ],
+          [
+            "76.536",
+            "1.5769"
+          ],
+          [
+            "76.539",
+            "1.5769"
+          ],
+          [
+            "76.54",
+            "7.8341"
+          ]
+        ],
+        "spread_bps": "0.13",
+        "market_fill_proven": false
+      },
+      "ticker": {
+        "source_at_utc": "2026-10-25T01:14:28Z",
+        "last": "76.52",
+        "bid": "76.525",
+        "ask": "76.526",
+        "volume24h_base": "207833.2362",
+        "volume24h_quote": "15735317.2211011"
+      },
+      "reason": null,
+      "at_utc": "2026-10-25T01:14:28Z",
+      "market_fill_proven": false
+    }
+  ]
+}
