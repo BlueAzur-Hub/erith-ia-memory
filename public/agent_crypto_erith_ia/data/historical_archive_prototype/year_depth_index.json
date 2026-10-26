@@ -20314,27 +20314,30 @@
       "at_least_24_consecutive_months": false,
       "contiguous_runs": [
         {
-          "first_month": "2026-04",
+          "first_month": "2026-01",
           "last_month": "2026-09",
-          "months": 6
+          "months": 9
         }
       ],
       "earliest_possible_price_unverified": true,
       "first_exchange_trade_known": false,
-      "first_verified_closed_month": "2026-04",
+      "first_verified_closed_month": "2026-01",
       "id": "superfarm",
       "last_verified_closed_month": "2026-09",
-      "longest_contiguous_months": 6,
-      "native_minutes": 263520,
+      "longest_contiguous_months": 9,
+      "native_minutes": 393120,
       "rank": 248,
       "symbol": "SUPER",
       "token_creation_date_known": false,
-      "verified_months": 6,
+      "verified_months": 9,
       "year_shards": [
         {
-          "first_month": "2026-04",
+          "first_month": "2026-01",
           "last_month": "2026-09",
           "months": [
+            "2026-01",
+            "2026-02",
+            "2026-03",
             "2026-04",
             "2026-05",
             "2026-06",
@@ -20392,5 +20395,5 @@
   "ranked": 250,
   "schema": "aerith.public.ohlcv.top250.verifiable-year-depth.v1",
   "source": "Verified Binance Spot monthly ZIP catalog",
-  "source_catalog_minutes": 249556320
+  "source_catalog_minutes": 249685920
 }
