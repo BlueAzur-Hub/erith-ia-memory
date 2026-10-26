@@ -5502,7 +5502,7 @@ const ATLAS_CHART_SELECTION_AUTO_RETRIES = 3;
 const ATLAS_CHART_SELECTION_RETRY_DELAYS_MS = [15000, 45000, 120000];
 
 const ATLAS_CHART_RULES = Object.freeze({
-  1: Object.freeze({ minPoints: 20, minCoverageHours: 20, refreshMs: ATLAS_CHART_BACKGROUND_REFRESH_MS, delayedMs: 6 * 60 * 60 * 1000, archiveMs: 7 * 24 * 60 * 60 * 1000 }),
+  1: Object.freeze({ minPoints: 20, minCoverageHours: 23.5, refreshMs: ATLAS_CHART_BACKGROUND_REFRESH_MS, delayedMs: 6 * 60 * 60 * 1000, archiveMs: 7 * 24 * 60 * 60 * 1000 }),
   7: Object.freeze({ minPoints: 40, minCoverageHours: 132, refreshMs: ATLAS_CHART_BACKGROUND_REFRESH_MS, delayedMs: 24 * 60 * 60 * 1000, archiveMs: 14 * 24 * 60 * 60 * 1000 }),
   30: Object.freeze({ minPoints: 100, minCoverageHours: 600, refreshMs: ATLAS_CHART_BACKGROUND_REFRESH_MS, delayedMs: 72 * 60 * 60 * 1000, archiveMs: 60 * 24 * 60 * 60 * 1000 }),
   60: Object.freeze({ minPoints: 120, minCoverageHours: 1200, refreshMs: 15 * 60 * 1000, delayedMs: 5 * 24 * 60 * 60 * 1000, archiveMs: 120 * 24 * 60 * 60 * 1000 }),
@@ -5844,6 +5844,18 @@ function atlasChartResultFingerprint(result) {
 function atlasChartNeedsRefresh(result, days) {
   if (!result) return true;
   const rules = atlasChartRules(days);
+  // A recently-written cache is NOT fresh if its actual final price is old
+  // or its 24h series is incomplete. Do not trust savedAt over market timestamps.
+  if (Number(days) === 1) {
+    const series = atlasSanitizeChartRows(result.series || []);
+    const first = Number(series[0]?.[0]);
+    const last = Number(series[series.length - 1]?.[0]);
+    const now = Date.now();
+    if (!Number.isFinite(first) || !Number.isFinite(last)
+        || first > now - 24 * 3600000 + 12 * 60000
+        || last < now - 12 * 60000 || last > now + 12 * 60000
+        || last - first < 23.5 * 3600000) return true;
+  }
   const savedAt = Number(result.savedAt || 0);
   if (savedAt && Date.now() - savedAt <= rules.refreshMs) return false;
   const freshness = result?.integrity?.metrics?.freshness;
@@ -15308,11 +15320,38 @@ function atlasScannerHistorySummary(entries) {
   ].filter(Boolean).join(" · ");
 }
 
+// A single clock belongs to all five 24h series. The price data (not the
+// cache-write time) must span that same clock window, with 5-minute API tolerance.
+function atlasScannerSeriesCoversWindow(result, tx) {
+  if (Number(tx?.period) !== 1 || !Number.isFinite(Number(tx?.windowEnd))) {
+    return { ok: true, reason: "other-period" };
+  }
+  const points = atlasSanitizeChartRows(result?.series || []);
+  const first = Number(points[0]?.[0]);
+  const last = Number(points[points.length - 1]?.[0]);
+  const end = Number(tx.windowEnd);
+  const start = end - 24 * 3600000;
+  const tolerance = 12 * 60000;
+  if (points.length < atlasChartRules(1).minPoints || !Number.isFinite(first)
+      || !Number.isFinite(last) || first > start + tolerance
+      || last < end - tolerance || last > Date.now() + tolerance) {
+    return { ok: false, reason: `24 h non couvertes · ${points.length} points · début ${Number.isFinite(first) ? new Date(first).toISOString() : "absent"} · fin ${Number.isFinite(last) ? new Date(last).toISOString() : "absente"}` };
+  }
+  return { ok: true, reason: "24h-covered", start, end };
+}
+
 function atlasScannerDecorateEntry(tx, coin, result, source) {
   const historyKind = atlasScannerHistoryKind(result, tx.period, source);
+  // Keep full original histories in storage. Only the in-memory chart view is
+  // cropped, so a 7-day or earlier cache can never stretch a 24h comparison.
+  const range = atlasScannerSeriesCoversWindow(result, tx);
+  const series = range.ok && Number(tx?.period) === 1 && Number.isFinite(range.start)
+    ? atlasSanitizeChartRows(result.series).filter(point =>
+        point[0] >= range.start - 12 * 60000 && point[0] <= range.end + 12 * 60000)
+    : result.series;
   return {
     coin,
-    result,
+    result: series === result.series ? result : { ...result, series },
     source,
     atlasMarketMetric: atlasScannerMarketMetric(tx.preset, coin, tx.period),
     atlasMarketMetricLabel: atlasScannerMarketMetricLabel(tx.preset, tx.period),
@@ -15359,7 +15398,7 @@ function atlasScannerSubsetIsCompatible(prepared, period) {
   );
 }
 
-function atlasScannerAligned(entries, period, candidateIds) {
+function atlasScannerAligned(entries, period, candidateIds, windowEnd = null) {
   const order = new Map((candidateIds || []).map((id, index) => [id, index]));
   const minimum = atlasChartRules(period).minPoints;
   const prepared = (Array.isArray(entries) ? entries : [])
@@ -15406,7 +15445,17 @@ function atlasScannerAligned(entries, period, candidateIds) {
       }
     };
     search(0, []);
-    if (exactResult) return exactResult;
+    if (exactResult) {
+      if (Number(period) === 1 && windowEnd !== null && Number.isFinite(Number(windowEnd))) {
+        const starts = exactResult.map(entry => Number(entry?.data?.[0]?.x));
+        const ends = exactResult.map(entry => Number(entry?.data?.[entry.data.length - 1]?.x));
+        const commonStart = Math.max(...starts);
+        const commonEnd = Math.min(...ends);
+        if (!Number.isFinite(commonStart) || !Number.isFinite(commonEnd)
+            || commonEnd - commonStart < 23.5 * 3600000) continue;
+      }
+      return exactResult;
+    }
   }
   return [];
 }
@@ -15487,7 +15536,8 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
   const prevalidated = atlasScannerAligned(
     finalEntries,
     tx.period,
-    tx.candidateIds
+    tx.candidateIds,
+          tx.windowEnd
   );
   // A partial result is acceptable only if every drawn series is a member of
   // the frozen Top 5 selection, in the same relative Market order.
@@ -15742,7 +15792,8 @@ async function atlasScannerRun(tx) {
       tx.cacheChecked += 1;
       const stored = atlasScannerStoredHistory(coin, tx.period);
       if (stored && Array.isArray(stored.series) && stored.series.length
-          && !atlasChartNeedsRefresh(stored, tx.period)) {
+          && !atlasChartNeedsRefresh(stored, tx.period)
+          && atlasScannerSeriesCoversWindow(stored, tx).ok) {
         accepted.push(
           atlasScannerDecorateEntry(
             tx,
@@ -15755,7 +15806,8 @@ async function atlasScannerRun(tx) {
         tx.validCount = atlasScannerAligned(
           accepted,
           tx.period,
-          tx.candidateIds
+          tx.candidateIds,
+          tx.windowEnd
         ).length;
         atlasScannerProgress(tx, coin.symbol);
         // Cache-heavy scans used to monopolize the browser event loop. Yield
@@ -15766,7 +15818,8 @@ async function atlasScannerRun(tx) {
           const cachedFinal = atlasScannerAligned(
             accepted,
             tx.period,
-            tx.candidateIds
+            tx.candidateIds,
+          tx.windowEnd
           );
           return atlasScannerCommit(tx, cachedFinal, rejected);
         }
@@ -15777,7 +15830,7 @@ async function atlasScannerRun(tx) {
               days: tx.period,
               prices: atlasNormalizeChartPayload({ prices: stored.series }),
               sourceMode: "browser-cache"
-            }).ok) {
+            }).ok && atlasScannerSeriesCoversWindow(stored, tx).ok) {
           archiveFallback.push(atlasScannerDecorateEntry(tx, coin, stored, "archive"));
         }
         networkQueue.push(coin);
@@ -15821,6 +15874,7 @@ async function atlasScannerRun(tx) {
           fetched?.result
           && Array.isArray(fetched.result.series)
           && fetched.result.series.length
+          && atlasScannerSeriesCoversWindow(fetched.result, tx).ok
         ) {
           const refreshed = atlasScannerDecorateEntry(
             tx, coin, fetched.result,
@@ -15833,14 +15887,16 @@ async function atlasScannerRun(tx) {
           rejected.push({
             id: coin.id,
             symbol: coin.symbol,
-            reason: String(fetched?.error?.message || "historique indisponible")
+            reason: String(fetched?.error?.message
+              || (fetched?.result ? atlasScannerSeriesCoversWindow(fetched.result, tx).reason : "historique indisponible"))
           });
         }
 
         const aligned = atlasScannerAligned(
           accepted,
           tx.period,
-          tx.candidateIds
+          tx.candidateIds,
+          tx.windowEnd
         );
         tx.validCount = Math.min(ATLAS_SCANNER_TARGET, aligned.length);
         atlasScannerProgress(tx, coin.symbol);
@@ -15871,7 +15927,8 @@ async function atlasScannerRun(tx) {
     const finalEntries = atlasScannerAligned(
       accepted,
       tx.period,
-      tx.candidateIds
+      tx.candidateIds,
+          tx.windowEnd
     );
 
     if (finalEntries.length > 0) {
@@ -15970,6 +16027,8 @@ function atlasScannerStart(preset = "gainers", limit = 5, options = {}) {
       id: ++atlasScannerSequence,
       preset,
       period,
+      // Every candidate is evaluated against the same acquisition clock.
+      windowEnd: Date.now(),
       universeSize: marketFrame.validatedAssets,
       marketFrameId: marketFrame.id,
       marketFrameFingerprint: marketFrame.fingerprint,
@@ -53954,6 +54013,9 @@ async function atlasScannerFetchDirect(tx, coin) {
       signal: tx.controller.signal,
       timeoutMs: 12000
     });
+    if (!atlasScannerSeriesCoversWindow(result, tx).ok) {
+      throw new Error(atlasScannerSeriesCoversWindow(result, tx).reason);
+    }
     atlasStoreChartResult(coin, tx.period, result, "coingecko");
     return { result, source: "direct", provider: "coingecko-browser" };
   } catch (error) {
@@ -53970,6 +54032,9 @@ async function atlasScannerFetchDirect(tx, coin) {
         timeoutMs: ATLAS_SCANNER_BRIDGE_FAST_TIMEOUT_MS,
         allowBinance: false
       });
+      if (!atlasScannerSeriesCoversWindow(result, tx).ok) {
+        throw new Error(atlasScannerSeriesCoversWindow(result, tx).reason);
+      }
       const provider = String(result?.bridgeHistory?.provider || "coingecko");
       atlasStoreChartResult(
         coin, tx.period, result,
@@ -53996,6 +54061,9 @@ async function atlasScannerFetchDirect(tx, coin) {
         signal: tx.controller.signal,
         timeoutMs: 12000
       });
+      if (!atlasScannerSeriesCoversWindow(result, tx).ok) {
+        throw new Error(atlasScannerSeriesCoversWindow(result, tx).reason);
+      }
       atlasStoreChartResult(coin, tx.period, result, "binance");
       return { result, source: "direct", provider: "binance-browser" };
     } catch (error) {

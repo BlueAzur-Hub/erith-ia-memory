@@ -224,6 +224,16 @@ jobs:
                   route=after[after.index("async function atlasScannerFetchDirect("):]
                   assert route.index("fetchCoinGeckoChartDirect(") < route.index("atlasFetchBridgeHistory(") < route.index("fetchBinanceChartDirectDynamic(")
                   assert "if (atlasScannerSafeExchangeSymbol(coin))" in route
+              elif (baseline_blob=="7c10818b10fb5b2efaa54eeef51d7208d67e2ca3"
+                    and actual_blob=="f2209dc946e30b239704d15c4b1d25a653bf08af"):
+                  # Exact, reviewed full 24h historical-window repair only.
+                  # All other app.js source transitions remain fail-closed.
+                  assert "minCoverageHours: 23.5" in after
+                  assert "function atlasScannerSeriesCoversWindow(" in after
+                  assert "windowEnd: Date.now()" in after
+                  assert "atlasScannerSeriesCoversWindow(stored, tx).ok" in after
+                  assert "atlasScannerSeriesCoversWindow(fetched.result, tx).ok" in after
+                  assert "function atlasMarketObservedChange24h(" in after
               else:
                   assert actual_blob=="da55cf27a8e1508db2caf6e813c20aafe2ffac9b", (
                       "Administrator app.js differs from protected baseline and exact reviewed repairs")
