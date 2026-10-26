@@ -213,6 +213,17 @@ jobs:
                   assert 'if (finalEntries.length === ATLAS_SCANNER_TARGET)' in after
                   assert '!atlasChartNeedsRefresh(stored, tx.period)' in after
                   assert 'node.dataset.top5UsdOwner = "canonical-app"' in after
+              elif (baseline_blob=="6fc95ce608bedc2db5da967677c8b7bb545d9b0c"
+                    and actual_blob=="7c10818b10fb5b2efaa54eeef51d7208d67e2ca3"):
+                  # 26-Oct P1/P2 reviewed exact transition only. Keep fail-closed
+                  # protection for any unreviewed app.js bytes or ancestry.
+                  assert "function atlasMarketObservedChange24h(" in after
+                  assert "atlasMarketUniverseCoins(limit)" in after
+                  assert "const unavailableIds = tx.candidateIds.filter(" in after
+                  assert "if (finalEntries.length > 0)" in after
+                  route=after[after.index("async function atlasScannerFetchDirect("):]
+                  assert route.index("fetchCoinGeckoChartDirect(") < route.index("atlasFetchBridgeHistory(") < route.index("fetchBinanceChartDirectDynamic(")
+                  assert "if (atlasScannerSafeExchangeSymbol(coin))" in route
               else:
                   assert actual_blob=="da55cf27a8e1508db2caf6e813c20aafe2ffac9b", (
                       "Administrator app.js differs from protected baseline and exact reviewed repairs")
