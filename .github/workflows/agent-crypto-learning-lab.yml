@@ -246,6 +246,17 @@ jobs:
                   assert "timeoutMs: 24000" in after
                   assert "atlasScannerSeriesCoversWindow(result, tx)" in after
                   assert "result.currency !== \"USD\" || result.quoteCurrency !== \"USD\"" in after
+              elif (baseline_blob=="c7a8905d956462c3944933558a110ca2742ac1eb"
+                    and actual_blob=="0f39ac0548eb0e046cfdc979f587623dd08ce261"):
+                  # Review: prefer newest complete native USD cache for ANY ranked asset.
+                  # Still fail closed on unreviewed Administrator source bytes.
+                  assert "function atlasScannerNativeUsdStored(coin, period, tx = null)" in after
+                  assert 'result.currency !== "USD" || result.quoteCurrency !== "USD"' in after
+                  assert "result.coinId !== coin.id" in after
+                  assert "atlasScannerSeriesCoversWindow(" in after
+                  assert "atlasChartNeedsRefresh(qualified, period)" in after
+                  assert "usable.sort((a, b)" in after
+                  assert "atlasScannerNativeUsdStored(coin, period, tx)" in after
               else:
                   assert actual_blob=="da55cf27a8e1508db2caf6e813c20aafe2ffac9b", (
                       "Administrator app.js differs from protected baseline and exact reviewed repairs")

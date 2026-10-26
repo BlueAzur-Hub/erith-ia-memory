@@ -15750,27 +15750,41 @@ function atlasScannerNativeUsdRequested(tx) {
 function atlasScannerNativeUsdKey(coin, period) {
   return globalThis.AgentCryptoGraphNativeUsd406520?.usdStorageKey?.(coin, period, "coingecko") || "";
 }
-function atlasScannerNativeUsdStored(coin, period) {
+function atlasScannerNativeUsdStored(coin, period, tx = null) {
   const key = atlasScannerNativeUsdKey(coin, period);
-  if (!key) return null;
-  const current = state.dataBroker?.comparison?.results?.[coin?.id];
+  if (!key || !coin?.id) return null;
+  const current = state.dataBroker?.comparison?.results?.[coin.id];
   const candidates = [
     current,
     state.chartCache?.[key]?.result,
     atlasReadLocalChartStore()?.[key]
-  ].filter(result => result && (result.currency === "USD" || result.quoteCurrency === "USD")
-    && Array.isArray(result.series) && result.series.length);
+  ];
+  const usable = [];
   for (const result of candidates) {
+    // Require both native USD markers and the exact asset identity.
+    if (!result || result.currency !== "USD" || result.quoteCurrency !== "USD"
+        || (result.coinId && result.coinId !== coin.id)
+        || !Array.isArray(result.series) || !result.series.length) continue;
     const series = atlasNormalizeChartPayload({ prices: result.series });
     const integrity = atlasValidateChartSeries({
       c: coin, days: period, prices: series, sourceMode: "browser-cache"
     });
-    if (integrity.ok) return {
+    if (!integrity.ok) continue;
+    const qualified = {
       ...result, series, integrity, currency: "USD", quoteCurrency: "USD",
-      sourceFamily: "coingecko", sourceMode: "browser-cache"
+      sourceFamily: "coingecko", sourceMode: "browser-cache", coinId: coin.id
     };
+    if (!atlasScannerSeriesCoversWindow(
+      qualified, tx || { period, windowEnd: Date.now() }
+    ).ok || atlasChartNeedsRefresh(qualified, period)) continue;
+    usable.push(qualified);
   }
-  return null;
+  // A previous comparison must not conceal a fresher full-window Solo cache.
+  usable.sort((a, b) =>
+    Number(b.integrity?.metrics?.lastTimestamp || b.series[b.series.length - 1]?.[0] || 0)
+    - Number(a.integrity?.metrics?.lastTimestamp || a.series[a.series.length - 1]?.[0] || 0)
+  );
+  return usable[0] || null;
 }
 function atlasScannerNativeUsdStore(coin, period, result) {
   const key = atlasScannerNativeUsdKey(coin, period);
@@ -15790,7 +15804,7 @@ function atlasScannerNativeUsdStore(coin, period, result) {
   atlasWriteLocalChartStore(local);
 }
 function atlasScannerStoredHistory(coin, period, tx = null) {
-  if (atlasScannerNativeUsdRequested(tx)) return atlasScannerNativeUsdStored(coin, period);
+  if (atlasScannerNativeUsdRequested(tx)) return atlasScannerNativeUsdStored(coin, period, tx);
   const current = state.dataBroker?.comparison?.results?.[coin?.id];
   const candidates = [
     current && Array.isArray(current.series) && current.series.length ? current : null,
