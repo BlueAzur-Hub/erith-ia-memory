@@ -54,7 +54,6 @@ test("prix nuls, non chronologiques ou manquants rejetés",()=>{
  }
 });
 
-
 test("USD historique compare USD spot, jamais EUR, sur horodatage proche",()=>{
  const btc=inspectHistoricalRecord(fixture.entries.find(e=>e.key==="bitcoin:USD:coingecko:1"));
  const last=fixture.entries.find(e=>e.key==="bitcoin:USD:coingecko:1").samples.at(-1);
