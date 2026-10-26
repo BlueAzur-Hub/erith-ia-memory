@@ -1,7 +1,7 @@
 # SEVEN HEAVEN — MÉMOIRE ACTIVE PARTAGÉE
 
 **FICHIER D'ENTRÉE UNIQUE pour la reprise inter-IA d'Agent-Crypto.**
-**Dernier état consigné : 26 octobre 2026, 17/17 tests Node réussis avec candidate de validation EUR/USD isolée ; aucun raccordement à la production.**
+**Dernier état consigné : 26 octobre 2026, étapes 1–6 documentées et vérifiées en isolation (46/46 tests Node), diff intégral des deux candidates vérifié ; AUCUN déploiement ni intégration Chart.js complète.**
 **Adresse canonique stable :** `coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_MEMOIRE_ACTIVE.md`
 **Responsabilité :** Aerith-7 / Seven Heaven et continuité Aerith-8, Aerith-9, autres sœurs habilitées.
 **Fonction :** index de reprise et journal de décision, non substitut aux sources ni mémoire automatique native du modèle.
@@ -78,6 +78,12 @@ Ce fichier est **un protocole documentaire** : aucune autre instance ne peut êt
 - **Consignes d'usage** : présence Aerith claire, calme, précise ; respecter le STOP ; ne pas faire attendre sans retour ; produire plutôt que répéter l'inventaire. Éviter l'abus de fichiers versionnés et de notes dispersées.
 
 ## 6 — Journal court de passation
+
+## 26 octobre 2026 — REPRISE CONTRÔLÉE DES ÉTAPES 1 À 6
+
+**Action effective de cette reprise :** les deux sources candidates ont été comparées octet pour octet après application d'un diff intégral reconstruit sur les sources originales ; `git apply --check`, `cmp` et `node --check` réussis. Un [rapport technique de passation](./REPRISE_TECHNIQUE_EUR_USD_ETAPES_1_A_6.md) regroupe les 6 étapes, les SHA, les tests et les limites. Le **rapport** est versé à la coordination GitHub ; les **candidates et les archives locales** ne sont pas encore transmises sous forme de fichiers GitHub. Ne pas annoncer de réparation en production. **Prochaine action :** déposer des artefacts candidats vérifiés hors runtime, puis recette intégrée en préproduction réelle.
+
+
 
 - **26/10/2026 — CLÔTURE DU FIL ET PASSATION EXPLICITE À AERITH-8 / AERITH-9 :** utilisateur demande la finalisation immédiate car la longueur maximale du fil est atteinte. **NE PAS RELANCER UN AUDIT GÉNÉRAL, NE PAS DEMANDER ENCORE `app.js` OU LE JSON FIREFOX.** Toutes les preuves et les plans sont liés plus haut. État final : 17/17 tests Node annoncés et reproduits en isolation ; source du validateur et sa candidate isolée ; **aucune intégration de cette candidate dans `administrator/app.js`**, donc aucun correctif graphique en production. Administrator 40.6.640 / Market Core 38.15.11 / IndexedDB préservés. Le plan complet est dans [PLAN_RACCORDEMENT_DEVISES.md](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/coordination/inter_ai_dialogues/agent_crypto/PLAN_RACCORDEMENT_DEVISES.md). **PROCHAINE ACTION UNIQUE :** créer une branche de travail non déployée et raccorder la qualification de devise aux 11 appels d'`atlasValidateChartSeries`, avec tests de cache/Bridge/Oracle/scanner, sans transformer les prix EUR en USD par simple changement de label ; ensuite 84 scénarios et recette Firefox avant toute fusion. Respecter la demande utilisateur de stabilité et d'une seule mémoire commune ; inscrire la suite dans ce même fichier et Notion. Cette clôture ne certifie aucune exécution de suite supplémentaire ni de test Firefox.
 
