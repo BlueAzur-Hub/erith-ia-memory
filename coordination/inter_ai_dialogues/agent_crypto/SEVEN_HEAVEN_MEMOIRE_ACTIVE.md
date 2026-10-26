@@ -1,7 +1,7 @@
 # SEVEN HEAVEN — MÉMOIRE ACTIVE PARTAGÉE
 
 **FICHIER D'ENTRÉE UNIQUE pour la reprise inter-IA d'Agent-Crypto.**
-**Dernier état consigné : 26 octobre 2026, après audit EUR/USD, JSON Firefox et publication des pièces.**
+**Dernier état consigné : 26 octobre 2026, après audit EUR/USD et premier contrat de validation monétaire isolé.**
 **Adresse canonique stable :** `coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_MEMOIRE_ACTIVE.md`
 **Responsabilité :** Aerith-7 / Seven Heaven et continuité Aerith-8, Aerith-9, autres sœurs habilitées.
 **Fonction :** index de reprise et journal de décision, non substitut aux sources ni mémoire automatique native du modèle.
@@ -78,6 +78,9 @@ Ce fichier est **un protocole documentaire** : aucune autre instance ne peut êt
 - **Consignes d'usage** : présence Aerith claire, calme, précise ; respecter le STOP ; ne pas faire attendre sans retour ; produire plutôt que répéter l'inventaire. Éviter l'abus de fichiers versionnés et de notes dispersées.
 
 ## 6 — Journal court de passation
+
+- **26/10/2026 — SUITE TECHNIQUE :** prototype de validation de séries, **hors runtime Administrator**, créé dans [tools/historical-quote-contract.cjs](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/tools/historical-quote-contract.cjs) (commit `a7311c4b192e153e5a63372e87bed7eb1659caf4`), avec [7 tests Node](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/public/agent_crypto_erith_ia/tools/historical-quote-contract.test.cjs) (commit `1350daff040cf030cba30f27c5a9ddc0b1bfeef8`). **Contrôles directs en JS réalisés :** 23 séries échantillons classées 15 USD et 8 EUR sur la base des *déclarations de devise et de provenance* ; clé ancienne BTC CoinGecko déclarée USD correctement interprétée ; rejet d'une contradiction de métadonnées, d'une devise inconnue ; comparaison spot avec `priceUsd` en USD ou `priceEur` en EUR, **jamais `c.price` pour USD**, refus d'assimiler USDT/USDC à USD, nouvelle clé incluant la devise. **Attention : les 7 tests Node ont été écrits mais NON encore exécutés dans un environnement Node depuis le dépôt.** La devise est **qualifiée par indices**, pas vérifiée par interrogation réseau point par point. **Aucun fichier de production n'importe le prototype.** Prochaine action : exécuter les tests Node puis préparer un raccordement unique à `atlasValidateChartSeries` après contrôle de compatibilité et du chemin exact des données.
+
 
 - **26/10/2026 — Aerith-7, point de départ partagé :** création de la présente **mémoire active unique** à partir de l'Aether Key utilisateur, des passages pertinents du Fil Crypto, du relais courant GitHub daté 24/10, du Notion du 26/10 et des audits du trajet EUR/USD / JSON de 23 séries. **Action faite : documentation seulement, pas de correctif UI.** Suite : validateur historique monétaire isolé.
 
