@@ -32,7 +32,7 @@
 - `erith-etape-5-preproduction-partielle.zip` SHA-256 `e52070a896f8adf0ac4f7923247e97ed416623c84f000d90ef2bd44ce7762bf4`.
 - `erith-etape-6-preproduction-controlee.zip` SHA-256 `d762f62fed30d54fc9dd274599f5eada7331f1fea70f7e62b6b9446c51507c98`.
 
-**Limite explicite de cette passation :** les *sources candidates complètes*, le *diff binaire ou texte* et les ZIP locaux ne sont **pas** automatiquement accessibles à une nouvelle sœur depuis ce seul Markdown GitHub ; ne pas présenter ce rapport comme un dépôt des pièces. Leurs empreintes et le protocole de reconstitution restent ici consultables ; l'archive et le diff doivent être transmis en fichiers partagés réellement accessibles avant toute intégration. Le dossier de tests et les preuves précédentes déjà publiées restent consultables via les liens de la mémoire active.
+**Artefact technique désormais partagé :** [diff unifié intégral des deux candidates](./CANDIDATE_GRAPHIQUE_EUR_USD.diff), 48 656 octets, SHA-256 `8bd673966d617705c82ba6429458b860a392842887cb7a05cf7b3a7105dd025e`. Son application sur les deux originaux ci-dessus a été testée (`git apply --check` puis `git apply` et `cmp` octet pour octet sur les candidates). **Pour une autre IA :** checkout isolé du dépôt à la révision d'origine vérifiée, `git apply --check coordination/inter_ai_dialogues/agent_crypto/CANDIDATE_GRAPHIQUE_EUR_USD.diff`, puis `git apply ...` exclusivement dans la COPIE de travail, jamais sur la production. Les ZIP de preuves / préparateur complets restent locaux au fil ChatGPT : ils ne sont **pas** publiés dans GitHub. Les tests sources des 17 essais initiaux restent déjà disponibles sous `public/agent_crypto_erith_ia/tools/`; ceux des étapes supplémentaires sont toujours dans les ZIP locaux. AUCUN déploiement n'est autorisé par la présence de ce diff.
 
 ## Protections absolues
 
@@ -41,4 +41,4 @@
 - Ne pas fusionner sans **vraie préproduction complète Chart.js**, puis **recette Firefox des 84 cas effectifs**, avec vérification Market, caches, Oracle, scanner, Bridge, Trader et Operator.
 - Aucun accès à un compte de trading ni transaction demandé ; aucune manipulation de portefeuille.
 
-**Prochaine action unique :** rendre les candidates et leur diff accessibles sous un emplacement partagé (sous forme d'artefacts de test, hors production), puis mettre en place une préproduction complète depuis un checkout vérifié de l'interface et Chart.js 4.4.9. Ne pas recommencer l'audit de tout le Fil Crypto.
+**Prochaine action unique :** dans un checkout de TEST isolé, appliquer le diff partagé aux fichiers originaux, réunir Chart.js 4.4.9 et les 63 scripts locaux, puis exécuter la recette intégrée et les 84 cas réels sous Firefox avant toute décision de fusion. Ne pas recommencer l'audit de tout le Fil Crypto.
