@@ -3,7 +3,7 @@ const test=require("node:test");
 const assert=require("node:assert/strict");
 const path=require("node:path");
 const fs=require("node:fs");
-const {seriesCurrencyEvidence,inspectHistoricalRecord,comparableSpot,proposedHistoryCacheKey}=require("./historical-quote-contract.cjs");
+const {seriesCurrencyEvidence,inspectHistoricalRecord,comparableSpot,proposedHistoryCacheKey,historicalSpotParity}=require("./historical-quote-contract.cjs");
 const fixture=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../../../coordination/inter_ai_dialogues/agent_crypto/PREUVE_FIREFOX_PRIX_HISTORIQUES_5_ACTIFS_20261026.json"),"utf8"));
 function sample(id,currency,days){return fixture.entries.map(inspectHistoricalRecord).find(x=>x.coinId===id&&x.currency===currency&&x.periodDays===days);}
 test("relevé Firefox: 23 séries classées sans interpréter toutes les anciennes clés comme EUR",()=>{
@@ -52,4 +52,28 @@ test("prix nuls, non chronologiques ou manquants rejetés",()=>{
   const record=inspectHistoricalRecord({coinId:"bitcoin",currencyInKey:"USD",periodDays:1,source:"CoinGecko market_chart USD",samples});
   assert.equal(record.usable,false);
  }
+});
+
+
+test("USD historique compare USD spot, jamais EUR, sur horodatage proche",()=>{
+ const btc=inspectHistoricalRecord(fixture.entries.find(e=>e.key==="bitcoin:USD:coingecko:1"));
+ const last=fixture.entries.find(e=>e.key==="bitcoin:USD:coingecko:1").samples.at(-1);
+ const coin={source:"CoinGecko",price:71366.61,priceEur:71366.61,priceUsd:80159.31,spotUpdatedAt:last.timeIso};
+ const result=historicalSpotParity(coin,btc,last.priceRaw,last.timeMs);
+ assert.equal(result.comparable,true);
+ assert.equal(result.spotField,"priceUsd");
+ assert.equal(result.warn,false);
+ assert.ok(result.gapPct<0.01);
+ assert.equal(historicalSpotParity({...coin,priceUsd:70000},btc,last.priceRaw,last.timeMs).warn,true);
+});
+test("comparaison refuse absence de devise prouvable, source tierce, spot distant ou indisponible",()=>{
+ const btc=inspectHistoricalRecord(fixture.entries.find(e=>e.key==="bitcoin:USD:coingecko:1"));
+ const last=fixture.entries.find(e=>e.key==="bitcoin:USD:coingecko:1").samples.at(-1);
+ const coin={source:"CoinGecko",priceEur:71366.61,priceUsd:80159.31,spotUpdatedAt:last.timeIso};
+ assert.equal(historicalSpotParity({...coin,source:"Binance"},btc,last.priceRaw,last.timeMs).comparable,false);
+ assert.equal(historicalSpotParity({...coin,spotUpdatedAt:"2025-01-01T00:00:00Z"},btc,last.priceRaw,last.timeMs).comparable,false);
+ assert.equal(historicalSpotParity({...coin,priceUsd:null},btc,last.priceRaw,last.timeMs).comparable,false);
+ const unqualified=sample("bitcoin","USD",1);
+ const copy={...unqualified,currencyEvidence:"metadata-or-key-declared"};
+ assert.equal(historicalSpotParity(coin,copy,last.priceRaw,last.timeMs).reason,"provenance-not-established");
 });
