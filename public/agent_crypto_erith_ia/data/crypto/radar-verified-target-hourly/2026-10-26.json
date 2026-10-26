@@ -1921,6 +1921,390 @@
       "paper_fills": 0,
       "account_access": false,
       "strategy_certified": false
+    },
+    {
+      "schema": "erith.radar.verified-target-hourly.v1",
+      "record_kind": "public_spot_observation_not_trading_signal",
+      "hour_utc": "2026-10-26T11Z",
+      "observed_at_utc": "2026-10-26T11:35:25Z",
+      "selection_source_date_utc": "2026-10-20",
+      "markets": [
+        {
+          "coin_id": "bedrock-token",
+          "symbol": "BR",
+          "venue": "Bitget",
+          "pair": "BRUSDT",
+          "quote": "USDT",
+          "type": "SPOT",
+          "platform": "binance-smart-chain",
+          "contract_address": "0xff7d6a96ae471bbcd7713af9cb1feeb16cf56b41",
+          "status": "OBSERVED",
+          "proof": {
+            "identity": {
+              "coin_id": "bedrock-token",
+              "platform": "binance-smart-chain",
+              "contract_address": "0xff7d6a96ae471bbcd7713af9cb1feeb16cf56b41",
+              "native_checked_at_utc": "2026-10-26T11:35:25Z",
+              "same_chain_and_address": true
+            },
+            "ticker": {
+              "source_at_utc": "2026-10-26T11:35:24Z",
+              "response_at_utc": "2026-10-26T11:35:25Z",
+              "last": "0.4708",
+              "volume24h_base": "409385.79",
+              "volume24h_quote": "196009.81"
+            },
+            "book": {
+              "source_at_utc": "2026-10-26T11:35:25Z",
+              "bid5": [
+                [
+                  "0.4707",
+                  "59.16"
+                ],
+                [
+                  "0.4706",
+                  "368.9"
+                ],
+                [
+                  "0.4703",
+                  "178.91"
+                ],
+                [
+                  "0.4702",
+                  "448.39"
+                ],
+                [
+                  "0.4701",
+                  "1283.84"
+                ]
+              ],
+              "ask5": [
+                [
+                  "0.4712",
+                  "78.89"
+                ],
+                [
+                  "0.4713",
+                  "1283.84"
+                ],
+                [
+                  "0.4715",
+                  "342.36"
+                ],
+                [
+                  "0.4717",
+                  "352.05"
+                ],
+                [
+                  "0.4718",
+                  "1283.84"
+                ]
+              ],
+              "best_bid": "0.4707",
+              "best_ask": "0.4712",
+              "spread_bps": "10.62",
+              "top5_bid_quote_depth": "1099.9585",
+              "top5_ask_quote_depth": "1575.4472",
+              "fill_proven": false
+            },
+            "closed_15m": [
+              {
+                "open_at_utc": "2026-10-26T10:30:00Z",
+                "open": "0.473",
+                "high": "0.473",
+                "low": "0.4647",
+                "close": "0.4659",
+                "volume_base": "859.44",
+                "volume_quote": "402.4484"
+              },
+              {
+                "open_at_utc": "2026-10-26T10:45:00Z",
+                "open": "0.4659",
+                "high": "0.4693",
+                "low": "0.4654",
+                "close": "0.467",
+                "volume_base": "2212.97",
+                "volume_quote": "1035.213059"
+              },
+              {
+                "open_at_utc": "2026-10-26T11:00:00Z",
+                "open": "0.467",
+                "high": "0.4689",
+                "low": "0.4661",
+                "close": "0.468",
+                "volume_base": "624.86",
+                "volume_quote": "292.170592"
+              },
+              {
+                "open_at_utc": "2026-10-26T11:15:00Z",
+                "open": "0.468",
+                "high": "0.4721",
+                "low": "0.468",
+                "close": "0.4711",
+                "volume_base": "838.34",
+                "volume_quote": "394.478552"
+              }
+            ],
+            "instrument_public_min_notional_usdt": "1",
+            "execution_proven": false,
+            "account_rules_verified": false
+          },
+          "unavailable_reason": null
+        },
+        {
+          "coin_id": "janction",
+          "symbol": "JCT",
+          "venue": "Bitget",
+          "pair": "JCTUSDT",
+          "quote": "USDT",
+          "type": "SPOT",
+          "platform": "binance-smart-chain",
+          "contract_address": "0xea37a8de1de2d9d10772eeb569e28bfa5cb17707",
+          "status": "OBSERVED",
+          "proof": {
+            "identity": {
+              "coin_id": "janction",
+              "platform": "binance-smart-chain",
+              "contract_address": "0xea37a8de1de2d9d10772eeb569e28bfa5cb17707",
+              "native_checked_at_utc": "2026-10-26T11:35:25Z",
+              "same_chain_and_address": true
+            },
+            "ticker": {
+              "source_at_utc": "2026-10-26T11:35:25Z",
+              "response_at_utc": "2026-10-26T11:35:26Z",
+              "last": "0.006127",
+              "volume24h_base": "893855767.9",
+              "volume24h_quote": "5122109.6"
+            },
+            "book": {
+              "source_at_utc": "2026-10-26T11:35:26Z",
+              "bid5": [
+                [
+                  "0.006125",
+                  "2270.7"
+                ],
+                [
+                  "0.006123",
+                  "45598.9"
+                ],
+                [
+                  "0.006121",
+                  "52355.6"
+                ],
+                [
+                  "0.006119",
+                  "13197.0"
+                ],
+                [
+                  "0.006118",
+                  "45598.9"
+                ]
+              ],
+              "ask5": [
+                [
+                  "0.00613",
+                  "2270.7"
+                ],
+                [
+                  "0.006131",
+                  "13197.0"
+                ],
+                [
+                  "0.006135",
+                  "13197.0"
+                ],
+                [
+                  "0.006139",
+                  "38474.5"
+                ],
+                [
+                  "0.00614",
+                  "58795.9"
+                ]
+              ],
+              "best_bid": "0.006125",
+              "best_ask": "0.00613",
+              "spread_bps": "8.16",
+              "top5_bid_quote_depth": "973.3052",
+              "top5_ask_quote_depth": "772.9956",
+              "fill_proven": false
+            },
+            "closed_15m": [
+              {
+                "open_at_utc": "2026-10-26T10:30:00Z",
+                "open": "0.006131",
+                "high": "0.006143",
+                "low": "0.006021",
+                "close": "0.006044",
+                "volume_base": "2011443.7",
+                "volume_quote": "12261.0876819"
+              },
+              {
+                "open_at_utc": "2026-10-26T10:45:00Z",
+                "open": "0.006044",
+                "high": "0.006115",
+                "low": "0.006005",
+                "close": "0.006102",
+                "volume_base": "2205702.6",
+                "volume_quote": "13373.771167"
+              },
+              {
+                "open_at_utc": "2026-10-26T11:00:00Z",
+                "open": "0.006102",
+                "high": "0.006221",
+                "low": "0.006064",
+                "close": "0.006097",
+                "volume_base": "2653863.4",
+                "volume_quote": "16261.3911675"
+              },
+              {
+                "open_at_utc": "2026-10-26T11:15:00Z",
+                "open": "0.006097",
+                "high": "0.006163",
+                "low": "0.006085",
+                "close": "0.006141",
+                "volume_base": "1456729.1",
+                "volume_quote": "8928.1744405"
+              }
+            ],
+            "instrument_public_min_notional_usdt": "1",
+            "execution_proven": false,
+            "account_rules_verified": false
+          },
+          "unavailable_reason": null
+        },
+        {
+          "coin_id": "beam-2",
+          "symbol": "BEAM",
+          "venue": "Bitget",
+          "pair": "BEAMUSDT",
+          "quote": "USDT",
+          "type": "SPOT",
+          "platform": "ethereum",
+          "contract_address": "0x62d0a8458ed7719fdaf978fe5929c6d342b0bfce",
+          "status": "OBSERVED",
+          "proof": {
+            "identity": {
+              "coin_id": "beam-2",
+              "platform": "ethereum",
+              "contract_address": "0x62d0a8458ed7719fdaf978fe5929c6d342b0bfce",
+              "native_checked_at_utc": "2026-10-26T11:35:25Z",
+              "same_chain_and_address": true
+            },
+            "ticker": {
+              "source_at_utc": "2026-10-26T11:35:25Z",
+              "response_at_utc": "2026-10-26T11:35:26Z",
+              "last": "0.003357",
+              "volume24h_base": "36866795.99",
+              "volume24h_quote": "114736.47"
+            },
+            "book": {
+              "source_at_utc": "2026-10-26T11:35:26Z",
+              "bid5": [
+                [
+                  "0.003344",
+                  "7005.29"
+                ],
+                [
+                  "0.00334",
+                  "199034.68"
+                ],
+                [
+                  "0.003337",
+                  "1658.0"
+                ],
+                [
+                  "0.003336",
+                  "312459.8"
+                ],
+                [
+                  "0.00333",
+                  "198797.27"
+                ]
+              ],
+              "ask5": [
+                [
+                  "0.003349",
+                  "199272.65"
+                ],
+                [
+                  "0.003352",
+                  "496683.65"
+                ],
+                [
+                  "0.003355",
+                  "496742.98"
+                ],
+                [
+                  "0.003358",
+                  "497040.18"
+                ],
+                [
+                  "0.003361",
+                  "199213.1"
+                ]
+              ],
+              "best_bid": "0.003344",
+              "best_ask": "0.003349",
+              "spread_bps": "14.94",
+              "top5_bid_quote_depth": "2398.0951",
+              "top5_ask_quote_depth": "6337.4366",
+              "fill_proven": false
+            },
+            "closed_15m": [
+              {
+                "open_at_utc": "2026-10-26T10:30:00Z",
+                "open": "0.003313",
+                "high": "0.003313",
+                "low": "0.003268",
+                "close": "0.003299",
+                "volume_base": "4131458.1",
+                "volume_quote": "13592.56415193"
+              },
+              {
+                "open_at_utc": "2026-10-26T10:45:00Z",
+                "open": "0.003299",
+                "high": "0.003318",
+                "low": "0.003291",
+                "close": "0.003301",
+                "volume_base": "327357.11",
+                "volume_quote": "1082.11753363"
+              },
+              {
+                "open_at_utc": "2026-10-26T11:00:00Z",
+                "open": "0.003301",
+                "high": "0.003303",
+                "low": "0.003264",
+                "close": "0.003284",
+                "volume_base": "109057.74",
+                "volume_quote": "358.29630183"
+              },
+              {
+                "open_at_utc": "2026-10-26T11:15:00Z",
+                "open": "0.003284",
+                "high": "0.003294",
+                "low": "0.003274",
+                "close": "0.003285",
+                "volume_base": "263918.23",
+                "volume_quote": "867.1687425"
+              }
+            ],
+            "instrument_public_min_notional_usdt": "1",
+            "execution_proven": false,
+            "account_rules_verified": false
+          },
+          "unavailable_reason": null
+        }
+      ],
+      "total_targets": 3,
+      "markets_observed": 3,
+      "max_http_requests": 15,
+      "no_backfill": true,
+      "orders_enabled": false,
+      "real_orders": 0,
+      "paper_fills": 0,
+      "account_access": false,
+      "strategy_certified": false
     }
   ],
   "orders_enabled": false,
