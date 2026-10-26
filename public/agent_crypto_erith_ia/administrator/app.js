@@ -15739,7 +15739,58 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
   }
 }
 
-function atlasScannerStoredHistory(coin, period) {
+// Reuse the same exact-ID native USD history already acquired by Solo.
+// Keep this storage isolated from the legacy EUR chart family.
+function atlasScannerNativeUsdRequested(tx) {
+  if (Number(tx?.period) !== 1) return false;
+  try {
+    return String(globalThis.AgentCryptoQuoteCurrencyArchitecture?.snapshot?.()?.displayCurrency || "EUR").toUpperCase() === "USD";
+  } catch { return false; }
+}
+function atlasScannerNativeUsdKey(coin, period) {
+  return globalThis.AgentCryptoGraphNativeUsd406520?.usdStorageKey?.(coin, period, "coingecko") || "";
+}
+function atlasScannerNativeUsdStored(coin, period) {
+  const key = atlasScannerNativeUsdKey(coin, period);
+  if (!key) return null;
+  const current = state.dataBroker?.comparison?.results?.[coin?.id];
+  const candidates = [
+    current,
+    state.chartCache?.[key]?.result,
+    atlasReadLocalChartStore()?.[key]
+  ].filter(result => result && (result.currency === "USD" || result.quoteCurrency === "USD")
+    && Array.isArray(result.series) && result.series.length);
+  for (const result of candidates) {
+    const series = atlasNormalizeChartPayload({ prices: result.series });
+    const integrity = atlasValidateChartSeries({
+      c: coin, days: period, prices: series, sourceMode: "browser-cache"
+    });
+    if (integrity.ok) return {
+      ...result, series, integrity, currency: "USD", quoteCurrency: "USD",
+      sourceFamily: "coingecko", sourceMode: "browser-cache"
+    };
+  }
+  return null;
+}
+function atlasScannerNativeUsdStore(coin, period, result) {
+  const key = atlasScannerNativeUsdKey(coin, period);
+  if (!key || result?.currency !== "USD" || result?.quoteCurrency !== "USD") {
+    throw new Error("Historique USD natif sans identité de devise vérifiable");
+  }
+  const savedAt = Date.now();
+  const record = { ...result, savedAt, sourceFamily: "coingecko",
+    originalSourceMode: result.sourceMode || "coingecko-direct",
+    coinId: coin.id, currency: "USD", quoteCurrency: "USD" };
+  state.chartCache[key] = { createdAt: savedAt, result: record };
+  const local = atlasReadLocalChartStore();
+  local[key] = record;
+  const keys = Object.keys(local).sort((a, b) =>
+    Number(local[b]?.savedAt || 0) - Number(local[a]?.savedAt || 0));
+  for (const stale of keys.slice(80)) delete local[stale];
+  atlasWriteLocalChartStore(local);
+}
+function atlasScannerStoredHistory(coin, period, tx = null) {
+  if (atlasScannerNativeUsdRequested(tx)) return atlasScannerNativeUsdStored(coin, period);
   const current = state.dataBroker?.comparison?.results?.[coin?.id];
   const candidates = [
     current && Array.isArray(current.series) && current.series.length ? current : null,
@@ -15790,7 +15841,7 @@ async function atlasScannerRun(tx) {
       if (!atlasScannerCurrent(tx)) return false;
 
       tx.cacheChecked += 1;
-      const stored = atlasScannerStoredHistory(coin, tx.period);
+      const stored = atlasScannerStoredHistory(coin, tx.period, tx);
       if (stored && Array.isArray(stored.series) && stored.series.length
           && !atlasChartNeedsRefresh(stored, tx.period)
           && atlasScannerSeriesCoversWindow(stored, tx).ok) {
@@ -54004,6 +54055,39 @@ async function atlasFetchBridgeHistory(c, days, options = {}) {
 async function atlasScannerFetchDirect(tx, coin) {
   await atlasRespectComparisonRequestSpacing(tx.controller.signal, tx.period);
   const errors = [];
+
+  // USD scanner 24h shares Solo's CoinGecko native USD endpoint and USD cache.
+  // Never mix a Bridge/Binance EUR series into this native USD basket.
+  if (atlasScannerNativeUsdRequested(tx)) {
+    const native = globalThis.AgentCryptoGraphNativeUsd406520;
+    if (typeof native?.fetchCoinGeckoUsd !== "function") {
+      return { result: null, source: "blocked",
+        error: new Error("Collecteur natif CoinGecko USD indisponible") };
+    }
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const result = await native.fetchCoinGeckoUsd(coin, tx.period, {
+          signal: tx.controller.signal,
+          timeoutMs: 24000
+        });
+        if (result.currency !== "USD" || result.quoteCurrency !== "USD") {
+          throw new Error("Série retournée sans preuve USD");
+        }
+        const coverage = atlasScannerSeriesCoversWindow(result, tx);
+        if (!coverage.ok) throw new Error(coverage.reason);
+        atlasScannerNativeUsdStore(coin, tx.period, result);
+        return { result, source: "direct", provider: "coingecko-usd-native-solo" };
+      } catch (error) {
+        if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+        errors.push(`CoinGecko USD tentative ${attempt + 1} : ${String(error?.message || error)}`);
+        if (attempt === 0) {
+          const rateLimited = /429|too many|rate limit/i.test(String(error?.message || error));
+          await atlasWaitWithSignal(rateLimited ? 5000 : 1500, tx.controller.signal);
+        }
+      }
+    }
+    return { result: null, source: "blocked", error: new Error(errors.join(" · ")) };
+  }
 
   // CoinGecko owns the worldwide Top 250 classification and coin IDs.
   // It is also the first historical source: a Binance Spot pair is NOT
