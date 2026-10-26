@@ -15208,13 +15208,20 @@ function atlasScannerCancel(reason = "annulé", options = {}) {
   atlasRenderComparisonControls();
 }
 
+// Market and scanner must use the same displayed 24 h quote, not a frozen Frame basket.
+function atlasMarketObservedChange24h(coin) {
+  const raw = atlasMarketSnapshotSurface(coin)?.change24h;
+  const value = raw === null || raw === undefined ? NaN : Number(raw);
+  return Number.isFinite(value) ? value : NaN;
+}
+
 function atlasScannerMarketBasis(period) {
   const days = Number(period || 1);
   if (days === 1) {
     return {
       key: "change24h",
       label: "Market 24 h",
-      metric(coin) { return Number(coin?.change24h); }
+      metric(coin) { return atlasMarketObservedChange24h(coin); }
     };
   }
   if (days === 7) {
@@ -15232,14 +15239,17 @@ function atlasScannerMarketBasis(period) {
 }
 
 function atlasScannerPool(preset, period) {
-  const frameCoins = atlasMarketFrameScannerCoins(preset, period);
-  if (Array.isArray(frameCoins)) return frameCoins;
-
+  // LIVE canonical selection: read the active Market universe, never stale Frame baskets.
+  // The Market Frame remains provenance, not the owner of candidate identities.
+  const limit = Math.min(ATLAS_MARKET_REQUESTED_ASSETS, atlasMarketUniverseLimit());
+  const query = String(els.searchInput?.value || "").trim();
   const basis = atlasScannerMarketBasis(period);
-  let rows = (state.coins || [])
+  let rows = atlasMarketUniverseCoins(limit)
     .filter(coin => Number.isFinite(Number(coin?.rank)))
-    .filter(coin => Number(coin.rank) >= 1 && Number(coin.rank) <= 250)
-    .filter(coin => Number.isFinite(Number(coin?.priceEur ?? coin?.price)));
+    .filter(coin => Number(coin.rank) >= 1 && Number(coin.rank) <= limit)
+    .filter(coin => atlasHasPositiveQuote(coin?.priceEur ?? coin?.price))
+    .filter(coin => matchAssetFilter(coin))
+    .filter(coin => !query || atlasMarketSearchMatches(coin, query));
 
   if (preset === "volume") {
     /*
@@ -15252,7 +15262,6 @@ function atlasScannerPool(preset, period) {
       .sort((a, b) => Number(b.volume24h) - Number(a.volume24h));
   } else {
     rows = rows
-      .filter(coin => classifyAsset(coin) !== "Stablecoin")
       .filter(coin => Number.isFinite(basis.metric(coin)))
       .sort((a, b) => preset === "losers"
         ? basis.metric(a) - basis.metric(b)
@@ -15375,46 +15384,31 @@ function atlasScannerAligned(entries, period, candidateIds) {
 
   if (!prepared.length) return [];
 
-  let bestPrepared = [];
-  let exactResult = null;
-
-  /*
-    Recherche lexicographique : le premier groupe compatible de cinq conserve
-    le meilleur rang Market possible. Les historiques incompatibles sont
-    écartés au lieu de rendre tout le panier inutilisable.
-  */
-  const search = (startIndex, chosen) => {
-    if (exactResult) return;
-    if (chosen.length > bestPrepared.length) bestPrepared = [...chosen];
-    if (chosen.length === ATLAS_SCANNER_TARGET) {
-      const aligned = atlasBuildAlignedComparisonEntries(
-        chosen.map(item => item.entry),
-        period
-      );
-      if (aligned.length === ATLAS_SCANNER_TARGET) exactResult = aligned;
-      return;
-    }
-
-    const remainingNeeded = ATLAS_SCANNER_TARGET - chosen.length;
-    for (
-      let index = startIndex;
-      index <= prepared.length - remainingNeeded && !exactResult;
-      index += 1
-    ) {
-      const candidate = prepared[index];
-      const next = [...chosen, candidate];
-      if (!atlasScannerSubsetIsCompatible(next, period)) continue;
-      search(index + 1, next);
-    }
-  };
-
-  search(0, []);
-  if (exactResult) return exactResult;
-
-  return bestPrepared.length
-    ? atlasBuildAlignedComparisonEntries(bestPrepared.map(item => item.entry), period)
-        .slice(0, ATLAS_SCANNER_TARGET)
-    : [];
+  // Try the full group first; if unavailable, keep the largest compatible subset
+  // in Market order. This MUST NOT add assets ranked below the five candidates.
+  for (let target = Math.min(ATLAS_SCANNER_TARGET, prepared.length); target >= 1; target--) {
+    let exactResult = null;
+    const search = (startIndex, chosen) => {
+      if (exactResult) return;
+      if (chosen.length === target) {
+        const aligned = atlasBuildAlignedComparisonEntries(
+          chosen.map(item => item.entry), period
+        );
+        if (aligned.length === target) exactResult = aligned;
+        return;
+      }
+      const remaining = target - chosen.length;
+      for (let index = startIndex; index <= prepared.length - remaining && !exactResult; index++) {
+        const candidate = prepared[index];
+        const next = [...chosen, candidate];
+        if (!atlasScannerSubsetIsCompatible(next, period)) continue;
+        search(index + 1, next);
+      }
+    };
+    search(0, []);
+    if (exactResult) return exactResult;
+  }
+  return [];
 }
 
 function atlasScannerProgress(tx, symbol = "") {
@@ -15495,10 +15489,16 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
     tx.period,
     tx.candidateIds
   );
-  if (prevalidated.length !== ATLAS_SCANNER_TARGET
-      || prevalidated.some((entry, index) => entry.coin?.id !== tx.candidateIds[index])) return false;
+  // A partial result is acceptable only if every drawn series is a member of
+  // the frozen Top 5 selection, in the same relative Market order.
+  const canonicalPositions = new Map(tx.candidateIds.map((id, index) => [id, index]));
+  const positions = prevalidated.map(entry => canonicalPositions.get(entry.coin?.id));
+  if (!prevalidated.length || prevalidated.length > ATLAS_SCANNER_TARGET
+      || positions.some((position, index) => position === undefined
+        || (index > 0 && position <= positions[index - 1]))) return false;
 
   const ids = prevalidated.map(entry => entry.coin.id);
+  const unavailableIds = tx.candidateIds.filter(id => !ids.includes(id));
   const availableCount = ids.length;
   const missingCount = Math.max(0, ATLAS_SCANNER_TARGET - availableCount);
   const canonicalKey = atlasExpectedChartContextKey(ids, tx.period);
@@ -15517,7 +15517,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
     ...state.dataBroker.comparison,
     ids: [...ids],
     pendingIds: [],
-    unavailableIds: [],
+    unavailableIds: [...unavailableIds],
     results: Object.fromEntries(
       prevalidated.map(entry => [entry.coin.id, entry.result])
     ),
@@ -15570,6 +15570,8 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
         displayedIds: [...ids],
         availableCount,
         targetCount: ATLAS_SCANNER_TARGET,
+        unavailableIds: [...unavailableIds],
+        requestedIds: [...tx.candidateIds],
         rejected: [...rejected]
       }
     },
@@ -15649,7 +15651,7 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
 
     atlasSetChartCaptionText(
       `${atlasScannerLabel(tx.preset)} · ${availableCount}/5 historiques compatibles`
-      + `${missingCount ? ` · ${missingCount} manquant${missingCount > 1 ? "s" : ""}` : ""}`
+      + `${missingCount ? ` · ${missingCount} manquant${missingCount > 1 ? "s" : ""} : ${unavailableIds.map(id => String(state.coins.find(coin => coin.id === id)?.symbol || id).toUpperCase()).join(", ")}` : ""}`
       + ` · classement ${tx.marketBasisLabel}`
       + ` · ${marketValues}`
       + ` · historiques ${historySummary || "CoinGecko"}`
@@ -15715,6 +15717,7 @@ async function atlasScannerRun(tx) {
     .map(id => state.coins.find(coin => coin.id === id))
     .filter(Boolean);
   const networkQueue = [];
+  const archiveFallback = [];
 
   try {
     tx.phase = "lecture des caches historiques";
@@ -15768,6 +15771,15 @@ async function atlasScannerRun(tx) {
           return atlasScannerCommit(tx, cachedFinal, rejected);
         }
       } else {
+        if (stored && Array.isArray(stored.series) && stored.series.length
+            && atlasValidateChartSeries({
+              c: coin,
+              days: tx.period,
+              prices: atlasNormalizeChartPayload({ prices: stored.series }),
+              sourceMode: "browser-cache"
+            }).ok) {
+          archiveFallback.push(atlasScannerDecorateEntry(tx, coin, stored, "archive"));
+        }
         networkQueue.push(coin);
       }
     }
@@ -15851,13 +15863,18 @@ async function atlasScannerRun(tx) {
 
     if (!atlasScannerCurrent(tx)) return false;
 
+    // Network failures never erase already held histories. Preserve validated
+    // delayed local archives as explicitly dated fallback, never label them direct.
+    for (const archived of archiveFallback) {
+      if (!accepted.some(entry => entry.coin?.id === archived.coin?.id)) accepted.push(archived);
+    }
     const finalEntries = atlasScannerAligned(
       accepted,
       tx.period,
       tx.candidateIds
     );
 
-    if (finalEntries.length === ATLAS_SCANNER_TARGET) {
+    if (finalEntries.length > 0) {
       return atlasScannerCommit(tx, finalEntries, rejected);
     }
 
@@ -19300,7 +19317,7 @@ globalThis.AtlasMarketRadarCategory=Object.freeze({set:atlasMarketRadarCategoryS
 function volCapRatio(c) { return c?.volume24h && c?.marketCap ? c.volume24h / c.marketCap : 0;
 }
 
-function sortAssets(rows) { const list = [...rows]; const key = state.sortKey || "rank-asc"; const byNumber = (getter, dir = "desc") => list.sort((a, b) => { const av = Number(getter(a)); const bv = Number(getter(b)); const aa = Number.isFinite(av) ? av : -Infinity; const bb = Number.isFinite(bv) ? bv : -Infinity; return dir === "asc" ? aa - bb : bb - aa; }); if (key === "score-desc") return byNumber(c => scoreCoin(c).score ?? -1, "desc"); if (key === "volume-desc") return byNumber(c => c.volume24h ?? -1, "desc"); if (key === "change24-desc") return byNumber(c => c.change24h ?? -Infinity, "desc"); if (key === "change24-asc") return byNumber(c => c.change24h ?? Infinity, "asc"); if (key === "ratio-desc") return byNumber(c => volCapRatio(c), "desc"); return byNumber(c => c.rank ?? 999999, "asc");
+function sortAssets(rows) { const list = [...rows]; const key = state.sortKey || "rank-asc"; const byNumber = (getter, dir = "desc") => list.sort((a, b) => { const av = Number(getter(a)); const bv = Number(getter(b)); const aa = Number.isFinite(av) ? av : -Infinity; const bb = Number.isFinite(bv) ? bv : -Infinity; return dir === "asc" ? aa - bb : bb - aa; }); if (key === "score-desc") return byNumber(c => scoreCoin(c).score ?? -1, "desc"); if (key === "volume-desc") return byNumber(c => c.volume24h ?? -1, "desc"); if (key === "change24-desc") return byNumber(c => atlasMarketObservedChange24h(c), "desc"); if (key === "change24-asc") return byNumber(c => atlasMarketObservedChange24h(c), "asc"); if (key === "ratio-desc") return byNumber(c => volCapRatio(c), "desc"); return byNumber(c => c.rank ?? 999999, "asc");
 }
 
 function findCoinByQuery(query) { const q = normalizeSymbol(query); if (!q) return null; return state.coins.find(c => String(c.symbol || "").toUpperCase() === q || String(c.id || "").toUpperCase() === q || String(c.name || "").toUpperCase() === q ) || null;
@@ -53929,46 +53946,9 @@ async function atlasScannerFetchDirect(tx, coin) {
   await atlasRespectComparisonRequestSpacing(tx.controller.signal, tx.period);
   const errors = [];
 
-  /*
-    Le Bridge est appelé en chemin CoinGecko rapide pour les scanners.
-    L’ancien allow_binance=1 pouvait dépasser le timeout frontal avant
-    d’atteindre son repli CoinGecko, surtout sur les petites capitalisations.
-  */
-  try {
-    const result = await atlasFetchBridgeHistory(coin, tx.period, {
-      signal: tx.controller.signal,
-      timeoutMs: ATLAS_SCANNER_BRIDGE_FAST_TIMEOUT_MS,
-      allowBinance: false
-    });
-    const provider = String(result?.bridgeHistory?.provider || "coingecko");
-    atlasStoreChartResult(
-      coin,
-      tx.period,
-      result,
-      provider === "binance" ? "binance" : "coingecko"
-    );
-    return {
-      result,
-      source: result?.bridgeHistory?.cache ? "cache" : "direct",
-      provider: `bridge-${provider}`
-    };
-  } catch (error) {
-    if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
-    errors.push(`Bridge : ${String(error?.message || error || "indisponible")}`);
-  }
-
-  try {
-    const result = await fetchBinanceChartDirectDynamic(coin, tx.period, {
-      signal: tx.controller.signal,
-      timeoutMs: 12000
-    });
-    atlasStoreChartResult(coin, tx.period, result, "binance");
-    return { result, source: "direct", provider: "binance-browser" };
-  } catch (error) {
-    if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
-    errors.push(`Binance navigateur : ${String(error?.message || error || "indisponible")}`);
-  }
-
+  // CoinGecko owns the worldwide Top 250 classification and coin IDs.
+  // It is also the first historical source: a Binance Spot pair is NOT
+  // required for an asset to be selected or charted.
   try {
     const result = await fetchCoinGeckoChartDirect(coin, tx.period, {
       signal: tx.controller.signal,
@@ -53978,16 +53958,62 @@ async function atlasScannerFetchDirect(tx, coin) {
     return { result, source: "direct", provider: "coingecko-browser" };
   } catch (error) {
     if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
-    if (/429|too many/i.test(String(error?.message || error || ""))) {
-      await atlasWaitWithSignal(1200, tx.controller.signal).catch(() => {});
-    }
     errors.push(`CoinGecko navigateur : ${String(error?.message || error || "indisponible")}`);
-    return {
-      result: null,
-      source: "blocked",
-      error: new Error(errors.join(" · "))
-    };
   }
+
+  // Bridge may bypass browser CORS/rate limiting, and still uses the exact
+  // CoinGecko ID when no matching Binance market exists.
+  if (atlasDeviceComputeAllowed() && atlasHistoryBridgeCanTry()) {
+    try {
+      const result = await atlasFetchBridgeHistory(coin, tx.period, {
+        signal: tx.controller.signal,
+        timeoutMs: ATLAS_SCANNER_BRIDGE_FAST_TIMEOUT_MS,
+        allowBinance: false
+      });
+      const provider = String(result?.bridgeHistory?.provider || "coingecko");
+      atlasStoreChartResult(
+        coin, tx.period, result,
+        provider === "binance" ? "binance" : "coingecko"
+      );
+      return {
+        result,
+        source: result?.bridgeHistory?.cache ? "cache" : "direct",
+        provider: `bridge-${provider}`
+      };
+    } catch (error) {
+      if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+      errors.push(`Bridge : ${String(error?.message || error || "indisponible")}`);
+    }
+  } else {
+    errors.push("Bridge : local indisponible ou en pause");
+  }
+
+  // Binance is strictly an optional historical source, NEVER a market
+  // selection owner. Skip ambiguous or unavailable pair identifiers.
+  if (atlasScannerSafeExchangeSymbol(coin)) {
+    try {
+      const result = await fetchBinanceChartDirectDynamic(coin, tx.period, {
+        signal: tx.controller.signal,
+        timeoutMs: 12000
+      });
+      atlasStoreChartResult(coin, tx.period, result, "binance");
+      return { result, source: "direct", provider: "binance-browser" };
+    } catch (error) {
+      if (atlasComparisonAbortError(error) || tx.controller.signal.aborted) throw error;
+      errors.push(`Binance navigateur : ${String(error?.message || error || "indisponible")}`);
+    }
+  } else {
+    errors.push("Binance : paire non validée pour cet actif (aucune substitution)");
+  }
+
+  if (errors.some(message => /429|too many/i.test(message))) {
+    await atlasWaitWithSignal(1200, tx.controller.signal).catch(() => {});
+  }
+  return {
+    result: null,
+    source: "blocked",
+    error: new Error(errors.join(" · "))
+  };
 }
 
 const ATLAS_SCANNER_COLLECTOR_SCHEMA = "atlas_scanner_live_snapshot_v1";
