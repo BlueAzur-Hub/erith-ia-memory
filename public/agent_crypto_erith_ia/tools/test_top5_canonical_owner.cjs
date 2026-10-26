@@ -181,8 +181,8 @@ test("Scanner refuses incomplete/wrong-order graph and refreshes dated caches",(
  const end=app.indexOf("\nfunction atlasScannerStoredHistory(",begin);
  assert.ok(begin>0 && end>begin);
  const commit=app.slice(begin,end);
- assert.match(commit,/prevalidated\.length !== ATLAS_SCANNER_TARGET/);
- assert.match(commit,/entry\.coin\?\.id !== tx\.candidateIds\[index\]/);
+ assert.match(commit,/prevalidated\.length > ATLAS_SCANNER_TARGET/);
+ assert.match(commit,/canonicalPositions\.get\(entry\.coin\?\.id\)/);
  const runStart=app.indexOf("async function atlasScannerRun(");
  const runEnd=app.indexOf("\nfunction atlasScannerStart(",runStart);
  assert.ok(runStart>0 && runEnd>runStart);
@@ -190,7 +190,33 @@ test("Scanner refuses incomplete/wrong-order graph and refreshes dated caches",(
  assert.match(run,/!atlasChartNeedsRefresh\(stored, tx\.period\)/);
  assert.match(run,/const queued = new Set\(networkQueue\.map\(coin => coin\.id\)\)/);
  assert.match(run,/if \(existing >= 0\) accepted\[existing\] = refreshed/);
- assert.match(run,/if \(finalEntries\.length === ATLAS_SCANNER_TARGET\)/);
- assert.doesNotMatch(run,/if \(finalEntries\.length >= 1\)/);
+ assert.match(run,/if \(finalEntries\.length > 0\)/);
+ assert.match(run,/archiveFallback/);
  assert.match(run,/Séries non affichées/);
+});
+
+test("P1 Market current winners own the scanner, not stale Frame baskets",()=>{
+ const start=app.indexOf("function atlasScannerPool(");
+ const end=app.indexOf("\nfunction atlasScannerMarketMetric(",start);
+ assert.ok(start>0&&end>start);
+ const pool=app.slice(start,end);
+ assert.match(pool,/atlasMarketUniverseCoins\(limit\)/);
+ assert.match(pool,/atlasScannerMarketBasis\(period\)/);
+ const basis=app.slice(app.indexOf("function atlasScannerMarketBasis("),start);
+ assert.match(basis,/atlasMarketObservedChange24h/);
+ assert.doesNotMatch(pool,/atlasMarketFrameScannerCoins\(preset, period\)/);
+ const market=app.slice(app.indexOf("function sortAssets("),app.indexOf("\nfunction findCoinByQuery("));
+ assert.match(market,/change24-desc.*atlasMarketObservedChange24h/);
+});
+test("P2 CoinGecko exact-ID is first and Binance is optional when safe",()=>{
+ const start=app.indexOf("async function atlasScannerFetchDirect(");
+ const end=app.indexOf("\nconst ATLAS_SCANNER_COLLECTOR_SCHEMA",start);
+ assert.ok(start>0&&end>start);
+ const route=app.slice(start,end);
+ const cg=route.indexOf("fetchCoinGeckoChartDirect(");
+ const bridge=route.indexOf("atlasFetchBridgeHistory(");
+ const binance=route.indexOf("fetchBinanceChartDirectDynamic(");
+ assert.ok(cg>0&&bridge>cg&&binance>bridge);
+ assert.match(route,/atlasScannerSafeExchangeSymbol\(coin\)/);
+ assert.match(route,/atlasStoreChartResult/);
 });
