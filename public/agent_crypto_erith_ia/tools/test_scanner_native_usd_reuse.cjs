@@ -10,7 +10,7 @@ const extracted = (begin, end) => {
   assert.ok(i>=0 && j>i, "Missing scanned code boundary");
   return app.slice(i,j);
 };
-const helpers = extracted("function atlasScannerNativeUsdRequested(", "\nfunction atlasScannerStoredHistory(");
+const helpers = extracted("function atlasScannerNativeUsdRequested(", "\nasync function atlasScannerYieldToUi(");
 const direct = extracted("async function atlasScannerFetchDirect(", "\nconst ATLAS_SCANNER_COLLECTOR_SCHEMA");
 function context({fetch,mode="USD"}={}) {
   const cache={};
