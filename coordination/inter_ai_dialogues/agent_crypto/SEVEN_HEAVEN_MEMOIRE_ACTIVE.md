@@ -67,7 +67,7 @@ Ce fichier est **un protocole documentaire** : aucune autre instance ne peut êt
 4. Étendre le même propriétaire aux modes Solo/Top3/Top5/Hausses/Baisses/Volumes et 7 périodes ; validation 84 cas + transitions/cache/erreur réseau ; Market/Lecture Technique.
 5. Protéger le checkpoint avant chaque livraison. Réaliser tests automatisés ciblés puis validation Firefox ; **publication `main`, Pages, ZIP et digest uniquement quand une version est effectivement demandée/validée et l'état de CI vérifié**. Ne pas créer des patches permanents indépendants pour chaque actif.
 
-**Étape IMMEDIATE après ce fichier :** construire et tester en isolation un **contrat/validateur de séries historiques conscient de la devise**, dérivé des comportements réels d'`app.js` et des 23 preuves Firefox. **Ne pas retoucher les pages UI d'abord.** Relier les points `rawPrice` à la série autoritative avant de supprimer les substitutions du tooltip. Documenter précisément les tests et leur résultat ; ne pas déclarer l'écran corrigé tant qu'il ne l'est pas.
+**Étape IMMÉDIATE après ce fichier :** le contrat monétaire et la candidate du validateur sont déjà testés (17/17 Node PASS) et référencés dans le journal. **Ne pas les reconstruire.** Passer à la préparation du raccordement en branche isolée des 11 sites d'appel d'`atlasValidateChartSeries`, en qualifiant réellement les séries (y compris cache/Bridge), puis vérifier toutes les non-régressions avant toute publication de production. Ne pas modifier le rendu UI ni présenter EUR comme USD.
 
 ## 5 — Discipline du dialogue entre IA et de passation
 
