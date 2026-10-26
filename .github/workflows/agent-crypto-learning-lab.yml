@@ -234,6 +234,18 @@ jobs:
                   assert "atlasScannerSeriesCoversWindow(stored, tx).ok" in after
                   assert "atlasScannerSeriesCoversWindow(fetched.result, tx).ok" in after
                   assert "function atlasMarketObservedChange24h(" in after
+              elif (baseline_blob=="f2209dc946e30b239704d15c4b1d25a653bf08af"
+                    and actual_blob=="c7a8905d956462c3944933558a110ca2742ac1eb"):
+                  # Exact 26-Oct BR Solo/native USD scanner acquisition correction.
+                  # All other app.js transitions remain strictly forbidden.
+                  assert "function atlasScannerNativeUsdRequested(" in after
+                  assert "function atlasScannerNativeUsdStored(" in after
+                  assert "function atlasScannerNativeUsdStore(" in after
+                  assert "atlasScannerStoredHistory(coin, tx.period, tx)" in after
+                  assert "native.fetchCoinGeckoUsd(coin, tx.period" in after
+                  assert "timeoutMs: 24000" in after
+                  assert "atlasScannerSeriesCoversWindow(result, tx)" in after
+                  assert "result.currency !== \"USD\" || result.quoteCurrency !== \"USD\"" in after
               else:
                   assert actual_blob=="da55cf27a8e1508db2caf6e813c20aafe2ffac9b", (
                       "Administrator app.js differs from protected baseline and exact reviewed repairs")
