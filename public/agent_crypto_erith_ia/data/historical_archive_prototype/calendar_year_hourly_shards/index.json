@@ -7,7 +7,7 @@
   "source_catalog_archived": 126,
   "materialized_assets": 126,
   "remaining_archived_assets": 0,
-  "year_shards": 954,
+  "year_shards": 955,
   "max_is_all_time": false,
   "first_exchange_trade_date_not_proven": true,
   "assets": [
@@ -49923,9 +49923,42 @@
       "symbol": "SUPER",
       "pair": "SUPERUSDT",
       "quote": "USDT",
-      "source_signature": "fdfad7dd6f14d91a251c53e0b25fdbb0b0784e93ae80d5d75e190bba3716f588",
-      "verified_months": 9,
+      "source_signature": "4f4a907f99822934e4faf1a302e791ad0bfed3cc5a72b461bd7818a9752dfed8",
+      "verified_months": 12,
       "shards": [
+        {
+          "file": "superfarm-2025-span0-d81b087110a8311acd4eb0e52f3af3ce5d90691761fab41a047b86e72fdb5db6.json.gz",
+          "year": 2025,
+          "span": 0,
+          "first_open_ms": 1759276800000,
+          "last_open_ms": 1767222000000,
+          "first_month": "2025-10",
+          "last_month": "2025-12",
+          "hourly_count": 2208,
+          "native_1m_count": 132480,
+          "source_months": [
+            {
+              "month": "2025-10",
+              "release": "crypto-spot-bulk-add-2025-10-1m-ae527384ddf0",
+              "source_zip_sha256": "c7d749dced534dc823ea1f0c117221165cc07fe15991ae71ef04a45a29f56604",
+              "native_1m_count": 44640
+            },
+            {
+              "month": "2025-11",
+              "release": "crypto-spot-bulk-add-2025-11-1m-ae527384ddf0",
+              "source_zip_sha256": "27e5cf30dd2be9c4db18fefca44f667f0c10c15b05b8a417eeae855b2b7afdf7",
+              "native_1m_count": 43200
+            },
+            {
+              "month": "2025-12",
+              "release": "crypto-spot-bulk-add-2025-12-1m-ae527384ddf0",
+              "source_zip_sha256": "dc6d0e93c0390624f8885b2332f55bd76e08f729d0a048fbfe5a51a5ffe010af",
+              "native_1m_count": 44640
+            }
+          ],
+          "sha256": "d81b087110a8311acd4eb0e52f3af3ce5d90691761fab41a047b86e72fdb5db6",
+          "bytes": 55674
+        },
         {
           "file": "superfarm-2026-span0-c08b7da05a280265dfbffc198d4dc7edbbb65f7f27fec2d2401fd50e3b0ad13f.json.gz",
           "year": 2026,
