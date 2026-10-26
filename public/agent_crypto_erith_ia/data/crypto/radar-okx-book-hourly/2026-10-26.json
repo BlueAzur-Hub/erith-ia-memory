@@ -2269,6 +2269,384 @@
       "real_orders": 0,
       "paper_fills": 0,
       "account_access": false
+    },
+    {
+      "schema": "erith.radar.okx.public-spot-books.v1",
+      "record_kind": "PUBLIC_SAMPLED_BOOK_NO_EXECUTION_PROOF",
+      "hour_utc": "2026-10-26T13Z",
+      "observed_at_utc": "2026-10-26T13:08:23Z",
+      "markets": [
+        {
+          "coin_id": "sahara-ai",
+          "symbol": "SAHARA",
+          "venue": "OKX_EEA",
+          "pair": "SAHARA-USDC",
+          "quote": "USDC",
+          "type": "SPOT",
+          "status": "OBSERVED",
+          "proof": {
+            "ticker": {
+              "source_at_utc": "2026-10-26T13:08:22Z",
+              "last": "0.007685",
+              "volume24h_base": "9373.3",
+              "volume24h_quote_usdc": "73.4212176"
+            },
+            "book": {
+              "source_at_utc": "2026-10-26T13:08:23Z",
+              "bid5": [
+                [
+                  "0.007697",
+                  "128820.5"
+                ],
+                [
+                  "0.00769",
+                  "29480.8"
+                ],
+                [
+                  "0.007683",
+                  "35377"
+                ],
+                [
+                  "0.007677",
+                  "41273.2"
+                ],
+                [
+                  "0.00767",
+                  "47169.4"
+                ]
+              ],
+              "ask5": [
+                [
+                  "0.00778",
+                  "446.9"
+                ],
+                [
+                  "0.007782",
+                  "13544.7"
+                ],
+                [
+                  "0.00779",
+                  "23303.1"
+                ],
+                [
+                  "0.007797",
+                  "29128.8"
+                ],
+                [
+                  "0.007804",
+                  "108846.1"
+                ]
+              ],
+              "best_bid": "0.007697",
+              "best_ask": "0.00778",
+              "spread_bps": "107.26",
+              "top5_bid_quote_depth": "2168.6839",
+              "top5_ask_quote_depth": "1366.9651",
+              "fill_proven": false
+            },
+            "instrument_public_rules": {
+              "minSz": "100",
+              "lotSz": "0.1",
+              "tickSz": "0.000001"
+            },
+            "closed_15m": [
+              {
+                "open_at_utc": "2026-10-26T12:00:00Z",
+                "open": "0.007685",
+                "high": "0.007685",
+                "low": "0.007685",
+                "close": "0.007685",
+                "volume_base": "0",
+                "volume_quote": "0"
+              },
+              {
+                "open_at_utc": "2026-10-26T12:15:00Z",
+                "open": "0.007685",
+                "high": "0.007685",
+                "low": "0.007685",
+                "close": "0.007685",
+                "volume_base": "0",
+                "volume_quote": "0"
+              },
+              {
+                "open_at_utc": "2026-10-26T12:30:00Z",
+                "open": "0.007685",
+                "high": "0.007685",
+                "low": "0.007685",
+                "close": "0.007685",
+                "volume_base": "0",
+                "volume_quote": "0"
+              },
+              {
+                "open_at_utc": "2026-10-26T12:45:00Z",
+                "open": "0.007685",
+                "high": "0.007685",
+                "low": "0.007685",
+                "close": "0.007685",
+                "volume_base": "0",
+                "volume_quote": "0"
+              }
+            ],
+            "closed_15m_status": "CONFIRMED_CLOSED_BARS",
+            "exchange_symbol_verified": true,
+            "token_contract_verified": false,
+            "account_access_verified": false,
+            "min_notional_verified": false,
+            "fees_verified": false,
+            "execution_proven": false
+          },
+          "unavailable_reason": null
+        },
+        {
+          "coin_id": "threshold-network-token",
+          "symbol": "T",
+          "venue": "OKX_EEA",
+          "pair": "T-USDC",
+          "quote": "USDC",
+          "type": "SPOT",
+          "status": "OBSERVED",
+          "proof": {
+            "ticker": {
+              "source_at_utc": "2026-10-26T13:08:24Z",
+              "last": "0.004777",
+              "volume24h_base": "952885.8028",
+              "volume24h_quote_usdc": "5138.6577156448"
+            },
+            "book": {
+              "source_at_utc": "2026-10-26T13:08:24Z",
+              "bid5": [
+                [
+                  "0.004731",
+                  "144.6061"
+                ],
+                [
+                  "0.00473",
+                  "152723.0793"
+                ],
+                [
+                  "0.004729",
+                  "49645.3158"
+                ],
+                [
+                  "0.004727",
+                  "43594.131"
+                ],
+                [
+                  "0.004716",
+                  "101.402"
+                ]
+              ],
+              "ask5": [
+                [
+                  "0.004783",
+                  "101.3208"
+                ],
+                [
+                  "0.004791",
+                  "144.4614"
+                ],
+                [
+                  "0.004797",
+                  "42957.9856"
+                ],
+                [
+                  "0.004803",
+                  "33627.6863"
+                ],
+                [
+                  "0.00481",
+                  "53697.482"
+                ]
+              ],
+              "best_bid": "0.004731",
+              "best_ask": "0.004783",
+              "spread_bps": "109.31",
+              "top5_bid_quote_depth": "1164.3847",
+              "top5_ask_quote_depth": "627.0449",
+              "fill_proven": false
+            },
+            "instrument_public_rules": {
+              "minSz": "100",
+              "lotSz": "0.0001",
+              "tickSz": "0.000001"
+            },
+            "closed_15m": [
+              {
+                "open_at_utc": "2026-10-26T12:00:00Z",
+                "open": "0.004682",
+                "high": "0.004701",
+                "low": "0.004657",
+                "close": "0.004673",
+                "volume_base": "34167.3071",
+                "volume_quote": "159.6354298568"
+              },
+              {
+                "open_at_utc": "2026-10-26T12:15:00Z",
+                "open": "0.004716",
+                "high": "0.004716",
+                "low": "0.004716",
+                "close": "0.004716",
+                "volume_base": "101.3208",
+                "volume_quote": "0.4778288928"
+              },
+              {
+                "open_at_utc": "2026-10-26T12:30:00Z",
+                "open": "0.004731",
+                "high": "0.004731",
+                "low": "0.004731",
+                "close": "0.004731",
+                "volume_base": "144.4614",
+                "volume_quote": "0.6834468834"
+              },
+              {
+                "open_at_utc": "2026-10-26T12:45:00Z",
+                "open": "0.004749",
+                "high": "0.004781",
+                "low": "0.004749",
+                "close": "0.004781",
+                "volume_base": "2507.8032",
+                "volume_quote": "11.9836756056"
+              }
+            ],
+            "closed_15m_status": "CONFIRMED_CLOSED_BARS",
+            "exchange_symbol_verified": true,
+            "token_contract_verified": false,
+            "account_access_verified": false,
+            "min_notional_verified": false,
+            "fees_verified": false,
+            "execution_proven": false
+          },
+          "unavailable_reason": null
+        },
+        {
+          "coin_id": "grass",
+          "symbol": "GRASS",
+          "venue": "OKX_EEA",
+          "pair": "GRASS-USDC",
+          "quote": "USDC",
+          "type": "SPOT",
+          "status": "OBSERVED",
+          "proof": {
+            "ticker": {
+              "source_at_utc": "2026-10-26T13:08:24Z",
+              "last": "0.7174",
+              "volume24h_base": "376582.24",
+              "volume24h_quote_usdc": "267090.920506"
+            },
+            "book": {
+              "source_at_utc": "2026-10-26T13:08:25Z",
+              "bid5": [
+                [
+                  "0.7153",
+                  "1132.39"
+                ],
+                [
+                  "0.7152",
+                  "2097.31"
+                ],
+                [
+                  "0.7143",
+                  "2879.21"
+                ],
+                [
+                  "0.7142",
+                  "1577.83"
+                ],
+                [
+                  "0.7133",
+                  "1972.28"
+                ]
+              ],
+              "ask5": [
+                [
+                  "0.7168",
+                  "2094.24"
+                ],
+                [
+                  "0.7172",
+                  "2093.94"
+                ],
+                [
+                  "0.7174",
+                  "140.57"
+                ],
+                [
+                  "0.7176",
+                  "2091.32"
+                ],
+                [
+                  "0.718",
+                  "2090.15"
+                ]
+              ],
+              "best_bid": "0.7153",
+              "best_ask": "0.7168",
+              "spread_bps": "20.95",
+              "top5_bid_quote_depth": "6900.3279",
+              "top5_ask_quote_depth": "6105.2288",
+              "fill_proven": false
+            },
+            "instrument_public_rules": {
+              "minSz": "10",
+              "lotSz": "0.01",
+              "tickSz": "0.0001"
+            },
+            "closed_15m": [
+              {
+                "open_at_utc": "2026-10-26T12:00:00Z",
+                "open": "0.7133",
+                "high": "0.7137",
+                "low": "0.7128",
+                "close": "0.7137",
+                "volume_base": "3652",
+                "volume_quote": "2604.618898"
+              },
+              {
+                "open_at_utc": "2026-10-26T12:15:00Z",
+                "open": "0.7115",
+                "high": "0.725",
+                "low": "0.7115",
+                "close": "0.725",
+                "volume_base": "3933.82",
+                "volume_quote": "2831.616072"
+              },
+              {
+                "open_at_utc": "2026-10-26T12:30:00Z",
+                "open": "0.7239",
+                "high": "0.7239",
+                "low": "0.7153",
+                "close": "0.7175",
+                "volume_base": "713.94",
+                "volume_quote": "513.766753"
+              },
+              {
+                "open_at_utc": "2026-10-26T12:45:00Z",
+                "open": "0.7188",
+                "high": "0.7204",
+                "low": "0.7188",
+                "close": "0.7204",
+                "volume_base": "2574",
+                "volume_quote": "1853.861947"
+              }
+            ],
+            "closed_15m_status": "CONFIRMED_CLOSED_BARS",
+            "exchange_symbol_verified": true,
+            "token_contract_verified": false,
+            "account_access_verified": false,
+            "min_notional_verified": false,
+            "fees_verified": false,
+            "execution_proven": false
+          },
+          "unavailable_reason": null
+        }
+      ],
+      "target_count": 3,
+      "observed_count": 3,
+      "no_historical_book_backfill": true,
+      "orders_enabled": false,
+      "real_orders": 0,
+      "paper_fills": 0,
+      "account_access": false
     }
   ],
   "orders_enabled": false,
