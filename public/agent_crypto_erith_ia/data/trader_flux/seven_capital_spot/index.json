@@ -149,6 +149,41 @@
         }
       ],
       "selection_frozen": true
+    },
+    {
+      "id": "2026-10-26",
+      "date_utc": "2026-10-26",
+      "first_seen_at_utc": "2026-10-26T05:07:46.272Z",
+      "source_times_utc": [
+        "2026-10-26T04:43:15.529Z",
+        "2026-10-26T04:43:26.433Z"
+      ],
+      "universe_eligible": 407,
+      "policy_matches": 6,
+      "selected": [
+        {
+          "coin_id": "bedrock-token",
+          "symbol": "BR",
+          "source_at_utc": "2026-10-26T04:43:15.529Z",
+          "rank": 212,
+          "price_usd": 0.5009955483590683
+        },
+        {
+          "coin_id": "babylon",
+          "symbol": "BABY",
+          "source_at_utc": "2026-10-26T04:43:26.433Z",
+          "rank": 351,
+          "price_usd": 0.013721060845786896
+        },
+        {
+          "coin_id": "chain-2",
+          "symbol": "XCN",
+          "source_at_utc": "2026-10-26T04:43:15.529Z",
+          "rank": 195,
+          "price_usd": 0.004156538141130221
+        }
+      ],
+      "selection_frozen": true
     }
   ],
   "records": [
@@ -354,6 +389,27 @@
       "sha256": "5c37427ee011fe57a23e7cd0d0889c6dfed6c34f087849198b09c5b255c5027a",
       "recorded_at_utc": "2026-10-25T22:44:28.023Z",
       "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-10-24",
+      "file": "observations/2026-10-26T050746272Z--2026-10-24.json",
+      "sha256": "e959911ee7f1004d337cc8ff0f203a3bb700dfcd46df04d14ece0e0c3fbe1bae",
+      "recorded_at_utc": "2026-10-26T05:07:46.272Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-10-25",
+      "file": "observations/2026-10-26T050746272Z--2026-10-25.json",
+      "sha256": "5815d67b705bd18e124a34b42e57da7b047ede0704aea115da23395a32278403",
+      "recorded_at_utc": "2026-10-26T05:07:46.272Z",
+      "kind": "LATER_PUBLIC_BID"
+    },
+    {
+      "cohort_id": "2026-10-26",
+      "file": "observations/2026-10-26T050746272Z--2026-10-26.json",
+      "sha256": "7056085a663d6d6c18a7e3454a5e0ed7aec6f7d260bd030f68bc12227877e29c",
+      "recorded_at_utc": "2026-10-26T05:07:46.272Z",
+      "kind": "FIRST_PUBLIC_SCREEN"
     }
   ]
 }
