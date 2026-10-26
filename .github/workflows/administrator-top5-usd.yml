@@ -6,6 +6,7 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/app.js'
       - 'public/agent_crypto_erith_ia/tools/test_top5_canonical_owner.cjs'
       - 'public/agent_crypto_erith_ia/tools/test_scanner_full_window.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_scanner_native_usd_reuse.cjs'
       - 'public/agent_crypto_erith_ia/administrator/index.html'
       - 'public/agent_crypto_erith_ia/tools/test_top5_usd_quotes.cjs'
       - 'public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs'
@@ -17,6 +18,7 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/app.js'
       - 'public/agent_crypto_erith_ia/tools/test_top5_canonical_owner.cjs'
       - 'public/agent_crypto_erith_ia/tools/test_scanner_full_window.cjs'
+      - 'public/agent_crypto_erith_ia/tools/test_scanner_native_usd_reuse.cjs'
       - 'public/agent_crypto_erith_ia/administrator/index.html'
       - 'public/agent_crypto_erith_ia/tools/test_top5_usd_quotes.cjs'
       - 'public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs'
@@ -37,6 +39,7 @@ jobs:
             /public/agent_crypto_erith_ia/administrator/app.js
             /public/agent_crypto_erith_ia/tools/test_top5_canonical_owner.cjs
             /public/agent_crypto_erith_ia/tools/test_scanner_full_window.cjs
+            /public/agent_crypto_erith_ia/tools/test_scanner_native_usd_reuse.cjs
             /public/agent_crypto_erith_ia/administrator/index.html
             /public/agent_crypto_erith_ia/tools/test_top5_usd_quotes.cjs
             /public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs
@@ -47,4 +50,4 @@ jobs:
         run: |
           node --check public/agent_crypto_erith_ia/administrator/js/graph-native-usd-406520.js
           node --check public/agent_crypto_erith_ia/administrator/app.js
-          node --test public/agent_crypto_erith_ia/tools/test_top5_usd_quotes.cjs public/agent_crypto_erith_ia/tools/test_top5_canonical_owner.cjs public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs public/agent_crypto_erith_ia/tools/test_scanner_full_window.cjs
+          node --test public/agent_crypto_erith_ia/tools/test_top5_usd_quotes.cjs public/agent_crypto_erith_ia/tools/test_top5_canonical_owner.cjs public/agent_crypto_erith_ia/administrator/js/test-graph-native-usd-tooltip.cjs public/agent_crypto_erith_ia/tools/test_scanner_full_window.cjs public/agent_crypto_erith_ia/tools/test_scanner_native_usd_reuse.cjs
