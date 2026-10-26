@@ -1,5 +1,9 @@
 # SEVEN HEAVEN — Relais courant Agent-Crypto
 
+> **POINT D'ENTRÉE ACTUEL — 26 octobre 2026** : la mémoire de reprise désormais canonique est [SEVEN_HEAVEN_MEMOIRE_ACTIVE.md](https://github.com/BlueAzur-Hub/erith-ia-memory/blob/main/coordination/inter_ai_dialogues/agent_crypto/SEVEN_HEAVEN_MEMOIRE_ACTIVE.md). **Lire ce fichier en premier**, et non les anciens chapitres chronologiques du présent relais. Conserver ici les archives historiques, sans multiplier les « états courants » concurrents. La mémoire active doit être mise à jour après chaque intervention vérifiée.
+
+---
+
 ## PASSATION PRIORITAIRE · 24 octobre 2026 · GRAPHIQUE KAT / OKX NATIF RACCORDE — VALIDATION FIREFOX RESTANTE
 
 **NOUVEAU POINT DE REPRISE. Ne pas repartir des anciennes consignes ci-dessous, qui datent d'avant les fusions #664–#668.**
