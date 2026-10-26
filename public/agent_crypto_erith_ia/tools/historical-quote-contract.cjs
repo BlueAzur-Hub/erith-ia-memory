@@ -72,4 +72,31 @@ function proposedHistoryCacheKey(record){
   return `${record.coinId}:${record.currency}:${record.sourceFamily}:${record.periodDays}`;
 }
 
-module.exports={seriesCurrencyEvidence,inspectHistoricalRecord,comparableSpot,proposedHistoryCacheKey};
+function historicalSpotParity(coin,record,historicalPrice,historicalTimestamp,options={}){
+  const skip=(reason)=>Object.freeze({comparable:false,reason});
+  if(!record?.usable || record.conflict)
+    return skip("unqualified-history");
+  // The absence of a contradiction does NOT prove that cache labels are truthful.
+  if(record.currencyEvidence!=="source-declared")return skip("provenance-not-established");
+  if(record.sourceFamily!=="coingecko" || !String(coin?.source||"").toLowerCase().includes("coingecko"))
+    return skip("different-provider");
+  const spot=comparableSpot(coin,record);
+  if(!spot)return skip("spot-not-in-same-currency");
+  const historical=Number(historicalPrice),t=Number(historicalTimestamp);
+  if(!Number.isFinite(historical)||historical<=0||!Number.isFinite(t)||t<=0)
+    return skip("invalid-historical-price-or-time");
+  const timestamp=coin?.spotUpdatedAt??coin?.timestamp??coin?.lastUpdated;
+  const spotAt=typeof timestamp==="number"?timestamp:Date.parse(String(timestamp||""));
+  if(!Number.isFinite(spotAt)||spotAt<=0)return skip("missing-spot-timestamp");
+  const maxAgeMs=Number.isFinite(Number(options.maxAgeMs))&&Number(options.maxAgeMs)>=0
+    ?Number(options.maxAgeMs):20*60*1000;
+  if(Math.abs(t-spotAt)>maxAgeMs)return skip("timestamp-mismatch");
+  const warnGapPct=Number.isFinite(Number(options.warnGapPct))&&Number(options.warnGapPct)>0
+    ?Number(options.warnGapPct):2.5;
+  const gapPct=Math.abs(historical-spot.price)/spot.price*100;
+  return Object.freeze({comparable:true,currency:record.currency,spotField:spot.field,
+    historicalPrice:historical,spotPrice:spot.price,historicalTimestamp:t,spotTimestamp:spotAt,
+    gapPct,warn:gapPct>warnGapPct});
+}
+
+module.exports={seriesCurrencyEvidence,inspectHistoricalRecord,comparableSpot,proposedHistoryCacheKey,historicalSpotParity};
