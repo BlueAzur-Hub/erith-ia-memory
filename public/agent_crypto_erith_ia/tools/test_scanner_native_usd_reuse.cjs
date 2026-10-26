@@ -27,6 +27,7 @@ function context({fetch,mode="USD"}={}) {
     atlasWriteLocalChartStore:()=>{stored++;},
     atlasNormalizeChartPayload:({prices})=>prices,
     atlasValidateChartSeries:({prices})=>({ok:prices.length>=2,metrics:{lastTimestamp:prices.at(-1)[0]}}),
+    atlasChartNeedsRefresh:()=>false,
     atlasRespectComparisonRequestSpacing:async()=>{},
     atlasScannerSeriesCoversWindow:()=>({ok:true}),
     atlasComparisonAbortError:()=>false,
@@ -79,4 +80,34 @@ test("failed USD acquisitions never substitute EUR, Binance, or another coin",as
   assert.match(result.error.message,/CoinGecko USD tentative 2/);
   assert.equal(counts().calls,2);
   assert.equal(counts().fallback,0);
+});
+
+test("new Market entrant chooses the newest full USD history instead of a stale prior comparison",()=>{
+  const nextCoin={id:"grass",symbol:"GRASS"};
+  const {c,cache,states}=context({fetch:async()=>{throw Error("should not fetch")}});
+  const end=Date.now();
+  const older=[[end-26*3600000,0.70],[end-7*60000,0.71]];
+  const fresher=[[end-24*3600000,0.71],[end-60000,0.74]];
+  states.dataBroker.comparison.results.grass={
+    series:older,coinId:"grass",currency:"USD",quoteCurrency:"USD",savedAt:end
+  };
+  cache["grass:USD:coingecko:1"]={
+    series:fresher,coinId:"grass",currency:"USD",quoteCurrency:"USD",savedAt:end-3600000
+  };
+  const chosen=c.atlasScannerStoredHistory(nextCoin,1,{...tx,windowEnd:end});
+  assert.equal(chosen.coinId,"grass");
+  assert.equal(chosen.series.at(-1)[0],fresher.at(-1)[0]);
+  cache["grass:USD:coingecko:1"]={
+    series:fresher,coinId:"other-token",currency:"USD",quoteCurrency:"USD",savedAt:end
+  };
+  const remaining=c.atlasScannerNativeUsdStored(nextCoin,1);
+  assert.equal(remaining.series.at(-1)[0],older.at(-1)[0]);
+});
+test("native cache requires matching USD currency markers for any Top5 candidate",()=>{
+  const nextCoin={id:"grass",symbol:"GRASS"};
+  const {c,cache}=context({fetch:async()=>{throw Error("unused")}});
+  cache["grass:USD:coingecko:1"]={
+    series,coinId:"grass",currency:"EUR",quoteCurrency:"USD",savedAt:Date.now()
+  };
+  assert.equal(c.atlasScannerNativeUsdStored(nextCoin,1),null);
 });
