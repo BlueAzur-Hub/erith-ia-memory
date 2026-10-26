@@ -1,0 +1,973 @@
+{
+  "schema": "agent_crypto_history_currency_evidence_1",
+  "generatedAt": "2026-10-26T06:37:46.401Z",
+  "source": "Firefox IndexedDB · diagnostic lecture seule",
+  "database": "agent_crypto_storage_relief_40278",
+  "store": "payloads",
+  "targetAssets": [
+    "bitcoin",
+    "ethereum",
+    "binancecoin",
+    "ripple",
+    "solana"
+  ],
+  "sourceGlobalVerified": false,
+  "seriesFound": 23,
+  "assetsFound": [
+    "bitcoin",
+    "ethereum",
+    "binancecoin",
+    "ripple",
+    "solana"
+  ],
+  "keyUsdCount": 14,
+  "keyWithoutCurrencyCount": 9,
+  "currencyConflicts": 0,
+  "samplesPerSeriesMaximum": 3,
+  "caveat": "Devise dans la clé et métadonnées = déclarations à vérifier, pas preuve de cotation native ; aucune série intégrale exportée.",
+  "entries": [
+    {
+      "key": "bitcoin:1:binance",
+      "coinId": "bitcoin",
+      "periodDays": 1,
+      "sourceInKey": "binance",
+      "currencyInKey": null,
+      "declaredCurrency": null,
+      "declaredQuoteCurrency": null,
+      "currencyConflict": false,
+      "source": "Binance EUR DIRECT · BTCEUR · 5m · 24h · RAW SOURCE TRUTH",
+      "sourceFamily": "binance",
+      "sourceMode": "binance-direct-klines",
+      "originalSourceMode": "binance-direct-klines",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-26T05:36:57.014Z",
+      "generatedAt": "2026-10-26T05:35:00.000Z",
+      "totalPoints": 300,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792903200000,
+          "timeIso": "2026-10-25T04:40:00.000Z",
+          "priceRaw": 72210.26
+        },
+        {
+          "index": 149,
+          "timeMs": 1792947900000,
+          "timeIso": "2026-10-25T17:05:00.000Z",
+          "priceRaw": 72038.77
+        },
+        {
+          "index": 299,
+          "timeMs": 1792992900000,
+          "timeIso": "2026-10-26T05:35:00.000Z",
+          "priceRaw": 71366.61
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "bitcoin:1:coingecko",
+      "coinId": "bitcoin",
+      "periodDays": 1,
+      "sourceInKey": "coingecko",
+      "currencyInKey": null,
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "Cache navigateur · série CoinGecko",
+      "sourceFamily": "coingecko",
+      "sourceMode": "browser-cache",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-24T07:27:42.407Z",
+      "generatedAt": "2026-10-24T05:37:10.000Z",
+      "totalPoints": 289,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792734000000,
+          "timeIso": "2026-10-23T05:40:00.000Z",
+          "priceRaw": 81650.11116991118
+        },
+        {
+          "index": 144,
+          "timeMs": 1792777200000,
+          "timeIso": "2026-10-23T17:40:00.000Z",
+          "priceRaw": 81557.76087805125
+        },
+        {
+          "index": 288,
+          "timeMs": 1792820230000,
+          "timeIso": "2026-10-24T05:37:10.000Z",
+          "priceRaw": 80711.56812741535
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "données différées : 1.8 h"
+    },
+    {
+      "key": "bitcoin:USD:coingecko:1",
+      "coinId": "bitcoin",
+      "periodDays": 1,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-26T05:52:11.632Z",
+      "generatedAt": "2026-10-26T05:50:10.000Z",
+      "totalPoints": 289,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792907700000,
+          "timeIso": "2026-10-25T05:55:00.000Z",
+          "priceRaw": 80480.84478373853
+        },
+        {
+          "index": 144,
+          "timeMs": 1792950900000,
+          "timeIso": "2026-10-25T17:55:00.000Z",
+          "priceRaw": 80743.38282406144
+        },
+        {
+          "index": 288,
+          "timeMs": 1792993810000,
+          "timeIso": "2026-10-26T05:50:10.000Z",
+          "priceRaw": 80159.30693537465
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "bitcoin:7:binance",
+      "coinId": "bitcoin",
+      "periodDays": 7,
+      "sourceInKey": "binance",
+      "currencyInKey": null,
+      "declaredCurrency": null,
+      "declaredQuoteCurrency": null,
+      "currencyConflict": false,
+      "source": "Binance Spot BTC/EUR · chandelles",
+      "sourceFamily": "binance",
+      "sourceMode": "binance-direct-klines",
+      "originalSourceMode": "binance-direct-klines",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 7,
+      "savedAt": "2026-10-26T04:41:13.162Z",
+      "generatedAt": "2026-10-26T04:30:00.000Z",
+      "totalPoints": 350,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792360800000,
+          "timeIso": "2026-10-18T22:00:00.000Z",
+          "priceRaw": 72595.76
+        },
+        {
+          "index": 174,
+          "timeMs": 1792674000000,
+          "timeIso": "2026-10-22T13:00:00.000Z",
+          "priceRaw": 72990.67
+        },
+        {
+          "index": 349,
+          "timeMs": 1792989000000,
+          "timeIso": "2026-10-26T04:30:00.000Z",
+          "priceRaw": 71195.31
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "données différées : 11 min"
+    },
+    {
+      "key": "bitcoin:USD:coingecko:7",
+      "coinId": "bitcoin",
+      "periodDays": 7,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 7,
+      "savedAt": "2026-10-26T05:09:22.134Z",
+      "generatedAt": "2026-10-26T05:07:40.000Z",
+      "totalPoints": 169,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792386000000,
+          "timeIso": "2026-10-19T05:00:00.000Z",
+          "priceRaw": 82710.03387686268
+        },
+        {
+          "index": 84,
+          "timeMs": 1792688400000,
+          "timeIso": "2026-10-22T17:00:00.000Z",
+          "priceRaw": 81170.8057324379
+        },
+        {
+          "index": 168,
+          "timeMs": 1792991260000,
+          "timeIso": "2026-10-26T05:07:40.000Z",
+          "priceRaw": 80018.41719164533
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "bitcoin:USD:coingecko:30",
+      "coinId": "bitcoin",
+      "periodDays": 30,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "Cache navigateur · série CoinGecko",
+      "sourceFamily": "coingecko",
+      "sourceMode": "browser-cache",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 30,
+      "savedAt": "2026-10-26T03:43:39.300Z",
+      "generatedAt": "2026-10-21T09:07:00.000Z",
+      "totalPoints": 721,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1789981200000,
+          "timeIso": "2026-09-21T09:00:00.000Z",
+          "priceRaw": 83733.7521341574
+        },
+        {
+          "index": 360,
+          "timeMs": 1791277200000,
+          "timeIso": "2026-10-06T09:00:00.000Z",
+          "priceRaw": 86006.80828033305
+        },
+        {
+          "index": 720,
+          "timeMs": 1792573620000,
+          "timeIso": "2026-10-21T09:07:00.000Z",
+          "priceRaw": 83220.67126601387
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "archive réelle datée : 4.8 j"
+    },
+    {
+      "key": "bitcoin:USD:coingecko:60",
+      "coinId": "bitcoin",
+      "periodDays": 60,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 60,
+      "savedAt": "2026-10-19T00:22:06.065Z",
+      "generatedAt": "2026-10-19T00:20:20.000Z",
+      "totalPoints": 1441,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1787187600000,
+          "timeIso": "2026-08-20T01:00:00.000Z",
+          "priceRaw": 69371.09419653316
+        },
+        {
+          "index": 720,
+          "timeMs": 1789779600000,
+          "timeIso": "2026-09-19T01:00:00.000Z",
+          "priceRaw": 81605.60145345944
+        },
+        {
+          "index": 1440,
+          "timeMs": 1792369220000,
+          "timeIso": "2026-10-19T00:20:20.000Z",
+          "priceRaw": 81997.91781254017
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "écart prix/courbe : 12.31 %"
+    },
+    {
+      "key": "bitcoin:USD:coingecko:90",
+      "coinId": "bitcoin",
+      "periodDays": 90,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 90,
+      "savedAt": "2026-10-19T00:07:43.438Z",
+      "generatedAt": "2026-10-19T00:06:10.000Z",
+      "totalPoints": 2161,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1784592000000,
+          "timeIso": "2026-07-21T00:00:00.000Z",
+          "priceRaw": 65184.92144270268
+        },
+        {
+          "index": 1080,
+          "timeMs": 1788480000000,
+          "timeIso": "2026-09-04T00:00:00.000Z",
+          "priceRaw": 81264.70153038795
+        },
+        {
+          "index": 2160,
+          "timeMs": 1792368370000,
+          "timeIso": "2026-10-19T00:06:10.000Z",
+          "priceRaw": 82023.15124574801
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "bitcoin:USD:coingecko:365",
+      "coinId": "bitcoin",
+      "periodDays": 365,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 365,
+      "savedAt": "2026-10-24T07:24:15.353Z",
+      "generatedAt": "2026-10-24T07:22:40.000Z",
+      "totalPoints": 366,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1761350400000,
+          "timeIso": "2025-10-25T00:00:00.000Z",
+          "priceRaw": 111030.1833786475
+        },
+        {
+          "index": 182,
+          "timeMs": 1777075200000,
+          "timeIso": "2026-04-25T00:00:00.000Z",
+          "priceRaw": 77447.61757991764
+        },
+        {
+          "index": 365,
+          "timeMs": 1792826560000,
+          "timeIso": "2026-10-24T07:22:40.000Z",
+          "priceRaw": 80751.97837946017
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "écart prix/courbe : 12.00 %"
+    },
+    {
+      "key": "ethereum:1:binance",
+      "coinId": "ethereum",
+      "periodDays": 1,
+      "sourceInKey": "binance",
+      "currencyInKey": null,
+      "declaredCurrency": null,
+      "declaredQuoteCurrency": null,
+      "currencyConflict": false,
+      "source": "Binance EUR DIRECT · ETHEUR · 5m · 24h · RAW SOURCE TRUTH",
+      "sourceFamily": "binance",
+      "sourceMode": "binance-direct-klines",
+      "originalSourceMode": "binance-direct-klines",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-26T05:36:58.125Z",
+      "generatedAt": "2026-10-26T05:35:00.000Z",
+      "totalPoints": 300,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792903200000,
+          "timeIso": "2026-10-25T04:40:00.000Z",
+          "priceRaw": 2113.34
+        },
+        {
+          "index": 149,
+          "timeMs": 1792947900000,
+          "timeIso": "2026-10-25T17:05:00.000Z",
+          "priceRaw": 2100.21
+        },
+        {
+          "index": 299,
+          "timeMs": 1792992900000,
+          "timeIso": "2026-10-26T05:35:00.000Z",
+          "priceRaw": 2066.62
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "ethereum:1:coingecko",
+      "coinId": "ethereum",
+      "periodDays": 1,
+      "sourceInKey": "coingecko",
+      "currencyInKey": null,
+      "declaredCurrency": null,
+      "declaredQuoteCurrency": null,
+      "currencyConflict": false,
+      "source": "Bridge Ryzen V1.9.19 · CoinGecko market_chart EUR · Bridge local",
+      "sourceFamily": "coingecko",
+      "sourceMode": "bridge-coingecko-bridge-direct",
+      "originalSourceMode": "bridge-coingecko-bridge-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-25T08:31:47.126Z",
+      "generatedAt": "2026-10-25T08:29:50+00:00",
+      "totalPoints": 288,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792830900000,
+          "timeIso": "2026-10-24T08:35:00.000Z",
+          "priceRaw": 2116.0684952155557
+        },
+        {
+          "index": 143,
+          "timeMs": 1792873800000,
+          "timeIso": "2026-10-24T20:30:00.000Z",
+          "priceRaw": 2090.987809509937
+        },
+        {
+          "index": 287,
+          "timeMs": 1792916990000,
+          "timeIso": "2026-10-25T08:29:50.000Z",
+          "priceRaw": 2083.366363743374
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "ethereum:USD:coingecko:1",
+      "coinId": "ethereum",
+      "periodDays": 1,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-25T10:35:19.893Z",
+      "generatedAt": "2026-10-25T10:33:20.000Z",
+      "totalPoints": 289,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792838100000,
+          "timeIso": "2026-10-24T10:35:00.000Z",
+          "priceRaw": 2369.2830494173418
+        },
+        {
+          "index": 144,
+          "timeMs": 1792881300000,
+          "timeIso": "2026-10-24T22:35:00.000Z",
+          "priceRaw": 2341.388404975809
+        },
+        {
+          "index": 288,
+          "timeMs": 1792924400000,
+          "timeIso": "2026-10-25T10:33:20.000Z",
+          "priceRaw": 2323.4763791688474
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "ethereum:USD:coingecko:7",
+      "coinId": "ethereum",
+      "periodDays": 7,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 7,
+      "savedAt": "2026-10-26T05:09:22.347Z",
+      "generatedAt": "2026-10-26T05:07:40.000Z",
+      "totalPoints": 169,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792386000000,
+          "timeIso": "2026-10-19T05:00:00.000Z",
+          "priceRaw": 2427.1134113964845
+        },
+        {
+          "index": 84,
+          "timeMs": 1792688400000,
+          "timeIso": "2026-10-22T17:00:00.000Z",
+          "priceRaw": 2376.770765725798
+        },
+        {
+          "index": 168,
+          "timeMs": 1792991260000,
+          "timeIso": "2026-10-26T05:07:40.000Z",
+          "priceRaw": 2320.620657119448
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "binancecoin:1:binance",
+      "coinId": "binancecoin",
+      "periodDays": 1,
+      "sourceInKey": "binance",
+      "currencyInKey": null,
+      "declaredCurrency": null,
+      "declaredQuoteCurrency": null,
+      "currencyConflict": false,
+      "source": "Binance EUR DIRECT · BNBEUR · 5m · 24h · RAW SOURCE TRUTH",
+      "sourceFamily": "binance",
+      "sourceMode": "binance-direct-klines",
+      "originalSourceMode": "binance-direct-klines",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-26T05:36:59.239Z",
+      "generatedAt": "2026-10-26T05:35:00.000Z",
+      "totalPoints": 300,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792903200000,
+          "timeIso": "2026-10-25T04:40:00.000Z",
+          "priceRaw": 667.91
+        },
+        {
+          "index": 149,
+          "timeMs": 1792947900000,
+          "timeIso": "2026-10-25T17:05:00.000Z",
+          "priceRaw": 662.07
+        },
+        {
+          "index": 299,
+          "timeMs": 1792992900000,
+          "timeIso": "2026-10-26T05:35:00.000Z",
+          "priceRaw": 660.72
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "binancecoin:1:coingecko",
+      "coinId": "binancecoin",
+      "periodDays": 1,
+      "sourceInKey": "coingecko",
+      "currencyInKey": null,
+      "declaredCurrency": null,
+      "declaredQuoteCurrency": null,
+      "currencyConflict": false,
+      "source": "Bridge Ryzen V1.9.19 · CoinGecko market_chart EUR · Bridge local",
+      "sourceFamily": "coingecko",
+      "sourceMode": "bridge-coingecko-bridge-direct",
+      "originalSourceMode": "bridge-coingecko-bridge-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-25T08:31:47.935Z",
+      "generatedAt": "2026-10-25T08:30:00+00:00",
+      "totalPoints": 288,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792830900000,
+          "timeIso": "2026-10-24T08:35:00.000Z",
+          "priceRaw": 655.4742298166619
+        },
+        {
+          "index": 143,
+          "timeMs": 1792873800000,
+          "timeIso": "2026-10-24T20:30:00.000Z",
+          "priceRaw": 652.1519291980954
+        },
+        {
+          "index": 287,
+          "timeMs": 1792917000000,
+          "timeIso": "2026-10-25T08:30:00.000Z",
+          "priceRaw": 661.3257723036273
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "binancecoin:USD:coingecko:1",
+      "coinId": "binancecoin",
+      "periodDays": 1,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-25T10:35:20.150Z",
+      "generatedAt": "2026-10-25T10:33:50.000Z",
+      "totalPoints": 288,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792838400000,
+          "timeIso": "2026-10-24T10:40:00.000Z",
+          "priceRaw": 732.4599053459661
+        },
+        {
+          "index": 143,
+          "timeMs": 1792881300000,
+          "timeIso": "2026-10-24T22:35:00.000Z",
+          "priceRaw": 734.5065084794522
+        },
+        {
+          "index": 287,
+          "timeMs": 1792924430000,
+          "timeIso": "2026-10-25T10:33:50.000Z",
+          "priceRaw": 737.3704266262562
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "binancecoin:USD:coingecko:7",
+      "coinId": "binancecoin",
+      "periodDays": 7,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 7,
+      "savedAt": "2026-10-26T05:09:23.440Z",
+      "generatedAt": "2026-10-26T05:08:00.000Z",
+      "totalPoints": 169,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792386000000,
+          "timeIso": "2026-10-19T05:00:00.000Z",
+          "priceRaw": 728.14895020238
+        },
+        {
+          "index": 84,
+          "timeMs": 1792688400000,
+          "timeIso": "2026-10-22T17:00:00.000Z",
+          "priceRaw": 727.7596702121426
+        },
+        {
+          "index": 168,
+          "timeMs": 1792991280000,
+          "timeIso": "2026-10-26T05:08:00.000Z",
+          "priceRaw": 741.2105285439534
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "binancecoin:USD:coingecko:365",
+      "coinId": "binancecoin",
+      "periodDays": 365,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 365,
+      "savedAt": "2026-10-18T02:44:59.737Z",
+      "generatedAt": "2026-10-18T02:43:50.000Z",
+      "totalPoints": 366,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1760832000000,
+          "timeIso": "2025-10-19T00:00:00.000Z",
+          "priceRaw": 1092.6952441716232
+        },
+        {
+          "index": 182,
+          "timeMs": 1776556800000,
+          "timeIso": "2026-04-19T00:00:00.000Z",
+          "priceRaw": 630.021234735221
+        },
+        {
+          "index": 365,
+          "timeMs": 1792291430000,
+          "timeIso": "2026-10-18T02:43:50.000Z",
+          "priceRaw": 719.4198500845406
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "ripple:1:binance",
+      "coinId": "ripple",
+      "periodDays": 1,
+      "sourceInKey": "binance",
+      "currencyInKey": null,
+      "declaredCurrency": null,
+      "declaredQuoteCurrency": null,
+      "currencyConflict": false,
+      "source": "Binance EUR DIRECT · XRPEUR · 5m · 24h · RAW SOURCE TRUTH",
+      "sourceFamily": "binance",
+      "sourceMode": "binance-direct-klines",
+      "originalSourceMode": "binance-direct-klines",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-26T05:37:00.346Z",
+      "generatedAt": "2026-10-26T05:35:00.000Z",
+      "totalPoints": 300,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792903200000,
+          "timeIso": "2026-10-25T04:40:00.000Z",
+          "priceRaw": 1.169
+        },
+        {
+          "index": 149,
+          "timeMs": 1792947900000,
+          "timeIso": "2026-10-25T17:05:00.000Z",
+          "priceRaw": 1.1648
+        },
+        {
+          "index": 299,
+          "timeMs": 1792992900000,
+          "timeIso": "2026-10-26T05:35:00.000Z",
+          "priceRaw": 1.1478
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "ripple:USD:coingecko:7",
+      "coinId": "ripple",
+      "periodDays": 7,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 7,
+      "savedAt": "2026-10-26T05:09:24.549Z",
+      "generatedAt": "2026-10-26T05:07:50.000Z",
+      "totalPoints": 169,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792389600000,
+          "timeIso": "2026-10-19T06:00:00.000Z",
+          "priceRaw": 1.3119715039325914
+        },
+        {
+          "index": 84,
+          "timeMs": 1792692000000,
+          "timeIso": "2026-10-22T18:00:00.000Z",
+          "priceRaw": 1.3090364220536508
+        },
+        {
+          "index": 168,
+          "timeMs": 1792991270000,
+          "timeIso": "2026-10-26T05:07:50.000Z",
+          "priceRaw": 1.2876267363222111
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "ripple:USD:coingecko:365",
+      "coinId": "ripple",
+      "periodDays": 365,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 365,
+      "savedAt": "2026-10-18T02:45:06.343Z",
+      "generatedAt": "2026-10-18T02:43:30.000Z",
+      "totalPoints": 366,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1760832000000,
+          "timeIso": "2025-10-19T00:00:00.000Z",
+          "priceRaw": 2.3600123732745915
+        },
+        {
+          "index": 182,
+          "timeMs": 1776556800000,
+          "timeIso": "2026-04-19T00:00:00.000Z",
+          "priceRaw": 1.4342426784687692
+        },
+        {
+          "index": 365,
+          "timeMs": 1792291410000,
+          "timeIso": "2026-10-18T02:43:30.000Z",
+          "priceRaw": 1.2953139343473283
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "solana:1:binance",
+      "coinId": "solana",
+      "periodDays": 1,
+      "sourceInKey": "binance",
+      "currencyInKey": null,
+      "declaredCurrency": null,
+      "declaredQuoteCurrency": null,
+      "currencyConflict": false,
+      "source": "Binance EUR DIRECT · SOLEUR · 5m · 24h · RAW SOURCE TRUTH",
+      "sourceFamily": "binance",
+      "sourceMode": "binance-direct-klines",
+      "originalSourceMode": "binance-direct-klines",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-26T05:34:39.920Z",
+      "generatedAt": "2026-10-26T05:30:00.000Z",
+      "totalPoints": 300,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792902900000,
+          "timeIso": "2026-10-25T04:35:00.000Z",
+          "priceRaw": 91.57
+        },
+        {
+          "index": 149,
+          "timeMs": 1792947600000,
+          "timeIso": "2026-10-25T17:00:00.000Z",
+          "priceRaw": 90.92
+        },
+        {
+          "index": 299,
+          "timeMs": 1792992600000,
+          "timeIso": "2026-10-26T05:30:00.000Z",
+          "priceRaw": 90.18
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "intégrité validée"
+    },
+    {
+      "key": "solana:USD:coingecko:1",
+      "coinId": "solana",
+      "periodDays": 1,
+      "sourceInKey": "coingecko",
+      "currencyInKey": "USD",
+      "declaredCurrency": "USD",
+      "declaredQuoteCurrency": "USD",
+      "currencyConflict": false,
+      "source": "CoinGecko market_chart USD · direct",
+      "sourceFamily": "coingecko",
+      "sourceMode": "coingecko-direct",
+      "originalSourceMode": "coingecko-direct",
+      "coinIdInRecord": null,
+      "periodDaysInRecord": 1,
+      "savedAt": "2026-10-25T07:10:52.110Z",
+      "generatedAt": "2026-10-25T07:08:50.000Z",
+      "totalPoints": 288,
+      "samples": [
+        {
+          "index": 0,
+          "timeMs": 1792826100000,
+          "timeIso": "2026-10-24T07:15:00.000Z",
+          "priceRaw": 102.1620261387717
+        },
+        {
+          "index": 143,
+          "timeMs": 1792869000000,
+          "timeIso": "2026-10-24T19:10:00.000Z",
+          "priceRaw": 101.11813815718652
+        },
+        {
+          "index": 287,
+          "timeMs": 1792912130000,
+          "timeIso": "2026-10-25T07:08:50.000Z",
+          "priceRaw": 101.45332082563442
+        }
+      ],
+      "integrityOk": true,
+      "integrityReason": "écart prix/courbe : 12.25 %"
+    }
+  ]
+}
