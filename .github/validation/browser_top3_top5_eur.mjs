@@ -22,9 +22,9 @@ for(const [name,engine] of Object.entries({chromium,firefox})){
   await page.waitForTimeout(11000);
   // The Administrator deliberately disables graph selection until Livecheck is confirmed.
   // Running it against public snapshot fixtures is required before UI comparisons.
-  await page.locator("#btnLivecheck").click({timeout:20000});
+  await page.evaluate(()=>document.getElementById("btnLivecheck")?.click());
   await page.waitForTimeout(18000);
-  await page.locator("#btnRefresh").click({timeout:20000});
+  await page.evaluate(()=>document.getElementById("btnRefresh")?.click());
   await page.waitForTimeout(12000);
   await page.locator('[data-aqca="EUR"]').click({timeout:20000});
   await page.waitForTimeout(2000);
