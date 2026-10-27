@@ -1,0 +1,83 @@
+name: Agent Crypto - isolated Firefox remote TEST preview proof
+on:
+  push:
+    branches:
+      - test/euro-first-then-usd-integrity-20261027
+    paths:
+      - .github/workflows/agent-crypto-firefox-remote-preview-proof.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  firefox-remote-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TEST_URL: https://rawcdn.githack.com/BlueAzur-Hub/erith-ia-memory/20ed38e3f6bd8d1796b6e4e5489277548d36dbbe/public/agent_crypto_erith_ia/administrator/index.html
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify the public immutable TEST URL and essential assets
+        run: |
+          set -euo pipefail
+          mkdir -p preview-evidence
+          ROOT="${TEST_URL%/index.html}"
+          for file in index.html app.js runtime-shell.html js/graph-native-usd-406520.js js/command-center-routing-406240.js; do
+            echo "Probing ${file}"
+            status=$(curl -L --compressed --silent --show-error --max-time 80 --retry 2 -w '%{http_code}' -o /tmp/preview_asset "${ROOT}/${file}")
+            echo "${file} HTTP ${status}" | tee -a preview-evidence/http-assets.txt
+            if [ "${status}" != "200" ]; then exit 1; fi
+            if [ ! -s /tmp/preview_asset ]; then exit 1; fi
+          done
+          curl -L --compressed --silent --show-error --max-time 80 -D preview-evidence/headers.txt -o preview-evidence/index.html "${TEST_URL}"
+          grep -q 'Agent-Crypto' preview-evidence/index.html
+      - name: Install Firefox browser harness
+        run: |
+          mkdir -p /tmp/erith-preview-smoke
+          npm install --prefix /tmp/erith-preview-smoke --no-save --no-package-lock playwright@1.56.1
+          /tmp/erith-preview-smoke/node_modules/.bin/playwright install --with-deps firefox
+      - name: Prove TEST site renders in real Firefox
+        run: |
+          node <<'JS'
+          const { firefox } = require('/tmp/erith-preview-smoke/node_modules/playwright');
+          const fs = require('node:fs');
+          (async () => {
+            const browser = await firefox.launch({headless:true});
+            const ctx = await browser.newContext({viewport:{width:1440,height:900}});
+            // GitHack uses a browser-only anti-phishing interstitial.
+            // This cookie skips that interstitial in CI; humans may need one confirmation.
+            await ctx.addCookies([{name:'__Http-phish',value:'1',domain:'rawcdn.githack.com',path:'/',secure:true,httpOnly:true}]);
+            const page = await ctx.newPage();
+            const errors = [], failures = [];
+            page.on('pageerror', error => errors.push(String(error.message).slice(0,240)));
+            page.on('requestfailed', request => failures.push({url:request.url().slice(0,230),error:request.failure()?.errorText}));
+            let response;
+            try {response = await page.goto(process.env.TEST_URL,{waitUntil:'domcontentloaded',timeout:120000});}
+            catch(error) {errors.push('NAVIGATION: '+String(error.message));}
+            await page.waitForTimeout(9000);
+            await page.screenshot({path:'preview-evidence/firefox-test.png',fullPage:false});
+            const dom=await page.evaluate(() => ({
+              title:document.title,
+              href:location.href,
+              boot:document.documentElement.dataset.agentCryptoBoot||null,
+              bodyLength:document.body?.innerText?.length||0,
+              scripts:document.scripts.length,
+              graphScript:!!document.querySelector('script[src*="graph-native-usd-406520.js"]'),
+              pageText:document.body?.innerText?.slice(0,300)||''
+            }));
+            const report={status:response?.status()??null,...dom,pageErrors:errors.slice(0,15),failedRequests:failures.slice(0,30)};
+            fs.writeFileSync('preview-evidence/firefox-report.json',JSON.stringify(report,null,2));
+            console.log(JSON.stringify(report,null,2));
+            await browser.close();
+            if(report.status!==200 || !report.title.includes('40.6.640') || report.boot!=='ready' || report.bodyLength<1500 || report.scripts<10)process.exitCode=1;
+          })().catch(error=>{console.error(error);process.exitCode=1});
+          JS
+      - name: Save Firefox screenshot and URL proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-crypto-firefox-remote-preview-proof
+          path: preview-evidence/
+          retention-days: 14
+          if-no-files-found: warn
